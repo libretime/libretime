@@ -319,6 +319,8 @@ class CcShow extends BaseCcShow {
             $info['color'] = $this->getDbColor();
             $info['background_color'] = $this->getDbBackgroundColor();
             $info['linked'] = $this->getDbLinked();
+            $info['has_autoplaylist'] = $this->getDbHasAutoPlaylist();
+            $info['autoplaylist_id'] = $this->getDbAutoPlaylistId();
             return $info;
         }
 

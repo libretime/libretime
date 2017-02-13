@@ -113,6 +113,13 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
     protected $modified_instance;
 
     /**
+     * The value for the autoplaylist_built field.
+     * Note: this column has a database default value of: false
+     * @var        boolean
+     */
+    protected $autoplaylist_built;
+
+    /**
      * @var        CcShow
      */
     protected $aCcShow;
@@ -196,6 +203,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
         $this->rebroadcast = 0;
         $this->time_filled = '00:00:00';
         $this->modified_instance = false;
+        $this->autoplaylist_built = false;
     }
 
     /**
@@ -445,6 +453,17 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
     {
 
         return $this->modified_instance;
+    }
+
+    /**
+     * Get the [autoplaylist_built] column value.
+     *
+     * @return boolean
+     */
+    public function getDbAutoPlaylistBuilt()
+    {
+
+        return $this->autoplaylist_built;
     }
 
     /**
@@ -749,6 +768,35 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
     } // setDbModifiedInstance()
 
     /**
+     * Sets the value of the [autoplaylist_built] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param boolean|integer|string $v The new value
+     * @return CcShowInstances The current object (for fluent API support)
+     */
+    public function setDbAutoPlaylistBuilt($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->autoplaylist_built !== $v) {
+            $this->autoplaylist_built = $v;
+            $this->modifiedColumns[] = CcShowInstancesPeer::AUTOPLAYLIST_BUILT;
+        }
+
+
+        return $this;
+    } // setDbAutoPlaylistBuilt()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -775,6 +823,10 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
             }
 
             if ($this->modified_instance !== false) {
+                return false;
+            }
+
+            if ($this->autoplaylist_built !== false) {
                 return false;
             }
 
@@ -813,6 +865,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
             $this->created = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
             $this->last_scheduled = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
             $this->modified_instance = ($row[$startcol + 12] !== null) ? (boolean) $row[$startcol + 12] : null;
+            $this->autoplaylist_built = ($row[$startcol + 13] !== null) ? (boolean) $row[$startcol + 13] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -822,7 +875,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 13; // 13 = CcShowInstancesPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 14; // 14 = CcShowInstancesPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating CcShowInstances object", $e);
@@ -1179,6 +1232,9 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
         if ($this->isColumnModified(CcShowInstancesPeer::MODIFIED_INSTANCE)) {
             $modifiedColumns[':p' . $index++]  = '"modified_instance"';
         }
+        if ($this->isColumnModified(CcShowInstancesPeer::AUTOPLAYLIST_BUILT)) {
+            $modifiedColumns[':p' . $index++]  = '"autoplaylist_built"';
+        }
 
         $sql = sprintf(
             'INSERT INTO "cc_show_instances" (%s) VALUES (%s)',
@@ -1228,6 +1284,9 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
                         break;
                     case '"modified_instance"':
                         $stmt->bindValue($identifier, $this->modified_instance, PDO::PARAM_BOOL);
+                        break;
+                    case '"autoplaylist_built"':
+                        $stmt->bindValue($identifier, $this->autoplaylist_built, PDO::PARAM_BOOL);
                         break;
                 }
             }
@@ -1443,6 +1502,9 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
             case 12:
                 return $this->getDbModifiedInstance();
                 break;
+            case 13:
+                return $this->getDbAutoPlaylistBuilt();
+                break;
             default:
                 return null;
                 break;
@@ -1485,6 +1547,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
             $keys[10] => $this->getDbCreated(),
             $keys[11] => $this->getDbLastScheduled(),
             $keys[12] => $this->getDbModifiedInstance(),
+            $keys[13] => $this->getDbAutoPlaylistBuilt(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1583,6 +1646,9 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
             case 12:
                 $this->setDbModifiedInstance($value);
                 break;
+            case 13:
+                $this->setDbAutoPlaylistBuilt($value);
+                break;
         } // switch()
     }
 
@@ -1620,6 +1686,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
         if (array_key_exists($keys[10], $arr)) $this->setDbCreated($arr[$keys[10]]);
         if (array_key_exists($keys[11], $arr)) $this->setDbLastScheduled($arr[$keys[11]]);
         if (array_key_exists($keys[12], $arr)) $this->setDbModifiedInstance($arr[$keys[12]]);
+        if (array_key_exists($keys[13], $arr)) $this->setDbAutoPlaylistBuilt($arr[$keys[13]]);
     }
 
     /**
@@ -1644,6 +1711,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
         if ($this->isColumnModified(CcShowInstancesPeer::CREATED)) $criteria->add(CcShowInstancesPeer::CREATED, $this->created);
         if ($this->isColumnModified(CcShowInstancesPeer::LAST_SCHEDULED)) $criteria->add(CcShowInstancesPeer::LAST_SCHEDULED, $this->last_scheduled);
         if ($this->isColumnModified(CcShowInstancesPeer::MODIFIED_INSTANCE)) $criteria->add(CcShowInstancesPeer::MODIFIED_INSTANCE, $this->modified_instance);
+        if ($this->isColumnModified(CcShowInstancesPeer::AUTOPLAYLIST_BUILT)) $criteria->add(CcShowInstancesPeer::AUTOPLAYLIST_BUILT, $this->autoplaylist_built);
 
         return $criteria;
     }
@@ -1719,6 +1787,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
         $copyObj->setDbCreated($this->getDbCreated());
         $copyObj->setDbLastScheduled($this->getDbLastScheduled());
         $copyObj->setDbModifiedInstance($this->getDbModifiedInstance());
+        $copyObj->setDbAutoPlaylistBuilt($this->getDbAutoPlaylistBuilt());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -2791,6 +2860,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
         $this->created = null;
         $this->last_scheduled = null;
         $this->modified_instance = null;
+        $this->autoplaylist_built = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;

@@ -20,6 +20,8 @@
  * @method CcShowQuery orderByDbLinked($order = Criteria::ASC) Order by the linked column
  * @method CcShowQuery orderByDbIsLinkable($order = Criteria::ASC) Order by the is_linkable column
  * @method CcShowQuery orderByDbImagePath($order = Criteria::ASC) Order by the image_path column
+ * @method CcShowQuery orderByDbHasAutoPlaylist($order = Criteria::ASC) Order by the has_autoplaylist column
+ * @method CcShowQuery orderByDbAutoPlaylistId($order = Criteria::ASC) Order by the autoplaylist_id column
  *
  * @method CcShowQuery groupByDbId() Group by the id column
  * @method CcShowQuery groupByDbName() Group by the name column
@@ -35,10 +37,16 @@
  * @method CcShowQuery groupByDbLinked() Group by the linked column
  * @method CcShowQuery groupByDbIsLinkable() Group by the is_linkable column
  * @method CcShowQuery groupByDbImagePath() Group by the image_path column
+ * @method CcShowQuery groupByDbHasAutoPlaylist() Group by the has_autoplaylist column
+ * @method CcShowQuery groupByDbAutoPlaylistId() Group by the autoplaylist_id column
  *
  * @method CcShowQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method CcShowQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method CcShowQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ *
+ * @method CcShowQuery leftJoinCcPlaylist($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcPlaylist relation
+ * @method CcShowQuery rightJoinCcPlaylist($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcPlaylist relation
+ * @method CcShowQuery innerJoinCcPlaylist($relationAlias = null) Adds a INNER JOIN clause to the query using the CcPlaylist relation
  *
  * @method CcShowQuery leftJoinCcShowInstances($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcShowInstances relation
  * @method CcShowQuery rightJoinCcShowInstances($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcShowInstances relation
@@ -72,6 +80,8 @@
  * @method CcShow findOneByDbLinked(boolean $linked) Return the first CcShow filtered by the linked column
  * @method CcShow findOneByDbIsLinkable(boolean $is_linkable) Return the first CcShow filtered by the is_linkable column
  * @method CcShow findOneByDbImagePath(string $image_path) Return the first CcShow filtered by the image_path column
+ * @method CcShow findOneByDbHasAutoPlaylist(boolean $has_autoplaylist) Return the first CcShow filtered by the has_autoplaylist column
+ * @method CcShow findOneByDbAutoPlaylistId(int $autoplaylist_id) Return the first CcShow filtered by the autoplaylist_id column
  *
  * @method array findByDbId(int $id) Return CcShow objects filtered by the id column
  * @method array findByDbName(string $name) Return CcShow objects filtered by the name column
@@ -87,6 +97,8 @@
  * @method array findByDbLinked(boolean $linked) Return CcShow objects filtered by the linked column
  * @method array findByDbIsLinkable(boolean $is_linkable) Return CcShow objects filtered by the is_linkable column
  * @method array findByDbImagePath(string $image_path) Return CcShow objects filtered by the image_path column
+ * @method array findByDbHasAutoPlaylist(boolean $has_autoplaylist) Return CcShow objects filtered by the has_autoplaylist column
+ * @method array findByDbAutoPlaylistId(int $autoplaylist_id) Return CcShow objects filtered by the autoplaylist_id column
  *
  * @package    propel.generator.airtime.om
  */
@@ -194,7 +206,7 @@ abstract class BaseCcShowQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "name", "url", "genre", "description", "color", "background_color", "live_stream_using_airtime_auth", "live_stream_using_custom_auth", "live_stream_user", "live_stream_pass", "linked", "is_linkable", "image_path" FROM "cc_show" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "name", "url", "genre", "description", "color", "background_color", "live_stream_using_airtime_auth", "live_stream_using_custom_auth", "live_stream_user", "live_stream_pass", "linked", "is_linkable", "image_path", "has_autoplaylist", "autoplaylist_id" FROM "cc_show" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -692,6 +704,153 @@ abstract class BaseCcShowQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CcShowPeer::IMAGE_PATH, $dbImagePath, $comparison);
+    }
+
+    /**
+     * Filter the query on the has_autoplaylist column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbHasAutoPlaylist(true); // WHERE has_autoplaylist = true
+     * $query->filterByDbHasAutoPlaylist('yes'); // WHERE has_autoplaylist = true
+     * </code>
+     *
+     * @param     boolean|string $dbHasAutoPlaylist The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbHasAutoPlaylist($dbHasAutoPlaylist = null, $comparison = null)
+    {
+        if (is_string($dbHasAutoPlaylist)) {
+            $dbHasAutoPlaylist = in_array(strtolower($dbHasAutoPlaylist), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(CcShowPeer::HAS_AUTOPLAYLIST, $dbHasAutoPlaylist, $comparison);
+    }
+
+    /**
+     * Filter the query on the autoplaylist_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbAutoPlaylistId(1234); // WHERE autoplaylist_id = 1234
+     * $query->filterByDbAutoPlaylistId(array(12, 34)); // WHERE autoplaylist_id IN (12, 34)
+     * $query->filterByDbAutoPlaylistId(array('min' => 12)); // WHERE autoplaylist_id >= 12
+     * $query->filterByDbAutoPlaylistId(array('max' => 12)); // WHERE autoplaylist_id <= 12
+     * </code>
+     *
+     * @see       filterByCcPlaylist()
+     *
+     * @param     mixed $dbAutoPlaylistId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbAutoPlaylistId($dbAutoPlaylistId = null, $comparison = null)
+    {
+        if (is_array($dbAutoPlaylistId)) {
+            $useMinMax = false;
+            if (isset($dbAutoPlaylistId['min'])) {
+                $this->addUsingAlias(CcShowPeer::AUTOPLAYLIST_ID, $dbAutoPlaylistId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($dbAutoPlaylistId['max'])) {
+                $this->addUsingAlias(CcShowPeer::AUTOPLAYLIST_ID, $dbAutoPlaylistId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CcShowPeer::AUTOPLAYLIST_ID, $dbAutoPlaylistId, $comparison);
+    }
+
+    /**
+     * Filter the query by a related CcPlaylist object
+     *
+     * @param   CcPlaylist|PropelObjectCollection $ccPlaylist The related object(s) to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CcShowQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCcPlaylist($ccPlaylist, $comparison = null)
+    {
+        if ($ccPlaylist instanceof CcPlaylist) {
+            return $this
+                ->addUsingAlias(CcShowPeer::AUTOPLAYLIST_ID, $ccPlaylist->getDbId(), $comparison);
+        } elseif ($ccPlaylist instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(CcShowPeer::AUTOPLAYLIST_ID, $ccPlaylist->toKeyValue('PrimaryKey', 'DbId'), $comparison);
+        } else {
+            throw new PropelException('filterByCcPlaylist() only accepts arguments of type CcPlaylist or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CcPlaylist relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function joinCcPlaylist($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CcPlaylist');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CcPlaylist');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CcPlaylist relation CcPlaylist object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   CcPlaylistQuery A secondary query class using the current class as primary query
+     */
+    public function useCcPlaylistQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinCcPlaylist($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CcPlaylist', 'CcPlaylistQuery');
     }
 
     /**

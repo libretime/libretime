@@ -129,6 +129,34 @@ class Application_Model_Show
         return $this->_showId;
     }
 
+    
+    public function getHasAutoPlaylist()
+    {
+        $show = CcShowQuery::create()->findPK($this->_showId);
+        $hasAutoPlaylist = $show->getDbHasAutoPlaylist();
+        return $hasAutoPlaylist;
+    }
+    
+    public function setHasAutoPlaylist($value)
+    {
+        $show = CcShowQuery::create()->findPK($this->_showId);
+        $show->setDbHasAutoPlaylist($value);
+    }
+
+    public function getAutoPlaylistId()
+    {
+        $show = CcShowQuery::create()->findPK($this->_showId);
+        $autoPlaylistId = $show->getDbAutoPlaylistId();
+        return $autoPlaylistId;
+    }
+
+    public function setAutoPlaylistId($playlistid)
+    {
+        $show = CcShowQuery::create()->findPK($this->_showId);
+        $show->setDbAutoPlaylistId($playlistid);
+    }
+
+    
     public function getHosts()
     {
         $sql = <<<SQL

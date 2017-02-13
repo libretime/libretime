@@ -122,6 +122,24 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     protected $image_path;
 
     /**
+     * The value for the has_autoplaylist field.
+     * Note: this column has a database default value of: false
+     * @var        boolean
+     */
+    protected $has_autoplaylist;
+
+    /**
+     * The value for the autoplaylist_id field.
+     * @var        int
+     */
+    protected $autoplaylist_id;
+
+    /**
+     * @var        CcPlaylist
+     */
+    protected $aCcPlaylist;
+
+    /**
      * @var        PropelObjectCollection|CcShowInstances[] Collection to store aggregation of CcShowInstances objects.
      */
     protected $collCcShowInstancess;
@@ -205,6 +223,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         $this->linked = false;
         $this->is_linkable = true;
         $this->image_path = '';
+        $this->has_autoplaylist = false;
     }
 
     /**
@@ -369,6 +388,28 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     {
 
         return $this->image_path;
+    }
+
+    /**
+     * Get the [has_autoplaylist] column value.
+     *
+     * @return boolean
+     */
+    public function getDbHasAutoPlaylist()
+    {
+
+        return $this->has_autoplaylist;
+    }
+
+    /**
+     * Get the [autoplaylist_id] column value.
+     *
+     * @return int
+     */
+    public function getDbAutoPlaylistId()
+    {
+
+        return $this->autoplaylist_id;
     }
 
     /**
@@ -698,6 +739,60 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     } // setDbImagePath()
 
     /**
+     * Sets the value of the [has_autoplaylist] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param boolean|integer|string $v The new value
+     * @return CcShow The current object (for fluent API support)
+     */
+    public function setDbHasAutoPlaylist($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->has_autoplaylist !== $v) {
+            $this->has_autoplaylist = $v;
+            $this->modifiedColumns[] = CcShowPeer::HAS_AUTOPLAYLIST;
+        }
+
+
+        return $this;
+    } // setDbHasAutoPlaylist()
+
+    /**
+     * Set the value of [autoplaylist_id] column.
+     *
+     * @param  int $v new value
+     * @return CcShow The current object (for fluent API support)
+     */
+    public function setDbAutoPlaylistId($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->autoplaylist_id !== $v) {
+            $this->autoplaylist_id = $v;
+            $this->modifiedColumns[] = CcShowPeer::AUTOPLAYLIST_ID;
+        }
+
+        if ($this->aCcPlaylist !== null && $this->aCcPlaylist->getDbId() !== $v) {
+            $this->aCcPlaylist = null;
+        }
+
+
+        return $this;
+    } // setDbAutoPlaylistId()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -739,6 +834,10 @@ abstract class BaseCcShow extends BaseObject implements Persistent
                 return false;
             }
 
+            if ($this->has_autoplaylist !== false) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return true
         return true;
     } // hasOnlyDefaultValues()
@@ -775,6 +874,8 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             $this->linked = ($row[$startcol + 11] !== null) ? (boolean) $row[$startcol + 11] : null;
             $this->is_linkable = ($row[$startcol + 12] !== null) ? (boolean) $row[$startcol + 12] : null;
             $this->image_path = ($row[$startcol + 13] !== null) ? (string) $row[$startcol + 13] : null;
+            $this->has_autoplaylist = ($row[$startcol + 14] !== null) ? (boolean) $row[$startcol + 14] : null;
+            $this->autoplaylist_id = ($row[$startcol + 15] !== null) ? (int) $row[$startcol + 15] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -784,7 +885,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 14; // 14 = CcShowPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 16; // 16 = CcShowPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating CcShow object", $e);
@@ -807,6 +908,9 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     public function ensureConsistency()
     {
 
+        if ($this->aCcPlaylist !== null && $this->autoplaylist_id !== $this->aCcPlaylist->getDbId()) {
+            $this->aCcPlaylist = null;
+        }
     } // ensureConsistency
 
     /**
@@ -846,6 +950,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aCcPlaylist = null;
             $this->collCcShowInstancess = null;
 
             $this->collCcShowDayss = null;
@@ -966,6 +1071,18 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         $affectedRows = 0; // initialize var to track total num of affected rows
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
+
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aCcPlaylist !== null) {
+                if ($this->aCcPlaylist->isModified() || $this->aCcPlaylist->isNew()) {
+                    $affectedRows += $this->aCcPlaylist->save($con);
+                }
+                $this->setCcPlaylist($this->aCcPlaylist);
+            }
 
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
@@ -1124,6 +1241,12 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         if ($this->isColumnModified(CcShowPeer::IMAGE_PATH)) {
             $modifiedColumns[':p' . $index++]  = '"image_path"';
         }
+        if ($this->isColumnModified(CcShowPeer::HAS_AUTOPLAYLIST)) {
+            $modifiedColumns[':p' . $index++]  = '"has_autoplaylist"';
+        }
+        if ($this->isColumnModified(CcShowPeer::AUTOPLAYLIST_ID)) {
+            $modifiedColumns[':p' . $index++]  = '"autoplaylist_id"';
+        }
 
         $sql = sprintf(
             'INSERT INTO "cc_show" (%s) VALUES (%s)',
@@ -1176,6 +1299,12 @@ abstract class BaseCcShow extends BaseObject implements Persistent
                         break;
                     case '"image_path"':
                         $stmt->bindValue($identifier, $this->image_path, PDO::PARAM_STR);
+                        break;
+                    case '"has_autoplaylist"':
+                        $stmt->bindValue($identifier, $this->has_autoplaylist, PDO::PARAM_BOOL);
+                        break;
+                    case '"autoplaylist_id"':
+                        $stmt->bindValue($identifier, $this->autoplaylist_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1262,6 +1391,18 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             $retval = null;
 
             $failureMap = array();
+
+
+            // We call the validate method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aCcPlaylist !== null) {
+                if (!$this->aCcPlaylist->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aCcPlaylist->getValidationFailures());
+                }
+            }
 
 
             if (($retval = CcShowPeer::doValidate($this, $columns)) !== true) {
@@ -1378,6 +1519,12 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             case 13:
                 return $this->getDbImagePath();
                 break;
+            case 14:
+                return $this->getDbHasAutoPlaylist();
+                break;
+            case 15:
+                return $this->getDbAutoPlaylistId();
+                break;
             default:
                 return null;
                 break;
@@ -1421,6 +1568,8 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             $keys[11] => $this->getDbLinked(),
             $keys[12] => $this->getDbIsLinkable(),
             $keys[13] => $this->getDbImagePath(),
+            $keys[14] => $this->getDbHasAutoPlaylist(),
+            $keys[15] => $this->getDbAutoPlaylistId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1428,6 +1577,9 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->aCcPlaylist) {
+                $result['CcPlaylist'] = $this->aCcPlaylist->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
             if (null !== $this->collCcShowInstancess) {
                 $result['CcShowInstancess'] = $this->collCcShowInstancess->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
@@ -1516,6 +1668,12 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             case 13:
                 $this->setDbImagePath($value);
                 break;
+            case 14:
+                $this->setDbHasAutoPlaylist($value);
+                break;
+            case 15:
+                $this->setDbAutoPlaylistId($value);
+                break;
         } // switch()
     }
 
@@ -1554,6 +1712,8 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         if (array_key_exists($keys[11], $arr)) $this->setDbLinked($arr[$keys[11]]);
         if (array_key_exists($keys[12], $arr)) $this->setDbIsLinkable($arr[$keys[12]]);
         if (array_key_exists($keys[13], $arr)) $this->setDbImagePath($arr[$keys[13]]);
+        if (array_key_exists($keys[14], $arr)) $this->setDbHasAutoPlaylist($arr[$keys[14]]);
+        if (array_key_exists($keys[15], $arr)) $this->setDbAutoPlaylistId($arr[$keys[15]]);
     }
 
     /**
@@ -1579,6 +1739,8 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         if ($this->isColumnModified(CcShowPeer::LINKED)) $criteria->add(CcShowPeer::LINKED, $this->linked);
         if ($this->isColumnModified(CcShowPeer::IS_LINKABLE)) $criteria->add(CcShowPeer::IS_LINKABLE, $this->is_linkable);
         if ($this->isColumnModified(CcShowPeer::IMAGE_PATH)) $criteria->add(CcShowPeer::IMAGE_PATH, $this->image_path);
+        if ($this->isColumnModified(CcShowPeer::HAS_AUTOPLAYLIST)) $criteria->add(CcShowPeer::HAS_AUTOPLAYLIST, $this->has_autoplaylist);
+        if ($this->isColumnModified(CcShowPeer::AUTOPLAYLIST_ID)) $criteria->add(CcShowPeer::AUTOPLAYLIST_ID, $this->autoplaylist_id);
 
         return $criteria;
     }
@@ -1655,6 +1817,8 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         $copyObj->setDbLinked($this->getDbLinked());
         $copyObj->setDbIsLinkable($this->getDbIsLinkable());
         $copyObj->setDbImagePath($this->getDbImagePath());
+        $copyObj->setDbHasAutoPlaylist($this->getDbHasAutoPlaylist());
+        $copyObj->setDbAutoPlaylistId($this->getDbAutoPlaylistId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1735,6 +1899,58 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         }
 
         return self::$peer;
+    }
+
+    /**
+     * Declares an association between this object and a CcPlaylist object.
+     *
+     * @param                  CcPlaylist $v
+     * @return CcShow The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setCcPlaylist(CcPlaylist $v = null)
+    {
+        if ($v === null) {
+            $this->setDbAutoPlaylistId(NULL);
+        } else {
+            $this->setDbAutoPlaylistId($v->getDbId());
+        }
+
+        $this->aCcPlaylist = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the CcPlaylist object, it will not be re-added.
+        if ($v !== null) {
+            $v->addCcShow($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated CcPlaylist object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return CcPlaylist The associated CcPlaylist object.
+     * @throws PropelException
+     */
+    public function getCcPlaylist(PropelPDO $con = null, $doQuery = true)
+    {
+        if ($this->aCcPlaylist === null && ($this->autoplaylist_id !== null) && $doQuery) {
+            $this->aCcPlaylist = CcPlaylistQuery::create()->findPk($this->autoplaylist_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aCcPlaylist->addCcShows($this);
+             */
+        }
+
+        return $this->aCcPlaylist;
     }
 
 
@@ -2756,6 +2972,8 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         $this->linked = null;
         $this->is_linkable = null;
         $this->image_path = null;
+        $this->has_autoplaylist = null;
+        $this->autoplaylist_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -2799,6 +3017,9 @@ abstract class BaseCcShow extends BaseObject implements Persistent
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->aCcPlaylist instanceof Persistent) {
+              $this->aCcPlaylist->clearAllReferences($deep);
+            }
 
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
@@ -2819,6 +3040,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             $this->collCcShowHostss->clearIterator();
         }
         $this->collCcShowHostss = null;
+        $this->aCcPlaylist = null;
     }
 
     /**
