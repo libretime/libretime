@@ -146,6 +146,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
             'url'           => $url,
             'callback_url'  => $stationUrl . 'rest/media',
             'api_key'       => $CC_CONFIG["apiKey"][0],
+            'podcast_name'  => "best podcast",
         );
         $task = $this->_executeTask(static::$_CELERY_TASKS[self::DOWNLOAD], $data);
         // Get the created ThirdPartyTaskReference and set the episode ID so

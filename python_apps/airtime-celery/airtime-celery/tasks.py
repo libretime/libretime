@@ -6,6 +6,12 @@ import soundcloud
 import cgi
 import urlparse
 import posixpath
+import shutil
+import tempfile
+from mutagen.mp3 import MP3
+from mutagen.easyid3 import EasyID3
+import mutagen.id3
+from StringIO import StringIO
 from celery import Celery
 from celery.utils.log import get_task_logger
 from contextlib import closing
@@ -123,7 +129,7 @@ def soundcloud_delete(token, track_id):
 
 
 @celery.task(name='podcast-download', acks_late=True)
-def podcast_download(id, url, callback_url, api_key):
+def podcast_download(id, url, callback_url, api_key, podcast_name):
     """
     Download a podcast episode
 
@@ -131,6 +137,7 @@ def podcast_download(id, url, callback_url, api_key):
     :param url:             download url for the episode
     :param callback_url:    callback URL to send the downloaded file to
     :param api_key:         API key for callback authentication
+    :param podcast_name:    NAme of podcast to be added to id3 metadata for smartblock
 
     :return: JSON formatted string of a dictionary of download statuses
              and file identifiers (for successful uploads)
@@ -143,7 +150,17 @@ def podcast_download(id, url, callback_url, api_key):
         re = None
         with closing(requests.get(url, stream=True)) as r:
             filename = get_filename(r)
-            re = requests.post(callback_url, files={'file': (filename, r.content)}, auth=requests.auth.HTTPBasicAuth(api_key, ''))
+            with tempfile.NamedTemporaryFile(mode ='wb+', delete=False) as audiofile:
+                shutil.copyfileobj(r.raw, audiofile)
+                #m = mutagen.File(audiofile.name, easy=True)
+                # currently hardcoded for mp3s may want to add support for oggs etc
+                m = MP3(audiofile.name, ID3=EasyID3)
+                #m = EasyID3(audiofile.name)
+                m['album'] = [podcast_name]
+		m.save()
+                filetypeinfo = m.pprint()
+                logger.info('filetypeinfo is {0}'.format(filetypeinfo))
+                re = requests.post(callback_url, files={'file': (filename, open(audiofile.name, 'rb'))}, auth=requests.auth.HTTPBasicAuth(api_key, ''))
         re.raise_for_status()
         f = json.loads(re.content)  # Read the response from the media API to get the file id
         obj['fileid'] = f['id']
