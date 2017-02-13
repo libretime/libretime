@@ -215,6 +215,7 @@ SQL;
                 $currentMedia["ends"] = $currentMedia["show_ends"];
             }
 
+            $currentMetadata = null;
             $currentMediaName = "";
             $currentMediaFileId = $currentMedia["file_id"];
             $currentMediaStreamId = $currentMedia["stream_id"];
@@ -224,6 +225,7 @@ SQL;
                     ->filterByDbId($currentMediaFileId)
                     ->findOne();
                 $currentMediaName = $currentFile->getDbArtistName() . " - " . $currentFile->getDbTrackTitle();
+                $currentMetadata = CcFiles::sanitizeResponse($currentFile);
             } else if (isset($currentMediaStreamId)) {
                 $currentMediaType = "webstream";
                 $currentWebstream = CcWebstreamQuery::create()
@@ -247,6 +249,7 @@ SQL;
                 "type" => $currentMediaType,
                 "name" => $currentMediaName,
                 "media_item_played" => $currentMedia["media_item_played"],
+                "metadata" => $currentMetadata,
                 "record" => "0"
             );
         }
@@ -257,6 +260,7 @@ SQL;
             ->orderByDbStarts(Criteria::DESC)
             ->findOne();
         if (isset($previousMedia)) {
+            $previousMetadata = null;
             $previousMediaName = "";
             $previousMediaFileId = $previousMedia->getDbFileId();
             $previousMediaStreamId = $previousMedia->getDbStreamId();
@@ -266,6 +270,7 @@ SQL;
                     ->filterByDbId($previousMediaFileId)
                     ->findOne();
                 $previousMediaName = $previousFile->getDbArtistName() . " - " . $previousFile->getDbTrackTitle();
+                $previousMetadata = CcFiles::sanitizeResponse($previousFile);
             } else if (isset($previousMediaStreamId)) {
                 $previousMediaName = null;
                 $previousMediaType = "webstream";
@@ -280,7 +285,8 @@ SQL;
                 "starts" => $previousMedia->getDbStarts(),
                 "ends" => $previousMedia->getDbEnds(),
                 "type" => $previousMediaType,
-                "name" => $previousMediaName
+                "name" => $previousMediaName,
+                "metadata" => $previousMetadata,
             );
         }
 
@@ -290,6 +296,7 @@ SQL;
             ->orderByDbStarts(Criteria::ASC)
             ->findOne();
         if (isset($nextMedia)) {
+            $nextMetadata = null;
             $nextMediaName = "";
             $nextMediaFileId = $nextMedia->getDbFileId();
             $nextMediaStreamId = $nextMedia->getDbStreamId();
@@ -298,6 +305,7 @@ SQL;
                 $nextFile = CcFilesQuery::create()
                     ->filterByDbId($nextMediaFileId)
                     ->findOne();
+                $nextMetadata = CcFiles::sanitizeResponse($nextFile);
                 $nextMediaName = $nextFile->getDbArtistName() . " - " . $nextFile->getDbTrackTitle();
             } else if (isset($nextMediaStreamId)) {
                 $nextMediaType = "webstream";
@@ -312,7 +320,8 @@ SQL;
                 "starts" => $nextMedia->getDbStarts(),
                 "ends" => $nextMedia->getDbEnds(),
                 "type" => $nextMediaType,
-                "name" => $nextMediaName
+                "name" => $nextMediaName,
+                "metadata" => $nextMetadata
             );
         }
 
