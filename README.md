@@ -16,6 +16,23 @@ By participating in this project you agree to abide by its terms.
 Please direct your inquiries to the taiga or open an issue
 in GitHub.
 
+## Releasing
+
+The LibreTime maintainers release new versions of LibreTime at regular
+intervals. We follow the [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
+standards.
+
+In a nutshell, given a version number MAJOR.MINOR.PATCH we increment the:
+
+1. MAJOR version when we make incompatible API changes,
+2. MINOR version when we add functionality in a backwards-compatible manner, and
+3. PATCH version when we make backwards-compatible bug fixes.
+
+Given the history of the project we will be starting with version 3.0.0.
+
+Stay tuned for early alphas and lots of betas as we get development
+up and running.
+
 ## License
 
 LibreTime is free software: you can redistribute it and/or
