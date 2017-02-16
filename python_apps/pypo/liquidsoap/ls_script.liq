@@ -44,6 +44,24 @@ def create_source()
     l = request.equeue(id="s#{!source_id}", length=0.5)
 
     l = audio_to_stereo(id="queue_src", l)
+
+    # cue cut fix for liquidsoap <1.2.2
+    #
+    # This was most likely broken on 1.1.1 (debian) as well.
+    # 
+    # adapted from https://github.com/savonet/liquidsoap/issues/390#issuecomment-277562081
+    #
+    v = list.map(int_of_string, string.split(separator="\.", liquidsoap.version))
+    if list.nth(v,0) < 2 and list.nth(v,1) < 3 then
+        map_metadata(fun (~cue_in_metadata='liq_cue_in', m) ->
+            # 0.04 might need to be adjusted according to your frame size
+            if float_of_string(m[cue_in_metadata]) < 0.04 then
+                [(cue_in_metadata, "0")]
+            else
+                []
+            end
+        end)
+    end
     l = cue_cut(l)
     l = amplify(1., override="replay_gain", l)
 
