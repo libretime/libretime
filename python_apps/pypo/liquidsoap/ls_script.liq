@@ -40,6 +40,11 @@ just_switched = ref false
 sources = ref []
 source_id = ref 0
 
+def check_version(~version=liquidsoap.version, major, minor) =
+    v = list.map(int_of_string, string.split(separator="\.", version))
+    list.nth(v,0) > major or list.nth(v,0) == major and list.nth(v,1) >= minor
+end
+
 def create_source()
     l = request.equeue(id="s#{!source_id}", length=0.5)
 
@@ -51,9 +56,8 @@ def create_source()
     # 
     # adapted from https://github.com/savonet/liquidsoap/issues/390#issuecomment-277562081
     #
-    v = list.map(int_of_string, string.split(separator="\.", liquidsoap.version))
-    if list.nth(v,0) < 2 and list.nth(v,1) < 3 then
-        map_metadata(fun (~cue_in_metadata='liq_cue_in', m) ->
+    if not check_version(1, 3) then
+        l = map_metadata(fun (~cue_in_metadata='liq_cue_in', m) ->
             # 0.04 might need to be adjusted according to your frame size
             if float_of_string(m[cue_in_metadata]) < 0.04 then
                 [(cue_in_metadata, "0")]
