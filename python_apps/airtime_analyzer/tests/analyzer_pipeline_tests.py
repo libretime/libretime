@@ -22,7 +22,7 @@ def teardown():
 def test_basic():
     filename = os.path.basename(DEFAULT_AUDIO_FILE)
     q = Queue.Queue()
-    #cloud_storage_config_path = '/etc/airtime-saas/production/cloud_storage.conf'
+    #cloud_storage_config_path = os.path.join(os.getenv('LIBRETIME_CONF_DIR', '/etc/airtime'), '/production/cloud_storage.conf')
     #cloud_storage_config = config_file.read_config_file(cloud_storage_config_path)
     cloud_storage_config = SafeConfigParser()
     cloud_storage_config.add_section("current_backend")

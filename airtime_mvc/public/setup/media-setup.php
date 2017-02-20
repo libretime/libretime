@@ -25,8 +25,7 @@ require_once(dirname(dirname( __DIR__)) . "/application/models/airtime/CcMusicDi
 class MediaSetup extends Setup {
 
     const MEDIA_FOLDER = "mediaFolder";
-    const AIRTIME_CONF_PATH = "/etc/airtime/airtime.conf";
-    const RMQ_INI_BASE_PATH = "/etc/airtime-saas/";
+    const LIBRETIME_CONF_FILE_NAME = "airtime.conf";
     const RMQ_INI_FILE_NAME = "rabbitmq-analyzer.ini";
 
     static $path;
@@ -77,8 +76,11 @@ class MediaSetup extends Setup {
              * airtime.conf to airtime.conf.tmp during the setup process. Now that we're done,
              * we can rename it to airtime.conf.bak to avoid confusion.
              */
-            if (file_exists(self::AIRTIME_CONF_PATH . ".tmp")) {
-                rename(self::AIRTIME_CONF_PATH . ".tmp", self::AIRTIME_CONF_PATH . ".bak");
+            $fileName = LIBRETIME_CONF_DIR . '/' . self::LIBRETIME_CONF_FILE_NAME;
+            $tmpFile = $fileName . '.tmp';
+            $bakFile = $fileName . '.bak';
+            if (file_exists($tmpFile)) {
+                rename($tmpFile, $bakFile);
             }
         } else {
             self::$message = "Failed to move airtime.conf; /etc/airtime doesn't exist!";
@@ -96,7 +98,7 @@ class MediaSetup extends Setup {
      * @return boolean false if either of the copy or removal operations fail
      */
     function moveAirtimeConfig() {
-        return copy(AIRTIME_CONF_TEMP_PATH, self::AIRTIME_CONF_PATH)
+        return copy(AIRTIME_CONF_TEMP_PATH, LIBRETIME_CONF_DIR . '/' . self::LIBRETIME_CONF_FILE_NAME)
             && unlink(AIRTIME_CONF_TEMP_PATH);
     }
 
@@ -105,8 +107,8 @@ class MediaSetup extends Setup {
      * @return boolean false if either of the copy or removal operations fail
      */
     function moveRmqConfig() {
-        return copy(RMQ_INI_TEMP_PATH, self::RMQ_INI_BASE_PATH . self::RMQ_INI_FILE_NAME)
-            && copy(RMQ_INI_TEMP_PATH, self::RMQ_INI_BASE_PATH . "production/" . self::RMQ_INI_FILE_NAME)
+        return copy(RMQ_INI_TEMP_PATH, LIBRETIME_CONF_DIR . '/' . self::RMQ_INI_FILE_NAME)
+            && copy(RMQ_INI_TEMP_PATH, LIBRETIME_CONF_DIR . '/production/' . self::RMQ_INI_FILE_NAME)
             && unlink(RMQ_INI_TEMP_PATH);
     }
 

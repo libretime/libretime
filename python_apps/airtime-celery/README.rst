@@ -28,7 +28,7 @@ Developers
 To debug, you can run celery directly from the command line:
 
     $ cd /my/airtime/root/python_apps/airtime-celery
-    $ RMQ_CONFIG_FILE=/etc/airtime/airtime.conf celery -A airtime-celery.tasks worker --loglevel=info
+    $ RMQ_CONFIG_FILE=${LIBRETIME_CONF_DIR}/airtime.conf celery -A airtime-celery.tasks worker --loglevel=info
 
 This worker can be run alongside the service without issue.
 
@@ -57,8 +57,8 @@ If you run into issues getting Celery to accept tasks from Airtime:
 
     2) Check the log file (/var/log/airtime/airtime-celery[-DEV_ENV].log) to make sure Celery started correctly.
 
-    3) Check your /etc/airtime/airtime.conf rabbitmq settings. Make sure the settings here align with
-       /etc/airtime-saas/production/rabbitmq.ini.
+    3) Check your $LIBRETIME_CONF_DIR/airtime.conf rabbitmq settings. Make sure the settings here align with
+       $LIBRETIME_CONF_DIR/$ENVIRONMENT/rabbitmq.ini.
 
     4) Check RabbitMQ to make sure the celeryresults and task queues were created in the correct vhost.
 
