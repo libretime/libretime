@@ -1,7 +1,5 @@
 <?php
 
-require_once 'ProxyStorageBackend.php';
-
 class Rest_MediaController extends Zend_Rest_Controller
 {
     public function init()
@@ -10,6 +8,16 @@ class Rest_MediaController extends Zend_Rest_Controller
 
         // Remove reliance on .phtml files to render requests
         $this->_helper->viewRenderer->setNoRender(true);
+    }
+
+    /**
+     * headAction is needed as it is defined as an abstract function in the base controller
+     *
+     * @return void
+     */
+    public function headAction()
+    {
+        Logging::info("HEAD action received");
     }
     
     public function indexAction()
@@ -76,7 +84,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             }
             Application_Service_MediaService::streamFileDownload($id, $inline);
         }
-        catch (FileNotFoundException $e) {
+        catch (LibreTimeFileNotFoundException $e) {
             $this->fileNotFoundResponse();
             Logging::error($e->getMessage());
         }
@@ -99,7 +107,7 @@ class Rest_MediaController extends Zend_Rest_Controller
                 ->setHttpResponseCode(200)
                 ->appendBody(json_encode(CcFiles::getSanitizedFileById($id)));
         }
-        catch (FileNotFoundException $e) {
+        catch (LibreTimeFileNotFoundException $e) {
             $this->fileNotFoundResponse();
             Logging::error($e->getMessage());
         }
@@ -160,7 +168,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             $this->invalidDataResponse();
             Logging::error($e->getMessage());
         }
-        catch (FileNotFoundException $e) {
+        catch (LibreTimeFileNotFoundException $e) {
             $this->fileNotFoundResponse();
             Logging::error($e->getMessage());
         }
@@ -181,7 +189,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             $this->getResponse()
                 ->setHttpResponseCode(204);
         }
-        catch (FileNotFoundException $e) {
+        catch (LibreTimeFileNotFoundException $e) {
             $this->fileNotFoundResponse();
             Logging::error($e->getMessage());
         }

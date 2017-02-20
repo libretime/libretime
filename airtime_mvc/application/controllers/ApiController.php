@@ -1,6 +1,4 @@
 <?php
-require_once('WidgetHelper.php');
-require_once('TuneIn.php');
 
 class ApiController extends Zend_Controller_Action
 {
@@ -11,8 +9,10 @@ class ApiController extends Zend_Controller_Action
 
     public function init()
     {
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
+        if ($this->view) { // skip if already missing (ie in tests)
+            $this->view->layout()->disableLayout();
+            $this->_helper->viewRenderer->setNoRender(true);
+        }
 
         //Ignore API key and session authentication for these APIs:
         $ignoreAuth = array("live-info", 
@@ -135,8 +135,7 @@ class ApiController extends Zend_Controller_Action
      */
     public function pollCeleryAction() {
         $taskManager = TaskManager::getInstance();
-        $clazz = version_compare(phpversion(), '5.5.0', '<') ? get_class(new CeleryTask) : CeleryTask::class;
-        $taskManager->runTask($clazz);
+        $taskManager->runTask('CeleryTask');
     }
 
     /**
@@ -498,7 +497,7 @@ class ApiController extends Zend_Controller_Action
                 // Sometimes end users may be looking at stale data - if an image is removed
                 // but has been cached in a client's browser this will throw an exception
                 Application_Common_FileIO::smartReadFile($path, filesize($path), $mime_type);
-            } catch(FileNotFoundException $e) {
+            } catch(LibreTimeFileNotFoundException $e) {
                 //throw new ZendActionHttpException($this, 404, "ERROR: No image found at $path");
                 $this->_redirect('api/station-logo');
                 return;

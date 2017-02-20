@@ -1,7 +1,6 @@
 <?php
 
 define("RMQ_INI_SECTION", "rabbitmq");
-require_once dirname(dirname( __DIR__)) . '/library/php-amqplib/amqp.inc';
 
 function booleanReduce($a, $b) {
     return $a && $b;

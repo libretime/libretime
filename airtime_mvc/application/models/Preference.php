@@ -1,8 +1,5 @@
 <?php
 
-require_once 'StreamSetting.php';
-require_once 'Cache.php';
-
 class Application_Model_Preference
 {
     

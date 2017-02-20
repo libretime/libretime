@@ -1,6 +1,4 @@
-    <?php
-
-require_once 'customfilters/ImageSize.php';
+<?php
 
 class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 {

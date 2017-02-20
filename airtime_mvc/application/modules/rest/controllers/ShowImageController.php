@@ -12,9 +12,6 @@
  * @version 1.2.1
  */
 
-$filepath = realpath(__DIR__);
-require_once($filepath . "/../helpers/RestAuth.php");
-
 class Rest_ShowImageController extends Zend_Rest_Controller {
 
     public function init() {
@@ -22,6 +19,16 @@ class Rest_ShowImageController extends Zend_Rest_Controller {
         $this->view->layout()->disableLayout();
         // Remove reliance on .phtml files to render requests
         $this->_helper->viewRenderer->setNoRender(true);
+    }
+
+    /**
+     * headAction is needed as it is defined as an abstract function in the base controller
+     *
+     * @return void
+     */
+    public function headAction()
+    {
+        Logging::info("HEAD action received");
     }
 
     public function indexAction() {

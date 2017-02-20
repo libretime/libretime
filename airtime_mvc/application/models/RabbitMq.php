@@ -1,6 +1,4 @@
 <?php
-require_once 'php-amqplib/amqp.inc';
-require_once 'massivescale/celery-php/celery.php';
 
 class Application_Model_RabbitMq
 {

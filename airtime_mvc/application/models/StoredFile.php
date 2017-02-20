@@ -1,9 +1,5 @@
 <?php
 
-require_once 'formatters/LengthFormatter.php';
-require_once 'formatters/SamplerateFormatter.php';
-require_once 'formatters/BitrateFormatter.php';
-
 /**
  *  Application_Model_StoredFile class
  *

@@ -1,5 +1,4 @@
 <?php
-require_once(dirname(__FILE__)."/../Schedule.php");
 
 class SchedulerTests extends PHPUnit_TestCase {
 

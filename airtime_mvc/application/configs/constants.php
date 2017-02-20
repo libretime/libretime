@@ -36,6 +36,10 @@ define('AIRTIME_API_VERSION'    , '1.1');
 // XXX: it's important that we upgrade this every time we add an upgrade!
 define('AIRTIME_CODE_VERSION'   , '2.5.16');
 
+// grab values from env (i'll do this everywhere with a small function if we like it)
+define('LIBRETIME_CONF_DIR', getenv('LIBRETIME_CONF_DIR') ? getenv('LIBRETIME_CONF_DIR') : '/etc/airtime');
+define('LIBRETIME_LOG_DIR', getenv('LIBRETIME_LOG_DIR') ? getenv('LIBRETIME_LOG_DIR') : '/var/log/airtime');
+
 // Defaults
 define('DEFAULT_LOGO_PLACEHOLDER', 1);
 define('DEFAULT_LOGO_FILE', 'images/airtime_logo.png');

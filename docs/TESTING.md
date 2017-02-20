@@ -1,0 +1,38 @@
+# Testing LibreTime
+
+## MVC
+
+The MVC tests are based on PHPUnit and may be found in `airtime_mvc/tests`.
+
+### Prepare environment
+
+PHPUnit will need to be able to access the database and be allowed to
+create the libretime_test database. On a clean install this may be
+set up as follows.
+
+```bash
+psql -c 'CREATE DATABASE libretime;' -U postgres
+psql -c "CREATE USER libretime WITH PASSWORD 'libretime';" -U postgres
+psql -c 'GRANT CONNECT ON DATABASE libretime TO libretime;' -U postgres
+psql -c 'ALTER USER libretime CREATEDB;' -U postgres
+```
+
+In this case the libretime database is only used for the initial connection
+over which the libretime_test database is created.
+
+### Install PHPUnit 
+
+PHPUnit should have already been installed when you ran `composer install`.
+
+If you have not done so, now is the time to do so.
+
+### Run the tests
+
+```bash
+# run all tests
+cd airtime_mvc/tests
+../../vendor/bin/phpunit
+
+# run a subset of tests
+../../vendor/bin/phpunit --filter testEditReatingShowInstance 
+```

@@ -1,7 +1,5 @@
 <?php
 
-require_once "ThirdPartyService.php";
-
 abstract class Application_Service_ThirdPartyCeleryService extends Application_Service_ThirdPartyService {
 
     /**

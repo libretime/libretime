@@ -1,7 +1,5 @@
 <?php
 
-require_once "ThirdPartyCeleryService.php";
-
 /**
  * Service object for dealing with SoundCloud authorization and background tasks
  *

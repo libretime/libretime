@@ -1,6 +1,5 @@
 <?php
 
-require_once 'Acl_plugin.php';
 
 $ccAcl = new Zend_Acl();
 

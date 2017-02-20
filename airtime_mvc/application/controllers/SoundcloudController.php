@@ -1,8 +1,5 @@
 <?php
 
-require_once "ThirdPartyController.php";
-require_once "ise/php-soundcloud/src/Soundcloud/Service.php";
-
 class SoundcloudController extends ThirdPartyController implements OAuth2Controller {
 
     /**
