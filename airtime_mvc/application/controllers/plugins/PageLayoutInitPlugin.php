@@ -224,7 +224,8 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
         }
 
         $view->headScript()->appendScript("var userType = '$userType';");
-        if (array_key_exists('REQUEST_URI', $_SERVER) //Doesn't exist for unit tests
+        if (LIBRETIME_ENABLE_LIVECHAT === true
+            && array_key_exists('REQUEST_URI', $_SERVER) //Doesn't exist for unit tests
             && strpos($_SERVER['REQUEST_URI'], 'Dashboard/stream-player') === false
             && strpos($_SERVER['REQUEST_URI'], 'audiopreview') === false
             && $_SERVER['REQUEST_URI'] != "/") {
