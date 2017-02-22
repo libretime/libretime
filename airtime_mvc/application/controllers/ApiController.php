@@ -135,8 +135,7 @@ class ApiController extends Zend_Controller_Action
      */
     public function pollCeleryAction() {
         $taskManager = TaskManager::getInstance();
-        $clazz = version_compare(phpversion(), '5.5.0', '<') ? get_class(new CeleryTask) : CeleryTask::class;
-        $taskManager->runTask($clazz);
+        $taskManager->runTask('CeleryTask');
     }
 
     /**
