@@ -350,8 +350,7 @@ class TaskFactory {
      * @return bool true if the class $c implements AirtimeTask
      */
     private static function _isTask($c) {
-        $reflect = new ReflectionClass($c);
-        return $reflect->implementsInterface('AirtimeTask');
+        return is_a('AirtimeTask', $c, true);
     }
 
     /**

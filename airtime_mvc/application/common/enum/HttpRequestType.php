@@ -1,6 +1,6 @@
 <?php
 
-final class HttpRequestType extends Enum {
+final class HttpRequestType {
 
     const GET = "GET";
     const POST = "POST";
