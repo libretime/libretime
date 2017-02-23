@@ -443,7 +443,7 @@ class LibraryController extends Zend_Controller_Action
         $this->_helper->layout->disableLayout();
 
 
-        if (!Billing::isStationPodcastAllowed()) {
+        if (LIBRETIME_ENABLE_BILLING === true && !Billing::isStationPodcastAllowed()) {
             $this->renderScript("podcast/featureupgrade-pane.phtml");
         }
 

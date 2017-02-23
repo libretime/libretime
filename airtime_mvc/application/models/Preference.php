@@ -1573,7 +1573,7 @@ class Application_Model_Preference
      * @return int either 0 (public) or 1 (private)
      */
     public static function getStationPodcastPrivacy() {
-        if (!Billing::isStationPodcastAllowed()) {
+        if (LIBRETIME_ENABLE_BILLING === true && !Billing::isStationPodcastAllowed()) {
             // return private setting
             return 1;
         }
