@@ -22,6 +22,26 @@ class Application_Form_StreamSetting extends Zend_Form
 
         $setting = $this->setting;
 
+        $output_sound_device = new Zend_Form_Element_Checkbox('output_sound_device');
+        $output_sound_device->setLabel(_('Hardware Audio Output:'))
+                            ->setRequired(false)
+                            ->setValue(($setting['output_sound_device'] == "true")?1:0)
+                            ->setDecorators(array('ViewHelper'));
+        $this->addElement($output_sound_device);
+
+        $output_sound_device_type = new Zend_Form_Element_Select('output_sound_device_type');
+        $output_sound_device_type->setLabel(_('Output Type'))
+            ->setMultiOptions(array(
+                "ALSA"=>_("ALSA"),
+                "AO"=>_("AO"),
+                "OSS"=>_("OSS"),
+                "Portaudio"=>_("Portaudio"),
+                "Pulseaudio"=>_("Pulseaudio"),
+                "Jack"=>_("Jack")))
+            ->setValue(isset($setting['output_sound_device_type'])?$setting['output_sound_device_type']:0)
+            ->setDecorators(array('ViewHelper'));
+        $this->addElement($output_sound_device_type);
+
         $icecast_vorbis_metadata = new Zend_Form_Element_Checkbox('icecast_vorbis_metadata');
         $icecast_vorbis_metadata->setLabel(_('Icecast Vorbis Metadata'))
                                 ->setRequired(false)

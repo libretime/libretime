@@ -456,7 +456,7 @@ loud "          * Installing Airtime Services *            "
 loud "-----------------------------------------------------"
 
 verbose "\n * Installing necessary python services..."
-loudCmd "pip install setuptools"
+loudCmd "pip install setuptools --upgrade"
 verbose "...Done"
 
 verbose "\n * Creating /run/airtime..."
