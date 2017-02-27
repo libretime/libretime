@@ -50,23 +50,26 @@ class Config {
             $CC_CONFIG['staticBaseDir'] = '/';
         }
 
+        // Commented out for open-source version until cloud storage implemented
         // Parse separate conf file for cloud storage values
-        $cloudStorageConfig = "/etc/airtime-saas/".$CC_CONFIG['dev_env']."/cloud_storage.conf";
-        if (!file_exists($cloudStorageConfig)) {
+        // $cloudStorageConfig = "/etc/airtime-saas/".$CC_CONFIG['dev_env']."/cloud_storage.conf";
+        // if (!file_exists($cloudStorageConfig)) {
             // If the dev env specific cloud_storage.conf doesn't exist default
             // to the production cloud_storage.conf
-            $cloudStorageConfig = "/etc/airtime-saas/production/cloud_storage.conf";
-        }
-        $cloudStorageValues = parse_ini_file($cloudStorageConfig, true);
+        //    $cloudStorageConfig = "/etc/airtime-saas/production/cloud_storage.conf";
+        //}
+        //$cloudStorageValues = parse_ini_file($cloudStorageConfig, true);
         
-        $CC_CONFIG["supportedStorageBackends"] = array('amazon_S3');
-        foreach ($CC_CONFIG["supportedStorageBackends"] as $backend) {
-            $CC_CONFIG[$backend] = $cloudStorageValues[$backend];
-        }
+        //$CC_CONFIG["supportedStorageBackends"] = array('amazon_S3');
+        //foreach ($CC_CONFIG["supportedStorageBackends"] as $backend) {
+        //    $CC_CONFIG[$backend] = $cloudStorageValues[$backend];
+        //}
         
         // Tells us where file uploads will be uploaded to.
         // It will either be set to a cloud storage backend or local file storage.
-        $CC_CONFIG["current_backend"] = $cloudStorageValues["current_backend"]["storage_backend"];
+        // $CC_CONFIG["current_backend"] = $cloudStorageValues["current_backend"]["storage_backend"];
+    // Currently only the local file storage is implemented
+        $CC_CONFIG["current_backend"] = "file";
 
         $CC_CONFIG['cache_ahead_hours'] = $values['general']['cache_ahead_hours'];
         
@@ -90,12 +93,13 @@ class Config {
         if (!file_exists($globalAirtimeConfig)) {
             // If the dev env specific airtime.conf doesn't exist default
             // to the production airtime.conf
-            $globalAirtimeConfig = "/etc/airtime-saas/production/airtime.conf";
+            $globalAirtimeConfig = "/etc/airtime/airtime.conf";
         }
         $globalAirtimeConfigValues = parse_ini_file($globalAirtimeConfig, true);
-        $CC_CONFIG['soundcloud-client-id'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_client_id'];
-        $CC_CONFIG['soundcloud-client-secret'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_client_secret'];
-        $CC_CONFIG['soundcloud-redirect-uri'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_redirect_uri'];
+        // commented out soundcloud config until it can be tested
+        //$CC_CONFIG['soundcloud-client-id'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_client_id'];
+        //$CC_CONFIG['soundcloud-client-secret'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_client_secret'];
+        //$CC_CONFIG['soundcloud-redirect-uri'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_redirect_uri'];
         if (isset($globalAirtimeConfigValues['facebook']['facebook_app_id'])) {
             $CC_CONFIG['facebook-app-id'] = $globalAirtimeConfigValues['facebook']['facebook_app_id'];
             $CC_CONFIG['facebook-app-url'] = $globalAirtimeConfigValues['facebook']['facebook_app_url'];
