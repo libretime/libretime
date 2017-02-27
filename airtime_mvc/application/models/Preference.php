@@ -1508,6 +1508,15 @@ class Application_Model_Preference
     {
         self::setValue("whats_new_dialog_viewed", $value, true);
     }
+    
+    public static function getAutoPlaylistPollLock() {
+        return self::getValue("autoplaylist_poll_lock");
+    }
+
+    public static function setAutoPlaylistPollLock($value)
+    {
+        self::setValue("autoplaylist_poll_lock", $value);
+    }
 
     public static function getPodcastPollLock() {
         return self::getValue("podcast_poll_lock");
@@ -1597,9 +1606,9 @@ class Application_Model_Preference
         if (empty($val)) {
             // Set and return the plan defaults
             // TODO: remove this once all existing customers have this pref set
-            $planType = self::GetPlanLevel();
-            $val = Billing::$PLAN_TYPE_DEFAULTS[$planType]["bandwidth_limit"];
-            self::setBandwidthLimit($val);
+//            $planType = self::GetPlanLevel();
+//            $val = Billing::$PLAN_TYPE_DEFAULTS[$planType]["bandwidth_limit"];
+//            self::setBandwidthLimit($val);
         }
         return $val;
     }

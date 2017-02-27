@@ -20,6 +20,7 @@ class Application_Service_ShowFormService
     public function createShowForms()
     {
         $formWhat    = new Application_Form_AddShowWhat();
+	$formAutoPlaylist = new Application_Form_AddShowAutoPlaylist();
         $formWho     = new Application_Form_AddShowWho();
         $formWhen    = new Application_Form_AddShowWhen();
         $formRepeats = new Application_Form_AddShowRepeats();
@@ -30,6 +31,7 @@ class Application_Service_ShowFormService
         $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
 
         $formWhat->removeDecorator('DtDdWrapper');
+	$formAutoPlaylist->removeDecorator('DtDdWrapper');
         $formWho->removeDecorator('DtDdWrapper');
         $formWhen->removeDecorator('DtDdWrapper');
         $formRepeats->removeDecorator('DtDdWrapper');
@@ -41,6 +43,7 @@ class Application_Service_ShowFormService
 
         $forms = array();
         $forms["what"] = $formWhat;
+	$forms["autoplaylist"] = $formAutoPlaylist;
         $forms["who"] = $formWho;
         $forms["when"] = $formWhen;
         $forms["repeats"] = $formRepeats;
@@ -55,10 +58,10 @@ class Application_Service_ShowFormService
 
     /**
      * 
-     * Popluates the what, when, and repeat forms
+     * Popluates the what, autoplaylist, when, and repeat forms
      * with default values
      */
-    public function populateNewShowForms($formWhat, $formWhen, $formRepeats)
+    public function populateNewShowForms($formWhat,  $formWhen, $formRepeats)
     {
         $formWhat->populate(
             array('add_show_id' => '-1',
@@ -93,6 +96,7 @@ class Application_Service_ShowFormService
          */
         $forms["what"]->makeReadonly();
         $forms["what"]->enableInstanceDesc();
+	$forms["autoplaylist"]->disable();
         $forms["repeats"]->disable();
         $forms["who"]->disable();
         $forms["style"]->disable();
@@ -115,6 +119,7 @@ class Application_Service_ShowFormService
     {
         $this->populateFormWhat($forms["what"]);
         //local show start DT
+	$this->populateFormAutoPlaylist($forms["autoplaylist"]);
         $showStart = $this->populateFormWhen($forms["when"]);
         $this->populateFormRepeats($forms["repeats"], $showStart);
         $this->populateFormWho($forms["who"]);
@@ -125,10 +130,11 @@ class Application_Service_ShowFormService
         $this->populateFormRebroadcastAbsolute($forms["abs_rebroadcast"]);
     }
 
-    private function populateFormWhat($form)
+     private function populateFormWhat($form)
     {
         $ccShowInstance = CcShowInstancesQuery::create()->findPk($this->instanceId);
     	
+        
     	$form->populate(
             array(
                 'add_show_instance_id' => $this->instanceId,
@@ -137,10 +143,27 @@ class Application_Service_ShowFormService
                 'add_show_url' => $this->ccShow->getDbUrl(),
                 'add_show_genre' => $this->ccShow->getDbGenre(),
                 'add_show_description' => $this->ccShow->getDbDescription(),
-        		'add_show_instance_description' => $ccShowInstance->getDbDescription()));
+        		'add_show_instance_description' => $ccShowInstance->getDbDescription(),
+            ));
+    }
+    private function populateFormAutoPlaylist($form)
+    {
+        $ccShowInstance = CcShowInstancesQuery::create()->findPk($this->instanceId);
+    	
+        if (!$this->ccShow->getDbAutoPlaylistId()) {
+//            $form->disableAutoPlaylist();
+        }
+        
+    	$form->populate(
+            array(
+               'add_show_has_autoplaylist' => $this->ccShow->getDbHasAutoPlaylist() ? 1 : 0,
+               'add_show_autoplaylist_id' => $this->ccShow->getDbAutoPlaylistId()
+                
+            ));
     }
 
-    private function populateFormWhen($form)
+
+   private function populateFormWhen($form)
     {
         if ($this->ccShow->isRepeating()) {
             $ccShowDay = $this->ccShow->getFirstRepeatingCcShowDay();
@@ -503,6 +526,7 @@ class Application_Service_ShowFormService
         $originalStartDate=null, $editShow=false, $instanceId=null)
     {
         $what = $forms["what"]->isValid($formData);
+        $autoplaylist = $forms["autoplaylist"]->isValid($formData);
         $live = $forms["live"]->isValid($formData);
         $record = $forms["record"]->isValid($formData);
         $who = $forms["who"]->isValid($formData);
@@ -556,7 +580,7 @@ class Application_Service_ShowFormService
             }
         }
 
-        return ($what && $live && $record && $who && $style && $when &&
+        return ($what && $autoplaylist && $live && $record && $who && $style && $when &&
             $repeats && $absRebroadcast && $rebroadcast);
     }
     

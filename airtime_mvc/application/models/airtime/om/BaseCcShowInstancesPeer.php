@@ -24,13 +24,13 @@ abstract class BaseCcShowInstancesPeer
     const TM_CLASS = 'CcShowInstancesTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 13;
+    const NUM_COLUMNS = 14;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 13;
+    const NUM_HYDRATE_COLUMNS = 14;
 
     /** the column name for the id field */
     const ID = 'cc_show_instances.id';
@@ -71,6 +71,9 @@ abstract class BaseCcShowInstancesPeer
     /** the column name for the modified_instance field */
     const MODIFIED_INSTANCE = 'cc_show_instances.modified_instance';
 
+    /** the column name for the autoplaylist_built field */
+    const AUTOPLAYLIST_BUILT = 'cc_show_instances.autoplaylist_built';
+
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
 
@@ -90,12 +93,12 @@ abstract class BaseCcShowInstancesPeer
      * e.g. CcShowInstancesPeer::$fieldNames[CcShowInstancesPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbDescription', 'DbStarts', 'DbEnds', 'DbShowId', 'DbRecord', 'DbRebroadcast', 'DbOriginalShow', 'DbRecordedFile', 'DbTimeFilled', 'DbCreated', 'DbLastScheduled', 'DbModifiedInstance', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbDescription', 'dbStarts', 'dbEnds', 'dbShowId', 'dbRecord', 'dbRebroadcast', 'dbOriginalShow', 'dbRecordedFile', 'dbTimeFilled', 'dbCreated', 'dbLastScheduled', 'dbModifiedInstance', ),
-        BasePeer::TYPE_COLNAME => array (CcShowInstancesPeer::ID, CcShowInstancesPeer::DESCRIPTION, CcShowInstancesPeer::STARTS, CcShowInstancesPeer::ENDS, CcShowInstancesPeer::SHOW_ID, CcShowInstancesPeer::RECORD, CcShowInstancesPeer::REBROADCAST, CcShowInstancesPeer::INSTANCE_ID, CcShowInstancesPeer::FILE_ID, CcShowInstancesPeer::TIME_FILLED, CcShowInstancesPeer::CREATED, CcShowInstancesPeer::LAST_SCHEDULED, CcShowInstancesPeer::MODIFIED_INSTANCE, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'DESCRIPTION', 'STARTS', 'ENDS', 'SHOW_ID', 'RECORD', 'REBROADCAST', 'INSTANCE_ID', 'FILE_ID', 'TIME_FILLED', 'CREATED', 'LAST_SCHEDULED', 'MODIFIED_INSTANCE', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'description', 'starts', 'ends', 'show_id', 'record', 'rebroadcast', 'instance_id', 'file_id', 'time_filled', 'created', 'last_scheduled', 'modified_instance', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
+        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbDescription', 'DbStarts', 'DbEnds', 'DbShowId', 'DbRecord', 'DbRebroadcast', 'DbOriginalShow', 'DbRecordedFile', 'DbTimeFilled', 'DbCreated', 'DbLastScheduled', 'DbModifiedInstance', 'DbAutoPlaylistBuilt', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbDescription', 'dbStarts', 'dbEnds', 'dbShowId', 'dbRecord', 'dbRebroadcast', 'dbOriginalShow', 'dbRecordedFile', 'dbTimeFilled', 'dbCreated', 'dbLastScheduled', 'dbModifiedInstance', 'dbAutoPlaylistBuilt', ),
+        BasePeer::TYPE_COLNAME => array (CcShowInstancesPeer::ID, CcShowInstancesPeer::DESCRIPTION, CcShowInstancesPeer::STARTS, CcShowInstancesPeer::ENDS, CcShowInstancesPeer::SHOW_ID, CcShowInstancesPeer::RECORD, CcShowInstancesPeer::REBROADCAST, CcShowInstancesPeer::INSTANCE_ID, CcShowInstancesPeer::FILE_ID, CcShowInstancesPeer::TIME_FILLED, CcShowInstancesPeer::CREATED, CcShowInstancesPeer::LAST_SCHEDULED, CcShowInstancesPeer::MODIFIED_INSTANCE, CcShowInstancesPeer::AUTOPLAYLIST_BUILT, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'DESCRIPTION', 'STARTS', 'ENDS', 'SHOW_ID', 'RECORD', 'REBROADCAST', 'INSTANCE_ID', 'FILE_ID', 'TIME_FILLED', 'CREATED', 'LAST_SCHEDULED', 'MODIFIED_INSTANCE', 'AUTOPLAYLIST_BUILT', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'description', 'starts', 'ends', 'show_id', 'record', 'rebroadcast', 'instance_id', 'file_id', 'time_filled', 'created', 'last_scheduled', 'modified_instance', 'autoplaylist_built', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
     );
 
     /**
@@ -105,12 +108,12 @@ abstract class BaseCcShowInstancesPeer
      * e.g. CcShowInstancesPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbDescription' => 1, 'DbStarts' => 2, 'DbEnds' => 3, 'DbShowId' => 4, 'DbRecord' => 5, 'DbRebroadcast' => 6, 'DbOriginalShow' => 7, 'DbRecordedFile' => 8, 'DbTimeFilled' => 9, 'DbCreated' => 10, 'DbLastScheduled' => 11, 'DbModifiedInstance' => 12, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbDescription' => 1, 'dbStarts' => 2, 'dbEnds' => 3, 'dbShowId' => 4, 'dbRecord' => 5, 'dbRebroadcast' => 6, 'dbOriginalShow' => 7, 'dbRecordedFile' => 8, 'dbTimeFilled' => 9, 'dbCreated' => 10, 'dbLastScheduled' => 11, 'dbModifiedInstance' => 12, ),
-        BasePeer::TYPE_COLNAME => array (CcShowInstancesPeer::ID => 0, CcShowInstancesPeer::DESCRIPTION => 1, CcShowInstancesPeer::STARTS => 2, CcShowInstancesPeer::ENDS => 3, CcShowInstancesPeer::SHOW_ID => 4, CcShowInstancesPeer::RECORD => 5, CcShowInstancesPeer::REBROADCAST => 6, CcShowInstancesPeer::INSTANCE_ID => 7, CcShowInstancesPeer::FILE_ID => 8, CcShowInstancesPeer::TIME_FILLED => 9, CcShowInstancesPeer::CREATED => 10, CcShowInstancesPeer::LAST_SCHEDULED => 11, CcShowInstancesPeer::MODIFIED_INSTANCE => 12, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'DESCRIPTION' => 1, 'STARTS' => 2, 'ENDS' => 3, 'SHOW_ID' => 4, 'RECORD' => 5, 'REBROADCAST' => 6, 'INSTANCE_ID' => 7, 'FILE_ID' => 8, 'TIME_FILLED' => 9, 'CREATED' => 10, 'LAST_SCHEDULED' => 11, 'MODIFIED_INSTANCE' => 12, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'description' => 1, 'starts' => 2, 'ends' => 3, 'show_id' => 4, 'record' => 5, 'rebroadcast' => 6, 'instance_id' => 7, 'file_id' => 8, 'time_filled' => 9, 'created' => 10, 'last_scheduled' => 11, 'modified_instance' => 12, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
+        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbDescription' => 1, 'DbStarts' => 2, 'DbEnds' => 3, 'DbShowId' => 4, 'DbRecord' => 5, 'DbRebroadcast' => 6, 'DbOriginalShow' => 7, 'DbRecordedFile' => 8, 'DbTimeFilled' => 9, 'DbCreated' => 10, 'DbLastScheduled' => 11, 'DbModifiedInstance' => 12, 'DbAutoPlaylistBuilt' => 13, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbDescription' => 1, 'dbStarts' => 2, 'dbEnds' => 3, 'dbShowId' => 4, 'dbRecord' => 5, 'dbRebroadcast' => 6, 'dbOriginalShow' => 7, 'dbRecordedFile' => 8, 'dbTimeFilled' => 9, 'dbCreated' => 10, 'dbLastScheduled' => 11, 'dbModifiedInstance' => 12, 'dbAutoPlaylistBuilt' => 13, ),
+        BasePeer::TYPE_COLNAME => array (CcShowInstancesPeer::ID => 0, CcShowInstancesPeer::DESCRIPTION => 1, CcShowInstancesPeer::STARTS => 2, CcShowInstancesPeer::ENDS => 3, CcShowInstancesPeer::SHOW_ID => 4, CcShowInstancesPeer::RECORD => 5, CcShowInstancesPeer::REBROADCAST => 6, CcShowInstancesPeer::INSTANCE_ID => 7, CcShowInstancesPeer::FILE_ID => 8, CcShowInstancesPeer::TIME_FILLED => 9, CcShowInstancesPeer::CREATED => 10, CcShowInstancesPeer::LAST_SCHEDULED => 11, CcShowInstancesPeer::MODIFIED_INSTANCE => 12, CcShowInstancesPeer::AUTOPLAYLIST_BUILT => 13, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'DESCRIPTION' => 1, 'STARTS' => 2, 'ENDS' => 3, 'SHOW_ID' => 4, 'RECORD' => 5, 'REBROADCAST' => 6, 'INSTANCE_ID' => 7, 'FILE_ID' => 8, 'TIME_FILLED' => 9, 'CREATED' => 10, 'LAST_SCHEDULED' => 11, 'MODIFIED_INSTANCE' => 12, 'AUTOPLAYLIST_BUILT' => 13, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'description' => 1, 'starts' => 2, 'ends' => 3, 'show_id' => 4, 'record' => 5, 'rebroadcast' => 6, 'instance_id' => 7, 'file_id' => 8, 'time_filled' => 9, 'created' => 10, 'last_scheduled' => 11, 'modified_instance' => 12, 'autoplaylist_built' => 13, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
     );
 
     /**
@@ -197,6 +200,7 @@ abstract class BaseCcShowInstancesPeer
             $criteria->addSelectColumn(CcShowInstancesPeer::CREATED);
             $criteria->addSelectColumn(CcShowInstancesPeer::LAST_SCHEDULED);
             $criteria->addSelectColumn(CcShowInstancesPeer::MODIFIED_INSTANCE);
+            $criteria->addSelectColumn(CcShowInstancesPeer::AUTOPLAYLIST_BUILT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.description');
@@ -211,6 +215,7 @@ abstract class BaseCcShowInstancesPeer
             $criteria->addSelectColumn($alias . '.created');
             $criteria->addSelectColumn($alias . '.last_scheduled');
             $criteria->addSelectColumn($alias . '.modified_instance');
+            $criteria->addSelectColumn($alias . '.autoplaylist_built');
         }
     }
 

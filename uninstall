@@ -105,6 +105,11 @@ if [[ "$IN" = "y" || "$IN" = "Y" ]]; then
     dropAirtimeDatabase
 fi
 
-pip uninstall -y airtime-playout airtime-media-monitor
+# pip uninstall -y airtime-playout airtime-media-monitor
+pip uninstall -y airtime-playout
+if [[ $(pip list | grep airtime-media-monitor) ]]; then
+    pip uninstall -y airtime-playout airtime-media-monitor
+fi
+
 service apache2 restart
 echo "...Done"
