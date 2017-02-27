@@ -50,6 +50,8 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetDefaultTimezone($values["timezone"]);
                 Application_Model_Preference::SetWeekStartDay($values["weekStartDay"]);
                 Application_Model_Preference::setRadioPageDisplayLoginButton($values["radioPageLoginButton"]);
+                Application_Model_Preference::SetDiskQuota(($values["diskQuota"] * 1073741824));
+	
 
                 $logoUploadElement = $form->getSubForm('preferences_general')->getElement('stationLogo');
                 $logoUploadElement->receive();
@@ -66,13 +68,13 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::setTuneinPartnerId($values["tunein_partner_id"]);
 
                 // SoundCloud Preferences
-        // Commenting out until working
-        /*
+		// Commenting out until working
+		/*
                 if (Billing::isStationPodcastAllowed()) {
                     Application_Model_Preference::setDefaultSoundCloudLicenseType($values["SoundCloudLicense"]);
                     Application_Model_Preference::setDefaultSoundCloudSharingType($values["SoundCloudSharing"]);
                 }
-        */
+		*/
 
                 $this->view->statusMsg = "<div class='success'>". _("Preferences updated.")."</div>";
                 $form = new Application_Form_Preferences();

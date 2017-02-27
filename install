@@ -596,6 +596,12 @@ verbose "\n * Setting RabbitMQ user permissions..."
 #loudCmd "rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} \"$EXCHANGES\" \"$EXCHANGES\" \"$EXCHANGES\""
 loudCmd "rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} .\* .\* .\*"
 
+# added the following for upgrade users - probably will take out the saas anyways
+if [ ! -d "/etc/airtime-saas" ]; then
+    mkdir /etc/airtime-saas
+    mkdir -p /etc/airtime-saas/production
+fi
+
 if [ ! -d "/etc/airtime" ]; then
     loud "\n-----------------------------------------------------"
     loud "                * Installing Airtime *               "
@@ -603,10 +609,14 @@ if [ ! -d "/etc/airtime" ]; then
 
     verbose "\n * Creating /etc/airtime/ directory..."
     mkdir /etc/airtime
+fi
+if [ ! -d "/etc/airtime-saas" ]; then
     verbose "\n * Creating /etc/airtime-saas/ directory..."
+    mkdir /etc/airtime-saas
     # Default saas directory for the analyzer, cloud storage, and celery
     mkdir -p /etc/airtime-saas/production
 fi
+
 chown -R ${web_user}:${web_user} /etc/airtime
 chown -R ${web_user}:${web_user} /etc/airtime-saas
 

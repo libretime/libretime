@@ -18,6 +18,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 
         $defaultFadeIn = Application_Model_Preference::GetDefaultFadeIn();
         $defaultFadeOut = Application_Model_Preference::GetDefaultFadeOut();
+	$defaultDiskQuota = (Application_Model_Preference::GetDiskQuota() / 1073741824);
 
         //Station name
         $this->addElement('text', 'stationName', array(
@@ -128,6 +129,20 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $timezone->setMultiOptions(Application_Common_Timezone::getTimezones());
         $timezone->setValue(Application_Model_Preference::GetDefaultTimezone());
         $this->addElement($timezone);
+
+	/* Form Element for setting the Disk Storage Quota */
+	$this->addElement('text', 'diskQuota', array(
+		'class' => 'input_text',
+ 		'label' => _('Disk Storage Quota in GB'),
+		'required' => true,
+		'filters' => array('StringTrim'),
+		'validators' => array(
+			$rangeValidator,
+			$notEmptyValidator,
+			array('regex', false, array('/^[0-9]+(\.\d+)?$/', 'messages' => _('Please enter a size in gigabytes (eg. 2)')))
+		),
+		'value' => $defaultDiskQuota,
+		));
 
         /* Form Element for setting which day is the start of the week */
         $week_start_day = new Zend_Form_Element_Select("weekStartDay");
