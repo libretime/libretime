@@ -223,6 +223,37 @@ class CeleryTask implements AirtimeTask {
 }
 
 /**
+ * 
+ * Class AutoPlaylistTask
+ *
+ * Checks for shows with an autoplaylist that needs to be filled in
+ * 
+ */
+class AutoPlaylistTask implements AirtimeTask
+{
+
+    /**
+     * Checks whether or not the autoplaylist polling interval has passed
+     *
+     * @return bool true if the autoplaylist polling interval has passed
+     */
+    public function shouldBeRun()
+    {
+        return AutoPlaylistManager::hasAutoPlaylistPollIntervalPassed();
+    }
+
+    /**
+     *  Schedule the autoplaylist for the shows
+     */
+    public function run()
+    {
+        AutoPlaylistManager::buildAutoPlaylist();
+    }
+}
+
+
+
+/**
  * Class PodcastTask
  *
  * Checks podcasts marked for automatic ingest and downloads any new episodes

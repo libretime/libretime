@@ -48,13 +48,15 @@ $pages = array(
                 'module'     => 'default',
                 'controller' => 'embeddablewidgets',
                 'action'     => 'schedule',
-            ),
+            )
+	    /* commenting out to avoid error until Facebook embed widget is fixed
             array(
                 'label'      => _('Facebook'),
                 'module'     => 'default',
                 'controller' => 'embeddablewidgets',
                 'action'     => 'facebook',
             )
+           */
         )
     ),
     array(
@@ -175,11 +177,6 @@ $pages = array(
                 'label'      => _('User Manual'),
                 'uri'        => USER_MANUAL_URL,
                 'target'     => "_blank"
-            ),
-            array(
-                'label'     => _('File a Support Ticket'),
-                'uri'       => SUPPORT_TICKET_URL,
-                'target'    => "_blank"
             ),
             array(
                 'label'      => _(sprintf("Help Translate %s", PRODUCT_NAME)),

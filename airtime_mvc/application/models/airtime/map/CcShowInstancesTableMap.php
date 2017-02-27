@@ -52,6 +52,7 @@ class CcShowInstancesTableMap extends TableMap
         $this->addColumn('created', 'DbCreated', 'TIMESTAMP', true, null, null);
         $this->addColumn('last_scheduled', 'DbLastScheduled', 'TIMESTAMP', false, null, null);
         $this->addColumn('modified_instance', 'DbModifiedInstance', 'BOOLEAN', true, null, false);
+        $this->addColumn('autoplaylist_built', 'DbAutoPlaylistBuilt', 'BOOLEAN', true, null, false);
         // validators
     } // initialize()
 

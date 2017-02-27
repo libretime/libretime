@@ -131,7 +131,8 @@ class LibraryController extends Zend_Controller_Action
             // is a cloud_file and handle it appropriately.
             $url = $baseUrl."api/get-media/file/$id/download/true";
             $menu["download"] = array("name" => _("Download"), "icon" => "download", "url" => $url);
-
+            // COMMENTING OUT AS CURRENTLY NOT WORKING
+        /*
             // SOUNDCLOUD MENU OPTION
             $ownerId = empty($obj) ? $file->getFileOwnerId() : $obj->getCreatorId();
             if ($isAdminOrPM || $ownerId == $user->getId()) {
@@ -153,6 +154,7 @@ class LibraryController extends Zend_Controller_Action
                     }
                 }
             }
+            */
         } elseif ($type === "playlist" || $type === "block") {
             if ($type === 'playlist') {
                 $obj = new Application_Model_Playlist($id);

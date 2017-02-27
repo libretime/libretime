@@ -231,6 +231,9 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             && $_SERVER['REQUEST_URI'] != "/") {
             $plan_level = strval(Application_Model_Preference::GetPlanLevel());
             // Since the Hobbyist plan doesn't come with Live Chat support, don't enable it
+	    // airtime.pro
+            // this needs to be removed as it is simply airtime pro stuff commenting out for now
+	    /*
             if (Application_Model_Preference::GetLiveChatEnabled() && $plan_level !== 'hobbyist') {
                 $client_id = strval(Application_Model_Preference::GetClientId());
                 $station_url = $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
@@ -239,6 +242,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
                     "var livechat_station_url = 'http://$station_url';");
                 $view->headScript()->appendFile($baseUrl . 'js/airtime/common/livechat.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
             }
+            */
         }
 
         /*

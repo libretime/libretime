@@ -27,7 +27,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
             'class'      => 'input_text',
             'required'   => true,
             'filters'    => array('StringTrim'),
-            'value'      => _('Untitled Show'),
+            'value'      => _('New Show'),
             'validators' => array($notEmptyValidator, array('StringLength', false, array(0, $maxLens['name'])))
         ));
 
@@ -39,7 +39,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
             'filters'    => array('StringTrim'),
             'validators' => array($notEmptyValidator, array('StringLength', false, array(0, $maxLens['url'])))
         ));
-
+ 
          // Add genre element
         $this->addElement('text', 'add_show_genre', array(
             'label'      => _('Genre:'),
@@ -59,6 +59,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
 
         $descText = $this->getElement('add_show_description');
 
+
         $descText->setDecorators(array(array('ViewScript', array(
             'viewScript' => 'form/add-show-block.phtml',
             'class'      => 'block-display'
@@ -73,15 +74,36 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
         ));
         
         $instanceDesc = $this->getElement('add_show_instance_description');
-        
+       
         $instanceDesc->setDecorators(array(array('ViewScript', array(
         		'viewScript' => 'form/add-show-block.phtml',
         		'class'      => 'block-display'
         ))));
         $instanceDesc->setAttrib('disabled','disabled');
+
     }
+
+
+private function getPlaylistNames()
+{
+    $playlistNames = array(NULL  => _("None"));
     
-    /**
+
+    $playlists = CcPlaylistQuery::create()
+        ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
+        ->find();
+
+    foreach ($playlists as $playlist) {
+
+        $playlistNames[$playlist->getDbId()] = $playlist->getDbName();
+    }
+
+    return $playlistNames;
+}
+
+
+
+/**
      * Enable the instance description when editing a show instance
      */
     public function enableInstanceDesc()

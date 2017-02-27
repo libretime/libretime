@@ -626,6 +626,7 @@ class ScheduleController extends Zend_Controller_Action
         }
 
         $this->view->what = $forms["what"];
+        $this->view->autoplaylist = $forms["autoplaylist"];
         $this->view->when = $forms["when"];
         $this->view->repeats = $forms["repeats"];
         $this->view->live = $forms["live"];
