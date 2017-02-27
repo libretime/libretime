@@ -83,6 +83,8 @@ class Application_Model_RabbitMq
     public static function getRmqConfigPath() {
         //Hack for Airtime Pro. The RabbitMQ settings for communicating with airtime_analyzer are global
         //and shared between all instances on Airtime Pro.
+    //This is unnecessary for individual servers using this software commenting out and returning individual instance config
+        /*
         $CC_CONFIG = Config::getConfig();
         $devEnv = "production"; //Default
         if (array_key_exists("dev_env", $CC_CONFIG)) {
@@ -94,6 +96,8 @@ class Application_Model_RabbitMq
             // to the production rabbitmq-analyzer.ini
             $rmq_config_path = "/etc/airtime-saas/production/rabbitmq-analyzer.ini";
         }
+        */
+        $rmq_config_path = "/etc/airtime/airtime.conf";
         return $rmq_config_path;
     }
 
