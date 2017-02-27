@@ -160,6 +160,8 @@ CREATE TABLE "cc_show"
     "linked" BOOLEAN DEFAULT 'f' NOT NULL,
     "is_linkable" BOOLEAN DEFAULT 't' NOT NULL,
     "image_path" VARCHAR(255) DEFAULT '',
+    "has_autoplaylist" BOOLEAN DEFAULT 'f' NOT NULL,
+    "autoplaylist_id" INTEGER,
     PRIMARY KEY ("id")
 );
 
@@ -184,6 +186,7 @@ CREATE TABLE "cc_show_instances"
     "created" TIMESTAMP NOT NULL,
     "last_scheduled" TIMESTAMP,
     "modified_instance" BOOLEAN DEFAULT 'f' NOT NULL,
+    "autoplaylist_built" BOOLEAN DEFAULT 'f' NOT NULL,
     PRIMARY KEY ("id")
 );
 
@@ -799,6 +802,11 @@ ALTER TABLE "cc_perms" ADD CONSTRAINT "cc_perms_subj_fkey"
     FOREIGN KEY ("subj")
     REFERENCES "cc_subjs" ("id")
     ON DELETE CASCADE;
+
+ALTER TABLE "cc_show" ADD CONSTRAINT "cc_playlist_fkey"
+    FOREIGN KEY ("autoplaylist_id")
+    REFERENCES "cc_playlist" ("id")
+    ON DELETE SET NULL;
 
 ALTER TABLE "cc_show_instances" ADD CONSTRAINT "cc_show_fkey"
     FOREIGN KEY ("show_id")

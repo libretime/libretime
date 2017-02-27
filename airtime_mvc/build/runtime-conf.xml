@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
+  <log>
+    <type>file</type>
+    <name>./propel.log</name>
+    <ident>propel</ident>
+    <level>7</level>
+    <conf></conf>
+  </log>
   <propel>
     <datasources default="airtime">
       <datasource id="airtime">

@@ -267,6 +267,13 @@ function setAddShowEvents(form) {
         }
     });
 
+    if(!form.find("#add_show_has_autoplaylist").attr('checked')) {
+        form.find("#add_show_playlist_dropdown").hide();
+    }
+    else {
+        $("#add_show_playlist_dropdown").show();
+    }
+
 
     if(!form.find("#add_show_repeats").attr('checked')) {
         form.find("#schedule-show-when > fieldset:last").hide();
@@ -290,6 +297,22 @@ function setAddShowEvents(form) {
     
     var submitButton = $(".button-bar.bottom").find(".add-show-submit");
     $("[id^=add_show_instance_description]").toggle(submitButton.attr("data-action") === "edit-repeating-show-instance");
+
+    form.find("#add_show_has_autoplaylist").click(function(){
+        $(this).blur();
+        form.find("#add_show_playlist_dropdown").toggle();
+        
+        var checkBoxSelected = false;
+        
+        //must switch rebroadcast displays
+        if(form.find("#add_show_has_autoplaylist").attr('checked')) {
+        form.find("#add_show_playlist_dropdown").show();
+        }
+        else {
+	form.find("#add_show_playlist_downdown").hide();
+	}
+    });
+
 
     form.find("#add_show_repeats").click(function(){
         $(this).blur();
