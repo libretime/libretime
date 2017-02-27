@@ -154,6 +154,11 @@
     <column name="image_path" phpName="DbImagePath" type="VARCHAR" size="255" required="false" defaultValue=""/>
     <!-- Fully qualified path for the image associated with this show. 
          Default is /path/to/stor/dir/:ownerId/show-images/:showId/imageName -->
+    <column name="has_autoplaylist" phpName="DbHasAutoPlaylist" type="BOOLEAN" required="true" defaultValue="false"/>
+    <column name="autoplaylist_id" phpName="DbAutoPlaylistId" type="INTEGER" required="false" defaultValue="NULL"/>
+    <foreign-key foreignTable="cc_playlist" name="cc_playlist_fkey" onDelete="SETNULL">
+        <reference local="autoplaylist_id" foreign="id"/>
+    </foreign-key>
   </table>
   <table name="cc_show_instances" phpName="CcShowInstances">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
@@ -173,6 +178,7 @@
      instances can be regenerated if we edit the show, which is unwanted behaviour. This column serves
      to ensure that we don't regenerate the instance. -->
     <column name="modified_instance" phpName="DbModifiedInstance" type="BOOLEAN" required="true" defaultValue="false" />
+    <column name="autoplaylist_built" phpName="DbAutoPlaylistBuilt" type="BOOLEAN" required="true" defaultValue="false" />
 	<foreign-key foreignTable="cc_show" name="cc_show_fkey" onDelete="CASCADE">
       <reference local="show_id" foreign="id"/>
     </foreign-key>
