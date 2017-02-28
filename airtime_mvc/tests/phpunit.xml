@@ -17,6 +17,7 @@
     <php>
         <env name="ENVIRONMENT" value="testing"/>
         <env name="AIRTIME_UNIT_TEST" value="1"/>
+        <env name="LIBRETIME_CONF_DIR" value="./conf"/>
     </php>
 
     <!-- Disabling broken code coverage report. It's not using our autoloader for some reason... 

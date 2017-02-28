@@ -8,7 +8,6 @@ services:
 env:
   global:
   - ENVIRONMENT=testing
-  - LIBRETIME_CONF_DIR=/tmp/libretime
   - LIBRETIME_LOG_DIR=/tmp/log/libretime
 install:
 - composer install
@@ -17,7 +16,6 @@ before_script:
 - psql -c "CREATE USER libretime WITH PASSWORD 'libretime';" -U postgres
 - psql -c 'GRANT CONNECT ON DATABASE libretime TO libretime;' -U postgres
 - psql -c 'ALTER USER libretime CREATEDB;' -U postgres
-- mkdir -p /tmp/libretime/testing/ /tmp/log/libretime
-- cp airtime_mvc/tests/airtime.conf airtime_mvc/tests/cloud_storage.conf /tmp/libretime/testing/
+- mkdir -p /tmp/log/libretime
 script:
 - cd airtime_mvc/tests && ../../vendor/bin/phpunit

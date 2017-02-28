@@ -17,12 +17,8 @@ class Config {
                 "rootDir" => self::$rootDir
         );
         
-        //In the unit testing environment, we always want to use our local airtime.conf in airtime_mvc/application/test:
-        if (getenv('AIRTIME_UNIT_TEST') == '1') {
-            $filename = "airtime.conf";
-        } else {
-            $filename = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : LIBRETIME_CONF_DIR . "/airtime.conf";
-        }
+        //In the unit testing environment, LIBRETIME_CONF_DIR will our local airtime.conf in airtime_mvc/application/test/conf:
+        $filename = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : LIBRETIME_CONF_DIR . "/airtime.conf";
         
         $values = parse_ini_file($filename, true);
 
