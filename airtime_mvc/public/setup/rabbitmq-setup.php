@@ -1,7 +1,5 @@
 <?php
 
-require_once dirname(dirname( __DIR__)) . '/library/php-amqplib/amqp.inc';
-
 /**
  * User: sourcefabric
  * Date: 02/12/14
