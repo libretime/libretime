@@ -50,3 +50,25 @@ cd airtime_mvc/tests
 # run a subset of tests
 ../../vendor/bin/phpunit --filter testEditReatingShowInstance 
 ```
+
+## Python
+
+The python tests are run through nosetest. To prepare your env you should install
+it.
+
+```bash
+# Debian/Ubuntu
+apt-get install python-nose
+
+# CentOS
+yum install -y python-nose
+```
+
+In most cases you need to install deps before the tets can be run.
+
+### Airtime Analyzer
+
+```bash
+cd python_apps/airtime_analyzer
+nosetests
+```
