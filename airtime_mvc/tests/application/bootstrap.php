@@ -74,13 +74,6 @@ set_include_path(APPLICATION_PATH . '/../tests/application/helpers' . PATH_SEPAR
 //cloud storage files
 set_include_path(APPLICATION_PATH . '/cloud_storage' . PATH_SEPARATOR . get_include_path());
 
-//Zend framework
-if (file_exists('/usr/share/php/libzend-framework-php')) {
-    set_include_path('/usr/share/php/libzend-framework-php' . PATH_SEPARATOR . get_include_path());
-    set_include_path('/usr/share/php/libzend-framework-php/Zend/Test/PHPUnit' . PATH_SEPARATOR . get_include_path());
-}
-
-
 require_once APPLICATION_PATH.'/configs/conf.php';
 require_once 'propel/propel1/runtime/lib/Propel.php';
 Propel::init("../application/configs/airtime-conf-production.php");
