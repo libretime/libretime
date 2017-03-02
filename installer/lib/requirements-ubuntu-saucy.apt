@@ -1,7 +1,6 @@
 apache2
 libapache2-mod-php5
 php5
-libzend-framework-php
 php-pear
 php5-gd
 php5-json
