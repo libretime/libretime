@@ -1,5 +1,7 @@
 <?php
 
+require_once 'customfilters/ImageSize.php';
+
 class Application_Form_RegisterAirtime extends Zend_Form
 {
 

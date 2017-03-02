@@ -1,5 +1,7 @@
 <?php
 
+require_once 'customvalidators/ConditionalNotEmpty.php';
+
 class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
 {
 

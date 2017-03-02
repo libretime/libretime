@@ -6,8 +6,8 @@
  * way zf1 Zend_Loader_PluginLoader expects it to be found. Another way around this
  * might be to rename the class and have the new name get loaded proper.
  *
- * Since this is only getting used on the GeneralPreferences form I am re-adding the
- * require_once over there to get this fixed for now.
+ * Since this is only getting used in a few places I am re-adding the
+ * require_once there to get this fixed for now.
  */
 
 class Zend_Filter_ImageSize implements Zend_Filter_Interface
