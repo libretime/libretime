@@ -109,7 +109,7 @@ function checkRMQConnection() {
         $ini = parse_ini_file(BUILD_PATH . "airtime.example.conf", true);
     }
 
-    $conn = new AMQPConnection($ini[RMQ_INI_SECTION]["host"],
+    $conn = new \PhpAmqpLib\Connection\AMQPConnection($ini[RMQ_INI_SECTION]["host"],
                                $ini[RMQ_INI_SECTION]["port"],
                                $ini[RMQ_INI_SECTION]["user"],
                                $ini[RMQ_INI_SECTION]["password"],

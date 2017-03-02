@@ -62,7 +62,7 @@ class RabbitMQSetup extends Setup {
     }
 
     function checkRMQConnection() {
-        $conn = new AMQPConnection(self::$_properties["host"],
+        $conn = new \PhpAmqpLib\Connection\AMQPConnection(self::$_properties["host"],
                                    self::$_properties["port"],
                                    self::$_properties["user"],
                                    self::$_properties["password"],
