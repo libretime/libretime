@@ -12,3 +12,4 @@ composer.phar
 /tests/results.html
 /tests/*.jar
 VERSION
+airtime_mvc/tests/log/*.log
