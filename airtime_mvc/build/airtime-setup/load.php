@@ -26,19 +26,8 @@ function checkConfiguration() {
  */
 function checkPhpDependencies() {
     return array(
-        "zend" => checkZendDependencies(),
         "postgres" => checkDatabaseDependencies()
     );
-}
-
-/**
- * Check that the Zend framework libraries are installed
- *
- * @return boolean true if Zend exists in /usr/share/php
- */
-function checkZendDependencies() {
-    return file_exists('/usr/share/php/libzend-framework-php')
-        || file_exists('/usr/share/php/Zend'); // Debian version
 }
 
 /**
