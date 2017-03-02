@@ -64,8 +64,10 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
         $clientSecret   = $CC_CONFIG['soundcloud-client-secret'];
         $redirectUri    = $CC_CONFIG['soundcloud-redirect-uri'];
 
-        $this->_client = new Soundcloud\Service($clientId, $clientSecret, $redirectUri);
-        $accessToken = Application_Model_Preference::getSoundCloudRequestToken();
+        if ($clientId && $clientSecret && $redirectUri) {
+            $this->_client = new Soundcloud\Service($clientId, $clientSecret, $redirectUri);
+            $accessToken = Application_Model_Preference::getSoundCloudRequestToken();
+        }
         if (!empty($accessToken)) {
             $this->_accessToken = $accessToken;
             $this->_client->setAccessToken($accessToken);
