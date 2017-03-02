@@ -10,18 +10,29 @@ run them for you on pushes.
 ### Prepare environment
 
 PHPUnit will need to be able to access the database and be allowed to
-create the libretime_test database. On a clean install this may be
-set up as follows.
+create the libretime_test database. On a clean postgresql install this may 
+be set up as follows.
 
 ```bash
-psql -c 'CREATE DATABASE libretime;' -U postgres -h localhost
-psql -c "CREATE USER libretime WITH PASSWORD 'libretime';" -U postgres -h localhost
-psql -c 'GRANT CONNECT ON DATABASE libretime TO libretime;' -U postgres -h localhost
-psql -c 'ALTER USER libretime CREATEDB;' -U postgres -h localhost
+psql -c 'CREATE DATABASE libretime;' -U postgres
+psql -c "CREATE USER libretime WITH PASSWORD 'libretime';" -U postgres
+psql -c 'GRANT CONNECT ON DATABASE libretime TO libretime;' -U postgres
+psql -c 'ALTER USER libretime CREATEDB;' -U postgres
 ```
 
 In this case the libretime database is only used for the initial connection
 over which the libretime_test database is created.
+
+You may need to tweak the exact commands needed to setup postgresql depending
+on the distro you installed this to. On Ubuntu trusty the above can be
+acheived as follows.
+
+```bash
+sudo -u postgres psql -c 'CREATE DATABASE libretime;'
+sudo -u postgres psql -c "CREATE USER libretime WITH PASSWORD 'libretime';"
+sudo -u postgres psql -c 'GRANT CONNECT ON DATABASE libretime TO libretime;'
+sudo -u postgres psql -c 'ALTER USER libretime CREATEDB;'
+```
 
 ### Install PHPUnit 
 
