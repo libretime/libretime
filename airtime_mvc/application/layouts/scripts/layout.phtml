@@ -42,7 +42,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         var schedulePreLoaded = <?php
         //Awful hack to speed up loading - Embed the schedule in the response so that the dashboard
         //doesn't have to make a separate AJAX request to get this data.
-    require_once("ScheduleController.php");
     ScheduleController::printCurrentPlaylistForEmbedding();
  ?>;
         //The DOM elements that these calls depend on exist by this point:

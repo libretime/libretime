@@ -354,7 +354,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      *
      * @return array array of episode data
      *
-     * @throws CcFiles/FileNotFoundException
+     * @throws CcFiles/LibreTimeFileNotFoundException
      */
     public function _getImportedPodcastEpisodeArray($podcast, $episodes) {
         $rss = Application_Service_PodcastService::getPodcastFeed($podcast->getDbUrl());

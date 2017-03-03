@@ -1,7 +1,5 @@
 <?php
 
-require_once(dirname(__FILE__)."/../Schedule.php");
-
 class SchedulerExportTests extends PHPUnit_TestCase {
   function setup() {
     global $CC_CONFIG;

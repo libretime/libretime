@@ -1,5 +1,4 @@
 <?php
-require_once('SentryLogging.php');
 
 class Logging {
 

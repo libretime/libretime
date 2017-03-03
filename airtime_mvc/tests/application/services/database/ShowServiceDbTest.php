@@ -1,13 +1,8 @@
 <?php
-require_once "Zend/Test/PHPUnit/DatabaseTestCase.php";
-require_once "ShowService.php";
 require_once "../application/configs/conf.php";
-require_once "ShowServiceData.php";
-require_once "TestHelper.php";
-#require_once "PHPUnit/Extensions/Database/DataSet/ReplacementDataSet.php";
 
 /*
- * All dates in the xml files are hard coded and in the year 2016
+ * All dates in the xml files are hard coded and in the year 2044
  * It would have been nice to use 'PHPUnit/Extensions/Database/DataSet/ReplacementDataSet.php'
  * to be able to use variables in the xml dataset files so dates can be relative. This proved
  * not practical for Airtime; For repeating shows, the start times are always varying and would
@@ -50,14 +45,9 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
      */
     public function getDataSet()
     {
-        $xml_dataset = $this->createXmlDataSet(
-        dirname(__FILE__) . '/datasets/seed_show_service.xml'
+        return new PHPUnit_Extensions_Database_DataSet_YamlDataSet(
+            __DIR__ . '/datasets/seed_show_service.yml'
         );
-        /*$xml_dataset_fixed = new PHPUnit_Extensions_Database_DataSet_ReplacementDataSet(
-         $xml_dataset, array('SIX_WEEKS' => $this->_nowDT->add(new DateInterval("P42D"))->format("Y-m-d H:i:s")));
-
-         return $xml_dataset_fixed;*/
-        return $xml_dataset;
     }
 
     public function testCcShowInsertedIntoDatabase()
@@ -87,7 +77,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show', 'select * from cc_show');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_ccShowInsertedIntoDatabase.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_ccShowInsertedIntoDatabase.yml"),
             $ds
         );
     }
@@ -114,7 +104,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_createNoRepeatNoRRShow.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_createNoRepeatNoRRShow.yml'),
             $ds
         );
     }
@@ -141,7 +131,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_createWeeklyRepeatNoEndNoRRShow.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_createWeeklyRepeatNoEndNoRRShow.yml'),
             $ds
         );
     }
@@ -166,7 +156,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_createBiWeeklyRepeatNoEndNoRRShow.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_createBiWeeklyRepeatNoEndNoRRShow.yml'),
             $ds
         );
     }
@@ -191,7 +181,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_createTriWeeklyRepeatNoEndNoRRShow.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_createTriWeeklyRepeatNoEndNoRRShow.yml'),
             $ds
         );
     }
@@ -216,7 +206,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_createQuadWeeklyRepeatNoEndNoRRShow.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_createQuadWeeklyRepeatNoEndNoRRShow.yml"),
             $ds
         );
     }
@@ -241,7 +231,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_createMonthlyMonthlyRepeatNoEndNoRRShow.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_createMonthlyMonthlyRepeatNoEndNoRRShow.yml"),
             $ds
         );
     }
@@ -266,7 +256,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_createMonthlyWeeklyRepeatNoEndNoRRShow.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_createMonthlyWeeklyRepeatNoEndNoRRShow.yml"),
             $ds
         );
     }
@@ -293,7 +283,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_deleteShowInstance.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_deleteShowInstance.yml"),
             $ds
         );
     }
@@ -327,7 +317,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_deleteShowInstanceAndAllFollowing.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_deleteShowInstanceAndAllFollowing.yml"),
             $ds
         );
     }
@@ -357,7 +347,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_editRepeatingShowInstance.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_editRepeatingShowInstance.yml"),
             $ds
         );
     }
@@ -385,7 +375,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_deleteRepeatingShow.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_deleteRepeatingShow.yml"),
             $ds
         );
     }
@@ -401,7 +391,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $showService->addUpdateShow($data);
 
         //simulate the user moves forward in the calendar
-        $end = new DateTime("2016-03-12", new DateTimeZone("UTC"));
+        $end = new DateTime("2044-03-12", new DateTimeZone("UTC"));
         $showService->delegateInstanceCreation(null, $end, true);
 
         $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
@@ -414,7 +404,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_repeatShowCreationWhenUserMovesForwardInCalendar.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_repeatShowCreationWhenUserMovesForwardInCalendar.yml"),
             $ds
         );
     }
@@ -440,7 +430,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_createLinkedShow.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_createLinkedShow.yml"),
         $ds
         );
     }
@@ -464,7 +454,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_createNoRepeatRRShow.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_createNoRepeatRRShow.yml"),
             $ds
         );
     }
@@ -488,7 +478,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_createWeeklyRepeatRRShow.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_createWeeklyRepeatRRShow.yml"),
             $ds
         );
     }
@@ -502,7 +492,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $showService = new Application_Service_ShowService(null, $data);
         $showService->addUpdateShow($data);
 
-        $data["add_show_end_date"] = '2016-01-09';
+        $data["add_show_end_date"] = '2044-01-09';
         $data["add_show_no_end"] = 0;
         $data["add_show_id"] = 1;
 
@@ -519,7 +509,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_editRepeatingShowChangeNoEndOption.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_editRepeatingShowChangeNoEndOption.yml"),
             $ds
         );
     }
@@ -534,7 +524,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         TestHelper::loginUser();
 
         $data = ShowServiceData::getWeeklyRepeatNoEndNoRRData();
-        $data["add_show_start_date"] = "2016-01-29";
+        $data["add_show_start_date"] = "2044-01-29";
         $data["add_show_day_check"] = array(5,6);
         $data["add_show_linked"] = 1;
         $showService = new Application_Service_ShowService(null, $data);
@@ -581,7 +571,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_schedule', 'select id, starts, ends, file_id, clip_length, fade_in, fade_out, cue_in, cue_out, instance_id, playout_status from cc_schedule');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_removeFirstRepeatShowDayUpdatesScheduleCorrectly.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_removeFirstRepeatShowDayUpdatesScheduleCorrectly.yml"),
             $ds
         );
     }
@@ -591,7 +581,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         TestHelper::loginUser();
 
         $data = ShowServiceData::getWeeklyRepeatNoEndNoRRData();
-        $data["add_show_start_date"] = "2016-01-29";
+        $data["add_show_start_date"] = "2044-01-29";
         $data["add_show_day_check"] = array(5, 6);
         $data["add_show_linked"] = 1;
         $showService = new Application_Service_ShowService(null, $data);
@@ -638,7 +628,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_schedule', 'select id, starts, ends, file_id, clip_length, fade_in, fade_out, cue_in, cue_out, instance_id, playout_status from cc_schedule');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_changeRepeatDayUpdatesScheduleCorrectly.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_changeRepeatDayUpdatesScheduleCorrectly.yml"),
             $ds
         );
     }
@@ -668,7 +658,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
         
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_weeklyToNoRepeat.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_weeklyToNoRepeat.yml"),
             $ds
         );
     }
@@ -698,13 +688,8 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
         
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_weeklyToBiWeekly.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_weeklyToBiWeekly.yml"),
             $ds
         );
-    }
-
-    public function testChangeRepeatTypeFromMonthlyWeeklyToNoRepeat()
-    {
-        
     }
 }

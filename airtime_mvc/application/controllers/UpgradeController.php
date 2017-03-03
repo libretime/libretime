@@ -1,7 +1,5 @@
 <?php
 
-require_once("Upgrades.php");
-
 class UpgradeController extends Zend_Controller_Action
 {
     public function indexAction()

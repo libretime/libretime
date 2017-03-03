@@ -1,9 +1,5 @@
 <?php
-require_once "Zend/Test/PHPUnit/DatabaseTestCase.php";
-require_once "ShowService.php";
 require_once "../application/configs/conf.php";
-require_once "TestHelper.php";
-require_once "ShowServiceData.php";
 
 class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
 {
@@ -45,8 +41,8 @@ class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
      */
     public function getDataSet()
     {
-        return $this->createXmlDataSet(
-            dirname(__FILE__) . '/datasets/seed_schedule.xml'
+        return new PHPUnit_Extensions_Database_DataSet_YamlDataSet(
+            __DIR__ . '/datasets/seed_schedule.yml'
         );
     }
 
@@ -71,7 +67,7 @@ class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
 
         /** Make sure shows were created correctly **/
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_checkOverlappingShows.xml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_checkOverlappingShows.yml"),
             $ds
         );
 

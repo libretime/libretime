@@ -1,5 +1,4 @@
 <?php
-require_once "AirtimeInstall.php";
 
 class TestHelper
 {
@@ -25,12 +24,13 @@ class TestHelper
 
     public static function getDbZendConfig()
     {
+        $config = Config::getConfig();
         return new Zend_Config(
             array(
-                'host'     => '127.0.0.1',
-                'dbname'   => 'airtime_test',
-                'username' => 'airtime',
-                'password' => 'airtime'
+                'host'     => $config['dsn']['hostspec'],
+                'dbname'   => $config['dsn']['database'],
+                'username' => $config['dsn']['username'],
+                'password' => $config['dsn']['password']
             )
         );
     }
@@ -51,7 +51,7 @@ class TestHelper
         {
             //Truncate all the tables
             $con = Propel::getConnection();
-            $sql = "select * from pg_tables where tableowner = 'airtime'";
+            $sql = "select * from pg_tables where tableowner = '${dbuser}'";
             try {
                 $rows = $con->query($sql)->fetchAll();
             } catch (Exception $e) {

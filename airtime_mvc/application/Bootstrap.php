@@ -10,57 +10,9 @@ if (!isset($configRun) || !$configRun) {
     Propel::init(CONFIG_PATH . 'airtime-conf-production.php');
 }
 
-//Composer's autoloader
-require_once 'autoload.php';
-
 require_once CONFIG_PATH . "constants.php";
-/* Common */
-require_once "DateHelper.php";
-require_once "LocaleHelper.php";
-require_once "FileDataHelper.php";
-require_once "HTTPHelper.php";
-require_once "FileIO.php";
-require_once "OsPath.php";
-require_once "Database.php";
-require_once "ProvisioningHelper.php";
-require_once "SecurityHelper.php";
-require_once "SessionHelper.php";
-require_once "GoogleAnalytics.php";
-require_once "Timezone.php";
-require_once "CeleryManager.php";
-require_once "TaskManager.php";
-require_once "PodcastManager.php";
-require_once "UsabilityHints.php";
-require_once __DIR__.'/models/formatters/LengthFormatter.php';
-require_once __DIR__.'/common/widgets/Table.php';
-/* Models */
-require_once "Auth.php";
-require_once 'Preference.php';
-require_once 'Locale.php';
-/* Enums */
-require_once "Enum.php";
-require_once "MediaType.php";
-require_once "HttpRequestType.php";
-/* Interfaces */
-require_once "OAuth2.php";
-require_once "OAuth2Controller.php";
-require_once "Publish.php";
-/* Factories */
-require_once __DIR__.'/services/CeleryServiceFactory.php';
-require_once __DIR__.'/services/PublishServiceFactory.php';
 
-require_once __DIR__.'/forms/helpers/ValidationTypes.php';
-require_once __DIR__.'/forms/helpers/CustomDecorators.php';
-require_once __DIR__.'/controllers/plugins/PageLayoutInitPlugin.php';
-require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
-require_once __DIR__.'/controllers/plugins/Maintenance.php';
-require_once __DIR__.'/controllers/plugins/ConversionTracking.php';
-require_once __DIR__.'/modules/rest/controllers/ShowImageController.php';
-require_once __DIR__.'/modules/rest/controllers/MediaController.php';
-require_once __DIR__.'/upgrade/Upgrades.php';
-
-require_once (APPLICATION_PATH . "/logging/Logging.php");
-Logging::setLogPath('/var/log/airtime/zendphp.log');
+Logging::setLogPath(LIBRETIME_LOG_DIR . '/zendphp.log');
 
 // We need to manually route because we can't load Zend without the database being initialized first.
 if (array_key_exists("REQUEST_URI", $_SERVER) && (stripos($_SERVER["REQUEST_URI"], "/provisioning/create") !== false)) {

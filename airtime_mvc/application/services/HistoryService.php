@@ -1,7 +1,5 @@
 <?php
 
-require_once 'formatters/LengthFormatter.php';
-
 class Application_Service_HistoryService
 {
 	private $con;

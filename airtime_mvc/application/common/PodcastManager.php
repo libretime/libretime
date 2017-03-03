@@ -56,7 +56,7 @@ class PodcastManager {
     protected static function _findUningestedEpisodes($podcast, $service) {
         $episodeList = $service->getPodcastEpisodes($podcast->getDbPodcastId());
         $episodes = array();
-        usort($episodeList, array(static::class, "_sortByEpisodePubDate"));
+        usort($episodeList, array(__CLASS__, "_sortByEpisodePubDate"));
         for ($i = 0; $i < sizeof($episodeList); $i++) {
             $episodeData = $episodeList[$i];
             $ts = $podcast->getDbAutoIngestTimestamp();

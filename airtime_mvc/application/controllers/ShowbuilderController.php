@@ -1,7 +1,5 @@
 <?php
 
-require_once('CORSHelper.php');
-
 class ShowbuilderController extends Zend_Controller_Action
 {
 

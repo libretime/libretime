@@ -1,7 +1,5 @@
 <?php
 
-require_once 'ProxyStorageBackend.php';
-
 /**
  * Skeleton subclass for representing a row from the 'cloud_file' table.
  *

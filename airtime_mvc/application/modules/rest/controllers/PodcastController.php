@@ -1,7 +1,5 @@
 <?php
 
-require_once('PodcastFactory.php');
-
 class Rest_PodcastController extends Zend_Rest_Controller
 {
 
@@ -12,6 +10,16 @@ class Rest_PodcastController extends Zend_Rest_Controller
         // Remove reliance on .phtml files to render requests
         $this->_helper->viewRenderer->setNoRender(true);
         $this->view->setScriptPath(APPLICATION_PATH . 'views/scripts/');
+    }
+
+    /**
+     * headAction is needed as it is defined as an abstract function in the base controller
+     *
+     * @return void
+     */
+    public function headAction()
+    {
+        Logging::info("HEAD action received");
     }
 
     public function indexAction()

@@ -1,7 +1,6 @@
 <?php
 
 define("RMQ_INI_SECTION", "rabbitmq");
-require_once dirname(dirname( __DIR__)) . '/library/php-amqplib/amqp.inc';
 
 function booleanReduce($a, $b) {
     return $a && $b;
@@ -27,19 +26,8 @@ function checkConfiguration() {
  */
 function checkPhpDependencies() {
     return array(
-        "zend" => checkZendDependencies(),
         "postgres" => checkDatabaseDependencies()
     );
-}
-
-/**
- * Check that the Zend framework libraries are installed
- *
- * @return boolean true if Zend exists in /usr/share/php
- */
-function checkZendDependencies() {
-    return file_exists('/usr/share/php/libzend-framework-php')
-        || file_exists('/usr/share/php/Zend'); // Debian version
 }
 
 /**
@@ -110,7 +98,7 @@ function checkRMQConnection() {
         $ini = parse_ini_file(BUILD_PATH . "airtime.example.conf", true);
     }
 
-    $conn = new AMQPConnection($ini[RMQ_INI_SECTION]["host"],
+    $conn = new \PhpAmqpLib\Connection\AMQPConnection($ini[RMQ_INI_SECTION]["host"],
                                $ini[RMQ_INI_SECTION]["port"],
                                $ini[RMQ_INI_SECTION]["user"],
                                $ini[RMQ_INI_SECTION]["password"],

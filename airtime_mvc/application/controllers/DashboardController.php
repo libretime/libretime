@@ -1,7 +1,5 @@
 <?php
 
-require_once(__DIR__.'/../common/widgets/Table.php');
-
 class DashboardController extends Zend_Controller_Action
 {
 

@@ -17,6 +17,16 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
         $this->_service = new Application_Service_PodcastEpisodeService();
     }
 
+    /**
+     * headAction is needed as it is defined as an abstract function in the base controller
+     *
+     * @return void
+     */
+    public function headAction()
+    {
+        Logging::info("HEAD action received");
+    }
+
     public function indexAction()
     {
         // podcast ID

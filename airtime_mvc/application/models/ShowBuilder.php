@@ -1,8 +1,5 @@
 <?php
 
-require_once 'formatters/LengthFormatter.php';
-require_once 'formatters/TimeFilledFormatter.php';
-
 class Application_Model_ShowBuilder
 {
     private $timezone;

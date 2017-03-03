@@ -1,7 +1,5 @@
 <?php
 
-include('../library/phing/util/StringHelper.php');
-
 class Application_Form_Login extends Zend_Form
 {
 
@@ -19,7 +17,7 @@ class Application_Form_Login extends Zend_Form
             $refererUrl = $request->getHeader('referer');
             $originIsSafe = false;
             foreach (CORSHelper::getAllowedOrigins() as $safeOrigin) {
-                if (StringHelper::startsWith($safeOrigin, $refererUrl)) {
+                if ($this->startsWith($safeOrigin, $refererUrl)) {
                     $originIsSafe = true;
                     break;
                 }
@@ -110,4 +108,28 @@ class Application_Form_Login extends Zend_Form
         $this->addElement($captcha);
     }
 
+    /**
+     * tests if a string starts with a given string
+     *
+     * This method was pinched as is from phing since it was the only line of code
+     * actually used from phing. I'm not 100% convinced why it was deemed necessary
+     * in the first place as it is a rather simple method in the first place.
+     *
+     * For now it's here as a copy and we can refactor it away completely later.
+     *
+     * @see <https://github.com/phingofficial/phing/blob/41b2f54108018cf69aaa73904fade23e5adfd0cc/classes/phing/util/StringHelper.php>
+     *
+     * @param $check
+     * @param $string
+     *
+     * @return bool
+     */
+    private function startsWith($check, $string)
+    {
+        if ($check === "" || $check === $string) {
+            return true;
+        } else {
+            return (strpos($string, $check) === 0) ? true : false;
+        }
+    }
 }

@@ -9,7 +9,6 @@
 
 $phpDependencies    = checkPhpDependencies();
 $externalServices   = checkExternalServices();
-$zend               = $phpDependencies["zend"];
 $postgres           = $phpDependencies["postgres"];
 
 $database           = $externalServices["database"];
@@ -98,24 +97,6 @@ $result = $r1 && $r2;
                     PHP Dependencies
                 </caption>
                 <tbody>
-                    <tr class="<?=$zend ? 'success' : 'danger';?>">
-                        <td class="component">
-                            Zend
-                        </td>
-                        <td class="description">
-                            Zend MVC Framework
-                        </td>
-                        <td class="solution <?php if ($zend) {echo 'check';?>">
-                            <?php
-                                } else {
-                                    ?>">
-                                    <b>Ubuntu</b>: try running <code>sudo apt-get install libzend-framework-php</code>
-                                    <br/><b>Debian</b>: try running <code>sudo apt-get install zendframework</code>
-                                <?php
-                                }
-                            ?>
-                        </td>
-                    </tr>
                     <tr class="<?=$postgres ? 'success' : 'danger';?>">
                         <td class="component">
                             Postgres

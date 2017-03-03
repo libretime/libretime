@@ -22,7 +22,7 @@ class Application_Common_FileIO
     {
         $fm = @fopen($filePath, 'rb');
         if (!$fm) {
-            throw new FileNotFoundException($filePath);
+            throw new LibreTimeFileNotFoundException($filePath);
         }
 
         //Note that $size is allowed to be zero. If that's the case, it means we don't

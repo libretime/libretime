@@ -44,7 +44,9 @@ set_include_path(VENDOR_PATH . PATH_SEPARATOR . get_include_path());
 // Ensure library/ is on include_path
 set_include_path(LIB_PATH . PATH_SEPARATOR . get_include_path());
 
-if (!@include_once(VENDOR_PATH . 'propel/propel1/runtime/lib/Propel.php'))
+require_once VENDOR_PATH . '/autoload.php';
+
+if (!class_exists('Propel'))
 {
     die('Error: Propel not found. Did you install Airtime\'s third-party dependencies with composer? (Check the README.)');
 }
