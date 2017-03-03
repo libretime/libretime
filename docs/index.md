@@ -15,19 +15,11 @@ LibreTime is a fork of AirTime due to stalled development of the FLOSS version. 
 Getting Started
 ---------------
 
-The easiest way to check out LibreTime for yourself is to run a local instance in a virtual machine:
+The easiest way to check out LibreTime for yourself is to run a local instance in a virtual machine. Assuming you already have Git, Vagrant and Virtualbox installed, just run:
 
-1. Install Git, Vagrant and Virtualbox:
-```console
-$ sudo apt-get install git vagrant virtualbox
-```
-2. Clone this repository locally:
-```console
-$ git clone https://github.com/libretime/libretime.git
-```
-3. Launch the VM:
-```console
-$ cd libretime
-$ vagrant up
-```
+    :::console
+    $ git clone https://github.com/libretime/libretime.git
+    $ cd libretime
+    $ vagrant up
 
+Of course, this setup isn't appropriate for production use. For that, check out our [installation instructions](install.md).

@@ -1,17 +1,15 @@
-pre code.console {
+pre.codehilite > code,
+div.codehilite > pre {
   background-color: black;
   color: #808080;
   padding: 1em;
-  border-radius: 5px;
+  border-radius: 3px;
   font-size: 110%;
+  font-weight: bold;
   overflow: auto;
 }
 
-span.hljs-built_in,
-span.hljs-comment,
-span.hljs-keyword,
-span.hljs-variable {
-  color: #808080;
-  font-weight: normal;
-  font-style: normal;
+pre.codehilite > code.language-console > span,
+div.codehilite > pre > span[style*="color: #AA22FF"] {
+  color: #808080 !important;
 }

@@ -3,6 +3,10 @@ theme: readthedocs
 
 dev_addr: '0.0.0.0:8888'
 site_dir: '/tmp/aegir_docs/_site'
+markdown_extensions:
+- codehilite:
+    noclasses: True
+    pygments_style: emacs
 
 extra_css:
   - '_css/term.css'
