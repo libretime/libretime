@@ -1,0 +1,17 @@
+pre code.console {
+  background-color: black;
+  color: #808080;
+  padding: 1em;
+  border-radius: 5px;
+  font-size: 110%;
+  overflow: auto;
+}
+
+span.hljs-built_in,
+span.hljs-comment,
+span.hljs-keyword,
+span.hljs-variable {
+  color: #808080;
+  font-weight: normal;
+  font-style: normal;
+}
