@@ -110,6 +110,9 @@ define("LIBRETIME_ENABLE_WHMCS", false);
 define("WHMCS_API_URL", "https://account.example.org/includes/api.php");
 define("SUBDOMAIN_WHMCS_CUSTOM_FIELD_NAME", "Choose your domain");
 
+//LiveChat integration
+define('LIBRETIME_ENABLE_LIVECHAT', false);
+
 //Sentry error logging
 define('SENTRY_CONFIG_PATH', '/etc/airtime-saas/sentry.airtime_web.ini');
 
