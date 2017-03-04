@@ -152,12 +152,13 @@ def podcast_download(id, url, callback_url, api_key, podcast_name):
             filename = get_filename(r)
             with tempfile.NamedTemporaryFile(mode ='wb+', delete=False) as audiofile:
                 shutil.copyfileobj(r.raw, audiofile)
-                #m = mutagen.File(audiofile.name, easy=True)
                 # currently hardcoded for mp3s may want to add support for oggs etc
                 m = MP3(audiofile.name, ID3=EasyID3)
-                #m = EasyID3(audiofile.name)
-                m['album'] = [podcast_name]
-		m.save()
+                try:
+                    m['album']
+                except KeyError:
+                    m['album'] = [podcast_name]
+                m.save()
                 filetypeinfo = m.pprint()
                 logger.info('filetypeinfo is {0}'.format(filetypeinfo))
                 re = requests.post(callback_url, files={'file': (filename, open(audiofile.name, 'rb'))}, auth=requests.auth.HTTPBasicAuth(api_key, ''))
