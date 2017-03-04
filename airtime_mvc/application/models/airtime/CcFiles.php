@@ -16,7 +16,7 @@ class InvalidMetadataException extends Exception
 {
 }
 
-class FileNotFoundException extends Exception
+class LibreTimeFileNotFoundException extends Exception
 {
 }
 
@@ -67,7 +67,7 @@ class CcFiles extends BaseCcFiles {
         if ($file) {
             return CcFiles::sanitizeResponse($file);
         } else {
-            throw new FileNotFoundException();
+            throw new LibreTimeFileNotFoundException();
         }
     }
 
@@ -174,7 +174,7 @@ class CcFiles extends BaseCcFiles {
      * @param $fileArray array An associative array containing metadata. Replaces those fields if they exist.
      * @return array A sanitized version of the file metadata array.
      * @throws Exception
-     * @throws FileNotFoundException
+     * @throws LibreTimeFileNotFoundException
      * @throws PropelException
      */
     public static function updateFromArray($fileId, $fileArray)
@@ -196,7 +196,7 @@ class CcFiles extends BaseCcFiles {
 
                 $fileSizeBytes = $fileArray["filesize"];
                 if (!isset($fileSizeBytes) || $fileSizeBytes === false) {
-                    throw new FileNotFoundException("Invalid filesize for $fileId");
+                    throw new LibreTimeFileNotFoundException("Invalid filesize for $fileId");
                 }
 
                 $cloudFile = new CloudFile();
@@ -219,7 +219,7 @@ class CcFiles extends BaseCcFiles {
                 if (isset($fileArray["full_path"])) {
                     $fileSizeBytes = filesize($fileArray["full_path"]);
                     if (!isset($fileSizeBytes) || $fileSizeBytes === false) {
-                        throw new FileNotFoundException("Invalid filesize for $fileId");
+                        throw new LibreTimeFileNotFoundException("Invalid filesize for $fileId");
                     }
                     Application_Model_Preference::updateDiskUsage($fileSizeBytes);
 
@@ -235,14 +235,14 @@ class CcFiles extends BaseCcFiles {
                     }
                 }
             } else {
-                throw new FileNotFoundException();
+                throw new LibreTimeFileNotFoundException();
             }
 
             $now = new DateTime("now", new DateTimeZone("UTC"));
             $file->setDbMtime($now);
             $file->save();
         }
-        catch (FileNotFoundException $e)
+        catch (LibreTimeFileNotFoundException $e)
         {
             $file->setDbImportStatus(self::IMPORT_STATUS_FAILED);
             $file->setDbHidden(true);
@@ -258,7 +258,7 @@ class CcFiles extends BaseCcFiles {
      * @throws DeleteScheduledFileException
      * @throws Exception
      * @throws FileNoPermissionException
-     * @throws FileNotFoundException
+     * @throws LibreTimeFileNotFoundException
      * @throws PropelException
      */
     public static function deleteById($id)
@@ -269,7 +269,7 @@ class CcFiles extends BaseCcFiles {
             $storedFile = Application_Model_StoredFile::RecallById($id, $con);
             $storedFile->delete();
         } else {
-            throw new FileNotFoundException();
+            throw new LibreTimeFileNotFoundException();
         }
 
     }

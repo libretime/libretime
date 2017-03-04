@@ -351,8 +351,7 @@ class TaskFactory {
      */
     private static function _isTask($c) {
         $reflect = new ReflectionClass($c);
-        $clazz = version_compare(phpversion(), '5.5.0', '<') ? "AirtimeTask" : AirtimeTask::class;
-        return $reflect->implementsInterface($clazz);
+        return $reflect->implementsInterface('AirtimeTask');
     }
 
     /**

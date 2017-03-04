@@ -1,8 +1,5 @@
 <?php
 
-require_once('WhmcsLoginController.php');
-require_once('CORSHelper.php');
-
 class LoginController extends Zend_Controller_Action
 {
 
@@ -168,13 +165,16 @@ class LoginController extends Zend_Controller_Action
         if ($request->isPost()) {
             if ($form->isValid($request->getPost())) {
                 $query = CcSubjsQuery::create();
-                if (empty($form->username->getValue())) {
-                    $query->filterByDbEmail($form->email->getValue());
-                } else if (empty($form->email->getValue())) {
-                    $query->filterByDbLogin($form->username->getValue());
+                $username = $form->userName->getValue();
+                $email = $form->email->getValue();
+
+                if (empty($username)) {
+                    $query->filterByDbEmail($email);
+                } else if (empty($email)) {
+                    $query->filterByDbLogin($username);
                 } else {
-                    $query->filterByDbEmail($form->email->getValue())
-                        ->filterByDbLogin($form->username->getValue());
+                    $query->filterByDbEmail($email)
+                        ->filterByDbLogin($username);
                 }
                 $user = $query->findOne();
 

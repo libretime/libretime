@@ -1,5 +1,4 @@
 <?php
-require_once 'Zend/Locale.php';
 
 class Application_Form_BillingClient extends Zend_Form
 {

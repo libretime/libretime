@@ -1,7 +1,5 @@
 <?php
 
-require_once dirname(dirname( __DIR__)) . '/library/php-amqplib/amqp.inc';
-
 /**
  * User: sourcefabric
  * Date: 02/12/14
@@ -64,7 +62,7 @@ class RabbitMQSetup extends Setup {
     }
 
     function checkRMQConnection() {
-        $conn = new AMQPConnection(self::$_properties["host"],
+        $conn = new \PhpAmqpLib\Connection\AMQPConnection(self::$_properties["host"],
                                    self::$_properties["port"],
                                    self::$_properties["user"],
                                    self::$_properties["password"],

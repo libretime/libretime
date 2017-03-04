@@ -1,6 +1,5 @@
 <?php
 
-require_once('Billing.php');
 define('VAT_RATE', 19.00);
 
 class BillingController extends Zend_Controller_Action {

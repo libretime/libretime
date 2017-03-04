@@ -1,8 +1,5 @@
 <?php
 
-require_once('ProxyStorageBackend.php');
-require_once("FileIO.php");
-
 class Application_Service_MediaService
 {
 
@@ -56,13 +53,13 @@ class Application_Service_MediaService
      * @param $fileId
      * @param bool $inline Set the Content-Disposition header to inline to prevent a download dialog from popping up (or attachment if false)
      * @throws Exception
-     * @throws FileNotFoundException
+     * @throws LibreTimeFileNotFoundException
      */
     public static function streamFileDownload($fileId, $inline=false)
     {
         $media = Application_Model_StoredFile::RecallById($fileId);
         if ($media == null) {
-            throw new FileNotFoundException();
+            throw new LibreTimeFileNotFoundException();
         }
         // Make sure we don't have some wrong result because of caching
         clearstatcache();
@@ -104,7 +101,7 @@ class Application_Service_MediaService
                     $mimeType = $media->getPropelOrm()->getDbMime();
                     Application_Common_FileIO::smartReadFile($filePath, $size, $mimeType);
                     break; //Break out of the loop if we successfully read the file!
-                } catch (FileNotFoundException $e) {
+                } catch (LibreTimeFileNotFoundException $e) {
                     //If we have no alternate filepaths left, then let the exception bubble up.
                     if (sizeof($filePaths) == 0) {
                         throw $e;
@@ -116,7 +113,7 @@ class Application_Service_MediaService
             exit;
 
         } else {
-            throw new FileNotFoundException($filePath);
+            throw new LibreTimeFileNotFoundException($filePath);
         }
     }
 

@@ -1,5 +1,4 @@
 <?php
-require_once(dirname(__FILE__).'/../StoredFile.php');
 
 class StoredFileTest extends PHPUnit_TestCase {
 

@@ -377,14 +377,16 @@ if [ "$in_place" = "t" ]; then
     web_root=${AIRTIMEROOT}/airtime_mvc/public
 elif [ -n "$web_root" ]; then
     verbose "\n * Creating Apache web root directory..."
-    cp -R ${AIRTIMEROOT}/airtime_mvc/* ${web_root}
-    web_root=${web_root}/public/
+    cp -R ${AIRTIMEROOT}/airtime_mvc ${web_root}
+    cp -R ${AIRTIMEROOT}/vendor ${web_root}
+    web_root=${web_root}/airtime_mvc/public/
 else
-    verbose "\n * Creating default Apache web root directory /usr/share/airtime/..."
-    web_root="/usr/share/airtime"
+    verbose "\n * Creating default Apache web root directory /usr/share/airtime/php..."
+    web_root="/usr/share/airtime/php"
     mkdir -p ${web_root}
-    cp -R ${AIRTIMEROOT}/airtime_mvc/* ${web_root}
-    web_root=${web_root}/public/
+    cp -R ${AIRTIMEROOT}/airtime_mvc ${web_root}
+    cp -R ${AIRTIMEROOT}/vendor ${web_root}
+    web_root=${web_root}/airtime_mvc/public/
 fi
 verbose "...Done"
 

@@ -1,6 +1,4 @@
 <?php
-require_once 'php-amqplib/amqp.inc';
-require_once 'massivescale/celery-php/celery.php';
 
 class Application_Model_RabbitMq
 {
@@ -18,7 +16,7 @@ class Application_Model_RabbitMq
     {
         $CC_CONFIG = Config::getConfig();
 
-        $conn = new AMQPConnection($CC_CONFIG["rabbitmq"]["host"],
+        $conn = new \PhpAmqpLib\Connection\AMQPConnection($CC_CONFIG["rabbitmq"]["host"],
                                          $CC_CONFIG["rabbitmq"]["port"],
                                          $CC_CONFIG["rabbitmq"]["user"],
                                          $CC_CONFIG["rabbitmq"]["password"],
@@ -36,7 +34,7 @@ class Application_Model_RabbitMq
         //the way it is just so I don't accidentally break anything when I add the Analyzer code in. -- Albert, March 13, 2014
         $channel->exchange_declare($exchange, $exchangeType, false, true, $autoDeleteExchange);
 
-        $msg = new AMQPMessage($data, array('content_type' => 'text/plain'));
+        $msg = new \PhpAmqpLib\Message\AMQPMessage($data, array('content_type' => 'text/plain'));
 
         $channel->basic_publish($msg, $exchange);
         $channel->close();
@@ -101,7 +99,7 @@ class Application_Model_RabbitMq
                                                 $callbackUrl, $apiKey, $storageBackend, $filePrefix)
     {
         $config = parse_ini_file(self::getRmqConfigPath(), true);
-        $conn = new AMQPConnection($config["rabbitmq"]["host"],
+        $conn = new \PhpAmqpLib\Connection\AMQPConnection($config["rabbitmq"]["host"],
                 $config["rabbitmq"]["port"],
                 $config["rabbitmq"]["user"],
                 $config["rabbitmq"]["password"],
@@ -140,7 +138,7 @@ class Application_Model_RabbitMq
         //the way it is just so I don't accidentally break anything when I add the Analyzer code in. -- Albert, March 13, 2014
         $channel->exchange_declare($exchange, $exchangeType, false, true, $autoDeleteExchange);
         
-        $msg = new AMQPMessage($jsonData, array('content_type' => 'text/plain'));
+        $msg = new \PhpAmqpLib\Message\AMQPMessage($jsonData, array('content_type' => 'text/plain'));
 
         $channel->basic_publish($msg, $exchange);
         $channel->close();

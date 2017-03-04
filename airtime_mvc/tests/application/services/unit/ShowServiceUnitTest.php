@@ -1,7 +1,5 @@
 <?php
 require_once "../application/configs/conf.php";
-require_once "ShowService.php";
-require_once "ShowServiceData.php";
 
 class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
 {
@@ -38,7 +36,7 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(null, $end);
 
         $end = $method->invokeArgs($this->_showService, array(ShowServiceData::getWeeklyRepeatWithEndNoRRData()));
-        $this->assertEquals(new DateTime("2016-01-27", new DateTimeZone("UTC")), $end);
+        $this->assertEquals(new DateTime("2044-01-27", new DateTimeZone("UTC")), $end);
 
         $end = $method->invokeArgs($this->_showService, array(ShowServiceData::getWeeklyRepeatNoEndNoRRData()));
         $this->assertEquals(null, $end);
@@ -49,19 +47,19 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
         $method = $this->_reflectionOfShowService->getMethod('getMonthlyWeeklyRepeatInterval');
         $method->setAccessible(true);
 
-        $repeatInterval = $method->invokeArgs($this->_showService, array(new DateTime("2016-01-01"), new DateTimeZone("UTC")));
+        $repeatInterval = $method->invokeArgs($this->_showService, array(new DateTime("2044-01-01"), new DateTimeZone("UTC")));
         $this->assertEquals(array("first", "Friday"), $repeatInterval);
 
-        $repeatInterval = $method->invokeArgs($this->_showService, array(new DateTime("2016-01-12"), new DateTimeZone("UTC")));
+        $repeatInterval = $method->invokeArgs($this->_showService, array(new DateTime("2044-01-12"), new DateTimeZone("UTC")));
         $this->assertEquals(array("second", "Tuesday"), $repeatInterval);
 
-        $repeatInterval = $method->invokeArgs($this->_showService, array(new DateTime("2016-01-18"), new DateTimeZone("UTC")));
+        $repeatInterval = $method->invokeArgs($this->_showService, array(new DateTime("2044-01-18"), new DateTimeZone("UTC")));
         $this->assertEquals(array("third", "Monday"), $repeatInterval);
 
-        $repeatInterval = $method->invokeArgs($this->_showService, array(new DateTime("2016-01-28"), new DateTimeZone("UTC")));
+        $repeatInterval = $method->invokeArgs($this->_showService, array(new DateTime("2044-01-28"), new DateTimeZone("UTC")));
         $this->assertEquals(array("fourth", "Thursday"), $repeatInterval);
 
-        $repeatInterval = $method->invokeArgs($this->_showService, array(new DateTime("2016-01-30"), new DateTimeZone("UTC")));
+        $repeatInterval = $method->invokeArgs($this->_showService, array(new DateTime("2044-01-30"), new DateTimeZone("UTC")));
         $this->assertEquals(array("fifth", "Saturday"), $repeatInterval);
     }
 
@@ -70,11 +68,11 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
         $method = $this->_reflectionOfShowService->getMethod('getNextMonthlyMonthlyRepeatDate');
         $method->setAccessible(true);
 
-        $next = $method->invokeArgs($this->_showService, array(new DateTime("2016-01-01"), "UTC", "00:00"));
-        $this->assertEquals(new DateTime("2016-02-01", new DateTimeZone("UTC")), $next);
+        $next = $method->invokeArgs($this->_showService, array(new DateTime("2044-01-01"), "UTC", "00:00"));
+        $this->assertEquals(new DateTime("2044-02-01", new DateTimeZone("UTC")), $next);
 
-        $next = $method->invokeArgs($this->_showService, array(new DateTime("2016-01-30"), "UTC", "00:00"));
-        $this->assertEquals(new DateTime("2016-03-30", new DateTimeZone("UTC")), $next);
+        $next = $method->invokeArgs($this->_showService, array(new DateTime("2044-01-30"), "UTC", "00:00"));
+        $this->assertEquals(new DateTime("2044-03-30", new DateTimeZone("UTC")), $next);
     }
 
     public function testGetNextMonthlyWeeklyRepeatDate()
@@ -83,16 +81,16 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         $next = $method->invokeArgs($this->_showService, array(
-            new DateTime("2016-02-01"), "UTC", "00:00", "first", "Friday"));
-        $this->assertEquals(new DateTime("2016-02-05", new DateTimeZone("UTC")), $next);
+            new DateTime("2044-02-01"), "UTC", "00:00", "first", "Friday"));
+        $this->assertEquals(new DateTime("2044-02-05", new DateTimeZone("UTC")), $next);
 
         $next = $method->invokeArgs($this->_showService, array(
-            new DateTime("2016-02-01"), "UTC", "00:00", "fifth", "Saturday"));
-        $this->assertEquals(new DateTime("2016-04-30", new DateTimeZone("UTC")), $next);
+            new DateTime("2044-02-01"), "UTC", "00:00", "fifth", "Saturday"));
+        $this->assertEquals(new DateTime("2044-04-30", new DateTimeZone("UTC")), $next);
 
         $next = $method->invokeArgs($this->_showService, array(
-            new DateTime("2016-02-01"), "UTC", "00:00", "fourth", "Monday"));
-        $this->assertEquals(new DateTime("2016-02-22", new DateTimeZone("UTC")), $next);
+            new DateTime("2044-02-01"), "UTC", "00:00", "fourth", "Monday"));
+        $this->assertEquals(new DateTime("2044-02-22", new DateTimeZone("UTC")), $next);
     }
 
     public function testCreateUTCStartEndDateTime()
@@ -103,19 +101,19 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
         $utcTimezone = new DateTimeZone("UTC");
 
         //America/Toronto
-        $localStartDT = new DateTime("2016-01-01 06:30", new DateTimeZone("America/Toronto"));
-        $localEndDT = new DateTime("2016-01-01 07:30", new DateTimeZone("America/Toronto"));
+        $localStartDT = new DateTime("2044-01-01 06:30", new DateTimeZone("America/Toronto"));
+        $localEndDT = new DateTime("2044-01-01 07:30", new DateTimeZone("America/Toronto"));
 
         $dt = $method->invokeArgs($this->_showService, array($localStartDT, "01:00"));
         $this->assertEquals(array(
             $localStartDT->setTimezone($utcTimezone),$localEndDT->setTimezone($utcTimezone)), $dt);
 
         //America/Toronto with offset for rebroadcast shows
-        $localStartDT = new DateTime("2016-01-01 06:30", new DateTimeZone("America/Toronto"));
-        $localEndDT = new DateTime("2016-01-01 07:30", new DateTimeZone("America/Toronto"));
+        $localStartDT = new DateTime("2044-01-01 06:30", new DateTimeZone("America/Toronto"));
+        $localEndDT = new DateTime("2044-01-01 07:30", new DateTimeZone("America/Toronto"));
 
-        $localRebroadcastStartDT = new DateTime("2016-01-02 06:30", new DateTimeZone("America/Toronto"));
-        $localRebroadcastEndDT = new DateTime("2016-01-02 07:30", new DateTimeZone("America/Toronto"));
+        $localRebroadcastStartDT = new DateTime("2044-01-02 06:30", new DateTimeZone("America/Toronto"));
+        $localRebroadcastEndDT = new DateTime("2044-01-02 07:30", new DateTimeZone("America/Toronto"));
 
         $dt = $method->invokeArgs($this->_showService, array($localStartDT, "01:00",
             array("days" => "1", "hours" => "06", "mins" => "30")));
@@ -123,16 +121,16 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
             $localRebroadcastStartDT->setTimezone($utcTimezone),$localRebroadcastEndDT->setTimezone($utcTimezone)), $dt);
 
         //Australia/Brisbane
-        $localStartDT = new DateTime("2016-01-01 06:30", new DateTimeZone("Australia/Brisbane"));
-        $localEndDT = new DateTime("2016-01-01 07:30", new DateTimeZone("Australia/Brisbane"));
+        $localStartDT = new DateTime("2044-01-01 06:30", new DateTimeZone("Australia/Brisbane"));
+        $localEndDT = new DateTime("2044-01-01 07:30", new DateTimeZone("Australia/Brisbane"));
 
         $dt = $method->invokeArgs($this->_showService, array($localStartDT, "01:00"));
         $this->assertEquals(array(
             $localStartDT->setTimezone($utcTimezone), $localEndDT->setTimezone($utcTimezone)), $dt);
 
         //America/Vancouver
-        $localStartDT = new DateTime("2016-01-01 06:30", new DateTimeZone("America/Vancouver"));
-        $localEndDT = new DateTime("2016-01-01 07:30", new DateTimeZone("America/Vancouver"));
+        $localStartDT = new DateTime("2044-01-01 06:30", new DateTimeZone("America/Vancouver"));
+        $localEndDT = new DateTime("2044-01-01 07:30", new DateTimeZone("America/Vancouver"));
 
         $dt = $method->invokeArgs($this->_showService, array($localStartDT, "01:00"));
         $this->assertEquals(array(

@@ -1,7 +1,5 @@
 <?php
 
-require_once 'ProxyStorageBackend.php';
-
 use Aws\S3\S3Client;
 
 class ProvisioningController extends Zend_Controller_Action

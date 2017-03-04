@@ -1,6 +1,9 @@
 <?php
 error_reporting(E_ALL | E_STRICT);
 
+// load composer autoloader
+require_once __DIR__.'/../../../vendor/autoload.php';
+
 // Define path to application directory
 defined('APPLICATION_PATH')
     || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../application/'));
@@ -41,8 +44,9 @@ set_include_path(implode(PATH_SEPARATOR, array(
     realpath(APPLICATION_PATH . '/../../install_minimal/include')
 )));
 
-require_once (APPLICATION_PATH."/logging/Logging.php");
-Logging::setLogPath('/var/log/airtime/zendphp.log');
+require_once CONFIG_PATH . '/constants.php';
+
+Logging::setLogPath(LIBRETIME_LOG_DIR . '/zendphp.log');
 
 set_include_path(APPLICATION_PATH . '/common' . PATH_SEPARATOR . get_include_path());
 
@@ -70,19 +74,9 @@ set_include_path(APPLICATION_PATH . '/../tests/application/helpers' . PATH_SEPAR
 //cloud storage files
 set_include_path(APPLICATION_PATH . '/cloud_storage' . PATH_SEPARATOR . get_include_path());
 
-//Zend framework
-if (file_exists('/usr/share/php/libzend-framework-php')) {
-    set_include_path('/usr/share/php/libzend-framework-php' . PATH_SEPARATOR . get_include_path());
-    set_include_path('/usr/share/php/libzend-framework-php/Zend/Test/PHPUnit' . PATH_SEPARATOR . get_include_path());
-}
-
-require_once 'Zend/Application.php';
-require_once 'Zend/Config.php';
-
 require_once APPLICATION_PATH.'/configs/conf.php';
 require_once 'propel/propel1/runtime/lib/Propel.php';
 Propel::init("../application/configs/airtime-conf-production.php");
 
-require_once 'Zend/Session.php';
 Zend_Session::start();
 

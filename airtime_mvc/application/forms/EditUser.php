@@ -1,5 +1,4 @@
 <?php
-require_once( __DIR__ . '/../validate/NotDemoValidate.php');
 
 class Application_Form_EditUser extends Zend_Form
 {

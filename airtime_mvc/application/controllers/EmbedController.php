@@ -1,5 +1,4 @@
 <?php
-require_once('WidgetHelper.php');
 
 class EmbedController extends Zend_Controller_Action
 {

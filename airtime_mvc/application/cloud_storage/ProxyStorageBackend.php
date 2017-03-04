@@ -1,8 +1,5 @@
 <?php
 
-require_once 'StorageBackend.php';
-require_once 'FileStorageBackend.php';
-require_once 'Amazon_S3StorageBackend.php';
 
 /**
  *

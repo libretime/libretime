@@ -1,11 +1,5 @@
 <?php
 //require_once "../application/configs/conf.php";
-require_once "TestHelper.php";
-require_once "ShowServiceData.php";
-require_once "Schedule.php";
-require_once "Zend/Controller/Action.php";
-require_once "ControllerTestCase.php";
-require_once "ApiController.php";
 
 class ScheduleUnitTest extends Zend_Test_PHPUnit_ControllerTestCase //PHPUnit_Framework_TestCase
 {

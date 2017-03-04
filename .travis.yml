@@ -1,0 +1,21 @@
+language: php
+php:
+- '5.5'
+- '5.4'
+services:
+- postgresql
+- rabbitmq
+env:
+  global:
+  - ENVIRONMENT=testing
+  - LIBRETIME_LOG_DIR=/tmp/log/libretime
+install:
+- composer install
+before_script:
+- psql -c 'CREATE DATABASE libretime;' -U postgres
+- psql -c "CREATE USER libretime WITH PASSWORD 'libretime';" -U postgres
+- psql -c 'GRANT CONNECT ON DATABASE libretime TO libretime;' -U postgres
+- psql -c 'ALTER USER libretime CREATEDB;' -U postgres
+- mkdir -p /tmp/log/libretime
+script:
+- cd airtime_mvc/tests && ../../vendor/bin/phpunit

@@ -1,7 +1,5 @@
 <?php
 require_once "../application/configs/conf.php";
-require_once "TestHelper.php";
-require_once "Preference.php";
 
 class PreferenceUnitTest extends PHPUnit_Framework_TestCase
 {

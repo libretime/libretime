@@ -48,11 +48,6 @@ set_include_path(APPLICATION_PATH . 'controllers' . PATH_SEPARATOR . get_include
 //Controller plugins.
 set_include_path(APPLICATION_PATH . 'controllers/plugins' . PATH_SEPARATOR . get_include_path());
 
-//Zend framework
-if (file_exists('/usr/share/php/libzend-framework-php')) {
-    set_include_path('/usr/share/php/libzend-framework-php' . PATH_SEPARATOR . get_include_path());
-}
-
 //Services.
 set_include_path(APPLICATION_PATH . '/services/' . PATH_SEPARATOR . get_include_path());
 
@@ -65,7 +60,8 @@ set_include_path(APPLICATION_PATH . '/upgrade/' . PATH_SEPARATOR . get_include_p
 //Common directory
 set_include_path(APPLICATION_PATH . '/common/' . PATH_SEPARATOR . get_include_path());
 
-
+//Composer's autoloader
+require_once 'autoload.php';
 
 /** Zend_Application */
 require_once 'Zend/Application.php';
@@ -75,7 +71,7 @@ $application = new Zend_Application(
 );
 
 require_once(APPLICATION_PATH . "logging/Logging.php");
-Logging::setLogPath('/var/log/airtime/zendphp.log');
+Logging::setLogPath(LIBRETIME_LOG_DIR . '/zendphp.log');
 Logging::setupParseErrorLogging();
 
 // Create application, bootstrap, and run

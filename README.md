@@ -1,5 +1,7 @@
 # LibreTime
 
+[![Build Status](https://travis-ci.org/LibreTime/libretime.svg?branch=master)](https://travis-ci.org/LibreTime/libretime)
+
 LibreTime is a community managed fork of the AirTime project.
 
 It is managed by a friendly inclusive community of stations 

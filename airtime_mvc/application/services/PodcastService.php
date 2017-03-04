@@ -72,8 +72,12 @@ class Application_Service_PodcastService
 
         //TODO: why is this so slow?
         $rss = self::getPodcastFeed($feedUrl);
-        if (!$rss || !empty($rss->error())) {
+        if (!$rss) {
             throw new InvalidPodcastException();
+        }
+        $rssErr = $rss->error();
+        if (!empty($rssErr)) {
+            throw new InvalidPodcastException($rssErr);
         }
 
         // Ensure we are only creating Podcast with the given URL, and excluding
@@ -87,7 +91,8 @@ class Application_Service_PodcastService
         $podcastArray["language"] = htmlspecialchars($rss->get_language());
         $podcastArray["copyright"] = htmlspecialchars($rss->get_copyright());
 
-        $name = empty($rss->get_author()) ? "" : $rss->get_author()->get_name();
+        $rssAuthor = $rss->getAuthor();
+        $name = empty($rssAuthor) ? "" : $rss->rssAuthor->get_name();
         $podcastArray["creator"] = htmlspecialchars($name);
 
         $categories = array();

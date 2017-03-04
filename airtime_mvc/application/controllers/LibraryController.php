@@ -1,9 +1,5 @@
 <?php
 
-require_once 'formatters/LengthFormatter.php';
-require_once 'formatters/SamplerateFormatter.php';
-require_once 'formatters/BitrateFormatter.php';
-
 class LibraryController extends Zend_Controller_Action
 {
 

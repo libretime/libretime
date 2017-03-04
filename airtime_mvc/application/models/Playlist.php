@@ -1,7 +1,5 @@
 <?php
 
-require_once 'formatters/LengthFormatter.php';
-
 /**
  *
  * @package Airtime

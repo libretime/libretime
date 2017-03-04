@@ -1,8 +1,5 @@
 <?php
 
-require_once 'StorageBackend.php';
-require_once 'Billing.php';
-
 use Aws\S3\S3Client;
 
 class Amazon_S3StorageBackend extends StorageBackend
