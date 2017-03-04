@@ -106,7 +106,8 @@ define('UI_PLAYLISTCONTROLLER_OBJ_SESSNAME', 'PLAYLISTCONTROLLER_OBJ');
 define('UI_BLOCK_SESSNAME', 'BLOCK');*/
 
 //WHMCS integration
-define("WHMCS_API_URL", "https://account.sourcefabric.com/includes/api.php");
+define("LIBRETIME_ENABLE_WHMCS", false);
+define("WHMCS_API_URL", "https://account.example.org/includes/api.php");
 define("SUBDOMAIN_WHMCS_CUSTOM_FIELD_NAME", "Choose your domain");
 
 //Sentry error logging
