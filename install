@@ -458,7 +458,7 @@ loud "          * Installing Airtime Services *            "
 loud "-----------------------------------------------------"
 
 verbose "\n * Installing necessary python services..."
-loudCmd "pip install setuptools"
+loudCmd "pip install setuptools --upgrade"
 verbose "...Done"
 
 verbose "\n * Creating /run/airtime..."
@@ -607,10 +607,9 @@ if [ ! -d "/etc/airtime" ]; then
     mkdir /etc/airtime
     verbose "\n * Creating /etc/airtime-saas/ directory..."
     # Default saas directory for the analyzer, cloud storage, and celery
-    mkdir -p /etc/airtime-saas/production
+    mkdir -p /etc/airtime/production
 fi
 chown -R ${web_user}:${web_user} /etc/airtime
-chown -R ${web_user}:${web_user} /etc/airtime-saas
 
 if [ ! -d "/srv/airtime" ]; then
     mkdir -p /srv/airtime
