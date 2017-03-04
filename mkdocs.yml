@@ -15,4 +15,6 @@ pages:
   - 'Home': index.md
   - 'Features': features.md
   - 'Install': install.md
-  - 'Documentation': documentation.md
+  - 'Development':
+    - 'Testing': testing.md
+    - 'Documentation': documentation.md
