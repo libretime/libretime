@@ -145,3 +145,6 @@ define('STATION_PODCAST_SERVICE_NAME', 'station_podcast');
 //define('IMPORTED_PODCAST', 1);
 
 define('ITUNES_XML_NAMESPACE_URL', 'http://www.itunes.com/dtds/podcast-1.0.dtd');
+
+// Billing configuration
+define('LIBRETIME_ENABLE_BILLING', false);
