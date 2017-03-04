@@ -11,6 +11,7 @@ env:
   - LIBRETIME_LOG_DIR=/tmp/log/libretime
 install:
 - composer install
+- pip install --user mkdocs 
 before_script:
 - psql -c 'CREATE DATABASE libretime;' -U postgres
 - psql -c "CREATE USER libretime WITH PASSWORD 'libretime';" -U postgres
@@ -18,4 +19,16 @@ before_script:
 - psql -c 'ALTER USER libretime CREATEDB;' -U postgres
 - mkdir -p /tmp/log/libretime
 script:
-- cd airtime_mvc/tests && ../../vendor/bin/phpunit
+- pushd airtime_mvc/tests && ../../vendor/bin/phpunit && popd
+- mkdocs build --clean -q > /dev/null
+deploy:
+  provider: pages
+  skip_cleanup: true
+  local_dir: build/docs
+  github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
+  target_branch: master
+  project_name: LibreTime/LibreTime.github.io
+  fqdn: libretime.org
+  name: R. LibreTime DocBot
+  on:
+    branch: master
