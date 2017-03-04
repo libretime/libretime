@@ -67,20 +67,5 @@ before_script:
 - psql -c 'ALTER USER libretime CREATEDB;' -U postgres
 - mkdir -p /tmp/log/libretime
 script:
-- >
-    if [[ "$PYTHON" == false ]]; then
-      pushd airtime_mvc/tests
-      ../../vendor/bin/phpunit
-      results=$?
-      popd
-      exit $results
-    fi
-- >
-    if [[ "$PYTHON" == true ]]; then
-      pushd python_apps/airtime_analyzer 
-      nosetests -a '!rgain' 
-      results=$?
-      echo "replaygain tests where skipped due to not having a reliable replaygain install on travis."
-      popd
-      exit $results
-    fi
+- ./travis/php.sh
+- ./travis/python.sh
