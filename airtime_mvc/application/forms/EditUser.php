@@ -131,7 +131,7 @@ class Application_Form_EditUser extends Zend_Form
         $timezone->setDecorators(array('ViewHelper'));
         $this->addElement($timezone);
         
-        if (Application_Model_User::getCurrentUser()->isSuperAdmin()) {
+        if (LIBRETIME_ENABLE_BILLING === true && Application_Model_User::getCurrentUser()->isSuperAdmin()) {
             $elemsToDisable = array($password, $passwordVerify, $email, $firstName, $lastName,
                                     $cellPhone, $skype, $jabber);
             foreach ($elemsToDisable as $element) {

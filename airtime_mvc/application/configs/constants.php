@@ -106,11 +106,15 @@ define('UI_PLAYLISTCONTROLLER_OBJ_SESSNAME', 'PLAYLISTCONTROLLER_OBJ');
 define('UI_BLOCK_SESSNAME', 'BLOCK');*/
 
 //WHMCS integration
-define("WHMCS_API_URL", "https://account.sourcefabric.com/includes/api.php");
+define("LIBRETIME_ENABLE_WHMCS", false);
+define("WHMCS_API_URL", "https://account.example.org/includes/api.php");
 define("SUBDOMAIN_WHMCS_CUSTOM_FIELD_NAME", "Choose your domain");
 
+//LiveChat integration
+define('LIBRETIME_ENABLE_LIVECHAT', false);
+
 //Sentry error logging
-define('SENTRY_CONFIG_PATH', '/etc/airtime-saas/sentry.airtime_web.ini');
+define('SENTRY_CONFIG_PATH', LIBRETIME_CONF_DIR . '/sentry.airtime_web.ini');
 
 //Provisioning status
 define('PROVISIONING_STATUS_SUSPENDED' , 'Suspended');
@@ -141,3 +145,6 @@ define('STATION_PODCAST_SERVICE_NAME', 'station_podcast');
 //define('IMPORTED_PODCAST', 1);
 
 define('ITUNES_XML_NAMESPACE_URL', 'http://www.itunes.com/dtds/podcast-1.0.dtd');
+
+// Billing configuration
+define('LIBRETIME_ENABLE_BILLING', false);

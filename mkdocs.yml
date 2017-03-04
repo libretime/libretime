@@ -1,0 +1,20 @@
+site_name: LibreTime
+theme: readthedocs
+
+dev_addr: '0.0.0.0:8888'
+site_dir: 'build/docs'
+markdown_extensions:
+- codehilite:
+    noclasses: True
+    pygments_style: emacs
+
+extra_css:
+  - '_css/term.css'
+
+pages:
+  - 'Home': index.md
+  - 'Features': features.md
+  - 'Install': install.md
+  - 'Development':
+    - 'Testing': testing.md
+    - 'Documentation': documentation.md

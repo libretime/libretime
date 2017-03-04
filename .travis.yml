@@ -55,6 +55,7 @@ install:
     fi
 - >
     if [[ "$PYTHON" == true ]]; then
+      pip install --user mkdocs 
       pushd python_apps/airtime_analyzer 
       python setup.py install --dry-run --no-init-script
       popd
@@ -69,3 +70,17 @@ before_script:
 script:
 - ./travis/php.sh
 - ./travis/python.sh
+- mkdocs build --clean -q > /dev/null
+deploy:
+  provider: pages
+  skip_cleanup: true
+  local_dir: build/docs
+  github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
+  target_branch: master
+  repo: LibreTime/LibreTime.github.io
+  project_name: LibreTime
+  fqdn: libretime.org
+  name: R. LibreTime DocBot
+  on:
+    branch: master
+    env: PYTHON=true

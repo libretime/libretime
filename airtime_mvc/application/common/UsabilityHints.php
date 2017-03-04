@@ -103,7 +103,7 @@ class Application_Common_UsabilityHints
                     "<a href=\"/schedule\">",
                     "</a>");
             }
-        } else if ($userIsOnShowbuilderPage && $userIsSuperAdmin) {
+        } else if (LIBRETIME_ENABLE_BILLING === true && $userIsOnShowbuilderPage && $userIsSuperAdmin) {
             $unpaidInvoice = Billing::checkForUnpaidInvoice();
             if ($unpaidInvoice != null) {
                 $invoiceUrl = "/billing/invoice?invoiceid=" . $unpaidInvoice['id'];

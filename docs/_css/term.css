@@ -1,0 +1,14 @@
+pre.codehilite > code,
+div.codehilite > pre {
+  color: #808080;
+  padding: 1em;
+  border-radius: 3px;
+  font-size: 110%;
+  font-weight: bold;
+  overflow: auto;
+}
+
+pre.codehilite > code.language-console > span,
+div.codehilite > pre > span[style*="color: #AA22FF"] {
+  color: #808080 !important;
+}

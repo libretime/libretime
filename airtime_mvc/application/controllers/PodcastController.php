@@ -27,7 +27,7 @@ class PodcastController extends Zend_Controller_Action {
      */
     public function stationAction() {
 
-        if (!Billing::isStationPodcastAllowed()) {
+        if (LIBRETIME_ENABLE_BILLING === true && !Billing::isStationPodcastAllowed()) {
             $this->render("featureupgrade-page");
             return;
         }
