@@ -17,9 +17,9 @@ Getting Started
 
 The easiest way to check out LibreTime for yourself is to run a local instance in a virtual machine. Assuming you already have Git, Vagrant and Virtualbox installed, just run:
 
-    :::console
-    $ git clone https://github.com/libretime/libretime.git
-    $ cd libretime
-    $ vagrant up
+    :::bash
+    git clone https://github.com/libretime/libretime.git
+    cd libretime
+    vagrant up
 
 Of course, this setup isn't appropriate for production use. For that, check out our [installation instructions](install.md).
