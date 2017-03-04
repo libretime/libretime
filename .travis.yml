@@ -70,7 +70,6 @@ before_script:
 script:
 - ./travis/php.sh
 - ./travis/python.sh
-- mkdocs build --clean -q > /dev/null
 deploy:
   provider: pages
   skip_cleanup: true
