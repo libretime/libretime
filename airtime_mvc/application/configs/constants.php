@@ -114,7 +114,7 @@ define("SUBDOMAIN_WHMCS_CUSTOM_FIELD_NAME", "Choose your domain");
 define('LIBRETIME_ENABLE_LIVECHAT', false);
 
 //Sentry error logging
-define('SENTRY_CONFIG_PATH', '/etc/airtime-saas/sentry.airtime_web.ini');
+define('SENTRY_CONFIG_PATH', LIBRETIME_CONF_DIR . '/sentry.airtime_web.ini');
 
 //Provisioning status
 define('PROVISIONING_STATUS_SUSPENDED' , 'Suspended');
