@@ -82,4 +82,4 @@ deploy:
   name: R. LibreTime DocBot
   on:
     branch: master
-    env: PYTHON=true
+    condition: $PYTHON = true
