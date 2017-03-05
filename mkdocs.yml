@@ -13,8 +13,8 @@ extra_css:
 
 pages:
   - 'Home': index.md
-  - 'Features': features.md
   - 'What is LibreTime': manual/index.md
+  - 'Features': features.md
   - 'Rights and Royalties': manual/rights-and-royalties/index.md
   - 'Using LibreTime':
     - 'On air in 60 seconds!': 'manual/on-air-in-60-seconds/index.md'
@@ -35,13 +35,14 @@ pages:
     - 'History': manual/history/index.md
     - 'Listen': manual/listen/index.md
     - 'Help': manual/help/index.md
-  - 'Airtime in the studio':
+  - 'LibreTime in the studio':
     - 'Preparing media for ingest': manual/preparing-media-for-ingest/index.md
     - 'Live shows with Mixxx': manual/live-shows-with-mixxx/index.md
     - 'Smartphone journalism': manual/smartphone-journalism/index.md
     - 'Icecast and SHOUTcast': manual/icecast-and-shoutcast/index.md
     - 'Recording shows': manual/recording-shows/index.md
   - 'Installation':
+    - 'Install': install.md
     - 'Preparing the server': manual/preparing-the-server/index.md
     - 'Easy setup': manual/easy-setup/index.md
     - 'Automated installation': manual/automated-installation/index.md
@@ -62,14 +63,13 @@ pages:
     - 'Interface customization': manual/interface-customization/index.md
     - 'Interface localization': manual/interface-localization/index.md
     - 'Host configuration': manual/host-configuration/index.md
-    - 'Airtime API authentication': manual/airtime-api-authentication/index.md
+    - 'LibreTime API authentication': manual/airtime-api-authentication/index.md
     - 'Secure login with SSL or TLS': manual/secure-login-with-ssl/index.md
     - 'Icecast statistics with Piwik': manual/icecast-statistics-with-piwik/index.md
+  - 'Development':
+    - 'Testing': testing.md
+    - 'Documentation': documentation.md
   - 'Appendix':
     - 'Expert install': manual/expert-install/index.md
     - 'HD Audio Models': manual/hd-audio-models/index.md
     - 'About this manual': manual/about-this-manual/index.md
-  - 'Install': install.md
-  - 'Development':
-    - 'Testing': testing.md
-    - 'Documentation': documentation.md
