@@ -278,13 +278,13 @@ if [ -z web_root -a ! -d web_root ]; then
     echo "$web_root doesn't exist!"
     exit 1
 fi
+echo -e "\n.____    ._____.               ___________.__                "
+echo "|    |   |__\_ |_________   ___\__    ___/|__| _____   ____  "
+echo "|    |   |  || __ \_  __ \_/ __ \|    |   |  |/     \_/ __ \ "
+echo "|    |___|  || \_\ \  | \/\  ___/|    |   |  |  Y Y  \  ___/ "
+echo "|_______ \__||___  /__|    \___  >____|   |__|__|_|  /\___  >"
+echo -e "        \/       \/            \/                  \/     \/\n"
 
-echo -e "\n   _____  .________________________.___   _____  ___________   "
-echo    "  /  _  \ |   \______   \__    ___/|   | /     \ \_   _____/     "
-echo    " /  /_\  \|   ||       _/ |    |   |   |/  \ /  \ |    __)_      "
-echo    "/    |    \   ||    |   \ |    |   |   /    Y    \|        \     "
-echo    "\____|__  /___||____|_  / |____|   |___\____|__  /_______  /     "
-echo -e "        \/            \/                       \/        \/    \n"
 
 if [ "$ignore_dependencies" = "f" ]; then
     set +e
@@ -608,8 +608,12 @@ if [ ! -d "/etc/airtime" ]; then
     mkdir /etc/airtime
     verbose "\n * Creating /etc/airtime-saas/ directory..."
     # Default saas directory for the analyzer, cloud storage, and celery
-    mkdir -p /etc/airtime/production
+    ln -s /etc/airtime/ /etc/airtime/production
+    # put the default cloud_storage.conf using local file storage into directory
+    cp ${AIRTIMEROOT}/airtime_mvc/build/cloud_storage.conf /etc/airtime/cloud_storage.conf
 fi
+
+
 chown -R ${web_user}:${web_user} /etc/airtime
 
 if [ ! -d "/srv/airtime" ]; then
