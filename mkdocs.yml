@@ -8,6 +8,8 @@ markdown_extensions:
     noclasses: True
     pygments_style: emacs
 
+repo_url: https://github.com/LibreTime/libretime/
+
 extra_css:
   - '_css/term.css'
 
