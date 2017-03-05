@@ -1,3 +1,7 @@
+***Beware, here be dragons!*** 
+
+These Airtime instructions are outdated, see [install.md](../../install.md) for LibreTime instructions.
+
 You do not normally need to install Airtime manually, unless you are testing a development version of the software. Versions of Airtime recommended for production use are available for download and upgrade via *secure apt*, as shown in the *Automated installation* chapter.
 
 Dependencies provided by Sourcefabric

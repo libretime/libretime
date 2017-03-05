@@ -1,3 +1,7 @@
+***Beware, here be dragons!*** 
+
+These Airtime instructions are outdated, see [install.md](../../install.md) for LibreTime instructions.
+
 This installation method is intended for computers running Ubuntu or Debian GNU/Linux, and is the recommended method for production Airtime systems. If you have previously performed a manual installation of Airtime on the server, you should run the *airtime-uninstall* script to remove it before setting up the server for automated installation.
 
 Set up repositories for Ubuntu

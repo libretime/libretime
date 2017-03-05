@@ -1,3 +1,7 @@
+***Beware, here be dragons!*** 
+
+These Airtime instructions are outdated, see [install.md](../../install.md) for LibreTime instructions.
+
 The **airtime-easy-setup** package sets up a typical Airtime configuration without prompting you for any settings. You can then install the latest Airtime package from the Sourcefabric repository with a few clicks.
 
 After that, the Airtime administration interface can be accessed at the default domain name of the computer (such as *http://airtime.example.com*). If you have not yet set a fully qualified domain name for the computer, you can use a URL such as *http://ubuntu/* on the localhost for testing purposes. Whichever domain name you use, the Icecast administration interface will be at port 8000 of the same URL (such as *http://airtime.example.com:8000*).

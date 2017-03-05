@@ -1,3 +1,7 @@
+***Beware, here be dragons!*** 
+
+These Airtime instructions are outdated, see [install.md](../../install.md) for LibreTime instructions.
+
 The following instructions assume that you have root access (**sudo** on Ubuntu) to a GNU/Linux server, and are familiar with basic command line tasks. Experienced system administrators may prefer to skip to the *Expert install* chapter in the appendix of this book after preparing the server as shown in the steps below.
 
 The recommended Airtime server platform is Debian 7.2 'wheezy'. Ubuntu 12.04 LTS 'Precise Pangolin' is also supported. Users of other GNU/Linux distributions may be able to adapt these instructions to suit their needs.
