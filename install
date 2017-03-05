@@ -485,6 +485,7 @@ verbose "...Done"
 
 verbose "\n * Installing airtime_analyzer..."
 loudCmd "python ${AIRTIMEROOT}/python_apps/airtime_analyzer/setup.py install --install-scripts=/usr/bin"
+loudCmd "initctl reload-configuration"
 verbose "...Done"
 
 for i in /etc/init/airtime*.template; do
