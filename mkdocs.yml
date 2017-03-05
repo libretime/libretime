@@ -14,6 +14,31 @@ extra_css:
 pages:
   - 'Home': index.md
   - 'Features': features.md
+  - 'Manual':
+    - 'What is LibreTime': manual/index.md
+    - 'Rights and Royalties': manual/rights-and-royalties/index.md
+    - 'Using LibreTime':
+      - 'On air in 60 seconds!': 'manual/on-air-in-60-seconds/index.md'
+      - 'Getting started': manual/getting-started/index.md
+    - 'The System Menu':
+      - 'General': manual/preferences/index.md
+      - 'Users': manual/users/index.md
+      - 'Streams': manual/stream-settings/index.md
+      - 'Status': manual/status/index.md
+      - 'Listener stats': manual/listener-stats/index.md
+    - 'The main menus':
+      - 'Now playing': manual/now-playing/index.md
+      - 'Add media': manual/add-media/index.md
+      - 'Library': manual/library/index.md
+      - 'Calendar': manual/calendar/index.md
+      - 'History': manual/history/index.md
+      - 'Listen': manual/listen/index.md
+      - 'Help': manual/help/index.md
+    - 'Airtime in the studio':
+      - 'Preparing media for ingest': manual/preparing-media-for-ingest/index.md
+      - 'Live shows with Mixxx': manual/live-shows-with-mixxx/index.md
+      - 'Smartphone journalism': manual/smartphone-journalism/index.md
+      - 'About this manual': manual/about-this-manual/index.md
   - 'Install': install.md
   - 'Development':
     - 'Testing': testing.md
