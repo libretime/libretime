@@ -92,8 +92,8 @@ class CcFiles extends BaseCcFiles {
 
         //Extract the original filename, which we set as the temporary title for the track
         //until it's finished being processed by the analyzer.
-        $originalFilename = $_FILES["file"]["name"];
-        $tempFilePath = $_FILES['file']['tmp_name'];
+        $originalFilename = $fileArray['file']['name'];
+        $tempFilePath = $fileArray['file']['tmp_name'];
 
         try {
             return self::createAndImport($fileArray, $tempFilePath, $originalFilename);

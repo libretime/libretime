@@ -129,7 +129,19 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
 
         try {
-            $sanitizedFile = CcFiles::createFromUpload($this->getRequest()->getPost());
+            // REST uploads are not from Zend_Form, hence we handle them using Zend_File_transfer directly
+            $upload = new Zend_File_Transfer();
+            // this error should not really get hit, letting the user know if it does is nice for debugging
+            // see: https://github.com/LibreTime/libretime/issues/3#issuecomment-281143417
+            if (!$upload->isValid('file')) {
+                throw new Exception("invalid file uploaded");
+            }
+            $fileInfo = $upload->getFileInfo('file');
+            // this should have more info on any actual faults detected by php
+            if ($fileInfo['file']['error']) {
+                throw new Exception(sprintf('File upload error: %s', $fileInfo['file']['error']));
+            }
+            $sanitizedFile = CcFiles::createFromUpload($fileInfo);
             $this->getResponse()
                 ->setHttpResponseCode(201)
                 ->appendBody(json_encode($sanitizedFile));
