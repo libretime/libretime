@@ -1,6 +1,3 @@
-Calendar
-========
-
 The Calendar page of the Airtime administration interface has three views: **day**, **week** and **month**, which can be switched using the grey buttons in the top right corner. By default, the **month** view is shown, with today's date highlighted by a pale green background.
 
 ![](static/Screenshot451-Calendar.png)
@@ -12,7 +9,7 @@ In the top left corner of the page, you can go back or forward through the **Cal
 Adding a show
 -------------
 
-Only *Admins* and *Program Managers* can use this feature. To add a new show to the Calendar, click the **+ Show** button in the top left corner of the page, or click on any future row or box in the Calendar which is empty. Either of these actions opens the **Add this show** box, which has five sections, arranged vertically: **What**, **When**, **Live Stream Input**, **Who**, and **Style**. Click the small black triangle to the left of the section name if you wish to minimize or maximize it.
+Only *Admins* and *Program Managers* can use this feature. To add a new show to the Calendar, click the **+ Show** button in the top left corner of the page, or click on any future row or box in the Calendar which is empty. Either of these actions opens the **Add this show** box, which has six sections, arranged vertically: **What**, **When**, **Live Stream Input**, **Record & Rebroadcast**, **Who**, and **Style**. Click the small black triangle to the left of the section name if you wish to minimize or maximize it.
 
 What
 ----
@@ -28,34 +25,47 @@ Next, in the **When** section, if you clicked on a date in the **Calendar** this
 
 By default, the **Timezone** of the show start and end times will be the timezone of the station, as set on the Preferences page on the System menu. You can specify an alternative time zone using the drop-down menu, if you wish. The time zone displayed in the Calendar when you log in depends on your personal settings. See 'Updating your own account' in the chapter *Users* for more details.
 
-<img src="static/Screenshot526-Add_show_when_250.png" width="595" height="350" />
+![](static/Screenshot526-Add_show_when_250.png)
 
 Airtime will only allow you to enter valid times for shows. If you attempt to schedule show times which would be impossible, by ending the show before it begins, Airtime will highlight the error with a pink background.
 
-<img src="static/Screenshot527-negative_time250.png" width="340" height="220" />
+![](static/Screenshot527-negative_time250.png)
 
 To schedule a regular show, check the **Repeats?** box, which will make a new section of the dialog appear. Optionally, click the **Link:** box to automatically schedule the same content in the repeated shows as in the original show.
 
-<img src="static/Screenshot528-Link_shows_250.png" width="340" height="455" />
+![](static/Screenshot528-Link_shows_250.png)
 
 Then select either **weekly**, **every 2 weeks**, **every 3 weeks**, **every 4 weeks** or **monthly** from the **Repeat Type** drop-down menu. If you have selected a weekly option, check the boxes for the days of the week that you want to schedule the regular show on. If you have selected **monthly**, you have the option to **Repeat By: day of the month** (for example the 9th of each month) or **day of the week** (for example the second Wednesday of each month).
 
-<img src="static/Screenshot529-repeat_type_monthly_250.png" width="340" height="410" /> 
+![](static/Screenshot529-repeat_type_monthly_250.png)
 
 Uncheck the **No End?** box and set the **Date End** for the regular show to finish, or leave the **No End?** box checked to schedule the show indefinitely.
 
-<img src="static/Screenshot530-show_end_date_250.png" width="355" height="575" />
+![](static/Screenshot530-show_end_date_250.png)
 
 Live Stream Input
 -----------------
 
-The **Live Stream Input** section can be used to enable live input streams during the show, and also to configure authentication for them. If you check the **Use Airtime Authentication** box, the DJs (presenters) of the show will be able to connect a live stream to Airtime's **Show Source Mount** using their login name and password. See the chapter *Stream Settings* for details.
+The **Live Stream Input** section can be used to enable live input streams during the show, and also to configure authentication for them. If you check the **Use Airtime Authentication** box, the DJs (presenters) of the show will be able to connect a live stream to Airtime's **Show Source Mount Point** using their login name and password. See the chapter *Stream Settings* for details.
 
 If you check the **Use Custom Authentication** box instead, you can set a one-time username and password pair for live stream input to the show. For example, you may wish to create an authenticated live stream input for a particular remote news reporter, without providing any further access to your Airtime server for that person.
 
-<img src="static/Screenshot587-Live_stream_input.png" alt="Live stream input" width="354" height="539" />
+![](static/Screenshot457-Live_stream_input.png)
 
-A reminder of the **Host**, **Port** and **Mount** point for the live input stream to use is shown at the end of the **Live Stream Input** section.
+A reminder of the **Connection URL** for the live input stream to use is shown at the end of the **Live Stream Input** section.
+
+Record & Rebroadcast
+--------------------
+
+In the **Record & Rebroadcast** section, checking the **Record from Line In?** box enables automatic recording of the soundcard line input, if your Airtime server has one, at the time of the show. Shows set for line-in recording should not also contain files or playlists. The default audio format for live recordings is 256kbps Ogg Vorbis, and the files are saved in the *recorded* folder, under the **Import Folder** path set in the **Media Folders** page on the **System** menu. See the chapter *Host configuration* for details of recorder settings.
+
+If you wish the recording to be played out at a later time, check the **Rebroadcast?** box, and then select up to ten date and time slots in the **Choose Days** box.
+
+![](static/Screenshot458-Record_and_rebroadcast.png)
+
+Shows set for recording have a small red dot icon in the calendar, while rebroadcast shows have a white loop icon.
+
+![](static/Screenshot92-Record_and_rebroadcast_icons.png)
 
 Who
 ---
@@ -73,20 +83,20 @@ Show colours in the Calendar are set automatically, based on the **Name** of the
 
 Optionally, you can upload a Show Logo by clicking the **Browse** button.
 
-<img src="static/Screenshot584-Show_logo.png" alt="Show logo" width="335" />
+![](static/Screenshot584-Show_logo.png)
 
-Finally, click the **+ Add this show** button at the top or bottom of the box. The new show will now be displayed in the **Calendar**, with a regular slot if you have chosen to schedule one. 
+Finally, click the **Add this show** button at the top or bottom of the box. The new show will now be displayed in the **Calendar**, with a regular slot if you have chosen to schedule one. 
 
 Editing a show
 --------------
 
-Show configuration and metadata can be changed at any time before the end of a show, except for **Date/Time Start**, which is fixed after broadcast of that show commences. Click the show in the Calendar, and select either **Edit Show** for a one-off show, **Edit** then **Edit This Show** for all episodes of a repeating show or ****Edit**** then **Edit This Instance** for just one episode of a repeating show, from the pop-up context menu. Any of these actions opens the **Update Show** box, which is almost exactly the same as the **Add this Show** box. Click the **+ Update show** button at the top or bottom of the box when you are done.
+Show configuration and metadata can be changed at any time, except for **Date/Time Start** and **Record from Line In?** options, which are fixed after broadcast of that show commences. Click the show in the Calendar, and select **Edit Show** from the pop-up context menu. This opens the **Update Show** box, which is almost exactly the same as the **Add this Show** box. Click the **+ Update show** button at the top or bottom of the box when you are done.
 
 ![](static/Screenshot459-Update_show.png)
 
 Episodes of repeating shows also have an **Instance Description** field in which you can add details for that particular episode. Click the episode in the Calendar, click **Edit** on the pop-up menu, then click **Edit this instance**. After entering an Instance Description, click the **+ Update show** button.
 
-<img src="static/Screenshot583-Show_instance_description_vC9ooiT.png" alt="Show instance description" width="340" height="443" />
+![](static/Screenshot583-Show_instance_description_vC9ooiT.png)
 
 Alternatively, individual shows can be clicked on and dragged to new days and times in the calendar. However, Airtime will not allow you to drag a future show into the past, or drag and drop instances of a repeated show. In the **Day** and **Week** views, show length can be adjusted by clicking on the lower edge of the show box, and dragging the edge of the box upwards or downwards. The new show length is calculated automatically.
 

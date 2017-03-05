@@ -1,48 +1,34 @@
-General
-=======
-
-Only users with the **User Type** of *Admin* can see the **Settings** menu when they log in.
-
 On the <span style="font-weight: bold;">Settings</span> menu, click **General** to set your **Station Name**. This text is shown in your web browser's title bar when your station staff are logged into Airtime, and optionally in stream metadata. You can also set a **Station Description** and **Station Logo** here.
+You can enable live, read-only access to the Airtime schedule calendar for your station's public website with the **Allow Remote Websites to Access "Schedule" Info?** option, if you wish. (There is more about this feature in the *Exporting the schedule* chapter, in the *Advanced Configuration* section of this book).
 
-<img src="static/Screenshot553-Station_preferences.png" alt="Station preferences" width="565" height="550" />
+Initially, the **Default Fade In** and **Default Fade Out** times for automated fades are set to half a second, and the **Default Crossfade Duration** is set to zero seconds. Custom fade and crossfade times can be set for adjacent items in a playlist or static smart block. See the chapter *Library* for details.  
 
-The **Default Language** drop-down menu sets the default localization for your Airtime instance, and the **Station Timezone** drop-down menu can be used to display local time at your station. Airtime stores show times internally in UTC format (similar to *Greenwich Mean Time*), but displays local time for the convenience of your station staff. You can also set the day of the week that your station's **Week starts on**, which defaults to Sunday.
+The **Default Interface Language** drop-down menu sets the default localization for your Airtime instance, and the **Station Timezone** drop-down menu can be used to display local time at your station. Airtime stores show times internally in UTC format (similar to *Greenwich Mean Time*), but displays local time for the convenience of your station staff. You can also set the day of the week that you wish to start your station's weekly schedule on, which defaults to Sunday. Then click the **Save** button.
 
-<img src="static/Screenshot554-Default_language.png" alt="Default language" width="540" height="375" />
+![](static/Screenshot544-Preferences_250.png)
 
 Individual Airtime users can choose another interface localization when they log in, or set personal preferences for localization and time zone by clicking their username on the right side of the menu bar.
 
-<img src="static/Screenshot556-Username_link.png" alt="User name link" width="200" height="150" />
+![](static/Screenshot475-Edit_own_user_account.png)
 
-Initially, the **Default Fade In** and **Default Fade Out** times for automated fades are set to half a second, and the **Default Crossfade Duration** is set to zero seconds. Custom fade and crossfade times can be set for adjacent items in a playlist or static smart block. See the chapter *Library* for details. 
+Email / Mail Server Settings
+----------------------------
 
-You can enable live, read-only access to the Airtime schedule calendar for your station's public website by enabling the **Public Airtime API** option, if you wish. You can choose to reveal or hide the **login button** on your Radio Page by ticking on the **Display login button** option.
+The **Enable System Emails (Password Reset)** box is not checked by default, because although enabling staff users to retrieve their lost password for themselves may be convenient, this option does have security implications. If the email account of the staff user is compromised, an attacker could very easily gain access to your Airtime server by clicking the **Reset Password** link on the login page.
 
-<img src="static/Login_Button_02.PNG" width="543" height="146" />
+If you wish to enable the password reset option, your Airtime server can have an SMTP mail program installed. (See the chapter *Preparing the server* for details). Alternatively, you can check the box **Configure Mail Server** and specify the details of an external SMTP server, which would usually require authentication if it is outside of your local network.
 
-The **TuneIn Settings** enable the use of the [TuneIn broadcaster API](http://tunein.com/broadcasters/api/ "TuneIn broadcaster API"). <span>This feature is intended to push your Airtime station's stream metadata to your station's page on TuneIn. </span>
+Whether SMTP runs on the same server as Airtime or on another server, you should enter a valid email address into the **Reset Password 'From' Email** field to help ensure emails are delivered correctly. Then click the **Save** button.
 
-<span><img src="static/TuneIn%20Settings.PNG" width="543" height="245" />
-</span>
+![](static/Screenshot398-Mail_server_details.png) 
 
-You will need to add the **Station ID **which you can find in your TuneIn station URL and is the letter '*s*' and the six digits that follow. 
+SoundCloud Settings
+-------------------
 
-The next fields to fill in are the **Partner Id **and **Partner Key**. You will have to contact <span class="il">TuneIn to request both the Id and Key. Send a email including your Station ID to</span><span> </span>[broadcaster-support@<span class="il">tunein</span>.com](mailto:broadcaster-support@tunein.com "TuneIn broadcaster API")<span> and let them know you are using Airtime Pro as your broadcasting software.</span>
+If your station has a SoundCloud account (on [http://soundcloud.com](http://soundcloud.com/ "SoundCloud")), you may wish to upload files and show recordings to this service, in order to broaden distribution and balance the bandwidth load with your own servers. Click the small black triangle next to **SoundCloud Settings** to show the options available. Check the **Enable Soundcloud Upload** box, then optionally check the **Automatically Upload Recorded Shows** box. You will also need to enter your SoundCloud login email address and password, and the tag metadata that SoundCloud will use to categorize your show recordings.
 
-<span><img src="static/2015-06-29%2018_14_50-staging4%20-%20Airtime.png" alt="SoundCloud Settings" width="512" height="208" /></span>
+Check the box **Automatically Mark Files "Downloadable" on SoundCloud** if you wish to enable this option. **** You can also set a default genre, track type and copyright license here, including public domain, all rights reserved, or one of the *Creative Commons* licenses (see [http://creativecommons.org](http://creativecommons.org/ "Creative Commons")). Then click the **Save** button again.
 
-<span>**SoundCloud Settings **enable you to upload tracks from your Airtime Pro instance to your SoundCloud account. <span>If you frequently broadcast full, pre-produced radio shows, this new feature can help you streamline your audio publishing workflow. Title, genre, and year metadata are passed along to SoundCloud to save you time, and you can set a default visibility for new uploads in the preferences.</span></span>
+![](static/Screenshot270-SoundCloud_Settings.png)
 
-<span><img src="static/2015-06-29%2018_17_25-staging4%20-%20Airtime.png" alt="SoundCloud upload" width="494" height="261" /></span>
-
-<span>Once you've connected your Airtime Pro account to your SoundCloud account you'll be able to upload your tracks. To do so you only need to <span>Left-click on a track in your library and select SoundCloud -&gt; Upload track.</span></span>
-
- <img src="static/Delete%20All%20Tracks.PNG" width="541" height="172" />
-
-Under **Dangerous Options **there is the possibility to clear your entire library *permanently. *By clicking on this option you will clear all uploaded files from your library. This does not include playlists, smart blocks or webstreams, however all their contents will be deleted. 
-
-<img src="static/Save%20Preferences.PNG" width="540" height="136" />
-
-Once you have updated the preferences, click the **Save** button.
-
+Please note that like most online distribution services, SoundCloud terms of service require you to have copyright in, or permission for Internet distribution from the copyright holder of, any media that you upload. Commercially released music files uploaded to SoundCloud are likely to be automatically removed from your station's SoundCloud page.

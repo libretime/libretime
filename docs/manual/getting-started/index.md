@@ -1,17 +1,26 @@
-Getting started
-===============
+If the server is only being used for Airtime and has a web browser installed, you can access the administration interface directly on that server by opening the address:
 
-You can access the Airtime administration interface by opening your *airtime.pro* domain name in your web browser, for example:
+    http://localhost/
 
-    https://example.airtime.pro/
+If you have set up Airtime so that it can be accessed from other computers, you would use a domain name instead. For example:
 
-If you are the station administrator, log in with the user name *admin* and the password given to you. Your browser should automatically focus on the **Username** field.
+    https://airtime.example.com/
+
+You can log in for the first time with the user name *admin* and the password set during installation. Your browser should automatically focus on the **Username** field.
 
 ![](static/Screenshot465-Airtime_login.png)
 
 If you enter the password incorrectly three times, you will be presented with a reCAPTCHA challenge to prove that you are a human, and not a password-guessing robot. This feature helps protect your Airtime installation against brute force attacks.
 
 ![](static/Screenshot466-Recaptcha_login.png)
+
+If activated, you will see a link **Reset password** below the password field, which enables users to obtain a password reminder by email. See the chapter *Preferences* for configuration details.
+
+![](static/Screenshot467-Reset_password_link.png) 
+
+The **E-mail** address you enter must match the address stored in the database for your **Username**.
+
+![](static/Screenshot468-Restore_password.png)
 
 Register Airtime
 ----------------
@@ -49,14 +58,21 @@ Clicking the username link opens a page in which you can update your Airtime pas
 
 ![](static/Screenshot470-User_settings.png)
 
+On the right of the Logout link, clicking the green check mark opens a pop-up window with information about the version of Airtime installed. If your Airtime installation is not the latest version available, the green check mark changes to a green upgrade arrow. Should your Airtime installation get too far out of date, this arrow will change to a red exclamation mark.
+
+<img src="static/Screenshot543-Running_latest_version_250.png" width="595" height="230" />
+
 Checking an Icecast server
 --------------------------
 
-You can check that Icecast is running by opening its default server port of 8000 in your web browser. For example, using the domain name of the Icecast server found on the **Stream Settings** page:
+If you have installed an Icecast streaming media server, you can check that Icecast is running by opening its default server port of 8000 in your web browser. For example, on the server itself, you can use:
 
-    http://example.out.airtime.pro:8000/ 
+    http://localhost:8000
 
-You should see the Icecast status page, with details of any connections that your Airtime server has made to this Icecast server. If you have only just started with Airtime, there may not be any media playing out yet.
+or from another machine, using the domain name of the Icecast server:
+
+    http://streaming.example.com:8000
+
+You should see the Icecast status page, with details of any connections that your Airtime server has made to this Icecast server. If you have only just installed Airtime, there may not be any media playing out yet.
 
 ![](static/Screenshot293-Icecast_status_page.png)
-

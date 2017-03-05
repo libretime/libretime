@@ -1,6 +1,3 @@
-Smartphone journalism
-=====================
-
 Using an ordinary smartphone and Airtime, you can upload your audio reports to the studio library or put them straight on the air. Here's how...
 
 The basic voice recorder app on your phone may not have all the features you need for journalism, but there are plenty of more suitable recording apps available for both iPhone and Android. For instance, searching for 'ogg recorder' in the *Play Store* on an Android phone yields plenty of alternatives. The following example uses *RecForge Lite* because of its configurable recording formats. This free app is limited to three minutes per recording in Ogg and MP3 formats, but there is an unrestricted version available at very modest cost.
@@ -25,12 +22,14 @@ After tapping the **Start upload** button on the Add Media page, the files are n
 
 ![](static/Image380-Uploading_a_file.png)
 
+If you prefer, you can upload audio files to the *organize* folder on the Airtime server using an SFTP client, skipping the web browser step. See the chapter *Manage media folders* for details. Suitable client applications include **AndFTP** for Android: <http://www.lysesoft.com/products/andftp/index.html>
+
 You can now add the uploaded files directly to a forthcoming show, use them to create smart blocks or playlists in the **Library**, or edit their metadata to make them easier to find in searches later. One of the limitations of mobile recording is that it isn't always convenient to enter large amounts of text metadata when you're on the move. So a phone app that tagged audio recordings with creator, location and other relevant metadata would be very useful.
 
 Going live
 ----------
 
-Mobile apps which enable you to stream directly into Airtime's live rebroadcast feature include **KoalaSan** for iOS: <http://koalasan.net/> and **BroadcastMySelf** for Android: <https://play.google.com/store/apps/details?id=sa.broadcastmyself>
+Mobile apps which enable you to stream directly into Airtime's live rebroadcast feature include **KoalaSan** for iOS: <http://koalasan.net/> and **BroadcastMySelf** for Android: <https://play.google.com/store/apps/details?id=sa.broadcastmyself> DemoIcesShout for Android also shows promise, although it can only stream a static file, rather than stream from a microphone: <http://droidtools.sourceforge.net/content/icecast-client-android>
 
 A live workflow does of course depend on a steady network connection between the phone and Airtime server. Because streaming media on a regular basis can use a lot of bandwidth, it is advisable to use WiFi rather than mobile data (3G/4G) whenever possible, especially when roaming across networks.
 
@@ -88,4 +87,3 @@ You may also wish to configure the **Tracks Folder** setting, which enables you 
 To connect the Android device to the Airtime server, tap the square button in the lower middle of the main interface. The connection indicator on the button should turn blue, and the message *connected* should be shown. Push up the fader on the left to increase input level from the internal microphone, or push up the fader on the right and tap one of the named files in the upper right window to stream it. Tap either of the **LOCK** buttons to prevent the stream input level being changed accidentally.
 
 When the connection is made, Airtime output will fade from scheduled play to the stream from your mobile device. See the chapter *Stream settings* for more details of connection preferences.
-

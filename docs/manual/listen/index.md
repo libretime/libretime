@@ -1,6 +1,3 @@
-Listen
-======
-
 In the Master Panel, beneath the **ON AIR** indicator, you will find the **LISTEN** button.
 
 ![](static/Screenshot358-Listen_button.png)
@@ -18,4 +15,3 @@ To display the URL of the stream you are monitoring, so that you can copy and pa
 ![](static/Screenshot479-Live_stream_share.png)
 
 When you have finished monitoring the streams, you can close the pop-up window in the normal way, depending on the browser you are using. In Firefox, you can close the window by clicking the **X** button in the top right corner. This action will not shut down the output from the Airtime server, only the stream monitoring on your desktop computer or laptop.
-

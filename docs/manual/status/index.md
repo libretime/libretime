@@ -1,11 +1,7 @@
-Status
-======
+On the **System** menu, the **Status** page provides an overview of the health and resource usage of the various services that make up an Airtime system. If all is well, you will only see green check mark icons in the **Status** column. This page also shows how much **Disk Space** you have used on the disk partition containing the main Import folder, as well as any disks or partitions with watched folders.
 
-On the **System** menu, the **Status** page provides an overview of the health and resource usage of the services that make up an Airtime system. If all is well, you will only see green check mark icons in the **Status** column. This page also shows how much **Disk Space** you have used.
+![](static/Screenshot521-System_status_240.png)
 
-<img src="static/Screenshot573-System_status.png" alt="System status" width="645" height="208" />
+If any of the check mark icons in the **Status** column have changed to a red warning sign, contact your system administrator for assistance. (The chapter *Troubleshooting* contains some tips). Airtime will do its best to restart any failing services, but sometimes manual intervention may be required; for example, in the case of hardware failure.
 
-If any of the check mark icons in the **Status** column have changed to a red warning sign, contact Sourcefabric support for assistance. Airtime will do its best to restart any failing services, but sometimes manual intervention may be required.
-
-If you have run out of storage space, an Airtime user with *admin* privileges could log in and delete media files that are no longer required from the **Library**. Alternatively, you could order more storage capacity from Sourcefabric.
-
+If you have run out of storage space, an Airtime user with *admin* privileges could log in and delete media files that are no longer required from the **Library**. Alternatively, you could move some files to a watched folder on another disk, or ask your system administrator to install additional storage capacity.

@@ -14,31 +14,61 @@ extra_css:
 pages:
   - 'Home': index.md
   - 'Features': features.md
-  - 'Manual':
-    - 'What is LibreTime': manual/index.md
-    - 'Rights and Royalties': manual/rights-and-royalties/index.md
-    - 'Using LibreTime':
-      - 'On air in 60 seconds!': 'manual/on-air-in-60-seconds/index.md'
-      - 'Getting started': manual/getting-started/index.md
-    - 'The System Menu':
-      - 'General': manual/preferences/index.md
-      - 'Users': manual/users/index.md
-      - 'Streams': manual/stream-settings/index.md
-      - 'Status': manual/status/index.md
-      - 'Listener stats': manual/listener-stats/index.md
-    - 'The main menus':
-      - 'Now playing': manual/now-playing/index.md
-      - 'Add media': manual/add-media/index.md
-      - 'Library': manual/library/index.md
-      - 'Calendar': manual/calendar/index.md
-      - 'History': manual/history/index.md
-      - 'Listen': manual/listen/index.md
-      - 'Help': manual/help/index.md
-    - 'Airtime in the studio':
-      - 'Preparing media for ingest': manual/preparing-media-for-ingest/index.md
-      - 'Live shows with Mixxx': manual/live-shows-with-mixxx/index.md
-      - 'Smartphone journalism': manual/smartphone-journalism/index.md
-      - 'About this manual': manual/about-this-manual/index.md
+  - 'What is LibreTime': manual/index.md
+  - 'Rights and Royalties': manual/rights-and-royalties/index.md
+  - 'Using LibreTime':
+    - 'On air in 60 seconds!': 'manual/on-air-in-60-seconds/index.md'
+    - 'Getting started': manual/getting-started/index.md
+  - 'The System Menu':
+    - 'General': manual/preferences/index.md
+    - 'Users': manual/users/index.md
+    - 'Media Folders': manual/media-folders/index.md
+    - 'Streams': manual/stream-settings/index.md
+    - 'Support Feedback': manual/support-feedback/index.md
+    - 'Status': manual/status/index.md
+    - 'Listener stats': manual/listener-stats/index.md
+  - 'The main menus':
+    - 'Now playing': manual/now-playing/index.md
+    - 'Add media': manual/add-media/index.md
+    - 'Library': manual/library/index.md
+    - 'Calendar': manual/calendar/index.md
+    - 'History': manual/history/index.md
+    - 'Listen': manual/listen/index.md
+    - 'Help': manual/help/index.md
+  - 'Airtime in the studio':
+    - 'Preparing media for ingest': manual/preparing-media-for-ingest/index.md
+    - 'Live shows with Mixxx': manual/live-shows-with-mixxx/index.md
+    - 'Smartphone journalism': manual/smartphone-journalism/index.md
+    - 'Icecast and SHOUTcast': manual/icecast-and-shoutcast/index.md
+    - 'Recording shows': manual/recording-shows/index.md
+  - 'Installation':
+    - 'Preparing the server': manual/preparing-the-server/index.md
+    - 'Easy setup': manual/easy-setup/index.md
+    - 'Automated installation': manual/automated-installation/index.md
+    - 'Manual installation': manual/manual-installation/index.md
+    - 'Setting the server time': manual/setting-the-server-time/index.md
+  - 'Administration':
+    - 'The airtime-log command': manual/the-airtime-log-command/index.md
+    - 'Backing up the server': manual/backing-up-the-server/index.md
+    - 'Upgrading': manual/upgrading/index.md
+    - 'Troubleshooting': manual/troubleshooting/index.md
+    - 'Using Monit': manual/using-monit/index.md
+  - 'Advanced configuration':
+    - 'Automated file import': manual/automated-file-import/index.md
+    - 'Icecast handover': manual/icecast-handover/index.md
+    - 'Promoting your station': manual/promoting-your-station/index.md
+    - 'Stream player for your website': manual/stream-player-for-your-website/index.md
+    - 'Exporting the schedule': manual/exporting-the-schedule/index.md
+    - 'Interface customization': manual/interface-customization/index.md
+    - 'Interface localization': manual/interface-localization/index.md
+    - 'Host configuration': manual/host-configuration/index.md
+    - 'Airtime API authentication': manual/airtime-api-authentication/index.md
+    - 'Secure login with SSL or TLS': manual/secure-login-with-ssl/index.md
+    - 'Icecast statistics with Piwik': manual/icecast-statistics-with-piwik/index.md
+  - 'Appendix':
+    - 'Expert install': manual/expert-install/index.md
+    - 'HD Audio Models': manual/hd-audio-models/index.md
+    - 'About this manual': manual/about-this-manual/index.md
   - 'Install': install.md
   - 'Development':
     - 'Testing': testing.md

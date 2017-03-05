@@ -1,6 +1,3 @@
-Preparing media for ingest
-==========================
-
 Before uploading media to an Airtime server, there are a number of factors which should be considered. Getting your ingest workflow right will save you a lot of time later.
 
 Metadata quality
@@ -96,4 +93,3 @@ Before importing media, it is good practice to check for any silent sections in 
 Very quiet introductions or over-long fades can also lead to apparent gaps in your broadcast playout. Some audio CDs feature a 'hidden track' at the end, which in fact uses a long period of silence within the final track, rather than an actual separate track on the disc. This means that CD encoding programs will often encode both the hidden material and the silence in the media file. For example, the track *Debra* from the CD *Midnite Vultures* by *Beck* includes hidden material preceded by seven minutes of silence, as shown in the screen shot from Audacity below.
 
 ![](static/Screenshot126-Debra_silence.png)
-

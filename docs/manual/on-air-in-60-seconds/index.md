@@ -1,7 +1,4 @@
-On air in 60 seconds!
-=====================
-
-Here's how you can use Airtime Pro to manage your broadcasts. Chapter names in this book are shown in *italics*, to help you find the details of each step (if you need to read more).
+Here's how you can use Airtime to manage your broadcasts. Chapter names in this book are shown in *italics*, to help you find the details of each step (if you need to read more).
 
 1. Log in to your Airtime server with your **Username** and **Password** (*Getting started*).
 

@@ -1,6 +1,3 @@
-Rights and royalties
-====================
-
 If you're new to broadcasting, or have not streamed your station online before, reading the following brief explanation of compensation rules for songwriters, musicians and other copyright holders may save you a great deal of trouble later.
 
 Independent music radio on the Internet has faced royalty demands from SoundExchange in the USA, and similar organizations in other territories. These organizations are usually membership societies or government-sanctioned national authorities which are intended to collect money from broadcasters to compensate copyright holders. The royalty collection societies require payment before you can stream just about any music released commercially to the general public — whether you make any money out of streaming, or not. It's not so much the percentage of revenue demanded, but that there are usually annual minimum fees to pay, which can hurt small stations disproportionately.
@@ -18,4 +15,3 @@ Free content streaming offers an alternative for DIY Internet radio. Since royal
 You might be able to persuade other people to allow you to stream their content too, as long as they do not have a conflicting legal obligation, such as having previously joined one of the many royalty collection societies around the world. You can ask for permission to stream when website visitors upload their own music files to you via a HTML form, much as the likes of SoundCloud do. Or you can collect files licensed under an appropriate Creative Commons licence (<http://www.creativecommons.org>) or other free content licence.
 
 Explicit permission to stream on your particular server is always going to be the ideal, so think about your own terms and conditions before you accept files from third parties for streaming. How, for example, would you know if someone uploaded a file to your online radio station that unknown to you, had been ripped from a commercially released CD? That's the kind of thing that could get you in trouble with the licensing authorities and copyright holders.
-
