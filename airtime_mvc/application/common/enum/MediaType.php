@@ -1,7 +1,6 @@
 <?php
 
-require_once "Enum.php";
-final class MediaType extends Enum {
+final class MediaType {
 
     const __default = self::FILE;
 
@@ -10,5 +9,9 @@ final class MediaType extends Enum {
     const BLOCK = 3;
     const WEBSTREAM = 4;
     const PODCAST = 5;
+
+    public static function getDefault() {
+        return static::__default;
+    }
 
 }
