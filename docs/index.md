@@ -22,4 +22,6 @@ The easiest way to check out LibreTime for yourself is to run a local instance i
     cd libretime
     vagrant up
 
+If everything works out, you will find LibreTime on [port 8080](http://localhost:8080) and the docs on [port 8888](http://localhost:8888).
+
 Of course, this setup isn't appropriate for production use. For that, check out our [installation instructions](install.md).

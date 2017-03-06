@@ -305,11 +305,17 @@ if [ "$ignore_dependencies" = "f" ]; then
     else
         loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-ubuntu-trusty.apt | tr '\n' ' ')"
     fi
+    if [ "$in_place" = "t" ]; then
+        loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install git"
+    fi
     set -e
 else
     checkCommandExists "apache2"
     checkCommandExists "rabbitmqctl"
     checkCommandExists "psql"
+    if [ "$in_place" = "t" ]; then
+        checkCommandExists "git"
+    fi
 fi
 
 # Check if composer exists and install if it doesn't
@@ -606,8 +612,7 @@ if [ ! -d "/etc/airtime" ]; then
 
     verbose "\n * Creating /etc/airtime/ directory..."
     mkdir /etc/airtime
-    verbose "\n * Creating /etc/airtime-saas/ directory..."
-    # Default saas directory for the analyzer, cloud storage, and celery
+    # workaround for reintegrated airtime-saas dir, will get removed after we refactored config loading
     ln -s /etc/airtime/ /etc/airtime/production
     # put the default cloud_storage.conf using local file storage into directory
     cp ${AIRTIMEROOT}/airtime_mvc/build/cloud_storage.conf /etc/airtime/cloud_storage.conf
