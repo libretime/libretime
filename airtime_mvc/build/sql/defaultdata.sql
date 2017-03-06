@@ -386,5 +386,12 @@ ANALYZE cc_pref; -- this validates the new partial index
 
 --end added in 2.5.14
 
+-- edded in 2.5.15
+
 -- For now, just needs to be truthy - to be updated later; we should find a better way to implement this...
 INSERT INTO cc_pref("keystr", "valstr") VALUES('whats_new_dialog_viewed', 1);
+
+-- end added in 2.5.15
+
+-- added in 3.0.0-alpha
+INSERT INTO cc_pref("keystr", "valstr") VALUES("using_custom_stream_settings", 1);
