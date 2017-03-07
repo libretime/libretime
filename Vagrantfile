@@ -40,7 +40,7 @@ Vagrant.configure("2") do |config|
      sudo DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install  alsa
      sudo usermod -a -G audio vagrant
   SHELL
-  config.vm.provision "shell", inline: "cd /vagrant; ./install -fIapv --web-port=9080"
+  config.vm.provision "shell", inline: "cd /vagrant; ./install -fIiapv --web-port=9080"
   config.vm.provision "shell", path: "docs/scripts/install.sh"
   config.vm.provision "shell", path: "docs/scripts/serve.sh"
 

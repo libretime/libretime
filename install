@@ -210,11 +210,11 @@ while :; do
             exit 1
             ;;
         --web-port)
-            echo 'ERROR: Pleas specify a port number.' >&2
+            echo 'ERROR: Please specify a port number.' >&2
             exit 1
             ;;
         --web-port=)
-            echo 'ERROR: Pleas specify a port number.' >&2
+            echo 'ERROR: Please specify a port number.' >&2
             exit 1
             ;;
         --web-port=?*)
