@@ -9,6 +9,8 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 9080, host:9080
   # icecast2
   config.vm.network "forwarded_port", guest: 8000, host:8000
+  # liquidsoap input harbors for instreaming (ie. /master)
+  config.vm.network "forwarded_port", guest: 8001, host:8001
   # mkdics documentation
   config.vm.network "forwarded_port", guest: 8888, host:8888
 
