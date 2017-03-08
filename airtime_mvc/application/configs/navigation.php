@@ -88,7 +88,14 @@ $pages[] = array(
             'module'     => 'default',
             'controller' => 'preference',
             'action'     => 'stream-setting'
-        )
+        ),
+        array(
+            'label'      => _('Status'),
+            'module'     => 'default',
+            'controller' => 'systemstatus',
+            'action'     => 'index',
+            'resource'   =>    'systemstatus'
+        ),
     )
 );
 $pages[] = array(
