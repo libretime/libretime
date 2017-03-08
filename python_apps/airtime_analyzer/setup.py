@@ -14,7 +14,8 @@ if '--no-init-script' in sys.argv:
     data_files = []
     sys.argv.remove('--no-init-script') # super hax
 else:
-    data_files = [('/etc/init', ['install/upstart/airtime_analyzer.conf'])]
+    data_files = [('/etc/init', ['install/upstart/airtime_analyzer.conf']),
+                  ('/etc/init.d', ['install/sysvinit/airtime_analyzer'])]
     print data_files
 
 setup(name='airtime_analyzer',

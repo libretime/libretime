@@ -91,7 +91,8 @@ class Application_Service_PodcastService
         $podcastArray["language"] = htmlspecialchars($rss->get_language());
         $podcastArray["copyright"] = htmlspecialchars($rss->get_copyright());
 
-        $name = empty($rss->get_author()) ? "" : $rss->get_author()->get_name();
+        $author = $rss->get_author();
+        $name = empty($author) ? "" : $author->get_name();
         $podcastArray["creator"] = htmlspecialchars($name);
 
         $categories = array();

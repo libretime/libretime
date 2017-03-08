@@ -3,16 +3,19 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "ubuntu/trusty64"
-
   # libretime web interface
-  config.vm.network "forwarded_port", guest: 9080, host:9080
+  config.vm.network "forwarded_port", guest: 8080, host:8080
   # icecast2
   config.vm.network "forwarded_port", guest: 8000, host:8000
   # liquidsoap input harbors for instreaming (ie. /master)
   config.vm.network "forwarded_port", guest: 8001, host:8001
   # mkdics documentation
   config.vm.network "forwarded_port", guest: 8888, host:8888
+
+  # make sure we are using nfs (doesn't work out of the box with debian)
+  config.vm.synced_folder ".", "/vagrant", type: "nfs"
+  # private network for nfs
+  config.vm.network "private_network", ip: "192.168.10.100"
 
   config.vm.provider "virtualbox" do |v|
     # to run without OOMing we need at least 1GB of RAM
@@ -29,21 +32,33 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  # ubuntu/trusty64 alsa setup
-  # slightly modernized from  https://github.com/naomiaro/vagrant-alsa-audio
-  # https://wiki.ubuntu.com/Audio/UpgradingAlsa/DKMS
-  config.vm.provision "shell", inline: <<-SHELL
-     alsa_deb="oem-audio-hda-daily-dkms_0.201703070301~ubuntu14.04.1_all.deb"
-     wget -nv https://code.launchpad.net/~ubuntu-audio-dev/+archive/ubuntu/alsa-daily/+files/${alsa_deb}
-     sudo dpkg -i ${alsa_deb}
-     rm ${alsa_deb}
-     sudo DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install  alsa
-     sudo usermod -a -G audio vagrant
-     # liquidsoap runs as apache
-     sudo usermod -a -G audio www-data
-  SHELL
-  config.vm.provision "shell", inline: "cd /vagrant; ./install -fIiapv --web-port=9080"
-  config.vm.provision "shell", path: "docs/scripts/install.sh"
-  config.vm.provision "shell", path: "docs/scripts/serve.sh"
+  # default installer args used for all distros
+  installer_args="--force --in-place --verbose --postgres --apache --icecast "
+
+  # define all the OS boxes we support
+  config.vm.define "ubuntu" do |os|
+    os.vm.box = "ubuntu/trusty64"
+    provision_libretime(os, "ubuntu.sh", installer_args + "--distribution=ubuntu --release=trusty")
+  end
+  config.vm.define "debian" do |os|
+    os.vm.box = "debian/jessie64"
+    provision_libretime(os, "debian.sh", installer_args + "--distribution=debian --release=jessie")
+  end
+  config.vm.define "centos" do |os|
+    os.vm.box = 'centos/7'
+    provision_libretime(os, "centos.sh", installer_args + "--ignore-dependencies --distribution=centos --web-user=apache")
+  end
+
+  def provision_libretime(config, prepare_script, installer_args)
+    # Prepare OS
+    config.vm.provision "prepare", type: "shell", path: "installer/vagrant/%s" % prepare_script
+
+    # Provision LibreTime
+    config.vm.provision "install", type: "shell", inline: "cd /vagrant; ./install %s --web-port=8080" % installer_args
+
+    # Provision docs
+    config.vm.provision "install-mkdocs", type: "shell", path: "docs/scripts/install.sh"
+    config.vm.provision "start-mkdocs", type: "shell", path: "docs/scripts/serve.sh"
+  end
 
 end
