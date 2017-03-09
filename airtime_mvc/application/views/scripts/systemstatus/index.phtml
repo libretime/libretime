@@ -3,7 +3,6 @@
 </head>
 
 <?php
-/* Airtime Pro
     $phpDependencies = checkPhpDependencies();
     $externalServices = checkExternalServices();
     $postgres = $phpDependencies["postgres"];
@@ -13,23 +12,19 @@
 
     $pypo =          $externalServices["pypo"];
     $liquidsoap =    $externalServices["liquidsoap"];
-    $mediamonitor = $externalServices["media-monitor"];
+    $analyzer =      $externalServices["analyzer"];
 
     $r1 = array_reduce($phpDependencies, "booleanReduce", true);
     $r2 = array_reduce($externalServices, "booleanReduce", true);
     $result = $r1 && $r2;
-*/
-
-    // Disk information. We only use the [0]th index
-    // because we don't have Watched/Media Folders
-    $disk = $this->status->partitions[0];
-    $used = $disk->totalSpace-$disk->totalFreeSpace;
-    $total = $disk->totalSpace;
 ?>
 
 <table width="60%" cellpadding="0" cellspacing="0" border="0" class="statustable">
-<?php /* Disabling most of the status page for Airtime Pro
     <thead>
+        <tr>
+            <td class="strong"><?php echo sprintf(_("%s Version"), PRODUCT_NAME) ?></td>
+            <td colspan=2><?php echo $this->version; ?></td>
+        </tr>
         <tr class="ui-state-default strong">
             <td><?php echo _("Service") ?></td>
             <td><?php echo _("Description") ?></td>
@@ -37,13 +32,6 @@
         </tr>
     </thead>
     <tbody>
-        <!--
-        <tr class="odd">
-            <td><?php echo sprintf(_("%s Version"), PRODUCT_NAME) ?></td>
-            <td>1.9.3</td>
-            <td>&nbsp;</td>
-        </tr>
-        -->
         <tr>
             <td class="component">
                 Postgres
@@ -54,7 +42,7 @@
             <td class="solution <?php if ($postgres) {echo 'check';?>">
                 <?php
                     } else {
-                        ?>"
+                        ?>">
                         Try running <code>sudo apt-get install php5-pgsql</code>
                     <?php
                     }
@@ -66,15 +54,15 @@
                 Database
             </td>
             <td class="description">
-                Database configuration for Airtime
+                Database configuration for LibreTime
             </td>
             <td class="solution <?php if ($database) {echo 'check';?>">
                 <?php
                 } else {
-                    ?>"
+                    ?>">
                     Make sure you aren't missing any of the Postgres dependencies in the table above.
                     If your dependencies check out, make sure your database configuration settings in
-                    <code>/etc/airtime.conf</code> are correct and the Airtime database was installed correctly.
+                    <code>/etc/airtime.conf</code> are correct and the LibreTime database was installed correctly.
                 <?php
                 }
                 ?>
@@ -85,12 +73,12 @@
                 RabbitMQ
             </td>
             <td class="description">
-                RabbitMQ configuration for Airtime
+                RabbitMQ configuration for LibreTime
             </td>
             <td class="solution <?php if ($rabbitmq) {echo 'check';?>">
                 <?php
                 } else {
-                    ?>"
+                    ?>">
                     Make sure RabbitMQ is installed correctly, and that your settings in /etc/airtime/airtime.conf
                     are correct. Try using <code>sudo rabbitmqctl list_users</code> and <code>sudo rabbitmqctl list_vhosts</code>
                     to see if the airtime user (or your custom RabbitMQ user) exists, then checking that 
@@ -103,19 +91,19 @@
         </tr>
         <tr>
             <td class="component">
-                Media Monitor
+                Media Analzyer
             </td>
             <td class="description">
-                Airtime media-monitor service
+                LibreTime media analyzer service
             </td>
-            <td class="solution <?php if ($mediamonitor) {echo 'check';?>">
+            <td class="solution <?php if ($analyzer) {echo 'check';?>">
                 <?php
                 } else {
-                    ?>"
-                    Check that the airtime-media-monitor service is installed correctly in <code>/etc/init</code>, 
+                    ?>">
+                    Check that the airtime_analyzer service is installed correctly in <code>/etc/init</code>, 
                     and ensure that it's running with
-                    <br/><code>initctl list | grep airtime-media-monitor</code><br/>
-                    If not, try  <br/><code>sudo service airtime-media-monitor start</code>
+                    <br/><code>initctl list | grep airtime_analyzer</code><br/>
+                    If not, try  <br/><code>sudo service airtime_analyzer start</code>
                 <?php
                 }
                 ?>
@@ -126,12 +114,12 @@
                 Pypo
             </td>
             <td class="description">
-                Airtime playout service
+                LibreTime playout service
             </td>
             <td class="solution <?php if ($pypo) {echo 'check';?>">
                 <?php
                 } else {
-                    ?>"
+                    ?>">
                     Check that the airtime-playout service is installed correctly in <code>/etc/init</code>, 
                     and ensure that it's running with
                     <br/><code>initctl list | grep airtime-playout</code><br/>
@@ -146,12 +134,12 @@
                 Liquidsoap
             </td>
             <td class="description">
-                Airtime liquidsoap service
+                LibreTime liquidsoap service
             </td>
-            <td class="solution <?php if ($liquidsoap) {echo 'check';?>">
+            <td class="solution <?php if ($liquidsoap) {echo 'check';?>" >
                 <?php
                 } else {
-                    ?>"
+                    ?>">
                     Check that the airtime-liquidsoap service is installed correctly in <code>/etc/init</code>, 
                     and ensure that it's running with
                     <br/><code>initctl list | grep airtime-liquidsoap</code><br/>
@@ -162,26 +150,7 @@
             </td>
         </tr>
     </tbody>
- */?>
     <tr id="partitions" class="even">
         <th colspan="5"><?php echo _("Disk Space") ?></th>
-    </tr>
-    <tr class="partition-info">
-        <td><span class="strong"><?php echo _("Disk") ?></span>
-            <ul id="watched-dir-list">
-            </ul>
-        </td>
-        <td>
-            <?php
-                echo sprintf("%01.1fGB of %01.1fGB", $used/pow(2, 30), $total/pow(2, 30))
-            ?>
-        </td>
-        <td colspan="3">
-            <div class="big">
-                <div class="diskspace" style="width:<?php echo sprintf("%01.1f%%", $used/$total*100) ?>;">
-                </div>
-            </div>
-            <div><?php echo sprintf("%01.1f%% ", $used/$total*100) .  _("in use") ?></div>
-        </td>
     </tr>
 </table>
