@@ -197,7 +197,7 @@ $pages[] = array(
         ),
         array(
             'label'     => _('What\'s New?'),
-            'uri'       => UI_REVAMP_YOUTUBE_URL,
+            'uri'       => LIBRETIME_WHATS_NEW_URL,
             'target'    => "_blank"
         )
     )
