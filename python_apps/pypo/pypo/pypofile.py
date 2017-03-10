@@ -66,7 +66,9 @@ class PypoFile(Thread):
                 CONFIG_SECTION = "general"
                 username = self._config.get(CONFIG_SECTION, 'api_key')
                 host = self._config.get(CONFIG_SECTION, 'base_url')
-                url = "http://%s/rest/media/%s/download" % (host, media_item["id"])
+                port = self._config.get(CONFIG_SECTION, 'base_port', 80)
+                url = "http://%s:%s/rest/media/%s/download" % (host, port, media_item["id"])
+                self.logger.error(url)
                 with open(dst, "wb") as handle:
                     response = requests.get(url, auth=requests.auth.HTTPBasicAuth(username, ''), stream=True, verify=False)
                     
