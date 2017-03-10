@@ -267,10 +267,8 @@ class AirtimeInstall
     }
     public static function GetAirtimeVersion()
     {
-        $con = Propel::getConnection();
-        $sql = "SELECT valstr FROM cc_pref WHERE keystr = 'system_version' LIMIT 1";
-        $version = $con->query($sql)->fetchColumn(0);
-        return $version;
+        $config = Config::getConfig();
+        return $config['airtime_version'];
     }
     public static function DeleteFilesRecursive($p_path)
     {

@@ -865,23 +865,12 @@ class Application_Model_Preference
         self::setValue("schema_version", $version);
     }
 
-    public static function GetAirtimeVersion()
-    {
-        if (defined('APPLICATION_ENV') && APPLICATION_ENV == "development" && function_exists('exec')) {
-            $version = exec("git rev-parse --short HEAD 2>/dev/null", $out, $return_code);
-            if ($return_code == 0) {
-                return self::getValue("system_version")."+".$version.":".time();
-            }
-        }
-
-        return self::getValue("system_version");
-    }
-
     public static function GetLatestVersion()
     {
+        $config = Config::getConfig();
         $latest = self::getValue("latest_version");
         if ($latest == null || strlen($latest) == 0) {
-            return self::GetAirtimeVersion();
+            return $config['airtime_version'];
         } else {
             return $latest;
         }

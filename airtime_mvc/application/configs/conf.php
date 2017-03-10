@@ -96,7 +96,6 @@ class Config {
             $CC_CONFIG['facebook-app-api-key'] = $globalAirtimeConfigValues['facebook']['facebook_app_api_key'];
         }
 
-
         if(isset($values['demo']['demo'])){
             $CC_CONFIG['demo'] = $values['demo']['demo'];
         }
@@ -104,10 +103,12 @@ class Config {
     }
     
     public static function setAirtimeVersion() {
-        $airtime_version = Application_Model_Preference::GetAirtimeVersion();
-        $uniqueid = Application_Model_Preference::GetUniqueId();
-        $buildVersion = @file_get_contents(self::$rootDir."/../VERSION");
-        self::$CC_CONFIG['airtime_version'] = md5($airtime_version.$buildVersion);
+        $version = @file_get_contents(self::$rootDir."/../VERSION");
+        if (!$version) {
+            // fallback to constant from constants.php if no other info is available
+            $version = LIBRETIME_MAJOR_VERSION;
+        }
+        self::$CC_CONFIG['airtime_version'] = trim($version);
     }
     
     public static function getConfig() {
