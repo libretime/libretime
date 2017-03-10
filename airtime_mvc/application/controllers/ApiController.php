@@ -209,7 +209,7 @@ class ApiController extends Zend_Controller_Action
             $result["station_down"] = true;
         }
 
-        echo isset($_GET['callback']) ? $_GET['callback'].'('.json_encode($result).')' : json_encode($result);
+        $this->returnJsonOrJsonp($request, $result);
     }
     
     /**
@@ -292,18 +292,11 @@ class ApiController extends Zend_Controller_Action
 
             // convert image paths to point to api endpoints
             WidgetHelper::findAndConvertPaths($result);
-    
+
             // used by caller to determine if the airtime they are running or widgets in use is out of date.
             $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION;
-            header("Content-Type: application/json");
-    
-            if (version_compare(phpversion(), '5.4.0', '<')) {
-                $js = json_encode($result);
-            } else {
-                $js = json_encode($result, JSON_PRETTY_PRINT);
-            }
-            // If a callback is not given, then just provide the raw JSON.
-            echo isset($_GET['callback']) ? $_GET['callback'].'('.$js.')' : $js;
+
+            $this->returnJsonOrJsonp($request, $result);
         } else {
             header('HTTP/1.0 401 Unauthorized');
             print _('You are not allowed to access this resource. ');
@@ -368,15 +361,8 @@ class ApiController extends Zend_Controller_Action
             
             // used by caller to determine if the airtime they are running or widgets in use is out of date.
             $result["station"]["AIRTIME_API_VERSION"] = AIRTIME_API_VERSION;
-            header("Content-Type: application/json");
-            
-            if (version_compare(phpversion(), '5.4.0', '<')) {
-                $js = json_encode($result);
-            } else {
-                $js = json_encode($result, JSON_PRETTY_PRINT);
-            }
-            // If a callback is not given, then just provide the raw JSON.
-            echo isset($_GET['callback']) ? $_GET['callback'].'('.$js.')' : $js;
+
+            $this->returnJsonOrJsonp($request, $result);
         } else {
             header('HTTP/1.0 401 Unauthorized');
             print _('You are not allowed to access this resource. ');
@@ -443,15 +429,7 @@ class ApiController extends Zend_Controller_Action
             //used by caller to determine if the airtime they are running or widgets in use is out of date.
             $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION;
 
-            header("Content-type: text/javascript");
-            
-            if (version_compare(phpversion(), '5.4.0', '<')) {
-                $js = json_encode($result);
-            } else {
-                $js = json_encode($result, JSON_PRETTY_PRINT);
-            }
-            // If a callback is not given, then just provide the raw JSON.
-            echo isset($_GET['callback']) ? $_GET['callback'].'('.$js.')' : $js;
+            $this->returnJsonOrJsonp($request, $result);
         } else {
             header('HTTP/1.0 401 Unauthorized');
             print _('You are not allowed to access this resource. ');
@@ -534,15 +512,8 @@ class ApiController extends Zend_Controller_Action
             
             // used by caller to determine if the airtime they are running or widgets in use is out of date.
             $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION;
-            header("Content-type: text/javascript");
-            
-            if (version_compare(phpversion(), '5.4.0', '<')) {
-                $js = json_encode($result);
-            } else {
-                $js = json_encode($result, JSON_PRETTY_PRINT);
-            }
-            // If a callback is not given, then just provide the raw JSON.
-            echo isset($_GET['callback']) ? $_GET['callback'].'('.$js.')' : $js;
+
+            $this->returnJsonOrJsonp($request, $result);
         } else {
             header('HTTP/1.0 401 Unauthorized');
             print _('You are not allowed to access this resource. ');
@@ -1598,5 +1569,22 @@ class ApiController extends Zend_Controller_Action
             $progress += 1;
         }
         echo("Recalculated $total shows.");
+    }
+
+    private final function returnJsonOrJsonp($request, $result) {
+        $callback = $request->getParam('callback');
+        $response = $this->getResponse();
+        $response->setHeader('Content-Type', 'application/json');
+
+        $body = $this->_helper->json->encodeJson($result, false);
+
+        if ($callback) {
+            $response->setHeader('Content-Type', 'application/javascript');
+            $body = sprintf('%s(%s)', $callback, $body);
+        }
+        $response->setBody($body);
+
+        // enable cors access from configured URLs
+        CORSHelper::enableCrossOriginRequests($request, $response);
     }
 }

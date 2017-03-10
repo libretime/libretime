@@ -24,7 +24,7 @@ class LoginController extends Zend_Controller_Action
         $stationLocale = Application_Model_Preference::GetDefaultLocale();
         
         //Enable AJAX requests from www.airtime.pro for the sign-in process.
-        CORSHelper::enableATProCrossOriginRequests($request, $response);
+        CORSHelper::enableCrossOriginRequests($request, $response);
 
         
         Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', $stationLocale));
