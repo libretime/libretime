@@ -88,7 +88,14 @@ $pages[] = array(
             'module'     => 'default',
             'controller' => 'preference',
             'action'     => 'stream-setting'
-        )
+        ),
+        array(
+            'label'      => _('Status'),
+            'module'     => 'default',
+            'controller' => 'systemstatus',
+            'action'     => 'index',
+            'resource'   =>    'systemstatus'
+        ),
     )
 );
 $pages[] = array(
@@ -190,7 +197,7 @@ $pages[] = array(
         ),
         array(
             'label'     => _('What\'s New?'),
-            'uri'       => UI_REVAMP_YOUTUBE_URL,
+            'uri'       => LIBRETIME_WHATS_NEW_URL,
             'target'    => "_blank"
         )
     )

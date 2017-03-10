@@ -187,18 +187,15 @@ abstract class AirtimeUpgrader
      * allowing child classes to overwrite _runUpgrade to reduce duplication
      */
     public function upgrade() {
-        Cache::clear();
         assert($this->checkIfUpgradeSupported());
 
         try {
             // $this->toggleMaintenanceScreen(true);
-            Cache::clear();
 
             $this->_getDbValues();
             $this->_runUpgrade();
 
             Application_Model_Preference::SetSchemaVersion($this->getNewVersion());
-            Cache::clear();
 
             // $this->toggleMaintenanceScreen(false);
         } catch(Exception $e) {
@@ -215,7 +212,6 @@ abstract class AirtimeUpgrader
      * allowing child classes to overwrite _runDowngrade to reduce duplication
      */
     public function downgrade() {
-        Cache::clear();
 
         try {
             $this->_getDbValues();
@@ -232,7 +228,6 @@ abstract class AirtimeUpgrader
             // Set the schema version to the highest supported version so we don't skip versions when downgrading
             Application_Model_Preference::SetSchemaVersion($highestSupportedVersion);
 
-            Cache::clear();
         } catch(Exception $e) {
             return false;
         }
