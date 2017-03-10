@@ -17,11 +17,13 @@ Getting Started
 
 The easiest way to check out LibreTime for yourself is to run a local instance in a virtual machine. Assuming you already have Git, Vagrant and Virtualbox installed, just run:
 
-    :::bash
-    git clone https://github.com/libretime/libretime.git
-    cd libretime
-    vagrant up
+```bash
+git clone https://github.com/libretime/libretime.git
+cd libretime
+vagrant up
+```
 
 If everything works out, you will find LibreTime on [port 9080](http://localhost:9080), icecast on [port 8000](http://localhost:8000) and the docs on [port 8888](http://localhost:8888).
 
-Of course, this setup isn't appropriate for production use. For that, check out our [installation instructions](install.md).
+Of course, this setup isn't appropriate for production use. For that, check out our [installation instructions](install.md). More information on the vagrant setup are in [the docs](vagrant.md).
+

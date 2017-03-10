@@ -70,6 +70,7 @@ pages:
     - 'Icecast statistics with Piwik': manual/icecast-statistics-with-piwik/index.md
   - 'Development':
     - 'Testing': testing.md
+    - 'Vagrant': vagrant.md
     - 'Documentation': documentation.md
   - 'Appendix':
     - 'Expert install': manual/expert-install/index.md
