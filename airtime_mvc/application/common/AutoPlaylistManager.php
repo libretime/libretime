@@ -1,7 +1,6 @@
 <?php
 
 class AutoPlaylistManager {
-
     /**
      * @var int how often, in seconds, to check for and ingest new podcast episodes
      */
@@ -18,7 +17,6 @@ class AutoPlaylistManager {
         $lastPolled = Application_Model_Preference::getAutoPlaylistPollLock();
         return empty($lastPolled) || (microtime(true) > $lastPolled + self::$_AUTOPLAYLIST_POLL_INTERVAL_SECONDS);
     }
-
 
     /*
      * This function is copied from the TestUser class and is used to instantiate a user so that
@@ -45,7 +43,6 @@ class AutoPlaylistManager {
         }
     }
      
-
      /**
      * Find all shows with autoplaylists who have yet to have their playlists built and added to the schedule
      *
@@ -70,7 +67,6 @@ class AutoPlaylistManager {
 	Zend_Session::stop();
     }
 
-
     /**
      * Find all show instances starting in the next hour with autoplaylists not yet added to the schedule
      *
@@ -93,5 +89,4 @@ class AutoPlaylistManager {
             ->filterByDbAutoPlaylistBuilt(false)
             ->find();
     }
-
 }

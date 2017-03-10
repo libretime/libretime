@@ -274,7 +274,6 @@ function setAddShowEvents(form) {
         $("#add_show_playlist_dropdown").show();
     }
 
-
     if(!form.find("#add_show_repeats").attr('checked')) {
         form.find("#schedule-show-when > fieldset:last").hide();
         $("#add_show_rebroadcast_relative").hide();
@@ -312,7 +311,6 @@ function setAddShowEvents(form) {
 	form.find("#add_show_playlist_downdown").hide();
 	}
     });
-
 
     form.find("#add_show_repeats").click(function(){
         $(this).blur();

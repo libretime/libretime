@@ -1542,8 +1542,8 @@ SQL;
         $ccShow->setDbLiveStreamPass($showData['custom_password']);
         $ccShow->setDbHasAutoPlaylist($showData['add_show_has_autoplaylist'] == 1);
         // added to prevent errors with insert due to a lack of data
-	if ($showData['add_show_autoplaylist_id'] != '') {
-        $ccShow->setDbAutoPlaylistId($showData['add_show_autoplaylist_id']);
+        if ($showData['add_show_autoplaylist_id'] != '') {
+            $ccShow->setDbAutoPlaylistId($showData['add_show_autoplaylist_id']);
         }
         
         //Here a user has edited a show and linked it.

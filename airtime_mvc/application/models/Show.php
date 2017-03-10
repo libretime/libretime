@@ -129,7 +129,6 @@ class Application_Model_Show
         return $this->_showId;
     }
 
-    
     public function getHasAutoPlaylist()
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
@@ -156,7 +155,6 @@ class Application_Model_Show
         $show->setDbAutoPlaylistId($playlistid);
     }
 
-    
     public function getHosts()
     {
         $sql = <<<SQL

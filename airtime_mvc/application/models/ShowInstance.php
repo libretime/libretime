@@ -169,16 +169,11 @@ SQL;
             ->save();
     }
 
-
     public function updateScheduledTime()
     {
         $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
         $this->_showInstance->updateDbTimeFilled($con);
     }
-    
-    
-    
-    
 
     public function isDeleted()
     {

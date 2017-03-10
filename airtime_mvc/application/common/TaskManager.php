@@ -223,7 +223,6 @@ class CeleryTask implements AirtimeTask {
 }
 
 /**
- * 
  * Class AutoPlaylistTask
  *
  * Checks for shows with an autoplaylist that needs to be filled in
@@ -231,7 +230,6 @@ class CeleryTask implements AirtimeTask {
  */
 class AutoPlaylistTask implements AirtimeTask
 {
-
     /**
      * Checks whether or not the autoplaylist polling interval has passed
      *
@@ -250,8 +248,6 @@ class AutoPlaylistTask implements AirtimeTask
         AutoPlaylistManager::buildAutoPlaylist();
     }
 }
-
-
 
 /**
  * Class PodcastTask
