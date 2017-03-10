@@ -235,23 +235,8 @@ class AirtimeInstall
         }
         AirtimeInstall::$databaseTablesCreated = true;
     }
-    public static function BypassMigrations($dir, $version)
-    {
-        $appDir = AirtimeInstall::GetAirtimeSrcDir();
-        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
-                    "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
-                    "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
-                    "--no-interaction --add migrations:version $version";
-        system($command);
-    }
-    public static function MigrateTablesToVersion($dir, $version)
-    {
-        $appDir = AirtimeInstall::GetAirtimeSrcDir();
-        $command = "php $appDir/library/doctrine/migrations/doctrine-migrations.phar ".
-                    "--configuration=$dir/../../DoctrineMigrations/migrations.xml ".
-                    "--db-configuration=$appDir/library/doctrine/migrations/migrations-db.php ".
-                    "--no-interaction migrations:migrate $version";
-        system($command);
+    public final static function UpdateDatabaseTables() {
+        UpgradeManager::doUpgrade();
     }
     public static function SetAirtimeVersion($p_version)
     {

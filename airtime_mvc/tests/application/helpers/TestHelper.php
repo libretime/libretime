@@ -122,7 +122,8 @@ class TestHelper
         else
         {
             //Create all the database tables
-            AirtimeInstall::createDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost);
+            AirtimeInstall::CreateDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost);
+            AirtimeInstall::UpdateDatabaseTables();
         }
     }
 
