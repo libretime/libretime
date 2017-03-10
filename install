@@ -436,7 +436,7 @@ if [ "$apache" = "t" ]; then
         verbose "\n * Creating Apache config for Airtime..."
         listen_port=""
         if [ "$web_port" != "80" ]; then
-            listen_port=${web_port}
+            listen_port="Listen ${web_port}"
         fi
         
         apache_template_file=${SCRIPT_DIR}/installer/apache/airtime-vhost-2.4
@@ -445,7 +445,7 @@ if [ "$apache" = "t" ]; then
             apache_template_file=${SCRIPT_DIR}/installer/apache/airtime-vhost
         fi
         sed \
-            -e "s@WEB_PORT_LISTEN@Listen ${listen_port}@g" \
+            -e "s@WEB_PORT_LISTEN@${listen_port}@g" \
             -e "s@WEB_PORT@${web_port}@g" \
             -e "s@WEB_ROOT@${web_root}@g" \
             ${apache_template_file} > /etc/apache2/sites-available/${airtimeconfigfile}
