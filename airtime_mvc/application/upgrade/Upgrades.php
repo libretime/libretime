@@ -501,3 +501,16 @@ class AirtimeUpgrader2516 extends AirtimeUpgrader
         return '2.5.16';
     }
 }
+
+class AirtimeUpgrader300alpha extends AirtimeUpgrader
+{
+    protected function getSupportedSchemaVersions() {
+        return array(
+            '2.5.16'
+        );
+    }
+
+    public function getNewVersion() {
+        return '3.0.0-alpha';
+    }
+}
