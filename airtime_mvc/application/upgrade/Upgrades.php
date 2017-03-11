@@ -38,12 +38,6 @@ class UpgradeManager
         $schemaVersion = Application_Model_Preference::GetSchemaVersion();
         $supportedSchemaVersions = self::getSupportedSchemaVersions();
         return !in_array($schemaVersion, $supportedSchemaVersions);
-        // We shouldn't run the upgrade as a side-effect of this function!
-        /*
-        if ($upgradeNeeded) {
-            self::doUpgrade();
-        }
-        */
     }
 
     /**
@@ -187,8 +181,6 @@ abstract class AirtimeUpgrader
      * allowing child classes to overwrite _runUpgrade to reduce duplication
      */
     public function upgrade() {
-        assert($this->checkIfUpgradeSupported());
-
         try {
             // $this->toggleMaintenanceScreen(true);
 
@@ -200,6 +192,7 @@ abstract class AirtimeUpgrader
             // $this->toggleMaintenanceScreen(false);
         } catch(Exception $e) {
             // $this->toggleMaintenanceScreen(false);
+            Logging::error('Error in upgrade: '. $e->getMessage());
             return false;
         }
 
@@ -236,13 +229,12 @@ abstract class AirtimeUpgrader
     }
 
     protected function _getDbValues() {
-        $airtimeConf = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
-        $values = parse_ini_file($airtimeConf, true);
+        $config = Config::getConfig();
 
-        $this->username = $values['database']['dbuser'];
-        $this->password = $values['database']['dbpass'];
-        $this->host     = $values['database']['host'];
-        $this->database = $values['database']['dbname'];
+        $this->username = $config['dsn']['username'];
+        $this->password = $config['dsn']['password'];
+        $this->host     = $config['dsn']['hostspec'];
+        $this->database = $config['dsn']['database'];
     }
 
     protected function _runUpgrade() {
@@ -499,5 +491,18 @@ class AirtimeUpgrader2516 extends AirtimeUpgrader
 
     public function getNewVersion() {
         return '2.5.16';
+    }
+}
+
+class AirtimeUpgrader300alpha extends AirtimeUpgrader
+{
+    protected function getSupportedSchemaVersions() {
+        return array(
+            '2.5.16'
+        );
+    }
+
+    public function getNewVersion() {
+        return '3.0.0-alpha';
     }
 }

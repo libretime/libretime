@@ -30,6 +30,10 @@
  * @method CcPlaylistQuery rightJoinCcSubjs($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSubjs relation
  * @method CcPlaylistQuery innerJoinCcSubjs($relationAlias = null) Adds a INNER JOIN clause to the query using the CcSubjs relation
  *
+ * @method CcPlaylistQuery leftJoinCcShow($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcShow relation
+ * @method CcPlaylistQuery rightJoinCcShow($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcShow relation
+ * @method CcPlaylistQuery innerJoinCcShow($relationAlias = null) Adds a INNER JOIN clause to the query using the CcShow relation
+ *
  * @method CcPlaylistQuery leftJoinCcPlaylistcontents($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcPlaylistcontents relation
  * @method CcPlaylistQuery rightJoinCcPlaylistcontents($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcPlaylistcontents relation
  * @method CcPlaylistQuery innerJoinCcPlaylistcontents($relationAlias = null) Adds a INNER JOIN clause to the query using the CcPlaylistcontents relation
@@ -580,6 +584,80 @@ abstract class BaseCcPlaylistQuery extends ModelCriteria
         return $this
             ->joinCcSubjs($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'CcSubjs', 'CcSubjsQuery');
+    }
+
+    /**
+     * Filter the query by a related CcShow object
+     *
+     * @param   CcShow|PropelObjectCollection $ccShow  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CcPlaylistQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCcShow($ccShow, $comparison = null)
+    {
+        if ($ccShow instanceof CcShow) {
+            return $this
+                ->addUsingAlias(CcPlaylistPeer::ID, $ccShow->getDbAutoPlaylistId(), $comparison);
+        } elseif ($ccShow instanceof PropelObjectCollection) {
+            return $this
+                ->useCcShowQuery()
+                ->filterByPrimaryKeys($ccShow->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCcShow() only accepts arguments of type CcShow or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CcShow relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CcPlaylistQuery The current query, for fluid interface
+     */
+    public function joinCcShow($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CcShow');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CcShow');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CcShow relation CcShow object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   CcShowQuery A secondary query class using the current class as primary query
+     */
+    public function useCcShowQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinCcShow($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CcShow', 'CcShowQuery');
     }
 
     /**

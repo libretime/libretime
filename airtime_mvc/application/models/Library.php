@@ -33,4 +33,18 @@ class Application_Model_Library
         }
     }
 
+    public static function getPlaylistNames()
+    {
+        $playlistNames = array(NULL  => _("None"));
+
+        $playlists = CcPlaylistQuery::create()
+            ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
+            ->find();
+
+        foreach ($playlists as $playlist) {
+            $playlistNames[$playlist->getDbId()] = $playlist->getDbName();
+        }
+
+        return $playlistNames;
+    }
 }

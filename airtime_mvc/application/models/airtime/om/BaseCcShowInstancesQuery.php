@@ -19,6 +19,7 @@
  * @method CcShowInstancesQuery orderByDbCreated($order = Criteria::ASC) Order by the created column
  * @method CcShowInstancesQuery orderByDbLastScheduled($order = Criteria::ASC) Order by the last_scheduled column
  * @method CcShowInstancesQuery orderByDbModifiedInstance($order = Criteria::ASC) Order by the modified_instance column
+ * @method CcShowInstancesQuery orderByDbAutoPlaylistBuilt($order = Criteria::ASC) Order by the autoplaylist_built column
  *
  * @method CcShowInstancesQuery groupByDbId() Group by the id column
  * @method CcShowInstancesQuery groupByDbDescription() Group by the description column
@@ -33,6 +34,7 @@
  * @method CcShowInstancesQuery groupByDbCreated() Group by the created column
  * @method CcShowInstancesQuery groupByDbLastScheduled() Group by the last_scheduled column
  * @method CcShowInstancesQuery groupByDbModifiedInstance() Group by the modified_instance column
+ * @method CcShowInstancesQuery groupByDbAutoPlaylistBuilt() Group by the autoplaylist_built column
  *
  * @method CcShowInstancesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method CcShowInstancesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -77,6 +79,7 @@
  * @method CcShowInstances findOneByDbCreated(string $created) Return the first CcShowInstances filtered by the created column
  * @method CcShowInstances findOneByDbLastScheduled(string $last_scheduled) Return the first CcShowInstances filtered by the last_scheduled column
  * @method CcShowInstances findOneByDbModifiedInstance(boolean $modified_instance) Return the first CcShowInstances filtered by the modified_instance column
+ * @method CcShowInstances findOneByDbAutoPlaylistBuilt(boolean $autoplaylist_built) Return the first CcShowInstances filtered by the autoplaylist_built column
  *
  * @method array findByDbId(int $id) Return CcShowInstances objects filtered by the id column
  * @method array findByDbDescription(string $description) Return CcShowInstances objects filtered by the description column
@@ -91,6 +94,7 @@
  * @method array findByDbCreated(string $created) Return CcShowInstances objects filtered by the created column
  * @method array findByDbLastScheduled(string $last_scheduled) Return CcShowInstances objects filtered by the last_scheduled column
  * @method array findByDbModifiedInstance(boolean $modified_instance) Return CcShowInstances objects filtered by the modified_instance column
+ * @method array findByDbAutoPlaylistBuilt(boolean $autoplaylist_built) Return CcShowInstances objects filtered by the autoplaylist_built column
  *
  * @package    propel.generator.airtime.om
  */
@@ -198,7 +202,7 @@ abstract class BaseCcShowInstancesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "description", "starts", "ends", "show_id", "record", "rebroadcast", "instance_id", "file_id", "time_filled", "created", "last_scheduled", "modified_instance" FROM "cc_show_instances" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "description", "starts", "ends", "show_id", "record", "rebroadcast", "instance_id", "file_id", "time_filled", "created", "last_scheduled", "modified_instance", "autoplaylist_built" FROM "cc_show_instances" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -800,6 +804,33 @@ abstract class BaseCcShowInstancesQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CcShowInstancesPeer::MODIFIED_INSTANCE, $dbModifiedInstance, $comparison);
+    }
+
+    /**
+     * Filter the query on the autoplaylist_built column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbAutoPlaylistBuilt(true); // WHERE autoplaylist_built = true
+     * $query->filterByDbAutoPlaylistBuilt('yes'); // WHERE autoplaylist_built = true
+     * </code>
+     *
+     * @param     boolean|string $dbAutoPlaylistBuilt The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowInstancesQuery The current query, for fluid interface
+     */
+    public function filterByDbAutoPlaylistBuilt($dbAutoPlaylistBuilt = null, $comparison = null)
+    {
+        if (is_string($dbAutoPlaylistBuilt)) {
+            $dbAutoPlaylistBuilt = in_array(strtolower($dbAutoPlaylistBuilt), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(CcShowInstancesPeer::AUTOPLAYLIST_BUILT, $dbAutoPlaylistBuilt, $comparison);
     }
 
     /**
