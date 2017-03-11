@@ -36,6 +36,8 @@ showhelp () {
                 This will copy the Airtime application files, but you will need
                 to give your web user access to the given directory if it is 
                 not accessible
+    --web-port=WEB_PORT
+                Set what port the LibreTime interface should run on.
     -I, --in-place
                 Set the current Airtime directory as the web root
                 Note that you will need to give your web user permission to 
@@ -58,6 +60,7 @@ showversion () {
 
 web_user="www-data"
 web_root=""
+web_port="80"
 in_place="f"
 postgres="f"
 apache="f"
@@ -206,6 +209,17 @@ while :; do
             echo 'ERROR: Must specify a non-empty "--web-root=WEB_ROOT" argument.' >&2
             exit 1
             ;;
+        --web-port)
+            echo 'ERROR: Please specify a port number.' >&2
+            exit 1
+            ;;
+        --web-port=)
+            echo 'ERROR: Please specify a port number.' >&2
+            exit 1
+            ;;
+        --web-port=?*)
+            web_port=${1#*=}
+            ;;
         --)
             shift
             break
@@ -305,11 +319,17 @@ if [ "$ignore_dependencies" = "f" ]; then
     else
         loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-ubuntu-trusty.apt | tr '\n' ' ')"
     fi
+    if [ "$in_place" = "t" ]; then
+        loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install git"
+    fi
     set -e
 else
     checkCommandExists "apache2"
     checkCommandExists "rabbitmqctl"
     checkCommandExists "psql"
+    if [ "$in_place" = "t" ]; then
+        checkCommandExists "git"
+    fi
 fi
 
 # Check if composer exists and install if it doesn't
@@ -414,12 +434,22 @@ if [ "$apache" = "t" ]; then
     # will fail
     if [ "$upgrade" = "t" -o ! -f /etc/apache2/sites-available/${airtimeconfigfile} ]; then
         verbose "\n * Creating Apache config for Airtime..."
-        
-        if [ "$apacheversion" != "1" ]; then
-            sed -e "s@WEB_ROOT@${web_root}@g" ${SCRIPT_DIR}/installer/apache/airtime-vhost-2.4 > /etc/apache2/sites-available/${airtimeconfigfile}
-        else
-            sed -e "s@WEB_ROOT@${web_root}@g" ${SCRIPT_DIR}/installer/apache/airtime-vhost > /etc/apache2/sites-available/${airtimeconfigfile}
+        listen_port=""
+        if [ "$web_port" != "80" ]; then
+            listen_port="Listen ${web_port}"
         fi
+        
+        apache_template_file=${SCRIPT_DIR}/installer/apache/airtime-vhost-2.4
+        if [ "$apacheversion" = "1" ]; then
+            # fall back to apache 1 config
+            apache_template_file=${SCRIPT_DIR}/installer/apache/airtime-vhost
+        fi
+        sed \
+            -e "s@WEB_PORT_LISTEN@${listen_port}@g" \
+            -e "s@WEB_PORT@${web_port}@g" \
+            -e "s@WEB_ROOT@${web_root}@g" \
+            ${apache_template_file} > /etc/apache2/sites-available/${airtimeconfigfile}
+
         loudCmd "a2dissite 000-default"
         # If Airtime was previously installed with apt, the vhost file name is different,
         # so we need to specifically disable it.
@@ -606,8 +636,7 @@ if [ ! -d "/etc/airtime" ]; then
 
     verbose "\n * Creating /etc/airtime/ directory..."
     mkdir /etc/airtime
-    verbose "\n * Creating /etc/airtime-saas/ directory..."
-    # Default saas directory for the analyzer, cloud storage, and celery
+    # workaround for reintegrated airtime-saas dir, will get removed after we refactored config loading
     ln -s /etc/airtime/ /etc/airtime/production
     # put the default cloud_storage.conf using local file storage into directory
     cp ${AIRTIMEROOT}/airtime_mvc/build/cloud_storage.conf /etc/airtime/cloud_storage.conf

@@ -13,3 +13,4 @@ composer.phar
 /tests/*.jar
 VERSION
 airtime_mvc/tests/log/*.log
+.vagrant/

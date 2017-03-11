@@ -1,4 +1,6 @@
-<VirtualHost *:80>
+WEB_PORT_LISTEN
+
+<VirtualHost *:WEB_PORT>
    ServerAdmin foo@bar.org
    DocumentRoot WEB_ROOT
    php_admin_value upload_tmp_dir /tmp
