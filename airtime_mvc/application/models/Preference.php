@@ -1645,4 +1645,23 @@ class Application_Model_Preference
     public static function setBandwidthLimitUpdateTimer() {
         self::setValue("bandwidth_limit_update_timer", microtime(true));
     }
+
+    /**
+     * Getter for CORS URLs
+     *
+     * @return string
+     */
+    public static function GetAllowedCorsUrls() {
+        return self::getValue('allowed_cors_urls');
+    }
+
+    /**
+     * Setter for CORS URLs
+     *
+     * @param string $value
+     * @return void
+     */
+    public static function SetAllowedCorsUrls($value) {
+        self::setValue('allowed_cors_urls', $value);
+    }
 }
