@@ -53,6 +53,8 @@ class CcShowTableMap extends TableMap
         $this->addColumn('linked', 'DbLinked', 'BOOLEAN', true, null, false);
         $this->addColumn('is_linkable', 'DbIsLinkable', 'BOOLEAN', true, null, true);
         $this->addColumn('image_path', 'DbImagePath', 'VARCHAR', false, 255, '');
+        $this->addColumn('has_autoplaylist', 'DbHasAutoPlaylist', 'BOOLEAN', true, null, false);
+        $this->addForeignKey('autoplaylist_id', 'DbAutoPlaylistId', 'INTEGER', 'cc_playlist', 'id', false, null, null);
         // validators
     } // initialize()
 
@@ -61,6 +63,7 @@ class CcShowTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('CcPlaylist', 'CcPlaylist', RelationMap::MANY_TO_ONE, array('autoplaylist_id' => 'id', ), 'SET NULL', null);
         $this->addRelation('CcShowInstances', 'CcShowInstances', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null, 'CcShowInstancess');
         $this->addRelation('CcShowDays', 'CcShowDays', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null, 'CcShowDayss');
         $this->addRelation('CcShowRebroadcast', 'CcShowRebroadcast', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null, 'CcShowRebroadcasts');

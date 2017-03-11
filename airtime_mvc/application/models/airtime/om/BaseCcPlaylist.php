@@ -79,6 +79,12 @@ abstract class BaseCcPlaylist extends BaseObject implements Persistent
     protected $aCcSubjs;
 
     /**
+     * @var        PropelObjectCollection|CcShow[] Collection to store aggregation of CcShow objects.
+     */
+    protected $collCcShows;
+    protected $collCcShowsPartial;
+
+    /**
      * @var        PropelObjectCollection|CcPlaylistcontents[] Collection to store aggregation of CcPlaylistcontents objects.
      */
     protected $collCcPlaylistcontentss;
@@ -103,6 +109,12 @@ abstract class BaseCcPlaylist extends BaseObject implements Persistent
      * @var        boolean
      */
     protected $alreadyInClearAllReferencesDeep = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $ccShowsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -534,6 +546,8 @@ abstract class BaseCcPlaylist extends BaseObject implements Persistent
         if ($deep) {  // also de-associate any related objects?
 
             $this->aCcSubjs = null;
+            $this->collCcShows = null;
+
             $this->collCcPlaylistcontentss = null;
 
         } // if (deep)
@@ -678,6 +692,24 @@ abstract class BaseCcPlaylist extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->ccShowsScheduledForDeletion !== null) {
+                if (!$this->ccShowsScheduledForDeletion->isEmpty()) {
+                    foreach ($this->ccShowsScheduledForDeletion as $ccShow) {
+                        // need to save related object because we set the relation to null
+                        $ccShow->save($con);
+                    }
+                    $this->ccShowsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collCcShows !== null) {
+                foreach ($this->collCcShows as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             if ($this->ccPlaylistcontentssScheduledForDeletion !== null) {
@@ -890,6 +922,14 @@ abstract class BaseCcPlaylist extends BaseObject implements Persistent
             }
 
 
+                if ($this->collCcShows !== null) {
+                    foreach ($this->collCcShows as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
                 if ($this->collCcPlaylistcontentss !== null) {
                     foreach ($this->collCcPlaylistcontentss as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
@@ -999,6 +1039,9 @@ abstract class BaseCcPlaylist extends BaseObject implements Persistent
         if ($includeForeignObjects) {
             if (null !== $this->aCcSubjs) {
                 $result['CcSubjs'] = $this->aCcSubjs->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collCcShows) {
+                $result['CcShows'] = $this->collCcShows->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collCcPlaylistcontentss) {
                 $result['CcPlaylistcontentss'] = $this->collCcPlaylistcontentss->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -1184,6 +1227,12 @@ abstract class BaseCcPlaylist extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
+            foreach ($this->getCcShows() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addCcShow($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getCcPlaylistcontentss() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addCcPlaylistcontents($relObj->copy($deepCopy));
@@ -1303,9 +1352,237 @@ abstract class BaseCcPlaylist extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
+        if ('CcShow' == $relationName) {
+            $this->initCcShows();
+        }
         if ('CcPlaylistcontents' == $relationName) {
             $this->initCcPlaylistcontentss();
         }
+    }
+
+    /**
+     * Clears out the collCcShows collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return CcPlaylist The current object (for fluent API support)
+     * @see        addCcShows()
+     */
+    public function clearCcShows()
+    {
+        $this->collCcShows = null; // important to set this to null since that means it is uninitialized
+        $this->collCcShowsPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collCcShows collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialCcShows($v = true)
+    {
+        $this->collCcShowsPartial = $v;
+    }
+
+    /**
+     * Initializes the collCcShows collection.
+     *
+     * By default this just sets the collCcShows collection to an empty array (like clearcollCcShows());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initCcShows($overrideExisting = true)
+    {
+        if (null !== $this->collCcShows && !$overrideExisting) {
+            return;
+        }
+        $this->collCcShows = new PropelObjectCollection();
+        $this->collCcShows->setModel('CcShow');
+    }
+
+    /**
+     * Gets an array of CcShow objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this CcPlaylist is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|CcShow[] List of CcShow objects
+     * @throws PropelException
+     */
+    public function getCcShows($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collCcShowsPartial && !$this->isNew();
+        if (null === $this->collCcShows || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collCcShows) {
+                // return empty collection
+                $this->initCcShows();
+            } else {
+                $collCcShows = CcShowQuery::create(null, $criteria)
+                    ->filterByCcPlaylist($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collCcShowsPartial && count($collCcShows)) {
+                      $this->initCcShows(false);
+
+                      foreach ($collCcShows as $obj) {
+                        if (false == $this->collCcShows->contains($obj)) {
+                          $this->collCcShows->append($obj);
+                        }
+                      }
+
+                      $this->collCcShowsPartial = true;
+                    }
+
+                    $collCcShows->getInternalIterator()->rewind();
+
+                    return $collCcShows;
+                }
+
+                if ($partial && $this->collCcShows) {
+                    foreach ($this->collCcShows as $obj) {
+                        if ($obj->isNew()) {
+                            $collCcShows[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collCcShows = $collCcShows;
+                $this->collCcShowsPartial = false;
+            }
+        }
+
+        return $this->collCcShows;
+    }
+
+    /**
+     * Sets a collection of CcShow objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $ccShows A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return CcPlaylist The current object (for fluent API support)
+     */
+    public function setCcShows(PropelCollection $ccShows, PropelPDO $con = null)
+    {
+        $ccShowsToDelete = $this->getCcShows(new Criteria(), $con)->diff($ccShows);
+
+
+        $this->ccShowsScheduledForDeletion = $ccShowsToDelete;
+
+        foreach ($ccShowsToDelete as $ccShowRemoved) {
+            $ccShowRemoved->setCcPlaylist(null);
+        }
+
+        $this->collCcShows = null;
+        foreach ($ccShows as $ccShow) {
+            $this->addCcShow($ccShow);
+        }
+
+        $this->collCcShows = $ccShows;
+        $this->collCcShowsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related CcShow objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related CcShow objects.
+     * @throws PropelException
+     */
+    public function countCcShows(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collCcShowsPartial && !$this->isNew();
+        if (null === $this->collCcShows || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCcShows) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getCcShows());
+            }
+            $query = CcShowQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByCcPlaylist($this)
+                ->count($con);
+        }
+
+        return count($this->collCcShows);
+    }
+
+    /**
+     * Method called to associate a CcShow object to this object
+     * through the CcShow foreign key attribute.
+     *
+     * @param    CcShow $l CcShow
+     * @return CcPlaylist The current object (for fluent API support)
+     */
+    public function addCcShow(CcShow $l)
+    {
+        if ($this->collCcShows === null) {
+            $this->initCcShows();
+            $this->collCcShowsPartial = true;
+        }
+
+        if (!in_array($l, $this->collCcShows->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddCcShow($l);
+
+            if ($this->ccShowsScheduledForDeletion and $this->ccShowsScheduledForDeletion->contains($l)) {
+                $this->ccShowsScheduledForDeletion->remove($this->ccShowsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	CcShow $ccShow The ccShow object to add.
+     */
+    protected function doAddCcShow($ccShow)
+    {
+        $this->collCcShows[]= $ccShow;
+        $ccShow->setCcPlaylist($this);
+    }
+
+    /**
+     * @param	CcShow $ccShow The ccShow object to remove.
+     * @return CcPlaylist The current object (for fluent API support)
+     */
+    public function removeCcShow($ccShow)
+    {
+        if ($this->getCcShows()->contains($ccShow)) {
+            $this->collCcShows->remove($this->collCcShows->search($ccShow));
+            if (null === $this->ccShowsScheduledForDeletion) {
+                $this->ccShowsScheduledForDeletion = clone $this->collCcShows;
+                $this->ccShowsScheduledForDeletion->clear();
+            }
+            $this->ccShowsScheduledForDeletion[]= $ccShow;
+            $ccShow->setCcPlaylist(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -1618,6 +1895,11 @@ abstract class BaseCcPlaylist extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
+            if ($this->collCcShows) {
+                foreach ($this->collCcShows as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collCcPlaylistcontentss) {
                 foreach ($this->collCcPlaylistcontentss as $o) {
                     $o->clearAllReferences($deep);
@@ -1630,6 +1912,10 @@ abstract class BaseCcPlaylist extends BaseObject implements Persistent
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
+        if ($this->collCcShows instanceof PropelCollection) {
+            $this->collCcShows->clearIterator();
+        }
+        $this->collCcShows = null;
         if ($this->collCcPlaylistcontentss instanceof PropelCollection) {
             $this->collCcPlaylistcontentss->clearIterator();
         }

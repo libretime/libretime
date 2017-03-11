@@ -14,3 +14,5 @@ cc_show:
         linked: false
         is_linkable: true
         image_path: ''
+        has_autoplaylist: false
+        autoplaylist_id: null

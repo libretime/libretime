@@ -1495,6 +1495,15 @@ class Application_Model_Preference
     {
         self::setValue("whats_new_dialog_viewed", $value, true);
     }
+    
+    public static function getAutoPlaylistPollLock() {
+        return self::getValue("autoplaylist_poll_lock");
+    }
+
+    public static function setAutoPlaylistPollLock($value)
+    {
+        self::setValue("autoplaylist_poll_lock", $value);
+    }
 
     public static function getPodcastPollLock() {
         return self::getValue("podcast_poll_lock");

@@ -82,6 +82,21 @@ SQL;
         return $show->getDbGenre();
     }
 
+
+    public function hasAutoPlaylist()
+    {
+        $show = CcShowQuery::create()->findPK($this->getShowId());
+        return $show->getDbHasAutoPlaylist();
+
+    }
+    
+    public function getAutoPlaylistId()
+    {
+        $show = CcShowQuery::create()->findPK($this->getShowId());
+        return $show->getDbAutoPlaylistId();
+        
+    }
+    
     /**
      * Return the start time of the Show (UTC time)
      * @return string in format DEFAULT_TIMESTAMP_FORMAT (PHP time notation)
@@ -148,6 +163,12 @@ SQL;
         Application_Model_RabbitMq::PushSchedule();
     }
 
+    public function setAutoPlaylistBuilt($bool)
+    {
+        $this->_showInstance->setDbAutoPlaylistBuilt($bool)
+            ->save();
+    }
+
     public function updateScheduledTime()
     {
         $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
@@ -203,7 +224,7 @@ SQL;
      * @param int $plId
      *         Playlist ID.
      */
-    /*public function addPlaylistToShow($pl_id, $checkUserPerm = true)
+    public function addPlaylistToShow($pl_id, $checkUserPerm = true)
     {
         $ts = intval($this->_showInstance->getDbLastScheduled("U")) ? : 0;
         $id = $this->_showInstance->getDbId();
@@ -213,7 +234,7 @@ SQL;
             array(array("id" => 0, "instance"  => $id, "timestamp" => $ts)),
             array(array("id" => $pl_id, "type" => "playlist"))
         );
-    }*/
+    }
 
     /**
      * Add a media file as the last item in the show.
@@ -239,12 +260,12 @@ SQL;
      * @param array $plIds
      *         An array of playlist IDs.
      */
-    /*public function scheduleShow($plIds)
+    public function scheduleShow($plIds)
     {
         foreach ($plIds as $plId) {
             $this->addPlaylistToShow($plId);
         }
-    }*/
+    }
 
     public function clearShow()
     {

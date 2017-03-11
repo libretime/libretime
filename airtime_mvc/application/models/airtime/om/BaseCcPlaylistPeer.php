@@ -385,6 +385,9 @@ abstract class BaseCcPlaylistPeer
      */
     public static function clearRelatedInstancePool()
     {
+        // Invalidate objects in CcShowPeer instance pool,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        CcShowPeer::clearInstancePool();
         // Invalidate objects in CcPlaylistcontentsPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         CcPlaylistcontentsPeer::clearInstancePool();

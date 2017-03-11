@@ -28,27 +28,30 @@ if __name__ == '__main__':
     api_key = config.get(GENERAL_CONFIG_SECTION, 'api_key')
     base_url = config.get(GENERAL_CONFIG_SECTION, 'base_url')
     base_dir = config.get(GENERAL_CONFIG_SECTION, 'base_dir')
+    base_port = config.get(GENERAL_CONFIG_SECTION, 'base_port', 80)
     action = "upgrade"
-    airtime_url = ""
+    station_url = ""
+
+    default_url = "http://%s:%s%s" % (base_url, base_port, base_dir)
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--downgrade', help='Downgrade the station', action="store_true")
-    parser.add_argument('station_url', help='station URL', nargs='?', default='')
+    parser.add_argument('station_url', help='station URL', nargs='?', default=default_url)
     args = parser.parse_args()
     
     if args.downgrade:
         action = "downgrade"
 
-    if airtime_url == "":
-        airtime_url = "http://%s%s" % (base_url, base_dir)
+    if args.station_url:
+        station_url = args.station_url
 
     # Add http:// if you were lazy and didn't pass a scheme to this script
-    url = urlparse(airtime_url) 
+    url = urlparse(station_url) 
     if not url.scheme:
-        airtime_url = "http://%s" % airtime_url
+        station_url = "http://%s" % station_url
 
     print "Requesting %s..." % action
-    r = requests.get("%s/%s" % (airtime_url, action), auth=(api_key, ''))
+    r = requests.get("%s/%s" % (station_url, action), auth=(api_key, ''))
     print r.text
     r.raise_for_status()
 
