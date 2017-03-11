@@ -495,7 +495,7 @@ verbose "...Done"
 
 if [[ `lsb_release -rs` == "14.04" ]] # Ubuntu trusty needs a workaround for python version SSL downloads
 then
-loudCmd "pip install pyOpenSSL cryptography idna certifi"
+loudCmd "pip install pyOpenSSL cryptography idna certifi --upgrade"
 fi
 
 
