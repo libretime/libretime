@@ -377,7 +377,7 @@ class TaskFactory {
      * @return bool true if the class $c implements AirtimeTask
      */
     private static function _isTask($c) {
-        return is_a('AirtimeTask', $c, true);
+        return array_key_exists('AirtimeTask', class_implements($c));
     }
 
     /**
