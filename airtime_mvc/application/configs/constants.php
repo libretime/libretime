@@ -148,3 +148,6 @@ define('ITUNES_XML_NAMESPACE_URL', 'http://www.itunes.com/dtds/podcast-1.0.dtd')
 
 // Billing configuration
 define('LIBRETIME_ENABLE_BILLING', false);
+
+// Airtime.pro streaming configuration
+define('LIBRETIME_AIRTIME_PRO_STREAMING', false);
