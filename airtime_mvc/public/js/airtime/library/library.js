@@ -104,28 +104,28 @@ var AIRTIME = (function(AIRTIME) {
                     "media": "tracks",
                     "icon": "icon-music",
                     "subtext": "Click 'Upload' to add some now.",
-                    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/add-media/"
+                    "href": "http://libretime.org/manual/add-media/"
                 };
             case mod.MediaTypeIntegerEnum.PLAYLIST:
                 return {
                     "media": "playlists",
                     "icon": "icon-list",
                     "subtext": "Click 'New' to create one now.",
-                    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
+                    "href": "http://libretime.org/manual/library/"
                 };
             case mod.MediaTypeIntegerEnum.BLOCK:
                 return {
                     "media": "smart blocks",
                     "icon": "icon-time",
                     "subtext": "Click 'New' to create one now.",
-                    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
+                    "href": "http://libretime.org/manual/library/"
                 };
             case mod.MediaTypeIntegerEnum.WEBSTREAM:
                 return {
                     "media": "webstreams",
                     "icon": "icon-random",
                     "subtext": "Click 'New' to create one now.",
-                    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
+                    "href": "http://libretime.org/manual/library/"
                 };
             case mod.MediaTypeIntegerEnum.PODCAST:
                 return {
