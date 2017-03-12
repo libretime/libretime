@@ -1576,17 +1576,8 @@ class Application_Model_Preference
     /**
      * Accessors for station bandwidth limit.
      */
-
     public static function getBandwidthLimit() {
-        $val = self::getValue("bandwidth_limit");
-        if (empty($val)) {
-            // Set and return the plan defaults
-            // TODO: remove this once all existing customers have this pref set
-            $planType = self::GetPlanLevel();
-            $val = Billing::$PLAN_TYPE_DEFAULTS[$planType]["bandwidth_limit"];
-            self::setBandwidthLimit($val);
-        }
-        return $val;
+        return self::getValue("bandwidth_limit");
     }
 
     public static function setBandwidthLimit($value) {
