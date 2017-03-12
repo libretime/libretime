@@ -67,7 +67,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::setTuneinPartnerId($values["tunein_partner_id"]);
 
                 // SoundCloud Preferences
-                if (Billing::isStationPodcastAllowed()) {
+                if (Billing::isStationPodcastAllowed() && array_key_exists('SoundCloudLicense', $values)) {
                     Application_Model_Preference::setDefaultSoundCloudLicenseType($values["SoundCloudLicense"]);
                     Application_Model_Preference::setDefaultSoundCloudSharingType($values["SoundCloudSharing"]);
                 }
