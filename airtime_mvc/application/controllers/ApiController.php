@@ -105,8 +105,9 @@ class ApiController extends Zend_Controller_Action
 
     public function versionAction()
     {
+        $config = Config::getConfig();
         $this->_helper->json->sendJson( array(
-            "airtime_version" => Application_Model_Preference::GetAirtimeVersion(),
+            "airtime_version" => $config['airtime_version'],
             "api_version" => AIRTIME_API_VERSION));
     }
 
@@ -656,7 +657,8 @@ class ApiController extends Zend_Controller_Action
             $this->_helper->json->sendJson(
                 array("jsonrpc" => "2.0", "error" => array("code" => $result['code'], "message" => $result['message']))
             );
-        }*/
+        }
+        **/
     }
 
     public function uploadRecordedAction()
@@ -915,10 +917,11 @@ class ApiController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $getDiskInfo = $request->getParam('diskinfo') == "true";
+        $config = Config::getConfig();
 
         $status = array(
             "platform"=>Application_Model_Systemstatus::GetPlatformInfo(),
-            "airtime_version"=>Application_Model_Preference::GetAirtimeVersion(),
+            "airtime_version"=>$config['airtime_version'],
             "services"=>array(
                 "pypo"=>Application_Model_Systemstatus::GetPypoStatus(),
                 "liquidsoap"=>Application_Model_Systemstatus::GetLiquidsoapStatus(),

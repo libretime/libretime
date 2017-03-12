@@ -109,8 +109,9 @@ class DashboardController extends Zend_Controller_Action
 
     public function aboutAction()
     {
+        $config = Config::getConfig();
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Help');
-        $this->view->airtime_version = Application_Model_Preference::GetAirtimeVersion();
+        $this->view->airtime_version = $config['airtime_version'];
     }
 
     public function tableTestAction()

@@ -29,8 +29,9 @@ class UpgradeManager
      */
     public static function getSupportedSchemaVersions()
     {
+        $config = Config::getConfig();
         //What versions of the schema does the code support today:
-        return array(AIRTIME_CODE_VERSION);
+        return array($config['airtime_version']);
     }
 
     public static function checkIfUpgradeIsNeeded()
@@ -269,7 +270,6 @@ class AirtimeUpgrader253 extends AirtimeUpgrader
 
         Application_Model_Preference::setDiskUsage($diskUsage);
 
-        //update system_version in cc_pref and change some columns in cc_files
         parent::_runUpgrade();
     }
 }

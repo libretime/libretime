@@ -32,8 +32,8 @@ define('LICENSE_URL'        , 'http://www.gnu.org/licenses/agpl-3.0-standalone.h
 define('AIRTIME_COPYRIGHT_DATE' , '2010-2015');
 define('AIRTIME_REST_VERSION'   , '1.1');
 define('AIRTIME_API_VERSION'    , '1.1');
-// XXX: it's important that we upgrade this every time we add an upgrade!
-define('AIRTIME_CODE_VERSION'   , '2.5.16');
+// XXX: it's important that we upgrade this on major version bumps, usually users get more exact info from VERSION in airtime root dir
+define('LIBRETIME_MAJOR_VERSION', '3');
 
 // grab values from env (i'll do this everywhere with a small function if we like it)
 define('LIBRETIME_CONF_DIR', getenv('LIBRETIME_CONF_DIR') ? getenv('LIBRETIME_CONF_DIR') : '/etc/airtime');
