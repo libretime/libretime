@@ -396,8 +396,8 @@ if s3_enable == true then
     end
     server.register(namespace=!s3_namespace, "connected", fun (s) -> begin log("#{!s3_namespace}.connected") !s3_connected end)
     output_to(s3_output, s3_type, s3_bitrate, s3_host, s3_port, s3_pass,
-                s3_mount, s3_url, s3_name, s3_genre, s3_user, s, "3",
-                s3_connected, s3_description, s3_channels)
+                s3_mount, s3_url, s3_description, s3_genre, s3_user, s, "3",
+                s3_connected, s3_name, s3_channels)
 end
 
 s4_namespace = ref ''
