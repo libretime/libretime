@@ -67,3 +67,8 @@ silan
 libopus0
 
 sysvinit-utils
+
+build-essential 
+libssl-dev 
+libffi-dev 
+python-dev

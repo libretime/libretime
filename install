@@ -491,6 +491,14 @@ verbose "\n * Installing necessary python services..."
 loudCmd "pip install setuptools --upgrade"
 verbose "...Done"
 
+
+
+if [[ `lsb_release -rs` == "14.04" ]] # Ubuntu trusty needs a workaround for python version SSL downloads
+then
+loudCmd "pip install pyOpenSSL cryptography idna certifi --upgrade"
+fi
+
+
 verbose "\n * Creating /run/airtime..."
 mkdir -p /run/airtime
 chmod 755 /run/airtime
