@@ -4,7 +4,7 @@ These Airtime instructions are outdated, see [install.md](../../install.md) for 
 
 The following instructions assume that you have root access (**sudo** on Ubuntu) to a GNU/Linux server, and are familiar with basic command line tasks. Experienced system administrators may prefer to skip to the *Expert install* chapter in the appendix of this book after preparing the server as shown in the steps below.
 
-The recommended Airtime server platform is Debian 7.2 'wheezy'. Ubuntu 12.04 LTS 'Precise Pangolin' is also supported. Users of other GNU/Linux distributions may be able to adapt these instructions to suit their needs.
+The recommended Airtime server platform is Debian 8 'jessie'. Ubuntu 14.04 LTS 'Trusty Tahir' is also supported. Users of other GNU/Linux distributions may be able to adapt these instructions to suit their needs.
 
 The server should have at least a 1GHz processor and 1GB of RAM, preferably 2GB RAM or more. If you are using a desktop environment and web browser directly on the server you should install at least 2GB RAM, to avoid swapping to disk.
 

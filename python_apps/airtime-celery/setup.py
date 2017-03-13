@@ -31,18 +31,6 @@ def postinst():
         # permissions for the defaults config file
         os.chmod('/etc/init.d/airtime-celery', 0755)
         os.chmod('/etc/default/airtime-celery', 0640)
-    # Make the airtime log directory group-writable
-    os.chmod('/var/log/airtime', 0775)
-
-    # Create the Celery user
-    call(['adduser', '--no-create-home', '--gecos', '', '--disabled-login', '--firstuid', '1', '--lastuid', '999', 'celery'])
-    # Add celery to the www-data group
-    call(['usermod', '-G', 'www-data', '-a', 'celery'])
-
-    print "Reloading initctl configuration"
-    call(['initctl', 'reload-configuration'])
-    print "Setting Celery to start on boot"
-    call(['update-rc.d', 'airtime-celery', 'defaults'])
     print "Run \"sudo service airtime-celery restart\" now."
 
 setup(name='airtime-celery',

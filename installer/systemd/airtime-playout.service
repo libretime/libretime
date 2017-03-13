@@ -1,0 +1,10 @@
+[Unit]
+Description=Airtime Playout Service
+
+[Service]
+ExecStart=/usr/bin/airtime-playout
+User=libretime-pypo
+Group=libretime-pypo
+
+[Install]
+WantedBy=multi-user.target
