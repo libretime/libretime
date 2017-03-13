@@ -31,11 +31,11 @@ from configobj import ConfigObj
 
 # custom imports
 from api_clients import api_client
-#from std_err_override import LogWriter
 import pure
 
 LOG_PATH = '/var/log/airtime/pypo/pypo.log'
 LOG_LEVEL = logging.INFO
+logging.captureWarnings(True)
 
 # Set up command-line options
 parser = OptionParser()

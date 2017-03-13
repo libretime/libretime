@@ -21,12 +21,9 @@ from Queue import Empty, Queue
 from threading import Thread
 
 from api_clients import api_client
-from std_err_override import LogWriter
 from timeout import ls_timeout
 
-
-#need to wait for Python 2.7 for this..
-#logging.captureWarnings(True)
+logging.captureWarnings(True)
 
 PUSH_INTERVAL = 2
 

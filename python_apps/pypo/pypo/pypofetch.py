@@ -18,7 +18,6 @@ from threading import Thread, Timer
 from subprocess import Popen, PIPE
 
 from api_clients import api_client
-from std_err_override import LogWriter
 from timeout import ls_timeout
 
 
@@ -28,8 +27,7 @@ def keyboardInterruptHandler(signum, frame):
     sys.exit(0)
 signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
-#need to wait for Python 2.7 for this..
-#logging.captureWarnings(True)
+logging.captureWarnings(True)
 
 POLL_INTERVAL = 480
 
