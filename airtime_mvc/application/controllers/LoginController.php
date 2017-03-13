@@ -156,7 +156,7 @@ class LoginController extends Zend_Controller_Action
         if ($request->isPost()) {
             if ($form->isValid($request->getPost())) {
                 $query = CcSubjsQuery::create();
-                $username = $form->userName->getValue();
+                $username = $form->username->getValue();
                 $email = $form->email->getValue();
 
                 if (empty($username)) {
@@ -179,7 +179,18 @@ class LoginController extends Zend_Controller_Action
                         $form->email->addError($this->view->translate(_("Email could not be sent. Check your mail server settings and ensure it has been configured properly.")));
                     }
                 } else {
-                    $form->email->addError($this->view->translate(sprintf(_pro("That username or email address could not be found. If you are the station owner, you should <a href=\"%s\">reset your here</a>."), WHMCS_PASSWORD_RESET_URL)));
+                    if (!LIBRETIME_ENABLE_WHMCS) {
+                    	$form->email->addError($this->view->translate(_("That username or email address could not be found.")));
+                    } else {
+                        $form->email->addError(
+                            $this->view->translate(
+                                sprintf(
+                                    _pro("That username or email address could not be found. If you are the station owner, you should <a href=\"%s\">reset your here</a>."),
+                                    WHMCS_PASSWORD_RESET_URL
+                                )
+                            )
+                        );
+                    }
                 }
             } else { //Form is not valid
                 $form->email->addError($this->view->translate(_("There was a problem with the username or email address you entered.")));
