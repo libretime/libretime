@@ -49,7 +49,10 @@ showhelp () {
     -a, --apache
                 Install apache and deploy a basic configuration for Airtime
     -i, --icecast
-                Install Icecast 2 and deploy a basic configuration for Airtime"
+                Install Icecast 2 and deploy a basic configuration for Airtime
+    --selinux
+                Run restorecon on directories and files that need tagging to
+                allow the WEB_USER access."
     exit 0
 }
 
@@ -67,6 +70,7 @@ postgres="f"
 apache="f"
 icecast="f"
 ignore_dependencies="f"
+selinux="f"
 # Interactive
 _i=1
 # Verbose
@@ -222,6 +226,9 @@ while :; do
             ;;
         --web-port=?*)
             web_port=${1#*=}
+            ;;
+        --selinux)
+            selinux="t"
             ;;
         --)
             shift
@@ -745,6 +752,18 @@ if [ "$ignore_dependencies" = "f" ]; then
     if [ "$dist" = "debian" ]; then
         loudCmd "/usr/sbin/locale-gen"
     fi
+fi
+
+# If the user requested it we run restorecon on files that need
+# tagging for selinux.
+if [ "$selinux" = "t" ]; then
+    loud "\n-----------------------------------------------------"
+    loud "              * Restoring SELinux Tags *             "
+    loud "-----------------------------------------------------"
+
+    verbose "\n * Running restorecon..."
+    loudCmd "restorecon -Rv /etc/airtime /srv/airtime > /dev/null 2>&1"
+    verbose "...Done"
 fi
 
 verbose "\n * Reloading apache..."
