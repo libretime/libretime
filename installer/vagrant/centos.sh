@@ -84,6 +84,7 @@ yum install -y \
   php-bcmath \
   php-mbstring \
   httpd \
+  fdk-aac \
   liquidsoap \
   silan \
   icecast \
@@ -94,6 +95,7 @@ yum install -y \
 
 # for pip ssl install
 yum install -y \
+  gcc \
   python-devel \
   python-lxml \
   openssl-devel

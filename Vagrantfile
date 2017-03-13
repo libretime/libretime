@@ -46,7 +46,7 @@ Vagrant.configure("2") do |config|
   end
   config.vm.define "centos" do |os|
     os.vm.box = 'centos/7'
-    provision_libretime(os, "centos.sh", installer_args + "--ignore-dependencies --distribution=centos --web-user=apache")
+    provision_libretime(os, "centos.sh", installer_args + "--ignore-dependencies --distribution=centos --web-user=apache --selinux")
   end
 
   def provision_libretime(config, prepare_script, installer_args)
