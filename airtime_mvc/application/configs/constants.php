@@ -104,6 +104,9 @@ define('UI_PLAYLISTCONTROLLER_OBJ_SESSNAME', 'PLAYLISTCONTROLLER_OBJ');
 /*define('UI_PLAYLIST_SESSNAME', 'PLAYLIST');
 define('UI_BLOCK_SESSNAME', 'BLOCK');*/
 
+// Google Analytics integration
+define('LIBRETIME_ENABLE_GOOGLE_ANALYTICS', false);
+
 //WHMCS integration
 define('LIBRETIME_ENABLE_WHMCS',            false);
 define('WHMCS_PASSWORD_RESET_URL',          'https://account.example.com/pwreset.php');

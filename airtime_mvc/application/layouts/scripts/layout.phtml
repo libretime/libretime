@@ -9,6 +9,7 @@
 	<?php $baseUrl = Application_Common_OsPath::getBaseDir(); ?>
 </head>
 <body>
+<?php if (LIBRETIME_ENABLE_GOOGLE_ANALYTICS === true): ?>
 <!-- Google Tag Manager -->
 <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-55N6NH"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -18,7 +19,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-55N6NH');</script>
 <!-- End Google Tag Manager -->
-
+<?php endif; ?>
 <?php echo $this->partial('partialviews/trialBox.phtml', array("is_trial"=>$this->isTrial(), "trial_remain"=> $this->trialRemaining())) ?>
 
     <div id="Panel" class="sticky">
