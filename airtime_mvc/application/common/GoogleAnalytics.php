@@ -9,6 +9,9 @@ class Application_Common_GoogleAnalytics
     public static function generateGoogleTagManagerDataLayerJavaScript()
     {
         $code = "";
+        if (LIBRETIME_ENABLE_GOOGLE_ANALYTICS !== true) {
+            return $code;
+        }
 
         try {
             $clientId = Application_Model_Preference::GetClientId();
@@ -55,6 +58,11 @@ class Application_Common_GoogleAnalytics
     /** Generate the JavaScript snippet that logs a trial to paid conversion  */
     public static function generateConversionTrackingJavaScript()
     {
+        $code = "";
+        if (LIBRETIME_ENABLE_GOOGLE_ANALYTICS !== true) {
+            return $code;
+        }
+
         $newPlan = Application_Model_Preference::GetPlanLevel();
         $oldPlan = Application_Model_Preference::GetOldPlanLevel();
 

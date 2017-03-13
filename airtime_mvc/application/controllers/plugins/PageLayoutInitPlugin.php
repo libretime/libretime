@@ -240,11 +240,6 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
                 $view->headScript()->appendFile($baseUrl . 'js/airtime/common/livechat.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
             }
         }
-
-        /*
-        if (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1) {
-            $view->headScript()->appendFile($baseUrl.'js/libs/google-analytics.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        }*/
     }
 
     protected function _initViewHelpers()
