@@ -1310,10 +1310,18 @@ SQL;
             $id = $iterator->current()->getDbId();
             $fileLength = $iterator->current()->getCueLength();
             $length = Application_Common_DateHelper::calculateLengthInSeconds($fileLength);
-            $insertList[] = array('id'=>$id, 'length'=>$length);
-            $totalTime += $length;
-            $totalItems++;
-            
+            // need to check to determine if the track will make the playlist exceed the totalTime before adding it
+            // this can be quite processor consuming so as a workaround I used the totalItems limit to prevent the
+            // algorithm from parsing too many items.
+                $projectedTime = $totalTime + $length;
+            if ($projectedTime > $limit['time']) {
+                $totalItems++;
+                		}
+	        else {
+                $insertList[] = array('id' => $id, 'length' => $length);
+                $totalTime += $length;
+                $totalItems++;
+            }
             if ((!is_null($limit['items']) && $limit['items'] == count($insertList)) || $totalItems > 500 || $totalTime > $limit['time']) {
                 $isBlockFull = true;
                 break;
