@@ -93,6 +93,12 @@ $pages[] = array(
             'resource'   => 'user'
         ),
         array(
+            'label'      => _('Media Folders'),
+            'module'     => 'default',
+            'controller' => 'preference',
+            'action'     => 'directory-config'
+        ),
+        array(
             'label'      => _('Streams'),
             'module'     => 'default',
             'controller' => 'preference',

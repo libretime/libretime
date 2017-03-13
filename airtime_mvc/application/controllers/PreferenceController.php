@@ -114,6 +114,14 @@ class PreferenceController extends Zend_Controller_Action
 
     public function directoryConfigAction()
     {
+        $config = Config::getConfig();
+
+        Zend_Layout::getMvcInstance()->assign('parent_page', 'Settings');
+
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $this->view->headScript()->appendFile($baseUrl.'js/serverbrowse/serverbrowser.js?'.$config['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/musicdirs.js?'.$config['airtime_version'],'text/javascript');
+        $this->view->form = new Application_Form_WatchedDirPreferences();
     }
 
     public function removeLogoAction()
