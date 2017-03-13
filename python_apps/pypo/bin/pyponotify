@@ -28,7 +28,6 @@ from configobj import ConfigObj
 # custom imports
 #from util import *
 from api_clients import *
-from std_err_override import LogWriter
 
 LOG_LEVEL = logging.INFO
 LOG_PATH = '/var/log/airtime/pypo/notify.log'
@@ -54,6 +53,7 @@ parser.add_option("-n", "--liquidsoap-started", help="notify liquidsoap started"
 (options, args) = parser.parse_args()
 
 # Set up logging
+logging.captureWarnings(True)
 logFormatter = logging.Formatter("%(asctime)s [%(module)s] [%(levelname)-5.5s]  %(message)s")
 rootLogger = logging.getLogger()
 rootLogger.setLevel(LOG_LEVEL)

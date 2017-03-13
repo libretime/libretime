@@ -16,12 +16,9 @@ import json
 import hashlib
 from requests.exceptions import ConnectionError, HTTPError, Timeout
 
-from std_err_override import LogWriter
-
 CONFIG_PATH = '/etc/airtime/airtime.conf'
 
-#need to wait for Python 2.7 for this..
-#logging.captureWarnings(True)
+logging.captureWarnings(True)
 
 
 class PypoFile(Thread):
