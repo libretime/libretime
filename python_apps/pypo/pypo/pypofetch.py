@@ -208,8 +208,99 @@ class PypoFetch(Thread):
     TODO: This function needs to be way shorter, and refactored :/ - MK
     """
     def regenerate_liquidsoap_conf(self, setting):
-        self.restart_liquidsoap()
-        self.update_liquidsoap_connection_status()
+        existing = {}
+
+        setting = sorted(setting.items())
+        try:
+            fh = open('/etc/airtime/liquidsoap.cfg', 'r')
+        except IOError, e:
+            #file does not exist
+            self.restart_liquidsoap()
+            return
+
+        self.logger.info("Reading existing config...")
+        # read existing conf file and build dict
+        while True:
+            line = fh.readline()
+
+            # empty line means EOF
+            if not line:
+                break
+
+            line = line.strip()
+
+            if not len(line) or line[0] == "#":
+                continue
+
+            try:
+                key, value = line.split('=', 1)
+            except ValueError:
+                continue
+            key = key.strip()
+            value = value.strip()
+            value = value.replace('"', '')
+            if value == '' or value == "0":
+                value = ''
+            existing[key] = value
+        fh.close()
+
+        # dict flag for any change in config
+        change = {}
+        # this flag is to detect disable -> disable change
+        # in that case, we don't want to restart even if there are changes.
+        state_change_restart = {}
+        #restart flag
+        restart = False
+
+        self.logger.info("Looking for changes...")
+        # look for changes
+        for k, s in setting:
+            if "output_sound_device" in k or "icecast_vorbis_metadata" in k:
+                dump, stream = k.split('_', 1)
+                state_change_restart[stream] = False
+                # This is the case where restart is required no matter what
+                if (existing[k] != str(s)):
+                    self.logger.info("'Need-to-restart' state detected for %s...", s)
+                    restart = True;
+            elif "master_live_stream_port" in k or "master_live_stream_mp" in k or "dj_live_stream_port" in k or "dj_live_stream_mp" in k or "off_air_meta" in k:
+                if (existing[k] != s):
+                    self.logger.info("'Need-to-restart' state detected for %s...", s)
+                    restart = True;
+            else:
+                stream, dump = k.split('_', 1)
+                if "_output" in k:
+                    if (existing[k] != s):
+                        self.logger.info("'Need-to-restart' state detected for %s...", s)
+                        restart = True;
+                        state_change_restart[stream] = True
+                    elif (k != 'disabled'):
+                        state_change_restart[stream] = True
+                    else:
+                        state_change_restart[stream] = False
+                else:
+                    # setting inital value
+                    if stream not in change:
+                        change[stream] = False
+                    if not (s == existing[k]):
+                        self.logger.info("Keyname: %s, Current value: %s, New Value: %s", k, existing[k], s)
+                        change[stream] = True
+
+        # set flag change for sound_device alway True
+        self.logger.info("Change:%s, State_Change:%s...", change, state_change_restart)
+
+        for k, v in state_change_restart.items():
+            if k == "sound_device" and v:
+                restart = True
+            elif v and change[k]:
+                self.logger.info("'Need-to-restart' state detected for %s...", k)
+                restart = True
+        # rewrite
+        if restart:
+            self.restart_liquidsoap()
+        else:
+            self.logger.info("No change detected in setting...")
+            self.update_liquidsoap_connection_status()
+
 
 
     @ls_timeout

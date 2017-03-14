@@ -15,8 +15,8 @@
             <?php echo $this->element->getElement('master_username')->render() ?>
             <span class="master_username_help_icon"></span>
             <?php echo $this->element->getElement('master_password')->render() ?>
-
             <?php echo $this->element->getElement("master_source_host")->render() ?>
+
             <?php echo $this->element->getElement("master_source_port")->render() ?>
             <?php echo $this->element->getElement("master_source_mount")->render() ?>
         </fieldset>
@@ -26,6 +26,7 @@
             <p class="input-settings-inline-p">
                 <?php echo _("DJs can use these settings in their broadcasting software to broadcast live only during shows assigned to them.") ?>
             </p>
+
             <?php echo $this->element->getElement("show_source_host")->render() ?>
             <?php echo $this->element->getElement("show_source_port")->render() ?>
             <?php echo $this->element->getElement("show_source_mount")->render() ?>
