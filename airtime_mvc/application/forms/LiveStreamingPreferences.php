@@ -7,6 +7,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
     {
         $CC_CONFIG = Config::getConfig();
         $isDemo = isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1;
+        $isStreamConfigable = Application_Model_Preference::GetEnableStreamConf() == "true";
 
         $defaultFade = Application_Model_Preference::GetDefaultTransitionFade();
 
@@ -63,42 +64,54 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
 
         // Master source connection url parameters
         $masterSourceHost = new Zend_Form_Element_Text('master_source_host');
-        $masterSourceHost->setAttrib('readonly', true)
-            ->setLabel(_('Host:'))
-            ->setValue(isset($masterSourceParams["host"])?$masterSourceParams["host"]:"");
+        $masterSourceHost->setLabel(_('Host:'))
+            ->setAttrib('readonly', true)
+            ->setValue(Application_Model_Preference::GetMasterDJSourceConnectionURL());
         $this->addElement($masterSourceHost);
 
+        //liquidsoap harbor.input port
+        $betweenValidator = Application_Form_Helper_ValidationTypes::overrideBetweenValidator(1024, 49151);
+        $m_port = Application_Model_StreamSetting::getMasterLiveStreamPort();
         $masterSourcePort = new Zend_Form_Element_Text('master_source_port');
-        $masterSourcePort->setAttrib('readonly', true)
-            ->setLabel(_('Port:'))
-            ->setValue(isset($masterSourceParams["port"])?$masterSourceParams["port"]:"");
+        $masterSourcePort->setLabel(_('Master Source Port:'))
+            ->setValue($m_port)
+            ->setValidators(array($betweenValidator))
+            ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>_('Only numbers are allowed.'))));
         $this->addElement($masterSourcePort);
 
+        $m_mount = Application_Model_StreamSetting::getMasterLiveStreamMountPoint();
         $masterSourceMount = new Zend_Form_Element_Text('master_source_mount');
-        $masterSourceMount->setAttrib('readonly', true)
-            ->setLabel(_('Mount:'))
-            ->setValue(isset($masterSourceParams["path"])?$masterSourceParams["path"]:"");
+        $masterSourceMount->setLabel(_('Master Source Mount:'))
+            ->setValue($m_mount)
+            ->setValidators(array(
+                array('regex', false, array('/^[^ &<>]+$/', 'messages' => _('Invalid character entered')))));
         $this->addElement($masterSourceMount);
 
         $showSourceParams = parse_url(Application_Model_Preference::GetLiveDJSourceConnectionURL());
 
         // Show source connection url parameters
         $showSourceHost = new Zend_Form_Element_Text('show_source_host');
-        $showSourceHost->setAttrib('readonly', true)
-            ->setLabel(_('Host:'))
-            ->setValue(isset($showSourceParams["host"])?$showSourceParams["host"]:"");
+        $showSourceHost->setLabel(_('Host:'))
+            ->setAttrib('readonly', true)
+            ->setValue(Application_Model_Preference::GetLiveDJSourceConnectionURL());
         $this->addElement($showSourceHost);
 
+        //liquidsoap harbor.input port
+        $l_port = Application_Model_StreamSetting::getDjLiveStreamPort();
+
         $showSourcePort = new Zend_Form_Element_Text('show_source_port');
-        $showSourcePort->setAttrib('readonly', true)
-            ->setLabel(_('Port:'))
-            ->setValue(isset($showSourceParams["port"])?$showSourceParams["port"]:"");
+        $showSourcePort->setLabel(_('Show Source Port:'))
+            ->setValue($l_port)
+            ->setValidators(array($betweenValidator))
+            ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>_('Only numbers are allowed.'))));
         $this->addElement($showSourcePort);
 
+        $l_mount = Application_Model_StreamSetting::getDjLiveStreamMountPoint();
         $showSourceMount = new Zend_Form_Element_Text('show_source_mount');
-        $showSourceMount->setAttrib('readonly', true)
-            ->setLabel(_('Mount:'))
-            ->setValue(isset($showSourceParams["path"])?$showSourceParams["path"]:"");
+        $showSourceMount->setLabel(_('Show Source Mount:'))
+            ->setValue($l_mount)
+            ->setValidators(array(
+                array('regex', false, array('/^[^ &<>]+$/', 'messages' => _('Invalid character entered')))));
         $this->addElement($showSourceMount);
 
         // demo only code
@@ -125,12 +138,12 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
                 array ('ViewScript',
                     array (
                       'viewScript'                  => 'form/preferences_livestream.phtml',
-                      'master_source_host'          => isset($masterSourceParams["host"])?$masterSourceParams["host"]:"",
-                      'master_source_port'          => isset($masterSourceParams["port"])?$masterSourceParams["port"]:"",
-                      'master_source_mount'         => isset($masterSourceParams["path"])?$masterSourceParams["path"]:"",
-                      'show_source_host'            => isset($showSourceParams["host"])?$showSourceParams["host"]:"",
-                      'show_source_port'            => isset($showSourceParams["port"])?$showSourceParams["port"]:"",
-                      'show_source_mount'           => isset($showSourceParams["path"])?$showSourceParams["path"]:"",
+                      'master_source_host'          => isset($masterSourceHost)?$masterSourceParams["host"]:"",
+                      'master_source_port'          => isset($masterSourcePort)?$masterSourceParams["port"]:"",
+                      'master_source_mount'         => isset($masterSourceMount)?$masterSourceParams["path"]:"",
+                      'show_source_host'            => isset($showSourceHost)?$showSourceParams["host"]:"",
+                      'show_source_port'            => isset($showSourcePort)?$showSourceParams["port"]:"",
+                      'show_source_mount'           => isset($showSourceMount)?$showSourceParams["path"]:"",
                       'isDemo'                      => $isDemo,
                     )
                 )
@@ -140,7 +153,53 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
 
     public function isValid($data)
     {
-        return parent::isValid($data);
+        $isValid = parent::isValid($data);
+        $master_source_port = $data['master_source_port'];
+        $show_source_port = $data['show_source_port'];
+
+        if ($master_source_port == $show_source_port && $master_source_port != "") {
+            $element = $this->getElement('show_source_port');
+            $element->addError(_("You cannot use same port as Master DJ port."));
+            $isValid = false;
+        }
+        if ($master_source_port != "") {
+            if (is_numeric($master_source_port)) {
+                if ($master_source_port != Application_Model_StreamSetting::getMasterLiveStreamPort()) {
+                    $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+                    try {
+                        socket_bind($sock, 0, $master_source_port);
+                    } catch (Exception $e) {
+                        $element = $this->getElement("master_source_port");
+                        $element->addError(sprintf(_("Port %s is not available"), $master_source_port));
+                        $isValid = false;
+                    }
+
+                    socket_close($sock);
+                }
+            } else {
+                $isValid = false;
+            }
+        }
+        if ($show_source_port != "") {
+            if (is_numeric($show_source_port)) {
+                if ($show_source_port != Application_Model_StreamSetting::getDjLiveStreamPort()) {
+                    $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+                    try {
+                        socket_bind($sock, 0, $show_source_port);
+                    } catch (Exception $e) {
+                        $element = $this->getElement("show_source_port");
+                        $element->addError(sprintf(_("Port %s is not available"), $show_source_port));
+                        $isValid = false;
+                    }
+                    socket_close($sock);
+                }
+            } else {
+                $isValid = false;
+            }
+        }
+
+        return $isValid;
+
     }
 
 }

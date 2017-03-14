@@ -262,6 +262,41 @@ class PreferenceController extends Zend_Controller_Action
                     //Application_Model_RabbitMq::PushSchedule();
                 }
 
+                // pulling this from the 2.5.x branch
+                if (!Application_Model_Preference::GetMasterDjConnectionUrlOverride()) {
+                    $master_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["master_source_port"].$values["master_source_mount"];
+                    if (empty($values["master_source_port"]) || empty($values["master_source_port"])) {
+                        Application_Model_Preference::SetMasterDJSourceConnectionURL('N/A');
+                    } else {
+                        Application_Model_Preference::SetMasterDJSourceConnectionURL($master_connection_url);
+                    }
+                } else {
+                    Application_Model_Preference::SetMasterDJSourceConnectionURL($values["master_source_host"]);
+                }
+
+                if (!Application_Model_Preference::GetLiveDjConnectionUrlOverride()) {
+                    $live_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["show_source_port"].$values["show_source_mount"];
+                    if (empty($values["show_source_port"]) || empty($values["show_source_mount"])) {
+                        Application_Model_Preference::SetLiveDJSourceConnectionURL('N/A');
+                    } else {
+                        Application_Model_Preference::SetLiveDJSourceConnectionURL($live_connection_url);
+                    }
+                } else {
+                    Application_Model_Preference::SetLiveDJSourceConnectionURL($values["show_source_host"]);
+                }
+
+
+                Application_Model_StreamSetting::setMasterLiveStreamPort($values["master_source_port"]);
+                Application_Model_StreamSetting::setMasterLiveStreamMountPoint($values["master_source_mount"]);
+                Application_Model_StreamSetting::setDjLiveStreamPort($values["show_source_port"]);
+                Application_Model_StreamSetting::setDjLiveStreamMountPoint($values["show_source_mount"]);
+
+
+
+
+
+
+
                 Application_Model_StreamSetting::setOffAirMeta($values['offAirMeta']);
 
                 // store stream update timestamp
@@ -355,6 +390,7 @@ class PreferenceController extends Zend_Controller_Action
         Application_Model_Preference::SetDefaultTransitionFade($values["transition_fade"]);
         Application_Model_Preference::SetAutoTransition($values["auto_transition"]);
         Application_Model_Preference::SetAutoSwitch($values["auto_switch"]);
+
     }
 
     public function serverBrowseAction()
