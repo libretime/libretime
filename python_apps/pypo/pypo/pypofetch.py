@@ -255,25 +255,25 @@ class PypoFetch(Thread):
         self.logger.info("Looking for changes...")
         # look for changes
         for k, s in setting:
-            if "output_sound_device" in s[u'keyname'] or "icecast_vorbis_metadata" in s[u'keyname']:
-                dump, stream = s[u'keyname'].split('_', 1)
+            if "output_sound_device" in k or "icecast_vorbis_metadata" in k:
+                dump, stream = k.split('_', 1)
                 state_change_restart[stream] = False
                 # This is the case where restart is required no matter what
-                if (existing[s[u'keyname']] != str(s[u'value'])):
-                    self.logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
+                if (existing[k] != str(s)):
+                    self.logger.info("'Need-to-restart' state detected for %s...", s)
                     restart = True;
-            elif "master_live_stream_port" in s[u'keyname'] or "master_live_stream_mp" in s[u'keyname'] or "dj_live_stream_port" in s[u'keyname'] or "dj_live_stream_mp" in s[u'keyname'] or "off_air_meta" in s[u'keyname']:
-                if (existing[s[u'keyname']] != s[u'value']):
-                    self.logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
+            elif "master_live_stream_port" in k or "master_live_stream_mp" in k or "dj_live_stream_port" in k or "dj_live_stream_mp" in k or "off_air_meta" in k:
+                if (existing[k] != s):
+                    self.logger.info("'Need-to-restart' state detected for %s...", s)
                     restart = True;
             else:
-                stream, dump = s[u'keyname'].split('_', 1)
-                if "_output" in s[u'keyname']:
-                    if (existing[s[u'keyname']] != s[u'value']):
-                        self.logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
+                stream, dump = k.split('_', 1)
+                if "_output" in k:
+                    if (existing[k] != s):
+                        self.logger.info("'Need-to-restart' state detected for %s...", s)
                         restart = True;
                         state_change_restart[stream] = True
-                    elif (s[u'value'] != 'disabled'):
+                    elif (k != 'disabled'):
                         state_change_restart[stream] = True
                     else:
                         state_change_restart[stream] = False
@@ -281,8 +281,8 @@ class PypoFetch(Thread):
                     # setting inital value
                     if stream not in change:
                         change[stream] = False
-                    if not (s[u'value'] == existing[s[u'keyname']]):
-                        self.logger.info("Keyname: %s, Current value: %s, New Value: %s", s[u'keyname'], existing[s[u'keyname']], s[u'value'])
+                    if not (s == existing[k]):
+                        self.logger.info("Keyname: %s, Current value: %s, New Value: %s", k, existing[k], s)
                         change[stream] = True
 
         # set flag change for sound_device alway True
