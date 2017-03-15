@@ -111,18 +111,17 @@ function checkLiquidsoapStatus(){
 
 function setLiveSourceConnectionOverrideListener(){
     $("[id=connection_url_override]").click(function(event){
-        var url_input = $(this).parent().find("#stream_url").children();
+        var url_input = $(this).parent().find("dd[id$='_source_host-element']").children();
         url_input.removeAttr("readonly");
-		
         $(this).parent().find("div[id$='_dj_connection_url_actions']").show();
         event.preventDefault();
     });
     
     // set action for "OK" and "X"
     var live_dj_actions = $("#live_dj_connection_url_actions");
-    var live_dj_input = live_dj_actions.parent().find("#stream_url").children();
+    var live_dj_input = live_dj_actions.parent().find("dd[id$='_source_host-element']").children();
     var master_dj_actions = $("#master_dj_connection_url_actions");
-    var master_dj_input = master_dj_actions.parent().find("#stream_url").children();
+    var master_dj_input = master_dj_actions.parent().find("dd[id$='_source_host-element']").children();
     
     live_dj_actions.find("#ok").click(function(event){
     	event.preventDefault();
@@ -136,8 +135,8 @@ function setLiveSourceConnectionOverrideListener(){
     
     live_dj_actions.find("#reset").click(function(event){
     	event.preventDefault();
-        var port = $("#dj_harbor_input_port").val();
-        var mount = $("#dj_harbor_input_mount_point").val();
+        var port = $("#show_source_port").val();
+        var mount = $("#show_source_mount").val();
         var url = "http://"+location.hostname+":"+port+"/"+mount;
         if (port == '' || mount == '') {
             url = 'N/A';
@@ -159,8 +158,8 @@ function setLiveSourceConnectionOverrideListener(){
     });
     
     master_dj_actions.find("#reset").click(function(event){
-        var port = $("#master_harbor_input_port").val();
-        var mount = $("#master_harbor_input_mount_point").val();
+        var port = $("#master_source_port").val();
+        var mount = $("#master_source_mount").val();
         var url = "http://"+location.hostname+":"+port+"/"+mount;
         if (port == '' || mount == '') {
             url = 'N/A';
