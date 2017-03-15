@@ -91,7 +91,8 @@ yum install -y \
   python-pip \
   selinux-policy \
   policycoreutils-python \
-  python-celery 
+  python-celery \
+  lsof
 
 # for pip ssl install
 yum install -y \
