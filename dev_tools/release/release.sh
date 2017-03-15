@@ -1,11 +1,15 @@
 #!/bin/bash -e
 
 #release.sh 1.8.2
-#creates an airtime folder with a "1.8.2" suffix
+#creates a libretime folder with a "1.8.2" suffix
 #creates tarballs with a "1.8.2" suffix
 
 #release.sh 1.8.2 RC
-#creates an airtime folder with a "1.8.2" suffix
+#creates a libretime folder with a "1.8.2-RC" suffix
+#creates tarballs with a "1.8.2-RC" suffix
+
+#release.sh 1.8.2-RC
+#creates a libretime folder with a "1.8.2-RC" suffix
 #creates tarballs with a "1.8.2-RC" suffix
 
 if [ $# == 0 ]; then
@@ -22,32 +26,58 @@ fi
 dir=$(dirname $(readlink -f $0))
 gitrepo=$(readlink -f ./../../)
 
-echo "Creating tarballs with ${suffix} suffix"
+echo ${gitrepo}
 
-target=/tmp/airtime-${version}
-target_file=/tmp/airtime-${suffix}.tar.gz
+echo "Creating tarball for LibreTime ${suffix}."
+
+target=/tmp/libretime-${suffix}
+target_file=/tmp/libretime-${suffix}.tar.gz
 
 rm -rf $target
 rm -f $target_file
-git clone file://$gitrepo $target
+echo -n "Cloning temporary git repo..."
+git clone --quiet --depth=1 file://$gitrepo $target
+echo " Done"
 
-cd $target
+echo -n "Creating VERSION file for ${suffix}..."
+echo -n "${suffix}" > ${target}/VERSION
+echo " Done"
 
-echo "Checking out tag airtime-${suffix}"
-git checkout airtime-${suffix}
+pushd $target
 
+echo -n "Checking out tag ${suffix}..."
+git checkout --quiet ${suffix}
+echo " Done"
 
-cd $target
-rm -rf .git .gitignore .gitmodules .zfproject.xml dev_tools/ audio_samples/ 
+echo -n "Running composer install..."
+composer install --quiet --no-dev
+echo " Done"
 
-#echo "Minimizing Airtime Javascript files..."
+popd
+
+#echo "Minimizing LibreTime Javascript files..."
 #cd $dir
 #find $target/airtime_mvc/public/js/airtime/ -iname "*.js" -exec bash -c 'echo {}; jsmin/jsmin < {} > {}.min' \;
 #find $target/airtime_mvc/public/js/airtime/ -iname "*.js" -exec mv {}.min {} \;
 #echo "Done"
 
-#zip -r airtime-${suffix}.zip airtime-${version}
-cd /tmp/
-tar -czf $target_file airtime-${version}
+pushd /tmp/
+echo -n "Creating tarball..."
+tar -czf $target_file \
+        --owner=root --group=root \
+        --exclude-vcs \
+        --exclude .zfproject.xml \
+        --exclude .gitignore \
+        --exclude .travis.yml \
+        --exclude travis \
+        --exclude mkdocs.yml \
+        --exclude dev_tools \
+        --exclude docs \
+        --exclude vendor/phing \
+        --exclude vendor/simplepie/simplepie/tests \
+    libretime-${suffix} 
+echo " Done"
+popd
+
 
 echo "Output file available at $target_file"
