@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/LibreTime/libretime.svg?branch=master)](https://travis-ci.org/LibreTime/libretime)
 
-LibreTime is a community managed fork of the AirTime project.
+LibreTime makes it easy to run your own online or terrestrial radio station. It is a community managed fork of the AirTime project.
 
 It is managed by a friendly inclusive community of stations 
 from around the globe that use, document and improve LibreTime. 
@@ -10,6 +10,8 @@ Join us in fixing bugs and in defining how we manage the
 codebase going forward.
 
 We are currently ramping up development on this repository.
+
+Check out the [documentation](http://libretime.org) for more information and start broadcasting!
 
 Please note that LibreTime is released with a [Contributor Code 
 of Conduct](https://github.com/LibreTime/code-of-conduct/blob/CODE-OF-CONDUCT.md).
