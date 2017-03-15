@@ -17,6 +17,7 @@ pages:
   - 'Home': index.md
   - 'What is LibreTime': manual/index.md
   - 'Features': features.md
+  - 'F.A.Q.': faq.md
   - 'Rights and Royalties': manual/rights-and-royalties/index.md
   - 'Using LibreTime':
     - 'On air in 60 seconds!': 'manual/on-air-in-60-seconds/index.md'
@@ -71,6 +72,7 @@ pages:
   - 'Development':
     - 'Testing': testing.md
     - 'Vagrant': vagrant.md
+    - 'Translating': translating.md
     - 'Documentation': documentation.md
   - 'Appendix':
     - 'Expert install': manual/expert-install/index.md
