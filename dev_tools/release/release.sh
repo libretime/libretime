@@ -46,7 +46,8 @@ echo " Done"
 pushd $target
 
 echo -n "Checking out tag ${suffix}..."
-git checkout --quiet ${suffix}
+git fetch --quiet --tags
+git checkout --quiet tags/${suffix}
 echo " Done"
 
 echo -n "Running composer install..."
