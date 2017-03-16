@@ -77,6 +77,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             ->setValue($m_port)
             ->setValidators(array($betweenValidator))
             ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>_('Only numbers are allowed.'))));
+
         $this->addElement($masterSourcePort);
 
         $m_mount = Application_Model_StreamSetting::getMasterLiveStreamMountPoint();
@@ -153,53 +154,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
 
     public function isValid($data)
     {
-        $isValid = parent::isValid($data);
-        $master_source_port = $data['master_source_port'];
-        $show_source_port = $data['show_source_port'];
-
-        if ($master_source_port == $show_source_port && $master_source_port != "") {
-            $element = $this->getElement('show_source_port');
-            $element->addError(_("You cannot use same port as Master DJ port."));
-            $isValid = false;
-        }
-        if ($master_source_port != "") {
-            if (is_numeric($master_source_port)) {
-                if ($master_source_port != Application_Model_StreamSetting::getMasterLiveStreamPort()) {
-                    $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-                    try {
-                        socket_bind($sock, 0, $master_source_port);
-                    } catch (Exception $e) {
-                        $element = $this->getElement("master_source_port");
-                        $element->addError(sprintf(_("Port %s is not available"), $master_source_port));
-                        $isValid = false;
-                    }
-
-                    socket_close($sock);
-                }
-            } else {
-                $isValid = false;
-            }
-        }
-        if ($show_source_port != "") {
-            if (is_numeric($show_source_port)) {
-                if ($show_source_port != Application_Model_StreamSetting::getDjLiveStreamPort()) {
-                    $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-                    try {
-                        socket_bind($sock, 0, $show_source_port);
-                    } catch (Exception $e) {
-                        $element = $this->getElement("show_source_port");
-                        $element->addError(sprintf(_("Port %s is not available"), $show_source_port));
-                        $isValid = false;
-                    }
-                    socket_close($sock);
-                }
-            } else {
-                $isValid = false;
-            }
-        }
-
-        return $isValid;
-
+        return $isValid = parent::isValid($data);
     }
 
 }

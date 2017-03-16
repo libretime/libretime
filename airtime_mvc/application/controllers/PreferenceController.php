@@ -264,7 +264,6 @@ class PreferenceController extends Zend_Controller_Action
 
                 // pulling this from the 2.5.x branch
                 if (!Application_Model_Preference::GetMasterDjConnectionUrlOverride()) {
-                    $master_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["master_source_port"].$values["master_source_mount"];
                     if (empty($values["master_source_port"]) || empty($values["master_source_port"])) {
                         Application_Model_Preference::SetMasterDJSourceConnectionURL('N/A');
                     } else {
