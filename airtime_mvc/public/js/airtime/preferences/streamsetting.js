@@ -129,7 +129,7 @@ function setLiveSourceConnectionOverrideListener(){
         live_dj_input.val(url);
         live_dj_input.attr("readonly", "readonly");
         live_dj_actions.hide();
-        $.get(baseUrl+"Preference/set-source-connection-url/", {format: "json", type: "livedj", url:encodeURIComponent(url), override: 1});
+        $.get(baseUrl+"Preference/set-source-connection-url", {format: "json", type: "livedj", url:encodeURIComponent(url), override: 1});
     	event.preventDefault();
     });
     
@@ -137,7 +137,10 @@ function setLiveSourceConnectionOverrideListener(){
     	event.preventDefault();
         var port = $("#show_source_port").val();
         var mount = $("#show_source_mount").val();
-        var url = "http://"+location.hostname+":"+port+"/"+mount;
+        if (mount.charAt(0) != '/') {
+            mount = ('/').concat(mount);
+        }
+        var url = "http://"+location.hostname+":"+port+mount;
         if (port == '' || mount == '') {
             url = 'N/A';
         }
@@ -160,7 +163,10 @@ function setLiveSourceConnectionOverrideListener(){
     master_dj_actions.find("#reset").click(function(event){
         var port = $("#master_source_port").val();
         var mount = $("#master_source_mount").val();
-        var url = "http://"+location.hostname+":"+port+"/"+mount;
+        if (mount.charAt(0) != '/') {
+            mount = ('/').concat(mount);
+        }
+        var url = "http://"+location.hostname+":"+port+mount;
         if (port == '' || mount == '') {
             url = 'N/A';
         }

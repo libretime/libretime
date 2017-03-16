@@ -1102,7 +1102,13 @@ class Application_Model_Preference
 
     public static function GetMasterDJSourceConnectionURL()
     {
-        return self::getValue("master_dj_source_connection_url");
+        $master_connection_url = self::getValue("master_dj_source_connection_url");
+        if ($master_connection_url == "") {
+            $master_connection_url = "http://".$_SERVER['SERVER_NAME'].":".  Application_Model_StreamSetting::getMasterLiveStreamPort() . Application_Model_StreamSetting::getMasterLiveStreamMountPoint();
+            }
+
+        return $master_connection_url;
+
     }
 
     public static function SetLiveDJSourceConnectionURL($value)
@@ -1112,7 +1118,11 @@ class Application_Model_Preference
 
     public static function GetLiveDJSourceConnectionURL()
     {
-        return self::getValue("live_dj_source_connection_url");
+        $livedj_connection_url = self::getValue("live_dj_source_connection_url");
+        if ($livedj_connection_url == "") {
+            $livedj_connection_url = "http://".$_SERVER['SERVER_NAME'].":".  Application_Model_StreamSetting::getDjLiveStreamPort() . Application_Model_StreamSetting::getDjLiveStreamMountPoint();
+        }
+        return $livedj_connection_url;
     }
 
     /* Source Connection URL override status starts */
