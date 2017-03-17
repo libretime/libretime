@@ -141,9 +141,6 @@ function setLiveSourceConnectionOverrideListener(){
             mount = ('/').concat(mount);
         }
         var url = "http://"+location.hostname+":"+port+mount;
-        if (port == '' || mount == '') {
-            url = 'N/A';
-        }
         live_dj_input.val(url);
         live_dj_input.attr("readonly", "readonly");
         live_dj_actions.hide();
@@ -167,9 +164,6 @@ function setLiveSourceConnectionOverrideListener(){
             mount = ('/').concat(mount);
         }
         var url = "http://"+location.hostname+":"+port+mount;
-        if (port == '' || mount == '') {
-            url = 'N/A';
-        }
         master_dj_input.val(url);
         master_dj_input.attr("readonly", "readonly");
         master_dj_actions.hide();
