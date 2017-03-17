@@ -24,13 +24,13 @@ abstract class BaseImportedPodcastPeer
     const TM_CLASS = 'ImportedPodcastTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 4;
+    const NUM_COLUMNS = 5;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 4;
+    const NUM_HYDRATE_COLUMNS = 5;
 
     /** the column name for the id field */
     const ID = 'imported_podcast.id';
@@ -40,6 +40,9 @@ abstract class BaseImportedPodcastPeer
 
     /** the column name for the auto_ingest_timestamp field */
     const AUTO_INGEST_TIMESTAMP = 'imported_podcast.auto_ingest_timestamp';
+
+    /** the column name for the album_override field */
+    const ALBUM_OVERRIDE = 'imported_podcast.album_override';
 
     /** the column name for the podcast_id field */
     const PODCAST_ID = 'imported_podcast.podcast_id';
@@ -63,12 +66,12 @@ abstract class BaseImportedPodcastPeer
      * e.g. ImportedPodcastPeer::$fieldNames[ImportedPodcastPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbAutoIngest', 'DbAutoIngestTimestamp', 'DbPodcastId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbAutoIngest', 'dbAutoIngestTimestamp', 'dbPodcastId', ),
-        BasePeer::TYPE_COLNAME => array (ImportedPodcastPeer::ID, ImportedPodcastPeer::AUTO_INGEST, ImportedPodcastPeer::AUTO_INGEST_TIMESTAMP, ImportedPodcastPeer::PODCAST_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'AUTO_INGEST', 'AUTO_INGEST_TIMESTAMP', 'PODCAST_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'auto_ingest', 'auto_ingest_timestamp', 'podcast_id', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbAutoIngest', 'DbAutoIngestTimestamp', 'DbAlbumOverride', 'DbPodcastId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbAutoIngest', 'dbAutoIngestTimestamp', 'dbAlbumOverride', 'dbPodcastId', ),
+        BasePeer::TYPE_COLNAME => array (ImportedPodcastPeer::ID, ImportedPodcastPeer::AUTO_INGEST, ImportedPodcastPeer::AUTO_INGEST_TIMESTAMP, ImportedPodcastPeer::ALBUM_OVERRIDE, ImportedPodcastPeer::PODCAST_ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'AUTO_INGEST', 'AUTO_INGEST_TIMESTAMP', 'ALBUM_OVERRIDE', 'PODCAST_ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'auto_ingest', 'auto_ingest_timestamp', 'album_override', 'podcast_id', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
     );
 
     /**
@@ -78,12 +81,12 @@ abstract class BaseImportedPodcastPeer
      * e.g. ImportedPodcastPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbAutoIngest' => 1, 'DbAutoIngestTimestamp' => 2, 'DbPodcastId' => 3, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbAutoIngest' => 1, 'dbAutoIngestTimestamp' => 2, 'dbPodcastId' => 3, ),
-        BasePeer::TYPE_COLNAME => array (ImportedPodcastPeer::ID => 0, ImportedPodcastPeer::AUTO_INGEST => 1, ImportedPodcastPeer::AUTO_INGEST_TIMESTAMP => 2, ImportedPodcastPeer::PODCAST_ID => 3, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'AUTO_INGEST' => 1, 'AUTO_INGEST_TIMESTAMP' => 2, 'PODCAST_ID' => 3, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'auto_ingest' => 1, 'auto_ingest_timestamp' => 2, 'podcast_id' => 3, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbAutoIngest' => 1, 'DbAutoIngestTimestamp' => 2, 'DbAlbumOverride' => 3, 'DbPodcastId' => 4, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbAutoIngest' => 1, 'dbAutoIngestTimestamp' => 2, 'dbAlbumOverride' => 3, 'dbPodcastId' => 4, ),
+        BasePeer::TYPE_COLNAME => array (ImportedPodcastPeer::ID => 0, ImportedPodcastPeer::AUTO_INGEST => 1, ImportedPodcastPeer::AUTO_INGEST_TIMESTAMP => 2, ImportedPodcastPeer::ALBUM_OVERRIDE => 3, ImportedPodcastPeer::PODCAST_ID => 4, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'AUTO_INGEST' => 1, 'AUTO_INGEST_TIMESTAMP' => 2, 'ALBUM_OVERRIDE' => 3, 'PODCAST_ID' => 4, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'auto_ingest' => 1, 'auto_ingest_timestamp' => 2, 'album_override' => 3, 'podcast_id' => 4, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
     );
 
     /**
@@ -160,11 +163,13 @@ abstract class BaseImportedPodcastPeer
             $criteria->addSelectColumn(ImportedPodcastPeer::ID);
             $criteria->addSelectColumn(ImportedPodcastPeer::AUTO_INGEST);
             $criteria->addSelectColumn(ImportedPodcastPeer::AUTO_INGEST_TIMESTAMP);
+            $criteria->addSelectColumn(ImportedPodcastPeer::ALBUM_OVERRIDE);
             $criteria->addSelectColumn(ImportedPodcastPeer::PODCAST_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.auto_ingest');
             $criteria->addSelectColumn($alias . '.auto_ingest_timestamp');
+            $criteria->addSelectColumn($alias . '.album_override');
             $criteria->addSelectColumn($alias . '.podcast_id');
         }
     }

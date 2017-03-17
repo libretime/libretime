@@ -49,6 +49,13 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
     protected $auto_ingest_timestamp;
 
     /**
+     * The value for the album_override field.
+     * Note: this column has a database default value of: false
+     * @var        boolean
+     */
+    protected $album_override;
+
+    /**
      * The value for the podcast_id field.
      * @var        int
      */
@@ -88,6 +95,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
     public function applyDefaultValues()
     {
         $this->auto_ingest = false;
+        $this->album_override = false;
     }
 
     /**
@@ -155,6 +163,17 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
 
         return $dt->format($format);
 
+    }
+
+    /**
+     * Get the [album_override] column value.
+     *
+     * @return boolean
+     */
+    public function getDbAlbumOverride()
+    {
+
+        return $this->album_override;
     }
 
     /**
@@ -242,6 +261,35 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
     } // setDbAutoIngestTimestamp()
 
     /**
+     * Sets the value of the [album_override] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param boolean|integer|string $v The new value
+     * @return ImportedPodcast The current object (for fluent API support)
+     */
+    public function setDbAlbumOverride($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->album_override !== $v) {
+            $this->album_override = $v;
+            $this->modifiedColumns[] = ImportedPodcastPeer::ALBUM_OVERRIDE;
+        }
+
+
+        return $this;
+    } // setDbAlbumOverride()
+
+    /**
      * Set the value of [podcast_id] column.
      *
      * @param  int $v new value
@@ -280,6 +328,10 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
                 return false;
             }
 
+            if ($this->album_override !== false) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return true
         return true;
     } // hasOnlyDefaultValues()
@@ -305,7 +357,8 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
             $this->auto_ingest = ($row[$startcol + 1] !== null) ? (boolean) $row[$startcol + 1] : null;
             $this->auto_ingest_timestamp = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-            $this->podcast_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
+            $this->album_override = ($row[$startcol + 3] !== null) ? (boolean) $row[$startcol + 3] : null;
+            $this->podcast_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -315,7 +368,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 4; // 4 = ImportedPodcastPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = ImportedPodcastPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating ImportedPodcast object", $e);
@@ -562,6 +615,9 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
         if ($this->isColumnModified(ImportedPodcastPeer::AUTO_INGEST_TIMESTAMP)) {
             $modifiedColumns[':p' . $index++]  = '"auto_ingest_timestamp"';
         }
+        if ($this->isColumnModified(ImportedPodcastPeer::ALBUM_OVERRIDE)) {
+            $modifiedColumns[':p' . $index++]  = '"album_override"';
+        }
         if ($this->isColumnModified(ImportedPodcastPeer::PODCAST_ID)) {
             $modifiedColumns[':p' . $index++]  = '"podcast_id"';
         }
@@ -584,6 +640,9 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
                         break;
                     case '"auto_ingest_timestamp"':
                         $stmt->bindValue($identifier, $this->auto_ingest_timestamp, PDO::PARAM_STR);
+                        break;
+                    case '"album_override"':
+                        $stmt->bindValue($identifier, $this->album_override, PDO::PARAM_BOOL);
                         break;
                     case '"podcast_id"':
                         $stmt->bindValue($identifier, $this->podcast_id, PDO::PARAM_INT);
@@ -737,6 +796,9 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
                 return $this->getDbAutoIngestTimestamp();
                 break;
             case 3:
+                return $this->getDbAlbumOverride();
+                break;
+            case 4:
                 return $this->getDbPodcastId();
                 break;
             default:
@@ -771,7 +833,8 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
             $keys[0] => $this->getDbId(),
             $keys[1] => $this->getDbAutoIngest(),
             $keys[2] => $this->getDbAutoIngestTimestamp(),
-            $keys[3] => $this->getDbPodcastId(),
+            $keys[3] => $this->getDbAlbumOverride(),
+            $keys[4] => $this->getDbPodcastId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -826,6 +889,9 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
                 $this->setDbAutoIngestTimestamp($value);
                 break;
             case 3:
+                $this->setDbAlbumOverride($value);
+                break;
+            case 4:
                 $this->setDbPodcastId($value);
                 break;
         } // switch()
@@ -855,7 +921,8 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
         if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setDbAutoIngest($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setDbAutoIngestTimestamp($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setDbPodcastId($arr[$keys[3]]);
+        if (array_key_exists($keys[3], $arr)) $this->setDbAlbumOverride($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setDbPodcastId($arr[$keys[4]]);
     }
 
     /**
@@ -870,6 +937,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
         if ($this->isColumnModified(ImportedPodcastPeer::ID)) $criteria->add(ImportedPodcastPeer::ID, $this->id);
         if ($this->isColumnModified(ImportedPodcastPeer::AUTO_INGEST)) $criteria->add(ImportedPodcastPeer::AUTO_INGEST, $this->auto_ingest);
         if ($this->isColumnModified(ImportedPodcastPeer::AUTO_INGEST_TIMESTAMP)) $criteria->add(ImportedPodcastPeer::AUTO_INGEST_TIMESTAMP, $this->auto_ingest_timestamp);
+        if ($this->isColumnModified(ImportedPodcastPeer::ALBUM_OVERRIDE)) $criteria->add(ImportedPodcastPeer::ALBUM_OVERRIDE, $this->album_override);
         if ($this->isColumnModified(ImportedPodcastPeer::PODCAST_ID)) $criteria->add(ImportedPodcastPeer::PODCAST_ID, $this->podcast_id);
 
         return $criteria;
@@ -936,6 +1004,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
     {
         $copyObj->setDbAutoIngest($this->getDbAutoIngest());
         $copyObj->setDbAutoIngestTimestamp($this->getDbAutoIngestTimestamp());
+        $copyObj->setDbAlbumOverride($this->getDbAlbumOverride());
         $copyObj->setDbPodcastId($this->getDbPodcastId());
 
         if ($deepCopy && !$this->startCopy) {
@@ -1055,6 +1124,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
         $this->id = null;
         $this->auto_ingest = null;
         $this->auto_ingest_timestamp = null;
+        $this->album_override = null;
         $this->podcast_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
