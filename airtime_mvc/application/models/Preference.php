@@ -358,8 +358,7 @@ class Application_Model_Preference
     {
         self::setValue("third_party_api", $bool);
     }
-    
-    
+
     public static function GetAllow3rdPartyApi()
     {
         $val = self::getValue("third_party_api");
@@ -374,10 +373,8 @@ class Application_Model_Preference
     public static function GetPodcastAlbumOverride()
     {
         $val = self::getValue("podcast_album_override");
-        return (strlen($val) == 0 ) ? "1" : $val;
+        return $val === '1' ? true : false;
     }
-
-
 
     public static function SetPhone($phone)
     {

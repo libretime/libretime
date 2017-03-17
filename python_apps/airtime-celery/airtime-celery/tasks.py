@@ -157,15 +157,10 @@ def podcast_download(id, url, callback_url, api_key, podcast_name, album_overrid
                 # currently hardcoded for mp3s may want to add support for oggs etc
                 m = MP3(audiofile.name, ID3=EasyID3)
                 logger.debug('podcast_download loaded mp3 {0}'.format(audiofile.name))
-                # replace the album id3 tag with the podcast name if the album tag is empty
-                try:
-                    m['album']
-                except KeyError:
-                    logger.debug('setting new album name to {0} in podcast'.format(podcast_name.encode('ascii', 'ignore')))
-                    m['album'] = podcast_name
-                # if the album override option is enabled replace the album id3 tag with the podcast name even if the album tag contains data
-                if album_override is True:
-                    m['album'] = podcast_name
+
+                # replace album title as needed
+                m = podcast_override_album(m, podcast_name, album_override)
+
                 m.save()
                 filetypeinfo = m.pprint()
                 logger.info('filetypeinfo is {0}'.format(filetypeinfo.encode('ascii', 'ignore')))
@@ -181,6 +176,22 @@ def podcast_download(id, url, callback_url, api_key, podcast_name, album_overrid
         obj['status'] = 0
     return json.dumps(obj)
 
+def podcast_override_album(m, podcast_name, override):
+    """
+    Override m['album'] if empty or forced with override arg
+    """
+    # if the album override option is enabled replace the album id3 tag with the podcast name even if the album tag contains data
+    if override is True:
+        logger.debug('overriding album name to {0} in podcast'.format(podcast_name.encode('ascii', 'ignore')))
+        m['album'] = podcast_name
+    else:
+        # replace the album id3 tag with the podcast name if the album tag is empty
+        try:
+            m['album']
+        except KeyError:
+           logger.debug('setting new album name to {0} in podcast'.format(podcast_name.encode('ascii', 'ignore')))
+           m['album'] = podcast_name
+    return m
 
 def get_filename(r):
     """
