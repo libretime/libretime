@@ -46,7 +46,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     public function importEpisode($podcastId, $episode) {
         $e = $this->addPlaceholder($podcastId, $episode);
         $p = $e->getPodcast();
-        $this->_download($e->getDbId(), $e->getDbDownloadUrl(), $p->getDbTitle());
+        $this->_download($e->getDbId(), $e->getDbDownloadUrl(), $p->getDbTitle(), $this->_getAlbumOverride($p));
         return $e;
     }
 
@@ -128,29 +128,47 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         /** @var PodcastEpisodes $episode */
         foreach($episodes as $episode) {
             $podcast = $episode->getPodcast();
-            $this->_download($episode->getDbId(), $episode->getDbDownloadUrl(), $podcast->getDbTitle());
+            $this->_download($episode->getDbId(), $episode->getDbDownloadUrl(), $podcast->getDbTitle(), $this->_getAlbumOverride($podcast));
         }
+    }
+
+    /**
+     * check if there is a podcast specific album override
+     *
+     * @param object $podcast podcast object
+     *
+     * @return boolean
+     */
+    private function _getAlbumOverride($podcast) {
+        $override = Application_Model_Preference::GetPodcastAlbumOverride();
+        $podcast_override = $podcast->toArray();
+        $podcast_override = $podcast_override['DbAlbumOverride'];
+        if ($podcast_override) {
+            $override = $podcast_override;
+        }
+        return $override;
     }
 
     /**
      * Given an episode ID and a download URL, send a Celery task
      * to download an RSS feed track
      *
-     * @param int $id       episode unique ID
-     * @param string $url   download url for the episode
-     * @param string $title title of podcast to be downloaded - added as album to track metadata
+     * @param int     $id             episode unique ID
+     * @param string  $url            download url for the episode
+     * @param string  $title          title of podcast to be downloaded - added as album to track metadata
+     * @param boolean $album_override should we override the album name when downloading
      */
-    private function _download($id, $url, $title) {
+    private function _download($id, $url, $title, $album_override) {
         $CC_CONFIG = Config::getConfig();
         $stationUrl = Application_Common_HTTPHelper::getStationUrl();
         $stationUrl .= substr($stationUrl, -1) == '/' ? '' : '/';
         $data = array(
-            'id'            => $id,
-            'url'           => $url,
-            'callback_url'  => $stationUrl . 'rest/media',
-            'api_key'       => $CC_CONFIG["apiKey"][0],
-            'podcast_name'  => $title,
-            'album_override' => Application_Model_Preference::GetPodcastAlbumOverride(),
+            'id'             => $id,
+            'url'            => $url,
+            'callback_url'   => $stationUrl . 'rest/media',
+            'api_key'        => $CC_CONFIG["apiKey"][0],
+            'podcast_name'   => $title,
+            'album_override' => $album_override,
         );
         $task = $this->_executeTask(static::$_CELERY_TASKS[self::DOWNLOAD], $data);
         // Get the created ThirdPartyTaskReference and set the episode ID so
