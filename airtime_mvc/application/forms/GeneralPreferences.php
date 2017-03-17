@@ -103,7 +103,6 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 
         $podcast_album_override = new Zend_Form_Element_Radio('podcastAlbumOverride');
         $podcast_album_override->setLabel(_('Podcast Album Override'));
-        $podcast_album_override->setDescription(_('Always replace downloaded podcast track album with podcast name.'));
         $podcast_album_override->setMultiOptions(array(
             _("Disabled"),
             _("Enabled"),
