@@ -365,6 +365,17 @@ class Application_Model_Preference
         return (strlen($val) == 0 ) ? "1" : $val;
     }
 
+    public static function SetPodcastAlbumOverride($bool)
+    {
+        self::setValue("podcast_album_override", $bool);
+    }
+    
+    public static function GetPodcastAlbumOverride()
+    {
+        $val = self::getValue("podcast_album_override");
+        return $val === '1' ? true : false;
+    }
+
     public static function SetPhone($phone)
     {
         self::setValue("phone", $phone);

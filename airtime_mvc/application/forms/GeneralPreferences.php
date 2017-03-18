@@ -100,6 +100,24 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             'value' => $defaultFadeOut,
         ));
 
+
+        $podcast_album_override = new Zend_Form_Element_Radio('podcastAlbumOverride');
+        $podcast_album_override->setLabel(_('Podcast Album Override'));
+        $podcast_album_override->setMultiOptions(array(
+            _("Disabled"),
+            _("Enabled"),
+        ));
+        $podcast_album_override->setValue(Application_Model_Preference::GetPodcastAlbumOverride());
+        $podcast_album_override->setDescription(_('Enabling this means that podcast tracks will always contain the podcast name in their album field.'));
+        $podcast_album_override->setSeparator(' '); //No <br> between radio buttons
+        //$third_party_api->addDecorator(new Zend_Form_Decorator_Label(array('tag' => 'dd', 'class' => 'radio-inline-list')));
+        $podcast_album_override->addDecorator('HtmlTag', array('tag' => 'dd',
+            'id'=>"podcastAlbumOverride-element",
+            'class' => 'radio-inline-list',
+        ));
+        $this->addElement($podcast_album_override);
+
+
         $third_party_api = new Zend_Form_Element_Radio('thirdPartyApi');
         $third_party_api->setLabel(_('Public Airtime API'));
         $third_party_api->setDescription(_('Required for embeddable schedule widget.'));

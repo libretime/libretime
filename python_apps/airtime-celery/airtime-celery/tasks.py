@@ -130,7 +130,7 @@ def soundcloud_delete(token, track_id):
 
 
 @celery.task(name='podcast-download', acks_late=True)
-def podcast_download(id, url, callback_url, api_key, podcast_name):
+def podcast_download(id, url, callback_url, api_key, podcast_name, album_override):
     """
     Download a podcast episode
 
@@ -138,7 +138,8 @@ def podcast_download(id, url, callback_url, api_key, podcast_name):
     :param url:             download url for the episode
     :param callback_url:    callback URL to send the downloaded file to
     :param api_key:         API key for callback authentication
-    :param podcast_name:    NAme of podcast to be added to id3 metadata for smartblock
+    :param podcast_name:    Name of podcast to be added to id3 metadata for smartblock
+    :param album_override:  Passing whether to override the album id3 even if it exists
 
     :return: JSON formatted string of a dictionary of download statuses
              and file identifiers (for successful uploads)
@@ -156,11 +157,10 @@ def podcast_download(id, url, callback_url, api_key, podcast_name):
                 # currently hardcoded for mp3s may want to add support for oggs etc
                 m = MP3(audiofile.name, ID3=EasyID3)
                 logger.debug('podcast_download loaded mp3 {0}'.format(audiofile.name))
-                try:
-                    m['album']
-                except KeyError:
-                    logger.debug('setting new album name to {0} in podcast'.format(podcast_name.encode('ascii', 'ignore')))
-                    m['album'] = podcast_name
+
+                # replace album title as needed
+                m = podcast_override_album(m, podcast_name, album_override)
+
                 m.save()
                 filetypeinfo = m.pprint()
                 logger.info('filetypeinfo is {0}'.format(filetypeinfo.encode('ascii', 'ignore')))
@@ -176,6 +176,22 @@ def podcast_download(id, url, callback_url, api_key, podcast_name):
         obj['status'] = 0
     return json.dumps(obj)
 
+def podcast_override_album(m, podcast_name, override):
+    """
+    Override m['album'] if empty or forced with override arg
+    """
+    # if the album override option is enabled replace the album id3 tag with the podcast name even if the album tag contains data
+    if override is True:
+        logger.debug('overriding album name to {0} in podcast'.format(podcast_name.encode('ascii', 'ignore')))
+        m['album'] = podcast_name
+    else:
+        # replace the album id3 tag with the podcast name if the album tag is empty
+        try:
+            m['album']
+        except KeyError:
+           logger.debug('setting new album name to {0} in podcast'.format(podcast_name.encode('ascii', 'ignore')))
+           m['album'] = podcast_name
+    return m
 
 def get_filename(r):
     """
