@@ -510,6 +510,10 @@ SQL;
     	$serverPort = $_SERVER['SERVER_PORT'];
     	$subDir = $CC_CONFIG['baseDir'];
 
+        if ($protocol === 'https' && $serverPort == 80) {
+            $serverPort = 443;
+        }
+
     	if ($subDir[0] === "/") {
     		$subDir = substr($subDir, 1, strlen($subDir) - 1);
     	}

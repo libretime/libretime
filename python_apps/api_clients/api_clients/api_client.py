@@ -186,8 +186,9 @@ class RequestProvider(object):
         self.requests = {}
         if self.config["general"]["base_dir"].startswith("/"):
             self.config["general"]["base_dir"] = self.config["general"]["base_dir"][1:]
-        self.url = ApcUrl("http://%s:%s/%s%s/%s" \
-            % (self.config["general"]["base_url"], str(self.config["general"]["base_port"]),
+        self.url = ApcUrl("%s://%s:%s/%s%s/%s" \
+            % (str(("https", "http")[self.config["general"]["base_port"] == 443]),
+               self.config["general"]["base_url"], str(self.config["general"]["base_port"]),
                self.config["general"]["base_dir"], self.config["api_base"],
                '%%action%%'))
         # Now we must discover the possible actions
@@ -323,8 +324,9 @@ class AirtimeApiClient(object):
         # TODO : Make other methods in this class use this this method.
         if self.config["general"]["base_dir"].startswith("/"):
             self.config["general"]["base_dir"] = self.config["general"]["base_dir"][1:]
-        url = "http://%s:%s/%s%s/%s" %  \
-            (self.config["general"]["base_url"], str(self.config["general"]["base_port"]),
+        url = "%s://%s:%s/%s%s/%s" %  \
+            (str(("https", "http")[self.config["general"]["base_port"] == 443]),
+             self.config["general"]["base_url"], str(self.config["general"]["base_port"]),
              self.config["general"]["base_dir"], self.config["api_base"],
              self.config[config_action_key])
         url = url.replace("%%api_key%%", self.config["general"]["api_key"])
