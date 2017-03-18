@@ -543,7 +543,7 @@
     <column name="service" phpName="DbService" type="VARCHAR" size="256" required="true" />
     <!-- Make foreign ID a VARCHAR field in case a service uses hashes or other non-integer identifiers -->
     <column name="foreign_id" phpName="DbForeignId" type="VARCHAR" size="256" />
-    <column name="file_id" phpName="DbFileId" type="INTEGER" required="true" />
+    <column name="file_id" phpName="DbFileId" type="INTEGER" required="true" default="0" />
     <column name="upload_time" phpName="DbUploadTime" type="TIMESTAMP" />
     <column name="status" phpName="DbStatus" type="VARCHAR" size="256" />
     <unique name="foreign_id_unique">
