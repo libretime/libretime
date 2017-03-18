@@ -4145,6 +4145,12 @@ li .ui-state-hover {
     margin: 8px 0 0;
 }
 
+.podcast-metadata input[type="checkbox"].float-right {
+    float:right;
+    margin: 8px 0 0;
+
+}
+
 .podcast-metadata label,
 .media-metadata label {
     display: block;
