@@ -685,7 +685,7 @@ CREATE TABLE "third_party_track_references"
     "id" serial NOT NULL,
     "service" VARCHAR(256) NOT NULL,
     "foreign_id" VARCHAR(256),
-    "file_id" INTEGER NOT NULL,
+    "file_id" INTEGER DEFAULT 0 NOT NULL,
     "upload_time" TIMESTAMP,
     "status" VARCHAR(256),
     PRIMARY KEY ("id"),
@@ -760,6 +760,7 @@ CREATE TABLE "imported_podcast"
     "id" serial NOT NULL,
     "auto_ingest" BOOLEAN DEFAULT 'f' NOT NULL,
     "auto_ingest_timestamp" TIMESTAMP,
+    "album_override" BOOLEAN DEFAULT 'f' NOT NULL,
     "podcast_id" INTEGER NOT NULL,
     PRIMARY KEY ("id")
 );

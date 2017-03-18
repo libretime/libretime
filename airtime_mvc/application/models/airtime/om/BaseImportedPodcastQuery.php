@@ -9,11 +9,13 @@
  * @method ImportedPodcastQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method ImportedPodcastQuery orderByDbAutoIngest($order = Criteria::ASC) Order by the auto_ingest column
  * @method ImportedPodcastQuery orderByDbAutoIngestTimestamp($order = Criteria::ASC) Order by the auto_ingest_timestamp column
+ * @method ImportedPodcastQuery orderByDbAlbumOverride($order = Criteria::ASC) Order by the album_override column
  * @method ImportedPodcastQuery orderByDbPodcastId($order = Criteria::ASC) Order by the podcast_id column
  *
  * @method ImportedPodcastQuery groupByDbId() Group by the id column
  * @method ImportedPodcastQuery groupByDbAutoIngest() Group by the auto_ingest column
  * @method ImportedPodcastQuery groupByDbAutoIngestTimestamp() Group by the auto_ingest_timestamp column
+ * @method ImportedPodcastQuery groupByDbAlbumOverride() Group by the album_override column
  * @method ImportedPodcastQuery groupByDbPodcastId() Group by the podcast_id column
  *
  * @method ImportedPodcastQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -29,11 +31,13 @@
  *
  * @method ImportedPodcast findOneByDbAutoIngest(boolean $auto_ingest) Return the first ImportedPodcast filtered by the auto_ingest column
  * @method ImportedPodcast findOneByDbAutoIngestTimestamp(string $auto_ingest_timestamp) Return the first ImportedPodcast filtered by the auto_ingest_timestamp column
+ * @method ImportedPodcast findOneByDbAlbumOverride(boolean $album_override) Return the first ImportedPodcast filtered by the album_override column
  * @method ImportedPodcast findOneByDbPodcastId(int $podcast_id) Return the first ImportedPodcast filtered by the podcast_id column
  *
  * @method array findByDbId(int $id) Return ImportedPodcast objects filtered by the id column
  * @method array findByDbAutoIngest(boolean $auto_ingest) Return ImportedPodcast objects filtered by the auto_ingest column
  * @method array findByDbAutoIngestTimestamp(string $auto_ingest_timestamp) Return ImportedPodcast objects filtered by the auto_ingest_timestamp column
+ * @method array findByDbAlbumOverride(boolean $album_override) Return ImportedPodcast objects filtered by the album_override column
  * @method array findByDbPodcastId(int $podcast_id) Return ImportedPodcast objects filtered by the podcast_id column
  *
  * @package    propel.generator.airtime.om
@@ -142,7 +146,7 @@ abstract class BaseImportedPodcastQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "auto_ingest", "auto_ingest_timestamp", "podcast_id" FROM "imported_podcast" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "auto_ingest", "auto_ingest_timestamp", "album_override", "podcast_id" FROM "imported_podcast" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -341,6 +345,33 @@ abstract class BaseImportedPodcastQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ImportedPodcastPeer::AUTO_INGEST_TIMESTAMP, $dbAutoIngestTimestamp, $comparison);
+    }
+
+    /**
+     * Filter the query on the album_override column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbAlbumOverride(true); // WHERE album_override = true
+     * $query->filterByDbAlbumOverride('yes'); // WHERE album_override = true
+     * </code>
+     *
+     * @param     boolean|string $dbAlbumOverride The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ImportedPodcastQuery The current query, for fluid interface
+     */
+    public function filterByDbAlbumOverride($dbAlbumOverride = null, $comparison = null)
+    {
+        if (is_string($dbAlbumOverride)) {
+            $dbAlbumOverride = in_array(strtolower($dbAlbumOverride), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(ImportedPodcastPeer::ALBUM_OVERRIDE, $dbAlbumOverride, $comparison);
     }
 
     /**

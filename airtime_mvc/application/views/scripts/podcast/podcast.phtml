@@ -17,9 +17,14 @@
                     <span class="podcast-metadata-field">{{podcast.url}}</span>
                 </a>
             </div>
-
-            <label for="podcast_auto_ingest"><?php echo _("Automatically download latest episodes?") ?></label>
-            <input name="podcast_auto_ingest" ng-model="podcast.auto_ingest" type="checkbox"/>
+            <div style="padding-top: 0.1em;">
+                <label for="podcast_auto_ingest"><input name="podcast_auto_ingest" ng-model="podcast.auto_ingest" type="checkbox" class="float-right"/></label>
+                <span class="podcast-metadata-field"><?php echo _("Automatically download latest episodes?") ?></span>
+            </div>
+            <div style="padding-top: 0.1em;">
+                <label for="podcast_album_override"><input name="podcast_album_override" ng-model="podcast.album_override" type="checkbox" class="no-float"/></label>
+                <span class="podcast-metadata-field"><?php echo _("Override album name with podcast name during ingest."); ?></span>
+            </div>
         </form>
     </div>
 

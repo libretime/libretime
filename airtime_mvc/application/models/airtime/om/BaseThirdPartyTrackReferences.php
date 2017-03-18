@@ -49,6 +49,7 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
 
     /**
      * The value for the file_id field.
+     * Note: this column has a database default value of: 0
      * @var        int
      */
     protected $file_id;
@@ -101,6 +102,27 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
      * @var		PropelObjectCollection
      */
     protected $celeryTaskssScheduledForDeletion = null;
+
+    /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see        __construct()
+     */
+    public function applyDefaultValues()
+    {
+        $this->file_id = 0;
+    }
+
+    /**
+     * Initializes internal state of BaseThirdPartyTrackReferences object.
+     * @see        applyDefaults()
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->applyDefaultValues();
+    }
 
     /**
      * Get the [id] column value.
@@ -334,6 +356,10 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
      */
     public function hasOnlyDefaultValues()
     {
+            if ($this->file_id !== 0) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return true
         return true;
     } // hasOnlyDefaultValues()
@@ -1129,7 +1155,7 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
     public function setCcFiles(CcFiles $v = null)
     {
         if ($v === null) {
-            $this->setDbFileId(NULL);
+            $this->setDbFileId(0);
         } else {
             $this->setDbFileId($v->getDbId());
         }
@@ -1427,6 +1453,7 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
