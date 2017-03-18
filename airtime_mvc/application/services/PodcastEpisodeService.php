@@ -87,7 +87,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     public function addPlaceholder($podcastId, $episode) {
         $existingEpisode = PodcastEpisodesQuery::create()->findOneByDbEpisodeGuid($episode["guid"]);
         if (!empty($existingEpisode)) {
-            throw new DuplicatePodcastEpisodeException("Episode already exists: \n" . var_export($episode, true));
+            throw new DuplicatePodcastEpisodeException(sprintf("Episode already exists for podcast: %s, guid: %s\n", $episode['podcast_id'], $episode['guid']));
         }
         // We need to check whether the array is parsed directly from the SimplePie
         // feed object, or whether it's passed in as json
