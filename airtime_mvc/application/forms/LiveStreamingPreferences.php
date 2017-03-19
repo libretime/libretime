@@ -7,7 +7,6 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
     {
         $CC_CONFIG = Config::getConfig();
         $isDemo = isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1;
-        $isStreamConfigable = Application_Model_Preference::GetEnableStreamConf() == "true";
 
         $defaultFade = Application_Model_Preference::GetDefaultTransitionFade();
 
@@ -64,7 +63,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
 
         // Master source connection url parameters
         $masterSourceHost = new Zend_Form_Element_Text('master_source_host');
-        $masterSourceHost->setLabel(_('Host:'))
+        $masterSourceHost->setLabel(_('Master Source Host:'))
             ->setAttrib('readonly', true)
             ->setValue(Application_Model_Preference::GetMasterDJSourceConnectionURL());
         $this->addElement($masterSourceHost);
@@ -97,7 +96,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
 
         // Show source connection url parameters
         $showSourceHost = new Zend_Form_Element_Text('show_source_host');
-        $showSourceHost->setLabel(_('Host:'))
+        $showSourceHost->setLabel(_('Show Source Host:'))
             ->setAttrib('readonly', true)
             ->setValue(Application_Model_Preference::GetLiveDJSourceConnectionURL());
         $this->addElement($showSourceHost);
@@ -145,13 +144,5 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
                 )
             )
         );
-    }
-
-
-    public function isValid($data)
-    {
-        $isValid = parent::isValid($data);
-
-        return $isValid;
     }
 }

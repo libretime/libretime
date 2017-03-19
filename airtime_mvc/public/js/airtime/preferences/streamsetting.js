@@ -141,9 +141,6 @@ function setLiveSourceConnectionOverrideListener(){
             mount = ('/').concat(mount);
         }
         var url = "http://"+location.hostname+":"+port+mount;
-        if (port == '' || mount == '') {
-            url = 'N/A';
-        }
         live_dj_input.val(url);
         live_dj_input.attr("readonly", "readonly");
         live_dj_actions.hide();
@@ -167,9 +164,6 @@ function setLiveSourceConnectionOverrideListener(){
             mount = ('/').concat(mount);
         }
         var url = "http://"+location.hostname+":"+port+mount;
-        if (port == '' || mount == '') {
-            url = 'N/A';
-        }
         master_dj_input.val(url);
         master_dj_input.attr("readonly", "readonly");
         master_dj_actions.hide();
@@ -484,11 +478,13 @@ $(document).ready(function() {
             var url = baseUrl+'Preference/stream-setting';
 
             $.post(url, {format:"json", data: data}, function(json){
-                window.location.reload();
-                //$('#content').empty().append(json.html);
-                //setupEventListeners();
-                //setSliderForReplayGain();
-                //setPseudoAdminPassword(json.s1_set_admin_pass, json.s2_set_admin_pass, json.s3_set_admin_pass, json.s4_set_admin_pass);
+                $('#content').empty().append(json.html);
+                if (json.valid) {
+                    window.location.reload();
+                } 
+                setupEventListeners();
+                setSliderForReplayGain();
+                getAdminPasswordStatus();
             });
         } else {
             if (e.prop('checked')) {
