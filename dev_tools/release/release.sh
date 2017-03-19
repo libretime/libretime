@@ -26,12 +26,10 @@ fi
 dir=$(dirname $(readlink -f $0))
 gitrepo=$(readlink -f ./../../)
 
-echo ${gitrepo}
-
 echo "Creating tarball for LibreTime ${suffix}."
 
 target=/tmp/libretime-${suffix}
-target_file=/tmp/libretime-${suffix}.tar.gz
+target_file=${gitrepo}/build/libretime-${suffix}.tar.gz
 
 rm -rf $target
 rm -f $target_file
@@ -51,7 +49,7 @@ git checkout --quiet tags/${suffix}
 echo " Done"
 
 echo -n "Running composer install..."
-composer install --quiet --no-dev
+composer install --quiet --no-dev --ignore-platform-reqs
 echo " Done"
 
 popd
