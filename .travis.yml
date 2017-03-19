@@ -71,7 +71,7 @@ script:
 - ./travis/php.sh
 - ./travis/python.sh
 deploy:
-  provider: pages
+- provider: pages
   skip_cleanup: true
   local_dir: build/docs
   github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
@@ -82,4 +82,18 @@ deploy:
   name: R. LibreTime DocBot
   on:
     branch: master
+    condition: $PYTHON = true
+- provider: script
+  skip_cleanup: true
+  script: travis/release.sh
+  on:
+    tags: true
+    condition: $PYTHON = true
+- provider: releases
+  skip_cleanup: true
+  api_key: $GITHUB_TOKEN
+  file_glob: true
+  file: build/libretime-*.tar.gz
+  on:
+    tags: true
     condition: $PYTHON = true
