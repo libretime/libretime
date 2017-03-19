@@ -78,6 +78,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $masterSourcePort = new Zend_Form_Element_Text('master_source_port');
         $masterSourcePort->setLabel(_('Master Source Port:'))
             ->setValue($m_port)
+            ->setValidators(array($betweenValidator))
             ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>_('Only numbers are allowed.'))));
 
          $this->addElement($masterSourcePort);
