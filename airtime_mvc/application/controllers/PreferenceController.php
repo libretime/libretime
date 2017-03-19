@@ -200,6 +200,49 @@ class PreferenceController extends Zend_Controller_Action
         $csrf_element->setValue($csrf_namespace->authtoken)->setRequired('true')->removeDecorator('HtmlTag')->removeDecorator('Label');
         $form->addElement($csrf_element);
 
+        $live_stream_subform = new Application_Form_LiveStreamingPreferences();
+        $form->addSubForm($live_stream_subform, "live_stream_subform");
+
+        // get predefined type and bitrate from pref table
+        $temp_types = Application_Model_Preference::GetStreamType();
+        $stream_types = array();
+        foreach ($temp_types as $type) {
+            $type = strtolower(trim($type));
+            if (isset($name_map[$type])) {
+                $name = $name_map[$type];
+            } else {
+                $name = $type;
+            }
+            $stream_types[$type] = $name;
+        }
+
+        $temp_bitrate = Application_Model_Preference::GetStreamBitrate();
+        $max_bitrate = intval(Application_Model_Preference::GetMaxBitrate());
+        $stream_bitrates = array();
+        foreach ($temp_bitrate as $type) {
+            if (intval($type) <= $max_bitrate) {
+                $stream_bitrates[trim($type)] = strtoupper(trim($type))." kbit/s";
+            }
+        }
+
+        // get current settings
+        $setting = Application_Model_StreamSetting::getStreamSetting();
+        $form->setSetting($setting);
+
+        for ($i=1; $i<=$num_of_stream; $i++) {
+            $subform = new Application_Form_StreamSettingSubForm();
+            $subform->setPrefix($i);
+            $subform->setSetting($setting);
+            $subform->setStreamTypes($stream_types);
+            $subform->setStreamBitrates($stream_bitrates);
+            $subform->startForm();
+            $subform->toggleState();
+            $form->addSubForm($subform, "s".$i."_subform");
+        }
+
+        $live_stream_subform->updateVariables();
+        $form->startFrom();
+
         if ($request->isPost()) {
             $params = $request->getPost();
             /* Parse through post data and put in format
@@ -307,50 +350,6 @@ class PreferenceController extends Zend_Controller_Action
                 $this->view->statusMsg = "<div class='success'>"._("Stream Setting Updated.")."</div>";
             }
         }
-
-        // get predefined type and bitrate from pref table
-        $temp_types = Application_Model_Preference::GetStreamType();
-        $stream_types = array();
-        foreach ($temp_types as $type) {
-            $type = strtolower(trim($type));
-            if (isset($name_map[$type])) {
-                $name = $name_map[$type];
-            } else {
-                $name = $type;
-            }
-            $stream_types[$type] = $name;
-        }
-
-        $temp_bitrate = Application_Model_Preference::GetStreamBitrate();
-        $max_bitrate = intval(Application_Model_Preference::GetMaxBitrate());
-        $stream_bitrates = array();
-        foreach ($temp_bitrate as $type) {
-            if (intval($type) <= $max_bitrate) {
-                $stream_bitrates[trim($type)] = strtoupper(trim($type))." kbit/s";
-            }
-        }
-
-        // get current settings
-        $setting = Application_Model_StreamSetting::getStreamSetting();
-
-        $form->setSetting($setting);
-        $form->startFrom();
-
-        $live_stream_subform = new Application_Form_LiveStreamingPreferences();
-        $form->addSubForm($live_stream_subform, "live_stream_subform");
-
-        for ($i=1; $i<=$num_of_stream; $i++) {
-            $subform = new Application_Form_StreamSettingSubForm();
-            $subform->setPrefix($i);
-            $subform->setSetting($setting);
-            $subform->setStreamTypes($stream_types);
-            $subform->setStreamBitrates($stream_bitrates);
-            $subform->startForm();
-            $subform->toggleState();
-            $form->addSubForm($subform, "s".$i."_subform");
-        }
-
-        $live_stream_subform->updateVariables();
 
         $this->view->num_stream = $num_of_stream;
         $this->view->enable_stream_conf = Application_Model_Preference::GetEnableStreamConf();

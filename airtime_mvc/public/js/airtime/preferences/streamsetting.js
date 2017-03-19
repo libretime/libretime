@@ -478,11 +478,13 @@ $(document).ready(function() {
             var url = baseUrl+'Preference/stream-setting';
 
             $.post(url, {format:"json", data: data}, function(json){
-                window.location.reload();
-                //$('#content').empty().append(json.html);
-                //setupEventListeners();
-                //setSliderForReplayGain();
-                //setPseudoAdminPassword(json.s1_set_admin_pass, json.s2_set_admin_pass, json.s3_set_admin_pass, json.s4_set_admin_pass);
+                $('#content').empty().append(json.html);
+                if (json.valid) {
+                    window.location.reload();
+                } 
+                setupEventListeners();
+                setSliderForReplayGain();
+                getAdminPasswordStatus();
             });
         } else {
             if (e.prop('checked')) {
