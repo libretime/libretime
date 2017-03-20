@@ -855,17 +855,20 @@ var AIRTIME = (function(AIRTIME){
 
             tab.close();
 
-            $.ajax( {
-                url : baseUrl+"usersettings/set-library-screen-settings",
-                type : "POST",
-                data : {
-                    settings : {
-                        playlist : false
+            // save settings if we are not closing the "Scheduled Shows" tab
+            if (tabId != "0") {
+                $.ajax( {
+                    url : baseUrl+"usersettings/set-library-screen-settings",
+                    type : "POST",
+                    data : {
+                        settings : {
+                            playlist : false
+                        },
+                        format : "json"
                     },
-                    format : "json"
-                },
-                dataType : "json"
-            });
+                    dataType : "json"
+                });
+            }
         });
 
         $pl.find("#save_button").unbind().on("click", function(event) {

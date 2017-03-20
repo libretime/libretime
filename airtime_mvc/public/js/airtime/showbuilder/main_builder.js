@@ -187,6 +187,12 @@ AIRTIME = (function(AIRTIME) {
         //Highlight the media type selector we're currently on.
         highlightMediaTypeSelector();
 
+        // always re-show builder if dashboard button was clicked
+        $('.media_type_selector:first').on('click', function() {
+            $builder.show();
+            AIRTIME.tabs.openScheduleTab();
+        });
+
         /*
          * Icon hover states for search.
          */
