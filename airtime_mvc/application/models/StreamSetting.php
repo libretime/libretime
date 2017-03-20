@@ -464,7 +464,7 @@ class Application_Model_StreamSetting
 
     public static function getDjLiveStreamPort()
     {
-        return self::getValue("dj_live_stream_port", 8001);
+        return self::getValue("dj_live_stream_port", 8002);
     }
 
     public static function setDjLiveStreamMountPoint($value)

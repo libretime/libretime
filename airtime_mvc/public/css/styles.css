@@ -169,6 +169,17 @@ select {
     right:7px;
     line-height:16px !important;
 }
+#connection_url_override {
+    position: relative;
+    display: inline-block;
+    float: left;
+    margin-left: 5px;
+}
+
+#master_dj_connection_url_actions {
+    float:left;
+}
+
 
 #auto_switch_help, #auto_transition_help {
     right: 200px;

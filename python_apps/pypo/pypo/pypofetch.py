@@ -205,7 +205,7 @@ class PypoFetch(Thread):
                 self.telnet_lock.release()
 
     """
-    TODO: This function needs to be way shorter, and refactored :/ - MK
+    NOTE: This function is quite short after it was refactored.
     """
     def regenerate_liquidsoap_conf(self, setting):
         self.restart_liquidsoap()

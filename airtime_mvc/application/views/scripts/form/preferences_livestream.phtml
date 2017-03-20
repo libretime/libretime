@@ -15,8 +15,13 @@
             <?php echo $this->element->getElement('master_username')->render() ?>
             <span class="master_username_help_icon"></span>
             <?php echo $this->element->getElement('master_password')->render() ?>
-
-            <?php echo $this->element->getElement("master_source_host")->render() ?>
+            <span id="stream_url"><?php echo $this->element->getElement("master_source_host")->render() ?>
+                <a href=# id="connection_url_override" style="font-size: 12px;"><?php echo _("Override") ?></a>&nbsp;&nbsp;
+                <span class="override_help_icon"></span></br>
+                <div id="master_dj_connection_url_actions" style="display:none">
+                <a href=# id="ok" style="font-size: 12px;"><?php echo _("OK") ?></a> <a href=# id="reset" style="font-size: 12px;"><?php echo _("RESET"); ?></a>
+                </div>
+            </span>
             <?php echo $this->element->getElement("master_source_port")->render() ?>
             <?php echo $this->element->getElement("master_source_mount")->render() ?>
         </fieldset>
@@ -26,7 +31,15 @@
             <p class="input-settings-inline-p">
                 <?php echo _("DJs can use these settings in their broadcasting software to broadcast live only during shows assigned to them.") ?>
             </p>
+            <span id="stream_url">
             <?php echo $this->element->getElement("show_source_host")->render() ?>
+                <a href=# id="connection_url_override" style="font-size: 12px;"><?php echo _("Override") ?></a>&nbsp;&nbsp;
+                <span class="override_help_icon"></span>
+                </br>
+                <div id="live_dj_connection_url_actions" style="display:none">
+                <a href=# id="ok" style="font-size: 12px;"><?php echo _("OK") ?></a> <a href=# id="reset" style="font-size: 12px;"><?php echo _("RESET"); ?></a>
+                </div>
+            </span>
             <?php echo $this->element->getElement("show_source_port")->render() ?>
             <?php echo $this->element->getElement("show_source_mount")->render() ?>
         </fieldset>
