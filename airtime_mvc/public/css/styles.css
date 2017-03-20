@@ -101,8 +101,8 @@ select {
 /* Version Notification Starts*/
 #version-icon {
     position:absolute;
-    right:96px;
-    top:104px;
+    top:68px;
+    right: 196px;
     height:35px;
     width:35px;
     z-index:1000;

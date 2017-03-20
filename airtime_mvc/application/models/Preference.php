@@ -879,8 +879,27 @@ class Application_Model_Preference
     public static function GetLatestVersion()
     {
         $config = Config::getConfig();
-        $latest = self::getValue("latest_version");
-        if ($latest == null || strlen($latest) == 0) {
+
+        $latest = json_decode(self::getValue('latest_version'));
+        $nextCheck = self::getValue('latest_version_nextcheck');
+        if ($latest && $nextCheck > time()) {
+            return $latest;
+        }
+
+        $rss = new SimplePie();
+        $rss->set_feed_url(array(LIBRETIME_UPDATE_FEED));
+        $rss->enable_cache(false);
+        $rss->init();
+        $rss->handle_content_type();
+        // get all available versions ut to default github api limit
+        $versions = array();
+        foreach ($rss->get_items() as $item) {
+            $versions[] = $item->get_title();
+        }
+        $latest = $versions;
+        self::setValue('latest_version', json_encode($latest));
+        self::setValue('latest_version_nextcheck', strtotime('+1 week'));
+        if (empty($latest)) {
             return $config['airtime_version'];
         } else {
             return $latest;
@@ -899,7 +918,7 @@ class Application_Model_Preference
     {
         $link = self::getValue("latest_link");
         if ($link == null || strlen($link) == 0) {
-            return 'http://airtime.sourcefabric.org';
+            return LIBRETIME_WHATS_NEW_URL;
         } else {
             return $link;
         }

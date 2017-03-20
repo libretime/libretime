@@ -39,9 +39,11 @@ class LocaleController extends Zend_Controller_Action
             //dashboard/versiontooltip.js
             "You are running the latest version" => _("You are running the latest version"),
             "New version available: " => _("New version available: "),
-            "This version will soon be obsolete." => _("This version will soon be obsolete."),
-            "This version is no longer supported." => _("This version is no longer supported."),
-            "Please upgrade to " => _("Please upgrade to "),
+            "You have a pre-release version of LibreTime intalled." => _("You have a pre-release version of LibreTime intalled."),
+            "A patch update for your LibreTime installation is available." => _("A patch update for your LibreTime installation is available."),
+            "A feature update for your LibreTime installation is available." => _("A feature update for your LibreTime installation is available."),
+            "A major update for your LibreTime installation is available." => _("A major update for your LibreTime installation is available."),
+            "Multiple major updates for LibreTime installation are available. Please upgrade as soon as possible." => _("Multiple major updates for LibreTime installation are available. Please upgrade as soon as possible."),
             //library/events/library_playlistbuilder.js
             "Add to current playlist" => _("Add to current playlist"),
             "Add to current smart block" => _("Add to current smart block"),

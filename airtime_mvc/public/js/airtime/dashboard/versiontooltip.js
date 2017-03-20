@@ -2,43 +2,91 @@
  * Get the tooltip message to be displayed
  */
 function getContent() {
-    var diff = getVersionDiff();
     var link = getLatestLink();
-    
+    var hasPatch = getHasPatch();
+    var hasMinor = getHasMinor();
+    var hasMajor = getHasMajor();
+    var hasMultiMajor = getHasMultiMajor();
+    var isPreRelease = getIsPreRelease();
+
     var msg = "";
     // See file airtime_mvc/application/views/helpers/VersionNotify.php for more info
     if(isUpToDate()) {
         msg = $.i18n._("You are running the latest version");
-    } else if (diff < 20) {  
-        msg = $.i18n._("New version available: ") + link;
-    } else if (diff < 30) {
-        msg = $.i18n._("This version will soon be obsolete.")+"<br/>"+$.i18n._("Please upgrade to ") + link;
     } else {
-        msg = $.i18n._("This version is no longer supported.")+"<br/>"+$.i18n._("Please upgrade to ") + link;
+        msg = $.i18n._("New version available: ") + link + '<ul>';
+        if (isPreRelease) {
+            msg += '<li>'+$.i18n._("You have a pre-release version of LibreTime intalled.");
+        }
+        if (hasPatch) {
+            msg += '<li>'+$.i18n._("A patch update for your LibreTime installation is available.");
+        }
+        if (hasMinor) {
+            msg += '<li>'+$.i18n._("A feature update for your LibreTime installation is available.");
+        }
+        if (hasMajor && !hasMultiMajor) {
+            msg += '<li>'+$.i18n._("A major update for your LibreTime installation is available.");
+        }
+        if (hasMultiMajor) {
+            msg += '<li>'+$.i18n._("Multiple major updates for LibreTime installation are available. Please upgrade as soon as possible.");
+        }
+        msg += '</ul>';
     }
     
     return msg;
 }
 
 /**
- * Get major version difference b/w current and latest version, in int
+ * Get if patch is available
  */
-function getVersionDiff() {
-    return parseInt($("#version-diff").html());
+function getHasPatch() {
+    return versionNotifyInfo.hasPatch;
+
 }
+
+/**
+ * Get if minor update is available
+ */
+function getHasMinor() {
+    return versionNotifyInfo.hasMinor;
+}
+
+/**
+ * Get if major update is available
+ */
+function getHasMajor() {
+    return versionNotifyInfo.hasMajor;
+}
+
+/**
+ * Get if multiple major updates are available
+ */
+function getHasMultiMajor() {
+    return versionNotifyInfo.hasMultiMajor;
+}
+
+/**
+ * Get if pre-release was installed
+ */
+function getIsPreRelease() {
+    return versionNotifyInfo.isPreRelease;
+}
+
+
+
 
 /**
  * Get the current version
  */
 function getCurrentVersion() {
-    return $("#version-current").html();
+    return versionNotifyInfo.current;
 }
 
 /**
  * Get the latest version
  */
 function getLatestVersion() {
-    return $("#version-latest").html();
+    return versionNotifyInfo.latest;
 }
 
 /**
@@ -52,18 +100,14 @@ function getLatestLink() {
  * Returns true if current version is up to date
  */
 function isUpToDate() {
-    var diff = getVersionDiff();
-    var current = getCurrentVersion();
-    var latest = getLatestVersion();
-    var temp = (diff == 0 && current == latest) || diff < 0;
-    return (diff == 0 && current == latest) || diff < 0;
+    return !getHasPatch() && !getHasMinor() && !getHasMajor();
 }
 
 /**
  * Opens the link in a new window
  */
 function openLatestLink() {
-    window.open($("#version-link").html());
+    window.open(versionNotifyInfo.link);
 }
 
 /**
