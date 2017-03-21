@@ -27,7 +27,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
             'class'      => 'input_text',
             'required'   => true,
             'filters'    => array('StringTrim'),
-            'value'      => _('New Show'),
+            'value'      => _('Untitled Show'),
             'validators' => array($notEmptyValidator, array('StringLength', false, array(0, $maxLens['name'])))
         ));
 
