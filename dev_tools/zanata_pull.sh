@@ -39,5 +39,6 @@ for poFile in `find build/locale/po -name "airtime.po"`; do
         echo "Missing ${targetFile}" >&2
         exit 1
     fi
-    msgmerge -N -U --no-wrap ${targetFile} ${poFile}
+    cp ${poFile} ${targetFile}
+    msgfmt -o ${targetFile/%po/mo} ${targetFile}
 done
