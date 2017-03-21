@@ -17,25 +17,22 @@ post_file() {
     file_path="${stripped_file_path}"
     filename="${file_path##*/}"
 	
-    #base_instance_path and airtime_conf_path are common to all saas instances
-    base_instance_path=/mnt/airtimepro/instances/
     airtime_conf_path=/etc/airtime/airtime.conf
 	
-    #maps the instance_path to the url
-    vhost_file=/etc/apache2/airtime/vhost.map
 
     #instance_path will look like 1/1384, for example
-    instance_path=$(echo ${file_path} | grep -Po "(?<=($base_instance_path)).*?(?=/srv)")
+    http_path=$(grep base_url ${airtime_conf_path} | awk '{print $3;}' )
+    http_port=$(grep base_port ${airtime_conf_path} | awk '{print $3;}' ) 
 	
     #post request url - http://bananas.airtime.pro/rest/media, for example
     url=http://
-    url+=$(grep -E $instance_path $vhost_file | awk '{print $1;}')
+    url+=$http_path
+    url+=:
+    url+=$http_port
     url+=/rest/media
 	
-    #path to specific instance's airtime.conf
-    instance_conf_path=$base_instance_path$instance_path$airtime_conf_path
 	
-    api_key=$(awk -F "= " '/api_key/ {print $2}' $instance_conf_path)
+    api_key=$(grep api_key ${airtime_conf_path} | awk '{print $3;}' ) 
 
     # -f is needed to make curl fail if there's an HTTP error code
     # -L is needed to follow redirects! (just in case)
