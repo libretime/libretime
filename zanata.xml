@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+
+<config xmlns="http://zanata.org/namespace/config/">
+  <url>https://translate.zanata.org/</url>
+  <project>libretime</project>
+  <project-version>master</project-version>
+  <project-type>podir</project-type>
+  <src-dir>build/locale/pot/</src-dir>
+  <trans-dir>build/locale/po</trans-dir>
+
+  <hooks>
+    <hook command="push">
+      <before>cp -f airtime_mvc/locale/template/airtime.po build/locale/pot/airtime.pot</before>
+      <after>rm -f build/locale/pot/airtime.pot</after>
+    </hook>
+  </hooks>
+</config>

@@ -160,3 +160,7 @@ systemctl enable --now icecast
 
 # let em use alsa
 usermod -a -G audio apache
+
+# translation tools
+curl -o /etc/yum.repos.d/epel-zanata.repo https://repos.fedorapeople.org/dchen/zanata/epel-zanata.repo
+yum install -y zanata-cli-bin java-1.8.0-openjdk
