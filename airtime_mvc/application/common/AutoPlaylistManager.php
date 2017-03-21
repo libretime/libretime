@@ -18,53 +18,26 @@ class AutoPlaylistManager {
         return empty($lastPolled) || (microtime(true) > $lastPolled + self::$_AUTOPLAYLIST_POLL_INTERVAL_SECONDS);
     }
 
-    /*
-     * This function is copied from the TestUser class and is used to instantiate a user so that
-     * the Scheduler model can be utilized by buildAutoPlaylist.
-     * Not sure if this is the best strategy but it works.
-    */    
-    public static function loginUser()
-    {
-        $authAdapter = Application_Model_Auth::getAuthAdapter();
-
-        //pass to the adapter the submitted username and password
-        $authAdapter->setIdentity('admin')
-                    ->setCredential('admin');
-
-        $auth = Zend_Auth::getInstance();
-        $result = $auth->authenticate($authAdapter);
-        if ($result->isValid()) {
-            //all info about this user from the login table omit only the password
-            $userInfo = $authAdapter->getResultRowObject(null, 'password');
-
-            //the default storage is a session with namespace Zend_Auth
-            $authStorage = $auth->getStorage();
-            $authStorage->write($userInfo);
-        }
-    }
-     
      /**
      * Find all shows with autoplaylists who have yet to have their playlists built and added to the schedule
      *
      */
     public static function buildAutoPlaylist() {
-        // Starting a session so that the User can be created
-	Zend_Session::start();
-        static::loginUser();
-	Logging::info("Checking to run Auto Playlist");
-        $autoPlaylists = static::_upcomingAutoPlaylistShows();
-       foreach ($autoPlaylists as $autoplaylist) {
+            // Starting a session
+            Zend_Session::start();
+	        Logging::info("Checking to run Auto Playlist");
+            $autoPlaylists = static::_upcomingAutoPlaylistShows();
+            foreach ($autoPlaylists as $autoplaylist) {
        	    // creates a ShowInstance object to build the playlist in from the ShowInstancesQuery Object     
-	    $si = new Application_Model_ShowInstance($autoplaylist->getDbId());
-	    $playlistid = $si->GetAutoPlaylistId();
+	        $si = new Application_Model_ShowInstance($autoplaylist->getDbId());
+	        $playlistid = $si->GetAutoPlaylistId();
             Logging::info("Scheduling $playlistid");
             // call the addPlaylist to show function and don't check for user permission to avoid call to non-existant user object
             $si->addPlaylistToShow($playlistid, false);
             $si->setAutoPlaylistBuilt(true);
-
             }
-        Application_Model_Preference::setAutoPlaylistPollLock(microtime(true));
-	Zend_Session::stop();
+            Application_Model_Preference::setAutoPlaylistPollLock(microtime(true));
+	        Zend_Session::stop();
     }
 
     /**

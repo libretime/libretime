@@ -76,7 +76,7 @@ class Application_Model_Scheduler
     }
 
     /*
-     * make sure any incoming requests for scheduling are ligit.
+     * make sure any incoming requests for scheduling are legit.
     *
     * @param array $items, an array containing pks of cc_schedule items.
     */
