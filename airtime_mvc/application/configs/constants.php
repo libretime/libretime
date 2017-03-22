@@ -25,6 +25,7 @@ define('AIRTIME_TRANSIFEX_URL'      , 'http://libretime.org/translating/');
 define('SUPPORT_TICKET_URL'         , 'https://github.com/LibreTime/libretime/issues');
 define('UI_REVAMP_EMBED_URL'        , 'https://www.youtube.com/embed/nqpNnCKGluY');
 define('LIBRETIME_WHATS_NEW_URL'    , 'https://github.com/LibreTime/libretime/releases');
+define('LIBRETIME_UPDATE_FEED'      , 'https://github.com/LibreTime/libretime/releases.atom');
 define('LIBRETIME_EMAIL_FROM'       , 'noreply@libretime.org');
 
 define('LICENSE_VERSION'    , 'GNU AGPL v.3');
