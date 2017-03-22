@@ -137,7 +137,7 @@ def main (run):
         if files == None:
           continue
         for curFile in files:
-          database = {}
+          #database = {}
           database["directory"] = directory 
           curFilePath = os.path.join(curroot,curFile)
           # cut off the watch_dir
