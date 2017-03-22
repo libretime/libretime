@@ -1,6 +1,6 @@
 <?php
 
-class Application_Model_Scheduler
+final class Application_Model_Scheduler
 {
     private $con;
     private $fileInfo = array(
@@ -23,7 +23,7 @@ class Application_Model_Scheduler
 
     private $checkUserPermissions = true;
 
-    public function __construct()
+    public function __construct($checkUserPermissions=true)
     {
         $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
 
@@ -40,7 +40,11 @@ class Application_Model_Scheduler
             $this->nowDT = DateTime::createFromFormat("U", time(), new DateTimeZone("UTC"));
         }
 
-        $this->user = Application_Model_User::getCurrentUser();
+        $this->setCheckUserPermissions($checkUserPermissions);
+
+        if ($this->checkUserPermissions) {
+            $this->user = Application_Model_User::getCurrentUser();
+        }
 
         $this->crossfadeDuration = Application_Model_Preference::GetDefaultCrossfadeDuration();
     }

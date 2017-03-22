@@ -229,8 +229,7 @@ SQL;
         $ts = intval($this->_showInstance->getDbLastScheduled("U")) ? : 0;
         $id = $this->_showInstance->getDbId();
 
-        $scheduler = new Application_Model_Scheduler();
-        $scheduler->setCheckUserPermissions($checkUserPerm);
+        $scheduler = new Application_Model_Scheduler($checkUserPerm);
         $scheduler->scheduleAfter(
             array(array("id" => 0, "instance"  => $id, "timestamp" => $ts)),
             array(array("id" => $pl_id, "type" => "playlist"))

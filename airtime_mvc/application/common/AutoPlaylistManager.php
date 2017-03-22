@@ -23,21 +23,18 @@ class AutoPlaylistManager {
      *
      */
     public static function buildAutoPlaylist() {
-            // Starting a session
-            Zend_Session::start();
-	        Logging::info("Checking to run Auto Playlist");
-            $autoPlaylists = static::_upcomingAutoPlaylistShows();
-            foreach ($autoPlaylists as $autoplaylist) {
-       	    // creates a ShowInstance object to build the playlist in from the ShowInstancesQuery Object     
-	        $si = new Application_Model_ShowInstance($autoplaylist->getDbId());
-	        $playlistid = $si->GetAutoPlaylistId();
+        Logging::info("Checking to run Auto Playlist");
+        $autoPlaylists = static::_upcomingAutoPlaylistShows();
+        foreach ($autoPlaylists as $autoplaylist) {
+            // creates a ShowInstance object to build the playlist in from the ShowInstancesQuery Object     
+            $si = new Application_Model_ShowInstance($autoplaylist->getDbId());
+            $playlistid = $si->GetAutoPlaylistId();
             Logging::info("Scheduling $playlistid");
             // call the addPlaylist to show function and don't check for user permission to avoid call to non-existant user object
             $si->addPlaylistToShow($playlistid, false);
             $si->setAutoPlaylistBuilt(true);
-            }
-            Application_Model_Preference::setAutoPlaylistPollLock(microtime(true));
-	        Zend_Session::stop();
+        }
+        Application_Model_Preference::setAutoPlaylistPollLock(microtime(true));
     }
 
     /**
