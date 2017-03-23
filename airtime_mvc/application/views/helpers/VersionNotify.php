@@ -23,10 +23,13 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract {
         $latest = Application_Model_Preference::GetLatestVersion();
         $link = Application_Model_Preference::GetLatestLink();
 
-        $isGitRelease = preg_match('/^[[:alnum:]]{7}$/i', $current) === 1;
-        $currentParts = array(0, 0, 0, 0);
+        $isGitRelease = preg_match('/^[[:alnum:]]{7,}$/i', $current) === 1;
+        $currentParts = array();
         if (!$isGitRelease) {
             $currentParts = preg_split("/(\.|-)/", $current);
+        }
+        if (count($currentParts) < 3) {
+            $currentParts = array(0, 0, 0, 0);
         }
 
         $majorCandidates = SemVer::satisfiedBy($latest, sprintf('>=%1$s', $currentParts[0] + 1));
