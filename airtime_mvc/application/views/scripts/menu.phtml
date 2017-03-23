@@ -1,4 +1,4 @@
-<ol id="navlist">
+<ol class="navigation">
 <?php foreach ($this->container as $page) : ?>
     <?php if($this->navigation()->accept($page)) : ?>
         <li class="top <?php if($page->isActive(true)){echo 'active';} ?>">

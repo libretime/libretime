@@ -130,7 +130,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <hr>
         <?php
         $page = $this->navigation()->findOneBy('title', $this->layout()->parent_page);
-        echo $this->navigation()->menu()->renderMenu($page);
+        echo $this->navigation()->menu()->render($page);
         ?>
     </div>
 <?php } ?>
