@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys,fileinput,time,types,os
+import logging
 import codecs
 import datetime
 import psycopg2
@@ -9,9 +10,44 @@ import psycopg2
 #for libretime, there is no interactive way to define the watch dir
 #insert into cc_music_dirs (directory,type,exists,watched) values ('/srv/airtime/watch','watched','t','t');
 
+
+# definitions RabbitMQ
+EXCHANGE = "airtime-watch"
+EXCHANGE_TYPE = "topic"
+ROUTING_KEY = ""
+QUEUE = "airtime-watch"
+
+
 # create empty dictionary 
 database = {}
-logfile = "/var/log/airtime/libretime_watch.log"
+# keep the program running
+run=1
+
+#
+# logging
+#
+logging.basicConfig(format='%(asctime)s %(message)s',filename='/var/log/airtime/libretime_watch.log',level=logging.INFO)
+
+def connect_rabbitmq():
+   import pika
+
+   credentials = pika.PlainCredentials('airtime', 'airtime')
+   # connect to rabbitmq
+   connection = pika.BlockingConnection(pika.ConnectionParameters(
+        host='localhost',virtual_host='/airtime',credentials=credentials))
+   return (connection)
+
+#   channel = connection.channel()
+   
+   #channel.queue_declare(queue='hello')
+
+#def callback(ch, method, properties, body):
+#    print(" [x] Received %r" % body)
+
+#channel.basic_consume(callback,
+#                      queue='hello',
+#                      no_ack=True)
+
 
 def update_database (conn):
    cur = conn.cursor()
@@ -47,12 +83,23 @@ def insert_database (conn):
 def analyse_file (filename):
    import hashlib
    import magic
+   # test
+   from mimetypes import MimeTypes
    from mutagen.easyid3 import EasyID3
    from mutagen.mp3 import MP3
 
-   #print ("analyse Filename: "+filename)
+   analyse_ok=False
+   logging.info ("analyse Filename: "+filename)
+   #try to determin the filetype 
    mime_check = magic.from_file(filename, mime=True)
    database["mime"] = mime_check
+   # test
+   f = MP3(filename)
+   mime_mutagen = f.mime[0]
+   mime = MimeTypes()
+   type, a = mime.guess_type(filename)
+   logging.info ("mime_check :"+database["mime"]+ " mime: "+type+" mutagen: " +mime_mutagen )
+   #
    database["ftype"] = "audioclip"
    database["filesize"] = os.path.getsize(filename) 
    database["import_status"]=0
@@ -65,18 +112,20 @@ def analyse_file (filename):
               break
            m.update(data)
        database["md5"] = m.hexdigest()
-   # ID3
-   if database["mime"] in ['audio/mpeg','audio/mp3']:
+   # MP3 file ?
+   if database["mime"] in ['audio/mpeg','audio/mp3','application/octet-stream']:
      try:
        audio = EasyID3(filename)
        database["track_title"]=audio['title'][0]
        try:
          database["artist_name"]=audio['artist'][0]
        except StandardError, err:
+         logging.warning('no title ID3 for '+filename) 
          database["artist_name"]= ""       
        try:
          database["genre"]=audio['genre'][0]
        except StandardError, err:
+         logging.warning('no genre ID3 for '+filename) 
          database["genre"]= ""
        try:
          database["album_title"]=audio['album'][0]
@@ -103,21 +152,26 @@ def analyse_file (filename):
                 database["channels"] = 2
        else:
             database["channels"] = f.info.channels
-  
-     except StandardError, err:
-          print "Error: ",str(err),filename
+       analyse_ok=True
 
-def connect_database():
+     except StandardError, err:
+          logging.error('Error ',str(err),filename) 
+          #print "Error: ",str(err),filename
+   return analyse_ok
+
+def connect_database(): 
   try:
     conn = psycopg2.connect("dbname='airtime' user='airtime' host='localhost' password='airtime'")
   except:
-    print "I am unable to connect to the database"
+    logging.critical('Unable to connect to the database') 
+    #print "I am unable to connect to the database"
   return conn
 
-run = 1
 
 def main (run):
   while (run) :
+    # Connect to airtime rabbitmq
+    rabbit=connect_rabbitmq()
     # look for what dir we've to watch
     conn = connect_database()
     cur = conn.cursor()
@@ -129,7 +183,8 @@ def main (run):
       len_watch_dir = len(watch_dir) 
       cur.close()
     except:
-      print ("Can't get directory for watching")
+      logging.critical("Can't get directory for watching") 
+      #print ("Can't get directory for watching")
       exit()
  
     # so now scan all directories
@@ -146,38 +201,42 @@ def main (run):
           database["mtime"] = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(int(os.path.getmtime(curFilePath))))
           # prepare database 
           cur = conn.cursor()
+          #file already in database
           try:
             cur.execute ("SELECT count(*) from cc_files where"
                 +" filepath = '"+database["filepath"]+"'" 
                 +" and directory = "+str(database["directory"]))
           except: 
+            logging.warning ("I can't SELECT count(*) ... from cc_files")
             print "I can't SELECT from cc_files"
           row = cur.fetchone()
           # is there already a record
           if row[0] == 0:
-            print ("Insert: "+database["filepath"])
+            logging.info("Insert: "+database["filepath"])
+            #print ("Insert: "+database["filepath"])
             database["utime"] = datetime.datetime.now()
-            analyse_file (curFilePath)
-            insert_database (conn)
+            if analyse_file (curFilePath):
+              insert_database (conn)
             #let's sleep
 #            time.sleep(1)
           else :
             cur1 = conn.cursor()
             try:
+              # look for mtime
               cur1.execute ("SELECT mtime from cc_files where"
                 +" filepath = '"+database["filepath"]+"'" 
                 +" and directory = "+str(database["directory"]))
             except:
-              print "I can't SELECT from cc_files"
+              logging.warning ("I can't SELECT mtime ... from cc_files")
+              #print "I can't SELECT from cc_files"
             row = cur1.fetchone()
             # update needs only called, if mtime different
             if str(row[0]) != database["mtime"]:
-               print ("Update "+database["filepath"])
+               logging.info("Update: "+database["filepath"])
+               #print ("Update "+database["filepath"])
                database["utime"] = datetime.datetime.now()
-               analyse_file (curFilePath)
-               update_database (conn)
-               # let's sleep
-               time.sleep (1)
+               if analyse_file (curFilePath):
+                 update_database (conn)
             cur1.close()
           cur.close()
     #
@@ -185,8 +244,10 @@ def main (run):
     # close database session
     conn.close() 
     # time.sleep (300)	
-    run = 0
-
+    rabbit.close()    
+    logging.info("Finished")
+    run=0
 
 if __name__ == "__main__":
+    logging.info("Woke up")
     main(run)
