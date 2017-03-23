@@ -64,7 +64,7 @@ apt-get install python-nose
 yum install -y python-nose
 ```
 
-In most cases you need to install deps before the tets can be run.
+In most cases you need to install deps before the tests can be run.
 
 ### Airtime Analyzer
 
