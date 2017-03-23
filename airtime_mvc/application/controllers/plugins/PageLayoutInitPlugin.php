@@ -32,7 +32,6 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             "api",
             "auth",
             "error",
-            "locale",
             "upgrade",
             'whmcs-login',
             "provisioning",
