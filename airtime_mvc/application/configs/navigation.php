@@ -1,40 +1,48 @@
 <?php
-
-/*
-* Navigation container (config/array)
-
-* Each element in the array will be passed to
-* Zend_Navigation_Page::factory() when constructing
-* the navigation container below.
-*/
+/**
+ * Navigation container (config/array)
+ *
+ * Each element in the array will be passed to
+ * Zend_Navigation_Page::factory() when constructing
+ * the navigation container below.
+ *
+ * The class field is used to contain the icon rendered
+ * before the nav entry for i18n purposes. When this
+ * gets parsed the language is not yet set and the
+ * strings stay plain en for now. They get retranslated
+ * in the menu.phtml script when they are output.
+ */
 $pages = array();
 $pages[] = array(
-    'label' => "<i class='icon-music icon-white'></i>"._('My Podcast'),
+    'label'      => _('My Podcast'),
     'module'     => 'default',
     'controller' => 'podcast',
     'action'     => 'station',
-    'resource'   => 'podcast'
+    'resource'   => 'podcast',
+    'class'      => '<i class="icon-music icon-white"></i>'
 );
 $pages[] = array(
-    'label' => "<i class='icon-globe icon-white'></i>"._('Radio Page'),
-    'uri' => '/',
-    'resource' => '',
-    'pages' => array(
-    )
+    'label'      => _('Radio Page'),
+    'uri'        => '/',
+    'resource'   => '',
+    'class'      => '<i class="icon-globe icon-white"></i>',
+    'pages'      => array()
 );
 $pages[] = array(
-    'label'      => "<i class='icon-calendar icon-white'></i>"._('Calendar'),
+    'label'      => _('Calendar'),
     'module'     => 'default',
     'controller' => 'schedule',
     'action'     => 'index',
-    'resource'   => 'schedule'
+    'resource'   => 'schedule',
+    'class'      => '<i class="icon-calendar icon-white"></i>'
 );
 $pages[] = array(
-    'label'      =>  "<i class='icon-wrench icon-white'></i>"._('Widgets'),
+    'label'      => _('Widgets'),
     'module'     => 'default',
     'controller' => 'embeddablewidgets',
     'action'     => 'player',
     'resource'   => 'embeddablewidgets',
+    'class'      => '<i class="icon-wrench icon-white"></i>',
     'title' => 'Widgets',
     'pages' => array(
         array(
@@ -58,11 +66,12 @@ $pages[] = array(
     )
 );
 $pages[] = array(
-    'label' => "<i class='icon-cog icon-white'></i>"._("Settings"),
+    'label' => _("Settings"),
     'resource' => 'preference',
     'action' => 'index',
     'module' => 'default',
     'controller' => 'preference',
+    'class' => '<i class="icon-cog icon-white"></i>',
     'title' => 'Settings',
     'pages' => array(
         array(
@@ -99,11 +108,12 @@ $pages[] = array(
     )
 );
 $pages[] = array(
-    'label' =>  "<i class='icon-signal icon-white'></i>"._("Analytics"),
+    'label'      => _("Analytics"),
     'module'     => 'default',
     'controller' => 'playouthistory',
     'action'     => 'index',
     'resource'   => 'playouthistory',
+    'class'      => '<i class="icon-signal icon-white"></i>',
     'title' => 'Analytics',
     'pages' => array(
         array(
@@ -162,11 +172,12 @@ if (LIBRETIME_ENABLE_BILLING === true) {
     );
 }
 $pages[] = array(
-    'label'      =>  "<i class='icon-question-sign icon-white'></i>"._('Help'),
+    'label'      => _('Help'),
     'controller' => 'dashboard',
     'action'     => 'help',
-    'resource'    =>    'dashboard',
-    'title' => 'Help',
+    'resource'   => 'dashboard',
+    'class'      => '<i class="icon-question-sign icon-white"></i>',
+    'title'      => 'Help',
     'pages'      => array(
         array(
             'label'      => _('Getting Started'),
