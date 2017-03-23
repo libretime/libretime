@@ -213,13 +213,24 @@ var AIRTIME = (function(AIRTIME){
         delete $tabMap[self.id];  // Remove this tab from the internal tab mapping
 
         // Remove the relevant DOM elements (the tab and its contents)
-        self.tab.remove();
-        self.contents.remove();
+        if (self.uid !== 0) {
+            self.tab.remove();
+            self.contents.remove();
+        } else {
+            // only hide scheduled shows tab so we can still interact with it.
+            self.tab.hide();
+            self.contents.hide();
+        }
 
-        if (self.isActive()) {  // Closing the current tab, otherwise we don't need to switch tabs
+
+        if (self.isActive() && toTab) {  // Closing the current tab, otherwise we don't need to switch tabs
             toTab.switchTo();
         } else {
             mod.onResize();
+        }
+
+        if (Object.keys($openTabs).length < 1) {
+            $('#show_builder').hide();
         }
 
         self._destroy();
@@ -259,6 +270,7 @@ var AIRTIME = (function(AIRTIME){
             pane = $("#show_builder"),
             contents = pane.find(".outer-datatable-wrapper");
         self.id = 0;
+        self.uid = uid;
 
         tab.data("tab-id", self.id);
 
@@ -266,10 +278,14 @@ var AIRTIME = (function(AIRTIME){
         self.contents = contents;
         self.tab = tab;
 
-        tab.on("click", function() {
-            if (!$(this).hasClass('active')) {
+        self.assignTabClickHandler(function(e) {
+            if (!self.isActive()) {
                 self.switchTo();
             }
+        });
+
+        self.assignTabCloseClickHandler(function(e) {
+            self.close();
         });
 
         $openTabs[uid] = self;
@@ -305,9 +321,27 @@ var AIRTIME = (function(AIRTIME){
      * @returns {Tab}               the created Tab object
      */
     mod.openTab = function(html, uid, callback) {
+        $('#show_builder').show();
         var newTab = new Tab(html, uid);
         if (callback) callback(newTab);
         return newTab;
+    };
+
+    /**
+     * open the schedule tab if if was closed
+     *
+     * @returns {Tab}
+     */
+    mod.openScheduleTab = function() {
+        var $scheduleTab = this.getScheduleTab();
+        $('#show_builder').show();
+        $openTabs[0] = $scheduleTab;
+        $scheduleTab.tab.show();
+        $scheduleTab.contents.show();
+        $scheduleTab.switchTo();
+        $scheduleTab.assignTabCloseClickHandler(function(e) {
+            $scheduleTab.close();
+        });
     };
 
     /**
