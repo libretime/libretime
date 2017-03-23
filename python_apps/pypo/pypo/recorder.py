@@ -78,7 +78,7 @@ class ShowRecorder(Thread):
         else:
             filetype = "ogg";
 
-        joined_path = os.path.join(config["base_recorded_files"], filename)
+        joined_path = os.path.join(config["pypo"]["base_recorded_files"], filename)
         filepath = "%s.%s" % (joined_path, filetype)
 
         br = config["pypo"]["record_bitrate"]
