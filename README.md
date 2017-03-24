@@ -14,7 +14,7 @@ We are currently ramping up development on this repository.
 Check out the [documentation](http://libretime.org) for more information and start broadcasting!
 
 Please note that LibreTime is released with a [Contributor Code 
-of Conduct](https://github.com/LibreTime/code-of-conduct/blob/CODE-OF-CONDUCT.md).
+of Conduct](https://github.com/LibreTime/code-of-conduct/blob/master/CODE_OF_CONDUCT.md).
 By participating in this project you agree to abide by its terms.
 
 Please submit enhancements, bugfixes or comments via GitHub.
