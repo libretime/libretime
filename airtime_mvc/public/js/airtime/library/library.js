@@ -651,14 +651,26 @@ var AIRTIME = (function(AIRTIME) {
             },
             "fnStateLoad": function fnLibStateLoad(oSettings) {
                 var settings = JSON.parse(localStorage.getItem('datatables-library'));
+
+                // local storage was empty lets get something from the backend
+                if (settings === null) {
+                    // we have a datatables implementation that is so old we need to async:false ;(
+                    // see http://legacy.datatables.net/usage/callbacks#fnStateLoad for info and
+                    // feel free to start trying to port this to a modern version ;)
+                    $.ajax({
+                        'url': baseUrl + 'usersettings/get-library-datatable',
+                        'async': false, // <<< every sane browser will warn that this is not nice
+                        'dataType': 'json',
+                        'success': function(oData) {
+                            localStorage.setItem('datatables-library', JSON.stringify(oData));
+                            settings = oData;
+                        }
+                    });
+                }
                 // Hacky; always set the visibility of the last column (actions buttons) to true
                 if (settings && settings.abVisCols) settings.abVisCols[settings.abVisCols.length - 1] = true;
 
-                try {
-                    return settings;
-                } catch (e) {
-                    return null;
-                }
+                return settings;
             },
             "fnStateLoadParams": function (oSettings, oData) {
                 var i,

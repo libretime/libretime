@@ -47,7 +47,9 @@ class UsersettingsController extends Zend_Controller_Action
     {
         $data = Application_Model_Preference::getCurrentLibraryTableSetting();
         if (!is_null($data)) {
-            $this->view->settings = $data;
+            $this->_helper->json($data);
+        } else {
+            $this->_helper->json(false);
         }
     }
 
