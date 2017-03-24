@@ -84,7 +84,7 @@
 
     <div class="schedule_content">
         <div ng-repeat="x in weekDays track by $index" ng-attr-id="{{'day-' + x.dayOfMonth}}" class="schedule_item">
-            <div ng-if="isEmpty(x.shows)" class="row empty-schedule">Looks like there are no shows scheduled on this day.</div>
+            <div ng-if="isEmpty(x.shows)" class="row empty-schedule"><?php echo _('Looks like there are no shows scheduled on this day.') ?></div>
             <div ng-repeat="show in x.shows" class="row">
                 <div class="time_grid">{{show.show_start_hour}} - {{show.show_end_hour}}</div>
                 <div class="name_grid">{{show.name}}</div>
@@ -93,7 +93,7 @@
     </div>
 
     <div class="weekly-schedule-widget-footer" <?php if ($this->widgetStyle == "premium") echo "style='display:none'"; ?>>
-        <a href="<?php echo PRODUCT_SITE_URL; ?>" target="_blank">Powered by <?php echo PRODUCT_NAME; ?></a>
+        <a href="<?php echo PRODUCT_SITE_URL; ?>" target="_blank"><?php printf(_('Powered by %s'), PRODUCT_NAME); ?></a>
     </div>
 </div>
 

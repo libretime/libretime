@@ -34,6 +34,12 @@ class IndexController extends Zend_Controller_Action
 
         $this->_helper->layout->setLayout('radio-page');
 
+        // translate page to station default language
+        $locale = Application_Model_Preference::GetDefaultLocale();
+        if ($locale) {
+            Application_Model_Locale::configureLocalization($locale);
+        }
+
         $this->view->stationLogo = Application_Model_Preference::GetStationLogo();
 
         $stationName = Application_Model_Preference::GetStationName();
