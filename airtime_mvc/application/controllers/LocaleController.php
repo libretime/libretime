@@ -280,6 +280,7 @@ final class LocaleController extends Zend_Controller_Action
             "Filtering out " => _("Filtering out "),
             " of " => _(" of "),
             " records" => _(" records"),
+            "There are no shows scheduled during the specified time period." => _("There are no shows scheduled during the specified time period."),
             //already in library/library.js
             //"Title" => _("Title"),
             //"Creator" => _("Creator"),
