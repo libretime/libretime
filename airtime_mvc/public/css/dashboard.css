@@ -509,7 +509,7 @@ li.ui-state-default {
 
 .tab-name {
     float: left;
-    max-width: 140px;
+    max-width: 160px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
