@@ -1,11 +1,17 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import sys,fileinput,time,types,os
-import logging
 import codecs
 import datetime
+import logging
+import os
+import pika
 import psycopg2
+import select
+import signal
+import sys
+import time
+import types
 
 #for libretime, there is no interactive way to define the watch dir
 #insert into cc_music_dirs (directory,type,exists,watched) values ('/srv/airtime/watch','watched','t','t');
@@ -21,33 +27,12 @@ QUEUE = "airtime-watch"
 # create empty dictionary 
 database = {}
 # keep the program running
-run=1
+shutdown=False
 
 #
 # logging
 #
 logging.basicConfig(format='%(asctime)s %(message)s',filename='/var/log/airtime/libretime_watch.log',level=logging.INFO)
-
-def connect_rabbitmq():
-   import pika
-
-   credentials = pika.PlainCredentials('airtime', 'airtime')
-   # connect to rabbitmq
-   connection = pika.BlockingConnection(pika.ConnectionParameters(
-        host='localhost',virtual_host='/airtime',credentials=credentials))
-   return (connection)
-
-#   channel = connection.channel()
-   
-   #channel.queue_declare(queue='hello')
-
-#def callback(ch, method, properties, body):
-#    print(" [x] Received %r" % body)
-
-#channel.basic_consume(callback,
-#                      queue='hello',
-#                      no_ack=True)
-
 
 def update_database (conn):
    cur = conn.cursor()
@@ -81,6 +66,10 @@ def insert_database (conn):
    cur.close()
 
 def analyse_file (filename):
+   """This method analyses the file and returns analyse_ok 
+      It's filling the database dictionary with metadata read from
+      the file
+   """
    import hashlib
    import magic
    # test
@@ -168,18 +157,15 @@ def connect_database():
   return conn
 
 
-def main (run):
-  while (run) :
-    # Connect to airtime rabbitmq
-    rabbit=connect_rabbitmq()
+def watch (dir_id):
+    logging.info ("Start scanning Dir ID: "+str(dir_id))
     # look for what dir we've to watch
     conn = connect_database()
     cur = conn.cursor()
     try:
-      cur.execute ("SELECT directory,id from cc_music_dirs where type = 'watched'")
+      cur.execute ("SELECT directory from cc_music_dirs where id = '"+dir_id+"'")
       row = cur.fetchone()
       watch_dir = row[0]+"/"
-      directory=row[1]
       len_watch_dir = len(watch_dir) 
       cur.close()
     except:
@@ -193,7 +179,7 @@ def main (run):
           continue
         for curFile in files:
           #database = {}
-          database["directory"] = directory 
+          database["directory"] = dir_id 
           curFilePath = os.path.join(curroot,curFile)
           # cut off the watch_dir
           database["filepath"] = curFilePath[len_watch_dir:]
@@ -240,14 +226,82 @@ def main (run):
             cur1.close()
           cur.close()
     #
-    # to do... exit
     # close database session
     conn.close() 
-    # time.sleep (300)	
-    rabbit.close()    
-    logging.info("Finished")
-    run=0
+    logging.info ("Scan finished..")
+
+################################################################
+# RabbitMQ parts
+################################################################
+def graceful_shutdown(self, signum, frame):
+   '''Disconnect and break out of the message listening loop'''
+   shutdown = True
+
+def connect_to_messaging_server():
+  """Connect to RabbitMQ Server and start listening for messages. 
+     Returns RabbitMQ connection and channel
+  """
+  credentials=pika.credentials.PlainCredentials('airtime', 'airtime')
+  connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost',
+            virtual_host='/airtime',credentials=credentials))
+  channel = connection.channel()
+  #channel.exchange_delete (exchange=EXCHANGE)
+  channel.exchange_declare(exchange=EXCHANGE, type=EXCHANGE_TYPE, durable=True)
+  #channel.queue_delete(queue=QUEUE)
+  result = channel.queue_declare(queue=QUEUE, durable=True)
+  channel.queue_bind(exchange=EXCHANGE, queue=QUEUE, routing_key=ROUTING_KEY)
+
+  logging.info("Listening for messages...")
+  channel.basic_consume(msg_received_callback,queue=QUEUE, no_ack=False)
+
+  return connection, channel
+
+def msg_received_callback (channel, method, properties,body):
+  '''Message reader'''
+  logging.info ("Got message: "+body)
+  if "rescan_watch" in body: 
+     # now call the watching routine 
+     cmd,id = body.split(",")
+     logging.info ("Got message: "+cmd+" ID: "+id)
+     watch(id) 
+  channel.basic_ack(delivery_tag = method.delivery_tag)
+
+def wait_for_messages(channel):
+  """Waiting for messages comming from RabbitMQ
+  """
+  channel.start_consuming()
+
+def disconnect_from_messaging_server(connection):
+  """Disconnect RabbitMQ"""
+  connection.close()
+
+def main():
+  # Set up a signal handler so we can shutdown gracefully
+  # For some reason, this signal handler must be set up here. I'd rather 
+  # put it in AirtimeAnalyzerServer, but it doesn't work there (something to do
+  # with pika's SIGTERM handler interfering with it, I think...)
+  signal.signal(signal.SIGTERM, graceful_shutdown)
+
+  while not shutdown:
+    try:
+       connection, channel = connect_to_messaging_server()
+       wait_for_messages(channel)
+    except (KeyboardInterrupt, SystemExit):
+       break # Break out of the while loop and exit the application
+    except select.error:
+      pass
+    except pika.exceptions.AMQPError as e:
+       if shutdown:
+          break
+       logging.error("Connection to message queue failed. ")
+       logging.error(e)
+       logging.info("Retrying in 5 seconds...")
+       time.sleep(5)
+  # end of loop
+  disconnect_from_messaging_server(connection)
+  logging.info("Exiting cleanly.")
+
 
 if __name__ == "__main__":
     logging.info("Woke up")
-    main(run)
+    main()
