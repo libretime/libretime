@@ -1,6 +1,6 @@
 <?php
 
-class Application_Model_Locale
+final class Application_Model_Locale
 {
     private static $domains = array(
         'airtime', 

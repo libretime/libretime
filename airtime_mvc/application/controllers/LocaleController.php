@@ -1,12 +1,7 @@
 <?php
 
-class LocaleController extends Zend_Controller_Action
+final class LocaleController extends Zend_Controller_Action
 {
-
-    public function init()
-    {
-    }
-    
     public function datatablesTranslationTableAction()
     {
         $this->view->layout()->disableLayout();
@@ -285,6 +280,7 @@ class LocaleController extends Zend_Controller_Action
             "Filtering out " => _("Filtering out "),
             " of " => _(" of "),
             " records" => _(" records"),
+            "There are no shows scheduled during the specified time period." => _("There are no shows scheduled during the specified time period."),
             //already in library/library.js
             //"Title" => _("Title"),
             //"Creator" => _("Creator"),
@@ -443,7 +439,6 @@ class LocaleController extends Zend_Controller_Action
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         header("Content-type: text/javascript");
-        echo "var general_dict=".json_encode($translations);
-
+        echo "var general_dict=".$this->_helper->json->encodeJson($translations);
     }
 }

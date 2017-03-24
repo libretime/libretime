@@ -401,7 +401,7 @@ select {
     /*top: 0;*/
     /*right: 0;*/
 }
-#navlist {
+ol.navigation {
     padding: 0;
     margin: 0;
 }
@@ -3810,6 +3810,7 @@ button.btn-icon-text > i.icon-white {
     top: 102px;
     bottom: 0; /* Account for scrollbars */
     min-width: 150px;
+    max-width: 160px;
     border-right: 1px solid #5b5b5b;
     background: #242424;
     font-size: 14px;
