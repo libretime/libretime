@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-21 18:06+0000\n"
+"POT-Creation-Date: 2017-03-24 16:23+0000\n"
 "PO-Revision-Date: 2015-09-05 08:33+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: Serbian (Serbia) (http://www.transifex.com/sourcefabric/airtime/language/sr_RS/)\n"
@@ -573,6 +573,10 @@ msgstr ""
 msgid "Zulu"
 msgstr ""
 
+#: airtime_mvc/application/common/Timezone.php:21
+msgid "Use station default"
+msgstr ""
+
 #: airtime_mvc/application/common/UsabilityHints.php:66
 msgid "Upload some tracks below to add them to your library!"
 msgstr ""
@@ -620,105 +624,105 @@ msgstr ""
 msgid "It looks like the next show is empty. %sAdd tracks to your show now%s."
 msgstr ""
 
-#: airtime_mvc/application/configs/navigation.php:12
-#: airtime_mvc/application/controllers/LocaleController.php:125
+#: airtime_mvc/application/configs/navigation.php:17
+#: airtime_mvc/application/controllers/LocaleController.php:122
 #: airtime_mvc/application/views/scripts/podcast/station.phtml:6
 msgid "My Podcast"
 msgstr ""
 
-#: airtime_mvc/application/configs/navigation.php:19
+#: airtime_mvc/application/configs/navigation.php:25
 msgid "Radio Page"
 msgstr ""
 
-#: airtime_mvc/application/configs/navigation.php:26
+#: airtime_mvc/application/configs/navigation.php:32
 msgid "Calendar"
 msgstr "Календар"
 
-#: airtime_mvc/application/configs/navigation.php:33
+#: airtime_mvc/application/configs/navigation.php:40
 msgid "Widgets"
 msgstr ""
 
-#: airtime_mvc/application/configs/navigation.php:41
+#: airtime_mvc/application/configs/navigation.php:49
 #: airtime_mvc/application/views/scripts/embeddablewidgets/player.phtml:6
 msgid "Player"
 msgstr ""
 
-#: airtime_mvc/application/configs/navigation.php:47
+#: airtime_mvc/application/configs/navigation.php:55
 #: airtime_mvc/application/views/scripts/embeddablewidgets/schedule.phtml:5
 msgid "Weekly Schedule"
 msgstr ""
 
-#: airtime_mvc/application/configs/navigation.php:53
+#: airtime_mvc/application/configs/navigation.php:61
 msgid "Facebook"
 msgstr ""
 
-#: airtime_mvc/application/configs/navigation.php:61
+#: airtime_mvc/application/configs/navigation.php:69
 msgid "Settings"
 msgstr ""
 
-#: airtime_mvc/application/configs/navigation.php:69
+#: airtime_mvc/application/configs/navigation.php:78
 #: airtime_mvc/application/views/scripts/preference/index.phtml:2
 msgid "General"
 msgstr ""
 
-#: airtime_mvc/application/configs/navigation.php:74
+#: airtime_mvc/application/configs/navigation.php:83
 #: airtime_mvc/application/views/scripts/form/edit-user.phtml:1
 msgid "My Profile"
 msgstr ""
 
-#: airtime_mvc/application/configs/navigation.php:80
+#: airtime_mvc/application/configs/navigation.php:89
 msgid "Users"
 msgstr "Корисници"
 
-#: airtime_mvc/application/configs/navigation.php:87
+#: airtime_mvc/application/configs/navigation.php:96
 msgid "Streams"
 msgstr "Преноси"
 
-#: airtime_mvc/application/configs/navigation.php:93
-#: airtime_mvc/application/controllers/LocaleController.php:382
-#: airtime_mvc/application/controllers/LocaleController.php:383
+#: airtime_mvc/application/configs/navigation.php:102
+#: airtime_mvc/application/controllers/LocaleController.php:380
+#: airtime_mvc/application/controllers/LocaleController.php:381
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:31
 msgid "Status"
 msgstr "Стање"
 
-#: airtime_mvc/application/configs/navigation.php:102
+#: airtime_mvc/application/configs/navigation.php:111
 msgid "Analytics"
 msgstr ""
 
-#: airtime_mvc/application/configs/navigation.php:110
+#: airtime_mvc/application/configs/navigation.php:120
 #: airtime_mvc/application/views/scripts/playouthistory/index.phtml:2
 msgid "Playout History"
 msgstr "Историја Пуштених Песама"
 
-#: airtime_mvc/application/configs/navigation.php:117
+#: airtime_mvc/application/configs/navigation.php:127
 msgid "History Templates"
 msgstr "Историјски Шаблони"
 
-#: airtime_mvc/application/configs/navigation.php:124
+#: airtime_mvc/application/configs/navigation.php:134
 msgid "Listener Stats"
 msgstr "Слушатељска Статистика"
 
-#: airtime_mvc/application/configs/navigation.php:134
+#: airtime_mvc/application/configs/navigation.php:144
 msgid "Upgrade"
 msgstr ""
 
-#: airtime_mvc/application/configs/navigation.php:134
+#: airtime_mvc/application/configs/navigation.php:144
 msgid "Billing"
 msgstr ""
 
-#: airtime_mvc/application/configs/navigation.php:141
+#: airtime_mvc/application/configs/navigation.php:151
 msgid "Account Plans"
 msgstr ""
 
-#: airtime_mvc/application/configs/navigation.php:148
+#: airtime_mvc/application/configs/navigation.php:158
 msgid "Account Details"
 msgstr ""
 
-#: airtime_mvc/application/configs/navigation.php:155
+#: airtime_mvc/application/configs/navigation.php:165
 msgid "View Invoices"
 msgstr ""
 
-#: airtime_mvc/application/configs/navigation.php:165
+#: airtime_mvc/application/configs/navigation.php:175
 #: airtime_mvc/application/views/scripts/error/error-400.phtml:13
 #: airtime_mvc/application/views/scripts/error/error-403.phtml:13
 #: airtime_mvc/application/views/scripts/error/error-404.phtml:13
@@ -727,23 +731,23 @@ msgstr ""
 msgid "Help"
 msgstr "Помоћ"
 
-#: airtime_mvc/application/configs/navigation.php:172
+#: airtime_mvc/application/configs/navigation.php:183
 msgid "Getting Started"
 msgstr "Почетак Коришћења"
 
-#: airtime_mvc/application/configs/navigation.php:179
+#: airtime_mvc/application/configs/navigation.php:190
 msgid "FAQ"
 msgstr ""
 
-#: airtime_mvc/application/configs/navigation.php:184
+#: airtime_mvc/application/configs/navigation.php:195
 msgid "User Manual"
 msgstr "Упутство"
 
-#: airtime_mvc/application/configs/navigation.php:189
+#: airtime_mvc/application/configs/navigation.php:200
 msgid "File a Support Ticket"
 msgstr ""
 
-#: airtime_mvc/application/configs/navigation.php:199
+#: airtime_mvc/application/configs/navigation.php:210
 msgid "What's New?"
 msgstr ""
 
@@ -824,12 +828,12 @@ msgstr ""
 msgid "An internal application error has occurred."
 msgstr ""
 
-#: airtime_mvc/application/controllers/IndexController.php:84
+#: airtime_mvc/application/controllers/IndexController.php:90
 #, php-format
 msgid "%s Podcast"
 msgstr ""
 
-#: airtime_mvc/application/controllers/IndexController.php:85
+#: airtime_mvc/application/controllers/IndexController.php:91
 msgid "No tracks have been published yet."
 msgstr ""
 
@@ -922,173 +926,181 @@ msgstr "Копирање од %s"
 msgid "Please make sure admin user/password is correct on System->Streams page."
 msgstr "Молимо, провери да ли је исправан/на админ корисник/лозинка на страници Систем->Преноси."
 
-#: airtime_mvc/application/controllers/LocaleController.php:30
+#: airtime_mvc/application/controllers/LocaleController.php:25
 #: airtime_mvc/application/layouts/scripts/audio-player.phtml:5
 msgid "Audio Player"
 msgstr "Аудио Уређај"
 
-#: airtime_mvc/application/controllers/LocaleController.php:31
+#: airtime_mvc/application/controllers/LocaleController.php:26
 #: airtime_mvc/application/views/scripts/error/error-500.phtml:11
 msgid "Something went wrong!"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:33
+#: airtime_mvc/application/controllers/LocaleController.php:28
 msgid "Recording:"
 msgstr "Снимање:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:34
+#: airtime_mvc/application/controllers/LocaleController.php:29
 msgid "Master Stream"
 msgstr "Мајсторски Пренос"
 
-#: airtime_mvc/application/controllers/LocaleController.php:35
+#: airtime_mvc/application/controllers/LocaleController.php:30
 msgid "Live Stream"
 msgstr "Пренос Уживо"
 
-#: airtime_mvc/application/controllers/LocaleController.php:36
+#: airtime_mvc/application/controllers/LocaleController.php:31
 msgid "Nothing Scheduled"
 msgstr "Ништа по распореду"
 
-#: airtime_mvc/application/controllers/LocaleController.php:37
+#: airtime_mvc/application/controllers/LocaleController.php:32
 msgid "Current Show:"
 msgstr "Садашња Емисија:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:38
+#: airtime_mvc/application/controllers/LocaleController.php:33
 msgid "Current"
 msgstr "Тренутна"
 
-#: airtime_mvc/application/controllers/LocaleController.php:40
+#: airtime_mvc/application/controllers/LocaleController.php:35
 msgid "You are running the latest version"
 msgstr "Ти имаш инсталирану најновију верзију"
 
-#: airtime_mvc/application/controllers/LocaleController.php:41
+#: airtime_mvc/application/controllers/LocaleController.php:36
 msgid "New version available: "
 msgstr "Нова верзија је доступна:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:42
-msgid "This version will soon be obsolete."
-msgstr "Ова верзија ускоро ће да буде застарео."
+#: airtime_mvc/application/controllers/LocaleController.php:37
+msgid "You have a pre-release version of LibreTime intalled."
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:38
+msgid "A patch update for your LibreTime installation is available."
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:39
+msgid "A feature update for your LibreTime installation is available."
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:40
+msgid "A major update for your LibreTime installation is available."
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:41
+msgid "Multiple major updates for LibreTime installation are available. Please upgrade as soon as possible."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:43
-msgid "This version is no longer supported."
-msgstr "Ова верзија више није подржана."
-
-#: airtime_mvc/application/controllers/LocaleController.php:44
-msgid "Please upgrade to "
-msgstr "Молимо надогради на"
-
-#: airtime_mvc/application/controllers/LocaleController.php:46
 msgid "Add to current playlist"
 msgstr "Додај у тренутни списак песама"
 
-#: airtime_mvc/application/controllers/LocaleController.php:47
+#: airtime_mvc/application/controllers/LocaleController.php:44
 msgid "Add to current smart block"
 msgstr "Додај у тренутни smart block"
 
-#: airtime_mvc/application/controllers/LocaleController.php:48
+#: airtime_mvc/application/controllers/LocaleController.php:45
 msgid "Adding 1 Item"
 msgstr "Додавање 1 Ставке"
 
-#: airtime_mvc/application/controllers/LocaleController.php:49
+#: airtime_mvc/application/controllers/LocaleController.php:46
 #, php-format
 msgid "Adding %s Items"
 msgstr "Додавање %s Ставке"
 
-#: airtime_mvc/application/controllers/LocaleController.php:50
+#: airtime_mvc/application/controllers/LocaleController.php:47
 msgid "You can only add tracks to smart blocks."
 msgstr "Можеш да додаш само песме код паметних блокова."
 
-#: airtime_mvc/application/controllers/LocaleController.php:51
+#: airtime_mvc/application/controllers/LocaleController.php:48
 #: airtime_mvc/application/controllers/PlaylistController.php:180
 msgid "You can only add tracks, smart blocks, and webstreams to playlists."
 msgstr "Можеш само да додаш песме, паметне блокова, и преносе код листе нумера."
 
-#: airtime_mvc/application/controllers/LocaleController.php:54
+#: airtime_mvc/application/controllers/LocaleController.php:51
 msgid "Please select a cursor position on timeline."
 msgstr "Молимо одабери место показивача на временској црти."
 
-#: airtime_mvc/application/controllers/LocaleController.php:55
+#: airtime_mvc/application/controllers/LocaleController.php:52
 msgid "You haven't added any tracks"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:56
+#: airtime_mvc/application/controllers/LocaleController.php:53
 msgid "You haven't added any playlists"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:57
+#: airtime_mvc/application/controllers/LocaleController.php:54
 msgid "You haven't added any smart blocks"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:58
+#: airtime_mvc/application/controllers/LocaleController.php:55
 msgid "You haven't added any webstreams"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:59
+#: airtime_mvc/application/controllers/LocaleController.php:56
 msgid "Learn about tracks"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:60
+#: airtime_mvc/application/controllers/LocaleController.php:57
 msgid "Learn about playlists"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:61
+#: airtime_mvc/application/controllers/LocaleController.php:58
 msgid "Learn about podcasts"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:62
+#: airtime_mvc/application/controllers/LocaleController.php:59
 msgid "Learn about smart blocks"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:63
+#: airtime_mvc/application/controllers/LocaleController.php:60
 msgid "Learn about webstreams"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:64
+#: airtime_mvc/application/controllers/LocaleController.php:61
 msgid "Click 'New' to create one."
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:68
+#: airtime_mvc/application/controllers/LocaleController.php:65
 msgid "Edit Metadata"
 msgstr "Уреди Метаподатке"
 
-#: airtime_mvc/application/controllers/LocaleController.php:69
+#: airtime_mvc/application/controllers/LocaleController.php:66
 msgid "Add to selected show"
 msgstr "Додај у одабраној емисији"
 
-#: airtime_mvc/application/controllers/LocaleController.php:70
+#: airtime_mvc/application/controllers/LocaleController.php:67
 msgid "Select"
 msgstr "Одабери"
 
-#: airtime_mvc/application/controllers/LocaleController.php:71
+#: airtime_mvc/application/controllers/LocaleController.php:68
 msgid "Select this page"
 msgstr "Одабери ову страницу"
 
-#: airtime_mvc/application/controllers/LocaleController.php:72
+#: airtime_mvc/application/controllers/LocaleController.php:69
 msgid "Deselect this page"
 msgstr "Одзначи ову страницу"
 
-#: airtime_mvc/application/controllers/LocaleController.php:73
+#: airtime_mvc/application/controllers/LocaleController.php:70
 msgid "Deselect all"
 msgstr "Одзначи све"
 
-#: airtime_mvc/application/controllers/LocaleController.php:74
+#: airtime_mvc/application/controllers/LocaleController.php:71
 msgid "Are you sure you want to delete the selected item(s)?"
 msgstr "Јеси ли сигуран да желиш да избришеш одабрану (е) ставу (е)?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:75
+#: airtime_mvc/application/controllers/LocaleController.php:72
 msgid "Scheduled"
 msgstr "Заказана"
 
-#: airtime_mvc/application/controllers/LocaleController.php:76
+#: airtime_mvc/application/controllers/LocaleController.php:73
 #: airtime_mvc/application/views/scripts/partialviews/dashboard-sub-nav.php:3
 msgid "Tracks"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:77
+#: airtime_mvc/application/controllers/LocaleController.php:74
 #: airtime_mvc/application/layouts/scripts/layout.phtml:62
 msgid "Playlist"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:78
+#: airtime_mvc/application/controllers/LocaleController.php:75
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:74
 #: airtime_mvc/application/models/Block.php:1381
 #: airtime_mvc/application/services/HistoryService.php:1115
@@ -1098,7 +1110,7 @@ msgstr ""
 msgid "Title"
 msgstr "Назив"
 
-#: airtime_mvc/application/controllers/LocaleController.php:79
+#: airtime_mvc/application/controllers/LocaleController.php:76
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:60
 #: airtime_mvc/application/models/Block.php:1366
 #: airtime_mvc/application/services/HistoryService.php:1116
@@ -1109,7 +1121,7 @@ msgstr "Назив"
 msgid "Creator"
 msgstr "Творац"
 
-#: airtime_mvc/application/controllers/LocaleController.php:80
+#: airtime_mvc/application/controllers/LocaleController.php:77
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:51
 #: airtime_mvc/application/models/Block.php:1357
 #: airtime_mvc/application/services/HistoryService.php:1117
@@ -1117,17 +1129,17 @@ msgstr "Творац"
 msgid "Album"
 msgstr "Албум"
 
-#: airtime_mvc/application/controllers/LocaleController.php:81
+#: airtime_mvc/application/controllers/LocaleController.php:78
 msgid "Bit Rate"
 msgstr "Пренос Бита"
 
-#: airtime_mvc/application/controllers/LocaleController.php:82
+#: airtime_mvc/application/controllers/LocaleController.php:79
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:53
 #: airtime_mvc/application/models/Block.php:1359
 msgid "BPM"
 msgstr "BPM"
 
-#: airtime_mvc/application/controllers/LocaleController.php:83
+#: airtime_mvc/application/controllers/LocaleController.php:80
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:54
 #: airtime_mvc/application/models/Block.php:1360
 #: airtime_mvc/application/services/HistoryService.php:1122
@@ -1135,14 +1147,14 @@ msgstr "BPM"
 msgid "Composer"
 msgstr "Композитор"
 
-#: airtime_mvc/application/controllers/LocaleController.php:84
+#: airtime_mvc/application/controllers/LocaleController.php:81
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:55
 #: airtime_mvc/application/models/Block.php:1361
 #: airtime_mvc/application/services/HistoryService.php:1127
 msgid "Conductor"
 msgstr "Диригент"
 
-#: airtime_mvc/application/controllers/LocaleController.php:85
+#: airtime_mvc/application/controllers/LocaleController.php:82
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:56
 #: airtime_mvc/application/models/Block.php:1362
 #: airtime_mvc/application/services/HistoryService.php:1124
@@ -1151,13 +1163,13 @@ msgstr "Диригент"
 msgid "Copyright"
 msgstr "Ауторско право"
 
-#: airtime_mvc/application/controllers/LocaleController.php:86
+#: airtime_mvc/application/controllers/LocaleController.php:83
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:61
 #: airtime_mvc/application/models/Block.php:1367
 msgid "Encoded By"
 msgstr "Кодирано је по"
 
-#: airtime_mvc/application/controllers/LocaleController.php:87
+#: airtime_mvc/application/controllers/LocaleController.php:84
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:62
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:127
 #: airtime_mvc/application/models/Block.php:1368
@@ -1166,21 +1178,21 @@ msgstr "Кодирано је по"
 msgid "Genre"
 msgstr "Жанр"
 
-#: airtime_mvc/application/controllers/LocaleController.php:88
+#: airtime_mvc/application/controllers/LocaleController.php:85
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:63
 #: airtime_mvc/application/models/Block.php:1369
 #: airtime_mvc/application/services/HistoryService.php:1123
 msgid "ISRC"
 msgstr "ISRC"
 
-#: airtime_mvc/application/controllers/LocaleController.php:89
+#: airtime_mvc/application/controllers/LocaleController.php:86
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:64
 #: airtime_mvc/application/models/Block.php:1370
 #: airtime_mvc/application/services/HistoryService.php:1121
 msgid "Label"
 msgstr "Налепница"
 
-#: airtime_mvc/application/controllers/LocaleController.php:90
+#: airtime_mvc/application/controllers/LocaleController.php:87
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:65
 #: airtime_mvc/application/models/Block.php:1371
 #: airtime_mvc/application/services/HistoryService.php:1128
@@ -1188,19 +1200,19 @@ msgstr "Налепница"
 msgid "Language"
 msgstr "Језик"
 
-#: airtime_mvc/application/controllers/LocaleController.php:91
+#: airtime_mvc/application/controllers/LocaleController.php:88
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:66
 #: airtime_mvc/application/models/Block.php:1373
 msgid "Last Modified"
 msgstr "Последња Измена"
 
-#: airtime_mvc/application/controllers/LocaleController.php:92
+#: airtime_mvc/application/controllers/LocaleController.php:89
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:67
 #: airtime_mvc/application/models/Block.php:1374
 msgid "Last Played"
 msgstr "Задњи Пут Одиграна"
 
-#: airtime_mvc/application/controllers/LocaleController.php:93
+#: airtime_mvc/application/controllers/LocaleController.php:90
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:68
 #: airtime_mvc/application/models/Block.php:1375
 #: airtime_mvc/application/services/HistoryService.php:1118
@@ -1209,229 +1221,229 @@ msgstr "Задњи Пут Одиграна"
 msgid "Length"
 msgstr "Дужина"
 
-#: airtime_mvc/application/controllers/LocaleController.php:94
+#: airtime_mvc/application/controllers/LocaleController.php:91
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:69
 #: airtime_mvc/application/models/Block.php:1376
 msgid "Mime"
 msgstr "Mime"
 
-#: airtime_mvc/application/controllers/LocaleController.php:95
+#: airtime_mvc/application/controllers/LocaleController.php:92
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:70
 #: airtime_mvc/application/models/Block.php:1377
 #: airtime_mvc/application/services/HistoryService.php:1120
 msgid "Mood"
 msgstr "Расположење"
 
-#: airtime_mvc/application/controllers/LocaleController.php:96
+#: airtime_mvc/application/controllers/LocaleController.php:93
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:71
 #: airtime_mvc/application/models/Block.php:1378
 msgid "Owner"
 msgstr "Власник"
 
-#: airtime_mvc/application/controllers/LocaleController.php:97
+#: airtime_mvc/application/controllers/LocaleController.php:94
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:72
 #: airtime_mvc/application/models/Block.php:1379
 msgid "Replay Gain"
 msgstr "Replay Gain"
 
-#: airtime_mvc/application/controllers/LocaleController.php:98
+#: airtime_mvc/application/controllers/LocaleController.php:95
 msgid "Sample Rate"
 msgstr "Узорак Стопа"
 
-#: airtime_mvc/application/controllers/LocaleController.php:99
+#: airtime_mvc/application/controllers/LocaleController.php:96
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:75
 #: airtime_mvc/application/models/Block.php:1382
 msgid "Track Number"
 msgstr "Број Песма"
 
-#: airtime_mvc/application/controllers/LocaleController.php:100
+#: airtime_mvc/application/controllers/LocaleController.php:97
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:76
 #: airtime_mvc/application/models/Block.php:1383
 msgid "Uploaded"
 msgstr "Додата"
 
-#: airtime_mvc/application/controllers/LocaleController.php:101
+#: airtime_mvc/application/controllers/LocaleController.php:98
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:77
 #: airtime_mvc/application/models/Block.php:1384
 msgid "Website"
 msgstr "Веб страница"
 
-#: airtime_mvc/application/controllers/LocaleController.php:102
+#: airtime_mvc/application/controllers/LocaleController.php:99
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:78
 #: airtime_mvc/application/models/Block.php:1385
 #: airtime_mvc/application/services/HistoryService.php:1125
 msgid "Year"
 msgstr "Година"
 
-#: airtime_mvc/application/controllers/LocaleController.php:103
+#: airtime_mvc/application/controllers/LocaleController.php:100
 msgid "Loading..."
 msgstr "Учитавање..."
 
-#: airtime_mvc/application/controllers/LocaleController.php:104
-#: airtime_mvc/application/controllers/LocaleController.php:411
+#: airtime_mvc/application/controllers/LocaleController.php:101
+#: airtime_mvc/application/controllers/LocaleController.php:409
 #: airtime_mvc/application/views/scripts/plupload/index.phtml:65
 msgid "All"
 msgstr "Све"
 
-#: airtime_mvc/application/controllers/LocaleController.php:105
+#: airtime_mvc/application/controllers/LocaleController.php:102
 msgid "Files"
 msgstr "Датотеке"
 
-#: airtime_mvc/application/controllers/LocaleController.php:106
+#: airtime_mvc/application/controllers/LocaleController.php:103
 #: airtime_mvc/application/views/scripts/partialviews/dashboard-sub-nav.php:8
 msgid "Playlists"
 msgstr "Листе песама"
 
-#: airtime_mvc/application/controllers/LocaleController.php:107
+#: airtime_mvc/application/controllers/LocaleController.php:104
 #: airtime_mvc/application/views/scripts/partialviews/dashboard-sub-nav.php:13
 msgid "Smart Blocks"
 msgstr "Smart Block-ови"
 
-#: airtime_mvc/application/controllers/LocaleController.php:108
+#: airtime_mvc/application/controllers/LocaleController.php:105
 msgid "Web Streams"
 msgstr "Преноси"
 
-#: airtime_mvc/application/controllers/LocaleController.php:109
+#: airtime_mvc/application/controllers/LocaleController.php:106
 msgid "Unknown type: "
 msgstr "Непознати тип:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:110
+#: airtime_mvc/application/controllers/LocaleController.php:107
 msgid "Are you sure you want to delete the selected item?"
 msgstr "Јеси ли сигуран да желиш да обришеш изабрану ставку?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:111
-#: airtime_mvc/application/controllers/LocaleController.php:216
+#: airtime_mvc/application/controllers/LocaleController.php:108
+#: airtime_mvc/application/controllers/LocaleController.php:213
 msgid "Uploading in progress..."
 msgstr "Пренос је у току..."
 
-#: airtime_mvc/application/controllers/LocaleController.php:112
+#: airtime_mvc/application/controllers/LocaleController.php:109
 msgid "Retrieving data from the server..."
 msgstr "Преузимање података са сервера..."
 
-#: airtime_mvc/application/controllers/LocaleController.php:117
+#: airtime_mvc/application/controllers/LocaleController.php:114
 msgid "The soundcloud id for this file is: "
 msgstr "SoundCloud id за ову датотеку је:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:118
+#: airtime_mvc/application/controllers/LocaleController.php:115
 msgid "There was an error while uploading to soundcloud."
 msgstr "Дошло је до грешке приликом преноса на soundcloud."
 
-#: airtime_mvc/application/controllers/LocaleController.php:119
+#: airtime_mvc/application/controllers/LocaleController.php:116
 msgid "Error code: "
 msgstr "Шифра грешке:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:120
+#: airtime_mvc/application/controllers/LocaleController.php:117
 msgid "Error msg: "
 msgstr "Порука о грешци:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:121
+#: airtime_mvc/application/controllers/LocaleController.php:118
 msgid "Input must be a positive number"
 msgstr "Мора да буде позитиван број"
 
-#: airtime_mvc/application/controllers/LocaleController.php:122
+#: airtime_mvc/application/controllers/LocaleController.php:119
 msgid "Input must be a number"
 msgstr "Мора да буде број"
 
-#: airtime_mvc/application/controllers/LocaleController.php:123
+#: airtime_mvc/application/controllers/LocaleController.php:120
 msgid "Input must be in the format: yyyy-mm-dd"
 msgstr "Мора да буде у облику: гггг-мм-дд"
 
-#: airtime_mvc/application/controllers/LocaleController.php:124
+#: airtime_mvc/application/controllers/LocaleController.php:121
 msgid "Input must be in the format: hh:mm:ss.t"
 msgstr "Мора да буде у облику: hh:mm:ss.t"
 
-#: airtime_mvc/application/controllers/LocaleController.php:128
+#: airtime_mvc/application/controllers/LocaleController.php:125
 #, php-format
 msgid "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"
 msgstr "Тренутно је пренос датотеке. %sОдлазак на другом екрану ће да откаже процес слања. %s"
 
-#: airtime_mvc/application/controllers/LocaleController.php:130
+#: airtime_mvc/application/controllers/LocaleController.php:127
 msgid "Open Media Builder"
 msgstr "Отвори Медијског Градитеља"
 
-#: airtime_mvc/application/controllers/LocaleController.php:131
+#: airtime_mvc/application/controllers/LocaleController.php:128
 msgid "please put in a time '00:00:00 (.0)'"
 msgstr "молимо стави у време '00:00:00 (.0)'"
 
-#: airtime_mvc/application/controllers/LocaleController.php:132
+#: airtime_mvc/application/controllers/LocaleController.php:129
 msgid "Please enter a valid time in seconds. Eg. 0.5"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:133
+#: airtime_mvc/application/controllers/LocaleController.php:130
 msgid "Your browser does not support playing this file type: "
 msgstr "Твој претраживач не подржава ову врсту аудио фајл:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:134
+#: airtime_mvc/application/controllers/LocaleController.php:131
 msgid "Dynamic block is not previewable"
 msgstr "Динамички блок није доступан за преглед"
 
-#: airtime_mvc/application/controllers/LocaleController.php:135
+#: airtime_mvc/application/controllers/LocaleController.php:132
 msgid "Limit to: "
 msgstr "Ограничити се на:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:136
+#: airtime_mvc/application/controllers/LocaleController.php:133
 msgid "Playlist saved"
 msgstr "Списак песама је спремљена"
 
-#: airtime_mvc/application/controllers/LocaleController.php:137
+#: airtime_mvc/application/controllers/LocaleController.php:134
 msgid "Playlist shuffled"
 msgstr "Списак песама је измешан"
 
-#: airtime_mvc/application/controllers/LocaleController.php:139
+#: airtime_mvc/application/controllers/LocaleController.php:136
 msgid "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
 msgstr "Airtime је несигуран о статусу ове датотеке. То такође може да се деси када је датотека на удаљеном диску или је датотека у некој директоријуми, која се више није 'праћена односно надзирана'."
 
-#: airtime_mvc/application/controllers/LocaleController.php:141
+#: airtime_mvc/application/controllers/LocaleController.php:138
 #, php-format
 msgid "Listener Count on %s: %s"
 msgstr "Број Слушалаца %s: %s"
 
-#: airtime_mvc/application/controllers/LocaleController.php:143
+#: airtime_mvc/application/controllers/LocaleController.php:140
 msgid "Remind me in 1 week"
 msgstr "Подсети ме за 1 недељу"
 
-#: airtime_mvc/application/controllers/LocaleController.php:144
+#: airtime_mvc/application/controllers/LocaleController.php:141
 msgid "Remind me never"
 msgstr "Никад ме више не подсети"
 
-#: airtime_mvc/application/controllers/LocaleController.php:145
+#: airtime_mvc/application/controllers/LocaleController.php:142
 msgid "Yes, help Airtime"
 msgstr "Да, помажем Airtime-у"
 
-#: airtime_mvc/application/controllers/LocaleController.php:146
-#: airtime_mvc/application/controllers/LocaleController.php:194
+#: airtime_mvc/application/controllers/LocaleController.php:143
+#: airtime_mvc/application/controllers/LocaleController.php:191
 msgid "Image must be one of jpg, jpeg, png, or gif"
 msgstr "Слика мора да буде jpg, jpeg, png, или gif"
 
-#: airtime_mvc/application/controllers/LocaleController.php:149
+#: airtime_mvc/application/controllers/LocaleController.php:146
 msgid "A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show."
 msgstr "Статички паметни блокови спремају критеријуме и одмах генеришу блок садржаја. То ти омогућава да уредиш и видиш га у библиотеци пре него што га додаш на емисију."
 
-#: airtime_mvc/application/controllers/LocaleController.php:151
+#: airtime_mvc/application/controllers/LocaleController.php:148
 msgid "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."
 msgstr "Динамички паметни блокови само критеријуме спремају. Блок садржаја ће се генерише након што га додамо на емисију. Нећеш моћи да прегледаш и уређиваш садржај у библиотеци."
 
-#: airtime_mvc/application/controllers/LocaleController.php:153
+#: airtime_mvc/application/controllers/LocaleController.php:150
 msgid "The desired block length will not be reached if Airtime cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
 msgstr "Жељена дужина блока неће да буде постигнут јер Airtime не могу да пронађе довољно јединствене песме које одговарају твојим критеријумима. Омогући ову опцију ако желиш да допустиш да неке песме могу да се више пута понављају."
 
-#: airtime_mvc/application/controllers/LocaleController.php:154
+#: airtime_mvc/application/controllers/LocaleController.php:151
 msgid "Smart block shuffled"
 msgstr "Smart block је измешан"
 
-#: airtime_mvc/application/controllers/LocaleController.php:155
+#: airtime_mvc/application/controllers/LocaleController.php:152
 msgid "Smart block generated and criteria saved"
 msgstr "Smart block је генерисан и критеријуме су спремне"
 
-#: airtime_mvc/application/controllers/LocaleController.php:156
+#: airtime_mvc/application/controllers/LocaleController.php:153
 msgid "Smart block saved"
 msgstr "Smart block је сачуван"
 
-#: airtime_mvc/application/controllers/LocaleController.php:157
+#: airtime_mvc/application/controllers/LocaleController.php:154
 msgid "Processing..."
 msgstr "Обрада..."
 
-#: airtime_mvc/application/controllers/LocaleController.php:158
+#: airtime_mvc/application/controllers/LocaleController.php:155
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:90
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:106
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:265
@@ -1441,19 +1453,19 @@ msgstr "Обрада..."
 msgid "Select modifier"
 msgstr "Одабери модификатор"
 
-#: airtime_mvc/application/controllers/LocaleController.php:159
+#: airtime_mvc/application/controllers/LocaleController.php:156
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:91
 #: airtime_mvc/application/models/Block.php:1390
 msgid "contains"
 msgstr "садржи"
 
-#: airtime_mvc/application/controllers/LocaleController.php:160
+#: airtime_mvc/application/controllers/LocaleController.php:157
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:92
 #: airtime_mvc/application/models/Block.php:1391
 msgid "does not contain"
 msgstr "не садржи"
 
-#: airtime_mvc/application/controllers/LocaleController.php:161
+#: airtime_mvc/application/controllers/LocaleController.php:158
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:93
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:107
 #: airtime_mvc/application/models/Block.php:1392
@@ -1461,7 +1473,7 @@ msgstr "не садржи"
 msgid "is"
 msgstr "је"
 
-#: airtime_mvc/application/controllers/LocaleController.php:162
+#: airtime_mvc/application/controllers/LocaleController.php:159
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:94
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:108
 #: airtime_mvc/application/models/Block.php:1393
@@ -1469,45 +1481,45 @@ msgstr "је"
 msgid "is not"
 msgstr "није"
 
-#: airtime_mvc/application/controllers/LocaleController.php:163
+#: airtime_mvc/application/controllers/LocaleController.php:160
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:95
 #: airtime_mvc/application/models/Block.php:1394
 msgid "starts with"
 msgstr "почиње се са"
 
-#: airtime_mvc/application/controllers/LocaleController.php:164
+#: airtime_mvc/application/controllers/LocaleController.php:161
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:96
 #: airtime_mvc/application/models/Block.php:1395
 msgid "ends with"
 msgstr "завршава се са"
 
-#: airtime_mvc/application/controllers/LocaleController.php:165
+#: airtime_mvc/application/controllers/LocaleController.php:162
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:109
 #: airtime_mvc/application/models/Block.php:1398
 msgid "is greater than"
 msgstr "је већи од"
 
-#: airtime_mvc/application/controllers/LocaleController.php:166
+#: airtime_mvc/application/controllers/LocaleController.php:163
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:110
 #: airtime_mvc/application/models/Block.php:1399
 msgid "is less than"
 msgstr "је мањи од"
 
-#: airtime_mvc/application/controllers/LocaleController.php:167
+#: airtime_mvc/application/controllers/LocaleController.php:164
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:111
 #: airtime_mvc/application/models/Block.php:1400
 msgid "is in the range"
 msgstr "је у опсегу"
 
-#: airtime_mvc/application/controllers/LocaleController.php:169
+#: airtime_mvc/application/controllers/LocaleController.php:166
 msgid "Choose Storage Folder"
 msgstr "Одабери Мапу за Складиштење"
 
-#: airtime_mvc/application/controllers/LocaleController.php:170
+#: airtime_mvc/application/controllers/LocaleController.php:167
 msgid "Choose Folder to Watch"
 msgstr "Одабери Мапу за Праћење"
 
-#: airtime_mvc/application/controllers/LocaleController.php:172
+#: airtime_mvc/application/controllers/LocaleController.php:169
 msgid ""
 "Are you sure you want to change the storage folder?\n"
 "This will remove the files from your Airtime library!"
@@ -1515,438 +1527,442 @@ msgstr ""
 "Јеси ли сигуран да желиш да промениш мапу за складиштење?\n"
 "То ће да уклони датотеке из твоје библиотеке!"
 
-#: airtime_mvc/application/controllers/LocaleController.php:173
+#: airtime_mvc/application/controllers/LocaleController.php:170
 #: airtime_mvc/application/views/scripts/preference/directory-config.phtml:2
 msgid "Manage Media Folders"
 msgstr "Управљање Медијске Мапе"
 
-#: airtime_mvc/application/controllers/LocaleController.php:174
+#: airtime_mvc/application/controllers/LocaleController.php:171
 msgid "Are you sure you want to remove the watched folder?"
 msgstr "Јеси ли сигуран да желиш да уклониш надзорску мапу?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:175
+#: airtime_mvc/application/controllers/LocaleController.php:172
 msgid "This path is currently not accessible."
 msgstr "Овај пут није тренутно доступан."
 
-#: airtime_mvc/application/controllers/LocaleController.php:177
+#: airtime_mvc/application/controllers/LocaleController.php:174
 #, php-format
 msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
 msgstr "Неке врсте емитовање захтевају додатну конфигурацију. Детаљи око омогућавања %sAAC+ Подршке%s или %sOpus Подршке%s су овде доступни."
 
-#: airtime_mvc/application/controllers/LocaleController.php:178
+#: airtime_mvc/application/controllers/LocaleController.php:175
 msgid "Connected to the streaming server"
 msgstr "Прикључен је на серверу"
 
-#: airtime_mvc/application/controllers/LocaleController.php:179
+#: airtime_mvc/application/controllers/LocaleController.php:176
 msgid "The stream is disabled"
 msgstr "Пренос је онемогућен"
 
-#: airtime_mvc/application/controllers/LocaleController.php:180
+#: airtime_mvc/application/controllers/LocaleController.php:177
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:191
 msgid "Getting information from the server..."
 msgstr "Добијање информација са сервера..."
 
-#: airtime_mvc/application/controllers/LocaleController.php:181
+#: airtime_mvc/application/controllers/LocaleController.php:178
 msgid "Can not connect to the streaming server"
 msgstr "Не може да се повеже на серверу"
 
-#: airtime_mvc/application/controllers/LocaleController.php:183
+#: airtime_mvc/application/controllers/LocaleController.php:180
 msgid "If Airtime is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."
 msgstr "Ако је иза Airtime-а рутер или заштитни зид, можда мораш да конфигуришеш поље порта прослеђивање и ово информационо поље ће да буде нетачан. У том случају мораћеш ручно да ажурираш ово поље, да би показао тачноhost/port/mount да се могу да повеже твоји диск-џокеји. Допуштени опсег је између 1024 и 49151."
 
-#: airtime_mvc/application/controllers/LocaleController.php:184
+#: airtime_mvc/application/controllers/LocaleController.php:181
 #, php-format
 msgid "For more details, please read the %sAirtime Manual%s"
 msgstr "За више детаља, прочитај %sУпутству за употребу%s"
 
-#: airtime_mvc/application/controllers/LocaleController.php:186
+#: airtime_mvc/application/controllers/LocaleController.php:183
 msgid "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
 msgstr "Провери ову опцију како би се омогућило метаподатака за OGG потоке."
 
-#: airtime_mvc/application/controllers/LocaleController.php:187
+#: airtime_mvc/application/controllers/LocaleController.php:184
 msgid "Check this box to automatically switch off Master/Show source upon source disconnection."
 msgstr "Провери ову кућицу за аутоматско искључење Мајстор/Емисија извора, након престанка рада извора."
 
-#: airtime_mvc/application/controllers/LocaleController.php:188
+#: airtime_mvc/application/controllers/LocaleController.php:185
 msgid "Check this box to automatically switch on Master/Show source upon source connection."
 msgstr "Провери ову кућицу за аутоматско пребацивање на Мајстор/Емисија извора, након што је спојен извор."
 
-#: airtime_mvc/application/controllers/LocaleController.php:189
+#: airtime_mvc/application/controllers/LocaleController.php:186
 msgid "If your Icecast server expects a username of 'source', this field can be left blank."
 msgstr "Ако твој Icecast сервер очекује корисничко име из 'извора', ово поље може да остане празно."
 
-#: airtime_mvc/application/controllers/LocaleController.php:190
-#: airtime_mvc/application/controllers/LocaleController.php:200
+#: airtime_mvc/application/controllers/LocaleController.php:187
+#: airtime_mvc/application/controllers/LocaleController.php:197
 msgid "If your live streaming client does not ask for a username, this field should be 'source'."
 msgstr "Ако твој 'live streaming' клијент не пита за корисничко име, ово поље требало да буде 'извор'."
 
-#: airtime_mvc/application/controllers/LocaleController.php:191
+#: airtime_mvc/application/controllers/LocaleController.php:188
 msgid "WARNING: This will restart your stream and may cause a short dropout for your listeners!"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:192
+#: airtime_mvc/application/controllers/LocaleController.php:189
 msgid "This is the admin username and password for Icecast/SHOUTcast to get listener statistics."
 msgstr "Ово је админ корисничко име и лозинка за Icecast/SHOUTcast да би добио слушатељску статистику."
 
-#: airtime_mvc/application/controllers/LocaleController.php:196
+#: airtime_mvc/application/controllers/LocaleController.php:193
 msgid "Warning: You cannot change this field while the show is currently playing"
 msgstr "Упозорење: Не можеш променити садржај поља, док се садашња емисија не завршава"
 
-#: airtime_mvc/application/controllers/LocaleController.php:197
+#: airtime_mvc/application/controllers/LocaleController.php:194
 msgid "No result found"
 msgstr "Нема пронађених резултата"
 
-#: airtime_mvc/application/controllers/LocaleController.php:198
+#: airtime_mvc/application/controllers/LocaleController.php:195
 msgid "This follows the same security pattern for the shows: only users assigned to the show can connect."
 msgstr "То следи исти образац безбедности за емисије: само додељени корисници могу да се повеже на емисију."
 
-#: airtime_mvc/application/controllers/LocaleController.php:199
+#: airtime_mvc/application/controllers/LocaleController.php:196
 msgid "Specify custom authentication which will work only for this show."
 msgstr "Одреди прилагођене аутентификације које ће да се уважи само за ову емисију."
 
-#: airtime_mvc/application/controllers/LocaleController.php:201
+#: airtime_mvc/application/controllers/LocaleController.php:198
 msgid "The show instance doesn't exist anymore!"
 msgstr "Емисија у овом случају више не постоји!"
 
-#: airtime_mvc/application/controllers/LocaleController.php:202
+#: airtime_mvc/application/controllers/LocaleController.php:199
 msgid "Warning: Shows cannot be re-linked"
 msgstr "Упозорење: Емисије не може поново да се повеже"
 
-#: airtime_mvc/application/controllers/LocaleController.php:203
+#: airtime_mvc/application/controllers/LocaleController.php:200
 msgid "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"
 msgstr "Повезивањем своје понављајуће емисије свака заказана медијска става у свакој понављајућим емисијама добиће исти распоред такође и у другим понављајућим емисијама"
 
-#: airtime_mvc/application/controllers/LocaleController.php:204
+#: airtime_mvc/application/controllers/LocaleController.php:201
 msgid "Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the Interface Timezone in your user settings."
 msgstr "Временска зона је постављена по станичну зону према задатим. Емисије у календару ће се да прикаже по твојим локалном времену која је дефинисана у интерфејса временске зоне у твојим корисничким поставци."
 
-#: airtime_mvc/application/controllers/LocaleController.php:208
+#: airtime_mvc/application/controllers/LocaleController.php:205
 msgid "Show"
 msgstr "Емисија"
 
-#: airtime_mvc/application/controllers/LocaleController.php:209
+#: airtime_mvc/application/controllers/LocaleController.php:206
 msgid "Show is empty"
 msgstr "Емисија је празна"
 
-#: airtime_mvc/application/controllers/LocaleController.php:210
+#: airtime_mvc/application/controllers/LocaleController.php:207
 msgid "1m"
 msgstr "1m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:211
+#: airtime_mvc/application/controllers/LocaleController.php:208
 msgid "5m"
 msgstr "5m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:212
+#: airtime_mvc/application/controllers/LocaleController.php:209
 msgid "10m"
 msgstr "10m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:213
+#: airtime_mvc/application/controllers/LocaleController.php:210
 msgid "15m"
 msgstr "15m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:214
+#: airtime_mvc/application/controllers/LocaleController.php:211
 msgid "30m"
 msgstr "30m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:215
+#: airtime_mvc/application/controllers/LocaleController.php:212
 msgid "60m"
 msgstr "60m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:217
+#: airtime_mvc/application/controllers/LocaleController.php:214
 msgid "Retreiving data from the server..."
 msgstr "Добијање података са сервера..."
 
-#: airtime_mvc/application/controllers/LocaleController.php:223
+#: airtime_mvc/application/controllers/LocaleController.php:220
 msgid "This show has no scheduled content."
 msgstr "Ова емисија нема заказаног садржаја."
 
-#: airtime_mvc/application/controllers/LocaleController.php:224
+#: airtime_mvc/application/controllers/LocaleController.php:221
 msgid "This show is not completely filled with content."
 msgstr "Ова емисија није у потпуности испуњена са садржајем."
 
-#: airtime_mvc/application/controllers/LocaleController.php:228
+#: airtime_mvc/application/controllers/LocaleController.php:225
 msgid "January"
 msgstr "Јануар"
 
-#: airtime_mvc/application/controllers/LocaleController.php:229
+#: airtime_mvc/application/controllers/LocaleController.php:226
 msgid "February"
 msgstr "Фебруар"
 
-#: airtime_mvc/application/controllers/LocaleController.php:230
+#: airtime_mvc/application/controllers/LocaleController.php:227
 msgid "March"
 msgstr "Март"
 
-#: airtime_mvc/application/controllers/LocaleController.php:231
+#: airtime_mvc/application/controllers/LocaleController.php:228
 msgid "April"
 msgstr "Април"
 
-#: airtime_mvc/application/controllers/LocaleController.php:232
-#: airtime_mvc/application/controllers/LocaleController.php:244
+#: airtime_mvc/application/controllers/LocaleController.php:229
+#: airtime_mvc/application/controllers/LocaleController.php:241
 msgid "May"
 msgstr "Мај"
 
-#: airtime_mvc/application/controllers/LocaleController.php:233
+#: airtime_mvc/application/controllers/LocaleController.php:230
 msgid "June"
 msgstr "Јун"
 
-#: airtime_mvc/application/controllers/LocaleController.php:234
+#: airtime_mvc/application/controllers/LocaleController.php:231
 msgid "July"
 msgstr "Јул"
 
-#: airtime_mvc/application/controllers/LocaleController.php:235
+#: airtime_mvc/application/controllers/LocaleController.php:232
 msgid "August"
 msgstr "Август"
 
-#: airtime_mvc/application/controllers/LocaleController.php:236
+#: airtime_mvc/application/controllers/LocaleController.php:233
 msgid "September"
 msgstr "Септембар"
 
-#: airtime_mvc/application/controllers/LocaleController.php:237
+#: airtime_mvc/application/controllers/LocaleController.php:234
 msgid "October"
 msgstr "Октобар"
 
-#: airtime_mvc/application/controllers/LocaleController.php:238
+#: airtime_mvc/application/controllers/LocaleController.php:235
 msgid "November"
 msgstr "Новембар"
 
-#: airtime_mvc/application/controllers/LocaleController.php:239
+#: airtime_mvc/application/controllers/LocaleController.php:236
 msgid "December"
 msgstr "Децембар"
 
-#: airtime_mvc/application/controllers/LocaleController.php:240
+#: airtime_mvc/application/controllers/LocaleController.php:237
 msgid "Jan"
 msgstr "Јан"
 
-#: airtime_mvc/application/controllers/LocaleController.php:241
+#: airtime_mvc/application/controllers/LocaleController.php:238
 msgid "Feb"
 msgstr "Феб"
 
-#: airtime_mvc/application/controllers/LocaleController.php:242
+#: airtime_mvc/application/controllers/LocaleController.php:239
 msgid "Mar"
 msgstr "Мар"
 
-#: airtime_mvc/application/controllers/LocaleController.php:243
+#: airtime_mvc/application/controllers/LocaleController.php:240
 msgid "Apr"
 msgstr "Апр"
 
-#: airtime_mvc/application/controllers/LocaleController.php:245
+#: airtime_mvc/application/controllers/LocaleController.php:242
 msgid "Jun"
 msgstr "Јун"
 
-#: airtime_mvc/application/controllers/LocaleController.php:246
+#: airtime_mvc/application/controllers/LocaleController.php:243
 msgid "Jul"
 msgstr "Јул"
 
-#: airtime_mvc/application/controllers/LocaleController.php:247
+#: airtime_mvc/application/controllers/LocaleController.php:244
 msgid "Aug"
 msgstr "Авг"
 
-#: airtime_mvc/application/controllers/LocaleController.php:248
+#: airtime_mvc/application/controllers/LocaleController.php:245
 msgid "Sep"
 msgstr "Сеп"
 
-#: airtime_mvc/application/controllers/LocaleController.php:249
+#: airtime_mvc/application/controllers/LocaleController.php:246
 msgid "Oct"
 msgstr "Окт"
 
-#: airtime_mvc/application/controllers/LocaleController.php:250
+#: airtime_mvc/application/controllers/LocaleController.php:247
 msgid "Nov"
 msgstr "Нов"
 
-#: airtime_mvc/application/controllers/LocaleController.php:251
+#: airtime_mvc/application/controllers/LocaleController.php:248
 msgid "Dec"
 msgstr "Дец"
 
-#: airtime_mvc/application/controllers/LocaleController.php:252
+#: airtime_mvc/application/controllers/LocaleController.php:249
 msgid "Today"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:253
+#: airtime_mvc/application/controllers/LocaleController.php:250
 msgid "Day"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:254
+#: airtime_mvc/application/controllers/LocaleController.php:251
 msgid "Week"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:255
+#: airtime_mvc/application/controllers/LocaleController.php:252
 msgid "Month"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:256
+#: airtime_mvc/application/controllers/LocaleController.php:253
 #: airtime_mvc/application/forms/GeneralPreferences.php:185
 msgid "Sunday"
 msgstr "Недеља"
 
-#: airtime_mvc/application/controllers/LocaleController.php:257
+#: airtime_mvc/application/controllers/LocaleController.php:254
 #: airtime_mvc/application/forms/GeneralPreferences.php:186
 msgid "Monday"
 msgstr "Понедељак"
 
-#: airtime_mvc/application/controllers/LocaleController.php:258
+#: airtime_mvc/application/controllers/LocaleController.php:255
 #: airtime_mvc/application/forms/GeneralPreferences.php:187
 msgid "Tuesday"
 msgstr "Уторак"
 
-#: airtime_mvc/application/controllers/LocaleController.php:259
+#: airtime_mvc/application/controllers/LocaleController.php:256
 #: airtime_mvc/application/forms/GeneralPreferences.php:188
 msgid "Wednesday"
 msgstr "Среда"
 
-#: airtime_mvc/application/controllers/LocaleController.php:260
+#: airtime_mvc/application/controllers/LocaleController.php:257
 #: airtime_mvc/application/forms/GeneralPreferences.php:189
 msgid "Thursday"
 msgstr "Четвртак"
 
-#: airtime_mvc/application/controllers/LocaleController.php:261
+#: airtime_mvc/application/controllers/LocaleController.php:258
 #: airtime_mvc/application/forms/GeneralPreferences.php:190
 msgid "Friday"
 msgstr "Петак"
 
-#: airtime_mvc/application/controllers/LocaleController.php:262
+#: airtime_mvc/application/controllers/LocaleController.php:259
 #: airtime_mvc/application/forms/GeneralPreferences.php:191
 msgid "Saturday"
 msgstr "Субота"
 
-#: airtime_mvc/application/controllers/LocaleController.php:263
+#: airtime_mvc/application/controllers/LocaleController.php:260
 #: airtime_mvc/application/forms/AddShowRepeats.php:35
 msgid "Sun"
 msgstr "Нед"
 
-#: airtime_mvc/application/controllers/LocaleController.php:264
+#: airtime_mvc/application/controllers/LocaleController.php:261
 #: airtime_mvc/application/forms/AddShowRepeats.php:36
 msgid "Mon"
 msgstr "Пон"
 
-#: airtime_mvc/application/controllers/LocaleController.php:265
+#: airtime_mvc/application/controllers/LocaleController.php:262
 #: airtime_mvc/application/forms/AddShowRepeats.php:37
 msgid "Tue"
 msgstr "Уто"
 
-#: airtime_mvc/application/controllers/LocaleController.php:266
+#: airtime_mvc/application/controllers/LocaleController.php:263
 #: airtime_mvc/application/forms/AddShowRepeats.php:38
 msgid "Wed"
 msgstr "Сре"
 
-#: airtime_mvc/application/controllers/LocaleController.php:267
+#: airtime_mvc/application/controllers/LocaleController.php:264
 #: airtime_mvc/application/forms/AddShowRepeats.php:39
 msgid "Thu"
 msgstr "Чет"
 
-#: airtime_mvc/application/controllers/LocaleController.php:268
+#: airtime_mvc/application/controllers/LocaleController.php:265
 #: airtime_mvc/application/forms/AddShowRepeats.php:40
 msgid "Fri"
 msgstr "Пет"
 
-#: airtime_mvc/application/controllers/LocaleController.php:269
+#: airtime_mvc/application/controllers/LocaleController.php:266
 #: airtime_mvc/application/forms/AddShowRepeats.php:41
 msgid "Sat"
 msgstr "Суб"
 
-#: airtime_mvc/application/controllers/LocaleController.php:270
+#: airtime_mvc/application/controllers/LocaleController.php:267
 msgid "Shows longer than their scheduled time will be cut off by a following show."
 msgstr "Емисија дуже од предвиђеног времена ће да буде одсечен."
 
-#: airtime_mvc/application/controllers/LocaleController.php:271
+#: airtime_mvc/application/controllers/LocaleController.php:268
 msgid "Cancel Current Show?"
 msgstr "Откажи Тренутног Програма?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:272
-#: airtime_mvc/application/controllers/LocaleController.php:319
+#: airtime_mvc/application/controllers/LocaleController.php:269
+#: airtime_mvc/application/controllers/LocaleController.php:317
 msgid "Stop recording current show?"
 msgstr "Заустављање снимање емисије?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:273
+#: airtime_mvc/application/controllers/LocaleController.php:270
 msgid "Ok"
 msgstr "Ок"
 
-#: airtime_mvc/application/controllers/LocaleController.php:274
+#: airtime_mvc/application/controllers/LocaleController.php:271
 msgid "Contents of Show"
 msgstr "Садржај Емисије"
 
-#: airtime_mvc/application/controllers/LocaleController.php:277
+#: airtime_mvc/application/controllers/LocaleController.php:274
 msgid "Remove all content?"
 msgstr "Уклониш све садржаје?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:279
+#: airtime_mvc/application/controllers/LocaleController.php:276
 msgid "Delete selected item(s)?"
 msgstr "Обришеш ли одабрану (е) ставу (е)?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:280
+#: airtime_mvc/application/controllers/LocaleController.php:277
 #: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:5
 msgid "Start"
 msgstr "Почетак"
 
-#: airtime_mvc/application/controllers/LocaleController.php:281
+#: airtime_mvc/application/controllers/LocaleController.php:278
 msgid "End"
 msgstr "Завршетак"
 
-#: airtime_mvc/application/controllers/LocaleController.php:282
+#: airtime_mvc/application/controllers/LocaleController.php:279
 msgid "Duration"
 msgstr "Трајање"
 
-#: airtime_mvc/application/controllers/LocaleController.php:283
+#: airtime_mvc/application/controllers/LocaleController.php:280
 msgid "Filtering out "
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:284
+#: airtime_mvc/application/controllers/LocaleController.php:281
 msgid " of "
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:285
+#: airtime_mvc/application/controllers/LocaleController.php:282
 msgid " records"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:291
+#: airtime_mvc/application/controllers/LocaleController.php:283
+msgid "There are no shows scheduled during the specified time period."
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:289
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:57
 #: airtime_mvc/application/layouts/scripts/layout.phtml:148
 #: airtime_mvc/application/models/Block.php:1363
 msgid "Cue In"
 msgstr "Cue In"
 
-#: airtime_mvc/application/controllers/LocaleController.php:292
+#: airtime_mvc/application/controllers/LocaleController.php:290
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:58
 #: airtime_mvc/application/layouts/scripts/layout.phtml:155
 #: airtime_mvc/application/models/Block.php:1364
 msgid "Cue Out"
 msgstr "Cue Out"
 
-#: airtime_mvc/application/controllers/LocaleController.php:293
+#: airtime_mvc/application/controllers/LocaleController.php:291
 #: airtime_mvc/application/layouts/scripts/layout.phtml:175
 msgid "Fade In"
 msgstr "Одтамњење"
 
-#: airtime_mvc/application/controllers/LocaleController.php:294
+#: airtime_mvc/application/controllers/LocaleController.php:292
 #: airtime_mvc/application/layouts/scripts/layout.phtml:176
 msgid "Fade Out"
 msgstr "Затамњење"
 
-#: airtime_mvc/application/controllers/LocaleController.php:295
+#: airtime_mvc/application/controllers/LocaleController.php:293
 msgid "Show Empty"
 msgstr "Празна Емисија"
 
-#: airtime_mvc/application/controllers/LocaleController.php:296
+#: airtime_mvc/application/controllers/LocaleController.php:294
 msgid "Recording From Line In"
 msgstr "Снимање са Line In"
 
-#: airtime_mvc/application/controllers/LocaleController.php:297
+#: airtime_mvc/application/controllers/LocaleController.php:295
 msgid "Track preview"
 msgstr "Преглед песма"
 
-#: airtime_mvc/application/controllers/LocaleController.php:301
+#: airtime_mvc/application/controllers/LocaleController.php:299
 msgid "Cannot schedule outside a show."
 msgstr "Не може да се заказује ван емисије."
 
-#: airtime_mvc/application/controllers/LocaleController.php:302
+#: airtime_mvc/application/controllers/LocaleController.php:300
 msgid "Moving 1 Item"
 msgstr "Премештање 1 Ставка"
 
-#: airtime_mvc/application/controllers/LocaleController.php:303
+#: airtime_mvc/application/controllers/LocaleController.php:301
 #, php-format
 msgid "Moving %s Items"
 msgstr "Премештање %s Ставке"
 
-#: airtime_mvc/application/controllers/LocaleController.php:304
+#: airtime_mvc/application/controllers/LocaleController.php:302
 #: airtime_mvc/application/forms/AddUser.php:109
 #: airtime_mvc/application/forms/EditAudioMD.php:216
 #: airtime_mvc/application/forms/EditHistory.php:131
@@ -1966,8 +1982,8 @@ msgstr "Премештање %s Ставке"
 msgid "Save"
 msgstr "Сачувај"
 
-#: airtime_mvc/application/controllers/LocaleController.php:305
-#: airtime_mvc/application/controllers/LocaleController.php:328
+#: airtime_mvc/application/controllers/LocaleController.php:303
+#: airtime_mvc/application/controllers/LocaleController.php:326
 #: airtime_mvc/application/forms/EditAudioMD.php:206
 #: airtime_mvc/application/forms/EditHistory.php:141
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:75
@@ -1977,393 +1993,393 @@ msgstr "Сачувај"
 msgid "Cancel"
 msgstr "Одустани"
 
-#: airtime_mvc/application/controllers/LocaleController.php:306
+#: airtime_mvc/application/controllers/LocaleController.php:304
 msgid "Fade Editor"
 msgstr "Уређивач за (Од-/За-)тамњивање"
 
-#: airtime_mvc/application/controllers/LocaleController.php:307
+#: airtime_mvc/application/controllers/LocaleController.php:305
 msgid "Cue Editor"
 msgstr "Cue Уређивач"
 
-#: airtime_mvc/application/controllers/LocaleController.php:308
+#: airtime_mvc/application/controllers/LocaleController.php:306
 msgid "Waveform features are available in a browser supporting the Web Audio API"
 msgstr "Таласни облик функције су доступне у споредну Web Audio API прегледачу"
 
-#: airtime_mvc/application/controllers/LocaleController.php:311
+#: airtime_mvc/application/controllers/LocaleController.php:309
 msgid "Select all"
 msgstr "Одабери све"
 
-#: airtime_mvc/application/controllers/LocaleController.php:312
+#: airtime_mvc/application/controllers/LocaleController.php:310
 msgid "Select none"
 msgstr "Не одабери ништа"
 
-#: airtime_mvc/application/controllers/LocaleController.php:313
+#: airtime_mvc/application/controllers/LocaleController.php:311
 msgid "Trim overbooked shows"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:314
+#: airtime_mvc/application/controllers/LocaleController.php:312
 msgid "Remove selected scheduled items"
 msgstr "Уклони одабране заказане ставке"
 
-#: airtime_mvc/application/controllers/LocaleController.php:315
+#: airtime_mvc/application/controllers/LocaleController.php:313
 msgid "Jump to the current playing track"
 msgstr "Скочи на тренутну свирану песму"
 
-#: airtime_mvc/application/controllers/LocaleController.php:316
+#: airtime_mvc/application/controllers/LocaleController.php:314
 msgid "Cancel current show"
 msgstr "Поништи тренутну емисију"
 
-#: airtime_mvc/application/controllers/LocaleController.php:321
+#: airtime_mvc/application/controllers/LocaleController.php:319
 msgid "Open library to add or remove content"
 msgstr "Отвори библиотеку за додавање или уклањање садржаја"
 
-#: airtime_mvc/application/controllers/LocaleController.php:322
+#: airtime_mvc/application/controllers/LocaleController.php:320
 msgid "Add / Remove Content"
 msgstr "Додај / Уклони Садржај"
 
-#: airtime_mvc/application/controllers/LocaleController.php:324
+#: airtime_mvc/application/controllers/LocaleController.php:322
 #: airtime_mvc/application/views/scripts/listenerstat/index.phtml:25
 #: airtime_mvc/application/views/scripts/plupload/index.phtml:49
 msgid "in use"
 msgstr "у употреби"
 
-#: airtime_mvc/application/controllers/LocaleController.php:325
+#: airtime_mvc/application/controllers/LocaleController.php:323
 msgid "Disk"
 msgstr "Диск"
 
-#: airtime_mvc/application/controllers/LocaleController.php:327
+#: airtime_mvc/application/controllers/LocaleController.php:325
 msgid "Look in"
 msgstr "Погледај унутра"
 
-#: airtime_mvc/application/controllers/LocaleController.php:329
+#: airtime_mvc/application/controllers/LocaleController.php:327
 msgid "Open"
 msgstr "Отвори"
 
-#: airtime_mvc/application/controllers/LocaleController.php:331
+#: airtime_mvc/application/controllers/LocaleController.php:329
 #: airtime_mvc/application/forms/AddUser.php:101
 msgid "Admin"
 msgstr "Администратор"
 
-#: airtime_mvc/application/controllers/LocaleController.php:332
+#: airtime_mvc/application/controllers/LocaleController.php:330
 #: airtime_mvc/application/forms/AddUser.php:99
 msgid "DJ"
 msgstr "Диск-џокеј"
 
-#: airtime_mvc/application/controllers/LocaleController.php:333
+#: airtime_mvc/application/controllers/LocaleController.php:331
 #: airtime_mvc/application/forms/AddUser.php:100
 msgid "Program Manager"
 msgstr "Водитељ Програма"
 
-#: airtime_mvc/application/controllers/LocaleController.php:334
+#: airtime_mvc/application/controllers/LocaleController.php:332
 #: airtime_mvc/application/forms/AddUser.php:98
 msgid "Guest"
 msgstr "Гост"
 
-#: airtime_mvc/application/controllers/LocaleController.php:335
+#: airtime_mvc/application/controllers/LocaleController.php:333
 msgid "Guests can do the following:"
 msgstr "Гости могу да уради следеће:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:336
+#: airtime_mvc/application/controllers/LocaleController.php:334
 msgid "View schedule"
 msgstr "Преглед распореда"
 
-#: airtime_mvc/application/controllers/LocaleController.php:337
+#: airtime_mvc/application/controllers/LocaleController.php:335
 msgid "View show content"
 msgstr "Преглед садржај емисије"
 
-#: airtime_mvc/application/controllers/LocaleController.php:338
+#: airtime_mvc/application/controllers/LocaleController.php:336
 msgid "DJs can do the following:"
 msgstr "Диск-џокеји могу да уради следеће:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:339
+#: airtime_mvc/application/controllers/LocaleController.php:337
 msgid "Manage assigned show content"
 msgstr "Управљање додељен садржај емисије"
 
-#: airtime_mvc/application/controllers/LocaleController.php:340
+#: airtime_mvc/application/controllers/LocaleController.php:338
 msgid "Import media files"
 msgstr "Увоз медијске фајлове"
 
-#: airtime_mvc/application/controllers/LocaleController.php:341
+#: airtime_mvc/application/controllers/LocaleController.php:339
 msgid "Create playlists, smart blocks, and webstreams"
 msgstr "Изради листе песама, паметне блокове, и преносе"
 
-#: airtime_mvc/application/controllers/LocaleController.php:342
+#: airtime_mvc/application/controllers/LocaleController.php:340
 msgid "Manage their own library content"
 msgstr "Управљање своје библиотечког садржаја"
 
-#: airtime_mvc/application/controllers/LocaleController.php:343
+#: airtime_mvc/application/controllers/LocaleController.php:341
 msgid "Progam Managers can do the following:"
 msgstr "Менаџер програма могу да уради следеће:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:344
+#: airtime_mvc/application/controllers/LocaleController.php:342
 msgid "View and manage show content"
 msgstr "Приказ и управљање садржај емисије"
 
-#: airtime_mvc/application/controllers/LocaleController.php:345
+#: airtime_mvc/application/controllers/LocaleController.php:343
 msgid "Schedule shows"
 msgstr "Распоредне емисије"
 
-#: airtime_mvc/application/controllers/LocaleController.php:346
+#: airtime_mvc/application/controllers/LocaleController.php:344
 msgid "Manage all library content"
 msgstr "Управљање све садржаје библиотека"
 
-#: airtime_mvc/application/controllers/LocaleController.php:347
+#: airtime_mvc/application/controllers/LocaleController.php:345
 msgid "Admins can do the following:"
 msgstr "Администратори могу да уради следеће:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:348
+#: airtime_mvc/application/controllers/LocaleController.php:346
 msgid "Manage preferences"
 msgstr "Управљање подешавања"
 
-#: airtime_mvc/application/controllers/LocaleController.php:349
+#: airtime_mvc/application/controllers/LocaleController.php:347
 msgid "Manage users"
 msgstr "Управљање кориснике"
 
-#: airtime_mvc/application/controllers/LocaleController.php:350
+#: airtime_mvc/application/controllers/LocaleController.php:348
 msgid "Manage watched folders"
 msgstr "Управљање надзираних датотеке"
 
-#: airtime_mvc/application/controllers/LocaleController.php:351
+#: airtime_mvc/application/controllers/LocaleController.php:349
 #: airtime_mvc/application/forms/RegisterAirtime.php:116
 #: airtime_mvc/application/forms/SupportSettings.php:98
 msgid "Send support feedback"
 msgstr "Пошаљи повратне информације"
 
-#: airtime_mvc/application/controllers/LocaleController.php:352
+#: airtime_mvc/application/controllers/LocaleController.php:350
 msgid "View system status"
 msgstr "Преглед стања система"
 
-#: airtime_mvc/application/controllers/LocaleController.php:353
+#: airtime_mvc/application/controllers/LocaleController.php:351
 msgid "Access playout history"
 msgstr "Приступ за историју пуштених песама"
 
-#: airtime_mvc/application/controllers/LocaleController.php:354
+#: airtime_mvc/application/controllers/LocaleController.php:352
 msgid "View listener stats"
 msgstr "Погледај статистику слушаоце"
 
-#: airtime_mvc/application/controllers/LocaleController.php:356
+#: airtime_mvc/application/controllers/LocaleController.php:354
 msgid "Show / hide columns"
 msgstr "Покажи/сакриј колоне"
 
-#: airtime_mvc/application/controllers/LocaleController.php:358
+#: airtime_mvc/application/controllers/LocaleController.php:356
 msgid "From {from} to {to}"
 msgstr "Од {from} до {to}"
 
-#: airtime_mvc/application/controllers/LocaleController.php:359
+#: airtime_mvc/application/controllers/LocaleController.php:357
 msgid "kbps"
 msgstr "kbps"
 
-#: airtime_mvc/application/controllers/LocaleController.php:360
+#: airtime_mvc/application/controllers/LocaleController.php:358
 msgid "yyyy-mm-dd"
 msgstr "гггг-мм-дд"
 
-#: airtime_mvc/application/controllers/LocaleController.php:361
+#: airtime_mvc/application/controllers/LocaleController.php:359
 msgid "hh:mm:ss.t"
 msgstr "hh:mm:ss.t"
 
-#: airtime_mvc/application/controllers/LocaleController.php:362
+#: airtime_mvc/application/controllers/LocaleController.php:360
 msgid "kHz"
 msgstr "kHz"
 
-#: airtime_mvc/application/controllers/LocaleController.php:365
+#: airtime_mvc/application/controllers/LocaleController.php:363
 msgid "Su"
 msgstr "Не"
 
-#: airtime_mvc/application/controllers/LocaleController.php:366
+#: airtime_mvc/application/controllers/LocaleController.php:364
 msgid "Mo"
 msgstr "По"
 
-#: airtime_mvc/application/controllers/LocaleController.php:367
+#: airtime_mvc/application/controllers/LocaleController.php:365
 msgid "Tu"
 msgstr "Ут"
 
-#: airtime_mvc/application/controllers/LocaleController.php:368
+#: airtime_mvc/application/controllers/LocaleController.php:366
 msgid "We"
 msgstr "Ср"
 
-#: airtime_mvc/application/controllers/LocaleController.php:369
+#: airtime_mvc/application/controllers/LocaleController.php:367
 msgid "Th"
 msgstr "Че"
 
-#: airtime_mvc/application/controllers/LocaleController.php:370
+#: airtime_mvc/application/controllers/LocaleController.php:368
 msgid "Fr"
 msgstr "Пе"
 
-#: airtime_mvc/application/controllers/LocaleController.php:371
+#: airtime_mvc/application/controllers/LocaleController.php:369
 msgid "Sa"
 msgstr "Су"
 
-#: airtime_mvc/application/controllers/LocaleController.php:372
-#: airtime_mvc/application/controllers/LocaleController.php:400
+#: airtime_mvc/application/controllers/LocaleController.php:370
+#: airtime_mvc/application/controllers/LocaleController.php:398
 #: airtime_mvc/application/views/scripts/library/publish-dialog.phtml:49
 #: airtime_mvc/application/views/scripts/podcast/featureupgrade-pane.phtml:17
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:3
 msgid "Close"
 msgstr "Затвори"
 
-#: airtime_mvc/application/controllers/LocaleController.php:374
+#: airtime_mvc/application/controllers/LocaleController.php:372
 msgid "Hour"
 msgstr "Сат"
 
-#: airtime_mvc/application/controllers/LocaleController.php:375
+#: airtime_mvc/application/controllers/LocaleController.php:373
 msgid "Minute"
 msgstr "Минута"
 
-#: airtime_mvc/application/controllers/LocaleController.php:376
+#: airtime_mvc/application/controllers/LocaleController.php:374
 msgid "Done"
 msgstr "Готово"
 
-#: airtime_mvc/application/controllers/LocaleController.php:379
+#: airtime_mvc/application/controllers/LocaleController.php:377
 msgid "Select files"
 msgstr "Изабери датотеке"
 
-#: airtime_mvc/application/controllers/LocaleController.php:380
-#: airtime_mvc/application/controllers/LocaleController.php:381
+#: airtime_mvc/application/controllers/LocaleController.php:378
+#: airtime_mvc/application/controllers/LocaleController.php:379
 msgid "Add files to the upload queue and click the start button."
 msgstr "Додај датотеке и кликни на 'Покрени Upload' дугме."
 
-#: airtime_mvc/application/controllers/LocaleController.php:384
+#: airtime_mvc/application/controllers/LocaleController.php:382
 msgid "Add Files"
 msgstr "Додај Датотеке"
 
-#: airtime_mvc/application/controllers/LocaleController.php:385
+#: airtime_mvc/application/controllers/LocaleController.php:383
 msgid "Stop Upload"
 msgstr "Заустави Upload"
 
-#: airtime_mvc/application/controllers/LocaleController.php:386
+#: airtime_mvc/application/controllers/LocaleController.php:384
 msgid "Start upload"
 msgstr "Покрени upload"
 
-#: airtime_mvc/application/controllers/LocaleController.php:387
+#: airtime_mvc/application/controllers/LocaleController.php:385
 msgid "Add files"
 msgstr "Додај датотеке"
 
-#: airtime_mvc/application/controllers/LocaleController.php:388
+#: airtime_mvc/application/controllers/LocaleController.php:386
 #, php-format
 msgid "Uploaded %d/%d files"
 msgstr "Послата %d/%d датотека"
 
-#: airtime_mvc/application/controllers/LocaleController.php:389
+#: airtime_mvc/application/controllers/LocaleController.php:387
 msgid "N/A"
 msgstr "N/A"
 
-#: airtime_mvc/application/controllers/LocaleController.php:390
+#: airtime_mvc/application/controllers/LocaleController.php:388
 msgid "Drag files here."
 msgstr "Повуци датотеке овде."
 
-#: airtime_mvc/application/controllers/LocaleController.php:391
+#: airtime_mvc/application/controllers/LocaleController.php:389
 msgid "File extension error."
 msgstr "Грешка (ознаку типа датотеке)."
 
-#: airtime_mvc/application/controllers/LocaleController.php:392
+#: airtime_mvc/application/controllers/LocaleController.php:390
 msgid "File size error."
 msgstr "Грешка величине датотеке."
 
-#: airtime_mvc/application/controllers/LocaleController.php:393
+#: airtime_mvc/application/controllers/LocaleController.php:391
 msgid "File count error."
 msgstr "Грешка број датотеке."
 
-#: airtime_mvc/application/controllers/LocaleController.php:394
+#: airtime_mvc/application/controllers/LocaleController.php:392
 msgid "Init error."
 msgstr "Init грешка."
 
-#: airtime_mvc/application/controllers/LocaleController.php:395
+#: airtime_mvc/application/controllers/LocaleController.php:393
 msgid "HTTP Error."
 msgstr "HTTP Грешка."
 
-#: airtime_mvc/application/controllers/LocaleController.php:396
+#: airtime_mvc/application/controllers/LocaleController.php:394
 msgid "Security error."
 msgstr "Безбедносна грешка."
 
-#: airtime_mvc/application/controllers/LocaleController.php:397
+#: airtime_mvc/application/controllers/LocaleController.php:395
 msgid "Generic error."
 msgstr "Генеричка грешка."
 
-#: airtime_mvc/application/controllers/LocaleController.php:398
+#: airtime_mvc/application/controllers/LocaleController.php:396
 msgid "IO error."
 msgstr "IO грешка."
 
-#: airtime_mvc/application/controllers/LocaleController.php:399
+#: airtime_mvc/application/controllers/LocaleController.php:397
 #, php-format
 msgid "File: %s"
 msgstr "Фајл: %s"
 
-#: airtime_mvc/application/controllers/LocaleController.php:401
+#: airtime_mvc/application/controllers/LocaleController.php:399
 #, php-format
 msgid "%d files queued"
 msgstr "%d датотека на чекању"
 
-#: airtime_mvc/application/controllers/LocaleController.php:402
+#: airtime_mvc/application/controllers/LocaleController.php:400
 msgid "File: %f, size: %s, max file size: %m"
 msgstr "Датотека: %f, величина: %s, макс величина датотеке: %m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:403
+#: airtime_mvc/application/controllers/LocaleController.php:401
 msgid "Upload URL might be wrong or doesn't exist"
 msgstr "Преносни URL може да буде у криву или не постоји"
 
-#: airtime_mvc/application/controllers/LocaleController.php:404
+#: airtime_mvc/application/controllers/LocaleController.php:402
 msgid "Error: File too large: "
 msgstr "Грешка: Датотека је превелика:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:405
+#: airtime_mvc/application/controllers/LocaleController.php:403
 msgid "Error: Invalid file extension: "
 msgstr "Грешка: Неважећи ознак типа датотека:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:407
+#: airtime_mvc/application/controllers/LocaleController.php:405
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:27
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:58
 msgid "Set Default"
 msgstr "Постави Подразумевано"
 
-#: airtime_mvc/application/controllers/LocaleController.php:408
+#: airtime_mvc/application/controllers/LocaleController.php:406
 msgid "Create Entry"
 msgstr "Стварање Уноса"
 
-#: airtime_mvc/application/controllers/LocaleController.php:409
+#: airtime_mvc/application/controllers/LocaleController.php:407
 msgid "Edit History Record"
 msgstr "Уреди Историјат Уписа"
 
-#: airtime_mvc/application/controllers/LocaleController.php:410
+#: airtime_mvc/application/controllers/LocaleController.php:408
 #: airtime_mvc/application/forms/EditHistoryItem.php:57
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:53
 msgid "No Show"
 msgstr "Нема Програма"
 
-#: airtime_mvc/application/controllers/LocaleController.php:412
+#: airtime_mvc/application/controllers/LocaleController.php:410
 #, php-format
 msgid "Copied %s row%s to the clipboard"
 msgstr "%s ред%s је копиран у међумеморију"
 
-#: airtime_mvc/application/controllers/LocaleController.php:413
+#: airtime_mvc/application/controllers/LocaleController.php:411
 #, php-format
 msgid "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."
 msgstr "%sИспис поглед%sМолимо, користи прегледача штампање функцију за штампање ову табелу. Кад завршиш, притисни Escape."
 
-#: airtime_mvc/application/controllers/LocaleController.php:414
+#: airtime_mvc/application/controllers/LocaleController.php:412
 msgid "New Show"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:415
+#: airtime_mvc/application/controllers/LocaleController.php:413
 msgid "New Log Entry"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:434
+#: airtime_mvc/application/controllers/LocaleController.php:432
 msgid "Welcome to the new Airtime Pro!"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:436
+#: airtime_mvc/application/controllers/LocaleController.php:434
 msgid "On Air"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:437
+#: airtime_mvc/application/controllers/LocaleController.php:435
 msgid "Off Air"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:438
+#: airtime_mvc/application/controllers/LocaleController.php:436
 msgid "Offline"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:439
+#: airtime_mvc/application/controllers/LocaleController.php:437
 msgid "Nothing scheduled"
 msgstr ""
 
@@ -3141,6 +3157,7 @@ msgid "Show Source Mount:"
 msgstr ""
 
 #: airtime_mvc/application/forms/Login.php:81
+#: airtime_mvc/application/views/scripts/index/index.phtml:30
 #: airtime_mvc/application/views/scripts/login/index.phtml:3
 msgid "Login"
 msgstr "Пријава"
@@ -3838,6 +3855,8 @@ msgid "%s doesn't exist in the watched list."
 msgstr "%s не постоји у листи надзираних локације."
 
 #: airtime_mvc/application/models/Preference.php:470
+#: airtime_mvc/application/views/scripts/embed/player.phtml:398
+#: airtime_mvc/application/views/scripts/embed/weekly-program.phtml:96
 #, php-format
 msgid "Powered by %s"
 msgstr ""
@@ -3850,54 +3869,54 @@ msgstr "Одабери Државу"
 msgid "livestream"
 msgstr ""
 
-#: airtime_mvc/application/models/Scheduler.php:73
+#: airtime_mvc/application/models/Scheduler.php:77
 msgid "Cannot move items out of linked shows"
 msgstr "Не можеш да преместиш ставке из повезаних емисија"
 
-#: airtime_mvc/application/models/Scheduler.php:119
+#: airtime_mvc/application/models/Scheduler.php:123
 msgid "The schedule you're viewing is out of date! (sched mismatch)"
 msgstr "Застарео се прегледан распоред! (неважећи распоред)"
 
-#: airtime_mvc/application/models/Scheduler.php:124
+#: airtime_mvc/application/models/Scheduler.php:128
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
 msgstr "Застарео се прегледан распоред! (пример неусклађеност)"
 
-#: airtime_mvc/application/models/Scheduler.php:132
-#: airtime_mvc/application/models/Scheduler.php:477
-#: airtime_mvc/application/models/Scheduler.php:514
-#: airtime_mvc/application/models/Scheduler.php:549
+#: airtime_mvc/application/models/Scheduler.php:136
+#: airtime_mvc/application/models/Scheduler.php:481
+#: airtime_mvc/application/models/Scheduler.php:518
+#: airtime_mvc/application/models/Scheduler.php:553
 msgid "The schedule you're viewing is out of date!"
 msgstr "Застарео се прегледан распоред!"
 
-#: airtime_mvc/application/models/Scheduler.php:143
+#: airtime_mvc/application/models/Scheduler.php:147
 #, php-format
 msgid "You are not allowed to schedule show %s."
 msgstr "Не смеш да закажеш распоредну емисију %s."
 
-#: airtime_mvc/application/models/Scheduler.php:147
+#: airtime_mvc/application/models/Scheduler.php:151
 msgid "You cannot add files to recording shows."
 msgstr "Не можеш да додаш датотеке за снимљене емисије."
 
-#: airtime_mvc/application/models/Scheduler.php:153
+#: airtime_mvc/application/models/Scheduler.php:157
 #, php-format
 msgid "The show %s is over and cannot be scheduled."
 msgstr "Емисија %s је готова и не могу да буде заказана."
 
-#: airtime_mvc/application/models/Scheduler.php:160
+#: airtime_mvc/application/models/Scheduler.php:164
 #, php-format
 msgid "The show %s has been previously updated!"
 msgstr "Раније је %s емисија већ била ажурирана!"
 
-#: airtime_mvc/application/models/Scheduler.php:179
+#: airtime_mvc/application/models/Scheduler.php:183
 msgid "Content in linked shows cannot be changed while on air!"
 msgstr ""
 
-#: airtime_mvc/application/models/Scheduler.php:196
+#: airtime_mvc/application/models/Scheduler.php:200
 msgid "Cannot schedule a playlist that contains missing files."
 msgstr ""
 
-#: airtime_mvc/application/models/Scheduler.php:217
-#: airtime_mvc/application/models/Scheduler.php:306
+#: airtime_mvc/application/models/Scheduler.php:221
+#: airtime_mvc/application/models/Scheduler.php:310
 msgid "A selected File does not exist!"
 msgstr "Изабрани Фајл не постоји!"
 
@@ -4162,6 +4181,10 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/embed/player.phtml:393
 msgid "Next"
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/embed/weekly-program.phtml:87
+msgid "Looks like there are no shows scheduled on this day."
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/embeddablewidgets/facebook.phtml:5
@@ -5003,6 +5026,15 @@ msgstr "Нема преноса"
 #: airtime_mvc/public/setup/rabbitmq-setup.php:76
 msgid "Couldn't connect to RabbitMQ server! Please check if the server is running and your credentials are correct."
 msgstr ""
+
+#~ msgid "This version will soon be obsolete."
+#~ msgstr "Ова верзија ускоро ће да буде застарео."
+
+#~ msgid "This version is no longer supported."
+#~ msgstr "Ова верзија више није подржана."
+
+#~ msgid "Please upgrade to "
+#~ msgstr "Молимо надогради на"
 
 #~ msgid "please put in a time in seconds '00 (.0)'"
 #~ msgstr "молимо стави у време у секундама '00 (.0)'"
