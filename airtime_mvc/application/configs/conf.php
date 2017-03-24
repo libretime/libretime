@@ -73,10 +73,6 @@ class Config {
 
         $CC_CONFIG['apiKey'] = array($values['general']['api_key']);
         
-        if (defined('APPLICATION_ENV') && APPLICATION_ENV == "development"){
-            $CC_CONFIG['apiKey'][] = "";
-        }
-
         $CC_CONFIG['soundcloud-connection-retries'] = $values['soundcloud']['connection_retries'];
         $CC_CONFIG['soundcloud-connection-wait'] = $values['soundcloud']['time_between_retries'];
 

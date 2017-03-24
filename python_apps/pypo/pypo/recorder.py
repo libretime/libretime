@@ -95,7 +95,7 @@ class ShowRecorder(Thread):
         self.logger.info("starting record")
         self.logger.info("command " + command)
  
-        self.p = Popen(args,stdout=PIPE)
+        self.p = Popen(args,stdout=PIPE,stderr=PIPE)
 
         #blocks at the following line until the child process
         #quits
@@ -129,11 +129,10 @@ class ShowRecorder(Thread):
         # Register the streaming http handlers with urllib2
         register_openers()
 
-        # headers contains the necessary Content-Type and Content-Length
-        # datagen is a generator object that yields the encoded parameters
-        datagen, headers = multipart_encode({"file": open(filepath, "rb"), 'name': filename, 'show_instance': self.show_instance})
+        # files is what requests actually expects
+        files = {'file': open(filepath, "rb"), 'name': filename, 'show_instance': str(self.show_instance)}
 
-        self.api_client.upload_recorded_show(datagen, headers)
+        self.api_client.upload_recorded_show(files, self.show_instance)
 
     def set_metadata_and_save(self, filepath):
         """
