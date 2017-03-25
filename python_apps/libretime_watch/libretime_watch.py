@@ -3,6 +3,7 @@
 
 import codecs
 import datetime
+import json
 import logging
 import os
 import pika
@@ -258,12 +259,24 @@ def connect_to_messaging_server():
 
 def msg_received_callback (channel, method, properties,body):
   '''Message reader'''
-  logging.info ("Got message: "+body)
-  if "rescan_watch" in body: 
-     # now call the watching routine 
-     cmd,id = body.split(",")
-     logging.info ("Got message: "+cmd+" ID: "+id)
-     watch(id) 
+  try:
+    msg_dict = json.loads(body)
+    #api_key         = msg_dict["api_key"]
+    #callback_url    = msg_dict["callback_url"]
+
+    #audio_file_path = msg_dict["tmp_file_path"]
+    #import_directory = msg_dict["import_directory"]
+    #original_filename = msg_dict["original_filename"]
+    #file_prefix = msg_dict["file_prefix"]
+    #storage_backend = msg_dict["storage_backend"]
+    if "rescan_watch" in msg_dict["cmd"]: 
+       # now call the watching routine 
+       logging.info ("Got message: "+msg_dict["cmd"]+" ID: "+msg_dict["id"])
+       watch(msg_dict["id"]) 
+    else :
+       logging.info ("Got unhandled message: "+body)
+  except Exception as e:
+    logging.error("No JSON received: "+body+ str(e))
   channel.basic_ack(delivery_tag = method.delivery_tag)
 
 def wait_for_messages(channel):
@@ -303,5 +316,5 @@ def main():
 
 
 if __name__ == "__main__":
-    logging.info("Woke up")
+    logging.info("Program started..")
     main()
