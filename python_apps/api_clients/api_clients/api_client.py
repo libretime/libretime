@@ -10,6 +10,7 @@ import sys
 import time
 import urllib
 import urllib2
+import requests
 import socket 
 import logging
 import json
@@ -61,7 +62,7 @@ api_config['reload_metadata_group'] = 'reload-metadata-group/format/json/api_key
 api_config['handle_watched_dir_missing'] = 'handle-watched-dir-missing/format/json/api_key/%%api_key%%/dir/%%dir%%'
 #show-recorder
 api_config['show_schedule_url'] = 'recorded-shows/format/json/api_key/%%api_key%%'
-api_config['upload_file_url'] = 'upload-file/format/json/api_key/%%api_key%%'
+api_config['upload_file_url'] = 'rest/media'
 api_config['upload_retries'] = '3'
 api_config['upload_wait'] = '60'
 #pypo
@@ -278,33 +279,57 @@ class AirtimeApiClient(object):
             self.logger.error(str(e))
             return None
 
-    def upload_recorded_show(self, data, headers):
+    def upload_recorded_show(self, files, show_id):
         logger = self.logger
         response = ''
 
         retries = int(self.config["upload_retries"])
         retries_wait = int(self.config["upload_wait"])
 
-        url = self.construct_url("upload_file_url")
+        url = self.construct_rest_url("upload_file_url")
 
         logger.debug(url)
 
         for i in range(0, retries):
             logger.debug("Upload attempt: %s", i + 1)
+            logger.debug(files)
+            logger.debug(ApiRequest.API_HTTP_REQUEST_TIMEOUT)
 
             try:
-                request = urllib2.Request(url, data, headers)
-                response = urllib2.urlopen(request, timeout=ApiClient.API_HTTP_REQUEST_TIMEOUT).read().strip()
+                request  = requests.post(url, files=files, timeout=float(ApiRequest.API_HTTP_REQUEST_TIMEOUT))
+                response = request.json()
+                logger.debug(response)
 
-                logger.info("uploaded show result %s", response)
+                """
+                FIXME: We need to tell LibreTime that the uploaded track was recorded for a specific show
+
+                My issue here is that response does not yet have an id. The id gets generated at the point
+                where analyzer is done with it's work. We probably need to do what is below in analyzer
+                and also make sure that the show instance id is routed all the way through.
+
+                It already gets uploaded by this but the RestController does not seem to care about it. In
+                the end analyzer doesn't have the info in it's rabbitmq message and imports the show as a
+                regular track.
+
+                logger.info("uploaded show result as file id %s", response.id)
+
+                url = self.construct_url("upload_recorded")
+                url = url.replace('%%fileid%%', response.id)
+                url = url.replace('%%showinstanceid%%', show_id)
+                request.get(url)
+                logger.info("associated uploaded file %s with show instance %s", response.id, show_id)
+                """
                 break
 
-            except urllib2.HTTPError, e:
+            except requests.exceptions.HTTPError, e:
                 logger.error("Http error code: %s", e.code)
-            except urllib2.URLError, e:
+                logger.error("traceback: %s", traceback.format_exc())
+            except requests.exceptions.ConnectionError, e:
                 logger.error("Server is down: %s", e.args)
+                logger.error("traceback: %s", traceback.format_exc())
             except Exception, e:
                 logger.error("Exception: %s", e)
+                logger.error("traceback: %s", traceback.format_exc())
 
             #wait some time before next retry
             time.sleep(retries_wait)
@@ -331,6 +356,19 @@ class AirtimeApiClient(object):
              self.config[config_action_key])
         url = url.replace("%%api_key%%", self.config["general"]["api_key"])
         return url
+
+    def construct_rest_url(self,config_action_key):
+        """Constructs the base url for RESTful requests"""
+        if self.config["general"]["base_dir"].startswith("/"):
+            self.config["general"]["base_dir"] = self.config["general"]["base_dir"][1:]
+        url = "%s://%s:@%s:%s/%s/%s" %  \
+            (str(("http", "https")[int(self.config["general"]["base_port"]) == 443]),
+             self.config["general"]["api_key"],
+             self.config["general"]["base_url"], str(self.config["general"]["base_port"]),
+             self.config["general"]["base_dir"],
+             self.config[config_action_key])
+        return url
+
 
     """
     Caller of this method needs to catch any exceptions such as

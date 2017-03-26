@@ -87,6 +87,8 @@ yum install -y \
   fdk-aac \
   liquidsoap \
   silan \
+  ecasound \
+  alsa-utils \
   icecast \
   python-pip \
   selinux-policy \
@@ -155,3 +157,6 @@ systemctl restart httpd
 # icecast needs to be available to everyone
 sed -i -e 's@<bind-address>127.0.0.1</bind-address>@<bind-address>0.0.0.0</bind-address>@' /etc/icecast.xml 
 systemctl enable --now icecast
+
+# let em use alsa
+usermod -a -G audio apache

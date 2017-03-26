@@ -642,25 +642,6 @@ class ApiController extends Zend_Controller_Action
         }
     }
 
-    public function uploadFileAction()
-    {
-        Logging::error("FIXME: Change the show recorder to use the File Upload API and remove this function."); // Albert - April 3, 2014
-        /**
-        $upload_dir = ini_get("upload_tmp_dir");
-        $tempFilePath = Application_Model_StoredFile::uploadFile($upload_dir);
-        $tempFileName = basename($tempFilePath);
-
-        $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
-        $result = Application_Model_StoredFile::copyFileToStor($upload_dir, $fileName, $tempFileName);
-
-        if (!is_null($result)) {
-            $this->_helper->json->sendJson(
-                array("jsonrpc" => "2.0", "error" => array("code" => $result['code'], "message" => $result['message']))
-            );
-        }
-        **/
-    }
-
     public function uploadRecordedAction()
     {
         $show_instance_id           = $this->_getParam('showinstanceid');
