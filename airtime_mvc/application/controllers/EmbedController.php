@@ -2,11 +2,13 @@
 
 class EmbedController extends Zend_Controller_Action
 {
-    public function init()
-    {
-
+    public function init() {
+        // translate widgets to station default language
+        $locale = Application_Model_Preference::GetDefaultLocale();
+        if ($locale) {
+            Application_Model_Locale::configureLocalization($locale);
+        }
     }
-
     /**
      * This is the action that is called to insert the player onto a web page.
      * It passes all the js and css files to the view, as well as all the
