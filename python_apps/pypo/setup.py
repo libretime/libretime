@@ -38,7 +38,7 @@ setup(name='airtime-playout',
       author='sourcefabric',
       license='AGPLv3',
       packages=['pypo', 'pypo.media', 'pypo.media.update',
-                'liquidsoap', 'liquidsoap.library'],
+                'liquidsoap'],
       package_data={'': ['*.liq', '*.cfg', '*.types']},
       scripts=[
           'bin/airtime-playout',
