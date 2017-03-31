@@ -23,7 +23,7 @@ class Application_Form_AddShowAutoPlaylist extends Zend_Form_SubForm
      
         $autoPlaylistSelect = new Zend_Form_Element_Select("add_show_autoplaylist_id");
         $autoPlaylistSelect->setLabel(_("Select Playlist"));
-        $autoPlaylistSelect->setMultiOptions(Application_Model_Library::getPlaylistNames());
+        $autoPlaylistSelect->setMultiOptions(Application_Model_Library::getPlaylistNames(true));
         $autoPlaylistSelect->setValue(null);
         $autoPlaylistSelect->setDecorators(array('ViewHelper'));
         $this->addElement($autoPlaylistSelect);
