@@ -96,7 +96,15 @@ SQL;
         return $show->getDbAutoPlaylistId();
         
     }
-    
+
+    public function getAutoPlaylistRepeat()
+    {
+        $show = CcShowQuery::create()->findPK($this->getShowId());
+        return $show->getDbAutoPlaylistRepeat();
+
+    }
+
+
     /**
      * Return the start time of the Show (UTC time)
      * @return string in format DEFAULT_TIMESTAMP_FORMAT (PHP time notation)

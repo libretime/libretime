@@ -321,6 +321,7 @@ class CcShow extends BaseCcShow {
             $info['linked'] = $this->getDbLinked();
             $info['has_autoplaylist'] = $this->getDbHasAutoPlaylist();
             $info['autoplaylist_id'] = $this->getDbAutoPlaylistId();
+            $info['autoplaylist_repeat'] = $this->getDbAutoPlaylistRepeat();
             return $info;
         }
 

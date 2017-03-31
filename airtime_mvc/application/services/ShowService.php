@@ -1541,6 +1541,7 @@ SQL;
         $ccShow->setDbLiveStreamUser($showData['custom_username']);
         $ccShow->setDbLiveStreamPass($showData['custom_password']);
         $ccShow->setDbHasAutoPlaylist($showData['add_show_has_autoplaylist'] == 1);
+        $ccShow->setDbAutoPlaylistRepeat($showData['add_show_autoplaylist_repeat'] == 1);
         // added to prevent errors with insert due to a lack of data
         if ($showData['add_show_autoplaylist_id'] != '') {
             $ccShow->setDbAutoPlaylistId($showData['add_show_autoplaylist_id']);

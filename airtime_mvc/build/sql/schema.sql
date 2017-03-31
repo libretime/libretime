@@ -162,6 +162,7 @@ CREATE TABLE "cc_show"
     "image_path" VARCHAR(255) DEFAULT '',
     "has_autoplaylist" BOOLEAN DEFAULT 'f' NOT NULL,
     "autoplaylist_id" INTEGER,
+    "autoplaylist_repeat" BOOLEAN DEFAULT 'f' NOT NULL,
     PRIMARY KEY ("id")
 );
 

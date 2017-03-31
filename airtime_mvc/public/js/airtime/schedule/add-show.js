@@ -269,6 +269,7 @@ function setAddShowEvents(form) {
 
     if(!form.find("#add_show_has_autoplaylist").attr('checked')) {
         form.find("#add_show_playlist_dropdown").hide();
+        form.find("#add_show_autoplaylist_repeat").hide();
     }
     else {
         $("#add_show_playlist_dropdown").show();
@@ -300,12 +301,14 @@ function setAddShowEvents(form) {
     form.find("#add_show_has_autoplaylist").click(function(){
         $(this).blur();
         form.find("#add_show_playlist_dropdown").toggle();
+        form.find("#add_show_autoplaylist_repeat").toggle();
         
         var checkBoxSelected = false;
         
         //must switch rebroadcast displays
         if(form.find("#add_show_has_autoplaylist").attr('checked')) {
         form.find("#add_show_playlist_dropdown").show();
+        form.find("#add_show_autoplaylist_repeat").show();
         }
         else {
 	form.find("#add_show_playlist_downdown").hide();

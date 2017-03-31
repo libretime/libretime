@@ -153,7 +153,8 @@ class Application_Service_ShowFormService
         $form->populate(
             array(
                'add_show_has_autoplaylist' => $this->ccShow->getDbHasAutoPlaylist() ? 1 : 0,
-               'add_show_autoplaylist_id' => $this->ccShow->getDbAutoPlaylistId()
+               'add_show_autoplaylist_id' => $this->ccShow->getDbAutoPlaylistId(),
+               'add_show_autoplaylist_repeat' => $this->ccShow->getDbAutoPlaylistRepeat()
                 
             ));
     }
