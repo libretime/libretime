@@ -425,6 +425,7 @@ class ApiController extends Zend_Controller_Action
             $this->view->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
 
+            $request = $this->getRequest();
             $result = WidgetHelper::getWeekInfo($this->getRequest()->getParam("timezone"));
 
             //used by caller to determine if the airtime they are running or widgets in use is out of date.
