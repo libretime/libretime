@@ -1,0 +1,5 @@
+#
+#MAILTO=dd8ne@dd8ne.spdns.org
+#
+1 * * * *	root /tools/test_rabbit.py
+

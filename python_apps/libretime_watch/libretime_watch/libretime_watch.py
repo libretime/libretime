@@ -10,6 +10,7 @@ import pika
 import psycopg2
 import select
 import signal
+import subprocess
 import sys
 import time
 import types
@@ -19,11 +20,15 @@ import types
 
 
 # definitions RabbitMQ
-EXCHANGE = "airtime-watch"
-EXCHANGE_TYPE = "topic"
-ROUTING_KEY = ""
-QUEUE = "airtime-watch"
+#EXCHANGE = "airtime-watch"
+#EXCHANGE_TYPE = "topic"
+#ROUTING_KEY = ""
+#QUEUE = "airtime-watch"
 
+EXCHANGE="airtime-media-monitor"
+EXCHANGE_TYPE = "direct"
+ROUTING_KEY="filesystem"
+QUEUE="media-monitor"
 
 # create empty dictionary 
 database = {}
@@ -35,7 +40,12 @@ shutdown=False
 #
 logging.basicConfig(format='%(asctime)s %(message)s',filename='/var/log/airtime/libretime_watch.log',level=logging.INFO)
 
+
+
 def update_database (conn):
+   """Update database dictionary to cc_files
+   """
+
    cur = conn.cursor()
    cols = database.keys()
    cols_str = str(cols)
@@ -66,6 +76,65 @@ def insert_database (conn):
    conn.commit()
    cur.close()
 
+#
+# analysing the file
+#
+def replay_gain (filename):
+   """Getting the replaygain via python-rplay"""
+
+   EXE="replaygain"
+
+   command = [EXE, '-d', filename]
+   try:
+            results = subprocess.check_output(command, stderr=subprocess.STDOUT, close_fds=True)
+            filename_token = "%s: " % filename
+            rg_pos = results.find(filename_token, results.find("Calculating Replay Gain information")) + len(filename_token)
+            db_pos = results.find(" dB", rg_pos)
+            replaygain = results[rg_pos:db_pos]
+
+   except OSError as e: # replaygain was not found
+            logging.warn("Failed to run: %s - %s. %s" % (command[0], e.strerror, "Do you have python-rgain installed?"))
+   except subprocess.CalledProcessError as e: # replaygain returned an error code
+            logging.warn("%s %s %s", e.cmd, e.message, e.returncode)
+   except Exception as e:
+            logging.warn(e)
+
+   return replaygain
+
+def cue_points (filename, cue_in, cue_out):
+   """Analyse file cue using silan
+      return cue_in, cue_out
+   """
+
+   EXE="silan"
+
+   command = [EXE, '-q', '-b', '-F', '0.99', '-f', 'JSON', '-t', '1.0', filename]
+   try:
+            results_json = subprocess.check_output(command, stderr=subprocess.STDOUT, close_fds=True)
+            silan_results = json.loads(results_json)
+            # Defensive coding against Silan wildly miscalculating the cue in and out times:
+            silan_cuein = float(format(silan_results['sound'][0][0], 'f'))
+            silan_cueout = float (format(silan_results['sound'][0][1], 'f'))
+            # get cue_out(coming from mutagen) as seconds
+            x = datetime.datetime.strptime(cue_out, '%H:%M:%S.%f') - datetime.datetime(1900,1,1)
+            cue_out_sec= x.total_seconds()
+            # trust silan only, if the calculated value is within 95%..102% of the mutagen cue_out
+            if silan_cueout > cue_out_sec * 0.95 and silan_cueout < cue_out_sec * 1.02:
+               cue_out =  datetime.timedelta(seconds=silan_cueout)
+               logging.info ("Silan defined a new cue_out: " + str(cue_out))
+            cue_in = datetime.timedelta(seconds=silan_cuein)
+            logging.info("Silan: "+str(silan_cuein)+" "+str(silan_cueout)+" "+str(cue_out_sec))
+
+   except OSError as e: # silan was not found
+            logging.warn("Failed to run: %s - %s. %s" % (command[0], e.strerror, "Do you have silan installed?"))
+   except subprocess.CalledProcessError as e: # silan returned an error code
+            logging.warn("%s %s %s", e.cmd, e.message, e.returncode)
+   except Exception as e:
+            logging.warn(e)
+
+   return cue_in, cue_out
+
+
 def analyse_file (filename):
    """This method analyses the file and returns analyse_ok 
       It's filling the database dictionary with metadata read from
@@ -77,6 +146,7 @@ def analyse_file (filename):
    from mimetypes import MimeTypes
    from mutagen.easyid3 import EasyID3
    from mutagen.mp3 import MP3
+   import mutagen
 
    analyse_ok=False
    logging.info ("analyse Filename: "+filename)
@@ -84,11 +154,15 @@ def analyse_file (filename):
    mime_check = magic.from_file(filename, mime=True)
    database["mime"] = mime_check
    # test
-   f = MP3(filename)
-   mime_mutagen = f.mime[0]
+   #f = MP3(filename)
+   #f= mutagen.FileType(filename)
+   #mime_mutagen = f.mime[0]
+   #logging.info (" mutagen: " +mime_mutagen )
+   
    mime = MimeTypes()
    type, a = mime.guess_type(filename)
-   logging.info ("mime_check :"+database["mime"]+ " mime: "+type+" mutagen: " +mime_mutagen )
+   logging.info ("mime_check :"+database["mime"]+ " mime: "+type)
+   #+" mutagen: " +mime_mutagen )
    #
    database["ftype"] = "audioclip"
    database["filesize"] = os.path.getsize(filename) 
@@ -131,7 +205,10 @@ def analyse_file (filename):
          database["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
          # Other fields for Airtime
          database["cueout"] = database["length"]
+         database["replay_gain"]=float(replay_gain(filename))
        database["cuein"]= "00:00:00.0"
+       # get better (?) cuein, cueout using silan
+       database["cuein"], database["cueout"] = cue_points (filename, database["cuein"], database["cueout"])
        # use mutage to get better mime 
        if  f.mime:
             database["mime"] = f.mime[0]
@@ -149,7 +226,10 @@ def analyse_file (filename):
           #print "Error: ",str(err),filename
    return analyse_ok
 
-def connect_database(): 
+def connect_database():
+  """Connect database
+     return: connection
+  """
   try:
     conn = psycopg2.connect("dbname='airtime' user='airtime' host='localhost' password='airtime'")
   except:
@@ -246,9 +326,9 @@ def connect_to_messaging_server():
   connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost',
             virtual_host='/airtime',credentials=credentials))
   channel = connection.channel()
-  #channel.exchange_delete (exchange=EXCHANGE)
-  channel.exchange_declare(exchange=EXCHANGE, type=EXCHANGE_TYPE, durable=True)
-  #channel.queue_delete(queue=QUEUE)
+#  channel.exchange_delete (exchange=EXCHANGE)
+  channel.exchange_declare(exchange=EXCHANGE, type=EXCHANGE_TYPE, durable=True, auto_delete=True)
+#  channel.queue_delete(queue=QUEUE)
   result = channel.queue_declare(queue=QUEUE, durable=True)
   channel.queue_bind(exchange=EXCHANGE, queue=QUEUE, routing_key=ROUTING_KEY)
 
@@ -269,14 +349,15 @@ def msg_received_callback (channel, method, properties,body):
     #original_filename = msg_dict["original_filename"]
     #file_prefix = msg_dict["file_prefix"]
     #storage_backend = msg_dict["storage_backend"]
-    if "rescan_watch" in msg_dict["cmd"]: 
+  except Exception as e:
+    logging.error("No JSON received: "+body+ str(e))
+
+  if "rescan_watch" in msg_dict["cmd"]: 
        # now call the watching routine 
        logging.info ("Got message: "+msg_dict["cmd"]+" ID: "+msg_dict["id"])
        watch(msg_dict["id"]) 
-    else :
+  else :
        logging.info ("Got unhandled message: "+body)
-  except Exception as e:
-    logging.error("No JSON received: "+body+ str(e))
   channel.basic_ack(delivery_tag = method.delivery_tag)
 
 def wait_for_messages(channel):
