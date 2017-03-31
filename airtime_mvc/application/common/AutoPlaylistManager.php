@@ -32,7 +32,11 @@ class AutoPlaylistManager {
             Logging::info("Scheduling $playlistid");
             // call the addPlaylist to show function and don't check for user permission to avoid call to non-existant user object
             $si->addPlaylistToShow($playlistid, false);
+            while ($si->getPercentScheduled() < 100) {
+                $si->addPlaylistToShow($playlistid, false);
+            }
             $si->setAutoPlaylistBuilt(true);
+
         }
         Application_Model_Preference::setAutoPlaylistPollLock(microtime(true));
     }
