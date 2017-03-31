@@ -16,3 +16,4 @@ cc_show:
         image_path: ''
         has_autoplaylist: false
         autoplaylist_id: null
+        autoplaylist_repeat: false
