@@ -156,6 +156,7 @@
          Default is /path/to/stor/dir/:ownerId/show-images/:showId/imageName -->
     <column name="has_autoplaylist" phpName="DbHasAutoPlaylist" type="BOOLEAN" required="true" defaultValue="false"/>
     <column name="autoplaylist_id" phpName="DbAutoPlaylistId" type="INTEGER" required="false"/>
+    <column name="autoplaylist_repeat" phpName="DbAutoPlaylistRepeat" type="BOOLEAN" required="true" defaultValue="false"/>
     <foreign-key foreignTable="cc_playlist" name="cc_playlist_autoplaylist_fkey" onDelete="SETNULL">
       <reference local="autoplaylist_id" foreign="id"/>
     </foreign-key>
