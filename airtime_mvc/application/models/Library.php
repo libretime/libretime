@@ -33,14 +33,23 @@ class Application_Model_Library
         }
     }
 
-    public static function getPlaylistNames()
+    public static function getPlaylistNames($alphasort = false)
     {
+
         $playlistNames = array(NULL  => _("None"));
+        //if we want to return the playlists sorted alphabetically by name
+        if ($alphasort) {
+            $playlists = CcPlaylistQuery::create()
+                ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
+                ->orderByname()
+                ->find();
 
-        $playlists = CcPlaylistQuery::create()
-            ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
-            ->find();
-
+        }
+        else {
+            $playlists = CcPlaylistQuery::create()
+                ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
+                ->find();
+        }
         foreach ($playlists as $playlist) {
             $playlistNames[$playlist->getDbId()] = $playlist->getDbName();
         }
