@@ -24,6 +24,10 @@ ecasound
 libportaudio2
 libsamplerate0
 
+python-rgain
+python-gst-1.0
+gstreamer1.0-plugins-ugly
+
 patch
 
 php5-curl
