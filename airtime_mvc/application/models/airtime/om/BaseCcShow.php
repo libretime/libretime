@@ -135,6 +135,13 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     protected $autoplaylist_id;
 
     /**
+     * The value for the autoplaylist_repeat field.
+     * Note: this column has a database default value of: false
+     * @var        boolean
+     */
+    protected $autoplaylist_repeat;
+
+    /**
      * @var        CcPlaylist
      */
     protected $aCcPlaylist;
@@ -224,6 +231,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         $this->is_linkable = true;
         $this->image_path = '';
         $this->has_autoplaylist = false;
+        $this->autoplaylist_repeat = false;
     }
 
     /**
@@ -410,6 +418,17 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     {
 
         return $this->autoplaylist_id;
+    }
+
+    /**
+     * Get the [autoplaylist_repeat] column value.
+     *
+     * @return boolean
+     */
+    public function getDbAutoPlaylistRepeat()
+    {
+
+        return $this->autoplaylist_repeat;
     }
 
     /**
@@ -793,6 +812,35 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     } // setDbAutoPlaylistId()
 
     /**
+     * Sets the value of the [autoplaylist_repeat] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param boolean|integer|string $v The new value
+     * @return CcShow The current object (for fluent API support)
+     */
+    public function setDbAutoPlaylistRepeat($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->autoplaylist_repeat !== $v) {
+            $this->autoplaylist_repeat = $v;
+            $this->modifiedColumns[] = CcShowPeer::AUTOPLAYLIST_REPEAT;
+        }
+
+
+        return $this;
+    } // setDbAutoPlaylistRepeat()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -838,6 +886,10 @@ abstract class BaseCcShow extends BaseObject implements Persistent
                 return false;
             }
 
+            if ($this->autoplaylist_repeat !== false) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return true
         return true;
     } // hasOnlyDefaultValues()
@@ -876,6 +928,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             $this->image_path = ($row[$startcol + 13] !== null) ? (string) $row[$startcol + 13] : null;
             $this->has_autoplaylist = ($row[$startcol + 14] !== null) ? (boolean) $row[$startcol + 14] : null;
             $this->autoplaylist_id = ($row[$startcol + 15] !== null) ? (int) $row[$startcol + 15] : null;
+            $this->autoplaylist_repeat = ($row[$startcol + 16] !== null) ? (boolean) $row[$startcol + 16] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -885,7 +938,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 16; // 16 = CcShowPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 17; // 17 = CcShowPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating CcShow object", $e);
@@ -1247,6 +1300,9 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         if ($this->isColumnModified(CcShowPeer::AUTOPLAYLIST_ID)) {
             $modifiedColumns[':p' . $index++]  = '"autoplaylist_id"';
         }
+        if ($this->isColumnModified(CcShowPeer::AUTOPLAYLIST_REPEAT)) {
+            $modifiedColumns[':p' . $index++]  = '"autoplaylist_repeat"';
+        }
 
         $sql = sprintf(
             'INSERT INTO "cc_show" (%s) VALUES (%s)',
@@ -1305,6 +1361,9 @@ abstract class BaseCcShow extends BaseObject implements Persistent
                         break;
                     case '"autoplaylist_id"':
                         $stmt->bindValue($identifier, $this->autoplaylist_id, PDO::PARAM_INT);
+                        break;
+                    case '"autoplaylist_repeat"':
+                        $stmt->bindValue($identifier, $this->autoplaylist_repeat, PDO::PARAM_BOOL);
                         break;
                 }
             }
@@ -1525,6 +1584,9 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             case 15:
                 return $this->getDbAutoPlaylistId();
                 break;
+            case 16:
+                return $this->getDbAutoPlaylistRepeat();
+                break;
             default:
                 return null;
                 break;
@@ -1570,6 +1632,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             $keys[13] => $this->getDbImagePath(),
             $keys[14] => $this->getDbHasAutoPlaylist(),
             $keys[15] => $this->getDbAutoPlaylistId(),
+            $keys[16] => $this->getDbAutoPlaylistRepeat(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1674,6 +1737,9 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             case 15:
                 $this->setDbAutoPlaylistId($value);
                 break;
+            case 16:
+                $this->setDbAutoPlaylistRepeat($value);
+                break;
         } // switch()
     }
 
@@ -1714,6 +1780,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         if (array_key_exists($keys[13], $arr)) $this->setDbImagePath($arr[$keys[13]]);
         if (array_key_exists($keys[14], $arr)) $this->setDbHasAutoPlaylist($arr[$keys[14]]);
         if (array_key_exists($keys[15], $arr)) $this->setDbAutoPlaylistId($arr[$keys[15]]);
+        if (array_key_exists($keys[16], $arr)) $this->setDbAutoPlaylistRepeat($arr[$keys[16]]);
     }
 
     /**
@@ -1741,6 +1808,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         if ($this->isColumnModified(CcShowPeer::IMAGE_PATH)) $criteria->add(CcShowPeer::IMAGE_PATH, $this->image_path);
         if ($this->isColumnModified(CcShowPeer::HAS_AUTOPLAYLIST)) $criteria->add(CcShowPeer::HAS_AUTOPLAYLIST, $this->has_autoplaylist);
         if ($this->isColumnModified(CcShowPeer::AUTOPLAYLIST_ID)) $criteria->add(CcShowPeer::AUTOPLAYLIST_ID, $this->autoplaylist_id);
+        if ($this->isColumnModified(CcShowPeer::AUTOPLAYLIST_REPEAT)) $criteria->add(CcShowPeer::AUTOPLAYLIST_REPEAT, $this->autoplaylist_repeat);
 
         return $criteria;
     }
@@ -1819,6 +1887,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         $copyObj->setDbImagePath($this->getDbImagePath());
         $copyObj->setDbHasAutoPlaylist($this->getDbHasAutoPlaylist());
         $copyObj->setDbAutoPlaylistId($this->getDbAutoPlaylistId());
+        $copyObj->setDbAutoPlaylistRepeat($this->getDbAutoPlaylistRepeat());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -2974,6 +3043,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         $this->image_path = null;
         $this->has_autoplaylist = null;
         $this->autoplaylist_id = null;
+        $this->autoplaylist_repeat = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;

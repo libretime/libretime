@@ -55,6 +55,7 @@ class CcShowTableMap extends TableMap
         $this->addColumn('image_path', 'DbImagePath', 'VARCHAR', false, 255, '');
         $this->addColumn('has_autoplaylist', 'DbHasAutoPlaylist', 'BOOLEAN', true, null, false);
         $this->addForeignKey('autoplaylist_id', 'DbAutoPlaylistId', 'INTEGER', 'cc_playlist', 'id', false, null, null);
+        $this->addColumn('autoplaylist_repeat', 'DbAutoPlaylistRepeat', 'BOOLEAN', true, null, false);
         // validators
     } // initialize()
 

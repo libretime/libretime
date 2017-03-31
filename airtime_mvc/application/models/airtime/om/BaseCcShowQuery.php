@@ -22,6 +22,7 @@
  * @method CcShowQuery orderByDbImagePath($order = Criteria::ASC) Order by the image_path column
  * @method CcShowQuery orderByDbHasAutoPlaylist($order = Criteria::ASC) Order by the has_autoplaylist column
  * @method CcShowQuery orderByDbAutoPlaylistId($order = Criteria::ASC) Order by the autoplaylist_id column
+ * @method CcShowQuery orderByDbAutoPlaylistRepeat($order = Criteria::ASC) Order by the autoplaylist_repeat column
  *
  * @method CcShowQuery groupByDbId() Group by the id column
  * @method CcShowQuery groupByDbName() Group by the name column
@@ -39,6 +40,7 @@
  * @method CcShowQuery groupByDbImagePath() Group by the image_path column
  * @method CcShowQuery groupByDbHasAutoPlaylist() Group by the has_autoplaylist column
  * @method CcShowQuery groupByDbAutoPlaylistId() Group by the autoplaylist_id column
+ * @method CcShowQuery groupByDbAutoPlaylistRepeat() Group by the autoplaylist_repeat column
  *
  * @method CcShowQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method CcShowQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -82,6 +84,7 @@
  * @method CcShow findOneByDbImagePath(string $image_path) Return the first CcShow filtered by the image_path column
  * @method CcShow findOneByDbHasAutoPlaylist(boolean $has_autoplaylist) Return the first CcShow filtered by the has_autoplaylist column
  * @method CcShow findOneByDbAutoPlaylistId(int $autoplaylist_id) Return the first CcShow filtered by the autoplaylist_id column
+ * @method CcShow findOneByDbAutoPlaylistRepeat(boolean $autoplaylist_repeat) Return the first CcShow filtered by the autoplaylist_repeat column
  *
  * @method array findByDbId(int $id) Return CcShow objects filtered by the id column
  * @method array findByDbName(string $name) Return CcShow objects filtered by the name column
@@ -99,6 +102,7 @@
  * @method array findByDbImagePath(string $image_path) Return CcShow objects filtered by the image_path column
  * @method array findByDbHasAutoPlaylist(boolean $has_autoplaylist) Return CcShow objects filtered by the has_autoplaylist column
  * @method array findByDbAutoPlaylistId(int $autoplaylist_id) Return CcShow objects filtered by the autoplaylist_id column
+ * @method array findByDbAutoPlaylistRepeat(boolean $autoplaylist_repeat) Return CcShow objects filtered by the autoplaylist_repeat column
  *
  * @package    propel.generator.airtime.om
  */
@@ -206,7 +210,7 @@ abstract class BaseCcShowQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "name", "url", "genre", "description", "color", "background_color", "live_stream_using_airtime_auth", "live_stream_using_custom_auth", "live_stream_user", "live_stream_pass", "linked", "is_linkable", "image_path", "has_autoplaylist", "autoplaylist_id" FROM "cc_show" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "name", "url", "genre", "description", "color", "background_color", "live_stream_using_airtime_auth", "live_stream_using_custom_auth", "live_stream_user", "live_stream_pass", "linked", "is_linkable", "image_path", "has_autoplaylist", "autoplaylist_id", "autoplaylist_repeat" FROM "cc_show" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -775,6 +779,33 @@ abstract class BaseCcShowQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CcShowPeer::AUTOPLAYLIST_ID, $dbAutoPlaylistId, $comparison);
+    }
+
+    /**
+     * Filter the query on the autoplaylist_repeat column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbAutoPlaylistRepeat(true); // WHERE autoplaylist_repeat = true
+     * $query->filterByDbAutoPlaylistRepeat('yes'); // WHERE autoplaylist_repeat = true
+     * </code>
+     *
+     * @param     boolean|string $dbAutoPlaylistRepeat The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbAutoPlaylistRepeat($dbAutoPlaylistRepeat = null, $comparison = null)
+    {
+        if (is_string($dbAutoPlaylistRepeat)) {
+            $dbAutoPlaylistRepeat = in_array(strtolower($dbAutoPlaylistRepeat), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(CcShowPeer::AUTOPLAYLIST_REPEAT, $dbAutoPlaylistRepeat, $comparison);
     }
 
     /**
