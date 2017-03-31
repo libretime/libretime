@@ -142,6 +142,11 @@ class Application_Model_Show
         return $AutoPlaylistRepeat;
     }
 
+    public function setAutoPlaylistRepeat($value)
+    {
+        $show = CcShowQuery::create()->findPK($this->_showId);
+        $show->setDbAutoPlaylistRepeat($value);
+    }
     
     public function setHasAutoPlaylist($value)
     {
