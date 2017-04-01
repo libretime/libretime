@@ -24,13 +24,13 @@ abstract class BaseCcShowPeer
     const TM_CLASS = 'CcShowTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 16;
+    const NUM_COLUMNS = 17;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 16;
+    const NUM_HYDRATE_COLUMNS = 17;
 
     /** the column name for the id field */
     const ID = 'cc_show.id';
@@ -80,6 +80,9 @@ abstract class BaseCcShowPeer
     /** the column name for the autoplaylist_id field */
     const AUTOPLAYLIST_ID = 'cc_show.autoplaylist_id';
 
+    /** the column name for the autoplaylist_repeat field */
+    const AUTOPLAYLIST_REPEAT = 'cc_show.autoplaylist_repeat';
+
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
 
@@ -99,12 +102,12 @@ abstract class BaseCcShowPeer
      * e.g. CcShowPeer::$fieldNames[CcShowPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbUrl', 'DbGenre', 'DbDescription', 'DbColor', 'DbBackgroundColor', 'DbLiveStreamUsingAirtimeAuth', 'DbLiveStreamUsingCustomAuth', 'DbLiveStreamUser', 'DbLiveStreamPass', 'DbLinked', 'DbIsLinkable', 'DbImagePath', 'DbHasAutoPlaylist', 'DbAutoPlaylistId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbUrl', 'dbGenre', 'dbDescription', 'dbColor', 'dbBackgroundColor', 'dbLiveStreamUsingAirtimeAuth', 'dbLiveStreamUsingCustomAuth', 'dbLiveStreamUser', 'dbLiveStreamPass', 'dbLinked', 'dbIsLinkable', 'dbImagePath', 'dbHasAutoPlaylist', 'dbAutoPlaylistId', ),
-        BasePeer::TYPE_COLNAME => array (CcShowPeer::ID, CcShowPeer::NAME, CcShowPeer::URL, CcShowPeer::GENRE, CcShowPeer::DESCRIPTION, CcShowPeer::COLOR, CcShowPeer::BACKGROUND_COLOR, CcShowPeer::LIVE_STREAM_USING_AIRTIME_AUTH, CcShowPeer::LIVE_STREAM_USING_CUSTOM_AUTH, CcShowPeer::LIVE_STREAM_USER, CcShowPeer::LIVE_STREAM_PASS, CcShowPeer::LINKED, CcShowPeer::IS_LINKABLE, CcShowPeer::IMAGE_PATH, CcShowPeer::HAS_AUTOPLAYLIST, CcShowPeer::AUTOPLAYLIST_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'URL', 'GENRE', 'DESCRIPTION', 'COLOR', 'BACKGROUND_COLOR', 'LIVE_STREAM_USING_AIRTIME_AUTH', 'LIVE_STREAM_USING_CUSTOM_AUTH', 'LIVE_STREAM_USER', 'LIVE_STREAM_PASS', 'LINKED', 'IS_LINKABLE', 'IMAGE_PATH', 'HAS_AUTOPLAYLIST', 'AUTOPLAYLIST_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'url', 'genre', 'description', 'color', 'background_color', 'live_stream_using_airtime_auth', 'live_stream_using_custom_auth', 'live_stream_user', 'live_stream_pass', 'linked', 'is_linkable', 'image_path', 'has_autoplaylist', 'autoplaylist_id', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, )
+        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbUrl', 'DbGenre', 'DbDescription', 'DbColor', 'DbBackgroundColor', 'DbLiveStreamUsingAirtimeAuth', 'DbLiveStreamUsingCustomAuth', 'DbLiveStreamUser', 'DbLiveStreamPass', 'DbLinked', 'DbIsLinkable', 'DbImagePath', 'DbHasAutoPlaylist', 'DbAutoPlaylistId', 'DbAutoPlaylistRepeat', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbUrl', 'dbGenre', 'dbDescription', 'dbColor', 'dbBackgroundColor', 'dbLiveStreamUsingAirtimeAuth', 'dbLiveStreamUsingCustomAuth', 'dbLiveStreamUser', 'dbLiveStreamPass', 'dbLinked', 'dbIsLinkable', 'dbImagePath', 'dbHasAutoPlaylist', 'dbAutoPlaylistId', 'dbAutoPlaylistRepeat', ),
+        BasePeer::TYPE_COLNAME => array (CcShowPeer::ID, CcShowPeer::NAME, CcShowPeer::URL, CcShowPeer::GENRE, CcShowPeer::DESCRIPTION, CcShowPeer::COLOR, CcShowPeer::BACKGROUND_COLOR, CcShowPeer::LIVE_STREAM_USING_AIRTIME_AUTH, CcShowPeer::LIVE_STREAM_USING_CUSTOM_AUTH, CcShowPeer::LIVE_STREAM_USER, CcShowPeer::LIVE_STREAM_PASS, CcShowPeer::LINKED, CcShowPeer::IS_LINKABLE, CcShowPeer::IMAGE_PATH, CcShowPeer::HAS_AUTOPLAYLIST, CcShowPeer::AUTOPLAYLIST_ID, CcShowPeer::AUTOPLAYLIST_REPEAT, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'URL', 'GENRE', 'DESCRIPTION', 'COLOR', 'BACKGROUND_COLOR', 'LIVE_STREAM_USING_AIRTIME_AUTH', 'LIVE_STREAM_USING_CUSTOM_AUTH', 'LIVE_STREAM_USER', 'LIVE_STREAM_PASS', 'LINKED', 'IS_LINKABLE', 'IMAGE_PATH', 'HAS_AUTOPLAYLIST', 'AUTOPLAYLIST_ID', 'AUTOPLAYLIST_REPEAT', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'url', 'genre', 'description', 'color', 'background_color', 'live_stream_using_airtime_auth', 'live_stream_using_custom_auth', 'live_stream_user', 'live_stream_pass', 'linked', 'is_linkable', 'image_path', 'has_autoplaylist', 'autoplaylist_id', 'autoplaylist_repeat', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, )
     );
 
     /**
@@ -114,12 +117,12 @@ abstract class BaseCcShowPeer
      * e.g. CcShowPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbUrl' => 2, 'DbGenre' => 3, 'DbDescription' => 4, 'DbColor' => 5, 'DbBackgroundColor' => 6, 'DbLiveStreamUsingAirtimeAuth' => 7, 'DbLiveStreamUsingCustomAuth' => 8, 'DbLiveStreamUser' => 9, 'DbLiveStreamPass' => 10, 'DbLinked' => 11, 'DbIsLinkable' => 12, 'DbImagePath' => 13, 'DbHasAutoPlaylist' => 14, 'DbAutoPlaylistId' => 15, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbUrl' => 2, 'dbGenre' => 3, 'dbDescription' => 4, 'dbColor' => 5, 'dbBackgroundColor' => 6, 'dbLiveStreamUsingAirtimeAuth' => 7, 'dbLiveStreamUsingCustomAuth' => 8, 'dbLiveStreamUser' => 9, 'dbLiveStreamPass' => 10, 'dbLinked' => 11, 'dbIsLinkable' => 12, 'dbImagePath' => 13, 'dbHasAutoPlaylist' => 14, 'dbAutoPlaylistId' => 15, ),
-        BasePeer::TYPE_COLNAME => array (CcShowPeer::ID => 0, CcShowPeer::NAME => 1, CcShowPeer::URL => 2, CcShowPeer::GENRE => 3, CcShowPeer::DESCRIPTION => 4, CcShowPeer::COLOR => 5, CcShowPeer::BACKGROUND_COLOR => 6, CcShowPeer::LIVE_STREAM_USING_AIRTIME_AUTH => 7, CcShowPeer::LIVE_STREAM_USING_CUSTOM_AUTH => 8, CcShowPeer::LIVE_STREAM_USER => 9, CcShowPeer::LIVE_STREAM_PASS => 10, CcShowPeer::LINKED => 11, CcShowPeer::IS_LINKABLE => 12, CcShowPeer::IMAGE_PATH => 13, CcShowPeer::HAS_AUTOPLAYLIST => 14, CcShowPeer::AUTOPLAYLIST_ID => 15, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'URL' => 2, 'GENRE' => 3, 'DESCRIPTION' => 4, 'COLOR' => 5, 'BACKGROUND_COLOR' => 6, 'LIVE_STREAM_USING_AIRTIME_AUTH' => 7, 'LIVE_STREAM_USING_CUSTOM_AUTH' => 8, 'LIVE_STREAM_USER' => 9, 'LIVE_STREAM_PASS' => 10, 'LINKED' => 11, 'IS_LINKABLE' => 12, 'IMAGE_PATH' => 13, 'HAS_AUTOPLAYLIST' => 14, 'AUTOPLAYLIST_ID' => 15, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'url' => 2, 'genre' => 3, 'description' => 4, 'color' => 5, 'background_color' => 6, 'live_stream_using_airtime_auth' => 7, 'live_stream_using_custom_auth' => 8, 'live_stream_user' => 9, 'live_stream_pass' => 10, 'linked' => 11, 'is_linkable' => 12, 'image_path' => 13, 'has_autoplaylist' => 14, 'autoplaylist_id' => 15, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, )
+        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbUrl' => 2, 'DbGenre' => 3, 'DbDescription' => 4, 'DbColor' => 5, 'DbBackgroundColor' => 6, 'DbLiveStreamUsingAirtimeAuth' => 7, 'DbLiveStreamUsingCustomAuth' => 8, 'DbLiveStreamUser' => 9, 'DbLiveStreamPass' => 10, 'DbLinked' => 11, 'DbIsLinkable' => 12, 'DbImagePath' => 13, 'DbHasAutoPlaylist' => 14, 'DbAutoPlaylistId' => 15, 'DbAutoPlaylistRepeat' => 16, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbUrl' => 2, 'dbGenre' => 3, 'dbDescription' => 4, 'dbColor' => 5, 'dbBackgroundColor' => 6, 'dbLiveStreamUsingAirtimeAuth' => 7, 'dbLiveStreamUsingCustomAuth' => 8, 'dbLiveStreamUser' => 9, 'dbLiveStreamPass' => 10, 'dbLinked' => 11, 'dbIsLinkable' => 12, 'dbImagePath' => 13, 'dbHasAutoPlaylist' => 14, 'dbAutoPlaylistId' => 15, 'dbAutoPlaylistRepeat' => 16, ),
+        BasePeer::TYPE_COLNAME => array (CcShowPeer::ID => 0, CcShowPeer::NAME => 1, CcShowPeer::URL => 2, CcShowPeer::GENRE => 3, CcShowPeer::DESCRIPTION => 4, CcShowPeer::COLOR => 5, CcShowPeer::BACKGROUND_COLOR => 6, CcShowPeer::LIVE_STREAM_USING_AIRTIME_AUTH => 7, CcShowPeer::LIVE_STREAM_USING_CUSTOM_AUTH => 8, CcShowPeer::LIVE_STREAM_USER => 9, CcShowPeer::LIVE_STREAM_PASS => 10, CcShowPeer::LINKED => 11, CcShowPeer::IS_LINKABLE => 12, CcShowPeer::IMAGE_PATH => 13, CcShowPeer::HAS_AUTOPLAYLIST => 14, CcShowPeer::AUTOPLAYLIST_ID => 15, CcShowPeer::AUTOPLAYLIST_REPEAT => 16, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'URL' => 2, 'GENRE' => 3, 'DESCRIPTION' => 4, 'COLOR' => 5, 'BACKGROUND_COLOR' => 6, 'LIVE_STREAM_USING_AIRTIME_AUTH' => 7, 'LIVE_STREAM_USING_CUSTOM_AUTH' => 8, 'LIVE_STREAM_USER' => 9, 'LIVE_STREAM_PASS' => 10, 'LINKED' => 11, 'IS_LINKABLE' => 12, 'IMAGE_PATH' => 13, 'HAS_AUTOPLAYLIST' => 14, 'AUTOPLAYLIST_ID' => 15, 'AUTOPLAYLIST_REPEAT' => 16, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'url' => 2, 'genre' => 3, 'description' => 4, 'color' => 5, 'background_color' => 6, 'live_stream_using_airtime_auth' => 7, 'live_stream_using_custom_auth' => 8, 'live_stream_user' => 9, 'live_stream_pass' => 10, 'linked' => 11, 'is_linkable' => 12, 'image_path' => 13, 'has_autoplaylist' => 14, 'autoplaylist_id' => 15, 'autoplaylist_repeat' => 16, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, )
     );
 
     /**
@@ -209,6 +212,7 @@ abstract class BaseCcShowPeer
             $criteria->addSelectColumn(CcShowPeer::IMAGE_PATH);
             $criteria->addSelectColumn(CcShowPeer::HAS_AUTOPLAYLIST);
             $criteria->addSelectColumn(CcShowPeer::AUTOPLAYLIST_ID);
+            $criteria->addSelectColumn(CcShowPeer::AUTOPLAYLIST_REPEAT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
@@ -226,6 +230,7 @@ abstract class BaseCcShowPeer
             $criteria->addSelectColumn($alias . '.image_path');
             $criteria->addSelectColumn($alias . '.has_autoplaylist');
             $criteria->addSelectColumn($alias . '.autoplaylist_id');
+            $criteria->addSelectColumn($alias . '.autoplaylist_repeat');
         }
     }
 

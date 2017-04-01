@@ -31,8 +31,27 @@ class AutoPlaylistManager {
             $playlistid = $si->GetAutoPlaylistId();
             Logging::info("Scheduling $playlistid");
             // call the addPlaylist to show function and don't check for user permission to avoid call to non-existant user object
-            $si->addPlaylistToShow($playlistid, false);
+            $sid = $si->getShowId();
+            $playlistrepeat = new Application_Model_Show($sid);
+
+            if ($playlistrepeat->getAutoPlaylistRepeat()) {
+                $full = false;
+                while(!$full) {
+                    $si = new Application_Model_ShowInstance($autoplaylist->getDbId());
+                    $si->addPlaylistToShow($playlistid, false);
+                    $ps = $si->getPercentScheduled();
+                    //Logging::info("The total percent scheduled is % $ps");
+                    if ($ps > 100) {
+                        $full = true;
+                    }
+
+                }
+            }
+            else {
+                $si->addPlaylistToShow($playlistid, false);
+            }
             $si->setAutoPlaylistBuilt(true);
+
         }
         Application_Model_Preference::setAutoPlaylistPollLock(microtime(true));
     }

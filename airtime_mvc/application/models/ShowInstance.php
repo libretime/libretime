@@ -96,7 +96,15 @@ SQL;
         return $show->getDbAutoPlaylistId();
         
     }
-    
+
+    public function getAutoPlaylistRepeat()
+    {
+        $show = CcShowQuery::create()->findPK($this->getShowId());
+        return $show->getDbAutoPlaylistRepeat();
+
+    }
+
+
     /**
      * Return the start time of the Show (UTC time)
      * @return string in format DEFAULT_TIMESTAMP_FORMAT (PHP time notation)
@@ -228,13 +236,18 @@ SQL;
     {
         $ts = intval($this->_showInstance->getDbLastScheduled("U")) ? : 0;
         $id = $this->_showInstance->getDbId();
+        $lastid = $this->getLastAudioItemId();
+//        Logging::info("The last id is $lastid");
 
         $scheduler = new Application_Model_Scheduler($checkUserPerm);
         $scheduler->scheduleAfter(
-            array(array("id" => 0, "instance"  => $id, "timestamp" => $ts)),
+            array(array("id" => $lastid, "instance"  => $id, "timestamp" => $ts)),
             array(array("id" => $pl_id, "type" => "playlist"))
         );
     }
+
+
+
 
     /**
      * Add a media file as the last item in the show.
@@ -641,12 +654,28 @@ SQL;
         return $results;
     }
 
+    public function getLastAudioItemId()
+    {
+        $con = Propel::getConnection();
+
+        $sql = "SELECT id FROM cc_schedule "
+            ."WHERE instance_id = :instanceId "
+            ."ORDER BY ends DESC "
+            ."LIMIT 1";
+
+        $query = Application_Common_Database::prepareAndExecute( $sql,
+            array(':instanceId' => $this->_instanceId), 'column');
+
+        return ($query !== false) ? $query : null;
+    }
+
+
     public function getLastAudioItemEnd()
     {
         $con = Propel::getConnection();
 
         $sql = "SELECT ends FROM cc_schedule "
-            ."WHERE instance_id = :instanceId"
+            ."WHERE instance_id = :instanceId "
             ."ORDER BY ends DESC "
             ."LIMIT 1";
 

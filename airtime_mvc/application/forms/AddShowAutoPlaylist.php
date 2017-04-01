@@ -27,6 +27,13 @@ class Application_Form_AddShowAutoPlaylist extends Zend_Form_SubForm
         $autoPlaylistSelect->setValue(null);
         $autoPlaylistSelect->setDecorators(array('ViewHelper'));
         $this->addElement($autoPlaylistSelect);
+        // Add autoplaylist checkbox element
+        $this->addElement('checkbox', 'add_show_autoplaylist_repeat', array(
+            'label'      => _('Repeat AutoPlaylist Until Show is Full ?'),
+            'required'   => false,
+            'class'      => 'input_text',
+            'decorators'  => array('ViewHelper')
+        ));
     }
 
     public function disable()
