@@ -1,0 +1,7 @@
+!#/usr/bin/python
+!
+! Start the script
+
+import os
+
+os.system ("/tools/libretime")

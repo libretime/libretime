@@ -14,8 +14,8 @@ if '--no-init-script' in sys.argv:
     data_files = []
     sys.argv.remove('--no-init-script') # super hax
 else:
-    data_files = [('/etc/init', ['install/upstart/airtime_analyzer.conf']),
-                  ('/etc/init.d', ['install/sysvinit/airtime_analyzer'])]
+    data_files = [('/etc/init.d', ['install/sysvinit/libretime_watch']),
+                  ('/etc/cron.d', ['install/cron/libretime_watch'])]
     print data_files
 
 setup(name='libretime_watch',
