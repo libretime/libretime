@@ -25,6 +25,11 @@ libportaudio2
 libsamplerate0
 libvo-aacenc0
 
+python-rgain
+python-gst0.10
+gstreamer0.10-plugins-ugly
+gir1.2-gstreamer-0.10
+
 patch
 
 icecast2
