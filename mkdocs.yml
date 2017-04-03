@@ -69,6 +69,7 @@ pages:
     - 'LibreTime API authentication': manual/airtime-api-authentication/index.md
     - 'Secure login with SSL or TLS': manual/secure-login-with-ssl/index.md
     - 'Icecast statistics with Piwik': manual/icecast-statistics-with-piwik/index.md
+    - 'FreeIPA Authentication': freeipa.md
   - 'Development':
     - 'Testing': testing.md
     - 'Vagrant': vagrant.md

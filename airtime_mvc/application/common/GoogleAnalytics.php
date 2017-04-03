@@ -76,6 +76,10 @@ class Application_Common_GoogleAnalytics
     /** Return true if the user used to be on a trial plan and was just converted to a paid plan. */
     public static function didPaidConversionOccur($request)
     {
+        if (LIBRETIME_ENABLE_GOOGLE_ANALYTICS !== true) {
+            return false;
+        }
+
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         if ($userInfo) {
             $user = new Application_Model_User($userInfo->id);

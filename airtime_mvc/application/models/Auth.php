@@ -76,7 +76,10 @@ class Application_Model_Auth
     public static function getAuthAdapter()
     {
         $CC_CONFIG = Config::getConfig();
-        
+        if ($CC_CONFIG['auth'] !== 'local') {
+            return self::getCustomAuthAdapter($CC_CONFIG['auth']);
+        }
+  
         // Database config        
         $db = Zend_Db::factory('PDO_' . $CC_CONFIG['dsn']['phptype'], array(
             'host'     => $CC_CONFIG['dsn']['hostspec'],
@@ -93,6 +96,15 @@ class Application_Model_Auth
                     ->setCredentialTreatment('MD5(?)');
 
         return $authAdapter;
+    }
+
+    /**
+     * Gets an alternative Adapter that does not need to auth agains a databse table
+     *
+     * @return object
+     */
+    public static function getCustomAuthAdapter($adaptor) {
+        return new $adaptor();
     }
 
     /**

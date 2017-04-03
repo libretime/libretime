@@ -37,6 +37,11 @@ class Config {
             $CC_CONFIG['dev_env'] = 'production';
         }
 
+        $CC_CONFIG['auth'] = 'local';
+        if (isset($values['general']['auth'])) {
+            $CC_CONFIG['auth'] = $values['general']['auth'];
+        }
+
         //Backported static_base_dir default value into saas for now.
         if (array_key_exists('static_base_dir', $values['general'])) {
             $CC_CONFIG['staticBaseDir'] = $values['general']['static_base_dir'];
@@ -64,7 +69,7 @@ class Config {
 
         $CC_CONFIG['cache_ahead_hours'] = $values['general']['cache_ahead_hours'];
         
-	    // Database config
+        // Database config
         $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
         $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
         $CC_CONFIG['dsn']['hostspec'] = $values['database']['host'];
@@ -90,6 +95,21 @@ class Config {
             $CC_CONFIG['facebook-app-id'] = $globalAirtimeConfigValues['facebook']['facebook_app_id'];
             $CC_CONFIG['facebook-app-url'] = $globalAirtimeConfigValues['facebook']['facebook_app_url'];
             $CC_CONFIG['facebook-app-api-key'] = $globalAirtimeConfigValues['facebook']['facebook_app_api_key'];
+        }
+
+        // ldap config
+        if (array_key_exists('ldap', $values)) {
+            $CC_CONFIG['ldap_hostname'] = $values['ldap']['hostname'];
+            $CC_CONFIG['ldap_binddn'] = $values['ldap']['binddn'];
+            $CC_CONFIG['ldap_password'] = $values['ldap']['password'];
+            $CC_CONFIG['ldap_account_domain'] = $values['ldap']['account_domain'];
+            $CC_CONFIG['ldap_basedn'] = $values['ldap']['basedn'];
+            $CC_CONFIG['ldap_groupmap_guest'] = $values['ldap']['groupmap_guest'];
+            $CC_CONFIG['ldap_groupmap_host'] = $values['ldap']['groupmap_host'];
+            $CC_CONFIG['ldap_groupmap_program_manager'] = $values['ldap']['groupmap_program_manager'];
+            $CC_CONFIG['ldap_groupmap_admin'] = $values['ldap']['groupmap_admin'];
+            $CC_CONFIG['ldap_groupmap_superadmin'] = $values['ldap']['groupmap_superadmin'];
+            $CC_CONFIG['ldap_filter_field'] = $values['ldap']['filter_field'];
         }
 
         if(isset($values['demo']['demo'])){
