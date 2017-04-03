@@ -98,17 +98,19 @@ class Config {
         }
 
         // ldap config
-        $CC_CONFIG['ldap_hostname'] = $values['ldap']['hostname'];
-        $CC_CONFIG['ldap_binddn'] = $values['ldap']['binddn'];
-        $CC_CONFIG['ldap_password'] = $values['ldap']['password'];
-        $CC_CONFIG['ldap_account_domain'] = $values['ldap']['account_domain'];
-        $CC_CONFIG['ldap_basedn'] = $values['ldap']['basedn'];
-        $CC_CONFIG['ldap_groupmap_guest'] = $values['ldap']['groupmap_guest'];
-        $CC_CONFIG['ldap_groupmap_host'] = $values['ldap']['groupmap_host'];
-        $CC_CONFIG['ldap_groupmap_program_manager'] = $values['ldap']['groupmap_program_manager'];
-        $CC_CONFIG['ldap_groupmap_admin'] = $values['ldap']['groupmap_admin'];
-        $CC_CONFIG['ldap_groupmap_superadmin'] = $values['ldap']['groupmap_superadmin'];
-        $CC_CONFIG['ldap_filter_field'] = $values['ldap']['filter_field'];
+        if (array_key_exists('ldap', $values)) {
+            $CC_CONFIG['ldap_hostname'] = $values['ldap']['hostname'];
+            $CC_CONFIG['ldap_binddn'] = $values['ldap']['binddn'];
+            $CC_CONFIG['ldap_password'] = $values['ldap']['password'];
+            $CC_CONFIG['ldap_account_domain'] = $values['ldap']['account_domain'];
+            $CC_CONFIG['ldap_basedn'] = $values['ldap']['basedn'];
+            $CC_CONFIG['ldap_groupmap_guest'] = $values['ldap']['groupmap_guest'];
+            $CC_CONFIG['ldap_groupmap_host'] = $values['ldap']['groupmap_host'];
+            $CC_CONFIG['ldap_groupmap_program_manager'] = $values['ldap']['groupmap_program_manager'];
+            $CC_CONFIG['ldap_groupmap_admin'] = $values['ldap']['groupmap_admin'];
+            $CC_CONFIG['ldap_groupmap_superadmin'] = $values['ldap']['groupmap_superadmin'];
+            $CC_CONFIG['ldap_filter_field'] = $values['ldap']['filter_field'];
+        }
 
         if(isset($values['demo']['demo'])){
             $CC_CONFIG['demo'] = $values['demo']['demo'];
