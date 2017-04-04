@@ -98,7 +98,7 @@ try:
     if stream_type == "icecast":
         command = "%s 'output.icecast(%%vorbis, host = \"%s\", port = %s, user= \"%s\", password = \"%s\", mount=\"%s\", sine())'" % (liquidsoap_exe, host, port, user, password, mount)
     else:
-        command = "%s /usr/lib/airtime/pypo/bin/liquidsoap_scripts/library/pervasives.liq 'output.shoutcast(%%mp3, host=\"%s\", port = %s, user= \"%s\", password = \"%s\", sine())'" \
+        command = "%s 'output.shoutcast(%%mp3, host=\"%s\", port = %s, user= \"%s\", password = \"%s\", sine())'" \
         % (liquidsoap_exe, host, port, user, password)
 
     if not verbose:
