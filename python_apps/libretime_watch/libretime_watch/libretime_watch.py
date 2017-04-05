@@ -15,6 +15,8 @@ import sys
 import time
 import types
 
+import readconfig as airtime
+
 #for libretime, there is no interactive way to define the watch dir
 #insert into cc_music_dirs (directory,type,exists,watched) values ('/srv/airtime/watch','watched','t','t');
 
@@ -231,7 +233,11 @@ def connect_database():
      return: connection
   """
   try:
-    conn = psycopg2.connect("dbname='airtime' user='airtime' host='localhost' password='airtime'")
+     conn = psycopg2.connect("dbname='"
+          +config["db_name"]+"' user='"
+          +config["db_user"]+"' host='"
+          +config["db_host"]+"' password='"
+          +config["db_pass"]+"'")
   except:
     logging.critical('Unable to connect to the database') 
     #print "I am unable to connect to the database"
@@ -322,9 +328,9 @@ def connect_to_messaging_server():
   """Connect to RabbitMQ Server and start listening for messages. 
      Returns RabbitMQ connection and channel
   """
-  credentials=pika.credentials.PlainCredentials('airtime', 'airtime')
-  connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost',
-            virtual_host='/airtime',credentials=credentials))
+  credentials=pika.credentials.PlainCredentials(config["rm_user"],config["rm_pass"])
+  connection = pika.BlockingConnection(pika.ConnectionParameters(host=config["rm_host"],
+            virtual_host=config["rm_vhost"],credentials=credentials))
   channel = connection.channel()
 #  channel.exchange_delete (exchange=EXCHANGE)
   channel.exchange_declare(exchange=EXCHANGE, type=EXCHANGE_TYPE, durable=True, auto_delete=True)
@@ -398,4 +404,5 @@ def main():
 
 if __name__ == "__main__":
     logging.info("Program started..")
+    config = airtime.read_config()
     main()

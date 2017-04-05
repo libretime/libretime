@@ -23,15 +23,14 @@ setup(name='libretime_watch',
       description='Libretime Watch existing directory',
       url='http://github.com/libretime/libretime',
       author='HaJoHe',
-      author_email='rmi@chef.net',
+      author_email='rni@chef.net',
       license='MIT',
-      packages=['libretime_watch'],
+#      py_modules=['libretime_watch/libretime_watch', 'libretime_watch/readconfig.py'],
       scripts=['bin/libretime_watch'],
       install_requires=[
-          'mutagen==1.31', # The Mutagen guys change stuff all the time that break our unit tests. Watch out for this.
+          'mutagen',
           'pika',
-          'codecs',
-          'pyscopg2', # database
+          'psycopg2', # database
           'jason'
       ],
       zip_safe=False,
@@ -40,4 +39,3 @@ setup(name='libretime_watch',
 # Remind users to reload the initctl config so that "service start airtime_analyzer" works
 if data_files:
     print "Remember to reload the initctl configuration"
-    print "Run \"sudo initctl reload-configuration; sudo service libretime_watch restart\" now."
