@@ -32,6 +32,9 @@ EXCHANGE_TYPE = "direct"
 ROUTING_KEY="filesystem"
 QUEUE="media-monitor"
 
+timestamp_file = "/var/tmp/airtime/media-monitor/last_index"
+logfile= "/var/log/airtime/libretime_watch.log"
+
 # create empty dictionary 
 database = {}
 # keep the program running
@@ -40,7 +43,7 @@ shutdown=False
 #
 # logging
 #
-logging.basicConfig(format='%(asctime)s %(message)s',filename='/var/log/airtime/libretime_watch.log',level=logging.INFO)
+logging.basicConfig(format='%(asctime)s %(message)s',filename=logfile,level=logging.INFO)
 
 
 
@@ -228,6 +231,23 @@ def analyse_file (filename):
           #print "Error: ",str(err),filename
    return analyse_ok
 
+def touch_timestamp():
+  """Returns the timestamp of the last run"""
+  try:
+     timestamp = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(int(os.path.getmtime(timestamp_file))))
+  except OSError as e:
+     # create directory if not exists
+     folder=os.path.dirname(timestamp_file)
+     if not os.path.exists(folder):
+       os.makedirs(folder)
+     timestamp="1974-01-01 00:00:00"
+  #Update mtime
+  file = open (timestamp_file,"w")
+  file.write("")
+  file.close()
+
+  return timestamp
+
 def connect_database():
   """Connect database
      return: connection
@@ -245,7 +265,8 @@ def connect_database():
 
 
 def watch (dir_id):
-    logging.info ("Start scanning Dir ID: "+str(dir_id))
+    timestamp = touch_timestamp()
+    logging.info ("Start scanning Dir ID: "+str(dir_id)+ " for new files since "+ timestamp)
     # look for what dir we've to watch
     conn = connect_database()
     cur = conn.cursor()
@@ -294,17 +315,17 @@ def watch (dir_id):
 #            time.sleep(1)
           else :
             cur1 = conn.cursor()
-            try:
-              # look for mtime
-              cur1.execute ("SELECT mtime from cc_files where"
-                +" filepath = '"+database["filepath"]+"'" 
-                +" and directory = "+str(database["directory"]))
-            except:
-              logging.warning ("I can't SELECT mtime ... from cc_files")
-              #print "I can't SELECT from cc_files"
-            row = cur1.fetchone()
-            # update needs only called, if mtime different
-            if str(row[0]) != database["mtime"]:
+#            try:
+#              # look for mtime
+#              cur1.execute ("SELECT mtime from cc_files where"
+#                +" filepath = '"+database["filepath"]+"'" 
+#                +" and directory = "+str(database["directory"]))
+#            except:
+#              logging.warning ("I can't SELECT mtime ... from cc_files")
+#              #print "I can't SELECT from cc_files"
+#            row = cur1.fetchone()
+            # update needs only called, if new since last run
+            if timestamp < database["mtime"]:
                logging.info("Update: "+database["filepath"])
                #print ("Update "+database["filepath"])
                database["utime"] = datetime.datetime.now()
