@@ -26,6 +26,7 @@ setup(name='libretime_watch',
       author_email='rni@chef.net',
       license='MIT',
 #      py_modules=['libretime_watch/libretime_watch', 'libretime_watch/readconfig.py'],
+      packages=['libretime_watch'],
       scripts=['bin/libretime_watch'],
       install_requires=[
           'mutagen',
