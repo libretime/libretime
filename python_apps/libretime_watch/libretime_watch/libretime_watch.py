@@ -264,23 +264,24 @@ def connect_database():
   return conn
 
 
-def watch (dir_id):
+def watch (dir_id, directory):
     timestamp = touch_timestamp()
     logging.info ("Start scanning Dir ID: "+str(dir_id)+ " for new files since "+ timestamp)
     # look for what dir we've to watch
     conn = connect_database()
     cur = conn.cursor()
-    try:
-      cur.execute ("SELECT directory from cc_music_dirs where id = '"+dir_id+"'")
-      row = cur.fetchone()
-      watch_dir = row[0]+"/"
-      len_watch_dir = len(watch_dir) 
-      cur.close()
-    except:
-      logging.critical("Can't get directory for watching") 
-      #print ("Can't get directory for watching")
-      exit()
- 
+#    try:
+#      cur.execute ("SELECT directory from cc_music_dirs where id = '"+dir_id+"'")
+#      row = cur.fetchone()
+#      watch_dir = row[0]+"/"
+#      len_watch_dir = len(watch_dir) 
+#      cur.close()
+#    except:
+#      logging.critical("Can't get directory for watching") 
+#      #print ("Can't get directory for watching")
+#      exit()
+    watch_dir=directory
+    len_watch_dir=len(watch_dir) 
     # so now scan all directories
     for curroot, dirs, files in os.walk(watch_dir):
         if files == None:
@@ -381,8 +382,8 @@ def msg_received_callback (channel, method, properties,body):
 
   if "rescan_watch" in msg_dict["cmd"]: 
        # now call the watching routine 
-       logging.info ("Got message: "+msg_dict["cmd"]+" ID: "+msg_dict["id"])
-       watch(msg_dict["id"]) 
+       logging.info ("Got message: "+msg_dict["cmd"]+" ID: "+str(msg_dict["id"])+" directory: "+msg_dict["directory"])
+       watch(str(msg_dict["id"]),msg_dict["directory"]) 
   else :
        logging.info ("Got unhandled message: "+body)
   channel.basic_ack(delivery_tag = method.delivery_tag)
