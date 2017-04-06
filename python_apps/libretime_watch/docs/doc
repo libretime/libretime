@@ -1,0 +1,14 @@
+#
+# libretime_watch
+#
+... is started by a init.d script (should be init later)
+... is watching for files in a watching directory ;-)
+... is kicked off by a cronjob test_rabbit.py (should be done by libretime later)
+... is doing an analyse of the media file (ID3 tag, cue in, cue out, rgain, ...)
+... is doing an insert or update in the database (should be done by libretime later)
+
+It will not create a new db entry for existing files, just updating it !!!!
+
+Most of the stuff has been inspired by the airtime programs media-monitor and 
+airtime_analyze
+
