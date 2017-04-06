@@ -1,7 +1,7 @@
-!#/usr/bin/python
-!
-! Start the script
-
+#!/usr/bin/python
 import os
+import inspect
+import libretime_watch
 
-os.system ("/tools/libretime")
+print ("Now starting libretime_watch....")
+os.system("python "+os.path.dirname(inspect.getfile(libretime_watch))+"/libretime_watch.pyc")
