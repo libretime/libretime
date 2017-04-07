@@ -152,7 +152,7 @@ function checkLiquidsoapService() {
  * @return boolean true if airtime-celery is running
  */
 function checkCeleryService() {
-    exec("pgrep -f -u www-data airtime-celery", $out, $status);
+    exec("pgrep -f -u celery airtime-celery", $out, $status);
     if (array_key_exists(0, $out) && $status == 0) {
         return posix_kill(rtrim($out[0]), 0);
     }
