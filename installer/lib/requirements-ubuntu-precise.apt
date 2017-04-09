@@ -30,6 +30,7 @@ gstreamer0.10-plugins-ugly
 gir1.2-gstreamer-0.10
 patch
 
+curl
 php5-curl
 mpg123
 
