@@ -438,7 +438,7 @@ final class LocaleController extends Zend_Controller_Action
         );
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
-        header("Content-type: text/javascript");
-        echo "var general_dict=".$this->_helper->json->encodeJson($translations);
+        header("Content-Type: text/javascript");
+        echo "var general_dict=" . json_encode($translations);
     }
 }
