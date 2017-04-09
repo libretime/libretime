@@ -30,16 +30,14 @@ def printUsage():
 
 def find_liquidsoap_binary():
     """
-    With libretime 3.0 we are no longer depending upon airtime-liquidsoap but using the built in liquidsoap
-    rather than a bundled version of it. So this function no longer needs to be used.
-    Starting with Airtime 2.0, we don't know the exact location of the Liquidsoap
-    binary because it may have been installed through a debian package. Let's find
-    the location of this binary.
+    With libretime 3.0 we are no longer depending upon the airtime-liquidsoap binary
+    but use a generic install of liquidsoap. This takes care of checking if it is on the
+    path and will lead to an error otherwise.
     """
 
-    rv = subprocess.call("which airtime-liquidsoap > /dev/null", shell=True)
+    rv = subprocess.call("which liquidsoap > /dev/null", shell=True)
     if rv == 0:
-        return "airtime-liquidsoap"
+        return "liquidsoap"
 
     return None
 
@@ -97,10 +95,10 @@ try:
         raise Exception("Liquidsoap not found!")
 
     if stream_type == "icecast":
-        command = "liquidsoap 'output.icecast(%%vorbis, host = \"%s\", port = %s, user= \"%s\", password = \"%s\", mount=\"%s\", sine())'" % (host, port, user, password, mount)
+        command = "%s 'output.icecast(%%vorbis, host = \"%s\", port = %s, user= \"%s\", password = \"%s\", mount=\"%s\", sine())'" % (liquidsoap_exe, host, port, user, password, mount)
     else:
-        command = "liquidsoap 'output.shoutcast(%%mp3, host=\"%s\", port = %s, user= \"%s\", password = \"%s\", sine())'" \
-        % (host, port, user, password)
+        command = "%s 'output.shoutcast(%%mp3, host=\"%s\", port = %s, user= \"%s\", password = \"%s\", sine())'" \
+        % (liquidsoap_exe, host, port, user, password)
 
     if not verbose:
         command += " 2>/dev/null | grep \"failed\""
