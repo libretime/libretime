@@ -328,7 +328,11 @@ if [ "$ignore_dependencies" = "f" ]; then
     verbose "\n * Reading requirements-${dist,,}-${code,,}.apt..."
     loudCmd "apt-get update"
     if [ -f ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt ]; then
-        loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
+        if [ ${dist,,} == "Ubuntu" ] && [ ${code,,} == "xenial" ]; then
+            loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --allow install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
+        else
+            loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
+        fi
     else
         loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-ubuntu-trusty.apt | tr '\n' ' ')"
     fi
