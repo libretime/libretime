@@ -3,8 +3,11 @@ libapache2-mod-php7.0
 php7.0
 php-pear
 php7.0-gd
+php-bcmath
+php-mbstring
 
 lsb-release
+upstart-sysv
 
 rabbitmq-server
 
@@ -40,7 +43,7 @@ libpulse0
 vorbis-tools
 lsof
 # mp3gain need to be installed over an external ppa or the use of easymp3gain
-easymp3gain
+easymp3gain-gtk
 vorbisgain
 flac
 vorbis-tools
