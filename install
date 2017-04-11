@@ -328,8 +328,8 @@ if [ "$ignore_dependencies" = "f" ]; then
     verbose "\n * Reading requirements-${dist,,}-${code,,}.apt..."
     loudCmd "apt-get update"
     if [ -f ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt ]; then
-        if [ ${dist,,} == "Ubuntu" ] && [ ${code,,} == "xenial" ]; then
-            loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --allow install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
+        if [ ${dist,,} == "ubuntu" ] && [ ${code,,} == "xenial" ]; then
+            loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --allow-downgrades --allow-remove-essential --allow-change-held-packages install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
         else
             loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
         fi
@@ -363,7 +363,6 @@ fi
 
 # Run composer (install PHP dependencies) and create a VERSION file
 loudCmd "./build.sh"
-
 if [ -f /etc/airtime/airtime.conf ]; then
     OLD_CONF=$(grep "[media-monitor]" /etc/airtime/airtime.conf)
     
@@ -637,7 +636,12 @@ chmod -R a+x /var/tmp/airtime
 chown -R ${web_user}:${web_user} /var/tmp/airtime/
 
 # PHP Config File for Apache
-libretime_phpini="/etc/php5/apache2/conf.d/airtime.ini"
+if [ ${dist,,} == "ubuntu" ] && [ ${code,,} == "xenial" ]; then
+    libretime_phpini="/etc/php/7.0/apache2/conf.d/airtime.ini"
+else
+    libretime_phpini="/etc/php5/apache2/conf.d/airtime.ini"
+fi
+
 if [ "$dist" = "centos" ]; then
     libretime_phpini="/etc/php.d/airtime.ini"
 fi
@@ -649,8 +653,10 @@ else
 fi
 
 # Enable Apache modules
-if [ "$dist" != "centos" ]; then
+if [ "$dist" != "centos" ] && [ "$code" != "xenial" ]; then
     loudCmd "a2enmod rewrite php5"
+elif [ "$dist" == "ubuntu" ] && [ "$code" == "xenial" ]; then
+	loudCmd "a2enmod rewrite php7.0"
 fi
 
 loud "\n-----------------------------------------------------"
