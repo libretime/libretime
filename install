@@ -364,8 +364,6 @@ set +e
 		loudCmd "reboot"
     fi
 set -e
-echo "Got it "
-exit
 # Check if composer exists and install if it doesn't
 set +e
 eval hash "composer" 2>/dev/null
