@@ -349,21 +349,21 @@ else
     fi
 fi
 
-set +e
-    command="initctl"
-    eval hash ${command} 2>/dev/null
-    commandFound=$?
-    if [[ ! ${commandFound} -eq 0 ]] && [ "$dist" == "ubuntu" ] && [ "$code" == "xenial" ]; then
-		verbose "\n * Reset Systemd with Upstart"
-		loudCmd "update-initramfs -u"
-		echo
-		echo "We detect Ubuntu Xenial on your system so we need to change systemd to Upstart to complete this we need to restart your system!"
-		echo "After the restart just restart the instalation."
-		echo -e "To reboot press any key to reboot. \c"
-		read IN
-		loudCmd "reboot"
-    fi
-set -e
+#set +e
+#    command="initctl"
+#    eval hash ${command} 2>/dev/null
+#    commandFound=$?
+#    if [[ ! ${commandFound} -eq 0 ]] && [ "$dist" == "ubuntu" ] && [ "$code" == "xenial" ]; then#
+#		verbose "\n * Reset Systemd with Upstart"
+#		loudCmd "update-initramfs -u"
+#		echo
+#		echo "We detect Ubuntu Xenial on your system so we need to change systemd to Upstart to complete this we need to restart your system!"
+#		echo "After the restart just restart the instalation."
+#		echo -e "To reboot press any key to reboot. \c"
+#		read IN
+#		loudCmd "reboot"
+#    fi
+#set -e
 # Check if composer exists and install if it doesn't
 set +e
 eval hash "composer" 2>/dev/null
