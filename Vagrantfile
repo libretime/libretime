@@ -38,7 +38,17 @@ Vagrant.configure("2") do |config|
   installer_args="--force --in-place --verbose --postgres --apache --icecast "
 
   # define all the OS boxes we support
+  config.vm.define "ubuntu-xenial" do |os|
+    os.vm.box = "bento/ubuntu-16.04"
+    provision_libretime(os, "ubuntu.sh", installer_args + "--distribution=ubuntu --release=xenial")
+  end
+  config.vm.define "ubuntu-trusty" do |os|
+    os.vm.box = "bento/ubuntu-14.04"
+    provision_libretime(os, "ubuntu.sh", installer_args + "--distribution=ubuntu --release=trusty")
+  end
   config.vm.define "ubuntu" do |os|
+    STDERR.puts 'WARNING: The "ubuntu" option is deprecated. Please migrate to "ubuntu-trusty".'
+    STDERR.puts
     os.vm.box = "ubuntu/trusty64"
     provision_libretime(os, "ubuntu.sh", installer_args + "--distribution=ubuntu --release=trusty")
   end
