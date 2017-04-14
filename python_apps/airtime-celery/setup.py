@@ -43,7 +43,7 @@ setup(name='airtime-celery',
       packages=['airtime-celery'],
       install_requires=[
           'soundcloud',
-          'celery',
+          'celery < 4',
           'kombu',
           'configobj'
       ],
