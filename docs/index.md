@@ -20,7 +20,7 @@ The easiest way to check out LibreTime for yourself is to run a local instance i
 ```bash
 git clone https://github.com/libretime/libretime.git
 cd libretime
-vagrant up ubuntu
+vagrant up ubuntu-trusty
 ```
 
 If everything works out, you will find LibreTime on [port 8080](http://localhost:8080), icecast on [port 8000](http://localhost:8000) and the docs on [port 8888](http://localhost:8888).
