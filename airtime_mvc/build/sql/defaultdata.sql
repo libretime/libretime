@@ -3,7 +3,7 @@ INSERT INTO cc_pref("keystr", "valstr") VALUES('schema_version', '3.0.0-alpha');
 
 INSERT INTO cc_subjs ("login", "type", "pass") VALUES ('admin', 'A', md5('admin'));
 -- added in 2.3
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('off_air_meta', 'Airtime - offline', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('off_air_meta', 'LibreTime - offline', 'string');
 INSERT INTO cc_pref("keystr", "valstr") VALUES('enable_replay_gain', 1);
 -- end of added in 2.3
 
@@ -36,7 +36,7 @@ INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_admin_use
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_admin_pass', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_mount', 'airtime_128', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_url', 'http://airtime.sourcefabric.org', 'string');
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_description', 'Airtime Radio! Stream #1', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_description', 'LibreTime Radio! Stream #1', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_genre', 'genre', 'string');
 
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_enable', 'false', 'boolean');
@@ -312,7 +312,7 @@ INSERT INTO cc_country (isocode, name) VALUES ('ZWE', 'Zimbabwe ');
 
 
 -- added in 2.2
-INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_name', 'Airtime!', 'string');
+INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_name', 'LibreTime!', 'string');
 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_name', '', 'string');
 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_name', '', 'string');
 
