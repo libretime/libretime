@@ -4,6 +4,7 @@
 import argparse
 import os
 import generate_liquidsoap_cfg
+import logging
 
 PYPO_HOME = '/var/tmp/airtime/pypo/'
 
@@ -15,6 +16,9 @@ def run():
     args = parser.parse_args()
     
     os.environ["HOME"] = PYPO_HOME
+
+    if args.debug:
+        logging.basicConfig(level=getattr(logging, 'DEBUG', None))
     
     generate_liquidsoap_cfg.run()
     script_path = os.path.join(os.path.dirname(__file__), 'ls_script.liq')
