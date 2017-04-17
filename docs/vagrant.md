@@ -20,12 +20,12 @@ To get started you clone the repo and run `vagrant up`.
 ```bash
 git clone https://github.com/libretime/libretime.git
 cd libretime
-vagrant up ubuntu
+vagrant up ubuntu-trusty
 ```
 
 If everything works out, you will find LibreTime on [port 8080](http://localhost:8080), icecast on [port 8000](http://localhost:8000) and the docs on [port 8888](http://localhost:8888).
 
-Once you reach the web setup GUI you can click through it using the default values. To connect to the vagrant machine you can run `vagrant ssh ubuntu` in the libretime directory.
+Once you reach the web setup GUI you can click through it using the default values. To connect to the vagrant machine you can run `vagrant ssh ubuntu-trusty` in the libretime directory.
 
 ## Alternative OS installations
 
@@ -33,9 +33,11 @@ With the above instructions LibreTime is installed on Ubuntu Trusty Tahir. The V
 
 | OS     | Command             | Comment |
 | ------ | ------------------- | ------- |
-| Ubuntu | `vagrant up ubuntu` | Current default install since it was used by legacy upstream, based on Trusty Tahir . |
+| Ubuntu 14.04 | `vagrant up ubuntu-trusty` | Current default install since it was used by legacy upstream, based on Trusty Tahir. |
 | Debian | `vagrant up debian` | Recommended install on Jessie as per the docs. |
+| Ubuntu 16.04 | `vagrant up ubuntu-xenial` | Experimental install on current Ubuntu Xenial Xerus. |
 | CentOS | `vagrant up centos` | Experimental install on 7.3 with native systemd support and activated SELinux. |
+| Ubuntu | `vagrant up ubuntu` | Deprecated Ubuntu Trusty install, replaced by `ubuntu-trusty`. Do not use for new installs! |
 
 ## Troubleshooting
 
