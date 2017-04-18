@@ -90,6 +90,7 @@ class EmbedController extends Zend_Controller_Action
 
         $request = $this->getRequest();
 
+        $this->view->angular = Application_Common_HTTPHelper::getStationUrl() . 'js/libs/angular.min.js?'.$CC_CONFIG['airtime_version'];
         $widgetStyle = $request->getParam('style');
         if ($widgetStyle == "premium") {
             $this->view->widgetStyle = "premium";
