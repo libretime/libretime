@@ -16,16 +16,12 @@ import time
 import types
 
 import readconfig as airtime
+import metadata as airtime_md
 
 #for libretime, there is no interactive way to define the watch dir
 #insert into cc_music_dirs (directory,type,exists,watched) values ('/srv/airtime/watch','watched','t','t');
 
 
-# definitions RabbitMQ
-#EXCHANGE = "airtime-watch"
-#EXCHANGE_TYPE = "topic"
-#ROUTING_KEY = ""
-#QUEUE = "airtime-watch"
 
 EXCHANGE="airtime-media-monitor"
 EXCHANGE_TYPE = "direct"
@@ -40,6 +36,7 @@ database = {}
 # keep the program running
 shutdown=False
 
+config = {}
 #
 # logging
 #
@@ -50,7 +47,6 @@ logging.basicConfig(format='%(asctime)s %(message)s',filename=logfile,level=logg
 def update_database (conn):
    """Update database dictionary to cc_files
    """
-
    cur = conn.cursor()
    cols = database.keys()
    cols_str = str(cols)
@@ -80,156 +76,6 @@ def insert_database (conn):
            cols = cols_str, vals_str = vals_str), vals)
    conn.commit()
    cur.close()
-
-#
-# analysing the file
-#
-def replay_gain (filename):
-   """Getting the replaygain via python-rplay"""
-
-   EXE="replaygain"
-
-   command = [EXE, '-d', filename]
-   try:
-            results = subprocess.check_output(command, stderr=subprocess.STDOUT, close_fds=True)
-            filename_token = "%s: " % filename
-            rg_pos = results.find(filename_token, results.find("Calculating Replay Gain information")) + len(filename_token)
-            db_pos = results.find(" dB", rg_pos)
-            replaygain = results[rg_pos:db_pos]
-
-   except OSError as e: # replaygain was not found
-            logging.warn("Failed to run: %s - %s. %s" % (command[0], e.strerror, "Do you have python-rgain installed?"))
-   except subprocess.CalledProcessError as e: # replaygain returned an error code
-            logging.warn("%s %s %s", e.cmd, e.message, e.returncode)
-   except Exception as e:
-            logging.warn(e)
-
-   return replaygain
-
-def cue_points (filename, cue_in, cue_out):
-   """Analyse file cue using silan
-      return cue_in, cue_out
-   """
-
-   EXE="silan"
-
-   command = [EXE, '-q', '-b', '-F', '0.99', '-f', 'JSON', '-t', '1.0', filename]
-   try:
-            results_json = subprocess.check_output(command, stderr=subprocess.STDOUT, close_fds=True)
-            silan_results = json.loads(results_json)
-            # Defensive coding against Silan wildly miscalculating the cue in and out times:
-            silan_cuein = float(format(silan_results['sound'][0][0], 'f'))
-            silan_cueout = float (format(silan_results['sound'][0][1], 'f'))
-            # get cue_out(coming from mutagen) as seconds
-            x = datetime.datetime.strptime(cue_out, '%H:%M:%S.%f') - datetime.datetime(1900,1,1)
-            cue_out_sec= x.total_seconds()
-            # trust silan only, if the calculated value is within 95%..102% of the mutagen cue_out
-            if silan_cueout > cue_out_sec * 0.95 and silan_cueout < cue_out_sec * 1.02:
-               cue_out =  datetime.timedelta(seconds=silan_cueout)
-               logging.info ("Silan defined a new cue_out: " + str(cue_out))
-            cue_in = datetime.timedelta(seconds=silan_cuein)
-            logging.info("Silan: "+str(silan_cuein)+" "+str(silan_cueout)+" "+str(cue_out_sec))
-
-   except OSError as e: # silan was not found
-            logging.warn("Failed to run: %s - %s. %s" % (command[0], e.strerror, "Do you have silan installed?"))
-   except subprocess.CalledProcessError as e: # silan returned an error code
-            logging.warn("%s %s %s", e.cmd, e.message, e.returncode)
-   except Exception as e:
-            logging.warn(e)
-
-   return cue_in, cue_out
-
-
-def analyse_file (filename):
-   """This method analyses the file and returns analyse_ok 
-      It's filling the database dictionary with metadata read from
-      the file
-   """
-   import hashlib
-   import magic
-   # test
-   from mimetypes import MimeTypes
-   from mutagen.easyid3 import EasyID3
-   from mutagen.mp3 import MP3
-   import mutagen
-
-   analyse_ok=False
-   logging.info ("analyse Filename: "+filename)
-   #try to determin the filetype 
-   mime_check = magic.from_file(filename, mime=True)
-   database["mime"] = mime_check
-   # test
-   #f = MP3(filename)
-   #f= mutagen.FileType(filename)
-   #mime_mutagen = f.mime[0]
-   #logging.info (" mutagen: " +mime_mutagen )
-   
-   mime = MimeTypes()
-   type, a = mime.guess_type(filename)
-   logging.info ("mime_check :"+database["mime"]+ " mime: "+type)
-   #+" mutagen: " +mime_mutagen )
-   #
-   database["ftype"] = "audioclip"
-   database["filesize"] = os.path.getsize(filename) 
-   database["import_status"]=0
-   #md5
-   with open(filename, 'rb') as fh:
-       m = hashlib.md5()
-       while True:
-           data = fh.read(8192)
-           if not data:
-              break
-           m.update(data)
-       database["md5"] = m.hexdigest()
-   # MP3 file ?
-   if database["mime"] in ['audio/mpeg','audio/mp3','application/octet-stream']:
-     try:
-       audio = EasyID3(filename)
-       database["track_title"]=audio['title'][0]
-       try:
-         database["artist_name"]=audio['artist'][0]
-       except StandardError, err:
-         logging.warning('no title ID3 for '+filename) 
-         database["artist_name"]= ""       
-       try:
-         database["genre"]=audio['genre'][0]
-       except StandardError, err:
-         logging.warning('no genre ID3 for '+filename) 
-         database["genre"]= ""
-       try:
-         database["album_title"]=audio['album'][0]
-       except StandardError, err:
-         database["album_title"]= ""
-       # get data encoded into file
-       f = MP3(filename)
-       database["bit_rate"]=f.info.bitrate
-       database["sample_rate"]=f.info.sample_rate
-       if hasattr(f.info, "length"):
-         #Converting the length in seconds (float) to a formatted time string
-         track_length = datetime.timedelta(seconds=f.info.length)
-         database["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
-         # Other fields for Airtime
-         database["cueout"] = database["length"]
-         database["replay_gain"]=float(replay_gain(filename))
-       database["cuein"]= "00:00:00.0"
-       # get better (?) cuein, cueout using silan
-       database["cuein"], database["cueout"] = cue_points (filename, database["cuein"], database["cueout"])
-       # use mutage to get better mime 
-       if  f.mime:
-            database["mime"] = f.mime[0]
-       if database["mime"] in ["audio/mpeg", 'audio/mp3']:
-          if f.info.mode == 3:
-                database["channels"] = 1
-          else:
-                database["channels"] = 2
-       else:
-            database["channels"] = f.info.channels
-       analyse_ok=True
-
-     except StandardError, err:
-          logging.error('Error ',str(err),filename) 
-          #print "Error: ",str(err),filename
-   return analyse_ok
 
 def touch_timestamp():
   """Returns the timestamp of the last run"""
@@ -266,7 +112,7 @@ def connect_database():
 
 def watch (dir_id, directory):
     timestamp = touch_timestamp()
-    logging.info ("Start scanning Dir ID: "+str(dir_id)+ " for new files since "+ timestamp)
+    logging.info ("Start scanning directory "+directory+ " for new files since "+ timestamp)
     # look for what dir we've to watch
     conn = connect_database()
     cur = conn.cursor()
@@ -280,7 +126,7 @@ def watch (dir_id, directory):
 #      logging.critical("Can't get directory for watching") 
 #      #print ("Can't get directory for watching")
 #      exit()
-    watch_dir=directory
+    watch_dir=str(directory)
     len_watch_dir=len(watch_dir) 
     # so now scan all directories
     for curroot, dirs, files in os.walk(watch_dir):
@@ -310,7 +156,7 @@ def watch (dir_id, directory):
             logging.info("Insert: "+database["filepath"])
             #print ("Insert: "+database["filepath"])
             database["utime"] = datetime.datetime.now()
-            if analyse_file (curFilePath):
+            if airtime_md.analyse_file (curFilePath,database):
               insert_database (conn)
             #let's sleep
 #            time.sleep(1)
@@ -330,7 +176,7 @@ def watch (dir_id, directory):
                logging.info("Update: "+database["filepath"])
                #print ("Update "+database["filepath"])
                database["utime"] = datetime.datetime.now()
-               if analyse_file (curFilePath):
+               if airtime_md.analyse_file (curFilePath,database):
                  update_database (conn)
             cur1.close()
           cur.close()
@@ -369,7 +215,7 @@ def msg_received_callback (channel, method, properties,body):
   '''Message reader'''
   try:
     msg_dict = json.loads(body)
-    #api_key         = msg_dict["api_key"]
+    api_key         = msg_dict["api_key"]
     #callback_url    = msg_dict["callback_url"]
 
     #audio_file_path = msg_dict["tmp_file_path"]
@@ -398,6 +244,9 @@ def disconnect_from_messaging_server(connection):
   connection.close()
 
 def main():
+  logging.info("Program started..")
+  config = airtime.read_config()
+
   # Set up a signal handler so we can shutdown gracefully
   # For some reason, this signal handler must be set up here. I'd rather 
   # put it in AirtimeAnalyzerServer, but it doesn't work there (something to do
@@ -425,6 +274,4 @@ def main():
 
 
 if __name__ == "__main__":
-    logging.info("Program started..")
-    config = airtime.read_config()
     main()
