@@ -11,9 +11,9 @@
 
 #USERID=www-data
 #GROUPID=www-data
-NAME=libretime_watch.py
+NAME=libretime_watch
 
-DAEMON=/tools/$NAME
+DAEMON=/usr/local/bin/$NAME
 PIDFILE=/var/run/$NAME.pid
 
 # Exit if the package is not installed
