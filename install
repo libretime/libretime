@@ -349,21 +349,6 @@ else
     fi
 fi
 
-#set +e
-#    command="initctl"
-#    eval hash ${command} 2>/dev/null
-#    commandFound=$?
-#    if [[ ! ${commandFound} -eq 0 ]] && [ "$dist" == "ubuntu" ] && [ "$code" == "xenial" ]; then#
-#		verbose "\n * Reset Systemd with Upstart"
-#		loudCmd "update-initramfs -u"
-#		echo
-#		echo "We detect Ubuntu Xenial on your system so we need to change systemd to Upstart to complete this we need to restart your system!"
-#		echo "After the restart just restart the instalation."
-#		echo -e "To reboot press any key to reboot. \c"
-#		read IN
-#		loudCmd "reboot"
-#    fi
-#set -e
 # Check if composer exists and install if it doesn't
 set +e
 eval hash "composer" 2>/dev/null
@@ -583,15 +568,19 @@ fi
 # Add celery to the www-data group
 loudCmd "usermod -G ${web_user} -a celery"
 
-if [ "$dist" = "ubuntu" ]; then
+if [ "$dist" = "ubuntu" ] && [ "$code" != "xenial" ]; then
     loudCmd "initctl reload-configuration"
+elif [ "$dist" = "ubuntu" ] && [ "$code" = "xenial" ]; then
+	loudCmd "systemctl daemon-reload"
 fi
 verbose "...Done"
 
 verbose "\n * Installing airtime_analyzer..."
 loudCmd "python ${AIRTIMEROOT}/python_apps/airtime_analyzer/setup.py install --install-scripts=/usr/bin"
-if [ "$dist" = "ubuntu" ]; then
+if [ "$dist" = "ubuntu" ] && [ "$code" != "xenial" ]; then
     loudCmd "initctl reload-configuration"
+elif [ "$dist" = "ubuntu" ] && [ "$code" = "xenial" ]; then
+	loudCmd "systemctl daemon-reload"
 fi
 verbose "...Done"
 
@@ -605,7 +594,7 @@ set +e
 if [ "$dist" = "ubuntu" ] && [ "$code" != "xenial" ] ; then
     loudCmd "initctl reload-configuration"
 elif [ "$dist" = "ubuntu" ] && [ "$code" = "xenial" ]; then
-	loudCmd "systemctl restart celery"
+	loudCmd "systemctl daemon-reload"
 fi
 
 # airtime-celery only has an init.d startup script
