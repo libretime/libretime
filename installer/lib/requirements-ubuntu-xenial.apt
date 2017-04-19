@@ -7,7 +7,6 @@ php-bcmath
 php-mbstring
 
 lsb-release
-# upstart-sysv
 
 rabbitmq-server
 
