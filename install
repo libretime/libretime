@@ -328,7 +328,11 @@ if [ "$ignore_dependencies" = "f" ]; then
     verbose "\n * Reading requirements-${dist,,}-${code,,}.apt..."
     loudCmd "apt-get update"
     if [ -f ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt ]; then
-        loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
+        if [ ${dist,,} == "ubuntu" ] && [ ${code,,} == "xenial" ]; then
+            loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --allow-downgrades --allow-remove-essential --allow-change-held-packages install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
+        else
+            loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
+        fi
     else
         loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-ubuntu-trusty.apt | tr '\n' ' ')"
     fi
@@ -359,7 +363,6 @@ fi
 
 # Run composer (install PHP dependencies) and create a VERSION file
 loudCmd "./build.sh"
-
 if [ -f /etc/airtime/airtime.conf ]; then
     OLD_CONF=$(grep "[media-monitor]" /etc/airtime/airtime.conf)
     
@@ -369,7 +372,7 @@ if [ -f /etc/airtime/airtime.conf ]; then
         set +e
         verbose "Stopping airtime services..."
         loudCmd "service airtime-playout stop"
-        loudCmd "service airtime-media-monitor stop"
+        loudCmd "service airtime-celery stop"
         loudCmd "service airtime_analyzer stop"
         loudCmd "service airtime-liquidsoap stop"
         verbose "...Done"
@@ -565,15 +568,19 @@ fi
 # Add celery to the www-data group
 loudCmd "usermod -G ${web_user} -a celery"
 
-if [ "$dist" = "ubuntu" ]; then
+if [ "$dist" = "ubuntu" ] && [ "$code" != "xenial" ]; then
     loudCmd "initctl reload-configuration"
+elif [ "$dist" = "ubuntu" ] && [ "$code" = "xenial" ]; then
+	loudCmd "systemctl daemon-reload"
 fi
 verbose "...Done"
 
 verbose "\n * Installing airtime_analyzer..."
 loudCmd "python ${AIRTIMEROOT}/python_apps/airtime_analyzer/setup.py install --install-scripts=/usr/bin"
-if [ "$dist" = "ubuntu" ]; then
+if [ "$dist" = "ubuntu" ] && [ "$code" != "xenial" ]; then
     loudCmd "initctl reload-configuration"
+elif [ "$dist" = "ubuntu" ] && [ "$code" = "xenial" ]; then
+	loudCmd "systemctl daemon-reload"
 fi
 verbose "...Done"
 
@@ -584,8 +591,10 @@ for i in /etc/init/airtime*.template; do
 done
 
 set +e
-if [ "$dist" = "ubuntu" ]; then
+if [ "$dist" = "ubuntu" ] && [ "$code" != "xenial" ] ; then
     loudCmd "initctl reload-configuration"
+elif [ "$dist" = "ubuntu" ] && [ "$code" = "xenial" ]; then
+	loudCmd "systemctl daemon-reload"
 fi
 
 # airtime-celery only has an init.d startup script
@@ -633,7 +642,12 @@ chmod -R a+x /var/tmp/airtime
 chown -R ${web_user}:${web_user} /var/tmp/airtime/
 
 # PHP Config File for Apache
-libretime_phpini="/etc/php5/apache2/conf.d/airtime.ini"
+if [ ${dist,,} == "ubuntu" ] && [ ${code,,} == "xenial" ]; then
+    libretime_phpini="/etc/php/7.0/apache2/conf.d/airtime.ini"
+else
+    libretime_phpini="/etc/php5/apache2/conf.d/airtime.ini"
+fi
+
 if [ "$dist" = "centos" ]; then
     libretime_phpini="/etc/php.d/airtime.ini"
 fi
@@ -645,10 +659,12 @@ else
 fi
 
 # Enable Apache modules
-if [ "$dist" != "centos" ]; then
+if [ "$dist" != "centos" ] && [ "$code" != "xenial" ]; then
     loudCmd "a2enmod rewrite php5"
+elif [ "$dist" = "ubuntu" ] && [ "$code" = "xenial" ]; then
+	loudCmd "a2enmod rewrite"
+	loudCmd "a2enmod php7.0"
 fi
-
 loud "\n-----------------------------------------------------"
 loud "              * Configuring PostgreSQL *              "
 loud "-----------------------------------------------------"

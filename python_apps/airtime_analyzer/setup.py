@@ -53,3 +53,6 @@ setup(name='airtime_analyzer',
 if data_files:
     print "Remember to reload the initctl configuration"
     print "Run \"sudo initctl reload-configuration; sudo service airtime_analyzer restart\" now."
+    print "Or on Ubuntu Xenial (16.04)"
+    print "Remember to reload the systemd configuration"
+    print "Run \"sudo systemctl daemon-reload; sudo service airtime_analyzer restart\" now."
