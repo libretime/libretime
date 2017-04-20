@@ -52,7 +52,17 @@ Vagrant.configure("2") do |config|
     os.vm.box = "ubuntu/trusty64"
     provision_libretime(os, "ubuntu.sh", installer_args + "--distribution=ubuntu --release=trusty")
   end
+  config.vm.define "debian-jessie" do |os|
+    os.vm.box = "bento/debian-8.7"
+    provision_libretime(os, "debian.sh", installer_args + "--distribution=debian --release=jessie")
+  end
+  config.vm.define "debian-wheezy" do |os|
+    os.vm.box = "bento/debian-7.11"
+    provision_libretime(os, "debian.sh", installer_args + "--distribution=debian --release=wheezy")
+  end
   config.vm.define "debian" do |os|
+    STDERR.puts 'WARNING: The "debian" option is deprecated. Please migrate to "debian-jessie".'
+    STDERR.puts
     os.vm.box = "debian/jessie64"
     provision_libretime(os, "debian.sh", installer_args + "--distribution=debian --release=jessie")
   end
