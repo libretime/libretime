@@ -33,6 +33,12 @@ running the `./install` script. The installation script will detect an existing
 LibreTime deployment and back up any configuration files that it finds. We recommend 
 taking your own manual backups of the configuration yourself nevertheless.
 
+The install script tries to restart the needed services during an upgrade. In any case
+you should monitor if this happened and also take a quick look at the logs files to
+be sure everything is still fine. Now might be the time to reboot the system or
+virtual machine LibreTime is running on since regular reboots are part of a healthy
+system anyway.
+
 After the upgrade has completed, you may need to clear your web browser's cache 
 before logging into the new version of the LibreTime administration interface. If
 the playout engine starts up and detects that a show should be playing at the 
