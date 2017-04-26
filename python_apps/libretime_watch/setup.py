@@ -15,6 +15,7 @@ if '--no-init-script' in sys.argv:
     sys.argv.remove('--no-init-script') # super hax
 else:
     data_files = [('/etc/init.d', ['install/sysvinit/libretime_watch']),
+                  ('/etc/init',['install/upstart/libretime_watch.conf']),
                   ('/etc/cron.d', ['install/cron/libretime_watch'])]
     print data_files
 
