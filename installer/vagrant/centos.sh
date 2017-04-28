@@ -124,27 +124,6 @@ restorecon -Rv /vagrant /etc/airtime /srv/airtime
 # Disable default apache page
 sed -i -e 's/^/#/' /etc/httpd/conf.d/welcome.conf
 
-# Quick and dirty systemd unit install (will be in package later)
-unit_dir="/etc/systemd/system"
-unit_src_dir="/vagrant/installer/systemd"
-cp -rp ${unit_src_dir}/*.service ${unit_dir}
-
-# Overrides to use apache user for now (final packaging will have dedicated users)
-for service in `ls ${unit_src_dir}/*.service`; do
-    unit_name=`basename ${service}`
-    if [ "$unit_name" = "airtime-celery.service" ]; then
-        continue
-    fi
-    sed -i \
-        -e 's/User=.*/User=apache/' \
-        -e 's/Group=.*/Group=apache/' \
-        ${unit_dir}/${unit_name}
-done
-
-
-# for good measure, lets reload em
-systemctl daemon-reload
-
 # celery will not run unless we install a specific version (https://github.com/pypa/setuptools/issues/942)
 # this will need to be figured out later on and will get overriden by the docs installer anyhow :(
 pip install setuptools==33.1.1
