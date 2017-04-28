@@ -8,7 +8,8 @@ from around the globe that use, document and improve LibreTime.
 **Can I upgrade to LibreTime?**
 
 In theory you can update any pre 3.0 version of AirTime to
-LibreTime 3.0.0 and above. 
+LibreTime 3.0.0 and above. More information on [Upgrading](../manual/upgrading)
+is in the docs.
 
 LibreTime is complex software, as such it is close to impossible
 to guarantee that every upgrade path works as intended. This
