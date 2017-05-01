@@ -875,9 +875,18 @@ chmod 755 /run/airtime
 chown -R ${web_user}:${web_user} /run/airtime
 verbose "...Done"
 
-verbose "\n * Installing log writer..."
-loudCmd "python ${AIRTIMEROOT}/python_apps/std_err_override/setup.py install --install-scripts=/usr/bin"
-verbose "...Done"
+if [ ! -d /var/log/airtime ]; then
+    loud "\n-----------------------------------------------------"
+    loud "              * Installing Log Files *               "
+    loud "-----------------------------------------------------"
+
+    verbose "\n * Creating /var/log/airtime"
+    loudCmd "mkdir -p /var/log/airtime"
+
+    verbose "\n * Copying logrotate files..."
+    loudCmd "cp ${AIRTIMEROOT}/airtime_mvc/build/airtime-php.logrotate /etc/logrotate.d/airtime-php"
+    loudCmd "cp ${AIRTIMEROOT}/python_apps/pypo/liquidsoap/airtime-liquidsoap.logrotate /etc/logrotate.d/airtime-liquidsoap"
+fi
 
 verbose "\n * Installing API client..."
 loudCmd "python ${AIRTIMEROOT}/python_apps/api_clients/setup.py install --install-scripts=/usr/bin"
@@ -885,14 +894,14 @@ verbose "...Done"
 
 verbose "\n * Installing pypo and liquidsoap..."
 loudCmd "python ${AIRTIMEROOT}/python_apps/pypo/setup.py install --install-scripts=/usr/bin --no-init-script"
+loudCmd "mkdir -p /var/log/airtime/{pypo,pypo-liquidsoap} /var/tmp/airtime/pypo/{cache,files,tmp} /var/tmp/airtime/show-recorder/"
+loudCmd "chown -R ${web_user}:${web_user} /var/log/airtime/{pypo,pypo-liquidsoap} /var/tmp/airtime/pypo/{cache,files,tmp} /var/tmp/airtime/show-recorder/"
 systemInitInstall airtime-liquidsoap $web_user
 systemInitInstall airtime-playout $web_user
 verbose "...Done"
 
 verbose "\n * Installing airtime-celery..."
 loudCmd "python ${AIRTIMEROOT}/python_apps/airtime-celery/setup.py install --no-init-script"
-# Make the airtime log directory group-writable
-loudCmd "chmod 775 /var/log/airtime"
 # Create the Celery user
 if $is_centos_dist; then
     loudCmd "id celery 2>/dev/null || adduser --no-create-home -c 'LibreTime Celery' -r celery || true"
@@ -912,26 +921,14 @@ loudCmd "python ${AIRTIMEROOT}/python_apps/airtime_analyzer/setup.py install --i
 systemInitInstall airtime_analyzer $web_user
 verbose "...Done"
 
-if [ ! -d /var/log/airtime ]; then
-    loud "\n-----------------------------------------------------"
-    loud "              * Installing Log Files *               "
-    loud "-----------------------------------------------------"
-    
-    verbose "\n * Creating /var/tmp/airtime..."
-    mkdir -p /var/tmp/airtime/show-recorder/
-
-    verbose "\n * Copying logrotate files..."
-    cp ${AIRTIMEROOT}/airtime_mvc/build/airtime-php.logrotate /etc/logrotate.d/airtime-php
-    cp ${AIRTIMEROOT}/python_apps/pypo/pypo/liquidsoap_scripts/airtime-liquidsoap.logrotate /etc/logrotate.d/airtime-liquidsoap
-fi
-
 verbose "\n * Setting permissions on /var/log/airtime..."
-chmod -R a+x /var/log/airtime
-chown -R ${web_user}:${web_user} /var/log/airtime/
+# Make the airtime log directory group-writable
+loudCmd "chmod -R 775 /var/log/airtime"
+loudCmd "chown -R ${web_user}:${web_user} /var/log/airtime/"
 
 verbose "\n * Setting permissions on /var/tmp/airtime..."
-chmod -R a+x /var/tmp/airtime
-chown -R ${web_user}:${web_user} /var/tmp/airtime/
+loudCmd "chmod -R a+x /var/tmp/airtime"
+loudCmd "chown -R ${web_user}:${web_user} /var/tmp/airtime/"
 
 loud "\n-----------------------------------------------------"
 loud "              * Configuring PHP in Apache *          "
