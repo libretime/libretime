@@ -13,6 +13,7 @@ the following:
 * Updating or correcting documentation
 * Feature requests
 * Bug reports
+* [Translating LibreTime](http://libretime.org/translating/)
 
 Before opening an issue, please:
 
