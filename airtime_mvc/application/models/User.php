@@ -267,16 +267,6 @@ class Application_Model_User
         }
     }
 
-    public static function getFirstAdminId()
-    {
-        $admin = self::getFirstAdmin();
-        if ($admin) { 
-            return $admin->getDbId();
-        } else {
-            return null;
-        }
-    }
-
     public static function getUsers(array $type, $search=null)
     {
         $con     = Propel::getConnection();
