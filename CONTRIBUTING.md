@@ -25,6 +25,7 @@ Before opening an issue, please:
 For bug reports, please provide the following details:
 
 * **version**: what version of LibreTime you were using when you experienced the bug?
+* **distro**: what distribution is your install on and which distro version are you using (ie. Ubuntu Trusty)
 * **reduced test case**: the minimum amount of detail needed to reproduce the bug
 * **error messages**: please paste any error reports into the issue or a gist
 
