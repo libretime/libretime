@@ -177,9 +177,12 @@ function viewDisplay( view ) {
         }
     }
 
-    //save view name to db
-    var url = baseUrl+'Schedule/set-time-scale/format/json';
-    $.post(url, {timeScale: view.name});
+    //save view name to db if it was changed
+    if (calendarPref.timeScale !== view.name) {
+        var url = baseUrl+'Schedule/set-time-scale/format/json';
+        $.post(url, {timeScale: view.name});
+        calendarPref.timeScale = view.name;
+    }
 }
 
 function eventRender(event, element, view) {
