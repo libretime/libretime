@@ -9,7 +9,7 @@ class Rest_Bootstrap extends Zend_Application_Module_Bootstrap
 
         $restRoute = new Zend_Rest_Route($front, array(), array(
             'rest'=> array('media', 'show-image', 'podcast', 'podcast-episodes')));
-        assert($router->addRoute('rest', $restRoute));
+        $router->addRoute('rest', $restRoute);
 
         $podcastBulkRoute = new Zend_Controller_Router_Route(
             'rest/podcast/bulk',
