@@ -13,7 +13,8 @@
         "massivescale/celery-php": "2.0.*@dev",
         "simplepie/simplepie": "dev-master",
         "zendframework/zendframework1": "^1.12",
-        "composer/semver": "^1.4"
+        "composer/semver": "^1.4",
+        "php-amqplib/php-amqplib": "^2.6"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.3",
