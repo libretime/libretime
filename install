@@ -195,7 +195,6 @@ function systemInitInstall() {
         verbose "Service ${service_name} installed into ${target_path}"
         # Enable and start the service
         loudCmd "systemctl enable ${service_name}.service"
-        loudCmd "systemctl start ${service_name}.service"
         verbose "Service ${service_name} enabled and started"
     elif $has_upstart_init; then
         case "$service_name" in
@@ -235,9 +234,6 @@ function systemInitInstall() {
         chown root:root $target_path
         verbose "Service ${service_name} installed into ${target_path}"
         loudCmd "initctl check-config $service_name"
-        # Start the service
-        loudCmd "service ${service_name} start"
-        verbose "Service ${service_name} started"
     elif $has_systemv_init; then
         case "$service_name" in
             airtime_analyzer)
@@ -285,9 +281,7 @@ function systemInitInstall() {
         verbose "Service ${service_name} installed into ${target_path}"
         # Create symlinks for the appropriate runlevels
         loudCmd "update-rc.d $service_name defaults"
-        # Start the service
-        loudCmd "invoke-rc.d $service_name start"
-        verbose "Service ${service_name} enabled and started"
+        verbose "Service ${service_name} enabled"
     fi
     return 0
 }
