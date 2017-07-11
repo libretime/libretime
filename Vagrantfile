@@ -40,35 +40,35 @@ Vagrant.configure("2") do |config|
   # define all the OS boxes we support
   config.vm.define "ubuntu-xenial" do |os|
     os.vm.box = "bento/ubuntu-16.04"
-    provision_libretime(os, "ubuntu.sh", installer_args + "--distribution=ubuntu --release=xenial")
+    provision_libretime(os, "ubuntu.sh", installer_args)
   end
   config.vm.define "ubuntu-trusty" do |os|
     os.vm.box = "bento/ubuntu-14.04"
-    provision_libretime(os, "ubuntu.sh", installer_args + "--distribution=ubuntu --release=trusty")
+    provision_libretime(os, "ubuntu.sh", installer_args)
   end
   config.vm.define "ubuntu" do |os|
     STDERR.puts 'WARNING: The "ubuntu" option is deprecated. Please migrate to "ubuntu-trusty".'
     STDERR.puts
     os.vm.box = "ubuntu/trusty64"
-    provision_libretime(os, "ubuntu.sh", installer_args + "--distribution=ubuntu --release=trusty")
+    provision_libretime(os, "ubuntu.sh", installer_args)
   end
   config.vm.define "debian-jessie" do |os|
     os.vm.box = "bento/debian-8.7"
-    provision_libretime(os, "debian.sh", installer_args + "--distribution=debian --release=jessie")
+    provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "debian-wheezy" do |os|
     os.vm.box = "bento/debian-7.11"
-    provision_libretime(os, "debian.sh", installer_args + "--distribution=debian --release=wheezy")
+    provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "debian" do |os|
     STDERR.puts 'WARNING: The "debian" option is deprecated. Please migrate to "debian-jessie".'
     STDERR.puts
     os.vm.box = "debian/jessie64"
-    provision_libretime(os, "debian.sh", installer_args + "--distribution=debian --release=jessie")
+    provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "centos" do |os|
     os.vm.box = 'centos/7'
-    provision_libretime(os, "centos.sh", installer_args + "--ignore-dependencies --distribution=centos --web-user=apache --selinux")
+    provision_libretime(os, "centos.sh", installer_args + "--selinux")
   end
 
   def provision_libretime(config, prepare_script, installer_args)
