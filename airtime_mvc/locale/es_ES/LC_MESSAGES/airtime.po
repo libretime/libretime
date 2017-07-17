@@ -577,25 +577,25 @@ msgstr ""
 
 #: airtime_mvc/application/common/Timezone.php:21
 msgid "Use station default"
-msgstr ""
+msgstr "Usar el valor predeterminado de la estación"
 
 #: airtime_mvc/application/common/UsabilityHints.php:66
 msgid "Upload some tracks below to add them to your library!"
-msgstr ""
+msgstr "Cargue algunas pistas para agregarlas a su biblioteca."
 
 #: airtime_mvc/application/common/UsabilityHints.php:68
 #, php-format
 msgid "It looks like you haven't uploaded any audio files yet. %sUpload a file now%s."
-msgstr ""
+msgstr "Parece que aún no has subido ningún archivo de audio. %sSube un archivo ahora%s"
 
 #: airtime_mvc/application/common/UsabilityHints.php:74
 msgid "Click the 'New Show' button and fill out the required fields."
-msgstr ""
+msgstr "Haga clic en el botón 'Nuevo Show' y rellene los campos requeridos."
 
 #: airtime_mvc/application/common/UsabilityHints.php:76
 #, php-format
 msgid "It looks like you don't have any shows scheduled. %sCreate a show now%s."
-msgstr ""
+msgstr "Parece que no tienes shows programados. %sCrea un show ahora%s."
 
 #: airtime_mvc/application/common/UsabilityHints.php:84
 msgid "To start broadcasting, cancel the current linked show by clicking on it and selecting 'Cancel Show'."
