@@ -1,5 +1,5 @@
 #!/bin/bash -e
-composer install
+composer install --no-dev
 
 git_build=""
 if [ -d .git ]; then
