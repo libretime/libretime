@@ -26,7 +26,6 @@ class MediaSetup extends Setup {
 
     const MEDIA_FOLDER = "mediaFolder";
     const LIBRETIME_CONF_FILE_NAME = "airtime.conf";
-    const RMQ_INI_FILE_NAME = "rabbitmq-analyzer.ini";
 
     static $path;
     static $message = null;
@@ -66,10 +65,6 @@ class MediaSetup extends Setup {
                 self::$message = "Error moving airtime.conf or deleting /tmp/airtime.conf.temp!";
                 self::$errors[] = "ERR";
             }
-            if (!$this->moveRmqConfig()) {
-                self::$message = "Error moving rabbitmq-analyzer.ini or deleting /tmp/rabbitmq.ini.tmp!";
-                self::$errors[] = "ERR";
-            }
 
             /* 
              * If we're upgrading from an old Airtime instance (pre-2.5.2) we rename their old 
@@ -100,16 +95,6 @@ class MediaSetup extends Setup {
     function moveAirtimeConfig() {
         return copy(AIRTIME_CONF_TEMP_PATH, LIBRETIME_CONF_DIR . '/' . self::LIBRETIME_CONF_FILE_NAME)
             && unlink(AIRTIME_CONF_TEMP_PATH);
-    }
-
-    /**
-     * Moves /tmp/airtime.conf.temp to /etc/airtime.conf and then removes it to complete setup
-     * @return boolean false if either of the copy or removal operations fail
-     */
-    function moveRmqConfig() {
-        return copy(RMQ_INI_TEMP_PATH, LIBRETIME_CONF_DIR . '/' . self::RMQ_INI_FILE_NAME)
-            && copy(RMQ_INI_TEMP_PATH, LIBRETIME_CONF_DIR . '/production/' . self::RMQ_INI_FILE_NAME)
-            && unlink(RMQ_INI_TEMP_PATH);
     }
 
     /**
