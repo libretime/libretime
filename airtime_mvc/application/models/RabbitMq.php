@@ -78,29 +78,11 @@ class Application_Model_RabbitMq
         self::sendMessage($exchange, 'direct', true, $data);
     }
 
-    public static function getRmqConfigPath() {
-        //Hack for Airtime Pro. The RabbitMQ settings for communicating with airtime_analyzer are global
-        //and shared between all instances on Airtime Pro.
-        //
-        // todo: rewrite me to only use the config class and not access /etc/airtime directly
-        $CC_CONFIG = Config::getConfig();
-        $devEnv = "production"; //Default
-        if (array_key_exists("dev_env", $CC_CONFIG)) {
-            $devEnv = $CC_CONFIG["dev_env"];
-        }
-        $rmq_config_path = LIBRETIME_CONF_DIR . '/' . $devEnv."/rabbitmq-analyzer.ini";
-        if (!file_exists($rmq_config_path)) {
-            // If the dev env specific rabbitmq-analyzer.ini doesn't exist default
-            // to the production rabbitmq-analyzer.ini
-            $rmq_config_path = LIBRETIME_CONF_PATH . "/production/rabbitmq-analyzer.ini";
-        }
-        return $rmq_config_path;
-    }
-
     public static function SendMessageToAnalyzer($tmpFilePath, $importedStorageDirectory, $originalFilename,
                                                 $callbackUrl, $apiKey, $storageBackend, $filePrefix)
     {
-        $config = parse_ini_file(self::getRmqConfigPath(), true);
+        $config = Config::getConfig();
+
         $conn = new \PhpAmqpLib\Connection\AMQPConnection($config["rabbitmq"]["host"],
                 $config["rabbitmq"]["port"],
                 $config["rabbitmq"]["user"],

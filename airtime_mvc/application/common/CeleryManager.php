@@ -55,7 +55,7 @@ class CeleryManager {
      *                results asynchronously later
      */
     public static function sendCeleryMessage($task, $exchange, $data) {
-        $config = parse_ini_file(Application_Model_RabbitMq::getRmqConfigPath(), true);
+        $config = Config::getConfig();
         $queue = $routingKey = $exchange;
         $c = self::_setupCeleryExchange($config, $exchange, $queue);  // Use the exchange name for the queue
         $result = $c->PostTask($task, $data, true, $routingKey);      // and routing key
@@ -75,7 +75,7 @@ class CeleryManager {
      *                                $_CELERY_MESSAGE_TIMEOUT milliseconds have passed
      */
     private static function getAsyncResultMessage($task) {
-        $config = parse_ini_file(Application_Model_RabbitMq::getRmqConfigPath(), true);
+        $config = Config::getConfig();
         $queue = self::$_CELERY_RESULTS_EXCHANGE . "." . $task;
         $c = self::_setupCeleryExchange($config, self::$_CELERY_RESULTS_EXCHANGE, $queue);
         $message = $c->getAsyncResultMessage($task->getDbName(), $task->getDbTaskId());

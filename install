@@ -1032,10 +1032,6 @@ if [ ! -d "/etc/airtime" ]; then
 
     verbose "\n * Creating /etc/airtime/ directory..."
     mkdir /etc/airtime
-    # workaround for reintegrated airtime-saas dir, will get removed after we refactored config loading
-    ln -s /etc/airtime/ /etc/airtime/production
-    # put the default cloud_storage.conf using local file storage into directory
-    cp ${AIRTIMEROOT}/airtime_mvc/build/cloud_storage.conf /etc/airtime/cloud_storage.conf
 fi
 
 
