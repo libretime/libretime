@@ -9,7 +9,7 @@
 # Víctor Carranza <victor.carranza@sourcefabric.org>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: Airtime\n"
+"Project-Id-Version: Libretime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-24 16:23+0000\n"
 "PO-Revision-Date: 2017-07-19 15:51+0000\n"
