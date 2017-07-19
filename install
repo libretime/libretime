@@ -734,6 +734,7 @@ elif [ -n "$web_root" ]; then
     verbose "\n * Creating Apache web root directory..."
     cp -R ${AIRTIMEROOT}/airtime_mvc ${web_root}
     cp -R ${AIRTIMEROOT}/vendor ${web_root}
+    cp ${AIRTIMEROOT}/VERSION ${web_root}
     web_root=${web_root}/airtime_mvc/public/
 else
     verbose "\n * Creating default Apache web root directory /usr/share/airtime/php..."
@@ -741,6 +742,7 @@ else
     mkdir -p ${web_root}
     cp -R ${AIRTIMEROOT}/airtime_mvc ${web_root}
     cp -R ${AIRTIMEROOT}/vendor ${web_root}
+    cp ${AIRTIMEROOT}/VERSION ${web_root}
     web_root=${web_root}/airtime_mvc/public/
 fi
 verbose "...Done"
