@@ -1752,10 +1752,6 @@ msgstr "Mar"
 msgid "Apr"
 msgstr "Abr"
 
-#: airtime_mvc/application/controllers/LocaleController.php:241
-msgid "May"
-msgstr "May"
-
 #: airtime_mvc/application/controllers/LocaleController.php:242
 msgid "Jun"
 msgstr "Jun"
@@ -4307,7 +4303,7 @@ msgstr "Buscar"
 #: airtime_mvc/application/views/scripts/form/edit-user.phtml:7
 #, php-format
 msgid "<b>Note:</b> Since you're the station owner, your account information can be edited in <a href=\"%s\">Billing Settings</a> instead."
-msgstr "<b>Nota:</b> Puesto que eres el propietario de la estación, la información de tu cuenta se puede editar en <a href=\"%s\">Ajustes de Facturación</a>.""
+msgstr "<b>Nota:</b> Puesto que eres el propietario de la estación, la información de tu cuenta se puede editar en <a href=\"%s\">Ajustes de Facturación</a>."
 
 #: airtime_mvc/application/views/scripts/form/login.phtml:41
 msgid "Forgot your password?"
@@ -4666,7 +4662,7 @@ msgstr "Streams fuente"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:49
 msgid "ON AIR"
-msgstr "EMITIENDO"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:50
 msgid "Listen"
