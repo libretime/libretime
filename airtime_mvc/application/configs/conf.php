@@ -58,7 +58,7 @@ class Config {
 
         // Tells us where file uploads will be uploaded to.
         // It will either be set to a cloud storage backend or local file storage.
-        $CC_CONFIG["current_backend"] = $cloudStorageValues["current_backend"]["storage_backend"];
+        $CC_CONFIG["current_backend"] = $values["current_backend"]["storage_backend"];
 
         $CC_CONFIG['cache_ahead_hours'] = $values['general']['cache_ahead_hours'];
         
