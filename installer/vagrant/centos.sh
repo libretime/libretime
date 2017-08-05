@@ -75,6 +75,7 @@ rabbitmqctl add_vhost /airtime
 rabbitmqctl set_permissions -p /airtime airtime ".*" ".*" ".*"
 
 # LibreTime deps
+# TODO: move me to requirements-file ala debian e.a.
 yum install -y \
   git \
   php \
@@ -94,6 +95,7 @@ yum install -y \
   selinux-policy \
   policycoreutils-python \
   python-celery \
+  python2-pika \
   lsof
 
 # for pip ssl install
