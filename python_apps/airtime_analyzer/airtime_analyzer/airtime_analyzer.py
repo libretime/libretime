@@ -69,10 +69,10 @@ class AirtimeAnalyzerServer:
         rootLogger = logging.getLogger()
         rootLogger.setLevel(self._log_level)
 
-        #fileHandler = logging.handlers.RotatingFileHandler(filename=self._LOG_PATH, maxBytes=1024*1024*30,
-        #                                          backupCount=8)
-        #fileHandler.setFormatter(logFormatter)
-        #rootLogger.addHandler(fileHandler)
+        fileHandler = logging.handlers.RotatingFileHandler(filename=self._LOG_PATH, maxBytes=1024*1024*30,
+                                                  backupCount=8)
+        fileHandler.setFormatter(logFormatter)
+        rootLogger.addHandler(fileHandler)
 
         consoleHandler = logging.StreamHandler()
         consoleHandler.setFormatter(logFormatter)
