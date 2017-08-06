@@ -681,6 +681,9 @@ fi
 # Run composer (install PHP dependencies) and create a VERSION file
 loudCmd "./build.sh"
 if [ -f /etc/airtime/airtime.conf ]; then
+    # TODO use VERSION or some other way to check for updates and handle
+    # media-monitor case on it's own and remove the section from the config
+    # file completely (it's still in the install)
     OLD_CONF=$(grep "[media-monitor]" /etc/airtime/airtime.conf)
     
     if [ -n "${OLD_CONF}" ]; then
@@ -688,9 +691,13 @@ if [ -f /etc/airtime/airtime.conf ]; then
     
         set +e
         verbose "Stopping airtime services..."
-        systemInitCommand stop airtime_analyzer airtime-celery airtime-playout airtime-liquidsoap
+        systemInitCommand stop airtime_analyzer airtime-celery airtime-playout airtime-liquidsoap airtime-media-monitor
         verbose "...Done"
-        
+
+        verbose "Disabling obsolete services..."
+        systemInitCommand disable airtime-media-monitor
+        verbose "...Done"
+
         echo "Looks like you have an old version of Airtime. Your current /etc/airtime/airtime.conf \
 will be moved to /etc/airtime/airtime.conf.tmp"
         # If we don't remove the existing python files in /usr/lib and the 
