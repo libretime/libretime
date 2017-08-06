@@ -10,7 +10,7 @@ import airtime_analyzer.airtime_analyzer as aa
 VERSION = "1.0"
 LIBRETIME_CONF_DIR = os.getenv('LIBRETIME_CONF_DIR', '/etc/airtime')
 DEFAULT_RMQ_CONFIG_PATH = os.path.join(LIBRETIME_CONF_DIR, 'airtime.conf')
-DEFAULT_CLOUD_STORAGE_CONFIG_PATH = os.path.join(LIBRETIME_CONF_DIR, os.getenv('ENVIRONMENT', 'production'), 'airtime.conf')
+DEFAULT_CLOUD_STORAGE_CONFIG_PATH = os.path.join(LIBRETIME_CONF_DIR, 'airtime.conf')
 DEFAULT_HTTP_RETRY_PATH = '/tmp/airtime_analyzer_http_retries'
 
 def run():

@@ -49,23 +49,16 @@ class Config {
             $CC_CONFIG['staticBaseDir'] = '/';
         }
 
-        // Parse separate conf file for cloud storage values
-        $cloudStorageConfig = LIBRETIME_CONF_DIR . '/' . $CC_CONFIG['dev_env']."/cloud_storage.conf";
-        if (!file_exists($cloudStorageConfig)) {
-            // If the dev env specific cloud_storage.conf doesn't exist default
-            // to the production cloud_storage.conf
-            $cloudStorageConfig = LIBRETIME_CONF_DIR . "/production/cloud_storage.conf";
-        }
-        $cloudStorageValues = parse_ini_file($cloudStorageConfig, true);
-        
-        $CC_CONFIG["supportedStorageBackends"] = array('amazon_S3');
-        foreach ($CC_CONFIG["supportedStorageBackends"] as $backend) {
-            $CC_CONFIG[$backend] = $cloudStorageValues[$backend];
-        }
-        
+        $CC_CONFIG['amazon_S3'] = array(
+            'provider' => $values['amazon_S3']['provider'],
+            'bucket' => $values['amazon_S3']['bucket'],
+            'api_key' => $values['amazon_S3']['api_key'],
+            'api_key_secret' => $values['amazon_S3']['api_key_secret']
+        );
+
         // Tells us where file uploads will be uploaded to.
         // It will either be set to a cloud storage backend or local file storage.
-        $CC_CONFIG["current_backend"] = $cloudStorageValues["current_backend"]["storage_backend"];
+        $CC_CONFIG["current_backend"] = $values["current_backend"]["storage_backend"];
 
         $CC_CONFIG['cache_ahead_hours'] = $values['general']['cache_ahead_hours'];
         
@@ -81,20 +74,13 @@ class Config {
         $CC_CONFIG['soundcloud-connection-retries'] = $values['soundcloud']['connection_retries'];
         $CC_CONFIG['soundcloud-connection-wait'] = $values['soundcloud']['time_between_retries'];
 
-        $globalAirtimeConfig = LIBRETIME_CONF_DIR . '/' . $CC_CONFIG['dev_env']."/airtime.conf";
-        if (!file_exists($globalAirtimeConfig)) {
-            // If the dev env specific airtime.conf doesn't exist default
-            // to the production airtime.conf
-            $globalAirtimeConfig = LIBRETIME_CONF_DIR . "/production/airtime.conf";
-        }
-        $globalAirtimeConfigValues = parse_ini_file($globalAirtimeConfig, true);
-        $CC_CONFIG['soundcloud-client-id'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_client_id'];
-        $CC_CONFIG['soundcloud-client-secret'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_client_secret'];
-        $CC_CONFIG['soundcloud-redirect-uri'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_redirect_uri'];
-        if (isset($globalAirtimeConfigValues['facebook']['facebook_app_id'])) {
-            $CC_CONFIG['facebook-app-id'] = $globalAirtimeConfigValues['facebook']['facebook_app_id'];
-            $CC_CONFIG['facebook-app-url'] = $globalAirtimeConfigValues['facebook']['facebook_app_url'];
-            $CC_CONFIG['facebook-app-api-key'] = $globalAirtimeConfigValues['facebook']['facebook_app_api_key'];
+        $CC_CONFIG['soundcloud-client-id'] = $values['soundcloud']['soundcloud_client_id'];
+        $CC_CONFIG['soundcloud-client-secret'] = $values['soundcloud']['soundcloud_client_secret'];
+        $CC_CONFIG['soundcloud-redirect-uri'] = $values['soundcloud']['soundcloud_redirect_uri'];
+        if (isset($values['facebook']['facebook_app_id'])) {
+            $CC_CONFIG['facebook-app-id'] = $values['facebook']['facebook_app_id'];
+            $CC_CONFIG['facebook-app-url'] = $values['facebook']['facebook_app_url'];
+            $CC_CONFIG['facebook-app-api-key'] = $values['facebook']['facebook_app_api_key'];
         }
 
         // ldap config

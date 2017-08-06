@@ -10,7 +10,7 @@ from boto.s3.key import Key
 # https://github.com/docker/docker-registry/issues/400
 u'fix getaddrinfo deadlock'.encode('idna')
 
-CLOUD_CONFIG_PATH = os.path.join(os.getenv('LIBRETIME_CONF_DIR', '/etc/airtime'), 'cloud_storage.conf')
+CLOUD_CONFIG_PATH = os.path.join(os.getenv('LIBRETIME_CONF_DIR', '/etc/airtime'), 'airtime.conf')
 STORAGE_BACKEND_FILE = "file"
 SOCKET_TIMEOUT = 240
 

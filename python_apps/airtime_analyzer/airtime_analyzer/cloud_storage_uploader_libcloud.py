@@ -6,7 +6,7 @@ from libcloud.storage.providers import get_driver
 from libcloud.storage.types import Provider, ContainerDoesNotExistError, ObjectDoesNotExistError
 
 
-CLOUD_CONFIG_PATH = os.path.join(os.getenv('LIBRETIME_CONF_DIR', '/etc/airtime'), 'cloud_storage.conf')
+CLOUD_CONFIG_PATH = os.path.join(os.getenv('LIBRETIME_CONF_DIR', '/etc/airtime'), 'airtime.conf')
 STORAGE_BACKEND_FILE = "file"
 
 class CloudStorageUploader:
