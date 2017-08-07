@@ -1,0 +1,9 @@
+<div class="suspension_notice">
+    <H2>Station Suspended</H2>
+   <p>
+       <?php echo(_pro(sprintf('Your station is suspended due to an <b>unpaid invoice</b>. To restore your station, <a href="%s">please pay any overdue invoices</a>.', '/billing/invoices'))); ?>
+    </p>
+    <p>
+        <?php echo(_pro(sprintf('Suspended stations will be <b>removed</b> if an invoice is unpaid for 30 days. If you believe this suspension was in error, <a href="%s">please contact support</a>.', 'https://sourcefabricberlin.zendesk.com/anonymous_requests/new'))); ?>
+    </p>
+</div>

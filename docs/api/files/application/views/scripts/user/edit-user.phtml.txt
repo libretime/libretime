@@ -1,0 +1,5 @@
+<div class="prefpanel clearfix padded-strong edit-current-user">
+<?php echo $this->successMessage ?>
+<?php echo $this->form?>
+</div>
+

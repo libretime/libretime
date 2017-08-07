@@ -1,0 +1,53 @@
+<fieldset class="padded">
+    <dl class="zend_form">
+
+        <?php echo $this->element->getElement('player_preview_label')->renderLabel(); ?>
+
+        <div style="clear:both"></div>
+        <div class="player-preview">
+            <?php echo $this->element->getElement('player_embed_src')->getValue(); ?>
+        </div>
+
+        <div id="player_instructions">
+            <?php echo _("Customize the player by configuring the options below. When you are done,
+            copy the embeddable code below and paste it into your website's HTML.") ?>
+        </div>
+
+        <?php echo $this->element->getElement('player_title')->render(); ?>
+
+        <?php echo $this->element->getElement('player_stream_mode')->render(); ?>
+
+        <?php echo $this->element->getElement('player_stream_url'); ?>
+
+        <?php echo $this->element->getElement('player_embed_src')->render(); ?>
+
+        <?php //echo $this->element->getElement('player_display_track_metadata'); ?>
+
+        <table id="player_compatibility_chart">
+            <th colspan="5">Stream Compatibility</th>
+            <tr>
+                <td colspan="3">Desktop</td>
+                <td colspan="2">Mobile</td>
+            </tr>
+            <tr>
+                <td>Firefox</td>
+                <td>Chrome</td>
+                <td>Internet Explorer</td>
+                <td>Android 5 - Chrome</td>
+                <td>iOS 7 - Safari</td>
+            </tr>
+            <tr>
+                <td>Yes (Flash)</td>
+                <td>Yes (Flash)</td>
+                <td>Yes (Flash)</td>
+                <td>MP3/OGG* only</td>
+                <td>MP3/AAC only</td>
+            </tr>
+            <tr>
+                <td colspan="5">* Chrome on Android is known to take about 4 seconds to buffer a 128 kbps MP3 stream. Lower bitrates take longer to buffer.</td>
+            </tr>
+        </table>
+
+
+    </dl>
+</fieldset>

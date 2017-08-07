@@ -1,0 +1,26 @@
+<div id="history_content" class=" alpha-block padded">
+  <h2><?php echo(_("Playout History"));?></h2>
+  <?php echo $this->date_form; ?>
+
+  <div id="his-tabs">
+    <ul>
+      <?php if ($this->userType != UTYPE_HOST): ?>
+      <li><a href="#his-tabs-1"><?php echo _("Log Sheet"); ?></a></li>
+      <li><a href="#his-tabs-2"><?php echo _("File Summary"); ?></a></li>
+      <?php endif; ?>
+      <li><a href="#his-tabs-3"><?php echo _("Show Summary"); ?></a></li>
+    </ul>
+    <?php if ($this->userType != UTYPE_HOST): ?>
+    <div id="his-tabs-1">
+      <table id="history_table_list" cellpadding="0" cellspacing="0" class="datatable"></table>
+    </div>
+    <div id="his-tabs-2">
+      <table id="history_table_aggregate" cellpadding="0" cellspacing="0" class="datatable"></table>
+    </div>
+    <?php endif; ?>
+    <div id="his-tabs-3">
+      <div id="history_show_summary"></div>
+    </div>
+  </div>
+
+</div>

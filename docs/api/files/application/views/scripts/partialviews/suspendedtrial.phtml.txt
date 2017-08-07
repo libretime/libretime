@@ -1,0 +1,9 @@
+<div class="suspension_notice">
+    <H2>Station Suspended</H2>
+    <p>
+        <?php echo(_pro(sprintf('Your free trial is now over. To restore your station, <a href="%s">please upgrade your plan now</a>.', '/billing/upgrade'))); ?>
+    </p>
+    <p>
+        <?php echo(_pro(sprintf('Your station will be <b>removed</b> within 7 days if you do not upgrade. If you believe this suspension was in error, <a href="%s">please contact support</a>.', 'https://sourcefabricberlin.zendesk.com/anonymous_requests/new'))); ?>
+    </p>
+</div>
