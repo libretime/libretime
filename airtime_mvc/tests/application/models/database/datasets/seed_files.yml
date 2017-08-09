@@ -1,3 +1,13 @@
+
+cc_music_dirs:
+    -
+        id: '1'
+        directory: '/tmp/libretime-test'
+        type: 'stor'
+        exists: 't'
+        watched: 't'
+    
+
 cc_files:
     -
         id: '1'
