@@ -1350,6 +1350,13 @@ SQL;
         return $insertList;
     }
 
+    /**
+     * Parses each row in the database for the criteria associated with this block and renders human readable labels.
+     * Returns it as an array with each criteria_name and modifier_name added based upon options array lookup.
+     *
+     */
+
+
     public function getCriteria()
     {
         $criteriaOptions = array(
@@ -1393,6 +1400,9 @@ SQL;
             "is not"           => _("is not"),
             "starts with"      => _("starts with"),
             "ends with"        => _("ends with"),
+            "before"          => _("before"),
+            "after"           => _("after"),
+            "between"         => _("between"),
             "is"              => _("is"),
             "is not"          => _("is not"),
             "is greater than" => _("is greater than"),

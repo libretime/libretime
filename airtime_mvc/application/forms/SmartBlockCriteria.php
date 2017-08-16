@@ -24,9 +24,9 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         "description"  => "s",
         "artist_name"  => "s",
         "encoded_by"   => "s",
-        "utime"        => "n",
-        "mtime"        => "n",
-        "lptime"       => "n",
+        "utime"        => "d",
+        "mtime"        => "d",
+        "lptime"       => "d",
         "genre"        => "s",
         "isrc_number"  => "s",
         "label"        => "s",
@@ -115,6 +115,25 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     }
 
 
+    private function getDateTimeCriteriaOptions()
+    {
+        if (!isset($this->dateTimeCriteriaOptions)) {
+            $this->dateTimeCriteriaOptions = array(
+                "0"               => _("Select modifier"),
+                "before"          => _("before"),
+                "after"           => _("after"),
+                "between"         => _("between"),
+                "is"              => _("is"),
+                "is not"          => _("is not"),
+                "is greater than" => _("is greater than"),
+                "is less than"    => _("is less than"),
+                "is in the range" => _("is in the range")
+            );
+        }
+        return $this->dateTimeCriteriaOptions;
+    }
+
+
     private function getTimePeriodCriteriaOptions() {
         if (!isset($this->timePeriodCriteriaOptions)) {
             $this->timePeriodCriteriaOptions = array(
@@ -183,6 +202,18 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     	}
     }
 
+    /*
+     * This function takes a blockID as param and creates the datastructure for the form displayed with the view
+     * smart-block-criteria.phtml
+     *
+     * A description of the dataflow. First it loads the block and determines if it is a static or dynamic smartblock.
+     * Next it adds a radio selector for static or dynamic type.
+     * Then it loads the criteria via the getCriteria() function, which returns an array for each criteria.
+     *
+     *
+     */
+
+
     public function startForm($p_blockId, $p_isValid = false)
     {
         // load type
@@ -220,20 +251,25 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             $openSmartBlockOption = true;
         }
 
+        // this returns a number indexed array for each criteria found in the database
         $criteriaKeys = array();
         if (isset($storedCrit["crit"])) {
             $criteriaKeys = array_keys($storedCrit["crit"]);
         }
         $numElements = count($this->getCriteriaOptions());
+        // loop through once for each potential criteria option ie album, composer, track
+
         for ($i = 0; $i < $numElements; $i++) {
             $criteriaType = "";
 
+            // if there is a criteria found then count the number of rows for this specific criteria ie > 1 track title
             if (isset($criteriaKeys[$i])) {
                 $critCount = count($storedCrit["crit"][$criteriaKeys[$i]]);
             } else {
                 $critCount = 1;
             }
 
+            // store the number of items with the same key in the ModRowMap
             $modRowMap[$i] = $critCount;
 
             /* Loop through all criteria with the same field
@@ -241,6 +277,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
              */
             for ($j = 0; $j < $critCount; $j++) {
                 /****************** CRITERIA ***********/
+                // hide the criteria drop down select on any rows after the first
                 if ($j > 0) {
                     $invisible = ' sp-invisible';
                 } else {
@@ -252,17 +289,23 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                          ->setValue('Select criteria')
                          ->setDecorators(array('viewHelper'))
                          ->setMultiOptions($this->getCriteriaOptions());
+                // if this isn't the first criteria and there isn't an entry for it already disable it
                 if ($i != 0 && !isset($criteriaKeys[$i])) {
                     $criteria->setAttrib('disabled', 'disabled');
                 }
-
+                // add the numbering to the form ie the i loop for each specific criteria and
+                // the j loop starts at 0 and grows for each item matching the same criteria
+                // look up the criteria type using the criteriaTypes function from above based upon the criteria value
                 if (isset($criteriaKeys[$i])) {
                     $criteriaType = $this->criteriaTypes[$storedCrit["crit"][$criteriaKeys[$i]][$j]["criteria"]];
                     $criteria->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["criteria"]);
                 }
                 $this->addElement($criteria);
 
+
                 /****************** MODIFIER ***********/
+                // every element has an optional modifier dropdown select
+
                 $criteriaModifers = new Zend_Form_Element_Select("sp_criteria_modifier_".$i."_".$j);
                 $criteriaModifers->setValue('Select modifier')
                                  ->setAttrib('class', 'input_select sp_input_select')
@@ -270,10 +313,15 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 if ($i != 0 && !isset($criteriaKeys[$i])) {
                     $criteriaModifers->setAttrib('disabled', 'disabled');
                 }
+                // determine the modifier based upon criteria type which is looked up based upon an array
                 if (isset($criteriaKeys[$i])) {
                     if ($criteriaType == "s") {
                         $criteriaModifers->setMultiOptions($this->getStringCriteriaOptions());
-                    } else {
+                    }
+                    elseif ($criteriaType == "d") {
+                        $criteriaModifers->setMultiOptions($this->getDateTimeCriteriaOptions());
+                    }
+                    else {
                         $criteriaModifers->setMultiOptions($this->getNumericCriteriaOptions());
                     }
                     $criteriaModifers->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["modifier"]);
