@@ -114,6 +114,22 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         return $this->numericCriteriaOptions;
     }
 
+
+    private function getTimePeriodCriteriaOptions() {
+        if (!isset($this->timePeriodCriteriaOptions)) {
+            $this->timePeriodCriteriaOptions = array(
+                "0"             => _("Select unit of time"),
+                "minute"        => _("minute"),
+                "hour"          => _("hour"),
+                "day"           => _("day"),
+                "week"          => _("week"),
+                "year"          => _("year")
+            );
+        }
+        return $this->timePeriodCriteriaOptions;
+    }
+
+
     private function getLimitOptions()
     {
         if (!isset($this->limitOptions)) {
