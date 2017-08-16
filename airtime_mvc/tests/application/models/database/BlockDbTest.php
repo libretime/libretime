@@ -67,4 +67,29 @@ class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase //PHPUnit_Framework
         // need to load a example criteria into the database
     }
 
+
+    /**
+     * Test if the single newest file is added to the Database
+     *
+     */
+
+    public function testMultiTrackandAlbumsGetLoaded() {
+        TestHelper::loginUser();
+        $CC_CONFIG = Config::getConfig();
+        $testqry = CcFilesQuery::create();
+        $testout = $testqry->find();
+        $vd = $testout->getData();
+        $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
+            $this->getConnection()
+        );
+        $testCriteria = BlockModelData::getCriteriaMultiTrackAndAlbum1Hour();
+        $bltest = new Application_Model_Block();
+        $bltest->saveSmartBlockCriteria($testCriteria);
+        $tracks = $bltest->getListOfFilesUnderLimit();
+        //$tracks = $bltest->getLength();
+        $this->assertNotEmpty($tracks);
+        // add assertion that the length is less than 1 hour...
+        // need to load a example criteria into the database
+    }
+
 }
