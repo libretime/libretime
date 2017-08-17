@@ -9,6 +9,7 @@ class LibraryController extends Zend_Controller_Action
         $ajaxContext->addActionContext('contents-feed', 'json')
                     ->addActionContext('delete', 'json')
                     ->addActionContext('duplicate', 'json')
+                    ->addActionContext('duplicate-block', 'json')
                     ->addActionContext('delete-group', 'json')
                     ->addActionContext('context-menu', 'json')
                     ->addActionContext('get-file-metadata', 'html')
@@ -155,6 +156,7 @@ class LibraryController extends Zend_Controller_Action
                 $menu["duplicate"] = array("name" => _("Duplicate Playlist"), "icon" => "edit", "url" => $baseUrl."library/duplicate");
             } elseif ($type === 'block') {
                 $obj = new Application_Model_Block($id);
+                $menu["duplicate"] = array("name" => _("Duplicate Smartblock"), "icon" => "edit", "url" => $baseUrl."library/duplicate-block");
                 if (!$obj->isStatic()) {
                     unset($menu["play"]);
                 }
@@ -280,6 +282,7 @@ class LibraryController extends Zend_Controller_Action
     public function duplicateAction(){
         $params = $this->getRequest()->getParams();
         $id = $params['id'];
+        Logging::info($params);
 
         $originalPl = new Application_Model_Playlist($id);
         $newPl = new Application_Model_Playlist();
@@ -307,6 +310,24 @@ class LibraryController extends Zend_Controller_Action
         $newPl->setfades($plFadeIn, $plFadeOut);
         $newPl->setName(sprintf(_("Copy of %s"), $originalPl->getName()));
     }
+
+    // duplicate smartblock
+    public function duplicateBlockAction(){
+        Logging::info("duplicate smartblock functionality not yet implemented");
+        $params = $this->getRequest()->getParams();
+        $id = $params['id'];
+        Logging::info($params);
+
+        $originalBl = new Application_Model_Block($id);
+        $newBl = new Application_Model_Block();
+        $newBl->setCreator(Application_Model_User::getCurrentUser()->getId());
+        $newBl->setDescription($originalBl->getDescription());
+
+        Logging::info($originalBl->getCriteria());
+        //$newBl->saveSmartBlockCriteria();
+        $newBl->setName(sprintf(_("Copy of %s"), $originalBl->getName()));
+    }
+
 
     public function contentsFeedAction()
     {
