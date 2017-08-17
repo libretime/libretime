@@ -322,9 +322,27 @@ class LibraryController extends Zend_Controller_Action
         $newBl = new Application_Model_Block();
         $newBl->setCreator(Application_Model_User::getCurrentUser()->getId());
         $newBl->setDescription($originalBl->getDescription());
-
-        Logging::info($originalBl->getCriteria());
-        //$newBl->saveSmartBlockCriteria();
+        if ($originalBl->isStatic()) {
+            $newBl->saveType('static');
+        }
+        else {
+            $newBl->saveType('dynamic');
+        }
+        // the issue here is that the format that getCriteria provides is different from the format the saveCriteria
+        // expects due to the useage of startForm. So we either need to write new code that simply copies the database
+        // or figure out a way to instantiate a form inside of here and save it without modifying it.
+        //$newBlForm = new Application_Form_SmartBlockCriteria;
+        //$newBlForm->startForm($id);
+        $criteria = CcBlockcriteriaQuery::create()->orderByDbCriteria()->findByDbBlockId($id);
+        foreach ($criteria as &$c) {
+            $row = new CcBlockcriteria();
+            $row->setDbCriteria($c->getDbCriteria());
+            $row->setDbModifier($c->getDbModifier());
+            $row->setDbValue($c->getDbValue());
+            $row->setDbExtra($c->getDbExtra());
+            $row->setDbBlockId($newBl->getId());
+            $row->save();
+        }
         $newBl->setName(sprintf(_("Copy of %s"), $originalBl->getName()));
     }
 
