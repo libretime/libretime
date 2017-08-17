@@ -484,7 +484,15 @@ function populateModifierSelect(e, popAllMods) {
                    .attr('value', key)
                    .text(value));
             });
-        } else {
+        }
+        else if(criteria_type == 'd') {
+            $.each(dateTimeCriteriaOptions, function(key, value){
+                $(div).append($('<option></option>')
+                    .attr('value', key)
+                    .text(value));
+            });
+        }
+        else {
             $.each(numericCriteriaOptions, function(key, value){
                 $(div).append($('<option></option>')
                    .attr('value', key)
@@ -610,9 +618,9 @@ var criteriaTypes = {
     "description"  : "s",
     "artist_name"  : "s",
     "encoded_by"   : "s",
-    "utime"        : "n",
-    "mtime"        : "n",
-    "lptime"       : "n",
+    "utime"        : "d",
+    "mtime"        : "d",
+    "lptime"       : "d",
     "genre"        : "s",
     "isrc_number"  : "s",
     "label"        : "s",
@@ -641,6 +649,18 @@ var stringCriteriaOptions = {
     
 var numericCriteriaOptions = {
     "0" : $.i18n._("Select modifier"),
+    "is" : $.i18n._("is"),
+    "is not" : $.i18n._("is not"),
+    "is greater than" : $.i18n._("is greater than"),
+    "is less than" : $.i18n._("is less than"),
+    "is in the range" : $.i18n._("is in the range")
+};
+
+var dateTimeCriteriaOptions = {
+    "0" : $.i18n._("Select modifier"),
+    "before" : $.i18n._("before"),
+    "after" : $.i18n._("after"),
+    "between" : $.i18n._("between"),
     "is" : $.i18n._("is"),
     "is not" : $.i18n._("is not"),
     "is greater than" : $.i18n._("is greater than"),

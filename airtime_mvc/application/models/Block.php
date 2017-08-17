@@ -51,7 +51,10 @@ class Application_Model_Block implements Application_Model_LibraryEditable
             "ends with"        => Criteria::ILIKE,
             "is greater than"  => Criteria::GREATER_THAN,
             "is less than"     => Criteria::LESS_THAN,
-            "is in the range"  => Criteria::CUSTOM);
+            "is in the range"  => Criteria::CUSTOM,
+            "before"           => Criteria::CUSTOM,
+            "after"            => Criteria::CUSTOM,
+            "between"          => Criteria::CUSTOM);
 
     private static $criteria2PeerMap = array(
             0              => "Select criteria",
@@ -1197,9 +1200,13 @@ SQL;
                 	
                 	$field = $d['sp_criteria_field'];
                 	$value = $d['sp_criteria_value'];
+                	$modifier = $d['sp_criteria_modifier'];
                 		 	
                 	if ($field == 'utime' || $field == 'mtime' || $field == 'lptime') {
-                		$value = Application_Common_DateHelper::UserTimezoneStringToUTCString($value);
+                	    // if the date isn't relative we  want to convert the value to a specific UTC date
+                	    if (!in_array($modifier,array('before','ago','between'))) {
+                	        $value = Application_Common_DateHelper::UserTimezoneStringToUTCString($value);
+                        }
                 	}
                 	
                     $qry = new CcBlockcriteria();
@@ -1463,9 +1470,9 @@ SQL;
 
                     //data should already be in UTC, do we have to do anything special here anymore?
                     if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
-                    	
+
                         $spCriteriaValue = $criteria['value'];
-                        
+
                         if (isset($criteria['extra'])) {
                             $spCriteriaExtra = $criteria['extra'];
                         }
@@ -1510,6 +1517,26 @@ SQL;
                         $spCriteriaValue = "%$spCriteriaValue%";
                     } elseif ($spCriteriaModifier == "is in the range") {
                         $spCriteriaValue = "$spCriteria >= '$spCriteriaValue' AND $spCriteria <= '$spCriteriaExtra'";
+                    }
+                    elseif ($spCriteriaModifier == "before") {
+                        // need to pull in the current time and subtract the value or figure out how to make it relative
+                        $relativedate = new DateTime($spCriteriaValue);
+                        $dt = $relativedate->format(DateTime::ISO8601);
+                        $spCriteriaValue = "$spCriteria <= '$dt'";
+                        Logging::info($spCriteriaValue);
+                    }
+                    elseif ($spCriteriaModifier == "after") {
+                        $relativedate = new DateTime($spCriteriaValue);
+                        $dt = $relativedate->format(DateTime::ISO8601);
+                        $spCriteriaValue = "$spCriteria >= '$dt'";
+                        Logging::info($spCriteriaValue);
+                    } elseif ($spCriteriaModifier == "between") {
+                        $fromrelativedate = new DateTime($spCriteriaValue);
+                        $fdt = $fromrelativedate->format(DateTime::ISO8601);
+
+                        $torelativedate = new DateTime($spCriteriaValue);
+                        $tdt = $fromrelativedate->format(DateTime::ISO8601);
+                        $spCriteriaValue = "$spCriteria >= '$fdt' AND $spCriteria <= '$tdt'";
                     }
 
                     $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];

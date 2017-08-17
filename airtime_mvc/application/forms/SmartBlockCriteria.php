@@ -4,6 +4,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     private $criteriaOptions;
     private $stringCriteriaOptions;
     private $numericCriteriaOptions;
+    private $dateTimeCriteriaOptions;
     private $sortOptions;
     private $limitOptions;
 
@@ -629,29 +630,40 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                                 $element->addError(_("'Length' should be in '00:00:00' format"));
                                 $isValid = false;
                             }
+                            // this looks up the column type for the criteria the modified time, upload time etc.
                         } elseif ($column->getType() == PropelColumnTypes::TIMESTAMP) {
-                            if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
-                                $element->addError(_("The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"));
-                                $isValid = false;
-                            } else {
-                                $result = Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_value']);
-                                if (!$result["success"]) {
-                                    // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
-                                    $element->addError($result["errMsg"]);
-                                    $isValid = false;
+                            // need to check for relative modifiers first - bypassing currently
+                            if (in_array($d['sp_criteria_modifier'], array('before','ago','between'))) {
+                                //if the modifier is before ago or between we skip validation until we confirm format
                                 }
-                            }
-
-                            if (isset($d['sp_criteria_extra'])) {
-                                if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_extra'])) {
+                            else {
+                                if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
                                     $element->addError(_("The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"));
                                     $isValid = false;
                                 } else {
-                                    $result = Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_extra']);
+                                    $result = Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_value']);
                                     if (!$result["success"]) {
                                         // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
                                         $element->addError($result["errMsg"]);
                                         $isValid = false;
+                                    }
+                                }
+                            }
+                            if (isset($d['sp_criteria_extra'])) {
+                                if ($d['sp_criteria_modifier'] == 'between') {
+                                //disabling validation as this doesn't require the same format
+                                }
+                                else {
+                                    if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_extra'])) {
+                                        $element->addError(_("The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"));
+                                        $isValid = false;
+                                    } else {
+                                        $result = Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_extra']);
+                                        if (!$result["success"]) {
+                                            // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
+                                            $element->addError($result["errMsg"]);
+                                            $isValid = false;
+                                        }
                                     }
                                 }
                             }
