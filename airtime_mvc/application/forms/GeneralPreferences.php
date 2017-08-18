@@ -117,6 +117,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         ));
         $this->addElement($podcast_album_override);
 
+        //TODO add and insert Podcast Smartblock and Playlist autogenerate options
 
         $third_party_api = new Zend_Form_Element_Radio('thirdPartyApi');
         $third_party_api->setLabel(_('Public Airtime API'));
