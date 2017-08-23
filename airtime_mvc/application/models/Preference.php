@@ -376,6 +376,18 @@ class Application_Model_Preference
         return $val === '1' ? true : false;
     }
 
+    public static function SetPodcastAutoSmartblock($bool)
+    {
+        self::setValue("podcast_auto_smartblock", $bool);
+    }
+
+    public static function GetPodcastAutoSmartblock()
+    {
+        $val = self::getValue("podcast_auto_smartblock");
+        return $val === '1' ? true : false;
+    }
+
+
     public static function SetPhone($phone)
     {
         self::setValue("phone", $phone);
