@@ -66,6 +66,7 @@ function setSmartBlockEvents() {
         newRowVal.val('');
         newRowExtra.val('');
         disableAndHideExtraField(newRowVal);
+        disableAndHideDateTimeDropdown(newRowVal);
         sizeTextBoxes(newRowVal, 'sp_extra_input_text', 'sp_input_text');
         
         //remove the 'criteria add' button from new modifier row
@@ -112,7 +113,10 @@ function setSmartBlockEvents() {
             
             var criteria_value = next.find('[name^="sp_criteria_value"]').val();
             curr.find('[name^="sp_criteria_value"]').val(criteria_value);
-             
+
+            /* @todo need to add something regarding hiding datetime_select here */
+
+
             /* if current and next row have the extra criteria value
              * (for 'is in the range' modifier), then assign the next
              * extra value to current and remove that element from
@@ -241,6 +245,7 @@ function setSmartBlockEvents() {
         
         // disable extra field and hide the span
         disableAndHideExtraField($(this), index);
+        disableAndHideDateTimeDropdown($(this), index);
         populateModifierSelect(this, true);
     });
     
@@ -248,7 +253,22 @@ function setSmartBlockEvents() {
     form.find('select[id^="sp_criteria_modifier"]').live("change", function(){
         var criteria_value = $(this).next(),
             index_num = getRowIndex($(this).parent());
-        
+
+        if ($(this).val().match('before|after|between')) {
+            enableAndShowDateTimeDropdown(criteria_value, index_num);
+
+            if ($(this).val() == 'between') {
+                enableAndShowExtraField(criteria_value,index_num);
+            }
+            else {
+                disableAndHideExtraField(criteria_value, index_num);
+            }
+        }
+        else {
+            disableAndHideDateTimeDropdown(criteria_value, index_num);
+
+        }
+
         if ($(this).val() == 'is in the range') {
             enableAndShowExtraField(criteria_value, index_num);
         } else {
@@ -438,6 +458,30 @@ function setupUI() {
         }
     });
 }
+
+
+function enableAndShowDateTimeDropdown(valEle, index) {
+    alert('enabled')
+    var spanDatetime = valEle.nextAll("#datetime_select");
+    spanDatetime.children('#sp_criteria_datetime_select_'+index).removeAttr("disabled");
+    spanDatetime.show();
+
+    //make value input smaller since we have extra element now
+    var criteria_val = $('#sp_criteria_value_'+index);
+    sizeTextBoxes(criteria_val, 'sp_input_text', 'sp_extra_input_text');
+}
+
+function disableAndHideDateTimeDropdown(valEle, index) {
+    alert('disabled')
+    var spanDatetime = valEle.nextAll("#datetime_select");
+    spanDatetime.children('#sp_criteria_datetime_select_'+index).val("").attr("disabled", "disabled");
+    spanDatetime.hide();
+
+    //make value input larger since we don't have extra field now
+    var criteria_value = $('#sp_criteria_value_'+index);
+    sizeTextBoxes(criteria_value, 'sp_extra_input_text', 'sp_input_text');
+}
+
 
 function enableAndShowExtraField(valEle, index) {
     var spanExtra = valEle.nextAll("#extra_criteria");

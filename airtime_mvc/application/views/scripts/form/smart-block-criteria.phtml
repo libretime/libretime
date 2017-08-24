@@ -93,8 +93,11 @@
                           echo 'style=display:none';
                       } ?> >
                 <?php echo $this->element->getElement("sp_criteria_field_".$i."_".$j) ?>
-                <?php echo $this->element->getElement("sp_criteria_modifier_".$i."_".$j) ?>
+                <?php echo $this->element->getElement("sp_criteria_modifier_".$i."_".$j)   /* @todo finish this */?>
+
                 <?php echo $this->element->getElement("sp_criteria_value_".$i."_".$j) ?>
+                <span class='sp_text_font' id="datetime_select" <?php echo $this->element->getElement("sp_criteria_datetime_select_".$i."_".$j)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>><?php echo $this->element->getElement('sp_criteria_datetime_select_'.$i."_".$j) ?><?php echo _(" ago "); ?></span>
+
                 <a class='btn btn-small btn-new' id='modifier_add_<?php echo $i ?>'>
                     <i class='icon-white icon-plus'></i><?php echo(_("New Modifier")); ?>
                 </a>

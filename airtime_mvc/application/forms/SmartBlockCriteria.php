@@ -5,6 +5,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     private $stringCriteriaOptions;
     private $numericCriteriaOptions;
     private $dateTimeCriteriaOptions;
+    private $timePeriodCriteriaOptions;
     private $sortOptions;
     private $limitOptions;
 
@@ -135,15 +136,16 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     }
 
 
-    private function getTimePeriodCriteriaOptions() {
+    private function getTimePeriodCriteriaOptions()
+    {
         if (!isset($this->timePeriodCriteriaOptions)) {
             $this->timePeriodCriteriaOptions = array(
                 "0"             => _("Select unit of time"),
-                "minute"        => _("minute"),
-                "hour"          => _("hour"),
-                "day"           => _("day"),
-                "week"          => _("week"),
-                "year"          => _("year")
+                "minute"        => _("minute(s)"),
+                "hour"          => _("hour(s)"),
+                "day"           => _("day(s)"),
+                "week"          => _("week(s)"),
+                "year"          => _("year(s)")
             );
         }
         return $this->timePeriodCriteriaOptions;
@@ -342,6 +344,28 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                     $criteriaValue->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["value"]);
                 }
                 $this->addElement($criteriaValue);
+
+
+                /****************** DATETIME SELECT *************/
+                $criteriaDatetimeSelect = new Zend_Form_Element_Select("sp_criteria_datetime_select_".$i."_".$j);
+                $criteriaDatetimeSelect->setAttrib('class','input_select sp_input_select')
+                                        ->setDecorators(array('viewHelper'));
+                if ($i != 0 && !isset($criteriaKeys[$i])) {
+                    $criteriaDatetimeSelect->setAttrib('disabled', 'disabled');
+                }
+                // need to determine how this is stored in the database if using plaintext need to parse the value
+                /* @todo figure this out */
+                if (isset($criteriaKeys[$i]) && isset($storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"])) {
+                    $criteriaDatetimeSelect->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"]);
+                    $criteriaDatetimeSelect->setAttrib('class', 'input_text sp_datetime_input_select');
+                } else {
+                    $criteriaDatetimeSelect->setAttrib('disabled', 'disabled');
+                }
+
+                /* TODO FIX THIS */
+                $criteriaDatetimeSelect->setMultiOptions($this->getTimePeriodCriteriaOptions());
+//                $criteriaDatetimeSelect->setMultiOptions(array('0' => _('Select modifier')));
+                $this->addElement($criteriaDatetimeSelect);
 
                 /****************** EXTRA ***********/
                 $criteriaExtra = new Zend_Form_Element_Text("sp_criteria_extra_".$i."_".$j);
