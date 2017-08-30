@@ -46,6 +46,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetDefaultFadeIn($values["stationDefaultFadeIn"]);
                 Application_Model_Preference::SetDefaultFadeOut($values["stationDefaultFadeOut"]);
                 Application_Model_Preference::SetPodcastAlbumOverride($values["podcastAlbumOverride"]);
+                Application_Model_Preference::SetPodcastAutoSmartblock($values["podcastAutoSmartblock"]);
                 Application_Model_Preference::SetAllow3rdPartyApi($values["thirdPartyApi"]);
                 Application_Model_Preference::SetAllowedCorsUrls($values["allowedCorsUrls"]);
                 Application_Model_Preference::SetDefaultLocale($values["locale"]);

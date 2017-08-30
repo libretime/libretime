@@ -110,13 +110,29 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $podcast_album_override->setValue(Application_Model_Preference::GetPodcastAlbumOverride());
         $podcast_album_override->setDescription(_('Enabling this means that podcast tracks will always contain the podcast name in their album field.'));
         $podcast_album_override->setSeparator(' '); //No <br> between radio buttons
-        //$third_party_api->addDecorator(new Zend_Form_Decorator_Label(array('tag' => 'dd', 'class' => 'radio-inline-list')));
         $podcast_album_override->addDecorator('HtmlTag', array('tag' => 'dd',
             'id'=>"podcastAlbumOverride-element",
             'class' => 'radio-inline-list',
         ));
         $this->addElement($podcast_album_override);
 
+        $podcast_auto_smartblock = new Zend_Form_Element_Radio('podcastAutoSmartblock');
+        $podcast_auto_smartblock->setLabel(_('Podcast Automatic Smartblock and Playlist'));
+        $podcast_auto_smartblock->setMultiOptions(array(
+            _("Disabled"),
+            _("Enabled"),
+        ));
+        $podcast_auto_smartblock->setValue(Application_Model_Preference::GetPodcastAutoSmartblock());
+        $podcast_auto_smartblock->setDescription(_('Enabling this means that a smartblock and playlist matching the newest track of a 
+        podcast will be created when a new podcast is added. This depends upon the Podcast Album Override to work.'));
+        $podcast_auto_smartblock->setSeparator(' '); //No <br> between radio buttons
+        $podcast_auto_smartblock->addDecorator('HtmlTag', array('tag' => 'dd',
+            'id'=>"podcastAutoSmartblock-element",
+            'class' => 'radio-inline-list',
+        ));
+        $this->addElement($podcast_auto_smartblock);
+
+        //TODO add and insert Podcast Smartblock and Playlist autogenerate options
 
         $third_party_api = new Zend_Form_Element_Radio('thirdPartyApi');
         $third_party_api->setLabel(_('Public Airtime API'));
