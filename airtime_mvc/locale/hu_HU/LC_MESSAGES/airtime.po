@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-24 16:23+0000\n"
-"PO-Revision-Date: 2017-08-31 16:04+0200\n"
+"PO-Revision-Date: 2017-09-01 17:27+0200\n"
 "Last-Translator: miles <varota@gmail.com>\n"
 "Language-Team: Hungarian (Hungary) (http://www.transifex.com/sourcefabric/airtime/language/hu_HU/)\n"
 "Language: hu_HU\n"
@@ -592,7 +592,7 @@ msgstr "Úgy tűnik még nincsenek feltöltve audió fájlok. %sFájl feltölté
 
 #: airtime_mvc/application/common/UsabilityHints.php:74
 msgid "Click the 'New Show' button and fill out the required fields."
-msgstr ""
+msgstr "Kattintson az „Új műsor” gombra és töltse ki a kötelező mezőket!"
 
 #: airtime_mvc/application/common/UsabilityHints.php:76
 #, php-format
@@ -826,7 +826,7 @@ msgstr "A kiválasztott művelet nem támogatott."
 
 #: airtime_mvc/application/controllers/ErrorController.php:107
 msgid "You do not have permission to access this resource."
-msgstr ""
+msgstr "Nincs jogosultsága ennek a forrásnak az eléréséhez."
 
 #: airtime_mvc/application/controllers/ErrorController.php:118
 msgid "An internal application error has occurred."
@@ -974,7 +974,7 @@ msgstr "Új verzió érhető el:"
 
 #: airtime_mvc/application/controllers/LocaleController.php:37
 msgid "You have a pre-release version of LibreTime intalled."
-msgstr ""
+msgstr "A LibreTime egy kiadás-előtti verziója van telepítve."
 
 #: airtime_mvc/application/controllers/LocaleController.php:38
 msgid "A patch update for your LibreTime installation is available."
@@ -1024,11 +1024,11 @@ msgstr "Kérjük, válasszon kurzor pozíciót az idővonalon."
 
 #: airtime_mvc/application/controllers/LocaleController.php:52
 msgid "You haven't added any tracks"
-msgstr ""
+msgstr "Még nincsenek sávok hozzáadva"
 
 #: airtime_mvc/application/controllers/LocaleController.php:53
 msgid "You haven't added any playlists"
-msgstr ""
+msgstr "Még nincsenek lejátszási listák hozzáadva"
 
 #: airtime_mvc/application/controllers/LocaleController.php:54
 msgid "You haven't added any smart blocks"
@@ -1060,7 +1060,7 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:61
 msgid "Click 'New' to create one."
-msgstr ""
+msgstr "Létrehozni az „Új” gombra kattintással lehet."
 
 #: airtime_mvc/application/controllers/LocaleController.php:65
 msgid "Edit Metadata"
@@ -1229,7 +1229,7 @@ msgstr "Hossz"
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:69
 #: airtime_mvc/application/models/Block.php:1376
 msgid "Mime"
-msgstr "Mimika"
+msgstr "Mime típus"
 
 #: airtime_mvc/application/controllers/LocaleController.php:92
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:70
@@ -1371,7 +1371,7 @@ msgstr "kérjük, tegye időbe '00:00:00 (.0)'"
 
 #: airtime_mvc/application/controllers/LocaleController.php:129
 msgid "Please enter a valid time in seconds. Eg. 0.5"
-msgstr ""
+msgstr "Érvényes időt kell megadni másodpercben. Pl.: 0.5"
 
 #: airtime_mvc/application/controllers/LocaleController.php:130
 msgid "Your browser does not support playing this file type: "
@@ -2377,7 +2377,7 @@ msgstr "Adásban"
 
 #: airtime_mvc/application/controllers/LocaleController.php:435
 msgid "Off Air"
-msgstr ""
+msgstr "Adáson kívül"
 
 #: airtime_mvc/application/controllers/LocaleController.php:436
 msgid "Offline"
@@ -2385,7 +2385,7 @@ msgstr "Offline"
 
 #: airtime_mvc/application/controllers/LocaleController.php:437
 msgid "Nothing scheduled"
-msgstr ""
+msgstr "Nincs semmi ütemezve"
 
 #: airtime_mvc/application/controllers/LoginController.php:54
 msgid "Please enter your username and password."
@@ -2401,7 +2401,7 @@ msgstr "A felhasználónév vagy email cím nem található."
 
 #: airtime_mvc/application/controllers/LoginController.php:196
 msgid "There was a problem with the username or email address you entered."
-msgstr ""
+msgstr "Valamilyen probléma van a megadott felhasználónévvel vagy email címmel."
 
 #: airtime_mvc/application/controllers/LoginController.php:274
 msgid "Wrong username or password provided. Please try again."
@@ -2567,15 +2567,15 @@ msgstr "Egyéni Jelszó"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:49
 msgid "Host:"
-msgstr ""
+msgstr "Hoszt:"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:55
 msgid "Port:"
-msgstr ""
+msgstr "Port:"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:61
 msgid "Mount:"
-msgstr ""
+msgstr "Csatolási pont:"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:78
 msgid "Username field cannot be empty."
@@ -3027,7 +3027,7 @@ msgstr "Alapértelmezett Áttünési Időtartam (mp):"
 #: airtime_mvc/application/forms/GeneralPreferences.php:98
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:34
 msgid "Please enter a time in seconds (eg. 0.5)"
-msgstr ""
+msgstr "Idő megadása másodpercben (pl.: 0.5)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:78
 msgid "Default Fade In (s):"
@@ -3039,7 +3039,7 @@ msgstr "Alapértelmezett Leúsztatás (mp)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:105
 msgid "Podcast Album Override"
-msgstr ""
+msgstr "Podcast album felülírása"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:107
 #: airtime_mvc/application/forms/GeneralPreferences.php:125
@@ -3053,7 +3053,7 @@ msgstr "Engedélyezve"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:111
 msgid "Enabling this means that podcast tracks will always contain the podcast name in their album field."
-msgstr ""
+msgstr "Ha engedélyezett, a podcast sávok album mezőjébe mindig a podcast neve kerül."
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:122
 msgid "Public Airtime API"
@@ -3071,7 +3071,7 @@ msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:141
 msgid "Allowed CORS URLs"
-msgstr ""
+msgstr "Engedélyezett CORS URL-ek"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:142
 msgid "Remote URLs that are allowed to access this LibreTime instance in a browser. One URL per line."
@@ -3132,11 +3132,11 @@ msgstr ""
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:66
 msgid "Master Source Host:"
-msgstr ""
+msgstr "Mester forráshoszt:"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:78
 msgid "Master Source Port:"
-msgstr ""
+msgstr "Mester forrásport:"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:81
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:111
@@ -3146,19 +3146,19 @@ msgstr "Csak számok adhatók meg."
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:89
 msgid "Master Source Mount:"
-msgstr ""
+msgstr "Mester csatolási pont:"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:99
 msgid "Show Source Host:"
-msgstr ""
+msgstr "Forráshoszt mutatása:"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:108
 msgid "Show Source Port:"
-msgstr ""
+msgstr "Forrásport mutatása:"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:116
 msgid "Show Source Mount:"
-msgstr ""
+msgstr "Forrás csatolási pont mutatása:"
 
 #: airtime_mvc/application/forms/Login.php:81
 #: airtime_mvc/application/views/scripts/index/index.phtml:30
@@ -3647,15 +3647,15 @@ msgstr ""
 
 #: airtime_mvc/application/forms/TuneInPreferences.php:25
 msgid "Station ID:"
-msgstr ""
+msgstr "Állomás azonosító:"
 
 #: airtime_mvc/application/forms/TuneInPreferences.php:31
 msgid "Partner Key:"
-msgstr ""
+msgstr "Partnerkulcs:"
 
 #: airtime_mvc/application/forms/TuneInPreferences.php:37
 msgid "Partner Id:"
-msgstr ""
+msgstr "Partnerazonosító:"
 
 #: airtime_mvc/application/forms/TuneInPreferences.php:78
 #: airtime_mvc/application/forms/TuneInPreferences.php:87
