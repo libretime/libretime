@@ -14,7 +14,7 @@ class ProxyStorageBackend extends StorageBackend
      * Receives the file's storage backend and instantiates the appropriate
      * object.
      */
-    public function ProxyStorageBackend($storageBackend)
+    public function __construct($storageBackend)
     {
         $CC_CONFIG = Config::getConfig();
 
