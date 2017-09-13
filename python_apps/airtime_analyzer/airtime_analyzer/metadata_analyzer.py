@@ -175,7 +175,7 @@ class MetadataAnalyzer(Analyzer):
             metadata["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
             metadata["length_seconds"] = length_seconds
             metadata["cueout"] = metadata["length"] 
-        except wave.Error:
-            logging.error("Invalid WAVE file.")
+        except wave.Error as ex:
+            logging.error("Invalid WAVE file: {}".format(str(ex)))
             raise
         return metadata
