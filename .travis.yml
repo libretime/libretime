@@ -47,6 +47,7 @@ addons:
     - python-nose
     - python-rgain
     - python-gst-1.0
+    - python-magic
     - mp3gain
 install:
 - >
