@@ -72,6 +72,7 @@ pages:
     - 'FreeIPA Authentication': freeipa.md
   - 'Development':
     - 'Testing': testing.md
+    - 'Database': database.md
     - 'Vagrant': vagrant.md
     - 'Translating': translating.md
     - 'Documentation': documentation.md
