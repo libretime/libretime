@@ -578,7 +578,7 @@ msgstr ""
 
 #: airtime_mvc/application/common/Timezone.php:21
 msgid "Use station default"
-msgstr "Usar el valor predeterminado de la estación"
+msgstr "Usar el predeterminado de la estación"
 
 #: airtime_mvc/application/common/UsabilityHints.php:66
 msgid "Upload some tracks below to add them to your library!"
