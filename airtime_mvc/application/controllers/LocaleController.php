@@ -51,6 +51,7 @@ final class LocaleController extends Zend_Controller_Action
             "Please select a cursor position on timeline." => _("Please select a cursor position on timeline."),
             "You haven't added any tracks" => _("You haven't added any tracks"),
             "You haven't added any playlists" => _("You haven't added any playlists"),
+            "You haven't added any podcasts" => _("You haven't added any podcasts"),
             "You haven't added any smart blocks" => _("You haven't added any smart blocks"),
             "You haven't added any webstreams" => _("You haven't added any webstreams"),
             "Learn about tracks" => _("Learn about tracks"),
@@ -434,7 +435,8 @@ final class LocaleController extends Zend_Controller_Action
             "On Air" => _("On Air"),
             "Off Air" => _("Off Air"),
             "Offline" => _("Offline"),
-            "Nothing scheduled" => _("Nothing scheduled")
+            "Nothing scheduled" => _("Nothing scheduled"),
+            "Click 'Add' to create one now." => _("Click 'Add' to create one now.")
         );
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
