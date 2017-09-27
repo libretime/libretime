@@ -21,8 +21,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         $startNow->setRequired(false)
             ->setLabel(_('Start Time:'))
             ->addMultiOptions(array(
-                'now' => 'Now',
-                'future' => 'In the Future:'
+                'now' => _('Now'),
+                'future' => _('In the Future:')
             ))
             ->setValue('future')
             ->setDecorators(array('ViewHelper'));
