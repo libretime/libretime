@@ -84,7 +84,7 @@ class PypoFile(Thread):
                         handle.write(chunk)
 
                 #make file world readable
-                os.chmod(dst, stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH)
+                os.chmod(dst, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
 
                 if media_item['filesize'] == 0:
                     file_size = self.report_file_size_and_md5_to_airtime(dst, media_item["id"], host, username)
