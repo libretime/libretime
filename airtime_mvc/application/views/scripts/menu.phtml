@@ -1,5 +1,15 @@
 <ol class="navigation">
 <?php foreach ($this->container as $page) : ?>
+    <?php
+        // Admin and PM have access to the General Preferences. We need to set that menu item to point to General Preferences, instead of My Profile
+        $user = Application_Model_User::getCurrentUser();
+        $isHost = $user->isUserType(array(UTYPE_HOST));
+        if ($isHost && $page->getTitle() === 'Settings') {
+                $page->set('resource', 'usersettings');
+		$page->set('controller', 'user');
+                $page->set('action','edit-user');
+        }
+	?>
     <?php if($this->navigation()->accept($page)) : ?>
         <li class="top <?php if($page->isActive(true)){echo 'active';} ?>">
             <?php if($page->hasPages()) : ?>
