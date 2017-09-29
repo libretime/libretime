@@ -1030,7 +1030,7 @@ SQL;
                 $file = $storedFile->getPropelOrm();
                 //Even local files are downloaded through the REST API in case we need to transform
                 //their filenames (eg. in the case of a bad file extension, because Liquidsoap won't play them)
-                $uri = Application_Common_HTTPHelper::getStationUrl() . "/rest/media/" . $media_id;
+                $uri = Application_Common_HTTPHelper::getStationUrl() . "rest/media/" . $media_id;
                 //$uri = $file->getAbsoluteFilePath();
                 
                 $filesize = $file->getFileSize();
