@@ -77,26 +77,28 @@ $pages[] = array(
         array(
             'label'      => _('General'),
             'module'     => 'default',
-            'controller' => 'preference'
+            'controller' => 'preference',
+	    'resource'   => 'preference'
         ),
         array(
             'label' => _('My Profile'),
             'controller' => 'user',
             'action' => 'edit-user',
-            'resource' => 'user'
+            'resource' => 'usersettings'
         ),
         array(
             'label'      => _('Users'),
             'module'     => 'default',
             'controller' => 'user',
             'action'     => 'add-user',
-            'resource'   =>    'user'
+            'resource'   => 'user'
         ),
         array(
             'label'      => _('Streams'),
             'module'     => 'default',
             'controller' => 'preference',
-            'action'     => 'stream-setting'
+            'action'     => 'stream-setting',
+	    'resource'   => 'preference'
         ),
         array(
             'label'      => _('Status'),
