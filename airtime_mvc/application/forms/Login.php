@@ -16,7 +16,7 @@ class Application_Form_Login extends Zend_Form
         if ($request) {
             $refererUrl = $request->getHeader('referer');
             $originIsSafe = false;
-            foreach (CORSHelper::getAllowedOrigins() as $safeOrigin) {
+            foreach (CORSHelper::getAllowedOrigins($request) as $safeOrigin) {
                 if ($this->startsWith($safeOrigin, $refererUrl)) {
                     $originIsSafe = true;
                     break;

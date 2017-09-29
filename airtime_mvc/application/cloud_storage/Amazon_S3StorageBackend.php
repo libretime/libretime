@@ -8,7 +8,7 @@ class Amazon_S3StorageBackend extends StorageBackend
     private $s3Client;
     private $proxyHost;
 
-    public function Amazon_S3StorageBackend($securityCredentials)
+    public function __construct($securityCredentials)
     {
         $this->setBucket($securityCredentials['bucket']);
         $this->setAccessKey($securityCredentials['api_key']);

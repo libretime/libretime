@@ -18,7 +18,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-09-02 02:10-0400\n"
+"PO-Revision-Date: 2017-09-22 04:38-0400\n"
 "Last-Translator: Yaroslav Grebnev <yarik2720@ya.ru>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/sourcefabric/"
 "airtime/language/ru_RU/)\n"
@@ -3300,11 +3300,11 @@ msgstr "Пароли не совпадают"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:19
 msgid "Auto Switch Off:"
-msgstr "Авто откоючение внешнего потока:"
+msgstr "Авто-отключение:"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:25
 msgid "Auto Switch On:"
-msgstr "Авто включение внешнего потока:"
+msgstr "Авто-включение:"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:31
 msgid "Switch Transition Fade (s):"
@@ -3393,7 +3393,7 @@ msgstr "Выбрать поток:"
 
 #: airtime_mvc/application/forms/Player.php:28
 msgid "Auto detect the most appropriate stream to use."
-msgstr "Автоопределение наиболее приоритетного потока вещания."
+msgstr "Авто-определение наиболее приоритетного потока вещания."
 
 #: airtime_mvc/application/forms/Player.php:29
 msgid "Select a stream:"

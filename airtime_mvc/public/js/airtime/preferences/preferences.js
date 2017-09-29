@@ -29,6 +29,19 @@ function setEnableSystemEmailsListener() {
     });
 }
 
+function setPodcastAutoSmartblockReadonly() {
+    var disablePodcastAutomSmartblock = $("#podcastAutoSmartblock-0");
+    var enablePodcastAutomSmartblock = $("#podcastAutoSmartblock-1");
+    var podcastOverride = $("#podcastAlbumOverride-1");
+    if ($(podcastOverride).is(':checked')) {
+        enablePodcastAutomSmartblock.removeAttr("readonly");
+    } else {
+        disablePodcastAutomSmartblock.prop("checked", true);
+        disablePodcastAutomSmartblock.attr("readonly","readonly");
+        enablePodcastAutomSmartblock.attr("readonly","readonly");
+    }
+}
+
 function setSystemFromEmailReadonly() {
     var enableSystemEmails = $("#enableSystemEmail");
     var systemFromEmail = $("#systemEmail");
@@ -189,6 +202,7 @@ $(document).ready(function() {
     showErrorSections();
     
     setMailServerInputReadonly();
+    setPodcastAutoSmartblockReadonly();
     setSystemFromEmailReadonly();
     setConfigureMailServerListener();
     setEnableSystemEmailsListener();

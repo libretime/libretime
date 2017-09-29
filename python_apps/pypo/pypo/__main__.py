@@ -95,6 +95,11 @@ try:
     rootLogger.setLevel(LOG_LEVEL)
     logger = rootLogger
 
+    fileHandler = logging.handlers.RotatingFileHandler(filename=LOG_PATH, maxBytes=1024 * 1024 * 30,
+                                                       backupCount=8)
+    fileHandler.setFormatter(logFormatter)
+    rootLogger.addHandler(fileHandler)
+
     consoleHandler = logging.StreamHandler()
     consoleHandler.setFormatter(logFormatter)
     rootLogger.addHandler(consoleHandler)

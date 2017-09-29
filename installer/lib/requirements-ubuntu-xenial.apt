@@ -1,8 +1,10 @@
 apache2
-libapache2-mod-php5
-php5
+libapache2-mod-php7.0
+php7.0
 php-pear
-php5-gd
+php7.0-gd
+php-bcmath
+php-mbstring
 
 lsb-release
 
@@ -10,7 +12,7 @@ rabbitmq-server
 
 postgresql
 postgresql-client
-php5-pgsql
+php7.0-pgsql
 
 python
 python-virtualenv
@@ -31,24 +33,24 @@ python-pika
 
 patch
 
-curl
-php5-curl
+php7.0-curl
 mpg123
+curl
 
 icecast2
 
 libcamomile-ocaml-data
 libpulse0
 vorbis-tools
-lsb-release
 lsof
-mp3gain
+# mp3gain need to be installed over an external ppa or the use of easymp3gain
+easymp3gain-gtk
 vorbisgain
 flac
 vorbis-tools
 pwgen
 libfaad2
-php-apc
+php-apcu
 
 lame
 
@@ -74,7 +76,7 @@ libopus0
 
 sysvinit-utils
 
-build-essential 
-libssl-dev 
-libffi-dev 
+build-essential
+libssl-dev
+libffi-dev
 python-dev

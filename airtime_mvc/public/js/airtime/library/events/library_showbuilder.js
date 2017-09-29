@@ -103,7 +103,7 @@ var AIRTIME = (function(AIRTIME) {
                 opts = AIRTIME.library.placeholder(mediaType);
                 img.addClass("empty_placeholder_image icon-white " + opts.icon);
                 wrapper.find('.empty_placeholder_text').html(
-                    $.i18n._("You haven't added any " + opts.media + ".")
+                    $.i18n._("You haven't added any " + opts.media)
                     + "<br/>" + $.i18n._(opts.subtext)
                     + "<br/><a target='_blank' href='" + opts.href + "'>" + $.i18n._("Learn about " + opts.media) + "</a>"
                 );

@@ -32,18 +32,22 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract {
             $currentParts = array(0, 0, 0, 0);
         }
 
-        $majorCandidates = SemVer::satisfiedBy($latest, sprintf('>=%1$s', $currentParts[0] + 1));
+        $isPreRelease = $isGitRelease || array_key_exists(4, $currentParts);
+        // we are always interested in a major when we pre-release, hence the isPreRelease part
+        $majorCandidates = SemVer::satisfiedBy($latest, sprintf('>=%1$s-stable', $currentParts[0] + ($isPreRelease ? 0 : 1)));
         $minorCandidates = SemVer::satisfiedBy($latest, sprintf('~%1$s.%2$s', $currentParts[0], $currentParts[1] + 1));
-        $patchCandidates = SemVer::satisfiedBy($latest, sprintf('>=%1$s.%2$s.%3$s <%1$s.%3$s', $currentParts[0], $currentParts[1], $currentParts[2] + 1, $currentParts[1] + 1));
+        $patchCandidates = SemVer::satisfiedBy($latest, sprintf('>=%1$s.%2$s.%3$s <%1$s.%3$s', $currentParts[0], $currentParts[1], $currentParts[2] + 1));
         $hasMajor = !empty($majorCandidates);
         $hasMinor = !empty($minorCandidates);
         $hasPatch = !empty($patchCandidates);
-        $isPreRelease = $isGitRelease || array_key_exists(4, $currentParts);
         $hasMultiMajor = count($majorCandidates) > 1;
 
         if ($isPreRelease) {
-            // orange "warning" if you are on unreleased code
-            $class = 'update2';
+            $stableVersions = SemVer::satisfiedBy($latest, sprintf('>=%1$s.%2$s.%3$s-stable', $currentParts[0], $currentParts[1], $currentParts[2]));
+            // git releases are never interested in a stable version :P
+            $hasStable = !empty($stableVersions) && !$isGitRelease;
+            // no warning if no major release available, orange warning if you are on unreleased code
+            $class = $hasStable ? 'update2' : 'uptodate';
         } else if ($hasPatch || $hasMultiMajor) {
             // current patch or more than 1 major behind
             $class = 'outdated';

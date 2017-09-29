@@ -41,7 +41,10 @@ class MetadataAnalyzer(Analyzer):
             metadata["md5"] = m.hexdigest()
 
         # Mutagen doesn't handle WAVE files so we use a different package 
-        mime_check = magic.from_file(filename, mime=True)
+        ms = magic.open(magic.MIME_TYPE)
+        ms.load()
+        with open(filename, 'rb') as fh:
+            mime_check = ms.buffer(fh.read(2014))
         metadata["mime"] = mime_check
         if mime_check == 'audio/x-wav':
             return MetadataAnalyzer._analyze_wave(filename, metadata)
@@ -164,7 +167,6 @@ class MetadataAnalyzer(Analyzer):
     def _analyze_wave(filename, metadata):
         try:
             reader = wave.open(filename, 'rb')
-            metadata["mime"] = magic.from_file(filename, mime=True)
             metadata["channels"] = reader.getnchannels()
             metadata["sample_rate"] = reader.getframerate()
             length_seconds = float(reader.getnframes()) / float(metadata["sample_rate"])
@@ -173,7 +175,7 @@ class MetadataAnalyzer(Analyzer):
             metadata["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
             metadata["length_seconds"] = length_seconds
             metadata["cueout"] = metadata["length"] 
-        except wave.Error:
-            logging.error("Invalid WAVE file.")
+        except wave.Error as ex:
+            logging.error("Invalid WAVE file: {}".format(str(ex)))
             raise
         return metadata

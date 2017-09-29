@@ -2,11 +2,6 @@
 
 class FileStorageBackend extends StorageBackend
 {
-    //Stub class
-    public function FileStorageBackend()
-    {
-    }
-
     public function getAbsoluteFilePath($resourceId)
     {
         //TODO

@@ -47,6 +47,7 @@ addons:
     - python-nose
     - python-rgain
     - python-gst-1.0
+    - python-magic
     - mp3gain
 install:
 - >
@@ -85,7 +86,7 @@ deploy:
     condition: $PYTHON = true
 - provider: script
   skip_cleanup: true
-  script: travis/release.sh
+  script: ./travis/release.sh
   on:
     tags: true
     condition: $PYTHON = true
