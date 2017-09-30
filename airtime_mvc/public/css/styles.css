@@ -102,7 +102,7 @@ select {
 #version-icon {
     position:absolute;
     top:68px;
-    right: 196px;
+    right: 10px;
     height:35px;
     width:35px;
     z-index:1000;
