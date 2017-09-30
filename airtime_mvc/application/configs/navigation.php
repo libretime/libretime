@@ -26,7 +26,8 @@ $pages[] = array(
     'uri'        => '/',
     'resource'   => '',
     'class'      => '<i class="icon-globe icon-white"></i>',
-    'pages'      => array()
+    'pages'      => array(),
+    'visible'    => false
 );
 $pages[] = array(
     'label'      => _('Calendar'),
