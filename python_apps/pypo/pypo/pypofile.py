@@ -35,7 +35,7 @@ class PypoFile(Thread):
         """
         Copy media_item from local library directory to local cache directory.
         """
-        src = media_item['uri']
+        src = media_item['uri']	
         dst = media_item['dst']
 
         src_size = media_item['filesize']
@@ -62,12 +62,14 @@ class PypoFile(Thread):
             try:
                 CONFIG_SECTION = "general"
                 username = self._config.get(CONFIG_SECTION, 'api_key')
-                host = self._config.get(CONFIG_SECTION, 'base_url')
-                port = self._config.get(CONFIG_SECTION, 'base_port', 80)
 
-                url = "%s://%s:%s/rest/media/%s/download" % (str(("http", "https")[int(port) == 443]),
-                                                             host,
-                                                             port,
+		host = [str(("http", "https")[int(self._config.get(CONFIG_SECTION, 'base_port', 80)) == 443]), 
+			self._config.get(CONFIG_SECTION, 'base_url'), 
+			self._config.get(CONFIG_SECTION, 'base_port', 80)]
+
+                url = "%s://%s:%s/rest/media/%s/download" % (host[0],
+                                                             host[1],
+                                                             host[2],
                                                              media_item["id"])
                 self.logger.info(url)
                 with open(dst, "wb") as handle:
@@ -87,7 +89,7 @@ class PypoFile(Thread):
                 os.chmod(dst, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
 
                 if media_item['filesize'] == 0:
-                    file_size = self.report_file_size_and_md5_to_airtime(dst, media_item["id"], host, username)
+                    file_size = self.report_file_size_and_md5_to_airtime(dst, media_item["id"], host[2], username)
                     media_item["filesize"] = file_size
 
                 media_item['file_ready'] = True
@@ -95,7 +97,7 @@ class PypoFile(Thread):
                 self.logger.error("Could not copy from %s to %s" % (src, dst))
                 self.logger.error(e)
 
-    def report_file_size_and_md5_to_airtime(self, file_path, file_id, host_name, api_key):
+    def report_file_size_and_md5_to_airtime(self, file_path, file_id, host, api_key):
         try:
             file_size = os.path.getsize(file_path)
 
@@ -114,8 +116,9 @@ class PypoFile(Thread):
 
         # Make PUT request to Airtime to update the file size and hash
         error_msg = "Could not update media file %s with file size and md5 hash" % file_id
-        try:
-            put_url = "http://%s/rest/media/%s" % (host_name, file_id)
+
+	try:
+            put_url = "%s://%s:%s/rest/media/%s" % (host[0],host[1],host[2], file_id)
             payload = json.dumps({'filesize': file_size, 'md5': md5_hash})
             response = requests.put(put_url, data=payload, auth=requests.auth.HTTPBasicAuth(api_key, ''))
             if not response.ok:
@@ -214,4 +217,3 @@ class PypoFile(Thread):
             self.logger.error('PypoFile Exception: %s', top)
             time.sleep(5)
         self.logger.info('PypoFile thread exiting')
-
