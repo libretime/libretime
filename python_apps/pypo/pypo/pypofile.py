@@ -89,7 +89,7 @@ class PypoFile(Thread):
                 os.chmod(dst, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
 
                 if media_item['filesize'] == 0:
-                    file_size = self.report_file_size_and_md5_to_airtime(dst, media_item["id"], host[2], username)
+                    file_size = self.report_file_size_and_md5_to_airtime(dst, media_item["id"], host, username)
                     media_item["filesize"] = file_size
 
                 media_item['file_ready'] = True
