@@ -35,7 +35,7 @@ class PypoFile(Thread):
         """
         Copy media_item from local library directory to local cache directory.
         """
-        src = media_item['uri']	
+        src = media_item['uri']
         dst = media_item['dst']
 
         src_size = media_item['filesize']
@@ -59,19 +59,20 @@ class PypoFile(Thread):
 
         if do_copy:
             self.logger.info("copying from %s to local cache %s" % (src, dst))
-            try:
-                CONFIG_SECTION = "general"
-                username = self._config.get(CONFIG_SECTION, 'api_key')
 
-		host = [str(("http", "https")[int(self._config.get(CONFIG_SECTION, 'base_port', 80)) == 443]), 
-			self._config.get(CONFIG_SECTION, 'base_url'), 
-			self._config.get(CONFIG_SECTION, 'base_port', 80)]
+            CONFIG_SECTION = "general"
+            username = self._config.get(CONFIG_SECTION, 'api_key')
+            baseurl = self._config.get(CONFIG_SECTION, 'base_url')
+            port = self._config.get(CONFIG_SECTION, 'base_port', 80)
+	    protocol = self._config.get(CONFIG_SECTION, 'protocol', str(("http", "https")[int(port) == 443]))
+
+	    try:
+		host = [protocol, baseurl, port]
 
                 url = "%s://%s:%s/rest/media/%s/download" % (host[0],
                                                              host[1],
                                                              host[2],
                                                              media_item["id"])
-                self.logger.info(url)
                 with open(dst, "wb") as handle:
                     response = requests.get(url, auth=requests.auth.HTTPBasicAuth(username, ''), stream=True, verify=False)
                     
@@ -85,7 +86,7 @@ class PypoFile(Thread):
                         
                         handle.write(chunk)
 
-                #make file world readable
+                #make file world readable and owner writable
                 os.chmod(dst, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
 
                 if media_item['filesize'] == 0:
@@ -116,9 +117,8 @@ class PypoFile(Thread):
 
         # Make PUT request to Airtime to update the file size and hash
         error_msg = "Could not update media file %s with file size and md5 hash" % file_id
-
-	try:
-            put_url = "%s://%s:%s/rest/media/%s" % (host[0],host[1],host[2], file_id)
+        try:
+            put_url = "%s://%s:%s/rest/media/%s" % (host[0], host[1], host[2], file_id)
             payload = json.dumps({'filesize': file_size, 'md5': md5_hash})
             response = requests.put(put_url, data=payload, auth=requests.auth.HTTPBasicAuth(api_key, ''))
             if not response.ok:
