@@ -967,7 +967,7 @@ else
 fi
 
 # Enable Apache modules
-if $is_ubuntu_xenial; then
+if $is_ubuntu_xenial || $is_debian_stretch; then
     loudCmd "a2enmod rewrite php7.0"
 elif $is_centos_dist; then
     verbose "TODO: enable Apache modules mod_rewrite and mod_php manually"
@@ -1120,3 +1120,4 @@ echo    " To get started with Airtime, visit ${IP}            "
 echo    " or, if you've set up your own web configuration,    "
 echo    " the Airtime webroot on your webserver               "
 echo    "-----------------------------------------------------"
+
