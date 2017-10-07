@@ -1,0 +1,75 @@
+#!/usr/bin/python
+
+
+# usage: sudo -u postgres ./airtime-re-silan
+
+
+import os
+import sys
+import psycopg2
+import subprocess
+import json
+import datetime
+
+# loading config file
+srv_root = "/srv/airtime/stor/"
+
+
+conn = psycopg2.connect("dbname=airtime user=airtime host=localhost password=airtime")
+
+cur = conn.cursor()
+cur.execute("SELECT count(id) FROM cc_files;")
+nb = cur.fetchone()[0]
+
+
+cur.execute("SELECT id, cuein, cueout, length, filepath FROM cc_files;")
+
+cur2 = conn.cursor()
+
+i = 1
+for record in cur:
+	rid = record[0]
+	full_path = srv_root + record[4]
+	if os.path.isfile(full_path):
+		command = ['silan', '-b', '-f', 'JSON', full_path]
+		proc = subprocess.Popen(command, stdout=subprocess.PIPE)
+		out = proc.communicate()[0].strip('\r\n')
+		info = json.loads(out)
+		data = {}
+		data['cuein'] = float('{0:f}'.format(info['sound'][0][0]))
+		data['cueout'] = float('{0:f}'.format(info['sound'][-1][1]))
+		data['length'] = float('{0:f}'.format(info['file duration']))
+		print "== " + str(i) + " / " + str(nb) + " =="
+		print "  Fichier " + record[4] + " " + str(data)
+		cur2.execute("UPDATE cc_files SET cuein=%s, cueout=%s, length=%s WHERE id=%s", (datetime.timedelta(seconds=data['cuein']), datetime.timedelta(seconds=data['cueout']), datetime.timedelta(seconds=data['length']), rid))
+		print "  -> " + str(cur2.rowcount) + " modification(s)"
+		i +=  1
+
+conn.commit()
+cur.close()
+cur2.close()
+conn.close()
+
+
+#matches = []
+#for root, dirnames, filenames in os.walk(folder):
+    #for extension in [ "*.mp3", "*.flac", "*.m4a" ]:
+	    #for filename in fnmatch.filter(filenames, extension):
+		#full_path = os.path.join(root, filename)
+		#command = ['silan', '-b', '-f', 'JSON', full_path]
+                #proc = subprocess.Popen(command, stdout=subprocess.PIPE)
+                #out = proc.communicate()[0].strip('\r\n')
+                #info = json.loads(out)
+                #data = {}
+                #data['cuein'] = str('{0:f}'.format(info['sound'][0][0]))
+                #data['cueout'] = str('{0:f}'.format(info['sound'][-1][1]))
+                #data['length'] = str('{0:f}'.format(info['file duration']))
+		
+		##sudo -u postgres psql -c "UPDATE cc_files SET cueout='431.731224 second' WHERE filepath='imported/2/Kristian Conde/unknown/unknown-Dolce Vita-160kbps.mp3'" airtime
+		#local_filename = os.path.join(root.replace(folder, ""), filename)
+		#request = "UPDATE cc_files SET cueout='" + data['cueout'] + " second', cuein='" + data['cuein'] + " second', length='" + data['length'] +" second'  WHERE filepath=" + repr(local_filename)
+		#update_command = [ 'sudo', '-u', 'postgres', 'psql', '-c', request, 'airtime' ]
+		#print(update_command)
+		#update_proc = subprocess.Popen(update_command, stdout=subprocess.PIPE)
+		#print(update_proc.communicate()[0])
+
