@@ -153,6 +153,7 @@ def podcast_download(id, url, callback_url, api_key, podcast_name, album_overrid
         with closing(requests.get(url, stream=True)) as r:
             filename = get_filename(r)
             with tempfile.NamedTemporaryFile(mode ='wb+', delete=False) as audiofile:
+                r.raw.decode_content = True
                 shutil.copyfileobj(r.raw, audiofile)
                 # currently hardcoded for mp3s may want to add support for oggs etc
                 m = MP3(audiofile.name, ID3=EasyID3)
