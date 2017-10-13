@@ -11,6 +11,9 @@ php-amqplib
 
 lsb-release
 
+zip
+unzip
+
 rabbitmq-server
 
 postgresql

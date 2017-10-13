@@ -6,6 +6,9 @@ php5-gd
 
 lsb-release
 
+zip
+unzip
+
 rabbitmq-server
 
 postgresql
