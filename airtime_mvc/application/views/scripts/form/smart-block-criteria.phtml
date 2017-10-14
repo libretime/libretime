@@ -103,6 +103,8 @@
                 </a>
 
                 <span class='sp_text_font' id="extra_criteria" <?php echo $this->element->getElement("sp_criteria_extra_".$i."_".$j)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>><?php echo _(" to "); ?><?php echo $this->element->getElement('sp_criteria_extra_'.$i."_".$j) ?></span>
+                <span class='sp_text_font' id="extra_datetime_select" <?php echo $this->element->getElement("sp_criteria_extra_datetime_select_".$i."_".$j)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>><?php echo $this->element->getElement('sp_criteria_extra_datetime_select_'.$i."_".$j) ?><?php echo _(" ago "); ?></span>
+
                 <a style='margin-right:3px' class='btn btn-small btn-danger' id='criteria_remove_<?php echo $i ?>'>
                     <i class='icon-white icon-remove spl-no-r-margin'></i>
                 </a>

@@ -102,6 +102,8 @@ function setSmartBlockEvents() {
 
         if (count == 0) {
             disableAndHideDateTimeDropdown(curr.find(':first-child'), index);
+            disableAndHideExtraDateTimeDropdown(curr.find(':first-child'),index);
+            disableAndHideExtraField(curr.find(':first-child'),index);
         }
 
         /* assign next row to current row for all rows below and including
@@ -176,6 +178,29 @@ function setSmartBlockEvents() {
                 criteria_datetime = next.find('[name^="sp_criteria_datetime_select"]').val();
                 enableAndShowDateTimeDropdown(curr.find(':first-child'), index);
                 curr.find('[name^="sp_criteria_datetime_select"]').val(criteria_datetime);
+            }
+
+            /* if current and next row have the extra_date_time_select_criteria visible
+             * then show the current and it from the next row
+             */
+            if (curr.find('[name^="sp_criteria_extra_datetime_select"]').attr("disabled") != "disabled"
+                && next.find('#extra_datetime_select').is(':visible')) {
+
+                var extra_criteria_datetime = next.find('[name^="sp_criteria_extra_datetime_select"]').val();
+                curr.find('[name^="sp_criteria_extra_datetime_select"]').val(extra_criteria_datetime);
+                disableAndHideExtraDateTimeDropdown(next.find('first-child'), getRowIndex(next));
+                /* if only the current row has the extra criteria value,
+                 * then just remove the current row's extra criteria element
+                 */
+            } else if (curr.find('[name^="sp_criteria_extra_datetime_select"]').attr("disabled") != "disabled"
+                && next.find('#extra_datetime_select').not(':visible')) {
+                disableAndHideExtraDateTimeDropdown(curr.find(':first-child'), index);
+                /* if only the next row has date_time_select then just enable it on the current row
+                 */
+            } else if (next.find('#datetime_select').is(':visible')) {
+                criteria_datetime = next.find('[name^="sp_criteria_extra_datetime_select"]').val();
+                enableAndShowExtraDateTimeDropdown(curr.find(':first-child'), index);
+                curr.find('[name^="sp_criteria_extra_datetime_select"]').val(criteria_datetime);
             }
 
             /* determine if current row is a modifier row
@@ -286,28 +311,28 @@ function setSmartBlockEvents() {
         var criteria_value = $(this).next(),
             index_num = getRowIndex($(this).parent());
 
-        if ($(this).val().match('before|after|between')) {
+        if ($(this).val().match('before|after')) {
             enableAndShowDateTimeDropdown(criteria_value, index_num);
             console.log($(this).val());
-
-            if ($(this).val() == 'between') {
-                console.log('yah')
-                enableAndShowExtraField(criteria_value,index_num);
-            }
-            else {
-                console.log('huh')
-                disableAndHideExtraField(criteria_value, index_num);
-            }
         }
         else {
             disableAndHideDateTimeDropdown(criteria_value, index_num);
+            disableAndHideExtraDateTimeDropdown(criteria_value,index_num);
 
         }
 
-        if ($(this).val() == 'is in the range') {
+        if ($(this).val().match('is in the range')) {
             enableAndShowExtraField(criteria_value, index_num);
         } else {
             disableAndHideExtraField(criteria_value, index_num);
+        }
+        if ($(this).val().match('between')) {
+            enableAndShowExtraField(criteria_value, index_num);
+            enableAndShowDateTimeDropdown(criteria_value,index_num);
+            enableAndShowExtraDateTimeDropdown(criteria_value,index_num);
+        }
+        else {
+            disableAndHideExtraDateTimeDropdown(criteria_value,index_num);
         }
     });
 
@@ -498,8 +523,10 @@ function setupUI() {
  * and shows the criteria drop-down
  */
 function enableAndShowDateTimeDropdown(valEle, index) {
+    console.log('datetime show');
     var spanDatetime = valEle.nextAll("#datetime_select");
     spanDatetime.children('#sp_criteria_datetime_select_'+index).removeAttr("disabled");
+    spanDatetime.children('#sp_criteria_extra_datetime_select_'+index).removeAttr("disabled");
     spanDatetime.show();
 
     //make value input smaller since we have extra element now
@@ -513,6 +540,7 @@ function enableAndShowDateTimeDropdown(valEle, index) {
  */
 
 function disableAndHideDateTimeDropdown(valEle, index) {
+    console.log('datetime hide');
     var spanDatetime = valEle.nextAll("#datetime_select");
     spanDatetime.children('#sp_criteria_datetime_select_'+index).val("").attr("disabled", "disabled");
     spanDatetime.hide();
@@ -522,10 +550,37 @@ function disableAndHideDateTimeDropdown(valEle, index) {
     sizeTextBoxes(criteria_value, 'sp_extra_input_text', 'sp_input_text');
 }
 
+/* Utilizing jQuery this function finds the #datetime_select element on the given row
+ * and shows the criteria drop-down
+ */
+function enableAndShowExtraDateTimeDropdown(valEle, index) {
+    console.log('datetime show');
+    var spanDatetime = valEle.nextAll("#extra_datetime_select");
+    spanDatetime.children('#sp_criteria_extra_datetime_select_'+index).removeAttr("disabled");
+    spanDatetime.show();
+
+    //make value input smaller since we have extra element now
+    var criteria_val = $('#sp_criteria_value_'+index);
+    sizeTextBoxes(criteria_val, 'sp_input_text', 'sp_extra_input_text');
+}
+/* Utilizing jQuery this function finds the #datetime_select element on the given row
+ * and hides the datetime criteria drop-down
+ */
+
+function disableAndHideExtraDateTimeDropdown(valEle, index) {
+    console.log('datetime hide');
+    var spanDatetime = valEle.nextAll("#extra_datetime_select");
+    spanDatetime.children('#sp_criteria_extra_datetime_select_'+index).val("").attr("disabled", "disabled");
+    spanDatetime.hide();
+
+    //make value input larger since we don't have extra field now
+    var criteria_value = $('#sp_criteria_value_'+index);
+    sizeTextBoxes(criteria_value, 'sp_extra_input_text', 'sp_input_text');
+}
 
 function enableAndShowExtraField(valEle, index) {
     var spanExtra = valEle.nextAll("#extra_criteria");
-    console.log(spanExtra);
+    console.log('shown');
     spanExtra.children('#sp_criteria_extra_'+index).removeAttr("disabled");
     spanExtra.show();
 
@@ -538,6 +593,7 @@ function disableAndHideExtraField(valEle, index) {
     var spanExtra = valEle.nextAll("#extra_criteria");
     spanExtra.children('#sp_criteria_extra_'+index).val("").attr("disabled", "disabled");
     spanExtra.hide();
+    console.log('hidden');
     
     //make value input larger since we don't have extra field now
     var criteria_value = $('#sp_criteria_value_'+index);

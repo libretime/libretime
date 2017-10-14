@@ -1191,21 +1191,29 @@ SQL;
     {
         // delete criteria under $p_blockId
         CcBlockcriteriaQuery::create()->findByDbBlockId($this->id)->delete();
-        //Logging::info($p_criteriaData);
+        // Logging::info($p_criteriaData);
         //insert modifier rows
         if (isset($p_criteriaData['criteria'])) {
             $critKeys = array_keys($p_criteriaData['criteria']);
             for ($i = 0; $i < count($critKeys); $i++) {
                 foreach ($p_criteriaData['criteria'][$critKeys[$i]] as $d) {
-                	
+                	 Logging::info($d);
                 	$field = $d['sp_criteria_field'];
                 	$value = $d['sp_criteria_value'];
                 	$modifier = $d['sp_criteria_modifier'];
+                    if (isset($d['sp_criteria_extra'])) { $extra = $d['sp_criteria_extra']; }
+                    $datetimeunit = $d['sp_criteria_datetime_select'];
+                    if (isset($d['sp_criteria_extra_datetime_select'])) {$extradatetimeunit = $d['sp_criteria_extra_datetime_select'];}
                 		 	
                 	if ($field == 'utime' || $field == 'mtime' || $field == 'lptime') {
                 	    // if the date isn't relative we  want to convert the value to a specific UTC date
-                	    if (!in_array($modifier,array('before','ago','between'))) {
+                	    if (!(in_array($modifier,array('before','after','between')))) {
                 	        $value = Application_Common_DateHelper::UserTimezoneStringToUTCString($value);
+                        }
+                        else {
+                            $value = $value . ' ' . $datetimeunit . ' ago';
+                           // Logging::info($value);
+
                         }
                 	}
                 	
@@ -1218,10 +1226,17 @@ SQL;
                     if (isset($d['sp_criteria_extra'])) {
                     	
                     	if ($field == 'utime' || $field == 'mtime' || $field == 'lptime') {
-                    		$d['sp_criteria_extra'] = Application_Common_DateHelper::UserTimezoneStringToUTCString($d['sp_criteria_extra']);
+                            // if the date isn't relative we  want to convert the value to a specific UTC date
+                            if (!(in_array($modifier,array('before','after','between')))) {
+                                $extra = Application_Common_DateHelper::UserTimezoneStringToUTCString($extra);
+                            }
+                            else {
+                                $extra = $extra . ' ' . $extradatetimeunit. ' ago';
+                            }
+
                     	}
                     	
-                        $qry->setDbExtra($d['sp_criteria_extra']);
+                        $qry->setDbExtra($extra);
                     }
                     $qry->save();
                 }
@@ -1611,7 +1626,7 @@ SQL;
     }
     public static function organizeSmartPlaylistCriteria($p_criteria)
     { 
-        $fieldNames = array('sp_criteria_field', 'sp_criteria_modifier', 'sp_criteria_value', 'sp_criteria_extra');
+        $fieldNames = array('sp_criteria_field', 'sp_criteria_modifier', 'sp_criteria_value', 'sp_criteria_extra', 'sp_criteria_datetime_select', 'sp_criteria_extra_datetime_select');
         $output = array();
         foreach ($p_criteria as $ele) {
 
