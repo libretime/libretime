@@ -61,11 +61,11 @@ class PypoFile(Thread):
             self.logger.info("copying from %s to local cache %s" % (src, dst))
 
             CONFIG_SECTION = "general"
+            username = self._config.get(CONFIG_SECTION, 'api_key')
+            baseurl = self._config.get(CONFIG_SECTION, 'base_url')
+            port = self._config.get(CONFIG_SECTION, 'base_port', 80)
+            protocol = self._config.get(CONFIG_SECTION, 'protocol', str(("http", "https")[int(port) == 443]))
             try:
-                username = self._config.get(CONFIG_SECTION, 'api_key')
-                baseurl = self._config.get(CONFIG_SECTION, 'base_url')
-                port = self._config.get(CONFIG_SECTION, 'base_port', 80)
-                protocol = self._config.get(CONFIG_SECTION, 'protocol', str(("http", "https")[int(port) == 443]))
 
                 host = [protocol, baseurl, port]
                 url = "%s://%s:%s/rest/media/%s/download" % (host[0],
