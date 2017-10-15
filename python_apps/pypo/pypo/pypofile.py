@@ -2,6 +2,7 @@
 
 from threading import Thread
 from Queue import Empty
+from ConfigParser import NoOptionError
 
 import logging
 import shutil
@@ -63,14 +64,16 @@ class PypoFile(Thread):
             CONFIG_SECTION = "general"
             username = self._config.get(CONFIG_SECTION, 'api_key')
             baseurl = self._config.get(CONFIG_SECTION, 'base_url')
-            port = self._config.get(CONFIG_SECTION, 'base_port')
-            if not port:
-                port = 80
-            protocol = self._config.get(CONFIG_SECTION, 'protocol')
-            if not protocol:
-                protocol = str(("http", "https")[int(port) == 443])
             try:
+                port = self._config.get(CONFIG_SECTION, 'base_port')
+            except NoOptionError, e:
+                port = 80
+            try:
+                protocol = self._config.get(CONFIG_SECTION, 'protocol')
+            except NoOptionError, e:
+                protocol = str(("http", "https")[int(port) == 443])
 
+            try:
                 host = [protocol, baseurl, port]
                 url = "%s://%s:%s/rest/media/%s/download" % (host[0],
                                                              host[1],
