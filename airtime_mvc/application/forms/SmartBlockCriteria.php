@@ -347,9 +347,13 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                     /*
                      * Need to parse relative dates in a special way to populate select box down below
                      */
+                    // this is used below to test whether the datetime select should be shown or hidden
+                    $relativeDateTime = false;
                     $modifierTest = (string)$storedCrit["crit"][$criteriaKeys[$i]][$j]["modifier"];
                     if(isset($criteriaType) && $criteriaType == "d" &&
                         preg_match('/before|after|between/', $modifierTest) == 1) {
+                        // set relativeDatetime boolean to true so that the datetime select is displayed below
+                        $relativeDateTime = true;
                         // the criteria value will be a number followed by time unit and ago so set input to number part
                         $criteriaValue->setValue(filter_var($storedCrit["crit"][$criteriaKeys[$i]][$j]["value"], FILTER_SANITIZE_NUMBER_INT));
                     } else {
@@ -363,7 +367,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 $criteriaDatetimeSelect = new Zend_Form_Element_Select("sp_criteria_datetime_select_".$i."_".$j);
                 $criteriaDatetimeSelect->setAttrib('class','input_select sp_input_select')
                                         ->setDecorators(array('viewHelper'));
-                if (!isset($criteriaKeys[$i])) {
+                if (!isset($criteriaKeys[$i]) || !$relativeDateTime) {
                     $criteriaDatetimeSelect->setAttrib('disabled', 'disabled');
                 }
                 // check if the value is stored and it is a relative datetime field
