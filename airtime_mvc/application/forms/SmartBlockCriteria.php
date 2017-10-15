@@ -145,6 +145,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 "hour"          => _("hour(s)"),
                 "day"           => _("day(s)"),
                 "week"          => _("week(s)"),
+                "month"         => _("month(s)"),
                 "year"          => _("year(s)")
             );
         }
