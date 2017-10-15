@@ -1197,7 +1197,7 @@ SQL;
             $critKeys = array_keys($p_criteriaData['criteria']);
             for ($i = 0; $i < count($critKeys); $i++) {
                 foreach ($p_criteriaData['criteria'][$critKeys[$i]] as $d) {
-                	 Logging::info($d);
+                	// Logging::info($d);
                 	$field = $d['sp_criteria_field'];
                 	$value = $d['sp_criteria_value'];
                 	$modifier = $d['sp_criteria_modifier'];
@@ -1538,19 +1538,21 @@ SQL;
                         $relativedate = new DateTime($spCriteriaValue);
                         $dt = $relativedate->format(DateTime::ISO8601);
                         $spCriteriaValue = "$spCriteria <= '$dt'";
-                        Logging::info($spCriteriaValue);
+                        // Logging::info($spCriteriaValue);
                     }
                     elseif ($spCriteriaModifier == "after") {
                         $relativedate = new DateTime($spCriteriaValue);
                         $dt = $relativedate->format(DateTime::ISO8601);
                         $spCriteriaValue = "$spCriteria >= '$dt'";
-                        Logging::info($spCriteriaValue);
+                        // Logging::info($spCriteriaValue);
                     } elseif ($spCriteriaModifier == "between") {
                         $fromrelativedate = new DateTime($spCriteriaValue);
                         $fdt = $fromrelativedate->format(DateTime::ISO8601);
+                        // Logging::info($fdt);
 
-                        $torelativedate = new DateTime($spCriteriaValue);
-                        $tdt = $fromrelativedate->format(DateTime::ISO8601);
+                        $torelativedate = new DateTime($spCriteriaExtra);
+                        $tdt = $torelativedate->format(DateTime::ISO8601);
+                        // Logging::info($tdt);
                         $spCriteriaValue = "$spCriteria >= '$fdt' AND $spCriteria <= '$tdt'";
                     }
 

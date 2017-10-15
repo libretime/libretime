@@ -417,7 +417,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                     // need to strip white from front and ago from the end to match with the value of the time unit select dropdown
                     $extraDateTimeSelectValue = trim(preg_replace('/\W\w+\s*(\W*)$/', '$1', $extraDateTimeSelectValue));
                     $criteriaExtraDatetimeSelect->setMultiOptions($this->getTimePeriodCriteriaOptions());
-                    Logging::info('THIS IS-'.$extraDateTimeSelectValue.'-IT');
+                    // Logging::info('THIS IS-'.$extraDateTimeSelectValue.'-IT');
                     $criteriaExtraDatetimeSelect->setValue($extraDateTimeSelectValue);
                     $criteriaExtraDatetimeSelect->setAttrib('enabled', 'enabled');
 
@@ -527,6 +527,8 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                         $eleMod->setMultiOptions($this->getStringCriteriaOptions());
                     } elseif ($criteriaType == "n") {
                         $eleMod->setMultiOptions($this->getNumericCriteriaOptions());
+                    } elseif ($criteriaType == "d") {
+                        $eleMod->setMultiOptions($this->getDateTimeCriteriaOptions());
                     } else {
                         $eleMod->setMultiOptions(array('0' => _('Select modifier')));
                     }
@@ -565,6 +567,9 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                         $criteriaModifers->setMultiOptions($this->getStringCriteriaOptions());
                     } elseif ($criteriaType == "n") {
                         $criteriaModifers->setMultiOptions($this->getNumericCriteriaOptions());
+                    }
+                      elseif ($criteriaType == "d") {
+                          $criteriaModifers->setMultiOptions($this->getDateTimeCriteriaOptions());
                     } else {
                         $criteriaModifers->setMultiOptions(array('0' => _('Select modifier')));
                     }
@@ -610,6 +615,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
 
         $this->populate($formData);
 
+        // Logging::info($formData);
         return $data;
     }
 
@@ -706,10 +712,17 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                         } elseif ($column->getType() == PropelColumnTypes::TIMESTAMP) {
                             // need to check for relative modifiers first - bypassing currently
                             if (in_array($d['sp_criteria_modifier'], array('before','after','between'))) {
-                                // TODO validate this on numeric input with whatever parsing also do for extra
-                                //if the modifier is before ago or between we skip validation until we confirm format
+                                if (!preg_match("/^[1-9][0-9]*$|0/",$d['sp_criteria_value'])) {
+                                    $element->addError(_("Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"));
+                                    $isValid = false;
+                                    // TODO validate this on numeric input with whatever parsing also do for extra
+                                    //if the modifier is before ago or between we skip validation until we confirm format
                                 }
-                            else {
+                                elseif (isSet($d['sp_criteria_datetime_select']) && $d['sp_criteria_datetime_select'] == "0") {
+                                    $element->addError(_("You must select a time unit for a relative datetime."));
+                                    $isValid = false;
+                                }
+                            } else {
                                 if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
                                     $element->addError(_("The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"));
                                     $isValid = false;
@@ -724,7 +737,16 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                             }
                             if (isset($d['sp_criteria_extra'])) {
                                 if ($d['sp_criteria_modifier'] == 'between') {
-                                //disabling validation as this doesn't require the same format
+                                    // validate that the input value only contains a number if using relative date times
+                                    if (!preg_match("/^[1-9][0-9]*$|0/",$d['sp_criteria_extra'])) {
+                                        $element->addError(_("Only non-negative integer numbers are allowed for a relative date time"));
+                                        $isValid = false;
+                                    }
+                                    // also need to check to make sure they chose a time unit from the dropdown
+                                    elseif ($d['sp_criteria_extra_datetime_select'] == "0") {
+                                        $element->addError(_("You must select a time unit for a relative datetime."));
+                                        $isValid = false;
+                                    }
                                 }
                                 else {
                                     if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_extra'])) {
