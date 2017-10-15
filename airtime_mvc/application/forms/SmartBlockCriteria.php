@@ -363,7 +363,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 $criteriaDatetimeSelect = new Zend_Form_Element_Select("sp_criteria_datetime_select_".$i."_".$j);
                 $criteriaDatetimeSelect->setAttrib('class','input_select sp_input_select')
                                         ->setDecorators(array('viewHelper'));
-                if ($i != 0 && !isset($criteriaKeys[$i])) {
+                if (!isset($criteriaKeys[$i])) {
                     $criteriaDatetimeSelect->setAttrib('disabled', 'disabled');
                 }
                 // check if the value is stored and it is a relative datetime field

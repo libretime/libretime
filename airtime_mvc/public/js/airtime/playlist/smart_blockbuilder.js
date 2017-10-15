@@ -19,6 +19,8 @@ function setSmartBlockEvents() {
             appendAddButton();
             appendModAddButton();
             removeButtonCheck();
+            disableAndHideDateTimeDropdown(newRowVal);
+
 
         } else {
 
@@ -34,6 +36,8 @@ function setSmartBlockEvents() {
             appendAddButton();
             appendModAddButton();
             removeButtonCheck();
+            disableAndHideDateTimeDropdown(newRowVal);
+
         }
     });
     
@@ -67,6 +71,7 @@ function setSmartBlockEvents() {
         newRowExtra.val('');
         disableAndHideExtraField(newRowVal);
         disableAndHideDateTimeDropdown(newRowVal);
+        disableAndHideExtraDateTimeDropdown(newRowVal);
         sizeTextBoxes(newRowVal, 'sp_extra_input_text', 'sp_input_text');
         
         //remove the 'criteria add' button from new modifier row
@@ -303,6 +308,7 @@ function setSmartBlockEvents() {
         // disable extra field and hide the span
         disableAndHideExtraField($(this), index);
         disableAndHideDateTimeDropdown($(this), index);
+        disableAndHideExtraDateTimeDropdown($(this),index);
         populateModifierSelect(this, true);
     });
     

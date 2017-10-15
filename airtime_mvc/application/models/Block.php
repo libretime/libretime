@@ -1202,7 +1202,7 @@ SQL;
                 	$value = $d['sp_criteria_value'];
                 	$modifier = $d['sp_criteria_modifier'];
                     if (isset($d['sp_criteria_extra'])) { $extra = $d['sp_criteria_extra']; }
-                    $datetimeunit = $d['sp_criteria_datetime_select'];
+                    if (isset($d['sp_criteria_datetime_select'])) { $datetimeunit = $d['sp_criteria_datetime_select']; }
                     if (isset($d['sp_criteria_extra_datetime_select'])) {$extradatetimeunit = $d['sp_criteria_extra_datetime_select'];}
                 		 	
                 	if ($field == 'utime' || $field == 'mtime' || $field == 'lptime') {
