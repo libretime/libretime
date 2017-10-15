@@ -63,8 +63,12 @@ class PypoFile(Thread):
             CONFIG_SECTION = "general"
             username = self._config.get(CONFIG_SECTION, 'api_key')
             baseurl = self._config.get(CONFIG_SECTION, 'base_url')
-            port = self._config.get(CONFIG_SECTION, 'base_port', 80)
-            protocol = self._config.get(CONFIG_SECTION, 'protocol', str(("http", "https")[int(port) == 443]))
+            port = self._config.get(CONFIG_SECTION, 'base_port')
+            if not port:
+                port = 80
+            protocol = self._config.get(CONFIG_SECTION, 'protocol')
+            if not protocol:
+                protocol = str(("http", "https")[int(port) == 443])
             try:
 
                 host = [protocol, baseurl, port]
@@ -162,7 +166,7 @@ class PypoFile(Thread):
 
     def read_config_file(self, config_path):
         """Parse the application's config file located at config_path."""
-        config = ConfigParser.SafeConfigParser()
+        config = ConfigParser.SafeConfigParser(allow_no_value=True)
         try:
             config.readfp(open(config_path))
         except IOError as e:
