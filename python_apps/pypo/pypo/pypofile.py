@@ -2,6 +2,7 @@
 
 from threading import Thread
 from Queue import Empty
+from ConfigParser import NoOptionError
 
 import logging
 import shutil
@@ -61,12 +62,18 @@ class PypoFile(Thread):
             self.logger.info("copying from %s to local cache %s" % (src, dst))
 
             CONFIG_SECTION = "general"
+            username = self._config.get(CONFIG_SECTION, 'api_key')
+            baseurl = self._config.get(CONFIG_SECTION, 'base_url')
             try:
-                username = self._config.get(CONFIG_SECTION, 'api_key')
-                baseurl = self._config.get(CONFIG_SECTION, 'base_url')
-                port = self._config.get(CONFIG_SECTION, 'base_port', 80)
-                protocol = self._config.get(CONFIG_SECTION, 'protocol', str(("http", "https")[int(port) == 443]))
+                port = self._config.get(CONFIG_SECTION, 'base_port')
+            except NoOptionError, e:
+                port = 80
+            try:
+                protocol = self._config.get(CONFIG_SECTION, 'protocol')
+            except NoOptionError, e:
+                protocol = str(("http", "https")[int(port) == 443])
 
+            try:
                 host = [protocol, baseurl, port]
                 url = "%s://%s:%s/rest/media/%s/download" % (host[0],
                                                              host[1],
@@ -162,7 +169,7 @@ class PypoFile(Thread):
 
     def read_config_file(self, config_path):
         """Parse the application's config file located at config_path."""
-        config = ConfigParser.SafeConfigParser()
+        config = ConfigParser.SafeConfigParser(allow_no_value=True)
         try:
             config.readfp(open(config_path))
         except IOError as e:
