@@ -53,6 +53,10 @@ Given the history of the project we will be starting with version 3.0.0.
 Stay tuned for early alphas and lots of betas as we get development
 up and running.
 
+## Support
+
+To get support for any questions or problems you might have using the software we have a forum at [discourse.libretime.org](http://discourse.libretime.org). We are moving towards using the forum to provide community support and reserving the github issue queue for confirmed bugs and well-formed feature requests.
+
 ## License
 
 LibreTime is free software: you can redistribute it and/or
