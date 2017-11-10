@@ -1,3 +1,5 @@
+#!/bin/bash
+
 sound_folder='/srv/airtime/stor/'
 backup_folder='/home/example/backup/'
 psql_user='airtime'
