@@ -50,7 +50,6 @@ class RabbitMQSetup extends Setup {
         } catch(Exception $e) {
             $this->identifyRMQConnectionError();
         }
-
         return array(
             "message" => self::$message,
             "errors" => self::$errors
@@ -63,6 +62,7 @@ class RabbitMQSetup extends Setup {
                                    self::$_properties["user"],
                                    self::$_properties["password"],
                                    self::$_properties["vhost"]);
+        $this->writeToTemp();
         return isset($conn);
     }
 

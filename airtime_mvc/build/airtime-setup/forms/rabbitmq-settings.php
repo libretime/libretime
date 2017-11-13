@@ -10,7 +10,7 @@
     <h3 class="form-title">RabbitMQ Settings</h3>
     <span id="helpBlock" class="help-block help-message"></span>
     <p>
-        RabbitMQ is an AMQP-based messaging system used by Airtime. You should only edit these settings
+        RabbitMQ is an AMQP-based messaging system used by Libretime. You should only edit these settings
         if you have changed the defaults since running the installer, or if you've opted to install RabbitMQ manually.
     </p>
     <p>
