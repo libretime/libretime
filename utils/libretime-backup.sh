@@ -1,9 +1,21 @@
 #!/bin/bash
 
-sound_folder='/srv/airtime/stor/'
-backup_folder='/home/example/backup/'
-psql_user='airtime'
-psql_password='airtime'
+if [ -z "$1" ]
+        then
+                ## Use config
+                backup_folder=~/libretime_backup/
+        else
+                ## User arg as config
+                backup_folder=$1
+fi
+
+
+airtime_conf_path=/etc/airtime/airtime.conf
+sound_folder=/srv/airtime/stor/
+
+psdl_db=$(grep dbname ${airtime_conf_path} | awk '{print $3;}' )
+psql_user=$(grep dbuser ${airtime_conf_path} | awk '{print $3;}' )
+psql_password=$(grep dbpass ${airtime_conf_path} | awk '{print $3;}' )
 
 ## Remove old backup
 rm -rf $backup_folder
@@ -12,7 +24,7 @@ mkdir $backup_folder
 ## Backup of database
 
 echo 'db: Getting database...'
-pg_dump --dbname='postgresql://'$psql_user':'$psql_password'@localhost/airtime' > $backup_folder'database'
+pg_dump --dbname='postgresql://'$psql_user':'$psql_password'@localhost/'$psql_db > $backup_folder'database'
 echo 'db: Complete'
 
 ## Backup of sounds
