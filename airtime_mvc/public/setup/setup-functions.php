@@ -1,6 +1,6 @@
 <?php
 define("BUILD_PATH", dirname(dirname(__DIR__)) . "/build/");
-define("AIRTIME_CONF_TEMP_PATH", "/tmp/airtime.conf.temp");
+define("AIRTIME_CONF_TEMP_PATH", "/etc/airtime/airtime.conf.temp");
 define("RMQ_INI_TEMP_PATH", "/tmp/rabbitmq.ini.tmp");
 
 // load autoloader since this files is an entry path see 
@@ -37,7 +37,7 @@ abstract class Setup {
         if (!file_exists(AIRTIME_CONF_TEMP_PATH)) {
             copy(BUILD_PATH . "airtime.example.conf", AIRTIME_CONF_TEMP_PATH);
         }
-
+        //Logging::info(AIRTIME_CONF_TEMP_PATH);
         $this->_write(AIRTIME_CONF_TEMP_PATH);
     }
 
