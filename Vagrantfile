@@ -56,12 +56,16 @@ Vagrant.configure("2") do |config|
     os.vm.box = "bento/debian-8.7"
     provision_libretime(os, "debian.sh", installer_args)
   end
+  config.vm.define "debian-stretch" do |os|
+    os.vm.box = "bento/debian-9.2"
+    provision_libretime(os, "debian.sh", installer_args)
+  end
   config.vm.define "debian-wheezy" do |os|
     os.vm.box = "bento/debian-7.11"
     provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "debian" do |os|
-    STDERR.puts 'WARNING: The "debian" option is deprecated. Please migrate to "debian-jessie".'
+    STDERR.puts 'WARNING: The "debian" option is deprecated. Please migrate to "debian-stretch".'
     STDERR.puts
     os.vm.box = "debian/jessie64"
     provision_libretime(os, "debian.sh", installer_args)
