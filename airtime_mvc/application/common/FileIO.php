@@ -70,9 +70,15 @@ class Application_Common_FileIO
             ob_end_flush();
         }
 
-        // NOTE: We can't use fseek here because it does not work with streams
-        // (a.k.a. Files stored in the cloud)
-        while(!feof($fm) && (connection_status() == 0)) {
+
+        //These two lines were removed from Airtime 2.5.x at some point after Libretime forked from Airtime.
+        //These lines allow seek to work for files.
+        //Issue #349
+        $cur = $begin;
+        fseek($fm,$begin,0);
+
+
+        while(!feof($fm) && (connection_status() == 0) && ($cur <= $end)) {       
             echo fread($fm, 1024 * 8);
         }
         fclose($fm);
