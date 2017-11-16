@@ -294,7 +294,7 @@ thead th.ui-state-default:focus {
     top: 4px;
     right: 4px;
     left: 4px;
-    z-index: 1; /* Display above the content wrapper */
+    z-index: auto; /* Allows advanced mode expander to be visible in calendar schedule mode */
 
     -webkit-flex: 1 100%;
     -moz-flex: 1 100%;
