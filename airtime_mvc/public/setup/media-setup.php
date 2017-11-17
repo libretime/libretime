@@ -104,7 +104,7 @@ class MediaSetup extends Setup {
     function setupMusicDirectory() {
         try {
             $_SERVER['AIRTIME_CONF'] = AIRTIME_CONF_TEMP_PATH;
-            Propel::init(AIRTIME_CONF_TEMP_PATH);
+            Propel::init(CONFIG_PATH . "airtime-conf-production.php");
             $con = Propel::getConnection();
         } catch(Exception $e) {
             self::$message = "Failed to insert media folder; database isn't configured properly!";
