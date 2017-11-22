@@ -385,11 +385,12 @@ function setupUI() {
         if (playlist_type == "0") {
             shuffleButton.removeAttr("disabled");
             generateButton.removeAttr("disabled");
+            generateButton.html($.i18n._("Generate"));
             fadesButton.removeAttr("disabled");
             //sortable.children().show();
         } else {
             shuffleButton.attr("disabled", "disabled");
-            generateButton.attr("disabled", "disabled");
+            generateButton.html($.i18n._("Preview"));
             fadesButton.attr("disabled", "disabled");
             //sortable.children().hide();
         }
