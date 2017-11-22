@@ -141,7 +141,7 @@ You cannot delete or remove content from shows that have already played out. The
 Cancelling playout
 ------------------
 
-If you wish to cancel playout of a show while it is running, click on the show in the **Calendar** and select **Stop Recording Current Show** from the pop-up menu. LibreTime will ask you if you are sure about this action, as it cannot be undone.
+If you wish to cancel playout of a show while it is running, click on the show in the **Calendar** and select **Cancel Show** from the pop-up menu. LibreTime will ask you if you are sure about this action, as it cannot be undone.
 
 ![](static/Screenshot357-Cancel_current_show.png)
 
