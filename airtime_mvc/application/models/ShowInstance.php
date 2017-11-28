@@ -238,6 +238,7 @@ SQL;
         $id = $this->_showInstance->getDbId();
         $lastid = $this->getLastAudioItemId();
 //        Logging::info("The last id is $lastid");
+        xdebug_break();
 
         $scheduler = new Application_Model_Scheduler($checkUserPerm);
         $scheduler->scheduleAfter(
@@ -290,7 +291,9 @@ SQL;
     }
 
     private function checkToDeleteShow($showId)
+
     {
+        xdebug_break();
         //UTC DateTime object
         $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
 
@@ -554,6 +557,27 @@ SQL;
         }
 
         return $isFilled;
+    }
+
+    public static function getShowHasAutoplaylist($p_start, $p_end)
+    {
+        $sql = <<<SQL
+SELECT c.id, s.has_autoplaylist
+from cc_show_instances as c
+LEFT JOIN cc_show as S ON s.id = c.show_id
+WHERE ends > :p_start::TIMESTAMP
+AND starts < :p_end::TIMESTAMP
+SQL;
+        $res = Application_Common_Database::prepareAndExecute($sql, array(
+                ':p_start' => $p_start->format("Y-m-d G:i:s"),
+                ':p_end' => $p_end->format("Y-m-d G:i:s"))
+            , 'all');
+        $hasAutoplaylist = array();
+        foreach ($res as $r) {
+            $hasAutoplaylist[$r['id']] = $r['has_autoplaylist'];
+        }
+
+        return $hasAutoplaylist;
     }
 
     public function showEmpty()
