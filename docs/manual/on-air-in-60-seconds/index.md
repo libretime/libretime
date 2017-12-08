@@ -16,11 +16,11 @@ Here's how you can use Airtime to manage your broadcasts. Chapter names in this 
 
 <img src="static/Screenshot560-Show_when.png" alt="Show when" width="740" />
 
-5. Add media to the new show by clicking your show in the **Calendar** and selecting **Add / Remove Content** (*Calendar*). Or if the show has already started, use the **Add / Remove Content** button on the Now Playing page (*Now Playing*).
+5. Add media to the new show by clicking the name of your show in the **Calendar** and selecting **Schedule Tracks** (*Calendar*).
 
-<img src="static/Screenshot561-Add_show_content.png" alt="Add show content" width="490" />
+<img src="static/Screenshot561-Add_show_content.png" alt="Add show content" width="740" />
 
-6. Click media in the search results on the left side of the pop-up window which will appear, and drag it into your show on the right side (*Now Playing*).
+6. Search for the media in the left side of the pop-up window which will appear, and drag it into your show on the right side (*Now Playing*).
 
 <img src="static/Screenshot562-Drag_show_content.png" alt="Drag show content" width="740" />
 
