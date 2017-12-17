@@ -1057,7 +1057,6 @@ SQL;
 
             $startsDT->setTimezone($displayTimezone);
             $endsDT->setTimezone($displayTimezone);
-            xdebug_break();
 
             $options["show_empty"] = (array_key_exists($show['instance_id'],
                 $content_count)) ? 0 : 1;

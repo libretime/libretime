@@ -237,9 +237,6 @@ SQL;
         $ts = intval($this->_showInstance->getDbLastScheduled("U")) ? : 0;
         $id = $this->_showInstance->getDbId();
         $lastid = $this->getLastAudioItemId();
-//        Logging::info("The last id is $lastid");
-        xdebug_break();
-
         $scheduler = new Application_Model_Scheduler($checkUserPerm);
         $scheduler->scheduleAfter(
             array(array("id" => $lastid, "instance"  => $id, "timestamp" => $ts)),
@@ -293,7 +290,6 @@ SQL;
     private function checkToDeleteShow($showId)
 
     {
-        xdebug_break();
         //UTC DateTime object
         $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
 
@@ -561,23 +557,22 @@ SQL;
 
     public static function getShowHasAutoplaylist($p_start, $p_end)
     {
-        $sql = <<<SQL
-SELECT c.id, s.has_autoplaylist
-from cc_show_instances as c
-LEFT JOIN cc_show as S ON s.id = c.show_id
-WHERE ends > :p_start::TIMESTAMP
-AND starts < :p_end::TIMESTAMP
-SQL;
-        $res = Application_Common_Database::prepareAndExecute($sql, array(
-                ':p_start' => $p_start->format("Y-m-d G:i:s"),
-                ':p_end' => $p_end->format("Y-m-d G:i:s"))
-            , 'all');
-        $hasAutoplaylist = array();
-        foreach ($res as $r) {
-            $hasAutoplaylist[$r['id']] = $r['has_autoplaylist'];
+        $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
+        $con->beginTransaction();
+        try {
+            // query the show instances to find whether a show instance has an autoplaylist
+            $showInstances = CcShowInstancesQuery::create()
+                ->filterByDbEnds($p_end->format(DEFAULT_TIMESTAMP_FORMAT), Criteria::LESS_THAN)
+                ->filterByDbStarts($p_start->format(DEFAULT_TIMESTAMP_FORMAT), Criteria::GREATER_THAN)
+                ->leftJoinCcShow()
+                ->find($con);
+            return $showInstances;
         }
-
-        return $hasAutoplaylist;
+        catch (Exception $e) {
+            $con->rollback();
+            Logging::info("Couldn't query show instances for calendar to find which had autoplaylists");
+            Logging::info($e->getMessage());
+        }
     }
 
     public function showEmpty()
