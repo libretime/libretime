@@ -923,7 +923,7 @@ msgid "Copy of %s"
 msgstr "Копирање од %s"
 
 #: airtime_mvc/application/controllers/ListenerstatController.php:51
-msgid "Please make sure admin user/password is correct on System->Streams page."
+msgid "Please make sure admin user/password is correct on Settings->Streams page."
 msgstr "Молимо, провери да ли је исправан/на админ корисник/лозинка на страници Систем->Преноси."
 
 #: airtime_mvc/application/controllers/LocaleController.php:25
