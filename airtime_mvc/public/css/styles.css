@@ -2275,6 +2275,11 @@ span.errors.sp-errors{
     background:url(images/icon_link.png) no-repeat 0 0;
     margin-top: 0px !important;
 }
+.small-icon.autoplaylist {
+    background:url(images/icon_alert_cal_autoplaylist.png) no-repeat 0 0;
+    margin-top: 0px !important;
+}
+
 .small-icon.recording {
     background:url(images/icon_record.png) no-repeat 0 0;
     margin-top: 0px !important;
