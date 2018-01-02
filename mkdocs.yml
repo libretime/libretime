@@ -22,7 +22,7 @@ pages:
   - 'Using LibreTime':
     - 'On air in 60 seconds!': 'manual/on-air-in-60-seconds/index.md'
     - 'Getting started': manual/getting-started/index.md
-  - 'The System Menu':
+  - 'The Settings Menu':
     - 'General': manual/preferences/index.md
     - 'Users': manual/users/index.md
     - 'Media Folders': manual/media-folders/index.md
