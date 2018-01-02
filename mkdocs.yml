@@ -30,7 +30,7 @@ pages:
     - 'Support Feedback': manual/support-feedback/index.md
     - 'Status': manual/status/index.md
     - 'Listener Stats': manual/listener-stats/index.md
-  - 'The main menus':
+  - 'The Main Menus':
     - 'Now Playing': manual/now-playing/index.md
     - 'Add Media': manual/add-media/index.md
     - 'Library': manual/library/index.md
@@ -38,7 +38,7 @@ pages:
     - 'History': manual/history/index.md
     - 'Listen': manual/listen/index.md
     - 'Help': manual/help/index.md
-  - 'LibreTime in the studio':
+  - 'LibreTime in the Studio':
     - 'Preparing Media for Ingest': manual/preparing-media-for-ingest/index.md
     - 'Live Shows with Mixxx': manual/live-shows-with-mixxx/index.md
     - 'Smartphone Journalism': manual/smartphone-journalism/index.md
@@ -57,7 +57,7 @@ pages:
     - 'Upgrading': manual/upgrading/index.md
     - 'Troubleshooting': manual/troubleshooting/index.md
     - 'Using Monit': manual/using-monit/index.md
-  - 'Advanced configuration':
+  - 'Advanced Configuration':
     - 'Automated File Import': manual/automated-file-import/index.md
     - 'Icecast Handover': manual/icecast-handover/index.md
     - 'Promoting Your Station': manual/promoting-your-station/index.md
