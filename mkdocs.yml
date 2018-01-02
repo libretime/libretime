@@ -29,7 +29,6 @@ pages:
     - 'Streams': manual/stream-settings/index.md
     - 'Support Feedback': manual/support-feedback/index.md
     - 'Status': manual/status/index.md
-    - 'Listener Stats': manual/listener-stats/index.md
   - 'The Main Menus':
     - 'Now Playing': manual/now-playing/index.md
     - 'Add Media': manual/add-media/index.md
@@ -37,6 +36,7 @@ pages:
     - 'Calendar': manual/calendar/index.md
     - 'History': manual/history/index.md
     - 'Listen': manual/listen/index.md
+    - 'Analytics': manual/listener-stats/index.md
     - 'Help': manual/help/index.md
   - 'LibreTime in the Studio':
     - 'Preparing Media for Ingest': manual/preparing-media-for-ingest/index.md
