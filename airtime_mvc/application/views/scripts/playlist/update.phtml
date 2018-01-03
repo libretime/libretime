@@ -2,35 +2,29 @@
 $items = $this->contents;
 $isStaticSmartBlock = ($this->obj instanceof Application_Model_Block && $this->obj->isStatic());
 $isPlaylist = ($this->obj instanceof Application_Model_Playlist);
-if ($this->poolCount) { ?>
+?>
 <div class='sp_text_font sp_text_font_bold'>
-                <span id='sp_pool_count' class='sp_text_font sp_text_font_bold'>
-                <?php
-                if ($this->poolCount > 1) {
-                echo $this->poolCount;
-                ?>
-                <?php echo _("files meet the criteria")?>
-                    </span>
+<?php
+if ($this->poolCount) { ?>
+    <span id='sp_pool_count' class='sp_text_font sp_text_font_bold'>
+    <?php
+    if ($this->poolCount > 0) {
+        echo $this->poolCount;
+        echo ngettext(" file meets the criteria", " files meets the criteria", $this->poolCount);
+    }
+    ?>
+    </span>
     <span class='checked-icon sp-checked-icon' id='sp_pool_count_icon'></span>
     <?php
-    } else if ($this->poolCount == 1) {
-        echo $this->poolCount;
-        ?>
-        <?php echo _("file meets the criteria")?>
-        </span>
-        <span class='checked-icon sp-checked-icon' id='sp_pool_count_icon'></span>
-        <?php
-    } else {
-        ?>
-        0 <?php echo " "._("files meet the criteria")?>
-        </span>
-        <span class='sp-warning-icon' id='sp_pool_count_icon'></span>
-        <?php
+    }
+else if ($this->showPoolCount){
+    ?>
+    <span class='sp-warning-icon' id='sp_pool_count_icon'></span>
+    <?php    echo _("No files meet the criteria");
     }
     ?>
 </div>
-<?php }
-
+<?php
 if (count($items) && ($isStaticSmartBlock || $isPlaylist)) : ?>
 <?php $i = 0; ?>
 <?php foreach($items as $item) :

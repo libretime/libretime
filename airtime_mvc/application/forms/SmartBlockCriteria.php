@@ -361,8 +361,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
 
         $this->setDecorators(array(
                 array('ViewScript', array('viewScript' => 'form/smart-block-criteria.phtml', "openOption"=> $openSmartBlockOption,
-                        'criteriasLength' => count($this->getCriteriaOptions()), 'poolCount' => $files['count'], 'modRowMap' => $modRowMap,
-                        'showPoolCount' => $showPoolCount))
+                        'criteriasLength' => count($this->getCriteriaOptions()), 'modRowMap' => $modRowMap))
         ));
     }
 

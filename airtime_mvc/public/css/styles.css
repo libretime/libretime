@@ -739,6 +739,7 @@ input.input_text.sp_extra_input_text{
 
 .sp_text_font_bold{
     font-weight: bold;
+    color: white;
 }
 
 .sp-ui-button-icon-only {
@@ -782,6 +783,8 @@ input.input_text.sp_extra_input_text{
 .sp-closed{
     border-width: 0 0 0 !important;
 }
+
+
 /***** SMART BLOCK SPECIFIC STYLES END *****/
 
 label {
