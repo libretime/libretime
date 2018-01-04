@@ -179,7 +179,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
     }
 
     /**
-     * Get the entire block as a two dimentional array, sorted in order of play.
+     * Get the entire block as a two dimensional array, sorted in order of play.
      * @param boolean $filterFiles if this is true, it will only return files that has
      *             file_exists flag set to true
      * @return array
@@ -273,7 +273,7 @@ SQL;
 
     /**
      * The database stores fades in 00:00:00 Time format with optional millisecond resolution .000000
-     * but this isn't practical since fades shouldn't be very long usuall 1 second or less. This function
+     * but this isn't practical since fades shouldn't be very long usually 1 second or less. This function
      * will normalize the fade so that it looks like 00.000000 to the user.
      **/
     public function normalizeFade($fade)
@@ -1250,7 +1250,7 @@ SQL;
     }
 
     /**
-     * generate list of tracks. This function saves creiteria and generate
+     * generate list of tracks. This function saves criteria and generate
      * tracks.
      * @param array $p_criteria
      */
@@ -1259,7 +1259,7 @@ SQL;
         $this->saveSmartBlockCriteria($p_criteria);
         $insertList = $this->getListOfFilesUnderLimit();
         $this->deleteAllFilesFromBlock();
-        // constrcut id array
+        // construct id array
         $ids = array();
         foreach ($insertList as $ele) {
             $ids[] = $ele['id'];
