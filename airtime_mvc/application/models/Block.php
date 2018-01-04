@@ -1434,6 +1434,15 @@ SQL;
 
     }
 
+    /**
+     * This reads the smartblock criteria for this block object and returns a list of music files from the database
+     *
+     * This method calls getCriteria to pull in any existing criteria for this Block. It then loops over the criteria
+     * and builds a query using the modifier2CriteriaMap to translate the criteria into a Propel query.
+     *
+     * @return array a propel object containing the files
+     */
+
     // this function return list of propel object
     public function getListofFilesMeetCriteria()
     {

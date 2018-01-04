@@ -1,0 +1,445 @@
+<?php 
+    $form = $this->form;
+    $form->setAttrib('id', 'upgrade-downgrade');
+
+?>
+<script type="text/javascript">
+<?php echo("var products = " . json_encode(Billing::getProducts()) . ";\n");
+      echo("var vatRate = " . json_encode(VAT_RATE) . ";");
+?>
+
+var vatFieldId = "#customfields-7";
+var validVATNumber = false;
+var customerInEU = false;
+
+//Disable annual billing for hobbyist plan
+function validatePlan()
+{
+	if ($("#newproductid-25").is(":checked")) {
+		$("#newproductbillingcycle-monthly").attr("checked", "true");
+		//It's import that we switch the checked item first (because you can't disable a checked radio button in Chrome)
+		$("#newproductbillingcycle-annually").attr("disabled", "disabled");
+		$("label[for='newproductbillingcycle-annually']").addClass("disabled");
+	} else {
+		$("#newproductbillingcycle-annually").removeAttr("disabled");
+		$("label[for='newproductbillingcycle-annually']").removeClass("disabled");
+	}
+}
+
+function validateVATNumber()
+{
+    if ($(vatFieldId).val() == '') {
+        return;
+    }
+    
+	$.post("/billing/vat-validator", { "vatnumber" : $(vatFieldId).val(), "country" : $("#country").val() })
+		.success(function(data, textStatus, jqXHR) {
+    	if (data["result"]) {
+        	$("#vaterror").html("&#10003; Your VAT number is valid.");
+        	window.validVATNumber = true;
+    	} else {
+        	$("#vaterror").text("Error: Your VAT number is invalid.");
+        	window.validVATNumber = false;
+    	}
+    	recalculateTotals();
+	});
+	
+}
+
+/* Recalculate subtotal and total */
+function recalculateTotals()
+{
+	var newProductId = $("input[type='radio'][name='newproductid']:checked");
+	if (newProductId.length > 0) {
+	    newProductId = newProductId.val();
+	} else {
+		return;
+	}
+
+	var newProduct = null;  
+	for (var i = 0; i < products.length; i++)
+	{
+		if (products[i].pid == newProductId) {
+			newProduct = products[i];
+			break;
+		}
+	}
+
+	/** This calculation is all done on the server side too inside WHMCS so don't waste your time
+	    trying to hax0r it to get cheap Airtime Pro. */
+	var subtotal = "0";
+	var savings = "0";
+	var subtotalNumber = "0";
+	var billingPeriodString = "";
+	if ($("#newproductbillingcycle-monthly").is(":checked")) {
+		billingPeriodString = " per month";
+		subtotalNumber = newProduct.pricing["USD"]["monthly"];
+		subtotal = "$" + subtotalNumber + billingPeriodString;
+		$("#savings").text("");
+	    
+	} else if ($("#newproductbillingcycle-annually").is(":checked")) {
+		subtotalNumber = newProduct.pricing["USD"]["annually"];
+		billingPeriodString = " per year";
+		subtotal = "$" + subtotalNumber + billingPeriodString;
+				savings = "$" + (newProduct.pricing["USD"]["monthly"]*12 - subtotalNumber).toFixed(2);
+		$("#savings").html("You save: " + savings + " per year");
+	}
+	$("#subtotal").text(subtotal);
+
+	//Calculate total:
+	var vatAmount = 0; 
+	if (window.customerInEU && !window.validVATNumber) {
+		vatAmount = (parseFloat(subtotalNumber) * vatRate)/100.00;
+	}
+	var total = (vatAmount + parseFloat(subtotalNumber)).toFixed(2);
+	$(".subtotal").text(subtotal);
+	if (vatAmount > 0) {
+		$("#tax").text("Plus VAT at " + parseInt(vatRate) + "%: $" + vatAmount.toFixed(2) + billingPeriodString);
+	} else {
+		$("#tax").text("");
+	}
+	$("#total").text("$" + total + billingPeriodString);
+}
+
+function configureByCountry(countryCode)
+{
+	//Disable the VAT tax field if the country is not in the EU.
+	$.post("/billing/is-country-in-eu", { "country" : countryCode })
+	.success(function(data, textStatus, jqXHR) {
+    	if (data["result"]) {
+    		   $(vatFieldId).prop("disabled", false);
+           	   $(vatFieldId).prop("readonly", false);
+    		   $(vatFieldId + "-label").removeClass("disabled");
+    		   $("#vat_disclaimer2").fadeIn(300);
+    		   window.customerInEU = true;
+    	} else {
+        	$(vatFieldId).prop("disabled", true);
+        	$(vatFieldId).prop("readonly", true);
+        	$(vatFieldId).val("");
+ 		    $(vatFieldId + "-label").addClass("disabled");
+ 		    $("#vat_disclaimer2").fadeOut(0);
+ 		    window.customerInEU = false;
+    	}
+		recalculateTotals();
+	});
+}
+
+$(document).ready(function() {
+	
+	configureByCountry($("#country").val());
+	recalculateTotals();
+
+    $("input[name='newproductid']").change(function() {
+        validatePlan();
+        recalculateTotals();
+    });
+    $("input[name='newproductbillingcycle']").change(function() {
+    	recalculateTotals();
+    });
+
+    $("#country").change(function() {
+        configureByCountry($(this).val());
+    });
+
+    vatFieldChangeTimer = null;
+    $(vatFieldId).change(function() {
+		$("#vaterror").text("Please wait, checking VAT number...");
+        
+    	if (vatFieldChangeTimer) {
+    		clearTimeout(vatFieldChangeTimer);
+        }
+        
+        if ($(this).val() == "") {
+            $("#vaterror").text("");
+            window.validVATNumber = false;
+            recalculateTotals();
+            return;
+        }
+    	vatFieldChangeTimer = setTimeout(function() {
+        	validateVATNumber(); //Validate and recalculate the totals
+    	}, 1500); //Wait 1.5 seconds before validating the VAT number
+    });
+
+    //We don't assume the VAT number we have in the database is valid.
+    //Let's force it to be rechecked and the total to be recalculated when the page loads.
+    validateVATNumber(); 
+
+    $("#hobbyist_grid_price").text("$" + products[0].pricing["USD"]["monthly"] + " / month");
+    $("#starter_grid_price").text("$" + products[1].pricing["USD"]["monthly"] + " / month");
+    $("#plus_grid_price").text("$" + products[2].pricing["USD"]["monthly"] + " / month");
+    $("#premium_grid_price").text("$" + products[3].pricing["USD"]["monthly"] + " / month");
+});
+</script>
+
+<div class="ui-widget prefpanel clearfix padded-strong billing-panel">
+
+    <!--
+    <H2><?=_pro("Account Plans")?></H2>
+    <H4><?=_pro("Upgrade today to get more listeners and storage space!")?></H4>
+    -->
+
+<div class="ui-widget prefpanel clearfix padded-strong billing-panel">
+<H2><?=_pro("Monthly Plans")?></H2>
+<div class="pricing-grid">
+    <table>
+        <tr>
+            <th>Hobbyist</th>
+            <th>Starter</th>
+            <th>Plus</th>
+            <th>Premium</th>
+        </tr>
+        <tr>
+            <td>1 Stream
+            </td>
+            <td>2 Streams
+            </td>
+            <td>2 Streams
+            </td>
+            <td class="last-column">3 Streams
+            </td>
+        </tr> 
+        <tr>
+            <td>Up to 64kbps Stream Quality
+            </td>
+            <td>Up to 128kbps Stream Quality
+            </td>
+            <td>Up to 196kbps Stream Quality
+            </td>
+            <td class="last-column">Up to 196kbps Stream Quality
+            </td>
+        </tr> 
+        <tr>
+            <td>5 Listeners
+            </td>
+            <td>40 Listeners per stream
+            </td>
+            <td>100 Listeners per stream
+            </td>
+            <td class="last-column">500 Listeners per stream
+            </td>
+        </tr>
+        <tr>
+            <td>1 TB Bandwidth</td>
+            <td><span>3 TB Bandwidth</span></td>
+            <td><span>10 TB Bandwidth</span></td>
+            <td><span>40 TB Bandwidth</span></td>
+        </tr>
+        <tr>
+            <td>2GB Storage
+            </td>
+            <td>5GB Storage
+            </td>
+            <td>30GB Storage
+            </td>
+            <td class="last-column">
+                150GB Storage
+            </td>
+        </tr>
+        <tr>
+            <td>No Built-in Podcast
+            </td>
+            <td>2,000 Podcast Episode Downloads
+            </td>
+            <td>5,000 Podcast Episode Downloads
+            </td>
+            <td class="last-column">
+                10,000 Podcast Episode Downloads
+            </td>
+        </tr>
+        <tr>
+            <td>Ticket, Email, Forum Support
+            </td>
+            <td>Live Chat, Ticket, Email, Forum Support
+            </td>
+            <td>Live Chat, Ticket, Email, Forum Support
+            </td>
+            <td class="last-column">Live Chat, Ticket, Email, Forum Support
+            </td>
+        </tr> 
+        <tr>
+            <td>
+            </td>
+            <td>Save 15% if paid annually
+            </td>
+            <td>Save 15% if paid annually
+            </td>
+            <td class="last-column">Save 15% if paid annually
+            </td>
+        </tr> 
+        <tr class="price last-row">
+            <td id="hobbyist_grid_price">
+            </td>
+            <td id="starter_grid_price">
+            </td>
+            <td id="plus_grid_price">
+            </td>
+            <td class="last-column" id="premium_grid_price">
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="pricing-grid">
+    <h2 style="margin-top: 20px">Annual Plans - Special Holiday Promo</h2>
+    <h4>Sign up for an annual plan before December 21st to get a plan above plus a holiday bonus:</h4>
+    <table class="pricing-grid">
+        <tr>
+            <th></th>
+            <th>Starter</th>
+            <th>Plus</th>
+            <th>Premium</th>
+        </tr>
+        <tr>
+            <td></td>
+            <td><span class="promo-text-highlight">800 Listeners per stream</span>
+
+            </td>
+            <td style="padding: 6px"><span class="promo-text-highlight">2000 Listeners per stream</span>
+
+            </td>
+            <td class="last-column"><span class="promo-text-highlight">Unlimited listeners</span>
+            </td>
+        </tr>
+        <tr class="price last-row">
+            <td></td>
+            <td id="">$33.95 / month<br>Billed Annually
+            </td>
+            <td id="">$54.95 / month<br>Billed Annually
+            </td>
+            <td class="last-column" id="">$83.95 / month<br>Billed Annually
+            </td>
+        </tr>
+
+
+    </table>
+</div>
+<!-- 
+<p> <a target="_blank" href="https://www.airtime.pro/pricing"><?=_pro("View Plans")?></a> (Opens in a new window)</p>
+ -->
+<p id="current_plan"><span><?php echo(_pro('Your Current Plan:')); ?></span>
+<?php 
+$currentProduct = Billing::getClientCurrentAirtimeProduct();
+echo($currentProduct["name"]);
+//echo Application_Model_Preference::GetPlanLevel();
+?>
+</p>
+    <!--
+    <div class="educational-discount">
+        <h4>Are you a student or educator?</h4>
+        <p>Sign up on an annual plan before the end of October to receive a special educational discount. <a href="https://www.airtime.pro/educational-discount">Find out more</a>.</p>
+    </div>
+    -->
+
+<h3><?php echo(_pro('Choose a plan: ')); ?></h3>
+ <form id="<?php echo $form->getId(); ?>" method="<?php echo $form->getMethod() ?>" action="<?php echo
+    $form->getAction()?>" enctype="<?php echo $form->getEncType();?>">
+
+     <?php echo $form->csrf_upgrade ?>
+    
+    <div id="plantype">
+        <?php echo $form->newproductid ?>
+    </div>
+    <div id="billingcycle">
+        <?php echo $form->newproductbillingcycle ?>
+    </div>
+    <div id="billingcycle_disclaimer">
+        Save 15% on annual plans (Hobbyist plan excluded).
+    </div>
+    <div class="clearfix"></div>
+    <div id="subtotal_box">
+        <b>Subtotal:</b><br>
+        <span class="subtotal"></span><br>
+        <div id="savings"></div>
+    </div>
+    
+    <div id="vat_disclaimer">
+    VAT will be added below if you are an EU resident without a valid VAT number.
+    </div>
+    
+    <h3><?=_pro("Please enter your payment details:");?></h3>
+    <?php if (isset($this->errorMessage)) {?>
+    <div class="errors"><?php echo $this->errorMessage ?></div>
+    <?php }?>
+    <?php //echo $form ?>
+    
+    <?php $billingForm = $form->getSubform("billing_client_info") ?>
+    <div class="billing_col1">
+        <?=$billingForm->firstname?>
+    </div>
+    <div class="billing_col2">
+        <?=$billingForm->lastname?>
+    </div>
+    <div class="clearfix"></div>
+    <div class="billing_col1">
+        <?=$billingForm->companyname?>
+    </div>        
+    <div class="billing_col2">
+        <?=$billingForm->email?>
+    </div>        
+    <div class="clearfix"></div>
+    <div class="billing_col1">
+        <?=$billingForm->address1?>
+    </div>        
+    <div class="billing_col2">
+        <?=$billingForm->address2?>
+    </div>      
+    <div class="clearfix"></div>
+    <div class="billing_col1">
+        <?=$billingForm->city?>
+    </div>        
+    <div class="billing_col2">
+        <?=$billingForm->state?>
+    </div>   
+    <div class="clearfix"></div>
+    <div>
+        <?=$billingForm->postcode?>
+    </div>        
+    <div>
+        <?=$billingForm->country?>
+    </div>    
+    <div>
+        <?=$billingForm->phonenumber?>
+    </div>        
+    <div>
+        <?=$billingForm->securityqid?>
+    </div>
+    <div>
+        <?=$billingForm->securityqans?>
+    </div>
+    <div id="vat_disclaimer2"><p>VAT will be added to your invoice if you are an EU resident without a valid company VAT number.</p>
+    </div>
+    <div>
+        <?=$billingForm->getElement("7"); ?>
+        <div id="vaterror"></div>
+    </div>
+    <div class="clearfix"></div>
+     <?php echo $billingForm->csrf_client ?>
+
+     <div>
+    <div class="billing_checkbox">
+            <?=$billingForm->getElement("71")->renderViewHelper(); ?>
+        </div>
+        <?=$billingForm->getElement("71")->renderLabel(); ?>
+    </div>
+    <div class="clearfix"></div>
+    
+    <div style="float:right; width: 200px;"><p>After submitting your order, you will be redirected to an invoice with payment buttons.</p>
+    </div>
+    <div id="paymentmethod">
+        <?php echo $form->paymentmethod ?>
+    </div>
+     <!-- PayPal Logo --><table border="0" cellpadding="10" cellspacing="0"><tr><td></td></tr><tr><td align="center"><img src="https://www.paypalobjects.com/webstatic/en_CA/mktg/logo-image/bdg_secured_by_pp_2line.png" border="0" alt="Secured by PayPal"></td></tr></table><!-- PayPal Logo -->
+     <div>
+     <img src="https://www.2checkout.com/upload/images/paymentlogoshorizontal.png" alt="2Checkout.com is a worldwide leader in online payment services" />
+     </div>
+    
+    <div class="clearfix"></div>
+    <div id="total_box">
+        <b>Subtotal:</b> <span class="subtotal"></span><br>
+        <span id="tax"></span><br>
+        <b>Total:</b> <span id="total"></span>
+    </div>
+    
+    <input type="submit" class="btn right-floated" value="Submit Order" id="atpro_submitorder">
+    <div class="clearfix"></div>
+</form>
+</div>

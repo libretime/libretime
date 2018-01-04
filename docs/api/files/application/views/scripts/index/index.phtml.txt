@@ -1,0 +1,358 @@
+<script language="JavaScript">
+    function autoResize(id){
+        var newheight;
+        var newwidth;
+
+        if(document.getElementById){
+            newheight=document.getElementById(id).contentWindow.document.body.scrollHeight;
+            // Hack to get height in Firefox
+            if (newheight == 0) newheight = newheight = document.getElementById(id).contentWindow.document.documentElement.scrollHeight;
+            newwidth=document.getElementById(id).contentWindow.document.body.scrollWidth;
+        }
+        document.getElementById(id).height= (newheight) + "px";
+        document.getElementById(id).width= (newwidth) + "px";
+    }
+</script>
+
+<div class="wrapper">
+
+    <div class="bck_cover"></div>
+
+    <?php if ($this->stationLogo === DEFAULT_LOGO_PLACEHOLDER) {
+        echo "<a href='#' class='logo'><img src='".DEFAULT_LOGO_FILE."'></a>";
+    } else {
+        echo "<a href='#' class='logo'><img src='data:image/png;base64," . $this->stationLogo . "'></a>";
+    } ?>
+
+    <?php if ($this->displayLoginButton): ?>
+        <div class='login-btn'>
+            <a href='/login' target='_parent'>
+                <span><?php echo _('Login'); ?></span>
+                <span class='login-img'></span>
+            </a>
+        </div>
+    <?php endif; ?>
+
+    <div id="tab-1" class="schedule tab_content current">
+        <iframe onLoad="autoResize('schedule_iframe');" id="schedule_iframe" height="300px" scrolling="yes" frameborder="0" src=<?php echo $this->stationUrl."embed/weekly-program?style=premium"?>></iframe>
+    </div>
+
+
+    <div id="tab-2" class="about_us tab_content">
+        <h1><?php echo $this->escape($this->stationName) ?></h1>
+        <p><?php echo $this->escape($this->stationDescription) ?></p>
+    </div>
+
+    <div id="tab-3" class="login tab_content">
+        <h2>Login</h2>
+        <form action="demo_form.asp">
+            <input type="text" name="FirstName" value="username"><br>
+            <input type="text" name="Password" value="password"><br>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+
+    <?php
+    if ($this->displayRssTab) {?>
+        <div id="tab-4" class="podcast tab_content">
+            <div class="rss-title-wrapper">
+                <div id="rss-subscribe">
+                    <a target="_blank" href="<?php echo $this->stationPodcastRssUrl ?>" class="rss_icon"><span>Subscribe </span><img src="css/radio-page/img/rss.png"></a>
+                </div>
+                <div id="rss-title">
+                    <?php echo $this->podcastTitle ?>
+                </div>
+            </div>
+
+            <div id="jquery_jplayer_1" class="jp-player">
+            </div>
+            <div class="podcast_bck">
+            <div id="jp_container_1" class="jp-audio">
+                <div class="jp-type-playlist">
+
+                    <div class="current-track track-overflow">Now Playing: <span class="track-overflow"></span></div>
+                    <div class="jp-gui jp-interface">
+                        <div class="playbar playbar-buttons">
+                        <ul class="jp-controls rss-buttons">
+                            <li class="ui-corner-all jp-play">
+                                <span class="icon-play icon-white" tabindex="1"><?php /*echo _("play") */?></span>
+                            </li>
+
+                            <li class="ui-corner-all jp-pause">
+                                <span class="icon-pause icon-white" tabindex="1"><?php /*echo _("pause") */?></span>
+                            </li>
+                            <li class="ui-corner-all jp-stop">
+                                <span class="icon-stop icon-white" tabindex="1"><?php /*echo _("stop") */?></span>
+                            </li>
+                        </ul>
+                        </div>
+                        <div class="playbar playbar-progress">
+                        <div class="jp-time-block">
+                            <div class="jp-progress">
+                                <div class="jp-seek-bar">
+                                    <div class="jp-play-bar"></div>
+                                </div>
+                            </div>
+                            <div class="jp-time-holder">
+                                <div class="jp-current-time"></div>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="playbar playbar-progress">
+                        <div class="jp-volume-block">
+                            <div class="jp-mute">
+                                <span class="ui-icon" tabindex="1" title="mute"><?php /*echo _("mute") */?></span>
+                            </div>
+                            <div class="jp-unmute">
+                                <span class="ui-icon" tabindex="1" title="unmute"><?php /*echo _("unmute") */?></span>
+                            </div>
+                            <div class="jp-volume-bar">
+                                <div class="jp-volume-bar-value"></div>
+                            </div>
+                            <div class="jp-volume-max">
+                                <span class="ui-icon" tabindex="1" title="max volume"><?php /*echo _("max volume") */?></span>
+                            </div>
+                        </div>
+                        </div>
+                        </ul>
+
+                    </div>
+
+                    <div class="rss-tracks">
+                        <ul class="jp-playlist">
+                        </ul>
+                    </div>
+
+                    <ul class="pagination">
+                    </ul>
+                </div>
+
+            </div>
+            </div>
+
+            <script type="text/javascript">
+                var playlist;
+                function buildJplayerPlaylist(page, data) {
+                    playlist = new Array();
+                    var media;
+
+                    $('.rss-tracks ul').html('');
+                    $.each(data[Object.keys(data)[page]], function (index, value) {
+                        var media_mime_supported = true;
+                        media = {
+                            title: value.CcFiles.track_title,
+                            artist: value.CcFiles.artist_name,
+                        }
+
+                        if (value.mime == "mp3") {
+                            media.mp3 = value.download_url;
+                        } else if (value.mime == "ogg") {
+                            media.oga = value.download_url;
+                        } else if (value.mime == "m4a") {
+                            media.m4a = value.download_url;
+                        } else if (value.mime == "wav") {
+                            media.wav = value.download_url;
+                        } else {
+                            media_mime_supported = false;
+                        }
+
+                        var podcast_title_link = "<a class='podcast_title jp-playlist-item' tabindex='0' href='#'>"+value.CcFiles.track_title+"</a>";
+                        var podcast_title_no_link = "<div class='podcast_title'>"+value.CcFiles.track_title+"</div>";
+                        var playlist_metadata = "<span class='podcast_date'>"+value.publication_date+"</span>" +
+                        "<span class='podcast_length'>"+value.CcFiles.length+"</span>" +
+                        "<span class='podcast_desc_btn'>Description</span>" +
+                        "<div class='podcast_desc'>"+value.CcFiles.description+"</div>";
+
+                        if (media_mime_supported) {
+                            playlist.push(media);
+
+                            var playlist_item = "<li class='jp-playlist-item'><div class='podcast_info'>";
+
+                            playlist_item += podcast_title_link + playlist_metadata;
+
+                            playlist_item += "<div class='podcast_btn_group'>"+
+                            "<span class='podcast_play podcast_action_btn'><a href='#' id='rss-track' data-rss-playlist-id='"+index+"'><img src='css/radio-page/img/podcast_play.png'></a></span>" +
+                            "<span class='podcast_download podcast_action_btn'><a id='rss-download-link' href='"+value.download_url+"'><img src='css/radio-page/img/podcast_download.png'></a></span> </div></div></li>";
+
+                        } else {
+                            // add empty media item to playlist so indexes stay inline with the corret
+                            // audio and metadata
+                            playlist.push({});
+
+                            var playlist_item = "<div class='playlist-item-no-preview podcast_info'>";
+                            playlist_item += podcast_title_no_link + playlist_metadata;
+                            playlist_item += "<div class='podcast_btn_group'>"+
+                            "<span class='podcast_no_play'><img src='css/radio-page/img/podcast_no_play.png'></span>" +
+                            "<span class='podcast_download podcast_action_btn'><a id='rss-download-link' href='"+value.download_url+"'><img src='css/radio-page/img/podcast_download.png'></a></span> </div></div>";
+                        }
+
+                        $('.rss-tracks ul').append(playlist_item);
+
+                    });
+
+                    _playlist_jplayer.setPlaylist(playlist);
+
+                    // we have to set the player to play the first track on page load
+                    // or else the play button won't work at first. make sure nothing
+                    // is playing first
+                    if($("#jquery_jplayer_1").data().jPlayer.status.paused == true){
+                        // jPlayer is not currently playing
+                        _playlist_jplayer.play(0);
+                        $("#jquery_jplayer_1").jPlayer("stop");
+                    }
+
+                    $('.podcast_play').on('click', function() {
+                        _playlist_jplayer.play($(this).find('#rss-track').attr('data-rss-playlist-id'));
+
+                        // we need to manually highlight the track that play was clicked on
+                        $(this).parents('li').addClass('jp-playlist-current');
+
+                        return false;
+                    });
+
+                    $('.podcast_desc_btn').click(function(){
+                        $(this).toggleClass('current');
+                        $(this).next('.podcast_desc').slideToggle();
+                    });
+
+                } //buildPlaylist
+
+                _playlist_jplayer = new jPlayerPlaylist({
+                        jPlayer: "#jquery_jplayer_1",
+                        cssSelectorAncestor: "#jp_container_1"
+                    },[], //array of songs will be filled with below's json call
+                    {
+                        swfPath: baseUrl + "js/jplayer",
+                        supplied: "oga, mp3, m4v, m4a, wav",
+                        size: {
+                            width: "0px",
+                            height: "0px",
+                            cssClass: "jp-video-270p"
+                        },
+                        playlistOptions: {
+                            autoPlay: false,
+                            loopOnPrevious: false,
+                            shuffleOnLoop: true,
+                            enableRemoveControls: false,
+                            displayTime: 0,
+                            addTime: 0,
+                            removeTime: 0,
+                            shuffleTime: 0
+                        },
+                        ready: function () {
+
+                            var episodes = <?php echo $this->episodes ?>;
+                            var empty_podcast_message = "<?php echo $this->emptyPodcastMessage ?>";
+
+                            if (Object.keys(episodes).length <= 0) {
+                                $(".jp-playlist").append(empty_podcast_message);
+                            } else {
+                                buildJplayerPlaylist(0, episodes);
+
+
+                                // update current track metadata on player bar
+                                $("#jquery_jplayer_1").bind(jQuery.jPlayer.event.play, function (event) {
+                                    var current = _playlist_jplayer.current;
+                                    $('.current-track span').html(playlist[current].title);
+                                });
+
+                                // build pagination menu
+                                var pages = "<li data-page-index='0'><</li>";
+                                $.each(episodes, function (index, value) {
+                                    var page_number = +index + 1;
+                                    pages += "<li data-page-index='" + index + "'>" + page_number + "</li>";
+                                });
+                                var last_index = Object.keys(episodes).length - 1;
+                                pages += "<li data-page-index='" + last_index + "'>></li>";
+                                $("ul.pagination").append(pages);
+                                $("ul.pagination").find("li:contains('1')").addClass('current');
+
+                                // pagination click
+                                $("ul.pagination li").click(function () {
+                                    buildJplayerPlaylist($(this).attr("data-page-index"), episodes);
+                                    $(this).siblings().removeClass('current');
+                                    if ($(this).text() === "<") {
+                                        $(this).next().addClass("current");
+                                    } else if ($(this).text() === ">") {
+                                        $(this).prev().addClass("current");
+                                    } else {
+                                        $(this).addClass('current');
+                                    }
+
+                                });
+
+                                //turn off player bar when podcast track is played
+                                $("a.jp-playlist-item, .jp-play, .podcast_play").click(function () {
+                                    if ($("#player_iframe").contents().find('.play').hasClass('pause')) {
+                                        $("#player_iframe").contents().find('.play').click();
+                                    }
+                                });
+                            }
+                        }
+                    }
+                );
+
+            </script>
+        </div>
+    <?php
+    }
+    ?>
+
+    <iframe id="player_iframe" frameborder="0" width="100%" style="bottom:0px; left:0px; position:fixed; right:0px;" src=<?php echo $this->stationUrl."embed/player?stream=auto&style=premium";?>></iframe>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+
+        $("#player_iframe").load(function () {
+
+            $("#player_iframe").contents().find('.bottom_bar').append("<div class='flex_spacer' data-tab='tab-1'></div>");
+            $("#player_iframe").contents().find('.bottom_bar').append("<div class='schedule_btn button current' data-tab='tab-1'></div>");
+            $("#player_iframe").contents().find('.bottom_bar').append("<div class='about_us_btn button' data-tab='tab-2'></div>");
+
+            <?php
+            // Is there a better way to do this?
+            if ($this->displayRssTab) {?>
+                $("#player_iframe").contents().find('.bottom_bar').append("<div class='station_rss_btn button' data-tab='tab-4'></div>");
+            <?php
+            }
+            ?>
+
+
+            $("#player_iframe").contents().find('.bottom_bar .button').click(function(){
+                var tab_id = $(this).attr('data-tab');
+
+                $("#player_iframe").contents().find('.bottom_bar .button').removeClass('current');
+                $('.tab_content').removeClass('current');
+
+                window.scrollTo(0,0);
+                $(this).addClass('current');
+                $("#"+tab_id).addClass('current');
+            });
+
+            //turn off jplayer if it's playing and someone clicks to play the player bar
+            $("#player_iframe").contents().find('.play').click(function () {
+                if ($('.jp-play').is(':hidden')) {
+                    $('.jp-pause').click();
+                }
+            });
+        });
+
+        // schedule widget tabs
+        $('.tabs li').click(function(){
+            var tab_id = $(this).attr('data-tab');
+
+            $('.tabs li').removeClass('active');
+            $('.schedule_item').removeClass('active');
+
+            $(this).addClass('active');
+            $("#"+tab_id).addClass('active');
+        });
+
+    });
+
+</script>
