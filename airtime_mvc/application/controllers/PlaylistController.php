@@ -555,6 +555,7 @@ class PlaylistController extends Zend_Controller_Action
             if ($form->isValid($params)) {
                 $this->setPlaylistNameDescAction();
                 $bl->saveSmartBlockCriteria($params['data']);
+               // Logging::info($params['data']);
 
                 $this->createUpdateResponse($bl);
                 $this->view->result = 0;
