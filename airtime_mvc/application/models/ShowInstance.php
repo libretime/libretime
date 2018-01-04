@@ -565,9 +565,15 @@ SQL;
                 ->filterByDbEnds($p_end->format(DEFAULT_TIMESTAMP_FORMAT), Criteria::LESS_THAN)
                 ->filterByDbStarts($p_start->format(DEFAULT_TIMESTAMP_FORMAT), Criteria::GREATER_THAN)
                 ->leftJoinCcShow()
+                ->where('CcShow.has_autoplaylist = ?', 'true')
                 ->find($con);
-            return $showInstances;
+            $hasAutoplaylist = array();
+            foreach ($showInstances->toArray() as $ap) {
+                $hasAutoplaylist[$ap['DbId']] = true;
+            }
+            return $hasAutoplaylist;
         }
+
         catch (Exception $e) {
             $con->rollback();
             Logging::info("Couldn't query show instances for calendar to find which had autoplaylists");
