@@ -529,6 +529,7 @@ function setupUI() {
  * and shows the criteria drop-down
  */
 function enableAndShowDateTimeDropdown(valEle, index) {
+    console.log('datetime show');
     var spanDatetime = valEle.nextAll("#datetime_select");
     spanDatetime.children('#sp_criteria_datetime_select_'+index).removeAttr("disabled");
     spanDatetime.children('#sp_criteria_extra_datetime_select_'+index).removeAttr("disabled");
