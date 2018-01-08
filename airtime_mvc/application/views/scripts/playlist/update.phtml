@@ -2,7 +2,6 @@
 $items = $this->contents;
 $isSmartBlock = ($this->obj instanceof Application_Model_Block);
 $isPlaylist = ($this->obj instanceof Application_Model_Playlist);
-
 if (count($items) && ($isSmartBlock || $isPlaylist)) : ?>
 <?php $i = 0; ?>
 <?php foreach($items as $item) :
