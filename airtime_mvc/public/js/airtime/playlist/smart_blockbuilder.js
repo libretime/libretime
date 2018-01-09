@@ -233,13 +233,18 @@ function setSmartBlockEvents() {
          */
         item_to_hide = list.find('div:visible:last');
         item_to_hide.children().attr('disabled', 'disabled');
+        item_to_hide.find('[name^="sp_criteria_datetime_select"]').attr('disabled', 'disabled');
+        item_to_hide.find('[name^="sp_criteria_extra"]').attr('disabled', 'disabled');
+        item_to_hide.find('[name^="sp_criteria_extra_datetime_select"]').attr('disabled', 'disabled');
         if (item_to_hide.find('select[name^="sp_criteria_field"]').hasClass('sp-invisible')) {
             item_to_hide.find('select[name^="sp_criteria_field"]').removeClass('sp-invisible');
         }
         item_to_hide.find('[name^="sp_criteria_field"]').val(0).end()
                     .find('[name^="sp_criteria_modifier"]').val(0).end()
+                    .find('[name^="sp_criteria_datetime_select"]').end()
                     .find('[name^="sp_criteria_value"]').val('').end()
-                    .find('[name^="sp_criteria_extra"]').val('');
+                    .find('[name^="sp_criteria_extra"]').val('')
+                    .find('[name^="sp_criteria_extra_datetime_select"]').end();
         
         sizeTextBoxes(item_to_hide.find('[name^="sp_criteria_value"]'), 'sp_extra_input_text', 'sp_input_text');
         item_to_hide.hide();

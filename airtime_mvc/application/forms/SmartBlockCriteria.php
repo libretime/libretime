@@ -195,9 +195,8 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     			foreach ($criteria[$column] as &$constraint) {
     			    // convert to appropriate timezone timestamps only if the modifier is not a relative time
                     if (!in_array($constraint['modifier'], array('before','after','between'))) {
-    				    $constraint['value'] =
-    				    Application_Common_DateHelper::UTCStringToUserTimezoneString($constraint['value']);
-
+                        $constraint['value'] =
+                            Application_Common_DateHelper::UTCStringToUserTimezoneString($constraint['value']);
     				    if (isset($constraint['extra'])) {
     				  	  $constraint['extra'] =
     				  	  Application_Common_DateHelper::UTCStringToUserTimezoneString($constraint['extra']);
@@ -368,14 +367,17 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 $criteriaDatetimeSelect = new Zend_Form_Element_Select("sp_criteria_datetime_select_".$i."_".$j);
                 $criteriaDatetimeSelect->setAttrib('class','input_select sp_input_select')
                                         ->setDecorators(array('viewHelper'));
-                if (!isset($criteriaKeys[$i]) || !$relativeDateTime) {
+                if (isset($criteriaKeys[$i]) && $relativeDateTime) {
+                    $criteriaDatetimeSelect->setAttrib('enabled', 'enabled');
+                }
+                else {
                     $criteriaDatetimeSelect->setAttrib('disabled', 'disabled');
                 }
                 // check if the value is stored and it is a relative datetime field
                 if (isset($criteriaKeys[$i]) && isset($storedCrit["crit"][$criteriaKeys[$i]][$j]["value"])
                     && isset($criteriaType) && $criteriaType == "d" &&
                     preg_match('/before|after|between/', $modifierTest) == 1) {
-                    // need to remove the leading numbers stored in the database
+                    // need to remove any leading numbers stored in the database
                     $dateTimeSelectValue = preg_replace('/[0-9]+/', '', $storedCrit["crit"][$criteriaKeys[$i]][$j]["value"]);
                     // need to strip white from front and ago from the end to match with the value of the time unit select dropdown
                     $dateTimeSelectValue = trim(preg_replace('/\W\w+\s*(\W*)$/', '$1', $dateTimeSelectValue));
@@ -507,6 +509,12 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                         'showPoolCount' => $showPoolCount))
         ));
     }
+    /*
+     * This is a simple function that determines if a modValue should enable a datetime
+     */
+    public function enableDateTimeUnit($modValue) {
+        return (preg_match('/before|after|between/', $modValue) == 1);
+    }
 
     public function preValidation($params)
     {
@@ -540,6 +548,15 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                     $eleMod->setValue($modInfo['sp_criteria_modifier']);
                     $eleMod->setAttrib("disabled", null);
 
+                    $eleDatetime = $this->getElement("sp_criteria_datetime_select_".$critKey."_".$modKey);
+                    if ($this->enableDateTimeUnit($eleMod->getValue())) {
+                        $eleDatetime->setAttrib("enabled", "enabled");
+                        $eleDatetime->setValue($modInfo['sp_criteria_datetime_select']);
+                        $eleDatetime->setAttrib("disabled", null);
+                    }
+                    else {
+                        $eleDatetime->setAttrib("disabled","disabled");
+                    }
                     $eleValue = $this->getElement("sp_criteria_value_".$critKey."_".$modKey);
                     $eleValue->setValue($modInfo['sp_criteria_value']);
                     $eleValue->setAttrib("disabled", null);
@@ -549,6 +566,15 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                         $eleExtra->setValue($modInfo['sp_criteria_extra']);
                         $eleValue->setAttrib('class', 'input_text sp_extra_input_text');
                         $eleExtra->setAttrib("disabled", null);
+                    }
+                    $eleExtraDatetime = $this->getElement("sp_criteria_extra_datetime_select_".$critKey."_".$modKey);
+                    if ($eleMod->getValue() == 'between') {
+                        $eleExtraDatetime->setAttrib("enabled", "enabled");
+                        $eleExtraDatetime->setValue($modInfo['sp_criteria_extra_datetime_select']);
+                        $eleExtraDatetime->setAttrib("disabled", null);
+                    }
+                    else {
+                        $eleExtraDatetime->setAttrib("disabled","disabled");
                     }
 
                 } else {
@@ -587,7 +613,20 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                     ->setDecorators(array('viewHelper'));
                     $criteriaValue->setValue($modInfo['sp_criteria_value']);
                     $this->addElement($criteriaValue);
+                    /****************** DATETIME UNIT SELECT ***********/
 
+                    $criteriaDatetimeSelect = new Zend_Form_Element_Select("sp_criteria_datetime_select_".$critKey."_".$modKey);
+                    $criteriaDatetimeSelect->setAttrib('class','input_select sp_input_select')
+                        ->setDecorators(array('viewHelper'));
+                    if ($this->enableDateTimeUnit($criteriaValue->getValue())) {
+                        $criteriaDatetimeSelect->setAttrib('enabled', 'enabled');
+                        $criteriaDatetimeSelect->setAttrib('disabled', null);
+                        $criteriaDatetimeSelect->setValue($modInfo['sp_criteria_datetime_select']);
+                        $this->addElement($criteriaDatetimeSelect);
+                    }
+                    else {
+                        $criteriaDatetimeSelect->setAttrib('disabled', 'disabled');
+                    }
                     /****************** EXTRA ***********/
                     $criteriaExtra = new Zend_Form_Element_Text("sp_criteria_extra_".$critKey."_".$modKey);
                     $criteriaExtra->setAttrib('class', 'input_text sp_extra_input_text')
@@ -599,6 +638,21 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                         $criteriaExtra->setAttrib('disabled', 'disabled');
                     }
                     $this->addElement($criteriaExtra);
+
+                    /****************** EXTRA DATETIME UNIT SELECT ***********/
+
+                    $criteriaExtraDatetimeSelect = new Zend_Form_Element_Select("sp_criteria_extra_datetime_select_".$critKey."_".$modKey);
+                    $criteriaExtraDatetimeSelect->setAttrib('class','input_select sp_input_select')
+                        ->setDecorators(array('viewHelper'));
+                    if ($criteriaValue->getValue() == 'between') {
+                        $criteriaExtraDatetimeSelect->setAttrib('enabled', 'enabled');
+                        $criteriaExtraDatetimeSelect->setAttrib('disabled', null);
+                        $criteriaExtraDatetimeSelect->setValue($modInfo['sp_criteria_extra_datetime_select']);
+                        $this->addElement($criteriaExtraDatetimeSelect);
+                    }
+                    else {
+                        $criteriaExtraDatetimeSelect->setAttrib('disabled', 'disabled');
+                    }
                     $count++;
                 }
             }
@@ -624,6 +678,14 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         return $data;
     }
 
+    /*
+     * This function will enable or disable form criteria elements based upon the current form
+     * This is necessary after validation fails and the elements loaded from startForm are different from
+     * the current form data
+     *
+     */
+    public function reValidate(){
+    }
     public function isValid($params)
     {
         $isValid = true;
