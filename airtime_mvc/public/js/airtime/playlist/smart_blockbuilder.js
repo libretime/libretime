@@ -367,8 +367,8 @@ function setupUI() {
      */
     var sortable = activeTab.find('.spl_sortable'),
         plContents = sortable.children(),
-        shuffleButton = activeTab.find('button[name="shuffle_button"], #pl-bl-clear-content'),
-        generateButton = activeTab.find('button[name="generate_button"], #pl-bl-clear-content'),
+        shuffleButton = activeTab.find('button[name="shuffle_button"]'),
+        generateButton = activeTab.find('button[name="generate_button"]'),
         fadesButton = activeTab.find('#spl_crossfade, #pl-bl-clear-content');
 
     if (!plContents.hasClass('spl_empty')) {
