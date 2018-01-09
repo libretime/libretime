@@ -678,14 +678,6 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         return $data;
     }
 
-    /*
-     * This function will enable or disable form criteria elements based upon the current form
-     * This is necessary after validation fails and the elements loaded from startForm are different from
-     * the current form data
-     *
-     */
-    public function reValidate(){
-    }
     public function isValid($params)
     {
         $isValid = true;
