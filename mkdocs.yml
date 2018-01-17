@@ -15,60 +15,60 @@ extra_css:
 
 pages:
   - 'Home': index.md
-  - 'What is LibreTime': manual/index.md
+  - 'What is LibreTime?': manual/index.md
   - 'Features': features.md
   - 'F.A.Q.': faq.md
   - 'Rights and Royalties': manual/rights-and-royalties/index.md
   - 'Using LibreTime':
-    - 'On air in 60 seconds!': 'manual/on-air-in-60-seconds/index.md'
-    - 'Getting started': manual/getting-started/index.md
-  - 'The System Menu':
+    - 'On Air in 60 seconds!': 'manual/on-air-in-60-seconds/index.md'
+    - 'Getting Started': manual/getting-started/index.md
+  - 'The Settings Menu':
     - 'General': manual/preferences/index.md
     - 'Users': manual/users/index.md
     - 'Media Folders': manual/media-folders/index.md
     - 'Streams': manual/stream-settings/index.md
     - 'Support Feedback': manual/support-feedback/index.md
     - 'Status': manual/status/index.md
-    - 'Listener stats': manual/listener-stats/index.md
-  - 'The main menus':
-    - 'Now playing': manual/now-playing/index.md
-    - 'Add media': manual/add-media/index.md
+  - 'The Main Menus':
+    - 'Now Playing': manual/now-playing/index.md
+    - 'Add Media': manual/add-media/index.md
     - 'Library': manual/library/index.md
     - 'Calendar': manual/calendar/index.md
     - 'History': manual/history/index.md
     - 'Listen': manual/listen/index.md
+    - 'Analytics': manual/listener-stats/index.md
     - 'Help': manual/help/index.md
-  - 'LibreTime in the studio':
-    - 'Preparing media for ingest': manual/preparing-media-for-ingest/index.md
-    - 'Live shows with Mixxx': manual/live-shows-with-mixxx/index.md
-    - 'Smartphone journalism': manual/smartphone-journalism/index.md
+  - 'LibreTime in the Studio':
+    - 'Preparing Media for Ingest': manual/preparing-media-for-ingest/index.md
+    - 'Live Shows with Mixxx': manual/live-shows-with-mixxx/index.md
+    - 'Smartphone Journalism': manual/smartphone-journalism/index.md
     - 'Icecast and SHOUTcast': manual/icecast-and-shoutcast/index.md
-    - 'Recording shows': manual/recording-shows/index.md
+    - 'Recording Shows': manual/recording-shows/index.md
   - 'Installation':
     - 'Install': install.md
-    - 'Preparing the server': manual/preparing-the-server/index.md
-    - 'Easy setup': manual/easy-setup/index.md
-    - 'Automated installation': manual/automated-installation/index.md
-    - 'Manual installation': manual/manual-installation/index.md
-    - 'Setting the server time': manual/setting-the-server-time/index.md
+    - 'Preparing the Server': manual/preparing-the-server/index.md
+    - 'Easy Setup': manual/easy-setup/index.md
+    - 'Automated Installation': manual/automated-installation/index.md
+    - 'Manual Installation': manual/manual-installation/index.md
+    - 'Setting the Server Time': manual/setting-the-server-time/index.md
   - 'Administration':
-    - 'The airtime-log command': manual/the-airtime-log-command/index.md
-    - 'Backing up the server': manual/backing-up-the-server/index.md
+    - 'The airtime-log Command': manual/the-airtime-log-command/index.md
+    - 'Backing Up the Server': manual/backing-up-the-server/index.md
     - 'Upgrading': manual/upgrading/index.md
     - 'Troubleshooting': manual/troubleshooting/index.md
     - 'Using Monit': manual/using-monit/index.md
-  - 'Advanced configuration':
-    - 'Automated file import': manual/automated-file-import/index.md
-    - 'Icecast handover': manual/icecast-handover/index.md
-    - 'Promoting your station': manual/promoting-your-station/index.md
-    - 'Stream player for your website': manual/stream-player-for-your-website/index.md
-    - 'Exporting the schedule': manual/exporting-the-schedule/index.md
-    - 'Interface customization': manual/interface-customization/index.md
-    - 'Interface localization': manual/interface-localization/index.md
-    - 'Host configuration': manual/host-configuration/index.md
-    - 'LibreTime API authentication': manual/airtime-api-authentication/index.md
-    - 'Secure login with SSL or TLS': manual/secure-login-with-ssl/index.md
-    - 'Icecast statistics with Piwik': manual/icecast-statistics-with-piwik/index.md
+  - 'Advanced Configuration':
+    - 'Automated File Import': manual/automated-file-import/index.md
+    - 'Icecast Handover': manual/icecast-handover/index.md
+    - 'Promoting Your Station': manual/promoting-your-station/index.md
+    - 'Stream Player for Your Website': manual/stream-player-for-your-website/index.md
+    - 'Exporting the Schedule': manual/exporting-the-schedule/index.md
+    - 'Interface Customization': manual/interface-customization/index.md
+    - 'Interface Localization': manual/interface-localization/index.md
+    - 'Host Configuration': manual/host-configuration/index.md
+    - 'LibreTime API Authentication': manual/airtime-api-authentication/index.md
+    - 'Secure Login with SSL or TLS': manual/secure-login-with-ssl/index.md
+    - 'Icecast Statistics with Piwik': manual/icecast-statistics-with-piwik/index.md
     - 'FreeIPA Authentication': freeipa.md
   - 'Development':
     - 'Testing': testing.md
@@ -77,6 +77,6 @@ pages:
     - 'Translating': translating.md
     - 'Documentation': documentation.md
   - 'Appendix':
-    - 'Expert install': manual/expert-install/index.md
+    - 'Expert Install': manual/expert-install/index.md
     - 'HD Audio Models': manual/hd-audio-models/index.md
-    - 'About this manual': manual/about-this-manual/index.md
+    - 'About This Manual': manual/about-this-manual/index.md

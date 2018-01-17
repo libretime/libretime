@@ -734,11 +734,12 @@ input.input_text.sp_extra_input_text{
 .sp_text_font{
     font-size: 13px;
     font-family: Helvetica, Arial, sans-serif;
-    color: #5B5B5B;
+    color: #FFFFFF;
 }
 
 .sp_text_font_bold{
     font-weight: bold;
+    color: white;
 }
 
 .sp-ui-button-icon-only {
@@ -782,6 +783,8 @@ input.input_text.sp_extra_input_text{
 .sp-closed{
     border-width: 0 0 0 !important;
 }
+
+
 /***** SMART BLOCK SPECIFIC STYLES END *****/
 
 label {
@@ -2275,6 +2278,10 @@ span.errors.sp-errors{
     background:url(images/icon_link.png) no-repeat 0 0;
     margin-top: 0px !important;
 }
+.small-icon.autoplaylist {
+    background:url(images/icon_alert_cal_autoplaylist.png) no-repeat 0 0;
+}
+
 .small-icon.recording {
     background:url(images/icon_record.png) no-repeat 0 0;
     margin-top: 0px !important;

@@ -163,6 +163,8 @@ final class LocaleController extends Zend_Controller_Action
             "is greater than" => _("is greater than"),
             "is less than" => _("is less than"),
             "is in the range" => _("is in the range"),
+            "Preview" => _("Preview"),
+            "Generate" => _("Generate"),
            //preferences/musicdirs.js
             "Choose Storage Folder" => _("Choose Storage Folder"),
             "Choose Folder to Watch" => _("Choose Folder to Watch"),

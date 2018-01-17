@@ -51,7 +51,10 @@ class Application_Model_Block implements Application_Model_LibraryEditable
             "ends with"        => Criteria::ILIKE,
             "is greater than"  => Criteria::GREATER_THAN,
             "is less than"     => Criteria::LESS_THAN,
-            "is in the range"  => Criteria::CUSTOM);
+            "is in the range"  => Criteria::CUSTOM,
+            "before"           => Criteria::CUSTOM,
+            "after"            => Criteria::CUSTOM,
+            "between"          => Criteria::CUSTOM);
 
     private static $criteria2PeerMap = array(
             0              => "Select criteria",
@@ -179,7 +182,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
     }
 
     /**
-     * Get the entire block as a two dimentional array, sorted in order of play.
+     * Get the entire block as a two dimensional array, sorted in order of play.
      * @param boolean $filterFiles if this is true, it will only return files that has
      *             file_exists flag set to true
      * @return array
@@ -273,7 +276,7 @@ SQL;
 
     /**
      * The database stores fades in 00:00:00 Time format with optional millisecond resolution .000000
-     * but this isn't practical since fades shouldn't be very long usuall 1 second or less. This function
+     * but this isn't practical since fades shouldn't be very long usually 1 second or less. This function
      * will normalize the fade so that it looks like 00.000000 to the user.
      **/
     public function normalizeFade($fade)
@@ -1188,18 +1191,30 @@ SQL;
     {
         // delete criteria under $p_blockId
         CcBlockcriteriaQuery::create()->findByDbBlockId($this->id)->delete();
-        //Logging::info($p_criteriaData);
+        // Logging::info($p_criteriaData);
         //insert modifier rows
         if (isset($p_criteriaData['criteria'])) {
             $critKeys = array_keys($p_criteriaData['criteria']);
             for ($i = 0; $i < count($critKeys); $i++) {
                 foreach ($p_criteriaData['criteria'][$critKeys[$i]] as $d) {
-                	
+                	// Logging::info($d);
                 	$field = $d['sp_criteria_field'];
                 	$value = $d['sp_criteria_value'];
+                	$modifier = $d['sp_criteria_modifier'];
+                    if (isset($d['sp_criteria_extra'])) { $extra = $d['sp_criteria_extra']; }
+                    if (isset($d['sp_criteria_datetime_select'])) { $datetimeunit = $d['sp_criteria_datetime_select']; }
+                    if (isset($d['sp_criteria_extra_datetime_select'])) {$extradatetimeunit = $d['sp_criteria_extra_datetime_select'];}
                 		 	
                 	if ($field == 'utime' || $field == 'mtime' || $field == 'lptime') {
-                		$value = Application_Common_DateHelper::UserTimezoneStringToUTCString($value);
+                	    // if the date isn't relative we  want to convert the value to a specific UTC date
+                	    if (!(in_array($modifier,array('before','after','between')))) {
+                	        $value = Application_Common_DateHelper::UserTimezoneStringToUTCString($value);
+                        }
+                        else {
+                            $value = $value . ' ' . $datetimeunit . ' ago';
+                           // Logging::info($value);
+
+                        }
                 	}
                 	
                     $qry = new CcBlockcriteria();
@@ -1211,10 +1226,17 @@ SQL;
                     if (isset($d['sp_criteria_extra'])) {
                     	
                     	if ($field == 'utime' || $field == 'mtime' || $field == 'lptime') {
-                    		$d['sp_criteria_extra'] = Application_Common_DateHelper::UserTimezoneStringToUTCString($d['sp_criteria_extra']);
+                            // if the date isn't relative we  want to convert the value to a specific UTC date
+                            if (!(in_array($modifier,array('before','after','between')))) {
+                                $extra = Application_Common_DateHelper::UserTimezoneStringToUTCString($extra);
+                            }
+                            else {
+                                $extra = $extra . ' ' . $extradatetimeunit. ' ago';
+                            }
+
                     	}
                     	
-                        $qry->setDbExtra($d['sp_criteria_extra']);
+                        $qry->setDbExtra($extra);
                     }
                     $qry->save();
                 }
@@ -1250,7 +1272,7 @@ SQL;
     }
 
     /**
-     * generate list of tracks. This function saves creiteria and generate
+     * generate list of tracks. This function saves criteria and generate
      * tracks.
      * @param array $p_criteria
      */
@@ -1259,7 +1281,7 @@ SQL;
         $this->saveSmartBlockCriteria($p_criteria);
         $insertList = $this->getListOfFilesUnderLimit();
         $this->deleteAllFilesFromBlock();
-        // constrcut id array
+        // construct id array
         $ids = array();
         foreach ($insertList as $ele) {
             $ids[] = $ele['id'];
@@ -1350,6 +1372,13 @@ SQL;
         return $insertList;
     }
 
+    /**
+     * Parses each row in the database for the criteria associated with this block and renders human readable labels.
+     * Returns it as an array with each criteria_name and modifier_name added based upon options array lookup.
+     *
+     */
+
+
     public function getCriteria()
     {
         $criteriaOptions = array(
@@ -1393,6 +1422,9 @@ SQL;
             "is not"           => _("is not"),
             "starts with"      => _("starts with"),
             "ends with"        => _("ends with"),
+            "before"          => _("before"),
+            "after"           => _("after"),
+            "between"         => _("between"),
             "is"              => _("is"),
             "is not"          => _("is not"),
             "is greater than" => _("is greater than"),
@@ -1453,9 +1485,9 @@ SQL;
 
                     //data should already be in UTC, do we have to do anything special here anymore?
                     if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
-                    	
+
                         $spCriteriaValue = $criteria['value'];
-                        
+
                         if (isset($criteria['extra'])) {
                             $spCriteriaExtra = $criteria['extra'];
                         }
@@ -1500,6 +1532,28 @@ SQL;
                         $spCriteriaValue = "%$spCriteriaValue%";
                     } elseif ($spCriteriaModifier == "is in the range") {
                         $spCriteriaValue = "$spCriteria >= '$spCriteriaValue' AND $spCriteria <= '$spCriteriaExtra'";
+                    }
+                    elseif ($spCriteriaModifier == "before") {
+                        // need to pull in the current time and subtract the value or figure out how to make it relative
+                        $relativedate = new DateTime($spCriteriaValue);
+                        $dt = $relativedate->format(DateTime::ISO8601);
+                        $spCriteriaValue = "$spCriteria <= '$dt'";
+                        // Logging::info($spCriteriaValue);
+                    }
+                    elseif ($spCriteriaModifier == "after") {
+                        $relativedate = new DateTime($spCriteriaValue);
+                        $dt = $relativedate->format(DateTime::ISO8601);
+                        $spCriteriaValue = "$spCriteria >= '$dt'";
+                        // Logging::info($spCriteriaValue);
+                    } elseif ($spCriteriaModifier == "between") {
+                        $fromrelativedate = new DateTime($spCriteriaValue);
+                        $fdt = $fromrelativedate->format(DateTime::ISO8601);
+                        // Logging::info($fdt);
+
+                        $torelativedate = new DateTime($spCriteriaExtra);
+                        $tdt = $torelativedate->format(DateTime::ISO8601);
+                        // Logging::info($tdt);
+                        $spCriteriaValue = "$spCriteria >= '$fdt' AND $spCriteria <= '$tdt'";
                     }
 
                     $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
@@ -1574,7 +1628,7 @@ SQL;
     }
     public static function organizeSmartPlaylistCriteria($p_criteria)
     { 
-        $fieldNames = array('sp_criteria_field', 'sp_criteria_modifier', 'sp_criteria_value', 'sp_criteria_extra');
+        $fieldNames = array('sp_criteria_field', 'sp_criteria_modifier', 'sp_criteria_value', 'sp_criteria_extra', 'sp_criteria_datetime_select', 'sp_criteria_extra_datetime_select');
         $output = array();
         foreach ($p_criteria as $ele) {
 

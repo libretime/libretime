@@ -1023,7 +1023,7 @@ SQL;
         $content_count = Application_Model_ShowInstance::getContentCount(
             $p_start, $p_end);
         $isFull = Application_Model_ShowInstance::getIsFull($p_start, $p_end);
-
+        $hasAutoPlaylist = Application_Model_ShowInstance::getShowHasAutoplaylist($p_start, $p_end);
         $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
         $utcTimezone = new DateTimeZone("UTC");
         $now = new DateTime("now", $utcTimezone);
@@ -1063,6 +1063,11 @@ SQL;
                 $options["show_partial_filled"] = !$isFull[$show['instance_id']];
             } else {
                 $options["show_partial_filled"] = true;
+            }
+            if (array_key_exists($show['instance_id'], $hasAutoPlaylist)) {
+                $options["show_has_auto_playlist"] = true;
+            } else {
+                $options["show_has_auto_playlist"] = false;
             }
 
             $event = array();

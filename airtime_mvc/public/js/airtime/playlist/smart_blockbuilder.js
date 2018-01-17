@@ -19,6 +19,8 @@ function setSmartBlockEvents() {
             appendAddButton();
             appendModAddButton();
             removeButtonCheck();
+            disableAndHideDateTimeDropdown(newRowVal);
+
 
         } else {
 
@@ -34,6 +36,8 @@ function setSmartBlockEvents() {
             appendAddButton();
             appendModAddButton();
             removeButtonCheck();
+            disableAndHideDateTimeDropdown(newRowVal);
+
         }
     });
     
@@ -66,6 +70,8 @@ function setSmartBlockEvents() {
         newRowVal.val('');
         newRowExtra.val('');
         disableAndHideExtraField(newRowVal);
+        disableAndHideDateTimeDropdown(newRowVal);
+        disableAndHideExtraDateTimeDropdown(newRowVal);
         sizeTextBoxes(newRowVal, 'sp_extra_input_text', 'sp_input_text');
         
         //remove the 'criteria add' button from new modifier row
@@ -89,18 +95,28 @@ function setSmartBlockEvents() {
         var item_to_hide;
         var prev;
         var index;
-        
         //remove error message from current row, if any
         var error_element = curr.find('span[class="errors sp-errors"]');
         if (error_element.is(':visible')) {
             error_element.remove();
         }
 
+        /* In the case that there is only one element we need to remove the
+         * date_select drop down.
+         */
+
+        if (count == 0) {
+            disableAndHideDateTimeDropdown(curr.find(':first-child'), index);
+            disableAndHideExtraDateTimeDropdown(curr.find(':first-child'),index);
+            disableAndHideExtraField(curr.find(':first-child'),index);
+        }
+
         /* assign next row to current row for all rows below and including
          * the row getting removed
          */
+
+
         for (var i=0; i<count; i++) {
-            
             index = getRowIndex(curr);
             
             var criteria = next.find('[name^="sp_criteria_field"]').val();
@@ -109,10 +125,12 @@ function setSmartBlockEvents() {
             var modifier = next.find('[name^="sp_criteria_modifier"]').val();
             populateModifierSelect(curr.find('[name^="sp_criteria_field"]'), false);
             curr.find('[name^="sp_criteria_modifier"]').val(modifier);
-            
+
             var criteria_value = next.find('[name^="sp_criteria_value"]').val();
             curr.find('[name^="sp_criteria_value"]').val(criteria_value);
-             
+
+
+
             /* if current and next row have the extra criteria value
              * (for 'is in the range' modifier), then assign the next
              * extra value to current and remove that element from
@@ -124,7 +142,7 @@ function setSmartBlockEvents() {
                 var criteria_extra = next.find('[name^="sp_criteria_extra"]').val();
                 curr.find('[name^="sp_criteria_extra"]').val(criteria_extra);
                 disableAndHideExtraField(next.find(':first-child'), getRowIndex(next));
-            
+
             /* if only the current row has the extra criteria value,
              * then just remove the current row's extra criteria element
              */
@@ -140,6 +158,54 @@ function setSmartBlockEvents() {
                 criteria_extra = next.find('[name^="sp_criteria_extra"]').val();
                 enableAndShowExtraField(curr.find(':first-child'), index);
                 curr.find('[name^="sp_criteria_extra"]').val(criteria_extra);
+            }
+
+
+
+            /* if current and next row have the date_time_select_criteria visible
+             * then show the current and it from the next row
+             */
+            if (curr.find('[name^="sp_criteria_datetime_select"]').attr("disabled") != "disabled"
+                && next.find('#datetime_select').is(':visible')) {
+
+                var criteria_datetime = next.find('[name^="sp_criteria_datetime_select"]').val();
+                curr.find('[name^="sp_criteria_datetime_select"]').val(criteria_datetime);
+                disableAndHideDateTimeDropdown(next.find('first-child'), getRowIndex(next));
+                /* if only the current row has the extra criteria value,
+                 * then just remove the current row's extra criteria element
+                 */
+            } else if (curr.find('[name^="sp_criteria_datetime_select"]').attr("disabled") != "disabled"
+                && next.find('#datetime_select').not(':visible')) {
+                disableAndHideDateTimeDropdown(curr.find(':first-child'), index);
+                /* if only the next row has date_time_select then just enable it on the current row
+                 */
+            } else if (next.find('#datetime_select').is(':visible')) {
+                criteria_datetime = next.find('[name^="sp_criteria_datetime_select"]').val();
+                enableAndShowDateTimeDropdown(curr.find(':first-child'), index);
+                curr.find('[name^="sp_criteria_datetime_select"]').val(criteria_datetime);
+            }
+
+            /* if current and next row have the extra_date_time_select_criteria visible
+             * then show the current and it from the next row
+             */
+            if (curr.find('[name^="sp_criteria_extra_datetime_select"]').attr("disabled") != "disabled"
+                && next.find('#extra_datetime_select').is(':visible')) {
+
+                var extra_criteria_datetime = next.find('[name^="sp_criteria_extra_datetime_select"]').val();
+                curr.find('[name^="sp_criteria_extra_datetime_select"]').val(extra_criteria_datetime);
+                disableAndHideExtraDateTimeDropdown(next.find('first-child'), getRowIndex(next));
+                /* if only the current row has the extra criteria value,
+                 * then just remove the current row's extra criteria element
+                 */
+            } else if (curr.find('[name^="sp_criteria_extra_datetime_select"]').attr("disabled") != "disabled"
+                && next.find('#extra_datetime_select').not(':visible')) {
+                disableAndHideExtraDateTimeDropdown(curr.find(':first-child'), index);
+                /* if only the next row has date_time_select then just enable it on the current row
+                 */
+            } else if (next.find('#datetime_select').is(':visible')) {
+                criteria_datetime = next.find('[name^="sp_criteria_extra_datetime_select"]').val();
+                enableAndShowExtraDateTimeDropdown(curr.find(':first-child'), index);
+                curr.find('[name^="sp_criteria_extra_datetime_select"]').val(criteria_datetime);
             }
 
             /* determine if current row is a modifier row
@@ -167,13 +233,18 @@ function setSmartBlockEvents() {
          */
         item_to_hide = list.find('div:visible:last');
         item_to_hide.children().attr('disabled', 'disabled');
+        item_to_hide.find('[name^="sp_criteria_datetime_select"]').attr('disabled', 'disabled');
+        item_to_hide.find('[name^="sp_criteria_extra"]').attr('disabled', 'disabled');
+        item_to_hide.find('[name^="sp_criteria_extra_datetime_select"]').attr('disabled', 'disabled');
         if (item_to_hide.find('select[name^="sp_criteria_field"]').hasClass('sp-invisible')) {
             item_to_hide.find('select[name^="sp_criteria_field"]').removeClass('sp-invisible');
         }
         item_to_hide.find('[name^="sp_criteria_field"]').val(0).end()
                     .find('[name^="sp_criteria_modifier"]').val(0).end()
+                    .find('[name^="sp_criteria_datetime_select"]').end()
                     .find('[name^="sp_criteria_value"]').val('').end()
-                    .find('[name^="sp_criteria_extra"]').val('');
+                    .find('[name^="sp_criteria_extra"]').val('')
+                    .find('[name^="sp_criteria_extra_datetime_select"]').end();
         
         sizeTextBoxes(item_to_hide.find('[name^="sp_criteria_value"]'), 'sp_extra_input_text', 'sp_input_text');
         item_to_hide.hide();
@@ -241,6 +312,8 @@ function setSmartBlockEvents() {
         
         // disable extra field and hide the span
         disableAndHideExtraField($(this), index);
+        disableAndHideDateTimeDropdown($(this), index);
+        disableAndHideExtraDateTimeDropdown($(this),index);
         populateModifierSelect(this, true);
     });
     
@@ -248,11 +321,29 @@ function setSmartBlockEvents() {
     form.find('select[id^="sp_criteria_modifier"]').live("change", function(){
         var criteria_value = $(this).next(),
             index_num = getRowIndex($(this).parent());
-        
-        if ($(this).val() == 'is in the range') {
+
+        if ($(this).val().match('before|after')) {
+            enableAndShowDateTimeDropdown(criteria_value, index_num);
+            console.log($(this).val());
+        }
+        else {
+            disableAndHideDateTimeDropdown(criteria_value, index_num);
+            disableAndHideExtraDateTimeDropdown(criteria_value,index_num);
+
+        }
+
+        if ($(this).val().match('is in the range')) {
             enableAndShowExtraField(criteria_value, index_num);
         } else {
             disableAndHideExtraField(criteria_value, index_num);
+        }
+        if ($(this).val().match('between')) {
+            enableAndShowExtraField(criteria_value, index_num);
+            enableAndShowDateTimeDropdown(criteria_value,index_num);
+            enableAndShowExtraDateTimeDropdown(criteria_value,index_num);
+        }
+        else {
+            disableAndHideExtraDateTimeDropdown(criteria_value,index_num);
         }
     });
 
@@ -367,8 +458,8 @@ function setupUI() {
      */
     var sortable = activeTab.find('.spl_sortable'),
         plContents = sortable.children(),
-        shuffleButton = activeTab.find('button[name="shuffle_button"], #pl-bl-clear-content'),
-        generateButton = activeTab.find('button[name="generate_button"], #pl-bl-clear-content'),
+        shuffleButton = activeTab.find('button[name="shuffle_button"]'),
+        generateButton = activeTab.find('button[name="generate_button"]'),
         fadesButton = activeTab.find('#spl_crossfade, #pl-bl-clear-content');
 
     if (!plContents.hasClass('spl_empty')) {
@@ -385,11 +476,12 @@ function setupUI() {
         if (playlist_type == "0") {
             shuffleButton.removeAttr("disabled");
             generateButton.removeAttr("disabled");
+            generateButton.html($.i18n._("Generate"));
             fadesButton.removeAttr("disabled");
             //sortable.children().show();
         } else {
             shuffleButton.attr("disabled", "disabled");
-            generateButton.attr("disabled", "disabled");
+            generateButton.html($.i18n._("Preview"));
             fadesButton.attr("disabled", "disabled");
             //sortable.children().hide();
         }
@@ -439,8 +531,68 @@ function setupUI() {
     });
 }
 
+/* Utilizing jQuery this function finds the #datetime_select element on the given row
+ * and shows the criteria drop-down
+ */
+function enableAndShowDateTimeDropdown(valEle, index) {
+    console.log('datetime show');
+    var spanDatetime = valEle.nextAll("#datetime_select");
+    spanDatetime.children('#sp_criteria_datetime_select_'+index).removeAttr("disabled");
+    spanDatetime.children('#sp_criteria_extra_datetime_select_'+index).removeAttr("disabled");
+    spanDatetime.show();
+
+    //make value input smaller since we have extra element now
+    var criteria_val = $('#sp_criteria_value_'+index);
+    sizeTextBoxes(criteria_val, 'sp_input_text', 'sp_extra_input_text');
+}
+
+
+/* Utilizing jQuery this function finds the #datetime_select element on the given row
+ * and hides the datetime criteria drop-down
+ */
+
+function disableAndHideDateTimeDropdown(valEle, index) {
+    console.log('datetime hide');
+    var spanDatetime = valEle.nextAll("#datetime_select");
+    spanDatetime.children('#sp_criteria_datetime_select_'+index).val("").attr("disabled", "disabled");
+    spanDatetime.hide();
+
+    //make value input larger since we don't have extra field now
+    var criteria_value = $('#sp_criteria_value_'+index);
+    sizeTextBoxes(criteria_value, 'sp_extra_input_text', 'sp_input_text');
+}
+
+/* Utilizing jQuery this function finds the #datetime_select element on the given row
+ * and shows the criteria drop-down
+ */
+function enableAndShowExtraDateTimeDropdown(valEle, index) {
+    console.log('datetime show');
+    var spanDatetime = valEle.nextAll("#extra_datetime_select");
+    spanDatetime.children('#sp_criteria_extra_datetime_select_'+index).removeAttr("disabled");
+    spanDatetime.show();
+
+    //make value input smaller since we have extra element now
+    var criteria_val = $('#sp_criteria_value_'+index);
+    sizeTextBoxes(criteria_val, 'sp_input_text', 'sp_extra_input_text');
+}
+/* Utilizing jQuery this function finds the #datetime_select element on the given row
+ * and hides the datetime criteria drop-down
+ */
+
+function disableAndHideExtraDateTimeDropdown(valEle, index) {
+    console.log('datetime hide');
+    var spanDatetime = valEle.nextAll("#extra_datetime_select");
+    spanDatetime.children('#sp_criteria_extra_datetime_select_'+index).val("").attr("disabled", "disabled");
+    spanDatetime.hide();
+
+    //make value input larger since we don't have extra field now
+    var criteria_value = $('#sp_criteria_value_'+index);
+    sizeTextBoxes(criteria_value, 'sp_extra_input_text', 'sp_input_text');
+}
+
 function enableAndShowExtraField(valEle, index) {
     var spanExtra = valEle.nextAll("#extra_criteria");
+    console.log('shown');
     spanExtra.children('#sp_criteria_extra_'+index).removeAttr("disabled");
     spanExtra.show();
 
@@ -453,6 +605,7 @@ function disableAndHideExtraField(valEle, index) {
     var spanExtra = valEle.nextAll("#extra_criteria");
     spanExtra.children('#sp_criteria_extra_'+index).val("").attr("disabled", "disabled");
     spanExtra.hide();
+    console.log('hidden');
     
     //make value input larger since we don't have extra field now
     var criteria_value = $('#sp_criteria_value_'+index);
@@ -484,7 +637,15 @@ function populateModifierSelect(e, popAllMods) {
                    .attr('value', key)
                    .text(value));
             });
-        } else {
+        }
+        else if(criteria_type == 'd') {
+            $.each(dateTimeCriteriaOptions, function(key, value){
+                $(div).append($('<option></option>')
+                    .attr('value', key)
+                    .text(value));
+            });
+        }
+        else {
             $.each(numericCriteriaOptions, function(key, value){
                 $(div).append($('<option></option>')
                    .attr('value', key)
@@ -610,9 +771,9 @@ var criteriaTypes = {
     "description"  : "s",
     "artist_name"  : "s",
     "encoded_by"   : "s",
-    "utime"        : "n",
-    "mtime"        : "n",
-    "lptime"       : "n",
+    "utime"        : "d",
+    "mtime"        : "d",
+    "lptime"       : "d",
     "genre"        : "s",
     "isrc_number"  : "s",
     "label"        : "s",
@@ -641,6 +802,18 @@ var stringCriteriaOptions = {
     
 var numericCriteriaOptions = {
     "0" : $.i18n._("Select modifier"),
+    "is" : $.i18n._("is"),
+    "is not" : $.i18n._("is not"),
+    "is greater than" : $.i18n._("is greater than"),
+    "is less than" : $.i18n._("is less than"),
+    "is in the range" : $.i18n._("is in the range")
+};
+
+var dateTimeCriteriaOptions = {
+    "0" : $.i18n._("Select modifier"),
+    "before" : $.i18n._("before"),
+    "after" : $.i18n._("after"),
+    "between" : $.i18n._("between"),
     "is" : $.i18n._("is"),
     "is not" : $.i18n._("is not"),
     "is greater than" : $.i18n._("is greater than"),
