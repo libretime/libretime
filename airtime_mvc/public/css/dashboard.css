@@ -289,12 +289,17 @@ thead th.ui-state-default:focus {
     top: 33px;
 }
 
+#library_content > .panel-header-calendar {
+    top: 33px;
+}
+
+
 .panel-header {
     position: absolute;
     top: 4px;
     right: 4px;
     left: 4px;
-    z-index: auto; /* Allows advanced mode expander to be visible in calendar schedule mode */
+    z-index: 1;
 
     -webkit-flex: 1 100%;
     -moz-flex: 1 100%;
@@ -302,6 +307,22 @@ thead th.ui-state-default:focus {
     -o-flex: 1 100%;
     flex: 1 100%;
 }
+
+.panel-header-calendar {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    left: 4px;
+    z-index: auto;
+
+    -webkit-flex: 1 100%;
+    -moz-flex: 1 100%;
+    -ms-flex: 1 100%;
+    -o-flex: 1 100%;
+    flex: 1 100%;
+}
+
+
 
 /* Timeline */
 
