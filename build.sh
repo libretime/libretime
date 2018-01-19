@@ -17,11 +17,12 @@ if [ "${git_build}" = "y" ]; then
     echo ${git_version} > VERSION
 else
     # if no file was in tarball we create one letting the user know
-    # travis should release tarballs with a pre-written VERSION file
-    # at some stage
+    # if you run in to this you should grab an enriched tarball built
+    # by travis. It already contains the VERSION file and also bundles
+    # all the PHP you vendors files making the install much faster on
+    # your part.
     if [ ! -f VERSION ]; then
-        folder_name=$(basename `pwd`)
-        echo "tarball install from folder ${folder_name}" > VERSION
+        echo "could not detect version for VERSION file" > VERSION
     fi
 fi
 
