@@ -2,6 +2,7 @@
 
 use Composer\Semver\Comparator;
 use Composer\Semver\Semver;
+use Composer\Semver\VersionParser;
 
 /**
  * This file does the following things:
@@ -13,9 +14,25 @@ use Composer\Semver\Semver;
  * 4. Returns the current version, as HTML (stored in pair of invisible div tags)
  */
 class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract {
-    
-    public function versionNotify()
-    {
+
+    /**
+     * @var VersionParser
+     */
+    private $versionParser;
+
+    public function __construct() {
+        $this->versionParser = new VersionParser();
+    }
+
+    /**
+     * Prepare data for update notifier widget
+     *
+     * Grabs the version from the VERSION file created by build.sh and compares
+     * it against the versions available from github using the semver code from
+     * the composer project.
+     */
+    public function versionNotify() {
+
         $config = Config::getConfig();
 
         // retrieve and validate current and latest versions,
@@ -24,15 +41,9 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract {
         $link = Application_Model_Preference::GetLatestLink();
 
         $isGitRelease = preg_match('/^[[:alnum:]]{7,}$/i', $current) === 1;
-        $currentParts = array();
-        if (!$isGitRelease) {
-            $currentParts = preg_split("/(\.|-)/", $current);
-        }
-        if (count($currentParts) < 3) {
-            $currentParts = array(0, 0, 0, 0);
-        }
-
+        $currentParts = $this->normalizeVersion($current, $isGitRelease);
         $isPreRelease = $isGitRelease || array_key_exists(4, $currentParts);
+
         // we are always interested in a major when we pre-release, hence the isPreRelease part
         $majorCandidates = SemVer::satisfiedBy($latest, sprintf('>=%1$s-stable', $currentParts[0] + ($isPreRelease ? 0 : 1)));
         $minorCandidates = SemVer::satisfiedBy($latest, sprintf('~%1$s.%2$s', $currentParts[0], $currentParts[1] + 1));
@@ -77,5 +88,24 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract {
         $result = sprintf('<script>var versionNotifyInfo = %s;</script>', json_encode($data))
                 . "<div id='version-icon' class='" . $class . "'></div>";
         return $result;
+    }
+
+    private function normalizeVersion($version, $isGit) {
+        try {
+            $this->versionParser->normalize($version);
+        } catch(UnexpectedValueException $e) {
+            // recover by assuming an unknown version
+            $version= '0.0.0';
+        }
+
+        $parts = array();
+        if (!$isGit) {
+            $parts = preg_split("/(\.|-)/", $version);
+        }
+        if (count($parts) < 3) {
+            $parts = array(0, 0, 0);
+        }
+
+        return $parts;
     }
 }
