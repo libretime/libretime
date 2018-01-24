@@ -54,7 +54,7 @@ class Application_Model_RabbitMq
     {
         $md["event_type"] = $event_type;
 
-        $exchange = 'airtime-media-monitor';
+        $exchange = 'airtime-analyzer';
         $data = json_encode($md);
         self::sendMessage($exchange, 'direct', true, $data);
     }

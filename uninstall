@@ -66,8 +66,6 @@ for i in ${FILES[*]}; do
     echo $i
 done
 echo "pip airtime-playout"
-# We're no longer using media-monitor
-# echo "pip airtime-media-monitor"
 
 echo -e "\nIf your web root is not listed, you will need to manually remove it."
 
@@ -105,6 +103,6 @@ if [[ "$IN" = "y" || "$IN" = "Y" ]]; then
     dropAirtimeDatabase
 fi
 
-pip uninstall -y airtime-playout airtime-media-monitor
+pip uninstall -y airtime-playout airtime-media-monitor airtime-analyzer
 service apache2 restart
 echo "...Done"
