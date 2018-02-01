@@ -1017,7 +1017,7 @@ loud "-----------------------------------------------------"
 RABBITMQ_VHOST=/airtime
 RABBITMQ_USER=airtime
 RABBITMQ_PASSWORD=airtime
-EXCHANGES="airtime-pypo|pypo-fetch|airtime-media-monitor|media-monitor"
+EXCHANGES="airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
 
 # Ignore errors in this check to avoid dying when vhost isn't found
 set +e

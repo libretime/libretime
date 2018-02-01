@@ -184,7 +184,7 @@ class Application_Model_Systemstatus
             $ip = $component->getDbIp();
 
             $docRoot = self::GetMonitStatus($ip);
-            $data = self::ExtractServiceInformation($docRoot, "airtime-media-monitor");
+            $data = self::ExtractServiceInformation($docRoot, "airtime-analyzer");
 
             return $data;
         }

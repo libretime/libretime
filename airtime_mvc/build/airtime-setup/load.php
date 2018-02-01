@@ -107,9 +107,9 @@ function checkRMQConnection() {
 }
 
 /**
- * Check if airtime-media-monitor is currently running
+ * Check if airtime-analyzer is currently running
  * 
- * @return boolean true if airtime-media-monitor is running
+ * @return boolean true if airtime-analyzer is running
  */
 function checkAnalyzerService() {
     exec("pgrep -f -u www-data airtime_analyzer", $out, $status);
