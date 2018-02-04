@@ -59,9 +59,10 @@ $result = $r1 && $r2;
             <h3 class="error">Looks like something went wrong!</h3>
             <p>
                 Take a look at the checklist below for possible solutions. If you're tried the suggestions and are
-                still experiencing issues, come
-                <a href="https://forum.sourcefabric.org/">visit our forums</a>
-                or <a href="http://www.sourcefabric.org/en/airtime/manuals/">check out the manual</a>.
+                still experiencing issues, read the
+                <a href="https://github.com/LibreTime/libretime/releases">release notes</a>,
+                come <a href="https://discourse.libretime.org/">visit our discourse</a>
+                or, check <a href="http://www.libretime.org/">the website and main docs</a>.
             </p>
         <?php
         } else {

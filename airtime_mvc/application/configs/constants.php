@@ -10,11 +10,11 @@ define('COMPANY_NAME'       , 'LibreTime Community');
 define('COMPANY_SUFFIX'     , '');
 define('COMPANY_SITE'       , 'libretime.org');
 define('COMPANY_SITE_URL'   , 'http://libretime.org');
-define('SUPPORT_ADDRESS'    , 'https://github.com/LibreTime/libretime/issues');
+define('SUPPORT_ADDRESS'    , 'https://discourse.libretime.org/');
 
-define("AIRTIMEPRO_API_URL", "https://account.sourcefabric.com:5001/api/");
+define("AIRTIMEPRO_API_URL", "https://account.example.com:5001/api/");
 
-define('HELP_URL'                   , 'http://help.sourcefabric.org/');
+define('HELP_URL'                   , 'https://discourse.libretime.org/');
 define('FAQ_URL'                    , 'http://libretime.org/faq/');
 define('WHOS_USING_URL'             , 'https://github.com/orgs/LibreTime/people');
 define('TERMS_AND_CONDITIONS_URL'   , 'https://github.com/LibreTime/libretime/blob/master/README.md');
