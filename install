@@ -57,8 +57,12 @@ showhelp () {
 }
 
 showversion () {
-    version=$(php -r 'require_once(__DIR__ . "/airtime_mvc/application/configs/constants.php"); echo AIRTIME_CODE_VERSION;')
-    echo "Airtime Version ${version}"
+    if [ ! -f "$SCRIPT_DIR/VERSION" ]; then
+        echo "Please initialize LibreTime by running ./build.sh"
+        exit 1
+    fi
+    version=$(cat "$SCRIPT_DIR/VERSION")
+    echo "LibreTime Version ${version}"
     exit 0
 }
 
