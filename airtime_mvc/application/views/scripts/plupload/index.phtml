@@ -3,6 +3,9 @@
     font-size: 200px !important;
 }
 </style>
+<script type="text/javascript">
+    var LIBRETIME_PLUPLOAD_MAX_FILE_SIZE = "<?php echo $this->uploadMaxSize; ?>";
+</script>
 <?php $upgradeLink = Application_Common_OsPath::getBaseDir() . "billing/upgrade"; ?>
 <?php if ($this->quotaLimitReached) { ?>
     <div class="errors quota-reached">
