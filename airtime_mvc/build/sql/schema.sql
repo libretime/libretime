@@ -516,7 +516,7 @@ DROP TABLE IF EXISTS "cc_service_register" CASCADE;
 CREATE TABLE "cc_service_register"
 (
     "name" VARCHAR(32) NOT NULL,
-    "ip" VARCHAR(18) NOT NULL,
+    "ip" VARCHAR(45) NOT NULL,
     PRIMARY KEY ("name")
 );
 
