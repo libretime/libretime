@@ -39,7 +39,7 @@ class CcServiceRegisterTableMap extends TableMap
         $this->setUseIdGenerator(false);
         // columns
         $this->addPrimaryKey('name', 'DbName', 'VARCHAR', true, 32, null);
-        $this->addColumn('ip', 'DbIp', 'VARCHAR', true, 18, null);
+        $this->addColumn('ip', 'DbIp', 'VARCHAR', true, 45, null);
         // validators
     } // initialize()
 
