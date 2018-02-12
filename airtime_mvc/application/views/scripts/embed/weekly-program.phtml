@@ -2,11 +2,61 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
+	<!-- 
+    NOTE! The 'scroll to current show' works in a height-confined iFrame widget.
+    The green index page shows every item in an expandable frame and
+    so jquery considers that every item is in view and a scroll is not required.
+    The index page could be tweaked if that is considred a problem.
+    
+    Added missing charset (was causing errors in console)
+    Added. Refresh our iframe every 15 minutes to resync the schedule
+    Cannot see how to do it by ajax in the current configuration.
+    -->  
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="900">
     <script src="<?php echo $this->angular ?>" type="text/javascript"></script>
     <link rel="stylesheet" href="<?php echo $this->css?>" type="text/css">
     <script src="<?php echo $this->jquery ?>" type="text/javascript"></script>
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
     <script type="text/javascript">
+
+		// Should hyperlinks be used?
+		function displaylink(url) {
+			var di = "display:inline;";
+			var dn = "display:none;";
+			if (url == ""){
+				 var disp = [dn,di];
+			} else {
+				var disp = [di,dn];
+			}	
+			return disp;
+		}
+		
+		// Get the abreviated timezone from client e.g. EST, GMT etc		
+		function getTimeZone() {
+			return (new Date).toTimeString().split("(")[1].toString().replace(")", "")
+		}
+
+		// Determine if the given program entry is actually currently playing..
+		function iscurrent(mystart_date, myend_date ) {
+			var fcurrent ="99";
+			var mydate = new Date().getTime();
+			if ((mydate >= mystart_date) && (mydate <= myend_date)) {
+				fcurrent = "currentshow";
+			} else {
+				fcurrent = "notcurrent";
+			}	
+			return fcurrent;	
+		}
+		
+		// Scroll to the currently playing show when the whole page and dom has loaded
+		$(window).load(function() {
+			var etop = $('#currentshow').offset().top;
+			$('html,body').animate({
+				scrollTop: etop
+			}, 900, 'swing');
+		});
+
         $(document).ready(function() {
 
             //initialize first day to active
@@ -24,14 +74,16 @@
                 $("#"+tab_id).addClass('active');
             });
         });
+		
 
         String.prototype.paddingLeft = function(paddingValue) {
             return String(paddingValue + this).slice(-paddingValue.length);
         };
 
         var schedule_data = <?php echo $this->schedule_data; ?>;
-
+		
         var app = angular.module('scheduleWidget', []);
+        
         app.controller('scheduleController', ['$scope', '$window', function($scope, $window) {
 
             // Loop through every show and assign it to the corresponding day of the week's
@@ -52,12 +104,21 @@
                 // the months are indexed starting at 1.
                 var format_start_date = start_date.getFullYear() + "-" + (start_date.getMonth()+1) + "-" + start_date.getDate();
 
+				// Added to the substitution list, the following fields: show description", show image_path (Show Logo), show link url, client abreviated timezone tz
+				// and mycurrent which makes the currently playing id into 'current' i.e. the autoscroll target.
                 if ($window.schedule_data["weekDays"][format_start_date] !== undefined) {
                     $window.schedule_data["weekDays"][format_start_date]["shows"].push(
                         {
                             "show_start_hour": start_date.toLocaleTimeString([], { hour: 'numeric', minute : 'numeric' }),
                             "show_end_hour": end_date.toLocaleTimeString([], { hour: 'numeric', minute : 'numeric' }),
-                            "name": value.name
+                            "name": value.name,
+                            "description": value.description,
+                            "image_path": value.image_path,
+                            "url": value.url, 
+                            "tz": getTimeZone(),
+                            "mycurrent": iscurrent(start_date,end_date),
+                            "hyperlink_css": displaylink(value.url)[0],
+                            "no_hyperlink_css": displaylink(value.url)[1]         
                         });
                 }
             });
@@ -72,33 +133,62 @@
             };
         }]);
     </script>
+    
+	<!-- This could be moved into the widget(s) css (I didnt want to screw up the upstram so it is safely here for now). -->
+    <style>
+		.desc_grid{padding-top:4px;font-size:12px;font-weight: 600;color:#ddd;text-transform:none;}
+		.time_grid {font-weight:700!important;width:auto!important;color:#ddd!important;}	
+		.image_grid, .image_grid_play{float:right; padding-left:8px; padding-right:0;}
+		.schedule_item .row {min-height:80px;border-bottom:1px solid #777;}
+		.name_grid a {text-decoration:none; border-bottom:solid 1px #fff; color:#fff!important; text-transform:uppercase;}
+		.tab_content {max-width:850px;}
+		.schedule.current .schedule_content {max-height:100%;height:100%;}
+		 #currentshow {background-color:rgba(255,255,255,0.6);padding-left:12px;padding-right:12px;}
+		.nowplaying {display:none;}
+		#currentshow .name_grid a {display:inline; color:#000!important;border-bottom:solid 1px #000;}
+		#currentshow .nowplaying, #currentshow .time_grid, #currentshow .desc_grid {color: #333!important;}
+		#currentshow .image_grid, .image_grid_play{float:left;padding-left:0; padding-right:8px;}
+		#top {position:fixed;top:0;left:0;z-index:999;width:100%;}
+		#subtop{top:80px;}
+		.widgetimage {width:80px;}
+		.schedule_item {padding:10px 10px;}
+		
+		
+    </style>
 </head>
+<!-- Added ng-cloak to body to stop screenflash on load. -->
+<body ng-cloak ng-app="scheduleWidget" ng-controller="scheduleController">
+<div class="schedule tab_content current" id="top">
+	<ul class="tabs">
+		<li ng-repeat="x in weekDays track by $index">
+			{{x.dayOfWeek}}<span>{{x.dayOfMonth}}</span>
+		</li>
+	</ul>
+	</div>	
+<div class="schedule tab_content current" id="subtop">
 
-<body ng-app="scheduleWidget" ng-controller="scheduleController">
-<div class="schedule tab_content current">
-    <ul class="tabs">
-        <li ng-repeat="x in weekDays track by $index">
-            {{x.dayOfWeek}}<span>{{x.dayOfMonth}}</span>
-        </li>
-    </ul>
-
-    <div class="schedule_content">
-        <div ng-repeat="x in weekDays track by $index" ng-attr-id="{{'day-' + x.dayOfMonth}}" class="schedule_item">
-            <div ng-if="isEmpty(x.shows)" class="row empty-schedule"><?php echo _('Looks like there are no shows scheduled on this day.') ?></div>
-            <div ng-repeat="show in x.shows" class="row">
-                <div class="time_grid">{{show.show_start_hour}} - {{show.show_end_hour}}</div>
-                <div class="name_grid">{{show.name}}</div>
+	<!-- Changed and added to the layout to accomodate the added fields
+	and the new 'now playing' highted feature. -->
+	<div class="schedule_content">
+		<div ng-repeat="x in weekDays track by $index" ng-attr-id="{{'day-' + x.dayOfMonth}}" class="schedule_item">
+			<div ng-if="isEmpty(x.shows)" class="row empty-schedule"><?php echo _('Looks like there are no shows scheduled on this day.') ?></div>
+			<div ng-repeat="show in x.shows" class="row" id="{{show.mycurrent}}">
+				<div class="image_grid" style="{{show.hyperlink_css}}"><a href="{{show.url}}" target="_blank"><img class="widgetimage" src="{{show.image_path}}" /></a></div>
+				<div class="image_grid" style="{{show.no_hyperlink_css}}"><img class="widgetimage" src="{{show.image_path}}" /></div>
+				<div class="time_grid">{{show.show_start_hour}} - {{show.show_end_hour}} {{show.tz}}<span class="nowplaying"> - Now Playing..</span><br />
+					<span class="name_grid" style="{{show.hyperlink_css}}"><a href="{{show.url}}" target="_blank">{{show.name}}</a></span>
+					<span class="name_grid" style="{{show.no_hyperlink_css}}">{{show.name}}</span>
+				</div>
+				<div class="desc_grid">{{show.description}}</div>
             </div>
-        </div>
-    </div>
-
+		</div>
+	</div>
     <div class="weekly-schedule-widget-footer" <?php if ($this->widgetStyle == "premium") echo "style='display:none'"; ?>>
         <a href="<?php echo PRODUCT_SITE_URL; ?>" target="_blank"><?php printf(_('Powered by %s'), PRODUCT_NAME); ?></a>
     </div>
+
 </div>
 
 </body>
 
 </html>
-
-
