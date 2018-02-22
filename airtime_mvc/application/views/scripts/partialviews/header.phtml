@@ -1,5 +1,7 @@
 <div id="master-panel">
-  <img class="logo" src="data:image/png;base64,<?php echo Application_Model_Preference::GetStationLogo(); ?>" />
+  <div class="logo-container">
+    <img class="logo" src="data:image/png;base64,<?php echo Application_Model_Preference::GetStationLogo(); ?>" />
+  </div>
   <div class="now-playing-block">
     <div class="text-row"><strong><?php echo _("Previous:"); ?></strong> <span id='previous'></span> <span id='prev-length'></span></div>
     <div class="now-playing-info song">
