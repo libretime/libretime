@@ -88,14 +88,19 @@ select {
     background-color: #242424;
 }
 
-/* Fix for Firefox */
-.logo {
-    position: absolute;
-    float: left;
-    left: 26px;
-    top: 30px;
-    width: 100px;
-    height: 42px;
+div.logo-container 
+{ 
+    position: absolute; 
+    margin-top: -5px; 
+    width: 152px; 
+    height: 100px; 
+    text-align: center; 
+} 
+img.logo 
+{ 
+    max-width: 100%; 
+    max-height: 90%; 
+    padding: 10px; 
 }
 
 /* Version Notification Starts*/
