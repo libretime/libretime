@@ -88,19 +88,19 @@ select {
     background-color: #242424;
 }
 
-div.logo-container 
-{ 
-    position: absolute; 
-    margin-top: -5px; 
-    width: 152px; 
-    height: 100px; 
-    text-align: center; 
-} 
-img.logo 
-{ 
-    max-width: 100%; 
-    max-height: 90%; 
-    padding: 10px; 
+div.logo-container
+{
+  position: absolute;
+  width: 150px;
+  height: 100px;
+  text-align: center;
+}
+img.logo
+{
+  max-width: 100%;
+  max-height: 100%;
+  padding: 1em;
+  box-sizing: border-box;
 }
 
 /* Version Notification Starts*/
