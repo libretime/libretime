@@ -392,10 +392,18 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         $episodesArray = array();
         foreach ($rss->get_items() as $item) {
             /** @var SimplePie_Item $item */
-            // If the enclosure is empty or has not URL, this isn't a podcast episode (there's no audio data)
-            $enclosure = $item->get_enclosure();
-            $url = $enclosure instanceof SimplePie_Enclosure ? $enclosure->get_link() : $enclosure["link"];
-            if (empty($url)) { continue; }
+            // If the enclosure is empty or has not URL, this isn't a podcast episode (there's no audio data)     
+            // Added Checks for audio-only enclosures. JBC    
+            foreach ($item->get_enclosures() as $enclosure) {
+				$audio_podcast_found = false;
+				if (substr( $enclosure->get_type(), 0, 5 ) === 'audio') {
+					$url = $enclosure instanceof SimplePie_Enclosure ? $enclosure->get_link() : $enclosure["link"];
+					$audio_podcast_found = true;
+					break;
+				}		
+			}
+
+            if ($audio_podcast_found == false) { continue; }
             $itemId = $item->get_id();
             $ingested = in_array($itemId, $episodeIds) ? (empty($episodeFiles[$itemId]) ? -1 : 1) : 0;
             $file = $ingested > 0 && !empty($episodeFiles[$itemId]) ?
@@ -416,7 +424,8 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
                 "description" => htmlspecialchars($item->get_description()),
                 "pub_date" => $item->get_gmdate(),
                 "link" => $item->get_link(),
-                "enclosure" => $item->get_enclosure(),
+                // $enclosure now holds only an audio enclosure. JBC
+                "enclosure" => $enclosure,
                 "file" => $file
             ));
         }
