@@ -599,12 +599,14 @@ case "${dist}-${code}" in
         is_debian_dist=true
         is_debian_stretch=true
         ;;
+    #Fix for Raspbian 9 (stretch)
     raspbian-9|9)
 	code="stretch"
 	dist="debian"
 	is_debian_dist=true
 	is_debian_stretch=true
 	;;
+    #End of fix
     debian-8|debian-jessie)
         code="jessie"
         is_debian_dist=true
