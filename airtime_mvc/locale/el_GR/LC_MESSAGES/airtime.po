@@ -2424,7 +2424,7 @@ msgstr "Μπορείτε να προσθέσετε κομμάτια μόνο σ�
 
 #: airtime_mvc/application/controllers/PlaylistController.php:192
 msgid "Untitled Playlist"
-msgstr "Λίστα Αναπαραγωγλης χωρίς Τίτλο"
+msgstr "Λίστα Αναπαραγωγής χωρίς Τίτλο"
 
 #: airtime_mvc/application/controllers/PlaylistController.php:194
 msgid "Untitled Smart Block"
