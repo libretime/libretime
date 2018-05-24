@@ -693,8 +693,7 @@ fi
 loudCmd "./build.sh"
 if [ -f /etc/airtime/airtime.conf ]; then
     # TODO use VERSION or some other way to check for updates and handle
-    # media-monitor case on it's own and remove the section from the config
-    # file completely (it's still in the install)
+    # media-monitor case on it's own
     OLD_CONF=$(grep "[media-monitor]" /etc/airtime/airtime.conf)
     
     if [ -n "${OLD_CONF}" ]; then
