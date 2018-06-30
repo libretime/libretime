@@ -923,7 +923,7 @@ msgid "Copy of %s"
 msgstr "%s의 사본"
 
 #: airtime_mvc/application/controllers/ListenerstatController.php:51
-msgid "Please make sure admin user/password is correct on System->Streams page."
+msgid "Please make sure admin user/password is correct on Settings->Streams page."
 msgstr "시스템->스트림 에서 관리자 아이디/암호를 다시 확인하세요."
 
 #: airtime_mvc/application/controllers/LocaleController.php:25

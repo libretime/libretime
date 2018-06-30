@@ -962,7 +962,7 @@ msgstr "%s másolata"
 
 #: airtime_mvc/application/controllers/ListenerstatController.php:51
 msgid ""
-"Please make sure admin user/password is correct on System->Streams page."
+"Please make sure admin user/password is correct on Settings->Streams page."
 msgstr ""
 "Kérjük győződjön meg róla, hogy megfelelő adminisztrátori felhasználónév és"
 " jelszó van megadva a Rendszer -> Adásfolyamok oldalon."

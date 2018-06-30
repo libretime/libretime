@@ -934,7 +934,7 @@ msgid "Copy of %s"
 msgstr "Copia de %s"
 
 #: airtime_mvc/application/controllers/ListenerstatController.php:51
-msgid "Please make sure admin user/password is correct on System->Streams page."
+msgid "Please make sure admin user/password is correct on Settings->Streams page."
 msgstr "Verifica que la contraseña del usuario admin. esté correcta en Sistema->página de streams."
 
 #: airtime_mvc/application/controllers/LocaleController.php:25
