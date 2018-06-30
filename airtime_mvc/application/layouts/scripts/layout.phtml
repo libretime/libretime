@@ -92,6 +92,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <div id="nav">
         <?php echo $this->navigation()->menu(); ?>
     </div>
+        
+    <div class="btn-group">
+        <a href="<?php echo $this->baseUrl . '/login/logout'; ?>">
+            <button id="add_media_btn" class="btn btn-small dashboard-btn btn-danger">
+                <span><?php echo _("Logout") ?></span>
+            </button>
+        </a>
+    </div>
 
     <script>
     <?php

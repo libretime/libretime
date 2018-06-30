@@ -88,21 +88,26 @@ select {
     background-color: #242424;
 }
 
-/* Fix for Firefox */
-.logo {
-    position: absolute;
-    float: left;
-    left: 26px;
-    top: 30px;
-    width: 100px;
-    height: 42px;
+div.logo-container
+{
+  position: absolute;
+  width: 150px;
+  height: 100px;
+  text-align: center;
+}
+img.logo
+{
+  max-width: 100%;
+  max-height: 100%;
+  padding: 1em;
+  box-sizing: border-box;
 }
 
 /* Version Notification Starts*/
 #version-icon {
     position:absolute;
     top:68px;
-    right: 196px;
+    right: 10px;
     height:35px;
     width:35px;
     z-index:1000;
@@ -391,16 +396,7 @@ select {
     padding:0 12px 0 0;
     background:url(images/masterpanel_spacer.png) no-repeat right 0;
 }
-.time-info-block  {
-    -webkit-flex: 0 150px;
-    -moz-flex: 0 150px;
-    -ms-flex: 0 150px;
-    -o-flex: 0 150px;
-    flex: 0 150px;
-    /*position: absolute;*/
-    /*top: 0;*/
-    /*right: 0;*/
-}
+
 ol.navigation {
     padding: 0;
     margin: 0;
