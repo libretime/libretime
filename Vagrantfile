@@ -46,12 +46,6 @@ Vagrant.configure("2") do |config|
     os.vm.box = "bento/ubuntu-14.04"
     provision_libretime(os, "ubuntu.sh", installer_args)
   end
-  config.vm.define "ubuntu" do |os|
-    STDERR.puts 'WARNING: The "ubuntu" option is deprecated. Please migrate to "ubuntu-trusty".'
-    STDERR.puts
-    os.vm.box = "ubuntu/trusty64"
-    provision_libretime(os, "ubuntu.sh", installer_args)
-  end
   config.vm.define "debian-jessie" do |os|
     os.vm.box = "bento/debian-8.7"
     provision_libretime(os, "debian.sh", installer_args)
@@ -61,13 +55,9 @@ Vagrant.configure("2") do |config|
     provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "debian-wheezy" do |os|
-    os.vm.box = "bento/debian-7.11"
-    provision_libretime(os, "debian.sh", installer_args)
-  end
-  config.vm.define "debian" do |os|
-    STDERR.puts 'WARNING: The "debian" option is deprecated. Please migrate to "debian-stretch".'
+    STDERR.puts 'WARNING: The "debian-wheezy" option is deprecated. Please migrate to "debian-stretch".'
     STDERR.puts
-    os.vm.box = "debian/jessie64"
+    os.vm.box = "bento/debian-7.11"
     provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "centos" do |os|
