@@ -46,10 +46,10 @@ On port 80, Apache's *alias* module is used to set a *Redirect permanent* for th
 
           ServerAdmin admin@example.com
 
-          DocumentRoot /usr/share/airtime/public
+          DocumentRoot /usr/share/airtime/php/airtime_mvc/public
           DirectoryIndex index.php
 
-          <Directory /usr/share/airtime/public>
+          <Directory /usr/share/airtime/php/airtime_mvc/public>
                   Options -Indexes FollowSymLinks MultiViews
                   AllowOverride all
                   Order allow,deny
@@ -62,12 +62,12 @@ On port 80, Apache's *alias* module is used to set a *Redirect permanent* for th
 
           ServerAdmin admin@example.com
 
-          DocumentRoot /usr/share/airtime/public
+          DocumentRoot /usr/share/airtime/php/airtime_mvc/public
           Redirect permanent /login https://airtime.example.com/login
 
           SetEnv APPLICATION_ENV "production"
 
-          <Directory /usr/share/airtime/public>
+          <Directory /usr/share/airtime/php/airtime_mvc/public>
                   Options -Indexes FollowSymLinks MultiViews
                   AllowOverride All
                   Order allow,deny
