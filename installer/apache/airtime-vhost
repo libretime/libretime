@@ -15,7 +15,7 @@ WEB_PORT_LISTEN
   # ProxyPreserveHost On
   # ProxyRequests Off
 ## Icecast Streams
-  #  <Location /icecast/>
+  #  <Location /icecast>
   #      ProxyPass http://localhost:8000
   #      ProxyPassReverse http://localhost:8000
   #      SetOutputFilter proxy-html
