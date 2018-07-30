@@ -15,10 +15,13 @@ WEB_PORT_LISTEN
   # ProxyPreserveHost On
   # ProxyRequests Off
 ## Icecast Streams
-  # ProxyPass "/icecast/" http://localhost:8000/
-  # ProxyPassReverse "/icecast/" http://localhost:8000/
-  # ProxyPass "/admin" http://127.0.0.1:8000/admin
-  # ProxyPassReverse "/admin" http://127.0.0.1:8000/admin
+  #  <Location /icecast/>
+  #      ProxyPass http://localhost:8000
+  #      ProxyPassReverse http://localhost:8000
+  #      SetOutputFilter proxy-html
+  #      ProxyHTMLURLMap http://localhost:8000
+  #  </Location>
+  #  RewriteRule ^/icecast$ /icecast/ [R]
 ## Stream 1
   # ProxyPass "/radio.mp3"  "http://localhost:8000/_a"
   # ProxyPassReverse "/radio.mp3"  "http://localhost:8000/_a"
