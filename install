@@ -979,11 +979,11 @@ fi
 
 # Enable Apache modules
 if $is_ubuntu_xenial || $is_debian_stretch; then
-    loudCmd "a2enmod rewrite php7.0"
+    loudCmd "a2enmod rewrite php7.0 proxy proxy_http"
 elif $is_centos_dist; then
     verbose "TODO: enable Apache modules mod_rewrite and mod_php manually"
 else
-    loudCmd "a2enmod rewrite php5"
+    loudCmd "a2enmod rewrite php5 proxy proxy_http"
 fi
 
 loud "\n-----------------------------------------------------"
