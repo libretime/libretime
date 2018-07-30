@@ -9,6 +9,26 @@ WEB_PORT_LISTEN
    php_value request_order "GPC"
    php_value session.gc_probability 0
    php_value session.auto_start 0
+  
+## Proxy requires several modules enabled, please check:
+## http://libretime.org/manual/secure-login-with-ssl/ or
+## https://github.com/LibreTime/libretime/issues/376
+  # ProxyPreserveHost On
+  # ProxyRequests Off
+## Icecast Streams
+  # ProxyPass "/icecast" http://127.0.0.1:8000/
+  # ProxyPassReverse "/icecast" http://127.0.0.1:8000/
+  # ProxyPass "/admin" http://127.0.0.1:8000/admin
+  # ProxyPassReverse "/admin" http://127.0.0.1:8000/admin
+## Stream 1
+  # ProxyPass "/radio.mp3"  "http://localhost:8000/_a"
+  # ProxyPassReverse "/your_path_name"  "http://localhost:8000/_a"
+## Stream 2
+  # ProxyPass "/radio2.mp3"  "http://localhost:8000/_b"
+  # ProxyPassReverse "/your_path_name"  "http://localhost:8000/_b"
+## Stream 3
+  # ProxyPass "/radio3.mp3"  "http://localhost:8000/_c"
+  # ProxyPassReverse "/your_path_name"  "http://localhost:8000/_c"   
 
    AddOutputFilterByType DEFLATE text/plain
    AddOutputFilterByType DEFLATE text/html
