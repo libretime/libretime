@@ -97,8 +97,8 @@ def analyse_file (filename,database):
    analyse_ok=False
    logging.info ("analyse Filename: "+filename)
    #try to determin the filetype 
-   mime_check = magic.from_file(filename, mime=True)
-   database["mime"] = mime_check
+   mime_check = magic.detect_from_filename(filename)
+   database["mime"] = mime_check.mime_type
    # test
    #f = MP3(filename)
    #f= mutagen.FileType(filename)
