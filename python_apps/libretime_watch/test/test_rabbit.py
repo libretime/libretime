@@ -4,6 +4,8 @@ import pika, os, logging
 import json
 import psycopg2
 
+# initialize config
+logging.basicConfig()
 
 EXCHANGE="airtime-media-monitor"
 EXCHANGE_TYPE = "direct"
