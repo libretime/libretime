@@ -18,11 +18,6 @@ import types
 import readconfig as airtime
 import metadata as airtime_md
 
-#for libretime, there is no interactive way to define the watch dir
-#insert into cc_music_dirs (directory,type,exists,watched) values ('/srv/airtime/watch','watched','t','t');
-
-
-
 EXCHANGE="airtime-media-monitor"
 EXCHANGE_TYPE = "direct"
 ROUTING_KEY="filesystem"
