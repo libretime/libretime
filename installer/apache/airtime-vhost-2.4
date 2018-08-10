@@ -9,6 +9,28 @@ WEB_PORT_LISTEN
    php_value request_order "GPC"
    php_value session.gc_probability 0
    php_value session.auto_start 0
+   
+## Proxy requires several modules enabled, please check:
+## https://github.com/LibreTime/libretime/issues/376
+  # ProxyPreserveHost On
+  # ProxyRequests Off
+## Icecast Streams
+  #  <Location /icecast>
+  #      ProxyPass http://localhost:8000
+  #      ProxyPassReverse http://localhost:8000
+  #      SetOutputFilter proxy-html
+  #      ProxyHTMLURLMap http://localhost:8000
+  #  </Location>
+  #  RewriteRule ^/icecast$ /icecast/ [R]
+## Stream 1
+  # ProxyPass "/radio.mp3"  "http://localhost:8000/_a"
+  # ProxyPassReverse "/radio.mp3"  "http://localhost:8000/_a"
+## Stream 2
+  # ProxyPass "/radio2.mp3"  "http://localhost:8000/_b"
+  # ProxyPassReverse "/radio2.mp3"  "http://localhost:8000/_b"
+## Stream 3
+  # ProxyPass "/radio3.mp3"  "http://localhost:8000/_c"
+  # ProxyPassReverse "/radio3.mp3"  "http://localhost:8000/_c"   
 
    AddOutputFilterByType DEFLATE text/plain
    AddOutputFilterByType DEFLATE text/html
