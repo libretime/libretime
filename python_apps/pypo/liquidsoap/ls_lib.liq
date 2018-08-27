@@ -1,3 +1,6 @@
+# coding: utf-8
+%include "utils.liq"
+
 def notify(m)
   command = "timeout --signal=KILL 45 pyponotify --media-id=#{m['schedule_table_id']} &"
   log(command)
@@ -416,4 +419,18 @@ def http_fallback(~http_input_id,~http,~default)
       {connected() and source.is_ready(http) and !webstream_enabled}, http),
      ({true},default)])
 
+end
+
+
+def munge_live_hdr(m)
+  log("got headers #{m}")
+  # not setting title here because it might get set by something else
+  lm =  [("artist_clean", orn(m['ice-name'], m['icy-name'])),
+         ("artist", orn(m['ice-name'], m['icy-name'])),
+         ("mapped", "true"), # make airtime stop attempting to mangle it
+         ("url", orn(m['ice-url'], m['icy-url'])),
+         ("live", "true"),
+         ("description",  orn(m['ice-description'], m['icy-description']))]
+  log("set live_meta to #{lm}")
+  lm
 end

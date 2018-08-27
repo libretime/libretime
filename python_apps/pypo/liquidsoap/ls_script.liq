@@ -1,4 +1,5 @@
 %include "/etc/airtime/liquidsoap.cfg"
+%include "utils.liq"
 
 set("log.file.path", log_file)
 set("server.telnet", true)
@@ -176,13 +177,36 @@ server.register(namespace="dynamic_source",
 #                "read_stop_all",
 #                fun (s) -> begin log("dynamic_source.read_stop") destroy_dynamic_source_all() end)
 
-default = amplify(id="silence_src", 0.00001, noise())
-ref_off_air_meta = ref off_air_meta
-if !ref_off_air_meta == "" then
-    ref_off_air_meta := "LibreTime - offline"
-end
-default = rewrite_metadata([("title", !ref_off_air_meta)], default)
-ignore(output.dummy(default, fallible=true))
+
+
+
+
+
+silence = amplify(id="silence_src", 0.00001, noise())
+ignore(output.dummy(silence, fallible=true))
+
+log(off_air_meta)
+
+# check both drop and imported locations,
+# just in case something screws up via airtime
+jukebox = audio_to_stereo(id="stereoize",
+                          skip_blank(id="stor-skipblank",
+                                     playlist(id="archives",
+                                              reload=86400,
+                                              "/usr/share/airtime/public/archives")))
+
+
+
+
+
+# this is the master control for the stream right here.
+# the sources are listed in priority order
+default = fallback(id="default-switcher",
+                   track_sensitive=false,
+                   [jukebox,
+                    silence])
+
+
 
 master_dj_enabled = ref false
 live_dj_enabled = ref false
@@ -227,12 +251,17 @@ def live_dj_disconnect() =
     update_source_status("live_dj", false)
 end
 
+
+live_meta = ref []
+
 def master_dj_connect(header) =
     update_source_status("master_dj", true)
+    live_meta := munge_live_hdr(header)
 end
 
 def master_dj_disconnect() =
     update_source_status("master_dj", false)
+    live_meta := []
 end
 
 #auth function for live stream
@@ -259,7 +288,6 @@ end
 
 s = switch(id="schedule_noise_switch",
             track_sensitive=false,
-            transitions=[transition_default, transition],
             [({!scheduled_play_enabled}, stream_queue), ({true}, default)]
     )
 
@@ -278,7 +306,6 @@ s = if dj_live_stream_port != 0 and dj_live_stream_mp != "" then
 
     switch(id="show_schedule_noise_switch",
             track_sensitive=false,
-            transitions=[transition, transition],
             [({!live_dj_enabled}, dj_live), ({true}, s)]
         )
 else
@@ -286,22 +313,72 @@ else
 end
 
 s = if master_live_stream_port != 0 and master_live_stream_mp != "" then
-    master_dj =
+    master_raw =
         audio_to_stereo(
             input.harbor(id="master_harbor",
                 master_live_stream_mp,
                 port=master_live_stream_port,
                 auth=check_master_dj_client,
+                logfile="/tmp/master-buffer.log",
                 max=40.,
                 on_connect=master_dj_connect,
                 on_disconnect=master_dj_disconnect))
 
-    ignore(output.dummy(master_dj, fallible=true))
+      # we don't want dj's leaving their system on and forgetting...
+      master_dj = strip_blank(id="master-stripblank",
+                              threshold=-30.0,
+                              max_blank=60.0,
+                              master_raw)
+
+
+    dummy_up(master_dj)
+
+    pair = insert_metadata(drop_metadata(master_dj))
+    master_metadata_f = fst(pair)
+    master_meta = snd(pair)
+
+
+    spair = insert_metadata(drop_metadata(master_dj))
+    save_metadata_f = fst(spair)
+    master_save = snd(spair)
+
+
+    def force_live_metadata(_)
+      ignore(master_metadata_f(!live_meta))
+    end
+
+
+    log_metadata("SAVE metadata before output", master_save)
+
+    master_save_buffer = buffer(id="master_save_buffer",
+                         fallible=true, 
+                         on_start=fun()->ignore(save_metadata_f(format_save(!live_meta))),
+                         on_stop=fun()->ignore(save_metadata_f([])),
+                         master_save)
+
+
+    output.file(%vorbis,
+                  fallible=true,
+                  append=false,
+                  reopen_on_metadata=true,
+                  reopen_delay=30.0,
+                  "/home/streams/%Y-%m-%d-%H_%M_%S-$(artist).ogg",
+                  master_save_buffer)
+
+
+    dummy_up(on_metadata(force_live_metadata, master_raw))
+    dummy_up(on_track(force_live_metadata, master_raw))
+
+    master_buffer = buffer(id="master_dj_buffer",
+                           fallible=true,
+                           on_start=fun()->ignore(master_metadata_f(!live_meta)),
+                           on_stop=fun()->ignore(save_metadata_f([])),
+                           master_meta)
+
 
     switch(id="master_show_schedule_noise_switch",
             track_sensitive=false,
-            transitions=[transition, transition],
-            [({!master_dj_enabled}, master_dj), ({true}, s)]
+            [({!master_dj_enabled}, master_buffer), ({true}, s)]
         )
 else
     s
@@ -341,6 +418,13 @@ server.register(namespace="streams",
     usage="scheduled_play_start",
     "scheduled_play_start",
     fun (s) -> begin log("streams.scheduled_play_start") make_scheduled_play_available() "Done." end)
+
+
+post_metadata(s)
+## important debug function
+log_metadata("FINAL metadata before output", s)
+
+
 
 if output_sound_device then
     success = ref false
