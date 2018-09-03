@@ -154,7 +154,7 @@ function checkLiquidsoapService() {
 function checkCeleryService() {
     exec("pgrep -f -u celery airtime-celery", $out, $status);
     if (array_key_exists(0, $out) && $status == 0) {
-        return posix_kill(rtrim($out[0]), 0);
+        return 1;
     }
     return $status == 0;
 }
