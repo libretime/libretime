@@ -7,6 +7,7 @@ import os
 script_path = os.path.dirname(os.path.realpath(__file__))
 print script_path
 os.chdir(script_path)
+#todo need to figure out why its only going into /usr/local/bin vs /usr/bin when installed
 
 # Allows us to avoid installing the upstart init script when deploying libretime_import
 if '--no-init-script' in sys.argv:
@@ -26,6 +27,7 @@ setup(name='libretime_import',
       license='MIT',
       packages=['libretime_import'],
       scripts=['bin/libretime_import'],
+      console_scripts=['bin/libretime_import'],
       install_requires=[
           'daemon',
           'file-magic',

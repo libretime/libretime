@@ -41,14 +41,12 @@ class FolderWatcher:
         # with pika's SIGTERM handler interfering with it, I think...)
         # signal.signal(signal.SIGTERM, self.graceful_shutdown)
         # TODO - create a scan_folder function that will find all files existing in the directory and upload them
-
-
         self.watch_folder()
     """
-    upload_file will take a file and send it to the local REST api
+    upload_file will take a file and send it to the local REST api and the remove it from the filesystem
     need to learn more python to figure out how to properly call it from inside of the EventHandler function
     """
-    def upload_file(self, url, filename):
+    def upload_and_remove_file(self, url, filename):
         files = {'file': open(filename, 'rb')}
         r = requests.post(url, auth=HTTPBasicAuth(str(api_key), ''), files=files)
         print r.text
@@ -79,8 +77,9 @@ class FolderWatcher:
                 if not suffix_filter(event):
                     super(EventHandler, self).__call__(event)
             def process_IN_CLOSE_WRITE(self, event):
-                logging.info("This file was written to the directory and will be uploaded: %s", event.pathname)
+                logging.info("This file was written to the import directory and will be uploaded: %s", event.pathname)
                 # TODO - figure out how to properly call above function upload_file(FolderWatcher, event.pathname,url)
+                #FolderWatcher().upload_and_remove_file(self, event.pathname, url)
                 files = {'file': open(event.pathname, 'rb')}
                 r = requests.post(url, auth=HTTPBasicAuth(str(api_key), ''), files=files)
                 print r.text

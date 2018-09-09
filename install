@@ -217,6 +217,11 @@ function systemInitInstall() {
                 target_path="/etc/init/${service_name}.conf"
                 user=${user:-$web_user}
                 ;;
+            libretime_import)
+                source_path="${python_source_path}/pypo/install/upstart/${service_name}.conf.template"
+                target_path="/etc/init/${service_name}.conf"
+                user=${user:-$web_user}
+                ;;
         esac
         if [[ ! -e $source_path ]]; then
             echo "$0:${FUNCNAME}(): ERROR: service \"$service_name\" with source path \"$source_path\" does not exist!" >&2
@@ -253,6 +258,11 @@ function systemInitInstall() {
                 user=""
                 ;;
             airtime-liquidsoap|airtime-playout)
+                source_path="${python_source_path}/pypo/install/sysvinit/${service_name}"
+                target_path="/etc/init.d/${service_name}"
+                user=${user:-$web_user}
+                ;;
+            libretime_import)
                 source_path="${python_source_path}/pypo/install/sysvinit/${service_name}"
                 target_path="/etc/init.d/${service_name}"
                 user=${user:-$web_user}
@@ -942,6 +952,11 @@ loudCmd "python ${AIRTIMEROOT}/python_apps/airtime_analyzer/setup.py install --i
 systemInitInstall airtime_analyzer $web_user
 verbose "...Done"
 
+verbose "\n * Installing libretime_import..."
+loudCmd "python ${AIRTIMEROOT}/python_apps/libretime_import/setup.py install --install-scripts=/usr/bin --no-init-script"
+systemInitInstall libretime_import $web_user
+verbose "...Done"
+
 verbose "\n * Setting permissions on /var/log/airtime..."
 # Make the airtime log directory group-writable
 loudCmd "chmod -R 775 /var/log/airtime"
@@ -1066,7 +1081,7 @@ if [ ! -d "/srv/airtime" ]; then
     mkdir -p /srv/airtime
 fi
 if [ ! -d "/srv/airtime/upload" ]; then
-    mkdir -p /srv/airtime/upload
+    mkdir -p /srv/airtime/stor/uploads
 fi
 
 chown -R ${web_user}:${web_user} /srv/airtime
