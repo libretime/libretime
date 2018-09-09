@@ -40,10 +40,20 @@ class FolderWatcher:
         # put it in LibretimeImportServer, but it doesn't work there (something to do
         # with pika's SIGTERM handler interfering with it, I think...)
         # signal.signal(signal.SIGTERM, self.graceful_shutdown)
+        # TODO - create a scan_folder function that will find all files existing in the directory and upload them
+
 
         self.watch_folder()
-
-
+    """
+    upload_file will take a file and send it to the local REST api
+    need to learn more python to figure out how to properly call it from inside of the EventHandler function
+    """
+    def upload_file(self, url, filename):
+        files = {'file': open(filename, 'rb')}
+        r = requests.post(url, auth=HTTPBasicAuth(str(api_key), ''), files=files)
+        print r.text
+        # TODO we might want to parse r.text to determine if the upload status = 1 and was successful then delete
+        os.remove(event.pathname)
 
     def watch_folder(self):
         import_dir = self._import_dir
@@ -70,6 +80,7 @@ class FolderWatcher:
                     super(EventHandler, self).__call__(event)
             def process_IN_CLOSE_WRITE(self, event):
                 logging.info("This file was written to the directory and will be uploaded: %s", event.pathname)
+                # TODO - figure out how to properly call above function upload_file(FolderWatcher, event.pathname,url)
                 files = {'file': open(event.pathname, 'rb')}
                 r = requests.post(url, auth=HTTPBasicAuth(str(api_key), ''), files=files)
                 print r.text
@@ -81,6 +92,9 @@ class FolderWatcher:
         notifier = pyinotify.ThreadedNotifier(wm,handler)
         notifier.start()
         # TODO check and see if self._import_dir exists and have exception if it does not
+        # TODO - might also want to check and ensure that the import directory is not set to the current organized dir
+        # to avoid an endless file importation loop
+        #
         # rec=True and auto_add = True allow the watch to import any files that are inside of a folder that is copied
         # into the uploads directory - the files will be removed by the folder will remain
         # TODO possible housekeeping and deletion of directories after all files have been removed from them
