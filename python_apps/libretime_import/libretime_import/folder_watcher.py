@@ -1,12 +1,9 @@
 import sys
-import pika
 import json
 import time
 import select
 import signal
 import logging 
-import multiprocessing
-import asyncore
 import pyinotify
 
 """ A message listener class that waits for messages from Airtime through RabbitMQ
@@ -74,18 +71,8 @@ class FolderWatcher:
         # with pika's SIGTERM handler interfering with it, I think...)
         # signal.signal(signal.SIGTERM, self.graceful_shutdown)
 
-        while not self._shutdown:
-            try:
-                #TODO make a user configurable call to scan the folder and import any files that exist there
-                # self.scan_folder()
-                #TODO make this call a folder watch which will look for files and try to import them
-                self.watch_folder()
-            except (KeyboardInterrupt, SystemExit):
-                break # Break out of the while loop and exit the application
-            except select.error:
-                pass 
+        self.watch_folder()
 
-        logging.info("Exiting cleanly.")
 
 
     def watch_folder(self):
@@ -94,13 +81,15 @@ class FolderWatcher:
         mask = pyinotify.IN_CLOSE_WRITE | pyinotify.IN_CLOSE_NOWRITE
         wm = pyinotify.WatchManager()  # Watch Manager
         class EventHandler(pyinotify.ProcessEvent):
-            def process_default(self, event):
-                print "There was an event ", event.pathname, event.maskname
+            def process_IN_CLOSE(self, event):
+                print "There was an close event ", event.pathname, event.maskname
+            def default(self,event):
+                print event.maskname, event.pathname
         handler = EventHandler()
-        notifier = pyinotify.AsyncNotifier(wm,handler)
-        notifier.loop()
+        notifier = pyinotify.ThreadedNotifier(wm,handler)
+        notifier.start()
         # TODO check and see if self._import_dir exists and have exception if it does not
-        wdd = wm.add_watch('/srv/airtime/stor/uploads/', mask, rec=True)
+        wdd = wm.add_watch('/srv/airtime/stor/uploads/', pyinotify.ALL_EVENTS)
 
 
 
