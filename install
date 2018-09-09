@@ -1065,6 +1065,10 @@ chown -R ${web_user}:${web_user} /etc/airtime
 if [ ! -d "/srv/airtime" ]; then
     mkdir -p /srv/airtime
 fi
+if [ ! -d "/srv/airtime/upload" ]; then
+    mkdir -p /srv/airtime/upload
+fi
+
 chown -R ${web_user}:${web_user} /srv/airtime
 
 

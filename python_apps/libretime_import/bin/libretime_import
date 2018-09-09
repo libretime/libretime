@@ -1,0 +1,47 @@
+#!/usr/bin/env python
+"""Runs the libretime_import application.
+"""
+
+import daemon
+import argparse
+import os
+import libretime_import.libretime_import as li
+
+VERSION = "1.0"
+LIBRETIME_CONF_DIR = os.getenv('LIBRETIME_CONF_DIR', '/etc/airtime')
+DEFAULT_LT_CONFIG_PATH = os.path.join(LIBRETIME_CONF_DIR, 'airtime.conf')
+DEFAULT_CLOUD_STORAGE_CONFIG_PATH = os.path.join(LIBRETIME_CONF_DIR, 'airtime.conf')
+DEFAULT_HTTP_RETRY_PATH = '/tmp/libretime_import_http_retries'
+
+def run():
+    '''Entry-point for this application'''
+    print "Libretime Import " + VERSION
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-d", "--daemon", help="run as a daemon", action="store_true")
+    parser.add_argument("--debug", help="log full debugging output", action="store_true")
+    parser.add_argument("--lt-config-file", help="specify a configuration file with LibreTime settings (default is %s)" % DEFAULT_LT_CONFIG_PATH)
+    parser.add_argument("--http-retry-queue-file", help="specify where incompleted HTTP requests will be serialized (default is %s)" % DEFAULT_HTTP_RETRY_PATH)
+    args = parser.parse_args()
+
+    #Default config file path
+    lt_config_path = DEFAULT_LT_CONFIG_PATH
+    http_retry_queue_path = DEFAULT_HTTP_RETRY_PATH
+    if args.lt_config_file:
+        lt_config_path = args.lt_config_file
+    if args.http_retry_queue_file:
+        http_retry_queue_path = args.http_retry_queue_file
+
+    if args.daemon:
+        with daemon.DaemonContext():
+            li.LibretimeImportServer(lt_config_path=lt_config_path,
+                                     http_retry_queue_path=http_retry_queue_path,
+                                     debug=args.debug)
+    else: 
+        # Run without daemonizing
+        li.LibretimeImportServer(lt_config_path=lt_config_path,
+                                 http_retry_queue_path=http_retry_queue_path,
+                                 debug=args.debug)
+
+run()
+
+
