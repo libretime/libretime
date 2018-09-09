@@ -3,8 +3,11 @@ import json
 import time
 import select
 import signal
+import os
 import logging 
 import pyinotify
+import requests
+from requests.auth import HTTPBasicAuth
 
 """ A message listener class that waits for messages from Airtime through RabbitMQ
     notifying us about new uploads.
@@ -78,18 +81,29 @@ class FolderWatcher:
     def watch_folder(self):
         # TODO setup pyinotify or watchdog to create events when a file is closed
         logging.info(" Watching folder for new files...")
-        mask = pyinotify.IN_CLOSE_WRITE | pyinotify.IN_CLOSE_NOWRITE
+        mask = pyinotify.IN_CLOSE_WRITE
+        # lets send a /media/rest POST account via requests to the server
+        url = 'http://' + str(self._host) + ':' + str(self._port) + str(self._basedir) + 'rest/media'
+        print url
+        api_key = self._api_key
+
         wm = pyinotify.WatchManager()  # Watch Manager
         class EventHandler(pyinotify.ProcessEvent):
-            def process_IN_CLOSE(self, event):
-                print "There was an close event ", event.pathname, event.maskname
+            def process_IN_CLOSE_WRITE(self, event):
+                print "This file was written to the directory ", event.pathname
+                print "Going to upload it now"
+                files = {'file': open(event.pathname, 'rb')}
+                r = requests.post(url, auth=HTTPBasicAuth(str(api_key), ''), files=files)
+                print r.text
+                os.remove(event.pathname)
+
             def default(self,event):
                 print event.maskname, event.pathname
         handler = EventHandler()
         notifier = pyinotify.ThreadedNotifier(wm,handler)
         notifier.start()
         # TODO check and see if self._import_dir exists and have exception if it does not
-        wdd = wm.add_watch('/srv/airtime/stor/uploads/', pyinotify.ALL_EVENTS)
+        wdd = wm.add_watch('/srv/airtime/stor/uploads/', mask)
 
 
 
