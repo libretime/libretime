@@ -66,7 +66,7 @@ class Application_Service_PodcastService
      */
     public static function createFromFeedUrl($feedUrl)
     {
-        if (self::PodcastLimitReached()) {
+        if (self::PodcastLimitReached() && LIBRETIME_ENABLE_BILLING) {
             throw new PodcastLimitReachedException();
         }
 
