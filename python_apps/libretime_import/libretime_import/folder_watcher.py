@@ -46,8 +46,8 @@ class FolderWatcher:
 
 
     def watch_folder(self):
-        # TODO setup pyinotify or watchdog to create events when a file is closed
-        logging.info(" Watching folder for new files...")
+        import_dir = self._import_dir
+        logging.info(" Watching %s folder for new files...", import_dir)
         # pyinotify uses a mask file - if a new file is written into the upload folder it should create a IN_CLOSE_WRITE
         # event when the file is finished being written, if a FTP upload disconnects then this could trigger incomplete
         # files being uploaded
@@ -73,7 +73,7 @@ class FolderWatcher:
                 files = {'file': open(event.pathname, 'rb')}
                 r = requests.post(url, auth=HTTPBasicAuth(str(api_key), ''), files=files)
                 print r.text
-                #TODO parse r.text to determine if the upload status = 1 and was successful then delete
+                #TODO we might want to parse r.text to determine if the upload status = 1 and was successful then delete
                 os.remove(event.pathname)
             def default(self,event):
                 print event.maskname, event.pathname
@@ -84,4 +84,4 @@ class FolderWatcher:
         # rec=True and auto_add = True allow the watch to import any files that are inside of a folder that is copied
         # into the uploads directory - the files will be removed by the folder will remain
         # TODO possible housekeeping and deletion of directories after all files have been removed from them
-        wdd = wm.add_watch('/srv/airtime/stor/uploads/', mask, rec=True, auto_add=True)
+        wdd = wm.add_watch(import_dir, mask, rec=True, auto_add=True)
