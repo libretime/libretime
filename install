@@ -91,6 +91,8 @@ upgrade="f"
 dist=""
 code=""
 apache_bin=""
+skip_postgres=0
+skip_rabbitmq=0
 
 
 function verbose() {
@@ -455,10 +457,10 @@ while :; do
         --selinux)
             selinux="t"
             ;;
-        --skip-postgres)
+        --no-postgres)
             skip_postgres=1
             ;;
-        --skip-rabbitmq)
+        --no-rabbitmq)
             skip_rabbitmq=1
             ;;            
         --)
@@ -998,7 +1000,7 @@ else
     loudCmd "a2enmod rewrite php5"
 fi
 
-if [ $skip_postgres -ne 1 ]; then
+if [ $skip_postgres -eq 0 ]; then
     loud "\n-----------------------------------------------------"
     loud "              * Configuring PostgreSQL *              "
     loud "-----------------------------------------------------"
@@ -1035,7 +1037,7 @@ EOF
     fi
 fi
 
-if [ $skip_rabbitmq -ne 1 ]; then
+if [ $skip_rabbitmq -eq 0 ]; then
 
     loud "\n-----------------------------------------------------"
     loud "               * Configuring RabbitMQ *               "
