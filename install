@@ -598,7 +598,7 @@ code="${code:-$VERSION_ID}"
 code="${code,,}"
 verbose "Validating dist-code: ${dist}-${code}"
 case "${dist}-${code}" in
-    ubuntu-16.04|ubuntu-xenial)
+    ubuntu-16.04|ubuntu-xenial|ubuntu-xenial_docker_minimal)
         code="xenial"
         is_ubuntu_dist=true
         is_ubuntu_xenial=true
