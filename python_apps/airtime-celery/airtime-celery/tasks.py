@@ -159,14 +159,9 @@ def podcast_download(id, url, callback_url, api_key, podcast_name, album_overrid
                 r.raw.decode_content = True
                 shutil.copyfileobj(r.raw, audiofile)
 
-                # currently hardcoded for mp3s may want to add support for oggs etc - Run anything that's not mp3 through ffmpeg.
-                p = Popen(['ffprobe', '-v', 'error', '-select_streams', 'a:0', '-show_entries', 'stream=codec_name', '-of', 'default=nokey=1:noprint_wrappers=1', audiofile.name], stdin=PIPE, stdout=PIPE, stderr=PIPE)
-                rc = p.returncode
-
-                if rc != 'mp3':
-                    subprocess.call(['mv', audiofile.name, audiofile.name + '.old'])
-                    subprocess.call(['ffmpeg', '-hide_banner', '-loglevel', 'panic', '-i', audiofile.name + '.old', '-f', 'mp3', audiofile.name])
-                    subprocess.call(['rm', '-rf', audiofile.name + '.old'])
+                subprocess.call(['mv', audiofile.name, audiofile.name + '.old'])
+                subprocess.call(['ffmpeg', '-hide_banner', '-loglevel', 'panic', '-i', audiofile.name + '.old', '-f', 'mp3', audiofile.name])
+                subprocess.call(['rm', '-rf', audiofile.name + '.old'])
 
                 m = MP3(audiofile.name, ID3=EasyID3)
                 logger.debug('podcast_download loaded mp3 {0}'.format(audiofile.name))
