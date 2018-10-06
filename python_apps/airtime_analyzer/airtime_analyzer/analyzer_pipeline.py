@@ -7,7 +7,6 @@ import Queue
 import ConfigParser
 from metadata_analyzer import MetadataAnalyzer
 from filemover_analyzer import FileMoverAnalyzer
-from cloud_storage_uploader import CloudStorageUploader
 from cuepoint_analyzer import CuePointAnalyzer
 from replaygain_analyzer import ReplayGainAnalyzer
 from playability_analyzer import *
@@ -25,7 +24,7 @@ class AnalyzerPipeline:
     IMPORT_STATUS_FAILED = 2
 
     @staticmethod
-    def run_analysis(queue, audio_file_path, import_directory, original_filename, storage_backend, file_prefix, cloud_storage_config):
+    def run_analysis(queue, audio_file_path, import_directory, original_filename, storage_backend, file_prefix):
         """Analyze and import an audio file, and put all extracted metadata into queue.
         
         Keyword arguments:
@@ -40,7 +39,6 @@ class AnalyzerPipeline:
                                to know what the original name was.  
             storage_backend: String indicating the storage backend (amazon_s3 or file)
             file_prefix:
-            cloud_storage_config: ConfigParser object containing the cloud storage configuration settings
         """
         # It is super critical to initialize a separate log file here so that we 
         # don't inherit logging/locks from the parent process. Supposedly
@@ -58,8 +56,6 @@ class AnalyzerPipeline:
                 raise TypeError("original_filename must be unicode. Was of type " + type(original_filename).__name__ + " instead.")
             if not isinstance(file_prefix, unicode):
                 raise TypeError("file_prefix must be unicode. Was of type " + type(file_prefix).__name__ + " instead.")
-            if not isinstance(cloud_storage_config, ConfigParser.SafeConfigParser):
-                raise TypeError("cloud_storage_config must be a SafeConfigParser. Was of type " + type(cloud_storage_config).__name__ + " instead.")
 
 
             # Analyze the audio file we were told to analyze:
@@ -72,11 +68,7 @@ class AnalyzerPipeline:
             metadata = ReplayGainAnalyzer.analyze(audio_file_path, metadata)
             metadata = PlayabilityAnalyzer.analyze(audio_file_path, metadata)
 
-            if storage_backend.lower() == u"amazon_s3":
-                csu = CloudStorageUploader(cloud_storage_config)
-                metadata = csu.upload_obj(audio_file_path, metadata)
-            else:
-                metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata)
+            metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata)
 
             metadata["import_status"] = 0 # Successfully imported
 
