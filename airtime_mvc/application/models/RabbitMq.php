@@ -129,10 +129,4 @@ class Application_Model_RabbitMq
         $conn->close();
         
     }
-    
-    
-    public static function SendMessageToHaproxyConfigDaemon($md){
-        //XXX: This function has been deprecated and is no longer needed
-    }
-
 }
