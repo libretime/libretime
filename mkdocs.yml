@@ -47,9 +47,6 @@ pages:
   - 'Installation':
     - 'Install': install.md
     - 'Preparing the Server': manual/preparing-the-server/index.md
-    - 'Easy Setup': manual/easy-setup/index.md
-    - 'Automated Installation': manual/automated-installation/index.md
-    - 'Manual Installation': manual/manual-installation/index.md
     - 'Setting the Server Time': manual/setting-the-server-time/index.md
   - 'Administration':
     - 'The airtime-log Command': manual/the-airtime-log-command/index.md
