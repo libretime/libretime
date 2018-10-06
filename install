@@ -52,7 +52,13 @@ showhelp () {
                 Install Icecast 2 and deploy a basic configuration for Airtime
     --selinux
                 Run restorecon on directories and files that need tagging to
-                allow the WEB_USER access."
+                allow the WEB_USER access
+    --no-postgres
+                Skips all postgres related install tasks (Useful if you configure
+                postgresql as part of another script / docker builds)
+    --no-rabbitmq
+                Skips all rabbitmq related install tasks.
+                "
     exit 0
 }
 
@@ -85,6 +91,8 @@ upgrade="f"
 dist=""
 code=""
 apache_bin=""
+skip_postgres=0
+skip_rabbitmq=0
 
 
 function verbose() {
@@ -449,6 +457,12 @@ while :; do
         --selinux)
             selinux="t"
             ;;
+        --no-postgres)
+            skip_postgres=1
+            ;;
+        --no-rabbitmq)
+            skip_rabbitmq=1
+            ;;            
         --)
             shift
             break
@@ -584,7 +598,7 @@ code="${code:-$VERSION_ID}"
 code="${code,,}"
 verbose "Validating dist-code: ${dist}-${code}"
 case "${dist}-${code}" in
-    ubuntu-16.04|ubuntu-xenial)
+    ubuntu-16.04|ubuntu-xenial|ubuntu-xenial_docker_minimal)
         code="xenial"
         is_ubuntu_dist=true
         is_ubuntu_xenial=true
@@ -986,69 +1000,74 @@ else
     loudCmd "a2enmod rewrite php5"
 fi
 
-loud "\n-----------------------------------------------------"
-loud "              * Configuring PostgreSQL *              "
-loud "-----------------------------------------------------"
+if [ $skip_postgres -eq 0 ]; then
+    loud "\n-----------------------------------------------------"
+    loud "              * Configuring PostgreSQL *              "
+    loud "-----------------------------------------------------"
 
-# Ensure postgres is running - It isn't after you install the postgres package on Ubuntu 15.04
-systemInitCommand start postgresql
+    # Ensure postgres is running - It isn't after you install the postgres package on Ubuntu 15.04
+    systemInitCommand start postgresql
 
-setupAirtimePostgresUser() {
-    # here-doc to execute this block as postgres user
-    su postgres <<'EOF'
-    set +e
-    count=$(psql -d postgres -tAc "SELECT count(*) FROM pg_roles WHERE rolname='airtime';")
-    if [[ $count -eq 0 ]]; then
-        psql -d postgres -tAc "CREATE USER airtime WITH ENCRYPTED PASSWORD 'airtime'; ALTER USER airtime CREATEDB;"
-        [[ $? -eq 0 ]] && 
-              echo "Created airtime user in PostgreSQL" || 
-              echo "$0:${FUNCNAME}(): ERROR: Can't create airtime user in PostgreSQL!"
-    else
-        echo "airtime user already exists in PostgreSQL"
-    fi
-    set -e
+    setupAirtimePostgresUser() {
+        # here-doc to execute this block as postgres user
+        su postgres <<'EOF'
+        set +e
+        count=$(psql -d postgres -tAc "SELECT count(*) FROM pg_roles WHERE rolname='airtime';")
+        if [[ $count -eq 0 ]]; then
+            psql -d postgres -tAc "CREATE USER airtime WITH ENCRYPTED PASSWORD 'airtime'; ALTER USER airtime CREATEDB;"
+            [[ $? -eq 0 ]] && 
+                  echo "Created airtime user in PostgreSQL" || 
+                  echo "$0:${FUNCNAME}(): ERROR: Can't create airtime user in PostgreSQL!"
+        else
+            echo "airtime user already exists in PostgreSQL"
+        fi
+        set -e
 # don't indent this!
 EOF
-}
+    }
 
-if [ "$postgres" = "t" ]; then
-    setupAirtimePostgresUser
-elif [ ${_i} -eq 1 ]; then
-    echo -e "Create default airtime postgres user? (Y/n): \c"
-    read IN
-    if [ "$IN" = "y" -o "$IN" = "Y" ]; then
+    if [ "$postgres" = "t" ]; then
         setupAirtimePostgresUser
+    elif [ ${_i} -eq 1 ]; then
+        echo -e "Create default airtime postgres user? (Y/n): \c"
+        read IN
+        if [ "$IN" = "y" -o "$IN" = "Y" ]; then
+            setupAirtimePostgresUser
+        fi
     fi
 fi
 
-loud "\n-----------------------------------------------------"
-loud "               * Configuring RabbitMQ *               "
-loud "-----------------------------------------------------"
+if [ $skip_rabbitmq -eq 0 ]; then
 
-RABBITMQ_VHOST=/airtime
-RABBITMQ_USER=airtime
-RABBITMQ_PASSWORD=airtime
-EXCHANGES="airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
+    loud "\n-----------------------------------------------------"
+    loud "               * Configuring RabbitMQ *               "
+    loud "-----------------------------------------------------"
 
-# Ignore errors in this check to avoid dying when vhost isn't found
-set +e
-rabbitmqctl list_vhosts | grep -w "^${RABBITMQ_VHOST}$" > /dev/null
-RESULT="$?"
-set -e
+    RABBITMQ_VHOST=/airtime
+    RABBITMQ_USER=airtime
+    RABBITMQ_PASSWORD=airtime
+    EXCHANGES="airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
 
-# Only run these if the vhost doesn't exist
-if [ "$RESULT" != "0" ]; then
-    verbose "\n * Creating RabbitMQ user ${RABBITMQ_USER}..."
+    # Ignore errors in this check to avoid dying when vhost isn't found
+    set +e
+    rabbitmqctl list_vhosts | grep -w "^${RABBITMQ_VHOST}$" > /dev/null
+    RESULT="$?"
+    set -e
 
-    rabbitmqctl add_vhost ${RABBITMQ_VHOST}
-    rabbitmqctl add_user ${RABBITMQ_USER} ${RABBITMQ_PASSWORD}
-else
-    verbose "\nRabbitMQ user already exists, skipping creation"
+    # Only run these if the vhost doesn't exist
+    if [ "$RESULT" != "0" ]; then
+        verbose "\n * Creating RabbitMQ user ${RABBITMQ_USER}..."
+
+        rabbitmqctl add_vhost ${RABBITMQ_VHOST}
+        rabbitmqctl add_user ${RABBITMQ_USER} ${RABBITMQ_PASSWORD}
+    else
+        verbose "\nRabbitMQ user already exists, skipping creation"
+    fi
+
+    verbose "\n * Setting RabbitMQ user permissions..."
+    #loudCmd "rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} \"$EXCHANGES\" \"$EXCHANGES\" \"$EXCHANGES\""
+    loudCmd "rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} .\* .\* .\*"
 fi
-
-verbose "\n * Setting RabbitMQ user permissions..."
-#loudCmd "rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} \"$EXCHANGES\" \"$EXCHANGES\" \"$EXCHANGES\""
-loudCmd "rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} .\* .\* .\*"
 
 if [ ! -d "/etc/airtime" ]; then
     loud "\n-----------------------------------------------------"
