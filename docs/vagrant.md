@@ -33,13 +33,12 @@ With the above instructions LibreTime is installed on Ubuntu Trusty Tahir. The V
 
 | OS     | Command             | Comment |
 | ------ | ------------------- | ------- |
-| Ubuntu 14.04 | `vagrant up ubuntu-trusty` | Current default install since it was used by legacy upstream, based on Trusty Tahir. |
-| Debian 8.7   | `vagrant up debian-jessie` | Recommended install on Jessie as per the docs. |
-| Ubuntu 16.04 | `vagrant up ubuntu-xenial` | Experimental install on current Ubuntu Xenial Xerus. |
-| Debian 7.11  | `vagrant up debian-wheezy` | Recommended install on Wheezy as per the docs. |
-| CentOS | `vagrant up centos` | Experimental install on 7.3 with native systemd support and activated SELinux. |
-| Ubuntu | `vagrant up ubuntu` | Deprecated Ubuntu Trusty install, replaced by `ubuntu-trusty`. Do not use for new installs! |
-| Debian | `vagrant up debian` | Deprecated Debian Jessie install, replaced by `debian-jessie`. Do not use for new installs! |
+| Ubuntu 14.04 | `vagrant up ubuntu-trusty`  | Current default install since it was used by legacy upstream, based on Ubuntu Trusty Tahir. |
+| Debian 8.7   | `vagrant up debian-jessie`  | Recommended install on Debian Jessie as per the docs. |
+| Debian 9.2   | `vagrant up debian-stretch` | Experimental install on current Debian Stretch. |
+| Ubuntu 16.04 | `vagrant up ubuntu-xenial`  | Experimental install on current Ubuntu Xenial Xerus. |
+| Debian 7.11  | `vagrant up debian-wheezy`  | Deprecated install on Debian Wheezy. Please switch to debian-stretch. |
+| CentOS | `vagrant up centos` | Extremely experimental install on 7.3 with native systemd support and activated SELinux. Needs manual intervention due to Liquidsoap 1.3.3. |
 
 ## Troubleshooting
 
