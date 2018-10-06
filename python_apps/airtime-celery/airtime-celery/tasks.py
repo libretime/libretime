@@ -9,6 +9,9 @@ import posixpath
 import shutil
 import tempfile
 import traceback
+import subprocess
+
+from subprocess import Popen, PIPE
 from mutagen.mp3 import MP3
 from mutagen.easyid3 import EasyID3
 import mutagen.id3
@@ -155,7 +158,11 @@ def podcast_download(id, url, callback_url, api_key, podcast_name, album_overrid
             with tempfile.NamedTemporaryFile(mode ='wb+', delete=False) as audiofile:
                 r.raw.decode_content = True
                 shutil.copyfileobj(r.raw, audiofile)
-                # currently hardcoded for mp3s may want to add support for oggs etc
+
+                subprocess.call(['mv', audiofile.name, audiofile.name + '.old'])
+                subprocess.call(['ffmpeg', '-hide_banner', '-loglevel', 'panic', '-i', audiofile.name + '.old', '-f', 'mp3', audiofile.name])
+                subprocess.call(['rm', '-rf', audiofile.name + '.old'])
+
                 m = MP3(audiofile.name, ID3=EasyID3)
                 logger.debug('podcast_download loaded mp3 {0}'.format(audiofile.name))
 

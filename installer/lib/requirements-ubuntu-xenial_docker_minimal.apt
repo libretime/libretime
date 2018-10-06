@@ -12,6 +12,7 @@ zip
 unzip
 
 postgresql-client
+ffmpeg
 php7.0-pgsql
 
 python
