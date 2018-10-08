@@ -28,49 +28,57 @@ logfile= "/var/log/airtime/libretime_watch.log"
 
 # create empty dictionary 
 database = {}
+
 # keep the program running
 shutdown=False
 
 config = {}
-#
-# logging
-#
+
 logging.basicConfig(format='%(asctime)s %(message)s',filename=logfile,level=logging.INFO)
 
-
-
 def update_database (conn):
-   """Update database dictionary to cc_files
-   """
-   cur = conn.cursor()
-   cols = database.keys()
-   cols_str = str(cols)
-   #cut off enclosing []
-   cols_str = cols_str[1:-1]
-   cols_str = cols_str.replace("'","")
-   vals = [database[x] for x in cols]
-   vals_str_list = ["%s"] * len(vals)
-   vals_str = ", ".join(vals_str_list)
-   cur.execute ("UPDATE cc_files set ({cols}) = ({vals_str}) where directory = {dir} and filepath ='{file}'"
+  """Update database dictionary to cc_files
+  """
+  cur = conn.cursor()
+  cols = database.keys()
+  cols_str = str(cols)
+  #cut off enclosing []
+  cols_str = cols_str[1:-1]
+  cols_str = cols_str.replace("'","")
+  vals = [database[x] for x in cols]
+  vals_str_list = ["%s"] * len(vals)
+  vals_str = ", ".join(vals_str_list)
+  try:
+    cur.execute ("UPDATE cc_files set ({cols}) = ({vals_str}) where directory = {dir} and filepath ='{file}'"
        .format( cols = cols_str, vals_str = vals_str, dir = database["directory"], file = database["filepath"] ), vals)
-   conn.commit()
-   cur.close()
-
+  except psycopg2.Error as e:
+    logging.error("Database error: {}".format(e.pgerror))
+  else:
+    conn.commit()
+    logging.info("Updated: "+database["filepath"])
+  finally:
+    cur.close()
 
 def insert_database (conn):
-   cur = conn.cursor()
-   cols = database.keys()
-   cols_str = str(cols)
-   #cut off enclosing []
-   cols_str = cols_str[1:-1]
-   cols_str = cols_str.replace("'","")
-   vals = [database[x] for x in cols]
-   vals_str_list = ["%s"] * len(vals)
-   vals_str = ", ".join(vals_str_list)
-   cur.execute ("INSERT INTO cc_files ({cols}) VALUES ({vals_str})".format(
+  cur = conn.cursor()
+  cols = database.keys()
+  cols_str = str(cols)
+  #cut off enclosing []
+  cols_str = cols_str[1:-1]
+  cols_str = cols_str.replace("'","")
+  vals = [database[x] for x in cols]
+  vals_str_list = ["%s"] * len(vals)
+  vals_str = ", ".join(vals_str_list)
+  try:
+    cur.execute ("INSERT INTO cc_files ({cols}) VALUES ({vals_str})".format(
            cols = cols_str, vals_str = vals_str), vals)
-   conn.commit()
-   cur.close()
+  except psycopg2.Error as e:
+    logging.error("Database error: {}".format(e.pgerror))
+  else:
+    conn.commit()
+    logging.info("Inserted: "+database["filepath"])
+  finally:
+    cur.close()
 
 def touch_timestamp():
   """Returns the timestamp of the last run"""
@@ -101,26 +109,15 @@ def connect_database():
           +config["db_pass"]+"'")
   except:
     logging.critical('Unable to connect to the database') 
-    #print "I am unable to connect to the database"
   return conn
 
 
 def watch (dir_id, directory):
     timestamp = touch_timestamp()
     logging.info ("Start scanning directory "+directory+ " for new files since "+ timestamp)
-    # look for what dir we've to watch
+
     conn = connect_database()
-    cur = conn.cursor()
-#    try:
-#      cur.execute ("SELECT directory from cc_music_dirs where id = '"+dir_id+"'")
-#      row = cur.fetchone()
-#      watch_dir = row[0]+"/"
-#      len_watch_dir = len(watch_dir) 
-#      cur.close()
-#    except:
-#      logging.critical("Can't get directory for watching") 
-#      #print ("Can't get directory for watching")
-#      exit()
+
     watch_dir=str(directory)
     len_watch_dir=len(watch_dir) 
     # so now scan all directories
@@ -144,19 +141,17 @@ def watch (dir_id, directory):
                 +" and directory = "+str(database["directory"]))
           except: 
             logging.warning ("I can't SELECT count(*) ... from cc_files")
-            print "I can't SELECT from cc_files"
+          
           row = cur.fetchone()
           # is there already a record
           if row[0] == 0:
-            logging.info("Insert: "+database["filepath"])
-            #print ("Insert: "+database["filepath"])
+            logging.info("--> New audio: "+database["filepath"])
             database["utime"] = datetime.datetime.now()
             if airtime_md.analyse_file (curFilePath,database):
               insert_database (conn)
-            #let's sleep
-#            time.sleep(1)
+            else:
+              logging.warning("Problematic file: {}".format(database["filepath"]))
           else :
-            cur1 = conn.cursor()
 #            try:
 #              # look for mtime
 #              cur1.execute ("SELECT mtime from cc_files where"
@@ -168,13 +163,11 @@ def watch (dir_id, directory):
 #            row = cur1.fetchone()
             # update needs only called, if new since last run
             if timestamp < database["mtime"]:
-               logging.info("Update: "+database["filepath"])
+               logging.info("--> Existing audio: "+database["filepath"])
                #print ("Update "+database["filepath"])
                database["utime"] = datetime.datetime.now()
                if airtime_md.analyse_file (curFilePath,database):
                  update_database (conn)
-            cur1.close()
-          cur.close()
     #
     # close database session
     conn.close() 

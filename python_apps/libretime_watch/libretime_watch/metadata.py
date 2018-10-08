@@ -96,23 +96,19 @@ def analyse_file (filename,database):
 
    analyse_ok=False
    logging.info ("analyse Filename: "+filename)
-   #try to determin the filetype 
+
+   #try to determine the filetype 
    mime_check = magic.detect_from_filename(filename)
    database["mime"] = mime_check.mime_type
-   # test
-   #f = MP3(filename)
-   #f= mutagen.FileType(filename)
-   #mime_mutagen = f.mime[0]
-   #logging.info (" mutagen: " +mime_mutagen )
    
    mime = MimeTypes()
    type, a = mime.guess_type(filename)
-   logging.info ("mime_check :"+database["mime"]+ " mime: "+type)
-   #+" mutagen: " +mime_mutagen )
-   #
+   logging.info("mime_check: "+database["mime"]+ " mime: "+type)
+
    database["ftype"] = "audioclip"
    database["filesize"] = os.path.getsize(filename) 
    database["import_status"]=0
+
    #md5
    with open(filename, 'rb') as fh:
        m = hashlib.md5()
@@ -122,11 +118,16 @@ def analyse_file (filename,database):
               break
            m.update(data)
        database["md5"] = m.hexdigest()
+
    # MP3 file ?
    if database["mime"] in ['audio/mpeg','audio/mp3','application/octet-stream']:
      try:
-       audio = EasyID3(filename)
-       database["track_title"]=audio['title'][0]
+       audio = EasyID3(filename) # TODO catch no ID3 tag
+       try:
+         database["track_title"]=audio['title'][0]
+       except:
+         logging.warning("no title ID3 for {}".format(filename))
+         database["track_title"]=filename.split("/")[-1] # default title to filename
        try:
          database["artist_name"]=audio['artist'][0]
        except StandardError, err:
@@ -147,6 +148,7 @@ def analyse_file (filename,database):
        except StandardError, err:
          logging.debug('no track_number for '+filename) 
          database["track_number"]= 0
+
        # get data encoded into file
        f = MP3(filename)
        database["bit_rate"]=f.info.bitrate
@@ -176,7 +178,8 @@ def analyse_file (filename,database):
        analyse_ok=True
 
      except StandardError, err:
-          logging.error('Error ',str(err),filename) 
-          #print "Error: ",str(err),filename
+          logging.error("Error!: {}".format(err)) 
+
+   # TODO else Ogg Vorbis, Wav, etc
    return analyse_ok
 
