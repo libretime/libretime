@@ -18,6 +18,14 @@ import types
 
 import libretime_watch
 
+import hashlib
+import magic
+
+from mimetypes import MimeTypes
+from mutagen.easyid3 import EasyID3
+from mutagen.mp3 import MP3
+from mutagen.oggvorbis import OggVorbis
+import mutagen
 
 # create empty dictionary 
 #database = {}
@@ -151,21 +159,34 @@ def analyze_mp3(filename, database):
         database["channels"] = f.info.channels
 
 def analyze_ogg(filename, database):
-    pass # TODO
+    """retrieve info from an Ogg Vorbis file
+       does this work for FLAC and other Ogg formats?"""
+    ogg = OggVorbis(filename)
+    database["bit_rate"] = ogg.info.bitrate
+    database["sample_rate"] = ogg.info.sample_rate
+    if hasattr(ogg.info, "length"):
+        #Converting the length in seconds (float) to a formatted time string
+        track_length = datetime.timedelta(seconds=ogg.info.length)
+        database["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
+        # Other fields for Airtime
+        database["cueout"] = database["length"]
+        database["replay_gain"]=float(replay_gain(filename))
+    database["cuein"]= "00:00:00.0"
+    # get better (?) cuein, cueout using silan
+    database["cuein"], database["cueout"] = cue_points (filename, database["cuein"], database["cueout"])
+    # mark as silan checked
+    database["silan_check"] = "t"
+    # use mutage to get better mime 
+    if  ogg.mime:
+        database["mime"] = ogg.mime[0]
+    database["channels"] = ogg.info.channels
+
 
 def analyse_file (filename, database):
     """This method analyses the file and returns analyse_ok 
       It's filling the database dictionary with metadata read from
       the file
     """
-    import hashlib
-    import magic
-
-    from mimetypes import MimeTypes
-    from mutagen.easyid3 import EasyID3
-    from mutagen.mp3 import MP3
-    import mutagen
-
     analyse_ok=False
     logging.info ("analyse Filename: "+filename)
 
@@ -185,18 +206,19 @@ def analyse_file (filename, database):
     database["md5"] = md5_hash(filename)
 
     # Mp3
-    if database["mime"] in ['audio/mpeg','audio/mp3','application/octet-stream']:
+    if database["mime"] in ['audio/mpeg','audio/mp3']:
         self.easy_tags(filename, database)
-        analyze_mpe(filename, database)
+        analyze_mp3(filename, database)
         analyse_ok = True
     # Ogg
-    elif database["mime"] in ['audio/ogg']:    # TODO Ogg mimes
+    elif database["mime"] in ['audio/ogg', 'audio/vorbis', 'audio/x-vorbis', 'application/ogg', 'application/x-ogg']:
         easy_tags(filename, database)
         analyze_ogg(filename, database)
         analyse_ok = True
+    # TODO 'application/octet-stream'
     else:
         print("Unsupported metadata type: {} -- for audio {}".format(database["mime"], filename))
-        # TODO logging.warning(...)
+        # logging.warning(...)
         
     return analyse_ok
 
