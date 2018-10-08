@@ -99,9 +99,30 @@ def md5_hash(filename):
             m.update(data)
         return m.hexdigest()
 
-def easy_tags(self, filename, database):
-    """common tags retrieval using EasyID3
-       should work for both Mp3 and Ogg formats."""
+def analyse_file (filename, database):
+    """This method analyses the file and returns analyse_ok 
+      It's filling the database dictionary with metadata read from
+      the file
+    """
+    analyse_ok=False
+    logging.info ("analyse Filename: "+filename)
+
+    #try to determine the filetype 
+    mime_check = magic.detect_from_filename(filename)
+    database["mime"] = mime_check.mime_type
+   
+    mime = MimeTypes()
+    type, a = mime.guess_type(filename)
+    logging.info("mime_check: "+database["mime"]+ " mime: "+type)
+
+    database["ftype"] = "audioclip"
+    database["filesize"] = os.path.getsize(filename) 
+    database["import_status"]=0
+
+    #md5
+    database["md5"] = md5_hash(filename)
+
+    # common tags
     audio = EasyID3(filename) # TODO catch no ID3 tag
     try:
         database["track_title"]=audio['title'][0]
@@ -128,13 +149,20 @@ def easy_tags(self, filename, database):
     except StandardError, err:
         logging.debug('no track_number for '+filename) 
         database["track_number"]= 0
-    return database
-
-def analyze_mp3(filename, database):
-    # get data encoded into file
-    f = MP3(filename)
-    database["bit_rate"]=f.info.bitrate
-    database["sample_rate"]=f.info.sample_rate
+    # format dependent tags
+    # Mp3
+    if database["mime"] in ['audio/mpeg','audio/mp3']:
+        f = MP3(filename)
+    # Ogg
+    elif database["mime"] in ['audio/ogg', 'audio/vorbis', 'audio/x-vorbis', 'application/ogg', 'application/x-ogg']:
+        f = OggVorbis(filename)
+    else: # 'application/octet-stream'?
+        print("Unsupported metadata type: {} -- for audio {}".format(database["mime"], filename))
+        # logging.warning(...) TODO !
+        return analyse_ok=False
+    # analysis
+    database["bit_rate"] = f.info.bitrate
+    database["sample_rate"] = f.info.sample_rate
     if hasattr(f.info, "length"):
         #Converting the length in seconds (float) to a formatted time string
         track_length = datetime.timedelta(seconds=f.info.length)
@@ -157,68 +185,4 @@ def analyze_mp3(filename, database):
             database["channels"] = 2
     else:
         database["channels"] = f.info.channels
-
-def analyze_ogg(filename, database):
-    """retrieve info from an Ogg Vorbis file
-       does this work for FLAC and other Ogg formats?"""
-    ogg = OggVorbis(filename)
-    database["bit_rate"] = ogg.info.bitrate
-    database["sample_rate"] = ogg.info.sample_rate
-    if hasattr(ogg.info, "length"):
-        #Converting the length in seconds (float) to a formatted time string
-        track_length = datetime.timedelta(seconds=ogg.info.length)
-        database["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
-        # Other fields for Airtime
-        database["cueout"] = database["length"]
-        database["replay_gain"]=float(replay_gain(filename))
-    database["cuein"]= "00:00:00.0"
-    # get better (?) cuein, cueout using silan
-    database["cuein"], database["cueout"] = cue_points (filename, database["cuein"], database["cueout"])
-    # mark as silan checked
-    database["silan_check"] = "t"
-    # use mutage to get better mime 
-    if  ogg.mime:
-        database["mime"] = ogg.mime[0]
-    database["channels"] = ogg.info.channels
-
-
-def analyse_file (filename, database):
-    """This method analyses the file and returns analyse_ok 
-      It's filling the database dictionary with metadata read from
-      the file
-    """
-    analyse_ok=False
-    logging.info ("analyse Filename: "+filename)
-
-    #try to determine the filetype 
-    mime_check = magic.detect_from_filename(filename)
-    database["mime"] = mime_check.mime_type
-   
-    mime = MimeTypes()
-    type, a = mime.guess_type(filename)
-    logging.info("mime_check: "+database["mime"]+ " mime: "+type)
-
-    database["ftype"] = "audioclip"
-    database["filesize"] = os.path.getsize(filename) 
-    database["import_status"]=0
-
-    #md5
-    database["md5"] = md5_hash(filename)
-
-    # Mp3
-    if database["mime"] in ['audio/mpeg','audio/mp3']:
-        self.easy_tags(filename, database)
-        analyze_mp3(filename, database)
-        analyse_ok = True
-    # Ogg
-    elif database["mime"] in ['audio/ogg', 'audio/vorbis', 'audio/x-vorbis', 'application/ogg', 'application/x-ogg']:
-        easy_tags(filename, database)
-        analyze_ogg(filename, database)
-        analyse_ok = True
-    # TODO 'application/octet-stream'
-    else:
-        print("Unsupported metadata type: {} -- for audio {}".format(database["mime"], filename))
-        # logging.warning(...)
-        
-    return analyse_ok
-
+    return analyse_ok = True
