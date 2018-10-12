@@ -1,4 +1,4 @@
-The following instructions assume that you have root access (**sudo** on most distributions) to a GNU/Linux server, and are familiar with basic command line tasks. Experienced system administrators may prefer to skip to [Expert install](../expert-install/) in the appendix of manual after having prepared a server with the needed dependencies show below.
+The following instructions assume that you have root access (**sudo** on most distributions) to a GNU/Linux server, and are familiar with basic command line tasks. 
 
 The recommended Libretime server platform is Ubuntu 16.04 LTS (Xenial Xerus), or Ubuntu 14.04.5 LTS (Trusty Tahr).
 
@@ -243,8 +243,3 @@ Mail server
 -----------
 
 If you wish Airtime to be able to send password reminder emails to your staff users, the server can have an SMTP program installed, such as the **postfix** package in Debian or Ubuntu. For configuration options, refer to the documentation for your mail server of choice. Alternatively, you can specify an external SMTP server in the **Preferences** page on Airtime's **System** menu.
-
-Proceed to installation
------------------------
-
-Now your server should be ready for Airtime to be installed. Depending on your requirements, you should now proceed to either the chapter *Easy setup*, the chapter *Automated installation,* the chapter *Manual installation* or the *Expert install* appendix.

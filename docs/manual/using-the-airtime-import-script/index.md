@@ -65,7 +65,6 @@ Airtime 2.5 for Broadcasters
 -   [Secure login with SSL or TLS](../secure-login-with-ssl/index.html)
 -   [Icecast statistics with Piwik](../icecast-statistics-with-piwik/index.html)
 -   **Appendix**
--   [Expert install](../expert-install/index.html)
 -   [HD Audio Models](../hd-audio-models/index.html)
 -   [About this manual](../about-this-manual/index.html)
 
