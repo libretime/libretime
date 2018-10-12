@@ -26,19 +26,6 @@
     offset: 57
   });
 
-  // Collapse Navbar
-  //var navbarCollapse = function() {
-  //  if ($("#mainNav").offset().top > 100) {
-  //    $("#mainNav").addClass("navbar-shrink");
-  //  } else {
-  //    $("#mainNav").removeClass("navbar-shrink");
-  //  }
-  //};
-  // Collapse now if page is not at top
-  navbarCollapse();
-  // Collapse the navbar when page is scrolled
-  $(window).scroll(navbarCollapse);
-
   // Scroll reveal calls
   window.sr = ScrollReveal();
 
@@ -89,4 +76,22 @@
     }
   });
 
+
 })(jQuery); // End of use strict
+
+jQuery.loadScript = function (url, callback) {
+    jQuery.ajax({
+        url: url,
+        dataType: 'script',
+        success: callback,
+        async: true
+    });
+}
+
+if (typeof someObject == 'undefined') $.loadScript('https://www.googletagmanager.com/gtag/js?id=UA-127383666-1', function(){
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-127383666-1');
+});
+
