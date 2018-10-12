@@ -46,8 +46,6 @@ libcamomile-ocaml-data
 libpulse0
 vorbis-tools
 lsof
-# mp3gain need to be installed over an external ppa or the use of easymp3gain
-easymp3gain-gtk
 vorbisgain
 flac
 vorbis-tools

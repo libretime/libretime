@@ -588,6 +588,7 @@ is_debian_stretch=false
 is_debian_jessie=false
 is_debian_wheezy=false
 is_ubuntu_dist=false
+is_ubuntu_bionic=false
 is_ubuntu_xenial=false
 is_ubuntu_trusty=false
 is_centos_dist=false
@@ -598,6 +599,11 @@ code="${code:-$VERSION_ID}"
 code="${code,,}"
 verbose "Validating dist-code: ${dist}-${code}"
 case "${dist}-${code}" in
+    ubuntu-18.04)
+        code="bionic"
+        is_ubuntu_dist=true
+        is_ubuntu_bionic=true
+        ;;
     ubuntu-16.04|ubuntu-xenial|ubuntu-xenial_docker_minimal)
         code="xenial"
         is_ubuntu_dist=true
@@ -970,6 +976,7 @@ loud "              * Configuring PHP in Apache *          "
 loud "-----------------------------------------------------"
 # Test common locations for php conf directory
 php_conf_dirs=(
+    "/etc/php/7.2/apache2/conf.d"   # Ubuntu Bionic
     "/etc/php/7.0/apache2/conf.d"   # Ubuntu Xenial
     "/etc/php5/apache2/conf.d"      # Debian Stretch, Debian Jessie, Ubuntu Trusty
     "/etc/php.d"                    # CentOS 7
@@ -992,7 +999,9 @@ else
 fi
 
 # Enable Apache modules
-if $is_ubuntu_xenial || $is_debian_stretch; then
+if $is_ubuntu_bionic; then
+    loudCmd "a2enmod rewrite php7.2"
+elif $is_ubuntu_xenial || $is_debian_stretch; then
     loudCmd "a2enmod rewrite php7.0"
 elif $is_centos_dist; then
     verbose "TODO: enable Apache modules mod_rewrite and mod_php manually"
