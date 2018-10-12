@@ -77,6 +77,5 @@ pages:
     - 'Translating': translating.md
     - 'Documentation': documentation.md
   - 'Appendix':
-    - 'Expert Install': manual/expert-install/index.md
     - 'HD Audio Models': manual/hd-audio-models/index.md
     - 'About This Manual': manual/about-this-manual/index.md
