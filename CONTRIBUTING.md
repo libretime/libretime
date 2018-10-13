@@ -16,7 +16,7 @@ the following:
 
 Before opening an issue, please:
 
-* read and be prepared to adhere to our [code of conduct](https://github.com/LibreTime/code-of-conduct/blob/CODE-OF-CONDUCT.md)
+* read and be prepared to adhere to our [code of conduct](https://github.com/LibreTime/code-of-conduct/blob/master/CODE_OF_CONDUCT.md)
 * understand that we follow the standardized [C4 development process](https://rfc.zeromq.org/spec:42/C4/)
 * [search for existing duplicate or closed issues](https://github.com/LibreTime/libretime/issues?utf8=%E2%9C%93&q=is%3Aissue)
 * clearly state the problem you would like to solve in a meaningful way
