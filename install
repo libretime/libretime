@@ -613,6 +613,9 @@ case "${dist}-${code}" in
         code="trusty"
         is_ubuntu_dist=true
         is_ubuntu_trusty=true
+        echo -e "WARNING: Ubuntu Trusty will be EOL by April 2019 and LibreTime will no longer support it at that point." >&2
+        echo -e "Please upgrade to a non-EOL distro ASAP!" >&2
+        sleep 6
         ;;
     debian-9|debian-stretch)
         code="stretch"
