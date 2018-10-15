@@ -239,7 +239,7 @@
         sourceDomain: "http://localhost/", //where to get show status from
         updatePeriod: 600,
         dowText:{monday:"Monday", tuesday:"Tuesday", wednesday:"Wednesday",thursday:"Thursday", friday:"Friday", saturday:"Saturday",sunday:"Sunday", nextmonday:"Next Monday", nexttuesday:"Next Tuesday",nextwednesday:"Next Wednesday", nextthursday:"Next Thursday",nextfriday:"Next Friday", nextsaturday:"Next Saturday", nextsunday:"NextSunday"},
-        miscText: {time:"Time", programName:"Program Name", details:"Details", readMore:"Read More"}
+        miscText: {time:"Time", programName:"Program Name", details:"Details", readMore:"Read More", utcTime:"Time GMT", genre:"Genre", defaultGenre:"Other", nowPlaying:"Current Show - Now Playing..."}
     };
     options = $.extend(true, defaults, options);
     options.sourceDomain = addEndingBackslash(options.sourceDomain);
@@ -276,15 +276,15 @@
                 var html = 
                   '<table class="widget widget now-playing-list">'+
                     '<colgroup>'+
-                      '<col width="150" />'+
-                      '<col width="350" />'+
-                      '<col width="240" />'+
+                      '<col width="10%" />'+
+                      '<col width="3%" />'+
+		      '<col width=87% />'+
                     '</colgroup>'+
                     '<thead>'+
                       '<tr>'+
                         '<td>'+options.miscText.time+'</td>'+
+			'<td></td>'+
                         '<td>'+options.miscText.programName+'</td>'+
-                        '<td>'+options.miscText.details+'</td>'+
                       '</tr>'+
                     '</thead>'+
                     '<tfoot>'+
@@ -296,17 +296,23 @@
                 var daySchedule = data[dow[i]];
                 for (var j=0; j<daySchedule.length; j++){
                     var url = daySchedule[j].url;
+			daySchedule[j].genre = daySchedule[j].genre? daySchedule[j].genre : options.miscText.defaultGenre;
+			daySchedule[j].image_path = daySchedule[j].image_path? daySchedule[j].image_path : options.programImage;
                     html +=
                       '<tr>'+
-                        '<td>'+getTime(daySchedule[j].start_timestamp)+ " - " + getTime(daySchedule[j].end_timestamp)+'</td>'+
+			'<td style="padding-left:0px; padding-right:0px;"><p style="text-align:center;">'+getTime(daySchedule[j].start_timestamp)+'</p><p style="text-align:center;"><img src="/airtime-widgets/images/down-arrow.png"></p><p style="text-align:center; line-height: 8px;">'+getTime(daySchedule[j].end_timestamp)+'</p></td>'+
+			'<td valign="top" align="left" style="border-left:1px #741d00 dotted; border-right:1px #741d00 dotted;  background-color: #'+daySchedule[j].background_color+'";><p class="rotate"><span style="color: #'+daySchedule[j].color+';">'+daySchedule[j].genre+'</span></p></td>'+
                         '<td>'+
                           '<h4>'+daySchedule[j].name+'</h4>'+
-                        '</td>'+
-                        '<td>'+
-                          '<ul>'+
-                            '<li>'+(url.length > 0 ? '<a href="'+url+'">'+options.miscText.readMore+'</a>':'')+'</li>'+
+                          '<div id="widget_logobox"><img src="'+daySchedule[j].image_path+'" style="margin-top: -2px;"></div>'+
+			  '<br /><span id="jbShowDesc">'+daySchedule[j].description+'</span>'+
+                        //'</td>'+
+                        //'<td>'+
+                          '<br/><ul>'+
+                            '<li>'+(url.length > 0 ? '<a href="'+url+'" target="_top">'+options.miscText.readMore+'</a>':'')+'</li>'+
                           '</ul>'+
                         '</td>'+
+			
                       '</tr>';
                 }
                 html +=
