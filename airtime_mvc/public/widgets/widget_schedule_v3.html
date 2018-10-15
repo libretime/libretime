@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="/airtime-widgets/css/airtime-widgets.css" type="text/css" />
+<link rel="stylesheet" href="/airtime-widgets/css/custom.css" type="text/css" />
+<script src="/airtime-widgets/js/jquery-1.6.1.min.js" type="text/javascript"></script>
+<script src="/airtime-widgets/js/jquery-ui-1.8.10.custom.min.js" type="text/javascript"></script>
+<script src="/airtime-widgets/js/jquery.showinfo.js" type="text/javascript"></script>
+<script>
+    $(document).ready(function() {
+        $("#scheduleTabs").airtimeWeekSchedule({
+            sourceDomain:"https://airtime.97irratia.info/",
+            dowText:{monday:"Monday", tuesday:"Tuesday", wednesday:"Wednesday", thursday:"Thursday", friday:"Friday", saturday:"Saturday", sunday:"Sunday", nextmonday:">> Monday", nexttuesday:">> Tuesday", nextwednesday:">> Wednesday", nextthursday:">> Thursday", nextfriday:">> Friday", nextsaturday:">> Saturday"},
+            miscText:{time:"Time", programName:"Show name", details:"Details", readMore:"Read more", defaultGenre:"Radio", nowPlaying:"on Air now..."},
+	    backgroundColor: "#d52a33",
+	    textColor: "#fff",
+	    programImage: "https://97irratia.info/wp-content/uploads/2015/03/6461315162291g.jpg",
+            updatePeriod: 600 //seconds
+        });
+        var d = new Date().getDay();
+        $('#scheduleTabs').tabs({selected: d === 0 ? 6 : d-1, fx: { opacity: 'toggle' }});
+    });
+</script>
+<div id="scheduleTabs" class="ui-tabs"></div>
