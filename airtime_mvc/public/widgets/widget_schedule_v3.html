@@ -6,12 +6,12 @@
 <script>
     $(document).ready(function() {
         $("#scheduleTabs").airtimeWeekSchedule({
-            sourceDomain:"https://airtime.97irratia.info/",
+            sourceDomain:"http://localhost/",
             dowText:{monday:"Monday", tuesday:"Tuesday", wednesday:"Wednesday", thursday:"Thursday", friday:"Friday", saturday:"Saturday", sunday:"Sunday", nextmonday:">> Monday", nexttuesday:">> Tuesday", nextwednesday:">> Wednesday", nextthursday:">> Thursday", nextfriday:">> Friday", nextsaturday:">> Saturday"},
             miscText:{time:"Time", programName:"Show name", details:"Details", readMore:"Read more", defaultGenre:"Radio", nowPlaying:"on Air now..."},
 	    backgroundColor: "#d52a33",
 	    textColor: "#fff",
-	    programImage: "https://97irratia.info/wp-content/uploads/2015/03/6461315162291g.jpg",
+	    programImage: "http://localhost//default.jpg",
             updatePeriod: 600 //seconds
         });
         var d = new Date().getDay();
