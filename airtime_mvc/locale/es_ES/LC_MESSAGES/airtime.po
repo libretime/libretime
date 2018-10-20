@@ -578,7 +578,7 @@ msgstr ""
 
 #: airtime_mvc/application/common/Timezone.php:21
 msgid "Use station default"
-msgstr "Usar el valor predeterminado de la estación"
+msgstr "Usar el predeterminado de la estación"
 
 #: airtime_mvc/application/common/UsabilityHints.php:66
 msgid "Upload some tracks below to add them to your library!"
@@ -934,7 +934,7 @@ msgid "Copy of %s"
 msgstr "Copia de %s"
 
 #: airtime_mvc/application/controllers/ListenerstatController.php:51
-msgid "Please make sure admin user/password is correct on System->Streams page."
+msgid "Please make sure admin user/password is correct on Settings->Streams page."
 msgstr "Verifica que la contraseña del usuario admin. esté correcta en Sistema->página de streams."
 
 #: airtime_mvc/application/controllers/LocaleController.php:25
@@ -3693,13 +3693,13 @@ msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:73
 msgid "Upload"
-msgstr "Subir Audios"
+msgstr "Subir"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:81
 #: airtime_mvc/application/views/scripts/showbuilder/builderDialog.phtml:10
 #: airtime_mvc/application/views/scripts/showbuilder/index.phtml:5
 msgid "Dashboard"
-msgstr "Tablero"
+msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:87
 msgid "Podcasts"
@@ -3744,7 +3744,7 @@ msgid ""
 "Our new Dashboard view now has a powerful tabbed editing interface, so updating your tracks and playlists\n"
 "                        is easier than ever."
 msgstr ""
-"Nuestra nueva vista Tablero tiene ahora una poderosa interfaz de edición por pestañas, por lo que la actualización de tus pistas y listas de reproducción\n"
+"Nuestra nueva vista Dashboard tiene ahora una poderosa interfaz de edición por pestañas, por lo que la actualización de tus pistas y listas de reproducción\n"
 "                     es más sencillo que nunca."
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:197
@@ -5054,17 +5054,9 @@ msgstr "No hay webstream"
 msgid "Couldn't connect to RabbitMQ server! Please check if the server is running and your credentials are correct."
 msgstr "¡No se pudo conectar con el servidor RabbitMQ! Comprueba si el servidor se está ejecutando y tus credenciales son correctas."
 
-#: airtime_mvc/public/js/airtime/library/plupload.js 
+#: airtime_mvc...
 msgid "Successfully imported"
-msgstr "Importado con éxito"
-
-#: airtime_mvc/public/js/airtime/library/plupload.js 
-msgid "Import failed"
-msgstr "Error de importación"
-
-#: airtime_mvc/public/js/airtime/library/plupload.js 
-msgid "Pending import"
-msgstr "Pendiente de importación"
+msgstr "Importado correctamente"
 
 #: airtime_mvc/application/views/scripts/plupload/index.phtml
 msgid "Upload Audio Files"
