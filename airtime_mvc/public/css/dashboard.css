@@ -585,11 +585,11 @@ li.ui-state-default {
 .spl_sortable {
     height: 100%;
     overflow: auto;
-    -webkit-flex: 1 100%;
-    -moz-flex: 1 100%;
-    -ms-flex: 1 100%;
-    -o-flex: 1 100%;
-    flex: 1 100%;
+    -webkit-flex: 1 0 100%;
+    -moz-flex: 1 0 100%;
+    -ms-flex: 1 0 100%;
+    -o-flex: 1 0 100%;
+    flex: 1 0 100%;
 
     margin: 4px 0;
     min-height: 0;
