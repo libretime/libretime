@@ -388,3 +388,8 @@ ANALYZE cc_pref; -- this validates the new partial index
 
 -- For now, just needs to be truthy - to be updated later; we should find a better way to implement this...
 INSERT INTO cc_pref("keystr", "valstr") VALUES('whats_new_dialog_viewed', 1);
+
+--added for LibreTime to turn on podcast album override by default 3.0.0.alpha6
+INSERT INTO cc_pref("keystr", "valstr") VALUES('podcast_album_override', 1);
+INSERT INTO cc_pref("keystr", "valstr") VALUES('podcast_auto_smartblock', 1);
+-- end
