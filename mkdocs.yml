@@ -2,7 +2,7 @@ site_name: LibreTime
 theme: readthedocs
 
 dev_addr: '0.0.0.0:8888'
-site_dir: 'build/docs'
+site_dir: 'build/site/docs'
 markdown_extensions:
 - codehilite:
     noclasses: True

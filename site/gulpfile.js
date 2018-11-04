@@ -132,3 +132,19 @@ gulp.task('dev', ['css', 'js', 'browserSync'], function() {
   gulp.watch('./js/*.js', ['js']);
   gulp.watch('./*.html', browserSync.reload);
 });
+
+gulp.task('copy:deploy', function() {
+
+  gulp.src([
+    './vendor/**/*',
+    './css/**/*',
+    './img/**/*',
+    './js/**/*',
+    './index.html',
+  ], {base: "."})
+  .pipe(gulp.dest('./../build/site'))
+
+});
+
+// Deploy task
+gulp.task('deploy', ['default', 'copy:deploy']);

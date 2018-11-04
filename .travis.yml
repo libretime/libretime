@@ -20,6 +20,9 @@ env:
   matrix:
   - PYTHON=false
   - PYTHON=true
+  - NODE=false
+  - NODE=true
+  - SITE=true
 matrix:
   allow_failures:
   # there are currently some testing issues with DateTime precision on 7.1
@@ -29,12 +32,19 @@ matrix:
   - env: PYTHON=false
     php: 7.2
   exclude:
-  # by excluding all of python we make way to just runu python tests in one seperate instance
+  # by excluding all of python and node we can run such instances in a single chain
   - env: PYTHON=true
+  - env: NODE=false
+  - env: NODE=true
+  - env: SITE=true
   include:
-  # using latest to run python on since it will last the longest
+  # using latest to run alt language since it will last the longest
   - php: 7.1 
     env: PYTHON=true
+  - php: 7.1
+    env: NODE=true
+  - php: 7.1
+    env: SITE=true
 addons:
   apt:
     packages:
@@ -65,6 +75,17 @@ install:
       python setup.py install --dry-run --no-init-script
       popd
     fi
+- >
+    if [[ "$NODE" == true ]] || [[ "$SITE" == true ]]; then
+      npm install -g gulp-cli
+      pushd site/
+      npm install
+      popd
+    fi
+- >
+    if [[ "$SITE" == true ]]; then
+      pip install --user mkdocs
+    fi
 before_script:
 # prepare the database as per docs/testing.md
 - psql -c 'CREATE DATABASE libretime;' -U postgres
@@ -75,10 +96,12 @@ before_script:
 script:
 - ./travis/php.sh
 - ./travis/python.sh
+- ./travis/node.sh
+- ./travis/site.sh
 deploy:
 - provider: pages
   skip_cleanup: true
-  local_dir: build/docs
+  local_dir: build/site
   github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
   target_branch: master
   repo: LibreTime/LibreTime.github.io
@@ -87,7 +110,7 @@ deploy:
   name: R. LibreTime DocBot
   on:
     branch: master
-    condition: $PYTHON = true
+    condition: $SITE = true
 - provider: script
   skip_cleanup: true
   script: ./travis/release.sh
