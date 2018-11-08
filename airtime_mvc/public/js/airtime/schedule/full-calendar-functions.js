@@ -218,7 +218,7 @@ function eventRender(event, element, view) {
                 } else if (event.show_has_auto_playlist === true) {
                     $(element)
                         .find(".fc-event-time")
-                        .before('<span class="small-icon autoplaylist"></span><span class="small-icon show-empty"></span>');
+                        .before('<span class="small-icon autoplaylist"></span><span class="small-icon"></span>');
                 }
                     else {
                     $(element)
@@ -259,7 +259,7 @@ function eventRender(event, element, view) {
                 } else if (event.show_has_auto_playlist === true) {
                      $(element)
                         .find(".fc-event-title")
-                        .after('<span title="'+$.i18n._("Show has an automatic playlist")+'"class="small-icon autoplaylist"></span><span title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
+                        .after('<span title="'+$.i18n._("Show has an automatic playlist")+'"class="small-icon autoplaylist"></span>');
                 } else {
                      $(element)
                         .find(".fc-event-title")
