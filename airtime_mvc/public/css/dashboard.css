@@ -591,7 +591,7 @@ li.ui-state-default {
     overflow: auto;
     margin: 4px 0;
     min-height: 6em;
-    max-height: 100%;
+    max-height: calc(100% - 40px);
     padding: 5px;
     border: 1px solid #444;
     border-radius: 3px;
