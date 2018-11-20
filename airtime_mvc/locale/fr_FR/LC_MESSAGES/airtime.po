@@ -2538,7 +2538,7 @@ msgid "Must wait at least 1 hour to rebroadcast"
 msgstr "Vous devez attendre au moins 1 heure pour retransmettre"
 
 #: airtime_mvc/application/forms/AddShowAutoPlaylist.php:18
-msgid "Auto Schedule Playlist ?"
+msgid "Add Autoloading Playlist ?"
 msgstr ""
 
 #: airtime_mvc/application/forms/AddShowAutoPlaylist.php:25

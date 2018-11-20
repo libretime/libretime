@@ -21,7 +21,7 @@ In the **What** box, enter the **Name**, public website **URL**, **Genre** and *
 Autoloading Playlist
 ------------------
 
-In this section, you can select a playlist that will be used for this show. The playlist must already be defined in your library. **Auto Schedule Playlist** needs to be checked for **Select Playlist** and **Repeat AutoPlaylist Until Show is Full** to be visible.
+In this section, you can select a playlist that will be used for this show. The playlist must already be defined in your library. **Add Autoloading Playlist** needs to be checked for **Select Playlist** and **Repeat Playlist Until Show is Full** to be visible.
 
 ![](static/Screenshot454-Show_playlist.png)
 

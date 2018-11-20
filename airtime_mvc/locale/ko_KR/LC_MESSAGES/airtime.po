@@ -2535,7 +2535,7 @@ msgid "Must wait at least 1 hour to rebroadcast"
 msgstr "재방송 설정까지 1시간 기간이 필요합니다"
 
 #: airtime_mvc/application/forms/AddShowAutoPlaylist.php:18
-msgid "Auto Schedule Playlist ?"
+msgid "Add Autoloading Playlist ?"
 msgstr ""
 
 #: airtime_mvc/application/forms/AddShowAutoPlaylist.php:25
