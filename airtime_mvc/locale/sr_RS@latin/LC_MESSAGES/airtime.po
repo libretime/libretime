@@ -4939,7 +4939,7 @@ msgid "What"
 msgstr "Šta"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:14
-msgid "Automatic Playlist"
+msgid "Autoloading Playlist"
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:18
