@@ -473,6 +473,27 @@ function setAddShowEvents(form) {
         }
     });
 
+    form.find(".show_autoplaylist_help_icon").qtip({
+        content: {
+            text: $.i18n._("Autoloading playlists' contents are added to shows one hour before the show airs. <a href='http://libretime.org/manual/calendar/#autoloading-playlist'>More informaction</a>")
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        }
+    });
+
     form.find(".airtime_auth_help_icon").qtip({
         content: {
             text: $.i18n._("This follows the same security pattern for the shows: only users assigned to the show can connect.")
