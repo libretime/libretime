@@ -9,7 +9,7 @@ In the top left corner of the page, you can go back or forward through the **Cal
 Adding a show
 -------------
 
-Only *Admins* and *Program Managers* can use this feature. To add a new show to the Calendar, click the **+ New Show** button in the top left corner of the page, or click on any future row or box in the Calendar which is empty. Either of these actions opens the **Add this show** box, which has seven sections, arranged vertically: **What**, **Automatic Playlist**, **When**, **Live Stream Input**, **Record & Rebroadcast**, **Who**, and **Style**. Click the small orange triangle to the left of the section name if you wish to minimize or maximize it.
+Only *Admins* and *Program Managers* can use this feature. To add a new show to the Calendar, click the **+ New Show** button in the top left corner of the page, or click on any future row or box in the Calendar which is empty. Either of these actions opens the **Add this show** box, which has seven sections, arranged vertically: **What**, **Autoloading Playlist**, **When**, **Live Stream Input**, **Record & Rebroadcast**, **Who**, and **Style**. Click the small orange triangle to the left of the section name if you wish to minimize or maximize it.
 
 What
 ----
@@ -18,7 +18,7 @@ In the **What** box, enter the **Name**, public website **URL**, **Genre** and *
 
 ![](static/Screenshot453-Show_what.png)
 
-Automatic Playlist
+Autoloading Playlist
 ------------------
 
 In this section, you can select a playlist that will be used for this show. The playlist must already be defined in your library. **Auto Schedule Playlist** needs to be checked for **Select Playlist** and **Repeat AutoPlaylist Until Show is Full** to be visible.
