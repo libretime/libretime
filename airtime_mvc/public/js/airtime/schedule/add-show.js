@@ -16,6 +16,14 @@ function openAddShowForm(nowOrFuture) {
             $("#add-show-form").show();
 
             windowResize();
+
+            // collapse advanced configuration sections
+            $('#schedule-show-auto').hide();
+            $('#live-stream-override').hide();
+            $('#schedule-record-rebroadcast').hide();
+            $('#schedule-show-who').hide();
+            $('#schedule-show-style').hide();
+            
         }
         $("#schedule-show-what").show(0, function(){
             $add_show_name = $("#add_show_name");
