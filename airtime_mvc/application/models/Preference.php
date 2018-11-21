@@ -912,7 +912,7 @@ class Application_Model_Preference
         self::setValue('latest_version', json_encode($latest));
         self::setValue('latest_version_nextcheck', strtotime('+1 week'));
         if (empty($latest)) {
-            return $config['airtime_version'];
+            return array($config['airtime_version']);
         } else {
             return $latest;
         }
