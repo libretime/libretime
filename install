@@ -586,7 +586,6 @@ fi
 is_debian_dist=false
 is_debian_stretch=false
 is_debian_jessie=false
-is_debian_wheezy=false
 is_ubuntu_dist=false
 is_ubuntu_bionic=false
 is_ubuntu_xenial=false
@@ -636,9 +635,9 @@ case "${dist}-${code}" in
         is_debian_jessie=true
         ;;
     debian-7|debian-wheezy)
-        code="wheezy"
-        is_debian_dist=true
-        is_debian_wheezy=true
+        echo -e "ERROR: Debian Wheezy is archived and does not receive any security or other updates since 2018-05-31." >&2
+        echo -e "The LibreTime installer dropped support for installing LibreTime on Wheezy in 3.0.0-alpha.6." >&2
+        exit 1
         ;;
     centos-7)
         is_centos_dist=true
