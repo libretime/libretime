@@ -3,6 +3,7 @@
 LibreTime releases can be downloaded [here](https://github.com/LibreTime/libretime/releases).
 
 Recommendations:
+
 - LibreTime should generally be installed on a dedicated host running Ubuntu 16.04 LTS (Xenial Xerus). 
 - LibreTime is undergoing active development, and is currently in ALPHA. 
 - It is not recommended that you install LibreTime on the same computer you are using as a desktop. 
