@@ -52,7 +52,13 @@ showhelp () {
                 Install Icecast 2 and deploy a basic configuration for Airtime
     --selinux
                 Run restorecon on directories and files that need tagging to
-                allow the WEB_USER access."
+                allow the WEB_USER access
+    --no-postgres
+                Skips all postgres related install tasks (Useful if you configure
+                postgresql as part of another script / docker builds)
+    --no-rabbitmq
+                Skips all rabbitmq related install tasks.
+                "
     exit 0
 }
 
@@ -85,6 +91,8 @@ upgrade="f"
 dist=""
 code=""
 apache_bin=""
+skip_postgres=0
+skip_rabbitmq=0
 
 
 function verbose() {
@@ -449,6 +457,12 @@ while :; do
         --selinux)
             selinux="t"
             ;;
+        --no-postgres)
+            skip_postgres=1
+            ;;
+        --no-rabbitmq)
+            skip_rabbitmq=1
+            ;;            
         --)
             shift
             break
@@ -574,6 +588,7 @@ is_debian_stretch=false
 is_debian_jessie=false
 is_debian_wheezy=false
 is_ubuntu_dist=false
+is_ubuntu_bionic=false
 is_ubuntu_xenial=false
 is_ubuntu_trusty=false
 is_centos_dist=false
@@ -584,7 +599,12 @@ code="${code:-$VERSION_ID}"
 code="${code,,}"
 verbose "Validating dist-code: ${dist}-${code}"
 case "${dist}-${code}" in
-    ubuntu-16.04|ubuntu-xenial)
+    ubuntu-18.04)
+        code="bionic"
+        is_ubuntu_dist=true
+        is_ubuntu_bionic=true
+        ;;
+    ubuntu-16.04|ubuntu-xenial|ubuntu-xenial_docker_minimal)
         code="xenial"
         is_ubuntu_dist=true
         is_ubuntu_xenial=true
@@ -593,6 +613,9 @@ case "${dist}-${code}" in
         code="trusty"
         is_ubuntu_dist=true
         is_ubuntu_trusty=true
+        echo -e "WARNING: Ubuntu Trusty will be EOL by April 2019 and LibreTime will no longer support it at that point." >&2
+        echo -e "Please upgrade to a non-EOL distro ASAP!" >&2
+        sleep 6
         ;;
     debian-9|debian-stretch)
         code="stretch"
@@ -956,6 +979,7 @@ loud "              * Configuring PHP in Apache *          "
 loud "-----------------------------------------------------"
 # Test common locations for php conf directory
 php_conf_dirs=(
+    "/etc/php/7.2/apache2/conf.d"   # Ubuntu Bionic
     "/etc/php/7.0/apache2/conf.d"   # Ubuntu Xenial
     "/etc/php5/apache2/conf.d"      # Debian Stretch, Debian Jessie, Ubuntu Trusty
     "/etc/php.d"                    # CentOS 7
@@ -978,7 +1002,9 @@ else
 fi
 
 # Enable Apache modules
-if $is_ubuntu_xenial || $is_debian_stretch; then
+if $is_ubuntu_bionic; then
+    loudCmd "a2enmod rewrite php7.2"
+elif $is_ubuntu_xenial || $is_debian_stretch; then
     loudCmd "a2enmod rewrite php7.0"
 elif $is_centos_dist; then
     verbose "TODO: enable Apache modules mod_rewrite and mod_php manually"
@@ -986,69 +1012,74 @@ else
     loudCmd "a2enmod rewrite php5"
 fi
 
-loud "\n-----------------------------------------------------"
-loud "              * Configuring PostgreSQL *              "
-loud "-----------------------------------------------------"
+if [ $skip_postgres -eq 0 ]; then
+    loud "\n-----------------------------------------------------"
+    loud "              * Configuring PostgreSQL *              "
+    loud "-----------------------------------------------------"
 
-# Ensure postgres is running - It isn't after you install the postgres package on Ubuntu 15.04
-systemInitCommand start postgresql
+    # Ensure postgres is running - It isn't after you install the postgres package on Ubuntu 15.04
+    systemInitCommand start postgresql
 
-setupAirtimePostgresUser() {
-    # here-doc to execute this block as postgres user
-    su postgres <<'EOF'
-    set +e
-    count=$(psql -d postgres -tAc "SELECT count(*) FROM pg_roles WHERE rolname='airtime';")
-    if [[ $count -eq 0 ]]; then
-        psql -d postgres -tAc "CREATE USER airtime WITH ENCRYPTED PASSWORD 'airtime'; ALTER USER airtime CREATEDB;"
-        [[ $? -eq 0 ]] && 
-              echo "Created airtime user in PostgreSQL" || 
-              echo "$0:${FUNCNAME}(): ERROR: Can't create airtime user in PostgreSQL!"
-    else
-        echo "airtime user already exists in PostgreSQL"
-    fi
-    set -e
+    setupAirtimePostgresUser() {
+        # here-doc to execute this block as postgres user
+        su postgres <<'EOF'
+        set +e
+        count=$(psql -d postgres -tAc "SELECT count(*) FROM pg_roles WHERE rolname='airtime';")
+        if [[ $count -eq 0 ]]; then
+            psql -d postgres -tAc "CREATE USER airtime WITH ENCRYPTED PASSWORD 'airtime'; ALTER USER airtime CREATEDB;"
+            [[ $? -eq 0 ]] && 
+                  echo "Created airtime user in PostgreSQL" || 
+                  echo "$0:${FUNCNAME}(): ERROR: Can't create airtime user in PostgreSQL!"
+        else
+            echo "airtime user already exists in PostgreSQL"
+        fi
+        set -e
 # don't indent this!
 EOF
-}
+    }
 
-if [ "$postgres" = "t" ]; then
-    setupAirtimePostgresUser
-elif [ ${_i} -eq 1 ]; then
-    echo -e "Create default airtime postgres user? (Y/n): \c"
-    read IN
-    if [ "$IN" = "y" -o "$IN" = "Y" ]; then
+    if [ "$postgres" = "t" ]; then
         setupAirtimePostgresUser
+    elif [ ${_i} -eq 1 ]; then
+        echo -e "Create default airtime postgres user? (Y/n): \c"
+        read IN
+        if [ "$IN" = "y" -o "$IN" = "Y" ]; then
+            setupAirtimePostgresUser
+        fi
     fi
 fi
 
-loud "\n-----------------------------------------------------"
-loud "               * Configuring RabbitMQ *               "
-loud "-----------------------------------------------------"
+if [ $skip_rabbitmq -eq 0 ]; then
 
-RABBITMQ_VHOST=/airtime
-RABBITMQ_USER=airtime
-RABBITMQ_PASSWORD=airtime
-EXCHANGES="airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
+    loud "\n-----------------------------------------------------"
+    loud "               * Configuring RabbitMQ *               "
+    loud "-----------------------------------------------------"
 
-# Ignore errors in this check to avoid dying when vhost isn't found
-set +e
-rabbitmqctl list_vhosts | grep -w "^${RABBITMQ_VHOST}$" > /dev/null
-RESULT="$?"
-set -e
+    RABBITMQ_VHOST=/airtime
+    RABBITMQ_USER=airtime
+    RABBITMQ_PASSWORD=airtime
+    EXCHANGES="airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
 
-# Only run these if the vhost doesn't exist
-if [ "$RESULT" != "0" ]; then
-    verbose "\n * Creating RabbitMQ user ${RABBITMQ_USER}..."
+    # Ignore errors in this check to avoid dying when vhost isn't found
+    set +e
+    rabbitmqctl list_vhosts | grep -w "^${RABBITMQ_VHOST}$" > /dev/null
+    RESULT="$?"
+    set -e
 
-    rabbitmqctl add_vhost ${RABBITMQ_VHOST}
-    rabbitmqctl add_user ${RABBITMQ_USER} ${RABBITMQ_PASSWORD}
-else
-    verbose "\nRabbitMQ user already exists, skipping creation"
+    # Only run these if the vhost doesn't exist
+    if [ "$RESULT" != "0" ]; then
+        verbose "\n * Creating RabbitMQ user ${RABBITMQ_USER}..."
+
+        rabbitmqctl add_vhost ${RABBITMQ_VHOST}
+        rabbitmqctl add_user ${RABBITMQ_USER} ${RABBITMQ_PASSWORD}
+    else
+        verbose "\nRabbitMQ user already exists, skipping creation"
+    fi
+
+    verbose "\n * Setting RabbitMQ user permissions..."
+    #loudCmd "rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} \"$EXCHANGES\" \"$EXCHANGES\" \"$EXCHANGES\""
+    loudCmd "rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} .\* .\* .\*"
 fi
-
-verbose "\n * Setting RabbitMQ user permissions..."
-#loudCmd "rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} \"$EXCHANGES\" \"$EXCHANGES\" \"$EXCHANGES\""
-loudCmd "rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} .\* .\* .\*"
 
 if [ ! -d "/etc/airtime" ]; then
     loud "\n-----------------------------------------------------"

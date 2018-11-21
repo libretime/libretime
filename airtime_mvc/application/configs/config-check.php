@@ -16,7 +16,8 @@ $rabbitmq           = $externalServices["rabbitmq"];
 
 $pypo               = $externalServices["pypo"];
 $liquidsoap         = $externalServices["liquidsoap"];
-$analyzer       = $externalServices["analyzer"];
+$analyzer           = $externalServices["analyzer"];
+$celery             = $externalServices['celery'];
 
 $r1 = array_reduce($phpDependencies, "booleanReduce", true);
 $r2 = array_reduce($externalServices, "booleanReduce", true);
@@ -217,6 +218,26 @@ $result = $r1 && $r2;
                             and ensure that it's running with
                             <br/><code>initctl list | grep airtime-liquidsoap</code><br/>
                             If not, try running <code>sudo service airtime-liquidsoap restart</code>
+                        <?php
+                        }
+                        ?>
+                    </td>
+                </tr>
+                <tr class="<?=$celery ? 'success' : 'danger';?>">
+                    <td class="component">
+                        Celery
+                    </td>
+                    <td class="description">
+                        Airtime Celery Task service
+                    </td>
+                    <td class="solution <?php if ($celery) {echo 'check';?>">
+                        <?php
+                        } else {
+                            ?>">
+                            Check that the airtime-celery service is installed correctly in <code>/etc/init.d</code>,
+                            and ensure that it's running with
+                            <br/><code>initctl list | grep airtime-celery</code><br/>
+                            If not, try running <code>sudo service airtime-celery restart</code>
                         <?php
                         }
                         ?>

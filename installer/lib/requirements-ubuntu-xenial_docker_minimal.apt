@@ -11,9 +11,6 @@ lsb-release
 zip
 unzip
 
-rabbitmq-server
-
-postgresql
 postgresql-client
 php7.0-pgsql
 
@@ -39,8 +36,6 @@ patch
 php7.0-curl
 mpg123
 curl
-
-icecast2
 
 libcamomile-ocaml-data
 libpulse0

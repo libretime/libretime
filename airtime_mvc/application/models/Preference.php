@@ -909,13 +909,13 @@ class Application_Model_Preference
             $versions[] = $item->get_title();
         }
         $latest = $versions;
-        self::setValue('latest_version', json_encode($latest));
         self::setValue('latest_version_nextcheck', strtotime('+1 week'));
         if (empty($latest)) {
-            return $config['airtime_version'];
-        } else {
-            return $latest;
+            return array($config['airtime_version']);
         }
+
+        self::setValue('latest_version', json_encode($latest));
+        return $latest;
     }
 
     public static function SetLatestVersion($version)

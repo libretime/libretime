@@ -49,13 +49,6 @@ class Config {
             $CC_CONFIG['staticBaseDir'] = '/';
         }
 
-        $CC_CONFIG['amazon_S3'] = array(
-            'provider' => $values['amazon_S3']['provider'],
-            'bucket' => $values['amazon_S3']['bucket'],
-            'api_key' => $values['amazon_S3']['api_key'],
-            'api_key_secret' => $values['amazon_S3']['api_key_secret']
-        );
-
         // Tells us where file uploads will be uploaded to.
         // It will either be set to a cloud storage backend or local file storage.
         $CC_CONFIG["current_backend"] = $values["current_backend"]["storage_backend"];
