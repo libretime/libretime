@@ -1,4 +1,8 @@
-Airtime's media library is inside the */srv/airtime/stor/* folder on your server, by default. In **Media folders** on the **System** menu, you can change this default location, or add extra folders to be watched by Airtime.
+Airtime's media library is inside the */srv/airtime/stor/* folder on your server, by default. 
+# This functionality is not currently supported by LibreTime 3.x
+See [Libretime-import](../libretime-import) for an alternative filesystem based import service developed for LibreTime
+
+In **Media folders** on the **System** menu, you can change this default location, or add extra folders to be watched by Airtime.
 
 ![](static/Screenshot399-Manage_media_folders.png)
 

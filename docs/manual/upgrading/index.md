@@ -47,6 +47,9 @@ current time, it will skip to the correct point in the current item and start pl
 There will be tested ways to switch from a LibreTime pre-release to a packaged version
 of LibreTime.
 
+LibreTime 3.x has removed the media folders functionality and replaced it with 
+a filesystem based import service see [Libretime-Import](../libretime-import) for more details.
+
 Airtime 2.5.x versions support upgrading from version 2.3.0 and above. If you are
 running a production server with a version of Airtime prior to 2.3.0, you should
 upgrade it to version 2.3.0 before continuing. 
@@ -54,8 +57,7 @@ upgrade it to version 2.3.0 before continuing. 
 In Airtime 1.9.0 onwards, the concept of *linked files* was replaced with the
 concept of *watched folders*. If you are upgrading from a version of Airtime 
 earlier than 1.9.0 and you have previously linked files, the folders they are
-in will not be watched until you add them to your watched folder list. See
-[Media Folders](../media-folders) for more details.
+in will not be watched until you add them to your watched folder list.
 
 Upgrading the server distribution
 ---------------------------------

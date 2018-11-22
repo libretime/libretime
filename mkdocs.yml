@@ -55,7 +55,7 @@ pages:
     - 'Troubleshooting': manual/troubleshooting/index.md
     - 'Using Monit': manual/using-monit/index.md
   - 'Advanced Configuration':
-    - 'Automated File Import': manual/automated-file-import/index.md
+    - 'Automated File Import': manual/libretime-import/index.md
     - 'Icecast Handover': manual/icecast-handover/index.md
     - 'Promoting Your Station': manual/promoting-your-station/index.md
     - 'Stream Player for Your Website': manual/stream-player-for-your-website/index.md
