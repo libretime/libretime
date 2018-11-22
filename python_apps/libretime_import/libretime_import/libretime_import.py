@@ -27,7 +27,7 @@ class LibretimeImportServer:
         # Configure logging
         self.setup_logging(debug)
 
-        # Read our rmq config file
+        # Read our libretimesu config file
         lt_config = config_file.read_config_file(lt_config_path)
 
         # Start watching the uploads folder for new files

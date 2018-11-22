@@ -1113,6 +1113,7 @@ if [ ! -d "/srv/airtime" ]; then
 fi
 if [ ! -d "/srv/airtime/upload" ]; then
     mkdir -p /srv/airtime/stor/uploads
+    chmod 777 /srv/airtime/stor/uploads
 fi
 
 chown -R ${web_user}:${web_user} /srv/airtime

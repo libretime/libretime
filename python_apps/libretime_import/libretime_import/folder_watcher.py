@@ -32,8 +32,9 @@ class FolderWatcher:
         self._port = lt_config.getint(LT_CONFIG_SECTION, 'base_port')
         self._basedir = lt_config.get(LT_CONFIG_SECTION, 'base_dir')
         self._api_key = lt_config.get(LT_CONFIG_SECTION, 'api_key')
-        # TODO - make import_dir configurable via the command line or database add it to the airtime.conf config w/ installer
-        self._import_dir = lt_config.get(LT_CONFIG_SECTION, 'import_dir')
+        default_import = {'import_dir' : '/srv/airtime/stor/uploads'}
+        # TODO import_dir is added via the BASH install script but not via setup.py so putting in a default value as a temporary fix
+        self._import_dir = lt_config.get(LT_CONFIG_SECTION, 'import_dir', 0, default_import)
 
         # Set up a signal handler so we can shutdown gracefully - perhaps this is not needed
         # For some reason, this signal handler must be set up here. I'd rather 
