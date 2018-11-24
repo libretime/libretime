@@ -159,7 +159,8 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             $this->limitOptions = array(
                 "hours"   => _("hours"),
                 "minutes" => _("minutes"),
-                "items"   => _("items")
+                "items"   => _("items"),
+                "remaining" => _("remaining time in show")
             );
         }
         return $this->limitOptions;

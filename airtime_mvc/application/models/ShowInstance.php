@@ -476,6 +476,12 @@ SQL;
         return intval($ends->format('U')) - intval($starts->format('U'));
     }
 
+    // should return the amount of seconds remaining to be scheduled in a show instance
+    public function getSecondsRemaining()
+    {
+        return ($this->getDurationSecs() - $this->getTimeScheduledSecs());
+    }
+
     public function getPercentScheduled()
     {
         $durationSeconds = $this->getDurationSecs();
