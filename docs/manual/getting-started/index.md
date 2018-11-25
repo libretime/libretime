@@ -11,7 +11,7 @@ example:
 You can log in for the first time with the user name *admin* and the password set during installation. Your browser should 
 automatically focus on the **Username** field.
 
-![](static/Screenshot465-Airtime_login.png)
+![](static/Screenshot-Login.png)
 
 If you enter the password incorrectly three times, you will be presented with a reCAPTCHA challenge to prove that you are 
 a human, and not a password-guessing robot. This feature helps protect your LibreTime installation against brute force 
