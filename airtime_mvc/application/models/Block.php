@@ -1355,14 +1355,22 @@ SQL;
         $sizeOfInsert = count($insertList);
         
         // if block is not full and repeat_track is check, fill up more
+        // additionally still don't overflow the limit
         while (!$isBlockFull && $repeat == 1 && $sizeOfInsert > 0) {
         	Logging::debug("adding repeated tracks.");
         	Logging::debug("total time = " . $totalTime);
         	
             $randomEleKey = array_rand(array_slice($insertList, 0, $sizeOfInsert));
-            $insertList[] = $insertList[$randomEleKey];
-            $totalTime += $insertList[$randomEleKey]['length'];
-            $totalItems++;
+
+            $projectedTime = $totalTime + $insertList[$randomEleKey]['length'];
+            if ($projectedTime > $limit['time']) {
+                $totalItems++;
+            }
+            else {
+                $insertList[] = $insertList[$randomEleKey];
+                $totalTime += $insertList[$randomEleKey]['length'];
+                $totalItems++;
+            }
             
             if ((!is_null($limit['items']) && $limit['items'] == count($insertList)) || $totalItems > 500 || $totalTime > $limit['time']) {
                 break;
