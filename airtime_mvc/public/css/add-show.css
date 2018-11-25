@@ -85,6 +85,9 @@ label.wrapp-label input[type="checkbox"] {
 #schedule-add-show fieldset dd input[type="checkbox"] {
     margin-top: 6px;
 }
+#schedule-show-auto input[type="checkbox"] {
+    margin-left: 6px;
+}
 
 #add_show_day_check-element.block-display {
     margin-bottom: 15px;
