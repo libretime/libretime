@@ -234,11 +234,6 @@ and then run the command (as root):
 
 This should make sure that **rabbitmq-server** starts after the next reboot.
 
-libav on Debian squeeze and .m4a files
---------------------------------------
-
-The version of libav shipped with Debian 6.0 'squeeze' is known to cause problems when Airtime analyses .m4a files containing the AAC codec for silence, using Silan (see <https://github.com/x42/silan/issues/2>). It is recommended that Debian servers are upgraded to the current stable 'wheezy' 7.2 release. As a short-term measure, updated libav packages from the squeeze-backports repository can be used to work around this problem. This work-around is only required if you do not wish to upgrade to 'wheezy' yet, but have AAC codec .m4a files in your Airtime library.
-
 Mail server
 -----------
 

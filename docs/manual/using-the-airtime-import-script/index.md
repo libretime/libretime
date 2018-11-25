@@ -41,8 +41,7 @@ Airtime 2.5 for Broadcasters
 -   **Installation**
 -   [Preparing the server](../preparing-the-server/index.html)
 -   [Easy setup](../easy-setup/index.html)
--   [Automated installation](../automated-installation/index.html)
--   [Manual installation](../manual-installation/index.html)
+-   [Installation](../install)
 -   [Setting the server time](../setting-the-server-time/index.html)
 -   **Administration**
 -   [Preparing media for ingest](../preparing-media-for-ingest/index.html)
