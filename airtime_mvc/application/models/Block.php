@@ -1262,13 +1262,22 @@ SQL;
         ->save();
        
  
-        // insert repeate track option
+        // insert repeat track option
         $qry = new CcBlockcriteria();
         $qry->setDbCriteria("repeat_tracks")
         ->setDbModifier("N/A")
         ->setDbValue($p_criteriaData['etc']['sp_repeat_tracks'])
         ->setDbBlockId($this->id)
         ->save();
+
+        // insert overflow track option
+        $qry = new CcBlockcriteria();
+        $qry->setDbCriteria("overflow_tracks")
+            ->setDbModifier("N/A")
+            ->setDbValue($p_criteriaData['etc']['sp_overflow_tracks'])
+            ->setDbBlockId($this->id)
+            ->save();
+
     }
 
     /**
@@ -1316,6 +1325,7 @@ SQL;
         $files      = $info['files'];
         $limit      = $info['limit'];
         $repeat     = $info['repeat_tracks'];
+        $overflow   = $info['overflow_tracks'];
 
         $insertList = array();
         $totalTime  = 0;
@@ -1332,17 +1342,27 @@ SQL;
             $id = $iterator->current()->getDbId();
             $fileLength = $iterator->current()->getCueLength();
             $length = Application_Common_DateHelper::calculateLengthInSeconds($fileLength);
-            // need to check to determine if the track will make the playlist exceed the totalTime before adding it
-            // this can be quite processor consuming so as a workaround I used the totalItems limit to prevent the
-            // algorithm from parsing too many items.
-                $projectedTime = $totalTime + $length;
-            if ($projectedTime > $limit['time']) {
-                $totalItems++;
-                		}
-	        else {
+            // if the block is setup to allow the overflow of tracks this will add the next track even if it becomes
+            // longer than the time limit
+            if ($overflow == 1) {
                 $insertList[] = array('id' => $id, 'length' => $length);
                 $totalTime += $length;
                 $totalItems++;
+                }
+            // otherwise we need to check to determine if the track will make the playlist exceed the totalTime before
+            // adding it this could loop through a lot of tracks so I used the totalItems limit to prevent
+            // the algorithm from parsing too many items.
+
+            else {
+                    $projectedTime = $totalTime + $length;
+                if ($projectedTime > $limit['time']) {
+                    $totalItems++;
+                    		}
+	            else {
+                    $insertList[] = array('id' => $id, 'length' => $length);
+                    $totalTime += $length;
+                    $totalItems++;
+                }
             }
             if ((!is_null($limit['items']) && $limit['items'] == count($insertList)) || $totalItems > 500 || $totalTime > $limit['time']) {
                 $isBlockFull = true;
@@ -1361,15 +1381,23 @@ SQL;
         	Logging::debug("total time = " . $totalTime);
         	
             $randomEleKey = array_rand(array_slice($insertList, 0, $sizeOfInsert));
-
-            $projectedTime = $totalTime + $insertList[$randomEleKey]['length'];
-            if ($projectedTime > $limit['time']) {
-                $totalItems++;
-            }
-            else {
+            // this will also allow the overflow of tracks so that time limited smart blocks will schedule until they
+            // are longer than the time limit rather than never scheduling past the time limit
+            if ($overflow == 1) {
                 $insertList[] = $insertList[$randomEleKey];
                 $totalTime += $insertList[$randomEleKey]['length'];
                 $totalItems++;
+            }
+            else {
+                $projectedTime = $totalTime + $insertList[$randomEleKey]['length'];
+                if ($projectedTime > $limit['time']) {
+                    $totalItems++;
+                }
+                else {
+                    $insertList[] = $insertList[$randomEleKey];
+                    $totalTime += $insertList[$randomEleKey]['length'];
+                    $totalItems++;
+                }
             }
             
             if ((!is_null($limit['items']) && $limit['items'] == count($insertList)) || $totalItems > 500 || $totalTime > $limit['time']) {
@@ -1457,6 +1485,8 @@ SQL;
                     "display_modifier"=>_($modifier));
             } else if($criteria == "repeat_tracks") {
                 $storedCrit["repeat_tracks"] = array("value"=>$value);
+            } else if($criteria == "overflow_tracks") {
+                $storedCrit["overflow_tracks"] = array("value"=>$value);
             } else if($criteria == "sort") {
                 $storedCrit["sort"] = array("value"=>$value);
             } else {
@@ -1622,17 +1652,25 @@ SQL;
         }
         
         $repeatTracks = 0;
+        $overflowTracks = 0;
+
         if (isset($storedCrit['repeat_tracks'])) {
             $repeatTracks = $storedCrit['repeat_tracks']['value'];
         }
-        
+
+        if (isset($storedCrit['overflow_tracks'])) {
+            $overflowTracks = $storedCrit['overflow_tracks']['value'];
+        }
+
+
         try {
             $out = $qry->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)->find();
 
-            return array("files"=>$out, "limit"=>$limits, "repeat_tracks"=> $repeatTracks, "count"=>$out->count());
+            return array("files"=>$out, "limit"=>$limits, "repeat_tracks"=> $repeatTracks, "overflow_tracks"=> $overflowTracks, "count"=>$out->count());
         } catch (Exception $e) {
             Logging::info($e);
         }
+
     }
     public static function organizeSmartPlaylistCriteria($p_criteria)
     { 

@@ -446,6 +446,14 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         }
         $this->addElement($repeatTracks);
 
+        $overflowTracks = new Zend_Form_Element_Checkbox('sp_overflow_tracks');
+        $overflowTracks->setDecorators(array('viewHelper'))
+            ->setLabel(_('Overflow Time Limit:'));
+        if (isset($storedCrit["overflow_tracks"])) {
+            $overflowTracks->setChecked($storedCrit["overflow_tracks"]["value"] == 1?true:false);
+        }
+        $this->addElement($overflowTracks);
+
         $sort = new Zend_Form_Element_Select('sp_sort_options');
         $sort->setAttrib('class', 'sp_input_select')
               ->setDecorators(array('viewHelper'))
