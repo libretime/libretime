@@ -1,26 +1,21 @@
-If the server is only being used for LibreTime and has a web browser installed, you can access the administration interface 
-directly on that server by opening the address:
+If the server is only being used for LibreTime and has a web browser installed, you can access the administration interface directly on that server by opening the address:
 
     http://localhost/
 
-If you have set up LibreTime so that it can be accessed from other computers, you would use a domain name instead. For 
-example:
+If you have set up LibreTime so that it can be accessed from other computers, you would use a domain name instead. For example:
 
     https://libretime.example.com/
 
-You can log in for the first time with the user name *admin* and the password set during installation. Your browser should 
-automatically focus on the **Username** field.
+You can log in for the first time with the user name *admin* and the password set during installation. Your browser should automatically focus on the **Username** field.
 
 ![](static/Screenshot-Login.png)
 
-If you enter the password incorrectly three times, you will be presented with a reCAPTCHA challenge to prove that you are 
-a human, and not a password-guessing robot. This feature helps protect your LibreTime installation against brute force 
+If you enter the password incorrectly three times, you will be presented with a reCAPTCHA challenge to prove that you are a human, and not a password-guessing robot. This feature helps protect your LibreTime installation against brute force 
 attacks.
 
 ![](static/Screenshot466-Recaptcha_login.png)
 
-If activated, you will see a link **Reset password** below the password field, which enables users to obtain a password 
-reminder by email. See the chapter *Preferences* for configuration details.
+If activated, you will see a link **Reset password** below the password field, which enables users to obtain a password reminder by email. See the chapter *Preferences* for configuration details.
 
 ![](static/Screenshot467-Reset_password_link.png) 
 
@@ -32,16 +27,16 @@ The **E-mail** address you enter must match the address stored in the database f
 The Master Panel
 ----------------
 
-After the pop-up window is closed, you should now see the **Master Panel**, which is present at the top of every page of
-the LibreTime interface. On the left hand side, the Master Panel displays the details of the **Previous** file played out, 
+The **Master Panel** is present at the top of every page of the LibreTime interface. On the left hand side, the Master Panel displays the details of the **Previous** file played out, 
 the current file playing (with an orange progress bar and time elapsed/time remaining), and the details of the **Next** 
 file due to play. It also displays the name and scheduled time of the current show, with a blue progress bar.
 
-Beneath this side of the Master Panel is the main navigation menu, with sub-menus labelled **Now Playing**, **Add Media**, 
-**Library**, **Calendar**, **System**, **History** and **Help**. We'll be looking at the contents of these menus in the 
+![](static/Screenshot-MasterPanel.png)
+
+Beneath this side of the Master Panel is the main navigation menu. We'll be looking at the contents of these menus in the 
 following chapters of this book.
 
-<img src="static/Screenshot542-Main_menus_250.png" width="595" height="145" />
+![](static/Screenshot-MainMenu.png)
 
 On the right hand side of the Master Panel are the switches for the **Source Streams**, which enable you to switch from 
 scheduled play to remote live sources, and back. (See the chapter *Stream settings* for details of this feature). The 
