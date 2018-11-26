@@ -2700,8 +2700,12 @@ msgid "Must wait at least 1 hour to rebroadcast"
 msgstr "Az újraközvetítésre legalább 1 órát kell várni"
 
 #: airtime_mvc/application/forms/AddShowAutoPlaylist.php:18
-msgid "Auto Schedule Playlist ?"
+msgid "Add Autoloading Playlist ?"
 msgstr "Lejátszási lista automatikus ütemezése?"
+
+#: airtime_mvc/application/views/scripts/form/add-show-autoplaylist.phtml:14 
+msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/manual/calendar/#autoloading-playlist'>More information</a>" 
+msgstr "" 
 
 #: airtime_mvc/application/forms/AddShowAutoPlaylist.php:25
 msgid "Select Playlist"
@@ -5267,7 +5271,7 @@ msgid "What"
 msgstr "Mi"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:14
-msgid "Automatic Playlist"
+msgid "Autoloading Playlist"
 msgstr "Automatikus lejátszási lista"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:18
