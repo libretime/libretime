@@ -5267,7 +5267,7 @@ msgid "What"
 msgstr "Mi"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:14
-msgid "Automatic Playlist"
+msgid "Autoloading Playlist"
 msgstr "Automatikus lejátszási lista"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:18
