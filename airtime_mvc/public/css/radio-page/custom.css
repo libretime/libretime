@@ -1,0 +1,15 @@
+#schedule_iframe, .tab_content {
+    color: #fff;
+    text-align: center;
+    width: 770px;
+    max-width: 770px;
+    margin: -70px auto 0px -380px;
+    height: calc(100vh - 200px) !important;
+    padding: 10px;
+    padding-left: 10px;
+    margin-bottom: -100px;
+    padding-top: 50px;
+    position: absolute;
+    left: 50%;
+    overflow: hidden;
+}
