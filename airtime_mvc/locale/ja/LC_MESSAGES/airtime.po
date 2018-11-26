@@ -2537,8 +2537,12 @@ msgid "Must wait at least 1 hour to rebroadcast"
 msgstr "再配信するには、1時間以上待たなければなりません"
 
 #: airtime_mvc/application/forms/AddShowAutoPlaylist.php:18
-msgid "Auto Schedule Playlist ?"
+msgid "Add Autoloading Playlist ?"
 msgstr ""
+
+#: airtime_mvc/application/views/scripts/form/add-show-autoplaylist.phtml:14 
+msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/manual/calendar/#autoloading-playlist'>More information</a>" 
+msgstr "" 
 
 #: airtime_mvc/application/forms/AddShowAutoPlaylist.php:25
 msgid "Select Playlist"
