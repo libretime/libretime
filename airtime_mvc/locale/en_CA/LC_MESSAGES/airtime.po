@@ -2549,6 +2549,10 @@ msgstr ""
 msgid "Select Playlist"
 msgstr ""
 
+#: airtime_mvc/application/forms/AddShowAutoPlaylist.php:32 
+msgid "Repeat Playlist Until Show is Full ?" 
+msgstr ""  
+
 #: airtime_mvc/application/forms/AddShowLiveStream.php:11
 #, php-format
 msgid "Use %s Authentication:"
