@@ -291,8 +291,20 @@ function setSmartBlockEvents() {
         setupUI();
         AIRTIME.library.checkAddButton();
     });
-    
-    /********** CRITERIA CHANGE **********/
+
+    /********** LIMIT CHANGE *************/
+    form.find('select[id="sp_limit_options"]').live("change", function() {
+        var limVal = form.find('input[id="sp_limit_value"]');
+        if ($(this).val() === 'remaining') {
+            disableAndHideLimitValue();
+        }
+        else {
+            enableAndShowLimitValue();
+        }
+    });
+
+
+        /********** CRITERIA CHANGE **********/
     form.find('select[id^="sp_criteria"]:not([id^="sp_criteria_modifier"])').live("change", function(){
         var index = getRowIndex($(this).parent());
         //need to change the criteria value for any modifier rows
@@ -461,6 +473,9 @@ function setupUI() {
         shuffleButton = activeTab.find('button[name="shuffle_button"]'),
         generateButton = activeTab.find('button[name="generate_button"]'),
         fadesButton = activeTab.find('#spl_crossfade, #pl-bl-clear-content');
+    if (activeTab.find('#sp_limit_options').val() == 'remaining') {
+        disableAndHideLimitValue();
+    }
 
     if (!plContents.hasClass('spl_empty')) {
         if (shuffleButton.hasClass('ui-state-disabled')) {
@@ -610,6 +625,14 @@ function disableAndHideExtraField(valEle, index) {
     //make value input larger since we don't have extra field now
     var criteria_value = $('#sp_criteria_value_'+index);
     sizeTextBoxes(criteria_value, 'sp_extra_input_text', 'sp_input_text');
+}
+function disableAndHideLimitValue() {
+    console.log('we hide it');
+    $('#sp_limit_value').hide();
+}
+function enableAndShowLimitValue() {
+    console.log('we show it');
+    $('#sp_limit_value').show();
 }
 
 function sizeTextBoxes(ele, classToRemove, classToAdd) {
