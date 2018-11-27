@@ -64,15 +64,7 @@ A reminder of the connection **Host**, **Port** and **Mount** for the live input
 Record & Rebroadcast
 --------------------
 
-In the **Record & Rebroadcast** section, checking the **Record from Line In?** box enables automatic recording of the soundcard line input, if your LibreTime server has one, at the time of the show. Shows set for line-in recording should not also contain files or playlists. The default audio format for live recordings is 256kbps Ogg Vorbis, and the files are saved in the *recorded* folder, under the **Import Folder** path set in the **Media Folders** page on the **System** menu. See the chapter *Host configuration* for details of recorder settings.
-
-If you wish the recording to be played out at a later time, check the **Rebroadcast?** box, and then select up to ten date and time slots in the **Choose Days** box.
-
-![](static/Screenshot458-Record_and_rebroadcast.png)
-
-Shows set for rebroadcast have a white loop icon in the calendar.
-
-![](static/Screenshot92-Record_and_rebroadcast_icons.png)
+The **Record & Rebroadcast** section is currently not working, and so has been removed from the web interface. If this feature is important to you, please search for relevant issues in the [LibreTime github repository](https://github.com/LibreTime/libretime/search?q=record&type=Issues) and help us make it happen!
 
 Who
 ---
