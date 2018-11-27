@@ -226,7 +226,7 @@ function systemInitInstall() {
                 user=${user:-$web_user}
                 ;;
             libretime_import)
-                source_path="${python_source_path}/pypo/install/upstart/${service_name}.conf.template"
+                source_path="${python_source_path}/${service_name}/install/upstart/${service_name}.conf.template"
                 target_path="/etc/init/${service_name}.conf"
                 user=${user:-$web_user}
                 ;;
