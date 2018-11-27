@@ -204,18 +204,14 @@ img.logo
 .airtime_auth_help_icon, .custom_auth_help_icon, .stream_username_help_icon,
 .playlist_type_help_icon, .repeat_tracks_help_icon, .show_linking_help_icon,
 .admin_username_help_icon, .stream_type_help_icon,
-.show_timezone_help_icon, .show_autoplaylist_help_icon {
+.show_timezone_help_icon{
         cursor: help;
         position: relative;
         display:inline-block; zoom:1;
         width:14px; height:14px;
         background:url(images/icon_info.png) 0 0 no-repeat;
-        left: 3px;
+        top:2px; right:7px; left: 3px;
         line-height:16px !important;
-        vertical-align: text-top;
-}
-.qtip a {
-    color: white;
 }
 
 /* Clearfix */
@@ -2272,14 +2268,15 @@ span.errors.sp-errors{
     height:10px;
     float:right;
     margin-left:3px;
-    margin-top:2px;
 }
 .small-icon.linked {
     background:url(images/icon_link.png) no-repeat 0 0;
     margin-top: 0px !important;
 }
 .small-icon.autoplaylist {
-    background:url(images/icon_alert_cal_autoplaylist.png) no-repeat 0 0;
+    background: url(images/icon-clock.svg) black no-repeat center center;
+    border-radius: 2px;
+    background-size: contain;
 }
 
 .small-icon.recording {
