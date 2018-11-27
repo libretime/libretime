@@ -2272,14 +2272,15 @@ span.errors.sp-errors{
     height:10px;
     float:right;
     margin-left:3px;
-    margin-top:2px;
 }
 .small-icon.linked {
     background:url(images/icon_link.png) no-repeat 0 0;
     margin-top: 0px !important;
 }
 .small-icon.autoplaylist {
-    background:url(images/icon_alert_cal_autoplaylist.png) no-repeat 0 0;
+    background: url(images/icon-clock.svg) black no-repeat center center;
+    border-radius: 2px;
+    background-size: contain;
 }
 
 .small-icon.recording {
