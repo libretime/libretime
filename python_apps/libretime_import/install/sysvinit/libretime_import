@@ -9,8 +9,8 @@
 # Short-Description: Manage libretime_import daemon
 ### END INIT INFO
 
-USERID=www-data
-GROUPID=www-data
+USERID=root
+GROUPID=root
 NAME=libretime_import
 
 DAEMON=/usr/bin/$NAME
