@@ -86,6 +86,15 @@ class FolderWatcher:
                 print r.text
                 #TODO we might want to parse r.text to determine if the upload status = 1 and was successful then delete
                 os.remove(event.pathname)
+                #TODO we should check if the file is in a subdirectory and if that subdirectory is empty
+                # and then delete the subdirectory
+                #logging.info("checking to see if %s is empty", os.path.dirname(event.pathname))
+                if ((not (os.listdir(os.path.dirname(event.pathname)))) and (os.path.dirname(event.pathname) != import_dir)):
+                    os.rmdir(os.path.dirname(event.pathname))
+                    wm.rm_watch(self, wm.get_wd(self, os.path.dirname(event.pathname)))
+                    logging.info("removed the watch and deleted %s", os.path.dirname(event.pathname))
+
+
             def default(self,event):
                 print event.maskname, event.pathname
         handler = EventHandler()
