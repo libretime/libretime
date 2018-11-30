@@ -91,8 +91,7 @@ class FolderWatcher:
                 #logging.info("checking to see if %s is empty", os.path.dirname(event.pathname))
                 if ((not (os.listdir(os.path.dirname(event.pathname)))) and (os.path.dirname(event.pathname) != import_dir)):
                     os.rmdir(os.path.dirname(event.pathname))
-                    wm.rm_watch(self, wm.get_wd(self, os.path.dirname(event.pathname)))
-                    logging.info("removed the watch and deleted %s", os.path.dirname(event.pathname))
+                    #logging.info("deleted this folder %s", os.path.dirname(event.pathname))
 
 
             def default(self,event):
