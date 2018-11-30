@@ -2044,7 +2044,7 @@ span.errors.sp-errors{
     margin: 0 0 8px 0;
 }
 #schedule-add-show .button-bar.bottom {
-    margin: 16px 0 0;
+    margin: 16px 0 8px;
 }
 .schedule {
     text-align:left;
