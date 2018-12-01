@@ -976,7 +976,7 @@ systemInitInstall airtime_analyzer $web_user
 verbose "...Done"
 
 verbose "\n * Installing libretime_import..."
-loudCmd "python ${AIRTIMEROOT}/python_apps/libretime_import/setup.py install --install-scripts=/usr/bin --no-init-script"
+loudCmd "python3 ${AIRTIMEROOT}/python_apps/libretime_import/setup.py install --install-scripts=/usr/bin --no-init-script"
 systemInitInstall libretime_import $web_user
 verbose "...Done"
 

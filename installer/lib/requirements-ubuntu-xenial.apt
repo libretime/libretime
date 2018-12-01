@@ -20,6 +20,8 @@ php7.0-pgsql
 python
 python-virtualenv
 python-pip
+python3-setuptools
+python3-docutils
 
 libsoundtouch-ocaml
 libtaglib-ocaml

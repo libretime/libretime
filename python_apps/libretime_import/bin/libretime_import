@@ -15,7 +15,7 @@ DEFAULT_HTTP_RETRY_PATH = '/tmp/libretime_import_http_retries'
 
 def run():
     '''Entry-point for this application'''
-    print "Libretime Import " + VERSION
+    print("Libretime Import " + VERSION)
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--daemon", help="run as a daemon", action="store_true")
     parser.add_argument("--debug", help="log full debugging output", action="store_true")

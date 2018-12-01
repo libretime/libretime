@@ -5,9 +5,9 @@ import logging.handlers
 import sys
 import signal
 import traceback
-import config_file
+from . import config_file
 from functools import partial
-from folder_watcher import FolderWatcher
+from .folder_watcher import FolderWatcher
 
 class LibretimeImportServer:
     """A server for importing uploads to Airtime as background jobs.
@@ -62,7 +62,7 @@ class LibretimeImportServer:
     def dump_stacktrace(stack):
         ''' Dump a stacktrace for all threads '''
         code = []
-        for threadId, stack in sys._current_frames().items():
+        for threadId, stack in list(sys._current_frames().items()):
             code.append("\n# ThreadID: %s" % threadId)
             for filename, lineno, name, line in traceback.extract_stack(stack):
                 code.append('File: "%s", line %d, in %s' % (filename, lineno, name))

@@ -5,7 +5,7 @@ import os
 
 # Change directory since setuptools uses relative paths
 script_path = os.path.dirname(os.path.realpath(__file__))
-print script_path
+print(script_path)
 os.chdir(script_path)
 
 no_init = False
@@ -22,16 +22,16 @@ else:
                   ('/etc/init.d', ['install/sysvinit/libretime_import']),
                   ('/etc/systemd/system', ['install/systemd/libretime_import.service']),
                   ('/srv/airtime/stor/uploads',[])]
-    print data_files
+    print(data_files)
 def postinst():
     if not no_init:
         # Make /etc/init.d file executable and set proper
         # permissions for the defaults config file
-        os.chmod('/etc/init.d/libretime_import', 0755)
-        os.chmod('/srv/airtime/stor/uploads', 0777)
+        os.chmod('/etc/init.d/libretime_import', 0o755)
+        os.chmod('/srv/airtime/stor/uploads', 0o777)
 
 setup(name='libretime_import',
-      version='0.1',
+      version='0.2',
       description='Libretime Automatic Folder Import',
       url='http://github.com/libretime/LibreTime',
       author='Robb Ebright',
@@ -46,7 +46,7 @@ setup(name='libretime_import',
           'nose',
           'coverage',
           'mock',
-          'python-daemon==1.6',
+          'python-daemon',
           'requests>=2.7.0',
           'pyinotify'
       ],
@@ -56,8 +56,8 @@ if run_postinst:
     postinst()
 # Remind users to reload the initctl config so that "service start libretime_import" works
 if data_files:
-    print "Remember to reload the initctl configuration"
-    print "Run \"sudo initctl reload-configuration; sudo service libretime_import restart\" now."
-    print "Or on Ubuntu Xenial (16.04)"
-    print "Remember to reload the systemd configuration"
-    print "Run \"sudo systemctl daemon-reload; sudo service libretime_import restart\" now."
+    print("Remember to reload the initctl configuration")
+    print("Run \"sudo initctl reload-configuration; sudo service libretime_import restart\" now.")
+    print("Or on Ubuntu Xenial (16.04)")
+    print("Remember to reload the systemd configuration")
+    print("Run \"sudo systemctl daemon-reload; sudo service libretime_import restart\" now.")
