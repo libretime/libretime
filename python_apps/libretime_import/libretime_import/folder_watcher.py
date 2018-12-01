@@ -7,6 +7,7 @@ import os
 import logging 
 import pyinotify
 import requests
+import urllib
 from requests.auth import HTTPBasicAuth
 
 """ This class will watch a folder and proceed to import any files written to it via a post request to the LibreTime 
@@ -81,7 +82,9 @@ class FolderWatcher:
                 logging.info("This file was written to the import directory and will be uploaded: %s", event.pathname)
                 # TODO - figure out how to properly call above function upload_file(FolderWatcher, event.pathname,url)
                 #FolderWatcher().upload_and_remove_file(self, event.pathname, url)
-                files = {'file': open(event.pathname, 'rb')}
+	        #Need to use pathname2url to pass utf8 filenames otherwise it breaks, probably related to PHP noncompliance with RFC-2231 and requests using that
+                # the solution is to encode it with 3986 https://stackoverflow.com/questions/20801929/urlencode-for-rfc-3986
+                files = {'file': (urllib.pathname2url(event.pathname), 'rb')}
                 r = requests.post(url, auth=HTTPBasicAuth(str(api_key), ''), files=files)
                 print r.text
                 #TODO we might want to parse r.text to determine if the upload status = 1 and was successful then delete
