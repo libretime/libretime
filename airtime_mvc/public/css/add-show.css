@@ -7,6 +7,11 @@
     font-size: 12px;
     /*width: 25%;*/
     width: 310px;
+    max-height: calc(100vh - 144px);
+    overflow-y: scroll;
+}
+.usability_hint:not(.hidden) + .wrapper #schedule-add-show{
+    max-height: calc(100vh - 172px);
 }
 
 #schedule-add-show textarea {
