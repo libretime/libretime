@@ -162,9 +162,9 @@ class MessageListener:
             api_key         = msg_dict["api_key"]
             callback_url    = msg_dict["callback_url"]
 
-            audio_file_path = msg_dict["tmp_file_path"]
+            audio_file_path = unicode(msg_dict["tmp_file_path"])
             import_directory = msg_dict["import_directory"]
-            original_filename = msg_dict["original_filename"]
+            original_filename = unicode(msg_dict["original_filename"])
             file_prefix = msg_dict["file_prefix"]
             storage_backend = msg_dict["storage_backend"]
 
