@@ -2,27 +2,25 @@
 $items = $this->contents;
 $isSmartBlock = ($this->obj instanceof Application_Model_Block);
 $isPlaylist = ($this->obj instanceof Application_Model_Playlist);
-if ($this->poolCount) { ?>
+if ($this->showPoolCount) { ?>
     <div class='sp_text_font sp_text_font_bold'>
         <span id='sp_pool_count' class='sp_text_font sp_text_font_bold'>
         <?php
-        if ($this->poolCount > 0) {
             echo $this->poolCount;
             echo ngettext(" file meets the criteria", " files meets the criteria", $this->poolCount);
         ?>
-            </span>
-        <span class='checked-icon sp-checked-icon' id='sp_pool_count_icon'></span>
-        <?php
-        } else {
-            ?>
-            0 <?php echo " " . _("files meet the criteria") ?>
-            </span>
+        </span>
+        <?php if ($this->poolCount > 0) { ?>
+            <span class='checked-icon sp-checked-icon' id='sp_pool_count_icon'></span>
+        <?php }
+        else { ?>
             <span class='sp-warning-icon' id='sp_pool_count_icon'></span>
-            <?php
-        }
-        ?>
+        <?php } ?>
     </div>
     <?php
+}
+else {
+    
 }
 if (count($items) && ($isSmartBlock || $isPlaylist)) : ?>
 <?php $i = 0; ?>
