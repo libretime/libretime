@@ -6,8 +6,6 @@ import signal
 import os
 import logging 
 import pyinotify
-import requests
-import urllib.request, urllib.parse, urllib.error
 import urllib3
 from requests.auth import HTTPBasicAuth
 
