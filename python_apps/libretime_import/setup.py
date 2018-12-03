@@ -47,7 +47,8 @@ setup(name='libretime_import',
           'coverage',
           'mock',
           'python-daemon',
-          'pyinotify'
+          'pyinotify',
+          'urllib3'
       ],
       zip_safe=False,
       data_files=data_files)

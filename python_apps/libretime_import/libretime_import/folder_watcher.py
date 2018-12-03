@@ -7,7 +7,6 @@ import os
 import logging 
 import pyinotify
 import urllib3
-from requests.auth import HTTPBasicAuth
 
 """ This class will watch a folder and proceed to import any files written to it via a post request to the LibreTime 
 server that is configured via the libretime config folder. Any files that exist in the folder when the service starts 
