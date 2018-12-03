@@ -47,7 +47,6 @@ setup(name='libretime_import',
           'coverage',
           'mock',
           'python-daemon',
-          'requests>=2.7.0',
           'pyinotify'
       ],
       zip_safe=False,
