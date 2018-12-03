@@ -477,15 +477,6 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             $limitValue->setValue(1);
         }
 
-        //getting block content candidate count that meets criteria
-        $bl = new Application_Model_Block($p_blockId);
-        if ($p_isValid) {
-            $files = $bl->getListofFilesMeetCriteria();
-            $showPoolCount = true;
-        } else {
-            $files = null;
-            $showPoolCount = false;
-        }
 
         $generate = new Zend_Form_Element_Button('generate_button');
         $generate->setAttrib('class', 'sp-button btn');
