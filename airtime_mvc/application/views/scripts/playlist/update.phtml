@@ -7,7 +7,7 @@ if ($this->showPoolCount) { ?>
         <span id='sp_pool_count' class='sp_text_font sp_text_font_bold'>
         <?php
             echo $this->poolCount;
-            echo ngettext(" file meets the criteria", " files meet the criteria", $this->poolCount);
+            echo ngettext(" track matches your search criteria.", " tracks match your search criteria.", $this->poolCount);
         ?>
         </span>
         <?php if ($this->poolCount > 0) { ?>
