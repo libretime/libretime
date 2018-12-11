@@ -1475,7 +1475,7 @@ SQL;
         foreach ($out as $crit) {
             $criteria = $crit->getDbCriteria();
             $modifier = $crit->getDbModifier();
-            $value = htmlspecialchars($crit->getDbValue());
+            $value = $crit->getDbValue();
             $extra = $crit->getDbExtra();
 
             if ($criteria == "limit") {

@@ -7,6 +7,11 @@
     font-size: 12px;
     /*width: 25%;*/
     width: 310px;
+    max-height: calc(100vh - 144px);
+    overflow-y: scroll;
+}
+.usability_hint:not(.hidden) + .wrapper #schedule-add-show{
+    max-height: calc(100vh - 172px);
 }
 
 #schedule-add-show textarea {
@@ -84,6 +89,9 @@ label.wrapp-label input[type="checkbox"] {
 
 #schedule-add-show fieldset dd input[type="checkbox"] {
     margin-top: 6px;
+}
+#schedule-show-auto input[type="checkbox"] {
+    margin-left: 6px;
 }
 
 #add_show_day_check-element.block-display {

@@ -2548,12 +2548,20 @@ msgid "Must wait at least 1 hour to rebroadcast"
 msgstr "Debes esperar al menos 1 hora para reprogramar"
 
 #: airtime_mvc/application/forms/AddShowAutoPlaylist.php:18
-msgid "Auto Schedule Playlist ?"
-msgstr "¿Auto Programar Lista?"
+msgid "Add Autoloading Playlist ?"
+msgstr "¿Programar Lista Auto-Cargada?"
+
+#: airtime_mvc/application/views/scripts/form/add-show-autoplaylist.phtml:14 
+msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/manual/calendar/#autoloading-playlist'>More information</a>" 
+msgstr "Se le agrega los contenidos de las listas auto-cargadas a programas una hora antes de que suenen. <a target='_blank' href='http://libretime.org/manual/calendar/#autoloading-playlist'>Mas información</a>" 
 
 #: airtime_mvc/application/forms/AddShowAutoPlaylist.php:25
 msgid "Select Playlist"
 msgstr "Seleccionar Lista"
+
+#: airtime_mvc/application/forms/AddShowAutoPlaylist.php:32 
+msgid "Repeat Playlist Until Show is Full ?" 
+msgstr "Repitir lista hasta que termine el programa?"  
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:11
 #, php-format
@@ -4966,8 +4974,8 @@ msgid "What"
 msgstr "Qué"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:14
-msgid "Automatic Playlist"
-msgstr "Lista de reproducción automática"
+msgid "Autoloading Playlist"
+msgstr "Lista Auto-Cargada"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:18
 msgid "When"

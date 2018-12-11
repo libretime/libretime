@@ -15,7 +15,7 @@ class Application_Form_AddShowAutoPlaylist extends Zend_Form_SubForm
 
         // Add autoplaylist checkbox element
         $this->addElement('checkbox', 'add_show_has_autoplaylist', array(
-            'label'      => _('Auto Schedule Playlist ?'),
+            'label'      => _('Add Autoloading Playlist ?'),
             'required'   => false,
             'class'      => 'input_text',
             'decorators'  => array('ViewHelper')
@@ -29,7 +29,7 @@ class Application_Form_AddShowAutoPlaylist extends Zend_Form_SubForm
         $this->addElement($autoPlaylistSelect);
         // Add autoplaylist checkbox element
         $this->addElement('checkbox', 'add_show_autoplaylist_repeat', array(
-            'label'      => _('Repeat AutoPlaylist Until Show is Full ?'),
+            'label'      => _('Repeat Playlist Until Show is Full ?'),
             'required'   => false,
             'class'      => 'input_text',
             'decorators'  => array('ViewHelper')
