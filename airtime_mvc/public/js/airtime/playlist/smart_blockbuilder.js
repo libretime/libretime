@@ -533,7 +533,7 @@ function setupUI() {
 
     $(".overflow_tracks_help_icon").qtip({
         content: {
-            text: sprintf($.i18n._("The smartblock will normally schedule up to but not over the time limit. This will usually result in a smartblock that is less than the time limit set if there are no tracks short enough to fill the remaining time. Enable this option if you want to add tracks until it is longer than the smartblock. Any tracks longer than the smartblock limit maybe cut off during playback if they exceed a shows boundaries."), PRODUCT_NAME)
+            text: sprintf($.i18n._("<p>If this option is unchecked, the smartblock will schedule as many tracks as can be played out <strong>in their entirety</strong> within the specified duration. This will usually result in audio playback that is slightly less than the specified duration.</p><p>If this option is checked, the smartblock will also schedule one final track which will overflow the specified duration. This final track may be cut off mid-way if the show into which the smartblock is added finishes.</p>"), PRODUCT_NAME)
         },
         hide: {
             delay: 500,
