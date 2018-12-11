@@ -529,6 +529,28 @@ function setupUI() {
             at: "right center"
         }
     });
+
+
+    $(".overflow_tracks_help_icon").qtip({
+        content: {
+            text: sprintf($.i18n._("The smartblock will normally schedule up to but not over the time limit. This will usually result in a smartblock that is less than the time limit set if there are no tracks short enough to fill the remaining time. Enable this option if you want to add tracks until it is longer than the smartblock. Any tracks longer than the smartblock limit maybe cut off during playback if they exceed a shows boundaries."), PRODUCT_NAME)
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        }
+    });
 }
 
 /* Utilizing jQuery this function finds the #datetime_select element on the given row

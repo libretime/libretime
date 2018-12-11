@@ -33,6 +33,21 @@
             <?php endif; ?>
             <span class='repeat_tracks_help_icon'></span>
         </dd>
+        <dt>
+            <label class='sp_text_font'><?php echo $this->element->getElement('sp_overflow_tracks')->getLabel() ?></label>
+        </dt>
+        <dd id='sp_overflow_tracks-element'>
+            <?php echo $this->element->getElement('sp_overflow_tracks')?>
+            <?php if($this->element->getElement("sp_overflow_tracks")->hasErrors()) : ?>
+                <?php foreach($this->element->getElement("sp_overflow_tracks")->getMessages() as $error): ?>
+                    <span class='errors sp-errors'>
+                   <?php echo $error; ?>
+                </span>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            <span class='overflow_tracks_help_icon'></span>
+        </dd>
+
 
         <dt>
             <label class='sp_text_font'><?php echo $this->element->getElement('sp_sort_options')->getLabel();?></label>
