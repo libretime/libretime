@@ -448,7 +448,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
 
         $overflowTracks = new Zend_Form_Element_Checkbox('sp_overflow_tracks');
         $overflowTracks->setDecorators(array('viewHelper'))
-            ->setLabel(_('Overflow Time Limit:'));
+            ->setLabel(_('Allow last track to exceed time limit:'));
         if (isset($storedCrit["overflow_tracks"])) {
             $overflowTracks->setChecked($storedCrit["overflow_tracks"]["value"] == 1);
         }

@@ -106,7 +106,7 @@ By default, a smart block will not contain repeated items, which will limit the 
 
 In addition Smart Blocks by default will never overflow the Time Limit. For instance if you set a time limit of 1 hour. It will add tracks to the schedule until it can't add any more tracks without exceeding the hour. This is to prevent tracks from being cut-off because they exceed the time limit of a show. 
 
-If you want a smartblock to schedule tracks until it is longer than the Time Limit you can check Overflow Time Limit. This will make LibreTime add tracks that meet the criteria until it equals or is longer than the time limit. The was the default behaviour with the Airtime software.
+If you want a smartblock to schedule tracks until it is longer than the Time Limit you can check "Allow last track to exceed time limit". This will make LibreTime add tracks that meet the criteria until it equals or is longer than the time limit. The was the default behaviour with the Airtime software.
 
 If you have a large number of files which meet the criteria that you specify, you may wish to limit the duration of the smart block using the **Limit to** field, so that it fits within the show you have in mind. Select **hours**, **minutes** or **items** from the drop-down menu, and click the **Generate** button again, if it is a static smart block. Then click the **Save** button.
 

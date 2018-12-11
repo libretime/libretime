@@ -40,6 +40,7 @@
 
 .playlist_editor dt {
     float: left;
+    clear: left;
 }
 
 .playlist_editor input, .playlist_editor textarea {
@@ -508,10 +509,12 @@
 
 .side_playlist .zend_form dt {
     width: 170px;
+    margin-bottom: 10px;
 }
 
 .side_playlist .zend_form dd {
-    margin-bottom: 10px;
+    float: left;
+    margin: 0 0 10px;
 }
 .search-criteria dt label.sp_label
 {
