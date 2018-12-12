@@ -473,7 +473,7 @@ function setupUI() {
     }
     
     if (activeTab.find('.obj_type').val() == 'block') {
-        if (playlist_type == "0") {
+        if (playlist_type == "1") {
             shuffleButton.removeAttr("disabled");
             generateButton.removeAttr("disabled");
             generateButton.html($.i18n._("Generate"));

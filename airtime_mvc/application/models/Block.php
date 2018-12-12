@@ -361,10 +361,12 @@ SQL;
     {
         $result = CcBlockcriteriaQuery::create()->filterByDbBlockId($this->id)
                 ->filterByDbCriteria('limit')->findOne();
-        $modifier = $result->getDbModifier();
-        $value    = $result->getDbValue();
+        if ($result) {
+            $modifier = $result->getDbModifier();
+            $value = $result->getDbValue();
+            return array($value, $modifier);
+        }
 
-        return array($value, $modifier);
     }
 
     // this function returns sum of all track length under this block.
@@ -1158,7 +1160,7 @@ SQL;
     {
         $data = $this->organizeSmartPlaylistCriteria($p_criteria);
         // saving dynamic/static flag
-        $blockType = $data['etc']['sp_type'] == 0 ? 'static':'dynamic';
+        $blockType = $data['etc']['sp_type'] == 0 ? 'dynamic':'static';
         $this->saveType($blockType);
         $this->storeCriteriaIntoDb($data);
         

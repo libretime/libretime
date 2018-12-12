@@ -223,7 +223,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     {
         // load type
         $out = CcBlockQuery::create()->findPk($p_blockId);
-        if ($out->getDbType() == "static") {
+        if ($out->getDbType() == "dynamic") {
             $blockType = 0;
         } else {
             $blockType = 1;
@@ -233,8 +233,9 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         $spType->setLabel(_('Type:'))
                ->setDecorators(array('viewHelper'))
                ->setMultiOptions(array(
-                    'static' => _('Static'),
-                    'dynamic' => _('Dynamic')
+                    'dynamic' => _('Dynamic'),
+                    'static' => _('Static')
+
                 ))
                ->setValue($blockType);
         $this->addElement($spType);
@@ -491,10 +492,10 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         $generate->setAttrib('title', _('Generate playlist content and save criteria'));
         $generate->setIgnore(true);
         if ($blockType == 0) {
-            $generate->setLabel(_('Generate'));
+            $generate->setLabel(_('Preview'));
         }
         else {
-            $generate->setLabel(_('Preview'));
+            $generate->setLabel(_('Generate'));
         }
         $generate->setDecorators(array('viewHelper'));
         $this->addElement($generate);
