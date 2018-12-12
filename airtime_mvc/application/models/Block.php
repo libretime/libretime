@@ -1321,9 +1321,13 @@ SQL;
         }
     }
 
-    public function getListOfFilesUnderLimit()
+    /*
+     *
+     */
+
+    public function getListOfFilesUnderLimit($show = null)
     {
-        $info       = $this->getListofFilesMeetCriteria();
+        $info       = $this->getListofFilesMeetCriteria($show);
         $files      = $info['files'];
         $limit      = $info['limit'];
         $repeat     = $info['repeat_tracks'];
@@ -1507,7 +1511,7 @@ SQL;
     }
 
     // this function return list of propel object
-    public function getListofFilesMeetCriteria()
+    public function getListofFilesMeetCriteria($show = null)
     {
         $storedCrit = $this->getCriteria();
 
@@ -1645,6 +1649,17 @@ SQL;
             if ($storedCrit['limit']['modifier'] == "items") {
                 $limits['time'] = 1440 * 60;
                 $limits['items'] = $storedCrit['limit']['value'];
+            } elseif (($storedCrit['limit']['modifier'] == "remaining") ){
+                // show will be null unless being called inside a show instance
+                if (!(is_null($show))) {
+                    $showInstance = new Application_Model_ShowInstance($show);
+                    $limits['time'] = $showInstance->getSecondsRemaining();
+                    $limits['items'] = null;
+                }
+                else {
+                    $limits['time'] = 60 * 60;
+                    $limits['items'] = null;
+                }
             } else {
                 $limits['time'] = $storedCrit['limit']['modifier'] == "hours" ?
                     intval(floatval($storedCrit['limit']['value']) * 60 * 60) :

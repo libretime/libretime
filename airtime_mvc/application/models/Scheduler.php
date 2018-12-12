@@ -207,10 +207,11 @@ final class Application_Model_Scheduler
     /*
      * @param $id
      * @param $type
+     * @param $show
      *
      * @return $files
      */
-    private function retrieveMediaFiles($id, $type)
+    private function retrieveMediaFiles($id, $type, $show)
     {
         $files = array();
 
@@ -337,7 +338,7 @@ final class Application_Model_Scheduler
             } else {
                 $defaultFadeIn = Application_Model_Preference::GetDefaultFadeIn();
                 $defaultFadeOut = Application_Model_Preference::GetDefaultFadeOut();
-                $dynamicFiles = $bl->getListOfFilesUnderLimit();
+                $dynamicFiles = $bl->getListOfFilesUnderLimit($show);
                 foreach ($dynamicFiles as $f) {
                     $fileId = $f['id'];
                     $file = CcFilesQuery::create()->findPk($fileId);
@@ -788,11 +789,14 @@ final class Application_Model_Scheduler
                         Logging::debug(floatval($pend) - floatval($pstart));
                     }
 
+                    // passing $schedule["instance"] so that the instance being scheduled
+                    // can be used to determine the remaining time
+                    // in the case of a fill remaining time smart block
                     if (is_null($filesToInsert)) {
                         $filesToInsert = array();
                         foreach ($mediaItems as $media) {
                             $filesToInsert = array_merge($filesToInsert,
-                                $this->retrieveMediaFiles($media["id"], $media["type"]));
+                                $this->retrieveMediaFiles($media["id"], $media["type"], $schedule["instance"]));
                         }
                     }
 
