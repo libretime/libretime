@@ -1617,7 +1617,7 @@ SQL;
                     $limits['items'] = null;
                 }
                 else {
-                    $limits['time'] = 1440 * 60;
+                    $limits['time'] = 60 * 60;
                     $limits['items'] = null;
                 }
             } else {
