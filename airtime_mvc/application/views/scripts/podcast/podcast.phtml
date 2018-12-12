@@ -9,7 +9,7 @@
             <input ng-value="podcast.id" class="obj_id" type="hidden"/>
             <div>
                 <label for="podcast_name"><?php echo _("Podcast Name: ") ?></label>
-                <span class="podcast-metadata-field">{{podcast.title}}</span>
+                <input name="podcast_name" type="text" ng-model="podcast.title" value={{podcast.title}} class="podcast-metadata-field">
             </div>
             <div>
                 <label for="podcast_url"><?php echo _("Podcast URL: ") ?></label>
