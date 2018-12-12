@@ -1277,7 +1277,7 @@ var AIRTIME = (function(AIRTIME) {
                     }
                     // remove 'Add to smart block' option if the current
                     // block is dynamic
-                    if ($('input:radio[name=sp_type]:checked').val() === "1") {
+                    if ($('input:radio[name=sp_type]:checked').val() === "0") {
                         delete oItems.pl_add;
                     }
                     items = oItems;

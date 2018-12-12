@@ -1160,7 +1160,7 @@ SQL;
     {
         $data = $this->organizeSmartPlaylistCriteria($p_criteria);
         // saving dynamic/static flag
-        $blockType = $data['etc']['sp_type'] == 0 ? 'static':'dynamic';
+        $blockType = $data['etc']['sp_type'] == 0 ? 'dynamic':'static';
         $this->saveType($blockType);
         $this->storeCriteriaIntoDb($data);
         
