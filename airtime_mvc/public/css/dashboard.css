@@ -684,20 +684,6 @@ li.ui-state-default {
     height: 26px;
 }
 
-.smart-block-form input[type='radio'] {
-    vertical-align: bottom;
-    margin: 0 5px -2px;
-}
-
-.smart-block-form input[type='checkbox'] {
-    vertical-align: bottom;
-    margin: 0 4px;
-}
-
-.smart-block-form ~ .btn-toolbar {
-    padding-top: 4px;
-}
-
 /* Schedule tab DataTable */
 
 #show_builder_table_wrapper .fg-toolbar.ui-corner-tl.ui-corner-tr {
