@@ -167,6 +167,12 @@ class Application_Service_PodcastService
 
     public static function createPodcastSmartblockAndPlaylist($podcast)
     {
+        if (is_array($podcast)) {
+            $newpodcast = new Podcast();
+            $newpodcast->fromArray($podcast, BasePeer::TYPE_FIELDNAME);
+            $podcast = $newpodcast;
+        }
+            // Base class
             $newBl = new Application_Model_Block();
             $newBl->setCreator(Application_Model_User::getCurrentUser()->getId());
             $newBl->setName($podcast->getDbTitle());

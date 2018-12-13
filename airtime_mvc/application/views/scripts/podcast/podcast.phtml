@@ -25,6 +25,11 @@
                 <label for="podcast_album_override"><input name="podcast_album_override" ng-model="podcast.album_override" type="checkbox" class="no-float"/></label>
                 <span class="podcast-metadata-field"><?php echo _("Override album name with podcast name during ingest."); ?></span>
             </div>
+            <div style="padding-top: 0.1em;">
+                <button ng-click="createSmartblock()" class="btn" type="button" name="smartblock">
+                    <?php echo _("Generate Smartblock and Playlist for Podcast") ?>
+                </button>
+            </div>
         </form>
     </div>
 

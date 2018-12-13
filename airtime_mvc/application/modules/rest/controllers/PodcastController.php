@@ -191,6 +191,25 @@ class Rest_PodcastController extends Zend_Rest_Controller
         $this->_helper->json->sendJson($responseBody);
     }
 
+
+    /**
+     * Endpoint for triggering the generation of a smartblock and playlist to match the podcast name
+     */
+
+    public function smartblockAction() {
+
+        $id = $this->_getParam('id', []);
+        if (!$id) {
+            return;
+        }
+        $podcast = Application_Service_PodcastService::getPodcastById($id);
+
+        logging::info($podcast);
+        Application_Service_PodcastService::createPodcastSmartblockAndPlaylist($podcast);
+    }
+
+
+
     /**
      * @throws PodcastNotFoundException
      *
