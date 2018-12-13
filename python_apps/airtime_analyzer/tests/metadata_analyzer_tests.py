@@ -154,7 +154,7 @@ def test_mp3_bad_channels():
     metadata = MetadataAnalyzer.analyze(filename, dict())
     check_default_metadata(metadata)
     assert metadata['channels'] == 1
-    assert metadata['bit_rate'] < 63998
+    assert metadata['bit_rate'] == 63998
     assert abs(metadata['length_seconds'] - 3.9) < 0.1
     assert metadata['mime'] == 'audio/mp3' # Not unicode because MIMEs aren't.
     assert metadata['track_total'] == u'10' # MP3s can have a track_total
