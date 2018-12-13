@@ -2,7 +2,7 @@
 $items = $this->contents;
 $isSmartBlock = ($this->obj instanceof Application_Model_Block);
 $isPlaylist = ($this->obj instanceof Application_Model_Playlist);
-if ($this->showPoolCount) { ?>
+if ($isSmartBlock && $this->showPoolCount) { ?>
     <div class='sp_text_font sp_text_font_bold'>
         <span id='sp_pool_count' class='sp_text_font sp_text_font_bold'>
         <?php
