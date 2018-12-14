@@ -198,14 +198,15 @@ class Rest_PodcastController extends Zend_Rest_Controller
 
     public function smartblockAction() {
 
+        $title = $this->_getParam('title', []);
         $id = $this->_getParam('id', []);
         if (!$id) {
             return;
         }
         $podcast = Application_Service_PodcastService::getPodcastById($id);
 
-        logging::info($podcast);
-        Application_Service_PodcastService::createPodcastSmartblockAndPlaylist($podcast);
+        // logging::info($podcast);
+        Application_Service_PodcastService::createPodcastSmartblockAndPlaylist($podcast, $title);
     }
 
 
