@@ -36,7 +36,6 @@ var AIRTIME = (function (AIRTIME) {
 
         self.onSaveCallback = function () {
             AIRTIME.library.podcastDataTable.fnDraw();
-            tab.close();
         };
 
         /**
