@@ -518,6 +518,7 @@ li.ui-state-default {
     left: 4px;
     overflow-x: hidden; /* Show the y-direction scrollbar (magic!) */
     color: #efefef;
+    justify-content: stretch;
 }
 
 .angular_wrapper a {
@@ -548,6 +549,13 @@ li.ui-state-default {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+}
+.inner_editor_wrapper.smart-block-form {
+    -webkit-flex: 0 0 auto;
+    -moz-flex: 0 0 auto;
+    -ms-flex: 0 0 auto;
+    -o-flex: 0 0 auto;
+    flex: 0 0 auto;
 }
 
 .angular_wrapper > .inner_editor_wrapper {
@@ -682,20 +690,6 @@ li.ui-state-default {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     height: 26px;
-}
-
-.smart-block-form input[type='radio'] {
-    vertical-align: bottom;
-    margin: 0 5px -2px;
-}
-
-.smart-block-form input[type='checkbox'] {
-    vertical-align: bottom;
-    margin: 0 4px;
-}
-
-.smart-block-form ~ .btn-toolbar {
-    padding-top: 4px;
 }
 
 /* Schedule tab DataTable */

@@ -10,7 +10,7 @@ if (isset($this->obj)) {
         <H2><?php echo(_("Editing "));?>"<span class="title_obj_name"><?php if (isset($this->unsavedName)) echo $this->unsavedName;
                 else echo $this->escape($this->obj->getName());?></span>"</H2>
     </div>
-    <div class="inner_editor_wrapper">
+    <div class="inner_editor_wrapper smart-block-form">
         <input class="obj_id" type="hidden" value="<?php echo $this->obj->getId(); ?>"/>
         <input class="obj_lastMod" type="hidden" value="<?php echo $this->obj->getLastModified('U'); ?>"/>
         <input class='obj_type' type='hidden' value='block'/>
@@ -25,16 +25,21 @@ if (isset($this->obj)) {
                 else echo $this->escape($this->obj->getName());
                 ?>">
             </dd>
-            <dt id="description-label"><label for="description"><?php echo _("Description:") ?></label></dt>
-            <dd id="description-element">
-                <textarea cols="24" rows="3" id="description" name="description"><?php
-                    if (isset($this->unsavedDesc)) echo $this->unsavedDesc;
-                    else echo $this->obj->getDescription();
-                    ?></textarea>
-            </dd>
         </dl>
 
         <?php echo $this->form; ?>
+
+        <div class="smart-block-advanced">
+            <dl>
+                <dt id="description-label"><label for="description"><?php echo _("Description:") ?></label></dt>
+                <dd id="description-element">
+                    <textarea cols="24" rows="3" id="description" name="description"><?php
+                        if (isset($this->unsavedDesc)) echo $this->unsavedDesc;
+                        else echo $this->obj->getDescription();
+                        ?></textarea>
+                </dd>
+            </dl>
+        </div>
 
     </div>
 

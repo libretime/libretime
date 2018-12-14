@@ -566,6 +566,11 @@ function setupUI() {
             at: "right center"
         }
     });
+
+    activeTab.find('.collapsible-header').off('click').on('click', function(){
+        $(this).toggleClass('visible');
+        $('.smart-block-advanced').toggle();
+    });
 }
 
 /* Utilizing jQuery this function finds the #datetime_select element on the given row
