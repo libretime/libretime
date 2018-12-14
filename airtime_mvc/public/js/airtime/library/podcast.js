@@ -54,9 +54,8 @@ var AIRTIME = (function (AIRTIME) {
          * Generate a smartblock and playlist for this smartblock.
          */
         $scope.createSmartblock =  function () {
-            console.log($scope.podcast.id);
             $.post(endpoint + "smartblock", {csrf_token: $("#csrf").val(), id: $scope.podcast.id}, callback);
-
+        };
         /**
          * Close the tab and discard any changes made to the podcast data.
          */
