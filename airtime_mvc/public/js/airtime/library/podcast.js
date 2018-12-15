@@ -61,7 +61,16 @@ var AIRTIME = (function (AIRTIME) {
                     id: $scope.podcast.id,
                     title: $scope.podcast.title
                 }, 
-                callback
+                function() {
+                    var successMsg = $('.active-tab .pc-sb-success')
+                    successMsg.text($.i18n._('Smartblock and playlist generated'));
+                    successMsg.show();
+                    setTimeout(function(){
+                        successMsg.hide();
+                    }, 5000);
+                    dt = $('table[id="library_display"]').dataTable();
+                    dt.fnStandingRedraw();
+                }
             );
             // save podcast
             $scope.savePodcast();
