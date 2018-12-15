@@ -204,7 +204,7 @@ img.logo
 .airtime_auth_help_icon, .custom_auth_help_icon, .stream_username_help_icon,
 .playlist_type_help_icon, .repeat_tracks_help_icon, .show_linking_help_icon,
 .admin_username_help_icon, .stream_type_help_icon, .overflow_tracks_help_icon,
-.show_timezone_help_icon, .show_autoplaylist_help_icon {
+.show_timezone_help_icon, .show_autoplaylist_help_icon, .help_icon {
         cursor: help;
         position: relative;
         display:inline-block; zoom:1;

@@ -324,6 +324,28 @@ var AIRTIME = (function (AIRTIME) {
             uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+podcast.id,
             tab = AIRTIME.tabs.openTab(data.html, uid, null);
         _bootstrapAngularApp(podcast, tab);
+        
+        $(".album_names.help_icon").qtip({
+            content: {
+                text: $.i18n._('Overwrite downloaded podcast episodes\' "Album" metadata tag  with the Podcast Name specified above. This album name can then be used as a search criteria by a smartblock.')
+            },
+            hide: {
+                delay: 500,
+                fixed: true
+            },
+            style: {
+                border: {
+                    width: 0,
+                    radius: 4
+                },
+                classes: "ui-tooltip-dark ui-tooltip-rounded"
+            },
+            position: {
+                my: "left bottom",
+                at: "right center"
+            }
+        });
+
     }
 
     /**
