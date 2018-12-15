@@ -35,6 +35,11 @@ var AIRTIME = (function (AIRTIME) {
         view.find("table").attr("id", "podcast_episodes_" + podcast.id);
 
         self.onSaveCallback = function () {
+            var successMsg = $('.active-tab .btn-toolbar .success')
+            successMsg.text($.i18n._("Podcast settings saved")).show("fast");
+            setTimeout(function () {
+                successMsg.hide("fast");
+            }, 5000);
             AIRTIME.library.podcastDataTable.fnDraw();
         };
 
@@ -62,18 +67,29 @@ var AIRTIME = (function (AIRTIME) {
                     title: $scope.podcast.title
                 }, 
                 function() {
+                    // show success message
                     var successMsg = $('.active-tab .pc-sb-success')
                     successMsg.text($.i18n._('Smartblock and playlist generated'));
-                    successMsg.show();
+                    successMsg.show("fast");
                     setTimeout(function(){
-                        successMsg.hide();
+                        successMsg.hide("fast");
                     }, 5000);
+
+                    // save podcast but do not display notification beside save button below
+                    $http.put(endpoint + $scope.podcast.id, 
+                        {
+                            csrf_token: $scope.csrf, 
+                            podcast: $scope.podcast
+                        })
+                        .success(function () {
+                            AIRTIME.library.podcastDataTable.fnDraw();
+                        });
+
+                    // redraw list of smartblocks just in case they have it visible on the left
                     dt = $('table[id="library_display"]').dataTable();
                     dt.fnStandingRedraw();
                 }
             );
-            // save podcast
-            $scope.savePodcast();
         };
         /**
          * Close the tab and discard any changes made to the podcast data.
@@ -129,20 +145,21 @@ var AIRTIME = (function (AIRTIME) {
     function StationPodcastController($scope, $http, podcast, tab) {
         // Super call to parent controller
         PodcastController.call(this, $scope, $http, podcast, tab);
-        this.onSaveCallback = function () {
-            $http({
-                method: 'POST',
-                url: '/preference/station-podcast-settings',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                data: { stationPodcastPrivacy: $("#podcast-settings").find("input:checked").val() }
-            }).success(function (data) {
-                jQuery.extend($scope.podcast, data);
-                $(".success").text($.i18n._("Podcast settings saved")).slideDown("fast");
-                setTimeout(function () {
-                    $(".success").slideUp("fast");
-                }, 2000);
-            });
-        };
+        // @frecuencialibre commenting this out since i think it is never called. @todo delete once confirmed
+        // this.onSaveCallback = function () {
+        //     $http({
+        //         method: 'POST',
+        //         url: '/preference/station-podcast-settings',
+        //         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        //         data: { stationPodcastPrivacy: $("#podcast-settings").find("input:checked").val() }
+        //     }).success(function (data) {
+        //         jQuery.extend($scope.podcast, data);
+        //         $(".success").text($.i18n._("Podcast settings saved")).slideDown("fast");
+        //         setTimeout(function () {
+        //             $(".success").slideUp("fast");
+        //         }, 2000);
+        //     });
+        // };
         return this;
     }
 

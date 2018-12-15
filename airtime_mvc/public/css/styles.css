@@ -4166,7 +4166,9 @@ li .ui-state-hover {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
+.podcast-metadata-row .success {
+    margin-top: 10px;
+}
 .podcast_episodes_imported {
     text-align: center !important;
 }
