@@ -35,8 +35,12 @@ var AIRTIME = (function (AIRTIME) {
         view.find("table").attr("id", "podcast_episodes_" + podcast.id);
 
         self.onSaveCallback = function () {
+            var successMsg = $('.active-tab .btn-toolbar .success')
+            successMsg.text($.i18n._("Podcast settings saved")).show("fast");
+            setTimeout(function () {
+                successMsg.hide("fast");
+            }, 5000);
             AIRTIME.library.podcastDataTable.fnDraw();
-            tab.close();
         };
 
         /**
@@ -49,6 +53,44 @@ var AIRTIME = (function (AIRTIME) {
                 });
         };
 
+
+        /**
+         * Generate a smartblock and playlist for this smartblock.
+         */
+        $scope.createSmartblock =  function () {
+            // send smarblock creation instruction to API
+            $.post(
+                endpoint + "smartblock", 
+                {
+                    csrf_token: $("#csrf").val(), 
+                    id: $scope.podcast.id,
+                    title: $scope.podcast.title
+                }, 
+                function() {
+                    // show success message
+                    var successMsg = $('.active-tab .pc-sb-success')
+                    successMsg.text($.i18n._('Smartblock and playlist generated'));
+                    successMsg.show("fast");
+                    setTimeout(function(){
+                        successMsg.hide("fast");
+                    }, 5000);
+
+                    // save podcast but do not display notification beside save button below
+                    $http.put(endpoint + $scope.podcast.id, 
+                        {
+                            csrf_token: $scope.csrf, 
+                            podcast: $scope.podcast
+                        })
+                        .success(function () {
+                            AIRTIME.library.podcastDataTable.fnDraw();
+                        });
+
+                    // redraw list of smartblocks just in case they have it visible on the left
+                    dt = $('table[id="library_display"]').dataTable();
+                    dt.fnStandingRedraw();
+                }
+            );
+        };
         /**
          * Close the tab and discard any changes made to the podcast data.
          */
@@ -63,6 +105,9 @@ var AIRTIME = (function (AIRTIME) {
 
         return self;
     }
+
+
+
 
     /**
      * Initialize the controller.
@@ -100,20 +145,21 @@ var AIRTIME = (function (AIRTIME) {
     function StationPodcastController($scope, $http, podcast, tab) {
         // Super call to parent controller
         PodcastController.call(this, $scope, $http, podcast, tab);
-        this.onSaveCallback = function () {
-            $http({
-                method: 'POST',
-                url: '/preference/station-podcast-settings',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                data: { stationPodcastPrivacy: $("#podcast-settings").find("input:checked").val() }
-            }).success(function (data) {
-                jQuery.extend($scope.podcast, data);
-                $(".success").text($.i18n._("Podcast settings saved")).slideDown("fast");
-                setTimeout(function () {
-                    $(".success").slideUp("fast");
-                }, 2000);
-            });
-        };
+        // @frecuencialibre commenting this out since i think it is never called. @todo delete once confirmed
+        // this.onSaveCallback = function () {
+        //     $http({
+        //         method: 'POST',
+        //         url: '/preference/station-podcast-settings',
+        //         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        //         data: { stationPodcastPrivacy: $("#podcast-settings").find("input:checked").val() }
+        //     }).success(function (data) {
+        //         jQuery.extend($scope.podcast, data);
+        //         $(".success").text($.i18n._("Podcast settings saved")).slideDown("fast");
+        //         setTimeout(function () {
+        //             $(".success").slideUp("fast");
+        //         }, 2000);
+        //     });
+        // };
         return this;
     }
 
@@ -278,6 +324,28 @@ var AIRTIME = (function (AIRTIME) {
             uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+podcast.id,
             tab = AIRTIME.tabs.openTab(data.html, uid, null);
         _bootstrapAngularApp(podcast, tab);
+        
+        $(".album_names.help_icon").qtip({
+            content: {
+                text: $.i18n._('Overwrite downloaded podcast episodes\' "Album" metadata tag  with the Podcast Name specified above. This album name can then be used as a search criteria by a smartblock.')
+            },
+            hide: {
+                delay: 500,
+                fixed: true
+            },
+            style: {
+                border: {
+                    width: 0,
+                    radius: 4
+                },
+                classes: "ui-tooltip-dark ui-tooltip-rounded"
+            },
+            position: {
+                my: "left bottom",
+                at: "right center"
+            }
+        });
+
     }
 
     /**
