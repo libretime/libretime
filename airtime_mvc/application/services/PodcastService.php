@@ -166,15 +166,15 @@ class Application_Service_PodcastService
      * This will automatically create a smartblock and playlist for this podcast.
      */
 
-    public static function createPodcastSmartblockAndPlaylist($podcast, $title = "Podcast")
+    public static function createPodcastSmartblockAndPlaylist($podcast, $title = null)
     {
         if (is_array($podcast)) {
             $newpodcast = new Podcast();
             $newpodcast->fromArray($podcast, BasePeer::TYPE_FIELDNAME);
             $podcast = $newpodcast;
-            if ($title == "Podcast") {
-                $title = $podcast->getDbTitle();
-            }
+        }
+        if ($title == null) {
+            $title = $podcast->getDbTitle();
         }
         // Base class
         $newBl = new Application_Model_Block();
