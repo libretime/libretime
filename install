@@ -93,7 +93,7 @@ code=""
 apache_bin=""
 skip_postgres=0
 skip_rabbitmq=0
-
+default_value="Y"
 
 function verbose() {
     if [[ ${_v} -eq 1 ]]; then
@@ -769,6 +769,7 @@ fi
 if [ "$apache" = "f" -a ${_i} -eq 1 ]; then
     echo -e "Install default Airtime apache configuration? (Y/n): \c"
     read IN
+    IN=${IN:-$default_value}
     if [ "$IN" = "y" -o "$IN" = "Y" ]; then
         apache="t"
     fi
@@ -870,6 +871,7 @@ fi
 if [ "$icecast" = "f" -a ${_i} -eq 1 ]; then
     echo -e "Install default Airtime Icecast configuration? (Y/n): \c"
     read IN
+    IN=${IN:-$default_value}
     if [ "$IN" = "y" -o "$IN" = "Y" ]; then
         icecast="t"
     fi
@@ -1042,6 +1044,7 @@ EOF
     elif [ ${_i} -eq 1 ]; then
         echo -e "Create default airtime postgres user? (Y/n): \c"
         read IN
+        IN=${IN:-$default_value}
         if [ "$IN" = "y" -o "$IN" = "Y" ]; then
             setupAirtimePostgresUser
         fi
