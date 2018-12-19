@@ -154,7 +154,6 @@ def podcast_download(id, url, callback_url, api_key, podcast_name, album_overrid
                 r.raw.decode_content = True
                 shutil.copyfileobj(r.raw, audiofile)
                 metadata_audiofile = mutagen.File(audiofile.name, easy=True)
-                logger.debug('podcast_download loaded {0}'.format(audiofile.name))
                 # replace album title as needed
                 metadata_audiofile = podcast_override_album(metadata_audiofile, podcast_name, album_override)
                 metadata_audiofile.save()
