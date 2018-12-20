@@ -507,6 +507,7 @@ var AIRTIME = (function (AIRTIME) {
             AIRTIME.library.podcastTableWidget.clearSelection();
             AIRTIME.library.setCurrentTable(AIRTIME.library.DataTableTypeEnum.PODCAST_EPISODES);
             $("#podcast_url_dialog").dialog("close");
+            _initAppFromResponse(json);
         }).fail(function (e) {
             var errors = $("#podcast_url_dialog").find(".errors");
             errors.show(200).text(e.responseText);
