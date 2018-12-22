@@ -12,12 +12,33 @@
         "ise/php-soundcloud": "3.0.1",
         "massivescale/celery-php": "2.0.*@dev",
         "simplepie/simplepie": "dev-master",
-        "zendframework/zendframework1": "^1.12",
+        "zf1s/zend-application": "^1.12",
         "composer/semver": "^1.4",
-        "php-amqplib/php-amqplib": "^2.6"
+        "php-amqplib/php-amqplib": "^2.6",
+        "zf1s/zend-acl": "^1.12",
+        "zf1s/zend-session": "^1.12",
+        "zf1s/zend-navigation": "^1.12",
+        "zf1s/zend-controller": "^1.12",
+        "zf1s/zend-log": "^1.12",
+        "zf1s/zend-version": "^1.12",
+        "zf1s/zend-rest": "dev-master@dev",
+        "zf1s/zend-layout": "^1.12",
+        "zf1s/zend-loader": "dev-master@dev",
+        "zf1s/zend-auth": "^1.12",
+        "zf1s/zend-filter": "^1.12",
+        "zf1s/zend-json": "^1.12",
+        "zf1s/zend-form": "^1.12",
+        "zf1s/zend-db": "^1.12",
+        "zf1s/zend-file": "^1.12",
+        "zf1s/zend-file-transfer": "^1.12",
+        "zf1s/zend-http": "^1.12",
+        "zf1s/zend-date": "^1.12",
+        "zf1s/zend-validate": "dev-master@dev",
+        "zf1s/zend-cache": "dev-master@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.3",
-        "phpunit/dbunit": "^2.0"
+        "phpunit/dbunit": "^2.0",
+        "zf1s/zend-test": "^1.12"
     }
 }
