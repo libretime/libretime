@@ -9,9 +9,7 @@ import posixpath
 import shutil
 import tempfile
 import traceback
-from mutagen.mp3 import MP3
-from mutagen.easyid3 import EasyID3
-import mutagen.id3
+import mutagen
 from StringIO import StringIO
 from celery import Celery
 from celery.utils.log import get_task_logger
@@ -155,15 +153,11 @@ def podcast_download(id, url, callback_url, api_key, podcast_name, album_overrid
             with tempfile.NamedTemporaryFile(mode ='wb+', delete=False) as audiofile:
                 r.raw.decode_content = True
                 shutil.copyfileobj(r.raw, audiofile)
-                # currently hardcoded for mp3s may want to add support for oggs etc
-                m = MP3(audiofile.name, ID3=EasyID3)
-                logger.debug('podcast_download loaded mp3 {0}'.format(audiofile.name))
-
+                metadata_audiofile = mutagen.File(audiofile.name, easy=True)
                 # replace album title as needed
-                m = podcast_override_album(m, podcast_name, album_override)
-
-                m.save()
-                filetypeinfo = m.pprint()
+                metadata_audiofile = podcast_override_album(metadata_audiofile, podcast_name, album_override)
+                metadata_audiofile.save()
+                filetypeinfo = metadata_audiofile.pprint()
                 logger.info('filetypeinfo is {0}'.format(filetypeinfo.encode('ascii', 'ignore')))
                 re = requests.post(callback_url, files={'file': (filename, open(audiofile.name, 'rb'))}, auth=requests.auth.HTTPBasicAuth(api_key, ''))
         re.raise_for_status()
