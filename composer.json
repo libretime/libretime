@@ -18,7 +18,6 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^4.3",
-        "phpunit/dbunit": "^2.0",
-        "jokkedk/zfdebug": "^1.6"
+        "phpunit/dbunit": "^2.0"
     }
 }
