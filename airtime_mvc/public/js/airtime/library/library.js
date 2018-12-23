@@ -942,6 +942,25 @@ var AIRTIME = (function(AIRTIME) {
 
         var simpleSearchText;
 
+        /* set focus into the input box when page loads */
+        $(window).ready(function(){
+            $libContent.find("#library_display_filter label").find('input').focus();
+        } );
+        /* if the user clicks on an a anchor link ie most navigation buttons or there is no focus
+         * then bring focus back to the search window
+         * this should handle most navigation cases for the site currently without taking focus away from
+         * other input fields or otherwise interfering with the UI interaction */
+        $(window).click(function(){
+            var nothingIsFocused = document.activeElement === document.body;
+            if (nothingIsFocused) {
+                $libContent.find("#library_display_filter label").find('input').focus();
+             }
+             else if (document.activeElement.tagName.toLowerCase() === 'a')
+             {
+                 $libContent.find("#library_display_filter label").find('input').focus();
+            }
+        } );
+
         $libContent.on("click", "legend", function(){
             $simpleSearch = $libContent.find("#library_display_filter label");
             var $fs = $(this).parents("fieldset"),
