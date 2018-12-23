@@ -61,6 +61,7 @@ popd
 #echo "Done"
 
 pushd /tmp/
+find libretime-${suffix} -type f -exec dos2unix {} \;
 echo -n "Creating tarball..."
 tar -czf $target_file \
         --owner=root --group=root \
