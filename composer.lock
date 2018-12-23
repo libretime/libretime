@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8742fac4756aa4a4ec5e8035030410da",
-    "content-hash": "e5741a6b2af783dd4b1467b29e3387ab",
+    "hash": "0e4eedf77a6c56350bfc8f9c4a193f48",
+    "content-hash": "e85c1a0029cb2b6f1d1c6bf4ef399e7b",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -673,7 +673,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/simplepie/simplepie/zipball/3d628875ef6cda045b9a7df6ac509f73756670c6",
+                "url": "https://api.github.com/repos/simplepie/simplepie/zipball/0e8fe72132dad765d25db4cabc69a91139af1263",
                 "reference": "eb6dd2d578dd62a1eec68b60cdda8c4a38a8de49",
                 "shasum": ""
             },
@@ -826,6 +826,7 @@
                 "ZF1",
                 "framework"
             ],
+            "abandoned": "zendframework/zendframework",
             "time": "2016-09-08 14:50:34"
         }
     ],
@@ -883,52 +884,6 @@
                 "instantiate"
             ],
             "time": "2015-06-14 21:17:01"
-        },
-        {
-            "name": "jokkedk/zfdebug",
-            "version": "1.6.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jokkedk/ZFDebug.git",
-                "reference": "0450584c2ecaaa2b6503416b3434f35cbf45273b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jokkedk/ZFDebug/zipball/0450584c2ecaaa2b6503416b3434f35cbf45273b",
-                "reference": "0450584c2ecaaa2b6503416b3434f35cbf45273b",
-                "shasum": ""
-            },
-            "require": {
-                "zendframework/zendframework1": "1.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "ZFDebug_": "library/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "include-path": [
-                "library/"
-            ],
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Joakim Nygård",
-                    "homepage": "http://jokke.dk",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Andreas Pankratz",
-                    "homepage": "http://www.bangal.de",
-                    "role": "Contributor"
-                }
-            ],
-            "description": "ZFDebug is a plugin for the Zend Framework for PHP5, providing useful debug information displayed in a small bar at the bottom of every page.",
-            "homepage": "https://github.com/jokkedk/ZFDebug",
-            "time": "2014-06-25 14:06:28"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -1095,6 +1050,7 @@
                 "testing",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2016-12-02 14:39:14"
         },
         {
