@@ -3720,11 +3720,8 @@ button.btn-icon-text > i.icon-white {
     display: block;
 }
 
-.dashboard_sub_nav {
-    padding: 0px 0px 0px 10px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+.media_type_selector.dashboard_sub_nav a {
+    padding-left: 20px;
 }
 
 .wrapper {
