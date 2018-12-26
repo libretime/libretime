@@ -745,7 +745,8 @@ var AIRTIME = (function(AIRTIME) {
                         filterMessage.text("");
                     }
                     $libContent.find('.dataTables_filter input[type="text"]')
-                        .css('padding-right', $('#advanced-options').find('button').outerWidth());
+                        .css('padding-right', $('#advanced-options').find('button').outerWidth())
+                        .focus();
                 });
             },
             "fnRowCallback": AIRTIME.library.fnRowCallback,
