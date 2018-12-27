@@ -1398,31 +1398,6 @@ var AIRTIME = (function(AIRTIME) {
                 }
             });
 
-        var openPodcastEpisodeTable = function (podcast) {
-            $("#library_filter").append(" - " + podcast.title);
-            mod.podcastEpisodeTableWidget.reload(podcast.id);
-            mod.podcastTableWidget.clearSelection();
-            mod.setCurrentTable(mod.DataTableTypeEnum.PODCAST_EPISODES);
-            mod.podcastEpisodeDataTable.closest(".dataTables_wrapper").find(".dataTables_processing")
-                .addClass("block-overlay").css("visibility", "visible");
-        };
-
-        podcastToolbarButtons["ViewEpisodes"] = {
-            title : $.i18n._("View Episodes"),
-            iconClass : "icon-chevron-right",
-            extraBtnClass : "btn-small",
-            elementId : "",
-            eventHandlers : {
-                click: function () {
-                    var podcast = mod.podcastTableWidget.getSelectedRows()[0];
-                    openPodcastEpisodeTable(podcast);
-                }
-            },
-            validateConstraints: function () {
-                return this.getSelectedRows().length == 1;
-            }
-        };
-
         //Set up the div with id "podcast_table" as a datatable.
         mod.podcastTableWidget = new AIRTIME.widgets.Table(
             $('#podcast_table'), //DOM node to create the table inside.
@@ -1439,12 +1414,9 @@ var AIRTIME = (function(AIRTIME) {
                 }
             });
 
-        mod._initPodcastEpisodeDatatable();
-        // On double click, open a table showing the selected podcast's episodes
-        // in the left-hand pane.
+        // Edit podcast in right-side pane upon double click
         mod.podcastTableWidget.assignDblClickHandler(function () {
-            var podcast = mod.podcastDataTable.fnGetData(this);
-            openPodcastEpisodeTable(podcast);
+            AIRTIME.podcast.editSelectedPodcasts();
         });
 
         mod.podcastDataTable = mod.podcastTableWidget.getDatatable();
@@ -1452,27 +1424,9 @@ var AIRTIME = (function(AIRTIME) {
     };
 
     /**
-     * Initialize the podcast episode view for the left-hand pane
-     *
-     * @private
+     * Initialize the podcast episode table with working buttons
      */
-    mod._initPodcastEpisodeDatatable = function () {
-        var buttons = {
-                backBtn: {
-                    title           : $.i18n._('Back to Podcasts'),
-                    iconClass       : 'icon-chevron-left',
-                    extraBtnClass   : 'btn-small',
-                    elementId       : '',
-                    eventHandlers   : {
-                        click: function () {
-                            $("#library_filter").text($.i18n._("Podcasts"));
-                            mod.setCurrentTable(mod.DataTableTypeEnum.PODCAST);
-                        }
-                    },
-                    validateConstraints: function () { return true; }
-                }
-            },
-            defaults = AIRTIME.widgets.Table.getStandardToolbarButtons();
+    mod.initPodcastEpisodeDatatableWithButtonEvents = function (domNode) {
 
         /**
          * Check the import statuses of each selected episode to see which
@@ -1498,7 +1452,8 @@ var AIRTIME = (function(AIRTIME) {
         };
 
         // Setup the default buttons (new, edit, delete)
-        $.extend(true, defaults[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.NEW],
+        podcastEpisodeButtons = AIRTIME.widgets.Table.getStandardToolbarButtons();
+        $.extend(true, podcastEpisodeButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.NEW],
             {
                 title: "Import",
                 eventHandlers: {
@@ -1511,7 +1466,7 @@ var AIRTIME = (function(AIRTIME) {
                     return checkSelectedEpisodeImportStatus.call(this, false);
                 }
             });
-        $.extend(true, defaults[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.EDIT],
+        $.extend(true, podcastEpisodeButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.EDIT],
             {
                 eventHandlers: {
                     click: function () {
@@ -1523,7 +1478,7 @@ var AIRTIME = (function(AIRTIME) {
                     return checkSelectedEpisodeImportStatus.call(this, true);
                 }
             });
-        $.extend(true, defaults[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.DELETE],
+        $.extend(true, podcastEpisodeButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.DELETE],
             {
                 eventHandlers: {
                     click: function () {
@@ -1531,7 +1486,8 @@ var AIRTIME = (function(AIRTIME) {
                         $.each(episodes, function () {
                             data.push({id: this.file.id, type: this.file.ftype});
                         });
-                        mod.fnDeleteItems(data);
+                        console.log("podcast deletion:", data);
+                        AIRTIME.podcast.deleteSelectedEpisodes(data, mod.podcastEpisodeTableWidget);
                     }
                 },
                 validateConstraints: function () {
@@ -1541,30 +1497,30 @@ var AIRTIME = (function(AIRTIME) {
 
         // Reassign these because integer keys take precedence in iteration order - we want to order based on insertion
         // FIXME: this is a pretty flimsy way to try to set up iteration order (possibly not xbrowser compatible?)
-        defaults = {
-            newBtn : defaults[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.NEW],
-            editBtn: defaults[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.EDIT],
-            delBtn : defaults[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.DELETE]
+        podcastEpisodeButtons = {
+            newBtn : podcastEpisodeButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.NEW],
+            editBtn: podcastEpisodeButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.EDIT],
+            delBtn : podcastEpisodeButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.DELETE]
         };
 
-        $.extend(true, buttons, defaults, {
-            addToScheduleBtn: {
-                title           : $.i18n._('Add to Schedule'),
-                iconClass       : '',
-                extraBtnClass   : 'btn-small',
-                elementId       : '',
-                eventHandlers   : {
-                    click: function () {
-                        var data = [], selected = mod.podcastEpisodeTableWidget.getSelectedRows();
-                        $.each(selected, function () { data.push(this.file); });
-                        mod.addToSchedule(data);
-                    }
-                },
-                validateConstraints: function () {
-                    // TODO: change text + behaviour for playlists, smart blocks, etc.
-                    return checkSelectedEpisodeImportStatus.call(this, true);
-                }
-            },
+        $.extend(true, podcastEpisodeButtons, {
+            // addToScheduleBtn: {
+            //     title           : $.i18n._('Add to Schedule'),
+            //     iconClass       : '',
+            //     extraBtnClass   : 'btn-small',
+            //     elementId       : '',
+            //     eventHandlers   : {
+            //         click: function () {
+            //             var data = [], selected = mod.podcastEpisodeTableWidget.getSelectedRows();
+            //             $.each(selected, function () { data.push(this.file); });
+            //             mod.addToSchedule(data);
+            //         }
+            //     },
+            //     validateConstraints: function () {
+            //         // TODO: change text + behaviour for playlists, smart blocks, etc.
+            //         return checkSelectedEpisodeImportStatus.call(this, true);
+            //     }
+            // },
             viewDescBtn: {
                 title : $.i18n._("View"),
                 iconClass : "icon-globe",
@@ -1580,32 +1536,8 @@ var AIRTIME = (function(AIRTIME) {
         });
 
         mod.podcastEpisodeTableWidget = AIRTIME.podcast.initPodcastEpisodeDatatable(
-            $("#podcast_episodes_table"),
-            {
-                aoColumns   : [
-                    /* GUID */              { "sTitle" : ""                            , "mDataProp" : "guid"           , "sClass" : "podcast_episodes_guid"        , "bVisible" : false },
-                    /* Ingested */          { "sTitle" : $.i18n._("Imported?")         , "mDataProp" : "importIcon"     , "sClass" : "podcast_episodes_imported"    , "sWidth" : "120px" },
-                    /* Title */             { "sTitle" : $.i18n._("Title")             , "mDataProp" : "title"          , "sClass" : "podcast_episodes_title"       , "sWidth" : "170px" },
-                    /* Author */            { "sTitle" : $.i18n._("Author")            , "mDataProp" : "author"         , "sClass" : "podcast_episodes_author"      , "sWidth" : "170px" },
-                    /* Description */       { "sTitle" : $.i18n._("Description")       , "mDataProp" : "description"    , "sClass" : "podcast_episodes_description" , "sWidth" : "300px" },
-                    /* Link */              { "sTitle" : $.i18n._("Link")              , "mDataProp" : "link"           , "sClass" : "podcast_episodes_link"        , "sWidth" : "170px" },
-                    /* Publication Date */  { "sTitle" : $.i18n._("Publication Date")  , "mDataProp" : "pub_date"       , "sClass" : "podcast_episodes_pub_date"    , "sWidth" : "170px" }
-                ],
-                bServerSide : false,
-                sAjaxSource : null,
-                // Initialize the table with empty data so we can defer loading
-                // If we load sequentially there's a delay before the table appears
-                aaData      : {},
-                oColVis     : {
-                    buttonText: $.i18n._("Columns"),
-                    iOverlayFade: 0,
-                    aiExclude: [0, 1, 2]
-                },
-                oColReorder: {
-                    iFixedColumns: 3  // Checkbox + imported
-                }
-            },
-            buttons,
+            domNode,
+            podcastEpisodeButtons,
             {
                 hideIngestCheckboxes: false,
                 emptyPlaceholder: {
@@ -1628,6 +1560,8 @@ var AIRTIME = (function(AIRTIME) {
                 }
             }
         });
+
+        return mod.podcastEpisodeTableWidget;
     };
 
     mod.libraryInit = libraryInit;

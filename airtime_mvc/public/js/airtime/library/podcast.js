@@ -345,6 +345,12 @@ var AIRTIME = (function (AIRTIME) {
             }
         });
 
+        // Add podcast episode table in right-side panel below podcast edit form
+        var episodeTable = AIRTIME.library.initPodcastEpisodeDatatableWithButtonEvents(
+            $("#podcast_episodes_" + podcast.id),
+        );
+        episodeTable.reload(podcast.id);
+        episodeTable.clearSelection()
     }
 
     /**
@@ -501,11 +507,13 @@ var AIRTIME = (function (AIRTIME) {
      */
     mod.addPodcast = function () {
         $.post(endpoint, $("#podcast_url_dialog").find("form").serialize(), function(json) {
-            // Open the episode view for the newly created podcast in the left-hand pane
-            AIRTIME.library.podcastEpisodeTableWidget.reload(JSON.parse(json.podcast).id);
-            AIRTIME.library.podcastTableWidget.clearSelection();
-            AIRTIME.library.setCurrentTable(AIRTIME.library.DataTableTypeEnum.PODCAST_EPISODES);
+            // Refresh left-side library pane to show newly created podcast
+            AIRTIME.library.podcastDataTable.fnDraw();
+
+            // close modal
             $("#podcast_url_dialog").dialog("close");
+
+            // open newly created podcast in right-side edit pane
             _initAppFromResponse(json);
         }).fail(function (e) {
             var errors = $("#podcast_url_dialog").find(".errors");
@@ -560,6 +568,7 @@ var AIRTIME = (function (AIRTIME) {
      * @param {PodcastEpisodeTable} dt  PodcastEpisode table containing the data
      */
     mod.importSelectedEpisodes = function (episodes, dt) {
+        console.log("importSelectedEpisodes", episodes, dt);
         $.each(episodes, function () {
             // remainingDiskSpace is defined in layout.phtml
             if (this.enclosure.length > remainingDiskSpace) {
@@ -567,17 +576,30 @@ var AIRTIME = (function (AIRTIME) {
                 return false;
             }
             if (this.file && Object.keys(this.file).length > 0) return false;
-            var podcastId = this.podcast_id;
-            $.post(endpoint + podcastId + '/episodes', JSON.stringify({
+            $.post(endpoint + this.podcast_id + '/episodes', JSON.stringify({
                 csrf_token: $("#csrf").val(),
                 episode: this
             }), function () {
-                dt.reload(podcastId);
+                dt.reload(this.podcast_id);
             });
 
             remainingDiskSpace -= this.enclosure.length;
         });
 
+        dt.clearSelection();
+    };
+
+    /**
+     * Delete one or more podcast episodes.
+     *
+     * @param {id:string, type:string}[] data  Array of data objects to be deleted
+     * @param {PodcastEpisodeTable} dt  PodcastEpisode table containing the data
+     */
+    mod.deleteSelectedEpisodes = function (data, dt) {
+        $.each(data, function () {
+            AIRTIME.library.fnDeleteItems(data);
+        });        
+        dt.reload(this.podcast_id);
         dt.clearSelection();
     };
 
@@ -594,73 +616,74 @@ var AIRTIME = (function (AIRTIME) {
      *
      * @returns {Table} the created Table object
      */
-    mod.initPodcastEpisodeDatatable = function (domNode, params, buttons, config) {
-        if ('slideToggle' in buttons) {
-            buttons = $.extend(true, {
-                slideToggle: {
-                    title: '',
-                    iconClass: 'spl-no-r-margin icon-chevron-up',
-                    extraBtnClass: 'toggle-editor-form',
-                    elementId: '',
-                    eventHandlers: {},
-                    validateConstraints: function () { return true; }
-                }
-            }, buttons);
-        }
-        params = $.extend(true, params,
-            {
-                bDeferRender: true,
-                oColVis: {
-                    buttonText: $.i18n._("Columns"),
-                    iOverlayFade: 0,
-                    aiExclude: [0]
-                },
-                oColReorder: {
-                    iFixedColumns: 1  // Checkbox
-                },
-                fnCreatedRow: function(nRow, aData, iDataIndex) {
-                    var self = this;
-                    if (aData.file && Object.keys(aData.file).length > 0) {
-                        $(nRow).draggable({
-                            helper: function () {
-                                var $row = $(this), data = self._datatable.fnGetData(nRow);
-                                $row.data("aData", data.file);
-                                self.selectRow(this, data, self.SELECTION_MODE.SINGLE, $row.index());
-                                var selected = self.getSelectedRows().length, container,
-                                    width = self._$wrapperDOMNode.closest(".dataTables_wrapper").outerWidth(), message;
+    mod.initPodcastEpisodeDatatable = function (domNode, buttons, config) {
 
-                                message = sprintf($.i18n._(selected > 1 ? "Adding %s Items" : "Adding %s Item"), selected);
-                                container = $('<div/>').attr('id', 'draggingContainer').append('<tr/>')
-                                    .find("tr").append('<td/>').find("td")
-                                    .attr("colspan", 100).width(width).css("max-width", "none")
-                                    .addClass("ui-state-highlight").append(message).end().end();
+        params = {
+            aoColumns   : [
+                /* GUID */              { "sTitle" : ""                            , "mDataProp" : "guid"           , "sClass" : "podcast_episodes_guid"        , "bVisible" : false },
+                /* Ingested */          { "sTitle" : $.i18n._("Imported?")         , "mDataProp" : "importIcon"     , "sClass" : "podcast_episodes_imported"    , "sWidth" : "120px" },
+                /* Title */             { "sTitle" : $.i18n._("Title")             , "mDataProp" : "title"          , "sClass" : "podcast_episodes_title"       , "sWidth" : "170px" },
+                /* Author */            { "sTitle" : $.i18n._("Author")            , "mDataProp" : "author"         , "sClass" : "podcast_episodes_author"      , "sWidth" : "170px" },
+                /* Description */       { "sTitle" : $.i18n._("Description")       , "mDataProp" : "description"    , "sClass" : "podcast_episodes_description" , "sWidth" : "300px" },
+                /* Link */              { "sTitle" : $.i18n._("Link")              , "mDataProp" : "link"           , "sClass" : "podcast_episodes_link"        , "sWidth" : "170px" },
+                /* Publication Date */  { "sTitle" : $.i18n._("Publication Date")  , "mDataProp" : "pub_date"       , "sClass" : "podcast_episodes_pub_date"    , "sWidth" : "170px" }
+            ],
+            bServerSide : false,
+            sAjaxSource : null,
+            // Initialize the table with empty data so we can defer loading
+            // If we load sequentially there's a delay before the table appears
+            aaData      : {},
+            oColVis     : {
+                buttonText: $.i18n._("Columns"),
+                iOverlayFade: 0,
+                aiExclude: [0, 1, 2]
+            },
+            bDeferRender: true,
+            oColReorder: {
+                iFixedColumns: 3  // Checkbox + imported
+            },
+            fnCreatedRow: function(nRow, aData, iDataIndex) {
+                var self = this;
+                if (aData.file && Object.keys(aData.file).length > 0) {
+                    $(nRow).draggable({
+                        helper: function () {
+                            var $row = $(this), data = self._datatable.fnGetData(nRow);
+                            $row.data("aData", data.file);
+                            self.selectRow(this, data, self.SELECTION_MODE.SINGLE, $row.index());
+                            var selected = self.getSelectedRows().length, container,
+                                width = self._$wrapperDOMNode.closest(".dataTables_wrapper").outerWidth(), message;
 
-                                return container;
-                            },
-                            tolerance: 'pointer',
-                            cursor: 'move',
-                            cursorAt: {
-                                top: 20,
-                                left: Math.floor(self._datatable.outerWidth() / 2)
-                            },
-                            distance: 25, // min-distance for dragging
-                            connectToSortable: $("#show_builder_table, .active-tab .spl_sortable")
-                        });
-                    }
-                },
-                fnDrawCallback: function () {
-                    AIRTIME.library.drawEmptyPlaceholder(this);
-                    // Hide the processing div
-                    var dt = this.getDatatable();
-                    !dt || dt.closest(".dataTables_wrapper").find(".dataTables_processing").css("visibility", "hidden");
+                            message = sprintf($.i18n._(selected > 1 ? "Adding %s Items" : "Adding %s Item"), selected);
+                            container = $('<div/>').attr('id', 'draggingContainer').append('<tr/>')
+                                .find("tr").append('<td/>').find("td")
+                                .attr("colspan", 100).width(width).css("max-width", "none")
+                                .addClass("ui-state-highlight").append(message).end().end();
+
+                            return container;
+                        },
+                        tolerance: 'pointer',
+                        cursor: 'move',
+                        cursorAt: {
+                            top: 20,
+                            left: Math.floor(self._datatable.outerWidth() / 2)
+                        },
+                        distance: 25, // min-distance for dragging
+                        connectToSortable: $("#show_builder_table, .active-tab .spl_sortable")
+                    });
                 }
+            },
+            fnDrawCallback: function () {
+                AIRTIME.library.drawEmptyPlaceholder(this);
+                // Hide the processing div
+                var dt = this.getDatatable();
+                !dt || dt.closest(".dataTables_wrapper").find(".dataTables_processing").css("visibility", "hidden");
             }
-        );
+        }
 
         if (typeof PodcastEpisodeTable === 'undefined') {
             _initPodcastEpisodeTable();
         }
-
+        
         var podcastEpisodesTableWidget = new PodcastEpisodeTable(
             domNode, // DOM node to create the table inside.
             true,    // Enable item selection
