@@ -157,9 +157,11 @@ def podcast_download(id, url, callback_url, api_key, podcast_name, album_overrid
                 metadata_audiofile = mutagen.File(audiofile.name, easy=True)
                 # if for some reason this should fail lets try it as a mp3 specific code
                 if metadata_audiofile == None:
-                    logger.info('got a blank from mutagen')
-                    metadata_audiofile = mutagen.mp3.MP3(audiofile.name, ID3=mutagen.easyid3.EasyID3)
-                    logger.info('made a mp3')
+                    # if this happens then mutagen couldn't guess what type of file it is
+                    mp3suffix = ("mp3", "MP3", "Mp3", "mP3")
+                    # so we treat it like a mp3 if it has a mp3 file extension and hope for the best
+                    if filename.endswith(mp3suffix):
+                        metadata_audiofile = mutagen.mp3.MP3(audiofile.name, ID3=mutagen.easyid3.EasyID3)
                 #replace album title as needed
                 metadata_audiofile = podcast_override_album(metadata_audiofile, podcast_name, album_override)
                 metadata_audiofile.save()
