@@ -145,21 +145,20 @@ var AIRTIME = (function (AIRTIME) {
     function StationPodcastController($scope, $http, podcast, tab) {
         // Super call to parent controller
         PodcastController.call(this, $scope, $http, podcast, tab);
-        // @frecuencialibre commenting this out since i think it is never called. @todo delete once confirmed
-        // this.onSaveCallback = function () {
-        //     $http({
-        //         method: 'POST',
-        //         url: '/preference/station-podcast-settings',
-        //         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        //         data: { stationPodcastPrivacy: $("#podcast-settings").find("input:checked").val() }
-        //     }).success(function (data) {
-        //         jQuery.extend($scope.podcast, data);
-        //         $(".success").text($.i18n._("Podcast settings saved")).slideDown("fast");
-        //         setTimeout(function () {
-        //             $(".success").slideUp("fast");
-        //         }, 2000);
-        //     });
-        // };
+        this.onSaveCallback = function () {
+            $http({
+                method: 'POST',
+                url: '/preference/station-podcast-settings',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                data: { stationPodcastPrivacy: $("#podcast-settings").find("input:checked").val() }
+            }).success(function (data) {
+                jQuery.extend($scope.podcast, data);
+                $(".success").text($.i18n._("Podcast settings saved")).slideDown("fast");
+                setTimeout(function () {
+                    $(".success").slideUp("fast");
+                }, 2000);
+            });
+        };
         return this;
     }
 
@@ -324,7 +323,7 @@ var AIRTIME = (function (AIRTIME) {
             uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+podcast.id,
             tab = AIRTIME.tabs.openTab(data.html, uid, null);
         _bootstrapAngularApp(podcast, tab);
-        
+
         $(".album_names.help_icon").qtip({
             content: {
                 text: $.i18n._('Overwrite downloaded podcast episodes\' "Album" metadata tag  with the Podcast Name specified above. This album name can then be used as a search criteria by a smartblock.')
