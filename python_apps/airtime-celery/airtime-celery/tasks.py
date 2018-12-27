@@ -153,8 +153,14 @@ def podcast_download(id, url, callback_url, api_key, podcast_name, album_overrid
             with tempfile.NamedTemporaryFile(mode ='wb+', delete=False) as audiofile:
                 r.raw.decode_content = True
                 shutil.copyfileobj(r.raw, audiofile)
+                # mutagen should be able to guess the write file type
                 metadata_audiofile = mutagen.File(audiofile.name, easy=True)
-                # replace album title as needed
+                # if for some reason this should fail lets try it as a mp3 specific code
+                if metadata_audiofile == None:
+                    logger.info('got a blank from mutagen')
+                    metadata_audiofile = mutagen.mp3.MP3(audiofile.name, ID3=mutagen.easyid3.EasyID3)
+                    logger.info('made a mp3')
+                #replace album title as needed
                 metadata_audiofile = podcast_override_album(metadata_audiofile, podcast_name, album_override)
                 metadata_audiofile.save()
                 filetypeinfo = metadata_audiofile.pprint()
