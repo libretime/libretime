@@ -504,6 +504,8 @@ var AIRTIME = (function(AIRTIME) {
                 }
 
                 chosenItems = {};
+
+                // TODO: correct check whether used to delete episodes
                 if (oTable == $datatables[mod.DataTableTypeEnum.PODCAST_EPISODES]) {
                     mod.podcastEpisodeTableWidget.reload();
                 } else {
@@ -1421,147 +1423,6 @@ var AIRTIME = (function(AIRTIME) {
 
         mod.podcastDataTable = mod.podcastTableWidget.getDatatable();
         $datatables[mod.DataTableTypeEnum.PODCAST] = mod.podcastDataTable;
-    };
-
-    /**
-     * Initialize the podcast episode table with working buttons
-     */
-    mod.initPodcastEpisodeDatatableWithButtonEvents = function (domNode) {
-
-        /**
-         * Check the import statuses of each selected episode to see which
-         * buttons should be enabled or disabled.
-         *
-         * @param shouldBeImported whether or not the selected item(s)
-         *        should be imported to obtain a valid result.
-         *
-         * @returns {boolean} true if all selected episodes are valid and
-         *                    the button should be enabled, otherwise false.
-         */
-        var checkSelectedEpisodeImportStatus = function (shouldBeImported) {
-            var selected = this.getSelectedRows(), isValid = true;
-            if (selected.length == 0) return false;
-            $.each(selected, function () {
-                if (this.ingested < 0) isValid = false;
-                var isImported  = !$.isEmptyObject(this.file);
-                if (shouldBeImported ? !isImported : isImported) {
-                    isValid = false;
-                }
-            });
-            return isValid;
-        };
-
-        // Setup the default buttons (new, edit, delete)
-        podcastEpisodeButtons = AIRTIME.widgets.Table.getStandardToolbarButtons();
-        $.extend(true, podcastEpisodeButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.NEW],
-            {
-                title: "Import",
-                eventHandlers: {
-                    click: function () {
-                        var episodes = mod.podcastEpisodeTableWidget.getSelectedRows();
-                        AIRTIME.podcast.importSelectedEpisodes(episodes, mod.podcastEpisodeTableWidget);
-                    }
-                },
-                validateConstraints: function () {
-                    return checkSelectedEpisodeImportStatus.call(this, false);
-                }
-            });
-        $.extend(true, podcastEpisodeButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.EDIT],
-            {
-                eventHandlers: {
-                    click: function () {
-                        var episodes = mod.podcastEpisodeTableWidget.getSelectedRows();
-                        AIRTIME.podcast.editSelectedEpisodes(episodes);
-                    }
-                },
-                validateConstraints: function () {
-                    return checkSelectedEpisodeImportStatus.call(this, true);
-                }
-            });
-        $.extend(true, podcastEpisodeButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.DELETE],
-            {
-                eventHandlers: {
-                    click: function () {
-                        var data = [], episodes = mod.podcastEpisodeTableWidget.getSelectedRows();
-                        $.each(episodes, function () {
-                            data.push({id: this.file.id, type: this.file.ftype});
-                        });
-                        console.log("podcast deletion:", data);
-                        AIRTIME.podcast.deleteSelectedEpisodes(data, mod.podcastEpisodeTableWidget);
-                    }
-                },
-                validateConstraints: function () {
-                    return checkSelectedEpisodeImportStatus.call(this, true);
-                }
-            });
-
-        // Reassign these because integer keys take precedence in iteration order - we want to order based on insertion
-        // FIXME: this is a pretty flimsy way to try to set up iteration order (possibly not xbrowser compatible?)
-        podcastEpisodeButtons = {
-            newBtn : podcastEpisodeButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.NEW],
-            editBtn: podcastEpisodeButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.EDIT],
-            delBtn : podcastEpisodeButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.DELETE]
-        };
-
-        $.extend(true, podcastEpisodeButtons, {
-            // addToScheduleBtn: {
-            //     title           : $.i18n._('Add to Schedule'),
-            //     iconClass       : '',
-            //     extraBtnClass   : 'btn-small',
-            //     elementId       : '',
-            //     eventHandlers   : {
-            //         click: function () {
-            //             var data = [], selected = mod.podcastEpisodeTableWidget.getSelectedRows();
-            //             $.each(selected, function () { data.push(this.file); });
-            //             mod.addToSchedule(data);
-            //         }
-            //     },
-            //     validateConstraints: function () {
-            //         // TODO: change text + behaviour for playlists, smart blocks, etc.
-            //         return checkSelectedEpisodeImportStatus.call(this, true);
-            //     }
-            // },
-            viewDescBtn: {
-                title : $.i18n._("View"),
-                iconClass : "icon-globe",
-                extraBtnClass : "btn-small",
-                elementId : "",
-                eventHandlers : {
-                    click: mod.openPodcastEpisodeDialog
-                },
-                validateConstraints: function () {
-                    return this.getSelectedRows().length == 1;
-                }
-            }
-        });
-
-        mod.podcastEpisodeTableWidget = AIRTIME.podcast.initPodcastEpisodeDatatable(
-            domNode,
-            podcastEpisodeButtons,
-            {
-                hideIngestCheckboxes: false,
-                emptyPlaceholder: {
-                    iconClass: "icon-white icon-th-list",
-                    html: $.i18n._("This podcast doesn't have any episodes!")
-                    + "<br/>" + $.i18n._("Make sure the RSS feed contains audio items (with enclosure tags).")
-                    + "<br/><a target='_blank' href='http://www.apple.com/ca/itunes/podcasts/specs.html'>" + $.i18n._("Learn about podcasts") + "</a>"
-                }
-            }
-        );
-
-        mod.podcastEpisodeDataTable = $datatables[mod.DataTableTypeEnum.PODCAST_EPISODES] = mod.podcastEpisodeTableWidget.getDatatable();
-        mod.podcastEpisodeTableWidget.assignDblClickHandler(function () {
-            var data = mod.podcastEpisodeDataTable.fnGetData(this);
-            if (!$.isEmptyObject(data.file)) {
-                mod.dblClickAdd(data.file, data.file.ftype);
-            } else {
-                if (data.ingested >= 0) {  // Only import if the file isn't pending
-                    AIRTIME.podcast.importSelectedEpisodes([data], mod.podcastEpisodeTableWidget);
-                }
-            }
-        });
-
-        return mod.podcastEpisodeTableWidget;
     };
 
     mod.libraryInit = libraryInit;
