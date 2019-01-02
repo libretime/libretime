@@ -27,7 +27,6 @@ pages:
     - 'Users': manual/users/index.md
     - 'Media Folders': manual/media-folders/index.md
     - 'Streams': manual/stream-settings/index.md
-    - 'Support Feedback': manual/support-feedback/index.md
     - 'Status': manual/status/index.md
   - 'The Main Menus':
     - 'Now Playing': manual/now-playing/index.md
