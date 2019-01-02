@@ -110,47 +110,6 @@ class PreferenceController extends Zend_Controller_Action
         $this->_helper->json->sendJson(array("url" => $url));
     }
 
-    public function supportSettingAction()
-    {
-        $CC_CONFIG = Config::getConfig();
-
-        $request = $this->getRequest();
-
-        $baseUrl = Application_Common_OsPath::getBaseDir();
-
-        $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/support-setting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->statusMsg = "";
-
-        SessionHelper::reopenSessionForWriting();
-
-        $form = new Application_Form_SupportSettings();
-        if ($request->isPost()) {
-            $values = $request->getPost();
-        	if ($form->isValid($values)) {
-                Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
-                Application_Model_Preference::SetPhone($values["Phone"]);
-                Application_Model_Preference::SetEmail($values["Email"]);
-                Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
-
-                Application_Model_Preference::SetStationCountry($values["Country"]);
-                Application_Model_Preference::SetStationCity($values["City"]);
-                Application_Model_Preference::SetStationDescription($values["Description"]);
-                if (isset($values["Privacy"])) {
-                    Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
-                }
-            }
-            $this->view->statusMsg = "<div class='success'>"._("Support setting updated.")."</div>";
-        }
-
-        $privacyChecked = false;
-        if (Application_Model_Preference::GetPrivacyPolicyCheck() == 1) {
-            $privacyChecked = true;
-        }
-        $this->view->privacyChecked = $privacyChecked;
-        $this->view->section_title = _('Support Feedback');
-        $this->view->form = $form;
-    }
-
     public function directoryConfigAction()
     {
     }
