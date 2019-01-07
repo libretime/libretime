@@ -39,11 +39,11 @@ Vagrant.configure("2") do |config|
 
   # define all the OS boxes we support
   config.vm.define "ubuntu-bionic" do |os|
-    os.vm.box = "bento/ubuntu-18.04"
+    os.vm.box = "generic/ubuntu1804"
     provision_libretime(os, "ubuntu.sh", installer_args)
   end
   config.vm.define "ubuntu-xenial" do |os|
-    os.vm.box = "bento/ubuntu-16.04"
+    os.vm.box = "generic/ubuntu1604"
     provision_libretime(os, "ubuntu.sh", installer_args)
   end
   config.vm.define "ubuntu-trusty" do |os|
@@ -53,15 +53,15 @@ Vagrant.configure("2") do |config|
     provision_libretime(os, "ubuntu.sh", installer_args)
   end
   config.vm.define "debian-jessie" do |os|
-    os.vm.box = "bento/debian-8.7"
+    os.vm.box = "generic/debian8"
     provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "debian-stretch" do |os|
-    os.vm.box = "bento/debian-9.2"
+    os.vm.box = "generic/debian-9"
     provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "centos" do |os|
-    os.vm.box = 'centos/7'
+    os.vm.box = 'generic/centos7'
     provision_libretime(os, "centos.sh", installer_args + "--selinux")
   end
 
