@@ -480,7 +480,7 @@ var AIRTIME = (function(AIRTIME) {
         oTable.fnStandingRedraw();
     };
 
-    mod.fnDeleteItems = function(aMedia) {
+    mod.fnDeleteItems = function(aMedia, podcastId) {
         //Prevent the user from spamming the delete button while the AJAX request is in progress
         AIRTIME.button.disableButton("btn-group #sb-delete", false);
         var openTabObjectIds = $(".obj_id"),
@@ -505,11 +505,11 @@ var AIRTIME = (function(AIRTIME) {
 
                 chosenItems = {};
 
-                // TODO: correct check whether used to delete episodes
-                if (oTable == $datatables[mod.DataTableTypeEnum.PODCAST_EPISODES]) {
-                    mod.podcastEpisodeTableWidget.reload();
-                } else {
+                if (typeof(podcastId) === "undefined") {
                     oTable.fnStandingRedraw();
+                } else {
+                    AIRTIME.podcast.episodeTables[podcastId].reload(this.podcast_id);
+                    AIRTIME.podcast.episodeTables[podcastId].clearSelection();
                 }
 
                 //Re-enable the delete button
@@ -1331,8 +1331,8 @@ var AIRTIME = (function(AIRTIME) {
         return oTable;
     };
 
-    mod.openPodcastEpisodeDialog = function () {
-        var episode = mod.podcastEpisodeTableWidget.getSelectedRows()[0];
+    mod.openPodcastEpisodeDialog = function (podcastId) {
+        var episode = AIRTIME.podcast.episodeTables[podcastId].getSelectedRows()[0];
         $("body").append("<div id='podcast_episode_dialog'></div>");
         var dialog = $("#podcast_episode_dialog").html(episode.description);
         dialog.html(dialog.text());

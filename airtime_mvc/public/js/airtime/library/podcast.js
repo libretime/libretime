@@ -6,6 +6,7 @@ var AIRTIME = (function (AIRTIME) {
     }
 
     mod = AIRTIME.podcast;
+    mod.episodeTables = {};
 
     var endpoint = '/rest/podcast/', PodcastEpisodeTable;
 
@@ -41,6 +42,7 @@ var AIRTIME = (function (AIRTIME) {
                 successMsg.hide("fast");
             }, 5000);
             AIRTIME.library.podcastDataTable.fnDraw();
+            self.$scope.tab.setName(self.$scope.podcast.title);
         };
 
         /**
@@ -121,13 +123,14 @@ var AIRTIME = (function (AIRTIME) {
         self.$scope.tab.setName(self.$scope.podcast.title);
         // Add an onclose hook to the tab to remove the table object and the
         // import listener so we don't cause memory leaks.
-        if (self.episodeTable) {
-            self.$scope.tab.assignOnCloseHandler(function () {
-                self.episodeTable.destroy();
-                self.episodeTable = null;
+        var podcastId = self.$scope.podcast.id.toString();
+        self.$scope.tab.assignOnCloseHandler(function () {
+            if ( AIRTIME.podcast.episodeTables.hasOwnProperty(podcastId) ) {
+                AIRTIME.podcast.episodeTables[podcastId].destroy();
+                AIRTIME.podcast.episodeTables[podcastId] = null;
                 self.$scope.$destroy();
-            });
-        }
+            }
+        });
     };
 
     /**
@@ -348,6 +351,7 @@ var AIRTIME = (function (AIRTIME) {
         // Add podcast episode table in right-side panel below podcast edit form
         var episodeTable = AIRTIME.podcast.initPodcastEpisodeDatatableWithButtonEvents(
             $("#podcast_episodes_" + podcast.id),
+            podcast.id.toString()
         );
         episodeTable.reload(podcast.id);
         episodeTable.clearSelection()
@@ -436,7 +440,7 @@ var AIRTIME = (function (AIRTIME) {
             var self = this;
             self.importListener = setInterval(function () {
                 var podcastId = self.config.podcastId, pendingRows = [];
-                if (!podcastId) return false;
+            if (!podcastId) return false;
                 var dt = self.getDatatable(), data = dt.fnGetData();
                 // Iterate over the table data to check for any rows pending import
                 $.each(data, function () {
@@ -579,7 +583,7 @@ var AIRTIME = (function (AIRTIME) {
                 csrf_token: $("#csrf").val(),
                 episode: this
             }), function () {
-                dt.reload(this.podcast_id);
+                dt.reload(dt.config.podcastId);
             });
 
             remainingDiskSpace -= this.enclosure.length;
@@ -592,20 +596,18 @@ var AIRTIME = (function (AIRTIME) {
      * Delete one or more podcast episodes.
      *
      * @param {id:string, type:string}[] data  Array of data objects to be deleted
-     * @param {PodcastEpisodeTable} dt  PodcastEpisode table containing the data
+     * @param podcastId:string 
      */
-    mod.deleteSelectedEpisodes = function (data, dt) {
+    mod.deleteSelectedEpisodes = function (data, podcastId) {
         $.each(data, function () {
-            AIRTIME.library.fnDeleteItems(data);
+            AIRTIME.library.fnDeleteItems(data, podcastId);
         });        
-        dt.reload(this.podcast_id);
-        dt.clearSelection();
     };
 
     /**
      * Initialize the podcast episode table with working buttons
      */
-    mod.initPodcastEpisodeDatatableWithButtonEvents = function (domNode) {
+    mod.initPodcastEpisodeDatatableWithButtonEvents = function (domNode, podcastId) {
 
         /**
          * Check the import statuses of each selected episode to see which
@@ -637,8 +639,8 @@ var AIRTIME = (function (AIRTIME) {
                 title: "Import",
                 eventHandlers: {
                     click: function () {
-                        var episodes = mod.podcastEpisodeTableWidget.getSelectedRows();
-                        AIRTIME.podcast.importSelectedEpisodes(episodes, mod.podcastEpisodeTableWidget);
+                        var episodes = mod.episodeTables[podcastId].getSelectedRows();
+                        AIRTIME.podcast.importSelectedEpisodes(episodes, mod.episodeTables[podcastId]);
                     }
                 },
                 validateConstraints: function () {
@@ -649,7 +651,7 @@ var AIRTIME = (function (AIRTIME) {
             {
                 eventHandlers: {
                     click: function () {
-                        var episodes = mod.podcastEpisodeTableWidget.getSelectedRows();
+                        var episodes = mod.episodeTables[podcastId].getSelectedRows();
                         AIRTIME.podcast.editSelectedEpisodes(episodes);
                     }
                 },
@@ -661,12 +663,11 @@ var AIRTIME = (function (AIRTIME) {
             {
                 eventHandlers: {
                     click: function () {
-                        var data = [], episodes = mod.podcastEpisodeTableWidget.getSelectedRows();
+                        var data = [], episodes = mod.episodeTables[podcastId].getSelectedRows();
                         $.each(episodes, function () {
                             data.push({id: this.file.id, type: this.file.ftype});
                         });
-                        console.log("podcast deletion:", data, mod.podcastEpisodeTableWidget);
-                        AIRTIME.podcast.deleteSelectedEpisodes(data, mod.podcastEpisodeTableWidget);
+                        AIRTIME.podcast.deleteSelectedEpisodes(data, podcastId);
                     }
                 },
                 validateConstraints: function () {
@@ -683,30 +684,32 @@ var AIRTIME = (function (AIRTIME) {
         };
 
         $.extend(true, podcastEpisodeButtons, {
-            // addToScheduleBtn: {
-            //     title           : $.i18n._('Add to Schedule'),
-            //     iconClass       : '',
-            //     extraBtnClass   : 'btn-small',
-            //     elementId       : '',
-            //     eventHandlers   : {
-            //         click: function () {
-            //             var data = [], selected = mod.podcastEpisodeTableWidget.getSelectedRows();
-            //             $.each(selected, function () { data.push(this.file); });
-            //             mod.addToSchedule(data);
-            //         }
-            //     },
-            //     validateConstraints: function () {
-            //         // TODO: change text + behaviour for playlists, smart blocks, etc.
-            //         return checkSelectedEpisodeImportStatus.call(this, true);
-            //     }
-            // },
+            addToScheduleBtn: {
+                title           : $.i18n._('Add to Schedule'),
+                iconClass       : 'icon-plus',
+                extraBtnClass   : 'btn-small',
+                elementId       : '',
+                eventHandlers   : {
+                    click: function () {
+                        var data = [], selected = AIRTIME.podcast.episodeTables[podcastId].getSelectedRows();
+                        $.each(selected, function () { data.push(this.file); });
+                        AIRTIME.library.addToSchedule(data);
+                    }
+                },
+                validateConstraints: function () {
+                    // TODO: change text + behaviour for playlists, smart blocks, etc.
+                    return checkSelectedEpisodeImportStatus.call(this, true);
+                }
+            },
             viewDescBtn: {
                 title : $.i18n._("View"),
                 iconClass : "icon-globe",
                 extraBtnClass : "btn-small",
                 elementId : "",
                 eventHandlers : {
-                    click: mod.openPodcastEpisodeDialog
+                    click: function () {
+                        AIRTIME.library.openPodcastEpisodeDialog(podcastId);
+                    }
                 },
                 validateConstraints: function () {
                     return this.getSelectedRows().length == 1;
@@ -714,7 +717,7 @@ var AIRTIME = (function (AIRTIME) {
             }
         });
 
-        mod.podcastEpisodeTableWidget = AIRTIME.podcast.initPodcastEpisodeDatatable(
+        mod.episodeTables[podcastId] = AIRTIME.podcast.initPodcastEpisodeDatatable(
             domNode,
             podcastEpisodeButtons,
             {
@@ -728,19 +731,19 @@ var AIRTIME = (function (AIRTIME) {
             }
         );
 
-        mod.podcastEpisodeDataTable = mod.podcastEpisodeTableWidget.getDatatable();
-        mod.podcastEpisodeTableWidget.assignDblClickHandler(function () {
+        mod.podcastEpisodeDataTable = mod.episodeTables[podcastId].getDatatable();
+        mod.episodeTables[podcastId].assignDblClickHandler(function () {
             var data = mod.podcastEpisodeDataTable.fnGetData(this);
             if (!$.isEmptyObject(data.file)) {
                 mod.dblClickAdd(data.file, data.file.ftype);
             } else {
                 if (data.ingested >= 0) {  // Only import if the file isn't pending
-                    AIRTIME.podcast.importSelectedEpisodes([data], mod.podcastEpisodeTableWidget);
+                    AIRTIME.podcast.importSelectedEpisodes([data], mod.episodeTables[podcastId]);
                 }
             }
         });
 
-        return mod.podcastEpisodeTableWidget;
+        return mod.episodeTables[podcastId];
     };
 
     /**
