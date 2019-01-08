@@ -92,7 +92,6 @@ var AIRTIME = (function(AIRTIME) {
     mod.DataTableTypeEnum = Object.freeze({
         LIBRARY         : "library",
         PODCAST         : "podcast",
-        PODCAST_EPISODES: "podcastEpisodes"
     });
 
     // TODO: once the new manual pages are added, change links!
