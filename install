@@ -149,18 +149,14 @@ function systemInitDetect() {
     # returns '/sbin/init' (Debian Wheezy & Ubuntu Trusty)
     # returns '(/usr)?/lib/systemd/systemd' (Debian Stretch, Debian Jessie, Debian Buster, Ubuntu Xenial, CentOS 7)
     verbose "Detected path to PID=1 process: $pid_1_path"
-    # Get package of PID=1 path as it identifies the init system
-    if $if_debian_buster; then
-        # /usr/lib/systemd/systemd is provided by the base system in Debian Buster, so
-        # dpkg -S /usr/lib/systemd returns an error - no path found matching pattern
-        # This is a work around to avoid failing on package detection
-        pid_1_package=systemd
-    else
-        pid_1_package=$(dpkg -S $pid_1_path 2>/dev/null || 
-                        rpm --qf '%{name}\n' -qf $pid_1_path 2>/dev/null)
-    fi
+    # Get package of PID=1 path as it identifies the init system.
+    # Allow this to fail, at least then the init system can be guessed from the
+    # PID 1 executable alone
+    pid_1_package=$(dpkg -S $pid_1_path 2>/dev/null || 
+                    rpm --qf '%{name}\n' -qf $pid_1_path 2>/dev/null ||
+                    echo "unknown")
     verbose "Detected package name for PID=1 process: $pid_1_package"
-    case "${pid_1_package-$pid_1_path}" in
+    case "${pid_1_package:$pid_1_path}" in
       *systemd*) has_systemd_init=true; verbose "Detected init system type: systemd" ;;
       *upstart*) has_upstart_init=true; verbose "Detected init system type: Upstart" ;;
       *sysvinit*) has_systemv_init=true; verbose "Detected init system type: System V" ;;
