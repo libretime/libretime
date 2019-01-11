@@ -412,8 +412,7 @@ class Application_Service_PodcastService
         if (empty($value)) {
             return null;
         }
-        $child = $node->addChild($name, null, $namespace);
-        $child->{0} = $value;
+        $child = $node->addChild($name, $value, $namespace);
         return $child;
     }
 
