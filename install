@@ -632,6 +632,9 @@ case "${dist}-${code}" in
     debian-8|debian-jessie)
         code="jessie"
         is_debian_dist=true
+        echo -e "ERROR: Debian Jessie is archived and does not receive any security or other updates since 2018-05-17." >&2
+        echo -e "The LibreTime installer will drop support for installing LibreTime on Jessie in 3.0.0-alpha.8." >&2
+        sleep 6
         is_debian_jessie=true
         ;;
     debian-7|debian-wheezy)
