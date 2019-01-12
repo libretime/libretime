@@ -92,7 +92,6 @@ var AIRTIME = (function(AIRTIME) {
     mod.DataTableTypeEnum = Object.freeze({
         LIBRARY         : "library",
         PODCAST         : "podcast",
-        PODCAST_EPISODES: "podcastEpisodes"
     });
 
     // TODO: once the new manual pages are added, change links!
@@ -480,7 +479,7 @@ var AIRTIME = (function(AIRTIME) {
         oTable.fnStandingRedraw();
     };
 
-    mod.fnDeleteItems = function(aMedia) {
+    mod.fnDeleteItems = function(aMedia, podcastId) {
         //Prevent the user from spamming the delete button while the AJAX request is in progress
         AIRTIME.button.disableButton("btn-group #sb-delete", false);
         var openTabObjectIds = $(".obj_id"),
@@ -504,10 +503,12 @@ var AIRTIME = (function(AIRTIME) {
                 }
 
                 chosenItems = {};
-                if (oTable == $datatables[mod.DataTableTypeEnum.PODCAST_EPISODES]) {
-                    mod.podcastEpisodeTableWidget.reload();
-                } else {
+
+                if (typeof(podcastId) === "undefined") {
                     oTable.fnStandingRedraw();
+                } else {
+                    AIRTIME.podcast.episodeTables[podcastId].reload(this.podcast_id);
+                    AIRTIME.podcast.episodeTables[podcastId].clearSelection();
                 }
 
                 //Re-enable the delete button
@@ -1330,8 +1331,8 @@ var AIRTIME = (function(AIRTIME) {
         return oTable;
     };
 
-    mod.openPodcastEpisodeDialog = function () {
-        var episode = mod.podcastEpisodeTableWidget.getSelectedRows()[0];
+    mod.openPodcastEpisodeDialog = function (podcastId) {
+        var episode = AIRTIME.podcast.episodeTables[podcastId].getSelectedRows()[0];
         $("body").append("<div id='podcast_episode_dialog'></div>");
         var dialog = $("#podcast_episode_dialog").html(episode.description);
         dialog.html(dialog.text());
@@ -1399,31 +1400,6 @@ var AIRTIME = (function(AIRTIME) {
                 }
             });
 
-        var openPodcastEpisodeTable = function (podcast) {
-            $("#library_filter").append(" - " + podcast.title);
-            mod.podcastEpisodeTableWidget.reload(podcast.id);
-            mod.podcastTableWidget.clearSelection();
-            mod.setCurrentTable(mod.DataTableTypeEnum.PODCAST_EPISODES);
-            mod.podcastEpisodeDataTable.closest(".dataTables_wrapper").find(".dataTables_processing")
-                .addClass("block-overlay").css("visibility", "visible");
-        };
-
-        podcastToolbarButtons["ViewEpisodes"] = {
-            title : $.i18n._("View Episodes"),
-            iconClass : "icon-chevron-right",
-            extraBtnClass : "btn-small",
-            elementId : "",
-            eventHandlers : {
-                click: function () {
-                    var podcast = mod.podcastTableWidget.getSelectedRows()[0];
-                    openPodcastEpisodeTable(podcast);
-                }
-            },
-            validateConstraints: function () {
-                return this.getSelectedRows().length == 1;
-            }
-        };
-
         //Set up the div with id "podcast_table" as a datatable.
         mod.podcastTableWidget = new AIRTIME.widgets.Table(
             $('#podcast_table'), //DOM node to create the table inside.
@@ -1440,195 +1416,13 @@ var AIRTIME = (function(AIRTIME) {
                 }
             });
 
-        mod._initPodcastEpisodeDatatable();
-        // On double click, open a table showing the selected podcast's episodes
-        // in the left-hand pane.
+        // Edit podcast in right-side pane upon double click
         mod.podcastTableWidget.assignDblClickHandler(function () {
-            var podcast = mod.podcastDataTable.fnGetData(this);
-            openPodcastEpisodeTable(podcast);
+            AIRTIME.podcast.editSelectedPodcasts();
         });
 
         mod.podcastDataTable = mod.podcastTableWidget.getDatatable();
         $datatables[mod.DataTableTypeEnum.PODCAST] = mod.podcastDataTable;
-    };
-
-    /**
-     * Initialize the podcast episode view for the left-hand pane
-     *
-     * @private
-     */
-    mod._initPodcastEpisodeDatatable = function () {
-        var buttons = {
-                backBtn: {
-                    title           : $.i18n._('Back to Podcasts'),
-                    iconClass       : 'icon-chevron-left',
-                    extraBtnClass   : 'btn-small',
-                    elementId       : '',
-                    eventHandlers   : {
-                        click: function () {
-                            $("#library_filter").text($.i18n._("Podcasts"));
-                            mod.setCurrentTable(mod.DataTableTypeEnum.PODCAST);
-                        }
-                    },
-                    validateConstraints: function () { return true; }
-                }
-            },
-            defaults = AIRTIME.widgets.Table.getStandardToolbarButtons();
-
-        /**
-         * Check the import statuses of each selected episode to see which
-         * buttons should be enabled or disabled.
-         *
-         * @param shouldBeImported whether or not the selected item(s)
-         *        should be imported to obtain a valid result.
-         *
-         * @returns {boolean} true if all selected episodes are valid and
-         *                    the button should be enabled, otherwise false.
-         */
-        var checkSelectedEpisodeImportStatus = function (shouldBeImported) {
-            var selected = this.getSelectedRows(), isValid = true;
-            if (selected.length == 0) return false;
-            $.each(selected, function () {
-                if (this.ingested < 0) isValid = false;
-                var isImported  = !$.isEmptyObject(this.file);
-                if (shouldBeImported ? !isImported : isImported) {
-                    isValid = false;
-                }
-            });
-            return isValid;
-        };
-
-        // Setup the default buttons (new, edit, delete)
-        $.extend(true, defaults[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.NEW],
-            {
-                title: "Import",
-                eventHandlers: {
-                    click: function () {
-                        var episodes = mod.podcastEpisodeTableWidget.getSelectedRows();
-                        AIRTIME.podcast.importSelectedEpisodes(episodes, mod.podcastEpisodeTableWidget);
-                    }
-                },
-                validateConstraints: function () {
-                    return checkSelectedEpisodeImportStatus.call(this, false);
-                }
-            });
-        $.extend(true, defaults[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.EDIT],
-            {
-                eventHandlers: {
-                    click: function () {
-                        var episodes = mod.podcastEpisodeTableWidget.getSelectedRows();
-                        AIRTIME.podcast.editSelectedEpisodes(episodes);
-                    }
-                },
-                validateConstraints: function () {
-                    return checkSelectedEpisodeImportStatus.call(this, true);
-                }
-            });
-        $.extend(true, defaults[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.DELETE],
-            {
-                eventHandlers: {
-                    click: function () {
-                        var data = [], episodes = mod.podcastEpisodeTableWidget.getSelectedRows();
-                        $.each(episodes, function () {
-                            data.push({id: this.file.id, type: this.file.ftype});
-                        });
-                        mod.fnDeleteItems(data);
-                    }
-                },
-                validateConstraints: function () {
-                    return checkSelectedEpisodeImportStatus.call(this, true);
-                }
-            });
-
-        // Reassign these because integer keys take precedence in iteration order - we want to order based on insertion
-        // FIXME: this is a pretty flimsy way to try to set up iteration order (possibly not xbrowser compatible?)
-        defaults = {
-            newBtn : defaults[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.NEW],
-            editBtn: defaults[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.EDIT],
-            delBtn : defaults[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.DELETE]
-        };
-
-        $.extend(true, buttons, defaults, {
-            addToScheduleBtn: {
-                title           : $.i18n._('Add to Schedule'),
-                iconClass       : '',
-                extraBtnClass   : 'btn-small',
-                elementId       : '',
-                eventHandlers   : {
-                    click: function () {
-                        var data = [], selected = mod.podcastEpisodeTableWidget.getSelectedRows();
-                        $.each(selected, function () { data.push(this.file); });
-                        mod.addToSchedule(data);
-                    }
-                },
-                validateConstraints: function () {
-                    // TODO: change text + behaviour for playlists, smart blocks, etc.
-                    return checkSelectedEpisodeImportStatus.call(this, true);
-                }
-            },
-            viewDescBtn: {
-                title : $.i18n._("View"),
-                iconClass : "icon-globe",
-                extraBtnClass : "btn-small",
-                elementId : "",
-                eventHandlers : {
-                    click: mod.openPodcastEpisodeDialog
-                },
-                validateConstraints: function () {
-                    return this.getSelectedRows().length == 1;
-                }
-            }
-        });
-
-        mod.podcastEpisodeTableWidget = AIRTIME.podcast.initPodcastEpisodeDatatable(
-            $("#podcast_episodes_table"),
-            {
-                aoColumns   : [
-                    /* GUID */              { "sTitle" : ""                            , "mDataProp" : "guid"           , "sClass" : "podcast_episodes_guid"        , "bVisible" : false },
-                    /* Ingested */          { "sTitle" : $.i18n._("Imported?")         , "mDataProp" : "importIcon"     , "sClass" : "podcast_episodes_imported"    , "sWidth" : "120px" },
-                    /* Title */             { "sTitle" : $.i18n._("Title")             , "mDataProp" : "title"          , "sClass" : "podcast_episodes_title"       , "sWidth" : "170px" },
-                    /* Author */            { "sTitle" : $.i18n._("Author")            , "mDataProp" : "author"         , "sClass" : "podcast_episodes_author"      , "sWidth" : "170px" },
-                    /* Description */       { "sTitle" : $.i18n._("Description")       , "mDataProp" : "description"    , "sClass" : "podcast_episodes_description" , "sWidth" : "300px" },
-                    /* Link */              { "sTitle" : $.i18n._("Link")              , "mDataProp" : "link"           , "sClass" : "podcast_episodes_link"        , "sWidth" : "170px" },
-                    /* Publication Date */  { "sTitle" : $.i18n._("Publication Date")  , "mDataProp" : "pub_date"       , "sClass" : "podcast_episodes_pub_date"    , "sWidth" : "170px" }
-                ],
-                bServerSide : false,
-                sAjaxSource : null,
-                // Initialize the table with empty data so we can defer loading
-                // If we load sequentially there's a delay before the table appears
-                aaData      : {},
-                oColVis     : {
-                    buttonText: $.i18n._("Columns"),
-                    iOverlayFade: 0,
-                    aiExclude: [0, 1, 2]
-                },
-                oColReorder: {
-                    iFixedColumns: 3  // Checkbox + imported
-                }
-            },
-            buttons,
-            {
-                hideIngestCheckboxes: false,
-                emptyPlaceholder: {
-                    iconClass: "icon-white icon-th-list",
-                    html: $.i18n._("This podcast doesn't have any episodes!")
-                    + "<br/>" + $.i18n._("Make sure the RSS feed contains audio items (with enclosure tags).")
-                    + "<br/><a target='_blank' href='http://www.apple.com/ca/itunes/podcasts/specs.html'>" + $.i18n._("Learn about podcasts") + "</a>"
-                }
-            }
-        );
-
-        mod.podcastEpisodeDataTable = $datatables[mod.DataTableTypeEnum.PODCAST_EPISODES] = mod.podcastEpisodeTableWidget.getDatatable();
-        mod.podcastEpisodeTableWidget.assignDblClickHandler(function () {
-            var data = mod.podcastEpisodeDataTable.fnGetData(this);
-            if (!$.isEmptyObject(data.file)) {
-                mod.dblClickAdd(data.file, data.file.ftype);
-            } else {
-                if (data.ingested >= 0) {  // Only import if the file isn't pending
-                    AIRTIME.podcast.importSelectedEpisodes([data], mod.podcastEpisodeTableWidget);
-                }
-            }
-        });
     };
 
     mod.libraryInit = libraryInit;
