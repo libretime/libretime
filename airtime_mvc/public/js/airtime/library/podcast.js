@@ -329,7 +329,7 @@ var AIRTIME = (function (AIRTIME) {
 
         $(".album_names.help_icon").qtip({
             content: {
-                text: $.i18n._('Overwrite downloaded podcast episodes\' "Album" metadata tag  with the Podcast Name specified above. This album name can then be used as a search criteria by a smartblock.')
+                text: $.i18n._('Overwrite downloaded podcast episodes\' "Album" and "Creator" metadata tag with the Podcast Name specified above and set the track title to the title of the Podcast Episode. This album name can then be used as a search criteria by a smartblock. ')
             },
             hide: {
                 delay: 500,
