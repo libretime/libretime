@@ -37,7 +37,6 @@ class PodcastManager {
             //  but will at least continue to ingest new episodes.
             if (!empty($episodes)) {
                 $podcast->setDbAutoIngestTimestamp(gmdate('r', strtotime($episodes[0]->getDbPublicationDate())))->save();
-                Logging::info($episodes);
                 $service->downloadEpisodes($episodes);
             }
         }

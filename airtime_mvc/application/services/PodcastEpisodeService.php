@@ -133,7 +133,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         foreach($episodes as $episode) {
             $podcast = $episode->getPodcast();
             Logging::info($episode);
-            $this->_download($episode->getDbId(), $episode->getDbDownloadUrl(), $podcast->getDbTitle(), $this->_getAlbumOverride($podcast), $episode["title"]);
+            $this->_download($episode->getDbId(), $episode->getDbDownloadUrl(), $podcast->getDbTitle(), $this->_getAlbumOverride($podcast), $episode->getDbEpisodeTitle());
         }
     }
 
