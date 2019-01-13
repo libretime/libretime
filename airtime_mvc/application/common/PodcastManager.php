@@ -75,7 +75,7 @@ class PodcastManager {
                 array_push($episodes, $placeholder);
             }
         }
-        return $episodPoes;
+        return $episodes;
     }
 
     /**
