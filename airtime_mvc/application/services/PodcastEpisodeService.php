@@ -93,7 +93,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         // feed object, or whether it's passed in as json
         $enclosure = $episode["enclosure"];
         $url = $enclosure instanceof SimplePie_Enclosure ? $enclosure->get_link() : $enclosure["link"];
-        return $this->_buildEpisode($podcastId, $url, $episode["guid"], $episode["pub_date"]);
+        return $this->_buildEpisode($podcastId, $url, $episode["guid"], $episode["pub_date"], $episode["title"], $episode["description"]);
     }
 
     /**
@@ -103,18 +103,22 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      * @param string $url               the download URL for the episode
      * @param string $guid              the unique id for the episode. Often the same as the download URL
      * @param string $publicationDate   the publication date of the episode
+     * @param string $title             the title of the episode
+     * @param string $description       the description of the epsiode
      *
      * @return PodcastEpisodes the newly created PodcastEpisodes object
      *
      * @throws Exception
      * @throws PropelException
      */
-    private function _buildEpisode($podcastId, $url, $guid, $publicationDate) {
+    private function _buildEpisode($podcastId, $url, $guid, $publicationDate, $title, $description) {
         $e = new PodcastEpisodes();
         $e->setDbPodcastId($podcastId);
         $e->setDbDownloadUrl($url);
         $e->setDbEpisodeGuid($guid);
         $e->setDbPublicationDate($publicationDate);
+        $e->setDbEpisodeTitle($title);
+        $e->setDbEpisodeDescription($description);
         $e->save();
         return $e;
     }
