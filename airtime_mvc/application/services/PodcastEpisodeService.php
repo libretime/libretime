@@ -46,7 +46,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     public function importEpisode($podcastId, $episode) {
         $e = $this->addPlaceholder($podcastId, $episode);
         $p = $e->getPodcast();
-        $this->_download($e->getDbId(), $e->getDbDownloadUrl(), $p->getDbTitle(), $this->_getAlbumOverride($p));
+        $this->_download($e->getDbId(), $e->getDbDownloadUrl(), $p->getDbTitle(), $this->_getAlbumOverride($p), $episode["title"]);
         return $e;
     }
 
@@ -128,7 +128,8 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         /** @var PodcastEpisodes $episode */
         foreach($episodes as $episode) {
             $podcast = $episode->getPodcast();
-            $this->_download($episode->getDbId(), $episode->getDbDownloadUrl(), $podcast->getDbTitle(), $this->_getAlbumOverride($podcast));
+            Logging::info($episode);
+            $this->_download($episode->getDbId(), $episode->getDbDownloadUrl(), $podcast->getDbTitle(), $this->_getAlbumOverride($podcast), $episode["title"]);
         }
     }
 
@@ -158,7 +159,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      * @param string  $title          title of podcast to be downloaded - added as album to track metadata
      * @param boolean $album_override should we override the album name when downloading
      */
-    private function _download($id, $url, $title, $album_override) {
+    private function _download($id, $url, $title, $album_override, $track_title = null) {
         $CC_CONFIG = Config::getConfig();
         $stationUrl = Application_Common_HTTPHelper::getStationUrl();
         $stationUrl .= substr($stationUrl, -1) == '/' ? '' : '/';
@@ -169,7 +170,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
             'api_key'        => $CC_CONFIG["apiKey"][0],
             'podcast_name'   => $title,
             'album_override' => $album_override,
-        );
+            'track_title'    => $track_title);
         $task = $this->_executeTask(static::$_CELERY_TASKS[self::DOWNLOAD], $data);
         // Get the created ThirdPartyTaskReference and set the episode ID so
         // we can remove the placeholder if the import ends up stuck in a pending state
