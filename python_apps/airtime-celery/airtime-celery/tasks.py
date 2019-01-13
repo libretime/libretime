@@ -190,6 +190,7 @@ def podcast_override_metadata(m, podcast_name, override, track_title):
         logger.debug('overriding album name to {0} in podcast'.format(podcast_name.encode('ascii', 'ignore')))
         m['album'] = podcast_name
         m['title'] = track_title
+        m['artist'] = podcast_name
     else:
         # replace the album id3 tag with the podcast name if the album tag is empty
         try:
