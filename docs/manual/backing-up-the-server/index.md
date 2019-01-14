@@ -7,7 +7,7 @@ as the user *postgres*, by using the **sudo** command and the **-u** switch. It
 is separated from the **gzip** command with the pipe symbol.
 
 ```bash
-sudo -u postgres pg_dumpall | gzip -c > airtime-backup.gz
+sudo -u postgres pg_dumpall | gzip -c > libretime-backup.gz
 ```
 
 This command can be automated to run on a regular basis using the standard
@@ -31,8 +31,8 @@ To restore, first unzip the backup file with **gunzip**, then use the **psql**
 command as the *postgres* user:
 
 ```bash
-gunzip airtime-backup.gz
-sudo -u postgres psql -f airtime-backup
+gunzip libretime-backup.gz
+sudo -u postgres psql -f airtime-libretime
 ```
 
 You should now be able to log in to the Libretime web interface in the usual way.
