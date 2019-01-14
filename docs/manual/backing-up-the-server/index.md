@@ -32,7 +32,7 @@ command as the *postgres* user:
 
 ```bash
 gunzip libretime-backup.gz
-sudo -u postgres psql -f airtime-libretime
+sudo -u postgres psql -f libretime-backup
 ```
 
 You should now be able to log in to the Libretime web interface in the usual way.
