@@ -6,7 +6,9 @@ You can dump the entire database to a zipped file with the combination of the
 as the user *postgres*, by using the **sudo** command and the **-u** switch. It
 is separated from the **gzip** command with the pipe symbol.
 
-    sudo -u postgres pg_dumpall | gzip -c > airtime-backup.gz
+```bash
+sudo -u postgres pg_dumpall | gzip -c > airtime-backup.gz
+```
 
 This command can be automated to run on a regular basis using the standard
 **cron** tool on your server.
@@ -16,7 +18,9 @@ may be necessary to drop the empty database that was created during the new
 installation, by using the **dropdb** command. Again, this command is executed
 with **sudo** as the user *postgres*: 
 
-    sudo -u postgres dropdb airtime
+```bash
+sudo -u postgres dropdb airtime
+```
 
 This **dropdb** command above is necessary to avoid 'already exists' errors on
 table creation when overwriting an empty Libretime database in the next step.
@@ -26,8 +30,10 @@ data.
 To restore, first unzip the backup file with **gunzip**, then use the **psql**
 command as the *postgres* user:
 
-    gunzip airtime-backup.gz
-    sudo -u postgres psql -f airtime-backup
+```bash
+gunzip airtime-backup.gz
+sudo -u postgres psql -f airtime-backup
+```
 
 You should now be able to log in to the Libretime web interface in the usual way.
 
