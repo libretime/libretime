@@ -44,7 +44,7 @@ Vagrant.configure("2") do |config|
   end
   config.vm.define "ubuntu-xenial" do |os|
     os.vm.box = "generic/ubuntu1604"
-    provision_libretime(os, "ubuntu.sh", installer_args)
+    provision_libretime(os, "ubuntu.sh --hostname='127.0.1.1 ubuntu1604'", installer_args)
   end
   config.vm.define "ubuntu-trusty" do |os|
     STDERR.puts 'WARNING: The "ubuntu-trusty" option is deprecated. Please migrate to "ubuntu-bionic".'
@@ -67,7 +67,7 @@ Vagrant.configure("2") do |config|
 
   def provision_libretime(config, prepare_script, installer_args)
     # Prepare OS
-    config.vm.provision "prepare", type: "shell", path: "installer/vagrant/%s" % prepare_script
+    config.vm.provision "prepare", type: "shell", inline: "cd /vagrant; ./installer/vagrant/%s" % prepare_script
 
     # Provision LibreTime
     config.vm.provision "install", type: "shell", inline: "cd /vagrant; ./install %s --web-port=8080" % installer_args
