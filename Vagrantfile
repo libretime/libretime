@@ -40,17 +40,17 @@ Vagrant.configure("2") do |config|
   # define all the OS boxes we support
   config.vm.define "ubuntu-bionic" do |os|
     os.vm.box = "generic/ubuntu1804"
-    provision_libretime(os, "ubuntu.sh", installer_args)
+    provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "ubuntu-xenial" do |os|
     os.vm.box = "generic/ubuntu1604"
-    provision_libretime(os, "ubuntu.sh --hostname='127.0.1.1 ubuntu1604'", installer_args)
+    provision_libretime(os, "debian.sh --hostname='127.0.1.1 ubuntu1604'", installer_args)
   end
   config.vm.define "ubuntu-trusty" do |os|
     STDERR.puts 'WARNING: The "ubuntu-trusty" option is deprecated. Please migrate to "ubuntu-bionic".'
     STDERR.puts
     os.vm.box = "bento/ubuntu-14.04"
-    provision_libretime(os, "ubuntu.sh", installer_args)
+    provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "debian-jessie" do |os|
     os.vm.box = "generic/debian8"
