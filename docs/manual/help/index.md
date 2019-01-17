@@ -8,7 +8,7 @@ You can visit the Libretime online support forum at <https://discourse.libretime
 Bug reporting
 -------------
 
-Libretime needs your input to improve. If you think you've found a bug, please visit <https://github.com/LibreTime/libretime> and sign in. Create a bug report by selecting **Issues**, then **New Issue**. That way, the Libretime team can keep track of your problem and notify you when it has been fixed. You can also suggest improvements and new features for Libretime on that site.
+Libretime needs your input to improve. If you think you've found a bug, please visit <https://github.com/LibreTime/libretime>. Create a bug report by selecting **Issues**, then **New Issue**. That way, the Libretime team can keep track of your problem and notify you when it has been fixed. You can also suggest improvements and new features for Libretime on that site.
 
 
 

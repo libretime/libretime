@@ -252,11 +252,11 @@ If you have secure shell access (SSH) to the remote web server, you could write 
 Website widgets
 ---------------
 
-Example HTML, Javascript and CSS code for your public website are provided in the *widgets* folder of the Libretime installation tarball, or on GitHub: <https://github.com/sourcefabric/Libretime/tree/master/widgets>
+Example HTML, Javascript and CSS code for your public website are provided in the *widgets* folder of the Libretime installation tarball, or on GitHub: <https://github.com/LibreTime/libretime/tree/master/airtime_mvc/public/widgets>
 
 If you have performed an automated installation on Debian or Ubuntu, the widgets can be found in the */usr/share/doc/libretime/examples/* directory.
 
-For the widgets to work on a typical web server, links to the Javascript and CSS code have to be included in the HTML page &lt;head&gt; element, like the following example:
+For the widgets to work on a typical web server, links to the Javascript and CSS code have to be included in the HTML page <head> element, like the following example:
 
     <head>
      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

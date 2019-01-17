@@ -53,6 +53,7 @@ to make sure all of Libretime's database configuration files are updated. This c
     Updating /usr/share/airtime/build/build.properties
     Updating /usr/share/airtime/build/runtime-conf.xml
     Success!
+	
 
 API client configuration
 ------------------------
@@ -66,49 +67,11 @@ If you have changed the *base\_url*, *base\_port* or *base\_dir* setting in */et
     base_port = 80
     base_dir = /
 
-Media monitor settings
-----------------------
-
-Libretime's media monitor has its own configuration file in */etc/airtime/media-monitor.cfg* which contains RabbitMQ settings and other preferences.
-
-    api_client = airtime
-
-    # where the binary files live
-    bin_dir = /usr/lib/airtime/media-monitor
-
-    # where the logging files live
-    log_dir = /var/log/airtime/media-monitor
-
-    ############################################
-    # RabbitMQ settings                        #
-    ############################################
-    rabbitmq_host = localhost
-    rabbitmq_user = airtime
-    rabbitmq_password = XXXXXXXXXXXXXXXXXXXX
-    rabbitmq_vhost = /airtime
-
-    ############################################
-    # Media-Monitor preferences                #
-    ############################################
-
-    #how long to queue up events performed on the files themselves.
-    check_filesystem_events = 5
-
-    #how long to queue metadata input from Libretime.
-    check_airtime_events = 30
-
-    # MM2 only:
-    touch_interval = 5
-    chunking_number = 450
-    request_max_wait = 3.0
-    rmq_event_wait = 0.1
-    logpath = /var/log/airtime/media-monitor/media-monitor.log
-    index_path = /var/tmp/airtime/media-monitor/last_index
 
 Playout and recorder settings
 -----------------------------
 
-Settings for pypo, the playout and recording engine used by Libretime, are found in the file */etc/airtime/pypo.cfg*. After making changes to this file, you will have to issue the command:
+Settings for pypo, the playout and recording engine used by Libretime, are found in the file */etc/airtime/airtime.conf*. After making changes to this file, you will have to issue the command:
 
     sudo /etc/init.d/airtime-playout restart
 
