@@ -9,10 +9,9 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 8000, host:8000
   # liquidsoap input harbors for instreaming (ie. /master)
   config.vm.network "forwarded_port", guest: 8001, host:8001
-  config.vm.network "forwarded_port", guest: 8002, host:8002 
+  config.vm.network "forwarded_port", guest: 8002, host:8002
   # mkdocs documentation
   config.vm.network "forwarded_port", guest: 8888, host:8888
-  
 
   # make sure we are using nfs (doesn't work out of the box with debian)
   config.vm.synced_folder ".", "/vagrant", type: "nfs"
@@ -57,7 +56,7 @@ Vagrant.configure("2") do |config|
     provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "debian-stretch" do |os|
-    os.vm.box = "bento/debian-9.2"
+    os.vm.box = "bento/debian-9.6"
     provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "centos" do |os|
