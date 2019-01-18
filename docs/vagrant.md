@@ -42,10 +42,10 @@ vagrant up ubuntu-xenial --provider=libvirt
 #### Debian and Ubuntu
 
 ```bash
-sudo apt install vagrant vagrant-libvirt libvirt-daemon-system vagrant-mutate
+sudo apt install vagrant vagrant-libvirt libvirt-daemon-system vagrant-mutate libvirt-dev
 sudo usermod -a -G libvirt $USER
 
-# Log out and back in
+# Reboot
 
 vagrant box fetch bento/ubuntu-16.04
 vagrant mutate bento/ubuntu-16.04 libvirt
@@ -60,7 +60,7 @@ You will need to install [libvirt](https://libvirt.org/) and `vagrant-mutate` an
 vagrant plugin install vagrant-libvirt
 sudo usermod -a -G libvirt $USER
 
-# Log out and back in
+# Reboot
 
 vagrant plugin install vagrant-mutate
 vagrant box fetch bento/ubuntu-16.04
