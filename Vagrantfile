@@ -9,10 +9,9 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 8000, host:8000
   # liquidsoap input harbors for instreaming (ie. /master)
   config.vm.network "forwarded_port", guest: 8001, host:8001
-  config.vm.network "forwarded_port", guest: 8002, host:8002 
+  config.vm.network "forwarded_port", guest: 8002, host:8002
   # mkdocs documentation
   config.vm.network "forwarded_port", guest: 8888, host:8888
-  
 
   # make sure we are using nfs (doesn't work out of the box with debian)
   config.vm.synced_folder ".", "/vagrant", type: "nfs"
@@ -40,24 +39,24 @@ Vagrant.configure("2") do |config|
   # define all the OS boxes we support
   config.vm.define "ubuntu-bionic" do |os|
     os.vm.box = "bento/ubuntu-18.04"
-    provision_libretime(os, "ubuntu.sh", installer_args)
+    provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "ubuntu-xenial" do |os|
     os.vm.box = "bento/ubuntu-16.04"
-    provision_libretime(os, "ubuntu.sh", installer_args)
+    provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "ubuntu-trusty" do |os|
     STDERR.puts 'WARNING: The "ubuntu-trusty" option is deprecated. Please migrate to "ubuntu-bionic".'
     STDERR.puts
     os.vm.box = "bento/ubuntu-14.04"
-    provision_libretime(os, "ubuntu.sh", installer_args)
+    provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "debian-jessie" do |os|
     os.vm.box = "bento/debian-8.7"
     provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "debian-stretch" do |os|
-    os.vm.box = "bento/debian-9.2"
+    os.vm.box = "bento/debian-9.6"
     provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "centos" do |os|
