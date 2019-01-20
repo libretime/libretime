@@ -55,7 +55,7 @@ abstract class BaseCcBlockcontents extends BaseObject implements Persistent
 
     /**
      * The value for the trackoffset field.
-     * Note: this column has a database default value of: 0
+     * Note: this column has a database default value of: 0.0
      * @var        double
      */
     protected $trackoffset;
@@ -136,7 +136,7 @@ abstract class BaseCcBlockcontents extends BaseObject implements Persistent
      */
     public function applyDefaultValues()
     {
-        $this->trackoffset = 0;
+        $this->trackoffset = 0.0;
         $this->cliplength = '00:00:00';
         $this->cuein = '00:00:00';
         $this->cueout = '00:00:00';
@@ -548,7 +548,7 @@ abstract class BaseCcBlockcontents extends BaseObject implements Persistent
      */
     public function hasOnlyDefaultValues()
     {
-            if ($this->trackoffset !== 0) {
+            if ($this->trackoffset !== 0.0) {
                 return false;
             }
 

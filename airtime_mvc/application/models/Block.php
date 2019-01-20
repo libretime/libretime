@@ -1198,6 +1198,9 @@ SQL;
         if (isset($p_criteriaData['criteria'])) {
             $critKeys = array_keys($p_criteriaData['criteria']);
             for ($i = 0; $i < count($critKeys); $i++) {
+                // in order to maintain separation of different criteria to preserve AND statements for criteria
+                // that might contradict itself we group them based upon their original position on the form
+                $criteriaGroup = $i;
                 foreach ($p_criteriaData['criteria'][$critKeys[$i]] as $d) {
                     Logging::info($d);
                 	$field = $d['sp_criteria_field'];
@@ -1242,8 +1245,10 @@ SQL;
                     	
                         $qry->setDbExtra($extra);
                     }
-                    if (isset($extra)) {
-                        $qry->setDbExtra($extra);
+                    // save the criteria group so separation via new modifiers AND can be preserved vs. lumping
+                    // them all into a single or later on
+                    if (isset($criteriaGroup)) {
+                        $qry->setDbCriteriaGroup($criteriaGroup);
                     }
                     $qry->save();
                 }
@@ -1488,6 +1493,7 @@ SQL;
             $modifier = $crit->getDbModifier();
             $value = $crit->getDbValue();
             $extra = $crit->getDbExtra();
+            $criteriagroup = $crit->getDbCriteriaGroup();
 
             if ($criteria == "limit") {
                 $storedCrit["limit"] = array(
@@ -1506,6 +1512,7 @@ SQL;
                     "value"=>$value,
                     "modifier"=>$modifier,
                     "extra"=>$extra,
+                    "criteria_group"=>$criteriagroup,
                     "display_name"=>$criteriaOptions[$criteria],
                     "display_modifier"=>$modifierOptions[$modifier]);
             }
@@ -1523,18 +1530,19 @@ SQL;
         $qry = CcFilesQuery::create();
         $qry->useFkOwnerQuery("subj", "left join");
 
+        //Logging::info($storedCrit);
         if (isset($storedCrit["crit"])) {
             foreach ($storedCrit["crit"] as $crit) {
                 $i = 0;
                 $prevgroup = null;
                 $group = null;
-                Logging::info($crit);
                 // now we need to sort based upon extra which contains the and grouping from the form
                 usort($crit, function($a, $b) {
-                    return $a['extra'] - $b['extra'];
+                    return $a['criteria_group'] - $b['criteria_group'];
                 });
-                Logging::info($crit);
+                // we need to run the following loop separately for each criteria group inside of each array
                 foreach ($crit as $criteria) {
+                    $group = $criteria['criteria_group'];
                     $spCriteria = $criteria['criteria'];
                     $spCriteriaModifier = $criteria['modifier'];
 
@@ -1578,7 +1586,6 @@ SQL;
                             $spCriteriaValue = ($criteria['value']);
                         }
                         $spCriteriaExtra = $criteria['extra'];
-                        $group = $criteria['extra'];
                     }
 
                     if ($spCriteriaModifier == "starts with") {
@@ -1612,26 +1619,28 @@ SQL;
                         // Logging::info($tdt);
                         $spCriteriaValue = "$spCriteria >= '$fdt' AND $spCriteria <= '$tdt'";
                     }
-                    logging::info('before');
-                    logging::info($spCriteriaModifier);
+   //                 logging::info('before');
+   //                 logging::info($spCriteriaModifier);
 
                     $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
 
-                    logging::info('after');
-                    logging::info($spCriteriaModifier);
+   //                 logging::info('after');
+   //                 logging::info($spCriteriaModifier);
 
                     try {
                         if ($spCriteria == "owner_id") {
                             $spCriteria = "subj.login";
                         }
-                        if ($i > 0 && $group == $prevgroup) {
+                        Logging::info($i);
+                        Logging::info($group);
+                        Logging::info($prevgroup);
+                        if ($i > 0 && $prevgroup == $group) {
+                            Logging::info('adding or');
                             $qry->addOr($spCriteria, $spCriteriaValue, $spCriteriaModifier);
-                            Logging::info('it happened');
                         } else {
-                            Logging::info('it didnt happen');
-                            $qry->add($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+                            Logging::info('adding and');
+                            $qry->addAnd($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                         }
-
                         if ($spCriteriaModifier == Criteria::NOT_ILIKE || $spCriteriaModifier == Criteria::NOT_EQUAL) {
                             $qry->addOr($spCriteria, null, Criteria::ISNULL);
                         }

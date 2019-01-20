@@ -315,6 +315,7 @@
     <column name="modifier" phpName="DbModifier" type="VARCHAR" size="16" required="true"/>
     <column name="value" phpName="DbValue" type="VARCHAR" size="512" required="true"/>
     <column name="extra" phpName="DbExtra" type="VARCHAR" size="512" required="false"/>
+    <column name="criteriagroup" phpName="DbCriteriaGroup" type="INTEGER" required="false"/>
     <column name="block_id" phpName="DbBlockId" type="INTEGER" required="true"/>
     <foreign-key foreignTable="cc_block" name="cc_blockcontents_block_id_fkey" onDelete="CASCADE">
       <reference local="block_id" foreign="id"/>

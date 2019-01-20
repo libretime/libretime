@@ -11,6 +11,7 @@
  * @method CcBlockcriteriaQuery orderByDbModifier($order = Criteria::ASC) Order by the modifier column
  * @method CcBlockcriteriaQuery orderByDbValue($order = Criteria::ASC) Order by the value column
  * @method CcBlockcriteriaQuery orderByDbExtra($order = Criteria::ASC) Order by the extra column
+ * @method CcBlockcriteriaQuery orderByDbCriteriaGroup($order = Criteria::ASC) Order by the criteriagroup column
  * @method CcBlockcriteriaQuery orderByDbBlockId($order = Criteria::ASC) Order by the block_id column
  *
  * @method CcBlockcriteriaQuery groupByDbId() Group by the id column
@@ -18,6 +19,7 @@
  * @method CcBlockcriteriaQuery groupByDbModifier() Group by the modifier column
  * @method CcBlockcriteriaQuery groupByDbValue() Group by the value column
  * @method CcBlockcriteriaQuery groupByDbExtra() Group by the extra column
+ * @method CcBlockcriteriaQuery groupByDbCriteriaGroup() Group by the criteriagroup column
  * @method CcBlockcriteriaQuery groupByDbBlockId() Group by the block_id column
  *
  * @method CcBlockcriteriaQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -35,6 +37,7 @@
  * @method CcBlockcriteria findOneByDbModifier(string $modifier) Return the first CcBlockcriteria filtered by the modifier column
  * @method CcBlockcriteria findOneByDbValue(string $value) Return the first CcBlockcriteria filtered by the value column
  * @method CcBlockcriteria findOneByDbExtra(string $extra) Return the first CcBlockcriteria filtered by the extra column
+ * @method CcBlockcriteria findOneByDbCriteriaGroup(int $criteriagroup) Return the first CcBlockcriteria filtered by the criteriagroup column
  * @method CcBlockcriteria findOneByDbBlockId(int $block_id) Return the first CcBlockcriteria filtered by the block_id column
  *
  * @method array findByDbId(int $id) Return CcBlockcriteria objects filtered by the id column
@@ -42,6 +45,7 @@
  * @method array findByDbModifier(string $modifier) Return CcBlockcriteria objects filtered by the modifier column
  * @method array findByDbValue(string $value) Return CcBlockcriteria objects filtered by the value column
  * @method array findByDbExtra(string $extra) Return CcBlockcriteria objects filtered by the extra column
+ * @method array findByDbCriteriaGroup(int $criteriagroup) Return CcBlockcriteria objects filtered by the criteriagroup column
  * @method array findByDbBlockId(int $block_id) Return CcBlockcriteria objects filtered by the block_id column
  *
  * @package    propel.generator.airtime.om
@@ -150,7 +154,7 @@ abstract class BaseCcBlockcriteriaQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "criteria", "modifier", "value", "extra", "block_id" FROM "cc_blockcriteria" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "criteria", "modifier", "value", "extra", "criteriagroup", "block_id" FROM "cc_blockcriteria" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -395,6 +399,48 @@ abstract class BaseCcBlockcriteriaQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CcBlockcriteriaPeer::EXTRA, $dbExtra, $comparison);
+    }
+
+    /**
+     * Filter the query on the criteriagroup column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbCriteriaGroup(1234); // WHERE criteriagroup = 1234
+     * $query->filterByDbCriteriaGroup(array(12, 34)); // WHERE criteriagroup IN (12, 34)
+     * $query->filterByDbCriteriaGroup(array('min' => 12)); // WHERE criteriagroup >= 12
+     * $query->filterByDbCriteriaGroup(array('max' => 12)); // WHERE criteriagroup <= 12
+     * </code>
+     *
+     * @param     mixed $dbCriteriaGroup The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcBlockcriteriaQuery The current query, for fluid interface
+     */
+    public function filterByDbCriteriaGroup($dbCriteriaGroup = null, $comparison = null)
+    {
+        if (is_array($dbCriteriaGroup)) {
+            $useMinMax = false;
+            if (isset($dbCriteriaGroup['min'])) {
+                $this->addUsingAlias(CcBlockcriteriaPeer::CRITERIAGROUP, $dbCriteriaGroup['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($dbCriteriaGroup['max'])) {
+                $this->addUsingAlias(CcBlockcriteriaPeer::CRITERIAGROUP, $dbCriteriaGroup['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CcBlockcriteriaPeer::CRITERIAGROUP, $dbCriteriaGroup, $comparison);
     }
 
     /**
