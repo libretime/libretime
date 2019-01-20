@@ -1641,8 +1641,11 @@ SQL;
                             Logging::info('adding and');
                             $qry->addAnd($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                         }
+                        // only add this NOT LIKE null if you aren't also matching on another criteria
+                        if ($i == 0) {
                         if ($spCriteriaModifier == Criteria::NOT_ILIKE || $spCriteriaModifier == Criteria::NOT_EQUAL) {
                             $qry->addOr($spCriteria, null, Criteria::ISNULL);
+                        }
                         }
                     } catch (Exception $e) {
                         Logging::info($e);
