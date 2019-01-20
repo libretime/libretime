@@ -68,10 +68,9 @@ $pages[] = array(
 );
 $pages[] = array(
     'label' => _("Settings"),
-    'resource' => 'preference',
-    'action' => 'index',
+    'action' => 'edit-user',
     'module' => 'default',
-    'controller' => 'preference',
+    'controller' => 'user',
     'class' => '<i class="icon-cog icon-white"></i>',
     'title' => 'Settings',
     'pages' => array(
@@ -84,8 +83,7 @@ $pages[] = array(
         array(
             'label' => _('My Profile'),
             'controller' => 'user',
-            'action' => 'edit-user',
-            'resource' => 'usersettings'
+            'action' => 'edit-user'
         ),
         array(
             'label'      => _('Users'),
