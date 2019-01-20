@@ -270,11 +270,24 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             $criteriaType = "";
 
             // if there is a criteria found then count the number of rows for this specific criteria ie > 1 track title
+            // need to refactor this to maintain separation based upon criteria grouping
             if (isset($criteriaKeys[$i])) {
                 $critCount = count($storedCrit["crit"][$criteriaKeys[$i]]);
             } else {
                 $critCount = 1;
             }
+            // need to iterate through here and basically add an element for each new criteria group
+            // and also iterate through for every item in a specific criteria group
+            if ($critCount > 1) {
+                $groupCount = 0;
+                $groupVal = null;
+                $prevGroupVal = null;
+                foreach ($storedCrit["crit"][$criteriaKeys[$i]] as $item) {
+                    $groupVal = $item["criteria_group"];
+                    Logging::info($groupVal);
+                }
+            }
+
 
             // store the number of items with the same key in the ModRowMap
             $modRowMap[$i] = $critCount;
