@@ -242,7 +242,8 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         $this->addElement($spType);
 
         $bl = new Application_Model_Block($p_blockId);
-        $storedCrit = $bl->getCriteria();
+        $storedCrit = $bl->getCriteriaGrouped();
+        Logging::info($storedCrit);
         
         //need to convert criteria to be displayed in the user's timezone if there's some timestamp type.
         self::convertTimestamps($storedCrit["crit"]);
@@ -263,8 +264,11 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         if (isset($storedCrit["crit"])) {
             $criteriaKeys = array_keys($storedCrit["crit"]);
         }
+        //the way the everything is currently built it setups 25 smartblock criteria forms and then disables them
+        //but this creates 29 elements
         $numElements = count($this->getCriteriaOptions());
         // loop through once for each potential criteria option ie album, composer, track
+        // criteria from different groups are separated already by the getCriteriaGrouped call
 
         for ($i = 0; $i < $numElements; $i++) {
             $criteriaType = "";
@@ -272,32 +276,15 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             // if there is a criteria found then count the number of rows for this specific criteria ie > 1 track title
             // need to refactor this to maintain separation based upon criteria grouping
             if (isset($criteriaKeys[$i])) {
+                //Logging::info($criteriaKeys[$i]);
+                Logging::info($storedCrit["crit"][$criteriaKeys[$i]]);
                 $critCount = count($storedCrit["crit"][$criteriaKeys[$i]]);
             } else {
                 $critCount = 1;
             }
-            // need to iterate through here and basically add an element for each new criteria group
-            // and also iterate through for every item in a specific criteria group
-            if ($critCount > 1) {
-                $groupCount = 0;
-                $groupVal = null;
-                //this is so that it won't match where $groupVal = 0 matching with null ?
-                $prevGroupVal = -1;
-                // this loops through and counts the number of different grouping of criteria their are
-                // for this criteria to preserve different bundles of criteria and modifiers vs. considering
-                // all criteria to be connected via or - this allows the usage of contains X
-                // AND does not contain Y without including everything
-                foreach ($storedCrit["crit"][$criteriaKeys[$i]] as $item) {
-                    $groupVal = $item["criteria_group"];
-                    Logging::info($groupVal);
-                    if ($groupVal != $prevGroupVal) {
-                        $groupCount++;
-                        $prevGroupVal = $groupVal;
-                    }
-                }
-                Logging::info("group count = ");
-                Logging::info($groupCount);
-            }
+                // the challenge is that we need to increment the element for a new group
+                // within the same criteria but not the reference point i in the array
+                // and for these secondary groups they will have a differe$storedCrit["crit"][$criteriaKeys[$i]]nt j reference point
                 // store the number of items with the same key in the ModRowMap
                 $modRowMap[$i] = $critCount;
 
@@ -527,7 +514,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
 
         $this->setDecorators(array(
                 array('ViewScript', array('viewScript' => 'form/smart-block-criteria.phtml', "openOption"=> $openSmartBlockOption,
-                        'criteriasLength' => count($this->getCriteriaOptions()), 'modRowMap' => $modRowMap))
+                        'criteriasLength' => $numElements, 'modRowMap' => $modRowMap))
         ));
     }
     /*
@@ -540,7 +527,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     public function preValidation($params)
     {
         $data = Application_Model_Block::organizeSmartPlaylistCriteria($params['data']);
-        // add elelments that needs to be added
+        // add elements that needs to be added
         // set multioption for modifier according to criteria_field
         $modRowMap = array();
         if (!isset($data['criteria'])) {

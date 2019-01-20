@@ -1522,6 +1522,107 @@ SQL;
 
     }
 
+    /**
+     * Parses each row in the database for the criteria associated with this block and renders human readable labels.
+     * Returns it as an array with each criteria_name and modifier_name added based upon options array lookup.
+     * Maintains original separation of similar criteria that were separated by and statements
+     *
+     */
+
+
+    public function getCriteriaGrouped()
+    {
+        $criteriaOptions = array(
+            0              => _("Select criteria"),
+            "album_title"  => _("Album"),
+            "bit_rate"     => _("Bit Rate (Kbps)"),
+            "bpm"          => _("BPM"),
+            "composer"     => _("Composer"),
+            "conductor"    => _("Conductor"),
+            "copyright"    => _("Copyright"),
+            "cuein"        => _("Cue In"),
+            "cueout"       => _("Cue Out"),
+            "description"  => _("Description"),
+            "artist_name"  => _("Creator"),
+            "encoded_by"   => _("Encoded By"),
+            "genre"        => _("Genre"),
+            "isrc_number"  => _("ISRC"),
+            "label"        => _("Label"),
+            "language"     => _("Language"),
+            "utime"        => _("Upload Time"),
+            "mtime"        => _("Last Modified"),
+            "lptime"       => _("Last Played"),
+            "length"       => _("Length"),
+            "mime"         => _("Mime"),
+            "mood"         => _("Mood"),
+            "owner_id"     => _("Owner"),
+            "replay_gain"  => _("Replay Gain"),
+            "sample_rate"  => _("Sample Rate (kHz)"),
+            "track_title"  => _("Title"),
+            "track_number" => _("Track Number"),
+            "utime"        => _("Uploaded"),
+            "info_url"     => _("Website"),
+            "year"         => _("Year")
+        );
+
+        $modifierOptions = array(
+            "0"                => _("Select modifier"),
+            "contains"         => _("contains"),
+            "does not contain" => _("does not contain"),
+            "is"               => _("is"),
+            "is not"           => _("is not"),
+            "starts with"      => _("starts with"),
+            "ends with"        => _("ends with"),
+            "before"          => _("before"),
+            "after"           => _("after"),
+            "between"         => _("between"),
+            "is"              => _("is"),
+            "is not"          => _("is not"),
+            "is greater than" => _("is greater than"),
+            "is less than"    => _("is less than"),
+            "is in the range" => _("is in the range")
+        );
+
+        // Load criteria from db
+        $out = CcBlockcriteriaQuery::create()->orderByDbCriteria()->findByDbBlockId($this->id);
+        $storedCrit = array();
+
+        foreach ($out as $crit) {
+            Logging::info($crit);
+            $criteria = $crit->getDbCriteria();
+            $modifier = $crit->getDbModifier();
+            $value = $crit->getDbValue();
+            $extra = $crit->getDbExtra();
+            $criteriagroup = $crit->getDbCriteriaGroup();
+
+            if ($criteria == "limit") {
+                $storedCrit["limit"] = array(
+                    "value"=>$value,
+                    "modifier"=>$modifier,
+                    "display_modifier"=>_($modifier));
+            } else if($criteria == "repeat_tracks") {
+                $storedCrit["repeat_tracks"] = array("value"=>$value);
+            } else if($criteria == "overflow_tracks") {
+                $storedCrit["overflow_tracks"] = array("value"=>$value);
+            } else if($criteria == "sort") {
+                $storedCrit["sort"] = array("value"=>$value);
+            } else {
+                $storedCrit["crit"][$criteria . $criteriagroup][] = array(
+                    "criteria"=>$criteria,
+                    "value"=>$value,
+                    "modifier"=>$modifier,
+                    "extra"=>$extra,
+                    "display_name"=>$criteriaOptions[$criteria],
+                    "display_modifier"=>$modifierOptions[$modifier]);
+            }
+        }
+
+        Logging::info($storedCrit);
+        return $storedCrit;
+
+    }
+
+
     // this function return list of propel object
     public function getListofFilesMeetCriteria($show = null)
     {
