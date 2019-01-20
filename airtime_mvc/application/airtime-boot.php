@@ -64,10 +64,10 @@ set_include_path(APPLICATION_PATH . '/common/' . PATH_SEPARATOR . get_include_pa
 require_once 'autoload.php';
 
 /** Zend_Application */
-require_once 'Zend/Application.php';
 $application = new Zend_Application(
         APPLICATION_ENV,
-        CONFIG_PATH . 'application.ini'
+	CONFIG_PATH . 'application.ini',
+	true
 );
 
 require_once(APPLICATION_PATH . "logging/Logging.php");
