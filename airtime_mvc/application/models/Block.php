@@ -1199,11 +1199,13 @@ SQL;
             $critKeys = array_keys($p_criteriaData['criteria']);
             for ($i = 0; $i < count($critKeys); $i++) {
                 foreach ($p_criteriaData['criteria'][$critKeys[$i]] as $d) {
-                	// Logging::info($d);
+                    Logging::info($d);
                 	$field = $d['sp_criteria_field'];
                 	$value = $d['sp_criteria_value'];
                 	$modifier = $d['sp_criteria_modifier'];
                     if (isset($d['sp_criteria_extra'])) { $extra = $d['sp_criteria_extra']; }
+                    // if extra isn't set then we will use it to store the grouping of smartblocks
+                    else {$extra = $i;};
                     if (isset($d['sp_criteria_datetime_select'])) { $datetimeunit = $d['sp_criteria_datetime_select']; }
                     if (isset($d['sp_criteria_extra_datetime_select'])) {$extradatetimeunit = $d['sp_criteria_extra_datetime_select'];}
                 		 	
@@ -1238,6 +1240,9 @@ SQL;
 
                     	}
                     	
+                        $qry->setDbExtra($extra);
+                    }
+                    if (isset($extra)) {
                         $qry->setDbExtra($extra);
                     }
                     $qry->save();
@@ -1521,6 +1526,14 @@ SQL;
         if (isset($storedCrit["crit"])) {
             foreach ($storedCrit["crit"] as $crit) {
                 $i = 0;
+                $prevgroup = null;
+                $group = null;
+                Logging::info($crit);
+                // now we need to sort based upon extra which contains the and grouping from the form
+                usort($crit, function($a, $b) {
+                    return $a['extra'] - $b['extra'];
+                });
+                Logging::info($crit);
                 foreach ($crit as $criteria) {
                     $spCriteria = $criteria['criteria'];
                     $spCriteriaModifier = $criteria['modifier'];
@@ -1538,9 +1551,9 @@ SQL;
                     } elseif ($spCriteria == "bit_rate" || $spCriteria == 'sample_rate') {
                         // multiply 1000 because we store only number value
                         // e.g 192kps is stored as 192000
-                        $spCriteriaValue = $criteria['value']*1000;
+                        $spCriteriaValue = $criteria['value'] * 1000;
                         if (isset($criteria['extra'])) {
-                            $spCriteriaExtra = $criteria['extra']*1000;
+                            $spCriteriaExtra = $criteria['extra'] * 1000;
                         }
                      /*
                      * If user is searching for an exact match of length we need to
@@ -1564,8 +1577,8 @@ SQL;
                         } else {
                             $spCriteriaValue = ($criteria['value']);
                         }
-
                         $spCriteriaExtra = $criteria['extra'];
+                        $group = $criteria['extra'];
                     }
 
                     if ($spCriteriaModifier == "starts with") {
@@ -1599,25 +1612,33 @@ SQL;
                         // Logging::info($tdt);
                         $spCriteriaValue = "$spCriteria >= '$fdt' AND $spCriteria <= '$tdt'";
                     }
+                    logging::info('before');
+                    logging::info($spCriteriaModifier);
 
                     $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
+
+                    logging::info('after');
+                    logging::info($spCriteriaModifier);
 
                     try {
                         if ($spCriteria == "owner_id") {
                             $spCriteria = "subj.login";
                         }
-                        if ($i > 0) {
+                        if ($i > 0 && $group == $prevgroup) {
                             $qry->addOr($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+                            Logging::info('it happened');
                         } else {
+                            Logging::info('it didnt happen');
                             $qry->add($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                         }
-                        
+
                         if ($spCriteriaModifier == Criteria::NOT_ILIKE || $spCriteriaModifier == Criteria::NOT_EQUAL) {
                             $qry->addOr($spCriteria, null, Criteria::ISNULL);
                         }
                     } catch (Exception $e) {
                         Logging::info($e);
                     }
+                    $prevgroup = $group;
                     $i++;
                 }
             }
@@ -1682,6 +1703,7 @@ SQL;
 
         try {
             $out = $qry->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)->find();
+            Logging::info($qry->toString());
 
             return array("files"=>$out, "limit"=>$limits, "repeat_tracks"=> $repeatTracks, "overflow_tracks"=> $overflowTracks, "count"=>$out->count());
         } catch (Exception $e) {
@@ -1690,7 +1712,8 @@ SQL;
 
     }
     public static function organizeSmartPlaylistCriteria($p_criteria)
-    { 
+    {
+        Logging::info($p_criteria);
         $fieldNames = array('sp_criteria_field', 'sp_criteria_modifier', 'sp_criteria_value', 'sp_criteria_extra', 'sp_criteria_datetime_select', 'sp_criteria_extra_datetime_select');
         $output = array();
         foreach ($p_criteria as $ele) {
@@ -1729,7 +1752,7 @@ SQL;
                 $output['etc'][$ele['name']] = $ele['value'];
             }
         }
-        
+        Logging::info($output);
         return $output;
     }
     public static function getAllBlockFiles()
