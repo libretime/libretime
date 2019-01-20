@@ -281,176 +281,179 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             if ($critCount > 1) {
                 $groupCount = 0;
                 $groupVal = null;
-                $prevGroupVal = null;
+                //this is so that it won't match where $groupVal = 0 matching with null ?
+                $prevGroupVal = -1;
+                // this loops through and counts the number of different grouping of criteria their are
+                // for this criteria to preserve different bundles of criteria and modifiers vs. considering
+                // all criteria to be connected via or - this allows the usage of contains X
+                // AND does not contain Y without including everything
                 foreach ($storedCrit["crit"][$criteriaKeys[$i]] as $item) {
                     $groupVal = $item["criteria_group"];
                     Logging::info($groupVal);
+                    if ($groupVal != $prevGroupVal) {
+                        $groupCount++;
+                        $prevGroupVal = $groupVal;
+                    }
                 }
+                Logging::info("group count = ");
+                Logging::info($groupCount);
             }
+                // store the number of items with the same key in the ModRowMap
+                $modRowMap[$i] = $critCount;
 
-
-            // store the number of items with the same key in the ModRowMap
-            $modRowMap[$i] = $critCount;
-
-            /* Loop through all criteria with the same field
-             * Ex: all criteria for 'Album'
-             */
-            for ($j = 0; $j < $critCount; $j++) {
-                /****************** CRITERIA ***********/
-                // hide the criteria drop down select on any rows after the first
-                if ($j > 0) {
-                    $invisible = ' sp-invisible';
-                } else {
-                    $invisible = '';
-                }
-
-                $criteria = new Zend_Form_Element_Select("sp_criteria_field_".$i."_".$j);
-                $criteria->setAttrib('class', 'input_select sp_input_select'.$invisible)
-                         ->setValue('Select criteria')
-                         ->setDecorators(array('viewHelper'))
-                         ->setMultiOptions($this->getCriteriaOptions());
-                // if this isn't the first criteria and there isn't an entry for it already disable it
-                if ($i != 0 && !isset($criteriaKeys[$i])) {
-                    $criteria->setAttrib('disabled', 'disabled');
-                }
-                // add the numbering to the form ie the i loop for each specific criteria and
-                // the j loop starts at 0 and grows for each item matching the same criteria
-                // look up the criteria type using the criteriaTypes function from above based upon the criteria value
-                if (isset($criteriaKeys[$i])) {
-                    $criteriaType = $this->criteriaTypes[$storedCrit["crit"][$criteriaKeys[$i]][$j]["criteria"]];
-                    $criteria->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["criteria"]);
-                }
-                $this->addElement($criteria);
-
-
-                /****************** MODIFIER ***********/
-                // every element has an optional modifier dropdown select
-
-                $criteriaModifers = new Zend_Form_Element_Select("sp_criteria_modifier_".$i."_".$j);
-                $criteriaModifers->setValue('Select modifier')
-                                 ->setAttrib('class', 'input_select sp_input_select')
-                                 ->setDecorators(array('viewHelper'));
-                if ($i != 0 && !isset($criteriaKeys[$i])) {
-                    $criteriaModifers->setAttrib('disabled', 'disabled');
-                }
-                // determine the modifier based upon criteria type which is looked up based upon an array
-                if (isset($criteriaKeys[$i])) {
-                    if ($criteriaType == "s") {
-                        $criteriaModifers->setMultiOptions($this->getStringCriteriaOptions());
-                    }
-                    elseif ($criteriaType == "d") {
-                        $criteriaModifers->setMultiOptions($this->getDateTimeCriteriaOptions());
-                    }
-                    else {
-                        $criteriaModifers->setMultiOptions($this->getNumericCriteriaOptions());
-                    }
-                    $criteriaModifers->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["modifier"]);
-                } else {
-                    $criteriaModifers->setMultiOptions(array('0' => _('Select modifier')));
-                }
-                $this->addElement($criteriaModifers);
-
-                /****************** VALUE ***********/
-                /* The challenge here is that datetime */
-                $criteriaValue = new Zend_Form_Element_Text("sp_criteria_value_".$i."_".$j);
-                $criteriaValue->setAttrib('class', 'input_text sp_input_text')
-                              ->setDecorators(array('viewHelper'));
-                if ($i != 0 && !isset($criteriaKeys[$i])) {
-                    $criteriaValue->setAttrib('disabled', 'disabled');
-                }
-                if (isset($criteriaKeys[$i])) {
-                    /*
-                     * Need to parse relative dates in a special way to populate select box down below
-                     */
-                    // this is used below to test whether the datetime select should be shown or hidden
-                    $relativeDateTime = false;
-                    $modifierTest = (string)$storedCrit["crit"][$criteriaKeys[$i]][$j]["modifier"];
-                    if(isset($criteriaType) && $criteriaType == "d" &&
-                        preg_match('/before|after|between/', $modifierTest) == 1) {
-                        // set relativeDatetime boolean to true so that the datetime select is displayed below
-                        $relativeDateTime = true;
-                        // the criteria value will be a number followed by time unit and ago so set input to number part
-                        $criteriaValue->setValue(filter_var($storedCrit["crit"][$criteriaKeys[$i]][$j]["value"], FILTER_SANITIZE_NUMBER_INT));
+                /* Loop through all criteria with the same field
+                 * Ex: all criteria for 'Album'
+                 */
+                for ($j = 0; $j < $critCount; $j++) {
+                    /****************** CRITERIA ***********/
+                    // hide the criteria drop down select on any rows after the first
+                    if ($j > 0) {
+                        $invisible = ' sp-invisible';
                     } else {
-                        $criteriaValue->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["value"]);
+                        $invisible = '';
                     }
-                }
-                $this->addElement($criteriaValue);
 
-
-                /****************** DATETIME SELECT *************/
-                $criteriaDatetimeSelect = new Zend_Form_Element_Select("sp_criteria_datetime_select_".$i."_".$j);
-                $criteriaDatetimeSelect->setAttrib('class','input_select sp_input_select')
-                                        ->setDecorators(array('viewHelper'));
-                if (isset($criteriaKeys[$i]) && $relativeDateTime) {
-                    $criteriaDatetimeSelect->setAttrib('enabled', 'enabled');
-                }
-                else {
-                    $criteriaDatetimeSelect->setAttrib('disabled', 'disabled');
-                }
-                // check if the value is stored and it is a relative datetime field
-                if (isset($criteriaKeys[$i]) && isset($storedCrit["crit"][$criteriaKeys[$i]][$j]["value"])
-                    && isset($criteriaType) && $criteriaType == "d" &&
-                    preg_match('/before|after|between/', $modifierTest) == 1) {
-                    // need to remove any leading numbers stored in the database
-                    $dateTimeSelectValue = preg_replace('/[0-9]+/', '', $storedCrit["crit"][$criteriaKeys[$i]][$j]["value"]);
-                    // need to strip white from front and ago from the end to match with the value of the time unit select dropdown
-                    $dateTimeSelectValue = trim(preg_replace('/\W\w+\s*(\W*)$/', '$1', $dateTimeSelectValue));
-                    $criteriaDatetimeSelect->setMultiOptions($this->getTimePeriodCriteriaOptions());
-                    $criteriaDatetimeSelect->setValue($dateTimeSelectValue);
-                    $criteriaDatetimeSelect->setAttrib('enabled', 'enabled');
-                }
-                else {
-                    $criteriaDatetimeSelect->setMultiOptions(array('0' => _('Select unit of time')));
-                    $criteriaDatetimeSelect->setMultiOptions($this->getTimePeriodCriteriaOptions());
-
-                }
-
-                $this->addElement($criteriaDatetimeSelect);
-
-                /****************** EXTRA ***********/
-                $criteriaExtra = new Zend_Form_Element_Text("sp_criteria_extra_".$i."_".$j);
-                $criteriaExtra->setAttrib('class', 'input_text sp_extra_input_text')
-                              ->setDecorators(array('viewHelper'));
-                if (isset($criteriaKeys[$i]) && isset($storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"])) {
-                    // need to check if this is a relative date time value
-                    if(isset($criteriaType) && $criteriaType == "d" && $modifierTest == 'between') {
-                        // the criteria value will be a number followed by time unit and ago so set input to number part
-                        $criteriaExtra->setValue(filter_var($storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"], FILTER_SANITIZE_NUMBER_INT));
+                    $criteria = new Zend_Form_Element_Select("sp_criteria_field_" . $i . "_" . $j);
+                    $criteria->setAttrib('class', 'input_select sp_input_select' . $invisible)
+                        ->setValue('Select criteria')
+                        ->setDecorators(array('viewHelper'))
+                        ->setMultiOptions($this->getCriteriaOptions());
+                    // if this isn't the first criteria and there isn't an entry for it already disable it
+                    if ($i != 0 && !isset($criteriaKeys[$i])) {
+                        $criteria->setAttrib('disabled', 'disabled');
                     }
-                    else {
-                        $criteriaExtra->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"]);
+                    // add the numbering to the form ie the i loop for each specific criteria and
+                    // the j loop starts at 0 and grows for each item matching the same criteria
+                    // look up the criteria type using the criteriaTypes function from above based upon the criteria value
+                    if (isset($criteriaKeys[$i])) {
+                        $criteriaType = $this->criteriaTypes[$storedCrit["crit"][$criteriaKeys[$i]][$j]["criteria"]];
+                        $criteria->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["criteria"]);
                     }
-                    $criteriaValue->setAttrib('class', 'input_text sp_extra_input_text');
-                } else {
-                    $criteriaExtra->setAttrib('disabled', 'disabled');
-                }
-                $this->addElement($criteriaExtra);
-                /****************** DATETIME SELECT EXTRA **********/
+                    $this->addElement($criteria);
 
-                $criteriaExtraDatetimeSelect = new Zend_Form_Element_Select("sp_criteria_extra_datetime_select_".$i."_".$j);
-                $criteriaExtraDatetimeSelect->setAttrib('class','input_select sp_input_select')
-                    ->setDecorators(array('viewHelper'));
 
-                if (isset($criteriaKeys[$i]) && isset($storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"])
-                    && $modifierTest == 'between') {
-                    // need to remove the leading numbers stored in the database
-                    $extraDateTimeSelectValue = preg_replace('/[0-9]+/', '', $storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"]);
-                    // need to strip white from front and ago from the end to match with the value of the time unit select dropdown
-                    $extraDateTimeSelectValue = trim(preg_replace('/\W\w+\s*(\W*)$/', '$1', $extraDateTimeSelectValue));
-                    $criteriaExtraDatetimeSelect->setMultiOptions($this->getTimePeriodCriteriaOptions());
-                    // Logging::info('THIS IS-'.$extraDateTimeSelectValue.'-IT');
-                    $criteriaExtraDatetimeSelect->setValue($extraDateTimeSelectValue);
-                    $criteriaExtraDatetimeSelect->setAttrib('enabled', 'enabled');
+                    /****************** MODIFIER ***********/
+                    // every element has an optional modifier dropdown select
 
-                } else {
-                    $criteriaExtraDatetimeSelect->setMultiOptions(array('0' => _('Select unit of time')));
-                    $criteriaExtraDatetimeSelect->setMultiOptions($this->getTimePeriodCriteriaOptions());
-                    $criteriaExtraDatetimeSelect->setAttrib('disabled', 'disabled');
-                }
-                $this->addElement($criteriaExtraDatetimeSelect);
-            }//for
+                    $criteriaModifers = new Zend_Form_Element_Select("sp_criteria_modifier_" . $i . "_" . $j);
+                    $criteriaModifers->setValue('Select modifier')
+                        ->setAttrib('class', 'input_select sp_input_select')
+                        ->setDecorators(array('viewHelper'));
+                    if ($i != 0 && !isset($criteriaKeys[$i])) {
+                        $criteriaModifers->setAttrib('disabled', 'disabled');
+                    }
+                    // determine the modifier based upon criteria type which is looked up based upon an array
+                    if (isset($criteriaKeys[$i])) {
+                        if ($criteriaType == "s") {
+                            $criteriaModifers->setMultiOptions($this->getStringCriteriaOptions());
+                        } elseif ($criteriaType == "d") {
+                            $criteriaModifers->setMultiOptions($this->getDateTimeCriteriaOptions());
+                        } else {
+                            $criteriaModifers->setMultiOptions($this->getNumericCriteriaOptions());
+                        }
+                        $criteriaModifers->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["modifier"]);
+                    } else {
+                        $criteriaModifers->setMultiOptions(array('0' => _('Select modifier')));
+                    }
+                    $this->addElement($criteriaModifers);
 
+                    /****************** VALUE ***********/
+                    /* The challenge here is that datetime */
+                    $criteriaValue = new Zend_Form_Element_Text("sp_criteria_value_" . $i . "_" . $j);
+                    $criteriaValue->setAttrib('class', 'input_text sp_input_text')
+                        ->setDecorators(array('viewHelper'));
+                    if ($i != 0 && !isset($criteriaKeys[$i])) {
+                        $criteriaValue->setAttrib('disabled', 'disabled');
+                    }
+                    if (isset($criteriaKeys[$i])) {
+                        /*
+                         * Need to parse relative dates in a special way to populate select box down below
+                         */
+                        // this is used below to test whether the datetime select should be shown or hidden
+                        $relativeDateTime = false;
+                        $modifierTest = (string)$storedCrit["crit"][$criteriaKeys[$i]][$j]["modifier"];
+                        if (isset($criteriaType) && $criteriaType == "d" &&
+                            preg_match('/before|after|between/', $modifierTest) == 1) {
+                            // set relativeDatetime boolean to true so that the datetime select is displayed below
+                            $relativeDateTime = true;
+                            // the criteria value will be a number followed by time unit and ago so set input to number part
+                            $criteriaValue->setValue(filter_var($storedCrit["crit"][$criteriaKeys[$i]][$j]["value"], FILTER_SANITIZE_NUMBER_INT));
+                        } else {
+                            $criteriaValue->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["value"]);
+                        }
+                    }
+                    $this->addElement($criteriaValue);
+
+
+                    /****************** DATETIME SELECT *************/
+                    $criteriaDatetimeSelect = new Zend_Form_Element_Select("sp_criteria_datetime_select_" . $i . "_" . $j);
+                    $criteriaDatetimeSelect->setAttrib('class', 'input_select sp_input_select')
+                        ->setDecorators(array('viewHelper'));
+                    if (isset($criteriaKeys[$i]) && $relativeDateTime) {
+                        $criteriaDatetimeSelect->setAttrib('enabled', 'enabled');
+                    } else {
+                        $criteriaDatetimeSelect->setAttrib('disabled', 'disabled');
+                    }
+                    // check if the value is stored and it is a relative datetime field
+                    if (isset($criteriaKeys[$i]) && isset($storedCrit["crit"][$criteriaKeys[$i]][$j]["value"])
+                        && isset($criteriaType) && $criteriaType == "d" &&
+                        preg_match('/before|after|between/', $modifierTest) == 1) {
+                        // need to remove any leading numbers stored in the database
+                        $dateTimeSelectValue = preg_replace('/[0-9]+/', '', $storedCrit["crit"][$criteriaKeys[$i]][$j]["value"]);
+                        // need to strip white from front and ago from the end to match with the value of the time unit select dropdown
+                        $dateTimeSelectValue = trim(preg_replace('/\W\w+\s*(\W*)$/', '$1', $dateTimeSelectValue));
+                        $criteriaDatetimeSelect->setMultiOptions($this->getTimePeriodCriteriaOptions());
+                        $criteriaDatetimeSelect->setValue($dateTimeSelectValue);
+                        $criteriaDatetimeSelect->setAttrib('enabled', 'enabled');
+                    } else {
+                        $criteriaDatetimeSelect->setMultiOptions(array('0' => _('Select unit of time')));
+                        $criteriaDatetimeSelect->setMultiOptions($this->getTimePeriodCriteriaOptions());
+
+                    }
+
+                    $this->addElement($criteriaDatetimeSelect);
+
+                    /****************** EXTRA ***********/
+                    $criteriaExtra = new Zend_Form_Element_Text("sp_criteria_extra_" . $i . "_" . $j);
+                    $criteriaExtra->setAttrib('class', 'input_text sp_extra_input_text')
+                        ->setDecorators(array('viewHelper'));
+                    if (isset($criteriaKeys[$i]) && isset($storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"])) {
+                        // need to check if this is a relative date time value
+                        if (isset($criteriaType) && $criteriaType == "d" && $modifierTest == 'between') {
+                            // the criteria value will be a number followed by time unit and ago so set input to number part
+                            $criteriaExtra->setValue(filter_var($storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"], FILTER_SANITIZE_NUMBER_INT));
+                        } else {
+                            $criteriaExtra->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"]);
+                        }
+                        $criteriaValue->setAttrib('class', 'input_text sp_extra_input_text');
+                    } else {
+                        $criteriaExtra->setAttrib('disabled', 'disabled');
+                    }
+                    $this->addElement($criteriaExtra);
+                    /****************** DATETIME SELECT EXTRA **********/
+
+                    $criteriaExtraDatetimeSelect = new Zend_Form_Element_Select("sp_criteria_extra_datetime_select_" . $i . "_" . $j);
+                    $criteriaExtraDatetimeSelect->setAttrib('class', 'input_select sp_input_select')
+                        ->setDecorators(array('viewHelper'));
+
+                    if (isset($criteriaKeys[$i]) && isset($storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"])
+                        && $modifierTest == 'between') {
+                        // need to remove the leading numbers stored in the database
+                        $extraDateTimeSelectValue = preg_replace('/[0-9]+/', '', $storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"]);
+                        // need to strip white from front and ago from the end to match with the value of the time unit select dropdown
+                        $extraDateTimeSelectValue = trim(preg_replace('/\W\w+\s*(\W*)$/', '$1', $extraDateTimeSelectValue));
+                        $criteriaExtraDatetimeSelect->setMultiOptions($this->getTimePeriodCriteriaOptions());
+                        // Logging::info('THIS IS-'.$extraDateTimeSelectValue.'-IT');
+                        $criteriaExtraDatetimeSelect->setValue($extraDateTimeSelectValue);
+                        $criteriaExtraDatetimeSelect->setAttrib('enabled', 'enabled');
+
+                    } else {
+                        $criteriaExtraDatetimeSelect->setMultiOptions(array('0' => _('Select unit of time')));
+                        $criteriaExtraDatetimeSelect->setMultiOptions($this->getTimePeriodCriteriaOptions());
+                        $criteriaExtraDatetimeSelect->setAttrib('disabled', 'disabled');
+                    }
+                    $this->addElement($criteriaExtraDatetimeSelect);
+                }//for
         }//for
 
         $repeatTracks = new Zend_Form_Element_Checkbox('sp_repeat_tracks');
