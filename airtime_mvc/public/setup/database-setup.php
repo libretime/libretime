@@ -127,7 +127,7 @@ class DatabaseSetup extends Setup {
      */
     private function createDatabase() {
         $statement = self::$dbh->prepare("CREATE DATABASE " . pg_escape_string(self::$_properties["dbname"])
-                                         . " WITH ENCODING 'UTF8' TEMPLATE template0"
+                                         . " WITH ENCODING 'UNICODE' TEMPLATE template0"
                                          . " OWNER " . pg_escape_string(self::$_properties["dbuser"]));
         if (!$statement->execute()) {
             throw new AirtimeDatabaseException("There was an error creating the database!",

@@ -154,20 +154,6 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
         end
         %endif
 
-# FDK-AAC is the only good AAC encoder. libvoaac is deprecated and aacplus is subpar. 
-# The difference in compression quality is clearly audible. -- Albert
-#        %ifencoder %aac
-#        if type == "aac" then
-#            %include "aac.liq"
-#        end
-#        %endif
-
-#        %ifencoder %aacplus
-#        if type == "aacplus" then
-#            %include "aacplus.liq"
-#        end
-#        %endif
-
         %ifencoder %fdkaac
         if type == "aac" then
             %include "fdkaac.liq"
@@ -207,15 +193,9 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
             %include "mp3.liq"
         end
 
-        %ifencoder %aac
+        %ifencoder %fdkaac
         if type == "aac" then
-            %include "aac.liq"
-        end
-        %endif
-        
-        %ifencoder %aacplus
-        if type == "aacplus" then
-            %include "aacplus.liq"
+            %include "fdkaac.liq"
         end
         %endif
     end

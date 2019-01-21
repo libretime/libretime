@@ -30,7 +30,8 @@ set_include_path(implode(PATH_SEPARATOR, array(
 // Ensure vendor/ is on the include path
 set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
-    realpath(APPLICATION_PATH . '/../../vendor')
+    realpath(APPLICATION_PATH . '/../../vendor'),
+    realpath(APPLICATION_PATH . '/../../vendor/zf1s/zend-loader/library')
 )));
 
 set_include_path(implode(PATH_SEPARATOR, array(
