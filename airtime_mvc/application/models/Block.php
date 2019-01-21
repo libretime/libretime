@@ -1644,7 +1644,6 @@ SQL;
 
         // construct limit restriction
         $limits = array();
-        
         if (isset($storedCrit['limit'])) {
             if ($storedCrit['limit']['modifier'] == "items") {
                 $limits['time'] = 1440 * 60;

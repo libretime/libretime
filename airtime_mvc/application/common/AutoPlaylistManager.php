@@ -46,7 +46,17 @@ class AutoPlaylistManager {
                 while(!$full) {
                     $si = new Application_Model_ShowInstance($autoplaylist->getDbId());
                     $ps = $si->getPercentScheduled();
-                    //Logging::info("The total percent scheduled is % $ps");
+                    if ($introplaylistid != null) {
+                        sleep(20);
+                        Logging::info('adding intro');
+                        $si->addPlaylistToShowStart($introplaylistid, false);
+                    }
+                    if ($outroplaylistid != null) {
+                        sleep(20);
+                        Logging::info('adding outro');
+                        $si->addPlaylistToShow($outroplaylistid, false);
+                        //Logging::info("The total percent scheduled is % $ps");
+                    }
                     if ($ps > 100) {
                         $full = true;
                     }
@@ -56,9 +66,13 @@ class AutoPlaylistManager {
             else {
                 $si->addPlaylistToShow($playlistid, false);
                 if ($introplaylistid != null) {
+                    sleep(20);
+                    Logging::info('adding intro');
                     $si->addPlaylistToShowStart($introplaylistid, false);
                 }
                 if ($outroplaylistid != null) {
+                    sleep(20);
+                    Logging::info('adding outro');
                     $si->addPlaylistToShow($outroplaylistid, false);
                 }
             }

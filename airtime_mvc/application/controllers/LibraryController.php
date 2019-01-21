@@ -5,6 +5,7 @@ class LibraryController extends Zend_Controller_Action
 
     public function init()
     {
+        Logging::info('debugging wtf');
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('contents-feed', 'json')
                     ->addActionContext('delete', 'json')
