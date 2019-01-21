@@ -105,13 +105,13 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $introPlaylistSelect = new Zend_Form_Element_Select("introPlaylistSelect");
         $introPlaylistSelect->setLabel(_("Intro Autoloading Playlist"));
         $introPlaylistSelect->setMultiOptions(Application_Model_Library::getPlaylistNames(true));
-        $introPlaylistSelect->setValue(null);
+        $introPlaylistSelect->setValue(Application_Model_Preference::GetIntroPlaylist());
         $this->addElement($introPlaylistSelect);
 
         $outroPlaylistSelect = new Zend_Form_Element_Select("outroPlaylistSelect");
         $outroPlaylistSelect->setLabel(_("Outro Autoloading Playlist"));
         $outroPlaylistSelect->setMultiOptions(Application_Model_Library::getPlaylistNames(true));
-        $outroPlaylistSelect->setValue(null);
+        $outroPlaylistSelect->setValue(Application_Model_Preference::GetOutroPlaylist());
         $this->addElement($outroPlaylistSelect);
 
 

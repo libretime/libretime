@@ -33,12 +33,18 @@ class AutoPlaylistManager {
             // call the addPlaylist to show function and don't check for user permission to avoid call to non-existant user object
             $sid = $si->getShowId();
             $playlistrepeat = new Application_Model_Show($sid);
+            $introplaylistid = Application_Model_Preference::GetIntroPlaylist();
+            Logging::info("intro");
+            Logging::info($introplaylistid);
+            Logging::info($playlistid);
+            Logging::info("outro");
+            $outroplaylistid = Application_Model_Preference::GetOutroPlaylist();
+            Logging::info($outroplaylistid);
 
             if ($playlistrepeat->getAutoPlaylistRepeat()) {
                 $full = false;
                 while(!$full) {
                     $si = new Application_Model_ShowInstance($autoplaylist->getDbId());
-                    $si->addPlaylistToShow($playlistid, false);
                     $ps = $si->getPercentScheduled();
                     //Logging::info("The total percent scheduled is % $ps");
                     if ($ps > 100) {
@@ -49,6 +55,12 @@ class AutoPlaylistManager {
             }
             else {
                 $si->addPlaylistToShow($playlistid, false);
+                if ($introplaylistid != null) {
+                    $si->addPlaylistToShowStart($introplaylistid, false);
+                }
+                if ($outroplaylistid != null) {
+                    $si->addPlaylistToShow($outroplaylistid, false);
+                }
             }
             $si->setAutoPlaylistBuilt(true);
 
