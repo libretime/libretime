@@ -279,7 +279,7 @@ final class Application_Model_Scheduler
                     } else {
                         $defaultFadeIn = Application_Model_Preference::GetDefaultFadeIn();
                         $defaultFadeOut = Application_Model_Preference::GetDefaultFadeOut();
-                        $dynamicFiles = $bl->getListOfFilesUnderLimit();
+                        $dynamicFiles = $bl->getListOfFilesUnderLimit($show);
                         foreach ($dynamicFiles as $f) {
                             $fileId = $f['id'];
                             $file = CcFilesQuery::create()->findPk($fileId);
