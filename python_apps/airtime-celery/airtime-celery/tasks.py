@@ -128,7 +128,7 @@ def soundcloud_delete(token, track_id):
 
 
 @celery.task(name='podcast-download', acks_late=True)
-def podcast_download(id, url, callback_url, api_key, podcast_name, album_override):
+def podcast_download(id, url, callback_url, api_key, podcast_name, album_override, track_title):
     """
     Download a podcast episode
 
@@ -138,6 +138,7 @@ def podcast_download(id, url, callback_url, api_key, podcast_name, album_overrid
     :param api_key:         API key for callback authentication
     :param podcast_name:    Name of podcast to be added to id3 metadata for smartblock
     :param album_override:  Passing whether to override the album id3 even if it exists
+    :param track_title:     Passing the title of the episode from feed to override the metadata
 
     :return: JSON formatted string of a dictionary of download statuses
              and file identifiers (for successful uploads)
@@ -162,8 +163,9 @@ def podcast_download(id, url, callback_url, api_key, podcast_name, album_overrid
                     # so we treat it like a mp3 if it has a mp3 file extension and hope for the best
                     if filename.endswith(mp3suffix):
                         metadata_audiofile = mutagen.mp3.MP3(audiofile.name, ID3=mutagen.easyid3.EasyID3)
-                #replace album title as needed
-                metadata_audiofile = podcast_override_album(metadata_audiofile, podcast_name, album_override)
+                #replace track metadata as indicated by album_override setting
+                # replace album title as needed
+                metadata_audiofile = podcast_override_metadata(metadata_audiofile, podcast_name, album_override, track_title)
                 metadata_audiofile.save()
                 filetypeinfo = metadata_audiofile.pprint()
                 logger.info('filetypeinfo is {0}'.format(filetypeinfo.encode('ascii', 'ignore')))
@@ -179,7 +181,7 @@ def podcast_download(id, url, callback_url, api_key, podcast_name, album_overrid
         obj['status'] = 0
     return json.dumps(obj)
 
-def podcast_override_album(m, podcast_name, override):
+def podcast_override_metadata(m, podcast_name, override, track_title):
     """
     Override m['album'] if empty or forced with override arg
     """
@@ -187,6 +189,8 @@ def podcast_override_album(m, podcast_name, override):
     if override is True:
         logger.debug('overriding album name to {0} in podcast'.format(podcast_name.encode('ascii', 'ignore')))
         m['album'] = podcast_name
+        m['title'] = track_title
+        m['artist'] = podcast_name
     else:
         # replace the album id3 tag with the podcast name if the album tag is empty
         try:

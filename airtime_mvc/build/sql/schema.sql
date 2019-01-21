@@ -780,6 +780,8 @@ CREATE TABLE "podcast_episodes"
     "publication_date" TIMESTAMP NOT NULL,
     "download_url" VARCHAR(4096) NOT NULL,
     "episode_guid" VARCHAR(4096) NOT NULL,
+    "episode_title" VARCHAR(4096) NOT NULL,
+    "episode_description" VARCHAR(4096) NOT NULL,
     PRIMARY KEY ("id")
 );
 

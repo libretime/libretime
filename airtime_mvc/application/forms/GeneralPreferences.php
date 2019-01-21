@@ -102,13 +102,13 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 
 
         $podcast_album_override = new Zend_Form_Element_Radio('podcastAlbumOverride');
-        $podcast_album_override->setLabel(_('Podcast Album Override'));
+        $podcast_album_override->setLabel(_('Podcast Metadata Override'));
         $podcast_album_override->setMultiOptions(array(
             _("Disabled"),
             _("Enabled"),
         ));
         $podcast_album_override->setValue(Application_Model_Preference::GetPodcastAlbumOverride());
-        $podcast_album_override->setDescription(_('Enabling this means that podcast tracks will always contain the podcast name in their album field.'));
+        $podcast_album_override->setDescription(_('Enabling this means that podcast tracks will get their metadata set from the podcast feed values'));
         $podcast_album_override->setSeparator(' '); //No <br> between radio buttons
         $podcast_album_override->addDecorator('HtmlTag', array('tag' => 'dd',
             'id'=>"podcastAlbumOverride-element",
