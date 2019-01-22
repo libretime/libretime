@@ -106,15 +106,16 @@ img.logo
 /* Version Notification Starts*/
 #version-icon {
     position:absolute;
-    top:68px;
-    right: 10px;
-    height:35px;
-    width:35px;
+    top:3px;
+    right: 3px;
+    height:20px;
+    width:20px;
     z-index:1000;
     display:block;
     cursor:pointer;
     background-repeat:no-repeat;
     background-position:center;
+    background-size: contain;
 }
 #version-icon.outdated {
     background-image:url(images/icon_outdated.png);
@@ -267,7 +268,7 @@ img.logo
     overflow:hidden;
 }
 
-.now-playing-block, .show-block, .on-air-block, .time-info-block, .personal-block, .listen-control-block, .trial-info-block {
+.now-playing-block, .show-block, .on-air-block, .time-info-block, .listen-control-block, .trial-info-block {
     height:100px;
     float:left;
     margin-right:10px;
@@ -279,34 +280,6 @@ img.logo
     min-width:170px;
 }
 
-.personal-block  {
-    float:right;
-    margin-right:20px;
-    text-align:right;
-    min-width:110px;
-}
-
-.personal-block  ul {
-    margin:0;
-    padding:8px 0 0;
-}
-.personal-block li {
-    font-size:11px;
-    color:#bdbdbd;
-    list-style-type:none;
-    margin:0 0 2px 0;
-}
-.personal-block li.name {
-    color:#fff;
-    font-weight:normal;
-}
-.personal-block li a {
-    color:#fff;
-    text-decoration:underline;
-}
-.personal-block li a:hover {
-    color:#ff5d1a;
-}
 .now-playing-block {
     -webkit-flex: 1 0;
     -moz-flex: 1 0;
@@ -430,26 +403,7 @@ ol.navigation {
         min-width: 630px;
     }
 }
-.time-info-block ul {
-    margin:0;
-    padding:6px 0 0;
-}
-.time-info-block li {
-    list-style-type:none;
-    font-size:14px;
-    color:#bdbdbd;
-    margin:0 0 6px;
-}
-.time-info-block li.time {
-    font-size:26px;
-    color:#fff;
-    width:auto;
-    text-align:left;
-}
-.time-info-block li.time-zone {
-    font-size:17px;
-    margin-bottom:0;
-}
+
 .listen-control-block a, .listen-control-button {
     font-size:11px;
     text-transform:uppercase;

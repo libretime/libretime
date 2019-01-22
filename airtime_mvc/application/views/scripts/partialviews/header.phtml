@@ -52,10 +52,12 @@
     <a href="#" class="listen-control-button"><span><?php echo _("Listen") ?></span></a>
   </div>
   <div class="time-info-block pull-right">
-    <ul>
-      <li class="time" id="time"></li>
-      <li class="time-zone"><span id="time-zone"></span></li>
-    </ul>
+    <div class="time" id="time"></div>
+    <div class="personal-block">
+      <a id="current-user" href=<?php echo $this->baseUrl . "/user/edit-user"?>><span class="name"><?php echo $this->escape($this->loggedInAs()); ?></span></a>
+      <span>|</span> 
+      <a href=<?php echo $this->baseUrl . "/login/logout"?>><?php echo _("Logout")?></a>
+    </div>
   </div>
 </div>
 <div id="jquery_jplayer_1" class="jp-jplayer" style="width:0px; height:0px;"></div>
