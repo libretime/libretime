@@ -47,9 +47,9 @@ sudo usermod -a -G libvirt $USER
 
 # Reboot
 
-vagrant box fetch bento/ubuntu-16.04
+vagrant box add bento/ubuntu-16.04 --provider=virtualbox
 vagrant mutate bento/ubuntu-16.04 libvirt
-vagrant up bento/ubuntu-16.04 --provider=libvirt
+vagrant up ubuntu-xenial --provider=libvirt
 ```
 
 #### Other Distributions
@@ -65,7 +65,7 @@ sudo usermod -a -G libvirt $USER
 vagrant plugin install vagrant-mutate
 vagrant box fetch bento/ubuntu-16.04
 vagrant mutate bento/ubuntu-16.04 libvirt
-vagrant up bento/ubuntu-16.04 --provider=libvirt
+vagrant up ubuntu-xenial --provider=libvirt
 ```
 
 ## Starting LibreTime Vagrant
@@ -95,7 +95,7 @@ offers the option to choose a different operation system according to you needs.
 
 | OS     | Command             | Comment |
 | ------ | ------------------- | ------- |
-| Debian 9.2   | `vagrant up debian-stretch` | Install on current Debian Stretch. |
+| Debian 9.6   | `vagrant up debian-stretch` | Install on current Debian Stretch. |
 | Debian 8.7   | `vagrant up debian-jessie`  | Install on Debian Jessie. |
 | Ubuntu 18.04 | `vagrant up ubuntu-bionic`  | Experimental install on current Ubuntu Bionic Beaver. |
 | Ubuntu 16.04 | `vagrant up ubuntu-xenial`  | Install on Ubuntu Xenial Xerus. |
