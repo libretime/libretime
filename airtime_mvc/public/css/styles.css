@@ -4145,15 +4145,15 @@ li .ui-state-hover {
     float: none;
 }
 .podcast-metadata-row > *:first-child {
-    flex: 0 0 25%;
-    max-width: 25%;
+    flex: 0 0 40%;
+    max-width: 40%;
     text-align: right;
     padding-right: 2%;
     box-sizing: border-box;
 }
 .podcast-metadata-row > *:last-child {
-    flex: 0 0 75%;
-    max-width: 75%;
+    flex: 0 0 60%;
+    max-width: 60%;
     box-sizing: border-box;
     text-align: left;
 }
