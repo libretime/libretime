@@ -40,12 +40,9 @@ class MetadataAnalyzer(Analyzer):
                 m.update(data)
             metadata["md5"] = m.hexdigest()
 
-        # Mutagen doesn't handle WAVE files so we use a different package 
-        ms = magic.open(magic.MIME_TYPE)
-        ms.load()
-        with open(filename, 'rb') as fh:
-            mime_check = ms.buffer(fh.read(2014))
+        mime_check = magic.from_file(filename, mime=True)
         metadata["mime"] = mime_check
+        # Mutagen calculates durations incorrectly for wave files
         if mime_check == 'audio/x-wav':
             return MetadataAnalyzer._analyze_wave(filename, metadata)
 

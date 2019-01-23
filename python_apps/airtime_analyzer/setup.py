@@ -31,7 +31,7 @@ setup(name='airtime_analyzer',
           'mutagen>=1.41.1', # got rid of specific version requirement 
           'pika',
           'daemon',
-          'file-magic',
+          'python-magic',
           'nose',
           'coverage',
           'mock',
