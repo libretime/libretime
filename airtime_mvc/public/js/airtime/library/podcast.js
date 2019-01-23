@@ -85,6 +85,7 @@ var AIRTIME = (function (AIRTIME) {
                         })
                         .success(function () {
                             AIRTIME.library.podcastDataTable.fnDraw();
+                            self.$scope.tab.setName(self.$scope.podcast.title);
                         });
 
                     // redraw list of smartblocks just in case they have it visible on the left
