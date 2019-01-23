@@ -2,7 +2,7 @@ The Listener Stats page on the Analytics menu shows graphs of listener connectio
 
 ![](static/Screenshot483-Listener_Stats.png)
 
-If the status indicator is red, check that the **Admin User** and **Admin Password** settings are correct under **Additional Options** for the named mount point, such as *airtime\_128*, on the **Streams** page of the **Settings** menu.
+If the status indicator is red, check that the **Admin User** and **Admin Password** settings are correct under **Additional Options** for the named mount point, such as *libretime\_128*, on the **Streams** page of the **Settings** menu.
 
 By default, statistics for the last 24 hours of streaming are shown. To change this date and time range, click the calendar and clock icons in the lower left corner of the page, then click the magnifying glass icon.
 

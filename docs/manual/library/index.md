@@ -1,4 +1,4 @@
-This page of the Airtime interface enables you to search the media library, sort and display the search results by the criteria that you choose, audition library items, and drag and drop those items into a playlist. You can also adjust fade and cue points, create smart blocks (automatically generated playlists), or add incoming web streams to the library. The **Library** page is not visible to *Guest* users.
+This page of the Libretime interface enables you to search the media library, sort and display the search results by the criteria that you choose, audition library items, and drag and drop those items into a playlist. You can also adjust fade and cue points, create smart blocks (automatically generated playlists), or add incoming web streams to the library. The **Library** page is not visible to *Guest* users.
 
 Searching the library
 ---------------------
@@ -35,7 +35,7 @@ With a playlist open, click on an item in the search results and then click **Ad
 
 ![](static/Screenshot505-Add_item_to_playlist_240.png)
 
-You can also select or deselect a whole page of search results using the **Select** button, just below the simple search field. Alternatively, use the checkboxes in the first column of the search results table to select individual items, then click the **Add to current playlist** button. Items that you own which you no longer require can be deleted from Airtime's library using the **Trashcan** button. 
+You can also select or deselect a whole page of search results using the **Select** button, just below the simple search field. Alternatively, use the checkboxes in the first column of the search results table to select individual items, then click the **Add to current playlist** button. Items that you own which you no longer require can be deleted from Libretime's library using the **Trashcan** button. 
 
 ![](static/Screenshot439-Checkbox_select_items.png)
 
@@ -43,7 +43,7 @@ After adding files to the playlist, the total playlist time is displayed in the 
 
 To audition a playlist file in your web browser, click the white triangle**** button on the left side of its row. (If the format of the file is not supported by your browser, the triangle in this button will be greyed out). If audition of the file format is supported, a pop-up window will open, with the playlist starting at the file you clicked.
 
-Click the small white **x** icon on the right hand side of each row to remove a file from the playlist. You can also drag and drop files to re-order them, or click the **Shuffle** button to re-order files automatically. Click the **Clear** button to remove all content from the playlist, or click the **Delete** button to remove the playlist from the Airtime library altogether.
+Click the small white **x** icon on the right hand side of each row to remove a file from the playlist. You can also drag and drop files to re-order them, or click the **Shuffle** button to re-order files automatically. Click the **Clear** button to remove all content from the playlist, or click the **Delete** button to remove the playlist from the Libretime library altogether.
 
 ![](static/Screenshot506-Drag_drop_playlist_240.png)
 
@@ -69,7 +69,7 @@ If a **Fade In** and **Cue In** are set on the same item in the playlist, the fa
 
 ![](static/Screenshot511-Visual_cue_editor_240.png)
 
-When your playlist is complete, click the **New** button in the top left corner to create another playlist, click the close icon (a white cross in a black circle) in the top right corner, or browse to another page of the Airtime interface.
+When your playlist is complete, click the **New** button in the top left corner to create another playlist, click the close icon (a white cross in a black circle) in the top right corner, or browse to another page of the Libretime interface.
 
 If you want to edit the playlist content or metadata later, you can find it by **Title**, **Creator**, **Last Modified** date, **Length**, **Owner** or **Year** using one of the search tools on the Library page. Click the playlist in the search results list, and then click **Edit** from the pop-up menu. You can also **Preview** the entire playlist in a pop-up audition window, **Duplicate** or **Delete** one of your playlists from this menu.
 
@@ -78,13 +78,13 @@ If you want to edit the playlist content or metadata later, you can find it by *
 Creating a smart block
 ----------------------
 
-Smart blocks are automatically filled with media files from the Airtime library, according to the criteria that you specify. This feature is intended to save staff time, compared to selecting items for a playlist manually.
+Smart blocks are automatically filled with media files from the Libretime library, according to the criteria that you specify. This feature is intended to save staff time, compared to selecting items for a playlist manually.
 
 To create a smart block, click the **New** button on the right side of the Library page, and select **New Smart Block** from the pop-up menu. Like a playlist, smart blocks can have a title and **Description**, which you can edit. This helps you find relevant smart blocks in searches.
 
 ![](static/Screenshot512-Example_smart_block_240.png)
 
-Click the link **Smart Block Options** to display the criteria and modifiers for the smart block. The criteria can be any one of Airtime's metadata categories, such as **Title**, **Creator** or **Genre**. The modifier depends on whether the metadata in question contains letters or numbers. For example, **Title** has modifiers including *contains* and *starts with*, whereas the modifiers for **BPM** include *is greater than* and *is in the range*.
+Click the link **Smart Block Options** to display the criteria and modifiers for the smart block. The criteria can be any one of Libretime's metadata categories, such as **Title**, **Creator** or **Genre**. The modifier depends on whether the metadata in question contains letters or numbers. For example, **Title** has modifiers including *contains* and *starts with*, whereas the modifiers for **BPM** include *is greater than* and *is in the range*.
 
 You can also set the **smart block type**. A **Static** smart block will save the criteria and generate the block content immediately. This enables you to edit the contents of the block in the **Library** page before adding it to a show. A **Dynamic** smart block will only save the criteria, and the specific content will be generated at the time the block is added to a show. After that, the content of the show can be changed or re-ordered in the **Now Playing** page. 
 
@@ -106,7 +106,7 @@ By default, a smart block will not contain repeated items, which will limit the 
 
 In addition Smart Blocks by default will never overflow the Time Limit. For instance if you set a time limit of 1 hour. It will add tracks to the schedule until it can't add any more tracks without exceeding the hour. This is to prevent tracks from being cut-off because they exceed the time limit of a show. 
 
-If you want a smartblock to schedule tracks until it is longer than the Time Limit you can check "Allow last track to exceed time limit". This will make LibreTime add tracks that meet the criteria until it equals or is longer than the time limit. The was the default behaviour with the Airtime software.
+If you want a smartblock to schedule tracks until it is longer than the Time Limit you can check "Allow last track to exceed time limit". This will make LibreTime add tracks that meet the criteria until it equals or is longer than the time limit. The was the default behaviour with the Libretime software.
 
 If you have a large number of files which meet the criteria that you specify, you may wish to limit the duration of the smart block using the **Limit to** field, so that it fits within the show you have in mind. Select **hours**, **minutes** or **items** from the drop-down menu, and click the **Generate** button again, if it is a static smart block. Then click the **Save** button.
 
@@ -119,7 +119,7 @@ Once created, smart blocks can be found in Library searches and refined at any t
 Adding a web stream
 -------------------
 
-A web stream URL and metadata can be added to the Airtime library, so that a remote stream can be searched for and scheduled to be *pulled* into a show. For example, at the top of the hour your station may pull a news report from journalists working in another studio. This is a different concept from **Master Source** and **Show Source** remote streams which are *pushed* into the Airtime playout schedule.
+A web stream URL and metadata can be added to the Libretime library, so that a remote stream can be searched for and scheduled to be *pulled* into a show. For example, at the top of the hour your station may pull a news report from journalists working in another studio. This is a different concept from **Master Source** and **Show Source** remote streams which are *pushed* into the Libretime playout schedule.
 
 To add a web stream, click the **New** button on the right side of the Library page, and select **New Webstream** from the pop-up menu. Like a playlist, web streams in the Library can have a title and **Description**, which may help you find them in searches later.
 
