@@ -391,5 +391,5 @@ INSERT INTO cc_pref("keystr", "valstr") VALUES('whats_new_dialog_viewed', 1);
 
 --added for LibreTime to turn on podcast album override by default 3.0.0.alpha6
 INSERT INTO cc_pref("keystr", "valstr") VALUES('podcast_album_override', 1);
-INSERT INTO cc_pref("keystr", "valstr") VALUES('podcast_auto_smartblock', 1);
+INSERT INTO cc_pref("keystr", "valstr") VALUES('podcast_auto_smartblock', 0);
 -- end
