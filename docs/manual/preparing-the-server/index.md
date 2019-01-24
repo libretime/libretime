@@ -4,7 +4,7 @@ The recommended Libretime server platform is Ubuntu 16.04 LTS (Xenial Xerus).
 
 The server should have at least a 1GHz processor and 1GB of RAM, preferably 2GB RAM or more. If you are using a desktop environment and web browser directly on the server you should install at least 2GB RAM, to avoid swapping to disk.
 
-The LibreTime installation does not use much disk space, but you should allow plenty of storage capacity for the Airtime library. A hot-swap RAID array is recommended for media storage, in case of disk failure. You should also consider a UPS or other battery-powered system to offer some protection against short-term power failures.
+The LibreTime installation does not use much disk space, but you should allow plenty of storage capacity for the Libretime library. A hot-swap RAID array is recommended for media storage, in case of disk failure. You should also consider a UPS or other battery-powered system to offer some protection against short-term power failures.
 
 LibreTime depends on infrastructure and services that need to be configured properly for it to run smoothly. This chapter will go through the individual parts of a LibreTime install and help you assess how you need to manage them.
 
@@ -79,15 +79,15 @@ See these links for more information:
 
 ***Beware, Here be dragons!*** 
 
-The following instructions have been taken verbatim from the Airtime docs and
+The following instructions have been taken verbatim from the Libretime docs and
 not been brought up to date.
 
 Sound cards
 -----------
 
-If your Airtime machine will only be used to stream directly to an **Icecast** or **SHOUTcast** streaming media server, you do not require a sound card to be installed on the Airtime server side. This option is suitable for Airtime installations at your ISP's data centre, remote from any transmitter. However, you will not be able to take advantage of Airtime's live show recording feature (yet).
+If your Libretime machine will only be used to stream directly to an **Icecast** or **SHOUTcast** streaming media server, you do not require a sound card to be installed on the Libretime server side. This option is suitable for Libretime installations at your ISP's data centre, remote from any transmitter. However, you will not be able to take advantage of Libretime's live show recording feature (yet).
 
-If you intend that your Airtime server will have a direct audio output to a broadcast transmitter or a separate stream encoder, your server machine must have a sound card supported by an **ALSA** driver. Almost all standard sound cards have ALSA drivers built into the Linux kernel, which do not need to be installed separately. If in doubt about driver support for your sound card, check the ALSA support matrix at: <http://www.alsa-project.org/main/index.php/Matrix:Main>
+If you intend that your Libretime server will have a direct audio output to a broadcast transmitter or a separate stream encoder, your server machine must have a sound card supported by an **ALSA** driver. Almost all standard sound cards have ALSA drivers built into the Linux kernel, which do not need to be installed separately. If in doubt about driver support for your sound card, check the ALSA support matrix at: <http://www.alsa-project.org/main/index.php/Matrix:Main>
 
 USB audio device index
 ----------------------
@@ -113,7 +113,7 @@ Save the file with **Ctrl+O** and close **nano** with **Ctrl+X**. Then remove an
       Subdevices: 1/1
       Subdevice #0: subdevice #0
 
-When using a USB sound card with ALSA, some how-to documents advocate setting the *nrpacks=1* option, but this is not recommended for Airtime because it can increase CPU load significantly.
+When using a USB sound card with ALSA, some how-to documents advocate setting the *nrpacks=1* option, but this is not recommended for Libretime because it can increase CPU load significantly.
 
 Intel HDA mixer labels
 ----------------------
@@ -147,7 +147,7 @@ Save the file with **Ctrl+O** and close **nano** with **Ctrl+X**. Then reboot th
 Disable desktop and other sounds
 --------------------------------
 
-If you are installing Airtime on a desktop computer, make sure you disable or remove any programs that could send unintended audio to a sound card you are using for broadcast output. This includes alert sounds which play when the computer is ready for use, or when a user logs in. On Ubuntu, these sounds are configured using *System -&gt; Preferences -&gt; Sound* on the main desktop menu. (This configuration tool only works when the PulseAudio sound server is installed).
+If you are installing Libretime on a desktop computer, make sure you disable or remove any programs that could send unintended audio to a sound card you are using for broadcast output. This includes alert sounds which play when the computer is ready for use, or when a user logs in. On Ubuntu, these sounds are configured using *System -&gt; Preferences -&gt; Sound* on the main desktop menu. (This configuration tool only works when the PulseAudio sound server is installed).
 
 You may prefer to remove all system sound files from the computer, in case they could be played unintentionally via the sound card. For example, on Ubuntu you may wish to remove the **ubuntu-sounds** package, with the following command:
 
@@ -156,13 +156,13 @@ You may prefer to remove all system sound files from the computer, in case they 
 PulseAudio
 ----------
 
-The PulseAudio sound server is not recommended for Airtime sound card output, but is installed by default on Ubuntu. To remove PulseAudio from an Ubuntu machine, type the following command:
+The PulseAudio sound server is not recommended for Libretime sound card output, but is installed by default on Ubuntu. To remove PulseAudio from an Ubuntu machine, type the following command:
 
     sudo apt-get purge pulseaudio
 
 Removing the **pulseaudio** package on a desktop Ubuntu machine may force the removal of the **ubuntu-desktop** metapackage. However, this metapackage is only installed on the system for managing upgrades; removing it does not remove the entire desktop.
 
-After removing PulseAudio, if your Airtime machine has a desktop, you can install a mixer applet which can control the ALSA soundcard driver directly, such as **gnome-alsamixer**:
+After removing PulseAudio, if your Libretime machine has a desktop, you can install a mixer applet which can control the ALSA soundcard driver directly, such as **gnome-alsamixer**:
 
     sudo apt-get install gnome-alsamixer
 
@@ -177,13 +177,13 @@ This program should already be installed on an Ubuntu or Debian machine with a s
 The PHP cache
 -------------
 
-This dependency, introduced in Airtime 2.5.0, can improve the responsiveness of the Airtime administration interface and reduce server load. Various PHP cache software is available, but the current cache software required by Airtime is **APC** (<http://pecl.php.net/package/APC>). You should uninstall or disable any other PHP cache that may be present on the server, such as **XCache**, before installing Airtime and APC. This is because having multiple caches enabled can cause problems for PHP.
+This dependency, introduced in Libretime 2.5.0, can improve the responsiveness of the Libretime administration interface and reduce server load. Various PHP cache software is available, but the current cache software required by Libretime is **APC** (<http://pecl.php.net/package/APC>). You should uninstall or disable any other PHP cache that may be present on the server, such as **XCache**, before installing Libretime and APC. This is because having multiple caches enabled can cause problems for PHP.
 
 You can remove the XCache package **php5-xcache** from a Debian or Ubuntu server with the command:
 
     sudo apt-get remove php5-xcache
 
-APC is available in Debian or Ubuntu as the **php-apc** package. If you already have Apache installed on the server you are going to use for Airtime, you can install APC and get it working with the following commands:
+APC is available in Debian or Ubuntu as the **php-apc** package. If you already have Apache installed on the server you are going to use for Libretime, you can install APC and get it working with the following commands:
 
     sudo apt-get install php-apc
     sudo invoke-rc.d apache2 restart
@@ -197,9 +197,9 @@ You should set an admin password for the *apc* user on line 42 of the file, such
 
      defaults('ADMIN_PASSWORD','mynewpassword');
 
-Save the *apc.php* file with **Ctrl+O** and close it with **Ctrl+X**. Then open a web browser at the *apc.php* page of your Airtime server, such as:
+Save the *apc.php* file with **Ctrl+O** and close it with **Ctrl+X**. Then open a web browser at the *apc.php* page of your Libretime server, such as:
 
-    http://airtime.example.com/apc.php
+    http://libretime.example.com/apc.php
 
 You will then be able to confirm that APC is working, and view some statistics for the cache.
 
@@ -208,16 +208,16 @@ You will then be able to confirm that APC is working, and view some statistics f
 Remove webmin, if installed
 ---------------------------
 
-The **webmin** control panel (<http://www.webmin.com>) has been known to remove Apache and PHP packages on Debian and Ubuntu systems, which can cause the Airtime package to be removed in turn. This problem is easily reversed by re-installation of the affected packages, but it has the potential to disrupt your broadcast playout from Airtime. Webmin is not likely to be installed on your server unless your system administrator has installed it manually. This is because webmin was removed from official Debian and Ubuntu package repositories some years ago.
+The **webmin** control panel (<http://www.webmin.com>) has been known to remove Apache and PHP packages on Debian and Ubuntu systems, which can cause the Libretime package to be removed in turn. This problem is easily reversed by re-installation of the affected packages, but it has the potential to disrupt your broadcast playout from Libretime. Webmin is not likely to be installed on your server unless your system administrator has installed it manually. This is because webmin was removed from official Debian and Ubuntu package repositories some years ago.
 
 RabbitMQ on Debian squeeze
 --------------------------
 
-In Debian 6.0 'squeeze' the **rabbitmq-server** daemon does not start automatically after a reboot. This should be fixed before installing Airtime, to prevent problems at playout time. If the rabbitmq-server package was installed before the last reboot, you will need to run:
+In Debian 6.0 'squeeze' the **rabbitmq-server** daemon does not start automatically after a reboot. This should be fixed before installing Libretime, to prevent problems at playout time. If the rabbitmq-server package was installed before the last reboot, you will need to run:
 
     invoke-rc.d rabbitmq-server start
 
-as the root user before the installation of Airtime. If it is not already installed, run the following command as root:
+as the root user before the installation of Libretime. If it is not already installed, run the following command as root:
 
     apt-get install rabbitmq-server
 
@@ -234,7 +234,3 @@ and then run the command (as root):
 
 This should make sure that **rabbitmq-server** starts after the next reboot.
 
-Mail server
------------
-
-If you wish Airtime to be able to send password reminder emails to your staff users, the server can have an SMTP program installed, such as the **postfix** package in Debian or Ubuntu. For configuration options, refer to the documentation for your mail server of choice. Alternatively, you can specify an external SMTP server in the **Preferences** page on Airtime's **System** menu.

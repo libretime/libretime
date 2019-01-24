@@ -1,6 +1,6 @@
 The Now Playing page provides a view of the content your station will play out, or has already played out, which defaults to showing the 24 hours ahead. This page also enables you to make last-minute changes to running shows.
 
-If you've only just installed Airtime, there might not be any content shown yet. Click the calendar and clock icons above the table to change the date and time range, then click the **Find Shows** button (with the magnifying glass icon) to the right.
+If you've only just installed Libretime, there might not be any content shown yet. Click the calendar and clock icons above the table to change the date and time range, then click the **Find Shows** button (with the magnifying glass icon) to the right.
 
 ![](static/Screenshot416-Now_playing_date_select.png)
 
@@ -35,18 +35,18 @@ To cancel the current show completely, click the red button to the right again. 
 
 ![](static/Screenshot420-Cancel_current_show.png) 
 
-Items which are no longer available have an exclamation mark icon in the second column. This may happen for media files which were part of previous shows, and were removed from Airtime's library (main storage or watched folders) subsequently. Items which are included in forthcoming shows cannot be removed from the Library via the Airtime interface.
+Items which are no longer available have an exclamation mark icon in the second column. This may happen for media files which were part of previous shows, and were removed from Libretime's library (main storage or watched folders) subsequently. Items which are included in forthcoming shows cannot be removed from the Library via the Libretime interface.
 
 ![](static/Screenshot421-Missing_file_icon.png)
 
 Advanced and simple library searches
 ------------------------------------
 
-In the top left corner of the page is an **Add / Remove Content** button which enables you to open Airtime's library.
+In the top left corner of the page is an **Add / Remove Content** button which enables you to open Libretime's library.
 
 ![](static/Screenshot422-Add_remove_content.png)
 
-In the library table which opens, the upper section is for the **Advanced Search Options**, which enable you to search within individual fields of the database such as **Title** or **Creator**. Like an Internet search engine, you do not have to type in the correct upper or lower case, press the **Enter** key, or even type the whole of the search term before matches from the Airtime library are displayed.
+In the library table which opens, the upper section is for the **Advanced Search Options**, which enable you to search within individual fields of the database such as **Title** or **Creator**. Like an Internet search engine, you do not have to type in the correct upper or lower case, press the **Enter** key, or even type the whole of the search term before matches from the Libretime library are displayed.
 
 <img src="static/Screenshot574-Advanced_search.png" alt="Advanced search options" width="740" />
 
@@ -68,13 +68,13 @@ Use the drop-down menu at the top of the search results to display **Files**, **
 
 ![](static/Screenshot426-Search_result_select.png)
 
-Click the Advanced Search Options link to collapse that area. Beneath the collapsed link is the **Simple Search** field, with a magnifying glass icon, which enables the selection of items based on any tag metadata stored in the Airtime database, whether that metadata column is currently displayed in the table or not. For example, to search for all items between four and five minutes duration, enter *00:04* into the simple search field (for 00 hours and 04 minutes).
+Click the Advanced Search Options link to collapse that area. Beneath the collapsed link is the **Simple Search** field, with a magnifying glass icon, which enables the selection of items based on any tag metadata stored in the Libretime database, whether that metadata column is currently displayed in the table or not. For example, to search for all items between four and five minutes duration, enter *00:04* into the simple search field (for 00 hours and 04 minutes).
 
 ![](static/Screenshot425-Simple_search.png)
 
 If your jingles are tagged with *Jingle* in the **Genre** or other fields, you can very easily find them by entering *jingle* into the simple search field. The same technique can be used to find advertising and promotional files. (See the chapter *Preparing media for ingest* for tips on batch tagging files with metadata). Unlike advanced searches, simple searches use 'or' logic for multiple search terms, so a simple search for *jingle ident* will return items matching either keyword.
 
-Clicking on an item in the library table opens a pop-up menu which enables you to audition the item, or remove it from the Airtime library. Media types which cannot be auditioned directly in a web browser, such as FLAC, have a lock icon instead of a loudspeaker icon, but these files can be downloaded to your local computer for audition instead. The **Delete** option should be used with caution, because this action cannot be undone. For media files, you can also **Edit Metadata** stored for the file using this menu.
+Clicking on an item in the library table opens a pop-up menu which enables you to audition the item, or remove it from the Libretime library. Media types which cannot be auditioned directly in a web browser, such as FLAC, have a lock icon instead of a loudspeaker icon, but these files can be downloaded to your local computer for audition instead. The **Delete** option should be used with caution, because this action cannot be undone. For media files, you can also **Edit Metadata** stored for the file using this menu.
 
 ![](static/Screenshot427-Library_pop_up.png)
 
@@ -87,11 +87,11 @@ Adding content to a running show
 
 After you have found the items that you want using the search tools, you can then drag and drop them from the library table on the left side of the page into the shows on the right side, including the current playing show.
 
-If the current show has nothing playing out at the time, the new item will begin playing immediately. This manual triggering of playout can be used as a live assist technique, in which the Airtime server's soundcard output is mixed with other sources such as microphones or telephone hybrids on its way to a transmitter, or a separate stream encoder. For instance, a live show's host may not wish to cut off a studio discussion in order to play music at a fixed time.
+If the current show has nothing playing out at the time, the new item will begin playing immediately. This manual triggering of playout can be used as a live assist technique, in which the Libretime server's soundcard output is mixed with other sources such as microphones or telephone hybrids on its way to a transmitter, or a separate stream encoder. For instance, a live show's host may not wish to cut off a studio discussion in order to play music at a fixed time.
 
 ![](static/Screenshot428-Library_drag_and_drop.png)
 
-You can also select multiple items using the **Select** menu button, just beneath the simple search field, which has the options to **Select this page** of search results, **Deselect this page** and **Deselect all**. Alternatively, use the checkboxes on the left side of the library table to select specific items. Then drag one of the items into the show to add all of the selected items, or click the **Add to selected show** button, which has a plus icon. If you wish, you can also use the **Trashcan** button to permanently remove items from Airtime's library. Only *admin* users have permission to delete all items.
+You can also select multiple items using the **Select** menu button, just beneath the simple search field, which has the options to **Select this page** of search results, **Deselect this page** and **Deselect all**. Alternatively, use the checkboxes on the left side of the library table to select specific items. Then drag one of the items into the show to add all of the selected items, or click the **Add to selected show** button, which has a plus icon. If you wish, you can also use the **Trashcan** button to permanently remove items from Libretime's library. Only *admin* users have permission to delete all items.
 
 To insert checkbox selected items at a specific time in the show schedule, click one of the grey and white triangle icons on the left side of the schedule table, which will change to red and white. A red horizontal line will be shown at the insertion point. Then click the **Add to selected show** button in the library table.
 
@@ -105,6 +105,6 @@ Another way to create an insertion point is to click an item in the show table, 
 
 Multiple insertion points can be enabled, so that the same item is inserted into the schedule at different times. For example, you may wish to play a news report every hour, or a station ident after every five music files.
 
-A live show set for recording from the Airtime server's sound card is displayed with a red dot icon in the first column. It would not contain any files or playlists, smart blocks or web streams.
+A live show set for recording from the Libretime server's sound card is displayed with a red dot icon in the first column. It would not contain any files or playlists, smart blocks or web streams.
 
 ![](static/Screenshot431-Recording_from_line_in.png)
