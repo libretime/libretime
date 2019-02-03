@@ -25,9 +25,13 @@ function setSmartBlockEvents() {
         } else {
 
             div.find('.db-logic-label').text('and').show();
+            div.removeClass('search-row-or').addClass('search-row-and');
+            
             div = div.next().show();
 
             div.children().removeAttr('disabled');
+            div.find(".modifier_add_link").show();
+
             div = div.next();
             if (div.length === 0) {
                 $(this).hide();
@@ -36,7 +40,7 @@ function setSmartBlockEvents() {
             appendAddButton();
             appendModAddButton();
             removeButtonCheck();
-            disableAndHideDateTimeDropdown(newRowVal);
+            // disableAndHideDateTimeDropdown(newRowVal);
 
         }
     });
@@ -76,8 +80,12 @@ function setSmartBlockEvents() {
         
         //remove the 'criteria add' button from new modifier row
         newRow.find('#criteria_add').remove();
-        
+
         $(this).parent().after(newRow);
+        
+        newRow.prev().removeClass('search-row-and').addClass('search-row-or');
+        newRow.prev().find(".db-logic-label").removeClass('db-logic-label-and').addClass('db-logic-label-or');
+
         reindexElements();
         appendAddButton();
         appendModAddButton();

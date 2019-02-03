@@ -703,15 +703,29 @@ table.library-get-file-md.table-small{
 
 
 /***** SMART BLOCK SPECIFIC STYLES BEGIN *****/
-.db-logic-label{
-    font-size:11px;
+.modifier_add_link {
+    font-size: 12px;
+    display: block;
+    margin: 0 0 10px 33%;
+    text-decoration: underline;
+    cursor: pointer;
+    position: absolute;
+    top: 30px;
+}
+.db-logic-label {
+    font-size:14px;
+    position: absolute;
+    top: 36px;
+}
+.db-logic-label-and {
+    top: 42px;
 }
 .sp-invisible{
     visibility: hidden;
 }
 
 .sp_input_select{
-    width: 140px;
+    flex: 0 0 33%;
 }
 
 .sp_input_text_limit{
