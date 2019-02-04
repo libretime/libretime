@@ -13,6 +13,7 @@ Class BlockModelData
             Array("name" => "sp_criteria_field_0_0", "value" => "label"),
             Array("name" => "sp_criteria_modifier_0_0", "value" => "contains"),
             Array("name" => "sp_criteria_value_0_0", "value" => "nada"),
+            Array("name" => "sp_overflow_tracks", "value" => 0),
             );
     }
 
@@ -25,6 +26,7 @@ Class BlockModelData
             Array("name" => "sp_sort_options", "value" => "random"),
             Array("name" => "sp_limit_value", "value" => 1),
             Array("name" => "sp_limit_options", "value" => "hours"),
+            Array("name" => "sp_overflow_tracks", "value" => 0),
             Array("name" => "sp_criteria_field_0_0", "value" => "album_title"),
             Array("name" => "sp_criteria_modifier_0_0", "value" => "is"),
             Array("name" => "sp_criteria_value_0_0", "value" => "album1"),
