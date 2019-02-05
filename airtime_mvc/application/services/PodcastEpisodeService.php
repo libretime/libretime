@@ -132,7 +132,6 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         /** @var PodcastEpisodes $episode */
         foreach($episodes as $episode) {
             $podcast = $episode->getPodcast();
-            Logging::info($episode);
             $this->_download($episode->getDbId(), $episode->getDbDownloadUrl(), $podcast->getDbTitle(), $this->_getAlbumOverride($podcast), $episode->getDbEpisodeTitle());
         }
     }
@@ -398,9 +397,33 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         foreach ($rss->get_items() as $item) {
             /** @var SimplePie_Item $item */
             // If the enclosure is empty or has not URL, this isn't a podcast episode (there's no audio data)
+            // technically podcasts shouldn't have multiple enclosures but often CMS add non-audio files
             $enclosure = $item->get_enclosure();
             $url = $enclosure instanceof SimplePie_Enclosure ? $enclosure->get_link() : $enclosure["link"];
-            if (empty($url)) { continue; }
+            if (empty($url)) {
+                continue;
+            }
+            // next we check and see if the enclosure is not an audio file - this can happen from improperly
+            // formatted podcasts and we instead will search through the enclosures and see if there is an audio item
+            // then we pass that on, otherwise we just pass the first item since it is probably an audio file
+            elseif (!(substr($enclosure->get_type(), 0, 5) === 'audio')) {
+                // this is a rather hackish way of accessing the enclosures but get_enclosures() didnt detect multiple
+                // enclosures at certain points so we search through them and then manually create an enclosure object
+                // if we find an audio file in an enclosure and send it off
+                $testenclosures = $enclosures = $item->get_item_tags(SIMPLEPIE_NAMESPACE_RSS_20, 'enclosure');
+                $numenclosures = sizeof($testenclosures);
+                for ($i = 0; $i < $numenclosures; $i++) {
+                    $enclosure_attribs = array_values($testenclosures[$i]['attribs'])[0];
+                    if (stripos($enclosure_attribs['type'], 'audio') !== false) {
+                        $url = $enclosure_attribs['url'];
+                        $enclosure = new SimplePie_Enclosure($enclosure_attribs['url'], $enclosure_attribs['type'], $length = $enclosure_attribs['length']);
+                        break;
+                    }
+                }
+            } else {
+                $enclosure = $item->get_enclosure();
+            }
+            //Logging::info($enclosure);
             $itemId = $item->get_id();
             $ingested = in_array($itemId, $episodeIds) ? (empty($episodeFiles[$itemId]) ? -1 : 1) : 0;
             $file = $ingested > 0 && !empty($episodeFiles[$itemId]) ?
@@ -420,12 +443,11 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
                 "author" => $this->_buildAuthorString($item),
                 "description" => htmlspecialchars($item->get_description()),
                 "pub_date" => $item->get_gmdate(),
-                "link" => $item->get_link(),
-                "enclosure" => $item->get_enclosure(),
+                "link" => $url,
+                "enclosure" => $enclosure,
                 "file" => $file
             ));
         }
-
         return $episodesArray;
     }
 
