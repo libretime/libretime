@@ -410,15 +410,23 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
                 // this is a rather hackish way of accessing the enclosures but get_enclosures() didnt detect multiple
                 // enclosures at certain points so we search through them and then manually create an enclosure object
                 // if we find an audio file in an enclosure and send it off
+                Logging::info('found a non audio');
                 $testenclosures = $enclosures = $item->get_item_tags(SIMPLEPIE_NAMESPACE_RSS_20, 'enclosure');
-                $numenclosures = sizeof($testenclosures);
-                for ($i = 0; $i < $numenclosures; $i++) {
-                    $enclosure_attribs = array_values($testenclosures[$i]['attribs'])[0];
-                    if (stripos($enclosure_attribs['type'], 'audio') !== false) {
-                        $url = $enclosure_attribs['url'];
-                        $enclosure = new SimplePie_Enclosure($enclosure_attribs['url'], $enclosure_attribs['type'], $length = $enclosure_attribs['length']);
-                        break;
+                Logging::info($testenclosures);
+                // we need to check if this is an array otherwise sizeof will fail and stop this whole script
+                if (is_array($testenclosures)) {
+                    $numenclosures = sizeof($testenclosures);
+                    for ($i = 0; $i < $numenclosures; $i++) {
+                        $enclosure_attribs = array_values($testenclosures[$i]['attribs'])[0];
+                        if (stripos($enclosure_attribs['type'], 'audio') !== false) {
+                            $url = $enclosure_attribs['url'];
+                            $enclosure = new SimplePie_Enclosure($enclosure_attribs['url'], $enclosure_attribs['type'], $length = $enclosure_attribs['length']);
+                            break;
+                        }
                     }
+                }
+                else {
+                    continue;
                 }
             } else {
                 $enclosure = $item->get_enclosure();
