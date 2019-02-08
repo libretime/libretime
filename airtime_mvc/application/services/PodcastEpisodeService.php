@@ -416,12 +416,18 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
                 // we need to check if this is an array otherwise sizeof will fail and stop this whole script
                 if (is_array($testenclosures)) {
                     $numenclosures = sizeof($testenclosures);
-                    for ($i = 0; $i < $numenclosures; $i++) {
+                    // now we loop through and look for a audio file and then stop the loop at the first one we find
+                    for ($i = 0; $i < $numenclosures + 1; $i++) {
                         $enclosure_attribs = array_values($testenclosures[$i]['attribs'])[0];
                         if (stripos($enclosure_attribs['type'], 'audio') !== false) {
                             $url = $enclosure_attribs['url'];
                             $enclosure = new SimplePie_Enclosure($enclosure_attribs['url'], $enclosure_attribs['type'], $length = $enclosure_attribs['length']);
                             break;
+                        }
+                        // if we didn't find an audio file we need to continue because there were no audio item enclosures
+                        // so this should keep it from showing items without audio items on the episodes list
+                        if ($i = $numenclosures) {
+                            continue;
                         }
                     }
                 }
