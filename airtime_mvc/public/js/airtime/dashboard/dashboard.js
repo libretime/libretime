@@ -242,9 +242,6 @@ function calculateTimeToNextShow() {
 }
 
 function parseItems(obj){
-    $('#time-zone').text(obj.timezone);
-
-
     previousSong = obj.previous;
     currentSong = obj.current;
     nextSong = obj.next;

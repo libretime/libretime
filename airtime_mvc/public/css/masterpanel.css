@@ -302,32 +302,46 @@
 
 
 
-.personal-block.solo {
-	width: 215px;
-	line-height: 32px;
-	margin: 0;
-}
-.personal-block.solo span {
-	display: inline-block;
-	width: 100px;
-	text-overflow: ellipsis;
-	text-decoration: underline;
-	overflow: hidden;
-	float: left;
-}
-.personal-block.solo ol {
-    margin-top: 6px;
-}
 .time-info-block.pull-right {
 	margin-right:0;
 	text-align:right !important;
 	background-position:0 0;
 	padding: 0 10px 0 10px;
-	}
-	.time-info-block li, .time-info-block li.time {
-		text-align: right;
-		}
+	display: flex;
+    flex-direction: column;
+	justify-content: center;
+	max-width: 150px;
+}
+.time-info-block .time {
+	padding: 0;
+	margin: 0;
+	width: auto;
+	list-style-type:none;
+	font-size:40px;
+	color:#fff;
+}
 
+.personal-block {
+	display: flex;
+	justify-content: space-between;
+	color:#fff;
+	font-size:12px;
+}
+.personal-block .name {
+	display: inline-block;
+	max-width: 100px;
+	text-overflow: ellipsis;
+	text-decoration: underline;
+	overflow: hidden;
+	margin-right: 3px;
+}
+.personal-block a {
+	color:#fff;
+	text-decoration:underline;
+}
+.personal-block a:hover {
+    color:#ff5d1a;
+}
 /*.line-to-switch {
 	float: right;
 	width: 10px;
