@@ -242,6 +242,9 @@ SQL;
             array(array("id" => $lastid, "instance"  => $id, "timestamp" => $ts)),
             array(array("id" => $pl_id, "type" => "playlist"))
         );
+        // doing this to update the database schedule so that subsequent adds will work.
+        $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
+        $this->_showInstance->updateScheduleStatus($con);
     }
 
     /**
@@ -259,6 +262,9 @@ SQL;
             array(array("id" => 0, "instance"  => $id, "timestamp" => $ts)),
             array(array("id" => $pl_id, "type" => "playlist"))
         );
+        // doing this to update the database schedule so that subsequent adds will work.
+        $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
+        $this->_showInstance->updateScheduleStatus($con);
     }
 
 
