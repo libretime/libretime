@@ -26,34 +26,34 @@
                 $nextDisabled = $this->element->getElement("sp_criteria_field_".$nextIndex)->getAttrib('disabled') == 'disabled'?true:false;
         ?>
             <div <?php if (/*($i > 0) && */ $disabled) {
-                          echo 'style=display:none';
-                      } ?> >
+                          echo 'style="display:none"';
+                      }?> class="search-row-<?php echo $logicLabel ?>">
                 <?php echo $this->element->getElement("sp_criteria_field_".$i."_".$j) ?>
                 <?php echo $this->element->getElement("sp_criteria_modifier_".$i."_".$j)   /* @todo finish this */?>
 
                 <?php echo $this->element->getElement("sp_criteria_value_".$i."_".$j) ?>
                 <span class='sp_text_font' id="datetime_select" <?php echo $this->element->getElement("sp_criteria_datetime_select_".$i."_".$j)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>><?php echo $this->element->getElement('sp_criteria_datetime_select_'.$i."_".$j) ?><?php echo _(" ago "); ?></span>
 
-                <a class='btn btn-small btn-new' id='modifier_add_<?php echo $i ?>'>
-                    <i class='icon-white icon-plus'></i><?php echo(_("New Modifier")); ?>
+                <a <?php if ($disabled) { echo 'style=display:none'; } ?>  class='modifier_add_link' id='modifier_add_<?php echo $i ?>'>
+                    + <?php echo(_("New Modifier")); ?>
                 </a>
-
+                
                 <span class='sp_text_font' id="extra_criteria" <?php echo $this->element->getElement("sp_criteria_extra_".$i."_".$j)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>><?php echo _(" to "); ?><?php echo $this->element->getElement('sp_criteria_extra_'.$i."_".$j) ?></span>
                 <span class='sp_text_font' id="extra_datetime_select" <?php echo $this->element->getElement("sp_criteria_extra_datetime_select_".$i."_".$j)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>><?php echo $this->element->getElement('sp_criteria_extra_datetime_select_'.$i."_".$j) ?><?php echo _(" ago "); ?></span>
-
+                
                 <a style='margin-right:3px' class='btn btn-small btn-danger' id='criteria_remove_<?php echo $i ?>'>
                     <i class='icon-white icon-remove spl-no-r-margin'></i>
                 </a>
-                <span class='db-logic-label' <?php if ($nextDisabled) echo "style='display:none'"?>>
+                <span class='db-logic-label' <?php if ($nextDisabled) echo 'style="display:none"';?>>
                     <?php echo $logicLabel;?>
                 </span>
-
+                
                 <?php if($this->element->getElement("sp_criteria_field_".$i."_".$j)->hasErrors()) : ?>
-                    <?php foreach($this->element->getElement("sp_criteria_field_".$i."_".$j)->getMessages() as $error): ?>
-                    <span class='errors sp-errors'>
-                       <?php echo $error; ?>
-                    </span>
-                    <?php endforeach; ?>
+                <?php foreach($this->element->getElement("sp_criteria_field_".$i."_".$j)->getMessages() as $error): ?>
+                <span class='errors sp-errors'>
+                    <?php echo $error; ?>
+                </span>
+                <?php endforeach; ?>
                 <?php endif; ?>
             </div>
             <?php } ?>

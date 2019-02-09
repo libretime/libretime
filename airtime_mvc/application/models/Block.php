@@ -1198,8 +1198,11 @@ SQL;
         if (isset($p_criteriaData['criteria'])) {
             $critKeys = array_keys($p_criteriaData['criteria']);
             for ($i = 0; $i < count($critKeys); $i++) {
+                // in order to maintain separation of different criteria to preserve AND statements for criteria
+                // that might contradict itself we group them based upon their original position on the form
+                $criteriaGroup = $i;
                 foreach ($p_criteriaData['criteria'][$critKeys[$i]] as $d) {
-                	// Logging::info($d);
+                    Logging::info($d);
                 	$field = $d['sp_criteria_field'];
                 	$value = $d['sp_criteria_value'];
                 	$modifier = $d['sp_criteria_modifier'];
@@ -1239,6 +1242,11 @@ SQL;
                     	}
                     	
                         $qry->setDbExtra($extra);
+                    }
+                    // save the criteria group so separation via new modifiers AND can be preserved vs. lumping
+                    // them all into a single or later on
+                    if (isset($criteriaGroup)) {
+                        $qry->setDbCriteriaGroup($criteriaGroup);
                     }
                     $qry->save();
                 }
@@ -1483,6 +1491,7 @@ SQL;
             $modifier = $crit->getDbModifier();
             $value = $crit->getDbValue();
             $extra = $crit->getDbExtra();
+            $criteriagroup = $crit->getDbCriteriaGroup();
 
             if ($criteria == "limit") {
                 $storedCrit["limit"] = array(
@@ -1501,6 +1510,7 @@ SQL;
                     "value"=>$value,
                     "modifier"=>$modifier,
                     "extra"=>$extra,
+                    "criteria_group"=>$criteriagroup,
                     "display_name"=>$criteriaOptions[$criteria],
                     "display_modifier"=>$modifierOptions[$modifier]);
             }
@@ -1510,6 +1520,107 @@ SQL;
 
     }
 
+    /**
+     * Parses each row in the database for the criteria associated with this block and renders human readable labels.
+     * Returns it as an array with each criteria_name and modifier_name added based upon options array lookup.
+     * Maintains original separation of similar criteria that were separated by and statements
+     *
+     */
+
+
+    public function getCriteriaGrouped()
+    {
+        $criteriaOptions = array(
+            0              => _("Select criteria"),
+            "album_title"  => _("Album"),
+            "bit_rate"     => _("Bit Rate (Kbps)"),
+            "bpm"          => _("BPM"),
+            "composer"     => _("Composer"),
+            "conductor"    => _("Conductor"),
+            "copyright"    => _("Copyright"),
+            "cuein"        => _("Cue In"),
+            "cueout"       => _("Cue Out"),
+            "description"  => _("Description"),
+            "artist_name"  => _("Creator"),
+            "encoded_by"   => _("Encoded By"),
+            "genre"        => _("Genre"),
+            "isrc_number"  => _("ISRC"),
+            "label"        => _("Label"),
+            "language"     => _("Language"),
+            "utime"        => _("Upload Time"),
+            "mtime"        => _("Last Modified"),
+            "lptime"       => _("Last Played"),
+            "length"       => _("Length"),
+            "mime"         => _("Mime"),
+            "mood"         => _("Mood"),
+            "owner_id"     => _("Owner"),
+            "replay_gain"  => _("Replay Gain"),
+            "sample_rate"  => _("Sample Rate (kHz)"),
+            "track_title"  => _("Title"),
+            "track_number" => _("Track Number"),
+            "utime"        => _("Uploaded"),
+            "info_url"     => _("Website"),
+            "year"         => _("Year")
+        );
+
+        $modifierOptions = array(
+            "0"                => _("Select modifier"),
+            "contains"         => _("contains"),
+            "does not contain" => _("does not contain"),
+            "is"               => _("is"),
+            "is not"           => _("is not"),
+            "starts with"      => _("starts with"),
+            "ends with"        => _("ends with"),
+            "before"          => _("before"),
+            "after"           => _("after"),
+            "between"         => _("between"),
+            "is"              => _("is"),
+            "is not"          => _("is not"),
+            "is greater than" => _("is greater than"),
+            "is less than"    => _("is less than"),
+            "is in the range" => _("is in the range")
+        );
+
+        // Load criteria from db
+        $out = CcBlockcriteriaQuery::create()->orderByDbCriteria()->findByDbBlockId($this->id);
+        $storedCrit = array();
+
+        foreach ($out as $crit) {
+            Logging::info($crit);
+            $criteria = $crit->getDbCriteria();
+            $modifier = $crit->getDbModifier();
+            $value = $crit->getDbValue();
+            $extra = $crit->getDbExtra();
+            $criteriagroup = $crit->getDbCriteriaGroup();
+
+            if ($criteria == "limit") {
+                $storedCrit["limit"] = array(
+                    "value"=>$value,
+                    "modifier"=>$modifier,
+                    "display_modifier"=>_($modifier));
+            } else if($criteria == "repeat_tracks") {
+                $storedCrit["repeat_tracks"] = array("value"=>$value);
+            } else if($criteria == "overflow_tracks") {
+                $storedCrit["overflow_tracks"] = array("value"=>$value);
+            } else if($criteria == "sort") {
+                $storedCrit["sort"] = array("value"=>$value);
+            } else {
+                $storedCrit["crit"][$criteria . $criteriagroup][] = array(
+                    "criteria"=>$criteria,
+                    "value"=>$value,
+                    "modifier"=>$modifier,
+                    "extra"=>$extra,
+                    "display_name"=>$criteriaOptions[$criteria],
+                    "display_modifier"=>$modifierOptions[$modifier]);
+            }
+        }
+
+        Logging::info($storedCrit);
+        return $storedCrit;
+
+    }
+
+
     // this function return list of propel object
     public function getListofFilesMeetCriteria($show = null)
     {
@@ -1518,10 +1629,19 @@ SQL;
         $qry = CcFilesQuery::create();
         $qry->useFkOwnerQuery("subj", "left join");
 
+        //Logging::info($storedCrit);
         if (isset($storedCrit["crit"])) {
             foreach ($storedCrit["crit"] as $crit) {
                 $i = 0;
+                $prevgroup = null;
+                $group = null;
+                // now we need to sort based upon extra which contains the and grouping from the form
+                usort($crit, function($a, $b) {
+                    return $a['criteria_group'] - $b['criteria_group'];
+                });
+                // we need to run the following loop separately for each criteria group inside of each array
                 foreach ($crit as $criteria) {
+                    $group = $criteria['criteria_group'];
                     $spCriteria = $criteria['criteria'];
                     $spCriteriaModifier = $criteria['modifier'];
 
@@ -1538,9 +1658,9 @@ SQL;
                     } elseif ($spCriteria == "bit_rate" || $spCriteria == 'sample_rate') {
                         // multiply 1000 because we store only number value
                         // e.g 192kps is stored as 192000
-                        $spCriteriaValue = $criteria['value']*1000;
+                        $spCriteriaValue = $criteria['value'] * 1000;
                         if (isset($criteria['extra'])) {
-                            $spCriteriaExtra = $criteria['extra']*1000;
+                            $spCriteriaExtra = $criteria['extra'] * 1000;
                         }
                      /*
                      * If user is searching for an exact match of length we need to
@@ -1564,7 +1684,6 @@ SQL;
                         } else {
                             $spCriteriaValue = ($criteria['value']);
                         }
-
                         $spCriteriaExtra = $criteria['extra'];
                     }
 
@@ -1599,25 +1718,38 @@ SQL;
                         // Logging::info($tdt);
                         $spCriteriaValue = "$spCriteria >= '$fdt' AND $spCriteria <= '$tdt'";
                     }
+   //                 logging::info('before');
+   //                 logging::info($spCriteriaModifier);
 
                     $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
+
+   //                 logging::info('after');
+   //                 logging::info($spCriteriaModifier);
 
                     try {
                         if ($spCriteria == "owner_id") {
                             $spCriteria = "subj.login";
                         }
-                        if ($i > 0) {
+                        Logging::info($i);
+                        Logging::info($group);
+                        Logging::info($prevgroup);
+                        if ($i > 0 && $prevgroup == $group) {
+                            Logging::info('adding or');
                             $qry->addOr($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                         } else {
-                            $qry->add($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+                            Logging::info('adding and');
+                            $qry->addAnd($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                         }
-                        
+                        // only add this NOT LIKE null if you aren't also matching on another criteria
+                        if ($i == 0) {
                         if ($spCriteriaModifier == Criteria::NOT_ILIKE || $spCriteriaModifier == Criteria::NOT_EQUAL) {
                             $qry->addOr($spCriteria, null, Criteria::ISNULL);
+                        }
                         }
                     } catch (Exception $e) {
                         Logging::info($e);
                     }
+                    $prevgroup = $group;
                     $i++;
                 }
             }
@@ -1682,6 +1814,7 @@ SQL;
 
         try {
             $out = $qry->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)->find();
+            Logging::info($qry->toString());
 
             return array("files"=>$out, "limit"=>$limits, "repeat_tracks"=> $repeatTracks, "overflow_tracks"=> $overflowTracks, "count"=>$out->count());
         } catch (Exception $e) {
@@ -1690,7 +1823,8 @@ SQL;
 
     }
     public static function organizeSmartPlaylistCriteria($p_criteria)
-    { 
+    {
+        Logging::info($p_criteria);
         $fieldNames = array('sp_criteria_field', 'sp_criteria_modifier', 'sp_criteria_value', 'sp_criteria_extra', 'sp_criteria_datetime_select', 'sp_criteria_extra_datetime_select');
         $output = array();
         foreach ($p_criteria as $ele) {
@@ -1729,7 +1863,7 @@ SQL;
                 $output['etc'][$ele['name']] = $ele['value'];
             }
         }
-        
+        Logging::info($output);
         return $output;
     }
     public static function getAllBlockFiles()

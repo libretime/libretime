@@ -44,6 +44,7 @@ class CcBlockcriteriaTableMap extends TableMap
         $this->addColumn('modifier', 'DbModifier', 'VARCHAR', true, 16, null);
         $this->addColumn('value', 'DbValue', 'VARCHAR', true, 512, null);
         $this->addColumn('extra', 'DbExtra', 'VARCHAR', false, 512, null);
+        $this->addColumn('criteriagroup', 'DbCriteriaGroup', 'INTEGER', false, null, null);
         $this->addForeignKey('block_id', 'DbBlockId', 'INTEGER', 'cc_block', 'id', true, null, null);
         // validators
     } // initialize()

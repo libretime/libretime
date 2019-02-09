@@ -75,7 +75,7 @@ abstract class BaseCcBlock extends BaseObject implements Persistent
 
     /**
      * The value for the type field.
-     * Note: this column has a database default value of: 'dynamic'
+     * Note: this column has a database default value of: 'static'
      * @var        string
      */
     protected $type;
@@ -151,7 +151,7 @@ abstract class BaseCcBlock extends BaseObject implements Persistent
     {
         $this->name = '';
         $this->length = '00:00:00';
-        $this->type = 'dynamic';
+        $this->type = 'static';
     }
 
     /**
@@ -494,7 +494,7 @@ abstract class BaseCcBlock extends BaseObject implements Persistent
                 return false;
             }
 
-            if ($this->type !== 'dynamic') {
+            if ($this->type !== 'static') {
                 return false;
             }
 

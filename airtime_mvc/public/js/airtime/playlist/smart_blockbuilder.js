@@ -24,10 +24,14 @@ function setSmartBlockEvents() {
 
         } else {
 
-            div.find('.db-logic-label').text('and').show();
+            div.find('.db-logic-label').text('and').css('display', 'table');
+            div.removeClass('search-row-or').addClass('search-row-and');
+            
             div = div.next().show();
 
             div.children().removeAttr('disabled');
+            div.find(".modifier_add_link").show();
+
             div = div.next();
             if (div.length === 0) {
                 $(this).hide();
@@ -36,7 +40,8 @@ function setSmartBlockEvents() {
             appendAddButton();
             appendModAddButton();
             removeButtonCheck();
-            disableAndHideDateTimeDropdown(newRowVal);
+            // disableAndHideDateTimeDropdown(newRowVal);
+            groupCriteriaRows();
 
         }
     });
@@ -44,7 +49,7 @@ function setSmartBlockEvents() {
     /********** ADD MODIFIER ROW **********/
     form.find('a[id^="modifier_add"]').live('click', function(){
         var criteria_value = $(this).siblings('select[name^="sp_criteria_field"]').val();
-
+        
 
         //make new modifier row
         var newRow = $(this).parent().clone(),
@@ -76,12 +81,17 @@ function setSmartBlockEvents() {
         
         //remove the 'criteria add' button from new modifier row
         newRow.find('#criteria_add').remove();
-        
+
         $(this).parent().after(newRow);
+        
+        // remove extra spacing from previous row
+        newRow.prev().removeClass('search-row-and').addClass('search-row-or');
+
         reindexElements();
         appendAddButton();
         appendModAddButton();
         removeButtonCheck();
+        groupCriteriaRows();
     });
 	
     /********** REMOVE ROW **********/
@@ -269,6 +279,9 @@ function setSmartBlockEvents() {
         
         // remove the 'x' button if only one row is enabled
         removeButtonCheck();
+
+        groupCriteriaRows();
+        
     });
 	
     /********** SAVE ACTION **********/
@@ -305,7 +318,7 @@ function setSmartBlockEvents() {
 
 
         /********** CRITERIA CHANGE **********/
-    form.find('select[id^="sp_criteria"]:not([id^="sp_criteria_modifier"])').live("change", function(){
+    form.find('select[id^="sp_criteria"]:not([id^="sp_criteria_modifier"]):not([id^="sp_criteria_datetime"]):not([id^="sp_criteria_extra_datetime"])').live("change", function(){
         var index = getRowIndex($(this).parent());
         //need to change the criteria value for any modifier rows
         var critVal = $(this).val();
@@ -805,6 +818,30 @@ function enableLoadingIcon() {
 function disableLoadingIcon() {
     $(".side_playlist.active-tab").unblock()
 }
+
+function groupCriteriaRows() {
+    // check whether rows should be "grouped" and shown with an "or" "logic label", or separated by an "and" "logic label"
+    var visibleRows = $("#sp_criteria-element > div:visible"), 
+        prevRowGroup = "0";
+
+    visibleRows.each(function (index){
+        if (index > 0) {
+            var fieldId = $(this).find('select[id^="sp_criteria_field"]').attr("id");
+            var currRowGroup = fieldId[fieldId.length - 3];
+            if (currRowGroup === prevRowGroup) {
+                $(this).prev().addClass("search-row-or").removeClass("search-row-and")
+            } else {
+                $(this).prev().addClass("search-row-and").removeClass("search-row-or")
+            }
+            prevRowGroup = currRowGroup;
+        }
+    });
+
+    // ensure spacing below last visible row 
+    $("#sp_criteria-element > div:visible:last").addClass("search-row-and").removeClass("search-row-or");
+}
+
+
 // We need to know if the criteria value will be a string
 // or numeric value in order to populate the modifier
 // select list

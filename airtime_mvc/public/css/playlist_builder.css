@@ -533,6 +533,7 @@
 
 #sp_criteria-element {
     clear: both;
+    width: 100%;
 }
 
 /*
@@ -633,7 +634,7 @@ li.spl_empty {
 }
 
 #criteria_add {
-    margin-bottom: 5px;
+    margin: -10px 0 5px;
 }
 
 .smart-block-form dt, .smart-block-form dd {
