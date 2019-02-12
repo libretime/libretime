@@ -169,6 +169,17 @@ def podcast_download(id, url, callback_url, api_key, podcast_name, album_overrid
                 metadata_audiofile.save()
                 filetypeinfo = metadata_audiofile.pprint()
                 logger.info('filetypeinfo is {0}'.format(filetypeinfo.encode('ascii', 'ignore')))
+                start, ext = os.path.splitext(audiofile.name)
+                logger.info(start)
+                logger.info(ext)
+                if (not ext):
+                    logger.info(audiofile.name)
+                    newname = audiofile.name + 'mp3'
+                    os.rename(audiofile.name, newname)
+                    logger.info(audiofile.name)
+                    logger.info(newname)
+                    audiofile.name = newname
+                    logger.info(audiofile.name)
                 re = requests.post(callback_url, files={'file': (filename, open(audiofile.name, 'rb'))}, auth=requests.auth.HTTPBasicAuth(api_key, ''))
         re.raise_for_status()
         f = json.loads(re.content)  # Read the response from the media API to get the file id
