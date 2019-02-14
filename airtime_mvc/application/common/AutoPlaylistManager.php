@@ -23,32 +23,44 @@ class AutoPlaylistManager {
      *
      */
     public static function buildAutoPlaylist() {
-        Logging::info("Checking to run Auto Playlist");
+        //Logging::info("Checking to run Auto Playlist");
         $autoPlaylists = static::_upcomingAutoPlaylistShows();
         foreach ($autoPlaylists as $autoplaylist) {
             // creates a ShowInstance object to build the playlist in from the ShowInstancesQuery Object     
             $si = new Application_Model_ShowInstance($autoplaylist->getDbId());
             $playlistid = $si->GetAutoPlaylistId();
-            Logging::info("Scheduling $playlistid");
             // call the addPlaylist to show function and don't check for user permission to avoid call to non-existant user object
             $sid = $si->getShowId();
             $playlistrepeat = new Application_Model_Show($sid);
+            $introplaylistid = Application_Model_Preference::GetIntroPlaylist();
+            $outroplaylistid = Application_Model_Preference::GetOutroPlaylist();
 
-            if ($playlistrepeat->getAutoPlaylistRepeat()) {
-                $full = false;
-                while(!$full) {
-                    $si = new Application_Model_ShowInstance($autoplaylist->getDbId());
-                    $si->addPlaylistToShow($playlistid, false);
-                    $ps = $si->getPercentScheduled();
-                    //Logging::info("The total percent scheduled is % $ps");
-                    if ($ps > 100) {
-                        $full = true;
-                    }
-
-                }
-            }
-            else {
+            // we want to check and see if we need to repeat this process until the show is 100% scheduled
+            // so we create a while loop and break it immediately if repeat until full isn't enabled
+            // otherwise we continue to go through adding playlists, including the intro and outro if enabled
+            $full = false;
+            $repeatuntilfull = $playlistrepeat->getAutoPlaylistRepeat();
+            while(!$full) {
+                $si = new Application_Model_ShowInstance($autoplaylist->getDbId());
                 $si->addPlaylistToShow($playlistid, false);
+                $ps = $si->getPercentScheduled();
+                //Logging::info($ps);
+                if ($introplaylistid != null) {
+                    //Logging::info('adding intro');
+                    $si->addPlaylistToShowStart($introplaylistid, false);
+                }
+                if ($outroplaylistid != null) {
+                    //Logging::info('adding outro');
+                    $si->addPlaylistToShow($outroplaylistid, false);
+                    //Logging::info("The total percent scheduled is % $ps");
+                }
+                if ($ps > 100) {
+                    $full = true;
+                }
+                elseif (!$repeatuntilfull) {
+                    break;
+                }
+
             }
             $si->setAutoPlaylistBuilt(true);
 

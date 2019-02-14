@@ -242,9 +242,30 @@ SQL;
             array(array("id" => $lastid, "instance"  => $id, "timestamp" => $ts)),
             array(array("id" => $pl_id, "type" => "playlist"))
         );
+        // doing this to update the database schedule so that subsequent adds will work.
+        $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
+        $this->_showInstance->updateScheduleStatus($con);
     }
 
-
+    /**
+     * Add a playlist as the first item of the current show.
+     *
+     * @param int $plId
+     *         Playlist ID.
+     */
+    public function addPlaylistToShowStart($pl_id, $checkUserPerm = true)
+    {
+        $ts = intval($this->_showInstance->getDbLastScheduled("U")) ? : 0;
+        $id = $this->_showInstance->getDbId();
+        $scheduler = new Application_Model_Scheduler($checkUserPerm);
+        $scheduler->scheduleAfter(
+            array(array("id" => 0, "instance"  => $id, "timestamp" => $ts)),
+            array(array("id" => $pl_id, "type" => "playlist"))
+        );
+        // doing this to update the database schedule so that subsequent adds will work.
+        $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
+        $this->_showInstance->updateScheduleStatus($con);
+    }
 
 
     /**
