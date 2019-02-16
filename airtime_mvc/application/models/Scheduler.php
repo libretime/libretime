@@ -214,7 +214,6 @@ final class Application_Model_Scheduler
     private function retrieveMediaFiles($id, $type, $show)
     {
         $files = array();
-
         if ($type === "audioclip") {
             $file = CcFilesQuery::create()->findPK($id, $this->con);
 

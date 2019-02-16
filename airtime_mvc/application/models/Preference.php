@@ -387,6 +387,26 @@ class Application_Model_Preference
         return $val === '1' ? true : false;
     }
 
+    public static function GetIntroPlaylist()
+    {
+        return self::getValue("intro_playlist");
+    }
+
+    public static function GetOutroPlaylist()
+    {
+        return self::getValue("outro_playlist");
+    }
+
+
+    public static function SetIntroPlaylist($playlist)
+    {
+        self::setValue("intro_playlist", $playlist);
+    }
+
+    public static function SetOutroPlaylist($playlist)
+    {
+        self::setValue("outro_playlist", $playlist);
+    }
 
     public static function SetPhone($phone)
     {
