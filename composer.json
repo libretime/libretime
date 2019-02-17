@@ -33,6 +33,7 @@
         "zf1s/zend-file-transfer": "^1.12",
         "zf1s/zend-http": "^1.12",
         "zf1s/zend-date": "^1.12",
+        "zf1s/zend-view": "dev-master@dev",
         "zf1s/zend-validate": "dev-master@dev",
         "zf1s/zend-cache": "dev-master@dev"
     },
