@@ -13,7 +13,6 @@ class AutoPlaylistManager {
      * @return bool true if $_AUTOPLAYLIST_POLL_INTERVAL_SECONDS has passed since the last check
      */
     public static function hasAutoPlaylistPollIntervalPassed() {
-        Logging::info("Checking autoplaylist poll");
         $lastPolled = Application_Model_Preference::getAutoPlaylistPollLock();
         return empty($lastPolled) || (microtime(true) > $lastPolled + self::$_AUTOPLAYLIST_POLL_INTERVAL_SECONDS);
     }
@@ -23,7 +22,6 @@ class AutoPlaylistManager {
      *
      */
     public static function buildAutoPlaylist() {
-        //Logging::info("Checking to run Auto Playlist");
         $autoPlaylists = static::_upcomingAutoPlaylistShows();
         foreach ($autoPlaylists as $autoplaylist) {
             // creates a ShowInstance object to build the playlist in from the ShowInstancesQuery Object     
@@ -40,11 +38,14 @@ class AutoPlaylistManager {
             // otherwise we continue to go through adding playlists, including the intro and outro if enabled
             $full = false;
             $repeatuntilfull = $playlistrepeat->getAutoPlaylistRepeat();
+            $tempPercentScheduled = 0;
             while(!$full) {
                 $si = new Application_Model_ShowInstance($autoplaylist->getDbId());
-                $si->addPlaylistToShow($playlistid, false);
+                // we do not want to try to schedule an empty playlist
+                if ($playlistid != null) {
+                    $si->addPlaylistToShow($playlistid, false);
+                }
                 $ps = $si->getPercentScheduled();
-                //Logging::info($ps);
                 if ($introplaylistid != null) {
                     //Logging::info('adding intro');
                     $si->addPlaylistToShowStart($introplaylistid, false);
@@ -60,10 +61,19 @@ class AutoPlaylistManager {
                 elseif (!$repeatuntilfull) {
                     break;
                 }
-
+                // we want to avoid an infinite loop if all of the playlists are null
+                if ($playlistid == null && $introplaylistid == null && $outroplaylistid == null) {
+                    break;
+                }
+                // another possible issue would be if the show isn't increasing in length each loop
+                // ie if all of the playlists being added are zero lengths this could cause an infinite loop
+                if ($tempPercentScheduled == $ps) {
+                    break;
+                }
+                //now reset it to zero
+                $tempPercentScheduled = $ps;
             }
             $si->setAutoPlaylistBuilt(true);
-
         }
         Application_Model_Preference::setAutoPlaylistPollLock(microtime(true));
     }
