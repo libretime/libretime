@@ -269,8 +269,11 @@ SQL;
                 $previousFile = CcFilesQuery::create()
                     ->filterByDbId($previousMediaFileId)
                     ->findOne();
-                $previousMediaName = $previousFile->getDbArtistName() . " - " . $previousFile->getDbTrackTitle();
-                $previousMetadata = CcFiles::sanitizeResponse($previousFile);
+                if (isset($previousFile))
+                {
+                    $previousMediaName = $previousFile->getDbArtistName() . " - " . $previousFile->getDbTrackTitle();
+                    $previousMetadata = CcFiles::sanitizeResponse($previousFile);
+                }
             } else if (isset($previousMediaStreamId)) {
                 $previousMediaName = null;
                 $previousMediaType = "webstream";
