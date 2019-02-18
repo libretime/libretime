@@ -186,6 +186,10 @@ class ApiController extends Zend_Controller_Action
         $result["on_air_light"] = false;
         $result["on_air_light_expected_status"] = false;
         $result["station_down"] = false;
+        $result["master_stream"] = false;
+        $result["live_stream"] = false;
+        $result["master_stream_on_air"] = false;
+        $result["live_stream_on_air"] = false;
 
         $range = Application_Model_Schedule::GetPlayOrderRange();
 
@@ -209,6 +213,25 @@ class ApiController extends Zend_Controller_Action
 
         if ($result["on_air_light_expected_status"] != $result["on_air_light"]) {
             $result["station_down"] = true;
+        }
+
+        $live_dj_stream = Application_Model_Preference::GetSourceStatus("live_dj");
+        $master_dj_stream = Application_Model_Preference::GetSourceStatus("master_dj");
+        $live_dj_on_air = Application_Model_Preference::GetSourceSwitchStatus("live_dj");
+        $master_dj_on_air = Application_Model_Preference::GetSourceSwitchStatus("master_dj");
+
+        if($live_dj_stream == true){
+            $result["live_stream"] = true;
+            if ($live_dj_on_air == "on") {
+                $result["live_stream_on_air"] = true;
+            }
+        }
+
+        if($master_dj_stream == true){
+            $result["master_stream"] = true;
+            if ($master_dj_on_air == "on") {
+                $result["master_stream_on_air"] = true;
+            }
         }
 
         $this->returnJsonOrJsonp($request, $result);
