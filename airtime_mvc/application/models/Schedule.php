@@ -104,7 +104,7 @@ SQL;
         $utcNow = new DateTime("now", new DateTimeZone("UTC"));
 
         $shows = Application_Model_Show::getPrevCurrentNext($utcNow, $utcTimeEnd, $showsToRetrieve);
-        $currentShowID = count($shows['currentShow'])>0?$shows['currentShow']['instance_id']:null;
+        $currentShowID = (is_array($shows['currentShow'] && count($shows['currentShow'])>0))?$shows['currentShow']['instance_id']:null;
         $source = self::_getSource();
         $results = Application_Model_Schedule::getPreviousCurrentNextMedia($utcNow, $currentShowID, self::_getSource());
 
