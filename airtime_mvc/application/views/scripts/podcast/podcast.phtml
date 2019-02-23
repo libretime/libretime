@@ -27,7 +27,7 @@
                     <button ng-click="createSmartblock()" class="btn" type="button" name="smartblock">
                         <?php echo _("Generate Smartblock and Playlist") ?>
                     </button>
-                    <div class='pc-sb-success success' style='display:none'></span></div>
+                    <div class='pc-sb-success success' style='display:none'>&quot;{{podcast.title}}&quot; <br> <?php echo _("Smartblock and Playlist generated") ?></span></div>
                 </div>
             </div>
         </form>
@@ -46,6 +46,6 @@
                 <?php echo _("Save") ?>
             </button>
         </div>
-        <div class='success' style='display:none'></div>
+        <div class='pc-save-success success' style='display:none'></div>
     </div>
 </div>

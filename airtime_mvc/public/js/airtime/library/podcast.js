@@ -71,7 +71,6 @@ var AIRTIME = (function (AIRTIME) {
                 function() {
                     // show success message
                     var successMsg = $('.active-tab .pc-sb-success')
-                    successMsg.text($.i18n._('Smartblock and playlist generated'));
                     successMsg.show("fast");
                     setTimeout(function(){
                         successMsg.hide("fast");

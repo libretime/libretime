@@ -1990,6 +1990,10 @@ div.success{
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
+div.success.pc-sb-success {
+    height: auto;
+    text-align: left;
+}
 
 div.errors, span.errors{
     color:#902d2d;
@@ -4157,7 +4161,12 @@ li .ui-state-hover {
     box-sizing: border-box;
     text-align: left;
 }
-
+.editor_pane_wrapper .podcast-metadata-row:last-child {
+    align-items: flex-start;
+}
+.editor_pane_wrapper .podcast-metadata-row:last-child label {
+    padding-top: 5px;
+}
 .podcast-url {
     white-space: nowrap;
     overflow: hidden;
