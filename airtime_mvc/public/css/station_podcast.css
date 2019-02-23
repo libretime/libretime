@@ -42,6 +42,9 @@
 #station_podcast_help_text {
     padding-top: 20px;
     font-size: 14px;
+    text-align: center;
+    padding: 0 10px;
+    margin-top: 0;
 }
 
 #podcast-settings label:nth-child(even) {
