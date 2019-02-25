@@ -63,6 +63,16 @@ final class LocaleController extends Zend_Controller_Action
             //"Adding 1 Item" => _("Adding 1 Item"),
             //"Adding %s Items" => _("Adding %s Items"),
             //library/library.js
+            "Add" => _("Add"),
+            "New" => _("New"),
+            "Edit" => _("Edit"),
+            "Add to Schedule" => _("Add to Schedule"),
+            "Add to next show" => _("Add to next show"),
+            "Add to current show" => _("Add to current show"),
+            "Add after selected items" => _("Add after selected items"),
+            "Delete" => _("Delete"),
+            "Publish" => _("Publish"),
+            "Remove" => _("Remove"),
             "Edit Metadata" => _("Edit Metadata"),
             "Add to selected show" => _("Add to selected show"),
             "Select" => _("Select"),
@@ -108,6 +118,10 @@ final class LocaleController extends Zend_Controller_Action
             "Are you sure you want to delete the selected item?" => _("Are you sure you want to delete the selected item?"),
             "Uploading in progress..." => _("Uploading in progress..."),
             "Retrieving data from the server..." => _("Retrieving data from the server..."),
+            //library/podcast.js
+            "Import" => _("Import"),         
+            "Imported?" => _("Imported?"),
+            "View" => _("View"),
             // SOUNDCLOUD
             "Are you sure? SoundCloud stats and comments for this track will be permanently removed." => "Are you sure? SoundCloud stats and comments for this track will be permanently removed.",
             "Your track is being deleted from SoundCloud" => "Your track is being deleted from SoundCloud",
@@ -314,6 +328,7 @@ final class LocaleController extends Zend_Controller_Action
             "Trim overbooked shows" => _("Trim overbooked shows"),
             "Remove selected scheduled items" => _("Remove selected scheduled items"),
             "Jump to the current playing track" => _("Jump to the current playing track"),
+            "Jump to Current" => _("Jump to Current"),
             "Cancel current show" => _("Cancel current show"),
             //already in schedule/schedule.js
             //"Cancel Current Show?" => _("Cancel Current Show?"),
@@ -355,6 +370,7 @@ final class LocaleController extends Zend_Controller_Action
             "View listener stats" => _("View listener stats"),
             //dataTables/ColVis.js
             "Show / hide columns" => _("Show / hide columns"),
+            "Columns" => _("Columns"),
             //datatables.columnFilter.js
             "From {from} to {to}" => _("From {from} to {to}"),
             "kbps" => _("kbps"),

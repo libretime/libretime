@@ -636,7 +636,7 @@ var AIRTIME = (function (AIRTIME) {
         podcastEpisodeButtons = AIRTIME.widgets.Table.getStandardToolbarButtons();
         $.extend(true, podcastEpisodeButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.NEW],
             {
-                title: "Import",
+                title: $.i18n._("Import"),
                 eventHandlers: {
                     click: function () {
                         var episodes = mod.episodeTables[podcastId].getSelectedRows();
