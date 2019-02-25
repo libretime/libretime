@@ -860,6 +860,18 @@ msgstr "Προεπισκόπηση"
 msgid "Add to Playlist"
 msgstr "Προσθήκη στη λίστα αναπαραγωγής"
 
+#: airtime_mvc/application/controllers/LocaleController.php:70
+msgid "Add to next show"
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:71
+msgid "Add to current show"
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:69
+msgid "Add to Schedule"
+msgstr ""
+
 #: airtime_mvc/application/controllers/LibraryController.php:114
 msgid "Add to Smart Block"
 msgstr "Προσθήκη στο Smart Block"
@@ -2026,6 +2038,10 @@ msgstr "Αφαίρεση επιλεγμένων προγραμματισμένω
 msgid "Jump to the current playing track"
 msgstr "Μετάβαση στο τρέχον κομμάτι "
 
+#: airtime_mvc/application/controllers/LocaleController.php:331
+msgid "Jump to Current"
+msgstr ""
+
 #: airtime_mvc/application/controllers/LocaleController.php:314
 msgid "Cancel current show"
 msgstr "Ακύρωση τρέχουσας εκπομπής"
@@ -3051,7 +3067,7 @@ msgid "Generate a smartblock and a playlist upon creation of a new podcast"
 msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:126
-msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the "Overwrite Podcast Episode Metatags" feature must also be enabled in order for smartblocks to reliably find episodes."
+msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
 msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:107
@@ -4280,6 +4296,18 @@ msgstr "Επιλέξτε Ημέρες:"
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:75
 msgid "Add"
 msgstr "Προσθήκη"
+
+msgid "New"
+msgstr ""
+
+msgid "Columns"
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Imported?"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast.phtml:4
 msgid "Repeat Days:"

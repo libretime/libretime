@@ -870,6 +870,18 @@ msgstr "Previsualizar"
 msgid "Add to Playlist"
 msgstr "Agregar a lista de reproducción."
 
+#: airtime_mvc/application/controllers/LocaleController.php:70
+msgid "Add to next show"
+msgstr "Añadir al show próximo"
+
+#: airtime_mvc/application/controllers/LocaleController.php:71
+msgid "Add to current show"
+msgstr "Añadir al show actual"
+
+#: airtime_mvc/application/controllers/LocaleController.php:69
+msgid "Add to Schedule"
+msgstr "Añadir al show próximo"
+
 #: airtime_mvc/application/controllers/LibraryController.php:114
 msgid "Add to Smart Block"
 msgstr "Agregar un bloque inteligente"
@@ -2036,6 +2048,10 @@ msgstr "Eliminar los ítems programados seleccionados"
 msgid "Jump to the current playing track"
 msgstr "Saltar a la pista en reproducción actual"
 
+#: airtime_mvc/application/controllers/LocaleController.php:331
+msgid "Jump to Current"
+msgstr "Saltar a la pista actual"
+
 #: airtime_mvc/application/controllers/LocaleController.php:314
 msgid "Cancel current show"
 msgstr "Cancelar el show actual"
@@ -2551,17 +2567,17 @@ msgstr "Debes esperar al menos 1 hora para reprogramar"
 msgid "Add Autoloading Playlist ?"
 msgstr "¿Programar Lista Auto-Cargada?"
 
-#: airtime_mvc/application/views/scripts/form/add-show-autoplaylist.phtml:14 
-msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/manual/calendar/#autoloading-playlist'>More information</a>" 
-msgstr "Se le agrega los contenidos de las listas auto-cargadas a programas una hora antes de que suenen. <a target='_blank' href='http://libretime.org/manual/calendar/#autoloading-playlist'>Mas información</a>" 
+#: airtime_mvc/application/views/scripts/form/add-show-autoplaylist.phtml:14
+msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/manual/calendar/#autoloading-playlist'>More information</a>"
+msgstr "Se le agrega los contenidos de las listas auto-cargadas a programas una hora antes de que suenen. <a target='_blank' href='http://libretime.org/manual/calendar/#autoloading-playlist'>Mas información</a>"
 
 #: airtime_mvc/application/forms/AddShowAutoPlaylist.php:25
 msgid "Select Playlist"
 msgstr "Seleccionar Lista"
 
-#: airtime_mvc/application/forms/AddShowAutoPlaylist.php:32 
-msgid "Repeat Playlist Until Show is Full ?" 
-msgstr "Repitir lista hasta que termine el programa?"  
+#: airtime_mvc/application/forms/AddShowAutoPlaylist.php:32
+msgid "Repeat Playlist Until Show is Full ?"
+msgstr "Repitir lista hasta que termine el programa?"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:11
 #, php-format
@@ -3061,7 +3077,7 @@ msgid "Generate a smartblock and a playlist upon creation of a new podcast"
 msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:126
-msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the "Overwrite Podcast Episode Metatags" feature must also be enabled in order for smartblocks to reliably find episodes."
+msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
 msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:107
@@ -4311,6 +4327,18 @@ msgstr "Elige los días:"
 msgid "Add"
 msgstr "Añadir"
 
+msgid "New"
+msgstr "Nuevo"
+
+msgid "Columns"
+msgstr "Columnas"
+
+msgid "Import"
+msgstr "Importar"
+
+msgid "Imported?"
+msgstr "Importado?"
+
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast.phtml:4
 msgid "Repeat Days:"
 msgstr "Días de repetición:"
@@ -4895,11 +4923,11 @@ msgstr "¿Descargar automáticamente los últimos episodios?"
 
 #: airtime_mvc/application/views/scripts/podcast/podcast.phtml:26
 msgid "Scheduling:"
-msgstr ""
+msgstr "Programación:"
 
 #: airtime_mvc/application/views/scripts/podcast/podcast.phtml:28
 msgid "Generate Smartblock and Playlist"
-msgstr ""
+msgstr "Generar Bloque y Lista"
 
 #: airtime_mvc/application/views/scripts/podcast/podcast.phtml:30
 msgid "Smartblock and Playlist Generated"
