@@ -897,6 +897,18 @@ msgstr "Előnézet"
 msgid "Add to Playlist"
 msgstr "Hozzáadás lejátszási listához"
 
+#: airtime_mvc/application/controllers/LocaleController.php:70
+msgid "Add to next show"
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:71
+msgid "Add to current show"
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:69
+msgid "Add to Schedule"
+msgstr ""
+
 #: airtime_mvc/application/controllers/LibraryController.php:114
 msgid "Add to Smart Block"
 msgstr "Hozzáadás Okosblokkhoz"
@@ -2176,6 +2188,10 @@ msgstr "A kijelölt ütemezett elemek eltávolítása"
 msgid "Jump to the current playing track"
 msgstr "Ugrás a jelenleg játszott sávra"
 
+#: airtime_mvc/application/controllers/LocaleController.php:331
+msgid "Jump to Current"
+msgstr ""
+
 #: airtime_mvc/application/controllers/LocaleController.php:314
 msgid "Cancel current show"
 msgstr "A jelenlegi műsor megszakítása"
@@ -3211,8 +3227,16 @@ msgid "Default Fade Out (s):"
 msgstr "Alapértelmezett Leúsztatás (mp)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:105
-msgid "Podcast Album Override"
+msgid "Overwrite Podcast Episode Metatags"
 msgstr "Podcast album felülírása"
+
+#: airtime_mvc/application/forms/GeneralPreferences.php:120
+msgid "Generate a smartblock and a playlist upon creation of a new podcast"
+msgstr ""
+
+#: airtime_mvc/application/forms/GeneralPreferences.php:126
+msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
+msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:107
 #: airtime_mvc/application/forms/GeneralPreferences.php:125
@@ -3226,14 +3250,12 @@ msgstr "Engedélyezve"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:111
 msgid ""
-"Enabling this means that podcast tracks will always contain the podcast name"
-" in their album field."
-msgstr ""
-"Ha engedélyezett, a podcast sávok album mezőjébe mindig a podcast neve kerül."
+"Enabling this feature will cause podcast episode tracks to have their Artist, Title, and Album metatags set from podcast feed values. Note that enabling this feature is recommended in order to ensure reliable scheduling of episodes via smartblocks."
+msgstr "Ha engedélyezett, a podcast sávok album mezőjébe mindig a podcast neve kerül."
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:122
-msgid "Public Airtime API"
-msgstr "Public Airtime API"
+msgid "Public LibreTime API"
+msgstr "Public LibreTime API"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:123
 msgid "Required for embeddable schedule widget."
@@ -3241,7 +3263,7 @@ msgstr "Kötelező a beágyazható ütemezés felületi elemhez."
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:129
 msgid ""
-"Enabling this feature will allow Airtime to provide schedule data\n"
+"Enabling this feature will allow LibreTime to provide schedule data\n"
 "                                            to external widgets that can be"
 " embedded in your website."
 msgstr ""
@@ -4538,6 +4560,18 @@ msgstr "Válasszon napokat:"
 msgid "Add"
 msgstr "Hozzáadás"
 
+msgid "New"
+msgstr ""
+
+msgid "Columns"
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Imported?"
+msgstr ""
+
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast.phtml:4
 msgid "Repeat Days:"
 msgstr "Ismétlések napjai:"
@@ -5177,8 +5211,20 @@ msgid "Podcast URL: "
 msgstr "Podcast URL: "
 
 #: airtime_mvc/application/views/scripts/podcast/podcast.phtml:22
-msgid "Automatically download latest episodes?"
+msgid "Download latest episodes:"
 msgstr "Legutolsó epizódok automatikus letöltése?"
+
+#: airtime_mvc/application/views/scripts/podcast/podcast.phtml:26
+msgid "Scheduling:"
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/podcast/podcast.phtml:28
+msgid "Generate Smartblock and Playlist"
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/podcast/podcast.phtml:30
+msgid "Smartblock and Playlist Generated"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/podcast/podcast.phtml:26
 msgid "Override album name with podcast name during ingest."

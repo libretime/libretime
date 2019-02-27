@@ -71,7 +71,6 @@ var AIRTIME = (function (AIRTIME) {
                 function() {
                     // show success message
                     var successMsg = $('.active-tab .pc-sb-success')
-                    successMsg.text($.i18n._('Smartblock and playlist generated'));
                     successMsg.show("fast");
                     setTimeout(function(){
                         successMsg.hide("fast");
@@ -85,6 +84,7 @@ var AIRTIME = (function (AIRTIME) {
                         })
                         .success(function () {
                             AIRTIME.library.podcastDataTable.fnDraw();
+                            self.$scope.tab.setName(self.$scope.podcast.title);
                         });
 
                     // redraw list of smartblocks just in case they have it visible on the left
@@ -636,7 +636,7 @@ var AIRTIME = (function (AIRTIME) {
         podcastEpisodeButtons = AIRTIME.widgets.Table.getStandardToolbarButtons();
         $.extend(true, podcastEpisodeButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.NEW],
             {
-                title: "Import",
+                title: $.i18n._("Import"),
                 eventHandlers: {
                     click: function () {
                         var episodes = mod.episodeTables[podcastId].getSelectedRows();

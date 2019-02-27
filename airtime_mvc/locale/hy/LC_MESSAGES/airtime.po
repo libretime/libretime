@@ -855,6 +855,18 @@ msgstr ""
 msgid "Add to Playlist"
 msgstr ""
 
+#: airtime_mvc/application/controllers/LocaleController.php:70
+msgid "Add to next show"
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:71
+msgid "Add to current show"
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:69
+msgid "Add to Schedule"
+msgstr ""
+
 #: airtime_mvc/application/controllers/LibraryController.php:114
 msgid "Add to Smart Block"
 msgstr ""
@@ -2019,6 +2031,10 @@ msgstr ""
 msgid "Jump to the current playing track"
 msgstr ""
 
+#: airtime_mvc/application/controllers/LocaleController.php:331
+msgid "Jump to Current"
+msgstr ""
+
 #: airtime_mvc/application/controllers/LocaleController.php:314
 msgid "Cancel current show"
 msgstr ""
@@ -3036,7 +3052,15 @@ msgid "Default Fade Out (s):"
 msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:105
-msgid "Podcast Album Override"
+msgid "Overwrite Podcast Episode Metatags"
+msgstr ""
+
+#: airtime_mvc/application/forms/GeneralPreferences.php:120
+msgid "Generate a smartblock and a playlist upon creation of a new podcast"
+msgstr ""
+
+#: airtime_mvc/application/forms/GeneralPreferences.php:126
+msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
 msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:107
@@ -3050,11 +3074,11 @@ msgid "Enabled"
 msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:111
-msgid "Enabling this means that podcast tracks will always contain the podcast name in their album field."
+msgid "Enabling this feature will cause podcast episode tracks to have their Artist, Title, and Album metatags set from podcast feed values. Note that enabling this feature is recommended in order to ensure reliable scheduling of episodes via smartblocks."
 msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:122
-msgid "Public Airtime API"
+msgid "Public LibreTime API"
 msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:123
@@ -3063,7 +3087,7 @@ msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:129
 msgid ""
-"Enabling this feature will allow Airtime to provide schedule data\n"
+"Enabling this feature will allow LibreTime to provide schedule data\n"
 "                                            to external widgets that can be embedded in your website."
 msgstr ""
 
@@ -4264,6 +4288,18 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
+msgid "New"
+msgstr ""
+
+msgid "Columns"
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Imported?"
+msgstr ""
+
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast.phtml:4
 msgid "Repeat Days:"
 msgstr ""
@@ -4845,7 +4881,19 @@ msgid "Podcast URL: "
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/podcast/podcast.phtml:22
-msgid "Automatically download latest episodes?"
+msgid "Download latest episodes:"
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/podcast/podcast.phtml:26
+msgid "Scheduling:"
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/podcast/podcast.phtml:28
+msgid "Generate Smartblock and Playlist"
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/podcast/podcast.phtml:30
+msgid "Smartblock and Playlist Generated"
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/podcast/podcast.phtml:26

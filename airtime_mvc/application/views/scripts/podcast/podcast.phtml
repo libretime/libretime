@@ -16,26 +16,18 @@
                 <a href="{{podcast.url}}" target="_blank" class="podcast-url">{{podcast.url}}</a>
             </div>
             <div class="podcast-metadata-row">
+                <label for="podcast_auto_ingest"><?php echo _("Download latest episodes:") ?></label>
                 <div>
                     <input name="podcast_auto_ingest"  id="podcast_auto_ingest" ng-model="podcast.auto_ingest" type="checkbox"/>
                 </div>
-                <label for="podcast_auto_ingest"><?php echo _("Automatically download latest episodes") ?></label>
-            </div>
-            <div class="podcast-metadata-row">
-                <div>
-                    <input name="podcast_album_override" id="podcast_album_override" ng-model="podcast.album_override" type="checkbox" />
-                </div>
-                <div>
-                    <label for="podcast_album_override"><?php echo _("Overwrite episode track metadata"); ?></label> <span class='album_names help_icon'></span>
-                </div>
             </div>
             <div class="podcast-metadata-row" >
-                <div></div>
+                <label><?php echo _("Scheduling:") ?></label>
                 <div>
-                    <button ng-click="createSmartblock()" ng-disabled="!podcast.album_override" class="btn" type="button" name="smartblock">
-                        <?php echo _("Generate Smartblock and Playlist for Podcast") ?>
+                    <button ng-click="createSmartblock()" class="btn" type="button" name="smartblock">
+                        <?php echo _("Generate Smartblock and Playlist") ?>
                     </button>
-                    <div class='pc-sb-success success' style='display:none'></span></div>
+                    <div class='pc-sb-success success' style='display:none'>&quot;{{podcast.title}}&quot; <br> <?php echo _("Smartblock and Playlist generated") ?></span></div>
                 </div>
             </div>
         </form>
@@ -54,6 +46,6 @@
                 <?php echo _("Save") ?>
             </button>
         </div>
-        <div class='success' style='display:none'></div>
+        <div class='pc-save-success success' style='display:none'></div>
     </div>
 </div>
