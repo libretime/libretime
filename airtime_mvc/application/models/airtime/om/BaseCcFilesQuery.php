@@ -18,6 +18,7 @@
  * @method CcFilesQuery orderByDbMtime($order = Criteria::ASC) Order by the mtime column
  * @method CcFilesQuery orderByDbUtime($order = Criteria::ASC) Order by the utime column
  * @method CcFilesQuery orderByDbLPtime($order = Criteria::ASC) Order by the lptime column
+ * @method CcFilesQuery orderByDbExpirestime($order = Criteria::ASC) Order by the expirestime column
  * @method CcFilesQuery orderByDbMd5($order = Criteria::ASC) Order by the md5 column
  * @method CcFilesQuery orderByDbTrackTitle($order = Criteria::ASC) Order by the track_title column
  * @method CcFilesQuery orderByDbArtistName($order = Criteria::ASC) Order by the artist_name column
@@ -91,6 +92,7 @@
  * @method CcFilesQuery groupByDbMtime() Group by the mtime column
  * @method CcFilesQuery groupByDbUtime() Group by the utime column
  * @method CcFilesQuery groupByDbLPtime() Group by the lptime column
+ * @method CcFilesQuery groupByDbExpirestime() Group by the expirestime column
  * @method CcFilesQuery groupByDbMd5() Group by the md5 column
  * @method CcFilesQuery groupByDbTrackTitle() Group by the track_title column
  * @method CcFilesQuery groupByDbArtistName() Group by the artist_name column
@@ -214,6 +216,7 @@
  * @method CcFiles findOneByDbMtime(string $mtime) Return the first CcFiles filtered by the mtime column
  * @method CcFiles findOneByDbUtime(string $utime) Return the first CcFiles filtered by the utime column
  * @method CcFiles findOneByDbLPtime(string $lptime) Return the first CcFiles filtered by the lptime column
+ * @method CcFiles findOneByDbExpirestime(string $expirestime) Return the first CcFiles filtered by the expirestime column
  * @method CcFiles findOneByDbMd5(string $md5) Return the first CcFiles filtered by the md5 column
  * @method CcFiles findOneByDbTrackTitle(string $track_title) Return the first CcFiles filtered by the track_title column
  * @method CcFiles findOneByDbArtistName(string $artist_name) Return the first CcFiles filtered by the artist_name column
@@ -287,6 +290,7 @@
  * @method array findByDbMtime(string $mtime) Return CcFiles objects filtered by the mtime column
  * @method array findByDbUtime(string $utime) Return CcFiles objects filtered by the utime column
  * @method array findByDbLPtime(string $lptime) Return CcFiles objects filtered by the lptime column
+ * @method array findByDbExpirestime(string $expirestime) Return CcFiles objects filtered by the expirestime column
  * @method array findByDbMd5(string $md5) Return CcFiles objects filtered by the md5 column
  * @method array findByDbTrackTitle(string $track_title) Return CcFiles objects filtered by the track_title column
  * @method array findByDbArtistName(string $artist_name) Return CcFiles objects filtered by the artist_name column
@@ -454,7 +458,7 @@ abstract class BaseCcFilesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "name", "mime", "ftype", "directory", "filepath", "import_status", "currentlyaccessing", "editedby", "mtime", "utime", "lptime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "soundcloud_id", "soundcloud_error_code", "soundcloud_error_msg", "soundcloud_link_to_file", "soundcloud_upload_time", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist", "filesize", "description" FROM "cc_files" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "name", "mime", "ftype", "directory", "filepath", "import_status", "currentlyaccessing", "editedby", "mtime", "utime", "lptime", "expirestime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "soundcloud_id", "soundcloud_error_code", "soundcloud_error_msg", "soundcloud_link_to_file", "soundcloud_upload_time", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist", "filesize", "description" FROM "cc_files" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -1000,6 +1004,49 @@ abstract class BaseCcFilesQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CcFilesPeer::LPTIME, $dbLPtime, $comparison);
+    }
+
+    /**
+     * Filter the query on the expirestime column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbExpirestime('2011-03-14'); // WHERE expirestime = '2011-03-14'
+     * $query->filterByDbExpirestime('now'); // WHERE expirestime = '2011-03-14'
+     * $query->filterByDbExpirestime(array('max' => 'yesterday')); // WHERE expirestime < '2011-03-13'
+     * </code>
+     *
+     * @param     mixed $dbExpirestime The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcFilesQuery The current query, for fluid interface
+     */
+    public function filterByDbExpirestime($dbExpirestime = null, $comparison = null)
+    {
+        if (is_array($dbExpirestime)) {
+            $useMinMax = false;
+            if (isset($dbExpirestime['min'])) {
+                $this->addUsingAlias(CcFilesPeer::EXPIRESTIME, $dbExpirestime['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($dbExpirestime['max'])) {
+                $this->addUsingAlias(CcFilesPeer::EXPIRESTIME, $dbExpirestime['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CcFilesPeer::EXPIRESTIME, $dbExpirestime, $comparison);
     }
 
     /**

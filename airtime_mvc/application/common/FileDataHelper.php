@@ -41,6 +41,15 @@ class FileDataHelper {
             // If the track number isn't numeric, this will return 0
             $data["year"] = intval($data["year"]);
         }
+        if (array_key_exists("expires_date", $data) && array_key_exists("expires_time", $data)) {
+            // if these values are not empty we create a new datetime for insertion
+            if (!(is_null($data["expires_date"])) && !(is_null($data["expires_time"]))) {
+                $data["expirestime"] = $data['expires_date'] . " " . $data['expires_time'];
+            } // if they leave the time empty we just default to midnight
+            elseif (!(is_null($data["expires_date"])) && (is_null($data["expires_time"]))) {
+                $data["expirestime"] = $data['expires_date'] . " 00:00";
+            }
+        }
         if (array_key_exists("bpm", $data)) {
             //Some BPM tags are silly and include the word "BPM". Let's strip that...
             $data["bpm"] = str_ireplace("BPM", "", $data["bpm"]);

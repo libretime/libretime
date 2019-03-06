@@ -7,6 +7,11 @@ class Application_Form_EditAudioMD extends Zend_Form
     
     public function startForm($p_id)
     {
+        $regexValidator = Application_Form_Helper_ValidationTypes::overrideRegexValidator(
+            "/^[0-2]?[0-9]:[0-5][0-9]$/",
+            _("'%value%' does not fit the time format 'HH:mm'"));
+        $dateValidator = Application_Form_Helper_ValidationTypes::overrrideDateValidator("YYYY-MM-DD");
+
         $baseUrl = Application_Common_OsPath::getBaseDir();
          // Set the method for the display form to POST
         $this->setMethod('post');
@@ -75,6 +80,23 @@ class Application_Form_EditAudioMD extends Zend_Form
                 new Zend_Validate_StringLength(array('max' => 64))
             ));
         $this->addElement($genre);
+
+        // Add start date element
+        $expiresDate = new Zend_Form_Element_Text('expires_date');
+        $expiresDate->class = 'input_text';
+        $expiresDate->setRequired(false)
+            ->setLabel(_('Expires on:'))
+            ->setValidators(array(
+                $dateValidator));
+        $this->addElement($expiresDate);
+
+        // Add start time element
+        $expiresTime = new Zend_Form_Element_Text('expires_time');
+        $expiresTime->class = 'input_text';
+        $expiresTime->setRequired(false)
+            ->setValidators(array(
+                $regexValidator));
+        $this->addElement($expiresTime);
 
         // Add year field
         $year = new Zend_Form_Element_Text('year');

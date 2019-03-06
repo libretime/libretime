@@ -30,7 +30,35 @@ var AIRTIME = (function(AIRTIME){
     function playlistError(json) {
         alert(json.error);
     }
+    //dateText mm-dd-yy
+    function startDpSelect(dateText, inst) {
+        var time, date;
 
+        time = dateText.split("-");
+        date = new Date(time[0], time[1] - 1, time[2]);
+
+        if (inst.input)
+            inst.input.trigger('input');
+    }
+
+    function createDateInput(el, onSelect) {
+        var date;
+
+        el.datepicker({
+            minDate: adjustDateToServerDate(new Date()),
+            onSelect: onSelect,
+            dateFormat: 'yy-mm-dd',
+            //i18n_months, i18n_days_short are in common.js
+            monthNames: i18n_months,
+            dayNamesMin: i18n_days_short,
+            closeText: $.i18n._('Close'),
+            //showButtonPanel: true,
+        });
+    }
+
+    function onExpireTimeSelect(){
+        $("#expires_time").trigger('input');
+    }
     function stopAudioPreview() {
         // stop any preview playing
         $('#jquery_jplayer_1').jPlayer('stop');
@@ -1062,6 +1090,14 @@ var AIRTIME = (function(AIRTIME){
             if ($(event.target).is('input') && event.keyCode === 13) {
                 newTab.wrapper.find('.md-save').click();
             }
+        });
+        createDateInput(newTab.wrapper.find("#expires_date"), startDpSelect);
+        $("#expires_time").timepicker({
+            amPmText: ['', ''],
+            defaultTime: '00:00',
+            onSelect: onExpireTimeSelect,
+            hourText: $.i18n._("Hour"),
+            minuteText: $.i18n._("Minute")
         });
 
         mod.setupEventListeners();

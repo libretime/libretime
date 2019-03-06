@@ -51,6 +51,7 @@ class CcFilesTableMap extends TableMap
         $this->addColumn('mtime', 'DbMtime', 'TIMESTAMP', false, 6, null);
         $this->addColumn('utime', 'DbUtime', 'TIMESTAMP', false, 6, null);
         $this->addColumn('lptime', 'DbLPtime', 'TIMESTAMP', false, 6, null);
+        $this->addColumn('expirestime', 'DbExpirestime', 'TIMESTAMP', false, 6, null);
         $this->addColumn('md5', 'DbMd5', 'CHAR', false, 32, null);
         $this->addColumn('track_title', 'DbTrackTitle', 'VARCHAR', false, 512, null);
         $this->addColumn('artist_name', 'DbArtistName', 'VARCHAR', false, 512, null);

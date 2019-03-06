@@ -1,0 +1,1 @@
+ALTER TABLE cc_files ADD COLUMN expirestime timestamp(6);

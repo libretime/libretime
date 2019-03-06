@@ -108,6 +108,12 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     protected $lptime;
 
     /**
+     * The value for the expirestime field.
+     * @var        string
+     */
+    protected $expirestime;
+
+    /**
      * The value for the md5 field.
      * @var        string
      */
@@ -831,6 +837,41 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $dt = new DateTime($this->lptime);
         } catch (Exception $x) {
             throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->lptime, true), $x);
+        }
+
+        if ($format === null) {
+            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            return $dt;
+        }
+
+        if (strpos($format, '%') !== false) {
+            return strftime($format, $dt->format('U'));
+        }
+
+        return $dt->format($format);
+
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [expirestime] column value.
+     *
+     *
+     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     *				 If format is null, then the raw DateTime object will be returned.
+     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getDbExpirestime($format = 'Y-m-d H:i:s')
+    {
+        if ($this->expirestime === null) {
+            return null;
+        }
+
+
+        try {
+            $dt = new DateTime($this->expirestime);
+        } catch (Exception $x) {
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->expirestime, true), $x);
         }
 
         if ($format === null) {
@@ -1795,6 +1836,29 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
 
         return $this;
     } // setDbLPtime()
+
+    /**
+     * Sets the value of [expirestime] column to a normalized version of the date/time value specified.
+     *
+     * @param mixed $v string, integer (timestamp), or DateTime value.
+     *               Empty strings are treated as null.
+     * @return CcFiles The current object (for fluent API support)
+     */
+    public function setDbExpirestime($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->expirestime !== null || $dt !== null) {
+            $currentDateAsString = ($this->expirestime !== null && $tmpDt = new DateTime($this->expirestime)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
+            if ($currentDateAsString !== $newDateAsString) {
+                $this->expirestime = $newDateAsString;
+                $this->modifiedColumns[] = CcFilesPeer::EXPIRESTIME;
+            }
+        } // if either are not null
+
+
+        return $this;
+    } // setDbExpirestime()
 
     /**
      * Set the value of [md5] column.
@@ -3206,66 +3270,67 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $this->mtime = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
             $this->utime = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
             $this->lptime = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
-            $this->md5 = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
-            $this->track_title = ($row[$startcol + 13] !== null) ? (string) $row[$startcol + 13] : null;
-            $this->artist_name = ($row[$startcol + 14] !== null) ? (string) $row[$startcol + 14] : null;
-            $this->bit_rate = ($row[$startcol + 15] !== null) ? (int) $row[$startcol + 15] : null;
-            $this->sample_rate = ($row[$startcol + 16] !== null) ? (int) $row[$startcol + 16] : null;
-            $this->format = ($row[$startcol + 17] !== null) ? (string) $row[$startcol + 17] : null;
-            $this->length = ($row[$startcol + 18] !== null) ? (string) $row[$startcol + 18] : null;
-            $this->album_title = ($row[$startcol + 19] !== null) ? (string) $row[$startcol + 19] : null;
-            $this->genre = ($row[$startcol + 20] !== null) ? (string) $row[$startcol + 20] : null;
-            $this->comments = ($row[$startcol + 21] !== null) ? (string) $row[$startcol + 21] : null;
-            $this->year = ($row[$startcol + 22] !== null) ? (string) $row[$startcol + 22] : null;
-            $this->track_number = ($row[$startcol + 23] !== null) ? (int) $row[$startcol + 23] : null;
-            $this->channels = ($row[$startcol + 24] !== null) ? (int) $row[$startcol + 24] : null;
-            $this->url = ($row[$startcol + 25] !== null) ? (string) $row[$startcol + 25] : null;
-            $this->bpm = ($row[$startcol + 26] !== null) ? (int) $row[$startcol + 26] : null;
-            $this->rating = ($row[$startcol + 27] !== null) ? (string) $row[$startcol + 27] : null;
-            $this->encoded_by = ($row[$startcol + 28] !== null) ? (string) $row[$startcol + 28] : null;
-            $this->disc_number = ($row[$startcol + 29] !== null) ? (string) $row[$startcol + 29] : null;
-            $this->mood = ($row[$startcol + 30] !== null) ? (string) $row[$startcol + 30] : null;
-            $this->label = ($row[$startcol + 31] !== null) ? (string) $row[$startcol + 31] : null;
-            $this->composer = ($row[$startcol + 32] !== null) ? (string) $row[$startcol + 32] : null;
-            $this->encoder = ($row[$startcol + 33] !== null) ? (string) $row[$startcol + 33] : null;
-            $this->checksum = ($row[$startcol + 34] !== null) ? (string) $row[$startcol + 34] : null;
-            $this->lyrics = ($row[$startcol + 35] !== null) ? (string) $row[$startcol + 35] : null;
-            $this->orchestra = ($row[$startcol + 36] !== null) ? (string) $row[$startcol + 36] : null;
-            $this->conductor = ($row[$startcol + 37] !== null) ? (string) $row[$startcol + 37] : null;
-            $this->lyricist = ($row[$startcol + 38] !== null) ? (string) $row[$startcol + 38] : null;
-            $this->original_lyricist = ($row[$startcol + 39] !== null) ? (string) $row[$startcol + 39] : null;
-            $this->radio_station_name = ($row[$startcol + 40] !== null) ? (string) $row[$startcol + 40] : null;
-            $this->info_url = ($row[$startcol + 41] !== null) ? (string) $row[$startcol + 41] : null;
-            $this->artist_url = ($row[$startcol + 42] !== null) ? (string) $row[$startcol + 42] : null;
-            $this->audio_source_url = ($row[$startcol + 43] !== null) ? (string) $row[$startcol + 43] : null;
-            $this->radio_station_url = ($row[$startcol + 44] !== null) ? (string) $row[$startcol + 44] : null;
-            $this->buy_this_url = ($row[$startcol + 45] !== null) ? (string) $row[$startcol + 45] : null;
-            $this->isrc_number = ($row[$startcol + 46] !== null) ? (string) $row[$startcol + 46] : null;
-            $this->catalog_number = ($row[$startcol + 47] !== null) ? (string) $row[$startcol + 47] : null;
-            $this->original_artist = ($row[$startcol + 48] !== null) ? (string) $row[$startcol + 48] : null;
-            $this->copyright = ($row[$startcol + 49] !== null) ? (string) $row[$startcol + 49] : null;
-            $this->report_datetime = ($row[$startcol + 50] !== null) ? (string) $row[$startcol + 50] : null;
-            $this->report_location = ($row[$startcol + 51] !== null) ? (string) $row[$startcol + 51] : null;
-            $this->report_organization = ($row[$startcol + 52] !== null) ? (string) $row[$startcol + 52] : null;
-            $this->subject = ($row[$startcol + 53] !== null) ? (string) $row[$startcol + 53] : null;
-            $this->contributor = ($row[$startcol + 54] !== null) ? (string) $row[$startcol + 54] : null;
-            $this->language = ($row[$startcol + 55] !== null) ? (string) $row[$startcol + 55] : null;
-            $this->file_exists = ($row[$startcol + 56] !== null) ? (boolean) $row[$startcol + 56] : null;
-            $this->soundcloud_id = ($row[$startcol + 57] !== null) ? (int) $row[$startcol + 57] : null;
-            $this->soundcloud_error_code = ($row[$startcol + 58] !== null) ? (int) $row[$startcol + 58] : null;
-            $this->soundcloud_error_msg = ($row[$startcol + 59] !== null) ? (string) $row[$startcol + 59] : null;
-            $this->soundcloud_link_to_file = ($row[$startcol + 60] !== null) ? (string) $row[$startcol + 60] : null;
-            $this->soundcloud_upload_time = ($row[$startcol + 61] !== null) ? (string) $row[$startcol + 61] : null;
-            $this->replay_gain = ($row[$startcol + 62] !== null) ? (string) $row[$startcol + 62] : null;
-            $this->owner_id = ($row[$startcol + 63] !== null) ? (int) $row[$startcol + 63] : null;
-            $this->cuein = ($row[$startcol + 64] !== null) ? (string) $row[$startcol + 64] : null;
-            $this->cueout = ($row[$startcol + 65] !== null) ? (string) $row[$startcol + 65] : null;
-            $this->silan_check = ($row[$startcol + 66] !== null) ? (boolean) $row[$startcol + 66] : null;
-            $this->hidden = ($row[$startcol + 67] !== null) ? (boolean) $row[$startcol + 67] : null;
-            $this->is_scheduled = ($row[$startcol + 68] !== null) ? (boolean) $row[$startcol + 68] : null;
-            $this->is_playlist = ($row[$startcol + 69] !== null) ? (boolean) $row[$startcol + 69] : null;
-            $this->filesize = ($row[$startcol + 70] !== null) ? (int) $row[$startcol + 70] : null;
-            $this->description = ($row[$startcol + 71] !== null) ? (string) $row[$startcol + 71] : null;
+            $this->expirestime = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
+            $this->md5 = ($row[$startcol + 13] !== null) ? (string) $row[$startcol + 13] : null;
+            $this->track_title = ($row[$startcol + 14] !== null) ? (string) $row[$startcol + 14] : null;
+            $this->artist_name = ($row[$startcol + 15] !== null) ? (string) $row[$startcol + 15] : null;
+            $this->bit_rate = ($row[$startcol + 16] !== null) ? (int) $row[$startcol + 16] : null;
+            $this->sample_rate = ($row[$startcol + 17] !== null) ? (int) $row[$startcol + 17] : null;
+            $this->format = ($row[$startcol + 18] !== null) ? (string) $row[$startcol + 18] : null;
+            $this->length = ($row[$startcol + 19] !== null) ? (string) $row[$startcol + 19] : null;
+            $this->album_title = ($row[$startcol + 20] !== null) ? (string) $row[$startcol + 20] : null;
+            $this->genre = ($row[$startcol + 21] !== null) ? (string) $row[$startcol + 21] : null;
+            $this->comments = ($row[$startcol + 22] !== null) ? (string) $row[$startcol + 22] : null;
+            $this->year = ($row[$startcol + 23] !== null) ? (string) $row[$startcol + 23] : null;
+            $this->track_number = ($row[$startcol + 24] !== null) ? (int) $row[$startcol + 24] : null;
+            $this->channels = ($row[$startcol + 25] !== null) ? (int) $row[$startcol + 25] : null;
+            $this->url = ($row[$startcol + 26] !== null) ? (string) $row[$startcol + 26] : null;
+            $this->bpm = ($row[$startcol + 27] !== null) ? (int) $row[$startcol + 27] : null;
+            $this->rating = ($row[$startcol + 28] !== null) ? (string) $row[$startcol + 28] : null;
+            $this->encoded_by = ($row[$startcol + 29] !== null) ? (string) $row[$startcol + 29] : null;
+            $this->disc_number = ($row[$startcol + 30] !== null) ? (string) $row[$startcol + 30] : null;
+            $this->mood = ($row[$startcol + 31] !== null) ? (string) $row[$startcol + 31] : null;
+            $this->label = ($row[$startcol + 32] !== null) ? (string) $row[$startcol + 32] : null;
+            $this->composer = ($row[$startcol + 33] !== null) ? (string) $row[$startcol + 33] : null;
+            $this->encoder = ($row[$startcol + 34] !== null) ? (string) $row[$startcol + 34] : null;
+            $this->checksum = ($row[$startcol + 35] !== null) ? (string) $row[$startcol + 35] : null;
+            $this->lyrics = ($row[$startcol + 36] !== null) ? (string) $row[$startcol + 36] : null;
+            $this->orchestra = ($row[$startcol + 37] !== null) ? (string) $row[$startcol + 37] : null;
+            $this->conductor = ($row[$startcol + 38] !== null) ? (string) $row[$startcol + 38] : null;
+            $this->lyricist = ($row[$startcol + 39] !== null) ? (string) $row[$startcol + 39] : null;
+            $this->original_lyricist = ($row[$startcol + 40] !== null) ? (string) $row[$startcol + 40] : null;
+            $this->radio_station_name = ($row[$startcol + 41] !== null) ? (string) $row[$startcol + 41] : null;
+            $this->info_url = ($row[$startcol + 42] !== null) ? (string) $row[$startcol + 42] : null;
+            $this->artist_url = ($row[$startcol + 43] !== null) ? (string) $row[$startcol + 43] : null;
+            $this->audio_source_url = ($row[$startcol + 44] !== null) ? (string) $row[$startcol + 44] : null;
+            $this->radio_station_url = ($row[$startcol + 45] !== null) ? (string) $row[$startcol + 45] : null;
+            $this->buy_this_url = ($row[$startcol + 46] !== null) ? (string) $row[$startcol + 46] : null;
+            $this->isrc_number = ($row[$startcol + 47] !== null) ? (string) $row[$startcol + 47] : null;
+            $this->catalog_number = ($row[$startcol + 48] !== null) ? (string) $row[$startcol + 48] : null;
+            $this->original_artist = ($row[$startcol + 49] !== null) ? (string) $row[$startcol + 49] : null;
+            $this->copyright = ($row[$startcol + 50] !== null) ? (string) $row[$startcol + 50] : null;
+            $this->report_datetime = ($row[$startcol + 51] !== null) ? (string) $row[$startcol + 51] : null;
+            $this->report_location = ($row[$startcol + 52] !== null) ? (string) $row[$startcol + 52] : null;
+            $this->report_organization = ($row[$startcol + 53] !== null) ? (string) $row[$startcol + 53] : null;
+            $this->subject = ($row[$startcol + 54] !== null) ? (string) $row[$startcol + 54] : null;
+            $this->contributor = ($row[$startcol + 55] !== null) ? (string) $row[$startcol + 55] : null;
+            $this->language = ($row[$startcol + 56] !== null) ? (string) $row[$startcol + 56] : null;
+            $this->file_exists = ($row[$startcol + 57] !== null) ? (boolean) $row[$startcol + 57] : null;
+            $this->soundcloud_id = ($row[$startcol + 58] !== null) ? (int) $row[$startcol + 58] : null;
+            $this->soundcloud_error_code = ($row[$startcol + 59] !== null) ? (int) $row[$startcol + 59] : null;
+            $this->soundcloud_error_msg = ($row[$startcol + 60] !== null) ? (string) $row[$startcol + 60] : null;
+            $this->soundcloud_link_to_file = ($row[$startcol + 61] !== null) ? (string) $row[$startcol + 61] : null;
+            $this->soundcloud_upload_time = ($row[$startcol + 62] !== null) ? (string) $row[$startcol + 62] : null;
+            $this->replay_gain = ($row[$startcol + 63] !== null) ? (string) $row[$startcol + 63] : null;
+            $this->owner_id = ($row[$startcol + 64] !== null) ? (int) $row[$startcol + 64] : null;
+            $this->cuein = ($row[$startcol + 65] !== null) ? (string) $row[$startcol + 65] : null;
+            $this->cueout = ($row[$startcol + 66] !== null) ? (string) $row[$startcol + 66] : null;
+            $this->silan_check = ($row[$startcol + 67] !== null) ? (boolean) $row[$startcol + 67] : null;
+            $this->hidden = ($row[$startcol + 68] !== null) ? (boolean) $row[$startcol + 68] : null;
+            $this->is_scheduled = ($row[$startcol + 69] !== null) ? (boolean) $row[$startcol + 69] : null;
+            $this->is_playlist = ($row[$startcol + 70] !== null) ? (boolean) $row[$startcol + 70] : null;
+            $this->filesize = ($row[$startcol + 71] !== null) ? (int) $row[$startcol + 71] : null;
+            $this->description = ($row[$startcol + 72] !== null) ? (string) $row[$startcol + 72] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -3275,7 +3340,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 72; // 72 = CcFilesPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 73; // 73 = CcFilesPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating CcFiles object", $e);
@@ -3723,6 +3788,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if ($this->isColumnModified(CcFilesPeer::LPTIME)) {
             $modifiedColumns[':p' . $index++]  = '"lptime"';
         }
+        if ($this->isColumnModified(CcFilesPeer::EXPIRESTIME)) {
+            $modifiedColumns[':p' . $index++]  = '"expirestime"';
+        }
         if ($this->isColumnModified(CcFilesPeer::MD5)) {
             $modifiedColumns[':p' . $index++]  = '"md5"';
         }
@@ -3949,6 +4017,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                         break;
                     case '"lptime"':
                         $stmt->bindValue($identifier, $this->lptime, PDO::PARAM_STR);
+                        break;
+                    case '"expirestime"':
+                        $stmt->bindValue($identifier, $this->expirestime, PDO::PARAM_STR);
                         break;
                     case '"md5"':
                         $stmt->bindValue($identifier, $this->md5, PDO::PARAM_STR);
@@ -4382,183 +4453,186 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                 return $this->getDbLPtime();
                 break;
             case 12:
-                return $this->getDbMd5();
+                return $this->getDbExpirestime();
                 break;
             case 13:
-                return $this->getDbTrackTitle();
+                return $this->getDbMd5();
                 break;
             case 14:
-                return $this->getDbArtistName();
+                return $this->getDbTrackTitle();
                 break;
             case 15:
-                return $this->getDbBitRate();
+                return $this->getDbArtistName();
                 break;
             case 16:
-                return $this->getDbSampleRate();
+                return $this->getDbBitRate();
                 break;
             case 17:
-                return $this->getDbFormat();
+                return $this->getDbSampleRate();
                 break;
             case 18:
-                return $this->getDbLength();
+                return $this->getDbFormat();
                 break;
             case 19:
-                return $this->getDbAlbumTitle();
+                return $this->getDbLength();
                 break;
             case 20:
-                return $this->getDbGenre();
+                return $this->getDbAlbumTitle();
                 break;
             case 21:
-                return $this->getDbComments();
+                return $this->getDbGenre();
                 break;
             case 22:
-                return $this->getDbYear();
+                return $this->getDbComments();
                 break;
             case 23:
-                return $this->getDbTrackNumber();
+                return $this->getDbYear();
                 break;
             case 24:
-                return $this->getDbChannels();
+                return $this->getDbTrackNumber();
                 break;
             case 25:
-                return $this->getDbUrl();
+                return $this->getDbChannels();
                 break;
             case 26:
-                return $this->getDbBpm();
+                return $this->getDbUrl();
                 break;
             case 27:
-                return $this->getDbRating();
+                return $this->getDbBpm();
                 break;
             case 28:
-                return $this->getDbEncodedBy();
+                return $this->getDbRating();
                 break;
             case 29:
-                return $this->getDbDiscNumber();
+                return $this->getDbEncodedBy();
                 break;
             case 30:
-                return $this->getDbMood();
+                return $this->getDbDiscNumber();
                 break;
             case 31:
-                return $this->getDbLabel();
+                return $this->getDbMood();
                 break;
             case 32:
-                return $this->getDbComposer();
+                return $this->getDbLabel();
                 break;
             case 33:
-                return $this->getDbEncoder();
+                return $this->getDbComposer();
                 break;
             case 34:
-                return $this->getDbChecksum();
+                return $this->getDbEncoder();
                 break;
             case 35:
-                return $this->getDbLyrics();
+                return $this->getDbChecksum();
                 break;
             case 36:
-                return $this->getDbOrchestra();
+                return $this->getDbLyrics();
                 break;
             case 37:
-                return $this->getDbConductor();
+                return $this->getDbOrchestra();
                 break;
             case 38:
-                return $this->getDbLyricist();
+                return $this->getDbConductor();
                 break;
             case 39:
-                return $this->getDbOriginalLyricist();
+                return $this->getDbLyricist();
                 break;
             case 40:
-                return $this->getDbRadioStationName();
+                return $this->getDbOriginalLyricist();
                 break;
             case 41:
-                return $this->getDbInfoUrl();
+                return $this->getDbRadioStationName();
                 break;
             case 42:
-                return $this->getDbArtistUrl();
+                return $this->getDbInfoUrl();
                 break;
             case 43:
-                return $this->getDbAudioSourceUrl();
+                return $this->getDbArtistUrl();
                 break;
             case 44:
-                return $this->getDbRadioStationUrl();
+                return $this->getDbAudioSourceUrl();
                 break;
             case 45:
-                return $this->getDbBuyThisUrl();
+                return $this->getDbRadioStationUrl();
                 break;
             case 46:
-                return $this->getDbIsrcNumber();
+                return $this->getDbBuyThisUrl();
                 break;
             case 47:
-                return $this->getDbCatalogNumber();
+                return $this->getDbIsrcNumber();
                 break;
             case 48:
-                return $this->getDbOriginalArtist();
+                return $this->getDbCatalogNumber();
                 break;
             case 49:
-                return $this->getDbCopyright();
+                return $this->getDbOriginalArtist();
                 break;
             case 50:
-                return $this->getDbReportDatetime();
+                return $this->getDbCopyright();
                 break;
             case 51:
-                return $this->getDbReportLocation();
+                return $this->getDbReportDatetime();
                 break;
             case 52:
-                return $this->getDbReportOrganization();
+                return $this->getDbReportLocation();
                 break;
             case 53:
-                return $this->getDbSubject();
+                return $this->getDbReportOrganization();
                 break;
             case 54:
-                return $this->getDbContributor();
+                return $this->getDbSubject();
                 break;
             case 55:
-                return $this->getDbLanguage();
+                return $this->getDbContributor();
                 break;
             case 56:
-                return $this->getDbFileExists();
+                return $this->getDbLanguage();
                 break;
             case 57:
-                return $this->getDbSoundcloudId();
+                return $this->getDbFileExists();
                 break;
             case 58:
-                return $this->getDbSoundcloudErrorCode();
+                return $this->getDbSoundcloudId();
                 break;
             case 59:
-                return $this->getDbSoundcloudErrorMsg();
+                return $this->getDbSoundcloudErrorCode();
                 break;
             case 60:
-                return $this->getDbSoundcloudLinkToFile();
+                return $this->getDbSoundcloudErrorMsg();
                 break;
             case 61:
-                return $this->getDbSoundCloundUploadTime();
+                return $this->getDbSoundcloudLinkToFile();
                 break;
             case 62:
-                return $this->getDbReplayGain();
+                return $this->getDbSoundCloundUploadTime();
                 break;
             case 63:
-                return $this->getDbOwnerId();
+                return $this->getDbReplayGain();
                 break;
             case 64:
-                return $this->getDbCuein();
+                return $this->getDbOwnerId();
                 break;
             case 65:
-                return $this->getDbCueout();
+                return $this->getDbCuein();
                 break;
             case 66:
-                return $this->getDbSilanCheck();
+                return $this->getDbCueout();
                 break;
             case 67:
-                return $this->getDbHidden();
+                return $this->getDbSilanCheck();
                 break;
             case 68:
-                return $this->getDbIsScheduled();
+                return $this->getDbHidden();
                 break;
             case 69:
-                return $this->getDbIsPlaylist();
+                return $this->getDbIsScheduled();
                 break;
             case 70:
-                return $this->getDbFilesize();
+                return $this->getDbIsPlaylist();
                 break;
             case 71:
+                return $this->getDbFilesize();
+                break;
+            case 72:
                 return $this->getDbDescription();
                 break;
             default:
@@ -4602,66 +4676,67 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $keys[9] => $this->getDbMtime(),
             $keys[10] => $this->getDbUtime(),
             $keys[11] => $this->getDbLPtime(),
-            $keys[12] => $this->getDbMd5(),
-            $keys[13] => $this->getDbTrackTitle(),
-            $keys[14] => $this->getDbArtistName(),
-            $keys[15] => $this->getDbBitRate(),
-            $keys[16] => $this->getDbSampleRate(),
-            $keys[17] => $this->getDbFormat(),
-            $keys[18] => $this->getDbLength(),
-            $keys[19] => $this->getDbAlbumTitle(),
-            $keys[20] => $this->getDbGenre(),
-            $keys[21] => $this->getDbComments(),
-            $keys[22] => $this->getDbYear(),
-            $keys[23] => $this->getDbTrackNumber(),
-            $keys[24] => $this->getDbChannels(),
-            $keys[25] => $this->getDbUrl(),
-            $keys[26] => $this->getDbBpm(),
-            $keys[27] => $this->getDbRating(),
-            $keys[28] => $this->getDbEncodedBy(),
-            $keys[29] => $this->getDbDiscNumber(),
-            $keys[30] => $this->getDbMood(),
-            $keys[31] => $this->getDbLabel(),
-            $keys[32] => $this->getDbComposer(),
-            $keys[33] => $this->getDbEncoder(),
-            $keys[34] => $this->getDbChecksum(),
-            $keys[35] => $this->getDbLyrics(),
-            $keys[36] => $this->getDbOrchestra(),
-            $keys[37] => $this->getDbConductor(),
-            $keys[38] => $this->getDbLyricist(),
-            $keys[39] => $this->getDbOriginalLyricist(),
-            $keys[40] => $this->getDbRadioStationName(),
-            $keys[41] => $this->getDbInfoUrl(),
-            $keys[42] => $this->getDbArtistUrl(),
-            $keys[43] => $this->getDbAudioSourceUrl(),
-            $keys[44] => $this->getDbRadioStationUrl(),
-            $keys[45] => $this->getDbBuyThisUrl(),
-            $keys[46] => $this->getDbIsrcNumber(),
-            $keys[47] => $this->getDbCatalogNumber(),
-            $keys[48] => $this->getDbOriginalArtist(),
-            $keys[49] => $this->getDbCopyright(),
-            $keys[50] => $this->getDbReportDatetime(),
-            $keys[51] => $this->getDbReportLocation(),
-            $keys[52] => $this->getDbReportOrganization(),
-            $keys[53] => $this->getDbSubject(),
-            $keys[54] => $this->getDbContributor(),
-            $keys[55] => $this->getDbLanguage(),
-            $keys[56] => $this->getDbFileExists(),
-            $keys[57] => $this->getDbSoundcloudId(),
-            $keys[58] => $this->getDbSoundcloudErrorCode(),
-            $keys[59] => $this->getDbSoundcloudErrorMsg(),
-            $keys[60] => $this->getDbSoundcloudLinkToFile(),
-            $keys[61] => $this->getDbSoundCloundUploadTime(),
-            $keys[62] => $this->getDbReplayGain(),
-            $keys[63] => $this->getDbOwnerId(),
-            $keys[64] => $this->getDbCuein(),
-            $keys[65] => $this->getDbCueout(),
-            $keys[66] => $this->getDbSilanCheck(),
-            $keys[67] => $this->getDbHidden(),
-            $keys[68] => $this->getDbIsScheduled(),
-            $keys[69] => $this->getDbIsPlaylist(),
-            $keys[70] => $this->getDbFilesize(),
-            $keys[71] => $this->getDbDescription(),
+            $keys[12] => $this->getDbExpirestime(),
+            $keys[13] => $this->getDbMd5(),
+            $keys[14] => $this->getDbTrackTitle(),
+            $keys[15] => $this->getDbArtistName(),
+            $keys[16] => $this->getDbBitRate(),
+            $keys[17] => $this->getDbSampleRate(),
+            $keys[18] => $this->getDbFormat(),
+            $keys[19] => $this->getDbLength(),
+            $keys[20] => $this->getDbAlbumTitle(),
+            $keys[21] => $this->getDbGenre(),
+            $keys[22] => $this->getDbComments(),
+            $keys[23] => $this->getDbYear(),
+            $keys[24] => $this->getDbTrackNumber(),
+            $keys[25] => $this->getDbChannels(),
+            $keys[26] => $this->getDbUrl(),
+            $keys[27] => $this->getDbBpm(),
+            $keys[28] => $this->getDbRating(),
+            $keys[29] => $this->getDbEncodedBy(),
+            $keys[30] => $this->getDbDiscNumber(),
+            $keys[31] => $this->getDbMood(),
+            $keys[32] => $this->getDbLabel(),
+            $keys[33] => $this->getDbComposer(),
+            $keys[34] => $this->getDbEncoder(),
+            $keys[35] => $this->getDbChecksum(),
+            $keys[36] => $this->getDbLyrics(),
+            $keys[37] => $this->getDbOrchestra(),
+            $keys[38] => $this->getDbConductor(),
+            $keys[39] => $this->getDbLyricist(),
+            $keys[40] => $this->getDbOriginalLyricist(),
+            $keys[41] => $this->getDbRadioStationName(),
+            $keys[42] => $this->getDbInfoUrl(),
+            $keys[43] => $this->getDbArtistUrl(),
+            $keys[44] => $this->getDbAudioSourceUrl(),
+            $keys[45] => $this->getDbRadioStationUrl(),
+            $keys[46] => $this->getDbBuyThisUrl(),
+            $keys[47] => $this->getDbIsrcNumber(),
+            $keys[48] => $this->getDbCatalogNumber(),
+            $keys[49] => $this->getDbOriginalArtist(),
+            $keys[50] => $this->getDbCopyright(),
+            $keys[51] => $this->getDbReportDatetime(),
+            $keys[52] => $this->getDbReportLocation(),
+            $keys[53] => $this->getDbReportOrganization(),
+            $keys[54] => $this->getDbSubject(),
+            $keys[55] => $this->getDbContributor(),
+            $keys[56] => $this->getDbLanguage(),
+            $keys[57] => $this->getDbFileExists(),
+            $keys[58] => $this->getDbSoundcloudId(),
+            $keys[59] => $this->getDbSoundcloudErrorCode(),
+            $keys[60] => $this->getDbSoundcloudErrorMsg(),
+            $keys[61] => $this->getDbSoundcloudLinkToFile(),
+            $keys[62] => $this->getDbSoundCloundUploadTime(),
+            $keys[63] => $this->getDbReplayGain(),
+            $keys[64] => $this->getDbOwnerId(),
+            $keys[65] => $this->getDbCuein(),
+            $keys[66] => $this->getDbCueout(),
+            $keys[67] => $this->getDbSilanCheck(),
+            $keys[68] => $this->getDbHidden(),
+            $keys[69] => $this->getDbIsScheduled(),
+            $keys[70] => $this->getDbIsPlaylist(),
+            $keys[71] => $this->getDbFilesize(),
+            $keys[72] => $this->getDbDescription(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -4773,183 +4848,186 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                 $this->setDbLPtime($value);
                 break;
             case 12:
-                $this->setDbMd5($value);
+                $this->setDbExpirestime($value);
                 break;
             case 13:
-                $this->setDbTrackTitle($value);
+                $this->setDbMd5($value);
                 break;
             case 14:
-                $this->setDbArtistName($value);
+                $this->setDbTrackTitle($value);
                 break;
             case 15:
-                $this->setDbBitRate($value);
+                $this->setDbArtistName($value);
                 break;
             case 16:
-                $this->setDbSampleRate($value);
+                $this->setDbBitRate($value);
                 break;
             case 17:
-                $this->setDbFormat($value);
+                $this->setDbSampleRate($value);
                 break;
             case 18:
-                $this->setDbLength($value);
+                $this->setDbFormat($value);
                 break;
             case 19:
-                $this->setDbAlbumTitle($value);
+                $this->setDbLength($value);
                 break;
             case 20:
-                $this->setDbGenre($value);
+                $this->setDbAlbumTitle($value);
                 break;
             case 21:
-                $this->setDbComments($value);
+                $this->setDbGenre($value);
                 break;
             case 22:
-                $this->setDbYear($value);
+                $this->setDbComments($value);
                 break;
             case 23:
-                $this->setDbTrackNumber($value);
+                $this->setDbYear($value);
                 break;
             case 24:
-                $this->setDbChannels($value);
+                $this->setDbTrackNumber($value);
                 break;
             case 25:
-                $this->setDbUrl($value);
+                $this->setDbChannels($value);
                 break;
             case 26:
-                $this->setDbBpm($value);
+                $this->setDbUrl($value);
                 break;
             case 27:
-                $this->setDbRating($value);
+                $this->setDbBpm($value);
                 break;
             case 28:
-                $this->setDbEncodedBy($value);
+                $this->setDbRating($value);
                 break;
             case 29:
-                $this->setDbDiscNumber($value);
+                $this->setDbEncodedBy($value);
                 break;
             case 30:
-                $this->setDbMood($value);
+                $this->setDbDiscNumber($value);
                 break;
             case 31:
-                $this->setDbLabel($value);
+                $this->setDbMood($value);
                 break;
             case 32:
-                $this->setDbComposer($value);
+                $this->setDbLabel($value);
                 break;
             case 33:
-                $this->setDbEncoder($value);
+                $this->setDbComposer($value);
                 break;
             case 34:
-                $this->setDbChecksum($value);
+                $this->setDbEncoder($value);
                 break;
             case 35:
-                $this->setDbLyrics($value);
+                $this->setDbChecksum($value);
                 break;
             case 36:
-                $this->setDbOrchestra($value);
+                $this->setDbLyrics($value);
                 break;
             case 37:
-                $this->setDbConductor($value);
+                $this->setDbOrchestra($value);
                 break;
             case 38:
-                $this->setDbLyricist($value);
+                $this->setDbConductor($value);
                 break;
             case 39:
-                $this->setDbOriginalLyricist($value);
+                $this->setDbLyricist($value);
                 break;
             case 40:
-                $this->setDbRadioStationName($value);
+                $this->setDbOriginalLyricist($value);
                 break;
             case 41:
-                $this->setDbInfoUrl($value);
+                $this->setDbRadioStationName($value);
                 break;
             case 42:
-                $this->setDbArtistUrl($value);
+                $this->setDbInfoUrl($value);
                 break;
             case 43:
-                $this->setDbAudioSourceUrl($value);
+                $this->setDbArtistUrl($value);
                 break;
             case 44:
-                $this->setDbRadioStationUrl($value);
+                $this->setDbAudioSourceUrl($value);
                 break;
             case 45:
-                $this->setDbBuyThisUrl($value);
+                $this->setDbRadioStationUrl($value);
                 break;
             case 46:
-                $this->setDbIsrcNumber($value);
+                $this->setDbBuyThisUrl($value);
                 break;
             case 47:
-                $this->setDbCatalogNumber($value);
+                $this->setDbIsrcNumber($value);
                 break;
             case 48:
-                $this->setDbOriginalArtist($value);
+                $this->setDbCatalogNumber($value);
                 break;
             case 49:
-                $this->setDbCopyright($value);
+                $this->setDbOriginalArtist($value);
                 break;
             case 50:
-                $this->setDbReportDatetime($value);
+                $this->setDbCopyright($value);
                 break;
             case 51:
-                $this->setDbReportLocation($value);
+                $this->setDbReportDatetime($value);
                 break;
             case 52:
-                $this->setDbReportOrganization($value);
+                $this->setDbReportLocation($value);
                 break;
             case 53:
-                $this->setDbSubject($value);
+                $this->setDbReportOrganization($value);
                 break;
             case 54:
-                $this->setDbContributor($value);
+                $this->setDbSubject($value);
                 break;
             case 55:
-                $this->setDbLanguage($value);
+                $this->setDbContributor($value);
                 break;
             case 56:
-                $this->setDbFileExists($value);
+                $this->setDbLanguage($value);
                 break;
             case 57:
-                $this->setDbSoundcloudId($value);
+                $this->setDbFileExists($value);
                 break;
             case 58:
-                $this->setDbSoundcloudErrorCode($value);
+                $this->setDbSoundcloudId($value);
                 break;
             case 59:
-                $this->setDbSoundcloudErrorMsg($value);
+                $this->setDbSoundcloudErrorCode($value);
                 break;
             case 60:
-                $this->setDbSoundcloudLinkToFile($value);
+                $this->setDbSoundcloudErrorMsg($value);
                 break;
             case 61:
-                $this->setDbSoundCloundUploadTime($value);
+                $this->setDbSoundcloudLinkToFile($value);
                 break;
             case 62:
-                $this->setDbReplayGain($value);
+                $this->setDbSoundCloundUploadTime($value);
                 break;
             case 63:
-                $this->setDbOwnerId($value);
+                $this->setDbReplayGain($value);
                 break;
             case 64:
-                $this->setDbCuein($value);
+                $this->setDbOwnerId($value);
                 break;
             case 65:
-                $this->setDbCueout($value);
+                $this->setDbCuein($value);
                 break;
             case 66:
-                $this->setDbSilanCheck($value);
+                $this->setDbCueout($value);
                 break;
             case 67:
-                $this->setDbHidden($value);
+                $this->setDbSilanCheck($value);
                 break;
             case 68:
-                $this->setDbIsScheduled($value);
+                $this->setDbHidden($value);
                 break;
             case 69:
-                $this->setDbIsPlaylist($value);
+                $this->setDbIsScheduled($value);
                 break;
             case 70:
-                $this->setDbFilesize($value);
+                $this->setDbIsPlaylist($value);
                 break;
             case 71:
+                $this->setDbFilesize($value);
+                break;
+            case 72:
                 $this->setDbDescription($value);
                 break;
         } // switch()
@@ -4988,66 +5066,67 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if (array_key_exists($keys[9], $arr)) $this->setDbMtime($arr[$keys[9]]);
         if (array_key_exists($keys[10], $arr)) $this->setDbUtime($arr[$keys[10]]);
         if (array_key_exists($keys[11], $arr)) $this->setDbLPtime($arr[$keys[11]]);
-        if (array_key_exists($keys[12], $arr)) $this->setDbMd5($arr[$keys[12]]);
-        if (array_key_exists($keys[13], $arr)) $this->setDbTrackTitle($arr[$keys[13]]);
-        if (array_key_exists($keys[14], $arr)) $this->setDbArtistName($arr[$keys[14]]);
-        if (array_key_exists($keys[15], $arr)) $this->setDbBitRate($arr[$keys[15]]);
-        if (array_key_exists($keys[16], $arr)) $this->setDbSampleRate($arr[$keys[16]]);
-        if (array_key_exists($keys[17], $arr)) $this->setDbFormat($arr[$keys[17]]);
-        if (array_key_exists($keys[18], $arr)) $this->setDbLength($arr[$keys[18]]);
-        if (array_key_exists($keys[19], $arr)) $this->setDbAlbumTitle($arr[$keys[19]]);
-        if (array_key_exists($keys[20], $arr)) $this->setDbGenre($arr[$keys[20]]);
-        if (array_key_exists($keys[21], $arr)) $this->setDbComments($arr[$keys[21]]);
-        if (array_key_exists($keys[22], $arr)) $this->setDbYear($arr[$keys[22]]);
-        if (array_key_exists($keys[23], $arr)) $this->setDbTrackNumber($arr[$keys[23]]);
-        if (array_key_exists($keys[24], $arr)) $this->setDbChannels($arr[$keys[24]]);
-        if (array_key_exists($keys[25], $arr)) $this->setDbUrl($arr[$keys[25]]);
-        if (array_key_exists($keys[26], $arr)) $this->setDbBpm($arr[$keys[26]]);
-        if (array_key_exists($keys[27], $arr)) $this->setDbRating($arr[$keys[27]]);
-        if (array_key_exists($keys[28], $arr)) $this->setDbEncodedBy($arr[$keys[28]]);
-        if (array_key_exists($keys[29], $arr)) $this->setDbDiscNumber($arr[$keys[29]]);
-        if (array_key_exists($keys[30], $arr)) $this->setDbMood($arr[$keys[30]]);
-        if (array_key_exists($keys[31], $arr)) $this->setDbLabel($arr[$keys[31]]);
-        if (array_key_exists($keys[32], $arr)) $this->setDbComposer($arr[$keys[32]]);
-        if (array_key_exists($keys[33], $arr)) $this->setDbEncoder($arr[$keys[33]]);
-        if (array_key_exists($keys[34], $arr)) $this->setDbChecksum($arr[$keys[34]]);
-        if (array_key_exists($keys[35], $arr)) $this->setDbLyrics($arr[$keys[35]]);
-        if (array_key_exists($keys[36], $arr)) $this->setDbOrchestra($arr[$keys[36]]);
-        if (array_key_exists($keys[37], $arr)) $this->setDbConductor($arr[$keys[37]]);
-        if (array_key_exists($keys[38], $arr)) $this->setDbLyricist($arr[$keys[38]]);
-        if (array_key_exists($keys[39], $arr)) $this->setDbOriginalLyricist($arr[$keys[39]]);
-        if (array_key_exists($keys[40], $arr)) $this->setDbRadioStationName($arr[$keys[40]]);
-        if (array_key_exists($keys[41], $arr)) $this->setDbInfoUrl($arr[$keys[41]]);
-        if (array_key_exists($keys[42], $arr)) $this->setDbArtistUrl($arr[$keys[42]]);
-        if (array_key_exists($keys[43], $arr)) $this->setDbAudioSourceUrl($arr[$keys[43]]);
-        if (array_key_exists($keys[44], $arr)) $this->setDbRadioStationUrl($arr[$keys[44]]);
-        if (array_key_exists($keys[45], $arr)) $this->setDbBuyThisUrl($arr[$keys[45]]);
-        if (array_key_exists($keys[46], $arr)) $this->setDbIsrcNumber($arr[$keys[46]]);
-        if (array_key_exists($keys[47], $arr)) $this->setDbCatalogNumber($arr[$keys[47]]);
-        if (array_key_exists($keys[48], $arr)) $this->setDbOriginalArtist($arr[$keys[48]]);
-        if (array_key_exists($keys[49], $arr)) $this->setDbCopyright($arr[$keys[49]]);
-        if (array_key_exists($keys[50], $arr)) $this->setDbReportDatetime($arr[$keys[50]]);
-        if (array_key_exists($keys[51], $arr)) $this->setDbReportLocation($arr[$keys[51]]);
-        if (array_key_exists($keys[52], $arr)) $this->setDbReportOrganization($arr[$keys[52]]);
-        if (array_key_exists($keys[53], $arr)) $this->setDbSubject($arr[$keys[53]]);
-        if (array_key_exists($keys[54], $arr)) $this->setDbContributor($arr[$keys[54]]);
-        if (array_key_exists($keys[55], $arr)) $this->setDbLanguage($arr[$keys[55]]);
-        if (array_key_exists($keys[56], $arr)) $this->setDbFileExists($arr[$keys[56]]);
-        if (array_key_exists($keys[57], $arr)) $this->setDbSoundcloudId($arr[$keys[57]]);
-        if (array_key_exists($keys[58], $arr)) $this->setDbSoundcloudErrorCode($arr[$keys[58]]);
-        if (array_key_exists($keys[59], $arr)) $this->setDbSoundcloudErrorMsg($arr[$keys[59]]);
-        if (array_key_exists($keys[60], $arr)) $this->setDbSoundcloudLinkToFile($arr[$keys[60]]);
-        if (array_key_exists($keys[61], $arr)) $this->setDbSoundCloundUploadTime($arr[$keys[61]]);
-        if (array_key_exists($keys[62], $arr)) $this->setDbReplayGain($arr[$keys[62]]);
-        if (array_key_exists($keys[63], $arr)) $this->setDbOwnerId($arr[$keys[63]]);
-        if (array_key_exists($keys[64], $arr)) $this->setDbCuein($arr[$keys[64]]);
-        if (array_key_exists($keys[65], $arr)) $this->setDbCueout($arr[$keys[65]]);
-        if (array_key_exists($keys[66], $arr)) $this->setDbSilanCheck($arr[$keys[66]]);
-        if (array_key_exists($keys[67], $arr)) $this->setDbHidden($arr[$keys[67]]);
-        if (array_key_exists($keys[68], $arr)) $this->setDbIsScheduled($arr[$keys[68]]);
-        if (array_key_exists($keys[69], $arr)) $this->setDbIsPlaylist($arr[$keys[69]]);
-        if (array_key_exists($keys[70], $arr)) $this->setDbFilesize($arr[$keys[70]]);
-        if (array_key_exists($keys[71], $arr)) $this->setDbDescription($arr[$keys[71]]);
+        if (array_key_exists($keys[12], $arr)) $this->setDbExpirestime($arr[$keys[12]]);
+        if (array_key_exists($keys[13], $arr)) $this->setDbMd5($arr[$keys[13]]);
+        if (array_key_exists($keys[14], $arr)) $this->setDbTrackTitle($arr[$keys[14]]);
+        if (array_key_exists($keys[15], $arr)) $this->setDbArtistName($arr[$keys[15]]);
+        if (array_key_exists($keys[16], $arr)) $this->setDbBitRate($arr[$keys[16]]);
+        if (array_key_exists($keys[17], $arr)) $this->setDbSampleRate($arr[$keys[17]]);
+        if (array_key_exists($keys[18], $arr)) $this->setDbFormat($arr[$keys[18]]);
+        if (array_key_exists($keys[19], $arr)) $this->setDbLength($arr[$keys[19]]);
+        if (array_key_exists($keys[20], $arr)) $this->setDbAlbumTitle($arr[$keys[20]]);
+        if (array_key_exists($keys[21], $arr)) $this->setDbGenre($arr[$keys[21]]);
+        if (array_key_exists($keys[22], $arr)) $this->setDbComments($arr[$keys[22]]);
+        if (array_key_exists($keys[23], $arr)) $this->setDbYear($arr[$keys[23]]);
+        if (array_key_exists($keys[24], $arr)) $this->setDbTrackNumber($arr[$keys[24]]);
+        if (array_key_exists($keys[25], $arr)) $this->setDbChannels($arr[$keys[25]]);
+        if (array_key_exists($keys[26], $arr)) $this->setDbUrl($arr[$keys[26]]);
+        if (array_key_exists($keys[27], $arr)) $this->setDbBpm($arr[$keys[27]]);
+        if (array_key_exists($keys[28], $arr)) $this->setDbRating($arr[$keys[28]]);
+        if (array_key_exists($keys[29], $arr)) $this->setDbEncodedBy($arr[$keys[29]]);
+        if (array_key_exists($keys[30], $arr)) $this->setDbDiscNumber($arr[$keys[30]]);
+        if (array_key_exists($keys[31], $arr)) $this->setDbMood($arr[$keys[31]]);
+        if (array_key_exists($keys[32], $arr)) $this->setDbLabel($arr[$keys[32]]);
+        if (array_key_exists($keys[33], $arr)) $this->setDbComposer($arr[$keys[33]]);
+        if (array_key_exists($keys[34], $arr)) $this->setDbEncoder($arr[$keys[34]]);
+        if (array_key_exists($keys[35], $arr)) $this->setDbChecksum($arr[$keys[35]]);
+        if (array_key_exists($keys[36], $arr)) $this->setDbLyrics($arr[$keys[36]]);
+        if (array_key_exists($keys[37], $arr)) $this->setDbOrchestra($arr[$keys[37]]);
+        if (array_key_exists($keys[38], $arr)) $this->setDbConductor($arr[$keys[38]]);
+        if (array_key_exists($keys[39], $arr)) $this->setDbLyricist($arr[$keys[39]]);
+        if (array_key_exists($keys[40], $arr)) $this->setDbOriginalLyricist($arr[$keys[40]]);
+        if (array_key_exists($keys[41], $arr)) $this->setDbRadioStationName($arr[$keys[41]]);
+        if (array_key_exists($keys[42], $arr)) $this->setDbInfoUrl($arr[$keys[42]]);
+        if (array_key_exists($keys[43], $arr)) $this->setDbArtistUrl($arr[$keys[43]]);
+        if (array_key_exists($keys[44], $arr)) $this->setDbAudioSourceUrl($arr[$keys[44]]);
+        if (array_key_exists($keys[45], $arr)) $this->setDbRadioStationUrl($arr[$keys[45]]);
+        if (array_key_exists($keys[46], $arr)) $this->setDbBuyThisUrl($arr[$keys[46]]);
+        if (array_key_exists($keys[47], $arr)) $this->setDbIsrcNumber($arr[$keys[47]]);
+        if (array_key_exists($keys[48], $arr)) $this->setDbCatalogNumber($arr[$keys[48]]);
+        if (array_key_exists($keys[49], $arr)) $this->setDbOriginalArtist($arr[$keys[49]]);
+        if (array_key_exists($keys[50], $arr)) $this->setDbCopyright($arr[$keys[50]]);
+        if (array_key_exists($keys[51], $arr)) $this->setDbReportDatetime($arr[$keys[51]]);
+        if (array_key_exists($keys[52], $arr)) $this->setDbReportLocation($arr[$keys[52]]);
+        if (array_key_exists($keys[53], $arr)) $this->setDbReportOrganization($arr[$keys[53]]);
+        if (array_key_exists($keys[54], $arr)) $this->setDbSubject($arr[$keys[54]]);
+        if (array_key_exists($keys[55], $arr)) $this->setDbContributor($arr[$keys[55]]);
+        if (array_key_exists($keys[56], $arr)) $this->setDbLanguage($arr[$keys[56]]);
+        if (array_key_exists($keys[57], $arr)) $this->setDbFileExists($arr[$keys[57]]);
+        if (array_key_exists($keys[58], $arr)) $this->setDbSoundcloudId($arr[$keys[58]]);
+        if (array_key_exists($keys[59], $arr)) $this->setDbSoundcloudErrorCode($arr[$keys[59]]);
+        if (array_key_exists($keys[60], $arr)) $this->setDbSoundcloudErrorMsg($arr[$keys[60]]);
+        if (array_key_exists($keys[61], $arr)) $this->setDbSoundcloudLinkToFile($arr[$keys[61]]);
+        if (array_key_exists($keys[62], $arr)) $this->setDbSoundCloundUploadTime($arr[$keys[62]]);
+        if (array_key_exists($keys[63], $arr)) $this->setDbReplayGain($arr[$keys[63]]);
+        if (array_key_exists($keys[64], $arr)) $this->setDbOwnerId($arr[$keys[64]]);
+        if (array_key_exists($keys[65], $arr)) $this->setDbCuein($arr[$keys[65]]);
+        if (array_key_exists($keys[66], $arr)) $this->setDbCueout($arr[$keys[66]]);
+        if (array_key_exists($keys[67], $arr)) $this->setDbSilanCheck($arr[$keys[67]]);
+        if (array_key_exists($keys[68], $arr)) $this->setDbHidden($arr[$keys[68]]);
+        if (array_key_exists($keys[69], $arr)) $this->setDbIsScheduled($arr[$keys[69]]);
+        if (array_key_exists($keys[70], $arr)) $this->setDbIsPlaylist($arr[$keys[70]]);
+        if (array_key_exists($keys[71], $arr)) $this->setDbFilesize($arr[$keys[71]]);
+        if (array_key_exists($keys[72], $arr)) $this->setDbDescription($arr[$keys[72]]);
     }
 
     /**
@@ -5071,6 +5150,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if ($this->isColumnModified(CcFilesPeer::MTIME)) $criteria->add(CcFilesPeer::MTIME, $this->mtime);
         if ($this->isColumnModified(CcFilesPeer::UTIME)) $criteria->add(CcFilesPeer::UTIME, $this->utime);
         if ($this->isColumnModified(CcFilesPeer::LPTIME)) $criteria->add(CcFilesPeer::LPTIME, $this->lptime);
+        if ($this->isColumnModified(CcFilesPeer::EXPIRESTIME)) $criteria->add(CcFilesPeer::EXPIRESTIME, $this->expirestime);
         if ($this->isColumnModified(CcFilesPeer::MD5)) $criteria->add(CcFilesPeer::MD5, $this->md5);
         if ($this->isColumnModified(CcFilesPeer::TRACK_TITLE)) $criteria->add(CcFilesPeer::TRACK_TITLE, $this->track_title);
         if ($this->isColumnModified(CcFilesPeer::ARTIST_NAME)) $criteria->add(CcFilesPeer::ARTIST_NAME, $this->artist_name);
@@ -5205,6 +5285,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $copyObj->setDbMtime($this->getDbMtime());
         $copyObj->setDbUtime($this->getDbUtime());
         $copyObj->setDbLPtime($this->getDbLPtime());
+        $copyObj->setDbExpirestime($this->getDbExpirestime());
         $copyObj->setDbMd5($this->getDbMd5());
         $copyObj->setDbTrackTitle($this->getDbTrackTitle());
         $copyObj->setDbArtistName($this->getDbArtistName());
@@ -7606,6 +7687,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $this->mtime = null;
         $this->utime = null;
         $this->lptime = null;
+        $this->expirestime = null;
         $this->md5 = null;
         $this->track_title = null;
         $this->artist_name = null;

@@ -35,6 +35,7 @@ class Application_Model_StoredFile
         "bpm"          => "DbBpm",
         "label"        => "DbLabel",
         "composer"     => "DbComposer",
+        "expirestime"  => "DbExpirestime",
         "encoded_by"   => "DbEncodedBy",
         "conductor"    => "DbConductor",
         "year"         => "DbYear",

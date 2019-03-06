@@ -36,6 +36,7 @@ CREATE TABLE "cc_files"
     "mtime" TIMESTAMP(6),
     "utime" TIMESTAMP(6),
     "lptime" TIMESTAMP(6),
+    "expirestime" TIMESTAMP(6),
     "md5" CHAR(32),
     "track_title" VARCHAR(512),
     "artist_name" VARCHAR(512),
@@ -299,7 +300,7 @@ CREATE TABLE "cc_block"
     "creator_id" INTEGER,
     "description" VARCHAR(512),
     "length" interval DEFAULT '00:00:00',
-    "type" VARCHAR(7) DEFAULT 'static',
+    "type" VARCHAR(7) DEFAULT 'dynamic',
     PRIMARY KEY ("id")
 );
 
