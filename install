@@ -147,13 +147,16 @@ function systemInitDetect() {
     # Get the path of the command where pid=1 following any symlinks
     pid_1_path=$(readlink --canonicalize -n /proc/1/exe)
     # returns '/sbin/init' (Debian Wheezy & Ubuntu Trusty)
-    # returns '(/usr)?/lib/systemd/systemd' (Debian Stretch, Debian Jessie, Ubuntu Xenial, CentOS 7)
+    # returns '(/usr)?/lib/systemd/systemd' (Debian Stretch, Debian Jessie, Debian Buster, Ubuntu Xenial, CentOS 7)
     verbose "Detected path to PID=1 process: $pid_1_path"
-    # Get package of PID=1 path as it identifies the init system
-    pid_1_package=$(dpkg -S $pid_1_path 2>/dev/null || 
-                    rpm --qf '%{name}\n' -qf $pid_1_path 2>/dev/null)
+    # Get package of PID=1 path as it identifies the init system.
+    # Allow this to fail, at least then the init system can be guessed from the
+    # PID 1 executable alone
+    pid_1_package=$(dpkg -S $pid_1_path 2>/dev/null ||
+                    rpm --qf '%{name}\n' -qf $pid_1_path 2>/dev/null ||
+                    echo "unknown")
     verbose "Detected package name for PID=1 process: $pid_1_package"
-    case "${pid_1_package-$pid_1_path}" in
+    case "${pid_1_package}:${pid_1_path}" in
       *systemd*) has_systemd_init=true; verbose "Detected init system type: systemd" ;;
       *upstart*) has_upstart_init=true; verbose "Detected init system type: Upstart" ;;
       *sysvinit*) has_systemv_init=true; verbose "Detected init system type: System V" ;;
@@ -584,6 +587,7 @@ fi
 
 # Validate the distribution and release is a supported one; set boolean flags.
 is_debian_dist=false
+is_debian_buster=false
 is_debian_stretch=false
 is_debian_jessie=false
 is_ubuntu_dist=false
@@ -620,6 +624,11 @@ case "${dist}-${code}" in
         code="stretch"
         is_debian_dist=true
         is_debian_stretch=true
+        ;;
+    debian-10|debian-buster)
+        code="buster"
+        is_debian_dist=true
+        is_debian_buster=true
         ;;
     #Fix for Raspbian 9 (stretch)
     raspbian-9|9)
@@ -684,6 +693,7 @@ if [ "$ignore_dependencies" = "f" ]; then
         apt_force_options="--allow-downgrades --allow-remove-essential --allow-change-held-packages"
         # Get apt-get version by returning the 2nd parameter from the 1st line of output
         apt_version=$(apt-get --version |awk 'NR == 1 { print $2 }')
+        # returns 1.8.0~alpha3 (Debian Buster)
         # returns: 1.4.7 (Debian Stretch)
         # returns: 0.9.7.9 (Debian Wheezy)
         # returns: 1.0.1ubuntu2 (Ubuntu Trusty)
@@ -983,6 +993,7 @@ loud "              * Configuring PHP in Apache *          "
 loud "-----------------------------------------------------"
 # Test common locations for php conf directory
 php_conf_dirs=(
+    "/etc/php/7.3/apache2/conf.d"   # Debian Buster
     "/etc/php/7.2/apache2/conf.d"   # Ubuntu Bionic
     "/etc/php/7.0/apache2/conf.d"   # Ubuntu Xenial
     "/etc/php5/apache2/conf.d"      # Debian Stretch, Debian Jessie, Ubuntu Trusty
@@ -1006,7 +1017,9 @@ else
 fi
 
 # Enable Apache modules
-if $is_ubuntu_bionic; then
+if $is_debian_buster; then
+    loudCmd "a2enmod rewrite php7.3"
+elif $is_ubuntu_bionic; then
     loudCmd "a2enmod rewrite php7.2"
 elif $is_ubuntu_xenial || $is_debian_stretch; then
     loudCmd "a2enmod rewrite php7.0"
