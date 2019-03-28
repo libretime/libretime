@@ -48,6 +48,21 @@ class Application_Form_EditAudioMD extends Zend_Form
             ));
         $this->addElement($album_title);
 
+
+        // Add album field
+        $user_options = array();
+        $users = Application_Model_User::getNonGuestUsers();
+
+        foreach ($users as $host) {
+            $user_options[$host['index']] = $host['label'];
+        }
+
+        $owner_id = new Zend_Form_Element_Select('owner_id');
+        $owner_id->class = 'input_text';
+        $owner_id->setLabel(_('Owner:'));
+        $owner_id->setMultiOptions($user_options);
+        $this->addelement($owner_id);
+
         // Description field
         $description = new Zend_Form_Element_Textarea('description');
         $description->class = 'input_text';
@@ -244,6 +259,9 @@ class Application_Form_EditAudioMD extends Zend_Form
         }
     }
 
+    public function removeOwnerEdit() {
+        $this->removeElement('owner_id');
+    }
     public function removeActionButtons()
     {
         $this->removeElement('editmdsave');

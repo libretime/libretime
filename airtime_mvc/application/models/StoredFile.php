@@ -172,39 +172,36 @@ class Application_Model_StoredFile
                 $this->_file->$method(null);
             }
         } else {
-            $owner = $this->_file->getFkOwner();
-            // if owner_id is already set we don't want to set it again.
-            if (!$owner) { // no owner detected, we try to assign one.
-                // if MDATA_OWNER_ID is not set then we default to the
-                // first admin user we find
-                if (!array_key_exists('owner_id', $p_md)) {
-                    //$admins = Application_Model_User::getUsers(array('A'));
-                    $admins = array_merge(Application_Model_User::getUsersOfType('A')->getData(),
-                                          Application_Model_User::getUsersOfType('S')->getData());
-                    if (count($admins) > 0) { // found admin => pick first one
-                        $owner = $admins[0];
+            // in order to edit the owner of a file we see if owner_id exists in the track form metadata otherwise
+            // we determine it via the algorithm below
+            if (!array_key_exists('owner_id', $p_md)) {
+                $owner = $this->_file->getFkOwner();
+                // if owner_id is already set we don't want to set it again.
+                if (!$owner) { // no owner detected, we try to assign one.
+                    // if MDATA_OWNER_ID is not set then we default to the
+                    // first admin user we find
+                    if (!array_key_exists('owner_id', $p_md)) {
+                        //$admins = Application_Model_User::getUsers(array('A'));
+                        $admins = array_merge(Application_Model_User::getUsersOfType('A')->getData(),
+                            Application_Model_User::getUsersOfType('S')->getData());
+                        if (count($admins) > 0) { // found admin => pick first one
+                            $owner = $admins[0];
+                        }
+                    } // get the user by id and set it like that
+                    else {
+                        $user = CcSubjsQuery::create()
+                            ->findPk($p_md['owner_id']);
+                        if ($user) {
+                            $owner = $user;
+                        }
+                    }
+                    if ($owner) {
+                        $this->_file->setDbOwnerId($owner->getDbId());
+                    } else {
+                        Logging::info("Could not find suitable owner for file
+                        '" . $p_md['filepath'] . "'");
                     }
                 }
-                // get the user by id and set it like that
-                else {
-                    $user = CcSubjsQuery::create()
-                        ->findPk($p_md['owner_id']);
-                    if ($user) {
-                        $owner = $user;
-                    }
-                }
-                if ($owner) {
-                    $this->_file->setDbOwnerId( $owner->getDbId() );
-                } else {
-                    Logging::info("Could not find suitable owner for file
-                        '".$p_md['filepath']."'");
-                }
-            }
-            # We don't want to process owner_id in bulk because we already
-            # processed it in the code above. This is done because owner_id
-            # needs special handling
-            if (array_key_exists('owner_id', $p_md)) {
-                unset($p_md['owner_id']);
             }
             foreach ($p_md as $dbColumn => $mdValue) {
                 // don't blank out name, defaults to original filename on first
