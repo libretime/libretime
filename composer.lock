@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e324d9c2d063b379331a64aab1a42e53",
+    "content-hash": "d60326985fa7371adf17493a929e961c",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -2126,12 +2126,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zf1s/zend-validate.git",
-                "reference": "065da571732398e08a0b0ea6b6f320ae6fca0536"
+                "reference": "424607a11555d6d6fb0e826efa9f4a4fb235d360"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zf1s/zend-validate/zipball/065da571732398e08a0b0ea6b6f320ae6fca0536",
-                "reference": "065da571732398e08a0b0ea6b6f320ae6fca0536",
+                "url": "https://api.github.com/repos/zf1s/zend-validate/zipball/424607a11555d6d6fb0e826efa9f4a4fb235d360",
+                "reference": "424607a11555d6d6fb0e826efa9f4a4fb235d360",
                 "shasum": ""
             },
             "require": {
@@ -2171,7 +2171,7 @@
                 "validate",
                 "zend"
             ],
-            "time": "2018-08-17T10:18:25+00:00"
+            "time": "2019-02-15T20:19:12+00:00"
         },
         {
             "name": "zf1s/zend-version",
@@ -2220,16 +2220,16 @@
         },
         {
             "name": "zf1s/zend-view",
-            "version": "1.12.20",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zf1s/zend-view.git",
-                "reference": "e25c2bd4c82f2a0a649a6c0edc41852453cbd04e"
+                "reference": "89acaef8c2ef802862e97bbd124add2274a34857"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zf1s/zend-view/zipball/e25c2bd4c82f2a0a649a6c0edc41852453cbd04e",
-                "reference": "e25c2bd4c82f2a0a649a6c0edc41852453cbd04e",
+                "url": "https://api.github.com/repos/zf1s/zend-view/zipball/89acaef8c2ef802862e97bbd124add2274a34857",
+                "reference": "89acaef8c2ef802862e97bbd124add2274a34857",
                 "shasum": ""
             },
             "require": {
@@ -2270,7 +2270,7 @@
                 "view",
                 "zend"
             ],
-            "time": "2016-10-23T08:16:14+00:00"
+            "time": "2019-01-23T17:16:56+00:00"
         },
         {
             "name": "zf1s/zend-xml",
@@ -2916,6 +2916,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2015-10-02T06:51:40+00:00"
         },
         {
@@ -3448,6 +3449,7 @@
         "simplepie/simplepie": 20,
         "zf1s/zend-rest": 20,
         "zf1s/zend-loader": 20,
+        "zf1s/zend-view": 20,
         "zf1s/zend-validate": 20,
         "zf1s/zend-cache": 20
     },
