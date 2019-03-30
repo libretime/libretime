@@ -2126,12 +2126,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zf1s/zend-validate.git",
-                "reference": "065da571732398e08a0b0ea6b6f320ae6fca0536"
+                "reference": "424607a11555d6d6fb0e826efa9f4a4fb235d360"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zf1s/zend-validate/zipball/065da571732398e08a0b0ea6b6f320ae6fca0536",
-                "reference": "065da571732398e08a0b0ea6b6f320ae6fca0536",
+                "url": "https://api.github.com/repos/zf1s/zend-validate/zipball/424607a11555d6d6fb0e826efa9f4a4fb235d360",
+                "reference": "424607a11555d6d6fb0e826efa9f4a4fb235d360",
                 "shasum": ""
             },
             "require": {
@@ -2171,7 +2171,7 @@
                 "validate",
                 "zend"
             ],
-            "time": "2018-08-17T10:18:25+00:00"
+            "time": "2019-02-15T20:19:12+00:00"
         },
         {
             "name": "zf1s/zend-version",
