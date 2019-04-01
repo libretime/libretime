@@ -39,7 +39,11 @@ class PypoFile(Thread):
         src = media_item['uri']
         dst = media_item['dst']
 
-        src_size = media_item['filesize']
+        try:
+            src_size = os.path.getsize(src)
+        except Exception, e:
+            self.logger.error("Could not get size of source file: %s", src)
+            return
 
         dst_exists = True
         try:
