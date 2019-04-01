@@ -553,7 +553,7 @@ class AirtimeUpgrader300alpha7 extends AirtimeUpgrader
  */
 
 
-class AirtimeUpgrader300alpha7-1 extends AirtimeUpgrader
+class AirtimeUpgrader300alpha7_1 extends AirtimeUpgrader
 {
     protected function getSupportedSchemaVersions() {
         return array(
@@ -568,7 +568,7 @@ class AirtimeUpgrader300alpha7-1 extends AirtimeUpgrader
 
 
 
-class AirtimeUpgrader300alpha7-2 extends AirtimeUpgrader
+class AirtimeUpgrader300alpha7_2 extends AirtimeUpgrader
 {
     protected function getSupportedSchemaVersions() {
         return array(
