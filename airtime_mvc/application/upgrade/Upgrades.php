@@ -546,6 +546,11 @@ class AirtimeUpgrader300alpha7 extends AirtimeUpgrader
             '3.0.0-alpha.6'
         );
     }
+    public function getNewVersion() {
+        return '3.0.0-alpha.7';
+    }
+
+}
 /**
  * Class AirtimeUpgrader300alpha7-1
  *
@@ -560,6 +565,11 @@ class AirtimeUpgrader300alpha7_1 extends AirtimeUpgrader
             '3.0.0-alpha.7'
         );
     }
+    public function getNewVersion() {
+        return '3.0.0-alpha.7.1';
+    }
+
+}    
 /**
  * Class AirtimeUpgrader300alpha7-2
  *
@@ -575,9 +585,6 @@ class AirtimeUpgrader300alpha7_2 extends AirtimeUpgrader
             '3.0.0-alpha.7.1'
         );
     }
-
-
-
     public function getNewVersion() {
         return '3.0.0-alpha.7.2';
     }
