@@ -589,3 +589,16 @@ class AirtimeUpgrader300alpha7_2 extends AirtimeUpgrader
         return '3.0.0-alpha.7.2';
     }
 }
+class AirtimeUpgrader300alpha7_3 extends AirtimeUpgrader
+{
+    protected function getSupportedSchemaVersions() {
+        return array(
+            '3.0.0-alpha.7.2'
+        );
+    }
+    public function getNewVersion() {
+        return '3.0.0-alpha.7.3';
+    }
+}
+
+

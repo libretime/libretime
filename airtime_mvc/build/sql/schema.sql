@@ -299,7 +299,7 @@ CREATE TABLE "cc_block"
     "creator_id" INTEGER,
     "description" VARCHAR(512),
     "length" interval DEFAULT '00:00:00',
-    "type" VARCHAR(7) DEFAULT 'static',
+    "type" VARCHAR(7) DEFAULT 'dynamic',
     PRIMARY KEY ("id")
 );
 
@@ -782,7 +782,7 @@ CREATE TABLE "podcast_episodes"
     "download_url" VARCHAR(4096) NOT NULL,
     "episode_guid" VARCHAR(4096) NOT NULL,
     "episode_title" VARCHAR(4096) NOT NULL,
-    "episode_description" VARCHAR(4096) NOT NULL,
+    "episode_description" TEXT NOT NULL,
     PRIMARY KEY ("id")
 );
 

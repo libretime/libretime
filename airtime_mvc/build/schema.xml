@@ -625,7 +625,7 @@
     <column name="download_url" phpName="DbDownloadUrl" type="varchar" size="4096" required="true" />
     <column name="episode_guid" phpName="DbEpisodeGuid" type="varchar" size="4096" required="true" />
     <column name="episode_title" phpName="DbEpisodeTitle" type="varchar" size="4096" required="true" />
-    <column name="episode_description" phpName="DbEpisodeDescription" type="varchar" size="4096" required="true" />
+    <column name="episode_description" phpName="DbEpisodeDescription" type="LONGVARCHAR" required="true" />
 
     <foreign-key foreignTable="cc_files" name="podcast_episodes_cc_files_fkey" onDelete="CASCADE">
       <reference local="file_id" foreign="id" />

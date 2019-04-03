@@ -46,7 +46,7 @@ class PodcastEpisodesTableMap extends TableMap
         $this->addColumn('download_url', 'DbDownloadUrl', 'VARCHAR', true, 4096, null);
         $this->addColumn('episode_guid', 'DbEpisodeGuid', 'VARCHAR', true, 4096, null);
         $this->addColumn('episode_title', 'DbEpisodeTitle', 'VARCHAR', true, 4096, null);
-        $this->addColumn('episode_description', 'DbEpisodeDescription', 'VARCHAR', true, 4096, null);
+        $this->addColumn('episode_description', 'DbEpisodeDescription', 'LONGVARCHAR', true, null, null);
         // validators
     } // initialize()
 
