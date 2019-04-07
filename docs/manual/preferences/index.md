@@ -1,4 +1,9 @@
+ ![](static/station-info-settings.png)
+
 On the <span style="font-weight: bold;">Settings</span> menu, click **General** to set your **Station Name**. This text is shown in your web browser's title bar when your station staff are logged into Libretime, and optionally in stream metadata. You can also set a **Station Description** and **Station Logo** here.
+
+ ![](static/general-playback-settings.png)
+
 
 The **Default Interface Language** drop-down menu sets the default localization for your Libretime instance, and the **Station Timezone** drop-down menu can be used to display local time at your station. Libretime stores show times internally in UTC format (similar to *Greenwich Mean Time*), but displays local time for the convenience of your station staff. You can also set the day of the week that you wish to start your station's weekly schedule on, which defaults to Sunday.
 
@@ -12,6 +17,8 @@ The **Overwrite Podcast Episode Metatags** option which is enabled by default ca
 
 The **Generate a smartblock and a playlist upon creation of a new podcast** option when enabled will create a smartblock matching the newest episode of a podcast and a playlist containing that smartblock automatically upon adding a Podcast to LibreTime. This can also be done manually by the generate smartblock and playlist button under a podcasts settings which is why it is disabled by default. 
 
+ ![](static/api-settings.png)
+
 You can enable live, read-only access to the Libretime schedule calendar for your station's public website with the **Public LibreTime API** option, if you wish. (There is more about this feature in the *Exporting the schedule* chapter, in the *Advanced Configuration* section of this book).
 
 The **Allowed CORS URLs** is intended to deal with situations where you want a remote site with a different domain to access the API.
@@ -20,11 +27,13 @@ The **Allowed CORS URLs** is intended to deal with situations where you want a r
  
  The **Tune-In Settings** section is intended for stations that have partnered with TuneIn to automatically push their now playing metadata to TuneIn. This hasn't been tested and also requires special credentials from parterning with TuneIn to test.
  
+ 
+ ![](static/dangerous-options.png)
  The **Dangerous Options** section provides an administrator the ability to erase the entire LibreTime library.
 
- Then click the **Save** button.
+ When you are done remember click the **Save** button at the top or bottom of the form.
 
-![](static/Screenshot544-Preferences_250.png)
+![](static/save-button.png)
 
 Individual Libretime users can choose another interface localization when they log in, or set personal preferences for localization and time zone by clicking their username on the right side of the menu bar.
 
