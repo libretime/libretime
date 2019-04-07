@@ -12,6 +12,8 @@
  * @method PodcastEpisodesQuery orderByDbPublicationDate($order = Criteria::ASC) Order by the publication_date column
  * @method PodcastEpisodesQuery orderByDbDownloadUrl($order = Criteria::ASC) Order by the download_url column
  * @method PodcastEpisodesQuery orderByDbEpisodeGuid($order = Criteria::ASC) Order by the episode_guid column
+ * @method PodcastEpisodesQuery orderByDbEpisodeTitle($order = Criteria::ASC) Order by the episode_title column
+ * @method PodcastEpisodesQuery orderByDbEpisodeDescription($order = Criteria::ASC) Order by the episode_description column
  *
  * @method PodcastEpisodesQuery groupByDbId() Group by the id column
  * @method PodcastEpisodesQuery groupByDbFileId() Group by the file_id column
@@ -19,6 +21,8 @@
  * @method PodcastEpisodesQuery groupByDbPublicationDate() Group by the publication_date column
  * @method PodcastEpisodesQuery groupByDbDownloadUrl() Group by the download_url column
  * @method PodcastEpisodesQuery groupByDbEpisodeGuid() Group by the episode_guid column
+ * @method PodcastEpisodesQuery groupByDbEpisodeTitle() Group by the episode_title column
+ * @method PodcastEpisodesQuery groupByDbEpisodeDescription() Group by the episode_description column
  *
  * @method PodcastEpisodesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method PodcastEpisodesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -40,6 +44,8 @@
  * @method PodcastEpisodes findOneByDbPublicationDate(string $publication_date) Return the first PodcastEpisodes filtered by the publication_date column
  * @method PodcastEpisodes findOneByDbDownloadUrl(string $download_url) Return the first PodcastEpisodes filtered by the download_url column
  * @method PodcastEpisodes findOneByDbEpisodeGuid(string $episode_guid) Return the first PodcastEpisodes filtered by the episode_guid column
+ * @method PodcastEpisodes findOneByDbEpisodeTitle(string $episode_title) Return the first PodcastEpisodes filtered by the episode_title column
+ * @method PodcastEpisodes findOneByDbEpisodeDescription(string $episode_description) Return the first PodcastEpisodes filtered by the episode_description column
  *
  * @method array findByDbId(int $id) Return PodcastEpisodes objects filtered by the id column
  * @method array findByDbFileId(int $file_id) Return PodcastEpisodes objects filtered by the file_id column
@@ -47,6 +53,8 @@
  * @method array findByDbPublicationDate(string $publication_date) Return PodcastEpisodes objects filtered by the publication_date column
  * @method array findByDbDownloadUrl(string $download_url) Return PodcastEpisodes objects filtered by the download_url column
  * @method array findByDbEpisodeGuid(string $episode_guid) Return PodcastEpisodes objects filtered by the episode_guid column
+ * @method array findByDbEpisodeTitle(string $episode_title) Return PodcastEpisodes objects filtered by the episode_title column
+ * @method array findByDbEpisodeDescription(string $episode_description) Return PodcastEpisodes objects filtered by the episode_description column
  *
  * @package    propel.generator.airtime.om
  */
@@ -154,7 +162,7 @@ abstract class BasePodcastEpisodesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "file_id", "podcast_id", "publication_date", "download_url", "episode_guid" FROM "podcast_episodes" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "file_id", "podcast_id", "publication_date", "download_url", "episode_guid", "episode_title", "episode_description" FROM "podcast_episodes" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -472,6 +480,64 @@ abstract class BasePodcastEpisodesQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PodcastEpisodesPeer::EPISODE_GUID, $dbEpisodeGuid, $comparison);
+    }
+
+    /**
+     * Filter the query on the episode_title column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbEpisodeTitle('fooValue');   // WHERE episode_title = 'fooValue'
+     * $query->filterByDbEpisodeTitle('%fooValue%'); // WHERE episode_title LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbEpisodeTitle The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PodcastEpisodesQuery The current query, for fluid interface
+     */
+    public function filterByDbEpisodeTitle($dbEpisodeTitle = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbEpisodeTitle)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbEpisodeTitle)) {
+                $dbEpisodeTitle = str_replace('*', '%', $dbEpisodeTitle);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PodcastEpisodesPeer::EPISODE_TITLE, $dbEpisodeTitle, $comparison);
+    }
+
+    /**
+     * Filter the query on the episode_description column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbEpisodeDescription('fooValue');   // WHERE episode_description = 'fooValue'
+     * $query->filterByDbEpisodeDescription('%fooValue%'); // WHERE episode_description LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbEpisodeDescription The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PodcastEpisodesQuery The current query, for fluid interface
+     */
+    public function filterByDbEpisodeDescription($dbEpisodeDescription = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbEpisodeDescription)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbEpisodeDescription)) {
+                $dbEpisodeDescription = str_replace('*', '%', $dbEpisodeDescription);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PodcastEpisodesPeer::EPISODE_DESCRIPTION, $dbEpisodeDescription, $comparison);
     }
 
     /**

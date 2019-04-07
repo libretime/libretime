@@ -337,6 +337,7 @@ CREATE TABLE "cc_blockcriteria"
     "modifier" VARCHAR(16) NOT NULL,
     "value" VARCHAR(512) NOT NULL,
     "extra" VARCHAR(512),
+    "criteriagroup" INTEGER,
     "block_id" INTEGER NOT NULL,
     PRIMARY KEY ("id")
 );
@@ -780,6 +781,8 @@ CREATE TABLE "podcast_episodes"
     "publication_date" TIMESTAMP NOT NULL,
     "download_url" VARCHAR(4096) NOT NULL,
     "episode_guid" VARCHAR(4096) NOT NULL,
+    "episode_title" VARCHAR(4096) NOT NULL,
+    "episode_description" VARCHAR(4096) NOT NULL,
     PRIMARY KEY ("id")
 );
 

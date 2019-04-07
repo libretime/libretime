@@ -20,52 +20,73 @@
                 <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("General Fields") ?></h3>
                 <div class="collapsible-content">
                     <fieldset class="padded">
-                        <label><?php echo _("Name") ?></label>
-                        <input name="podcast_name" ng-model="podcast.title" type="text"/>
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Name") ?></label>
+                            <input name="podcast_name" ng-model="podcast.title" type="text"/>
+                        </div>
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Creator") ?></label>
+                            <input name="podcast_creator" ng-model="podcast.creator" type="text"/>
+                        </div>
 
-                        <label><?php echo _("Creator") ?></label>
-                        <input name="podcast_creator" ng-model="podcast.creator" type="text"/>
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Description") ?></label>
+                            <textarea name="podcast_description" ng-model="podcast.description"></textarea>
+                        </div>
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Language") ?></label>
+                            <select name="podcast_language" ng-model="podcast.language">
+                                <?php
+                                    foreach(Application_Common_LocaleHelper::getISO6391LanguageCodes() as $code=>$lang) {
+                                        echo "<option value='$code'>$lang</option>";
+                                    }
+                                ?>
+                            </select>
+                        </div>
 
-                        <label><?php echo _("Description") ?></label>
-                        <textarea name="podcast_description" ng-model="podcast.description"></textarea>
-
-                        <label><?php echo _("Language") ?></label>
-                        <select name="podcast_language" ng-model="podcast.language">
-                            <?php
-                                foreach(Application_Common_LocaleHelper::getISO6391LanguageCodes() as $code=>$lang) {
-                                    echo "<option value='$code'>$lang</option>";
-                                }
-                            ?>
-                        </select>
-
-                        <label><?php echo _("Copyright") ?></label>
-                        <input name="podcast_copyright" ng-model="podcast.copyright" type="text"/>
-
-                        <label><?php echo _("Link") ?></label>
-                        <input name="podcast_link" ng-model="podcast.link" type="url"/>
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Copyright") ?></label>
+                            <input name="podcast_copyright" ng-model="podcast.copyright" type="text"/>
+                        </div>
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Link") ?></label>
+                            <input name="podcast_link" ng-model="podcast.link" type="url"/>
+                        </div>
                     </fieldset>
                 </div>
 
                 <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("iTunes Fields") ?></h3>
                 <div class="collapsible-content">
                     <fieldset class="padded">
-                        <label><?php echo _("Author") ?></label>
-                        <input name="podcast_itunes_author" ng-model="podcast.itunes_author" type="text"/>
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Author") ?></label>
+                            <input name="podcast_itunes_author" ng-model="podcast.itunes_author" type="text"/>
+                        </div>
 
-                        <label><?php echo _("Keywords") ?></label>
-                        <input name="podcast_itunes_keywords" ng-model="podcast.itunes_keywords" type="text"/>
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Keywords") ?></label>
+                            <input name="podcast_itunes_keywords" ng-model="podcast.itunes_keywords" type="text"/>
+                        </div>
 
-                        <label><?php echo _("Summary") ?></label>
-                        <textarea name="podcast_itunes_summary" ng-model="podcast.itunes_summary"></textarea>
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Summary") ?></label>
+                            <textarea name="podcast_itunes_summary" ng-model="podcast.itunes_summary"></textarea>
+                        </div>
 
-                        <label><?php echo _("Subtitle") ?></label>
-                        <textarea name="podcast_itunes_subtitle" ng-model="podcast.itunes_subtitle"></textarea>
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Subtitle") ?></label>
+                            <textarea name="podcast_itunes_subtitle" ng-model="podcast.itunes_subtitle"></textarea>
+                        </div>
 
-                        <label><?php echo _("Category") ?></label>
-                        <input name="podcast_itunes_category" ng-model="podcast.itunes_category" type="text"/>
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Category") ?></label>
+                            <input name="podcast_itunes_category" ng-model="podcast.itunes_category" type="text"/>
+                        </div>
 
-                        <label><?php echo _("Explicit") ?></label>
-                        <input name="podcast_itunes_explicit" ng-model="podcast.itunes_explicit" type="checkbox"/>
+                        <div class="podcast-metadata-row">
+                            <label><?php echo _("Explicit") ?></label>
+                            <input name="podcast_itunes_explicit" ng-model="podcast.itunes_explicit" type="checkbox"/>
+                        </div>
                     </fieldset>
                 </div>
 
@@ -73,17 +94,21 @@
                 <div class="collapsible-content" id="podcast-settings">
                     <fieldset class="padded">
                         <dl>
-                            <?php echo $this->form->getSubform('preferences_podcast')->getElement("stationPodcastPrivacy")->renderLabel() ?>
-                            <div id="podcast-privacy-options">
-                                <?php echo $this->form->getSubform('preferences_podcast')->getElement("stationPodcastPrivacy")->renderViewHelper() ?>
+                            <div class="podcast-metadata-row">
+                                <?php echo $this->form->getSubform('preferences_podcast')->getElement("stationPodcastPrivacy")->renderLabel() ?>
+                                <div id="podcast-privacy-options">
+                                    <?php echo $this->form->getSubform('preferences_podcast')->getElement("stationPodcastPrivacy")->renderViewHelper() ?>
+                                </div>
                             </div>
                             <div style="clear:both"></div>
-                            <dt>
-                                <label for="stationPodcastFeedUrl" class="optional">Feed URL</label>
-                            </dt>
-                            <dd>
-                                <input type="url" ng-model="podcast.url" disabled="disabled" class="input_text" />
-                            </dd>
+                            <div class="podcast-metadata-row">
+                                <dt>
+                                    <label for="stationPodcastFeedUrl" class="optional">Feed URL</label>
+                                </dt>
+                                <dd>
+                                    <input type="url" ng-model="podcast.url" disabled="disabled" class="input_text" />
+                                </dd>
+                            </div>
                         </dl>
                     </fieldset>
                 </div>

@@ -8,7 +8,7 @@ CELERY_BIN="/usr/local/bin/celery"
 CELERY_APP="airtime-celery.tasks:celery"
 
 # Extra command-line arguments to the worker
-CELERYD_OPTS="--time-limit=300 --concurrency=1 --config=celeryconfig"
+CELERYD_OPTS="--time-limit=1800 --concurrency=1 --config=celeryconfig"
 
 # %N will be replaced with the first part of the nodename.
 CELERYD_LOG_FILE="/var/log/airtime/%N.log"

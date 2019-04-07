@@ -21,7 +21,8 @@ Click the **Save** button on the right side of the page to save any changes that
 Input stream settings
 ---------------------
 
-On the lower left side of the Stream Settings page you can configure remote live input streams from DJ programs such as **Mixxx** or **IDJC**, or smartphone applications used by broadcast journalists. Note that a [bug](https://sourceforge.net/p/butt/bugs/12/) has been reported with **Butt** versions 1.14 to 1.16 that causes streams not to connect to LibreTime. Butt version 1.13 does appear to be working. A fix has been introduced with **Butt** version 1.17 that allows it to be used by LibreTime.
+On the lower left side of the Stream Settings page you can configure remote live input streams from DJ programs such as **Mixxx** or **IDJC**, or smartphone applications used by broadcast journalists. A bug with **Butt** versions 1.14 to 1.16 causes streams not to connect to LibreTime. A fix has been introduced with **Butt** version 1.17 that allows it to be used by LibreTime.
+
 
 Airtime supports two types of live input stream; the **Show Source**, which enables a specific person to stream in during their own show, and the **Master Source**, which can override the Show Source if necessary. If neither type of live input is available, Airtime will fall back to **Scheduled Play** (playlists, smart blocks, remote streams and files scheduled in Airtime, in advance of or during a show).
 

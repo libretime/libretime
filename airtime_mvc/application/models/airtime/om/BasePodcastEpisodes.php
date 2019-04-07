@@ -66,6 +66,18 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
     protected $episode_guid;
 
     /**
+     * The value for the episode_title field.
+     * @var        string
+     */
+    protected $episode_title;
+
+    /**
+     * The value for the episode_description field.
+     * @var        string
+     */
+    protected $episode_description;
+
+    /**
      * @var        CcFiles
      */
     protected $aCcFiles;
@@ -183,6 +195,28 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
     {
 
         return $this->episode_guid;
+    }
+
+    /**
+     * Get the [episode_title] column value.
+     *
+     * @return string
+     */
+    public function getDbEpisodeTitle()
+    {
+
+        return $this->episode_title;
+    }
+
+    /**
+     * Get the [episode_description] column value.
+     *
+     * @return string
+     */
+    public function getDbEpisodeDescription()
+    {
+
+        return $this->episode_description;
     }
 
     /**
@@ -322,6 +356,48 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
     } // setDbEpisodeGuid()
 
     /**
+     * Set the value of [episode_title] column.
+     *
+     * @param  string $v new value
+     * @return PodcastEpisodes The current object (for fluent API support)
+     */
+    public function setDbEpisodeTitle($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->episode_title !== $v) {
+            $this->episode_title = $v;
+            $this->modifiedColumns[] = PodcastEpisodesPeer::EPISODE_TITLE;
+        }
+
+
+        return $this;
+    } // setDbEpisodeTitle()
+
+    /**
+     * Set the value of [episode_description] column.
+     *
+     * @param  string $v new value
+     * @return PodcastEpisodes The current object (for fluent API support)
+     */
+    public function setDbEpisodeDescription($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->episode_description !== $v) {
+            $this->episode_description = $v;
+            $this->modifiedColumns[] = PodcastEpisodesPeer::EPISODE_DESCRIPTION;
+        }
+
+
+        return $this;
+    } // setDbEpisodeDescription()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -359,6 +435,8 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
             $this->publication_date = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
             $this->download_url = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
             $this->episode_guid = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->episode_title = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+            $this->episode_description = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -368,7 +446,7 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 6; // 6 = PodcastEpisodesPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = PodcastEpisodesPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating PodcastEpisodes object", $e);
@@ -635,6 +713,12 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
         if ($this->isColumnModified(PodcastEpisodesPeer::EPISODE_GUID)) {
             $modifiedColumns[':p' . $index++]  = '"episode_guid"';
         }
+        if ($this->isColumnModified(PodcastEpisodesPeer::EPISODE_TITLE)) {
+            $modifiedColumns[':p' . $index++]  = '"episode_title"';
+        }
+        if ($this->isColumnModified(PodcastEpisodesPeer::EPISODE_DESCRIPTION)) {
+            $modifiedColumns[':p' . $index++]  = '"episode_description"';
+        }
 
         $sql = sprintf(
             'INSERT INTO "podcast_episodes" (%s) VALUES (%s)',
@@ -663,6 +747,12 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
                         break;
                     case '"episode_guid"':
                         $stmt->bindValue($identifier, $this->episode_guid, PDO::PARAM_STR);
+                        break;
+                    case '"episode_title"':
+                        $stmt->bindValue($identifier, $this->episode_title, PDO::PARAM_STR);
+                        break;
+                    case '"episode_description"':
+                        $stmt->bindValue($identifier, $this->episode_description, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -827,6 +917,12 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
             case 5:
                 return $this->getDbEpisodeGuid();
                 break;
+            case 6:
+                return $this->getDbEpisodeTitle();
+                break;
+            case 7:
+                return $this->getDbEpisodeDescription();
+                break;
             default:
                 return null;
                 break;
@@ -862,6 +958,8 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
             $keys[3] => $this->getDbPublicationDate(),
             $keys[4] => $this->getDbDownloadUrl(),
             $keys[5] => $this->getDbEpisodeGuid(),
+            $keys[6] => $this->getDbEpisodeTitle(),
+            $keys[7] => $this->getDbEpisodeDescription(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -927,6 +1025,12 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
             case 5:
                 $this->setDbEpisodeGuid($value);
                 break;
+            case 6:
+                $this->setDbEpisodeTitle($value);
+                break;
+            case 7:
+                $this->setDbEpisodeDescription($value);
+                break;
         } // switch()
     }
 
@@ -957,6 +1061,8 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
         if (array_key_exists($keys[3], $arr)) $this->setDbPublicationDate($arr[$keys[3]]);
         if (array_key_exists($keys[4], $arr)) $this->setDbDownloadUrl($arr[$keys[4]]);
         if (array_key_exists($keys[5], $arr)) $this->setDbEpisodeGuid($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setDbEpisodeTitle($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setDbEpisodeDescription($arr[$keys[7]]);
     }
 
     /**
@@ -974,6 +1080,8 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
         if ($this->isColumnModified(PodcastEpisodesPeer::PUBLICATION_DATE)) $criteria->add(PodcastEpisodesPeer::PUBLICATION_DATE, $this->publication_date);
         if ($this->isColumnModified(PodcastEpisodesPeer::DOWNLOAD_URL)) $criteria->add(PodcastEpisodesPeer::DOWNLOAD_URL, $this->download_url);
         if ($this->isColumnModified(PodcastEpisodesPeer::EPISODE_GUID)) $criteria->add(PodcastEpisodesPeer::EPISODE_GUID, $this->episode_guid);
+        if ($this->isColumnModified(PodcastEpisodesPeer::EPISODE_TITLE)) $criteria->add(PodcastEpisodesPeer::EPISODE_TITLE, $this->episode_title);
+        if ($this->isColumnModified(PodcastEpisodesPeer::EPISODE_DESCRIPTION)) $criteria->add(PodcastEpisodesPeer::EPISODE_DESCRIPTION, $this->episode_description);
 
         return $criteria;
     }
@@ -1042,6 +1150,8 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
         $copyObj->setDbPublicationDate($this->getDbPublicationDate());
         $copyObj->setDbDownloadUrl($this->getDbDownloadUrl());
         $copyObj->setDbEpisodeGuid($this->getDbEpisodeGuid());
+        $copyObj->setDbEpisodeTitle($this->getDbEpisodeTitle());
+        $copyObj->setDbEpisodeDescription($this->getDbEpisodeDescription());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1215,6 +1325,8 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
         $this->publication_date = null;
         $this->download_url = null;
         $this->episode_guid = null;
+        $this->episode_title = null;
+        $this->episode_description = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;

@@ -24,13 +24,13 @@ abstract class BasePodcastEpisodesPeer
     const TM_CLASS = 'PodcastEpisodesTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 6;
+    const NUM_COLUMNS = 8;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 6;
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /** the column name for the id field */
     const ID = 'podcast_episodes.id';
@@ -49,6 +49,12 @@ abstract class BasePodcastEpisodesPeer
 
     /** the column name for the episode_guid field */
     const EPISODE_GUID = 'podcast_episodes.episode_guid';
+
+    /** the column name for the episode_title field */
+    const EPISODE_TITLE = 'podcast_episodes.episode_title';
+
+    /** the column name for the episode_description field */
+    const EPISODE_DESCRIPTION = 'podcast_episodes.episode_description';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -69,12 +75,12 @@ abstract class BasePodcastEpisodesPeer
      * e.g. PodcastEpisodesPeer::$fieldNames[PodcastEpisodesPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbFileId', 'DbPodcastId', 'DbPublicationDate', 'DbDownloadUrl', 'DbEpisodeGuid', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbFileId', 'dbPodcastId', 'dbPublicationDate', 'dbDownloadUrl', 'dbEpisodeGuid', ),
-        BasePeer::TYPE_COLNAME => array (PodcastEpisodesPeer::ID, PodcastEpisodesPeer::FILE_ID, PodcastEpisodesPeer::PODCAST_ID, PodcastEpisodesPeer::PUBLICATION_DATE, PodcastEpisodesPeer::DOWNLOAD_URL, PodcastEpisodesPeer::EPISODE_GUID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'FILE_ID', 'PODCAST_ID', 'PUBLICATION_DATE', 'DOWNLOAD_URL', 'EPISODE_GUID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'file_id', 'podcast_id', 'publication_date', 'download_url', 'episode_guid', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbFileId', 'DbPodcastId', 'DbPublicationDate', 'DbDownloadUrl', 'DbEpisodeGuid', 'DbEpisodeTitle', 'DbEpisodeDescription', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbFileId', 'dbPodcastId', 'dbPublicationDate', 'dbDownloadUrl', 'dbEpisodeGuid', 'dbEpisodeTitle', 'dbEpisodeDescription', ),
+        BasePeer::TYPE_COLNAME => array (PodcastEpisodesPeer::ID, PodcastEpisodesPeer::FILE_ID, PodcastEpisodesPeer::PODCAST_ID, PodcastEpisodesPeer::PUBLICATION_DATE, PodcastEpisodesPeer::DOWNLOAD_URL, PodcastEpisodesPeer::EPISODE_GUID, PodcastEpisodesPeer::EPISODE_TITLE, PodcastEpisodesPeer::EPISODE_DESCRIPTION, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'FILE_ID', 'PODCAST_ID', 'PUBLICATION_DATE', 'DOWNLOAD_URL', 'EPISODE_GUID', 'EPISODE_TITLE', 'EPISODE_DESCRIPTION', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'file_id', 'podcast_id', 'publication_date', 'download_url', 'episode_guid', 'episode_title', 'episode_description', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -84,12 +90,12 @@ abstract class BasePodcastEpisodesPeer
      * e.g. PodcastEpisodesPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbFileId' => 1, 'DbPodcastId' => 2, 'DbPublicationDate' => 3, 'DbDownloadUrl' => 4, 'DbEpisodeGuid' => 5, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbFileId' => 1, 'dbPodcastId' => 2, 'dbPublicationDate' => 3, 'dbDownloadUrl' => 4, 'dbEpisodeGuid' => 5, ),
-        BasePeer::TYPE_COLNAME => array (PodcastEpisodesPeer::ID => 0, PodcastEpisodesPeer::FILE_ID => 1, PodcastEpisodesPeer::PODCAST_ID => 2, PodcastEpisodesPeer::PUBLICATION_DATE => 3, PodcastEpisodesPeer::DOWNLOAD_URL => 4, PodcastEpisodesPeer::EPISODE_GUID => 5, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'FILE_ID' => 1, 'PODCAST_ID' => 2, 'PUBLICATION_DATE' => 3, 'DOWNLOAD_URL' => 4, 'EPISODE_GUID' => 5, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'file_id' => 1, 'podcast_id' => 2, 'publication_date' => 3, 'download_url' => 4, 'episode_guid' => 5, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbFileId' => 1, 'DbPodcastId' => 2, 'DbPublicationDate' => 3, 'DbDownloadUrl' => 4, 'DbEpisodeGuid' => 5, 'DbEpisodeTitle' => 6, 'DbEpisodeDescription' => 7, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbFileId' => 1, 'dbPodcastId' => 2, 'dbPublicationDate' => 3, 'dbDownloadUrl' => 4, 'dbEpisodeGuid' => 5, 'dbEpisodeTitle' => 6, 'dbEpisodeDescription' => 7, ),
+        BasePeer::TYPE_COLNAME => array (PodcastEpisodesPeer::ID => 0, PodcastEpisodesPeer::FILE_ID => 1, PodcastEpisodesPeer::PODCAST_ID => 2, PodcastEpisodesPeer::PUBLICATION_DATE => 3, PodcastEpisodesPeer::DOWNLOAD_URL => 4, PodcastEpisodesPeer::EPISODE_GUID => 5, PodcastEpisodesPeer::EPISODE_TITLE => 6, PodcastEpisodesPeer::EPISODE_DESCRIPTION => 7, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'FILE_ID' => 1, 'PODCAST_ID' => 2, 'PUBLICATION_DATE' => 3, 'DOWNLOAD_URL' => 4, 'EPISODE_GUID' => 5, 'EPISODE_TITLE' => 6, 'EPISODE_DESCRIPTION' => 7, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'file_id' => 1, 'podcast_id' => 2, 'publication_date' => 3, 'download_url' => 4, 'episode_guid' => 5, 'episode_title' => 6, 'episode_description' => 7, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -169,6 +175,8 @@ abstract class BasePodcastEpisodesPeer
             $criteria->addSelectColumn(PodcastEpisodesPeer::PUBLICATION_DATE);
             $criteria->addSelectColumn(PodcastEpisodesPeer::DOWNLOAD_URL);
             $criteria->addSelectColumn(PodcastEpisodesPeer::EPISODE_GUID);
+            $criteria->addSelectColumn(PodcastEpisodesPeer::EPISODE_TITLE);
+            $criteria->addSelectColumn(PodcastEpisodesPeer::EPISODE_DESCRIPTION);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.file_id');
@@ -176,6 +184,8 @@ abstract class BasePodcastEpisodesPeer
             $criteria->addSelectColumn($alias . '.publication_date');
             $criteria->addSelectColumn($alias . '.download_url');
             $criteria->addSelectColumn($alias . '.episode_guid');
+            $criteria->addSelectColumn($alias . '.episode_title');
+            $criteria->addSelectColumn($alias . '.episode_description');
         }
     }
 

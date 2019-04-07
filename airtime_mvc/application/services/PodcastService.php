@@ -162,49 +162,59 @@ class Application_Service_PodcastService
 
     /**
      * @param $podcast
+     * @param $title passed in directly from web UI input
      * This will automatically create a smartblock and playlist for this podcast.
      */
 
-    public static function createPodcastSmartblockAndPlaylist($podcast)
+    public static function createPodcastSmartblockAndPlaylist($podcast, $title = null)
     {
-            $newBl = new Application_Model_Block();
-            $newBl->setCreator(Application_Model_User::getCurrentUser()->getId());
-            $newBl->setName($podcast->getDbTitle());
-            $newBl->setDescription('Auto-generated smartblock for podcast');
-            $newBl->saveType('dynamic');
-            // limit the smartblock to 1 item
-            $row = new CcBlockcriteria();
-            $row->setDbCriteria('limit');
-            $row->setDbModifier('items');
-            $row->setDbValue(1);
-            $row->setDbBlockId($newBl->getId());
-            $row->save();
-
-            // sort so that it is the newest item
-            $row = new CcBlockcriteria();
-            $row->setDbCriteria('sort');
-            $row->setDbModifier('N/A');
-            $row->setDbValue('newest');
-            $row->setDbBlockId($newBl->getId());
-            $row->save();
-
-            // match the track by ensuring the album title matches the podcast
-            $row = new CcBlockcriteria();
-            $row->setDbCriteria('album_title');
-            $row->setDbModifier('is');
-            $row->setDbValue($newBl->getName());
-            $row->setDbBlockId($newBl->getId());
-            $row->save();
-
-            $newPl = new Application_Model_Playlist();
-            $newPl->setName($podcast->getDbTitle());
-            $newPl->setCreator(Application_Model_User::getCurrentUser()->getId());
-            $row = new CcPlaylistcontents();
-            $row->setDbBlockId($newBl->getId());
-            $row->setDbPlaylistId($newPl->getId());
-            $row->setDbType(2);
-            $row->save();
+        if (is_array($podcast)) {
+            $newpodcast = new Podcast();
+            $newpodcast->fromArray($podcast, BasePeer::TYPE_FIELDNAME);
+            $podcast = $newpodcast;
         }
+        if ($title == null) {
+            $title = $podcast->getDbTitle();
+        }
+        // Base class
+        $newBl = new Application_Model_Block();
+        $newBl->setCreator(Application_Model_User::getCurrentUser()->getId());
+        $newBl->setName($title);
+        $newBl->setDescription('Auto-generated smartblock for podcast');
+        $newBl->saveType('dynamic');
+        // limit the smartblock to 1 item
+        $row = new CcBlockcriteria();
+        $row->setDbCriteria('limit');
+        $row->setDbModifier('items');
+        $row->setDbValue(1);
+        $row->setDbBlockId($newBl->getId());
+        $row->save();
+
+        // sort so that it is the newest item
+        $row = new CcBlockcriteria();
+        $row->setDbCriteria('sort');
+        $row->setDbModifier('N/A');
+        $row->setDbValue('newest');
+        $row->setDbBlockId($newBl->getId());
+        $row->save();
+
+        // match the track by ensuring the album title matches the podcast
+        $row = new CcBlockcriteria();
+        $row->setDbCriteria('album_title');
+        $row->setDbModifier('is');
+        $row->setDbValue($title);
+        $row->setDbBlockId($newBl->getId());
+        $row->save();
+
+        $newPl = new Application_Model_Playlist();
+        $newPl->setName($title);
+        $newPl->setCreator(Application_Model_User::getCurrentUser()->getId());
+        $row = new CcPlaylistcontents();
+        $row->setDbBlockId($newBl->getId());
+        $row->setDbPlaylistId($newPl->getId());
+        $row->setDbType(2);
+        $row->save();
+    }
 
 
     public static function createStationPodcast()

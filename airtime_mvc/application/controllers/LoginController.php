@@ -58,11 +58,7 @@ class LoginController extends Zend_Controller_Action
             //Open the session for writing, because we close it for writing by default in Bootstrap.php as an optimization.
             //session_start();
 
-            // if the post contains recaptcha field, which means form had recaptcha field.
-            // Hence add the element for validation.
-            if (array_key_exists('recaptcha_response_field', $request->getPost())) {
-                $form->addRecaptcha();
-            }
+
             if ($form->isValid($request->getPost())) {
                 //get the username and password from the form
                 $username = $form->getValue('username');
@@ -276,10 +272,6 @@ class LoginController extends Zend_Controller_Action
         Application_Model_LoginAttempts::increaseAttempts($_SERVER['REMOTE_ADDR']);
         $form = new Application_Form_Login();                            
         $this->view->error = true;
-        //Only show the captcha if you get your login wrong 4 times in a row.
-        if (Application_Model_Subjects::getLoginAttempts($username) > 3) {
-            $form->addRecaptcha();
-        }
         return $form;
     }
 }

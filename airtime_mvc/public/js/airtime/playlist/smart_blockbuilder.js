@@ -24,10 +24,14 @@ function setSmartBlockEvents() {
 
         } else {
 
-            div.find('.db-logic-label').text('and').show();
+            div.find('.db-logic-label').text('and').css('display', 'table');
+            div.removeClass('search-row-or').addClass('search-row-and');
+            
             div = div.next().show();
 
             div.children().removeAttr('disabled');
+            div.find(".modifier_add_link").show();
+
             div = div.next();
             if (div.length === 0) {
                 $(this).hide();
@@ -36,7 +40,8 @@ function setSmartBlockEvents() {
             appendAddButton();
             appendModAddButton();
             removeButtonCheck();
-            disableAndHideDateTimeDropdown(newRowVal);
+            // disableAndHideDateTimeDropdown(newRowVal);
+            groupCriteriaRows();
 
         }
     });
@@ -44,7 +49,7 @@ function setSmartBlockEvents() {
     /********** ADD MODIFIER ROW **********/
     form.find('a[id^="modifier_add"]').live('click', function(){
         var criteria_value = $(this).siblings('select[name^="sp_criteria_field"]').val();
-
+        
 
         //make new modifier row
         var newRow = $(this).parent().clone(),
@@ -76,12 +81,17 @@ function setSmartBlockEvents() {
         
         //remove the 'criteria add' button from new modifier row
         newRow.find('#criteria_add').remove();
-        
+
         $(this).parent().after(newRow);
+        
+        // remove extra spacing from previous row
+        newRow.prev().removeClass('search-row-and').addClass('search-row-or');
+
         reindexElements();
         appendAddButton();
         appendModAddButton();
         removeButtonCheck();
+        groupCriteriaRows();
     });
 	
     /********** REMOVE ROW **********/
@@ -269,6 +279,9 @@ function setSmartBlockEvents() {
         
         // remove the 'x' button if only one row is enabled
         removeButtonCheck();
+
+        groupCriteriaRows();
+        
     });
 	
     /********** SAVE ACTION **********/
@@ -291,9 +304,21 @@ function setSmartBlockEvents() {
         setupUI();
         AIRTIME.library.checkAddButton();
     });
-    
-    /********** CRITERIA CHANGE **********/
-    form.find('select[id^="sp_criteria"]:not([id^="sp_criteria_modifier"])').live("change", function(){
+
+    /********** LIMIT CHANGE *************/
+    form.find('select[id="sp_limit_options"]').live("change", function() {
+        var limVal = form.find('input[id="sp_limit_value"]');
+        if ($(this).val() === 'remaining') {
+            disableAndHideLimitValue();
+        }
+        else {
+            enableAndShowLimitValue();
+        }
+    });
+
+
+        /********** CRITERIA CHANGE **********/
+    form.find('select[id^="sp_criteria"]:not([id^="sp_criteria_modifier"]):not([id^="sp_criteria_datetime"]):not([id^="sp_criteria_extra_datetime"])').live("change", function(){
         var index = getRowIndex($(this).parent());
         //need to change the criteria value for any modifier rows
         var critVal = $(this).val();
@@ -461,6 +486,9 @@ function setupUI() {
         shuffleButton = activeTab.find('button[name="shuffle_button"]'),
         generateButton = activeTab.find('button[name="generate_button"]'),
         fadesButton = activeTab.find('#spl_crossfade, #pl-bl-clear-content');
+    if (activeTab.find('#sp_limit_options').val() == 'remaining') {
+        disableAndHideLimitValue();
+    }
 
     if (!plContents.hasClass('spl_empty')) {
         if (shuffleButton.hasClass('ui-state-disabled')) {
@@ -473,7 +501,7 @@ function setupUI() {
     }
     
     if (activeTab.find('.obj_type').val() == 'block') {
-        if (playlist_type == "0") {
+        if (playlist_type == "1") {
             shuffleButton.removeAttr("disabled");
             generateButton.removeAttr("disabled");
             generateButton.html($.i18n._("Generate"));
@@ -528,6 +556,33 @@ function setupUI() {
             my: "left bottom",
             at: "right center"
         }
+    });
+
+
+    $(".overflow_tracks_help_icon").qtip({
+        content: {
+            text: sprintf($.i18n._("<p>If this option is unchecked, the smartblock will schedule as many tracks as can be played out <strong>in their entirety</strong> within the specified duration. This will usually result in audio playback that is slightly less than the specified duration.</p><p>If this option is checked, the smartblock will also schedule one final track which will overflow the specified duration. This final track may be cut off mid-way if the show into which the smartblock is added finishes.</p>"), PRODUCT_NAME)
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        }
+    });
+
+    activeTab.find('.collapsible-header').off('click').on('click', function(){
+        $(this).toggleClass('visible');
+        $('.smart-block-advanced').toggle();
     });
 }
 
@@ -610,6 +665,14 @@ function disableAndHideExtraField(valEle, index) {
     //make value input larger since we don't have extra field now
     var criteria_value = $('#sp_criteria_value_'+index);
     sizeTextBoxes(criteria_value, 'sp_extra_input_text', 'sp_input_text');
+}
+function disableAndHideLimitValue() {
+    console.log('we hide it');
+    $('#sp_limit_value').hide();
+}
+function enableAndShowLimitValue() {
+    console.log('we show it');
+    $('#sp_limit_value').show();
 }
 
 function sizeTextBoxes(ele, classToRemove, classToAdd) {
@@ -755,6 +818,30 @@ function enableLoadingIcon() {
 function disableLoadingIcon() {
     $(".side_playlist.active-tab").unblock()
 }
+
+function groupCriteriaRows() {
+    // check whether rows should be "grouped" and shown with an "or" "logic label", or separated by an "and" "logic label"
+    var visibleRows = $("#sp_criteria-element > div:visible"), 
+        prevRowGroup = "0";
+
+    visibleRows.each(function (index){
+        if (index > 0) {
+            var fieldId = $(this).find('select[id^="sp_criteria_field"]').attr("id");
+            var currRowGroup = fieldId[fieldId.length - 3];
+            if (currRowGroup === prevRowGroup) {
+                $(this).prev().addClass("search-row-or").removeClass("search-row-and")
+            } else {
+                $(this).prev().addClass("search-row-and").removeClass("search-row-or")
+            }
+            prevRowGroup = currRowGroup;
+        }
+    });
+
+    // ensure spacing below last visible row 
+    $("#sp_criteria-element > div:visible:last").addClass("search-row-and").removeClass("search-row-or");
+}
+
+
 // We need to know if the criteria value will be a string
 // or numeric value in order to populate the modifier
 // select list

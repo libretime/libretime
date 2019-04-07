@@ -47,6 +47,8 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetDefaultFadeOut($values["stationDefaultFadeOut"]);
                 Application_Model_Preference::SetPodcastAlbumOverride($values["podcastAlbumOverride"]);
                 Application_Model_Preference::SetPodcastAutoSmartblock($values["podcastAutoSmartblock"]);
+                Application_Model_Preference::SetIntroPlaylist($values["introPlaylistSelect"]);
+                Application_Model_Preference::SetOutroPlaylist($values["outroPlaylistSelect"]);
                 Application_Model_Preference::SetAllow3rdPartyApi($values["thirdPartyApi"]);
                 Application_Model_Preference::SetAllowedCorsUrls($values["allowedCorsUrls"]);
                 Application_Model_Preference::SetDefaultLocale($values["locale"]);
@@ -108,47 +110,6 @@ class PreferenceController extends Zend_Controller_Action
         Application_Model_Preference::setStationPodcastPrivacy($values->stationPodcastPrivacy);
 
         $this->_helper->json->sendJson(array("url" => $url));
-    }
-
-    public function supportSettingAction()
-    {
-        $CC_CONFIG = Config::getConfig();
-
-        $request = $this->getRequest();
-
-        $baseUrl = Application_Common_OsPath::getBaseDir();
-
-        $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/support-setting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->statusMsg = "";
-
-        SessionHelper::reopenSessionForWriting();
-
-        $form = new Application_Form_SupportSettings();
-        if ($request->isPost()) {
-            $values = $request->getPost();
-        	if ($form->isValid($values)) {
-                Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
-                Application_Model_Preference::SetPhone($values["Phone"]);
-                Application_Model_Preference::SetEmail($values["Email"]);
-                Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
-
-                Application_Model_Preference::SetStationCountry($values["Country"]);
-                Application_Model_Preference::SetStationCity($values["City"]);
-                Application_Model_Preference::SetStationDescription($values["Description"]);
-                if (isset($values["Privacy"])) {
-                    Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
-                }
-            }
-            $this->view->statusMsg = "<div class='success'>"._("Support setting updated.")."</div>";
-        }
-
-        $privacyChecked = false;
-        if (Application_Model_Preference::GetPrivacyPolicyCheck() == 1) {
-            $privacyChecked = true;
-        }
-        $this->view->privacyChecked = $privacyChecked;
-        $this->view->section_title = _('Support Feedback');
-        $this->view->form = $form;
     }
 
     public function directoryConfigAction()

@@ -9,7 +9,7 @@ In the top left corner of the page, you can go back or forward through the **Cal
 Adding a show
 -------------
 
-Only *Admins* and *Program Managers* can use this feature. To add a new show to the Calendar, click the **+ New Show** button in the top left corner of the page, or click on any future row or box in the Calendar which is empty. Either of these actions opens the **Add this show** box, which has seven sections, arranged vertically: **What**, **Automatic Playlist**, **When**, **Live Stream Input**, **Record & Rebroadcast**, **Who**, and **Style**. Click the small orange triangle to the left of the section name if you wish to minimize or maximize it.
+Only *Admins* and *Program Managers* can use this feature. To add a new show to the Calendar, click the **+ New Show** button in the top left corner of the page, or click on any future row or box in the Calendar which is empty. Either of these actions opens the **Add this show** box, which has seven sections, arranged vertically: **What**, **Autoloading Playlist**, **When**, **Live Stream Input**, **Record & Rebroadcast**, **Who**, and **Style**. Click the small orange triangle to the left of the section name if you wish to minimize or maximize it.
 
 What
 ----
@@ -18,7 +18,7 @@ In the **What** box, enter the **Name**, public website **URL**, **Genre** and *
 
 ![](static/Screenshot453-Show_what.png)
 
-Automatic Playlist
+Autoloading Playlist
 ------------------
 
 In this section, you can select a playlist that will be used for this show. The playlist must already be defined in your library. **Auto Schedule Playlist** needs to be checked for **Select Playlist** and **Repeat AutoPlaylist Until Show is Full** to be visible.
@@ -64,15 +64,7 @@ A reminder of the connection **Host**, **Port** and **Mount** for the live input
 Record & Rebroadcast
 --------------------
 
-In the **Record & Rebroadcast** section, checking the **Record from Line In?** box enables automatic recording of the soundcard line input, if your LibreTime server has one, at the time of the show. Shows set for line-in recording should not also contain files or playlists. The default audio format for live recordings is 256kbps Ogg Vorbis, and the files are saved in the *recorded* folder, under the **Import Folder** path set in the **Media Folders** page on the **System** menu. See the chapter *Host configuration* for details of recorder settings.
-
-If you wish the recording to be played out at a later time, check the **Rebroadcast?** box, and then select up to ten date and time slots in the **Choose Days** box.
-
-![](static/Screenshot458-Record_and_rebroadcast.png)
-
-Shows set for rebroadcast have a white loop icon in the calendar.
-
-![](static/Screenshot92-Record_and_rebroadcast_icons.png)
+The **Record & Rebroadcast** section is currently not working, and so has been removed from the web interface. If this feature is important to you, please search for relevant issues in the [LibreTime github repository](https://github.com/LibreTime/libretime/search?q=record&type=Issues) and help us make it happen!
 
 Who
 ---

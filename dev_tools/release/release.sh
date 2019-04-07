@@ -61,6 +61,7 @@ popd
 #echo "Done"
 
 pushd /tmp/
+find libretime-${suffix} -type f -exec dos2unix {} \;
 echo -n "Creating tarball..."
 tar -czf $target_file \
         --owner=root --group=root \
@@ -69,9 +70,7 @@ tar -czf $target_file \
         --exclude .gitignore \
         --exclude .travis.yml \
         --exclude travis \
-        --exclude mkdocs.yml \
         --exclude dev_tools \
-        --exclude docs \
         --exclude vendor/phing \
         --exclude vendor/simplepie/simplepie/tests \
     libretime-${suffix} 

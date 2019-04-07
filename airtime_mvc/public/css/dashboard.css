@@ -518,6 +518,7 @@ li.ui-state-default {
     left: 4px;
     overflow-x: hidden; /* Show the y-direction scrollbar (magic!) */
     color: #efefef;
+    justify-content: stretch;
 }
 
 .angular_wrapper a {
@@ -548,6 +549,13 @@ li.ui-state-default {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+}
+.inner_editor_wrapper.smart-block-form {
+    -webkit-flex: 0 0 auto;
+    -moz-flex: 0 0 auto;
+    -ms-flex: 0 0 auto;
+    -o-flex: 0 0 auto;
+    flex: 0 0 auto;
 }
 
 .angular_wrapper > .inner_editor_wrapper {
@@ -583,16 +591,15 @@ li.ui-state-default {
 }
 
 .spl_sortable {
-    height: 100%;
+    -webkit-flex: 1 0 auto;
+    -moz-flex: 1 0 auto;
+    -ms-flex: 1 0 auto;
+    -o-flex: 1 0 auto;
+    flex: 1 0 auto;
     overflow: auto;
-    -webkit-flex: 1 100%;
-    -moz-flex: 1 100%;
-    -ms-flex: 1 100%;
-    -o-flex: 1 100%;
-    flex: 1 100%;
-
     margin: 4px 0;
-    min-height: 0;
+    min-height: 6em;
+    max-height: calc(100% - 40px);
     padding: 5px;
     border: 1px solid #444;
     border-radius: 3px;
@@ -683,20 +690,6 @@ li.ui-state-default {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     height: 26px;
-}
-
-.smart-block-form input[type='radio'] {
-    vertical-align: bottom;
-    margin: 0 5px -2px;
-}
-
-.smart-block-form input[type='checkbox'] {
-    vertical-align: bottom;
-    margin: 0 4px;
-}
-
-.smart-block-form ~ .btn-toolbar {
-    padding-top: 4px;
 }
 
 /* Schedule tab DataTable */

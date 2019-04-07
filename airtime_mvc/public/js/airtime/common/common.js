@@ -11,7 +11,7 @@ $(document).ready(function() {
     //});
 
     //this statement tells the browser to fade out any success message after 5 seconds
-    setTimeout(function(){$(".success").fadeOut("slow", function(){$(this).empty()});}, 5000);
+    setTimeout(function(){$(".success").fadeOut("slow")}, 5000);
 });
 
 /*

@@ -207,13 +207,13 @@ final class Application_Model_Scheduler
     /*
      * @param $id
      * @param $type
+     * @param $show
      *
      * @return $files
      */
-    private function retrieveMediaFiles($id, $type)
+    private function retrieveMediaFiles($id, $type, $show)
     {
         $files = array();
-
         if ($type === "audioclip") {
             $file = CcFilesQuery::create()->findPK($id, $this->con);
 
@@ -278,7 +278,7 @@ final class Application_Model_Scheduler
                     } else {
                         $defaultFadeIn = Application_Model_Preference::GetDefaultFadeIn();
                         $defaultFadeOut = Application_Model_Preference::GetDefaultFadeOut();
-                        $dynamicFiles = $bl->getListOfFilesUnderLimit();
+                        $dynamicFiles = $bl->getListOfFilesUnderLimit($show);
                         foreach ($dynamicFiles as $f) {
                             $fileId = $f['id'];
                             $file = CcFilesQuery::create()->findPk($fileId);
@@ -337,7 +337,7 @@ final class Application_Model_Scheduler
             } else {
                 $defaultFadeIn = Application_Model_Preference::GetDefaultFadeIn();
                 $defaultFadeOut = Application_Model_Preference::GetDefaultFadeOut();
-                $dynamicFiles = $bl->getListOfFilesUnderLimit();
+                $dynamicFiles = $bl->getListOfFilesUnderLimit($show);
                 foreach ($dynamicFiles as $f) {
                     $fileId = $f['id'];
                     $file = CcFilesQuery::create()->findPk($fileId);
@@ -788,11 +788,14 @@ final class Application_Model_Scheduler
                         Logging::debug(floatval($pend) - floatval($pstart));
                     }
 
+                    // passing $schedule["instance"] so that the instance being scheduled
+                    // can be used to determine the remaining time
+                    // in the case of a fill remaining time smart block
                     if (is_null($filesToInsert)) {
                         $filesToInsert = array();
                         foreach ($mediaItems as $media) {
                             $filesToInsert = array_merge($filesToInsert,
-                                $this->retrieveMediaFiles($media["id"], $media["type"]));
+                                $this->retrieveMediaFiles($media["id"], $media["type"], $schedule["instance"]));
                         }
                     }
 
@@ -855,8 +858,14 @@ final class Application_Model_Scheduler
 
                         // default fades are in seconds
                         // we need to convert to '00:00:00' format
-                        $file['fadein'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadein']);
-                        $file['fadeout'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadeout']);
+                        // added a check to only run the conversion if they are in seconds format 
+                        // otherwise php > 7.1 throws errors
+                        if (is_numeric($file['fadein'])) {
+                            $file['fadein'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadein']);
+                        }
+                        if (is_numeric($file['fadeout'])) {
+                            $file['fadeout'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadeout']);
+                        }
 
                         switch ($file["type"]) {
                             case 0:
