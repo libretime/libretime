@@ -1,3 +1,5 @@
+*Note* LibreTime installed via the install script does not currently change the default Icecast password and is insecure without intervention by the system admin. There is a [tutorial](https://github.com/LibreTime/libretime/wiki/Securing-icecast-and-customizing-stream-settings) on our wiki that walks you through the steps of how to fix this and an open issue [#86](https://github.com/LibreTime/libretime/issues/86) to track resolution of this. 
+
 You can configure direct Icecast and SHOUTcast streams and sound card output by clicking **Streams** on the **System** menu.
 
 At the top left of the **Stream Settings** page are global settings including **Hardware Audio Output**, which enables playout from the default sound card on the server, if one is fitted. The default **Output Type** of *ALSA* on the drop-down menu will be suitable for most servers with a sound card. If not, you have the option to choose from other Liquidsoap interfaces available, such as *OSS* or *PortAudio*.
@@ -19,7 +21,8 @@ Click the **Save** button on the right side of the page to save any changes that
 Input stream settings
 ---------------------
 
-On the lower left side of the Stream Settings page you can configure remote live input streams from DJ programs such as **Mixxx** or **IDJC**, or smartphone applications used by broadcast journalists. Note that a [bug](https://sourceforge.net/p/butt/bugs/12/) has been reported with **Butt** versions 1.14 to 1.16 that causes streams not to connect to LibreTime. Butt version 1.13 does appear to be working.
+On the lower left side of the Stream Settings page you can configure remote live input streams from DJ programs such as **Mixxx** or **IDJC**, or smartphone applications used by broadcast journalists. A bug with **Butt** versions 1.14 to 1.16 causes streams not to connect to LibreTime. A fix has been introduced with **Butt** version 1.17 that allows it to be used by LibreTime.
+
 
 Airtime supports two types of live input stream; the **Show Source**, which enables a specific person to stream in during their own show, and the **Master Source**, which can override the Show Source if necessary. If neither type of live input is available, Airtime will fall back to **Scheduled Play** (playlists, smart blocks, remote streams and files scheduled in Airtime, in advance of or during a show).
 
@@ -40,16 +43,19 @@ Switching input streams
 
 In the Master Panel, available input source streams are shown with an orange line connecting the source to the switch, which you could think of like a patch cable connecting a source to a broadcast mixer. When that switch is active, another orange line connects the switch to the On Air indicator, like a patch cable connecting a mixer to a transmitter.
 
-![](static/Screenshot309-Master_source_switch.png)
+![](static/libretime-master-source-stream.png)
 
-If you have checked the **Auto Switch On** box in the Stream Settings page, the **Master Source** switch will move automatically to the active position, on the left, when an authenticated master source connects to Airtime. Otherwise, you can activate the switches manually by clicking the left side of each switch, or deactivate them by clicking the right side. The switches do not have to be dragged with the mouse, in the way that a switch on a hardware mixer would be pushed sideways. **Show Source** live input streams and **Scheduled Play** can be manually activated or deactivated in the same way.
+If you have checked the **Auto Switch On** box in the Stream Settings page, the **Master Source** switch will move automatically to the active position, on the left, when an authenticated master source connects to Airtime. Otherwise, you can activate the switches manually by clicking the left side of each switch, or deactivate them by clicking the right side. The switches do not have to be dragged with the mouse, in the way that a switch on a hardware mixer would be pushed sideways. **Show Source** live input streams can also be manually activated or deactivated in the same way. If neither the show source or master source is active then LibreTime will default to what is scheduled to play in the Calendar.
 
-![](static/Screenshot310-Show_source_switch.png)
+![](static/libretime-show-source-stream.png)
 
-To force disconnection of a live remote source, for example when the remote input source has crashed and is no longer sending audio data, click the **X** icon to the left of the source name.
+If you have the **Auto Switch Off** box checked LibreTime will resume scheduled playback whenever a stream disconnects. Otherwise you will need to slide to disable a source after a DJ stops streaming. 
+
+You can also force disconnection of a live remote source, for example when the remote input source has crashed and is no longer sending audio data, click the **X** icon to the left of the source name.
 
 Output stream settings
 ----------------------
+The Default Streaming radio button that is configured by default currently relies upon an insecure icecast password. You will want to change the Icecast2 password and select Custom Streaming. See the notice above for a tutorial on how to fix this.
 
 On the right side of the page, you can configure up to three independent output streams with different bit rates or formats, and send these streams to different Icecast or SHOUTcast servers. By default, only Stream 1 is enabled, with this stream being sent the Icecast server configured at installation time.
 
