@@ -48,7 +48,6 @@ pages:
     - 'Preparing the Server': manual/preparing-the-server/index.md
     - 'Setting the Server Time': manual/setting-the-server-time/index.md
   - 'Administration':
-    - 'The airtime-log Command': manual/the-airtime-log-command/index.md
     - 'Backing Up the Server': manual/backing-up-the-server/index.md
     - 'Upgrading': manual/upgrading/index.md
     - 'Troubleshooting': manual/troubleshooting/index.md
