@@ -23,20 +23,30 @@ pages:
     - 'On Air in 60 seconds!': 'manual/on-air-in-60-seconds/index.md'
     - 'Getting Started': manual/getting-started/index.md
   - 'The Settings Menu':
-    - 'General': manual/preferences/index.md
+    - 'General': manual/general/index.md
     - 'Users': manual/users/index.md
-    - 'Media Folders': manual/media-folders/index.md
     - 'Streams': manual/stream-settings/index.md
     - 'Status': manual/status/index.md
   - 'The Main Menus':
-    - 'Now Playing': manual/now-playing/index.md
-    - 'Add Media': manual/add-media/index.md
-    - 'Library': manual/library/index.md
+    - 'Upload': manual/upload/index.md
+    - 'Dashboard': manual/dashboard/index.md
+    - 'Tracks': manual/tracks/index.md
+    - 'Playlists' : manual/playlists/index.md
+    - 'Smart Blocks' : manual/smartblocks/index.md
+    - 'Webstreams' : manual/webstreams/index.md
+    - 'Podcasts' : manual/podcasts/index.md
+    - 'My Podcast' : manual/my-podcast/index.md
+    - 'Radio Page' : manual/radio-page/index.md
     - 'Calendar': manual/calendar/index.md
-    - 'History': manual/history/index.md
-    - 'Listen': manual/listen/index.md
+    - 'Widgets': manual/widgets/index.md
+    - 'Settings' : manual/general/index.md
     - 'Analytics': manual/listener-stats/index.md
     - 'Help': manual/help/index.md
+    - 'Listen': manual/listen/index.md
+  - 'The Analytics Menu':
+    - 'Playout History' : manual/history/index.md
+    - 'History Templates' : manual/history-templates/index.md  
+    - 'Listener Stats' : manual/listener-stats/index.md
   - 'LibreTime in the Studio':
     - 'Preparing Media for Ingest': manual/preparing-media-for-ingest/index.md
     - 'Live Shows with Mixxx': manual/live-shows-with-mixxx/index.md
@@ -49,6 +59,7 @@ pages:
     - 'Setting the Server Time': manual/setting-the-server-time/index.md
   - 'Administration':
     - 'Backing Up the Server': manual/backing-up-the-server/index.md
+    - 'Media Folders': manual/media-folders/index.md
     - 'Upgrading': manual/upgrading/index.md
     - 'Troubleshooting': manual/troubleshooting/index.md
   - 'Advanced Configuration':
