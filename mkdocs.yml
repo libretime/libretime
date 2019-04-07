@@ -51,7 +51,6 @@ pages:
     - 'Backing Up the Server': manual/backing-up-the-server/index.md
     - 'Upgrading': manual/upgrading/index.md
     - 'Troubleshooting': manual/troubleshooting/index.md
-    - 'Using Monit': manual/using-monit/index.md
   - 'Advanced Configuration':
     - 'Automated File Import': manual/automated-file-import/index.md
     - 'Icecast Handover': manual/icecast-handover/index.md
