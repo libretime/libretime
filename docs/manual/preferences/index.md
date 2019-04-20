@@ -19,13 +19,13 @@ The **Generate a smartblock and a playlist upon creation of a new podcast** opti
 
  ![](static/api-settings.png)
 
-You can enable live, read-only access to the Libretime schedule calendar for your station's public website with the **Public LibreTime API** option, if you wish. (There is more about this feature in the *Exporting the schedule* chapter, in the *Advanced Configuration* section of this book).
+You can enable live, read-only access to the Libretime schedule calendar for your station's public website with the **Public LibreTime API** option, if you wish. (There is more about this feature in the [*Exporting the schedule*](../exporting-the-schedule/index.md) chapter, in the *Advanced Configuration* section of this book).
 
 The **Allowed CORS URLs** is intended to deal with situations where you want a remote site with a different domain to access the API.
 
  The **Display login button on your Radio Page?** will determine whether visitors to your site see a link to login. If this is disabled DJs and admins will need to goto http://SITEURL/login to be able to login. 
  
- The **Tune-In Settings** section is intended for stations that have partnered with TuneIn to automatically push their now playing metadata to TuneIn. This hasn't been tested and also requires special credentials from parterning with TuneIn to test.
+ The **Tune-In Settings** section is intended for stations that have partnered with TuneIn to automatically push their now playing metadata to TuneIn. This hasn't been tested and also requires special credentials from TuneIn to test.
  
  
  ![](static/dangerous-options.png)
