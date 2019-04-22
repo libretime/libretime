@@ -1622,7 +1622,7 @@ SQL;
 
 
     // this function return list of propel object
-    public function getListofFilesMeetCriteria($show = null)
+    public function getListofFilesMeetCriteria($showLimit = null)
     {
         $storedCrit = $this->getCriteria();
 
@@ -1782,9 +1782,8 @@ SQL;
                 $limits['items'] = $storedCrit['limit']['value'];
             } elseif (($storedCrit['limit']['modifier'] == "remaining") ){
                 // show will be null unless being called inside a show instance
-                if (!(is_null($show))) {
-                    $showInstance = new Application_Model_ShowInstance($show);
-                    $limits['time'] = $showInstance->getSecondsRemaining();
+                if (!(is_null($showLimit))) {
+                    $limits['time'] = $showLimit;
                     $limits['items'] = null;
                 }
                 else {
@@ -1813,7 +1812,6 @@ SQL;
 
         try {
             $out = $qry->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)->find();
-            Logging::info($qry->toString());
 
             return array("files"=>$out, "limit"=>$limits, "repeat_tracks"=> $repeatTracks, "overflow_tracks"=> $overflowTracks, "count"=>$out->count());
         } catch (Exception $e) {
@@ -1823,7 +1821,6 @@ SQL;
     }
     public static function organizeSmartPlaylistCriteria($p_criteria)
     {
-        Logging::info($p_criteria);
         $fieldNames = array('sp_criteria_field', 'sp_criteria_modifier', 'sp_criteria_value', 'sp_criteria_extra', 'sp_criteria_datetime_select', 'sp_criteria_extra_datetime_select');
         $output = array();
         foreach ($p_criteria as $ele) {
@@ -1862,7 +1859,6 @@ SQL;
                 $output['etc'][$ele['name']] = $ele['value'];
             }
         }
-        Logging::info($output);
         return $output;
     }
     public static function getAllBlockFiles()
