@@ -269,8 +269,7 @@ SQL;
                 $previousFile = CcFilesQuery::create()
                     ->filterByDbId($previousMediaFileId)
                     ->findOne();
-                if (isset($previousFile))
-                {
+                if (isset($previousFile)) {
                     $previousMediaName = $previousFile->getDbArtistName() . " - " . $previousFile->getDbTrackTitle();
                     $previousMetadata = CcFiles::sanitizeResponse($previousFile);
                 }
