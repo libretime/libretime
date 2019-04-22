@@ -384,6 +384,15 @@ class ApiController extends Zend_Controller_Action
             // convert image paths to point to api endpoints
             WidgetHelper::findAndConvertPaths($result);
 
+            // Expose the live source status
+            $live_dj        = Application_Model_Preference::GetSourceSwitchStatus('live_dj')        ;
+            $master_dj      = Application_Model_Preference::GetSourceSwitchStatus('master_dj')      ;
+            $scheduled_play = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play') ;
+            $result["sources"] = array();
+            $result["sources"]["livedj"] = $live_dj;
+            $result["sources"]["masterdj"] = $master_dj;
+            $result["sources"]["scheduledplay"] = $scheduled_play;
+
             // used by caller to determine if the airtime they are running or widgets in use is out of date.
             $result["station"]["AIRTIME_API_VERSION"] = AIRTIME_API_VERSION;
 
