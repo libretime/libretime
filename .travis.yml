@@ -57,6 +57,7 @@ addons:
     - python-gst-1.0
     - python-magic
     - mp3gain
+    - dos2unix
 install:
 - >
     if [[ "$PYTHON" == false ]]; then
