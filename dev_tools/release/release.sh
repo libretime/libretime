@@ -68,6 +68,7 @@ tar -czf $target_file \
         --exclude-vcs \
         --exclude .zfproject.xml \
         --exclude .gitignore \
+        --exclude .gitattributes \
         --exclude .travis.yml \
         --exclude travis \
         --exclude dev_tools \
