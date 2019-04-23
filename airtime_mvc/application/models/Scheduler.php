@@ -84,7 +84,7 @@ final class Application_Model_Scheduler
     *
     * @param array $items, an array containing pks of cc_schedule items.
     */
-    private function validateRequest($items, $addRemoveAction=false)
+    private function validateRequest($items, $addRemoveAction=false, $cancelShow=false)
     {
         //$items is where tracks get inserted (they are schedule locations)
 
@@ -168,8 +168,10 @@ final class Application_Model_Scheduler
              * Does the afterItem belong to a show that is linked AND
              * currently playing?
              * If yes, throw an exception
+             * unless it is a cancel show action then we don't check because otherwise
+             * ongoing linked shows can't be cancelled
              */
-            if ($addRemoveAction) {
+            if ($addRemoveAction && !$cancelShow) {
                 $ccShow = $instance->getCcShow();
                 if ($ccShow->isLinked()) {
                     //get all the linked shows instances and check if
@@ -1207,7 +1209,7 @@ final class Application_Model_Scheduler
 
         try {
 
-            $this->validateRequest($scheduledItems, true);
+            $this->validateRequest($scheduledItems, true, true);
 
             $scheduledIds = array();
             foreach ($scheduledItems as $item) {
