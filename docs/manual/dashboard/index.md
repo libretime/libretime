@@ -1,4 +1,6 @@
-The Now Playing page provides a view of the content your station will play out, or has already played out, which defaults to showing the 24 hours ahead. This page also enables you to make last-minute changes to running shows.
+The Dashboard is divided into two sections a Library section divided between [Tracks](../tracks),[Playlists](../playlists),[Smart Blocks](../smartblocks),[Webstreams](../webstreams), and [Podcasts](../podcasts) and the **Scheduled Shows** dialog on the right. This page provides an overview of the right-hand interface. Check the links to see information about the other sections which provide the content that can be scheduled. 
+
+The **Scheduled ShowS** page provides a view of the content your station is will playout, or has already played out, which defaults to showing the 24 hours ahead. This page also enables you to make last-minute changes to running shows. 
 
 If you've only just installed Libretime, there might not be any content shown yet. Click the calendar and clock icons above the table to change the date and time range, then click the **Find Shows** button (with the magnifying glass icon) to the right.
 
@@ -12,7 +14,7 @@ On the left side of the page, the **Start** and **End** times, **Duration** and
 
 Click the **Show/hide columns** button on the right to configure the metadata displayed, by checking the boxes in the pop-up window.
 
-<img src="static/Screenshot498-Show_hide_columns_240.png" width="595" height="520" />
+![](static/Screenshot498-Show_hide_columns_240.png)
 
 The row for the currently playing item is displayed with a bright green background. Any underbooked shows (shows with insufficient content to fill the time allowed) are displayed with a row indicating the length of the underbooking in minutes and seconds. These rows contain a red exclamation mark in the first column, and have a pink background.
 
@@ -38,49 +40,6 @@ To cancel the current show completely, click the red button to the right again. 
 Items which are no longer available have an exclamation mark icon in the second column. This may happen for media files which were part of previous shows, and were removed from Libretime's library (main storage or watched folders) subsequently. Items which are included in forthcoming shows cannot be removed from the Library via the Libretime interface.
 
 ![](static/Screenshot421-Missing_file_icon.png)
-
-Advanced and simple library searches
-------------------------------------
-
-In the top left corner of the page is an **Add / Remove Content** button which enables you to open Libretime's library.
-
-![](static/Screenshot422-Add_remove_content.png)
-
-In the library table which opens, the upper section is for the **Advanced Search Options**, which enable you to search within individual fields of the database such as **Title** or **Creator**. Like an Internet search engine, you do not have to type in the correct upper or lower case, press the **Enter** key, or even type the whole of the search term before matches from the Libretime library are displayed.
-
-<img src="static/Screenshot574-Advanced_search.png" alt="Advanced search options" width="740" />
-
-At the bottom of the library table, click the **First**, **Previous**, **Next**, **Last** or individual page number buttons to browse the search results. Right-clicking an item in the search results will display the available metadata for that item in a pop-up window.
-
-![](static/Screenshot433-Metadata_pop_up.png)
-
-The columns displayed in the search results correspond to the fields available for advanced searches (except for **Scheduled** and **Playlist / Block**, which indicate if a particular item is in use). To change the fields which can be searched, click the **Show / hide columns** button on the right side of the table, just above the search results.
-
-<img src="static/Screenshot499-Library_show_hide_columns_240.png" width="595" height="360" />
-
-Click the metadata column headings such as **Title**, **Creator**, **Album**, or <span style="font-weight: bold;">Genre</span> to sort the entries in ascending or descending order. In the second column, audio files are represented by a loudspeaker icon, while playlists are represented by a document icon. Smart blocks have a think bubble icon, and web streams have an arrow icon.
-
-To find all files uploaded by yourself, or another specific member of the station staff, click the **Show / hide columns** checkbox which enables the **Owner** column. After you have made your search, you can click the header of the **Uploaded** column to find the items that person added to the server most recently.
-
-Advanced search terms are matched using 'and' rather than 'or' logic, to narrow your search. Perhaps you have tagged some jazz-flavoured station idents intended for use in a particular show called 'Jazz Maverick' with the **Album** tag of *Jazz Maverick* and a **Genre** of *Ident*. You could then find exactly the idents you are searching for by typing *maverick* and *ident* into the respective advanced search fields.
-
-Use the drop-down menu at the top of the search results to display **Files**, **Playlists**, **Smart Blocks**, **Web Streams** or **All** items. By default 10 items are listed, but you can click the **Show** drop-down menu to change the list length to between 5 and 100 items.
-
-![](static/Screenshot426-Search_result_select.png)
-
-Click the Advanced Search Options link to collapse that area. Beneath the collapsed link is the **Simple Search** field, with a magnifying glass icon, which enables the selection of items based on any tag metadata stored in the Libretime database, whether that metadata column is currently displayed in the table or not. For example, to search for all items between four and five minutes duration, enter *00:04* into the simple search field (for 00 hours and 04 minutes).
-
-![](static/Screenshot425-Simple_search.png)
-
-If your jingles are tagged with *Jingle* in the **Genre** or other fields, you can very easily find them by entering *jingle* into the simple search field. The same technique can be used to find advertising and promotional files. (See the chapter *Preparing media for ingest* for tips on batch tagging files with metadata). Unlike advanced searches, simple searches use 'or' logic for multiple search terms, so a simple search for *jingle ident* will return items matching either keyword.
-
-Clicking on an item in the library table opens a pop-up menu which enables you to audition the item, or remove it from the Libretime library. Media types which cannot be auditioned directly in a web browser, such as FLAC, have a lock icon instead of a loudspeaker icon, but these files can be downloaded to your local computer for audition instead. The **Delete** option should be used with caution, because this action cannot be undone. For media files, you can also **Edit Metadata** stored for the file using this menu.
-
-![](static/Screenshot427-Library_pop_up.png)
-
-If the **Enable SoundCloud Upload** box on the Preferences page is checked, there will be an additional option on the pop-up menu, **Upload to SoundCloud**. As mentioned previously, you should only upload audio files to SoundCloud with the permission of the copyright holder.
-
-![](static/Screenshot432-Upload_to_SoundCloud.png)
 
 Adding content to a running show
 --------------------------------
