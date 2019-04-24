@@ -10,12 +10,7 @@ You can log in for the first time with the user name *admin* and the password se
 
 ![](static/Screenshot-Login.png)
 
-If you enter the password incorrectly three times, you will be presented with a reCAPTCHA challenge to prove that you are a human, and not a password-guessing robot. This feature helps protect your LibreTime installation against brute force 
-attacks.
-
-![](static/Screenshot466-Recaptcha_login.png)
-
-If activated, you will see a link **Reset password** below the password field, which enables users to obtain a password reminder by email. See the chapter *Preferences* for configuration details.
+You will see a link **Reset password** below the password field, which enables users to obtain a password reminder by email. You will need to have a mailserver configured to work with PHP for this to work. There is an issue open to add documentation for this. [#724](https://github.com/LibreTime/libretime/issues/724)
 
 ![](static/Screenshot467-Reset_password_link.png) 
 
