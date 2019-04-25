@@ -102,7 +102,7 @@ var AIRTIME = (function(AIRTIME) {
                     "media": "tracks",
                     "icon": "icon-music",
                     "subtext": "Click 'Upload' to add some now.",
-                    "href": "http://libretime.org/manual/upload/"
+                    "href": "http://libretime.org/manual/tracks/"
                 };
             case mod.MediaTypeIntegerEnum.PLAYLIST:
                 return {
