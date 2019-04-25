@@ -413,7 +413,6 @@ class Application_Service_PodcastService
             return null;
         }
         $child = $node->addChild($name, null, $namespace);
-        Logging::info($value);
         $child[0] = $value;
         return $child;
     }
