@@ -413,7 +413,7 @@ class Application_Service_PodcastService
             return null;
         }
         $child = $node->addChild($name, null, $namespace);
-        $child->{0} = $value;
+        $child[0] = $value;
         return $child;
     }
 
@@ -445,7 +445,7 @@ class Application_Service_PodcastService
 
             $imageUrl = Application_Common_HTTPHelper::getStationUrl()."api/station-logo";
             $image = $channel->addChild("image");
-            $image->addChild("title", $podcast->getDbTitle());
+            $image->addChild("title", htmlspecialchars($podcast->getDbTitle()));
             self::addEscapedChild($image, "url", $imageUrl);
             self::addEscapedChild($image, "link", Application_Common_HTTPHelper::getStationUrl());
 
