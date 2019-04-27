@@ -1,0 +1,2 @@
+How to Upload Tracks and Schedule Your Show - Youtube Video
+[![Upload Tracks](http://img.youtube.com/vi/TJtWUzAlP08/0.jpg)](https://www.youtube-nocookie.com/embed/TJtWUzAlP08 "How to upload tracks")

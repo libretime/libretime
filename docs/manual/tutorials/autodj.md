@@ -1,0 +1,2 @@
+How to Setup Genre based AutoDJ - Youtube Video
+[![How to Setup Genre based AutoDJ](http://img.youtube.com/vi/XNVIDnczrOk/0.jpg)](https://www.youtube-nocookie.com/embed/XNVIDnczrOk "How to Setup Genre based AutoDJ")
