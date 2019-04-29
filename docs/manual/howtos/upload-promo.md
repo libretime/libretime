@@ -6,7 +6,7 @@ Instructions:
 
 Record your promo and export it as a mp3
 
-note: if you can set the metadata of genre to **promo **you can skip the
+note: if you can set the metadata of genre to **promo** you can skip the
 final step below
 
 Login to LibreTime with your DJ username
@@ -19,10 +19,10 @@ right click **Tracks**
 Find the track in the list. *(follow instructions below if you don’t see
 it)*
 
-If it is not at the top click the **Uploaded **column until it sorts by
+If it is not at the top click the **Uploaded** column until it sorts by
 the newest tracks first.
 
-If Uploaded doesn’t show up click **Columns **to the top right scroll
+If Uploaded doesn’t show up click **Columns** to the top right scroll
 down and click the box next to **Uploaded**
 
 ****

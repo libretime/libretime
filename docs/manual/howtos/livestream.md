@@ -21,19 +21,16 @@ Click the radio button next to **IceCast** under Type
 
 Type your stations URL (webpage address) under **Address**:
 
-Type **8002 **under **Port**:
+Type **8002** under **Port**:
 
 Type your DJ login password under **Password**
 
-Type **/show **under IceCast mountpoint:
+Type **/show** under IceCast mountpoint:
 
 Type your dj login under **IceCast user:**
 
-****
 
 Click **ADD**
-
-****
 
 Still in settings
 

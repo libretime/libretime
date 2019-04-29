@@ -9,11 +9,11 @@ Click on the Calendar menu item on the left side of the screen
 
 Click on the blue New Show button
 
-Under **What – **type in a Name to replace Untitled Show
+Under **What** - type in a Name to replace Untitled Show
 
 Optional – add URL, Genre and Description
-
-Under **When **click **In The Future - **
+ 	
+Under **When** click **In The Future**
 
 Select a date and time for the **Start Time** and **End Time **
 
@@ -23,7 +23,7 @@ military time and the second 2 digits are the minutes. So 15:00 is 3PM.
 Note: 24 hours is the maximum show time and Midnight is 00:00 of the
 next date.
 
-Click **Repeats **if this show will air more than once.
+Click **Repeats** if this show will air more than once.
 
 If it airs at the same time of the day on more than one day of the week
 then check the boxes next to the Days it should repeat on.
@@ -31,13 +31,13 @@ then check the boxes next to the Days it should repeat on.
 If this is a limited engagement show uncheck **No End?** and select the
 date at which this show should no longer be on the schedule.
 
-**Autoloading Playlist **is used if you will generate the content for
+**Autoloading Playlist** is used if you will generate the content for
 this show using a playlist possibly containing smartblocks to
 dynamically generate it.
 
 Basically if this is checked and a playlist is selected LibreTime will
 schedule it an hour before the show is set to air as well as any **Intro
-& Outro Playlist **configured in the Admin settings.
+& Outro Playlist** configured in the Admin settings.
 
 See other How Tos for ideas about how to use AutoLoading playlists.
 

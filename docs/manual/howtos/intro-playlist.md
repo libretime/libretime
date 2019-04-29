@@ -15,9 +15,9 @@ On the right (or below if screen width is limited)
 
 Type in the Smart Block Name: **Top of the Hour Station ID**
 
-Under **Search Criteria **select **Genre **for the criteria
+Under **Search Criteria** select **Genre** for the criteria
 
-Select **is **for modifier
+Select **is** for modifier
 
 Type TOTHID in the third box.
 
@@ -31,17 +31,17 @@ Click **Save**
 
 Adding Smartblock to Intro Playlist
 
-Click **Playlist **
+Click **Playlist**
 
-Click **+ New **
+Click **+ New**
 
-Type **Intro Playlist **in the Name.
+Type **Intro Playlist** in the Name.
 
 Click **Smart Blocks**
 
 Click the box to the left of **Top of the Hour Station ID**
 
-Click **+ Add to current playlist **or drag the smart block to the right
+Click **+ Add to current playlist** or drag the smart block to the right
 bottom of the playlist window.
 
 Click **Save**
