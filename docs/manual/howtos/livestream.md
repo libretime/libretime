@@ -11,7 +11,7 @@ Note: be sure you have butt version 0.1.17 or newer installed
 
 Open up butt – and click **settings**
 
-Under **Main **under **Server **click **ADD**
+Under **Main** under **Server **click **ADD**
 
 ****
 
@@ -28,7 +28,6 @@ Type your DJ login password under **Password**
 Type **/show** under IceCast mountpoint:
 
 Type your dj login under **IceCast user:**
-
 
 Click **ADD**
 
@@ -74,7 +73,7 @@ directory by default.
 
 Everything should no be working and you can broadcast for your entire
 time slot. If you choose to stop streaming before it is over click the
-white square **Stop **button to disconnect.
+white square **Stop** button to disconnect.
 
 Then go to the LibreTime page and if the Show Source didn’t
 automatically disconnect you can click it to the right and it should

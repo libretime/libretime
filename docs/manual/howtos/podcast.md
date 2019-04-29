@@ -11,7 +11,7 @@ Login to LibreTime with a user with the Program Manager or Admin role
 
 Copy the URL to the podcast RSS feed
 
-Click on Podcasts and then click the blue **Add **button and then past
+Click on Podcasts and then click the blue **Add** button and then past
 the feed URL and click Subscribe.
 
 Click the newly added Podcast and then click edit or double click it.
@@ -21,8 +21,8 @@ Update the name of the podcast if you want to change it.
 On the right hand window should be open for your podcast click
 **Generate Smartblock and Playlist**
 
-Click the checkbox next the newest episode and then click the **import
-**button.
+Click the checkbox next the newest episode and then click the
+**import** button.
 
 Let podcast download in the background.
 

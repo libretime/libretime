@@ -12,10 +12,10 @@ Click on the blue New Show button
 Under **What** - type in a Name to replace Untitled Show
 
 Optional – add URL, Genre and Description
- 	
+
 Under **When** click **In The Future**
 
-Select a date and time for the **Start Time** and **End Time **
+Select a date and time for the **Start Time** and **End Time**
 
 Time is entered as 00:00 where the first 2 digits are the hour in
 military time and the second 2 digits are the minutes. So 15:00 is 3PM.

@@ -44,16 +44,16 @@ Click the box to the left of **Top of the Hour Station ID**
 Click **+ Add to current playlist** or drag the smart block to the right
 bottom of the playlist window.
 
-Click **Save**
+Click **Save**.
 
 How to Set Default Intro Playlist
 
 Click **Settings**.
 
-Click General and then scroll to **Intro Autoloading Playlist **and
-click the drop down to select the **Intro Playlist **
+Click **General** and then scroll to **Intro Autoloading Playlist** and
+click the drop down to select the **Intro Playlist**
 
-Click **Save.**
+Click **Save**.
 
 Now everytime an autoloading playlist is scheduled the system will
 select a random top of the hour ID and insert it before any other

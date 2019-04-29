@@ -27,7 +27,7 @@ down and click the box next to **Uploaded**
 
 ****
 
-Now click **Uploaded **twice and it should display your track at the
+Now click **Uploaded** twice and it should display your track at the
 top.
 
 Click the box next your track and click the **Edit** button above the
