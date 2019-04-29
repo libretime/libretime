@@ -1,23 +1,18 @@
-﻿If you do not have direct access to the Libretime server, you can add files to the Libretime library using the **Add Media** page of the administration interface. (The **Add Media** page is not visible to *Guest* users). This page includes an upload queue for media files, which supports drag and drop from your computer's file manager if you are using a recent web browser, such as *Mozilla Firefox 16* or later.
+﻿The primary way you can add files to the Libretime library is using the **Upload** page of the administration interface. (The **Upload** page is not visible to *Guest* users). This page includes an upload queue for media files, which supports drag and drop from your computer's file manager if you are using a recent web browser, such as *Mozilla Firefox 16* or later.
 
-Some web browsers may set an upload limit for a single file, between 200MB and 2GB. If you need to upload files larger than 200MB to the Libretime server on a regular basis, you may find it more convenient to perform the upload using SFTP, rather than through the browser. See the chapter *Automated file import* for more details.
+Some web browsers may set an upload limit for a single file, between 200MB and 2GB. In addition the default LibreTime webserver configuration limits file size to 500M.  If you need to upload files larger than 500MB to the Libretime server on a regular basis, you will need to have your admin update the configuration at `/etc/apache2/sites-available/airtime.conf `. Airtime previously supported import via SFTP but this functionality is still under development for LibreTime.
 
-![](static/Screenshot383-Add_media.png)
+![](static/upload-files-dialog)
 
-If your web browser does not support drag and drop, you can use the **Add files** button, which has a white plus sign in a green circle icon, to open a file selection window on your computer.
+If your web browser does not support drag and drop, you can click the background of the screen on the **Upload page**, to open up a file browser dialog.
+LibreTime will automatically attempt to upload files once you select them. You can track the file upload progress via the gray progress bar in the upload window.
 
-![](static/Screenshot143-File_upload.png)
+![](static/dialog-progress.png)
 
-After you have added all the files that you require to the upload queue, click the **Start upload** button, which has a green arrow icon.
+The upload speed will depend on the network connection between your computer and the Libretime server. While files are uploading you need to keep this browser window open or it will interrupt the file transfer.
 
-![](static/Screenshot144-Start_upload_1.png)
+![](static/pending-import.png)
 
-The row of the file currently being uploaded is highlighted in pale green. At the bottom of the upload queue, a progress bar and percentage indicates how much of the upload has taken place so far. The upload speed will depend on the network connection between your computer and the Libretime server.
+After the file transfer is complete, the file is then processed by the analyzer service and if it has been succesfully uploaded the **Import Status** will change from **Pending Import** to **Succesfully imported**. If it fails there was some reason your file was rejected by LibreTime and you will need to try again or contact your Admin to have them consult the logs and open up a bug report. It sometimes takes a few minutes for files to be processed but if they are all stuck at **Pending Import** then it is possible that the *airtime_analyzer* process has crashed and the admin will need to restart it. See [Troubleshooting](../troubleshooting) for more information. You can look specifically at any failed imports by clicking the radio button next to Failed.
 
-![](static/Screenshot145-Upload_status_1.png)
-
-Once it has been uploaded successfully, each file row displays a white check mark in a green circle icon.
-
-![](static/Screenshot146-Upload_done_1.png) 
-
-Your files are now imported into the Libretime library, ready to be included in your broadcast playlists, smart blocks and shows.
+Once they are done procesing your files ready to be included in your broadcast playlists, smart blocks and shows and can be viewed in the [Tracks](../Tracks) section of the Library.
