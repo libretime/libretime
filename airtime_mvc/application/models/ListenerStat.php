@@ -113,6 +113,27 @@ SQL;
             }
             return($showData);
     }
+    public static function getAllShowDataPointsWithinRange($p_start, $p_end) {
+        // this query selects the id of all show instances that aired in this date range
+        $all_show_data = [];
+        $sql = <<<SQL
+SELECT show_id FROM cc_show_instances 
+WHERE starts >=:p1 AND ends <=:p2
+GROUP BY show_id
+SQL;
+        $data = Application_Common_Database::prepareAndExecute($sql,
+            array('p1'=>$p_start, 'p2'=>$p_end));
+
+        foreach($data as $show_id) {
+            $all_show_data = array_merge(self::getShowDataPointsWithinRange($p_start,$p_end,$show_id['show_id']), $all_show_data);
+        }
+        /* option to sort by number of listeners currently commented out
+        usort($all_show_data, function($a, $b) {
+            return $a['average_number_of_listeners'] - $b['average_number_of_listeners'];
+        });
+        */
+        return $all_show_data;
+    }
 
     public static function insertDataPoints($p_dataPoints) {
 

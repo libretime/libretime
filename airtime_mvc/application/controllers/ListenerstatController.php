@@ -73,4 +73,11 @@ class ListenerstatController extends Zend_Controller_Action
             $endsDT->format(DEFAULT_TIMESTAMP_FORMAT),$show_id);
         $this->_helper->json->sendJson($data);
     }
+    public function getAllShowDataAction(){
+        list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
+        $show_id = $this->getRequest()->getParam("show_id", null);
+        $data = Application_Model_ListenerStat::getAllShowDataPointsWithinRange($startsDT->format(DEFAULT_TIMESTAMP_FORMAT),
+            $endsDT->format(DEFAULT_TIMESTAMP_FORMAT),$show_id);
+        $this->_helper->json->sendJson($data);
+    }
 }
