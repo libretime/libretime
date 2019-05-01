@@ -56,6 +56,39 @@ class ListenerstatController extends Zend_Controller_Action
         $this->view->errorStatus = $out;
         $this->view->date_form = $form;
     }
+    public function showAction() {
+        $CC_CONFIG = Config::getConfig();
+
+        $request = $this->getRequest();
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+        Zend_Layout::getMvcInstance()->assign('parent_page', 'Analytics');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/listenerstat/showlistenerstat.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
+        $user = Application_Model_User::getCurrentUser();
+        if ($user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+            $this->view->showAllShows = true;
+        }
+        $form = new Application_Form_ShowBuilder();
+
+        list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
+        $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+        $startsDT->setTimezone($userTimezone);
+        $endsDT->setTimezone($userTimezone);
+        $form->populate(array(
+            'sb_date_start' => $startsDT->format("Y-m-d"),
+            'sb_time_start' => $startsDT->format("H:i"),
+            'sb_date_end'   => $endsDT->format("Y-m-d"),
+            'sb_time_end'   => $endsDT->format("H:i")
+        ));
+
+        $this->view->sb_form = $form;
+    }
 
     public function getDataAction(){
         list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
@@ -67,8 +100,6 @@ class ListenerstatController extends Zend_Controller_Action
     public function getShowDataAction(){
         list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
         $show_id = $this->getRequest()->getParam("show_id", null);
-        Logging::info($this->getRequest()->getParam("show_id", null));
-        Logging::info($show_id);
         $data = Application_Model_ListenerStat::getShowDataPointsWithinRange($startsDT->format(DEFAULT_TIMESTAMP_FORMAT),
             $endsDT->format(DEFAULT_TIMESTAMP_FORMAT),$show_id);
         $this->_helper->json->sendJson($data);
