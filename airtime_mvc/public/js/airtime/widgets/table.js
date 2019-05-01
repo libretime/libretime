@@ -77,6 +77,7 @@ var AIRTIME = (function(AIRTIME) {
             "bAutoWidth": false,
             "aaSorting": [],
             "iDisplayLength": 25,
+            "iDisplayStart": 25,
             "aLengthMenu": [25, 50, 100],
             "oLanguage" : getDatatablesStrings({
                 "sEmptyTable": $.i18n._(""),
@@ -428,8 +429,6 @@ var AIRTIME = (function(AIRTIME) {
             "type": "GET",
             "url": sSource,
             "data": {
-                "limit": oSettings._iDisplayLength,
-                "offset": oSettings._iDisplayStart,
                 "sort": sortColName,
                 "sort_dir": sortDir,
                 "search": search
