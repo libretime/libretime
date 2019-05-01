@@ -1365,7 +1365,8 @@ var AIRTIME = (function(AIRTIME) {
             /* Creator */        { "sTitle" : $.i18n._("Creator")            , "mDataProp" : "creator"      , "sClass"      : "library_creator"     , "sWidth"  : "160px" },
             /* Website */        { "sTitle" : $.i18n._("Description")        , "mDataProp" : "description"  , "bVisible"    : false                 , "sWidth"  : "150px" },
             /* Year */           { "sTitle" : $.i18n._("Owner")              , "mDataProp" : "owner"        , "bVisible"    : false                 , "sWidth"  : "60px"  },
-            /* URL */            { "sTitle" : $.i18n._("Feed URL")           , "mDataProp" : "url"          , "bVisible"    : false                 , "sWidth"  : "60px"  }
+            /* URL */            { "sTitle" : $.i18n._("Feed URL")           , "mDataProp" : "url"          , "bVisible"    : false                 , "sWidth"  : "60px"  },
+            /* Import Date */    { "sTitle" : $.i18n._("Import Date")        ,"mDataProp" : "auto_ingest_timestamp", "bVisible"    : true           , "sWidth"  : "60px"  },
             ],
             ajaxSourceURL = baseUrl+"rest/podcast",
             podcastToolbarButtons = AIRTIME.widgets.Table.getStandardToolbarButtons();

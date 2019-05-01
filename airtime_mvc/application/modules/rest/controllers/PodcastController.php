@@ -36,7 +36,10 @@ class Rest_PodcastController extends Zend_Rest_Controller
         $stationPodcastId = Application_Model_Preference::getStationPodcastId();
         $result = PodcastQuery::create()
             // Don't return the Station podcast - we fetch it separately
-            ->filterByDbId($stationPodcastId, Criteria::NOT_EQUAL);
+            ->filterByDbId($stationPodcastId, Criteria::NOT_EQUAL)
+            ->leftJoinImportedPodcast()
+            ->withColumn('auto_ingest_timestamp');
+
         if ($limit > 0) { $result->setLimit($limit); }
         $result->setOffset($offset)
             ->orderBy($sortColumn, $sortDir);
