@@ -60,17 +60,18 @@ class ListenerstatController extends Zend_Controller_Action
 
         $request = $this->getRequest();
         $baseUrl = Application_Common_OsPath::getBaseDir();
+        $headScript = $this->view->headScript();
+        AirtimeTableView::injectTableJavaScriptDependencies($headScript, $baseUrl, $CC_CONFIG['airtime_version']);
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Analytics');
         $this->view->headScript()->appendFile($baseUrl.'js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/listenerstat/showlistenerstat.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/TableTools-2.1.5/js/ZeroClipboard.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/TableTools-2.1.5/js/TableTools.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
+
+
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/dataTables.colReorder.min.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'js/datatables/plugin/TableTools-2.1.5/css/TableTools.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
 
@@ -99,7 +100,6 @@ class ListenerstatController extends Zend_Controller_Action
 
     public function getDataAction(){
         list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
-
         $data = Application_Model_ListenerStat::getDataPointsWithinRange($startsDT->format(DEFAULT_TIMESTAMP_FORMAT),
                                                                          $endsDT->format(DEFAULT_TIMESTAMP_FORMAT));
         $this->_helper->json->sendJson($data);
@@ -114,9 +114,8 @@ class ListenerstatController extends Zend_Controller_Action
     }
     public function getAllShowData(){
     list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
-    $show_id = $this->getRequest()->getParam("show_id", null);
     $data = Application_Model_ListenerStat::getAllShowDataPointsWithinRange($startsDT->format(DEFAULT_TIMESTAMP_FORMAT),
-        $endsDT->format(DEFAULT_TIMESTAMP_FORMAT),$show_id);
+        $endsDT->format(DEFAULT_TIMESTAMP_FORMAT));
     return $data;
     }
 
@@ -124,7 +123,7 @@ class ListenerstatController extends Zend_Controller_Action
         list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
         $show_id = $this->getRequest()->getParam("show_id", null);
         $data = Application_Model_ListenerStat::getAllShowDataPointsWithinRange($startsDT->format(DEFAULT_TIMESTAMP_FORMAT),
-            $endsDT->format(DEFAULT_TIMESTAMP_FORMAT),$show_id);
+            $endsDT->format(DEFAULT_TIMESTAMP_FORMAT));
         $this->_helper->json->sendJson($data);
     }
 }
