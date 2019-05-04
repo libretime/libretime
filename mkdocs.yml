@@ -22,6 +22,8 @@ pages:
   - 'Using LibreTime':
     - 'On Air in 60 seconds!': 'manual/on-air-in-60-seconds/index.md'
     - 'Getting Started': manual/getting-started/index.md
+    - 'Tutorials': manual/tutorials/index.md
+    - 'How-Tos': manual/howtos/index.md
   - 'The Settings Menu':
     - 'General': manual/general/index.md
     - 'Users': manual/users/index.md

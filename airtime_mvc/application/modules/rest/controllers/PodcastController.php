@@ -39,7 +39,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
             ->filterByDbId($stationPodcastId, Criteria::NOT_EQUAL)
             ->leftJoinImportedPodcast()
             ->withColumn('auto_ingest_timestamp');
-
+        $total = $result->count();
         if ($limit > 0) { $result->setLimit($limit); }
         $result->setOffset($offset)
             ->orderBy($sortColumn, $sortDir);
@@ -47,9 +47,10 @@ class Rest_PodcastController extends Zend_Rest_Controller
 
         $podcastArray = $result->toArray(null, false, BasePeer::TYPE_FIELDNAME);
 
+
         $this->getResponse()
             ->setHttpResponseCode(200)
-            ->setHeader('X-TOTAL-COUNT', $result->count())
+            ->setHeader('X-TOTAL-COUNT', $total)
             ->appendBody(json_encode($podcastArray));
     }
 
