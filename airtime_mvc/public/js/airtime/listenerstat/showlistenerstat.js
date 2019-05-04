@@ -16,7 +16,7 @@ $(document).ready(function() {
         var oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
         var start = oRange.start;
         var end = oRange.end;
-        brokeDataTable();
+        showListenerDataTable();
     });
 });
 
@@ -36,9 +36,9 @@ function addDatePicker() {
         dayNamesMin: i18n_days_short,
         onSelect: function(sDate, oDatePicker) {
             $(this).datepicker( "setDate", sDate );
-        }
+        },
+        onClose: validateTimeRange
     };
-
     oBaseTimePickerSettings = {
         showPeriodLabels: false,
         showCloseButton: true,
@@ -46,13 +46,14 @@ function addDatePicker() {
         showLeadingZero: false,
         defaultTime: '0:00',
         hourText: $.i18n._("Hour"),
-        minuteText: $.i18n._("Minute")
+        minuteText: $.i18n._("Minute"),
+        onClose: validateTimeRange
     };
 
-    showlistenerstat_content.find(dateStartId).datepicker(oBaseDatePickerSettings);
-    showlistenerstat_content.find(timeStartId).timepicker(oBaseTimePickerSettings);
-    showlistenerstat_content.find(dateEndId).datepicker(oBaseDatePickerSettings);
-    showlistenerstat_content.find(timeEndId).timepicker(oBaseTimePickerSettings);
+    showlistenerstat_content.find(dateStartId).datepicker(oBaseDatePickerSettings).blur(validateTimeRange());
+    showlistenerstat_content.find(timeStartId).timepicker(oBaseTimePickerSettings).blur(validateTimeRange());
+    showlistenerstat_content.find(dateEndId).datepicker(oBaseDatePickerSettings).blur(validateTimeRange());
+    showlistenerstat_content.find(timeEndId).timepicker(oBaseTimePickerSettings).blur(validateTimeRange());
 }
 
 function getStartEnd() {
@@ -60,22 +61,35 @@ function getStartEnd() {
     return AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
 }
 
+function validateTimeRange() {
+    var oRange,
+        inputs = $('.date_form > input'),
+        error_window = $('.error_window'),
+        start, end;
 
-function showSummaryList(start, end) {
-    var url = baseUrl+"playouthistory/show-history-feed",
-        data = {
-            format: "json",
-            start: start,
-            end: end
-        };
+    oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
 
-    $.post(url, data, function(json) {
-        drawShowList(json);
-    });
+    start = oRange.start;
+    end = oRange.end;
+
+    if (end >= start) {
+        error_window.removeClass('error');
+        $('.error_window').html('');
+    }
+    else {
+        error_window.addClass('error');
+        console.log('bad')
+        $('.error_window').html('Your start date time is after your end date time');
+    }
+
+    return {
+        start: start,
+        end: end,
+        isValid: end >= start
+    };
 }
 
-
-function brokeDataTable() {
+function showListenerDataTable() {
     var oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
     var start = oRange.start;
     var end = oRange.end;
@@ -90,6 +104,7 @@ function brokeDataTable() {
             /* last name */  {"sName": "maximum_number_of_listeners", "mDataProp": "maximum_number_of_listeners"}],
         "sAjaxSource":         baseUrl+'Listenerstat/get-all-show-data',
         "sAjaxDataProp": "",
+        "bDestroy": true,
         "fnServerData": function ( sSource, aoData, fnCallback ) {
             aoData.push({"start": start, "end": end});
           $.ajax( {
