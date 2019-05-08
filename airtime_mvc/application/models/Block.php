@@ -1762,10 +1762,10 @@ SQL;
             $qry->addAscendingOrderByColumn('utime');
         }
         else if ($sortTracks == 'mostrecentplay') {
-            $qry->addDescendingOrderByColumn('lptime');
+            $qry->addDescendingOrderByColumn('(lptime IS NULL), lptime');
         }
         else if ($sortTracks == 'leastrecentplay') {
-            $qry->addAscendingOrderByColumn('lptime');
+            $qry->addAscendingOrderByColumn('(lptime IS NOT NULL), lptime');
         }
         else if ($sortTracks == 'random') {
             $qry->addAscendingOrderByColumn('random()');
