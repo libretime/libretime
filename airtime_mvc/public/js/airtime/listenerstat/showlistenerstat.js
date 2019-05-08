@@ -92,7 +92,9 @@ function validateTimeRange() {
 function showListenerDataTable() {
     var oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
     var start = oRange.start;
+    var lengthMenu = [[10, 25, 50, 100, 500, -1], [10, 25, 50, 100, 500, $.i18n._("All")]];
     var end = oRange.end;
+    var sDom = 'l<"dt-process-rel"r><"H"T><"dataTables_scrolling"t><"F"ip>';
     var show_id = $("#sb_show_filter").val();
     var dt = $('#show_stats_datatable');
     info = getStartEnd();
@@ -105,6 +107,12 @@ function showListenerDataTable() {
         "sAjaxSource":         baseUrl+'Listenerstat/get-all-show-data',
         "sAjaxDataProp": "",
         "bDestroy": true,
+        "aLengthMenu": lengthMenu,
+        "iDisplayLength": 25,
+        "sPaginationType": "full_numbers",
+        "bJQueryUI": true,
+        "bAutoWidth": true,
+        "sDom": sDom,
         "fnServerData": function ( sSource, aoData, fnCallback ) {
             aoData.push({"start": start, "end": end});
           $.ajax( {
