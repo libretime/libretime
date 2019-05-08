@@ -103,10 +103,16 @@ GROUP BY timestamp
 SQL;
             $data = Application_Common_Database::prepareAndExecute($sql,
                 array('p1'=>$d['starts'], 'p2'=>$d['ends']));
+            $utcTimezone = new DateTimeZone("UTC");
+            $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
             if (sizeof($data) > 0) {
+                $t = new DateTime($data[0]['timestamp'], $utcTimezone);
+                $t->setTimezone($displayTimezone);
+                // tricking javascript so it thinks the server timezone is in UTC
                 $average_listeners = array_sum(array_column($data, 'listeners')) / sizeof($data);
                 $max_num_listeners = max(array_column($data, 'listeners'));
-                $entry = array("show" => $showName, "time" => $data[0]['timestamp'], "average_number_of_listeners" => $average_listeners,
+                $entry = array("show" => $showName, "time" => $t->format( 'Y-m-d H:i:s')
+                , "average_number_of_listeners" => $average_listeners,
                     "maximum_number_of_listeners" => $max_num_listeners);
                 array_push($showData, $entry);
             }
