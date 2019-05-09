@@ -26,7 +26,6 @@ class ListenerstatController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-
         $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
 
         list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
@@ -56,12 +55,76 @@ class ListenerstatController extends Zend_Controller_Action
         $this->view->errorStatus = $out;
         $this->view->date_form = $form;
     }
+    public function showAction() {
+        $CC_CONFIG = Config::getConfig();
+
+        $request = $this->getRequest();
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $headScript = $this->view->headScript();
+        AirtimeTableView::injectTableJavaScriptDependencies($headScript, $baseUrl, $CC_CONFIG['airtime_version']);
+        Zend_Layout::getMvcInstance()->assign('parent_page', 'Analytics');
+        $this->view->headScript()->appendFile($baseUrl.'js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/listenerstat/showlistenerstat.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+
+
+
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/dataTables.colReorder.min.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'js/datatables/plugin/TableTools-2.1.5/css/TableTools.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/show_analytics.css'.$CC_CONFIG['airtime_version']);
+
+        $user = Application_Model_User::getCurrentUser();
+        if ($user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+            $this->view->showAllShows = true;
+        }
+        $data = [];
+        $this->view->showData = $data;
+
+        $form = new Application_Form_ShowListenerStat();
+
+        list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
+        $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+        $startsDT->setTimezone($userTimezone);
+        $endsDT->setTimezone($userTimezone);
+        $form->populate(array(
+            'his_date_start' => $startsDT->format("Y-m-d"),
+            'his_time_start' => $startsDT->format("H:i"),
+            'his_date_end'   => $endsDT->format("Y-m-d"),
+            'his_time_end'   => $endsDT->format("H:i")
+        ));
+
+        $this->view->date_form = $form;
+    }
 
     public function getDataAction(){
         list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
-        
         $data = Application_Model_ListenerStat::getDataPointsWithinRange($startsDT->format(DEFAULT_TIMESTAMP_FORMAT),
                                                                          $endsDT->format(DEFAULT_TIMESTAMP_FORMAT));
+        $this->_helper->json->sendJson($data);
+    }
+
+    public function getShowDataAction(){
+        list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
+        $show_id = $this->getRequest()->getParam("show_id", null);
+        $data = Application_Model_ListenerStat::getShowDataPointsWithinRange($startsDT->format(DEFAULT_TIMESTAMP_FORMAT),
+            $endsDT->format(DEFAULT_TIMESTAMP_FORMAT),$show_id);
+        $this->_helper->json->sendJson($data);
+    }
+    public function getAllShowData(){
+    list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
+    $data = Application_Model_ListenerStat::getAllShowDataPointsWithinRange($startsDT->format(DEFAULT_TIMESTAMP_FORMAT),
+        $endsDT->format(DEFAULT_TIMESTAMP_FORMAT));
+    return $data;
+    }
+
+    public function getAllShowDataAction(){
+        list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
+        $show_id = $this->getRequest()->getParam("show_id", null);
+        $data = Application_Model_ListenerStat::getAllShowDataPointsWithinRange($startsDT->format(DEFAULT_TIMESTAMP_FORMAT),
+            $endsDT->format(DEFAULT_TIMESTAMP_FORMAT));
         $this->_helper->json->sendJson($data);
     }
 }

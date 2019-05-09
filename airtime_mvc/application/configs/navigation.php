@@ -138,6 +138,14 @@ $pages[] = array(
             'action'     => 'index',
             'resource'   => 'listenerstat'
         ),
+        array(            
+            'label'      => _('Show Listener Stats'),
+            'module'     => 'default',
+            'controller' => 'listenerstat',
+            'action'     => 'show',
+            'resource'   => 'showlistenerstat'
+        ),
+
     )
 );
 if (LIBRETIME_ENABLE_BILLING === true) {
