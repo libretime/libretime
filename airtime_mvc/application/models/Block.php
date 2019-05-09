@@ -1750,7 +1750,6 @@ SQL;
         $qry->add("file_exists", "true", Criteria::EQUAL);
         $qry->add("hidden", "false", Criteria::EQUAL);
 
-        //$qry->addAsColumn('lptime','COALESCE("lptime",\'1970-01-01\')');
         $sortTracks = 'random';
         if (isset($storedCrit['sort'])) {
             $sortTracks = $storedCrit['sort']['value'];
@@ -1761,6 +1760,7 @@ SQL;
         else if ($sortTracks == 'oldest') {
             $qry->addAscendingOrderByColumn('utime');
         }
+        // these sort additions are needed to override the default postgres NULL sort behavior
         else if ($sortTracks == 'mostrecentplay') {
             $qry->addDescendingOrderByColumn('(lptime IS NULL), lptime');
         }
