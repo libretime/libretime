@@ -1202,7 +1202,6 @@ SQL;
                 // that might contradict itself we group them based upon their original position on the form
                 $criteriaGroup = $i;
                 foreach ($p_criteriaData['criteria'][$critKeys[$i]] as $d) {
-                    Logging::info($d);
                 	$field = $d['sp_criteria_field'];
                 	$value = $d['sp_criteria_value'];
                 	$modifier = $d['sp_criteria_modifier'];
@@ -1586,7 +1585,6 @@ SQL;
         $storedCrit = array();
 
         foreach ($out as $crit) {
-            Logging::info($crit);
             $criteria = $crit->getDbCriteria();
             $modifier = $crit->getDbModifier();
             $value = $crit->getDbValue();
@@ -1614,8 +1612,6 @@ SQL;
                     "display_modifier"=>$modifierOptions[$modifier]);
             }
         }
-
-        Logging::info($storedCrit);
         return $storedCrit;
 
     }
@@ -1730,14 +1726,9 @@ SQL;
                         if ($spCriteria == "owner_id") {
                             $spCriteria = "subj.login";
                         }
-                        Logging::info($i);
-                        Logging::info($group);
-                        Logging::info($prevgroup);
                         if ($i > 0 && $prevgroup == $group) {
-                            Logging::info('adding or');
                             $qry->addOr($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                         } else {
-                            Logging::info('adding and');
                             $qry->addAnd($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                         }
                         // only add this NOT LIKE null if you aren't also matching on another criteria
@@ -1758,6 +1749,7 @@ SQL;
         // check if file exists
         $qry->add("file_exists", "true", Criteria::EQUAL);
         $qry->add("hidden", "false", Criteria::EQUAL);
+
         $sortTracks = 'random';
         if (isset($storedCrit['sort'])) {
             $sortTracks = $storedCrit['sort']['value'];
@@ -1767,6 +1759,13 @@ SQL;
         }
         else if ($sortTracks == 'oldest') {
             $qry->addAscendingOrderByColumn('utime');
+        }
+        // these sort additions are needed to override the default postgres NULL sort behavior
+        else if ($sortTracks == 'mostrecentplay') {
+            $qry->addDescendingOrderByColumn('(lptime IS NULL), lptime');
+        }
+        else if ($sortTracks == 'leastrecentplay') {
+            $qry->addAscendingOrderByColumn('(lptime IS NOT NULL), lptime');
         }
         else if ($sortTracks == 'random') {
             $qry->addAscendingOrderByColumn('random()');
@@ -1812,7 +1811,6 @@ SQL;
 
         try {
             $out = $qry->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)->find();
-
             return array("files"=>$out, "limit"=>$limits, "repeat_tracks"=> $repeatTracks, "overflow_tracks"=> $overflowTracks, "count"=>$out->count());
         } catch (Exception $e) {
             Logging::info($e);
