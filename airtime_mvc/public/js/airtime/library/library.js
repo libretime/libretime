@@ -745,8 +745,10 @@ var AIRTIME = (function(AIRTIME) {
                         filterMessage.text("");
                     }
                     $libContent.find('.dataTables_filter input[type="text"]')
-                        .css('padding-right', $('#advanced-options').find('button').outerWidth())
-                        .focus();
+                        .css('padding-right', $('#advanced-options').find('button').outerWidth());
+                    if (! ($('#advanced_search input[type="text"]').is(":focus")) ) {
+                        $libContent.find('.dataTables_filter input[type="text"]').focus();
+                    }
                 });
             },
             "fnRowCallback": AIRTIME.library.fnRowCallback,
