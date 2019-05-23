@@ -127,4 +127,12 @@ class ListenerstatController extends Zend_Controller_Action
             $endsDT->format(DEFAULT_TIMESTAMP_FORMAT));
         $this->_helper->json->sendJson($data);
     }
+
+    public function getTrackDataAction(){
+        list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
+        $file_id = $this->getRequest()->getParam("file_id", null);
+        $data = Application_Model_ListenerStat::getTrackDataPointsWithinRange($startsDT->format(DEFAULT_TIMESTAMP_FORMAT),
+            $endsDT->format(DEFAULT_TIMESTAMP_FORMAT), $file_id);
+        $this->_helper->json->sendJson($data);
+    }
 }
