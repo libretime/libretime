@@ -143,18 +143,18 @@ SQL;
 
 
 // this will currently log the average number of listeners to a specific show during a certain range
-    public static function getTrackListenersWithinRange($p_start, $p_end, $file_id) {
+    public static function getTrackDataPointsWithinRange($p_start, $p_end, $file_id) {
         $playData = [];
         $ccFile = CcFilesQuery::create()->findPk($file_id);
-        $trackTitle = $ccFile->getDbName();
+        $trackTitle = $ccFile->getDbTrackTitle();
         $trackArtist = $ccFile->getDbArtistName();
         $trackISRC = $ccFile->getDbIsrcNumber();
         $trackAlbum = $ccFile->getDbAlbumTitle();
         $trackLabel = $ccFile->getDbLabel();
+        $audienceCount = 0;
+        $playCount = 0;
 
-
-
-        // this query selects all show instances that aired in this date range that match the show_id
+        // this query selects all plays of the file that aired in this date range that match the file_id
         $sql = <<<SQL
 SELECT id, starts, ends FROM cc_playout_history WHERE file_id =:p1 
 AND starts >=:p2 AND ends <=:p3
@@ -164,7 +164,7 @@ SQL;
         foreach ($data as $d) {
             $sql = <<<SQL
 SELECT timestamp, SUM(listener_count) AS listeners
-    FROM cc_listener_count AS lc
+    FROM cc_listener_count AS lc  
     INNER JOIN cc_timestamp AS ts ON (lc.timestamp_id = ts.ID)
     INNER JOIN cc_mount_name AS mn ON (lc.mount_name_id = mn.ID)
 WHERE (ts.timestamp >=:p1 AND ts.timestamp <=:p2)
@@ -174,18 +174,22 @@ SQL;
                 array('p1'=>$d['starts'], 'p2'=>$d['ends']));
             $utcTimezone = new DateTimeZone("UTC");
             $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+            $playCount++;
             if (sizeof($data) > 0) {
                 $t = new DateTime($data[0]['timestamp'], $utcTimezone);
                 $t->setTimezone($displayTimezone);
                 // tricking javascript so it thinks the server timezone is in UTC
                 $average_listeners = array_sum(array_column($data, 'listeners')) / sizeof($data);
                 $max_num_listeners = max(array_column($data, 'listeners'));
+                $audienceCount += $max_num_listeners;
                 $entry = array("trackTitle" => $trackTitle, "trackArtist" => $trackArtist, "trackISRC" => $trackISRC, "trackAlbum" => $trackAlbum, "trackLabel" => $trackLabel, "time" => $t->format( 'Y-m-d H:i:s')
                 , "average_number_of_listeners" => $average_listeners,
                     "maximum_number_of_listeners" => $max_num_listeners);
                 array_push($playData, $entry);
             }
         }
+        $finalStats = array("spins" => $playCount, "audienceMeasurement" => $audienceCount);
+        array_push($playData,$finalStats);
         return($playData);
     }
 
