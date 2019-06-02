@@ -60,8 +60,7 @@ Vagrant.configure("2") do |config|
     provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "debian-buster" do |os|
-    # TODO: Replace with generic/debian10 once it is released
-    os.vm.box = "fujimakishouten/debian-buster64"
+    os.vm.box = "debian/buster64"
     # TODO: Remove the manual flags after buster is released
     provision_libretime(os, "debian.sh", installer_args + "--distribution=debian --release=buster")
   end
