@@ -2,7 +2,7 @@
 
 Some web browsers may set an upload limit for a single file, between 200MB and 2GB. In addition the default LibreTime webserver configuration limits file size to 500M.  If you need to upload files larger than 500MB to the Libretime server on a regular basis, you will need to have your admin update the configuration at `/etc/apache2/sites-available/airtime.conf `. Airtime previously supported import via SFTP but this functionality is still under development for LibreTime.
 
-![](static/upload-files-dialog)
+![](static/upload-files-dialog.png)
 
 If your web browser does not support drag and drop, you can click the background of the screen on the **Upload page**, to open up a file browser dialog.
 LibreTime will automatically attempt to upload files once you select them. You can track the file upload progress via the gray progress bar in the upload window.
