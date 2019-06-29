@@ -1,17 +1,20 @@
-# LibreTime
+![](https://github.com/LibreTime/libretime/raw/master/logo/logotype.png)
 
 [![Build Status](https://travis-ci.org/LibreTime/libretime.svg?branch=master)](https://travis-ci.org/LibreTime/libretime)
+[![Backers](https://opencollective.com/libretime/tiers/backer/badge.svg?label=backer&color=brightgreen)](https://opencollective.com/libretime)
+[![Sponsors](https://opencollective.com/libretime/tiers/sponsor/badge.svg?label=sponsor&color=brightgreen)](https://opencollective.com/libretime)
 
-LibreTime makes it easy to run your own online or terrestrial radio station. It is a community managed fork of the AirTime project.
+LibreTime makes it easy to run your own online or terrestrial radio station. It
+is a community managed fork of the AirTime project.
 
-It is managed by a friendly inclusive community of stations 
-from around the globe that use, document and improve LibreTime. 
-Join us in fixing bugs and in defining how we manage the 
-codebase going forward.
+It is managed by a friendly inclusive community of stations from around the
+globe that use, document and improve LibreTime. Join us in fixing bugs and in
+defining how we manage the codebase going forward.
 
 We are currently ramping up development on this repository.
 
-Check out the [documentation](http://libretime.org) for more information and start broadcasting!
+Check out the [documentation](http://libretime.org) for more information and
+start broadcasting!
 
 Please note that LibreTime is released with a [Contributor Code 
 of Conduct](https://github.com/LibreTime/code-of-conduct/blob/master/CODE_OF_CONDUCT.md).
