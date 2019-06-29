@@ -3,6 +3,7 @@ theme: readthedocs
 
 dev_addr: '0.0.0.0:8888'
 site_dir: 'build/docs'
+docs_dir: 'docs'
 markdown_extensions:
 - codehilite:
     noclasses: True
@@ -13,7 +14,7 @@ repo_url: https://github.com/LibreTime/libretime/
 extra_css:
   - '_css/term.css'
 
-pages:
+nav:
   - 'Home': index.md
   - 'What is LibreTime?': manual/index.md
   - 'Features': features.md
@@ -47,7 +48,7 @@ pages:
     - 'Listen': manual/listen/index.md
   - 'The Analytics Menu':
     - 'Playout History' : manual/history/index.md
-    - 'History Templates' : manual/history-templates/index.md  
+    - 'History Templates' : manual/history-templates/index.md
     - 'Listener Stats' : manual/listener-stats/index.md
   - 'LibreTime in the Studio':
     - 'Preparing Media for Ingest': manual/preparing-media-for-ingest/index.md
