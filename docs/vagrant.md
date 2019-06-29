@@ -97,7 +97,6 @@ offers the option to choose a different operation system according to you needs.
 | ------ | ------------------- | ------- |
 | Debian 10   | `vagrant up debian-buster`  | Install on Debian Buster. |
 | Debian 9.6   | `vagrant up debian-stretch` | Install on current Debian Stretch. |
-| Debian 8.7   | `vagrant up debian-jessie`  | Install on Debian Jessie. |
 | Ubuntu 18.04 | `vagrant up ubuntu-bionic`  | Experimental install on current Ubuntu Bionic Beaver. |
 | Ubuntu 16.04 | `vagrant up ubuntu-xenial`  | Install on Ubuntu Xenial Xerus. |
 | Ubuntu 14.04 | `vagrant up ubuntu-trusty`  | Deprecated install on Ubuntu Trusty Tahir. Recommended by legacy upstream. |
