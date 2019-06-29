@@ -15,4 +15,4 @@ Features
 Screenshots
 -----------
 
-TBD
+![](manual/what-is-airtime/static/Screenshot540-Now_playing_250.png)
