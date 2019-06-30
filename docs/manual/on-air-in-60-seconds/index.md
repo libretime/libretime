@@ -1,14 +1,14 @@
 # On Air in 60 Seconds
 
-Here's how you can use Libretime to manage your broadcasts. Chapter names in
+Here's how you can use LibreTime to manage your broadcasts. Chapter names in
 this book are shown in *italics*, to help you find the details of each step (if
 you need to read more).
 
-1. Log in to your Libretime server with your **Username** and **Password**
+1. Log in to your LibreTime server with your **Username** and **Password**
 (*Getting started*).
 ![](static/Screenshot559-Log_in.png)
 
-2. Add your files to the Libretime library by clicking **Upload** on the left
+2. Add your files to the LibreTime library by clicking **Upload** on the left
 menu, then click on the the **Drop files here or click to browse your computer**
 area. You can drag and drop your files into this window too. The upload will
 start as soon as you drop a file (*Add media*).

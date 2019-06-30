@@ -10,7 +10,7 @@ The **Scheduled Shows** page provides a view of the content your station is will
 playout, or has already played out, which defaults to showing the 24 hours
 ahead. This page also enables you to make last-minute changes to running shows.
 
-If you've only just installed Libretime, there might not be any content shown
+If you've only just installed LibreTime, there might not be any content shown
 yet. Click the calendar and clock icons above the table to change the date and
 time range, then click the **Find Shows** button (with the magnifying glass
 icon) to the right.
@@ -74,9 +74,9 @@ be undone.
 
 Items which are no longer available have an exclamation mark icon in the second
 column. This may happen for media files which were part of previous shows, and
-were removed from Libretime's library (main storage or watched folders)
+were removed from LibreTime's library (main storage or watched folders)
 subsequently. Items which are included in forthcoming shows cannot be removed
-from the Library via the Libretime interface.
+from the Library via the LibreTime interface.
 
 Adding content to a running show
 --------------------------------
@@ -87,7 +87,7 @@ the shows on the right side, including the current playing show.
 
 If the current show has nothing playing out at the time, the new item will begin
 playing immediately. This manual triggering of playout can be used as a live
-assist technique, in which the Libretime server's soundcard output is mixed with
+assist technique, in which the LibreTime server's soundcard output is mixed with
 other sources such as microphones or telephone hybrids on its way to a
 transmitter, or a separate stream encoder. For instance, a live show's host may
 not wish to cut off a studio discussion in order to play music at a fixed time.
@@ -101,7 +101,7 @@ use the checkboxes on the left side of the library table to select specific
 items. Then drag one of the items into the show to add all of the selected
 items, or click the **Add to selected show** button, which has a plus icon. If
 you wish, you can also use the **Trashcan** button to permanently remove items
-from Libretime's library. Only *admin* users have permission to delete all
+from LibreTime's library. Only *admin* users have permission to delete all
 items.
 
 To insert checkbox selected items at a specific time in the show schedule, click

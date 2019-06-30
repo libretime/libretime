@@ -4,14 +4,14 @@
 
 On the **Settings** menu, click **General** to set your **Station Name**. This
 text is shown in your web browser's title bar when your station staff are logged
-into Libretime, and optionally in stream metadata. You can also set a **Station
+into LibreTime, and optionally in stream metadata. You can also set a **Station
 Description** and **Station Logo** here.
 
 ![](static/general-playback-settings.png)
 
 The **Default Interface Language** drop-down menu sets the default localization
-for your Libretime instance, and the **Station Timezone** drop-down menu can be
-used to display local time at your station. Libretime stores show times
+for your LibreTime instance, and the **Station Timezone** drop-down menu can be
+used to display local time at your station. LibreTime stores show times
 internally in UTC format (similar to *Greenwich Mean Time*), but displays local
 time for the convenience of your station staff. You can also set the day of the
 week that you wish to start your station's weekly schedule on, which defaults
@@ -43,7 +43,7 @@ default.
 
 ![](static/api-settings.png)
 
-You can enable live, read-only access to the Libretime schedule calendar for
+You can enable live, read-only access to the LibreTime schedule calendar for
 your station's public website with the **Public LibreTime API** option, if you
 wish. (There is more about this feature in the
 [*Exporting the schedule*](../exporting-the-schedule/index.md) chapter, in the
@@ -70,7 +70,7 @@ form.
 
 ![](static/save-button.png)
 
-Individual Libretime users can choose another interface localization when they
+Individual LibreTime users can choose another interface localization when they
 log in, or set personal preferences for localization and time zone by clicking
 their username on the right side of the menu bar.
 

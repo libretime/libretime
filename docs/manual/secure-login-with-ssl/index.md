@@ -1,6 +1,6 @@
-To increase the security of your server, you can enable encrypted access to the Libretime administration interface, and direct your users towards this more secure login page. The main advantage of using this encryption is that your remote users' login names and passwords are not sent in plain text across the public Internet or untrusted local networks, such as shared Wi-Fi access points.
+To increase the security of your server, you can enable encrypted access to the LibreTime administration interface, and direct your users towards this more secure login page. The main advantage of using this encryption is that your remote users' login names and passwords are not sent in plain text across the public Internet or untrusted local networks, such as shared Wi-Fi access points.
 
-The padlock icon in a web browser's address bar depends on the browser's recognition of an encryption certificate. Because the users of your Libretime server will often be known to you personally, it is feasible to use a self-signed certificate for this purpose. Alternatively, you can pay a Certificate Authority to sign the certificate for you. Libretime Pro servers are pre-configured with a certificate signed by a Certificate Authority which is automatically recognised by all popular browsers.
+The padlock icon in a web browser's address bar depends on the browser's recognition of an encryption certificate. Because the users of your LibreTime server will often be known to you personally, it is feasible to use a self-signed certificate for this purpose. Alternatively, you can pay a Certificate Authority to sign the certificate for you. LibreTime Pro servers are pre-configured with a certificate signed by a Certificate Authority which is automatically recognised by all popular browsers.
 
 Deploying a self-signed certificate
 -----------------------------------
@@ -9,11 +9,11 @@ The Debian/Ubuntu package *ssl-cert* creates a *snakeoil* certificate and key ba
 
     sudo apt-get install ssl-cert
 
-If the hostname of your server does not match the domain name you intend to use with the Libretime virtual host, the user's browser will present an additional security warning. You can set the domain name of the certificate by editing the file */usr/share/ssl-cert/ssleay.cnf* to replace the *@HostName@* variable:
+If the hostname of your server does not match the domain name you intend to use with the LibreTime virtual host, the user's browser will present an additional security warning. You can set the domain name of the certificate by editing the file */usr/share/ssl-cert/ssleay.cnf* to replace the *@HostName@* variable:
 
     commonName                      = @HostName@
 
-with the domain name used by Libretime:
+with the domain name used by LibreTime:
 
     commonName                      = airtime.example.com
 
@@ -25,13 +25,13 @@ You should enable additional Apache modules for page redirections, custom header
 
     sudo a2enmod alias headers ssl
 
-Next, edit the virtual host configuration for your Libretime server to include a stanza for the https:// interface on port 443 and a redirect for logins from port 80:
+Next, edit the virtual host configuration for your LibreTime server to include a stanza for the https:// interface on port 443 and a redirect for logins from port 80:
 
     sudo nano /etc/apache2/sites-available/airtime-vhost.conf
 
 Using the following configuration for Apache 2.2 as a guide, replace *airtime.example.com* with the name of your server and *admin@example.com* with your email address. The older SSLv2 and SSLv3 protocols and SSL compression should be disabled, as they are generally believed to be insecure. You may wish to create a *ServerAlias* for users to access the administration interface over https:// if required.
 
-On port 80, Apache's *alias* module is used to set a *Redirect permanent* for the login page. Optionally, access could be denied to all sites except *localhost* and any other Libretime servers on your network, so that unencrypted communication between Libretime components can continue.
+On port 80, Apache's *alias* module is used to set a *Redirect permanent* for the login page. Optionally, access could be denied to all sites except *localhost* and any other LibreTime servers on your network, so that unencrypted communication between LibreTime components can continue.
 
     <VirtualHost *:443>
           SSLEngine on
@@ -84,7 +84,7 @@ When attempting to log into your server via http:// in future, you should be red
 Importing a self-signed certificate into the browser
 ----------------------------------------------------
 
-The first time you access an Libretime server with a self-signed certificate over https:// your browser will block the login page and display a security warning. In **Mozilla Firefox**, you can click **Technical Details** to confirm that the warning is due to the certificate being self-signed before clicking the **Add Exception** button. In **Google Chrome**, the button to click on the security warning page is **Proceed Anyway**.
+The first time you access an LibreTime server with a self-signed certificate over https:// your browser will block the login page and display a security warning. In **Mozilla Firefox**, you can click **Technical Details** to confirm that the warning is due to the certificate being self-signed before clicking the **Add Exception** button. In **Google Chrome**, the button to click on the security warning page is **Proceed Anyway**.
 
 ![](static/Screenshot547-connection_untrusted.png)
 
@@ -92,7 +92,7 @@ On the next page in Firefox, click the **Get Certificate** button to inspect the
 
 ![](static/Screenshot548-confirm_exception.png)
 
-If the users of your Libretime server wish to avoid going through these steps, or they do not trust the remote Libretime server to be what it claims to be, it is also possible to import a trusted local copy of a certificate file into the browser. For example, in Firefox version 30 preferences, you can go into the **Advanced** section, click the **Certificates** tab, then click the **View Certificates** button. On the **Servers** tab of the **Certificate Manager**, there is an **Import** button which enables you to load a certificate file from the local computer.
+If the users of your LibreTime server wish to avoid going through these steps, or they do not trust the remote LibreTime server to be what it claims to be, it is also possible to import a trusted local copy of a certificate file into the browser. For example, in Firefox version 30 preferences, you can go into the **Advanced** section, click the **Certificates** tab, then click the **View Certificates** button. On the **Servers** tab of the **Certificate Manager**, there is an **Import** button which enables you to load a certificate file from the local computer.
 
 Mixed encrypted and unencrypted content
 ---------------------------------------

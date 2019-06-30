@@ -1,10 +1,10 @@
-The first entry on Libretime's **Help** menu offers a **Getting Started** guide
+The first entry on LibreTime's **Help** menu offers a **Getting Started** guide
 for new users. Further down, there is also a link to the online version of this
   **User Manual**.
 
 ![](static/Screenshot460-Help_page.png)
 
-You can visit the Libretime online support forum at
+You can visit the LibreTime online support forum at
 <https://discourse.libretime.org/c/get-help> to ask for help from the community
 regarding your LibreTime setup.
 
@@ -12,11 +12,11 @@ regarding your LibreTime setup.
 Bug reporting
 -------------
 
-Libretime needs your input to improve. If you think you've found a bug, please
+LibreTime needs your input to improve. If you think you've found a bug, please
 visit <https://github.com/LibreTime/libretime>. Create a bug report by selecting
-**Issues**, then **New Issue**. That way, the Libretime team can keep track of
+**Issues**, then **New Issue**. That way, the LibreTime team can keep track of
 your problem and notify you when it has been fixed. You can also suggest
-improvements and new features for Libretime on that site.
+improvements and new features for LibreTime on that site.
 
 
 

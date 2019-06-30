@@ -1,11 +1,11 @@
-Before uploading media to an Libretime server, there are a number of factors which should be considered. Getting your ingest workflow right will save you a lot of time later.
+Before uploading media to an LibreTime server, there are a number of factors which should be considered. Getting your ingest workflow right will save you a lot of time later.
 
 Metadata quality
 ----------------
 
-Libretime automatically imports any metadata that is in the files' ID3 tags. If these tags are incorrect or are missing information, you will have to either edit the metadata manually, or suffer the consequences. For example, if the files have creator or genre metadata missing, it will be impossible to search for, create playlists or generate smart blocks according to these criteria until you add it.
+LibreTime automatically imports any metadata that is in the files' ID3 tags. If these tags are incorrect or are missing information, you will have to either edit the metadata manually, or suffer the consequences. For example, if the files have creator or genre metadata missing, it will be impossible to search for, create playlists or generate smart blocks according to these criteria until you add it.
 
-There are a number of programs available which can be used to correct mistakes or incomplete information in ID3 tags. On GNU/Linux, the program **Ex Falso** ([http://code.google.com/p/quodlibet/](http://code.google.com/p/quodlibet/) "http://sourceforge.net/projects/dr14tmeter/")) can be useful for batch setting and editing ID3 tags before importing files into your Libretime server. On a Debian or Ubuntu desktop machine, you can install this program with the command:
+There are a number of programs available which can be used to correct mistakes or incomplete information in ID3 tags. On GNU/Linux, the program **Ex Falso** ([http://code.google.com/p/quodlibet/](http://code.google.com/p/quodlibet/) "http://sourceforge.net/projects/dr14tmeter/")) can be useful for batch setting and editing ID3 tags before importing files into your LibreTime server. On a Debian or Ubuntu desktop machine, you can install this program with the command:
 
     sudo apt-get install exfalso
 
@@ -20,7 +20,7 @@ or from the desktop menu. The *Tags From Path* feature of this program is a part
 Metadata in legacy character sets
 ---------------------------------
 
-Libretime expects file tag metadata to be stored in the international *UTF-8* character set. Programs such as **Ex Falso** (described above) encode metadata in UTF-8 by default. If you have an archive of files encoded with metadata in a legacy character set, such as the Cyrillic encoding *Windows-1251*, you should convert these files before import.
+LibreTime expects file tag metadata to be stored in the international *UTF-8* character set. Programs such as **Ex Falso** (described above) encode metadata in UTF-8 by default. If you have an archive of files encoded with metadata in a legacy character set, such as the Cyrillic encoding *Windows-1251*, you should convert these files before import.
 
 The program **mid3iconv** (part of the **python-mutagen** package in Debian and Ubuntu) can be used to batch convert the metadata character set of files on the command line. You can install **python-mutagen** with the command:
 
@@ -55,15 +55,15 @@ CP1256: Arabic
 Audio loudness
 --------------
 
-On file ingest, Libretime analyzes each Ogg Vorbis, MP3, AAC or FLAC file's loudness, and stores a *ReplayGain* value for that file in its database. At playout time, the ReplayGain value is provided to Liquidsoap so that gain can be automatically adjusted to provide an average output of -14 dBFS loudness (14 decibels below full scale). See <http://www.replaygain.org/> for more details of ReplayGain.
+On file ingest, LibreTime analyzes each Ogg Vorbis, MP3, AAC or FLAC file's loudness, and stores a *ReplayGain* value for that file in its database. At playout time, the ReplayGain value is provided to Liquidsoap so that gain can be automatically adjusted to provide an average output of -14 dBFS loudness (14 decibels below full scale). See <http://www.replaygain.org/> for more details of ReplayGain.
 
 Because of this automatic gain adjustment, any files with average loudness higher than -14 dBFS will not sound louder than quieter files at playout time, but the lower crest factor in the louder files (their relatively low peak-to-average ratio) may be apparent in the output, making those files sound less dynamic. This may be an issue for contemporary popular music, which can average at -9 dBFS or louder before ReplayGain adjustment. (See <http://www.soundonsound.com/sos/sep11/articles/loudness.htm> for a detailed analysis of the problem).
 
-Your station's producers should therefore aim for 14dB between peak and average loudness to maintain the crest factor of their prepared material (also known as *DR14* on some dynamic range meters, such as the command-line DR14 T.meter available from <http://sourceforge.net/projects/dr14tmeter/>). If the producers are working to a different loudness standard, the ReplayGain modifier in Libretime's Stream Settings page can be adjusted to suit their material.
+Your station's producers should therefore aim for 14dB between peak and average loudness to maintain the crest factor of their prepared material (also known as *DR14* on some dynamic range meters, such as the command-line DR14 T.meter available from <http://sourceforge.net/projects/dr14tmeter/>). If the producers are working to a different loudness standard, the ReplayGain modifier in LibreTime's Stream Settings page can be adjusted to suit their material.
 
 Large transient peaks in otherwise quiet files should be avoided, to guard against the need for peak limiting when ReplayGain is applied to those quieter files.
 
-The **vorbisgain** command-line tool, available in the **vorbisgain** package in Debian/Ubuntu, can be used to indicate the ReplayGain of an individual Ogg Vorbis file before ingest into Libretime. (A similar tool for MP3 files is available in the **mp3gain** package in Debian/Ubuntu).
+The **vorbisgain** command-line tool, available in the **vorbisgain** package in Debian/Ubuntu, can be used to indicate the ReplayGain of an individual Ogg Vorbis file before ingest into LibreTime. (A similar tool for MP3 files is available in the **mp3gain** package in Debian/Ubuntu).
 
 Here is an example of a very quiet file where the use of ReplayGain would make the output more than 17dB louder:
 
@@ -88,7 +88,7 @@ In the output from vorbisgain, *Peak* is the maximum sample value of the file be
 Silence in media files
 ----------------------
 
-Before importing media, it is good practice to check for any silent sections in the media files. While Libretime compensates for leading and trailing silence with the use of automatic cue-in and cue-out points****, it may be preferable to trim these files to the intended length before upload. This is because media in the Libretime library could potentially be re-used in many different systems. **Audacity** is a cross-platform editor suitable for the task of trimming audio files, available from [http://audacity.sourceforge.net/](http://audacity.sourceforge.net "http://sourceforge.net/projects/dr14tmeter/")
+Before importing media, it is good practice to check for any silent sections in the media files. While LibreTime compensates for leading and trailing silence with the use of automatic cue-in and cue-out points****, it may be preferable to trim these files to the intended length before upload. This is because media in the LibreTime library could potentially be re-used in many different systems. **Audacity** is a cross-platform editor suitable for the task of trimming audio files, available from [http://audacity.sourceforge.net/](http://audacity.sourceforge.net "http://sourceforge.net/projects/dr14tmeter/")
 
 Very quiet introductions or over-long fades can also lead to apparent gaps in your broadcast playout. Some audio CDs feature a 'hidden track' at the end, which in fact uses a long period of silence within the final track, rather than an actual separate track on the disc. This means that CD encoding programs will often encode both the hidden material and the silence in the media file. For example, the track *Debra* from the CD *Midnite Vultures* by *Beck* includes hidden material preceded by seven minutes of silence, as shown in the screen shot from Audacity below.
 

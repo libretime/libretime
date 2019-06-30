@@ -1,7 +1,7 @@
 Adding a web stream
 -------------------
 
-A web stream URL and metadata can be added to the Libretime library, so that a remote stream can be searched for and scheduled to be *pulled* into a show. For example, at the top of the hour your station may pull a news report from journalists working in another studio. This is a different concept from **Master Source** and **Show Source** remote streams which are *pushed* into the Libretime playout schedule.
+A web stream URL and metadata can be added to the LibreTime library, so that a remote stream can be searched for and scheduled to be *pulled* into a show. For example, at the top of the hour your station may pull a news report from journalists working in another studio. This is a different concept from **Master Source** and **Show Source** remote streams which are *pushed* into the LibreTime playout schedule.
 
 To add a web stream, click the **New** button on the right side of the Library page, and select **New Webstream** from the pop-up menu. Like a playlist, web streams in the Library can have a title and **Description**, which may help you find them in searches later.
 

@@ -4,14 +4,14 @@ The following instructions assume that you have root access (**sudo** on most
 distributions) to a GNU/Linux server, and are familiar with basic command line
 tasks.
 
-The recommended Libretime server platform is Ubuntu 16.04 LTS (Xenial Xerus).
+The recommended LibreTime server platform is Ubuntu 16.04 LTS (Xenial Xerus).
 
 The server should have at least a 1GHz processor and 1GB of RAM, preferably 2GB
 RAM or more. If you are using a desktop environment and web browser directly on
 the server you should install at least 2GB RAM, to avoid swapping to disk.
 
 The LibreTime installation does not use much disk space, but you should allow
-plenty of storage capacity for the Libretime library. A hot-swap RAID array is
+plenty of storage capacity for the LibreTime library. A hot-swap RAID array is
 recommended for media storage, in case of disk failure. You should also consider
 a UPS or other battery-powered system to offer some protection against
 short-term power failures.

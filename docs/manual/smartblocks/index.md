@@ -2,13 +2,13 @@
 Creating a smart block
 ----------------------
 
-Smart blocks are automatically filled with media files from the Libretime library, according to the criteria that you specify. This feature is intended to save staff time, compared to selecting items for a playlist manually.
+Smart blocks are automatically filled with media files from the LibreTime library, according to the criteria that you specify. This feature is intended to save staff time, compared to selecting items for a playlist manually.
 
 To create a smart block, click the **New** button on the right side of the Library page, and select **New Smart Block** from the pop-up menu. Like a playlist, smart blocks can have a title and **Description**, which you can edit. This helps you find relevant smart blocks in searches.
 
 ![](static/Screenshot512-Example_smart_block_240.png)
 
-Click the link **Smart Block Options** to display the criteria and modifiers for the smart block. The criteria can be any one of Libretime's metadata categories, such as **Title**, **Creator** or **Genre**. The modifier depends on whether the metadata in question contains letters or numbers. For example, **Title** has modifiers including *contains* and *starts with*, whereas the modifiers for **BPM** include *is greater than* and *is in the range*.
+Click the link **Smart Block Options** to display the criteria and modifiers for the smart block. The criteria can be any one of LibreTime's metadata categories, such as **Title**, **Creator** or **Genre**. The modifier depends on whether the metadata in question contains letters or numbers. For example, **Title** has modifiers including *contains* and *starts with*, whereas the modifiers for **BPM** include *is greater than* and *is in the range*.
 
 You can also set the **smart block type**. A **Static** smart block will save the criteria and generate the block content immediately. This enables you to edit the contents of the block in the **Library** page before adding it to a show. A **Dynamic** smart block will only save the criteria, and the specific content will be generated at the time the block is added to a show. After that, the content of the show can be changed or re-ordered in the **Now Playing** page. 
 
@@ -30,7 +30,7 @@ By default, a smart block will not contain repeated items, which will limit the 
 
 In addition Smart Blocks by default will never overflow the Time Limit. For instance if you set a time limit of 1 hour. It will add tracks to the schedule until it can't add any more tracks without exceeding the hour. This is to prevent tracks from being cut-off because they exceed the time limit of a show. 
 
-If you want a smartblock to schedule tracks until it is longer than the Time Limit you can check "Allow last track to exceed time limit". This will make LibreTime add tracks that meet the criteria until it equals or is longer than the time limit. The was the default behaviour with the Libretime software.
+If you want a smartblock to schedule tracks until it is longer than the Time Limit you can check "Allow last track to exceed time limit". This will make LibreTime add tracks that meet the criteria until it equals or is longer than the time limit. The was the default behaviour with the LibreTime software.
 
 If you have a large number of files which meet the criteria that you specify, you may wish to limit the duration of the smart block using the **Limit to** field, so that it fits within the show you have in mind. Select **hours**, **minutes** or **items** from the drop-down menu, and click the **Generate** button again, if it is a static smart block. Then click the **Save** button.
 
