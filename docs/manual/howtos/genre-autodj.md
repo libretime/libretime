@@ -1,21 +1,20 @@
-How to set up genre specific Auto DJ with autloading playlist
+# How to set up genre specific Auto DJ with autoloading playlist
 
-Intro: In this LibreTime tutorial we will focus on how to build a
-traditional auto DJ system where we use a feature called smart blocks
-and auto loading playlists to play random music tracks of a certain
-genre during a show. This tutorial is primarily focused on program
-managers but users who are DJs can also benefit from smart blocks but
-will only be able to manually schedule them.
+In this tutorial we will focus on how to build a traditional auto DJ system
+where we use a feature called smart blocks and auto loading playlists to play
+random music tracks of a certain genre during a show. This tutorial is
+primarily focused on program managers but users who are DJs can also benefit
+from smart blocks but will only be able to manually schedule them.
 
 So for the purposes of this tutorial we are going to assume that you
 have uploaded a number of files of music with the genre metadata all
-matching a specific genre for instance alternative. This can be done
-ahead of time but LibreTime has no way of automatically grouping sub
-genres and so it is important that you spend some time manicuring the
-track metadata before you upload it to libretime as there is not
-currently a way to bulk edit tracks from inside libretime. Also once
+matching a specific genre, for instance, Alternative. This can be done
+ahead of time, but LibreTime has no way of automatically grouping sub
+genres and so it is important that you spend some time curating the
+track metadata before you upload it to LibreTime as there is not
+currently a way to bulk edit tracks from inside LibreTime. Also once
 tracks are uploaded the metadata of the track itself isn’t changed but
-just how it is represented in the libretime database. This might change
+just how it is represented in the LibreTime database. This might change
 in the future but would only affect you if you were downloading tracks
 and uploading them to another instance and hoped that the changes you
 made were saved.
@@ -93,11 +92,11 @@ to add a promos or musical sound bridges at the end that are also time
 remaining but allow overfill.
 
 It is possible that we could improve the way the autoloading playlists
-work in the future, please check out libretime.org for the latest
+work in the future, please check out LibreTime.org for the latest
 release notes and feel free to ask any questions at our forum at
-[https://discourse.libretime.org](https://discourse.libretime.org/)
+[https://discourse.LibreTime.org](https://discourse.LibreTime.org/)
 
-Thanks for tuning in to another libretime tutorial. Our next tutorial
+Thanks for tuning in to another LibreTime tutorial. Our next tutorial
 will show you how to use autoloading playlists to add show specific
 underwriting or advertisements.
 
