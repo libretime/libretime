@@ -34,7 +34,7 @@ import mutagen
 # analysing the file
 #
 def replay_gain (filename):
-    """Getting the replaygain via python-rplay"""
+   """Getting the replaygain via python-rgain"""
 
     EXE="replaygain"
 
@@ -47,7 +47,7 @@ def replay_gain (filename):
         if db_pos != -1: # dB is indicator of a result
             replaygain = results[rg_pos:db_pos]
             return float(replaygain)
-        else: # TODO neutral value
+        else: # TODO DEFAULT neutral value
             return None
     except OSError as e: # replaygain was not found
         logging.warn("Failed to run: %s - %s. %s" % (command[0], e.strerror, "Do you have python-rgain installed?"))
@@ -107,6 +107,7 @@ def analyse_file (filename, database):
       It's filling the database dictionary with metadata read from
       the file
     """
+
     analyse_ok=False
     logging.info ("analyse Filename: "+filename)
 
@@ -125,74 +126,90 @@ def analyse_file (filename, database):
     #md5
     database["md5"] = md5_hash(filename)
 
+
     # common tags
     audio = EasyID3(filename) # TODO catch no ID3 tag
-    try:
-        database["track_title"]=audio['title'][0]
-    except:
-        logging.warning("no title ID3 for {}".format(filename))
-        database["track_title"]=filename.split("/")[-1] # default title to filename
-    try:
-        database["artist_name"]=audio['artist'][0]
-    except StandardError, err:
-        logging.warning('no artist ID3 for '+filename) 
-        database["artist_name"]= ""       
-    try:
-        database["genre"]=audio['genre'][0]
-    except StandardError, err:
-        logging.debug('no genre ID3 for '+filename) 
-        database["genre"]= ""
-    try:
-        database["album_title"]=audio['album'][0]
-    except StandardError, err:
-        logging.debug('no album title for '+filename) 
-        database["album_title"]= ""
-    try:
-        # TODO quizas mi tracknumber con pleca esta mal
-        track_number = audio['tracknumber'][0]
-        if "/" in track_number:
-            track_number = track_number.split("/")[0]
-        database["track_number"]= track_number
-        
-    except StandardError, err:
-        logging.debug('no track_number for '+filename) 
-        database["track_number"]= 0
-    # format dependent tags
-    # Mp3
-    if database["mime"] in ['audio/mpeg','audio/mp3']:
-        f = MP3(filename)
-    # Ogg
-    elif database["mime"] in ['audio/ogg', 'audio/vorbis', 'audio/x-vorbis', 'application/ogg', 'application/x-ogg']:
-        f = OggVorbis(filename)
-    else: # 'application/octet-stream'?
-        print("Unsupported metadata type: {} -- for audio {}".format(database["mime"], filename))
-        # logging.warning(...) TODO !
-        return False
-    # analysis
-    database["bit_rate"] = f.info.bitrate
-    database["sample_rate"] = f.info.sample_rate
-    if hasattr(f.info, "length"):
-        #Converting the length in seconds (float) to a formatted time string
-        track_length = datetime.timedelta(seconds=f.info.length)
-        database["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
-        # Other fields for Airtime
-        database["cueout"] = database["length"]
-        replaygain = replay_gain(filename)
-        if replaygain: #...
-            database["replay_gain"] = replaygain
-    database["cuein"]= "00:00:00.0"
-    # get better (?) cuein, cueout using silan
-    database["cuein"], database["cueout"] = cue_points (filename, database["cuein"], database["cueout"])
-    # mark as silan checked
-    database["silan_check"] = "t"
-    # use mutage to get better mime 
-    if  f.mime:
-        database["mime"] = f.mime[0]
-    if database["mime"] in ["audio/mpeg", 'audio/mp3']:
-        if f.info.mode == 3:
-            database["channels"] = 1
-        else:
-            database["channels"] = 2
+    
+       # MP3 file ?
+    if database["mime"] in ['audio/mpeg','audio/mp3','application/octet-stream']:
+        logging.info("Es un MP3: {}".format(filename))
+        try:
+            try:
+                database["track_title"]=audio['title'][0]
+            except:
+                logging.warning("no title ID3 for {}".format(filename))
+                database["track_title"]=filename.split("/")[-1] # default title to filename
+            try:
+                database["artist_name"]=audio['artist'][0]
+            except StandardError, err:
+                logging.warning('no artist ID3 for '+filename) 
+                database["artist_name"]= ""       
+            try:
+                database["genre"]=audio['genre'][0]
+            except StandardError, err:
+                logging.debug('no genre ID3 for '+filename) 
+                database["genre"]= ""
+            try:
+                database["album_title"]=audio['album'][0]
+            except StandardError, err:
+                logging.debug('no album title for '+filename) 
+                database["album_title"]= ""
+            try:
+                # TODO quizas mi tracknumber con pleca esta mal
+                track_number = audio['tracknumber'][0]
+                if "/" in track_number:
+                    track_number = track_number.split("/")[0]
+                database["track_number"]= track_number
+                
+            except StandardError, err:
+                logging.debug('no track_number for '+filename) 
+                database["track_number"]= 0
+            # format dependent tags
+            
+            # Mp3
+            if database["mime"] in ['audio/mpeg','audio/mp3']:
+                f = MP3(filename)
+            # Ogg
+            elif database["mime"] in ['audio/ogg', 'audio/vorbis', 'audio/x-vorbis', 'application/ogg', 'application/x-ogg']:
+                f = OggVorbis(filename)
+            else: # 'application/octet-stream'?
+                print("Unsupported metadata type: {} -- for audio {}".format(database["mime"], filename))
+                # logging.warning(...) TODO !
+                return False
+            # analysis
+            database["bit_rate"] = f.info.bitrate
+            database["sample_rate"] = f.info.sample_rate
+            
+            if hasattr(f.info, "length"):
+                #Converting the length in seconds (float) to a formatted time string
+                track_length = datetime.timedelta(seconds=f.info.length)
+                database["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
+                # Other fields for Airtime
+                database["cueout"] = database["length"]
+                replaygain = replay_gain(filename)
+                if replaygain: #...
+                    database["replay_gain"] = float(replaygain)
+                    
+            database["cuein"]= "00:00:00.0"
+            # get better (?) cuein, cueout using silan
+            database["cuein"], database["cueout"] = cue_points (filename, database["cuein"], database["cueout"])
+            # mark as silan checked
+            database["silan_check"] = "t"
+            # use mutage to get better mime 
+            if  f.mime:
+                database["mime"] = f.mime[0]
+            if database["mime"] in ["audio/mpeg", 'audio/mp3']:
+                if f.info.mode == 3:
+                    database["channels"] = 1
+                else:
+                    database["channels"] = 2
+            else:
+                database["channels"] = f.info.channels
+            analyse_ok=True
+            logging.info("Analyze OK: {}".format(filename))
+        except StandardError, err:
+            logging.error("Error : {} -- {}".format(err, filename))
     else:
-        database["channels"] = f.info.channels
-    return True
+        logging.warning("NOT MP3: {}".format(filename))
+        
+    return analyse_ok
