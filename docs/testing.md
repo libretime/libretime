@@ -24,8 +24,8 @@ In this case the libretime database is only used for the initial connection
 over which the libretime_test database is created.
 
 You may need to tweak the exact commands needed to setup postgresql depending
-on the distro you installed this to. On Ubuntu trusty the above can be
-acheived as follows.
+on the distro you installed this to. On Ubuntu the above can be acheived as
+follows.
 
 ```bash
 sudo -u postgres psql -c 'CREATE DATABASE libretime;'

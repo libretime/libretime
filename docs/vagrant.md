@@ -99,7 +99,6 @@ offers the option to choose a different operation system according to you needs.
 | Debian 9.6   | `vagrant up debian-stretch` | Install on current Debian Stretch. |
 | Ubuntu 18.04 | `vagrant up ubuntu-bionic`  | Experimental install on current Ubuntu Bionic Beaver. |
 | Ubuntu 16.04 | `vagrant up ubuntu-xenial`  | Install on Ubuntu Xenial Xerus. |
-| Ubuntu 14.04 | `vagrant up ubuntu-trusty`  | Deprecated install on Ubuntu Trusty Tahir. Recommended by legacy upstream. |
 | CentOS | `vagrant up centos` | Extremely experimental install on 7.3 with native systemd support and activated SELinux. Needs manual intervention due to Liquidsoap 1.3.3. |
 
 ## Troubleshooting

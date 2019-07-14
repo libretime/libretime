@@ -589,11 +589,9 @@ fi
 is_debian_dist=false
 is_debian_buster=false
 is_debian_stretch=false
-is_debian_jessie=false
 is_ubuntu_dist=false
 is_ubuntu_bionic=false
 is_ubuntu_xenial=false
-is_ubuntu_trusty=false
 is_centos_dist=false
 is_centos_7=false
 # Use specified distribution and release or detected otherwise.
@@ -613,12 +611,9 @@ case "${dist}-${code}" in
         is_ubuntu_xenial=true
         ;;
     ubuntu-14.04|ubuntu-trusty)
-        code="trusty"
-        is_ubuntu_dist=true
-        is_ubuntu_trusty=true
-        echo -e "WARNING: Ubuntu Trusty will be EOL by April 2019 and LibreTime will no longer support it at that point." >&2
-        echo -e "Please upgrade to a non-EOL distro ASAP!" >&2
-        sleep 6
+        echo -e "ERROR: Ubuntu Trusty is archived and does not receive any security or other updates since 2019-04-17." >&2
+        echo -e "The LibreTime installer dropped support for installing LibreTime on Trusty in 3.0.0-alpha.8." >&2
+        exit 1
         ;;
     debian-9|debian-stretch)
         code="stretch"
@@ -639,8 +634,6 @@ case "${dist}-${code}" in
 	;;
     #End of fix
     debian-8|debian-jessie)
-        code="jessie"
-        is_debian_dist=true
         echo -e "ERROR: Debian Jessie is archived and does not receive any security or other updates since 2018-05-17." >&2
         echo -e "The LibreTime installer dropped support for installing LibreTime on Jessie in 3.0.0-alpha.8." >&2
         exit 1
