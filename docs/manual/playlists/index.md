@@ -28,7 +28,7 @@ With a playlist open, click on an item in the search results and then click **Ad
 
 ![](static/Screenshot505-Add_item_to_playlist_240.png)
 
-You can also select or deselect a whole page of search results using the **Select** button, just below the simple search field. Alternatively, use the checkboxes in the first column of the search results table to select individual items, then click the **Add to current playlist** button. Items that you own which you no longer require can be deleted from Libretime's library using the **Trashcan** button. 
+You can also select or deselect a whole page of search results using the **Select** button, just below the simple search field. Alternatively, use the checkboxes in the first column of the search results table to select individual items, then click the **Add to current playlist** button. Items that you own which you no longer require can be deleted from LibreTime's library using the **Trashcan** button. 
 
 ![](static/Screenshot439-Checkbox_select_items.png)
 
@@ -36,7 +36,7 @@ After adding files to the playlist, the total playlist time is displayed in the 
 
 To audition a playlist file in your web browser, click the white triangle**** button on the left side of its row. (If the format of the file is not supported by your browser, the triangle in this button will be greyed out). If audition of the file format is supported, a pop-up window will open, with the playlist starting at the file you clicked.
 
-Click the small white **x** icon on the right hand side of each row to remove a file from the playlist. You can also drag and drop files to re-order them, or click the **Shuffle** button to re-order files automatically. Click the **Clear** button to remove all content from the playlist, or click the **Delete** button to remove the playlist from the Libretime library altogether.
+Click the small white **x** icon on the right hand side of each row to remove a file from the playlist. You can also drag and drop files to re-order them, or click the **Shuffle** button to re-order files automatically. Click the **Clear** button to remove all content from the playlist, or click the **Delete** button to remove the playlist from the LibreTime library altogether.
 
 ![](static/Screenshot506-Drag_drop_playlist_240.png)
 
@@ -62,7 +62,7 @@ If a **Fade In** and **Cue In** are set on the same item in the playlist, the fa
 
 ![](static/Screenshot511-Visual_cue_editor_240.png)
 
-When your playlist is complete, click the **New** button in the top left corner to create another playlist, click the close icon (a white cross in a black circle) in the top right corner, or browse to another page of the Libretime interface.
+When your playlist is complete, click the **New** button in the top left corner to create another playlist, click the close icon (a white cross in a black circle) in the top right corner, or browse to another page of the LibreTime interface.
 
 If you want to edit the playlist content or metadata later, you can find it by **Title**, **Creator**, **Last Modified** date, **Length**, **Owner** or **Year** using one of the search tools on the Library page. Click the playlist in the search results list, and then click **Edit** from the pop-up menu. You can also **Preview** the entire playlist in a pop-up audition window, **Duplicate** or **Delete** one of your playlists from this menu.
 

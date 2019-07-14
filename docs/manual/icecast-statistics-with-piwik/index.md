@@ -1,4 +1,4 @@
-Piwik (<http://piwik.org/>) is an open source web analytics platform which supports Icecast's log format, in Piwik version 2.0 or later. For your convenience, packages of Piwik for Debian and Ubuntu are provided in the <http://apt.sourcefabric.org> repository. If you have already configured your Libretime server for this repository, you can install the **piwik** package and its dependencies with the command:
+Piwik (<http://piwik.org/>) is an open source web analytics platform which supports Icecast's log format, in Piwik version 2.0 or later. For your convenience, packages of Piwik for Debian and Ubuntu are provided in the <http://apt.sourcefabric.org> repository. If you have already configured your LibreTime server for this repository, you can install the **piwik** package and its dependencies with the command:
 
     sudo apt-get install piwik php5-geoip php5-cli mysql-server
 

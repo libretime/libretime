@@ -3,7 +3,7 @@ History
 
 On the History menu, the **Playout History** page enables you to view a list of files played within a specific date and time range. This page is designed to help your station prepare reports for music royalty collection societies and regulatory agencies.
 
-Search results can be copied to the clipboard using the **Copy** button, exported as data in **CSV** format (comma separated values), exported as a document in **PDF** format, or displayed in a printer-friendly format using the **Print** button. (Your web browser must have an Adobe Flash plugin installed for these buttons to appear). Press the **Esc** key to return to the Libretime interface once the print job is complete.
+Search results can be copied to the clipboard using the **Copy** button, exported as data in **CSV** format (comma separated values), exported as a document in **PDF** format, or displayed in a printer-friendly format using the **Print** button. (Your web browser must have an Adobe Flash plugin installed for these buttons to appear). Press the **Esc** key to return to the LibreTime interface once the print job is complete.
 
 This page has three tabs: **Log Sheet**, **File Summary** and **Show Summary**. On any of these tabs, you can select a date and time range by clicking the calendar and clock icons in the upper left corner of the page. Then click the search button, which has a magnifying glass icon, to the right. A list of files played during that date and time range will appear further down the page.
 
@@ -22,7 +22,7 @@ On the **Show Summary** tab, click the name of a show within the search range to
 Manual logging
 --------------
 
-If your station features playout from analogue sources such as turntables or microphones, there is no automatic metadata for Libretime to collect from these inputs. To ensure that the playout history is complete, you can add log entries manually by clicking the **+ Create Entry** button. This action opens a pop-up window with default fields of Start Time, End Time, Title and Creator. Click the **Find** button to automatically fill the **Choose Show Instance** menu with the names of shows that took place within the specified time range. Then click the **Save** button to enter the new item into the playout history.
+If your station features playout from analogue sources such as turntables or microphones, there is no automatic metadata for LibreTime to collect from these inputs. To ensure that the playout history is complete, you can add log entries manually by clicking the **+ Create Entry** button. This action opens a pop-up window with default fields of Start Time, End Time, Title and Creator. Click the **Find** button to automatically fill the **Choose Show Instance** menu with the names of shows that took place within the specified time range. Then click the **Save** button to enter the new item into the playout history.
 
 <img src="static/Screenshot536-Manual_login_250.png" width="530" height="575" />
 

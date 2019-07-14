@@ -1,4 +1,4 @@
-This listing is provided to help ensure that the correct model parameter is passed to the ALSA kernel module for an Intel HDA soundcard, if one is fitted to your Libretime server. See the chapter *Preparing the server* in this book for more details.
+This listing is provided to help ensure that the correct model parameter is passed to the ALSA kernel module for an Intel HDA soundcard, if one is fitted to your LibreTime server. See the chapter *Preparing the server* in this book for more details.
 
       Model name   Description
       ----------    -----------

@@ -3,6 +3,7 @@ theme: readthedocs
 
 dev_addr: '0.0.0.0:8888'
 site_dir: 'build/docs'
+docs_dir: 'docs'
 markdown_extensions:
 - codehilite:
     noclasses: True
@@ -13,7 +14,7 @@ repo_url: https://github.com/LibreTime/libretime/
 extra_css:
   - '_css/term.css'
 
-pages:
+nav:
   - 'Home': index.md
   - 'What is LibreTime?': manual/index.md
   - 'Features': features.md
@@ -24,30 +25,29 @@ pages:
     - 'Getting Started': manual/getting-started/index.md
     - 'Tutorials': manual/tutorials/index.md
     - 'How-Tos': manual/howtos/index.md
-  - 'The Settings Menu':
-    - 'General': manual/general/index.md
-    - 'Users': manual/users/index.md
-    - 'Streams': manual/stream-settings/index.md
-    - 'Status': manual/status/index.md
   - 'The Main Menus':
     - 'Upload': manual/upload/index.md
     - 'Dashboard': manual/dashboard/index.md
     - 'Tracks': manual/tracks/index.md
-    - 'Playlists' : manual/playlists/index.md
-    - 'Smart Blocks' : manual/smartblocks/index.md
-    - 'Webstreams' : manual/webstreams/index.md
-    - 'Podcasts' : manual/podcasts/index.md
-    - 'My Podcast' : manual/my-podcast/index.md
-    - 'Radio Page' : manual/radio-page/index.md
+    - 'Playlists': manual/playlists/index.md
+    - 'Smart Blocks': manual/smartblocks/index.md
+    - 'Webstreams': manual/webstreams/index.md
+    - 'Podcasts': manual/podcasts/index.md
+    - 'My Podcast': manual/my-podcast/index.md
+    - 'Radio Page': manual/radio-page/index.md
     - 'Calendar': manual/calendar/index.md
     - 'Widgets': manual/widgets/index.md
-    - 'Settings' : manual/general/index.md
+    - 'Settings':
+      - 'General': manual/general/index.md
+      - 'Users': manual/users/index.md
+      - 'Streams': manual/stream-settings/index.md
+      - 'Status': manual/status/index.md
     - 'Analytics': manual/listener-stats/index.md
     - 'Help': manual/help/index.md
     - 'Listen': manual/listen/index.md
   - 'The Analytics Menu':
     - 'Playout History' : manual/history/index.md
-    - 'History Templates' : manual/history-templates/index.md  
+    - 'History Templates' : manual/history-templates/index.md
     - 'Listener Stats' : manual/listener-stats/index.md
   - 'LibreTime in the Studio':
     - 'Preparing Media for Ingest': manual/preparing-media-for-ingest/index.md

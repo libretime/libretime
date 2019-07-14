@@ -8,7 +8,7 @@ The following are step-by-step instructions derived from the LibreTime tutorials
 
 ##Program Manager How Tos##
 * [How to build a schedule](build-schedule.md)
-* [How to setup genre specific autoDJ](genre-autodj.md)
+* [How to setup genre specific AutoDJ](genre-autodj.md)
 * [How to setup an intro playlist](intro-playlist.md)
 * [How to setup an outro playlist with ambient music](outro-playlist.md)
 * [How to setup latest podcast episode to play with autoloading playlist](podcast.md)
