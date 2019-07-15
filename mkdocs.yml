@@ -14,7 +14,7 @@ repo_url: https://github.com/LibreTime/libretime/
 extra_css:
   - '_css/term.css'
 
-nav:
+pages:
   - 'Home': index.md
   - 'What is LibreTime?': manual/index.md
   - 'Features': features.md
