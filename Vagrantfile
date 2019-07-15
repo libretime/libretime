@@ -45,12 +45,6 @@ Vagrant.configure("2") do |config|
     os.vm.box = "bento/ubuntu-16.04"
     provision_libretime(os, "debian.sh", installer_args)
   end
-  config.vm.define "ubuntu-trusty" do |os|
-    STDERR.puts 'WARNING: The "ubuntu-trusty" option is deprecated. Please migrate to "ubuntu-bionic".'
-    STDERR.puts
-    os.vm.box = "bento/ubuntu-14.04"
-    provision_libretime(os, "debian.sh", installer_args)
-  end
   config.vm.define "debian-stretch" do |os|
     os.vm.box = "bento/debian-9.6"
     provision_libretime(os, "debian.sh", installer_args)
