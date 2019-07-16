@@ -18,12 +18,10 @@ class ProxyStorageBackend extends StorageBackend
     {
         $CC_CONFIG = Config::getConfig();
 
-        //The storage backend in the airtime.conf directly corresponds to
-        //the name of the class that implements it (eg. Amazon_S3), so we 
-        //can easily create the right backend object dynamically:
-        if ($storageBackend == "amazon_S3") {
-            $this->storageBackend = new Amazon_S3StorageBackend($CC_CONFIG["amazon_S3"]);
-        } else if ($storageBackend == "file") {
+        // The storage backend in the airtime.conf directly corresponds to
+        // the name of the class that implements it, so we can create the
+        // right backend object dynamically:
+        if ($storageBackend == "file") {
             $this->storageBackend = new FileStorageBackend();
         } else {
             $this->storageBackend = new $storageBackend($CC_CONFIG[$storageBackend]);

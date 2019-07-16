@@ -216,7 +216,11 @@ tr.lib-selected > td > div.library_actions_btn:hover {
 
 .search-criteria .criteria-element > div {
 	margin-bottom: 5px;
+	display: flex;
+	flex-wrap: wrap;
+	position: relative;
 	}
+	.search-criteria .criteria-element > div.search-row-and { margin-bottom: 42px; }
 	.search-criteria .criteria-element > div input[type="text"],
 	.search-criteria .criteria-element > div select  {
 		-webkit-box-sizing: border-box;

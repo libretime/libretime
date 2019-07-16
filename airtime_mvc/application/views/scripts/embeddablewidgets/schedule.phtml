@@ -13,12 +13,12 @@
         <div id="weekly-schedule-widget-preview" <?php if (isset($this->weekly_schedule_error_msg)) echo "style=display:none"; ?>>
             <label><?php echo _("Preview:") ?></label>
             <div class="schedule_iframe_wrapper">
-                <iframe id="schedule_iframe" height="400px" width="550px" scrolling="no" frameborder="0" src=<?php echo Application_Common_HTTPHelper::getStationUrl()."embed/weekly-program"?>></iframe>
+                <iframe id="schedule_iframe" height="400px" width="550px" scrolling="no" frameborder="0" src="<?php echo Application_Common_HTTPHelper::getStationUrl()."embed/weekly-program"?>"></iframe>
             </div>
 
             <div style="clear:both"></div>
             <label>Embeddable Code:</label>
-            <textarea style="width:98%" rows="3" readonly="readonly"><iframe height="400px" width="550px" scrolling="no" frameborder="0" src=<?php echo Application_Common_HTTPHelper::getStationUrl()."embed/weekly-program"?>></iframe>
+            <textarea style="width:98%" rows="3" readonly="readonly"><iframe height="400px" width="550px" scrolling="no" frameborder="0" src="<?php echo Application_Common_HTTPHelper::getStationUrl()."embed/weekly-program"?>"></iframe>
             </textarea>
             <div><p>
                     Copy this code and paste it into your website's HTML to embed the weekly schedule in your site.

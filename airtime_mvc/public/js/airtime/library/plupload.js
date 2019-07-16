@@ -20,7 +20,7 @@ $(document).ready(function () {
         acceptedFiles: acceptedMimeTypes.join(),
         addRemoveLinks: true,
         dictRemoveFile: $.i18n._("Remove"),
-        maxFilesize: 500, //Megabytes
+        maxFilesize:LIBRETIME_PLUPLOAD_MAX_FILE_SIZE, //Megabytes
         init: function () {
             this.on("sending", function (file, xhr, data) {
                 data.append("csrf_token", $("#csrf").val());

@@ -299,7 +299,7 @@ CREATE TABLE "cc_block"
     "creator_id" INTEGER,
     "description" VARCHAR(512),
     "length" interval DEFAULT '00:00:00',
-    "type" VARCHAR(7) DEFAULT 'static',
+    "type" VARCHAR(7) DEFAULT 'dynamic',
     PRIMARY KEY ("id")
 );
 
@@ -337,6 +337,7 @@ CREATE TABLE "cc_blockcriteria"
     "modifier" VARCHAR(16) NOT NULL,
     "value" VARCHAR(512) NOT NULL,
     "extra" VARCHAR(512),
+    "criteriagroup" INTEGER,
     "block_id" INTEGER NOT NULL,
     PRIMARY KEY ("id")
 );
@@ -516,7 +517,7 @@ DROP TABLE IF EXISTS "cc_service_register" CASCADE;
 CREATE TABLE "cc_service_register"
 (
     "name" VARCHAR(32) NOT NULL,
-    "ip" VARCHAR(18) NOT NULL,
+    "ip" VARCHAR(45) NOT NULL,
     PRIMARY KEY ("name")
 );
 
@@ -780,6 +781,8 @@ CREATE TABLE "podcast_episodes"
     "publication_date" TIMESTAMP NOT NULL,
     "download_url" VARCHAR(4096) NOT NULL,
     "episode_guid" VARCHAR(4096) NOT NULL,
+    "episode_title" VARCHAR(4096) NOT NULL,
+    "episode_description" TEXT NOT NULL,
     PRIMARY KEY ("id")
 );
 

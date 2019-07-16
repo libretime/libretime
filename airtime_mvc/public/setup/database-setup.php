@@ -7,9 +7,9 @@
  * Wrapper class for validating and installing the Airtime database during the installation process
  */
 class DatabaseSetup extends Setup {
-
+    
     // airtime.conf section header
-    protected static $_settings = "[database]";
+    protected static $_section = "[database]";
 
     // Constant form field names for passing errors back to the front-end
     const DB_USER = "dbUser",
@@ -51,6 +51,7 @@ class DatabaseSetup extends Setup {
      * @throws AirtimeDatabaseException
      */
     public function runSetup() {
+        $this->writeToTemp();
         try {
             $this->setNewDatabaseConnection("postgres");
             if ($this->checkDatabaseExists()) {
@@ -61,14 +62,11 @@ class DatabaseSetup extends Setup {
                 $this->installDatabaseTables();
             }
         } catch (PDOException $e) {
-            throw new AirtimeDatabaseException("Couldn't establish a connection to the database! "
-                                               . "Please check your credentials and try again. "
+            throw new AirtimeDatabaseException("Couldn't establish a connection to the database! ".
+                                                "Please check your credentials and try again. "
                                                . "PDO Exception: " .  $e->getMessage(),
                                                array(self::DB_NAME, self::DB_USER, self::DB_PASS));
         }
-
-        $this->writeToTemp();
-
         self::$dbh = null;
         return array(
             "message" => "Airtime database was created successfully!",
@@ -129,7 +127,7 @@ class DatabaseSetup extends Setup {
      */
     private function createDatabase() {
         $statement = self::$dbh->prepare("CREATE DATABASE " . pg_escape_string(self::$_properties["dbname"])
-                                         . " WITH ENCODING 'UTF8' TEMPLATE template0"
+                                         . " WITH ENCODING 'UNICODE' TEMPLATE template0"
                                          . " OWNER " . pg_escape_string(self::$_properties["dbuser"]));
         if (!$statement->execute()) {
             throw new AirtimeDatabaseException("There was an error creating the database!",

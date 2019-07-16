@@ -387,6 +387,26 @@ class Application_Model_Preference
         return $val === '1' ? true : false;
     }
 
+    public static function GetIntroPlaylist()
+    {
+        return self::getValue("intro_playlist");
+    }
+
+    public static function GetOutroPlaylist()
+    {
+        return self::getValue("outro_playlist");
+    }
+
+
+    public static function SetIntroPlaylist($playlist)
+    {
+        self::setValue("intro_playlist", $playlist);
+    }
+
+    public static function SetOutroPlaylist($playlist)
+    {
+        self::setValue("outro_playlist", $playlist);
+    }
 
     public static function SetPhone($phone)
     {
@@ -909,13 +929,13 @@ class Application_Model_Preference
             $versions[] = $item->get_title();
         }
         $latest = $versions;
-        self::setValue('latest_version', json_encode($latest));
         self::setValue('latest_version_nextcheck', strtotime('+1 week'));
         if (empty($latest)) {
-            return $config['airtime_version'];
-        } else {
-            return $latest;
+            return array($config['airtime_version']);
         }
+
+        self::setValue('latest_version', json_encode($latest));
+        return $latest;
     }
 
     public static function SetLatestVersion($version)

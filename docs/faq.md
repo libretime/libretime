@@ -1,9 +1,11 @@
+# Frequently Asked Questions
+
 **What is LibreTime?**
 
 LibreTime is a community managed fork of the AirTime project.
 
-It is managed by a friendly inclusive community of stations 
-from around the globe that use, document and improve LibreTime. 
+It is managed by a friendly inclusive community of stations
+from around the globe that use, document and improve LibreTime.
 
 **Can I upgrade to LibreTime?**
 
@@ -13,15 +15,15 @@ is in the docs.
 
 LibreTime is complex software, as such it is close to impossible
 to guarantee that every upgrade path works as intended. This
-means you should trial the update on a parallel test 
+means you should trial the update on a parallel test
 infrastructure to minimize possible downtime.
 
 Please let the community know if you encounter issues with the
-update process. 
+update process.
 
 **Why are Cue-In/Out points wrong in some tracks? / What's with silan?**
 
-The silan silence detection is currently outdated on almost all distributions. The older versions report clearly wrong information and may segfault at the worst. Versions starting with 0.3.3 (and some patched 0.3.2 builds) are much better but still need thorough testing. Please see the [release notes](https://github.com/LibreTime/libretime/releases) for up to date mitigation scenarios and details on the issues. 
+The silan silence detection is currently outdated on almost all distributions. The older versions report clearly wrong information and may segfault at the worst. Versions starting with 0.3.3 (and some patched 0.3.2 builds) are much better but still need thorough testing. Please see the [release notes](https://github.com/LibreTime/libretime/releases) for up to date mitigation scenarios and details on the issues.
 
 **Why did you fork AirTime?**
 

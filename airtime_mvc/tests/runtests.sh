@@ -8,7 +8,7 @@ rabbitmqctl start_app
 RABBITMQ_VHOST="/airtime_tests"
 RABBITMQ_USER="airtime_tests"
 RABBITMQ_PASSWORD="airtime_tests"
-EXCHANGES="airtime-pypo|pypo-fetch|airtime-media-monitor|media-monitor"
+EXCHANGES="airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
 
 rabbitmqctl list_vhosts | grep $RABBITMQ_VHOST
 RESULT="$?"

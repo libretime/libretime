@@ -16,7 +16,8 @@ $rabbitmq           = $externalServices["rabbitmq"];
 
 $pypo               = $externalServices["pypo"];
 $liquidsoap         = $externalServices["liquidsoap"];
-$analyzer       = $externalServices["analyzer"];
+$analyzer           = $externalServices["analyzer"];
+$celery             = $externalServices['celery'];
 
 $r1 = array_reduce($phpDependencies, "booleanReduce", true);
 $r2 = array_reduce($externalServices, "booleanReduce", true);
@@ -59,9 +60,10 @@ $result = $r1 && $r2;
             <h3 class="error">Looks like something went wrong!</h3>
             <p>
                 Take a look at the checklist below for possible solutions. If you're tried the suggestions and are
-                still experiencing issues, come
-                <a href="https://forum.sourcefabric.org/">visit our forums</a>
-                or <a href="http://www.sourcefabric.org/en/airtime/manuals/">check out the manual</a>.
+                still experiencing issues, read the
+                <a href="https://github.com/LibreTime/libretime/releases">release notes</a>,
+                come <a href="https://discourse.libretime.org/">visit our discourse</a>
+                or, check <a href="http://www.libretime.org/">the website and main docs</a>.
             </p>
         <?php
         } else {
@@ -216,6 +218,26 @@ $result = $r1 && $r2;
                             and ensure that it's running with
                             <br/><code>initctl list | grep airtime-liquidsoap</code><br/>
                             If not, try running <code>sudo service airtime-liquidsoap restart</code>
+                        <?php
+                        }
+                        ?>
+                    </td>
+                </tr>
+                <tr class="<?=$celery ? 'success' : 'danger';?>">
+                    <td class="component">
+                        Celery
+                    </td>
+                    <td class="description">
+                        Airtime Celery Task service
+                    </td>
+                    <td class="solution <?php if ($celery) {echo 'check';?>">
+                        <?php
+                        } else {
+                            ?>">
+                            Check that the airtime-celery service is installed correctly in <code>/etc/init.d</code>,
+                            and ensure that it's running with
+                            <br/><code>initctl list | grep airtime-celery</code><br/>
+                            If not, try running <code>sudo service airtime-celery restart</code>
                         <?php
                         }
                         ?>

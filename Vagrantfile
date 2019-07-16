@@ -9,10 +9,9 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 8000, host:8000
   # liquidsoap input harbors for instreaming (ie. /master)
   config.vm.network "forwarded_port", guest: 8001, host:8001
-  config.vm.network "forwarded_port", guest: 8002, host:8002 
+  config.vm.network "forwarded_port", guest: 8002, host:8002
   # mkdocs documentation
   config.vm.network "forwarded_port", guest: 8888, host:8888
-  
 
   # make sure we are using nfs (doesn't work out of the box with debian)
   config.vm.synced_folder ".", "/vagrant", type: "nfs"
@@ -38,33 +37,22 @@ Vagrant.configure("2") do |config|
   installer_args="--force --in-place --verbose --postgres --apache --icecast "
 
   # define all the OS boxes we support
+  config.vm.define "ubuntu-bionic" do |os|
+    os.vm.box = "bento/ubuntu-18.04"
+    provision_libretime(os, "debian.sh", installer_args)
+  end
   config.vm.define "ubuntu-xenial" do |os|
     os.vm.box = "bento/ubuntu-16.04"
-    provision_libretime(os, "ubuntu.sh", installer_args)
-  end
-  config.vm.define "ubuntu-trusty" do |os|
-    os.vm.box = "bento/ubuntu-14.04"
-    provision_libretime(os, "ubuntu.sh", installer_args)
-  end
-  config.vm.define "ubuntu" do |os|
-    STDERR.puts 'WARNING: The "ubuntu" option is deprecated. Please migrate to "ubuntu-trusty".'
-    STDERR.puts
-    os.vm.box = "ubuntu/trusty64"
-    provision_libretime(os, "ubuntu.sh", installer_args)
-  end
-  config.vm.define "debian-jessie" do |os|
-    os.vm.box = "bento/debian-8.7"
     provision_libretime(os, "debian.sh", installer_args)
   end
-  config.vm.define "debian-wheezy" do |os|
-    os.vm.box = "bento/debian-7.11"
+  config.vm.define "debian-stretch" do |os|
+    os.vm.box = "bento/debian-9.6"
     provision_libretime(os, "debian.sh", installer_args)
   end
-  config.vm.define "debian" do |os|
-    STDERR.puts 'WARNING: The "debian" option is deprecated. Please migrate to "debian-jessie".'
-    STDERR.puts
-    os.vm.box = "debian/jessie64"
-    provision_libretime(os, "debian.sh", installer_args)
+  config.vm.define "debian-buster" do |os|
+    os.vm.box = "debian/buster64"
+    # TODO: Remove the manual flags after buster is released
+    provision_libretime(os, "debian.sh", installer_args + "--distribution=debian --release=buster")
   end
   config.vm.define "centos" do |os|
     os.vm.box = 'centos/7'

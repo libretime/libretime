@@ -1,13 +1,10 @@
+# TODO: use an abstract base class (ie. import from abc ...) once we have python >=3.3 that supports @staticmethod with @abstractmethod
+
 
 class Analyzer:
-    """ Abstract base class fpr all "analyzers".
+    """ Abstract base class for all "analyzers".
     """
+
     @staticmethod
     def analyze(filename, metadata):
         raise NotImplementedError
-
-'''
-class AnalyzerError(Error):
-    def __init__(self):
-        super.__init__(self)
-'''

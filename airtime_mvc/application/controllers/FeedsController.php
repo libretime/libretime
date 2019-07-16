@@ -7,14 +7,17 @@ class FeedsController extends Zend_Controller_Action
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+
         if ((Application_Model_Preference::getStationPodcastPrivacy()
-                && $this->getRequest()->getParam("sharing_token") != Application_Model_Preference::getStationPodcastDownloadKey())
+                && $request->getParam("sharing_token") != Application_Model_Preference::getStationPodcastDownloadKey())
                 && !RestAuth::verifyAuth(true, false, $this)) {
-            $this->getResponse()
-                ->setHttpResponseCode(401);
+            $response->setHttpResponseCode(401);
             return;
         }
 
+        CORSHelper::enableCrossOriginRequests($request, $response);
 
         $rssData = Application_Service_PodcastService::createStationRssFeed();
 

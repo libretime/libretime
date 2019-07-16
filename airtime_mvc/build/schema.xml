@@ -281,7 +281,7 @@
     <column name="creator_id" phpName="DbCreatorId" type="INTEGER" required="false"/>
     <column name="description" phpName="DbDescription" type="VARCHAR" size="512" required="false"/>
     <column name="length" phpName="DbLength" type="VARCHAR" sqlType="interval" defaultValue="00:00:00"/>
-    <column name="type" phpName="DbType" type="VARCHAR" size="7" defaultValue="static"/>
+    <column name="type" phpName="DbType" type="VARCHAR" size="7" defaultValue="dynamic"/>
     <behavior name="aggregate_column">
       <parameter name="name" value="length" />
       <parameter name="foreign_table" value="cc_blockcontents" />
@@ -315,6 +315,7 @@
     <column name="modifier" phpName="DbModifier" type="VARCHAR" size="16" required="true"/>
     <column name="value" phpName="DbValue" type="VARCHAR" size="512" required="true"/>
     <column name="extra" phpName="DbExtra" type="VARCHAR" size="512" required="false"/>
+    <column name="criteriagroup" phpName="DbCriteriaGroup" type="INTEGER" required="false"/>
     <column name="block_id" phpName="DbBlockId" type="INTEGER" required="true"/>
     <foreign-key foreignTable="cc_block" name="cc_blockcontents_block_id_fkey" onDelete="CASCADE">
       <reference local="block_id" foreign="id"/>
@@ -450,7 +451,7 @@
   </table>
   <table name="cc_service_register" phpName="CcServiceRegister">
     <column name="name" phpName="DbName" primaryKey="true" type="VARCHAR" size="32" required="true" />
-    <column name="ip" phpName="DbIp" type="VARCHAR" size="18" required="true"/>
+    <column name="ip" phpName="DbIp" type="VARCHAR" size="45" required="true"/>
   </table>
   <table name="cc_live_log" phpName="CcLiveLog">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
@@ -623,6 +624,9 @@
     <column name="publication_date" phpName="DbPublicationDate" type="TIMESTAMP" required="true" />
     <column name="download_url" phpName="DbDownloadUrl" type="varchar" size="4096" required="true" />
     <column name="episode_guid" phpName="DbEpisodeGuid" type="varchar" size="4096" required="true" />
+    <column name="episode_title" phpName="DbEpisodeTitle" type="varchar" size="4096" required="true" />
+    <column name="episode_description" phpName="DbEpisodeDescription" type="LONGVARCHAR" required="true" />
+
     <foreign-key foreignTable="cc_files" name="podcast_episodes_cc_files_fkey" onDelete="CASCADE">
       <reference local="file_id" foreign="id" />
     </foreign-key>

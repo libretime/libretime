@@ -24,13 +24,13 @@ abstract class BaseCcBlockcriteriaPeer
     const TM_CLASS = 'CcBlockcriteriaTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 6;
+    const NUM_COLUMNS = 7;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 6;
+    const NUM_HYDRATE_COLUMNS = 7;
 
     /** the column name for the id field */
     const ID = 'cc_blockcriteria.id';
@@ -46,6 +46,9 @@ abstract class BaseCcBlockcriteriaPeer
 
     /** the column name for the extra field */
     const EXTRA = 'cc_blockcriteria.extra';
+
+    /** the column name for the criteriagroup field */
+    const CRITERIAGROUP = 'cc_blockcriteria.criteriagroup';
 
     /** the column name for the block_id field */
     const BLOCK_ID = 'cc_blockcriteria.block_id';
@@ -69,12 +72,12 @@ abstract class BaseCcBlockcriteriaPeer
      * e.g. CcBlockcriteriaPeer::$fieldNames[CcBlockcriteriaPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbCriteria', 'DbModifier', 'DbValue', 'DbExtra', 'DbBlockId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbCriteria', 'dbModifier', 'dbValue', 'dbExtra', 'dbBlockId', ),
-        BasePeer::TYPE_COLNAME => array (CcBlockcriteriaPeer::ID, CcBlockcriteriaPeer::CRITERIA, CcBlockcriteriaPeer::MODIFIER, CcBlockcriteriaPeer::VALUE, CcBlockcriteriaPeer::EXTRA, CcBlockcriteriaPeer::BLOCK_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'CRITERIA', 'MODIFIER', 'VALUE', 'EXTRA', 'BLOCK_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'criteria', 'modifier', 'value', 'extra', 'block_id', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbCriteria', 'DbModifier', 'DbValue', 'DbExtra', 'DbCriteriaGroup', 'DbBlockId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbCriteria', 'dbModifier', 'dbValue', 'dbExtra', 'dbCriteriaGroup', 'dbBlockId', ),
+        BasePeer::TYPE_COLNAME => array (CcBlockcriteriaPeer::ID, CcBlockcriteriaPeer::CRITERIA, CcBlockcriteriaPeer::MODIFIER, CcBlockcriteriaPeer::VALUE, CcBlockcriteriaPeer::EXTRA, CcBlockcriteriaPeer::CRITERIAGROUP, CcBlockcriteriaPeer::BLOCK_ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'CRITERIA', 'MODIFIER', 'VALUE', 'EXTRA', 'CRITERIAGROUP', 'BLOCK_ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'criteria', 'modifier', 'value', 'extra', 'criteriagroup', 'block_id', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
@@ -84,12 +87,12 @@ abstract class BaseCcBlockcriteriaPeer
      * e.g. CcBlockcriteriaPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbCriteria' => 1, 'DbModifier' => 2, 'DbValue' => 3, 'DbExtra' => 4, 'DbBlockId' => 5, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbCriteria' => 1, 'dbModifier' => 2, 'dbValue' => 3, 'dbExtra' => 4, 'dbBlockId' => 5, ),
-        BasePeer::TYPE_COLNAME => array (CcBlockcriteriaPeer::ID => 0, CcBlockcriteriaPeer::CRITERIA => 1, CcBlockcriteriaPeer::MODIFIER => 2, CcBlockcriteriaPeer::VALUE => 3, CcBlockcriteriaPeer::EXTRA => 4, CcBlockcriteriaPeer::BLOCK_ID => 5, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'CRITERIA' => 1, 'MODIFIER' => 2, 'VALUE' => 3, 'EXTRA' => 4, 'BLOCK_ID' => 5, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'criteria' => 1, 'modifier' => 2, 'value' => 3, 'extra' => 4, 'block_id' => 5, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbCriteria' => 1, 'DbModifier' => 2, 'DbValue' => 3, 'DbExtra' => 4, 'DbCriteriaGroup' => 5, 'DbBlockId' => 6, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbCriteria' => 1, 'dbModifier' => 2, 'dbValue' => 3, 'dbExtra' => 4, 'dbCriteriaGroup' => 5, 'dbBlockId' => 6, ),
+        BasePeer::TYPE_COLNAME => array (CcBlockcriteriaPeer::ID => 0, CcBlockcriteriaPeer::CRITERIA => 1, CcBlockcriteriaPeer::MODIFIER => 2, CcBlockcriteriaPeer::VALUE => 3, CcBlockcriteriaPeer::EXTRA => 4, CcBlockcriteriaPeer::CRITERIAGROUP => 5, CcBlockcriteriaPeer::BLOCK_ID => 6, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'CRITERIA' => 1, 'MODIFIER' => 2, 'VALUE' => 3, 'EXTRA' => 4, 'CRITERIAGROUP' => 5, 'BLOCK_ID' => 6, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'criteria' => 1, 'modifier' => 2, 'value' => 3, 'extra' => 4, 'criteriagroup' => 5, 'block_id' => 6, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
@@ -168,6 +171,7 @@ abstract class BaseCcBlockcriteriaPeer
             $criteria->addSelectColumn(CcBlockcriteriaPeer::MODIFIER);
             $criteria->addSelectColumn(CcBlockcriteriaPeer::VALUE);
             $criteria->addSelectColumn(CcBlockcriteriaPeer::EXTRA);
+            $criteria->addSelectColumn(CcBlockcriteriaPeer::CRITERIAGROUP);
             $criteria->addSelectColumn(CcBlockcriteriaPeer::BLOCK_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
@@ -175,6 +179,7 @@ abstract class BaseCcBlockcriteriaPeer
             $criteria->addSelectColumn($alias . '.modifier');
             $criteria->addSelectColumn($alias . '.value');
             $criteria->addSelectColumn($alias . '.extra');
+            $criteria->addSelectColumn($alias . '.criteriagroup');
             $criteria->addSelectColumn($alias . '.block_id');
         }
     }

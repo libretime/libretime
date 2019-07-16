@@ -71,10 +71,6 @@ class Application_Form_Login extends Zend_Form
             "locale" => Application_Model_Locale::getUserLocale()
         ));
 
-        if (Application_Model_LoginAttempts::getAttempts($_SERVER['REMOTE_ADDR']) >= 3) {
-            $this->addRecaptcha();
-        }
-
         // Add the submit button
         $this->addElement('submit', 'submit', array(
             'ignore'   => true,
@@ -87,26 +83,6 @@ class Application_Form_Login extends Zend_Form
 
     }
 
-    public function addRecaptcha()
-    {
-        $pubKey = '6Ld4JsISAAAAAIxUKT4IjjOGi3DHqdoH2zk6WkYG';
-        $privKey = '6Ld4JsISAAAAAJynYlXdrE4hfTReTSxYFe5szdyv';
-
-        $params= array('ssl' => true);
-        $recaptcha = new Zend_Service_ReCaptcha($pubKey, $privKey, $params);
-
-        $captcha = new Zend_Form_Element_Captcha('captcha',
-            array(
-                'label' => _('Type the characters you see in the picture below.'),
-                'captcha' =>  'ReCaptcha',
-                'captchaOptions'        => array(
-                    'captcha'   => 'ReCaptcha',
-                    'service' => $recaptcha
-                )
-            )
-        );
-        $this->addElement($captcha);
-    }
 
     /**
      * tests if a string starts with a given string

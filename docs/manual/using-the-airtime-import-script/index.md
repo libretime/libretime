@@ -1,76 +1,8 @@
-[Sourcefabric Manuals](http://sourcefabric.booktype.pro/)
-
--   [Sign In / Create Account](http://sourcefabric.booktype.pro/accounts/signin/?redirect=/airtime-25-for-broadcasters/using-the-airtime-import-script/)
-
- English |  <a href="index.html#" class="langes">Español</a> |  <a href="index.html#" class="langfr">Français</a> |  <a href="index.html#" class="langit">Italiano</a> |  <a href="index.html#" class="langpt">Português</a> |  <a href="index.html#" class="langru">Русский</a> |  <a href="index.html#" class="langsq">Shqip</a>
-
--   [Books](http://sourcefabric.booktype.pro/list-books/)
--   [Groups](http://sourcefabric.booktype.pro/list-groups/)
--   [People](http://sourcefabric.booktype.pro/list-people/)
-
-Airtime 2.5 for Broadcasters
-----------------------------
-
--   **Introduction**
--   [What is Airtime?](../index.html)
--   [Rights and royalties](../rights-and-royalties/index.html)
--   **Using Airtime**
--   [On air in 60 seconds!](../on-air-in-60-seconds/index.html)
--   [Getting started](../getting-started/index.html)
--   [Smartphone journalism](../smartphone-journalism/index.html)
--   **The System menu**
--   [Preferences](../preferences/index.html)
--   [Users](../users/index.html)
--   [Media folders](../media-folders/index.html)
--   [Stream settings](../stream-settings/index.html)
--   [Support feedback](../support-feedback/index.html)
--   [Status](../status/index.html)
--   [Listener stats](../listener-stats/index.html)
--   **The main menus**
--   [Now playing](../now-playing/index.html)
--   [Add media](../add-media/index.html)
--   [Library](../library/index.html)
--   [Calendar](../calendar/index.html)
--   [History](../playout-history/index.html)
--   [Listen](../listen/index.html)
--   [Help](../help/index.html)
--   **Airtime in the studio**
--   [Recording shows](../recording-shows/index.html)
--   [Live shows with Mixxx](../live-shows-with-mixxx/index.html)
--   [Icecast and SHOUTcast](../icecast-and-shoutcast/index.html)
--   **Installation**
--   [Preparing the server](../preparing-the-server/index.html)
--   [Easy setup](../easy-setup/index.html)
--   [Automated installation](../automated-installation/index.html)
--   [Manual installation](../manual-installation/index.html)
--   [Setting the server time](../setting-the-server-time/index.html)
--   **Administration**
--   [Preparing media for ingest](../preparing-media-for-ingest/index.html)
--   [Using the airtime-import script](index.html)
--   [The airtime-log command](../the-airtime-log-command/index.html)
--   [Backing up the server](../backing-up-the-server/index.html)
--   [Upgrading](../upgrading/index.html)
--   [Troubleshooting](../troubleshooting/index.html)
--   [Using Monit](../using-monit/index.html)
--   **Advanced configuration**
--   [Automated file import](../automated-file-import/index.html)
--   [Icecast handover](../icecast-handover/index.html)
--   [Promoting your station](../promoting-your-station/index.html)
--   [Stream player for your website](../stream-player-for-your-website/index.html)
--   [Exporting the schedule](../exporting-the-schedule/index.html)
--   [Interface customization](../interface-customization/index.html)
--   [Interface localization and Git](../interface-localization/index.html)
--   [Host configuration](../host-configuration/index.html)
--   [Airtime API authentication](../airtime-api-authentication/index.html)
--   [Secure login with SSL or TLS](../secure-login-with-ssl/index.html)
--   [Icecast statistics with Piwik](../icecast-statistics-with-piwik/index.html)
--   **Appendix**
--   [Expert install](../expert-install/index.html)
--   [HD Audio Models](../hd-audio-models/index.html)
--   [About this manual](../about-this-manual/index.html)
-
 Using the import script
 =======================
+
+###NOTE: This page has issues, as the import script is not currently functional
+
 
 If you have a large number of files in your media library, importing these files one at a time into a broadcast automation system would be time-consuming and tedious. That's why Airtime includes a script that can import an entire directory of files in one go.
 

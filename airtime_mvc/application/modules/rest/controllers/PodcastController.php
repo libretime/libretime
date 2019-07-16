@@ -36,7 +36,10 @@ class Rest_PodcastController extends Zend_Rest_Controller
         $stationPodcastId = Application_Model_Preference::getStationPodcastId();
         $result = PodcastQuery::create()
             // Don't return the Station podcast - we fetch it separately
-            ->filterByDbId($stationPodcastId, Criteria::NOT_EQUAL);
+            ->filterByDbId($stationPodcastId, Criteria::NOT_EQUAL)
+            ->leftJoinImportedPodcast()
+            ->withColumn('auto_ingest_timestamp');
+        $total = $result->count();
         if ($limit > 0) { $result->setLimit($limit); }
         $result->setOffset($offset)
             ->orderBy($sortColumn, $sortDir);
@@ -44,9 +47,10 @@ class Rest_PodcastController extends Zend_Rest_Controller
 
         $podcastArray = $result->toArray(null, false, BasePeer::TYPE_FIELDNAME);
 
+
         $this->getResponse()
             ->setHttpResponseCode(200)
-            ->setHeader('X-TOTAL-COUNT', $result->count())
+            ->setHeader('X-TOTAL-COUNT', $total)
             ->appendBody(json_encode($podcastArray));
     }
 
@@ -190,6 +194,26 @@ class Rest_PodcastController extends Zend_Rest_Controller
 
         $this->_helper->json->sendJson($responseBody);
     }
+
+
+    /**
+     * Endpoint for triggering the generation of a smartblock and playlist to match the podcast name
+     */
+
+    public function smartblockAction() {
+
+        $title = $this->_getParam('title', []);
+        $id = $this->_getParam('id', []);
+        if (!$id) {
+            return;
+        }
+        $podcast = Application_Service_PodcastService::getPodcastById($id);
+
+        // logging::info($podcast);
+        Application_Service_PodcastService::createPodcastSmartblockAndPlaylist($podcast, $title);
+    }
+
+
 
     /**
      * @throws PodcastNotFoundException

@@ -46,7 +46,7 @@ class CcBlockTableMap extends TableMap
         $this->addForeignKey('creator_id', 'DbCreatorId', 'INTEGER', 'cc_subjs', 'id', false, null, null);
         $this->addColumn('description', 'DbDescription', 'VARCHAR', false, 512, null);
         $this->addColumn('length', 'DbLength', 'VARCHAR', false, null, '00:00:00');
-        $this->addColumn('type', 'DbType', 'VARCHAR', false, 7, 'static');
+        $this->addColumn('type', 'DbType', 'VARCHAR', false, 7, 'dynamic');
         // validators
     } // initialize()
 

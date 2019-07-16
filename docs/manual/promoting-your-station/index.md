@@ -1,6 +1,6 @@
 If you have an Icecast server, you can put a link to the Icecast status page (by default at port 8000) on your station's homepage, to provide an overview of available streams. See the chapter *Interface customization* for tips on theming the Icecast status page. You can also use Now Playing widgets (see the chapter *Exporting the schedule*) or HTML5 stream players (see the chapter *Stream player for your website*) to help grow your audience.
 
-On an Icecast server, you can uncomment the *&lt;directory&gt;* section in the */etc/icecast2/icecast.xml* file to have your station automatically listed on the Icecast directory website <http://dir.xiph.org> which could help you pick up more listeners.
+On an Icecast server, you can uncomment the *<directory>* section in the */etc/icecast2/icecast.xml* file to have your station automatically listed on the Icecast directory website <http://dir.xiph.org> which could help you pick up more listeners.
 
         <!-- Uncomment this if you want directory listings -->
 
@@ -9,7 +9,7 @@ On an Icecast server, you can uncomment the *&lt;directory&gt;* section in the *
             <yp-url>http://dir.xiph.org/cgi-bin/yp-cgi</yp-url>
         </directory>
 
-The Indymedia stream directory at <http://radio.indymedia.org/en/yp> links to grassroots independent radio projects around the world. You can add your station to their list with an additional *&lt;directory&gt;* section, as follows:
+The Indymedia stream directory at <http://radio.indymedia.org/en/yp> links to grassroots independent radio projects around the world. You can add your station to their list with an additional *<directory>* section, as follows:
 
         <directory>
              <yp-url-timeout>15</yp-url-timeout>
@@ -25,7 +25,7 @@ Another stream directory service is provided by the Liquidsoap Flows! site <http
       genre="Rock",
       user="",
       password="",
-      streams=[("ogg/128k","http://streaming.example.com/airtime_128")],
+      streams=[("ogg/128k","http://streaming.example.com/libretime_128")],
       ourstation)
 
 For the time being, a stream can be registered on the Liquidsoap Flows! site with any username and password. Authenticated services may be offered in future.

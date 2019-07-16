@@ -60,6 +60,12 @@ abstract class BaseCcBlockcriteria extends BaseObject implements Persistent
     protected $extra;
 
     /**
+     * The value for the criteriagroup field.
+     * @var        int
+     */
+    protected $criteriagroup;
+
+    /**
      * The value for the block_id field.
      * @var        int
      */
@@ -143,6 +149,17 @@ abstract class BaseCcBlockcriteria extends BaseObject implements Persistent
     {
 
         return $this->extra;
+    }
+
+    /**
+     * Get the [criteriagroup] column value.
+     *
+     * @return int
+     */
+    public function getDbCriteriaGroup()
+    {
+
+        return $this->criteriagroup;
     }
 
     /**
@@ -262,6 +279,27 @@ abstract class BaseCcBlockcriteria extends BaseObject implements Persistent
     } // setDbExtra()
 
     /**
+     * Set the value of [criteriagroup] column.
+     *
+     * @param  int $v new value
+     * @return CcBlockcriteria The current object (for fluent API support)
+     */
+    public function setDbCriteriaGroup($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->criteriagroup !== $v) {
+            $this->criteriagroup = $v;
+            $this->modifiedColumns[] = CcBlockcriteriaPeer::CRITERIAGROUP;
+        }
+
+
+        return $this;
+    } // setDbCriteriaGroup()
+
+    /**
      * Set the value of [block_id] column.
      *
      * @param  int $v new value
@@ -323,7 +361,8 @@ abstract class BaseCcBlockcriteria extends BaseObject implements Persistent
             $this->modifier = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->value = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
             $this->extra = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->block_id = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
+            $this->criteriagroup = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
+            $this->block_id = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -333,7 +372,7 @@ abstract class BaseCcBlockcriteria extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 6; // 6 = CcBlockcriteriaPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 7; // 7 = CcBlockcriteriaPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating CcBlockcriteria object", $e);
@@ -586,6 +625,9 @@ abstract class BaseCcBlockcriteria extends BaseObject implements Persistent
         if ($this->isColumnModified(CcBlockcriteriaPeer::EXTRA)) {
             $modifiedColumns[':p' . $index++]  = '"extra"';
         }
+        if ($this->isColumnModified(CcBlockcriteriaPeer::CRITERIAGROUP)) {
+            $modifiedColumns[':p' . $index++]  = '"criteriagroup"';
+        }
         if ($this->isColumnModified(CcBlockcriteriaPeer::BLOCK_ID)) {
             $modifiedColumns[':p' . $index++]  = '"block_id"';
         }
@@ -614,6 +656,9 @@ abstract class BaseCcBlockcriteria extends BaseObject implements Persistent
                         break;
                     case '"extra"':
                         $stmt->bindValue($identifier, $this->extra, PDO::PARAM_STR);
+                        break;
+                    case '"criteriagroup"':
+                        $stmt->bindValue($identifier, $this->criteriagroup, PDO::PARAM_INT);
                         break;
                     case '"block_id"':
                         $stmt->bindValue($identifier, $this->block_id, PDO::PARAM_INT);
@@ -773,6 +818,9 @@ abstract class BaseCcBlockcriteria extends BaseObject implements Persistent
                 return $this->getDbExtra();
                 break;
             case 5:
+                return $this->getDbCriteriaGroup();
+                break;
+            case 6:
                 return $this->getDbBlockId();
                 break;
             default:
@@ -809,7 +857,8 @@ abstract class BaseCcBlockcriteria extends BaseObject implements Persistent
             $keys[2] => $this->getDbModifier(),
             $keys[3] => $this->getDbValue(),
             $keys[4] => $this->getDbExtra(),
-            $keys[5] => $this->getDbBlockId(),
+            $keys[5] => $this->getDbCriteriaGroup(),
+            $keys[6] => $this->getDbBlockId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -870,6 +919,9 @@ abstract class BaseCcBlockcriteria extends BaseObject implements Persistent
                 $this->setDbExtra($value);
                 break;
             case 5:
+                $this->setDbCriteriaGroup($value);
+                break;
+            case 6:
                 $this->setDbBlockId($value);
                 break;
         } // switch()
@@ -901,7 +953,8 @@ abstract class BaseCcBlockcriteria extends BaseObject implements Persistent
         if (array_key_exists($keys[2], $arr)) $this->setDbModifier($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setDbValue($arr[$keys[3]]);
         if (array_key_exists($keys[4], $arr)) $this->setDbExtra($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setDbBlockId($arr[$keys[5]]);
+        if (array_key_exists($keys[5], $arr)) $this->setDbCriteriaGroup($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setDbBlockId($arr[$keys[6]]);
     }
 
     /**
@@ -918,6 +971,7 @@ abstract class BaseCcBlockcriteria extends BaseObject implements Persistent
         if ($this->isColumnModified(CcBlockcriteriaPeer::MODIFIER)) $criteria->add(CcBlockcriteriaPeer::MODIFIER, $this->modifier);
         if ($this->isColumnModified(CcBlockcriteriaPeer::VALUE)) $criteria->add(CcBlockcriteriaPeer::VALUE, $this->value);
         if ($this->isColumnModified(CcBlockcriteriaPeer::EXTRA)) $criteria->add(CcBlockcriteriaPeer::EXTRA, $this->extra);
+        if ($this->isColumnModified(CcBlockcriteriaPeer::CRITERIAGROUP)) $criteria->add(CcBlockcriteriaPeer::CRITERIAGROUP, $this->criteriagroup);
         if ($this->isColumnModified(CcBlockcriteriaPeer::BLOCK_ID)) $criteria->add(CcBlockcriteriaPeer::BLOCK_ID, $this->block_id);
 
         return $criteria;
@@ -986,6 +1040,7 @@ abstract class BaseCcBlockcriteria extends BaseObject implements Persistent
         $copyObj->setDbModifier($this->getDbModifier());
         $copyObj->setDbValue($this->getDbValue());
         $copyObj->setDbExtra($this->getDbExtra());
+        $copyObj->setDbCriteriaGroup($this->getDbCriteriaGroup());
         $copyObj->setDbBlockId($this->getDbBlockId());
 
         if ($deepCopy && !$this->startCopy) {
@@ -1107,6 +1162,7 @@ abstract class BaseCcBlockcriteria extends BaseObject implements Persistent
         $this->modifier = null;
         $this->value = null;
         $this->extra = null;
+        $this->criteriagroup = null;
         $this->block_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;

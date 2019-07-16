@@ -2,6 +2,8 @@ dist: trusty
 language: php
 php:
 # the latest and greatest, has some issues that are excluded below in matrix.allow_failures
+- 7.3
+- 7.2
 - 7.1
 # the 7.0 build demonstrates that everything is basically ok for 7.0, users might want to wait for 7.1 to run it
 - 7.0
@@ -24,12 +26,18 @@ matrix:
   # there are currently some testing issues with DateTime precision on 7.1
   - env: PYTHON=false
     php: 7.1
+  # there are some issues with phpunit as well as some deep in zf1 on 7.2
+  - env: PYTHON=false
+    php: 7.2
+  # there are some issues with phpunit as well as some deep in zf1 on 7.3
+  - env: PYTHON=false
+    php: 7.3
   exclude:
-  # by excluding all of python we make way to just runu python tests in one seperate instance
+  # by excluding all of python we make way to just run python tests in one seperate instance
   - env: PYTHON=true
   include:
   # using latest to run python on since it will last the longest
-  - php: 7.1 
+  - php: 7.3
     env: PYTHON=true
 addons:
   apt:
@@ -48,7 +56,7 @@ addons:
     - python-rgain
     - python-gst-1.0
     - python-magic
-    - mp3gain
+    - dos2unix
 install:
 - >
     if [[ "$PYTHON" == false ]]; then

@@ -38,8 +38,8 @@ define('AIRTIME_CONFIG', 'airtime.conf');
 //Rest Module Controllers - for custom Rest_RouteController.php
 set_include_path(REST_MODULE_CONTROLLER_PATH . PATH_SEPARATOR . get_include_path());
 
-//Vendors (Composer)
-set_include_path(VENDOR_PATH . PATH_SEPARATOR . get_include_path());
+// Vendors (Composer, zend-loader is explicitly specified due to https://github.com/zf1/zend-application/pull/2#issuecomment-102599655)
+set_include_path(VENDOR_PATH . PATH_SEPARATOR . VENDOR_PATH . 'zf1s/zend-loader/library/' . PATH_SEPARATOR . get_include_path());
 
 // Ensure library/ is on include_path
 set_include_path(LIB_PATH . PATH_SEPARATOR . get_include_path());

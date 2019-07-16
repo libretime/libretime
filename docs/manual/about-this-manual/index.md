@@ -1,10 +1,10 @@
 About this manual
 =================
 
-**Copyright © 2011-2015 Sourcefabric z.ú.
-**
+**Copyright © 2011-2017 Sourcefabric z.ú.**
+**Copyright © 2017 LibreTime Community**
 
-This manual was written for Sourcefabric by Daniel James, using Booktype Pro. Please add your comments and contributions at: [http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/](../index.html "Airtime Pro for Broadcasters")
+This manual was written for Sourcefabric by Daniel James, using Booktype Pro. It has been converted to markdown and updated by the LibreTime Community. Please add your comments and contributions at: [http://libretime.org/manual/](../index.md)
 
 License
 -------

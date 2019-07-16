@@ -43,29 +43,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->doctype('XHTML1_STRICT');
     }
 
-    protected function _initZFDebug()
+    /**
+     * initialize front controller
+     *
+     * This is call ZFrontController to ensure it is executed last in the bootstrap process.
+     */
+    protected function _initZFrontController()
     {
-
         Zend_Controller_Front::getInstance()->throwExceptions(false);
-
-        /*
-        if (APPLICATION_ENV == "development") {
-            $autoloader = Zend_Loader_Autoloader::getInstance();
-            $autoloader->registerNamespace('ZFDebug');
-
-            $options = array(
-                'plugins' => array('Variables',
-                                   'Exception',
-                                   'Memory',
-                                   'Time')
-            );
-            $debug = new ZFDebug_Controller_Plugin_Debug($options);
-
-            $this->bootstrap('frontController');
-            $frontController = $this->getResource('frontController');
-            $frontController->registerPlugin($debug);
-        }
-        */
     }
 
     protected function _initRouter()

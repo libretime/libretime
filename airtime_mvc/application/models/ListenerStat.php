@@ -16,8 +16,8 @@ group by mount_name
 SQL;
         $data = Application_Common_Database::prepareAndExecute($sql,
                 array('p1'=>$p_start, 'p2'=>$p_end));
-
         $out = array();
+
         foreach ($data as $d) {
             $jump = intval($d['count']/1000);
             $jump = max(1, $jump);
@@ -36,7 +36,7 @@ WHERE (temp.rownum%:p4) = :p5;
 SQL;
             $result = Application_Common_Database::prepareAndExecute($sql,
                     array('p1'=>$p_start, 'p2'=>$p_end, 'p3'=>$d['mount_name'], 'p4'=>$jump, 'p5'=>$remainder));
-            
+
             $utcTimezone = new DateTimeZone("UTC");
             $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
             
@@ -51,6 +51,7 @@ SQL;
             }
         }
 
+        return $out;
         $enabledStreamIds = Application_Model_StreamSetting::getEnabledStreamIds();
         $enabledOut = array();
 
@@ -76,6 +77,68 @@ SQL;
         }
 
         return $enabledOut;
+    }
+// this will currently log the average number of listeners to a specific show during a certain range
+    public static function getShowDataPointsWithinRange($p_start, $p_end, $show_id) {
+        $showData = [];
+        $ccShow = CcShowQuery::create()->findPk($show_id);
+        $showName = $ccShow->getDbName();
+
+
+        // this query selects all show instances that aired in this date range that match the show_id
+        $sql = <<<SQL
+SELECT id, starts, ends FROM cc_show_instances WHERE show_id =:p1 
+AND starts >=:p2 AND ends <=:p3
+SQL;
+        $data = Application_Common_Database::prepareAndExecute($sql,
+            array('p1'=>$show_id,'p2'=>$p_start, 'p3'=>$p_end));
+        foreach ($data as $d) {
+            $sql = <<<SQL
+SELECT timestamp, SUM(listener_count) AS listeners
+    FROM cc_listener_count AS lc
+    INNER JOIN cc_timestamp AS ts ON (lc.timestamp_id = ts.ID)
+    INNER JOIN cc_mount_name AS mn ON (lc.mount_name_id = mn.ID)
+WHERE (ts.timestamp >=:p1 AND ts.timestamp <=:p2)
+GROUP BY timestamp
+SQL;
+            $data = Application_Common_Database::prepareAndExecute($sql,
+                array('p1'=>$d['starts'], 'p2'=>$d['ends']));
+            $utcTimezone = new DateTimeZone("UTC");
+            $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+            if (sizeof($data) > 0) {
+                $t = new DateTime($data[0]['timestamp'], $utcTimezone);
+                $t->setTimezone($displayTimezone);
+                // tricking javascript so it thinks the server timezone is in UTC
+                $average_listeners = array_sum(array_column($data, 'listeners')) / sizeof($data);
+                $max_num_listeners = max(array_column($data, 'listeners'));
+                $entry = array("show" => $showName, "time" => $t->format( 'Y-m-d H:i:s')
+                , "average_number_of_listeners" => $average_listeners,
+                    "maximum_number_of_listeners" => $max_num_listeners);
+                array_push($showData, $entry);
+            }
+            }
+            return($showData);
+    }
+    public static function getAllShowDataPointsWithinRange($p_start, $p_end) {
+        // this query selects the id of all show instances that aired in this date range
+        $all_show_data = [];
+        $sql = <<<SQL
+SELECT show_id FROM cc_show_instances 
+WHERE starts >=:p1 AND ends <=:p2
+GROUP BY show_id
+SQL;
+        $data = Application_Common_Database::prepareAndExecute($sql,
+            array('p1'=>$p_start, 'p2'=>$p_end));
+
+        foreach($data as $show_id) {
+            $all_show_data = array_merge(self::getShowDataPointsWithinRange($p_start,$p_end,$show_id['show_id']), $all_show_data);
+        }
+        /* option to sort by number of listeners currently commented out
+        usort($all_show_data, function($a, $b) {
+            return $a['average_number_of_listeners'] - $b['average_number_of_listeners'];
+        });
+        */
+        return $all_show_data;
     }
 
     public static function insertDataPoints($p_dataPoints) {

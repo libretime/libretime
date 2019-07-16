@@ -101,14 +101,29 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         ));
 
 
+        // add intro playlist select here
+        $introPlaylistSelect = new Zend_Form_Element_Select("introPlaylistSelect");
+        $introPlaylistSelect->setLabel(_("Intro Autoloading Playlist"));
+        $introPlaylistSelect->setMultiOptions(Application_Model_Library::getPlaylistNames(true));
+        $introPlaylistSelect->setValue(Application_Model_Preference::GetIntroPlaylist());
+        $this->addElement($introPlaylistSelect);
+
+        $outroPlaylistSelect = new Zend_Form_Element_Select("outroPlaylistSelect");
+        $outroPlaylistSelect->setLabel(_("Outro Autoloading Playlist"));
+        $outroPlaylistSelect->setMultiOptions(Application_Model_Library::getPlaylistNames(true));
+        $outroPlaylistSelect->setValue(Application_Model_Preference::GetOutroPlaylist());
+        $this->addElement($outroPlaylistSelect);
+
+
+
         $podcast_album_override = new Zend_Form_Element_Radio('podcastAlbumOverride');
-        $podcast_album_override->setLabel(_('Podcast Album Override'));
+        $podcast_album_override->setLabel(_('Overwrite Podcast Episode Metatags'));
         $podcast_album_override->setMultiOptions(array(
             _("Disabled"),
             _("Enabled"),
         ));
         $podcast_album_override->setValue(Application_Model_Preference::GetPodcastAlbumOverride());
-        $podcast_album_override->setDescription(_('Enabling this means that podcast tracks will always contain the podcast name in their album field.'));
+        $podcast_album_override->setDescription(_('Enabling this feature will cause podcast episode tracks to have their Artist, Title, and Album metatags set from podcast feed values. Note that enabling this feature is recommended in order to ensure reliable scheduling of episodes via smartblocks.'));
         $podcast_album_override->setSeparator(' '); //No <br> between radio buttons
         $podcast_album_override->addDecorator('HtmlTag', array('tag' => 'dd',
             'id'=>"podcastAlbumOverride-element",
@@ -117,14 +132,13 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $this->addElement($podcast_album_override);
 
         $podcast_auto_smartblock = new Zend_Form_Element_Radio('podcastAutoSmartblock');
-        $podcast_auto_smartblock->setLabel(_('Podcast Automatic Smartblock and Playlist'));
+        $podcast_auto_smartblock->setLabel(_('Generate a smartblock and a playlist upon creation of a new podcast'));
         $podcast_auto_smartblock->setMultiOptions(array(
             _("Disabled"),
             _("Enabled"),
         ));
         $podcast_auto_smartblock->setValue(Application_Model_Preference::GetPodcastAutoSmartblock());
-        $podcast_auto_smartblock->setDescription(_('Enabling this means that a smartblock and playlist matching the newest track of a 
-        podcast will be created when a new podcast is added. This depends upon the Podcast Album Override to work.'));
+        $podcast_auto_smartblock->setDescription(_('If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the "Overwrite Podcast Episode Metatags" feature must also be enabled in order for smartblocks to reliably find episodes.'));
         $podcast_auto_smartblock->setSeparator(' '); //No <br> between radio buttons
         $podcast_auto_smartblock->addDecorator('HtmlTag', array('tag' => 'dd',
             'id'=>"podcastAutoSmartblock-element",
@@ -135,14 +149,14 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         //TODO add and insert Podcast Smartblock and Playlist autogenerate options
 
         $third_party_api = new Zend_Form_Element_Radio('thirdPartyApi');
-        $third_party_api->setLabel(_('Public Airtime API'));
+        $third_party_api->setLabel(_('Public LibreTime API'));
         $third_party_api->setDescription(_('Required for embeddable schedule widget.'));
         $third_party_api->setMultiOptions(array(
                                             _("Disabled"),
                                             _("Enabled"),
                                         ));
         $third_party_api->setValue(Application_Model_Preference::GetAllow3rdPartyApi());
-        $third_party_api->setDescription(_('Enabling this feature will allow Airtime to provide schedule data
+        $third_party_api->setDescription(_('Enabling this feature will allow LibreTime to provide schedule data
                                             to external widgets that can be embedded in your website.'));
         $third_party_api->setSeparator(' '); //No <br> between radio buttons
         //$third_party_api->addDecorator(new Zend_Form_Decorator_Label(array('tag' => 'dd', 'class' => 'radio-inline-list')));

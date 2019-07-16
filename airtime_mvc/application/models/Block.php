@@ -51,7 +51,10 @@ class Application_Model_Block implements Application_Model_LibraryEditable
             "ends with"        => Criteria::ILIKE,
             "is greater than"  => Criteria::GREATER_THAN,
             "is less than"     => Criteria::LESS_THAN,
-            "is in the range"  => Criteria::CUSTOM);
+            "is in the range"  => Criteria::CUSTOM,
+            "before"           => Criteria::CUSTOM,
+            "after"            => Criteria::CUSTOM,
+            "between"          => Criteria::CUSTOM);
 
     private static $criteria2PeerMap = array(
             0              => "Select criteria",
@@ -179,7 +182,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
     }
 
     /**
-     * Get the entire block as a two dimentional array, sorted in order of play.
+     * Get the entire block as a two dimensional array, sorted in order of play.
      * @param boolean $filterFiles if this is true, it will only return files that has
      *             file_exists flag set to true
      * @return array
@@ -273,7 +276,7 @@ SQL;
 
     /**
      * The database stores fades in 00:00:00 Time format with optional millisecond resolution .000000
-     * but this isn't practical since fades shouldn't be very long usuall 1 second or less. This function
+     * but this isn't practical since fades shouldn't be very long usually 1 second or less. This function
      * will normalize the fade so that it looks like 00.000000 to the user.
      **/
     public function normalizeFade($fade)
@@ -358,10 +361,12 @@ SQL;
     {
         $result = CcBlockcriteriaQuery::create()->filterByDbBlockId($this->id)
                 ->filterByDbCriteria('limit')->findOne();
-        $modifier = $result->getDbModifier();
-        $value    = $result->getDbValue();
+        if ($result) {
+            $modifier = $result->getDbModifier();
+            $value = $result->getDbValue();
+            return array($value, $modifier);
+        }
 
-        return array($value, $modifier);
     }
 
     // this function returns sum of all track length under this block.
@@ -1155,7 +1160,7 @@ SQL;
     {
         $data = $this->organizeSmartPlaylistCriteria($p_criteria);
         // saving dynamic/static flag
-        $blockType = $data['etc']['sp_type'] == 0 ? 'static':'dynamic';
+        $blockType = $data['etc']['sp_type'] == 0 ? 'dynamic':'static';
         $this->saveType($blockType);
         $this->storeCriteriaIntoDb($data);
         
@@ -1188,18 +1193,32 @@ SQL;
     {
         // delete criteria under $p_blockId
         CcBlockcriteriaQuery::create()->findByDbBlockId($this->id)->delete();
-        //Logging::info($p_criteriaData);
+        // Logging::info($p_criteriaData);
         //insert modifier rows
         if (isset($p_criteriaData['criteria'])) {
             $critKeys = array_keys($p_criteriaData['criteria']);
             for ($i = 0; $i < count($critKeys); $i++) {
+                // in order to maintain separation of different criteria to preserve AND statements for criteria
+                // that might contradict itself we group them based upon their original position on the form
+                $criteriaGroup = $i;
                 foreach ($p_criteriaData['criteria'][$critKeys[$i]] as $d) {
-                	
                 	$field = $d['sp_criteria_field'];
                 	$value = $d['sp_criteria_value'];
+                	$modifier = $d['sp_criteria_modifier'];
+                    if (isset($d['sp_criteria_extra'])) { $extra = $d['sp_criteria_extra']; }
+                    if (isset($d['sp_criteria_datetime_select'])) { $datetimeunit = $d['sp_criteria_datetime_select']; }
+                    if (isset($d['sp_criteria_extra_datetime_select'])) {$extradatetimeunit = $d['sp_criteria_extra_datetime_select'];}
                 		 	
                 	if ($field == 'utime' || $field == 'mtime' || $field == 'lptime') {
-                		$value = Application_Common_DateHelper::UserTimezoneStringToUTCString($value);
+                	    // if the date isn't relative we  want to convert the value to a specific UTC date
+                	    if (!(in_array($modifier,array('before','after','between')))) {
+                	        $value = Application_Common_DateHelper::UserTimezoneStringToUTCString($value);
+                        }
+                        else {
+                            $value = $value . ' ' . $datetimeunit . ' ago';
+                           // Logging::info($value);
+
+                        }
                 	}
                 	
                     $qry = new CcBlockcriteria();
@@ -1211,10 +1230,22 @@ SQL;
                     if (isset($d['sp_criteria_extra'])) {
                     	
                     	if ($field == 'utime' || $field == 'mtime' || $field == 'lptime') {
-                    		$d['sp_criteria_extra'] = Application_Common_DateHelper::UserTimezoneStringToUTCString($d['sp_criteria_extra']);
+                            // if the date isn't relative we  want to convert the value to a specific UTC date
+                            if (!(in_array($modifier,array('before','after','between')))) {
+                                $extra = Application_Common_DateHelper::UserTimezoneStringToUTCString($extra);
+                            }
+                            else {
+                                $extra = $extra . ' ' . $extradatetimeunit. ' ago';
+                            }
+
                     	}
                     	
-                        $qry->setDbExtra($d['sp_criteria_extra']);
+                        $qry->setDbExtra($extra);
+                    }
+                    // save the criteria group so separation via new modifiers AND can be preserved vs. lumping
+                    // them all into a single or later on
+                    if (isset($criteriaGroup)) {
+                        $qry->setDbCriteriaGroup($criteriaGroup);
                     }
                     $qry->save();
                 }
@@ -1240,17 +1271,26 @@ SQL;
         ->save();
        
  
-        // insert repeate track option
+        // insert repeat track option
         $qry = new CcBlockcriteria();
         $qry->setDbCriteria("repeat_tracks")
         ->setDbModifier("N/A")
         ->setDbValue($p_criteriaData['etc']['sp_repeat_tracks'])
         ->setDbBlockId($this->id)
         ->save();
+
+        // insert overflow track option
+        $qry = new CcBlockcriteria();
+        $qry->setDbCriteria("overflow_tracks")
+            ->setDbModifier("N/A")
+            ->setDbValue($p_criteriaData['etc']['sp_overflow_tracks'])
+            ->setDbBlockId($this->id)
+            ->save();
+
     }
 
     /**
-     * generate list of tracks. This function saves creiteria and generate
+     * generate list of tracks. This function saves criteria and generate
      * tracks.
      * @param array $p_criteria
      */
@@ -1259,7 +1299,7 @@ SQL;
         $this->saveSmartBlockCriteria($p_criteria);
         $insertList = $this->getListOfFilesUnderLimit();
         $this->deleteAllFilesFromBlock();
-        // constrcut id array
+        // construct id array
         $ids = array();
         foreach ($insertList as $ele) {
             $ids[] = $ele['id'];
@@ -1288,12 +1328,17 @@ SQL;
         }
     }
 
-    public function getListOfFilesUnderLimit()
+    /*
+     *
+     */
+
+    public function getListOfFilesUnderLimit($show = null)
     {
-        $info       = $this->getListofFilesMeetCriteria();
+        $info       = $this->getListofFilesMeetCriteria($show);
         $files      = $info['files'];
         $limit      = $info['limit'];
         $repeat     = $info['repeat_tracks'];
+        $overflow   = $info['overflow_tracks'];
 
         $insertList = array();
         $totalTime  = 0;
@@ -1310,17 +1355,27 @@ SQL;
             $id = $iterator->current()->getDbId();
             $fileLength = $iterator->current()->getCueLength();
             $length = Application_Common_DateHelper::calculateLengthInSeconds($fileLength);
-            // need to check to determine if the track will make the playlist exceed the totalTime before adding it
-            // this can be quite processor consuming so as a workaround I used the totalItems limit to prevent the
-            // algorithm from parsing too many items.
-                $projectedTime = $totalTime + $length;
-            if ($projectedTime > $limit['time']) {
-                $totalItems++;
-                		}
-	        else {
+            // if the block is setup to allow the overflow of tracks this will add the next track even if it becomes
+            // longer than the time limit
+            if ($overflow == 1) {
                 $insertList[] = array('id' => $id, 'length' => $length);
                 $totalTime += $length;
                 $totalItems++;
+                }
+            // otherwise we need to check to determine if the track will make the playlist exceed the totalTime before
+            // adding it this could loop through a lot of tracks so I used the totalItems limit to prevent
+            // the algorithm from parsing too many items.
+
+            else {
+                    $projectedTime = $totalTime + $length;
+                if ($projectedTime > $limit['time']) {
+                    $totalItems++;
+                    		}
+	            else {
+                    $insertList[] = array('id' => $id, 'length' => $length);
+                    $totalTime += $length;
+                    $totalItems++;
+                }
             }
             if ((!is_null($limit['items']) && $limit['items'] == count($insertList)) || $totalItems > 500 || $totalTime > $limit['time']) {
                 $isBlockFull = true;
@@ -1333,14 +1388,30 @@ SQL;
         $sizeOfInsert = count($insertList);
         
         // if block is not full and repeat_track is check, fill up more
+        // additionally still don't overflow the limit
         while (!$isBlockFull && $repeat == 1 && $sizeOfInsert > 0) {
         	Logging::debug("adding repeated tracks.");
         	Logging::debug("total time = " . $totalTime);
         	
             $randomEleKey = array_rand(array_slice($insertList, 0, $sizeOfInsert));
-            $insertList[] = $insertList[$randomEleKey];
-            $totalTime += $insertList[$randomEleKey]['length'];
-            $totalItems++;
+            // this will also allow the overflow of tracks so that time limited smart blocks will schedule until they
+            // are longer than the time limit rather than never scheduling past the time limit
+            if ($overflow == 1) {
+                $insertList[] = $insertList[$randomEleKey];
+                $totalTime += $insertList[$randomEleKey]['length'];
+                $totalItems++;
+            }
+            else {
+                $projectedTime = $totalTime + $insertList[$randomEleKey]['length'];
+                if ($projectedTime > $limit['time']) {
+                    $totalItems++;
+                }
+                else {
+                    $insertList[] = $insertList[$randomEleKey];
+                    $totalTime += $insertList[$randomEleKey]['length'];
+                    $totalItems++;
+                }
+            }
             
             if ((!is_null($limit['items']) && $limit['items'] == count($insertList)) || $totalItems > 500 || $totalTime > $limit['time']) {
                 break;
@@ -1349,6 +1420,13 @@ SQL;
 
         return $insertList;
     }
+
+    /**
+     * Parses each row in the database for the criteria associated with this block and renders human readable labels.
+     * Returns it as an array with each criteria_name and modifier_name added based upon options array lookup.
+     *
+     */
+
 
     public function getCriteria()
     {
@@ -1393,6 +1471,9 @@ SQL;
             "is not"           => _("is not"),
             "starts with"      => _("starts with"),
             "ends with"        => _("ends with"),
+            "before"          => _("before"),
+            "after"           => _("after"),
+            "between"         => _("between"),
             "is"              => _("is"),
             "is not"          => _("is not"),
             "is greater than" => _("is greater than"),
@@ -1407,8 +1488,9 @@ SQL;
         foreach ($out as $crit) {
             $criteria = $crit->getDbCriteria();
             $modifier = $crit->getDbModifier();
-            $value = htmlspecialchars($crit->getDbValue());
+            $value = $crit->getDbValue();
             $extra = $crit->getDbExtra();
+            $criteriagroup = $crit->getDbCriteriaGroup();
 
             if ($criteria == "limit") {
                 $storedCrit["limit"] = array(
@@ -1417,6 +1499,8 @@ SQL;
                     "display_modifier"=>_($modifier));
             } else if($criteria == "repeat_tracks") {
                 $storedCrit["repeat_tracks"] = array("value"=>$value);
+            } else if($criteria == "overflow_tracks") {
+                $storedCrit["overflow_tracks"] = array("value"=>$value);
             } else if($criteria == "sort") {
                 $storedCrit["sort"] = array("value"=>$value);
             } else {
@@ -1425,6 +1509,7 @@ SQL;
                     "value"=>$value,
                     "modifier"=>$modifier,
                     "extra"=>$extra,
+                    "criteria_group"=>$criteriagroup,
                     "display_name"=>$criteriaOptions[$criteria],
                     "display_modifier"=>$modifierOptions[$modifier]);
             }
@@ -1434,18 +1519,125 @@ SQL;
 
     }
 
+    /**
+     * Parses each row in the database for the criteria associated with this block and renders human readable labels.
+     * Returns it as an array with each criteria_name and modifier_name added based upon options array lookup.
+     * Maintains original separation of similar criteria that were separated by and statements
+     *
+     */
+
+
+    public function getCriteriaGrouped()
+    {
+        $criteriaOptions = array(
+            0              => _("Select criteria"),
+            "album_title"  => _("Album"),
+            "bit_rate"     => _("Bit Rate (Kbps)"),
+            "bpm"          => _("BPM"),
+            "composer"     => _("Composer"),
+            "conductor"    => _("Conductor"),
+            "copyright"    => _("Copyright"),
+            "cuein"        => _("Cue In"),
+            "cueout"       => _("Cue Out"),
+            "description"  => _("Description"),
+            "artist_name"  => _("Creator"),
+            "encoded_by"   => _("Encoded By"),
+            "genre"        => _("Genre"),
+            "isrc_number"  => _("ISRC"),
+            "label"        => _("Label"),
+            "language"     => _("Language"),
+            "utime"        => _("Upload Time"),
+            "mtime"        => _("Last Modified"),
+            "lptime"       => _("Last Played"),
+            "length"       => _("Length"),
+            "mime"         => _("Mime"),
+            "mood"         => _("Mood"),
+            "owner_id"     => _("Owner"),
+            "replay_gain"  => _("Replay Gain"),
+            "sample_rate"  => _("Sample Rate (kHz)"),
+            "track_title"  => _("Title"),
+            "track_number" => _("Track Number"),
+            "utime"        => _("Uploaded"),
+            "info_url"     => _("Website"),
+            "year"         => _("Year")
+        );
+
+        $modifierOptions = array(
+            "0"                => _("Select modifier"),
+            "contains"         => _("contains"),
+            "does not contain" => _("does not contain"),
+            "is"               => _("is"),
+            "is not"           => _("is not"),
+            "starts with"      => _("starts with"),
+            "ends with"        => _("ends with"),
+            "before"          => _("before"),
+            "after"           => _("after"),
+            "between"         => _("between"),
+            "is"              => _("is"),
+            "is not"          => _("is not"),
+            "is greater than" => _("is greater than"),
+            "is less than"    => _("is less than"),
+            "is in the range" => _("is in the range")
+        );
+
+        // Load criteria from db
+        $out = CcBlockcriteriaQuery::create()->orderByDbCriteria()->findByDbBlockId($this->id);
+        $storedCrit = array();
+
+        foreach ($out as $crit) {
+            $criteria = $crit->getDbCriteria();
+            $modifier = $crit->getDbModifier();
+            $value = $crit->getDbValue();
+            $extra = $crit->getDbExtra();
+            $criteriagroup = $crit->getDbCriteriaGroup();
+
+            if ($criteria == "limit") {
+                $storedCrit["limit"] = array(
+                    "value"=>$value,
+                    "modifier"=>$modifier,
+                    "display_modifier"=>_($modifier));
+            } else if($criteria == "repeat_tracks") {
+                $storedCrit["repeat_tracks"] = array("value"=>$value);
+            } else if($criteria == "overflow_tracks") {
+                $storedCrit["overflow_tracks"] = array("value"=>$value);
+            } else if($criteria == "sort") {
+                $storedCrit["sort"] = array("value"=>$value);
+            } else {
+                $storedCrit["crit"][$criteria . $criteriagroup][] = array(
+                    "criteria"=>$criteria,
+                    "value"=>$value,
+                    "modifier"=>$modifier,
+                    "extra"=>$extra,
+                    "display_name"=>$criteriaOptions[$criteria],
+                    "display_modifier"=>$modifierOptions[$modifier]);
+            }
+        }
+        return $storedCrit;
+
+    }
+
+
     // this function return list of propel object
-    public function getListofFilesMeetCriteria()
+    public function getListofFilesMeetCriteria($showLimit = null)
     {
         $storedCrit = $this->getCriteria();
 
         $qry = CcFilesQuery::create();
         $qry->useFkOwnerQuery("subj", "left join");
 
+        //Logging::info($storedCrit);
         if (isset($storedCrit["crit"])) {
             foreach ($storedCrit["crit"] as $crit) {
                 $i = 0;
+                $prevgroup = null;
+                $group = null;
+                // now we need to sort based upon extra which contains the and grouping from the form
+                usort($crit, function($a, $b) {
+                    return $a['criteria_group'] - $b['criteria_group'];
+                });
+                // we need to run the following loop separately for each criteria group inside of each array
                 foreach ($crit as $criteria) {
+                    $group = $criteria['criteria_group'];
                     $spCriteria = $criteria['criteria'];
                     $spCriteriaModifier = $criteria['modifier'];
 
@@ -1453,18 +1645,18 @@ SQL;
 
                     //data should already be in UTC, do we have to do anything special here anymore?
                     if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
-                    	
+
                         $spCriteriaValue = $criteria['value'];
-                        
+
                         if (isset($criteria['extra'])) {
                             $spCriteriaExtra = $criteria['extra'];
                         }
                     } elseif ($spCriteria == "bit_rate" || $spCriteria == 'sample_rate') {
                         // multiply 1000 because we store only number value
                         // e.g 192kps is stored as 192000
-                        $spCriteriaValue = $criteria['value']*1000;
+                        $spCriteriaValue = $criteria['value'] * 1000;
                         if (isset($criteria['extra'])) {
-                            $spCriteriaExtra = $criteria['extra']*1000;
+                            $spCriteriaExtra = $criteria['extra'] * 1000;
                         }
                      /*
                      * If user is searching for an exact match of length we need to
@@ -1488,7 +1680,6 @@ SQL;
                         } else {
                             $spCriteriaValue = ($criteria['value']);
                         }
-
                         $spCriteriaExtra = $criteria['extra'];
                     }
 
@@ -1501,25 +1692,55 @@ SQL;
                     } elseif ($spCriteriaModifier == "is in the range") {
                         $spCriteriaValue = "$spCriteria >= '$spCriteriaValue' AND $spCriteria <= '$spCriteriaExtra'";
                     }
+                    elseif ($spCriteriaModifier == "before") {
+                        // need to pull in the current time and subtract the value or figure out how to make it relative
+                        $relativedate = new DateTime($spCriteriaValue);
+                        $dt = $relativedate->format(DateTime::ISO8601);
+                        $spCriteriaValue = "$spCriteria <= '$dt'";
+                        // Logging::info($spCriteriaValue);
+                    }
+                    elseif ($spCriteriaModifier == "after") {
+                        $relativedate = new DateTime($spCriteriaValue);
+                        $dt = $relativedate->format(DateTime::ISO8601);
+                        $spCriteriaValue = "$spCriteria >= '$dt'";
+                        // Logging::info($spCriteriaValue);
+                    } elseif ($spCriteriaModifier == "between") {
+                        $fromrelativedate = new DateTime($spCriteriaValue);
+                        $fdt = $fromrelativedate->format(DateTime::ISO8601);
+                        // Logging::info($fdt);
+
+                        $torelativedate = new DateTime($spCriteriaExtra);
+                        $tdt = $torelativedate->format(DateTime::ISO8601);
+                        // Logging::info($tdt);
+                        $spCriteriaValue = "$spCriteria >= '$fdt' AND $spCriteria <= '$tdt'";
+                    }
+   //                 logging::info('before');
+   //                 logging::info($spCriteriaModifier);
 
                     $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
+
+   //                 logging::info('after');
+   //                 logging::info($spCriteriaModifier);
 
                     try {
                         if ($spCriteria == "owner_id") {
                             $spCriteria = "subj.login";
                         }
-                        if ($i > 0) {
+                        if ($i > 0 && $prevgroup == $group) {
                             $qry->addOr($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                         } else {
-                            $qry->add($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+                            $qry->addAnd($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                         }
-                        
+                        // only add this NOT LIKE null if you aren't also matching on another criteria
+                        if ($i == 0) {
                         if ($spCriteriaModifier == Criteria::NOT_ILIKE || $spCriteriaModifier == Criteria::NOT_EQUAL) {
                             $qry->addOr($spCriteria, null, Criteria::ISNULL);
+                        }
                         }
                     } catch (Exception $e) {
                         Logging::info($e);
                     }
+                    $prevgroup = $group;
                     $i++;
                 }
             }
@@ -1528,6 +1749,7 @@ SQL;
         // check if file exists
         $qry->add("file_exists", "true", Criteria::EQUAL);
         $qry->add("hidden", "false", Criteria::EQUAL);
+
         $sortTracks = 'random';
         if (isset($storedCrit['sort'])) {
             $sortTracks = $storedCrit['sort']['value'];
@@ -1538,6 +1760,13 @@ SQL;
         else if ($sortTracks == 'oldest') {
             $qry->addAscendingOrderByColumn('utime');
         }
+        // these sort additions are needed to override the default postgres NULL sort behavior
+        else if ($sortTracks == 'mostrecentplay') {
+            $qry->addDescendingOrderByColumn('(lptime IS NULL), lptime');
+        }
+        else if ($sortTracks == 'leastrecentplay') {
+            $qry->addAscendingOrderByColumn('(lptime IS NOT NULL), lptime');
+        }
         else if ($sortTracks == 'random') {
             $qry->addAscendingOrderByColumn('random()');
         } else {
@@ -1546,11 +1775,20 @@ SQL;
 
         // construct limit restriction
         $limits = array();
-        
         if (isset($storedCrit['limit'])) {
             if ($storedCrit['limit']['modifier'] == "items") {
                 $limits['time'] = 1440 * 60;
                 $limits['items'] = $storedCrit['limit']['value'];
+            } elseif (($storedCrit['limit']['modifier'] == "remaining") ){
+                // show will be null unless being called inside a show instance
+                if (!(is_null($showLimit))) {
+                    $limits['time'] = $showLimit;
+                    $limits['items'] = null;
+                }
+                else {
+                    $limits['time'] = 60 * 60;
+                    $limits['items'] = null;
+                }
             } else {
                 $limits['time'] = $storedCrit['limit']['modifier'] == "hours" ?
                     intval(floatval($storedCrit['limit']['value']) * 60 * 60) :
@@ -1560,21 +1798,28 @@ SQL;
         }
         
         $repeatTracks = 0;
+        $overflowTracks = 0;
+
         if (isset($storedCrit['repeat_tracks'])) {
             $repeatTracks = $storedCrit['repeat_tracks']['value'];
         }
-        
+
+        if (isset($storedCrit['overflow_tracks'])) {
+            $overflowTracks = $storedCrit['overflow_tracks']['value'];
+        }
+
+
         try {
             $out = $qry->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)->find();
-
-            return array("files"=>$out, "limit"=>$limits, "repeat_tracks"=> $repeatTracks, "count"=>$out->count());
+            return array("files"=>$out, "limit"=>$limits, "repeat_tracks"=> $repeatTracks, "overflow_tracks"=> $overflowTracks, "count"=>$out->count());
         } catch (Exception $e) {
             Logging::info($e);
         }
+
     }
     public static function organizeSmartPlaylistCriteria($p_criteria)
-    { 
-        $fieldNames = array('sp_criteria_field', 'sp_criteria_modifier', 'sp_criteria_value', 'sp_criteria_extra');
+    {
+        $fieldNames = array('sp_criteria_field', 'sp_criteria_modifier', 'sp_criteria_value', 'sp_criteria_extra', 'sp_criteria_datetime_select', 'sp_criteria_extra_datetime_select');
         $output = array();
         foreach ($p_criteria as $ele) {
 
@@ -1612,7 +1857,6 @@ SQL;
                 $output['etc'][$ele['name']] = $ele['value'];
             }
         }
-        
         return $output;
     }
     public static function getAllBlockFiles()

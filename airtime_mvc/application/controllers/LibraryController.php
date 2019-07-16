@@ -364,6 +364,7 @@ class LibraryController extends Zend_Controller_Action
     {
         $user = Application_Model_User::getCurrentUser();
         $isAdminOrPM = $user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        $isAdmin = $user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN));
 
         $request = $this->getRequest();
 
@@ -379,6 +380,10 @@ class LibraryController extends Zend_Controller_Action
             $form->makeReadOnly();
             $form->removeActionButtons();
             $this->view->permissionDenied = true;
+        }
+        // only admins should be able to edit the owner of a file
+        if (!$isAdmin) {
+            $form->removeOwnerEdit();
         }
 
         if ($request->isPost()) {

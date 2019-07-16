@@ -57,18 +57,21 @@ class PlaylistController extends Zend_Controller_Action
         return $obj;
     }
 
-    private function createUpdateResponse($obj)
+    private function createUpdateResponse($obj, $formIsValid = false)
     {
         $formatter = new LengthFormatter($obj->getLength());
         $this->view->length = $formatter->format();
 
         $this->view->obj = $obj;
         $this->view->contents = $obj->getContents();
+        if ($formIsValid && $obj instanceof Application_Model_Block) {
+            $this->view->poolCount = $obj->getListofFilesMeetCriteria()['count'];
+        }
+        $this->view->showPoolCount = true;
         $this->view->html = $this->view->render('playlist/update.phtml');
         $this->view->name = $obj->getName();
         $this->view->description = $obj->getDescription();
         $this->view->modified = $obj->getLastModified("U");
-
         unset($this->view->obj);
     }
 
@@ -99,7 +102,6 @@ class PlaylistController extends Zend_Controller_Action
                 $form = new Application_Form_SmartBlockCriteria();
                 $form->removeDecorator('DtDdWrapper');
                 $form->startForm($obj->getId(), $formIsValid);
-
                 $this->view->form = $form;
                 $this->view->obj = $obj;
                 //$this->view->type = "sb";
@@ -555,8 +557,7 @@ class PlaylistController extends Zend_Controller_Action
             if ($form->isValid($params)) {
                 $this->setPlaylistNameDescAction();
                 $bl->saveSmartBlockCriteria($params['data']);
-
-                $this->createUpdateResponse($bl);
+                $this->createUpdateResponse($bl, true);
                 $this->view->result = 0;
                 /*
                 $result['html'] = $this->createFullResponse($bl, true, true);
@@ -599,7 +600,7 @@ class PlaylistController extends Zend_Controller_Action
             if ($form->isValid($params)) {
                 $result = $bl->generateSmartBlock($params['data']);
                 $this->view->result = $result['result'];
-                $this->createUpdateResponse($bl);
+                $this->createUpdateResponse($bl, true);
                 #$this->_helper->json->sendJson(array("result"=>0, "html"=>$this->createFullResponse($bl, true, true)));
             } else {
                 $this->view->obj = $bl;
@@ -624,7 +625,7 @@ class PlaylistController extends Zend_Controller_Action
             $result = $bl->shuffleSmartBlock();
 
             $this->view->result = $result["result"];
-            $this->createUpdateResponse($bl);
+            $this->createUpdateResponse($bl,true);
 
             /*
             if ($result['result'] == 0) {
@@ -652,7 +653,7 @@ class PlaylistController extends Zend_Controller_Action
             $result = $pl->shuffle();
 
             $this->view->result = $result["result"];
-            $this->createUpdateResponse($pl);
+            $this->createUpdateResponse($pl,true);
             /*
             if ($result['result'] == 0) {
                 $this->_helper->json->sendJson(array(

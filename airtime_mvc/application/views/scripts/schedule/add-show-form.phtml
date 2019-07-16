@@ -11,10 +11,6 @@
     <div id="schedule-show-what" class="collapsible-content">
         <?php echo $this->what; ?>
     </div>
-    <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("Automatic Playlist") ?></h3>
-    <div id="schedule-show-what" class="collapsible-content">
-        <?php echo $this->autoplaylist; ?>
-    </div>
     <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("When") ?></h3>
     <div id="schedule-show-when" class="collapsible-content">
         <?php
@@ -29,15 +25,13 @@
 
         <?php echo $this->repeats; ?>
     </div>
+    <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("Autoloading Playlist") ?></h3>
+    <div id="schedule-show-auto" class="collapsible-content">
+        <?php echo $this->autoplaylist; ?>
+    </div>
     <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("Live Stream Input") ?></h3>
     <div id="live-stream-override" class="collapsible-content">
         <?php echo $this->live; ?>
-    </div>
-    <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("Record & Rebroadcast")?></h3>
-    <div id="schedule-record-rebroadcast" class="collapsible-content">
-        <?php echo $this->rr; ?>
-        <?php echo $this->absoluteRebroadcast; ?>
-        <?php echo $this->rebroadcast; ?>
     </div>
     <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("Who") ?></h3>
     <div id="schedule-show-who" class="collapsible-content">

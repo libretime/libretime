@@ -9,7 +9,6 @@ import multiprocessing
 import Queue
 from analyzer_pipeline import AnalyzerPipeline
 from status_reporter import StatusReporter
-from cloud_storage_uploader import CloudStorageUploader
 
 EXCHANGE = "airtime-uploads"
 EXCHANGE_TYPE = "topic"
@@ -56,13 +55,12 @@ QUEUE = "airtime-uploads"
 """
 class MessageListener:
 
-    def __init__(self, rmq_config, cloud_storage_config):
+    def __init__(self, rmq_config):
         ''' Start listening for file upload notification messages
             from RabbitMQ
             
             Keyword arguments:
                 rmq_config: A ConfigParser object containing the [rabbitmq] configuration.
-                cloud_storage_config: A ConfigParser object containing the cloud storage configuration.
         '''
     
         self._shutdown = False
@@ -76,8 +74,6 @@ class MessageListener:
         self._password = rmq_config.get(RMQ_CONFIG_SECTION, 'password')
         self._vhost = rmq_config.get(RMQ_CONFIG_SECTION, 'vhost')
 
-        self.cloud_storage_config = cloud_storage_config
-        
         # Set up a signal handler so we can shutdown gracefully
         # For some reason, this signal handler must be set up here. I'd rather 
         # put it in AirtimeAnalyzerServer, but it doesn't work there (something to do
@@ -110,7 +106,7 @@ class MessageListener:
             port=self._port, virtual_host=self._vhost, 
             credentials=pika.credentials.PlainCredentials(self._username, self._password)))
         self._channel = self._connection.channel()
-        self._channel.exchange_declare(exchange=EXCHANGE, type=EXCHANGE_TYPE, durable=True)
+        self._channel.exchange_declare(exchange=EXCHANGE, exchange_type=EXCHANGE_TYPE, durable=True)
         result = self._channel.queue_declare(queue=QUEUE, durable=True)
 
         self._channel.queue_bind(exchange=EXCHANGE, queue=QUEUE, routing_key=ROUTING_KEY)
@@ -172,7 +168,7 @@ class MessageListener:
             file_prefix = msg_dict["file_prefix"]
             storage_backend = msg_dict["storage_backend"]
 
-            audio_metadata = MessageListener.spawn_analyzer_process(audio_file_path, import_directory, original_filename, storage_backend, file_prefix, self.cloud_storage_config)
+            audio_metadata = MessageListener.spawn_analyzer_process(audio_file_path, import_directory, original_filename, storage_backend, file_prefix)
             StatusReporter.report_success_to_callback_url(callback_url, api_key, audio_metadata)
 
         except KeyError as e:
@@ -211,12 +207,12 @@ class MessageListener:
             channel.basic_ack(delivery_tag=method_frame.delivery_tag)
     
     @staticmethod
-    def spawn_analyzer_process(audio_file_path, import_directory, original_filename, storage_backend, file_prefix, cloud_storage_config):
+    def spawn_analyzer_process(audio_file_path, import_directory, original_filename, storage_backend, file_prefix):
         ''' Spawn a child process to analyze and import a new audio file. '''
         '''
         q = multiprocessing.Queue()
         p = multiprocessing.Process(target=AnalyzerPipeline.run_analysis,
-                        args=(q, audio_file_path, import_directory, original_filename, storage_backend, file_prefix, cloud_storage_config))
+                        args=(q, audio_file_path, import_directory, original_filename, storage_backend, file_prefix))
         p.start()
         p.join()
         if p.exitcode == 0:
@@ -230,7 +226,7 @@ class MessageListener:
 
         q = Queue.Queue()
         try:
-            AnalyzerPipeline.run_analysis(q, audio_file_path, import_directory, original_filename, storage_backend, file_prefix, cloud_storage_config)
+            AnalyzerPipeline.run_analysis(q, audio_file_path, import_directory, original_filename, storage_backend, file_prefix)
             metadata = q.get()
         except Exception as e:
             logging.error("Analyzer pipeline exception: %s" % str(e))

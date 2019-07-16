@@ -6,6 +6,9 @@ php5-gd
 
 lsb-release
 
+zip
+unzip
+
 rabbitmq-server
 
 postgresql
@@ -41,7 +44,6 @@ libpulse0
 vorbis-tools
 lsb-release
 lsof
-mp3gain
 vorbisgain
 flac
 vorbis-tools

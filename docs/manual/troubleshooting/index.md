@@ -2,7 +2,7 @@ If your Airtime server is not working as expected, individual components of the 
 
     sudo invoke-rc.d airtime-liquidsoap     start|stop|restart|status
     sudo invoke-rc.d airtime-playout        start|stop|restart|status
-    sudo invoke-rc.d airtime-media-monitor  start|stop|restart|status
+    sudo invoke-rc.d airtime-analyzer       start|stop|restart|status
     sudo invoke-rc.d apache2                start|stop|restart|status
     sudo invoke-rc.d rabbitmq-server        start|stop|restart|status
 
@@ -14,7 +14,7 @@ The server should respond:
 
     Restarting Airtime Playout: Done.
 
-The **status** option for **airtime-playout** and **airtime-media-monitor** runs the **airtime-check-system** script to confirm that all of Airtime's dependencies are installed and running correctly.
+The **status** option for **airtime-playout** and **airtime-analyzer** runs the **airtime-check-system** script to confirm that all of Airtime's dependencies are installed and running correctly.
 
 Log files
 ---------
@@ -79,6 +79,6 @@ where the hostname is *airtime.example.com*. If the hostname has changed, it may
     rabbitmqctl add_vhost /airtime
     rabbitmqctl add_user airtime XXXXXXXXXXXXXXXXXXXX 
     rabbitmqctl set_permissions -p /airtime airtime 
-       "airtime-pypo|pypo-fetch|airtime-media-monitor|media-monitor"
-       "airtime-pypo|pypo-fetch|airtime-media-monitor|media-monitor"
-       "airtime-pypo|pypo-fetch|airtime-media-monitor|media-monitor"
+       "airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
+       "airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
+       "airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"

@@ -43,6 +43,15 @@ class PluploadController extends Zend_Controller_Action
         $csrf_form = new Zend_Form();
         $csrf_form->addElement($csrf_element);
         $this->view->form = $csrf_form;
+
+        // get max upload files size in MiB for plupload js.
+        $uploadMaxSize = $this->file_upload_max_size() / 1024 / 1024;
+        if ($uploadMaxSize === 0) {
+            // fall back to old default behaviour if unlimited uploads are
+            // configured on the server side.
+            $uploadMaxSize = 500;
+        }
+        $this->view->uploadMaxSize = $uploadMaxSize;
     }
 
     public function uploadAction()
@@ -115,5 +124,54 @@ class PluploadController extends Zend_Controller_Action
         $this->view->iTotalDisplayRecords = $numTotalDisplayUploads;
         $this->view->iTotalRecords = $numTotalRecentUploads;
         $this->view->files = SecurityHelper::htmlescape_recursive($uploadsArray);
+    }
+
+    /**
+     * get configured upload max size from php
+     *
+     * Pinched from Drupal: https://github.com/drupal/drupal/blob/4204b0b29a7318008f10765cf88114bf3ed21c32/core/includes/file.inc#L1099
+     *
+     * Drupal seems to be the only framework that does this somewhat the right
+     * way. I'm adding the method here since it's part of their core and I did
+     * not find an easy way to grab that thrrough composer in an isolated way.
+     */
+    private function file_upload_max_size() {
+        static $max_size = -1;
+        if ($max_size < 0) {
+
+            // Start with post_max_size.
+            $max_size = $this->bytes_to_int(ini_get('post_max_size'));
+
+            // If upload_max_size is less, then reduce. Except if upload_max_size is
+            // zero, which indicates no limit.
+            $upload_max = $this->bytes_to_int(ini_get('upload_max_filesize'));
+            if ($upload_max > 0 && $upload_max < $max_size) {
+                $max_size = $upload_max;
+            }
+        }
+        return $max_size;
+    }
+
+    /**
+     * Pinched from Drupal: https://github.com/drupal/drupal/blob/4204b0b29a7318008f10765cf88114bf3ed21c32/core/lib/Drupal/Component/Utility/Bytes.php#L27
+     *
+     * This is the real point of importing the Drupal solution. They have done
+     * an implementation for figuring out what the user specified in the
+     * post_max_size and upload_max_size configuration. Sadly php does not
+     * support a nice way to get at the results of this config after it is
+     * parsed by the engine, hence the below hack.
+     */
+    private function bytes_to_int($size) {
+        // Remove the non-unit characters from the size.
+        $unit = preg_replace('/[^bkmgtpezy]/i', '', $size);
+        // Remove the non-numeric characters from the size.
+        $size = preg_replace('/[^0-9\.]/', '', $size);
+        if ($unit) {
+            // Find the position of the unit in the ordered string which is the power
+            // of magnitude to multiply a kilobyte by.
+            return round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
+        } else {
+            return round($size);
+        }
     }
 }

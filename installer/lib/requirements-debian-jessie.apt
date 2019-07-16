@@ -8,6 +8,9 @@ lsb-release
 
 rabbitmq-server
 
+zip
+unzip
+
 postgresql
 postgresql-client
 php5-pgsql

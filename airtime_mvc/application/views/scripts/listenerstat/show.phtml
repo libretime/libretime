@@ -1,0 +1,23 @@
+<div id="showlistenerstat_content" class="alpha-block padded">
+    <H2><?php echo _("Listeners")?></H2>
+    <div class="error_window"></div>
+    <div id="date_form" style="float:left; margin:0px 0px">
+        <h3 style="padding-left: 0px">Date Range</h3>
+        <?php echo $this->date_form; ?>
+    </div>
+
+    <table id="show_builder_table" cellpadding="0" cellspacing="0" class="datatable"></table>
+    <table cellspacing="0" cellpadding="0" style="" id="show_stats_datatable" class="datatable">
+        <thead>
+        <tr>
+            <th><?php echo _("Show Name") ?></th>
+            <th><?php echo _("Air Date") ?></th>
+            <th><?php echo _("Average Listeners")?></th>
+            <th><?php echo _("Maximum Number of Listeners")?></th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div style="clear: both;"></div>
+</div>

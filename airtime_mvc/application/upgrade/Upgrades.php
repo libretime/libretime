@@ -519,3 +519,86 @@ class AirtimeUpgrader300alpha1 extends AirtimeUpgrader
         return '3.0.0-alpha.1';
     }
 }
+
+class AirtimeUpgrader300alpha6 extends AirtimeUpgrader
+{
+    protected function getSupportedSchemaVersions() {
+        return array(
+            '3.0.0-alpha.1'
+        );
+    }
+
+    public function getNewVersion() {
+        return '3.0.0-alpha.6';
+    }
+}
+/**
+ * Class AirtimeUpgrader300alpha7
+ *
+ * GH-#636 - https://github.com/LibreTime/libretime/pull/636 - Change dynamic smartblock to be default smartblock type
+ */
+
+
+class AirtimeUpgrader300alpha7 extends AirtimeUpgrader
+{
+    protected function getSupportedSchemaVersions() {
+        return array(
+            '3.0.0-alpha.6'
+        );
+    }
+    public function getNewVersion() {
+        return '3.0.0-alpha.7';
+    }
+
+}
+/**
+ * Class AirtimeUpgrader300alpha7-1
+ *
+ * GH-#659 - https://github.com/LibreTime/libretime/pull/659/ - Add description and title to podcast episodes database table
+ */
+
+
+class AirtimeUpgrader300alpha7_1 extends AirtimeUpgrader
+{
+    protected function getSupportedSchemaVersions() {
+        return array(
+            '3.0.0-alpha.7'
+        );
+    }
+    public function getNewVersion() {
+        return '3.0.0-alpha.7.1';
+    }
+
+}    
+/**
+ * Class AirtimeUpgrader300alpha7-2
+ *
+ * GH-#704 - https://github.com/LibreTime/libretime/pull/704/ - Add criteria group to smartblock table to enable database to store separately
+ */
+
+
+
+class AirtimeUpgrader300alpha7_2 extends AirtimeUpgrader
+{
+    protected function getSupportedSchemaVersions() {
+        return array(
+            '3.0.0-alpha.7.1'
+        );
+    }
+    public function getNewVersion() {
+        return '3.0.0-alpha.7.2';
+    }
+}
+class AirtimeUpgrader300alpha7_3 extends AirtimeUpgrader
+{
+    protected function getSupportedSchemaVersions() {
+        return array(
+            '3.0.0-alpha.7.2'
+        );
+    }
+    public function getNewVersion() {
+        return '3.0.0-alpha.7.3';
+    }
+}
+
+

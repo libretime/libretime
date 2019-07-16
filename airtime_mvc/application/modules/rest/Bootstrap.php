@@ -21,6 +21,17 @@ class Rest_Bootstrap extends Zend_Application_Module_Bootstrap
         );
         $router->addRoute('podcast-bulk', $podcastBulkRoute);
 
+
+        $smartblockPodcastRoute = new Zend_Controller_Router_Route(
+            'rest/podcast/smartblock',
+            array(
+                'controller' => 'podcast',
+                'action' => 'smartblock',
+                'module' => 'rest'
+            )
+        );
+        $router->addRoute('podcast-smartblock', $smartblockPodcastRoute);
+
         $stationPodcastRoute = new Zend_Controller_Router_Route(
             'rest/podcast/station',
             array(
