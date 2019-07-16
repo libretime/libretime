@@ -111,7 +111,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      * @throws Exception
      * @throws PropelException
      */
-    private function _buildEpisode($podcastId, $url, $guid, $publicationDate, $title, $description) {
+    private function _buildEpisode($podcastId, $url, $guid, $publicationDate, $title = NULL, $description = NULL) {
         $e = new PodcastEpisodes();
         $e->setDbPodcastId($podcastId);
         $e->setDbDownloadUrl($url);
