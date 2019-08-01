@@ -49,10 +49,13 @@ class PypoFile(Thread):
 
         do_copy = False
         if dst_exists:
-            if src_size != dst_size:
-                do_copy = True
-            else:
-                self.logger.debug("file %s already exists in local cache as %s, skipping copying..." % (src, dst))
+            # TODO: Check if the locally cached variant of the file is sane.
+            # This used to be a filesize check that didn't end up working.
+            # Once we have watched folders updated files from them might
+            # become an issue here... This needs proper cache management.
+            # https://github.com/LibreTime/libretime/issues/756#issuecomment-477853018
+            # https://github.com/LibreTime/libretime/pull/845
+            self.logger.debug("file %s already exists in local cache as %s, skipping copying..." % (src, dst))
         else:
             do_copy = True
 
