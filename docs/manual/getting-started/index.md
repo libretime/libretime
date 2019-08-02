@@ -12,7 +12,7 @@ you would use a domain name instead. For example:
     https://libretime.example.com/
 
 You can log in for the first time with the user name *admin* and the password
-set during installation. Your browser should automatically focus on the
+*admin*. Your browser should automatically focus on the
 **Username** field.
 
 ![](../on-air-in-60-seconds/static/Screenshot559-Log_in.png)
