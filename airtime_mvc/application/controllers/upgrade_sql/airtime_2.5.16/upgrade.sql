@@ -1,4 +1,6 @@
 ALTER TABLE cc_files ADD COLUMN description VARCHAR(512);
+-- @todo: add this to the right upgrade.sql if not this one
+ALTER TABLE cc_files ADD COLUMN img_url VARCHAR(512);
 
 -----------------------------------------------------------------------
 -- podcast
