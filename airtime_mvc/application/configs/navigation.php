@@ -30,7 +30,7 @@ $pages[] = array(
     'visible'    => false
 );
 $pages[] = array(
-    'label'      => _('Calendar'),
+    'label'      => _('Schedule'),
     'module'     => 'default',
     'controller' => 'schedule',
     'action'     => 'index',
@@ -138,7 +138,7 @@ $pages[] = array(
             'action'     => 'index',
             'resource'   => 'listenerstat'
         ),
-        array(            
+        array(
             'label'      => _('Show Listener Stats'),
             'module'     => 'default',
             'controller' => 'listenerstat',
