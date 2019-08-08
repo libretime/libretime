@@ -42,7 +42,6 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         "track_title"  => "s",
         "track_number" => "n",
         "info_url"     => "s",
-        "img_url"      => "s",
         "year"         => "n"
     );
 
@@ -78,7 +77,6 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 "track_number" => _("Track Number"),
                 "utime"        => _("Uploaded"),
                 "info_url"     => _("Website"),
-                "img_url"      => _("Artwork"),
                 "year"         => _("Year")
             );
         }
@@ -712,7 +710,6 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             "lptime" => "DbLPtime",
             "genre" => "DbGenre",
             "info_url" => "DbInfoUrl",
-            "img_url" => "DbImgUrl",
             "isrc_number" => "DbIsrcNumber",
             "label" => "DbLabel",
             "language" => "DbLanguage",

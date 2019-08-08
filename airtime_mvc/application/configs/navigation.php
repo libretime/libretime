@@ -180,6 +180,7 @@ if (LIBRETIME_ENABLE_BILLING === true) {
         )
     );
 }
+
 $pages[] = array(
     'label'      => _('Help'),
     'controller' => 'dashboard',

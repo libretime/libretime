@@ -874,7 +874,6 @@ var criteriaTypes = {
     "track_title"  : "s",
     "track_number" : "n",
     "info_url"     : "s",
-    "img_url"      : "s",
     "year"         : "n"
 };
 

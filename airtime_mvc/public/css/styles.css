@@ -331,7 +331,7 @@ img.logo
     color:#fff;
     font-size:15px;
     line-height:22px;
-    text-indent:5px;    
+    text-indent:5px;
     overflow:hidden;
     margin-bottom:3px;
 }
@@ -361,12 +361,12 @@ img.logo
 }
 .now-playing-info .show-length {
     color:#c4c4c4;
-    padding-left:6px; 
+    padding-left:6px;
 }
 
 .now-playing-info .song-length {
     color:#9b9b9b;
-    padding-right:6px; 
+    padding-right:6px;
 }
 
 .on-air-block  {
@@ -415,7 +415,7 @@ ol.navigation {
     margin-top:34px;
     display:block;
     text-align:center;
-    
+
 }
 .listen-control-button {
     margin-top:6px;
@@ -573,7 +573,7 @@ table.library-track-md{
     width: 280px;
 }
 
-.ui-tooltip-dark.file-md-long{ 
+.ui-tooltip-dark.file-md-long{
     max-width: 415px !important;
 }
 
@@ -652,7 +652,7 @@ table.library-get-file-md.table-small{
 .webstream {
     color: #4eba70;
 }
-    
+
 /***** LIBRARY QTIP METADATA SPECIFIC STYLES END *****/
 
 
@@ -785,11 +785,11 @@ label {
 dl.inline-list {
     float: left;
     margin: 0;
-    padding: 0;    
+    padding: 0;
 
 }
 
-dl.inline-list dt { 
+dl.inline-list dt {
     clear: left;
     float: left;
     margin: 0;
@@ -801,7 +801,7 @@ dl.inline-list dt {
     text-align:left;
     min-width:70px;
 }
-dl.inline-list dd { 
+dl.inline-list dd {
     float: left;
     margin: 0;
     padding: 0px 0 4px 15px;
@@ -861,7 +861,7 @@ dl.inline-list dd {
 .even {
     background-color: #2f2f2f;
 }
-    
+
 .datatable tr .selected td {
     background-color: #abcfe2;
 }
@@ -919,13 +919,13 @@ dl.inline-list dd {
 .dataTables_type {
     float:right;
     margin:0 8px 0 0;
-    
+
 }
 
 .dataTables_length {
     float:left;
     margin:0;
-    
+
 }
 .dataTables_length label {
     padding:0;
@@ -1007,7 +1007,7 @@ div.blockOverlay {
 .dataTables_empty {
     cursor: auto;
 }
-table.dataTable tbody tr, 
+table.dataTable tbody tr,
 table.dataTable span.DataTables_sort_icon {
     cursor: pointer;
 
@@ -1047,6 +1047,10 @@ button.ColVis_Button.ColVis_ShowAll {
 
 .library_length {
     text-align: right;
+}
+
+.library_img {
+    line-height: 1 !important;
 }
 
 /*----END Data Table----*/
@@ -1390,7 +1394,7 @@ ful
 /** Extremely nasty workaround for a fullcalendar bug, where clicking "Add Show"
     would cause this large space under the table header. The CSS to get to that
     is ridiculously complicated and set in the HTML (!) dynamically with JS,
-    which makes it a pain in the ass to fix. That's why we're overriding it 
+    which makes it a pain in the ass to fix. That's why we're overriding it
     with !important here.
 */
 
@@ -1557,11 +1561,11 @@ h2#scheduled_playlist_name {
     font-weight:normal;
     margin:0;
     padding:8px 0 0px 12px;
-    color:#1c1c1c; 
+    color:#1c1c1c;
 }
 
 h2#scheduled_playlist_name span {
-    color:#656565; 
+    color:#656565;
 }
 
 .time {
@@ -1588,7 +1592,7 @@ h2#scheduled_playlist_name span {
 #schedule_calendar .ui-progressbar {
     width: 46%;
     height: 5px;
-    margin: 9px 9px 0 0;    
+    margin: 9px 9px 0 0;
 }
 
 #schedule_calendar .ui-progressbar.ui-widget-content {
@@ -1686,7 +1690,7 @@ h2#scheduled_playlist_name span {
     width: 100%;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
-    box-sizing: border-box; 
+    box-sizing: border-box;
     padding: 4px 0 8px;
 }
 
@@ -1751,7 +1755,7 @@ h2#scheduled_playlist_name span {
 
 .ui-state-default .ui-icon.crossfade-main-icon     {
     background:url(images/crossfade_main.png) no-repeat 0 2px;
-    width:25px;    
+    width:25px;
 }
 
 .btn.crossfade-main-button span {
@@ -1770,7 +1774,7 @@ h2#scheduled_playlist_name span {
     line-height: 14px;
     vertical-align: text-top;
     margin-top: 1px;
-    margin-right: -5px;    
+    margin-right: -5px;
 }
 
 .ui-button-icon-only.crossfade-main-button .ui-icon {
@@ -1987,7 +1991,7 @@ div.errors, span.errors{
 
 span.errors.sp-errors{
     width: 429px;
-    display: block;    
+    display: block;
 }
 
 .collapsible-header, .collapsible-header-disabled {
@@ -2014,7 +2018,7 @@ span.errors.sp-errors{
     position:absolute;
     left:5px;
     top:12px;
-    
+
 }
 .collapsible-header.closed .arrow-icon, .collapsible-header-disabled.close  .arrow-icon {
     background-position: 0 -11px !important;
@@ -2405,7 +2409,7 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
 .preferences dd.block-display .input_select, .stream-config dd.block-display .input_select {
     width: 100%;
 }
-.preferences dd.block-display .input_text_area, .preferences dd.block-display .input_text 
+.preferences dd.block-display .input_text_area, .preferences dd.block-display .input_text
 .stream-config dd.block-display .input_text_area, .stream-config dd.block-display .input_text,
 .stream-config dd.block-display input[type="text"], .stream-config dd.block-display input[type="password"] {
     width: 98.5%;
@@ -2646,7 +2650,7 @@ label span {
 #watched-folder-section dd.block-display {
     clear:both;
     min-height:25px;
-    
+
 }
 #watched-folder-section dd.block-display.selected-item {
     clear:both;
@@ -2828,7 +2832,7 @@ dt.block-display.info-block {
     width: 99.5%;
     height: 110px;
 }
-    
+
 .input-info {
     font-size:12px;
     padding:0 0 0 5px;
@@ -2966,8 +2970,8 @@ tfoot tr th    {
     font-weight:bold;
     text-align:left;
 }
-    
-    
+
+
 /*---////////////////////    STATUS TABLE    ////////////////////---*/
 .statustable    {
     background-color: #D8D8D8;
@@ -3093,7 +3097,7 @@ tfoot tr th    {
 .trial-box-button a {
     width:92px;
     height:14px;
-    display:block;    
+    display:block;
     padding: 1px 3px;
     -moz-border-radius: 1px;
     -webkit-border-radius: 1px;
@@ -3133,9 +3137,9 @@ tfoot tr th    {
     height:22px;
     display:block;
     -webkit-border-top-right-radius: 1px;
-    -moz-border-radius-topright: 1px;    
+    -moz-border-radius-topright: 1px;
     -webkit-border-top-left-radius: 1px;
-    -moz-border-radius-topleft: 1px;    
+    -moz-border-radius-topleft: 1px;
 }
 .trial-box-calendar-gray    {
     width:36px;
@@ -3149,9 +3153,9 @@ tfoot tr th    {
     background: -moz-linear-gradient(top, #7f7f7f 0, #555555 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #7f7f7f), color-stop(100%, #555555));
     -webkit-border-bottom-right-radius: 1px;
-    -moz-border-radius-bottomright: 1px;    
+    -moz-border-radius-bottomright: 1px;
     -webkit-border-bottom-left-radius: 1px;
-    -moz-border-radius-bottomleft: 1px;    
+    -moz-border-radius-bottomleft: 1px;
     box-shadow: rgba(0, 0, 0, 0.4) 0 2px 1px inset;
     -moz-box-shadow: rgba(0, 0, 0, 0.4) 0 2px 2px inset;
     -webkit-box-shadow: rgba(0, 0, 0, 0.4) 0 2px 2px inset;
@@ -3233,7 +3237,7 @@ dd .stream-status {
 .qtip div > span {
     padding: 5px;
 }
-    
+
 .pull-left {
     float:left;
 }
@@ -3268,12 +3272,12 @@ dd .stream-status {
 }
 
 
-/*---////////////////////    NEW BUTTONS    ////////////////////        
+/*---////////////////////    NEW BUTTONS    ////////////////////
 .btn {
     display: inline-block;
     *display: inline;
 
-    
+
     *zoom: 1;
     padding: 4px 10px 4px;
     margin-bottom: 0;

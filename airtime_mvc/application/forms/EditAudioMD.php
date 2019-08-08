@@ -18,8 +18,17 @@ class Application_Form_EditAudioMD extends Zend_Form
         $file_id->setAttrib('class', 'obj_id');
         $this->addElement($file_id);
 
-        // Add artwork field
-        //@todo: add an upload field with preview instead
+        // add_show_logo
+        /* still in development, will work on it this week, for the meantime
+           make a copy and resize to a smaller image no lower than 28px
+           then rename by adding '-small' to the end before extension
+           Upload both files to a server, orginal and small version
+           example:
+                    https://your-site.com/images/track1.jpg
+                    https://your-site.com/images/track1-small.jpg
+          then you only need to save the orginal url to the track in the library and save it.
+          Adding the url manually is only for testing purposes**** 
+        */
         $img_url = new Zend_Form_Element('img_url');
         $img_url->class = 'input_text';
         $img_url->setLabel(_('Artwork:'))

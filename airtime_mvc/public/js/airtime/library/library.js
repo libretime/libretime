@@ -574,14 +574,15 @@ var AIRTIME = (function(AIRTIME) {
         // https://wiki.sourcefabric.org/display/CC/Adding+a+new+library+datatable+column
         var cols = [
             /* ftype */           { "sTitle" : ""                             , "mDataProp" : "ftype"        , "bSearchable" : false                 , "bVisible"    : false                   },
-            /* Checkbox */        { "sTitle" : ""                             , "mDataProp" : "checkbox"     , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "16px"         , "sClass" : "library_checkbox" },
-            /* Type */            { "sTitle" : ""                             , "mDataProp" : "image"        , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "16px"    , "sClass" : "library_type" , "iDataSort" : 0 },
-            /* Is Scheduled */    { "sTitle" : $.i18n._("Scheduled")          , "mDataProp" : "is_scheduled" , "bVisible"    : false                 , "bSearchable" : false                   , "sWidth" : "90px"    , "sClass" : "library_is_scheduled" },
-            ///* Is Playlist */     { "sTitle" : $.i18n._("Playlist / Block")   , "mDataProp" : "is_playlist"  , "bSearchable" : false                 , "sWidth"      : "110px"                  , "sClass" : "library_is_playlist"}  ,
-            /* Artwork */         { "sTitle" : $.i18n._("Artwork")            , "mDataProp" : "img_url"      , "bVisible"    : false                 , "sClass"      : "library_img"           , "sWidth" : "150px"        },
+            /* Checkbox */        { "sTitle" : ""                             , "mDataProp" : "checkbox"     , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "16px"        , "sClass"  : "library_checkbox" },
+            /* Type */            { "sTitle" : ""                             , "mDataProp" : "image"        , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "16px"        , "sClass"  : "library_type" , "iDataSort" : 0 },
+            /* Artwork */         { "sTitle" : ""                             , "mDataProp" : "img_url"      , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "24px"        , "sClass"  : "library_img" , "iDataSort" : 0 },
+            /* Artwork */         //{ "sTitle" : $.i18n._("Cover")            , "mDataProp" : "img_url"      , "bVisible"    : false                 , "sClass"      : "library_img"           , "sWidth" : "24px"         },
+            /* Is Scheduled */    { "sTitle" : $.i18n._("Scheduled")          , "mDataProp" : "is_scheduled" , "bVisible"    : false                 , "bSearchable" : false                   , "sWidth" : "90px"        , "sClass"  : "library_is_scheduled" },
+            ///* Is Playlist */     { "sTitle" : $.i18n._("Playlist / Block")   , "mDataProp" : "is_playlist"  , "bSearchable" : false               "sWidth"        : "110px"                 , "sClass" : "library_is_playlist"}  ,
             /* Title */           { "sTitle" : $.i18n._("Title")              , "mDataProp" : "track_title"  , "sClass"      : "library_title"       , "sWidth"      : "170px"                 },
             /* Creator */         { "sTitle" : $.i18n._("Creator")            , "mDataProp" : "artist_name"  , "sClass"      : "library_creator"     , "sWidth"      : "160px"                 },
-            /* Album */           { "sTitle" : $.i18n._("Album")              , "mDataProp" : "album_title"  , "bVisible"    : false                , "sClass"      : "library_album"       , "sWidth"      : "150px"                 },
+            /* Album */           { "sTitle" : $.i18n._("Album")              , "mDataProp" : "album_title"  , "bVisible"    : false                 , "sClass"      : "library_album"         , "sWidth" : "150px"        },
             /* Bit Rate */        { "sTitle" : $.i18n._("Bit Rate")           , "mDataProp" : "bit_rate"     , "bVisible"    : false                 , "sClass"      : "library_bitrate"       , "sWidth" : "80px"         },
             /* BPM */             { "sTitle" : $.i18n._("BPM")                , "mDataProp" : "bpm"          , "bVisible"    : false                 , "sClass"      : "library_bpm"           , "sWidth" : "50px"         },
             /* Composer */        { "sTitle" : $.i18n._("Composer")           , "mDataProp" : "composer"     , "bVisible"    : false                 , "sClass"      : "library_composer"      , "sWidth" : "150px"        },
@@ -591,7 +592,7 @@ var AIRTIME = (function(AIRTIME) {
             /* Cue Out */         { "sTitle" : $.i18n._("Cue Out")            , "mDataProp" : "cueout"       , "bVisible"    : false                 , "sClass"      : "library_length"        , "sWidth" : "80px"         },
             /* Description */     { "sTitle" : $.i18n._("Description")        , "mDataProp" : "description"  , "bVisible"    : false                 , "sClass"      : "library_description"   , "sWidth" : "150px"        },
             /* Encoded */         { "sTitle" : $.i18n._("Encoded By")         , "mDataProp" : "encoded_by"   , "bVisible"    : false                 , "sClass"      : "library_encoded"       , "sWidth" : "150px"        },
-            /* Genre */           { "sTitle" : $.i18n._("Genre")              , "mDataProp" : "genre"        , "sClass"      : "library_genre"         , "sWidth" : "100px"        },
+            /* Genre */           { "sTitle" : $.i18n._("Genre")              , "mDataProp" : "genre"        , "sClass"      : "library_genre"       , "sWidth"      : "100px"        },
             /* ISRC Number */     { "sTitle" : $.i18n._("ISRC")               , "mDataProp" : "isrc_number"  , "bVisible"    : false                 , "sClass"      : "library_isrc"          , "sWidth" : "150px"        },
             /* Label */           { "sTitle" : $.i18n._("Label")              , "mDataProp" : "label"        , "bVisible"    : false                 , "sClass"      : "library_label"         , "sWidth" : "125px"        },
             /* Language */        { "sTitle" : $.i18n._("Language")           , "mDataProp" : "language"     , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        },
@@ -615,7 +616,7 @@ var AIRTIME = (function(AIRTIME) {
             );
         }
 
-        var colExclude = onDashboard ? [0, 1, 2, 32] : [0, 1, 2];
+        var colExclude = onDashboard ? [0, 1, 2, 3, 33] : [0, 1, 2, 3];
 
         /*  ############################################
                             DATATABLES
@@ -769,12 +770,22 @@ var AIRTIME = (function(AIRTIME) {
                 // add audio preview image/button
                 if (aData.ftype === "audioclip") {
                     $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Track preview") + '" src="' + baseUrl + 'css/images/icon_audioclip.png">');
+                    if (aData.img_url) {
+                        var img_url = aData.img_url;
+                        var lib_img = img_url.replace(/(\.[\w\d_-]+)$/i, '-small$1');
+                        $(nRow).find('td.library_img').html('<img class="img_small" id="'+ aData.id +'" width="28" height="28" src="'+ lib_img +'">');
+                    } else {
+                        $(nRow).find('td.library_img').html('<img class="img_small" width="28" height="28" src="' + baseUrl + 'css/images/no-cover.jpg">');
+                    }
                 } else if (aData.ftype === "playlist") {
                     $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Playlist preview") + '" src="' + baseUrl + 'css/images/icon_playlist.png">');
+                    $(nRow).find('td.library_img').html('<img class="img_small" width="28" height="28" src="' + baseUrl + 'css/images/no-cover.jpg">');
                 } else if (aData.ftype === "block") {
                     $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Smart Block") + '" src="' + baseUrl + 'css/images/icon_smart-block.png">');
+                    $(nRow).find('td.library_img').html('<img class="img_small" width="28" height="28" src="' + baseUrl + 'css/images/no-cover.jpg">');
                 } else if (aData.ftype === "stream") {
                     $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Webstream preview") + '" src="' + baseUrl + 'css/images/icon_webstream.png">');
+                    $(nRow).find('td.library_img').html('<img class="img_small" width="28" height="28" src="' + baseUrl + 'css/images/no-cover.jpg">');
                 }
 
                 if (aData.is_scheduled) {
@@ -1597,6 +1608,7 @@ var validationTypes = {
 
 
 $(document).ready(function() {
+
     if (window.location.href.indexOf("showbuilder") > -1) {
         AIRTIME.library.initPodcastDatatable();
     }
@@ -1608,5 +1620,21 @@ $(document).ready(function() {
     $(window).resize(function() {
         resizeAdvancedSearch();
     });
+
+    // Artwork image in library
+    $(".dataTables_wrapper").mouseenter(function(){
+      alert('test works - 1');
+        $(this).attr('src',function(index, attr){
+            return attr.replace(".jpg", "-active.jpg");
+        });
+    });
+
+    $(".library_img").mouseleave(function(){
+      alert('test works - 2');
+        $(this).attr('src',function(index, attr){
+            return attr.replace("-active.png",".jpg");
+        });
+    });
+
 });
 

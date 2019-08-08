@@ -29,9 +29,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <?php echo $this->partial('partialviews/suspended.phtml'); ?>
     <?php else : ?>
 
-    <?php echo $this->versionNotify();
-            $sss = $this->SourceSwitchStatus();
-            $scs = $this->SourceConnectionStatus();
+    <?php
+		// disabled the versionNotify() for now, you can comment it out if you like
+		// echo $this->versionNotify();
+    $sss = $this->SourceSwitchStatus();
+    $scs = $this->SourceConnectionStatus();
     ?>
     <?php echo $this->partial('partialviews/header.phtml', array("live_dj_switch"=>$sss['live_dj'], "live_dj_connection"=>$scs['live_dj'], "master_dj_switch"=>$sss['master_dj'], "master_dj_connection"=>$scs['master_dj'],
                 "scheduled_play_switch"=>$sss['scheduled_play'])) ?>
@@ -92,7 +94,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <div id="nav">
         <?php echo $this->navigation()->menu(); ?>
     </div>
-        
+
     <div class="btn-group">
         <a href="<?php echo $this->baseUrl . '/login/logout'; ?>">
             <button id="add_media_btn" class="btn btn-small dashboard-btn btn-danger">

@@ -74,7 +74,6 @@ class Application_Model_Block implements Application_Model_LibraryEditable
             "lptime"       => "DbLPtime",
             "genre"        => "DbGenre",
             "info_url"     => "DbInfoUrl",
-            "img_url"      => "DbImgUrl",
             "isrc_number"  => "DbIsrcNumber",
             "label"        => "DbLabel",
             "language"     => "DbLanguage",
@@ -1461,7 +1460,6 @@ SQL;
             "track_number" => _("Track Number"),
             "utime"        => _("Uploaded"),
             "info_url"     => _("Website"),
-            "img_url"      => _("Artwork"),
             "year"         => _("Year")
         );
 
@@ -1561,7 +1559,6 @@ SQL;
             "track_number" => _("Track Number"),
             "utime"        => _("Uploaded"),
             "info_url"     => _("Website"),
-            "img_url"      => _("Artwork"),
             "year"         => _("Year")
         );
 

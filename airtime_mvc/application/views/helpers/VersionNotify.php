@@ -36,6 +36,7 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract {
         $config = Config::getConfig();
 
         // retrieve and validate current and latest versions,
+        //$current = $config['airtime_version'];
         $current = $config['airtime_version'];
         $latest = Application_Model_Preference::GetLatestVersion();
         $link = Application_Model_Preference::GetLatestLink();

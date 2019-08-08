@@ -32,6 +32,9 @@ $front->registerPlugin(new RabbitMqPlugin());
 $front->registerPlugin(new Zend_Controller_Plugin_ConversionTracking());
 $front->throwExceptions(false);
 
+// Load the ID3 Library
+require_once(APPLICATION_PATH . 'common/getid3/getid3.php');
+
 /* The bootstrap class should only be used to initialize actions that return a view.
    Actions that return JSON will not use the bootstrap class! */
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
