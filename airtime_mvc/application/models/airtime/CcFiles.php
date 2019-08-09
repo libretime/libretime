@@ -33,7 +33,6 @@ class CcFiles extends BaseCcFiles {
     const IMPORT_STATUS_PENDING = 1;
     const IMPORT_STATUS_FAILED = 2;
 
-
     //fields that are not modifiable via our RESTful API
     private static $blackList = array(
         'id',
@@ -274,7 +273,6 @@ class CcFiles extends BaseCcFiles {
 
     }
 
-
     private static function validateFileArray(&$fileArray)
     {
         // Sanitize any wildly incorrect metadata before it goes to be validated
@@ -314,18 +312,17 @@ class CcFiles extends BaseCcFiles {
         return true;
     }
 
-
     public function getCueLength()
-	{
+	  {
 		$cuein = $this->getDbCuein();
 		$cueout = $this->getDbCueout();
-		
+
 		$cueinSec = Application_Common_DateHelper::calculateLengthInSeconds($cuein);
 		$cueoutSec = Application_Common_DateHelper::calculateLengthInSeconds($cueout);
 		$lengthSec = bcsub($cueoutSec, $cueinSec, 6);
-		
+
 		$length = Application_Common_DateHelper::secondsToPlaylistTime($lengthSec);
-		
+
 		return $length;
 	}
 
@@ -342,7 +339,7 @@ class CcFiles extends BaseCcFiles {
         return $this->getDbFileExists() && !$this->getDbHidden();
     }
 
-    public function reassignTo($user) 
+    public function reassignTo($user)
     {
         $this->setDbOwnerId( $user->getDbId() );
         $this->save();
@@ -423,7 +420,6 @@ class CcFiles extends BaseCcFiles {
         return $data;
     }
 
-
     private static function getOwnerId()
     {
         try {
@@ -487,7 +483,6 @@ class CcFiles extends BaseCcFiles {
         exec("find $path -empty -type d -delete");
     }
 
-
     /**
      * Checks if the file is a regular file that can be previewed and downloaded.
      */
@@ -495,9 +490,9 @@ class CcFiles extends BaseCcFiles {
     {
         return is_file($this->getAbsoluteFilePath());
     }
-    
+
     /**
-     * 
+     *
      * Deletes the file from the stor directory on disk.
      */
     public function deletePhysicalFile()
@@ -509,9 +504,9 @@ class CcFiles extends BaseCcFiles {
             throw new Exception("Could not locate file ".$filepath);
         }
     }
-    
+
     /**
-     * 
+     *
      * This function refers to the file's Amazon S3 resource id.
      * Returns null because cc_files are stored on local disk.
      */
@@ -519,10 +514,10 @@ class CcFiles extends BaseCcFiles {
     {
         return null;
     }
-    
+
     public function getCcFileId()
     {
         return $this->id;
     }
-    
+
 } // CcFiles

@@ -1,12 +1,39 @@
 <div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong edit-md-dialog">
-    <div class="inner_editor_title">
+
+    <div class="track-edit-header">
+
         <?php if ($this->permissionDenied) { ?> <h3><?php echo _("You do not have permission to edit this track.") ?></h3> <?php } ?>
-        <H2><?php
-            if ($this->permissionDenied) {
-                echo(_("Viewing "));
-            } else {
-                echo(_("Editing "));
-            }?>"<span class="title_obj_name"><?php echo($this->title); ?></span>"</H2>
+
+        <?php
+        /* Do we really need this? Maybe add an icon instead...
+        if ($this->permissionDenied) {
+          echo(_("Viewing "));
+        } else {
+          echo(_("Editing "));
+        }
+        */
+        ?>
+
+        <div class="track-edit-right-wrapper">
+            <div class="track-edit-right">
+                <!-- @todo: add this in css file after testing -->
+                <div class="inner_track_editor_title" style="width: 100%;">
+
+                    <h2 style="line-height: 26px !important;"><span class="title_obj_name"><?php echo($this->title); ?></span></h2>
+                    <h3 style="line-height: 2px !important;"><span class=""><?php echo($this->artist_name); ?></span></h3>
+
+                </div>
+            </div>
+        </div>
+        <div class="track-edit-left">
+            <?php if ($this->img_url) { ?>
+                <img id="<?php echo($this->id); ?>" width="100" height="100" src="<?php echo($this->img_url); ?>">
+            <?php } else { ?>
+                <img width="100" height="100" src="css/images/no-cover.jpg">
+            <?php } ?>
+        </div>
+
     </div>
+    <div style="height: 120px;"></div>
     <?php echo $this->form; ?>
 </div>

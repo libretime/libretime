@@ -409,6 +409,13 @@ class LibraryController extends Zend_Controller_Action
         $this->view->form = $form;
         $this->view->id = $file_id;
         $this->view->title = $file->getPropelOrm()->getDbTrackTitle();
+        $this->view->artist_name = $file->getPropelOrm()->getDbArtistName();
+
+        //needed to generate ID3
+        $this->view->filePath = $file->getPropelOrm()->getDbFilepath();
+        //IMG saved
+        $this->view->img_url = $file->getPropelOrm()->getDbImgUrl();
+
         $this->view->html = $this->view->render('library/edit-file-md.phtml');
     }
 

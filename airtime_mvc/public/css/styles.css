@@ -4349,3 +4349,21 @@ li .ui-state-hover {
     text-decoration: none;
     color: #f0f0f0;
 }
+
+/* Library - Tracks Edit */
+.track-edit-header{
+  padding: 5px 0 35px 0;
+}
+.track-edit-left {
+    float: left;
+    width: 100px;
+    margin-left: -100%;
+}
+.track-edit-right-wrapper {
+    /*background-color: #333333;*/
+    float: left;
+    width: 100%;
+}
+.track-edit-right {
+     margin-left: 120px;
+}

@@ -27,9 +27,10 @@ class Application_Form_EditAudioMD extends Zend_Form
                     https://your-site.com/images/track1.jpg
                     https://your-site.com/images/track1-small.jpg
           then you only need to save the orginal url to the track in the library and save it.
-          Adding the url manually is only for testing purposes**** 
+          Adding the url manually is only for testing purposes****
         */
         $img_url = new Zend_Form_Element('img_url');
+
         $img_url->class = 'input_text';
         $img_url->setLabel(_('Artwork:'))
             ->setFilters(array('StringTrim'))
@@ -37,6 +38,7 @@ class Application_Form_EditAudioMD extends Zend_Form
                 new Zend_Validate_StringLength(array('max' => 512))
             ));
         $this->addElement($img_url);
+
 
         // Add title field
         $track_title = new Zend_Form_Element_Text('track_title');
