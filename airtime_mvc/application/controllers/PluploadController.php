@@ -1,5 +1,4 @@
 <?php
-
 class PluploadController extends Zend_Controller_Action
 {
     public function init()
@@ -64,31 +63,33 @@ class PluploadController extends Zend_Controller_Action
             $upload_dir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
             $tempFilePath = Application_Model_StoredFile::uploadFile($upload_dir);
             $tempFileName = basename($tempFilePath);
-         
+
             $this->_helper->json->sendJson(array("jsonrpc" => "2.0", "tempfilepath" => $tempFileName));
         }else{
             $this->_helper->json->sendJson(array("jsonrpc" => "2.0", "valid" => false, "error" => "CSRF token did not match."));
         }
+
+
     }
 
     public function recentUploadsAction()
     {
     	$request = $this->getRequest();
-    	
+
         $filter = $request->getParam('uploadFilter', "all");
         $limit = intval($request->getParam('iDisplayLength', 10));
         $rowStart = intval($request->getParam('iDisplayStart', 0));
-        
+
         $recentUploadsQuery = CcFilesQuery::create();
         //old propel 1.5 to reuse this query item (for counts/finds)
         $recentUploadsQuery->keepQuery(true);
-        
+
         //Hide deleted files
         $recentUploadsQuery->filterByDbFileExists(true);
-        
+
         $numTotalRecentUploads = $recentUploadsQuery->count();
         $numTotalDisplayUploads = $numTotalRecentUploads;
-        
+
         if ($filter == "pending") {
             $recentUploadsQuery->filterByDbImportStatus(1);
             $numTotalDisplayUploads = $recentUploadsQuery->count();
@@ -97,17 +98,17 @@ class PluploadController extends Zend_Controller_Action
             $numTotalDisplayUploads = $recentUploadsQuery->count();
             //TODO: Consider using array('min' => 200)) or something if we have multiple errors codes for failure.
         }
-        
+
         $recentUploads = $recentUploadsQuery
         	->orderByDbUtime(Criteria::DESC)
         	->offset($rowStart)
         	->limit($limit)
         	->find();
-        
+
         $uploadsArray = array();
         $utcTimezone = new DateTimeZone("UTC");
         $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
-        
+
         foreach ($recentUploads as $upload)
         {
             $upload = $upload->toArray(BasePeer::TYPE_FIELDNAME);
@@ -119,7 +120,7 @@ class PluploadController extends Zend_Controller_Action
             //TODO: Invoke sanitization here (MediaController's removeBlacklist stuff)
             array_push($uploadsArray, $upload);
         }
-        
+
         $this->view->sEcho = intval($request->getParam('sEcho'));
         $this->view->iTotalDisplayRecords = $numTotalDisplayUploads;
         $this->view->iTotalRecords = $numTotalRecentUploads;

@@ -28,7 +28,6 @@ class OverDiskQuotaException extends Exception
 class CcFiles extends BaseCcFiles {
 
     const MUSIC_DIRS_STOR_PK = 1;
-
     const IMPORT_STATUS_SUCCESS = 0;
     const IMPORT_STATUS_PENDING = 1;
     const IMPORT_STATUS_FAILED = 2;
@@ -145,10 +144,61 @@ class CcFiles extends BaseCcFiles {
 
             self::validateFileArray($fileArray);
 
+
+            //TODO: Artwork, may need to be placed in right location, testing...
+
+            $storDir = Application_Model_MusicDir::getStorDir();
+
+            //$artworkStorageDir = $storDir->getDirectory() . "artwork/" . self::getOwnerId() . "/";
+            $importedStorageDir = $storDir->getDirectory() . "imported/" . self::getOwnerId() . "/";
+            //$mp3_path = $importedStorageDir . $originalFilename;
+
+            // TODO: Messy, ...also add to Rest eg. /api/get-media/file/68/img/the-image
+            $getID3 = new getID3;
+            $getFileInfo = $getID3->analyze($filePath);
+
+            if(isset($getFileInfo['comments']['picture'][0])) {
+
+                 $Image = 'data:'.$getFileInfo['comments']['picture'][0]['image_mime'].';charset=utf-8;base64,'.base64_encode($getFileInfo['comments']['picture'][0]['data']);
+                 $base64 = @$Image;
+
+                //if (preg_match("^data:image\/(?<extension>(?:png|gif|jpg|jpeg));base64,(?<image>.+)$", $base64, $matchings)) {
+
+                    //$imageData = base64_decode($matchings['image']);
+                    //$extension = $matchings['extension'];
+                    //$filename = sprintf("image.%s", $extension);
+                //}
+
+                if (!file_exists($importedStorageDir . "artwork/")) {
+                    if (!mkdir($importedStorageDir . "artwork/", 0777)) {
+                        Logging::info("Failed to create artwork directory.");
+                        throw new Exception("Failed to create artwork directory.");
+                    }
+                }
+
+                $path_parts = pathinfo($originalFilename);
+
+                if (file_put_contents($importedStorageDir . "artwork/" . $path_parts['filename'], $base64)) {
+                   // image saved
+                }
+
+                // TODO: Redirect path to: your-site/artwork/filename
+                // saved with jpg ext., doesn't matter if it's BMP, ect.. should be able to cache
+                // if it sees artwork/ then simply add the DATA URI, remote files then save URL
+                $artwork_path = $importedStorageDir . "artwork/". $path_parts['filename'] .".jpg";
+                $get_img = "artwork/". $path_parts['filename'] .".jpg";
+                Logging::info("Saving artwork into: $get_img");
+
+            } else {
+
+                $get_img = 'css/images/no-cover.jpg';
+            }
+
             $file->fromArray($fileArray);
             $file->setDbOwnerId(self::getOwnerId());
-            $now  = new DateTime("now", new DateTimeZone("UTC"));
+            $now = new DateTime("now", new DateTimeZone("UTC"));
             $file->setDbTrackTitle($originalFilename);
+            $file->setDbImgUrl($get_img);
             $file->setDbUtime($now);
             $file->setDbHidden(true);
             $file->save();
@@ -179,7 +229,6 @@ class CcFiles extends BaseCcFiles {
     public static function updateFromArray($fileId, $fileArray)
     {
         $file = CcFilesQuery::create()->findPk($fileId);
-
         $fileArray = self::removeBlacklistedFields($fileArray);
         $fileArray = self::stripTimeStampFromYearTag($fileArray);
 
@@ -267,6 +316,8 @@ class CcFiles extends BaseCcFiles {
             $con = Propel::getConnection();
             $storedFile = Application_Model_StoredFile::RecallById($id, $con);
             $storedFile->delete();
+
+            // TODO: Also delete artwork and all related files from db
         } else {
             throw new LibreTimeFileNotFoundException();
         }
@@ -314,17 +365,17 @@ class CcFiles extends BaseCcFiles {
 
     public function getCueLength()
 	  {
-		$cuein = $this->getDbCuein();
-		$cueout = $this->getDbCueout();
+    		$cuein = $this->getDbCuein();
+    		$cueout = $this->getDbCueout();
 
-		$cueinSec = Application_Common_DateHelper::calculateLengthInSeconds($cuein);
-		$cueoutSec = Application_Common_DateHelper::calculateLengthInSeconds($cueout);
-		$lengthSec = bcsub($cueoutSec, $cueinSec, 6);
+    		$cueinSec = Application_Common_DateHelper::calculateLengthInSeconds($cuein);
+    		$cueoutSec = Application_Common_DateHelper::calculateLengthInSeconds($cueout);
+    		$lengthSec = bcsub($cueoutSec, $cueinSec, 6);
 
-		$length = Application_Common_DateHelper::secondsToPlaylistTime($lengthSec);
+    		$length = Application_Common_DateHelper::secondsToPlaylistTime($lengthSec);
 
-		return $length;
-	}
+    		return $length;
+	  }
 
     public function setDbTrackNumber($v)
     {
@@ -499,6 +550,7 @@ class CcFiles extends BaseCcFiles {
     {
         $filepath = $this->getAbsoluteFilePath();
         if (file_exists($filepath)) {
+            // TODO:  also remove related images that were uploaded
             unlink($filepath);
         } else {
             throw new Exception("Could not locate file ".$filepath);

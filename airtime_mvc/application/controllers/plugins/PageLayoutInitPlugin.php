@@ -93,7 +93,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             $userType = "";
         }
         $view->headScript()->appendScript("var userType = '$userType';");
-        
+
         // Dropzone also accept file extensions and doesn't correctly extract certain mimetypes (eg. FLAC - try it),
         // so we append the file extensions to the list of mimetypes and that makes it work.
         $mimeTypes = FileDataHelper::getAudioMimeTypeArray();

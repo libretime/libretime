@@ -576,8 +576,7 @@ var AIRTIME = (function(AIRTIME) {
             /* ftype */           { "sTitle" : ""                             , "mDataProp" : "ftype"        , "bSearchable" : false                 , "bVisible"    : false                   },
             /* Checkbox */        { "sTitle" : ""                             , "mDataProp" : "checkbox"     , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "16px"        , "sClass"  : "library_checkbox" },
             /* Type */            { "sTitle" : ""                             , "mDataProp" : "image"        , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "16px"        , "sClass"  : "library_type" , "iDataSort" : 0 },
-            /* Artwork */         { "sTitle" : ""                             , "mDataProp" : "img_url"      , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "24px"        , "sClass"  : "library_img" , "iDataSort" : 0 },
-            /* Artwork */         //{ "sTitle" : $.i18n._("Cover")            , "mDataProp" : "img_url"      , "bVisible"    : false                 , "sClass"      : "library_img"           , "sWidth" : "24px"         },
+            /* Artwork */         { "sTitle" : ""                             , "mDataProp" : "img_url"      , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "28px"        , "sClass"  : "library_img" , "iDataSort" : 0 },
             /* Is Scheduled */    { "sTitle" : $.i18n._("Scheduled")          , "mDataProp" : "is_scheduled" , "bVisible"    : false                 , "bSearchable" : false                   , "sWidth" : "90px"        , "sClass"  : "library_is_scheduled" },
             ///* Is Playlist */     { "sTitle" : $.i18n._("Playlist / Block")   , "mDataProp" : "is_playlist"  , "bSearchable" : false               "sWidth"        : "110px"                 , "sClass" : "library_is_playlist"}  ,
             /* Title */           { "sTitle" : $.i18n._("Title")              , "mDataProp" : "track_title"  , "sClass"      : "library_title"       , "sWidth"      : "170px"                 },
@@ -772,20 +771,19 @@ var AIRTIME = (function(AIRTIME) {
                     $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Track preview") + '" src="' + baseUrl + 'css/images/icon_audioclip.png">');
                     if (aData.img_url) {
                         var img_url = aData.img_url;
-                        var lib_img = img_url.replace(/(\.[\w\d_-]+)$/i, '-small$1');
-                        $(nRow).find('td.library_img').html('<img class="img_small" id="'+ aData.id +'" width="28" height="28" src="'+ lib_img +'">');
+                        $(nRow).find('td.library_img').html('<img class="img_small" id="'+ aData.id +'" width="28" height="28" src="'+ img_url +'">');
                     } else {
                         $(nRow).find('td.library_img').html('<img class="img_small" width="28" height="28" src="' + baseUrl + 'css/images/no-cover.jpg">');
                     }
                 } else if (aData.ftype === "playlist") {
                     $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Playlist preview") + '" src="' + baseUrl + 'css/images/icon_playlist.png">');
-                    $(nRow).find('td.library_img').html('<img class="img_small" width="28" height="28" src="' + baseUrl + 'css/images/no-cover.jpg">');
+                    //$(nRow).find('td.library_img').html('<img class="img_small" width="28" height="28" src="' + baseUrl + 'css/images/no-cover.jpg">');
                 } else if (aData.ftype === "block") {
                     $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Smart Block") + '" src="' + baseUrl + 'css/images/icon_smart-block.png">');
-                    $(nRow).find('td.library_img').html('<img class="img_small" width="28" height="28" src="' + baseUrl + 'css/images/no-cover.jpg">');
+                    //$(nRow).find('td.library_img').html('<img class="img_small" width="28" height="28" src="' + baseUrl + 'css/images/no-cover.jpg">');
                 } else if (aData.ftype === "stream") {
                     $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Webstream preview") + '" src="' + baseUrl + 'css/images/icon_webstream.png">');
-                    $(nRow).find('td.library_img').html('<img class="img_small" width="28" height="28" src="' + baseUrl + 'css/images/no-cover.jpg">');
+                    //$(nRow).find('td.library_img').html('<img class="img_small" width="28" height="28" src="' + baseUrl + 'css/images/no-cover.jpg">');
                 }
 
                 if (aData.is_scheduled) {
@@ -1621,20 +1619,4 @@ $(document).ready(function() {
         resizeAdvancedSearch();
     });
 
-    // Artwork image in library
-    $(".dataTables_wrapper").mouseenter(function(){
-      alert('test works - 1');
-        $(this).attr('src',function(index, attr){
-            return attr.replace(".jpg", "-active.jpg");
-        });
-    });
-
-    $(".library_img").mouseleave(function(){
-      alert('test works - 2');
-        $(this).attr('src',function(index, attr){
-            return attr.replace("-active.png",".jpg");
-        });
-    });
-
 });
-

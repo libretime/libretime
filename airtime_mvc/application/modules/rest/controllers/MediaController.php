@@ -19,7 +19,7 @@ class Rest_MediaController extends Zend_Rest_Controller
     {
         Logging::info("HEAD action received");
     }
-    
+
     public function indexAction()
     {
         $totalFileCount = CcFilesQuery::create()->count();
@@ -56,7 +56,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             ->setHttpResponseCode(200)
             ->setHeader('X-TOTAL-COUNT', $totalFileCount)
             ->appendBody(json_encode($files_array));
-        
+
         /** TODO: Use this simpler code instead after we upgrade to Propel 1.7 (Airtime 2.6.x branch):
         $this->getResponse()
             ->setHttpResponseCode(200)
@@ -94,7 +94,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             Logging::error($e->getMessage());
         }
     }
-    
+
     public function getAction()
     {
         $id = $this->getId();
@@ -116,7 +116,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             Logging::error($e->getMessage());
         }
     }
-    
+
     public function postAction()
     {
         //If we do get an ID on a POST, then that doesn't make any sense
@@ -124,7 +124,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         if ($id = $this->_getParam('id', false)) {
             $resp = $this->getResponse();
             $resp->setHttpResponseCode(400);
-            $resp->appendBody("ERROR: ID should not be specified when using POST. POST is only used for file creation, and an ID will be chosen by Airtime"); 
+            $resp->appendBody("ERROR: ID should not be specified when using POST. POST is only used for file creation, and an ID will be chosen by Airtime");
             return;
         }
 
@@ -243,9 +243,9 @@ class Rest_MediaController extends Zend_Rest_Controller
         if (!$id = $this->_getParam('id', false)) {
             $resp = $this->getResponse();
             $resp->setHttpResponseCode(400);
-            $resp->appendBody("ERROR: No file ID specified."); 
+            $resp->appendBody("ERROR: No file ID specified.");
             return false;
-        } 
+        }
         return $id;
     }
 
@@ -253,9 +253,9 @@ class Rest_MediaController extends Zend_Rest_Controller
     {
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(404);
-        $resp->appendBody("ERROR: Media not found."); 
+        $resp->appendBody("ERROR: Media not found.");
     }
-    
+
     private function importFailedResponse()
     {
         $resp = $this->getResponse();

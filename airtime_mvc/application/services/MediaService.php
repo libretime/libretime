@@ -48,7 +48,6 @@ class Application_Service_MediaService
         return $newTempFilePath;
     }
 
-
     /**
      * @param $fileId
      * @param bool $inline Set the Content-Disposition header to inline to prevent a download dialog from popping up (or attachment if false)
@@ -150,4 +149,3 @@ class Application_Service_MediaService
     }
 
 }
-

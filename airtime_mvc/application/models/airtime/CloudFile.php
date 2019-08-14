@@ -32,9 +32,9 @@ class CloudFile extends BaseCloudFile
         }
         return $this->proxyStorageBackend->getDownloadURLs($this->getResourceId(), $this->getFilename());
     }
-    
+
     /**
-     * 
+     *
      * Returns a url to the file's object on Amazon S3.
      */
     public function getAbsoluteFilePath()
@@ -44,7 +44,7 @@ class CloudFile extends BaseCloudFile
         }
         return $this->proxyStorageBackend->getAbsoluteFilePath($this->getResourceId());
     }
-    
+
     public function getFilename()
     {
         $filename = $this->getDbFilepath();
@@ -56,7 +56,7 @@ class CloudFile extends BaseCloudFile
 
         return $info['filename'] . $extension;
     }
-    
+
     /**
      * Checks if the file is a regular file that can be previewed and downloaded.
      */
@@ -68,9 +68,9 @@ class CloudFile extends BaseCloudFile
         // does not get imported into the Airtime library.
         return true;
     }
-    
+
     /**
-     * 
+     *
      * Deletes the file from cloud storage
      */
     public function deletePhysicalFile()
@@ -80,9 +80,9 @@ class CloudFile extends BaseCloudFile
         }
         $this->proxyStorageBackend->deletePhysicalFile($this->getResourceId());
     }
-    
+
     /**
-     * 
+     *
      * Deletes the cc_file and cloud_file entries from the database.
      */
     public function delete(PropelPDO $con = NULL)

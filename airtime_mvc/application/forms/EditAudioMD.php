@@ -1,5 +1,4 @@
 <?php
-
 class Application_Form_EditAudioMD extends Zend_Form
 {
 
@@ -18,27 +17,19 @@ class Application_Form_EditAudioMD extends Zend_Form
         $file_id->setAttrib('class', 'obj_id');
         $this->addElement($file_id);
 
-        // add_show_logo
-        /* still in development, will work on it this week, for the meantime
-           make a copy and resize to a smaller image no lower than 28px
-           then rename by adding '-small' to the end before extension
-           Upload both files to a server, orginal and small version
-           example:
-                    https://your-site.com/images/track1.jpg
-                    https://your-site.com/images/track1-small.jpg
-          then you only need to save the orginal url to the track in the library and save it.
-          Adding the url manually is only for testing purposes****
-        */
-        $img_url = new Zend_Form_Element('img_url');
-
+        /* This will add an input and able to replace artwork with URL
+         * Don't recommend, only here for testing.
+         *
+         * TODO: Drag & drop image with right into the image, using AJAX
+         */
+        /*$img_url = new Zend_Form_Element('img_url');
         $img_url->class = 'input_text';
         $img_url->setLabel(_('Artwork:'))
             ->setFilters(array('StringTrim'))
             ->setValidators(array(
                 new Zend_Validate_StringLength(array('max' => 512))
             ));
-        $this->addElement($img_url);
-
+        $this->addElement($img_url);*/
 
         // Add title field
         $track_title = new Zend_Form_Element_Text('track_title');

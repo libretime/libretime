@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Base class that represents a row from the 'cc_files' table.
  *
@@ -1851,9 +1850,28 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $this->modifiedColumns[] = CcFilesPeer::TRACK_TITLE;
         }
 
-
         return $this;
     } // setDbTrackTitle()
+
+    /**
+     * Set the value of [img_url] column.
+     *
+     * @param  string $v new value
+     * @return CcFiles The current object (for fluent API support)
+     */
+    public function setDbImgUrl($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->img_url !== $v) {
+            $this->img_url = $v;
+            $this->modifiedColumns[] = CcFilesPeer::IMG_URL;
+        }
+
+        return $this;
+    } // setDbImgUrl()
 
     /**
      * Set the value of [artist_name] column.
@@ -1871,7 +1889,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $this->artist_name = $v;
             $this->modifiedColumns[] = CcFilesPeer::ARTIST_NAME;
         }
-
 
         return $this;
     } // setDbArtistName()
@@ -2442,27 +2459,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
 
         return $this;
     } // setDbInfoUrl()
-
-    /**
-     * Set the value of [img_url] column.
-     *
-     * @param  string $v new value
-     * @return CcFiles The current object (for fluent API support)
-     */
-    public function setDbImgUrl($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
-        }
-
-        if ($this->img_url !== $v) {
-            $this->img_url = $v;
-            $this->modifiedColumns[] = CcFilesPeer::IMG_URL;
-        }
-
-
-        return $this;
-    } // setDbImgUrl()
 
     /**
      * Set the value of [artist_url] column.

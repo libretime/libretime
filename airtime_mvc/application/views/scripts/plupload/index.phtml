@@ -12,13 +12,13 @@
     <?php printf(_pro("Disk quota exceeded. You cannot upload files until you %s upgrade your storage"),
         "<a target=\"_parent\" href=$upgradeLink>");?></a>.
     </div>
-<?php 
+<?php
 }
 ?>
 <!--
 <form id="plupload_form" <?php if ($this->quotaLimitReached) { ?> class="hidden" <?php } ?>>
     <?php echo $this->form->getElement('csrf') ?>
-    <div id="plupload_files"></div>	
+    <div id="plupload_files"></div>
 </form>
 -->
 <div id="upload_form" class="lib-content ui-widget ui-widget-content block-shadow padded content-pane wide-panel<?php if ($this->quotaLimitReached) { ?> hidden <?php } ?>">
@@ -68,7 +68,7 @@
                 <input type="radio" name="upload_status" id="upload_status_all" checked /><label for="upload_status_all"><?php echo _("All")?></label>
                 <input type="radio" name="upload_status" id="upload_status_failed" /><label for="upload_status_failed"><?php echo _("Failed")?></label>
                 <input type="radio" name="upload_status" id="upload_status_pending" /><label for="upload_status_pending"><?php echo _("Pending")?></label>
-            </form>        
+            </form>
         </div>
         <H2><?php echo _("Recent Uploads")?></H2>
         <table id="recent_uploads_table" class="datatable lib-content ui-widget ui-widget-content block-shadow"
