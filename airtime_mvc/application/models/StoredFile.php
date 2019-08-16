@@ -830,6 +830,9 @@ SQL;
         $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
         $utcTimezone = new DateTimeZone("UTC");
 
+        $storDir = Application_Model_MusicDir::getStorDir();
+        $fp = $storDir->getDirectory();
+
         foreach ($results['aaData'] as &$row) {
             $row['id'] = intval($row['id']);
 
@@ -866,8 +869,17 @@ SQL;
                 // for audio preview
                 $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
 
-            }
-            else {
+                // for artwork
+
+                if($filecontent = file_get_contents($fp . $row['img_url']) !== false){
+                   $get_artwork = file_get_contents($fp . $row['img_url']);
+                } else {
+                  $get_artwork = "";
+                }
+
+                $row['img_url'] = $get_artwork;
+
+            } else {
 
                 $row['audioFile'] = $row['id'];
                 $row_length = $row['length'];

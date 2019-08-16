@@ -17,20 +17,6 @@ class Application_Form_EditAudioMD extends Zend_Form
         $file_id->setAttrib('class', 'obj_id');
         $this->addElement($file_id);
 
-        /* This will add an input and able to replace artwork with URL
-         * Don't recommend, only here for testing.
-         *
-         * TODO: Drag & drop image with right into the image, using AJAX
-         */
-        /*$img_url = new Zend_Form_Element('img_url');
-        $img_url->class = 'input_text';
-        $img_url->setLabel(_('Artwork:'))
-            ->setFilters(array('StringTrim'))
-            ->setValidators(array(
-                new Zend_Validate_StringLength(array('max' => 512))
-            ));
-        $this->addElement($img_url);*/
-
         // Add title field
         $track_title = new Zend_Form_Element_Text('track_title');
         $track_title->class = 'input_text';

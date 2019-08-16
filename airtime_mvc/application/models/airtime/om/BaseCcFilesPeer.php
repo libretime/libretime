@@ -435,8 +435,8 @@ abstract class BaseCcFilesPeer
             $criteria->addSelectColumn(CcFilesPeer::IS_SCHEDULED);
             $criteria->addSelectColumn(CcFilesPeer::IS_PLAYLIST);
             $criteria->addSelectColumn(CcFilesPeer::FILESIZE);
-            $criteria->addSelectColumn(CcFilesPeer::IMG_URL);
             $criteria->addSelectColumn(CcFilesPeer::DESCRIPTION);
+            $criteria->addSelectColumn(CcFilesPeer::IMG_URL);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');

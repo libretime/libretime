@@ -1,5 +1,5 @@
 <div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong edit-md-dialog">
-    <div class="track-edit-header">
+    <div class="track-edit-header" style="top:15px">
 
         <?php if ($this->permissionDenied) { ?> <h3><?php echo _("You do not have permission to edit this track.") ?></h3> <?php } ?>
 
@@ -13,7 +13,7 @@
         ?>
         <div class="track-edit-right-wrapper">
             <div class="track-edit-right">
-                <!--TODO: add this in css file after testing -->
+
                 <div class="inner_track_editor_title" style="width: 100%;">
 
                     <h2 style="line-height: 26px !important;"><span class="title_obj_name"><?php echo($this->title); ?></span></h2>
@@ -25,34 +25,20 @@
         <div class="track-edit-left">
 
             <?php
-            //// TODO: we need to have drag n drop feature for artwork. Drag into photo itself.
-            $Path = $this->filePath;
+            // TODO: add to function
             $storDir = Application_Model_MusicDir::getStorDir();
-            $importedStorageDirectory = $storDir->getDirectory();
-            $mp3_path = $importedStorageDirectory. $Path;
-            $getID3 = new getID3;
+            $saved_file = $storDir->getDirectory() . $this->img_url;
 
-            $getFileInfo = $getID3->analyze($mp3_path);
-
-            // If no image is saved in db, get image from mp3 file
-            if ($this->img_url) {
-
-                echo '<img width="100" height="100" src="' . $this->img_url .'">';
-
+            if($filecontent = file_get_contents($saved_file) !== false){
+               $get_file_content = file_get_contents($saved_file);
             } else {
-
-                if(isset($getFileInfo['comments']['picture'][0])){
-                      $Image='data:'.$getFileInfo['comments']['picture'][0]['image_mime'].';charset=utf-8;base64,'.base64_encode($getFileInfo['comments']['picture'][0]['data']);
-                      $get_img = @$Image;
-                      echo '<img width="100" height="100" src="'. $get_img .'">';
-                } else {
-                      echo '<img width="100" height="100" src="css/images/no-cover.jpg">';
-                }
+              $get_file_content = "css/images/no-cover.jpg";
             }
+            echo '<img width="140" height="140" src="' . $get_file_content .'">';
             ?>
 
         </div>
     </div>
-    <div style="height: 120px;"></div>
+    <div style="height: 160px;"></div>
     <?php echo $this->form; ?>
 </div>

@@ -141,33 +141,19 @@ class CcFiles extends BaseCcFiles {
             }
 
             $fileArray = self::removeBlacklistedFields($fileArray);
-
             self::validateFileArray($fileArray);
 
-
-            //TODO: Artwork, may need to be placed in right location, testing...
-
             $storDir = Application_Model_MusicDir::getStorDir();
-
-            //$artworkStorageDir = $storDir->getDirectory() . "artwork/" . self::getOwnerId() . "/";
             $importedStorageDir = $storDir->getDirectory() . "imported/" . self::getOwnerId() . "/";
-            //$mp3_path = $importedStorageDir . $originalFilename;
+            $importedDbPath = "imported/" . self::getOwnerId() . "/";
 
-            // TODO: Messy, ...also add to Rest eg. /api/get-media/file/68/img/the-image
             $getID3 = new getID3;
             $getFileInfo = $getID3->analyze($filePath);
 
             if(isset($getFileInfo['comments']['picture'][0])) {
 
-                 $Image = 'data:'.$getFileInfo['comments']['picture'][0]['image_mime'].';charset=utf-8;base64,'.base64_encode($getFileInfo['comments']['picture'][0]['data']);
-                 $base64 = @$Image;
-
-                //if (preg_match("^data:image\/(?<extension>(?:png|gif|jpg|jpeg));base64,(?<image>.+)$", $base64, $matchings)) {
-
-                    //$imageData = base64_decode($matchings['image']);
-                    //$extension = $matchings['extension'];
-                    //$filename = sprintf("image.%s", $extension);
-                //}
+                $Image = 'data:'.$getFileInfo['comments']['picture'][0]['image_mime'].';charset=utf-8;base64,'.base64_encode($getFileInfo['comments']['picture'][0]['data']);
+                $base64 = @$Image;
 
                 if (!file_exists($importedStorageDir . "artwork/")) {
                     if (!mkdir($importedStorageDir . "artwork/", 0777)) {
@@ -177,20 +163,14 @@ class CcFiles extends BaseCcFiles {
                 }
 
                 $path_parts = pathinfo($originalFilename);
-
                 if (file_put_contents($importedStorageDir . "artwork/" . $path_parts['filename'], $base64)) {
-                   // image saved
+                    $get_img = $importedDbPath . "artwork/". $path_parts['filename'];
+                    Logging::info("Saved artwork ($get_img)");
+                } else {
+                    Logging::info("Could not save the artwork");
                 }
 
-                // TODO: Redirect path to: your-site/artwork/filename
-                // saved with jpg ext., doesn't matter if it's BMP, ect.. should be able to cache
-                // if it sees artwork/ then simply add the DATA URI, remote files then save URL
-                $artwork_path = $importedStorageDir . "artwork/". $path_parts['filename'] .".jpg";
-                $get_img = "artwork/". $path_parts['filename'] .".jpg";
-                Logging::info("Saving artwork into: $get_img");
-
             } else {
-
                 $get_img = 'css/images/no-cover.jpg';
             }
 

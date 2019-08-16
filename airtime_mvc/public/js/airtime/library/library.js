@@ -766,12 +766,10 @@ var AIRTIME = (function(AIRTIME) {
                         }).html("<div class='library_actions_btn'>...</div>");
                 }
 
-                // add audio preview image/button
                 if (aData.ftype === "audioclip") {
                     $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Track preview") + '" src="' + baseUrl + 'css/images/icon_audioclip.png">');
                     if (aData.img_url) {
-                        var img_url = aData.img_url;
-                        $(nRow).find('td.library_img').html('<img class="img_small" id="'+ aData.id +'" width="28" height="28" src="'+ img_url +'">');
+                        $(nRow).find('td.library_img').html('<img class="img_small" id="'+ aData.id +'" width="28" height="28" src="'+ aData.img_url +'">');
                     } else {
                         $(nRow).find('td.library_img').html('<img class="img_small" width="28" height="28" src="' + baseUrl + 'css/images/no-cover.jpg">');
                     }
