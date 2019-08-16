@@ -27,7 +27,7 @@
             <?php
             // TODO: add to function
             $storDir = Application_Model_MusicDir::getStorDir();
-            $saved_file = $storDir->getDirectory() . $this->img_url;
+            $saved_file = $storDir->getDirectory() . $this->artwork;
 
             if($filecontent = file_get_contents($saved_file) !== false){
                $get_file_content = file_get_contents($saved_file);

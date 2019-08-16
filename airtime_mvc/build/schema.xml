@@ -84,6 +84,7 @@
     <column name="is_playlist" phpName="DbIsPlaylist" type="BOOLEAN" defaultValue="false"/>
     <column name="filesize" phpName="DbFilesize" type="Integer" required="true" defaultValue="0"/>
     <column name="description" phpName="DbDescription" type="VARCHAR" size="512" />
+    <column name="artwork" phpName="DbArtwork" type="VARCHAR" size="512" required="false"/>
     <foreign-key foreignTable="cc_subjs" phpName="FkOwner" name="cc_files_owner_fkey">
       <reference local="owner_id" foreign="id"/>
     </foreign-key>
@@ -152,7 +153,7 @@
 	<!-- A show is_linkable if it has never been linked before. Once a show becomes unlinked
          it can not be linked again -->
     <column name="image_path" phpName="DbImagePath" type="VARCHAR" size="255" required="false" defaultValue=""/>
-    <!-- Fully qualified path for the image associated with this show. 
+    <!-- Fully qualified path for the image associated with this show.
          Default is /path/to/stor/dir/:ownerId/show-images/:showId/imageName -->
     <column name="has_autoplaylist" phpName="DbHasAutoPlaylist" type="BOOLEAN" required="true" defaultValue="false"/>
     <column name="autoplaylist_id" phpName="DbAutoPlaylistId" type="INTEGER" required="false"/>
@@ -249,7 +250,7 @@
     <column name="file_id" phpName="DbFileId" type="INTEGER" required="false"/>
     <column name="block_id" phpName="DbBlockId" type="INTEGER" required="false"/>
     <column name="stream_id" phpName="DbStreamId" type="INTEGER" required="false"/>
-    <!-- What type of item is stored in the playlist. 
+    <!-- What type of item is stored in the playlist.
             0: audiotrack
             1: webstream
             2: block
@@ -319,7 +320,7 @@
     <column name="block_id" phpName="DbBlockId" type="INTEGER" required="true"/>
     <foreign-key foreignTable="cc_block" name="cc_blockcontents_block_id_fkey" onDelete="CASCADE">
       <reference local="block_id" foreign="id"/>
-    </foreign-key>    
+    </foreign-key>
   </table>
   <table name="cc_pref" phpName="CcPref">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
@@ -355,7 +356,7 @@
     <column name="instance_id" phpName="DbInstanceId" type="INTEGER" required="true"/>
     <column name="playout_status" phpName="DbPlayoutStatus" type="SMALLINT" required="true" defaultValue="1"/>
     <column name="broadcasted" phpName="DbBroadcasted" type="SMALLINT" required="true" defaultValue="0"/>
-    <!-- Broadcasted is set to 1 when show and master source are not on. 
+    <!-- Broadcasted is set to 1 when show and master source are not on.
          We need to know this for logging playout history. (It only gets logged when
          broadcasted = 1)
     -->

@@ -178,7 +178,7 @@ class CcFiles extends BaseCcFiles {
             $file->setDbOwnerId(self::getOwnerId());
             $now = new DateTime("now", new DateTimeZone("UTC"));
             $file->setDbTrackTitle($originalFilename);
-            $file->setDbImgUrl($get_img);
+            $file->setDbArtwork($get_img);
             $file->setDbUtime($now);
             $file->setDbHidden(true);
             $file->save();

@@ -410,7 +410,7 @@ class LibraryController extends Zend_Controller_Action
         $this->view->title = $file->getPropelOrm()->getDbTrackTitle();
         $this->view->artist_name = $file->getPropelOrm()->getDbArtistName();
         $this->view->filePath = $file->getPropelOrm()->getDbFilepath();
-        $this->view->img_url = $file->getPropelOrm()->getDbImgUrl();
+        $this->view->artwork = $file->getPropelOrm()->getDbArtwork();
         $this->view->html = $this->view->render('library/edit-file-md.phtml');
     }
 

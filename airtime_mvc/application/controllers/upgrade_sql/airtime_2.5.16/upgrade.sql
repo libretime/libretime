@@ -1,5 +1,5 @@
 ALTER TABLE cc_files ADD COLUMN description VARCHAR(512);
-ALTER TABLE cc_files ADD COLUMN img_url VARCHAR(512);
+ALTER TABLE cc_files ADD COLUMN artwork VARCHAR(512);
 
 -----------------------------------------------------------------------
 -- podcast

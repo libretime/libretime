@@ -288,10 +288,10 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     protected $info_url;
 
     /**
-     * The value for the img_url field.
+     * The value for the artwork field.
      * @var        string
      */
-    protected $img_url;
+    protected $artwork;
 
     /**
      * The value for the artist_url field.
@@ -1182,14 +1182,14 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [img_url] column value.
+     * Get the [artwork] column value.
      *
      * @return string
      */
-    public function getDbImgUrl()
+    public function getDbArtwork()
     {
 
-        return $this->img_url;
+        return $this->artwork;
     }
 
     /**
@@ -1854,24 +1854,24 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     } // setDbTrackTitle()
 
     /**
-     * Set the value of [img_url] column.
+     * Set the value of [artwork] column.
      *
      * @param  string $v new value
      * @return CcFiles The current object (for fluent API support)
      */
-    public function setDbImgUrl($v)
+    public function setDbArtwork($v)
     {
         if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
-        if ($this->img_url !== $v) {
-            $this->img_url = $v;
-            $this->modifiedColumns[] = CcFilesPeer::IMG_URL;
+        if ($this->artwork !== $v) {
+            $this->artwork = $v;
+            $this->modifiedColumns[] = CcFilesPeer::ARTWORK;
         }
 
         return $this;
-    } // setDbImgUrl()
+    } // setDbArtwork()
 
     /**
      * Set the value of [artist_name] column.
@@ -3300,7 +3300,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $this->is_playlist = ($row[$startcol + 69] !== null) ? (boolean) $row[$startcol + 69] : null;
             $this->filesize = ($row[$startcol + 70] !== null) ? (int) $row[$startcol + 70] : null;
             $this->description = ($row[$startcol + 71] !== null) ? (string) $row[$startcol + 71] : null;
-            $this->img_url = ($row[$startcol + 72] !== null) ? (string) $row[$startcol + 72] : null;
+            $this->artwork = ($row[$startcol + 72] !== null) ? (string) $row[$startcol + 72] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -3938,8 +3938,8 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if ($this->isColumnModified(CcFilesPeer::DESCRIPTION)) {
             $modifiedColumns[':p' . $index++]  = '"description"';
         }
-        if ($this->isColumnModified(CcFilesPeer::IMG_URL)) {
-            $modifiedColumns[':p' . $index++]  = '"img_url"';
+        if ($this->isColumnModified(CcFilesPeer::ARTWORK)) {
+            $modifiedColumns[':p' . $index++]  = '"artwork"';
         }
 
         $sql = sprintf(
@@ -4168,8 +4168,8 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                     case '"description"':
                         $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
                         break;
-                    case '"img_url"':
-                        $stmt->bindValue($identifier, $this->img_url, PDO::PARAM_STR);
+                    case '"artwork"':
+                        $stmt->bindValue($identifier, $this->artwork, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -4603,7 +4603,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                 return $this->getDbDescription();
                 break;
             case 72:
-                return $this->getDbImgUrl();
+                return $this->getDbArtwork();
                 break;
             default:
                 return null;
@@ -4706,7 +4706,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $keys[69] => $this->getDbIsPlaylist(),
             $keys[70] => $this->getDbFilesize(),
             $keys[71] => $this->getDbDescription(),
-            $keys[72] => $this->getDbImgUrl(),
+            $keys[72] => $this->getDbArtwork(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -4998,7 +4998,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                 $this->setDbDescription($value);
                 break;
             case 72:
-                $this->setDbImgUrl($value);
+                $this->setDbArtwork($value);
                 break;
         } // switch()
     }
@@ -5096,7 +5096,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if (array_key_exists($keys[69], $arr)) $this->setDbIsPlaylist($arr[$keys[69]]);
         if (array_key_exists($keys[70], $arr)) $this->setDbFilesize($arr[$keys[70]]);
         if (array_key_exists($keys[71], $arr)) $this->setDbDescription($arr[$keys[71]]);
-        if (array_key_exists($keys[72], $arr)) $this->setDbImgUrl($arr[$keys[72]]);
+        if (array_key_exists($keys[72], $arr)) $this->setDbArtwork($arr[$keys[72]]);
     }
 
     /**
@@ -5180,7 +5180,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if ($this->isColumnModified(CcFilesPeer::IS_PLAYLIST)) $criteria->add(CcFilesPeer::IS_PLAYLIST, $this->is_playlist);
         if ($this->isColumnModified(CcFilesPeer::FILESIZE)) $criteria->add(CcFilesPeer::FILESIZE, $this->filesize);
         if ($this->isColumnModified(CcFilesPeer::DESCRIPTION)) $criteria->add(CcFilesPeer::DESCRIPTION, $this->description);
-        if ($this->isColumnModified(CcFilesPeer::IMG_URL)) $criteria->add(CcFilesPeer::IMG_URL, $this->img_url);
+        if ($this->isColumnModified(CcFilesPeer::ARTWORK)) $criteria->add(CcFilesPeer::ARTWORK, $this->artwork);
 
         return $criteria;
     }
@@ -5315,7 +5315,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $copyObj->setDbIsPlaylist($this->getDbIsPlaylist());
         $copyObj->setDbFilesize($this->getDbFilesize());
         $copyObj->setDbDescription($this->getDbDescription());
-        $copyObj->setDbImgUrl($this->getDbImgUrl());
+        $copyObj->setDbArtwork($this->getDbArtwork());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -7717,7 +7717,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $this->is_playlist = null;
         $this->filesize = null;
         $this->description = null;
-        $this->img_url = null;
+        $this->artwork = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
