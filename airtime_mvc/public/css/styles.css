@@ -575,6 +575,7 @@ table.library-track-md{
 
 .ui-tooltip-dark.file-md-long{ 
     max-width: 415px !important;
+    overflow-y: unset;
 }
 
 .library-get-file-md tr td, .library-track-md tr td{
