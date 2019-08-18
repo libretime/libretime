@@ -30,7 +30,7 @@ class SentryLogger
                 //FIXME: This doesn't seem to be working...
                 'processorOptions' => array(
                     'Raven_SanitizeDataProcessor' => array(
-                        'fields_re' => '/(authorization|password|passwd|user_token|secret|WHMCS_|SESSION)/i',
+                        'fields_re' => '/(authorization|password|passwd|user_token|secret|SESSION)/i',
                         'values_re' => '/^(?:\d[ -]*?){13,16}$/'
                     )
                 )

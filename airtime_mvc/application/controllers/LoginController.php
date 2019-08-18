@@ -88,21 +88,6 @@ class LoginController extends Zend_Controller_Action
                     Application_Model_Preference::SetUserLocale($locale);
 
                     $this->_redirect('showbuilder');
-                } elseif (LIBRETIME_ENABLE_WHMCS) {
-                    $email = $form->getValue('username');
-                    $authAdapter = new WHMCS_Auth_Adapter("admin", $email, $password);
-                    $auth = Zend_Auth::getInstance();
-                    $result = $auth->authenticate($authAdapter);
-                    if ($result->isValid()) {
-                        Zend_Session::regenerateId();
-                        //set the user locale in case user changed it in when logging in
-                        Application_Model_Preference::SetUserLocale($locale);
-                        
-                        $this->_redirect('showbuilder');
-                    }
-                    else {
-                        $form = $this->loginError($username);
-                    }
                 } else {
                     $form = $this->loginError($username);
                 }
@@ -175,18 +160,7 @@ class LoginController extends Zend_Controller_Action
                         $form->email->addError($this->view->translate(_("Email could not be sent. Check your mail server settings and ensure it has been configured properly.")));
                     }
                 } else {
-                    if (!LIBRETIME_ENABLE_WHMCS) {
-                    	$form->email->addError($this->view->translate(_("That username or email address could not be found.")));
-                    } else {
-                        $form->email->addError(
-                            $this->view->translate(
-                                sprintf(
-                                    _pro("That username or email address could not be found. If you are the station owner, you should <a href=\"%s\">reset your here</a>."),
-                                    WHMCS_PASSWORD_RESET_URL
-                                )
-                            )
-                        );
-                    }
+                    $form->email->addError($this->view->translate(_("That username or email address could not be found.")));
                 }
             } else { //Form is not valid
                 $form->email->addError($this->view->translate(_("There was a problem with the username or email address you entered.")));

@@ -1,16 +1,6 @@
 <h2><?php echo _("My Profile") ?></h2>
 <div id="current-user-container">
 
-  <?php if(LIBRETIME_ENABLE_BILLING === true && Application_Model_User::getCurrentUser()->isSuperAdmin()) : ?>
-    <div id="user_details_superadmin_message">
-        <p class="alert alert-error">
-            <?=sprintf(_("<b>Note:</b> Since you're the station owner, your account information can be edited in <a href=\"%s\">Billing Settings</a> instead."), "/billing/client");?>
-        </p>
-        <br><br>
-    </div>
-  <?php endif; ?>
-
-
 <form id="current-user-form" class="edit-user-global" method="post" enctype="application/x-www-form-urlencoded">
     <dl class="zend_form">
         <?php echo $this->element->getElement('cu_user_id') ?>

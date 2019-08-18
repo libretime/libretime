@@ -727,26 +727,6 @@ msgstr "Naplózási sablonok"
 msgid "Listener Stats"
 msgstr "Hallgatói statisztikák"
 
-#: airtime_mvc/application/configs/navigation.php:144
-msgid "Upgrade"
-msgstr "Frissítés"
-
-#: airtime_mvc/application/configs/navigation.php:144
-msgid "Billing"
-msgstr "Számlázás"
-
-#: airtime_mvc/application/configs/navigation.php:151
-msgid "Account Plans"
-msgstr "Fióktervek"
-
-#: airtime_mvc/application/configs/navigation.php:158
-msgid "Account Details"
-msgstr "Fiók részletei"
-
-#: airtime_mvc/application/configs/navigation.php:165
-msgid "View Invoices"
-msgstr "Számlák megtekintése"
-
 #: airtime_mvc/application/configs/navigation.php:175
 #: airtime_mvc/application/views/scripts/error/error-400.phtml:13
 #: airtime_mvc/application/views/scripts/error/error-403.phtml:13
@@ -3041,50 +3021,6 @@ msgstr "Felhasználótípus:"
 msgid "Login name is not unique."
 msgstr "A bejelentkezési név nem egyedi."
 
-#: airtime_mvc/application/forms/BillingClient.php:125
-msgid "What is the name of your favorite childhood friend?"
-msgstr "Mi a legjobb gyerekkori barátja neve?"
-
-#: airtime_mvc/application/forms/BillingClient.php:126
-msgid "What school did you attend for sixth grade?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:127
-msgid "In what city did you meet your spouse/significant other?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:128
-msgid "What street did you live on in third grade?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:129
-msgid "What is the first name of the boy or girl that you first kissed?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:130
-msgid "In what city or town was your first job?"
-msgstr "Melyik városban volt az első munkahelye?"
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:19
-msgid "Plan type:"
-msgstr "Tervtípus:"
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:31
-msgid "Billing cycle:"
-msgstr "Számlázási ciklus:"
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:39
-msgid "Payment method:"
-msgstr "Fizetési mód:"
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:42
-msgid "PayPal"
-msgstr "PayPal"
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:43
-msgid "Credit Card via 2Checkout"
-msgstr "Hitelkártya 2Checkout-on keresztül"
-
 #: airtime_mvc/application/forms/customvalidators/ConditionalNotEmpty.php:32
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:8
 msgid "Value is required and can't be empty"
@@ -4590,13 +4526,6 @@ msgstr "Műsorpéldány kiválasztása"
 msgid "Find"
 msgstr "Találat"
 
-#: airtime_mvc/application/views/scripts/form/edit-user.phtml:7
-#, php-format
-msgid ""
-"<b>Note:</b> Since you're the station owner, your account information can be"
-" edited in <a href=\"%s\">Billing Settings</a> instead."
-msgstr ""
-
 #: airtime_mvc/application/views/scripts/form/login.phtml:41
 msgid "Forgot your password?"
 msgstr "Elfelejtett jelszó?"
@@ -5399,13 +5328,6 @@ msgstr "Keresztnév"
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:21
 msgid "User Type"
 msgstr "Felhasználótípus"
-
-#: airtime_mvc/application/views/scripts/user/add-user.phtml:31
-#, php-format
-msgid ""
-"Super Admin details can be changed in your <a href=\"%s\">Billing Settings</a"
-">."
-msgstr ""
 
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:30
 msgid "Stream URL:"

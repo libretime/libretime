@@ -703,26 +703,6 @@ msgstr "History Templates"
 msgid "Listener Stats"
 msgstr "Listener Stats"
 
-#: airtime_mvc/application/configs/navigation.php:144
-msgid "Upgrade"
-msgstr ""
-
-#: airtime_mvc/application/configs/navigation.php:144
-msgid "Billing"
-msgstr ""
-
-#: airtime_mvc/application/configs/navigation.php:151
-msgid "Account Plans"
-msgstr ""
-
-#: airtime_mvc/application/configs/navigation.php:158
-msgid "Account Details"
-msgstr ""
-
-#: airtime_mvc/application/configs/navigation.php:165
-msgid "View Invoices"
-msgstr ""
-
 #: airtime_mvc/application/configs/navigation.php:175
 #: airtime_mvc/application/views/scripts/error/error-400.phtml:13
 #: airtime_mvc/application/views/scripts/error/error-403.phtml:13
@@ -2876,50 +2856,6 @@ msgstr "User Type:"
 msgid "Login name is not unique."
 msgstr "Login name is not unique."
 
-#: airtime_mvc/application/forms/BillingClient.php:125
-msgid "What is the name of your favorite childhood friend?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:126
-msgid "What school did you attend for sixth grade?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:127
-msgid "In what city did you meet your spouse/significant other?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:128
-msgid "What street did you live on in third grade?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:129
-msgid "What is the first name of the boy or girl that you first kissed?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:130
-msgid "In what city or town was your first job?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:19
-msgid "Plan type:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:31
-msgid "Billing cycle:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:39
-msgid "Payment method:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:42
-msgid "PayPal"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:43
-msgid "Credit Card via 2Checkout"
-msgstr ""
-
 #: airtime_mvc/application/forms/customvalidators/ConditionalNotEmpty.php:32
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:8
 msgid "Value is required and can't be empty"
@@ -4326,11 +4262,6 @@ msgstr "Choose Show Instance"
 msgid "Find"
 msgstr "Find"
 
-#: airtime_mvc/application/views/scripts/form/edit-user.phtml:7
-#, php-format
-msgid "<b>Note:</b> Since you're the station owner, your account information can be edited in <a href=\"%s\">Billing Settings</a> instead."
-msgstr ""
-
 #: airtime_mvc/application/views/scripts/form/login.phtml:41
 msgid "Forgot your password?"
 msgstr ""
@@ -5074,11 +5005,6 @@ msgstr "Last Name"
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:21
 msgid "User Type"
 msgstr "User Type"
-
-#: airtime_mvc/application/views/scripts/user/add-user.phtml:31
-#, php-format
-msgid "Super Admin details can be changed in your <a href=\"%s\">Billing Settings</a>."
-msgstr ""
 
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:30
 msgid "Stream URL:"

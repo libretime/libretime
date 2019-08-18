@@ -11,7 +11,7 @@ class Application_Form_Login extends Zend_Form
         $this->setMethod('post');
 
         //If the request comes from an origin we consider safe, we disable the CSRF
-        //token checking ONLY for the login page. We do this to allow logins from WHMCS to work.
+        //token checking ONLY for the login page.
         $request = Zend_Controller_Front::getInstance()->getRequest();
         if ($request) {
             $refererUrl = $request->getHeader('referer');

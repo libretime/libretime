@@ -6,21 +6,6 @@
 <script type="text/javascript">
     var LIBRETIME_PLUPLOAD_MAX_FILE_SIZE = "<?php echo $this->uploadMaxSize; ?>";
 </script>
-<?php $upgradeLink = Application_Common_OsPath::getBaseDir() . "billing/upgrade"; ?>
-<?php if ($this->quotaLimitReached) { ?>
-    <div class="errors quota-reached">
-    <?php printf(_pro("Disk quota exceeded. You cannot upload files until you %s upgrade your storage"),
-        "<a target=\"_parent\" href=$upgradeLink>");?></a>.
-    </div>
-<?php 
-}
-?>
-<!--
-<form id="plupload_form" <?php if ($this->quotaLimitReached) { ?> class="hidden" <?php } ?>>
-    <?php echo $this->form->getElement('csrf') ?>
-    <div id="plupload_files"></div>	
-</form>
--->
 <div id="upload_form" class="lib-content ui-widget ui-widget-content block-shadow padded content-pane wide-panel<?php if ($this->quotaLimitReached) { ?> hidden <?php } ?>">
     <?php
     $partitions = Application_Model_Systemstatus::GetDiskInfo();
