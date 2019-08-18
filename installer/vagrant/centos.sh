@@ -6,16 +6,6 @@ yum install -y epel-release
 # Nux Dextop
 yum install -y http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
 
-# We are after PUIAS Unsupported where we get celery from
-# the install needs forcing since springdale-core tries to replace centos-release
-curl -O http://springdale.math.ias.edu/data/puias/6/x86_64/os/Packages/springdale-unsupported-6-2.sdl6.10.noarch.rpm
-rpm -hiv --nodeps springdale-unsupported-6-2.sdl6.10.noarch.rpm 
-rm -f springdale-unsupported-6-2.sdl6.10.noarch.rpm 
-# we need to install the key manually since it is also part of springdale-core
-curl -O http://puias.princeton.edu/data/puias/6/x86_64/os/RPM-GPG-KEY-puias
-rpm --import RPM-GPG-KEY-puias 
-rm -f RPM-GPG-KEY-puias
-
 # RaBe Liquidsoap Distribution (RaBe LSD)
 curl -o /etc/yum.repos.d/home:radiorabe:liquidsoap.repo \
     http://download.opensuse.org/repositories/home:/radiorabe:/liquidsoap/CentOS_7/home:radiorabe:liquidsoap.repo
