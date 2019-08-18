@@ -744,7 +744,7 @@ msgid "User Manual"
 msgstr "Priručnik"
 
 #: airtime_mvc/application/configs/navigation.php:200
-msgid "File a Support Ticket"
+msgid "Get Help Online"
 msgstr ""
 
 #: airtime_mvc/application/configs/navigation.php:210
