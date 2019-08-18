@@ -20,16 +20,7 @@ function scheduleRefetchEvents(json) {
 }
 
 function makeTimeStamp(date) {
-    var sy, sm, sd, h, m, s, timestamp;
-    sy = date.getFullYear();
-    sm = date.getMonth() + 1;
-    sd = date.getDate();
-    h = date.getHours();
-    m = date.getMinutes();
-    s = date.getSeconds();
-
-    timestamp = sy + "-" + pad(sm, 2) + "-" + pad(sd, 2) + " " + pad(h, 2) + ":" + pad(m, 2) + ":" + pad(s, 2);
-    return timestamp;
+    return date.format('YYYY-MM-DD HH:mm:ss');
 }
 
 function dayClick(date, allDay, jsEvent, view) {
