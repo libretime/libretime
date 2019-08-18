@@ -746,8 +746,8 @@ msgid "User Manual"
 msgstr "User Manual"
 
 #: airtime_mvc/application/configs/navigation.php:200
-msgid "File a Support Ticket"
-msgstr "File a Support Ticket"
+msgid "Get Help Online"
+msgstr "Get Help Online"
 
 #: airtime_mvc/application/configs/navigation.php:210
 msgid "What's New?"

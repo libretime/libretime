@@ -22,7 +22,7 @@ define('PRIVACY_POLICY_URL'         , 'https://github.com/LibreTime/code-of-cond
 define('USER_MANUAL_URL'            , 'http://libretime.org/manual/');
 define('ABOUT_AIRTIME_URL'          , 'http://libretime.org');
 define('AIRTIME_TRANSIFEX_URL'      , 'http://libretime.org/translating/');
-define('SUPPORT_TICKET_URL'         , 'https://github.com/LibreTime/libretime/issues');
+define('LIBRETIME_DISCOURSE_URL'    , 'https://discourse.libretime.org');
 define('UI_REVAMP_EMBED_URL'        , 'https://www.youtube.com/embed/nqpNnCKGluY');
 define('LIBRETIME_WHATS_NEW_URL'    , 'https://github.com/LibreTime/libretime/releases');
 define('LIBRETIME_UPDATE_FEED'      , 'https://github.com/LibreTime/libretime/releases.atom');
