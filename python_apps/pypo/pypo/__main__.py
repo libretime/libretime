@@ -16,7 +16,10 @@ from api_clients import api_client
 from configobj import ConfigObj
 from datetime import datetime
 from optparse import OptionParser
-from queue import Queue
+try:
+    from queue import Queue
+except ImportError:  # Python 2.7.5 (CentOS 7)
+    from Queue import Queue
 from threading import Lock
 
 from .listenerstat import ListenerStat
