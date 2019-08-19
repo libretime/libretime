@@ -53,13 +53,21 @@ class Application_Model_Dashboard
         //Compare the two and if the last show was recorded and started
         //after the last item in the schedule table, then return the show's
         //name. Else return the last item from the schedule.
-
         $row = array();
         $showInstance = Application_Model_ShowInstance::GetCurrentShowInstance($p_timeNow);
         if (!is_null($showInstance)) {
             $instanceId = $showInstance->getShowInstanceId();
             $row = Application_Model_Schedule::GetCurrentScheduleItem($p_timeNow, $instanceId);
         }
+        /*
+        $storDir = Application_Model_MusicDir::getStorDir();
+        $artwork = $storDir->getDirectory() . $row[0]["metadata"]["artwork"];
+        if($filecontent = file_get_contents($artwork) !== false){
+           $get_file_content = file_get_contents($artwork);
+        } else {
+          $get_file_content = "css/images/no-cover.jpg";
+        }*/
+
         if (is_null($showInstance)) {
             if (count($row) == 0) {
                 return null;
@@ -68,8 +76,9 @@ class Application_Model_Dashboard
                  * just in case we allow tracks to be scheduled without a show
                  * in the future.
                  */
-
                 return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
+                            //"artwork_data"=>$get_file_content,
+                            "artwork_data"=>$row[0]["artwork_data"],
                             "starts"=>$row[0]["starts"],
                             "ends"=>$row[0]["ends"]);
             }
@@ -87,6 +96,7 @@ class Application_Model_Dashboard
                 }
             } else {
                  return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
+                        "artwork_data"=>$row[0]["artwork_data"],
                         "starts"=>$row[0]["starts"],
                         "ends"=>$row[0]["ends"],
                         "media_item_played"=>$row[0]["media_item_played"],
@@ -110,6 +120,7 @@ class Application_Model_Dashboard
                 return null;
             } else {
                 return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
+                            "artwork_data"=>$row[0]["artwork_data"],
                             "starts"=>$row[0]["starts"],
                             "ends"=>$row[0]["ends"]);
             }
@@ -128,6 +139,7 @@ class Application_Model_Dashboard
 
                 if ($row[0]["starts"] <= $showInstance->getShowInstanceStart()) {
                     return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
+                            "artwork_data"=>$row[0]["artwork_data"],
                             "starts"=>$row[0]["starts"],
                             "ends"=>$row[0]["ends"]);
                 } else {

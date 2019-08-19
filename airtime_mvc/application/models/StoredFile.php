@@ -663,7 +663,6 @@ SQL;
         return $res;
     }
 
-
     public static function getLibraryColumns()
     {
         return array("id", "track_title", "artist_name", "album_title",
@@ -866,18 +865,17 @@ SQL;
                 $formatter = new BitrateFormatter($row['bit_rate']);
                 $row['bit_rate'] = $formatter->format();
 
-                // for audio preview
-                $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
-
                 // for artwork
-
                 if($filecontent = file_get_contents($fp . $row['artwork']) !== false){
                    $get_artwork = file_get_contents($fp . $row['artwork']);
                 } else {
                   $get_artwork = "";
                 }
 
-                $row['artwork'] = $get_artwork;
+                $row['artwork_data'] = $get_artwork;
+
+                // for audio preview
+                $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
 
             } else {
 
@@ -1135,7 +1133,6 @@ SQL;
     {
         return $this->_file->getDbOwnerId();
     }
-
 
     public static function setIsPlaylist($p_playlistItems, $p_type, $p_status) {
         foreach ($p_playlistItems as $item) {

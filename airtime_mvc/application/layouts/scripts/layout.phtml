@@ -40,7 +40,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <?php 	$partial = array('menu.phtml', 'default');
     $this->navigation()->menu()->setPartial($partial); ?>
 
-
     <script type="text/javascript">
         var schedulePreLoaded = <?php
         //Awful hack to speed up loading - Embed the schedule in the response so that the dashboard
@@ -49,6 +48,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
  ?>;
         //The DOM elements that these calls depend on exist by this point:
         parseItems(schedulePreLoaded.entries);
+				//console.log(schedulePreLoaded.entries);
         parseSourceStatus(schedulePreLoaded.source_status);
         parseSwitchStatus(schedulePreLoaded.switch_status);
 

@@ -63,6 +63,7 @@ define('MDATA_KEY_MIME'        , 'mime');
 define('MDATA_KEY_FTYPE'       , 'ftype');
 define('MDATA_KEY_URL'         , 'info_url');
 define('MDATA_KEY_ARTWORK'     , 'artwork');
+define('MDATA_KEY_ARTWORK_DATA', 'artwork_data');
 define('MDATA_KEY_GENRE'       , 'genre');
 define('MDATA_KEY_MOOD'        , 'mood');
 define('MDATA_KEY_LABEL'       , 'label');

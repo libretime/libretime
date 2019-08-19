@@ -141,6 +141,9 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
         $view->headScript()->appendScript("var PRODUCT_NAME = '" . PRODUCT_NAME . "';");
         $view->headScript()->appendScript("var USER_MANUAL_URL = '" . USER_MANUAL_URL . "';");
         $view->headScript()->appendScript("var COMPANY_NAME = '" . COMPANY_NAME . "';");
+        //Each page refresh or tab open has uniqID, not to be used for security
+        $view->headScript()->appendScript("var UNIQID = '" . uniqid() . "';");
+
     }
 
     protected function _initHeadLink()
@@ -183,7 +186,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             ->appendFile($baseUrl . 'js/qtip/jquery.qtip.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'js/jplayer/jquery.jplayer.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'js/sprintf/sprintf-0.7-beta1.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
-            ->appendFile($baseUrl . 'js/cookie/jquery.cookie.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
+            ->appendFile($baseUrl . 'js/cookie/js.cookie.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'js/i18n/jquery.i18n.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'locale/general-translation-table?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'locale/datatables-translation-table?' . $CC_CONFIG['airtime_version'], 'text/javascript')

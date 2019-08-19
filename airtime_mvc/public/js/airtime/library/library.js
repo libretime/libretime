@@ -768,8 +768,8 @@ var AIRTIME = (function(AIRTIME) {
 
                 if (aData.ftype === "audioclip") {
                     $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Track preview") + '" src="' + baseUrl + 'css/images/icon_audioclip.png">');
-                    if (aData.artwork) {
-                        $(nRow).find('td.library_img').html('<img class="img_small" id="'+ aData.id +'" width="28" height="28" src="'+ aData.artwork +'">');
+                    if (aData.artwork_data) {
+                        $(nRow).find('td.library_img').html('<img class="img_small" id="'+ aData.id +'" width="28" height="28" src="'+ aData.artwork_data +'">');
                     } else {
                         $(nRow).find('td.library_img').html('<img class="img_small" width="28" height="28" src="' + baseUrl + 'css/images/no-cover.jpg">');
                     }
@@ -794,6 +794,7 @@ var AIRTIME = (function(AIRTIME) {
                 } else if (!aData.is_playlist) {
                     $(nRow).find("td.library_is_playlist").html('');
                 }
+                //console.log(aData);
             },
             // remove any selected nodes before the draw.
             "fnPreDrawCallback": function (oSettings) {
@@ -1142,7 +1143,7 @@ var AIRTIME = (function(AIRTIME) {
 
                 function processMenuItems(oItems) {
 
-                        // define an add to playlist callback.
+                    // define an add to playlist callback.
                     if (oItems.pl_add !== undefined) {
                         var aItems = [];
 
@@ -1249,7 +1250,6 @@ var AIRTIME = (function(AIRTIME) {
                         oItems.publish.callback = callback;
                     }
 
-
                     // define a download callback.
                     if (oItems.download !== undefined) {
 
@@ -1303,6 +1303,7 @@ var AIRTIME = (function(AIRTIME) {
                     async: false,
                     success: function(json){
                         processMenuItems(json.items);
+                        //console.log(json.items);
                     }
                 });
 

@@ -339,6 +339,7 @@
                     } else {
                         $("ul.schedule_list").find("li").html(data.next.name);
                     }
+                    //console.log(data.current.metadata.artwork_data);
                 }
             });
 
@@ -350,10 +351,7 @@
             // Add 3 seconds to the timeout so Airtime has time to update the metadata before we fetch it
             metadataTimer = setTimeout(attachStreamMetadataToPlayer, time_to_next_track_starts+3000);
 
-
         }
-
-
     </script>
 
     <style type="text/css">
