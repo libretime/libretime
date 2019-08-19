@@ -133,11 +133,25 @@ function updatePlaybar(){
 
             var check_current_song = Cookies.get('current_track');
             var loaded = Cookies.get('loaded');
-            //this is to prevent it from reloading multiple times
+
+            ////UNCOMMENT the two lines below to test
+            //$('#now-playing-artwork_containter').html("<img height='75' width='75' class'artwork' src='"+ currentSong.metadata.artwork_data +"' />");
+            //console.log("Data URI Test: "+ currentSong.metadata.artwork_data);
+
             if (check_current_song != currentSong.name) {
 
               $('#current').text(currentSong.name+",");
 
+              /* TODO: I know the artwork codes are a bit messy right now, the only
+                 issue here could be due to data-uri size and not performing fast.
+                 needs to be checked. When track changes, it seem to be showing
+                 undefined, then after a few refreshes the data uri shows up. I have
+                 the code below inside this if/else rule so it doesn't refesh
+                 everytime, so you won't see the image update. But if you want to
+                 see it you can comment out the codes outside this if/else rule
+                 right above this comment. One being the code you see below but
+                 it will refresh everytime. And the other is to the console.
+              */
               $('#now-playing-artwork_containter').html("<img height='75' width='75' class'artwork' src='"+ currentSong.metadata.artwork_data +"' />");
               Cookies.remove('current_track');
               Cookies.set('current_track', currentSong.name);
