@@ -134,7 +134,7 @@ function updatePlaybar(){
             var check_current_song = Cookies.get('current_track');
             var loaded = Cookies.get('loaded');
 
-            ////UNCOMMENT the two lines below to test
+            ////UNCOMMENT the two lines below to test, make sure to comment out line 155 to test
             //$('#now-playing-artwork_containter').html("<img height='75' width='75' class'artwork' src='"+ currentSong.metadata.artwork_data +"' />");
             //console.log("Data URI Test: "+ currentSong.metadata.artwork_data);
 
