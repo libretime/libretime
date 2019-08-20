@@ -20,16 +20,7 @@ function scheduleRefetchEvents(json) {
 }
 
 function makeTimeStamp(date) {
-    var sy, sm, sd, h, m, s, timestamp;
-    sy = date.getFullYear();
-    sm = date.getMonth() + 1;
-    sd = date.getDate();
-    h = date.getHours();
-    m = date.getMinutes();
-    s = date.getSeconds();
-
-    timestamp = sy + "-" + pad(sm, 2) + "-" + pad(sd, 2) + " " + pad(h, 2) + ":" + pad(m, 2) + ":" + pad(s, 2);
-    return timestamp;
+    return date.format('YYYY-MM-DD HH:mm:ss');
 }
 
 function dayClick(date, allDay, jsEvent, view) {
@@ -239,6 +230,21 @@ function eventRender(event, element, view) {
                         .find(".fc-event-time")
                         .before('<span class="small-icon show-partial-filled"></span>');
                 }
+            } else if (event.percent > 100) {
+                if (event.linked) {
+                    $(element)
+                        .find(".fc-event-time")
+                        .before('<span class="small-icon linked"></span><span class="small-icon show-overbooked"></span>');
+                } else if (event.show_has_auto_playlist === true) {
+                    $(element)
+                        .find(".fc-event-time")
+                        .before('<span class="small-icon autoplaylist"></span>');
+                } else {
+                    $(element)
+                        .find(".fc-event-time")
+                        .before('<span class="small-icon show-overbooked"></span>');
+                }
+
             } else {
                 if (event.linked) {
                     $(element)
@@ -278,6 +284,20 @@ function eventRender(event, element, view) {
                     $(element)
                         .find(".fc-event-title")
                         .after('<span title="' + $.i18n._("Show is partially filled") + '" class="small-icon show-partial-filled"></span>');
+                }
+            } else if (event.percent > 100) {
+                if (event.linked) {
+                    $(element)
+                        .find(".fc-event-title")
+                        .after('<span class="small-icon linked"></span><span title="' + $.i18n._("Shows longer than their scheduled time will be cut off by a following show.") + '" class="small-icon show-overbooked"></span>');
+                } else if (event.show_has_auto_playlist === true) {
+                    $(element)
+                        .find(".fc-event-title")
+                        .after('<span title="' + $.i18n._("Show has an automatic playlist") + '"class="small-icon autoplaylist"></span>');
+                } else {
+                    $(element)
+                        .find(".fc-event-title")
+                        .after('<span title="' + $.i18n._("Shows longer than their scheduled time will be cut off by a following show.") + '" class="small-icon show-overbooked"></span>');
                 }
             } else {
                 if (event.linked) {
@@ -566,6 +586,27 @@ function addQtipsToIcons(ele, id) {
         $(ele).qtip({
             content: {
                 text: $.i18n._("This show is not completely filled with content.")
+            },
+            position: {
+                adjust: {
+                    resize: true,
+                    method: "flip flip"
+                },
+                at: "right center",
+                my: "left top",
+                viewport: $(window)
+            },
+            style: {
+                classes: "ui-tooltip-dark file-md-long"
+            },
+            show: {
+                ready: true // Needed to make it show on first mouseover event
+            }
+        });
+    } else if ($(ele).hasClass("show-overbooked")) {
+        $(ele).qtip({
+            content: {
+                text: $.i18n._("Shows longer than their scheduled time will be cut off by a following show.")
             },
             position: {
                 adjust: {
