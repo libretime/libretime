@@ -302,15 +302,7 @@ class ScheduleController extends Zend_Controller_Action
             $range["previous"]["ends"] = Application_Common_DateHelper::UTCStringToUserTimezoneString($range["previous"]["ends"]);
         }
         if (isset($range["current"])) {
-
-            $storDir = Application_Model_MusicDir::getStorDir();
-            $artwork_path = $storDir->getDirectory() . $range["current"]["metadata"]["artwork"];
-            if($filecontent = file_get_contents($artwork_path) !== false){
-               $get_artwork = file_get_contents($artwork_path);
-            } else {
-              $get_artwork = "css/images/no-cover.jpg";
-            }
-
+            $get_artwork = FileDataHelper::getArtworkData($range["current"]["metadata"]["artwork"]);
             $range["current"]["metadata"]["artwork_data"] = $get_artwork;
             $range["current"]["starts"] = Application_Common_DateHelper::UTCStringToUserTimezoneString($range["current"]["starts"]);
             $range["current"]["ends"] = Application_Common_DateHelper::UTCStringToUserTimezoneString($range["current"]["ends"]);

@@ -68,4 +68,29 @@ class FileDataHelper {
         }
     }
 
+    /**
+     * Gets data from artwork file
+     *
+     * @param string $file
+     * @param string $filepath
+     *
+     * @return string Data URI for artwork
+     */
+    public static function getArtworkData($file, $filepath = false)
+    {
+        if ($filepath != false) {
+            $path = $filepath . $file;
+        } else {
+            $storDir = Application_Model_MusicDir::getStorDir();
+            $path = $storDir->getDirectory() . $file;
+        }
+
+        if($filecontent = file_get_contents($path) !== false){
+            $get_file_content = file_get_contents($path);
+        } else {
+            $get_file_content = "css/images/no-cover.jpg";
+        }
+        return $get_file_content;
+    }
+
 }

@@ -13,30 +13,17 @@
         ?>
         <div class="track-edit-right-wrapper">
             <div class="track-edit-right">
-
                 <div class="inner_track_editor_title" style="width: 100%;">
-
                     <h2 style="line-height: 26px !important;"><span class="title_obj_name"><?php echo($this->title); ?></span></h2>
                     <h3 style="line-height: 2px !important;"><span class=""><?php echo($this->artist_name); ?></span></h3>
-
                 </div>
             </div>
         </div>
         <div class="track-edit-left">
-
             <?php
-            // TODO: add to function
-            $storDir = Application_Model_MusicDir::getStorDir();
-            $saved_file = $storDir->getDirectory() . $this->artwork;
-
-            if($filecontent = file_get_contents($saved_file) !== false){
-               $get_file_content = file_get_contents($saved_file);
-            } else {
-              $get_file_content = "css/images/no-cover.jpg";
-            }
-            echo '<img width="140" height="140" src="' . $get_file_content .'">';
+            $get_artwork = FileDataHelper::getArtworkData($this->artwork);
+            echo '<img width="140" height="140" src="' . $get_artwork .'">';
             ?>
-
         </div>
     </div>
     <div style="height: 160px;"></div>

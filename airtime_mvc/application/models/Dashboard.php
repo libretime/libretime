@@ -59,14 +59,9 @@ class Application_Model_Dashboard
             $instanceId = $showInstance->getShowInstanceId();
             $row = Application_Model_Schedule::GetCurrentScheduleItem($p_timeNow, $instanceId);
         }
-        /*
-        $storDir = Application_Model_MusicDir::getStorDir();
-        $artwork = $storDir->getDirectory() . $row[0]["metadata"]["artwork"];
-        if($filecontent = file_get_contents($artwork) !== false){
-           $get_file_content = file_get_contents($artwork);
-        } else {
-          $get_file_content = "css/images/no-cover.jpg";
-        }*/
+
+
+        //$get_artwork = FileDataHelper::getArtworkData($row[0]["artwork"]);
 
         if (is_null($showInstance)) {
             if (count($row) == 0) {
