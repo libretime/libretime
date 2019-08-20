@@ -207,8 +207,8 @@ $pages[] = array(
             'target'     => "_blank"
         ),
         array(
-            'label'     => _('File a Support Ticket'),
-            'uri'       => SUPPORT_TICKET_URL,
+            'label'     => _('Get Help Online'),
+            'uri'       => LIBRETIME_DISCOURSE_URL,
             'target'    => "_blank"
         ),
         array(

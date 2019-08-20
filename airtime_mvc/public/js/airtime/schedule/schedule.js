@@ -22,21 +22,6 @@ function closeDialogCalendar(event, ui) {
     $("#schedule_calendar").fullCalendar( 'refetchEvents' );
 }
 
-function checkShowLength(json) {
-    var percent = json.percentFilled;
-
-    if (percent > 100){
-        $("#show_time_warning")
-            .text($.i18n._("Shows longer than their scheduled time will be cut off by a following show."))
-            .show();
-    }
-    else {
-        $("#show_time_warning")
-            .empty()
-            .hide();
-    }
-}
-
 function confirmCancelShow(show_instance_id){
     if (confirm($.i18n._('Cancel Current Show?'))) {
         var url = baseUrl+"Schedule/cancel-current-show";

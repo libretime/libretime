@@ -64,8 +64,8 @@ specific version dependencies.
 * [CentOS](https://www.postgresql.org/download/linux/redhat/)
 
 You should restrict access to the database and create a user specific to
-LibreTime. The default installer script create a user with the password
-`airtime` which is far to open and should be replaced with a self provided user
+LibreTime. The default installer script creates a user with the password
+`airtime`, which is far too open and should be replaced with a self provided user
 and a secure password. See the PostgreSQL docs on
 [roles](https://www.postgresql.org/docs/7.0/static/newuser.htm) and
 [databases](https://www.postgresql.org/docs/10/static/managing-databases.html).

@@ -1,5 +1,6 @@
 [Unit]
 Description=Airtime Playout Service
+After=network-online.target
 
 [Service]
 ExecStart=/usr/bin/airtime-playout
