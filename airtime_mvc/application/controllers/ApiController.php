@@ -57,7 +57,6 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('status'                        , 'json')
                 ->addActionContext('register-component'            , 'json')
                 ->addActionContext('update-liquidsoap-status'      , 'json')
-                ->addActionContext('live-chat'                     , 'json')
                 ->addActionContext('update-file-system-mount'      , 'json')
                 ->addActionContext('handle-watched-dir-missing'    , 'json')
                 ->addActionContext('rabbitmq-do-push'              , 'json')

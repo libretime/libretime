@@ -103,13 +103,6 @@ class Application_Common_UsabilityHints
                     "<a href=\"/schedule\">",
                     "</a>");
             }
-        } else if (LIBRETIME_ENABLE_BILLING === true && $userIsOnShowbuilderPage && $userIsSuperAdmin) {
-            $unpaidInvoice = Billing::checkForUnpaidInvoice();
-            if ($unpaidInvoice != null) {
-                $invoiceUrl = "/billing/invoice?invoiceid=" . $unpaidInvoice['id'];
-                $amount = $unpaidInvoice['currencyprefix'] . $unpaidInvoice['total'];
-                return _pro(sprintf("You have an unpaid invoice for %s due soon. <a href='%s'>Please pay it to keep your station on the air.</a>", $amount, $invoiceUrl));;
-            }
         }
         return "";
     }

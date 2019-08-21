@@ -485,13 +485,6 @@ class LibraryController extends Zend_Controller_Action
 
     public function publishDialogAction() {
         $this->_helper->layout->disableLayout();
-
-
-        if (LIBRETIME_ENABLE_BILLING === true && !Billing::isStationPodcastAllowed()) {
-            $this->renderScript("podcast/featureupgrade-pane.phtml");
-        }
-
-
         //This just spits out publish-dialog.phtml!
     }
 }

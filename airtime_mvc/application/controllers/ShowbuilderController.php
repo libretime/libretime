@@ -25,7 +25,6 @@ class ShowbuilderController extends Zend_Controller_Action
         //$this->_helper->layout->setLayout("showbuilder");
 
         $this->view->headScript()->appendScript("localStorage.setItem( 'user-type', '$userType' );");
-        $this->view->headScript()->appendScript(Application_Common_GoogleAnalytics::generateGoogleTagManagerDataLayerJavaScript());
 
         $this->view->headLink()->appendStylesheet($baseUrl . 'css/redmond/jquery-ui-1.8.8.custom.css?' . $CC_CONFIG['airtime_version']);
 

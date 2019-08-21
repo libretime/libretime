@@ -148,38 +148,6 @@ $pages[] = array(
 
     )
 );
-if (LIBRETIME_ENABLE_BILLING === true) {
-    $pages[] = array(
-        'label' =>  (Application_Model_Preference::GetPlanLevel()=="trial") ? "<i class='icon-star icon-orange'></i><span style='color: #ff5d1a'>"._('Upgrade')."</span>" : "<i class='icon-briefcase icon-white'></i>"._('Billing'),
-        'controller' => 'billing',
-        'action' => 'upgrade',
-        'resource' => 'billing',
-        'title' => 'Billing',
-        'pages' => array(
-            array(
-                'label' => _('Account Plans'),
-                'module' => 'default',
-                'controller' => 'billing',
-                'action' => 'upgrade',
-                'resource' => 'billing'
-            ),
-            array(
-                'label' => _('Account Details'),
-                'module' => 'default',
-                'controller' => 'billing',
-                'action' => 'client',
-                'resource' => 'billing'
-            ),
-            array(
-                'label' => _('View Invoices'),
-                'module' => 'default',
-                'controller' => 'billing',
-                'action' => 'invoices',
-                'resource' => 'billing'
-            )
-        )
-    );
-}
 $pages[] = array(
     'label'      => _('Help'),
     'controller' => 'dashboard',

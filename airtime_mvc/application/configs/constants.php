@@ -106,24 +106,8 @@ define('UI_PLAYLISTCONTROLLER_OBJ_SESSNAME', 'PLAYLISTCONTROLLER_OBJ');
 /*define('UI_PLAYLIST_SESSNAME', 'PLAYLIST');
 define('UI_BLOCK_SESSNAME', 'BLOCK');*/
 
-// Google Analytics integration
-define('LIBRETIME_ENABLE_GOOGLE_ANALYTICS', false);
-
-//WHMCS integration
-define('LIBRETIME_ENABLE_WHMCS',            false);
-define('WHMCS_PASSWORD_RESET_URL',          'https://account.example.com/pwreset.php');
-define('WHMCS_API_URL'                    , 'https://account.example.org/includes/api.php');
-define('SUBDOMAIN_WHMCS_CUSTOM_FIELD_NAME', 'Choose your domain');
-
-//LiveChat integration
-define('LIBRETIME_ENABLE_LIVECHAT', false);
-
 //Sentry error logging
 define('SENTRY_CONFIG_PATH', LIBRETIME_CONF_DIR . '/sentry.airtime_web.ini');
-
-//Provisioning status
-define('PROVISIONING_STATUS_SUSPENDED' , 'Suspended');
-define('PROVISIONING_STATUS_ACTIVE' , 'Active');
 
 //TuneIn integration
 define("TUNEIN_API_URL", "http://air.radiotime.com/Playing.ashx");
@@ -150,6 +134,3 @@ define('STATION_PODCAST_SERVICE_NAME', 'station_podcast');
 //define('IMPORTED_PODCAST', 1);
 
 define('ITUNES_XML_NAMESPACE_URL', 'http://www.itunes.com/dtds/podcast-1.0.dtd');
-
-// Billing configuration
-define('LIBRETIME_ENABLE_BILLING', false);

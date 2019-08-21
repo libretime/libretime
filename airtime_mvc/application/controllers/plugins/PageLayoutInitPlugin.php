@@ -33,8 +33,6 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             "auth",
             "error",
             "upgrade",
-            'whmcs-login',
-            "provisioning",
             "embed",
             "feeds"
         ))
@@ -223,29 +221,12 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
         }
 
         $view->headScript()->appendScript("var userType = '$userType';");
-        if (LIBRETIME_ENABLE_LIVECHAT === true
-            && array_key_exists('REQUEST_URI', $_SERVER) //Doesn't exist for unit tests
-            && strpos($_SERVER['REQUEST_URI'], 'Dashboard/stream-player') === false
-            && strpos($_SERVER['REQUEST_URI'], 'audiopreview') === false
-            && $_SERVER['REQUEST_URI'] != "/") {
-            $plan_level = strval(Application_Model_Preference::GetPlanLevel());
-            // Since the Hobbyist plan doesn't come with Live Chat support, don't enable it
-            if (Application_Model_Preference::GetLiveChatEnabled() && $plan_level !== 'hobbyist') {
-                $client_id = strval(Application_Model_Preference::GetClientId());
-                $station_url = $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
-                $view->headScript()->appendScript("var livechat_client_id = '$client_id';\n" .
-                    "var livechat_plan_type = '$plan_level';\n" .
-                    "var livechat_station_url = 'http://$station_url';");
-                $view->headScript()->appendFile($baseUrl . 'js/airtime/common/livechat.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-            }
-        }
     }
 
     protected function _initViewHelpers()
     {
         $view = $this->_bootstrap->getResource('view');
         $view->addHelperPath(APPLICATION_PATH . 'views/helpers', 'Airtime_View_Helper');
-        $view->assign('suspended', (Application_Model_Preference::getProvisioningStatus() == PROVISIONING_STATUS_SUSPENDED));
     }
 
     protected function _initTitle()

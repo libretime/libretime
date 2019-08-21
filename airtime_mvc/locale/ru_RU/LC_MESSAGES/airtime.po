@@ -711,26 +711,6 @@ msgstr "Шаблоны истории"
 msgid "Listener Stats"
 msgstr "Статистика по слушателям"
 
-#: airtime_mvc/application/configs/navigation.php:144
-msgid "Upgrade"
-msgstr "Обновление"
-
-#: airtime_mvc/application/configs/navigation.php:144
-msgid "Billing"
-msgstr "Биллинг"
-
-#: airtime_mvc/application/configs/navigation.php:151
-msgid "Account Plans"
-msgstr "Тарифный план"
-
-#: airtime_mvc/application/configs/navigation.php:158
-msgid "Account Details"
-msgstr "Детали учетной записи"
-
-#: airtime_mvc/application/configs/navigation.php:165
-msgid "View Invoices"
-msgstr "Показать счета"
-
 #: airtime_mvc/application/configs/navigation.php:175
 #: airtime_mvc/application/views/scripts/error/error-400.phtml:13
 #: airtime_mvc/application/views/scripts/error/error-403.phtml:13
@@ -2892,50 +2872,6 @@ msgstr "Тип пользователя:"
 msgid "Login name is not unique."
 msgstr "Имя пользователя не является уникальным."
 
-#: airtime_mvc/application/forms/BillingClient.php:125
-msgid "What is the name of your favorite childhood friend?"
-msgstr "Как звали вашего лучшего друга детства?"
-
-#: airtime_mvc/application/forms/BillingClient.php:126
-msgid "What school did you attend for sixth grade?"
-msgstr "В какой школе вы учились в шестом классе?"
-
-#: airtime_mvc/application/forms/BillingClient.php:127
-msgid "In what city did you meet your spouse/significant other?"
-msgstr "В каком городе вы встретили своего супруга?"
-
-#: airtime_mvc/application/forms/BillingClient.php:128
-msgid "What street did you live on in third grade?"
-msgstr "На какой улице вы жили в третьем классе?"
-
-#: airtime_mvc/application/forms/BillingClient.php:129
-msgid "What is the first name of the boy or girl that you first kissed?"
-msgstr "Как звали вашу первую девушку (вашего первого парня), которую(ого) вы поцеловали?"
-
-#: airtime_mvc/application/forms/BillingClient.php:130
-msgid "In what city or town was your first job?"
-msgstr "В каком городе вы впервые устроились на работу?"
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:19
-msgid "Plan type:"
-msgstr "Тарифный план:"
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:31
-msgid "Billing cycle:"
-msgstr "Цикличность оплаты:"
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:39
-msgid "Payment method:"
-msgstr "Способ оплаты:"
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:42
-msgid "PayPal"
-msgstr "PayPal"
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:43
-msgid "Credit Card via 2Checkout"
-msgstr "Кредитная карта через 2Checkout"
-
 #: airtime_mvc/application/forms/customvalidators/ConditionalNotEmpty.php:32
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:8
 msgid "Value is required and can't be empty"
@@ -4364,11 +4300,6 @@ msgstr "Выберите программу"
 msgid "Find"
 msgstr "Найти"
 
-#: airtime_mvc/application/views/scripts/form/edit-user.phtml:7
-#, php-format
-msgid "<b>Note:</b> Since you're the station owner, your account information can be edited in <a href=\"%s\">Billing Settings</a> instead."
-msgstr "<b>Примечание:</b> Так как вы владелец радиостанции, информация о вашем аккаунте может быть отредактирована в <a href=\"%s\">Настройках оплаты</a> ."
-
 #: airtime_mvc/application/views/scripts/form/login.phtml:41
 msgid "Forgot your password?"
 msgstr "Забыли пароль?"
@@ -5116,11 +5047,6 @@ msgstr "Фамилия"
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:21
 msgid "User Type"
 msgstr "Тип пользователя"
-
-#: airtime_mvc/application/views/scripts/user/add-user.phtml:31
-#, php-format
-msgid "Super Admin details can be changed in your <a href=\"%s\">Billing Settings</a>."
-msgstr "Данные СуперПользователя могут быть изменены в  <a href=\"%s\">Billing Settings</a>."
 
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:30
 msgid "Stream URL:"

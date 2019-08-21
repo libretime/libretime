@@ -268,7 +268,7 @@ img.logo
     overflow:hidden;
 }
 
-.now-playing-block, .show-block, .on-air-block, .time-info-block, .listen-control-block, .trial-info-block {
+.now-playing-block, .show-block, .on-air-block, .time-info-block, .listen-control-block {
     height:100px;
     float:left;
     margin-right:10px;
@@ -3070,96 +3070,6 @@ tfoot tr th    {
     margin:0;
 }
 
-/*---////////////////////    TRIAL BOX HEADER    ////////////////////---*/
-
-.trial-box    {
-    width:142px;
-    height:38px;
-    display:block;
-    position:fixed;
-    left:160px;
-    bottom:0px;
-    background-color:#222;
-    background-color:rgba(0, 0, 0, 0.7);
-    z-index:101;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    color:#FFF;
-    font-size:11px;
-    padding:7px;
-}
-.trial-box p    {
-    padding:0 0 3px 0;
-    margin:0 0 5px 0;
-    float:left;
-}
-.trial-box-button a {
-    width:92px;
-    height:14px;
-    display:block;    
-    padding: 1px 3px;
-    -moz-border-radius: 1px;
-    -webkit-border-radius: 1px;
-    border-radius: 1px;
-    text-transform:uppercase;
-    text-align:center;
-    font-family:Arial, Helvetica, sans-serif;
-    font-weight:bold;
-    text-decoration:none;
-    color:#FFFFFF;
-    background-color:#ff5d1a;
-    background: -moz-linear-gradient(top, #ff5d1a 0, #dd4202 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ff5d1a), color-stop(100%, #dd4202));
-    box-shadow: rgba(248, 248, 248, 0.4) 0 1px 1px inset;
-    -moz-box-shadow: rgba(248, 248, 248, 0.4) 0 1px 1px inset;
-    -webkit-box-shadow: rgba(248, 248, 248, 0.4) 0 1px 1px inset;
-    float:left;
-}
-.trial-box-button a:hover {
-    background-color:#dd4202;
-    background: -moz-linear-gradient(top, #dd4202 0, #ff5d1a 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #dd4202), color-stop(100%, #ff5d1a));
-    box-shadow: rgba(248, 248, 248, 0.4) 0 1px 1px inset;
-    -moz-box-shadow: rgba(248, 248, 248, 0.4) 0 1px 1px inset;
-    -webkit-box-shadow: rgba(248, 248, 248, 0.4) 0 1px 1px inset;
-}
-.trial-box-calendar    {
-    float:right;
-    text-align:center;
-    font-weight:bold;
-}
-.trial-box-calendar-white    {
-    font-size:18px;
-    color:#ff5d1a;
-    background:#FFF;
-    width:36px;
-    height:22px;
-    display:block;
-    -webkit-border-top-right-radius: 1px;
-    -moz-border-radius-topright: 1px;    
-    -webkit-border-top-left-radius: 1px;
-    -moz-border-radius-topleft: 1px;    
-}
-.trial-box-calendar-gray    {
-    width:36px;
-    height:14px;
-    display:block;
-    color:#FFF;
-    font-size:11px;
-    padding:1px 0;
-    text-transform:uppercase;
-    background-color:#676767;
-    background: -moz-linear-gradient(top, #7f7f7f 0, #555555 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #7f7f7f), color-stop(100%, #555555));
-    -webkit-border-bottom-right-radius: 1px;
-    -moz-border-radius-bottomright: 1px;    
-    -webkit-border-bottom-left-radius: 1px;
-    -moz-border-radius-bottomleft: 1px;    
-    box-shadow: rgba(0, 0, 0, 0.4) 0 2px 1px inset;
-    -moz-box-shadow: rgba(0, 0, 0, 0.4) 0 2px 2px inset;
-    -webkit-box-shadow: rgba(0, 0, 0, 0.4) 0 2px 2px inset;
-}
 #stream_url {font-size:12px; line-height: 170%;}
 .stream-setting-content fieldset {border-width:0 1px 1px 1px;}
 
@@ -3444,33 +3354,6 @@ dd .stream-status {
     -o-flex: 0 0 100%;
     flex: 0 0 100%;
     font-size: 14px !important;
-}
-
-.thankyou-panel
-{
-    width: 400px;
-    margin: 0 auto;
-    margin-bottom: 30px;
-}
-
-.thankyou-panel h3
-{
-    color: #222;
-}
-
-.suspension_notice
-{
-    text-align: center;
-    background-color: #D27A7A;
-    height: 143px;
-    font-size: 16px;
-    font-family: Helvetica, Arial, sans-serif;
-}
-
-.suspension_notice h2
-{
-    padding-bottom: 0px;
-    padding-top: 13px;
 }
 
 .enable-tunein {

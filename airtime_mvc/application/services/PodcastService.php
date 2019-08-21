@@ -1,6 +1,5 @@
 <?php
 
-class PodcastLimitReachedException extends Exception {}
 
 class InvalidPodcastException extends Exception {}
 
@@ -17,22 +16,6 @@ class Application_Service_PodcastService
         "type",
         "owner"
     );
-
-    /**
-     * There is maximum of 50 podcasts allowed in the library - to limit
-     * resource consumption. This function returns true if the podcast
-     * limit has been reached.
-     *
-     * @return bool
-     */
-    public static function PodcastLimitReached()
-    {
-        if (PodcastQuery::create()->count() >= 50) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     /**
      * Returns parsed rss feed, or false if the given URL cannot be downloaded
@@ -62,14 +45,9 @@ class Application_Service_PodcastService
      * @return array Podcast Array with a full list of episodes
      * @throws Exception
      * @throws InvalidPodcastException
-     * @throws PodcastLimitReachedException
      */
     public static function createFromFeedUrl($feedUrl)
     {
-        if (self::PodcastLimitReached() && LIBRETIME_ENABLE_BILLING) {
-            throw new PodcastLimitReachedException();
-        }
-
         //TODO: why is this so slow?
         $rss = self::getPodcastFeed($feedUrl);
         if (!$rss) {

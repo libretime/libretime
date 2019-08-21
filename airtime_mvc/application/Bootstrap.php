@@ -14,13 +14,6 @@ require_once CONFIG_PATH . "constants.php";
 
 Logging::setLogPath(LIBRETIME_LOG_DIR . '/zendphp.log');
 
-// We need to manually route because we can't load Zend without the database being initialized first.
-if (array_key_exists("REQUEST_URI", $_SERVER) && (stripos($_SERVER["REQUEST_URI"], "/provisioning/create") !== false)) {
-    $provisioningHelper = new ProvisioningHelper($CC_CONFIG["apiKey"][0]);
-    $provisioningHelper->createAction();
-    die();
-}
-
 Zend_Session::setOptions(array('strict' => true));
 Config::setAirtimeVersion();
 require_once (CONFIG_PATH . 'navigation.php');
@@ -29,7 +22,6 @@ Zend_Validate::setDefaultNamespaces("Zend");
 
 $front = Zend_Controller_Front::getInstance();
 $front->registerPlugin(new RabbitMqPlugin());
-$front->registerPlugin(new Zend_Controller_Plugin_ConversionTracking());
 $front->throwExceptions(false);
 
 /* The bootstrap class should only be used to initialize actions that return a view.

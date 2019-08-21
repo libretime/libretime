@@ -96,11 +96,6 @@ class Rest_PodcastController extends Zend_Rest_Controller
                                                "html"=>$this->view->render($path),
                                            ));
         }
-        catch (PodcastLimitReachedException $e) {
-            $this->getResponse()
-                ->setHttpResponseCode(400)
-                ->appendBody("Podcast limit reached.");
-        }
         catch (InvalidPodcastException $e) {
             $this->getResponse()
                 ->setHttpResponseCode(400)
