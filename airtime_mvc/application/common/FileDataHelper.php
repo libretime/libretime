@@ -78,19 +78,25 @@ class FileDataHelper {
      */
     public static function getArtworkData($file, $filepath = false)
     {
-        Logging::info("getArtworkData Log: $file ");
+        //default cover, maybe make option to change in settings
+        $default = "css/images/no-cover.jpg";
 
-        if ($filepath != false) {
-            $path = $filepath . $file;
+        if ($file === '') {
+           //default cover, this opion
+           $get_file_content = $default;
         } else {
-            $storDir = Application_Model_MusicDir::getStorDir();
-            $path = $storDir->getDirectory() . $file;
-        }
+            if ($filepath != false) {
+                $path = $filepath . $file;
+            } else {
+                $storDir = Application_Model_MusicDir::getStorDir();
+                $path = $storDir->getDirectory() . $file;
+            }
 
-        if($filecontent = file_get_contents($path) !== false){
-            $get_file_content = file_get_contents($path);
-        } else {
-            $get_file_content = "css/images/no-cover.jpg";
+            if($filecontent = file_get_contents($path) !== false){
+                $get_file_content = file_get_contents($path);
+            } else {
+                $get_file_content = $default;
+            }
         }
         return $get_file_content;
     }
