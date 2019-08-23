@@ -93,4 +93,123 @@ class FileDataHelper {
         return $get_file_content;
     }
 
+    /**
+     * Add artwork file
+     *
+     * @param string $file
+     * @param string $filepath
+     *
+     * @return string Data URI for artwork
+     */
+    public static function saveArtworkData($analyzeFile, $filename, $importDir, $DbPath)
+    {
+        $getID3 = new getID3;
+        $getFileInfo = $getID3->analyze($analyzeFile);
+
+        if(isset($getFileInfo['comments']['picture'][0])) {
+
+              $get_img = "";
+              $Image = 'data:'.$getFileInfo['comments']['picture'][0]['image_mime'].';charset=utf-8;base64,'.base64_encode($getFileInfo['comments']['picture'][0]['data']);
+              $base64 = @$Image;
+
+              if (!file_exists($importDir . "artwork/")) {
+                  if (!mkdir($importDir . "artwork/", 0777)) {
+                      Logging::info("Failed to create artwork directory.");
+                      throw new Exception("Failed to create artwork directory.");
+                  }
+              }
+
+              $normalizeValue = self::normalizePath($filename);
+              $path_parts = pathinfo($normalizeValue);
+
+              if (file_put_contents($importDir . "artwork/" . $path_parts['filename'], $base64)) {
+                  $get_img = $DbPath . "artwork/". $path_parts['filename'];
+                  Logging::info("Saved artwork ($get_img)");
+              } else {
+                  Logging::info("Could not save the artwork");
+              }
+
+        } else {
+
+              $get_img = 'css/images/no-cover.jpg';
+        }
+
+        return $get_img;
+    }
+
+    private static function normalizePath($string)
+    {
+        static $normal = array (
+          'ƒ' => 'f',
+          'Š' => 'S',
+          'š' => 's',
+          'Ð' => 'Dj',
+          'Ž' => 'Z',
+          'ž' => 'z',
+          'À' => 'A',
+          'Á' => 'A',
+          'Â' => 'A',
+          'Ã' => 'A',
+          'Ä' => 'A',
+          'Å' => 'A',
+          'Æ' => 'E',
+          'Ç' => 'C',
+          'È' => 'E',
+          'É' => 'E',
+          'Ê' => 'E',
+          'Ë' => 'E',
+          'Ì' => 'I',
+          'Í' => 'I',
+          'Î' => 'I',
+          'Ï' => 'I',
+          'Ñ' => 'N',
+          'Ò' => 'O',
+          'Ó' => 'O',
+          'Ô' => 'O',
+          'Õ' => 'O',
+          'Ö' => 'O',
+          'Ø' => 'O',
+          'Ù' => 'U',
+          'Ú' => 'U',
+          'Û' => 'U',
+          'Ü' => 'U',
+          'Ý' => 'Y',
+          'Þ' => 'B',
+          'ß' => 'Ss',
+          'à' => 'a',
+          'á' => 'a',
+          'â' => 'a',
+          'ã' => 'a',
+          'ä' => 'a',
+          'å' => 'a',
+          'æ' => 'e',
+          'ç' => 'c',
+          'è' => 'e',
+          'é' => 'e',
+          'ê' => 'e',
+          'ë' => 'e',
+          'ì' => 'i',
+          'í' => 'i',
+          'î' => 'i',
+          'ï' => 'i',
+          'ð' => 'o',
+          'ñ' => 'n',
+          'ò' => 'o',
+          'ó' => 'o',
+          'ô' => 'o',
+          'õ' => 'o',
+          'ö' => 'o',
+          'ø' => 'o',
+          'ù' => 'u',
+          'ú' => 'u',
+          'û' => 'u',
+          'ý' => 'y',
+          'ý' => 'y',
+          'þ' => 'b',
+          'ÿ' => 'y',
+          ' ' => '_'
+        );
+        return strtr($string, $normal);
+    }
+
 }

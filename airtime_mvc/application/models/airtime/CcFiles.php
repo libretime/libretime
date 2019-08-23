@@ -146,38 +146,7 @@ class CcFiles extends BaseCcFiles {
             $storDir = Application_Model_MusicDir::getStorDir();
             $importedStorageDir = $storDir->getDirectory() . "imported/" . self::getOwnerId() . "/";
             $importedDbPath = "imported/" . self::getOwnerId() . "/";
-
-            $getID3 = new getID3;
-            $getFileInfo = $getID3->analyze($filePath);
-
-            if(isset($getFileInfo['comments']['picture'][0])) {
-
-                $Image = 'data:'.$getFileInfo['comments']['picture'][0]['image_mime'].';charset=utf-8;base64,'.base64_encode($getFileInfo['comments']['picture'][0]['data']);
-                $base64 = @$Image;
-
-                if (!file_exists($importedStorageDir . "artwork/")) {
-                    if (!mkdir($importedStorageDir . "artwork/", 0777)) {
-                        Logging::info("Failed to create artwork directory.");
-                        throw new Exception("Failed to create artwork directory.");
-                    }
-                }
-
-                /* suggest using normalize path in actual audio file as well
-                 * still needs to link it for deletion, when audio gets deleted so does the artwork
-                 * eg. MP3: path-to-file/track-name.mp3 Artwork: path-to-file/track-name
-                 */
-                $normalizeValue = self::normalizePath($originalFilename);
-                $path_parts = pathinfo($normalizeValue);
-                if (file_put_contents($importedStorageDir . "artwork/" . $path_parts['filename'], $base64)) {
-                    $get_img = $importedDbPath . "artwork/". $path_parts['filename'];
-                    Logging::info("Saved artwork ($get_img)");
-                } else {
-                    Logging::info("Could not save the artwork");
-                }
-
-            } else {
-                $get_img = 'css/images/no-cover.jpg';
-            }
+            $get_img = FileDataHelper::saveArtworkData($filePath, $originalFilename, $importedStorageDir, $importedDbPath);
 
             $file->fromArray($fileArray);
             $file->setDbOwnerId(self::getOwnerId());
@@ -512,81 +481,6 @@ class CcFiles extends BaseCcFiles {
         //Do a final encoding conversion to
         $string = mb_convert_encoding($string, 'UTF-8', 'UTF-8');
         return $string;
-    }
-
-    private static function normalizePath($string)
-    {
-        static $normal = array (
-          'ƒ' => 'f',
-          'Š' => 'S',
-          'š' => 's',
-          'Ð' => 'Dj',
-          'Ž' => 'Z',
-          'ž' => 'z',
-          'À' => 'A',
-          'Á' => 'A',
-          'Â' => 'A',
-          'Ã' => 'A',
-          'Ä' => 'A',
-          'Å' => 'A',
-          'Æ' => 'E',
-          'Ç' => 'C',
-          'È' => 'E',
-          'É' => 'E',
-          'Ê' => 'E',
-          'Ë' => 'E',
-          'Ì' => 'I',
-          'Í' => 'I',
-          'Î' => 'I',
-          'Ï' => 'I',
-          'Ñ' => 'N',
-          'Ò' => 'O',
-          'Ó' => 'O',
-          'Ô' => 'O',
-          'Õ' => 'O',
-          'Ö' => 'O',
-          'Ø' => 'O',
-          'Ù' => 'U',
-          'Ú' => 'U',
-          'Û' => 'U',
-          'Ü' => 'U',
-          'Ý' => 'Y',
-          'Þ' => 'B',
-          'ß' => 'Ss',
-          'à' => 'a',
-          'á' => 'a',
-          'â' => 'a',
-          'ã' => 'a',
-          'ä' => 'a',
-          'å' => 'a',
-          'æ' => 'e',
-          'ç' => 'c',
-          'è' => 'e',
-          'é' => 'e',
-          'ê' => 'e',
-          'ë' => 'e',
-          'ì' => 'i',
-          'í' => 'i',
-          'î' => 'i',
-          'ï' => 'i',
-          'ð' => 'o',
-          'ñ' => 'n',
-          'ò' => 'o',
-          'ó' => 'o',
-          'ô' => 'o',
-          'õ' => 'o',
-          'ö' => 'o',
-          'ø' => 'o',
-          'ù' => 'u',
-          'ú' => 'u',
-          'û' => 'u',
-          'ý' => 'y',
-          'ý' => 'y',
-          'þ' => 'b',
-          'ÿ' => 'y',
-          ' ' => '_'
-        );
-        return strtr($string, $normal);
     }
 
     private function removeEmptySubFolders($path)
