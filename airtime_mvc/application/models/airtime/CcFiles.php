@@ -146,13 +146,13 @@ class CcFiles extends BaseCcFiles {
             $storDir = Application_Model_MusicDir::getStorDir();
             $importedStorageDir = $storDir->getDirectory() . "imported/" . self::getOwnerId() . "/";
             $importedDbPath = "imported/" . self::getOwnerId() . "/";
-            $get_img = FileDataHelper::saveArtworkData($filePath, $originalFilename, $importedStorageDir, $importedDbPath);
+            $artwork = FileDataHelper::saveArtworkData($filePath, $originalFilename, $importedStorageDir, $importedDbPath);
 
             $file->fromArray($fileArray);
             $file->setDbOwnerId(self::getOwnerId());
             $now = new DateTime("now", new DateTimeZone("UTC"));
             $file->setDbTrackTitle($originalFilename);
-            $file->setDbArtwork($get_img);
+            $file->setDbArtwork($artwork);
             $file->setDbUtime($now);
             $file->setDbHidden(true);
             $file->save();

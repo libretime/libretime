@@ -78,6 +78,8 @@ class FileDataHelper {
      */
     public static function getArtworkData($file, $filepath = false)
     {
+        Logging::info("getArtworkData Log: $file ");
+
         if ($filepath != false) {
             $path = $filepath . $file;
         } else {
@@ -133,7 +135,7 @@ class FileDataHelper {
 
         } else {
 
-              $get_img = 'css/images/no-cover.jpg';
+              $get_img = '';
         }
 
         return $get_img;

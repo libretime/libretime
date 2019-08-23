@@ -27,7 +27,7 @@
             tableString += "<h3>" + options.text.onAirToday + "</h3>";
             tableString += "<table width='100%' border='0' cellspacing='0' cellpadding='0' class='widget widget now-playing-list small'>"+
                 "<tbody>";
-            
+
             for (var i=0; i<shows.length; i++){
                 tableString +=
                 "<tr>" +
@@ -38,10 +38,10 @@
                     tableString += "<td><a href='" + shows[i].getURL() + "'>" + shows[i].getName() + "</a></td></tr>";
                 } else {
                     tableString += "<td>" + shows[i].getName() + "</td></tr>";
-                }  
+                }
             }
             tableString += "</tbody></table>";
-            
+
             obj.empty();
             obj.append(tableString);
         }
@@ -56,12 +56,12 @@
         }
 
         function getServerData(){
-            $.ajax({url: options.sourceDomain + "api/live-info/", 
-                    data: {type:"endofday",limit: options.showLimit}, 
-                    dataType: "jsonp", 
+            $.ajax({url: options.sourceDomain + "api/live-info/",
+                    data: {type:"endofday",limit: options.showLimit},
+                    dataType: "jsonp",
                     success:function(data) {
                         processData(data);
-                    }, 
+                    },
                     error: airtimeScheduleJsonpError});
             setTimeout(getServerData, options.updatePeriod*1000);
         }
@@ -78,7 +78,7 @@
         sourceDomain: "http://localhost/", //where to get show status from
         text: {onAirNow:"On Air Now", offline:"Offline", current:"Current", next:"Next"}
     };
-    options = $.extend(true, defaults, options);    
+    options = $.extend(true, defaults, options);
     options.sourceDomain = addEndingBackslash(options.sourceDomain);
 
     return this.each(function() {
@@ -94,7 +94,7 @@
             if (sd == null){
                 return;
             }
-            
+
             var currentShow = sd.getCurrentShow();
             var nextShows = sd.getNextShows();
 
@@ -139,12 +139,12 @@
         }
 
         function getServerData(){
-            $.ajax({url: options.sourceDomain + "api/live-info/", 
-                    data: {type:"interval",limit:"5"}, 
-                    dataType: "jsonp", 
+            $.ajax({url: options.sourceDomain + "api/live-info/",
+                    data: {type:"interval",limit:"5"},
+                    dataType: "jsonp",
                     success: function(data) {
                         processData(data);
-                    }, 
+                    },
                     error: airtimeScheduleJsonpError});
             setTimeout(getServerData, options.updatePeriod*1000);
         }
@@ -160,7 +160,7 @@
            sourceDomain: "http://localhost/", //where to get show status from
            text: {onAirNow:"On Air Now", offline:"Offline", current:"Current", next:"Next"}
        };
-       options = $.extend(true, defaults, options);    
+       options = $.extend(true, defaults, options);
        options.sourceDomain = addEndingBackslash(options.sourceDomain);
 
        return this.each(function() {
@@ -175,7 +175,7 @@
                if (sd == null){
                    return;
                }
-               
+
                var currentShow = sd.getCurrentShow();
                var nextShows = sd.getNextShows();
 
@@ -206,7 +206,7 @@
                        "<span class='current' id='time-remaining' class='time-remaining'>"+timeRemaining+"</span>");
                obj.append("<ul class='widget now-playing-bar'>" +
                    "<li class='current track-metadata'>"+options.text.current+": "+sd.currentTrack.getTitle()+"</li>" +
-                   "<li class='next track-metadata'>"+options.text.next+": "+sd.nextTrack.getTitle()+"</span></li>" +                   
+                   "<li class='next track-metadata'>"+options.text.next+": "+sd.nextTrack.getTitle()+"</span></li>" +
                    "</ul>");
            }
 
@@ -219,12 +219,12 @@
            }
 
            function getServerData(){
-               $.ajax({url: options.sourceDomain + "api/live-info/", 
-                       data: {type:"interval",limit:"5"}, 
-                       dataType: "jsonp", 
+               $.ajax({url: options.sourceDomain + "api/live-info/",
+                       data: {type:"interval",limit:"5"},
+                       dataType: "jsonp",
                        success: function(data) {
                            processData(data);
-                       }, 
+                       },
                        error: airtimeScheduleJsonpError});
                setTimeout(getServerData, options.updatePeriod*1000);
            }
@@ -243,7 +243,7 @@
     };
     options = $.extend(true, defaults, options);
     options.sourceDomain = addEndingBackslash(options.sourceDomain);
-    
+
     return this.each(function() {
         var obj = $(this);
         obj.empty();
@@ -273,7 +273,7 @@
 
         function updateWidget(data){
             for (var i=0; i<dow.length; i++){
-                var html = 
+                var html =
                   '<table class="widget widget now-playing-list">'+
                     '<colgroup>'+
                       '<col width="150" />'+
@@ -312,7 +312,7 @@
                 html +=
                     '</tbody>'+
                   '</table>';
-                  
+
                 $("#"+dow[i]).empty();
                 $("#"+dow[i]).append(html);
             }
@@ -360,7 +360,7 @@ function ScheduleData(data){
             this.nextShows[i] = new Show(data.nextShow[i]);
         }
     }
-    
+
     this.currentTrack = new AudioTrack(data.current);
     this.nextTrack = new AudioTrack(data.next);
 
@@ -499,12 +499,12 @@ function convertDateToPosixTime(s){
 *     -If the value is less then 1 warn the user that they should upgrade the javascript to a newer version.
 */
 function checkWidgetVersion(data){
-   
+
     var airtimeServerWidgetVersion = data['AIRTIME_API_VERSION'];
-    
+
     if (undefined === airtimeServerWidgetVersion || airtimeServerWidgetVersion >  AIRTIME_API_VERSION )
         throw "The version of widgets you are using is out of date with the Airtime installation, please update your widgets javascript file. (Airtime widget API version is "+airtimeServerWidgetVersion+", this widget's API version is "+AIRTIME_API_VERSION+")";
     else if (airtimeServerWidgetVersion < AIRTIME_API_VERSION )
         throw "The Airtime server has a different version than this widget supports. Please get the correct widget version for your Airtime installation. (Airtime widget API version is "+airtimeServerWidgetVersion+", this widget's API version is "+AIRTIME_API_VERSION+")";
-    
+
 }
