@@ -96,10 +96,12 @@ class FileDataHelper {
     /**
      * Add artwork file
      *
-     * @param string $file
-     * @param string $filepath
+     * @param string $analyzeFile
+     * @param string $filename
+     * @param string $importDir
+     * @param string $DbPath
      *
-     * @return string Data URI for artwork
+     * @return string Path to artwork
      */
     public static function saveArtworkData($analyzeFile, $filename, $importDir, $DbPath)
     {
