@@ -130,38 +130,25 @@ function updatePlaybar(){
         if (currentSong.record == "1") {
             $('#current').html("<span style='color:red; font-weight:bold'>"+$.i18n._("Recording:")+"</span>"+currentSong.name+",");
         } else {
+            $('#current').text(currentSong.name+",");
 
-            var check_current_song = Cookies.get('current_track');
-            var loaded = Cookies.get('loaded');
+            if (currentSong.metadata.artwork_data) {
 
-            ////UNCOMMENT the two lines below to test, make sure to comment out line 155 to test
-            //$('#now-playing-artwork_containter').html("<img height='75' width='75' class'artwork' src='"+ currentSong.metadata.artwork_data +"' />");
-            //console.log("Data URI Test: "+ currentSong.metadata.artwork_data);
+                  var check_current_song = Cookies.get('current_track');
+                  var loaded = Cookies.get('loaded');
 
-            if (check_current_song != currentSong.name) {
-
-              $('#current').text(currentSong.name+",");
-
-              /* TODO: I know the artwork codes are a bit messy right now, the only
-                 issue here could be due to data-uri size and not performing fast.
-                 needs to be checked. When track changes, it seem to be showing
-                 undefined, then after a few refreshes the data uri shows up. I have
-                 the code below inside this if/else rule so it doesn't refesh
-                 everytime, so you won't see the image update. But if you want to
-                 see it you can comment out the codes outside this if/else rule
-                 right above this comment. One being the code you see below but
-                 it will refresh everytime. And the other is to the console.
-              */
-              $('#now-playing-artwork_containter').html("<img height='75' width='75' class'artwork' src='"+ currentSong.metadata.artwork_data +"' />");
-              Cookies.remove('current_track');
-              Cookies.set('current_track', currentSong.name);
-            }
-            //makes sure it stays updated with current track on each page loaded
-            if (loaded != UNIQID) {
-              Cookies.remove('current_track');
-              Cookies.remove('loaded');
-              Cookies.set('loaded', UNIQID);
-            }
+                  if (check_current_song != currentSong.name) {
+                    $('#now-playing-artwork_containter').html("<img height='75' width='75' class'artwork' src='"+ currentSong.metadata.artwork_data +"' />");
+                    Cookies.remove('current_track');
+                    Cookies.set('current_track', currentSong.name);
+                  }
+                  // makes sure it stays updated with current track if page loads
+                  if (loaded != UNIQID) {
+                    Cookies.remove('current_track');
+                    Cookies.remove('loaded');
+                    Cookies.set('loaded', UNIQID);
+                  }
+           }
         }
 
     }else{

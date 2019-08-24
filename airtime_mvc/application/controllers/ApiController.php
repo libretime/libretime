@@ -396,9 +396,6 @@ class ApiController extends Zend_Controller_Action
             $result["sources"]["masterdj"] = $master_dj;
             $result["sources"]["scheduledplay"] = $scheduled_play;
 
-            $get_artwork = FileDataHelper::getArtworkData($result["current"]["metadata"]["artwork"]);
-            $result["current"]["metadata"]["artwork_data"] = $get_artwork;
-
             // used by caller to determine if the airtime they are running or widgets in use is out of date.
             $result["station"]["AIRTIME_API_VERSION"] = AIRTIME_API_VERSION;
 

@@ -140,7 +140,7 @@ class FileDataHelper {
               }
 
         } else {
-
+              //leave empty
               $get_img = '';
         }
 
