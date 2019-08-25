@@ -78,7 +78,8 @@ class FileDataHelper {
      */
     public static function getArtworkData($file, $filepath = false)
     {
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Application_Common_HTTPHelper::getStationUrl();
+
         //default cover, maybe make option to change in settings
         $default = $baseUrl . "css/images/no-cover.jpg";
 

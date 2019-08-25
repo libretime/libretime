@@ -26,6 +26,7 @@ class ApiController extends Zend_Controller_Action
             "show-tracks",
             "show-schedules",
             "show-logo",
+            "track-metadata",
             "stream-m3u"
         );
 
@@ -297,6 +298,8 @@ class ApiController extends Zend_Controller_Action
 
             $get_artwork = FileDataHelper::getArtworkData($result["current"]["metadata"]["artwork"]);
             $result["current"]["metadata"]["artwork_data"] = $get_artwork;
+            // convert artwork to point to api endpoints (option to get image request instead)
+            //WidgetHelper::findAndConvertArtwork($result);
 
             // apply user-defined timezone, or default to station
             Application_Common_DateHelper::convertTimestampsToTimezone(
@@ -520,6 +523,91 @@ class ApiController extends Zend_Controller_Action
             } catch(Exception $e) {
                 throw new ZendActionHttpException($this, 500, "ERROR: " . $e->getMessage());
             }
+        } else {
+            header('HTTP/1.0 401 Unauthorized');
+            print _('You are not allowed to access this resource. ');
+            exit;
+        }
+    }
+
+    /**
+     * New API endpoint to display the track artwork
+     *
+     * Find metadata to any track imported (eg. id=1&return=json)
+     * Also renders artwork (eg. id=1&return=artwork)
+     *
+     */
+     //temp/test, change this to trackMetadataAction and add more parameters...
+    public function trackMetadataAction()
+    {
+        // Disable the view and the layout
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        if (Application_Model_Preference::GetAllow3rdPartyApi() || $this->checkAuth()) {
+
+            $request = $this->getRequest();
+            $trackid = $request->getParam('id');
+            $return = $request->getParam('return');
+
+            if (empty($return)) {
+                throw new ZendActionHttpException($this, 400, "ERROR: No return was given.");
+            }
+
+            if (empty($trackid)) {
+                throw new ZendActionHttpException($this, 400, "ERROR: No ID was given.");
+            }
+
+            $storDir = Application_Model_MusicDir::getStorDir();
+            $fp = $storDir->getDirectory();
+
+            $file = Application_Model_StoredFile::RecallById($trackid);
+            //$this->view->type = $type;
+            $md = $file->getMetadata();
+
+            if ($return == "artwork") {
+
+                    foreach ($md as $key => $value) {
+                            if ($key == 'MDATA_KEY_DIRECTORY' && !is_null($value)) {
+
+                                  $musicDir = Application_Model_MusicDir::getDirByPK($value);
+                                  $md['MDATA_KEY_FILEPATH'] = Application_Common_OsPath::join($musicDir->getDirectory(), $md['MDATA_KEY_FILEPATH']);
+
+                                  //echo $md['MDATA_KEY_FILEPATH']; //path to MP3 file
+                                  //echo $md['MDATA_KEY_ARTWORK'];
+                                  $art = $fp . $md['MDATA_KEY_ARTWORK'];
+                                  if($filecontent = file_get_contents($art) !== false){
+                                      $get_file_content = file_get_contents($art);
+                                      //echo $get_file_content;
+
+                                      //header("Content-type: image/jpg");
+                                      //echo base64_decode($get_file_content);
+
+                                      /*$code_base64 = $get_file_content;
+                                      $code_base64 = str_replace('data:image/jpeg;base64,','',$code_base64);
+                                      $code_binary = base64_decode($code_base64);
+                                      $image= imagecreatefromstring($code_binary);
+                                      header('Content-Type text/plain');
+                                      imagejpeg($image);
+                                      imagedestroy($image);*/
+
+                                      header('Content-Type text/plain');
+                                      echo $get_file_content;
+                                      //echo '<img width="140" height="140" src="' . $get_file_content .'">';
+                                  } else {
+                                      //$get_file_content = $default;
+                                      echo "";
+                                  }
+
+                          }
+                    }
+
+            } elseif($return == "json") {
+
+                  $data =json_encode($md);
+                  echo $data;
+            }
+
         } else {
             header('HTTP/1.0 401 Unauthorized');
             print _('You are not allowed to access this resource. ');
