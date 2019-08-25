@@ -584,6 +584,16 @@ class ApiController extends Zend_Controller_Action
                           }
                     }
 
+            } elseif($return == "artwork_data") {
+
+                  $art = $fp . $md['MDATA_KEY_ARTWORK'];
+                  if($filecontent = file_get_contents($art) !== false){
+                      $get_file_content = file_get_contents($art);
+                       echo $get_file_content;
+                  } else {
+                      echo "";
+                  }
+
             } elseif($return == "json") {
 
                   $data =json_encode($md);
