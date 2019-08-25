@@ -568,34 +568,16 @@ class ApiController extends Zend_Controller_Action
             if ($return == "artwork") {
 
                     foreach ($md as $key => $value) {
-                            if ($key == 'MDATA_KEY_DIRECTORY' && !is_null($value)) {
+                            if ($key == 'MDATA_KEY_ARTWORK' && !is_null($value)) {
 
-                                  $musicDir = Application_Model_MusicDir::getDirByPK($value);
-                                  $md['MDATA_KEY_FILEPATH'] = Application_Common_OsPath::join($musicDir->getDirectory(), $md['MDATA_KEY_FILEPATH']);
+                                  //$musicDir = Application_Model_MusicDir::getDirByPK($value);
+                                  //$md['MDATA_KEY_FILEPATH'] = Application_Common_OsPath::join($musicDir->getDirectory(), $md['MDATA_KEY_FILEPATH']);
 
-                                  //echo $md['MDATA_KEY_FILEPATH']; //path to MP3 file
-                                  //echo $md['MDATA_KEY_ARTWORK'];
                                   $art = $fp . $md['MDATA_KEY_ARTWORK'];
                                   if($filecontent = file_get_contents($art) !== false){
                                       $get_file_content = file_get_contents($art);
-                                      //echo $get_file_content;
-
-                                      //header("Content-type: image/jpg");
-                                      //echo base64_decode($get_file_content);
-
-                                      /*$code_base64 = $get_file_content;
-                                      $code_base64 = str_replace('data:image/jpeg;base64,','',$code_base64);
-                                      $code_binary = base64_decode($code_base64);
-                                      $image= imagecreatefromstring($code_binary);
-                                      header('Content-Type text/plain');
-                                      imagejpeg($image);
-                                      imagedestroy($image);*/
-
-                                      header('Content-Type text/plain');
-                                      echo $get_file_content;
-                                      //echo '<img width="140" height="140" src="' . $get_file_content .'">';
+                                       echo "<img src='$get_file_content'>";
                                   } else {
-                                      //$get_file_content = $default;
                                       echo "";
                                   }
 
