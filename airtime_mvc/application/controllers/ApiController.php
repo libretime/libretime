@@ -575,24 +575,30 @@ class ApiController extends Zend_Controller_Action
 
                                   $art = $fp . $md['MDATA_KEY_ARTWORK'];
                                   if($filecontent = file_get_contents($art) !== false){
-                                      $get_file_content = file_get_contents($art);
-                                       echo "<img src='$get_file_content'>";
+
+                                       $image = @file_get_contents($art);
+                                       $image = base64_encode($image);
+
+                                       // if there's no logo, just die - redirects to a 404
+                                       if (!$image || $image === '') {
+                                           return;
+                                       }
+
+                                       $blob = base64_decode($image);
+
+                                       // use finfo to get the mimetype from the decoded blob
+                                       $f = finfo_open();
+                                       $mime_type = finfo_buffer($f, $blob, FILEINFO_MIME_TYPE);
+                                       finfo_close($f);
+
+                                       header("Content-Type: " . $mime_type);
+                                       echo $blob;
                                   } else {
-                                      echo "";
+                                      return;
                                   }
 
                           }
                     }
-
-            } elseif($return == "artwork_data") {
-
-                  $art = $fp . $md['MDATA_KEY_ARTWORK'];
-                  if($filecontent = file_get_contents($art) !== false){
-                      $get_file_content = file_get_contents($art);
-                       echo $get_file_content;
-                  } else {
-                      echo "";
-                  }
 
             } elseif($return == "json") {
 
@@ -650,15 +656,10 @@ class ApiController extends Zend_Controller_Action
             $this->_helper->viewRenderer->setNoRender(true);
 
             $logo = Application_Model_Preference::GetStationLogo();
-            // if there's no logo, just die - redirects to a 404
             if (!$logo || $logo === '') {
                 return;
             }
-
-            // we're passing this as an image instead of using it in a data uri, so decode it
             $blob = base64_decode($logo);
-
-            // use finfo to get the mimetype from the decoded blob
             $f = finfo_open();
             $mime_type = finfo_buffer($f, $blob, FILEINFO_MIME_TYPE);
             finfo_close($f);
