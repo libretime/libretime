@@ -531,13 +531,14 @@ class ApiController extends Zend_Controller_Action
     }
 
     /**
-     * New API endpoint to display the track artwork
+     * New API endpoint to display metadata from any track
      *
      * Find metadata to any track imported (eg. id=1&return=json)
-     * Also renders artwork (eg. id=1&return=artwork)
+     *
+     * @param int    $id          track ID
+     * @param string $return      json, artwork_data, or artwork_img
      *
      */
-     //temp/test, change this to trackMetadataAction and add more parameters...
     public function trackMetadataAction()
     {
         // Disable the view and the layout
@@ -565,13 +566,11 @@ class ApiController extends Zend_Controller_Action
             //$this->view->type = $type;
             $md = $file->getMetadata();
 
-            if ($return == "artwork") {
+            if ($return === "artwork_data") {
 
+                    //just the artwork data
                     foreach ($md as $key => $value) {
                             if ($key == 'MDATA_KEY_ARTWORK' && !is_null($value)) {
-
-                                  //$musicDir = Application_Model_MusicDir::getDirByPK($value);
-                                  //$md['MDATA_KEY_FILEPATH'] = Application_Common_OsPath::join($musicDir->getDirectory(), $md['MDATA_KEY_FILEPATH']);
 
                                   $art = $fp . $md['MDATA_KEY_ARTWORK'];
                                   if($filecontent = file_get_contents($art) !== false){
@@ -593,6 +592,7 @@ class ApiController extends Zend_Controller_Action
 
                                        header("Content-Type: " . $mime_type);
                                        echo $blob;
+
                                   } else {
                                       return;
                                   }
@@ -600,7 +600,31 @@ class ApiController extends Zend_Controller_Action
                           }
                     }
 
-            } elseif($return == "json") {
+            } elseif ($return === "artwork_img") {
+
+              foreach ($md as $key => $value) {
+
+                      if ($key == 'MDATA_KEY_ARTWORK' && !is_null($value)) {
+
+                              $art = $fp . $md['MDATA_KEY_ARTWORK'].'.jpg';
+                              $get_cont = file_get_contents($art);
+                              $rrr = base64_encode($get_cont);
+                              $im = @imagecreatefromjpeg($get_cont);
+                              if(!$im) {
+                                  $im  = imagecreatetruecolor(150, 30);
+                                  $bgc = imagecolorallocate($im, 255, 255, 255);
+                                  $tc  = imagecolorallocate($im, 0, 0, 0);
+                                  imagefilledrectangle($im, 0, 0, 150, 30, $bgc);
+                                  imagestring($im, 1, 5, 5, 'Error loading ' . $imgname, $tc);
+                              }
+                              header('Content-Type: image/jpeg');
+                              $img = $im;
+                              imagejpeg($img);
+                              imagedestroy($img);
+                        }
+                  }
+
+            } elseif($return === "json") {
 
                   $data =json_encode($md);
                   echo $data;

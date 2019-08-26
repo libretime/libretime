@@ -133,13 +133,30 @@ class FileDataHelper {
 
               $normalizeValue = self::normalizePath($filename);
               $path_parts = pathinfo($normalizeValue);
+              $file = $importDir . "artwork/" . $path_parts['filename'];
 
-              if (file_put_contents($importDir . "artwork/" . $path_parts['filename'], $base64)) {
+              if (file_put_contents($file, $base64)) {
                   $get_img = $DbPath . "artwork/". $path_parts['filename'];
-                  Logging::info("Saved artwork ($get_img)");
+                  Logging::info("Saved Data URI ($get_img)");
               } else {
-                  Logging::info("Could not save the artwork");
+                  Logging::info("Could not save Data URI");
               }
+
+              /* So i decided to add the actual image as well,
+              data URI is good for most cases, but ran into some issues in Swift the way I had it
+              Added to API (I'm leaving versioning API to whom ever is going to manage it)
+              You can retrieve image from any file with ID: Example:
+
+              http://192.168.10.100:8080/api/track-metadata?id=165&return=artwork_img
+
+              A lot of these are tests, still needs refining
+              */
+              $gencodedBase = base64_encode($base64);
+              $imgp = str_replace('data:image/jpeg;base64,', '', $gencodedBase);
+              $img = str_replace(' ', '+', $imgp);
+              $datap = base64_decode($imgp);
+              $filep = $file . '.jpg';
+              $success = file_put_contents($filep, $datap);
 
         } else {
               //leave empty
