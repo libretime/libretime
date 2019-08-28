@@ -297,9 +297,9 @@ class ApiController extends Zend_Controller_Action
             }
 
             $get_artwork = FileDataHelper::getArtworkData($result["current"]["metadata"]["artwork"]);
+
+            //Show Data URI for artwork as well?
             $result["current"]["metadata"]["artwork_data"] = $get_artwork;
-            // convert artwork to point to api endpoints (option to get image request instead)
-            //WidgetHelper::findAndConvertArtwork($result);
 
             // apply user-defined timezone, or default to station
             Application_Common_DateHelper::convertTimestampsToTimezone(

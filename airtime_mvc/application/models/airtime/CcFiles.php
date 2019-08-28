@@ -270,8 +270,6 @@ class CcFiles extends BaseCcFiles {
             $con = Propel::getConnection();
             $storedFile = Application_Model_StoredFile::RecallById($id, $con);
             $storedFile->delete();
-
-            // TODO: Also delete artwork and all related files from db
         } else {
             throw new LibreTimeFileNotFoundException();
         }
@@ -407,6 +405,22 @@ class CcFiles extends BaseCcFiles {
         }
         $directory = $music_dir->getDirectory();
         $filepath  = $this->getDbFilepath();
+
+        return Application_Common_OsPath::join($directory, $filepath);
+    }
+
+    /**
+     * Returns the artwork's absolute file path stored on disk.
+     */
+    public function getAbsoluteArtworkPath()
+    {
+        $music_dir = Application_Model_MusicDir::getDirByPK($this->getDbDirectory());
+        if (!$music_dir) {
+            throw new Exception("Invalid music_dir for file " . $this->getDbId() . " in database.");
+        }
+        $directory = $music_dir->getDirectory();
+        $filepath  = $this->getDbArtwork();
+
         return Application_Common_OsPath::join($directory, $filepath);
     }
 
@@ -503,9 +517,12 @@ class CcFiles extends BaseCcFiles {
     public function deletePhysicalFile()
     {
         $filepath = $this->getAbsoluteFilePath();
+        $artworkpath = $this->getAbsoluteArtworkPath();
         if (file_exists($filepath)) {
-            // TODO:  also remove related images that were uploaded
             unlink($filepath);
+            // also delete related images
+            unlink($artworkpath);
+            unlink($artworkpath.'.jpg');
         } else {
             throw new Exception("Could not locate file ".$filepath);
         }
