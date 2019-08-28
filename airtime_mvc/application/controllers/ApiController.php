@@ -26,7 +26,7 @@ class ApiController extends Zend_Controller_Action
             "show-tracks",
             "show-schedules",
             "show-logo",
-            "track-metadata",
+            "track",
             "stream-m3u"
         );
 
@@ -531,15 +531,15 @@ class ApiController extends Zend_Controller_Action
     }
 
     /**
-     * New API endpoint to display metadata from any track
+     * New API endpoint to display metadata from any single track
      *
      * Find metadata to any track imported (eg. id=1&return=json)
      *
      * @param int    $id          track ID
-     * @param string $return      json, artwork_data, or artwork_img
+     * @param string $return      json, artwork_data, or artwork
      *
      */
-    public function trackMetadataAction()
+    public function trackAction()
     {
         // Disable the view and the layout
         $this->view->layout()->disableLayout();
@@ -600,7 +600,7 @@ class ApiController extends Zend_Controller_Action
                           }
                     }
 
-            } elseif ($return === "artwork_img") {
+            } elseif ($return === "artwork") {
 
               foreach ($md as $key => $value) {
 

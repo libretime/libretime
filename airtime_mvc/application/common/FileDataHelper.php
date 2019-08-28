@@ -147,7 +147,7 @@ class FileDataHelper {
               Added to API (I'm leaving versioning API to whom ever is going to manage it)
               You can retrieve image from any file with ID: Example:
 
-              http://192.168.10.100:8080/api/track-metadata?id=165&return=artwork_img
+              http://192.168.10.100:8080/api/track?id=165&return=artwork
 
               A lot of these are tests, still needs refining
               */
