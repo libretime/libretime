@@ -135,6 +135,7 @@ class FileDataHelper {
               $path_parts = pathinfo($normalizeValue);
               $file = $importDir . "artwork/" . $path_parts['filename'];
 
+              //Save Data URI
               if (file_put_contents($file, $base64)) {
                   $get_img = $DbPath . "artwork/". $path_parts['filename'];
                   Logging::info("Saved Data URI ($get_img)");
@@ -142,15 +143,7 @@ class FileDataHelper {
                   Logging::info("Could not save Data URI");
               }
 
-              /* So i decided to add the actual image as well,
-              data URI is good for most cases, but ran into some issues in Swift the way I had it
-              Added to API (I'm leaving versioning API to whom ever is going to manage it)
-              You can retrieve image from any file with ID: Example:
-
-              http://192.168.10.100:8080/api/track?id=165&return=artwork
-
-              A lot of these are tests, still needs refining
-              */
+              //Save JPG file
               $gencodedBase = base64_encode($base64);
               $imgp = str_replace('data:image/jpeg;base64,', '', $gencodedBase);
               $img = str_replace(' ', '+', $imgp);
@@ -161,6 +154,57 @@ class FileDataHelper {
         } else {
               //leave empty
               $get_img = '';
+        }
+
+        return $get_img;
+    }
+
+    public static function resetArtwork($trackid)
+    {
+        $file = Application_Model_StoredFile::RecallById($trackid);
+        $md = $file->getMetadata();
+
+        $storDir = Application_Model_MusicDir::getStorDir();
+        $fp = $storDir->getDirectory();
+
+        $dbAudioPath = $md["MDATA_KEY_FILEPATH"];
+        $fullpath = $fp . $dbAudioPath;
+
+        $getID3 = new getID3;
+        $getFileInfo = $getID3->analyze($fullpath);
+
+        if(isset($getFileInfo['comments']['picture'][0])) {
+
+              $get_img = "";
+              $Image = 'data:'.$getFileInfo['comments']['picture'][0]['image_mime'].';charset=utf-8;base64,'.base64_encode($getFileInfo['comments']['picture'][0]['data']);
+              $base64 = @$Image;
+
+              $audioPath = dirname($fullpath);
+              $dbPath = dirname($dbAudioPath);
+
+              $normalizeValue = self::normalizePath($fullpath);
+              $path_parts = pathinfo($normalizeValue);
+              $file = $path_parts['filename'];
+
+              if (file_put_contents($audioPath . "/" . $file, $base64)) {
+                  $get_img = $dbPath . "/" . $file;
+                  Logging::info("Saved Data URI ($get_img)");
+              } else {
+                  Logging::info("Could not save Data URI");
+              }
+
+              $gencodedBase = base64_encode($base64);
+              $imgp = str_replace('data:image/jpeg;base64,', '', $gencodedBase);
+              $img = str_replace(' ', '+', $imgp);
+              $datap = base64_decode($imgp);
+              $filep = $audioPath . "/" . $file . '.jpg';
+
+              Logging::info("JPG:");
+              Logging::info($filep);
+              $success = file_put_contents($filep, $datap);
+
+        } else {
+              $get_img = "";
         }
 
         return $get_img;

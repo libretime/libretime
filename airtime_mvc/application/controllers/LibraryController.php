@@ -392,6 +392,12 @@ class LibraryController extends Zend_Controller_Action
             //need to convert from serialized jQuery array.
             foreach ($js as $j) {
                 $serialized[$j["name"]] = $j["value"];
+
+                //on edit, if no artwork is set and audiofile has image, automatically add it
+                if ($j["name"] == "artwork") {
+                  //$trackID = $j["value"];
+                  $serialized["artwork"] = FileDataHelper::resetArtwork($file_id);
+                }
             }
 
             // Sanitize any wildly incorrect metadata before it goes to be validated.
