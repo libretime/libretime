@@ -124,6 +124,9 @@ class FileDataHelper {
               $Image = 'data:'.$getFileInfo['comments']['picture'][0]['image_mime'].';charset=utf-8;base64,'.base64_encode($getFileInfo['comments']['picture'][0]['data']);
               $base64 = @$Image;
 
+              //TODO: Can be used, but please be aware, we still need to resize
+              //need to turn into jpg for thumbnails, resize and save, put back as data uri
+
               if (!file_exists($importDir . "artwork/")) {
                   if (!mkdir($importDir . "artwork/", 0777)) {
                       Logging::info("Failed to create artwork directory.");
