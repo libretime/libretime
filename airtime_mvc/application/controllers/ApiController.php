@@ -296,10 +296,22 @@ class ApiController extends Zend_Controller_Action
                 $result = Application_Model_Schedule::GetPlayOrderRangeOld($limit);
             }
 
-            $get_artwork = FileDataHelper::getArtworkData($result["current"]["metadata"]["artwork"]);
+            //$get_artwork = FileDataHelper::getArtworkData($result["current"]["metadata"]["artwork"]);
+            //$result["current"]["metadata"]["artwork_data"] = $get_artwork;
 
-            //Show Data URI for artwork as well?
-            $result["current"]["metadata"]["artwork_data"] = $get_artwork;
+            $stationUrl = Application_Common_HTTPHelper::getStationUrl();
+
+            $previousID = $result["previous"]["metadata"]["id"];
+            $get_prev_artwork_url = $stationUrl . 'api/track?id='. $previousID .'&return=artwork';
+            $result["previous"]["metadata"]["artwork_url"] = $get_prev_artwork_url;
+
+            $currID = $result["current"]["metadata"]["id"];
+            $get_curr_artwork_url = $stationUrl . 'api/track?id='. $currID .'&return=artwork';
+            $result["current"]["metadata"]["artwork_url"] = $get_curr_artwork_url;
+
+            $nextID = $result["previous"]["metadata"]["id"];
+            $get_next_artwork_url = $stationUrl . 'api/track?id='. $nextID .'&return=artwork';
+            $result["previous"]["metadata"]["artwork_url"] = $get_next_artwork_url;
 
             // apply user-defined timezone, or default to station
             Application_Common_DateHelper::convertTimestampsToTimezone(
