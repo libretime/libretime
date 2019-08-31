@@ -78,10 +78,12 @@ class Application_Form_EditAudioMD extends Zend_Form
         $media_types = array(
             'MUS'    => 'Music',
             'SID'    => 'Station ID',
-            'INT'    => 'Show Intro',
+            'INT'    => 'Intro',
+            'OUT'    => 'Outro',
             'SWP'    => 'Sweeper',
             'JIN'    => 'Jingle',
             'PRO'    => 'Promo',
+            'SHO'    => 'Shout Out',
             'NWS'    => 'News',
             'COM'    => 'Commercial',
             'INT'    => 'Interview',
@@ -89,7 +91,6 @@ class Application_Form_EditAudioMD extends Zend_Form
           );
 
         foreach ($media_types as $key => $mt) {
-        //foreach ($media_types as $mt) {
             $media_type_options[$key] = $mt;
         }
 
