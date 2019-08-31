@@ -78,6 +78,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         $media_types = array(
             'MUS'    => 'Music',
             'SID'    => 'Station ID',
+            'INT'    => 'Show Intro',
             'SWP'    => 'Sweeper',
             'JIN'    => 'Jingle',
             'PRO'    => 'Promo',
