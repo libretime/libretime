@@ -67,11 +67,11 @@ SQL;
 
         return $show->getDbName();
     }
-    
+
     public function getImagePath()
     {
     	$show = CcShowQuery::create()->findPK($this->getShowId());
-    
+
     	return $show->getDbImagePath();
     }
 
@@ -89,12 +89,12 @@ SQL;
         return $show->getDbHasAutoPlaylist();
 
     }
-    
+
     public function getAutoPlaylistId()
     {
         $show = CcShowQuery::create()->findPK($this->getShowId());
         return $show->getDbAutoPlaylistId();
-        
+
     }
 
     public function getAutoPlaylistRepeat()
@@ -507,7 +507,7 @@ SQL;
     {
         $durationSeconds = $this->getDurationSecs();
         $timeSeconds = $this->getTimeScheduledSecs();
-    
+
         if ($durationSeconds != 0) { //Prevent division by zero if the show duration is somehow zero.
             $percent = ceil(($timeSeconds / $durationSeconds) * 100);
         } else {
@@ -536,7 +536,7 @@ SQL;
         return $returnStr;
     }
 
-    public static function getContentCount($p_start, $p_end) 
+    public static function getContentCount($p_start, $p_end)
     {
         $sql = <<<SQL
 SELECT instance_id,
@@ -680,10 +680,10 @@ SQL;
             ':instance_id2' => $this->_instanceId
         ));
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-       
+
         if (isset($timezone)) {
             $displayTimezone = new DateTimeZone($timezone);
-        } else { 
+        } else {
             $userTimezone = Application_Model_Preference::GetUserTimezone();
             $displayTimezone = new DateTimeZone($userTimezone);
         }

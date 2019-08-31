@@ -58,6 +58,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
 
     private static $criteria2PeerMap = array(
             0              => "Select criteria",
+            "media_type"   => "DbMediaType",
             "album_title"  => "DbAlbumTitle",
             "artist_name"  => "DbArtistName",
             "bit_rate"     => "DbBitRate",
@@ -1432,6 +1433,7 @@ SQL;
     {
         $criteriaOptions = array(
             0              => _("Select criteria"),
+            "media_type"   => _("Media Type"),
             "album_title"  => _("Album"),
             "bit_rate"     => _("Bit Rate (Kbps)"),
             "bpm"          => _("BPM"),
@@ -1531,6 +1533,7 @@ SQL;
     {
         $criteriaOptions = array(
             0              => _("Select criteria"),
+            "media_type"   => _("Media Type"),
             "album_title"  => _("Album"),
             "bit_rate"     => _("Bit Rate (Kbps)"),
             "bpm"          => _("BPM"),

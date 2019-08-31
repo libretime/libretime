@@ -54,6 +54,7 @@ var AIRTIME = (function(AIRTIME) {
         "owner_id"    : "s",
         "info_url"    : "s",
         "artwork"     : "s",
+        "media_type"  : "s",
         "replay_gain" : "n"
     };
 
@@ -606,7 +607,8 @@ var AIRTIME = (function(AIRTIME) {
             /* Track Number */    { "sTitle" : $.i18n._("Track Number")       , "mDataProp" : "track_number" , "bVisible"    : false                 , "sClass"      : "library_track"         , "sWidth" : "125px"        },
             /* Upload Time */     { "sTitle" : $.i18n._("Uploaded")           , "mDataProp" : "utime"        , "sClass"      : "library_upload_time"   , "sWidth" : "155px"        },
             /* Website */         { "sTitle" : $.i18n._("Website")            , "mDataProp" : "info_url"     , "bVisible"    : false                 , "sClass"      : "library_url"           , "sWidth" : "150px"        },
-            /* Year */            { "sTitle" : $.i18n._("Year")               , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         }
+            /* Year */            { "sTitle" : $.i18n._("Year")               , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         },
+            /* Media Type */      { "sTitle" : $.i18n._("Type")               , "mDataProp" : "media_type"   , "bVisible"    : false                 , "sClass"      : "library_media_type"    , "sWidth" : "50px"         }
         ];
 
         if (onDashboard) {
@@ -1600,6 +1602,7 @@ var validationTypes = {
     "track_number" : "i",
     "info_url" : "s",
     "artwork" : "s",
+    "media_type" : "s",
     "year" : "i"
 };
 

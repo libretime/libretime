@@ -1,5 +1,6 @@
 ALTER TABLE cc_files ADD COLUMN description VARCHAR(512);
 ALTER TABLE cc_files ADD COLUMN artwork VARCHAR(512);
+ALTER TABLE cc_files ADD COLUMN media_type VARCHAR(8);
 
 -----------------------------------------------------------------------
 -- podcast

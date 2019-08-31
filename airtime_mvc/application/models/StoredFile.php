@@ -54,7 +54,8 @@ class Application_Model_StoredFile
         "cuein"        => "DbCueIn",
         "cueout"       => "DbCueOut",
         "description"  => "DbDescription",
-        "artwork"      => "DbArtwork"
+        "artwork"      => "DbArtwork",
+        "media_type"   => "DbMediaType"
     );
 
     function __construct($file, $con) {
@@ -671,7 +672,7 @@ SQL;
         "bit_rate", "sample_rate", "isrc_number", "encoded_by", "label",
         "copyright", "mime", "language", "filepath", "owner_id",
         "conductor", "replay_gain", "lptime", "is_playlist", "is_scheduled",
-        "cuein", "cueout", "description", "artwork" );
+        "cuein", "cueout", "description", "artwork", "media_type" );
     }
 
     public static function searchLibraryFiles($datatables)

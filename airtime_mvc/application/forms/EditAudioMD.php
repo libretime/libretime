@@ -59,7 +59,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         $this->addElement($album_title);
 
 
-        // Add album field
+        // Add owner dropdown
         $user_options = array();
         $users = Application_Model_User::getNonGuestUsers();
 
@@ -223,6 +223,30 @@ class Application_Form_EditAudioMD extends Zend_Form
         );
         $cueOut->setValidators(array($cueOutValidator));
         $this->addElement($cueOut);
+
+        // Add media type dropdown
+        $media_type_options = array();
+        $media_types = array(
+            'MUS'    => 'Music',
+            'SID'    => 'Station ID',
+            'SWP'    => 'Sweeper',
+            'JIN'    => 'Jingle',
+            'PRO'    => 'Promo',
+            'NWS'    => 'News',
+            'COM'    => 'Commercial',
+            'INT'    => 'Interview',
+            'VTR'    => 'Voice Tracking',
+          );
+
+        foreach ($media_types as $host) {
+            $user_options[$host['index']] = $host['label'];
+        }
+
+        $media_type = new Zend_Form_Element_Select('media_type');
+        $media_type->class = 'input_text';
+        $media_type->setLabel(_('Media Type:'));
+        $media_type->setMultiOptions($media_type_options);
+        $this->addelement($media_type);
 
         // Add the cancel button
         $this->addElement('button', 'editmdcancel', array(

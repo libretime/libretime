@@ -420,7 +420,7 @@ class Application_Service_PodcastService
     public static function createStationRssFeed()
     {
         $stationPodcastId = Application_Model_Preference::getStationPodcastId();
-        
+
         try {
             $podcast = PodcastQuery::create()->findPk($stationPodcastId);
             if (!$podcast) {

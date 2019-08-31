@@ -268,12 +268,12 @@ class Application_Model_ShowBuilder
             $row["instance"] = intval($p_item["si_id"]);
             $row["starts"]   = $schedStartDT->format("H:i:s");
             $row["ends"]     = $schedEndDT->format("H:i:s");
-            
+
             $cue_out = Application_Common_DateHelper::playlistTimeToSeconds($p_item['cue_out']);
             $cue_in = Application_Common_DateHelper::playlistTimeToSeconds($p_item['cue_in']);
-            
+
             $run_time = $cue_out-$cue_in;
-            
+
             $formatter = new LengthFormatter(Application_Common_DateHelper::secondsToPlaylistTime($run_time));
             $row['runtime'] = $formatter->format();
 
@@ -484,7 +484,7 @@ class Application_Model_ShowBuilder
             $display_items[] = $this->makeFooterRow($scheduled_items[
                 count($scheduled_items)-1]);
         }
-        
+
         return array(
             "schedule"      => $display_items,
             "showInstances" => $this->showInstances);
