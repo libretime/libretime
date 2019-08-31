@@ -479,7 +479,7 @@ class Application_Service_PodcastService
                 //title
                 self::addEscapedChild($item, "title", $publishedFile->getDbTrackTitle());
 
-                //link - do we need this?
+                //link - do we need this? 
 
                 //pubDate
                 self::addEscapedChild($item, "pubDate", gmdate(DATE_RFC2822, strtotime($episode->getDbPublicationDate())));
