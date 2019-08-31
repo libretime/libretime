@@ -724,7 +724,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             "track_title" => "DbTrackTitle",
             "track_number" => "DbTrackNumber",
             "year" => "DbYear",
-            "media_type" => "DbMediaType",
+            "media_type" => "DbMediaType"
         );
 
         // things we need to check

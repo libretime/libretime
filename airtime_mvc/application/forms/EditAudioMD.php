@@ -73,6 +73,31 @@ class Application_Form_EditAudioMD extends Zend_Form
         $owner_id->setMultiOptions($user_options);
         $this->addelement($owner_id);
 
+        // Add media type dropdown
+        $media_type_options = array();
+        $media_types = array(
+            'MUS'    => 'Music',
+            'SID'    => 'Station ID',
+            'SWP'    => 'Sweeper',
+            'JIN'    => 'Jingle',
+            'PRO'    => 'Promo',
+            'NWS'    => 'News',
+            'COM'    => 'Commercial',
+            'INT'    => 'Interview',
+            'VTR'    => 'Voice Tracking',
+          );
+
+        foreach ($media_types as $key => $mt) {
+        //foreach ($media_types as $mt) {
+            $media_type_options[$key] = $mt;
+        }
+
+        $media_type = new Zend_Form_Element_Select('media_type');
+        $media_type->class = 'input_text';
+        $media_type->setLabel(_('Media Type:'));
+        $media_type->setMultiOptions($media_type_options);
+        $this->addelement($media_type);
+
         // Description field
         $description = new Zend_Form_Element_Textarea('description');
         $description->class = 'input_text';
@@ -223,30 +248,6 @@ class Application_Form_EditAudioMD extends Zend_Form
         );
         $cueOut->setValidators(array($cueOutValidator));
         $this->addElement($cueOut);
-
-        // Add media type dropdown
-        $media_type_options = array();
-        $media_types = array(
-            'MUS'    => 'Music',
-            'SID'    => 'Station ID',
-            'SWP'    => 'Sweeper',
-            'JIN'    => 'Jingle',
-            'PRO'    => 'Promo',
-            'NWS'    => 'News',
-            'COM'    => 'Commercial',
-            'INT'    => 'Interview',
-            'VTR'    => 'Voice Tracking',
-          );
-
-        foreach ($media_types as $host) {
-            $user_options[$host['index']] = $host['label'];
-        }
-
-        $media_type = new Zend_Form_Element_Select('media_type');
-        $media_type->class = 'input_text';
-        $media_type->setLabel(_('Media Type:'));
-        $media_type->setMultiOptions($media_type_options);
-        $this->addelement($media_type);
 
         // Add the cancel button
         $this->addElement('button', 'editmdcancel', array(

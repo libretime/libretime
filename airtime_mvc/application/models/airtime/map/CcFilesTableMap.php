@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * This class defines the structure of the 'cc_files' table.
  *

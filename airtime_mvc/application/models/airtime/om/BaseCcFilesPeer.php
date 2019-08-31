@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Base static class for performing query and update operations on the 'cc_files' table.
  *
@@ -253,9 +252,6 @@ abstract class BaseCcFilesPeer
 
     /** the column name for the artwork field */
     const ARTWORK = 'cc_files.artwork';
-
-    /** the column name for the media_type field */
-    const MEDIA_TYPE = 'cc_files.media_type';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -2070,4 +2066,3 @@ abstract class BaseCcFilesPeer
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
 BaseCcFilesPeer::buildTableMap();
-
