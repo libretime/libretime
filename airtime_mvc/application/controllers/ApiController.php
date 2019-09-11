@@ -574,70 +574,60 @@ class ApiController extends Zend_Controller_Action
             $storDir = Application_Model_MusicDir::getStorDir();
             $fp = $storDir->getDirectory();
 
-            $file = Application_Model_StoredFile::RecallById($trackid);
             //$this->view->type = $type;
+            $file = Application_Model_StoredFile::RecallById($trackid);
             $md = $file->getMetadata();
 
-            if ($return === "artwork_data") {
-
-                    //just the artwork data
-                    foreach ($md as $key => $value) {
-                            if ($key == 'MDATA_KEY_ARTWORK' && !is_null($value)) {
-
-                                  $art = $fp . $md['MDATA_KEY_ARTWORK'];
-                                  if($filecontent = file_get_contents($art) !== false){
-
-                                       $image = @file_get_contents($art);
-                                       $image = base64_encode($image);
-
-                                       // if there's no logo, just die - redirects to a 404
-                                       if (!$image || $image === '') {
-                                           return;
-                                       }
-
-                                       $blob = base64_decode($image);
-
-                                       // use finfo to get the mimetype from the decoded blob
-                                       $f = finfo_open();
-                                       $mime_type = finfo_buffer($f, $blob, FILEINFO_MIME_TYPE);
-                                       finfo_close($f);
-
-                                       header("Content-Type: " . $mime_type);
-                                       echo $blob;
-
-                                  } else {
-                                      return;
-                                  }
-
-                          }
+            if ($return === "artwork-data") {
+                foreach ($md as $key => $value) {
+                    if ($key == 'MDATA_KEY_ARTWORK' && !is_null($value)) {
+                        FileDataHelper::renderDataURI($fp . $md['MDATA_KEY_ARTWORK']);
                     }
-
+                }
+            } elseif ($return === "artwork-data-32") {
+                foreach ($md as $key => $value) {
+                    if ($key == 'MDATA_KEY_ARTWORK' && !is_null($value)) {
+                        FileDataHelper::renderDataURI($fp . $md['MDATA_KEY_ARTWORK']. '-32');
+                    }
+                }
             } elseif ($return === "artwork") {
-
-              foreach ($md as $key => $value) {
-
-                      if ($key == 'MDATA_KEY_ARTWORK' && !is_null($value)) {
-
-                              $art = $fp . $md['MDATA_KEY_ARTWORK'].'.jpg';
-                              $get_cont = file_get_contents($art);
-                              $rrr = base64_encode($get_cont);
-                              $im = @imagecreatefromjpeg($get_cont);
-                              if(!$im) {
-                                  $im  = imagecreatetruecolor(150, 30);
-                                  $bgc = imagecolorallocate($im, 255, 255, 255);
-                                  $tc  = imagecolorallocate($im, 0, 0, 0);
-                                  imagefilledrectangle($im, 0, 0, 150, 30, $bgc);
-                                  imagestring($im, 1, 5, 5, 'Error loading ' . $imgname, $tc);
-                              }
-                              header('Content-Type: image/jpeg');
-                              $img = $im;
-                              imagejpeg($img);
-                              imagedestroy($img);
-                        }
-                  }
-
-            } elseif($return === "json") {
-
+                //default
+                foreach ($md as $key => $value) {
+                    if ($key == 'MDATA_KEY_ARTWORK' && !is_null($value)) {
+                        FileDataHelper::renderImage($fp . $md['MDATA_KEY_ARTWORK'].'-1024.jpg');
+                    }
+                }
+            } elseif ($return === "artwork-32") {
+                foreach ($md as $key => $value) {
+                    if ($key == 'MDATA_KEY_ARTWORK' && !is_null($value)) {
+                        FileDataHelper::renderImage($fp . $md['MDATA_KEY_ARTWORK'].'-32.jpg');
+                    }
+                }
+            } elseif ($return === "artwork-64") {
+                foreach ($md as $key => $value) {
+                    if ($key == 'MDATA_KEY_ARTWORK' && !is_null($value)) {
+                        FileDataHelper::renderImage($fp . $md['MDATA_KEY_ARTWORK'].'-64.jpg');
+                    }
+                }
+            } elseif ($return === "artwork-128") {
+                foreach ($md as $key => $value) {
+                    if ($key == 'MDATA_KEY_ARTWORK' && !is_null($value)) {
+                        FileDataHelper::renderImage($fp . $md['MDATA_KEY_ARTWORK'].'-128.jpg');
+                    }
+                }
+            } elseif ($return === "artwork-512") {
+                foreach ($md as $key => $value) {
+                    if ($key == 'MDATA_KEY_ARTWORK' && !is_null($value)) {
+                        FileDataHelper::renderImage($fp . $md['MDATA_KEY_ARTWORK'].'-512.jpg');
+                    }
+                }
+            } elseif ($return === "artwork-1024") {
+                foreach ($md as $key => $value) {
+                    if ($key == 'MDATA_KEY_ARTWORK' && !is_null($value)) {
+                        FileDataHelper::renderImage($fp . $md['MDATA_KEY_ARTWORK'].'-1024.jpg');
+                    }
+                }
+            } elseif ($return === "json") {
                   $data =json_encode($md);
                   echo $data;
             }

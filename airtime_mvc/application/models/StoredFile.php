@@ -866,7 +866,7 @@ SQL;
                 $formatter = new BitrateFormatter($row['bit_rate']);
                 $row['bit_rate'] = $formatter->format();
 
-                $get_artwork = FileDataHelper::getArtworkData($row['artwork'], $fp);
+                $get_artwork = FileDataHelper::getArtworkData($row['artwork'], 32, $fp);
                 $row['artwork_data'] = $get_artwork;
 
                 // for audio preview

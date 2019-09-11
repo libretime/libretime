@@ -76,18 +76,19 @@ class Application_Form_EditAudioMD extends Zend_Form
         // Add media type dropdown
         $media_type_options = array();
         $media_types = array(
-            'MUS'    => 'Music',
-            'SID'    => 'Station ID',
-            'IN'     => 'Intro',
-            'OUT'    => 'Outro',
-            'SWP'    => 'Sweeper',
-            'JIN'    => 'Jingle',
-            'PRO'    => 'Promo',
-            'SHO'    => 'Shout Out',
-            'NWS'    => 'News',
-            'COM'    => 'Commercial',
-            'INT'    => 'Interview',
-            'VTR'    => 'Voice Tracking',
+            ''       => '--- Select Media Type ---',
+            'MUS'    => 'Music (MUS)',
+            'SID'    => 'Station ID (SID)',
+            'INT'    => 'Intro (INT)',
+            'OUT'    => 'Outro (OUT)',
+            'SWP'    => 'Sweeper (SWP)',
+            'JIN'    => 'Jingle (JIN)',
+            'PRO'    => 'Promo (PRO)',
+            'SHO'    => 'Shout Out (SHO)',
+            'NWS'    => 'News (NWS)',
+            'COM'    => 'Commercial (COM)',
+            'ITV'    => 'Interview (ITV)',
+            'VTR'    => 'Voice Tracking (VTR)',
           );
 
         foreach ($media_types as $key => $mt) {

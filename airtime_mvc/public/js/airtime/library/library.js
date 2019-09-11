@@ -53,9 +53,9 @@ var AIRTIME = (function(AIRTIME) {
         "year"        : "n",
         "owner_id"    : "s",
         "info_url"    : "s",
+        "replay_gain" : "n",
         "artwork"     : "s",
-        "media_type"  : "s",
-        "replay_gain" : "n"
+        "media_type"  : "s"
     };
 
     if (AIRTIME.library === undefined) {
@@ -571,8 +571,6 @@ var AIRTIME = (function(AIRTIME) {
         // put hidden columns at the top to insure they can never be visible
         // on the table through column reordering.
 
-        //IMPORTANT: WHEN ADDING A NEW COLUMN PLEASE CONSULT WITH THE WIKI
-        // https://wiki.sourcefabric.org/display/CC/Adding+a+new+library+datatable+column
         var cols = [
             /* ftype */           { "sTitle" : ""                             , "mDataProp" : "ftype"        , "bSearchable" : false                 , "bVisible"    : false                   },
             /* Checkbox */        { "sTitle" : ""                             , "mDataProp" : "checkbox"     , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "16px"        , "sClass"  : "library_checkbox" },
@@ -592,6 +590,7 @@ var AIRTIME = (function(AIRTIME) {
             /* Cue Out */         { "sTitle" : $.i18n._("Cue Out")            , "mDataProp" : "cueout"       , "bVisible"    : false                 , "sClass"      : "library_length"        , "sWidth" : "80px"         },
             /* Description */     { "sTitle" : $.i18n._("Description")        , "mDataProp" : "description"  , "bVisible"    : false                 , "sClass"      : "library_description"   , "sWidth" : "150px"        },
             /* Encoded */         { "sTitle" : $.i18n._("Encoded By")         , "mDataProp" : "encoded_by"   , "bVisible"    : false                 , "sClass"      : "library_encoded"       , "sWidth" : "150px"        },
+            /* Media Type */      { "sTitle" : $.i18n._("Type")               , "mDataProp" : "media_type"   , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         },
             /* Genre */           { "sTitle" : $.i18n._("Genre")              , "mDataProp" : "genre"        , "sClass"      : "library_genre"       , "sWidth"      : "100px"        },
             /* ISRC Number */     { "sTitle" : $.i18n._("ISRC")               , "mDataProp" : "isrc_number"  , "bVisible"    : false                 , "sClass"      : "library_isrc"          , "sWidth" : "150px"        },
             /* Label */           { "sTitle" : $.i18n._("Label")              , "mDataProp" : "label"        , "bVisible"    : false                 , "sClass"      : "library_label"         , "sWidth" : "125px"        },
@@ -604,11 +603,10 @@ var AIRTIME = (function(AIRTIME) {
             /* Owner */           { "sTitle" : $.i18n._("Owner")              , "mDataProp" : "owner_id"     , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        },
             /* Replay Gain */     { "sTitle" : $.i18n._("Replay Gain")        , "mDataProp" : "replay_gain"  , "bVisible"    : false                 , "sClass"      : "library_replay_gain"   , "sWidth" : "125px"        },
             /* Sample Rate */     { "sTitle" : $.i18n._("Sample Rate")        , "mDataProp" : "sample_rate"  , "bVisible"    : false                 , "sClass"      : "library_sr"            , "sWidth" : "125px"        },
-            /* Track Number */    { "sTitle" : $.i18n._("Track Number")       , "mDataProp" : "track_number" , "bVisible"    : false                 , "sClass"      : "library_track"         , "sWidth" : "125px"        },
+            /* Track Number */    { "sTitle" : $.i18n._("Track #")       , "mDataProp" : "track_number" , "bVisible"    : false                 , "sClass"      : "library_track"         , "sWidth" : "125px"        },
             /* Upload Time */     { "sTitle" : $.i18n._("Uploaded")           , "mDataProp" : "utime"        , "sClass"      : "library_upload_time"   , "sWidth" : "155px"        },
             /* Website */         { "sTitle" : $.i18n._("Website")            , "mDataProp" : "info_url"     , "bVisible"    : false                 , "sClass"      : "library_url"           , "sWidth" : "150px"        },
-            /* Year */            { "sTitle" : $.i18n._("Year")               , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         },
-            /* Media Type */      { "sTitle" : $.i18n._("Type")               , "mDataProp" : "media_type"   , "bVisible"    : false                 , "sClass"      : "library_media_type"    , "sWidth" : "50px"         }
+            /* Year */            { "sTitle" : $.i18n._("Year")               , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         }
         ];
 
         if (onDashboard) {
@@ -617,7 +615,7 @@ var AIRTIME = (function(AIRTIME) {
             );
         }
 
-        var colExclude = onDashboard ? [0, 1, 2, 3, 33] : [0, 1, 2, 3];
+        var colExclude = onDashboard ? [0, 1, 2, 3, 34] : [0, 1, 2];
 
         /*  ############################################
                             DATATABLES
@@ -1380,7 +1378,7 @@ var AIRTIME = (function(AIRTIME) {
             /* Website */        { "sTitle" : $.i18n._("Description")        , "mDataProp" : "description"  , "bVisible"    : false                 , "sWidth"  : "150px" },
             /* Year */           { "sTitle" : $.i18n._("Owner")              , "mDataProp" : "owner"        , "bVisible"    : false                 , "sWidth"  : "60px"  },
             /* URL */            { "sTitle" : $.i18n._("Feed URL")           , "mDataProp" : "url"          , "bVisible"    : false                 , "sWidth"  : "60px"  },
-            /* Import Date */    { "sTitle" : $.i18n._("Import Date")        ,"mDataProp" : "auto_ingest_timestamp", "bVisible"    : true           , "sWidth"  : "60px"  },
+            /* Import Date */    { "sTitle" : $.i18n._("Import Date")        , "mDataProp" : "auto_ingest_timestamp", "bVisible"    : true           , "sWidth"  : "60px"  },
             ],
             ajaxSourceURL = baseUrl+"rest/podcast",
             podcastToolbarButtons = AIRTIME.widgets.Table.getStandardToolbarButtons();

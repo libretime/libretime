@@ -58,7 +58,6 @@ class Application_Model_Block implements Application_Model_LibraryEditable
 
     private static $criteria2PeerMap = array(
             0              => "Select criteria",
-            "media_type"   => "DbMediaType",
             "album_title"  => "DbAlbumTitle",
             "artist_name"  => "DbArtistName",
             "bit_rate"     => "DbBitRate",
@@ -86,7 +85,8 @@ class Application_Model_Block implements Application_Model_LibraryEditable
             "sample_rate"  => "DbSampleRate",
             "track_title"  => "DbTrackTitle",
             "track_number" => "DbTrackNumber",
-            "year"         => "DbYear"
+            "year"         => "DbYear",
+            "media_type"   => "DbMediaType"
     );
 
     public function __construct($id=null, $con=null)
@@ -1433,7 +1433,6 @@ SQL;
     {
         $criteriaOptions = array(
             0              => _("Select criteria"),
-            "media_type"   => _("Media Type"),
             "album_title"  => _("Album"),
             "bit_rate"     => _("Bit Rate (Kbps)"),
             "bpm"          => _("BPM"),
@@ -1462,7 +1461,8 @@ SQL;
             "track_number" => _("Track Number"),
             "utime"        => _("Uploaded"),
             "info_url"     => _("Website"),
-            "year"         => _("Year")
+            "year"         => _("Year"),
+            "media_type"   => _("Media Type")
         );
 
         $modifierOptions = array(
@@ -1533,7 +1533,6 @@ SQL;
     {
         $criteriaOptions = array(
             0              => _("Select criteria"),
-            "media_type"   => _("Media Type"),
             "album_title"  => _("Album"),
             "bit_rate"     => _("Bit Rate (Kbps)"),
             "bpm"          => _("BPM"),
@@ -1562,7 +1561,8 @@ SQL;
             "track_number" => _("Track Number"),
             "utime"        => _("Uploaded"),
             "info_url"     => _("Website"),
-            "year"         => _("Year")
+            "year"         => _("Year"),
+            "media_type"   => _("Media Type")
         );
 
         $modifierOptions = array(

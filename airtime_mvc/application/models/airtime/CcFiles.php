@@ -520,9 +520,11 @@ class CcFiles extends BaseCcFiles {
         $artworkpath = $this->getAbsoluteArtworkPath();
         if (file_exists($filepath)) {
             unlink($filepath);
-            // also delete related images
+            // also delete related images (dataURI and jpeg files)
+            foreach (glob("$artworkpath*", GLOB_NOSORT) as $filename) {
+                unlink($filename);
+            }
             unlink($artworkpath);
-            unlink($artworkpath.'.jpg');
         } else {
             throw new Exception("Could not locate file ".$filepath);
         }

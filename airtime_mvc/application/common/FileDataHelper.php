@@ -72,26 +72,35 @@ class FileDataHelper {
      * Gets data from artwork file
      *
      * @param string $file
+     * @param int $size
      * @param string $filepath
      *
      * @return string Data URI for artwork
      */
-    public static function getArtworkData($file, $filepath = false)
+    public static function getArtworkData($file, $size, $filepath = false)
     {
-        $baseUrl = Application_Common_HTTPHelper::getStationUrl();
 
+        $baseUrl = Application_Common_HTTPHelper::getStationUrl();
         //default cover, maybe make option to change in settings
         $default = $baseUrl . "css/images/no-cover.jpg";
 
         if ($file === '') {
            //default cover, this opion
            $get_file_content = $default;
+
         } else {
+
             if ($filepath != false) {
-                $path = $filepath . $file;
+                $path = $filepath . $file . "-" . $size;
+                if (!file_exists($path)) {
+                    Logging::info("THE FILE DOES NOT EXIST: " . $path);
+                }
             } else {
                 $storDir = Application_Model_MusicDir::getStorDir();
-                $path = $storDir->getDirectory() . $file;
+                $path = $storDir->getDirectory() . $file . "-" . $size;
+                if (!file_exists($path)) {
+                    Logging::info("THE FILE DOES NOT EXIST: " . $path);
+                }
             }
 
             if($filecontent = file_get_contents($path) !== false){
@@ -113,7 +122,7 @@ class FileDataHelper {
      *
      * @return string Path to artwork
      */
-    public static function saveArtworkData($analyzeFile, $filename, $importDir, $DbPath)
+    public static function saveArtworkData($analyzeFile, $filename, $importDir = null, $DbPath = null)
     {
         $getID3 = new getID3;
         $getFileInfo = $getID3->analyze($analyzeFile);
@@ -121,11 +130,9 @@ class FileDataHelper {
         if(isset($getFileInfo['comments']['picture'][0])) {
 
               $get_img = "";
-              $Image = 'data:'.$getFileInfo['comments']['picture'][0]['image_mime'].';charset=utf-8;base64,'.base64_encode($getFileInfo['comments']['picture'][0]['data']);
+              $mime = $getFileInfo['comments']['picture'][0]['image_mime'];
+              $Image = 'data:'.$mime.';charset=utf-8;base64,'.base64_encode($getFileInfo['comments']['picture'][0]['data']);
               $base64 = @$Image;
-
-              //TODO: Can be used, but please be aware, we still need to resize
-              //need to turn into jpg for thumbnails, resize and save, put back as data uri
 
               if (!file_exists($importDir . "artwork/")) {
                   if (!mkdir($importDir . "artwork/", 0777)) {
@@ -146,23 +153,65 @@ class FileDataHelper {
                   Logging::info("Could not save Data URI");
               }
 
-              //Save JPG file
-              $gencodedBase = base64_encode($base64);
-              $imgp = str_replace('data:image/jpeg;base64,', '', $gencodedBase);
-              $img = str_replace(' ', '+', $imgp);
-              $datap = base64_decode($imgp);
-              $filep = $file . '.jpg';
-              $success = file_put_contents($filep, $datap);
+              if ($mime == "image/png") {
+                  $ext = 'png';
+              } elseif ($mime == "image/gif") {
+                  $ext = 'gif';
+              } elseif ($mime == "image/bmp") {
+                 $ext = 'bmp';
+              } else {
+                 $ext = 'jpg';
+              }
 
+              if (file_exists($file)) {
+                  self::resizeImage($file, $file . '-32.jpg', $ext, 32, 100);
+                  self::resizeImage($file, $file . '-128.jpg', $ext, 128, 100);
+                  self::resizeImage($file, $file . '-256.jpg', $ext, 256, 100);
+                  self::resizeImage($file, $file . '-512.jpg', $ext, 512, 100);
+                  self::resizeImage($file, $file . '-1024.jpg', $ext, 1024, 100);
+                  self::imgToDataURI($file . '-32.jpg', $file . '-32');
+                  self::imgToDataURI($file . '-128.jpg', $file . '-128');
+                  self::imgToDataURI($file . '-256.jpg', $file . '-256');
+              } else {
+                  Logging::info("The file $file does not exist");
+              }
         } else {
-              //leave empty
               $get_img = '';
         }
-
         return $get_img;
     }
 
+
+    /**
+     * Reset artwork
+     *
+     * @param string $trackid
+     *
+     * @return string $get_img Path to artwork
+     */
     public static function resetArtwork($trackid)
+    {
+        $file = Application_Model_StoredFile::RecallById($trackid);
+        $md = $file->getMetadata();
+
+        $storDir = Application_Model_MusicDir::getStorDir();
+        $fp = $storDir->getDirectory();
+
+        $dbAudioPath = $md["MDATA_KEY_FILEPATH"];
+        $fullpath = $fp . $dbAudioPath;
+
+        self::saveArtworkData($fullpath, $fullpath);
+
+    }
+
+    /**
+     * Reset artwork
+     *
+     * @param string $trackid
+     *
+     * @return string $get_img Path to artwork
+     */
+    public static function resetArtwork2($trackid)
     {
         $file = Application_Model_StoredFile::RecallById($trackid);
         $md = $file->getMetadata();
@@ -182,28 +231,23 @@ class FileDataHelper {
               $Image = 'data:'.$getFileInfo['comments']['picture'][0]['image_mime'].';charset=utf-8;base64,'.base64_encode($getFileInfo['comments']['picture'][0]['data']);
               $base64 = @$Image;
 
+              //saves to dataURI file
               $audioPath = dirname($fullpath);
               $dbPath = dirname($dbAudioPath);
-
               $normalizeValue = self::normalizePath($fullpath);
               $path_parts = pathinfo($normalizeValue);
               $file = $path_parts['filename'];
-
               if (file_put_contents($audioPath . "/" . $file, $base64)) {
                   $get_img = $dbPath . "/" . $file;
-                  Logging::info("Saved Data URI ($get_img)");
               } else {
-                  Logging::info("Could not save Data URI");
               }
 
+              //this will gen fake jpg data uri to jpg
               $gencodedBase = base64_encode($base64);
               $imgp = str_replace('data:image/jpeg;base64,', '', $gencodedBase);
               $img = str_replace(' ', '+', $imgp);
               $datap = base64_decode($imgp);
               $filep = $audioPath . "/" . $file . '.jpg';
-
-              Logging::info("JPG:");
-              Logging::info($filep);
               $success = file_put_contents($filep, $datap);
 
         } else {
@@ -213,6 +257,13 @@ class FileDataHelper {
         return $get_img;
     }
 
+    /**
+     * Normalize string
+     *
+     * @param string $string
+     *
+     * @return string Normalized string
+     */
     private static function normalizePath($string)
     {
         static $normal = array (
@@ -279,13 +330,114 @@ class FileDataHelper {
           'ù' => 'u',
           'ú' => 'u',
           'û' => 'u',
+          'ü' => 'u',
           'ý' => 'y',
           'ý' => 'y',
           'þ' => 'b',
           'ÿ' => 'y',
-          ' ' => '_'
+          ' ' => '_',
+          '(' => '_',
+          ')' => '_',
+          '[' => '_',
+          ']' => '_'
         );
         return strtr($string, $normal);
     }
 
+    /**
+     * Render image
+     * Used in API
+     *
+     * @param string $file
+     * @param string $size
+     */
+    public static function renderImage($file)
+    {
+          $im = @imagecreatefromjpeg($file);
+          header('Content-Type: image/jpeg');
+          $img = $im;
+          imagejpeg($img);
+          imagedestroy($img);
+    }
+
+    /**
+     * Render Data URI
+     * Used in API
+     *
+     * @param string $file
+     * @param string $size
+     */
+    public static function renderDataURI($dataFile)
+    {
+          if($filecontent = file_get_contents($dataFile) !== false){
+               $image = @file_get_contents($dataFile);
+               $image = base64_encode($image);
+               if (!$image || $image === '') {
+                   return;
+               }
+               $blob = base64_decode($image);
+               $f = finfo_open();
+               $mime_type = finfo_buffer($f, $blob, FILEINFO_MIME_TYPE);
+               finfo_close($f);
+               header("Content-Type: " . $mime_type);
+               echo $blob;
+          } else {
+              return;
+          }
+    }
+
+    /**
+     * Render Data URI
+     * Used in API
+     *
+     * @param string $file
+     * @param string $size
+     */
+    public static function resizeImage($orig_filename, $converted_filename, $ext, $size=500, $quality=75)
+    {
+          $get_cont = file_get_contents($orig_filename);
+          if ($ext == "png") {
+              $im = @imagecreatefrompng($get_cont);
+          } elseif ($ext == "gif") {
+              $im = @imagecreatefromgif($get_cont);
+          } else {
+              $im = @imagecreatefromjpeg($get_cont);
+          }
+
+          if ($size){
+            $im = imagescale($im , $size);
+          }
+
+          if(!$im) {
+              $im  = imagecreatetruecolor(150, 30);
+              $bgc = imagecolorallocate($im, 255, 255, 255);
+              $tc  = imagecolorallocate($im, 0, 0, 0);
+              imagefilledrectangle($im, 0, 0, 150, 30, $bgc);
+              imagestring($im, 1, 5, 5, 'Error loading ' . $imgname, $tc);
+          }
+
+          $img = $im;
+          imagejpeg($img, $converted_filename, $quality);
+          imagedestroy($img);
+    }
+
+    /**
+     * Convert image to Data URI
+     *
+     * @param string $orig_filename
+     * @param string $conv_filename
+     */
+    public static function imgToDataURI($orig_filename, $conv_filename)
+    {
+          $file = file_get_contents($orig_filename);
+          $Image = 'data:image/jpeg;charset=utf-8;base64,'.base64_encode($file);
+          $base64 = @$Image;
+
+          //Save Data URI
+          if (file_put_contents($conv_filename, $base64)) {
+              Logging::info("Saved Data URI ($file)");
+          } else {
+              Logging::info("Could not save Data URI");
+          }
+    }
 }
