@@ -165,11 +165,13 @@ class FileDataHelper {
 
               if (file_exists($file)) {
                   self::resizeImage($file, $file . '-32.jpg', $ext, 32, 100);
+                  self::resizeImage($file, $file . '-64.jpg', $ext, 64, 100);
                   self::resizeImage($file, $file . '-128.jpg', $ext, 128, 100);
                   self::resizeImage($file, $file . '-256.jpg', $ext, 256, 100);
                   self::resizeImage($file, $file . '-512.jpg', $ext, 512, 100);
                   self::resizeImage($file, $file . '-1024.jpg', $ext, 1024, 100);
                   self::imgToDataURI($file . '-32.jpg', $file . '-32');
+                  self::imgToDataURI($file . '-64.jpg', $file . '-64');
                   self::imgToDataURI($file . '-128.jpg', $file . '-128');
                   self::imgToDataURI($file . '-256.jpg', $file . '-256');
               } else {
