@@ -201,10 +201,11 @@ class Application_Model_Preference
     public static function GetHeadTitle()
     {
         $title = self::getValue("station_name");
-        if (strlen($title) > 0)
-            $title .= " - ";
+        if (empty($title)) {
+            $title = PRODUCT_NAME;
+        }
 
-        return $title.PRODUCT_NAME;
+        return $title;
     }
 
     public static function SetHeadTitle($title, $view=null)
