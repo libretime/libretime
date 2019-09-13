@@ -79,34 +79,26 @@ class FileDataHelper {
      */
     public static function getArtworkData($file, $size, $filepath = false)
     {
-
         $baseUrl = Application_Common_HTTPHelper::getStationUrl();
         //default cover, maybe make option to change in settings
         $default = $baseUrl . "css/images/no-cover.jpg";
 
-        if ($file === '') {
-           //default cover, this opion
-           $get_file_content = $default;
-
-        } else {
-
-            if ($filepath != false) {
-                $path = $filepath . $file . "-" . $size;
-                if (!file_exists($path)) {
-                    Logging::info("THE FILE DOES NOT EXIST: " . $path);
-                }
-            } else {
-                $storDir = Application_Model_MusicDir::getStorDir();
-                $path = $storDir->getDirectory() . $file . "-" . $size;
-                if (!file_exists($path)) {
-                    Logging::info("THE FILE DOES NOT EXIST: " . $path);
-                }
-            }
-
-            if($filecontent = file_get_contents($path) !== false){
-                $get_file_content = file_get_contents($path);
-            } else {
+        if ($filepath != false) {
+            $path = $filepath . $file . "-" . $size;
+            if (!file_exists($path)) {
                 $get_file_content = $default;
+                //Logging::error("THE FILE DOES NOT EXIST: " . $path);
+            } else {
+               $get_file_content = file_get_contents($path);
+            }
+        } else {
+            $storDir = Application_Model_MusicDir::getStorDir();
+            $path = $storDir->getDirectory() . $file . "-" . $size;
+            if (!file_exists($path)) {
+                $get_file_content = $default;
+                //Logging::error("THE FILE DOES NOT EXIST: " . $path);
+            } else {
+               $get_file_content = file_get_contents($path);
             }
         }
         return $get_file_content;
@@ -183,7 +175,6 @@ class FileDataHelper {
         return $get_img;
     }
 
-
     /**
      * Reset artwork
      *
@@ -202,60 +193,58 @@ class FileDataHelper {
         $dbAudioPath = $md["MDATA_KEY_FILEPATH"];
         $fullpath = $fp . $dbAudioPath;
 
-        self::saveArtworkData($fullpath, $fullpath);
-
-    }
-
-    /**
-     * Reset artwork
-     *
-     * @param string $trackid
-     *
-     * @return string $get_img Path to artwork
-     */
-    public static function resetArtwork2($trackid)
-    {
-        $file = Application_Model_StoredFile::RecallById($trackid);
-        $md = $file->getMetadata();
-
-        $storDir = Application_Model_MusicDir::getStorDir();
-        $fp = $storDir->getDirectory();
-
-        $dbAudioPath = $md["MDATA_KEY_FILEPATH"];
-        $fullpath = $fp . $dbAudioPath;
-
         $getID3 = new getID3;
         $getFileInfo = $getID3->analyze($fullpath);
 
         if(isset($getFileInfo['comments']['picture'][0])) {
 
               $get_img = "";
+              $mime = $getFileInfo['comments']['picture'][0]['image_mime'];
               $Image = 'data:'.$getFileInfo['comments']['picture'][0]['image_mime'].';charset=utf-8;base64,'.base64_encode($getFileInfo['comments']['picture'][0]['data']);
               $base64 = @$Image;
 
-              //saves to dataURI file
               $audioPath = dirname($fullpath);
               $dbPath = dirname($dbAudioPath);
               $normalizeValue = self::normalizePath($fullpath);
               $path_parts = pathinfo($normalizeValue);
               $file = $path_parts['filename'];
+
+              //Save Data URI
               if (file_put_contents($audioPath . "/" . $file, $base64)) {
                   $get_img = $dbPath . "/" . $file;
               } else {
+                  Logging::error("Could not save Data URI");
               }
 
-              //this will gen fake jpg data uri to jpg
-              $gencodedBase = base64_encode($base64);
-              $imgp = str_replace('data:image/jpeg;base64,', '', $gencodedBase);
-              $img = str_replace(' ', '+', $imgp);
-              $datap = base64_decode($imgp);
-              $filep = $audioPath . "/" . $file . '.jpg';
-              $success = file_put_contents($filep, $datap);
+              $rfile = $audioPath . "/" . $file;
 
+              if ($mime == "image/png") {
+                  $ext = 'png';
+              } elseif ($mime == "image/gif") {
+                  $ext = 'gif';
+              } elseif ($mime == "image/bmp") {
+                 $ext = 'bmp';
+              } else {
+                 $ext = 'jpg';
+              }
+
+              if (file_exists($rfile)) {
+                  self::resizeImage($rfile, $rfile . '-32.jpg', $ext, 32, 100);
+                  self::resizeImage($rfile, $rfile . '-64.jpg', $ext, 64, 100);
+                  self::resizeImage($rfile, $rfile . '-128.jpg', $ext, 128, 100);
+                  self::resizeImage($rfile, $rfile . '-256.jpg', $ext, 256, 100);
+                  self::resizeImage($rfile, $rfile . '-512.jpg', $ext, 512, 100);
+                  self::resizeImage($rfile, $rfile . '-1024.jpg', $ext, 1024, 100);
+                  self::imgToDataURI($rfile . '-32.jpg', $rfile . '-32');
+                  self::imgToDataURI($rfile . '-64.jpg', $rfile . '-64');
+                  self::imgToDataURI($rfile . '-128.jpg', $rfile . '-128');
+                  self::imgToDataURI($rfile . '-256.jpg', $rfile . '-256');
+              } else {
+                  Logging::info("The file $rfile does not exist");
+              }
         } else {
               $get_img = "";
         }
-
         return $get_img;
     }
 
@@ -366,8 +355,7 @@ class FileDataHelper {
      * Render Data URI
      * Used in API
      *
-     * @param string $file
-     * @param string $size
+     * @param string $dataFile
      */
     public static function renderDataURI($dataFile)
     {
@@ -389,11 +377,14 @@ class FileDataHelper {
     }
 
     /**
-     * Render Data URI
-     * Used in API
+     * Resize Image
      *
-     * @param string $file
-     * @param string $size
+     * @param string $orig_filename
+     * @param string $converted_filename
+     * @param string $ext
+     * @param string $size      Default: 500
+     * @param string $quality   Default: 75
+     *
      */
     public static function resizeImage($orig_filename, $converted_filename, $ext, $size=500, $quality=75)
     {
