@@ -4,6 +4,6 @@ $(window).load(function() {
 
 $(document).ready(function() {
     $("#submit").click(function() {
-        $.cookie("airtime_locale", $("#locale").val(), {path: '/'});
+        Cookies.set('airtime_locale', $('#locale').val(), {path: '/'});
     });
 });
