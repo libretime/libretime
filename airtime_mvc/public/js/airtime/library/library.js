@@ -54,7 +54,8 @@ var AIRTIME = (function(AIRTIME) {
         "owner_id"    : "s",
         "info_url"    : "s",
         "replay_gain" : "n",
-        "artwork"     : "s"
+        "artwork"     : "s",
+        "media_type"  : "s"
     };
 
     if (AIRTIME.library === undefined) {
@@ -591,6 +592,7 @@ var AIRTIME = (function(AIRTIME) {
             /* Cue Out */         { "sTitle" : $.i18n._("Cue Out")            , "mDataProp" : "cueout"       , "bVisible"    : false                 , "sClass"      : "library_length"        , "sWidth" : "80px"         },
             /* Description */     { "sTitle" : $.i18n._("Description")        , "mDataProp" : "description"  , "bVisible"    : false                 , "sClass"      : "library_description"   , "sWidth" : "150px"        },
             /* Encoded */         { "sTitle" : $.i18n._("Encoded By")         , "mDataProp" : "encoded_by"   , "bVisible"    : false                 , "sClass"      : "library_encoded"       , "sWidth" : "150px"        },
+            /* Media Type */      { "sTitle" : $.i18n._("Type")               , "mDataProp" : "media_type"   , "bVisible"    : false                 , "sClass"      : "library_media_type"    , "sWidth" : "60px"         },
             /* Genre */           { "sTitle" : $.i18n._("Genre")              , "mDataProp" : "genre"        , "sClass"      : "library_genre"         , "sWidth" : "100px"        },
             /* ISRC Number */     { "sTitle" : $.i18n._("ISRC")               , "mDataProp" : "isrc_number"  , "bVisible"    : false                 , "sClass"      : "library_isrc"          , "sWidth" : "150px"        },
             /* Label */           { "sTitle" : $.i18n._("Label")              , "mDataProp" : "label"        , "bVisible"    : false                 , "sClass"      : "library_label"         , "sWidth" : "125px"        },
@@ -615,7 +617,7 @@ var AIRTIME = (function(AIRTIME) {
             );
         }
 
-        var colExclude = onDashboard ? [0, 1, 2, 33] : [0, 1, 2];
+        var colExclude = onDashboard ? [0, 1, 2, 34] : [0, 1, 2];
 
         /*  ############################################
                             DATATABLES
@@ -1597,6 +1599,7 @@ var validationTypes = {
     "track_number" : "i",
     "info_url" : "s",
     "artwork" : "s",
+    "media_type" : "s",
     "year" : "i"
 };
 
