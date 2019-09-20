@@ -42,7 +42,8 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         "track_title"  => "s",
         "track_number" => "n",
         "info_url"     => "s",
-        "year"         => "n"
+        "year"         => "n",
+        "media_type"   => "s"
     );
 
     private function getCriteriaOptions($option = null)
@@ -77,7 +78,8 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 "track_number" => _("Track Number"),
                 "utime"        => _("Uploaded"),
                 "info_url"     => _("Website"),
-                "year"         => _("Year")
+                "year"         => _("Year"),
+                "media_type"   => _("Media Type")
             );
         }
 
@@ -183,18 +185,18 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     public function init()
     {
     }
-    
+
     /*
      * converts UTC timestamp citeria into user timezone strings.
      */
     private function convertTimestamps(&$criteria)
     {
     	$columns = array("utime", "mtime", "lptime");
-    	
+
     	foreach ($columns as $column) {
-    		
+
     		if (isset($criteria[$column])) {
-    			
+
     			foreach ($criteria[$column] as &$constraint) {
     			    // convert to appropriate timezone timestamps only if the modifier is not a relative time
                     if (!in_array($constraint['modifier'], array('before','after','between'))) {
@@ -246,7 +248,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         $bl = new Application_Model_Block($p_blockId);
         $storedCrit = $bl->getCriteriaGrouped();
         Logging::info($storedCrit);
-        
+
         //need to convert criteria to be displayed in the user's timezone if there's some timestamp type.
         self::convertTimestamps($storedCrit["crit"]);
 
@@ -470,7 +472,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             $sort->setValue($storedCrit["sort"]["value"]);
         }
         $this->addElement($sort);
-        
+
         $limit = new Zend_Form_Element_Select('sp_limit_options');
         $limit->setAttrib('class', 'sp_input_select')
               ->setDecorators(array('viewHelper'))
@@ -721,7 +723,8 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             "sample_rate" => "DbSampleRate",
             "track_title" => "DbTrackTitle",
             "track_number" => "DbTrackNumber",
-            "year" => "DbYear"
+            "year" => "DbYear",
+            "media_type" => "DbMediaType"
         );
 
         // things we need to check

@@ -85,6 +85,7 @@
     <column name="filesize" phpName="DbFilesize" type="Integer" required="true" defaultValue="0"/>
     <column name="description" phpName="DbDescription" type="VARCHAR" size="512" />
     <column name="artwork" phpName="DbArtwork" type="VARCHAR" size="512" required="false"/>
+    <column name="media_type" phpName="DbMediaType" type="VARCHAR" size="4" required="false"/>
     <foreign-key foreignTable="cc_subjs" phpName="FkOwner" name="cc_files_owner_fkey">
       <reference local="owner_id" foreign="id"/>
     </foreign-key>
