@@ -2,9 +2,9 @@
 
 class Application_Form_EditAudioMD extends Zend_Form
 {
-    
+
     public function init() {}
-    
+
     public function startForm($p_id)
     {
         $baseUrl = Application_Common_OsPath::getBaseDir();
@@ -17,6 +17,17 @@ class Application_Form_EditAudioMD extends Zend_Form
         $file_id->removeDecorator('Label');
         $file_id->setAttrib('class', 'obj_id');
         $this->addElement($file_id);
+
+        // Add artwork hidden field
+        $artwork = new Zend_Form_Element_Hidden('artwork');
+        $artwork->setFilters(array('StringTrim'))
+            ->setValidators(array(
+                new Zend_Validate_StringLength(array('max' => 512))
+            ));
+        $file_id->addDecorator('HtmlTag', array('tag' => 'div', 'style' => 'display:none'));
+        $file_id->removeDecorator('Label');
+        $file_id->setAttrib('class', 'artwork');
+        $this->addElement($artwork);
 
         // Add title field
         $track_title = new Zend_Form_Element_Text('track_title');

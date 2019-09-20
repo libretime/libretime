@@ -70,6 +70,7 @@ class Application_Model_Dashboard
                  */
 
                 return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
+                            "artwork_data"=>$row[0]["artwork_data"],
                             "starts"=>$row[0]["starts"],
                             "ends"=>$row[0]["ends"]);
             }
@@ -87,6 +88,7 @@ class Application_Model_Dashboard
                 }
             } else {
                  return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
+                        "artwork_data"=>$row[0]["artwork_data"],
                         "starts"=>$row[0]["starts"],
                         "ends"=>$row[0]["ends"],
                         "media_item_played"=>$row[0]["media_item_played"],
@@ -110,6 +112,7 @@ class Application_Model_Dashboard
                 return null;
             } else {
                 return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
+                            "artwork_data"=>$row[0]["artwork_data"],
                             "starts"=>$row[0]["starts"],
                             "ends"=>$row[0]["ends"]);
             }
@@ -128,6 +131,7 @@ class Application_Model_Dashboard
 
                 if ($row[0]["starts"] <= $showInstance->getShowInstanceStart()) {
                     return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
+                            "artwork_data"=>$row[0]["artwork_data"],
                             "starts"=>$row[0]["starts"],
                             "ends"=>$row[0]["ends"]);
                 } else {

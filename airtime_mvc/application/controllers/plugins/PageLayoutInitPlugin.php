@@ -91,7 +91,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             $userType = "";
         }
         $view->headScript()->appendScript("var userType = '$userType';");
-        
+
         // Dropzone also accept file extensions and doesn't correctly extract certain mimetypes (eg. FLAC - try it),
         // so we append the file extensions to the list of mimetypes and that makes it work.
         $mimeTypes = FileDataHelper::getAudioMimeTypeArray();
@@ -139,6 +139,8 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
         $view->headScript()->appendScript("var PRODUCT_NAME = '" . PRODUCT_NAME . "';");
         $view->headScript()->appendScript("var USER_MANUAL_URL = '" . USER_MANUAL_URL . "';");
         $view->headScript()->appendScript("var COMPANY_NAME = '" . COMPANY_NAME . "';");
+        //Each page refresh or tab open has uniqID, not to be used for security
+        $view->headScript()->appendScript("var UNIQID = '" . uniqid() . "';");
     }
 
     protected function _initHeadLink()

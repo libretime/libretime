@@ -111,6 +111,7 @@ class CcFilesTableMap extends TableMap
         $this->addColumn('is_playlist', 'DbIsPlaylist', 'BOOLEAN', false, null, false);
         $this->addColumn('filesize', 'DbFilesize', 'INTEGER', true, null, 0);
         $this->addColumn('description', 'DbDescription', 'VARCHAR', false, 512, null);
+        $this->addColumn('artwork', 'DbArtwork', 'VARCHAR', false, 512, null);
         // validators
     } // initialize()
 

@@ -122,7 +122,7 @@ class ScheduleController extends Zend_Controller_Action
         $currentUser = $service_user->getCurrentUser();
 
         $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
-        
+
         $start = new DateTime($this->_getParam('start', null), $userTimezone);
         $start->setTimezone(new DateTimeZone("UTC"));
         $end = new DateTime($this->_getParam('end', null), $userTimezone);
@@ -187,7 +187,7 @@ class ScheduleController extends Zend_Controller_Action
             $this->view->show_error = true;
             return false;
         }
-        
+
         $error = $service_calendar->moveShow($deltaDay, $deltaMin);
         if (isset($error)) {
             $this->view->error = $error;
@@ -209,7 +209,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars["params"]["delta day"] = $deltaDay;
         $log_vars["params"]["delta minute"] = $deltaMin;
         Logging::info($log_vars);
-        
+
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
 
@@ -239,7 +239,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars["params"] = array();
         $log_vars["params"]["instance id"] = $instanceId;
         Logging::info($log_vars);
-        
+
         $service_show = new Application_Service_ShowService();
         $showId = $service_show->deleteShow($instanceId, true);
 
@@ -261,7 +261,7 @@ class ScheduleController extends Zend_Controller_Action
     public function clearShowAction()
     {
         $instanceId = $this->_getParam('id');
-        
+
         $log_vars = array();
         $log_vars["url"] = $_SERVER['HTTP_HOST'];
         $log_vars["action"] = "schedule/clear-show";
@@ -296,12 +296,14 @@ class ScheduleController extends Zend_Controller_Action
 
         /* Convert all UTC times to localtime before sending back to user. */
         $range["schedulerTime"] = Application_Common_DateHelper::UTCStringToUserTimezoneString($range["schedulerTime"]);
-        
+
         if (isset($range["previous"])) {
             $range["previous"]["starts"] = Application_Common_DateHelper::UTCStringToUserTimezoneString($range["previous"]["starts"]);
             $range["previous"]["ends"] = Application_Common_DateHelper::UTCStringToUserTimezoneString($range["previous"]["ends"]);
         }
         if (isset($range["current"])) {
+            $get_artwork = FileDataHelper::getArtworkData($range["current"]["metadata"]["artwork"], 256);
+            $range["current"]["metadata"]["artwork_data"] = $get_artwork;
             $range["current"]["starts"] = Application_Common_DateHelper::UTCStringToUserTimezoneString($range["current"]["starts"]);
             $range["current"]["ends"] = Application_Common_DateHelper::UTCStringToUserTimezoneString($range["current"]["ends"]);
         }
@@ -309,14 +311,14 @@ class ScheduleController extends Zend_Controller_Action
             $range["next"]["starts"] = Application_Common_DateHelper::UTCStringToUserTimezoneString($range["next"]["starts"]);
             $range["next"]["ends"] = Application_Common_DateHelper::UTCStringToUserTimezoneString($range["next"]["ends"]);
         }
-  
+
         Application_Common_DateHelper::convertTimestamps(
-        	$range["currentShow"], 
+        	$range["currentShow"],
         	array("starts", "ends", "start_timestamp", "end_timestamp"),
         	"user"
         );
         Application_Common_DateHelper::convertTimestamps(
-        	$range["nextShow"], 
+        	$range["nextShow"],
         	array("starts", "ends", "start_timestamp", "end_timestamp"),
         	"user"
         );
@@ -324,7 +326,7 @@ class ScheduleController extends Zend_Controller_Action
         //TODO: Add timezone and timezoneOffset back into the ApiController's results.
         $range["timezone"] = Application_Common_DateHelper::getUserTimezoneAbbreviation();
         $range["timezoneOffset"] = Application_Common_DateHelper::getUserTimezoneOffset();
-        
+
         $source_status = array();
         $switch_status = array();
         $live_dj = Application_Model_Preference::GetSourceStatus("live_dj");
@@ -358,7 +360,7 @@ class ScheduleController extends Zend_Controller_Action
 
             return false;
         }
-        
+
         $originalShowId = $show->isRebroadcast();
         if (!is_null($originalShowId)) {
             try {
@@ -375,7 +377,7 @@ class ScheduleController extends Zend_Controller_Action
             $displayTimeZone = new DateTimeZone(Application_Model_Preference::GetTimezone());
             $originalDateTime = new DateTime($originalShowStart, new DateTimeZone("UTC"));
             $originalDateTime->setTimezone($displayTimeZone);
-            
+
             $this->view->additionalShowInfo =
                 sprintf(_("Rebroadcast of show %s from %s at %s"),
                     $originalShowName,
@@ -461,7 +463,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars["params"] = array();
         $log_vars["params"]["form_data"] = $data;
         Logging::info($log_vars);
-        
+
         $service_showForm = new Application_Service_ShowFormService(
             $data["add_show_id"], $data["add_show_instance_id"]);
         $service_show = new Application_Service_ShowService(null, $data);
@@ -513,7 +515,7 @@ class ScheduleController extends Zend_Controller_Action
         if ($data['add_show_day_check'] == "") {
             $data['add_show_day_check'] = null;
         }
-        
+
         $log_vars = array();
         $log_vars["url"] = $_SERVER['HTTP_HOST'];
         $log_vars["action"] = "schedule/edit-show";
@@ -525,12 +527,12 @@ class ScheduleController extends Zend_Controller_Action
 
         list($data, $validateStartDate, $validateStartTime, $originalShowStartDateTime) =
             $service_showForm->preEditShowValidationCheck($data);
-        
+
         if ($service_showForm->validateShowForms($forms, $data, $validateStartDate,
                 $originalShowStartDateTime, true, $data["add_show_instance_id"])) {
             // Get the show ID from the show service to pass as a parameter to the RESTful ShowImageController
             $this->view->showId = $service_show->addUpdateShow($data);
-            
+
         	$this->view->addNewShow = true;
             $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
         } else {
@@ -541,7 +543,7 @@ class ScheduleController extends Zend_Controller_Action
                 $this->view->when->getElement('add_show_start_time')->setOptions(array('disabled' => true));
             }
             //$this->view->rr->getElement('add_show_record')->setOptions(array('disabled' => true));
-            
+
             $this->view->addNewShow = false;
             $this->view->action = "edit-show";
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');
@@ -551,7 +553,7 @@ class ScheduleController extends Zend_Controller_Action
     public function addShowAction()
     {
         $service_showForm = new Application_Service_ShowFormService(null);
-        
+
         $js = $this->_getParam('data');
         $data = array();
 
@@ -565,20 +567,20 @@ class ScheduleController extends Zend_Controller_Action
         // TODO: move this to js
 		$data['add_show_hosts']     = $this->_getParam('hosts');
 		$data['add_show_day_check'] = $this->_getParam('days');
-		
+
         if ($data['add_show_day_check'] == "") {
             $data['add_show_day_check'] = null;
         }
-        
+
         $log_vars = array();
         $log_vars["url"] = $_SERVER['HTTP_HOST'];
         $log_vars["action"] = "schedule/add-show";
         $log_vars["params"] = array();
         $log_vars["params"]["form_data"] = $data;
         Logging::info($log_vars);
-        
+
         $forms = $this->createShowFormAction();
-        
+
         $this->view->addNewShow = true;
 
         if ($data['add_show_start_now'] == "now") {
@@ -597,18 +599,18 @@ class ScheduleController extends Zend_Controller_Action
         if ($service_showForm->validateShowForms($forms, $data)) {
         	// Get the show ID from the show service to pass as a parameter to the RESTful ShowImageController
         	$this->view->showId = $service_show->addUpdateShow($data);
-            
+
             //send new show forms to the user
             $this->createShowFormAction(true);
             $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
-            
+
             Logging::debug("Show creation succeeded");
         } else {
         	$this->view->form = $this->view->render('schedule/add-show-form.phtml');
             Logging::debug("Show creation failed");
         }
     }
-    
+
     public function createShowFormAction($populateDefaults=false)
     {
         $service_showForm = new Application_Service_ShowFormService();
@@ -638,7 +640,7 @@ class ScheduleController extends Zend_Controller_Action
     public function deleteShowAction()
     {
         $instanceId = $this->_getParam('id');
-        
+
         $log_vars = array();
         $log_vars["url"] = $_SERVER['HTTP_HOST'];
         $log_vars["action"] = "schedule/delete-show";
@@ -648,7 +650,7 @@ class ScheduleController extends Zend_Controller_Action
 
         $service_show = new Application_Service_ShowService();
         $showId = $service_show->deleteShow($instanceId);
-        
+
         if (!$showId) {
             $this->view->show_error = true;
         }
@@ -663,7 +665,7 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars["params"] = array();
         $log_vars["params"]["instance id"] = $this->_getParam('id');
         Logging::info($log_vars);
-        
+
         $user = Application_Model_User::getCurrentUser();
 
         if ($user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
@@ -730,7 +732,7 @@ class ScheduleController extends Zend_Controller_Action
     	$start = $this->_getParam('startTime');
     	$end = $this->_getParam('endTime');
     	$timezone = $this->_getParam('timezone');
-    	
+
         $service_showForm = new Application_Service_ShowFormService();
         $result = $service_showForm->calculateDuration($start, $end, $timezone);
 
@@ -741,10 +743,10 @@ class ScheduleController extends Zend_Controller_Action
     public function updateFutureIsScheduledAction()
     {
         $schedId = $this->_getParam('schedId');
-        
+
         $scheduleService = new Application_Service_SchedulerService();
         $redrawLibTable = $scheduleService->updateFutureIsScheduled($schedId, false);
-        
+
         $this->_helper->json->sendJson(array("redrawLibTable" => $redrawLibTable));
     }
 
@@ -762,5 +764,5 @@ class ScheduleController extends Zend_Controller_Action
 
         $this->_helper->json->sendJson($localTime);
     }
-    
+
 }
