@@ -41,7 +41,7 @@ var nextSongPrepare = true;
 var nextShowPrepare = true;
 
 function secondsTimer(){
-    /* This function constantly calls itself every 'uiUpdateInterval' 
+    /* This function constantly calls itself every 'uiUpdateInterval'
      * micro-seconds and is responsible for updating the UI. */
     if (localRemoteTimeOffset !== null){
         var date = new Date();
@@ -59,7 +59,7 @@ function newSongStart(){
     if (nextSong.type == 'track') {
         currentSong = nextSong;
         nextSong = null;
-    }   
+    }
 }
 
 function nextShowStart(){
@@ -83,13 +83,13 @@ function updateProgressBarValue(){
     var songPercentDone = 0;
     var scheduled_play_div = $("#scheduled_play_div");
     var scheduled_play_line_to_switch = scheduled_play_div.parent().find(".line-to-switch");
-    
+
     if (currentSong !== null){
         var songElapsedTime = 0;
         songPercentDone = (approximateServerTime - currentSong.songStartPosixTime)/currentSong.songLengthMs*100;
         songElapsedTime = approximateServerTime - currentSong.songStartPosixTime;
         if (songPercentDone < 0) {
-            songPercentDone = 0;        
+            songPercentDone = 0;
             //currentSong = null;
         } else if (songPercentDone > 100) {
             songPercentDone = 100;
@@ -211,12 +211,12 @@ function calculateTimeToNextSong() {
     if (approximateServerTime === null) {
         return;
     }
-    
+
     if (newSongTimeoutId !== null) {
         /* We have a previous timeout set, let's unset it */
         clearTimeout(newSongTimeoutId);
         newSongTimeoutId = null;
-    } 
+    }
 
     var diff = nextSong.songStartPosixTime - approximateServerTime;
     if (diff < 0) diff=0;
@@ -233,7 +233,7 @@ function calculateTimeToNextShow() {
         /* We have a previous timeout set, let's unset it */
         clearTimeout(newShowTimeoutId);
         newShowTimeoutId = null;
-    } 
+    }
 
     var diff = nextShow[0].showStartPosixTime - approximateServerTime;
     if (diff < 0) diff=0;
@@ -256,7 +256,7 @@ function parseItems(obj){
         calcAdditionalData(nextSong);
         calculateTimeToNextSong();
     }
-    
+
     currentShow = new Array();
     if (obj.currentShow.length > 0) {
         calcAdditionalShowData(obj.currentShow);
@@ -269,7 +269,7 @@ function parseItems(obj){
         nextShow = obj.nextShow;
         calculateTimeToNextShow();
     }
-    
+
 
     var schedulePosixTime = convertDateToPosixTime(obj.schedulerTime);
     var date = new Date();
@@ -281,7 +281,7 @@ function parseSourceStatus(obj){
     var master_div = $("#master_dj_div");
     var live_li = live_div.parent();
     var master_li = master_div.parent();
-    
+
     if(obj.live_dj_source == false){
         live_li.find(".line-to-switch").attr("class", "line-to-switch off");
         live_div.removeClass("ready");
@@ -289,7 +289,7 @@ function parseSourceStatus(obj){
         live_li.find(".line-to-switch").attr("class", "line-to-switch on");
         live_div.addClass("ready");
     }
-    
+
     if(obj.master_dj_source == false){
         master_li.find(".line-to-switch").attr("class", "line-to-switch off");
         master_div.removeClass("ready");
@@ -300,43 +300,43 @@ function parseSourceStatus(obj){
 }
 
 function parseSwitchStatus(obj){
-    
+
     if(obj.live_dj_source == "on"){
         live_dj_on_air = true;
     }else{
         live_dj_on_air = false;
     }
-    
+
     if(obj.master_dj_source == "on"){
         master_dj_on_air = true;
     }else{
         master_dj_on_air = false;
     }
-    
+
     if(obj.scheduled_play == "on"){
         scheduled_play_on_air = true;
     }else{
         scheduled_play_on_air = false;
     }
-    
+
     var scheduled_play_switch = $("#scheduled_play.source-switch-button");
     var live_dj_switch = $("#live_dj.source-switch-button");
     var master_dj_switch = $("#master_dj.source-switch-button");
-    
+
     scheduled_play_switch.find("span").html(obj.scheduled_play);
     if(scheduled_play_on_air){
         scheduled_play_switch.addClass("active");
     }else{
         scheduled_play_switch.removeClass("active");
     }
-    
+
     live_dj_switch.find("span").html(obj.live_dj_source);
     if(live_dj_on_air){
         live_dj_switch.addClass("active");
     }else{
         live_dj_switch.removeClass("active");
     }
-    
+
     master_dj_switch.find("span").html(obj.master_dj_source)
     if(master_dj_on_air){
         master_dj_switch.addClass("active");
@@ -351,7 +351,7 @@ function controlOnAirLight(){
         onAirOffIterations = 0;
     } else if (onAirOffIterations < 20) {
         //if less than 4 seconds have gone by (< 20 executions of this function)
-        //then keep the ON-AIR light on. Only after at least 3 seconds have gone by, 
+        //then keep the ON-AIR light on. Only after at least 3 seconds have gone by,
         //should we be allowed to turn it off. This is to stop the light from temporarily turning
         //off between tracks: CC-3725
         onAirOffIterations++;
@@ -364,7 +364,7 @@ function controlSwitchLight(){
     var live_li= $("#live_dj_div").parent();
     var master_li = $("#master_dj_div").parent();
     var scheduled_play_li = $("#scheduled_play_div").parent();
-    
+
     if((scheduled_play_on_air && scheduled_play_source) && !live_dj_on_air && !master_dj_on_air){
         scheduled_play_li.find(".line-to-on-air").attr("class", "line-to-on-air on");
         live_li.find(".line-to-on-air").attr("class", "line-to-on-air off");
@@ -385,8 +385,8 @@ function controlSwitchLight(){
 }
 
 function getScheduleFromServer(){
-    $.ajax({ url: baseUrl+"Schedule/get-current-playlist/format/json", 
-                    dataType:"json", 
+    $.ajax({ url: baseUrl+"Schedule/get-current-playlist/format/json",
+                    dataType:"json",
                     success:function(data){
                 parseItems(data.entries);
                 parseSourceStatus(data.source_status);
@@ -440,7 +440,7 @@ function setSwitchListener(ele){
 
 function kickSource(ele){
     var sourcename = $(ele).attr('id');
-    
+
     $.get(baseUrl+"Dashboard/disconnect-source/format/json/sourcename/"+sourcename, function(data){
         if(data.error){
             alert(data.error);
@@ -458,7 +458,7 @@ function init() {
     secondsTimer();
 
     setupQtip();
-    
+
     $('.listen-control-button').click(function() {
         if (stream_window == null || stream_window.closed)
             stream_window=window.open(baseUrl+"Dashboard/stream-player", 'name', 'width=400,height=158');
@@ -490,15 +490,15 @@ $(document).ready(function() {
     if ($('.errors').length === 0) {
         setCurrentUserPseudoPassword();
     }
-    
+
     $('body').on('click','#current-user', function() {
         $.ajax({
             url: baseUrl+'user/edit-user/format/json'
         });
     });
-    
+
     $('body').on('click', '#cu_save_user', function() {
-        $.cookie("airtime_locale", $('#cu_locale').val(), {path: '/'});
+        Cookies.set('airtime_locale', $('#cu_locale').val(), {path: '/'});
     });
 
     // When the 'Listen' button is clicked we set the width
