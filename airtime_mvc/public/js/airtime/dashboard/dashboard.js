@@ -517,7 +517,7 @@ $(document).ready(function() {
     });
 
     $('body').on('click', '#cu_save_user', function() {
-        $.cookie("airtime_locale", $('#cu_locale').val(), {path: '/'});
+        Cookies.set('airtime_locale', $('#cu_locale').val(), {path: '/'});
     });
 
     // When the 'Listen' button is clicked we set the width
