@@ -1,12 +1,27 @@
+<?php $get_artwork = FileDataHelper::getArtworkData($this->artwork, 256); ?>
 <div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong edit-md-dialog">
-    <div class="inner_editor_title">
+    <div class="track-edit-header" style="top:15px">
         <?php if ($this->permissionDenied) { ?> <h3><?php echo _("You do not have permission to edit this track.") ?></h3> <?php } ?>
-        <H2><?php
-            if ($this->permissionDenied) {
-                echo(_("Viewing "));
-            } else {
-                echo(_("Editing "));
-            }?>"<span class="title_obj_name"><?php echo($this->title); ?></span>"</H2>
+        <?php
+        /*
+        if ($this->permissionDenied) {
+          echo(_("Viewing "));
+        } else {
+          echo(_("Editing "));
+        } */
+        ?>
+        <div class="track-edit-right-wrapper">
+            <div class="track-edit-right">
+                <div class="inner_track_editor_title" style="width: 100%;">
+                    <h2 style="line-height: 26px !important;"><span class="title_obj_name"><?php echo($this->title); ?></span></h2>
+                    <h3 style="line-height: 2px !important;"><span class=""><?php echo($this->artist_name); ?></span></h3>
+                </div>
+            </div>
+        </div>
+        <div class="track-edit-left">
+            <?php echo '<img width="140" height="140" src="' . $get_artwork .'">'; ?>
+        </div>
     </div>
+    <div style="height: 160px;"></div>
     <?php echo $this->form; ?>
 </div>
