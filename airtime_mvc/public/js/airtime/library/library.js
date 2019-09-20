@@ -615,7 +615,7 @@ var AIRTIME = (function(AIRTIME) {
             );
         }
 
-        var colExclude = onDashboard ? [0, 1, 2, 32] : [0, 1, 2];
+        var colExclude = onDashboard ? [0, 1, 2, 33] : [0, 1, 2];
 
         /*  ############################################
                             DATATABLES
