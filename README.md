@@ -1,8 +1,7 @@
 ![](https://github.com/LibreTime/libretime/raw/master/logo/logotype.png)
 
 [![Build Status](https://travis-ci.org/LibreTime/libretime.svg?branch=master)](https://travis-ci.org/LibreTime/libretime)
-[![Financial Contributors on Open Collective](https://opencollective.com/libretime/all/badge.svg?label=financial+contributors)](https://opencollective.com/libretime) [![Backers](https://opencollective.com/libretime/tiers/backer/badge.svg?label=backer&color=brightgreen)](https://opencollective.com/libretime)
-[![Sponsors](https://opencollective.com/libretime/tiers/sponsor/badge.svg?label=sponsor&color=brightgreen)](https://opencollective.com/libretime)
+[![Financial Contributors on Open Collective](https://opencollective.com/libretime/all/badge.svg?label=financial+contributors)](https://opencollective.com/libretime)
 
 LibreTime makes it easy to run your own online or terrestrial radio station. It
 is a community managed fork of the AirTime project.
@@ -58,18 +57,21 @@ up and running.
 
 ## Support
 
-To get support for any questions or problems you might have using the software we have a forum at [discourse.libretime.org](http://discourse.libretime.org). We are moving towards using the forum to provide community support and reserving the github issue queue for confirmed bugs and well-formed feature requests.
+To get support for any questions or problems you might have using the software
+we have a forum at [discourse.libretime.org](http://discourse.libretime.org).
+We are moving towards using the forum to provide community support and reserving
+the github issue queue for confirmed bugs and well-formed feature requests.
 
 ## Contributors
 
 ### Code Contributors
 
-This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
-<a href="https://github.com/LibreTime/libretime/graphs/contributors"><img src="https://opencollective.com/libretime/contributors.svg?width=890&button=false" /></a>
+This project exists thanks to all the people who [contribute](CONTRIBUTING.md).
 
 ### Financial Contributors
 
-Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/libretime/contribute)]
+Become a financial contributor and help us sustain our community on
+[OpenCollective](https://opencollective.com/libretime/contribute).
 
 #### Individuals
 
@@ -77,7 +79,8 @@ Become a financial contributor and help us sustain our community. [[Contribute](
 
 #### Organizations
 
-Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/libretime/contribute)]
+[Support](https://opencollective.com/libretime/contribute) this project with
+your organization. Your logo will show up here with a link to your website.
 
 <a href="https://opencollective.com/libretime/organization/0/website"><img src="https://opencollective.com/libretime/organization/0/avatar.svg"></a>
 <a href="https://opencollective.com/libretime/organization/1/website"><img src="https://opencollective.com/libretime/organization/1/avatar.svg"></a>
