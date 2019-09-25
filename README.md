@@ -1,8 +1,7 @@
 ![](https://github.com/LibreTime/libretime/raw/master/logo/logotype.png)
 
 [![Build Status](https://travis-ci.org/LibreTime/libretime.svg?branch=master)](https://travis-ci.org/LibreTime/libretime)
-[![Backers](https://opencollective.com/libretime/tiers/backer/badge.svg?label=backer&color=brightgreen)](https://opencollective.com/libretime)
-[![Sponsors](https://opencollective.com/libretime/tiers/sponsor/badge.svg?label=sponsor&color=brightgreen)](https://opencollective.com/libretime)
+[![Financial Contributors on Open Collective](https://opencollective.com/libretime/all/badge.svg?label=financial+contributors)](https://opencollective.com/libretime)
 
 LibreTime makes it easy to run your own online or terrestrial radio station. It
 is a community managed fork of the AirTime project.
@@ -58,7 +57,41 @@ up and running.
 
 ## Support
 
-To get support for any questions or problems you might have using the software we have a forum at [discourse.libretime.org](http://discourse.libretime.org). We are moving towards using the forum to provide community support and reserving the github issue queue for confirmed bugs and well-formed feature requests.
+To get support for any questions or problems you might have using the software
+we have a forum at [discourse.libretime.org](http://discourse.libretime.org).
+We are moving towards using the forum to provide community support and reserving
+the github issue queue for confirmed bugs and well-formed feature requests.
+
+## Contributors
+
+### Code Contributors
+
+This project exists thanks to all the people who [contribute](CONTRIBUTING.md).
+
+### Financial Contributors
+
+Become a financial contributor and help us sustain our community on
+[OpenCollective](https://opencollective.com/libretime/contribute).
+
+#### Individuals
+
+<a href="https://opencollective.com/libretime"><img src="https://opencollective.com/libretime/individuals.svg?width=890"></a>
+
+#### Organizations
+
+[Support](https://opencollective.com/libretime/contribute) this project with
+your organization. Your logo will show up here with a link to your website.
+
+<a href="https://opencollective.com/libretime/organization/0/website"><img src="https://opencollective.com/libretime/organization/0/avatar.svg"></a>
+<a href="https://opencollective.com/libretime/organization/1/website"><img src="https://opencollective.com/libretime/organization/1/avatar.svg"></a>
+<a href="https://opencollective.com/libretime/organization/2/website"><img src="https://opencollective.com/libretime/organization/2/avatar.svg"></a>
+<a href="https://opencollective.com/libretime/organization/3/website"><img src="https://opencollective.com/libretime/organization/3/avatar.svg"></a>
+<a href="https://opencollective.com/libretime/organization/4/website"><img src="https://opencollective.com/libretime/organization/4/avatar.svg"></a>
+<a href="https://opencollective.com/libretime/organization/5/website"><img src="https://opencollective.com/libretime/organization/5/avatar.svg"></a>
+<a href="https://opencollective.com/libretime/organization/6/website"><img src="https://opencollective.com/libretime/organization/6/avatar.svg"></a>
+<a href="https://opencollective.com/libretime/organization/7/website"><img src="https://opencollective.com/libretime/organization/7/avatar.svg"></a>
+<a href="https://opencollective.com/libretime/organization/8/website"><img src="https://opencollective.com/libretime/organization/8/avatar.svg"></a>
+<a href="https://opencollective.com/libretime/organization/9/website"><img src="https://opencollective.com/libretime/organization/9/avatar.svg"></a>
 
 ## License
 
