@@ -62,6 +62,9 @@ we have a forum at [discourse.libretime.org](http://discourse.libretime.org).
 We are moving towards using the forum to provide community support and reserving
 the github issue queue for confirmed bugs and well-formed feature requests.
 
+You can also contact us through our [Mattermost instance](https://chat.libretime.org)
+where you can talk with other users and developers.
+
 ## Contributors
 
 ### Code Contributors
