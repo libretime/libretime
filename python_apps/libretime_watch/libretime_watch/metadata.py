@@ -114,9 +114,10 @@ def analyse_file (filename, database):
     #try to determine the filetype 
     mime_check = magic.detect_from_filename(filename)
     database["mime"] = mime_check.mime_type
-   
+    #
     mime = MimeTypes()
     type, a = mime.guess_type(filename)
+    #
     logging.info("mime_check: "+database["mime"]+ " mime: "+type)
 
     database["ftype"] = "audioclip"
@@ -127,12 +128,7 @@ def analyse_file (filename, database):
     database["md5"] = md5_hash(filename)
 
 
-    # common tags
-    audio = EasyID3(filename) # TODO catch no ID3 tag
-    
-       # MP3 file ?
-    if database["mime"] in ['audio/mpeg','audio/mp3','application/octet-stream']:
-        logging.info("Es un MP3: {}".format(filename))
+    if database["mime"] in ['audio/mpeg','audio/mp3','application/octet-stream', 'audio/ogg', 'audio/vorbis', 'audio/x-vorbis', 'application/ogg', 'application/x-ogg']:
         try:
             try:
                 database["track_title"]=audio['title'][0]
@@ -172,10 +168,7 @@ def analyse_file (filename, database):
             # Ogg
             elif database["mime"] in ['audio/ogg', 'audio/vorbis', 'audio/x-vorbis', 'application/ogg', 'application/x-ogg']:
                 f = OggVorbis(filename)
-            else: # 'application/octet-stream'?
-                print("Unsupported metadata type: {} -- for audio {}".format(database["mime"], filename))
-                # logging.warning(...) TODO !
-                return False
+            
             # analysis
             database["bit_rate"] = f.info.bitrate
             database["sample_rate"] = f.info.sample_rate
@@ -210,6 +203,6 @@ def analyse_file (filename, database):
         except StandardError, err:
             logging.error("Error : {} -- {}".format(err, filename))
     else:
-        logging.warning("NOT MP3: {}".format(filename))
+        logging.warning("UNSUPPORTED FORMAT: {}".format(filename))
         
     return analyse_ok
