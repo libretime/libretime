@@ -15,7 +15,7 @@ If you are end-user of an already installed LibreTime instance we have a number 
 
 We also have [how-to guides](manual/howtos) that contain step-by-step instructions for various common tasks.
 
-There are currently no companies offering turn-key LibreTime hosting so if you are interested in running it you will need to have some familiarity with running a linux server. You can always reach out to help from the community at our [forum](http://discourse.libretime.org)
+There are currently no companies offering turn-key LibreTime hosting so if you are interested in running it you will need to have some familiarity with running a linux server. You can always reach out to help from the community at our [forum](http://discourse.libretime.org). You can also join our [Mattermost instance](https://chat.libretime.org/) and talk with other developers and users.
 
 Getting Started (for Developers and Admins)
 ---------------
