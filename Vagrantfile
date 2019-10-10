@@ -15,6 +15,7 @@ Vagrant.configure("2") do |config|
 
   # make sure we are using nfs (doesn't work out of the box with debian)
   nfsPath = "."
+  # Catalina support
   if Dir.exist?("/System/Volumes/Data")
       nfsPath = "/System/Volumes/Data" + Dir.pwd
   end
