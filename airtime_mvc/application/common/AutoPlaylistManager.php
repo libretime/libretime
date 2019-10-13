@@ -39,22 +39,18 @@ class AutoPlaylistManager {
             $full = false;
             $repeatuntilfull = $playlistrepeat->getAutoPlaylistRepeat();
             $tempPercentScheduled = 0;
+            $si = new Application_Model_ShowInstance($autoplaylist->getDbId());
+            // the intro playlist should be added exactly once
+            if ($introplaylistid != null) {
+                //Logging::info('adding intro');
+                $si->addPlaylistToShowStart($introplaylistid, false);
+            }
             while(!$full) {
-                $si = new Application_Model_ShowInstance($autoplaylist->getDbId());
                 // we do not want to try to schedule an empty playlist
                 if ($playlistid != null) {
                     $si->addPlaylistToShow($playlistid, false);
                 }
                 $ps = $si->getPercentScheduled();
-                if ($introplaylistid != null) {
-                    //Logging::info('adding intro');
-                    $si->addPlaylistToShowStart($introplaylistid, false);
-                }
-                if ($outroplaylistid != null) {
-                    //Logging::info('adding outro');
-                    $si->addPlaylistToShow($outroplaylistid, false);
-                    //Logging::info("The total percent scheduled is % $ps");
-                }
                 if ($ps > 100) {
                     $full = true;
                 }
@@ -62,7 +58,7 @@ class AutoPlaylistManager {
                     break;
                 }
                 // we want to avoid an infinite loop if all of the playlists are null
-                if ($playlistid == null && $introplaylistid == null && $outroplaylistid == null) {
+                if ($playlistid == null) {
                     break;
                 }
                 // another possible issue would be if the show isn't increasing in length each loop
@@ -70,8 +66,17 @@ class AutoPlaylistManager {
                 if ($tempPercentScheduled == $ps) {
                     break;
                 }
-                //now reset it to zero
+                //now reset it to the current percent scheduled
                 $tempPercentScheduled = $ps;
+            }
+            // the outroplaylist is added at the end, it will always overbook
+            // shows that have repeat until full enabled because they will
+            // never have time remaining for the outroplaylist to be added
+            // this is done outside the content loop to avoid a scenario
+            // where a time remaining smartblock in a outro playlist
+            // prevents the repeat until full from functioning by filling up the show
+            if ($outroplaylistid != null) {
+                $si->addPlaylistToShow($outroplaylistid, false);
             }
             $si->setAutoPlaylistBuilt(true);
         }
