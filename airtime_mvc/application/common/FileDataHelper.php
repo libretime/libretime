@@ -113,8 +113,13 @@ class FileDataHelper {
      */
     public static function saveArtworkData($analyzeFile, $filename, $importDir = null, $DbPath = null)
     {
-        $getID3 = new \getID3();
-        $getFileInfo = $getID3->analyze($analyzeFile);
+        if (class_exists('getID3')) {
+            $getID3 = new \getID3();
+            $getFileInfo = $getID3->analyze($analyzeFile);
+        } else {
+            $getFileInfo = [];
+            Logging::error("Failed to load getid3 library. Please run either 'composer install' or the 'install' script.");
+        }
 
         if(isset($getFileInfo['comments']['picture'][0])) {
 
@@ -188,8 +193,13 @@ class FileDataHelper {
         $dbAudioPath = $md["MDATA_KEY_FILEPATH"];
         $fullpath = $fp . $dbAudioPath;
 
-        $getID3 = new \getID3();
-        $getFileInfo = $getID3->analyze($fullpath);
+        if (class_exists('getID3')) {
+            $getID3 = new \getID3();
+            $getFileInfo = $getID3->analyze($fullpath);
+        } else {
+            $getFileInfo = [];
+            Logging::error("Failed to load getid3 library. Please run either 'composer install' or the 'install' script.");
+        }
 
         if(isset($getFileInfo['comments']['picture'][0])) {
 
