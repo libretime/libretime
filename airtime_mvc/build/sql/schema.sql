@@ -96,8 +96,11 @@ CREATE TABLE "cc_files"
     "is_playlist" BOOLEAN DEFAULT 'f',
     "filesize" INTEGER DEFAULT 0 NOT NULL,
     "description" VARCHAR(512),
+<<<<<<< HEAD
     "artwork" VARCHAR(512),
     "media_type" VARCHAR(4),
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
     PRIMARY KEY ("id")
 );
 

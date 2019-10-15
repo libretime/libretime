@@ -53,9 +53,13 @@ class Application_Model_StoredFile
         "owner_id"     => "DbOwnerId",
         "cuein"        => "DbCueIn",
         "cueout"       => "DbCueOut",
+<<<<<<< HEAD
         "description"  => "DbDescription",
         "artwork"      => "DbArtwork",
         "media_type"   => "DbMediaType"
+=======
+        "description"  => "DbDescription"
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
     );
 
     function __construct($file, $con) {
@@ -211,7 +215,7 @@ class Application_Model_StoredFile
                 if ($dbColumn == "track_title" && (is_null($mdValue) || $mdValue == "")) {
                     continue;
                 }
-
+                
                 // Bpm gets POSTed as a string type. With Propel 1.6 this value
                 // was casted to an integer type before saving it to the db. But
                 // Propel 1.7 does not do this
@@ -354,8 +358,8 @@ SQL;
             return array();
         }
     }
-
-    /**
+    
+    /** 
      * Check if the file (on disk) corresponding to this class exists or not.
      * @return boolean true if the file exists, false otherwise.
      */
@@ -417,11 +421,11 @@ SQL;
 
         //Update the user's disk usage
         Application_Model_Preference::updateDiskUsage(-1 * $filesize);
-
+        
         //Explicitly update any playlist's and block's length that contain
         //the file getting deleted
         self::updateBlockAndPlaylistLength($this->_file->getDbId());
-
+        
         //delete the file record from cc_files (and cloud_file, if applicable)
         $this->_file->delete();
     }
@@ -429,7 +433,7 @@ SQL;
     /*
      * This function is meant to be called when a file is getting
      * deleted from the library. It re-calculates the length of
-     * all blocks and playlists that contained the deleted file.
+     * all blocks and playlists that contained the deleted file. 
      */
     private static function updateBlockAndPlaylistLength($fileId)
     {
@@ -473,7 +477,7 @@ SQL;
     public function getFilePaths()
     {
         assert($this->_file);
-
+        
         return $this->_file->getURLsForTrackPreviewOrDownload();
     }
 
@@ -530,7 +534,7 @@ SQL;
     {
         return $baseUrl."api/get-media/file/".$this->getId();
     }
-
+    
     public function getResourceId()
     {
         return $this->_file->getResourceId();
@@ -547,7 +551,7 @@ SQL;
         }
         return $filesize;
     }
-
+    
     public static function Insert($md, $con)
     {
         // save some work by checking if filepath is given right away
@@ -594,17 +598,17 @@ SQL;
 
         if (isset($p_id)) {
             $p_id = intval($p_id);
-
+            
             $storedFile =  CcFilesQuery::create()->findPK($p_id, $con);
             if (is_null($storedFile)) {
                 throw new Exception("Could not recall file with id: ".$p_id);
             }
-
+            
             //Attempt to get the cloud file object and return it. If no cloud
             //file object is found then we are dealing with a regular stored
             //object so return that
             $cloudFile = CloudFileQuery::create()->findOneByCcFileId($p_id);
-
+            
             if (is_null($cloudFile)) {
                 return self::createWithFile($storedFile, $con);
             } else {
@@ -673,7 +677,11 @@ SQL;
         "bit_rate", "sample_rate", "isrc_number", "encoded_by", "label",
         "copyright", "mime", "language", "filepath", "owner_id",
         "conductor", "replay_gain", "lptime", "is_playlist", "is_scheduled",
+<<<<<<< HEAD
         "cuein", "cueout", "description", "artwork", "media_type" );
+=======
+        "cuein", "cueout", "description" );
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
     }
 
     public static function searchLibraryFiles($datatables)
@@ -695,49 +703,49 @@ SQL;
                 $blSelect[]     = "BL.id AS ".$key;
                 $fileSelect[]   = "FILES.id AS $key";
                 $streamSelect[] = "ws.id AS ".$key;
-            }
+            } 
             elseif ($key === "track_title") {
                 $plSelect[]     = "name AS ".$key;
                 $blSelect[]     = "name AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "name AS ".$key;
-            }
+            } 
             elseif ($key === "ftype") {
                 $plSelect[]     = "'playlist'::varchar AS ".$key;
                 $blSelect[]     = "'block'::varchar AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "'stream'::varchar AS ".$key;
-            }
+            } 
             elseif ($key === "artist_name") {
                 $plSelect[]     = "login AS ".$key;
                 $blSelect[]     = "login AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "login AS ".$key;
-            }
+            } 
             elseif ($key === "owner_id") {
                 $plSelect[]     = "login AS ".$key;
                 $blSelect[]     = "login AS ".$key;
                 $fileSelect[]   = "sub.login AS $key";
                 $streamSelect[] = "login AS ".$key;
-            }
+            } 
             elseif ($key === "replay_gain") {
                 $plSelect[]     = "NULL::NUMERIC AS ".$key;
                 $blSelect[]     = "NULL::NUMERIC AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "NULL::NUMERIC AS ".$key;
-            }
+            } 
             elseif ($key === "lptime") {
                 $plSelect[]     = "NULL::TIMESTAMP AS ".$key;
                 $blSelect[]     = "NULL::TIMESTAMP AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = $key;
-            }
+            } 
             elseif ($key === "is_scheduled" || $key === "is_playlist") {
                 $plSelect[]     = "NULL::boolean AS ".$key;
                 $blSelect[]     = "NULL::boolean AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "NULL::boolean AS ".$key;
-            }
+            } 
             elseif ($key === "cuein" || $key === "cueout") {
                 $plSelect[]     = "NULL::INTERVAL AS ".$key;
                 $blSelect[]     = "NULL::INTERVAL AS ".$key;
@@ -757,7 +765,7 @@ SQL;
                 $blSelect[]     = $key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = $key;
-            }
+            } 
             elseif ($key === "year") {
                 $plSelect[]     = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
                 $blSelect[]     = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
@@ -770,13 +778,13 @@ SQL;
                 $blSelect[]     = "NULL::int AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "NULL::int AS ".$key;
-            }
+            } 
             elseif ($key === "filepath") {
                 $plSelect[]     = "NULL::VARCHAR AS ".$key;
                 $blSelect[]     = "NULL::VARCHAR AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "url AS ".$key;
-            }
+            } 
             else if ($key == "mime") {
                 $plSelect[]     = "NULL::VARCHAR AS ".$key;
                 $blSelect[]     = "NULL::VARCHAR AS ".$key;
@@ -830,10 +838,7 @@ SQL;
 
         $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
         $utcTimezone = new DateTimeZone("UTC");
-
-        $storDir = Application_Model_MusicDir::getStorDir();
-        $fp = $storDir->getDirectory();
-
+        
         foreach ($results['aaData'] as &$row) {
             $row['id'] = intval($row['id']);
 
@@ -867,9 +872,6 @@ SQL;
                 $formatter = new BitrateFormatter($row['bit_rate']);
                 $row['bit_rate'] = $formatter->format();
 
-                $get_artwork = FileDataHelper::getArtworkData($row['artwork'], 32, $fp);
-                $row['artwork_data'] = $get_artwork;
-
                 // for audio preview
                 $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
 
@@ -882,7 +884,7 @@ SQL;
 
             $len_formatter = new LengthFormatter($row_length);
             $row['length'] = $len_formatter->format();
-
+            
             //convert mtime and utime to localtime
             $row['mtime'] = new DateTime($row['mtime'], $utcTimezone);
             $row['mtime']->setTimeZone($displayTimezone);
@@ -890,7 +892,7 @@ SQL;
             $row['utime'] = new DateTime($row['utime'], $utcTimezone);
             $row['utime']->setTimeZone($displayTimezone);
             $row['utime'] = $row['utime']->format(DEFAULT_TIMESTAMP_FORMAT);
-
+            
             //need to convert last played to localtime if it exists.
             if (isset($row['lptime'])) {
             	$row['lptime'] = new DateTime($row['lptime'], $utcTimezone);
@@ -912,16 +914,16 @@ SQL;
     }
 
     /**
-     * Copy a newly uploaded audio file from its temporary upload directory
-     * on the local disk (like /tmp) over to Airtime's "stor" directory,
+     * Copy a newly uploaded audio file from its temporary upload directory 
+     * on the local disk (like /tmp) over to Airtime's "stor" directory, 
      * which is where all ingested music/media live.
-     *
+     * 
      * This is done in PHP here on the web server rather than in airtime_analyzer because
      * the airtime_analyzer might be running on a different physical computer than the web server,
      * and it probably won't have access to the web server's /tmp folder. The stor/organize directory
-     * is, however, both accessible to the machines running airtime_analyzer and the web server
+     * is, however, both accessible to the machines running airtime_analyzer and the web server 
      * on Airtime Pro.
-     *
+     * 
      * The file is actually copied to "stor/organize", which is a staging directory where files go
      * before they're processed by airtime_analyzer, which then moves them to "stor/imported" in the final
      * step.
@@ -944,11 +946,11 @@ SQL;
                 throw new Exception("Failed to create organize directory.");
             }
         }
-
+    
         if (chmod($audio_file, 0644) === false) {
             Logging::info("Warning: couldn't change permissions of $audio_file to 0644");
         }
-
+    
         // Did all the checks for real, now trying to copy
         $audio_stor = Application_Common_OsPath::join($stor, "organize",
                 $originalFilename);
@@ -984,7 +986,7 @@ SQL;
         }
         return $audio_stor;
     }
-
+    
     /*
      * Pass the file through Liquidsoap and test if it is readable. Return True if readable, and False otherwise.
      */
@@ -1165,7 +1167,7 @@ SQL;
     }
 
     /**
-     *
+     * 
      * Updates the is_scheduled flag to false for tracks that are no longer
      * scheduled in the future. We do this by checking the difference between
      * all files scheduled in the future and all files with is_scheduled = true.
@@ -1179,15 +1181,15 @@ SQL;
         $futureScheduledFilesSelectCriteria->add(CcSchedulePeer::ENDS, gmdate(DEFAULT_TIMESTAMP_FORMAT), Criteria::GREATER_THAN);
         $stmt = CcSchedulePeer::doSelectStmt($futureScheduledFilesSelectCriteria);
         $filesScheduledInFuture = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-
+        
         $filesCurrentlySetWithIsScheduledSelectCriteria = new Criteria();
         $filesCurrentlySetWithIsScheduledSelectCriteria->addSelectColumn(CcFilesPeer::ID);
         $filesCurrentlySetWithIsScheduledSelectCriteria->add(CcFilesPeer::IS_SCHEDULED, true);
         $stmt = CcFilesPeer::doSelectStmt($filesCurrentlySetWithIsScheduledSelectCriteria);
         $filesCurrentlySetWithIsScheduled = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-
+        
         $diff = array_diff($filesCurrentlySetWithIsScheduled, $filesScheduledInFuture);
-
+        
         $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
         $selectCriteria = new Criteria();
         $selectCriteria->add(CcFilesPeer::ID, $diff, Criteria::IN);

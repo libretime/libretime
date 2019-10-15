@@ -289,6 +289,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     protected $info_url;
 
     /**
+<<<<<<< HEAD
      * The value for the artwork field.
      * @var        string
      */
@@ -301,6 +302,8 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     protected $media_type;
 
     /**
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
      * The value for the artist_url field.
      * @var        string
      */
@@ -1189,6 +1192,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     }
 
     /**
+<<<<<<< HEAD
      * Get the [artwork] column value.
      *
      * @return string
@@ -1211,6 +1215,8 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     }
 
     /**
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
      * Get the [artist_url] column value.
      *
      * @return string
@@ -1873,6 +1879,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     } // setDbTrackTitle()
 
     /**
+<<<<<<< HEAD
      * Set the value of [artwork] column.
      *
      * @param  string $v new value
@@ -1913,6 +1920,8 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     } // setDbMediaType()
 
     /**
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
      * Set the value of [artist_name] column.
      *
      * @param  string $v new value
@@ -3340,8 +3349,11 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $this->is_playlist = ($row[$startcol + 69] !== null) ? (boolean) $row[$startcol + 69] : null;
             $this->filesize = ($row[$startcol + 70] !== null) ? (int) $row[$startcol + 70] : null;
             $this->description = ($row[$startcol + 71] !== null) ? (string) $row[$startcol + 71] : null;
+<<<<<<< HEAD
             $this->artwork = ($row[$startcol + 72] !== null) ? (string) $row[$startcol + 72] : null;
             $this->media_type = ($row[$startcol + 73] !== null) ? (string) $row[$startcol + 73] : null;
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
             $this->resetModified();
 
             $this->setNew(false);
@@ -3979,12 +3991,15 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if ($this->isColumnModified(CcFilesPeer::DESCRIPTION)) {
             $modifiedColumns[':p' . $index++]  = '"description"';
         }
+<<<<<<< HEAD
         if ($this->isColumnModified(CcFilesPeer::ARTWORK)) {
             $modifiedColumns[':p' . $index++]  = '"artwork"';
         }
         if ($this->isColumnModified(CcFilesPeer::MEDIA_TYPE)) {
             $modifiedColumns[':p' . $index++]  = '"media_type"';
         }
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
 
         $sql = sprintf(
             'INSERT INTO "cc_files" (%s) VALUES (%s)',
@@ -4212,12 +4227,15 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                     case '"description"':
                         $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
                         break;
+<<<<<<< HEAD
                     case '"artwork"':
                         $stmt->bindValue($identifier, $this->artwork, PDO::PARAM_STR);
                         break;
                     case '"media_type"':
                         $stmt->bindValue($identifier, $this->media_type, PDO::PARAM_STR);
                         break;
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
                 }
             }
             $stmt->execute();
@@ -4649,12 +4667,15 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             case 71:
                 return $this->getDbDescription();
                 break;
+<<<<<<< HEAD
             case 72:
                 return $this->getDbArtwork();
                 break;
             case 73:
                 return $this->getDbMediaType();
                 break;
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
             default:
                 return null;
                 break;
@@ -4756,8 +4777,11 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $keys[69] => $this->getDbIsPlaylist(),
             $keys[70] => $this->getDbFilesize(),
             $keys[71] => $this->getDbDescription(),
+<<<<<<< HEAD
             $keys[72] => $this->getDbArtwork(),
             $keys[73] => $this->getDbMediaType(),
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -5048,12 +5072,15 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             case 71:
                 $this->setDbDescription($value);
                 break;
+<<<<<<< HEAD
             case 72:
                 $this->setDbArtwork($value);
                 break;
             case 73:
                 $this->setDbMediaType($value);
                 break;
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
         } // switch()
     }
 
@@ -5150,8 +5177,11 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if (array_key_exists($keys[69], $arr)) $this->setDbIsPlaylist($arr[$keys[69]]);
         if (array_key_exists($keys[70], $arr)) $this->setDbFilesize($arr[$keys[70]]);
         if (array_key_exists($keys[71], $arr)) $this->setDbDescription($arr[$keys[71]]);
+<<<<<<< HEAD
         if (array_key_exists($keys[72], $arr)) $this->setDbArtwork($arr[$keys[72]]);
         if (array_key_exists($keys[73], $arr)) $this->setDbMediaType($arr[$keys[73]]);
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
     }
 
     /**
@@ -5235,8 +5265,11 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if ($this->isColumnModified(CcFilesPeer::IS_PLAYLIST)) $criteria->add(CcFilesPeer::IS_PLAYLIST, $this->is_playlist);
         if ($this->isColumnModified(CcFilesPeer::FILESIZE)) $criteria->add(CcFilesPeer::FILESIZE, $this->filesize);
         if ($this->isColumnModified(CcFilesPeer::DESCRIPTION)) $criteria->add(CcFilesPeer::DESCRIPTION, $this->description);
+<<<<<<< HEAD
         if ($this->isColumnModified(CcFilesPeer::ARTWORK)) $criteria->add(CcFilesPeer::ARTWORK, $this->artwork);
         if ($this->isColumnModified(CcFilesPeer::MEDIA_TYPE)) $criteria->add(CcFilesPeer::MEDIA_TYPE, $this->media_type);
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
 
         return $criteria;
     }
@@ -5371,8 +5404,11 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $copyObj->setDbIsPlaylist($this->getDbIsPlaylist());
         $copyObj->setDbFilesize($this->getDbFilesize());
         $copyObj->setDbDescription($this->getDbDescription());
+<<<<<<< HEAD
         $copyObj->setDbArtwork($this->getDbArtwork());
         $copyObj->setDbMediaType($this->getDbMediaType());
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -7774,8 +7810,11 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $this->is_playlist = null;
         $this->filesize = null;
         $this->description = null;
+<<<<<<< HEAD
         $this->artwork = null;
         $this->media_type = null;
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;

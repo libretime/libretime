@@ -53,9 +53,13 @@ var AIRTIME = (function(AIRTIME) {
         "year"        : "n",
         "owner_id"    : "s",
         "info_url"    : "s",
+<<<<<<< HEAD
         "replay_gain" : "n",
         "artwork"     : "s",
         "media_type"  : "s"
+=======
+        "replay_gain" : "n"
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
     };
 
     if (AIRTIME.library === undefined) {
@@ -577,7 +581,6 @@ var AIRTIME = (function(AIRTIME) {
             /* ftype */           { "sTitle" : ""                             , "mDataProp" : "ftype"        , "bSearchable" : false                 , "bVisible"    : false                   },
             /* Checkbox */        { "sTitle" : ""                             , "mDataProp" : "checkbox"     , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "16px"         , "sClass" : "library_checkbox" },
             /* Type */            { "sTitle" : ""                             , "mDataProp" : "image"        , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "16px"    , "sClass" : "library_type" , "iDataSort" : 0 },
-            /* Artwork */         { "sTitle" : ""                             , "mDataProp" : "artwork"      , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "28px"        , "sClass"  : "library_artwork" , "iDataSort" : 0 },
             /* Is Scheduled */    { "sTitle" : $.i18n._("Scheduled")          , "mDataProp" : "is_scheduled" , "bVisible"    : false                 , "bSearchable" : false                   , "sWidth" : "90px"    , "sClass" : "library_is_scheduled" },
             ///* Is Playlist */     { "sTitle" : $.i18n._("Playlist / Block")   , "mDataProp" : "is_playlist"  , "bSearchable" : false                 , "sWidth"      : "110px"                  , "sClass" : "library_is_playlist"}  ,
             /* Title */           { "sTitle" : $.i18n._("Title")              , "mDataProp" : "track_title"  , "sClass"      : "library_title"       , "sWidth"      : "170px"                 },
@@ -771,11 +774,6 @@ var AIRTIME = (function(AIRTIME) {
                 // add audio preview image/button
                 if (aData.ftype === "audioclip") {
                     $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Track preview") + '" src="' + baseUrl + 'css/images/icon_audioclip.png">');
-                    if (aData.artwork_data) {
-                        $(nRow).find('td.library_artwork').html('<img class="img_small" id="'+ aData.id +'" width="28" height="28" src="'+ aData.artwork_data +'">');
-                    } else {
-                        $(nRow).find('td.library_artwork').html('<img class="img_small" width="28" height="28" src="' + baseUrl + 'css/images/no-cover.jpg">');
-                    }
                 } else if (aData.ftype === "playlist") {
                     $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Playlist preview") + '" src="' + baseUrl + 'css/images/icon_playlist.png">');
                 } else if (aData.ftype === "block") {
@@ -1598,8 +1596,11 @@ var validationTypes = {
     "track_title" : "s",
     "track_number" : "i",
     "info_url" : "s",
+<<<<<<< HEAD
     "artwork" : "s",
     "media_type" : "s",
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
     "year" : "i"
 };
 

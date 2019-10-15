@@ -392,14 +392,7 @@ class LibraryController extends Zend_Controller_Action
             $serialized = array();
             //need to convert from serialized jQuery array.
             foreach ($js as $j) {
-                //on edit, if no artwork is set and audiofile has image, automatically add it
-                if ($j["name"] == "artwork") {
-                    if ($j["value"] ==  null || $j["value"] ==  ''){
-                      $serialized["artwork"] = FileDataHelper::resetArtwork($file_id);
-                    }
-                } else {
-                   $serialized[$j["name"]] = $j["value"];
-                }
+                $serialized[$j["name"]] = $j["value"];
             }
 
             // Sanitize any wildly incorrect metadata before it goes to be validated.
@@ -416,9 +409,6 @@ class LibraryController extends Zend_Controller_Action
         $this->view->form = $form;
         $this->view->id = $file_id;
         $this->view->title = $file->getPropelOrm()->getDbTrackTitle();
-        $this->view->artist_name = $file->getPropelOrm()->getDbArtistName();
-        $this->view->filePath = $file->getPropelOrm()->getDbFilepath();
-        $this->view->artwork = $file->getPropelOrm()->getDbArtwork();
         $this->view->html = $this->view->render('library/edit-file-md.phtml');
     }
 

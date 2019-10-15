@@ -78,8 +78,11 @@
  * @method CcFilesQuery orderByDbIsPlaylist($order = Criteria::ASC) Order by the is_playlist column
  * @method CcFilesQuery orderByDbFilesize($order = Criteria::ASC) Order by the filesize column
  * @method CcFilesQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
+<<<<<<< HEAD
  * @method CcFilesQuery orderByDbArtwork($order = Criteria::ASC) Order by the artwork column
  * @method CcFilesQuery orderByDbMediaType($order = Criteria::ASC) Order by the media_type column
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
  *
  * @method CcFilesQuery groupByDbId() Group by the id column
  * @method CcFilesQuery groupByDbName() Group by the name column
@@ -153,8 +156,11 @@
  * @method CcFilesQuery groupByDbIsPlaylist() Group by the is_playlist column
  * @method CcFilesQuery groupByDbFilesize() Group by the filesize column
  * @method CcFilesQuery groupByDbDescription() Group by the description column
+<<<<<<< HEAD
  * @method CcFilesQuery groupByDbArtwork() Group by the artwork column
  * @method CcFilesQuery groupByDbMediaType() Group by the media_type column
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
  *
  * @method CcFilesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method CcFilesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -278,8 +284,11 @@
  * @method CcFiles findOneByDbIsPlaylist(boolean $is_playlist) Return the first CcFiles filtered by the is_playlist column
  * @method CcFiles findOneByDbFilesize(int $filesize) Return the first CcFiles filtered by the filesize column
  * @method CcFiles findOneByDbDescription(string $description) Return the first CcFiles filtered by the description column
+<<<<<<< HEAD
  * @method CcFiles findOneByDbArtwork(string $artwork) Return the first CcFiles filtered by the artwork column
  * @method CcFiles findOneByDbMediaType(string $media_type) Return the first CcFiles filtered by the media_type column
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
  *
  * @method array findByDbId(int $id) Return CcFiles objects filtered by the id column
  * @method array findByDbName(string $name) Return CcFiles objects filtered by the name column
@@ -353,8 +362,11 @@
  * @method array findByDbIsPlaylist(boolean $is_playlist) Return CcFiles objects filtered by the is_playlist column
  * @method array findByDbFilesize(int $filesize) Return CcFiles objects filtered by the filesize column
  * @method array findByDbDescription(string $description) Return CcFiles objects filtered by the description column
+<<<<<<< HEAD
  * @method array findByDbArtwork(string $artwork) Return CcFiles objects filtered by the artwork column
  * @method array findByDbMediaType(string $media_type) Return CcFiles objects filtered by the media_type column
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
  *
  * @package    propel.generator.airtime.om
  */
@@ -462,7 +474,11 @@ abstract class BaseCcFilesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
+<<<<<<< HEAD
         $sql = 'SELECT "id", "name", "mime", "ftype", "directory", "filepath", "import_status", "currentlyaccessing", "editedby", "mtime", "utime", "lptime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "soundcloud_id", "soundcloud_error_code", "soundcloud_error_msg", "soundcloud_link_to_file", "soundcloud_upload_time", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist", "filesize", "description", "artwork", "media_type" FROM "cc_files" WHERE "id" = :p0';
+=======
+        $sql = 'SELECT "id", "name", "mime", "ftype", "directory", "filepath", "import_status", "currentlyaccessing", "editedby", "mtime", "utime", "lptime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "soundcloud_id", "soundcloud_error_code", "soundcloud_error_msg", "soundcloud_link_to_file", "soundcloud_upload_time", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist", "filesize", "description" FROM "cc_files" WHERE "id" = :p0';
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -1946,6 +1962,7 @@ abstract class BaseCcFilesQuery extends ModelCriteria
     }
 
     /**
+<<<<<<< HEAD
      * Filter the query on the artwork column
      *
      * Example usage:
@@ -2004,6 +2021,8 @@ abstract class BaseCcFilesQuery extends ModelCriteria
     }
 
     /**
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
      * Filter the query on the artist_url column
      *
      * Example usage:

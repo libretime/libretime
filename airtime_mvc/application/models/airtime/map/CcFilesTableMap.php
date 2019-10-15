@@ -111,8 +111,11 @@ class CcFilesTableMap extends TableMap
         $this->addColumn('is_playlist', 'DbIsPlaylist', 'BOOLEAN', false, null, false);
         $this->addColumn('filesize', 'DbFilesize', 'INTEGER', true, null, 0);
         $this->addColumn('description', 'DbDescription', 'VARCHAR', false, 512, null);
+<<<<<<< HEAD
         $this->addColumn('artwork', 'DbArtwork', 'VARCHAR', false, 512, null);
         $this->addColumn('media_type', 'DbMediaType', 'VARCHAR', false, 4, null);
+=======
+>>>>>>> parent of 45dbf8475... Generate artwork images for audio using ID3.
         // validators
     } // initialize()
 
