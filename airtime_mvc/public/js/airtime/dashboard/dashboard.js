@@ -126,10 +126,29 @@ function updatePlaybar(){
     }
 
     if (currentSong !== null && !master_dj_on_air && !live_dj_on_air){
-        if (currentSong.record == "1")
+        if (currentSong.record == "1") {
             $('#current').html("<span style='color:red; font-weight:bold'>"+$.i18n._("Recording:")+"</span>"+currentSong.name+",");
-        else
+        } else {
             $('#current').text(currentSong.name+",");
+
+            if (currentSong.metadata.artwork_data) {
+
+                  var check_current_song = Cookies.get('current_track');
+                  var loaded = Cookies.get('loaded');
+
+                  if (check_current_song != currentSong.name) {
+                    $('#now-playing-artwork_containter').html("<img height='75' width='75' class'artwork' src='"+ currentSong.metadata.artwork_data +"' />");
+                    Cookies.remove('current_track');
+                    Cookies.set('current_track', currentSong.name);
+                  }
+                  // makes sure it stays updated with current track if page loads
+                  if (loaded != UNIQID) {
+                    Cookies.remove('current_track');
+                    Cookies.remove('loaded');
+                    Cookies.set('loaded', UNIQID);
+                  }
+           }
+        }
     }else{
         if (master_dj_on_air) {
             if (showName) {

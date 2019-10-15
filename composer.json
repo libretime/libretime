@@ -6,6 +6,7 @@
         "classmap": ["airtime_mvc/tests/application/", "vendor/phpunit/dbunit/src/"]
     },
     "require": {
+        "james-heinrich/getid3": "dev-master",
         "propel/propel1": "1.7.0-stable",
         "aws/aws-sdk-php": "2.7.9",
         "raven/raven": "0.12.0",

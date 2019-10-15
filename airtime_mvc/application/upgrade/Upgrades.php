@@ -284,7 +284,7 @@ class AirtimeUpgrader254 extends AirtimeUpgrader
     {
         return '2.5.4';
     }
-    
+
     protected function _runUpgrade()
     {
         //First, ensure there are no superadmins already.
@@ -350,7 +350,7 @@ class AirtimeUpgrader259 extends AirtimeUpgrader {
             '2.5.5'
         );
     }
-    
+
     public function getNewVersion() {
         return '2.5.9';
     }
@@ -493,7 +493,6 @@ class AirtimeUpgrader2516 extends AirtimeUpgrader
         return '2.5.16';
     }
 }
-
 class AirtimeUpgrader300alpha extends AirtimeUpgrader
 {
     protected function getSupportedSchemaVersions() {
@@ -569,7 +568,7 @@ class AirtimeUpgrader300alpha7_1 extends AirtimeUpgrader
         return '3.0.0-alpha.7.1';
     }
 
-}    
+}
 /**
  * Class AirtimeUpgrader300alpha7-2
  *
@@ -598,6 +597,19 @@ class AirtimeUpgrader300alpha7_3 extends AirtimeUpgrader
     }
     public function getNewVersion() {
         return '3.0.0-alpha.7.3';
+    }
+}
+
+class AirtimeUpgrader300alpha9_1 extends AirtimeUpgrader
+{
+    protected function getSupportedSchemaVersions() {
+        return array(
+            '3.0.0-alpha.7.3'
+        );
+    }
+
+    public function getNewVersion() {
+        return '3.0.0-alpha.9.1';
     }
 }
 

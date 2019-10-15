@@ -2,6 +2,9 @@
   <div class="logo-container">
     <img class="logo" src="data:image/png;base64,<?php echo Application_Model_Preference::GetStationLogo(); ?>" />
   </div>
+  <div class="now-playing-artwork" id="now-playing-artwork">
+    <div class="now-playing-artwork_containter" id="now-playing-artwork_containter"></div>
+  </div>
   <div class="now-playing-block">
     <div class="text-row"><strong><?php echo _("Previous:"); ?></strong> <span id='previous'></span> <span id='prev-length'></span></div>
     <div class="now-playing-info song">
@@ -55,7 +58,7 @@
     <div class="time" id="time"></div>
     <div class="personal-block">
       <a id="current-user" href=<?php echo $this->baseUrl . "/user/edit-user"?>><span class="name"><?php echo $this->escape($this->loggedInAs()); ?></span></a>
-      <span>|</span> 
+      <span>|</span>
       <a href=<?php echo $this->baseUrl . "/login/logout"?>><?php echo _("Logout")?></a>
     </div>
   </div>

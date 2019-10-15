@@ -81,6 +81,8 @@ define('MDATA_KEY_REPLAYGAIN'  , 'replay_gain');
 define('MDATA_KEY_OWNER_ID'    , 'owner_id');
 define('MDATA_KEY_CUE_IN'      , 'cuein');
 define('MDATA_KEY_CUE_OUT'     , 'cueout');
+define('MDATA_KEY_ARTWORK'     , 'artwork');
+define('MDATA_KEY_ARTWORK_DATA', 'artwork_data');
 
 define('UI_MDATA_VALUE_FORMAT_FILE'   , 'File');
 define('UI_MDATA_VALUE_FORMAT_STREAM' , 'live stream');

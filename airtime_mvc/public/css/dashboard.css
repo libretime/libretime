@@ -574,6 +574,18 @@ li.ui-state-default {
     line-height: inherit;
 }
 
+.inner_track_editor_title h2 {
+    margin: 10px 0 0 0;
+    width: 80%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.inner_track_editor_title span {
+    font-size: inherit;
+    line-height: inherit;
+}
+
 .clearfix:after, .side_playlist li:after {
     display: none !important;
 }

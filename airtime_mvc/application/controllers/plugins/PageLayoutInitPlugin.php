@@ -139,6 +139,8 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
         $view->headScript()->appendScript("var PRODUCT_NAME = '" . PRODUCT_NAME . "';");
         $view->headScript()->appendScript("var USER_MANUAL_URL = '" . USER_MANUAL_URL . "';");
         $view->headScript()->appendScript("var COMPANY_NAME = '" . COMPANY_NAME . "';");
+        //Each page refresh or tab open has uniqID, not to be used for security
+        $view->headScript()->appendScript("var UNIQID = '" . uniqid() . "';");
     }
 
     protected function _initHeadLink()
