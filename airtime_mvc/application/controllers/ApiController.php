@@ -590,7 +590,7 @@ class ApiController extends Zend_Controller_Action
                 //default
                 foreach ($md as $key => $value) {
                     if ($key == 'MDATA_KEY_ARTWORK' && !is_null($value)) {
-                        FileDataHelper::renderImage($fp . $md['MDATA_KEY_ARTWORK'].'-1024.jpg');
+                        FileDataHelper::renderImage($fp . $md['MDATA_KEY_ARTWORK'].'-512.jpg');
                     }
                 }
             } elseif ($return === "artwork-32") {
@@ -615,12 +615,6 @@ class ApiController extends Zend_Controller_Action
                 foreach ($md as $key => $value) {
                     if ($key == 'MDATA_KEY_ARTWORK' && !is_null($value)) {
                         FileDataHelper::renderImage($fp . $md['MDATA_KEY_ARTWORK'].'-512.jpg');
-                    }
-                }
-            } elseif ($return === "artwork-1024") {
-                foreach ($md as $key => $value) {
-                    if ($key == 'MDATA_KEY_ARTWORK' && !is_null($value)) {
-                        FileDataHelper::renderImage($fp . $md['MDATA_KEY_ARTWORK'].'-1024.jpg');
                     }
                 }
             } elseif ($return === "json") {
