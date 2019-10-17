@@ -99,7 +99,8 @@
     text-align: center;
 }
 
-.library_year {
+.library_year,
+.library_media_type {
     text-align: center;
 }
 
@@ -141,7 +142,7 @@ tr.lib-selected > td > div.library_actions_btn:hover {
 	color: #eee;
 }
 
-.library_import {  
+.library_import {
     padding-bottom: 5px;
 }
 
@@ -244,7 +245,7 @@ tr.lib-selected > td > div.library_actions_btn:hover {
 	vertical-align: middle;
 	margin: 0 !important;
 	line-height: 16px;
-	}	
+	}
 
 .sb-timerange input {
 	-webkit-box-sizing: border-box;
@@ -256,4 +257,4 @@ tr.lib-selected > td > div.library_actions_btn:hover {
 	height: 26px;
 	outline: none;
 	vertical-align: middle !important;
-	}			
+	}
