@@ -96,15 +96,15 @@ offers the option to choose a different operation system according to you needs.
 | OS     | Command             | Comment |
 | ------ | ------------------- | ------- |
 | Debian 10   | `vagrant up debian-buster`  | Install on Debian Buster. |
-| Debian 9.6   | `vagrant up debian-stretch` | Install on current Debian Stretch. |
-| Ubuntu 18.04 | `vagrant up ubuntu-bionic`  | Experimental install on current Ubuntu Bionic Beaver. |
+| Debian 9   | `vagrant up debian-stretch` | Install on current Debian Stretch. Needs manual intervention due to Liquidsoap 1.3.3. |
+| Ubuntu 18.04 | `vagrant up ubuntu-bionic`  | Install on current Ubuntu Bionic Beaver. |
 | Ubuntu 16.04 | `vagrant up ubuntu-xenial`  | Install on Ubuntu Xenial Xerus. |
 | CentOS | `vagrant up centos` | Extremely experimental install on 7.3 with native systemd support and activated SELinux. Needs manual intervention due to Liquidsoap 1.3.3. |
 
 ## Troubleshooting
 
 If anything fails during the initial provisioning step you can try running `vagrant provision`
-to rerun the installer.
+to re-run the installer.
 
-If you only want to re-run parts of the installer, use `--provision-with install`. The
+If you only want to re-run parts of the installer, use `--provision-with $step`. The
 supported steps are `prepare`, `install`, `install-mkdocs` and `start-mkdocs`.
