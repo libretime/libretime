@@ -51,11 +51,11 @@ Vagrant.configure("2") do |config|
     provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "debian-stretch" do |os|
-    os.vm.box = "bento/debian-9.6"
+    os.vm.box = "bento/debian-9"
     provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "debian-buster" do |os|
-    os.vm.box = "generic/debian10"
+    os.vm.box = "bento/debian-10"
     provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "centos" do |os|
