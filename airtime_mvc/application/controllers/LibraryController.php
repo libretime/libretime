@@ -400,6 +400,12 @@ class LibraryController extends Zend_Controller_Action
                 } else {
                    $serialized[$j["name"]] = $j["value"];
                 }
+
+                if ($j["name"] == "artwork_uploaded") {
+                  if ($j["value"] !=  null || $j["value"] !=  ''){
+                      $serialized["artwork"] = FileDataHelper::uploadArtwork($file_id, $j["value"] );
+                  }
+                }
             }
 
             // Sanitize any wildly incorrect metadata before it goes to be validated.

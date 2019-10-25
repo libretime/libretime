@@ -252,6 +252,69 @@ class FileDataHelper {
     }
 
     /**
+     * Upload artwork
+     *
+     * @param string $trackid
+     * @param string $data
+     *
+     * @return string Path to artwork
+     */
+    public static function uploadArtwork($trackid, $data)
+    {
+        $file = Application_Model_StoredFile::RecallById($trackid);
+        $md = $file->getMetadata();
+
+        $storDir = Application_Model_MusicDir::getStorDir();
+        $fp = $storDir->getDirectory();
+
+        $dbAudioPath = $md["MDATA_KEY_FILEPATH"];
+        $fullpath = $fp . $dbAudioPath;
+
+        $base64 = @$data;
+        $mime = explode(';', $base64)[0];
+
+        $audioPath = dirname($fullpath);
+        $dbPath = dirname($dbAudioPath);
+        $path_parts = pathinfo($fullpath);
+        $file = $path_parts['filename'];
+
+        //Save Data URI
+        if (file_put_contents($audioPath . "/" . $file, $base64)) {
+            $get_img = $dbPath . "/" . $file;
+        } else {
+            Logging::error("Could not save Data URI");
+        }
+
+        $rfile = $audioPath . "/" . $file;
+
+        if ($mime == "data:image/png") {
+            $ext = 'png';
+        } elseif ($mime == "data:image/gif") {
+            $ext = 'gif';
+        } elseif ($mime == "data:image/bmp") {
+           $ext = 'bmp';
+        } else {
+           $ext = 'jpg';
+        }
+
+        if (file_exists($rfile)) {
+            self::resizeImage($rfile, $rfile . '-32.jpg', $ext, 32, 100);
+            self::resizeImage($rfile, $rfile . '-64.jpg', $ext, 64, 100);
+            self::resizeImage($rfile, $rfile . '-128.jpg', $ext, 128, 100);
+            self::resizeImage($rfile, $rfile . '-256.jpg', $ext, 256, 100);
+            self::resizeImage($rfile, $rfile . '-512.jpg', $ext, 512, 100);
+            self::imgToDataURI($rfile . '-32.jpg', $rfile . '-32');
+            self::imgToDataURI($rfile . '-64.jpg', $rfile . '-64');
+            self::imgToDataURI($rfile . '-128.jpg', $rfile . '-128');
+            self::imgToDataURI($rfile . '-256.jpg', $rfile . '-256');
+        } else {
+            Logging::error("The file $rfile does not exist");
+        }
+
+        return $get_img;
+    }
+
+    /**
      * Render image
      * Used in API to render JPEG
      *

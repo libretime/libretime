@@ -22,12 +22,20 @@ class Application_Form_EditAudioMD extends Zend_Form
         $artwork = new Zend_Form_Element_Hidden('artwork');
         $artwork->setFilters(array('StringTrim'))
             ->setValidators(array(
-                new Zend_Validate_StringLength(array('max' => 512))
+                new Zend_Validate_StringLength(array('max' => 2048))
             ));
         $file_id->addDecorator('HtmlTag', array('tag' => 'div', 'style' => 'display:none'));
         $file_id->removeDecorator('Label');
         $file_id->setAttrib('class', 'artwork');
         $this->addElement($artwork);
+
+        // Add artwork uploaded hidden field
+        $artwork_uploaded = new Zend_Form_Element_Hidden('artwork_uploaded');
+        $artwork_uploaded->class = 'input_text artwork_uploaded_'. $p_id;
+        $file_id->addDecorator('HtmlTag', array('tag' => 'div', 'style' => 'display:none'));
+        $file_id->removeDecorator('Label');
+        $file_id->setAttrib('class', 'artwork_uploaded');
+        $this->addElement($artwork_uploaded);
 
         // Add title field
         $track_title = new Zend_Form_Element_Text('track_title');
