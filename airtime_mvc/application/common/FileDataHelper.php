@@ -155,20 +155,8 @@ class FileDataHelper {
               } else {
                  $ext = 'jpg';
               }
+              self::resizeGroup($file, $ext);
 
-              if (file_exists($file)) {
-                  self::resizeImage($file, $file . '-32.jpg', $ext, 32, 100);
-                  self::resizeImage($file, $file . '-64.jpg', $ext, 64, 100);
-                  self::resizeImage($file, $file . '-128.jpg', $ext, 128, 100);
-                  self::resizeImage($file, $file . '-256.jpg', $ext, 256, 100);
-                  self::resizeImage($file, $file . '-512.jpg', $ext, 512, 100);
-                  self::imgToDataURI($file . '-32.jpg', $file . '-32');
-                  self::imgToDataURI($file . '-64.jpg', $file . '-64');
-                  self::imgToDataURI($file . '-128.jpg', $file . '-128');
-                  self::imgToDataURI($file . '-256.jpg', $file . '-256');
-              } else {
-                  Logging::error("The file $file does not exist");
-              }
         } else {
               $get_img = '';
         }
@@ -231,20 +219,8 @@ class FileDataHelper {
               } else {
                  $ext = 'jpg';
               }
+              self::resizeGroup($rfile, $ext);
 
-              if (file_exists($rfile)) {
-                  self::resizeImage($rfile, $rfile . '-32.jpg', $ext, 32, 100);
-                  self::resizeImage($rfile, $rfile . '-64.jpg', $ext, 64, 100);
-                  self::resizeImage($rfile, $rfile . '-128.jpg', $ext, 128, 100);
-                  self::resizeImage($rfile, $rfile . '-256.jpg', $ext, 256, 100);
-                  self::resizeImage($rfile, $rfile . '-512.jpg', $ext, 512, 100);
-                  self::imgToDataURI($rfile . '-32.jpg', $rfile . '-32');
-                  self::imgToDataURI($rfile . '-64.jpg', $rfile . '-64');
-                  self::imgToDataURI($rfile . '-128.jpg', $rfile . '-128');
-                  self::imgToDataURI($rfile . '-256.jpg', $rfile . '-256');
-              } else {
-                  Logging::error("The file $rfile does not exist");
-              }
         } else {
               $get_img = "";
         }
@@ -296,22 +272,32 @@ class FileDataHelper {
         } else {
            $ext = 'jpg';
         }
-
-        if (file_exists($rfile)) {
-            self::resizeImage($rfile, $rfile . '-32.jpg', $ext, 32, 100);
-            self::resizeImage($rfile, $rfile . '-64.jpg', $ext, 64, 100);
-            self::resizeImage($rfile, $rfile . '-128.jpg', $ext, 128, 100);
-            self::resizeImage($rfile, $rfile . '-256.jpg', $ext, 256, 100);
-            self::resizeImage($rfile, $rfile . '-512.jpg', $ext, 512, 100);
-            self::imgToDataURI($rfile . '-32.jpg', $rfile . '-32');
-            self::imgToDataURI($rfile . '-64.jpg', $rfile . '-64');
-            self::imgToDataURI($rfile . '-128.jpg', $rfile . '-128');
-            self::imgToDataURI($rfile . '-256.jpg', $rfile . '-256');
-        } else {
-            Logging::error("The file $rfile does not exist");
-        }
+        self::resizeGroup($rfile, $ext);
 
         return $get_img;
+    }
+
+    /**
+     * Resize artwork group
+     *
+     * @param string $file
+     * @param string $ext
+     */
+    public static function resizeGroup($file, $ext)
+    {
+          if (file_exists($file)) {
+              self::resizeImage($file, $file . '-32.jpg', $ext, 32, 100);
+              self::resizeImage($file, $file . '-64.jpg', $ext, 64, 100);
+              self::resizeImage($file, $file . '-128.jpg', $ext, 128, 100);
+              self::resizeImage($file, $file . '-256.jpg', $ext, 256, 100);
+              self::resizeImage($file, $file . '-512.jpg', $ext, 512, 100);
+              self::imgToDataURI($file . '-32.jpg', $file . '-32');
+              self::imgToDataURI($file . '-64.jpg', $file . '-64');
+              self::imgToDataURI($file . '-128.jpg', $file . '-128');
+              self::imgToDataURI($file . '-256.jpg', $file . '-256');
+          } else {
+              Logging::error("The file $file does not exist");
+          }
     }
 
     /**
