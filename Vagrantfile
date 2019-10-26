@@ -14,7 +14,12 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 8888, host:8888
 
   # make sure we are using nfs (doesn't work out of the box with debian)
-  config.vm.synced_folder ".", "/vagrant", type: "nfs"
+  nfsPath = "."
+  # macOS Catalina support
+  if Dir.exist?("/System/Volumes/Data")
+      nfsPath = "/System/Volumes/Data" + Dir.pwd
+  end
+  config.vm.synced_folder nfsPath, "/vagrant", type: "nfs"
   # private network for nfs
   config.vm.network "private_network", ip: "192.168.10.100"
 
@@ -46,11 +51,11 @@ Vagrant.configure("2") do |config|
     provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "debian-stretch" do |os|
-    os.vm.box = "bento/debian-9.6"
+    os.vm.box = "bento/debian-9"
     provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "debian-buster" do |os|
-    os.vm.box = "generic/debian10"
+    os.vm.box = "bento/debian-10"
     provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "centos" do |os|
