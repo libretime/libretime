@@ -1609,7 +1609,7 @@ function readArtworkURL(input, id) {
             $('.artwork-preview-'+id).css('background-image', 'url('+e.target.result +')');
             $('.artwork-preview-'+id).hide();
             $('.artwork-preview-'+id).fadeIn(500);
-            $('.artwork_uploaded_'+id).val(function() {
+            $('.set_artwork_'+id).val(function() {
                 return e.target.result;
             });
         }
@@ -1676,6 +1676,25 @@ $(document).ready(function() {
 
     $(window).resize(function() {
         resizeAdvancedSearch();
+    });
+
+    // delete artwork
+    $(document).on('click', '.delete-artwork', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var id = $(this).attr('data-id');
+        $('.artwork-preview-'+id).css('background-image', 'url('+ baseUrl +'css/images/no-cover.jpg)');
+        $('.artwork-preview-'+id).hide();
+        $('.artwork-preview-'+id).fadeIn(500);
+        $('.artwork_'+id).val(function() {
+            return "";
+        });
+        $('.set_artwork_'+id).val(function() {
+            return "";
+        });
+        $('.remove_artwork_'+id).val(function() {
+            return 1;
+        });
     });
 
     // image upload by clicking on the artwork container
@@ -1760,7 +1779,7 @@ $(document).ready(function() {
                 $('.artwork-preview-'+id).css('background-image', 'url('+ data +')');
                 $('.artwork-preview-'+id).hide();
                 $('.artwork-preview-'+id).fadeIn(500);
-                $('.artwork_uploaded_'+id).val(function() {
+                $('.set_artwork_'+id).val(function() {
                     return data;
                 });
             }

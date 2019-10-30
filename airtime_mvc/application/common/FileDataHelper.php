@@ -235,7 +235,7 @@ class FileDataHelper {
      *
      * @return string Path to artwork
      */
-    public static function uploadArtwork($trackid, $data)
+    public static function setArtwork($trackid, $data)
     {
         $file = Application_Model_StoredFile::RecallById($trackid);
         $md = $file->getMetadata();
@@ -246,35 +246,68 @@ class FileDataHelper {
         $dbAudioPath = $md["MDATA_KEY_FILEPATH"];
         $fullpath = $fp . $dbAudioPath;
 
-        $base64 = @$data;
-        $mime = explode(';', $base64)[0];
+        if ($data == "0") {
 
-        $audioPath = dirname($fullpath);
-        $dbPath = dirname($dbAudioPath);
-        $path_parts = pathinfo($fullpath);
-        $file = $path_parts['filename'];
+            $get_img = "";
+            self::removeArtwork($trackid, $data);
 
-        //Save Data URI
-        if (file_put_contents($audioPath . "/" . $file, $base64)) {
-            $get_img = $dbPath . "/" . $file;
         } else {
-            Logging::error("Could not save Data URI");
+
+            $base64 = @$data;
+            $mime = explode(';', $base64)[0];
+
+            $audioPath = dirname($fullpath);
+            $dbPath = dirname($dbAudioPath);
+            $path_parts = pathinfo($fullpath);
+            $file = $path_parts['filename'];
+
+            //Save Data URI
+            if (file_put_contents($audioPath . "/" . $file, $base64)) {
+                $get_img = $dbPath . "/" . $file;
+            } else {
+                Logging::error("Could not save Data URI");
+            }
+
+            $rfile = $audioPath . "/" . $file;
+
+            if ($mime == "data:image/png") {
+                $ext = 'png';
+            } elseif ($mime == "data:image/gif") {
+                $ext = 'gif';
+            } elseif ($mime == "data:image/bmp") {
+               $ext = 'bmp';
+            } else {
+               $ext = 'jpg';
+            }
+            self::resizeGroup($rfile, $ext);
+
         }
-
-        $rfile = $audioPath . "/" . $file;
-
-        if ($mime == "data:image/png") {
-            $ext = 'png';
-        } elseif ($mime == "data:image/gif") {
-            $ext = 'gif';
-        } elseif ($mime == "data:image/bmp") {
-           $ext = 'bmp';
-        } else {
-           $ext = 'jpg';
-        }
-        self::resizeGroup($rfile, $ext);
-
         return $get_img;
+    }
+
+    /**
+     *
+     * Deletes just the artwork
+     */
+    public static function removeArtwork($trackid)
+    {
+        $file = Application_Model_StoredFile::RecallById($trackid);
+        $md = $file->getMetadata();
+
+        $storDir = Application_Model_MusicDir::getStorDir();
+        $fp = $storDir->getDirectory();
+
+        $dbAudioPath = $md["MDATA_KEY_ARTWORK"];
+        $fullpath = $fp . $dbAudioPath;
+
+        if (file_exists($fullpath)) {
+            foreach (glob("$fullpath*", GLOB_NOSORT) as $filename) {
+                unlink($filename);
+            }
+        } else {
+            throw new Exception("Could not locate file ".$filepath);
+        }
+        return "";
     }
 
     /**
