@@ -48,8 +48,9 @@ class PypoMessageHandler(Thread):
             schedule_queue = Queue("pypo-fetch", exchange=schedule_exchange, key="foo")
             with Connection(self.config["host"], \
                             self.config["user"], \
-                            self.config["password"],\
-                            self.config["vhost"]) as connection:
+                            self.config["password"], \
+                            self.config["vhost"], \
+                            hearbeat = 4) as connection:
                 rabbit = RabbitConsumer(connection, [schedule_queue], self)
                 rabbit.run()
         except Exception, e:
