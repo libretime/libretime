@@ -69,6 +69,7 @@ class PypoPush(Thread):
                 media_schedule = self.queue.get(block=True)
             except Exception, e:
                 self.logger.error(str(e))
+                raise
             else:
                 self.logger.debug(media_schedule)
                 #separate media_schedule list into currently_playing and
