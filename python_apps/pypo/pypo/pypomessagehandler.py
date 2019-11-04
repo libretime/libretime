@@ -50,7 +50,7 @@ class PypoMessageHandler(Thread):
                             self.config["user"], \
                             self.config["password"], \
                             self.config["vhost"], \
-                            hearbeat = 4) as connection:
+                            heartbeat = 5) as connection:
                 rabbit = RabbitConsumer(connection, [schedule_queue], self)
                 rabbit.run()
         except Exception, e:
