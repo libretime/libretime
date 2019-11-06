@@ -35,7 +35,7 @@ INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_pass', 'h
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_admin_user', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_admin_pass', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_mount', 'airtime_128', 'string');
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_url', 'http://airtime.sourcefabric.org', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_url', 'https://libretime.org', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_description', 'LibreTime Radio! Stream #1', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_genre', 'genre', 'string');
 
