@@ -19,7 +19,19 @@
             </div>
         </div>
         <div class="track-edit-left">
-            <?php echo '<img width="140" height="140" src="' . $get_artwork .'">'; ?>
+            <div class="artwork-upload" data-id="<?php echo($this->id); ?>">
+                <div class="artwork-edit">
+                    <input type='file' class="artworkUpload artwork-uploaded-<?php echo($this->id); ?>" id="artworkUpload" data-id="<?php echo($this->id); ?>" accept=".png, .jpg, .jpeg" />
+                    <label for="artworkUpload"></label>
+                </div>
+                <div id="artwork-preview" class="artwork-preview">
+                    <div class="artwork-preview-<?php echo($this->id); ?>" id="artworkPreview" style="background-image: url(<?php echo $get_artwork; ?>);">
+                    </div>
+                </div>
+            </div>
+            <div>
+              <a href="#" class="delete-artwork" data-id="<?php echo($this->id); ?>" style="font-size: 11px;">Remove</a>
+            </div>
         </div>
     </div>
     <div style="height: 160px;"></div>
