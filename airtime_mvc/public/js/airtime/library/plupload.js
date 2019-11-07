@@ -203,4 +203,11 @@ $(document).ready(function () {
     self.recentUploadsTable = self.setupRecentUploadsTable();
 
     //$("#recent_uploads_table.div.fg-toolbar").prepend('<b>Custom tool bar! Text/images etc.</b>');
+
+    $("#select_type").on("change",function(){
+        var mtValue = $("#select_type").val();
+        var mtText = $('#select_type option[value="'+mtValue+'"]').text();
+        $("#upload_type").text(" " + mtText);
+        Cookies.set('mt_upload', mtValue);
+    });
 });

@@ -349,4 +349,20 @@ class FileDataHelper {
           }
     }
 
+    /**
+     * Media Type
+     *
+     * @return string Media type key value
+     */
+    public static function saveMediaType()
+    {
+        if (isset($_COOKIE['mt_upload'])) {
+            $mt = $_COOKIE['mt_upload'];
+        } else {
+          // Use default media type
+          $mt = "MUS";
+        }
+        return $mt;
+    }
+
 }
