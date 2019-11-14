@@ -123,46 +123,44 @@ def watch (dir_id, directory):
         if files == None:
           continue
         for curFile in files:
-          #database = {}
-          database["directory"] = dir_id 
-          curFilePath = os.path.join(curroot,curFile)
+          database["directory"] = dir_id
+          curFilePath = os.path.join(curroot, curFile)
           # cut off the watch_dir
           database["filepath"] = curFilePath[len_watch_dir:]
           # get modification date
           database["mtime"] = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(int(os.path.getmtime(curFilePath))))
-          # prepare database 
+
           cur = conn.cursor()
-          #file already in database
           try:
             cur.execute ("SELECT count(*) from cc_files where"
                 +" filepath = '"+database["filepath"]+"'" 
                 +" and directory = "+str(database["directory"]))
           except: 
             logging.warning ("I can't SELECT count(*) ... from cc_files")
-
+            continue
           row = cur.fetchone()
-          # is there already a record
-          if row[0] == 0:
+          counter = row[0]
+          if counter == 0:
+            # new file
             logging.info("--> New audio: "+database["filepath"])
             database["utime"] = datetime.datetime.now()
             if airtime_md.analyse_file (curFilePath,database):
               insert_database (conn)
             else:
               logging.warning("Problematic file: {}".format(database["filepath"]))
-          else :
-#            try:
-#              # look for mtime
-#              cur1.execute ("SELECT mtime from cc_files where"
-#                +" filepath = '"+database["filepath"]+"'" 
-#                +" and directory = "+str(database["directory"]))
-#            except:
-#              logging.warning ("I can't SELECT mtime ... from cc_files")
-#              #print "I can't SELECT from cc_files"
-#            row = cur1.fetchone()
+          elsif counter >= 1:
+            logging.info("--> Existing audio: "+database["filepath"])
+            try:
+              cur.execute ("SELECT mtime from cc_files where"
+                +" filepath = '"+database["filepath"]+"'" 
+                +" and directory = "+str(database["directory"]))
+            except:
+              logging.warning ("I can't SELECT mtime ... from cc_files")
+              continue
+            row = cur.fetchone()
+            fdate = row[0].strftime("%Y-%m-%d %H:%M:%S")
             # update needs only called, if new since last run
-            if timestamp < database["mtime"]:
-               logging.info("--> Existing audio: "+database["filepath"])
-               #print ("Update "+database["filepath"])
+            if fdate < database["mtime"]:
                database["utime"] = datetime.datetime.now()
                if airtime_md.analyse_file (curFilePath,database):
                  update_database (conn)
