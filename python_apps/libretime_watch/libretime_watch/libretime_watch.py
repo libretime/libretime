@@ -148,7 +148,7 @@ def watch (dir_id, directory):
               insert_database (conn)
             else:
               logging.warning("Problematic file: {}".format(database["filepath"]))
-          elsif counter >= 1:
+          elif counter >= 1:
             logging.info("--> Existing audio: "+database["filepath"])
             try:
               cur.execute ("SELECT mtime from cc_files where"
