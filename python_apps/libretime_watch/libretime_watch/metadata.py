@@ -118,7 +118,7 @@ def analyse_file (filename, database):
     mime = MimeTypes()
     type, a = mime.guess_type(filename)
     #
-    logging.info("mime_check: "+database["mime"]+ " mime: "+type)
+    logging.info("mime_check: {} | mime: {}".format(database["mime"], type))
 
     database["ftype"] = "audioclip"
     database["filesize"] = os.path.getsize(filename) 
