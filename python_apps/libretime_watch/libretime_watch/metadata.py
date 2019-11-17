@@ -27,6 +27,7 @@ from mutagen.mp3 import MP3
 from mutagen.oggvorbis import OggVorbis
 import mutagen
 from mutagen.id3 import ID3NoHeaderError
+from mutagen.oggvorbis import OggVorbisHeaderError
 
 #
 # analysing the file
@@ -136,8 +137,12 @@ def analyse_file (filename, database):
             return False
     # Ogg
     elif database["mime"] in ['audio/ogg', 'audio/vorbis', 'audio/x-vorbis', 'application/ogg', 'application/x-ogg']:
-        audio = OggVorbis(filename)
-        f = audio
+        try:
+            audio = OggVorbis(filename)
+            f = audio
+        except OggVorbisHeaderError:
+            logging.warning("OGG without Metadata: {}".format(filename))
+            return False
     else:
         logging.warning("Unsupported mime type: {} -- for audio {}".format(database["mime"], filename))
         return False
