@@ -132,11 +132,11 @@ def watch (dir_id, directory):
 
           cur = conn.cursor()
           try:
-            cur.execute ("SELECT count(*) from cc_files where"
-                +" filepath = '"+database["filepath"]+"'" 
-                +" and directory = "+str(database["directory"]))
+            query = "SELECT count(*) FROM cc_files WHERE filepath = %s AND directory = %s"
+            cur.execute(query, (database["filepath"], database["directory"]))            
           except: 
             logging.warning ("I can't SELECT count(*) ... from cc_files")
+            logging.info ("Skipping: {}".format(curFilePath))
             continue
           row = cur.fetchone()
           counter = row[0]
@@ -151,9 +151,8 @@ def watch (dir_id, directory):
           elif counter >= 1:
             logging.info("--> Existing audio: "+database["filepath"])
             try:
-              cur.execute ("SELECT mtime from cc_files where"
-                +" filepath = '"+database["filepath"]+"'" 
-                +" and directory = "+str(database["directory"]))
+              query = "SELECT mtime from cc_files WHERE filepath = %s AND directory = %s"
+              cur.execute(query, (database["filepath"], database["directory"]))
             except:
               logging.warning ("I can't SELECT mtime ... from cc_files")
               continue
