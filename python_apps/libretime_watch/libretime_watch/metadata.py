@@ -183,10 +183,14 @@ def analyse_file (filename, database):
 
     try:
         track_number = audio['tracknumber'][0]
+        if "/" in track_number: 
         # TODO are slashes allowed in this format?
-        if "/" in track_number:
             track_number = track_number.split("/")[0]
-        database["track_number"]= int(track_number)
+        track_number = int(track_number)
+        if track_number > 2147483647:
+        # make sure it doesn't exceed Postgres maximum integer value
+            track_number = 0
+        database["track_number"]= track_number
     except StandardError, err:
         logging.debug('no track_number for '+filename) 
         database["track_number"]= 0
