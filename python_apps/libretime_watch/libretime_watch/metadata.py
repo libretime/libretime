@@ -27,6 +27,7 @@ from mutagen.mp3 import MP3
 from mutagen.oggvorbis import OggVorbis
 import mutagen
 from mutagen.id3 import ID3NoHeaderError
+from mutagen.mp3 import HeaderNotFoundError
 from mutagen.oggvorbis import OggVorbisHeaderError
 
 #
@@ -132,7 +133,7 @@ def analyse_file (filename, database):
         try:
             audio = EasyID3(filename)
             f = MP3(filename)
-        except ID3NoHeaderError:
+        except (ID3NoHeaderError, HeaderNotFoundError) as e:
             logging.warning("MP3 without Metadata: {}".format(filename))
             return False
     # Ogg
