@@ -130,8 +130,7 @@ function updatePlaybar(){
             $('#current').html("<span style='color:red; font-weight:bold'>"+$.i18n._("Recording:")+"</span>"+currentSong.name+",");
         } else {
             $('#current').text(currentSong.name+",");
-
-            if (currentSong.metadata.artwork_data) {
+            if (currentSong.metadata && currentSong.metadata.artwork_data) {
 
                   var check_current_song = Cookies.get('current_track');
                   var loaded = Cookies.get('loaded');
