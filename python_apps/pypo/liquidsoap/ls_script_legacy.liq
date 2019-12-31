@@ -34,14 +34,14 @@ s2_namespace = ref ''
 s3_namespace = ref ''
 just_switched = ref false
 
-%include "ls_lib.liq"
+%include "ls_lib_legacy.liq"
 
 sources = ref []
 source_id = ref 0
 
 def check_version(~version=liquidsoap.version, major, minor) =
     v = list.map(int_of_string, string.split(separator="\.", version))
-    list.nth(v,0,default=0) > major or list.nth(v,0,default=0) == major and list.nth(v,1,default=0) >= minor
+    list.nth(v,0) > major or list.nth(v,0) == major and list.nth(v,1) >= minor
 end
 
 # cue cut fix for liquidsoap <1.2.2
@@ -235,40 +235,26 @@ def master_dj_disconnect() =
     update_source_status("master_dj", false)
 end
 
-# Auth function for live stream
-# @Category LiveStream
-# @param user     Username to check against LibreTime API
-# @param password Password to check against LibreTime API
-# @param ~type    Type of password to check, "dj" or "master, default: "master"
-def check_auth(user="", password="", ~type="master") =
-    log("#{type} user #{user} connected",label="#{type}_source")
+#auth function for live stream
+def check_master_dj_client(user,password) =
+    log("master connected")
+    #get the output of the php script
+    ret = get_process_lines("python #{auth_path} --master #{user} #{password}")
+    #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
+    ret = list.hd(ret)
 
-    # Check auth based on return value from auth script
-    ret = snd(snd(run_process("python #{auth_path} --#{type} #{user} #{password}"))) == "0"
-
-    if ret then
-        log("#{type} user #{user} authenticated",label="#{type}_source")
-    else
-        log("#{type} user #{user} auth failed",label="#{type}_source",level=2)
-    end
-
-    ret
+    #return true to let the client transmit data, or false to tell harbor to decline
+    ret == "True"
 end
 
-# Check master source auth
-# @Category LiveStream
-# @param user     Username to check against LibreTime API
-# @param password Password to check against LibreTime API
-def check_master_dj_client(user, password) =
-    check_auth(user, password)
-end
-
-# Check dj/show source auth
-# @Category LiveStream
-# @param user     Username to check against LibreTime API
-# @param password Password to check against LibreTime API
-def check_dj_client(user, password) =
-    check_auth(user, password, type="dj")
+def check_dj_client(user,password) =
+    log("live dj connected")
+    #get the output of the php script
+    ret = get_process_lines("python #{auth_path} --dj #{user} #{password}")
+    #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
+    hd = list.hd(ret)
+    log("Live DJ authenticated: #{hd}")
+    hd == "True"
 end
 
 s = switch(id="schedule_noise_switch",
