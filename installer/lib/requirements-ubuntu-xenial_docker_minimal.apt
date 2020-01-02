@@ -76,3 +76,5 @@ build-essential
 libssl-dev
 libffi-dev
 python-dev
+
+xmlstarlet

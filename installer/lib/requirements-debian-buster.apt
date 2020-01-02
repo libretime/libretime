@@ -67,3 +67,5 @@ liquidsoap
 libopus0
 
 systemd-sysv
+
+xmlstarlet
