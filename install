@@ -633,6 +633,15 @@ case "${dist}-${code}" in
 	is_debian_stretch=true
 	;;
     #End of fix
+    #Fix for Raspbian 10 (buster)
+    raspbian-10|10)
+        code="buster"
+        dist="debian"
+        is_debian_dist=true
+        is_debian_buster=true
+        ;;
+    #End of fix
+
     debian-8|debian-jessie)
         echo -e "ERROR: Debian Jessie is archived and does not receive any security or other updates since 2018-05-17." >&2
         echo -e "The LibreTime installer dropped support for installing LibreTime on Jessie in 3.0.0-alpha.8." >&2
