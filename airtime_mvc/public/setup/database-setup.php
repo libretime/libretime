@@ -185,7 +185,6 @@ class DatabaseSetup extends Setup {
             throw new AirtimeDatabaseException("The Icecast Password file was not accessible", array());
        };
        $icecast_pass = file_get_contents(LIBRETIME_CONF_DIR . '/icecast_pass', true);
-       error_log($icecast_pass);
        $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's1_pass'");
        $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
        try {
@@ -193,7 +192,6 @@ class DatabaseSetup extends Setup {
            }
        catch (PDOException $ex) {
            print "Error!: " . $ex->getMessage() . "<br />";
-           die();
            }
        $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's1_admin_pass'");
        $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
@@ -202,7 +200,6 @@ class DatabaseSetup extends Setup {
            }
        catch (PDOException $ex) {
            print "Error!: " . $ex->getMessage() . "<br />";
-           die();
            }
        $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's2_pass'");
        $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
@@ -211,7 +208,6 @@ class DatabaseSetup extends Setup {
            }
        catch (PDOException $ex) {
            print "Error!: " . $ex->getMessage() . "<br />";
-           die();
            }
        $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's2_admin_pass'");
        $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
@@ -220,7 +216,6 @@ class DatabaseSetup extends Setup {
            }
        catch (PDOException $ex) {
            print "Error!: " . $ex->getMessage() . "<br />";
-           die();
            }
 
        $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's3_pass'");
@@ -230,7 +225,6 @@ class DatabaseSetup extends Setup {
            }
        catch (PDOException $ex) {
            print "Error!: " . $ex->getMessage() . "<br />";
-           die();
            }
        $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's3_admin_pass'");
        $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
@@ -239,7 +233,6 @@ class DatabaseSetup extends Setup {
            }
        catch (PDOException $ex) {
            print "Error!: " . $ex->getMessage() . "<br />";
-           die();
            }
        $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's1_admin_pass'");
        $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
@@ -248,7 +241,6 @@ class DatabaseSetup extends Setup {
            }
        catch (PDOException $ex) {
            print "Error!: " . $ex->getMessage() . "<br />";
-           die();
            }
        $statement =  self::$dbh->prepare("INSERT INTO cc_pref (keystr, valstr) VALUES ('default_icecast_password', :icecastpass )");
        $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
@@ -257,7 +249,6 @@ class DatabaseSetup extends Setup {
            }
        catch (PDOException $ex) {
            print "Error!: " . $ex->getMessage() . "<br />";
-           die();
            }
     }
 
