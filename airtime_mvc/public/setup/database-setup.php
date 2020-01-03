@@ -184,17 +184,81 @@ class DatabaseSetup extends Setup {
        if (!file_exists(LIBRETIME_CONF_DIR . '/icecast_pass')) {
             throw new AirtimeDatabaseException("The Icecast Password file was not accessible", array());
        };
-       $icecastPass = file_get_contents(LIBRETIME_CONF_DIR . '/icecast_pass', true);
-       error_log($icecastPass);
-       $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's1_pass' AND SET value = :icecastpass WHERE keyname = 's1_admin_pass'; "
-                                         . "UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's2_pass'; "
-                                         . "UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's2_admin_pass'; "
-                                         . "UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's3_pass'; "
-                                         . "UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's3_admin_pass'; "
-                                         . "INSERT INTO cc_pref (keystr, valstr) VALUES ('default_icecast_password', :icecastpass )");
-       if (!$statement->execute(array(":icecastpass" => $icecastPass))) {
-          throw new AirtimeDatabaseException("Could not update the database with icecast password!", array());
-       }
+       $icecast_pass = file_get_contents(LIBRETIME_CONF_DIR . '/icecast_pass', true);
+       error_log($icecast_pass);
+       $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's1_pass'");
+       $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
+       try {
+           $statement->execute(); 
+           }
+       catch (PDOException $ex) {
+           print "Error!: " . $ex->getMessage() . "<br />";
+           die();
+           }
+       $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's1_admin_pass'");
+       $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
+       try {
+           $statement->execute(); 
+           }
+       catch (PDOException $ex) {
+           print "Error!: " . $ex->getMessage() . "<br />";
+           die();
+           }
+       $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's2_pass'");
+       $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
+       try {
+           $statement->execute(); 
+           }
+       catch (PDOException $ex) {
+           print "Error!: " . $ex->getMessage() . "<br />";
+           die();
+           }
+       $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's2_admin_pass'");
+       $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
+       try {
+           $statement->execute(); 
+           }
+       catch (PDOException $ex) {
+           print "Error!: " . $ex->getMessage() . "<br />";
+           die();
+           }
+
+       $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's3_pass'");
+       $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
+       try {
+           $statement->execute(); 
+           }
+       catch (PDOException $ex) {
+           print "Error!: " . $ex->getMessage() . "<br />";
+           die();
+           }
+       $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's3_admin_pass'");
+       $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
+       try {
+           $statement->execute(); 
+           }
+       catch (PDOException $ex) {
+           print "Error!: " . $ex->getMessage() . "<br />";
+           die();
+           }
+       $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's1_admin_pass'");
+       $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
+       try {
+           $statement->execute(); 
+           }
+       catch (PDOException $ex) {
+           print "Error!: " . $ex->getMessage() . "<br />";
+           die();
+           }
+       $statement =  self::$dbh->prepare("INSERT INTO cc_pref (keystr, valstr) VALUES ('default_icecast_password', :icecastpass )");
+       $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
+       try {
+           $statement->execute(); 
+           }
+       catch (PDOException $ex) {
+           print "Error!: " . $ex->getMessage() . "<br />";
+           die();
+           }
     }
 
 }
