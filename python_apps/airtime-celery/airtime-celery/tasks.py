@@ -197,10 +197,16 @@ def podcast_download(
                 logger.info(
                     "filetypeinfo is {0}".format(filetypeinfo.encode("ascii", "ignore"))
                 )
+                start, ext = os.path.splitext(filename)
+                # if the filename has no extension we assume it is an mp3 and try to upload it
+                if (not ext):
+                    newname = filename + '.mp3'
+                    filename = newname
+                    logger.info(filename)
                 re = requests.post(
                     callback_url,
-                    files={"file": (filename, open(audiofile.name, "rb"))},
-                    auth=requests.auth.HTTPBasicAuth(api_key, ""),
+                    files={'file': (filename, open(audiofile.name, 'rb'))},
+                    auth=requests.auth.HTTPBasicAuth(api_key, ''),
                 )
         re.raise_for_status()
         f = json.loads(
