@@ -894,7 +894,7 @@ if [ "$icecast" = "t" ]; then
     else
         icecast_unit_name="icecast"
     fi
-    icecast_pass=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-12};echo;)
+    icecast_pass=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-12};)
     echo $icecast_pass > /tmp/icecast_pass
     xmlstarlet ed --inplace -u /icecast/authentication/source-password -v $icecast_pass /etc/icecast2/icecast.xml
     xmlstarlet ed --inplace -u /icecast/authentication/relay-password -v $icecast_pass /etc/icecast2/icecast.xml

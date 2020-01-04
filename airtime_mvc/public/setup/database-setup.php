@@ -184,7 +184,10 @@ class DatabaseSetup extends Setup {
        if (!file_exists(LIBRETIME_CONF_DIR . '/icecast_pass')) {
             throw new AirtimeDatabaseException("The Icecast Password file was not accessible", array());
        };
-       $icecast_pass = file_get_contents(LIBRETIME_CONF_DIR . '/icecast_pass', true);
+       $icecast_pass_txt = file(LIBRETIME_CONF_DIR . '/icecast_pass');
+       $icecast_pass = $icecast_pass_txt[0];
+       $icecast_pass = str_replace(PHP_EOL, '', $icecast_pass);
+       error_log($icecast_pass);
        $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's1_pass'");
        $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
        try {
