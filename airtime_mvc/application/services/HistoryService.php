@@ -1126,7 +1126,7 @@ class Application_Service_HistoryService
 			array("name"=> MDATA_KEY_TRACKNUMBER, "label"=> _("Track"), "type"=> TEMPLATE_INT),
 			array("name"=> MDATA_KEY_CONDUCTOR, "label"=> _("Conductor"), "type"=> TEMPLATE_STRING),
 			array("name"=> MDATA_KEY_LANGUAGE, "label"=> _("Language"), "type"=> TEMPLATE_STRING),
-			array("name"=> MDATA_KEY_MEDIA_TYPE, "label"=> _("Media Type"), "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_TRACK_TYPE, "label"=> _("Track Type"), "type"=> TEMPLATE_STRING),
 		);
 
 		return $fileMD;

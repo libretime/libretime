@@ -350,19 +350,19 @@ class FileDataHelper {
     }
 
     /**
-     * Media Type
+     * Track Type
      *
-     * @return string Media type key value
+     * @return string Track type key value
      */
-    public static function saveMediaType()
+    public static function saveTrackType()
     {
-        if (isset($_COOKIE['mt_upload'])) {
-            $mt = $_COOKIE['mt_upload'];
+        if (isset($_COOKIE['tt_upload'])) {
+            $tt = $_COOKIE['tt_upload'];
         } else {
-          // Use default media type
-          $mt = "MUS";
+          // Use default track type
+          $tt = "MUS";
         }
-        return $mt;
+        return $tt;
     }
 
 }

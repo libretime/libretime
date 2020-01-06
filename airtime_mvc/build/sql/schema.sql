@@ -97,7 +97,7 @@ CREATE TABLE "cc_files"
     "filesize" INTEGER DEFAULT 0 NOT NULL,
     "description" VARCHAR(512),
     "artwork" VARCHAR(512),
-    "media_type" VARCHAR(16),
+    "track_type" VARCHAR(16),
     PRIMARY KEY ("id")
 );
 

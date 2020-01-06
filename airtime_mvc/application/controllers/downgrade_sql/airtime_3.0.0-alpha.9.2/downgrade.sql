@@ -1,1 +1,1 @@
-ALTER TABLE cc_files DROP COLUMN IF EXISTS media_type;
+ALTER TABLE cc_files DROP COLUMN IF EXISTS track_type;

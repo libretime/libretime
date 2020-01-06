@@ -86,7 +86,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
             "track_title"  => "DbTrackTitle",
             "track_number" => "DbTrackNumber",
             "year"         => "DbYear",
-            "media_type"   => "DbMediaType"
+            "track_type"   => "DbTrackType"
     );
 
     public function __construct($id=null, $con=null)
@@ -1452,7 +1452,7 @@ SQL;
             "mtime"        => _("Last Modified"),
             "lptime"       => _("Last Played"),
             "length"       => _("Length"),
-            "media_type"   => _("Media Type"),
+            "track_type"   => _("Track Type"),
             "mime"         => _("Mime"),
             "mood"         => _("Mood"),
             "owner_id"     => _("Owner"),
@@ -1552,7 +1552,7 @@ SQL;
             "mtime"        => _("Last Modified"),
             "lptime"       => _("Last Played"),
             "length"       => _("Length"),
-            "media_type"   => _("Media Type"),
+            "track_type"   => _("Track Type"),
             "mime"         => _("Mime"),
             "mood"         => _("Mood"),
             "owner_id"     => _("Owner"),

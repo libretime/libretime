@@ -875,7 +875,7 @@ var criteriaTypes = {
     "track_number" : "n",
     "info_url"     : "s",
     "year"         : "n",
-    "media_type"   : "s"
+    "track_type"   : "s"
 };
 
 var stringCriteriaOptions = {

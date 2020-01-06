@@ -150,14 +150,14 @@ class CcFiles extends BaseCcFiles {
             $importedStorageDir = $storDir->getDirectory() . "imported/" . self::getOwnerId() . "/";
             $importedDbPath = "imported/" . self::getOwnerId() . "/";
             $artwork = FileDataHelper::saveArtworkData($filePath, $originalFilename, $importedStorageDir, $importedDbPath);
-            $mediaType = FileDataHelper::saveMediaType();
+            $trackType = FileDataHelper::saveTrackType();
 
             $file->fromArray($fileArray);
             $file->setDbOwnerId(self::getOwnerId());
             $now  = new DateTime("now", new DateTimeZone("UTC"));
             $file->setDbTrackTitle($originalFilename);
             $file->setDbArtwork($artwork);
-            $file->setDbMediaType($mediaType);
+            $file->setDbTrackType($trackType);
             $file->setDbUtime($now);
             $file->setDbHidden(true);
             $file->save();

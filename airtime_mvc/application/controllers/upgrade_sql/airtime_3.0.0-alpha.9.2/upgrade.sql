@@ -1,1 +1,1 @@
-ALTER TABLE cc_files ADD COLUMN media_type VARCHAR(16);
+ALTER TABLE cc_files ADD COLUMN track_type VARCHAR(16);

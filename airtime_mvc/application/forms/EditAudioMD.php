@@ -74,10 +74,10 @@ class Application_Form_EditAudioMD extends Zend_Form
         $owner_id->setMultiOptions($user_options);
         $this->addelement($owner_id);
 
-        // Add media type dropdown
-        $media_type_options = array();
-        $media_types = array(
-            ''       => '--- Select Media Type ---',
+        // Add track type dropdown
+        $track_type_options = array();
+        $track_types = array(
+            ''       => '--- Select Track Type ---',
             'MUS'    => 'Music (MUS)',
             'SID'    => 'Station ID (SID)',
             'INT'    => 'Intro (INT)',
@@ -92,15 +92,15 @@ class Application_Form_EditAudioMD extends Zend_Form
             'VTR'    => 'Voice Tracking (VTR)',
           );
 
-        foreach ($media_types as $key => $mt) {
-            $media_type_options[$key] = $mt;
+        foreach ($track_types as $key => $tt) {
+            $track_type_options[$key] = $tt;
         }
 
-        $media_type = new Zend_Form_Element_Select('media_type');
-        $media_type->class = 'input_text';
-        $media_type->setLabel(_('Media Type:'));
-        $media_type->setMultiOptions($media_type_options);
-        $this->addelement($media_type);
+        $track_type = new Zend_Form_Element_Select('track_type');
+        $track_type->class = 'input_text';
+        $track_type->setLabel(_('Track Type:'));
+        $track_type->setMultiOptions($track_type_options);
+        $this->addelement($track_type);
 
         // Description field
         $description = new Zend_Form_Element_Textarea('description');

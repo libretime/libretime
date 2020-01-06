@@ -43,7 +43,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         "track_number" => "n",
         "info_url"     => "s",
         "year"         => "n",
-        "media_type"   => "s"
+        "track_type"   => "s"
     );
 
     private function getCriteriaOptions($option = null)
@@ -69,7 +69,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 "mtime"        => _("Last Modified"),
                 "lptime"       => _("Last Played"),
                 "length"       => _("Length"),
-                "media_type"   => _("Media Type"),
+                "track_type"   => _("Track Type"),
                 "mime"         => _("Mime"),
                 "mood"         => _("Mood"),
                 "owner_id"     => _("Owner"),
@@ -724,7 +724,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             "track_title" => "DbTrackTitle",
             "track_number" => "DbTrackNumber",
             "year" => "DbYear",
-            "media_type" => "DbMediaType"
+            "track_type" => "DbTrackType"
         );
 
         // things we need to check

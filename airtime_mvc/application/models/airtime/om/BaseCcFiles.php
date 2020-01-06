@@ -295,10 +295,10 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     protected $artwork;
 
     /**
-     * The value for the media_type field.
+     * The value for the track_type field.
      * @var        string
      */
-    protected $media_type;
+    protected $track_type;
 
     /**
      * The value for the artist_url field.
@@ -1200,14 +1200,14 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [media_type] column value.
+     * Get the [track_type] column value.
      *
      * @return string
      */
-    public function getDbMediaType()
+    public function getDbTrackType()
     {
 
-        return $this->media_type;
+        return $this->track_type;
     }
 
     /**
@@ -1893,24 +1893,24 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     } // setDbArtwork()
 
     /**
-     * Set the value of [media_type] column.
+     * Set the value of [track_type] column.
      *
      * @param  string $v new value
      * @return CcFiles The current object (for fluent API support)
      */
-    public function setDbMediaType($v)
+    public function setDbTrackType($v)
     {
         if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
-        if ($this->media_type !== $v) {
-            $this->media_type = $v;
-            $this->modifiedColumns[] = CcFilesPeer::MEDIA_TYPE;
+        if ($this->track_type !== $v) {
+            $this->track_type = $v;
+            $this->modifiedColumns[] = CcFilesPeer::TRACK_TYPE;
         }
 
         return $this;
-    } // setDbMediaType()
+    } // setDbTrackType()
 
     /**
      * Set the value of [artist_name] column.
@@ -3341,7 +3341,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $this->filesize = ($row[$startcol + 70] !== null) ? (int) $row[$startcol + 70] : null;
             $this->description = ($row[$startcol + 71] !== null) ? (string) $row[$startcol + 71] : null;
             $this->artwork = ($row[$startcol + 72] !== null) ? (string) $row[$startcol + 72] : null;
-            $this->media_type = ($row[$startcol + 73] !== null) ? (string) $row[$startcol + 73] : null;
+            $this->track_type = ($row[$startcol + 73] !== null) ? (string) $row[$startcol + 73] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -3982,8 +3982,8 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if ($this->isColumnModified(CcFilesPeer::ARTWORK)) {
             $modifiedColumns[':p' . $index++]  = '"artwork"';
         }
-        if ($this->isColumnModified(CcFilesPeer::MEDIA_TYPE)) {
-            $modifiedColumns[':p' . $index++]  = '"media_type"';
+        if ($this->isColumnModified(CcFilesPeer::TRACK_TYPE)) {
+            $modifiedColumns[':p' . $index++]  = '"track_type"';
         }
 
         $sql = sprintf(
@@ -4215,8 +4215,8 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                     case '"artwork"':
                         $stmt->bindValue($identifier, $this->artwork, PDO::PARAM_STR);
                         break;
-                    case '"media_type"':
-                        $stmt->bindValue($identifier, $this->media_type, PDO::PARAM_STR);
+                    case '"track_type"':
+                        $stmt->bindValue($identifier, $this->track_type, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -4653,7 +4653,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                 return $this->getDbArtwork();
                 break;
             case 73:
-                return $this->getDbMediaType();
+                return $this->getDbTrackType();
                 break;
             default:
                 return null;
@@ -4757,7 +4757,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $keys[70] => $this->getDbFilesize(),
             $keys[71] => $this->getDbDescription(),
             $keys[72] => $this->getDbArtwork(),
-            $keys[73] => $this->getDbMediaType(),
+            $keys[73] => $this->getDbTrackType(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -5052,7 +5052,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                 $this->setDbArtwork($value);
                 break;
             case 73:
-                $this->setDbMediaType($value);
+                $this->setDbTrackType($value);
                 break;
         } // switch()
     }
@@ -5151,7 +5151,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if (array_key_exists($keys[70], $arr)) $this->setDbFilesize($arr[$keys[70]]);
         if (array_key_exists($keys[71], $arr)) $this->setDbDescription($arr[$keys[71]]);
         if (array_key_exists($keys[72], $arr)) $this->setDbArtwork($arr[$keys[72]]);
-        if (array_key_exists($keys[73], $arr)) $this->setDbMediaType($arr[$keys[73]]);
+        if (array_key_exists($keys[73], $arr)) $this->setDbTrackType($arr[$keys[73]]);
     }
 
     /**
@@ -5236,7 +5236,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if ($this->isColumnModified(CcFilesPeer::FILESIZE)) $criteria->add(CcFilesPeer::FILESIZE, $this->filesize);
         if ($this->isColumnModified(CcFilesPeer::DESCRIPTION)) $criteria->add(CcFilesPeer::DESCRIPTION, $this->description);
         if ($this->isColumnModified(CcFilesPeer::ARTWORK)) $criteria->add(CcFilesPeer::ARTWORK, $this->artwork);
-        if ($this->isColumnModified(CcFilesPeer::MEDIA_TYPE)) $criteria->add(CcFilesPeer::MEDIA_TYPE, $this->media_type);
+        if ($this->isColumnModified(CcFilesPeer::TRACK_TYPE)) $criteria->add(CcFilesPeer::TRACK_TYPE, $this->track_type);
 
         return $criteria;
     }
@@ -5372,7 +5372,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $copyObj->setDbFilesize($this->getDbFilesize());
         $copyObj->setDbDescription($this->getDbDescription());
         $copyObj->setDbArtwork($this->getDbArtwork());
-        $copyObj->setDbMediaType($this->getDbMediaType());
+        $copyObj->setDbTrackType($this->getDbTrackType());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -7775,7 +7775,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $this->filesize = null;
         $this->description = null;
         $this->artwork = null;
-        $this->media_type = null;
+        $this->track_type = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
