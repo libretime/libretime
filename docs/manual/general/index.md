@@ -50,7 +50,9 @@ wish. (There is more about this feature in the
 *Advanced Configuration* section of this book).
 
 The **Allowed CORS URLs** is intended to deal with situations where you want a
-remote site with a different domain to access the API.
+remote site with a different domain to access the API. This is relevant when
+there is a reverse proxy server in front of LibreTime. If you are using a
+reverse proxy, the URLs that will be used to access it should be added here.
 
 The **Display login button on your Radio Page?** will determine whether visitors
 to your site see a link to login. If this is disabled DJs and admins will need
