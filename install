@@ -891,15 +891,20 @@ if [ "$icecast" = "t" ]; then
     icecast_unit_name="icecast2"
     if [ "$dist" != "centos" ]; then
         sed -i 's/ENABLE=false/ENABLE=true/g' /etc/default/icecast2
+        icecast_config="/etc/icecast2/icecast.xml"
     else
         icecast_unit_name="icecast"
+	icecast_config="/etc/icecast.xml"
     fi
-    icecast_pass=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-12};)
-    echo $icecast_pass > /tmp/icecast_pass
-    xmlstarlet ed --inplace -u /icecast/authentication/source-password -v $icecast_pass /etc/icecast2/icecast.xml
-    xmlstarlet ed --inplace -u /icecast/authentication/relay-password -v $icecast_pass /etc/icecast2/icecast.xml
-    xmlstarlet ed --inplace -u /icecast/authentication/admin-password -v $icecast_pass /etc/icecast2/icecast.xml
-
+    # only update icecast password if 
+    if [ ! -f "/etc/airtime/airtime.conf" ]; then
+        icecast_pass=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-12};)
+        echo $icecast_pass > /tmp/icecast_pass
+        loud "\n New install detected setting icecast password to random value."
+        xmlstarlet ed --inplace -u /icecast/authentication/source-password -v $icecast_pass $icecast_config
+        xmlstarlet ed --inplace -u /icecast/authentication/relay-password -v $icecast_pass $icecast_config
+        xmlstarlet ed --inplace -u /icecast/authentication/admin-password -v $icecast_pass $icecast_config
+    fi
     # restart in case icecast was already started (like is the case on debian)
     systemInitCommand restart ${icecast_unit_name}
     verbose "...Done"
@@ -1104,10 +1109,10 @@ if [ ! -d "/etc/airtime" ]; then
 
     verbose "\n * Creating /etc/airtime/ directory..."
     mkdir /etc/airtime
+    # need to copy the icecast_pass from temp to /etc/airtime so installer can read it
+    cp /tmp/icecast_pass /etc/airtime/icecast_pass
 fi
 
-# need to copy the icecast_pass from temp to /etc/airtime so installer can read it
-    cp /tmp/icecast_pass /etc/airtime/icecast_pass
 
 
 chown -R ${web_user}:${web_user} /etc/airtime
