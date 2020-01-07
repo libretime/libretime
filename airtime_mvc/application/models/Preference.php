@@ -1628,19 +1628,15 @@ class Application_Model_Preference
     /**
      * Getter for CORS URLs
      *
+     * DEPRECATED - CORS URLs configuration has been moved to the config file as it is required
+     * to access the instance from behind a proxy. When using a proxy, the Database setting is
+     * inaccessible. It is used in Config::loadConfig() to migrate users from the database
+     * version to the configuration file
+     *
+     * @deprecated
      * @return string
      */
     public static function GetAllowedCorsUrls() {
         return self::getValue('allowed_cors_urls');
-    }
-
-    /**
-     * Setter for CORS URLs
-     *
-     * @param string $value
-     * @return void
-     */
-    public static function SetAllowedCorsUrls($value) {
-        self::setValue('allowed_cors_urls', $value);
     }
 }

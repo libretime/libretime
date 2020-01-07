@@ -16,10 +16,10 @@ class Config {
                 /* ================================================ storage configuration */
                 "rootDir" => self::$rootDir
         );
-        
+
         //In the unit testing environment, LIBRETIME_CONF_DIR will our local airtime.conf in airtime_mvc/application/test/conf:
         $filename = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : LIBRETIME_CONF_DIR . "/airtime.conf";
-        
+
         $values = parse_ini_file($filename, true);
 
         // Name of the web server user
@@ -54,7 +54,7 @@ class Config {
         $CC_CONFIG["current_backend"] = $values["current_backend"]["storage_backend"];
 
         $CC_CONFIG['cache_ahead_hours'] = $values['general']['cache_ahead_hours'];
-        
+
         // Database config
         $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
         $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
@@ -63,7 +63,7 @@ class Config {
         $CC_CONFIG['dsn']['database'] = $values['database']['dbname'];
 
         $CC_CONFIG['apiKey'] = array($values['general']['api_key']);
-        
+
         $CC_CONFIG['soundcloud-connection-retries'] = $values['soundcloud']['connection_retries'];
         $CC_CONFIG['soundcloud-connection-wait'] = $values['soundcloud']['time_between_retries'];
 
@@ -94,9 +94,26 @@ class Config {
         if(isset($values['demo']['demo'])){
             $CC_CONFIG['demo'] = $values['demo']['demo'];
         }
+        # Fetch CORS URLs from the DB if the config file is not updated.
+        $save_config = false;
+        if(isset($values['general']['allowed_cors_urls'])){
+            $CC_CONFIG['allowed_cors_urls'] = $values['general']['allowed_cors_urls'];
+        } else {
+            $CC_CONFIG['allowed_cors_urls'] = str_replace(PHP_EOL, ',',
+              Application_Model_Preference::GetAllowedCorsUrls());
+            if ($CC_CONFIG['allowed_cors_urls'] != "") {
+                $save_config = true;
+                $values['general']['allowed_cors_urls'] = $CC_CONFIG['allowed_cors_urls'];
+            }
+        }
         self::$CC_CONFIG = $CC_CONFIG;
+        if ($save_config) {
+            # Update the config to migrate the allowed_cors_urls to the config file instead of
+            # the database
+            self::saveConfig($values, $filename);
+        }
     }
-    
+
     public static function setAirtimeVersion() {
         $version = @file_get_contents(self::$rootDir."/../VERSION");
         if (!$version) {
@@ -105,11 +122,23 @@ class Config {
         }
         self::$CC_CONFIG['airtime_version'] = trim($version);
     }
-    
+
     public static function getConfig() {
         if (is_null(self::$CC_CONFIG)) {
             self::loadConfig();
         }
         return self::$CC_CONFIG;
+    }
+
+    private static function saveConfig($config, $filename) {
+        $new_content = '';
+        foreach ($config as $section => $section_content) {
+            $section_content = array_map(function($value, $key) {
+                return "$key=$value";
+            }, array_values($section_content), array_keys($section_content));
+            $section_content = implode("\n", $section_content);
+            $new_content .= "[$section]\n$section_content\n";
+        }
+        file_put_contents($filename, $new_content);
     }
 }

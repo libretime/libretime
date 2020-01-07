@@ -29,7 +29,7 @@ class CORSHelper
     {
         $allowedCorsUrls = array_map(
             function($v) { return trim($v); },
-            explode(PHP_EOL, Application_Model_Preference::GetAllowedCorsUrls())
+            explode(',', Config::getConfig()['allowed_cors_urls']))
         );
 
         // always allow the configured server in (as reported by the server and not what is i baseUrl)
