@@ -94,3 +94,15 @@ your LibreTime server has made to this Icecast server. If you have only just
 installed LibreTime, there may not be any media playing out yet.
 
 ![](static/Screenshot293-Icecast_status_page.png)
+
+Reverse Proxy Connections
+-------------------------
+In some deployments, the LibreTime server is deployed behind a reverse proxy,
+for example in containerization use-cases such as Docker and LXC. LibreTime
+makes extensive use of its API for some site functionality, which causes
+[Cross-Origin Resource Sharing (CORS)](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+to occur. By default, CORS requests are blocked by your browser and the origins
+need to be added to the **Allowed CORS URLs** block in
+[**General Settings**](/manual/general/). These origins should include any
+domains that will be used externally to connect to your reverse proxy that you
+want handled by LibreTime.
