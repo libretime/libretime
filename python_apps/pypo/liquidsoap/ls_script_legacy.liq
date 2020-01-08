@@ -108,7 +108,6 @@ http = input.http_restart(id="http")
 http = cross_http(http_input_id="http",http)
 output.dummy(fallible=true, http)
 stream_queue = http_fallback(http_input_id="http", http=http, default=queue)
-stream_queue = map_metadata(update=false, append_title, stream_queue)
 
 ignore(output.dummy(stream_queue, fallible=true))
 
@@ -341,6 +340,8 @@ server.register(namespace="streams",
     usage="scheduled_play_start",
     "scheduled_play_start",
     fun (s) -> begin log("streams.scheduled_play_start") make_scheduled_play_available() "Done." end)
+
+stream_queue = map_metadata(update=false, append_title, stream_queue)
 
 if output_sound_device then
     success = ref false

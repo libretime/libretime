@@ -33,7 +33,11 @@ def append_title(m) =
     m
   else
       if !stream_metadata_type == 1 then
-        [("title", "#{!show_name} - #{m['artist']} - #{m['title']}"), ("mapped", "true")]
+        if "#{m['artist']}" == "" then
+            [("title", "#{!show_name} - #{m['title']}"), ("mapped", "true")]
+        else
+            [("title", "#{!show_name} - #{m['artist']} - #{m['title']}"), ("mapped", "true")]
+        end
       elsif !stream_metadata_type == 2 then
         [("title", "#{!station_name} - #{!show_name}"), ("mapped", "true")]
       else
