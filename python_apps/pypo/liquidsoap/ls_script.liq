@@ -396,6 +396,13 @@ if output_sound_device then
 	end
 	%endif
 
+    %ifdef output.jack
+    if output_sound_device_type == "Jack" then
+        ignore(output.jack(s))
+        success := true
+    end
+    %endif
+
     if (!success == false) then
         ignore(output.prefered(s))
 	end
