@@ -79,6 +79,7 @@ class DatabaseSetup extends Setup {
         $this->setNewDatabaseConnection(self::$_properties["dbname"]);
         $this->checkSchemaExists();
         $this->createDatabaseTables();
+        $this->updateIcecastPassword();
     }
 
     /**
@@ -174,6 +175,83 @@ class DatabaseSetup extends Setup {
             throw new AirtimeDatabaseException("The database was installed with an incorrect encoding type!",
                                                array(self::DB_NAME,));
         }
+    }
+    /**
+    * Updates the icecast password in the database based upon the temp file created during install
+    * @throws AirtimeDatabaseException
+    */
+    private function updateIcecastPassword() {
+       if (!file_exists(LIBRETIME_CONF_DIR . '/icecast_pass')) {
+            throw new AirtimeDatabaseException("The Icecast Password file was not accessible", array());
+       };
+       $icecast_pass_txt = file(LIBRETIME_CONF_DIR . '/icecast_pass');
+       $icecast_pass = $icecast_pass_txt[0];
+       $icecast_pass = str_replace(PHP_EOL, '', $icecast_pass);
+       $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's1_pass'");
+       $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
+       try {
+           $statement->execute(); 
+           }
+       catch (PDOException $ex) {
+           print "Error!: " . $ex->getMessage() . "<br />";
+           }
+       $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's1_admin_pass'");
+       $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
+       try {
+           $statement->execute(); 
+           }
+       catch (PDOException $ex) {
+           print "Error!: " . $ex->getMessage() . "<br />";
+           }
+       $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's2_pass'");
+       $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
+       try {
+           $statement->execute(); 
+           }
+       catch (PDOException $ex) {
+           print "Error!: " . $ex->getMessage() . "<br />";
+           }
+       $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's2_admin_pass'");
+       $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
+       try {
+           $statement->execute(); 
+           }
+       catch (PDOException $ex) {
+           print "Error!: " . $ex->getMessage() . "<br />";
+           }
+
+       $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's3_pass'");
+       $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
+       try {
+           $statement->execute(); 
+           }
+       catch (PDOException $ex) {
+           print "Error!: " . $ex->getMessage() . "<br />";
+           }
+       $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's3_admin_pass'");
+       $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
+       try {
+           $statement->execute(); 
+           }
+       catch (PDOException $ex) {
+           print "Error!: " . $ex->getMessage() . "<br />";
+           }
+       $statement =  self::$dbh->prepare("UPDATE cc_stream_setting SET value = :icecastpass WHERE keyname = 's1_admin_pass'");
+       $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
+       try {
+           $statement->execute(); 
+           }
+       catch (PDOException $ex) {
+           print "Error!: " . $ex->getMessage() . "<br />";
+           }
+       $statement =  self::$dbh->prepare("INSERT INTO cc_pref (keystr, valstr) VALUES ('default_icecast_password', :icecastpass )");
+       $statement->bindValue(':icecastpass', $icecast_pass, PDO::PARAM_STR);
+       try {
+           $statement->execute(); 
+           }
+       catch (PDOException $ex) {
+           print "Error!: " . $ex->getMessage() . "<br />";
+           }
     }
 
 }
