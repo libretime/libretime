@@ -32,7 +32,7 @@ INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_host', '1
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_port', '8000', 'integer');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_user', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_pass', 'hackme', 'string');
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_admin_user', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_admin_user', 'admin', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_admin_pass', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_mount', 'airtime_128', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_url', 'https://libretime.org', 'string');
