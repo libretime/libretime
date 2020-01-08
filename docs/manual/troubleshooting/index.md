@@ -1,25 +1,20 @@
-If your Airtime server is not working as expected, individual components of the system can be started, stopped, restarted or checked in the server console using the <span style="font-weight: bold;">invok</span>**e-rc.d** command:
+If your Airtime server is not working as expected, individual components of the system can be started, stopped, restarted or checked in the server console using the **systemctl** command:
 
-    sudo invoke-rc.d airtime-liquidsoap     start|stop|restart|status
-    sudo invoke-rc.d airtime-playout        start|stop|restart|status
-    sudo invoke-rc.d airtime-analyzer       start|stop|restart|status
-    sudo invoke-rc.d apache2                start|stop|restart|status
-    sudo invoke-rc.d rabbitmq-server        start|stop|restart|status
+    sudo systemctl start|stop|restart|status airtime-liquidsoap
+    sudo systemctl start|stop|restart|status airtime-playout
+    sudo systemctl start|stop|restart|status airtime-celery
+    sudo systemctl start|stop|restart|status airtime_analyzer
+    sudo systemctl start|stop|restart|status apache2
+    sudo systemctl start|stop|restart|status rabbitmq-server
 
 For example, to restart the Airtime playout engine, you could enter the command:
 
-    sudo invoke-rc.d airtime-playout restart
-
-The server should respond:
-
-    Restarting Airtime Playout: Done.
-
-The **status** option for **airtime-playout** and **airtime-analyzer** runs the **airtime-check-system** script to confirm that all of Airtime's dependencies are installed and running correctly.
+    sudo systemctl restart airtime-analyzer
 
 Log files
 ---------
 
-Airtime stores log files under the directory path */var/log/airtime/* which can be useful for diagnosing the cause of any problems. Copies of these log files may be requested by Sourcefabric engineers while they are providing technical support for your Airtime deployment. See the chapter *The airtime-log command* for more details.
+Airtime stores log files under the directory path */var/log/airtime/* which can be useful for diagnosing the cause of any problems. Copies of these log files may be requested by LibreTime developers while they are providing technical support for your Airtime deployment.
 
 Test tones
 ----------
@@ -58,7 +53,7 @@ If the Airtime logs indicate failures to connect to the RabbitMQ server, such as
     2013-10-31 08:21:11,255 ERROR - [pypomessagehandler.py : main() : line 
     99] - Error connecting to RabbitMQ Server. Trying again in few seconds
 
-2013-10-31 08:21:11,255 ERROR - \[pypomessagehandler.py : main() : line 99\] - Error connecting to RabbitMQ Server. Trying again in few seconds - See more at: http://forum.sourcefabric.org/discussion/16050/\#sthash.W8OJrNFm.dpuf
+    2013-10-31 08:21:11,255 ERROR - \[pypomessagehandler.py : main() : line 99\] - Error connecting to RabbitMQ Server. Trying again in few seconds - See more at: http://forum.sourcefabric.org/discussion/16050/\#sthash.W8OJrNFm.dpuf
 
 but the RabbitMQ server is running normally, this error might be due to a change in the server's hostname since Airtime installation. Directory names under */var/lib/rabbitmq/mnesia/* indicate that RabbitMQ's database files are organised according to the hostname of the server, for example:
 
@@ -72,13 +67,13 @@ where the hostname is *airtime.example.com*. If the hostname has changed, it may
 
 2. Restart RabbitMQ:
 
-    sudo invoke-rc.d rabbitmq-server restart
+    sudo systemctl restart rabbitmq-server
 
 3. Enter the following commands to set up authentication and grant permissions. The *rabbitmqctl add\_user* command requires the RabbitMQ password from the /etc/airtime/airtime.conf file as an argument. The *rabbitmqctl set\_permissions* command should be entered on one line, with the list of Airtime services repeated three times:
 
     rabbitmqctl add_vhost /airtime
-    rabbitmqctl add_user airtime XXXXXXXXXXXXXXXXXXXX 
-    rabbitmqctl set_permissions -p /airtime airtime 
+    rabbitmqctl add_user airtime XXXXXXXXXXXXXXXXXXXX
+    rabbitmqctl set_permissions -p /airtime airtime
        "airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
        "airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
        "airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"

@@ -42,18 +42,13 @@ You can also set options for RabbitMQ messaging, the LibreTime server and SoundC
     [demo]
     demo = 0
 
-Save and close the file with **Ctrl+O** and **Ctrl+X**. If you have changed the database settings, you should now run the command:
+Save and close the file with **Ctrl+O** and **Ctrl+X**.  In order to update the configuration
+used by the various components of LibreTime, run the following commands
 
-    sudo airtime-update-db-settings
-
-to make sure all of LibreTime's database configuration files are updated. This command should output the following text to the server console:
-
-    LibreTime root folder found at /usr/share/airtime
-    Updating /usr/share/airtime/application/configs/application.ini
-    Updating /usr/share/airtime/build/build.properties
-    Updating /usr/share/airtime/build/runtime-conf.xml
-    Success!
-	
+    sudo systemctl restart airtime-liquidsoap
+    sudo systemctl restart airtime-playout
+    sudo systemctl restart airtime-celery
+    sudo systemctl restart airtime_analyzer
 
 API client configuration
 ------------------------
@@ -73,7 +68,7 @@ Playout and recorder settings
 
 Settings for pypo, the playout and recording engine used by LibreTime, are found in the file */etc/airtime/airtime.conf*. After making changes to this file, you will have to issue the command:
 
-    sudo /etc/init.d/airtime-playout restart
+    sudo systemctl restart airtime-playout
 
 for the changes to take effect.
 
@@ -107,7 +102,7 @@ for the changes to take effect.
 
     ############################################
     # Liquidsoap settings                      #
-    ############################################ 
+    ############################################
     ls_host = 127.0.0.1
     ls_port = 1234
 
@@ -141,21 +136,7 @@ for the changes to take effect.
     #
     push_interval = 1# in seconds
 
-    # 'pre' or 'otf'. 'pre' cues while playlist preparation 
+    # 'pre' or 'otf'. 'pre' cues while playlist preparation
     # while 'otf' (on the fly) cues while loading into ls
     # (needs the post_processor patch)
     cue_style = pre
-
-    ############################################
-    # Recorded Audio settings                  #
-    ############################################
-    record_bitrate = 256
-    record_samplerate = 44100
-    record_channels = 2
-    record_sample_size = 16
-
-    #can be either ogg|mp3, mp3 recording requires installation of the package "lame"
-    record_file_type = ogg
-
-    # base path to store recorded shows at 
-    base_recorded_files = /var/tmp/airtime/show-recorder/
