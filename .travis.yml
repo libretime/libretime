@@ -52,10 +52,9 @@ addons:
     - liquidsoap-plugin-faad
     - liquidsoap-plugin-vorbis
     - liquidsoap-plugin-opus
-    - python-nose
-    - python-rgain
-    - python-gst-1.0
-    - python-magic
+    - python3-nose
+    - python3-gst-1.0
+    - python3-magic
     - dos2unix
 install:
 - >
@@ -64,9 +63,9 @@ install:
     fi
 - >
     if [[ "$PYTHON" == true ]]; then
-      pip install --user mkdocs 
+      pip3 install --user mkdocs rgain3
       pushd python_apps/airtime_analyzer 
-      python setup.py install --dry-run --no-init-script
+      python3 setup.py install --dry-run --no-init-script
       popd
     fi
 before_script:
