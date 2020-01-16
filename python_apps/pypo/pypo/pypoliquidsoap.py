@@ -1,10 +1,10 @@
-from pypofetch import PypoFetch
-from telnetliquidsoap import TelnetLiquidsoap
+from .pypofetch import PypoFetch
+from .telnetliquidsoap import TelnetLiquidsoap
 
 from datetime import datetime
 from datetime import timedelta
 
-import eventtypes
+from . import eventtypes
 import time
 
 class PypoLiquidsoap():
@@ -22,7 +22,7 @@ class PypoLiquidsoap():
                 logger,\
                 host,\
                 port,\
-                self.liq_queue_tracker.keys())
+                list(self.liq_queue_tracker.keys()))
 
     def get_telnet_dispatcher(self):
         return self.telnet_liquidsoap
@@ -120,13 +120,12 @@ class PypoLiquidsoap():
 
         try:
             scheduled_now_files = \
-                    filter(lambda x: x["type"] == eventtypes.FILE, scheduled_now)
+                    [x for x in scheduled_now if x["type"] == eventtypes.FILE]
 
             scheduled_now_webstream = \
-                    filter(lambda x: x["type"] == eventtypes.STREAM_OUTPUT_START, \
-                            scheduled_now)
+                    [x for x in scheduled_now if x["type"] == eventtypes.STREAM_OUTPUT_START]
 
-            schedule_ids = set(map(lambda x: x["row_id"], scheduled_now_files))
+            schedule_ids = set([x["row_id"] for x in scheduled_now_files])
 
             row_id_map = {}
             liq_queue_ids = set()
@@ -200,7 +199,7 @@ class PypoLiquidsoap():
         return media_item["type"] == eventtypes.FILE
 
     def clear_queue_tracker(self):
-        for i in self.liq_queue_tracker.keys():
+        for i in list(self.liq_queue_tracker.keys()):
             self.liq_queue_tracker[i] = None
 
     def modify_cue_point(self, link):

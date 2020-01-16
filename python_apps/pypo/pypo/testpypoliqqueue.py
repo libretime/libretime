@@ -1,9 +1,9 @@
-from __future__ import print_function
-from pypoliqqueue import PypoLiqQueue
-from telnetliquidsoap import DummyTelnetLiquidsoap, TelnetLiquidsoap
+
+from .pypoliqqueue import PypoLiqQueue
+from .telnetliquidsoap import DummyTelnetLiquidsoap, TelnetLiquidsoap
 
 
-from Queue import Queue
+from queue import Queue
 from threading import Lock
 
 import sys

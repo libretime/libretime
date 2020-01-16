@@ -11,14 +11,14 @@ import subprocess
 import signal
 from datetime import datetime
 import traceback
-import pure
+from . import pure
 import mimetypes
-from Queue import Empty
+from queue import Empty
 from threading import Thread, Timer
 from subprocess import Popen, PIPE
 
 from api_clients import api_client
-from timeout import ls_timeout
+from .timeout import ls_timeout
 
 
 def keyboardInterruptHandler(signum, frame):
@@ -65,7 +65,7 @@ class PypoFetch(Thread):
                 """
                 self.logger.debug("Cache dir does not exist. Creating...")
                 os.makedirs(dir)
-        except Exception, e:
+        except Exception as e:
             pass
 
         self.schedule_data = []
@@ -120,7 +120,7 @@ class PypoFetch(Thread):
                 if self.listener_timeout < 0:
                     self.listener_timeout = 0
             self.logger.info("New timeout: %s" % self.listener_timeout)
-        except Exception, e:
+        except Exception as e:
             top = traceback.format_exc()
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", top)
@@ -151,13 +151,13 @@ class PypoFetch(Thread):
         self.logger.debug('Getting information needed on bootstrap from Airtime')
         try:
             info = self.api_client.get_bootstrap_info()
-        except Exception, e:
+        except Exception as e:
             self.logger.error('Unable to get bootstrap info.. Exiting pypo...')
             self.logger.error(str(e))
 
         self.logger.debug('info:%s', info)
         commands = []
-        for k, v in info['switch_status'].iteritems():
+        for k, v in info['switch_status'].items():
             commands.append(self.switch_source_temp(k, v))
 
         stream_format = info['stream_label']
@@ -194,11 +194,11 @@ class PypoFetch(Thread):
                     tn.read_all()
                     self.logger.info("Liquidsoap is up and running")
                     break
-                except Exception, e:
+                except Exception as e:
                     #sleep 0.5 seconds and try again
                     time.sleep(0.5)
 
-        except Exception, e:
+        except Exception as e:
             self.logger.error(e)
         finally:
             if self.telnet_lock.locked():
@@ -237,7 +237,7 @@ class PypoFetch(Thread):
             tn.write('exit\n')
 
             output = tn.read_all()
-        except Exception, e:
+        except Exception as e:
             self.logger.error(str(e))
         finally:
             self.telnet_lock.release()
@@ -271,7 +271,7 @@ class PypoFetch(Thread):
             tn.write(command)
             tn.write('exit\n')
             tn.read_all()
-        except Exception, e:
+        except Exception as e:
             self.logger.error("Exception %s", e)
         finally:
             self.telnet_lock.release()
@@ -288,7 +288,7 @@ class PypoFetch(Thread):
             tn.write(command)
             tn.write('exit\n')
             tn.read_all()
-        except Exception, e:
+        except Exception as e:
             self.logger.error("Exception %s", e)
         finally:
             self.telnet_lock.release()
@@ -306,11 +306,11 @@ class PypoFetch(Thread):
                 tn.write(command)
                 tn.write('exit\n')
                 tn.read_all()
-            except Exception, e:
+            except Exception as e:
                 self.logger.error(str(e))
             finally:
                 self.telnet_lock.release()
-        except Exception, e:
+        except Exception as e:
             self.logger.error("Exception %s", e)
 
     """
@@ -336,7 +336,7 @@ class PypoFetch(Thread):
             download_dir = self.cache_dir
             try:
                 os.makedirs(download_dir)
-            except Exception, e:
+            except Exception as e:
                 pass
 
             media_copy = {}
@@ -344,7 +344,7 @@ class PypoFetch(Thread):
                 media_item = media[key]
                 if (media_item['type'] == 'file'):
                     fileExt = self.sanity_check_media_item(media_item)
-                    dst = os.path.join(download_dir, unicode(media_item['id']) + unicode(fileExt))
+                    dst = os.path.join(download_dir, str(media_item['id']) + str(fileExt))
                     media_item['dst'] = dst
                     media_item['file_ready'] = False
                     media_filtered[key] = media_item
@@ -357,7 +357,7 @@ class PypoFetch(Thread):
 
 
             self.media_prepare_queue.put(copy.copy(media_filtered))
-        except Exception, e: self.logger.error("%s", e)
+        except Exception as e: self.logger.error("%s", e)
 
         # Send the data to pypo-push
         self.logger.debug("Pushing to pypo-push")
@@ -366,7 +366,7 @@ class PypoFetch(Thread):
 
         # cleanup
         try: self.cache_cleanup(media)
-        except Exception, e: self.logger.error("%s", e)
+        except Exception as e: self.logger.error("%s", e)
 
     #do basic validation of file parameters. Useful for debugging
     #purposes
@@ -408,7 +408,7 @@ class PypoFetch(Thread):
         for mkey in media:
             media_item = media[mkey]
             if media_item['type'] == 'file':
-                scheduled_file_set.add(unicode(media_item["id"]) + unicode(media_item["file_ext"]))
+                scheduled_file_set.add(str(media_item["id"]) + str(media_item["file_ext"]))
 
         expired_files = cached_file_set - scheduled_file_set
 
@@ -426,7 +426,7 @@ class PypoFetch(Thread):
                     self.logger.info("File '%s' removed" % path)
                 else:
                     self.logger.info("File '%s' not removed. Still busy!" % path)
-            except Exception, e:
+            except Exception as e:
                 self.logger.error("Problem removing file '%s'" % f)
                 self.logger.error(traceback.format_exc())
 

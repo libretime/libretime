@@ -5,16 +5,16 @@ class TestApcUrl(unittest.TestCase):
     def test_init(self):
         url = "/testing"
         u = ApcUrl(url)
-        self.assertEquals( u.base_url, url)
+        self.assertEqual( u.base_url, url)
 
     def test_params_1(self):
         u = ApcUrl("/testing/%%key%%")
-        self.assertEquals(u.params(key='val').url(), '/testing/val')
+        self.assertEqual(u.params(key='val').url(), '/testing/val')
 
     def test_params_2(self):
         u = ApcUrl('/testing/%%key%%/%%api%%/more_testing')
         full_url = u.params(key="AAA",api="BBB").url()
-        self.assertEquals(full_url, '/testing/AAA/BBB/more_testing')
+        self.assertEqual(full_url, '/testing/AAA/BBB/more_testing')
 
     def test_params_ex(self):
         u = ApcUrl("/testing/%%key%%")
@@ -23,7 +23,7 @@ class TestApcUrl(unittest.TestCase):
 
     def test_url(self):
         u = "one/two/three"
-        self.assertEquals( ApcUrl(u).url(), u )
+        self.assertEqual( ApcUrl(u).url(), u )
 
     def test_url_ex(self):
         u = ApcUrl('/%%one%%/%%two%%/three').params(two='testing')

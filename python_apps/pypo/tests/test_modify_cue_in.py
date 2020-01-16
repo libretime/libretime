@@ -1,6 +1,6 @@
 from pypopush import PypoPush
 from threading import Lock
-from Queue import Queue
+from queue import Queue
 
 import datetime
 

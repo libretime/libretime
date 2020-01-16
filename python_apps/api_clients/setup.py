@@ -24,11 +24,10 @@ setup(name='api_clients',
 #           'docopt',
 #           'kombu',
 #           'mutagen',
-#           'poster',
+#           'poster3',
 #           'PyDispatcher',
 #           'pyinotify',
 #           'pytz',
-#           'wsgiref'
       ],
       zip_safe=False,
       data_files=[])

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import print_function
+
 import traceback
 
 """
@@ -76,7 +76,7 @@ logger = rootLogger
 try:
     config = ConfigObj('/etc/airtime/airtime.conf')
 
-except Exception, e:
+except Exception as e:
     logger.error('Error loading config file: %s', e)
     sys.exit()
 

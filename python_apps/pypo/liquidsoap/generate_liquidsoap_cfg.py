@@ -1,4 +1,4 @@
-from __future__ import print_function
+
 import logging
 import os
 import sys
@@ -14,7 +14,7 @@ def generate_liquidsoap_config(ss):
     fh.write("################################################\n")
     fh.write("# The ignore() lines are to squash unused variable warnings\n")
 
-    for key, value in data.iteritems():
+    for key, value in data.items():
         try:
             if not "port" in key and not "bitrate" in key: # Stupid hack
                 raise ValueError()
@@ -49,7 +49,7 @@ def run():
             ss = ac.get_stream_setting()
             generate_liquidsoap_config(ss)
             successful = True
-        except Exception, e:
+        except Exception as e:
             print("Unable to connect to the Airtime server.")
             logging.error(str(e))
             logging.error("traceback: %s", traceback.format_exc())

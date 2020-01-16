@@ -19,7 +19,7 @@ class TestRequestProvider(unittest.TestCase):
             self.assertTrue( meth in rp )
 
     def test_notify_webstream_data(self):
-        ret = json.dumps( {u'testing' : u'123' } )
+        ret = json.dumps( {'testing' : '123' } )
         rp = RequestProvider(self.cfg)
         read = MagicMock()
         read.read = MagicMock(return_value=ret)
@@ -27,6 +27,6 @@ class TestRequestProvider(unittest.TestCase):
             mock_method.return_value = read
             response = rp.notify_webstream_data(media_id=123)
             mock_method.called_once_with(media_id=123)
-            self.assertEquals(json.loads(ret), response)
+            self.assertEqual(json.loads(ret), response)
 
 if __name__ == '__main__': unittest.main()

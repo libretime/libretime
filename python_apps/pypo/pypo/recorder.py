@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
+
 import logging
 import json
 import time
@@ -36,8 +36,8 @@ def api_client(logger):
 # loading config file
 try:
     config = ConfigObj('/etc/airtime/airtime.conf')
-except Exception, e:
-    print('Error loading config file: %s', e)
+except Exception as e:
+    print(('Error loading config file: %s', e))
     sys.exit()
 
 # TODO : add docstrings everywhere in this module
@@ -153,10 +153,10 @@ class ShowRecorder(Thread):
             recorded_file['title'] = "%s-%s-%s" % (self.show_name,
                     full_date, full_time)
             #You cannot pass ints into the metadata of a file. Even tracknumber needs to be a string
-            recorded_file['tracknumber'] = unicode(self.show_instance)
+            recorded_file['tracknumber'] = str(self.show_instance)
             recorded_file.save()
 
-        except Exception, e:
+        except Exception as e:
             top = traceback.format_exc()
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", top)
@@ -173,7 +173,7 @@ class ShowRecorder(Thread):
 
                 self.upload_file(filepath)
                 os.remove(filepath)
-            except Exception, e:
+            except Exception as e:
                 self.logger.error(e)
         else:
             self.logger.info("problem recording show")
@@ -196,7 +196,7 @@ class Recorder(Thread):
             try:
                 self.api_client.register_component('show-recorder')
                 success = True
-            except Exception, e:
+            except Exception as e:
                 self.logger.error(str(e))
                 time.sleep(10)
 
@@ -221,12 +221,12 @@ class Recorder(Thread):
         temp_shows_to_record = {}
         shows = m['shows']
         for show in shows:
-            show_starts = getDateTimeObj(show[u'starts'])
-            show_end = getDateTimeObj(show[u'ends'])
+            show_starts = getDateTimeObj(show['starts'])
+            show_end = getDateTimeObj(show['ends'])
             time_delta = show_end - show_starts
 
-            temp_shows_to_record[show[u'starts']] = [time_delta,
-                    show[u'instance_id'], show[u'name'], m['server_timezone']]
+            temp_shows_to_record[show['starts']] = [time_delta,
+                    show['instance_id'], show['name'], m['server_timezone']]
         self.shows_to_record = temp_shows_to_record
 
     def get_time_till_next_show(self):
@@ -298,7 +298,7 @@ class Recorder(Thread):
                 #remove show from shows to record.
                 del self.shows_to_record[start_time]
                 #self.time_till_next_show = self.get_time_till_next_show()
-        except Exception, e :
+        except Exception as e :
             top = traceback.format_exc()
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", top)
@@ -318,7 +318,7 @@ class Recorder(Thread):
                 if temp is not None:
                     self.process_recorder_schedule(temp)
                 self.logger.info("Bootstrap recorder schedule received: %s", temp)
-            except Exception, e:
+            except Exception as e:
                 self.logger.error( traceback.format_exc() )
                 self.logger.error(e)
 
@@ -338,16 +338,16 @@ class Recorder(Thread):
                         if temp is not None:
                             self.process_recorder_schedule(temp)
                         self.logger.info("updated recorder schedule received: %s", temp)
-                    except Exception, e:
+                    except Exception as e:
                         self.logger.error( traceback.format_exc() )
                         self.logger.error(e)
                 try: self.handle_message()
-                except Exception, e:
+                except Exception as e:
                     self.logger.error( traceback.format_exc() )
                     self.logger.error('Pypo Recorder Exception: %s', e)
                 time.sleep(PUSH_INTERVAL)
                 self.loops += 1
-        except Exception, e :
+        except Exception as e :
             top = traceback.format_exc()
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", top)

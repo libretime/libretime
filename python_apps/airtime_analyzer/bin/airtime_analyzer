@@ -2,7 +2,7 @@
 """Runs the airtime_analyzer application.
 """
 
-from __future__ import print_function
+
 import daemon
 import argparse
 import os
