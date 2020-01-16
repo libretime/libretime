@@ -19,28 +19,6 @@ else:
                   ('/etc/init.d', ['install/sysvinit/airtime_analyzer'])]
     print(data_files)
 
-dependencies = [
-    'mutagen~=1.43.0',
-    'pika~=1.1.0',
-    'daemon',
-    'file-magic',
-    'nose',
-    'coverage',
-    'mock',
-    'python-daemon==1.6',
-    'requests>=2.7.0',
-    # These next 3 are required for requests to support SSL with SNI. Learned this the hard way...
-    # What sucks is that GCC is required to pip install these.
-    #'ndg-httpsclient',
-    #'pyasn1',
-    #'pyopenssl'
-]
-
-if sys.version_info >= (3, 0):
-    dependencies += ['rgain3']
-else:
-    dependencies += ['rgain']
-
 setup(name='airtime_analyzer',
       version='0.1',
       description='Airtime Analyzer Worker and File Importer',
@@ -50,7 +28,23 @@ setup(name='airtime_analyzer',
       license='MIT',
       packages=['airtime_analyzer'],
       scripts=['bin/airtime_analyzer'],
-      install_requires=dependencies,
+      install_requires=[
+          'mutagen>=1.41.1', # got rid of specific version requirement 
+          'pika',
+          'daemon',
+          'file-magic',
+          'nose',
+          'coverage',
+          'mock',
+          'python-daemon==1.6',
+          'requests>=2.7.0',
+          'rgain3',
+          # These next 3 are required for requests to support SSL with SNI. Learned this the hard way...
+          # What sucks is that GCC is required to pip install these. 
+          #'ndg-httpsclient',
+          #'pyasn1',
+          #'pyopenssl'
+      ],
       zip_safe=False,
       data_files=data_files)
 
