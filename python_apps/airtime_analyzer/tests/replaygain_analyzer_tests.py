@@ -1,3 +1,4 @@
+from __future__ import print_function
 from nose.tools import *
 from airtime_analyzer.replaygain_analyzer import ReplayGainAnalyzer
 
@@ -28,7 +29,7 @@ def check_default_metadata(metadata):
     '''
     tolerance = 0.30
     expected_replaygain = 5.0
-    print metadata['replay_gain']
+    print(metadata['replay_gain'])
     assert abs(metadata['replay_gain'] - expected_replaygain) < tolerance
 
 def test_missing_replaygain():

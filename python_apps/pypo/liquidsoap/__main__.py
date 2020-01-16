@@ -1,6 +1,7 @@
 """ Runs Airtime liquidsoap
 """
 
+from __future__ import print_function
 import argparse
 import os
 import generate_liquidsoap_cfg
@@ -11,7 +12,7 @@ PYPO_HOME = '/var/tmp/airtime/pypo/'
 
 def run():
     '''Entry-point for this application'''
-    print "Airtime Liquidsoap"
+    print("Airtime Liquidsoap")
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--debug", help="run in debug mode", action="store_true")
     args = parser.parse_args()

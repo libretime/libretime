@@ -1,3 +1,4 @@
+from __future__ import print_function
 import ConfigParser
 
 def read_config_file(config_path):
@@ -6,10 +7,10 @@ def read_config_file(config_path):
     try:
         config.readfp(open(config_path))
     except IOError as e:
-        print "Failed to open config file at " + config_path + ": " + e.strerror
+        print("Failed to open config file at {}: {}".format(config_path, e.strerror))
         exit(-1)
     except Exception as e:
-        print e.strerror
+        print(e.strerror)
         exit(-1)
 
     return config

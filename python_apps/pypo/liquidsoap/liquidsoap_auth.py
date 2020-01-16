@@ -1,3 +1,4 @@
+from __future__ import print_function
 from api_clients import *
 import sys
 
@@ -16,8 +17,8 @@ elif dj_type == '--dj':
 response = api_clients.check_live_stream_auth(username, password, source_type)
 
 if 'msg' in response and response['msg'] == True:
-    print response['msg']
+    print(response['msg'])
     sys.exit(0)
 else:
-    print False
+    print(False)
     sys.exit(1)

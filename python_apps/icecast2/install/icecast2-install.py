@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 import shutil
 import os
 import sys
 
 if os.geteuid() != 0:
-    print "Please run this as root."
+    print("Please run this as root.")
     sys.exit(1)
 
 def get_current_script_dir():
@@ -18,5 +19,5 @@ try:
     shutil.copy(current_script_dir+"/../airtime-icecast-status.xsl", "/usr/share/icecast2/web")
 
 except Exception, e:
-    print "exception: %s" % e
+    print("exception: {}".format(e))
     sys.exit(1)

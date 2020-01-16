@@ -1,3 +1,4 @@
+from __future__ import print_function
 from pypoliqqueue import PypoLiqQueue
 from telnetliquidsoap import DummyTelnetLiquidsoap, TelnetLiquidsoap
 
@@ -45,7 +46,7 @@ plq.daemon = True
 plq.start()
 
 
-print "Time now: %s" % datetime.utcnow()
+print("Time now: {:s}".format(datetime.utcnow()))
 
 media_schedule = {}
 
