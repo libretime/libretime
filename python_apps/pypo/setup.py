@@ -1,10 +1,11 @@
+from __future__ import print_function
 from setuptools import setup
 from subprocess import call
 import sys
 import os
 
 script_path = os.path.dirname(os.path.realpath(__file__))
-print script_path
+print(script_path)
 os.chdir(script_path)
 
 # Allows us to avoid installing the upstart init script when deploying on Airtime Pro:
@@ -29,7 +30,7 @@ else:
                   ('/var/tmp/airtime/pypo/files', []),
                   ('/var/tmp/airtime/pypo/tmp', []),
                  ]
-    print data_files
+    print(data_files)
 
 setup(name='airtime-playout',
       version='1.0',
@@ -67,6 +68,6 @@ setup(name='airtime-playout',
 
 # Reload the initctl config so that playout services works
 if data_files:
-    print "Reloading initctl configuration"
+    print("Reloading initctl configuration")
     #call(['initctl', 'reload-configuration'])
-    print "Run \"sudo service airtime-playout start\" and \"sudo service airtime-liquidsoap start\""
+    print("Run \"sudo service airtime-playout start\" and \"sudo service airtime-liquidsoap start\"")

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 import logging
 import json
 import time
@@ -36,7 +37,7 @@ def api_client(logger):
 try:
     config = ConfigObj('/etc/airtime/airtime.conf')
 except Exception, e:
-    print ('Error loading config file: %s', e)
+    print('Error loading config file: %s', e)
     sys.exit()
 
 # TODO : add docstrings everywhere in this module

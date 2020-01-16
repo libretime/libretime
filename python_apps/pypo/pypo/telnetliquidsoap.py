@@ -1,3 +1,4 @@
+from __future__ import print_function
 import telnetlib
 from timeout import ls_timeout
 
@@ -302,7 +303,7 @@ class DummyTelnetLiquidsoap:
 
             self.logger.info("Pushing %s to queue %s" % (media_item, queue_id))
             from datetime import datetime
-            print "Time now: %s" % datetime.utcnow()
+            print("Time now: {:s}".format(datetime.utcnow()))
 
             annotation = create_liquidsoap_annotation(media_item)
             self.liquidsoap_mock_queues[queue_id].append(annotation)
@@ -318,7 +319,7 @@ class DummyTelnetLiquidsoap:
 
             self.logger.info("Purging queue %s" % queue_id)
             from datetime import datetime
-            print "Time now: %s" % datetime.utcnow()
+            print("Time now: {:s}".format(datetime.utcnow()))
 
         except Exception:
             raise

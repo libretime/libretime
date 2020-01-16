@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import datetime
 import mutagen
 import mock
@@ -79,8 +80,8 @@ def test_ogg_stereo():
 ''' faac and avconv can't seem to create a proper mono AAC file... ugh
 def test_aac_mono():
     metadata = MetadataAnalyzer.analyze(u'tests/test_data/44100Hz-16bit-mono.m4a')
-    print "Mono AAC metadata:"
-    print metadata
+    print("Mono AAC metadata:")
+    print(metadata)
     check_default_metadata(metadata)
     assert metadata['channels'] == 1
     assert metadata['bit_rate'] == 80000

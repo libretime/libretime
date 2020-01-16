@@ -2,6 +2,7 @@
 """Runs the airtime_analyzer application.
 """
 
+from __future__ import print_function
 import daemon
 import argparse
 import os
@@ -14,7 +15,7 @@ DEFAULT_HTTP_RETRY_PATH = '/tmp/airtime_analyzer_http_retries'
 
 def run():
     '''Entry-point for this application'''
-    print "Airtime Analyzer " + VERSION
+    print("Airtime Analyzer {}".format(VERSION))
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--daemon", help="run as a daemon", action="store_true")
     parser.add_argument("--debug", help="log full debugging output", action="store_true")
@@ -57,8 +58,8 @@ def check_if_media_monitor_is_running():
         try:
             process_name = open(os.path.join('/proc', pid, 'cmdline'), 'rb').read()
             if 'media_monitor.py' in process_name:
-                print "Error: This process conflicts with media_monitor, and media_monitor is running."
-                print "       Please terminate the running media_monitor.py process and try again."
+                print("Error: This process conflicts with media_monitor, and media_monitor is running.")
+                print("       Please terminate the running media_monitor.py process and try again.")
                 exit(1)
         except IOError: # proc has already terminated
             continue
