@@ -3,13 +3,13 @@
 import logging
 import threading
 import multiprocessing
-import Queue
-import ConfigParser
-from metadata_analyzer import MetadataAnalyzer
-from filemover_analyzer import FileMoverAnalyzer
-from cuepoint_analyzer import CuePointAnalyzer
-from replaygain_analyzer import ReplayGainAnalyzer
-from playability_analyzer import *
+import queue
+import configparser
+from .metadata_analyzer import MetadataAnalyzer
+from .filemover_analyzer import FileMoverAnalyzer
+from .cuepoint_analyzer import CuePointAnalyzer
+from .replaygain_analyzer import ReplayGainAnalyzer
+from .playability_analyzer import *
 
 class AnalyzerPipeline:
     """ Analyzes and imports an audio file into the Airtime library. 
@@ -46,15 +46,15 @@ class AnalyzerPipeline:
         AnalyzerPipeline.python_logger_deadlock_workaround()
 
         try:
-            if not isinstance(queue, Queue.Queue):
+            if not isinstance(queue, queue.Queue):
                 raise TypeError("queue must be a Queue.Queue()")
-            if not isinstance(audio_file_path, unicode):
+            if not isinstance(audio_file_path, str):
                 raise TypeError("audio_file_path must be unicode. Was of type " + type(audio_file_path).__name__ + " instead.")
-            if not isinstance(import_directory, unicode):
+            if not isinstance(import_directory, str):
                 raise TypeError("import_directory must be unicode. Was of type " + type(import_directory).__name__ + " instead.")
-            if not isinstance(original_filename, unicode):
+            if not isinstance(original_filename, str):
                 raise TypeError("original_filename must be unicode. Was of type " + type(original_filename).__name__ + " instead.")
-            if not isinstance(file_prefix, unicode):
+            if not isinstance(file_prefix, str):
                 raise TypeError("file_prefix must be unicode. Was of type " + type(file_prefix).__name__ + " instead.")
 
 
@@ -91,7 +91,7 @@ class AnalyzerPipeline:
     @staticmethod
     def python_logger_deadlock_workaround():
         # Workaround for: http://bugs.python.org/issue6721#msg140215
-        logger_names = logging.Logger.manager.loggerDict.keys()
+        logger_names = list(logging.Logger.manager.loggerDict.keys())
         logger_names.append(None) # Root logger
         for name in logger_names:
             for handler in logging.getLogger(name).handlers:

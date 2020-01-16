@@ -6,9 +6,9 @@ import select
 import signal
 import logging 
 import multiprocessing 
-import Queue
-from analyzer_pipeline import AnalyzerPipeline
-from status_reporter import StatusReporter
+import queue
+from .analyzer_pipeline import AnalyzerPipeline
+from .status_reporter import StatusReporter
 
 EXCHANGE = "airtime-uploads"
 EXCHANGE_TYPE = "topic"
@@ -198,7 +198,7 @@ class MessageListener:
             if callback_url: # If we got an invalid message, there might be no callback_url in the JSON
                 # Report this as a failed upload to the File Upload REST API.
                 StatusReporter.report_failure_to_callback_url(callback_url, api_key, import_status=2,
-                                                              reason=u'An error occurred while importing this file')
+                                                              reason='An error occurred while importing this file')
             
 
         else:
@@ -224,7 +224,7 @@ class MessageListener:
         '''
         metadata = {}
 
-        q = Queue.Queue()
+        q = queue.Queue()
         try:
             AnalyzerPipeline.run_analysis(q, audio_file_path, import_directory, original_filename, storage_backend, file_prefix)
             metadata = q.get()

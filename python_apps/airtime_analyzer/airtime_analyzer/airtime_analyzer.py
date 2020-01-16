@@ -5,12 +5,12 @@ import logging.handlers
 import sys
 import signal
 import traceback
-import config_file
+from . import config_file
 from functools import partial
-from metadata_analyzer import MetadataAnalyzer
-from replaygain_analyzer import ReplayGainAnalyzer
-from status_reporter import StatusReporter 
-from message_listener import MessageListener
+from .metadata_analyzer import MetadataAnalyzer
+from .replaygain_analyzer import ReplayGainAnalyzer
+from .status_reporter import StatusReporter 
+from .message_listener import MessageListener
 
 
 class AirtimeAnalyzerServer:
@@ -76,7 +76,7 @@ class AirtimeAnalyzerServer:
     def dump_stacktrace(stack):
         ''' Dump a stacktrace for all threads '''
         code = []
-        for threadId, stack in sys._current_frames().items():
+        for threadId, stack in list(sys._current_frames().items()):
             code.append("\n# ThreadID: %s" % threadId)
             for filename, lineno, name, line in traceback.extract_stack(stack):
                 code.append('File: "%s", line %d, in %s' % (filename, lineno, name))

@@ -6,7 +6,7 @@ import wave
 import logging
 import os
 import hashlib
-from analyzer import Analyzer
+from .analyzer import Analyzer
 
 class MetadataAnalyzer(Analyzer):
 
@@ -18,7 +18,7 @@ class MetadataAnalyzer(Analyzer):
                 filename: The path to the audio file to extract metadata from.
                 metadata: A dictionary that the extracted metadata will be added to. 
         '''
-        if not isinstance(filename, unicode):
+        if not isinstance(filename, str):
             raise TypeError("filename must be unicode. Was of type " + type(filename).__name__)
         if not isinstance(metadata, dict):
             raise TypeError("metadata must be a dict. Was of type " + type(metadata).__name__)
@@ -104,11 +104,11 @@ class MetadataAnalyzer(Analyzer):
             if isinstance(track_number, list): # Sometimes tracknumber is a list, ugh 
                 track_number = track_number[0]
             track_number_tokens = track_number 
-            if u'/' in track_number:
-                track_number_tokens = track_number.split(u'/')
+            if '/' in track_number:
+                track_number_tokens = track_number.split('/')
                 track_number = track_number_tokens[0]
-            elif u'-' in track_number:
-                track_number_tokens = track_number.split(u'-')
+            elif '-' in track_number:
+                track_number_tokens = track_number.split('-')
                 track_number = track_number_tokens[0]
             metadata["track_number"] = track_number
             track_total = track_number_tokens[1]
@@ -146,7 +146,7 @@ class MetadataAnalyzer(Analyzer):
             #'mime_type':    'mime',
         }
 
-        for mutagen_tag, airtime_tag in mutagen_to_airtime_mapping.iteritems():
+        for mutagen_tag, airtime_tag in mutagen_to_airtime_mapping.items():
             try:
                 metadata[airtime_tag] = audio_file[mutagen_tag]
 

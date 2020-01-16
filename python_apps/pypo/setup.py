@@ -17,7 +17,7 @@ else:
     for root, dirnames, filenames in os.walk('pypo'):
         for filename in filenames:
             pypo_files.append(os.path.join(root, filename))
-        
+
     data_files = [
                   ('/etc/init', ['install/upstart/airtime-playout.conf.template']),
                   ('/etc/init', ['install/upstart/airtime-liquidsoap.conf.template']),
@@ -55,12 +55,11 @@ setup(name='airtime-playout',
           'future',
           'kombu',
           'mutagen',
-          'poster',
+          'poster3',
           'PyDispatcher',
           'pyinotify',
           'pytz',
           'requests',
-          'wsgiref',
           'defusedxml'
       ],
       zip_safe=False,

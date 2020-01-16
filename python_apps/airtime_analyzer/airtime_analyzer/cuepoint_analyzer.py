@@ -3,7 +3,7 @@ import logging
 import traceback
 import json
 import datetime
-from analyzer import Analyzer
+from .analyzer import Analyzer
 
 
 class CuePointAnalyzer(Analyzer):

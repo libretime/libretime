@@ -1,6 +1,6 @@
-from __future__ import print_function
+
 import telnetlib
-from timeout import ls_timeout
+from .timeout import ls_timeout
 
 def create_liquidsoap_annotation(media):
     # We need liq_start_next value in the annotate. That is the value that controls overlap duration of crossfade.
@@ -140,7 +140,7 @@ class TelnetLiquidsoap:
             tn.write("exit\n")
             self.logger.debug(tn.read_all())
 
-        except Exception, e:
+        except Exception as e:
             self.logger.error(str(e))
         finally:
             self.telnet_lock.release()
@@ -159,7 +159,7 @@ class TelnetLiquidsoap:
             tn.write("exit\n")
             self.logger.debug(tn.read_all())
 
-        except Exception, e:
+        except Exception as e:
             self.logger.error(str(e))
         finally:
             self.telnet_lock.release()
@@ -182,7 +182,7 @@ class TelnetLiquidsoap:
             self.logger.debug(tn.read_all())
 
             self.current_prebuffering_stream_id = None
-        except Exception, e:
+        except Exception as e:
             self.logger.error(str(e))
         finally:
             self.telnet_lock.release()
@@ -205,7 +205,7 @@ class TelnetLiquidsoap:
             self.logger.debug(tn.read_all())
 
             self.current_prebuffering_stream_id = media_item['row_id']
-        except Exception, e:
+        except Exception as e:
             self.logger.error(str(e))
         finally:
             self.telnet_lock.release()
@@ -225,7 +225,7 @@ class TelnetLiquidsoap:
             self.logger.debug("stream_id: %s" % stream_id)
 
             return stream_id
-        except Exception, e:
+        except Exception as e:
             self.logger.error(str(e))
         finally:
             self.telnet_lock.release()
@@ -246,7 +246,7 @@ class TelnetLiquidsoap:
             tn.write(command)
             tn.write('exit\n')
             tn.read_all()
-        except Exception, e:
+        except Exception as e:
             self.logger.error(traceback.format_exc())
         finally:
             self.telnet_lock.release()
@@ -263,7 +263,7 @@ class TelnetLiquidsoap:
 
             tn.write('exit\n')
             tn.read_all()
-        except Exception, e:
+        except Exception as e:
             self.logger.error(str(e))
         finally:
             self.telnet_lock.release()

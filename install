@@ -465,7 +465,7 @@ while :; do
             ;;
         --no-rabbitmq)
             skip_rabbitmq=1
-            ;;            
+            ;;
         --)
             shift
             break
@@ -923,22 +923,12 @@ loud "\n-----------------------------------------------------"
 loud "          * Installing Airtime Services *            "
 loud "-----------------------------------------------------"
 
-verbose "\n * Installing necessary python services..."
-loudCmd "pip install setuptools --upgrade"
-loudCmd "pip install zipp==1.0.0"
-verbose "...Done"
-
-# Ubuntu Trusty and Debian Wheezy needs a workaround for python version SSL downloads
-# This affects all python installs where python < 2.7.9
-python_version=$(python --version 2>&1 | awk '{ print $2 }')
+python_version=$(python3 --version 2>&1 | awk '{ print $2 }')
 verbose "Detected Python version: $python_version"
-# Convert version so each segment is zero padded for easy comparison
-python_version_formatted=$(awk 'BEGIN {FS = "."} {printf "%03d.%03d.%03d\n", $1,$2,$3}' <<< $python_version)
-if [[ "$python_version_formatted" < "002.007.009" ]]; then
-    verbose "\n * Installing pyOpenSSL and ca db for SNI support..."
-    loudCmd "pip install pyOpenSSL cryptography idna certifi --upgrade"
-    verbose "...Done"
-fi
+
+verbose "\n * Installing necessary python services..."
+loudCmd "pip3 install setuptools --upgrade"
+verbose "...Done"
 
 verbose "\n * Creating /run/airtime..."
 mkdir -p /run/airtime
@@ -960,11 +950,11 @@ if [ ! -d /var/log/airtime ]; then
 fi
 
 verbose "\n * Installing API client..."
-loudCmd "python ${AIRTIMEROOT}/python_apps/api_clients/setup.py install --install-scripts=/usr/bin"
+loudCmd "python3 ${AIRTIMEROOT}/python_apps/api_clients/setup.py install --install-scripts=/usr/bin"
 verbose "...Done"
 
 verbose "\n * Installing pypo and liquidsoap..."
-loudCmd "python ${AIRTIMEROOT}/python_apps/pypo/setup.py install --install-scripts=/usr/bin --no-init-script"
+loudCmd "python3 ${AIRTIMEROOT}/python_apps/pypo/setup.py install --install-scripts=/usr/bin --no-init-script"
 loudCmd "mkdir -p /var/log/airtime/{pypo,pypo-liquidsoap} /var/tmp/airtime/pypo/{cache,files,tmp} /var/tmp/airtime/show-recorder/"
 loudCmd "chown -R ${web_user}:${web_user} /var/log/airtime/{pypo,pypo-liquidsoap} /var/tmp/airtime/pypo/{cache,files,tmp} /var/tmp/airtime/show-recorder/"
 systemInitInstall airtime-liquidsoap $web_user
@@ -972,7 +962,7 @@ systemInitInstall airtime-playout $web_user
 verbose "...Done"
 
 verbose "\n * Installing airtime-celery..."
-loudCmd "python ${AIRTIMEROOT}/python_apps/airtime-celery/setup.py install --no-init-script"
+loudCmd "python3 ${AIRTIMEROOT}/python_apps/airtime-celery/setup.py install --no-init-script"
 # Create the Celery user
 if $is_centos_dist; then
     loudCmd "id celery 2>/dev/null || adduser --no-create-home -c 'LibreTime Celery' -r celery || true"
@@ -988,7 +978,7 @@ systemInitInstall airtime-celery
 verbose "...Done"
 
 verbose "\n * Installing airtime_analyzer..."
-loudCmd "python ${AIRTIMEROOT}/python_apps/airtime_analyzer/setup.py install --install-scripts=/usr/bin --no-init-script"
+loudCmd "python3 ${AIRTIMEROOT}/python_apps/airtime_analyzer/setup.py install --install-scripts=/usr/bin --no-init-script"
 systemInitInstall airtime_analyzer $web_user
 verbose "...Done"
 

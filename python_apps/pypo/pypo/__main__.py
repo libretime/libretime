@@ -1,7 +1,7 @@
 """
 Python part of radio playout (pypo)
 """
-from __future__ import absolute_import
+
 
 import locale
 import logging
@@ -16,10 +16,11 @@ from api_clients import api_client
 from configobj import ConfigObj
 from datetime import datetime
 from optparse import OptionParser
+import importlib
 try:
     from queue import Queue
 except ImportError:  # Python 2.7.5 (CentOS 7)
-    from Queue import Queue
+    from queue import Queue
 from threading import Lock
 
 from .listenerstat import ListenerStat
@@ -119,7 +120,7 @@ try:
     consoleHandler.setFormatter(logFormatter)
     rootLogger.addHandler(consoleHandler)
 except Exception as e:
-    print("Couldn't configure logging", e)
+    print(("Couldn't configure logging", e))
     sys.exit(1)
 
 
@@ -160,7 +161,7 @@ def configure_locale():
             "New locale set to: %s", locale.setlocale(locale.LC_ALL, new_locale)
         )
 
-    reload(sys)
+    importlib.reload(sys)
     sys.setdefaultencoding("UTF-8")
     current_locale_encoding = locale.getlocale()[1].lower()
     logger.debug("sys default encoding %s", sys.getdefaultencoding())

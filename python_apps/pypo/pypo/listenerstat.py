@@ -1,5 +1,5 @@
 from threading import Thread
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import defusedxml.minidom
 import base64
 from datetime import datetime
@@ -44,13 +44,13 @@ class ListenerStat(Thread):
             user_agent = "Mozilla/5.0 (Linux; rv:22.0) Gecko/20130405 Firefox/22.0"
             header["User-Agent"] = user_agent
 
-        req = urllib2.Request(
+        req = urllib.request.Request(
             #assuming that the icecast stats path is /admin/stats.xml
             #need to fix this
             url=url,
             headers=header)
 
-        f = urllib2.urlopen(req, timeout=ListenerStat.HTTP_REQUEST_TIMEOUT)
+        f = urllib.request.urlopen(req, timeout=ListenerStat.HTTP_REQUEST_TIMEOUT)
         document = f.read()
 
         return document
@@ -109,7 +109,7 @@ class ListenerStat(Thread):
         #Note that there can be optimizations done, since if all three
         #streams are the same server, we will still initiate 3 separate
         #connections
-        for k, v in stream_parameters.items():
+        for k, v in list(stream_parameters.items()):
             if v["enable"] == 'true':
                 try:
                     if v["output"] == "icecast":
@@ -146,7 +146,7 @@ class ListenerStat(Thread):
 
                 if stats:
                     self.push_stream_stats(stats)
-            except Exception, e:
+            except Exception as e:
                 self.logger.error('Exception: %s', e)
 
             time.sleep(120)

@@ -31,12 +31,11 @@ setup(name='airtime_analyzer',
       install_requires=[
           'mutagen>=1.41.1', # got rid of specific version requirement 
           'pika',
-          'daemon',
           'file-magic',
           'nose',
           'coverage',
           'mock',
-          'python-daemon==1.6',
+          'python-daemon',
           'requests>=2.7.0',
           'rgain3',
           # These next 3 are required for requests to support SSL with SNI. Learned this the hard way...

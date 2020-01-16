@@ -6,7 +6,7 @@ import os, errno
 import time
 import uuid 
 
-from analyzer import Analyzer
+from .analyzer import Analyzer
 
 class FileMoverAnalyzer(Analyzer):
     """This analyzer copies a file over from a temporary directory (stor/organize) 
@@ -29,11 +29,11 @@ class FileMoverAnalyzer(Analyzer):
                original_filename: The filename of the file when it was uploaded to Airtime.
                metadata: A dictionary where the "full_path" of where the file is moved to will be added.
         """
-        if not isinstance(audio_file_path, unicode):
+        if not isinstance(audio_file_path, str):
             raise TypeError("audio_file_path must be unicode. Was of type " + type(audio_file_path).__name__)
-        if not isinstance(import_directory, unicode):
+        if not isinstance(import_directory, str):
             raise TypeError("import_directory must be unicode. Was of type " + type(import_directory).__name__)
-        if not isinstance(original_filename, unicode):
+        if not isinstance(original_filename, str):
             raise TypeError("original_filename must be unicode. Was of type " + type(original_filename).__name__)
         if not isinstance(metadata, dict):
             raise TypeError("metadata must be a dict. Was of type " + type(metadata).__name__)
@@ -46,9 +46,9 @@ class FileMoverAnalyzer(Analyzer):
         max_file_len = 48
         final_file_path = import_directory
         orig_file_basename, orig_file_extension = os.path.splitext(original_filename)
-        if metadata.has_key("artist_name"):
+        if "artist_name" in metadata:
             final_file_path += "/" + metadata["artist_name"][0:max_dir_len] # truncating with array slicing
-        if metadata.has_key("album_title"):
+        if "album_title" in metadata:
             final_file_path += "/" + metadata["album_title"][0:max_dir_len]
         # Note that orig_file_extension includes the "." already
         final_file_path += "/" + orig_file_basename[0:max_file_len] + orig_file_extension

@@ -13,7 +13,7 @@ try:
     tn.write('exit\n')
     tn.read_all()
 
-except Exception, e:
-    print('Error loading config file: %s', e)
+except Exception as e:
+    print(('Error loading config file: %s', e))
     sys.exit()
 

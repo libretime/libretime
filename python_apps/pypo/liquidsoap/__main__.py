@@ -1,10 +1,10 @@
 """ Runs Airtime liquidsoap
 """
 
-from __future__ import print_function
+
 import argparse
 import os
-import generate_liquidsoap_cfg
+from . import generate_liquidsoap_cfg
 import logging
 import subprocess
 
