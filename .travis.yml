@@ -43,6 +43,7 @@ addons:
   apt:
     packages:
     - silan
+    - libgirepository1.0-dev
     - liquidsoap
     - liquidsoap-plugin-mad
     - liquidsoap-plugin-taglib
