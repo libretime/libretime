@@ -120,7 +120,7 @@ try:
     consoleHandler.setFormatter(logFormatter)
     rootLogger.addHandler(consoleHandler)
 except Exception as e:
-    print(("Couldn't configure logging", e))
+    print("Couldn't configure logging: {}".format(e))
     sys.exit(1)
 
 

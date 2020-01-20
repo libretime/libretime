@@ -37,7 +37,7 @@ def api_client(logger):
 try:
     config = ConfigObj('/etc/airtime/airtime.conf')
 except Exception as e:
-    print(('Error loading config file: %s', e))
+    print("Error loading config file: {}".format(e))
     sys.exit()
 
 # TODO : add docstrings everywhere in this module
@@ -95,7 +95,7 @@ class ShowRecorder(Thread):
 
         self.logger.info("starting record")
         self.logger.info("command " + command)
- 
+
         self.p = Popen(args,stdout=PIPE,stderr=PIPE)
 
         #blocks at the following line until the child process
@@ -131,7 +131,7 @@ class ShowRecorder(Thread):
         register_openers()
 
         # files is what requests actually expects
-        files = {'file': open(filepath, "rb"), 'name': filename, 'show_instance': str(self.show_instance)}
+        files = {'file': open(filepath, "rb"), 'name': filename, 'show_instance': self.show_instance}
 
         self.api_client.upload_recorded_show(files, self.show_instance)
 
@@ -153,7 +153,7 @@ class ShowRecorder(Thread):
             recorded_file['title'] = "%s-%s-%s" % (self.show_name,
                     full_date, full_time)
             #You cannot pass ints into the metadata of a file. Even tracknumber needs to be a string
-            recorded_file['tracknumber'] = str(self.show_instance)
+            recorded_file['tracknumber'] = self.show_instance
             recorded_file.save()
 
         except Exception as e:
@@ -246,11 +246,11 @@ class Recorder(Thread):
                 self.logger.debug("Next show %s", next_show)
                 self.logger.debug("Now %s", tnow)
         return out
-    
+
     def cancel_recording(self):
         self.sr.cancel_recording()
         self.sr = None
-    
+
     def currently_recording(self):
         if self.sr is not None and self.sr.is_recording():
             return True
@@ -278,23 +278,23 @@ class Recorder(Thread):
                 start_time_formatted = '%(year)d-%(month)02d-%(day)02d %(hour)02d:%(min)02d:%(sec)02d' % \
                     {'year': start_time_on_server.year, 'month': start_time_on_server.month, 'day': start_time_on_server.day, \
                         'hour': start_time_on_server.hour, 'min': start_time_on_server.minute, 'sec': start_time_on_server.second}
-                    
-                
+
+
                 seconds_waiting = 0
-                
+
                 #avoiding CC-5299
                 while(True):
                     if self.currently_recording():
                         self.logger.info("Previous record not finished, sleeping 100ms")
                         seconds_waiting = seconds_waiting + 0.1
-                        time.sleep(0.1)   
+                        time.sleep(0.1)
                     else:
                         show_length_seconds = show_length.seconds - seconds_waiting
-                        
+
                         self.sr = ShowRecorder(show_instance, show_name, show_length_seconds, start_time_formatted)
                         self.sr.start()
                         break
-                    
+
                 #remove show from shows to record.
                 del self.shows_to_record[start_time]
                 #self.time_till_next_show = self.get_time_till_next_show()

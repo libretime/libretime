@@ -344,20 +344,21 @@ class PypoFetch(Thread):
                 media_item = media[key]
                 if (media_item['type'] == 'file'):
                     fileExt = self.sanity_check_media_item(media_item)
-                    dst = os.path.join(download_dir, str(media_item['id']) + str(fileExt))
+                    dst = os.path.join(download_dir, media_item['id'] + fileExt)
                     media_item['dst'] = dst
                     media_item['file_ready'] = False
                     media_filtered[key] = media_item
 
-                media_item['start'] = datetime.strptime(media_item['start'], 
+                media_item['start'] = datetime.strptime(media_item['start'],
                         "%Y-%m-%d-%H-%M-%S")
-                media_item['end'] = datetime.strptime(media_item['end'], 
+                media_item['end'] = datetime.strptime(media_item['end'],
                         "%Y-%m-%d-%H-%M-%S")
                 media_copy[key] = media_item
 
 
             self.media_prepare_queue.put(copy.copy(media_filtered))
-        except Exception as e: self.logger.error("%s", e)
+        except Exception as e:
+            self.logger.error(e)
 
         # Send the data to pypo-push
         self.logger.debug("Pushing to pypo-push")
@@ -365,8 +366,10 @@ class PypoFetch(Thread):
 
 
         # cleanup
-        try: self.cache_cleanup(media)
-        except Exception as e: self.logger.error("%s", e)
+        try:
+            self.cache_cleanup(media)
+        except Exception as e:
+            self.logger.error(e)
 
     #do basic validation of file parameters. Useful for debugging
     #purposes
@@ -408,7 +411,7 @@ class PypoFetch(Thread):
         for mkey in media:
             media_item = media[mkey]
             if media_item['type'] == 'file':
-                scheduled_file_set.add(str(media_item["id"]) + str(media_item["file_ext"]))
+                scheduled_file_set.add(media_item["id"] + media_item["file_ext"])
 
         expired_files = cached_file_set - scheduled_file_set
 

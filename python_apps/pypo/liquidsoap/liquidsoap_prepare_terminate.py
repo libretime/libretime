@@ -14,6 +14,6 @@ try:
     tn.read_all()
 
 except Exception as e:
-    print(('Error loading config file: %s', e))
+    print("Error loading config file: {}".format(e))
     sys.exit()
 
