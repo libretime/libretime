@@ -1,4 +1,4 @@
-dist: trusty
+dist: xenial
 language: php
 php:
 # the latest and greatest, has some issues that are excluded below in matrix.allow_failures
