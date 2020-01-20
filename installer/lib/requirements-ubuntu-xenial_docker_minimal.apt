@@ -53,6 +53,7 @@ python3-gst-1.0
 python3-pika
 python3-pip
 python3-virtualenv
+python3-cairo
 silan
 sysvinit-utils
 unzip
