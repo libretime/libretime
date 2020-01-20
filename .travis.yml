@@ -64,7 +64,7 @@ install:
     fi
 - >
     if [[ "$PYTHON" == true ]]; then
-      pyenv local 3.6
+      pyenv local 3.7
       pip3 install --user mkdocs rgain3
       pushd python_apps/airtime_analyzer
       python3 setup.py install --dry-run --no-init-script
