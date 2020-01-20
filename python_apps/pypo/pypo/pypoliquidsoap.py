@@ -125,7 +125,7 @@ class PypoLiquidsoap():
             scheduled_now_webstream = \
                     [x for x in scheduled_now if x["type"] == eventtypes.STREAM_OUTPUT_START]
 
-            schedule_ids = set([x["row_id"] for x in scheduled_now_files])
+            schedule_ids = {x["row_id"] for x in scheduled_now_files]}
 
             row_id_map = {}
             liq_queue_ids = set()
@@ -199,7 +199,7 @@ class PypoLiquidsoap():
         return media_item["type"] == eventtypes.FILE
 
     def clear_queue_tracker(self):
-        for i in list(self.liq_queue_tracker.keys()):
+        for i in self.liq_queue_tracker.keys():
             self.liq_queue_tracker[i] = None
 
     def modify_cue_point(self, link):

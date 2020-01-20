@@ -52,6 +52,7 @@ addons:
     - liquidsoap-plugin-faad
     - liquidsoap-plugin-vorbis
     - liquidsoap-plugin-opus
+    - python3
     - python3-nose
     - python3-gst-1.0
     - python3-magic

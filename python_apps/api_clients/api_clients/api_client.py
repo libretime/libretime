@@ -8,7 +8,6 @@
 ###############################################################################
 import sys
 import time
-import urllib.request, urllib.parse, urllib.error
 import urllib.request, urllib.error, urllib.parse
 import requests
 import socket 
@@ -19,26 +18,6 @@ import traceback
 from configobj import ConfigObj
 
 AIRTIME_API_VERSION = "1.1"
-
-
-# TODO : Place these functions in some common module. Right now, media
-# monitor uses the same functions and it would be better to reuse them
-# instead of copy pasting them around
-
-def to_unicode(obj, encoding='utf-8'):
-    if isinstance(obj, str):
-        if not isinstance(obj, str):
-            obj = str(obj, encoding)
-    return obj
-
-def encode_to(obj, encoding='utf-8'):
-    if isinstance(obj, str):
-        obj = obj.encode(encoding)
-    return obj
-
-def convert_dict_value_to_utf8(md):
-    #list comprehension to convert all values of md to utf-8
-    return dict([(item[0], encode_to(item[1], "utf-8")) for item in list(md.items())])
 
 
 api_config = {}
@@ -407,7 +386,7 @@ class AirtimeApiClient(object):
         # Note that we must prefix every key with: mdX where x is a number
         # Is there a way to format the next line a little better? The
         # parenthesis make the code almost unreadable
-        md_list = dict((("md%d" % i), json.dumps(convert_dict_value_to_utf8(md))) \
+        md_list = dict((("md%d" % i), json.dumps(md)) \
                 for i,md in enumerate(valid_actions))
         # For testing we add the following "dry" parameter to tell the
         # controller not to actually do any changes

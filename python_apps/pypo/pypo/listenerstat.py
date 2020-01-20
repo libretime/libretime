@@ -109,7 +109,7 @@ class ListenerStat(Thread):
         #Note that there can be optimizations done, since if all three
         #streams are the same server, we will still initiate 3 separate
         #connections
-        for k, v in list(stream_parameters.items()):
+        for k, v in stream_parameters.items():
             if v["enable"] == 'true':
                 try:
                     if v["output"] == "icecast":
