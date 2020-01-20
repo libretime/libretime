@@ -7,7 +7,7 @@ set -xe
 python3 --version
 
 pushd python_apps/airtime_analyzer
-pyenv local 3.4
+pyenv local 3.6
 pip3 install -e .
 nosetests
 popd
