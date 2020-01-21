@@ -64,7 +64,7 @@ class CuePointAnalyzer(Analyzer):
         except OSError as e: # silan was not found
             logging.warn("Failed to run: %s - %s. %s" % (command[0], e.strerror, "Do you have silan installed?"))
         except subprocess.CalledProcessError as e: # silan returned an error code
-            logging.warn("%s %s %s", e.cmd, e.message, e.returncode)
+            logging.warn("%s %s %s", e.cmd, e.output, e.returncode)
         except Exception as e:
             logging.warn(e)
 
