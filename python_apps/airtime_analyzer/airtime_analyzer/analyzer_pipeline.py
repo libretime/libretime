@@ -1,9 +1,9 @@
-""" Analyzes and imports an audio file into the Airtime library. 
+""" Analyzes and imports an audio file into the Airtime library.
 """
 import logging
 import threading
 import multiprocessing
-import queue
+from queue import Queue
 import configparser
 from .metadata_analyzer import MetadataAnalyzer
 from .filemover_analyzer import FileMoverAnalyzer
@@ -12,8 +12,8 @@ from .replaygain_analyzer import ReplayGainAnalyzer
 from .playability_analyzer import *
 
 class AnalyzerPipeline:
-    """ Analyzes and imports an audio file into the Airtime library. 
-    
+    """ Analyzes and imports an audio file into the Airtime library.
+
         This currently performs metadata extraction (eg. gets the ID3 tags from an MP3),
         then moves the file to the Airtime music library (stor/imported), and returns
         the results back to the parent process. This class is used in an isolated process
@@ -26,27 +26,27 @@ class AnalyzerPipeline:
     @staticmethod
     def run_analysis(queue, audio_file_path, import_directory, original_filename, storage_backend, file_prefix):
         """Analyze and import an audio file, and put all extracted metadata into queue.
-        
+
         Keyword arguments:
             queue: A multiprocessing.queues.Queue which will be used to pass the
                    extracted metadata back to the parent process.
             audio_file_path: Path on disk to the audio file to analyze.
-            import_directory: Path to the final Airtime "import" directory where 
+            import_directory: Path to the final Airtime "import" directory where
                               we will move the file.
-            original_filename: The original filename of the file, which we'll try to 
-                               preserve. The file at audio_file_path typically has a 
+            original_filename: The original filename of the file, which we'll try to
+                               preserve. The file at audio_file_path typically has a
                                temporary randomly generated name, which is why we want
-                               to know what the original name was.  
+                               to know what the original name was.
             storage_backend: String indicating the storage backend (amazon_s3 or file)
             file_prefix:
         """
-        # It is super critical to initialize a separate log file here so that we 
+        # It is super critical to initialize a separate log file here so that we
         # don't inherit logging/locks from the parent process. Supposedly
         # this can lead to Bad Things (deadlocks): http://bugs.python.org/issue6721
         AnalyzerPipeline.python_logger_deadlock_workaround()
 
         try:
-            if not isinstance(queue, queue.Queue):
+            if not isinstance(queue, Queue):
                 raise TypeError("queue must be a Queue.Queue()")
             if not isinstance(audio_file_path, str):
                 raise TypeError("audio_file_path must be unicode. Was of type " + type(audio_file_path).__name__ + " instead.")
@@ -72,7 +72,7 @@ class AnalyzerPipeline:
 
             metadata["import_status"] = 0 # Successfully imported
 
-            # Note that the queue we're putting the results into is our interprocess communication 
+            # Note that the queue we're putting the results into is our interprocess communication
             # back to the main process.
 
             # Pass all the file metadata back to the main analyzer process, which then passes

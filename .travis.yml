@@ -9,8 +9,6 @@ php:
 - 7.0
 # folks who prefer running on 5.x should be using 5.6 in most cases, 5.4 is no in the matrix since noone should use it
 - 5.6
-# this is in for centos support, it's still the default on CentOS 7.3 and there were some lang changes after 5.4
-- 5.4
 services:
 - postgresql
 - rabbitmq
@@ -44,6 +42,12 @@ addons:
     packages:
     - silan
     - libgirepository1.0-dev
+    - gir1.2-gstreamer-1.0
+    - gstreamer1.0-plugins-base
+    - gstreamer1.0-plugins-good
+    - gstreamer1.0-plugins-bad
+    - gstreamer1.0-plugins-ugly
+    - libcairo2-dev
     - liquidsoap
     - liquidsoap-plugin-mad
     - liquidsoap-plugin-taglib
