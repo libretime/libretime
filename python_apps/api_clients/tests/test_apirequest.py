@@ -4,7 +4,7 @@ from mock import MagicMock, patch
 from api_clients.api_client import ApcUrl, ApiRequest
 
 class ResponseInfo:
-    def getheader(self, name):
+    def get_content_type(self):
         return 'application/json'
 
 class TestApiRequest(unittest.TestCase):

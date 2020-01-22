@@ -122,7 +122,7 @@ class ApiRequest(object):
         try:
             req = urllib.request.Request(final_url, _post_data)
             f = urllib.request.urlopen(req, timeout=ApiRequest.API_HTTP_REQUEST_TIMEOUT)
-            content_type = f.info().getheader('Content-Type')
+            content_type = f.info().get_content_type()
             response = f.read()
         #Everything that calls an ApiRequest should be catching URLError explicitly
         #(according to the other comments in this file and a cursory grep through the code)
