@@ -123,59 +123,6 @@ except Exception as e:
     print("Couldn't configure logging: {}".format(e))
     sys.exit(1)
 
-
-def configure_locale():
-    """
-    Silly hacks to force Python 2.x to run in UTF-8 mode. Not portable at all,
-    however serves our purpose at the moment.
-
-    More information available here:
-    http://stackoverflow.com/questions/3828723/why-we-need-sys-setdefaultencodingutf-8-in-a-py-script
-    """
-    logger.debug("Before %s", locale.nl_langinfo(locale.CODESET))
-    current_locale = locale.getlocale()
-
-    if current_locale[1] is None:
-        logger.debug("No locale currently set. Attempting to get default locale.")
-        default_locale = locale.getdefaultlocale()
-
-        if default_locale[1] is None:
-            logger.debug(
-                "No default locale exists. Let's try loading from \
-                    /etc/default/locale"
-            )
-            if os.path.exists("/etc/default/locale"):
-                locale_config = ConfigObj("/etc/default/locale")
-                lang = locale_config.get("LANG")
-                new_locale = lang
-            else:
-                logger.error(
-                    "/etc/default/locale could not be found! Please \
-                        run 'sudo update-locale' from command-line."
-                )
-                sys.exit(1)
-        else:
-            new_locale = default_locale
-
-        logger.info(
-            "New locale set to: %s", locale.setlocale(locale.LC_ALL, new_locale)
-        )
-
-    importlib.reload(sys)
-    sys.setdefaultencoding("UTF-8")
-    current_locale_encoding = locale.getlocale()[1].lower()
-    logger.debug("sys default encoding %s", sys.getdefaultencoding())
-    logger.debug("After %s", locale.nl_langinfo(locale.CODESET))
-
-    if current_locale_encoding not in ["utf-8", "utf8"]:
-        logger.error(
-            "Need a UTF-8 locale. Currently '%s'. Exiting..." % current_locale_encoding
-        )
-        sys.exit(1)
-
-
-configure_locale()
-
 # loading config file
 try:
     config = ConfigObj("/etc/airtime/airtime.conf")

@@ -15,9 +15,6 @@ import re
 
 from configobj import ConfigObj
 
-from poster.encode import multipart_encode
-from poster.streaminghttp import register_openers
-
 from subprocess import Popen
 from subprocess import PIPE
 from threading import Thread
@@ -126,9 +123,6 @@ class ShowRecorder(Thread):
     def upload_file(self, filepath):
 
         filename = os.path.split(filepath)[1]
-
-        # Register the streaming http handlers with urllib2
-        register_openers()
 
         # files is what requests actually expects
         files = {'file': open(filepath, "rb"), 'name': filename, 'show_instance': self.show_instance}
