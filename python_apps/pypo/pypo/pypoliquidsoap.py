@@ -125,7 +125,7 @@ class PypoLiquidsoap():
             scheduled_now_webstream = \
                     [x for x in scheduled_now if x["type"] == eventtypes.STREAM_OUTPUT_START]
 
-            schedule_ids = {x["row_id"] for x in scheduled_now_files]}
+            schedule_ids = [x["row_id"] for x in scheduled_now_files]
 
             row_id_map = {}
             liq_queue_ids = set()
