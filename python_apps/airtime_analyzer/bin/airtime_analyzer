@@ -23,8 +23,6 @@ def run():
     parser.add_argument("--http-retry-queue-file", help="specify where incompleted HTTP requests will be serialized (default is %s)" % DEFAULT_HTTP_RETRY_PATH)
     args = parser.parse_args()
 
-    check_if_media_monitor_is_running()
-
     #Default config file path
     rmq_config_path = DEFAULT_RMQ_CONFIG_PATH
     http_retry_queue_path = DEFAULT_HTTP_RETRY_PATH
@@ -36,32 +34,12 @@ def run():
     if args.daemon:
         with daemon.DaemonContext():
             aa.AirtimeAnalyzerServer(rmq_config_path=rmq_config_path,
-                                     http_retry_queue_path=http_retry_queue_path, 
+                                     http_retry_queue_path=http_retry_queue_path,
                                      debug=args.debug)
-    else: 
+    else:
         # Run without daemonizing
         aa.AirtimeAnalyzerServer(rmq_config_path=rmq_config_path,
-                                 http_retry_queue_path=http_retry_queue_path, 
+                                 http_retry_queue_path=http_retry_queue_path,
                                  debug=args.debug)
-
-
-def check_if_media_monitor_is_running():
-    """Ensure media_monitor isn't running before we start.
-    
-       We do this because media_monitor will move newly uploaded
-       files into the library on us and screw up the operation of airtime_analyzer.
-       media_monitor is deprecated.
-    """
-    pids = [pid for pid in os.listdir('/proc') if pid.isdigit()]
-
-    for pid in pids:
-        try:
-            process_name = open(os.path.join('/proc', pid, 'cmdline'), 'rb').read()
-            if 'media_monitor.py' in process_name:
-                print("Error: This process conflicts with media_monitor, and media_monitor is running.")
-                print("       Please terminate the running media_monitor.py process and try again.")
-                exit(1)
-        except IOError: # proc has already terminated
-            continue
 
 run()
