@@ -1,7 +1,11 @@
 import unittest
 import json
 from mock import MagicMock, patch
-from .. api_client import ApcUrl, ApiRequest
+from api_clients.api_client import ApcUrl, ApiRequest
+
+class ResponseInfo:
+    def getheader(self, name):
+        return 'application/json'
 
 class TestApiRequest(unittest.TestCase):
     def test_init(self):
@@ -12,8 +16,9 @@ class TestApiRequest(unittest.TestCase):
         ret = json.dumps( {'ok':'ok'} )
         read = MagicMock()
         read.read = MagicMock(return_value=ret)
-        u = '/testing'
-        with patch('urllib2.urlopen') as mock_method:
+        read.info = MagicMock(return_value=ResponseInfo())
+        u = 'http://localhost/testing'
+        with patch('urllib.request.urlopen') as mock_method:
             mock_method.return_value = read
             request = ApiRequest('mm', ApcUrl(u))()
             self.assertEqual(request, json.loads(ret))

@@ -17,17 +17,7 @@ setup(name='api_clients',
       packages=['api_clients'],
       scripts=[],
       install_requires=[
-#           'amqplib',
-#           'anyjson',
-#           'argparse',
         'configobj'
-#           'docopt',
-#           'kombu',
-#           'mutagen',
-#           'poster3',
-#           'PyDispatcher',
-#           'pyinotify',
-#           'pytz',
       ],
       zip_safe=False,
       data_files=[])

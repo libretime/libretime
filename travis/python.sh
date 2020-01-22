@@ -15,11 +15,6 @@ pip3 install -e .
 nosetests
 popd
 
-pushd python_apps/pypo
-pip3 install -e .
-nosetests
-popd
-
 echo "Building docs..."
 mkdocs build --clean -q > /dev/null
 echo -n "done"
