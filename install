@@ -925,6 +925,7 @@ loud "-----------------------------------------------------"
 
 verbose "\n * Installing necessary python services..."
 loudCmd "pip install setuptools --upgrade"
+loudCmd "pip install zipp==1.0.0"
 verbose "...Done"
 
 # Ubuntu Trusty and Debian Wheezy needs a workaround for python version SSL downloads
