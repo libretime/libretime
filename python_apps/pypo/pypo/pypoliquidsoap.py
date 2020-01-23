@@ -97,26 +97,28 @@ class PypoLiquidsoap():
 
 
     def verify_correct_present_media(self, scheduled_now):
-        #verify whether Liquidsoap is currently playing the correct files.
-        #if we find an item that Liquidsoap is not playing, then push it
-        #into one of Liquidsoap's queues. If Liquidsoap is already playing
-        #it do nothing. If Liquidsoap is playing a track that isn't in
-        #currently_playing then stop it.
+        """
+        verify whether Liquidsoap is currently playing the correct files.
+        if we find an item that Liquidsoap is not playing, then push it
+        into one of Liquidsoap's queues. If Liquidsoap is already playing
+        it do nothing. If Liquidsoap is playing a track that isn't in
+        currently_playing then stop it.
 
-        #Check for Liquidsoap media we should source.skip
-        #get liquidsoap items for each queue. Since each queue can only have one
-        #item, we should have a max of 8 items.
+        Check for Liquidsoap media we should source.skip
+        get liquidsoap items for each queue. Since each queue can only have one
+        item, we should have a max of 8 items.
 
-        #2013-03-21-22-56-00_0: {
-        #id: 1,
-        #type: "stream_output_start",
-        #row_id: 41,
-        #uri: "http://stream2.radioblackout.org:80/blackout.ogg",
-        #start: "2013-03-21-22-56-00",
-        #end: "2013-03-21-23-26-00",
-        #show_name: "Untitled Show",
-        #independent_event: true
-        #},
+        2013-03-21-22-56-00_0: {
+        id: 1,
+        type: "stream_output_start",
+        row_id: 41,
+        uri: "http://stream2.radioblackout.org:80/blackout.ogg",
+        start: "2013-03-21-22-56-00",
+        end: "2013-03-21-23-26-00",
+        show_name: "Untitled Show",
+        independent_event: true
+        },
+        """
 
         try:
             scheduled_now_files = \
@@ -125,7 +127,7 @@ class PypoLiquidsoap():
             scheduled_now_webstream = \
                     [x for x in scheduled_now if x["type"] == eventtypes.STREAM_OUTPUT_START]
 
-            schedule_ids = [x["row_id"] for x in scheduled_now_files]
+            schedule_ids = set([x["row_id"] for x in scheduled_now_files])
 
             row_id_map = {}
             liq_queue_ids = set()
@@ -154,7 +156,6 @@ class PypoLiquidsoap():
                         self.logger.info("Track %s found to have new attr." % i)
                         to_be_removed.add(i["row_id"])
                         to_be_added.add(i["row_id"])
-
 
             to_be_removed.update(liq_queue_ids - schedule_ids)
             to_be_added.update(schedule_ids - liq_queue_ids)

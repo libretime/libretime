@@ -117,7 +117,8 @@ class ApiRequest(object):
 
     def __call__(self,_post_data=None, **kwargs):
         final_url = self.url.params(**kwargs).url()
-        if _post_data is not None: _post_data = urllib.parse.urlencode(_post_data)
+        if _post_data is not None:
+            _post_data = urllib.parse.urlencode(_post_data).encode('utf-8')
         self.logger.debug(final_url)
         try:
             req = urllib.request.Request(final_url, _post_data)
@@ -131,8 +132,7 @@ class ApiRequest(object):
             self.logger.error('HTTP request to %s timed out', final_url)
             raise
         except Exception as e:
-            #self.logger.error('Exception: %s', e)
-            #self.logger.error("traceback: %s", traceback.format_exc())
+            #self.logger.exception(e)
             raise
 
         try:
@@ -142,8 +142,7 @@ class ApiRequest(object):
             else:
                 raise InvalidContentType()
         except Exception:
-            #self.logger.error(response)
-            #self.logger.error("traceback: %s", traceback.format_exc())
+            #self.logger.exception(e)
             raise
 
     def req(self, *args, **kwargs):
@@ -182,8 +181,10 @@ class RequestProvider(object):
     def __contains__(self, request) : return request in self.requests
 
     def __getattr__(self, attr):
-        if attr in self: return self.requests[attr]
-        else: return super(RequestProvider, self).__getattribute__(attr)
+        if attr in self:
+            return self.requests[attr]
+        else:
+            return super(RequestProvider, self).__getattribute__(attr)
 
 
 class AirtimeApiClient(object):
@@ -197,8 +198,7 @@ class AirtimeApiClient(object):
             self.config.update(api_config)
             self.services = RequestProvider(self.config)
         except Exception as e:
-            self.logger.error('Error loading config file: %s', config_path)
-            self.logger.error("traceback: %s", traceback.format_exc())
+            self.logger.exception('Error loading config file: %s', config_path)
             sys.exit(1)
 
     def __get_airtime_version(self):
@@ -239,7 +239,7 @@ class AirtimeApiClient(object):
         try:
             self.services.notify_liquidsoap_started()
         except Exception as e:
-            self.logger.error(str(e))
+            self.logger.exception(e)
 
     def notify_media_item_start_playing(self, media_id):
         """ This is a callback from liquidsoap, we use this to notify
@@ -248,14 +248,14 @@ class AirtimeApiClient(object):
         try:
             return self.services.update_start_playing_url(media_id=media_id)
         except Exception as e:
-            self.logger.error(str(e))
+            self.logger.exception(e)
             return None
 
     def get_shows_to_record(self):
         try:
             return self.services.show_schedule_url()
         except Exception as e:
-            self.logger.error(str(e))
+            self.logger.exception(e)
             return None
 
     def upload_recorded_show(self, files, show_id):
@@ -307,8 +307,7 @@ class AirtimeApiClient(object):
                 logger.error("Server is down: %s", e.args)
                 logger.error("traceback: %s", traceback.format_exc())
             except Exception as e:
-                logger.error("Exception: %s", e)
-                logger.error("traceback: %s", traceback.format_exc())
+                self.logger.exception(e)
 
             #wait some time before next retry
             time.sleep(retries_wait)
@@ -320,7 +319,7 @@ class AirtimeApiClient(object):
             return self.services.check_live_stream_auth(
                 username=username, password=password, djtype=dj_type)
         except Exception as e:
-            self.logger.error(str(e))
+            self.logger.exception(e)
             return {}
 
     def construct_url(self,config_action_key):
@@ -468,17 +467,14 @@ class AirtimeApiClient(object):
                                             stream_id=stream_id,
                                             boot_time=time).retry(5)
         except Exception as e:
-            #TODO
-            logger.error("Exception: %s", e)
+            self.logger.exception(e)
 
     def notify_source_status(self, sourcename, status):
         try:
-            logger = self.logger
             return self.services.update_source_status.req(sourcename=sourcename,
                                                       status=status).retry(5)
         except Exception as e:
-            #TODO
-            logger.error("Exception: %s", e)
+            self.logger.exception(e)
 
     def get_bootstrap_info(self):
         """ Retrieve infomations needed on bootstrap time """
@@ -494,7 +490,7 @@ class AirtimeApiClient(object):
         try:
             return self.services.get_files_without_replay_gain(dir_id=dir_id)
         except Exception as e:
-            self.logger.error(str(e))
+            self.logger.exception(e)
             return []
 
     def get_files_without_silan_value(self):
@@ -506,7 +502,7 @@ class AirtimeApiClient(object):
         try:
             return self.services.get_files_without_silan_value()
         except Exception as e:
-            self.logger.error(str(e))
+            self.logger.exception(e)
             return []
 
     def update_replay_gain_values(self, pairs):
@@ -549,8 +545,7 @@ class AirtimeApiClient(object):
             response = self.services.update_stream_setting_table(_post_data={'data': json.dumps(data)})
             return response
         except Exception as e:
-            #TODO
-            self.logger.error(str(e))
+            self.logger.exception(e)
 
     def update_metadata_on_tunein(self):
         self.services.update_metadata_on_tunein()

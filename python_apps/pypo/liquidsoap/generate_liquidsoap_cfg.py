@@ -28,21 +28,21 @@ def generate_liquidsoap_config(ss):
             except: #Everything else is a string
                 str_buffer = "%s = \"%s\"\n" % (key, value)
 
-        fh.write(str_buffer.encode('utf-8'))
+        fh.write(str_buffer)
         # ignore squashes unused variable errors from Liquidsoap
-        fh.write(("ignore(%s)\n" % key).encode('utf-8'))
+        fh.write("ignore(%s)\n" % key)
 
     auth_path = os.path.dirname(os.path.realpath(__file__))
     fh.write('log_file = "/var/log/airtime/pypo-liquidsoap/<script>.log"\n')
     fh.write('auth_path = "%s/liquidsoap_auth.py"\n' % auth_path)
     fh.close()
-    
+
 def run():
     logging.basicConfig(format='%(message)s')
     attempts = 0
     max_attempts = 10
     successful = False
-    
+
     while not successful:
         try:
             ac = AirtimeApiClient(logging.getLogger())

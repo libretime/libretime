@@ -52,8 +52,8 @@ class TelnetLiquidsoap:
         return True
         tn = self.__connect()
         msg = '%s.queue\nexit\n' % queue_id
-        tn.write(msg)
-        output = tn.read_all().splitlines()
+        tn.write(msg.encode('utf-8'))
+        output = tn.read_all().decode('utf-8').splitlines()
         if len(output) == 3:
             return len(output[0]) == 0
         else:
@@ -68,10 +68,10 @@ class TelnetLiquidsoap:
             for i in self.queues:
                 msg = 'queues.%s_skip\n' % i
                 self.logger.debug(msg)
-                tn.write(msg)
-            
-            tn.write("exit\n")
-            self.logger.debug(tn.read_all())
+                tn.write(msg.encode('utf-8'))
+
+            tn.write("exit\n".encode('utf-8'))
+            self.logger.debug(tn.read_all().decode('utf-8'))
         except Exception:
             raise
         finally:
@@ -85,10 +85,10 @@ class TelnetLiquidsoap:
 
             msg = 'queues.%s_skip\n' % queue_id
             self.logger.debug(msg)
-            tn.write(msg)
-            
-            tn.write("exit\n")
-            self.logger.debug(tn.read_all())
+            tn.write(msg.encode('utf-8'))
+
+            tn.write("exit\n".encode('utf-8'))
+            self.logger.debug(tn.read_all().decode('utf-8'))
         except Exception:
             raise
         finally:
@@ -105,17 +105,17 @@ class TelnetLiquidsoap:
 
             tn = self.__connect()
             annotation = create_liquidsoap_annotation(media_item)
-            msg = '%s.push %s\n' % (queue_id, annotation.encode('utf-8'))
+            msg = '%s.push %s\n' % (queue_id, annotation)
             self.logger.debug(msg)
-            tn.write(msg)
+            tn.write(msg.encode('utf-8'))
 
             show_name = media_item['show_name']
-            msg = 'vars.show_name %s\n' % show_name.encode('utf-8')
-            tn.write(msg)
+            msg = 'vars.show_name %s\n' % show_name
+            tn.write(msg.encode('utf-8'))
             self.logger.debug(msg)
 
-            tn.write("exit\n")
-            self.logger.debug(tn.read_all())
+            tn.write("exit\n".encode('utf-8'))
+            self.logger.debug(tn.read_all().decode('utf-8'))
         except Exception:
             raise
         finally:
@@ -131,14 +131,14 @@ class TelnetLiquidsoap:
 
             msg = 'http.stop\n'
             self.logger.debug(msg)
-            tn.write(msg)
+            tn.write(msg.encode('utf-8'))
 
             msg = 'dynamic_source.id -1\n'
             self.logger.debug(msg)
-            tn.write(msg)
+            tn.write(msg.encode('utf-8'))
 
-            tn.write("exit\n")
-            self.logger.debug(tn.read_all())
+            tn.write("exit\n".encode('utf-8'))
+            self.logger.debug(tn.read_all().decode('utf-8'))
 
         except Exception as e:
             self.logger.error(str(e))
@@ -154,10 +154,10 @@ class TelnetLiquidsoap:
 
             msg = 'dynamic_source.output_stop\n'
             self.logger.debug(msg)
-            tn.write(msg)
+            tn.write(msg.encode('utf-8'))
 
-            tn.write("exit\n")
-            self.logger.debug(tn.read_all())
+            tn.write("exit\n".encode('utf-8'))
+            self.logger.debug(tn.read_all().decode('utf-8'))
 
         except Exception as e:
             self.logger.error(str(e))
@@ -172,21 +172,21 @@ class TelnetLiquidsoap:
 
             #TODO: DO we need this?
             msg = 'streams.scheduled_play_start\n'
-            tn.write(msg)
+            tn.write(msg.encode('utf-8'))
 
             msg = 'dynamic_source.output_start\n'
             self.logger.debug(msg)
-            tn.write(msg)
+            tn.write(msg.encode('utf-8'))
 
-            tn.write("exit\n")
-            self.logger.debug(tn.read_all())
+            tn.write("exit\n".encode('utf-8'))
+            self.logger.debug(tn.read_all().decode('utf-8'))
 
             self.current_prebuffering_stream_id = None
         except Exception as e:
             self.logger.error(str(e))
         finally:
             self.telnet_lock.release()
-        
+
     @ls_timeout
     def start_web_stream_buffer(self, media_item):
         try:
@@ -195,14 +195,14 @@ class TelnetLiquidsoap:
 
             msg = 'dynamic_source.id %s\n' % media_item['row_id']
             self.logger.debug(msg)
-            tn.write(msg)
+            tn.write(msg.encode('utf-8'))
 
             msg = 'http.restart %s\n' % media_item['uri'].encode('latin-1')
             self.logger.debug(msg)
-            tn.write(msg)
+            tn.write(msg.encode('utf-8'))
 
-            tn.write("exit\n")
-            self.logger.debug(tn.read_all())
+            tn.write("exit\n".encode('utf-8'))
+            self.logger.debug(tn.read_all().decode('utf-8'))
 
             self.current_prebuffering_stream_id = media_item['row_id']
         except Exception as e:
@@ -218,10 +218,10 @@ class TelnetLiquidsoap:
 
             msg = 'dynamic_source.get_id\n'
             self.logger.debug(msg)
-            tn.write(msg)
+            tn.write(msg.encode('utf-8'))
 
-            tn.write("exit\n")
-            stream_id = tn.read_all().splitlines()[0]
+            tn.write("exit\n".encode('utf-8'))
+            stream_id = tn.read_all().decode('utf-8').splitlines()[0]
             self.logger.debug("stream_id: %s" % stream_id)
 
             return stream_id
@@ -243,9 +243,9 @@ class TelnetLiquidsoap:
             self.telnet_lock.acquire()
             tn = telnetlib.Telnet(self.ls_host, self.ls_port)
             self.logger.info(command)
-            tn.write(command)
-            tn.write('exit\n')
-            tn.read_all()
+            tn.write(command.encode('utf-8'))
+            tn.write('exit\n'.encode('utf-8'))
+            tn.read_all().decode('utf-8')
         except Exception as e:
             self.logger.error(traceback.format_exc())
         finally:
@@ -259,10 +259,10 @@ class TelnetLiquidsoap:
             tn = telnetlib.Telnet(self.ls_host, self.ls_port)
             for i in commands:
                 self.logger.info(i)
-                tn.write(i)
+                tn.write(i.encode('utf-8'))
 
-            tn.write('exit\n')
-            tn.read_all()
+            tn.write('exit\n'.encode('utf-8'))
+            tn.read_all().decode('utf-8')
         except Exception as e:
             self.logger.error(str(e))
         finally:
