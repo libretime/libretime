@@ -102,6 +102,19 @@
       <index-column name="name"/>
     </index>
   </table>
+  <table name="cc_track_types" phpName="CcTracktypes">
+    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="code" phpName="DbCode" type="VARCHAR" size="16" required="true" defaultValue=""/>
+    <column name="visibility" phpName="DbVisibility" type="BOOLEAN" required="true" defaultValue="true"/>
+    <column name="type_name" phpName="DbTypeName" type="VARCHAR" size="64" required="true" defaultValue=""/>
+	  <column name="description" phpName="DbDescription" type="VARCHAR" size="255" required="true" defaultValue=""/>
+    <unique name="cc_track_types_id_idx">
+      <unique-column name="id"/>
+    </unique>
+    <unique name="cc_track_types_code_idx">
+      <unique-column name="code"/>
+    </unique>
+  </table>
   <!-- Class Table Inheritance -->
   <table name="cloud_file" phpName="CloudFile">
     <column name="id" phpName="DbId" required="true" primaryKey="true" autoIncrement="true" type="INTEGER"/>

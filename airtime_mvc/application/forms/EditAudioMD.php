@@ -76,24 +76,9 @@ class Application_Form_EditAudioMD extends Zend_Form
 
         // Add track type dropdown
         $track_type_options = array();
-        $track_types = array(
-            ''       => '--- Select Track Type ---',
-            'MUS'    => 'Music (MUS)',
-            'SID'    => 'Station ID (SID)',
-            'INT'    => 'Intro (INT)',
-            'OUT'    => 'Outro (OUT)',
-            'SWP'    => 'Sweeper (SWP)',
-            'JIN'    => 'Jingle (JIN)',
-            'PRO'    => 'Promo (PRO)',
-            'SHO'    => 'Shout Out (SHO)',
-            'NWS'    => 'News (NWS)',
-            'COM'    => 'Commercial (COM)',
-            'ITV'    => 'Interview (ITV)',
-            'VTR'    => 'Voice Tracking (VTR)',
-          );
-
+        $track_types = Application_Model_Tracktype::getTracktypes();
         foreach ($track_types as $key => $tt) {
-            $track_type_options[$key] = $tt;
+            $track_type_options[$tt['code']] = $tt['type_name'];
         }
 
         $track_type = new Zend_Form_Element_Select('track_type');

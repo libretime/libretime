@@ -27,6 +27,7 @@ class ApiController extends Zend_Controller_Action
             "show-schedules",
             "show-logo",
             "track",
+            "track-types",
             "stream-m3u"
         );
 
@@ -628,6 +629,22 @@ class ApiController extends Zend_Controller_Action
                   echo $data;
             }
 
+        } else {
+            header('HTTP/1.0 401 Unauthorized');
+            print _('You are not allowed to access this resource. ');
+            exit;
+        }
+    }
+
+    public function trackTypesAction()
+    {
+        if (Application_Model_Preference::GetAllow3rdPartyApi() || $this->checkAuth()) {
+            // disable the view and the layout
+            $this->view->layout()->disableLayout();
+            $this->_helper->viewRenderer->setNoRender(true);
+
+            $tracktypes = Application_Model_Tracktype::getTracktypes();
+            $this->_helper->json->sendJson($tracktypes);
         } else {
             header('HTTP/1.0 401 Unauthorized');
             print _('You are not allowed to access this resource. ');

@@ -1725,11 +1725,13 @@ h2#scheduled_playlist_name span {
     padding: 4px 0 8px;
 }
 
-.user-form-label {
+.user-form-label,
+.tracktype-form-label {
     width: 30% !important;
 }
 
-.user-form-element {
+.user-form-element,
+.tracktype-form-element {
     width: 65% !important;
 }
 
@@ -1818,27 +1820,32 @@ button, input {
     margin-bottom:0;
 }
 
-#user_details
+#user_details,
+#tracktype_details
 {
     visibility: hidden;
 }
 
-.user-management {
+.user-management,
+.tracktype-management {
     min-width: 910px;
     min-height: 410px;
 }
 
-.user-management-expanded {
+.user-management-expanded,
+.tracktype-management-expanded {
     width: 910px;
 }
 
-.user-data {
+.user-data,
+.tracktype-data {
     float:right;
     width:420px;
     margin-left:10px;
 }
 
-.user-list-wrapper {
+.user-list-wrapper,
+.tracktype-list-wrapper {
     float:left;
     width:480px;
     position: absolute;
@@ -1846,59 +1853,72 @@ button, input {
     /*margin-right:10px;*/
 }
 
-#users_datatable {
+#users_datatable,
+#tracktypes_datatable {
     border: 0;
 }
 
-#users_datatable_wrapper td {
+#users_datatable_wrapper td,
+#tracktypes_datatable_wrapper td {
     vertical-align: middle;
 }
 
-.user-management div.user-list-wrapper .ui-widget-header:first-child {
+.user-management div.user-list-wrapper .ui-widget-header:first-child,
+.tracktype-management div.tracktype-list-wrapper .ui-widget-header:first-child {
     background: none repeat scroll 0 0 transparent;
     border-width: 0;
     color: #444444;
     font-weight: bold;
 }
-.user-list-wrapper .ui-widget-header:first-child .dataTables_filter {
+.user-list-wrapper .ui-widget-header:first-child .dataTables_filter,
+.tracktype-list-wrapper .ui-widget-header:first-child .dataTables_filter {
     margin:0;
 }
-.user-management h2 {
+.user-management h2,
+.tracktype-management h2 {
     font-size: 1.7em;
     padding-bottom: 12px;
 }
-.user-management .dataTables_filter input {
+.user-management .dataTables_filter input,
+.tracktype-management .dataTables_filter input {
     width: 100%;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     margin-bottom:8px;
 }
-.user-data.simple-formblock dd {
+.user-data.simple-formblock dd,
+.tracktype-data.simple-formblock dd {
     width: 73%;
 }
 
-.user-data fieldset {
+.user-data fieldset,
+.tracktype-data fieldset {
     margin-bottom:8px;
 }
-.user-data fieldset:last-child {
+.user-data fieldset:last-child,
+.tracktype-data fieldset:last-child {
     margin-bottom:0;
 }
 
-.user-list-wrapper .button-holder {
+.user-list-wrapper .button-holder,
+.tracktype-list-wrapper .button-holder {
     padding:0;
     height:37px;
 }
-.user-list-wrapper .button-holder .ui-button {
+.user-list-wrapper .button-holder .ui-button,
+.tracktype-list-wrapper .button-holder .ui-button {
     margin:0;
 }
-.ui-widget-content .user-list-wrapper .ui-icon.ui-icon-closethick {
+.ui-widget-content .user-list-wrapper .ui-icon.ui-icon-closethick,
+.ui-widget-content .tracktype-list-wrapper .ui-icon.ui-icon-closethick {
     background-image:url(redmond/images/ui-icons_666666_256x240.png);
     cursor:pointer;
     float:right;
     margin-right:5px;
 }
-.ui-widget-content .user-list-wrapper .ui-icon.ui-icon-closethick:hover {
+.ui-widget-content .user-list-wrapper .ui-icon.ui-icon-closethick:hover,
+.ui-widget-content .tracktype-list-wrapper .ui-icon.ui-icon-closethick:hover {
     background-image:url(redmond/images/ui-icons_ff5d1a_256x240.png);
 }
 
@@ -3929,12 +3949,14 @@ li .ui-state-hover {
     flex: 1;
 }
 
-#user_list_inner_wrapper {
+#user_list_inner_wrapper,
+#tracktype_list_inner_wrapper {
     height: 272px;
     overflow: auto;
 }
 
-#users_datatable_wrapper {
+#users_datatable_wrapper,
+#tracktypes_datatable_wrapper {
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -3944,11 +3966,13 @@ li .ui-state-hover {
     flex-flow: column;
 }
 
-#users_datatable {
+#users_datatable,
+#tracktypes_datatable {
     overflow: auto;
 }
 
-#users_datatable tbody {
+#users_datatable tbody,
+#tracktypes_datatable tbody {
 
     vertical-align: top !important;
 }

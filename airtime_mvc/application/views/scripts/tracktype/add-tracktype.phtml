@@ -1,0 +1,36 @@
+
+<div class="ui-widget prefpanel clearfix padded-strong tracktype-management">
+
+    <h2><?php echo _("Manage Track Types") ?></h2>
+    <div class="tracktype-list-wrapper">
+        <div id="tracktypes_wrapper" class="dataTables_wrapper">
+
+            <div class="button-holder">
+                <button type="button" id="add_tracktype_button" name="search_add_group" class="ui-button ui-widget  ui-button-text-icon-primary btn">
+                    <span class="ui-icon ui-icon-plusthick"></span>
+                    <span class="ui-button-text"><?php echo _("New Track Type")?></span>
+                </button>
+            </div>
+
+            <table cellspacing="0" cellpadding="0" style="" id="tracktypes_datatable" class="datatable">
+                <thead>
+                    <tr>
+                        <th><?php echo _("id") ?></th>
+                        <th><?php echo _("Code") ?></th>
+                        <th><?php echo _("Label")?></th>
+                        <th><?php echo _("Description")?></th>
+                        <th><?php echo _("Visibility")?></th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <div class="tracktype-data simple-formblock" id="tracktype_details">
+        <?php echo $this->successMessage ?>
+        <fieldset class="padded">
+            <?php echo $this->form ?>
+        </fieldset>
+    </div>
+</div>

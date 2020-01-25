@@ -392,4 +392,21 @@ INSERT INTO cc_pref("keystr", "valstr") VALUES('whats_new_dialog_viewed', 1);
 --added for LibreTime to turn on podcast album override by default 3.0.0.alpha6
 INSERT INTO cc_pref("keystr", "valstr") VALUES('podcast_album_override', 1);
 INSERT INTO cc_pref("keystr", "valstr") VALUES('podcast_auto_smartblock', 0);
+
+--added in 3.0.0.alpha9.2 to add default track types
+INSERT INTO cc_track_types (id, code, type_name, description, visibility) VALUES (1, 'MUS', 'Music', 'This is used for tracks containing music.', true);
+INSERT INTO cc_track_types (id, code, type_name, description, visibility) VALUES (2, 'SID', 'Station IDs', 'This is used for Station IDs.', true);
+INSERT INTO cc_track_types (id, code, type_name, description, visibility) VALUES (3, 'INT', 'Show Intros', 'This can be used for organizing all the show introductions.', true);
+INSERT INTO cc_track_types (id, code, type_name, description, visibility) VALUES (4, 'OUT', 'Show Outros', 'This can be used for organizing all the show outroductions.', true);
+INSERT INTO cc_track_types (id, code, type_name, description, visibility) VALUES (5, 'SWP', 'Sweepers', 'This is used for segues between songs.', true);
+INSERT INTO cc_track_types (id, code, type_name, description, visibility) VALUES (6, 'JIN', 'Jingles', 'A short song or tune, normally played during commercial breaks. Contains one or more hooks.', true);
+INSERT INTO cc_track_types (id, code, type_name, description, visibility) VALUES (7, 'PRO', 'Promos', 'For promotional use.', true);
+INSERT INTO cc_track_types (id, code, type_name, description, visibility) VALUES (8, 'SHO', 'Shout Outs', 'A message of congratulation, greeting. support, or appreciation.', true);
+INSERT INTO cc_track_types (id, code, type_name, description, visibility) VALUES (9, 'NWS', 'News', 'This is used for noteworthy information and announcements.', true);
+INSERT INTO cc_track_types (id, code, type_name, description, visibility) VALUES (10, 'COM', 'Commercials', 'This is used for commerical advertising.', true);
+INSERT INTO cc_track_types (id, code, type_name, description, visibility) VALUES (11, 'ITV', 'Radio Interviews', 'This is used for radio interviews', true);
+INSERT INTO cc_track_types (id, code, type_name, description, visibility) VALUES (12, 'VTR', 'Voice Trackings', 'Also referred as robojock or taped. Play announcements without actually being in the station.', true);
+
+--end added in 3.0.0.alpha9.2
+
 -- end
