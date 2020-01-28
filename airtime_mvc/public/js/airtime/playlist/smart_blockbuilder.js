@@ -339,7 +339,20 @@ function setSmartBlockEvents() {
         disableAndHideExtraField($(this), index);
         disableAndHideDateTimeDropdown($(this), index);
         disableAndHideExtraDateTimeDropdown($(this),index);
-        populateModifierSelect(this, true);
+
+        // disable extra field and hide the span
+        disableAndHideExtraField($(this), index);
+        disableAndHideDateTimeDropdown($(this), index);
+        disableAndHideExtraDateTimeDropdown($(this),index);
+
+        if ($( "#sp_criteria_field_" + index +" option:selected" ).val() === 'track_type') {
+            //console.log("Track Type is set);
+            populateTracktypeSelect(this, false);
+        } else {
+            //console.log("Track Type is not set");
+            populateModifierSelect(this, true);
+        }
+
     });
 
     /********** MODIFIER CHANGE **********/
@@ -370,6 +383,30 @@ function setSmartBlockEvents() {
         else {
             disableAndHideExtraDateTimeDropdown(criteria_value,index_num);
         }
+
+        var get_crit_field = $(this).siblings(':first-child');
+        var crit_field = get_crit_field[0]["id"];
+        if ($( "#" + crit_field +" option:selected" ).val() === 'track_type') {
+
+            if ($(this).val() == "is" || $(this).val() == "is not") {
+                console.log("Criteria is set to Track Type, Modifier uses (stringIsNotOptions)");
+                enableAndShowTracktypeDropdown(criteria_value, index_num);
+            } else {
+                console.log("Criteria is set to Track Type, Modifier not using (stringIsNotOptions)");
+                disableAndHideTracktypeDropdown(criteria_value, index_num);
+            }
+            //populateTracktypeSelect(this, true);
+        }
+        if ($( "#" + crit_field +" option:selected" ).val() !== 'track_type') {
+            //disableAndHideTracktypeDropdown(criteria_value, index_num);
+            //populateTracktypeSelect(this, false);
+            console.log("Criteria is not set to Track Type");
+        }
+    });
+
+    /********** VALUE CHANGE (if value field is a select menu) **********/
+    form.find('select[id^="sp_criteria_value"]').live("change", function(){
+        console.log("VALUE CHANGED");
     });
 
     setupUI();
@@ -451,6 +488,8 @@ function reindexElements() {
             $(div).find('select[name^="sp_criteria_modifier"]').attr('id', 'sp_criteria_modifier_'+index+'_'+modIndex);
             $(div).find('input[name^="sp_criteria_value"]').attr('name', 'sp_criteria_value_'+index+'_'+modIndex);
             $(div).find('input[name^="sp_criteria_value"]').attr('id', 'sp_criteria_value_'+index+'_'+modIndex);
+            $(div).find('select[name^="sp_criteria_value"]').attr('name', 'sp_criteria_value_'+index+'_'+modIndex);
+            $(div).find('select[name^="sp_criteria_value"]').attr('id', 'sp_criteria_value_'+index+'_'+modIndex);
             $(div).find('input[name^="sp_criteria_extra"]').attr('name', 'sp_criteria_extra_'+index+'_'+modIndex);
             $(div).find('input[name^="sp_criteria_extra"]').attr('id', 'sp_criteria_extra_'+index+'_'+modIndex);
             $(div).find('a[name^="modifier_add"]').attr('id', 'modifier_add_'+index);
@@ -586,6 +625,19 @@ function setupUI() {
     });
 }
 
+function enableAndShowTracktypeDropdown(valEle, index) {
+       //console.log("enable tracktype:"+index);
+       $("#sp_criteria_value_"+index).replaceWith('<select name="sp_criteria_value_'+index+'" id="sp_criteria_value_'+index+'" class="input_select sp_input_select"></select>');
+       $.each(stringTracktypeOptions, function(key, value){
+             $("#sp_criteria_value_"+index).append($('<option></option>').attr('value', key).text(value));
+       });
+}
+
+function disableAndHideTracktypeDropdown(valEle, index) {
+      //console.log("disable tracktype:"+index);
+      $("#sp_criteria_value_"+index).replaceWith('<input type="text" name="sp_criteria_value_'+index+'" id="sp_criteria_value_'+index+'" value="" class="input_text sp_input_text">');
+}
+
 /* Utilizing jQuery this function finds the #datetime_select element on the given row
  * and shows the criteria drop-down
  */
@@ -682,6 +734,7 @@ function sizeTextBoxes(ele, classToRemove, classToAdd) {
 }
 
 function populateModifierSelect(e, popAllMods) {
+
     var criteria_type = getCriteriaOptionType(e),
         index = getRowIndex($(e).parent()),
         divs;
@@ -708,6 +761,13 @@ function populateModifierSelect(e, popAllMods) {
                     .text(value));
             });
         }
+        else if(criteria_type == 'tt') {
+            $.each(stringIsNotOptions, function(key, value){
+                $(div).append($('<option></option>')
+                    .attr('value', key)
+                    .text(value));
+            });
+        }
         else {
             $.each(numericCriteriaOptions, function(key, value){
                 $(div).append($('<option></option>')
@@ -718,9 +778,35 @@ function populateModifierSelect(e, popAllMods) {
     });
 }
 
+function populateTracktypeSelect(e, popAllMods) {
+
+    var criteria_type = getTracktype(e),
+        index = getRowIndex($(e).parent()),
+        divs;
+
+    if (popAllMods) {
+        index = index.substring(0, 1);
+    }
+    divs = $(e).parents().find('select[id^="sp_criteria_modifier_'+index+'"]');
+    $.each(divs, function(i, div){
+        $(div).children().remove();
+        $.each(stringIsNotOptions, function(key, value){
+            $(div).append($('<option></option>')
+               .attr('value', key)
+               .text(value));
+        });
+
+    });
+}
+
 function getCriteriaOptionType(e) {
     var criteria = $(e).val();
     return criteriaTypes[criteria];
+}
+
+function getTracktype(e) {
+    var type = $(e).val();
+    return stringTracktypeOptions[type];
 }
 
 function callback(json, type) {
@@ -875,7 +961,7 @@ var criteriaTypes = {
     "track_number" : "n",
     "info_url"     : "s",
     "year"         : "n",
-    "track_type"   : "s"
+    "track_type"   : "tt"
 };
 
 var stringCriteriaOptions = {
@@ -908,3 +994,11 @@ var dateTimeCriteriaOptions = {
     "is less than" : $.i18n._("is less than"),
     "is in the range" : $.i18n._("is in the range")
 };
+
+var stringIsNotOptions = {
+    "0" : $.i18n._("Select modifier"),
+    "is" : $.i18n._("is"),
+    "is not" : $.i18n._("is not")
+};
+
+var stringTracktypeOptions = TRACKTYPES;
