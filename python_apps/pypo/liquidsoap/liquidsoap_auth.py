@@ -1,5 +1,5 @@
 
-from api_clients import *
+from api_clients import version1 as api_client
 import sys
 
 api_clients = api_client.AirtimeApiClient()

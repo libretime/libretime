@@ -56,6 +56,7 @@ function checkExternalServices() {
             "liquidsoap" => checkLiquidsoapService(),
             "rabbitmq" => checkRMQConnection(),
             "celery" => checkCeleryService(),
+            "api" => checkApiService(),
     );
 }
 
@@ -153,6 +154,19 @@ function checkLiquidsoapService() {
  */
 function checkCeleryService() {
     exec("pgrep -f -u celery airtime-celery", $out, $status);
+    if (array_key_exists(0, $out) && $status == 0) {
+        return 1;
+    }
+    return $status == 0;
+}
+
+/**
+ * Check if libretime-api is currently running
+ *
+ * @return boolean true if libretime-api is running
+ */
+function checkApiService() {
+    exec("pgrep -f -u www-data uwsgi", $out, $status);
     if (array_key_exists(0, $out) && $status == 0) {
         return 1;
     }

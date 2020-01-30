@@ -17,6 +17,7 @@ libmad-ocaml
 libopus0
 libportaudio2
 libpulse0
+libpq-dev
 libsamplerate0
 libsoundtouch-ocaml
 libssl-dev
@@ -63,4 +64,6 @@ vorbisgain
 vorbis-tools
 vorbis-tools
 xmlstarlet
+uwsgi
+uwsgi-plugin-python3
 zip

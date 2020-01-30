@@ -18,6 +18,7 @@ $pypo               = $externalServices["pypo"];
 $liquidsoap         = $externalServices["liquidsoap"];
 $analyzer           = $externalServices["analyzer"];
 $celery             = $externalServices['celery'];
+$api                = $externalServices['api'];
 
 $r1 = array_reduce($phpDependencies, "booleanReduce", true);
 $r2 = array_reduce($externalServices, "booleanReduce", true);
@@ -29,14 +30,14 @@ $result = $r1 && $r2;
         <link rel="stylesheet" type="text/css" href="css/setup/config-check.css">
     </head>
     <style>
-        /* 
-            This is here because we're using the config-check css for 
+        /*
+            This is here because we're using the config-check css for
             both this page and the system status page
          */
         html {
             background-color: #f5f5f5;
         }
-        
+
         body {
             padding: 2em;
             min-width: 600px;
@@ -156,7 +157,7 @@ $result = $r1 && $r2;
                             ?>">
                             Make sure RabbitMQ is installed correctly, and that your settings in /etc/airtime/airtime.conf
                             are correct. Try using <code>sudo rabbitmqctl list_users</code> and <code>sudo rabbitmqctl list_vhosts</code>
-                            to see if the airtime user (or your custom RabbitMQ user) exists, then checking that 
+                            to see if the airtime user (or your custom RabbitMQ user) exists, then checking that
                             <code>sudo rabbitmqctl list_exchanges</code> contains entries for airtime-pypo and airtime-uploads.
                         <?php
                         }
@@ -238,6 +239,26 @@ $result = $r1 && $r2;
                             <?php echo _(" and ensure that it's running with ") ?>
                             <br/><code>systemctl status libretime-celery</code><br/>
                             <?php echo _("If not, try ") ?><br/><code>sudo systemctl restart libretime-celery</code>
+                        <?php
+                        }
+                        ?>
+                    </td>
+                </tr>
+                <tr class="<?=$api ? 'success' : 'danger';?>">
+                    <td class="component">
+                        API
+                    </td>
+                    <td class="description">
+                        <?php echo _("LibreTime API service") ?>
+                    </td>
+                    <td class="solution <?php if ($api) {echo 'check';?>" >
+                        <?php
+                        } else {
+                            ?>">
+                            <?php echo _("Check that the libretime-api service is installed correctly in ") ?><code>/etc/init.d/</code>,
+                            <?php echo _(" and ensure that it's running with ") ?>
+                            <br/><code>systemctl status libretime-api</code><br/>
+                            <?php echo _("If not, try ") ?><br/><code>sudo systemctl restart libretime-api</code>
                         <?php
                         }
                         ?>

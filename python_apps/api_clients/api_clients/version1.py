@@ -8,202 +8,71 @@
 ###############################################################################
 import sys
 import time
-import urllib.request, urllib.error, urllib.parse
+import urllib.parse
 import requests
-import socket
 import logging
 import json
 import base64
 import traceback
 from configobj import ConfigObj
 
+from .utils import RequestProvider, ApiRequest, get_protocol
+
 AIRTIME_API_VERSION = "1.1"
 
 
 api_config = {}
+api_endpoints = {}
 
 # URL to get the version number of the server API
-api_config['version_url'] = 'version/api_key/%%api_key%%'
+api_endpoints['version_url'] = 'version/api_key/{api_key}'
 #URL to register a components IP Address with the central web server
-api_config['register_component'] = 'register-component/format/json/api_key/%%api_key%%/component/%%component%%'
+api_endpoints['register_component'] = 'register-component/format/json/api_key/{api_key}/component/{component}'
 
 #media-monitor
-api_config['media_setup_url'] = 'media-monitor-setup/format/json/api_key/%%api_key%%'
-api_config['upload_recorded'] = 'upload-recorded/format/json/api_key/%%api_key%%/fileid/%%fileid%%/showinstanceid/%%showinstanceid%%'
-api_config['update_media_url'] = 'reload-metadata/format/json/api_key/%%api_key%%/mode/%%mode%%'
-api_config['list_all_db_files'] = 'list-all-files/format/json/api_key/%%api_key%%/dir_id/%%dir_id%%/all/%%all%%'
-api_config['list_all_watched_dirs'] = 'list-all-watched-dirs/format/json/api_key/%%api_key%%'
-api_config['add_watched_dir'] = 'add-watched-dir/format/json/api_key/%%api_key%%/path/%%path%%'
-api_config['remove_watched_dir'] = 'remove-watched-dir/format/json/api_key/%%api_key%%/path/%%path%%'
-api_config['set_storage_dir'] = 'set-storage-dir/format/json/api_key/%%api_key%%/path/%%path%%'
-api_config['update_fs_mount'] = 'update-file-system-mount/format/json/api_key/%%api_key%%'
-api_config['reload_metadata_group'] = 'reload-metadata-group/format/json/api_key/%%api_key%%'
-api_config['handle_watched_dir_missing'] = 'handle-watched-dir-missing/format/json/api_key/%%api_key%%/dir/%%dir%%'
+api_endpoints['media_setup_url'] = 'media-monitor-setup/format/json/api_key/{api_key}'
+api_endpoints['upload_recorded'] = 'upload-recorded/format/json/api_key/{api_key}/fileid/{fileid}/showinstanceid/{showinstanceid}'
+api_endpoints['update_media_url'] = 'reload-metadata/format/json/api_key/{api_key}/mode/{mode}'
+api_endpoints['list_all_db_files'] = 'list-all-files/format/json/api_key/{api_key}/dir_id/{dir_id}/all/{all}'
+api_endpoints['list_all_watched_dirs'] = 'list-all-watched-dirs/format/json/api_key/{api_key}'
+api_endpoints['add_watched_dir'] = 'add-watched-dir/format/json/api_key/{api_key}/path/{path}'
+api_endpoints['remove_watched_dir'] = 'remove-watched-dir/format/json/api_key/{api_key}/path/{path}'
+api_endpoints['set_storage_dir'] = 'set-storage-dir/format/json/api_key/{api_key}/path/{path}'
+api_endpoints['update_fs_mount'] = 'update-file-system-mount/format/json/api_key/{api_key}'
+api_endpoints['reload_metadata_group'] = 'reload-metadata-group/format/json/api_key/{api_key}'
+api_endpoints['handle_watched_dir_missing'] = 'handle-watched-dir-missing/format/json/api_key/{api_key}/dir/{dir}'
 #show-recorder
-api_config['show_schedule_url'] = 'recorded-shows/format/json/api_key/%%api_key%%'
-api_config['upload_file_url'] = 'rest/media'
-api_config['upload_retries'] = '3'
-api_config['upload_wait'] = '60'
+api_endpoints['show_schedule_url'] = 'recorded-shows/format/json/api_key/{api_key}'
+api_endpoints['upload_file_url'] = 'rest/media'
+api_endpoints['upload_retries'] = '3'
+api_endpoints['upload_wait'] = '60'
 #pypo
-api_config['export_url'] = 'schedule/api_key/%%api_key%%'
-api_config['get_media_url'] = 'get-media/file/%%file%%/api_key/%%api_key%%'
-api_config['update_item_url'] = 'notify-schedule-group-play/api_key/%%api_key%%/schedule_id/%%schedule_id%%'
-api_config['update_start_playing_url'] = 'notify-media-item-start-play/api_key/%%api_key%%/media_id/%%media_id%%/'
-api_config['get_stream_setting'] = 'get-stream-setting/format/json/api_key/%%api_key%%/'
-api_config['update_liquidsoap_status'] = 'update-liquidsoap-status/format/json/api_key/%%api_key%%/msg/%%msg%%/stream_id/%%stream_id%%/boot_time/%%boot_time%%'
-api_config['update_source_status'] = 'update-source-status/format/json/api_key/%%api_key%%/sourcename/%%sourcename%%/status/%%status%%'
-api_config['check_live_stream_auth'] = 'check-live-stream-auth/format/json/api_key/%%api_key%%/username/%%username%%/password/%%password%%/djtype/%%djtype%%'
-api_config['get_bootstrap_info'] = 'get-bootstrap-info/format/json/api_key/%%api_key%%'
-api_config['get_files_without_replay_gain'] = 'get-files-without-replay-gain/api_key/%%api_key%%/dir_id/%%dir_id%%'
-api_config['update_replay_gain_value'] = 'update-replay-gain-value/format/json/api_key/%%api_key%%'
-api_config['notify_webstream_data'] = 'notify-webstream-data/api_key/%%api_key%%/media_id/%%media_id%%/format/json'
-api_config['notify_liquidsoap_started'] = 'rabbitmq-do-push/api_key/%%api_key%%/format/json'
-api_config['get_stream_parameters'] = 'get-stream-parameters/api_key/%%api_key%%/format/json'
-api_config['push_stream_stats'] = 'push-stream-stats/api_key/%%api_key%%/format/json'
-api_config['update_stream_setting_table'] = 'update-stream-setting-table/api_key/%%api_key%%/format/json'
-api_config['get_files_without_silan_value'] = 'get-files-without-silan-value/api_key/%%api_key%%'
-api_config['update_cue_values_by_silan'] = 'update-cue-values-by-silan/api_key/%%api_key%%'
+api_endpoints['export_url'] = 'schedule/api_key/{api_key}'
+api_endpoints['get_media_url'] = 'get-media/file/{file}/api_key/{api_key}'
+api_endpoints['update_item_url'] = 'notify-schedule-group-play/api_key/{api_key}/schedule_id/{schedule_id}'
+api_endpoints['update_start_playing_url'] = 'notify-media-item-start-play/api_key/{api_key}/media_id/{media_id}/'
+api_endpoints['get_stream_setting'] = 'get-stream-setting/format/json/api_key/{api_key}/'
+api_endpoints['update_liquidsoap_status'] = 'update-liquidsoap-status/format/json/api_key/{api_key}/msg/{msg}/stream_id/{stream_id}/boot_time/{boot_time}'
+api_endpoints['update_source_status'] = 'update-source-status/format/json/api_key/{api_key}/sourcename/{sourcename}/status/{status}'
+api_endpoints['check_live_stream_auth'] = 'check-live-stream-auth/format/json/api_key/{api_key}/username/{username}/password/{password}/djtype/{djtype}'
+api_endpoints['get_bootstrap_info'] = 'get-bootstrap-info/format/json/api_key/{api_key}'
+api_endpoints['get_files_without_replay_gain'] = 'get-files-without-replay-gain/api_key/{api_key}/dir_id/{dir_id}'
+api_endpoints['update_replay_gain_value'] = 'update-replay-gain-value/format/json/api_key/{api_key}'
+api_endpoints['notify_webstream_data'] = 'notify-webstream-data/api_key/{api_key}/media_id/{media_id}/format/json'
+api_endpoints['notify_liquidsoap_started'] = 'rabbitmq-do-push/api_key/{api_key}/format/json'
+api_endpoints['get_stream_parameters'] = 'get-stream-parameters/api_key/{api_key}/format/json'
+api_endpoints['push_stream_stats'] = 'push-stream-stats/api_key/{api_key}/format/json'
+api_endpoints['update_stream_setting_table'] = 'update-stream-setting-table/api_key/{api_key}/format/json'
+api_endpoints['get_files_without_silan_value'] = 'get-files-without-silan-value/api_key/{api_key}'
+api_endpoints['update_cue_values_by_silan'] = 'update-cue-values-by-silan/api_key/{api_key}'
+api_endpoints['update_metadata_on_tunein'] = 'update-metadata-on-tunein/api_key/{api_key}'
 api_config['api_base'] = 'api'
 api_config['bin_dir'] = '/usr/lib/airtime/api_clients/'
-api_config['update_metadata_on_tunein'] = 'update-metadata-on-tunein/api_key/%%api_key%%'
-
-def get_protocol(config):
-    positive_values = ['Yes', 'yes', 'True', 'true', True]
-    port = config['general'].get('base_port', 80)
-    force_ssl = config['general'].get('force_ssl', False)
-    if force_ssl in positive_values:
-        protocol = 'https'
-    else:
-        protocol = config['general'].get('protocol')
-        if not protocol:
-            protocol = str(("http", "https")[int(port) == 443])
-    return protocol
 
 
 ################################################################################
-# Airtime API Client
+# Airtime API Version 1 Client
 ################################################################################
-
-class UrlException(Exception): pass
-
-class IncompleteUrl(UrlException):
-    def __init__(self, url): self.url = url
-    def __str__(self): return "Incomplete url: '%s'" % self.url
-
-class UrlBadParam(UrlException):
-    def __init__(self, url, param):
-        self.url = url
-        self.param = param
-    def __str__(self):
-        return "Bad param '%s' passed into url: '%s'" % (self.param, self.url)
-
-class ApcUrl(object):
-    """ A safe abstraction and testable for filling in parameters in
-    api_client.cfg"""
-    def __init__(self, base_url): self.base_url = base_url
-
-    def params(self, **params):
-        temp_url = self.base_url
-        for k, v in params.items():
-            wrapped_param = "%%" + k + "%%"
-            if wrapped_param in temp_url:
-                temp_url = temp_url.replace(wrapped_param, str(v))
-            else: raise UrlBadParam(self.base_url, k)
-        return ApcUrl(temp_url)
-
-    def url(self):
-        if '%%' in self.base_url: raise IncompleteUrl(self.base_url)
-        else: return self.base_url
-
-class ApiRequest(object):
-
-    API_HTTP_REQUEST_TIMEOUT = 30 # 30 second HTTP request timeout
-
-    def __init__(self, name, url, logger=None):
-        self.name = name
-        self.url  = url
-        self.__req = None
-        if logger is None: self.logger = logging
-        else: self.logger = logger
-
-    def __call__(self,_post_data=None, **kwargs):
-        final_url = self.url.params(**kwargs).url()
-        if _post_data is not None:
-            _post_data = urllib.parse.urlencode(_post_data).encode('utf-8')
-        self.logger.debug(final_url)
-        try:
-            req = urllib.request.Request(final_url, _post_data)
-            f = urllib.request.urlopen(req, timeout=ApiRequest.API_HTTP_REQUEST_TIMEOUT)
-            content_type = f.info().get_content_type()
-            response = f.read()
-        #Everything that calls an ApiRequest should be catching URLError explicitly
-        #(according to the other comments in this file and a cursory grep through the code)
-        #Note that URLError can occur for timeouts as well as socket.timeout
-        except socket.timeout:
-            self.logger.error('HTTP request to %s timed out', final_url)
-            raise
-        except Exception as e:
-            #self.logger.exception(e)
-            raise
-
-        try:
-            if content_type == 'application/json':
-                try:
-                    response = response.decode()
-                except (UnicodeDecodeError, AttributeError):
-                    pass
-                data = json.loads(response)
-                return data
-            else:
-                raise InvalidContentType()
-        except Exception:
-            #self.logger.exception(e)
-            raise
-
-    def req(self, *args, **kwargs):
-        self.__req = lambda : self(*args, **kwargs)
-        return self
-
-    def retry(self, n, delay=5):
-        """Try to send request n times. If after n times it fails then
-        we finally raise exception"""
-        for i in range(0,n-1):
-            try: return self.__req()
-            except Exception: time.sleep(delay)
-        return self.__req()
-
-class RequestProvider(object):
-    """ Creates the available ApiRequest instance that can be read from
-    a config file """
-    def __init__(self, cfg):
-        self.config = cfg
-        self.requests = {}
-        if self.config["general"]["base_dir"].startswith("/"):
-            self.config["general"]["base_dir"] = self.config["general"]["base_dir"][1:]
-        protocol = get_protocol(self.config)
-
-        self.url = ApcUrl("%s://%s:%s/%s%s/%s" \
-            % (protocol, self.config["general"]["base_url"],
-               str(self.config["general"]["base_port"]),
-               self.config["general"]["base_dir"], self.config["api_base"],
-               '%%action%%'))
-        # Now we must discover the possible actions
-        actions = dict( (k,v) for k,v in cfg.items() if '%%api_key%%' in v)
-        for action_name, action_value in actions.items():
-            new_url = self.url.params(action=action_value).params(
-                api_key=self.config["general"]['api_key'])
-            self.requests[action_name] = ApiRequest(action_name, new_url)
-
-    def available_requests(self)    : return list(self.requests.keys())
-    def __contains__(self, request) : return request in self.requests
-
-    def __getattr__(self, attr):
-        if attr in self:
-            return self.requests[attr]
-        else:
-            return super(RequestProvider, self).__getattribute__(attr)
-
-
 class AirtimeApiClient(object):
     def __init__(self, logger=None,config_path='/etc/airtime/airtime.conf'):
         if logger is None: self.logger = logging
@@ -213,7 +82,7 @@ class AirtimeApiClient(object):
         try:
             self.config = ConfigObj(config_path)
             self.config.update(api_config)
-            self.services = RequestProvider(self.config)
+            self.services = RequestProvider(self.config, api_endpoints)
         except Exception as e:
             self.logger.exception('Error loading config file: %s', config_path)
             sys.exit(1)
@@ -223,8 +92,11 @@ class AirtimeApiClient(object):
         except Exception: return -1
 
     def __get_api_version(self):
-        try: return self.services.version_url()['api_version']
-        except Exception: return -1
+        try:
+            return self.services.version_url()['api_version']
+        except Exception as e:
+            self.logger.exception(e)
+            return -1
 
     def is_server_compatible(self, verbose=True):
         logger = self.logger

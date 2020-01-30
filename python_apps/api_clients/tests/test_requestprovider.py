@@ -2,7 +2,8 @@ import unittest
 import json
 from mock import patch, MagicMock
 from configobj import ConfigObj
-from api_clients.api_client import RequestProvider, api_config
+from api_clients.version1 import api_config
+from api_clients.utils import RequestProvider
 
 class TestRequestProvider(unittest.TestCase):
     def setUp(self):
@@ -18,13 +19,17 @@ class TestRequestProvider(unittest.TestCase):
         self.assertTrue('general' in self.cfg)
 
     def test_init(self):
-        rp = RequestProvider(self.cfg)
-        self.assertTrue( len( rp.available_requests() ) > 0 )
+        rp = RequestProvider(self.cfg, {})
+        self.assertEqual(len(rp.available_requests()), 0)
 
     def test_contains(self):
-        rp = RequestProvider(self.cfg)
-        methods = ['upload_recorded', 'update_media_url', 'list_all_db_files']
+        methods = {
+            'upload_recorded': '/1/',
+            'update_media_url': '/2/',
+            'list_all_db_files': '/3/',
+        }
+        rp = RequestProvider(self.cfg, methods)
         for meth in methods:
-            self.assertTrue( meth in rp.requests )
+            self.assertTrue(meth in rp.requests)
 
 if __name__ == '__main__': unittest.main()

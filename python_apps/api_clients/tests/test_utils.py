@@ -1,6 +1,7 @@
-import unittest
+import datetime
 import configparser
-from api_clients.api_client import get_protocol
+import unittest
+from api_clients import utils
 
 def get_force_ssl(value, useConfigParser):
     config = {}
@@ -10,12 +11,23 @@ def get_force_ssl(value, useConfigParser):
         'base_port': 80,
         'force_ssl': value,
     }
-    return get_protocol(config)
+    return utils.get_protocol(config)
+
+
+class TestTime(unittest.TestCase):
+    def test_time_in_seconds(self):
+        time = datetime.time(hour=0, minute=3, second=34, microsecond=649600)
+        self.assertTrue(abs(utils.time_in_seconds(time) - 214.65) < 0.009)
+
+    def test_time_in_milliseconds(self):
+        time = datetime.time(hour=0, minute=0, second=0, microsecond=500000)
+        self.assertEqual(utils.time_in_milliseconds(time), 500)
+
 
 class TestGetProtocol(unittest.TestCase):
     def test_dict_config_empty_http(self):
         config = {'general': {}}
-        protocol = get_protocol(config)
+        protocol = utils.get_protocol(config)
         self.assertEqual(protocol, 'http')
 
     def test_dict_config_http(self):
@@ -24,7 +36,7 @@ class TestGetProtocol(unittest.TestCase):
                 'base_port': 80,
             },
         }
-        protocol = get_protocol(config)
+        protocol = utils.get_protocol(config)
         self.assertEqual(protocol, 'http')
 
     def test_dict_config_https(self):
@@ -33,7 +45,7 @@ class TestGetProtocol(unittest.TestCase):
                 'base_port': 443,
             },
         }
-        protocol = get_protocol(config)
+        protocol = utils.get_protocol(config)
         self.assertEqual(protocol, 'https')
 
     def test_dict_config_force_https(self):
@@ -47,7 +59,7 @@ class TestGetProtocol(unittest.TestCase):
     def test_configparser_config_empty_http(self):
         config = configparser.ConfigParser()
         config['general'] = {}
-        protocol = get_protocol(config)
+        protocol = utils.get_protocol(config)
         self.assertEqual(protocol, 'http')
 
     def test_configparser_config_http(self):
@@ -55,7 +67,7 @@ class TestGetProtocol(unittest.TestCase):
         config['general'] = {
             'base_port': 80,
         }
-        protocol = get_protocol(config)
+        protocol = utils.get_protocol(config)
         self.assertEqual(protocol, 'http')
 
     def test_configparser_config_https(self):
@@ -63,7 +75,7 @@ class TestGetProtocol(unittest.TestCase):
         config['general'] = {
             'base_port': 443,
         }
-        protocol = get_protocol(config)
+        protocol = utils.get_protocol(config)
         self.assertEqual(protocol, 'https')
 
     def test_configparser_config_force_https(self):
@@ -73,3 +85,5 @@ class TestGetProtocol(unittest.TestCase):
             self.assertEqual(get_force_ssl(value, True), 'https')
         for value in negative_values:
             self.assertEqual(get_force_ssl(value, True), 'http')
+
+if __name__ == '__main__': unittest.main()

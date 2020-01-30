@@ -202,6 +202,11 @@ function systemInitInstall() {
                 target_path="/etc/systemd/system/${service_name}.service"
                 alt_path=$(echo $target_path | sed 's/libretime-/airtime-/')
                 ;;
+            libretime-api)
+                source_path="${SCRIPT_DIR-$PWD}/api/install/systemd/${service_name}.service"
+                target_path="/etc/systemd/system/${service_name}.service"
+                alt_path=$(echo $target_path | sed 's/libretime-/airtime-/')
+                ;;
         esac
         if [[ ! -e $source_path ]]; then
             echo "$0:${FUNCNAME}(): ERROR: service \"$service_name\" with source path \"$source_path\" does not exist!" >&2
@@ -1019,6 +1024,16 @@ loudCmd "$python_bin ${AIRTIMEROOT}/python_apps/airtime_analyzer/setup.py instal
 systemInitInstall libretime-analyzer $web_user
 verbose "...Done"
 
+verbose "\n * Installing API..."
+loudCmd "python3 ${AIRTIMEROOT}/api/setup.py install --install-scripts=/usr/bin"
+systemInitInstall libretime-api $web_user
+mkdir -p /etc/airtime
+sed -e "s@WEB_USER@${web_user}@g" \
+    -e "s@WEB_ROOT@${web_root}@g" \
+    ${AIRTIMEROOT}/installer/uwsgi/libretime-api.ini > /etc/airtime/libretime-api.ini
+loudCmd "libretime-api collectstatic --clear --noinput"
+verbose "...Done"
+
 verbose "\n * Setting permissions on /var/log/airtime..."
 # Make the airtime log directory group-writable
 loudCmd "chmod -R 775 /var/log/airtime"
@@ -1058,15 +1073,15 @@ fi
 
 # Enable Apache modules
 if $is_debian_buster; then
-    loudCmd "a2enmod rewrite php7.3"
+    loudCmd "a2enmod rewrite php7.3 proxy proxy_http"
 elif $is_ubuntu_bionic; then
-    loudCmd "a2enmod rewrite php7.2"
+    loudCmd "a2enmod rewrite php7.2 proxy proxy_http"
 elif $is_ubuntu_xenial || $is_debian_stretch; then
-    loudCmd "a2enmod rewrite php7.0"
+    loudCmd "a2enmod rewrite php7.0 proxy proxy_http"
 elif $is_centos_dist; then
-    verbose "TODO: enable Apache modules mod_rewrite and mod_php manually"
+    verbose "TODO: enable Apache modules mod_rewrite, mod_php, mod_proxy and mod_proxy_http manually"
 else
-    loudCmd "a2enmod rewrite php5"
+    loudCmd "a2enmod rewrite php5 proxy proxy_http"
 fi
 
 if [ $skip_postgres -eq 0 ]; then

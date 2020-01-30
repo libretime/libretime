@@ -12,7 +12,7 @@ import sys
 import telnetlib
 import time
 
-from api_clients import api_client
+from api_clients import version1 as api_client
 from configobj import ConfigObj
 from datetime import datetime
 from optparse import OptionParser
