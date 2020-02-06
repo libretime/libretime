@@ -318,7 +318,7 @@ function setSmartBlockEvents() {
 
 
         /********** CRITERIA CHANGE **********/
-    form.find('select[id^="sp_criteria"]:not([id^="sp_criteria_modifier"]):not([id^="sp_criteria_datetime"]):not([id^="sp_criteria_extra_datetime"])').live("change", function(){
+    form.find('select[id^="sp_criteria"]:not([id^="sp_criteria_modifier"]):not([id^="sp_criteria_datetime"]):not([id^="sp_criteria_extra_datetime"]):not([id^="sp_criteria_value"])').live("change", function(){
         var index = getRowIndex($(this).parent());
         //need to change the criteria value for any modifier rows
         var critVal = $(this).val();
@@ -340,17 +340,11 @@ function setSmartBlockEvents() {
         disableAndHideDateTimeDropdown($(this), index);
         disableAndHideExtraDateTimeDropdown($(this),index);
 
-        // disable extra field and hide the span
-        disableAndHideExtraField($(this), index);
-        disableAndHideDateTimeDropdown($(this), index);
-        disableAndHideExtraDateTimeDropdown($(this),index);
-
         if ($( "#sp_criteria_field_" + index +" option:selected" ).val() === 'track_type') {
-            //console.log("Track Type is set);
-            populateTracktypeSelect(this, false);
+          populateTracktypeSelect(this, false);
         } else {
-            //console.log("Track Type is not set");
-            populateModifierSelect(this, true);
+          disableAndHideTracktypeDropdown($(this),index);
+          populateModifierSelect(this, true);
         }
 
     });
@@ -387,26 +381,12 @@ function setSmartBlockEvents() {
         var get_crit_field = $(this).siblings(':first-child');
         var crit_field = get_crit_field[0]["id"];
         if ($( "#" + crit_field +" option:selected" ).val() === 'track_type') {
-
             if ($(this).val() == "is" || $(this).val() == "is not") {
-                console.log("Criteria is set to Track Type, Modifier uses (stringIsNotOptions)");
                 enableAndShowTracktypeDropdown(criteria_value, index_num);
             } else {
-                console.log("Criteria is set to Track Type, Modifier not using (stringIsNotOptions)");
                 disableAndHideTracktypeDropdown(criteria_value, index_num);
             }
-            //populateTracktypeSelect(this, true);
         }
-        if ($( "#" + crit_field +" option:selected" ).val() !== 'track_type') {
-            //disableAndHideTracktypeDropdown(criteria_value, index_num);
-            //populateTracktypeSelect(this, false);
-            console.log("Criteria is not set to Track Type");
-        }
-    });
-
-    /********** VALUE CHANGE (if value field is a select menu) **********/
-    form.find('select[id^="sp_criteria_value"]').live("change", function(){
-        console.log("VALUE CHANGED");
     });
 
     setupUI();
@@ -626,7 +606,7 @@ function setupUI() {
 }
 
 function enableAndShowTracktypeDropdown(valEle, index) {
-       //console.log("enable tracktype:"+index);
+       console.log('tracktype show');
        $("#sp_criteria_value_"+index).replaceWith('<select name="sp_criteria_value_'+index+'" id="sp_criteria_value_'+index+'" class="input_select sp_input_select"></select>');
        $.each(stringTracktypeOptions, function(key, value){
              $("#sp_criteria_value_"+index).append($('<option></option>').attr('value', key).text(value));
@@ -634,7 +614,7 @@ function enableAndShowTracktypeDropdown(valEle, index) {
 }
 
 function disableAndHideTracktypeDropdown(valEle, index) {
-      //console.log("disable tracktype:"+index);
+      console.log('tracktype hide');
       $("#sp_criteria_value_"+index).replaceWith('<input type="text" name="sp_criteria_value_'+index+'" id="sp_criteria_value_'+index+'" value="" class="input_text sp_input_text">');
 }
 
@@ -795,7 +775,6 @@ function populateTracktypeSelect(e, popAllMods) {
                .attr('value', key)
                .text(value));
         });
-
     });
 }
 
@@ -1001,4 +980,5 @@ var stringIsNotOptions = {
     "is not" : $.i18n._("is not")
 };
 
-var stringTracktypeOptions = TRACKTYPES;
+let tracktypes = TRACKTYPES;
+var stringTracktypeOptions = Object.assign({"": "Select Track Type"}, tracktypes);
