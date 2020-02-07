@@ -532,7 +532,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
         }
         if (null === $this->id) {
             try {
-                $stmt = $con->query("SELECT nextval('cc_subjs_id_seq')");
+                $stmt = $con->query("SELECT nextval('cc_track_types_id_seq')");
                 $row = $stmt->fetch(PDO::FETCH_NUM);
                 $this->id = $row[0];
             } catch (Exception $e) {

@@ -35,7 +35,7 @@ class CcTracktypesTableMap extends TableMap
         $this->setClassname('CcTracktypes');
         $this->setPackage('airtime');
         $this->setUseIdGenerator(true);
-        $this->setPrimaryKeyMethodInfo('cc_subjs_id_seq');
+        $this->setPrimaryKeyMethodInfo('cc_track_types_id_seq');
         // columns
         $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
         $this->addColumn('code', 'DbCode', 'VARCHAR', true, 255, '');

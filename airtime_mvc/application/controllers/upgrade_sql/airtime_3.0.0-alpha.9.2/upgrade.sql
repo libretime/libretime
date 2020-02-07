@@ -2,7 +2,7 @@ ALTER TABLE cc_files ADD COLUMN track_type VARCHAR(16);
 
 CREATE TABLE IF NOT EXISTS "cc_track_types"
 (
-    "id" integer DEFAULT nextval('cc_subjs_id_seq'::regclass) NOT NULL,
+    "id" integer DEFAULT nextval('cc_track_types_id_seq'::regclass) NOT NULL,
     "code" VARCHAR(16) NOT NULL,
     "type_name" VARCHAR(64),
     "description" VARCHAR(255),
