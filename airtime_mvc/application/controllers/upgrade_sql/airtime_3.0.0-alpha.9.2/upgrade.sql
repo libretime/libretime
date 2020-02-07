@@ -23,3 +23,5 @@ INSERT INTO cc_track_types VALUES (9, 'NWS', 'News', 'This is used for noteworth
 INSERT INTO cc_track_types VALUES (10, 'COM', 'Commercial', 'This is used for commerical advertising.', true);
 INSERT INTO cc_track_types VALUES (11, 'ITV', 'Interview', 'This is used for radio interviews', true);
 INSERT INTO cc_track_types VALUES (12, 'VTR', 'Voice Tracking', 'Also referred as robojock or taped. Make announcements without actually being in the station.', true);
+
+ALTER SEQUENCE cc_track_types_id_seq RESTART WITH 13;
