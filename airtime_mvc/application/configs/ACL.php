@@ -67,7 +67,6 @@ $ccAcl->allow('G', 'index')
       ->allow('G', 'setup')
       ->allow('G', 'embeddablewidgets')
       ->allow('G', 'feeds')
-      ->allow('P', 'tracktype')
       ->allow('H', 'soundcloud')
       ->allow('H', 'rest:show-image')
       ->allow('H', 'rest:media')
@@ -84,9 +83,10 @@ $ccAcl->allow('G', 'index')
       ->allow('H', 'showlistenerstat')
       ->allow('A', 'playouthistorytemplate')
       ->allow('A', 'user')
+      ->allow('A', 'tracktype')
       ->allow('A', 'systemstatus')
       ->allow('A', 'preference');
-      
+
 
 $aclPlugin = new Zend_Controller_Plugin_Acl($ccAcl);
 
