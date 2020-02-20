@@ -28,7 +28,7 @@ setup(name='airtime_analyzer',
       packages=['airtime_analyzer'],
       scripts=['bin/airtime_analyzer'],
       install_requires=[
-          'mutagen>=1.41.1', # got rid of specific version requirement 
+          'mutagen~=1.43.0', # got rid of specific version requirement 
           'pika',
           'daemon',
           'file-magic',
