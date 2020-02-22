@@ -183,7 +183,7 @@ def connect_to_messaging_server():
             virtual_host=config["rm_vhost"],credentials=credentials))
   channel = connection.channel()
 #  channel.exchange_delete (exchange=EXCHANGE)
-  channel.exchange_declare(exchange=EXCHANGE, type=EXCHANGE_TYPE, durable=True, auto_delete=True)
+  channel.exchange_declare(exchange=EXCHANGE, exchange_type=EXCHANGE_TYPE, durable=True, auto_delete=True)
 #  channel.queue_delete(queue=QUEUE)
   result = channel.queue_declare(queue=QUEUE, durable=True)
   channel.queue_bind(exchange=EXCHANGE, queue=QUEUE, routing_key=ROUTING_KEY)
