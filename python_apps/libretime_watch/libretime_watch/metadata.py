@@ -175,6 +175,14 @@ def analyse_file (filename, database):
         database["genre"]= ""
 
     try:
+        label = audio['organization'][0]
+        label = strim(label, 64)
+        database["label"] = label
+    except StandardError, err:
+        logging.debug('no label ID3 for '+filename) 
+        database["label"]= ""
+
+    try:
         album_title = audio['album'][0]
         album_title = strim(album_title, 512)
         database["album_title"] = album_title
