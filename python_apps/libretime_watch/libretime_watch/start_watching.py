@@ -81,7 +81,7 @@ connection = pika.BlockingConnection(pika.ConnectionParameters(host=config["rm_h
 channel = connection.channel()
 
 # declare exchange
-channel.exchange_declare(exchange=EXCHANGE,type=EXCHANGE_TYPE,durable=True, auto_delete=True )
+channel.exchange_declare(exchange=EXCHANGE,exchange_type=EXCHANGE_TYPE,durable=True, auto_delete=True )
 
 # .. and send message
 channel.basic_publish(exchange=EXCHANGE,
