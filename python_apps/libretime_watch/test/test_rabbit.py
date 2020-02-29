@@ -33,7 +33,7 @@ def read_config():
     config["api_key"]=Config.get('general','api_key')
 
   except:
-    print ("can't open the configfile")  
+    print("can't open the configfile")  
   return config
 
 def connect_database():
@@ -47,7 +47,7 @@ def connect_database():
           +config["db_host"]+"' password='"
           +config["db_pass"]+"'")
   except:
-    print "I am unable to connect to the database"
+    print("I am unable to connect to the database")
   return conn
 
 
@@ -64,10 +64,10 @@ try:
    watch_dir = row[1]
    cur.close()
 except:
-   print ("Can't get directory for watching")
+   print("Can't get directory for watching")
    exit()
 
-#print ("ID: "+str(id)+" Dir: "+str(watch_dir)+ " "+config['api_key'])
+#print("ID: "+str(id)+" Dir: "+str(watch_dir)+ " "+config['api_key'])
 
 #message = { 'cmd' : 'rescan_watch', 'id' : '34', 'directory' : '/srv/airtime/watch/'}
 message = { 'cmd' : 'rescan_watch', 'api_key' : str(config['api_key']), 'id' : str(id), 'directory' : str(watch_dir)}

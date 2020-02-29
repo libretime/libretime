@@ -5,7 +5,7 @@ import os
 
 # Change directory since setuptools uses relative paths
 script_path = os.path.dirname(os.path.realpath(__file__))
-print script_path
+print(script_path)
 os.chdir(script_path)
 
 # Allows us to avoid installing the upstart init script when deploying airtime_analyzer
@@ -17,7 +17,7 @@ else:
     data_files = [('/etc/init.d', ['install/sysvinit/libretime_watch']),
                   ('/etc/init',['install/upstart/libretime_watch.conf']),
                   ('/etc/cron.d', ['install/cron/libretime_watch'])]
-    print data_files
+    print(data_files)
 
 setup(name='libretime_watch',
       version='0.1',
@@ -40,4 +40,4 @@ setup(name='libretime_watch',
 
 # Remind users to reload the initctl config so that "service start airtime_analyzer" works
 if data_files:
-    print "Remember to reload the initctl configuration"
+    print("Remember to reload the initctl configuration")
