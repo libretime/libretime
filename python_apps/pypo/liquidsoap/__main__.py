@@ -23,7 +23,7 @@ def run():
 
     generate_liquidsoap_cfg.run()
     ''' check liquidsoap version if less than 1.3 use legacy liquidsoap script '''
-    liquidsoap_version = subprocess.check_output("liquidsoap --version", shell=True, text=True)
+    liquidsoap_version = subprocess.check_output("liquidsoap --version", shell=True, universal_newlines=True)
     if pure.version_cmp(liquidsoap_version, "1.3") < 0:
         script_path = os.path.join(os.path.dirname(__file__), 'ls_script.liq')
     else:
