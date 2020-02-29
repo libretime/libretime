@@ -33,7 +33,8 @@ setup(name='libretime_watch',
           'mutagen',
           'pika',
           'psycopg2-binary', # database
-          'jason'
+          'jason',
+          'setuptools'
       ],
       zip_safe=False,
       data_files=data_files)
