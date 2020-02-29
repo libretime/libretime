@@ -32,7 +32,7 @@ setup(name='libretime_watch',
       install_requires=[
           'mutagen',
           'pika',
-          'psycopg2', # database
+          'psycopg2-binary', # database
           'jason'
       ],
       zip_safe=False,
