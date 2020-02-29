@@ -162,7 +162,7 @@ def analyse_file (filename, database):
         artist_name = audio['artist'][0]
         artist_name = strim(artist_name, 512)
         database["artist_name"] = artist_name
-    except StandardError, err:
+    except StandardError as err:
         logging.warning('no artist ID3 for '+filename) 
         database["artist_name"]= ""
     
@@ -170,7 +170,7 @@ def analyse_file (filename, database):
         genre = audio['genre'][0]
         genre = strim(genre, 64)
         database["genre"] = genre
-    except StandardError, err:
+    except StandardError as err:
         logging.debug('no genre ID3 for '+filename) 
         database["genre"]= ""
 
@@ -178,7 +178,7 @@ def analyse_file (filename, database):
         label = audio['organization'][0]
         label = strim(label, 64)
         database["label"] = label
-    except StandardError, err:
+    except StandardError as err:
         logging.debug('no label ID3 for '+filename) 
         database["label"]= ""
 
@@ -186,7 +186,7 @@ def analyse_file (filename, database):
         album_title = audio['album'][0]
         album_title = strim(album_title, 512)
         database["album_title"] = album_title
-    except StandardError, err:
+    except StandardError as err:
         logging.debug('no album title for '+filename) 
         database["album_title"]= ""
 
@@ -200,7 +200,7 @@ def analyse_file (filename, database):
         # make sure it doesn't exceed Postgres maximum integer value
             track_number = 0
         database["track_number"]= track_number
-    except StandardError, err:
+    except StandardError as err:
         logging.debug('no track_number for '+filename) 
         database["track_number"]= 0
     
