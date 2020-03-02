@@ -34,7 +34,7 @@ def read_config():
     config["api_key"]=Config.get('general','api_key')
 
   except:
-    logging.critical("can't open the configfile")
+    logging.critical("Can't open the configfile.")
   return config
 
 def connect_database():
@@ -48,7 +48,7 @@ def connect_database():
           +config["db_host"]+"' password='"
           +config["db_pass"]+"'")
   except:
-    logging.critical("I am unable to connect to the database")
+    logging.critical("I am unable to connect to the database.")
   return conn
 
 
@@ -64,19 +64,18 @@ try:
   cur.close()
 except:
   cur.close()
-  logging.critical("Can't get directory for watching")
-  exit()
+  logging.critical("Can't get directory for watching.")
+  exit(1)
 
 for row in rows:
   id = row[0]
   watch_dir = row[1]
-  #message = { 'cmd' : 'rescan_watch', 'id' : '34', 'directory' : '/srv/airtime/watch/'}
   message = { 'cmd' : 'rescan_watch', 'api_key' : str(config['api_key']), 'id' : str(id), 'directory' : str(watch_dir)}
-
   json_encoded = json.dumps(message)
 
   # user/password rabbitmq
   credentials=pika.credentials.PlainCredentials(config["rm_user"],config["rm_pass"])
+
   # connect to rabbitmq
   connection = pika.BlockingConnection(pika.ConnectionParameters(host=config["rm_host"],
               virtual_host=config["rm_vhost"],credentials=credentials))
@@ -91,7 +90,7 @@ for row in rows:
                         body=json_encoded)
   # close rabbitmq
   connection.close()
-  logging.info("Triggered Watching Folders Scan for {0}".format(str(watch_dir)))
+  logging.info("Triggered watching folder scan for {0}".format(str(watch_dir)))
 
 exit()
 
