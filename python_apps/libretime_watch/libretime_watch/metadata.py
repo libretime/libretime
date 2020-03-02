@@ -189,7 +189,12 @@ def analyse_file (filename, database):
         database["genre"]= ""
 
     try:
-        label = audio['organization'][0]
+        if 'label' in audio.keys():
+            label = audio['label'][0]
+        elif 'organization' in audio.keys():
+            label = audio['organization'][0]
+        else:
+            label = ""
         label = strim(label, 64)
         database["label"] = label
     except StandardError as err:
