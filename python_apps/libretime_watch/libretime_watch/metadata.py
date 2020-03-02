@@ -114,13 +114,17 @@ def analyse_file (filename, database):
     analyse_ok=False
     logging.info ("analyse Filename: "+filename)
 
-    #try to determine the filetype 
-    database["mime"] = magic.from_file(filename, mime=True)
-    #
-    mime = MimeTypes()
-    type, a = mime.guess_type(filename)
-    #
-    logging.info("mime_check: {} | mime: {}".format(database["mime"], type))
+    #try to determine the filetype
+    try:
+        database["mime"] = magic.from_file(filename, mime=True)
+        #
+        mime = MimeTypes()
+        type, a = mime.guess_type(filename)
+        #
+        logging.info("mime_check: {} | mime: {}".format(database["mime"], type))
+    except:
+        logging.critical("Could not get mime type for {0}".format(filename))
+        return False
 
     database["ftype"] = "audioclip"
     database["filesize"] = os.path.getsize(filename) 
