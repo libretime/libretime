@@ -58,19 +58,6 @@ lame
 coreutils
 
 liquidsoap
-liquidsoap-plugin-alsa
-liquidsoap-plugin-ao
-liquidsoap-plugin-faad
-liquidsoap-plugin-flac
-liquidsoap-plugin-icecast
-liquidsoap-plugin-lame
-liquidsoap-plugin-mad
-liquidsoap-plugin-ogg
-liquidsoap-plugin-portaudio
-liquidsoap-plugin-pulseaudio
-liquidsoap-plugin-taglib
-liquidsoap-plugin-voaacenc
-liquidsoap-plugin-vorbis
 
 silan
 libopus0
