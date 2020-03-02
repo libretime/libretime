@@ -115,8 +115,7 @@ def analyse_file (filename, database):
     logging.info ("analyse Filename: "+filename)
 
     #try to determine the filetype 
-    mime_check = magic.detect_from_filename(filename)
-    database["mime"] = mime_check.mime_type
+    database["mime"] = magic.from_file(filename, mime=True)
     #
     mime = MimeTypes()
     type, a = mime.guess_type(filename)
