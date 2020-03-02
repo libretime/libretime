@@ -34,7 +34,8 @@ setup(name='libretime_watch',
           'pika',
           'psycopg2-binary', # database
           'jason',
-          'setuptools'
+          'setuptools',
+          'magic'
       ],
       zip_safe=False,
       data_files=data_files)
