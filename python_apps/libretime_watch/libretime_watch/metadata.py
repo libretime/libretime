@@ -25,10 +25,12 @@ from mimetypes import MimeTypes
 from mutagen.easyid3 import EasyID3
 from mutagen.mp3 import MP3
 from mutagen.oggvorbis import OggVorbis
+from mutagen.flac import FLAC
 import mutagen
 from mutagen.id3 import ID3NoHeaderError
 from mutagen.mp3 import HeaderNotFoundError
 from mutagen.oggvorbis import OggVorbisHeaderError
+from mutagen.flac import FLACNoHeaderError
 
 #
 # analysing the file
@@ -144,9 +146,18 @@ def analyse_file (filename, database):
         except OggVorbisHeaderError:
             logging.warning("OGG without Metadata: {}".format(filename))
             return False
+    # flac
+    elif database["mime"] in ['audio/flac', 'audio/flac-x']:
+        try:
+            audio = FLAC(filename)
+            f = audio
+        except FLACNoHeaderError:
+            logging.warning("FLAC without Metadata: {}".format(filename))
+            return False
     else:
         logging.warning("Unsupported mime type: {} -- for audio {}".format(database["mime"], filename))
         return False
+
 
     try:
         track_title = audio['title'][0]
