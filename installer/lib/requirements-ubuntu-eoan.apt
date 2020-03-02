@@ -71,3 +71,5 @@ libffi-dev
 python-dev
 
 xmlstarlet
+
+libcairo2-dev
