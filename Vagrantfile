@@ -42,6 +42,10 @@ Vagrant.configure("2") do |config|
   installer_args="--force --in-place --verbose --postgres --apache --icecast "
 
   # define all the OS boxes we support
+  config.vm.define "ubuntu-eoan" do |os|
+    os.vm.box = "bento/ubuntu-19.10"
+    provision_libretime(os, "debian.sh", installer_args)
+  end
   config.vm.define "ubuntu-bionic" do |os|
     os.vm.box = "bento/ubuntu-18.04"
     provision_libretime(os, "debian.sh", installer_args)
