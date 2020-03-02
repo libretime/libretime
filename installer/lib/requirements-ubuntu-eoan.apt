@@ -1,8 +1,8 @@
 apache2
-libapache2-mod-php7.2
-php7.2
+libapache2-mod-php7.3
+php7.3
 php-pear
-php7.2-gd
+php7.3-gd
 php-bcmath
 php-mbstring
 
@@ -15,7 +15,7 @@ rabbitmq-server
 
 postgresql
 postgresql-client
-php7.2-pgsql
+php7.3-pgsql
 
 python
 python-virtualenv
@@ -36,7 +36,7 @@ python-pika
 
 patch
 
-php7.2-curl
+php7.3-curl
 mpg123
 curl
 
