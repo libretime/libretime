@@ -49,6 +49,8 @@ def connect_database():
           +config["db_pass"]+"'")
   except:
     logging.critical("I am unable to connect to the database.")
+    exit(1)
+
   return conn
 
 def main():
