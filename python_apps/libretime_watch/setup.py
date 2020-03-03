@@ -29,6 +29,11 @@ setup(name='libretime_watch',
 #      py_modules=['libretime_watch/libretime_watch', 'libretime_watch/readconfig.py'],
       packages=['libretime_watch'],
       scripts=['bin/libretime_watch'],
+      entry_points={
+        "console_scripts": [
+          "libretime_watch_start = libretime_watch.start_watching:main"
+        ]
+      },
       install_requires=[
           'mutagen',
           'pika',

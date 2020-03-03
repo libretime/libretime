@@ -51,46 +51,48 @@ def connect_database():
     logging.critical("I am unable to connect to the database.")
   return conn
 
+def main():
+  # get the config data
+  libretime_config =read_config()
 
-# get the config data
-libretime_config =read_config()
+  # connect to database
+  conn=connect_database()
+  cur = conn.cursor()
+  try:
+    cur.execute ("SELECT id,directory from cc_music_dirs where type = 'watched'")
+    rows = cur.fetchall()
+    cur.close()
+  except:
+    cur.close()
+    logging.critical("Can't get directory for watching.")
+    exit(1)
 
-# connect to database
-conn=connect_database()
-cur = conn.cursor()
-try:
-  cur.execute ("SELECT id,directory from cc_music_dirs where type = 'watched'")
-  rows = cur.fetchall()
-  cur.close()
-except:
-  cur.close()
-  logging.critical("Can't get directory for watching.")
-  exit(1)
+  for row in rows:
+    id = row[0]
+    watch_dir = row[1]
+    message = { 'cmd' : 'rescan_watch', 'api_key' : str(config['api_key']), 'id' : str(id), 'directory' : str(watch_dir)}
+    json_encoded = json.dumps(message)
 
-for row in rows:
-  id = row[0]
-  watch_dir = row[1]
-  message = { 'cmd' : 'rescan_watch', 'api_key' : str(config['api_key']), 'id' : str(id), 'directory' : str(watch_dir)}
-  json_encoded = json.dumps(message)
+    # user/password rabbitmq
+    credentials=pika.credentials.PlainCredentials(config["rm_user"],config["rm_pass"])
 
-  # user/password rabbitmq
-  credentials=pika.credentials.PlainCredentials(config["rm_user"],config["rm_pass"])
+    # connect to rabbitmq
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=config["rm_host"],
+                virtual_host=config["rm_vhost"],credentials=credentials))
+    channel = connection.channel()
 
-  # connect to rabbitmq
-  connection = pika.BlockingConnection(pika.ConnectionParameters(host=config["rm_host"],
-              virtual_host=config["rm_vhost"],credentials=credentials))
-  channel = connection.channel()
+    # declare exchange
+    channel.exchange_declare(exchange=EXCHANGE,exchange_type=EXCHANGE_TYPE,durable=True, auto_delete=True )
 
-  # declare exchange
-  channel.exchange_declare(exchange=EXCHANGE,exchange_type=EXCHANGE_TYPE,durable=True, auto_delete=True )
+    # .. and send message
+    channel.basic_publish(exchange=EXCHANGE,
+                          routing_key=ROUTING_KEY,
+                          body=json_encoded)
+    # close rabbitmq
+    connection.close()
+    logging.info("Triggered watching folder scan for {0}".format(str(watch_dir)))
 
-  # .. and send message
-  channel.basic_publish(exchange=EXCHANGE,
-                        routing_key=ROUTING_KEY,
-                        body=json_encoded)
-  # close rabbitmq
-  connection.close()
-  logging.info("Triggered watching folder scan for {0}".format(str(watch_dir)))
+  exit()
 
-exit()
-
+if __name__ == "__main__":
+  main()
