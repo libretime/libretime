@@ -31,7 +31,8 @@ setup(name='libretime_watch',
       scripts=['bin/libretime_watch'],
       entry_points={
         "console_scripts": [
-          "libretime_watch_start = libretime_watch.start_watching:main"
+          # Console script to trigger a scan of the watch directories
+          "libretime-watch-trigger = libretime_watch.start_watching:main"
         ]
       },
       install_requires=[
