@@ -185,7 +185,7 @@ class PypoFetch(Thread):
             while True:
                 try:
                     tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
-                    tn.write('exit\n'.encode())
+                    tn.write('exit\n'.encode('utf-8'))
                     tn.read_all()
                     self.logger.info("Liquidsoap is up and running")
                     break
@@ -221,15 +221,15 @@ class PypoFetch(Thread):
             # we are manually adjusting the bootup time variable so the status msg will get
             # updated.
             current_time = time.time()
-            boot_up_time_command = ("vars.bootup_time " + str(current_time) + "\n").encode()
+            boot_up_time_command = ("vars.bootup_time " + str(current_time) + "\n").encode('utf-8')
             self.logger.info(boot_up_time_command)
             tn.write(boot_up_time_command)
 
-            connection_status = ("streams.connection_status\n").encode()
+            connection_status = ("streams.connection_status\n").encode('utf-8')
             self.logger.info(connection_status)
             tn.write(connection_status)
 
-            tn.write('exit\n'.encode())
+            tn.write('exit\n'.encode('utf-8'))
 
             output = tn.read_all()
         except Exception as e:
@@ -264,7 +264,7 @@ class PypoFetch(Thread):
             command = ('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8')
             self.logger.info(command)
             tn.write(command)
-            tn.write('exit\n'.encode())
+            tn.write('exit\n'.encode('utf-8'))
             tn.read_all()
         except Exception as e:
             self.logger.exception(e)
@@ -281,7 +281,7 @@ class PypoFetch(Thread):
             command = ('vars.default_dj_fade %s\n' % fade).encode('utf-8')
             self.logger.info(command)
             tn.write(command)
-            tn.write('exit\n'.encode())
+            tn.write('exit\n'.encode('utf-8'))
             tn.read_all()
         except Exception as e:
             self.logger.exception(e)
@@ -299,7 +299,7 @@ class PypoFetch(Thread):
                 command = ('vars.station_name %s\n' % station_name).encode('utf-8')
                 self.logger.info(command)
                 tn.write(command)
-                tn.write('exit\n'.encode())
+                tn.write('exit\n'.encode('utf-8'))
                 tn.read_all()
             except Exception as e:
                 self.logger.exception(e)
