@@ -1,6 +1,7 @@
 
 import telnetlib
 from .timeout import ls_timeout
+import traceback
 
 def create_liquidsoap_annotation(media):
     # We need liq_start_next value in the annotate. That is the value that controls overlap duration of crossfade.
