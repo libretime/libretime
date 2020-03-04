@@ -229,7 +229,7 @@ class PypoFetch(Thread):
             self.logger.info(connection_status)
             tn.write(connection_status)
 
-            tn.write('exit\n')
+            tn.write('exit\n'.encode('ascii'))
 
             output = tn.read_all()
         except Exception as e:
@@ -281,7 +281,7 @@ class PypoFetch(Thread):
             command = ('vars.default_dj_fade %s\n' % fade).encode('utf-8')
             self.logger.info(command)
             tn.write(command)
-            tn.write('exit\n')
+            tn.write('exit\n'.encode('ascii'))
             tn.read_all()
         except Exception as e:
             self.logger.exception(e)
@@ -299,7 +299,7 @@ class PypoFetch(Thread):
                 command = ('vars.station_name %s\n' % station_name).encode('utf-8')
                 self.logger.info(command)
                 tn.write(command)
-                tn.write('exit\n')
+                tn.write('exit\n'.encode('ascii'))
                 tn.read_all()
             except Exception as e:
                 self.logger.exception(e)
