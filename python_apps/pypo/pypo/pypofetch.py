@@ -264,7 +264,7 @@ class PypoFetch(Thread):
             command = ('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8')
             self.logger.info(command)
             tn.write(command)
-            tn.write('exit\n')
+            tn.write('exit\n'.encode('ascii'))
             tn.read_all()
         except Exception as e:
             self.logger.exception(e)
