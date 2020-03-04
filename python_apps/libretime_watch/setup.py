@@ -19,6 +19,10 @@ else:
                   ('/etc/cron.d', ['install/cron/libretime_watch'])]
     print(data_files)
 
+
+# https://stackoverflow.com/questions/5932804/set-file-permissions-in-setup-py-file
+
+
 setup(name='libretime_watch',
       version='0.1',
       description='Libretime Watch existing directory',
@@ -49,3 +53,9 @@ setup(name='libretime_watch',
 # Remind users to reload the initctl config so that "service start airtime_analyzer" works
 if data_files:
     print("Remember to reload the initctl configuration")
+
+    # Set proper permissions for cron file to run
+    # Not sure how to properly do this.
+    call(['chmod', '644', '/etc/cron.d/libretime_watch'])
+
+
