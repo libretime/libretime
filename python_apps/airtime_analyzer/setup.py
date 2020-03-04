@@ -30,7 +30,7 @@ setup(name='airtime_analyzer',
       scripts=['bin/airtime_analyzer'],
       install_requires=[
           'mutagen>=1.41.1', # got rid of specific version requirement 
-          'pika',
+          'pika~=1.1.0',
           'file-magic',
           'nose',
           'coverage',
