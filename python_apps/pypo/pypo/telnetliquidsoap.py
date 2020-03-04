@@ -265,7 +265,9 @@ class TelnetLiquidsoap:
             tn = telnetlib.Telnet(self.ls_host, self.ls_port)
             for i in commands:
                 self.logger.info(i)
-                tn.write(i.encode('utf-8'))
+                if type(i) is str:
+                    i = i.encode('utf-8')
+                tn.write(i)
 
             tn.write('exit\n'.encode('utf-8'))
             tn.read_all().decode('utf-8')
