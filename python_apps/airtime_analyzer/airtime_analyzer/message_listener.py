@@ -112,8 +112,7 @@ class MessageListener:
         self._channel.queue_bind(exchange=EXCHANGE, queue=QUEUE, routing_key=ROUTING_KEY)
          
         logging.info(" Listening for messages...")
-        self._channel.basic_consume(self.msg_received_callback,
-                                    queue=QUEUE, no_ack=False)
+        self._channel.basic_consume(QUEUE, self.msg_received_callback, auto_ack=False)
 
     def wait_for_messages(self):
         '''Wait until we've received a RabbitMQ message.'''
