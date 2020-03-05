@@ -24,7 +24,7 @@ else:
 
 
 setup(name='libretime_watch',
-      version='0.1',
+      version='0.1.1',
       description='Libretime Watch existing directory',
       url='http://github.com/libretime/libretime',
       author='HaJoHe',
