@@ -189,6 +189,14 @@ def analyse_file (filename, database):
         database["genre"]= ""
 
     try:
+        language = audio['language'][0]
+        language = strim(language, 64)
+        database["language"] = language
+    except StandardError as err:
+        logging.debug('no language ID3 for '+filename)
+        database["language"]= ""
+
+    try:
         if 'label' in audio.keys():
             label = audio['label'][0]
         elif 'organization' in audio.keys():
