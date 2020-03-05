@@ -151,7 +151,12 @@ def watch (dir_id, directory):
           elif counter >= 1:
             logging.info("--> Existing audio: "+database["filepath"])
             logging.info("--> MTIME: ".format(row[0]))
-            fdate = datetime.datetime.strftime(row[0], "%Y-%m-%d %H:%M:%S")
+            logging.info("--> MTIME: ".format(database['mtime']))
+            try:
+              fdate = datetime.datetime.fromtimestamp(row[0])
+            except:
+              logging.warning("Cen't get datetime from database: {0}".format(row))
+              fdate = None
             logging.info("--> Check Dates: {0}<>{1}".format(fdate, database['mtime']))
             try:
               query = "SELECT mtime from cc_files WHERE filepath = %s AND directory = %s"
