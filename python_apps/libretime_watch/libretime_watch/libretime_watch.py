@@ -150,8 +150,8 @@ def watch (dir_id, directory):
               logging.warning("Problematic file: {}".format(database["filepath"]))
           elif counter >= 1:
             logging.info("--> Existing audio: "+database["filepath"])
-            logging.info("--> MTIME: ".format(row[0]))
-            logging.info("--> MTIME: ".format(database['mtime']))
+            logging.info("--> MTIME: {0}".format(row[0]))
+            logging.info("--> MTIME: {0}".format(database['mtime']))
             try:
               fdate = datetime.datetime.fromtimestamp(row[0])
             except:
