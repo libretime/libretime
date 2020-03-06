@@ -158,15 +158,12 @@ def watch (dir_id, directory):
               continue
             row = cur.fetchone()
             fdate = row[0].strftime("%Y-%m-%d %H:%M:%S")
+
             # update needs only called, if new since last run
-            logging.info("--> Check Dates: {0}<>{1}".format(fdate, database['mtime']))
             old_mtime = time.strptime("%Y-%m-%d %H:%M:%S", fdate)
             new_mtime = time.strptime("%Y-%m-%d %H:%M:%S", database['mime'])
-            logging.info("--> Check Dates: {0} <? {1} : {2}".format(
-              fdate, database['mtime'], old_mtime < new_mtime))
-
             if old_mtime < new_mtime:
-              logging.info('--> Updating...')
+              logging.info('--> Updating: {0}'.format(database["filepath"]))
               database["utime"] = datetime.datetime.now()
               if airtime_md.analyse_file (curFilePath,database):
                 update_database (conn)
