@@ -150,14 +150,6 @@ def watch (dir_id, directory):
               logging.warning("Problematic file: {}".format(database["filepath"]))
           elif counter >= 1:
             logging.info("--> Existing audio: "+database["filepath"])
-            logging.info("--> MTIME: {0}".format(row[0]))
-            logging.info("--> MTIME: {0}".format(database['mtime']))
-            try:
-              fdate = datetime.datetime.fromtimestamp(row[0])
-            except:
-              logging.warning("Cen't get datetime from database: {0}".format(row))
-              fdate = None
-            logging.info("--> Check Dates: {0}<>{1}".format(fdate, database['mtime']))
             try:
               query = "SELECT mtime from cc_files WHERE filepath = %s AND directory = %s"
               cur.execute(query, (database["filepath"], database["directory"]))
@@ -165,7 +157,9 @@ def watch (dir_id, directory):
               logging.warning ("I can't SELECT mtime ... from cc_files")
               continue
             row = cur.fetchone()
+            fdate = row[0].strftime("%Y-%m-%d %H:%M:%S")
             # update needs only called, if new since last run
+            logging.info("--> Check Dates: {0}<>{1}".format(fdate, database['mtime']))
             if fdate < database["mtime"]:
                database["utime"] = datetime.datetime.now()
                if airtime_md.analyse_file (curFilePath,database):
