@@ -55,7 +55,4 @@ if data_files:
     print("Remember to reload the initctl configuration")
 
     # Set proper permissions for cron file to run
-    # Not sure how to properly do this.
-    call(['chmod', '644', '/etc/cron.d/libretime_watch'])
-
-
+    os.chmod('/etc/cron.d/libretime_watch', stat.IRUSR | stat.IWUSR | stat.IRGRP | stat.IROTH)
