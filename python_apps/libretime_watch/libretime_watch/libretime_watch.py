@@ -124,7 +124,7 @@ def watch (dir_id, directory):
     query = "SELECT id FROM cc_files WHERE directory = %s"
     cur.execute(query, (dir_id,))
     watched_files_id = cur.fetchall()
-    logging.info("{0} files found in DB in {1}".format(len(watched_files_id), dir_id))
+    logging.info("{0} files found in DB in {1}:{2}".format(len(watched_files_id), dir_id, directory))
     file_ids = set(watched_files_id)
 
     # so now scan all directories
@@ -141,14 +141,16 @@ def watch (dir_id, directory):
 
           cur = conn.cursor()
           try:
-            query = "SELECT count(*) FROM cc_files WHERE filepath = %s AND directory = %s"
+            query = "SELECT * FROM cc_files WHERE filepath = %s AND directory = %s"
             cur.execute(query, (database["filepath"], database["directory"]))            
-          except: 
-            logging.warning ("I can't SELECT count(*) ... from cc_files")
+          except Exception as e: 
+            logging.warning("I can't SELECT * ... from cc_files")
+            logging.warning(e)
             logging.info ("Skipping: {}".format(curFilePath))
             continue
-          row = cur.fetchone()
-          counter = row[0]
+          counter = len(cur.fetchall())
+          # row = cur.fetchone()
+          # counter = row[0]
           if counter == 0:
             # new file
             logging.info("--> New audio: "+database["filepath"])
