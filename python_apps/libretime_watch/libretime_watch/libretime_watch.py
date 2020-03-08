@@ -118,6 +118,14 @@ def watch (dir_id, directory):
     conn = connect_database()
     watch_dir=str(directory)
     len_watch_dir=len(watch_dir) 
+
+    # Get current files in DB to check if they've been moved or deleted
+    query = "SELECT id FROM cc_files WHERE directory = %s"
+    cur.execute(query, (dir_id,))
+    watched_files_id = cur.fetchall()
+    logging.info("{0} files found in DB in {1}".format(len(watched_files_id), dir_id))
+    file_ids = set(watched_files_id)
+
     # so now scan all directories
     for curroot, dirs, files in os.walk(watch_dir):
         if files == None:
@@ -151,13 +159,14 @@ def watch (dir_id, directory):
           elif counter >= 1:
             logging.info("--> Existing audio: "+database["filepath"])
             try:
-              query = "SELECT mtime from cc_files WHERE filepath = %s AND directory = %s"
+              query = "SELECT mtime,id from cc_files WHERE filepath = %s AND directory = %s"
               cur.execute(query, (database["filepath"], database["directory"]))
             except:
               logging.warning ("I can't SELECT mtime ... from cc_files")
               continue
             row = cur.fetchone()
             fdate = row[0].strftime("%Y-%m-%d %H:%M:%S")
+            file_ids.remove(row[1])
 
             # update needs only called, if new since last run
             old_mtime = time.strptime("%Y-%m-%d %H:%M:%S", fdate)
@@ -167,6 +176,14 @@ def watch (dir_id, directory):
               database["utime"] = datetime.datetime.now()
               if airtime_md.analyse_file (curFilePath,database):
                 update_database (conn)
+
+    logging.info("Found {0} files not in {1}".format(len(file_ids), directory))
+    for file_id in file_ids:
+      logging.info('Removing file ID {0}'.format(file_id))
+      query = "DELETE FROM cc_files WHERE id = %s"
+      cur.execute(query, (file_id,))
+    conn.commit()
+
     # close database session
     conn.close() 
     logging.info ("Scan finished..")
