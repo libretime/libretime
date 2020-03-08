@@ -16,6 +16,7 @@ import sys
 import time
 import types
 import traceback
+import re
 
 import libretime_watch
 
@@ -49,12 +50,11 @@ def replay_gain (filename):
     command = [EXE, '-d', filename]
     try:
         results = subprocess.check_output(command, stderr=subprocess.STDOUT, close_fds=True)
-        filename_token = "%s: " % filename
-        rg_pos = results.find(filename_token, results.find("Calculating Replay Gain information")) + len(filename_token)
-        db_pos = results.find(" dB", rg_pos)
-        if db_pos != -1: # dB is indicator of a result
-            replaygain = results[rg_pos:db_pos]
-            return float(replaygain)
+        exp = r'([+|-]?[0-9]+.[0-9]+)([ ]?dB)'
+        m = re.search(exp, str(results))
+        replaygain = float(m.groups()[0])
+        logging.info("Replay gain: {0}".format(replaygain))
+        return float(replaygain)
     except OSError as e: # replaygain was not found
         logging.warn("Failed to run: %s - %s. %s" % (command[0], e.strerror, "Do you have python-rgain installed?"))
     except subprocess.CalledProcessError as e: # replaygain returned an error code

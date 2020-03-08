@@ -14,6 +14,7 @@ import subprocess
 import sys
 import time
 import types
+import traceback
 
 import readconfig as airtime
 import metadata as airtime_md
@@ -36,7 +37,7 @@ config = {}
 
 logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s',filename=logfile,level=logging.INFO)
 
-def update_database (conn):
+def update_database(conn, cc_file_id):
   """Update database dictionary to cc_files
   """
   cur = conn.cursor()
@@ -49,8 +50,8 @@ def update_database (conn):
   vals_str_list = ["%s"] * len(vals)
   vals_str = ", ".join(vals_str_list)
   try:
-    cur.execute ("UPDATE cc_files set ({cols}) = ({vals_str}) where directory = {dir} and filepath ='{file}'"
-       .format( cols = cols_str, vals_str = vals_str, dir = database["directory"], file = database["filepath"] ), vals)
+    cur.execute ("UPDATE cc_files set ({cols}) = ({vals_str}) where id = {cc_file_id}"
+       .format( cols = cols_str, vals_str = vals_str, cc_file_id = cc_file_id), vals)
   except psycopg2.Error as e:
     logging.error("Database error: {}".format(e.pgerror))
   else:
@@ -126,6 +127,8 @@ def watch (dir_id, directory):
     watched_files_id = cur.fetchall()
     logging.info("{0} files found in DB in {1}:{2}".format(len(watched_files_id), dir_id, directory))
     file_ids = set(i[0] for i in watched_files_id)
+    logging.info("IDs: {0}".format(file_ids))
+    cur.close()
 
     # so now scan all directories
     for curroot, dirs, files in os.walk(watch_dir):
@@ -147,6 +150,7 @@ def watch (dir_id, directory):
             logging.warning("I can't SELECT * ... from cc_files")
             logging.warning(e)
             logging.info ("Skipping: {}".format(curFilePath))
+            cur.close()
             continue
           counter = len(cur.fetchall())
           # row = cur.fetchone()
@@ -156,7 +160,7 @@ def watch (dir_id, directory):
             logging.info("--> New audio: "+database["filepath"])
             database["utime"] = datetime.datetime.now()
             if airtime_md.analyse_file (curFilePath,database):
-              insert_database (conn)
+              insert_database(conn)
             else:
               logging.warning("Problematic file: {}".format(database["filepath"]))
           elif counter >= 1:
@@ -168,24 +172,51 @@ def watch (dir_id, directory):
               logging.warning ("I can't SELECT mtime ... from cc_files")
               continue
             row = cur.fetchone()
-            fdate = row[0].strftime("%Y-%m-%d %H:%M:%S")
-            file_ids.remove(row[1])
+            logging.info(row)
+            fdate = row[0]
+            cc_file_id = row[1]
+            file_ids.remove(cc_file_id)
 
             # update needs only called, if new since last run
-            old_mtime = time.strptime("%Y-%m-%d %H:%M:%S", fdate)
-            new_mtime = time.strptime("%Y-%m-%d %H:%M:%S", database['mime'])
-            if old_mtime < new_mtime:
+            new_mtime = datetime.datetime.strptime(database['mtime'], "%Y-%m-%d %H:%M:%S")
+            if fdate < new_mtime:
               logging.info('--> Updating: {0}'.format(database["filepath"]))
               database["utime"] = datetime.datetime.now()
-              if airtime_md.analyse_file (curFilePath,database):
-                update_database (conn)
+              try:
+                if airtime_md.analyse_file(curFilePath,database):
+                  try:
+                    update_database(conn, cc_file_id)
+                  except Exception as e:
+                    logging.error("Could not save data for {0}".format(database["filepath"]))
+                    logging.error(e)
+                    logging.error(traceback.format_exc())
+              except Exception as e:
+                logging.error("Could not analyse {0}".format(database["filepath"]))
+                logging.error(e)
+                logging.error(traceback.format_exc())
+            else:
+              logging.info('No update required for {0}'.format(database["filepath"]))
 
+    ## TODO ##
+    ## Need to remove these properly e.g. if there are schedules that use the file!
     logging.info("Found {0} files not in {1}".format(len(file_ids), directory))
     for file_id in file_ids:
-      logging.info('Removing file ID {0}'.format(file_id))
-      query = "DELETE FROM cc_files WHERE id = %s"
-      cur.execute(query, (file_id,))
-    conn.commit()
+      cur = conn.cursor()
+      try:
+        logging.info('Removing file ID {0}'.format(file_id))
+        query = "DELETE FROM cc_files WHERE id = %s"
+        cur.execute(query, (file_id,))
+      except Exception as e:
+        logging.error(e)
+      finally:
+        cur.close()
+
+    try:
+      conn.commit()
+    except Exception as e:
+      logging.error("Could not commit DELETEs {0}".format(file_ids))
+      logging.error(e)
+      logging.error(traceback.format_exc())
 
     # close database session
     conn.close() 
@@ -231,6 +262,7 @@ def msg_received_callback (channel, method, properties,body):
     #storage_backend = msg_dict["storage_backend"]
   except Exception as e:
     logging.error("No JSON received: "+body+ str(e))
+    return
 
   if "rescan_watch" in msg_dict["cmd"]: 
        # now call the watching routine 
