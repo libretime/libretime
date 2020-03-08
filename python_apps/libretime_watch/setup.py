@@ -2,6 +2,7 @@ from setuptools import setup
 from subprocess import call
 import sys
 import os
+import stat
 
 # Change directory since setuptools uses relative paths
 script_path = os.path.dirname(os.path.realpath(__file__))
@@ -55,4 +56,4 @@ if data_files:
     print("Remember to reload the initctl configuration")
 
     # Set proper permissions for cron file to run
-    os.chmod('/etc/cron.d/libretime_watch', stat.IRUSR | stat.IWUSR | stat.IRGRP | stat.IROTH)
+    os.chmod('/etc/cron.d/libretime_watch', stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
