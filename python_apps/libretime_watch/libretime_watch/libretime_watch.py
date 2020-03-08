@@ -125,7 +125,7 @@ def watch (dir_id, directory):
     cur.execute(query, (dir_id,))
     watched_files_id = cur.fetchall()
     logging.info("{0} files found in DB in {1}:{2}".format(len(watched_files_id), dir_id, directory))
-    file_ids = set(watched_files_id)
+    file_ids = set(i[0] for i in watched_files_id)
 
     # so now scan all directories
     for curroot, dirs, files in os.walk(watch_dir):
