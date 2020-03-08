@@ -187,20 +187,22 @@ def analyse_file (filename, database):
         logging.warning('no artist ID3 for '+filename) 
         database["artist_name"]= ""
 
-
-
-    for tag in ['genre', 'label', 'organization', 'language']:
+    for tag in [
+            ('genre', 'genre'),
+            ('label', 'label'),
+            ('label', 'organization'),
+            ('language', 'language')]:
 
         try:
-            if len(audio[tag]) > 1:
-                value = ', '.join(audio[tag])
+            if len(audio[tag[1]]) > 1:
+                value = ', '.join(audio[tag[1]])
             else:
-                value = audio[tag][0]
+                value = audio[tag[1]][0]
             value = strim(value, 64)
-            database[tag] = value
+            database[tag[0]] = value
         except StandardError as err:
             logging.debug('no {0} ID3 for {1}'.format(tag, filename))
-            database[tag]= ""
+            database[tag[0]]= ""
 
     try:
         album_title = audio['album'][0]
