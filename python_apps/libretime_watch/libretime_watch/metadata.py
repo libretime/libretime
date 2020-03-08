@@ -60,6 +60,7 @@ def replay_gain (filename):
         logging.warn("%s %s %s", e.cmd, e.message, e.returncode)
     except Exception as e:
         logging.warn(e)
+        logging.warn("traceback: %s", traceback.format_exc())
 
     return None
 
@@ -227,6 +228,7 @@ def analyse_file (filename, database):
 
     if hasattr(f.info, "length"):
         #Converting the length in seconds (float) to a formatted time string
+        logging.info("TLEN: {0}".format(f.info.length))
         track_length = datetime.timedelta(seconds=f.info.length)
         database["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
         # Other fields for Airtime

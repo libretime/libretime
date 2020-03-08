@@ -34,7 +34,7 @@ shutdown=False
 
 config = {}
 
-logging.basicConfig(format='%(asctime)s %(message)s',filename=logfile,level=logging.INFO)
+logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s',filename=logfile,level=logging.INFO)
 
 def update_database (conn):
   """Update database dictionary to cc_files
