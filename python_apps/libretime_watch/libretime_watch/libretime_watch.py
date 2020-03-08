@@ -120,6 +120,7 @@ def watch (dir_id, directory):
     len_watch_dir=len(watch_dir) 
 
     # Get current files in DB to check if they've been moved or deleted
+    cur = conn.cursor()
     query = "SELECT id FROM cc_files WHERE directory = %s"
     cur.execute(query, (dir_id,))
     watched_files_id = cur.fetchall()
