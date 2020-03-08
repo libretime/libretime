@@ -32,6 +32,11 @@ from mutagen.mp3 import HeaderNotFoundError
 from mutagen.oggvorbis import OggVorbisHeaderError
 from mutagen.flac import FLACNoHeaderError
 
+##
+## TO DO:
+## Use code in airtime_analyzer for importing files rather than duplicating. 
+##
+
 #
 # analysing the file
 #
@@ -179,35 +184,21 @@ def analyse_file (filename, database):
     except StandardError as err:
         logging.warning('no artist ID3 for '+filename) 
         database["artist_name"]= ""
-    
-    try:
-        genre = audio['genre'][0]
-        genre = strim(genre, 64)
-        database["genre"] = genre
-    except StandardError as err:
-        logging.debug('no genre ID3 for '+filename) 
-        database["genre"]= ""
 
-    try:
-        language = audio['language'][0]
-        language = strim(language, 64)
-        database["language"] = language
-    except StandardError as err:
-        logging.debug('no language ID3 for '+filename)
-        database["language"]= ""
 
-    try:
-        if 'label' in audio.keys():
-            label = audio['label'][0]
-        elif 'organization' in audio.keys():
-            label = audio['organization'][0]
-        else:
-            label = ""
-        label = strim(label, 64)
-        database["label"] = label
-    except StandardError as err:
-        logging.debug('no label ID3 for '+filename) 
-        database["label"]= ""
+
+    for tag in ['genre', 'label', 'organization', 'language']:
+
+        try:
+            if len(audio[tag]) > 1:
+                value = ', '.join(audio[tag])
+            else:
+                value = audio[tag][0]
+            value = strim(value, 64)
+            database[tag] = value
+        except StandardError as err:
+            logging.debug('no {0} ID3 for {1}'.format(tag, filename))
+            database[tag]= ""
 
     try:
         album_title = audio['album'][0]
