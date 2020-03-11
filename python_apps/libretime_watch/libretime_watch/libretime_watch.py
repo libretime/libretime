@@ -62,7 +62,7 @@ def update_database(conn, cc_file_id):
 
 def insert_database (conn):
   cur = conn.cursor()
-  cols = database.keys()
+  cols = [k for k in database]
   cols_str = str(cols)
   #cut off enclosing []
   cols_str = cols_str[1:-1]
