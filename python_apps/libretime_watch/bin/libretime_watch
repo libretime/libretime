@@ -1,0 +1,12 @@
+#!/usr/bin/python
+import os
+import inspect
+#import libretime_watch
+import libretime_watch.libretime_watch as libretime_watch
+
+def run():
+  print ("Now starting libretime_watch....")
+  #os.system("python "+os.path.dirname(inspect.getfile(libretime_watch))+"/libretime_watch.pyc")
+  libretime_watch.main ()
+
+run()

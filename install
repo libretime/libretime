@@ -982,6 +982,10 @@ loudCmd "python3 ${AIRTIMEROOT}/python_apps/airtime_analyzer/setup.py install --
 systemInitInstall airtime_analyzer $web_user
 verbose "...Done"
 
+verbose "\n * Installing Watching folders feature..."
+loudCmd "python3 ${AIRTIMEROOT}/python_apps/libretime_watch/setup.py install"
+verbose "...Done"
+
 verbose "\n * Setting permissions on /var/log/airtime..."
 # Make the airtime log directory group-writable
 loudCmd "chmod -R 775 /var/log/airtime"

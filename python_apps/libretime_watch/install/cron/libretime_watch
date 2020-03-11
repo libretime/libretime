@@ -1,0 +1,2 @@
+# Re-scan Watching folders every minute
+* * * * * www-data /usr/local/bin/libretime-watch-trigger
