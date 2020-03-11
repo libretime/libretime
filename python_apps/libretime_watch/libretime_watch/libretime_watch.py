@@ -244,7 +244,7 @@ def connect_to_messaging_server():
   channel.queue_bind(exchange=EXCHANGE, queue=QUEUE, routing_key=ROUTING_KEY)
 
   logging.info("Listening for messages...")
-  channel.basic_consume(msg_received_callback,queue=QUEUE, no_ack=False)
+  channel.basic_consume(QUEUE, msg_received_callback, auto_ack=False)
 
   return connection, channel
 
@@ -283,10 +283,7 @@ def disconnect_from_messaging_server(connection):
 
 def main():
   logging.info("Program started..")
-  config = airtime.read_config()
-  if config is None:
-    logging.error("Can't open airtime configuration file.")
-    raise
+  airtime.read_config(config)
 
   # Set up a signal handler so we can shutdown gracefully
   # For some reason, this signal handler must be set up here. I'd rather 
