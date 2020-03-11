@@ -21,7 +21,7 @@ import re
 import libretime_watch
 
 import hashlib
-import magic
+# import magic
 
 from mimetypes import MimeTypes
 from mutagen.easyid3 import EasyID3
@@ -123,12 +123,13 @@ def analyse_file (filename, database):
 
     #try to determine the filetype
     try:
-        database["mime"] = magic.from_file(filename, mime=True)
+        # database["mime"] = magic.from_file(filename, mime=True)
         #
         mime = MimeTypes()
-        type, a = mime.guess_type(filename)
+        mtype, a = mime.guess_type(filename)
+        database["mime"] = mtype
         #
-        logging.info("mime_check: {} | mime: {}".format(database["mime"], type))
+        logging.info("mime_check: {0} | mime: {1}".format(database["mime"], mtype))
     except:
         logging.critical("Could not get mime type for {0}".format(filename))
         return False
