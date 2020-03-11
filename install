@@ -972,7 +972,7 @@ systemInitInstall airtime_analyzer $web_user
 verbose "...Done"
 
 verbose "\n * Installing Watching folders feature..."
-loudCmd "python ${AIRTIMEROOT}/python_apps/libretime_watch/setup.py install"
+loudCmd "python3 ${AIRTIMEROOT}/python_apps/libretime_watch/setup.py install"
 verbose "...Done"
 
 verbose "\n * Setting permissions on /var/log/airtime..."
