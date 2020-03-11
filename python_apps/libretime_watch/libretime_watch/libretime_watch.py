@@ -36,7 +36,7 @@ shutdown=False
 config = {}
 # config = airtime.read_config()
 
-logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s',filename=logfile,level=logging.INFO)
+logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s',filename=logfile,level=logging.DEBUG)
 
 def update_database(conn, cc_file_id):
   """Update database dictionary to cc_files
