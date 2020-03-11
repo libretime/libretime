@@ -3,6 +3,7 @@ import ConfigParser
 import pika, os, logging
 import json
 import psycopg2
+from libretime_watch import readconfig as airtime
 
 # initialize logging
 logfile= "/var/log/airtime/libretime_watch_cron.log"
@@ -13,29 +14,29 @@ EXCHANGE_TYPE = "direct"
 ROUTING_KEY="filesystem"
 QUEUE="media-monitor"
 
-CONFIGFILE="/etc/airtime/airtime.conf"
+# CONFIGFILE="/etc/airtime/airtime.conf"
 
 config = {}
 
-def read_config():
-  """Read airtime configfile"""
-  try: 
-    Config = ConfigParser.ConfigParser()
-    Config.read(CONFIGFILE)
-    config["db_host"]=Config.get('database','host')
-    config["db_name"]=Config.get('database','dbname')
-    config["db_user"]=Config.get('database','dbuser')
-    config["db_pass"]=Config.get('database','dbpass')
-    config["rm_host"]=Config.get('rabbitmq','host')
-    config["rm_vhost"]=Config.get('rabbitmq','vhost')
-    config["rm_port"]=Config.get('rabbitmq','port')
-    config["rm_user"]=Config.get('rabbitmq','user')
-    config["rm_pass"]=Config.get('rabbitmq','password')
-    config["api_key"]=Config.get('general','api_key')
+# def read_config():
+#   """Read airtime configfile"""
+#   try: 
+#     Config = ConfigParser.ConfigParser()
+#     Config.read(CONFIGFILE)
+#     config["db_host"]=Config.get('database','host')
+#     config["db_name"]=Config.get('database','dbname')
+#     config["db_user"]=Config.get('database','dbuser')
+#     config["db_pass"]=Config.get('database','dbpass')
+#     config["rm_host"]=Config.get('rabbitmq','host')
+#     config["rm_vhost"]=Config.get('rabbitmq','vhost')
+#     config["rm_port"]=Config.get('rabbitmq','port')
+#     config["rm_user"]=Config.get('rabbitmq','user')
+#     config["rm_pass"]=Config.get('rabbitmq','password')
+#     config["api_key"]=Config.get('general','api_key')
 
-  except:
-    logging.critical("Can't open the configfile.")
-  return config
+#   except:
+#     logging.critical("Can't open the configfile.")
+#   return config
 
 def connect_database():
   """Connect database
@@ -55,7 +56,7 @@ def connect_database():
 
 def main():
   # get the config data
-  libretime_config =read_config()
+  config = airtime.read_config()
 
   # connect to database
   conn=connect_database()
