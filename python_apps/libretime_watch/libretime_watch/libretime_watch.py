@@ -71,8 +71,6 @@ def insert_database (conn):
   vals = [database[x] for x in cols]
   vals_str_list = ["%s"] * len(vals)
   vals_str = ", ".join(vals_str_list)
-  logging.info(cols_str)
-  logging.info(vals_str)
   try:
     cur.execute ("INSERT INTO cc_files ({cols}) VALUES ({vals_str})".format(
            cols = cols_str, vals_str = vals_str), vals)
