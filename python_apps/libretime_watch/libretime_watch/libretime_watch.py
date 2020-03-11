@@ -126,9 +126,9 @@ def watch (dir_id, directory):
     query = "SELECT id FROM cc_files WHERE directory = %s"
     cur.execute(query, (dir_id,))
     watched_files_id = cur.fetchall()
-    logging.info("{0} files found in DB in {1}:{2}".format(len(watched_files_id), dir_id, directory))
+    logging.debug("{0} files found in DB in {1}:{2}".format(len(watched_files_id), dir_id, directory))
     file_ids = set(i[0] for i in watched_files_id)
-    logging.info("IDs: {0}".format(file_ids))
+    logging.debug("IDs: {0}".format(file_ids))
     cur.close()
 
     # so now scan all directories
@@ -150,7 +150,7 @@ def watch (dir_id, directory):
           except Exception as e: 
             logging.warning("I can't SELECT * ... from cc_files")
             logging.warning(e)
-            logging.info ("Skipping: {}".format(curFilePath))
+            logging.info("Skipping: {}".format(curFilePath))
             cur.close()
             continue
           counter = len(cur.fetchall())
@@ -165,7 +165,7 @@ def watch (dir_id, directory):
             else:
               logging.warning("Problematic file: {}".format(database["filepath"]))
           elif counter >= 1:
-            logging.info("--> Existing audio: "+database["filepath"])
+            logging.debug("--> Existing audio: "+database["filepath"])
             try:
               query = "SELECT mtime,id from cc_files WHERE filepath = %s AND directory = %s"
               cur.execute(query, (database["filepath"], database["directory"]))
@@ -173,7 +173,7 @@ def watch (dir_id, directory):
               logging.warning ("I can't SELECT mtime ... from cc_files")
               continue
             row = cur.fetchone()
-            logging.info(row)
+            logging.debug(row)
             fdate = row[0]
             cc_file_id = row[1]
             file_ids.remove(cc_file_id)
@@ -196,11 +196,11 @@ def watch (dir_id, directory):
                 logging.error(e)
                 logging.error(traceback.format_exc())
             else:
-              logging.info('No update required for {0}'.format(database["filepath"]))
+              logging.debug('No update required for {0}'.format(database["filepath"]))
 
     ## TODO ##
     ## Need to remove these properly e.g. if there are schedules that use the file!
-    logging.info("Found {0} files not in {1}".format(len(file_ids), directory))
+    logging.debug("Found {0} files not in {1}".format(len(file_ids), directory))
     for file_id in file_ids:
       cur = conn.cursor()
       try:
