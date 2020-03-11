@@ -16,8 +16,8 @@ import time
 import types
 import traceback
 
-import readconfig as airtime
-import metadata as airtime_md
+from libretime_watch import readconfig as airtime
+from libretime_watch import metadata as airtime_md
 
 EXCHANGE="airtime-media-monitor"
 EXCHANGE_TYPE = "direct"
