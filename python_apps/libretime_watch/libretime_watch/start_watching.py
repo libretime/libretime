@@ -56,7 +56,7 @@ def connect_database():
 
 def main():
   # get the config data
-  config = airtime.read_config()
+  airtime.read_config(config)
 
   # connect to database
   conn=connect_database()

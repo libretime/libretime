@@ -34,6 +34,7 @@ database = {}
 shutdown=False
 
 config = {}
+# config = airtime.read_config()
 
 logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s',filename=logfile,level=logging.INFO)
 
@@ -283,7 +284,7 @@ def disconnect_from_messaging_server(connection):
 
 def main():
   logging.info("Program started..")
-  config = airtime.read_config()
+  airtime.read_config(config)
   if config is None:
     logging.error("Can't open airtime configuration file.")
     raise

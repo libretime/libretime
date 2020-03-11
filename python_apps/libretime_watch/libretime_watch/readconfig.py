@@ -7,9 +7,9 @@ import os
 
 CONFIGFILE="/etc/airtime/airtime.conf"
 
-def read_config():
+def read_config(config):
   """Read airtime configfile"""
-  config = {}
+  # config = {}
   try: 
     Config = configparser.ConfigParser()
     Config.read(CONFIGFILE)
@@ -22,7 +22,6 @@ def read_config():
     config["rm_port"]=Config.get('rabbitmq','port')
     config["rm_user"]=Config.get('rabbitmq','user')
     config["rm_pass"]=Config.get('rabbitmq','password')
-    return config
   except:
-    logging.error ("can't open the configfile")
-    return None
+    logging.error("can't open the configfile")
+    raise
