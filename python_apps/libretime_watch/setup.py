@@ -41,7 +41,7 @@ setup(name='libretime_watch',
         ]
       },
       install_requires=[
-          'mutagen~=1.4.3',
+          'mutagen~=1.43.0',
           'pika',
           'psycopg2-binary', # database
           'jason',
