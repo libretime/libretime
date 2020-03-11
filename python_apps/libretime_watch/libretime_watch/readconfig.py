@@ -9,7 +9,6 @@ CONFIGFILE="/etc/airtime/airtime.conf"
 
 def read_config(config):
   """Read airtime configfile"""
-  # config = {}
   try: 
     Config = configparser.ConfigParser()
     Config.read(CONFIGFILE)
