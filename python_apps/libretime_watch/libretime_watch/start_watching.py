@@ -1,5 +1,4 @@
 #!/usr/bin/python
-import ConfigParser
 import pika, os, logging
 import json
 import psycopg2
