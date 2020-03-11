@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import ConfigParser
+import configparser
 import logging
 import os
 import libretime_watch as libretime_watch
@@ -10,7 +10,7 @@ CONFIGFILE="/etc/airtime/airtime.conf"
 def read_config():
   """Read airtime configfile"""
   try: 
-    Config = ConfigParser.ConfigParser()
+    Config = configparser.ConfigParser()
     Config.read(CONFIGFILE)
     libretime_watch.config["db_host"]=Config.get('database','host')
     libretime_watch.config["db_name"]=Config.get('database','dbname')
