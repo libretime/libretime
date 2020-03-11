@@ -22,6 +22,7 @@ def read_config():
     config["rm_port"]=Config.get('rabbitmq','port')
     config["rm_user"]=Config.get('rabbitmq','user')
     config["rm_pass"]=Config.get('rabbitmq','password')
+    return config
   except:
-    logging.error ("can't open the configfile")  
-  return config
+    logging.error ("can't open the configfile")
+    return None
