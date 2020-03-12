@@ -307,7 +307,7 @@ def analyse_file (filename, database):
             background.paste(new_img, mask=new_img.split()[3]) # 3 is the alpha channel
             background.save(img_path, format="JPEG")
             logging.info("Saving artwork: {0}".format(img_path))
-        database['artwork'] = artwork_dir
+        database['artwork'] = os.path.join(artwork_dir, fp)
         logging.info('Saved album artwork: {0}'.format(database['artwork']))
 
     except Exception as e:
