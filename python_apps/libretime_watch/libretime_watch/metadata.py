@@ -276,6 +276,7 @@ def analyse_file (filename, database):
 
         fp = database["filepath"]
         directory = filename.replace(fp,'')
+        fp = '.',join(fp.split('.')[0:-1])
         artwork_dir = os.path.join(directory, 'artwork')
 
         if not os.path.exists(artwork_dir):
@@ -283,7 +284,7 @@ def analyse_file (filename, database):
 
         image = Image.open(BytesIO(picture.data))
         for size in [32, 64, 128, 256, 512]:
-            img_file_name =  "{0}-{1}.jpg".format(database['filepath'], size)
+            img_file_name =  "{0}-{1}.jpg".format(fp, size)
             img_path = os.path.join(artwork_dir,img_file_name)
             processor = SmartResize(size, size)
             new_img = processor.process(image)
