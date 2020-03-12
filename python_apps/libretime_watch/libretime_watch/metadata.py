@@ -152,7 +152,8 @@ def analyse_file (filename, database):
             f = MP3(filename)
         except (ID3NoHeaderError, HeaderNotFoundError) as e:
             logging.warning("MP3 without Metadata: {}".format(filename))
-            return False
+            audio = mutagen.File(filename)
+            f = audio
     # Ogg
     elif database["mime"] in ['audio/ogg', 'audio/vorbis', 'audio/x-vorbis', 'application/ogg', 'application/x-ogg']:
         try:
@@ -160,7 +161,8 @@ def analyse_file (filename, database):
             f = audio
         except OggVorbisHeaderError:
             logging.warning("OGG without Metadata: {}".format(filename))
-            return False
+            audio = mutagen.File(filename)
+            f = audio
     # flac
     elif database["mime"] in ['audio/flac', 'audio/flac-x']:
         try:
@@ -168,7 +170,8 @@ def analyse_file (filename, database):
             f = audio
         except FLACNoHeaderError:
             logging.warning("FLAC without Metadata: {}".format(filename))
-            return False
+            audio = mutagen.File(filename)
+            f = audio
     else:
         logging.warning("Unsupported mime type: {} -- for audio {}".format(database["mime"], filename))
         return False
@@ -275,7 +278,7 @@ def analyse_file (filename, database):
             raise
 
         fp = database["filepath"]
-        directory = filename.replace(fp,'')
+        directory = filename.replace(fp,'') # Watch Directory
         fp = '.'.join(fp.split('.')[0:-1])
         artwork_dir = os.path.join(directory, 'artwork')
 
@@ -292,8 +295,8 @@ def analyse_file (filename, database):
             background.paste(new_img, mask=new_img.split()[3]) # 3 is the alpha channel
             background.save(img_path, format="JPEG")
             logging.info("Saving artwork: {0}".format(img_path))
-        database['artwork'] = fp
-        logging.info('Saved album artwork: {0}'.format(database['filepath']))
+        database['artwork'] = artwork_dir
+        logging.info('Saved album artwork: {0}'.format(database['artwork'] ))
 
     except Exception as e:
         logging.warning(e)
