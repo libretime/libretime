@@ -189,17 +189,17 @@ def analyse_file (filename, database):
         database["artist_name"]= ""
 
     for tag in [
-            ('genre', 'genre'),
-            ('label', 'label'),
-            ('label', 'organization'),
-            ('language', 'language')]:
+            ('genre', 'genre', 64),
+            ('label', 'label', 512),
+            ('label', 'organization', 512),
+            ('language', 'language', 512)]:
 
         try:
             if len(audio[tag[1]]) > 1:
                 value = ', '.join(audio[tag[1]])
             else:
                 value = audio[tag[1]][0]
-            value = strim(value, 64)
+            value = strim(value, tag[2])
             database[tag[0]] = value
         except Exception as err:
             logging.debug('no {0} ID3 for {1}'.format(tag, filename))
