@@ -266,10 +266,13 @@ def analyse_file (filename, database):
     # Try to import artwork
     try:
         tags = ID3(filename)
+        picture = None
         for key in tags.keys():
-            if 'APIC:' in key:
+            if 'APIC' in key:
                 picture = tags.get(key)
                 break
+        if not picture:
+            raise
 
         fp = database["filepath"]
         directory = filename.replace(fp,'')
