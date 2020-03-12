@@ -265,7 +265,7 @@ def analyse_file (filename, database):
 
     # Try to import artwork
     try:
-        picture = tags.get("APIC:")
+        picture = f.tags.get("APIC:")
         directory = database['directory']
         artwork_dir = os.path.join(directory, 'artwork')
 
