@@ -29,7 +29,7 @@ from mutagen.mp3 import MP3
 from mutagen.oggvorbis import OggVorbis
 from mutagen.flac import FLAC
 import mutagen
-from mutagen.id3 import ID3NoHeaderError
+from mutagen.id3 import ID3NoHeaderError, ID3
 from mutagen.mp3 import HeaderNotFoundError
 from mutagen.oggvorbis import OggVorbisHeaderError
 from mutagen.flac import FLACNoHeaderError
@@ -265,7 +265,12 @@ def analyse_file (filename, database):
 
     # Try to import artwork
     try:
-        picture = f.tags.get("APIC:")
+        tags = ID3(filename)
+        for key in tags.keys():
+            if 'APIC:' in key:
+                picture = tags.get(key)
+                break
+
         fp = database["filepath"]
         directory = filename.replace(fp,'')
         artwork_dir = os.path.join(directory, 'artwork')
