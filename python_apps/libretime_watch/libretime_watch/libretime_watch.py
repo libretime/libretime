@@ -168,7 +168,7 @@ def watch (dir_id, directory):
             # new file
             logging.info("--> New audio: "+database["filepath"])
             database["utime"] = datetime.datetime.now()
-            if airtime_md.analyse_file (curFilePath,database):
+            if airtime_md.analyse_file(curFilePath,database):
               insert_database(conn)
             else:
               logging.warning("Problematic file: {}".format(database["filepath"]))
