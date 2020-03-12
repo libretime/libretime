@@ -114,6 +114,7 @@ def connect_database():
 
 
 def watch (dir_id, directory):
+    database = {}
     timestamp = touch_timestamp()
     logging.info ("Start scanning directory "+directory+ " for new files since "+ timestamp)
     conn = connect_database()
