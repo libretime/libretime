@@ -287,7 +287,7 @@ def analyse_file (filename, database):
                 picture = tags.get(key)
                 break
         if not picture:
-            raise
+            return True
 
         fp = database["filepath"]
         directory = filename.replace(fp,'') # Watch Directory
@@ -313,7 +313,6 @@ def analyse_file (filename, database):
     except Exception as e:
         logging.warning(e)
         logging.info('Could not extract album artwork.')
-
 
 
     return True
