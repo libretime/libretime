@@ -276,7 +276,7 @@ def analyse_file (filename, database):
 
         fp = database["filepath"]
         directory = filename.replace(fp,'')
-        fp = '.',join(fp.split('.')[0:-1])
+        fp = '.'.join(fp.split('.')[0:-1])
         artwork_dir = os.path.join(directory, 'artwork')
 
         if not os.path.exists(artwork_dir):
