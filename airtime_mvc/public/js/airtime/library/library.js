@@ -766,6 +766,43 @@ var AIRTIME = (function(AIRTIME) {
                         .on('click', function (e) {
                             $(this).contextMenu({x: $(e.target).offset().left, y: $(e.target).offset().top})
                         }).html("<div class='library_actions_btn'>...</div>");
+
+                    $(nRow).find('td.library_track_type')
+                          .on('click', function (e) {
+
+                              $.getJSON(
+                              baseUrl + "api/track-types",
+                              function(json){
+                                    var type_enabled = false;
+                                    $.each(json, function(key, value) {
+
+                                        if(value['code'] == aData.track_type){
+                                            $("#au_"+aData.id+" td.library_track_type div.library_track_type_btn").qtip({
+                                              content: {
+                                                  text: value['type_name']
+                                              },
+                                              style: {
+                                                classes: 'track-type-tip'
+                                              },
+                                              show: {
+                                                ready: true
+                                              },
+                                              hide: {
+                                                distance: 30,
+                                                fixed: true,
+                                              }
+                                            });
+
+                                            type_enabled = true;
+                                        }
+                                    });
+
+                                    if(type_enabled == false){
+                                      alert("This type is disabled.");
+                                    }
+                              });
+
+                          }).html("<div class='library_track_type_btn'>"+aData.track_type+"</div>");
                 }
 
                 // add audio preview image/button
