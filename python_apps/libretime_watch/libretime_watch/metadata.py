@@ -297,6 +297,9 @@ def analyse_file (filename, database):
         if not os.path.exists(artwork_dir):
             os.mkdir(artwork_dir, mode=0o777)
 
+        with open(os.path.join(artwork_dir, fp), 'w') as file:
+            file.write(picture.data)
+
         image = Image.open(BytesIO(picture.data))
         for size in [32, 64, 128, 256, 512]:
             img_file_name =  "{0}-{1}.jpg".format(fp, size)
