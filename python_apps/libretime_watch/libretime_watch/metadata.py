@@ -37,6 +37,7 @@ from mutagen.flac import FLACNoHeaderError
 from io import BytesIO
 from PIL import Image
 from pilkit.processors import SmartResize
+import base64
 
 ##
 ## TO DO:
@@ -297,18 +298,27 @@ def analyse_file (filename, database):
         if not os.path.exists(artwork_dir):
             os.mkdir(artwork_dir, mode=0o777)
 
-        with open(os.path.join(artwork_dir, fp), 'w') as file:
-            file.write(picture.data)
-
         image = Image.open(BytesIO(picture.data))
         for size in [32, 64, 128, 256, 512]:
             img_file_name =  "{0}-{1}.jpg".format(fp, size)
+            if size == 512:
+                base64_file_name = fp
+            else:
+                base64_file_name =  "{0}-{1}".format(fp, size)
+
             img_path = os.path.join(artwork_dir,img_file_name)
             processor = SmartResize(size, size)
             new_img = processor.process(image)
             background = Image.new("RGB", new_img.size, (255, 255, 255))
             background.paste(new_img, mask=new_img.split()[3]) # 3 is the alpha channel
             background.save(img_path, format="JPEG")
+            temp = BytesIO()
+            background.save(temp, format="JPEG")
+            encoded = base64.b64encode(temp.getvalue())
+            with open(base64_file_name, 'w') as file:
+                data = "data:image/jpeg;charset=utf-8;base64," + encoded
+                file.write(data)
+
             logging.info("Saving artwork: {0}".format(img_path))
         database['artwork'] = os.path.join(artwork_dir, fp)
         logging.info('Saved album artwork: {0}'.format(database['artwork']))
