@@ -296,7 +296,7 @@ def analyse_file (filename, database):
             background.save(img_path, format="JPEG")
             logging.info("Saving artwork: {0}".format(img_path))
         database['artwork'] = artwork_dir
-        logging.info('Saved album artwork: {0}'.format(database['artwork'] ))
+        logging.info('Saved album artwork: {0}'.format(database['artwork']))
 
     except Exception as e:
         logging.warning(e)
