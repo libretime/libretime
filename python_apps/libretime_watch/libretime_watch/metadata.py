@@ -266,7 +266,8 @@ def analyse_file (filename, database):
     # Try to import artwork
     try:
         picture = f.tags.get("APIC:")
-        directory = database['directory']
+        fp = database["filepath"]
+        directory = filename.replace(fp,'')
         artwork_dir = os.path.join(directory, 'artwork')
 
         if not os.path.exists(artwork_dir):
@@ -282,7 +283,7 @@ def analyse_file (filename, database):
             background.paste(new_img, mask=new_img.split()[3]) # 3 is the alpha channel
             background.save(img_path, format="JPEG")
             logging.info("Saving artwork: {0}".format(img_path))
-        database['artwork'] = database['filepath']
+        database['artwork'] = fp
         logging.info('Saved album artwork: {0}'.format(database['filepath']))
 
     except Exception as e:
