@@ -34,6 +34,10 @@ from mutagen.mp3 import HeaderNotFoundError
 from mutagen.oggvorbis import OggVorbisHeaderError
 from mutagen.flac import FLACNoHeaderError
 
+from io import BytesIO
+from PIL import Image
+from pilkit.processors import SmartResize
+
 ##
 ## TO DO:
 ## Use code in airtime_analyzer for importing files rather than duplicating. 
@@ -257,5 +261,34 @@ def analyse_file (filename, database):
             database["channels"] = 2
     else:
         database["channels"] = f.info.channels
+
+
+    # Try to import artwork
+    try:
+        picture = tags.get("APIC:")
+        directory = database['directory']
+        artwork_dir = os.path.join(directory, 'artwork')
+
+        if not os.path.exists(artwork_dir):
+            os.mkdir(artwork_dir, mode=0o777)
+
+        image = Image.open(BytesIO(picture.data))
+        for size in [32, 64, 128, 256, 512]:
+            img_file_name =  "{0}-{1}.jpg".format(database['filepath'], size)
+            img_path = os.path.join(artwork_dir,img_file_name)
+            processor = SmartResize(size, size)
+            new_img = processor.process(image)
+            background = Image.new("RGB", new_img.size, (255, 255, 255))
+            background.paste(new_img, mask=new_img.split()[3]) # 3 is the alpha channel
+            background.save(img_path, format="JPEG")
+            logging.info("Saving artwork: {0}".format(img_path))
+        database['artwork'] = database['filepath']
+        logging.info('Saved album artwork: {0}'.format(database['filepath']))
+
+    except Exception as e:
+        logging.warning(e)
+        logging.info('Could not extract album artwork.')
+
+
 
     return True
