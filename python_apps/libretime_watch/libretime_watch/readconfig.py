@@ -22,6 +22,12 @@ def read_config(config):
     config["rm_user"]=Config.get('rabbitmq','user')
     config["rm_pass"]=Config.get('rabbitmq','password')
     config["api_key"]=Config.get('general','api_key')
+    config["airtime_dir"]=Config.get('general', 'airtime_dir')
+
+    # Is there a better way to do this?
+    if not config["airtime_dir"]:
+        config["airtime_dir"] = '/srv/airtime/stor/'
+
   except:
-    logging.error ("can't open the configfile")
+    logging.error("can't open the configfile")
     raise
