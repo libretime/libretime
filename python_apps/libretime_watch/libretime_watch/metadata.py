@@ -316,7 +316,7 @@ def analyse_file (filename, database):
             background.save(temp, format="JPEG")
             encoded = base64.b64encode(temp.getvalue())
             with open(base64_file_name, 'w') as file:
-                data = "data:image/jpeg;charset=utf-8;base64," + encoded
+                data = "data:image/jpeg;charset=utf-8;base64," + str(encoded)
                 file.write(data)
 
             logging.info("Saving artwork: {0}".format(img_path))
