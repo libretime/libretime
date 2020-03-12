@@ -289,6 +289,11 @@ def analyse_file (filename, database):
 
 
     # Try to import artwork
+    # TODO:
+    # - Make sure we don't have overlapping file names
+    # - Test this works with other types of files (not just mines)
+    # - 
+
     try:
         tags = ID3(filename)
         picture = None
