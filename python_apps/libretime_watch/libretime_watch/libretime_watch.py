@@ -136,6 +136,14 @@ def watch (dir_id, directory):
         if files == None:
           continue
         for curFile in files:
+
+          # Ignore files that begin with '.'
+          if curFile[0] == '.':
+            continue
+          # Ignore files with non audio extensions
+          elif curFile.split('.')[-1].lower() not in 'mp4 m4a flac wav wave mpg mp3 mov aiff pcm ogg mkv':
+            continue
+
           database["directory"] = dir_id
           curFilePath = os.path.join(curroot, curFile)
           # cut off the watch_dir
