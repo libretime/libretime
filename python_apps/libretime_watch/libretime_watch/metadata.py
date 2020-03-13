@@ -269,6 +269,7 @@ def analyse_file (filename, database):
         database["track_number"]= 0
 
     try:
+        bpm = None
         bpm = bpm(filename)
     except ValueError:
         bpm = int(float(audio['bpm'][0]))
