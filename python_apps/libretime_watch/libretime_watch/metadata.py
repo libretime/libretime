@@ -9,6 +9,8 @@ import datetime
 import json
 import logging
 import os
+import pwd
+import grp
 import select
 import signal
 import subprocess
@@ -29,10 +31,20 @@ from mutagen.mp3 import MP3
 from mutagen.oggvorbis import OggVorbis
 from mutagen.flac import FLAC
 import mutagen
-from mutagen.id3 import ID3NoHeaderError
+from mutagen.id3 import ID3NoHeaderError, ID3
 from mutagen.mp3 import HeaderNotFoundError
 from mutagen.oggvorbis import OggVorbisHeaderError
 from mutagen.flac import FLACNoHeaderError
+
+from io import BytesIO
+from PIL import Image
+from pilkit.processors import SmartResize
+import base64
+
+from libretime_watch import readconfig as airtime
+
+config = {}
+
 
 ##
 ## TO DO:
@@ -130,6 +142,8 @@ def analyse_file (filename, database):
       It's filling the database dictionary with metadata read from
       the file
     """
+    airtime.read_config(config)
+
     analyse_ok=False
     logging.info ("analyse Filename: "+filename)
 
@@ -160,7 +174,12 @@ def analyse_file (filename, database):
             f = MP3(filename)
         except (ID3NoHeaderError, HeaderNotFoundError) as e:
             logging.warning("MP3 without Metadata: {}".format(filename))
-            return False
+            try:
+                audio = mutagen.File(filename)
+                f = audio
+            except Exception as e:
+                logging.error(e)
+                return False
     # Ogg
     elif database["mime"] in ['audio/ogg', 'audio/vorbis', 'audio/x-vorbis', 'application/ogg', 'application/x-ogg']:
         try:
@@ -168,7 +187,12 @@ def analyse_file (filename, database):
             f = audio
         except OggVorbisHeaderError:
             logging.warning("OGG without Metadata: {}".format(filename))
-            return False
+            try:
+                audio = mutagen.File(filename)
+                f = audio
+            except Exception as e:
+                logging.error(e)
+                return False
     # flac
     elif database["mime"] in ['audio/flac', 'audio/flac-x']:
         try:
@@ -176,7 +200,12 @@ def analyse_file (filename, database):
             f = audio
         except FLACNoHeaderError:
             logging.warning("FLAC without Metadata: {}".format(filename))
-            return False
+            try:
+                audio = mutagen.File(filename)
+                f = audio
+            except Exception as e:
+                logging.error(e)
+                return False
     else:
         logging.warning("Unsupported mime type: {} -- for audio {}".format(database["mime"], filename))
         return False
@@ -284,5 +313,61 @@ def analyse_file (filename, database):
             database["channels"] = 2
     else:
         database["channels"] = f.info.channels
+
+
+    # Try to import artwork
+    database['artwork'] = '' # Reset this key
+    try:
+        tags = ID3(filename)
+        picture = None
+        for key in tags.keys():
+            if 'APIC' in key:
+                picture = tags.get(key)
+                break
+        if not picture:
+            return True
+
+        fp = database["filepath"]
+        directory = filename.replace(fp,'') # Watch Directory
+        fp = '.'.join(fp.split('.')[0:-1])
+        artwork_dir = os.path.join(config['airtime_dir'], 'artwork')
+
+        uid = pwd.getpwnam("www-data").pw_uid
+        gid = grp.getgrnam("www-data").gr_gid
+        if not os.path.exists(artwork_dir):
+            os.mkdir(artwork_dir, mode=0o777)
+            os.chown(artwork_dir, uid, gid)
+
+        image = Image.open(BytesIO(picture.data))
+        for size in [32, 64, 128, 256, 512]:
+            img_file_name =  "{0}-{1}.jpg".format(fp, size)
+            if size == 512:
+                base64_file_name = fp
+            else:
+                base64_file_name =  "{0}-{1}".format(fp, size)
+            img_path = os.path.join(artwork_dir,img_file_name)
+            b64_path = os.path.join(artwork_dir,base64_file_name)
+            processor = SmartResize(size, size)
+            new_img = processor.process(image)
+            background = Image.new("RGB", new_img.size, (255, 255, 255))
+            background.paste(new_img, mask=new_img.split()[3]) # 3 is the alpha channel
+            background.save(img_path, format="JPEG")
+            temp = BytesIO()
+            background.save(temp, format="JPEG")
+            encoded = base64.b64encode(temp.getvalue())
+            with open(b64_path, 'w') as file:
+                data = "data:image/jpeg;charset=utf-8;base64," + encoded.decode()
+                file.write(data)
+            os.chown(img_path, uid, gid)
+            os.chown(b64_path, uid, gid)
+            logging.info("Saving artwork: {0}".format(img_path))
+
+        database['artwork'] = os.path.join(artwork_dir.replace(config['airtime_dir'], ''), fp)
+        logging.info('Saved album artwork: {0}'.format(database['artwork']))
+
+    except Exception as e:
+        logging.warning(e)
+        logging.info('Could not extract album artwork.')
+
 
     return True
