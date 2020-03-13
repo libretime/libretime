@@ -255,7 +255,7 @@ def analyse_file (filename, database):
     except Exception as err:
         logging.debug('no track_number for '+filename) 
         database["track_number"]= 0
-    
+
     database["bit_rate"] = f.info.bitrate
     database["sample_rate"] = f.info.sample_rate
 
