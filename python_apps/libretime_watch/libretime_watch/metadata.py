@@ -110,7 +110,7 @@ def cue_points (filename, cue_in, cue_out):
 
     return cue_in, cue_out
 
-def bpm(filename):
+def calculate_bpm(filename):
     # Attempt to calculate BPM
     cmd = [
         'ffmpeg','-i',filename,
@@ -270,7 +270,7 @@ def analyse_file (filename, database):
 
     try:
         bpm = None
-        bpm = bpm(filename)
+        bpm = calculate_bpm(filename)
     except ValueError:
         bpm = int(float(audio['bpm'][0]))
     except KeyError:
