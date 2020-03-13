@@ -114,8 +114,8 @@ def calculate_bpm(filename):
     # Attempt to calculate BPM
     cmd = [
         'ffmpeg','-i',filename,
-        '-c:a', 'pcm_s32le', '-ar', '44.1k', '-ac', '1',
-        '-f', 'raw', '-v', 'quiet', '-']
+        '-c:a', 'pcm_f32le', '-ar', '44100', '-ac', '1',
+        '-f', 'f32le', '-v', 'quiet', '-']
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output = subprocess.check_output(['bpm'], stdin=p.stdout)
     p.wait()
@@ -274,7 +274,7 @@ def analyse_file (filename, database):
     except ValueError:
         bpm = int(float(audio['bpm'][0]))
     except KeyError:
-        bpm = None
+        pass
     finally:
         if bpm:
             database["bpm"] = int(bpm)
