@@ -258,7 +258,7 @@ def analyse_file (filename, database):
 
     # Get BPM
     try:
-        bpm = audio['bpm'][0]
+        bpm = float(audio['bpm'][0])
     except KeyError as e:
         try:
             # Attempt to calculate BPM
@@ -268,7 +268,7 @@ def analyse_file (filename, database):
                 '-f', 'raw', '-v', 'quiet', '-', '|', 'bpm']
             p = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
             output, error = p.communicate()
-            bpm = int(out)
+            bpm = float(out)
         except Exception as e:
             logging.debug("Could not calculate BPM")
             bpm = None
