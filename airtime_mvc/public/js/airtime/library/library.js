@@ -778,19 +778,37 @@ var AIRTIME = (function(AIRTIME) {
 
                                         if(value['code'] == aData.track_type){
                                             $("#au_"+aData.id+" td.library_track_type div.library_track_type_btn").qtip({
-                                              content: {
-                                                  text: value['type_name']
-                                              },
-                                              style: {
-                                                classes: 'track-type-tip'
-                                              },
-                                              show: {
-                                                ready: true
-                                              },
-                                              hide: {
-                                                distance: 30,
-                                                fixed: true,
-                                              }
+                                                  overwrite: false,
+                                                  content: {
+                                                      text: value['type_name']
+                                                  },
+                                                  style: {
+                                                    classes: 'track-type-tip',
+                                                    widget: true,
+                                                    def: false,
+                                                    position: {
+                                                        target: $("#au_"+aData.id+" td.library_track_type"), // my target
+                                                        my: 'bottom center',
+                                                        at: 'top center',
+                                                        adjust: {
+                                                              x: 50
+                                                          }
+                                                    },
+                                                    tip: {
+                                                        height: 5,
+                                                        width: 12,
+                                                        corner: 'bottom left',
+                                                        mimic: 'left'
+                                                    }
+                                                  },
+                                                  show: {
+                                                    ready: true
+                                                  },
+                                                  hide: {
+                                                    distance: 30,
+                                                    delay: 200,
+                                                    fixed: true,
+                                                  }
                                             });
 
                                             type_enabled = true;

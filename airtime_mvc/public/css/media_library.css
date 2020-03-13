@@ -148,16 +148,15 @@ td.library_track_type
 }
 
 .library_track_type_btn {
-	float: left;
-	font-weight: bold;
-	white-space: nowrap;
+	font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
 	border: 1px solid #ccc;
-	border-radius: 2px;
-	padding: 0px !important;
-	margin: 0px !important;
-	margin-right: 6px !important;
-	line-height: 17px !important;
-	padding: 3px !important;
+	border-radius: 1px;
+	margin: 5px 6px !important;
+	line-height: 13px !important;
+	padding: 5px 6px !important;
 }
 
 .library_track_type_btn:hover {
@@ -171,9 +170,15 @@ tr.lib-selected > td > div.library_track_type_btn:hover {
 	color: #eee;
 }
 .track-type-tip{
-    margin-left: -50px;
-    margin-top: -68px;
-    z-index: 1000 !important;
+    overflow: visible;
+    overflow-y: visible;
+    margin-left: -30px;
+    margin-top: -61px;
+    z-index: 10000 !important;
+}
+
+.track-type-tip.qtip-pos-tl{
+    color: #000;
 }
 
 .library_import {
