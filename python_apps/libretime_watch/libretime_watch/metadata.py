@@ -274,7 +274,7 @@ def analyse_file (filename, database):
             bpm = None
     if bpm:
         database["bpm"] = int(bpm)
-        logging.info("BPM: {0}".format(BPM))
+        logging.info("BPM: {0}".format(bpm))
     else:
         del database["bpm"]
 
