@@ -805,7 +805,6 @@ var AIRTIME = (function(AIRTIME) {
                                                     ready: true
                                                   },
                                                   hide: {
-                                                    distance: 30,
                                                     delay: 200,
                                                     fixed: true,
                                                   }
