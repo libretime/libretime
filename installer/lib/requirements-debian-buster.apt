@@ -50,9 +50,15 @@ python3-virtualenv
 python3-cairo
 rabbitmq-server
 systemd-sysv
+
 unzip
 vorbisgain
 vorbis-tools
 vorbis-tools
 xmlstarlet
 zip
+
+
+bpm-tools
+ffmpeg
+
