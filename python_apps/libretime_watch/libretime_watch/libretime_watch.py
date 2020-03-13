@@ -127,7 +127,7 @@ def watch (dir_id, directory):
     watched_files_id = cur.fetchall()
     logging.info("{0} files found in DB in {1}:{2}".format(len(watched_files_id), dir_id, directory))
     file_ids = set(i[0] for i in watched_files_id)
-    logging.info("IDs: {0}".format(file_ids))
+    logging.debug("IDs: {0}".format(file_ids))
     cur.close()
 
     # so now scan all directories
@@ -194,8 +194,7 @@ def watch (dir_id, directory):
                 logging.error("Could not analyse {0}".format(database["filepath"]))
                 logging.error(e)
                 logging.error(traceback.format_exc())
-            else:
-              logging.info('No update required for {0}'.format(database["filepath"]))
+            else:debug('No update required for {0}'.format(database["filepath"]))
 
     ## TODO ##
     ## Need to remove these properly e.g. if there are schedules that use the file!
