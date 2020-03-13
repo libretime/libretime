@@ -269,11 +269,14 @@ def analyse_file (filename, database):
             p = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
             output, error = p.communicate()
             bpm = int(out)
-            logging.info("BPM: {0}".format(BPM))
         except Exception as e:
             logging.debug("Could not calculate BPM")
-            bpm = ''
-    database["bpm"] = bpm
+            bpm = None
+    if bpm:
+        database["bpm"] = int(bpm)
+        logging.info("BPM: {0}".format(BPM))
+    else:
+        del database["bpm"]
 
     database["bit_rate"] = f.info.bitrate
     database["sample_rate"] = f.info.sample_rate
