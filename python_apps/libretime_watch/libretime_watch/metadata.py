@@ -275,7 +275,7 @@ def analyse_file (filename, database):
     except KeyError:
         bpm = None
     finally:
-        if bpm
+        if bpm:
             database["bpm"] = int(bpm)
             logging.info("BPM: {0}".format(bpm))
         else:
