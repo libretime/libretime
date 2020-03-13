@@ -180,7 +180,7 @@ def watch (dir_id, directory):
               logging.warning ("I can't SELECT mtime ... from cc_files")
               continue
             row = cur.fetchone()
-            logging.info(row)
+            logging.debug(row)
             fdate = row[0]
             cc_file_id = row[1]
             file_ids.remove(cc_file_id)
