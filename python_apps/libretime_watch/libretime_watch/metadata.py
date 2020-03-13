@@ -113,13 +113,13 @@ def cue_points (filename, cue_in, cue_out):
 def calculate_bpm(filename):
     # Attempt to calculate BPM
     cmd = [
-        'ffmpeg','-i',filename,
-        '-c:a', 'pcm_f32le', '-ar', '44100', '-ac', '1',
-        '-f', 'f32le', '-v', 'quiet', '-']
+        'ffmpeg','-v', 'quiet', '-i', filename,
+        '-f', 'f32le', '-c:a', 'pcm_f32le', '-ar', '44100', '-ac', '1',
+          'pipe:1']
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output = subprocess.check_output(['bpm'], stdin=p.stdout)
+    output = subprocess.check_output(['bpm', '-m', '30','-x', '240'], stdin=p.stdout)
     p.wait()
-    bpm = float(output)
+    bpm = round(float(output))
     return int(bpm)
 
 def md5_hash(filename):
