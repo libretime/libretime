@@ -98,6 +98,18 @@ def cue_points (filename, cue_in, cue_out):
 
     return cue_in, cue_out
 
+def bpm(filename):
+    # Attempt to calculate BPM
+    cmd = [
+        'ffmpeg','-i',filename,
+        '-c:a', 'pcm_s32le', '-ar', '44.1k', '-ac', '1',
+        '-f', 'raw', '-v', 'quiet', '-']
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output = subprocess.check_output(['bpm'], stdin=p.stdout)
+    p.wait()
+    bpm = float(output)
+    return int(bpm)
+
 def md5_hash(filename):
     """encapsulate MD5 hashing into a function"""
     with open(filename, 'rb') as fh:
@@ -227,30 +239,19 @@ def analyse_file (filename, database):
         logging.debug('no track_number for '+filename) 
         database["track_number"]= 0
 
-    # Get BPM
     try:
-        bpm = float(audio['bpm'][0])
-        if not bpm:
-            raise KeyError
-    except KeyError as e:
-        try:
-            # Attempt to calculate BPM
-            cmd = [
-                'ffmpeg','-i',filename,
-                '-c:a', 'pcm_s32le', '-ar', '44.1k', '-ac', '1',
-                '-f', 'raw', '-v', 'quiet', '-', '|', 'bpm']
-            p = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-            output, error = p.communicate()
-            bpm = float(out)
-        except Exception as e:
-            logging.debug("Could not calculate BPM")
-            bpm = None
-    if bpm:
-        database["bpm"] = int(bpm)
-        logging.info("BPM: {0}".format(bpm))
-    else:
-        if "bpm" in database:
-            del database["bpm"]
+        bpm = bpm(filename)
+    except ValueError:
+        bpm = int(float(audio['bpm'][0]))
+    except KeyError:
+        bpm = None
+    finally:
+        if bpm
+            database["bpm"] = int(bpm)
+            logging.info("BPM: {0}".format(bpm))
+        else:
+            if "bpm" in database:
+                del database["bpm"]
 
     database["bit_rate"] = f.info.bitrate
     database["sample_rate"] = f.info.sample_rate
