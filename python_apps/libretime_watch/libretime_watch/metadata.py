@@ -218,17 +218,17 @@ def analyse_file (filename, database):
         database["artist_name"]= ""
 
     for tag in [
-            ('genre', 'genre', 64),
-            ('label', 'label', 512),
-            ('label', 'organization', 512),
-            ('language', 'language', 512)]:
+            ('genre', 'genre'),
+            ('label', 'label'),
+            ('label', 'organization'),
+            ('language', 'language')]:
 
         try:
             if len(audio[tag[1]]) > 1:
                 value = ', '.join(audio[tag[1]])
             else:
                 value = audio[tag[1]][0]
-            value = strim(value, tag[2])
+            value = strim(value, 64)
             database[tag[0]] = value
         except Exception as err:
             logging.debug('no {0} ID3 for {1}'.format(tag, filename))
@@ -255,28 +255,7 @@ def analyse_file (filename, database):
     except Exception as err:
         logging.debug('no track_number for '+filename) 
         database["track_number"]= 0
-
-
-    # Get BPM
-    try:
-        bpm = audio['bpm'][0]
-    except KeyError as e:
-        try:
-            # Attempt to calculate BPM
-            cmd = [
-                'ffmpeg','-i',filename,
-                '-c:a', 'pcm_s32le', '-ar', '44.1k', '-ac', '1',
-                '-f', 'raw', '-v', 'quiet', '-', '|', 'bpm']
-            p = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-            output, error = p.communicate()
-            bpm = int(out)
-            logging.info("BPM: {0}".format(BPM))
-        except Exception as e:
-            logging.debug("Could not calculate BPM")
-            bpm = ''
-    database["bpm"] = bpm
-
-
+    
     database["bit_rate"] = f.info.bitrate
     database["sample_rate"] = f.info.sample_rate
 
@@ -310,11 +289,7 @@ def analyse_file (filename, database):
 
 
     # Try to import artwork
-    # TODO:
-    # - Make sure we don't have overlapping file names
-    # - Test this works with other types of files (not just mines)
-    # - 
-
+    database['artwork'] = '' # Reset this key
     try:
         tags = ID3(filename)
         picture = None
