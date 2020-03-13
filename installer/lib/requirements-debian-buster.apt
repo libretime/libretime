@@ -67,3 +67,6 @@ liquidsoap
 libopus0
 
 systemd-sysv
+
+bpm-tools
+ffmpeg
