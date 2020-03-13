@@ -230,6 +230,8 @@ def analyse_file (filename, database):
     # Get BPM
     try:
         bpm = float(audio['bpm'][0])
+        if not bpm:
+            raise KeyError
     except KeyError as e:
         try:
             # Attempt to calculate BPM
@@ -247,7 +249,8 @@ def analyse_file (filename, database):
         database["bpm"] = int(bpm)
         logging.info("BPM: {0}".format(bpm))
     else:
-        del database["bpm"]
+        if "bpm" in database:
+            del database["bpm"]
 
     database["bit_rate"] = f.info.bitrate
     database["sample_rate"] = f.info.sample_rate
