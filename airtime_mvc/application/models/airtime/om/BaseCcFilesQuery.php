@@ -79,6 +79,7 @@
  * @method CcFilesQuery orderByDbFilesize($order = Criteria::ASC) Order by the filesize column
  * @method CcFilesQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
  * @method CcFilesQuery orderByDbArtwork($order = Criteria::ASC) Order by the artwork column
+ * @method CcFilesQuery orderByDbTrackType($order = Criteria::ASC) Order by the track_type column
  *
  * @method CcFilesQuery groupByDbId() Group by the id column
  * @method CcFilesQuery groupByDbName() Group by the name column
@@ -153,6 +154,7 @@
  * @method CcFilesQuery groupByDbFilesize() Group by the filesize column
  * @method CcFilesQuery groupByDbDescription() Group by the description column
  * @method CcFilesQuery groupByDbArtwork() Group by the artwork column
+ * @method CcFilesQuery groupByDbTrackType() Group by the track_type column
  *
  * @method CcFilesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method CcFilesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -277,6 +279,7 @@
  * @method CcFiles findOneByDbFilesize(int $filesize) Return the first CcFiles filtered by the filesize column
  * @method CcFiles findOneByDbDescription(string $description) Return the first CcFiles filtered by the description column
  * @method CcFiles findOneByDbArtwork(string $artwork) Return the first CcFiles filtered by the artwork column
+ * @method CcFiles findOneByDbTrackType(string $track_type) Return the first CcFiles filtered by the track_type column
  *
  * @method array findByDbId(int $id) Return CcFiles objects filtered by the id column
  * @method array findByDbName(string $name) Return CcFiles objects filtered by the name column
@@ -351,6 +354,7 @@
  * @method array findByDbFilesize(int $filesize) Return CcFiles objects filtered by the filesize column
  * @method array findByDbDescription(string $description) Return CcFiles objects filtered by the description column
  * @method array findByDbArtwork(string $artwork) Return CcFiles objects filtered by the artwork column
+ * @method array findByDbTrackType(string $track_type) Return CcFiles objects filtered by the track_type column
  *
  * @package    propel.generator.airtime.om
  */
@@ -458,7 +462,7 @@ abstract class BaseCcFilesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "name", "mime", "ftype", "directory", "filepath", "import_status", "currentlyaccessing", "editedby", "mtime", "utime", "lptime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "soundcloud_id", "soundcloud_error_code", "soundcloud_error_msg", "soundcloud_link_to_file", "soundcloud_upload_time", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist", "filesize", "description", "artwork" FROM "cc_files" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "name", "mime", "ftype", "directory", "filepath", "import_status", "currentlyaccessing", "editedby", "mtime", "utime", "lptime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "soundcloud_id", "soundcloud_error_code", "soundcloud_error_msg", "soundcloud_link_to_file", "soundcloud_upload_time", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist", "filesize", "description", "artwork", "track_type" FROM "cc_files" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -1968,6 +1972,35 @@ abstract class BaseCcFilesQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CcFilesPeer::ARTWORK, $dbArtwork, $comparison);
+    }
+
+    /**
+     * Filter the query on the track_type column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbTrackType('fooValue');   // WHERE track_type = 'fooValue'
+     * $query->filterByDbTrackType('%fooValue%'); // WHERE track_type LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbTrackType The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcFilesQuery The current query, for fluid interface
+     */
+    public function filterByDbTrackType($dbTrackType = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbTrackType)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbTrackType)) {
+                $dbTrackType = str_replace('*', '%', $dbTrackType);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CcFilesPeer::TRACK_TYPE, $dbTrackType, $comparison);
     }
 
     /**

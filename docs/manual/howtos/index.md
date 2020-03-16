@@ -12,3 +12,6 @@ The following are step-by-step instructions derived from the LibreTime tutorials
 * [How to setup an intro playlist](intro-playlist.md)
 * [How to setup an outro playlist with ambient music](outro-playlist.md)
 * [How to setup latest podcast episode to play with autoloading playlist](podcast.md)
+
+##Adminstrators How Tos##
+* [How to add track types](track-types.md)

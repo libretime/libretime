@@ -431,4 +431,20 @@ class FileDataHelper {
           }
     }
 
+    /**
+     * Track Type
+     *
+     * @return string Track type key value
+     */
+    public static function saveTrackType()
+    {
+        if (isset($_COOKIE['tt_upload'])) {
+            $tt = $_COOKIE['tt_upload'];
+        } else {
+          // Use default track type
+          $tt = "MUS";
+        }
+        return $tt;
+    }
+
 }

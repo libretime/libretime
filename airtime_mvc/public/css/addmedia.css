@@ -640,3 +640,9 @@ table#recent_uploads_table td
 	left: 0;
 	right: 0;
 }
+
+#track_type_selection {
+	position: absolute;
+	right: 2px;
+	top: 0;
+}
