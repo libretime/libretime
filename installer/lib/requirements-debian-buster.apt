@@ -59,7 +59,7 @@ libfaad2
 php-apcu
 
 lame
-
+silan
 coreutils
 
 liquidsoap
@@ -67,3 +67,5 @@ liquidsoap
 libopus0
 
 systemd-sysv
+
+xmlstarlet
