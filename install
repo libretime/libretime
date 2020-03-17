@@ -906,7 +906,7 @@ if [ "$icecast" = "t" ]; then
 	icecast_config="/etc/icecast.xml"
     fi
     # only update icecast password if 
-    if [ ! -f "/etc/airtime/airtime.conf" ] && [ !-f "/etc/airtime/airtime.conf.tmp" ]; then
+    if [ ! -e "/etc/airtime/airtime.conf" ] && [ ! -e "/etc/airtime/airtime.conf.tmp" ]; then
         icecast_pass=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-12};)
         echo $icecast_pass > /tmp/icecast_pass
         loud "\n New install detected setting icecast password to random value."
