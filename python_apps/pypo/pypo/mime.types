@@ -9,6 +9,7 @@ audio/aac           aac
 audio/aacp          aac
 audio/mp4           m4a
 audio/x-flac        flac
+audio/flac          flac
 audio/wav           wav
 audio/x-wav         wav
 audio/mp2           mp2
