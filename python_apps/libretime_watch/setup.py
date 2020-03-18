@@ -53,9 +53,8 @@ setup(name='libretime_watch',
       zip_safe=False,
       data_files=data_files)
 
-# Remind users to reload the initctl config so that "service start airtime_analyzer" works
+# Remind users to reload the initctl config so that "service start libretime-watch" works
 if data_files:
     print("Remember to reload the initctl configuration")
-
     # Set proper permissions for cron file to run
     os.chmod('/etc/cron.d/libretime_watch', stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)

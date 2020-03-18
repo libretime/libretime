@@ -316,7 +316,11 @@ def analyse_file (filename, database):
 
 
     # Try to import artwork
-    database['artwork'] = '' # Reset this key
+    try:
+        del database['artwork'] # = '' # Reset this key
+    except KeyError:
+        pass
+
     try:
         tags = ID3(filename)
         picture = None
