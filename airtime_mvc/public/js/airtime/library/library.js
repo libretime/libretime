@@ -54,7 +54,8 @@ var AIRTIME = (function(AIRTIME) {
         "owner_id"    : "s",
         "info_url"    : "s",
         "replay_gain" : "n",
-        "artwork"     : "s"
+        "artwork"     : "s",
+        "track_type"  : "tt"
     };
 
     if (AIRTIME.library === undefined) {
@@ -591,6 +592,7 @@ var AIRTIME = (function(AIRTIME) {
             /* Cue Out */         { "sTitle" : $.i18n._("Cue Out")            , "mDataProp" : "cueout"       , "bVisible"    : false                 , "sClass"      : "library_length"        , "sWidth" : "80px"         },
             /* Description */     { "sTitle" : $.i18n._("Description")        , "mDataProp" : "description"  , "bVisible"    : false                 , "sClass"      : "library_description"   , "sWidth" : "150px"        },
             /* Encoded */         { "sTitle" : $.i18n._("Encoded By")         , "mDataProp" : "encoded_by"   , "bVisible"    : false                 , "sClass"      : "library_encoded"       , "sWidth" : "150px"        },
+            /* Track Type */      { "sTitle" : $.i18n._("Type")               , "mDataProp" : "track_type"   , "sClass"      : "library_track_type"    , "sWidth" : "60px"         },
             /* Genre */           { "sTitle" : $.i18n._("Genre")              , "mDataProp" : "genre"        , "sClass"      : "library_genre"         , "sWidth" : "100px"        },
             /* ISRC Number */     { "sTitle" : $.i18n._("ISRC")               , "mDataProp" : "isrc_number"  , "bVisible"    : false                 , "sClass"      : "library_isrc"          , "sWidth" : "150px"        },
             /* Label */           { "sTitle" : $.i18n._("Label")              , "mDataProp" : "label"        , "bVisible"    : false                 , "sClass"      : "library_label"         , "sWidth" : "125px"        },
@@ -615,7 +617,7 @@ var AIRTIME = (function(AIRTIME) {
             );
         }
 
-        var colExclude = onDashboard ? [0, 1, 2, 33] : [0, 1, 2];
+        var colExclude = onDashboard ? [0, 1, 2, 3, 34] : [0, 1, 2];
 
         /*  ############################################
                             DATATABLES
@@ -764,6 +766,60 @@ var AIRTIME = (function(AIRTIME) {
                         .on('click', function (e) {
                             $(this).contextMenu({x: $(e.target).offset().left, y: $(e.target).offset().top})
                         }).html("<div class='library_actions_btn'>...</div>");
+
+                    $(nRow).find('td.library_track_type')
+                          .on('click', function (e) {
+
+                              $.getJSON(
+                              baseUrl + "api/track-types",
+                              function(json){
+                                    var type_enabled = false;
+                                    $.each(json, function(key, value) {
+
+                                        if(value['code'] == aData.track_type){
+                                            $("#au_"+aData.id+" td.library_track_type div.library_track_type_btn").qtip({
+                                                  overwrite: false,
+                                                  content: {
+                                                      text: value['type_name']
+                                                  },
+                                                  style: {
+                                                    classes: 'track-type-tip',
+                                                    widget: true,
+                                                    def: false,
+                                                    position: {
+                                                        target: $("#au_"+aData.id+" td.library_track_type"), // my target
+                                                        my: 'bottom center',
+                                                        at: 'top center',
+                                                        adjust: {
+                                                              x: 50
+                                                          }
+                                                    },
+                                                    tip: {
+                                                        height: 5,
+                                                        width: 12,
+                                                        corner: 'bottom left',
+                                                        mimic: 'left'
+                                                    }
+                                                  },
+                                                  show: {
+                                                    ready: true
+                                                  },
+                                                  hide: {
+                                                    delay: 200,
+                                                    fixed: true,
+                                                  }
+                                            });
+
+                                            type_enabled = true;
+                                        }
+                                    });
+
+                                    if(type_enabled == false){
+                                      alert("This type is disabled.");
+                                    }
+                              });
+
+                          }).html("<div class='library_track_type_btn'>"+aData.track_type+"</div>");
                 }
 
                 // add audio preview image/button
@@ -852,8 +908,11 @@ var AIRTIME = (function(AIRTIME) {
 
                     var inputClass = 'filter_column filter_number_text';
                     var labelStyle = "style='margin-right:35px;'";
-                    if (libraryColumnTypes[ele.mDataProp] != "s") {
+                    if (libraryColumnTypes[ele.mDataProp] == "n" || libraryColumnTypes[ele.mDataProp] == "i") {
                         inputClass = 'filterColumn filter_number_range';
+                        labelStyle = "";
+                    } else if (libraryColumnTypes[ele.mDataProp] == "tt") {
+                        inputClass = 'filterColumn filter_track_type_select';
                         labelStyle = "";
                     }
 
@@ -873,6 +932,8 @@ var AIRTIME = (function(AIRTIME) {
 
                     if (libraryColumnTypes[ele.mDataProp] == "s") {
                         var obj = { sSelector: "#"+ele.mDataProp }
+                    } else if (libraryColumnTypes[ele.mDataProp] == "tt") {
+                        var obj = { sSelector: "#"+ele.mDataProp, type: "select" }
                     } else {
                         var obj = { sSelector: "#"+ele.mDataProp, type: "number-range" }
                     }
@@ -1597,9 +1658,29 @@ var validationTypes = {
     "track_number" : "i",
     "info_url" : "s",
     "artwork" : "s",
+    "track_type" : "s",
     "year" : "i"
 };
 
+function airtimeScheduleJsonpError(jqXHR, textStatus, errorThrown){
+}
+
+function tracktypesJson() {
+   $(function() {
+        jQuery.getJSON(
+        baseUrl + "api/track-types",
+        function(json){
+              var ttSelect = $('#track_type .filter_select .select_filter');
+              $.each(json, function(key, value) {
+                var option = $("<option/>", {
+                  value: value['code'],
+                  text: value['type_name']
+                });
+                ttSelect.append(option);
+              });
+        });
+   });
+}
 
 function readArtworkURL(input, id) {
 
@@ -1666,6 +1747,8 @@ var resampleImg = (function (canvas) {
 
 
 $(document).ready(function() {
+    tracktypesJson();
+
     if (window.location.href.indexOf("showbuilder") > -1) {
         AIRTIME.library.initPodcastDatatable();
     }

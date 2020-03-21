@@ -12,6 +12,7 @@ $ccAcl->addRole(new Zend_Acl_Role('G'))
 $ccAcl->add(new Zend_Acl_Resource('library'))
       ->add(new Zend_Acl_Resource('index'))
       ->add(new Zend_Acl_Resource('user'))
+      ->add(new Zend_Acl_Resource('tracktype'))
       ->add(new Zend_Acl_Resource('error'))
       ->add(new Zend_Acl_Resource('login'))
       ->add(new Zend_Acl_Resource('playlist'))
@@ -82,9 +83,10 @@ $ccAcl->allow('G', 'index')
       ->allow('H', 'showlistenerstat')
       ->allow('A', 'playouthistorytemplate')
       ->allow('A', 'user')
+      ->allow('A', 'tracktype')
       ->allow('A', 'systemstatus')
       ->allow('A', 'preference');
-      
+
 
 $aclPlugin = new Zend_Controller_Plugin_Acl($ccAcl);
 

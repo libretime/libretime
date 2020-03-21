@@ -99,7 +99,8 @@
     text-align: center;
 }
 
-.library_year {
+.library_year,
+.library_track_type {
     text-align: center;
 }
 
@@ -141,7 +142,46 @@ tr.lib-selected > td > div.library_actions_btn:hover {
 	color: #eee;
 }
 
-.library_import {  
+td.library_track_type
+{
+	padding: 0px !important;
+}
+
+.library_track_type_btn {
+	font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+	border: 1px solid #ccc;
+	border-radius: 1px;
+	margin: 5px 6px !important;
+	line-height: 13px !important;
+	padding: 5px 6px !important;
+}
+
+.library_track_type_btn:hover {
+	background: #555;
+}
+tr.lib-selected > td > div.library_track_type_btn  {
+	border-color: #000;
+}
+tr.lib-selected > td > div.library_track_type_btn:hover {
+	background: #000;
+	color: #eee;
+}
+.track-type-tip{
+    overflow: visible;
+    overflow-y: visible;
+    margin-left: -30px;
+    margin-top: -61px;
+    z-index: 10000 !important;
+}
+
+.track-type-tip.qtip-pos-tl{
+    color: #000;
+}
+
+.library_import {
     padding-bottom: 5px;
 }
 
@@ -244,7 +284,7 @@ tr.lib-selected > td > div.library_actions_btn:hover {
 	vertical-align: middle;
 	margin: 0 !important;
 	line-height: 16px;
-	}	
+	}
 
 .sb-timerange input {
 	-webkit-box-sizing: border-box;
@@ -256,4 +296,4 @@ tr.lib-selected > td > div.library_actions_btn:hover {
 	height: 26px;
 	outline: none;
 	vertical-align: middle !important;
-	}			
+	}

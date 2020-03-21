@@ -9,7 +9,12 @@
 </head>
 <body>
     <div id="Panel" class="sticky">
-    <?php echo $this->versionNotify();
+    <?php
+						/*
+						NOTE: Temporarily disabled version notification to avoid confusion,
+						Users can check current version in Settings > Status.
+						*/
+						//echo $this->versionNotify();
             $sss = $this->SourceSwitchStatus();
             $scs = $this->SourceConnectionStatus();
     ?>
@@ -70,7 +75,7 @@
     <div id="nav">
         <?php echo $this->navigation()->menu(); ?>
     </div>
-        
+
     <div class="btn-group">
         <a href="<?php echo $this->baseUrl . '/login/logout'; ?>">
             <button id="add_media_btn" class="btn btn-small dashboard-btn btn-danger">

@@ -85,6 +85,7 @@
     <column name="filesize" phpName="DbFilesize" type="Integer" required="true" defaultValue="0"/>
     <column name="description" phpName="DbDescription" type="VARCHAR" size="512" />
     <column name="artwork" phpName="DbArtwork" type="VARCHAR" size="512" required="false"/>
+    <column name="track_type" phpName="DbTrackType" type="VARCHAR" size="16" required="false"/>
     <foreign-key foreignTable="cc_subjs" phpName="FkOwner" name="cc_files_owner_fkey">
       <reference local="owner_id" foreign="id"/>
     </foreign-key>
@@ -100,6 +101,19 @@
     <index name="cc_files_name_idx">
       <index-column name="name"/>
     </index>
+  </table>
+  <table name="cc_track_types" phpName="CcTracktypes">
+    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="code" phpName="DbCode" type="VARCHAR" size="16" required="true" defaultValue=""/>
+    <column name="visibility" phpName="DbVisibility" type="BOOLEAN" required="true" defaultValue="true"/>
+    <column name="type_name" phpName="DbTypeName" type="VARCHAR" size="64" required="true" defaultValue=""/>
+	  <column name="description" phpName="DbDescription" type="VARCHAR" size="255" required="true" defaultValue=""/>
+    <unique name="cc_track_types_id_idx">
+      <unique-column name="id"/>
+    </unique>
+    <unique name="cc_track_types_code_idx">
+      <unique-column name="code"/>
+    </unique>
   </table>
   <!-- Class Table Inheritance -->
   <table name="cloud_file" phpName="CloudFile">

@@ -91,6 +91,19 @@ class Application_Form_EditAudioMD extends Zend_Form
         $owner_id->setMultiOptions($user_options);
         $this->addelement($owner_id);
 
+        // Add track type dropdown
+        $track_type_options = array();
+        $track_types = Application_Model_Tracktype::getTracktypes();
+        foreach ($track_types as $key => $tt) {
+            $track_type_options[$tt['code']] = $tt['type_name'];
+        }
+
+        $track_type = new Zend_Form_Element_Select('track_type');
+        $track_type->class = 'input_text';
+        $track_type->setLabel(_('Track Type:'));
+        $track_type->setMultiOptions($track_type_options);
+        $this->addelement($track_type);
+
         // Description field
         $description = new Zend_Form_Element_Textarea('description');
         $description->class = 'input_text';

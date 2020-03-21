@@ -91,6 +91,12 @@ $pages[] = array(
             'controller' => 'user',
             'action'     => 'add-user',
             'resource'   => 'user'
+        ),array(
+            'label'      => _('Track Types'),
+            'module'     => 'default',
+            'controller' => 'tracktype',
+            'action'     => 'add-tracktype',
+            'resource'   => 'tracktype'
         ),
         array(
             'label'      => _('Streams'),
@@ -138,7 +144,7 @@ $pages[] = array(
             'action'     => 'index',
             'resource'   => 'listenerstat'
         ),
-        array(            
+        array(
             'label'      => _('Show Listener Stats'),
             'module'     => 'default',
             'controller' => 'listenerstat',

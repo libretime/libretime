@@ -141,6 +141,14 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
         $view->headScript()->appendScript("var COMPANY_NAME = '" . COMPANY_NAME . "';");
         //Each page refresh or tab open has uniqID, not to be used for security
         $view->headScript()->appendScript("var UNIQID = '" . uniqid() . "';");
+
+        $track_type_options = array();
+        $track_types = Application_Model_Tracktype::getTracktypes();
+        foreach ($track_types as $key => $tt) {
+            $track_type_options[$tt['code']] = $tt['type_name'];
+        }
+        $ttarr = json_encode($track_type_options, JSON_FORCE_OBJECT);
+        $view->headScript()->appendScript("var TRACKTYPES = " . $ttarr . ";");
     }
 
     protected function _initHeadLink()
