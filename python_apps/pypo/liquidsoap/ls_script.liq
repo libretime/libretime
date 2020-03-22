@@ -243,11 +243,6 @@ end
 def check_auth(user="", password="", ~type="master") =
     log("#{type} user #{user} connected",label="#{type}_source")
 
-    result = run_process("python3 #{auth_path} --#{type} #{user} #{password}")
-
-    log("python3 #{auth_path} --#{type} #{user} #{password}",label="#{type}_source")
-    outa = snd(result)
-    outb = snd(outa)
     # Check auth based on return value from auth script
     ret = snd(snd(run_process("python3 #{auth_path} --#{type} #{user} #{password}"))) == "0"
 
