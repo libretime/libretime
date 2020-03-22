@@ -242,7 +242,7 @@ end
 # @param ~type    Type of password to check, "dj" or "master, default: "master"
 def check_auth(user="", password="", ~type="master") =
     log("#{type} user #{user} connected",label="#{type}_source")
-
+    log("python #{auth_path} --#{type} #{user} #{password}")
     # Check auth based on return value from auth script
     ret = snd(snd(run_process("python #{auth_path} --#{type} #{user} #{password}"))) == "0"
 
