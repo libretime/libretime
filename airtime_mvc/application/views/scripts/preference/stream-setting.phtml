@@ -50,7 +50,7 @@
                 <?php foreach ($this->form->getElement('streamFormat')->getMultiOptions() as $radio) : ?>
                     <label for="streamFormat-<?php echo $i ?>">
                         <input type="radio" value="<?php echo $i ?>" id="streamFormat-<?php echo $i ?>" name="streamFormat" <?php if($i == $value){echo 'checked="checked"';}?> >
-                            <?php echo $radio ?>
+                            <?php echo $radio ?> <br><br>
                         </input>
                     </label>
                     <?php $i = $i + 1; ?>
