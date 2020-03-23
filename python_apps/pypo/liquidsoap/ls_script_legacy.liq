@@ -239,7 +239,7 @@ end
 def check_master_dj_client(user,password) =
     log("master connected")
     #get the output of the php script
-    ret = get_process_lines("python #{auth_path} --master #{user} #{password}")
+    ret = get_process_lines("python3 #{auth_path} --master #{user} #{password}")
     #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
     ret = list.hd(ret)
 
@@ -250,7 +250,7 @@ end
 def check_dj_client(user,password) =
     log("live dj connected")
     #get the output of the php script
-    ret = get_process_lines("python #{auth_path} --dj #{user} #{password}")
+    ret = get_process_lines("python3 #{auth_path} --dj #{user} #{password}")
     #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
     hd = list.hd(ret)
     log("Live DJ authenticated: #{hd}")
