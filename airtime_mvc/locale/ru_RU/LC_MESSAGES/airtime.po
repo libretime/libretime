@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Airtime 2.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-24 16:23+0000\n"
-"PO-Revision-Date: 2020-03-22 14:59+0200\n"
+"PO-Revision-Date: 2020-03-26 08:12+0200\n"
 "Last-Translator: Stepan Curuci <stepan@curuci.eu>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/sourcefabric/airtime/language/ru_RU/)\n"
 "Language: ru\n"
@@ -612,9 +612,7 @@ msgstr "Для начала вещания завершите текущую с�
 msgid ""
 "Linked shows need to be filled with tracks before it starts. To start broadcasting cancel the current linked show and schedule an unlinked show.\n"
 "                    %sCreate an unlinked show now%s."
-msgstr ""
-"Связанные Программы должны быть заполнены треками до их начала. Для начала вещания завершите текущую связанную Программу и запланируйте новую несвязанную.\n"
-"                    %sСоздать несвязанную Программу сейчас%s."
+msgstr "Связанные Программы необходимо заполнить до их начала. Для начала вещания отмените текущую связанную Программу и запланируйте новую  %sнесвязанную Программу сейчас%s."
 
 #: airtime_mvc/application/common/UsabilityHints.php:91
 msgid "To start broadcasting, click on the current show and select 'Schedule Tracks'"
@@ -683,6 +681,10 @@ msgstr "Мой профиль"
 #: airtime_mvc/application/configs/navigation.php:89
 msgid "Users"
 msgstr "Пользователи"
+
+#: airtime_mvc/application/configs/navigation.php
+msgid "Track Types"
+msgstr "Типы треков"
 
 #: airtime_mvc/application/configs/navigation.php:96
 msgid "Streams"
@@ -1097,7 +1099,7 @@ msgstr "Вы действительно хотите удалить выбран
 
 #: airtime_mvc/application/controllers/LocaleController.php:72
 msgid "Scheduled"
-msgstr "Запланирован в Программе"
+msgstr "Запланирован"
 
 #: airtime_mvc/application/controllers/LocaleController.php:73
 #: airtime_mvc/application/views/scripts/partialviews/dashboard-sub-nav.php:3
@@ -1170,7 +1172,7 @@ msgstr "Дирижер"
 #: airtime_mvc/application/services/HistoryService.php:1177
 #: airtime_mvc/application/views/scripts/podcast/station.phtml:41
 msgid "Copyright"
-msgstr "Авторское право"
+msgstr "Копирайт"
 
 #: airtime_mvc/application/controllers/LocaleController.php:83
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:61
@@ -1213,7 +1215,7 @@ msgstr "Язык"
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:66
 #: airtime_mvc/application/models/Block.php:1373
 msgid "Last Modified"
-msgstr "Последнее изменение"
+msgstr "Изменен"
 
 #: airtime_mvc/application/controllers/LocaleController.php:89
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:67
@@ -1253,11 +1255,11 @@ msgstr "Владелец"
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:72
 #: airtime_mvc/application/models/Block.php:1379
 msgid "Replay Gain"
-msgstr "Выравнивание громкости"
+msgstr "Replay Gain"
 
 #: airtime_mvc/application/controllers/LocaleController.php:95
 msgid "Sample Rate"
-msgstr "Частота дискретизации"
+msgstr "Sample Rate"
 
 #: airtime_mvc/application/controllers/LocaleController.php:96
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:75
@@ -1270,6 +1272,10 @@ msgstr "Номер трека"
 #: airtime_mvc/application/models/Block.php:1383
 msgid "Uploaded"
 msgstr "Загружено"
+
+#: airtime_mvc
+msgid "Cancel upload"
+msgstr "Отменить загрузку"
 
 #: airtime_mvc/application/controllers/LocaleController.php:98
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:77
@@ -2240,7 +2246,7 @@ msgstr "Минуты"
 
 #: airtime_mvc/application/controllers/LocaleController.php:374
 msgid "Done"
-msgstr "Сделано"
+msgstr "Готово"
 
 #: airtime_mvc/application/controllers/LocaleController.php:377
 msgid "Select files"
@@ -2356,7 +2362,7 @@ msgstr "Редактировать историю"
 #: airtime_mvc/application/forms/EditHistoryItem.php:57
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:53
 msgid "No Show"
-msgstr "Нет Программы"
+msgstr "Нет программы"
 
 #: airtime_mvc/application/controllers/LocaleController.php:410
 #, php-format
@@ -3025,12 +3031,12 @@ msgstr "Если эта опция включена, новый Смарт-бл�
 #: airtime_mvc/application/forms/GeneralPreferences.php:107
 #: airtime_mvc/application/forms/GeneralPreferences.php:125
 msgid "Disabled"
-msgstr "Отключить"
+msgstr "Отключено"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:108
 #: airtime_mvc/application/forms/GeneralPreferences.php:126
 msgid "Enabled"
-msgstr "Включить"
+msgstr "Включено"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:111
 msgid "Enabling this feature will cause podcast episode tracks to have their Artist, Title, and Album metatags set from podcast feed values. Note that enabling this feature is recommended in order to ensure reliable scheduling of episodes via smartblocks."
@@ -4283,7 +4289,7 @@ msgstr "Фильтр истории"
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:45
 msgid "Choose Show Instance"
-msgstr "Выберите Экземпляр Программы"
+msgstr "Выберите экземпляр программы"
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:56
 msgid "Find"
@@ -4578,7 +4584,7 @@ msgstr "Опубликовано в:"
 
 #: airtime_mvc/application/views/scripts/library/publish-dialog.phtml:36
 msgid "Unpublish"
-msgstr "Убрать с публикации"
+msgstr "Снять с публикации"
 
 #: airtime_mvc/application/views/scripts/library/publish-dialog.phtml:39
 msgid "You haven't published this track to any sources!"
@@ -4599,7 +4605,7 @@ msgstr "Слушатели"
 
 #: airtime_mvc/application/views/scripts/listenerstat/index.phtml:10
 msgid "Stream Data Collection Status"
-msgstr "Статус сбора данных потока:"
+msgstr "Состояние потоков для сбора данных:"
 
 #: airtime_mvc/application/views/scripts/listenerstat/index.phtml:23
 msgid "Monthly Listener Bandwidth Usage"
@@ -5003,7 +5009,7 @@ msgstr "Версия %s:"
 
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:29
 msgid "Service"
-msgstr "Сервис"
+msgstr "Служба"
 
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:154
 msgid "Disk Space"
@@ -5097,14 +5103,229 @@ msgstr "Только MP3/AAC"
 msgid "* Chrome on Android is known to take about 4 seconds to buffer a 128 kbps MP3 stream. Lower bitrates take longer to buffer."
 msgstr "* Известно, что для Chrome на Android требуется около 4 секунд для буферизации потока MP3 со скоростью 128 кбит/с. Более низкие битрейты требуют больше времени для буферизации."
 
-#~ msgid "This version will soon be obsolete."
-#~ msgstr "Эта версия скоро устареет."
+#: airtime_mvc/application/views/scriptsform/cinfigs/navigation.php:148
+msgid "Show Listener Stats"
+msgstr "Статистика прослушиваний"
 
-#~ msgid "This version is no longer supported."
-#~ msgstr "Эта версия больше не поддерживается."
+#: airtime_mvc/application/views/scripts/form/cinfigs/navigation.php:188
+msgid "Help Translate Libretime"
+msgstr "Помогите перевести Libretime"
 
-#~ msgid "Please upgrade to "
-#~ msgstr "Пожалуйста, обновитесь до"
+#: airtime_mvc/application/views/scripts/podcast/station.phtml:106
+msgid "Feed URL"
+msgstr "Ссылка на ленту"
 
-#~ msgid "<h2>Preview:</h2>"
-#~ msgstr "<h2>Предпросмотр:</h2>"
+#: airtime_mvc\application\views\scripts\listenerstat\show.phtml:5
+msgid "Date Range"
+msgstr "Выберите интервал дат ниже"
+
+#: airtime_mvc\application\views\scripts\listenerstat\show.phtml:13
+msgid "Show Name"
+msgstr "Программа"
+
+#: airtime_mvc\application\views\scripts\listenerstat\show.phtml:14
+msgid "Air Date"
+msgstr "Дата эфира"
+
+#: airtime_mvc\application\views\scripts\listenerstat\show.phtml:15
+msgid "Average Listeners"
+msgstr "Слушателей в среднем"
+
+#: airtime_mvc\application\views\scripts\listenerstat\show.phtml:16
+msgid "Maximum Number of Listeners"
+msgstr "Максимум слушателей"
+
+#: airtime_mvc/application/controllers/LocaleController.php:
+msgid "Drag tracks here from the library"
+msgstr "Перетащите треки сюда из Библиотеки"
+
+#: airtime_mvc/application/controllers/LocaleController.php:
+msgid "No tracks were played during the selected time period."
+msgstr "В течение выбранного периода времени треки не воспроизводились."
+
+#: airtime_mvc/application/controllers/LocaleController.php:
+msgid "No matching results found."
+msgstr "Результаты не найдены."
+
+#: airtime_mvc/application/controllers/LocaleController.php:
+msgid "Publication Date"
+msgstr "Дата публикации"
+
+#: airtime_mvc/application/controllers/LocaleController.php:
+msgid "Import Status"
+msgstr "Статус загрузки"
+
+#: airtime_mvc/application/controllers/LocaleController.php:
+msgid "Actions"
+msgstr "Действия"
+
+#: airtime_mvc/application/controllers/LocaleController.php:
+msgid "Delete from Library"
+msgstr "Удалить из Библиотеки"
+
+#: airtime_mvc/application/controllers/LocaleController.php:
+msgid "Successfully imported"
+msgstr "Успешно загружено"
+
+#: airtime_mvc/application/controllers/LocaleController.php:
+msgid "No matching records found"
+msgstr "Совпадающих записей не найдено"
+
+#: airtime_mvc\application\views\scripts\plupload\index.phtml:86
+msgid "Storage"
+msgstr "Хранилище"
+
+#: airtime_mvc\application\views\scripts\plupload\index.phtml:91
+msgid "%01.1fGB of %01.1fGB"
+msgstr "%01.1fGB из %01.1fGB"
+
+#: airtime_mvc\application\views\scripts\systemstatus\index.phtml:41
+msgid "PDO and PostgreSQL libraries"
+msgstr "Библиотеки PDO и PostgreSQL"
+
+#: airtime_mvc\application\views\scripts\systemstatus\index.phtml:58
+msgid "Database configuration for LibreTime"
+msgstr "Конфигурация базы данных LibreTime"
+
+#: airtime_mvc\application\views\scripts\systemstatus\index.phtml:77
+msgid "RabbitMQ configuration for LibreTime"
+msgstr "Конфигурация RabbitMQ для LibreTime"
+
+#: airtime_mvc\application\views\scripts\systemstatus\index.phtml:98
+msgid "LibreTime media analyzer service"
+msgstr "Служба медиа анализатора LibreTime"
+
+#: airtime_mvc\application\views\scripts\systemstatus\index.phtml:118
+msgid "LibreTime playout service"
+msgstr "Служба воспроизведения LibreTime"
+
+#: airtime_mvc\application\views\scripts\systemstatus\index.phtml:138
+msgid "LibreTime liquidsoap service"
+msgstr "Служба Liquidsoap LibreTime"
+
+#: airtime_mvc\application\views\scripts\systemstatus\index.phtml:158
+msgid "LibreTime Celery Task service"
+msgstr "Служба Celery Task LibreTime"
+
+#: airtime_mvc\application\views\scripts\systemstatus\index.phtml:104
+msgid "Check that the airtime_analyzer service is installed correctly in "
+msgstr "Проверьте, что служба airtime_analyzer правильно установлена в "
+
+#: airtime_mvc\application\views\scripts\systemstatus\index.phtml:124
+msgid "Check that the airtime-playout service is installed correctly in "
+msgstr "Проверьте, что служба airtime-playout правильно установлена в "
+
+#: airtime_mvc\application\views\scripts\systemstatus\index.phtml:144
+msgid "Check that the airtime-liquidsoap service is installed correctly in "
+msgstr "Проверьте, что служба airtime-liquidsoap правильно установлена в "
+
+#: airtime_mvc\application\views\scripts\systemstatus\index.phtml:164
+msgid "Check that the airtime-celery service is installed correctly in "
+msgstr "Проверьте, что служба airtime-celery правильно установлена в "
+
+#: airtime_mvc\application\views\scripts\systemstatus\index.phtml:158
+msgid " If not, try <br/><code>sudo service airtime-celery restart</code>"
+msgstr " Если нет - попробуйте запустить <br/><code>sudo service airtime-celery restart</code>"
+
+#: airtime_mvc\application\views\scripts\systemstatus\index.phtml:164
+msgid " and ensure that it's running with "
+msgstr " а также убедитесь, что она запущена "
+
+#: airtime_mvc\application\views\scripts\systemstatus\index.phtml:164
+msgid "If not, try "
+msgstr "Если нет - попробуйте запустить"
+
+#: airtime_mvc/application/controllers/LocaleController.php:464
+msgid "Show _MENU_"
+msgstr "Показать _MENU_"
+
+#: airtime_mvc/application/controllers/LocaleController.php:465
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "Показано с _START_ по _END_ из _TOTAL_ значений"
+
+#: airtime_mvc/application/controllers/LocaleController.php:466
+msgid "Showing _START_ to _END_ of _TOTAL_ tracks"
+msgstr "Показано с _START_ по _END_ из _TOTAL_ треков"
+
+#: airtime_mvc/application/controllers/LocaleController.php:467
+msgid "Showing _START_ to _END_ of _TOTAL_ track types"
+msgstr "Показано с _START_ по _END_ из _TOTAL_ типов трека"
+
+#: airtime_mvc/application/controllers/LocaleController.php:468
+msgid "Showing 0 to 0 of 0 entries"
+msgstr "Показано с 0 по 0 из 0 значений"
+
+#: airtime_mvc/application/controllers/LocaleController.php:469
+msgid "Showing 0 to 0 of 0 tracks"
+msgstr "Показано с 0 по 0 из 0 треков"
+
+#: airtime_mvc/application/controllers/LocaleController.php:446
+msgid "First"
+msgstr "Начало"
+
+#: airtime_mvc/application/controllers/LocaleController.php:447
+msgid "Last"
+msgstr "Конец"
+
+#: airtime_mvc/application/controllers/LocaleController.php:449
+msgid "Previous"
+msgstr "Предыдущая"
+
+#: airtime_mvc/application/controllers/LocaleController.php: airtime_mvc
+msgid "Podcast settings saved"
+msgstr "Настройки подкаста сохранены"
+
+#: airtime_mvc/
+msgid "Type"
+msgstr "Тип"
+
+#: airtime_mvc/
+msgid "Manage Track Types"
+msgstr "Управление типами треков"
+
+#: airtime_mvc/
+msgid "New Track Type"
+msgstr "Новый тип"
+
+#: airtime_mvc/
+msgid "Type Name:"
+msgstr "Название типа"
+
+#: airtime_mvc/
+msgid "Code"
+msgstr "Код"
+
+#: airtime_mvc/
+msgid "Code:"
+msgstr "Код:"
+
+#: airtime_mvc/
+msgid "Visibility"
+msgstr "Видимость"
+
+#: airtime_mvc/
+msgid "Visibility:"
+msgstr "Видимость:"
+
+#: airtime_mvc/application/controllers/LocaleController.php:471
+msgid "(filtered from _MAX_ total track types)"
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:473
+msgid "Are you sure you want to delete this tracktype?"
+msgstr "Вы уверены что хотите удалить этот тип трека?"
+
+#: airtime_mvc/application/controllers/LocaleController.php:474
+msgid "No track types were found."
+msgstr "Типы треков не были найдены."
+
+#: airtime_mvc/application/controllers/LocaleController.php:475
+msgid "No track types found"
+msgstr "Типы треков не найдены"
+
+#: airtime_mvc/application/controllers/LocaleController.php:476
+msgid "No matching track types found"
+msgstr "Не найдено подходящих типов треков"
+
+#~ msgid "of"
+#~ msgstr "из"
