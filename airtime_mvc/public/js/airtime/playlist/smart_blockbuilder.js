@@ -451,12 +451,12 @@ function reindexElements() {
              */
             if ($(div).find('select[name^="sp_criteria_field"]').hasClass('sp-invisible')) {
                 if ($(div).is(':visible')) {
-                    $(div).prev().find('.db-logic-label').text('or').show();
+                    $(div).prev().find('.db-logic-label').text($.i18n._("or")).show();
                 }
                 modIndex++;
             } else {
                 if ($(div).is(':visible')) {
-                    $(div).prev().find('.db-logic-label').text('and').show();
+                    $(div).prev().find('.db-logic-label').text($.i18n._("and")).show();
                 }
                 index++;
                 modIndex = 0;
