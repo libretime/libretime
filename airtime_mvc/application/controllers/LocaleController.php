@@ -161,8 +161,8 @@ final class LocaleController extends Zend_Controller_Action
                 => _("A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show."),
             "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."
                 => _("A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."),
-            "The desired block length will not be reached if Airtime cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
-                => _("The desired block length will not be reached if Airtime cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."),
+            "The desired block length will not be reached if %s cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
+                => _("The desired block length will not be reached if %s cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."),
             "Smart block shuffled" => _("Smart block shuffled"),
             "Smart block generated and criteria saved" => _("Smart block generated and criteria saved"),
             "Smart block saved" => _("Smart block saved"),
@@ -486,6 +486,11 @@ final class LocaleController extends Zend_Controller_Action
 		"You haven't published any episodes!" => _("You haven't published any episodes!"),
 		"You can publish your uploaded content from the 'Tracks' view." => _("You can publish your uploaded content from the 'Tracks' view."),
 		"Try it now" => _("Try it now"),
+		"<p>If this option is unchecked, the smartblock will schedule as many tracks as can be played out <strong>in their entirety</strong> within the specified duration. This will usually result in audio playback that is slightly less than the specified duration.</p><p>If this option is checked, the smartblock will also schedule one final track which will overflow the specified duration. This final track may be cut off mid-way if the show into which the smartblock is added finishes.</p>" => _("<p>If this option is unchecked, the smartblock will schedule as many tracks as can be played out <strong>in their entirety</strong> within the specified duration. This will usually result in audio playback that is slightly less than the specified duration.</p><p>If this option is checked, the smartblock will also schedule one final track which will overflow the specified duration. This final track may be cut off mid-way if the show into which the smartblock is added finishes.</p>"),
+		"Playlist preview" => _("Playlist preview"),
+		"Smart Block" => _("Smart Block"),
+		"Webstream preview" => _("Webstream preview"),
+		"You don't have permission to view the library." => _("You don't have permission to view the library."),
             //embed player
             "On Air" => _("On Air"),
             "Off Air" => _("Off Air"),
