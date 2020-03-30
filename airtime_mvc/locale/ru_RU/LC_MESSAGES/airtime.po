@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Airtime 2.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-24 16:23+0000\n"
-"PO-Revision-Date: 2020-03-30 00:57+0300\n"
+"PO-Revision-Date: 2020-03-30 13:59+0300\n"
 "Last-Translator: Stepan Curuci <stepan@curuci.eu>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/sourcefabric/airtime/language/ru_RU/)\n"
 "Language: ru\n"
@@ -3753,7 +3753,7 @@ msgstr "Новая версия LibreTime плавнее и быстрее на 
 #: airtime_mvc/application/layouts/scripts/livestream.phtml:9
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:2
 msgid "Live stream"
-msgstr "Живой аудио поток"
+msgstr "Прямой эфир"
 
 #: airtime_mvc/application/layouts/scripts/login.phtml:24
 #, php-format
@@ -5403,6 +5403,58 @@ msgstr "Предпросмотр веб-потока"
 #: airtime_mvc/application/controllers/LocaleController.php:
 msgid "Smartblock and Playlist generated"
 msgstr "Смарт-блок и Плейлист созданы"
+
+#: airtime_mvc/
+msgid "Intro Autoloading Playlist"
+msgstr "Вступительный автозагружаемый плейлист (Intro)"
+
+#: airtime_mvc/
+msgid "Outro Autoloading Playlist"
+msgstr "Завершающий автозагружаемый плейлист (Outro)"
+
+#: airtime_mvc/application/controllers/LocaleController.php:496
+msgid "Now"
+msgstr "С текущего момента"
+
+#: airtime_mvc/application/controllers/LocaleController.php:54
+msgid "You haven't added any podcasts"
+msgstr "У вас не добавлено ни одного подкаста"
+
+#: airtime_mvc/application/controllers/LocaleController.php:
+msgid "Click 'Add' to create one now."
+msgstr "Нажмите «Добавить» чтобы создать новый"
+
+#: airtime_mvc
+msgid "Click 'New' to create one now."
+msgstr "Нажмите «Новый» чтобы создать новый"
+
+#: airtime_mvc
+msgid "Click 'Upload' to add some now."
+msgstr "Нажмите «Загрузить» чтобы добавить новый"
+
+#: airtime_mvc
+msgid "Import Date"
+msgstr "Дата импорта"
+
+#: airtime_mvc
+msgid "Add new Podcast"
+msgstr "Добавить новый подкаст"
+
+#: airtime_mvc
+msgid ""
+"Cannot schedule outside a show.\n"
+"Try creating a show first."
+msgstr ""
+"Нельзя планировать аудио вне рамок Программы.\n"
+"Попробуйте сначала создать Программу"
+
+#: airtime_mvc
+msgid "No files have been uploaded yet."
+msgstr "Еще ни одного файла не загружено"
+
+#: airtime_mvc
+msgid "Please enter both your username and email address."
+msgstr "Пожалуйста, введите ваши логин и e-mail."
 
 #~ msgid "of"
 #~ msgstr "из"
