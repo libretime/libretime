@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Airtime 2.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-24 16:23+0000\n"
-"PO-Revision-Date: 2020-03-30 13:59+0300\n"
+"PO-Revision-Date: 2020-03-31 01:27+0300\n"
 "Last-Translator: Stepan Curuci <stepan@curuci.eu>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/sourcefabric/airtime/language/ru_RU/)\n"
 "Language: ru\n"
@@ -2127,7 +2127,7 @@ msgid "Manage their own library content"
 msgstr "- Управлять собственным контентом в Библиотеке;"
 
 #: airtime_mvc/application/controllers/LocaleController.php:341
-msgid "Progam Managers can do the following:"
+msgid "Program Managers can do the following:"
 msgstr "Менеджеры Программ могут следующее:"
 
 #: airtime_mvc/application/controllers/LocaleController.php:342
@@ -2881,7 +2881,7 @@ msgstr "Логин не является уникальным."
 #: airtime_mvc/application/forms/customvalidators/ConditionalNotEmpty.php:32
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:8
 msgid "Value is required and can't be empty"
-msgstr "Нельзя оставлять пустым"
+msgstr "Поля не могут быть пустыми"
 
 #: airtime_mvc/application/forms/DangerousPreferences.php:12
 msgid "Delete All Tracks in Library"
@@ -4103,16 +4103,16 @@ msgstr "стоп"
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:60
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:90
 msgid "mute"
-msgstr "выкл. звук"
+msgstr "Без звука"
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:63
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:91
 msgid "unmute"
-msgstr "включить звук"
+msgstr "Включить звук"
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:69
 msgid "max volume"
-msgstr "максимальная громкость"
+msgstr "Макс. громкость"
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:79
 msgid "Update Required"
@@ -5315,6 +5315,10 @@ msgstr "Видимость:"
 msgid "(filtered from _MAX_ total track types)"
 msgstr ""
 
+#: airtime_mvc/application/controllers/LocaleController.php:435
+msgid "(filtered from _MAX_ total entries)"
+msgstr ""
+
 #: airtime_mvc/application/controllers/LocaleController.php:473
 msgid "Are you sure you want to delete this tracktype?"
 msgstr "Вы уверены что хотите удалить этот тип трека?"
@@ -5437,7 +5441,7 @@ msgid "Import Date"
 msgstr "Дата импорта"
 
 #: airtime_mvc
-msgid "Add new Podcast"
+msgid "Add New Podcast"
 msgstr "Добавить новый подкаст"
 
 #: airtime_mvc
@@ -5455,6 +5459,14 @@ msgstr "Еще ни одного файла не загружено"
 #: airtime_mvc
 msgid "Please enter both your username and email address."
 msgstr "Пожалуйста, введите ваши логин и e-mail."
+
+#: airtime_mvc
+msgid "Powered by LibreTime"
+msgstr "При поддержке LibreTime"
+
+#: airtime_mvc
+msgid "Now Playing:"
+msgstr "Сейчас играет:"
 
 #~ msgid "of"
 #~ msgstr "из"
