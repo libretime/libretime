@@ -16,14 +16,14 @@ msgstr ""
 "Project-Id-Version: Airtime 2.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-24 16:23+0000\n"
-"PO-Revision-Date: 2020-03-29 20:56+0300\n"
+"PO-Revision-Date: 2020-03-30 00:57+0300\n"
 "Last-Translator: Stepan Curuci <stepan@curuci.eu>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/sourcefabric/airtime/language/ru_RU/)\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Poedit 2.3\n"
 
 #: airtime_mvc/application/common/DateHelper.php:213
@@ -1439,8 +1439,8 @@ msgid "A dynamic smart block will only save the criteria. The block content will
 msgstr "Динамический Смарт-блок сохраняет только параметры. Контент блока будет сгенерирован только после добавления его в Программу. Вы не сможете просматривать и редактировать содержимое в Библиотеке."
 
 #: airtime_mvc/application/controllers/LocaleController.php:150
-msgid "The desired block length will not be reached if Airtime cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
-msgstr "Желаемая длительность блока не будет достигнута, если LibreTime не найдет достаточно уникальных треков, соответствующих вашим критериям. Поставьте галочку, если хотите, чтобы повторяющиеся треки заполнили остальное время до окончания Программы в Смарт-блоке."
+msgid "The desired block length will not be reached if %s cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
+msgstr "Желаемая длительность блока не будет достигнута, если %s не найдет достаточно уникальных треков, соответствующих вашим критериям. Поставьте галочку, если хотите, чтобы повторяющиеся треки заполнили остальное время до окончания Программы в Смарт-блоке."
 
 #: airtime_mvc/application/controllers/LocaleController.php:151
 msgid "Smart block shuffled"
@@ -4863,7 +4863,7 @@ msgstr "Запланировано:"
 
 #: airtime_mvc/application/views/scripts/podcast/podcast.phtml:28
 msgid "Generate Smartblock and Playlist"
-msgstr "Сгенерировать Смарт-блок и Плейлист"
+msgstr "Создать Смарт-блок и Плейлист"
 
 #: airtime_mvc/application/views/scripts/podcast/podcast.phtml:30
 msgid "Smartblock and Playlist Generated"
@@ -5354,6 +5354,55 @@ msgstr "Вы можете опубликовать ваш загруженный
 #: airtime_mvc/application/controllers/LocaleController.php:
 msgid "Try it now"
 msgstr "Попробовать сейчас"
+
+#: airtime_mvc\application\forms\SmartBlockCriteria.php:167
+msgid "time remaining in show"
+msgstr "оставшееся время программы"
+
+#: airtime_mvc\application\forms\SmartBlockCriteria.php:179
+msgid "Most recently played"
+msgstr "Давно проигранные"
+
+#: airtime_mvc\application\forms\SmartBlockCriteria.php:180
+msgid "Least recently played"
+msgstr "Недавно проигранные"
+
+#: airtime_mvc/application/controllers/LocaleController.php:
+msgid "<p>If this option is unchecked, the smartblock will schedule as many tracks as can be played out <strong>in their entirety</strong> within the specified duration. This will usually result in audio playback that is slightly less than the specified duration.</p><p>If this option is checked, the smartblock will also schedule one final track which will overflow the specified duration. This final track may be cut off mid-way if the show into which the smartblock is added finishes.</p>"
+msgstr "<p> Если галочка не установлена, то Смарт-блок будет планировать столько треков, сколько может быть <strong>полностью</strong> воспроизведено, в течение указанного периода времени. Обычно это приводит к воспроизведению аудио, которое немного меньше указанной длительности. </p><p> Если галочка установлена, то Смарт-блок также запланирует одну последнюю дорожку, которая будет превышать указанный период времени. Этот последний трек может быть обрезан, если закончится Программа, в которое добавлен Смарт-блок. </p>"
+
+#: airtime_mvc\application\views\scripts\playlist\update.phtml:10
+msgid " track matches your search criteria."
+msgid_plural " tracks match your search criteria."
+msgstr[0] " трек соответствует вашим критериям поиска."
+msgstr[1] " трека соответствуют вашим критериям поиска."
+msgstr[2] " треков соответствуют вашим критериям поиска."
+
+#: airtime_mvc\application\controllers\LibraryController.php:159
+#, php-format
+msgid "Duplicate Smartblock"
+msgstr "Дублировать Смарт-блок"
+
+#: airtime_mvc\application\services\PodcastService.php:161
+#, php-format
+msgid "Auto-generated smartblock for podcast"
+msgstr "Автоматически сгенерированный Смарт-блок для подкаста"
+
+#: airtime_mvc/application/controllers/LocaleController.php:
+msgid "You don't have permission to view the library."
+msgstr "У вас нет разрешений для просмотра Библиотеки"
+
+#: airtime_mvc/application/controllers/LocaleController.php:
+msgid "Playlist preview"
+msgstr "Предпросмотр плейлиста"
+
+#: airtime_mvc/application/controllers/LocaleController.php:
+msgid "Webstream preview"
+msgstr "Предпросмотр веб-потока"
+
+#: airtime_mvc/application/controllers/LocaleController.php:
+msgid "Smartblock and Playlist generated"
+msgstr "Смарт-блок и Плейлист созданы"
 
 #~ msgid "of"
 #~ msgstr "из"
