@@ -37,7 +37,8 @@ setup(name='libretime_watch',
       entry_points={
         "console_scripts": [
           # Console script to trigger a scan of the watch directories
-          "libretime-watch-trigger = libretime_watch.start_watching:main"
+          "libretime-watch-trigger = libretime_watch.start_watching:main",
+          "libretime-watch-purge-queue = libretime_watch.purge_queue:main"
         ]
       },
       install_requires=[
