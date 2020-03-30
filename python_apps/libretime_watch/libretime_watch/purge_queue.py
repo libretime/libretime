@@ -31,6 +31,8 @@ def main():
   channel.exchange_declare(exchange=EXCHANGE,exchange_type=EXCHANGE_TYPE,durable=True, auto_delete=True )
   
   # Delete queue
+  print(channel)
+  print("deleting queue")
   channel.queue_delete(queue=QUEUE)
   connection.close()
 
