@@ -172,7 +172,7 @@ def watch (dir_id, directory):
             else:
               logging.warning("Problematic file: {}".format(database["filepath"]))
           elif counter >= 1:
-            logging.info("--> Existing audio: "+database["filepath"])
+            logging.debug("--> Existing audio: "+database["filepath"])
             try:
               query = "SELECT mtime,id from cc_files WHERE filepath = %s AND directory = %s"
               cur.execute(query, (database["filepath"], database["directory"]))
@@ -273,9 +273,13 @@ def msg_received_callback (channel, method, properties,body):
     return
 
   if "rescan_watch" in msg_dict["cmd"]: 
-       # now call the watching routine 
-       logging.info ("Got message: "+msg_dict["cmd"]+" ID: "+str(msg_dict["id"])+" directory: "+msg_dict["directory"])
-       watch(str(msg_dict["id"]),msg_dict["directory"]) 
+      # now call the watching routine 
+      logging.info ("Got message: "+msg_dict["cmd"]+" ID: "+str(msg_dict["id"])+" directory: "+msg_dict["directory"])
+      try:
+        watch(str(msg_dict["id"]),msg_dict["directory"])
+      except Exception as e:
+        logging.error("Unexpected error when calling watch() on {0}".format(msg_dict["directory"]))
+        logging.error(e)
   else :
        logging.info ("Got unhandled message: "+body)
   channel.basic_ack(delivery_tag = method.delivery_tag)
