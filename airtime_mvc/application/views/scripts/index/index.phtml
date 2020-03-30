@@ -57,7 +57,7 @@
         <div id="tab-4" class="podcast tab_content">
             <div class="rss-title-wrapper">
                 <div id="rss-subscribe">
-                    <a target="_blank" href="<?php echo $this->stationPodcastRssUrl ?>" class="rss_icon"><span>Subscribe </span><img src="css/radio-page/img/rss.png"></a>
+                    <a target="_blank" href="<?php echo $this->stationPodcastRssUrl ?>" class="rss_icon"><span><?php echo _("Subscribe") ?></span><img src="css/radio-page/img/rss.png"></a>
                 </div>
                 <div id="rss-title">
                     <?php echo $this->podcastTitle ?>
@@ -70,7 +70,7 @@
             <div id="jp_container_1" class="jp-audio">
                 <div class="jp-type-playlist">
 
-                    <div class="current-track track-overflow">Now Playing: <span class="track-overflow"></span></div>
+                    <div class="current-track track-overflow"><?php echo _("Now Playing:") ?><span class="track-overflow"></span></div>
                     <div class="jp-gui jp-interface">
                         <div class="playbar playbar-buttons">
                         <ul class="jp-controls rss-buttons">
