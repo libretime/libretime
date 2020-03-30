@@ -34,6 +34,7 @@ def main():
   print(channel)
   print("deleting queue")
   channel.queue_delete(queue=QUEUE)
+  print("deleted {0}".format(QUEUE))
   connection.close()
 
   logging.info("Deleted watch folder queue.")
