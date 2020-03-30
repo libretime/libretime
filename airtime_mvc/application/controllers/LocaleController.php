@@ -356,7 +356,7 @@ final class LocaleController extends Zend_Controller_Action
             "Import media files" => _("Import media files"),
             "Create playlists, smart blocks, and webstreams" => _("Create playlists, smart blocks, and webstreams"),
             "Manage their own library content" => _("Manage their own library content"),
-            "Progam Managers can do the following:" => _("Progam Managers can do the following:"),
+            "Program Managers can do the following:" => _("Program Managers can do the following:"),
             "View and manage show content" => _("View and manage show content"),
             "Schedule shows" => _("Schedule shows"),
             "Manage all library content" => _("Manage all library content"),
@@ -431,17 +431,13 @@ final class LocaleController extends Zend_Controller_Action
             "New Show" => _("New Show"),
             "New Log Entry" => _("New Log Entry"),
             //Datatables:
-            "No data available in table",
-            "(filtered from _MAX_ total entries)",
-            //"",
-            //",",
-            //"Loading...",
-            //"Processing...",
+            "No data available in table" => _("No data available in table"),
+            "(filtered from _MAX_ total entries)" => _("(filtered from _MAX_ total entries)"),
             ": activate to sort column ascending",
             ": activate to sort column descending",
             //End of datatables
             "Welcome to the new Airtime Pro!" => _("Welcome to the new Airtime Pro!"),
-            
+		
 		//New entries from .js	"" => _(""),
 		"First" => _("First"),
 		"Last" => _("Last"),
@@ -491,6 +487,18 @@ final class LocaleController extends Zend_Controller_Action
 		"Smart Block" => _("Smart Block"),
 		"Webstream preview" => _("Webstream preview"),
 		"You don't have permission to view the library." => _("You don't have permission to view the library."),
+		"Now" => _("Now"),
+		"Click 'New' to create one now." => _("Click 'New' to create one now."),
+		"Click 'Upload' to add some now." => _("Click 'Upload' to add some now."),
+		"Feed URL" => _("Feed URL"),
+		"Import Date" => _("Import Date"),
+		"Add New Podcast" => _("Add New Podcast"),
+		"Cannot schedule outside a show.\nTry creating a show first." => _("Cannot schedule outside a show.\nTry creating a show first."),
+		"No files have been uploaded yet." => _("No files have been uploaded yet."),
+		//"Value is required and can't be empty" => _("Value is required and can't be empty"),
+		//"mute" => _("mute"),
+		//"max volume" => _("max volume"),
+
             //embed player
             "On Air" => _("On Air"),
             "Off Air" => _("Off Air"),
