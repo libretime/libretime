@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Airtime 2.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-24 16:23+0000\n"
-"PO-Revision-Date: 2020-03-31 01:27+0300\n"
+"PO-Revision-Date: 2020-03-31 03:52+0300\n"
 "Last-Translator: Stepan Curuci <stepan@curuci.eu>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/sourcefabric/airtime/language/ru_RU/)\n"
 "Language: ru\n"
@@ -695,6 +695,9 @@ msgstr "Аудио потоки"
 #: airtime_mvc/application/controllers/LocaleController.php:381
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:31
 msgid "Status"
+msgstr "Статус системы"
+
+msgid "Service Status"
 msgstr "Статус службы"
 
 #: airtime_mvc/application/configs/navigation.php:111
@@ -1456,7 +1459,7 @@ msgstr "Смарт-блок сохранен"
 
 #: airtime_mvc/application/controllers/LocaleController.php:154
 msgid "Processing..."
-msgstr "Обработка ..."
+msgstr "Подождите..."
 
 #: airtime_mvc/application/controllers/LocaleController.php:155
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:90
@@ -4195,7 +4198,7 @@ msgstr "Таблица тестов"
 
 #: airtime_mvc/application/views/scripts/embed/player.phtml:393
 msgid "Next"
-msgstr "Далее"
+msgstr "Следующая"
 
 #: airtime_mvc/application/views/scripts/embed/weekly-program.phtml:87
 msgid "Looks like there are no shows scheduled on this day."
@@ -5169,7 +5172,7 @@ msgstr "Успешно загружено"
 
 #: airtime_mvc/application/controllers/LocaleController.php:
 msgid "No matching records found"
-msgstr "Совпадающих записей не найдено"
+msgstr "Записи отсутствуют."
 
 #: airtime_mvc\application\views\scripts\plupload\index.phtml:86
 msgid "Storage"
@@ -5239,9 +5242,29 @@ msgstr "Если нет - попробуйте запустить"
 msgid "Show _MENU_"
 msgstr "Показать _MENU_"
 
+#: airtime_mvc/application/controllers/LocaleController.php:462
+msgid "Show _MENU_ entries"
+msgstr "Показать _MENU_ записей"
+
+#: airtime_mvc/application/controllers/LocaleController.php:434
+msgid "No data available in table"
+msgstr "В таблице нет данных"
+
+#: airtime_mvc/application/controllers/LocaleController.php:446
+msgid "Search:"
+msgstr "Поиск:"
+
+#: airtime_mvc/application/controllers/LocaleController.php:471
+msgid "(filtered from _MAX_ total track types)"
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:435
+msgid "(filtered from _MAX_ total entries)"
+msgstr "(отфильтровано из _MAX_ записей)"
+
 #: airtime_mvc/application/controllers/LocaleController.php:465
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
-msgstr "Показано с _START_ по _END_ из _TOTAL_ значений"
+msgstr "Записи с _START_ до _END_ из _TOTAL_ записей"
 
 #: airtime_mvc/application/controllers/LocaleController.php:466
 msgid "Showing _START_ to _END_ of _TOTAL_ tracks"
@@ -5257,7 +5280,7 @@ msgstr "Показано с _START_ по _END_ из _TOTAL_ пользовате
 
 #: airtime_mvc/application/controllers/LocaleController.php:468
 msgid "Showing 0 to 0 of 0 entries"
-msgstr "Показано с 0 по 0 из 0 значений"
+msgstr "Записи с 0 до 0 из 0 записей"
 
 #: airtime_mvc/application/controllers/LocaleController.php:469
 msgid "Showing 0 to 0 of 0 tracks"
@@ -5265,11 +5288,11 @@ msgstr "Показано с 0 по 0 из 0 треков"
 
 #: airtime_mvc/application/controllers/LocaleController.php:446
 msgid "First"
-msgstr "Начало"
+msgstr "Первая"
 
 #: airtime_mvc/application/controllers/LocaleController.php:447
 msgid "Last"
-msgstr "Конец"
+msgstr "Последняя"
 
 #: airtime_mvc/application/controllers/LocaleController.php:449
 msgid "Previous"
@@ -5310,14 +5333,6 @@ msgstr "Видимость"
 #: airtime_mvc/
 msgid "Visibility:"
 msgstr "Видимость:"
-
-#: airtime_mvc/application/controllers/LocaleController.php:471
-msgid "(filtered from _MAX_ total track types)"
-msgstr ""
-
-#: airtime_mvc/application/controllers/LocaleController.php:435
-msgid "(filtered from _MAX_ total entries)"
-msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:473
 msgid "Are you sure you want to delete this tracktype?"
