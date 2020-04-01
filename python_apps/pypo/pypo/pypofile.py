@@ -39,12 +39,13 @@ class PypoFile(Thread):
         src = media_item['uri']
         dst = media_item['dst']
 
-        src_size = media_item['filesize']
+        src_md5 = media_item['md5']
 
-        dst_exists = True
+        dst_exists = False
         try:
-            dst_size = os.path.getsize(dst)
+            dst_exists = os.path.exists(dst)
         except Exception, e:
+            self.logger.debug(e)
             dst_exists = False
 
         do_copy = False
@@ -55,7 +56,14 @@ class PypoFile(Thread):
             # become an issue here... This needs proper cache management.
             # https://github.com/LibreTime/libretime/issues/756#issuecomment-477853018
             # https://github.com/LibreTime/libretime/pull/845
-            self.logger.debug("file %s already exists in local cache as %s, skipping copying..." % (src, dst))
+            with open(dst, 'rb') as file:
+                data = file.read()
+                dst_md5 = hashlib.md5(data).hexdigest()
+
+            if dst_md5 != src_md5:
+                do_copy = True
+            else:
+                self.logger.debug("file %s already exists in local cache as %s, skipping copying..." % (src, dst))
         else:
             do_copy = True
 
