@@ -54,11 +54,18 @@ systemd-sysv
 unzip
 vorbisgain
 vorbis-tools
-vorbis-tools
 xmlstarlet
 zip
+pwgen
+libfaad2
+php-apcu
+
+lame
+silan
+coreutils
+
+liquidsoap
 
 
 bpm-tools
 ffmpeg
-
