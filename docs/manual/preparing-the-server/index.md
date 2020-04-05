@@ -8,11 +8,11 @@ The recommended LibreTime server platform is Ubuntu 16.04 LTS (Xenial Xerus).
 
 The server should have at least a 1GHz processor and 1GB of RAM, preferably 2GB
 RAM or more. If you are using a desktop environment and web browser directly on
-the server you should install at least 2GB RAM, to avoid swapping to disk.
+the server you should install at least 2GB RAM to avoid swapping to disk.
 
 The LibreTime installation does not use much disk space, but you should allow
 plenty of storage capacity for the LibreTime library. A hot-swap RAID array is
-recommended for media storage, in case of disk failure. You should also consider
+recommended for media storage to mitigate the effects of disk failure. You should also consider
 a UPS or other battery-powered system to offer some protection against
 short-term power failures.
 
@@ -34,7 +34,7 @@ Setting up a local firewall is done differently on all the supported distros.
 * [Ubuntu](https://help.ubuntu.com/lts/serverguide/firewall.html)
 * [FirewallD](http://www.firewalld.org/) (CentOS)
 
-There is a vast amount of ways to configure your network, firewall included.
+There are a vast amount of ways to configure your network, firewall included.
 Choose the way that best fits your deploy and dont internal expose parts of your
 LibreTime install on the network.
 
