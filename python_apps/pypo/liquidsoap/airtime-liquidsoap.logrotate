@@ -6,6 +6,6 @@
   notifempty
   sharedscripts
   postrotate
-    start-stop-daemon --stop --signal USR1 --quiet --pidfile /var/run/airtime/airtime-liquidsoap.pid
+    systemctl kill --signal=SIGUSR1 airtime-liquidsoap >/dev/null 2>&1 || true
   endscript
 }
