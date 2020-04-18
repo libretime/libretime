@@ -43,6 +43,7 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
         }
     }
 
+    // The Facebook widget is untested & unsupported, the widget has been removed from the navigation in navigation.php
     public function facebookAction()
     {
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Widgets');
