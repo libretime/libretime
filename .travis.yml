@@ -19,10 +19,10 @@ env:
   global:
   - ENVIRONMENT=testing
   - LIBRETIME_LOG_DIR=/tmp/log/libretime
-  matrix:
+  jobs:
   - PYTHON=false
   - PYTHON=true
-matrix:
+jobs:
   allow_failures:
   # there are currently some testing issues with DateTime precision on 7.1
   - env: PYTHON=false
@@ -33,14 +33,13 @@ matrix:
   # there are some issues with phpunit as well as some deep in zf1 on 7.3
   - env: PYTHON=false
     php: 7.3
-jobs:
   exclude:
   # by excluding all of python we make way to just run python tests in one seperate instance
   - env: PYTHON=true
   include:
-  # having php 7.0 run python tests because travisCI quit running a independent job with 7.3 and 7.0 can still run phpunit tests
-  - php: 7.0
-    env: PYTHON=true
+  # having the latest run as php 7.3 to do the python tests
+    php: 7.3
+  - env: PYTHON=true
 addons:
   apt:
     packages:
