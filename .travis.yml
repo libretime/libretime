@@ -35,7 +35,8 @@ jobs:
     php: 7.3
   include:
   # having the latest run as php 7.3 to do the python tests
-  - env: PYTHON=true
+  - name: "python test and doc push"
+    env: PYTHON=true
     php: 7.3
   exclude:
   # by excluding all of python we make way to just run python tests in one seperate instance
