@@ -38,8 +38,8 @@ jobs:
   - env: PYTHON=true
   include:
   # having the latest run as php 7.3 to do the python tests
-    php: 7.3
   - env: PYTHON=true
+    php: 7.3
 addons:
   apt:
     packages:
