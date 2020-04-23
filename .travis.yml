@@ -33,21 +33,18 @@ jobs:
   # there are some issues with phpunit as well as some deep in zf1 on 7.3
   - env: PYTHON=false
     php: 7.3
-  include:
-  # having the latest run as php 7.3 to do the python tests
-  - name: "python test and doc push"
-    env: PYTHON=true
-    php: 7.3
   exclude:
-  # by excluding all of python we make way to just run python tests in one seperate instance
+  # we need to explicitly exclude python for every version of php other than 7.3 to  make way to just run python tests in one seperate instance
+  - env: PYTHON=true
+    php: 7.2
+  - env: PYTHON=true
+    php: 7.1
+  - env: PYTHON=true
+    php: 7.0
   - env: PYTHON=true
     php: 5.6
+  - env: PYTHON=true
     php: 5.4
-    php: 7.0
-    php: 7.1
-    php: 7.2
-  
-
 addons:
   apt:
     packages:
