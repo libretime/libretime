@@ -33,6 +33,7 @@ matrix:
   # there are some issues with phpunit as well as some deep in zf1 on 7.3
   - env: PYTHON=false
     php: 7.3
+jobs:
   exclude:
   # by excluding all of python we make way to just run python tests in one seperate instance
   - env: PYTHON=true
