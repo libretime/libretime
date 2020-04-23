@@ -1,4 +1,4 @@
-dist: trusty
+dist: bionic 
 version: ~> 1.0
 language: php
 php:
