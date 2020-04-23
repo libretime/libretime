@@ -14,7 +14,7 @@ repo_url: https://github.com/LibreTime/libretime/
 extra_css:
   - '_css/term.css'
 
-nav:
+pages:
   - 'Home': index.md
   - 'What is LibreTime?': manual/index.md
   - 'Features': features.md
@@ -25,7 +25,7 @@ nav:
     - 'Preparing the Server': manual/preparing-the-server/index.md
     - 'Setting the Server Time': manual/setting-the-server-time/index.md
   - 'Using LibreTime':
-    - 'On Air in 60 seconds!': manual/on-air-in-60-seconds/index.md
+    - 'On Air in 60 seconds!': 'manual/on-air-in-60-seconds/index.md'
     - 'Getting Started': manual/getting-started/index.md
     - 'Tutorials': manual/tutorials/index.md
     - 'How-Tos': manual/howtos/index.md
