@@ -1,4 +1,5 @@
 dist: trusty
+version: ~> 1.0
 language: php
 php:
 # the latest and greatest, has some issues that are excluded below in matrix.allow_failures
