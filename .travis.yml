@@ -1,4 +1,4 @@
-dist: bionic 
+dist: xenial 
 version: ~> 1.0
 language: php
 php:
