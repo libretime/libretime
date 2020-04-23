@@ -41,6 +41,12 @@ jobs:
   exclude:
   # by excluding all of python we make way to just run python tests in one seperate instance
   - env: PYTHON=true
+    php: 5.6
+    php: 5.4
+    php: 7.0
+    php: 7.1
+    php: 7.2
+  
 
 addons:
   apt:
