@@ -68,14 +68,6 @@ password, contact details, language and time zone preferences. Click the
 
 ![](static/Screenshot470-User_settings.png)
 
-On the right of the Logout link, clicking the green check mark opens a pop-up
-window with information about the version of LibreTime installed. If your
-LibreTime installation is not the latest version available, the green check
-mark changes to a green upgrade arrow. Should your LibreTime installation get
-too far out of date, this arrow will change to a red exclamation mark.
-
-![](static/Screenshot543-Running_latest_version_250.png)
-
 Checking an Icecast server
 --------------------------
 
