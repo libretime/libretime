@@ -1,13 +1,13 @@
 # Dashboard
 The Dashboard is divided into two sections a Library section divided between
-[Tracks](../tracks),[Playlists](../playlists), [Smart Blocks](../smartblocks),
+[Tracks](../tracks), [Playlists](../playlists), [Smart Blocks](../smartblocks),
 [Webstreams](../webstreams), and [Podcasts](../podcasts), with the **Scheduled
 Shows** dialog on the right. This page provides an overview of the right-hand
 interface. Check the links to see information about the other sections which
 provide the content that can be scheduled.
 
 The **Scheduled Shows** page provides a view of the content your station is will
-playout, or has already played out, which defaults to showing the 24 hours
+playout, or has already played out, which defaults to showing the 3 hours
 ahead. This page also enables you to make last-minute changes to running shows.
 
 If you've only just installed LibreTime, there might not be any content shown
