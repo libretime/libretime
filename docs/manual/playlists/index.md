@@ -1,13 +1,7 @@
 Creating a new playlist
 -----------------------
 
-Once you have found the media that you require using the search tools, you can create a new playlist on the right hand side of the **Library** page. If it is not already open, click the **Open Media Builder** button to begin.
-
-![](static/Screenshot500-Open_media_builder_240.png)
-
-Then click the **New** button and select **New Playlist** from the pop-up menu.
-
-![](static/Screenshot434-New_playlist.png)
+You can create a new playlist on the toolbar of the **Playlists** page.
 
 At first, the new playlist will be shown as *Untitled Playlist*. Click the pencil icon on the right to give the playlist a name.
 
@@ -34,7 +28,7 @@ You can also select or deselect a whole page of search results using the **Selec
 
 After adding files to the playlist, the total playlist time is displayed in the top right corner. The duration of an individual file is shown in each row of the playlist in a white font, and beneath this figure the time since the beginning of the playlist is displayed in a smaller light grey font. This elapsed time figure can be used as a time check for voice tracks, although this option may limit the re-usability of the voice track.
 
-To audition a playlist file in your web browser, click the white triangle**** button on the left side of its row. (If the format of the file is not supported by your browser, the triangle in this button will be greyed out). If audition of the file format is supported, a pop-up window will open, with the playlist starting at the file you clicked.
+To audition a playlist file in your web browser, click the white triangle button on the left side of its row. (If the format of the file is not supported by your browser, the triangle in this button will be greyed out). If audition of the file format is supported, a pop-up window will open, with the playlist starting at the file you clicked.
 
 Click the small white **x** icon on the right hand side of each row to remove a file from the playlist. You can also drag and drop files to re-order them, or click the **Shuffle** button to re-order files automatically. Click the **Clear** button to remove all content from the playlist, or click the **Delete** button to remove the playlist from the LibreTime library altogether.
 
