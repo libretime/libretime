@@ -62,6 +62,21 @@ If you have changed the *base\_url*, *base\_port* or *base\_dir* setting in */et
     base_port = 80
     base_dir = /
 
+Apache max file size configuration
+----------------------------------
+
+By default, the maximum upload file size is 500 MB, which may not be large enough for some stations, especially if they are uploading prerecorded shows. The setting for this is located in */etc/apache2/sites-available/airtime.config*. Search for and update the following in megabytes:
+
+```
+; Maximum allowed size for uploaded files.
+upload_max_filesize = 40M
+
+; Must be greater than or equal to upload_max_filesize
+post_max_size = 40M
+```
+
+For quick reference, 1024 MB = 1 GB and 2048 MB = 2 GB, but most will be okay with rounding to the nearest thousand. After updating the config file, restart Apache by `sudo systemctl apache restart`.
+
 
 Playout and recorder settings
 -----------------------------

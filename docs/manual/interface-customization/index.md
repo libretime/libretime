@@ -1,3 +1,6 @@
+Modifying the LibreTime interface
+----------------------------------
+
 The LibreTime administration interface, as a web application, is fully customizable using the same methods that you might use to modify a website. For instance, you may wish to increase certain font sizes or change the colours in the LibreTime interface to better suit staff users with impaired vision. To do this, open one of the CSS files in the */public/css/* directory under the LibreTime *DocumentRoot* directory in an editor such as **nano**:
 
     sudo nano /usr/share/airtime/public/css/styles.css
@@ -15,6 +18,24 @@ To change the background colour of the administration interface from dark gray t
 Save the file with **Ctrl+O**, then refresh your browser to see the change to the interface background colour.
 
 Any custom changes that you make to the administration interface should be backed up before upgrading LibreTime to a newer version, otherwise they could be overwritten. If you have made improvements that you think might be useful to other LibreTime users, please contact LibreTime and tell us about them.
+
+Modifying the LibreTime Radio Page
+-----------------------------------
+
+The background of the mini-site that appears when you visit the server's domain in your web browser can be changed by modifying the page's CSS file, located at */usr/share/airtime/php/airtime_mvc/public/css/radio-page/radio-page.css*.
+
+```
+html {
+    background: url("img/background-testing-3.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    overflow-y: auto;
+}
+```
+
+Place the new background image in the */usr/share/airtime/public/css/radio-page/img/* folder and change the `background:` entry's URL to point to the new image. The new image should be at least 1280 x 720 in pixel size to avoid being blurry.
 
 Modifying the Icecast interface
 -------------------------------
