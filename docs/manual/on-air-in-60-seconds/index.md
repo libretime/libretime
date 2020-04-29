@@ -10,11 +10,12 @@ you need to read more).
 ![](static/Screenshot559-Log_in.png)
 
 2. Add your files to the LibreTime library by clicking **Upload** on the left
-menu, then click on the the **Drop files here or click to browse your computer**
+menu, selecting the track type (ie. Music, Show Intros, Station IDs), then clicking
+on the the **Drop files here or click to browse your computer**
 area. You can drag and drop your files into this window too. The upload will
 start as soon as you drop a file (*Add media*).
 
-![](static/Screenshot557-Select_files_a7GflUi.png)
+![](static/Select_files.png)
 
 3. Create a show by clicking **Calendar** on the main menu, and then clicking
 the **New Show** button (*Calendar*). Only admins and program managers can add
