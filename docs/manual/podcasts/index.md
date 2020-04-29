@@ -6,5 +6,13 @@ The podcast interfaces provides you with the ability generate [Smartblocks](../s
 
 ##Video Tutorials##
 Coming Soon
-##How To##
-TBD
+
+The podcasts dashboard
+----------------------
+
+![](Podcasts_Dashboard.png)
+
+The podcasts editor
+-------------------
+
+![](Podcasts_Editor.png)
