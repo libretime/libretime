@@ -16,3 +16,9 @@ Screenshots
 -----------
 
 ![](manual/what-is-airtime/static/Screenshot540-Now_playing_250.png)
+
+![](static/Scheduler1.png)
+
+![](static/Scheduler2.png)
+
+![](static/Upload.png)
