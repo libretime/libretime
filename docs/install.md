@@ -17,7 +17,7 @@ then running the installer.
 2. Create a folder in your home directory for the download and change to it: `cd ~ && mkdir LibreTime && cd LibreTime`
 3. Clone the repo: `git clone https://github.com/LibreTime/libretime.git`
 4. Run the installer: `sudo ./install -fiap`
-5. After the installer is finished, follow the instructions to proceed to the [setup wizard](getting-started/index.md)
+5. After the installer is finished, follow the instructions to proceed to the [setup wizard](manual/getting-started/index.md)
 
 It's recommended to use the `-fiap` flag to install LibreTime on a fresh server install. This way,
 all dependencies will be installed and configured by the installer without needing user input.
