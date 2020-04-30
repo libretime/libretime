@@ -4,11 +4,9 @@ The following instructions assume that you have root access (**sudo** on most
 distributions) to a GNU/Linux server, and are familiar with basic command line
 tasks.
 
-The recommended LibreTime server platform is Ubuntu 16.04 LTS (Xenial Xerus).
-
-The server should have at least a 1GHz processor and 1GB of RAM, preferably 2GB
-RAM or more. If you are using a desktop environment and web browser directly on
-the server you should install at least 2GB RAM to avoid swapping to disk.
+The recommended LibreTime server platform is Ubuntu Server 18.04 LTS. The server should have at least a 1GHz
+processor, 2GB of RAM, and a _wired_ ethernet connection. A soundcard is only required if you plan to
+output audio directly to a mixing console instead of/in addition to using the onboard Icecast2 server.
 
 The LibreTime installation does not use much disk space, but you should allow
 plenty of storage capacity for the LibreTime library. A hot-swap RAID array is
@@ -19,6 +17,29 @@ short-term power failures.
 LibreTime depends on infrastructure and services that need to be configured
 properly for it to run smoothly. This chapter will go through the individual
 parts of a LibreTime install and help you assess how you need to manage them.
+
+Netplan
+-------
+
+Starting in Ubuntu 18.04 LTS, network settings are managed by the Netplan daemon (more info [here](https://netplan.io/)). The Netplan config file is written in yaml and located at */etc/netplan/...*; if no yaml file is present, create one with a name like `##-netcfg.yaml` where ## is a number of your choice.
+
+An example Netplan config looks like this:
+```
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp3s0:
+      addresses: [192.168.88.8/24]
+      gateway4: 192.168.88.1
+      nameservers:
+        search: [lan]
+        addresses: 192.168.88.1
+```
+
+In this example, `enp3s0` is the name of your network card; check to see what your network card's name is by running `ip -a` or `ifconfig`. List your desired static IP address under `addresses:`.
+
+Once your Netplan config is set up correctly, run `sudo netplan apply` to update the configuration. Check that your IP address is set to the specified address with `ifconfig` and check to see if you are connected to the internet properly by pinging a known IP (ex. `ping 1.1.1.1`, Cloudflare's server) or by running `sudo apt update`. If no errors appear, than your server's IP is configured correctly.
 
 Firewall
 --------
