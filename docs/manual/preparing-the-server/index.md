@@ -37,7 +37,13 @@ network:
         addresses: 192.168.88.1
 ```
 
-In this example, `enp3s0` is the name of your network card; check to see what your network card's name is by running `ip -a` or `ifconfig`. List your desired static IP address under `addresses:`.
+In this example, `enp3s0` is the name of your network card; check to see what your network card's name is by running `ip -a` or `ifconfig`. Make sure to get your spacing right!
+Two spaces per indent and _do not tab over_.
+
+- List your desired static IP address under `addresses` in the XXX.XXX.XXX.XXX/YY format (for more information on this, see [this subreddit thread](https://www.reddit.com/r/AskTechnology/comments/1r9x2f/how_does_the_ip_range_format_xxxxxxxxxxxxyy_work/)).
+  - If your subnet mask is *255.255.255.0* then your IP address will end in `/24`, just like the example above.
+- Set your DNS server under `gateway4` (this will likely be your router's IP address)
+- Set your gateway under `nameservers -> addresses`
 
 Once your Netplan config is set up correctly, run `sudo netplan apply` to update the configuration. Check that your IP address is set to the specified address with `ifconfig` and check to see if you are connected to the internet properly by pinging a known IP (ex. `ping 1.1.1.1`, Cloudflare's server) or by running `sudo apt update`. If no errors appear, than your server's IP is configured correctly.
 
