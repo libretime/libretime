@@ -37,8 +37,7 @@ network:
         addresses: 192.168.88.1
 ```
 
-In this example, `enp3s0` is the name of your network card; check to see what your network card's name is by running `ip -a` or `ifconfig`. Make sure to get your spacing right!
-Two spaces per indent and _do not tab over_.
+In this example, `enp3s0` is the name of your network card; check to see what your network card's name is by running `ip -a` or `ifconfig`. Spacing in Netplan config files is two (2) spaces per indent. Using tabs will prevent the Netplan config from starting correctly.
 
 - List your desired static IP address under `addresses` in the XXX.XXX.XXX.XXX/YY format (for more information on this, see [this subreddit thread](https://www.reddit.com/r/AskTechnology/comments/1r9x2f/how_does_the_ip_range_format_xxxxxxxxxxxxyy_work/)).
   - If your subnet mask is *255.255.255.0* then your IP address will end in `/24`, just like the example above.
@@ -62,10 +61,10 @@ Setting up a local firewall is done differently on all the supported distros.
 * [FirewallD](http://www.firewalld.org/) (CentOS)
 
 There are a vast amount of ways to configure your network, firewall included.
-Choose the way that best fits your deploy and dont internal expose parts of your
+Choose the way that best fits your deployment and don't expose internal parts of your
 LibreTime install on the network.
 
-The following ports are relevant to the deploy and need to be opened to varying
+The following ports are relevant to LibreTime's core services and need to be opened to varying
 degrees.
 
 | Port | Description |
@@ -73,7 +72,7 @@ degrees.
 | 80 | Default unsecure web port. Needs to be open for the webserver to serve the LibreTime webinterface or if you enable TLS a redirect to the secure web port.|
 | 443 | Default secure web port. This is where your LibreTime webinterface lives if you choose to configure TLS.|
 | 8000 | Main Icecast instance. This is where your listeners connect if you plan on using your LibreTime server to directly serve such connections. You can also configure external Icecast or ShoutCast instances for this later.|
-| 8001 and 8002 | Master and Show source input ports. Only open these ports if you plan on letting anyone use these features. You might want to consider using a fixed IP if you use the master source for studio connections on port 8001 and only allow DJ to connect over a VPN link or similar depending your security needs.|
+| 8001 and 8002 | Master and Show source input ports. Only open these ports if you plan on letting anyone use these features.|
 
 The remaining parts of LibreTime might open additional ports that should not be
 accessible from any untrusted networks. You should consider how to configure
@@ -140,3 +139,31 @@ See these links for more information:
 
 * [Networking and RabbitMQ](https://www.rabbitmq.com/networking.html)
 * [Serverfault Instructions for Debian](https://serverfault.com/a/319166)
+
+Services
+---------
+
+Once all of the services needed to run LibreTime are installed and configured,
+it is important that the server starts them during the boot process, to cut down on downtime, especially in live enviornments.
+Ubuntu 18.04 uses the `systemctl` command to manage services, so run the following commands to enable all
+LibreTime-needed services to run at boot:
+
+```
+sudo systemctl enable airtime-liquidsoap
+sudo systemctl enable airtime-playout
+sudo systemctl enable airtime-celery
+sudo systemctl enable airtime_analyzer
+sudo systemctl enable apache2
+sudo systemctl enable rabbitmq-server
+```
+
+If an error is returned, try adding `.service` to the end of each command. For example:
+
+```
+sudo systemctl enable apache2.service
+```
+
+User groups
+------------
+
+If you plan to have LibreTime output audio directly to a mixing console or transmitter, the `www-data` user needs to be added to the `audio` user group using `sudo adduser www-data audio`. Otherwise, if an Icecast or Shoutcast server is going to be used without an analog audio output, this step can be omitted.
