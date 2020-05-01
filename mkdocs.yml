@@ -28,7 +28,6 @@ pages:
     - 'On Air in 60 seconds!': 'manual/on-air-in-60-seconds/index.md'
     - 'Getting Started': manual/getting-started/index.md
     - 'Tutorials': manual/tutorials/index.md
-    - 'How-Tos': manual/howtos/index.md
   - 'The Main Menus':
     - 'Upload': manual/upload/index.md
     - 'Dashboard': manual/dashboard/index.md
