@@ -73,7 +73,7 @@ degrees.
 | 80 | Default unsecure web port. Needs to be open for the webserver to serve the LibreTime webinterface or if you enable TLS a redirect to the secure web port.|
 | 443 | Default secure web port. This is where your LibreTime webinterface lives if you choose to configure TLS.|
 | 8000 | Main Icecast instance. This is where your listeners connect if you plan on using your LibreTime server to directly serve such connections. You can also configure external Icecast or ShoutCast instances for this later.|
-| 8001 and 8002 | Master and Show source input ports. Only open these ports if you plan on letting anyone use these features. You might want to consider usinga fixed IP if you use the master source for studio connections on port 8001 and only allow DJ to connect over a VPN link or similar depending your security needs.|
+| 8001 and 8002 | Master and Show source input ports. Only open these ports if you plan on letting anyone use these features. You might want to consider using a fixed IP if you use the master source for studio connections on port 8001 and only allow DJ to connect over a VPN link or similar depending your security needs.|
 
 The remaining parts of LibreTime might open additional ports that should not be
 accessible from any untrusted networks. You should consider how to configure
