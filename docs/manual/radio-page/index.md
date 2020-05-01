@@ -6,6 +6,7 @@ _libretime.example.com_ (for installations to a server on a domain).
 ![](static/radio-page.png)
 
 The site includes your logo (set under Settings > General), the login button to the LibreTime interface, links for the schedule, station description, and podcast tabs, and a livestream player that runs of the stream from the built-in Icecast2 server.
+The currently playing artist and track are displayed.
 
 ![](static/radio-schedule.png)
 
