@@ -18,8 +18,8 @@
             <span id="stream_url"><?php echo $this->element->getElement("master_source_host")->render() ?>
                 <a href=# id="connection_url_override" style="font-size: 12px;"><?php echo _("Override") ?></a>&nbsp;&nbsp;
                 <span class="override_help_icon"></span></br>
-                <div id="master_dj_connection_url_actions" style="display:none">
-                <a href=# id="ok" style="font-size: 12px;"><?php echo _("OK") ?></a> <a href=# id="reset" style="font-size: 12px;"><?php echo _("RESET"); ?></a>
+                <div id="master_dj_connection_url_actions" style="display:none">&nbsp;&nbsp; 
+                <a href=# id="ok" style="font-size: 12px;"><?php echo _("OK") ?></a>&nbsp;&nbsp;<a href=# id="reset" style="font-size: 12px;"><?php echo _("RESET"); ?></a>
                 </div>
             </span>
             <?php echo $this->element->getElement("master_source_port")->render() ?>
@@ -36,8 +36,8 @@
                 <a href=# id="connection_url_override" style="font-size: 12px;"><?php echo _("Override") ?></a>&nbsp;&nbsp;
                 <span class="override_help_icon"></span>
                 </br>
-                <div id="live_dj_connection_url_actions" style="display:none">
-                <a href=# id="ok" style="font-size: 12px;"><?php echo _("OK") ?></a> <a href=# id="reset" style="font-size: 12px;"><?php echo _("RESET"); ?></a>
+                <div id="live_dj_connection_url_actions" style="display:none; float:left">&nbsp;&nbsp;
+                <a href=# id="ok" style="font-size: 12px;"><?php echo _("OK") ?></a>&nbsp;&nbsp;<a href=# id="reset" style="font-size: 12px;"><?php echo _("RESET"); ?></a>
                 </div>
             </span>
             <?php echo $this->element->getElement("show_source_port")->render() ?>
