@@ -57,7 +57,7 @@ Two of the most important passwords that should be changed *immediately* after i
 are the passwords used by the PostgreSQL database.
 It is strongly recommended that you do this before exposing your server to the internet beyond your internal network.
 
-1. Login to PostgreSQL with `sudo -u postgres psql`. `postgres=#` means that you have logged in successfully.
+1. Login to PostgreSQL with `sudo -u postgres psql`. The PostgreSQL shell - `postgres=#` - means that you have logged in successfully.
 2. Change the admin password with `ALTER USER postgres PASSWORD 'myPassword';`, where `myPassword` is the new password.
 Make sure to include the semicolon at the end! A response of `ALTER ROLE` means that the command ran successfully.
 3. Change the password for the *airtime* user with `ALTER USER airtime WITH PASSWORD 'new_password';`
