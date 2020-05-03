@@ -1,4 +1,5 @@
 dist: trusty
+version: ~> 1.0
 language: php
 php:
 # the latest and greatest, has some issues that are excluded below in matrix.allow_failures
@@ -18,10 +19,10 @@ env:
   global:
   - ENVIRONMENT=testing
   - LIBRETIME_LOG_DIR=/tmp/log/libretime
-  matrix:
+  jobs:
   - PYTHON=false
   - PYTHON=true
-matrix:
+jobs:
   allow_failures:
   # there are currently some testing issues with DateTime precision on 7.1
   - env: PYTHON=false
@@ -33,12 +34,17 @@ matrix:
   - env: PYTHON=false
     php: 7.3
   exclude:
-  # by excluding all of python we make way to just run python tests in one seperate instance
+  # we need to explicitly exclude python for every version of php other than 7.3 to  make way to just run python tests in one seperate instance
   - env: PYTHON=true
-  include:
-  # using latest to run python on since it will last the longest
-  - php: 7.3
-    env: PYTHON=true
+    php: 7.2
+  - env: PYTHON=true
+    php: 7.1
+  - env: PYTHON=true
+    php: 7.0
+  - env: PYTHON=true
+    php: 5.6
+  - env: PYTHON=true
+    php: 5.4
 addons:
   apt:
     packages:

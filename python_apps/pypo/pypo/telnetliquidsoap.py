@@ -234,9 +234,9 @@ class TelnetLiquidsoap:
         self.logger.debug('Disconnecting source: %s', sourcename)
         command = ""
         if(sourcename == "master_dj"):
-            command += "master_harbor.kick\n"
+            command += "master_harbor.stop\n"
         elif(sourcename == "live_dj"):
-            command += "live_dj_harbor.kick\n"
+            command += "live_dj_harbor.stop\n"
 
         try:
             self.telnet_lock.acquire()

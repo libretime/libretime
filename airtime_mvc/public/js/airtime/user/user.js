@@ -60,7 +60,7 @@ function rowCallback( nRow, aData, iDisplayIndex ){
     if( aData['delete'] != "self"){
     	$('td:eq(4)', nRow).append( '<span class="ui-icon ui-icon-closethick"></span>').children('span').click(function(e){e.stopPropagation(); removeUserCallback(aData['id'], nRow)});
     }else{
-    	$('td:eq(4)', nRow).empty().append( '<span class="ui-icon ui-icon-closethick"></span>').children('span').click(function(e){e.stopPropagation(); alert("Can't delete yourself!")});
+    	$('td:eq(4)', nRow).empty().append( '<span class="ui-icon ui-icon-closethick"></span>').children('span').click(function(e){e.stopPropagation(); alert($.i18n._("Can't delete yourself!"))});
     }
 
     if ( aData['type'] == "A" )

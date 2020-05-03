@@ -57,12 +57,6 @@ $pages[] = array(
             'module'     => 'default',
             'controller' => 'embeddablewidgets',
             'action'     => 'schedule',
-        ),
-        array(
-            'label'      => _('Facebook'),
-            'module'     => 'default',
-            'controller' => 'embeddablewidgets',
-            'action'     => 'facebook',
         )
     )
 );
@@ -185,7 +179,7 @@ $pages[] = array(
             'target'    => "_blank"
         ),
         array(
-            'label'      => _(sprintf("Help Translate %s", PRODUCT_NAME)),
+            'label'      => _('Help Translate Libretime'),
             'uri'        => AIRTIME_TRANSIFEX_URL,
             'target'     => "_blank"
         ),

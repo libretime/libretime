@@ -1,5 +1,9 @@
 *Note* LibreTime installed via the install script does not currently change the default Icecast password and is insecure without intervention by the system admin. There is a [tutorial](https://github.com/LibreTime/libretime/wiki/Securing-icecast-and-customizing-stream-settings) on our wiki that walks you through the steps of how to fix this and an open issue [#86](https://github.com/LibreTime/libretime/issues/86) to track resolution of this. 
 
+
+Global settings
+------------------------
+
 You can configure direct Icecast and SHOUTcast streams and sound card output by clicking **Streams** on the **System** menu.
 
 At the top left of the **Stream Settings** page are global settings including **Hardware Audio Output**, which enables playout from the default sound card on the server, if one is fitted. The default **Output Type** of *ALSA* on the drop-down menu will be suitable for most servers with a sound card. If not, you have the option to choose from other Liquidsoap interfaces available, such as *OSS* or *PortAudio*.

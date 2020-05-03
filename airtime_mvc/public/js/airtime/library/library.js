@@ -767,6 +767,14 @@ var AIRTIME = (function(AIRTIME) {
                             $(this).contextMenu({x: $(e.target).offset().left, y: $(e.target).offset().top})
                         }).html("<div class='library_actions_btn'>...</div>");
 
+                    if (aData.track_type == null || aData.track_type == undefined || aData.track_type == 0) {
+                        var has_type = false;
+                        var type_button = "";
+                    } else {
+                        var has_type = true;
+                        var type_button = "<div class='library_track_type_btn'>"+aData.track_type+"</div>";
+                    }
+
                     $(nRow).find('td.library_track_type')
                           .on('click', function (e) {
 
@@ -814,12 +822,12 @@ var AIRTIME = (function(AIRTIME) {
                                         }
                                     });
 
-                                    if(type_enabled == false){
+                                    if(type_enabled == false && has_type == true){
                                       alert("This type is disabled.");
                                     }
                               });
 
-                          }).html("<div class='library_track_type_btn'>"+aData.track_type+"</div>");
+                          }).html(type_button);
                 }
 
                 // add audio preview image/button

@@ -75,6 +75,12 @@ class Application_Form_Player extends Zend_Form_SubForm
 
         $previewLabel = new Zend_Form_Element_Text('player_preview_label');
         $previewLabel->setLabel(_("Preview:"));
+        $previewLabel->setDecorators(array(
+            'ViewHelper',
+            'Errors',
+            'Label'
+        ));
+	$previewLabel->addDecorator('Label', array('class' => 'preview-label'));
         $this->addElement($previewLabel);
 
     }

@@ -158,7 +158,7 @@ class Application_Service_PodcastService
         $newBl = new Application_Model_Block();
         $newBl->setCreator(Application_Model_User::getCurrentUser()->getId());
         $newBl->setName($title);
-        $newBl->setDescription('Auto-generated smartblock for podcast');
+        $newBl->setDescription(_("Auto-generated smartblock for podcast"));
         $newBl->saveType('dynamic');
         // limit the smartblock to 1 item
         $row = new CcBlockcriteria();
