@@ -84,3 +84,4 @@ pages:
   - 'Appendix':
     - 'HD Audio Models': manual/hd-audio-models/index.md
     - 'About This Manual': manual/about-this-manual/index.md
+    - 'Uninstall LibreTime': uninstall.md
