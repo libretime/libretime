@@ -24,6 +24,7 @@ pages:
     - 'Install': install.md
     - 'Preparing the Server': manual/preparing-the-server/index.md
     - 'Setting the Server Time': manual/setting-the-server-time/index.md
+    - 'Host Configuration': manual/host-configuration/index.md
   - 'Using LibreTime':
     - 'On Air in 60 seconds!': 'manual/on-air-in-60-seconds/index.md'
     - 'Getting Started': manual/getting-started/index.md
@@ -70,7 +71,6 @@ pages:
     - 'Exporting the Schedule': manual/exporting-the-schedule/index.md
     - 'Interface Customization': manual/interface-customization/index.md
     - 'Interface Localization': manual/interface-localization/index.md
-    - 'Host Configuration': manual/host-configuration/index.md
     - 'LibreTime API Authentication': manual/airtime-api-authentication/index.md
     - 'Secure Login with SSL or TLS': manual/secure-login-with-ssl/index.md
     - 'Icecast Statistics with Piwik': manual/icecast-statistics-with-piwik/index.md
