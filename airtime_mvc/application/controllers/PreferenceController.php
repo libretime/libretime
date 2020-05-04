@@ -25,7 +25,7 @@ class PreferenceController extends Zend_Controller_Action
         $request = $this->getRequest();
 
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Settings');
-                
+
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/preferences.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -42,6 +42,7 @@ class PreferenceController extends Zend_Controller_Action
             {
                 Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
                 Application_Model_Preference::SetStationDescription($values["stationDescription"]);
+                Application_Model_Preference::SetTrackTypeDefault($values["tracktypeDefault"]);
                 Application_Model_Preference::SetDefaultCrossfadeDuration($values["stationDefaultCrossfadeDuration"]);
                 Application_Model_Preference::SetDefaultFadeIn($values["stationDefaultFadeIn"]);
                 Application_Model_Preference::SetDefaultFadeOut($values["stationDefaultFadeOut"]);
@@ -502,7 +503,7 @@ class PreferenceController extends Zend_Controller_Action
     {
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
-        
+
         if (!SecurityHelper::verifyCSRFToken($this->_getParam('csrf_token'))) {
             Logging::error(__FILE__ . ': Invalid CSRF token');
             $this->_helper->json->sendJson(array("jsonrpc" => "2.0", "valid" => false, "error" => "CSRF token did not match."));

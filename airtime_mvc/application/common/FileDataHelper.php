@@ -442,7 +442,7 @@ class FileDataHelper {
             $tt = $_COOKIE['tt_upload'];
         } else {
           // Use default track type
-          $tt = "MUS";
+          $tt = Application_Model_Preference::GetTrackTypeDefault();
         }
         return $tt;
     }
