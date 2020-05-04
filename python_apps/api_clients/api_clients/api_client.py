@@ -141,7 +141,7 @@ class ApiRequest(object):
                     response = response.decode()
                 except (UnicodeDecodeError, AttributeError):
                     pass
-                data = json.loads(response.decode)
+                data = json.loads(response)
                 return data
             else:
                 raise InvalidContentType()
