@@ -1,6 +1,6 @@
 # Installing LibreTime
-There two methods of installing LibreTime - [Source (recommended)](#source) or
-[Ubuntu package (experimental)](#ubuntu-package).
+There two methods of installing LibreTime - [Source](#source) or
+[Ubuntu package](#ubuntu-package).
 
 ## Source
 
