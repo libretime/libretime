@@ -197,7 +197,11 @@ class Recorder(Thread):
     def handle_message(self):
         if not self.queue.empty():
             message = self.queue.get()
-            msg     = json.loads(message)
+            try:
+                message = message.decode()
+            except (UnicodeDecodeError, AttributeError):
+                pass
+            msg = json.loads(message)
             command = msg["event_type"]
             self.logger.info("Received msg from Pypo Message Handler: %s", msg)
             if command == 'cancel_recording':

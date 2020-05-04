@@ -27,6 +27,10 @@ class CuePointAnalyzer(Analyzer):
         command = [CuePointAnalyzer.SILAN_EXECUTABLE, '-b', '-F', '0.99', '-f', 'JSON', '-t', '1.0', filename]
         try:
             results_json = subprocess.check_output(command, stderr=subprocess.STDOUT, close_fds=True)
+            try:
+                results_json = results_json.decode()
+            except (UnicodeDecodeError, AttributeError):
+                pass
             silan_results = json.loads(results_json)
 
             # Defensive coding against Silan wildly miscalculating the cue in and out times:

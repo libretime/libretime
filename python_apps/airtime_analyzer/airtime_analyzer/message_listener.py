@@ -157,6 +157,10 @@ class MessageListener:
             We avoid cascading failure this way.
         '''
         try:
+            try:
+                body = body.decode()
+            except (UnicodeDecodeError, AttributeError):
+                pass
             msg_dict = json.loads(body)
             api_key         = msg_dict["api_key"]
             callback_url    = msg_dict["callback_url"]

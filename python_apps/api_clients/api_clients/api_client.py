@@ -137,7 +137,11 @@ class ApiRequest(object):
 
         try:
             if content_type == 'application/json':
-                data = json.loads(response)
+                try:
+                    response = response.decode()
+                except (UnicodeDecodeError, AttributeError):
+                    pass
+                data = json.loads(response.decode)
                 return data
             else:
                 raise InvalidContentType()

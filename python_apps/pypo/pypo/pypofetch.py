@@ -78,6 +78,10 @@ class PypoFetch(Thread):
         try:
             self.logger.info("Received event from Pypo Message Handler: %s" % message)
 
+            try:
+                message = message.decode()
+            except (UnicodeDecodeError, AttributeError):
+                pass
             m = json.loads(message)
             command = m['event_type']
             self.logger.info("Handling command: " + command)
