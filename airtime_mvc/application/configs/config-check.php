@@ -165,19 +165,19 @@ $result = $r1 && $r2;
                 </tr>
                 <tr class="<?=$analyzer ? 'success' : 'danger';?>">
                     <td class="component">
-                        Airtime Analyzer
+                        Media Analyzer
                     </td>
                     <td class="description">
-                        Airtime Upload and File Analysis service
+                        <?php echo _("LibreTime media analyzer service") ?>
                     </td>
                     <td class="solution <?php if ($analyzer) {echo 'check';?>">
                         <?php
                         } else {
                             ?>">
-                            Check that the airtime_analyzer service is installed correctly in <code>/etc/init.d</code>,
-                            and ensure that it's running with
-                            <br/><code>initctl list | grep airtime_analyzer</code><br/>
-                            If not, try running <code>sudo service airtime_analyzer start</code>
+                            <?php echo _("Check that the libretime-analyzer service is installed correctly in ") ?><code>/etc/systemd/system/</code>,
+                            <?php echo _(" and ensure that it's running with ") ?>
+                            <br/><code>systemctl status libretime-analyzer</code><br/>
+                            <?php echo _("If not, try ") ?><br/><code>sudo systemctl restart libretime-analyzer</code>
                         <?php
                         }
                         ?>
@@ -188,16 +188,16 @@ $result = $r1 && $r2;
                         Pypo
                     </td>
                     <td class="description">
-                        Airtime playout service
+                        <?php echo _("LibreTime playout service") ?>
                     </td>
                     <td class="solution <?php if ($pypo) {echo 'check';?>">
                         <?php
                         } else {
                             ?>">
-                            Check that the airtime-playout service is installed correctly in <code>/etc/init.d</code>,
-                            and ensure that it's running with
-                            <br/><code>initctl list | grep airtime-playout</code><br/>
-                            If not, try running <code>sudo service airtime-playout restart</code>
+                            <?php echo _("Check that the libretime-playout service is installed correctly in ") ?><code>/etc/systemd/system/</code>,
+                            <?php echo _(" and ensure that it's running with ") ?>
+                            <br/><code>systemctl status libretime-playout</code><br/>
+                            <?php echo _("If not, try ") ?><br/><code>sudo systemctl restart libretime-playout</code>
                         <?php
                         }
                         ?>
@@ -208,16 +208,16 @@ $result = $r1 && $r2;
                         Liquidsoap
                     </td>
                     <td class="description">
-                        Airtime liquidsoap service
+                        <?php echo _("LibreTime liquidsoap service") ?>
                     </td>
-                    <td class="solution <?php if ($liquidsoap) {echo 'check';?>">
+                    <td class="solution <?php if ($liquidsoap) {echo 'check';?>" >
                         <?php
                         } else {
                             ?>">
-                            Check that the airtime-liquidsoap service is installed correctly in <code>/etc/init.d</code>,
-                            and ensure that it's running with
-                            <br/><code>initctl list | grep airtime-liquidsoap</code><br/>
-                            If not, try running <code>sudo service airtime-liquidsoap restart</code>
+                            <?php echo _("Check that the libretime-liquidsoap service is installed correctly in ") ?><code>/etc/systemd/system/</code>,
+                            <?php echo _(" and ensure that it's running with ") ?>
+                            <br/><code>systemctl status libretime-liquidsoap</code><br/>
+                            <?php echo _("If not, try ") ?><br/><code>sudo systemctl restart libretime-liquidsoap</code>
                         <?php
                         }
                         ?>
@@ -228,16 +228,16 @@ $result = $r1 && $r2;
                         Celery
                     </td>
                     <td class="description">
-                        Airtime Celery Task service
+                        <?php echo _("LibreTime Celery Task service") ?>
                     </td>
-                    <td class="solution <?php if ($celery) {echo 'check';?>">
+                    <td class="solution <?php if ($celery) {echo 'check';?>" >
                         <?php
                         } else {
                             ?>">
-                            Check that the airtime-celery service is installed correctly in <code>/etc/init.d</code>,
-                            and ensure that it's running with
-                            <br/><code>initctl list | grep airtime-celery</code><br/>
-                            If not, try running <code>sudo service airtime-celery restart</code>
+                            <?php echo _("Check that the libretime-celery service is installed correctly in ") ?><code>/etc/systemd/system/</code>,
+                            <?php echo _(" and ensure that it's running with ") ?>
+                            <br/><code>systemctl status libretime-celery</code><br/>
+                            <?php echo _("If not, try ") ?><br/><code>sudo systemctl restart libretime-celery</code>
                         <?php
                         }
                         ?>
