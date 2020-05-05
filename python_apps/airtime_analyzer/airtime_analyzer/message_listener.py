@@ -6,9 +6,9 @@ import select
 import signal
 import logging 
 import multiprocessing 
-import Queue
-from analyzer_pipeline import AnalyzerPipeline
-from status_reporter import StatusReporter
+import queue
+from .analyzer_pipeline import AnalyzerPipeline
+from .status_reporter import StatusReporter
 
 EXCHANGE = "airtime-uploads"
 EXCHANGE_TYPE = "topic"
@@ -112,8 +112,7 @@ class MessageListener:
         self._channel.queue_bind(exchange=EXCHANGE, queue=QUEUE, routing_key=ROUTING_KEY)
          
         logging.info(" Listening for messages...")
-        self._channel.basic_consume(self.msg_received_callback,
-                                    queue=QUEUE, no_ack=False)
+        self._channel.basic_consume(QUEUE, self.msg_received_callback, auto_ack=False)
 
     def wait_for_messages(self):
         '''Wait until we've received a RabbitMQ message.'''
@@ -158,6 +157,10 @@ class MessageListener:
             We avoid cascading failure this way.
         '''
         try:
+            try:
+                body = body.decode()
+            except (UnicodeDecodeError, AttributeError):
+                pass
             msg_dict = json.loads(body)
             api_key         = msg_dict["api_key"]
             callback_url    = msg_dict["callback_url"]
@@ -198,7 +201,7 @@ class MessageListener:
             if callback_url: # If we got an invalid message, there might be no callback_url in the JSON
                 # Report this as a failed upload to the File Upload REST API.
                 StatusReporter.report_failure_to_callback_url(callback_url, api_key, import_status=2,
-                                                              reason=u'An error occurred while importing this file')
+                                                              reason='An error occurred while importing this file')
             
 
         else:
@@ -224,7 +227,7 @@ class MessageListener:
         '''
         metadata = {}
 
-        q = Queue.Queue()
+        q = queue.Queue()
         try:
             AnalyzerPipeline.run_analysis(q, audio_file_path, import_directory, original_filename, storage_backend, file_prefix)
             metadata = q.get()

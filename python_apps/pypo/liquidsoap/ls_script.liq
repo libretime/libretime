@@ -244,7 +244,7 @@ def check_auth(user="", password="", ~type="master") =
     log("#{type} user #{user} connected",label="#{type}_source")
 
     # Check auth based on return value from auth script
-    ret = snd(snd(run_process("python #{auth_path} --#{type} #{user} #{password}"))) == "0"
+    ret = snd(snd(run_process("python3 #{auth_path} --#{type} #{user} #{password}"))) == "0"
 
     if ret then
         log("#{type} user #{user} authenticated",label="#{type}_source")

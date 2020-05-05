@@ -45,7 +45,7 @@ setup(
     author_email="duncan.sommerville@sourcefabric.org",
     license="MIT",
     packages=["airtime-celery"],
-    install_requires=["soundcloud", "celery < 4", "kombu < 3.1", "configobj"],
+    install_requires=["soundcloud", "celery", "kombu", "configobj"],
     zip_safe=False,
     data_files=data_files,
 )

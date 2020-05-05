@@ -2,7 +2,7 @@ __author__ = 'asantoni'
 
 import subprocess
 import logging
-from analyzer import Analyzer
+from .analyzer import Analyzer
 
 class UnplayableFileError(Exception):
     pass

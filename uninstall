@@ -65,7 +65,7 @@ echo -e "The following files, directories, and services will be removed:\n"
 for i in ${FILES[*]}; do
     echo $i
 done
-echo "pip airtime-playout"
+echo "pip3 airtime-playout"
 
 echo -e "\nIf your web root is not listed, you will need to manually remove it."
 
@@ -103,6 +103,6 @@ if [[ "$IN" = "y" || "$IN" = "Y" ]]; then
     dropAirtimeDatabase
 fi
 
-pip uninstall -y airtime-playout airtime-media-monitor airtime-analyzer
+pip3 uninstall -y airtime-playout airtime-media-monitor airtime-analyzer
 service apache2 restart
 echo "...Done"

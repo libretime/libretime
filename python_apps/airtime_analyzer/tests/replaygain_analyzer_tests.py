@@ -1,20 +1,7 @@
+from __future__ import print_function
 from nose.tools import *
 from airtime_analyzer.replaygain_analyzer import ReplayGainAnalyzer
 
-'''
-The tests in here were all tagged with the 'rgain' tag so the can be exluded from being run
-with nosetest -a '!rgain'. This was needed due to the fact that it is not readily possible
-to install replaygain on a containerized travis instance.
-
-We can either give running replaygain test on travis another shot after ubuntu getsan updated
-gi instrospection allowing us to install gi and gobject into the virtualenv, or we can switch
-to a full machine and stop using 'sudo: false' on travis.
-
-Deactivating these tests is a bad fix for now and I plan on looking into it again after
-most everything else is up and running. For those interesed the tests seem to work locally
-albeit my results not being up to the given tolerance of 0.30 (which I'm assuming is my rig's
-problem and would work on travis if replaygain was available).
-'''
 
 def check_default_metadata(metadata):
     ''' Check that the values extract by Silan/CuePointAnalyzer on our test audio files match what we expect.
@@ -28,7 +15,7 @@ def check_default_metadata(metadata):
     '''
     tolerance = 0.30
     expected_replaygain = 5.0
-    print metadata['replay_gain']
+    print(metadata['replay_gain'])
     assert abs(metadata['replay_gain'] - expected_replaygain) < tolerance
 
 def test_missing_replaygain():

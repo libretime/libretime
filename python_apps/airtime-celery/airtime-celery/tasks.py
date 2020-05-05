@@ -86,8 +86,12 @@ def soundcloud_download(token, callback_url, api_key, track_id):
                     auth=requests.auth.HTTPBasicAuth(api_key, ""),
                 )
             re.raise_for_status()
+            try:
+                response = re.content.decode()
+            except (UnicodeDecodeError, AttributeError):
+                response = re.content
             f = json.loads(
-                re.content
+                response
             )  # Read the response from the media API to get the file id
             obj["fileid"] = f["id"]
         else:
@@ -203,8 +207,12 @@ def podcast_download(
                     auth=requests.auth.HTTPBasicAuth(api_key, ""),
                 )
         re.raise_for_status()
+        try:
+            response = re.content.decode()
+        except (UnicodeDecodeError, AttributeError):
+            response = re.content
         f = json.loads(
-            re.content
+            response
         )  # Read the response from the media API to get the file id
         obj["fileid"] = f["id"]
         obj["status"] = 1

@@ -53,7 +53,7 @@ class PypoMessageHandler(Thread):
                             heartbeat = 5) as connection:
                 rabbit = RabbitConsumer(connection, [schedule_queue], self)
                 rabbit.run()
-        except Exception, e:
+        except Exception as e:
             self.logger.error(e)
 
     """
@@ -64,6 +64,10 @@ class PypoMessageHandler(Thread):
         try:
             self.logger.info("Received event from RabbitMQ: %s" % message)
 
+            try:
+                message = message.decode()
+            except (UnicodeDecodeError, AttributeError):
+                pass
             m = json.loads(message)
             command = m['event_type']
             self.logger.info("Handling command: " + command)
@@ -98,13 +102,13 @@ class PypoMessageHandler(Thread):
                 self.recorder_queue.put(message)
             else:
                 self.logger.info("Unknown command: %s" % command)
-        except Exception, e:
+        except Exception as e:
             self.logger.error("Exception in handling RabbitMQ message: %s", e)
 
     def main(self):
         try:
             self.init_rabbit_mq()
-        except Exception, e:
+        except Exception as e:
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", traceback.format_exc())
         self.logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")

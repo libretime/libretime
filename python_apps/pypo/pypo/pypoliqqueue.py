@@ -7,7 +7,7 @@ import sys
 import time
 
 
-from Queue import Empty
+from queue import Empty
 
 import signal
 def keyboardInterruptHandler(signum, frame):
@@ -38,7 +38,7 @@ class PypoLiqQueue(Thread):
                             time_until_next_play)
                     media_schedule = self.queue.get(block=True, \
                             timeout=time_until_next_play)
-            except Empty, e:
+            except Empty as e:
                 #Time to push a scheduled item.
                 media_item = schedule_deque.popleft()
                 self.pypo_liquidsoap.play(media_item)
@@ -82,7 +82,7 @@ class PypoLiqQueue(Thread):
 
     def run(self):
         try: self.main()
-        except Exception, e:
+        except Exception as e:
             self.logger.error('PypoLiqQueue Exception: %s', traceback.format_exc())
 
 

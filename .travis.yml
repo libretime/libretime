@@ -1,4 +1,4 @@
-dist: trusty
+dist: xenial
 version: ~> 1.0
 language: php
 php:
@@ -10,8 +10,6 @@ php:
 - 7.0
 # folks who prefer running on 5.x should be using 5.6 in most cases, 5.4 is no in the matrix since noone should use it
 - 5.6
-# this is in for centos support, it's still the default on CentOS 7.3 and there were some lang changes after 5.4
-- 5.4
 services:
 - postgresql
 - rabbitmq
@@ -49,6 +47,13 @@ addons:
   apt:
     packages:
     - silan
+    - libgirepository1.0-dev
+    - gir1.2-gstreamer-1.0
+    - gstreamer1.0-plugins-base
+    - gstreamer1.0-plugins-good
+    - gstreamer1.0-plugins-bad
+    - gstreamer1.0-plugins-ugly
+    - libcairo2-dev
     - liquidsoap
     - liquidsoap-plugin-mad
     - liquidsoap-plugin-taglib
@@ -58,10 +63,10 @@ addons:
     - liquidsoap-plugin-faad
     - liquidsoap-plugin-vorbis
     - liquidsoap-plugin-opus
-    - python-nose
-    - python-rgain
-    - python-gst-1.0
-    - python-magic
+    - python3
+    - python3-nose
+    - python3-gst-1.0
+    - python3-magic
     - dos2unix
 install:
 - >
@@ -70,9 +75,11 @@ install:
     fi
 - >
     if [[ "$PYTHON" == true ]]; then
-      pip install --user mkdocs 
-      pushd python_apps/airtime_analyzer 
-      python setup.py install --dry-run --no-init-script
+      pyenv local 3.7
+      pip3 install -U pip wheel
+      pip3 install --user mkdocs rgain3
+      pushd python_apps/airtime_analyzer
+      python3 setup.py install --dry-run --no-init-script
       popd
     fi
 before_script:

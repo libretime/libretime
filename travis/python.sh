@@ -4,11 +4,15 @@ set -xe
 
 [[ "$PYTHON" == false ]] && exit 0
 
+pyenv local 3.7
 pushd python_apps/airtime_analyzer
-pyenv local 2.7
-pip install -e .
-nosetests -a '!rgain'
-echo "replaygain tests where skipped due to not having a reliable replaygain install on travis."
+pip3 install -e .
+nosetests
+popd
+
+pushd python_apps/api_clients
+pip3 install -e .
+nosetests
 popd
 
 echo "Building docs..."
