@@ -1,3 +1,5 @@
+# Troubleshooting
+
 If your Airtime server is not working as expected, individual components of the system can be started, stopped, restarted or checked in the server console using the **systemctl** command:
 
     sudo systemctl start|stop|restart|status airtime-liquidsoap
@@ -50,7 +52,7 @@ RabbitMQ hostname changes
 
 If the Airtime logs indicate failures to connect to the RabbitMQ server, such as:
 
-    2013-10-31 08:21:11,255 ERROR - [pypomessagehandler.py : main() : line 
+    2013-10-31 08:21:11,255 ERROR - [pypomessagehandler.py : main() : line
     99] - Error connecting to RabbitMQ Server. Trying again in few seconds
 
     2013-10-31 08:21:11,255 ERROR - \[pypomessagehandler.py : main() : line 99\] - Error connecting to RabbitMQ Server. Trying again in few seconds - See more at: http://forum.sourcefabric.org/discussion/16050/\#sthash.W8OJrNFm.dpuf

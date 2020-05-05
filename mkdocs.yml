@@ -24,11 +24,11 @@ pages:
     - 'Install': install.md
     - 'Preparing the Server': manual/preparing-the-server/index.md
     - 'Setting the Server Time': manual/setting-the-server-time/index.md
+    - 'Host Configuration': manual/host-configuration/index.md
   - 'Using LibreTime':
     - 'On Air in 60 seconds!': 'manual/on-air-in-60-seconds/index.md'
     - 'Getting Started': manual/getting-started/index.md
     - 'Tutorials': manual/tutorials/index.md
-    - 'How-Tos': manual/howtos/index.md
   - 'The Main Menus':
     - 'Upload': manual/upload/index.md
     - 'Dashboard': manual/dashboard/index.md
@@ -58,7 +58,6 @@ pages:
     - 'Live Shows with Mixxx': manual/live-shows-with-mixxx/index.md
     - 'Smartphone Journalism': manual/smartphone-journalism/index.md
     - 'Icecast and SHOUTcast': manual/icecast-and-shoutcast/index.md
-    - 'Recording Shows': manual/recording-shows/index.md
   - 'Administration':
     - 'Backing Up the Server': manual/backing-up-the-server/index.md
     - 'Media Folders': manual/media-folders/index.md
@@ -71,7 +70,6 @@ pages:
     - 'Exporting the Schedule': manual/exporting-the-schedule/index.md
     - 'Interface Customization': manual/interface-customization/index.md
     - 'Interface Localization': manual/interface-localization/index.md
-    - 'Host Configuration': manual/host-configuration/index.md
     - 'LibreTime API Authentication': manual/airtime-api-authentication/index.md
     - 'Secure Login with SSL or TLS': manual/secure-login-with-ssl/index.md
     - 'Icecast Statistics with Piwik': manual/icecast-statistics-with-piwik/index.md
@@ -85,3 +83,4 @@ pages:
   - 'Appendix':
     - 'HD Audio Models': manual/hd-audio-models/index.md
     - 'About This Manual': manual/about-this-manual/index.md
+    - 'Uninstall LibreTime': uninstall.md

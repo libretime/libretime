@@ -37,3 +37,7 @@ scheduled along with this playlist.
 1. To add tracks before or after all autoloading playlists see the
 [Intro playlist](intro-playlist.md) and [Outro playlist](outro-playlist.md)
 tutorials.
+
+Watch the tutorial on YouTube
+
+* [![How to Set Up an Podcast to Play with Autoloading Playlist](http://img.youtube.com/vi/g-4UcD8qvR8/0.jpg)](https://www.youtube-nocookie.com/embed/g-4UcD8qvR8 "How to Set Up an Podcast to Play with Autoloading Playlist")
