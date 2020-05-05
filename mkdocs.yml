@@ -58,7 +58,6 @@ pages:
     - 'Live Shows with Mixxx': manual/live-shows-with-mixxx/index.md
     - 'Smartphone Journalism': manual/smartphone-journalism/index.md
     - 'Icecast and SHOUTcast': manual/icecast-and-shoutcast/index.md
-    - 'Recording Shows': manual/recording-shows/index.md
   - 'Administration':
     - 'Backing Up the Server': manual/backing-up-the-server/index.md
     - 'Media Folders': manual/media-folders/index.md
