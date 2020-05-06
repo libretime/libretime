@@ -17,6 +17,8 @@ time for the convenience of your station staff. You can also set the day of the
 week that you wish to start your station's weekly schedule on, which defaults
 to Sunday.
 
+The **Track Type Default** enables you to select a track type default for uploads.
+
 Initially, the **Default Fade In** and **Default Fade Out** times for automated
 fades are set to half a second, and the **Default Crossfade Duration** is set to
 zero seconds. Custom fade and crossfade times can be set for adjacent items in a
