@@ -34,9 +34,10 @@
         "zf1s/zend-file-transfer": "^1.13",
         "zf1s/zend-http": "^1.13",
         "zf1s/zend-date": "^1.13",
-        "zf1s/zend-view": "dev-master@dev",
-        "zf1s/zend-validate": "dev-master@dev",
-        "zf1s/zend-cache": "dev-master@dev"
+        "zf1s/zend-view": "^1.13",
+        "zf1s/zend-validate": "^1.13",
+        "zf1s/zend-cache": "^1.13",
+	"zf1s/zend-registry": "^1.13"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.3",

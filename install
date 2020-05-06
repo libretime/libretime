@@ -590,6 +590,7 @@ is_debian_dist=false
 is_debian_buster=false
 is_debian_stretch=false
 is_ubuntu_dist=false
+is_ubuntu_focal=false
 is_ubuntu_bionic=false
 is_ubuntu_xenial=false
 is_centos_dist=false
@@ -600,6 +601,11 @@ code="${code:-$VERSION_ID}"
 code="${code,,}"
 verbose "Validating dist-code: ${dist}-${code}"
 case "${dist}-${code}" in
+    ubuntu-20.04)
+        code="focal"
+        is_ubuntu_dist=true
+        is_ubuntu_focal=true
+        ;;
     ubuntu-18.04)
         code="bionic"
         is_ubuntu_dist=true
@@ -996,6 +1002,7 @@ loud "              * Configuring PHP in Apache *          "
 loud "-----------------------------------------------------"
 # Test common locations for php conf directory
 php_conf_dirs=(
+    "/etc/php/7.4/apache2/conf.d"   # Ubuntu Focal
     "/etc/php/7.3/apache2/conf.d"   # Debian Buster
     "/etc/php/7.2/apache2/conf.d"   # Ubuntu Bionic
     "/etc/php/7.0/apache2/conf.d"   # Ubuntu Xenial
@@ -1022,6 +1029,8 @@ fi
 # Enable Apache modules
 if $is_debian_buster; then
     loudCmd "a2enmod rewrite php7.3"
+elif $is_ubuntu_focal; then
+    loudCmd "a2enmod rewrite php7.4"
 elif $is_ubuntu_bionic; then
     loudCmd "a2enmod rewrite php7.2"
 elif $is_ubuntu_xenial || $is_debian_stretch; then
