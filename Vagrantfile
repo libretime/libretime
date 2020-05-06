@@ -50,6 +50,11 @@ Vagrant.configure("2") do |config|
     os.vm.box = "bento/ubuntu-16.04"
     provision_libretime(os, "debian.sh", installer_args)
   end
+  config.vm.define "ubuntu-focal" do |os|
+    os.vm.box = "bento/ubuntu-20.04"
+    provision_libretime(os, "debian.sh", installer_args)
+  end
+  
   config.vm.define "debian-stretch" do |os|
     os.vm.box = "bento/debian-9"
     provision_libretime(os, "debian.sh", installer_args)
