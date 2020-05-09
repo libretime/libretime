@@ -8,6 +8,9 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [How to upload and schedule tracks on your show](dj/upload-tracks.md)
 * [How to upload a promo](dj/upload-promo.md)
 * [How to livestream with BUTT](dj/livestream.md)
+* [Live Shows with Mixxx](dj/live-shows-with-mixxx/index.md)
+* [Smartphone Journalism](dj/smartphone-journalism/index.md)
+* [Preparing Media for Ingest](dj/preparing-media-for-ingest/index.md)
 
 ## Program Manager tutorials
 * [Building a schedule](program-manager/build-schedule.md)
@@ -20,6 +23,7 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 
 ## Administration tutorials
 * [Installing LibreTime from Git on a stand-alone VPS](admin/install-vps.md)
+* [Configuring Icecast and SHOUTcast](admin/icecast-and-shoutcast/index.md)
 * [Securing icecast and customizing stream settings ](admin/stream-settings.md)
 * [How to install player and calendar widgets on your website](admin/widgets.md)
 * [Configuring track types](admin/track-types.md)
