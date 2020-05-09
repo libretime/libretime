@@ -1,0 +1,23 @@
+# Maintainer: Zachary Klosko (kloskoz@vcu.edu)
+
+hostname: libretimeTest
+timezone: America/New York  # change as needed
+ntp:
+  pools: ['north-america.pool.ntp.org']
+  servers: ['0.north-america.pool.ntp.org', '0.pool.ntp.org']
+
+password: hackme
+chpasswd: { expire: False }
+
+packages:
+  - git
+apt_update: true
+apt_upgrade: true
+# runs installer on first boot
+runcmd:
+  - cd / && git clone https://github.com/LibreTime/libretime.git
+  # - sudo ./install -fiap  # not sure if sudo is needed
+  # - service airtime-liquidsoap start  # possibly remove
+  # - service airtime-playout start
+  # - service airtime-celery start
+  # - service airtime_analyzer start
