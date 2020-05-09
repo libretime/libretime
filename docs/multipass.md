@@ -11,7 +11,8 @@ Canonical released
 
 Similar to Docker, Multipass works through a CLI. To use, clone this repo and then open a Terminal (or Command Prompt) inside the created folder and run
 ```
-multipass launch bionic -n ltTEST --cloud-init libretimeTest.yaml  # to launch VM
+multipass launch bionic -n ltTEST --cloud-init libretimeTest.yaml  # to create and launch VM
+multipass list  # to display running VMs, IP address displayed here
 multipass shell ltTEST  # to enter VM's shell
 ```
 
@@ -26,7 +27,7 @@ sudo service airtime-celery start
 sudo service airtime_analyzer start
 ```
 
-The IP address of your new VM can be found by running `multipass list`. Copy and paste it into your web browser to access the LibreTime interface.
+Copy and paste the VM's IP address into your web browser to access the LibreTime interface.
 
 You can stop the VM with `multipass stop ltTEST` and restart with `multipass start ltTEST`.
 If you want to delete the image and start again, run `multipass delete ltTEST && multipass purge`.
