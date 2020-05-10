@@ -8,7 +8,11 @@ layouts_dir: _layouts
 data_dir: _data
 
 navigation:
-  - index.md
-  - features.md
-  - screenshots.md
-  - faq.md
+- text: Home
+  url: index.md
+- text: Features
+  url: features.md
+- text: Screenshots
+  url: screenshots.md
+- text: FAQ
+  url: faq.md
