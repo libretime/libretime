@@ -4,3 +4,4 @@ logo: [../logo/144px.png]
 show_downloads: true
 
 theme: jekyll-theme-minimal
+layouts_dir: _layouts
