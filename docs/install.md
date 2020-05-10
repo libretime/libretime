@@ -9,6 +9,7 @@ Requirements:
 - LibreTime should generally be installed on a dedicated host running Ubuntu Server 18.04 LTS, have at least 1 GHz of processor power, at least 2 GB of system RAM, and a static IP address.
 - LibreTime is undergoing active development, and is currently in ALPHA. Make sure it is working for your needs well before you begin to use it in a live environment.
 - Please review the release notes of the version you are planning on installing.
+- Complete the [Preparing the server](preparing-the-server) guide before proceeding
 
 The easiest way to install LibreTime is by cloning the repository using git, and
 then running the installer.
