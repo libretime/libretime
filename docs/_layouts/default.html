@@ -38,13 +38,15 @@
         </ul>
         {% endif %}
         
-        {% for item in site.data.samplelist.toc %}
-          <h3>{{ item.title }}</h3>
-            <ul>
-              {% for entry in item.subfolderitems %}
-                <li><a href="{{ entry.url }}">{{ entry.page }}</a></li>
-              {% endfor %}
-            </ul>
+        {% for link in site.navigation %}
+          {% assign current = nil %}
+          {% if page.url == link.url %}
+            {% assign current = 'current' %}
+          {% endif %}
+
+          <li class="nav-list-item{% if forloop.first %}first{% endif %} {{ current }} {% if forloop.last %}nav-list-item-last{% endif %}">
+            <a class="{{ current }}" href="{{ link.url }}">{{ link.text }}</a>
+          </li>
         {% endfor %}
         
       </header>
