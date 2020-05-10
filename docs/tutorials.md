@@ -5,21 +5,21 @@ Please provide any feedback on this [discourse forum post](https://discourse.lib
 There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/user90812787)
 
 ## DJ tutorials
-* [How to upload and schedule tracks on your show](tutorials/upload-tracks)
-* [How to upload a promo](tutorials/upload-promo)
-* [How to livestream with butt](tutorials/livestream)
+* [How to upload and schedule tracks on your show](tuts/upload-tracks)
+* [How to upload a promo](tuts/upload-promo)
+* [How to livestream with butt](tuts/livestream)
 
 ## Program Manager tutorials
-* [Building a schedule](build-schedule.md)
-* [How to set up an automatic top of the hour ID with intro playlist feature](top-of-hour-id.md)
-* [How to schedule a podcast to play the newest episode on an automatic basis](podcast.md)
-* [How to setup a Auto DJ to play music from certain genres for unscheduled shows](autodj.md)
-* [Preventing dead air between shows without cutting off tracks](outro-playlist.md)
-* [How to schedule automatic underwriting/advertising announcements](underwriting.md)
-* [How to schedule a repeating webstream with a linked show](webstream-link.md)
+* [Building a schedule](tuts/build-schedule)
+* [How to set up an automatic top of the hour ID with intro playlist feature](tuts/top-of-hour-id)
+* [How to schedule a podcast to play the newest episode on an automatic basis](tuts/podcast)
+* [How to setup a Auto DJ to play music from certain genres for unscheduled shows](tuts/autodj)
+* [Preventing dead air between shows without cutting off tracks](tuts/outro-playlist)
+* [How to schedule automatic underwriting/advertising announcements](tuts/underwriting)
+* [How to schedule a repeating webstream with a linked show](tuts/webstream-link)
 
 ## Admin tutorials
-* [Installing LibreTime from Git on a stand-alone VPS](install-vps.md)
-* [Securing icecast and customizing stream settings ](stream-settings.md)
-* [How to install player and calendar widgets on your website](widgets.md)
-* [Configuring track types](track-types.md)
+* [Installing LibreTime from Git on a stand-alone VPS](tuts/install-vps)
+* [Securing icecast and customizing stream settings ](tuts/stream-settings)
+* [How to install player and calendar widgets on your website](tuts/widgets)
+* [Configuring track types](tuts/track-types)
