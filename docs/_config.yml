@@ -5,3 +5,10 @@ show_downloads: true
 
 theme: jekyll-theme-minimal
 layouts_dir: _layouts
+data_dir: _data
+
+header_pages:
+  - index.md
+  - features.md
+  - screenshots.md
+  - faq.md
