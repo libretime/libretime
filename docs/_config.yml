@@ -12,11 +12,11 @@ navigation:
   url: install
 - text: Features
   url: features
-- text: Screenshots
-  url: screenshots
 - text: FAQ
   url: faq
 - text: Tutorials
-  subfolderitems:
-    - text: Auto DJ
-      url: manual/tutorials/autodj
+  url: tutorials
+- text: Docs
+  url: docstoc
+- text: On Air in 60 Seconds
+  url: on-air-in-60-seconds/index
