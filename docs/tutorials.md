@@ -21,6 +21,12 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
   * [Users](tuts/users/index)
   * [Streams](tuts/stream-settings/index)
   * [Status](tuts/status/index)
+* Analytics
+  * [Playout History](tuts/history/index)
+  * [History Templates](tuts/history-templates/index)
+  * [Listener Stats](tuts/listener-stats/index)
+* [Help](tuts/help/index)
+* [Listen](tuts/listen/index)
 
 ## DJ tutorials
 * [How to upload and schedule tracks on your show](tuts/upload-tracks)
