@@ -9,10 +9,10 @@ data_dir: _data
 
 navigation:
 - text: Home
-  url: index.md
+  url: index
 - text: Features
-  url: features.md
+  url: features
 - text: Screenshots
-  url: screenshots.md
+  url: screenshots
 - text: FAQ
-  url: faq.md
+  url: faq
