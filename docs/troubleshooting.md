@@ -1,6 +1,8 @@
 # Troubleshooting
 
-If your Airtime server is not working as expected, individual components of the system can be started, stopped, restarted or checked in the server console using the **systemctl** command:
+Having trouble with your LibreTime installation? We've got you covered!
+
+Since LibreTime is effectively a web site running on a LAPP stack, individual components of the system can be started, stopped, restarted or checked in the server console using the **systemctl** command:
 
     sudo systemctl start|stop|restart|status airtime-liquidsoap
     sudo systemctl start|stop|restart|status airtime-playout

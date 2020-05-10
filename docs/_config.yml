@@ -18,5 +18,5 @@ navigation:
   url: tutorials
 - text: Config
   url: config
-- text: On Air in 60 Seconds
-  url: on-air-in-60-seconds/index
+- text: Help!
+  url: troubleshooting

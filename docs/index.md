@@ -8,6 +8,7 @@ Welcome to LibreTime
 ====================
 
 LibreTime makes it easy to run your own online or terrestrial radio station. Check out some [features](features.md) and [screenshots](features.md#screenshots), then [install it](install.md) and start broadcasting!
+Don't believe us? Check out our [On Air in 60 Seconds](on-air-in-60-seconds/index) page to see just how easy it is to use LibreTime!
 
 LibreTime is Free/Libre and Open Source Software (FLOSS). Among other things, this means that you have the freedom to:
 
