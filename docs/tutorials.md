@@ -5,9 +5,9 @@ Please provide any feedback on this [discourse forum post](https://discourse.lib
 There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/user90812787)
 
 ## DJ tutorials
-* [How to upload and schedule tracks on your show](upload-tracks.md)
-* [How to upload a promo](upload-promo.md)
-* [How to livestream with butt](livestream.md)
+* [How to upload and schedule tracks on your show](tutorials/upload-tracks)
+* [How to upload a promo](tutorials/upload-promo)
+* [How to livestream with butt](tutorials/livestream)
 
 ## Program Manager tutorials
 * [Building a schedule](build-schedule.md)
