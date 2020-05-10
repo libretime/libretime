@@ -1,3 +1,8 @@
+---
+layout: default
+---
+
+
 Welcome to LibreTime
 ====================
 
