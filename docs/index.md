@@ -23,6 +23,10 @@ We also have [how-to guides](manual/howtos) that contain step-by-step instructio
 
 There are currently no companies offering turn-key LibreTime hosting so if you are interested in running it you will need to have some familiarity with running a linux server. You can always reach out to help from the community at our [forum](http://discourse.libretime.org). You can also join our [Mattermost instance](https://chat.libretime.org/) and talk with other developers and users.
 
+### Proud Users
+
+![Rabe95.6](static/stations/rabe956.svg) ![RadioCampus93.3](static/stations/radiocampus933.png) ![WRCS92.7](static/stations/wrcs927.png) ![WRIR 97.3](static/stations/wrir973.png)
+
 Getting Started (for Developers and Admins)
 ---------------
 
