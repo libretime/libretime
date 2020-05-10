@@ -52,4 +52,4 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [Configuring track types](tuts/track-types)
 * [How to back up the LibreTime media folder and database](tuts/backing-up-the-server/index)
 * [Upgrading LibreTime](tuts/upgrading/index)
-* [Uninstalling LibreTime](tuts/uninstall/index)
+* [Uninstalling LibreTime](tuts/uninstall)
