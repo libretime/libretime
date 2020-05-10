@@ -7,7 +7,7 @@ title: Home
 Welcome to LibreTime
 ====================
 
-LibreTime makes it easy to run your own online or terrestrial radio station. Check out some [features](features.md) and [screenshots](features.md#screenshots), then [install it](install.md) and start broadcasting!
+LibreTime makes it easy to run your own online or terrestrial radio station. Check out some [features](features) and [screenshots](features#screenshots), then [install it](install) and start broadcasting!
 Don't believe us? Check out our [On Air in 60 Seconds](on-air-in-60-seconds/index) page to see just how easy it is to use LibreTime!
 
 LibreTime is Free/Libre and Open Source Software (FLOSS). Among other things, this means that you have the freedom to:
@@ -18,9 +18,7 @@ LibreTime is Free/Libre and Open Source Software (FLOSS). Among other things, th
 
 LibreTime is a fork of AirTime due to stalled development of the FLOSS version. For background on this, see this [open letter to the Airtime community](https://gist.github.com/hairmare/8c03b69c9accc90cfe31fd7e77c3b07d).
 
-If you are end-user of an already installed LibreTime instance we have a number of [tutorials](manual/tutorials/index.md) that can help you learn how to use the software.
-
-We also have [how-to guides](manual/howtos) that contain step-by-step instructions for various common tasks.
+We have a number of [how-to guides](tutorials) that contain step-by-step instructions for various common tasks for both end users and administrators.
 
 There are currently no companies offering turn-key LibreTime hosting so if you are interested in running it you will need to have some familiarity with running a linux server. You can always reach out to help from the community at our [forum](http://discourse.libretime.org). You can also join our [Mattermost instance](https://chat.libretime.org/) and talk with other developers and users.
 

@@ -46,6 +46,7 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [How to schedule a repeating webstream with a linked show](tuts/webstream-link)
 
 ## For Server Administrators
+* [How to configure API Authentication](api)
 * [Installing LibreTime from Git on a stand-alone VPS](tuts/install-vps)
 * [Securing icecast and customizing stream settings ](tuts/stream-settings)
 * [How to install player and calendar widgets on your website](tuts/widgets)
