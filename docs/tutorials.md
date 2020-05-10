@@ -4,6 +4,24 @@ This page contains links to number of tutorials.
 Please provide any feedback on this [discourse forum post](https://discourse.libretime.org/t/new-tutorials-available-on-libretime-wiki/270/2).
 There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/user90812787)
 
+## The main menus
+* [Uploads](tuts/upload/index)
+* [Dashboard](tuts/dashboard/index)
+* [Tracks](tuts/tracks/index)
+* [Playlists](tuts/playlists/index)
+* [Smart Blocks](tuts/smartblocks/index)
+* [Webstreams](tuts/webstreams/index)
+* [Podcasts](tuts/podcasts/index)
+* [My Podcasts](tuts/my-podcasts/index)
+* [Radio Page](tuts/radio-page/index)
+* [Calendar](tuts/calendar/index)
+* [Widgets](tuts/widgets/index)
+* Settings
+  * [General](tuts/general/index)
+  * [Users](tuts/users/index)
+  * [Streams](tuts/stream-settings/index)
+  * [Status](tuts/status/index)
+
 ## DJ tutorials
 * [How to upload and schedule tracks on your show](tuts/upload-tracks)
 * [How to upload a promo](tuts/upload-promo)
