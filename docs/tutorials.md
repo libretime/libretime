@@ -35,6 +35,7 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [How to upload a promo](tuts/upload-promo)
 * [How to livestream with butt](tuts/livestream)
 * [How to do a live show with MIXXX](tuts/live-shows-with-mixxx/index)
+* [How to prepare media for ingest to LibreTime](tuts/preparing-media-for-ingest/index)
 
 ## For Program Managers
 * [Building a schedule](tuts/build-schedule)
@@ -44,6 +45,7 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [Preventing dead air between shows without cutting off tracks](tuts/outro-playlist)
 * [How to schedule automatic underwriting/advertising announcements](tuts/underwriting)
 * [How to schedule a repeating webstream with a linked show](tuts/webstream-link)
+* [How to export a schedule of played tracks](tuts/exporting-the-schedule/index)
 
 ## For Server Administrators
 * [How to configure API Authentication](api)
