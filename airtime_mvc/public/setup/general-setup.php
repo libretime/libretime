@@ -15,8 +15,8 @@ class GeneralSetup extends Setup {
 
     // Constant form field names for passing errors back to the front-end
     const GENERAL_PORT = "generalPort",
-        GENERAL_HOST = "generalHost";
-
+        GENERAL_HOST = "generalHost",
+        CORS_URL = "corsURL";
     // Array of key->value pairs for airtime.conf
     protected static $_properties;
 
@@ -30,6 +30,7 @@ class GeneralSetup extends Setup {
             "api_key" => $this->generateRandomString(),
             "base_url" => $settings[self::GENERAL_HOST],
             "base_port" => $settings[self::GENERAL_PORT],
+            "cors_url" => $settings[self::CORS_URL]
         );
     }
 

@@ -19,6 +19,20 @@
             <span class="glyphicon glyphicon-remove form-control-feedback"></span>
         </div>
         <input class="form-control" type="hidden" name="generalErr" id="generalErr" aria-describedby="helpBlock"/>
+        <p>The CORS URL can be setup during install if you are accessing your LibreTime instance behind a Proxy.
+            This is common with docker setups. If you have a reverse proxy setup enter the URL below, otherwise you
+            can safely ignore this.
+        </p>
+        <div id="corsSlideToggle">
+            <span><strong>CORS URL </strong></span><span id="corsCaret" class="caret"></span><hr/>
+        </div>
+        <div id="corsFormBody">
+            <div class="form-group">
+                <label class="control-label" for="corsURL">CORS URLs</label>
+                <textarea class="form-control" id="corsURL" rows="4" cols="50">
+                </textarea>
+            </div>
+        </div>
     </div>
     <div>
         <input type="submit" formtarget="generalSettingsForm" class="btn btn-primary btn-next" value="Next &#10097;"/>
@@ -27,6 +41,10 @@
 </form>
 
 <script>
+    $("#corsSlideToggle").click(function() {
+        $("#corsFormBody").slideToggle(500);
+        $("#corsCaret").toggleClass("caret-up");
+    });
     $("#generalSettingsForm").submit(function(e) {
         submitForm(e, "GeneralSetup");
     });
