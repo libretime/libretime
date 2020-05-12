@@ -26,11 +26,9 @@
         <div id="corsSlideToggle">
             <span><strong>CORS URL </strong></span><span id="corsCaret" class="caret"></span><hr/>
         </div>
-        <div id="corsFormBody">
-            <div class="form-group">
-                <label class="control-label" for="corsURL">CORS URLs</label>
-                <textarea class="form-control" id="corsURL" rows="4" cols="50"></textarea>
-            </div>
+        <div class="form-group">
+                <label class="control-label" for="corsUrl">CORS URLs</label>
+                <textarea name="corsUrl" class="form-control" id="corsUrl" rows="4" cols="50"></textarea>
         </div>
     </div>
     <div>
