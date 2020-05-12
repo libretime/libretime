@@ -29,8 +29,7 @@
         <div id="corsFormBody">
             <div class="form-group">
                 <label class="control-label" for="corsURL">CORS URLs</label>
-                <textarea class="form-control" id="corsURL" rows="4" cols="50">
-                </textarea>
+                <textarea class="form-control" id="corsURL" rows="4" cols="50"></textarea>
             </div>
         </div>
     </div>
