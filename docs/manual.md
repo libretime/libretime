@@ -50,10 +50,11 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 
 ## For Server Administrators
 
-### Initial Configuration (Please complete these after installing LibreTime)
+### Initial Configuration
 * [Host Configuration](manual/host-configuration)
 * [Setting the server time](manual/setting-the-server-time/index)
 * [How to configure API Authentication](api)
+* [Information on reverse proxy connections](manual/reverse-proxy)
 
 ### Advanced Configuration
 * [Installing LibreTime from Git on a stand-alone VPS](manual/install-vps)
