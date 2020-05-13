@@ -7,8 +7,8 @@ title: Home
 Welcome to LibreTime
 ====================
 
-LibreTime makes it easy to run your own online or terrestrial radio station. Check out some features below and then [install it](install) and start broadcasting!
-Don't believe us? Check out our [On Air in 60 Seconds](on-air-in-60-seconds) page to see just how easy it is to use LibreTime!
+LibreTime makes it easy to run your own online or terrestrial radio station.
+Don't believe us? Check out our [Quick Install](quickstart) page to see just how easy it is to install and use LibreTime!
 
 Some of LibreTime's main features include:
 
@@ -28,25 +28,11 @@ Some of LibreTime's main features include:
 
 LibreTime is a fork of AirTime due to stalled development of the FLOSS version. For background on this, see this [open letter to the Airtime community](https://gist.github.com/hairmare/8c03b69c9accc90cfe31fd7e77c3b07d).
 
-We have a number of [how-to guides](tutorials) that contain step-by-step instructions for various common tasks for both end users and administrators.
+We have a number of [how-to guides](manual) that contain step-by-step instructions for various common tasks for both end users and administrators.
 
-There are currently no companies offering turn-key LibreTime hosting so if you are interested in running it you will need to have some familiarity with running a linux server. You can always reach out to help from the community at our [forum](http://discourse.libretime.org). You can also join our [Mattermost instance](https://chat.libretime.org/) and talk with other developers and users.
+There are currently no companies offering turn-key LibreTime hosting so if you are interested in running it you will need to have some familiarity with running a Linux server.
+You can always reach out to help from the community at our [forum](http://discourse.libretime.org). You can also join our [Mattermost instance](https://chat.libretime.org/) and talk with other developers and users.
 
 ### Proud Users
 
 ![Rabe95.6](img/stations/rabe956.svg) ![RadioCampus93.3](img/stations/radiocampus933.png) ![WRCS92.7](img/stations/wrcs927.png) ![WRIR 97.3](img/stations/wrir973.png)
-
-Getting Started (for Developers and Admins)
----------------
-
-The easiest way to check out LibreTime for yourself is to run a local instance in a virtual machine. Assuming you already have Git, Vagrant and Virtualbox installed, just run:
-
-```bash
-git clone https://github.com/libretime/libretime.git
-cd libretime
-vagrant up ubuntu-bionic
-```
-
-If everything works out, you will find LibreTime on [port 8080](http://localhost:8080) and icecast on [port 8000](http://localhost:8000).
-
-Of course, this setup isn't appropriate for production use. For that, check out our [installation instructions](install). More information on the vagrant setup are in [the docs](vagrant).
