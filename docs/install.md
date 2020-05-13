@@ -15,15 +15,17 @@ Requirements:
 The easiest way to install LibreTime is by cloning the repository using git, and
 then running the installer.
 
-1. If you don't have git installed already, run `sudo apt install git -y`
-2. Create a folder in your home directory for the download and change to it: `cd ~ && mkdir LibreTime && cd LibreTime`
-3. Clone the repo: `git clone https://github.com/LibreTime/libretime.git`
-4. Run the installer: `sudo ./install -fiap`
-5. After the installer is finished, follow the instructions to proceed to the [setup wizard](manual/getting-started/index.md)
+```
+cd ~ && git clone https://github.com/LibreTime/libretime.git
+sudo ./libretime/install -fiap
+```
+
+After the installer is finished, follow the instructions to proceed to the
+[setup wizard](manual/getting-started/index.md).
 
 It's recommended to use the `-fiap` flag to install LibreTime on a fresh server install. This way,
 all dependencies will be installed and configured by the installer without needing user input.
-For those who plan to manually configure LibreTime, run `sudo ./install -f` to see all installer options.
+For those who plan to manually configure LibreTime, run `sudo ./install -h` to see all installer options.
 
 A great tutorial video on how to install LibreTime is [here](https://www.youtube.com/watch?v=Djo_55LgjXE).
 
