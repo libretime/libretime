@@ -13,7 +13,7 @@
     <body>
         <div class="header">
             <h3 class="logo">
-                <img src="css/images/airtime_logo_jp.png" id="airtimeLogo" /><br/>
+                <img src="css/images/libretime_logo_jp.png" id="LibreTimeLogo" /><br/>
                 <strong>Setup</strong>
             </h3>
             <strong>Step <span id="stepCount">1</span> of 5</strong>

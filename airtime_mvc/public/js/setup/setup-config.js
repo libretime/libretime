@@ -87,6 +87,7 @@ function formSlide(dir) {
         steps = parseInt(stepCount.html());
     stepCount.html((dir == "next") ? (steps + 1) : (steps - 1));
     hideRMQForm();
+    hideCORSForm();
 }
 
 /**
@@ -110,6 +111,15 @@ function prevSlide() {
 function hideRMQForm() {
     $("#rmqFormBody").slideUp(500);
     $("#advCaret").removeClass("caret-up");
+}
+
+/**
+ * Hide the RMQ form when the slider is called to avoid showing
+ * scrollbars on slider panels that fit vertically
+ */
+function hideCORSForm() {
+    $("#corsFormBody").slideUp(500);
+    $("#corsCaret").removeClass("caret-up");
 }
 
 function submitForm(e, obj) {
