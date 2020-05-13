@@ -16,7 +16,7 @@ navigation:
   url: faq
 - text: Tutorials
   url: tutorials
-- text: Config
-  url: config
+- text: Appendix
+  url: appendix
 - text: Help!
   url: troubleshooting

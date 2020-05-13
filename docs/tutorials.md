@@ -48,11 +48,23 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [How to export a schedule of played tracks](tuts/exporting-the-schedule/index)
 
 ## For Server Administrators
+
+### Initial Configuration (Please complete these after installing LibreTime)
+* [Host Configuration](tuts/host-configuration)
+* [Setting the server time](tuts/setting-the-server-time/index)
 * [How to configure API Authentication](api)
+
+### Advanced Configuration
 * [Installing LibreTime from Git on a stand-alone VPS](tuts/install-vps)
 * [Securing icecast and customizing stream settings ](tuts/stream-settings)
 * [How to install player and calendar widgets on your website](tuts/widgets)
 * [Configuring track types](tuts/track-types)
+* [Interface Customization](tuts/interface-customization/index)
+* [Localization Settings](tuts/interface-localization/index)
+* [Setting up SSL](tuts/secure-login-with-ssl)
+* [Promoting your station through your Icecast stream](tuts/promoting-your-station)
+* [Configuring Icecast handover](tuts/icecast-handover/index)
+* [Configuring Icecast statistics with Piwik](tuts/piwik/index)
 * [How to back up the LibreTime media folder and database](tuts/backing-up-the-server/index)
 * [Upgrading LibreTime](tuts/upgrading/index)
 * [Uninstalling LibreTime](tuts/uninstall)
