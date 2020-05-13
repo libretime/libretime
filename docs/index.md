@@ -7,8 +7,25 @@ title: Home
 Welcome to LibreTime
 ====================
 
-LibreTime makes it easy to run your own online or terrestrial radio station. Check out some [features](features) and [screenshots](features#screenshots), then [install it](install) and start broadcasting!
+LibreTime makes it easy to run your own online or terrestrial radio station. Check out some features below and then [install it](install) and start broadcasting!
 Don't believe us? Check out our [On Air in 60 Seconds](on-air-in-60-seconds/index) page to see just how easy it is to use LibreTime!
+
+Some of LibreTime's main features include:
+
+* *Web-based remote station management* - authorized personnel can add
+   programme material, create playlists or smart blocks, and stream in live,
+   all via a web interface.
+* *Automation* - LibreTime has a scheduler function that enables users to
+   create shows with content for playback at the exact date and time specified.
+   Playlists, smart blocks and remote stream URLs can be used multiple times.
+* *Solid playout* - LibreTime uses the open source Liquidsoap streaming language
+   for reliable and precise playback to multiple outputs.
+* *Open, extensible architecture* - stations are free to extend and alter
+   all parts of the program code, under the GNU AGPLv3 license.
+* *Multilingual* - supports over 15 languages both in the interface and inside file metadata
+* *Low system requirements*
+  * For servers: 1Ghz processor, 2 GB RAM, 500 MB, and a wired ethernet connection with a static IP address
+  * For end-users: a modern version of Firefox, Chrome, or Safari, and a screen resolution of at least 1280x768
 
 LibreTime is Free/Libre and Open Source Software (FLOSS). Among other things, this means that you have the freedom to:
 

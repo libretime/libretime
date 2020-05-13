@@ -9,23 +9,6 @@ interface and triggers playout with sub-second precision.
 
 ![](static/Screenshot540-Now_playing_250.png)
 
-Main features include:
-
-* Web-based remote station management - authorized personnel can add
-   programme material, create playlists or smart blocks, and stream in live,
-   all via a web interface.
-* Automation - LibreTime has a scheduler function that enables users to
-   create shows with content for playback at the exact date and time specified.
-   Playlists, smart blocks and remote stream URLs can be used multiple times.
-* Solid playout - LibreTime uses the open source Liquidsoap streaming language
-   for reliable and precise playback to multiple outputs.
-* Open, extensible architecture - stations are free to extend and alter
-   all parts of the program code, under the GNU AGPLv3 license.
-* Multilingual - supports over 15 languages both in the interface and inside file metadata
-* Low system requirements
-  * For servers: 1Ghz processor, 2 GB RAM, 500 MB, and a wired ethernet connection with a static IP address
-  * For end-users: a modern version of Firefox, Chrome, or Safari, and a screen resolution of at least 1280x768 (1920x1080 recommended)
-
 LibreTime has been intended to provide a solution for a wide range of broadcast
 projects, from community to public and commercial stations. The scalability of
 LibreTime allows implementation in a number of scenarios, ranging from an
