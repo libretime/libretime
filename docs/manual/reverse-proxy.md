@@ -38,7 +38,7 @@ Nginx set up on `proxy` and LibreTime will be installed on `libretime`. You will
 access on both. `libretime` also needs to be able to be accessed from `proxy`
 (`ping libretime` on `proxy`).
 
-On `libretime`, install LibreTime as described in the [install guide](/install/). In short
+On `libretime`, install LibreTime as described in the [install guide](../install). In short
 this means run the following commands:
 
 ```
