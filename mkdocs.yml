@@ -25,6 +25,7 @@ pages:
     - 'Preparing the Server': manual/preparing-the-server/index.md
     - 'Setting the Server Time': manual/setting-the-server-time/index.md
     - 'Host Configuration': manual/host-configuration/index.md
+    - 'Reverse Proxy': manual/reverse-proxy/index.md
   - 'Using LibreTime':
     - 'On Air in 60 seconds!': 'manual/on-air-in-60-seconds/index.md'
     - 'Getting Started': manual/getting-started/index.md
