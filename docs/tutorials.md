@@ -68,3 +68,8 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [How to back up the LibreTime media folder and database](tuts/backing-up-the-server/index)
 * [Upgrading LibreTime](tuts/upgrading/index)
 * [Uninstalling LibreTime](tuts/uninstall)
+
+## Appendix
+* [About this manual](appx/about-manual)
+* [HD Audio Module information](appx/hd-audio-modules)
+* [Rights and royalty information](appx/rights-royalties)

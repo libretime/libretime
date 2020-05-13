@@ -14,9 +14,7 @@ navigation:
   url: features
 - text: FAQ
   url: faq
-- text: Tutorials
+- text: User Guides
   url: tutorials
-- text: Appendix
-  url: appendix
 - text: Help!
   url: troubleshooting
