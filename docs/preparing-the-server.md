@@ -176,3 +176,10 @@ User groups
 ------------
 
 If you plan to have LibreTime output audio directly to a mixing console or transmitter, the `www-data` user needs to be added to the `audio` user group using `sudo adduser www-data audio`. Otherwise, if an Icecast or Shoutcast server is going to be used without an analog audio output, this step can be omitted.
+
+
+Next steps
+----------
+
+After completing this guide, please complete the [Setting the server time](manual/setting-the-server-time/index)
+guide before continuing to the installer.
