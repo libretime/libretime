@@ -4,8 +4,6 @@ This page contains links to number of tutorials.
 Please provide any feedback on this [discourse forum post](https://discourse.libretime.org/t/new-tutorials-available-on-libretime-wiki/270/2).
 There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/user90812787)
 
-[Getting Started](getting-started)
-
 ## Understanding the Main Menus
 * [Uploads](upload)
 * [Dashboard](dashboard)
