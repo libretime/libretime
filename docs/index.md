@@ -8,7 +8,7 @@ Welcome to LibreTime
 ====================
 
 LibreTime makes it easy to run your own online or terrestrial radio station. Check out some features below and then [install it](install) and start broadcasting!
-Don't believe us? Check out our [On Air in 60 Seconds](on-air-in-60-seconds/index) page to see just how easy it is to use LibreTime!
+Don't believe us? Check out our [On Air in 60 Seconds](on-air-in-60-seconds) page to see just how easy it is to use LibreTime!
 
 Some of LibreTime's main features include:
 
