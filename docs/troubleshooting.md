@@ -23,15 +23,14 @@ Airtime stores log files under the directory path */var/log/airtime/* which can 
 Test tones
 ----------
 
-Liquidsoap output can be tested using two commands provided by Airtime. The **airtime-test-soundcard** command enables you to send a test tone to the default sound card on the system, so you can check that your audio equipment is working. Press **Ctrl+C** on your keyboard to stop the tone.
+If you need to test your computer's soundcard, you can use `speaker-test`, a tone generator for ALSA.
+This does not come installed with LibreTime but can be installed with `sudo apt install speaker-test`.
 
-    airtime-test-soundcard [-v]
-                     [-o alsa | ao | oss | portaudio | pulseaudio ]
-                     [-h]
-    Where:
-         -v verbose mode
-         -o Linux Sound API (default: alsa)
-         -h show help menu
+   speaker-test [-D] [-f]
+   
+   Where:
+        -D device name
+        -f frequency of test tone
 
 The **airtime-test-stream** command enables you to send a test tone to a local or remote streaming media server. Press **Ctrl+C** on your keyboard to stop the tone being streamed.
 
