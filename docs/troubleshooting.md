@@ -13,7 +13,7 @@ Since LibreTime is effectively a web site running on a LAPP stack, individual co
 
 For example, to restart the Airtime playout engine, you could enter the command:
 
-    sudo systemctl restart airtime-analyzer
+    sudo systemctl restart airtime-playout
 
 Log files
 ---------
