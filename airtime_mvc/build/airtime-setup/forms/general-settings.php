@@ -21,7 +21,8 @@
         <input class="form-control" type="hidden" name="generalErr" id="generalErr" aria-describedby="helpBlock"/>
         <p>The CORS URL can be setup during install if you are accessing your LibreTime instance behind a Proxy.
             This is common with docker setups. If you have a reverse proxy setup enter the URL below, otherwise you
-            can safely ignore this. If you are reinstalling LibreTime on an existing setup you can ignore this as well,
+	    can safely ignore this. Please enter one URL per line. Include the entire URL such as http://example.com
+            If you are reinstalling LibreTime on an existing setup you can ignore this as well,
             the settings in your existing database will be retained unless you enter new values below.
         </p>
         <div id="corsSlideToggle">
