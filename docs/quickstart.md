@@ -50,7 +50,7 @@ sudo ufw allow 8000/tcp
 This part is suprisingly easy. Just enter these commands in the terminal:
 
 ```
-cd ~ && git clone https://github.com/LibreTime/libretime.git
+git clone https://github.com/LibreTime/libretime.git
 sudo ./libretime/install -fiap
 ```
 
