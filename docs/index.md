@@ -47,6 +47,6 @@ cd libretime
 vagrant up ubuntu-bionic
 ```
 
-If everything works out, you will find LibreTime on [port 8080](http://localhost:8080), icecast on [port 8000](http://localhost:8000) and the docs on [port 8888](http://localhost:8888).
+If everything works out, you will find LibreTime on [port 8080](http://localhost:8080) and icecast on [port 8000](http://localhost:8000).
 
 Of course, this setup isn't appropriate for production use. For that, check out our [installation instructions](install). More information on the vagrant setup are in [the docs](vagrant).
