@@ -99,8 +99,8 @@ into the playlist.
 ![](img/Screenshot562-Drag_show_content.png)
 
 Keep in mind the bar at the end of your show's playlist. It will show the amount of time your show is under- or
-over-scheduled. Shows that are underscheduled will have dead air at the end and shows that are overscheduled
-will fade out exactly when the show is over (orange colored entries), meaning tracks scheduled to start
+overscheduled. Shows that are underscheduled will have dead air at the end and shows that are overscheduled
+will fade out exactly when the show is over (the orange colored entry), meaning tracks scheduled to start
 after this point will not play (dark red colored entries). Click the *Ok* button in the bottom right to save.
 
 Show playback will start and end as per each show's start and end times, allowing you to rely completely on
