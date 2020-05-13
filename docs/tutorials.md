@@ -70,6 +70,6 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [Uninstalling LibreTime](tuts/uninstall)
 
 ## Appendix
-* [About this manual](appx/about-manual)
-* [HD Audio Module information](appx/hd-audio-modules)
-* [Rights and royalty information](appx/rights-royalties)
+* [About this manual](tuts/about-manual)
+* [HD Audio Module information](tuts/hd-audio-modules)
+* [Rights and royalty information](tuts/rights-royalties)
