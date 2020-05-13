@@ -6,7 +6,7 @@ makes extensive use of its API for some site functionality, which causes
 [Cross-Origin Resource Sharing (CORS)](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
 to occur. By default, CORS requests are blocked by your browser and the origins
 need to be added to the **Allowed CORS URLs** block in
-[**General Settings**](/manual/general/). These origins should include any
+[**General Settings**](/manual/general/index). These origins should include any
 domains that will be used externally to connect to your reverse proxy that you
 want handled by LibreTime. These URLS can also be set during the first run configuration
 that is displayed when you first install LibreTime
