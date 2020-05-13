@@ -1,0 +1,24 @@
+# Maintainer: Zachary Klosko (kloskoz@vcu.edu)
+
+hostname: libretimeTest
+timezone: America/New York  # change as needed
+ntp:
+  pools: ['north-america.pool.ntp.org']
+  servers: ['0.north-america.pool.ntp.org', '0.pool.ntp.org']
+
+password: hackme
+chpasswd: { expire: False }
+
+packages:
+  - git
+apt_update: true
+apt_upgrade: true
+
+
+runcmd:
+  - cd / && git clone https://github.com/LibreTime/libretime.git
+  # - sudo ./install -fiap  # not working yet, uncomment once Canonical fixes bugs in Multipass
+  # - service airtime-liquidsoap start
+  # - service airtime-playout start
+  # - service airtime-celery start
+  # - service airtime_analyzer start

@@ -75,6 +75,7 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 
 ## For Developers and Contributors
 * [Setting up a LibreTime instance with Vagrant](vagrant)
+* [Setting up a LibreTime instance with Multipass](multipass)
 * [Database access](database)
 * [Translating LibreTime](manual/interface-localization/index)
 
