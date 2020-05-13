@@ -23,7 +23,7 @@ Some of LibreTime's main features include:
 * *Open source* - run LibreTime royalty-free, make changes to the code, and contribute to the project as you see fit, under the GNU AGPLv3 license.
 * *Multilingual* - supports over 15 languages both in the interface and inside file metadata
 * *Low system requirements*
-  * For servers: 1Ghz processor, 2 GB RAM, 500 MB, and a wired ethernet connection with a static IP address
+  * For servers: 1Ghz processor, 2 GB RAM, and a wired ethernet connection with a static IP address
   * For end-users: a modern version of Firefox, Chrome, or Safari, and a screen resolution of at least 1280x768
 
 LibreTime is a fork of AirTime due to stalled development of the FLOSS version. For background on this, see this [open letter to the Airtime community](https://gist.github.com/hairmare/8c03b69c9accc90cfe31fd7e77c3b07d).
