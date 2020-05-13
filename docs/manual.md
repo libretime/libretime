@@ -57,7 +57,7 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [Information on reverse proxy connections](reverse-proxy)
 
 ### Advanced Configuration
-* [Installing LibreTime from Git on a stand-alone VPS](install-vps)
+* [Installing LibreTime from Git on a stand-alone VPS](https://www.youtube.com/watch?v=Djo_55LgjXE)
 * [Configuring FreeIPA authentication](freeipa)
 * [Embedding a streaming player on your website](embed-player)
 * [Securing icecast and customizing stream settings ](stream-settings)
