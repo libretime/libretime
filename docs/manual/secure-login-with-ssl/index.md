@@ -1,6 +1,45 @@
+Setting up SSL
+--------------
+
 To increase the security of your server, you can enable encrypted access to the LibreTime administration interface, and direct your users towards this more secure login page. The main advantage of using this encryption is that your remote users' login names and passwords are not sent in plain text across the public Internet or untrusted local networks, such as shared Wi-Fi access points.
 
-The padlock icon in a web browser's address bar depends on the browser's recognition of an encryption certificate. Because the users of your LibreTime server will often be known to you personally, it is feasible to use a self-signed certificate for this purpose. Alternatively, you can pay a Certificate Authority to sign the certificate for you. LibreTime Pro servers are pre-configured with a certificate signed by a Certificate Authority which is automatically recognised by all popular browsers.
+Deploying a certificate with Certbot
+------------------------------------
+
+One of the fastest, easiest, and cheapest ways to get an SSL certificate is through [Certbot](https://certbot.eff.org/), as created by the
+[Electronic Frontier Foundation](https://www.eff.org/). There are some requirements for this process:
+- you have an HTTP website (already installed and configured by default by the LibreTime installer) and
+- this website is open to the public internet (likely via. port forwarding if your computer is behind a firewall) and
+- the server is accessible to the public via. port 80
+
+If you aren't able to verify all three requirements, you may want to try a self-signed certificate (see next section).
+
+These instructions come from Certbot's website and assume that you are using an Apache web server
+running on Ubuntu 18.04 LTS (the Apache web server is installed with LibreTime by default).
+Instructions for other Debian-based OSes are similar, but check with Certbot for clarification.
+
+Note: all instructions require you to have sudo priveledges
+
+First, add Certbot's PPA using:
+
+```
+    sudo apt-get update
+    sudo apt-get install software-properties-common
+    sudo add-apt-repository universe
+    sudo add-apt-repository ppa:certbot/certbot
+    sudo apt-get update
+```
+
+Next, install Certbot and install the SSL certificate using the below commands:
+
+```
+sudo apt-get install certbot python3-certbot-apache
+sudo certbot --apache  # get and install the certificate
+sudo certbot certonly --apache  # to only get the certificate, not install it using Certbot
+```
+
+You can test certificate renewal by running `sudo certbot renew --dry-run`.
+Head to your server's IP address to check to see that the installation worked.
 
 Deploying a self-signed certificate
 -----------------------------------
