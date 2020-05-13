@@ -7,7 +7,7 @@ features are coupled with a collaborative on-line scheduling calendar and
 playlist management. The scheduling calendar is managed through an easy-to-use
 interface and triggers playout with sub-second precision.
 
-![](static/Screenshot540-Now_playing_250.png)
+![](img/Screenshot540-Now_playing_250.png)
 
 LibreTime has been intended to provide a solution for a wide range of broadcast
 projects, from community to public and commercial stations. The scalability of
@@ -91,7 +91,7 @@ because it is also connected to the Internet for remote access by media
 contributors. This enables LibreTime to offer password-protected access to the
 media library and scheduling from both inside and outside the studio building.
 
-![](static/libretime_architecture.svg)
+![](img/libretime_architecture.svg)
 
 Example web broadcast system
 ----------------------------
@@ -101,4 +101,4 @@ soundcard. There does not need to be a centralised studio, although LibreTime
 can enable remote studios to stream in to Liquidsoap at authorised times.
 Optionally, the outgoing Icecast stream can be relayed to a transmitter.
 
-![](static/libretime_web_architecture.svg)
+![](img/libretime_web_architecture.svg)

@@ -34,7 +34,7 @@ There are currently no companies offering turn-key LibreTime hosting so if you a
 
 ### Proud Users
 
-![Rabe95.6](static/stations/rabe956.svg) ![RadioCampus93.3](static/stations/radiocampus933.png) ![WRCS92.7](static/stations/wrcs927.png) ![WRIR 97.3](static/stations/wrir973.png)
+![Rabe95.6](img/stations/rabe956.svg) ![RadioCampus93.3](img/stations/radiocampus933.png) ![WRCS92.7](img/stations/wrcs927.png) ![WRIR 97.3](img/stations/wrir973.png)
 
 Getting Started (for Developers and Admins)
 ---------------
