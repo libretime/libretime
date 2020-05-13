@@ -36,6 +36,7 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [How to livestream with butt](tuts/livestream)
 * [How to do a live show with MIXXX](tuts/live-shows-with-mixxx/index)
 * [How to prepare media for ingest to LibreTime](tuts/preparing-media-for-ingest/index)
+* [Smartphone journalism](tuts/smartphone-journalism/index)
 
 ## For Program Managers
 * [Building a schedule](tuts/build-schedule)
@@ -56,11 +57,13 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 
 ### Advanced Configuration
 * [Installing LibreTime from Git on a stand-alone VPS](tuts/install-vps)
+* [Configuring FreeIPA authentication](tuts/freeipa)
+* [Embedding a streaming player on your website](tuts/embed-player/index)
 * [Securing icecast and customizing stream settings ](tuts/stream-settings)
+* [Using Icecast and Shoutcast in the studio](tuts/icecast-and-shoutcast/index)
 * [How to install player and calendar widgets on your website](tuts/widgets)
 * [Configuring track types](tuts/track-types)
 * [Interface Customization](tuts/interface-customization/index)
-* [Localization Settings](tuts/interface-localization/index)
 * [Setting up SSL](tuts/secure-login-with-ssl)
 * [Promoting your station through your Icecast stream](tuts/promoting-your-station)
 * [Configuring Icecast handover](tuts/icecast-handover/index)
@@ -69,7 +72,13 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [Upgrading LibreTime](tuts/upgrading/index)
 * [Uninstalling LibreTime](tuts/uninstall)
 
+## For Developers and Contributors
+* [Setting up a LibreTime instance with Vagrant](vagrant)
+* [Database access](database)
+* [Translating LibreTime](tuts/interface-localization/index)
+
 ## Appendix
 * [About this manual](tuts/about-manual)
 * [HD Audio Module information](tuts/hd-audio-modules)
 * [Rights and royalty information](tuts/rights-royalties)
+* [Information on media folders used by LibreTime](tuts/folders)

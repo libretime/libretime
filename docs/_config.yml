@@ -15,6 +15,6 @@ navigation:
 - text: FAQ
   url: faq
 - text: Manual
-  url: tutorials
+  url: manual
 - text: Help!
   url: troubleshooting
