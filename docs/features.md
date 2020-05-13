@@ -52,9 +52,11 @@ LibreTime services
 | [Monit](https://mmonit.com/monit/) | Monitors the health of pypo, media-monitor and Liquidsoap, and reports the status of these services to LibreTime. |
 | [RabbitMQ](https://www.rabbitmq.com/) | Pushes messages from LibreTime to media-monitor and pypo about changes to media files and the playout schedule. |
 
-LibreTime manages all of these components, and provides an easy,
-multi-user web interface to the system. Create different accounts for your
-staff by role, to give them only the permissions they need to succeed:
+Types of user accounts
+----------------------
+
+Create different accounts for your staff by role, to give them only the permissions they need to succeed.
+
 * Guests
   - Can view shows and the playout log on the Calendar and Dashboard, respectively
   - Listen to the output stream without leaving the interface
