@@ -9,12 +9,12 @@ data_dir: _data
 
 navigation:
 - text: Install
-  url: install
+  url: /install
 - text: Features
-  url: features
+  url: /features
 - text: FAQ
-  url: faq
+  url: /faq
 - text: Manual
-  url: manual
+  url: /manual
 - text: Help!
-  url: troubleshooting
+  url: /troubleshooting
