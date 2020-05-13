@@ -20,18 +20,11 @@ Some of LibreTime's main features include:
    Playlists, smart blocks and remote stream URLs can be used multiple times.
 * *Solid playout* - LibreTime uses the open source Liquidsoap streaming language
    for reliable and precise playback to multiple outputs.
-* *Open, extensible architecture* - stations are free to extend and alter
-   all parts of the program code, under the GNU AGPLv3 license.
+* *Open source* - run LibreTime royalty-free, make changes to the code, and contribute to the project as you see fit, under the GNU AGPLv3 license.
 * *Multilingual* - supports over 15 languages both in the interface and inside file metadata
 * *Low system requirements*
   * For servers: 1Ghz processor, 2 GB RAM, 500 MB, and a wired ethernet connection with a static IP address
   * For end-users: a modern version of Firefox, Chrome, or Safari, and a screen resolution of at least 1280x768
-
-LibreTime is Free/Libre and Open Source Software (FLOSS). Among other things, this means that you have the freedom to:
-
-* Run it royalty-free for as long as you like.
-* Read and alter the code that makes it work (or hire someone to do this for you!)
-* Contribute documentation, bug-fixes, etc. so that everyone in the community benefits.
 
 LibreTime is a fork of AirTime due to stalled development of the FLOSS version. For background on this, see this [open letter to the Airtime community](https://gist.github.com/hairmare/8c03b69c9accc90cfe31fd7e77c3b07d).
 
