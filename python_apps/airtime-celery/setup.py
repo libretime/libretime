@@ -1,3 +1,4 @@
+from pathlib import Path
 from setuptools import setup
 from subprocess import call
 import os
@@ -28,7 +29,9 @@ else:
 
 
 def postinst():
-    if not no_init:
+    initd = Path("/etc/init.d/airtime-celery")
+    conf = Path("/etc/default/airtime-celery")
+    if not no_init and initd.is_file() and conf.is_file():
         # Make /etc/init.d file executable and set proper
         # permissions for the defaults config file
         os.chmod("/etc/init.d/airtime-celery", 0o755)
