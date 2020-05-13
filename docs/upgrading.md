@@ -14,7 +14,7 @@ Any pre-release versions of LibreTime are denoted by appending a hyphen and a se
 
 Before upgrading a production LibreTime server, you should back up both the PostgreSQL database and the storage server used by LibreTime. This is especially important if you have not already set up a regular back up routine. This extra back up is a safety measure in case of accidental data loss during the upgrade, for example due to the wrong command being entered when moving files. See [Backing up the server](../backing-up-the-server/) in this manual for details of how to perform these back ups.
 
-The LibreTime [installation script](../install) will detect an existing LibreTime or Airtime deployment and back up any configuration files that it finds. We recommend taking your own manual backups of the configuration yourself nevertheless.  The install script also tries to restart the needed services during an upgrade. In any case you should monitor if this happened and also take a quick look at the logs files to be sure everything is still fine. Now might be the time to reboot the system or virtual machine LibreTime is running on since regular reboots are part of a healthy system anyway.
+The LibreTime [installation script](install) will detect an existing LibreTime or Airtime deployment and back up any configuration files that it finds. We recommend taking your own manual backups of the configuration yourself nevertheless.  The install script also tries to restart the needed services during an upgrade. In any case you should monitor if this happened and also take a quick look at the logs files to be sure everything is still fine. Now might be the time to reboot the system or virtual machine LibreTime is running on since regular reboots are part of a healthy system anyway.
 
 After the upgrade has completed, you may need to clear your web browser's cache  before logging into the new version of the LibreTime administration interface. If the playout engine starts up and detects that a show should be playing at the  current time, it will skip to the correct point in the current item and start playing. 
 
@@ -28,7 +28,7 @@ In Airtime 1.9.0 onwards, the concept of *linked files* was replaced with the
 concept of *watched folders*. If you are upgrading from a version of Airtime 
 earlier than 1.9.0 and you have previously linked files, the folders they are
 in will not be watched until you add them to your watched folder list. See
-[Media Folders](../media-folders) for more details.
+[Media Folders](folders) for more details.
 
 Upgrading the server distribution
 ---------------------------------
