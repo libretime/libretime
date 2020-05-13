@@ -1,6 +1,6 @@
 In the Master Panel, beneath the **ON AIR** indicator, you will find the **LISTEN** button.
 
-![](static/Screenshot358-Listen_button.png)
+![](static/listen-button.png)
 
 This button opens a pop-up **Live stream** window, which enables you to monitor the streams that have been configured previously in the **Streams** page on the **System** menu. In the **Live stream** window, a drop-down menu enables you to switch between the streams which are currently available. Both the streaming server and name of the stream are shown. Your station logo is shown in the top left corner of the window, if you have uploaded one via the **Preferences** page on the **System** menu.
 
