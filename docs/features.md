@@ -45,45 +45,38 @@ LibreTime services
 | Service | Description |
 |---------|-------------|
 | `media-monitor` | Keeps track of files being added, renamed, moved or removed from storage, and reads their metadata using the Mutagen library. |
-| PostgreSQL | Contains the location of those media files and their metadata. This means you can search for and playlist a set of media files according to the specific metadata that you require, or use a 'smart block' to select the files for you. The database also contains details of specified remote input streams. |
+| [PostgreSQL](https://www.postgresql.org/) | Contains the location of those media files and their metadata. This means you can search for and playlist a set of media files according to the specific metadata that you require, or use a 'smart block' to select the files for you. The database also contains details of specified remote input streams. |
 | Pypo | (Python Playout engine) Downloads media from the storage up to 24 hours ahead of playout and checks it for average level (with ReplayGain tools) and leading or trailing silence (with Silan). At playout time, the media to be broadcast is sent to Liquidsoap. |
-| Liquidsoap | Takes individual media files and remote input streams, and assembles them into a continuous output stream. This stream can be sent to a sound card (e.g. for a broadcast mixer, on the way to an FM or DAB transmitter) or to a streaming server for IP network distribution, over the LAN, local WiFi or the Internet. You can stream to a sound card and up to three different stream distribution servers with the same LibreTime server, if you wish. |
-| Icecast or Shoutcast | Audio streaming server, used for creating an internet radio stream from LibreTime. Icecast is included in the LibreTime installation by default. Note: If a suitable Liquidsoap output is not available for your streaming service of choice, you can send audio from Liquidsoap to a separate encoding or streaming machine via a sound card or relay stream. |
-| Monit | Monitors the health of pypo, media-monitor and Liquidsoap, and reports the status of these services to LibreTime. |
-| RabbitMQ | Pushes messages from LibreTime to media-monitor and pypo about changes to media files and the playout schedule. |
+| [Liquidsoap](https://www.liquidsoap.info/) | Takes individual media files and remote input streams, and assembles them into a continuous output stream. This stream can be sent to a sound card (e.g. for a broadcast mixer, on the way to an FM or DAB transmitter) or to a streaming server for IP network distribution, over the LAN, local WiFi or the Internet. You can stream to a sound card and up to three different stream distribution servers with the same LibreTime server, if you wish. |
+| [Icecast](https://www.icecast.org/) or [Shoutcast](https://shoutcast.com/) | Audio streaming server, used for creating an internet radio stream from LibreTime. Icecast is included in the LibreTime installation by default. Note: If a suitable Liquidsoap output is not available for your streaming service of choice, you can send audio from Liquidsoap to a separate encoding or streaming machine via a sound card or relay stream. |
+| [Monit](https://mmonit.com/monit/) | Monitors the health of pypo, media-monitor and Liquidsoap, and reports the status of these services to LibreTime. |
+| [RabbitMQ](https://www.rabbitmq.com/) | Pushes messages from LibreTime to media-monitor and pypo about changes to media files and the playout schedule. |
 
 LibreTime manages all of these components, and provides an easy,
-multi-user web interface to the system. It enables your station staff,
-depending on the permissions you have granted them, to:
-- upload media files to the storage server via the **Add Media** page
-- automatically import file metadata into the PostgreSQL database
-- search for and download media files, and edit the metadata of individual
-files, if required, on the **Library** page
-- create and edit playlists of media files or create smart blocks of content
-based on metadata, edit cue points and fades, and audition them. Playlists and
-smart blocks are also saved in the database, and can be searched for
-- schedule colour-coded broadcast shows (which can contain playlists, smart
-blocks, pre-recorded complete shows, timed remote input streams, or be live)
-for specific dates and times on the **Calendar** page. Regular shows can be
-scheduled by the day of the week or month, and can be linked to share content
-- automatically record live shows at specific times and dates (in 256 kbps Ogg
-Vorbis format by default) from the sound card input with Ecasound, upload them
-to the storage server and import them into the database
-- manage presenter, staff and guest access to LibreTime, and contact details,
-via the **Manage Users** page
-- see what is about to be played by Liquidsoap on the **Now Playing** page,
-with support for last-minute changes to the content
-- upload media files from LibreTime to a third-party hosting service, such as
-SoundCloud
-- audition available output streams from the server using the **Listen**
-button
-- check the status and resource usage of system components on the **Status**
-page
-- export the broadcast schedule to external sites via the Schedule API
-- see logs on the **Playout History** page and view graphs on the
-**Listener Stats** page
-- configure the LibreTime system on the **Preferences**, **Media Folders** and
-**Streams** pages.
+multi-user web interface to the system. Create different accounts for your
+staff by role, to give them only the permissions they need to succeed:
+* Guests
+  - Can view shows and the playout log on the Calendar and Dashboard, respectively
+  - Listen to the output stream without leaving the interface
+* DJs
+  - Everything Guests can do, plus
+  - Upload media (music, PSAs, underwriting, shows, etc.) to their own library (DJs cannot view other libraries)
+  - Edit metadata, delete, and schedule media in their own library to shows they are assigned to
+  - Preview uploaded media _without_ affecting the live playout
+  - Create Playlists, Smart Blocks, and connect Podcasts and Webstreams to LibreTime
+  - Publish media items to LibreTime's built-in My Podcast function or 3rd party sources such as Soundcloud
+* Program Directors
+  - Everything DJs can do, plus
+  - Manage other users' libraries in addition to their own
+  - Create, edit, and delete color-coded shows on the Calender and assign them to DJs (if needed)
+  - Shows can be scheduled to repeat, with the option of linking content between the shows (helpful if a DJ livestreams in each week)
+  - View listener statistics
+  - Export playout logs for analysis or reporting for music royalties
+* Administrators
+  - Everything Program Directors can do, plus
+  - Manage all user accounts, including the ability to reset passwords
+  - Configure Track Types for easy sorting of uploaded content
+  - Change system and system settings, in addition to monitoring the system status
 
 Example studio broadcast system
 -------------------------------
