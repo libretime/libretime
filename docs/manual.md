@@ -15,7 +15,7 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [My Podcasts](my-podcasts)
 * [Radio Page](radio-page)
 * [Calendar](calendar)
-* [Widgets](widgets)
+* Widgets (coming soon)
 * Settings
   * [General](general-settings)
   * [Users](users)
