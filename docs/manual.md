@@ -17,7 +17,7 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [Calendar](calendar)
 * [Widgets](widgets)
 * Settings
-  * [General](general)
+  * [General](general-settings)
   * [Users](users)
   * [Streams](stream-settings)
   * [Status](status)
