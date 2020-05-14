@@ -75,7 +75,6 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [Translating LibreTime](interface-localization)
 
 ## Appendix
-* [About this manual](about-manual)
 * [HD Audio Module information](hd-audio-modules)
 * [Rights and royalty information](rights-royalties)
 * [Information on media folders used by LibreTime](folders)
