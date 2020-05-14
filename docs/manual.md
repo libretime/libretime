@@ -34,7 +34,6 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [How to livestream with butt](livestream)
 * [How to do a live show with MIXXX](live-shows-with-mixxx)
 * [How to prepare media for ingest to LibreTime](preparing-media)
-* [Smartphone journalism](smartphone-journalism)
 
 ## For Program Managers
 * [Building a schedule](build-schedule)
