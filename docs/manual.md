@@ -12,7 +12,7 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [Smart Blocks](smartblocks)
 * [Webstreams](webstreams)
 * [Podcasts](podcasts)
-* [My Podcasts](my-podcasts)
+* [My Podcasts](my-podcast)
 * [Radio Page](radio-page)
 * [Calendar](calendar)
 * Widgets (coming soon)
