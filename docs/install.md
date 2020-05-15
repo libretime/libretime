@@ -35,6 +35,9 @@ Athough these are less tested, it is possible to install LibreTime on
 - Debian 9 and 10
 - Raspbian 9 and 10
 
+Follow the [Quick Install] instructions for these OSes. If something goes wrong, please open a Github
+[issue request](https://github.com/LibreTime/libretime/issues).
+
 ## Containerization using Docker
 
 If you would like to try LibreTime in a Docker image,
