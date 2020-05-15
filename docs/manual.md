@@ -36,7 +36,6 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 ## For Program Managers
 * [Building a schedule](build-schedule)
 * [How to set up an automatic top of the hour ID with intro playlist feature](intro-playlist)
-* [How to schedule a podcast to play the newest episode on an automatic basis](podcast)
 * [How to setup a Auto DJ to play music from certain genres for unscheduled shows](autodj)
 * [Preventing dead air between shows without cutting off tracks](outro-playlist)
 * [How to schedule automatic underwriting/advertising announcements](https://www.youtube.com/watch?v=F7rMut7Trb4)

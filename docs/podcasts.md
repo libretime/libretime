@@ -6,7 +6,7 @@ In order to add a podcast you need to get the RSS feed. All podcasts available o
 
 The podcast interfaces provides you with the ability to generate [Smartblocks](../smartblocks) that can be used in conjunction with [Autoloading Playlists](../calendar/#autoloading-playlist) to schedule the newest episode of a podcast without human intervention.
 
-##Video Tutorials##
+### Video Tutorials
 - [How to schedule a podcast to play the latest episode automatically](https://www.youtube.com/watch?v=g-4UcD8qvR8)
 
 Dashboard
