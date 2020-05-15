@@ -1,33 +1,14 @@
-# Installing LibreTime
-There two methods of installing LibreTime - [Source](#source) or
-[Ubuntu package](#ubuntu-package).
-Please complete the [Preparing the server](preparing-the-server) and
+# Advanced Installation
+
+ This guide is for administrators who need to install LibreTime using a more hands-on method, such as
+ manually configuring depenencies and services, installing using a deb package,
+ or containerizing LibreTime. Running LibreTime in the cloud can be manually set up using the same steps in the
+ [Quick Install](quickstart). Please complete the [Preparing the server](preparing-the-server) and
 [Setting the server time](manual/setting-the-server-time/index) guides before proceeding.
 
-## Source
+## Reverse proxy connections
 
-Requirements:
-
-- LibreTime should generally be installed on a dedicated host running Ubuntu Server 18.04 LTS, have at least 1 GHz of processor power, at least 2 GB of system RAM, and a static IP address.
-- LibreTime is undergoing active development, and is currently in ALPHA. Make sure it is working for your needs well before you begin to use it in a live environment.
-- Please review the release notes of the version you are planning on installing.
-
-The easiest way to install LibreTime is by cloning the repository using git, and
-then running the installer.
-
-```
-cd ~ && git clone https://github.com/LibreTime/libretime.git
-sudo ./libretime/install -fiap
-```
-
-After the installer is finished, follow the instructions to proceed to the
-[setup wizard](manual/getting-started/index.md).
-
-It's recommended to use the `-fiap` flag to install LibreTime on a fresh server install. This way,
-all dependencies will be installed and configured by the installer without needing user input.
-For those who plan to manually configure LibreTime, run `sudo ./install -h` to see all installer options.
-
-A great tutorial video on how to install LibreTime is [here](https://www.youtube.com/watch?v=Djo_55LgjXE).
+Instuctions for setting up a reverse proxy can be found [here](reverse-proxy).
 
 ## Ubuntu Package
 LibreTime maintains amd64 .deb packages for Ubuntu 16.04 (Xenial) and 18.04
@@ -44,13 +25,18 @@ sudo apt install icecast2 ./libretime_<version>_amd64.deb
 ```
 `<version>` is replaced by the version of the package downloaded.
 
+Plans are in the works for `.rpm` packages, as well as Docker and AWS images.
+
 ## Alternative OS installations
-Installation in Debian 9 and other Linux distributions is possible, but these
-are less tested.
+Athough these are less tested, it is possible to install LibreTime on
 
-Plans are in the works for `.rpm` packages, as well as Docker and AWS images. If you would like to try LibreTime in a Docker image, [odclive's (unofficial) image](https://hub.docker.com/r/odclive/libretime-docker) is a great place to start.
+- CentOS 7
+- Ubuntu 16.04 LTS
+- Debian 9 and 10
+- Raspbian 9 and 10
 
-Please note that the install script does not take care to ensure that any
-packages installed are set up in a secure manner. Please see the chapter on
-[preparing the server](manual/preparing-the-server) for more details on
-how to set up a secure installation.
+## Containerization using Docker
+
+If you would like to try LibreTime in a Docker image,
+Odclive has instructions [here](https://github.com/kessibi/libretime-docker) for setting up a test image
+and a more persistant install.
