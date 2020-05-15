@@ -107,7 +107,7 @@ Show playback will start and end as per each show's start and end times, allowin
 LibreTime for running your station or using LibreTime as a part of your live setup to cover when DJs are not present.
 When media is playing back, the **On Air** indicator at the top will turn red.
 
-![](img/Screenshot563-Listen.png)
+![](img/on-air-status.png)
 
 You can listen to your stream by going to `localhost:8000` or by clicking the **Listen** button under the On Air
 indicator. Congratulations! You've successfully set up LibreTime! We're so proud of you. :)
