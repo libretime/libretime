@@ -216,7 +216,7 @@ function systemInitInstall() {
         local old_style_unit_exists="f"
         # Migrate old style airtime unit exist if it exists
         if [[ -e $alt_path && ! -L $alt_path ]]; then
-            local old_service=$(echo $service_name | sed 's/libretime/airtime/')
+            local old_service=$(echo $service_name | sed 's/libretime/airtime/' | sed 's/-analyzer/_analyzer/')
             verbose "Old service $old_service already exists - migrating."
             loudCmd "systemctl disable ${old_service}.service"
             loudCmd "systemctl stop ${old_service}.service"
@@ -793,7 +793,6 @@ will be moved to /etc/airtime/airtime.conf.tmp"
         rm -f /etc/init.d/airtime*
         rm -f /etc/init/airtime*
         rm -f /etc/default/airtime-celery
-        rm -f /etc/systemd/system/airtime*
 
         if [ "$apache" = "t" ]; then
             # If the user selects an "in-place" install or passes in a web root, 
