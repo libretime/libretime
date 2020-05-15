@@ -127,6 +127,7 @@ function submitForm(e, obj) {
     e.preventDefault();
     var d = $(e.target).serializeArray();
     addOverlay();
+    $(".viewport").scrollTop(0);
     // Append .promise().done() rather than using a
     // callback to avoid call duplication
     $("#overlay, #loadingImage").fadeIn(500).promise().done(function() {
