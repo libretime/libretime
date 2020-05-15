@@ -1,5 +1,6 @@
+# The Smartblocks page
 
-Creating a smart block
+Creating a smartblock
 ----------------------
 
 Smart blocks are automatically filled with media files from the LibreTime library, according to the criteria that you specify. This feature is intended to save staff time, compared to selecting items for a playlist manually, and can be used to schedule shows that operate in a consistent format.

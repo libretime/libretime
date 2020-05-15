@@ -1,3 +1,5 @@
+# The Status page
+
 On the **Settings** menu, the **Status** page provides an overview of the health and resource usage of the various services that make up a LibreTime system. If all is well, you will only see green check mark icons in the **Status** column. This page also shows how much **Disk Space** you have used on the disk partition containing the main Import folder, as well as any disks or partitions with watched folders.
 
 ![](img/Screenshot521-System_status_240.png)

@@ -1,5 +1,6 @@
-*Note* LibreTime installed via the install script does not currently change the default Icecast password and is insecure without intervention by the system admin. There is a [tutorial](https://github.com/LibreTime/libretime/wiki/Securing-icecast-and-customizing-stream-settings) on our wiki that walks you through the steps of how to fix this and an open issue [#86](https://github.com/LibreTime/libretime/issues/86) to track resolution of this. 
+# The Stream Settings page
 
+*Note* LibreTime installed via the install script does not currently change the default Icecast password and is insecure without intervention by the system admin. There is a [tutorial](https://github.com/LibreTime/libretime/wiki/Securing-icecast-and-customizing-stream-settings) on our wiki that walks you through the steps of how to fix this and an open issue [#86](https://github.com/LibreTime/libretime/issues/86) to track resolution of this. 
 
 Global settings
 ------------------------

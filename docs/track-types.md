@@ -1,3 +1,6 @@
+Working with track types
+------------------------
+
 # How to add track types
 
 **Audience**: Adminstrators

@@ -1,3 +1,5 @@
+# Help menu
+
 The first entry on LibreTime's **Help** menu offers a **Getting Started** guide
 for new users. Further down, there is also a link to the online version of this
   **User Manual**.

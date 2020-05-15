@@ -12,7 +12,7 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [Smart Blocks](smartblocks)
 * [Webstreams](webstreams)
 * [Podcasts](podcasts)
-* [My Podcasts](my-podcast)
+* My Podcast (coming soon)
 * [Radio Page](radio-page)
 * [Calendar](calendar)
 * Widgets (coming soon)
@@ -52,13 +52,11 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 
 ### Advanced Configuration
 * [Configuring FreeIPA authentication](freeipa)
-* [Using Icecast and Shoutcast in the studio](icecast-shoutcast)
+* [Using and configuring Icecast and Shoutcast](icecast-shoutcast)
 * [Configuring track types](track-types)
 * [Interface Customization](interface-customization)
 * [Setting up SSL](ssl-config)
 * [Promoting your station through your Icecast stream](promoting-your-station)
-* [Configuring Icecast handover](icecast-handover)
-* [Configuring Icecast statistics with Piwik](piwik)
 * [How to back up the LibreTime media folder and database](backing-up-the-server)
 * [Upgrading LibreTime](upgrading)
 * [Uninstalling LibreTime](uninstall)

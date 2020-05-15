@@ -1,3 +1,6 @@
+The Users page
+---------------
+
 If your Airtime server is accessible from the public Internet, it will not be secure until you set your own, strong password for the all-powerful *admin* user. Should the password for the *admin* user still be set to *admin* or some other easily guessed word, you should set a new password immediately, via the **Users** page on the <span style="font-weight: bold;">System</span> menu. Only users with the **User Type** of *Admin* can see the **System** menu when they log in.
 
 Setting passwords and contact details

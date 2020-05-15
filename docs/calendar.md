@@ -1,3 +1,6 @@
+Calendar
+--------
+
 The Calendar page of the LibreTime administration interface has three views: **day**, **week** and **month**, which can be switched using the grey buttons in the top right corner. By default, the **month** view is shown, with today's date highlighted by a pale grey background.
 
 ![](img/Screenshot451-Calendar.png)

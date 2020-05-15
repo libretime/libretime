@@ -1,3 +1,6 @@
+Exporting the schedule
+----------------------
+
 LibreTime has a feature which enables your station's show and schedule information to be displayed on remote websites. This feature is included in LibreTime because you would not usually invite the general public to access your LibreTime server directly. If you had very large numbers of people requesting data from the LibreTime server at once, the burst of network traffic might overload the server, potentially disrupting your broadcasts. If carried out maliciously, this network overload is known as a *denial of service attack*.
 
 Instead, your public-facing web server can retrieve the schedule information from the LibreTime API. This information can then be displayed on your broadcast station or affiliate websites by a content management system, such as Sourcefabric's **Newscoop** (<http://newscoop.sourcefabric.org/>). It can be presented using Javascript widgets and styled with CSS, in any format that you require. The **Broadcaster** theme for Newscoop (<https://github.com/newscoop/theme-Broadcaster>) integrates these widgets with ready-to-use styles.

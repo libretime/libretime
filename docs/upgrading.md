@@ -1,3 +1,5 @@
+# Upgrading LibreTime
+
 ## LibreTime versioning
 
 LibreTime 3.x versions support upgrading from Airtime 2.5.x versions. LibreTime follows the [Semantic Versioning (semver)](http://semver.org/spec/v2.0.0.html) standards.

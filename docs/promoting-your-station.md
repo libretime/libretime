@@ -1,6 +1,13 @@
-If you have an Icecast server, you can put a link to the Icecast status page (by default at port 8000) on your station's homepage, to provide an overview of available streams. See the chapter *Interface customization* for tips on theming the Icecast status page. You can also use Now Playing widgets (see the chapter *Exporting the schedule*) or HTML5 stream players (see the chapter *Stream player for your website*) to help grow your audience.
+Promoting Your Station
+----------------------
 
-On an Icecast server, you can uncomment the *<directory>* section in the */etc/icecast2/icecast.xml* file to have your station automatically listed on the Icecast directory website <http://dir.xiph.org> which could help you pick up more listeners.
+If you have an Icecast server, you can put a link to the Icecast status page (by default at port 8000) on your station's homepage,
+to provide an overview of available streams. See the chapter *Interface customization* for tips on theming the
+Icecast status page. You can also use Now Playing widgets (see the chapter *Exporting the schedule*) or HTML5 stream players (see the chapter *Stream player for your website*) to help grow your audience.
+
+On an Icecast server, you can uncomment the `<directory>` section in the _/etc/icecast2/icecast.xml_ file to have
+your station automatically listed on the Icecast directory website <http://dir.xiph.org> which could help you pick
+up more listeners.
 
         <!-- Uncomment this if you want directory listings -->
 

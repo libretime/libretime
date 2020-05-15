@@ -1,3 +1,5 @@
+# FreeIPA configuration
+
 You can configure LibreTime to delegate all authentication to a FreeIPA server.
 
 This allows you users to use their existing FreeIPA credentials. For this to
