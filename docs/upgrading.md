@@ -10,11 +10,18 @@ In a nutshell, given a version number MAJOR.MINOR.PATCH we increment the:
 2. MINOR version when we add functionality in a backwards-compatible manner, and
 3. PATCH version when we make backwards-compatible bug fixes.
 
-Any pre-release versions of LibreTime are denoted by appending a hyphen and a series of dot separated identifiers immediately following the patch version. This pre-release indicates that the version is unstable in a sense that it might contain incomplete features or not satisfy the intended compatibility requirements as per semver.
+Any pre-release versions of LibreTime are denoted by appending a hyphen and a series
+of dot separated identifiers immediately following the patch version. This pre-release indicates
+that the version is unstable in a sense that it might contain incomplete features or not satisfy the
+intended compatibility requirements as per semver.
 
 ## Upgrading 
 
-Before upgrading a production LibreTime server, you should back up both the PostgreSQL database and the storage server used by LibreTime. This is especially important if you have not already set up a regular back up routine. This extra back up is a safety measure in case of accidental data loss during the upgrade, for example due to the wrong command being entered when moving files. See [Backing up the server](../backing-up-the-server/) in this manual for details of how to perform these back ups.
+Before upgrading a production LibreTime server, you should back up both the PostgreSQL
+database and the storage server used by LibreTime. This is especially important if you have not already
+set up a regular back up routine. This extra back up is a safety measure in case of accidental data loss
+during the upgrade, for example due to the wrong command being entered when moving files. See
+[Backing up the server](backing-up-the-server) in this manual for details of how to perform these back ups.
 
 The LibreTime [installation script](install) will detect an existing LibreTime or Airtime deployment and back up any configuration files that it finds. We recommend taking your own manual backups of the configuration yourself nevertheless.  The install script also tries to restart the needed services during an upgrade. In any case you should monitor if this happened and also take a quick look at the logs files to be sure everything is still fine. Now might be the time to reboot the system or virtual machine LibreTime is running on since regular reboots are part of a healthy system anyway.
 

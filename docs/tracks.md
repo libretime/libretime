@@ -30,7 +30,7 @@ indicate if a particular item is in use). To change the fields which can be
 searched, click the **Show / hide columns** button on the right side of the
 table, just above the search results.
 
-![](../dashboard/img/columns.png)
+![](img/columns.png)
 
 Click the metadata column headings such as **Title**, **Creator**, **Album**, or
 **Genre** to sort the entries in ascending or descending order. In the second
