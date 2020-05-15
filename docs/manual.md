@@ -5,7 +5,7 @@ Please provide any feedback on this [discourse forum post](https://discourse.lib
 There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/user90812787)
 
 ## Understanding the Main Menus
-* [Uploads](upload)
+* [Upload](upload)
 * [Dashboard](dashboard)
 * [Tracks](tracks)
 * [Playlists](playlists)

@@ -13,7 +13,7 @@ on a regular basis, you will need to have your admin update the configuration at
 Airtime previously supported import via SFTP but this functionality is still under
 development for LibreTime.
 
-![](img/upload-files-dialog.png)
+![](img/Select-files.png)
 
 If your web browser does not support drag and drop, you can click the background
 of the screen on the **Upload page**, to open up a file browser dialog.
