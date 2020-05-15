@@ -54,11 +54,9 @@ git clone https://github.com/LibreTime/libretime.git
 sudo ./libretime/install -fiap
 ```
 
-After the install is completed, head to `localhost`
-to complete the installation wizard. You don't have to change any passwords immediately if you
-don't want to, although it is strongly recommended if you plan to attach the server to a domain
-that would allow you to access it from ourside your station's network. You will need to enter
-a few commands in the terminal, but don't worry, the guide will walk you through it.
+After the install is completed, head to the IP address of the server LibreTime was just installed on
+to complete the welcome wizard. While not strictly necessary, it is recommended that you change the passwords prompted in the welcome wizard if you intend on accessing the server from the Internet. The welcome wizard will
+walk you through the rest of the installation process.
 
 ## Scheduling your first show
 
@@ -109,6 +107,6 @@ When media is playing back, the **On Air** indicator at the top will turn red.
 
 ![](img/on-air-status.png)
 
-You can listen to your stream by going to `localhost:8000` or by clicking the **Listen** button under the On Air
+You can listen to your stream by going to `yourserverIP:8000` or by clicking the **Listen** button under the On Air
 indicator. Congratulations! You've successfully set up LibreTime! We're so proud of you. :)
 
