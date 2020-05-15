@@ -1,14 +1,40 @@
 # Advanced Installation
 
  This guide is for administrators who need to install LibreTime using a more hands-on method, such as
- manually configuring depenencies and services, installing using a deb package,
- or containerizing LibreTime. Running LibreTime in the cloud can be manually set up using the same steps in the
+ manually configuring depenencies and services or containerizing LibreTime. Running LibreTime in the cloud can be manually set up using the same steps in the
  [Quick Install](quickstart). Please complete the [Preparing the server](preparing-the-server) and
 [Setting the server time](manual/setting-the-server-time/index) guides before proceeding.
 
 ## Reverse proxy connections
 
 Instuctions for setting up a reverse proxy can be found [here](reverse-proxy).
+
+## Ubuntu Package
+LibreTime maintains amd64 .deb packages for Ubuntu 16.04 (Xenial) and 18.04
+(Bionic). These can be downloaded using their PPA in apt or your favorite package manager.
+
+```
+sudo add-apt-repository ppa:libretime/libretime
+sudo apt-get update
+sudo apt-get install libretime icecast2
+```
+
+## Alternative OS installations
+Athough these are less tested, it is possible to install LibreTime on
+
+- CentOS 7
+- Ubuntu 16.04 LTS
+- Debian 9 and 10
+- Raspbian 9 and 10
+
+Follow the [Quick Install] instructions for these OSes. If something goes wrong, please open a Github
+[issue request](https://github.com/LibreTime/libretime/issues).
+
+## Containerization using Docker
+
+If you would like to try LibreTime in a Docker image,
+Odclive has instructions [here](https://github.com/kessibi/libretime-docker) for setting up a test image
+and a more persistant install.
 
 ## Manual configuration
 
@@ -65,31 +91,4 @@ Usage: sudo bash install [options]
                 "
 ```
 
-## Ubuntu Package
-LibreTime maintains amd64 .deb packages for Ubuntu 16.04 (Xenial) and 18.04
-(Bionic). These can be downloaded using their PPA in apt or your favorite package manager.
-
-```
-sudo add-apt-repository ppa:libretime/libretime
-sudo apt-get update
-sudo apt-get install libretime icecast2
-```
-
 Plans are in the works for `.rpm` packages, as well as Docker and AWS images.
-
-## Alternative OS installations
-Athough these are less tested, it is possible to install LibreTime on
-
-- CentOS 7
-- Ubuntu 16.04 LTS
-- Debian 9 and 10
-- Raspbian 9 and 10
-
-Follow the [Quick Install] instructions for these OSes. If something goes wrong, please open a Github
-[issue request](https://github.com/LibreTime/libretime/issues).
-
-## Containerization using Docker
-
-If you would like to try LibreTime in a Docker image,
-Odclive has instructions [here](https://github.com/kessibi/libretime-docker) for setting up a test image
-and a more persistant install.
