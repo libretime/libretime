@@ -47,7 +47,7 @@ sudo ufw allow 8000/tcp
 
 ## Installing LibreTime
 
-This part is suprisingly easy. Just enter these commands in the terminal:
+Installing LibreTime consists of running two commands in the terminal:
 
 ```
 git clone https://github.com/LibreTime/libretime.git
