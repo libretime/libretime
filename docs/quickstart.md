@@ -1,5 +1,5 @@
-Up and running in 10 minutes or less!
-------------------------------------
+Up and running in 10 minutes!
+----------------------------
 
 LibreTime is quick and easy to install and get running. Follow this guide to go from zero
 to full internet radio station in 10 minutes!
@@ -7,7 +7,7 @@ to full internet radio station in 10 minutes!
 ## Prerequisites
 
 - minimum 1 Ghz Processor, 2 GB RAM, and a wired ethernet connection
-- Ubuntu Server 18.04 LTS
+- Ubuntu Server 18.04 LTS on bare-metal or cloud VM
 - git, ntp installed and configured with the correct localization
 
 ## Preparing the server
