@@ -67,18 +67,13 @@ Usage: sudo bash install [options]
 
 ## Ubuntu Package
 LibreTime maintains amd64 .deb packages for Ubuntu 16.04 (Xenial) and 18.04
-(Bionic). These can be downloaded [here](https://github.com/LibreTime/libretime-debian-packaging/releases).
-Issues with installation of these packages should be reported to the
-[LibretTime/libretime-debian-packaging](https://github.com/LibreTime/libretime-debian-packaging)
-repository.
-
-These are installed by running the following from the command line (the `./` in
-front of the libretime package is important):
+(Bionic). These can be downloaded using their PPA in apt or your favorite package manager.
 
 ```
-sudo apt install icecast2 ./libretime_<version>_amd64.deb
+sudo add-apt-repository ppa:libretime/libretime
+sudo apt-get update
+sudo apt-get install libretime icecast2
 ```
-`<version>` is replaced by the version of the package downloaded.
 
 Plans are in the works for `.rpm` packages, as well as Docker and AWS images.
 
