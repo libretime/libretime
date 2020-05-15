@@ -31,8 +31,7 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 ## For DJs
 * [How to upload and schedule tracks on your show](upload-tracks)
 * [How to upload a promo](upload-promo)
-* [How to livestream with butt](livestream)
-* [How to do a live show with MIXXX](live-shows-with-mixxx)
+* [Broadcasting live with MIXXX or B.U.T.T.](live-broadcast)
 * [How to prepare media for ingest to LibreTime](preparing-media)
 
 ## For Program Managers
