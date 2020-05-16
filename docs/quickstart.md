@@ -15,7 +15,7 @@ to full internet radio station in 10 minutes!
 | git, ntp | git, ntp |
 
 [DigitalOcean](https://www.digitalocean.com/pricing/#Compute) and [Linode](https://www.linode.com/pricing/#row--compute)
-both have similar plans that meet Cloud Install requirements that both cost $10/month.
+ have similar plans that meet Cloud Install requirements. Both plans cost $10/month.
 
 ## Preparing the server
 
