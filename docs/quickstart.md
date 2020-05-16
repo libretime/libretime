@@ -4,11 +4,18 @@ Up and running in 10 minutes!
 LibreTime is quick and easy to install and get running. Follow this guide to go from zero
 to full internet radio station in 10 minutes!
 
-## Prerequisites
+## Minimum System Requirements
 
-- minimum 1 Ghz Processor, 2 GB RAM, and a wired ethernet connection
-- Ubuntu Server 18.04 LTS on bare-metal or cloud VM
-- git, ntp installed and configured with the correct localization
+| On-Premises Install  (FM + Internet Radio) | Cloud Install (Internet Radio Only) |
+|---------------------|---------------|
+| 1 Ghz Processor| 1vCPU |
+| 2 GB RAM | 2 GB RAM |
+| Wired ethernet connection | 2 TB of data transfer/month |
+| Ubuntu Server 18.04 LTS | Ubuntu Server 18.04 LTS |
+| git, ntp | git, ntp |
+
+[DigitalOcean](https://www.digitalocean.com/pricing/#Compute) and [Linode](https://www.linode.com/pricing/#row--compute)
+both have similar plans that will meet Cloud Install requirements that both cost $10/month.
 
 ## Preparing the server
 
