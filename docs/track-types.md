@@ -1,8 +1,6 @@
 Working with track types
 ------------------------
 
-# How to add track types
-
 **Audience**: Adminstrators
 
 ## Using track types when uploading tracks
