@@ -23,4 +23,4 @@ Tracks published wind up here, and can be played back on-demand. This is a great
 
 ![](img/radio-altbkgnd.png)
 
-The background of the radio page can be changed; see instructions [here](../interface-customization/index.md). Image comes from [CATS ON SYNTHESIZERS IN SPACE](https://www.catsonsynthesizersinspace.com/).
+The background of the radio page can be changed; see instructions [here](interface-customization). Image comes from [CATS ON SYNTHESIZERS IN SPACE](https://www.catsonsynthesizersinspace.com/).

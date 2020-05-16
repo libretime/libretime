@@ -1,11 +1,7 @@
 # Testing LibreTime with Canonical's Multipass
 
 Ever wanted to test out LibreTime but didn't want to tango with
-Virturalbox, Vagrent, or Docker?
-
-![](https://thumbs.gfycat.com/HauntingDirtyDragon-size_restricted.gif)
-
-Canonical released [Multipass](https://multipass.run), a tool for setting up Ubuntu VMs with cloud-init files in a snap.
+Virturalbox, Vagrent, or Docker? Canonical released [Multipass](https://multipass.run), a tool for setting up Ubuntu VMs with cloud-init files in a snap.
 Multipass is available for Windows and macOS, as well as Linux OSes that support snaps.
 
 Similar to Docker, Multipass works through a CLI. To use, clone this repo and then open a Terminal
@@ -15,16 +11,11 @@ multipass launch bionic -n ltTEST --cloud-init libretimeTest.yaml  # to launch V
 multipass shell ltTEST  # to enter VM's shell
 ```
 
-And that's it! At the moment, Multipass isn't patient enough for an automated install,
-so after you enter the shell for the first time, you will still need to run the install script for LibreTime.
+Due to a known bug, Multipass is not able to perform the entire install using the cloud-init file.
+Run the LibreTime installer and follow the welcome wizard in your web browser.
 
 ```
 sudo ./libretime/install -fiap
-
-sudo service airtime-liquidsoap start
-sudo service airtime-playout start
-sudo service airtime-celery start
-sudo service airtime_analyzer start
 ```
 
 The IP address of your new VM can be found by running `multipass list`.

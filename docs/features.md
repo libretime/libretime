@@ -3,13 +3,13 @@
 [LibreTime](http://libretime.org/ "LibreTime homepage") is the open broadcast
 software for scheduling and remote station management. Web browser access to
 the station's media library, multi-file upload and automatic metadata import
-features are coupled with a collaborative on-line scheduling calendar and
+features are coupled with a collaborative online scheduling calendar and
 playlist management. The scheduling calendar is managed through an easy-to-use
 interface and triggers playout with sub-second precision.
 
 ![](img/Screenshot540-Now_playing_250.png)
 
-LibreTime has been intended to provide a solution for a wide range of broadcast
+LibreTime is intended to provide a solution for a wide range of broadcast
 projects, from community to public and commercial stations. The scalability of
 LibreTime allows implementation in a number of scenarios, ranging from an
 unmanned broadcast unit accessed remotely through the Internet, to a local
@@ -30,8 +30,8 @@ line input. News editors, DJs and station controllers can use LibreTime to
 build playlists or smart blocks and manage media files (upload, edit metadata,
 manage advertisements) at the station or via the Internet.
 
-The scheduler in LibreTime has a calendar view, organized by months, weeks and
-days. Here the program editors can schedule playlists and shows for their
+The scheduler in LibreTime has a calendar view, organized by months, weeks or
+days. Program editors can schedule playlists and shows here for their
 broadcast station. In some scenarios, the transmitter is situated outside the
 reach of the broadcaster and all program management has to be maintained
 through the web interface. Possible reasons for this scenario might be of a
@@ -44,12 +44,12 @@ LibreTime services
 
 | Service | Description |
 |---------|-------------|
-| `media-monitor` | Keeps track of files being added, renamed, moved or removed from storage, and reads their metadata using the Mutagen library. |
+| `airtime-analyzer` | Keeps track of files being added, renamed, moved or removed from storage, and reads their metadata using the Mutagen library. |
 | [PostgreSQL](https://www.postgresql.org/) | Contains the location of those media files and their metadata. This means you can search for and playlist a set of media files according to the specific metadata that you require, or use a 'smart block' to select the files for you. The database also contains details of specified remote input streams. |
 | Pypo | (Python Playout engine) Downloads media from the storage up to 24 hours ahead of playout and checks it for average level (with ReplayGain tools) and leading or trailing silence (with Silan). At playout time, the media to be broadcast is sent to Liquidsoap. |
 | [Liquidsoap](https://www.liquidsoap.info/) | Takes individual media files and remote input streams, and assembles them into a continuous output stream. This stream can be sent to a sound card (e.g. for a broadcast mixer, on the way to an FM or DAB transmitter) or to a streaming server for IP network distribution, over the LAN, local WiFi or the Internet. You can stream to a sound card and up to three different stream distribution servers with the same LibreTime server, if you wish. |
 | [Icecast](https://www.icecast.org/) or [Shoutcast](https://shoutcast.com/) | Audio streaming server, used for creating an internet radio stream from LibreTime. Icecast is included in the LibreTime installation by default. Note: If a suitable Liquidsoap output is not available for your streaming service of choice, you can send audio from Liquidsoap to a separate encoding or streaming machine via a sound card or relay stream. |
-| [Monit](https://mmonit.com/monit/) | Monitors the health of pypo, media-monitor and Liquidsoap, and reports the status of these services to LibreTime. |
+| [Monit](https://mmonit.com/monit/) | Monitors the health of pypo, airtime-analyzer and Liquidsoap, and reports the status of these services to LibreTime. |
 | [RabbitMQ](https://www.rabbitmq.com/) | Pushes messages from LibreTime to media-monitor and pypo about changes to media files and the playout schedule. |
 
 Types of user accounts
@@ -67,7 +67,7 @@ Create different accounts for your staff by role, to give them only the permissi
   - Preview uploaded media _without_ affecting the live playout
   - Create Playlists, Smart Blocks, and connect Podcasts and Webstreams to LibreTime
   - Publish media items to LibreTime's built-in My Podcast function or 3rd party sources such as Soundcloud
-* Program Directors
+* Program Managers
   - Everything DJs can do, plus
   - Manage other users' libraries in addition to their own
   - Create, edit, and delete color-coded shows on the Calender and assign them to DJs (if needed)
@@ -75,10 +75,10 @@ Create different accounts for your staff by role, to give them only the permissi
   - View listener statistics
   - Export playout logs for analysis or reporting for music royalties
 * Administrators
-  - Everything Program Directors can do, plus
+  - Everything Program Managers can do, plus
   - Manage all user accounts, including the ability to reset passwords
   - Configure Track Types for easy sorting of uploaded content
-  - Change system and system settings, in addition to monitoring the system status
+  - Change system settings
 
 Example studio broadcast system
 -------------------------------

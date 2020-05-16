@@ -5,10 +5,6 @@
  [Quick Install](quickstart). Please complete the [Preparing the server](preparing-the-server) and
 [Setting the server time](manual/setting-the-server-time/index) guides before proceeding.
 
-## Reverse proxy connections
-
-Instuctions for setting up a reverse proxy can be found [here](reverse-proxy).
-
 ## Ubuntu Package
 LibreTime maintains amd64 .deb packages for Ubuntu 16.04 (Xenial) and 18.04
 (Bionic). These can be downloaded using their PPA in apt or your favorite package manager.
@@ -35,6 +31,10 @@ Follow the [Quick Install] instructions for these OSes. If something goes wrong,
 If you would like to try LibreTime in a Docker image,
 Odclive has instructions [here](https://github.com/kessibi/libretime-docker) for setting up a test image
 and a more persistant install.
+
+## Reverse proxy connections
+
+Instuctions for setting up a reverse proxy can be found [here](reverse-proxy).
 
 ## Manual configuration
 

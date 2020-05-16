@@ -13,6 +13,7 @@ to full internet radio station in 10 minutes!
 ## Preparing the server
 
 Configure the server to have a static IP address by modifying the Netplan configuration.
+If you're using a cloud VM, you likely already have a static IP address. Check with your provider to confirm this.
 
 ```
 cd /etc/netplan && ls  # find the netplan filename
@@ -33,7 +34,6 @@ network:
       addresses: [192.168.88.8/24]
       gateway4: 192.168.88.1
       nameservers:
-        search: [lan]
         addresses: 192.168.88.1
 ```
 
@@ -45,13 +45,21 @@ sudo ufw allow 80/tcp
 sudo ufw allow 8000/tcp
 ```
 
+If you plan on broadcasting live with Libretime, also unblock ports 8001 and 8002.
+
+```
+sudo ufw enable 8001/tcp
+sudo ufw enable 8002/tcp
+```
+
 ## Installing LibreTime
 
-Installing LibreTime consists of running two commands in the terminal:
+Installing LibreTime consists of running these commands in the terminal:
 
 ```
 git clone https://github.com/LibreTime/libretime.git
-sudo ./libretime/install -fiap
+cd libretime
+sudo ./install -fiap
 ```
 
 After the install is completed, head to the IP address of the server LibreTime was just installed on
@@ -96,17 +104,27 @@ into the playlist.
 
 ![](img/Screenshot562-Drag_show_content.png)
 
-Keep in mind the bar at the end of your show's playlist. It will show the amount of time your show is under- or
-overscheduled. Shows that are underscheduled will have dead air at the end and shows that are overscheduled
+The bar at the end of the show's playlist will show the amount of time the show is underscheduled or overscheduled.
+Shows that are underscheduled will have dead air at the end and shows that are overscheduled
 will fade out exactly when the show is over (the orange colored entry), meaning tracks scheduled to start
 after this point will not play (dark red colored entries). Click the **Ok** button in the bottom right to save.
 
 Show playback will start and end as per each show's start and end times, allowing you to rely completely on
 LibreTime for running your station or using LibreTime as a part of your live setup to cover when DJs are not present.
-When media is playing back, the **On Air** indicator at the top will turn red.
+When media is playing, the **On Air** indicator at the top will turn red.
 
 ![](img/on-air-status.png)
 
 You can listen to your stream by going to `yourserverIP:8000` or by clicking the **Listen** button under the On Air
-indicator. Congratulations! You've successfully set up LibreTime! We're so proud of you. :)
+indicator.
 
+Congratulations! You've successfully set up LibreTime!
+
+## Next Steps
+
+Now that the install is complete, use these guides to help you continue to set up your LibreTime server
+
+- [Host Configuration](host-configuration)
+- [Setting the Server Time](setting-the-server-time)
+- [Configuring Track Types](track-types)
+- [Setting up SSL](ssl-config)

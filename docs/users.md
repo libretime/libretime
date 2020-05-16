@@ -19,10 +19,19 @@ Adding user accounts
 
 To add further user accounts to the system, one for each of your station staff that need access to Airtime, click the **New User** button with the plus icon. Enter a user name, password and contact details, and then select the **User Type** from the drop down menu, which can be *Admin*, *Program Manager*, *DJ*, or *Guest*. The difference between these user types is:
 
--   An *Admin* (station manager) has read and write access to all the features of Airtime. This role should be reserved for trusted staff members only. If you give the *Admin* role to too many people, there could be arguments at the station!
--   A *Program Manager* has write access to the entire broadcast schedule, but cannot see the **System** menu and therefore cannot adjust Airtime preferences, manage user accounts, change media folder or stream settings, check the server status, or see the Listener Stats. A *Program Manager* can view the **History** menu and the Playout History page, but cannot edit History Templates. **
--   A *DJ* (presenter) only has write access to features related to the specific shows assigned to them by an *Admin* or *Program Manager*. The *DJ* can read data for other shows in the **Calendar**, but not write to them. This read access to other shows helps staff plan their own shows, for instance avoiding the scenario where two DJs play the same music by coincidence. Like a *Program Manager*, a *DJ* cannot see the **System** menu when they log in, and cannot edit History Templates.
--   A *Guest* can log in to read the forthcoming schedule or playlists, but has no write permission for any feature. *Guest* users cannot see the **Add Media**, **Library**, **System** or **History** menus when they log in. The group of guest users might include the station accountant, or the show assistants.
+-   An *Admin* (station manager) has read and write access to all the features of Airtime. This role should be
+reserved for trusted staff members only. If you give the *Admin* role to too many people, there could be arguments
+at the station!
+-   A *Program Manager* has write access to the entire broadcast schedule, but cannot see the **System** menu and therefore cannot adjust Airtime preferences, manage user accounts, change media folder or stream settings, check the server status, or see the Listener Stats. A
+*Program Manager* can view the **History** menu and the Playout History page, but cannot edit History Templates.
+-   A *DJ* (presenter) only has write access to features related to the specific shows assigned to them by an
+*Admin* or *Program Manager*. The *DJ* can read data for other shows in the **Calendar**, but not write to them.
+This read access to other shows helps staff plan their own shows, for instance avoiding the scenario where two DJs
+play the same music by coincidence. Like a *Program Manager*, a *DJ* cannot see the **System** menu when they log
+in, and cannot edit History Templates.
+-   A *Guest* can log in to read the forthcoming schedule or playlists, but has no write permission for any
+feature. *Guest* users cannot see the **Add Media**, **Library**, **System** or **History** menus when they log in.
+The group of guest users might include the station accountant, or the show assistants.
 
 Editing or deleting user accounts
 ---------------------------------

@@ -48,7 +48,7 @@ default.
 You can enable live, read-only access to the LibreTime schedule calendar for
 your station's public website with the **Public LibreTime API** option, if you
 wish. (There is more about this feature in the
-[*Exporting the schedule*](../exporting-the-schedule/index.md) chapter, in the
+[*Exporting the schedule*](exporting-the-schedule) chapter, in the
 *Advanced Configuration* section of this book).
 
 The **Allowed CORS URLs** is intended to deal with situations where you want a

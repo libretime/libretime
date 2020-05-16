@@ -9,7 +9,7 @@ Some web browsers may set an upload limit for a single file, between 200MB and
 2GB. In addition the default LibreTime webserver configuration limits file size
 to 500M.  If you need to upload files larger than 500MB to the LibreTime server
 on a regular basis, you will need to have your admin update the configuration at
-`/etc/apache2/sites-available/airtime.conf` (see [here](../host-configuration/index.md)). 
+`/etc/apache2/sites-available/airtime.conf` (see [here](host-configuration)). 
 Airtime previously supported import via SFTP but this functionality is still under
 development for LibreTime.
 
@@ -37,9 +37,9 @@ again or contact your Admin to have them consult the logs and open up a bug
 report. It sometimes takes a few minutes for files to be processed but if they
 are all stuck at **Pending Import** then it is possible that the
 *airtime_analyzer* process has crashed and the admin will need to restart it.
-See [Troubleshooting](../troubleshooting) for more information. You can look
+See [Troubleshooting](troubleshooting) for more information. You can look
 specifically at any failed imports by clicking the radio button next to Failed.
 
 Once they are done procesing your files ready to be included in your broadcast
-playlists, smart blocks and shows and can be viewed in the [Tracks](../Tracks)
+playlists, smart blocks and shows and can be viewed in the [Tracks](tracks)
 section of the Library.

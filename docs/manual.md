@@ -1,4 +1,5 @@
-# Tutorials
+Manual
+------
 
 This page contains links to number of tutorials.
 Please provide any feedback on this [discourse forum post](https://discourse.libretime.org/t/new-tutorials-available-on-libretime-wiki/270/2).
@@ -12,10 +13,8 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [Smart Blocks](smartblocks)
 * [Webstreams](webstreams)
 * [Podcasts](podcasts)
-* My Podcast (coming soon)
 * [Radio Page](radio-page)
 * [Calendar](calendar)
-* Widgets (coming soon)
 * Settings
   * [General](general-settings)
   * [Users](users)
@@ -38,8 +37,8 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [How to set up an automatic top of the hour ID with intro playlist feature](intro-playlist)
 * [How to setup a Auto DJ to play music from certain genres for unscheduled shows](autodj)
 * [Preventing dead air between shows without cutting off tracks](outro-playlist)
-* [How to schedule automatic underwriting/advertising announcements](https://www.youtube.com/watch?v=F7rMut7Trb4)
-* [How to schedule a repeating webstream with a linked show](https://www.youtube.com/watch?v=Ha3X6aYdY04)
+* [How to schedule automatic underwriting/advertising announcements (YouTube)](https://www.youtube.com/watch?v=F7rMut7Trb4)
+* [How to schedule a repeating webstream with a linked show (YouTube)](https://www.youtube.com/watch?v=Ha3X6aYdY04)
 * [How to export a schedule of played tracks](exporting-the-schedule)
 
 ## For Server Administrators
