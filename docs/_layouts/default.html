@@ -39,7 +39,7 @@
         {% endif %}
         
         <ul>
-          {% for item in site.navigation.[page.sidebar] %}
+          {% for item in site.data.nav[page.sidebar] %}
             <li><a href="{{ item.url }}">{{ item.text }}</a></li>
           {% endfor %}
         </ul> 
