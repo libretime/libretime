@@ -1,5 +1,5 @@
 [Unit]
-Description=Airtime Playout Service
+Description=Libretime Playout Service
 After=network-online.target
 
 [Service]

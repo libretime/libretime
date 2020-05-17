@@ -44,7 +44,7 @@
                 <?php
                     } else {
                         ?>">
-                        Try running <code>sudo apt-get install php5-pgsql</code>
+                        Try running <code>sudo apt-get install php7-pgsql</code>
                     <?php
                     }
                 ?>
@@ -101,10 +101,10 @@
                 <?php
                 } else {
                     ?>">
-                    <?php echo _("Check that the airtime_analyzer service is installed correctly in ") ?><code>/etc/init</code>,
+                    <?php echo _("Check that the libretime-analyzer service is installed correctly in ") ?><code>/etc/systemd/system/</code>,
                     <?php echo _(" and ensure that it's running with ") ?>
-                    <br/><code>initctl list | grep airtime_analyzer</code><br/>
-                    <?php echo _("If not, try ") ?><br/><code>sudo service airtime_analyzer start</code>
+                    <br/><code>systemctl status libretime-analyzer</code><br/>
+                    <?php echo _("If not, try ") ?><br/><code>sudo systemctl restart libretime-analyzer</code>
                 <?php
                 }
                 ?>
@@ -121,10 +121,10 @@
                 <?php
                 } else {
                     ?>">
-                    <?php echo _("Check that the airtime-playout service is installed correctly in ") ?><code>/etc/init</code>, 
+                    <?php echo _("Check that the libretime-playout service is installed correctly in ") ?><code>/etc/systemd/system/</code>,
                     <?php echo _(" and ensure that it's running with ") ?>
-                    <br/><code>initctl list | grep airtime-playout</code><br/>
-                    <?php echo _("If not, try ") ?><br/><code>sudo service airtime-playout restart</code>
+                    <br/><code>systemctl status libretime-playout</code><br/>
+                    <?php echo _("If not, try ") ?><br/><code>sudo systemctl restart libretime-playout</code>
                 <?php
                 }
                 ?>
@@ -141,17 +141,17 @@
                 <?php
                 } else {
                     ?>">
-                    <?php echo _("Check that the airtime-liquidsoap service is installed correctly in ") ?><code>/etc/init</code>, 
+                    <?php echo _("Check that the libretime-liquidsoap service is installed correctly in ") ?><code>/etc/systemd/system/</code>,
                     <?php echo _(" and ensure that it's running with ") ?>
-                    <br/><code>initctl list | grep airtime-liquidsoap</code><br/>
-                    <?php echo _("If not, try ") ?><br/><code>sudo service airtime-liquidsoap restart</code>
+                    <br/><code>systemctl status libretime-liquidsoap</code><br/>
+                    <?php echo _("If not, try ") ?><br/><code>sudo systemctl restart libretime-liquidsoap</code>
                 <?php
                 }
                 ?>
             </td>
         </tr>
         <tr>
-            <td class="component" align="center">
+            <td class="component">
                 Celery
             </td>
             <td class="description">
@@ -161,10 +161,10 @@
                 <?php
                 } else {
                     ?>">
-                    <?php echo _("Check that the airtime-celery service is installed correctly in ") ?><code>/etc/init</code>, 
+                    <?php echo _("Check that the libretime-celery service is installed correctly in ") ?><code>/etc/systemd/system/</code>,
                     <?php echo _(" and ensure that it's running with ") ?>
-                    <br/><code>initctl list | grep airtime-celery</code><br/>
-                    <?php echo _("If not, try ") ?><br/><code>sudo service airtime-celery restart</code>
+                    <br/><code>systemctl status libretime-celery</code><br/>
+                    <?php echo _("If not, try ") ?><br/><code>sudo systemctl restart libretime-celery</code>
                 <?php
                 }
                 ?>

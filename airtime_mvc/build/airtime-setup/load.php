@@ -45,7 +45,7 @@ function checkDatabaseDependencies() {
 /**
  * Check that all external services are configured correctly and return an associative
  * array with the results
- * 
+ *
  * @return array associative array of external service check results
  */
 function checkExternalServices() {
@@ -88,7 +88,7 @@ function configureDatabase() {
 
 /**
  * Check that we can connect to RabbitMQ
- * 
+ *
  * @return true if the RabbitMQ connection can be established
  */
 function checkRMQConnection() {
@@ -109,7 +109,7 @@ function checkRMQConnection() {
 
 /**
  * Check if airtime-analyzer is currently running
- * 
+ *
  * @return boolean true if airtime-analyzer is running
  */
 function checkAnalyzerService() {
@@ -122,7 +122,7 @@ function checkAnalyzerService() {
 
 /**
  * Check if airtime-playout is currently running
- * 
+ *
  * @return boolean true if airtime-playout is running
  */
 function checkPlayoutService() {
@@ -135,7 +135,7 @@ function checkPlayoutService() {
 
 /**
  * Check if airtime-liquidsoap is currently running
- * 
+ *
  * @return boolean true if airtime-liquidsoap is running
  */
 function checkLiquidsoapService() {
@@ -148,7 +148,7 @@ function checkLiquidsoapService() {
 
 /**
  * Check if airtime-celery is currently running
- * 
+ *
  * @return boolean true if airtime-celery is running
  */
 function checkCeleryService() {

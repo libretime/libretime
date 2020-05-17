@@ -2,18 +2,18 @@
 ?>
 
 <form action="#" role="form" id="finishSettingsForm">
-    <h3 class="form-title">Manual Step: Start Airtime Services</h3>
+    <h3 class="form-title">Manual Step: Start Libretime Services</h3>
     <span id="helpBlock" class="help-block help-message"></span>
     <p>
         Looks like you're almost done! As a final step, please run the following commands from the terminal:
     </p>
-    <pre style="text-align: left">sudo service airtime-playout start
-sudo service airtime-liquidsoap start
-sudo service airtime_analyzer start
-sudo service airtime-celery start</pre>
+    <pre style="text-align: left">sudo systemctl start libretime-playout
+sudo systemctl start libretime-liquidsoap
+sudo systemctl start libretime-analyzer
+sudo systemctl start libretime-celery</pre>
     <p>
-        Click "Done!" to bring up the Airtime configuration checklist; if your configuration is all green, 
-        you're ready to get started with your personal Airtime station!
+        Click "Done!" to bring up the Libretime configuration checklist; if your configuration is all green,
+        you're ready to get started with your personal Libretime station!
     </p>
     <p>
         If you need to re-run the web installer, just remove <code>/etc/airtime/airtime.conf</code>.
