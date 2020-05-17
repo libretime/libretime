@@ -8,15 +8,90 @@ layouts_dir: _layouts
 data_dir: _data
 
 navigation:
-- text: Quick Install
-  url: quickstart
-- text: Advanced Install
-  url: install
-- text: Features
-  url: features
-- text: FAQ
-  url: faq
-- text: Manual
-  url: manual
-- text: Help!
-  url: troubleshooting
+  main:
+  - text: Quick Install
+    url: quickstart
+  - text: Advanced Install
+    url: install
+  - text: Features
+    url: features
+  - text: FAQ
+    url: faq
+  - text: Manual
+    url: manual
+  - text: Help!
+    url: troubleshooting
+  
+  installer:
+  - Quick Install:
+    - text: Quick Install
+      url: quickstart
+    - text: Host Configuration
+      url: host-configuration
+    - text: Setting the Server Time
+      url: setting-the-server-time
+    - text: Configuring Track Types
+      url: track-types
+  - text: Advanced Install
+    url: install
+  - text: Features
+    url: features
+  - text: FAQ
+    url: faq
+  - text: Manual
+    url: manual
+  - text: Help!
+    url: troubleshooting
+    
+    man-mainmenus:
+  - text: Quick Install
+    url: quickstart
+  - text: Advanced Install
+    url: install
+  - text: Features
+    url: features
+  - text: FAQ
+    url: faq
+  - text: Manual
+    url: manual
+    - text: Main Menus
+      - text: Upload
+        url: upload
+      - text: Dashboard
+        url: dashboard
+      - text: Tracks
+        url: tracks
+      - text: Playlists
+        url: playlists
+      - text: Smartblocks
+        url: smartblocks
+      - text: Webstreams
+        url: webstreams
+      - text: Podcasts
+        url: podcasts
+      - text: Radio Page
+        url: radio-page
+      - text: Calendar
+        url: calendar
+      - text: Settings
+        - text: General
+          url: general-settings
+        - text: Users
+          url: users
+        - text: Stream Settings
+          url: stream-settings
+        - text: Status
+          url: sttus
+      - text: Analytics
+        - text: Playout History
+          url: history
+        - text: History Templates
+          url: history-templates
+        - text: Listener Statistics
+          url: listener-stats
+      - text: Help
+        url: help
+      - text: Listen
+        url: listen
+    - text: Help!
+      url: troubleshooting
