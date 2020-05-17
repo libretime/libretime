@@ -23,7 +23,7 @@ navigation:
     url: troubleshooting
   
   installer:
-  - text: Quick Install:
+  - Quick Install:
     - text: Quick Install
       url: quickstart
     - text: Host Configuration
@@ -52,7 +52,7 @@ navigation:
     url: features
   - text: FAQ
     url: faq
-  - text: Manual
+  - Manual:
     - text: Back to Manual
       url: manual
     - text: Main Menus
