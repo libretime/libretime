@@ -53,7 +53,8 @@ navigation:
   - text: FAQ
     url: faq
   - text: Manual
-    url: manual
+    - text: Back to Manual
+      url: manual
     - text: Main Menus
       - text: Upload
         url: upload
