@@ -55,7 +55,7 @@ navigation:
   - Manual:
     - text: Back to Manual
       url: manual
-    - text: Main Menus
+    - Main Menus:
       - text: Upload
         url: upload
       - text: Dashboard
@@ -74,7 +74,7 @@ navigation:
         url: radio-page
       - text: Calendar
         url: calendar
-      - text: Settings
+      - Settings:
         - text: General
           url: general-settings
         - text: Users
@@ -83,7 +83,7 @@ navigation:
           url: stream-settings
         - text: Status
           url: sttus
-      - text: Analytics
+      - Analytics:
         - text: Playout History
           url: history
         - text: History Templates
