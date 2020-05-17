@@ -33,7 +33,7 @@ installer:
 - text: Help!
   url: troubleshooting
   
-  man-mainmenus:
+man-mainmenus:
 - text: Quick Install
   url: quickstart
 - text: Advanced Install
