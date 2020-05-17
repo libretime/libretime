@@ -13,7 +13,8 @@ main:
   url: troubleshooting
 
 installer:
-- Quick Install:
+- title: Quick Install
+  subfolderitems:
   - text: Quick Install
     url: quickstart
   - text: Host Configuration
@@ -43,8 +44,9 @@ man-mainmenus:
 - text: FAQ
   url: faq
 - text: Manual
-  url: manual
+  subfolderitems:
   - text: Main Menus
+    subfolderitems:
     - text: Upload
       url: upload
     - text: Dashboard
@@ -64,6 +66,7 @@ man-mainmenus:
     - text: Calendar
       url: calendar
     - text: Settings
+      subfolderitems:
       - text: General
         url: general-settings
       - text: Users
@@ -71,8 +74,9 @@ man-mainmenus:
       - text: Stream Settings
         url: stream-settings
       - text: Status
-        url: sttus
+        url: status
     - text: Analytics
+      subfolderitems:
       - text: Playout History
         url: history
       - text: History Templates
