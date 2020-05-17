@@ -1,3 +1,7 @@
+---
+sidebar: man-mainmenus
+---
+
 The Users page
 ---------------
 

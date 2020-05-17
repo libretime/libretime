@@ -23,7 +23,7 @@ navigation:
     url: troubleshooting
   
   installer:
-  - Quick Install:
+  - text: Quick Install:
     - text: Quick Install
       url: quickstart
     - text: Host Configuration
