@@ -19,19 +19,28 @@ Adding user accounts
 
 To add further user accounts to the system, one for each of your station staff that need access to Airtime, click the **New User** button with the plus icon. Enter a user name, password and contact details, and then select the **User Type** from the drop down menu, which can be *Admin*, *Program Manager*, *DJ*, or *Guest*. The difference between these user types is:
 
--   An *Admin* (station manager) has read and write access to all the features of Airtime. This role should be
-reserved for trusted staff members only. If you give the *Admin* role to too many people, there could be arguments
-at the station!
--   A *Program Manager* has write access to the entire broadcast schedule, but cannot see the **System** menu and therefore cannot adjust Airtime preferences, manage user accounts, change media folder or stream settings, check the server status, or see the Listener Stats. A
-*Program Manager* can view the **History** menu and the Playout History page, but cannot edit History Templates.
--   A *DJ* (presenter) only has write access to features related to the specific shows assigned to them by an
-*Admin* or *Program Manager*. The *DJ* can read data for other shows in the **Calendar**, but not write to them.
-This read access to other shows helps staff plan their own shows, for instance avoiding the scenario where two DJs
-play the same music by coincidence. Like a *Program Manager*, a *DJ* cannot see the **System** menu when they log
-in, and cannot edit History Templates.
--   A *Guest* can log in to read the forthcoming schedule or playlists, but has no write permission for any
-feature. *Guest* users cannot see the **Add Media**, **Library**, **System** or **History** menus when they log in.
-The group of guest users might include the station accountant, or the show assistants.
+* Guests
+  - Can view shows and the playout log on the Calendar and Dashboard, respectively
+  - Listen to the output stream without leaving the interface
+* DJs
+  - Everything Guests can do, plus
+  - Upload media (music, PSAs, underwriting, shows, etc.) to their own library (DJs cannot view other libraries)
+  - Edit metadata, delete, and schedule media in their own library to shows they are assigned to
+  - Preview uploaded media _without_ affecting the live playout
+  - Create Playlists, Smart Blocks, and connect Podcasts and Webstreams to LibreTime
+  - Publish media items to LibreTime's built-in My Podcast function or 3rd party sources such as Soundcloud
+* Program Managers
+  - Everything DJs can do, plus
+  - Manage other users' libraries in addition to their own
+  - Create, edit, and delete color-coded shows on the Calender and assign them to DJs (if needed)
+  - Shows can be scheduled to repeat, with the option of linking content between the shows (helpful if a DJ livestreams in each week)
+  - View listener statistics
+  - Export playout logs for analysis or reporting for music royalties
+* Administrators
+  - Everything Program Managers can do, plus
+  - Manage all user accounts, including the ability to reset passwords
+  - Configure Track Types for easy sorting of uploaded content
+  - Change system settings
 
 Editing or deleting user accounts
 ---------------------------------

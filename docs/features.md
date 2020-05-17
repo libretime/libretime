@@ -52,34 +52,6 @@ LibreTime services
 | [Monit](https://mmonit.com/monit/) | Monitors the health of pypo, airtime-analyzer and Liquidsoap, and reports the status of these services to LibreTime. |
 | [RabbitMQ](https://www.rabbitmq.com/) | Pushes messages from LibreTime to media-monitor and pypo about changes to media files and the playout schedule. |
 
-Types of user accounts
-----------------------
-
-Create different accounts for your staff by role, to give them only the permissions they need to succeed.
-
-* Guests
-  - Can view shows and the playout log on the Calendar and Dashboard, respectively
-  - Listen to the output stream without leaving the interface
-* DJs
-  - Everything Guests can do, plus
-  - Upload media (music, PSAs, underwriting, shows, etc.) to their own library (DJs cannot view other libraries)
-  - Edit metadata, delete, and schedule media in their own library to shows they are assigned to
-  - Preview uploaded media _without_ affecting the live playout
-  - Create Playlists, Smart Blocks, and connect Podcasts and Webstreams to LibreTime
-  - Publish media items to LibreTime's built-in My Podcast function or 3rd party sources such as Soundcloud
-* Program Managers
-  - Everything DJs can do, plus
-  - Manage other users' libraries in addition to their own
-  - Create, edit, and delete color-coded shows on the Calender and assign them to DJs (if needed)
-  - Shows can be scheduled to repeat, with the option of linking content between the shows (helpful if a DJ livestreams in each week)
-  - View listener statistics
-  - Export playout logs for analysis or reporting for music royalties
-* Administrators
-  - Everything Program Managers can do, plus
-  - Manage all user accounts, including the ability to reset passwords
-  - Configure Track Types for easy sorting of uploaded content
-  - Change system settings
-
 Example studio broadcast system
 -------------------------------
 
