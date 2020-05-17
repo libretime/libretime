@@ -42,7 +42,7 @@ navigation:
     url: manual
   - text: Help!
     url: troubleshooting
-    
+
     man-mainmenus:
   - text: Quick Install
     url: quickstart
