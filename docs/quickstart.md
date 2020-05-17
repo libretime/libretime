@@ -1,3 +1,8 @@
+---
+title: Quick Install
+sidebar: installer
+---
+
 Up and running in 10 minutes!
 ----------------------------
 

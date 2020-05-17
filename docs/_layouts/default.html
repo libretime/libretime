@@ -38,16 +38,11 @@
         </ul>
         {% endif %}
         
-        {% for link in site.navigation %}
-          {% assign current = nil %}
-          {% if page.url == link.url %}
-            {% assign current = 'current' %}
-          {% endif %}
-
-          <p class="nav-list-item{% if forloop.first %}first{% endif %} {{ current }} {% if forloop.last %}nav-list-item-last{% endif %}">
-            <a class="{{ current }}" href="{{ link.url }}">{{ link.text }}</a>
-          <p>
-        {% endfor %}
+        <ul>
+          {% for item in site.data.nav[page.sidebar] %}
+            <li><a href="{{ item.url }}">{{ item.text }}</a></li>
+          {% endfor %}
+        </ul> 
         
       </header>
       <section>
