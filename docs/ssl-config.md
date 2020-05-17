@@ -1,10 +1,12 @@
-Setting up SSL
---------------
+---
+sidebar: installer
+---
+
+# Setting up SSL
 
 To increase the security of your server, you can enable encrypted access to the LibreTime administration interface, and direct your users towards this more secure login page. The main advantage of using this encryption is that your remote users' login names and passwords are not sent in plain text across the public Internet or untrusted local networks, such as shared Wi-Fi access points.
 
-Deploying a certificate with Certbot
-------------------------------------
+## Deploying a certificate with Certbot
 
 One of the fastest, easiest, and cheapest ways to get an SSL certificate is through [Certbot](https://certbot.eff.org/), as created by the
 [Electronic Frontier Foundation](https://www.eff.org/). There are some requirements for this process:
@@ -41,8 +43,7 @@ sudo certbot certonly --apache  # to only get the certificate, not install it us
 You can test certificate renewal by running `sudo certbot renew --dry-run`.
 Head to your server's IP address to check to see that the installation worked.
 
-Deploying a self-signed certificate
------------------------------------
+## Deploying a self-signed certificate
 
 The Debian/Ubuntu package *ssl-cert* creates a *snakeoil* certificate and key based on your server's hostname. This gratis certificate and key pair created under the */etc/ssl/certs*/ and */etc/ssl/private/* directories will not be recognised by users' browsers without manual intervention. You can install the *ssl-cert* package with the command:
 
@@ -120,8 +121,7 @@ Save the file with **Ctrl+O** and exit the **nano** editor with **Ctrl+X**. Then
 
 When attempting to log into your server via http:// in future, you should be redirected to https:// automatically.
 
-Importing a self-signed certificate into the browser
-----------------------------------------------------
+### Importing a self-signed certificate into the browser
 
 The first time you access an LibreTime server with a self-signed certificate over https:// your browser will block the login page and display a security warning. In **Mozilla Firefox**, you can click **Technical Details** to confirm that the warning is due to the certificate being self-signed before clicking the **Add Exception** button. In **Google Chrome**, the button to click on the security warning page is **Proceed Anyway**.
 
@@ -133,8 +133,7 @@ On the next page in Firefox, click the **Get Certificate** button to inspect the
 
 If the users of your LibreTime server wish to avoid going through these steps, or they do not trust the remote LibreTime server to be what it claims to be, it is also possible to import a trusted local copy of a certificate file into the browser. For example, in Firefox version 30 preferences, you can go into the **Advanced** section, click the **Certificates** tab, then click the **View Certificates** button. On the **Servers** tab of the **Certificate Manager**, there is an **Import** button which enables you to load a certificate file from the local computer.
 
-Mixed encrypted and unencrypted content
----------------------------------------
+## Mixed encrypted and unencrypted content
 
 Whether your certificate is self-signed or not, you will see browser security warnings whenever a https:// page is delivering unencrypted content, such as the stream from an Icecast server. In Firefox, an exclamation mark icon is displayed in the address bar of the **Listen** pop-up.
 

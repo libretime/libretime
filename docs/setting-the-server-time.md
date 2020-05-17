@@ -1,3 +1,7 @@
+---
+sidebar: installer
+---
+
 # Setting the server time
 
 Accurate time keeping on your server is vital for LibreTime performance. You can confirm that the date and time of your server are set correctly with the **date** command:

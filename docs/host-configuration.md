@@ -1,3 +1,7 @@
+---
+sidebar: installer
+---
+
 Host configuration
 ------------------
 
