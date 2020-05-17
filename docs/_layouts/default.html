@@ -38,11 +38,9 @@
         </ul>
         {% endif %}
         
-        <ul>
           {% for item in site.data.nav[page.sidebar] %}
-            <li><a href="{{ item.url }}">{{ item.text }}</a></li>
+            <p><a href="{{ item.url }}">{{ item.text }}</a></p>
           {% endfor %}
-        </ul> 
         
       </header>
       <section>

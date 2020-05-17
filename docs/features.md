@@ -1,3 +1,7 @@
+---
+sidebar: main
+---
+
 # What is LibreTime?
 
 [LibreTime](http://libretime.org/ "LibreTime homepage") is the open broadcast
