@@ -20,7 +20,47 @@ toc2:
       - page: FAQ
         url: faq
       - page:  
-  - title: Manual
+  - title: Interface tour
+    subfolderitems:
+      - page: Upload
+        url: upload
+      - page: Dashboard
+        url: dashboard
+      - page: Tracks
+        url: tracks
+      - page: Playlists
+        url: playlists
+      - page: Smartblocks
+        url: smartblocks
+      - page: Webstreams
+        url: webstreams
+      - page: Podcasts
+        url: podcasts
+      - page: Calendar
+        url: calendar
+      - subtitle: Settings
+        subsubfolderitems:
+          - page: General Settings
+            url: general-settings
+          - page: Users
+            url: users
+          - page: Stream Settings
+            url: stream-settings
+          - page: Status
+            url: status
+      - subtitle: Analytics
+        subsubfolderitems:
+          - page: Playout History
+            url: history
+          - page: History Templates
+            url: history-templates
+          - page: Listener Stats
+            url: listener-stats
+        url: /widget2.html
+      - page: Widget 3
+        url: /widget3.html
+      - page:
+  - title: Interface tour
     subfolderitems:
       - page: Contents
         url: manual
@@ -33,17 +73,18 @@ toc2:
         url: /widget2.html
       - page: Widget 3
         url: /widget3.html
-      - page:   
+      - page: 
   - title: Contribute to LibreTime
     subfolderitems:
       - page: Testing with Vagrant
-        url: vargant
+        url: vagrant
       - page: Testing with Multipass
         url: multipass
       - page: Database Access
         url: database
       - page: Translating LibreTime
         url: interface-localization
+      - page:   
   - title: Appendix
     subfolderitems:
       - page: Help!
