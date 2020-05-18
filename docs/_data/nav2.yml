@@ -56,11 +56,11 @@ toc2:
             url: history-templates
           - page: Listener Stats
             url: listener-stats
-        url: /widget2.html
-      - page: Widget 3
-        url: /widget3.html
-      - page:
-  - title: Interface tour
+      - page: Help
+        url: help
+      - url: Listen
+        page: listen
+  - title: Tutorials
     subfolderitems:
       - page: Contents
         url: manual
