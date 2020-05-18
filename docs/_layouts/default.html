@@ -55,7 +55,7 @@
         
         <div>
           {% for item in site.data.nav2.toc2 %}
-            <br> <strong>{{ item.title }}</strong>
+            <strong>{{ item.title }}</strong> <br>
               {% if item.subfolderitems[0] %}
                   {% for entry in item.subfolderitems %}
                       <br><a href="{{ entry.url }}">{{ entry.page }}</a>
@@ -78,7 +78,7 @@
       <footer>
         <br>
         <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-        <p><small>Copyright (c) 2020 The LibreTime Foundation</small></p>
+        <br><small>Copyright (c) 2020 The LibreTime Foundation</small>
       </footer>
     </div>
     <script src="{{ "/assets/js/scale.fix.js" | relative_url }}"></script>
