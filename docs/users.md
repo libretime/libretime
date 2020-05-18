@@ -1,5 +1,5 @@
 ---
-sidebar: man-mainmenus
+sidebar: mainmenus
 ---
 
 The Users page

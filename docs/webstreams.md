@@ -1,5 +1,5 @@
 ---
-sidebar: main
+sidebar: mainmenus
 ---
 
 The Webstreams page

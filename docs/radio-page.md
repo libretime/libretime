@@ -1,3 +1,7 @@
+---
+sidebar: mainmenus
+---
+
 # Radio page
 
 LibreTime includes a mini-site, which can be accessed at _localhost_ (for local installations) or

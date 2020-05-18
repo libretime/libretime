@@ -1,3 +1,7 @@
+---
+sidebar: mainmenus
+---
+
 In the Master Panel, beneath the **ON AIR** indicator, you will find the **LISTEN** button.
 
 ![](img/listen-button.png)

@@ -1,5 +1,5 @@
 ---
-sidebar: main
+sidebar: mainmenus
 ---
 
 # The Podcasts page
