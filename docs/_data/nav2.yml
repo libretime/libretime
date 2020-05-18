@@ -12,16 +12,18 @@ toc2:
             url: setting-the-server-time
           - page: Configuring Track Types
             url: track-types
+          - page:
   - title: About LibreTime
     subfolderitems:
       - page: Features
         url: features
       - page: FAQ
         url: faq
-  - title: Docs
+      - page:  
+  - title: Manual
     subfolderitems:
-      - page: Widget 1
-        url: /widget1.html
+      - page: Contents
+        url: manual
         subsubfolderitems:
           - page: Subwidget 1
             url: /subwidget1.html
@@ -31,13 +33,24 @@ toc2:
         url: /widget2.html
       - page: Widget 3
         url: /widget3.html
+      - page:   
   - title: Contribute to LibreTime
     subfolderitems:
-      - page: Vagrant
+      - page: Testing with Vagrant
         url: vargant
-      - page: Multipass
+      - page: Testing with Multipass
         url: multipass
-  - title: Troubleshooting
+      - page: Database Access
+        url: database
+      - page: Translating LibreTime
+        url: interface-localization
+  - title: Appendix
     subfolderitems:
       - page: Help!
         url: troubleshooting
+      - page: HD Audio Modules
+        url: hd-audio-modules
+      - page: Rights and Royalties
+        url: rights-royalties
+      - page: Media Folders used by LibreTime
+        url: folders
