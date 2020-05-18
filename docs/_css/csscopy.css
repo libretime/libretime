@@ -112,12 +112,12 @@ a:hover,a:focus{
   }
 a small{
   font-size:11px;
-  color:#777;
+  color:#F25416;
   margin-top:-0.3em;
   display:block
   }
 a:hover small{
-  color:#777
+  color:#F25416
   }
 .wrapper{
   width:860px;

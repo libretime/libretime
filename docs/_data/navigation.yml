@@ -1,25 +1,29 @@
 sidebar:
-  - title: Installation
-    subfolderitems:
-      - page: Quick Install
-        url: quickstart
-      - page: Advanced Install
-        url: install
-      - page: Host Configuration
-        url: host-configuration
-        subsubfolderitems:
-          - page: Setting the Server Time
-            url: setting-the-server-time
-          - page: Configuring Track Types
-            url: track-types
-      - page:
   - title: About LibreTime
     subfolderitems:
-      - page: Features
-        url: features
-      - page: FAQ
-        url: faq
-      - page:  
+    - page: Features
+      url: features
+    - page: FAQ
+      url: faq
+    - page:  
+  - title: Installation
+    subfolderitems:
+    - page: Quick Install
+      url: quickstart
+    - page: Advanced Install
+      url: install
+      subsubfolderitems:
+        - page: Host Configuration
+          url: host-configuration
+        - page: Setting the Server Time
+          url: setting-the-server-time
+        - page: Configuring Track Types
+          url: track-types
+        - page: Setting up SSL
+          url: ssl-config
+        - page: Advanced Configuration
+          url: manual
+      - page:   
   - title: Using LibreTime
     subfolderitems:
       - page: Interface Tour
@@ -27,20 +31,6 @@ sidebar:
       - page: Tutorials
         url: manual
       - page:     
-  - title: Configuring LibreTime
-    subfolderitems:
-      - page: Contents
-        url: manual
-        subsubfolderitems:
-          - page: Subwidget 1
-            url: /subwidget1.html
-          - page: Subwidget 2
-            url: /subwidget2.html
-      - page: Widget 2
-        url: /widget2.html
-      - page: Widget 3
-        url: /widget3.html
-      - page: 
   - title: Contribute to LibreTime
     subfolderitems:
       - page: Testing with Vagrant

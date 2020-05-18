@@ -6,17 +6,3 @@ show_downloads: false
 theme: jekyll-theme-minimal
 layouts_dir: _layouts
 data_dir: _data
-
-navigation:
-- text: Quick Install
-  url: quickstart
-- text: Advanced Install
-  url: install
-- text: Features
-  url: features
-- text: FAQ
-  url: faq
-- text: Manual
-  url: manual
-- text: Help!
-  url: troubleshooting

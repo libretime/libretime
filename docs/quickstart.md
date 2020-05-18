@@ -15,7 +15,7 @@ to full internet radio station in 10 minutes!
 |---------------------|---------------|
 | 1 Ghz Processor| 1vCPU |
 | 2 GB RAM | 2 GB RAM |
-| Wired ethernet connection | 2 TB of data transfer/month |
+| Wired ethernet connection and a static IP address (see below for instructions) | 2 TB of data transfer/month |
 | Ubuntu Server 18.04 LTS | Ubuntu Server 18.04 LTS |
 | git, ntp | git, ntp |
 
