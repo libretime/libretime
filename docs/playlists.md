@@ -1,3 +1,7 @@
+---
+sidebar: main
+---
+
 # The Playlists page
 
 Creating a new playlist

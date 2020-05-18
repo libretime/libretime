@@ -1,4 +1,8 @@
-﻿# Upload
+﻿---
+sidebar: mainmenus
+---
+
+# Upload
 The primary way you can add files to the LibreTime library is using the
 **Upload** page of the administration interface. (The **Upload** page is not
 visible to *Guest* users). This page includes an upload queue for media files,

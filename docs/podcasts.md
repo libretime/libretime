@@ -1,3 +1,7 @@
+---
+sidebar: main
+---
+
 # The Podcasts page
 
 The Podcasts page allows you add subscriptions to podcasts which are often used to syndicated audio files using a URL called a RSS feed. This allows your LibreTime instance to automatically download new shows from the web.

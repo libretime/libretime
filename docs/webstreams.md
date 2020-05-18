@@ -1,3 +1,7 @@
+---
+sidebar: main
+---
+
 The Webstreams page
 -------------------
 

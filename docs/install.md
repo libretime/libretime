@@ -1,3 +1,7 @@
+---
+sidebar: installer
+---
+
 # Advanced Installation
 
  This guide is for administrators who need to install LibreTime using a more hands-on method, such as
