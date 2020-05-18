@@ -55,7 +55,7 @@
         
         <div>
           {% for item in site.data.nav2.toc2 %}
-            <strong>{{ item.title }}</strong>
+            <br><strong>{{ item.title }}</strong>
               {% if item.subfolderitems[0] %}
                   {% for entry in item.subfolderitems %}
                       <br><a href="{{ entry.url }}">{{ entry.page }}</a>
