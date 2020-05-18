@@ -12,7 +12,7 @@ sidebar:
             url: setting-the-server-time
           - page: Configuring Track Types
             url: track-types
-          - page:
+      - page:
   - title: About LibreTime
     subfolderitems:
       - page: Features
