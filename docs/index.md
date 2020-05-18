@@ -29,7 +29,7 @@ Some of LibreTime's main features include:
 
 LibreTime is a fork of AirTime due to stalled development of the FLOSS version. For background on this, see this [open letter to the Airtime community](https://gist.github.com/hairmare/8c03b69c9accc90cfe31fd7e77c3b07d).
 
-We have a number of [how-to guides](manual) that contain step-by-step instructions for various common tasks for both end users and administrators.
+We have a number of [how-to guides](tutorials) that contain step-by-step instructions for various common tasks for both end users and administrators.
 
 There are currently no companies offering turn-key LibreTime hosting so if you are interested in running it you will need to have some familiarity with running a Linux server.
 You can always reach out to help from the community at our [forum](http://discourse.libretime.org). You can also join our [Mattermost instance](https://chat.libretime.org/) and talk with other developers and users.

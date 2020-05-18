@@ -8,16 +8,16 @@ Having trouble with your LibreTime installation? We've got you covered!
 
 Since LibreTime is effectively a web site running on a LAPP stack, individual components of the system can be started, stopped, restarted or checked in the server console using the **systemctl** command:
 
-    sudo systemctl start|stop|restart|status airtime-liquidsoap
-    sudo systemctl start|stop|restart|status airtime-playout
-    sudo systemctl start|stop|restart|status airtime-celery
-    sudo systemctl start|stop|restart|status airtime_analyzer
+    sudo systemctl start|stop|restart|status libretime-liquidsoap
+    sudo systemctl start|stop|restart|status libretime-playout
+    sudo systemctl start|stop|restart|status libretime-celery
+    sudo systemctl start|stop|restart|status libretime-analyzer
     sudo systemctl start|stop|restart|status apache2
     sudo systemctl start|stop|restart|status rabbitmq-server
 
 For example, to restart the Airtime playout engine, you could enter the command:
 
-    sudo systemctl restart airtime-playout
+    sudo systemctl restart libretime-playout
 
 Log files
 ---------

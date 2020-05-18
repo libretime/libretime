@@ -52,10 +52,10 @@ You can also set options for RabbitMQ messaging, the LibreTime server and SoundC
 Save and close the file with **Ctrl+O** and **Ctrl+X**.  In order to update the configuration
 used by the various components of LibreTime, run the following commands
 
-    sudo systemctl restart airtime-liquidsoap
-    sudo systemctl restart airtime-playout
-    sudo systemctl restart airtime-celery
-    sudo systemctl restart airtime_analyzer
+    sudo systemctl restart libretime-liquidsoap
+    sudo systemctl restart libretime-playout
+    sudo systemctl restart libretime-celery
+    sudo systemctl restart libretime-analyzer
 
 Changing the default PostgreSQL passwords
 ----------------------------------------
@@ -105,7 +105,7 @@ Playout and recorder settings
 
 Settings for pypo, the playout and recording engine used by LibreTime, are found in the file */etc/airtime/airtime.conf*. After making changes to this file, you will have to issue the command:
 
-    sudo systemctl restart airtime-playout
+    sudo systemctl restart libretime-playout
 
 for the changes to take effect.
 

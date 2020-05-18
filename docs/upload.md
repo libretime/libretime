@@ -38,7 +38,7 @@ was some reason your file was rejected by LibreTime and you will need to try
 again or contact your Admin to have them consult the logs and open up a bug
 report. It sometimes takes a few minutes for files to be processed but if they
 are all stuck at **Pending Import** then it is possible that the
-*airtime_analyzer* process has crashed and the admin will need to restart it.
+*libretime-analyzer* process has crashed and the admin will need to restart it.
 See [Troubleshooting](troubleshooting) for more information. You can look
 specifically at any failed imports by clicking the radio button next to Failed.
 

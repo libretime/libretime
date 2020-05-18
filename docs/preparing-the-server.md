@@ -158,10 +158,10 @@ Ubuntu 18.04 uses the `systemctl` command to manage services, so run the followi
 LibreTime-needed services to run at boot:
 
 ```
-sudo systemctl enable airtime-liquidsoap
-sudo systemctl enable airtime-playout
-sudo systemctl enable airtime-celery
-sudo systemctl enable airtime_analyzer
+sudo systemctl enable libretime-liquidsoap
+sudo systemctl enable libretime-playout
+sudo systemctl enable libretime-celery
+sudo systemctl enable libretime-analyzer
 sudo systemctl enable apache2
 sudo systemctl enable rabbitmq-server
 ```
