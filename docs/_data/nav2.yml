@@ -1,0 +1,43 @@
+toc2:
+  - title: Installation
+    subfolderitems:
+      - page: Quick Install
+        url: quickstart
+      - page: Advanced Install
+        url: install
+      - page: Host Configuration
+        url: host-config
+        subsubfolderitems:
+          - page: Setting the Server Time
+            url: setting-the-server-time
+          - page: Configuring Track Types
+            url: track-types
+  - title: About LibreTime
+    subfolderitems:
+      - page: Features
+        url: features
+      - page: FAQ
+        url: faq
+  - title: Docs
+    subfolderitems:
+      - page: Widget 1
+        url: /widget1.html
+        subsubfolderitems:
+          - page: Subwidget 1
+            url: /subwidget1.html
+          - page: Subwidget 2
+            url: /subwidget2.html
+      - page: Widget 2
+        url: /widget2.html
+      - page: Widget 3
+        url: /widget3.html
+  - title: Contribute to LibreTime
+    subfolderitems:
+      - page: Vagrant
+        url: vargant
+      - page: Multipass
+        url: multipass
+  - title: Troubleshooting
+    subfolderitems:
+      - page: Help!
+        url: troubleshooting
