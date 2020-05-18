@@ -1,4 +1,4 @@
-toc2:
+sidebar:
   - title: Installation
     subfolderitems:
       - page: Quick Install
@@ -20,47 +20,14 @@ toc2:
       - page: FAQ
         url: faq
       - page:  
-  - title: Interface tour
+  - title: Using LibreTime
     subfolderitems:
-      - page: Upload
+      - page: Interface Tour
         url: upload
-      - page: Dashboard
-        url: dashboard
-      - page: Tracks
-        url: tracks
-      - page: Playlists
-        url: playlists
-      - page: Smartblocks
-        url: smartblocks
-      - page: Webstreams
-        url: webstreams
-      - page: Podcasts
-        url: podcasts
-      - page: Calendar
-        url: calendar
-      - subtitle: Settings
-        subsubfolderitems:
-          - page: General Settings
-            url: general-settings
-          - page: Users
-            url: users
-          - page: Stream Settings
-            url: stream-settings
-          - page: Status
-            url: status
-      - subtitle: Analytics
-        subsubfolderitems:
-          - page: Playout History
-            url: history
-          - page: History Templates
-            url: history-templates
-          - page: Listener Stats
-            url: listener-stats
-      - page: Help
-        url: help
-      - url: Listen
-        page: listen
-  - title: Tutorials
+      - page: Tutorials
+        url: manual
+      - page:     
+  - title: Configuring LibreTime
     subfolderitems:
       - page: Contents
         url: manual
