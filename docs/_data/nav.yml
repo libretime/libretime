@@ -29,35 +29,33 @@ installer:
 mainmenus:
 - text: --Back to Manual
   url: manual
-- text: Main Menus
-  subfolderitems:
-  - text: Upload
-    url: upload
-  - text: Dashboard
-    url: dashboard
-  - text: Tracks
-    url: tracks
-  - text: Playlists
-    url: playlists
-  - text: Smartblocks
-    url: smartblocks
-  - text: Webstreams
-    url: webstreams
-  - text: Podcasts
-    url: podcasts
-  - text: Radio Page
-    url: radio-page
-  - text: Calendar
-    url: calendar
-  - text: Settings
-  - text: General
-    url: general-settings
-  - text: Users
-    url: users
-  - text: Stream Settings
-    url: stream-settings
-  - text: Status
-    url: status
+- text: Upload
+  url: upload
+- text: Dashboard
+  url: dashboard
+- text: Tracks
+  url: tracks
+- text: Playlists
+  url: playlists
+- text: Smartblocks
+  url: smartblocks
+- text: Webstreams
+  url: webstreams
+- text: Podcasts
+  url: podcasts
+- text: Radio Page
+  url: radio-page
+- text: Calendar
+  url: calendar
+- text: Settings
+- text: General
+  url: general-settings
+- text: Users
+  url: users
+- text: Stream Settings
+  url: stream-settings
+- text: Status
+  url: status
 - test: ---
 - text: Analytics
 - text: Playout History
