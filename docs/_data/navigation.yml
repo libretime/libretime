@@ -8,21 +8,21 @@ sidebar:
     - page:  
   - title: Installation
     subfolderitems:
-    - page: Quick Install
-      url: quickstart
-    - page: Advanced Install
-      url: install
-      subsubfolderitems:
-        - page: Host Configuration
-          url: host-configuration
-        - page: Setting the Server Time
-          url: setting-the-server-time
-        - page: Configuring Track Types
-          url: track-types
-        - page: Setting up SSL
-          url: ssl-config
-        - page: Advanced Configuration
-          url: manual
+     - page: Quick Install
+       url: quickstart
+     - page: Advanced Install
+       url: install
+       subsubfolderitems:
+         - page: Host Configuration
+           url: host-configuration
+         - page: Setting the Server Time
+           url: setting-the-server-time
+         - page: Configuring Track Types
+           url: track-types
+         - page: Setting up SSL
+           url: ssl-config
+         - page: Advanced Configuration
+           url: manual
       - page:   
   - title: Using LibreTime
     subfolderitems:
