@@ -6,7 +6,7 @@ toc2:
       - page: Advanced Install
         url: install
       - page: Host Configuration
-        url: host-config
+        url: host-configuration
         subsubfolderitems:
           - page: Setting the Server Time
             url: setting-the-server-time
