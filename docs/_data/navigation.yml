@@ -8,10 +8,10 @@ sidebar:
     - page:  
   - title: Installation
     subfolderitems:
-     - page: Quick Install
-       url: quickstart
-     - page: Advanced Install
-       url: install
+    - page: Quick Install
+      url: quickstart
+    - page: Advanced Install
+      url: install
        subsubfolderitems:
          - page: Host Configuration
            url: host-configuration
