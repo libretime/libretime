@@ -12,43 +12,43 @@ sidebar:
       url: quickstart
     - page: Advanced Install
       url: install
-       subsubfolderitems:
-         - page: Host Configuration
-           url: host-configuration
-         - page: Setting the Server Time
-           url: setting-the-server-time
-         - page: Configuring Track Types
-           url: track-types
-         - page: Setting up SSL
-           url: ssl-config
-         - page: Advanced Configuration
-           url: manual
-      - page:   
+      subsubfolderitems:
+      - page: Host Configuration
+        url: host-configuration
+      - page: Setting the Server Time
+        url: setting-the-server-time
+      - page: Configuring Track Types
+        url: track-types
+      - page: Setting up SSL
+        url: ssl-config
+      - page: Advanced Configuration
+        url: manual
+    - page:   
   - title: Using LibreTime
     subfolderitems:
-      - page: Interface Tour
-        url: upload
-      - page: Tutorials
-        url: manual
-      - page:     
+    - page: Interface Tour
+      url: upload
+    - page: Tutorials
+      url: manual
+    - page:     
   - title: Contribute to LibreTime
     subfolderitems:
-      - page: Testing with Vagrant
-        url: vagrant
-      - page: Testing with Multipass
-        url: multipass
-      - page: Database Access
-        url: database
-      - page: Translating LibreTime
-        url: interface-localization
-      - page:   
+    - page: Testing with Vagrant
+      url: vagrant
+    - page: Testing with Multipass
+      url: multipass
+    - page: Database Access
+      url: database
+    - page: Translating LibreTime
+      url: interface-localization
+    - page:   
   - title: Appendix
     subfolderitems:
-      - page: Help!
-        url: troubleshooting
-      - page: HD Audio Modules
-        url: hd-audio-modules
-      - page: Rights and Royalties
-        url: rights-royalties
-      - page: Media Folders used by LibreTime
-        url: folders
+    - page: Help!
+      url: troubleshooting
+    - page: HD Audio Modules
+      url: hd-audio-modules
+    - page: Rights and Royalties
+      url: rights-royalties
+    - page: Media Folders used by LibreTime
+      url: folders
