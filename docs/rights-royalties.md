@@ -1,3 +1,7 @@
+---
+sidebar: appendix
+---
+
 # Rights and Royalties
 
 If you're new to broadcasting, or have not streamed your station online before,

@@ -1,3 +1,7 @@
+---
+sidebar: main
+---
+
 # Troubleshooting
 
 Having trouble with your LibreTime installation? We've got you covered!

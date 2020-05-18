@@ -13,7 +13,7 @@ main:
   url: troubleshooting
 
 installer:
-- text: --Go Back
+- text: <--Go Back
   url: index
 - text: Quick Install
   url: quickstart
@@ -27,7 +27,7 @@ installer:
   url: track-types
   
 mainmenus:
-- text: --Back to Manual
+- text: <--Back to Manual
   url: manual
 - text: Upload
   url: upload
@@ -56,7 +56,6 @@ mainmenus:
   url: stream-settings
 - text: Status
   url: status
-- test: ---
 - text: Analytics
 - text: Playout History
   url: history
@@ -64,3 +63,25 @@ mainmenus:
   url: history-templates
 - text: Listener Statistics
   url: listener-stats
+
+devs:
+- text: <--Back to Manual
+  url: manual
+- text: Vagrant
+  url: vagrant
+- text: Multipass
+  url: multipass
+- text: Database access
+  url: database
+- text: Translating LibreTime
+  url: interface-localization
+
+appendix:
+- text: <--Back to Manual
+  url: manual
+- text: HD Audio Modules
+  url: hd-audio-modules
+- text: Rights and Royalties
+  url: rights-royalties
+- text: Media Folders
+  url: folders

@@ -1,5 +1,8 @@
-Media Library Folders
----------------------
+---
+sidebar: appendix
+---
+
+# Media Library Folders
 
 LibreTime's media library is inside the */srv/airtime/stor/* folder on your server, by default.
 Tracks are uploaded into the imported subdirectory and then a separate directory based upon the user

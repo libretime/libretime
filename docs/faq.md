@@ -1,3 +1,7 @@
+---
+sidebar: main
+---
+
 # Frequently Asked Questions
 
 **What is LibreTime?**

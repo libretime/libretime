@@ -1,10 +1,13 @@
-Database
-=============
+---
+sidebar: devs
+---
+
+# Database
 
 LibreTime is designed to work with a [PostgreSQL](https://www.postgresql.org/) database server running locally.
 LibreTime uses [PropelORM](http://propelorm.org) to interact with the ZendPHP components and create the database.
 
-# Modifying the Database
+## Modifying the Database
 If you are a developer seeking to add new columns to the database here are the steps.
 
 1. Modify `airtime_mvc/build/schema.xml` with any changes.

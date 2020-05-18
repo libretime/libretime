@@ -1,3 +1,7 @@
+---
+sidebar: devs
+---
+
 # Testing LibreTime with Canonical's Multipass
 
 Ever wanted to test out LibreTime but didn't want to tango with
