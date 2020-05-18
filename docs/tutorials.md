@@ -1,4 +1,4 @@
-Manual
+Tutorials
 ------
 
 This page contains links to number of tutorials.
@@ -27,11 +27,6 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 * [Help](help)
 * [Listen](listen)
 
-## For DJs
-* [How to upload and schedule tracks on your show](upload-tracks)
-* [Broadcasting live with MIXXX or B.U.T.T.](live-broadcast)
-* [How to prepare media for ingest to LibreTime](preparing-media)
-
 ## For Program Managers
 * [Building a schedule](build-schedule)
 * [How to set up an automatic top of the hour ID with intro playlist feature](intro-playlist)
@@ -52,21 +47,8 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 ### Advanced Configuration
 * [Configuring FreeIPA authentication](freeipa)
 * [Using and configuring Icecast and Shoutcast](icecast-shoutcast)
-* [Configuring track types](track-types)
 * [Interface Customization](interface-customization)
-* [Setting up SSL](ssl-config)
 * [Promoting your station through your Icecast stream](promoting-your-station)
 * [How to back up the LibreTime media folder and database](backing-up-the-server)
 * [Upgrading LibreTime](upgrading)
 * [Uninstalling LibreTime](uninstall)
-
-## For Developers and Contributors
-* [Setting up a LibreTime instance with Vagrant](vagrant)
-* [Setting up a LibreTime instance with Multipass](multipass)
-* [Database access](database)
-* [Translating LibreTime](interface-localization)
-
-## Appendix
-* [HD Audio Module information](hd-audio-modules)
-* [Rights and royalty information](rights-royalties)
-* [Information on media folders used by LibreTime](folders)

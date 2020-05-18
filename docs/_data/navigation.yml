@@ -26,10 +26,15 @@ sidebar:
     - page:   
   - title: Using LibreTime
     subfolderitems:
-    - page: Interface Tour
-      url: upload
-    - page: Tutorials
-      url: manual
+    - page: Scheduling Shows
+      url: scheduling-shows
+    - page: Broadcasting Live
+      url: live-broadcast
+    - page: Adding Users
+      url: users
+      subsubfolderitems:
+      - page: More Tutorials
+        url: tutorials
     - page:     
   - title: Contribute to LibreTime
     subfolderitems:
@@ -52,3 +57,5 @@ sidebar:
       url: rights-royalties
     - page: Media Folders used by LibreTime
       url: folders
+    - page: Preparing Media for Upload
+      url: preparing-media
