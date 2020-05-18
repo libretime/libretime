@@ -10,7 +10,7 @@ LibreTime is quick and easy to install and get running. Follow this guide to go 
 to full internet radio station in 10 minutes!
 
 > Note: this guide is assuming you are using Ubuntu 18.04 LTS for installation, which comes with `ufw` and `netplan`,
-and that you have already installed `git` and configured `npt`. NPT configuration instructions can be found [here](setting-the-server-time).
+and that you have already installed `git` and configured `ntp`. NTP configuration instructions can be found [here](setting-the-server-time).
 While it is possible to install LibreTime on other OSes, such as CentOS 7, Debian 9 and 10, and Raspbian 9 and 10,
 these are less tested. Firewall and static IP address configuration will need to be done according to your OSes instructions.
 
