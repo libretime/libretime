@@ -768,7 +768,7 @@ loudCmd "./build.sh"
 if [ -f /etc/airtime/airtime.conf ]; then
     # TODO use VERSION or some other way to check for updates and handle
     # media-monitor case on it's own
-    OLD_CONF=$(grep "[media-monitor]" /etc/airtime/airtime.conf)
+    OLD_CONF=$(grep -F "[media-monitor]" /etc/airtime/airtime.conf || true)
     
     if [ -n "${OLD_CONF}" ]; then
         upgrade="t"
