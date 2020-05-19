@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 8001, host:8001
   config.vm.network "forwarded_port", guest: 8002, host:8002
   # mkdocs documentation
-  config.vm.network "forwarded_port", guest: 8888, host:8888
+  # config.vm.network "forwarded_port", guest: 8888, host:8888
 
   # make sure we are using nfs (doesn't work out of the box with debian)
   nfsPath = "."
@@ -71,8 +71,8 @@ Vagrant.configure("2") do |config|
     config.vm.provision "install", type: "shell", inline: "cd /vagrant; ./install %s --web-port=8080" % installer_args
 
     # Provision docs
-    config.vm.provision "install-mkdocs", type: "shell", path: "docs/scripts/install.sh"
-    config.vm.provision "start-mkdocs", type: "shell", path: "docs/scripts/serve.sh"
+    # config.vm.provision "install-mkdocs", type: "shell", path: "docs/scripts/install.sh"
+    # config.vm.provision "start-mkdocs", type: "shell", path: "docs/scripts/serve.sh"
   end
 
 end

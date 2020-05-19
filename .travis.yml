@@ -77,7 +77,8 @@ install:
     if [[ "$PYTHON" == true ]]; then
       pyenv local 3.7
       pip3 install -U pip wheel
-      pip3 install --user mkdocs rgain3
+      # pip3 install --user mkdocs
+      pip3 install --user rgain3
       pushd python_apps/airtime_analyzer
       python3 setup.py install --dry-run --no-init-script
       popd
@@ -92,30 +93,30 @@ before_script:
 script:
 - ./travis/php.sh
 - ./travis/python.sh
-deploy:
-- provider: pages
-  skip_cleanup: true
-  local_dir: build/docs
-  github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
-  target_branch: master
-  repo: LibreTime/LibreTime.github.io
-  project_name: LibreTime
-  fqdn: libretime.org
-  name: R. LibreTime DocBot
-  on:
-    branch: master
-    condition: $PYTHON = true
-- provider: script
-  skip_cleanup: true
-  script: ./travis/release.sh
-  on:
-    tags: true
-    condition: $PYTHON = true
-- provider: releases
-  skip_cleanup: true
-  api_key: $GITHUB_TOKEN
-  file_glob: true
-  file: build/libretime-*.tar.gz
-  on:
-    tags: true
-    condition: $PYTHON = true
+#deploy:
+#- provider: pages
+#  skip_cleanup: true
+#  local_dir: build/docs
+#  github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
+#  target_branch: master
+#  repo: LibreTime/LibreTime.github.io
+#  project_name: LibreTime
+#  fqdn: libretime.org
+#  name: R. LibreTime DocBot
+#  on:
+#    branch: master
+#    condition: $PYTHON = true
+#- provider: script
+#  skip_cleanup: true
+#  script: ./travis/release.sh
+#  on:
+#    tags: true
+#    condition: $PYTHON = true
+#- provider: releases
+#  skip_cleanup: true
+#  api_key: $GITHUB_TOKEN
+#  file_glob: true
+#  file: build/libretime-*.tar.gz
+#  on:
+#    tags: true
+#    condition: $PYTHON = true
