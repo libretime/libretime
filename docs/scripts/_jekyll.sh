@@ -1,12 +1,12 @@
 # Installing Jekyll
+# This script does not work and exists as a skeleton for
+# someone to use to get Jekyll building outside of GitHub
 
 echo "Installing Ruby"
 sudo apt-get install ruby-full build-essential zlib1g-dev
 
-echo '# Install Ruby Gems to ~/gems' >> ~/.bashrc
-echo 'export GEM_HOME="$HOME/gems"' >> ~/.bashrc
-echo 'export PATH="$HOME/gems/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
+export GEM_HOME=".gems"
+export PATH=".gems/bin:$PATH"
 
 echo "Installing Jekyll"
 cd docs
