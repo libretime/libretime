@@ -21,11 +21,11 @@ sidebar:
         url: track-types
       - page: Setting up SSL
         url: ssl-config
-      - page: Advanced Configuration
-        url: manual
     - page:   
   - title: Using LibreTime
     subfolderitems:
+    - page: Preparing Media
+      url: preparing-media
     - page: Scheduling Shows
       url: scheduling-shows
     - page: Broadcasting Live
@@ -57,5 +57,3 @@ sidebar:
       url: rights-royalties
     - page: Media Folders used by LibreTime
       url: folders
-    - page: Preparing Media for Upload
-      url: preparing-media

@@ -48,7 +48,7 @@ LibreTime services
 
 | Service | Description |
 |---------|-------------|
-| `airtime-analyzer` | Keeps track of files being added, renamed, moved or removed from storage, and reads their metadata using the Mutagen library. |
+| `libretime-analyzer` | Keeps track of files being added, renamed, moved or removed from storage, and reads their metadata using the Mutagen library. |
 | [PostgreSQL](https://www.postgresql.org/) | Contains the location of those media files and their metadata. This means you can search for and playlist a set of media files according to the specific metadata that you require, or use a 'smart block' to select the files for you. The database also contains details of specified remote input streams. |
 | Pypo | (Python Playout engine) Downloads media from the storage up to 24 hours ahead of playout and checks it for average level (with ReplayGain tools) and leading or trailing silence (with Silan). At playout time, the media to be broadcast is sent to Liquidsoap. |
 | [Liquidsoap](https://www.liquidsoap.info/) | Takes individual media files and remote input streams, and assembles them into a continuous output stream. This stream can be sent to a sound card (e.g. for a broadcast mixer, on the way to an FM or DAB transmitter) or to a streaming server for IP network distribution, over the LAN, local WiFi or the Internet. You can stream to a sound card and up to three different stream distribution servers with the same LibreTime server, if you wish. |

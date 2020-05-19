@@ -38,13 +38,8 @@ There are also a number of tutorials in Spanish on [Vimeo](https://vimeo.com/use
 
 ## For Server Administrators
 
-### Initial Configuration
-* [Host Configuration](host-configuration)
-* [Setting the server time](setting-the-server-time)
 * [How to configure API Authentication](api)
 * [Information on reverse proxy connections](reverse-proxy)
-
-### Advanced Configuration
 * [Configuring FreeIPA authentication](freeipa)
 * [Using and configuring Icecast and Shoutcast](icecast-shoutcast)
 * [Interface Customization](interface-customization)
