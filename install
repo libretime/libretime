@@ -180,14 +180,29 @@ function systemInitInstall() {
     local source_base_path=""
     local source_path=""
     local target_path=""
+    local alt_path=""
     local source_config_path=""
     local target_config_path=""
     local python_source_path="${SCRIPT_DIR-$PWD}/python_apps"
     verbose "\n * Installing service $service_name ..."
     if $has_systemd_init; then
-        # TODO: move .service files under python_apps/.../install/systemd
-        source_path="${SCRIPT_DIR-$PWD}/installer/systemd/${service_name}.service"
-        target_path="/etc/systemd/system/${service_name}.service"
+        case "$service_name" in
+            libretime-analyzer)
+                source_path="${python_source_path}/airtime_analyzer/install/systemd/${service_name}.service"
+                target_path="/etc/systemd/system/${service_name}.service"
+                alt_path=$(echo $target_path | sed 's/libretime-/airtime_/')
+                ;;
+            libretime-celery)
+                source_path="${python_source_path}/airtime-celery/install/systemd/${service_name}.service"
+                target_path="/etc/systemd/system/${service_name}.service"
+                alt_path=$(echo $target_path | sed 's/libretime-/airtime-/')
+                ;;
+            libretime-liquidsoap|libretime-playout)
+                source_path="${python_source_path}/pypo/install/systemd/${service_name}.service"
+                target_path="/etc/systemd/system/${service_name}.service"
+                alt_path=$(echo $target_path | sed 's/libretime-/airtime-/')
+                ;;
+        esac
         if [[ ! -e $source_path ]]; then
             echo "$0:${FUNCNAME}(): ERROR: service \"$service_name\" with source path \"$source_path\" does not exist!" >&2
             exit 1
@@ -198,12 +213,27 @@ function systemInitInstall() {
             loudCmd "systemctl disable ${service_name}.service"
             loudCmd "systemctl stop ${service_name}.service"
         fi
+        local old_style_unit_exists="f"
+        # Migrate old style airtime unit exist if it exists
+        if [[ -e $alt_path && ! -L $alt_path ]]; then
+            local old_service=$(echo $service_name | sed 's/libretime/airtime/' | sed 's/-analyzer/_analyzer/')
+            verbose "Old service $old_service already exists - migrating."
+            loudCmd "systemctl disable ${old_service}.service"
+            loudCmd "systemctl stop ${old_service}.service"
+            loudCmd "rm $alt_path"
+            old_style_unit_exists="t"
+        fi
         # If no user defined, then just copy, otherwise filter
         if [[ -z $user ]]; then
             loudCmd "cp $source_path $target_path"
         else
             sed -e "s/User=.*/User=${user}/" \
                 -e "s/Group=.*/Group=${user}/" $source_path > $target_path
+        fi
+        if [[ $old_style_unit_exists == "t" ]]; then
+            verbose "Maintaining compatibility with old systemd unit names"
+            # Alias to old Airtime names
+            loudCmd "ln -s $source_path $alt_path"
         fi
         chmod 0644 $target_path
         chown root:root $target_path
@@ -213,17 +243,17 @@ function systemInitInstall() {
         verbose "Service ${service_name} enabled and started"
     elif $has_upstart_init; then
         case "$service_name" in
-            airtime_analyzer)
-                source_path="${python_source_path}/${service_name}/install/upstart/${service_name}.conf"
+            libretime-analyzer)
+                source_path="${python_source_path}/airtime_analyzer/install/upstart/${service_name}.conf"
                 target_path="/etc/init/${service_name}.conf"
                 user=${user:-$web_user}
                 ;;
-            airtime-celery)
-                source_path="${python_source_path}/${service_name}/install/upstart/${service_name}.conf"
+            libretime-celery)
+                source_path="${python_source_path}/airtime-celery/install/upstart/${service_name}.conf"
                 target_path="/etc/init/${service_name}.conf"
                 user=""
                 ;;
-            airtime-liquidsoap|airtime-playout)
+            libretime-liquidsoap|libretime-playout)
                 source_path="${python_source_path}/pypo/install/upstart/${service_name}.conf.template"
                 target_path="/etc/init/${service_name}.conf"
                 user=${user:-$web_user}
@@ -251,19 +281,19 @@ function systemInitInstall() {
         loudCmd "initctl check-config $service_name"
     elif $has_systemv_init; then
         case "$service_name" in
-            airtime_analyzer)
-                source_path="${python_source_path}/${service_name}/install/sysvinit/${service_name}"
+            libretime-analyzer)
+                source_path="${python_source_path}/airtime_analyzer/install/sysvinit/${service_name}"
                 target_path="/etc/init.d/${service_name}"
                 user=${user:-$web_user}
                 ;;
-            airtime-celery)
-                source_path="${python_source_path}/${service_name}/install/initd/${service_name}"
+            libretime-celery)
+                source_path="${python_source_path}/airtime-celery/install/sysvinit/${service_name}"
                 target_path="/etc/init.d/${service_name}"
                 source_config_path="${python_source_path}/${service_name}/install/conf/${service_name}"
                 target_config_path="/etc/default/${service_name}"
                 user=""
                 ;;
-            airtime-liquidsoap|airtime-playout)
+            libretime-liquidsoap|libretime-playout)
                 source_path="${python_source_path}/pypo/install/sysvinit/${service_name}"
                 target_path="/etc/init.d/${service_name}"
                 user=${user:-$web_user}
@@ -763,7 +793,6 @@ will be moved to /etc/airtime/airtime.conf.tmp"
         rm -f /etc/init.d/airtime*
         rm -f /etc/init/airtime*
         rm -f /etc/default/airtime-celery
-        rm -f /etc/systemd/system/airtime*
 
         if [ "$apache" = "t" ]; then
             # If the user selects an "in-place" install or passes in a web root, 
@@ -957,8 +986,8 @@ verbose "\n * Installing pypo and liquidsoap..."
 loudCmd "python3 ${AIRTIMEROOT}/python_apps/pypo/setup.py install --install-scripts=/usr/bin --no-init-script"
 loudCmd "mkdir -p /var/log/airtime/{pypo,pypo-liquidsoap} /var/tmp/airtime/pypo/{cache,files,tmp} /var/tmp/airtime/show-recorder/"
 loudCmd "chown -R ${web_user}:${web_user} /var/log/airtime/{pypo,pypo-liquidsoap} /var/tmp/airtime/pypo/{cache,files,tmp} /var/tmp/airtime/show-recorder/"
-systemInitInstall airtime-liquidsoap $web_user
-systemInitInstall airtime-playout $web_user
+systemInitInstall libretime-liquidsoap $web_user
+systemInitInstall libretime-playout $web_user
 verbose "...Done"
 
 verbose "\n * Installing airtime-celery..."
@@ -971,15 +1000,15 @@ else
 fi
 # Add celery to the www-data group
 loudCmd "usermod -G ${web_user} -a celery"
-# CentOS installs celery in /usr/bin which differs from other distros. Make 
+# CentOS installs celery in /usr/bin which differs from other distros. Make
 # available in /usr/local/bin as systemd requires an absolute path.
 [[ ! -e /usr/local/bin/celery ]] && ln -s /usr/bin/celery /usr/local/bin/celery
-systemInitInstall airtime-celery
+systemInitInstall libretime-celery
 verbose "...Done"
 
 verbose "\n * Installing airtime_analyzer..."
 loudCmd "python3 ${AIRTIMEROOT}/python_apps/airtime_analyzer/setup.py install --install-scripts=/usr/bin --no-init-script"
-systemInitInstall airtime_analyzer $web_user
+systemInitInstall libretime-analyzer $web_user
 verbose "...Done"
 
 verbose "\n * Setting permissions on /var/log/airtime..."

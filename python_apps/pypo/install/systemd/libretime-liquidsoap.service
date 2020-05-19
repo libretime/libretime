@@ -1,5 +1,5 @@
 [Unit]
-Description=Airtime Liquidsoap Service
+Description=Libretime Liquidsoap Service
 
 [Service]
 ExecStart=/usr/bin/airtime-liquidsoap

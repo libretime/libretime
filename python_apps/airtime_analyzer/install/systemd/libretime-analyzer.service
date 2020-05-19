@@ -3,8 +3,8 @@ Description=LibreTime Media Analyzer Service
 
 [Service]
 ExecStart=/usr/bin/airtime_analyzer
-User=airtime-analyzer
-Group=airtime-analyzer
+User=libretime-analyzer
+Group=libretime-analyzer
 Restart=always
 
 [Install]

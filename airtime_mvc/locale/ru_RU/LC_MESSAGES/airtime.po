@@ -5211,24 +5211,24 @@ msgid "LibreTime Celery Task service"
 msgstr "Служба Celery Task LibreTime"
 
 #: airtime_mvc\application\views\scripts\systemstatus\index.phtml:104
-msgid "Check that the airtime_analyzer service is installed correctly in "
-msgstr "Проверьте, что служба airtime_analyzer правильно установлена в "
+msgid "Check that the libretime-analyzer service is installed correctly in "
+msgstr "Проверьте, что служба libretime-analyzer правильно установлена в "
 
 #: airtime_mvc\application\views\scripts\systemstatus\index.phtml:124
-msgid "Check that the airtime-playout service is installed correctly in "
-msgstr "Проверьте, что служба airtime-playout правильно установлена в "
+msgid "Check that the libretime-playout service is installed correctly in "
+msgstr "Проверьте, что служба libretime-playout правильно установлена в "
 
 #: airtime_mvc\application\views\scripts\systemstatus\index.phtml:144
-msgid "Check that the airtime-liquidsoap service is installed correctly in "
-msgstr "Проверьте, что служба airtime-liquidsoap правильно установлена в "
+msgid "Check that the libretime-liquidsoap service is installed correctly in "
+msgstr "Проверьте, что служба libretime-liquidsoap правильно установлена в "
 
 #: airtime_mvc\application\views\scripts\systemstatus\index.phtml:164
-msgid "Check that the airtime-celery service is installed correctly in "
-msgstr "Проверьте, что служба airtime-celery правильно установлена в "
+msgid "Check that the libretime-celery service is installed correctly in "
+msgstr "Проверьте, что служба libretime-celery правильно установлена в "
 
 #: airtime_mvc\application\views\scripts\systemstatus\index.phtml:158
-msgid " If not, try <br/><code>sudo service airtime-celery restart</code>"
-msgstr " Если нет - попробуйте запустить <br/><code>sudo service airtime-celery restart</code>"
+msgid " If not, try <br/><code>sudo service libretime-celery restart</code>"
+msgstr " Если нет - попробуйте запустить <br/><code>sudo service libretime-celery restart</code>"
 
 #: airtime_mvc\application\views\scripts\systemstatus\index.phtml:164
 msgid " and ensure that it's running with "
