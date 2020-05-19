@@ -5,8 +5,6 @@
 This how to is intended for DJs using BUTT or MIXXX to stream to their LibreTime
 server with an external USB audio card setup to route a mixer and sound.
 
-**Audience**: DJs
-
 Live shows with MIXXX
 ---------------------
 

@@ -5,13 +5,13 @@ sidebar:
       url: features
     - page: FAQ
       url: faq
+    - page: Contribute to LibreTime
+      url: contribute
     - page:  
   - title: Installation
     subfolderitems:
     - page: Quick Install
       url: quickstart
-    - page: Advanced Install
-      url: install
       subsubfolderitems:
       - page: Host Configuration
         url: host-configuration
@@ -35,18 +35,11 @@ sidebar:
       subsubfolderitems:
       - page: More Tutorials
         url: tutorials
-    - page:     
-  - title: Contribute to LibreTime
+    - page:      
+  - title: Radio Broadcasting 101
     subfolderitems:
-    - page: Testing with Vagrant
-      url: vagrant
-    - page: Testing with Multipass
-      url: multipass
-    - page: Database Access
-      url: database
-    - page: Translating LibreTime
-      url: interface-localization
-    - page:   
+    - page: UNESCO Public Radio Guide
+      url: learnradio-unescoguide
   - title: Appendix
     subfolderitems:
     - page: Help!
