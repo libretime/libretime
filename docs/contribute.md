@@ -36,6 +36,10 @@ Before submitting code to the project, it's a good idea to test it first. To do 
 LibreTime in a virtural machine on your local system or in a cloud VM. Instructions on how to set up a virtural
 instance of LibreTime with Vagrant are located [here](vagrant).
 
+If you would like to try LibreTime in a Docker image,
+Odclive has instructions [here](https://github.com/kessibi/libretime-docker) for setting up a test image
+and a more persistant install.
+
 ### Modifying the Database
 LibreTime is designed to work with a [PostgreSQL](https://www.postgresql.org/) database server running locally.
 LibreTime uses [PropelORM](http://propelorm.org) to interact with the ZendPHP components and create the database.
