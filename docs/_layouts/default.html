@@ -76,11 +76,6 @@
               {% if item.subfolderitems[0] %}
                   {% for entry in item.subfolderitems %}
                       <br><a href="{{ entry.url }}">{{ entry.page }}</a>
-                        {% if entry.subsubfolderitems[0] %}
-                          {% for subentry in entry.subsubfolderitems %}
-                             <br> &nbsp; -- <a href="{{ subentry.url }}">{{ subentry.page }}</a>
-                          {% endfor %}
-                        {% endif %}
                   {% endfor %}
               {% endif %}
             {% endfor %}
@@ -94,7 +89,8 @@
       </section>
       <footer>
         <br>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small>
+        <p><small>Spanish Tutorials can be found <a href="https://vimeo.com/user90812787">here</a>.</small>
+        <small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small>
       </footer>
     </div>
     <script src="{{ "/assets/js/scale.fix.js" | relative_url }}"></script>
