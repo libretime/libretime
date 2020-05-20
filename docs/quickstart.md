@@ -73,18 +73,10 @@ sudo ufw enable 8002/tcp
 
 Installing LibreTime consists of running the following commands in the terminal:
 
-Option 1:
 ```
 git clone https://github.com/LibreTime/libretime.git
 cd libretime
 sudo ./install -fiap
-```
-
-Option 2:
-```
-sudo add-apt-repository ppa:libretime/libretime
-sudo apt-get update
-sudo apt-get install libretime icecast2
 ```
 
 After the install is completed, head to the IP address of the server LibreTime was just installed on
