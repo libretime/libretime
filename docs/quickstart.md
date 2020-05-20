@@ -60,7 +60,7 @@ sudo ufw allow 80/tcp
 sudo ufw allow 8000/tcp
 ```
 
-If you plan on broadcasting live with Libretime, also unblock ports 8001 and 8002.
+Unblock ports 8001 and 8002 if you plan on broadcasting live with Libretime.
 
 ```
 sudo ufw enable 8001/tcp
