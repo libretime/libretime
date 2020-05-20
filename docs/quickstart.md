@@ -85,7 +85,14 @@ walk you through the rest of the installation process.
 
 Congratulations! You've successfully set up LibreTime!
 
-## Next Steps
+## Post-install
+
+If you plan to have LibreTime output analog audio directly from its server to a mixing console or transmitter,
+the `www-data` user needs to be added to the `audio` user group using the command below.
+
+```
+sudo adduser www-data audio
+```
 
 Now that the install is complete, use these guides to help you continue to set up your LibreTime server
 
