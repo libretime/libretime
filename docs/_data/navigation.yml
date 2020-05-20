@@ -32,6 +32,8 @@ sidebar:
       url: live-broadcast
     - page: Adding Users
       url: users
+    - page: Help!
+      url: troubleshooting
       subsubfolderitems:
       - page: More Tutorials
         url: tutorials
@@ -43,8 +45,6 @@ sidebar:
     - page:   
   - title: Appendix
     subfolderitems:
-    - page: Help!
-      url: troubleshooting
     - page: HD Audio Modules
       url: hd-audio-modules
     - page: Rights and Royalties
