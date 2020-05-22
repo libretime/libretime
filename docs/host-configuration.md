@@ -1,5 +1,5 @@
 ---
-sidebar: installer
+layout: docs
 ---
 
 Host configuration

@@ -1,3 +1,7 @@
+---
+layout: docs
+---
+
 # Settings
 
 ![](img/station-info-settings.png)

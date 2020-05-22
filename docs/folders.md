@@ -1,5 +1,5 @@
 ---
-sidebar: appendix
+layout: docs
 ---
 
 # Media Library Folders

@@ -1,5 +1,5 @@
 ---
-sidebar: devs
+layout: docs
 ---
 
 # Interface Localization

@@ -85,15 +85,34 @@ layout: default
       </div>
     </nav>
     
+    <!-- Sidebar -->
     <div id="sidebar">
       <ul>
         {% for item in site.data.nav.docsnav %}
         <li class="nav-item">
-          <a class="nav-link js-scroll-trigger" href="{{ item.url }}">{{ item.page }}</a>
+          <a class="nav-link" href="{{ item.url }}">{{ item.page }}</a>
         </li>
         {% endfor %}
       </ul>
     </div>
+    
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>Table of Contents</h3>
+        </div>
+        
+        {% for item in site.data.nav.docsnav %}
+        <ul class="list-unstyled components">
+          <i>{{ item.section }}</i>
+          {% for entry in item.contents %}
+            <li>
+                <a href="{{ entry.url }}">{{ entry.page }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+        {% endfor %}
+    </nav>
+    
     <div class="container-fluid">
       <!-- This is the main content of the page getting pulled from the MDs -->
       <div class="content">

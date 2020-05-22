@@ -1,5 +1,7 @@
-Tutorials
-------
+---
+layout: docs
+---
+
 
 This page contains links to number of tutorials.
 Please provide any feedback on this [discourse forum post](https://discourse.libretime.org/t/new-tutorials-available-on-libretime-wiki/270/2).

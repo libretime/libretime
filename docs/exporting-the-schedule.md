@@ -1,3 +1,7 @@
+---
+layout: docs
+---
+
 Exporting the schedule
 ----------------------
 

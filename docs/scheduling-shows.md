@@ -1,3 +1,7 @@
+---
+layout: docs
+---
+
 # Scheduling Shows
 
 Log in using your username and password using the link in the upper right corner. (If you just installed

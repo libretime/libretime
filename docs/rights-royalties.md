@@ -1,5 +1,5 @@
 ---
-sidebar: appendix
+layout: docs
 ---
 
 # Rights and Royalties

@@ -1,3 +1,7 @@
+---
+layout: docs
+---
+
 Backing up the server
 --------------------
 

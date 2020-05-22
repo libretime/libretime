@@ -1,3 +1,7 @@
+---
+layout: docs
+---
+
 # Reverse Proxy Connections
 
 In some deployments, the LibreTime server is deployed behind a reverse proxy,

@@ -1,3 +1,7 @@
+---
+layout: docs
+---
+
 # Broadcasting live with MIXXX or B.U.T.T.
 
 [![How to Livestream Your Show](http://img.youtube.com/vi/4GLsU9hPTtM/0.jpg)](https://www.youtube-nocookie.com/embed/4GLsU9hPTtM "How to Livestream Your Show")

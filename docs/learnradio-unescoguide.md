@@ -1,3 +1,7 @@
+---
+layout: docs
+---
+
 # Radio Broadcasting 101 - UNESCO Public Radio Guide
 
 The UNESCO publication [*Community Radio - A user's guide to the technology*](img/CommunityRadioUserGuide.pdf)

@@ -13,9 +13,44 @@ topnav:
   url: contribute
   
 docsnav:
-- page: Config
-  url: config1
-- page: More config
-  url: config2
-- page: Admin stuff
-  url: adminstuff
+- section: Install
+  contents:
+  - page: Quick Install
+    url: quickstart
+  - page: Host Configuration
+    url: host-configuration
+  - page: Setting the Server Time
+    url: setting-the-server-time
+  - page: Configuring Track Types
+    url: track-types
+  - page: Setting up SSL
+    url: ssl-config
+  - page:
+- section: Using LibreTime
+  contents:
+  - page: Preparing Media
+    url: preparing-media
+  - page: Scheduling Shows
+    url: scheduling-shows
+  - page: Broadcasting Live
+    url: live-broadcast
+  - page: Adding Users
+    url: users
+  - page: Help!
+    url: troubleshooting
+  - page: Advanced Configuration
+    url: advanced-configuration
+  - page:      
+- section: Radio Broadcasting 101
+  contents:
+  - page: UNESCO Public Radio Guide
+    url: learnradio-unescoguide
+  - page:   
+- section: Appendix
+  contents:
+  - page: HD Audio Modules
+    url: hd-audio-modules
+  - page: Rights and Royalties
+    url: rights-royalties
+  - page: Media Folders used by LibreTime
+    url: folders
