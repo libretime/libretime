@@ -60,7 +60,7 @@ sudo ufw allow 80/tcp
 sudo ufw allow 8000/tcp
 ```
 
-If you plan on broadcasting live with Libretime, also unblock ports 8001 and 8002.
+Unblock ports 8001 and 8002 if you plan on broadcasting live with Libretime.
 
 ```
 sudo ufw enable 8001/tcp
@@ -73,18 +73,10 @@ sudo ufw enable 8002/tcp
 
 Installing LibreTime consists of running the following commands in the terminal:
 
-Option 1:
 ```
 git clone https://github.com/LibreTime/libretime.git
 cd libretime
 sudo ./install -fiap
-```
-
-Option 2:
-```
-sudo add-apt-repository ppa:libretime/libretime
-sudo apt-get update
-sudo apt-get install libretime icecast2
 ```
 
 After the install is completed, head to the IP address of the server LibreTime was just installed on
@@ -93,7 +85,14 @@ walk you through the rest of the installation process.
 
 Congratulations! You've successfully set up LibreTime!
 
-## Next Steps
+## Post-install
+
+If you plan to have LibreTime output analog audio directly from its server to a mixing console or transmitter,
+the `www-data` user needs to be added to the `audio` user group using the command below.
+
+```
+sudo adduser www-data audio
+```
 
 Now that the install is complete, use these guides to help you continue to set up your LibreTime server
 

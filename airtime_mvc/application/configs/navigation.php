@@ -179,8 +179,8 @@ $pages[] = array(
             'target'    => "_blank"
         ),
         array(
-            'label'      => _('Help Translate Libretime'),
-            'uri'        => AIRTIME_TRANSIFEX_URL,
+            'label'      => _('Contribute to LibreTime'),
+            'uri'        => LIBRETIME_CONTRIBUTE_URL,
             'target'     => "_blank"
         ),
         array(

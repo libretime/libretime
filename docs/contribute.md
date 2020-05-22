@@ -21,7 +21,7 @@ Have an idea that would make LibreTime even better than it is right now? Start a
 LibreTime can run in over 15 different languages due to the gracious help of our volunteers. Is your language not
 supported? Follow [this guide](interface-localization) to add your language to LibreTime!
 
-## Help build and text LibreTime
+## Help write code for LibreTime
 
 Are you familar with coding in PHP? Have you made projects in Liquidsoap and some of the other services we use?
 Take a look at the bugs and feature requests [here](https://github.com/LibreTime/libretime/issues), and then
@@ -30,9 +30,12 @@ your desktop, open up a favorite editor and make some changes, and then commit, 
 Knowledge on how to use [Github](https://guides.github.com/activities/hello-world/) and [Git](https://git-scm.com/docs/gittutorial)
 will suit you well, use the links for a quick 101.
 
+### Testing LibreTime in Vagrant
+
 Before submitting code to the project, it's a good idea to test it first. To do this, it's easiest to install
 LibreTime in a virtural machine on your local system or in a cloud VM. Instructions on how to set up a virtural
 instance of LibreTime with Vagrant are located [here](vagrant).
+
 If you would like to try LibreTime in a Docker image,
 Odclive has instructions [here](https://github.com/kessibi/libretime-docker) for setting up a test image
 and a more persistant install.
