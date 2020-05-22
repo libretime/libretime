@@ -3,6 +3,8 @@ sidebar:
     subfolderitems:
     - page: Features
       url: features
+    - page: Interface Tour
+      url: tour
     - page: FAQ
       url: faq
     - page: Contribute to LibreTime
@@ -12,15 +14,14 @@ sidebar:
     subfolderitems:
     - page: Quick Install
       url: quickstart
-      subsubfolderitems:
-      - page: Host Configuration
-        url: host-configuration
-      - page: Setting the Server Time
-        url: setting-the-server-time
-      - page: Configuring Track Types
-        url: track-types
-      - page: Setting up SSL
-        url: ssl-config
+    - page: Host Configuration
+      url: host-configuration
+    - page: Setting the Server Time
+      url: setting-the-server-time
+    - page: Configuring Track Types
+      url: track-types
+    - page: Setting up SSL
+      url: ssl-config
     - page:   
   - title: Using LibreTime
     subfolderitems:
@@ -34,9 +35,8 @@ sidebar:
       url: users
     - page: Help!
       url: troubleshooting
-      subsubfolderitems:
-      - page: More Tutorials
-        url: tutorials
+    - page: Advanced Configuration
+      url: advanced-configuration
     - page:      
   - title: Radio Broadcasting 101
     subfolderitems:
