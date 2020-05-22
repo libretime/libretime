@@ -1,0 +1,13 @@
+I"‚<h2 id="the-webstreams-page">The Webstreams page</h2>
+
+<h2 id="adding-a-webstream">Adding a webstream</h2>
+<p>A web stream URL and metadata can be added to the LibreTime library, so that a remote stream can be searched for and scheduled to be <em>pulled</em> into a show. For example, at the top of the hour your station may pull a news report from journalists working in another studio. This is a different concept from <strong>Master Source</strong> and <strong>Show Source</strong> remote streams which are <em>pushed</em> into the LibreTime playout schedule.</p>
+
+<p>To add a web stream, click the <strong>+ New</strong> button on the left side of the Webstreams page. Like a playlist, web streams in the Library can have a title and <strong>Description</strong>, which may help you find them in searches later.</p>
+
+<p><img src="webstream.jpg" alt="" /></p>
+
+<p>The <strong>Stream URL</strong> setting must include the <em>port number</em> (such as 8000) and <em>mount point</em> (such as remote_stream) of the remote stream, in addition to the streaming server name. A <strong>Default Length</strong> for the remote stream can also be set. If the stream is added at the end of a show which becomes overbooked as a result, it will be faded out when the show ends.</p>
+
+<p>Note: LibreTime checks the remote webstreamâ€™s status upon editing stream settings, so an offline stream will result in an error. There are many tools such as <a href="https://danielnoethen.de/butt/">BUTT</a> and <a href="https://www.mixxx.org">MIXXX</a> that can be used to send a test stream to LibreTime can save it; read more <a href="../live-shows-with-mixxx/index.md">here</a>.</p>
+:ET

@@ -1,0 +1,145 @@
+I"%<h1 id="setting-up-ssl">Setting up SSL</h1>
+
+<p>To increase the security of your server, you can enable encrypted access to the LibreTime administration interface, and direct your users towards this more secure login page. The main advantage of using this encryption is that your remote users’ login names and passwords are not sent in plain text across the public Internet or untrusted local networks, such as shared Wi-Fi access points.</p>
+
+<h2 id="deploying-a-certificate-with-certbot">Deploying a certificate with Certbot</h2>
+
+<p>One of the fastest, easiest, and cheapest ways to get an SSL certificate is through <a href="https://certbot.eff.org/">Certbot</a>, as created by the
+<a href="https://www.eff.org/">Electronic Frontier Foundation</a>. There are some requirements for this process:</p>
+<ul>
+  <li>you have an HTTP website (already installed and configured by default by the LibreTime installer) and</li>
+  <li>this website is open to the public internet (likely via. port forwarding if your computer is behind a firewall) and</li>
+  <li>the server is accessible to the public via. port 80</li>
+</ul>
+
+<p>If you aren’t able to verify all three requirements, you may want to try a self-signed certificate (see next section).</p>
+
+<p>These instructions come from Certbot’s website and assume that you are using an Apache web server
+running on Ubuntu 18.04 LTS (the Apache web server is installed with LibreTime by default).
+Instructions for other Debian-based OSes are similar, but check with Certbot for clarification.</p>
+
+<p>Note: all instructions require you to have sudo priveledges</p>
+
+<p>First, add Certbot’s PPA using:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    sudo apt-get update
+    sudo apt-get install software-properties-common
+    sudo add-apt-repository universe
+    sudo add-apt-repository ppa:certbot/certbot
+    sudo apt-get update
+</code></pre></div></div>
+
+<p>Next, install Certbot and install the SSL certificate using the below commands:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install certbot python3-certbot-apache
+sudo certbot --apache  # get and install the certificate
+sudo certbot certonly --apache  # to only get the certificate, not install it using Certbot
+</code></pre></div></div>
+
+<p>You can test certificate renewal by running <code class="highlighter-rouge">sudo certbot renew --dry-run</code>.
+Head to your server’s IP address to check to see that the installation worked.</p>
+
+<h2 id="deploying-a-self-signed-certificate">Deploying a self-signed certificate</h2>
+
+<p>The Debian/Ubuntu package <em>ssl-cert</em> creates a <em>snakeoil</em> certificate and key based on your server’s hostname. This gratis certificate and key pair created under the <em>/etc/ssl/certs</em>/ and <em>/etc/ssl/private/</em> directories will not be recognised by users’ browsers without manual intervention. You can install the <em>ssl-cert</em> package with the command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install ssl-cert
+</code></pre></div></div>
+
+<p>If the hostname of your server does not match the domain name you intend to use with the LibreTime virtual host, the user’s browser will present an additional security warning. You can set the domain name of the certificate by editing the file <em>/usr/share/ssl-cert/ssleay.cnf</em> to replace the <em>@HostName@</em> variable:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>commonName                      = @HostName@
+</code></pre></div></div>
+
+<p>with the domain name used by LibreTime:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>commonName                      = airtime.example.com
+</code></pre></div></div>
+
+<p>Then save the file and regenerate the certificate with the command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo make-ssl-cert generate-default-snakeoil --force-overwrite
+</code></pre></div></div>
+
+<p>You should enable additional Apache modules for page redirections, custom headers and secure access:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo a2enmod alias headers ssl
+</code></pre></div></div>
+
+<p>Next, edit the virtual host configuration for your LibreTime server to include a stanza for the https:// interface on port 443 and a redirect for logins from port 80:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo nano /etc/apache2/sites-available/airtime-vhost.conf
+</code></pre></div></div>
+
+<p>Using the following configuration for Apache 2.2 as a guide, replace <em>airtime.example.com</em> with the name of your server and <em>admin@example.com</em> with your email address. The older SSLv2 and SSLv3 protocols and SSL compression should be disabled, as they are generally believed to be insecure. You may wish to create a <em>ServerAlias</em> for users to access the administration interface over https:// if required.</p>
+
+<p>On port 80, Apache’s <em>alias</em> module is used to set a <em>Redirect permanent</em> for the login page. Optionally, access could be denied to all sites except <em>localhost</em> and any other LibreTime servers on your network, so that unencrypted communication between LibreTime components can continue.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;VirtualHost *:443&gt;
+      SSLEngine on
+      SSLProtocol All -SSLv2 -SSLv3
+      SSLCompression off
+      SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
+      SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+      Header always set Strict-Transport-Security "max-age=31536000"
+
+      ServerName airtime.example.com
+      #ServerAlias www.example.com
+
+      ServerAdmin admin@example.com
+
+      DocumentRoot /usr/share/airtime/php/airtime_mvc/public
+      DirectoryIndex index.php
+
+      &lt;Directory /usr/share/airtime/php/airtime_mvc/public&gt;
+              Options -Indexes FollowSymLinks MultiViews
+              AllowOverride all
+              Order allow,deny
+              Allow from all
+      &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+
+&lt;VirtualHost *:80&gt;
+      ServerName airtime.example.com
+
+      ServerAdmin admin@example.com
+
+      DocumentRoot /usr/share/airtime/php/airtime_mvc/public
+      Redirect permanent /login https://airtime.example.com/login
+
+      SetEnv APPLICATION_ENV "production"
+
+      &lt;Directory /usr/share/airtime/php/airtime_mvc/public&gt;
+              Options -Indexes FollowSymLinks MultiViews
+              AllowOverride All
+              Order allow,deny
+              Allow from all
+      &lt;/Directory&gt;
+&lt;/VirtualHost&gt; 
+</code></pre></div></div>
+
+<p>Save the file with <strong>Ctrl+O</strong> and exit the <strong>nano</strong> editor with <strong>Ctrl+X</strong>. Then restart Apache with the command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo service apache restart
+</code></pre></div></div>
+
+<p>When attempting to log into your server via http:// in future, you should be redirected to https:// automatically.</p>
+
+<h3 id="importing-a-self-signed-certificate-into-the-browser">Importing a self-signed certificate into the browser</h3>
+
+<p>The first time you access an LibreTime server with a self-signed certificate over https:// your browser will block the login page and display a security warning. In <strong>Mozilla Firefox</strong>, you can click <strong>Technical Details</strong> to confirm that the warning is due to the certificate being self-signed before clicking the <strong>Add Exception</strong> button. In <strong>Google Chrome</strong>, the button to click on the security warning page is <strong>Proceed Anyway</strong>.</p>
+
+<p><img src="img/Screenshot547-connection_untrusted.png" alt="" /></p>
+
+<p>On the next page in Firefox, click the <strong>Get Certificate</strong> button to inspect the details of the self-signed certificate. If all is well, click the <strong>Confirm Security Exception</strong> button. You should now be able to proceed to the https:// login page.  </p>
+
+<p><img src="img/Screenshot548-confirm_exception.png" alt="" /></p>
+
+<p>If the users of your LibreTime server wish to avoid going through these steps, or they do not trust the remote LibreTime server to be what it claims to be, it is also possible to import a trusted local copy of a certificate file into the browser. For example, in Firefox version 30 preferences, you can go into the <strong>Advanced</strong> section, click the <strong>Certificates</strong> tab, then click the <strong>View Certificates</strong> button. On the <strong>Servers</strong> tab of the <strong>Certificate Manager</strong>, there is an <strong>Import</strong> button which enables you to load a certificate file from the local computer.</p>
+
+<h2 id="mixed-encrypted-and-unencrypted-content">Mixed encrypted and unencrypted content</h2>
+
+<p>Whether your certificate is self-signed or not, you will see browser security warnings whenever a https:// page is delivering unencrypted content, such as the stream from an Icecast server. In Firefox, an exclamation mark icon is displayed in the address bar of the <strong>Listen</strong> pop-up.</p>
+
+<p><img src="img/Screenshot549-unencrypted_warning.png" alt="" /></p>
+:ET

@@ -3,6 +3,18 @@ description: An open source radio automation server made for (and made by) low-p
 logo: 144px.png
 show_downloads: false
 
-remote_theme: zklosko/spirit-of-radio
 layouts_dir: _layouts
 data_dir: _data
+
+favicon: 144px.png
+
+# For splash page layout only
+headimage: img/header.jpg
+headtext: Open Source Radio Automation
+headsubtext: Everything you need to get your terrestrial / on-line radio station up and broadcasting like a pro - without breaking the bank! 
+headbuttonurl: https://libretime.org
+headbuttontext: Get LibreTime
+
+# Build settings
+plugins:
+  - jekyll-feed

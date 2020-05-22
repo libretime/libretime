@@ -1,0 +1,21 @@
+topnav:
+- page: Install
+  url: quickstart
+- page: Features
+  url: features
+- page: Tour
+  url: tour
+- page: FAQ
+  url: faq
+- page: Docs
+  url: advanced-configuration
+- page: Help Us!
+  url: contribute
+  
+docsnav:
+- page: Config
+  url: config1
+- page: More config
+  url: config2
+- page: Admin stuff
+  url: adminstuff

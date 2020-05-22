@@ -1,0 +1,90 @@
+<h1 id="troubleshooting">Troubleshooting</h1>
+
+<p>Having trouble with your LibreTime installation? We’ve got you covered!</p>
+
+<p>Since LibreTime is effectively a web site running on a LAPP stack, individual components of the system can be started, stopped, restarted or checked in the server console using the <strong>systemctl</strong> command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo systemctl start|stop|restart|status libretime-liquidsoap
+sudo systemctl start|stop|restart|status libretime-playout
+sudo systemctl start|stop|restart|status libretime-celery
+sudo systemctl start|stop|restart|status libretime-analyzer
+sudo systemctl start|stop|restart|status apache2
+sudo systemctl start|stop|restart|status rabbitmq-server
+</code></pre></div></div>
+
+<p>For example, to restart the Airtime playout engine, you could enter the command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo systemctl restart libretime-playout
+</code></pre></div></div>
+
+<h2 id="log-files">Log files</h2>
+
+<p>Airtime stores log files under the directory path <em>/var/log/airtime/</em> which can be useful for diagnosing the cause of any problems. Copies of these log files may be requested by LibreTime developers while they are providing technical support for your Airtime deployment.</p>
+
+<h2 id="test-tones">Test tones</h2>
+
+<p>If you need to test your computer’s soundcard, you can use <code class="highlighter-rouge">speaker-test</code>, a tone generator for ALSA.
+This does not come installed with LibreTime but can be installed with <code class="highlighter-rouge">sudo apt install speaker-test</code>.</p>
+
+<p>speaker-test [-D] [-f]</p>
+
+<p>Where:
+        -D device name
+        -f frequency of test tone</p>
+
+<p>The <strong>airtime-test-stream</strong> command enables you to send a test tone to a local or remote streaming media server. Press <strong>Ctrl+C</strong> on your keyboard to stop the tone being streamed.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>airtime-test-stream [-v]
+               [-o icecast | shoutcast ] [-H hostname] [-P port]
+               [-u username] [-p password] [-m mount]
+               [-h]
+Where:
+     -v verbose mode
+     -o stream server type (default: icecast)
+     -H hostname (default: localhost)
+     -P port (default: 8000)
+     -u user (default: source)
+     -p password (default: hackme)
+     -m mount (default: test)
+     -h show help menu
+</code></pre></div></div>
+
+<h2 id="rabbitmq-hostname-changes">RabbitMQ hostname changes</h2>
+
+<p>If the Airtime logs indicate failures to connect to the RabbitMQ server, such as:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2013-10-31 08:21:11,255 ERROR - [pypomessagehandler.py : main() : line
+99] - Error connecting to RabbitMQ Server. Trying again in few seconds
+
+2013-10-31 08:21:11,255 ERROR - \[pypomessagehandler.py : main() : line 99\] - Error connecting to RabbitMQ Server. Trying again in few seconds - See more at: http://forum.sourcefabric.org/discussion/16050/\#sthash.W8OJrNFm.dpuf
+</code></pre></div></div>
+
+<p>but the RabbitMQ server is running normally, this error might be due to a change in the server’s hostname since Airtime installation. Directory names under <em>/var/lib/rabbitmq/mnesia/</em> indicate that RabbitMQ’s database files are organised according to the hostname of the server, for example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rabbit@airtime
+</code></pre></div></div>
+
+<p>where the hostname is <em>airtime.example.com</em>. If the hostname has changed, it may be necessary to reconfigure RabbitMQ manually, as follows:</p>
+
+<ol>
+  <li>
+    <p>Delete the files in <em>/var/lib/rabbitmq/mnesia/</em></p>
+
+    <p>sudo rm -r /var/lib/rabbitmq/mnesia/*</p>
+  </li>
+  <li>
+    <p>Restart RabbitMQ:</p>
+
+    <p>sudo systemctl restart rabbitmq-server</p>
+  </li>
+  <li>
+    <p>Enter the following commands to set up authentication and grant permissions. The <em>rabbitmqctl add_user</em> command requires the RabbitMQ password from the /etc/airtime/airtime.conf file as an argument. The <em>rabbitmqctl set_permissions</em> command should be entered on one line, with the list of Airtime services repeated three times:</p>
+
+    <p>rabbitmqctl add_vhost /airtime
+ rabbitmqctl add_user airtime XXXXXXXXXXXXXXXXXXXX
+ rabbitmqctl set_permissions -p /airtime airtime
+    “airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor”
+    “airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor”
+    ”airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor”</p>
+  </li>
+</ol>

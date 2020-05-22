@@ -1,8 +1,11 @@
 ---
-sidebar: main
+layout: post
+title: Frequently Asked Questions
+date: May 22, 2020
+author: LibreTime Community
+blurb: You've got questions, we've got answers
 ---
 
-# Frequently Asked Questions
 
 **What is LibreTime?**
 

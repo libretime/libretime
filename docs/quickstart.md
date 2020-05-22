@@ -1,13 +1,9 @@
 ---
 title: Quick Install
-sidebar: installer
+layout: page
+blurb: LibreTime is quick and easy to install and get running. Follow this guide to go from zero to full internet radio station in 10 minutes!
 ---
 
-Up and running in 10 minutes!
-----------------------------
-
-LibreTime is quick and easy to install and get running. Follow this guide to go from zero
-to full internet radio station in 10 minutes!
 
 > Note: this guide is assuming you are using Ubuntu 18.04 LTS for installation, which comes with `ufw` and `netplan`,
 and that you have already installed `git` and configured `ntp`. NTP configuration instructions can be found [here](setting-the-server-time).

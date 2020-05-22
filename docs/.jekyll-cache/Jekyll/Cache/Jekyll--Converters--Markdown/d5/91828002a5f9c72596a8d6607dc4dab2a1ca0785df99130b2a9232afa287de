@@ -1,0 +1,37 @@
+I"�
+<h1 id="the-podcasts-page">The Podcasts page</h1>
+
+<p>The Podcasts page allows you add subscriptions to podcasts which are often used to syndicated audio files using a URL called a RSS feed. This allows your LibreTime instance to automatically download new shows from the web.</p>
+
+<p>In order to add a podcast you need to get the RSS feed. All podcasts available on iTunes have a RSS feed but it is sometimes hidden. See this issue on our github page <a href="https://github.com/LibreTime/libretime/issues/510">#510</a> for more information. RSS feeds that do not end in <em>.xml</em> may be accepted by LibreTime but might fail to download episodes; in that case, download the episode using a podcast client such as <a href="https://gpodder.github.io/">gpodder</a> and then manually upload and schedule the episode. Podcast feeds coming from Anchor.fm have been known to have this issue.</p>
+
+<p>The podcast interfaces provides you with the ability to generate <a href="smartblocks">Smartblocks</a> that can be used in conjunction with <a href="../calendar/#autoloading-playlist">Autoloading Playlists</a> to schedule the newest episode of a podcast without human intervention.</p>
+
+<h3 id="video-tutorials">Video Tutorials</h3>
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=g-4UcD8qvR8">How to schedule a podcast to play the latest episode automatically</a></li>
+</ul>
+
+<h2 id="dashboard">Dashboard</h2>
+
+<p><img src="img/Podcasts_Dashboard.png" alt="" /></p>
+
+<p>The podcasts dashboard is similar to the tracks view, allowing you to add, edit, and remove
+podcasts by the toolbar, in addition to sorting by columns.</p>
+
+<p>To add a podcast, click on the <strong>+ Add</strong> button on the toolbar and provide the podcast’s RSS feed, which usually ends in <em>.xml</em>.
+Once the podcast’s feed is recognized, the editor pane opens for the podcast.</p>
+
+<h2 id="editor">Editor</h2>
+
+<p><img src="img/Podcasts_Editor.png" alt="" /></p>
+
+<p>In the podcasts editor, you can rename the podcast, update settings for the podcast, and manage episodes.
+A search box is available to search for episodes within the feed.</p>
+
+<ul>
+  <li>To import an episode directly into LibreTime, double-click on an episode or select it and click <strong>+ Import</strong>. The podcast will appear under tracks with the Podcast Name as the Album.</li>
+  <li>To delete an episode from LibreTime, select the episode and click on the red trash can on the toolbar.</li>
+  <li>If you would like LibreTime to automatically download the latest episodes of a podcast, make sure <em>Download latest episodes</em> is checked. This can be used in conjunction with Smartblocks and Playlists to automate downloading and scheduling shows that are received via podcast feed.</li>
+</ul>
+:ET

@@ -1,5 +1,6 @@
 ---
-sidebar: main
+layout: page
+title: Features
 ---
 
 # What is LibreTime?

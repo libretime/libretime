@@ -1,8 +1,8 @@
-# How to Contribute to the LibreTime Project
-
-LibreTime is a community project, maintained by an awesome group of volunteers. Being a "free as in freedom" project,
-we need the help of our users to keep the project going. You don't have to know how to write code in order to help.
-Check out some of ways you can give back to the LibreTime project below.
+---
+layout: page
+title: Contributing to LibreTime
+blurb: LibreTime is a community project, maintained by an awesome group of volunteers. Being a "free as in freedom" project, we need the help of our users to keep the project going. You don't have to know how to write code in order to help. Check out some of ways you can give back to the LibreTime project below.
+---
 
 ## Bug reporting
 

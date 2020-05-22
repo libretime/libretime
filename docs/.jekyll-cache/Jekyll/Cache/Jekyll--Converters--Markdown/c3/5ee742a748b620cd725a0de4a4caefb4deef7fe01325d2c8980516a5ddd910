@@ -1,0 +1,42 @@
+I"t<h1 id="the-playlists-page">The Playlists page</h1>
+
+<h2 id="creating-a-new-playlist">Creating a new playlist</h2>
+
+<p>You can create a new playlist on the toolbar of the <strong>Playlists</strong> page.</p>
+
+<p>At first, the new playlist will be shown as <em>Untitled Playlist</em>. Click the pencil icon on the right to give the playlist a name.</p>
+
+<p><img src="img/Screenshot502-Untitled_playlist_240.png" alt="" /></p>
+
+<p>Type the name you have chosen, then press the <strong>Enter</strong> key on your keyboard to save the new name. You can edit the name of the playlist later, by clicking on the pencil icon again.</p>
+
+<p><img src="img/Screenshot503-My_playlist_240.png" alt="" /></p>
+
+<p>Click the link <strong>View / edit description</strong> to expand a box where you can enter a <strong>Description</strong> for the playlist, then click the <strong>Save</strong> button. Setting good quality metadata here will help you find the playlist using the search box later, so you should be as descriptive as possible.</p>
+
+<p><img src="img/Screenshot504-Example_playlist_240.png" alt="" /></p>
+
+<h2 id="adding-content-to-a-playlist">Adding content to a playlist</h2>
+
+<p>With a playlist open, drag and drop items from the search results on the left into the playlist on the right. Jingles and voice tracks can be added before, after or between music items.</p>
+
+<p><img src="img/Screenshot505-Add_item_to_playlist_240.png" alt="" /></p>
+
+<p>After adding files to the playlist, the total playlist time is displayed in the top right corner. The duration of an individual file is shown in each row of the playlist in a white font, and beneath this figure the time since the beginning of the playlist is displayed in a smaller light grey font. This elapsed time figure can be used as a time check for voice tracks, although this option may limit the re-usability of the voice track.</p>
+
+<p>To audition a playlist file in your web browser, click the white triangle button on the left side of its row. (If the format of the file is not supported by your browser, the triangle in this button will be greyed out). If audition of the file format is supported, a pop-up window will open, with the playlist starting at the file you clicked.</p>
+
+<p>Click the small white <strong>x</strong> icon on the right hand side of each row to remove a file from the playlist. You can also drag and drop files to re-order them, or click the <strong>Shuffle</strong> button to re-order files automatically.</p>
+
+<p><img src="img/Screenshot506-Drag_drop_playlist_240.png" alt="" /></p>
+
+<p>To adjust start and end fades, click the playlist <strong>Fade</strong> button (two horizontal white arrows crossing in a grey rectangle), to the left of the <strong>Delete</strong> and <strong>Save</strong> buttons. This action opens a beige bar in which you can set the <strong>Fade in</strong> duration for the first item in this playlist, and the <strong>Fade out</strong> duration for the last item. This duration figure represents the length of the fade, in seconds and tenths of a second, not the time at which the fade takes place. The default fade duration is set in the <strong>Preferences</strong> page on the <strong>System</strong> menu.</p>
+
+<p><img src="img/Screenshot507-Fade_in_out_240.png" alt="" /></p>
+
+<p>When your playlist is complete, click the <strong>New</strong> button in the top left corner to create another playlist, click the close icon (a white cross in a black circle) in the top right corner, or browse to another page of the LibreTime interface.</p>
+
+<p>If you want to edit the playlist content or metadata later, you can find it by <strong>Title</strong>, <strong>Creator</strong>, <strong>Last Modified</strong> date, <strong>Length</strong>, <strong>Owner</strong> or <strong>Year</strong> using one of the search tools on the Library page. Click the playlist in the search results list, and then click <strong>Edit</strong> from the pop-up menu. You can also <strong>Preview</strong> the entire playlist in a pop-up audition window, <strong>Duplicate</strong> or <strong>Delete</strong> one of your playlists from this menu.</p>
+
+<p><img src="img/Screenshot501-Edit_playlist_240.png" alt="" /></p>
+:ET

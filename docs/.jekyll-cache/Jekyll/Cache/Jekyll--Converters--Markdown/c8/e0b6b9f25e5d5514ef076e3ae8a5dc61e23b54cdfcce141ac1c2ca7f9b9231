@@ -1,0 +1,66 @@
+I"�<h1 id="the-users-page">The Users page</h1>
+
+<blockquote>
+  <p>Note: if your Airtime server is accessible from the public Internet (ex. being hosted in a cloud VM)
+it is recommended that you create a second administrator account with a secure password and then
+delete the <code class="highlighter-rouge">admin</code> account, for best security practice.</p>
+</blockquote>
+
+<h2 id="adding-user-accounts">Adding user accounts</h2>
+
+<p>To add further user accounts to the system, one for each of your station staff that need access to Airtime, click the <strong>New User</strong> button with the plus icon. Enter a user name, password and contact details, and then select the <strong>User Type</strong> from the drop down menu, which can be <em>Admin</em>, <em>Program Manager</em>, <em>DJ</em>, or <em>Guest</em>. The difference between these user types is:</p>
+
+<ul>
+  <li>Guests
+    <ul>
+      <li>Can view shows and the playout log on the Calendar and Dashboard, respectively</li>
+      <li>Listen to the output stream without leaving the interface</li>
+    </ul>
+  </li>
+  <li>DJs
+    <ul>
+      <li>Everything Guests can do, plus</li>
+      <li>Upload media (music, PSAs, underwriting, shows, etc.) to their own library (DJs cannot view other libraries)</li>
+      <li>Edit metadata, delete, and schedule media in their own library to shows they are assigned to</li>
+      <li>Preview uploaded media <em>without</em> affecting the live playout</li>
+      <li>Create Playlists, Smart Blocks, and connect Podcasts and Webstreams to LibreTime</li>
+      <li>Publish media items to LibreTime’s built-in My Podcast function or 3rd party sources such as Soundcloud</li>
+    </ul>
+  </li>
+  <li>Program Managers
+    <ul>
+      <li>Everything DJs can do, plus</li>
+      <li>Manage other users’ libraries in addition to their own</li>
+      <li>Create, edit, and delete color-coded shows on the Calender and assign them to DJs (if needed)</li>
+      <li>Shows can be scheduled to repeat, with the option of linking content between the shows (helpful if a DJ livestreams in each week)</li>
+      <li>View listener statistics</li>
+      <li>Export playout logs for analysis or reporting for music royalties</li>
+    </ul>
+  </li>
+  <li>Administrators
+    <ul>
+      <li>Everything Program Managers can do, plus</li>
+      <li>Manage all user accounts, including the ability to reset passwords</li>
+      <li>Configure Track Types for easy sorting of uploaded content</li>
+      <li>Change system settings</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="editing-or-deleting-user-accounts">Editing or deleting user accounts</h2>
+
+<p>New user accounts that you add will be shown in the table on the left side of the <strong>Users</strong> page. If you have a
+large number of users on the system, you can use the search tool above the table (which has a magnifying glass icon)
+to identify specific user accounts. Click the white chevrons in the table headings to sort the search results
+by <strong>Username</strong>, <strong>First Name</strong>, <strong>Last Name</strong> or <strong>User Type</strong>.</p>
+
+<p>To edit a user account, click on that user’s row in the table, change the user’s details in the box on the
+right side, and then click the <strong>Save</strong> button. To remove a user account, click the small <strong>x</strong> icon to the right
+side of its row in the table. You cannot delete your own user account, and usernames cannot be changed once created.</p>
+
+<p><img src="img/Screenshot474-Save_user_details.png" alt="" /></p>
+
+<p>Users can update their own password, and their contact, language and time zone details, by clicking their username on the
+right side of the main menu bar, next to the <strong>Logout</strong> link.</p>
+
+:ET

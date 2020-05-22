@@ -1,0 +1,51 @@
+---
+layout: default
+---
+
+<html>
+    <head>
+        <style>
+            section{padding:2rem 0}
+        </style>
+    </head>
+    <body>
+    
+        <section class="bg-dark">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 mx-auto text-center">
+                <h2 class="section-heading text-white"> {{ page.title }} </h2>
+                <hr class="light my-4">
+                <p class="text-faded mb-4">
+                    {{ page.blurb }}
+                    <br><small>by {{ page.author }} on {{ page.date }}</small> 
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {{ content }}
+        
+        <!-- Work in progress... aiming to create list of blog posts -->
+        <section class="bg-dark">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 mx-auto text-center">
+                <h2 class="section-heading text-white"> Other Posts </h2>
+                <hr class="light my-4">
+                <p class="text-faded mb-4">
+                  <ul>
+                    {% for post in site.posts %}
+                      <li>
+                        <a href="{{ post.url }}">{{ post.title }}</a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+   </body>
+</html>

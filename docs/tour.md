@@ -1,4 +1,8 @@
-# Interface Tour
+---
+layout: page
+title: Interface Tour
+blurb: See what LibreTime can do!
+---
 
 ## Listen
 
@@ -31,4 +35,3 @@ logo and station description (set under Settings > General), the login button to
 podcast tabs, and a live feed of your station with the currently playing artist and track displayed.
 
 The background of the radio page can be changed; see instructions [here](interface-customization).
-Image comes from [CATS ON SYNTHESIZERS IN SPACE](https://www.catsonsynthesizersinspace.com/).
