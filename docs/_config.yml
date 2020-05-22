@@ -3,6 +3,6 @@ description: An open source radio automation server made for (and made by) low-p
 logo: 144px.png
 show_downloads: false
 
-theme: jekyll-theme-minimal
+remote_theme: zklosko/spirit-of-radio
 layouts_dir: _layouts
 data_dir: _data
