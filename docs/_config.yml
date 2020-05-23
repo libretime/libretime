@@ -6,7 +6,7 @@ show_downloads: false
 layouts_dir: _layouts
 data_dir: _data
 
-favicon: 144px.png
+favicon:
 
 # For splash page layout only
 headimage: img/header.jpg
