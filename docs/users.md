@@ -1,8 +1,8 @@
 ---
-sidebar: mainmenus
+layout: docs
+title: Managing Users
+blurb: How to add, edit, and remove user accounts
 ---
-
-# The Users page
 
 > Note: if your Airtime server is accessible from the public Internet (ex. being hosted in a cloud VM)
 it is recommended that you create a second administrator account with a secure password and then

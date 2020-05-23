@@ -30,6 +30,9 @@ layout: default
            /* Estimated height of largest sidebar in case of short content */
            min-height: 800px;
        }
+       section{
+        padding:1rem 0
+        }
     </style>
     
     <title>{{ site.title }} - {{ page.title }}</title>
@@ -74,7 +77,21 @@ layout: default
         {% endfor %}
     </nav>
     
+    <!-- Page Header -->
     <div class="container-fluid">
+        <section class="bg-primary">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 mx-auto text-center">
+                <h2 class="section-heading text-white"> {{ page.title }} </h2>
+                <hr class="light my-4">
+                <p class="text-faded mb-4">
+                    {{ page.blurb }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
       <!-- This is the main content of the page getting pulled from the MDs -->
       <div class="content">
         {{ content }}
