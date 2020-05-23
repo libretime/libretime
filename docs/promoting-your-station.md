@@ -1,3 +1,8 @@
+---
+layout: docs
+title: Promoting Your Station
+---
+
 Promoting Your Station
 ----------------------
 

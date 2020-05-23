@@ -1,5 +1,5 @@
-title: LibreTime Radio Automation
-description: An open source radio automation server made for (and made by) low-power FM stations and the rest of us.
+title: LibreTime 
+description: An open source radio automation server made for (and by) low-power FM stations and the rest of us.
 logo: 144px.png
 show_downloads: false
 
@@ -12,7 +12,7 @@ favicon:
 headimage: img/header.jpg
 headtext: Open Source Radio Automation
 headsubtext: Everything you need to get your terrestrial / on-line radio station up and broadcasting like a pro - without breaking the bank! 
-headbuttonurl: https://libretime.org
+headbuttonurl: index#get-started
 headbuttontext: Get LibreTime
 
 # Build settings

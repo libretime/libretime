@@ -1,5 +1,6 @@
 ---
-sidebar: installer
+layout: docs
+title: Setting the Server Time
 ---
 
 # Setting the server time

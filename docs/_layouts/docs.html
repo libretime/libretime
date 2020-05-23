@@ -24,42 +24,12 @@ layout: default
     <link href="css/creative.min.css" rel="stylesheet">
     
     <style>
-            /* "CONTENT" From Above */
        .content {
-       
             /* size of my container minus sidebar width */
            width: calc(80%);
-       
            /* Estimated height of largest sidebar in case of short content */
            min-height: 800px;
        }
-       
-       /* SIDEBAR */
-       .sidebar {
-           position: absolute;
-           right: 0;
-           top: 57px;
-           width: 20%;
-           height: 100%; /* Super important! */
-           background-color: #212529;
-           color: #fff;
-       }
-       .link-style {
-          color: rgba(255,255,255,.9);
-       }
-       /* SIDEBAR CONTAINER */
-      .sidebar-item {
-          position: absolute;
-          top: 5px;
-          left: 10%;
-          width: 100%;
-          height: 25%;
-      
-          /* Position the items */
-          &:nth-child(2) { top: 25%; }
-          &:nth-child(3) { top: 50%; }
-          &:nth-child(4) { top: 75%; }
-        }
     </style>
     
     <title>{{ site.title }} - {{ page.title }}</title>
@@ -86,15 +56,6 @@ layout: default
     </nav>
     
     <!-- Sidebar -->
-    <div id="sidebar">
-      <ul>
-        {% for item in site.data.nav.docsnav %}
-        <li class="nav-item">
-          <a class="nav-link" href="{{ item.url }}">{{ item.page }}</a>
-        </li>
-        {% endfor %}
-      </ul>
-    </div>
     
     <nav id="sidebar">
         <div class="sidebar-header">

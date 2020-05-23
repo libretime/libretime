@@ -3,8 +3,6 @@ topnav:
   url: quickstart
 - page: Features
   url: features
-- page: Tour
-  url: tour
 - page: Docs
   url: advanced-configuration
 - page: Contribute
@@ -36,6 +34,8 @@ docsnav:
     url: live-broadcast
   - page: Adding Users
     url: users
+  - page: Listen To Your Stream
+    url: listen
   - page: Help!
     url: troubleshooting
 - section: Advanced Configuration

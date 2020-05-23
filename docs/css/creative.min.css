@@ -22,7 +22,7 @@ hr.light{
   
 img{
  width:100%;
- max-width: 600px;
+ max-width: 700px;
 }
   
 a{
@@ -38,13 +38,33 @@ a:hover{
 h1,h2,h3,h4,h5,h6{
   font-family:'Open Sans','Helvetica Neue',Arial,sans-serif
   }
-  
+
+/* Table Properties */
+table{
+ border: 2px solid #f05f40;
+}
+
+th{
+ background-color: #f05f40
+}
+ 
+tr, td{
+ padding: 15px;
+ text-align: left;
+}
+
+/* Theme Colors */  
 .bg-primary{
   background-color:#f05f40!important
   }
   
 .bg-dark{
   background-color:#212529!important
+  }
+  
+.footer-dark{
+ background-color:#212529!important;
+ padding:2rem 0
   }
   
 .text-faded{
@@ -106,55 +126,6 @@ img::-moz-selection{color:#fff;background:0 0}
 #mainNav.navbar-shrink .navbar-nav>li.nav-item>a.nav-link:focus{color:#212529}
 #mainNav.navbar-shrink .navbar-nav>li.nav-item>a.nav-link:focus:hover,
 #mainNav.navbar-shrink .navbar-nav>li.nav-item>a.nav-link:hover{color:#f05f40}}
-
-/* CSS for docs navbar*/ 
-#docsNav{
-  border-bottom:1px solid rgba(33,37,41,.1);
-  background-color:#fff;
-  font-family:'Open Sans','Helvetica Neue',Arial,sans-serif;
-  -webkit-transition:all .2s;
-  transition:all .2s
-  } 
- 
-#docsNav .navbar-brand{
-  font-weight:650;
-  text-transform:uppercase;
-  color:#f05f40;
-  font-family:'Open Sans','Helvetica Neue',Arial,sans-serif
-  }
-
-#docsNav .navbar-brand:focus,
-#docsNav .navbar-brand:hover{color:#f05f40}
-#docsNav .navbar-nav>li.nav-item>a.nav-link,
-#docsNav .navbar-nav>li.nav-item>a.nav-link:focus{
-  font-size:.8rem;font-weight:650;text-transform:uppercase;color:#212529
-  }
-#docsNav .navbar-nav>li.nav-item>a.nav-link:focus:hover,
-#docsNav .navbar-nav>li.nav-item>a.nav-link:hover{color:#f05f40}
-#docsNav .navbar-nav>li.nav-item>a.nav-link.active,
-#docsNav .navbar-nav>li.nav-item>a.nav-link:focus.active{color:#f05f40!important;background-color:transparent}
-#docsNav .navbar-nav>li.nav-item>a.nav-link.active:hover,
-#docsNav .navbar-nav>li.nav-item>a.nav-link:focus.active:hover{background-color:transparent}
-
-@media (min-width:992px){
-  #docsNav{border-color:transparent;background-color:transparent
-  }
-  
-#docsNav .navbar-brand{color:rgba(255,255,255,.7)}
-#docsNav .navbar-brand:focus,#docsNav .navbar-brand:hover{color:#fff}
-#docsNav .navbar-nav>li.nav-item>a.nav-link{padding:.5rem 1rem}
-#docsNav .navbar-nav>li.nav-item>a.nav-link,
-#docsNav .navbar-nav>li.nav-item>a.nav-link:focus{color:rgba(255,255,255,.7)}
-#docsNav .navbar-nav>li.nav-item>a.nav-link:focus:hover,
-#docsNav .navbar-nav>li.nav-item>a.nav-link:hover{color:#fff}
-#docsNav.navbar-shrink{border-bottom:1px solid rgba(33,37,41,.1);background-color:#fff}
-#docsNav.navbar-shrink .navbar-brand{color:#f05f40}
-#docsNav.navbar-shrink .navbar-brand:focus,
-#docsNav.navbar-shrink .navbar-brand:hover{color:#f05f40}
-#docsNav.navbar-shrink .navbar-nav>li.nav-item>a.nav-link,
-#docsNav.navbar-shrink .navbar-nav>li.nav-item>a.nav-link:focus{color:#212529}
-#docsNav.navbar-shrink .navbar-nav>li.nav-item>a.nav-link:focus:hover,
-#docsNav.navbar-shrink .navbar-nav>li.nav-item>a.nav-link:hover{color:#f05f40}}
 
 header.masthead{
   padding-top:10rem;padding-bottom:calc(10rem - 56px);
@@ -246,6 +217,22 @@ display: block;
 font-size: 80%;
 color: brown;
 text-align: right;
+}
+
+/* Code Blocks */
+code {
+color: gray;
+font-size: .9rem;
+}
+
+pre.highlight {
+border: 1px solid #212529;
+border-left: 10px solid #212529;
+background: white;
+color: black;
+font-size: .9rem;
+margin: 10px;
+padding: 10px 20px;
 }
 
 /* Sidebar */

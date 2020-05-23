@@ -1,3 +1,7 @@
+---
+layout: docs
+---
+
 Working with track types
 ------------------------
 

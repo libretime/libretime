@@ -1,3 +1,7 @@
+---
+layout: docs
+---
+
 # Preparing the Server
 
 The following instructions assume that you have root access (**sudo** on most

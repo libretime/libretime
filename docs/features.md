@@ -4,8 +4,6 @@ title: Features
 blurb: 
 ---
 
-![](img/Calendar-with-shows.jpg)
-
 Some of LibreTime's greatest hits:
 
 * *Web-based remote station management* - authorized personnel can add

@@ -16,7 +16,7 @@ these are less tested. Firewall and static IP address configuration will need to
 |---------------------|---------------|
 | 1 Ghz Processor| 1vCPU |
 | 2 GB RAM | 2 GB RAM |
-| Wired ethernet connection and a static IP address (see below for instructions) | 2 TB of data transfer/month |
+| Wired ethernet connection, static IP address | 2 TB of data transfer/month |
 
 [DigitalOcean](https://www.digitalocean.com/pricing/#Compute) and [Linode](https://www.linode.com/pricing/#row--compute)
  have similar plans that meet Cloud Install requirements. Both plans cost $10/month.

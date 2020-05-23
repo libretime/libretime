@@ -1,5 +1,6 @@
 ---
-sidebar: installer
+layout: docs
+title: Setting up SSL
 ---
 
 # Setting up SSL

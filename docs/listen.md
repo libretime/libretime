@@ -1,7 +1,5 @@
 ---
-layout: page
-title: Interface Tour
-blurb: See what LibreTime can do!
+layout: docs
 ---
 
 ## Listen
