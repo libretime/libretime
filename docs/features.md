@@ -1,10 +1,8 @@
 ---
 layout: page
 title: Features
-blurb: 
+blurb: Just some of LibreTime's greatest hits
 ---
-
-Some of LibreTime's greatest hits:
 
 * *Web-based remote station management* - authorized personnel can add
    programme material, create playlists or smart blocks, and stream in live,
@@ -109,7 +107,7 @@ Optionally, the outgoing Icecast stream can be relayed to a transmitter.
         <div class="col-lg-3 col-md-6 text-center">
           <div class="service-box mt-5 mx-auto">
             <h3 class="mb-3">"Can I upgrade to LibreTime?"</h3>
-            <p class="text-muted mb-0">In theory you can update any pre 3.0 version of AirTime to LibreTime 3.0.0 and above. More information is <a href:"upgrading">here</a>.</p>
+            <p class="text-muted mb-0">In theory you can update any pre 3.0 version of AirTime to LibreTime 3.0.0 and above. More information is <a href="upgrading">here</a>.</p>
           </div>
         </div>
         <div class="col-lg-3 col-md-6 text-center">

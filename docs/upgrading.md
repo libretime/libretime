@@ -1,4 +1,7 @@
-# Upgrading LibreTime
+---
+layout: docs
+title: Upgrading LibreTime
+---
 
 ## LibreTime versioning
 

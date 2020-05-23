@@ -3,8 +3,6 @@ layout: docs
 title: Setting up SSL
 ---
 
-# Setting up SSL
-
 To increase the security of your server, you can enable encrypted access to the LibreTime administration interface, and direct your users towards this more secure login page. The main advantage of using this encryption is that your remote users' login names and passwords are not sent in plain text across the public Internet or untrusted local networks, such as shared Wi-Fi access points.
 
 ## Deploying a certificate with Certbot
