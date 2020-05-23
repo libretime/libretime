@@ -1,16 +1,26 @@
 ---
 layout: page
 title: Features
+blurb: 
 ---
 
-# What is LibreTime?
+![](img/Calendar-with-shows.jpg)
 
-[LibreTime](http://libretime.org/ "LibreTime homepage") is the open broadcast
-software for scheduling and remote station management. Web browser access to
-the station's media library, multi-file upload and automatic metadata import
-features are coupled with a collaborative online scheduling calendar and
-playlist management. The scheduling calendar is managed through an easy-to-use
-interface and triggers playout with sub-second precision.
+Some of LibreTime's greatest hits:
+
+* *Web-based remote station management* - authorized personnel can add
+   programme material, create playlists or smart blocks, and stream in live,
+   all via a web interface.
+* *Automation* - LibreTime has a scheduler function that enables users to
+   create shows with content for playback at the exact date and time specified.
+   Playlists, smart blocks and remote stream URLs can be used multiple times.
+* *Solid playout* - LibreTime uses the open source Liquidsoap streaming language
+   for reliable and precise playback to multiple outputs.
+* *Open source* - run LibreTime royalty-free, make changes to the code, and contribute to the project as you see fit, under the GNU AGPLv3 license.
+* *Multilingual* - supports over 15 languages both in the interface and inside file metadata
+* *Low system requirements*
+  * For servers: 1Ghz processor, 2 GB RAM, and a wired ethernet connection with a static IP address
+  * For end-users: a modern version of Firefox, Chrome, or Safari, and a screen resolution of at least 1280x768
 
 ![](img/Screenshot540-Now_playing_250.png)
 
@@ -79,3 +89,44 @@ can enable remote studios to stream in to Liquidsoap at authorised times.
 Optionally, the outgoing Icecast stream can be relayed to a transmitter.
 
 ![](img/libretime_web_architecture.svg)
+
+<html>
+  <section id="faq">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <h2 class="section-heading">Frequently Asked Questions</h2>
+          <hr class="my-4">
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 col-md-6 text-center">
+          <div class="service-box mt-5 mx-auto">
+            <h3 class="mb-3">"What is LibreTime?"</h3>
+            <p class="text-mute mb-0">LibreTime is a community managed fork of the AirTime project. It is managed by a friendly inclusive community of stations from around the globe that use, document and improve LibreTime.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 text-center">
+          <div class="service-box mt-5 mx-auto">
+            <h3 class="mb-3">"Can I upgrade to LibreTime?"</h3>
+            <p class="text-muted mb-0">In theory you can update any pre 3.0 version of AirTime to LibreTime 3.0.0 and above. More information is <a href:"upgrading">here</a>.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 text-center">
+          <div class="service-box mt-5 mx-auto">
+            <h3 class="mb-3">"Why are Cue-In/Out points wrong in some tracks?"</h3>
+            <p class="text-muted mb-0">The silan silence detection is currently outdated on almost all distributions. The older versions report clearly wrong information and may segfault at the worst. Versions starting with 0.3.3 (and some patched 0.3.2 builds) are much better but still need thorough testing.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 text-center">
+          <div class="service-box mt-5 mx-auto">
+            <h3 class="mb-3">"Why did you fork AirTime?"</h3>
+            <p class="text-muted mb-0">See this <a href="https://gist.github.com/hairmare/8c03b69c9accc90cfe31fd7e77c3b07d">open letter to the Airtime community</a>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</html>

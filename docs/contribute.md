@@ -4,6 +4,9 @@ title: Contributing to LibreTime
 blurb: LibreTime is a community project, maintained by an awesome group of volunteers. Being a "free as in freedom" project, we need the help of our users to keep the project going. You don't have to know how to write code in order to help. Check out some of ways you can give back to the LibreTime project below.
 ---
 
+> LibreTime is a fork of AirTime due to stalled development of the FLOSS version. For background on this,
+see this [open letter to the Airtime community](https://gist.github.com/hairmare/8c03b69c9accc90cfe31fd7e77c3b07d).
+
 ## Bug reporting
 
 If you think you've found a bug, please report it on our [Github issues page](https://github.com/LibreTime/libretime/issues/new/choose).

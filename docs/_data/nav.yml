@@ -5,16 +5,16 @@ topnav:
   url: features
 - page: Tour
   url: tour
-- page: FAQ
-  url: faq
 - page: Docs
   url: advanced-configuration
-- page: Help Us!
+- page: Contribute
   url: contribute
   
 docsnav:
 - section: Install
   contents:
+  - page: Preparing the Server
+    url: preparing-the-server
   - page: Quick Install
     url: quickstart
   - page: Host Configuration
@@ -38,9 +38,16 @@ docsnav:
     url: users
   - page: Help!
     url: troubleshooting
-  - page: Advanced Configuration
-    url: advanced-configuration
-  - page:      
+- section: Advanced Configuration
+  contents:
+  - page: Interface Customization
+    url: interface-customization
+  - page: Configuring Streaming Services
+    url: icecast-shoutcast
+  - page: Backing up LibreTime
+    url: backing-up-the-server
+  - page: Upgrading LibreTime
+    url: upgrading
 - section: Radio Broadcasting 101
   contents:
   - page: UNESCO Public Radio Guide
@@ -54,3 +61,5 @@ docsnav:
     url: rights-royalties
   - page: Media Folders used by LibreTime
     url: folders
+  - page: Uninstalling LibreTime
+    url: uninstall
