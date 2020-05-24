@@ -1,8 +1,7 @@
 ---
 layout: docs
+title: Preparing the Server
 ---
-
-# Preparing the Server
 
 The following instructions assume that you have root access (**sudo** on most
 distributions) to a GNU/Linux server, and are familiar with basic command line

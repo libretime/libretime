@@ -87,6 +87,7 @@ Optionally, the outgoing Icecast stream can be relayed to a transmitter.
 ![](img/libretime_web_architecture.svg)
 
 <html>
+<!-- FAQ Section -->
   <section id="faq">
     <div class="container">
       <div class="row">

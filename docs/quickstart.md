@@ -48,6 +48,8 @@ network:
         addresses: 192.168.88.1
 ```
 
+After the netplan file has been saved, run `sudo netplan apply` to apply changes.
+
 Next, configure Ubuntu's firewall by running:
 
 ```
