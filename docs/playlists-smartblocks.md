@@ -3,6 +3,12 @@ layout: docs
 title: Playlists and Smartblocks
 ---
 
+> Quick Links:
+- [Playlists](#playlists)
+- [Smartblocks](#smartblocks)
+
+# Playlists {#playlists}
+
 ## Creating a new playlist
 
 You can create a new playlist on the toolbar of the **Playlists** page.
@@ -42,6 +48,8 @@ When your playlist is complete, click the **New** button in the top left corner 
 If you want to edit the playlist content or metadata later, you can find it by **Title**, **Creator**, **Last Modified** date, **Length**, **Owner** or **Year** using one of the search tools on the Library page. Click the playlist in the search results list, and then click **Edit** from the pop-up menu. You can also **Preview** the entire playlist in a pop-up audition window, **Duplicate** or **Delete** one of your playlists from this menu.
 
 ![](img/Screenshot501-Edit_playlist_240.png)
+
+# Smartblocks {#smartblocks}
 
 ## Creating a Smartblock
 

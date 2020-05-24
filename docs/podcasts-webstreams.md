@@ -2,6 +2,11 @@
 layout: docs
 title: Podcasts and Webstreams
 ---
+> Quick Links:
+- [Podcasts](#podcasts)
+- [Webstreams](#webstreams)
+
+# Podcasts   {#podcasts}
 
 The Podcasts page allows you add subscriptions to podcasts which are often used to syndicated audio files using a URL called a RSS feed. This allows your LibreTime instance to automatically download new shows from the web.
 
@@ -32,6 +37,8 @@ A search box is available to search for episodes within the feed.
 - To import an episode directly into LibreTime, double-click on an episode or select it and click **+ Import**. The podcast will appear under tracks with the Podcast Name as the Album.
 - To delete an episode from LibreTime, select the episode and click on the red trash can on the toolbar.
 - If you would like LibreTime to automatically download the latest episodes of a podcast, make sure *Download latest episodes* is checked. This can be used in conjunction with Smartblocks and Playlists to automate downloading and scheduling shows that are received via podcast feed.
+
+# Webstreams   {#webstreams}
 
 ## Adding a webstream
 A web stream URL and metadata can be added to the LibreTime library, so that a remote stream can be searched for and scheduled to be *pulled* into a show. For example, at the top of the hour your station may pull a news report from journalists working in another studio. This is a different concept from **Master Source** and **Show Source** remote streams which are *pushed* into the LibreTime playout schedule.

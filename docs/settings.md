@@ -93,6 +93,11 @@ their username on the right side of the menu bar.
 
 ----
 
+> Quick Links:
+- [General Settings](#general)
+- [Stream Settings](#stream)
+- [LibreTime Status](#status)
+
 # Stream Settings      {#stream}
 
 Global settings
@@ -175,6 +180,11 @@ Any connection problems between Liquidsoap and Icecast or SHOUTcast are shown on
 ![](img/Screenshot405-Connection_timeout.png)
 
 ------
+
+> Quick Links:
+- [General Settings](#general)
+- [Stream Settings](#stream)
+- [LibreTime Status](#status)
 
 # The Status page    {#status}
 

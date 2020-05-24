@@ -32,8 +32,14 @@ docsnav:
     url: preparing-media
   - page: Scheduling Shows
     url: scheduling-shows
+  - page: Playlists and Smartblocks
+    url: playlists-smartblocks
+  - page: Podcasts and Webstreams
+    url: podcasts-webstreams
   - page: Broadcasting Live
     url: live-broadcast
+  - page: LibreTime Settings
+    url: settings
   - page: Managing Users
     url: users
   - page: Listen To Your Stream
