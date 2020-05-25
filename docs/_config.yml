@@ -6,7 +6,7 @@ show_downloads: false
 layouts_dir: _layouts
 data_dir: _data
 
-favicon:
+favicon: favicon.ico
 
 # For splash page layout only
 headimage: img/header.jpg
@@ -16,5 +16,5 @@ headbuttonurl: index#get-started
 headbuttontext: Get LibreTime
 
 # Build settings
-plugins:
-  - jekyll-feed
+#plugins:
+#  - jekyll-feed
