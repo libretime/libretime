@@ -1,16 +1,18 @@
 ---
 layout: docs
+title: Broadcasting live with MIXXX or B.U.T.T.
 ---
 
-# Broadcasting live with MIXXX or B.U.T.T.
+> Quick Links:
+- [MIXXX](#mixxx)
+- [BUTT](#butt)
 
 [![How to Livestream Your Show](http://img.youtube.com/vi/4GLsU9hPTtM/0.jpg)](https://www.youtube-nocookie.com/embed/4GLsU9hPTtM "How to Livestream Your Show")
 
 This how to is intended for DJs using BUTT or MIXXX to stream to their LibreTime
 server with an external USB audio card setup to route a mixer and sound.
 
-Live shows with MIXXX
----------------------
+# Live shows with MIXXX {#mixxx}
 
 Mixxx is a cross-platform Open Source application for DJs, available [here](https://www.mixxx.org).
 
@@ -35,8 +37,7 @@ For **Host**, **Mount**, **Port**, **Login** and **Password**, use the **Input S
 configured in the LibreTime **Streams** page, on LibreTime's **System** menu. See [stream settings](stream-settings)
 for remote input connection details.
 
-Live shows with B.U.T.T. (Broadcast Using This Tool)
-------------------------------------------------------
+# Live shows with B.U.T.T. (Broadcast Using This Tool) {#butt}
 
 ## Set Up
 

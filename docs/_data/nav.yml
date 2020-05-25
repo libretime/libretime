@@ -4,7 +4,7 @@ topnav:
 - page: Features
   url: features
 - page: Docs
-  url: advanced-configuration
+  url: preparing-the-server
 - page: Contribute
   url: contribute
 - page: <svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg> Sponsor
@@ -13,47 +13,49 @@ topnav:
 docsnav:
 - section: Install
   contents:
-  - page: Preparing the Server
+  - page: 0. Preparing the Server
     url: preparing-the-server
-  - page: Quick Install
+  - page: 1. Quick Install
     url: quickstart
-  - page: Host Configuration
+  - page: 2. Host Configuration
     url: host-configuration
-  - page: Setting the Server Time
+  - page: 3. Setting the Server Time
     url: setting-the-server-time
-  - page: Configuring Track Types
+  - page: 4. Configuring Track Types
     url: track-types
-  - page: Setting up SSL
+  - page: 5. Setting up SSL
     url: ssl-config
   - page:
 - section: Using LibreTime
   contents:
-  - page: Preparing Media
-    url: preparing-media
-  - page: Scheduling Shows
-    url: scheduling-shows
+  - page: Broadcasting Live
+    url: live-broadcast
+  - page: Dashboard and Calendar
+    url: dashboard
+  - page: Help!
+    url: troubleshooting
+  - page: Listen To Your Stream
+    url: listen
+  - page: Managing Users
+    url: users
   - page: Playlists and Smartblocks
     url: playlists-smartblocks
   - page: Podcasts and Webstreams
     url: podcasts-webstreams
-  - page: Broadcasting Live
-    url: live-broadcast
-  - page: LibreTime Settings
+  - page: Preparing Media
+    url: preparing-media
+  - page: Scheduling Shows
+    url: scheduling-shows
+  - page: Settings
     url: settings
-  - page: Managing Users
-    url: users
-  - page: Listen To Your Stream
-    url: listen
-  - page: Help!
-    url: troubleshooting
 - section: Advanced Configuration
   contents:
+  - page: Backing up LibreTime
+    url: backing-up-the-server    
+  - page: Configuring Streaming Services
+    url: icecast-shoutcast  
   - page: Interface Customization
     url: interface-customization
-  - page: Configuring Streaming Services
-    url: icecast-shoutcast
-  - page: Backing up LibreTime
-    url: backing-up-the-server
   - page: Upgrading LibreTime
     url: upgrading
 - section: Radio Broadcasting 101
@@ -65,9 +67,9 @@ docsnav:
   contents:
   - page: HD Audio Modules
     url: hd-audio-modules
+  - page: Media Folders used by LibreTime
+    url: folders    
   - page: Rights and Royalties
     url: rights-royalties
-  - page: Media Folders used by LibreTime
-    url: folders
   - page: Uninstalling LibreTime
     url: uninstall

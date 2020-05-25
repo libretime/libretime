@@ -1,12 +1,10 @@
 ---
-sidebar: main
+layout: docs
+title: Troubleshooting
+blurb: Having trouble with your LibreTime installation? We've got you covered!
 ---
 
-# Troubleshooting
-
-Having trouble with your LibreTime installation? We've got you covered!
-
-Since LibreTime is effectively a web site running on a LAPP stack, individual components of the system can be started, stopped, restarted or checked in the server console using the **systemctl** command:
+LibreTime is effectively a web site running on a LAPP stack, so individual components of the system can be started, stopped, restarted or checked in the server console using the **systemctl** command:
 
     sudo systemctl start|stop|restart|status libretime-liquidsoap
     sudo systemctl start|stop|restart|status libretime-playout

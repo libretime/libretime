@@ -1,11 +1,8 @@
 ---
 layout: docs
+title: Working with Track Types
 ---
 
-Working with track types
-------------------------
-
-**Audience**: Adminstrators
 
 ## Using track types when uploading tracks
 
