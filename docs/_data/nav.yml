@@ -53,7 +53,9 @@ docsnav:
   - page: Backing up LibreTime
     url: backing-up-the-server    
   - page: Configuring Streaming Services
-    url: icecast-shoutcast  
+    url: icecast-shoutcast
+  - page: FreeIPA Configuration
+    url: freeipa
   - page: Interface Customization
     url: interface-customization
   - page: Upgrading LibreTime

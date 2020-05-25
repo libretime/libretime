@@ -4,14 +4,37 @@ title: Features
 blurb: Just some of LibreTime's greatest hits
 ---
 
+> Quick Links:
+- [Library Intelligence](#library)
+- [Programming](#programming)
+- [DJ Management](#managedjs)
+- [Podcasting & More!](#podcasting)
+- [B-Sides](#bsides)
+
+# <i class="fas fa-1x fa-music text-primary mb-3 sr-icon-1"></i> Library Intelligence {#library}
+
+* *Automation* - LibreTime has a scheduler function that enables users to
+   create shows with content for playback at the exact date and time specified.
+   Playlists, smart blocks and remote stream URLs can be used multiple times.
+
+# <i class="fas fa-1x fa-th-list text-primary mb-3 sr-icon-2"></i> Programming {#programming}
+
 * *Web-based remote station management* - authorized personnel can add
    programme material, create playlists or smart blocks, and stream in live,
    all via a web interface.
 * *Automation* - LibreTime has a scheduler function that enables users to
    create shows with content for playback at the exact date and time specified.
    Playlists, smart blocks and remote stream URLs can be used multiple times.
+
+# <i class="fas fa-1x fa-users text-primary mb-3 sr-icon-3"></i> DJ Management {#managedjs}
+
+# <i class="fas fa-1x fa-microphone text-primary mb-3 sr-icon-4"></i> Podcasting & More! {#podcasting}
+
 * *Solid playout* - LibreTime uses the open source Liquidsoap streaming language
    for reliable and precise playback to multiple outputs.
+
+# B-Sides {#bsides}
+
 * *Open source* - run LibreTime royalty-free, make changes to the code, and contribute to the project as you see fit, under the GNU AGPLv3 license.
 * *Multilingual* - supports over 15 languages both in the interface and inside file metadata
 * *Low system requirements*
