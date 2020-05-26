@@ -8,7 +8,7 @@ blurb: Just some of LibreTime's greatest hits
 - [Library Intelligence](#library)
 - [Programming](#programming)
 - [DJ Management](#managedjs)
-- [Podcasting & More!](#podcasting)
+- [AM/FM & Web](#amfm)
 - [B-Sides](#bsides)
 
 # <i class="fas fa-1x fa-music text-primary mb-3 sr-icon-1"></i> Library Intelligence {#library}
@@ -20,7 +20,7 @@ blurb: Just some of LibreTime's greatest hits
 # <i class="fas fa-1x fa-th-list text-primary mb-3 sr-icon-2"></i> Programming {#programming}
 
 * *Web-based remote station management* - authorized personnel can add
-   programme material, create playlists or smart blocks, and stream in live,
+   programme material, and create playlists or smart blocks,
    all via a web interface.
 * *Automation* - LibreTime has a scheduler function that enables users to
    create shows with content for playback at the exact date and time specified.
@@ -28,7 +28,10 @@ blurb: Just some of LibreTime's greatest hits
 
 # <i class="fas fa-1x fa-users text-primary mb-3 sr-icon-3"></i> DJ Management {#managedjs}
 
-# <i class="fas fa-1x fa-microphone text-primary mb-3 sr-icon-4"></i> Podcasting & More! {#podcasting}
+* *User Management* - LibreTime allows for the creation of user accounts with four levels of user permissions:
+*Guest*, *DJ*, *Program Manager*, and *Admin*. Only give your staff the permissions they need to succeed.
+
+# <i class="fas fa-1x fa-broadcast-tower text-primary mb-3 sr-icon-4"></i> AM/FM &amp; Web {#amfm}
 
 * *Solid playout* - LibreTime uses the open source Liquidsoap streaming language
    for reliable and precise playback to multiple outputs.
@@ -125,7 +128,7 @@ Optionally, the outgoing Icecast stream can be relayed to a transmitter.
         <div class="col-lg-3 col-md-6 text-center">
           <div class="service-box mt-5 mx-auto">
             <h3 class="mb-3">"What is LibreTime?"</h3>
-            <p class="text-mute mb-0">LibreTime is a community managed fork of the AirTime project. It is managed by a friendly inclusive community of stations from around the globe that use, document and improve LibreTime.</p>
+            <p class="text-muted mb-0">LibreTime is a community managed fork of the AirTime project. It is managed by a friendly inclusive community of stations from around the globe that use, document and improve LibreTime.</p>
           </div>
         </div>
         <div class="col-lg-3 col-md-6 text-center">

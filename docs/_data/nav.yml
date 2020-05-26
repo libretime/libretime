@@ -1,8 +1,6 @@
 topnav:
 - page: Install
   url: quickstart
-- page: Features
-  url: features
 - page: Docs
   url: preparing-the-server
 - page: Contribute
