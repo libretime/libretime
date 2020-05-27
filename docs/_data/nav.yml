@@ -1,8 +1,6 @@
 topnav:
-- page: Install
-  url: quickstart
 - page: Docs
-  url: preparing-the-server
+  url: quickstart
 - page: Contribute
   url: contribute
 - page: <svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg> Sponsor
@@ -11,8 +9,6 @@ topnav:
 docsnav:
 - section: Install
   contents:
-  - page: 0. Preparing the Server
-    url: preparing-the-server
   - page: 1. Quick Install
     url: quickstart
   - page: 2. Host Configuration

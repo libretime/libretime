@@ -72,6 +72,7 @@ Using the following configuration for Apache 2.2 as a guide, replace *airtime.ex
 
 On port 80, Apache's *alias* module is used to set a *Redirect permanent* for the login page. Optionally, access could be denied to all sites except *localhost* and any other LibreTime servers on your network, so that unencrypted communication between LibreTime components can continue.
 
+```
     <VirtualHost *:443>
           SSLEngine on
           SSLProtocol All -SSLv2 -SSLv3
@@ -113,6 +114,7 @@ On port 80, Apache's *alias* module is used to set a *Redirect permanent* for th
                   Allow from all
           </Directory>
     </VirtualHost> 
+```
 
 Save the file with **Ctrl+O** and exit the **nano** editor with **Ctrl+X**. Then restart Apache with the command:
 
@@ -136,4 +138,3 @@ If the users of your LibreTime server wish to avoid going through these steps, o
 
 Whether your certificate is self-signed or not, you will see browser security warnings whenever a https:// page is delivering unencrypted content, such as the stream from an Icecast server. In Firefox, an exclamation mark icon is displayed in the address bar of the **Listen** pop-up.
 
-![](img/Screenshot549-unencrypted_warning.png)

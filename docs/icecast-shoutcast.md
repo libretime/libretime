@@ -1,4 +1,7 @@
-# Icecast and Shoutcast stream configuration
+---
+layout: docs
+title: Icecast and Shoutcast Stream Configuration
+---
 
 LibreTime supports direct connection to two popular streaming media servers, the open source **Icecast** (<http://www.icecast.org>) and the proprietary **SHOUTcast** (<http://www.shoutcast.com>). Apart from the software license, the main difference between these two servers is that Icecast supports simultaneous MP3, AAC, Ogg Vorbis or Ogg Opus streaming from LibreTime, whereas SHOUTcast supports MP3 and AAC streams but not Ogg Vorbis or Opus. The royalty-free Ogg Vorbis format has the advantage of better sound quality than MP3 at lower bitrates, which has a direct impact on the amount of bandwidth that your station will require to serve the same number of listeners. Ogg Opus also benefits from good sound quality at low bitrates, with the added advantage of lower latency than other streaming formats. Opus is now an IETF standard (<http://tools.ietf.org/html/rfc6716>) and requires Icecast 2.4 or later to be installed on the streaming server.
 

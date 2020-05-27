@@ -81,9 +81,31 @@ After the install is completed, head to the IP address of the server LibreTime w
 to complete the welcome wizard. While not strictly necessary, it is recommended that you change the passwords prompted in the welcome wizard if you intend on accessing the server from the Internet. The welcome wizard will
 walk you through the rest of the installation process.
 
-Congratulations! You've successfully set up LibreTime!
-
 ## Post-install
+
+### Services
+
+Once all of the services needed to run LibreTime are installed and configured,
+it is important that the server starts them during the boot process, to cut down on downtime, especially in live enviornments.
+Ubuntu 18.04 uses the `systemctl` command to manage services, so run the following commands to enable all
+LibreTime-needed services to run at boot:
+
+```
+sudo systemctl enable libretime-liquidsoap
+sudo systemctl enable libretime-playout
+sudo systemctl enable libretime-celery
+sudo systemctl enable libretime-analyzer
+sudo systemctl enable apache2
+sudo systemctl enable rabbitmq-server
+```
+
+If an error is returned, try adding `.service` to the end of each command. For example:
+
+```
+sudo systemctl enable apache2.service
+```
+
+### User Permissions
 
 If you plan to have LibreTime output analog audio directly from its server to a mixing console or transmitter,
 the `www-data` user needs to be added to the `audio` user group using the command below.
@@ -91,6 +113,8 @@ the `www-data` user needs to be added to the `audio` user group using the comman
 ```
 sudo adduser www-data audio
 ```
+
+Congratulations! You've successfully installed LibreTime!
 
 Now that the install is complete, use these guides to help you continue to set up your LibreTime server
 

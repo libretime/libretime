@@ -1,8 +1,7 @@
 ---
-sidebar: appendix
+layout: docs
+title: HD Audio Modules
 ---
-
-# HD Audio Modules
 
 This listing is provided to help ensure that the correct model parameter is passed to the ALSA kernel module for an Intel HDA soundcard, if one is fitted to your LibreTime server. See the chapter *Preparing the server* in this book for more details.
 

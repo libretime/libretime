@@ -7,7 +7,11 @@ title: Broadcasting live with MIXXX or B.U.T.T.
 - [MIXXX](#mixxx)
 - [BUTT](#butt)
 
-[![How to Livestream Your Show](http://img.youtube.com/vi/4GLsU9hPTtM/0.jpg)](https://www.youtube-nocookie.com/embed/4GLsU9hPTtM "How to Livestream Your Show")
+# Video Tutorial
+
+<html>
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/4GLsU9hPTtM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</html>
 
 This how to is intended for DJs using BUTT or MIXXX to stream to their LibreTime
 server with an external USB audio card setup to route a mixer and sound.

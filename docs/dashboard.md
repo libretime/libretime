@@ -80,8 +80,6 @@ To cancel the current show completely, click the red button to the right again.
 A pop-up window will ask you to confirm the cancellation, as this action cannot
 be undone.
 
-![](img/cancel-show.png)
-
 Items which are no longer available have an exclamation mark icon in the second
 column. This may happen for media files which were part of previous shows, and
 were removed from LibreTime's library (main storage or watched folders)

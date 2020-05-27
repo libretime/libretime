@@ -1,5 +1,7 @@
-Uninstall LibreTime
--------------------
+---
+layout: docs
+title: Uninstall LibreTime
+---
 
 Hopefully it wasn't something that we did, but if you need to uninstall LibreTime for
 any reason, cd to the directory of the installer and run `sudo ./uninstall` and follow the prompts.

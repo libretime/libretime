@@ -1,5 +1,8 @@
-Modifying the LibreTime interface
-----------------------------------
+---
+layout: docs
+title: Modifying the LibreTime interface
+---
+
 
 The LibreTime administration interface, as a web application, is fully customizable using the same methods that you might use to modify a website. For instance, you may wish to increase certain font sizes or change the colours in the LibreTime interface to better suit staff users with impaired vision. To do this, open one of the CSS files in the */public/css/* directory under the LibreTime *DocumentRoot* directory in an editor such as **nano**:
 

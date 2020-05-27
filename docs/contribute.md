@@ -24,6 +24,13 @@ Have an idea that would make LibreTime even better than it is right now? Start a
 LibreTime can run in over 15 different languages due to the gracious help of our volunteers. Is your language not
 supported? Follow [this guide](interface-localization) to add your language to LibreTime!
 
+## Help write documentation for LibreTime
+
+Our site is now run by Jekyll. After cloning our repo locally, enter the `/docs` directory and run
+```
+jekyll serve
+```
+
 ## Help write code for LibreTime
 
 Are you familar with coding in PHP? Have you made projects in Liquidsoap and some of the other services we use?
