@@ -5,6 +5,7 @@ title: Settings
 
 > Quick Links:
 - [General Settings](#general)
+- [Track Types](#types)
 - [Stream Settings](#stream)
 - [LibreTime Status](#status)
 
@@ -93,10 +94,20 @@ their username on the right side of the menu bar.
 
 ----
 
-> Quick Links:
-- [General Settings](#general)
-- [Stream Settings](#stream)
-- [LibreTime Status](#status)
+# Track Types {#types}
+
+## Create track types
+
+1. Click **Settings**
+1. Click **Track Types**
+1. Click **New Track Type**
+1. On the "Code" field, type a unique code that can be easily identifiable. Example, for Music use "MUS" or for Sound Effects use something like "FX".
+1. On the "Type Name" field, type a the name of the type of tracks. Example, "Station IDs".
+1. On the "Description" field, enter the description of the type given.
+1. On the "Visibility" drop down menu, choose to enable or disable the track type. By default, it is enabled. If disabled, it won't be shown across Libretime or in the API for developers.
+1. Click **Save**.
+
+----
 
 # Stream Settings      {#stream}
 
@@ -181,10 +192,6 @@ Any connection problems between Liquidsoap and Icecast or SHOUTcast are shown on
 
 ------
 
-> Quick Links:
-- [General Settings](#general)
-- [Stream Settings](#stream)
-- [LibreTime Status](#status)
 
 # The Status page    {#status}
 

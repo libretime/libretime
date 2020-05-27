@@ -10,8 +10,7 @@ title: Dashboard and Calendar
 # Dashboard {#dashboard}
 
 The Dashboard is divided into two sections a Library section divided between
-[Tracks](../tracks), [Playlists](../playlists), [Smart Blocks](../smartblocks),
-[Webstreams](../webstreams), and [Podcasts](../podcasts), with the **Scheduled
+Tracks, Playlists, Smart Blocks, Webstreams, and Podcasts, with the **Scheduled
 Shows** dialog on the right. This page provides an overview of the right-hand
 interface. Check the links to see information about the other sections which
 provide the content that can be scheduled.

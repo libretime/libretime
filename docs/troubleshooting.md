@@ -76,9 +76,11 @@ where the hostname is *airtime.example.com*. If the hostname has changed, it may
 
 3. Enter the following commands to set up authentication and grant permissions. The *rabbitmqctl add\_user* command requires the RabbitMQ password from the /etc/airtime/airtime.conf file as an argument. The *rabbitmqctl set\_permissions* command should be entered on one line, with the list of Airtime services repeated three times:
 
-    rabbitmqctl add_vhost /airtime
-    rabbitmqctl add_user airtime XXXXXXXXXXXXXXXXXXXX
-    rabbitmqctl set_permissions -p /airtime airtime
-       "airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
-       "airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
-       "airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
+```
+rabbitmqctl add_vhost /airtime
+rabbitmqctl add_user airtime XXXXXXXXXXXXXXXXXXXX
+rabbitmqctl set_permissions -p /airtime airtime
+   "airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
+   "airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
+   "airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
+```
