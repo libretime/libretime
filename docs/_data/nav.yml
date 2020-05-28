@@ -22,16 +22,20 @@ docsnav:
   - page:
 - section: Using LibreTime
   contents:
+  - page: AM/FM Broadcast Setup
+    url: ota-broadcast
   - page: Broadcasting Live
     url: live-broadcast
-  - page: Dashboard and Calendar
-    url: dashboard
-  - page: Listen To Your Stream
-    url: listen
-  - page: Managing Users
+  - page: Intelligent Library
+    url: library
+  - page: Built-in Microsite
+    url: microsite
+  - page: User Management
     url: users
   - page: Playlists and Smartblocks
     url: playlists-smartblocks
+  - page: Playout History & Auditing
+    url: playout-history
   - page: Podcasts and Webstreams
     url: podcasts-webstreams
   - page: Preparing Media
@@ -40,6 +44,8 @@ docsnav:
     url: scheduling-shows
   - page: Settings
     url: settings
+  - page: Streaming Listener Statistics
+    url: listener-stats
 - section: Advanced Configuration
   contents:
   - page: Backing up LibreTime
@@ -56,11 +62,6 @@ docsnav:
   contents:
   - page: Basic Troubleshooting
     url: troubleshooting
-- section: Radio Broadcasting 101
-  contents:
-  - page: UNESCO Public Radio Guide
-    url: learnradio-unescoguide
-  - page:   
 - section: Appendix
   contents:
   - page: HD Audio Modules
