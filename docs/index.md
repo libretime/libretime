@@ -9,7 +9,7 @@ Welcome to LibreTime
 ====================
 
 LibreTime makes it easy to run your own online or terrestrial radio station.
-Don't believe us? Check out our [Quick Install](quickstart) page to see just how easy it is to install and use LibreTime!
+Don't believe us? Check out our [Quick Install](quickstart.md) page to see just how easy it is to install and use LibreTime!
 
 Some of LibreTime's main features include:
 
