@@ -1,3 +1,8 @@
+---
+layout: docs
+title: Streaming Listener Statistics
+---
+
 The Listener Stats page on the Analytics menu shows graphs of listener connections to the configured streaming servers for the selected date and time range.  On the right side, a green **Status** indicator shows **OK** if the connection to the streaming server is active.
 
 ![](img/Screenshot483-Listener_Stats.png)

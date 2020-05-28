@@ -2,7 +2,7 @@ topnav:
 - page: Introduction
   url: index
 - page: Docs
-  url: scheduling-shows
+  url: contributing
 - page: <svg class="bi bi-people-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg> Github
   url: https://github.com/LibreTime/libretime
 - page: <svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg> Sponsor
@@ -22,16 +22,20 @@ docsnav:
   - page:
 - section: Using LibreTime
   contents:
+  - page: AM/FM Broadcast Setup
+    url: ota-broadcast
   - page: Broadcasting Live
     url: live-broadcast
-  - page: Dashboard and Calendar
-    url: dashboard
-  - page: Listen To Your Stream
-    url: listen
-  - page: Managing Users
+  - page: Intelligent Library
+    url: library
+  - page: Built-in Microsite
+    url: microsite
+  - page: User Management
     url: users
   - page: Playlists and Smartblocks
     url: playlists-smartblocks
+  - page: Playout History & Auditing
+    url: playout-history
   - page: Podcasts and Webstreams
     url: podcasts-webstreams
   - page: Preparing Media
@@ -40,6 +44,8 @@ docsnav:
     url: scheduling-shows
   - page: Settings
     url: settings
+  - page: Streaming Listener Statistics
+    url: listener-stats
 - section: Advanced Configuration
   contents:
   - page: Backing up LibreTime
@@ -56,11 +62,6 @@ docsnav:
   contents:
   - page: Basic Troubleshooting
     url: troubleshooting
-- section: Radio Broadcasting 101
-  contents:
-  - page: UNESCO Public Radio Guide
-    url: learnradio-unescoguide
-  - page:   
 - section: Appendix
   contents:
   - page: HD Audio Modules
