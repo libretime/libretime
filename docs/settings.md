@@ -111,6 +111,10 @@ their username on the right side of the menu bar.
 
 # Stream Settings      {#stream}
 
+<html>
+    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/QPNo52Fc0ck" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</html>
+
 Global settings
 ------------------------
 
