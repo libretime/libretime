@@ -1,10 +1,8 @@
 ---
 layout: docs
+title: Preparing Media for LibreTime
+blurb: Before uploading media to an LibreTime server, there are a number of factors which should be considered. Getting your ingest workflow right will save you a lot of time later.
 ---
-
-# Preparing media for uploading to LibreTime
-
-Before uploading media to an LibreTime server, there are a number of factors which should be considered. Getting your ingest workflow right will save you a lot of time later.
 
 Metadata quality
 ----------------

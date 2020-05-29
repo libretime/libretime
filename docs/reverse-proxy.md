@@ -1,8 +1,7 @@
 ---
 layout: docs
+title: Reverse Proxy Connections
 ---
-
-# Reverse Proxy Connections
 
 In some deployments, the LibreTime server is deployed behind a reverse proxy,
 for example in containerization use-cases such as Docker and LXC. LibreTime

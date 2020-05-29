@@ -1,8 +1,7 @@
 ---
 layout: docs
+title: Interface Localization
 ---
-
-# Interface Localization
 
 The LibreTime administration interface can be localized using the standard GNU **gettext** method. Using GitHub for this task means you don't have to tackle the whole of a localization yourself; just as much as you can manage.
 
