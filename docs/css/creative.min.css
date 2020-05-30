@@ -290,7 +290,7 @@ padding: 10px 20px;
         display: block;
         top: 5px;
         left: 5px;
-        z-index: 100000; // Above WP toolbar
+        z-index: 100000; 
         clip-path: none;
         background-color: #eee;
         padding: 15px 23px 14px;
@@ -302,4 +302,19 @@ padding: 10px 20px;
         font-size: 1em;
         clip: auto !important;
     }
+}
+
+/* Station Logos for Splash Page */
+.station-logos img {
+    max-height: 200px;
+    max-width: 200px;
+}
+
+.station-logos-row {
+    display: flex;
+}
+
+.station-logos-col {
+    flex: 25%;
+    padding: 5px;
 }
