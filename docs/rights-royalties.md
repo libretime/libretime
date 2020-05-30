@@ -1,8 +1,7 @@
 ---
 layout: docs
+title: Rights and Royalties
 ---
-
-# Rights and Royalties
 
 If you're new to broadcasting, or have not streamed your station online before,
 reading the following brief explanation of compensation rules for songwriters,
