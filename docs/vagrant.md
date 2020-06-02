@@ -106,4 +106,4 @@ If anything fails during the initial provisioning step you can try running `vagr
 to re-run the installer.
 
 If you only want to re-run parts of the installer, use `--provision-with $step`. The
-supported steps are `prepare`, `install`, `install-mkdocs` and `start-mkdocs`.
+supported steps are `prepare` and `install`.
