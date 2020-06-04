@@ -1,9 +1,7 @@
 ---
 layout: docs
-title: AM/FM Broadcasting Guide
+title: UNESCO Public Radio Guide
 ---
-
-# Radio Broadcasting 101 - UNESCO Public Radio Guide
 
 The UNESCO publication [*Community Radio - A user's guide to the technology*](img/CommunityRadioUserGuide.pdf)
 features a very comprehensive guide to setting up a community radio station.

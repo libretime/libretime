@@ -1,7 +1,8 @@
 title: LibreTime 
 description: An open source radio automation server made for (and by) low-power FM stations and the rest of us.
 logo: 144px.png
-show_downloads: false
+baseurl: "" # The subpath of your site, e.g. /blog
+url: "" # The base hostname & protocol for your site, e.g. http://example.com
 
 layouts_dir: _layouts
 data_dir: _data
