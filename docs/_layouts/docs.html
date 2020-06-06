@@ -61,8 +61,8 @@ layout: default
     <!-- Sidebar -->
     
     <nav id="sidebar">
-        <div class="sidebar-header">
-            <h3>Table of Contents</h3>
+        <div class="allcaps navbar-brand section-heading">
+            <h5>Table of Contents</h5>
         </div>
         
         {% for item in site.data.nav.docsnav %}
@@ -79,24 +79,18 @@ layout: default
     
     <!-- Page Header -->
     <div class="container-fluid">
-        <section class="bg-primary">
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8 mx-auto text-center">
-                <h2 class="section-heading text-white"> {{ page.title }} </h2>
-                <hr class="light my-4">
-              </div>
-            </div>
-          </div>
-        </section>
+      <div class="mx-auto">
+        <h2 class="allcaps navbar-brand section-heading"> {{ page.title }} </h2>
+      </div>
+    </div>
       <div class="toc">
         {% toc %}
+        <hr class="my-4">
       </div>
       <!-- This is the main content of the page getting pulled from the MDs -->
       <div class="content">
         {{ content }}
       </div>
-    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
