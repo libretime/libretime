@@ -1,11 +1,12 @@
 ---
 layout: docs
 title: Preparing Media for LibreTime
-blurb: Before uploading media to an LibreTime server, there are a number of factors which should be considered. Getting your ingest workflow right will save you a lot of time later.
+toc: true
 ---
 
-Metadata quality
-----------------
+Before uploading media to an LibreTime server, there are a number of factors which should be considered. Getting your ingest workflow right will save you a lot of time later.
+
+# Metadata quality
 
 LibreTime automatically imports any metadata that is in the files' ID3 tags. If these tags are incorrect or are missing information, you will have to either edit the metadata manually, or suffer the consequences. For example, if the files have creator or genre metadata missing, it will be impossible to search for, create playlists or generate smart blocks according to these criteria until you add it.
 
@@ -21,8 +22,7 @@ or from the desktop menu. The *Tags From Path* feature of this program is a part
 
 ![](img/Screenshot175-Ex_Falso.png)
 
-Metadata in legacy character sets
----------------------------------
+# Metadata in legacy character sets
 
 LibreTime expects file tag metadata to be stored in the international *UTF-8* character set. Programs such as **Ex Falso** (described above) encode metadata in UTF-8 by default. If you have an archive of files encoded with metadata in a legacy character set, such as the Cyrillic encoding *Windows-1251*, you should convert these files before import.
 
@@ -56,8 +56,7 @@ CP1254: Turkish
 CP1255: Hebrew
 CP1256: Arabic
 
-Audio loudness
---------------
+# Audio loudness
 
 On file ingest, LibreTime analyzes each Ogg Vorbis, MP3, AAC or FLAC file's loudness, and stores a *ReplayGain* value for that file in its database. At playout time, the ReplayGain value is provided to Liquidsoap so that gain can be automatically adjusted to provide an average output of -14 dBFS loudness (14 decibels below full scale). See <http://www.replaygain.org/> for more details of ReplayGain.
 
@@ -89,8 +88,7 @@ And here is an example of a very loud file, with lower crest factor, where the o
 
 In the output from vorbisgain, *Peak* is the maximum sample value of the file before any ReplayGain has been applied, where a value of 32,767 represents full scale when decoding to signed 16 bit samples. Note that lossy compressed files can have peaks greater than full scale, due to encoding artifacts. The *New Peak* value for the Snoop Dogg file may be relatively low due to the hard limiting used in the mastering of that piece of music.
 
-Silence in media files
-----------------------
+# Silence in media files
 
 Before importing media, it is good practice to check for any silent sections in the media files. While LibreTime compensates for leading and trailing silence with the use of automatic cue-in and cue-out points****, it may be preferable to trim these files to the intended length before upload. This is because media in the LibreTime library could potentially be re-used in many different systems. **Audacity** is a cross-platform editor suitable for the task of trimming audio files, available from [http://audacity.sourceforge.net/](http://audacity.sourceforge.net "http://sourceforge.net/projects/dr14tmeter/")
 

@@ -1,11 +1,8 @@
 ---
 layout: docs
 title: Playlists and Smartblocks
+toc: true
 ---
-
-> Quick Links:
-- [Playlists](#playlists)
-- [Smartblocks](#smartblocks)
 
 # Playlists {#playlists}
 

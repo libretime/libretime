@@ -85,13 +85,13 @@ layout: default
               <div class="col-lg-8 mx-auto text-center">
                 <h2 class="section-heading text-white"> {{ page.title }} </h2>
                 <hr class="light my-4">
-                <p class="text-faded mb-4">
-                    {{ page.blurb }}
-                </p>
               </div>
             </div>
           </div>
         </section>
+      <div class="toc">
+        {% toc %}
+      </div>
       <!-- This is the main content of the page getting pulled from the MDs -->
       <div class="content">
         {{ content }}

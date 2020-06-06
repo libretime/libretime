@@ -1,6 +1,7 @@
 ---
 layout: docs
 title: Modifying the LibreTime interface
+toc: true
 ---
 
 
@@ -22,8 +23,7 @@ Save the file with **Ctrl+O**, then refresh your browser to see the change to th
 
 Any custom changes that you make to the administration interface should be backed up before upgrading LibreTime to a newer version, otherwise they could be overwritten. If you have made improvements that you think might be useful to other LibreTime users, please contact LibreTime and tell us about them.
 
-Modifying the LibreTime Radio Page
------------------------------------
+# Modifying the LibreTime Radio Page
 
 The background of the mini-site that appears when you visit the server's domain in your web browser can be changed by modifying the page's CSS file, located at */usr/share/airtime/php/airtime_mvc/public/css/radio-page/radio-page.css*.
 
@@ -40,8 +40,7 @@ html {
 
 Place the new background image in the */usr/share/airtime/public/css/radio-page/img/* folder and change the `background:` entry's URL to point to the new image. The new image should be at least 1280 x 720 in pixel size to avoid being blurry.
 
-Modifying the Icecast interface
--------------------------------
+# Modifying the Icecast interface
 
 If you have installed Icecast, in the directory */etc/icecast2/web/* you will find several XSLT and other files which are used to generate the Icecast web interface. If you are familiar with HTML you should be able to modify these pages, as they are well commented. You do have to be careful with syntax, because something as simple as a missing bracket can cause the Icecast web interface to break down.
 

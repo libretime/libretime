@@ -18,5 +18,5 @@ headbuttonurl: index#get-started
 headbuttontext: Get LibreTime
 
 # Build settings
-#plugins:
-#  - jekyll-feed
+plugins:
+  - jekyll-toc

@@ -1,6 +1,7 @@
 ---
 layout: docs
 title: Setting the Server Time
+toc: true
 ---
 
 # Setting the server time
@@ -15,8 +16,7 @@ The server should respond with the date, time, time zone and year in a format si
 
 If the time on your server is wrong, it is recommended that you take LibreTime off-air until the problem is fixed.
 
-Configuring NTP
----------------
+# Configuring NTP
 
 Although it is possible to set the date and time of the server manually, this is not recommended because the server clock can drift over time, compromising the accuracy of your broadcast schedule. If your LibreTime server is permanently connected to the Internet, you can synchronize your server to a time server with the **ntp** ** program. If **ntp** is not yet installed, you can enter the following command on Debian or Ubuntu:
 
@@ -55,8 +55,7 @@ Then use the **ntpq -p** command to confirm that **ntp** is working. This comman
     ntppub.le 158.43.192.66  2 u   91   64    2 122.781  44.864  0.001
     dns0.rmpl 195.66.241.3   2 u   27   64    3  22.171   1.464  4.242
 
-Adjusting the server time zone
-------------------------------
+# Adjusting the server time zone
 
 The data centre which hosts your LibreTime server could be located anywhere in the world. Some servers are set to *Coordinated Universal Time* or UTC (similar to *Greenwich Mean Time* or GMT), regardless of their location. LibreTime uses UTC time in its database for scheduling purposes, independent of the server time zone.
 

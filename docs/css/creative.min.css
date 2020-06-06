@@ -318,3 +318,13 @@ padding: 10px 20px;
     flex: 25%;
     padding: 5px;
 }
+
+/* TOC */
+.section-nav {
+  background-color: #fff;
+  margin: 5px 0;
+  padding: 10px 30px;
+  border: 1px solid #212529;
+  border-radius: 0px;
+  border-left: 10px solid #212529;
+}

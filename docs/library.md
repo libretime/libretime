@@ -1,11 +1,8 @@
 ---
 layout: docs
 title: Dashboard and Calendar
+toc: true
 ---
-
-> Quick Links:
-- [Dashboard](#dashboard)
-- [Calendar](#calendar)
 
 # Dashboard {#dashboard}
 

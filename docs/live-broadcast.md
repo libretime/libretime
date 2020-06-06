@@ -1,11 +1,8 @@
 ---
 layout: docs
 title: Broadcasting live with MIXXX or B.U.T.T.
+toc: true
 ---
-
-> Quick Links:
-- [MIXXX](#mixxx)
-- [BUTT](#butt)
 
 This how to is intended for DJs using BUTT or MIXXX to stream to their LibreTime
 server with an external USB audio card setup to route a mixer and sound.

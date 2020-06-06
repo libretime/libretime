@@ -1,13 +1,8 @@
 ---
 layout: docs
 title: FreeIPA Configuration
+toc: true
 ---
-
-> Quick Links:
-- [Apache Configuration](#apache)
-- [PAM Configuration](#pam)
-- [LDAP Configuration](#ldap)
-- [Enable FreeIPA Authentication](#freeipa)
 
 You can configure LibreTime to delegate all authentication to a FreeIPA server.
 

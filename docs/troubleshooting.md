@@ -1,14 +1,8 @@
 ---
 layout: docs
 title: Troubleshooting
-blurb: Having trouble with your LibreTime installation? We've got you covered!
+toc: true
 ---
-
-> Quick Links:
-- [Log Files](#logs)
-- [Test Tones](#tones)
-- [RabbitMQ](#rabbitmq)
-- [Uninstall LibreTime](#uninstall)
 
 LibreTime is effectively a web site running on a LAPP stack, so individual components of the system can be started, stopped, restarted or checked in the server console using the **systemctl** command:
 

@@ -68,7 +68,9 @@ docsnav:
     url: hd-audio-modules
   - page: Contribute to LibreTime
     url: contribute   
+  - page: Letter to the AirTime Community
+    url: https://gist.github.com/hairmare/8c03b69c9accc90cfe31fd7e77c3b07d
   - page: Rights and Royalties
     url: rights-royalties
-  - page: UNESCO Guide to Public Radio
-    url: unesco-guide
+  - page: UNESCO Public Radio Guide (PDF)
+    url: img/CommunityRadioUserGuide.pdf

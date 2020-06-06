@@ -1,11 +1,8 @@
 ---
 layout: docs
 title: Playout History
+toc: true
 ---
-
-> Quick Links:
-- [Playout History](#history)
-- [Exporting the Playout History](#exporting)
 
 # History {#history}
 

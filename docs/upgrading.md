@@ -1,6 +1,7 @@
 ---
 layout: docs
 title: Upgrading LibreTime
+toc: true
 ---
 
 ## LibreTime versioning

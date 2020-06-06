@@ -1,11 +1,8 @@
 ---
 layout: docs
 title: Podcasts and Webstreams
+toc: true
 ---
-
-> Quick Links:
-- [Podcasts](#podcasts)
-- [Webstreams](#webstreams)
 
 <html>
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/g-4UcD8qvR8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

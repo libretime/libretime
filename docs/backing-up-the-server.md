@@ -48,8 +48,7 @@ which is backed up by your storage backup tool of choice; for example, the
 restore can be made along with a matching and complete version of the LibreTime
 database from the day that the storage backup was made. 
 
-Storage backup
---------------
+## Storage backup
 
 Backing up the LibreTime database with **pg\_dumpall** will not back up the
 LibreTime media storage server, which is likely to need a great deal more backup

@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Using Vagrant and Virtualbox for developing LibreTime
-blurb: The fastest way to get LibreTime up and running in a way to hack on its source code or to test it locally.
+toc: true
 ---
 
 > Prerequisites: git, [Vagrant](https://vagrantup.com), libvirt or VirturalBox

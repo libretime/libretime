@@ -1,13 +1,8 @@
 ---
 layout: docs
 title: Settings
+toc: true
 ---
-
-> Quick Links:
-- [General Settings](#general)
-- [Track Types](#types)
-- [Stream Settings](#stream)
-- [LibreTime Status](#status)
 
 
 # General Settings  {#general}
