@@ -328,3 +328,8 @@ padding: 10px 20px;
   border-radius: 0px;
   border-left: 10px solid #212529;
 }
+
+/* Page Title */
+.allcaps {
+  text-transform: uppercase
+}
