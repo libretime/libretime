@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Modifying the LibreTime interface
-toc: true
+
 ---
 
 

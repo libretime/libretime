@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Contributing to LibreTime
-toc: true
+
 ---
 
 > LibreTime is a fork of AirTime due to stalled development of the FLOSS version. For background on this,

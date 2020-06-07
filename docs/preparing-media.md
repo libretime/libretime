@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Preparing Media for LibreTime
-toc: true
+
 ---
 
 Before uploading media to an LibreTime server, there are a number of factors which should be considered. Getting your ingest workflow right will save you a lot of time later.
@@ -92,6 +92,6 @@ In the output from vorbisgain, *Peak* is the maximum sample value of the file be
 
 Before importing media, it is good practice to check for any silent sections in the media files. While LibreTime compensates for leading and trailing silence with the use of automatic cue-in and cue-out points****, it may be preferable to trim these files to the intended length before upload. This is because media in the LibreTime library could potentially be re-used in many different systems. **Audacity** is a cross-platform editor suitable for the task of trimming audio files, available from [http://audacity.sourceforge.net/](http://audacity.sourceforge.net "http://sourceforge.net/projects/dr14tmeter/")
 
-Very quiet introductions or over-long fades can also lead to apparent gaps in your broadcast playout. Some audio CDs feature a 'hidden track' at the end, which in fact uses a long period of silence within the final track, rather than an actual separate track on the disc. This means that CD encoding programs will often encode both the hidden material and the silence in the media file. For example, the track *Debra* from the CD *Midnite Vultures* by *Beck* includes hidden material preceded by seven minutes of silence, as shown in the screen shot from Audacity below.
+Very quiet introductions or over-long fades can also lead to apparent gaps in your broadcast playout. Some audio CDs feature a 'hidden track' at the end, which in fact uses a long period of silence within the final track, rather than an actual separate track on the disc. This means that CD encoding programs will often encode both the hidden material and the silence in the media file. For example, the track "Debra" from the CD *Midnite Vultures* by Beck includes hidden material preceded by seven minutes of silence, as shown in the screen shot from Audacity below.
 
 ![](img/Screenshot126-Debra_silence.png)

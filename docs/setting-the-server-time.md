@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Setting the Server Time
-toc: true
+
 ---
 
 # Setting the server time

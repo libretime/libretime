@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Managing Users
-toc: true
+
 ---
 
 > Note: if your Airtime server is accessible from the public Internet (ex. being hosted in a cloud VM)

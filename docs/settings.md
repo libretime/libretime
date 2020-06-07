@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Settings
-toc: true
+
 ---
 
 

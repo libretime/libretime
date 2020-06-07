@@ -6,6 +6,7 @@ url: "" # The base hostname & protocol for your site, e.g. http://example.com
 
 layouts_dir: _layouts
 data_dir: _data
+includes_dir: _includes
 
 favicon: favicon.ico
 
@@ -19,4 +20,4 @@ headbuttontext: Get LibreTime
 
 # Build settings
 plugins:
-  - jekyll-toc
+  - kramdown

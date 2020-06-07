@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Dashboard and Calendar
-toc: true
+
 ---
 
 # Dashboard {#dashboard}

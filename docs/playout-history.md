@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Playout History
-toc: true
+
 ---
 
 # History {#history}

@@ -137,7 +137,7 @@ ensure that your RabbitMQ configuration and user permissions are safe.
 ### RabbitMQ hostname
 
 RabbitMQ requires a fixed and resolvable hostname (see
-[the docs](http://www.rabbitmq.com/ec2.html#issues-hostname)), which is normal
+[the docs](http://www.rabbitmq.com/ec2.html#issues-hostname), which is normal
 for a server. For a desktop or laptop machine where the hostname changes
 frequently or is not resolvable, this issue may prevent RabbitMQ from starting.
 When using a desktop or laptop computer with a dynamic IP address, such as an

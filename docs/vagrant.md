@@ -1,10 +1,10 @@
 ---
 layout: page
 title: Using Vagrant and Virtualbox for developing LibreTime
-toc: true
+
 ---
 
-> Prerequisites: git, [Vagrant](https://vagrantup.com), libvirt or VirturalBox
+> Prerequisites: git, [Vagrant](https://vagrantup.com), libvirt or VirtualBox
 
 # VirtualBox
 

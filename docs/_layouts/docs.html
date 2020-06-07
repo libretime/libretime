@@ -83,12 +83,10 @@ layout: default
         <h2 class="allcaps navbar-brand section-heading"> {{ page.title }} </h2>
       </div>
     </div>
-      <div class="toc">
-        {% toc %}
-        <hr class="my-4">
-      </div>
       <!-- This is the main content of the page getting pulled from the MDs -->
       <div class="content">
+        <div class="toc" >{% include toc.html html=content class=toc ordered=true %}</div>
+        <hr class="my-4">
         {{ content }}
       </div>
 

@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Broadcasting live with MIXXX or B.U.T.T.
-toc: true
+
 ---
 
 This how to is intended for DJs using BUTT or MIXXX to stream to their LibreTime

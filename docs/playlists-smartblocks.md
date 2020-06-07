@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: Playlists and Smartblocks
-toc: true
+
 ---
 
 # Playlists {#playlists}
