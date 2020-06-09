@@ -1,7 +1,6 @@
 ---
 layout: docs
 title: FreeIPA Configuration
-
 ---
 
 You can configure LibreTime to delegate all authentication to a FreeIPA server.

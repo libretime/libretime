@@ -4,9 +4,9 @@ title: Playlists and Smartblocks
 
 ---
 
-# Playlists {#playlists}
+## Playlists {#playlists}
 
-## Creating a new playlist
+### Creating a new playlist
 
 You can create a new playlist on the toolbar of the **Playlists** page.
 
@@ -46,9 +46,9 @@ If you want to edit the playlist content or metadata later, you can find it by *
 
 ![](img/Screenshot501-Edit_playlist_240.png)
 
-# Smartblocks {#smartblocks}
+## Smartblocks {#smartblocks}
 
-## Creating a Smartblock
+### Creating a Smartblock
 
 Smart blocks are automatically filled with media files from the LibreTime library, according to the criteria that you specify. This feature is intended to save staff time, compared to selecting items for a playlist manually, and can be used to schedule shows that operate in a consistent format.
 

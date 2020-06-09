@@ -3,6 +3,8 @@ layout: docs
 title: Backing Up The Server
 ---
 
+## Database Backup
+
 The following shell commands can be used for database backup and restore on a
 running *PostgreSQL* server in an LibreTime system.
 

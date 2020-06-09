@@ -21,6 +21,13 @@ intended compatibility requirements as per semver.
 
 ## Upgrading 
 
+> After your LibreTime server has been deployed for a few years, you may need to
+upgrade the GNU/Linux distribution that it runs in order to maintain security
+update support. If the upgrade does not go smoothly, it may cause significant
+downtime, so you should always have a fallback system available during the 
+upgrade to ensure broadcast continuity.
+
+
 Before upgrading a production LibreTime server, you should back up both the PostgreSQL
 database and the storage server used by LibreTime. This is especially important if you have not already
 set up a regular back up routine. This extra back up is a safety measure in case of accidental data loss
@@ -42,12 +49,3 @@ concept of *watched folders*. If you are upgrading from a version of Airtime
 earlier than 1.9.0 and you have previously linked files, the folders they are
 in will not be watched until you add them to your watched folder list. See
 [Media Folders](folders) for more details.
-
-Upgrading the server distribution
----------------------------------
-
-After your LibreTime server has been deployed for a few years, you may need to
-upgrade the GNU/Linux distribution that it runs in order to maintain security
-update support. If the upgrade does not go smoothly, it may cause significant
-downtime, so you should always have a fallback system available during the 
-upgrade to ensure broadcast continuity.

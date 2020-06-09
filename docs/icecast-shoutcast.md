@@ -14,7 +14,7 @@ Because LibreTime supports simultaneous streaming in multiple formats, it is pos
 
 Conversely, you may have a music station which wants to stream at 160kbps or 192kbps to offer a quality advantage over stations streaming at 128kbps or less. Since Ogg, AAC and MP3 formats use lossy compression, listeners will only hear the benefit of higher streaming bitrates if the media files in the LibreTime storage server are encoded at an equivalent bitrate, or higher.
 
-# UTF-8 metadata in Icecast MP3 streams
+## UTF-8 metadata in Icecast MP3 streams
 
 When sending metadata about your stream to an Icecast server in non-Latin alphabets, you may find that Icecast does not display the characters correctly for an MP3 stream, even though they are displayed correctly for an Ogg Vorbis stream. In the following screenshot, Russian characters are being displayed incorrectly in the *Current Song* field for the MP3 stream:
 
@@ -34,7 +34,7 @@ After saving the */etc/icecast2/icecast.xml* file, you should restart the Icecas
     Detaching from the console
     icecast2.
 
-# Icecast handover configuration
+## Icecast handover configuration
 
 In a typical radio station configuration, the live output from the broadcast studio and the scheduled output from LibreTime are mixed together before being sent further along the broadcast chain, to a transmitter or streaming media server on the Internet. (This may not be the case if your LibreTime server is remote from the studio, and you are using the **Show Source Mount Point** or **Master Source Mount Point** to mix live and scheduled content. See the *Stream Settings* chapter for details).
 
@@ -71,7 +71,7 @@ These mount point definitions mean that a client connecting to a URL such as *ht
 
 Setting the value of *<fallback-override>* to 1 (enabled) means that when the */live.ogg* mount point becomes available again, the client will be re-connected to it.  If you wish to hide the */airtime\_128* and */live.ogg* mount points from the public Icecast web interface, set the value of *<hidden>* in each of these definitions to 1.
 
-# Source configuration
+## Source configuration
 
 Connect the other source to the Icecast server with the same parameters defined in the */etc/airtime/liquidsoap.cfg* file, except for the mount point. This should one of the mount points you have defined in the */etc/icecast2/icecast.xml* file, such as */live.ogg* in the example above.
 
@@ -81,3 +81,40 @@ To configure **Mixxx** for streaming to Icecast, click *Options*, *Preferences*,
 
 By default, Icecast streams are buffered to guard against network problems, which causes latency for remote listeners. When monitoring the stream from a remote location, you may have to begin the live stream a few seconds before the previous stream ends to enable a smooth transition.
 
+## Promoting your station through Icecast
+
+If you have an Icecast server, you can put a link to the Icecast status page (by default at port 8000) on your station's homepage,
+to provide an overview of available streams. See the chapter *Interface customization* for tips on theming the
+Icecast status page. You can also use Now Playing widgets (see the chapter *Exporting the schedule*) or HTML5 stream players (see the chapter *Stream player for your website*) to help grow your audience.
+
+On an Icecast server, you can uncomment the `<directory>` section in the _/etc/icecast2/icecast.xml_ file to have
+your station automatically listed on the Icecast directory website <http://dir.xiph.org> which could help you pick
+up more listeners.
+
+        <!-- Uncomment this if you want directory listings -->
+
+        <directory>
+            <yp-url-timeout>15</yp-url-timeout>
+            <yp-url>http://dir.xiph.org/cgi-bin/yp-cgi</yp-url>
+        </directory>
+
+The Indymedia stream directory at <http://radio.indymedia.org/en/yp> links to grassroots independent radio projects around the world. You can add your station to their list with an additional *<directory>* section, as follows:
+
+        <directory>
+             <yp-url-timeout>15</yp-url-timeout>
+             <yp-url>http://radio.indymedia.org/cgi-bin/yp-cgi</yp-url>
+        </directory>
+
+Another stream directory service is provided by the Liquidsoap Flows! site <http://flows.liquidsoap.fm/>. The following section can be added to the file */usr/lib/airtime/pypo/bin/liquidsoap\_scripts/ls\_script.liq* after *add\_skip\_command(s)* on line 174, for a stream named '*ourstation*':
+
+    ourstation = register_flow(
+      radio="Rock 'n Roll Radio",
+      website="http://radio.example.com/",
+      description="Canada's most rockin' radio!",
+      genre="Rock",
+      user="",
+      password="",
+      streams=[("ogg/128k","http://streaming.example.com/libretime_128")],
+      ourstation)
+
+For the time being, a stream can be registered on the Liquidsoap Flows! site with any username and password. Authenticated services may be offered in future.

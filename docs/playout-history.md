@@ -4,7 +4,7 @@ title: Playout History
 
 ---
 
-# History {#history}
+## History {#history}
 
 On the History menu, the **Playout History** page enables you to view a list of files played within a specific date and time range. This page is designed to help your station prepare reports for music royalty collection societies and regulatory agencies.
 
@@ -24,7 +24,7 @@ On the **Show Summary** tab, click the name of a show within the search range to
 
 ![](img/Screenshot535-Show_summary_250.png)
 
-## Manual logging
+### Manual logging
 
 If your station features playout from analogue sources such as turntables or microphones, there is no automatic metadata for LibreTime to collect from these inputs. To ensure that the playout history is complete, you can add log entries manually by clicking the **+ Create Entry** button. This action opens a pop-up window with default fields of Start Time, End Time, Title and Creator. Click the **Find** button to automatically fill the **Choose Show Instance** menu with the names of shows that took place within the specified time range. Then click the **Save** button to enter the new item into the playout history.
 
@@ -45,11 +45,11 @@ Either of these actions opens a page in which you can name the new template, and
 When the template is in the format you require, click the **Save** button, and **Set Default Template** if you wish. The new template will now be listed on the History Templates page. If you have set a new default template, any changes will be visible on the tabs of the Playout History page.
 
 
-# Exporting the schedule {#exporting}
+## Exporting the schedule {#exporting}
 
 LibreTime has a feature which enables your station's show and schedule information to be displayed on remote websites. This feature is included in LibreTime because you would not usually invite the general public to access your LibreTime server directly. If you had very large numbers of people requesting data from the LibreTime server at once, the burst of network traffic might overload the server, potentially disrupting your broadcasts. If carried out maliciously, this network overload is known as a *denial of service attack*.
 
-Instead, your public-facing web server can retrieve the schedule information from the LibreTime API. This information can then be displayed on your broadcast station or affiliate websites by a content management system, such as Sourcefabric's **Newscoop** (<http://newscoop.sourcefabric.org/>). It can be presented using Javascript widgets and styled with CSS, in any format that you require. The **Broadcaster** theme for Newscoop (<https://github.com/newscoop/theme-Broadcaster>) integrates these widgets with ready-to-use styles.
+Instead, your public-facing web server can retrieve the schedule information from the LibreTime API. It can be presented using Javascript widgets and styled with CSS, in any format that you require.
 
 There are two kinds of information that can be retrieved remotely from the LibreTime API without authentication; the metadata for the current show plus the following show (live-info), or the schedule for the current week and the week ahead (week-info). The week-info metadata includes show names, times, and individual show URLs on your public website. That way, the audience for your station can click through from the schedule information to find out more about a particular show, or download a previous show recording that you might have made available.
 
@@ -179,8 +179,7 @@ If you see the message *You are not allowed to access this resource* when attemp
 
 ![](img/Screenshot497-System_preferences_240.png)
 
-Caching schedule information
-----------------------------
+### Caching schedule information
 
 If the LibreTime server is behind a firewall, or you want to protect the LibreTime server from large numbers of schedule requests, you may wish to cache the schedule information on a public-facing or intermediate server. You can then create a firewall rule that only allows the schedule server to connect to the LibreTime server, in addition to any remote users of the LibreTime web interface.
 
@@ -271,8 +270,7 @@ containing the line:
 
 The schedule server will now be serving the same show information as the LibreTime server, with a cache lifetime of one minute. You can adjust the cache lifetime by altering the frequency of the cron job that polls the LibreTime server.
 
-Pushing schedule information via FTP or SSH
--------------------------------------------
+### Pushing schedule information via FTP or SSH
 
 If there is no inbound access to the LibreTime server at all, an FTP script can be used to push cached schedule data from LibreTime to an external web server. The standard ftp command should be available on the LibreTime server and the external web server should have a suitably restricted FTP account set up. After following steps 1 and 2 above to export schedule data to a pair of temporary files on the LibreTime server, create a new script on the LibreTime server to automatically make the upload:
 

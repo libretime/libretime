@@ -36,21 +36,24 @@ a:hover{
   }
   
 h1,h2,h3,h4,h5,h6{
-  font-family:'Open Sans','Helvetica Neue',Arial,sans-serif
+  font-family:'Open Sans','Helvetica Neue',Arial,sans-serif;
   }
 
 /* Table Properties */
 table{
- border: 2px solid #f05f40;
+ padding: 20px;
 }
 
 th{
- background-color: #f05f40
+ background-color: #f05f40;
+ text-align: center;
+ color: white;
 }
  
 tr, td{
  padding: 15px;
  text-align: left;
+ border-bottom: 1px solid #f05f40
 }
 
 /* Theme Colors */  

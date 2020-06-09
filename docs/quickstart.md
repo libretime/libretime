@@ -11,8 +11,9 @@ these are less tested. Firewall and static IP address configuration will need to
 
 ## Minimum System Requirements
 
-| On-Premises Install  (FM + Internet Radio) | Cloud Install (Internet Radio Only) |
+| On-Premises Install | Cloud Install |
 |---------------------|---------------|
+| (FM + Internet Radio) | (Internet Radio Only) |
 | 1 Ghz Processor| 1vCPU |
 | 2 GB RAM | 2 GB RAM |
 | Wired ethernet connection, static IP address | 2 TB of data transfer/month |
@@ -57,7 +58,7 @@ sudo ufw allow 80/tcp
 sudo ufw allow 8000/tcp
 ```
 
-Unblock ports 8001 and 8002 if you plan on broadcasting live with Libretime.
+Unblock ports 8001 and 8002 if you plan to use LibreTime's Icecast server to broadcast livestreams without an external Icecast server acting as a repeater.
 
 ```
 sudo ufw enable 8001/tcp

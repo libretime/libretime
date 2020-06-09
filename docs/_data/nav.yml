@@ -42,7 +42,7 @@ docsnav:
     url: scheduling-shows
   - page: Settings
     url: settings
-  - page: Streaming Listener Statistics
+  - page: Streaming Statistics
     url: listener-stats
 - section: Advanced Configuration
   contents:
@@ -50,14 +50,12 @@ docsnav:
     url: api
   - page: Backing up LibreTime
     url: backing-up-the-server    
-  - page: Configuring Streaming Services
+  - page: Configuring Icecast/Shoutcast
     url: icecast-shoutcast
   - page: FreeIPA Configuration
     url: freeipa
   - page: Interface Customization
     url: interface-customization
-  - page: Promoting through Icecast
-    url: promoting-your-station
   - page: Troubleshooting/Uninstall
     url: troubleshooting
   - page: Upgrading LibreTime
