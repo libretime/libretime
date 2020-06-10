@@ -62,15 +62,17 @@ Setting up a local firewall is done differently on all the supported distros.
 * [Debian](https://wiki.debian.org/DebianFirewall)
 * [FirewallD](http://www.firewalld.org/) (CentOS)
 * [Ubuntu](https://help.ubuntu.com/lts/serverguide/firewall.html)
-  * To quickly configure Ubuntu's firewall, `ufw`:
-  ```
+
+To quickly configure Ubuntu's firewall, `ufw`:
+
+```
 sudo ufw enable
 sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
 sudo ufw allow 8000/tcp #only if streaming from your server
 sudo ufw allow 8001/tcp #only if DJs will be directly connecting to stream in ports, also include 8002/tcp
 sudo ufw status #to check setup
-  ```
+```
 
 There are a vast amount of ways to configure your network, firewall included.
 Choose the way that best fits your deployment and don't expose internal parts of your

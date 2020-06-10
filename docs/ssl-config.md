@@ -74,47 +74,47 @@ Using the following configuration for Apache 2.2 as a guide, replace *airtime.ex
 On port 80, Apache's *alias* module is used to set a *Redirect permanent* for the login page. Optionally, access could be denied to all sites except *localhost* and any other LibreTime servers on your network, so that unencrypted communication between LibreTime components can continue.
 
 ```
-    <VirtualHost *:443>
-          SSLEngine on
-          SSLProtocol All -SSLv2 -SSLv3
-          SSLCompression off
-          SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
-          SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
-          Header always set Strict-Transport-Security "max-age=31536000"
+<VirtualHost *:443>
+      SSLEngine on
+      SSLProtocol All -SSLv2 -SSLv3
+      SSLCompression off
+      SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
+      SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+      Header always set Strict-Transport-Security "max-age=31536000"
 
-          ServerName airtime.example.com
-          #ServerAlias www.example.com
+      ServerName airtime.example.com
+      #ServerAlias www.example.com
 
-          ServerAdmin admin@example.com
+      ServerAdmin admin@example.com
 
-          DocumentRoot /usr/share/airtime/php/airtime_mvc/public
-          DirectoryIndex index.php
+      DocumentRoot /usr/share/airtime/php/airtime_mvc/public
+      DirectoryIndex index.php
 
-          <Directory /usr/share/airtime/php/airtime_mvc/public>
-                  Options -Indexes FollowSymLinks MultiViews
-                  AllowOverride all
-                  Order allow,deny
-                  Allow from all
-          </Directory>
-    </VirtualHost>
+      <Directory /usr/share/airtime/php/airtime_mvc/public>
+              Options -Indexes FollowSymLinks MultiViews
+              AllowOverride all
+              Order allow,deny
+              Allow from all
+      </Directory>
+</VirtualHost>
 
-    <VirtualHost *:80>
-          ServerName airtime.example.com
+<VirtualHost *:80>
+      ServerName airtime.example.com
 
-          ServerAdmin admin@example.com
+      ServerAdmin admin@example.com
 
-          DocumentRoot /usr/share/airtime/php/airtime_mvc/public
-          Redirect permanent /login https://airtime.example.com/login
+      DocumentRoot /usr/share/airtime/php/airtime_mvc/public
+      Redirect permanent /login https://airtime.example.com/login
 
-          SetEnv APPLICATION_ENV "production"
+      SetEnv APPLICATION_ENV "production"
 
-          <Directory /usr/share/airtime/php/airtime_mvc/public>
-                  Options -Indexes FollowSymLinks MultiViews
-                  AllowOverride All
-                  Order allow,deny
-                  Allow from all
-          </Directory>
-    </VirtualHost> 
+      <Directory /usr/share/airtime/php/airtime_mvc/public>
+              Options -Indexes FollowSymLinks MultiViews
+              AllowOverride All
+              Order allow,deny
+              Allow from all
+      </Directory>
+</VirtualHost> 
 ```
 
 Save the file with **Ctrl+O** and exit the **nano** editor with **Ctrl+X**. Then restart Apache with the command:

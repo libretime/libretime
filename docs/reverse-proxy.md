@@ -15,7 +15,7 @@ domains that will be used externally to connect to your reverse proxy that you
 want handled by LibreTime. These URLS can also be set during the first run configuration
 that is displayed when you first install LibreTime
 
-# Reverse Proxy Basics
+## Reverse Proxy Basics
 
 A reverse proxy allows the LibreTime server to not be connected to the open internet. In
 this configuration, it is rather behind another server that proxies traffic to it from

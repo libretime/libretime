@@ -28,7 +28,7 @@ img{
 a{
   color:#f05f40;
   -webkit-transition:all .2s;
-  transition:all .2s
+  transition:all .2s;
   }
   
 a:hover{
@@ -38,6 +38,11 @@ a:hover{
 h1,h2,h3,h4,h5,h6{
   font-family:'Open Sans','Helvetica Neue',Arial,sans-serif;
   }
+
+/* Correcting overscroll on TOC links */
+:target{
+    padding-top: 57px;
+}
 
 /* Table Properties */
 table{
