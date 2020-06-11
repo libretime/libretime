@@ -46,8 +46,6 @@ To edit a user account, click on that user's row in the table, change the user's
 right side, and then click the **Save** button. To remove a user account, click the small **x** icon to the right
 side of its row in the table. You cannot delete your own user account, and usernames cannot be changed once created.
 
-![](img/Screenshot474-Save_user_details.png)
-
 Users can update their own password, and their contact, language and time zone details, by clicking their username on the
 right side of the main menu bar, next to the **Logout** link.
 

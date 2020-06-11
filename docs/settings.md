@@ -5,7 +5,7 @@ title: Settings
 ---
 
 
-# General Settings  {#general}
+## General Settings
 
 ![](img/station-info-settings.png)
 
@@ -89,9 +89,9 @@ their username on the right side of the menu bar.
 
 ----
 
-# Track Types {#types}
+## Track Types {#types}
 
-## Create track types
+### Create track types
 
 1. Click **Settings**
 1. Click **Track Types**
@@ -104,14 +104,13 @@ their username on the right side of the menu bar.
 
 ----
 
-# Stream Settings      {#stream}
+## Stream Settings      {#stream}
 
 <html>
     <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/QPNo52Fc0ck" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </html>
 
-Global settings
-------------------------
+### Global settings
 
 You can configure direct Icecast and SHOUTcast streams and sound card output by clicking **Streams** on the **System** menu.
 
@@ -131,8 +130,7 @@ If Replay Gain is enabled, output level can be adjusted up to 10dB louder or qui
 
 Click the **Save** button on the right side of the page to save any changes that you have made to global settings. If you are only using the hardware audio output, and will not be streaming to or from Airtime, you can leave the **Stream Settings** page after clicking the **Save** button.
 
-Input stream settings
----------------------
+### Input stream settings
 
 On the lower left side of the Stream Settings page you can configure remote live input streams from DJ programs such as **Mixxx** or **IDJC**, or smartphone applications used by broadcast journalists. A bug with **Butt** versions 1.14 to 1.16 causes streams not to connect to LibreTime. A fix has been introduced with **Butt** version 1.17 that allows it to be used by LibreTime.
 
@@ -150,8 +148,7 @@ To avoid further confusion, it is also recommended that you set a different **Mo
 
 If your Airtime server is behind a firewall, and you wish remote broadcasters to connect input streams to it across the public Internet, you may need to click the **Override** link to set a **Connection URL** which is available from outside your local area network. This URL might be based on the domain name assigned to the router which forwards the appropriate port to your Airtime server. Then click **OK** to save the new connection URL.
 
-Switching input streams
------------------------
+### Switching input streams
 
 In the Master Panel, available input source streams are shown with an orange line connecting the source to the switch, which you could think of like a patch cable connecting a source to a broadcast mixer. When that switch is active, another orange line connects the switch to the On Air indicator, like a patch cable connecting a mixer to a transmitter.
 
@@ -165,8 +162,8 @@ If you have the **Auto Switch Off** box checked LibreTime will resume scheduled 
 
 You can also force disconnection of a live remote source, for example when the remote input source has crashed and is no longer sending audio data, click the **X** icon to the left of the source name.
 
-Output stream settings
-----------------------
+### Output stream settings
+
 The Default Streaming radio button that is configured by default currently relies upon an insecure icecast password. You will want to change the Icecast2 password and select Custom Streaming. See the notice above for a tutorial on how to fix this.
 
 On the right side of the page, you can configure up to three independent output streams with different bit rates or formats, and send these streams to different Icecast or SHOUTcast servers. By default, only Stream 1 is enabled, with this stream being sent the Icecast server configured at installation time.
@@ -192,7 +189,7 @@ Any connection problems between Liquidsoap and Icecast or SHOUTcast are shown on
 ------
 
 
-# The Status page    {#status}
+## The Status page    {#status}
 
 On the **Settings** menu, the **Status** page provides an overview of the health and resource usage of the various
 services that make up a LibreTime system. If all is well, you will only see green check mark icons in the

@@ -10,7 +10,7 @@ Before uploading media to an LibreTime server, there are a number of factors whi
 
 LibreTime automatically imports any metadata that is in the files' ID3 tags. If these tags are incorrect or are missing information, you will have to either edit the metadata manually, or suffer the consequences. For example, if the files have creator or genre metadata missing, it will be impossible to search for, create playlists or generate smart blocks according to these criteria until you add it.
 
-There are a number of programs available which can be used to correct mistakes or incomplete information in ID3 tags. 
+There are a number of programs available which can be used to correct mistakes or incomplete information in ID3 tags. You can use a music library manager (like Apple Music, Rhythmbox, or Windows Media Player) to edit ID3 tags as well, but you may be required to import the files into your library, which may not always be convenient.  
 
 | Windows | macOS | Linux |
 |---------|-------|-------|

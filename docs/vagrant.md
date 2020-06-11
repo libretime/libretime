@@ -6,7 +6,7 @@ title: Using Vagrant and Virtualbox for developing LibreTime
 
 > Prerequisites: git, [Vagrant](https://vagrantup.com), libvirt or VirtualBox
 
-# VirtualBox
+## VirtualBox
 
 You will need to install [VirtualBox](https://www.virtualbox.org) and may want to consider
 installing [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest) to update the
@@ -16,7 +16,7 @@ guest extensions to match your host system on vagrant up.
 vagrant plugin install vagrant-vbguest
 ```
 
-# Libvirt
+## Libvirt
 
 Setting the libvirt provider up on (Ubuntu and Debian)[#Ubuntu and Debian] is straight
 forward, using the distribution provided packages. While on
@@ -38,7 +38,7 @@ vagrant destroy ubuntu-xenial
 vagrant up ubuntu-xenial --provider=libvirt
 ```
 
-# Debian and Ubuntu
+### Debian and Ubuntu
 
 ```bash
 sudo apt install vagrant vagrant-libvirt libvirt-daemon-system vagrant-mutate libvirt-dev
@@ -51,7 +51,7 @@ vagrant mutate bento/ubuntu-16.04 libvirt
 vagrant up ubuntu-xenial --provider=libvirt
 ```
 
-## Other Distributions
+### Other Distributions
 
 You will need to install [libvirt](https://libvirt.org/) and `vagrant-mutate` and then run
 
@@ -67,7 +67,7 @@ vagrant mutate bento/ubuntu-16.04 libvirt
 vagrant up ubuntu-xenial --provider=libvirt
 ```
 
-# Starting LibreTime Vagrant
+## Starting LibreTime Vagrant
 
 To get started you clone the repo and run `vagrant up`. The command accepts a parameter to
 change the default provider if you have multiple installed. This can be done by appending
@@ -87,7 +87,7 @@ Once you reach the web setup GUI you can click through it using the default valu
 connect to the vagrant machine you can run `vagrant ssh ubuntu-xenial` in the libretime
 directory.
 
-# Alternative OS installations
+## Alternative OS installations
 
 With the above instructions LibreTime is installed on Ubuntu Xenial Xerus. The Vagrant setup
 offers the option to choose a different operation system according to you needs.
@@ -100,7 +100,7 @@ offers the option to choose a different operation system according to you needs.
 | Ubuntu 16.04 | `vagrant up ubuntu-xenial`  | Install on Ubuntu Xenial Xerus. |
 | CentOS | `vagrant up centos` | Extremely experimental install on 7.3 with native systemd support and activated SELinux. Needs manual intervention due to Liquidsoap 1.3.3. |
 
-# Troubleshooting
+## Troubleshooting
 
 If anything fails during the initial provisioning step you can try running `vagrant provision`
 to re-run the installer.
