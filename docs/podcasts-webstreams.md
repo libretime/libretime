@@ -8,7 +8,7 @@ title: Podcasts and Webstreams
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/g-4UcD8qvR8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </html>
 
-# Podcasts   {#podcasts}
+## Podcasts   {#podcasts}
 
 The Podcasts page allows you add subscriptions to podcasts which are often used to syndicated audio files using a URL called a RSS feed. This allows your LibreTime instance to automatically download new shows from the web.
 
@@ -19,7 +19,7 @@ The podcast interfaces provides you with the ability to generate [Smartblocks](s
 Video Tutorials:
 - [How to schedule a podcast to play the latest episode automatically](https://www.youtube.com/watch?v=g-4UcD8qvR8)
 
-## Podcasts Dashboard
+### Podcasts Dashboard
 
 ![](img/Podcasts_Dashboard.png)
 
@@ -40,13 +40,13 @@ A search box is available to search for episodes within the feed.
 - To delete an episode from LibreTime, select the episode and click on the red trash can on the toolbar.
 - If you would like LibreTime to automatically download the latest episodes of a podcast, make sure *Download latest episodes* is checked. This can be used in conjunction with Smartblocks and Playlists to automate downloading and scheduling shows that are received via podcast feed.
 
-# Webstreams   {#webstreams}
+## Webstreams   {#webstreams}
 
 <html>
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/Ha3X6aYdY04" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </html>
 
-## Adding a webstream
+### Adding a webstream
 A web stream URL and metadata can be added to the LibreTime library, so that a remote stream can be searched for and scheduled to be *pulled* into a show. For example, at the top of the hour your station may pull a news report from journalists working in another studio. This is a different concept from **Master Source** and **Show Source** remote streams which are *pushed* into the LibreTime playout schedule.
 
 To add a web stream, click the **+ New** button on the left side of the Webstreams page. Like a playlist, web streams in the Library can have a title and **Description**, which may help you find them in searches later.

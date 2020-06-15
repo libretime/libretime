@@ -1,7 +1,6 @@
 ---
 title: Quick Install
 layout: docs
-
 ---
 
 > Note: this guide is assuming you are using Ubuntu 18.04 LTS for installation, which comes with `ufw` and `netplan`,
