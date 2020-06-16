@@ -1,10 +1,50 @@
 topnav:
-- page: Docs
+- page: Install
   url: quickstart
+- page: Guides
+  url: guides
 - page: Github
   url: https://github.com/LibreTime/libretime
 - page: <svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg> Sponsor
   url: https://opencollective.com/libretime
+  
+djguides:
+- page: Broadcasting Live
+  url: live-broadcast
+- page: Playlists and Smartblocks
+  url: playlists-smartblocks
+- page: Podcasts and Webstreams
+  url: podcasts-webstreams
+- page: Preparing Media
+  url: preparing-media
+- page: Scheduling Shows
+  url: scheduling-shows
+
+managerguides:
+- page: Playout History & Auditing
+  url: playout-history
+- page: User Management
+  url: users 
+
+adminguides:
+- page: API Usage
+  url: api
+- page: Backing up LibreTime
+  url: backing-up-the-server    
+- page: Configuring Icecast/Shoutcast
+  url: icecast-shoutcast
+- page: FreeIPA Configuration
+  url: freeipa
+- page: HD Audio Modules Reference
+  url: hd-audio-modules
+- page: Interface Customization
+  url: interface-customization
+- page: Settings
+  url: settings
+- page: Troubleshooting/Uninstall
+  url: troubleshooting
+- page: Upgrading LibreTime
+  url: upgrading
   
 docsnav:
 - section: Install
@@ -22,44 +62,16 @@ docsnav:
   - page:
 - section: Using LibreTime
   contents:
-  - page: Broadcasting Live
-    url: live-broadcast
+
   - page: Intelligent Library
     url: library
   - page: Built-in Microsite
     url: microsite
-  - page: User Management
-    url: users
-  - page: Playlists and Smartblocks
-    url: playlists-smartblocks
-  - page: Playout History & Auditing
-    url: playout-history
-  - page: Podcasts and Webstreams
-    url: podcasts-webstreams
-  - page: Preparing Media
-    url: preparing-media
   - page: Scheduling Shows
     url: scheduling-shows
-  - page: Settings
-    url: settings
   - page: Streaming Statistics
-    url: listener-stats
-- section: Advanced Configuration
-  contents:
-  - page: API Usage
-    url: api
-  - page: Backing up LibreTime
-    url: backing-up-the-server    
-  - page: Configuring Icecast/Shoutcast
-    url: icecast-shoutcast
-  - page: FreeIPA Configuration
-    url: freeipa
-  - page: Interface Customization
-    url: interface-customization
-  - page: Troubleshooting/Uninstall
-    url: troubleshooting
-  - page: Upgrading LibreTime
-    url: upgrading
+    url: stats
+
 - section: Appendix
   contents:
   - page: HD Audio Modules

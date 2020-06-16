@@ -5,23 +5,7 @@ layout: default
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    
-    <!-- Custom fonts for this template -->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
-
-    <!-- Plugin CSS -->
-    <link href="vendor/magnific-popup/magnific-popup.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="css/creative.min.css" rel="stylesheet">
+    {% include head.html %}
     
     <style>
        .content {
@@ -43,56 +27,25 @@ layout: default
   <body id="page-top">
 
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-shrink" id="mainNav">
-      <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="index"> {{ site.title }} </a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto">
-            {% for item in site.data.nav.topnav %}
-              <li class="nav-item">
-                <a class="nav-link js-scroll-trigger" href="{{ item.url }}">{{ item.page }}</a>
-              </li>
-            {% endfor %}
-          </ul>
-        </div>
-      </div>
-    </nav>
-    
-    <!-- Sidebar -->
-    
-    <nav id="sidebar">
-        <div class="allcaps navbar-brand section-heading">
-            <h5>Table of Contents</h5>
-        </div>
-        
-        {% for item in site.data.nav.docsnav %}
-        <ul class="list-unstyled components">
-          <i>{{ item.section }}</i>
-          {% for entry in item.contents %}
-            <li>
-                <a href="{{ entry.url }}">{{ entry.page }}</a>
-            </li>
-          {% endfor %}
-        </ul>
-        {% endfor %}
-    </nav>
+    {% include navbar.html %}
     
     <!-- Page Header -->
-    <div class="container-fluid">
+    <div class="container">
       <div class="mx-auto">
+        <small><a href="guides"><svg class="bi bi-arrow-left" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M5.854 4.646a.5.5 0 0 1 0 .708L3.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0z"/>
+        <path fill-rule="evenodd" d="M2.5 8a.5.5 0 0 1 .5-.5h10.5a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+        </svg>Back to Guides</a> </small> <br>
         <h2 class="allcaps navbar-brand section-heading"> {{ page.title }} </h2>
       </div>
-    </div>
       <!-- This is the main content of the page getting pulled from the MDs -->
-      <div class="content">
+      <div class="container-large">
         <div class="toc" >{% include toc.html html=content class=toc ordered=true %}</div>
         <hr class="my-4">
         {{ content }}
       </div>
-
+    </div>
+    
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

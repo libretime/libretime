@@ -243,16 +243,6 @@ margin: 10px;
 padding: 10px 20px;
 }
 
-/* Sidebar */
-#sidebar {
- position: absolute;
- top: 57px;
- right: 0;
- width: 20%;
- height: 100%;
- background-color: #fff
-}
-
 /* Scroll to Top */
 .top-link {
   transition: all .25s ease-in-out;

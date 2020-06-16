@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    {% include head.html %}
+    
+    <style>
+      header.masthead {
+        padding-top: 10rem;
+        padding-bottom: calc(10rem - 56px);
+        background-image: url("{{ site.headimage }}");
+        background-position: center center;
+        background-size: cover;
+      }
+      body{
+        font-family:Merriweather,'Helvetica Neue',Arial,sans-serif;
+        padding-top: 0px;
+      }
+    </style>
+    
+    <title>{{ site.title }} - {{ page.title }}</title>
+  </head>
+  <body id="page-top">
+
+    <!-- Navigation -->
+    {% include navbar.html %}
+    
+    <!-- Scroll to Top link -->
+    <a class="top-link hide" href="" id="js-top">
+      <svg class="bi bi-arrow-up-circle-fill" width="4em" height="4em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-10.646.354a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 6.207V11a.5.5 0 0 1-1 0V6.207L5.354 8.354z"/>
+      </svg>
+      <span class="screen-reader-text">Back to top</span>
+    </a>
+
+    <!-- Splash Image
+    <header class="masthead text-center text-white d-flex">
+      <div class="container my-auto">
+        <div class="row">
+          <div class="col-lg-10 mx-auto">
+            <h1 class="text-uppercase">
+              <strong> {{ site.headtext }} </strong>
+            </h1>
+            <hr>
+          </div>
+          <div class="col-lg-8 mx-auto">
+            <p class="text-faded mb-5">
+                {{ site.headsubtext}}
+            </p>
+            <a class="btn btn-primary btn-xl js-scroll-trigger" href="{{ site.headbuttonurl }}">{{ site.headbuttontext }}</a>
+          </div>
+        </div>
+      </div>
+    </header>
+    -->
+    
+    <!-- Orange Container -->
+    <section class="bg-dark text-white" id="dj">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto text-center">
+            <h2 class="section-heading text-white">Guides for DJs</h2>
+            <hr class="light my-4">
+            <p class="text-faded mb-4">
+                Basic guides for broadcasting with Libretime can be found here, perfect for DJs.
+            </p>
+          {% for item in site.data.nav.djguides %}
+            <li>
+              <a class="" href="{{ item.url }}">{{ item.page }}</a>
+            </li>
+          {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="" id="managers">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto text-center">
+            <h2 class="section-heading">Guides for Program Managers</h2>
+            <hr class="light my-4">
+            <p class="mb-4">
+                Program Managers, sometimes known as Program Directors, manage DJs and are responsible for maintaining the station's on-air calendar. All the help Program Managers need is right here. (Note: guides for DJs will also be helpful for programming Libretime)
+            </p>
+          {% for item in site.data.nav.managerguides %}
+            <li>
+              <a class="" href="{{ item.url }}">{{ item.page }}</a>
+            </li>
+          {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section class="bg-dark text-white" id="dj">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto text-center">
+            <h2 class="section-heading text-white">Guides for System Administrators</h2>
+            <hr class="light my-4">
+            <p class="text-faded mb-4">
+                System administrators can find all of the information they need here to configure and maintain their LibreTime instance.
+            </p>
+          {% for item in site.data.nav.adminguides %}
+            <li>
+              <a class="" href="{{ item.url }}">{{ item.page }}</a>
+            </li>
+          {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <footer>
+      <section class="footer-dark text-white">
+        <div class="text-footer">
+          <small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/ned-kelly">ned-kelly</a> and <a href="https://github.com/zklosko">Zachary Klosko</a> &nbsp; | &nbsp;</small>
+          <small>Code and docs licensed under GPLv2. More details <a href="http://sourcefabric.booktype.pro/airtime-25-for-broadcasters/about-this-manual/">here</a>. </small>
+        </div>
+      </section>
+    </footer>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+            <!-- For Scroll to Top text; from https://getflywheel.com/layout/sticky-back-to-top-button-tutorial/ -->
+    <script>
+      // Set a variable for our button element.
+      const scrollToTopButton = document.getElementById('js-top');
+      
+      const scrollFunc = () => {
+        // Get the current scroll value
+        let y = window.scrollY;
+         
+        // If the scroll value is greater than the window height, let's add a class to the scroll-to-top button to show it!
+        if (y > 0) {
+          scrollToTopButton.className = "top-link show";
+        } else {
+          scrollToTopButton.className = "top-link hide";
+        }
+      };
+      window.addEventListener("scroll", scrollFunc);
+      const scrollToTop = () => {
+        // Let's set a variable for the number of pixels we are from the top of the document.
+        const c = document.documentElement.scrollTop || document.body.scrollTop;
+         
+        // If that number is greater than 0, we'll scroll back to 0, or the top of the document.
+        // We'll also animate that scroll with requestAnimationFrame:
+        // https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
+        if (c > 0) {
+          window.requestAnimationFrame(scrollToTop);
+          // ScrollTo takes an x and a y coordinate.
+          // Increase the '10' value to get a smoother/slower scroll!
+          window.scrollTo(0, c - c / 10);
+        }
+      };
+      // When the button is clicked, run our ScrolltoTop function above!
+      scrollToTopButton.onclick = function(e) {
+        e.preventDefault();
+        scrollToTop();
+      }
+    </script>
+  </body>
+</html>
