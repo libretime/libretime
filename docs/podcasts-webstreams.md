@@ -4,10 +4,6 @@ title: Podcasts and Webstreams
 
 ---
 
-<html>
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/g-4UcD8qvR8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</html>
-
 ## Podcasts   {#podcasts}
 
 The Podcasts page allows you add subscriptions to podcasts which are often used to syndicated audio files using a URL called a RSS feed. This allows your LibreTime instance to automatically download new shows from the web.
@@ -16,8 +12,10 @@ In order to add a podcast you need to get the RSS feed. All podcasts available o
 
 The podcast interfaces provides you with the ability to generate [Smartblocks](smartblocks) that can be used in conjunction with [Autoloading Playlists](../calendar/#autoloading-playlist) to schedule the newest episode of a podcast without human intervention.
 
-Video Tutorials:
-- [How to schedule a podcast to play the latest episode automatically](https://www.youtube.com/watch?v=g-4UcD8qvR8)
+<html>
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/g-4UcD8qvR8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</html>
+
 
 ### Podcasts Dashboard
 
@@ -51,7 +49,7 @@ A web stream URL and metadata can be added to the LibreTime library, so that a r
 
 To add a web stream, click the **+ New** button on the left side of the Webstreams page. Like a playlist, web streams in the Library can have a title and **Description**, which may help you find them in searches later.
 
-![](webstream.jpg)
+![](img/webstream.jpg)
 
 The **Stream URL** setting must include the *port number* (such as 8000) and *mount point* (such as remote\_stream) of the remote stream, in addition to the streaming server name. A **Default Length** for the remote stream can also be set. If the stream is added at the end of a show which becomes overbooked as a result, it will be faded out when the show ends.
 

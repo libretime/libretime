@@ -4,9 +4,6 @@ title: Broadcasting live with MIXXX or B.U.T.T.
 
 ---
 
-This how to is intended for DJs using BUTT or MIXXX to stream to their LibreTime
-server with an external USB audio card setup to route a mixer and sound.
-
 ## Live shows with MIXXX {#mixxx}
 
 [Mixxx](https://www.mixxx.org) is a cross-platform Open Source application for DJs.
