@@ -21,10 +21,22 @@
       <span class="screen-reader-text">Back to top</span>
     </a>
     
-    <div class="container-lg">
-      <nav class="content">
-        {{ content }}
-      </nav>
+    <div class="container">
+      <div class="row no-gutters">
+        <div class="col-9">
+          <nav class="content">
+            {{ content }}
+          </nav>
+        </div>
+        <div class="col">
+          <hr class="my-4">
+          <div class="text-footer">
+            <h5 class="allcaps">Contents</h5>
+          </div>
+          <div class="toc" >{% include toc.html html=content class=toc %}</div>
+          <hr class="my-4">
+        </div>
+      </div>
     </div>
     
     <footer>
@@ -34,7 +46,7 @@
           <small>Code and docs licensed under GPLv2. More details <a href="http://sourcefabric.booktype.pro/airtime-25-for-broadcasters/about-this-manual/">here</a>. </small>
         </div>
       </section>
-    </footer>s
+    </footer>
     {% include scripts.html %}
   </body>
 </html>

@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: default
 title: Broadcasting live with MIXXX or B.U.T.T.
 
 ---

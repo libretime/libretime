@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: default
 title: Icecast and Shoutcast Stream Configuration
 ---
 

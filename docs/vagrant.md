@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: default
 title: Using Vagrant and Virtualbox for developing LibreTime
 
 ---

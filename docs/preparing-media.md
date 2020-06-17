@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: default
 title: Preparing Media for LibreTime
 
 ---

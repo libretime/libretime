@@ -1,12 +1,18 @@
+docsdrop:
+- page: Broadcasting Live
+  url: live-broadcast
+- page: Intelligent Library
+  url: library
+- page: Scheduling Shows
+  url: scheduling-shows
+
+
 topnav:
-- page: Install
-  url: quickstart
-- page: Guides
-  url: guides
 - page: Github
   url: https://github.com/LibreTime/libretime
 - page: <svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg> Sponsor
   url: https://opencollective.com/libretime
+  
   
 djguides:
 - page: Broadcasting Live
@@ -62,7 +68,6 @@ docsnav:
   - page:
 - section: Using LibreTime
   contents:
-
   - page: Intelligent Library
     url: library
   - page: Built-in Microsite
@@ -71,7 +76,6 @@ docsnav:
     url: scheduling-shows
   - page: Streaming Statistics
     url: stats
-
 - section: Appendix
   contents:
   - page: HD Audio Modules
@@ -82,5 +86,3 @@ docsnav:
     url: https://gist.github.com/hairmare/8c03b69c9accc90cfe31fd7e77c3b07d
   - page: Rights and Royalties
     url: rights-royalties
-  - page: UNESCO Public Radio Guide (PDF)
-    url: img/CommunityRadioUserGuide.pdf

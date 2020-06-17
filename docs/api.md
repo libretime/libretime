@@ -1,5 +1,5 @@
 ---
-layout: docs
+layout: default
 title: LibreTime API Usage
 ---
 
