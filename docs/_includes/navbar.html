@@ -15,20 +15,21 @@
           Docs
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            {% for item in site.docsdrop %}
+            {% for item in site.data.nav.docsdrop %}
               <a class="dropdown-item" href="{{ item.url }}">{{ item.page }}</a>
             {% endfor %}
             <div class="dropdown-divider"></div>
-            {% for item in site.admindocsdrop %}
+            {% for item in site.data.nav.admindocsdrop %}
               <a class="dropdown-item" href="{{ item.url }}">{{ item.page }}</a>
             {% endfor %}
           </div>
         </li>
-        {% for item in site.topnav %}
-          <li class="nav-item">
-            <a class="nav-link" href="{{ item.url }}">{{ item.page }}</a>
-          </li>
-        {% endfor %}
+        <li class="nav-item">
+          <a class="nav-link" href="https://www.youtube.com/channel/UC-MA9GzkTb8th1YlDmF0NfA" target="_blank"><i class="fab fa-youtube"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/LibreTime/libretime" target="_blank"><i class="fab fa-github"></i></a>
+        </li>
       </ul>
     </div>
   </div>

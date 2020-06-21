@@ -1,16 +1,15 @@
 ---
 title: Install
 layout: default
+git: install.md
 ---
-
-## Install
 
 > Note: this guide is assuming you are using Ubuntu 18.04 LTS for installation, which comes with `ufw` and `netplan`,
 and that you have already installed `git` and configured `ntp`. NTP configuration instructions can be found [here](setting-the-server-time).
 While it is possible to install LibreTime on other OSes, such as CentOS 7, Debian 9 and 10, and Raspbian 9 and 10,
 these are less tested. Firewall and static IP address configuration will need to be done according to your OSes instructions.
 
-### Minimum System Requirements
+## Minimum System Requirements
 
 | On-Premises Install | Cloud Install |
 |---------------------|---------------|
@@ -22,7 +21,7 @@ these are less tested. Firewall and static IP address configuration will need to
 [DigitalOcean](https://www.digitalocean.com/pricing/#Compute) and [Linode](https://www.linode.com/pricing/#row--compute)
  have similar plans that meet Cloud Install requirements. Both plans cost $10/month.
 
-### Preparing the server
+## Preparing the server
 
 Configure the server to have a static IP address by modifying the Netplan configuration.
 If you're using a cloud VM, you likely already have a static IP address. Check with your provider to confirm this.
@@ -112,8 +111,6 @@ the `www-data` user needs to be added to the `audio` user group using the comman
 ```
 sudo adduser www-data audio
 ```
-
-Congratulations! You've successfully installed LibreTime!
 
 ---
 

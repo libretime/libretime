@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Managing Users
-
+git: users.md
 ---
 
 > Note: if your Airtime server is accessible from the public Internet (ex. being hosted in a cloud VM)
