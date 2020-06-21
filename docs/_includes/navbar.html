@@ -15,14 +15,16 @@
           Docs
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            {% for item in site.data.nav.docsdrop %}
+            {% for item in site.docsdrop %}
               <a class="dropdown-item" href="{{ item.url }}">{{ item.page }}</a>
             {% endfor %}
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="guides">More Docs</a>
+            {% for item in site.admindocsdrop %}
+              <a class="dropdown-item" href="{{ item.url }}">{{ item.page }}</a>
+            {% endfor %}
           </div>
         </li>
-        {% for item in site.data.nav.topnav %}
+        {% for item in site.topnav %}
           <li class="nav-item">
             <a class="nav-link" href="{{ item.url }}">{{ item.page }}</a>
           </li>

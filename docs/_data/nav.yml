@@ -3,6 +3,8 @@ docsdrop:
   url: live-broadcast
 - page: Intelligent Library
   url: library
+- page: Playout History
+  url: analytics
 - page: Scheduling Shows
   url: scheduling-shows
 
