@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Broadcasting live with MIXXX or B.U.T.T.
-
+git: live-broadcast.md
 ---
 
 ## Live shows with MIXXX {#mixxx}

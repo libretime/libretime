@@ -328,3 +328,9 @@ padding: 10px 20px;
 .allcaps {
   text-transform: uppercase
 }
+
+ .center {
+  margin: auto;
+  width: 50%;
+  padding: 10px;
+}

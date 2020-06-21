@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Backing Up The Server
+git: backing-up-the-server.md
 ---
 
 ## Database Backup
