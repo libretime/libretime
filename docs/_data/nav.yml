@@ -1,29 +1,9 @@
 # Navigation
-docsdrop:
-- page: Broadcasting Live
-  url: live-broadcast
-- page: Intelligent Library
-  url: library
-- page: Playout History
-  url: analytics
-- page: Scheduling Shows
-  url: scheduling-shows
-- page: Troubleshooting
-  url: troubleshooting
-- page: User Management
-  url: users
-  
-admindocsdrop:
-- page: Admin Guides
-  url: guides
-  
 djguides:
 - page: Broadcasting Live
   url: live-broadcast
-- page: Playlists and Smartblocks
-  url: playlists-smartblocks
-- page: Podcasts and Webstreams
-  url: podcasts-webstreams
+- page: Using the Library (Playlists, Smartblocks, Webstreams, Podcasts)
+  url: library
 - page: Preparing Media
   url: preparing-media
 - page: Scheduling Shows
@@ -32,6 +12,8 @@ djguides:
 managerguides:
 - page: Playout History & Auditing
   url: playout-history
+- page: Rights and Royalties
+  url: rights-royalties
 - page: User Management
   url: users 
 
@@ -39,13 +21,17 @@ adminguides:
 - page: API Usage
   url: api
 - page: Backing up LibreTime
-  url: backing-up-the-server    
+  url: backing-up-the-server 
+- page: Built-in Microsite
+  url: microsite
 - page: Configuring Icecast/Shoutcast
   url: icecast-shoutcast
 - page: FreeIPA Configuration
   url: freeipa
 - page: HD Audio Modules Reference
   url: hd-audio-modules
+- page: Installing Libretime
+  url: install
 - page: Interface Customization
   url: interface-customization
 - page: Settings
@@ -55,37 +41,8 @@ adminguides:
 - page: Upgrading LibreTime
   url: upgrading
   
-docsnav:
-- section: Install
-  contents:
-  - page: 1. Quick Install
-    url: quickstart
-  - page: 1.1 Reverse Proxy
-    url: reverse-proxy
-  - page: 2. Host Configuration
-    url: host-configuration
-  - page: 3. Setting the Server Time
-    url: setting-the-server-time
-  - page: 4. Setting up SSL
-    url: ssl-config
-  - page:
-- section: Using LibreTime
-  contents:
-  - page: Intelligent Library
-    url: library
-  - page: Built-in Microsite
-    url: microsite
-  - page: Scheduling Shows
-    url: scheduling-shows
-  - page: Streaming Statistics
-    url: stats
-- section: Appendix
-  contents:
-  - page: HD Audio Modules
-    url: hd-audio-modules
-  - page: Contribute to LibreTime
-    url: contribute   
-  - page: Letter to the AirTime Community
-    url: https://gist.github.com/hairmare/8c03b69c9accc90cfe31fd7e77c3b07d
-  - page: Rights and Royalties
-    url: rights-royalties
+devguides:
+- page: Contributing to Libretime
+  url: contribute
+- page: Developing with Vagrant
+  url: vagrant

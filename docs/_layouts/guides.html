@@ -58,7 +58,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 mx-auto text-center">
-            <h2 class="section-heading text-white">Guides for DJs</h2>
+            <h2 class="section-heading text-white">Docs for DJs</h2>
             <hr class="light my-4">
             <p class="text-faded mb-4">
                 Basic guides for broadcasting with Libretime can be found here, perfect for DJs.
@@ -77,7 +77,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 mx-auto text-center">
-            <h2 class="section-heading">Guides for Program Managers</h2>
+            <h2 class="section-heading">Docs for Program Managers</h2>
             <hr class="light my-4">
             <p class="mb-4">
                 Program Managers, sometimes known as Program Directors, manage DJs and are responsible for maintaining the station's on-air calendar. All the help Program Managers need is right here. (Note: guides for DJs will also be helpful for programming Libretime)
@@ -96,12 +96,31 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 mx-auto text-center">
-            <h2 class="section-heading text-white">Guides for System Administrators</h2>
+            <h2 class="section-heading text-white">Docs for System Administrators</h2>
             <hr class="light my-4">
             <p class="text-faded mb-4">
                 System administrators can find all of the information they need here to configure and maintain their LibreTime instance.
             </p>
           {% for item in site.data.nav.adminguides %}
+            <li>
+              <a class="" href="{{ item.url }}">{{ item.page }}</a>
+            </li>
+          {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section class="" id="devs">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto text-center">
+            <h2 class="section-heading">Docs for Developers</h2>
+            <hr class="light my-4">
+            <p class="mb-4">
+                Calling all developers! Find the information you need to get started at the links below.
+            </p>
+          {% for item in site.data.nav.devguides %}
             <li>
               <a class="" href="{{ item.url }}">{{ item.page }}</a>
             </li>

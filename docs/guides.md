@@ -1,4 +1,4 @@
 ---
-title: Guides
+title: Docs
 layout: guides
 ---

@@ -10,25 +10,20 @@
         <li class="nav-item">
           <a class="nav-link" href="install">Install</a>
         </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Docs
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            {% for item in site.data.nav.docsdrop %}
-              <a class="dropdown-item" href="{{ item.url }}">{{ item.page }}</a>
-            {% endfor %}
-            <div class="dropdown-divider"></div>
-            {% for item in site.data.nav.admindocsdrop %}
-              <a class="dropdown-item" href="{{ item.url }}">{{ item.page }}</a>
-            {% endfor %}
-          </div>
+        <li class="nav-item">
+          <a class="nav-link" href="guides">Docs</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="https://www.youtube.com/channel/UC-MA9GzkTb8th1YlDmF0NfA" target="_blank"><i class="fab fa-youtube"></i></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="https://github.com/LibreTime/libretime" target="_blank"><i class="fab fa-github"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://discourse.libretime.org/" target="_blank"><i class="fab fa-discourse"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://chat.libretime.org/login" target="_blank"><i class="fas fa-comments"></i></a>
         </li>
       </ul>
     </div>
