@@ -13,6 +13,8 @@ Search results can be copied to the clipboard using the **Copy** button, exporte
 
 This page has three tabs: **Log Sheet**, **File Summary** and **Show Summary**. On any of these tabs, you can select a date and time range by clicking the calendar and clock icons in the upper left corner of the page. Then click the search button, which has a magnifying glass icon, to the right. A list of files played during that date and time range will appear further down the page.
 
+![](img/log-sheet.png)
+
 In the **Log Sheet** tab, the playout history is sorted by **Start Time** and **End Time** by default.
 
 The number of times each file was played and the length of the files are shown in the **File Summary** tab. To make optimal use of this feature for royalty reporting purposes, music files must be tagged with **Composer** and **Copyright** metadata. The artist performing a piece of music may not be the original composer of the work, or the copyright holder of the sound recording.
@@ -27,7 +29,11 @@ Log entries can also be manually deleted, using the button with the trashcan ico
 
 ## History Templates
 
+![](img/history-templates.png)
+
 The **History Templates** page on the History menu enables you to prepare reports with the exact content required by regulatory agencies in the territories that you are broadcasting to. You can begin creating a custom template by clicking the button **New Log Sheet Template** or the button **New File Summary Template**.
+
+![](img/new-hist-temp.png)
 
 Either of these actions opens a page in which you can name the new template, and add or remove elements from the list on the left. To add a new element from the list on the right, click the plus icon for the item you require. If the element you require is not listed, you can use the **Add New Field** box at the lower end of the right side column. Select *string*, *boolean*, *integer*, or *float*, depending on the type of data that you wish to log, and then click the **+ Add** button.
 

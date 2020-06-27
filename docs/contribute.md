@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Contributing to LibreTime
-
+git: contribute.md
 ---
 
 > LibreTime is a fork of AirTime due to stalled development of the FLOSS version. For background on this,
@@ -27,7 +27,9 @@ supported? Follow [this guide](interface-localization) to add your language to L
 ## Help write documentation for LibreTime
 
 Our site is now run by Jekyll. After cloning our repo locally, enter the `/docs` directory and run
+
 ```
+bundle install
 jekyll serve
 ```
 

@@ -1,4 +1,4 @@
-# Navigation
+# Navigation for Docs page (guides.md)
 djguides:
 - page: Broadcasting Live
   url: live-broadcast
@@ -11,7 +11,7 @@ djguides:
 
 managerguides:
 - page: Playout History & Auditing
-  url: playout-history
+  url: analytics
 - page: Rights and Royalties
   url: rights-royalties
 - page: User Management

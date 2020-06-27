@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Preparing Media for LibreTime
-
+git: preparing-media.md
 ---
 
 Before uploading media to an LibreTime server, there are a number of factors which should be considered. Getting your ingest workflow right will save you a lot of time later.

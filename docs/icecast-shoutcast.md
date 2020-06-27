@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Icecast and Shoutcast Stream Configuration
+git: icecast-shoutcast.md
 ---
 
 ## Background

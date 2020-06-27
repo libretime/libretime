@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Upgrading LibreTime
-
+git: upgrading.md
 ---
 
 ## LibreTime versioning

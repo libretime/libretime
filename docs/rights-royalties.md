@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Rights and Royalties
+git: rights-royalties.md
 ---
 
 If you're new to broadcasting, or have not streamed your station online before,

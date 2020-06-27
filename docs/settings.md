@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Settings
+git: settings.md
 ---
 
 

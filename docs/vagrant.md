@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Using Vagrant and Virtualbox for developing LibreTime
-
+git: vagrant.md
 ---
 
 > Prerequisites: git, [Vagrant](https://vagrantup.com), libvirt or VirtualBox

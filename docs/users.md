@@ -8,7 +8,7 @@ git: users.md
 it is recommended that you create a second administrator account with a secure password and then
 delete the `admin` account, for best security practice.
 
-## Adding user accounts
+## User Account Types
 
 To add further user accounts to the system, one for each of your station staff that need access to Airtime, click the **New User** button with the plus icon. Enter a user name, password and contact details, and then select the **User Type** from the drop down menu, which can be *Admin*, *Program Manager*, *DJ*, or *Guest*. The difference between these user types is:
 
@@ -37,10 +37,14 @@ To add further user accounts to the system, one for each of your station staff t
 
 ## Editing or deleting user accounts
 
+![](img/user-list.png)
+
 New user accounts that you add will be shown in the table on the left side of the **Users** page. If you have a
 large number of users on the system, you can use the search tool above the table (which has a magnifying glass icon)
 to identify specific user accounts. Click the white chevrons in the table headings to sort the search results
 by **Username**, **First Name**, **Last Name** or **User Type**.
+
+![](img/user-edit.png)
 
 To edit a user account, click on that user's row in the table, change the user's details in the box on the
 right side, and then click the **Save** button. To remove a user account, click the small **x** icon to the right
