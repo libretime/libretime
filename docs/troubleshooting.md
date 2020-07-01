@@ -1,23 +1,27 @@
 ---
 layout: default
 title: Troubleshooting
-
+git: troubleshooting.md
 ---
 
 ## Restarting services
 
 LibreTime is effectively a web site running on a LAPP stack, so individual components of the system can be started, stopped, restarted or checked in the server console using the **systemctl** command:
 
-    sudo systemctl start|stop|restart|status libretime-liquidsoap
-    sudo systemctl start|stop|restart|status libretime-playout
-    sudo systemctl start|stop|restart|status libretime-celery
-    sudo systemctl start|stop|restart|status libretime-analyzer
-    sudo systemctl start|stop|restart|status apache2
-    sudo systemctl start|stop|restart|status rabbitmq-server
+```
+sudo systemctl start|stop|restart|status libretime-liquidsoap
+sudo systemctl start|stop|restart|status libretime-playout
+sudo systemctl start|stop|restart|status libretime-celery
+sudo systemctl start|stop|restart|status libretime-analyzer
+sudo systemctl start|stop|restart|status apache2
+sudo systemctl start|stop|restart|status rabbitmq-server
+```
 
 For example, to restart the Airtime playout engine, you could enter the command:
 
-    sudo systemctl restart libretime-playout
+```
+sudo systemctl restart libretime-playout
+```
 
 ## Log files {#logs}
 
@@ -62,19 +66,19 @@ If the Airtime logs indicate failures to connect to the RabbitMQ server, such as
 
 2013-10-31 08:21:11,255 ERROR - \[pypomessagehandler.py : main() : line 99\] - Error connecting to RabbitMQ Server. Trying again in few seconds - See more at: http://forum.sourcefabric.org/discussion/16050/\#sthash.W8OJrNFm.dpuf
 ```
-but the RabbitMQ server is running normally, this error might be due to a change in the server's hostname since Airtime installation. Directory names under */var/lib/rabbitmq/mnesia/* indicate that RabbitMQ's database files are organised according to the hostname of the server, for example:
-```
-rabbit@airtime
-```
-where the hostname is *airtime.example.com*. If the hostname has changed, it may be necessary to reconfigure RabbitMQ manually, as follows:
+but the RabbitMQ server is running normally, this error might be due to a change in the server's hostname since Libretime installation. Directory names under */var/lib/rabbitmq/mnesia/* indicate that RabbitMQ's database files are organised according to the hostname of the server (ex. `rabbit@airtime`) where the hostname is *airtime.example.com*. If the hostname has changed, it may be necessary to reconfigure RabbitMQ manually, as follows:
 
 1. Delete the files in */var/lib/rabbitmq/mnesia/*
 
-    sudo rm -r /var/lib/rabbitmq/mnesia/*
+```
+sudo rm -r /var/lib/rabbitmq/mnesia/*
+```
 
 2. Restart RabbitMQ:
 
-    sudo systemctl restart rabbitmq-server
+```
+sudo systemctl restart rabbitmq-server
+```
 
 3. Enter the following commands to set up authentication and grant permissions. The *rabbitmqctl add\_user* command requires the RabbitMQ password from the /etc/airtime/airtime.conf file as an argument. The *rabbitmqctl set\_permissions* command should be entered on one line, with the list of Airtime services repeated three times:
 

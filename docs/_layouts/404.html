@@ -3,7 +3,19 @@
   <head>
     {% include head.html %}
     
-    <style>
+    <style type="text/css" media="screen">
+      h1 {
+        margin: 30px 0;
+        font-size: 4em;
+        line-height: 1;
+        letter-spacing: -1px;
+      }
+      img {
+        max-width: 250px;
+      }
+      .center-text {
+        text-align: center;
+      }
     </style>
     
     <title>{{ site.title }} - {{ page.title }}</title>
@@ -13,28 +25,19 @@
     <!-- Navigation -->
     {% include navbar.html %}
     
-    <!-- Scroll to Top link -->
-    <a class="top-link hide" href="" id="js-top">
-      <svg class="bi bi-arrow-up-circle-fill" width="4em" height="4em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-10.646.354a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 6.207V11a.5.5 0 0 1-1 0V6.207L5.354 8.354z"/>
-      </svg>
-      <span class="screen-reader-text">Back to top</span>
-    </a>
-    
     <div class="container-fluid">
-          <nav class="content">
-            {{ content }}
-          </nav>
+      <section class="bg-dark text-white center-text">
+        <img src="img/404.png" alt="404 Tape">
+        <p><strong>Page not found :(</strong></p>
+        <p>The requested page could not be found.</p>
+        <a href="guides"><svg class="bi bi-arrow-left-circle-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.646 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L6.207 7.5H11a.5.5 0 0 1 0 1H6.207l2.147 2.146z"/>
+        </svg> Back to Docs
+        </a>
+      </section>
     </div>
     
-    <footer>
-      <section class="footer-dark text-white">
-        <div class="text-footer">
-          <small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/ned-kelly">ned-kelly</a> and <a href="https://github.com/zklosko">Zachary Klosko</a> &nbsp; | &nbsp;</small>
-          <small>Code and docs licensed under GPLv2. More details <a href="http://sourcefabric.booktype.pro/airtime-25-for-broadcasters/about-this-manual/">here</a>. </small>
-        </div>
-      </section>
-    </footer>
+    {% include footer.html %}
     {% include scripts.html %}
   </body>
 </html>
