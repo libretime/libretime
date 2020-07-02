@@ -18,9 +18,9 @@ vagrant plugin install vagrant-vbguest
 
 ## Libvirt
 
-Setting the libvirt provider up on (Ubuntu and Debian)[#Ubuntu and Debian] is straight
-forward, using the distribution provided packages. While on
-(Other Distributions)[#Other Distributions] it can be built from within vagrant.
+Setting the libvirt provider up on Ubuntu and Debian is straight-forward,
+using the distribution provided packages. While on
+other distributions it can be built from within vagrant.
 
 If you try run a libvirt provided box after using a VirtualBox one, you will receive an
 error:
