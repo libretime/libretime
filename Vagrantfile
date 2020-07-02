@@ -71,8 +71,7 @@ Vagrant.configure("2") do |config|
     config.vm.provision "install", type: "shell", inline: "cd /vagrant; ./install %s --web-port=8080" % installer_args
 
     # Provision docs
-    # config.vm.provision "install-mkdocs", type: "shell", path: "docs/scripts/install.sh"
-    # config.vm.provision "start-mkdocs", type: "shell", path: "docs/scripts/serve.sh"
+    config.vm.provision "build-site-jekyll", type: "shell", path: "docs/jekyll.sh"
   end
 
 end
