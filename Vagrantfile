@@ -10,8 +10,6 @@ Vagrant.configure("2") do |config|
   # liquidsoap input harbors for instreaming (ie. /master)
   config.vm.network "forwarded_port", guest: 8001, host:8001
   config.vm.network "forwarded_port", guest: 8002, host:8002
-  # mkdocs documentation
-  # config.vm.network "forwarded_port", guest: 8888, host:8888
 
   # make sure we are using nfs (doesn't work out of the box with debian)
   nfsPath = "."

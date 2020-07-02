@@ -35,9 +35,10 @@ class ListenerStat(Thread):
 
 
     def get_stream_server_xml(self, ip, url, is_shoutcast=False):
-        encoded = base64.b64encode("%(admin_user)s:%(admin_pass)s" % ip)
+        auth_string = "%(admin_user)s:%(admin_pass)s" % ip
+        encoded = base64.b64encode(auth_string.encode('utf-8'))
 
-        header = {"Authorization":"Basic %s" % encoded}
+        header = {"Authorization":"Basic %s" % encoded.decode('ascii')}
 
         if is_shoutcast:
             #user agent is required for shoutcast auth, otherwise it returns 404.
