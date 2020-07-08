@@ -36,11 +36,6 @@
           <h5 class="allcaps">{{ page.title }}</h5>
         </div>
         <div class="col white-text center text-footer">
-          {% if page.git %}
-          <a href="https://github.com/LibreTime/libretime/edit/master/docs/{{page.git}}" target="_blank">
-            <i class="far fa-edit"></i> Edit on Github
-          </a>
-          {% endif %}
         </div>
       </div>
     </div>
@@ -57,6 +52,12 @@
           </div>
           <nav class="content">
             {{ content }}
+            <p></p>
+            {% if page.git %}
+            <a href="https://github.com/LibreTime/libretime/edit/master/docs/{{page.git}}" target="_blank">
+              <i class="far fa-edit"></i> Edit on Github
+            </a>
+            {% endif %}
           </nav>
         </div>
         <div class="col d-none d-sm-none d-md-none d-lg-block">
