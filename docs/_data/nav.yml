@@ -46,3 +46,5 @@ devguides:
   url: contribute
 - page: Developing with Vagrant
   url: vagrant
+- page: Translate Libretime
+  url: interface-localization

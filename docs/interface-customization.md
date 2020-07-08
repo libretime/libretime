@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Modifying the LibreTime interface
-
+git: interface-customization.md
 ---
 
 
