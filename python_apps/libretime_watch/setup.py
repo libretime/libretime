@@ -24,7 +24,7 @@ else:
 # https://stackoverflow.com/questions/5932804/set-file-permissions-in-setup-py-file
 
 
-setup(name='libretime_watch',
+setup(name='libretime-watch',
       version='0.1.1',
       description='Libretime Watch existing directory',
       url='http://github.com/libretime/libretime',
