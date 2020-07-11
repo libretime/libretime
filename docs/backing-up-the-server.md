@@ -1,5 +1,10 @@
-Backing up the server
---------------------
+---
+layout: default
+title: Backing Up The Server
+git: backing-up-the-server.md
+---
+
+## Database Backup
 
 The following shell commands can be used for database backup and restore on a
 running *PostgreSQL* server in an LibreTime system.
@@ -46,8 +51,7 @@ which is backed up by your storage backup tool of choice; for example, the
 restore can be made along with a matching and complete version of the LibreTime
 database from the day that the storage backup was made. 
 
-Storage backup
---------------
+## Storage backup
 
 Backing up the LibreTime database with **pg\_dumpall** will not back up the
 LibreTime media storage server, which is likely to need a great deal more backup
@@ -63,12 +67,10 @@ the backup server also contains an LibreTime installation, it should be possible
 to switch playout to this second machine relatively quickly, in case of a
 hardware failure or other emergency on the production server.
 
-A standard incremental backup tool on GNU/Linux servers is *rsync*
-[(http://rsync.samba.org/)](http://rsync.samba.org/)) which can be installed
+A standard incremental backup tool on GNU/Linux servers is [rsync](http://rsync.samba.org/) which can be installed
 using the package manager of your GNU/Linux distribution. However, incremental
 backup alone cannot help in the scenario where a file which later proves to be
 important has been deleted by an administrator. For backups that can be rolled
 back to restore from an earlier date than the current backup, the tool
-*rdiff-backup*
-[(http://www.nongnu.org/rdiff-backup/](http://www.nongnu.org/rdiff-backup/)) can
+[rdiff-backup](http://www.nongnu.org/rdiff-backup/) can
 be deployed.  

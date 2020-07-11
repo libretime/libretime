@@ -1,19 +1,12 @@
 ---
-sidebar: devs
+layout: default
+title: Using Vagrant and Virtualbox for developing LibreTime
+git: vagrant.md
 ---
 
-# Using Vagrant and Virturalbox for developing LibreTime
+> Prerequisites: git, [Vagrant](https://vagrantup.com), libvirt or VirtualBox
 
-The **LibreTime Vagrant install** is the fastet way to get LibreTime up and running in a way
-to hack on its source code or to test it locally. There are two supported providers: libvirt
-and VirtualBox.
-
-## Prerequisites
-
-* [Git](https://git-scm.com/)
-* [Vagrant](https://vagrantup.com)
-
-### Virtual Box
+## VirtualBox
 
 You will need to install [VirtualBox](https://www.virtualbox.org) and may want to consider
 installing [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest) to update the
@@ -23,11 +16,11 @@ guest extensions to match your host system on vagrant up.
 vagrant plugin install vagrant-vbguest
 ```
 
-### Libvirt
+## Libvirt
 
-Setting the libvirt provider up on (Ubuntu and Debian)[#Ubuntu and Debian] is straight
-forward, using the distribution provided packages. While on
-(Other Distributions)[#Other Distributions] it can be built from within vagrant.
+Setting the libvirt provider up on Ubuntu and Debian is straight-forward,
+using the distribution provided packages. While on
+other distributions it can be built from within vagrant.
 
 If you try run a libvirt provided box after using a VirtualBox one, you will receive an
 error:
@@ -45,7 +38,7 @@ vagrant destroy ubuntu-xenial
 vagrant up ubuntu-xenial --provider=libvirt
 ```
 
-#### Debian and Ubuntu
+### Debian and Ubuntu
 
 ```bash
 sudo apt install vagrant vagrant-libvirt libvirt-daemon-system vagrant-mutate libvirt-dev
@@ -58,7 +51,7 @@ vagrant mutate bento/ubuntu-16.04 libvirt
 vagrant up ubuntu-xenial --provider=libvirt
 ```
 
-#### Other Distributions
+### Other Distributions
 
 You will need to install [libvirt](https://libvirt.org/) and `vagrant-mutate` and then run
 

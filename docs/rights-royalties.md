@@ -1,8 +1,8 @@
 ---
-sidebar: appendix
+layout: default
+title: Rights and Royalties
+git: rights-royalties.md
 ---
-
-# Rights and Royalties
 
 If you're new to broadcasting, or have not streamed your station online before,
 reading the following brief explanation of compensation rules for songwriters,

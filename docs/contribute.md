@@ -1,8 +1,11 @@
-# How to Contribute to the LibreTime Project
+---
+layout: default
+title: Contributing to LibreTime
+git: contribute.md
+---
 
-LibreTime is a community project, maintained by an awesome group of volunteers. Being a "free as in freedom" project,
-we need the help of our users to keep the project going. You don't have to know how to write code in order to help.
-Check out some of ways you can give back to the LibreTime project below.
+> LibreTime is a fork of AirTime due to stalled development of the FLOSS version. For background on this,
+see this [open letter to the Airtime community](https://gist.github.com/hairmare/8c03b69c9accc90cfe31fd7e77c3b07d).
 
 ## Bug reporting
 
@@ -20,6 +23,15 @@ Have an idea that would make LibreTime even better than it is right now? Start a
 
 LibreTime can run in over 15 different languages due to the gracious help of our volunteers. Is your language not
 supported? Follow [this guide](interface-localization) to add your language to LibreTime!
+
+## Help write documentation for LibreTime
+
+Our site is now run by Jekyll. After cloning our repo locally, enter the `/docs` directory and run
+
+```
+bundle install
+jekyll serve
+```
 
 ## Help write code for LibreTime
 

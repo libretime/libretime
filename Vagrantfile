@@ -67,6 +67,9 @@ Vagrant.configure("2") do |config|
 
     # Provision LibreTime
     config.vm.provision "install", type: "shell", inline: "cd /vagrant; ./install %s --web-port=8080" % installer_args
+
+    # Provision docs
+    config.vm.provision "build-site-jekyll", type: "shell", path: "docs/jekyll.sh"
   end
 
 end

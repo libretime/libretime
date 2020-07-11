@@ -1,4 +1,0 @@
-History Templates
------------------
-
-Coming soon.

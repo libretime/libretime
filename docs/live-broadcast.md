@@ -1,14 +1,12 @@
-# Broadcasting live with MIXXX or B.U.T.T.
+---
+layout: default
+title: Broadcasting live with MIXXX or B.U.T.T.
+git: live-broadcast.md
+---
 
-[![How to Livestream Your Show](http://img.youtube.com/vi/4GLsU9hPTtM/0.jpg)](https://www.youtube-nocookie.com/embed/4GLsU9hPTtM "How to Livestream Your Show")
+## Live shows with MIXXX {#mixxx}
 
-This how to is intended for DJs using BUTT or MIXXX to stream to their LibreTime
-server with an external USB audio card setup to route a mixer and sound.
-
-Live shows with MIXXX
----------------------
-
-Mixxx is a cross-platform Open Source application for DJs, available [here](https://www.mixxx.org).
+[Mixxx](https://www.mixxx.org) is a cross-platform Open Source application for DJs.
 
 Installed on a desktop or laptop computer, Mixxx complements your LibreTime server to provide a complete system
 for both live and scheduled broadcasting. Although Mixxx has many features designed for dance music DJs
@@ -31,10 +29,13 @@ For **Host**, **Mount**, **Port**, **Login** and **Password**, use the **Input S
 configured in the LibreTime **Streams** page, on LibreTime's **System** menu. See [stream settings](stream-settings)
 for remote input connection details.
 
-Live shows with B.U.T.T. (Broadcast Using This Tool)
-------------------------------------------------------
+## Live shows with B.U.T.T. (Broadcast Using This Tool) {#butt}
 
-## Set Up
+<html>
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/4GLsU9hPTtM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</html>
+
+### Set Up
 
 1. Download and install butt from <https://danielnoethen.de/> for your OS.
 *Note: be sure you have butt version 0.1.17 or newer installed*
@@ -54,7 +55,7 @@ Live shows with B.U.T.T. (Broadcast Using This Tool)
 to use it but that is OS specific and outside of this tutorial. We are assuming
 you have a mic and mixer or a USB mixer hooked up to or as an external soundcard*
 
-## Show Time
+### Show Time
 
 1. When its almost your show time go to your LibreTime page and look at the time
 in the top right when your show starts go to Butt.
@@ -68,7 +69,7 @@ shows Live Show you are connected.
 will toggle your show on and you will be broadcasting. *Note: whether auto
 connect is turned on is a station specific setting so it could work either way*
 
-## Recording your show
+### Recording your show
 
 You can record your show under butt by clicking the red circle record button on
 the left. It will save a mp3 based upon the date and time in your home/user
