@@ -298,19 +298,19 @@ class ApiController extends Zend_Controller_Action
 
             $stationUrl = Application_Common_HTTPHelper::getStationUrl();
 
-            if ($result["previous"]["type"] != "livestream") {
+            if (($result["previous"]["type"] != "livestream") && isset($result["previous"]["metadata"])) {
                 $previousID = $result["previous"]["metadata"]["id"];
                 $get_prev_artwork_url = $stationUrl . 'api/track?id='. $previousID .'&return=artwork';
                 $result["previous"]["metadata"]["artwork_url"] = $get_prev_artwork_url;
             }
 
-            if ($result["current"]["type"] != "livestream") {
+            if (($result["current"]["type"] != "livestream") && isset($result["current"]["metadata"])) {
                 $currID = $result["current"]["metadata"]["id"];
                 $get_curr_artwork_url = $stationUrl . 'api/track?id='. $currID .'&return=artwork';
                 $result["current"]["metadata"]["artwork_url"] = $get_curr_artwork_url;
             }
 
-            if ($result["next"]["type"] != "livestream") {
+            if (($result["next"]["type"] != "livestream") && isset($result["next"]["metadata"])) {
                 $nextID = $result["next"]["metadata"]["id"];
                 $get_next_artwork_url = $stationUrl . 'api/track?id='. $nextID .'&return=artwork';
                 $result["next"]["metadata"]["artwork_url"] = $get_next_artwork_url;
