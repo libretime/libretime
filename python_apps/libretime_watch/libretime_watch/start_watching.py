@@ -3,10 +3,11 @@ import pika, os, logging
 import json
 import psycopg2
 from libretime_watch import readconfig as airtime
+from libretime_watch import log
 
 # initialize logging
 logfile= "/var/log/airtime/libretime_watch_cron.log"
-logging.basicConfig(format='%(asctime)s %(message)s',filename=logfile,level=logging.INFO)
+log.setup(logfile)
 
 EXCHANGE="airtime-media-monitor"
 EXCHANGE_TYPE = "direct"

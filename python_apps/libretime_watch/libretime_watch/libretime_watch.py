@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 
 import codecs
 import datetime
@@ -18,6 +17,7 @@ import traceback
 
 from libretime_watch import readconfig as airtime
 from libretime_watch import metadata as airtime_md
+from libretime_watch import log
 
 EXCHANGE="airtime-media-monitor"
 EXCHANGE_TYPE = "direct"
@@ -25,7 +25,10 @@ ROUTING_KEY="filesystem"
 QUEUE="media-monitor"
 
 timestamp_file = "/var/tmp/airtime/media-monitor/last_index"
+
+# initialize logging
 logfile= "/var/log/airtime/libretime_watch.log"
+log.setup(logfile)
 
 # create empty dictionary 
 database = {}
@@ -34,8 +37,6 @@ database = {}
 shutdown=False
 
 config = {}
-
-logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s',filename=logfile,level=logging.INFO)
 
 def update_database(conn, cc_file_id):
   """Update database dictionary to cc_files
