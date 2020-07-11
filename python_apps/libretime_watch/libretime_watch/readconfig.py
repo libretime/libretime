@@ -3,7 +3,6 @@
 import configparser
 import logging
 import os
-# import libretime_watch as libretime_watch
 
 CONFIGFILE="/etc/airtime/airtime.conf"
 

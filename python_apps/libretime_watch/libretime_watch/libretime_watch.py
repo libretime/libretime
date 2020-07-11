@@ -113,12 +113,18 @@ def connect_database():
   return conn
 
 
-def watch (dir_id, directory):
+def watch(dir_id, directory):
     timestamp = touch_timestamp()
     logging.info ("Start scanning directory "+directory+ " for new files since "+ timestamp)
     conn = connect_database()
     watch_dir=str(directory)
     len_watch_dir=len(watch_dir) 
+
+    # Check watch_dir exists
+    # TODO: Remove from database or show an error somehow...
+    if not os.path.exists(watch_dir):
+        logging.error(f'Directory {watch_dir} does not exist.')
+        return
 
     # Get current files in DB to check if they've been moved or deleted
     cur = conn.cursor()
@@ -245,9 +251,7 @@ def connect_to_messaging_server():
   connection = pika.BlockingConnection(pika.ConnectionParameters(host=config["rm_host"],
             virtual_host=config["rm_vhost"],credentials=credentials))
   channel = connection.channel()
-#  channel.exchange_delete (exchange=EXCHANGE)
   channel.exchange_declare(exchange=EXCHANGE, exchange_type=EXCHANGE_TYPE, durable=True, auto_delete=True)
-#  channel.queue_delete(queue=QUEUE)
   result = channel.queue_declare(queue=QUEUE, durable=True)
   channel.queue_bind(exchange=EXCHANGE, queue=QUEUE, routing_key=ROUTING_KEY)
 

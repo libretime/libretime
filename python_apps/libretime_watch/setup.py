@@ -33,7 +33,7 @@ setup(name='libretime-watch',
       license='MIT',
 #      py_modules=['libretime_watch/libretime_watch', 'libretime_watch/readconfig.py'],
       packages=['libretime_watch'],
-      scripts=['bin/libretime_watch'],
+      scripts=['bin/libretime-watch'],
       entry_points={
         "console_scripts": [
           # Console script to trigger a scan of the watch directories
@@ -58,4 +58,4 @@ setup(name='libretime-watch',
 if data_files:
     print("Remember to reload the initctl configuration")
     # Set proper permissions for cron file to run
-    os.chmod('/etc/cron.d/libretime_watch', stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
+    os.chmod('/etc/cron.d/libretime-watch', stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
