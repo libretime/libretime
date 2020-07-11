@@ -1,0 +1,9 @@
+[Unit]
+Description=LibreTime Watch Folder Service
+
+[Service]
+ExecStart=/usr/bin/libretime-watch
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
