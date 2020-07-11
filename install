@@ -202,6 +202,11 @@ function systemInitInstall() {
                 target_path="/etc/systemd/system/${service_name}.service"
                 alt_path=$(echo $target_path | sed 's/libretime-/airtime-/')
                 ;;
+            libretime-watch)
+                source_path="${python_source_path}/libretime_watch/install/systemd/${service_name}.service"
+                target_path="/etc/systemd/system/${service_name}.service"
+                alt_path=$(echo $target_path | sed 's/libretime-/airtime-/')
+                ;;
         esac
         if [[ ! -e $source_path ]]; then
             echo "$0:${FUNCNAME}(): ERROR: service \"$service_name\" with source path \"$source_path\" does not exist!" >&2
