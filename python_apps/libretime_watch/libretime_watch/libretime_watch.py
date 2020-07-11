@@ -28,7 +28,7 @@ timestamp_file = "/var/tmp/airtime/media-monitor/last_index"
 
 # initialize logging
 logfile= "/var/log/airtime/libretime_watch.log"
-log.setup(logfile)
+log.setup(logfile, logging.INFO, 5)
 
 # create empty dictionary 
 database = {}

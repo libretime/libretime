@@ -7,7 +7,7 @@ from libretime_watch import log
 
 # initialize logging
 logfile= "/var/log/airtime/libretime_watch_cron.log"
-log.setup(logfile)
+log.setup(logfile, logging.WARNING)
 
 EXCHANGE="airtime-media-monitor"
 EXCHANGE_TYPE = "direct"
