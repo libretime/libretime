@@ -1,8 +1,10 @@
 apache2
+bpm-tools
 build-essential
 coreutils
 curl
 ecasound
+ffmpeg
 flac
 gstreamer1.0-plugins-bad
 gstreamer1.0-plugins-good

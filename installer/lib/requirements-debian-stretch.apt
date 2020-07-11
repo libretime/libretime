@@ -1,7 +1,9 @@
 apache2
+bpm-tools
 coreutils
 curl
 ecasound
+ffmpeg
 flac
 git
 gstreamer1.0-plugins-bad
