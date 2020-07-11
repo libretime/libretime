@@ -18,6 +18,7 @@ $pypo               = $externalServices["pypo"];
 $liquidsoap         = $externalServices["liquidsoap"];
 $analyzer           = $externalServices["analyzer"];
 $celery             = $externalServices['celery'];
+$watchfolder        = $externalServices['watchfolder'];
 
 $r1 = array_reduce($phpDependencies, "booleanReduce", true);
 $r2 = array_reduce($externalServices, "booleanReduce", true);
@@ -238,6 +239,26 @@ $result = $r1 && $r2;
                             <?php echo _(" and ensure that it's running with ") ?>
                             <br/><code>systemctl status libretime-celery</code><br/>
                             <?php echo _("If not, try ") ?><br/><code>sudo systemctl restart libretime-celery</code>
+                        <?php
+                        }
+                        ?>
+                    </td>
+                </tr>
+                <tr class="<?=$watchfolder ? 'success' : 'danger';?>">
+                    <td class="component">
+                        Watch Folder
+                    </td>
+                    <td class="description">
+                        <?php echo _("LibreTime Watch Folder service") ?>
+                    </td>
+                    <td class="solution <?php if ($watchfolder) {echo 'check';?>" >
+                        <?php
+                        } else {
+                            ?>">
+                            <?php echo _("Check that the libretime-watch service is installed correctly in ") ?><code>/etc/systemd/system/</code>,
+                            <?php echo _(" and ensure that it's running with ") ?>
+                            <br/><code>systemctl status libretime-watch</code><br/>
+                            <?php echo _("If not, try ") ?><br/><code>sudo systemctl restart libretime-watch</code>
                         <?php
                         }
                         ?>

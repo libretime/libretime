@@ -14,6 +14,7 @@ Since LibreTime is effectively a web site running on a LAPP stack, individual co
     sudo systemctl start|stop|restart|status libretime-analyzer
     sudo systemctl start|stop|restart|status apache2
     sudo systemctl start|stop|restart|status rabbitmq-server
+    sudo systemctl start|stop|restart|status libretime-watch
 
 For example, to restart the Airtime playout engine, you could enter the command:
 

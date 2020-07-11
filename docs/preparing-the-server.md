@@ -164,6 +164,7 @@ sudo systemctl enable libretime-celery
 sudo systemctl enable libretime-analyzer
 sudo systemctl enable apache2
 sudo systemctl enable rabbitmq-server
+sudo systemctl enable libretime-watch
 ```
 
 If an error is returned, try adding `.service` to the end of each command. For example:
