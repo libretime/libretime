@@ -40,8 +40,15 @@ class PypoFile(Thread):
         dst = media_item['dst']
         src_md5 = media_item['md5']
 
+        dst_exists = False
+        try:
+            dst_exists = os.path.exists(dst)
+        except Exception as e:
+            self.logger.warning(e)
+            dst_exists = False
+
         do_copy = False
-        if os.path.exists(dst):
+        if dst_exists:
             # TODO: Check if the locally cached variant of the file is sane.
             # This used to be a filesize check that didn't end up working.
             # Once we have watched folders updated files from them might
