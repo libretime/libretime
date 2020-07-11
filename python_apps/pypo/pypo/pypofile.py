@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from threading import Thread
-from Queue import Empty
-from ConfigParser import NoOptionError
+from queue import Empty
+from configparser import NoOptionError
 
 import logging
 import shutil
@@ -12,7 +12,7 @@ import os
 import sys
 import stat
 import requests
-import ConfigParser
+import configparser
 import json
 import hashlib
 from requests.exceptions import ConnectionError, HTTPError, Timeout
@@ -76,11 +76,11 @@ class PypoFile(Thread):
             baseurl = self._config.get(CONFIG_SECTION, 'base_url')
             try:
                 port = self._config.get(CONFIG_SECTION, 'base_port')
-            except NoOptionError, e:
+            except NoOptionError as e:
                 port = 80
             try:
                 protocol = self._config.get(CONFIG_SECTION, 'protocol')
-            except NoOptionError, e:
+            except NoOptionError as e:
                 protocol = str(("http", "https")[int(port) == 443])
 
             try:
@@ -110,7 +110,7 @@ class PypoFile(Thread):
                     media_item["filesize"] = file_size
 
                 media_item['file_ready'] = True
-            except Exception, e:
+            except Exception as e:
                 self.logger.error("Could not copy from %s to %s" % (src, dst))
                 self.logger.error(e)
 
@@ -179,7 +179,7 @@ class PypoFile(Thread):
 
     def read_config_file(self, config_path):
         """Parse the application's config file located at config_path."""
-        config = ConfigParser.SafeConfigParser(allow_no_value=True)
+        config = configparser.SafeConfigParser(allow_no_value=True)
         try:
             config.readfp(open(config_path))
         except IOError as e:
@@ -209,14 +209,14 @@ class PypoFile(Thread):
                     """
                     try:
                         self.media = self.media_queue.get_nowait()
-                    except Empty, e:
+                    except Empty as e:
                         pass
 
 
                 media_item = self.get_highest_priority_media_item(self.media)
                 if media_item is not None:
                     self.copy_file(media_item)
-            except Exception, e:
+            except Exception as e:
                 import traceback
                 top = traceback.format_exc()
                 self.logger.error(str(e))
@@ -228,7 +228,7 @@ class PypoFile(Thread):
         Entry point of the thread
         """
         try: self.main()
-        except Exception, e:
+        except Exception as e:
             top = traceback.format_exc()
             self.logger.error('PypoFile Exception: %s', top)
             time.sleep(5)
