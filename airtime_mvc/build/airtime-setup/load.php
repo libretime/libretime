@@ -45,7 +45,7 @@ function checkDatabaseDependencies() {
 /**
  * Check that all external services are configured correctly and return an associative
  * array with the results
- * 
+ *
  * @return array associative array of external service check results
  */
 function checkExternalServices() {
@@ -88,7 +88,7 @@ function configureDatabase() {
 
 /**
  * Check that we can connect to RabbitMQ
- * 
+ *
  * @return true if the RabbitMQ connection can be established
  */
 function checkRMQConnection() {
@@ -109,12 +109,12 @@ function checkRMQConnection() {
 
 /**
  * Check if airtime-analyzer is currently running
- * 
+ *
  * @return boolean true if airtime-analyzer is running
  */
 function checkAnalyzerService() {
-    exec("pgrep -f -u www-data airtime_analyzer", $out, $status);
-    if (array_key_exists(0, $out) && $status == 0) {
+    exec("pgrep -f airtime_analyzer", $out, $status);
+    if (($out > 0) && $status == 0) {
         return posix_kill(rtrim($out[0]), 0);
     }
     return $status == 0;
@@ -122,12 +122,12 @@ function checkAnalyzerService() {
 
 /**
  * Check if airtime-playout is currently running
- * 
+ *
  * @return boolean true if airtime-playout is running
  */
 function checkPlayoutService() {
-    exec("pgrep -f -u www-data airtime-playout", $out, $status);
-    if (array_key_exists(0, $out) && $status == 0) {
+    exec("pgrep -f airtime-playout", $out, $status);
+    if ($out > 0) {
         return posix_kill(rtrim($out[0]), 0);
     }
     return $status == 0;
@@ -135,12 +135,12 @@ function checkPlayoutService() {
 
 /**
  * Check if airtime-liquidsoap is currently running
- * 
+ *
  * @return boolean true if airtime-liquidsoap is running
  */
 function checkLiquidsoapService() {
-    exec("pgrep -f -u www-data airtime-liquidsoap", $out, $status);
-    if (array_key_exists(0, $out) && $status == 0) {
+    exec("pgrep -f airtime-liquidsoap", $out, $status);
+    if ($out > 0) {
         return posix_kill(rtrim($out[0]), 0);
     }
     return $status == 0;
@@ -148,7 +148,7 @@ function checkLiquidsoapService() {
 
 /**
  * Check if airtime-celery is currently running
- * 
+ *
  * @return boolean true if airtime-celery is running
  */
 function checkCeleryService() {

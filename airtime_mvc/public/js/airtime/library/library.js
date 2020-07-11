@@ -54,7 +54,8 @@ var AIRTIME = (function(AIRTIME) {
         "owner_id"    : "s",
         "info_url"    : "s",
         "replay_gain" : "n",
-        "artwork"     : "s"
+        "artwork"     : "s",
+        "track_type"  : "tt"
     };
 
     if (AIRTIME.library === undefined) {
@@ -591,6 +592,7 @@ var AIRTIME = (function(AIRTIME) {
             /* Cue Out */         { "sTitle" : $.i18n._("Cue Out")            , "mDataProp" : "cueout"       , "bVisible"    : false                 , "sClass"      : "library_length"        , "sWidth" : "80px"         },
             /* Description */     { "sTitle" : $.i18n._("Description")        , "mDataProp" : "description"  , "bVisible"    : false                 , "sClass"      : "library_description"   , "sWidth" : "150px"        },
             /* Encoded */         { "sTitle" : $.i18n._("Encoded By")         , "mDataProp" : "encoded_by"   , "bVisible"    : false                 , "sClass"      : "library_encoded"       , "sWidth" : "150px"        },
+            /* Track Type */      { "sTitle" : $.i18n._("Type")               , "mDataProp" : "track_type"   , "sClass"      : "library_track_type"    , "sWidth" : "60px"         },
             /* Genre */           { "sTitle" : $.i18n._("Genre")              , "mDataProp" : "genre"        , "sClass"      : "library_genre"         , "sWidth" : "100px"        },
             /* ISRC Number */     { "sTitle" : $.i18n._("ISRC")               , "mDataProp" : "isrc_number"  , "bVisible"    : false                 , "sClass"      : "library_isrc"          , "sWidth" : "150px"        },
             /* Label */           { "sTitle" : $.i18n._("Label")              , "mDataProp" : "label"        , "bVisible"    : false                 , "sClass"      : "library_label"         , "sWidth" : "125px"        },
@@ -615,7 +617,7 @@ var AIRTIME = (function(AIRTIME) {
             );
         }
 
-        var colExclude = onDashboard ? [0, 1, 2, 33] : [0, 1, 2];
+        var colExclude = onDashboard ? [0, 1, 2, 3, 34] : [0, 1, 2];
 
         /*  ############################################
                             DATATABLES
@@ -764,6 +766,68 @@ var AIRTIME = (function(AIRTIME) {
                         .on('click', function (e) {
                             $(this).contextMenu({x: $(e.target).offset().left, y: $(e.target).offset().top})
                         }).html("<div class='library_actions_btn'>...</div>");
+
+                    if (aData.track_type == null || aData.track_type == undefined || aData.track_type == 0) {
+                        var has_type = false;
+                        var type_button = "";
+                    } else {
+                        var has_type = true;
+                        var type_button = "<div class='library_track_type_btn'>"+aData.track_type+"</div>";
+                    }
+
+                    $(nRow).find('td.library_track_type')
+                          .on('click', function (e) {
+
+                              $.getJSON(
+                              baseUrl + "api/track-types",
+                              function(json){
+                                    var type_enabled = false;
+                                    $.each(json, function(key, value) {
+
+                                        if(value['code'] == aData.track_type){
+                                            $("#au_"+aData.id+" td.library_track_type div.library_track_type_btn").qtip({
+                                                  overwrite: false,
+                                                  content: {
+                                                      text: value['type_name']
+                                                  },
+                                                  style: {
+                                                    classes: 'track-type-tip',
+                                                    widget: true,
+                                                    def: false,
+                                                    position: {
+                                                        target: $("#au_"+aData.id+" td.library_track_type"), // my target
+                                                        my: 'bottom center',
+                                                        at: 'top center',
+                                                        adjust: {
+                                                              x: 50
+                                                          }
+                                                    },
+                                                    tip: {
+                                                        height: 5,
+                                                        width: 12,
+                                                        corner: 'bottom left',
+                                                        mimic: 'left'
+                                                    }
+                                                  },
+                                                  show: {
+                                                    ready: true
+                                                  },
+                                                  hide: {
+                                                    delay: 200,
+                                                    fixed: true,
+                                                  }
+                                            });
+
+                                            type_enabled = true;
+                                        }
+                                    });
+
+                                    if(type_enabled == false && has_type == true){
+                                      alert("This type is disabled.");
+                                    }
+                              });
+
+                          }).html(type_button);
                 }
 
                 // add audio preview image/button
@@ -852,8 +916,11 @@ var AIRTIME = (function(AIRTIME) {
 
                     var inputClass = 'filter_column filter_number_text';
                     var labelStyle = "style='margin-right:35px;'";
-                    if (libraryColumnTypes[ele.mDataProp] != "s") {
+                    if (libraryColumnTypes[ele.mDataProp] == "n" || libraryColumnTypes[ele.mDataProp] == "i") {
                         inputClass = 'filterColumn filter_number_range';
+                        labelStyle = "";
+                    } else if (libraryColumnTypes[ele.mDataProp] == "tt") {
+                        inputClass = 'filterColumn filter_track_type_select';
                         labelStyle = "";
                     }
 
@@ -873,6 +940,8 @@ var AIRTIME = (function(AIRTIME) {
 
                     if (libraryColumnTypes[ele.mDataProp] == "s") {
                         var obj = { sSelector: "#"+ele.mDataProp }
+                    } else if (libraryColumnTypes[ele.mDataProp] == "tt") {
+                        var obj = { sSelector: "#"+ele.mDataProp, type: "select" }
                     } else {
                         var obj = { sSelector: "#"+ele.mDataProp, type: "number-range" }
                     }
@@ -1597,11 +1666,97 @@ var validationTypes = {
     "track_number" : "i",
     "info_url" : "s",
     "artwork" : "s",
+    "track_type" : "s",
     "year" : "i"
 };
 
+function airtimeScheduleJsonpError(jqXHR, textStatus, errorThrown){
+}
+
+function tracktypesJson() {
+   $(function() {
+        jQuery.getJSON(
+        baseUrl + "api/track-types",
+        function(json){
+              var ttSelect = $('#track_type .filter_select .select_filter');
+              $.each(json, function(key, value) {
+                var option = $("<option/>", {
+                  value: value['code'],
+                  text: value['type_name']
+                });
+                ttSelect.append(option);
+              });
+        });
+   });
+}
+
+function readArtworkURL(input, id) {
+
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            $('.artwork-preview-'+id).css('background-image', 'url('+e.target.result +')');
+            $('.artwork-preview-'+id).hide();
+            $('.artwork-preview-'+id).fadeIn(500);
+            $('.set_artwork_'+id).val(function() {
+                return e.target.result;
+            });
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// Resample Artwork
+var resampleImg = (function (canvas) {
+
+    function resampleImg(img, width, height, onresample) {
+        var load = typeof img == "string",
+        i = load || img;
+        if (load) {
+            i = new Image;
+            i.onload = onload;
+            i.onerror = onerror;
+        }
+        i._onresample = onresample;
+        i._width = width;
+        i._height = height;
+        load ? (i.src = img) : onload.call(img);
+    }
+
+    function onerror() {
+        throw ("not found: " + this.src);
+    }
+
+    function onload() {
+        var img = this,
+        width = img._width,
+        height = img._height,
+        onresample = img._onresample;
+
+        var minValue = Math.min(img.height, img.width);
+        width == null && (width = round(img.width * height / img.height));
+        height == null && (height = round(img.height * width / img.width));
+
+        delete img._onresample;
+        delete img._width;
+        delete img._height;
+        canvas.width = width;
+        canvas.height = height;
+        context.drawImage(img,0,0,minValue,minValue,0,0,width,height);
+        onresample(canvas.toDataURL("image/jpeg"));
+    }
+
+    var context = canvas.getContext("2d"),
+          round = Math.round;
+
+    return resampleImg;
+
+}(this.document.createElement("canvas")));
+
 
 $(document).ready(function() {
+    tracktypesJson();
+
     if (window.location.href.indexOf("showbuilder") > -1) {
         AIRTIME.library.initPodcastDatatable();
     }
@@ -1613,5 +1768,114 @@ $(document).ready(function() {
     $(window).resize(function() {
         resizeAdvancedSearch();
     });
-});
 
+    // delete artwork
+    $(document).on('click', '.delete-artwork', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var id = $(this).attr('data-id');
+        $('.artwork-preview-'+id).css('background-image', 'url('+ baseUrl +'css/images/no-cover.jpg)');
+        $('.artwork-preview-'+id).hide();
+        $('.artwork-preview-'+id).fadeIn(500);
+        $('.artwork_'+id).val(function() {
+            return "";
+        });
+        $('.set_artwork_'+id).val(function() {
+            return "";
+        });
+        $('.remove_artwork_'+id).val(function() {
+            return 1;
+        });
+    });
+
+    // image upload by clicking on the artwork container
+    $(document).on('change', '.artworkUpload', 'input', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var id = $(this).attr('data-id');
+        readArtworkURL(this, id);
+    });
+
+    // image upload by dragging onto the artwork container
+    $.event.props.push('dataTransfer');
+    (function() {
+
+        var s;
+        var Artwork = {
+            settings: {
+              body: $("body")
+            },
+            init: function() {
+                s = Artwork.settings;
+                Artwork.bindUIActions();
+            },
+            bindUIActions: function() {
+
+                var timer;
+                s.body.on('dragover', '.artwork-upload', function(event) {
+
+                    event.preventDefault();
+                    event.stopPropagation();
+                    clearTimeout(timer);
+                    Artwork.showDroppableArea();
+                    return false;
+                });
+                s.body.on('dragleave', '.artwork-upload', function(event) {
+
+                    event.preventDefault();
+                    event.stopPropagation();
+                    timer = setTimeout(function() {
+                        Artwork.hideDroppableArea();
+                    }, 200);
+                });
+                s.body.on('drop', '.artwork-upload', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    var id = $(this).attr('data-id');
+                    Artwork.handleDrop(event.dataTransfer.files, id);
+                });
+
+            },
+            showDroppableArea: function() {
+                s.body.addClass("droppable");
+            },
+            hideDroppableArea: function() {
+                s.body.removeClass("droppable");
+            },
+            handleDrop: function(files, id) {
+                Artwork.hideDroppableArea();
+                var file = files[0];
+                if (typeof file !== 'undefined' && file.type.match('image.*')) {
+                    Artwork.resizeImage(file, 512, function(data) {
+                        Artwork.placeImage(data, id);
+                    });
+                } else {
+                    alert("The file is not an image.");
+                }
+            },
+            resizeImage: function(file, size, callback) {
+                var fileTracker = new FileReader;
+                fileTracker.onload = function() {
+                    resampleImg(this.result, size, size, callback);
+                }
+                fileTracker.readAsDataURL(file);
+                fileTracker.onabort = function() {
+                    alert("Upload aborted!");
+                }
+                fileTracker.onerror = function() {
+                    alert("File could not be read.");
+                }
+            },
+            placeImage: function(data, id) {
+                $('.artwork-preview-'+id).css('background-image', 'url('+ data +')');
+                $('.artwork-preview-'+id).hide();
+                $('.artwork-preview-'+id).fadeIn(500);
+                $('.set_artwork_'+id).val(function() {
+                    return data;
+                });
+            }
+        }
+        Artwork.init();
+    })();
+
+});

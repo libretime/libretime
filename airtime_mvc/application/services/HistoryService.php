@@ -516,41 +516,41 @@ class Application_Service_HistoryService
 
 		return $filteredShows;
 	}
-	
+
 	public function insertWebstreamMetadata($schedId, $startDT, $data) {
-		
+
 		$this->con->beginTransaction();
-		
+
 		try {
-			
+
 			$item = CcScheduleQuery::create()->findPK($schedId, $this->con);
-			
+
 			//TODO figure out how to combine these all into 1 query.
 			$showInstance = $item->getCcShowInstances($this->con);
 			$show = $showInstance->getCcShow($this->con);
-			
+
 			$webstream = $item->getCcWebstream($this->con);
-			
+
 			$metadata = array();
 			$metadata["showname"] = $show->getDbName();
 			$metadata[MDATA_KEY_TITLE] = $data->title;
 			$metadata[MDATA_KEY_CREATOR] = $webstream->getDbName();
-			
+
 			$history = new CcPlayoutHistory();
 			$history->setDbStarts($startDT);
 			$history->setDbEnds(null);
 			$history->setDbInstanceId($item->getDbInstanceId());
-			
+
 			foreach ($metadata as $key => $val) {
 				$meta = new CcPlayoutHistoryMetaData();
 				$meta->setDbKey($key);
 				$meta->setDbValue($val);
-			
+
 				$history->addCcPlayoutHistoryMetaData($meta);
 			}
-			
+
 			$history->save($this->con);
-			
+
 			$this->con->commit();
 		}
 		catch (Exception $e) {
@@ -586,36 +586,36 @@ class Application_Service_HistoryService
 				$itemEnd = $item->getDbEnds(null);
 				$recordStart = $item->getDbStarts(null);
 				$recordEnd = ($instanceEnd < $itemEnd) ? $instanceEnd : $itemEnd;
-				
+
 				//first check if this is a duplicate
 				// (caused by restarting liquidsoap)
-				
+
 				$prevRecord = CcPlayoutHistoryQuery::create()
 					->filterByDbStarts($recordStart)
 					->filterByDbEnds($recordEnd)
 					->filterByDbFileId($fileId)
 					->findOne($this->con);
-				
+
 				if (empty($prevRecord)) {
-					
+
 					$history = new CcPlayoutHistory();
 					$history->setDbFileId($fileId);
 					$history->setDbStarts($recordStart);
 					$history->setDbEnds($recordEnd);
 					$history->setDbInstanceId($item->getDbInstanceId());
-					
+
 					foreach ($metadata as $key => $val) {
 						$meta = new CcPlayoutHistoryMetaData();
 						$meta->setDbKey($key);
 						$meta->setDbValue($val);
-					
+
 						$history->addCcPlayoutHistoryMetaData($meta);
 					}
-					
+
 					$history->save($this->con);
 					$this->con->commit();
-				}	
-			}	
+				}
+			}
 		}
 		catch (Exception $e) {
 			$this->con->rollback();
@@ -1126,6 +1126,7 @@ class Application_Service_HistoryService
 			array("name"=> MDATA_KEY_TRACKNUMBER, "label"=> _("Track"), "type"=> TEMPLATE_INT),
 			array("name"=> MDATA_KEY_CONDUCTOR, "label"=> _("Conductor"), "type"=> TEMPLATE_STRING),
 			array("name"=> MDATA_KEY_LANGUAGE, "label"=> _("Language"), "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_TRACK_TYPE, "label"=> _("Track Type"), "type"=> TEMPLATE_STRING),
 		);
 
 		return $fileMD;

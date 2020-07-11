@@ -1,0 +1,53 @@
+sidebar:
+  - title: About LibreTime
+    subfolderitems:
+    - page: Features
+      url: features
+    - page: FAQ
+      url: faq
+    - page: Contribute to LibreTime
+      url: contribute
+    - page:  
+  - title: Installation
+    subfolderitems:
+    - page: Quick Install
+      url: quickstart
+      subsubfolderitems:
+      - page: Host Configuration
+        url: host-configuration
+      - page: Setting the Server Time
+        url: setting-the-server-time
+      - page: Configuring Track Types
+        url: track-types
+      - page: Setting up SSL
+        url: ssl-config
+    - page:   
+  - title: Using LibreTime
+    subfolderitems:
+    - page: Preparing Media
+      url: preparing-media
+    - page: Scheduling Shows
+      url: scheduling-shows
+    - page: Broadcasting Live
+      url: live-broadcast
+    - page: Adding Users
+      url: users
+    - page: Help!
+      url: troubleshooting
+      subsubfolderitems:
+      - page: More Tutorials
+        url: tutorials
+    - page:      
+  - title: Radio Broadcasting 101
+    subfolderitems:
+    - page: UNESCO Public Radio Guide
+      url: learnradio-unescoguide
+    - page:   
+  - title: Appendix
+    subfolderitems:
+    - page: HD Audio Modules
+      url: hd-audio-modules
+    - page: Rights and Royalties
+      url: rights-royalties
+    - page: Media Folders used by LibreTime
+      url: folders

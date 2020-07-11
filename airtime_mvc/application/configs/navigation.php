@@ -57,12 +57,6 @@ $pages[] = array(
             'module'     => 'default',
             'controller' => 'embeddablewidgets',
             'action'     => 'schedule',
-        ),
-        array(
-            'label'      => _('Facebook'),
-            'module'     => 'default',
-            'controller' => 'embeddablewidgets',
-            'action'     => 'facebook',
         )
     )
 );
@@ -91,6 +85,12 @@ $pages[] = array(
             'controller' => 'user',
             'action'     => 'add-user',
             'resource'   => 'user'
+        ),array(
+            'label'      => _('Track Types'),
+            'module'     => 'default',
+            'controller' => 'tracktype',
+            'action'     => 'add-tracktype',
+            'resource'   => 'tracktype'
         ),
         array(
             'label'      => _('Media Folders'),
@@ -144,7 +144,7 @@ $pages[] = array(
             'action'     => 'index',
             'resource'   => 'listenerstat'
         ),
-        array(            
+        array(
             'label'      => _('Show Listener Stats'),
             'module'     => 'default',
             'controller' => 'listenerstat',
@@ -185,8 +185,8 @@ $pages[] = array(
             'target'    => "_blank"
         ),
         array(
-            'label'      => _(sprintf("Help Translate %s", PRODUCT_NAME)),
-            'uri'        => AIRTIME_TRANSIFEX_URL,
+            'label'      => _('Contribute to LibreTime'),
+            'uri'        => LIBRETIME_CONTRIBUTE_URL,
             'target'     => "_blank"
         ),
         array(

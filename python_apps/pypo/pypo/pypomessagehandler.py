@@ -7,14 +7,31 @@ import sys
 from threading import Thread
 import time
 # For RabbitMQ
-from kombu.connection import BrokerConnection
+from kombu.connection import Connection
 from kombu.messaging import Exchange, Queue
 from kombu.simple import SimpleQueue
 from amqp.exceptions import AMQPError
 import json
 
+from kombu.mixins import ConsumerMixin
+
 logging.captureWarnings(True)
 
+
+class RabbitConsumer(ConsumerMixin):
+    def __init__(self, connection, queues, handler):
+        self.connection = connection
+        self.queues = queues
+        self.handler = handler
+
+    def get_consumers(self, Consumer, channel):
+        return [
+            Consumer(self.queues, callbacks=[self.on_message], accept=['text/plain']),
+        ]
+
+    def on_message(self, body, message):
+        self.handler.handle_message(message.payload)
+        message.ack()
 
 class PypoMessageHandler(Thread):
     def __init__(self, pq, rq, config):
@@ -26,21 +43,18 @@ class PypoMessageHandler(Thread):
 
     def init_rabbit_mq(self):
         self.logger.info("Initializing RabbitMQ stuff")
-        simple_queue = None
         try:
             schedule_exchange = Exchange("airtime-pypo", "direct", durable=True, auto_delete=True)
             schedule_queue = Queue("pypo-fetch", exchange=schedule_exchange, key="foo")
-            connection = BrokerConnection(self.config["host"],
-                                          self.config["user"],
-                                          self.config["password"],
-                                          self.config["vhost"])
-
-            channel = connection.channel()
-            simple_queue = SimpleQueue(channel, schedule_queue)
-        except Exception, e:
+            with Connection(self.config["host"], \
+                            self.config["user"], \
+                            self.config["password"], \
+                            self.config["vhost"], \
+                            heartbeat = 5) as connection:
+                rabbit = RabbitConsumer(connection, [schedule_queue], self)
+                rabbit.run()
+        except Exception as e:
             self.logger.error(e)
-
-        return simple_queue
 
     """
     Handle a message from RabbitMQ, put it into our yucky global var.
@@ -50,6 +64,10 @@ class PypoMessageHandler(Thread):
         try:
             self.logger.info("Received event from RabbitMQ: %s" % message)
 
+            try:
+                message = message.decode()
+            except (UnicodeDecodeError, AttributeError):
+                pass
             m = json.loads(message)
             command = m['event_type']
             self.logger.info("Handling command: " + command)
@@ -84,18 +102,13 @@ class PypoMessageHandler(Thread):
                 self.recorder_queue.put(message)
             else:
                 self.logger.info("Unknown command: %s" % command)
-        except Exception, e:
+        except Exception as e:
             self.logger.error("Exception in handling RabbitMQ message: %s", e)
 
     def main(self):
         try:
-            with self.init_rabbit_mq() as queue:
-                while True:
-                    message = queue.get(block=True)
-                    self.handle_message(message.payload)
-                    # ACK the message to take it off the queue
-                    message.ack()
-        except Exception, e:
+            self.init_rabbit_mq()
+        except Exception as e:
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", traceback.format_exc())
         self.logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")

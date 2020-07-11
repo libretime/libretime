@@ -10,15 +10,14 @@ import copy
 import subprocess
 import signal
 from datetime import datetime
-import traceback
-import pure
 import mimetypes
-from Queue import Empty
+from . import pure
+from queue import Empty
 from threading import Thread, Timer
 from subprocess import Popen, PIPE
 
 from api_clients import api_client
-from timeout import ls_timeout
+from .timeout import ls_timeout
 
 
 def keyboardInterruptHandler(signum, frame):
@@ -65,7 +64,7 @@ class PypoFetch(Thread):
                 """
                 self.logger.debug("Cache dir does not exist. Creating...")
                 os.makedirs(dir)
-        except Exception, e:
+        except Exception as e:
             pass
 
         self.schedule_data = []
@@ -79,6 +78,10 @@ class PypoFetch(Thread):
         try:
             self.logger.info("Received event from Pypo Message Handler: %s" % message)
 
+            try:
+                message = message.decode()
+            except (UnicodeDecodeError, AttributeError):
+                pass
             m = json.loads(message)
             command = m['event_type']
             self.logger.info("Handling command: " + command)
@@ -120,11 +123,8 @@ class PypoFetch(Thread):
                 if self.listener_timeout < 0:
                     self.listener_timeout = 0
             self.logger.info("New timeout: %s" % self.listener_timeout)
-        except Exception, e:
-            top = traceback.format_exc()
-            self.logger.error('Exception: %s', e)
-            self.logger.error("traceback: %s", top)
-            self.logger.error("Exception in handling Message Handler message: %s", e)
+        except Exception as e:
+            self.logger.exception("Exception in handling Message Handler message")
 
 
     def switch_source_temp(self, sourcename, status):
@@ -151,13 +151,12 @@ class PypoFetch(Thread):
         self.logger.debug('Getting information needed on bootstrap from Airtime')
         try:
             info = self.api_client.get_bootstrap_info()
-        except Exception, e:
-            self.logger.error('Unable to get bootstrap info.. Exiting pypo...')
-            self.logger.error(str(e))
+        except Exception as e:
+            self.logger.exception('Unable to get bootstrap info.. Exiting pypo...')
 
         self.logger.debug('info:%s', info)
         commands = []
-        for k, v in info['switch_status'].iteritems():
+        for k, v in info['switch_status'].items():
             commands.append(self.switch_source_temp(k, v))
 
         stream_format = info['stream_label']
@@ -190,16 +189,16 @@ class PypoFetch(Thread):
             while True:
                 try:
                     tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
-                    tn.write("exit\n")
+                    tn.write('exit\n'.encode('utf-8'))
                     tn.read_all()
                     self.logger.info("Liquidsoap is up and running")
                     break
-                except Exception, e:
+                except Exception as e:
                     #sleep 0.5 seconds and try again
                     time.sleep(0.5)
 
-        except Exception, e:
-            self.logger.error(e)
+        except Exception as e:
+            self.logger.exception(e)
         finally:
             if self.telnet_lock.locked():
                 self.telnet_lock.release()
@@ -226,19 +225,19 @@ class PypoFetch(Thread):
             # we are manually adjusting the bootup time variable so the status msg will get
             # updated.
             current_time = time.time()
-            boot_up_time_command = "vars.bootup_time " + str(current_time) + "\n"
+            boot_up_time_command = ("vars.bootup_time " + str(current_time) + "\n").encode('utf-8')
             self.logger.info(boot_up_time_command)
             tn.write(boot_up_time_command)
 
-            connection_status = "streams.connection_status\n"
+            connection_status = ("streams.connection_status\n").encode('utf-8')
             self.logger.info(connection_status)
             tn.write(connection_status)
 
-            tn.write('exit\n')
+            tn.write('exit\n'.encode('utf-8'))
 
             output = tn.read_all()
-        except Exception, e:
-            self.logger.error(str(e))
+        except Exception as e:
+            self.logger.exception(e)
         finally:
             self.telnet_lock.release()
 
@@ -269,10 +268,10 @@ class PypoFetch(Thread):
             command = ('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8')
             self.logger.info(command)
             tn.write(command)
-            tn.write('exit\n')
+            tn.write('exit\n'.encode('utf-8'))
             tn.read_all()
-        except Exception, e:
-            self.logger.error("Exception %s", e)
+        except Exception as e:
+            self.logger.exception(e)
         finally:
             self.telnet_lock.release()
 
@@ -286,10 +285,10 @@ class PypoFetch(Thread):
             command = ('vars.default_dj_fade %s\n' % fade).encode('utf-8')
             self.logger.info(command)
             tn.write(command)
-            tn.write('exit\n')
+            tn.write('exit\n'.encode('utf-8'))
             tn.read_all()
-        except Exception, e:
-            self.logger.error("Exception %s", e)
+        except Exception as e:
+            self.logger.exception(e)
         finally:
             self.telnet_lock.release()
 
@@ -304,14 +303,14 @@ class PypoFetch(Thread):
                 command = ('vars.station_name %s\n' % station_name).encode('utf-8')
                 self.logger.info(command)
                 tn.write(command)
-                tn.write('exit\n')
+                tn.write('exit\n'.encode('utf-8'))
                 tn.read_all()
-            except Exception, e:
-                self.logger.error(str(e))
+            except Exception as e:
+                self.logger.exception(e)
             finally:
                 self.telnet_lock.release()
-        except Exception, e:
-            self.logger.error("Exception %s", e)
+        except Exception as e:
+            self.logger.exception(e)
 
     """
     Process the schedule
@@ -336,7 +335,7 @@ class PypoFetch(Thread):
             download_dir = self.cache_dir
             try:
                 os.makedirs(download_dir)
-            except Exception, e:
+            except Exception as e:
                 pass
 
             media_copy = {}
@@ -344,20 +343,21 @@ class PypoFetch(Thread):
                 media_item = media[key]
                 if (media_item['type'] == 'file'):
                     fileExt = self.sanity_check_media_item(media_item)
-                    dst = os.path.join(download_dir, unicode(media_item['id']) + unicode(fileExt))
+                    dst = os.path.join(download_dir, "{}{}".format(media_item['id'], fileExt))
                     media_item['dst'] = dst
                     media_item['file_ready'] = False
                     media_filtered[key] = media_item
 
-                media_item['start'] = datetime.strptime(media_item['start'], 
+                media_item['start'] = datetime.strptime(media_item['start'],
                         "%Y-%m-%d-%H-%M-%S")
-                media_item['end'] = datetime.strptime(media_item['end'], 
+                media_item['end'] = datetime.strptime(media_item['end'],
                         "%Y-%m-%d-%H-%M-%S")
                 media_copy[key] = media_item
 
 
             self.media_prepare_queue.put(copy.copy(media_filtered))
-        except Exception, e: self.logger.error("%s", e)
+        except Exception as e:
+            self.logger.exception(e)
 
         # Send the data to pypo-push
         self.logger.debug("Pushing to pypo-push")
@@ -365,8 +365,10 @@ class PypoFetch(Thread):
 
 
         # cleanup
-        try: self.cache_cleanup(media)
-        except Exception, e: self.logger.error("%s", e)
+        try:
+            self.cache_cleanup(media)
+        except Exception as e:
+            self.logger.exception(e)
 
     #do basic validation of file parameters. Useful for debugging
     #purposes
@@ -408,7 +410,9 @@ class PypoFetch(Thread):
         for mkey in media:
             media_item = media[mkey]
             if media_item['type'] == 'file':
-                scheduled_file_set.add(unicode(media_item["id"]) + unicode(media_item["file_ext"]))
+                if "file_ext" not in media_item.keys():
+                    media_item["file_ext"] = mimetypes.guess_extension(media_item['metadata']['mime'], strict=False)
+                scheduled_file_set.add("{}{}".format(media_item["id"], media_item["file_ext"]))
 
         expired_files = cached_file_set - scheduled_file_set
 
@@ -426,9 +430,8 @@ class PypoFetch(Thread):
                     self.logger.info("File '%s' removed" % path)
                 else:
                     self.logger.info("File '%s' not removed. Still busy!" % path)
-            except Exception, e:
-                self.logger.error("Problem removing file '%s'" % f)
-                self.logger.error(traceback.format_exc())
+            except Exception as e:
+                self.logger.exception("Problem removing file '%s'" % f)
 
     def manual_schedule_fetch(self):
         success, self.schedule_data = self.api_client.get_schedule()
@@ -498,18 +501,13 @@ class PypoFetch(Thread):
                 self.logger.info("Queue timeout. Fetching schedule manually")
                 manual_fetch_needed = True
             except Exception as e:
-                top = traceback.format_exc()
-                self.logger.error('Exception: %s', e)
-                self.logger.error("traceback: %s", top)
+                self.logger.exception(e)
 
             try:
                 if manual_fetch_needed:
                     self.persistent_manual_schedule_fetch(max_attempts=5)
             except Exception as e:
-                top = traceback.format_exc()
-                self.logger.error('Failed to manually fetch the schedule.')
-                self.logger.error('Exception: %s', e)
-                self.logger.error("traceback: %s", top)
+                self.logger.exception('Failed to manually fetch the schedule.')
 
             loops += 1
 

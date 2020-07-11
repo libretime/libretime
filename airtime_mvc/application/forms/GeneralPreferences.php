@@ -100,6 +100,11 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             'value' => $defaultFadeOut,
         ));
 
+        $tracktypeDefault = new Zend_Form_Element_Select("tracktypeDefault");
+        $tracktypeDefault->setLabel(_("Track Type Upload Default"));
+        $tracktypeDefault->setMultiOptions(Application_Model_Library::getTracktypes());
+        $tracktypeDefault->setValue(Application_Model_Preference::GetTrackTypeDefault());
+        $this->addElement($tracktypeDefault);
 
         // add intro playlist select here
         $introPlaylistSelect = new Zend_Form_Element_Select("introPlaylistSelect");
@@ -113,8 +118,6 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $outroPlaylistSelect->setMultiOptions(Application_Model_Library::getPlaylistNames(true));
         $outroPlaylistSelect->setValue(Application_Model_Preference::GetOutroPlaylist());
         $this->addElement($outroPlaylistSelect);
-
-
 
         $podcast_album_override = new Zend_Form_Element_Radio('podcastAlbumOverride');
         $podcast_album_override->setLabel(_('Overwrite Podcast Episode Metatags'));

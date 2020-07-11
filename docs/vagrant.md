@@ -1,3 +1,9 @@
+---
+sidebar: devs
+---
+
+# Using Vagrant and Virturalbox for developing LibreTime
+
 The **LibreTime Vagrant install** is the fastet way to get LibreTime up and running in a way
 to hack on its source code or to test it locally. There are two supported providers: libvirt
 and VirtualBox.
@@ -107,4 +113,4 @@ If anything fails during the initial provisioning step you can try running `vagr
 to re-run the installer.
 
 If you only want to re-run parts of the installer, use `--provision-with $step`. The
-supported steps are `prepare`, `install`, `install-mkdocs` and `start-mkdocs`.
+supported steps are `prepare` and `install`.

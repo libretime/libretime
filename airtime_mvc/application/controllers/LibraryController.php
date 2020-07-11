@@ -395,7 +395,16 @@ class LibraryController extends Zend_Controller_Action
                 //on edit, if no artwork is set and audiofile has image, automatically add it
                 if ($j["name"] == "artwork") {
                     if ($j["value"] ==  null || $j["value"] ==  ''){
-                      $serialized["artwork"] = FileDataHelper::resetArtwork($file_id);
+                        $serialized["artwork"] = FileDataHelper::resetArtwork($file_id);
+                    }
+                } elseif ($j["name"] == "set_artwork") {
+                    if ($j["value"] !=  null || $j["value"] !=  ''){
+                        $serialized["artwork"] = FileDataHelper::setArtwork($file_id, $j["value"] );
+                    }
+                } elseif ($j["name"] == "remove_artwork") {
+                    if ($j["value"] ==  1){
+                        $remove_artwork = true;
+                        $serialized["artwork"] = FileDataHelper::removeArtwork($file_id);
                     }
                 } else {
                    $serialized[$j["name"]] = $j["value"];

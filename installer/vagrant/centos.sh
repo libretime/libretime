@@ -86,7 +86,8 @@ yum install -y \
   policycoreutils-python \
   python-celery \
   python2-pika \
-  lsof
+  lsof \
+  xmlstarlet
 
 # for pip ssl install
 yum install -y \
