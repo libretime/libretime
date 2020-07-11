@@ -56,6 +56,7 @@ function checkExternalServices() {
             "liquidsoap" => checkLiquidsoapService(),
             "rabbitmq" => checkRMQConnection(),
             "celery" => checkCeleryService(),
+            "watchfolder" => checkWatchFolderService(),
     );
 }
 
@@ -153,6 +154,19 @@ function checkLiquidsoapService() {
  */
 function checkCeleryService() {
     exec("pgrep -f -u celery airtime-celery", $out, $status);
+    if (array_key_exists(0, $out) && $status == 0) {
+        return 1;
+    }
+    return $status == 0;
+}
+
+/**
+ * Check if libretime-watch is currently running
+ *
+ * @return boolean true if libretime-watch is running
+ */
+function checkWatchFolderService() {
+    exec("pgrep -f libretime-watch", $out, $status);
     if (array_key_exists(0, $out) && $status == 0) {
         return 1;
     }

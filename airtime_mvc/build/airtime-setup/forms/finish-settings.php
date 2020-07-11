@@ -10,7 +10,8 @@
     <pre style="text-align: left">sudo systemctl start libretime-playout
 sudo systemctl start libretime-liquidsoap
 sudo systemctl start libretime-analyzer
-sudo systemctl start libretime-celery</pre>
+sudo systemctl start libretime-celery
+sudo systemctl start libretime-watch</pre>
     <p>
         Click "Done!" to bring up the Libretime configuration checklist; if your configuration is all green,
         you're ready to get started with your personal Libretime station!
