@@ -244,6 +244,7 @@ You can also set options for RabbitMQ messaging, the LibreTime server and SoundC
 
     [database]
     host = localhost
+    port = 5432
     dbname = airtime
     dbuser = airtime
     dbpass = airtime
