@@ -11,6 +11,7 @@
 $CC_CONFIG = Config::getConfig();
 
 $dbhost = $CC_CONFIG['dsn']['hostspec'];
+$dbport = $CC_CONFIG['dsn']['portspec'];
 $dbname = $CC_CONFIG['dsn']['database'];
 $dbuser = $CC_CONFIG['dsn']['username'];
 $dbpass = $CC_CONFIG['dsn']['password'];
@@ -23,7 +24,7 @@ $conf = array (
       'adapter' => 'pgsql',
       'connection' =>
       array (
-        'dsn' => "pgsql:host=$dbhost;port=5432;dbname=$dbname;user=$dbuser;password=$dbpass",
+        'dsn' => "pgsql:host=$dbhost;port=$dbport;dbname=$dbname;user=$dbuser;password=$dbpass",
       ),
     ),
     'default' => 'airtime',

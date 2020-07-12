@@ -28,6 +28,7 @@ class TestHelper
         return new Zend_Config(
             array(
                 'host'     => $config['dsn']['hostspec'],
+                'port'     => $config['dsn']['portspec'],
                 'dbname'   => $config['dsn']['database'],
                 'username' => $config['dsn']['username'],
                 'password' => $config['dsn']['password']
@@ -45,6 +46,7 @@ class TestHelper
         $dbpasswd = $CC_CONFIG['dsn']['password'];
         $dbname = $CC_CONFIG['dsn']['database'];
         $dbhost = $CC_CONFIG['dsn']['hostspec'];
+        $dbport = $CC_CONFIG['dsn']['portspec'];
     
         $databaseAlreadyExists = AirtimeInstall::createDatabase();
         if ($databaseAlreadyExists)
@@ -122,7 +124,7 @@ class TestHelper
         else
         {
             //Create all the database tables
-            AirtimeInstall::CreateDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost);
+            AirtimeInstall::CreateDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost, $dbport);
             AirtimeInstall::UpdateDatabaseTables();
         }
     }

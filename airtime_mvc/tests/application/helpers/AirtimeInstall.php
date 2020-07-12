@@ -187,12 +187,13 @@ class AirtimeInstall
         $username = $CC_CONFIG['dsn']['username'];
         $password = $CC_CONFIG['dsn']['password'];
         $hostspec = $CC_CONFIG['dsn']['hostspec'];
+        $portspec = $CC_CONFIG['dsn']['portspec'];
 
         echo " * Creating Airtime database: " . $database . PHP_EOL;
 
         $dbExists = false;
         try {
-             $con = pg_connect('user='.$username.' password='.$password.' host='.$hostspec);
+             $con = pg_connect('user='.$username.' password='.$password.' host='.$hostspec.' port='.$portspec);
 
              pg_query($con, 'CREATE DATABASE '.$database.' WITH ENCODING \'UTF8\' TEMPLATE template0 OWNER '.$username.';');
 
@@ -222,7 +223,7 @@ class AirtimeInstall
             echo "  * Postgres scripting language already installed".PHP_EOL;
         }
     }
-    public static function CreateDatabaseTables($p_dbuser, $p_dbpasswd, $p_dbname, $p_dbhost)
+    public static function CreateDatabaseTables($p_dbuser, $p_dbpasswd, $p_dbname, $p_dbhost, $p_dbport)
     {
         echo " * Creating database tables".PHP_EOL;
         // Put Propel sql files in Database
@@ -230,7 +231,7 @@ class AirtimeInstall
         $dir = self::GetAirtimeSrcDir()."/build/sql/";
         $files = array("schema.sql", "sequences.sql", "views.sql", "triggers.sql", "defaultdata.sql");
         foreach ($files as $f){
-            $command = "export PGPASSWORD=$p_dbpasswd && psql --username $p_dbuser --dbname $p_dbname --host $p_dbhost --file $dir$f 2>&1";
+            $command = "export PGPASSWORD=$p_dbpasswd && psql --username $p_dbuser --dbname $p_dbname --host $p_dbhost --port $p_dbport --file $dir$f 2>&1";
             @exec($command, $output, $results);
         }
         AirtimeInstall::$databaseTablesCreated = true;

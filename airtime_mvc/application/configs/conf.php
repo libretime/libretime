@@ -59,6 +59,7 @@ class Config {
         $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
         $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
         $CC_CONFIG['dsn']['hostspec'] = $values['database']['host'];
+        $CC_CONFIG['dsn']['portspec'] = $values['database']['port'];
         $CC_CONFIG['dsn']['phptype'] = 'pgsql';
         $CC_CONFIG['dsn']['database'] = $values['database']['dbname'];
 

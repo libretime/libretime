@@ -15,7 +15,8 @@ class DatabaseSetup extends Setup {
     const DB_USER = "dbUser",
         DB_PASS = "dbPass",
         DB_NAME = "dbName",
-        DB_HOST = "dbHost";
+        DB_HOST = "dbHost",
+        DB_PORT = "dbPort";
 
     // Array of key->value pairs for airtime.conf
     protected static $_properties;
@@ -28,6 +29,7 @@ class DatabaseSetup extends Setup {
     public function __construct($settings) {
         static::$_properties = array(
             "host"   => $settings[self::DB_HOST],
+            "port"   => $settings[self::DB_PORT],
             "dbname" => $settings[self::DB_NAME],
             "dbuser" => $settings[self::DB_USER],
             "dbpass" => $settings[self::DB_PASS],
@@ -35,7 +37,7 @@ class DatabaseSetup extends Setup {
     }
 
     private function setNewDatabaseConnection($dbName) {
-        self::$dbh = new PDO("pgsql:host=" . self::$_properties["host"] . ";dbname=" . $dbName . ";port=5432"
+        self::$dbh = new PDO("pgsql:host=" . self::$_properties["host"] . ";dbname=" . $dbName . ";port=" . self::$_properties["port"]
                              . ";user=" . self::$_properties["dbuser"] . ";password=" . self::$_properties["dbpass"]);
         $err = self::$dbh->errorInfo();
         if ($err[1] != null) {

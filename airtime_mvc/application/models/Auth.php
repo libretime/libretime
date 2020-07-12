@@ -83,6 +83,7 @@ class Application_Model_Auth
         // Database config        
         $db = Zend_Db::factory('PDO_' . $CC_CONFIG['dsn']['phptype'], array(
             'host'     => $CC_CONFIG['dsn']['hostspec'],
+            'port'     => $CC_CONFIG['dsn']['portspec'],
             'username' => $CC_CONFIG['dsn']['username'],
             'password' => $CC_CONFIG['dsn']['password'],
             'dbname'   => $CC_CONFIG['dsn']['database']

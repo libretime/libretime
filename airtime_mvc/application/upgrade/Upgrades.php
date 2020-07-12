@@ -235,6 +235,7 @@ abstract class AirtimeUpgrader
         $this->username = $config['dsn']['username'];
         $this->password = $config['dsn']['password'];
         $this->host     = $config['dsn']['hostspec'];
+        $this->port     = $config['dsn']['portspec'];
         $this->database = $config['dsn']['database'];
     }
 

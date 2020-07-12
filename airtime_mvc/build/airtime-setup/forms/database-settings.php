@@ -37,6 +37,12 @@
             value="<?php echo (isset($db) ? $db["host"] : "localhost"); ?>" />
         <span class="glyphicon glyphicon-remove form-control-feedback"></span>
     </div>
+    <div class="form-group">
+        <label class="control-label" for="dbPort">Port</label>
+        <input required class="form-control" type="text" name="dbPort" id="dbPort" placeholder="Port" 
+            value="<?php echo (isset($db) ? $db["port"] : "5432"); ?>" />
+        <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+    </div>
     <input class="form-control" type="hidden" name="dbErr" id="dbErr" aria-describedby="helpBlock"/>
     <div>
         <p style="text-align:right">
