@@ -394,16 +394,18 @@ class FileDataHelper {
               $im = @imagecreatefromjpeg($get_cont);
           }
 
-          if ($size){
-            $im = imagescale($im , $size);
-          }
-
-          if(!$im) {
+          // if one of those bombs, create an error image instead
+          if (!$im) {
               $im  = imagecreatetruecolor(150, 30);
               $bgc = imagecolorallocate($im, 255, 255, 255);
               $tc  = imagecolorallocate($im, 0, 0, 0);
               imagefilledrectangle($im, 0, 0, 150, 30, $bgc);
-              imagestring($im, 1, 5, 5, 'Error loading ' . $imgname, $tc);
+              imagestring($im, 1, 5, 5, 'Error loading ' . $converted_filename, $tc);
+          }
+        
+          // scale if appropriate
+          if ($size){
+            $im = imagescale($im , $size);
           }
 
           $img = $im;
