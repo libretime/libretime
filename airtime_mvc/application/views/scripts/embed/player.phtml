@@ -3,7 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="<?php echo $this->css?>" type="text/css">
-    <script src="<?php echo $this->mrp_js?>" type="text/javascript"></script>
+    <script src="<?php echo $this->playerhtml5_js?>" type="text/javascript"></script>
     <script src="<?php echo $this->jquery?>" type="text/javascript"></script>
 
     <script src="<?php echo $this->jquery_i18n?>" type="text/javascript"></script>
@@ -12,33 +12,18 @@
     <script type="text/javascript">
         $.i18n.setDictionary(general_dict);
 
-        var RETRY_DELAY_MSECS = 2000; //Delay before trying to reconnect to stream after an error.
         var MAX_MOBILE_SCREEN_WIDTH = 760;
 
-        // We are creating a custom player object that acts as a wrapper
-        // around the player object we get from Muses. We are doing this
-        // for a couple reasons:
-        //
-        // 1. It will be easier to swap out Muses for a different player engine
-        //    in the future - if we ever decide to do that.
-        // 2. We had to add in some custom behaviour depending on the player
-        //    customizations and whether or not the player is in Flash or HTML5
-        //    mode.
-        var MusesPlayer = function() {
+        var Html5Player = function() {
+            var id_element=getRandomIdPlayer(3000);
             this.mobileDetect = this.mobileDetect();
             this.playerMode = "<?php echo $this->playerMode ?>";
-            this.flashDetect = FlashDetect.versionAtLeast(10, 1) ? true : false;
             this.settings = {
-                'volume': 100,
-                'jsevents': true,
-                'autoplay': false,
-                'buffering': 0,
-                'title': 'test',
-                'bgcolor': '#FFFFFF',
-                'skin': 'mcclean',
-                'reconnectTime' : 2000, //Doesn't seem to do anything
-                'width': 180,
-                'height': 60
+                'elementId': id_element,    // leave alone
+                'autoplay': false,          // or true (only works on some browsers)
+                'forceHTTPS': true,         // or true if the stream is in SSL (beware of the listening port, usually 8000)
+                'replacePort':false,        // false for disabled or '8000' as the usual start port, forces to specify replacePortTo.
+                'replacePortTo':''          // either '' to use the default port of the browser (80/http, 443/https) or '8443' to force the port of the stream.
             };
 
             if (this.playerMode == "manual") {
@@ -56,7 +41,9 @@
             }
 
             // Create the Muses player object
-            MRP.insert(this.settings);
+            playerhtml5_insert(this.settings);
+            playerhtml5_audio = document.getElementById(id_element);
+            if(playerhtml5_audio.played==true) togglePlayStopButton();
 
             // Configure player title
             var player_title = <?php echo $this->player_title?>;
@@ -70,57 +57,9 @@
             attachStreamMetadataToPlayer();
 
             // detects events in HTML5 mode
-            if (!this.flashDetect) {
 
-                MRP.html.audio.addEventListener('error', function failed(e) {
-                    var streamUrl = "";
-                    if (musesPlayer.playerMode == "auto") {
-                        var nextAvailableStream = musesPlayer.getNextAvailableStream();
-                        streamUrl = nextAvailableStream["url"];
-                    } else {
-                        streamUrl = musesPlayer.settings.url;
-                    }
-
-                    switch (e.target.error.code) {
-                        case e.target.error.MEDIA_ERR_NETWORK:
-                            // If there is a network error keep retrying to connect
-                            // to a stream.
-                            musesPlayer.deferredPlay(streamUrl, RETRY_DELAY_MSECS);
-                            break;
-                        case e.target.error.MEDIA_ERR_DECODE:
-                            // If there was a corruption error or a problem with the browser
-                            // display an error and stop playback.
-                            togglePlayStopButton();
-                            clearTimeout(metadataTimer);
-                            $("p.now_playing").html("Error - Try again later");
-                            break;
-                        case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
-                            // If in auto mode and the current stream format is not supported
-                            // or the max number of listeners has been reached
-                            // retry connection with the next available stream.
-                            if (musesPlayer.playerMode == "auto") {
-                                musesPlayer.deferredPlay(nextAvailableStream["url"], RETRY_DELAY_MSECS);
-                            } else {
-                                // If in manual mode and the current stream format is not supported
-                                // or the max number of listeners has been reached
-                                // display an error and stop play back.
-                                togglePlayStopButton();
-                                clearTimeout(metadataTimer);
-                                $("p.now_playing").html("Error - Try again later");
-                            }
-                            break;
-                        default:
-                            togglePlayStopButton();
-                            clearTimeout(metadataTimer);
-                            $("p.now_playing").html("Error - Try again later");
-                            break;
-                    }
-
-                }, true);
-            }
         };
-
-        MusesPlayer.prototype.mobileDetect = function() {
+        Html5Player.prototype.mobileDetect = function() {
             return (screen.width <= MAX_MOBILE_SCREEN_WIDTH);
         }
 
@@ -129,7 +68,7 @@
         // the streams listener count has been maxed out or if the stream is down).
         // It checks if the client is a mobile device or not and returns the next
         // best available stream.
-        MusesPlayer.prototype.getNextAvailableStream = function() {
+        Html5Player.prototype.getNextAvailableStream = function() {
             if (this.mobileDetect && this.availableMobileStreamQueue.length > 0) {
                 return this.getNextAvailableMobileStream();
             }
@@ -152,7 +91,7 @@
 
         // Gets and returns the next available mobile stream from the queue,
         // but adds it back to the end of the queue to be recycled.
-        MusesPlayer.prototype.getNextAvailableMobileStream = function() {
+        Html5Player.prototype.getNextAvailableMobileStream = function() {
             var stream = this.availableMobileStreamQueue.shift();
             //add to end of queue
             this.availableMobileStreamQueue.push(stream);
@@ -161,115 +100,25 @@
 
         // Gets and returns the next available desktop stream from the queue,
         // but adds it back to the end of the queue to be recycled.
-        MusesPlayer.prototype.getNextAvailableDesktopStream = function() {
+        Html5Player.prototype.getNextAvailableDesktopStream = function() {
             var stream = this.availableDesktopStreamQueue.shift();
             //add to end of queue
             this.availableDesktopStreamQueue.push(stream);
             return stream;
         }
 
-        MusesPlayer.prototype.play = function() {
-            this.flashDetect ? MRP.play() : musesHTMLPlayClick();;
+        Html5Player.prototype.play = function() {
+            console.log('play');
+            playerhtml5_audio.src = this.settings.url+'?'+Math.floor(Math.random() * Math.floor(100000));
+            playerhtml5_audio.play();
             togglePlayStopButton();
         };
 
-        MusesPlayer.prototype.stop = function() {
-            this.flashDetect ? MRP.stop() : musesHTMLStopClick();
+        Html5Player.prototype.stop = function() {
+            console.log('stop');
+            playerhtml5_audio.pause();
             togglePlayStopButton();
         };
-
-        MusesPlayer.prototype.setURL = function(url) {
-            this.flashDetect ? MRP.setUrl(url) : musesHTMLSetURL(url);
-
-            // update musesPlayer object
-            musesPlayer.settings.url = url;
-        };
-
-        MusesPlayer.prototype.setCodec = function(codec) {
-            //TODO: get rid of this? Doesn't seem to make a difference
-            this.flashDetect ? console.log("blah") : musesHTMLSetCodec(codec);
-            musesPlayer.settings.codec = codec;
-        }
-
-        /** Retry playback after a few seconds (used to throttle attempts to reconnect/play). */
-        MusesPlayer.prototype.deferredPlay = function(streamUrl, delayMSec) {
-            if (!this.flashDetect) {
-                setTimeout(function() {
-                    var audio = $(MRP.html.audio);
-                    audio[0].src = streamUrl;
-                    audio[0].load();
-                    audio[0].play();
-                }, delayMSec);
-
-            } else {
-                setTimeout(function() {
-                    musesPlayer.setURL(streamUrl);
-                    musesPlayer.play();
-                }, delayMSec);
-            }
-        };
-
-        // detects errors in FLASH mode
-        function musesCallback(event,value) {
-            switch (event) {
-                case "ioError":
-                    // problem connecting to stream
-                    var streamUrl = "";
-                    if (musesPlayer.playerMode == "auto") {
-                        streamUrl = musesPlayer.getNextAvailableStream()["url"];
-                    } else {
-                        streamUrl = musesPlayer.settings.url;
-                    }
-
-                    //Retry playback but only after sleeping for a bit, to avoid spinning.
-                    musesPlayer.deferredPlay(streamUrl, RETRY_DELAY_MSECS);
-                    break;
-                case "securityError":
-                    // max listeners reached
-                    if (musesPlayer.playerMode == "auto") {
-                        var stream = musesPlayer.getNextAvailableStream();
-                        musesPlayer.deferredPlay(stream["url"], RETRY_DELAY_MSECS);
-                    } else if (musesPlayer.playerMode == "file") {
-                    } else {
-                        // If in manual mode and there is a problem connecting to
-                        // the stream display an error and stop play back.
-                        MRP.stop();
-                        if ($("#play_button").hasClass("hide_button")) {
-                            togglePlayStopButton();
-                        }
-                        clearTimeout(metadataTimer);
-                        $("p.now_playing").html("Error - Try again later");
-                    }
-                    break;
-            }
-        }
-
-        // Triggers the play function on the Muses player object in HTML5 mode
-        function musesHTMLPlayClick() {
-            MRP.html.audio.src = musesPlayer.settings.url;
-            MRP.html.audio.play();
-        }
-
-        // Triggers the stop function on the Muses player object in HTML5 mode
-        // NOTE: The HTML5 audio element doesn't have stop functionality. It
-        // can only be paused.
-        function musesHTMLStopClick() {
-            MRP.html.audio.pause();
-            //delete MRP.html;
-        }
-
-        function musesHTMLSetURL(url)
-        {
-            MRP.html.audio.src = url;
-
-            //MRP.html.audio.play();
-            //musesPlayer.play();
-        }
-
-        function musesHTMLSetCodec(codec) {
-            MRP.html.audio.codec = codec;
-        }
-
         function togglePlayStopButton() {
             document.getElementById("play_button").classList.toggle("hide_button");
             document.getElementById("stop_button").classList.toggle("hide_button");
@@ -278,9 +127,9 @@
         $(document).ready(function() {
             $(".play").click(function () {
                 if ($(this).hasClass("pause")) {
-                    musesPlayer.stop();
+                    html5Player.stop();
                 } else {
-                    musesPlayer.play();
+                    html5Player.play();
                 }
 
                 $(this).toggleClass("pause");
@@ -363,7 +212,7 @@
         not work. It has to be "visible" on the page. As a hacky work around we
         set the height and width to 1px so users will not see it.
         */
-        #muses_skin{width:0; height:0; overflow: hidden;}
+        #html5player_skin{width:0; height:0; overflow: hidden;}
     </style>
 
 </head>
@@ -380,8 +229,8 @@
         <div class="airtime_box">
 
             <div class="airtime_button">
-                <span id="play_button" class="play_button" onclick="musesPlayer.play()"></span>
-                <span id="stop_button" class="stop_button hide_button" onclick="musesPlayer.stop()"></span>
+                <span id="play_button" class="play_button" onclick="html5Player.play()"></span>
+                <span id="stop_button" class="stop_button hide_button" onclick="html5Player.stop()"></span>
             </div>
             <p class="now_playing"></p>
 
@@ -411,9 +260,9 @@
 
 </div>
 
-<div id="muses_skin">
+<div id="html5player_skin">
     <script type="text/javascript">
-        var musesPlayer = new MusesPlayer();
+        var html5Player = new Html5Player();
     </script>
 </div>
 
