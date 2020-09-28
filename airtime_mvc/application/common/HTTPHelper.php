@@ -31,6 +31,7 @@ class Application_Common_HTTPHelper
         $baseUrl = $CC_CONFIG['baseUrl'];
         $baseDir = $CC_CONFIG['baseDir'];
         $basePort = $CC_CONFIG['basePort'];
+        $forceSSL = $CC_CONFIG['forceSSL'];
         if (empty($baseDir)) {
             $baseDir = "/";
         }
@@ -42,7 +43,7 @@ class Application_Common_HTTPHelper
         }
 
         $scheme = "http";
-        if ($secured && !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+        if ($forceSSL || ($secured && !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
             $scheme = "https";
             $basePort = "443"; //Airtime Pro compatibility hack
         }

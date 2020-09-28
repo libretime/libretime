@@ -228,6 +228,15 @@ https://localhost
 http://localhost
 ```
 
+Finally, the configuration file needs updating. Under `[general]`, `force_ssl`
+needs to be set to true:
+
+```
+[general]
+...
+force_ssl = true
+```
+
 ---
 
 ## Host Configuration
