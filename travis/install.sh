@@ -6,6 +6,7 @@ if [[ -n "$TRAVIS_PHP_VERSION" ]]; then
   composer install
 fi
 if [[ -n "$TRAVIS_PYTHON_VERSION" ]]; then
+  pyenv install --list
   pyenv install $TRAVIS_PYTHON_VERSION
   pyenv local $TRAVIS_PYTHON_VERSION
   pushd python_apps/airtime_analyzer
