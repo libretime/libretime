@@ -38,6 +38,7 @@ setup(name='airtime_analyzer',
           'python-daemon',
           'requests>=2.7.0',
           'rgain3==1.0.0',
+          # Pycairo 1.20 requires Cairo 1.15.10+, which is not available in Bionic or Xenial
           'pycairo==1.19.1',
           'PyGObject<=3.36.1',
           # These next 3 are required for requests to support SSL with SNI. Learned this the hard way...
