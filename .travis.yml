@@ -45,9 +45,6 @@ jobs:
       python: 3.8
       stage: test
     - language: python
-      python: 3.7
-      stage: test
-    - language: python
       python: 3.5
       stage: test
     - stage: deploy
