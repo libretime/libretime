@@ -934,6 +934,7 @@ if [ "$icecast" = "t" ]; then
         icecast_unit_name="icecast"
 	icecast_config="/etc/icecast.xml"
     fi
+    systemInitCommand enable ${icecast_unit_name}
     # only update icecast password if 
     if [ ! -e "/etc/airtime/airtime.conf" ] && [ ! -e "/etc/airtime/airtime.conf.tmp" ]; then
         icecast_pass=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-12};)
