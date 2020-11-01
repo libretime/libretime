@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: article
 title: Interface Localization
 git: interface-localization.md
 ---

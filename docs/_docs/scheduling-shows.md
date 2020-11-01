@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: article
 title: Scheduling Shows
 git: scheduling-shows.md
 ---

@@ -1,8 +1,8 @@
 ---
-layout: default
+layout: article
 title: Analytics
 git: analytics.md
-
+category: manager
 ---
 
 ## History {#history}

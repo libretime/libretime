@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: article
 title: Using Vagrant and Virtualbox for developing LibreTime
 git: vagrant.md
 ---

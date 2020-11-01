@@ -1,4 +1,4 @@
 ---
 title: Docs
-layout: guides
+layout: docindex
 ---

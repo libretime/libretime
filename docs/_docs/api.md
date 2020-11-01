@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: article
 title: LibreTime API Usage
 git: api.md
 ---

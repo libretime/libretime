@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: article
 title: Rights and Royalties
 git: rights-royalties.md
 ---

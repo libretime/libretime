@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: article
 title: Contributing to LibreTime
 git: contribute.md
 ---

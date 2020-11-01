@@ -1,7 +1,8 @@
 ---
-layout: default
+layout: article
 title: Modifying the LibreTime interface
 git: interface-customization.md
+category: admin
 ---
 
 

@@ -7,24 +7,11 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
+      	{% for navbarlink in site.data.nav.navbarlink %}
         <li class="nav-item">
-          <a class="nav-link" href="/install">Install</a>
+          <a class="nav-link" href="{{navbarlink.url}}">{{navbarlink.name}}</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/guides">Docs</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="https://www.youtube.com/channel/UC-MA9GzkTb8th1YlDmF0NfA" target="_blank"><i class="fab fa-youtube"></i></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="https://github.com/LibreTime/libretime" target="_blank"><i class="fab fa-github"></i></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="https://discourse.libretime.org/" target="_blank"><i class="fab fa-discourse"></i></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="https://chat.libretime.org/login" target="_blank"><i class="fas fa-comments"></i></a>
-        </li>
+        {% endfor %}
       </ul>
     </div>
   </div>
