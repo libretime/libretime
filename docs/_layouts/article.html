@@ -1,0 +1,37 @@
+---
+layout: default
+---
+    
+  <!-- Promo Section -->
+  <section class="bg-primary">
+    <div class="container">
+      <div class="d-flex mh-25rem pt-11 py-6">
+        <div class="align-self-center">
+          <h1 class="text-white font-weight-light mb-3">{{ page.title }}</h1>
+
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End Promo Section -->
+
+  <main>
+    <div class="container py-10">
+      <div class="row">
+        <div class="col-lg-8 mb-11 mb-lg-4 pr-lg-6">
+			{{ content }}
+        </div>
+
+        <div class="col-lg-4 mb-4">
+          <div class="card p-3 border-0 shadow">
+            <div class="card-header pb-0">
+              <h4 class="h5 mb-3">Contents</h4>
+            </div>
+            <div class="card-body">
+               <div class="toc" >{% include toc.html html=content class=toc %}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>

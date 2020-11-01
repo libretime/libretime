@@ -1,6 +1,7 @@
 ---
-layout: default
+layout: article
 title: Backing Up The Server
+category: admin
 git: backing-up-the-server.md
 ---
 

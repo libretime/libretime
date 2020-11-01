@@ -1,6 +1,6 @@
 ---
 title: Install
-layout: default
+layout: article
 git: install.md
 ---
 

@@ -83,7 +83,8 @@ div.text-footer{
  text-align: center;
   } 
 
-section{padding:8rem 0}
+/* Changed padding */
+section{padding:2rem 0}
 .section-heading{margin-top:0}
 ::-moz-selection{color:#fff;background:#212529;text-shadow:none}
 ::selection{color:#fff;background:#212529;text-shadow:none}

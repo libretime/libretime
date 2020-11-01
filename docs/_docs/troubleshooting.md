@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: article
 title: Troubleshooting
 git: troubleshooting.md
 ---

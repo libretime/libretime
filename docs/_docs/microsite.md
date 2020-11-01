@@ -1,7 +1,8 @@
 ---
-layout: default
+layout: article
 title: Built-in Microsite
 git: microsite.md
+category: admin
 ---
 
 ## Overview

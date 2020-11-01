@@ -18,6 +18,11 @@ headsubtext: Everything you need to get your terrestrial / on-line radio station
 headbuttonurl: index#get-started
 headbuttontext: Get LibreTime
 
+# Collections Settings
+collections:
+  docs:
+    output: true
+
 # Build settings
 plugins:
   - kramdown

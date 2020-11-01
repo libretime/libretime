@@ -1,7 +1,8 @@
 ---
-layout: default
+layout: article
 title: Library
 git: library.md
+category: dj
 ---
 
 ## Dashboard {#dashboard}

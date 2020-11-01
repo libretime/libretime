@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: article
 title: Upgrading LibreTime
 git: upgrading.md
 ---
