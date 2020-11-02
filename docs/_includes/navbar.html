@@ -7,11 +7,15 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
-      	{% for navbarlink in site.data.nav.navbarlink %}
-        <li class="nav-item">
-          <a class="nav-link" href="{{navbarlink.url}}">{{navbarlink.name}}</a>
+      	<li class="nav-item ml-lg-4 mb-2 mb-lg-0">
+          <a class="nav-link px-0" href="/docs/install"> Install</a>
         </li>
-        {% endfor %}
+      	<li class="nav-item ml-lg-4 mb-2 mb-lg-0">
+          <a class="nav-link px-0" href="/docs">Docs</a>
+        </li>
+		<li class="nav-item ml-lg-4 mb-2 mb-lg-0">
+          <a class="nav-link px-0" href="https://github.com/libretime/libretime" target="_blank"><i class="fab fa-github mr-1"></i> Star on Github</a>
+        </li>
       </ul>
     </div>
   </div>

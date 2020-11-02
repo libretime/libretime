@@ -25,7 +25,7 @@ layout: default
             <div class="card p-3 border-0 shadow">
               <div class="card-header border-0"><i class="fas fa-wrench fa-3x text-dark"></i></div>
               <div class="card-body pt-0">
-                <h4 class="h5 mb-2"><a class="link-dark" href="article.html">Configure</a></h4>
+                <h4 class="h5 mb-2"><a class="link-dark" href="/docs/host-configuration">Configure</a></h4>
                 <p class="card-text mb-4">We strive to embrace and drive change in our industry.</p>
               </div>
             </div>
@@ -65,7 +65,7 @@ layout: default
             <div class="card p-3 border-0 shadow">
               <div class="card-header border-0"><i class="fa fa-adjust fa-3x text-dark"></i></div>
               <div class="card-body pt-0">
-                <h4 class="h5 mb-2"><a class="link-dark" href="article.html">FAQs</a></h4>
+                <h4 class="h5 mb-2"><a class="link-dark" href="/faq">FAQs</a></h4>
                 <p class="card-text mb-4">Have questions? <br> We have answers.</p>
               </div>
             </div>
@@ -76,7 +76,7 @@ layout: default
 
     <!-- Section -->
     <div class="container">
-      <div class="card gradient-dark shadow-sm">
+      <div class="card shadow-sm">
         <div class="card-body p-5 px-md-7">
           <div class="d-md-flex align-items-center">
             <div class="w-100 mb-3 mb-md-0 pr-md-5">
@@ -98,11 +98,11 @@ layout: default
         <div class="row">
           <div class="col-md-4 mb-5 mb-md-0">
             <i class="fas fa-headphones-alt fa-2x text-dark mb-3"></i>
-            <h3 class="h5 mb-2">For DJs</h3>
+            <h3 class="h5 mb-2">Using Libretime</h3>
 
             <ul class="list-unstyled">
             	{% for doc in site.docs %}
-            		{% if doc.category == "dj" %}
+            		{% if doc.category == "interface" %}
               <li class="mb-2"><a class="link-muted" href="{{doc.url}}">{{doc.title}}</a></li>
               		{% endif %}
               	{% endfor %}
@@ -110,7 +110,7 @@ layout: default
           </div>
 
           <div class="col-md-4 mb-5 mb-md-0">
-            <i class="fas fa-users fa-2x text-dark mb-3"></i>
+            <i class="fas fa-user-tie fa-2x text-dark mb-3"></i>
             <h3 class="h5 mb-2">For Program Managers</h3>
 
             <ul class="list-unstyled">
@@ -122,14 +122,14 @@ layout: default
             </ul>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-4 mb-5 mb-md-0">
             <i class="fas fa-user-secret fa-2x text-dark mb-3"></i>
             <h3 class="h5 mb-2">For System Administrators</h3>
 
             <ul class="list-unstyled">
             	{% for doc in site.docs %}
             		{% if doc.category == "admin" %}
-              <li class="mb-2"><a class="link-muted" href="{{doc.url}}">{{doc.title}}</a></li>
+              <li class="mb-3"><a class="link-muted" href="{{doc.url}}">{{doc.title}}</a></li>
               		{% endif %}
               	{% endfor %}
             </ul>

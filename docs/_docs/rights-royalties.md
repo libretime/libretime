@@ -1,7 +1,7 @@
 ---
 layout: article
 title: Rights and Royalties
-git: rights-royalties.md
+category: manager
 ---
 
 If you're new to broadcasting, or have not streamed your station online before,

@@ -1,8 +1,7 @@
 ---
 layout: article
-title: Preparing Media for LibreTime
-git: preparing-media.md
-category: dj
+title: Preparing Media for Upload
+category: interface
 ---
 
 Before uploading media to an LibreTime server, there are a number of factors which should be considered. Getting your ingest workflow right will save you a lot of time later.
@@ -13,14 +12,14 @@ LibreTime automatically imports any metadata that is in the files' ID3 tags. If 
 
 There are a number of programs available which can be used to correct mistakes or incomplete information in ID3 tags. You can use a music library manager (like Apple Music, Rhythmbox, or Windows Media Player) to edit ID3 tags as well, but you may be required to import the files into your library, which may not always be convenient.  
 
-| Windows | macOS | Linux |
-|---------|-------|-------|
-| [Mp3tag](https://www.mp3tag.de/en/index.html) | [MusicBrainz Picard](https://picard.musicbrainz.org/) | [Ex Falso](http://code.google.com/p/quodlibet/) |
-| [TagScanner](https://www.xdlab.ru/en/) | | |
+- [TagScanner](https://www.xdlab.ru/en/) (Windows)
+- [Mp3tag](https://www.mp3tag.de/en/index.html) (Windows)
+- [MusicBrainz Picard](https://picard.musicbrainz.org/) (Mac, Windows, Linux)
+- [Ex Falso](http://code.google.com/p/quodlibet/) (Linux)
 
 The *Tags From Path* feature of Ex Falso is a particularly useful time saver if you have a large archive of untagged files. Sometimes there is useful creator or title information in the file name or directory path structure, which can be converted into an ID3 tag automatically.
 
-![](img/Screenshot175-Ex_Falso.png)
+![](/img/Screenshot175-Ex_Falso.png)
 
 ## Metadata in legacy character sets
 
@@ -42,19 +41,19 @@ To actually convert all of the tags and strip any legacy ID3v1 tag present from 
 
 The name of the original character set follows the **-e** option. Other legacy character sets that mid3iconv can convert to UTF-8 include:
 
-KOI8-R: Russian
-KOI8-U: Ukrainian
+	KOI8-R: Russian
+	KOI8-U: Ukrainian
 
-GBK: Traditional Chinese
-GB2312: Simplified Chinese
+	GBK: Traditional Chinese
+	GB2312: Simplified Chinese
 
-EUC-KR: Korean
-EUC-JP: Japanese
+	EUC-KR: Korean
+	EUC-JP: Japanese
 
-CP1253: Greek
-CP1254: Turkish
-CP1255: Hebrew
-CP1256: Arabic
+	CP1253: Greek
+	CP1254: Turkish
+	CP1255: Hebrew
+	CP1256: Arabic
 
 ## Audio loudness
 
@@ -94,4 +93,4 @@ Before importing media, it is good practice to check for any silent sections in 
 
 Quiet introductions or extended fades can also lead to apparent gaps in your broadcast playout. This is more common when playing back audio from ripped CDs or dubbed from tape or vinyl; this issue is not as common with digitally-purchased music. For best results, long periods of silence should be removed from files before uploading to Libretime.
 
-![](img/Screenshot126-Debra_silence.png)
+![](/img/Screenshot126-Debra_silence.png)

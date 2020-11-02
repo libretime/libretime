@@ -1,13 +1,10 @@
 ---
 layout: article
 title: Built-in Microsite
-git: microsite.md
 category: admin
 ---
 
-## Overview
-
-![](img/radio-page.png)
+![](/img/radio-page.png)
 
 LibreTime includes a mini-site, which can be accessed at _serverIP_ (for local installations), or
 _libretime.yourdomain.com_ or _cloudvmIP_ (for installations to a server on a domain). The site includes your

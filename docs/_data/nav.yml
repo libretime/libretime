@@ -1,7 +1,0 @@
-navbarlink:
-- name: Install
-  url: /install
-- name: Docs
-  url: /docs
-- name: Github
-  url: https://github.com/LibreTime/libretime
