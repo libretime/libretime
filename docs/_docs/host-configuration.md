@@ -124,8 +124,11 @@ upload_max_filesize = 40M
 post_max_size = 40M
 ```
 
-For quick reference, 1024 MB = 1 GB and 2048 MB = 2 GB, but most will be okay with rounding to the nearest thousand. After updating the config file, restart Apache by `sudo systemctl apache restart`.
+For quick reference, 1024 MB = 1 GB and 2048 MB = 2 GB, but most will be okay with rounding to the nearest thousand. After updating the config file, restart Apache. 
 
+```
+sudo systemctl apache restart
+```
 
 ### Playout settings {#playout}
 

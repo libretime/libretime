@@ -84,7 +84,6 @@
             <p class="text-faded mb-4">
                 The platform is a fork of the older AirTime project which is <b>no longer actively maintained</b>, and the evolution of Open Source broadcasting for both current AirTime and new users looking to continue with the platform on their own infrastructure. 
             </p>
-            <a class="btn btn-light btn-xl js-scroll-trigger" href="#features">Key Features</a>
           </div>
         </div>
       </div>
@@ -223,20 +222,24 @@
     <!-- "Our Biggest Fans" Section -->
     {% include fans.html %}
 
-    <section class="bg-dark text-white" id="get-started">
+    <section class="" id="get-started">
       <div class="container">
         <div class="row">
           <div class="col-lg-10 mx-auto text-center">
-            <h2 class="section-heading">Get started with LibreTime today</h2>
+            <h2 class="section-heading">Get started</h2>
+            
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/Djo_55LgjXE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            
             <p class="mb-5" style="text-align: center;">
-                Requires: 1 Ghz processor, 2 GB RAM, wired ethernet connection with static IP address and you. <br> What are you waiting for?
-            <div class="start-buttons" style="padding: 0px;">
-                <a class="btn btn-light btn-xl sr-button" href="install">Server Install</a>
-
-                <a class="btn btn-light btn-xl sr-button" href="vagrant">Vagrant for Devs</a>
-
-                <a class="btn btn-light btn-xl sr-button" target="_blank" href="https://github.com/ned-kelly/docker-multicontainer-libretime/blob/master/README.md">Docker</a>
-            </div>
+            	<p class="text-muted mb-0">Install Libretime in just three commands:</p>
+            	<code>git clone https://github.com/LibreTime/libretime.git</code>
+            	<br>
+				<code>cd libretime</code>
+				<br>
+				<code>sudo bash install -fiap</code>
+				
+				<p>
+				<a href="/docs/host-configuration">Next: Host Configuration</a>
           </div>
 
         </div>
