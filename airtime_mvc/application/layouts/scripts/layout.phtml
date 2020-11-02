@@ -76,14 +76,6 @@
         <?php echo $this->navigation()->menu(); ?>
     </div>
 
-    <div class="btn-group">
-        <a href="<?php echo $this->baseUrl . '/login/logout'; ?>">
-            <button id="add_media_btn" class="btn btn-small dashboard-btn btn-danger">
-                <span><?php echo _("Logout") ?></span>
-            </button>
-        </a>
-    </div>
-
     <script>
     <?php
     $partitions = Application_Model_Systemstatus::GetDiskInfo();
