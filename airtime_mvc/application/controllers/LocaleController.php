@@ -477,7 +477,7 @@ final class LocaleController extends Zend_Controller_Action
 		"Disabled" => _("Disabled"),
 		"Cancel upload" => _("Cancel upload"),
 		"Type" => _("Type"),
-		"Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/manual/calendar/#autoloading-playlist'>More information</a>" => _("Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/manual/calendar/#autoloading-playlist'>More information</a>"),
+		"Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/docs/playlists'>More information</a>" => _("Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/docs/playlists'>More information</a>"),
 		"Podcast settings saved" => _("Podcast settings saved"),
 		"Are you sure you want to delete this user?" => _("Are you sure you want to delete this user?"),
 		"Can't delete yourself!" => _("Can't delete yourself!"),

@@ -104,35 +104,35 @@ var AIRTIME = (function(AIRTIME) {
                     "media": "tracks",
                     "icon": "icon-music",
                     "subtext": "Click 'Upload' to add some now.",
-                    "href": "http://libretime.org/manual/tracks/"
+                    "href": "http://libretime.org/docs/dashboard/"
                 };
             case mod.MediaTypeIntegerEnum.PLAYLIST:
                 return {
                     "media": "playlists",
                     "icon": "icon-list",
                     "subtext": "Click 'New' to create one now.",
-                    "href": "http://libretime.org/manual/playlist/"
+                    "href": "http://libretime.org/docs/playlists/"
                 };
             case mod.MediaTypeIntegerEnum.BLOCK:
                 return {
                     "media": "smart blocks",
                     "icon": "icon-time",
                     "subtext": "Click 'New' to create one now.",
-                    "href": "http://libretime.org/manual/smartblocks/"
+                    "href": "http://libretime.org/docs/playlists/"
                 };
             case mod.MediaTypeIntegerEnum.WEBSTREAM:
                 return {
                     "media": "webstreams",
                     "icon": "icon-random",
                     "subtext": "Click 'New' to create one now.",
-                    "href": "http://libretime.org/manual/webstreams/"
+                    "href": "http://libretime.org/docs/webstreams/"
                 };
             case mod.MediaTypeIntegerEnum.PODCAST:
                 return {
                     "media": "podcasts",
                     "icon": "icon-headphones",
                     "subtext": "Click 'Add' to create one now.",
-                    "href": "http://libretime.org/manual/podcasts"
+                    "href": "http://libretime.org/docs/podcasts"
                 };
             default:
                 break;

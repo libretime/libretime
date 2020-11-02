@@ -2563,8 +2563,8 @@ msgid "Add Autoloading Playlist ?"
 msgstr "Добавить?"
 
 #: airtime_mvc/application/views/scripts/form/add-show-autoplaylist.phtml:14
-msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/manual/calendar/#autoloading-playlist'>More information</a>"
-msgstr "Содержимое автозагружаемого Плейлиста добавляется в Программу за один час до ее выхода в эфир. <a target='_blank' href='http://libretime.org/manual/calendar/#autoloading-playlist'>Больше информации</a>"
+msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/docs/playlists'>More information</a>"
+msgstr "Содержимое автозагружаемого Плейлиста добавляется в Программу за один час до ее выхода в эфир. <a target='_blank' href='http://libretime.org/docs/playlists'>Больше информации</a>"
 
 #: airtime_mvc/application/forms/AddShowAutoPlaylist.php:25
 msgid "Select Playlist"
