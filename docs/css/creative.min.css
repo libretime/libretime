@@ -13,7 +13,7 @@ body{
   }
   
 hr{
-  max-width:50px;border-width:3px;border-color:#f05f40
+  max-width:auto;border-width:2px;border-color:#f05f40
   }
   
 hr.light{
@@ -56,9 +56,9 @@ th{
 }
  
 tr, td{
- padding: 15px;
+ padding: 5px;
  text-align: left;
- border-bottom: 1px solid #f05f40
+ border: 2px solid #f05f40
 }
 
 /* Theme Colors */  
@@ -205,11 +205,8 @@ header.masthead p{font-weight:300}
 
 /* Blockquotes */
 blockquote {
-border: 1px solid #212529;
-border-left: 10px solid #f05f40;
+border: 2px solid #f05f40;
 border-radius: 0px;
-background: #212529;
-color: white;
 font-size: .9rem;
 margin: 10px;
 padding: 10px 20px;
@@ -235,8 +232,7 @@ font-size: .9rem;
 }
 
 pre.highlight {
-border: 1px solid #212529;
-border-left: 10px solid #212529;
+border-left: 2px solid #212529;
 background: white;
 color: black;
 font-size: .9rem;
@@ -258,8 +254,8 @@ padding: 10px 20px;
   margin: 0 3em 3em 0;
   border-radius: 50%;
   padding: .25em;
-  width: 80px;
-  height: 80px;
+  width: 50px;
+  height: 50px;
   background-color: #F8F8F8;
 }
 
@@ -325,13 +321,66 @@ padding: 10px 20px;
   padding: 10px 0px;
 }
 
-/* Page Title */
-.allcaps {
-  text-transform: uppercase
+/* Gradients */
+.gradient-dark {
+  background-color: #343a40;
+  background-image: -webkit-gradient(linear, left top, right top, from(#343a40), to(#000));
+  background-image: -webkit-linear-gradient(left, #343a40, #000);
+  background-image: -o-linear-gradient(left, #343a40, #000);
+  background-image: linear-gradient(to right, #343a40, #000);
 }
 
- .center {
-  margin: auto;
-  width: 50%;
-  padding: 10px;
+.gradient-primary {
+  background-color: transparent;
+  background-image: -webkit-gradient(linear, left top, right top, from(#FF7657), to(#FF6745));
+  background-image: -webkit-linear-gradient(left, #FF7657, #FF6745);
+  background-image: -o-linear-gradient(left, #FF7657, #FF6745);
+  background-image: linear-gradient(to right, #FF7657, #FF6745);
+}
+
+/*------------------------------------
+  List
+------------------------------------*/
+.list-line {
+  list-style: none;
+  padding-left: 0;
+}
+
+.list-line li {
+  position: relative;
+  color: #FF6745;
+  padding-left: 1.5rem;
+}
+
+.list-line li::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: "—";
+  color: #FF6745;
+}
+
+.list-icon {
+  list-style: none;
+  padding-left: 0;
+}
+
+.list-icon li {
+  position: relative;
+  color: #212529;
+  padding-left: 1.8rem;
+  margin-bottom: 1.8rem;
+}
+
+.list-icon li::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.list-icon-star li::before {
+  content: "\f005";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 400;
+  color: #007bff;
 }

@@ -1,11 +1,8 @@
 ---
 layout: article
-title: Analytics
-git: analytics.md
+title: Playout History
 category: manager
 ---
-
-## History {#history}
 
 On the History menu, the **Playout History** page enables you to view a list of files played within a specific date and time range. This page is designed to help your station prepare reports for music royalty collection societies and regulatory agencies.
 
@@ -13,7 +10,7 @@ Search results can be copied to the clipboard using the **Copy** button, exporte
 
 This page has three tabs: **Log Sheet**, **File Summary** and **Show Summary**. On any of these tabs, you can select a date and time range by clicking the calendar and clock icons in the upper left corner of the page. Then click the search button, which has a magnifying glass icon, to the right. A list of files played during that date and time range will appear further down the page.
 
-![](img/log-sheet.png)
+![](/img/log-sheet.png)
 
 In the **Log Sheet** tab, the playout history is sorted by **Start Time** and **End Time** by default.
 
@@ -29,11 +26,11 @@ Log entries can also be manually deleted, using the button with the trashcan ico
 
 ## History Templates
 
-![](img/history-templates.png)
+![](/img/history-templates.png)
 
 The **History Templates** page on the History menu enables you to prepare reports with the exact content required by regulatory agencies in the territories that you are broadcasting to. You can begin creating a custom template by clicking the button **New Log Sheet Template** or the button **New File Summary Template**.
 
-![](img/new-hist-temp.png)
+![](/img/new-hist-temp.png)
 
 Either of these actions opens a page in which you can name the new template, and add or remove elements from the list on the left. To add a new element from the list on the right, click the plus icon for the item you require. If the element you require is not listed, you can use the **Add New Field** box at the lower end of the right side column. Select *string*, *boolean*, *integer*, or *float*, depending on the type of data that you wish to log, and then click the **+ Add** button.
 
@@ -288,17 +285,3 @@ Replace host, user and password values with appropriate values for your external
 Then make the new script executable and create a cron job to launch it every minute, as in step 8 above. Steps 3 to 7 above should be carried out on the external web server so that it can convert the two temporary files uploaded via FTP into public schedule data.
 
 If you have secure shell access (SSH) to the remote web server, you could write a script to use the secure copy command (scp) instead of ftp.
-
----
-
-## Streaming Listener Statistics
-
-The Listener Stats page on the Analytics menu shows graphs of listener connections to the configured streaming servers for the selected date and time range.  On the right side, a green **Status** indicator shows **OK** if the connection to the streaming server is active.
-
-![](img/portfolio/stream-stats.jpg)
-
-If the status indicator is red, check that the **Admin User** and **Admin Password** settings are correct under **Additional Options** for the named mount point, such as *libretime\_128*, on the **Streams** page of the **Settings** menu.
-
-By default, statistics for the last 24 hours of streaming are shown. To change this date and time range, click the calendar and clock icons in the lower left corner of the page, then click the magnifying glass icon.
-
-> To choose which particular streams should have statistics displayed, click the check boxes for the individual colour-coded mount points, just below the graph.
