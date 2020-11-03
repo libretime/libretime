@@ -1,7 +1,6 @@
 ---
 layout: article
-title: Icecast and Shoutcast Stream Configuration
-git: icecast-shoutcast.md
+title: Icecast Configuration
 category: admin
 ---
 
