@@ -1,20 +1,20 @@
 ---
 layout: article
 title: Settings
-git: settings.md
+category: admin
 ---
 
 
 ## General Settings
 
-![](img/station-info-settings.png)
+![](/img/station-info-settings.png)
 
 On the **Settings** menu, click **General** to set your **Station Name**. This
 text is shown in your web browser's title bar when your station staff are logged
 into LibreTime, and optionally in stream metadata. You can also set a **Station
 Description** and **Station Logo** here.
 
-![](img/general-playback-settings.png)
+![](/img/general-playback-settings.png)
 
 The **Default Interface Language** drop-down menu sets the default localization
 for your LibreTime instance, and the **Station Timezone** drop-down menu can be
@@ -50,12 +50,12 @@ podcast to LibreTime. This can also be done manually by the generate smartblock
 and playlist button under a podcasts settings which is why it is disabled by
 default.
 
-![](img/api-settings.png)
+![](/img/api-settings.png)
 
 You can enable live, read-only access to the LibreTime schedule calendar for
 your station's public website with the **Public LibreTime API** option, if you
 wish. (There is more about this feature in the
-[*Exporting the schedule*](exporting-the-schedule) chapter, in the
+[*Exporting the schedule*](/docs/playout-history) chapter, in the
 *Advanced Configuration* section of this book).
 
 The **Allowed CORS URLs** is intended to deal with situations where you want a
@@ -71,7 +71,7 @@ The **Tune-In Settings** section is intended for stations that have partnered
 with TuneIn to automatically push their now playing metadata to TuneIn. This
 hasn't been tested and also requires special credentials from TuneIn.
 
-![](img/dangerous-options.png)
+![](/img/dangerous-options.png)
 
 The **Dangerous Options** section provides an administrator the ability to erase
 the entire LibreTime library.
@@ -79,13 +79,13 @@ the entire LibreTime library.
 When you are done remember click the **Save** button at the top or bottom of the
 form.
 
-![](img/save-button.png)
+![](/img/save-button.png)
 
 Individual LibreTime users can choose another interface localization when they
 log in, or set personal preferences for localization and time zone by clicking
 their username on the right side of the menu bar.
 
-![](img/Screenshot475-Edit_own_user_account.png)
+![](/img/Screenshot475-Edit_own_user_account.png)
 
 ----
 
@@ -120,7 +120,7 @@ The second checkbox under Global Settings enables the sending of **Icecast Vorbi
 
 The **Stream Label** radio button allows you to set the metadata that will be sent with direct streams; *Artist* and *Title*, *Show*, *Artist* and *Title*, or *Station name* and *Show name*.
 
-![](img/Screenshot481-Global_stream_settings.png)
+![](/img/Screenshot481-Global_stream_settings.png)
 
 The **Off Air Metadata** field configures the text that will be sent to any configured streaming servers, and from there on to media players, when Airtime is not streaming any output.
 
@@ -144,7 +144,7 @@ Input streams must have a **Port** for the remote broadcaster to connect to, whi
 
 To avoid further confusion, it is also recommended that you set a different **Mount Point** (the specific filename for broadcasters and listeners to connect to) from that used on your public Icecast or SHOUTcast server.
 
-![](img/Screenshot401-Input_stream_settings.png)
+![](/img/Screenshot401-Input_stream_settings.png)
 
 If your Airtime server is behind a firewall, and you wish remote broadcasters to connect input streams to it across the public Internet, you may need to click the **Override** link to set a **Connection URL** which is available from outside your local area network. This URL might be based on the domain name assigned to the router which forwards the appropriate port to your Airtime server. Then click **OK** to save the new connection URL.
 
@@ -152,11 +152,11 @@ If your Airtime server is behind a firewall, and you wish remote broadcasters to
 
 In the Master Panel, available input source streams are shown with an orange line connecting the source to the switch, which you could think of like a patch cable connecting a source to a broadcast mixer. When that switch is active, another orange line connects the switch to the On Air indicator, like a patch cable connecting a mixer to a transmitter.
 
-![](img/libretime-master-source-stream.png)
+![](/img/libretime-master-source-stream.png)
 
 If you have checked the **Auto Switch On** box in the Stream Settings page, the **Master Source** switch will move automatically to the active position, on the left, when an authenticated master source connects to Airtime. Otherwise, you can activate the switches manually by clicking the left side of each switch, or deactivate them by clicking the right side. The switches do not have to be dragged with the mouse, in the way that a switch on a hardware mixer would be pushed sideways. **Show Source** live input streams can also be manually activated or deactivated in the same way. If neither the show source or master source is active then LibreTime will default to what is scheduled to play in the Calendar.
 
-![](img/libretime-show-source-stream.png)
+![](/img/libretime-show-source-stream.png)
 
 If you have the **Auto Switch Off** box checked LibreTime will resume scheduled playback whenever a stream disconnects. Otherwise you will need to slide to disable a source after a DJ stops streaming. 
 
@@ -170,37 +170,19 @@ On the right side of the page, you can configure up to three independent output 
 
 To configure another stream, click the bar with the stream number to expand its box, and make sure **Enabled** is checked. Enter at least the streaming **Server** IP address or domain name, and **Port** details. The default port for Icecast and SHOUTcast servers is 8000.
 
-![](img/Screenshot402-Output_stream_settings.png)
+![](/img/Screenshot402-Output_stream_settings.png)
 
 Click **Additional Options** to expand a box in which you can enter the usernames, passwords and metadata to send to the streaming server. The default **Username** for Icecast servers is *source*, and if this the name in use on your streaming server, you can leave this field empty. The **Admin User** and **Admin Password** settings are optional, and are used to query the streaming server for audience numbers by the **Listener Stats** page on the **System** menu.
 
 You can also set the specific **Mount Point** that listeners will connect to here. Then click one of the **Save** buttons in the upper or lower right corner of the page to update the Airtime server's settings.
 
-![](img/Screenshot482-Additional_options.png)
+![](/img/Screenshot482-Additional_options.png)
 
 Airtime supports output to Icecast in Ogg Vorbis, Ogg Opus, MP3 and AAC formats. When selecting a SHOUTcast server from the **Service Type** drop-down menu, you are restricted to using MP3 or AAC formats only, so the choice of Ogg Vorbis and Opus formats is greyed out in the **Stream Type** drop-down menu. The SHOUTcast username for stream sources is fixed, so you do not need to enter this value under **Additional Options**, but you will usually have to enter a password.
 
-![](img/Screenshot404-Shoutcast_output_stream.png)
+![](/img/Screenshot404-Shoutcast_output_stream.png)
 
 Any connection problems between Liquidsoap and Icecast or SHOUTcast are shown on the Stream Settings page. For example, if you enter the wrong password, you will see an *Authentication Required* error message. To fix this, enter the correct password in the **Additional Options** box, and click the **Save** button. If the streaming server is down for any reason, or you have entered an incorrect **Server** name or **Port** number, you will see the message *Can not connect to the streaming server*.
 
-![](img/Screenshot405-Connection_timeout.png)
-
-------
-
-
-## The Status page    {#status}
-
-On the **Settings** menu, the **Status** page provides an overview of the health and resource usage of the various
-services that make up a LibreTime system. If all is well, you will only see green check mark icons in the
-**Status** column. This page also shows how much **Disk Space** you have used on the disk partition containing the media storage folder.
-
-![](img/Screenshot521-System_status_240.png)
-
-If any of the check mark icons in the **Status** column have changed to a red warning sign, contact your system
-administrator for assistance. (The chapter [Troubleshooting](troubleshooting) contains some tips). LibreTime will
-do its best to restart any failing services, but sometimes manual intervention may be required; for example, in the case of hardware failure.
-
-If you have run out of storage space, a LibreTime user with *admin* privileges could log in and delete media files
-that are no longer required from the **Library**. Alternatively, you could ask your system administrator to install additional storage capacity.
+![](/img/Screenshot405-Connection_timeout.png)
 

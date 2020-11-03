@@ -4,11 +4,17 @@ title: Playlists and Smartblocks
 category: interface
 ---
 
+> **About Autoloading Playlists**
+>
+> Libretime will schedule tracks from a selected playlist an hour before a show is 
+> scheduled to air. This is a great way to automatically schedule weekly shows which are received
+> via. podcasts.
+
 ### Creating a new playlist
 
 You can create a new playlist on the toolbar of the **Playlists** page.
 
-![](img/Playlist-Editor.png)
+![](/img/Playlist-Editor.png)
 
 Enter a **Name** and **Description** for the playlist, then click the **Save** button. Setting good quality metadata here will help you find the playlist using the search box later, so you should be as descriptive as possible.
 
@@ -28,7 +34,7 @@ If you want to edit the playlist content or metadata later, you can find it by *
 
 ### Creating a Smartblock
 
-![](img/Smartblock-options.png)
+![](/img/Smartblock-options.png)
 
 Smart blocks are automatically filled with media files from the LibreTime library, according to the criteria that you specify. This feature is intended to save staff time, compared to selecting items for a playlist manually, and can be used to schedule shows that operate in a consistent format.
 
@@ -38,19 +44,20 @@ Fill out the smart block's **Name**, **Search Criteria**, and **Limit to** secti
 
 If you have a large number of files which meet the criteria that you specify, you may wish to limit the duration of the smart block using the **Limit to** field, so that it fits within the show you have in mind. Select **hours**, **minutes** or **items** from the drop-down menu, and click the **Generate** button again, if it is a static smart block. Then click the **Save** button.
 
-> Note: Smart Blocks by default will never overflow the Time Limit. For instance if you set a time limit of 1 hour. It will add tracks to the schedule until it can't add any more tracks without exceeding the hour. This is to prevent tracks from being cut-off because they exceed the time limit of a show. 
->
-> If you want a smartblock to schedule tracks until it is longer than the Time Limit you can check "Allow last track to exceed time limit". This will make LibreTime add tracks that meet the criteria until it equals or is longer than the time limit. This is helpful for avoiding dead air on shows that are being autoscheduled.
+> Note: Smart Blocks by default will not overflow the length of a scheduled show.
+> This is to prevent tracks from being cut-off because they exceed the time limit of a show. 
+> If you want a smartblock to schedule tracks until it is longer than the Time Limit you can check **"Allow last track to exceed time limit"**
+> (helpful for avoiding dead air on autoscheduled shows).
 
-![](img/Smartblock-advanced.png)
+![](/img/Smartblock-advanced.png)
 
 You can also set the **smart block type**. A **Static** smart block will save the criteria and generate the block content immediately. This enables you to edit the contents of the block in the **Library** page before adding it to a show. A **Dynamic** smart block will only save the criteria, and the specific content will be generated at the time the block is added to a show. After that, the content of the show can be changed or re-ordered in the **Now Playing** page. 
 
 Click the **plus button** on the left to add OR criteria, such as **Creator** containing *beck* OR *jimi*. To add AND criteria, such as **Creator** containing *jimi* AND BPM in the range *120* to *130*, click the **plus button** on the right. (The criteria are not case sensitive). Click **Preview** to see the results.
 
-> If you see the message *0 files meet the criteria*, it might mean that the files in the Library have not been tagged with the correct metadata. See the chapter [Preparing media](preparing-media) for tips on tagging content.
+> If you see the message **0 files meet the criteria**, it might mean that the files in the Library have not been tagged with the correct metadata. See the chapter [Preparing media](/docs/preparing-media) for tips on tagging content.
 
-![](img/Smartblock-content.png)
+![](/img/Smartblock-content.png)
 
 If you don't like the ordering which is generated, click the **Shuffle** button, or drag and drop the smart block contents into the order that you prefer. You can also remove items or add new items manually from the Library. Changes to static smart block contents are saved automatically when you add items, remove or re-order them, or click the **Generate** button. Click the **Save** button in the upper right corner to save any changes to smart block criteria.
 
