@@ -1,7 +1,8 @@
 ---
+title: Contribute to Libretime
 layout: article
-title: Contributing to LibreTime
-git: contribute.md
+category: dev
+permalink: /contribute
 ---
 
 > LibreTime is a fork of AirTime due to stalled development of the FLOSS version. For background on this,
