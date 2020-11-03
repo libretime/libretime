@@ -44,7 +44,7 @@ large number of users on the system, you can use the search tool above the table
 to identify specific user accounts. Click the white chevrons in the table headings to sort the search results
 by **Username**, **First Name**, **Last Name** or **User Type**.
 
-![](img/user-edit.png)
+![](/img/user-edit.png)
 
 To edit a user account, click on that user's row in the table, change the user's details in the box on the
 right side, and then click the **Save** button. To remove a user account, click the small **x** icon to the right

@@ -1,7 +1,7 @@
 ---
 layout: article
-title: Using Vagrant and Virtualbox for developing LibreTime
-git: vagrant.md
+title: Using Vagrant for local development
+category: dev
 ---
 
 > Prerequisites: git, [Vagrant](https://vagrantup.com), libvirt or VirtualBox
