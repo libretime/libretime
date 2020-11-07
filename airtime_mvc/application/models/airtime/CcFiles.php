@@ -146,10 +146,18 @@ class CcFiles extends BaseCcFiles {
 
             self::validateFileArray($fileArray);
 
+            $storDir = Application_Model_MusicDir::getStorDir();
+            $importedStorageDir = $storDir->getDirectory() . "imported/" . self::getOwnerId() . "/";
+            $importedDbPath = "imported/" . self::getOwnerId() . "/";
+            $artwork = FileDataHelper::saveArtworkData($filePath, $originalFilename, $importedStorageDir, $importedDbPath);
+            $trackType = FileDataHelper::saveTrackType();
+
             $file->fromArray($fileArray);
             $file->setDbOwnerId(self::getOwnerId());
             $now  = new DateTime("now", new DateTimeZone("UTC"));
             $file->setDbTrackTitle($originalFilename);
+            $file->setDbArtwork($artwork);
+            $file->setDbTrackType($trackType);
             $file->setDbUtime($now);
             $file->setDbHidden(true);
             $file->save();
@@ -319,13 +327,13 @@ class CcFiles extends BaseCcFiles {
 	{
 		$cuein = $this->getDbCuein();
 		$cueout = $this->getDbCueout();
-		
+
 		$cueinSec = Application_Common_DateHelper::calculateLengthInSeconds($cuein);
 		$cueoutSec = Application_Common_DateHelper::calculateLengthInSeconds($cueout);
 		$lengthSec = bcsub($cueoutSec, $cueinSec, 6);
-		
+
 		$length = Application_Common_DateHelper::secondsToPlaylistTime($lengthSec);
-		
+
 		return $length;
 	}
 
@@ -342,7 +350,7 @@ class CcFiles extends BaseCcFiles {
         return $this->getDbFileExists() && !$this->getDbHidden();
     }
 
-    public function reassignTo($user) 
+    public function reassignTo($user)
     {
         $this->setDbOwnerId( $user->getDbId() );
         $this->save();
@@ -405,6 +413,21 @@ class CcFiles extends BaseCcFiles {
         }
         $directory = $music_dir->getDirectory();
         $filepath  = $this->getDbFilepath();
+        return Application_Common_OsPath::join($directory, $filepath);
+    }
+
+    /**
+     * Returns the artwork's absolute file path stored on disk.
+     */
+    public function getAbsoluteArtworkPath()
+    {
+        $music_dir = Application_Model_MusicDir::getDirByPK($this->getDbDirectory());
+        if (!$music_dir) {
+            throw new Exception("Invalid music_dir for file " . $this->getDbId() . " in database.");
+        }
+        $directory = $music_dir->getDirectory();
+        $filepath  = $this->getDbArtwork();
+
         return Application_Common_OsPath::join($directory, $filepath);
     }
 
@@ -495,23 +518,29 @@ class CcFiles extends BaseCcFiles {
     {
         return is_file($this->getAbsoluteFilePath());
     }
-    
+
     /**
-     * 
+     *
      * Deletes the file from the stor directory on disk.
      */
     public function deletePhysicalFile()
     {
         $filepath = $this->getAbsoluteFilePath();
+        $artworkpath = $this->getAbsoluteArtworkPath();
         if (file_exists($filepath)) {
             unlink($filepath);
+            // also delete related images (dataURI and jpeg files)
+            foreach (glob("$artworkpath*", GLOB_NOSORT) as $filename) {
+                unlink($filename);
+            }
+            unlink($artworkpath);
         } else {
             throw new Exception("Could not locate file ".$filepath);
         }
     }
-    
+
     /**
-     * 
+     *
      * This function refers to the file's Amazon S3 resource id.
      * Returns null because cc_files are stored on local disk.
      */
@@ -519,10 +548,10 @@ class CcFiles extends BaseCcFiles {
     {
         return null;
     }
-    
+
     public function getCcFileId()
     {
         return $this->id;
     }
-    
+
 } // CcFiles

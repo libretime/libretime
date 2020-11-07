@@ -2,10 +2,10 @@
 
     <?php $baseUrl = Application_Common_OsPath::getBaseDir(); ?>
 
-    <h2 style="float:left"><?php echo _("Facebook Radio Player") ?></h2>
+    <h2 style="text-align:center"><?php echo _("Facebook Radio Player") ?></h2>
     <div style="clear:both"></div>
 
-    <p><button class="btn btn-new" id="facebook-login" style="margin-left: 300px;">Add to My Facebook Page</button></p>
+    <p><button class="btn btn-new" id="facebook-login" style="margin-left: 320px;"><?php echo _("Add to My Facebook Page") ?></button></p>
 
     <div id="weekly-schedule-widget-error">
         <?php echo $this->facebook_error_msg; ?>
@@ -13,7 +13,7 @@
 
 
     <div>
-        <h3 style="padding-left: 0px">Preview:</h3>
+        <h3 style="padding-left: 0px"><?php echo _("Preview:") ?></h3>
 
         <div>
             <iframe width=800 height=800 src="<?php echo Application_Common_HTTPHelper::getStationUrl(); ?>/?facebook=1"></iframe>
@@ -24,12 +24,12 @@
 
 
     <div>
-        <h3 style="padding-left: 0px">Tips:</h3>
+        <h3 style="padding-left: 0px"><?php echo _("Tips:") ?></h3>
         <p>
-            To make the tab more visible on your Facebook page, click "More", and "Manage Tabs":<br>
+            <?php echo _("To make the tab more visible on your Facebook page, click 'More', and 'Manage Tabs':") ?><br><br>
             <img src="<?php echo($baseUrl) . "images/doc/facebook_widget1.png"?>"><br><br>
 
-            Then, drag the Radio Player item higher in the list, and click Save. It will now appear as one of the default tabs instead of being buried under "More":<br>
+            <?php echo _("Then, drag the Radio Player item higher in the list, and click Save. It will now appear as one of the default tabs instead of being buried under 'More':") ?><br><br>
             <img src="<?php echo($baseUrl) . "images/doc/facebook_widget2.png"?>">
 
         </p>

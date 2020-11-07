@@ -16,7 +16,9 @@
     <p>
         In either case, we recommend that you change at least the default password provided -
         you can do this by running the following line from the command line:<br/>
-        <code>sudo rabbitmqctl change_password &lt;username&gt; &lt;newpassword&gt;</code>
+        <code>sudo rabbitmqctl change_password &lt;username&gt; &lt;newpassword&gt;</code><br/>
+        <strong>Notice:</strong> using special characters such as ! in your rabbitmq password will cause LibreTime to fail
+            to load properly after setup. Please use alphanumerical characters only.
     </p>
     <div id="rmqSlideToggle">
         <span><strong>Advanced </strong></span><span id="advCaret" class="caret"></span><hr/>

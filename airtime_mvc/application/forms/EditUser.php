@@ -130,18 +130,6 @@ class Application_Form_EditUser extends Zend_Form
         $timezone->setValue($userTz == $stationTz ? null : $userTz);
         $timezone->setDecorators(array('ViewHelper'));
         $this->addElement($timezone);
-        
-        if (LIBRETIME_ENABLE_BILLING === true && Application_Model_User::getCurrentUser()->isSuperAdmin()) {
-            $elemsToDisable = array($password, $passwordVerify, $email, $firstName, $lastName,
-                                    $cellPhone, $skype, $jabber);
-            foreach ($elemsToDisable as $element) {
-            //$this->_redirect('billing/client');
-                $element->setAttrib('disabled', 'disabled');
-                $element->setAttrib('readonly', 'readonly');
-                $element->setRequired(false);
-            }
-        }
-        
     }
 
     public function validateLogin($p_login, $p_userId) {

@@ -702,26 +702,6 @@ msgstr ""
 msgid "Listener Stats"
 msgstr ""
 
-#: airtime_mvc/application/configs/navigation.php:144
-msgid "Upgrade"
-msgstr ""
-
-#: airtime_mvc/application/configs/navigation.php:144
-msgid "Billing"
-msgstr ""
-
-#: airtime_mvc/application/configs/navigation.php:151
-msgid "Account Plans"
-msgstr ""
-
-#: airtime_mvc/application/configs/navigation.php:158
-msgid "Account Details"
-msgstr ""
-
-#: airtime_mvc/application/configs/navigation.php:165
-msgid "View Invoices"
-msgstr ""
-
 #: airtime_mvc/application/configs/navigation.php:175
 #: airtime_mvc/application/views/scripts/error/error-400.phtml:13
 #: airtime_mvc/application/views/scripts/error/error-403.phtml:13
@@ -744,7 +724,7 @@ msgid "User Manual"
 msgstr ""
 
 #: airtime_mvc/application/configs/navigation.php:200
-msgid "File a Support Ticket"
+msgid "Get Help Online"
 msgstr ""
 
 #: airtime_mvc/application/configs/navigation.php:210
@@ -797,19 +777,19 @@ msgstr ""
 msgid ""
 "To configure and use the embeddable player you must:<br><br>\n"
 "            1. Enable at least one MP3, AAC, or OGG stream under Settings -> Streams<br>\n"
-"            2. Enable the Public Airtime API under Settings -> Preferences"
+"            2. Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
 
 #: airtime_mvc/application/controllers/EmbeddablewidgetsController.php:41
 msgid ""
 "To use the embeddable weekly schedule widget you must:<br><br>\n"
-"            Enable the Public Airtime API under Settings -> Preferences"
+"            Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
 
 #: airtime_mvc/application/controllers/EmbeddablewidgetsController.php:53
 msgid ""
 "To add the Radio Tab to your Facebook Page, you must first:<br><br>\n"
-"            Enable the Public Airtime API under Settings -> Preferences"
+"            Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
 
 #: airtime_mvc/application/controllers/ErrorController.php:87
@@ -857,6 +837,18 @@ msgstr "Ön izleme"
 #: airtime_mvc/application/controllers/LibraryController.php:163
 #: airtime_mvc/application/controllers/LibraryController.php:186
 msgid "Add to Playlist"
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:70
+msgid "Add to next show"
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:71
+msgid "Add to current show"
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:69
+msgid "Add to Schedule"
 msgstr ""
 
 #: airtime_mvc/application/controllers/LibraryController.php:114
@@ -2023,6 +2015,10 @@ msgstr ""
 msgid "Jump to the current playing track"
 msgstr ""
 
+#: airtime_mvc/application/controllers/LocaleController.php:331
+msgid "Jump to Current"
+msgstr ""
+
 #: airtime_mvc/application/controllers/LocaleController.php:314
 msgid "Cancel current show"
 msgstr ""
@@ -2535,12 +2531,20 @@ msgid "Must wait at least 1 hour to rebroadcast"
 msgstr "Tekrar yayın yapmak için en az bir saat bekleyiniz"
 
 #: airtime_mvc/application/forms/AddShowAutoPlaylist.php:18
-msgid "Auto Schedule Playlist ?"
+msgid "Add Autoloading Playlist ?"
 msgstr ""
+
+#: airtime_mvc/application/views/scripts/form/add-show-autoplaylist.phtml:14 
+msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/manual/calendar/#autoloading-playlist'>More information</a>" 
+msgstr "" 
 
 #: airtime_mvc/application/forms/AddShowAutoPlaylist.php:25
 msgid "Select Playlist"
 msgstr ""
+
+#: airtime_mvc/application/forms/AddShowAutoPlaylist.php:32 
+msgid "Repeat Playlist Until Show is Full ?" 
+msgstr ""  
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:11
 #, php-format
@@ -2849,50 +2853,6 @@ msgstr "Kullanıcı Tipi:"
 msgid "Login name is not unique."
 msgstr "Kullanıcı adı eşsiz değil."
 
-#: airtime_mvc/application/forms/BillingClient.php:125
-msgid "What is the name of your favorite childhood friend?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:126
-msgid "What school did you attend for sixth grade?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:127
-msgid "In what city did you meet your spouse/significant other?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:128
-msgid "What street did you live on in third grade?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:129
-msgid "What is the first name of the boy or girl that you first kissed?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:130
-msgid "In what city or town was your first job?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:19
-msgid "Plan type:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:31
-msgid "Billing cycle:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:39
-msgid "Payment method:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:42
-msgid "PayPal"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:43
-msgid "Credit Card via 2Checkout"
-msgstr ""
-
 #: airtime_mvc/application/forms/customvalidators/ConditionalNotEmpty.php:32
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:8
 msgid "Value is required and can't be empty"
@@ -3032,7 +2992,15 @@ msgid "Default Fade Out (s):"
 msgstr "Varsayılan Fade Out geçişi (s)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:105
-msgid "Podcast Album Override"
+msgid "Overwrite Podcast Episode Metatags"
+msgstr ""
+
+#: airtime_mvc/application/forms/GeneralPreferences.php:120
+msgid "Generate a smartblock and a playlist upon creation of a new podcast"
+msgstr ""
+
+#: airtime_mvc/application/forms/GeneralPreferences.php:126
+msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
 msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:107
@@ -3046,11 +3014,11 @@ msgid "Enabled"
 msgstr "Aktif"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:111
-msgid "Enabling this means that podcast tracks will always contain the podcast name in their album field."
+msgid "Enabling this feature will cause podcast episode tracks to have their Artist, Title, and Album metatags set from podcast feed values. Note that enabling this feature is recommended in order to ensure reliable scheduling of episodes via smartblocks."
 msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:122
-msgid "Public Airtime API"
+msgid "Public LibreTime API"
 msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:123
@@ -3059,7 +3027,7 @@ msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:129
 msgid ""
-"Enabling this feature will allow Airtime to provide schedule data\n"
+"Enabling this feature will allow LibreTime to provide schedule data\n"
 "                                            to external widgets that can be embedded in your website."
 msgstr ""
 
@@ -3370,6 +3338,18 @@ msgstr "Dinamik"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:299
 msgid "Allow Repeated Tracks:"
+msgstr ""
+
+#: airtime_mvc/application/forms/SmartBlockCriteria.php:453
+msgid "Allow last track to exceed time limit:"
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/playlist/update.phtml:25
+msgid "</br>This is only a preview of possible content generated by the smart block based upon the above criteria."
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:82
+msgid "Advanced options"
 msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:308
@@ -4248,6 +4228,18 @@ msgstr ""
 msgid "Add"
 msgstr "Ekle"
 
+msgid "New"
+msgstr ""
+
+msgid "Columns"
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Imported?"
+msgstr ""
+
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast.phtml:4
 msgid "Repeat Days:"
 msgstr ""
@@ -4263,11 +4255,6 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:56
 msgid "Find"
-msgstr ""
-
-#: airtime_mvc/application/views/scripts/form/edit-user.phtml:7
-#, php-format
-msgid "<b>Note:</b> Since you're the station owner, your account information can be edited in <a href=\"%s\">Billing Settings</a> instead."
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/login.phtml:41
@@ -4829,7 +4816,19 @@ msgid "Podcast URL: "
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/podcast/podcast.phtml:22
-msgid "Automatically download latest episodes?"
+msgid "Download latest episodes:"
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/podcast/podcast.phtml:26
+msgid "Scheduling:"
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/podcast/podcast.phtml:28
+msgid "Generate Smartblock and Playlist"
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/podcast/podcast.phtml:30
+msgid "Smartblock and Playlist Generated"
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/podcast/podcast.phtml:26
@@ -4935,7 +4934,7 @@ msgid "What"
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:14
-msgid "Automatic Playlist"
+msgid "Autoloading Playlist"
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:18
@@ -5000,11 +4999,6 @@ msgstr "Soyisim"
 
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:21
 msgid "User Type"
-msgstr ""
-
-#: airtime_mvc/application/views/scripts/user/add-user.phtml:31
-#, php-format
-msgid "Super Admin details can be changed in your <a href=\"%s\">Billing Settings</a>."
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:30

@@ -25,9 +25,8 @@ class EmbedController extends Zend_Controller_Action
 
         $request = $this->getRequest();
 
-        $this->view->mrp_js = Application_Common_HTTPHelper::getStationUrl() . "js/airtime/player/mrp.js?".$CC_CONFIG['airtime_version'];
+        $this->view->playerhtml5_js = Application_Common_HTTPHelper::getStationUrl() . "js/airtime/player/playerhtml5.js?".$CC_CONFIG['airtime_version'];
         $this->view->jquery = Application_Common_HTTPHelper::getStationUrl() . "js/libs/jquery-1.10.2.js";
-        $this->view->muses_swf = Application_Common_HTTPHelper::getStationUrl() . "js/airtime/player/muses.swf";
         $this->view->metadata_api_url = Application_Common_HTTPHelper::getStationUrl() . "api/live-info";
         $this->view->player_title = json_encode($this->view->escape($request->getParam('title')));
         $this->view->jquery_i18n = Application_Common_HTTPHelper::getStationUrl() . "js/i18n/jquery.i18n.js?";

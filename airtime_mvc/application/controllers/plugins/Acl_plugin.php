@@ -118,8 +118,6 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                 "error",
                 "locale",
                 "upgrade",
-                'whmcs-login',
-                "provisioning",
                 "embed",
                 "feeds"
             )))

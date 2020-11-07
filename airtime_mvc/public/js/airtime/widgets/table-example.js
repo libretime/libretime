@@ -5,6 +5,7 @@
 
 $(document).ready(function() {
     var aoColumns = [
+    /* Artwork */         { "sTitle" : $.i18n._("Artwork")            , "mDataProp" : "artwork"      , "bVisible"    : false                 , "sClass"      : "library_artwork"           , "sWidth" : "150px"        },
     /* Title */           { "sTitle" : $.i18n._("Title")              , "mDataProp" : "track_title"  , "sClass"      : "library_title"       , "sWidth"      : "170px"                 },
     /* Creator */         { "sTitle" : $.i18n._("Creator")            , "mDataProp" : "artist_name"  , "sClass"      : "library_creator"     , "sWidth"      : "160px"                 },
     /* Upload Time */     { "sTitle" : $.i18n._("Uploaded")           , "mDataProp" : "utime"        , "bVisible"    : false                 , "sClass"      : "library_upload_time"   , "sWidth" : "155px"        },

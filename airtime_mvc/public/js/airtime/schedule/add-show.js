@@ -16,6 +16,14 @@ function openAddShowForm(nowOrFuture) {
             $("#add-show-form").show();
 
             windowResize();
+
+            // collapse advanced configuration sections
+            $('#schedule-show-auto').hide();
+            $('#live-stream-override').hide();
+            $('#schedule-record-rebroadcast').hide();
+            $('#schedule-show-who').hide();
+            $('#schedule-show-style').hide();
+            
         }
         $("#schedule-show-what").show(0, function(){
             $add_show_name = $("#add_show_name");
@@ -302,17 +310,6 @@ function setAddShowEvents(form) {
         $(this).blur();
         form.find("#add_show_playlist_dropdown").toggle();
         form.find("#add_show_autoplaylist_repeat").toggle();
-        
-        var checkBoxSelected = false;
-        
-        //must switch rebroadcast displays
-        if(form.find("#add_show_has_autoplaylist").attr('checked')) {
-        form.find("#add_show_playlist_dropdown").show();
-        form.find("#add_show_autoplaylist_repeat").show();
-        }
-        else {
-	form.find("#add_show_playlist_downdown").hide();
-	}
     });
 
     form.find("#add_show_repeats").click(function(){
@@ -466,6 +463,27 @@ function setAddShowEvents(form) {
         content: {
             text: $.i18n._("Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the " +
                 "Interface Timezone in your user settings.")
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        }
+    });
+    
+    form.find(".show_autoplaylist_help_icon").qtip({
+        content: {
+            text: $.i18n._("Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/manual/calendar/#autoloading-playlist'>More information</a>")
         },
         hide: {
             delay: 500,

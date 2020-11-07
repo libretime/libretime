@@ -3,7 +3,7 @@ import logging
 import traceback
 import json
 import datetime
-from analyzer import Analyzer
+from .analyzer import Analyzer
 
 
 class CuePointAnalyzer(Analyzer):
@@ -27,6 +27,10 @@ class CuePointAnalyzer(Analyzer):
         command = [CuePointAnalyzer.SILAN_EXECUTABLE, '-b', '-F', '0.99', '-f', 'JSON', '-t', '1.0', filename]
         try:
             results_json = subprocess.check_output(command, stderr=subprocess.STDOUT, close_fds=True)
+            try:
+                results_json = results_json.decode()
+            except (UnicodeDecodeError, AttributeError):
+                pass
             silan_results = json.loads(results_json)
 
             # Defensive coding against Silan wildly miscalculating the cue in and out times:
@@ -64,7 +68,7 @@ class CuePointAnalyzer(Analyzer):
         except OSError as e: # silan was not found
             logging.warn("Failed to run: %s - %s. %s" % (command[0], e.strerror, "Do you have silan installed?"))
         except subprocess.CalledProcessError as e: # silan returned an error code
-            logging.warn("%s %s %s", e.cmd, e.message, e.returncode)
+            logging.warn("%s %s %s", e.cmd, e.output, e.returncode)
         except Exception as e:
             logging.warn(e)
 

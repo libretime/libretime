@@ -1,9 +1,14 @@
+---
+layout: default
+title: FreeIPA Configuration
+---
+
 You can configure LibreTime to delegate all authentication to a FreeIPA server.
 
 This allows you users to use their existing FreeIPA credentials. For this to
 work you need to configure Apache to use `mod_authnz_pam` and `mod_intercept_form_submit`.
 
-## Apache configuration
+## Apache configuration {#apache}
 
 After installing the needed modules you can set up Apache to intercept form logins and
 check them against pam.
@@ -33,7 +38,7 @@ check them against pam.
 </Location>
 ```
 
-## PAM configuration
+## PAM configuration {#pam}
 
 The above configuration expects a PAM configuration for the `http-libretime` service.
 
@@ -44,7 +49,7 @@ auth    required   pam_sss.so
 account required   pam_sss.so
 ```
 
-## LDAP configuration
+## LDAP configuration {#ldap}
 
 LibreTime needs direct access to LDAP so it can fetch additional information. It does so with
 a [system account](https://www.freeipa.org/page/HowTo/LDAP#System_Accounts) that you need to
@@ -90,7 +95,7 @@ groupmap_admin = 'cn=admins,cn=groups,cn=accounts,dc=int,dc=example,dc=org'
 groupmap_superadmin = 'cn=superadmin,cn=groups,cn=accounts,dc=int,dc=example,dc=org'
 ```
 
-## Enable FreeIPA auth
+## Enable FreeIPA Authentication {#freeipa}
 
 After everything is set up properly you can enable FreeIPA auth in `airtime.conf`:
 

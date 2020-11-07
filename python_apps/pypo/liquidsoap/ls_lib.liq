@@ -154,20 +154,6 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
         end
         %endif
 
-# FDK-AAC is the only good AAC encoder. libvoaac is deprecated and aacplus is subpar. 
-# The difference in compression quality is clearly audible. -- Albert
-#        %ifencoder %aac
-#        if type == "aac" then
-#            %include "aac.liq"
-#        end
-#        %endif
-
-#        %ifencoder %aacplus
-#        if type == "aacplus" then
-#            %include "aacplus.liq"
-#        end
-#        %endif
-
         %ifencoder %fdkaac
         if type == "aac" then
             %include "fdkaac.liq"
@@ -207,15 +193,9 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
             %include "mp3.liq"
         end
 
-        %ifencoder %aac
+        %ifencoder %fdkaac
         if type == "aac" then
-            %include "aac.liq"
-        end
-        %endif
-        
-        %ifencoder %aacplus
-        if type == "aacplus" then
-            %include "aacplus.liq"
+            %include "fdkaac.liq"
         end
         %endif
     end
@@ -286,7 +266,7 @@ def input.http_restart(~id,~initial_url="http://dummy/url")
   source = audio_to_stereo(input.http(buffer=5.,max=15.,id=id,autostart=false,initial_url))
 
   def stopped()
-    "stopped" == list.hd(server.execute("#{id}.status"))
+    "stopped" == list.hd(server.execute("#{id}.status"), default="")
   end
 
   server.register(namespace=id,
@@ -341,7 +321,7 @@ def cross_http(~debug=true,~http_input_id,source)
   cross_d = 3.
 
   def crosser(a,b)
-    url = list.hd(server.execute('#{id}.url'))
+    url = list.hd(server.execute('#{id}.url'), default="")
     status = list.hd(server.execute('#{id}.status'))
     on_m([("source_url",url)])
     if debug then
@@ -394,7 +374,7 @@ def http_fallback(~http_input_id,~http,~default)
   end
 
   def connected()
-    status = list.hd(server.execute("#{id}.status"))
+    status = list.hd(server.execute("#{id}.status"), default="")
     not(list.mem(status,["polling","stopped"]))
   end
   connected = gracetime(connected)

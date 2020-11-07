@@ -1,5 +1,5 @@
 from threading import Thread
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import defusedxml.minidom
 import base64
 from datetime import datetime
@@ -35,22 +35,23 @@ class ListenerStat(Thread):
 
 
     def get_stream_server_xml(self, ip, url, is_shoutcast=False):
-        encoded = base64.b64encode("%(admin_user)s:%(admin_pass)s" % ip)
+        auth_string = "%(admin_user)s:%(admin_pass)s" % ip
+        encoded = base64.b64encode(auth_string.encode('utf-8'))
 
-        header = {"Authorization":"Basic %s" % encoded}
+        header = {"Authorization":"Basic %s" % encoded.decode('ascii')}
 
         if is_shoutcast:
             #user agent is required for shoutcast auth, otherwise it returns 404.
             user_agent = "Mozilla/5.0 (Linux; rv:22.0) Gecko/20130405 Firefox/22.0"
             header["User-Agent"] = user_agent
 
-        req = urllib2.Request(
+        req = urllib.request.Request(
             #assuming that the icecast stats path is /admin/stats.xml
             #need to fix this
             url=url,
             headers=header)
 
-        f = urllib2.urlopen(req, timeout=ListenerStat.HTTP_REQUEST_TIMEOUT)
+        f = urllib.request.urlopen(req, timeout=ListenerStat.HTTP_REQUEST_TIMEOUT)
         document = f.read()
 
         return document
@@ -146,7 +147,7 @@ class ListenerStat(Thread):
 
                 if stats:
                     self.push_stream_stats(stats)
-            except Exception, e:
+            except Exception as e:
                 self.logger.error('Exception: %s', e)
 
             time.sleep(120)

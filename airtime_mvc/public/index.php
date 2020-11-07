@@ -38,8 +38,8 @@ define('AIRTIME_CONFIG', 'airtime.conf');
 //Rest Module Controllers - for custom Rest_RouteController.php
 set_include_path(REST_MODULE_CONTROLLER_PATH . PATH_SEPARATOR . get_include_path());
 
-//Vendors (Composer)
-set_include_path(VENDOR_PATH . PATH_SEPARATOR . get_include_path());
+// Vendors (Composer, zend-loader is explicitly specified due to https://github.com/zf1/zend-application/pull/2#issuecomment-102599655)
+set_include_path(VENDOR_PATH . PATH_SEPARATOR . VENDOR_PATH . 'zf1s/zend-loader/library/' . PATH_SEPARATOR . get_include_path());
 
 // Ensure library/ is on include_path
 set_include_path(LIB_PATH . PATH_SEPARATOR . get_include_path());
@@ -69,12 +69,6 @@ if (file_exists($filename)) {
 }
 // Otherwise, we'll need to run our configuration setup
 else {
-    // Sometimes we can get into a weird NFS state where a station's airtime.conf has
-    // been neg-cached - redirect to a 404 instead until the NFS cache is updated
-    if (strpos($_SERVER['SERVER_NAME'], "airtime.pro") !== false) {
-        header($_SERVER['SERVER_PROTOCOL'] . ' 404 Page Not Found', true, 404);
-        exit;
-    }
     $airtimeSetup = true;
     require_once(SETUP_PATH . 'setup-config.php');
 }

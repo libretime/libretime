@@ -93,7 +93,7 @@ code=""
 apache_bin=""
 skip_postgres=0
 skip_rabbitmq=0
-
+default_value="Y"
 
 function verbose() {
     if [[ ${_v} -eq 1 ]]; then
@@ -147,13 +147,16 @@ function systemInitDetect() {
     # Get the path of the command where pid=1 following any symlinks
     pid_1_path=$(readlink --canonicalize -n /proc/1/exe)
     # returns '/sbin/init' (Debian Wheezy & Ubuntu Trusty)
-    # returns '(/usr)?/lib/systemd/systemd' (Debian Stretch, Debian Jessie, Ubuntu Xenial, CentOS 7)
+    # returns '(/usr)?/lib/systemd/systemd' (Debian Stretch, Debian Jessie, Debian Buster, Ubuntu Xenial, CentOS 7)
     verbose "Detected path to PID=1 process: $pid_1_path"
-    # Get package of PID=1 path as it identifies the init system
-    pid_1_package=$(dpkg -S $pid_1_path 2>/dev/null || 
-                    rpm --qf '%{name}\n' -qf $pid_1_path 2>/dev/null)
+    # Get package of PID=1 path as it identifies the init system.
+    # Allow this to fail, at least then the init system can be guessed from the
+    # PID 1 executable alone
+    pid_1_package=$(dpkg -S $pid_1_path 2>/dev/null ||
+                    rpm --qf '%{name}\n' -qf $pid_1_path 2>/dev/null ||
+                    echo "unknown")
     verbose "Detected package name for PID=1 process: $pid_1_package"
-    case "${pid_1_package-$pid_1_path}" in
+    case "${pid_1_package}:${pid_1_path}" in
       *systemd*) has_systemd_init=true; verbose "Detected init system type: systemd" ;;
       *upstart*) has_upstart_init=true; verbose "Detected init system type: Upstart" ;;
       *sysvinit*) has_systemv_init=true; verbose "Detected init system type: System V" ;;
@@ -177,14 +180,29 @@ function systemInitInstall() {
     local source_base_path=""
     local source_path=""
     local target_path=""
+    local alt_path=""
     local source_config_path=""
     local target_config_path=""
     local python_source_path="${SCRIPT_DIR-$PWD}/python_apps"
     verbose "\n * Installing service $service_name ..."
     if $has_systemd_init; then
-        # TODO: move .service files under python_apps/.../install/systemd
-        source_path="${SCRIPT_DIR-$PWD}/installer/systemd/${service_name}.service"
-        target_path="/etc/systemd/system/${service_name}.service"
+        case "$service_name" in
+            libretime-analyzer)
+                source_path="${python_source_path}/airtime_analyzer/install/systemd/${service_name}.service"
+                target_path="/etc/systemd/system/${service_name}.service"
+                alt_path=$(echo $target_path | sed 's/libretime-/airtime_/')
+                ;;
+            libretime-celery)
+                source_path="${python_source_path}/airtime-celery/install/systemd/${service_name}.service"
+                target_path="/etc/systemd/system/${service_name}.service"
+                alt_path=$(echo $target_path | sed 's/libretime-/airtime-/')
+                ;;
+            libretime-liquidsoap|libretime-playout)
+                source_path="${python_source_path}/pypo/install/systemd/${service_name}.service"
+                target_path="/etc/systemd/system/${service_name}.service"
+                alt_path=$(echo $target_path | sed 's/libretime-/airtime-/')
+                ;;
+        esac
         if [[ ! -e $source_path ]]; then
             echo "$0:${FUNCNAME}(): ERROR: service \"$service_name\" with source path \"$source_path\" does not exist!" >&2
             exit 1
@@ -195,12 +213,27 @@ function systemInitInstall() {
             loudCmd "systemctl disable ${service_name}.service"
             loudCmd "systemctl stop ${service_name}.service"
         fi
+        local old_style_unit_exists="f"
+        # Migrate old style airtime unit exist if it exists
+        if [[ -e $alt_path && ! -L $alt_path ]]; then
+            local old_service=$(echo $service_name | sed 's/libretime/airtime/' | sed 's/-analyzer/_analyzer/')
+            verbose "Old service $old_service already exists - migrating."
+            loudCmd "systemctl disable ${old_service}.service"
+            loudCmd "systemctl stop ${old_service}.service"
+            loudCmd "rm $alt_path"
+            old_style_unit_exists="t"
+        fi
         # If no user defined, then just copy, otherwise filter
         if [[ -z $user ]]; then
             loudCmd "cp $source_path $target_path"
         else
             sed -e "s/User=.*/User=${user}/" \
                 -e "s/Group=.*/Group=${user}/" $source_path > $target_path
+        fi
+        if [[ $old_style_unit_exists == "t" ]]; then
+            verbose "Maintaining compatibility with old systemd unit names"
+            # Alias to old Airtime names
+            loudCmd "ln -s $source_path $alt_path"
         fi
         chmod 0644 $target_path
         chown root:root $target_path
@@ -210,17 +243,17 @@ function systemInitInstall() {
         verbose "Service ${service_name} enabled and started"
     elif $has_upstart_init; then
         case "$service_name" in
-            airtime_analyzer)
-                source_path="${python_source_path}/${service_name}/install/upstart/${service_name}.conf"
+            libretime-analyzer)
+                source_path="${python_source_path}/airtime_analyzer/install/upstart/${service_name}.conf"
                 target_path="/etc/init/${service_name}.conf"
                 user=${user:-$web_user}
                 ;;
-            airtime-celery)
-                source_path="${python_source_path}/${service_name}/install/upstart/${service_name}.conf"
+            libretime-celery)
+                source_path="${python_source_path}/airtime-celery/install/upstart/${service_name}.conf"
                 target_path="/etc/init/${service_name}.conf"
                 user=""
                 ;;
-            airtime-liquidsoap|airtime-playout)
+            libretime-liquidsoap|libretime-playout)
                 source_path="${python_source_path}/pypo/install/upstart/${service_name}.conf.template"
                 target_path="/etc/init/${service_name}.conf"
                 user=${user:-$web_user}
@@ -248,19 +281,19 @@ function systemInitInstall() {
         loudCmd "initctl check-config $service_name"
     elif $has_systemv_init; then
         case "$service_name" in
-            airtime_analyzer)
-                source_path="${python_source_path}/${service_name}/install/sysvinit/${service_name}"
+            libretime-analyzer)
+                source_path="${python_source_path}/airtime_analyzer/install/sysvinit/${service_name}"
                 target_path="/etc/init.d/${service_name}"
                 user=${user:-$web_user}
                 ;;
-            airtime-celery)
-                source_path="${python_source_path}/${service_name}/install/initd/${service_name}"
+            libretime-celery)
+                source_path="${python_source_path}/airtime-celery/install/sysvinit/${service_name}"
                 target_path="/etc/init.d/${service_name}"
                 source_config_path="${python_source_path}/${service_name}/install/conf/${service_name}"
                 target_config_path="/etc/default/${service_name}"
                 user=""
                 ;;
-            airtime-liquidsoap|airtime-playout)
+            libretime-liquidsoap|libretime-playout)
                 source_path="${python_source_path}/pypo/install/sysvinit/${service_name}"
                 target_path="/etc/init.d/${service_name}"
                 user=${user:-$web_user}
@@ -462,7 +495,7 @@ while :; do
             ;;
         --no-rabbitmq)
             skip_rabbitmq=1
-            ;;            
+            ;;
         --)
             shift
             break
@@ -584,13 +617,11 @@ fi
 
 # Validate the distribution and release is a supported one; set boolean flags.
 is_debian_dist=false
+is_debian_buster=false
 is_debian_stretch=false
-is_debian_jessie=false
-is_debian_wheezy=false
 is_ubuntu_dist=false
 is_ubuntu_bionic=false
 is_ubuntu_xenial=false
-is_ubuntu_trusty=false
 is_centos_dist=false
 is_centos_7=false
 # Use specified distribution and release or detected otherwise.
@@ -610,17 +641,19 @@ case "${dist}-${code}" in
         is_ubuntu_xenial=true
         ;;
     ubuntu-14.04|ubuntu-trusty)
-        code="trusty"
-        is_ubuntu_dist=true
-        is_ubuntu_trusty=true
-        echo -e "WARNING: Ubuntu Trusty will be EOL by April 2019 and LibreTime will no longer support it at that point." >&2
-        echo -e "Please upgrade to a non-EOL distro ASAP!" >&2
-        sleep 6
+        echo -e "ERROR: Ubuntu Trusty is archived and does not receive any security or other updates since 2019-04-17." >&2
+        echo -e "The LibreTime installer dropped support for installing LibreTime on Trusty in 3.0.0-alpha.8." >&2
+        exit 1
         ;;
     debian-9|debian-stretch)
         code="stretch"
         is_debian_dist=true
         is_debian_stretch=true
+        ;;
+    debian-10|debian-buster)
+        code="buster"
+        is_debian_dist=true
+        is_debian_buster=true
         ;;
     #Fix for Raspbian 9 (stretch)
     raspbian-9|9)
@@ -630,15 +663,24 @@ case "${dist}-${code}" in
 	is_debian_stretch=true
 	;;
     #End of fix
-    debian-8|debian-jessie)
-        code="jessie"
+    #Fix for Raspbian 10 (buster)
+    raspbian-10|10)
+        code="buster"
+        dist="debian"
         is_debian_dist=true
-        is_debian_jessie=true
+        is_debian_buster=true
+        ;;
+    #End of fix
+
+    debian-8|debian-jessie)
+        echo -e "ERROR: Debian Jessie is archived and does not receive any security or other updates since 2018-05-17." >&2
+        echo -e "The LibreTime installer dropped support for installing LibreTime on Jessie in 3.0.0-alpha.8." >&2
+        exit 1
         ;;
     debian-7|debian-wheezy)
-        code="wheezy"
-        is_debian_dist=true
-        is_debian_wheezy=true
+        echo -e "ERROR: Debian Wheezy is archived and does not receive any security or other updates since 2018-05-31." >&2
+        echo -e "The LibreTime installer dropped support for installing LibreTime on Wheezy in 3.0.0-alpha.6." >&2
+        exit 1
         ;;
     centos-7)
         is_centos_dist=true
@@ -682,6 +724,7 @@ if [ "$ignore_dependencies" = "f" ]; then
         apt_force_options="--allow-downgrades --allow-remove-essential --allow-change-held-packages"
         # Get apt-get version by returning the 2nd parameter from the 1st line of output
         apt_version=$(apt-get --version |awk 'NR == 1 { print $2 }')
+        # returns 1.8.0~alpha3 (Debian Buster)
         # returns: 1.4.7 (Debian Stretch)
         # returns: 0.9.7.9 (Debian Wheezy)
         # returns: 1.0.1ubuntu2 (Ubuntu Trusty)
@@ -750,7 +793,6 @@ will be moved to /etc/airtime/airtime.conf.tmp"
         rm -f /etc/init.d/airtime*
         rm -f /etc/init/airtime*
         rm -f /etc/default/airtime-celery
-        rm -f /etc/systemd/system/airtime*
 
         if [ "$apache" = "t" ]; then
             # If the user selects an "in-place" install or passes in a web root, 
@@ -770,6 +812,7 @@ fi
 if [ "$apache" = "f" -a ${_i} -eq 1 ]; then
     echo -e "Install default Airtime apache configuration? (Y/n): \c"
     read IN
+    IN=${IN:-$default_value}
     if [ "$IN" = "y" -o "$IN" = "Y" ]; then
         apache="t"
     fi
@@ -871,6 +914,7 @@ fi
 if [ "$icecast" = "f" -a ${_i} -eq 1 ]; then
     echo -e "Install default Airtime Icecast configuration? (Y/n): \c"
     read IN
+    IN=${IN:-$default_value}
     if [ "$IN" = "y" -o "$IN" = "Y" ]; then
         icecast="t"
     fi
@@ -885,8 +929,19 @@ if [ "$icecast" = "t" ]; then
     icecast_unit_name="icecast2"
     if [ "$dist" != "centos" ]; then
         sed -i 's/ENABLE=false/ENABLE=true/g' /etc/default/icecast2
+        icecast_config="/etc/icecast2/icecast.xml"
     else
         icecast_unit_name="icecast"
+	icecast_config="/etc/icecast.xml"
+    fi
+    # only update icecast password if 
+    if [ ! -e "/etc/airtime/airtime.conf" ] && [ ! -e "/etc/airtime/airtime.conf.tmp" ]; then
+        icecast_pass=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-12};)
+        echo $icecast_pass > /tmp/icecast_pass
+        loud "\n New install detected setting icecast password to random value."
+        xmlstarlet ed --inplace -u /icecast/authentication/source-password -v $icecast_pass $icecast_config
+        xmlstarlet ed --inplace -u /icecast/authentication/relay-password -v $icecast_pass $icecast_config
+        xmlstarlet ed --inplace -u /icecast/authentication/admin-password -v $icecast_pass $icecast_config
     fi
     # restart in case icecast was already started (like is the case on debian)
     systemInitCommand restart ${icecast_unit_name}
@@ -897,21 +952,12 @@ loud "\n-----------------------------------------------------"
 loud "          * Installing Airtime Services *            "
 loud "-----------------------------------------------------"
 
-verbose "\n * Installing necessary python services..."
-loudCmd "pip install setuptools --upgrade"
-verbose "...Done"
-
-# Ubuntu Trusty and Debian Wheezy needs a workaround for python version SSL downloads
-# This affects all python installs where python < 2.7.9
-python_version=$(python --version 2>&1 | awk '{ print $2 }')
+python_version=$(python3 --version 2>&1 | awk '{ print $2 }')
 verbose "Detected Python version: $python_version"
-# Convert version so each segment is zero padded for easy comparison
-python_version_formatted=$(awk 'BEGIN {FS = "."} {printf "%03d.%03d.%03d\n", $1,$2,$3}' <<< $python_version)
-if [[ "$python_version_formatted" < "002.007.009" ]]; then
-    verbose "\n * Installing pyOpenSSL and ca db for SNI support..."
-    loudCmd "pip install pyOpenSSL cryptography idna certifi --upgrade"
-    verbose "...Done"
-fi
+
+verbose "\n * Installing necessary python services..."
+loudCmd "pip3 install setuptools --upgrade"
+verbose "...Done"
 
 verbose "\n * Creating /run/airtime..."
 mkdir -p /run/airtime
@@ -933,19 +979,19 @@ if [ ! -d /var/log/airtime ]; then
 fi
 
 verbose "\n * Installing API client..."
-loudCmd "python ${AIRTIMEROOT}/python_apps/api_clients/setup.py install --install-scripts=/usr/bin"
+loudCmd "python3 ${AIRTIMEROOT}/python_apps/api_clients/setup.py install --install-scripts=/usr/bin"
 verbose "...Done"
 
 verbose "\n * Installing pypo and liquidsoap..."
-loudCmd "python ${AIRTIMEROOT}/python_apps/pypo/setup.py install --install-scripts=/usr/bin --no-init-script"
+loudCmd "python3 ${AIRTIMEROOT}/python_apps/pypo/setup.py install --install-scripts=/usr/bin --no-init-script"
 loudCmd "mkdir -p /var/log/airtime/{pypo,pypo-liquidsoap} /var/tmp/airtime/pypo/{cache,files,tmp} /var/tmp/airtime/show-recorder/"
 loudCmd "chown -R ${web_user}:${web_user} /var/log/airtime/{pypo,pypo-liquidsoap} /var/tmp/airtime/pypo/{cache,files,tmp} /var/tmp/airtime/show-recorder/"
-systemInitInstall airtime-liquidsoap $web_user
-systemInitInstall airtime-playout $web_user
+systemInitInstall libretime-liquidsoap $web_user
+systemInitInstall libretime-playout $web_user
 verbose "...Done"
 
 verbose "\n * Installing airtime-celery..."
-loudCmd "python ${AIRTIMEROOT}/python_apps/airtime-celery/setup.py install --no-init-script"
+loudCmd "python3 ${AIRTIMEROOT}/python_apps/airtime-celery/setup.py install --no-init-script"
 # Create the Celery user
 if $is_centos_dist; then
     loudCmd "id celery 2>/dev/null || adduser --no-create-home -c 'LibreTime Celery' -r celery || true"
@@ -954,15 +1000,15 @@ else
 fi
 # Add celery to the www-data group
 loudCmd "usermod -G ${web_user} -a celery"
-# CentOS installs celery in /usr/bin which differs from other distros. Make 
+# CentOS installs celery in /usr/bin which differs from other distros. Make
 # available in /usr/local/bin as systemd requires an absolute path.
 [[ ! -e /usr/local/bin/celery ]] && ln -s /usr/bin/celery /usr/local/bin/celery
-systemInitInstall airtime-celery
+systemInitInstall libretime-celery
 verbose "...Done"
 
 verbose "\n * Installing airtime_analyzer..."
-loudCmd "python ${AIRTIMEROOT}/python_apps/airtime_analyzer/setup.py install --install-scripts=/usr/bin --no-init-script"
-systemInitInstall airtime_analyzer $web_user
+loudCmd "python3 ${AIRTIMEROOT}/python_apps/airtime_analyzer/setup.py install --install-scripts=/usr/bin --no-init-script"
+systemInitInstall libretime-analyzer $web_user
 verbose "...Done"
 
 verbose "\n * Setting permissions on /var/log/airtime..."
@@ -979,6 +1025,7 @@ loud "              * Configuring PHP in Apache *          "
 loud "-----------------------------------------------------"
 # Test common locations for php conf directory
 php_conf_dirs=(
+    "/etc/php/7.3/apache2/conf.d"   # Debian Buster
     "/etc/php/7.2/apache2/conf.d"   # Ubuntu Bionic
     "/etc/php/7.0/apache2/conf.d"   # Ubuntu Xenial
     "/etc/php5/apache2/conf.d"      # Debian Stretch, Debian Jessie, Ubuntu Trusty
@@ -1002,7 +1049,9 @@ else
 fi
 
 # Enable Apache modules
-if $is_ubuntu_bionic; then
+if $is_debian_buster; then
+    loudCmd "a2enmod rewrite php7.3"
+elif $is_ubuntu_bionic; then
     loudCmd "a2enmod rewrite php7.2"
 elif $is_ubuntu_xenial || $is_debian_stretch; then
     loudCmd "a2enmod rewrite php7.0"
@@ -1043,6 +1092,7 @@ EOF
     elif [ ${_i} -eq 1 ]; then
         echo -e "Create default airtime postgres user? (Y/n): \c"
         read IN
+        IN=${IN:-$default_value}
         if [ "$IN" = "y" -o "$IN" = "Y" ]; then
             setupAirtimePostgresUser
         fi
@@ -1090,6 +1140,10 @@ if [ ! -d "/etc/airtime" ]; then
     mkdir /etc/airtime
 fi
 
+if [ ! -e "/etc/airtime/airtime.conf" ] && [ ! -e "/etc/airtime/airtime.conf.tmp" ]; then
+    # need to copy the icecast_pass from temp to /etc/airtime so web-based installer can read it
+    cp /tmp/icecast_pass /etc/airtime/icecast_pass
+fi
 
 chown -R ${web_user}:${web_user} /etc/airtime
 

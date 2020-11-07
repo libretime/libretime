@@ -1,4 +1,4 @@
-<?php 
+<?php
 //XSS exploit prevention
 foreach ($this->md as $key => &$value) {
     $value = $this->escape($value);
@@ -23,7 +23,10 @@ foreach ($this->md as $key => &$value) {
 <tr><td><?php echo _("Copyright:"); ?></td><td><?php echo ($this->md["MDATA_KEY_COPYRIGHT"]);?></td></tr>
 <tr><td><?php echo _("Isrc Number:"); ?></td><td><?php echo ($this->md["MDATA_KEY_ISRC"]);?></td></tr>
 <tr><td><?php echo _("Website:"); ?></td><td><?php echo ($this->md["MDATA_KEY_URL"]);?></td></tr>
+<tr><td><?php echo _("Artwork:"); ?></td><td><?php echo ($this->md["MDATA_KEY_ARTWORK"]);?></td></tr>
+<tr><td><?php echo _("Artwork Data:"); ?></td><td><?php echo ($this->md["MDATA_KEY_ARTWORK_DATA"]);?></td></tr>
 <tr><td><?php echo _("Language:"); ?></td><td><?php echo ($this->md["MDATA_KEY_LANGUAGE"]);?></td></tr>
+<tr><td><?php echo _("Track Type:"); ?></td><td><?php echo ($this->md["MDATA_KEY_TRACK_TYPE"]);?></td></tr>
 <tr><td class='file-md-qtip-nowrap'><?php echo _("File Path:"); ?></td><td><?php echo ($this->md["MDATA_KEY_FILEPATH"]);?></td></tr>
 </table>
 <?php endif; ?>
@@ -99,7 +102,7 @@ foreach ($this->md as $key => &$value) {
             <?php } ?>
         <?php endforeach; ?>
         </table>
-        
+
     <?php } elseif ($this->blType == "Dynamic") { ?>
         <div class='file-md-qtip-left'><span><?php echo _("Dynamic Smart Block Criteria: "); ?></span></div>
         <table class='library-get-file-md table-small'>

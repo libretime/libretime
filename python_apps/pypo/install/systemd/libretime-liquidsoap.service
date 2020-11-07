@@ -1,0 +1,11 @@
+[Unit]
+Description=Libretime Liquidsoap Service
+
+[Service]
+ExecStart=/usr/bin/airtime-liquidsoap
+User=libretime-playout
+Group=libretime-playout
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

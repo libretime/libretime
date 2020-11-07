@@ -706,26 +706,6 @@ msgstr "Plantillas Historial"
 msgid "Listener Stats"
 msgstr "Estadísticas de oyentes"
 
-#: airtime_mvc/application/configs/navigation.php:144
-msgid "Upgrade"
-msgstr "Actualizar"
-
-#: airtime_mvc/application/configs/navigation.php:144
-msgid "Billing"
-msgstr "Facturación"
-
-#: airtime_mvc/application/configs/navigation.php:151
-msgid "Account Plans"
-msgstr "Planes de Cuenta"
-
-#: airtime_mvc/application/configs/navigation.php:158
-msgid "Account Details"
-msgstr "Detalles de Cuenta"
-
-#: airtime_mvc/application/configs/navigation.php:165
-msgid "View Invoices"
-msgstr "Ver Facturas"
-
 #: airtime_mvc/application/configs/navigation.php:175
 #: airtime_mvc/application/views/scripts/error/error-400.phtml:13
 #: airtime_mvc/application/views/scripts/error/error-403.phtml:13
@@ -748,8 +728,8 @@ msgid "User Manual"
 msgstr "Manual para el usuario"
 
 #: airtime_mvc/application/configs/navigation.php:200
-msgid "File a Support Ticket"
-msgstr "Presentar un Ticket de Soporte"
+msgid "Get Help Online"
+msgstr ""
 
 #: airtime_mvc/application/configs/navigation.php:210
 msgid "What's New?"
@@ -801,7 +781,7 @@ msgstr "No tienes permiso para cambiar de fuente."
 msgid ""
 "To configure and use the embeddable player you must:<br><br>\n"
 "            1. Enable at least one MP3, AAC, or OGG stream under Settings -> Streams<br>\n"
-"            2. Enable the Public Airtime API under Settings -> Preferences"
+"            2. Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
 "Para configurar y utilizar el reproductor incrustable debes:<br><br>\n"
 "            1. Habilitar al menos un stream MP3, AAC, or OGG en Ajustes -> Streams<br>\n"
@@ -810,7 +790,7 @@ msgstr ""
 #: airtime_mvc/application/controllers/EmbeddablewidgetsController.php:41
 msgid ""
 "To use the embeddable weekly schedule widget you must:<br><br>\n"
-"            Enable the Public Airtime API under Settings -> Preferences"
+"            Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
 "Para utilizar el calendario semanal incrustable debes:<br><br>\n"
 "            Habilitar la API pública de Libretime en Ajustes -> Preferencias"
@@ -818,7 +798,7 @@ msgstr ""
 #: airtime_mvc/application/controllers/EmbeddablewidgetsController.php:53
 msgid ""
 "To add the Radio Tab to your Facebook Page, you must first:<br><br>\n"
-"            Enable the Public Airtime API under Settings -> Preferences"
+"            Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
 "Para añadir la pestaña Radio a tu página de Facebook, debes primero:<br><br>\n"
 "            Habilitar la API pública de Libretime en Ajustes -> Preferencias"
@@ -869,6 +849,18 @@ msgstr "Previsualizar"
 #: airtime_mvc/application/controllers/LibraryController.php:186
 msgid "Add to Playlist"
 msgstr "Agregar a lista de reproducción."
+
+#: airtime_mvc/application/controllers/LocaleController.php:70
+msgid "Add to next show"
+msgstr "Añadir al show próximo"
+
+#: airtime_mvc/application/controllers/LocaleController.php:71
+msgid "Add to current show"
+msgstr "Añadir al show actual"
+
+#: airtime_mvc/application/controllers/LocaleController.php:69
+msgid "Add to Schedule"
+msgstr "Añadir al show próximo"
 
 #: airtime_mvc/application/controllers/LibraryController.php:114
 msgid "Add to Smart Block"
@@ -2036,6 +2028,10 @@ msgstr "Eliminar los ítems programados seleccionados"
 msgid "Jump to the current playing track"
 msgstr "Saltar a la pista en reproducción actual"
 
+#: airtime_mvc/application/controllers/LocaleController.php:331
+msgid "Jump to Current"
+msgstr "Saltar a la pista actual"
+
 #: airtime_mvc/application/controllers/LocaleController.php:314
 msgid "Cancel current show"
 msgstr "Cancelar el show actual"
@@ -2548,12 +2544,20 @@ msgid "Must wait at least 1 hour to rebroadcast"
 msgstr "Debes esperar al menos 1 hora para reprogramar"
 
 #: airtime_mvc/application/forms/AddShowAutoPlaylist.php:18
-msgid "Auto Schedule Playlist ?"
-msgstr "¿Auto Programar Lista?"
+msgid "Add Autoloading Playlist ?"
+msgstr "¿Programar Lista Auto-Cargada?"
+
+#: airtime_mvc/application/views/scripts/form/add-show-autoplaylist.phtml:14
+msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/manual/calendar/#autoloading-playlist'>More information</a>"
+msgstr "Se le agrega los contenidos de las listas auto-cargadas a programas una hora antes de que suenen. <a target='_blank' href='http://libretime.org/manual/calendar/#autoloading-playlist'>Mas información</a>"
 
 #: airtime_mvc/application/forms/AddShowAutoPlaylist.php:25
 msgid "Select Playlist"
 msgstr "Seleccionar Lista"
+
+#: airtime_mvc/application/forms/AddShowAutoPlaylist.php:32
+msgid "Repeat Playlist Until Show is Full ?"
+msgstr "Repitir lista hasta que termine el programa?"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:11
 #, php-format
@@ -2862,50 +2866,6 @@ msgstr "Tipo de usuario:"
 msgid "Login name is not unique."
 msgstr "El nombre de usuario no es único."
 
-#: airtime_mvc/application/forms/BillingClient.php:125
-msgid "What is the name of your favorite childhood friend?"
-msgstr "¿Cuál es el nombre de tu amigo de infancia favorito?"
-
-#: airtime_mvc/application/forms/BillingClient.php:126
-msgid "What school did you attend for sixth grade?"
-msgstr "¿A qué escuela asiste en Sexto de Primaria?"
-
-#: airtime_mvc/application/forms/BillingClient.php:127
-msgid "In what city did you meet your spouse/significant other?"
-msgstr "¿En qué ciudad conociste a tu cónyuge / pareja"
-
-#: airtime_mvc/application/forms/BillingClient.php:128
-msgid "What street did you live on in third grade?"
-msgstr "¿En qué calle vivías en Tercero de Primaria?"
-
-#: airtime_mvc/application/forms/BillingClient.php:129
-msgid "What is the first name of the boy or girl that you first kissed?"
-msgstr "¿Cuál es el nombre del niño o niña que besaste por primera vez?"
-
-#: airtime_mvc/application/forms/BillingClient.php:130
-msgid "In what city or town was your first job?"
-msgstr "¿En qué ciudad o pueblo fue tu primer trabajo?"
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:19
-msgid "Plan type:"
-msgstr "Tipo de plan:"
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:31
-msgid "Billing cycle:"
-msgstr "Ciclo de facturación:"
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:39
-msgid "Payment method:"
-msgstr "Método de Pago:"
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:42
-msgid "PayPal"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:43
-msgid "Credit Card via 2Checkout"
-msgstr "Tarjeta de crédito vía 2Checkout"
-
 #: airtime_mvc/application/forms/customvalidators/ConditionalNotEmpty.php:32
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:8
 msgid "Value is required and can't be empty"
@@ -3045,8 +3005,16 @@ msgid "Default Fade Out (s):"
 msgstr "Fade Out preseterminado (s):"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:105
-msgid "Podcast Album Override"
+msgid "Overwrite Podcast Episode Metatags"
 msgstr "Sobrescribir el álbum del podcast"
+
+#: airtime_mvc/application/forms/GeneralPreferences.php:120
+msgid "Generate a smartblock and a playlist upon creation of a new podcast"
+msgstr ""
+
+#: airtime_mvc/application/forms/GeneralPreferences.php:126
+msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
+msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:107
 #: airtime_mvc/application/forms/GeneralPreferences.php:125
@@ -3059,11 +3027,11 @@ msgid "Enabled"
 msgstr "Activado"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:111
-msgid "Enabling this means that podcast tracks will always contain the podcast name in their album field."
+msgid "Enabling this feature will cause podcast episode tracks to have their Artist, Title, and Album metatags set from podcast feed values. Note that enabling this feature is recommended in order to ensure reliable scheduling of episodes via smartblocks."
 msgstr "Habilitar esto significa que las pistas del podcast siempre contendrán el nombre del podcast en su campo de álbum."
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:122
-msgid "Public Airtime API"
+msgid "Public LibreTime API"
 msgstr "API Pública de Libretime"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:123
@@ -3072,7 +3040,7 @@ msgstr "Requerido para el widget de programación incrustado"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:129
 msgid ""
-"Enabling this feature will allow Airtime to provide schedule data\n"
+"Enabling this feature will allow LibreTime to provide schedule data\n"
 "                                            to external widgets that can be embedded in your website."
 msgstr ""
 "Habilitar esta función permite a Libretime proporcionar datos de programación\n"
@@ -3386,6 +3354,18 @@ msgstr "Dinámico"
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:299
 msgid "Allow Repeated Tracks:"
 msgstr "Permitir Pistas Repetidas:"
+
+#: airtime_mvc/application/forms/SmartBlockCriteria.php:453
+msgid "Allow last track to exceed time limit:"
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/playlist/update.phtml:25
+msgid "</br>This is only a preview of possible content generated by the smart block based upon the above criteria."
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:82
+msgid "Advanced options"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:308
 msgid "Sort Tracks:"
@@ -4283,6 +4263,18 @@ msgstr "Elige los días:"
 msgid "Add"
 msgstr "Añadir"
 
+msgid "New"
+msgstr "Nuevo"
+
+msgid "Columns"
+msgstr "Columnas"
+
+msgid "Import"
+msgstr "Importar"
+
+msgid "Imported?"
+msgstr "Importado?"
+
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast.phtml:4
 msgid "Repeat Days:"
 msgstr "Días de repetición:"
@@ -4299,11 +4291,6 @@ msgstr "Selecciona Instancia del Show"
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:56
 msgid "Find"
 msgstr "Buscar"
-
-#: airtime_mvc/application/views/scripts/form/edit-user.phtml:7
-#, php-format
-msgid "<b>Note:</b> Since you're the station owner, your account information can be edited in <a href=\"%s\">Billing Settings</a> instead."
-msgstr "<b>Nota:</b> Puesto que eres el propietario de la estación, la información de tu cuenta se puede editar en <a href=\"%s\">Ajustes de Facturación</a>."
 
 #: airtime_mvc/application/views/scripts/form/login.phtml:41
 msgid "Forgot your password?"
@@ -4862,8 +4849,20 @@ msgid "Podcast URL: "
 msgstr "URL del Podcast: "
 
 #: airtime_mvc/application/views/scripts/podcast/podcast.phtml:22
-msgid "Automatically download latest episodes?"
+msgid "Download latest episodes:"
 msgstr "¿Descargar automáticamente los últimos episodios?"
+
+#: airtime_mvc/application/views/scripts/podcast/podcast.phtml:26
+msgid "Scheduling:"
+msgstr "Programación:"
+
+#: airtime_mvc/application/views/scripts/podcast/podcast.phtml:28
+msgid "Generate Smartblock and Playlist"
+msgstr "Generar Bloque y Lista"
+
+#: airtime_mvc/application/views/scripts/podcast/podcast.phtml:30
+msgid "Smartblock and Playlist Generated"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/podcast/podcast.phtml:26
 msgid "Override album name with podcast name during ingest."
@@ -4966,8 +4965,8 @@ msgid "What"
 msgstr "Qué"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:14
-msgid "Automatic Playlist"
-msgstr "Lista de reproducción automática"
+msgid "Autoloading Playlist"
+msgstr "Lista Auto-Cargada"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:18
 msgid "When"
@@ -5032,11 +5031,6 @@ msgstr "Apellido"
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:21
 msgid "User Type"
 msgstr "Tipo de usuario"
-
-#: airtime_mvc/application/views/scripts/user/add-user.phtml:31
-#, php-format
-msgid "Super Admin details can be changed in your <a href=\"%s\">Billing Settings</a>."
-msgstr "Los detalles Super Admin se pueden cambiar en tu <a href=\"%s\">Configuración de facturación"
 
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:30
 msgid "Stream URL:"

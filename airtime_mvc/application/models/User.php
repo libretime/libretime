@@ -325,6 +325,11 @@ class Application_Model_User
         return Application_Model_User::getUsers(array('H'), $search);
     }
 
+    public static function getNonGuestUsers($search=null)
+    {
+        return Application_Model_User::getUsers(array('H','A','S','P'), $search);
+    }
+
     public static function getUsersDataTablesInfo($datatables)
     {
 

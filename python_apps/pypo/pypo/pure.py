@@ -1,10 +1,14 @@
 import re
-
+from packaging.version import Version, parse
 
 def version_cmp(version1, version2):
-    def normalize(v):
-        return [int(x) for x in re.sub(r'(\.0+)*$','', v).split(".")]
-    return cmp(normalize(version1), normalize(version2))
+    version1 = parse(version1)
+    version2 = parse(version2)
+    if version1 > version2:
+        return 1
+    if version1 == version2:
+        return 0
+    return -1
 
 def date_interval_to_seconds(interval):
     """

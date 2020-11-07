@@ -40,6 +40,7 @@
 
 .playlist_editor dt {
     float: left;
+    clear: left;
 }
 
 .playlist_editor input, .playlist_editor textarea {
@@ -508,10 +509,12 @@
 
 .side_playlist .zend_form dt {
     width: 170px;
+    margin-bottom: 10px;
 }
 
 .side_playlist .zend_form dd {
-    margin-bottom: 10px;
+    float: left;
+    margin: 0 0 10px;
 }
 .search-criteria dt label.sp_label
 {
@@ -530,6 +533,7 @@
 
 #sp_criteria-element {
     clear: both;
+    width: 100%;
 }
 
 /*
@@ -630,5 +634,42 @@ li.spl_empty {
 }
 
 #criteria_add {
-    margin-bottom: 5px;
+    margin: -10px 0 5px;
+}
+
+.smart-block-form dt, .smart-block-form dd {
+    float: none;
+}
+.smart-block-form dl:not(.search-criteria) {
+    display: flex;
+    width: 100%;
+}
+.smart-block-form dt {
+    flex: 1 0 20%;
+    margin: 0;
+}
+.smart-block-form dd {
+    flex: 0 0 80%;
+    margin: 0;
+}
+.collapsible-header .arrow-icon {
+    transition: 0.3s;
+}
+.collapsible-header.visible .arrow-icon {
+    transform: rotate(90deg);
+}
+.smart-block-advanced {
+    display: none;
+}
+.smart-block-form .smart-block-advanced dt {
+    flex: 0 0 40%;
+    margin: 0;
+}
+.smart-block-form .smart-block-advanced dd {
+    flex: 0 0 60%;
+    margin: 0;
+}
+.smart-block-form input[type='radio'], .smart-block-form input[type='checkbox'] {
+    vertical-align: middle;
+    margin: 0 5px;
 }

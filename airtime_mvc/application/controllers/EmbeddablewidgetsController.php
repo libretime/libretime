@@ -27,7 +27,7 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
         } else {
             $this->view->player_error_msg = _("To configure and use the embeddable player you must:<br><br>
             1. Enable at least one MP3, AAC, or OGG stream under Settings -> Streams<br>
-            2. Enable the Public Airtime API under Settings -> Preferences");
+            2. Enable the Public LibreTime API under Settings -> Preferences");
         }
     }
 
@@ -39,10 +39,11 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
 
         if (!$apiEnabled) {
             $this->view->weekly_schedule_error_msg = _("To use the embeddable weekly schedule widget you must:<br><br>
-            Enable the Public Airtime API under Settings -> Preferences");
+            Enable the Public LibreTime API under Settings -> Preferences");
         }
     }
 
+    // The Facebook widget is untested & unsupported, the widget has been removed from the navigation in navigation.php
     public function facebookAction()
     {
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Widgets');
@@ -51,7 +52,7 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
 
         if (!$apiEnabled) {
             $this->view->facebook_error_msg = _("To add the Radio Tab to your Facebook Page, you must first:<br><br>
-            Enable the Public Airtime API under Settings -> Preferences");
+            Enable the Public LibreTime API under Settings -> Preferences");
         }
 
         $CC_CONFIG = Config::getConfig();

@@ -1,104 +1,86 @@
-dist: trusty
-language: php
-php:
-# the latest and greatest, has some issues that are excluded below in matrix.allow_failures
-- 7.2
-- 7.1
-# the 7.0 build demonstrates that everything is basically ok for 7.0, users might want to wait for 7.1 to run it
-- 7.0
-# folks who prefer running on 5.x should be using 5.6 in most cases, 5.4 is no in the matrix since noone should use it
-- 5.6
-# this is in for centos support, it's still the default on CentOS 7.3 and there were some lang changes after 5.4
-- 5.4
+dist: xenial
+
 services:
-- postgresql
-- rabbitmq
+  - postgresql
+
 env:
   global:
-  - ENVIRONMENT=testing
-  - LIBRETIME_LOG_DIR=/tmp/log/libretime
-  matrix:
-  - PYTHON=false
-  - PYTHON=true
-matrix:
-  allow_failures:
-  # there are currently some testing issues with DateTime precision on 7.1
-  - env: PYTHON=false
-    php: 7.1
-  # there are some issues with phpunit as well as some deep in zf1 on 7.2
-  - env: PYTHON=false
-    php: 7.2
-  exclude:
-  # by excluding all of python we make way to just runu python tests in one seperate instance
-  - env: PYTHON=true
-  include:
-  # using latest to run python on since it will last the longest
-  - php: 7.1 
-    env: PYTHON=true
+    - ENVIRONMENT=testing
+    - LIBRETIME_LOG_DIR=/tmp/log/libretime
+
 addons:
   apt:
     packages:
-    - silan
-    - liquidsoap
-    - liquidsoap-plugin-mad
-    - liquidsoap-plugin-taglib
-    - liquidsoap-plugin-flac
-    - liquidsoap-plugin-ogg
-    - liquidsoap-plugin-lame
-    - liquidsoap-plugin-faad
-    - liquidsoap-plugin-vorbis
-    - liquidsoap-plugin-opus
-    - python-nose
-    - python-rgain
-    - python-gst-1.0
-    - python-magic
-    - mp3gain
-install:
-- >
-    if [[ "$PYTHON" == false ]]; then
-      composer install
-    fi
-- >
-    if [[ "$PYTHON" == true ]]; then
-      pip install --user mkdocs 
-      pushd python_apps/airtime_analyzer 
-      python setup.py install --dry-run --no-init-script
-      popd
-    fi
+      - gstreamer1.0-plugins-base
+      - gstreamer1.0-plugins-good
+      - gstreamer1.0-plugins-bad
+      - gstreamer1.0-plugins-ugly
+      - libgirepository1.0-dev
+      - liquidsoap
+      - liquidsoap-plugin-faad
+      - liquidsoap-plugin-lame
+      - liquidsoap-plugin-mad
+      - liquidsoap-plugin-vorbis
+      - python3-gst-1.0
+      - silan
+
+jobs:
+  include:
+    - language: php
+      php: 7.3
+      stage: test
+    - language: php
+      php: 7.2
+      stage: test
+    - language: php
+      php: 7.1
+      stage: test
+    - language: php
+      php: 7.0
+      stage: test
+    - language: php
+      php: 5.6
+      stage: test
+    - language: python
+      python: 3.8
+      stage: test
+    - language: python
+      python: 3.7
+      stage: test
+    - language: python
+      python: 3.5
+      stage: test
+    - stage: deploy
+      addons:
+        apt:
+          packages:
+            dos2unix
+      script:
+        ./travis/release.sh
+      deploy:
+        - provider: releases
+          token: $GITHUB_TOKEN
+          file: build/libretime-*.tar.gz
+          edge: true
+          on:
+            tags: true
+  allow_failures:
+    # https://github.com/LibreTime/libretime/issues/779
+    - language: php
+      php: 7.3
+    - language: php
+      php: 7.2
+    - language: php
+      php: 7.1
+    # https://github.com/LibreTime/libretime/issues/1041
+    - language: python
+      python: 3.5
+
+install: ./travis/install.sh
 before_script:
-# prepare the database as per docs/testing.md
 - psql -c 'CREATE DATABASE libretime;' -U postgres
 - psql -c "CREATE USER libretime WITH PASSWORD 'libretime';" -U postgres
 - psql -c 'GRANT CONNECT ON DATABASE libretime TO libretime;' -U postgres
 - psql -c 'ALTER USER libretime CREATEDB;' -U postgres
 - mkdir -p /tmp/log/libretime
-script:
-- ./travis/php.sh
-- ./travis/python.sh
-deploy:
-- provider: pages
-  skip_cleanup: true
-  local_dir: build/docs
-  github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
-  target_branch: master
-  repo: LibreTime/LibreTime.github.io
-  project_name: LibreTime
-  fqdn: libretime.org
-  name: R. LibreTime DocBot
-  on:
-    branch: master
-    condition: $PYTHON = true
-- provider: script
-  skip_cleanup: true
-  script: ./travis/release.sh
-  on:
-    tags: true
-    condition: $PYTHON = true
-- provider: releases
-  skip_cleanup: true
-  api_key: $GITHUB_TOKEN
-  file_glob: true
-  file: build/libretime-*.tar.gz
-  on:
-    tags: true
-    condition: $PYTHON = true
+script: ./travis/test.sh

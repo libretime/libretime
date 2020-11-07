@@ -22,7 +22,7 @@ Common Non-linked Code
 Airtime Web
 -----------
 Linked code:
- * Zend Framework 1.10.3 
+ * Zend Framework 1.10.3
    - What is it: Framework for PHP web apps
    - Web site: http://framework.zend.com/
    - License: New BSD license
@@ -32,7 +32,7 @@ Linked code:
    - What is it: PHP library
    - Notes: We only use the PEAR base class PEAR_Error, in the "PEAR" PEAR library.
    - License: New BSD License
-   - Compatible with GPLv3? Yes. 
+   - Compatible with GPLv3? Yes.
 
  * Propel ORM
    - What is it: Maps DB data into PHP objects
@@ -40,7 +40,7 @@ Linked code:
    - License: MIT/Expat License
    - Compatible with the GPL: Yes.  See http://www.gnu.org/licenses/license-list.html
 
- * Phing 
+ * Phing
    - What is it: PHP project build system
    - Web site: http://phing.info/trac/
    - Note: Only used for development, not needed to run Airtime.
@@ -48,22 +48,27 @@ Linked code:
 
  * PHP-AMQPLIB
    - What is it: PHP library to interact with RabbitMQ
-   - Web site: https://github.com/tnc/php-amqplib 
+   - Web site: https://github.com/tnc/php-amqplib
    - License: LGPLv2.1
    - Compatible with GPLv3? Yes
 
  * Soundcloud PHP API wrapper
    - What is it: PHP library to upload to SoundCloud
    - Web site: https://github.com/mptre/php-soundcloud/blob/master/Services/Soundcloud.php
-   - License: MIT   
+   - License: MIT
    - Compatible with the GPL: Yes.  See http://www.gnu.org/licenses/license-list.html
 
+ * getID3()
+   - What is it: PHP script that extracts useful information from MP3s & other multimedia file formats:
+   - Web site: https://github.com/JamesHeinrich/getID3
+   - License: GPLv3
+
 Non-linked code:
- * Apache Web Server 2.2 
+ * Apache Web Server 2.2
    - Web site: http://httpd.apache.org/
    - License: Apache 2.0. See http://httpd.apache.org/docs/2.2/license.html
 
- * PostgreSQL 9.1 
+ * PostgreSQL 9.1
    - Web site: http://www.postgresql.org/
    - License: The PostgreSQL License. See http://www.postgresql.org/about/licence
 
@@ -71,22 +76,22 @@ Non-linked code:
    - Web site: http://www.php.net/
    - License: The PHP License. See http://www.php.net/license/3_01.txt
 
- * jQuery 
+ * jQuery
    - Web site: http://jquery.com/
    - License: MIT and GPL.  See http://jquery.org/license
 
    - jQuery components used:
-     * Full Calendar 
+     * Full Calendar
        - Web site: http://arshaw.com/fullcalendar/
        - License: Dual licensed under MIT and GPLv2
 
-     * Colorpicker 
+     * Colorpicker
        - Web site: http://www.eyecon.ro/colorpicker/
        - License: Dual licensed under the MIT and GPL licenses.
 
      * Context Menu
        - Web site: http://jursza.net/dev/jjmenu/
-       - License: MIT [http://www.opensource.org/licenses/mit-license.php] 
+       - License: MIT [http://www.opensource.org/licenses/mit-license.php]
 
      * PLUpload
        - Web site: http://www.plupload.com
@@ -98,8 +103,8 @@ Non-linked code:
 
      * qtip
        - Web site: http://craigsworks.com/projects/qtip/
-       - License: MIT 
-       
+       - License: MIT
+
      * TimePicker
        - Web site: http://fgelinas.com/code/timepicker/
        - License: Dual licensed under the MIT or GPL Version 2 licenses.
@@ -120,7 +125,7 @@ Non-linked code:
 Media-Monitor
 -------------
 Linked code:
- * Mutagen 
+ * Mutagen
    - What is it: Parser of audio file metadata
    - Web site: http://code.google.com/p/mutagen/
    - License: GPLv2-only
@@ -129,7 +134,7 @@ Linked code:
    - What is it: Python interface to RabbitMQ
    - Web site: http://pypi.python.org/pypi/kombu/
    - License: New BSD
-   - Compatible with GPLv3? Yes. 
+   - Compatible with GPLv3? Yes.
 
  * pyinotify
    - Python interface to inotify
@@ -155,7 +160,7 @@ Linked code:
    - What is it: Python interface to RabbitMQ
    - Web site: http://pypi.python.org/pypi/kombu/
    - License: New BSD
-   - Compatible with GPLv3? Yes. 
+   - Compatible with GPLv3? Yes.
 
 Non-linked code:
  * Python 2.7
@@ -174,7 +179,7 @@ Linked code:
  * Kombu
    - Web site: http://pypi.python.org/pypi/kombu/
    - License: New BSD
-   - Compatible with GPLv3? Yes. 
+   - Compatible with GPLv3? Yes.
 
 Non-linked code:
  * Python 2.7

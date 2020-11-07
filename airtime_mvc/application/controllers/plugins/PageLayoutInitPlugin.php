@@ -33,8 +33,6 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             "auth",
             "error",
             "upgrade",
-            'whmcs-login',
-            "provisioning",
             "embed",
             "feeds"
         ))
@@ -93,7 +91,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             $userType = "";
         }
         $view->headScript()->appendScript("var userType = '$userType';");
-        
+
         // Dropzone also accept file extensions and doesn't correctly extract certain mimetypes (eg. FLAC - try it),
         // so we append the file extensions to the list of mimetypes and that makes it work.
         $mimeTypes = FileDataHelper::getAudioMimeTypeArray();
@@ -141,6 +139,16 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
         $view->headScript()->appendScript("var PRODUCT_NAME = '" . PRODUCT_NAME . "';");
         $view->headScript()->appendScript("var USER_MANUAL_URL = '" . USER_MANUAL_URL . "';");
         $view->headScript()->appendScript("var COMPANY_NAME = '" . COMPANY_NAME . "';");
+        //Each page refresh or tab open has uniqID, not to be used for security
+        $view->headScript()->appendScript("var UNIQID = '" . uniqid() . "';");
+
+        $track_type_options = array();
+        $track_types = Application_Model_Tracktype::getTracktypes();
+        foreach ($track_types as $key => $tt) {
+            $track_type_options[$tt['code']] = $tt['type_name'];
+        }
+        $ttarr = json_encode($track_type_options, JSON_FORCE_OBJECT);
+        $view->headScript()->appendScript("var TRACKTYPES = " . $ttarr . ";");
     }
 
     protected function _initHeadLink()
@@ -183,7 +191,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             ->appendFile($baseUrl . 'js/qtip/jquery.qtip.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'js/jplayer/jquery.jplayer.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'js/sprintf/sprintf-0.7-beta1.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
-            ->appendFile($baseUrl . 'js/cookie/jquery.cookie.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
+            ->appendFile($baseUrl . 'js/cookie/js.cookie.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'js/i18n/jquery.i18n.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'locale/general-translation-table?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'locale/datatables-translation-table?' . $CC_CONFIG['airtime_version'], 'text/javascript')
@@ -223,29 +231,12 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
         }
 
         $view->headScript()->appendScript("var userType = '$userType';");
-        if (LIBRETIME_ENABLE_LIVECHAT === true
-            && array_key_exists('REQUEST_URI', $_SERVER) //Doesn't exist for unit tests
-            && strpos($_SERVER['REQUEST_URI'], 'Dashboard/stream-player') === false
-            && strpos($_SERVER['REQUEST_URI'], 'audiopreview') === false
-            && $_SERVER['REQUEST_URI'] != "/") {
-            $plan_level = strval(Application_Model_Preference::GetPlanLevel());
-            // Since the Hobbyist plan doesn't come with Live Chat support, don't enable it
-            if (Application_Model_Preference::GetLiveChatEnabled() && $plan_level !== 'hobbyist') {
-                $client_id = strval(Application_Model_Preference::GetClientId());
-                $station_url = $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
-                $view->headScript()->appendScript("var livechat_client_id = '$client_id';\n" .
-                    "var livechat_plan_type = '$plan_level';\n" .
-                    "var livechat_station_url = 'http://$station_url';");
-                $view->headScript()->appendFile($baseUrl . 'js/airtime/common/livechat.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-            }
-        }
     }
 
     protected function _initViewHelpers()
     {
         $view = $this->_bootstrap->getResource('view');
         $view->addHelperPath(APPLICATION_PATH . 'views/helpers', 'Airtime_View_Helper');
-        $view->assign('suspended', (Application_Model_Preference::getProvisioningStatus() == PROVISIONING_STATUS_SUSPENDED));
     }
 
     protected function _initTitle()

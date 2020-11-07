@@ -131,12 +131,6 @@ AIRTIME = (function(AIRTIME) {
         selected.parent().addClass("selected");
         $("#library_filter").text(selected.text());
 
-        // Slightly hacky way of triggering the click event when it's outside of the anchor text
-        $(".media_type_selector").on("click", function() {
-            // Need get(0) here so we don't create a stack overflow by recurring the click on the parent
-            $(this).find("a").get(0).click();
-        });
-
         $(window).on('hashchange', function() {
             var selected = $("a[href$='"+location.hash+"']"),
                 dashboardLink = $(".media_type_selector:first"),

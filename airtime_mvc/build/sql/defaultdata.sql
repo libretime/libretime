@@ -32,10 +32,10 @@ INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_host', '1
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_port', '8000', 'integer');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_user', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_pass', 'hackme', 'string');
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_admin_user', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_admin_user', 'admin', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_admin_pass', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_mount', 'airtime_128', 'string');
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_url', 'http://airtime.sourcefabric.org', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_url', 'https://libretime.org', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_description', 'LibreTime Radio! Stream #1', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_genre', 'genre', 'string');
 
@@ -47,7 +47,7 @@ INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_host', ''
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_port', '', 'integer');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_user', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_pass', '', 'string');
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_admin_user', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_admin_user', 'admin', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_admin_pass', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_mount', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_url', '', 'string');
@@ -62,7 +62,7 @@ INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_host', ''
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_port', '', 'integer');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_user', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_pass', '', 'string');
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_admin_user', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_admin_user', 'admin', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_admin_pass', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_mount', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_url', '', 'string');
@@ -370,7 +370,7 @@ INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_host', ''
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_port', '', 'integer');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_user', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_pass', '', 'string');
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_admin_user', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_admin_user', 'admin', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_admin_pass', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_mount', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_url', '', 'string');
@@ -388,3 +388,8 @@ ANALYZE cc_pref; -- this validates the new partial index
 
 -- For now, just needs to be truthy - to be updated later; we should find a better way to implement this...
 INSERT INTO cc_pref("keystr", "valstr") VALUES('whats_new_dialog_viewed', 1);
+
+--added for LibreTime to turn on podcast album override by default 3.0.0.alpha6
+INSERT INTO cc_pref("keystr", "valstr") VALUES('podcast_album_override', 1);
+INSERT INTO cc_pref("keystr", "valstr") VALUES('podcast_auto_smartblock', 0);
+-- end

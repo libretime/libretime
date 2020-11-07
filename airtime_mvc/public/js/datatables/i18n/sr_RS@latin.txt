@@ -1,4 +1,4 @@
-﻿//Serbian Latin
+//Serbian Latin
 
 {
 "sProcessing": "Obrada...",

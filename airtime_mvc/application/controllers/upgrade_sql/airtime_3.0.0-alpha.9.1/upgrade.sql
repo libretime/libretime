@@ -1,0 +1,1 @@
+ALTER TABLE cc_files ADD COLUMN artwork VARCHAR(4096);

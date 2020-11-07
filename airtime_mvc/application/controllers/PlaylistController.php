@@ -64,7 +64,7 @@ class PlaylistController extends Zend_Controller_Action
 
         $this->view->obj = $obj;
         $this->view->contents = $obj->getContents();
-        if ($formIsValid) {
+        if ($formIsValid && $obj instanceof Application_Model_Block) {
             $this->view->poolCount = $obj->getListofFilesMeetCriteria()['count'];
         }
         $this->view->showPoolCount = true;

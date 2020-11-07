@@ -15,3 +15,6 @@ VERSION
 airtime_mvc/tests/log/*.log
 .vagrant/
 .DS_Store
+.idea/
+/docs/_site/*
+/docs/.jekyll-cache/*

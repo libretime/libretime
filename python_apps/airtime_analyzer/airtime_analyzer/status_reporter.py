@@ -2,12 +2,12 @@ import requests
 import json
 import logging
 import collections
-import Queue
+import queue
 import time
 import traceback
 import pickle
 import threading 
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 # Disable urllib3 warnings because these can cause a rare deadlock due to Python 2's crappy internal non-reentrant locking
 # around POSIX stuff. See SAAS-714. The hasattr() is for compatibility with older versions of requests.
@@ -68,7 +68,7 @@ def process_http_requests(ipc_queue, http_retry_queue_path):
                         break
                     if not isinstance(request, PicklableHttpRequest):
                         raise TypeError("request must be a PicklableHttpRequest. Was of type " + type(request).__name__)
-                except Queue.Empty:
+                except queue.Empty:
                     request = None
 
                 # If there's no new HTTP request we need to execute, let's check our "retry
@@ -159,7 +159,7 @@ class StatusReporter():
     ''' We use multiprocessing.Process again here because we need a thread for this stuff
         anyways, and Python gives us process isolation for free (crash safety).
     '''
-    _ipc_queue = Queue.Queue()
+    _ipc_queue = queue.Queue()
     #_http_thread = multiprocessing.Process(target=process_http_requests,
     #                        args=(_ipc_queue,))
     _http_thread = None
@@ -222,7 +222,7 @@ class StatusReporter():
 
     @classmethod
     def report_failure_to_callback_url(self, callback_url, api_key, import_status, reason):
-        if not isinstance(import_status, (int, long) ):
+        if not isinstance(import_status, int ):
             raise TypeError("import_status must be an integer. Was of type " + type(import_status).__name__)
 
         logging.debug("Reporting import failure to Airtime REST API...")

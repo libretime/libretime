@@ -96,12 +96,32 @@ CREATE TABLE "cc_files"
     "is_playlist" BOOLEAN DEFAULT 'f',
     "filesize" INTEGER DEFAULT 0 NOT NULL,
     "description" VARCHAR(512),
+    "artwork" VARCHAR(512),
+    "track_type" VARCHAR(16),
     PRIMARY KEY ("id")
 );
 
 CREATE INDEX "cc_files_md5_idx" ON "cc_files" ("md5");
 
 CREATE INDEX "cc_files_name_idx" ON "cc_files" ("name");
+
+-----------------------------------------------------------------------
+-- cc_track_types
+-----------------------------------------------------------------------
+
+DROP TABLE IF EXISTS "cc_track_types" CASCADE;
+
+CREATE TABLE "cc_track_types"
+(
+    "id" serial NOT NULL,
+    "code" VARCHAR(16) DEFAULT '' NOT NULL,
+    "type_name" VARCHAR(64) DEFAULT '' NOT NULL,
+    "description" VARCHAR(255) DEFAULT '' NOT NULL,
+    "visibility" boolean DEFAULT true NOT NULL,
+    PRIMARY KEY ("id"),
+    CONSTRAINT "cc_track_types_id_idx" UNIQUE ("id"),
+    CONSTRAINT "cc_track_types_code_idx" UNIQUE ("code")
+);
 
 -----------------------------------------------------------------------
 -- cloud_file
@@ -299,7 +319,7 @@ CREATE TABLE "cc_block"
     "creator_id" INTEGER,
     "description" VARCHAR(512),
     "length" interval DEFAULT '00:00:00',
-    "type" VARCHAR(7) DEFAULT 'static',
+    "type" VARCHAR(7) DEFAULT 'dynamic',
     PRIMARY KEY ("id")
 );
 
@@ -337,6 +357,7 @@ CREATE TABLE "cc_blockcriteria"
     "modifier" VARCHAR(16) NOT NULL,
     "value" VARCHAR(512) NOT NULL,
     "extra" VARCHAR(512),
+    "criteriagroup" INTEGER,
     "block_id" INTEGER NOT NULL,
     PRIMARY KEY ("id")
 );
@@ -780,6 +801,8 @@ CREATE TABLE "podcast_episodes"
     "publication_date" TIMESTAMP NOT NULL,
     "download_url" VARCHAR(4096) NOT NULL,
     "episode_guid" VARCHAR(4096) NOT NULL,
+    "episode_title" VARCHAR(4096) NOT NULL,
+    "episode_description" TEXT NOT NULL,
     PRIMARY KEY ("id")
 );
 

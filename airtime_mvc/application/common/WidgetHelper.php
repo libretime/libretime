@@ -4,7 +4,7 @@ define("DAYS_PER_WEEK", 7);
 
 class WidgetHelper
 {
-    public static function getWeekInfo($timezone)
+    public static function getWeekInfo($userDefinedTimezone)
     {
         //weekStart is in station time.
         $weekStartDateTime = Application_Common_DateHelper::getWeekStartDateTime();
@@ -17,10 +17,12 @@ class WidgetHelper
 
         // default to the station timezone
         $timezone = Application_Model_Preference::GetDefaultTimezone();
-        $userDefinedTimezone = strtolower($timezone);
-        // if the timezone defined by the user exists, use that
-        if (array_key_exists($userDefinedTimezone, timezone_abbreviations_list())) {
-            $timezone = $userDefinedTimezone;
+        if ($userDefinedTimezone) {
+            $userDefinedTimezone = strtolower($userDefinedTimezone);
+            // if the timezone defined by the user exists, use that
+            if (array_key_exists($userDefinedTimezone, timezone_abbreviations_list())) {
+                $timezone = $userDefinedTimezone;
+            }
         }
         $utcTimezone = new DateTimeZone("UTC");
 
