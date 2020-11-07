@@ -21,8 +21,8 @@
         <div class="track-edit-left">
             <div class="artwork-upload" data-id="<?php echo($this->id); ?>">
                 <div class="artwork-edit">
-                    <input type='file' class="artworkUpload artwork-uploaded-<?php echo($this->id); ?>" id="artworkUpload" data-id="<?php echo($this->id); ?>" accept=".png, .jpg, .jpeg" />
-                    <label for="artworkUpload"></label>
+                    <input type='file' class="artworkUpload artwork-uploaded-<?php echo($this->id); ?>" id="artworkUpload-<?php echo ($this->id); ?>" data-id="<?php echo($this->id); ?>" accept=".png, .jpg, .jpeg" />
+                    <label for="artworkUpload-<?php echo ($this->id); ?>"></label>
                 </div>
                 <div id="artwork-preview" class="artwork-preview">
                     <div class="artwork-preview-<?php echo($this->id); ?>" id="artworkPreview" style="background-image: url(<?php echo $get_artwork; ?>);">
