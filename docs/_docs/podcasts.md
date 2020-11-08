@@ -8,7 +8,7 @@ The Podcasts page allows you add subscriptions to podcasts which are often used 
 
 In order to add a podcast you need to get the RSS feed. All podcasts available on iTunes have a RSS feed but it is sometimes hidden. See this issue on our github page [#510](https://github.com/LibreTime/libretime/issues/510) for more information. RSS feeds that do not end in *.xml* may be accepted by LibreTime but might fail to download episodes; in that case, download the episode using a podcast client such as [gpodder](https://gpodder.github.io/) and then manually upload and schedule the episode. Podcast feeds coming from Anchor.fm have been known to have this issue.
 
-The podcast interfaces provides you with the ability to generate [Smartblocks](library#smartblocks) that can be used in conjunction with autoloading playlists to schedule the newest episode of a podcast without human intervention.
+The podcast interfaces provides you with the ability to generate [Smartblocks](/docs/playlists) that can be used in conjunction with autoloading playlists to schedule the newest episode of a podcast without human intervention.
 
 <html>
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/g-4UcD8qvR8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

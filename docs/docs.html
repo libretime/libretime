@@ -81,7 +81,7 @@ layout: default
           <div class="d-md-flex align-items-center">
             <div class="w-100 mb-3 mb-md-0 pr-md-5">
               <h2 class="h4 font-weight-light mb-0">Can't find what you're looking for?</h2>
-              <p class="font-weight-light mb-0">Let us help you!</p>
+              <p class="font-weight-light mb-0">Ask for help on our Github repo!</p>
             </div>
 
             <div class="text-md-right w-100">
@@ -129,7 +129,7 @@ layout: default
             <ul class="list-unstyled">
             	{% for doc in site.docs %}
             		{% if doc.category == "admin" %}
-              <li class="mb-3"><a class="link-muted" href="{{doc.url}}">{{doc.title}}</a></li>
+              <li class="mb-2"><a class="link-muted" href="{{doc.url}}">{{doc.title}}</a></li>
               		{% endif %}
               	{% endfor %}
             </ul>

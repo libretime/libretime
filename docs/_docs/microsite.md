@@ -6,10 +6,9 @@ category: admin
 
 ![](/img/radio-page.png)
 
-LibreTime includes a mini-site, which can be accessed at _serverIP_ (for local installations), or
-_libretime.yourdomain.com_ or _cloudvmIP_ (for installations to a server on a domain). The site includes your
+LibreTime includes a microsite, which can be accessed at _serverIP_ or a domain you've set up for your server. The site includes your
 logo and station description (set under Settings > General), the login button to the LibreTime interface, the schedule for the next seven days,
-podcast tabs, and a live feed of your station with the currently playing artist and track displayed.
+podcast tabs, and a live feed of your station with information on the the currently playing artist and track.
 
 ## Modifying the LibreTime Radio Page
 
@@ -26,4 +25,4 @@ html {
 }
 ```
 
-Place the new background image in the */usr/share/airtime/public/css/radio-page/img/* folder and change the `background:` entry's URL to point to the new image. The new image should be at least 1280 x 720 in pixel size to avoid being blurry.
+Place the new background image in the `/usr/share/airtime/public/css/radio-page/img/` folder and change the `background:` entry's URL to point to the new image. The new image should be at least 1280 x 720 in pixel size to avoid being blurry.

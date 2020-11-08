@@ -23,21 +23,24 @@ Have an idea that would make LibreTime even better than it is right now? Start a
 ## Help translate LibreTime
 
 LibreTime can run in over 15 different languages due to the gracious help of our volunteers. Is your language not
-supported? Follow [this guide](interface-localization) to add your language to LibreTime!
+supported? Follow [this guide](/docs/interface-localization) to add your language to LibreTime!
 
 ## Help write documentation for LibreTime
 
-Our site is now run by Jekyll. After cloning our repo locally, enter the `/docs` directory and run
+Our site is now run by Jekyll, who has an installation guide [here](https://jekyllrb.com/docs/installation/) to help get you started.
+ After cloning our repo locally, enter the `/docs` directory and run
 
 ```
 bundle install
 jekyll serve
 ```
 
+If you get an error, try running `bundle exec jekyll serve`. The site should start running on `http://127.0.0.1:4000/`.
+
 ## Help write code for LibreTime
 
 Are you familar with coding in PHP? Have you made projects in Liquidsoap and some of the other services we use?
-Take a look at the bugs and feature requests [here](https://github.com/LibreTime/libretime/issues), and then
+Take a look at the [list of bugs and feature requests](https://github.com/LibreTime/libretime/issues), and then
 fork our repo and have a go! Just use the **Fork** button at the top of our **Code** page, clone the forked repo to
 your desktop, open up a favorite editor and make some changes, and then commit, push, and open a pull request.
 Knowledge on how to use [Github](https://guides.github.com/activities/hello-world/) and [Git](https://git-scm.com/docs/gittutorial)
@@ -47,7 +50,7 @@ will suit you well, use the links for a quick 101.
 
 Before submitting code to the project, it's a good idea to test it first. To do this, it's easiest to install
 LibreTime in a virtural machine on your local system or in a cloud VM. Instructions on how to set up a virtural
-instance of LibreTime with Vagrant are located [here](vagrant).
+instance of LibreTime with Vagrant are located [here](/docs/vagrant).
 
 If you would like to try LibreTime in a Docker image,
 Odclive has instructions [here](https://github.com/kessibi/libretime-docker) for setting up a test image

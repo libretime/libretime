@@ -4,29 +4,6 @@ title: Troubleshooting
 git: troubleshooting.md
 ---
 
-## Restarting services
-
-LibreTime is effectively a web site running on a LAPP stack, so individual components of the system can be started, stopped, restarted or checked in the server console using the **systemctl** command:
-
-```
-sudo systemctl start|stop|restart|status libretime-liquidsoap
-sudo systemctl start|stop|restart|status libretime-playout
-sudo systemctl start|stop|restart|status libretime-celery
-sudo systemctl start|stop|restart|status libretime-analyzer
-sudo systemctl start|stop|restart|status apache2
-sudo systemctl start|stop|restart|status rabbitmq-server
-```
-
-For example, to restart the Airtime playout engine, you could enter the command:
-
-```
-sudo systemctl restart libretime-playout
-```
-
-## Log files {#logs}
-
-Airtime stores log files under the directory path */var/log/airtime/* which can be useful for diagnosing the cause of any problems. Copies of these log files may be requested by LibreTime developers while they are providing technical support for your Airtime deployment.
-
 ## Test tones {#tones}
 
 If you need to test your computer's soundcard, you can use `speaker-test`, a tone generator for ALSA.
@@ -90,21 +67,3 @@ rabbitmqctl set_permissions -p /airtime airtime
    "airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
    "airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
 ```
-
-## Uninstall LibreTime {#uninstall}
-
-Hopefully it wasn't something that we did, but if you need to uninstall LibreTime for
-any reason, cd to the directory of the installer and run
-```
-sudo ./uninstall
-```
-
-If allowed, the installer will **permanently** delete all databases and media uploaded to
-LibreTime.
-
-If it was something we did, please open an issue request on our Github page, located
-[here](https://github.com/LibreTime/libretime/issues).
-
-Until we meet again, best of luck.
-
-<3 The LibreTime team

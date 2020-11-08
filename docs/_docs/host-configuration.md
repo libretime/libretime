@@ -211,15 +211,12 @@ for the changes to take effect.
 
 ## Setting the server time
 
-Accurate time keeping on your server is vital for LibreTime performance. You can confirm that the date and time of your server are set correctly with the **date** command:
-
-    date
-
+Accurate time keeping on your server is vital for LibreTime performance. You can confirm that the date and time of your server are set correctly with the `date` command.
 The server should respond with the date, time, time zone and year in a format similar to the following example:
 
     Tue Jul  2 15:08:57 BST 2013 
 
-If the time on your server is wrong, it is recommended that you take LibreTime off-air until the problem is fixed.
+If the time on your server is wrong, it is strongly recommended that you take LibreTime off-air until the problem is fixed.
 
 ### Configuring NTP
 
