@@ -40,7 +40,7 @@ layout: default
               <div class="card-body z-index-1">
                 <div class="d-flex align-items-center">
                   <i class="fab fa-github fa-3x mr-4"></i>
-                  <p class="mb-0">Stay up to date for any abouts and contributions!</p>
+                  <p class="mb-0">Stay up to date with updates and contributions!</p>
                 </div>
               </div>
 
@@ -73,21 +73,21 @@ layout: default
 
                 <div class="card border-bottom mb-3">
                   <div class="card-header accordion-header d-flex align-items-center collapsed" id="headingTwo-001" data-toggle="collapse" data-target="#collapseTwo-001" aria-expanded="false" aria-controls="collapseTwo-001" role="region">
-                    <h6 class="mb-0">Is it really free and under MIT license?</h6>
+                    <h6 class="mb-0">Where do I find the log files?</h6>
                     <i class="fas fa-angle-down accordion-control ml-auto text-primary"></i>
                   </div>
                   <div id="collapseTwo-001" class="collapse" aria-labelledby="headingTwo-001" data-parent="#accordionExample-001">
-                    <div class="card-body">Yes! It's just absolutely FREE and comes with a simple license! If you have any questions or doubts, please feel free to reach us <a href="#">here</a>.</div>
+                    <div class="card-body">Airtime stores log files under the directory path <code>/var/log/airtime/</code>. Copies of these log files may be requested by LibreTime developers while they are providing technical support for your Libretime deployment.</div>
                   </div>
                 </div>
 
                 <div class="card border-bottom mb-3">
                   <div class="card-header accordion-header d-flex align-items-center collapsed" id="headingThree-001" data-toggle="collapse" data-target="#collapseThree-001" aria-expanded="false" aria-controls="collapseThree-001" role="region">
-                    <h6 class="mb-0">Can I use Docs UI Kit in commercial project?</h6>
+                    <h6 class="mb-0">One of the Libretime services stopped working. How do I restart it?</h6>
                     <i class="fas fa-angle-down accordion-control ml-auto text-primary"></i>
                   </div>
                   <div id="collapseThree-001" class="collapse" aria-labelledby="headingThree-001" data-parent="#accordionExample-001">
-                    <div class="card-body">Yes! Docs UI Kit is absolutely Free and you can use in both personal and commercial projects without any attribution. However, we would much appreciate for any attribution.</div>
+                    <div class="card-body">On Ubuntu, LibreTime services are controlled by the system service daemon <i>systemctl</i>. To restart a service, use the command <code>sudo systemctl restart servicename</code>. Some of Libretime's services include libretime-liquidsoap, libretime-playout, libretime-celery, libretime-analyzer, apache2, and rabbitmq-server.</div>
                   </div>
                 </div>
 
@@ -138,8 +138,8 @@ layout: default
                     <i class="fas fa-angle-down accordion-control ml-auto text-primary"></i>
                   </div>
                   <div id="collapseEight-001" class="collapse" aria-labelledby="headingEight-001" data-parent="#accordionExample-001">
-                    <div class="card-body">Hopefully it wasn't something that we did, but if you need to uninstall LibreTime for any reason, cd to the directory of the installer and run <code>sudo ./uninstall</code>.
-					If allowed, the installer will **permanently** delete all databases and media uploaded to LibreTime.
+                    <div class="card-body">Hopefully it wasn't something that we did, but if you need to uninstall LibreTime for any reason, cd to the directory of the installer and run <code>sudo bash uninstall</code>.
+					If allowed, the installer will <i>permanently</i> delete all databases and media uploaded to LibreTime.
 					<p>If it was something we did, please <a href="https://github.com/LibreTime/libretime/issues" target="_blank">open an issue request</a> on our Github.
 					</div>
                   </div>

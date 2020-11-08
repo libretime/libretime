@@ -44,7 +44,7 @@ Fill out the smart block's **Name**, **Search Criteria**, and **Limit to** secti
 
 If you have a large number of files which meet the criteria that you specify, you may wish to limit the duration of the smart block using the **Limit to** field, so that it fits within the show you have in mind. Select **hours**, **minutes** or **items** from the drop-down menu, and click the **Generate** button again, if it is a static smart block. Then click the **Save** button.
 
-> Note: Smart Blocks by default will not overflow the length of a scheduled show.
+> **Note:** Smart Blocks by default will not overflow the length of a scheduled show.
 > This is to prevent tracks from being cut-off because they exceed the time limit of a show. 
 > If you want a smartblock to schedule tracks until it is longer than the Time Limit you can check **"Allow last track to exceed time limit"**
 > (helpful for avoiding dead air on autoscheduled shows).
