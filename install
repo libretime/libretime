@@ -1133,7 +1133,7 @@ fi
 
 if [ ! -d "/etc/airtime" ]; then
     loud "\n-----------------------------------------------------"
-    loud "                * Installing Airtime *               "
+    loud "                * Installing Libretime *               "
     loud "-----------------------------------------------------"
 
     verbose "\n * Creating /etc/airtime/ directory..."

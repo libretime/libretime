@@ -1,8 +1,7 @@
 ---
 layout: article
-title: Backing Up The Server
+title: Backing Up Libretime
 category: admin
-git: backing-up-the-server.md
 ---
 
 ## Database Backup
