@@ -267,11 +267,11 @@ If the server time zone is not appropriate for integration with your station's o
 
 This command opens a menu in which you can select the continent that you require, by pressing the Enter key.
 
-![](img/Screenshot15-Configuring_tzdata.png)
+![](/img/Screenshot15-Configuring_tzdata.png)
 
 The next step is to select your nearest city, again by pressing the Enter key. The appropriate time zone is selected according to the information that you have entered.
 
-![](img/Screenshot16-Configure_city.png)
+![](/img/Screenshot16-Configure_city.png)
 
 The console output from the **dpkg-reconfigure tzdata** command will confirm the new setting:
 
