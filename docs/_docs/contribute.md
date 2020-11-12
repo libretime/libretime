@@ -46,17 +46,17 @@ your desktop, open up a favorite editor and make some changes, and then commit, 
 Knowledge on how to use [Github](https://guides.github.com/activities/hello-world/) and [Git](https://git-scm.com/docs/gittutorial)
 will suit you well, use the links for a quick 101.
 
-### Testing LibreTime in Vagrant
+## Testing LibreTime
 
 Before submitting code to the project, it's a good idea to test it first. To do this, it's easiest to install
-LibreTime in a virtural machine on your local system or in a cloud VM. Instructions on how to set up a virtural
-instance of LibreTime with Vagrant are located [here](/docs/vagrant).
+LibreTime in a virtural machine on your local system or in a cloud VM. We have instructions for setting up a virtural
+instance of LibreTime with [Vagrant](/docs/vagrant) and [Multipass](/docs/multipass).
 
 If you would like to try LibreTime in a Docker image,
 Odclive has instructions [here](https://github.com/kessibi/libretime-docker) for setting up a test image
 and a more persistant install.
 
-### Modifying the Database
+## Modifying the Database
 LibreTime is designed to work with a [PostgreSQL](https://www.postgresql.org/) database server running locally.
 LibreTime uses [PropelORM](http://propelorm.org) to interact with the ZendPHP components and create the database.
 
