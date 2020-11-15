@@ -4,22 +4,44 @@ title: Backing Up Libretime
 category: admin
 ---
 
-## Database Backup
+## Backup
 
-The following shell commands can be used for database backup and restore on a
-running *PostgreSQL* server in an LibreTime system.
-
-You can dump the entire database to a zipped file with the combination of the
+You can dump the entire *PostgreSQL* database to a zipped file with the combination of the
 **pg\_dumpall** command and **gzip**. The **pg\_dumpall** command is executed
 as the user *postgres*, by using the **sudo** command and the **-u** switch. It
 is separated from the **gzip** command with the pipe symbol.
 
-```bash
-sudo -u postgres pg_dumpall | gzip -c > libretime-backup.gz
-```
-
 This command can be automated to run on a regular basis using the standard
 **cron** tool on your server.
+
+It is recommended to use an incremental backup technique to synchronize
+the your LibreTime track library with a backup server regularly. (If
+the backup server also contains an LibreTime installation, it should be possible
+to switch playout to this second machine relatively quickly, in case of a
+hardware failure or other emergency on the production server.)
+
+Two notible backup tools are [rsync](http://rsync.samba.org/) (without version control) and 
+[rdiff-backup](http://www.nongnu.org/rdiff-backup/) (with version control). *rsync* comes
+preinstalled with Ubuntu Server.
+
+> **Note:** Standard *rsync* backups cannot restore files deleted in the backup itself
+
+```
+#/bin/bash
+
+# Replace /backup with backup folder location!
+# Used for backing up the media library
+sudo rsync -aE --delete --info=progress2 /srv/airtime/stor/ /backup
+
+# Used for backing up the database
+sudo -u postgres pg_dumpall | gzip -c > libretime-db-backup.gz
+sudo mv libretime-db-backup.gz /backup
+
+# Write date/time of backup to file
+date >> /backup/datelog.txt
+```
+
+## Restore from a Backup
 
 When restoring a production database on a cleanly installed LibreTime system, it
 may be necessary to drop the empty database that was created during the new
@@ -39,8 +61,8 @@ To restore, first unzip the backup file with **gunzip**, then use the **psql**
 command as the *postgres* user:
 
 ```bash
-gunzip libretime-backup.gz
-sudo -u postgres psql -f libretime-backup
+gunzip libretime-db-backup.gz
+sudo -u postgres psql -f libretim-db-backup
 ```
 
 You should now be able to log in to the LibreTime web interface in the usual way.
@@ -50,27 +72,3 @@ which is backed up by your storage backup tool of choice; for example, the
 */srv/airtime/database\_backups* directory. This should ensure that a storage
 restore can be made along with a matching and complete version of the LibreTime
 database from the day that the storage backup was made. 
-
-## Storage backup
-
-Backing up the LibreTime database with **pg\_dumpall** will not back up the
-LibreTime media storage server, which is likely to need a great deal more backup
-space. Creating a compressed file from hundreds of gigabytes of storage server
-contents is likely to take a very long time, and may have little benefit for the
-amount of CPU power used, if the media files are already stored in a highly
-compressed format. It is also impractical to copy very large backup files across
-the network on a daily basis.
-
-Instead, it is preferable to use an incremental backup technique to synchronize
-the production LibreTime server storage with a backup server each day or night. If
-the backup server also contains an LibreTime installation, it should be possible
-to switch playout to this second machine relatively quickly, in case of a
-hardware failure or other emergency on the production server.
-
-A standard incremental backup tool on GNU/Linux servers is [rsync](http://rsync.samba.org/) which can be installed
-using the package manager of your GNU/Linux distribution. However, incremental
-backup alone cannot help in the scenario where a file which later proves to be
-important has been deleted by an administrator. For backups that can be rolled
-back to restore from an earlier date than the current backup, the tool
-[rdiff-backup](http://www.nongnu.org/rdiff-backup/) can
-be deployed.  

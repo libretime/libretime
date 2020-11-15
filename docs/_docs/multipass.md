@@ -5,10 +5,12 @@ category: dev
 ---
 
 [Multipass](https://multipass.run) is a tool for easily setting up Ubuntu VMs on Windows, Mac, and Linux.
-Similar to Docker, Multipass works through a CLI. To use, clone this repo and then open a Terminal (or Command Prompt) inside the created folder and run
+Similar to Docker, Multipass works through a CLI. To use, clone this repo and then create a new Multipass VM.
 
 ```
-multipass launch bionic -n ltTEST --cloud-init multipass.yaml
+git clone https://github.com/libretime/libretime.git
+cd libretime
+multipass launch bionic -n ltTEST --cloud-init cloud-init.yaml
 multipass shell ltTEST
 ```
 
@@ -16,7 +18,8 @@ Multipass isn't currently able to do an automated install from the cloud-init sc
 After you enter the shell for the first time, you will still need to run the install script for LibreTime.
 
 ```
-sudo ./libretime/install -fiap
+cd libretime
+sudo bash install -fiap
 ```
 
 The IP address of your new VM can be found by running `multipass list`. Copy and paste it into your web browser to access the LibreTime interface and complete the setup wizard.

@@ -79,9 +79,8 @@ cd libretime
 vagrant up ubuntu-xenial
 ```
 
-If everything works out, you will find LibreTime on [port 8080](http://localhost:8080),
-icecast on [port 8000](http://localhost:8000) and the docs on
-[port 8888](http://localhost:8888).
+If everything works out, you will find LibreTime on [port 8080](http://localhost:8080)
+and Icecast on [port 8000](http://localhost:8000).
 
 Once you reach the web setup GUI you can click through it using the default values. To
 connect to the vagrant machine you can run `vagrant ssh ubuntu-xenial` in the libretime

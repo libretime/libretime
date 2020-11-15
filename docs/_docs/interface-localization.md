@@ -6,7 +6,7 @@ category: admin
 
 The LibreTime administration interface can be localized using the standard GNU **gettext** method. Using GitHub for this task means you don't have to tackle the whole of a localization yourself; just as much as you can manage.
 
-![](img/Screenshot464-Korean_stream_setting.png)
+![](/img/Screenshot464-Korean_stream_setting.png)
 
 First, you should check if a localization is already under way for your locale of choice. The best way to do this is to take a look at the 'master' branch in the GitHub repository for LibreTime at <https://github.com/LibreTime/libretime>. You can also ask in the LibreTime development forum at <https://discourse.libretime.org/>, where you might find community members who can help you with the translation.
 

@@ -4,6 +4,8 @@ title: Dashboard
 category: interface
 ---
 
+> Want to listen to Libretime's output stream? Click **Listen** below the **On Air** light.
+
 The Dashboard is divided into two sections a Library section divided between
 Tracks, Playlists, Smart Blocks, Webstreams, and Podcasts, with the **Scheduled
 Shows** dialog on the right. This page provides an overview of the right-hand
