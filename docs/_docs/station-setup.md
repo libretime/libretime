@@ -13,7 +13,7 @@ and ethernet port. A wired approach is strongly recommended over a wireless one.
 
 ### 2. Install Ubuntu Server 18.04 LTS
 
-Download Ubuntu Server [here](https://ubuntu.com/download/server) (look under Option 3).
+Download Ubuntu Server [here](https://ubuntu.com/download/server). 
 A standard install is recommended, on a RAID 1 array if possible (not required, but recommended).
 
 Installation checklist:

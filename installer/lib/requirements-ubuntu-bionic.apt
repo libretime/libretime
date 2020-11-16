@@ -11,9 +11,12 @@ icecast2
 lame
 libao-ocaml
 libapache2-mod-php7.2
+libcairo2-dev
 libcamomile-ocaml-data
 libfaad2
 libffi-dev
+libgirepository1.0-dev
+libglib2.0-dev
 libmad-ocaml
 libopus0
 libportaudio2
@@ -48,6 +51,7 @@ php-apcu
 php-bcmath
 php-mbstring
 php-pear
+pkg_config
 postgresql
 postgresql-client
 pwgen
