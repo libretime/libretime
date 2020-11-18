@@ -37,9 +37,6 @@ jobs:
       php: 7.2
       stage: test
     - language: php
-      php: 7.1
-      stage: test
-    - language: php
       php: 7.0
       stage: test
     - language: php
@@ -74,8 +71,6 @@ jobs:
       php: 7.3
     - language: php
       php: 7.2
-    - language: php
-      php: 7.1
     # https://github.com/LibreTime/libretime/issues/1041
     - language: python
       python: 3.5
