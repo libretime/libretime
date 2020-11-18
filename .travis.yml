@@ -1,4 +1,4 @@
-dist: xenial
+dist: bionic
 
 services:
   - postgresql
@@ -23,6 +23,10 @@ addons:
       - liquidsoap-plugin-vorbis
       - python3-gst-1.0
       - silan
+      - python3-gi
+      - python3-gi-cairo
+      - gcc
+      - gir1.2-gtk-3.0
 
 jobs:
   include:
@@ -33,13 +37,7 @@ jobs:
       php: 7.2
       stage: test
     - language: php
-      php: 7.1
-      stage: test
-    - language: php
       php: 7.0
-      stage: test
-    - language: php
-      php: 5.6
       stage: test
     - language: python
       python: 3.8
@@ -70,8 +68,6 @@ jobs:
       php: 7.3
     - language: php
       php: 7.2
-    - language: php
-      php: 7.1
     # https://github.com/LibreTime/libretime/issues/1041
     - language: python
       python: 3.5
