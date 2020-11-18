@@ -3,7 +3,7 @@
 # someone to use to get Jekyll building outside of GitHub
 
 echo "Installing Ruby"
-apt-get install -y ruby-full build-essential zlib1g-dev
+apt-get update -y && apt-get install -y ruby-full build-essential zlib1g-dev
 
 export GEM_HOME=".gems"
 export PATH=".gems/bin:$PATH"
