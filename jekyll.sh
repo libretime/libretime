@@ -9,7 +9,16 @@ export GEM_HOME=".gems"
 export PATH=".gems/bin:$PATH"
 
 echo "Installing Jekyll"
-cd docs
+
+# Picking different directory if installing with Vagrant
+localUser=$(who am i | awk '{print $1}')
+if [ $localUser == vagrant ]
+then 
+	cd /vagrant/docs
+else
+	cd docs
+fi
+
 gem install jekyll bundler
 
 # Running Jekyll
