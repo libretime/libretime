@@ -18,3 +18,4 @@ airtime_mvc/tests/log/*.log
 .idea/
 /docs/_site/*
 /docs/.jekyll-cache/*
+/docs/.gems/*
