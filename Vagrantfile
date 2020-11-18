@@ -10,6 +10,8 @@ Vagrant.configure("2") do |config|
   # liquidsoap input harbors for instreaming (ie. /master)
   config.vm.network "forwarded_port", guest: 8001, host:8001
   config.vm.network "forwarded_port", guest: 8002, host:8002
+  # for Jekyll serve
+  config.vm.network "forwarded_port", guest: 8888, host:8888
 
   # make sure we are using nfs (doesn't work out of the box with debian)
   nfsPath = "."
@@ -69,7 +71,7 @@ Vagrant.configure("2") do |config|
     config.vm.provision "install", type: "shell", inline: "cd /vagrant; ./install %s --web-port=8080" % installer_args
 
     # Provision docs
-    config.vm.provision "build-site-jekyll", type: "shell", path: "docs/jekyll.sh"
+    config.vm.provision "build-site-jekyll", type: "shell", path: "./jekyll.sh"
   end
 
 end

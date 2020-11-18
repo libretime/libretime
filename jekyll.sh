@@ -13,4 +13,4 @@ cd docs
 gem install jekyll bundler
 
 # Running Jekyll
-jekyll serve 
+jekyll serve --port 8888
