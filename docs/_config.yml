@@ -10,8 +10,6 @@ includes_dir: _includes
 
 favicon: favicon.ico
 
-exclude: ['jekyll.sh'
-]
 # For splash page layout only
 headimage: img/header.jpg
 headtext: Open Source Radio Automation
