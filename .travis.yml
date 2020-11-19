@@ -1,4 +1,4 @@
-dist: xenial
+dist: bionic
 
 services:
   - postgresql
@@ -23,6 +23,12 @@ addons:
       - liquidsoap-plugin-vorbis
       - python3-gst-1.0
       - silan
+      - gcc
+      - gir1.2-gtk-3.0
+      - python3-gi
+      - python3-gi-cairo
+      - python-cairo
+      - pkg-config
 
 jobs:
   include:
