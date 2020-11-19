@@ -35,7 +35,7 @@ bundle install
 jekyll serve
 ```
 
-If you get an error, try running `bundle exec jekyll serve`. The site should start running on `http://127.0.0.1:4000/`.
+> If you get an error, try running `bundle exec jekyll serve`.
 
 ## Help write code for LibreTime
 
