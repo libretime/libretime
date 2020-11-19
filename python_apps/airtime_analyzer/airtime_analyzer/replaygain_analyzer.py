@@ -21,7 +21,7 @@ class ReplayGainAnalyzer(Analyzer):
         command = [ReplayGainAnalyzer.REPLAYGAIN_EXECUTABLE, '-d', filename]
         try:
             results = subprocess.check_output(command, stderr=subprocess.STDOUT,
-                                              close_fds=True, text=True)
+                                              close_fds=True, universal_newlines=True)
             gain_match = r'Calculating Replay Gain information \.\.\.(?:\n|.)*?:([\d.-]*) dB'
             replaygain = re.search(gain_match, results).group(1)
             metadata['replay_gain'] = float(replaygain)
