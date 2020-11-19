@@ -20,7 +20,7 @@ Conversely, you may have a music station which wants to stream at 160kbps or 192
 
 When sending metadata about your stream to an Icecast server in non-Latin alphabets, you may find that Icecast does not display the characters correctly for an MP3 stream, even though they are displayed correctly for an Ogg Vorbis stream. In the following screenshot, Russian characters are being displayed incorrectly in the *Current Song* field for the MP3 stream:
 
-![](img/Screenshot223-Icecast_UTF-8_metadata.png)
+![](/img/Screenshot223-Icecast_UTF-8_metadata.png)
 
 The solution is to specify that the metadata for the MP3 mount point you are using should be interpreted using UTF-8 encoding. You can do this by adding the following stanza to the */etc/icecast2/icecast.xml* file, where *libretime.mp3* is the name of your mount point:
 
@@ -119,4 +119,4 @@ Another stream directory service is provided by the Liquidsoap Flows! site <http
       streams=[("ogg/128k","http://streaming.example.com/libretime_128")],
       ourstation)
 
-For the time being, a stream can be registered on the Liquidsoap Flows! site with any username and password. Authenticated services may be offered in future.
+> **Note:** For the time being, a stream can be registered on the Liquidsoap Flows! site with any username and password. Authenticated services may be offered in future.

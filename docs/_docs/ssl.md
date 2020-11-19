@@ -9,7 +9,7 @@ To increase the security of your server, you can enable encrypted access to the 
 ### Deploying a certificate with Certbot
 
 One of the fastest, easiest, and cheapest ways to get an SSL certificate is through [Certbot](https://certbot.eff.org/), as created by the
-[Electronic Frontier Foundation](https://www.eff.org/). There are some requirements for this process:
+Electronic Frontier Foundation. There are some requirements for this process:
 - you have an HTTP website (already installed and configured by default by the LibreTime installer) and
 - this website is open to the public internet (likely via. port forwarding if your computer is behind a firewall) and
 - the server is accessible to the public via. port 80

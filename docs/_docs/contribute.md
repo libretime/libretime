@@ -5,7 +5,7 @@ category: dev
 permalink: /contribute
 ---
 
-> LibreTime is a fork of AirTime due to stalled development of the FLOSS version. For background on this,
+> LibreTime is a fork of AirTime due to stalled development of the open source version. For background on this,
 see this [open letter to the Airtime community](https://gist.github.com/hairmare/8c03b69c9accc90cfe31fd7e77c3b07d).
 
 ## Bug reporting
@@ -27,7 +27,7 @@ supported? Follow [this guide](/docs/interface-localization) to add your languag
 
 ## Help write documentation for LibreTime
 
-Our site is now run by Jekyll, who has an installation guide [here](https://jekyllrb.com/docs/installation/) to help get you started.
+Our site is now built by Jekyll, which has an installation guide [here](https://jekyllrb.com/docs/installation/) to help get you started.
  After cloning our repo locally, enter the `/docs` directory and run
 
 ```

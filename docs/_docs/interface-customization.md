@@ -6,7 +6,7 @@ category: admin
 ---
 
 
-The LibreTime administration interface, as a web application, is fully customizable using the same methods that you might use to modify a website. For instance, you may wish to increase certain font sizes or change the colours in the LibreTime interface to better suit staff users with impaired vision. To do this, open one of the CSS files in the */public/css/* directory under the LibreTime *DocumentRoot* directory in an editor such as **nano**:
+The LibreTime administration interface, as a web application, is fully customizable using the same methods that you might use to modify a website. For instance, you may wish to increase certain font sizes or change the colours in the LibreTime interface to better suit staff users with impaired vision. To do so, open one of the CSS files in the */public/css/* directory under the LibreTime *DocumentRoot* directory in an editor such as **nano**:
 
     sudo nano /usr/share/airtime/public/css/styles.css
 
@@ -20,7 +20,7 @@ To change the background colour of the administration interface from dark gray t
           padding: 0;
     }
 
-Save the file with **Ctrl+O**, then refresh your browser to see the change to the interface background colour.
+Save the file with **Ctrl+S**, then refresh your browser to see the change to the interface background colour.
 
 Any custom changes that you make to the administration interface should be backed up before upgrading LibreTime to a newer version, otherwise they could be overwritten. If you have made improvements that you think might be useful to other LibreTime users, please contact LibreTime and tell us about them.
 
@@ -36,4 +36,4 @@ Modifying the *status.xsl* page is a good place to start, because this is the de
 
 After saving the file with Ctrl+O, refresh your web browser, and the new look should now be visible.
 
-![](img/Screenshot177-Icecast_rocks.png)
+![](/img/Screenshot177-Icecast_rocks.png)

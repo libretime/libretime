@@ -11,7 +11,7 @@ fi
 
 
 airtime_conf_path=/etc/airtime/airtime.conf
-sound_folder=/srv/airtime/stor/
+uploads_folder=/srv/airtime/stor/
 
 psdl_db=$(grep dbname ${airtime_conf_path} | awk '{print $3;}' )
 psql_user=$(grep dbuser ${airtime_conf_path} | awk '{print $3;}' )
@@ -29,10 +29,10 @@ echo 'db: Complete'
 
 ## Backup of sounds
 
-mkdir $backup_folder'sounds/'
+mkdir $backup_folder'uploads/'
 
-echo 'stor : Copying sounds...'
-rsync -r -a --info=progress2 $sound_folder $backup_folder'sounds/'
+echo 'stor : Copying uploaded files...'
+rsync -r -a --info=progress2 $uploads_folder $backup_folder'uploads/'
 echo 'stor: Complete'
 
 ## Backup of libretime config
@@ -42,3 +42,5 @@ mkdir $backup_folder'airtime_config/'
 echo 'config: Copying config...'
 rsync -r -a --info=progress2 /etc/airtime/ $backup_folder'airtime_config/'
 echo 'config: Complete'
+
+date >> $backup_folder'datelog.txt'

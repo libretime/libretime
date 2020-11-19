@@ -18,7 +18,7 @@ Multipass isn't currently able to do an automated install from the cloud-init sc
 After you enter the shell for the first time, you will still need to run the install script for LibreTime.
 
 ```
-cd libretime
+cd /libretime
 sudo bash install -fiap
 ```
 

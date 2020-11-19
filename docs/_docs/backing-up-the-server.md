@@ -6,6 +6,16 @@ category: admin
 
 ## Backup
 
+A backup script is supplied for your convenience in the *utils/* folder of the Libretime repo.
+
+```
+sudo bash libretime-backup.sh  # backs up to user's home folder
+# or
+sudo bash libretime-backup.sh /backupdir/
+```
+
+### Backup Methods
+
 You can dump the entire *PostgreSQL* database to a zipped file with the combination of the
 **pg\_dumpall** command and **gzip**. The **pg\_dumpall** command is executed
 as the user *postgres*, by using the **sudo** command and the **-u** switch. It
@@ -25,21 +35,6 @@ Two notible backup tools are [rsync](http://rsync.samba.org/) (without version c
 preinstalled with Ubuntu Server.
 
 > **Note:** Standard *rsync* backups cannot restore files deleted in the backup itself
-
-```
-#/bin/bash
-
-# Replace /backup with backup folder location!
-# Used for backing up the media library
-sudo rsync -aE --delete --info=progress2 /srv/airtime/stor/ /backup
-
-# Used for backing up the database
-sudo -u postgres pg_dumpall | gzip -c > libretime-db-backup.gz
-sudo mv libretime-db-backup.gz /backup
-
-# Write date/time of backup to file
-date >> /backup/datelog.txt
-```
 
 ## Restore from a Backup
 

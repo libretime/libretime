@@ -36,7 +36,7 @@ for remote input connection details.
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/4GLsU9hPTtM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </html>
 
-### Set Up
+**Setup**
 
 1. Download and install butt from <https://danielnoethen.de/> for your OS.
 *Note: be sure you have butt version 0.1.17 or newer installed*
@@ -56,7 +56,7 @@ for remote input connection details.
 to use it but that is OS specific and outside of this tutorial. We are assuming
 you have a mic and mixer or a USB mixer hooked up to or as an external soundcard*
 
-### Show Time
+**Show Time**
 
 1. When its almost your show time go to your LibreTime page and look at the time
 in the top right when your show starts go to Butt.

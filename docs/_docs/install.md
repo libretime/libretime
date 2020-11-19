@@ -4,10 +4,7 @@ layout: article
 category: install
 ---
 
-> Note: this guide is assuming you are using Ubuntu 18.04 LTS for installation, which comes with `ufw` and `netplan`,
-and that you have already installed `git` and configured `ntp`. NTP configuration instructions can be found [here](#configuring-ntp).
-While it is possible to install LibreTime on other OSes, such as CentOS 7, Debian 9 and 10, and Raspbian 9 and 10,
-these are less tested. Firewall and static IP address configuration will need to be done according to your OSes instructions.
+> Note: this guide is assuming you are using Ubuntu 18.04 LTS for installation, which comes with `ufw` and `netplan`.
 
 ## Minimum System Requirements
 
@@ -52,18 +49,16 @@ Next, configure Ubuntu's firewall by running:
 
 ```
 sudo ufw enable
-sudo ufw allow 80/tcp
-sudo ufw allow 8000/tcp
+sudo ufw allow 22,80,8000/tcp
 ```
 
 Unblock ports 8001 and 8002 if you plan to use LibreTime's Icecast server to broadcast livestreams without an external Icecast server acting as a repeater.
 
 ```
-sudo ufw enable 8001/tcp
-sudo ufw enable 8002/tcp
+sudo ufw allow 8001,8002/tcp
 ```
 
-> If needed, instuctions for setting up a reverse proxy can be found [here](/docs/reverse-proxy).
+> If needed, instructions for setting up a reverse proxy can be found [here](/docs/reverse-proxy).
 
 ### Installing LibreTime
 
@@ -72,7 +67,7 @@ Installing LibreTime consists of running the following commands in the terminal:
 ```
 git clone https://github.com/LibreTime/libretime.git
 cd libretime
-sudo ./install -fiap
+sudo bash install -fiap
 ```
 
 After the install is completed, head to the IP address of the server LibreTime was just installed on
@@ -95,16 +90,12 @@ sudo systemctl enable apache2
 sudo systemctl enable rabbitmq-server
 ```
 
-If an error is returned, try adding `.service` to the end of each command. For example:
-
-```
-sudo systemctl enable apache2.service
-```
+> If an error is returned, try adding `.service` to the end of each command.
 
 ### User Permissions
 
-If you plan to have LibreTime output analog audio directly from its server to a mixing console or transmitter,
-the `www-data` user needs to be added to the `audio` user group using the command below.
+If you plan to have LibreTime output analog audio directly to a mixing console or transmitter,
+the `www-data` user needs to be added to the `audio` user group using the command below:
 
 ```
 sudo adduser www-data audio

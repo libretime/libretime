@@ -11,7 +11,7 @@ makes extensive use of its API for some site functionality, which causes
 [Cross-Origin Resource Sharing (CORS)](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
 to occur. By default, CORS requests are blocked by your browser and the origins
 need to be added to the **Allowed CORS URLs** block in
-[**General Settings**](settings). These origins should include any
+[**General Settings**](/docs/settings). These origins should include any
 domains that will be used externally to connect to your reverse proxy that you
 want handled by LibreTime. These URLS can also be set during the first run configuration
 that is displayed when you first install LibreTime
@@ -43,7 +43,7 @@ Nginx set up on `proxy` and LibreTime will be installed on `libretime`. You will
 access on both. `libretime` also needs to be able to be accessed from `proxy`
 (`ping libretime` on `proxy`).
 
-On `libretime`, install LibreTime as described in the [install guide](quickstart). In short
+On `libretime`, install LibreTime as described in the [install guide](/install). In short
 this means run the following commands:
 
 ```
@@ -106,7 +106,7 @@ sudo certbot certonly -d libretime.example.com -a standalone
 sudo systemctl start nginx
 ```
 
-You can now go to [https://libretime.example.com](https://libretime.example.com) and go
+You can now go to *https://libretime.example.com* and go
 through the installer. On `General Settings`, you need to change the Webserver Port to
 `443` and add the following CORS URLs:
 
