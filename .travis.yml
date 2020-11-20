@@ -37,24 +37,24 @@ addons:
 
 jobs:
   include:
-    - language: php
-      php: 7.3
-      stage: test
-    - language: php
-      php: 7.2
-      stage: test
+#    - language: php
+#      php: 7.3
+#      stage: test
+#    - language: php
+#      php: 7.2
+#      stage: test
     - language: php
       php: 7.0
       stage: test
     - language: php
       php: 5.6
       stage: test
-    - language: python
-      python: 3.8
-      stage: test
-    - language: python
-      python: 3.6
-      stage: test
+#    - language: python
+#      python: 3.8
+#      stage: test
+#    - language: python
+#      python: 3.6
+#      stage: test
     - language: python
       python: 3.5
       stage: test
@@ -74,16 +74,18 @@ jobs:
             tags: true
   allow_failures:
     # https://github.com/LibreTime/libretime/issues/779
-    - language: php
-      php: 7.3
-    - language: php
-      php: 7.2
+#    - language: php
+#      php: 7.3
+#    - language: php
+#      php: 7.2
     # Ubuntu Bionic cloud image uses Python 3.6.9
-    - language: python
-      python: 3.8
+#    - language: python
+#      python: 3.8
     # https://github.com/LibreTime/libretime/issues/1041
-    - language: python
-      python: 3.5
+#    - language: python
+#      python: 3.5
+    - language: php
+      php: 5.6
 
 install: ./travis/install.sh
 before_script:
