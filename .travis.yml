@@ -48,11 +48,14 @@ jobs:
     - language: php
       php: 5.6
       stage: test
+#    - language: python
+#      python: 3.8
+#      stage: test
+#    - language: python
+#      python: 3.7
+#      stage: test
     - language: python
-      python: 3.8
-      stage: test
-    - language: python
-      python: 3.7
+      python: 3.6
       stage: test
     - language: python
       python: 3.5
@@ -77,6 +80,11 @@ jobs:
       php: 7.3
     - language: php
       php: 7.2
+    # Ubuntu Bionic cloud image uses Python 3.6.9
+    - language: python
+      python: 3.8
+    - language: python
+      python: 3.7
     # https://github.com/LibreTime/libretime/issues/1041
     - language: python
       python: 3.5
