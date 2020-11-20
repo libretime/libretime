@@ -33,6 +33,7 @@ addons:
       - python3-gi-cairo
       - python-cairo
       - pkg-config
+      - libcairo2-dev
 
 jobs:
   include:
