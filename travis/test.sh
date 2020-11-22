@@ -8,7 +8,6 @@ if [[ -n "$TRAVIS_PHP_VERSION" ]]; then
   popd
 fi
 if [[ -n "$TRAVIS_PYTHON_VERSION" ]]; then
-  pyenv local $TRAVIS_PYTHON_VERSION
   pushd python_apps/airtime_analyzer
   nosetests
   popd
