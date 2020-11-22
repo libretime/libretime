@@ -14,7 +14,6 @@ The podcast interfaces provides you with the ability to generate [Smartblocks](/
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/g-4UcD8qvR8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </html>
 
-<br>
 ### Podcasts Dashboard
 
 ![](/img/Podcasts_Dashboard.png)

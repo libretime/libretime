@@ -7,12 +7,22 @@ category: admin
 ## Backup
 
 A backup script is supplied for your convenience in the *utils/* folder of the Libretime repo.
+Run it using:
 
 ```
 sudo bash libretime-backup.sh  # backs up to user's home folder
 # or
 sudo bash libretime-backup.sh /backupdir/
 ```
+
+The backup process can be automated with Cron. Simply add the following to the root user's
+crontab with *sudo crontab -e*:
+
+```
+0 0 1 * * root /locationoflibretimerepo/libretime/backup.sh
+```
+
+> For more information on how Cron works, check out [this Redhat guide](https://www.redhat.com/sysadmin/automate-linux-tasks-cron).
 
 ### Backup Methods
 
