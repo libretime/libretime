@@ -79,7 +79,7 @@ Connect the other source to the Icecast server with the same parameters defined 
 
 To configure **Mixxx** for streaming to Icecast, click *Options*, *Preferences*, then *Live Broadcasting*. For server *Type*, select the default of *Icecast 2* when streaming to Debian or Ubuntu servers, as this is the current version of Icecast supplied with those GNU/Linux distributions.
 
-![](img/Screenshot123-Mixxx_Preferences.png) 
+![](/img/Screenshot123-Mixxx_Preferences.png) 
 
 By default, Icecast streams are buffered to guard against network problems, which causes latency for remote listeners. When monitoring the stream from a remote location, you may have to begin the live stream a few seconds before the previous stream ends to enable a smooth transition.
 

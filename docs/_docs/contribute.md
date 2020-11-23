@@ -35,7 +35,8 @@ bundle install
 jekyll serve
 ```
 
-> If you get an error, try running `bundle exec jekyll serve`.
+> If running the test code from a virtual machine, feel free to use the *jekyll.sh* script in the 
+> root directory of the repo
 
 ## Help write code for LibreTime
 

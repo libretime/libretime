@@ -4,7 +4,10 @@ title: Backing Up Libretime
 category: admin
 ---
 
-## Backup
+> At the moment, there is not a way to automatically restore a Libretime backup.
+> To restore a failed Libretime instance, install a fresh copy, go through the 
+> standard setup process, and reupload the backed-up media files. A *Watched Folders* 
+> feature is [currently in development](https://github.com/LibreTime/libretime/issues/70).
 
 A backup script is supplied for your convenience in the *utils/* folder of the Libretime repo.
 Run it using:
@@ -16,23 +19,38 @@ sudo bash libretime-backup.sh /backupdir/
 ```
 
 The backup process can be automated with Cron. Simply add the following to the root user's
-crontab with *sudo crontab -e*:
+crontab with `sudo crontab -e`:
 
 ```
-0 0 1 * * root /locationoflibretimerepo/libretime/backup.sh
+0 0 1 * * /locationoflibretimerepo/libretime/backup.sh
 ```
 
 > For more information on how Cron works, check out [this Redhat guide](https://www.redhat.com/sysadmin/automate-linux-tasks-cron).
 
-### Backup Methods
+If you wish to deploy your own backup solution, the following files and folders need to 
+be backed up.
 
-You can dump the entire *PostgreSQL* database to a zipped file with the combination of the
-**pg\_dumpall** command and **gzip**. The **pg\_dumpall** command is executed
-as the user *postgres*, by using the **sudo** command and the **-u** switch. It
-is separated from the **gzip** command with the pipe symbol.
+```
+/srv
+  /airtime
+    /stor
+      /imported - Sucessfully imported media
+      /organize - A temporary holding place for uploaded media as the importer works
+/etc
+  /airtime
+    airtime.conf - The main Libretime configuration
+    icecast_pass - Holds the password for the Icecast server
+    liquidsoap.cfg - The main configuration file for Liquidsoap
+```
 
-This command can be automated to run on a regular basis using the standard
-**cron** tool on your server.
+In addition, you should keep a copy of the database current to the backup. The below code 
+can be used to export the Libretime database to a file.
+
+```
+sudo -u postgres pg_dumpall filename 
+# or to a zipped archive
+sudo -u postgres pg_dumpall | gzip -c > archivename.gz
+```
 
 It is recommended to use an incremental backup technique to synchronize
 the your LibreTime track library with a backup server regularly. (If
@@ -44,36 +62,5 @@ Two notible backup tools are [rsync](http://rsync.samba.org/) (without version c
 [rdiff-backup](http://www.nongnu.org/rdiff-backup/) (with version control). *rsync* comes
 preinstalled with Ubuntu Server.
 
-> **Note:** Standard *rsync* backups cannot restore files deleted in the backup itself
+> **Note:** Standard *rsync* backups, which are used by the backup script, cannot restore files deleted in the backup itself
 
-## Restore from a Backup
-
-When restoring a production database on a cleanly installed LibreTime system, it
-may be necessary to drop the empty database that was created during the new
-installation, by using the **dropdb** command. Again, this command is executed
-with **sudo** as the user *postgres*: 
-
-```bash
-sudo -u postgres dropdb airtime
-```
-
-This **dropdb** command above is necessary to avoid 'already exists' errors on
-table creation when overwriting an empty LibreTime database in the next step.
-These errors might prevent some data from being restored, such as user account
-data.
-
-To restore, first unzip the backup file with **gunzip**, then use the **psql**
-command as the *postgres* user:
-
-```bash
-gunzip libretime-db-backup.gz
-sudo -u postgres psql -f libretim-db-backup
-```
-
-You should now be able to log in to the LibreTime web interface in the usual way.
-
-For safety reasons, your regular database backups should be kept in a directory
-which is backed up by your storage backup tool of choice; for example, the
-*/srv/airtime/database\_backups* directory. This should ensure that a storage
-restore can be made along with a matching and complete version of the LibreTime
-database from the day that the storage backup was made. 

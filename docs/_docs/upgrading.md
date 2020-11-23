@@ -1,6 +1,6 @@
 ---
 layout: article
-title: Upgrading LibreTime
+title: Upgrading Libretime
 category: admin
 ---
 

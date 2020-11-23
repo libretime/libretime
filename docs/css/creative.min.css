@@ -214,8 +214,7 @@ padding: 10px 20px;
  
 blockquote p {
 margin: 0;
-line-height: 30px;
-padding-bottom: 20px;
+line-height: 25px;
 }
  
 blockquote .small {
@@ -303,6 +302,7 @@ padding: 10px 20px;
 .station-logos img {
     max-height: 200px;
     max-width: 200px;
+    margin: auto;
 }
 
 .station-logos-row {
