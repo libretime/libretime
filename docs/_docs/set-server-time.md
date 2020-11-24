@@ -13,7 +13,7 @@ If the time on your server is wrong, it is strongly recommended that you take Li
 
 ### Configuring NTP
 
-Although it is possible to set the date and time of the server manually, this is not recommended because the server clock can drift over time, compromising the accuracy of your broadcast schedule. If your LibreTime server is permanently connected to the Internet, you can synchronize your server to a time server with the **ntp** ** program. If **ntp** is not yet installed, you can enter the following command on Debian or Ubuntu:
+Although it is possible to set the date and time of the server manually, this is not recommended because the server clock can drift over time, compromising the accuracy of your broadcast schedule. If your LibreTime server is permanently connected to the Internet, you can synchronize your server to a time server with the **ntp** program. If **ntp** is not yet installed, you can enter the following command on Debian or Ubuntu:
 
     sudo apt-get install ntp
 

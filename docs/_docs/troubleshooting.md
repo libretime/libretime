@@ -1,7 +1,7 @@
 ---
 layout: article
 title: Troubleshooting
-git: troubleshooting.md
+category: admin
 ---
 
 ## Test tones {#tones}

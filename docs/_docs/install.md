@@ -2,6 +2,7 @@
 title: Install
 layout: article
 category: install
+permalink: /install
 ---
 
 > Note: this guide is assuming you are using Ubuntu 18.04 LTS for installation, which comes with `ufw` and `netplan`.
@@ -10,7 +11,7 @@ category: install
 
 - Ubuntu 18.04 LTS, Debian 9 and 10, Raspbian 9 and 10
 - 1 Ghz Processor
-- 4 GB RAM recommended (2 GB required)
+- 2 GB RAM recommended (1 GB required)
 - Wired internet connection and static IP address for on-prem install
 
 [DigitalOcean](https://www.digitalocean.com/pricing/#Compute) and [Linode](https://www.linode.com/pricing/#row--compute)
