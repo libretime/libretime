@@ -9,7 +9,10 @@ permalink: /install
 
 ## Minimum System Requirements
 
-- Ubuntu 18.04 LTS, Debian 9 and 10, Raspbian 9 and 10
+- One of the following Linux distributions
+  - Ubuntu 16.04 LTS, 18.04 LTS
+  - Debian 9, 10
+  - Raspberry Pi OS 9, 10 (formerly Raspbian)
 - 1 Ghz Processor
 - 2 GB RAM recommended (1 GB required)
 - Wired internet connection and static IP address for on-prem install
@@ -62,6 +65,9 @@ sudo ufw allow 8001,8002/tcp
 > If needed, instructions for setting up a reverse proxy can be found [here](/docs/reverse-proxy).
 
 ### Installing LibreTime
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Djo_55LgjXE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 
 Installing LibreTime consists of running the following commands in the terminal:
 

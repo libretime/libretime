@@ -9,13 +9,6 @@ includes_dir: _includes
 
 favicon: favicon.ico
 
-# For splash page layout only
-headtext: Open Source Radio Automation
-headsubtext: Everything you need to get your terrestrial / on-line radio station up and broadcasting like a pro - without breaking the bank! 
-# items below - only for first front page link
-headbuttonurl: index#get-started
-headbuttontext: Get LibreTime
-
 # Collections Settings
 collections:
   docs:

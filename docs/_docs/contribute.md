@@ -35,9 +35,6 @@ bundle install
 jekyll serve
 ```
 
-> If running the test code from a virtual machine, feel free to use the *jekyll.sh* script in the 
-> root directory of the repo
-
 ## Help write code for LibreTime
 
 Are you familar with coding in PHP? Have you made projects in Liquidsoap and some of the other services we use?

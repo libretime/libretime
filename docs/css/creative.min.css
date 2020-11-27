@@ -203,6 +203,12 @@ header.masthead p{font-weight:300}
   
 .btn-outline-full-width{border:1px solid #888;margin:5px;width:100%}
 
+/* Photo Credit */
+.photo-credit {
+position:absolute;
+bottom:0;
+}
+
 /* Blockquotes */
 blockquote {
 border: 2px solid #f05f40;
