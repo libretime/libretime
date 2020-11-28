@@ -94,6 +94,7 @@ offers the option to choose a different operation system according to you needs.
 | OS           | Command                    | Comment                                                     |
 | ------------ | -------------------------- | ----------------------------------------------------------- |
 | Debian 10    | `vagrant up debian-buster` | Install on Debian Buster.                                   |
+| Ubuntu 20.04 | `vagrant up ubuntu-focal`  | Install on Ubuntu Focal Fossa.                              |
 | Ubuntu 18.04 | `vagrant up ubuntu-bionic` | Install on Ubuntu Bionic Beaver.                            |
 | CentOS       | `vagrant up centos`        | CentOS 8 with native systemd support and activated SELinux. |
 

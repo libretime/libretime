@@ -27,7 +27,7 @@ def run():
     generate_liquidsoap_cfg.run()
     """ check liquidsoap version so we can run a scripts matching the liquidsoap minor version """
     liquidsoap_version = subprocess.check_output(
-        "liquidsoap  --force-start 'print(liquidsoap.version) shutdown()'",
+        "liquidsoap 'print(liquidsoap.version) shutdown()'",
         shell=True,
         universal_newlines=True,
     )[0:3]
@@ -37,9 +37,8 @@ def run():
     exec_args = [
         "/usr/bin/liquidsoap",
         "libretime-liquidsoap",
-        script_path,
         "--verbose",
-        "-f",
+        script_path,
     ]
     if args.debug:
         print(f"Liquidsoap {liquidsoap_version} using script: {script_path}")
