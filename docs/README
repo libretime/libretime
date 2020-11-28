@@ -1,0 +1,8 @@
+# Contributing to the docs
+
+## Running Jekyll
+
+```
+bundler install
+jekyll serve
+```

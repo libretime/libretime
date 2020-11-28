@@ -1,7 +1,7 @@
 ---
 layout: home
 title: Home
-linkto: /install
+linkto: index#get-started
 linktext: Get Libretime
 img: /img/radio-unsplash.jpg
 photocredit: Photo by <a href="https://unsplash.com/@leowieling?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Leo Wieling</a> on <a href="https://unsplash.com/s/photos/radio?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a>
@@ -16,10 +16,10 @@ actions:
   linktext: Install from Git
 ---
 
-# RADIO AUTOMATION FOR THE MASSES
+# BROADCAST WITHOUT LIMITS
 
-Get broadcasting without the hassle
+Libretime is an open source radio automation and broadcasting solution helping communities get on-air with ease.
 
-LibreTime is Open Source radio automation and broadcasting solution helping communities both modernize their broadcasting stack, and get up and on-the-air with ease.
+The platform can be easily deployed on dedicated hardware and VMs, on-prem or in the cloud, "free as in freedom" free.
 
-The platform consists of several open-source components that can be easily and rapidly deployed on both dedicated hardware, virtual machines, and Cloud native infrastructure - allowing your station to truly underwrite it's own destiny.
+Let your station underwrite its own destiny.

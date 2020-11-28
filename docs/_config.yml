@@ -9,6 +9,8 @@ includes_dir: _includes
 
 favicon: favicon.ico
 
+exclude: ['README']
+
 # Collections Settings
 collections:
   docs:
