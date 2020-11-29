@@ -22,7 +22,7 @@ Mixxx 1.9.0 or later includes a live streaming client which, like LibreTime, is 
 and **SHOUTcast** media servers. This feature can also be used to stream from Mixxx directly into LibreTime,
 using either the **Show Source** or **Master Source**.
 
-![](img/Screenshot369-Mixxx_streaming_preferences.png)
+![](/img/Screenshot369-Mixxx_streaming_preferences.png)
 
 To configure **Mixxx** for streaming into LibreTime, click **Options**, **Preferences**, then
 **Live Broadcasting** on the main Mixxx menu. For server **Type**, select the default of **Icecast 2**.
@@ -30,7 +30,7 @@ For **Host**, **Mount**, **Port**, **Login** and **Password**, use the **Input S
 configured in the LibreTime **Streams** page, on LibreTime's **System** menu. See [stream settings](stream-settings)
 for remote input connection details.
 
-## Live shows with B.U.T.T. (Broadcast Using This Tool) {#butt}
+## Live shows with B.U.T.T. (Broadcast Using This Tool)
 
 <html>
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/4GLsU9hPTtM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -38,11 +38,11 @@ for remote input connection details.
 
 **Setup**
 
-1. Download and install butt from <https://danielnoethen.de/> for your OS.
+1. Download and install [BUTT](https://danielnoethen.de/) for your OS.
 *Note: be sure you have butt version 0.1.17 or newer installed*
-2. Open up butt
+2. Open up BUTT
 3. Click **settings**
-4. Under **Main** under **Server **click **ADD**
+4. Under **Main** > **Server** click **ADD**
     * Type LibreTime (or your station) under Name
     * Click the radio button next to **IceCast** under Type
     * Type your stations URL (webpage address) under **Address**:

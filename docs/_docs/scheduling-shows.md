@@ -4,10 +4,7 @@ title: Scheduling Shows
 category: interface
 ---
 
-<html>
-    <br>
-    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/TJtWUzAlP08" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</html>
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/TJtWUzAlP08" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 Log in using your username and password using the link in the upper right corner. (If you just installed
 LibreTime, your username/password is admin/admin.)
