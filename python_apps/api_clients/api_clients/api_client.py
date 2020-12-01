@@ -10,7 +10,7 @@ import sys
 import time
 import urllib.request, urllib.error, urllib.parse
 import requests
-import socket 
+import socket
 import logging
 import json
 import base64
@@ -219,17 +219,18 @@ class AirtimeApiClient(object):
         # logger.info('Airtime version found: ' + str(version))
         if api_version == -1:
             if verbose:
-                logger.info('Unable to get Airtime API version number.\n')
+                logger.error('Unable to get Airtime API version number.\n')
             return False
         elif api_version[0:3] != AIRTIME_API_VERSION[0:3]:
             if verbose:
-                logger.info('Airtime API version found: ' + str(api_version))
-                logger.info('pypo is only compatible with API version: ' + AIRTIME_API_VERSION)
+                logger.error('Airtime API version found: ' + str(api_version))
+                logger.error('pypo is only compatible with API version: ' + AIRTIME_API_VERSION)
+                logger.error('client is not compatible with the server API version')
             return False
         else:
             if verbose:
                 logger.info('Airtime API version found: ' + str(api_version))
-                logger.info('pypo is only compatible with API version: ' + AIRTIME_API_VERSION)
+                logger.info('pypo is compatible with API version: ' + AIRTIME_API_VERSION)
             return True
 
 
