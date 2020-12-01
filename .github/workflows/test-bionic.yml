@@ -1,0 +1,30 @@
+name: test-bionic
+on:
+  push:
+    paths-ignore:
+    - 'docs/**'
+  pull_request:
+    types: [opened, ready_for_review, review_requested]
+    paths-ignore:
+    - 'docs/**'
+  workflow_dispatch:
+  
+jobs:
+  test-xenial:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.6'
+      - uses: harmon758/postgresql-action@v1
+        with:
+          postgresql version: '11'
+          postgresql db: 'libretime'
+          postgresql user: 'libretime'
+          postgresql password: 'libretime'
+      - run: ENVIRONMENT=testing && LIBRETIME_LOG_DIR=/tmp/log/libretime
+      - run: sudo bash ./.github/scripts/install.sh
+      - run: sudo composer install
+      - run: sudo bash ./.github/scripts/python-pkg-install.sh
+      - run: sudo bash ./.github/scripts/python-pkg-test.sh

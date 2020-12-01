@@ -7,7 +7,6 @@ on:
     types: [opened, ready_for_review, review_requested]
     paths-ignore:
     - 'docs/**'
-    
   workflow_dispatch:
   
 jobs:
@@ -25,12 +24,7 @@ jobs:
           postgresql user: 'libretime'
           postgresql password: 'libretime'
       - run: ENVIRONMENT=testing && LIBRETIME_LOG_DIR=/tmp/log/libretime
-      - run: psql -c 'ALTER USER libretime CREATEDB;' -U postgres
-      - run: ./dev_tools/ci/install.sh
-      - run: composer install
-      - run: pip3 install -e python_apps/airtime_analyzer/.
-      - run: pip3 install -e python_apps/airtime-celery/.
-      - run: pip3 install -e python_apps/api_clients/.
-      - run: pip3 install -e python_apps/pypo/.
-      - run: nosetests python_apps/airtime_analyzer/.
-      - run: nosetests python_apps/api_clients/.
+      - run: sudo bash ./.github/scripts/install.sh
+      - run: sudo composer install
+      - run: sudo bash ./.github/scripts/python-pkg-install.sh
+      - run: sudo bash ./.github/scripts/python-pkg-test.sh
