@@ -7,6 +7,9 @@ on:
     types: [opened, ready_for_review, review_requested]
     paths-ignore:
     - 'docs/**'
+    
+  workflow_dispatch:
+  
 jobs:
   test-xenial:
     runs-on: ubuntu-16.04
