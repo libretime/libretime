@@ -12,6 +12,8 @@ Before using the widgets, make sure Libretime's Public API is enabled in **Setti
 
 ![](/img/widgets_settings.png)
 
+> **Note:** Your Libretime instance needs to be accessible to the public *without the use of a VPN or SSH tunneling* in order for the widgets to work.
+
 ## Streaming Player Widget
 
 The streaming player widget inserts your Libretime stream into your website. One example is from [WRCS Community Radio](http://wcrsfm.org/) in Columbus, Ohio, USA.
