@@ -711,10 +711,14 @@ if [ "$ignore_dependencies" = "f" ]; then
     loud "\n-----------------------------------------------------"
     loud "         * Installing External Dependencies *        "
     loud "-----------------------------------------------------"
+    
+    if [ $is_ubuntu_dist ]; then
+    	loudCmd "add-apt-repository -y ppa:libretime/libretime"
+    	fi
 
     if [ -x /usr/bin/apt-get ]; then
         verbose "\n * Reading requirements-${dist}-${code}.apt..."
-        loudCmd "apt-get update"
+        loudCmd "apt-get -q update"
         package_list_file="${SCRIPT_DIR}/installer/lib/requirements-${dist}-${code}.apt"
         if [ ! -f "$package_list_file" ]; then
             echo "ERROR: package file does not exist: $package_list_file" >&2
@@ -768,7 +772,7 @@ loudCmd "./build.sh"
 if [ -f /etc/airtime/airtime.conf ]; then
     # TODO use VERSION or some other way to check for updates and handle
     # media-monitor case on it's own
-    OLD_CONF=$(grep "[media-monitor]" /etc/airtime/airtime.conf)
+    OLD_CONF=$(grep -F "[media-monitor]" /etc/airtime/airtime.conf || true)
     
     if [ -n "${OLD_CONF}" ]; then
         upgrade="t"
