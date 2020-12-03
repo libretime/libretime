@@ -232,6 +232,7 @@ text-align: right;
 code {
 color: #212529;
 font-size: .9rem;
+text-decoration: underline dotted;
 }
 
 pre.highlight {
