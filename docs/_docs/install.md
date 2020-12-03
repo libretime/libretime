@@ -64,7 +64,7 @@ sudo ufw allow 8001,8002/tcp
 
 > If needed, instructions for setting up a reverse proxy can be found [here](/docs/reverse-proxy).
 
-### Installing LibreTime
+## Installing LibreTime
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/Djo_55LgjXE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
@@ -81,7 +81,7 @@ After the install is completed, head to the IP address of the server LibreTime w
 to complete the welcome wizard. While not strictly necessary, it is recommended that you change the passwords prompted in the welcome wizard if you intend on accessing the server from the Internet. The welcome wizard will
 walk you through the rest of the installation process.
 
-### Services
+## Services
 
 Once all of the services needed to run LibreTime are installed and configured,
 it is important that the server starts them during the boot process, to cut down on downtime, especially in live enviornments.
@@ -99,7 +99,7 @@ sudo systemctl enable rabbitmq-server
 
 > If an error is returned, try adding `.service` to the end of each command.
 
-### User Permissions
+## User Permissions
 
 If you plan to have LibreTime output analog audio directly to a mixing console or transmitter,
 the `www-data` user needs to be added to the `audio` user group using the command below:

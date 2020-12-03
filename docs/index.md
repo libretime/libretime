@@ -4,10 +4,10 @@ title: Home
 linkto: index#get-started
 linktext: Get Libretime
 img: /img/radio-unsplash.jpg
-photocredit: Photo by <a href="https://unsplash.com/@leowieling?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Leo Wieling</a> on <a href="https://unsplash.com/s/photos/radio?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a>
+photocredit: Top photo by <a href="https://unsplash.com/@leowieling?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Leo Wieling</a> on <a href="https://unsplash.com/s/photos/radio?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a>
 actions:
 - title: Stable Release
-  text: Throughly tested so you can rest(ed)? Install from our release snapshots on Github.
+  text: Thoroughly tested so you can relax? Install from our official releases on Github.
   linkto: https://github.com/LibreTime/libretime/releases
   linktext: Releases on Github
 - title: Rolling Commits
