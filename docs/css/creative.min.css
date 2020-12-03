@@ -230,9 +230,8 @@ text-align: right;
 
 /* Code Blocks */
 code {
-color: #212529;
+color: #ad462e;
 font-size: .9rem;
-text-decoration: underline dotted;
 }
 
 pre.highlight {
