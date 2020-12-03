@@ -205,7 +205,7 @@ header.masthead p{font-weight:300}
 
 /* Photo Credit */
 .photo-credit {
-position:absolute;
+position: relative;
 bottom:0;
 }
 
@@ -318,13 +318,6 @@ padding: 10px 20px;
 .station-logos-col {
     flex: 25%;
     padding: 5px;
-}
-
-/* TOC */
-.toc {
-  background-color: #fff;
-  margin: 0px 0;
-  padding: 10px 0px;
 }
 
 /* Gradients */
