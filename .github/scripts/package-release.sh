@@ -25,7 +25,7 @@ fi
 
 # Adding dos2unix package
 apt update -y -q
-apt install dos2unix -y
+apt install dos2unix php composer -y
 
 echo "Creating tarball for LibreTime ${suffix}."
 

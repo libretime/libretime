@@ -1,5 +1,6 @@
 #/bin/bash
 
+# Adding repos and packages
 add-apt-repository -y ppa:libretime/libretime
 apt-get -q update
 apt-get install -y gstreamer1.0-plugins-base \
@@ -25,4 +26,12 @@ apt-get install -y gstreamer1.0-plugins-base \
   php \
   php-curl \
   php-gd \
-  php-pgsql
+  php-pgsql \
+  postgresql \
+  postgresql-client
+
+# Creating database for testing
+psql -c 'CREATE DATABASE libretime;' -U postgres
+psql -c "CREATE USER libretime WITH PASSWORD 'libretime';" -U postgres
+psql -c 'GRANT CONNECT ON DATABASE libretime TO libretime;' -U postgres
+psql -c 'ALTER USER libretime CREATEDB;' -U postgres

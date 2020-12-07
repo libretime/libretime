@@ -6,6 +6,7 @@ on:
     # Sequence of patterns matched against refs/tags
     tags:
     - '\d+.\d+.\d+(~\s+\.\d+)*' # Originally '*', changes by @paddatrapper
+  workflow_dispatch:
 
 jobs:
   build:
@@ -18,8 +19,7 @@ jobs:
         id: release_notes_file
         uses: andstor/file-reader-action@v1
         with:
-          path: "RELEASENOTES"
-      - run: echo RELEASENOTES
+          path: ./.github/RELEASE.md
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1

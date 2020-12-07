@@ -17,12 +17,6 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: '3.5'
-      - uses: harmon758/postgresql-action@v1
-        with:
-          postgresql version: '11'
-          postgresql db: 'libretime'
-          postgresql user: 'libretime'
-          postgresql password: 'libretime'
       - run: ENVIRONMENT=testing && LIBRETIME_LOG_DIR=/tmp/log/libretime
       - run: sudo bash ./.github/scripts/install.sh
       - run: sudo composer install
