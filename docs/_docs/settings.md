@@ -170,5 +170,3 @@ Airtime supports output to Icecast in Ogg Vorbis, Ogg Opus, MP3 and AAC formats.
 
 Any connection problems between Liquidsoap and Icecast or SHOUTcast are shown on the Stream Settings page. For example, if you enter the wrong password, you will see an *Authentication Required* error message. To fix this, enter the correct password in the **Additional Options** box, and click the **Save** button. If the streaming server is down for any reason, or you have entered an incorrect **Server** name or **Port** number, you will see the message *Can not connect to the streaming server*.
 
-![](/img/Screenshot405-Connection_timeout.png)
-
