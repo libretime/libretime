@@ -3,10 +3,10 @@
 # Starting at repo root
 
 cd python_apps/airtime_analyzer
-nosetests .
+nosetests . -x
 
 cd ../api_clients
-nosetests .
+nosetests . -x
 
 # Reset to repo root
 cd ../..

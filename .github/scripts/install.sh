@@ -31,22 +31,8 @@ apt-get install -y gstreamer1.0-plugins-base \
   postgresql-client
 
 # Creating database for testing
-    setupAirtimePostgresUser() {
-        # here-doc to execute this block as postgres user
-        su postgres <<'EOF'
-        set +e
-        count=$(psql -d postgres -tAc "SELECT count(*) FROM pg_roles WHERE rolname='airtime';")
-        if [[ $count -eq 0 ]]; then
-            psql -d postgres -tAc "CREATE USER airtime WITH ENCRYPTED PASSWORD 'airtime'; ALTER USER airtime CREATEDB; CREATE DATABASE libretime; GRANT CONNECT ON DATABASE libretime TO libretime;"
-            [[ $? -eq 0 ]] && 
-                  echo "Created airtime user in PostgreSQL" || 
-                  echo "$0:${FUNCNAME}(): ERROR: Can't create airtime user in PostgreSQL!"
-        else
-            echo "airtime user already exists in PostgreSQL"
-        fi
-        set -e
-# don't indent this!
-EOF
-    }
-
-setupAirtimePostgresUser
+-u postgres psql -c 'CREATE DATABASE libretime;' 
+-u postgres psql -c "CREATE USER libretime WITH PASSWORD 'libretime';"
+-u postgres psql -c 'GRANT CONNECT ON DATABASE libretime TO libretime;'
+-u postgres psql -c 'ALTER USER libretime CREATEDB;'
+mkdir -p /tmp/log/libretime
