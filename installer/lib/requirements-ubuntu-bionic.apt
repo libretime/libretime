@@ -17,8 +17,8 @@ libcairo2-dev
 libcamomile-ocaml-data
 libfaad2
 libffi-dev
-libglib2.0-dev
 libgirepository1.0-dev
+libglib2.0-dev
 libmad-ocaml
 libopus0
 libportaudio2

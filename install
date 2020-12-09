@@ -1138,7 +1138,7 @@ fi
 
 if [ ! -d "/etc/airtime" ]; then
     loud "\n-----------------------------------------------------"
-    loud "                * Installing Airtime *               "
+    loud "                * Installing Libretime *               "
     loud "-----------------------------------------------------"
 
     verbose "\n * Creating /etc/airtime/ directory..."
@@ -1217,8 +1217,8 @@ verbose "...Done"
 echo -e "\n-----------------------------------------------------"
 echo    "                * Basic Setup DONE! *                "
 echo    "                                                     "
-echo    " To get started with Airtime, visit ${IP}            "
+echo    " To get started with Libretime, visit ${IP}            "
 echo    " or, if you've set up your own web configuration,    "
-echo    " the Airtime webroot on your webserver               "
+echo    " the Libretime webroot on your webserver               "
 echo    "-----------------------------------------------------"
 

@@ -1,43 +1,29 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    {% include head.html %}
-    
-    <style type="text/css" media="screen">
-      h1 {
-        margin: 30px 0;
-        font-size: 4em;
-        line-height: 1;
-        letter-spacing: -1px;
+---
+layout: default
+---
+
+    <style>
+      header.masthead {
+        padding-top: 10rem;
+        padding-bottom: calc(10rem - 56px);
+        background-image: url("{{ page.img }}");
+        background-position: center center;
+        background-size: cover;
       }
-      img {
-        max-width: 250px;
-      }
-      .center-text {
-        text-align: center;
+      body{
+        font-family:Merriweather,'Helvetica Neue',Arial,sans-serif;
+        padding-top: 0px;
       }
     </style>
-    
-    <title>{{ site.title }} - {{ page.title }}</title>
-  </head>
-  <body id="page-top">
 
-    <!-- Navigation -->
-    {% include navbar.html %}
-    
-    <div class="container-fluid">
-      <section class="bg-dark text-white center-text">
-        <img src="img/404.png" alt="404 Tape">
-        <p><strong>Page not found :(</strong></p>
-        <p>The requested page could not be found.</p>
-        <a href="guides"><svg class="bi bi-arrow-left-circle-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.646 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L6.207 7.5H11a.5.5 0 0 1 0 1H6.207l2.147 2.146z"/>
-        </svg> Back to Docs
-        </a>
-      </section>
-    </div>
-    
-    {% include footer.html %}
-    {% include scripts.html %}
-  </body>
-</html>
+    <!-- Splash Image -->
+    <header class="masthead text-center text-white d-flex">
+      <div class="container my-auto">
+        <div class="row">
+          <div class="col-lg-10 mx-auto">
+          {{ content }}
+            <a class="btn btn-primary btn-xl js-scroll-trigger" href="{{ page.linkto }}">{{ page.linktext }}</a>
+          </div>
+        </div>
+      </div>
+    </header>

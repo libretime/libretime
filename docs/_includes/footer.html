@@ -1,8 +1,55 @@
-    <footer>
-      <section class="footer-dark text-white">
-        <div class="text-footer">
-          <small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/volny">Felix Volny</a>, <a href="https://github.com/ned-kelly">ned-kelly</a> and <a href="https://github.com/zklosko">Zachary Klosko</a> &nbsp; | &nbsp;</small>
-          <small>Code and docs licensed under GPLv2. More details <a href="http://sourcefabric.booktype.pro/airtime-25-for-broadcasters/about-this-manual/">here</a>. </small>
+    <footer class="footer-dark text-white font-weight-light text-white-55 pt-11 pb-5 overflow-hidden">
+    <div class="container ">
+      <div class="row justify-content-md-between">
+        <div class="col-md-12 col-lg-4 mb-4 mr-lg-auto">
+          <img class="mb-3" src="/img/logo.png" alt="Libretime" style="width: 170px;">
+          <p class="small font-weight-light mb-3">LibreTime is an open source radio automation solution helping communities broadcast with ease.</p>
         </div>
-      </section>
-    </footer>
+
+        <div class="col-sm-4 col-lg-2 mb-4">
+          <h4 class="h6 text-white mb-3">Contribute</h4>
+
+          <!-- Links -->
+          <ul class="list-unstyled">
+            <li class="mb-3"><a class="link-white-55" href="/contribute">Develop</a></li>
+            <li class="mb-3"><a class="link-white-55" href="https://opencollective.com/libretime">Donate</a></li>
+          </ul>
+          <!-- End Links -->
+        </div>
+
+        <div class="col-sm-4 col-lg-2 mb-4">
+          <h4 class="h6 text-white mb-3">Support</h4>
+
+          <!-- Links -->
+          <ul class="list-unstyled">
+            <li class="mb-3"><a class="link-white-55" href="/docs">Docs</a></li>
+            <li class="mb-3"><a class="link-white-55" href="/docs/troubleshooting">Troubleshooting</a></li>
+          </ul>
+          <!-- End Links -->
+        </div>
+
+        <div class="col-sm-4 col-lg-2 mb-4">
+          <h4 class="h6 text-white mb-3">Community</h4>
+
+          <!-- Links -->
+          <ul class="list-unstyled">
+            <li class="mb-3"><a class="link-white-55" href="https://discourse.libretime.org/">Discourse</a></li>
+            <li class="mb-3"><a class="link-white-55" href="https://chat.libretime.org/">Mattermost</a></li>
+          </ul>
+          <!-- End Links -->
+        </div>
+      </div>
+
+      <hr class="my-5 opacity-10">
+
+      <div class="row">
+        <div class="col-md-7">
+          <p class="small font-weight-light mb-md-0">Code licensed under AGPLv3; docs licensed under GPLv2. More details <a href="http://sourcefabric.booktype.pro/airtime-25-for-broadcasters/about-this-manual/">here</a>.</p>
+          {% if page.photocredit %}
+          <div class="small font-weight-light mb-md-0">{{page.photocredit}}</div>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+  </footer>

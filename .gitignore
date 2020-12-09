@@ -19,3 +19,4 @@ airtime_mvc/tests/log/*.log
 /docs/_site/*
 /docs/.jekyll-cache/*
 /docs/.gems/*
+Gemfile.lock

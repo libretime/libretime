@@ -1,0 +1,142 @@
+---
+layout: default
+title: Docs
+---
+
+<main>
+    <section class="text-center pt-11 pb-6">
+      <div class="container">
+        <div class="w-md-75 w-lg-50 mx-auto text-center mb-5">
+          <h2 class="h3 text-center">Knowledge Base</h2>
+          <p>All of the guides you need to set up, maintain, and use Libretime, all in one place.</p>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4 mb-5">
+            <div class="card p-3 border-0 shadow">
+              <div class="card-header border-0"><i class="fas fa-save fa-3x text-dark"></i></div>
+              <div class="card-body pt-0">
+                <h4 class="h5 mb-2"><a class="link-dark" href="/install">Install</a></h4>
+                <p class="card-text mb-4">Get Libretime up and running in just 10 minutes.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-5">
+            <div class="card p-3 border-0 shadow">
+              <div class="card-header border-0"><i class="fas fa-wrench fa-3x text-dark"></i></div>
+              <div class="card-body pt-0">
+                <h4 class="h5 mb-2"><a class="link-dark" href="/docs/host-configuration">Configure</a></h4>
+                <p class="card-text mb-4">Prepare Libretime for primetime.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-5">
+            <div class="card p-3 border-0 shadow">
+              <div class="card-header border-0"><i class="far fa-clock fa-3x text-dark"></i></div>
+              <div class="card-body pt-0">
+                <h4 class="h5 mb-2"><a class="link-dark" href="/docs/scheduling-shows">Schedule Shows</a></h4>
+                <p class="card-text mb-4">Putting in your first show? Start here.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-5">
+            <div class="card p-3 border-0 shadow">
+              <div class="card-header border-0"><i class="fa fa-users fa-3x text-dark"></i></div>
+              <div class="card-body pt-0">
+                <h4 class="h5 mb-2"><a class="link-dark" href="/docs/users">User Accounts</a></h4>
+                <p class="card-text mb-4">Learn how to add, change, and delete user accounts.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-5">
+            <div class="card p-3 border-0 shadow">
+              <div class="card-header border-0"><i class="fas fa-people-carry fa-3x text-dark"></i></div>
+              <div class="card-body pt-0">
+                <h4 class="h5 mb-2"><a class="link-dark" href="/contribute">Contribute to Libretime</a></h4>
+                <p class="card-text mb-4">Love what we do? Help us out!</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-5">
+            <div class="card p-3 border-0 shadow">
+              <div class="card-header border-0"><i class="fa fa-exclamation-triangle fa-3x text-dark"></i></div>
+              <div class="card-body pt-0">
+                <h4 class="h5 mb-2"><a class="link-dark" href="/docs/troubleshooting">Troubleshooting</a></h4>
+                <p class="card-text mb-4">Something not working? Here's a quick guide to fixing Libretime.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section -->
+    <div class="container">
+      <div class="card shadow-sm">
+        <div class="card-body p-4 px-md-7">
+          <div class="d-md-flex align-items-center">
+            <div class="w-100 mb-3 mb-md-0 pr-md-5">
+              <h2 class="h4 font-weight-light mb-0">Can't find what you're looking for?</h2>
+              <p class="font-weight-light mb-0">Ask for help on our Github repo!</p>
+            </div>
+
+            <div class="text-md-right w-100">
+              <a class="btn btn-dark" href="https://github.com/LibreTime/libretime/issues/new/choose">Submit a Request</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Section -->
+
+    <section class="py-11">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 mb-5 mb-md-0">
+            <i class="fas fa-headphones-alt fa-2x text-dark mb-3"></i>
+            <h3 class="h5 mb-2">Using Libretime</h3>
+
+            <ul class="list-unstyled">
+            	{% for doc in site.docs %}
+            		{% if doc.category == "interface" %}
+              <li class="mb-2"><a class="link-muted" href="{{doc.url}}">{{doc.title}}</a></li>
+              		{% endif %}
+              	{% endfor %}
+            </ul>
+          </div>
+
+          <div class="col-md-4 mb-5 mb-md-0">
+            <i class="fas fa-user-tie fa-2x text-dark mb-3"></i>
+            <h3 class="h5 mb-2">For Program Managers</h3>
+
+            <ul class="list-unstyled">
+            	{% for doc in site.docs %}
+            		{% if doc.category == "manager" %}
+              <li class="mb-2"><a class="link-muted" href="{{doc.url}}">{{doc.title}}</a></li>
+              		{% endif %}
+              	{% endfor %}
+            </ul>
+          </div>
+
+          <div class="col-md-4 mb-5 mb-md-0">
+            <i class="fas fa-user-secret fa-2x text-dark mb-3"></i>
+            <h3 class="h5 mb-2">For System Administrators</h3>
+
+            <ul class="list-unstyled">
+            	{% for doc in site.docs %}
+            		{% if doc.category == "admin" %}
+              <li class="mb-2"><a class="link-muted" href="{{doc.url}}">{{doc.title}}</a></li>
+              		{% endif %}
+              	{% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+    

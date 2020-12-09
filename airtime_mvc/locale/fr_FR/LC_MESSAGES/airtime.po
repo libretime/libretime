@@ -2568,8 +2568,8 @@ msgid "Add Autoloading Playlist ?"
 msgstr "Ajouter une playlist automatique ?"
 
 #: airtime_mvc/application/views/scripts/form/add-show-autoplaylist.phtml:14
-msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/manual/calendar/#autoloading-playlist'>More information</a>"
-msgstr "Le contenu des playlists automatiques est ajouté aux émissions une heure avant leur départ. <a target='_blank' href='http://libretime.org/manual/calendar/#autoloading-playlist'>Plus d'informations</a>"
+msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/docs/playlists'>More information</a>"
+msgstr "Le contenu des playlists automatiques est ajouté aux émissions une heure avant leur départ. <a target='_blank' href='http://libretime.org/docs/playlists'>Plus d'informations</a>"
 
 #: airtime_mvc/application/forms/AddShowAutoPlaylist.php:25
 msgid "Select Playlist"
