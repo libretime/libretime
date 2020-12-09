@@ -1,4 +1,4 @@
-name: test-bionic
+name: test-all-Ubuntu
 on:
   push:
     paths-ignore:
