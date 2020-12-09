@@ -23,21 +23,14 @@ else
     version=$1
 fi
 
+echo "Creating tarball for LibreTime ${suffix}."
+
 # Adding dos2unix package
 apt update -y -q
 apt install dos2unix php composer -y
 
-echo "Creating tarball for LibreTime ${suffix}."
-
-target=/tmp/libretime-${suffix}
-target_file=libretime-${suffix}.tar.gz
-
-rm -rf $target
-rm -f $target_file
-mkdir $target
-
 echo -n "Creating VERSION file for ${suffix}..."
-echo -n "${suffix}" > ${target}/VERSION
+echo -n "${suffix}" > ./VERSION
 echo " Done"
 
 echo -n "Running composer install..."
@@ -51,15 +44,15 @@ echo " Done"
 #find $target/airtime_mvc/public/js/airtime/ -iname "*.js" -exec mv {}.min {} \;
 #echo "Done"
 
-cd /tmp/
+cd ..
 find libretime-${suffix} -type f -exec dos2unix {} \;
 echo -n "Creating tarball..."
-tar -czf $target_file \
+tar -czf libretime-${suffix}.tar.gz \
         --owner=root --group=root \
         --exclude-vcs \
         --exclude .zfproject.xml \
         --exclude .gitignore \
         --exclude .gitattributes \
         --exclude dev_tools \
-    libretime-${suffix} 
+    libretime
 echo " Done"
