@@ -53,6 +53,10 @@ tar -czf libretime-${suffix}.tar.gz \
         --exclude .zfproject.xml \
         --exclude .gitignore \
         --exclude .gitattributes \
+        --exclude .travis.yml \
+        --exclude travis \
         --exclude dev_tools \
+        --exclude vendor/phing \
+        --exclude vendor/simplepie/simplepie/tests \
     libretime
 echo " Done"
