@@ -29,12 +29,29 @@ apt install dos2unix php composer -y
 
 echo "Creating tarball for LibreTime ${suffix}."
 
+target=/tmp/libretime-${suffix}
 target_file=libretime-${suffix}.tar.gz
+
+rm -rf $target
+rm -f $target_file
+mkdir $target
+
+echo -n "Creating VERSION file for ${suffix}..."
+echo -n "${suffix}" > ${target}/VERSION
+echo " Done"
 
 echo -n "Running composer install..."
 composer install --quiet --no-dev --ignore-platform-reqs
 echo " Done"
 
+# Adding back; may be useful later...
+#echo "Minimizing LibreTime Javascript files..."
+#cd $dir
+#find $target/airtime_mvc/public/js/airtime/ -iname "*.js" -exec bash -c 'echo {}; jsmin/jsmin < {} > {}.min' \;
+#find $target/airtime_mvc/public/js/airtime/ -iname "*.js" -exec mv {}.min {} \;
+#echo "Done"
+
+cd /tmp/
 find libretime-${suffix} -type f -exec dos2unix {} \;
 echo -n "Creating tarball..."
 tar -czf $target_file \
