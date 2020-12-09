@@ -1,4 +1,4 @@
-name: test-xenial
+name: test-bionic
 on:
   push:
     paths-ignore:
@@ -10,6 +10,18 @@ on:
   workflow_dispatch:
   
 jobs:
+  test-bionic:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.6'
+      - run: ENVIRONMENT=testing && LIBRETIME_LOG_DIR=/tmp/log/libretime
+      - run: sudo bash ./.github/scripts/install.sh
+      - run: sudo composer install
+      - run: sudo bash ./.github/scripts/python-pkg-install.sh
+      - run: sudo bash ./.github/scripts/python-pkg-test.sh
   test-xenial:
     runs-on: ubuntu-16.04
     steps:
