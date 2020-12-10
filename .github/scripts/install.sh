@@ -31,6 +31,7 @@ apt-get install -y gstreamer1.0-plugins-base \
   postgresql-client
 
 # Creating database for testing
+systemctl restart postgres
 sudo -u postgres psql -c 'CREATE DATABASE libretime;' 
 sudo -u postgres psql -c "CREATE USER libretime WITH PASSWORD 'libretime';"
 sudo -u postgres psql -c 'GRANT CONNECT ON DATABASE libretime TO libretime;'
