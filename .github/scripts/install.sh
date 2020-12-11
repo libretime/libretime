@@ -26,14 +26,7 @@ apt-get install -y gstreamer1.0-plugins-base \
   php \
   php-curl \
   php-gd \
-  php-pgsql \
-  postgresql \
-  postgresql-client
+  php-pgsql
 
-# Creating database for testing
-systemctl restart postgres
-sudo -u postgres psql -c 'CREATE DATABASE libretime;' 
-sudo -u postgres psql -c "CREATE USER libretime WITH PASSWORD 'libretime';"
-sudo -u postgres psql -c 'GRANT CONNECT ON DATABASE libretime TO libretime;'
-sudo -u postgres psql -c 'ALTER USER libretime CREATEDB;'
+# Making directory; not sure why...
 mkdir -p /tmp/log/libretime
