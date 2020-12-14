@@ -109,7 +109,7 @@
 
         Html5Player.prototype.play = function() {
             console.log('play');
-            playerhtml5_audio.src = this.settings.url+'?'+Math.floor(Math.random() * Math.floor(100000));
+            playerhtml5_audio.src = this.settings.url //+'?'+Math.floor(Math.random() * Math.floor(100000));
             playerhtml5_audio.play();
             togglePlayStopButton();
         };
