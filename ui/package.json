@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit --testMatch '**/*.spec.js'",
+    "test:unit": "vue-cli-service test:unit --testMatch '**/*.spec.js' --setupFiles ./src/test.setup.js",
     "lint": "vue-cli-service lint",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
     "serve:storybook": "start-storybook -p 6006"
