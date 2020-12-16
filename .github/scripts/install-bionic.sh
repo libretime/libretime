@@ -23,17 +23,14 @@ apt-get install -y gstreamer1.0-plugins-base \
   python-cairo \
   pkg-config \
   libcairo2-dev \
-  postgresql \
-  postgresql-client
-
-apt-get install -y php7.2 \
+  php7.2 \
   php7.2-curl \
   php7.2-gd \
   php7.2-pgsql \
-  php-apcu \
-  php-bcmath \
-  php-mbstring \
-  php-pear
+  php7.2-apcu \
+  php7.2-bcmath \
+  php7.2-mbstring \
+  php7.2-pear
 
 # Making directory; not sure why...
 mkdir -p /tmp/log/libretime
