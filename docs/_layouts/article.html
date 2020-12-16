@@ -1,0 +1,76 @@
+---
+layout: default
+---
+    
+  <!-- Promo Section -->
+  <section class="bg-primary">
+    <div class="container">
+      <div class="d-flex mh-25rem pt-11 py-6">
+        <div class="align-self-center">
+          <h1 class="text-white font-weight-light mb-3">{{ page.title }}</h1>
+          
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-light">
+              <li class="breadcrumb-item"><a href="/">Home</a></li>
+              <li class="breadcrumb-item"><a href="/docs">Docs</a></li>
+              <li class="breadcrumb-item active" aria-current="page">{{ page.title }}</li>
+            </ol>
+          </nav>
+
+        </div>
+      </div>
+    </div>
+    
+    <!-- SVG BG -->
+    <svg class="position-absolute bottom-0 left-0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1920 323" enable-background="new 0 0 1920 323" xml:space="preserve">
+      <polygon fill="#ffffff" style="fill-opacity: .05;" points="-0.5,322.5 -0.5,121.5 658.3,212.3 "></polygon>
+      <polygon fill="#ffffff" style="fill-opacity: .1;" points="-2,323 1920,323 1920,-1 "></polygon>
+    </svg>
+    <!-- End SVG BG -->
+  </section>
+  <!-- End Promo Section -->
+
+  <main>
+  <p>
+    <div class="container py-10">
+      <div class="row">
+        <div class="col-lg-8 mb-11 mb-lg-4 pr-lg-6">
+			{{ content }}
+        </div>
+
+        <div class="col-lg-4 mb-4">
+          <div class="card p-3 border-0 shadow">
+            <div class="card-header pb-0">
+              <h4 class="h5 mb-3">In This Section</h4>
+            </div>
+            <div class="card-body">
+              <ul class="list-line mb-0">
+              {% for doc in site.docs %}
+            		{% if doc.category == page.category %}
+              <li class="mb-2"><a class="link-muted" href="{{doc.url}}">{{doc.title}}</a></li>
+              		{% endif %}
+              	{% endfor %}
+              </ul>
+            </div>
+          </div>
+          <br>
+          <!-- Edit Page -->
+            <a class="card border-0 bg-primary link-white text-white mb-4" href="https://github.com/Libretime/libretime/edit/master/docs/{{ page.path }}">
+              <div class="card-body z-index-1">
+                <div class="d-flex align-items-center">
+                  <i class="fa fa-pencil-alt fa-3x mr-4"></i>
+                  <p class="mb-0">Help improve this page</p>
+                </div>
+              </div>
+
+              <!-- SVG BG -->
+              <svg class="position-absolute bottom-0 left-0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1920 323" enable-background="new 0 0 1920 323" xml:space="preserve">
+                <polygon fill="#ffffff" style="fill-opacity: .05;" points="-0.5,322.5 -0.5,121.5 658.3,212.3 "></polygon>
+                <polygon fill="#ffffff" style="fill-opacity: .1;" points="-2,323 1920,323 1920,-1 "></polygon>
+              </svg>
+              <!-- End SVG BG -->
+            </a>
+        </div>
+      </div>
+    </div>
+  </main>

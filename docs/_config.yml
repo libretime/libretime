@@ -1,22 +1,21 @@
 title: LibreTime 
 description: An open source radio automation server made for (and by) low-power FM stations and the rest of us.
 logo: 144px.png
-baseurl: "/" # The subpath of your site, e.g. /blog
+baseurl: "" # The subpath of your site, e.g. /blog
 url: "https://libretime.org" # The base hostname & protocol for your site, e.g. http://example.com
 
 layouts_dir: _layouts
-data_dir: _data
 includes_dir: _includes
 
 favicon: favicon.ico
 
-# For splash page layout only
-headimage: img/header.jpg
-headtext: Open Source Radio Automation
-headsubtext: Everything you need to get your terrestrial / on-line radio station up and broadcasting like a pro - without breaking the bank! 
-# items below - only for first front page link
-headbuttonurl: index#get-started
-headbuttontext: Get LibreTime
+exclude: ['README']
+
+# Collections Settings
+collections:
+  docs:
+    output: true
+    permalink: /docs/:name
 
 # Build settings
 plugins:

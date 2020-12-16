@@ -1,0 +1,203 @@
+---
+layout: default
+---
+    
+    <style>
+      header.masthead {
+        padding-top: 10rem;
+        padding-bottom: calc(10rem - 56px);
+        background-image: url("{{ page.img }}");
+        background-position: center center;
+        background-size: cover;
+      }
+      body{
+        font-family:Merriweather,'Helvetica Neue',Arial,sans-serif;
+        padding-top: 0px;
+      }
+    </style>
+
+    <!-- Splash Image -->
+    <header class="masthead text-center text-white d-flex">
+      <div class="container my-auto">
+        <div class="row">
+          <div class="col-lg-10 mx-auto">
+          {{ content }}
+            <a class="btn btn-primary btn-xl js-scroll-trigger" href="{{ page.linkto }}">{{ page.linktext }}</a>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Features Block -->
+    <section id="features">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <h2 class="section-heading">Key features include</h2>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-3 col-md-6 text-center">
+            <div class="service-box mt-5 mx-auto">
+              <i class="fas fa-4x fa-music text-primary mb-3 sr-icon-1"></i>
+              <h3 class="mb-3">Library Intelligence</h3>
+              <p class="text-muted mb-0">From designing intelligent &amp; automated playlists to drag-and-drop visual editing &amp; cuing, managing your library and playlists has never been simpler.</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 text-center">
+            <div class="service-box mt-5 mx-auto">
+              <i class="fas fa-4x fa-th-list text-primary mb-3 sr-icon-2"></i>
+              <h3 class="mb-3">Programming</h3>
+              <p class="text-muted mb-0">Schedule your live and pre-programmed shows easily with a drag-and-drop style calendar, additionally all content broadcasted is logged for efficient reporting to media licensing authorities.</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 text-center">
+            <div class="service-box mt-5 mx-auto">
+              <i class="fas fa-4x fa-users text-primary mb-3 sr-icon-3"></i>
+              <h3 class="mb-3">DJ Management</h3>
+              <p class="text-muted mb-0">Libretime's user management allows for the simple creation of hierarchical staff who can control their broadcast slots associated with them from anywhere on the planet!</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 text-center">
+            <div class="service-box mt-5 mx-auto">
+              <i class="fas fa-4x fa-broadcast-tower text-primary mb-3 sr-icon-4"></i>
+              <h3 class="mb-3">AM/FM &amp; Web</h3>
+              <p class="text-muted mb-0">LibreTime is flexible, allowing you to run your internet radio station entirely from a cloud VM with its built-in Icecast server or plug its analog output into the mixer at your broadcast AM or FM station.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screenshots gallery -->
+    <section class="p-0" id="screenshots">
+      <div class="container-fluid p-0">
+        <div class="row no-gutters popup-gallery">
+          <div class="col-lg-4 col-sm-6">
+            <a class="portfolio-box" href="/docs/dashboard">
+              <img class="img-fluid" src="/img/portfolio/library.jpg" alt="">
+              <div class="portfolio-box-caption">
+                <div class="portfolio-box-caption-content">
+                  <div class="project-category text-faded">
+                    Intelligent Library
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-4 col-sm-6">
+            <a class="portfolio-box" href="/docs/listener-stats">
+              <img class="img-fluid" src="/img/portfolio/stream-stats.jpg" alt="">
+              <div class="portfolio-box-caption">
+                <div class="portfolio-box-caption-content">
+                  <div class="project-category text-faded">
+                    Streaming Listener Statistics
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-4 col-sm-6">
+            <a class="portfolio-box" href="/docs/scheduling-shows">
+              <img class="img-fluid" src="/img/portfolio/scheduling.jpg" alt="">
+              <div class="portfolio-box-caption">
+                <div class="portfolio-box-caption-content">
+                  <div class="project-category text-faded">
+                    Show Scheduling
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-4 col-sm-6">
+            <a class="portfolio-box" href="/docs/microsite">
+              <img class="img-fluid" src="/img/portfolio/builtin-microsite.jpg" alt="">
+              <div class="portfolio-box-caption">
+                <div class="portfolio-box-caption-content">
+                  <div class="project-category text-faded">
+                    Built-in Microsite
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-4 col-sm-6">
+            <a class="portfolio-box" href="/docs/playout-history">
+              <img class="img-fluid" src="/img/portfolio/playout-history.jpg" alt="">
+              <div class="portfolio-box-caption">
+                <div class="portfolio-box-caption-content">
+                  <div class="project-category text-faded">
+                    Playout History &amp; Auditing
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="col-lg-4 col-sm-6">
+            <a class="portfolio-box" href="/docs/podcasts">
+              <img class="img-fluid" src="/img/portfolio/podcasts.jpg" alt="">
+              <div class="portfolio-box-caption">
+                <div class="portfolio-box-caption-content">
+                  <div class="project-category text-faded">
+                    Podcast Automation &amp; Scheduling
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- "Our Biggest Fans" Section -->
+<section class="" id="biggest-fans">
+  <div class="container text-center">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h2 class="section-heading">Our Biggest Fans</h2>
+      </div>
+    </div>
+<p>
+    <div class="station-logos">
+      <div class="station-logos-row">
+        <a class="station-logos-col" href="https://www.wrir.org" target="_blank">
+              <img src="img/stations/wrir973.png" alt="WRIR 97.3 FM">
+        </a>
+        <a class="station-logos-col" href="http://wcrsfm.org/" target="_blank">
+              <img src="img/stations/wrcs927.png" alt="WCRS 92.7 FM">
+        </a>
+        <a class="station-logos-col" href="https://rabe.ch/" target="_blank">
+              <img src="img/stations/rabe956.svg" alt="Rabe 95.6">
+        </a>
+        <a class="station-logos-col" href="https://campus-clermont.net/" target="_blank">
+              <img src="img/stations/radiocampus933.png" alt="Radio Campus 93.3">
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+<section class="" id="get-started">
+	<div class="col-lg-10 mx-auto text-center">
+    <h2 class="section-heading">Get started with Libretime <span class="badge badge-secondary">Alpha</span></h2>
+    <br>
+	<div class="row">
+	{% for action in page.actions %}
+	  <div class="col-sm-6">
+		<div class="card">
+		  <div class="card-body">
+			<h5 class="card-title">{{action.title}}</h5>
+			<p class="card-text">{{action.text}}</p>
+			<a href="{{action.linkto}}" class="btn btn-primary">{{action.linktext}}</a>
+		  </div>
+		</div>
+	  </div>
+	{% endfor %}
+	</div>
+	</div>
+</section>
+</div>
+

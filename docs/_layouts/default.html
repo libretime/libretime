@@ -3,10 +3,6 @@
   <head>
     {% include head.html %}
     
-    <style>
-    </style>
-    
-    <title>{{ site.title }} - {{ page.title }}</title>
   </head>
   <body id="page-top">
 
@@ -21,55 +17,7 @@
       <span class="screen-reader-text">Back to top</span>
     </a>
     
-    <div class="container">
-      <div class="row bg-dark text-white">
-        <div class="col">
-          <br>
-          <a href="guides"><svg class="bi bi-arrow-left-circle-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.646 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L6.207 7.5H11a.5.5 0 0 1 0 1H6.207l2.147 2.146z"/>
-          </svg> Back
-          </a>
-          <br>
-          <p></p>
-        </div>
-        <div class="col white-text center text-footer">
-          <h5 class="allcaps">{{ page.title }}</h5>
-        </div>
-        <div class="col white-text center text-footer">
-        </div>
-      </div>
-    </div>
-    <div class="container">
-      <div class="row no-gutters">
-        <div class="col-9">
-          <div class="d-block d-sm-none d-sm-block d-md-block d-lg-none">
-            <hr class="my-4">
-            <div class="text-footer">
-              <h5 class="allcaps">Contents</h5>
-            </div>
-            <div class="toc" >{% include toc.html html=content class=toc %}</div>
-            <hr class="my-4">
-          </div>
-          <nav class="content">
-            {{ content }}
-            <p></p>
-            {% if page.git %}
-            <a href="https://github.com/LibreTime/libretime/edit/master/docs/{{page.git}}" target="_blank">
-              <i class="far fa-edit"></i> Edit on Github
-            </a>
-            {% endif %}
-          </nav>
-        </div>
-        <div class="col d-none d-sm-none d-md-none d-lg-block">
-          <hr class="my-4">
-          <div class="text-footer">
-            <h5 class="allcaps">Contents</h5>
-          </div>
-          <div class="toc" >{% include toc.html html=content class=toc %}</div>
-          <hr class="my-4">
-        </div>
-      </div>
-    </div>
+	{{content}}
     
     {% include footer.html %}
 

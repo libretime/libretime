@@ -1,0 +1,33 @@
+# Contributing to the docs
+
+**Note:** External components for the website (Bootstrap, jQuery, Font Awesome etc.) are
+now being served from CDNs instead of from the repo itself. You must be connected to the internet in order to test the site.
+
+## Running Jekyll
+
+Follow [these instructions](https://jekyllrb.com/docs/installation/) to install Ruby, then:
+
+```
+# Install Jekyll and Bundler gems
+gem install jekyll bundler
+
+# Install Jekyll dependencies
+cd docs  #must run in docs folder
+bundler install
+
+# Run Jekyll server
+jekyll serve
+```
+
+## Where to find things
+
+```
+/docs -> main folder
+|-- /_docs -> actual documentation lives here in markdown files
+|-- /_includes -> the equilivant of components, can be inserted into HTML files
+|-- /_layouts -> the HTML styling templates that make up each page
+|-- /css -> CSS files live here
+|-- /img -> all images, screenshots live here
+|-- _config.yml -> main settings file for Jekyll
+|-- Gemfile -> dependencies file for Jekyll
+```

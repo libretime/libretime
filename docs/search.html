@@ -1,0 +1,29 @@
+---
+layout: default
+title: Search
+---
+
+<section class="bg-primary">
+    <div class="container">
+      <div class="d-flex mh-25rem pt-11 py-6">
+        <div class="align-self-center">
+          <h1 class="text-white font-weight-light mb-3">{{ page.title }}</h1>
+          
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-light">
+              <li class="breadcrumb-item"><a href="/">Home</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Search</li>
+            </ol>
+          </nav>
+
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+<section class="pt-11 pb-6">
+<div class="container-lg">
+{% include search-lunr.html %}
+</div>
+</section>

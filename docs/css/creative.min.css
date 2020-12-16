@@ -13,7 +13,7 @@ body{
   }
   
 hr{
-  max-width:50px;border-width:3px;border-color:#f05f40
+  max-width:auto;border-width:2px;border-color:#f05f40
   }
   
 hr.light{
@@ -39,6 +39,10 @@ h1,h2,h3,h4,h5,h6{
   font-family:'Open Sans','Helvetica Neue',Arial,sans-serif;
   }
 
+  h1,h2{
+    margin-top: 30px; /* adding padding on top of lead headings */
+  }
+
 /* Correcting overscroll on TOC links */
 :target{
     padding-top: 57px;
@@ -56,9 +60,9 @@ th{
 }
  
 tr, td{
- padding: 15px;
+ padding: 5px;
  text-align: left;
- border-bottom: 1px solid #f05f40
+ border: 2px solid #f05f40
 }
 
 /* Theme Colors */  
@@ -83,7 +87,8 @@ div.text-footer{
  text-align: center;
   } 
 
-section{padding:8rem 0}
+/* Changed padding */
+section{padding:2rem 0}
 .section-heading{margin-top:0}
 ::-moz-selection{color:#fff;background:#212529;text-shadow:none}
 ::selection{color:#fff;background:#212529;text-shadow:none}
@@ -204,11 +209,8 @@ header.masthead p{font-weight:300}
 
 /* Blockquotes */
 blockquote {
-border: 1px solid #212529;
-border-left: 10px solid #f05f40;
+border: 2px solid #f05f40;
 border-radius: 0px;
-background: #212529;
-color: white;
 font-size: .9rem;
 margin: 10px;
 padding: 10px 20px;
@@ -216,8 +218,7 @@ padding: 10px 20px;
  
 blockquote p {
 margin: 0;
-line-height: 30px;
-padding-bottom: 20px;
+line-height: 25px;
 }
  
 blockquote .small {
@@ -229,13 +230,12 @@ text-align: right;
 
 /* Code Blocks */
 code {
-color: #f05f40;
+color: #ad462e;
 font-size: .9rem;
 }
 
 pre.highlight {
-border: 1px solid #212529;
-border-left: 10px solid #212529;
+border-left: 2px solid #212529;
 background: white;
 color: black;
 font-size: .9rem;
@@ -257,8 +257,8 @@ padding: 10px 20px;
   margin: 0 3em 3em 0;
   border-radius: 50%;
   padding: .25em;
-  width: 80px;
-  height: 80px;
+  width: 50px;
+  height: 50px;
   background-color: #F8F8F8;
 }
 
@@ -306,6 +306,7 @@ padding: 10px 20px;
 .station-logos img {
     max-height: 200px;
     max-width: 200px;
+    margin: auto;
 }
 
 .station-logos-row {
@@ -317,20 +318,49 @@ padding: 10px 20px;
     padding: 5px;
 }
 
-/* TOC */
-.toc {
-  background-color: #fff;
-  margin: 0px 0;
-  padding: 10px 0px;
+/*------------------------------------
+  List
+------------------------------------*/
+.list-line {
+  list-style: none;
+  padding-left: 0;
 }
 
-/* Page Title */
-.allcaps {
-  text-transform: uppercase
+.list-line li {
+  position: relative;
+  color: #FF6745;
+  padding-left: 1.5rem;
 }
 
- .center {
-  margin: auto;
-  width: 50%;
-  padding: 10px;
+.list-line li::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: "—";
+  color: #FF6745;
+}
+
+.list-icon {
+  list-style: none;
+  padding-left: 0;
+}
+
+.list-icon li {
+  position: relative;
+  color: #212529;
+  padding-left: 1.8rem;
+  margin-bottom: 1.8rem;
+}
+
+.list-icon li::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.list-icon-star li::before {
+  content: "\f005";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 400;
+  color: #007bff;
 }
