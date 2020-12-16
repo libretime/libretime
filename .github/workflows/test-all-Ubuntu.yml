@@ -25,6 +25,10 @@ jobs:
           sudo -u postgres psql -c "CREATE USER libretime WITH PASSWORD 'libretime';"
           sudo -u postgres psql -c 'GRANT CONNECT ON DATABASE libretime TO libretime;'
           sudo -u postgres psql -c 'ALTER USER libretime CREATEDB;'
+      - name: Setup PHP with specific version
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.0'
       - run: ENVIRONMENT=testing && LIBRETIME_LOG_DIR=/tmp/log/libretime
       - name: Install prerequisites
         run: sudo bash ./.github/scripts/install-bionic.sh
