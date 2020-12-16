@@ -4,6 +4,4 @@ import config from '@/plugins/i18n';
 
 Vue.use(VueI18n)
 
-export default new VueI18n({
-})
-
+export default new VueI18n({})
