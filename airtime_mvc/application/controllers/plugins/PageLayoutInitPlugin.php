@@ -144,6 +144,11 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
 
         $track_type_options = array();
         $track_types = Application_Model_Tracktype::getTracktypes();
+        
+        array_multisort(array_map(function($element) {
+            return $element['type_name'];
+        }, $track_types), SORT_ASC, $track_types);
+        
         foreach ($track_types as $key => $tt) {
             $track_type_options[$tt['code']] = $tt['type_name'];
         }
