@@ -24,9 +24,7 @@ apt-get install -y gstreamer1.0-plugins-base \
   pkg-config \
   libcairo2-dev \
   postgresql \
-  postgresql-client
-
-apt-get install -y php7.0 \
+  postgresql-client \
   php7.0-curl \
   php7.0-gd \
   php7.0-pgsql \
