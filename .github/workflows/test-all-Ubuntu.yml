@@ -35,7 +35,10 @@ jobs:
       - name: Run PHP tests
         run: |
           sudo composer install
-          cd airtime_mvc/tests && sudo bash ../../vendor/bin/phpunit && cd ../..
+          cd airtime_mvc/tests
+          ls ../../vendor/bin/phpunit
+          sudo bash ../../vendor/bin/phpunit
+          cd ../..
       - name: Run Python tests
         run: |
           sudo bash ./.github/scripts/python-pkg-install.sh
