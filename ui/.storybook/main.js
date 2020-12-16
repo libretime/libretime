@@ -4,6 +4,7 @@ module.exports = {
   stories: ['../src/**/*.stories.@(js|mdx)'],
   addons: ['@storybook/addon-essentials'],
   webpackFinal: async (config, { configType }) => {
+    // Configure sass for Vuetify
     config.module.rules.push({
       test: /\.sass$/,
       use: ['style-loader', 'css-loader', 'sass-loader'],
