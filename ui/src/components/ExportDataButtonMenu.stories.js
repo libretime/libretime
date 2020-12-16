@@ -1,6 +1,7 @@
-import ExportDataButtonMenu from '../../src/components/ExportDataButtonMenu.vue';
 import { action } from '@storybook/addon-actions';
 import { i18n } from '../plugins/i18n';
+
+import ExportDataButtonMenu from '../../src/components/ExportDataButtonMenu.vue';
 
 export default {
     title: 'ExportDataButtonMenu',

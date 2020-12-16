@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ExportDataButtonMenu.vue should match snapshot 1`] = `
+<div class="v-menu"><button type="button" class="v-btn v-btn--contained theme--dark v-size--default primary" role="button" aria-haspopup="true" aria-expanded="false"><span class="v-btn__content">
+
+      </span></button>
+  <!---->
+</div>
+`;

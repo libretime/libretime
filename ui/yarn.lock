@@ -6080,9 +6080,9 @@ ejs@^3.1.2:
     jake "^10.6.1"
 
 electron-to-chromium@^1.3.378, electron-to-chromium@^1.3.621:
-  version "1.3.627"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.627.tgz#4acdbbbbe31eb605fba8380063fd9c8a7e5ca4a0"
-  integrity sha512-O5IVRS4sCxP2+vECAp7uHkaI8V+dKYpuCyBcLn+hqVAOy/RONd8zx+6eH7TuWSTBYs/oUrzBXkNMZuVsQd58kQ==
+  version "1.3.628"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.628.tgz#be5a14ddf3a455de876274c84de0926439a287a7"
+  integrity sha512-fmhO4YGo/kapy+xL9Eq/cZwDASaTHZu3psIFYo4yc+RY1LzbZr84xjKlDImDrlrmWhOxsrDi98nX097U/xK/cQ==
 
 element-resize-detector@^1.2.1:
   version "1.2.1"
@@ -14476,7 +14476,7 @@ vue-inbrowser-compiler-utils@^4.33.6:
   dependencies:
     camelcase "^5.3.1"
 
-vue-jest@^3.0.5:
+vue-jest@^3.0.5, vue-jest@^3.0.7:
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/vue-jest/-/vue-jest-3.0.7.tgz#a6d29758a5cb4d750f5d1242212be39be4296a33"
   integrity sha512-PIOxFM+wsBMry26ZpfBvUQ/DGH2hvp5khDQ1n51g3bN0TwFwTy4J85XVfxTRMukqHji/GnAoGUnlZ5Ao73K62w==
