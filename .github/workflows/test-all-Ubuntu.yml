@@ -10,13 +10,45 @@ on:
   workflow_dispatch:
   
 jobs:
-  test-bionic:
-    runs-on: ubuntu-18.04
+  # test-bionic:
+  #   runs-on: ubuntu-18.04
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-python@v2
+  #       with:
+  #         python-version: '3.6'
+  #     - name: Setup PostgreSQL
+  #       run: |
+  #         sudo systemctl start postgresql.service
+  #         pg_isready
+  #         sudo -u postgres psql -c 'CREATE DATABASE libretime;'
+  #         sudo -u postgres psql -c "CREATE USER libretime WITH PASSWORD 'libretime';"
+  #         sudo -u postgres psql -c 'GRANT CONNECT ON DATABASE libretime TO libretime;'
+  #         sudo -u postgres psql -c 'ALTER USER libretime CREATEDB;'
+  #     - name: Setup PHP with specific version
+  #       uses: shivammathur/setup-php@v2
+  #       with:
+  #         php-version: '7.2'
+  #     - run: ENVIRONMENT=testing && LIBRETIME_LOG_DIR=/tmp/log/libretime
+  #     - name: Install prerequisites
+  #       run: sudo bash ./.github/scripts/install-bionic.sh
+  #     - name: Run PHP tests
+  #       run: |
+  #         composer install
+  #         cd airtime_mvc/tests
+  #         sudo bash ../../vendor/bin/phpunit
+  #         cd ../..
+  #     - name: Run Python tests
+  #       run: |
+  #         sudo bash ./.github/scripts/python-pkg-install.sh
+  #         sudo bash ./.github/scripts/python-pkg-test.sh
+  test-xenial:
+    runs-on: ubuntu-16.04
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.6'
+          python-version: '3.5'
       - name: Setup PostgreSQL
         run: |
           sudo systemctl start postgresql.service
@@ -28,48 +60,17 @@ jobs:
       - name: Setup PHP with specific version
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.2'
+          php-version: '7.0'
       - run: ENVIRONMENT=testing && LIBRETIME_LOG_DIR=/tmp/log/libretime
       - name: Install prerequisites
-        run: sudo bash ./.github/scripts/install-bionic.sh
+        run: sudo bash ./.github/scripts/install-xenial.sh
       - name: Run PHP tests
         run: |
-          sudo composer install
+          composer install
           cd airtime_mvc/tests
-          ls ../../vendor/bin/phpunit
           sudo bash ../../vendor/bin/phpunit
           cd ../..
       - name: Run Python tests
         run: |
           sudo bash ./.github/scripts/python-pkg-install.sh
           sudo bash ./.github/scripts/python-pkg-test.sh
-  # test-xenial:
-    # runs-on: ubuntu-16.04
-    # steps:
-    #   - uses: actions/checkout@v2
-    #   - uses: actions/setup-python@v2
-    #     with:
-    #       python-version: '3.5'
-    #   - name: Setup PostgreSQL
-    #     run: |
-    #       sudo systemctl start postgresql.service
-    #       pg_isready
-    #       sudo -u postgres psql -c 'CREATE DATABASE libretime;'
-    #       sudo -u postgres psql -c "CREATE USER libretime WITH PASSWORD 'libretime';"
-    #       sudo -u postgres psql -c 'GRANT CONNECT ON DATABASE libretime TO libretime;'
-    #       sudo -u postgres psql -c 'ALTER USER libretime CREATEDB;'
-    #   - name: Setup PHP with specific version
-    #     uses: shivammathur/setup-php@v2
-    #     with:
-    #       php-version: '7.0'
-    #   - run: ENVIRONMENT=testing && LIBRETIME_LOG_DIR=/tmp/log/libretime
-    #   - name: Install prerequisites
-    #     run: sudo bash ./.github/scripts/install-xenial.sh
-    #   - name: Run PHP tests
-    #     run: |
-    #       sudo composer install
-    #       cd airtime_mvc/tests && sudo bash ../../vendor/bin/phpunit && cd ../..
-    #   - name: Run Python tests
-    #     run: |
-    #       sudo bash ./.github/scripts/python-pkg-install.sh
-    #       sudo bash ./.github/scripts/python-pkg-test.sh
