@@ -82,6 +82,10 @@
   ],
   "jest": {
     "verbose": true,
+    "preset": "@vue/cli-plugin-unit-jest",
+    "setupFiles": [
+      "./test.setup.js"
+    ],
     "testMatch": [
       "**/*.spec.js"
     ],
