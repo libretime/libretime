@@ -10,9 +10,11 @@ class Application_Form_EditAudioMD extends Zend_Form
         $baseUrl = Application_Common_OsPath::getBaseDir();
          // Set the method for the display form to POST
         $this->setMethod('post');
+        $this->setAttrib('id', "track_edit_".$p_id);
 
         $file_id = new Zend_Form_Element_Hidden('file_id');
         $file_id->setValue($p_id);
+        $file_id->setDecorators(array('ViewHelper'));
         $file_id->addDecorator('HtmlTag', array('tag' => 'div', 'style' => 'display:none'));
         $file_id->removeDecorator('Label');
         $file_id->setAttrib('class', 'obj_id');
@@ -25,25 +27,28 @@ class Application_Form_EditAudioMD extends Zend_Form
             ->setValidators(array(
                 new Zend_Validate_StringLength(array('max' => 2048))
             ));
-        $file_id->addDecorator('HtmlTag', array('tag' => 'div', 'style' => 'display:none'));
-        $file_id->removeDecorator('Label');
-        $file_id->setAttrib('class', 'artwork');
+        $artwork->setDecorators(array('ViewHelper'));
+        $artwork->addDecorator('HtmlTag', array('tag' => 'div', 'style' => 'display:none'));
+        $artwork->removeDecorator('Label');
+        $artwork->setAttrib('class', 'artwork');
         $this->addElement($artwork);
 
         // Set artwork hidden field
         $set_artwork = new Zend_Form_Element_Hidden('set_artwork');
         $set_artwork->class = 'input_text set_artwork_'. $p_id;
-        $file_id->addDecorator('HtmlTag', array('tag' => 'div', 'style' => 'display:none'));
-        $file_id->removeDecorator('Label');
-        $file_id->setAttrib('class', 'set_artwork');
+        $set_artwork->setDecorators(array('ViewHelper'));
+        $set_artwork->addDecorator('HtmlTag', array('tag' => 'div', 'style' => 'display:none'));
+        $set_artwork->removeDecorator('Label');
+        $set_artwork->setAttrib('class', 'set_artwork');
         $this->addElement($set_artwork);
 
         // Remove artwork hidden field
         $remove_artwork = new Zend_Form_Element_Hidden('remove_artwork');
         $remove_artwork->class = 'input_text remove_artwork_'. $p_id;
-        $file_id->addDecorator('HtmlTag', array('tag' => 'div', 'style' => 'display:none'));
-        $file_id->removeDecorator('Label');
-        $file_id->setAttrib('class', 'remove_artwork');
+        $remove_artwork->setDecorators(array('ViewHelper'));
+        $remove_artwork->addDecorator('HtmlTag', array('tag' => 'div', 'style' => 'display:none'));
+        $remove_artwork->removeDecorator('Label');
+        $remove_artwork->setAttrib('class', 'remove_artwork');
         $this->addElement($remove_artwork);
 
         // Add title field
@@ -185,6 +190,16 @@ class Application_Form_EditAudioMD extends Zend_Form
                 new Zend_Validate_StringLength(array('max' => 64))
             ));
         $this->addElement($mood);
+        
+        // Add replay gain field
+        $replay_gain = new Zend_Form_Element('replay_gain');
+        $replay_gain->class = 'input_text replay_gain_'. $p_id;
+        $replay_gain->setLabel(_('Replay Gain:'))
+            ->setFilters(array('StringTrim'))
+            ->setValidators(array(
+                new Zend_Validate_StringLength(array('max' => 512))
+            ));
+        $this->addElement($replay_gain);
 
         // Add bmp field
         $bpm = new Zend_Form_Element_Text('bpm');
@@ -239,7 +254,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         $validCuePattern = '/^(?:[0-9]{1,2}:)?(?:[0-9]{1,2}:)?[0-9]{1,6}(\.\d{1,6})?$/';
 
         $cueIn = new Zend_Form_Element_Text('cuein');
-        $cueIn->class = 'input_text';
+        $cueIn->class = 'input_text cuein_'. $p_id;
         $cueIn->setLabel("Cue In:");
         $cueInValidator = Application_Form_Helper_ValidationTypes::overrideRegexValidator(
             $validCuePattern, _(sprintf("Specify cue in time in the format %s", "(hh:mm:)ss(.dddddd)"))
@@ -248,7 +263,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         $this->addElement($cueIn);
 
         $cueOut = new Zend_Form_Element_Text('cueout');
-        $cueOut->class = 'input_text';
+        $cueOut->class = 'input_text cueout_'. $p_id;
         $cueOut->setLabel('Cue Out:');
         $cueOutValidator = Application_Form_Helper_ValidationTypes::overrideRegexValidator(
             $validCuePattern, _(sprintf("Specify cue out time in the format %s", "(hh:mm:)ss(.dddddd)"))
@@ -311,3 +326,4 @@ class Application_Form_EditAudioMD extends Zend_Form
     }
 
 }
+

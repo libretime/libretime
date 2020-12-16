@@ -435,10 +435,7 @@ textarea {
 
 .edit-md-dialog .zend_form dt {
     float: left;
-    width: 35%;
-
-    text-align: right;
-
+    text-align: left;
     line-height: 20px;
     margin: 0 0 10px;
     padding-right: 4px;

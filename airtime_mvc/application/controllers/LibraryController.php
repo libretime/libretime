@@ -428,6 +428,14 @@ class LibraryController extends Zend_Controller_Action
         $this->view->artist_name = $file->getPropelOrm()->getDbArtistName();
         $this->view->filePath = $file->getPropelOrm()->getDbFilepath();
         $this->view->artwork = $file->getPropelOrm()->getDbArtwork();
+        
+        $this->view->replay_gain = $file->getPropelOrm()->getDbReplayGain();
+        $this->view->cuein = $file->getPropelOrm()->getDbCuein();
+        $this->view->cueout = $file->getPropelOrm()->getDbCueout();
+        $this->view->format = $file->getPropelOrm()->getDbFormat();
+        $this->view->bitrate = $file->getPropelOrm()->getDbBitRate();
+        $this->view->samplerate = $file->getPropelOrm()->getDbSampleRate();
+        
         $this->view->html = $this->view->render('library/edit-file-md.phtml');
     }
 

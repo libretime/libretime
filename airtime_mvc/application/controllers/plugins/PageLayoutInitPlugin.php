@@ -222,6 +222,13 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
 
             ->appendFile($baseUrl . 'js/airtime/common/common.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'js/airtime/common/audioplaytest.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+            
+            //include Wavesurfer
+            $view->headScript()->appendFile($baseUrl . 'js/wavesurfer/wavesurfer.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
+            ->appendFile($baseUrl . 'js/wavesurfer/timeline.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
+            ->appendFile($baseUrl . 'js/wavesurfer/regions.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
+            ->appendFile($baseUrl . 'js/wavesurfer/cursor.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
+            ->appendFile($baseUrl . 'js/wavesurfer/libretime.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
 
         $user = Application_Model_User::getCurrentUser();
         if (!is_null($user)) {
