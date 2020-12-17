@@ -39,8 +39,8 @@
         "zf1s/zend-cache": "dev-master@dev"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.3",
-        "phpunit/dbunit": "^2.0",
+        "phpunit/phpunit": "^6",
+        "phpunit/dbunit": "^3.0",
         "zf1s/zend-test": "^1.12"
     }
 }

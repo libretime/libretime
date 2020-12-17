@@ -23,8 +23,6 @@ apt-get install -y gstreamer1.0-plugins-base \
   python-cairo \
   pkg-config \
   libcairo2-dev \
-  postgresql \
-  postgresql-client \
   php7.0-curl \
   php7.0-gd \
   php7.0-pgsql \

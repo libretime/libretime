@@ -65,10 +65,11 @@ jobs:
         run: sudo bash ./.github/scripts/install-xenial.sh
       - name: Run Python tests
         run: |
+          pip3 install --upgrade pip
           sudo bash ./.github/scripts/python-pkg-install.sh
           sudo bash ./.github/scripts/python-pkg-test.sh
       - name: Run PHP tests
         run: |
-          composer install --no-progress
+          composer install --no-progress --dev
           cd airtime_mvc/tests
           sudo bash ../../vendor/bin/phpunit
