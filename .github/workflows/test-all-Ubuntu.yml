@@ -65,14 +65,11 @@ jobs:
         run: sudo bash ./.github/scripts/install-xenial.sh
       - name: Run Python tests
         run: |
-          pip3 install --upgrade pip
+          pip install --upgrade pip
           sudo bash ./.github/scripts/python-pkg-install.sh
           sudo bash ./.github/scripts/python-pkg-test.sh
-      - name: Install PHP dependencies
-        run: composer install --no-progress --dev
-      - name: PHPUnit tests
-        uses: php-actions/phpunit@v1
-        with:
-          php_version: '7.0'
-          configuration: 'airtime_mvc/tests/phpunit.xml'
-          bootstrap: 'airtime_mvc/tests/application/bootstrap.php'
+      - name: Run PHP tests
+        run: |
+          composer install --no-progress --dev
+          cd airtime_mvc/tests
+          sudo bash ../../vendor/bin/phpunit
