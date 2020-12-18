@@ -29,18 +29,19 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '7.2'
-      - run: ENVIRONMENT=testing && LIBRETIME_LOG_DIR=/tmp/log/libretime
       - name: Install prerequisites
-        run: sudo bash ./.github/scripts/install-bionic.sh
+        run: |
+          ENVIRONMENT=testing && LIBRETIME_LOG_DIR=/tmp/log/libretime
+          sudo bash ./.github/scripts/install-bionic.sh
       - name: Run Python tests
         run: |
           sudo bash ./.github/scripts/python-pkg-install.sh
           sudo bash ./.github/scripts/python-pkg-test.sh
       - name: Run PHP tests
         run: |
-          composer install --no-progress
+          composer install --no-progress --dev
           cd airtime_mvc/tests
-          sudo bash ../../vendor/bin/phpunit
+          php ../../vendor/bin/phpunit
   test-xenial:
     runs-on: ubuntu-16.04
     steps:
