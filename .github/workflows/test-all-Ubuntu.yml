@@ -72,4 +72,4 @@ jobs:
         run: |
           composer install --no-progress --dev
           cd airtime_mvc/tests
-          sudo bash ../../vendor/bin/phpunit
+          php ../../vendor/bin/phpunit
