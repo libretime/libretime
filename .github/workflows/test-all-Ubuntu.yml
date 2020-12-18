@@ -60,14 +60,31 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '7.0'
-      - run: ENVIRONMENT=testing && LIBRETIME_LOG_DIR=/tmp/log/libretime
       - name: Install prerequisites
-        run: sudo bash ./.github/scripts/install-xenial.sh
+        run: |
+          ENVIRONMENT=testing && LIBRETIME_LOG_DIR=/tmp/log/libretime
+          sudo bash ./.github/scripts/install-xenial.sh
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
       - name: Run Python tests
         run: |
           pip install --upgrade pip
           sudo bash ./.github/scripts/python-pkg-install.sh
           sudo bash ./.github/scripts/python-pkg-test.sh
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
       - name: Run PHP tests
         run: |
           composer install --no-progress --dev
