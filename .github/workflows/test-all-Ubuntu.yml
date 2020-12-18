@@ -64,17 +64,20 @@ jobs:
         run: |
           ENVIRONMENT=testing && LIBRETIME_LOG_DIR=/tmp/log/libretime
           sudo bash ./.github/scripts/install-xenial.sh
-      - uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
       - name: Run Python tests
         run: |
           pip install --upgrade pip
           sudo bash ./.github/scripts/python-pkg-install.sh
           sudo bash ./.github/scripts/python-pkg-test.sh
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+      - name: Run PHP tests
+        run: |
+          composer install --no-progress --dev
+          cd airtime_mvc/tests
+          php ../../vendor/bin/phpunit
       - name: Get Composer Cache Directory
         id: composer-cache
         run: |
@@ -83,10 +86,3 @@ jobs:
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-      - name: Run PHP tests
-        run: |
-          composer install --no-progress --dev
-          cd airtime_mvc/tests
-          php ../../vendor/bin/phpunit
