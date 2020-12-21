@@ -772,7 +772,7 @@ class Application_Model_Preference
 
     public static function GetImportTimestamp()
     {
-        return self::getValue("import_timestamp");
+        return (int) self::getValue("import_timestamp");
     }
 
     public static function GetStreamType()
