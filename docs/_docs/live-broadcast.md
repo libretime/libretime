@@ -2,7 +2,7 @@
 layout: article
 title: Broadcasting live with MIXXX or B.U.T.T.
 git: live-broadcast.md
-category: dj
+category: interface
 ---
 
 ## Live shows with MIXXX {#mixxx}
