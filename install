@@ -712,7 +712,7 @@ if [ "$ignore_dependencies" = "f" ]; then
     loud "         * Installing External Dependencies *        "
     loud "-----------------------------------------------------"
     
-    if [ $is_ubuntu_dist ]; then
+    if $is_ubuntu_dist; then
     	loudCmd "add-apt-repository -y ppa:libretime/libretime"
     	fi
 
