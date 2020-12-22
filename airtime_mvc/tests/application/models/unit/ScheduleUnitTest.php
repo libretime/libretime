@@ -23,7 +23,7 @@ class ScheduleUnitTest extends Zend_Test_PHPUnit_ControllerTestCase //PHPUnit_Fr
 
         $testShowData = ShowServiceData::getNoRepeatNoRRData();
         $showService = new Application_Service_ShowService();
-        $futureDate = new DateTime('2040-01-01T12:00:00.012345Z');
+        $futureDate = new DateTime();
         $futureDate->add(new DateInterval('P1Y')); //1 year into the future
         $futureDateString = $futureDate->format('Y-m-d');
 
@@ -35,7 +35,7 @@ class ScheduleUnitTest extends Zend_Test_PHPUnit_ControllerTestCase //PHPUnit_Fr
         //value will prevent anything from actually being scheduled. Normally this isn't
         //a problem because as soon as you view the calendar for the first time, this is
         //set to a week ahead in the future.
-        $populateUntil = new DateTime('2040-01-01T12:00:00.012345Z', new DateTimeZone('UTC'));
+        $populateUntil = new DateTime("now", new DateTimeZone('UTC'));
         $populateUntil = $populateUntil->add(new DateInterval("P2Y")); //2 years ahead in the future.
         Application_Model_Preference::SetShowsPopulatedUntil($populateUntil);
 
