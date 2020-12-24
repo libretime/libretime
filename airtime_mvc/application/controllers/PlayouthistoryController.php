@@ -46,8 +46,13 @@ class PlayouthistoryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/TableTools-2.1.5/js/ZeroClipboard.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/TableTools-2.1.5/js/TableTools.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+
+        // For new HTML5 export buttons, replaces TableTools
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.buttonsHTML5.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.jszip.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.pdfmake.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.pdfmake.vsfonts.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $this->view->headScript()->appendFile($baseUrl.'js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/bootstrap-datetime/bootstrap-datetimepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -56,7 +61,6 @@ class PlayouthistoryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/playouthistory/historytable.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $this->view->headLink()->appendStylesheet($baseUrl.'css/bootstrap-datetimepicker.min.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'js/datatables/plugin/TableTools-2.1.5/css/TableTools.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/playouthistory.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/history_styles.css?'.$CC_CONFIG['airtime_version']);
