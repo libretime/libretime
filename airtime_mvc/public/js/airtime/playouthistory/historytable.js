@@ -10,7 +10,7 @@ var AIRTIME = (function(AIRTIME) {
         
     var lengthMenu = [[10, 25, 50, 100, 500, -1], [10, 25, 50, 100, 500, $.i18n._("All")]];
     
-    var sDom = 'l<"dt-process-rel"r><"H"T><"dataTables_scrolling"t><"F"ip>';
+    var sDom = 'l<"dt-process-rel"r><"H"><"dataTables_scrolling"t><"F"ip>';
     
     var selectedLogItems = {};
     
