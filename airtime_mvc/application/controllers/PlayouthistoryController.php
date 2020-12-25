@@ -48,11 +48,11 @@ class PlayouthistoryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         // For new HTML5 export buttons, replaces TableTools
-        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.buttonsHTML5.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.jszip.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.pdfmake.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.pdfmake.vsfonts.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile('js/datatables/plugin/dataTables.buttons.js?','text/javascript');
+        $this->view->headScript()->appendFile('js/datatables/plugin/dataTables.buttonsHTML5.js?','text/javascript');
+        $this->view->headScript()->appendFile('js/datatables/plugin/dataTables.jszip.js?','text/javascript');
+        $this->view->headScript()->appendFile('js/datatables/plugin/dataTables.pdfmake.js?','text/javascript');
+        $this->view->headScript()->appendFile('js/datatables/plugin/dataTables.pdfmake.vsfonts.js?','text/javascript');
 
         $this->view->headScript()->appendFile($baseUrl.'js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/bootstrap-datetime/bootstrap-datetimepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
