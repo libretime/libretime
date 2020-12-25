@@ -301,7 +301,6 @@ var AIRTIME = (function(AIRTIME) {
         oTable = $historyTableDiv.dataTable( {
             
             "aoColumns": columns,
-                          
             "bProcessing": true,
             "bServerSide": true,
             "sAjaxSource": baseUrl+"playouthistory/file-history-feed",

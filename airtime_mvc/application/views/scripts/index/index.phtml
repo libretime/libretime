@@ -38,7 +38,6 @@
         <div class="podcast_bck">
         <div id="jp_container_1" class="jp-audio">
             <div class="jp-type-playlist">
-
                 <div class="current-track track-overflow"><?php echo _("Now Playing:") ?><span class="track-overflow"></span></div>
                 <div class="jp-gui jp-interface">
                     <div class="playbar playbar-buttons">
@@ -55,6 +54,7 @@
                         </li>
                     </ul>
                     </div>
+
                     <div class="playbar playbar-progress">
                     <div class="jp-time-block">
                         <div class="jp-progress">
@@ -85,7 +85,6 @@
                     </div>
                     </div>
                     </ul>
-
                 </div>
 
                 <div class="rss-tracks">
@@ -157,7 +156,6 @@
                     }
 
                     $('.rss-tracks ul').append(playlist_item);
-
                 });
 
                 _playlist_jplayer.setPlaylist(playlist);
@@ -271,8 +269,6 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-
-
 
         $("#player_iframe").load(function () {
 
