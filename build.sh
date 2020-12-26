@@ -26,3 +26,9 @@ else
     fi
 fi
 
+pushd ui
+yarn install
+yarn build
+popd
+cp ui/dist/js/*.js.map ui/dist/js/*.js airtime_mvc/public/js/
+cp ui/dist/css/*.css airtime_mvc/public/css/

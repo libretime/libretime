@@ -36,3 +36,10 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# ignore vue js and css files (part of the strangling the legacy ui)
+airtime_mvc/public/css/analyticsplayouthistory.css
+airtime_mvc/public/css/chunk-vendors.css
+airtime_mvc/public/js/analyticsplayouthistory.js*
+airtime_mvc/public/js/app.js*
+airtime_mvc/public/js/chunk-vendors.js*
