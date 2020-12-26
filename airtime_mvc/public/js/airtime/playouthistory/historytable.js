@@ -119,25 +119,6 @@ var AIRTIME = (function(AIRTIME) {
         }
         return filename;
     }
-
-    function setFlashFileName( nButton, oConfig, oFlash ) {
-        var filename = getFileName(oConfig.sExtends);
-        oFlash.setFileName( filename );
-        
-        if (oConfig.sExtends == "pdf") {
-            this.fnSetText( oFlash,
-                "title:"+ this.fnGetTitle(oConfig) +"\n"+
-                "message:"+ oConfig.sPdfMessage +"\n"+
-                "colWidth:"+ this.fnCalcColRatios(oConfig) +"\n"+
-                "orientation:"+ oConfig.sPdfOrientation +"\n"+
-                "size:"+ oConfig.sPdfSize +"\n"+
-                "--/TableToolsOpts--\n" +
-                this.fnGetTableData(oConfig));
-        }
-        else {
-            this.fnSetText(oFlash, this.fnGetTableData(oConfig));
-        }
-    }
     
     /* This callback can be used for all history tables */
     function fnServerData( sSource, aoData, fnCallback ) {
@@ -262,7 +243,6 @@ var AIRTIME = (function(AIRTIME) {
 				"</button>" +
 			"</div>");
 
-
 		$menu.append("<div class='btn-group'>" +
             "<button class='btn btn-small dropdown-toggle' data-toggle='dropdown'>" +
                 $.i18n._("Select")+" <span class='caret'></span>" +
@@ -319,7 +299,7 @@ var AIRTIME = (function(AIRTIME) {
             "sPaginationType": "full_numbers",
             "bJQueryUI": true,
             "bAutoWidth": true,
-            "sDom": sDom, 
+            "sDom": sDom,
         });
         oTable.fnSetFilteringDelay(350);
        
@@ -391,7 +371,7 @@ var AIRTIME = (function(AIRTIME) {
             "sPaginationType": "full_numbers",
             "bJQueryUI": true,
             "bAutoWidth": true,
-            "sDom": sDom, 
+            "sDom": sDom,
         });
         oTable.fnSetFilteringDelay(350);
         
