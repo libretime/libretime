@@ -1,6 +1,5 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 
-import Vue from 'vue'
 import Vuetify from 'vuetify'
 
 import ExportDataButtonMenu from '../../src/components/ExportDataButtonMenu.vue';
