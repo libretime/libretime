@@ -284,8 +284,8 @@ class Application_Model_StreamSetting
             'output' => 'icecast',
             'user'   => $config['stationId'],
             'pass'   => Application_Model_Preference::getDefaultIcecastPassword(),
-            // Kind of ugly... convert prefix int to ascii char
-            'mount'  => $config['stationId'] . '_' . chr($prefix[1] + 96),
+            // Forcing default mountpoint string for now
+            'mount'  => 'airtime_128',
         );
     }
 
