@@ -57,7 +57,7 @@ Vagrant.configure("2") do |config|
     provision_libretime(os, "debian.sh", installer_args)
   end
   config.vm.define "centos" do |os|
-    os.vm.box = 'centos/7'
+    os.vm.box = 'centos/8'
     provision_libretime(os, "centos.sh", installer_args + "--selinux")
   end
 

@@ -166,7 +166,7 @@ class AirtimeInstall
         echo " * Creating Airtime database user".PHP_EOL;
         $username = $CC_CONFIG['dsn']['username'];
         $password = $CC_CONFIG['dsn']['password'];
-        $command = "echo \"CREATE USER $username ENCRYPTED PASSWORD '$password' LOGIN CREATEDB NOCREATEUSER;\" | su postgres -c psql 2>/dev/null";
+        $command = "echo \"CREATE USER $username ENCRYPTED PASSWORD '$password' LOGIN CREATEDB NOCREATEUSER;\" | su postgres -c /usr/bin/psql 2>/dev/null";
         @exec($command, $output, $results);
         if ($results == 0) {
             echo "  * Database user '{$CC_CONFIG['dsn']['username']}' created.".PHP_EOL;
@@ -230,7 +230,7 @@ class AirtimeInstall
         $dir = self::GetAirtimeSrcDir()."/build/sql/";
         $files = array("schema.sql", "sequences.sql", "views.sql", "triggers.sql", "defaultdata.sql");
         foreach ($files as $f){
-            $command = "export PGPASSWORD=$p_dbpasswd && psql --username $p_dbuser --dbname $p_dbname --host $p_dbhost --file $dir$f 2>&1";
+            $command = "export PGPASSWORD=$p_dbpasswd && /usr/bin/psql --username $p_dbuser --dbname $p_dbname --host $p_dbhost --file $dir$f 2>&1";
             @exec($command, $output, $results);
         }
         AirtimeInstall::$databaseTablesCreated = true;
