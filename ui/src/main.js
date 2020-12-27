@@ -4,8 +4,13 @@ import vuetify from './plugins/vuetify';
 import i18n from './plugins/i18n'
 import vcalendar from './plugins/vcalendar';
 import router from './router'
+import { makeServer } from "./server"
 
 Vue.config.productionTip = false
+
+if (process.env.NODE_ENV === "development") {
+  makeServer()
+}
 
 new Vue({
   vuetify,

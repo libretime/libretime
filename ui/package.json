@@ -11,6 +11,7 @@
     "serve:storybook": "start-storybook -p 6006"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "core-js": "^3.8.1",
     "v-calendar": "^2.1.4",
     "vue": "^2.6.11",
@@ -41,6 +42,7 @@
     "eslint": "^7.16.0",
     "eslint-plugin-vue": "^7.3.0",
     "js-beautify": "^1.13.0",
+    "miragejs": "^0.1.41",
     "prism-react-renderer": "^1.1.1",
     "prismjs": "^1.17.1",
     "sass": "^1.30.0",

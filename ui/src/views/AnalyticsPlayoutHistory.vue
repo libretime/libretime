@@ -20,12 +20,13 @@
         </v-row>
       </template>
     </vc-date-picker>
-    <v-data-table dense :headers="headers" :items="items" v-if="initialized"/>
+    <v-data-table dense :headers="headers" :items="items" :loading="loading" v-if="initialized"/>
   </div>
 </template>
 
 <script>
 import ExportDataButtonMenu from '../components/ExportDataButtonMenu';
+import PlayoutHistoryService from '../services/PlayoutHistoryService';
 
 export default {
   name: 'AnalyticsPlayoutHistory',
@@ -34,6 +35,7 @@ export default {
   },
   data: () => ({
     initialized: false,
+    loading: true,
     range: {
       start: new Date(),
       end: new Date(),
@@ -66,8 +68,23 @@ export default {
     ],
     items: [],
   }),
+  methods: {
+    fetch() {
+      PlayoutHistoryService.getAll()
+        .then(response => {
+          this.items = response.data;
+          this.loading = false;
+        })
+        .catch(e => {
+          this.items = [];
+          this.loading = false;
+          this.err = e;
+        })
+    }
+  },
   mounted() {
     this.initialized = true;
+    this.fetch();
   },
 };
 </script>
