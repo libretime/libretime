@@ -6,7 +6,7 @@ module.exports = {
   webpackFinal: async (config, { configType }) => {
     // Configure sass for Vuetify
     config.module.rules.push({
-      test: /\.sass$/,
+      test: /\.s[ca]ss$/,
       use: ['style-loader', 'css-loader', 'sass-loader'],
       include: path.resolve(__dirname, '../'),
     });

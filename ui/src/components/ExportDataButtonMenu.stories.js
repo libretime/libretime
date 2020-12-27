@@ -1,4 +1,4 @@
-import { i18n } from '../plugins/i18n';
+import i18n from '../plugins/i18n';
 
 import ExportDataButtonMenu from './ExportDataButtonMenu.vue';
 
@@ -11,7 +11,13 @@ export default {
 const Template = (args, { argTypes }) => ({
   components: { ExportDataButtonMenu },
   props: Object.keys(argTypes),
-  template: '<ExportDataButtonMenu/>',
+  template: `
+    <v-main>
+      <v-container>
+        <ExportDataButtonMenu/>
+      </v-container>
+    </v-main>
+  `,
   i18n,
 });
 

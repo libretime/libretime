@@ -1,4 +1,4 @@
-import { i18n } from '../plugins/i18n';
+import i18n from '@/plugins/i18n';
 
 import AnalyticsPlayoutHistory from './AnalyticsPlayoutHistory.vue';
 
@@ -11,7 +11,13 @@ export default {
 const Template = (args, { argTypes }) => ({
   components: { AnalyticsPlayoutHistory },
   props: Object.keys(argTypes),
-  template: '<AnalyticsPlayoutHistory/>',
+  template: `
+    <v-main>
+      <v-container>
+        <AnalyticsPlayoutHistory/>
+      </v-container>
+    </v-main>
+  `,
   i18n,
 });
 

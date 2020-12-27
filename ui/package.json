@@ -12,10 +12,11 @@
   },
   "dependencies": {
     "core-js": "^3.8.1",
+    "v-calendar": "^2.1.4",
     "vue": "^2.6.11",
     "vue-i18n": "^8.17.3",
     "vue-router": "^3.2.0",
-    "vuetify": "^2.3.21"
+    "vuetify": "^2.4.0"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.12.10",
@@ -37,7 +38,7 @@
     "@vue/test-utils": "^1.1.2",
     "babel-eslint": "^10.1.0",
     "babel-preset-vue": "^2.0.2",
-    "eslint": "^7.15.0",
+    "eslint": "^7.16.0",
     "eslint-plugin-vue": "^7.3.0",
     "js-beautify": "^1.13.0",
     "prism-react-renderer": "^1.1.1",
