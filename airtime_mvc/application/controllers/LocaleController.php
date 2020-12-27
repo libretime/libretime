@@ -436,8 +436,7 @@ final class LocaleController extends Zend_Controller_Action
             ": activate to sort column ascending",
             ": activate to sort column descending",
             //End of datatables
-            "Welcome to the new Airtime Pro!" => _("Welcome to the new Airtime Pro!"),
-		
+            		
 		//New entries from .js	"" => _(""),
 		"First" => _("First"),
 		"Last" => _("Last"),

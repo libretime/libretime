@@ -97,9 +97,6 @@ class LoginController extends Zend_Controller_Action
         $this->view->form = $form;
         $this->view->airtimeVersion = $CC_CONFIG['airtime_version'];
         $this->view->airtimeCopyright = AIRTIME_COPYRIGHT_DATE;
-        if (isset($CC_CONFIG['demo'])) {
-            $this->view->demo = $CC_CONFIG['demo'];
-        }
     }
 
     public function logoutAction()
