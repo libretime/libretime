@@ -698,12 +698,12 @@ verbose "Using distribution id \"$dist\", release code \"$code\""
 systemInitDetect
 
 if $is_centos_dist; then
-    python_bin="python3"
+    python_bin="python3.8"
     apache_bin="httpd"
     apache_service="httpd"
     web_user="${web_user:-apache}"
 else
-    python_bin="python"
+    python_bin="python3"
     apache_bin="apache2ctl"
     apache_service="apache2"
     web_user="${web_user:-www-data}"
