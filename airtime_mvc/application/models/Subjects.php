@@ -1,7 +1,4 @@
 <?php
-define('ALIBERR_NOTGR', 20);
-define('ALIBERR_BADSMEMB', 21);
-
 /**
  * Subj class
  *

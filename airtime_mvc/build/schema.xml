@@ -407,16 +407,6 @@
       <index-column name="userid"/>
     </index>
   </table>
-  <table name="cc_smemb" phpName="CcSmemb">
-    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" required="true"/>
-    <column name="uid" phpName="Uid" type="INTEGER" required="true" defaultValue="0"/>
-    <column name="gid" phpName="Gid" type="INTEGER" required="true" defaultValue="0"/>
-    <column name="level" phpName="Level" type="INTEGER" required="true" defaultValue="0"/>
-    <column name="mid" phpName="Mid" type="INTEGER" required="false"/>
-    <unique name="cc_smemb_id_idx">
-      <unique-column name="id"/>
-    </unique>
-  </table>
   <table name="cc_subjs" phpName="CcSubjs">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="login" phpName="DbLogin" type="VARCHAR" size="255" required="true" defaultValue=""/>
