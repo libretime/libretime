@@ -279,7 +279,7 @@
             <?php
             // Is there a better way to do this?
             if ($this->displayRssTab) {?>
-                $("#player_iframe").contents().find('.bottom_bar').append("<div class='station_rss_btn button'><a target="_blank" href="<?php echo $this->stationPodcastRssUrl ?>" class="rss_icon"><span><?php echo _("Subscribe") ?></span><img src="css/radio-page/img/rss.png"></a></div>");
+                $("#player_iframe").contents().find('.bottom_bar').append("<div class='station_rss_btn button'><a target='_blank' href='<?php echo $this->stationPodcastRssUrl ?>' class='rss_icon'><span><?php echo _("Subscribe") ?></span><img src='css/radio-page/img/rss.png'></a></div>");
             <?php
             }
             ?>
