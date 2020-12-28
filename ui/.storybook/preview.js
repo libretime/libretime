@@ -4,9 +4,12 @@ import Vue from 'vue';
 import Vuetify from 'vuetify';
 import vuetify from '@/plugins/vuetify';
 import vcalendar from '@/plugins/vcalendar';
+import { makeServer } from "@/server"
 
 Vue.use(Vuetify, vuetify)
 Vue.use(vcalendar)
+
+makeServer()
 
 addDecorator(() => ({
   vuetify,
