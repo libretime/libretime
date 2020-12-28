@@ -1,0 +1,170 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AnalyticsPlayoutHistory.vue should match snapshot 1`] = `
+<div class="about">
+  <div aria-busy="true" aria-live="polite" role="alert" class="v-skeleton-loader v-skeleton-loader--is-loading theme--light">
+    <div class="v-skeleton-loader__table v-skeleton-loader__bone">
+      <div class="v-skeleton-loader__table-heading v-skeleton-loader__bone">
+        <div class="v-skeleton-loader__heading v-skeleton-loader__bone"></div>
+        <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+      </div>
+      <div class="v-skeleton-loader__table-thead v-skeleton-loader__bone">
+        <div class="v-skeleton-loader__heading v-skeleton-loader__bone"></div>
+        <div class="v-skeleton-loader__heading v-skeleton-loader__bone"></div>
+        <div class="v-skeleton-loader__heading v-skeleton-loader__bone"></div>
+        <div class="v-skeleton-loader__heading v-skeleton-loader__bone"></div>
+        <div class="v-skeleton-loader__heading v-skeleton-loader__bone"></div>
+        <div class="v-skeleton-loader__heading v-skeleton-loader__bone"></div>
+      </div>
+      <div class="v-skeleton-loader__table-tbody v-skeleton-loader__bone">
+        <div class="v-skeleton-loader__table-row-divider v-skeleton-loader__bone">
+          <div class="v-skeleton-loader__table-row v-skeleton-loader__bone">
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+          </div>
+          <div class="v-skeleton-loader__divider v-skeleton-loader__bone"></div>
+        </div>
+        <div class="v-skeleton-loader__table-row-divider v-skeleton-loader__bone">
+          <div class="v-skeleton-loader__table-row v-skeleton-loader__bone">
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+          </div>
+          <div class="v-skeleton-loader__divider v-skeleton-loader__bone"></div>
+        </div>
+        <div class="v-skeleton-loader__table-row-divider v-skeleton-loader__bone">
+          <div class="v-skeleton-loader__table-row v-skeleton-loader__bone">
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+          </div>
+          <div class="v-skeleton-loader__divider v-skeleton-loader__bone"></div>
+        </div>
+        <div class="v-skeleton-loader__table-row-divider v-skeleton-loader__bone">
+          <div class="v-skeleton-loader__table-row v-skeleton-loader__bone">
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+          </div>
+          <div class="v-skeleton-loader__divider v-skeleton-loader__bone"></div>
+        </div>
+        <div class="v-skeleton-loader__table-row-divider v-skeleton-loader__bone">
+          <div class="v-skeleton-loader__table-row v-skeleton-loader__bone">
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+          </div>
+          <div class="v-skeleton-loader__divider v-skeleton-loader__bone"></div>
+        </div>
+        <div class="v-skeleton-loader__table-row-divider v-skeleton-loader__bone">
+          <div class="v-skeleton-loader__table-row v-skeleton-loader__bone">
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+            <div class="v-skeleton-loader__table-cell v-skeleton-loader__bone">
+              <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+            </div>
+          </div>
+          <div class="v-skeleton-loader__divider v-skeleton-loader__bone"></div>
+        </div>
+      </div>
+      <div class="v-skeleton-loader__table-tfoot v-skeleton-loader__bone">
+        <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+        <div class="v-skeleton-loader__text v-skeleton-loader__bone"></div>
+        <div class="v-skeleton-loader__avatar v-skeleton-loader__bone"></div>
+        <div class="v-skeleton-loader__avatar v-skeleton-loader__bone"></div>
+      </div>
+    </div>
+  </div>
+  <!---->
+  <!---->
+</div>
+`;
