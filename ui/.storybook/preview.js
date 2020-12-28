@@ -14,8 +14,10 @@ makeServer()
 addDecorator(() => ({
   vuetify,
   template: `
-    <v-app dark>
-      <story />
-    </v-app>
+    <div libretime-vue>
+      <v-app dark>
+        <story />
+      </v-app>
+    </div>
   `,
 }));

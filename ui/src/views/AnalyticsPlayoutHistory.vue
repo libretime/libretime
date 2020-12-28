@@ -4,17 +4,17 @@
     <vc-date-picker mode="dateTime" v-model="range" is-range is-dark v-if="initialized">
       <template v-slot="{ inputValue, inputEvents }">
         <v-row>
-          <v-col cols=12 md=4>
+          <v-col cols=12 md=3>
             <h2>{{ $t('Playout History') }}</h2>
           </v-col>
           <v-spacer/>
-          <v-col cols=12 md=2>
+          <v-col cols=12 md=3>
             <v-text-field dense readonly :label="$t('Start Time')" :value="inputValue.start" v-on="inputEvents.start"/>
           </v-col>
-          <v-col cols=12 md=2>
+          <v-col cols=12 md=3>
             <v-text-field dense readonly :label="$t('End Time')" :value="inputValue.end" v-on="inputEvents.end"/>
           </v-col>
-          <v-col cols=12 md=1>
+          <v-col cols=12 md=2>
             <ExportDataButtonMenu data="[]"/>
           </v-col>
         </v-row>

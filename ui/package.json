@@ -44,6 +44,7 @@
     "faker": "^5.1.0",
     "js-beautify": "^1.13.0",
     "miragejs": "^0.1.41",
+    "postcss-prefix-selector": "^1.7.2",
     "prism-react-renderer": "^1.1.1",
     "prismjs": "^1.17.1",
     "sass": "^1.30.0",
