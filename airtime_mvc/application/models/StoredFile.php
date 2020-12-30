@@ -916,14 +916,14 @@ SQL;
      * on the local disk (like /tmp) over to Airtime's "stor" directory,
      * which is where all ingested music/media live.
      *
-     * This is done in PHP here on the web server rather than in airtime_analyzer because
-     * the airtime_analyzer might be running on a different physical computer than the web server,
+     * This is done in PHP here on the web server rather than in libretime-analyzer because
+     * the libretime-analyzer might be running on a different physical computer than the web server,
      * and it probably won't have access to the web server's /tmp folder. The stor/organize directory
-     * is, however, both accessible to the machines running airtime_analyzer and the web server
+     * is, however, both accessible to the machines running libretime-analyzer and the web server
      * on Airtime Pro.
      *
      * The file is actually copied to "stor/organize", which is a staging directory where files go
-     * before they're processed by airtime_analyzer, which then moves them to "stor/imported" in the final
+     * before they're processed by libretime-analyzer, which then moves them to "stor/imported" in the final
      * step.
      *
      * @param string $tempFilePath
