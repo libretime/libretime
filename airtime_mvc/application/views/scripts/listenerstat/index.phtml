@@ -15,17 +15,4 @@
         </fieldset>
     </div>
     <div style="clear: both;"></div>
-    <?php $bandwidthLimit = Application_Model_Preference::getBandwidthLimit(); ?>
-    <?php if ($bandwidthLimit): ?>
-    <?php $bandwidthUsage = Application_Model_Preference::getBandwidthLimitCounter(); ?>
-    <?php $percentInUse = sprintf("%01.1f%% ", $bandwidthUsage/$bandwidthLimit*100); ?>
-    <div id="bandwidth_usage">
-        <div style="padding-bottom: 2px;"><?php echo _("Monthly Listener Bandwidth Usage") ?></div>
-        <div class="bandwidth_usage_progress_bar"></div>
-        <div class="bandwidth_usage_percent_in_use"><?php echo $percentInUse .  _("in use") ?></div>
-        <div class="bandwidth_usage_used" style="width:<?php echo sprintf("%01.1f%%", min(100, $bandwidthUsage/$bandwidthLimit*100)) ?>;"></div>
-
-        <div style="margin-top: 17px; font-size: 12px;"><?php echo sprintf("%01.1fGB of %01.1fGB", $bandwidthUsage/pow(2, 30), $bandwidthLimit/pow(2, 30)); ?></div>
-    </div>
-    <?php endif; ?>
 </div>
