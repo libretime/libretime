@@ -164,11 +164,6 @@ $pages[] = array(
             'resource'   =>    'dashboard'
         ),
         array(
-            'label'      => _('FAQ'),
-            'uri'        => FAQ_URL,
-            'target'     => "_blank"
-        ),
-        array(
             'label'      => _('User Manual'),
             'uri'        => USER_MANUAL_URL,
             'target'     => "_blank"
