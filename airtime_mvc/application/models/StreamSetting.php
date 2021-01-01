@@ -156,7 +156,7 @@ class Application_Model_StreamSetting
         self::ensureKeyExists($keyPrefix . 'description', $data);
         self::ensureKeyExists($keyPrefix . 'enable', $data, "false");
         self::ensureKeyExists($keyPrefix . 'genre', $data);
-        self::ensureKeyExists($keyPrefix . 'host', $data, $config['baseUrl']);
+        self::ensureKeyExists($keyPrefix . 'host', $data);
         self::ensureKeyExists($keyPrefix . 'liquidsoap_error', $data, "waiting");
         self::ensureKeyExists($keyPrefix . 'mount', $data);
         self::ensureKeyExists($keyPrefix . 'name', $data);
