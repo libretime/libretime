@@ -23,7 +23,7 @@ default_dj_fade = ref 0.
 station_name = ref ''
 show_name = ref ''
 
-dynamic_metadata_callback = ref fun (s) -> begin () end
+dynamic_metadata_callback = ref fun (~new_track=false, s) -> begin () end
 
 s1_connected = ref ''
 s2_connected = ref ''
@@ -34,20 +34,20 @@ s2_namespace = ref ''
 s3_namespace = ref ''
 just_switched = ref false
 
-%include "ls_lib_legacy.liq"
+%include "ls_lib.liq"
 
 sources = ref []
 source_id = ref 0
 
 def check_version(~version=liquidsoap.version, major, minor) =
     v = list.map(int_of_string, string.split(separator="\.", version))
-    list.nth(v,0) > major or list.nth(v,0) == major and list.nth(v,1) >= minor
+    list.nth(v,0,default=0) > major or list.nth(v,0,default=0) == major and list.nth(v,1,default=0) >= minor
 end
 
 # cue cut fix for liquidsoap <1.2.2
 #
 # This was most likely broken on 1.1.1 (debian) as well.
-# 
+#
 # adapted from https://github.com/savonet/liquidsoap/issues/390#issuecomment-277562081
 #
 def fix_cue_in(~cue_in_metadata='liq_cue_in', m) =
@@ -73,16 +73,16 @@ def create_source()
     l = amplify(1., override="replay_gain", l)
 
     # the crossfade function controls fade in/out
-    l = crossfade_airtime(l)
+    l = crossfade(duration=0., smart=true, l)
 
     l = on_metadata(notify_queue, l)
 
     sources := list.append([l], !sources)
     server.register(namespace="queues",
                 "s#{!source_id}_skip",
-                fun (s) -> begin log("queues.s#{!source_id}_skip") 
-                    clear_queue(l) 
-                    "Done" 
+                fun (s) -> begin log("queues.s#{!source_id}_skip")
+                    clear_queue(l)
+                    "Done"
                 end)
     source_id := !source_id + 1
 end
@@ -181,7 +181,10 @@ ref_off_air_meta = ref off_air_meta
 if !ref_off_air_meta == "" then
     ref_off_air_meta := "LibreTime - offline"
 end
-default = rewrite_metadata([("title", !ref_off_air_meta)], default)
+def map_off_air_meta(m) =
+  [("title", !ref_off_air_meta)]
+end
+default = map_metadata(map_off_air_meta, default)
 ignore(output.dummy(default, fallible=true))
 
 master_dj_enabled = ref false
@@ -235,26 +238,40 @@ def master_dj_disconnect() =
     update_source_status("master_dj", false)
 end
 
-#auth function for live stream
-def check_master_dj_client(user,password) =
-    log("master connected")
-    #get the output of the php script
-    ret = get_process_lines("python3 #{auth_path} --master #{user} #{password}")
-    #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
-    ret = list.hd(ret)
+# Auth function for live stream
+# @Category LiveStream
+# @param user     Username to check against LibreTime API
+# @param password Password to check against LibreTime API
+# @param ~type    Type of password to check, "dj" or "master, default: "master"
+def check_auth(user="", password="", ~type="master") =
+    log("#{type} user #{user} connected",label="#{type}_source")
 
-    #return true to let the client transmit data, or false to tell harbor to decline
-    ret == "True"
+    # Check auth based on return value from auth script
+    ret = test_process("python3 #{auth_path} --#{type} #{user} #{password}")
+
+    if ret then
+        log("#{type} user #{user} authenticated",label="#{type}_source")
+    else
+        log("#{type} user #{user} auth failed",label="#{type}_source",level=2)
+    end
+
+    ret
 end
 
-def check_dj_client(user,password) =
-    log("live dj connected")
-    #get the output of the php script
-    ret = get_process_lines("python3 #{auth_path} --dj #{user} #{password}")
-    #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
-    hd = list.hd(ret)
-    log("Live DJ authenticated: #{hd}")
-    hd == "True"
+# Check master source auth
+# @Category LiveStream
+# @param user     Username to check against LibreTime API
+# @param password Password to check against LibreTime API
+def check_master_dj_client(user, password) =
+    check_auth(user, password)
+end
+
+# Check dj/show source auth
+# @Category LiveStream
+# @param user     Username to check against LibreTime API
+# @param password Password to check against LibreTime API
+def check_dj_client(user, password) =
+    check_auth(user, password, type="dj")
 end
 
 s = switch(id="schedule_noise_switch",
