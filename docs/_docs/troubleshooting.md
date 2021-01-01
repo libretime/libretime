@@ -36,11 +36,12 @@ If the service isn't wanting to restart, look at its status for clues as to why 
 
 > If you find yourself constantly needing to restart a service, there's a chance it was never set to autostart on system boot. Use `sudo systemctl enable servicename` to fix this problem.
 
-## 3. Basic troubleshooting
+## 3. Known problems
 
 If you have one of these issues, please try to resolve it with the instructions below before moving on in the 
 troubleshooting checklist.
 
+- **Streaming player on Microsite and Listen player on Dashboard not working?** The problem is caused by a bug in writing to the database during the setup wizard. This can be fixed by going to **Settings** -> **Stream Settings** and toggling the **Default Streaming** and **Custom/ 3rd Party Streaming** option, accepting the popup dialogues, and clicking **Save** at the top of the settings page.
 - **File not importing successfully?** Libretime has been known to work with MP3 and WAV files, encoded using 41,100 Hz. Variable Bit Rate (VBR) files are currently hit or miss with the importer. Please convert your file to an MP3 or WAV at 41,100 Hz. and try uploading again.
 - **Podcast hosted by Anchor.fm not importing?** There is no known work-around at this time. Ask your producers to provide their show files manually or check with the show's distributer.
 - **Tracks won't publish?** We know the Publish screen is broken and we're working on it. A potential work-around is to use an external podcast host like [Anchor.fm](https://www.anchor.fm) or [Blubrry](https://blubrry.com/).
