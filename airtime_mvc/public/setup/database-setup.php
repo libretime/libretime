@@ -152,7 +152,7 @@ class DatabaseSetup extends Setup {
                  * have multiple issues; they similarly die on any SQL errors, fail to read in multi-line
                  * commands, and fail on any unescaped ? or $ characters.
                  */
-                exec("export PGPASSWORD=" . self::$_properties["dbpass"] . " && psql -U " . self::$_properties["dbuser"]
+                exec("export PGPASSWORD=" . self::$_properties["dbpass"] . " && /usr/bin/psql -U " . self::$_properties["dbuser"]
                      . " --dbname " . self::$_properties["dbname"] . " -h " . self::$_properties["host"]
                      . " -f $sqlDir$f 2>/dev/null", $out, $status);
             } catch (Exception $e) {

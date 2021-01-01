@@ -94,6 +94,11 @@ class Application_Form_EditAudioMD extends Zend_Form
         // Add track type dropdown
         $track_type_options = array();
         $track_types = Application_Model_Tracktype::getTracktypes();
+        
+        array_multisort(array_map(function($element) {
+            return $element['type_name'];
+        }, $track_types), SORT_ASC, $track_types);
+        
         $track_type_options[""] = _('Select a Type');
         foreach ($track_types as $key => $tt) {
             $track_type_options[$tt['code']] = $tt['type_name'];

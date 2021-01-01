@@ -239,12 +239,12 @@ abstract class AirtimeUpgrader
     }
 
     protected function _runUpgrade() {
-        passthru("export PGPASSWORD=".$this->password." && psql -h ".$this->host." -U ".$this->username." -q -f ".$this->_dir."/upgrade_sql/airtime_"
+        passthru("export PGPASSWORD=".$this->password." && /usr/bin/psql -h ".$this->host." -U ".$this->username." -q -f ".$this->_dir."/upgrade_sql/airtime_"
                  .$this->getNewVersion()."/upgrade.sql ".$this->database." 2>&1 | grep -v -E \"will create implicit sequence|will create implicit index\"");
     }
 
     protected function _runDowngrade() {
-        passthru("export PGPASSWORD=".$this->password." && psql -h ".$this->host." -U ".$this->username." -q -f ".$this->_dir."/downgrade_sql/airtime_"
+        passthru("export PGPASSWORD=".$this->password." && /usr/bin/psql -h ".$this->host." -U ".$this->username." -q -f ".$this->_dir."/downgrade_sql/airtime_"
                  .$this->getNewVersion()."/downgrade.sql ".$this->database." 2>&1 | grep -v -E \"will create implicit sequence|will create implicit index\"");
     }
 
@@ -623,5 +623,18 @@ class AirtimeUpgrader300alpha9_2 extends AirtimeUpgrader
 
     public function getNewVersion() {
         return '3.0.0-alpha.9.2';
+    }
+}
+
+class AirtimeUpgrader200alpha9_3 extends AirtimeUpgrader
+{
+    protected function getSupportedSchemaVersions() {
+        return array(
+            '3.0.0-alpha.9.2'
+        );
+    }
+
+    public function getNewVersion() {
+        return '3.0.0-alpha.9.3';
     }
 }
