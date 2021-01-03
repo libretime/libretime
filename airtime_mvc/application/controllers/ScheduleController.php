@@ -90,7 +90,7 @@ class ScheduleController extends Zend_Controller_Action
         AirtimeTableView::injectTableJavaScriptDependencies($headScript, $baseUrl, $CC_CONFIG['airtime_version']);
 
         $this->view->headScript()->appendFile($baseUrl.'js/libs/moment.min.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'js/libs/moment-timezone-with-data-2010-2020.min.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/libs/moment-timezone.min.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
