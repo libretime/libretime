@@ -90,7 +90,7 @@ export default {
           this.items = response.data
           this.loading = false
         })
-        .catch((e) => {
+        .catch(() => {
           this.items = []
           this.loading = false
         })
