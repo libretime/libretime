@@ -8,13 +8,16 @@
     "test:unit": "vue-cli-service test:unit --testMatch '**/*.spec.js' --setupFiles ./src/test.setup.js",
     "lint": "vue-cli-service lint",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
-    "serve:storybook": "start-storybook -p 6006"
+    "serve:storybook": "start-storybook -p 6006",
+    "styleguide": "vue-cli-service styleguidist",
+    "styleguide:build": "vue-cli-service styleguidist:build"
   },
   "dependencies": {
     "axios": "^0.21.1",
     "core-js": "^3.8.1",
     "v-calendar": "^2.1.4",
     "vue": "^2.6.11",
+    "vue-blob-json-csv": "^0.1.7",
     "vue-i18n": "^8.17.3",
     "vue-router": "^3.2.0",
     "vuetify": "^2.4.0"
@@ -25,6 +28,7 @@
     "@mdi/font": "^5.8.55",
     "@storybook/addon-a11y": "^6.1.11",
     "@storybook/addon-actions": "^6.1.11",
+    "@storybook/addon-docs": "^6.1.11",
     "@storybook/addon-essentials": "^6.1.11",
     "@storybook/addon-knobs": "^6.1.11",
     "@storybook/addon-notes": "^5.2",
@@ -40,18 +44,24 @@
     "babel-eslint": "^10.1.0",
     "babel-preset-vue": "^2.0.2",
     "eslint": "^7.16.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-prettier-vue": "^2.1.1",
     "eslint-plugin-vue": "^7.3.0",
     "faker": "^5.1.0",
     "js-beautify": "^1.13.0",
     "miragejs": "^0.1.41",
     "postcss-prefix-selector": "^1.7.2",
+    "prettier": "^2.2.1",
     "prism-react-renderer": "^1.1.1",
     "prismjs": "^1.17.1",
     "sass": "^1.30.0",
     "sass-loader": "^10.1.0",
     "vue-cli-plugin-i18n": "~1.0.1",
+    "vue-cli-plugin-styleguidist": "~4.34.2",
     "vue-cli-plugin-vuetify": "~2.0.8",
     "vue-cli-plugin-vuetify-storybook": "~0.2.0",
+    "vue-docgen-api": "^4.34.2",
+    "vue-docgen-loader": "^1.5.0",
     "vue-jest": "^3.0.7",
     "vue-storybook": "^1.1.0",
     "vue-template-compiler": "^2.6.11",
@@ -63,13 +73,36 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/essential",
+      "plugin:vue/recommended",
+      "plugin:prettier-vue/recommended",
+      "prettier/vue",
       "eslint:recommended"
     ],
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {},
+    "rules": {
+      "prettier-vue/prettier": [
+        "error",
+        {
+          "printWidth": 100,
+          "singleQuote": true,
+          "semi": false,
+          "trailingComma": "es5"
+        }
+      ]
+    },
+    "settings": {
+      "prettier-vue": {
+        "SFCBlocks": {
+          "customBlocks": {
+            "docs": {
+              "lang": "markdown"
+            }
+          }
+        }
+      }
+    },
     "overrides": [
       {
         "files": [

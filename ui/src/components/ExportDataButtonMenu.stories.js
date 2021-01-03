@@ -1,12 +1,9 @@
-import i18n from '../plugins/i18n';
-
-import ExportDataButtonMenu from './ExportDataButtonMenu.vue';
+import ExportDataButtonMenu from './ExportDataButtonMenu.vue'
 
 export default {
-    title: 'ExportDataButtonMenu',
-    component: ExportDataButtonMenu,
-    i18n,
-};
+  title: 'Components/Generic/ExportDataButtonMenu',
+  component: ExportDataButtonMenu,
+}
 
 const Template = (args, { argTypes }) => ({
   components: { ExportDataButtonMenu },
@@ -14,17 +11,13 @@ const Template = (args, { argTypes }) => ({
   template: `
     <v-main>
       <v-container>
-        <ExportDataButtonMenu/>
+        <export-data-button-menu :data="data" :label="label" :file-name="fileName"/>
       </v-container>
     </v-main>
   `,
-  i18n,
-});
+})
 
-export const NoData = Template.bind({});
-NoData.args = {}
-
-export const TabularData = Template.bind({});
+export const TabularData = Template.bind({})
 TabularData.args = {
-  data: '[{"id": 1, "value": "test"}]'
+  data: [{ id: 1, value: 'test' }],
 }

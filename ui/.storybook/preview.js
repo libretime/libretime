@@ -1,4 +1,4 @@
-import { addDecorator } from '@storybook/vue';
+import { addDecorator, addParameters } from '@storybook/vue';
 
 import Vue from 'vue';
 import Vuetify from 'vuetify';
@@ -21,3 +21,9 @@ addDecorator(() => ({
     </div>
   `,
 }));
+
+addParameters({
+  docs: {
+    inlineStories: true,
+  },
+});
