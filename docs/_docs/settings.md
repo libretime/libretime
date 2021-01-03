@@ -52,6 +52,11 @@ default.
 
 ![](/img/api-settings.png)
 
+You can opt-in to test new features with the **Feature Previews** option.
+Features that we soft rollout this way may need more feedback or still have
+tolerable bugs. This contains but is not limited to features like large ui
+refactors. You can switch back at any time.
+
 You can enable live, read-only access to the LibreTime schedule calendar for
 your station's public website with the **Public LibreTime API** option, if you
 wish. (There is more about this feature in the
