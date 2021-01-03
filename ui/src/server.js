@@ -160,7 +160,7 @@ export function makeServer({ environment = 'development' } = {}) {
       this.get('/playout-history', (schema) => {
         return schema.playouthistories.all()
       })
-      this.get('/playout-history-template', (schema) => {
+      this.get('/playout-history-templates', (schema) => {
         return schema.playouthistorytemplates.all()
       })
     },

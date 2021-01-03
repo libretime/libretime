@@ -2,7 +2,7 @@ import api from '../api'
 
 class PlayoutHistoryTemplateService {
   getAll() {
-    return api.get('/playout-history-template')
+    return api.get('/playout-history-templates')
   }
 }
 

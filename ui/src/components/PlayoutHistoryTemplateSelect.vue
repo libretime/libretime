@@ -14,7 +14,7 @@
 import PlayoutHistoryTemplateService from '../services/PlayoutHistoryTemplateService'
 
 /**
- * `select` tag that gets populated from the `/api/v2/playout-history-template` API endpoint.
+ * `select` tag that gets populated from the `/api/v2/playout-history-templates` API endpoint.
  *
  * The component emits a `change` event containing the complete template if one is selected.
  *

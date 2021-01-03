@@ -93,7 +93,6 @@ export default {
         .catch((e) => {
           this.items = []
           this.loading = false
-          this.err = e
         })
     },
   },
