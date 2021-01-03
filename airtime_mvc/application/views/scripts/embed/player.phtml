@@ -22,8 +22,8 @@
                 'elementId': id_element,    // leave alone
                 'autoplay': false,          // or true (only works on some browsers)
                 'forceHTTPS': false,         // or true if the stream is in SSL (beware of the listening port, usually 8000)
-                'replacePort':false,        // false for disabled or '8000' as the usual start port, forces to specify replacePortTo.
-                'replacePortTo':''          // either '' to use the default port of the browser (80/http, 443/https) or '8443' to force the port of the stream.
+                'replacePort': false,        // false for disabled or '8000' as the usual start port, forces to specify replacePortTo.
+                'replacePortTo': ''          // either '' to use the default port of the browser (80/http, 443/https) or '8443' to force the port of the stream.
             };
 
             if (this.playerMode == "manual") {
@@ -109,7 +109,7 @@
 
         Html5Player.prototype.play = function() {
             console.log('play');
-            playerhtml5_audio.src = this.settings.url+'?'+Math.floor(Math.random() * Math.floor(100000));
+            playerhtml5_audio.src = this.settings.url;
             playerhtml5_audio.play();
             togglePlayStopButton();
         };
