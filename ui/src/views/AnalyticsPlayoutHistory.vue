@@ -14,6 +14,7 @@
             <v-text-field
               dense
               readonly
+              :disabled="!selected"
               :label="$t('Start Time')"
               :value="inputValue.start"
               v-on="inputEvents.start"
@@ -23,18 +24,19 @@
             <v-text-field
               dense
               readonly
+              :disabled="!selected"
               :label="$t('End Time')"
               :value="inputValue.end"
               v-on="inputEvents.end"
             />
           </v-col>
           <v-col cols="12" md="2">
-            <export-data-button-menu :label="$t('Export…')" :data="items" />
+            <export-data-button-menu :label="$t('Export…')" :data="items" :disabled="!selected" />
           </v-col>
         </v-row>
       </template>
     </vc-date-picker>
-    <v-data-table dense :headers="headers" :items="items" :loading="loading" />
+    <v-data-table v-if="selected" dense :headers="headers" :items="items" :loading="loading" />
   </v-sheet>
 </template>
 
@@ -55,6 +57,7 @@ export default {
       end: new Date(),
     },
 
+    selected: false,
     loading: false,
     headers: [],
     items: [],
@@ -81,6 +84,7 @@ export default {
             value: value,
           }
         })
+      this.selected = true
     },
 
     fetch() {

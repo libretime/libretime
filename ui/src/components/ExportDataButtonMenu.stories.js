@@ -11,7 +11,7 @@ const Template = (args, { argTypes }) => ({
   template: `
     <v-main>
       <v-container>
-        <export-data-button-menu :data="data" :label="label" :file-name="fileName"/>
+        <export-data-button-menu :data="data" :label="label" :file-name="fileName" :disabled="disabled"/>
       </v-container>
     </v-main>
   `,

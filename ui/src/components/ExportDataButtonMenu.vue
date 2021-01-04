@@ -1,7 +1,7 @@
 <template>
   <v-menu offset-y>
     <template #activator="{ on, attrs }">
-      <v-btn v-bind="attrs" dark color="primary" v-on="on">{{ label }}</v-btn>
+      <v-btn v-bind="attrs" dark color="primary" :disabled="disabled" v-on="on">{{ label }}</v-btn>
     </template>
     <v-list>
       <v-list-item v-for="t in types" :key="t.type">
@@ -46,6 +46,13 @@ export default {
     data: {
       type: Array,
       required: true,
+    },
+    /**
+     * Disable button.
+     */
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   data: () => ({
