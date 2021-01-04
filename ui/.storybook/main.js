@@ -2,8 +2,11 @@ const path = require('path');
 
 module.exports = {
   stories: ['../src/**/*.stories.@(js|mdx)'],
-  addons: ['@storybook/addon-essentials'],
+  addons: [
+    '@storybook/addon-essentials',
+  ],
   webpackFinal: async (config, { configType }) => {
+
     // Configure sass for Vuetify
     config.module.rules.push({
       test: /\.s[ca]ss$/,

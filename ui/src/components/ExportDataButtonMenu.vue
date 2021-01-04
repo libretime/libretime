@@ -18,6 +18,10 @@
 <script>
 /**
  * Download data provided as CSV or JSON.
+ *
+ * ```vue
+ * <export-data-button-menu :data="[{id:1, value: "1"},{id:2, value: "2"}]"/>
+ * ```
  */
 export default {
   name: 'ExportDataButtonMenu',
