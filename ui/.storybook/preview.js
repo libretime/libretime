@@ -38,7 +38,6 @@ const i18n = new VueI18n(i18nOptions)
 // vue/vuetify/i18n/etc decorator
 export const decorators = [
   (story, context) => {
-    console.log('decorator called for story', context)
     // wrap the passed component within the passed context
     const wrapped = story(context)
     // extend Vue to use Vuetify around the wrapped component
