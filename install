@@ -1210,7 +1210,6 @@ else
     # not on centos
     ip_device="eth0"
     $is_ubuntu_xenial && ip_device="enp0s8"
-    $is_ubuntu_bionic && ip_device="enp0s2"
     IP=$(ifconfig ${ip_device} 2>/dev/null |awk -F'[ :]+' '/inet addr:/ {print $4}')
 fi
 verbose "...Done"
