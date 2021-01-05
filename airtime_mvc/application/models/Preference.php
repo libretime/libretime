@@ -1574,68 +1574,6 @@ class Application_Model_Preference
     }
 
     /**
-     * Accessors for station bandwidth limit.
-     */
-    public static function getBandwidthLimit() {
-        return self::getValue("bandwidth_limit");
-    }
-
-    public static function setBandwidthLimit($value) {
-        self::setValue("bandwidth_limit", $value);
-    }
-
-    /**
-     * Accessors for bandwidth limit counter.
-     * Tracks bandwidth usage.
-     *
-     * @see ApiController::bandwidthUsageAction()
-     * @see BandwidthLimitTask
-     */
-
-    public static function getBandwidthLimitCounter() {
-        return self::getValue("bandwidth_limit_counter");
-    }
-
-    public static function incrementBandwidthLimitCounter($value) {
-        $counter = intval(self::getValue("bandwidth_limit_counter"));
-        self::setValue("bandwidth_limit_counter", $counter + intval($value));
-    }
-
-    public static function resetBandwidthLimitCounter() {
-        self::setValue("bandwidth_limit_counter", 0);
-    }
-
-    /**
-     * Accessors for bandwidth limit reset timer.
-     * Used to determine when to reset the bandwidth counter for the station.
-     *
-     * @see BandwidthLimitTask
-     */
-
-    public static function getBandwidthLimitResetTimer() {
-        return self::getValue("bandwidth_limit_reset_timer");
-    }
-
-    public static function setBandwidthLimitResetTimer($value) {
-        self::setValue("bandwidth_limit_reset_timer", $value);
-    }
-
-    /**
-     * Accessors for bandwidth limit update timer.
-     * Used to determine when the bandwidth was last updated for this station.
-     *
-     * @see ApiController::bandwidthUsageAction()
-     */
-
-    public static function getBandwidthLimitUpdateTimer() {
-        return self::getValue("bandwidth_limit_update_timer");
-    }
-
-    public static function setBandwidthLimitUpdateTimer() {
-        self::setValue("bandwidth_limit_update_timer", microtime(true));
-    }
-
-    /**
      * Getter for CORS URLs
      *
      * @return string
