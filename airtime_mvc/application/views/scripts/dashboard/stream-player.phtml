@@ -1,109 +1,8 @@
 <div id="content" class="jp-container">
     <h1><?php echo _("Live stream") ?></h1>
-    <a id="popup-link" href="#"><?php echo _("Share") ?></a> 
+    <!-- <a id="popup-link" href="#"><?php echo _("Share") ?></a>  -->
     <?php $ids = Application_Model_StreamSetting::getEnabledStreamIds(); ?>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.js"></script>
-    <!-- <script src="/js/libs/howler.js"></script> -->
-    <script>
-    // function setjPlayer(url, type, serverType){
-    //     var obj = new Object();
-    //     obj[type] = url;
-
-    //     if(serverType == 'shoutcast'){
-    //         obj[type] = url + ";stream/1";
-    //     }
-        
-    //     $("#jquery_jplayer_1").jPlayer("destroy");
-    //     $("#jquery_jplayer_1").jPlayer({
-    //         ready: function () {
-    //             $(this).jPlayer("setMedia", obj).jPlayer("play");
-    //         },
-    //         ended: function (event) {
-    //             $(this).jPlayer("play");
-    //         },
-    //         swfPath: "/js/jplayer/",
-    //         supplied: type,
-    //         wmode: "window"
-    //     });
-    // }
-
-    // Set first stream upon launch
-    let streamURLs;
-    <?php
-        if (count($ids) > 0){
-            $id = $ids[0];
-            $streamData = Application_Model_StreamSetting::getStreamData($id);
-            $url = "http://".$streamData["${id}_host"].":".$streamData["${id}_port"]."/".$streamData["${id}_mount"];
-            $type = $streamData["${id}_type"];
-            $serverType = $streamData["${id}_output"];
-            // if ($type == "ogg")
-            //     $type = "oga";
-            if ($serverType == "shoutcast")
-                $url = $url + ";stream/1";
-            echo "streamURLs = ['$url'];";
-        }
-    ?>
-
-    var streamPlayer = new Howl({
-        src: streamURLs,
-        html5: true,
-        format: ['ogg', 'mp3', 'opus', 'aac'],
-        volume: 0.5
-    });
-
-    function setHowl(url){
-        // Check to see if new stream URL is different:
-        // Do nothing if same, change to new stream if different.
-        if (url === streamPlayer.src) {
-            return false
-        } else {
-            streamPlayer.stop();
-            streamPlayer.src = url;
-            streamPlayer.play();
-        }
-    }
-
-    let playerMuted = false;
-    function setHowlVolume(muted, volume){
-        if (muted !== playerMuted) {
-            streamPlayer.mute(muted);
-        }
-        if (volume !== playerVolume) {
-            steamPlayer.volume(volume);
-        }
-    }
-
-    // Button setup
-    const setMuteBtn = document.querySelector('.jp-mute');
-    const setUnmuteBtn = document.querySelector('.jp-unmute');
-
-    setMuteBtn.addEventListener('click', setHowlVolume(true, playerVolume));
-    setUnmuteBtn.addEventListener('click', setHowlVolume(false, playerVolume));
-
-    // Page init using jQuery
-    $(document).ready(function(){
-
-        // When stream selected from drop-down
-        $("#combo-box").change(function(eventObject){
-            var elem = $("#combo-box option:selected");
-            setHowl(elem.attr("data-url"));
-        });
-
-        $("#popup-link").click(function() {
-            $("#popup-share").show("slow");
-            $("#popup-share-link").val($("#combo-box option:selected").attr("data-url"));
-        });
-
-        $("#popup-close").click(function() {
-            $("#popup-share").hide("slow");
-        });
-    });
-    </script>
     <div class="jp-logo"><img id="logo-img" onload='resizeToMaxHeight(this, 40);' src="<?php echo $this->logo ?>" /></div>
-    <div id="popup-share">
-    <a class="close-round" href="#" id="popup-close"></a>
-        <input id="popup-share-link" type="text" readonly="readonly"/>
-    </div>
 
     <div class="jp-stream stream-player-label">
         <div class="jp-stream-text"><?php echo _("Select stream:"); ?></div>
@@ -123,15 +22,14 @@
                     }
 
                     $label = "(".$streamData["${id}_host"].") ".$streamData["${id}_description"]." - ".$streamData["${id}_bitrate"]." kbit/s";
-                    echo sprintf("<option class='stream' value='%s' data-url='%s' data-type='%s' server-type='%s'>%s</option>", $id, $url, $type, $serverType, $label);
+                    echo sprintf("<option class='stream' value='%s'>%s</option>", $url, $label);
                 }
             ?>
         </select>
         </form>
     </div>
-    <div id="jquery_jplayer_1" class="jp-jplayer"></div>
 
-    <div id="jp_container_1" class="jp-audio">
+    <!-- <div id="jp_container_1" class="jp-audio">
         <div class="jp-type-single">
             <div id="jp_interface_1" class="jp-gui jp-interface">
                 <ul class="jp-controls">
@@ -142,7 +40,73 @@
                     <div class="jp-volume-bar-value"></div>
                 </div>
             </div>
-            <div id="jp_playlist_1" class="jp-playlist"></div>
         </div>
-    </div>
+    </div> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.js"></script>
+    <!-- <script src="/js/libs/howler.js"></script> -->
+    <script>
+        // Pull first stream
+        let streamURLs;
+        <?php
+            if (count($ids) > 0){
+                $id = $ids[0];
+                $streamData = Application_Model_StreamSetting::getStreamData($id);
+                $url = "http://".$streamData["${id}_host"].":".$streamData["${id}_port"]."/".$streamData["${id}_mount"];
+                $type = $streamData["${id}_type"];
+                $serverType = $streamData["${id}_output"];
+                // if ($type == "ogg")
+                //     $type = "oga";
+                if ($serverType == "shoutcast")
+                    $url = $url + ";stream/1";
+                echo "streamURLs = ['$url'];";
+            }
+        ?>
+
+        var streamPlayer = new Howl({
+            src: streamURLs,
+            html5: true,
+            format: ['ogg', 'mp3', 'opus', 'aac'],
+            volume: 0.5
+        });
+
+        // Track changes in #combo-box
+        var selectedStream = document.getElementById('combo-box');
+        selectedStream.onchange = function() {
+            sel = selectedStream.options[selectedStream.selectedIndex];
+            // Check to see if new stream URL is different:
+            // Do nothing if same, change to new stream if different.
+            if (sel.value === streamPlayer.src) {
+                return false
+            } else {
+                streamPlayer.stop();
+                streamPlayer.src = sel.value;
+                streamPlayer.play();
+                console.log('Player changed to ' + sel.value);
+            }
+        }
+
+        let playerMuted = false;
+        function setHowlVolume(muted, volume){
+            if (muted !== playerMuted) {
+                streamPlayer.mute(muted);
+            }
+            if (volume !== streamPlayer.volume) {
+                streamPlayer.volume(volume);
+            }
+        }
+
+        // Button setup
+        const setMuteBtn = document.querySelector('.jp-mute');
+        const setUnmuteBtn = document.querySelector('.jp-unmute');
+
+        setMuteBtn.addEventListener('click', setHowlVolume(true, playerVolume));
+        setUnmuteBtn.addEventListener('click', setHowlVolume(false, playerVolume));
+
+        // Copying stream URL to clipboard [WIP]
+        const shareBtn = document.getElementById('popup-link');
+        shareBtn.addEventListener('click', (event) => {
+            console.log(shareBtn.value);
+        });
+        
+    </script>
 </div>
