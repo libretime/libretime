@@ -52,12 +52,6 @@ Linked code:
    - License: LGPLv2.1
    - Compatible with GPLv3? Yes
 
- * Soundcloud PHP API wrapper
-   - What is it: PHP library to upload to SoundCloud
-   - Web site: https://github.com/mptre/php-soundcloud/blob/master/Services/Soundcloud.php
-   - License: MIT
-   - Compatible with the GPL: Yes.  See http://www.gnu.org/licenses/license-list.html
-
  * getID3()
    - What is it: PHP script that extracts useful information from MP3s & other multimedia file formats:
    - Web site: https://github.com/JamesHeinrich/getID3

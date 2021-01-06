@@ -1389,38 +1389,6 @@ class Application_Model_Preference
         self::setValue("last_tunein_metadata_update", $value);
     }
 
-    /* Third Party */
-
-    // SoundCloud
-
-    public static function getDefaultSoundCloudLicenseType() {
-        $val = self::getValue("soundcloud_license_type");
-        // If we don't have a value set, return all-rights-reserved by default
-        return empty($val) ? DEFAULT_SOUNDCLOUD_LICENSE_TYPE : $val;
-    }
-
-    public static function setDefaultSoundCloudLicenseType($value) {
-        self::setValue("soundcloud_license_type", $value);
-    }
-
-    public static function getDefaultSoundCloudSharingType() {
-        $val = self::getValue("soundcloud_sharing_type");
-        // If we don't have a value set, return public by default
-        return empty($val) ? DEFAULT_SOUNDCLOUD_SHARING_TYPE : $val;
-    }
-
-    public static function setDefaultSoundCloudSharingType($value) {
-        self::setValue("soundcloud_sharing_type", $value);
-    }
-
-    public static function getSoundCloudRequestToken() {
-        return self::getValue("soundcloud_request_token");
-    }
-
-    public static function setSoundCloudRequestToken($value) {
-        self::setValue("soundcloud_request_token", $value);
-    }
-
     // TaskManager Lock Timestamp
 
     public static function getTaskManagerLock() {

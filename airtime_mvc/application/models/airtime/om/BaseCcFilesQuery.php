@@ -63,11 +63,6 @@
  * @method CcFilesQuery orderByDbContributor($order = Criteria::ASC) Order by the contributor column
  * @method CcFilesQuery orderByDbLanguage($order = Criteria::ASC) Order by the language column
  * @method CcFilesQuery orderByDbFileExists($order = Criteria::ASC) Order by the file_exists column
- * @method CcFilesQuery orderByDbSoundcloudId($order = Criteria::ASC) Order by the soundcloud_id column
- * @method CcFilesQuery orderByDbSoundcloudErrorCode($order = Criteria::ASC) Order by the soundcloud_error_code column
- * @method CcFilesQuery orderByDbSoundcloudErrorMsg($order = Criteria::ASC) Order by the soundcloud_error_msg column
- * @method CcFilesQuery orderByDbSoundcloudLinkToFile($order = Criteria::ASC) Order by the soundcloud_link_to_file column
- * @method CcFilesQuery orderByDbSoundCloundUploadTime($order = Criteria::ASC) Order by the soundcloud_upload_time column
  * @method CcFilesQuery orderByDbReplayGain($order = Criteria::ASC) Order by the replay_gain column
  * @method CcFilesQuery orderByDbOwnerId($order = Criteria::ASC) Order by the owner_id column
  * @method CcFilesQuery orderByDbCuein($order = Criteria::ASC) Order by the cuein column
@@ -138,11 +133,6 @@
  * @method CcFilesQuery groupByDbContributor() Group by the contributor column
  * @method CcFilesQuery groupByDbLanguage() Group by the language column
  * @method CcFilesQuery groupByDbFileExists() Group by the file_exists column
- * @method CcFilesQuery groupByDbSoundcloudId() Group by the soundcloud_id column
- * @method CcFilesQuery groupByDbSoundcloudErrorCode() Group by the soundcloud_error_code column
- * @method CcFilesQuery groupByDbSoundcloudErrorMsg() Group by the soundcloud_error_msg column
- * @method CcFilesQuery groupByDbSoundcloudLinkToFile() Group by the soundcloud_link_to_file column
- * @method CcFilesQuery groupByDbSoundCloundUploadTime() Group by the soundcloud_upload_time column
  * @method CcFilesQuery groupByDbReplayGain() Group by the replay_gain column
  * @method CcFilesQuery groupByDbOwnerId() Group by the owner_id column
  * @method CcFilesQuery groupByDbCuein() Group by the cuein column
@@ -263,11 +253,6 @@
  * @method CcFiles findOneByDbContributor(string $contributor) Return the first CcFiles filtered by the contributor column
  * @method CcFiles findOneByDbLanguage(string $language) Return the first CcFiles filtered by the language column
  * @method CcFiles findOneByDbFileExists(boolean $file_exists) Return the first CcFiles filtered by the file_exists column
- * @method CcFiles findOneByDbSoundcloudId(int $soundcloud_id) Return the first CcFiles filtered by the soundcloud_id column
- * @method CcFiles findOneByDbSoundcloudErrorCode(int $soundcloud_error_code) Return the first CcFiles filtered by the soundcloud_error_code column
- * @method CcFiles findOneByDbSoundcloudErrorMsg(string $soundcloud_error_msg) Return the first CcFiles filtered by the soundcloud_error_msg column
- * @method CcFiles findOneByDbSoundcloudLinkToFile(string $soundcloud_link_to_file) Return the first CcFiles filtered by the soundcloud_link_to_file column
- * @method CcFiles findOneByDbSoundCloundUploadTime(string $soundcloud_upload_time) Return the first CcFiles filtered by the soundcloud_upload_time column
  * @method CcFiles findOneByDbReplayGain(string $replay_gain) Return the first CcFiles filtered by the replay_gain column
  * @method CcFiles findOneByDbOwnerId(int $owner_id) Return the first CcFiles filtered by the owner_id column
  * @method CcFiles findOneByDbCuein(string $cuein) Return the first CcFiles filtered by the cuein column
@@ -338,11 +323,6 @@
  * @method array findByDbContributor(string $contributor) Return CcFiles objects filtered by the contributor column
  * @method array findByDbLanguage(string $language) Return CcFiles objects filtered by the language column
  * @method array findByDbFileExists(boolean $file_exists) Return CcFiles objects filtered by the file_exists column
- * @method array findByDbSoundcloudId(int $soundcloud_id) Return CcFiles objects filtered by the soundcloud_id column
- * @method array findByDbSoundcloudErrorCode(int $soundcloud_error_code) Return CcFiles objects filtered by the soundcloud_error_code column
- * @method array findByDbSoundcloudErrorMsg(string $soundcloud_error_msg) Return CcFiles objects filtered by the soundcloud_error_msg column
- * @method array findByDbSoundcloudLinkToFile(string $soundcloud_link_to_file) Return CcFiles objects filtered by the soundcloud_link_to_file column
- * @method array findByDbSoundCloundUploadTime(string $soundcloud_upload_time) Return CcFiles objects filtered by the soundcloud_upload_time column
  * @method array findByDbReplayGain(string $replay_gain) Return CcFiles objects filtered by the replay_gain column
  * @method array findByDbOwnerId(int $owner_id) Return CcFiles objects filtered by the owner_id column
  * @method array findByDbCuein(string $cuein) Return CcFiles objects filtered by the cuein column
@@ -462,7 +442,7 @@ abstract class BaseCcFilesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "name", "mime", "ftype", "directory", "filepath", "import_status", "currentlyaccessing", "editedby", "mtime", "utime", "lptime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "soundcloud_id", "soundcloud_error_code", "soundcloud_error_msg", "soundcloud_link_to_file", "soundcloud_upload_time", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist", "filesize", "description", "artwork", "track_type" FROM "cc_files" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "name", "mime", "ftype", "directory", "filepath", "import_status", "currentlyaccessing", "editedby", "mtime", "utime", "lptime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist", "filesize", "description", "artwork", "track_type" FROM "cc_files" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -2434,191 +2414,6 @@ abstract class BaseCcFilesQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CcFilesPeer::FILE_EXISTS, $dbFileExists, $comparison);
-    }
-
-    /**
-     * Filter the query on the soundcloud_id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByDbSoundcloudId(1234); // WHERE soundcloud_id = 1234
-     * $query->filterByDbSoundcloudId(array(12, 34)); // WHERE soundcloud_id IN (12, 34)
-     * $query->filterByDbSoundcloudId(array('min' => 12)); // WHERE soundcloud_id >= 12
-     * $query->filterByDbSoundcloudId(array('max' => 12)); // WHERE soundcloud_id <= 12
-     * </code>
-     *
-     * @param     mixed $dbSoundcloudId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return CcFilesQuery The current query, for fluid interface
-     */
-    public function filterByDbSoundcloudId($dbSoundcloudId = null, $comparison = null)
-    {
-        if (is_array($dbSoundcloudId)) {
-            $useMinMax = false;
-            if (isset($dbSoundcloudId['min'])) {
-                $this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_ID, $dbSoundcloudId['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($dbSoundcloudId['max'])) {
-                $this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_ID, $dbSoundcloudId['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_ID, $dbSoundcloudId, $comparison);
-    }
-
-    /**
-     * Filter the query on the soundcloud_error_code column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByDbSoundcloudErrorCode(1234); // WHERE soundcloud_error_code = 1234
-     * $query->filterByDbSoundcloudErrorCode(array(12, 34)); // WHERE soundcloud_error_code IN (12, 34)
-     * $query->filterByDbSoundcloudErrorCode(array('min' => 12)); // WHERE soundcloud_error_code >= 12
-     * $query->filterByDbSoundcloudErrorCode(array('max' => 12)); // WHERE soundcloud_error_code <= 12
-     * </code>
-     *
-     * @param     mixed $dbSoundcloudErrorCode The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return CcFilesQuery The current query, for fluid interface
-     */
-    public function filterByDbSoundcloudErrorCode($dbSoundcloudErrorCode = null, $comparison = null)
-    {
-        if (is_array($dbSoundcloudErrorCode)) {
-            $useMinMax = false;
-            if (isset($dbSoundcloudErrorCode['min'])) {
-                $this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_ERROR_CODE, $dbSoundcloudErrorCode['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($dbSoundcloudErrorCode['max'])) {
-                $this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_ERROR_CODE, $dbSoundcloudErrorCode['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_ERROR_CODE, $dbSoundcloudErrorCode, $comparison);
-    }
-
-    /**
-     * Filter the query on the soundcloud_error_msg column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByDbSoundcloudErrorMsg('fooValue');   // WHERE soundcloud_error_msg = 'fooValue'
-     * $query->filterByDbSoundcloudErrorMsg('%fooValue%'); // WHERE soundcloud_error_msg LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $dbSoundcloudErrorMsg The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return CcFilesQuery The current query, for fluid interface
-     */
-    public function filterByDbSoundcloudErrorMsg($dbSoundcloudErrorMsg = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($dbSoundcloudErrorMsg)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $dbSoundcloudErrorMsg)) {
-                $dbSoundcloudErrorMsg = str_replace('*', '%', $dbSoundcloudErrorMsg);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_ERROR_MSG, $dbSoundcloudErrorMsg, $comparison);
-    }
-
-    /**
-     * Filter the query on the soundcloud_link_to_file column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByDbSoundcloudLinkToFile('fooValue');   // WHERE soundcloud_link_to_file = 'fooValue'
-     * $query->filterByDbSoundcloudLinkToFile('%fooValue%'); // WHERE soundcloud_link_to_file LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $dbSoundcloudLinkToFile The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return CcFilesQuery The current query, for fluid interface
-     */
-    public function filterByDbSoundcloudLinkToFile($dbSoundcloudLinkToFile = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($dbSoundcloudLinkToFile)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $dbSoundcloudLinkToFile)) {
-                $dbSoundcloudLinkToFile = str_replace('*', '%', $dbSoundcloudLinkToFile);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_LINK_TO_FILE, $dbSoundcloudLinkToFile, $comparison);
-    }
-
-    /**
-     * Filter the query on the soundcloud_upload_time column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByDbSoundCloundUploadTime('2011-03-14'); // WHERE soundcloud_upload_time = '2011-03-14'
-     * $query->filterByDbSoundCloundUploadTime('now'); // WHERE soundcloud_upload_time = '2011-03-14'
-     * $query->filterByDbSoundCloundUploadTime(array('max' => 'yesterday')); // WHERE soundcloud_upload_time < '2011-03-13'
-     * </code>
-     *
-     * @param     mixed $dbSoundCloundUploadTime The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return CcFilesQuery The current query, for fluid interface
-     */
-    public function filterByDbSoundCloundUploadTime($dbSoundCloundUploadTime = null, $comparison = null)
-    {
-        if (is_array($dbSoundCloundUploadTime)) {
-            $useMinMax = false;
-            if (isset($dbSoundCloundUploadTime['min'])) {
-                $this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_UPLOAD_TIME, $dbSoundCloundUploadTime['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($dbSoundCloundUploadTime['max'])) {
-                $this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_UPLOAD_TIME, $dbSoundCloundUploadTime['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_UPLOAD_TIME, $dbSoundCloundUploadTime, $comparison);
     }
 
     /**

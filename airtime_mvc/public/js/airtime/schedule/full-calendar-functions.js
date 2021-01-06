@@ -429,31 +429,6 @@ function getFullCalendarEvents(start, end, callback) {
     //$("span.fc-button > :button").addClass("btn btn-small");
 }
 
-function checkSCUploadStatus() {
-    var url = baseUrl + 'Library/get-upload-to-soundcloud-status/format/json',
-        id;
-    $("span[class*=progress]").each(function () {
-        id = $(this).parents("div.fc-event").data("event").id;
-
-        $.post(url, { format: "json", id: id, type: "show" }, function (json) {
-            if (json.sc_id > 0) {
-                $(".fc-show-instance-" + id)
-                    .find(".progress")
-                    .removeClass("progress")
-                    .addClass("soundcloud");
-            }
-            else if (json.sc_id == "-3") {
-                $(".fc-show-instance-" + id)
-                    .find(".progress")
-                    .removeClass("progress")
-                    .addClass("sc-error");
-            }
-
-            setTimeout(checkSCUploadStatus, 5000);
-        });
-    });
-}
-
 /** This function adds and removes the current
  *  show icon
  */
@@ -494,65 +469,6 @@ function addQtipsToIcons(ele, id) {
         $(ele).qtip({
             content: {
                 text: $.i18n._("Uploading in progress...")
-            },
-            position: {
-                adjust: {
-                    resize: true,
-                    method: "flip flip"
-                },
-                at: "right center",
-                my: "left top",
-                viewport: $(window)
-            },
-            style: {
-                classes: "ui-tooltip-dark file-md-long"
-            },
-            show: {
-                ready: true // Needed to make it show on first mouseover event
-            }
-        });
-    } else if ($(ele).hasClass("soundcloud")) {
-        $(ele).qtip({
-            content: {
-                text: $.i18n._("Retreiving data from the server..."),
-                ajax: {
-                    url: baseUrl + "Library/get-upload-to-soundcloud-status",
-                    type: "post",
-                    data: ({ format: "json", id: id, type: "show" }),
-                    success: function (json, status) {
-                        this.set('content.text', $.i18n._("The soundcloud id for this file is: ") + json.sc_id);
-                    }
-                }
-            },
-            position: {
-                adjust: {
-                    resize: true,
-                    method: "flip flip"
-                },
-                at: "right center",
-                my: "left top",
-                viewport: $(window)
-            },
-            style: {
-                classes: "ui-tooltip-dark file-md-long"
-            },
-            show: {
-                ready: true // Needed to make it show on first mouseover event
-            }
-        });
-    } else if ($(ele).hasClass("sc-error")) {
-        $(ele).qtip({
-            content: {
-                text: $.i18n._("Retreiving data from the server..."),
-                ajax: {
-                    url: baseUrl + "Library/get-upload-to-soundcloud-status",
-                    type: "post",
-                    data: ({ format: "json", id: id, type: "show" }),
-                    success: function (json, status) {
-                        this.set('content.text', $.i18n._("There was error while uploading to soundcloud.") + "<br>" + $.i18n._("Error code: ") + json.error_code +
-                            "<br>" + $.i18n._("Error msg: ") + json.error_msg + "<br>");
-                    }
-                }
             },
             position: {
                 adjust: {
@@ -644,7 +560,6 @@ function alertShowErrorAndReload() {
 
 $(document).ready(function () {
     preloadEventFeed();
-    checkSCUploadStatus();
     getCurrentShow();
 });
 

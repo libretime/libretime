@@ -96,11 +96,6 @@ class CcFilesTableMap extends TableMap
         $this->addColumn('contributor', 'DbContributor', 'VARCHAR', false, 512, null);
         $this->addColumn('language', 'DbLanguage', 'VARCHAR', false, 512, null);
         $this->addColumn('file_exists', 'DbFileExists', 'BOOLEAN', false, null, true);
-        $this->addColumn('soundcloud_id', 'DbSoundcloudId', 'INTEGER', false, null, null);
-        $this->addColumn('soundcloud_error_code', 'DbSoundcloudErrorCode', 'INTEGER', false, null, null);
-        $this->addColumn('soundcloud_error_msg', 'DbSoundcloudErrorMsg', 'VARCHAR', false, 512, null);
-        $this->addColumn('soundcloud_link_to_file', 'DbSoundcloudLinkToFile', 'VARCHAR', false, 4096, null);
-        $this->addColumn('soundcloud_upload_time', 'DbSoundCloundUploadTime', 'TIMESTAMP', false, 6, null);
         $this->addColumn('replay_gain', 'DbReplayGain', 'NUMERIC', false, null, null);
         $this->addForeignKey('owner_id', 'DbOwnerId', 'INTEGER', 'cc_subjs', 'id', false, null, null);
         $this->addColumn('cuein', 'DbCuein', 'VARCHAR', false, null, '00:00:00');

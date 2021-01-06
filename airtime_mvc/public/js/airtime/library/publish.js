@@ -16,15 +16,6 @@ var AIRTIME = (function (AIRTIME) {
     var publishApp = angular.module(PUBLISH_APP_NAME, [])
         .controller('Publish', function ($sce, $scope, $http, mediaId, tab) {
             $scope.publishData = {};
-            var isAdmin = userType == 'A' || userType == 'S';
-            // Javascript enum containing source connection HTML strings (ie. Connect with SoundCloud button)
-            $scope.sourceConnectEnum = Object.freeze({
-                soundcloud: isAdmin ? $sce.trustAsHtml(
-                    "<a href='" + baseUrl + "soundcloud/authorize' target='_blank'>" +
-                        "<img src='http://connect.soundcloud.com/2/btn-connect-sc-l.png'>" +
-                    "</a>"
-                ) : $sce.trustAsHtml($.i18n._("Ask your station administrator to connect to SoundCloud."))
-            });
             var sourceInterval;
 
             tab.contents.on("click", "input[type='checkbox']", function () {
@@ -84,11 +75,7 @@ var AIRTIME = (function (AIRTIME) {
                 var data = {};
                 jQuery.each($scope.publishData, function (k, v) {
                     if (v) {
-                        if (k == "soundcloud") {
-                            alert($.i18n._("Your track is being uploaded and will "
-                                + "appear on SoundCloud in a couple of minutes"));
-                        }
-                        data[k] = 'publish';  // FIXME: should be more robust
+                       data[k] = 'publish';  // FIXME: should be more robust
                     }
                 });
 
@@ -106,13 +93,10 @@ var AIRTIME = (function (AIRTIME) {
             $scope.remove = function (source) {
                 var data = {};
                 data[source] = 'unpublish';  // FIXME: should be more robust
-                if (source != "soundcloud" || confirm($.i18n._("Are you sure? SoundCloud stats and comments "
-                        + "for this track will be permanently removed."))) {
-                    $http.put(endpoint + mediaId + '/publish', {csrf_token: jQuery("#csrf").val(), sources: data})
-                        .success(function () {
-                            fetchSourceData();
-                        });
-                }
+                $http.put(endpoint + mediaId + '/publish', {csrf_token: jQuery("#csrf").val(), sources: data})
+                    .success(function () {
+                        fetchSourceData();
+                });
             };
 
             $scope.discard = function () {

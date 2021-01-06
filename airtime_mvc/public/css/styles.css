@@ -2326,16 +2326,6 @@ span.errors.sp-errors{
     background:url(images/icon_rebroadcast.png) no-repeat 0 0;
     margin-top: 0px !important;
 }
-.small-icon.soundcloud {
-    background:url(images/icon_soundcloud.png) no-repeat 0 0;
-    width:21px;
-    margin-top: 0px !important;
-}
-.small-icon.sc-error {
-    background:url(images/icon_soundcloud_error2.png) no-repeat 0 0;
-    width:21px;
-    margin-top: 0px !important;
-}
 .small-icon.now-playing {
     background:url(images/icon_play_cal.png) no-repeat 0 0;
     height:10px;
@@ -2386,10 +2376,6 @@ span.errors.sp-errors{
 }
 .medium-icon.rebroadcast {
     background:url(images/icon_rebroadcast_m.png) no-repeat 0 0;
-}
-.medium-icon.soundcloud {
-    background:url(images/icon_soundcloud_m.png) no-repeat 0 0;
-    width:21px;
 }
 .medium-icon.nowplaying, .medium-icon.finishedplaying {
     background:url(images/icon_nowplaying_m.png) no-repeat 0 0;
@@ -4198,11 +4184,6 @@ li .ui-state-hover {
 }
 
 /* Publishing Dialog */
-
-.icon-soundcloud-white {
-    background: url(images/icon_soundcloud_cm_white.png) 0 0 no-repeat;
-    width: 24px;
-}
 
 .source-name {
     text-align: left !important;

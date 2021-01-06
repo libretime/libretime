@@ -11,8 +11,6 @@ class CeleryServiceFactory {
      */
     public static function getService($serviceName) {
         switch($serviceName) {
-            case SOUNDCLOUD_SERVICE_NAME:
-                return new Application_Service_SoundcloudService();
             case PODCAST_SERVICE_NAME:
                 return new Application_Service_PodcastEpisodeService();
             default:
