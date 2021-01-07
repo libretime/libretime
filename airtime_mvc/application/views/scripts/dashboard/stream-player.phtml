@@ -29,19 +29,24 @@
         </form>
     </div>
 
-    <!-- <div id="jp_container_1" class="jp-audio">
+    <div id="jp_container_1" class="jp-audio">
         <div class="jp-type-single">
             <div id="jp_interface_1" class="jp-gui jp-interface">
-                <ul class="jp-controls">
-                    <li><a title="mute" tabindex="1" class="jp-mute" href="javascript:;"><?php echo _("mute") ?></a></li>
-                    <li><a title="unmute" tabindex="1" class="jp-unmute" href="javascript:;"><?php echo _("unmute") ?></a></li>
-                </ul>
-                <div class="jp-volume-bar">
-                    <div class="jp-volume-bar-value"></div>
+                <div class="sp-controls" style="top:19%; left:45%; position:absolute;">
+                    <button id="sp-mute" class="btn btn-link hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-stop-fill" viewBox="0 0 16 16">
+                        <path d="M5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5A1.5 1.5 0 0 1 5 3.5z"/>
+                        </svg>
+                    </button>
+                    <button id="sp-unmute" class="btn btn-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-play-fill" viewBox="0 0 16 16">
+                        <path d="M11.596 8.697l-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.js"></script>
     <!-- <script src="/js/libs/howler.js"></script> -->
     <script>
@@ -85,22 +90,22 @@
             }
         }
 
-        let playerMuted = false;
-        function setHowlVolume(muted, volume){
-            if (muted !== playerMuted) {
-                streamPlayer.mute(muted);
-            }
-            if (volume !== streamPlayer.volume) {
-                streamPlayer.volume(volume);
-            }
-        }
-
         // Button setup
-        const setMuteBtn = document.querySelector('.jp-mute');
-        const setUnmuteBtn = document.querySelector('.jp-unmute');
+        const setMuteBtn = document.querySelector('#sp-mute');
+        const setUnmuteBtn = document.querySelector('#sp-unmute');
 
-        setMuteBtn.addEventListener('click', setHowlVolume(true, playerVolume));
-        setUnmuteBtn.addEventListener('click', setHowlVolume(false, playerVolume));
+        setMuteBtn.addEventListener('click', (event) => {
+            document.getElementById('sp-unmute').classList.remove('hidden');
+            document.getElementById('sp-mute').classList.add('hidden');
+            streamPlayer.stop();
+            console.log('Stopped player');
+        });
+        setUnmuteBtn.addEventListener('click', (event) => {
+            document.getElementById('sp-unmute').classList.add('hidden');
+            document.getElementById('sp-mute').classList.remove('hidden');
+            streamPlayer.play();
+            console.log('Started player');
+        });
 
         // Copying stream URL to clipboard [WIP]
         const shareBtn = document.getElementById('popup-link');
