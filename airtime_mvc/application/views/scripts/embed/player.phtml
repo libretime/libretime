@@ -115,6 +115,7 @@
         }
 
         let recheckTimer, currentSong, currentArtist, nextProg, currentEndTime, nowPlayingData;
+        const embedPlayerBody = document.querySelector('#embedPlayerBody');
         // Get Now Playing metadata
         async function getMetadata(){
             let metaURL = "<?php echo $this->metadata_api_url?>";
@@ -165,11 +166,12 @@
                 };
                 console.log(nowPlayingData);
             }
+
             // Templating with Handlebars.js
-            var hbNowPlaying = document.querySelector('#nowPlayingTemp').innerHTML;
+            const hbNowPlaying = document.querySelector('#nowPlayingTemp').innerHTML;
             var hbTemplate = Handlebars.compile(hbNowPlaying); // 2nd iter compiling fails [WIP]
             var compiledHTML = hbTemplate(nowPlayingData);
-            document.querySelector('#embedPlayerBody').innerHTML = compiledHTML;
+            embedPlayerBody.innerHTML = compiledHTML;
 
             // Doomsday scenerio for metadata checking: clocks out of sync
             if (isNaN(recheckTimer) || recheckTimer < 0) recheckTimer = 0;
