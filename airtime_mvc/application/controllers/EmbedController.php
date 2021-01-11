@@ -86,7 +86,7 @@ class EmbedController extends Zend_Controller_Action
             $this->view->widgetStyle = "basic";
             $this->view->css = "/css/embed/weekly-schedule-widget-basic.css?" . $CC_CONFIG['airtime_version'];
         }
-        $this->view->jquery = "/js/libs/jquery-1.6.1.min.js?".$CC_CONFIG['airtime_version'];
+        $this->view->jquery = "/js/libs/jquery-1.10.2.js?".$CC_CONFIG['airtime_version'];
 
         $weeklyScheduleData = WidgetHelper::getWeekInfoV2();
 
