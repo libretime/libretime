@@ -97,6 +97,7 @@ class AutoPlaylistManager {
 	    $future->add(new DateInterval('PT1H'));
 	    
         return CcShowInstancesQuery::create()
+            ->filterByDbModifiedInstance(false)
             ->filterByDbStarts($now,Criteria::GREATER_THAN) 
           ->filterByDbStarts($future,Criteria::LESS_THAN)
             ->useCcShowQuery('a', 'left join')
