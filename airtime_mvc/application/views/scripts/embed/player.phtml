@@ -14,54 +14,53 @@
 <body>
     <div id="embedPlayerBody">
         <!-- Inserted template goes here via. Handlebars.js -->
-        <script id="nowPlayingTemp" type="text/x-handlebars-template">
-            <div id="player" <?php if ($this->player_style == "basic") echo "style='display:block;'"; else echo "style='display:none'"; ?>>
-                <div class="airtime_player">
-
-                    <div class="airtime_header">
-                        <p class="station_name"><?php echo _("Now Playing") ?></p>
-                    </div>
-
-                    <div class="airtime_box">
-                        <div class="airtime_button">
-                            <span id="play_button" class="play_button" onclick="doPlay()"></span>
-                            <span id="stop_button" class="stop_button hide_button" onclick="doStop()"></span>
-                        </div>
-                        <p class="now_playing">
-                            <b>{{song}}</b>
-                            <span>{{artist}}</span>
-                        </p>
-                    </div>
-
-                    <div style="clear:both"></div>
-
-                    <div class="airtime_schedule">
-                        <p class="airtime_next"><?php echo _("Next") ?></p>
-                        <ul class="schedule_list">
-                            <li>{{next}}</li>
-                        </ul>
-                    </div>
-                    <a class="airtime_pro" target="_blank" href="<?php echo PRODUCT_SITE_URL; ?>"><?php printf(_('Powered by %s'), PRODUCT_NAME); ?></a>
-                </div>
-            </div>
-
-            <div id="premium_player" <?php if ($this->player_style == "premium") echo "style='display:block;'"; else echo "style='display:none'"; ?>>
-                <div class="bottom_bar">
-                    <div id="premiumPlayBtn" class="play cont_btn" onclick="premiumBtn()"></div>
-
-                    <div class="on_air">
-                        <p class="now_playing">
-                            <b>{{song}}</b>
-                            <span>{{artist}}</span>
-                        </p>
-                    </div>
-                    <div class='flex_spacer' data-tab='tab-1'></div>
-                    <div class='schedule_btn button current' data-tab='tab-1'></div>
-                    <div class='about_us_btn button' data-tab='tab-2'></div>
-                </div>
-            </div>
-        </script>
     </div>
+
+    <!-- Make sure to keep the template outside of the div tag it gets inserted into! -->
+    <script id="nowPlayingTemp" type="text/x-handlebars-template">
+        <div id="player" <?php if ($this->player_style == "basic") echo "style='display:block;'"; else echo "style='display:none'"; ?>>
+            <div class="airtime_player">
+
+                <div class="airtime_header">
+                    <p class="station_name"><?php echo _("Now Playing") ?></p>
+                </div>
+
+                <div class="airtime_box">
+                    <div class="airtime_button">
+                        <span id="play_button" class="play_button" onclick="doPlay()"></span>
+                        <span id="stop_button" class="stop_button hide_button" onclick="doStop()"></span>
+                    </div>
+                    <p class="now_playing">
+                        <b>{{{song}}}</b>
+                        <span>{{{artist}}}</span>
+                    </p>
+                </div>
+
+                <div style="clear:both"></div>
+
+                <div class="airtime_schedule">
+                    <p class="airtime_next"><?php echo _("Next") ?></p>
+                    <ul class="schedule_list">
+                        <li>{{{next}}}</li>
+                    </ul>
+                </div>
+                <a class="airtime_pro" target="_blank" href="<?php echo PRODUCT_SITE_URL; ?>"><?php printf(_('Powered by %s'), PRODUCT_NAME); ?></a>
+            </div>
+        </div>
+
+        <div id="premium_player" <?php if ($this->player_style == "premium") echo "style='display:block;'"; else echo "style='display:none'"; ?>>
+            <div class="bottom_bar">
+                <div id="premiumPlayBtn" class="play cont_btn" onclick="premiumBtn()"></div>
+
+                <div class="on_air">
+                    <p class="now_playing">
+                        <b>{{{song}}}</b>
+                        <span>{{{artist}}}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </script>
 
     <script type="text/javascript">
         let mobileStreams, desktopStreams;
