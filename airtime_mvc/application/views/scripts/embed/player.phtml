@@ -5,10 +5,10 @@
     <link rel="stylesheet" href="<?php echo $this->css?>" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
 
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.js"></script> -->
-    <script src="/js/libs/howler.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script> -->
-    <script src="/js/libs/handlebars.min-v4.7.6.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.js"></script>
+    <!-- <script src="/js/libs/howler.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <!-- <script src="/js/libs/handlebars.min-v4.7.6.js"></script> -->
 </head>
 
 <body>
@@ -89,18 +89,32 @@
         });
 
         // Functions for buttons
+        function showPlay(){
+            console.log('add play button');
+            document.getElementById("play_button").classList.remove("hide_button");
+            document.getElementById("stop_button").classList.add("hide_button");
+            document.getElementById("premiumPlayBtn").classList.add("play");
+            document.getElementById("premiumPlayBtn").classList.remove("pause");   
+        }
+
+        function showPause(){
+            console.log('add pause button');
+            document.getElementById("play_button").classList.add("hide_button");
+            document.getElementById("stop_button").classList.remove("hide_button");
+            document.getElementById("premiumPlayBtn").classList.remove("play");
+            document.getElementById("premiumPlayBtn").classList.add("pause");
+        }
+
         function doPlay(){
             console.log('play');
             embedPlayer.play();
-            document.getElementById("play_button").classList.toggle("hide_button");
-            document.getElementById("stop_button").classList.toggle("hide_button");
+            showPause();
         };
 
         function doStop(){
             console.log('stop');
             embedPlayer.stop();
-            document.getElementById("play_button").classList.toggle("hide_button");
-            document.getElementById("stop_button").classList.toggle("hide_button");
+            showPlay();
         };
 
         function premiumBtn(){
@@ -108,15 +122,16 @@
             if (btnStatus.classList.contains('play')) {
                 console.log('play');
                 embedPlayer.play();
+                showPause();
             } else {
                 console.log('stop');
                 embedPlayer.stop();
+                showPlay();
             }
-            document.getElementById("premiumPlayBtn").classList.toggle("play");
-            document.getElementById("premiumPlayBtn").classList.toggle("pause");   
         }
 
         let recheckTimer, currentSong, currentArtist, nextProg, currentEndTime, nowPlayingData;
+        let isPlaying;
         const embedPlayerBody = document.querySelector('#embedPlayerBody');
         // Get Now Playing metadata
         async function getMetadata(){
@@ -174,6 +189,12 @@
             var hbTemplate = Handlebars.compile(hbNowPlaying); // 2nd iter compiling fails [WIP]
             var compiledHTML = hbTemplate(nowPlayingData);
             embedPlayerBody.innerHTML = compiledHTML;
+            isPlaying = embedPlayer.playing();
+            if (isPlaying) {
+                showPause();
+            } else {
+                showPlay();
+            };
 
             // Doomsday scenerio for metadata checking: clocks out of sync
             if (isNaN(recheckTimer) || recheckTimer < 0) recheckTimer = 0;
