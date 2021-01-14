@@ -60,10 +60,10 @@ span.login-img {
     text-align: center;
     width: 770px;
     max-width: 770px;
-    margin: 0 auto 0px -380px;
-    padding: 10px;
+    margin: -200px auto 0px -380px;
+    /* padding: 10px; */
     padding-left: 0px;
-    padding-bottom: 140px !important;
+    padding-bottom: 120px !important;
     position: absolute;
     left: 50%;
     /*	-webkit-transition-delay: 1s;

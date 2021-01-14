@@ -186,7 +186,7 @@
 
             // Templating with Handlebars.js
             const hbNowPlaying = document.querySelector('#nowPlayingTemp').innerHTML;
-            var hbTemplate = Handlebars.compile(hbNowPlaying); // 2nd iter compiling fails [WIP]
+            var hbTemplate = Handlebars.compile(hbNowPlaying);
             var compiledHTML = hbTemplate(nowPlayingData);
             embedPlayerBody.innerHTML = compiledHTML;
             isPlaying = embedPlayer.playing();
