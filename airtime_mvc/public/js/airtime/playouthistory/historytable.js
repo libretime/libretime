@@ -243,7 +243,6 @@ var AIRTIME = (function(AIRTIME) {
 				"</button>" +
 			"</div>");
 
-
 		$menu.append("<div class='btn-group'>" +
             "<button class='btn btn-small dropdown-toggle' data-toggle='dropdown'>" +
                 $.i18n._("Select")+" <span class='caret'></span>" +
@@ -253,13 +252,20 @@ var AIRTIME = (function(AIRTIME) {
                 "<li class='his-dselect-page'><a href='#'>"+$.i18n._("Deselect this page")+"</a></li>" +
                 "<li class='his-dselect-all'><a href='#'>"+$.i18n._("Deselect all")+"</a></li>" +
             "</ul>" +
-        "</div>");
+		"</div>");
         
         $menu.append("<div class='btn-group'>" +
             "<button class='btn btn-small' id='his_trash'>" +
                 "<i class='icon-white icon-trash'></i>" +
             "</button>" +
-        "</div>");
+		"</div>");
+		
+		$menu.append("<div class='btn-group'>" +
+			"<button class='btn btn-small btn-new' id='csv_export'>" +
+			// "<i class='icon-white icon-plus'></i>" +
+			$.i18n._("Export as CSV") +
+			"</button>" +
+		"</div>");
                   
         $el.append($menu);
     }
@@ -568,7 +574,48 @@ var AIRTIME = (function(AIRTIME) {
     			makeHistoryDialog(json.dialog);
     			
     		}, "json");
-    	});
+		});
+		
+		$historyContentDiv.on("click", "#csv_export", async function(){
+			// Get date/time from pickers
+			var startDay = document.querySelector('#his_date_start').value;
+			var startTime = document.querySelector('#his_time_start').value;
+			var endDay = document.querySelector('#his_date_end').value;
+			var endTime = document.querySelector('#his_time_end').value;
+
+			var url = baseUrl + "api/item-history-feed?start=" + startDay + " " + startTime + "&end=" + endDay + " " + endTime;
+			var requestData = await fetch(url);
+			var hisData = await requestData.json();
+
+			if (!hisData.length) {
+				alert("The date range selected doesn't have any items to export.");
+				return
+			} else {
+				// Clean returned data
+				hisData.forEach(element => {
+					// Start date/time
+					element.startDate = element.starts.split(" ")[0];
+					element.startTime = element.starts.split(" ")[1];
+					// End date/time
+					element.endDate = element.ends.split(" ")[0];
+					element.endTime = element.ends.split(" ")[1];
+					// Moving Title and Artist fields to the end
+					element.title = element.track_title;
+					element.artist = element.artist_name;
+					// Removing extra fields
+					delete element.checkbox;
+					delete element.history_id;
+					delete element.instance_id;
+					delete element.starts;  // we already converted these, so we don't need them anymore
+					delete element.ends;
+					delete element.track_title;
+					delete element.artist_name;
+				});
+			};
+
+			var csvX = new CSVExport(hisData);  // Actual export function
+			return false  // Was part of the demo. Please leave as is.
+		});
     	
     	$('body').on("click", ".his_file_cancel, .his_item_cancel", function(e) {
     		removeHistoryDialog();

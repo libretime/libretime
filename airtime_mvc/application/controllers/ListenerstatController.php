@@ -72,7 +72,6 @@ class ListenerstatController extends Zend_Controller_Action
 
         $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/dataTables.colReorder.min.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'js/datatables/plugin/TableTools-2.1.5/css/TableTools.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/show_analytics.css'.$CC_CONFIG['airtime_version']);
 
