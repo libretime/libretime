@@ -253,18 +253,21 @@ var AIRTIME = (function(AIRTIME) {
                 "<li class='his-dselect-all'><a href='#'>"+$.i18n._("Deselect all")+"</a></li>" +
             "</ul>" +
 		"</div>");
-        
+
+		$menu.append("<div class='btn-group'>" +
+            "<button class='btn btn-small dropdown-toggle' data-toggle='dropdown'>" +
+                $.i18n._("Export")+" <span class='caret'></span>" +
+            "</button>" +
+            "<ul class='dropdown-menu'>" +
+                "<li id='csv_export'><a href='#'>"+$.i18n._("Export as CSV")+"</a></li>" +
+                "<li id='pdf_export'><a href='#'>"+$.i18n._("Export as PDF")+"</a></li>" +
+            "</ul>" +
+		"</div>");
+
         $menu.append("<div class='btn-group'>" +
             "<button class='btn btn-small' id='his_trash'>" +
                 "<i class='icon-white icon-trash'></i>" +
             "</button>" +
-		"</div>");
-		
-		$menu.append("<div class='btn-group'>" +
-			"<button class='btn btn-small btn-new' id='csv_export'>" +
-			// "<i class='icon-white icon-plus'></i>" +
-			$.i18n._("Export as CSV") +
-			"</button>" +
 		"</div>");
                   
         $el.append($menu);
@@ -574,6 +577,72 @@ var AIRTIME = (function(AIRTIME) {
     			makeHistoryDialog(json.dialog);
     			
     		}, "json");
+		});
+
+		$historyContentDiv.on("click", "#pdf_export", async function(){
+			// Get date/time from pickers
+			var startDay = document.querySelector('#his_date_start').value;
+			var startTime = document.querySelector('#his_time_start').value;
+			var endDay = document.querySelector('#his_date_end').value;
+			var endTime = document.querySelector('#his_time_end').value;
+
+			var url = baseUrl + "api/item-history-feed?start=" + startDay + " " + startTime + "&end=" + endDay + " " + endTime;
+			var requestData = await fetch(url);
+			var hisData = await requestData.json();
+
+			if (!hisData.length) {
+				alert("The date range selected doesn't have any items to export.");
+				return
+			} else {
+				// Generate PDF template
+				var dd = {
+					content: [
+						{text: 'Libretime', style: 'subheader'},
+						{text: 'Playout History from ' + startDay + ' ' + startTime + ' to ' + endDay + ' ' + endTime, style: 'header'},
+						{
+							style: 'mainTable',
+							table: {
+								headerRows: 1,
+								body: [
+									[{text: 'Start Time', style: 'tableHeader'}, {text: 'End Time', style: 'tableHeader'}, {text: 'Song', style: 'tableHeader'}, {text: 'Artist', style: 'tableHeader'}],
+								]
+							}
+						}
+					],
+					styles: {
+						header: {
+							fontSize: 18,
+							bold: true,
+							margin: [0, 0, 0, 10]
+						},
+						subheader: {
+							fontSize: 14,
+							bold: true,
+							margin: [0, 10, 0, 5]
+						},
+						mainTable: {
+							margin: [0, 5, 0, 15]
+						},
+						tableHeader: {
+							bold: true,
+							fontSize: 13,
+							color: 'black'
+						}
+					},
+					defaultStyle: {
+
+					}
+				};
+				hisData.forEach(element => {
+					// Removing extra fields
+					delete element.checkbox;
+					delete element.history_id;
+					delete element.instance_id;					
+					dd.content[2].table.body.push(Object.values(element));
+				});
+				// Make PDF and start download
+				pdfMake.createPdf(dd).download();
+			};
 		});
 		
 		$historyContentDiv.on("click", "#csv_export", async function(){
