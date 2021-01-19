@@ -1591,4 +1591,23 @@ class Application_Model_Preference
     public static function SetAllowedCorsUrls($value) {
         self::setValue('allowed_cors_urls', $value);
     }
+
+    /**
+     * Getter for feature preview mode.
+     *
+     * @return bool
+     */
+    public static function GetFeaturePreviewMode() {
+        return self::getValue('feature_preview_mode') === '1';
+    }
+
+    /**
+     * Setter for feature preview mode.
+     *
+     * @param bool $value
+     * @return void
+     */
+    public static function SetFeaturePreviewMode($value) {
+        return self::setValue('feature_preview_mode', $value);
+    }
 }

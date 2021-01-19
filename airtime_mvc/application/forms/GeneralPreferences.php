@@ -210,6 +210,21 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $radioPageLoginButton->setLabel(_("Display login button on your Radio Page?"));
         $radioPageLoginButton->setValue($displayRadioPageLoginButtonValue);
         $this->addElement($radioPageLoginButton);
+
+        $feature_preview_mode = new Zend_Form_Element_Radio('featurePreviewMode');
+        $feature_preview_mode->setLabel(_('Feature Previews'));
+        $feature_preview_mode->setMultiOptions(array(
+            _("Disabled"),
+            _("Enabled"),
+        ));
+        $feature_preview_mode->setValue(Application_Model_Preference::GetFeaturePreviewMode());
+        $feature_preview_mode->setDescription(_('Enable this to opt-in to test new features.'));
+        $feature_preview_mode->setSeparator(' '); //No <br> between radio buttons
+        $feature_preview_mode->addDecorator('HtmlTag', array('tag' => 'dd',
+            'id'=>"featurePreviewMode-element",
+            'class' => 'radio-inline-list',
+        ));
+        $this->addElement($feature_preview_mode);
     }
 
     private function getWeekStartDays()

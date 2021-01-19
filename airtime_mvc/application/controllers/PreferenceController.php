@@ -56,6 +56,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetDefaultTimezone($values["timezone"]);
                 Application_Model_Preference::SetWeekStartDay($values["weekStartDay"]);
                 Application_Model_Preference::setRadioPageDisplayLoginButton($values["radioPageLoginButton"]);
+                Application_Model_Preference::SetFeaturePreviewMode($values["featurePreviewMode"]);
 
                 $logoUploadElement = $form->getSubForm('preferences_general')->getElement('stationLogo');
                 $logoUploadElement->receive();
