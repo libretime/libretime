@@ -517,7 +517,9 @@ var AIRTIME = (function(AIRTIME) {
     	        	removeHistoryDialog();
     	        }
     	    });
-    	}
+		}
+		
+		hisSubmit(); // Fixes display bug
     	
     	/*
          * Icon hover states for search.
@@ -825,23 +827,26 @@ var AIRTIME = (function(AIRTIME) {
 			
 			return AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
     	}
-    	
+		
+		function hisSubmit(){
+			var fn, info;
+		
+			info = getStartEnd();
+			
+			fn = fnServerData;
+			fn.start = info.start;
+			fn.end = info.end;
+			
+			if (inShowsTab) {
+				showSummaryList(info.start, info.end);
+			}
+			else {
+				redrawTables();
+			};
+		};
+
     	$historyContentDiv.find("#his_submit").click(function(ev){
-    		var fn,
-    			info;
-    		
-    		info = getStartEnd();
-    		
-    		fn = fnServerData;
-    	    fn.start = info.start;
-    	    fn.end = info.end;
-    	    
-    	    if (inShowsTab) {
-    	    	showSummaryList(info.start, info.end);
-    	    }
-    	    else {
-    	    	redrawTables();
-    	    }  
+			hisSubmit();
     	});
     	
     	$historyContentDiv.on("click", ".his-select-page", selectCurrentPage);
