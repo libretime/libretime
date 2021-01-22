@@ -5,7 +5,7 @@ class TestApcUrl(unittest.TestCase):
     def test_init(self):
         url = "/testing"
         u = ApcUrl(url)
-        self.assertEqual( u.base_url, url)
+        self.assertEqual(u.base_url, url)
 
     def test_params_1(self):
         u = ApcUrl("/testing/%%key%%")

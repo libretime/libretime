@@ -68,13 +68,14 @@ api_config['bin_dir'] = '/usr/lib/airtime/api_clients/'
 api_config['update_metadata_on_tunein'] = 'update-metadata-on-tunein/api_key/%%api_key%%'
 
 def get_protocol(config):
-    port = config.get('general', 'base_port', fallback=80)
-    if config.getboolean('general', 'force_ssl', fallback=False):
+    positive_values = ['Yes', 'yes', 'True', 'true', True]
+    port = config['general'].get('base_port', 80)
+    force_ssl = config['general'].get('force_ssl', False)
+    if force_ssl in positive_values:
         protocol = 'https'
     else:
-        try:
-            protocol = config.get(CONFIG_SECTION, 'protocol')
-        except NoOptionError as e:
+        protocol = config['general'].get('protocol')
+        if not protocol:
             protocol = str(("http", "https")[int(port) == 443])
     return protocol
 
