@@ -84,7 +84,7 @@ walk you through the rest of the installation process.
 ## Services
 
 Once all of the services needed to run LibreTime are installed and configured,
-it is important that the server starts them during the boot process, to cut down on downtime, especially in live enviornments.
+it is important that the server starts them during the boot process, to cut down on downtime, especially in live environments.
 Ubuntu 18.04 uses the `systemctl` command to manage services, so run the following commands to enable all
 LibreTime-needed services to run at boot:
 
