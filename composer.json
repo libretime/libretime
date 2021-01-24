@@ -10,7 +10,6 @@
         "propel/propel1": "1.7.0-stable",
         "aws/aws-sdk-php": "2.7.9",
         "raven/raven": "0.12.0",
-        "ise/php-soundcloud": "3.0.1",
         "massivescale/celery-php": "2.0.*@dev",
         "simplepie/simplepie": "dev-master",
         "zf1s/zend-application": "^1.12",

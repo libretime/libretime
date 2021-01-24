@@ -236,16 +236,15 @@ var AIRTIME = (function(AIRTIME) {
                 "</div>"
             );
 
-        if (onDashboard) {
-            $menu.append(
-                "<div class='btn-group' title=" + $.i18n._('Publish') + ">" +
-                "<button class='btn btn-small' id='publish-btn'>" +
-                "<i class='icon-soundcloud-white'></i>" +
-                "<span>" + $.i18n._('Publish') + "</span>" +
-                "</button>" +
-                "</div>"
-            );
-        }
+            if (onDashboard) {
+                $menu.append(
+                    "<div class='btn-group' title=" + $.i18n._('Publish') + ">" +
+                    "<button class='btn btn-small' id='publish-btn'>" +
+                    "<span>" + $.i18n._('Publish') + "</span>" +
+                    "</button>" +
+                    "</div>"
+                );
+            }
     };
 
     mod.createToolbarDropDown = function() {
@@ -1324,25 +1323,6 @@ var AIRTIME = (function(AIRTIME) {
                             document.location.href = oItems.download.url;
                         };
                         oItems.download.callback = callback;
-                    }
-                    // add callbacks for Soundcloud menu items.
-                    if (oItems.soundcloud !== undefined) {
-                        var soundcloud = oItems.soundcloud.items;
-
-                        if (soundcloud.update !== undefined) {
-                            callback = function() {
-                                $.post(soundcloud.update.url, function () {});
-                            };
-                            soundcloud.update.callback = callback;
-                        }
-
-                        // define a view on soundcloud callback
-                        if (soundcloud.view !== undefined) {
-                            callback = function() {
-                                window.open(soundcloud.view.url);
-                            };
-                            soundcloud.view.callback = callback;
-                        }
                     }
                     // add callbacks for duplicate menu items.
                     if (oItems.duplicate !== undefined) {

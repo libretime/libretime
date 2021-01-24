@@ -44,7 +44,6 @@ class CcFiles extends BaseCcFiles {
         'utime',
         'lptime',
         'silan_check',
-        'soundcloud_id',
         'is_scheduled',
         'is_playlist'
     );

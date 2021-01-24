@@ -48,34 +48,6 @@ function confirmCancelRecordedShow(show_instance_id){
     }
 }
 
-function checkCalendarSCUploadStatus(){
-    var url = baseUrl+'Library/get-upload-to-soundcloud-status',
-        span,
-        id;
-    
-    function checkSCUploadStatusCallback(json) {
-        
-        if (json.sc_id > 0) {
-            span.removeClass("progress").addClass("soundcloud");
-            
-        }
-        else if (json.sc_id == "-3") {
-            span.removeClass("progress").addClass("sc-error");
-        }
-    }
-    
-    function checkSCUploadStatusRequest() {
-        
-        span = $(this);
-        id = span.parents("div.fc-event").data("event").id;
-       
-        $.post(url, {format: "json", id: id, type:"show"}, checkSCUploadStatusCallback);
-    }
-    
-    $("#schedule_calendar span.progress").each(checkSCUploadStatusRequest);
-    setTimeout(checkCalendarSCUploadStatus, 5000);
-}
-
 function findViewportDimensions() {
     var viewportwidth,
         viewportheight;
@@ -365,8 +337,6 @@ function alertShowErrorAndReload(){
 
 $(document).ready(function() {
 
-    checkCalendarSCUploadStatus();
-    
     $.contextMenu({
         selector: 'div.fc-event',
         trigger: "left",

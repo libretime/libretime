@@ -12,7 +12,7 @@ Optionally, you may wish to edit the file */etc/airtime/airtime.conf* to set the
 
     sudo nano /etc/airtime/airtime.conf
 
-You can also set options for RabbitMQ messaging, the LibreTime server and SoundCloud uploads in this file, although you should not normally need to adjust the defaults unless you are running a large LibreTime system distributed across multiple servers. To run the LibreTime server in demo mode, which changes the greeting on the login page and prevents user accounts from being created or modified, set the value of *demo* to 1.
+You can also set options for RabbitMQ messaging and the LibreTime server in this file, although you should not normally need to adjust the defaults unless you are running a large LibreTime system distributed across multiple servers. To run the LibreTime server in demo mode, which changes the greeting on the login page and prevents user accounts from being created or modified, set the value of *demo* to 1.
 
     [database]
     host = localhost
@@ -39,10 +39,6 @@ You can also set options for RabbitMQ messaging, the LibreTime server and SoundC
     [monit]
     monit_user = guest
     monit_password = airtime
-
-    [soundcloud]
-    connection_retries = 3
-    time_between_retries = 60
 
     [demo]
     demo = 0

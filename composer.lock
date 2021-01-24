@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f77b688ef532e689ba85602a6faff987",
+    "content-hash": "d0492e2014ec7e958f566adbf53e070b",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -230,54 +230,6 @@
             ],
             "abandoned": "guzzlehttp/guzzle",
             "time": "2015-03-18T18:23:50+00:00"
-        },
-        {
-            "name": "ise/php-soundcloud",
-            "version": "3.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/internalsystemerror/php-soundcloud.git",
-                "reference": "ac3ff2dce2a6e6d34636c58e66fd316d722c31df"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/internalsystemerror/php-soundcloud/zipball/ac3ff2dce2a6e6d34636c58e66fd316d722c31df",
-                "reference": "ac3ff2dce2a6e6d34636c58e66fd316d722c31df",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Soundcloud\\": "src/",
-                    "SoundcloudTest\\": "tests/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Anton Lindqvist",
-                    "email": "anton@qvister.se",
-                    "homepage": "http://qvister.se/",
-                    "role": "developer"
-                },
-                {
-                    "name": "Gary Lockett",
-                    "email": "ise@garylockett.com",
-                    "homepage": "http://www.garylockett.com/"
-                }
-            ],
-            "description": "API Wrapper for SoundCloud written in PHP with support for authentication using OAuth 2.0 by Anton Lindqvist (mptre), composer support added by Gary Lockett (ise)",
-            "homepage": "https://github.com/internalsystemerror/php-soundcloud",
-            "keywords": [
-                "soundcloud"
-            ],
-            "time": "2014-02-03T15:49:00+00:00"
         },
         {
             "name": "james-heinrich/getid3",
@@ -562,12 +514,12 @@
             "version": "v1.0.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nrk/predis.git",
+                "url": "https://github.com/predis/predis.git",
                 "reference": "84060b9034d756b4d79641667d7f9efe1aeb8e04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nrk/predis/zipball/84060b9034d756b4d79641667d7f9efe1aeb8e04",
+                "url": "https://api.github.com/repos/predis/predis/zipball/84060b9034d756b4d79641667d7f9efe1aeb8e04",
                 "reference": "84060b9034d756b4d79641667d7f9efe1aeb8e04",
                 "shasum": ""
             },

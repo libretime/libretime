@@ -456,8 +456,7 @@ SQL;
                 ft.album_title AS file_album_title,
                 ft.length AS file_length,
                 ft.file_exists AS file_exists,
-                ft.mime AS file_mime,
-                ft.soundcloud_id AS soundcloud_id
+                ft.mime AS file_mime
 SQL;
         $filesJoin = <<<SQL
        cc_schedule AS sched
@@ -492,8 +491,7 @@ SQL;
                 ws.description AS file_album_title,
                 ws.length AS file_length,
                 't'::BOOL AS file_exists,
-                ws.mime AS file_mime,
-                (SELECT NULL::integer AS soundcloud_id)
+                ws.mime AS file_mime
 SQL;
         $streamJoin = <<<SQL
       cc_schedule AS sched

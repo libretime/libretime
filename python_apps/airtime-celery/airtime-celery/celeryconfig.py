@@ -29,7 +29,6 @@ CELERY_RESULT_PERSISTENT = True  # Persist through a broker restart
 CELERY_TASK_RESULT_EXPIRES = 900  # Expire task results after 15 minutes
 CELERY_RESULT_EXCHANGE = "celeryresults"  # Default exchange - needed due to php-celery
 CELERY_QUEUES = (
-    Queue("soundcloud", exchange=Exchange("soundcloud"), routing_key="soundcloud"),
     Queue("podcast", exchange=Exchange("podcast"), routing_key="podcast"),
     Queue(exchange=Exchange("celeryresults"), auto_delete=True),
 )
