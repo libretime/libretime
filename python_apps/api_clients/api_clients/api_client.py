@@ -10,7 +10,7 @@ import sys
 import time
 import urllib.request, urllib.error, urllib.parse
 import requests
-import socket 
+import socket
 import logging
 import json
 import base64
@@ -67,6 +67,17 @@ api_config['api_base'] = 'api'
 api_config['bin_dir'] = '/usr/lib/airtime/api_clients/'
 api_config['update_metadata_on_tunein'] = 'update-metadata-on-tunein/api_key/%%api_key%%'
 
+def get_protocol(config):
+    positive_values = ['Yes', 'yes', 'True', 'true', True]
+    port = config['general'].get('base_port', 80)
+    force_ssl = config['general'].get('force_ssl', False)
+    if force_ssl in positive_values:
+        protocol = 'https'
+    else:
+        protocol = config['general'].get('protocol')
+        if not protocol:
+            protocol = str(("http", "https")[int(port) == 443])
+    return protocol
 
 
 ################################################################################
@@ -169,9 +180,11 @@ class RequestProvider(object):
         self.requests = {}
         if self.config["general"]["base_dir"].startswith("/"):
             self.config["general"]["base_dir"] = self.config["general"]["base_dir"][1:]
+        protocol = get_protocol(self.config)
+
         self.url = ApcUrl("%s://%s:%s/%s%s/%s" \
-            % (str(("http", "https")[int(self.config["general"]["base_port"]) == 443]),
-               self.config["general"]["base_url"], str(self.config["general"]["base_port"]),
+            % (protocol, self.config["general"]["base_url"],
+               str(self.config["general"]["base_port"]),
                self.config["general"]["base_dir"], self.config["api_base"],
                '%%action%%'))
         # Now we must discover the possible actions
@@ -208,7 +221,7 @@ class AirtimeApiClient(object):
     def __get_airtime_version(self):
         try: return self.services.version_url()['airtime_version']
         except Exception: return -1
-    
+
     def __get_api_version(self):
         try: return self.services.version_url()['api_version']
         except Exception: return -1
@@ -331,8 +344,9 @@ class AirtimeApiClient(object):
         # TODO : Make other methods in this class use this this method.
         if self.config["general"]["base_dir"].startswith("/"):
             self.config["general"]["base_dir"] = self.config["general"]["base_dir"][1:]
+        protocol = get_protocol(self.config)
         url = "%s://%s:%s/%s%s/%s" %  \
-            (str(("http", "https")[int(self.config["general"]["base_port"]) == 443]),
+            (protocol,
              self.config["general"]["base_url"], str(self.config["general"]["base_port"]),
              self.config["general"]["base_dir"], self.config["api_base"],
              self.config[config_action_key])
@@ -343,9 +357,9 @@ class AirtimeApiClient(object):
         """Constructs the base url for RESTful requests"""
         if self.config["general"]["base_dir"].startswith("/"):
             self.config["general"]["base_dir"] = self.config["general"]["base_dir"][1:]
+        protocol = get_protocol(self.config)
         url = "%s://%s:@%s:%s/%s/%s" %  \
-            (str(("http", "https")[int(self.config["general"]["base_port"]) == 443]),
-             self.config["general"]["api_key"],
+            (protocol, self.config["general"]["api_key"],
              self.config["general"]["base_url"], str(self.config["general"]["base_port"]),
              self.config["general"]["base_dir"],
              self.config[config_action_key])

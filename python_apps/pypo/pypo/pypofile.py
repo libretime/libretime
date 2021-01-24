@@ -67,14 +67,14 @@ class PypoFile(Thread):
             CONFIG_SECTION = "general"
             username = self._config.get(CONFIG_SECTION, 'api_key')
             baseurl = self._config.get(CONFIG_SECTION, 'base_url')
-            try:
-                port = self._config.get(CONFIG_SECTION, 'base_port')
-            except NoOptionError as e:
-                port = 80
-            try:
-                protocol = self._config.get(CONFIG_SECTION, 'protocol')
-            except NoOptionError as e:
-                protocol = str(("http", "https")[int(port) == 443])
+            port = self._config.get(CONFIG_SECTION, 'base_port', 80)
+            if self._config.getboolean(CONFIG_SECTION, 'force_ssl', fallback=False):
+                protocol = 'https'
+            else:
+                try:
+                    protocol = self._config.get(CONFIG_SECTION, 'protocol')
+                except NoOptionError as e:
+                    protocol = str(("http", "https")[int(port) == 443])
 
             try:
                 host = [protocol, baseurl, port]
@@ -84,15 +84,15 @@ class PypoFile(Thread):
                                                              media_item["id"])
                 with open(dst, "wb") as handle:
                     response = requests.get(url, auth=requests.auth.HTTPBasicAuth(username, ''), stream=True, verify=False)
-                    
+
                     if not response.ok:
                         self.logger.error(response)
                         raise Exception("%s - Error occurred downloading file" % response.status_code)
-                    
+
                     for chunk in response.iter_content(1024):
                         if not chunk:
                             break
-                        
+
                         handle.write(chunk)
 
                 #make file world readable and owner writable
@@ -160,11 +160,11 @@ class PypoFile(Thread):
 
         """
         Remove this media_item from the dictionary. On the next iteration
-        (from the main function) we won't consider it for prioritization 
+        (from the main function) we won't consider it for prioritization
         anymore. If on the next iteration we have received a new schedule,
-        it is very possible we will have to deal with the same media_items 
+        it is very possible we will have to deal with the same media_items
         again. In this situation, the worst possible case is that we try to
-        copy the file again and realize we already have it (thus aborting the copy). 
+        copy the file again and realize we already have it (thus aborting the copy).
         """
         del schedule[highest_priority]
 
@@ -179,7 +179,7 @@ class PypoFile(Thread):
             logging.debug("Failed to open config file at %s: %s" % (config_path, e.strerror))
             sys.exit()
         except Exception as e:
-            logging.debug(e.strerror) 
+            logging.debug(e.strerror)
             sys.exit()
 
         return config
