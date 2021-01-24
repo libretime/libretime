@@ -1,45 +1,39 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.js"></script>
+<!-- <script src="/js/libs/howler.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+<!-- <script src="/js/libs/handlebars.min-v4.7.6.js"></script> -->
+
 <div id="jquery_jplayer_1" class="jp-jplayer"></div>
 <div id="jp_container_1" class="jp-audio">
-<?php if (isset($this->playlistID)): ?>
-    <span class='playlistID'><?php echo "$this->playlistID" ?></span>
-    <span class='playlistIndex'><?php echo "$this->playlistIndex" ?></span>
-<?php elseif (isset($this->blockId)): ?>
-    <span class='blockId' style="display: none;"><?php echo "$this->blockId" ?></span>
-    <span class='blockIndex' style="display: none;"><?php echo "$this->blockIndex" ?></span>
-<?php elseif (isset($this->uri)): ?>
-    <span class='audioUri' style="display: none;"><?php echo "$this->uri" ?></span>
-    <span class='audioMime' style="display: none;"><?php echo "$this->mime" ?></span>
-    <span class='audioFileTitle'><?php echo "$this->audioFileTitle" ?></span>
-    <span class='audioFileArtist'><?php echo "$this->audioFileArtist" ?></span>
-<?php elseif (isset($this->showID)): ?>
-    <span class='showID'><?php echo "$this->showID" ?></span>
-    <span class='showIndex'><?php echo "$this->showIndex" ?></span>
-<?php endif;?>
+    <?php if (isset($this->uri)): ?>
+        <span class='audioFileTitle'><?php echo "$this->audioFileTitle" ?></span>
+        <span class='audioFileArtist'><?php echo "$this->audioFileArtist" ?></span>
+    <?php endif;?>
     <div class="jp-type-playlist">
         <div class="jp-gui jp-interface">
             <ul class="jp-controls">
                 <?php if ($this->type != "audioclip"): ?>
                 <li class="ui-state-default ui-corner-all jp-previous">
-                    <span class="ui-icon ui-icon-seek-prev" tabindex="1"><?php echo _("previous") ?></span>
+                    <span class="ui-icon ui-icon-seek-prev" tabindex="1" onclick="playTrack(curID - 1);"><?php echo _("previous") ?></span>
                 </li>
                 <?php endif;?>
 
                 <li class="ui-state-default ui-corner-all jp-play">
-                    <span class="ui-icon ui-icon-play" tabindex="1"><?php echo _("play") ?></span>
+                    <span class="ui-icon ui-icon-play" tabindex="1" onclick="audioPlayer.play();"><?php echo _("play") ?></span>
                 </li>
 
                 <li class="ui-state-default ui-corner-all jp-pause">
-                    <span class="ui-icon ui-icon-pause" tabindex="1"><?php echo _("pause") ?></span>
+                    <span class="ui-icon ui-icon-pause" tabindex="1" onclick="audioPlayer.pause();"><?php echo _("pause") ?></span>
                 </li>
 
                 <?php if ($this->type != "audioclip"): ?>
                 <li class="ui-state-default ui-corner-all jp-next">
-                    <span class="ui-icon ui-icon-seek-next" tabindex="1"><?php echo _("next") ?></span>
+                    <span class="ui-icon ui-icon-seek-next" tabindex="1" onclick="playTrack(curID + 1);"><?php echo _("next") ?></span>
                 </li>
                 <?php endif;?>
 
                 <li class="ui-state-default ui-corner-all jp-stop">
-                    <span class="ui-icon ui-icon-stop" tabindex="1"><?php echo _("stop") ?></span>
+                    <span class="ui-icon ui-icon-stop" tabindex="1" onclick="audioPlayer.stop();"><?php echo _("stop") ?></span>
                 </li>
             </ul>
             <div class="jp-time-block">
@@ -57,29 +51,173 @@
             </div>
             <div class="jp-volume-block">
                 <div class="jp-mute">
-                    <span class="ui-icon" tabindex="1" title="mute"><?php echo _("mute") ?></span>
+                    <span class="ui-icon" tabindex="1" title="mute" onclick="audioPlayer.mute(true);"><?php echo _("mute") ?></span>
                 </div>
                 <div class="jp-unmute">
-                    <span class="ui-icon" tabindex="1" title="unmute"><?php echo _("unmute") ?></span>
+                    <span class="ui-icon" tabindex="1" title="unmute" onclick="audioPlayer.mute(false);"><?php echo _("unmute") ?></span>
                 </div>
                 <div class="jp-volume-bar">
                     <div class="jp-volume-bar-value"></div>
                 </div>
                 <div class="jp-volume-max">
-                    <span class="ui-icon" tabindex="1" title="max volume"><?php echo _("max volume") ?></span>
+                    <span class="ui-icon" tabindex="1" title="max volume" onclick="audioPlayer.volume(1.0);"><?php echo _("max volume") ?></span>
                 </div>
             </div>
         </div>
         <div class="jp-playlist">
+            <script id="playlistTemp" type="text/x-handlebars-template">
             <ul>
-                <li></li>
+                {{#if (singleCheck)}}
+                {{#each this}}
+                    <li class="jp-playlist-current">{{{element_title}}} <span class="jp-artist">by {{{element_artist}}}</span></li>
+                {{/each}}
+                {{else}}
+                {{#each this}}
+                    <li id="track-{{element_position}}" onclick="playTrack({{element_position}});">{{{element_title}}}</span></li>
+                {{/each}}
+                {{/if}}
             </ul>
-        </div>
-        <div class="jp-no-solution">
-            <span><?php echo _("Update Required") ?></span>
-            <?php sprintf(_("To play the media you will need to either update your browser to a recent version or update your %sFlash plugin%s."),
-                "<a href='http://get.adobe.com/flashplayer/' target='_blank'>",
-                "</a>") ?>
+            </script>
         </div>
     </div>
 </div>
+
+<script>
+    var pList, curID, playlistID, playlistIndex, blockID, blockIndex,
+    audioUri, audioFileTitle, audioFileArtist, showID, showIndex, audioPlayer;
+
+    // Gather info via. PHP
+    <?php 
+        if (isset($this->playlistID)):
+            echo "playlistID = '$this->playlistID';";
+            echo "playlistIndex = '$this->playlistIndex';";
+        elseif (isset($this->blockId)):
+            echo "blockID = '$this->blockId';";
+            echo "blockIndex = '$this->blockIndex';";
+        elseif (isset($this->uri)):
+            echo "audioUri = '$this->uri';";
+            echo "audioFileTitle = document.querySelector('.audioFileTitle').innerHTML;";
+            echo "audioFileArtist = document.querySelector('.audioFileArtist').innerHTML;";
+        elseif (isset($this->showID)):
+            echo "showID = '$this->showID';";
+            echo "showIndex = '$this->showIndex';";
+        endif;
+    ?>
+
+    // Function to switch tracks
+    function playTrack(pos){
+        if (pos === curID){
+            return false
+        } else {
+            // Remove current track
+            audioPlayer.stop();
+            audioPlayer.unload();
+
+            // Add new track, start playback, update curID
+            audioPlayer._src = [pList[pos].uri];  // _src is necessary
+            audioPlayer.load();
+            curID = pos;
+            audioPlayer.play();
+
+            // Update styling in list
+            document.querySelector('#track-' + curID).classList.remove('jp-playlist-current');
+            document.querySelector('#track-' + pos).classList.add('jp-playlist-current');
+        }
+    };
+
+    // Init Howler
+    function initPlayer(src){
+        audioPlayer = new Howl({
+            src: [src],  // src must be string
+            format: ['mp3', 'ogg', 'wav', 'opus', 'aac'],
+            volume: 0.5,
+            html5: true,
+            onend: function(){
+                // Checking to see if we're at the end of the playlist
+                if ((curID + 1) > pList.length){
+                    audioPlayer.stop();
+                } else {
+                    playTrack(curID + 1);
+                }
+            },
+            onstop: function(){
+                document.querySelector('.jp-play').classList.remove('hidden');
+                document.querySelector('.jp-pause').classList.add('hidden');
+            },
+            onpause: function(){
+                document.querySelector('.jp-play').classList.remove('hidden');
+                document.querySelector('.jp-pause').classList.add('hidden');
+            },
+            onplay: function(){
+                document.querySelector('.jp-play').classList.add('hidden');
+                document.querySelector('.jp-pause').classList.remove('hidden');
+            },
+            onmute: function(){
+                // document.querySelector('.jp-audio').classList.toggle('jp-state-playing');
+            },
+            onloaderror: function(){
+                alert('The file could not be played');
+            }
+        });
+
+        // Check if the player only got passed a single track
+        Handlebars.registerHelper('singleCheck', function(){
+            return pList.length == 1;
+        });
+
+        // Templating with Handlebars.js
+        var temp = document.querySelector('#playlistTemp').innerHTML;
+        var tempComp = Handlebars.compile(temp);
+        var compiledHtml = tempComp(pList);
+        document.querySelector('.jp-playlist').innerHTML = compiledHtml;
+
+        return audioPlayer
+    };
+
+    // Pull playlist via API call
+    async function initPlaylist(){
+        // Figure out where playlist comes from
+        if (!!playlistID){
+            curID = playlistIndex - 1;
+            url = baseUrl+"audiopreview/get-playlist/playlistID/"+playlistID;
+        };
+        if (!!showID){
+            curID = showIndex - 1;
+            url = baseUrl+"audiopreview/get-show/showID/"+showID;
+        };
+        if (!!blockID){
+            curID = blockIndex - 1;
+            url = baseUrl+"audiopreview/get-block/blockId/"+blockID;
+        };
+
+        // API call
+        var request = await fetch(url);
+        pList = await request.json();
+
+        if (!request.ok){
+            console.log('Something failed');
+            return false
+        } else {
+            audioPlayer = initPlayer(pList[curID].uri);
+        }
+        return audioPlayer
+    };
+
+    // Main init sequence
+    document.querySelector('.jp-pause').classList.add('hidden');
+    if (!!audioUri){
+        pList = [{
+            element_title: audioFileTitle,
+            element_artist: audioFileArtist,
+            uri: audioUri
+        }];
+        audioPlayer = initPlayer(pList[0].uri);
+
+    } else {
+        audioPlayer = initPlaylist();  // Call async function to setup playlist
+    };
+
+    // Window resize not working
+    var container = document.querySelector('#jp_container_1');
+    window.resizeTo(container.width() + 2, container.height() + URL_BAR_HEIGHT + 2);
+</script>
