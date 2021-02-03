@@ -67,7 +67,7 @@ class PypoFile(Thread):
             CONFIG_SECTION = "general"
             username = self._config.get(CONFIG_SECTION, 'api_key')
             baseurl = self._config.get(CONFIG_SECTION, 'base_url')
-            port = self._config.get(CONFIG_SECTION, 'base_port', 80)
+            port = self._config.get(CONFIG_SECTION, 'base_port', fallback=80)
             if self._config.getboolean(CONFIG_SECTION, 'force_ssl', fallback=False):
                 protocol = 'https'
             else:
