@@ -64,17 +64,22 @@ class PypoFile(Thread):
         if do_copy:
             self.logger.info("copying from %s to local cache %s" % (src, dst))
 
-            CONFIG_SECTION = "general"
-            username = self._config.get(CONFIG_SECTION, 'api_key')
-            baseurl = self._config.get(CONFIG_SECTION, 'base_url')
-            port = self._config.get(CONFIG_SECTION, 'base_port', fallback=80)
-            if self._config.getboolean(CONFIG_SECTION, 'force_ssl', fallback=False):
+            CONFIG_SECTION = 'general'
+            username = self._config[CONFIG_SECTION].get('api_key')
+            baseurl = self._config[CONFIG_SECTION].get('base_url')
+            port = self._config[CONFIG_SECTION].get('base_port', 80)
+            positive_values = ['Yes', 'yes', 'True', 'true', True]
+            force_ssl = self._config[CONFIG_SECTION].get('force_ssl', False)
+            if force_ssl in positive_values:
                 protocol = 'https'
+                self.logger.debug('protocol set to https from force_ssl configuration setting')
             else:
                 try:
-                    protocol = self._config.get(CONFIG_SECTION, 'protocol')
-                except NoOptionError as e:
+                    protocol = self._config[CONFIG_SECTION]['protocol']
+                    self.logger.debug('protocol set to %s from configuration setting' % (protocol))
+                except (NoOptionError, KeyError) as e:
                     protocol = str(("http", "https")[int(port) == 443])
+                    self.logger.debug('guessing protocol as %s from port configuration' % (protocol))
 
             try:
                 host = [protocol, baseurl, port]
