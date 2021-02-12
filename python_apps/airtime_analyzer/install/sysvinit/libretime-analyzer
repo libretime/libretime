@@ -1,17 +1,17 @@
 #!/bin/bash
 
 ### BEGIN INIT INFO
-# Provides:          airtime_analyzer
+# Provides:          libretime-analyzer
 # Required-Start:    $local_fs $remote_fs $network $syslog $all
 # Required-Stop:     $local_fs $remote_fs $network $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Manage airtime_analyzer daemon
+# Short-Description: Manage libretime-analyzer daemon
 ### END INIT INFO
 
 USERID=www-data
 GROUPID=www-data
-NAME=airtime_analyzer
+NAME=libretime-analyzer
 
 DAEMON=/usr/bin/$NAME
 PIDFILE=/var/run/$NAME.pid

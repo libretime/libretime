@@ -113,7 +113,7 @@ function checkRMQConnection() {
  * @return boolean true if airtime-analyzer is running
  */
 function checkAnalyzerService() {
-    exec("pgrep -f airtime_analyzer", $out, $status);
+    exec("pgrep -f libretime-analyzer", $out, $status);
     if (($out > 0) && $status == 0) {
         return posix_kill(rtrim($out[0]), 0);
     }

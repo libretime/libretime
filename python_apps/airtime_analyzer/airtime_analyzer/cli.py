@@ -1,7 +1,6 @@
-#!/usr/bin/env python
-"""Runs the airtime_analyzer application.
 """
-
+Main CLI entrypoint for the libretime-analyzer app.
+"""
 
 import daemon
 import argparse
@@ -13,9 +12,9 @@ LIBRETIME_CONF_DIR = os.getenv('LIBRETIME_CONF_DIR', '/etc/airtime')
 DEFAULT_RMQ_CONFIG_PATH = os.path.join(LIBRETIME_CONF_DIR, 'airtime.conf')
 DEFAULT_HTTP_RETRY_PATH = '/tmp/airtime_analyzer_http_retries'
 
-def run():
+def main():
     '''Entry-point for this application'''
-    print("Airtime Analyzer {}".format(VERSION))
+    print("LibreTime Analyzer {}".format(VERSION))
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--daemon", help="run as a daemon", action="store_true")
     parser.add_argument("--debug", help="log full debugging output", action="store_true")
@@ -42,4 +41,5 @@ def run():
                                  http_retry_queue_path=http_retry_queue_path,
                                  debug=args.debug)
 
-run()
+if __name__ == "__main__":
+    main()
