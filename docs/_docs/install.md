@@ -27,13 +27,13 @@ If you're using a cloud VM, you likely already have a static IP address. Check w
 
 ```
 cd /etc/netplan && ls  # find the netplan filename
-sudo nano ##-netcfg.yaml
+sudo nano ##-network-manager-all.yaml
 ```
 
 If the Netplan configuration is empty, fill in the file with the example below. Otherwise,
 input the IP address reserved for the server in `xxx.xxx.xxx.xxx/yy` format, the gateway (the IP address
 of your router), and the DNS nameserver. If you don't have a nameserver on your network,
-feel free to use Cloudflare's: `1.1.1.1` and `1.0.0.1`.
+feel free to use Cloudflare's: `1.1.1.1` and `1.0.0.1`. In this File is "Tab" not allowed.
 
 ```
 network:
@@ -44,7 +44,7 @@ network:
       addresses: [192.168.88.8/24]
       gateway4: 192.168.88.1
       nameservers:
-        addresses: 192.168.88.1
+        addresses: [192.168.88.1]
 ```
 
 After the netplan file has been saved, run `sudo netplan apply` to apply changes.
