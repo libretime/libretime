@@ -42,7 +42,7 @@ vagrant up ubuntu-xenial --provider=libvirt
 
 ```bash
 sudo apt install vagrant vagrant-libvirt libvirt-daemon-system vagrant-mutate libvirt-dev
-sudo usermod -a -G libvirt $USER
+sudo usermod -aG libvirt $USER
 
 # Reboot
 
