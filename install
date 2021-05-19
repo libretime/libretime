@@ -35,13 +35,13 @@ showhelp () {
     -r, --web-root=WEB_ROOT
                 Set the web root for Airtime files
                 This will copy the Airtime application files, but you will need
-                to give your web user access to the given directory if it is 
+                to give your web user access to the given directory if it is
                 not accessible
     --web-port=WEB_PORT
                 Set what port the LibreTime interface should run on.
     -I, --in-place
                 Set the current Airtime directory as the web root
-                Note that you will need to give your web user permission to 
+                Note that you will need to give your web user permission to
                 access this directory if it is not accessible
     -p, --postgres
                 Create a default postgres user named 'airtime' with password
@@ -107,7 +107,7 @@ function loud() {
     fi
 }
 
-# Evaluate commands silently if quiet. 
+# Evaluate commands silently if quiet.
 # If not quiet, output command if verbose.
 function loudCmd() {
     if [[ ${_q} -eq 0 ]]; then
@@ -131,12 +131,12 @@ function checkCommandExists() {
 }
 
 # Function to determine if systemd, Upstart or System V Init is the active
-# init system. All the newer supported distros use systemd out-of-the-box but 
+# init system. All the newer supported distros use systemd out-of-the-box but
 # a sysadmin could have installed an alternative init compatibility package.
-# As a result, making assumptions based on the distribution and release is 
+# As a result, making assumptions based on the distribution and release is
 # not a good idea. The detection works as follows:
 # 1. Get the process name where PID=1 and follow any symlinks.
-# 2. Look up that path in the appropriate package manager to get the name 
+# 2. Look up that path in the appropriate package manager to get the name
 #    of the package that process is part of.
 # See https://unix.stackexchange.com/questions/196166/how-to-find-out-if-a-system-uses-sysv-upstart-or-systemd-initsystem
 has_systemd_init=false
@@ -338,7 +338,7 @@ function systemInitInstall() {
 
 # Function to wrap different systemd vs. Upstart init commands depending
 # on which init system has been detected. Syntax is similar to systemctl.
-# Usage: 
+# Usage:
 #   systemInitCommand _command_ [service-name ...]
 # Where _command_ is one of: start, stop, status, reload, restart
 #   enable, disable and either daemon-reload or reload-configuration.
@@ -368,10 +368,10 @@ function systemInitCommand() {
                 fi
             fi
             ;;
-        daemon-reload|reload-configuration) 
-            $has_systemd_init && 
+        daemon-reload|reload-configuration)
+            $has_systemd_init &&
                 loudCmd "systemctl daemon-reload"
-            $has_upstart_init && 
+            $has_upstart_init &&
                 loudCmd "initctl reload-configuration"
             ;;
         *) echo -e "$0:${FUNCNAME}(): ERROR: command \"$command\" is not supported!" >&2
@@ -719,7 +719,7 @@ if [ "$ignore_dependencies" = "f" ]; then
     loud "\n-----------------------------------------------------"
     loud "         * Installing External Dependencies *        "
     loud "-----------------------------------------------------"
-    
+
     if $is_ubuntu_dist; then
     	loudCmd "add-apt-repository -y ppa:libretime/libretime"
     	fi
@@ -781,10 +781,10 @@ if [ -f /etc/airtime/airtime.conf ]; then
     # TODO use VERSION or some other way to check for updates and handle
     # media-monitor case on it's own
     OLD_CONF=$(grep -F "[media-monitor]" /etc/airtime/airtime.conf || true)
-    
+
     if [ -n "${OLD_CONF}" ]; then
         upgrade="t"
-    
+
         set +e
         verbose "Stopping airtime services..."
         systemInitCommand stop airtime_analyzer airtime-celery airtime-playout airtime-liquidsoap airtime-media-monitor
@@ -796,7 +796,7 @@ if [ -f /etc/airtime/airtime.conf ]; then
 
         echo "Looks like you have an old version of Airtime. Your current /etc/airtime/airtime.conf \
 will be moved to /etc/airtime/airtime.conf.tmp"
-        # If we don't remove the existing python files in /usr/lib and the 
+        # If we don't remove the existing python files in /usr/lib and the
         # /etc/init.d startup scripts, services won't work properly
         if [ -d /usr/lib/airtime/ ]; then
             rm -rf /usr/lib/airtime/
@@ -807,18 +807,25 @@ will be moved to /etc/airtime/airtime.conf.tmp"
         rm -f /etc/default/airtime-celery
 
         if [ "$apache" = "t" ]; then
-            # If the user selects an "in-place" install or passes in a web root, 
+            # If the user selects an "in-place" install or passes in a web root,
             # we need to replace the old apache airtime.conf
-            rm /etc/apache2/sites-available/airtime.conf /etc/apache2/sites-enabled/airtime.conf
+            rm -f /etc/apache2/sites-available/airtime.conf /etc/apache2/sites-enabled/airtime.conf
         fi
-        
+
         if [ -d /usr/share/airtime -a web_root = /usr/share/airtime ]; then
             rm -rf /usr/share/airtime
         fi
-        
+
         mv /etc/airtime/airtime.conf /etc/airtime/airtime.conf.tmp
         set -e
     fi
+fi
+
+API2_APACHE_CONF=$(grep -F "ProxyPass" /etc/apache2/sites-available/airtime.conf || true)
+if [ -z "${API2_APACHE_CONF}" -a "$apache" = "t" ]; then
+    # Remove Apache configuration so that the ProxyPass configuration for API 2.0
+    # is installed
+    rm -f /etc/apache2/sites-available/airtime.conf /etc/apache2/sites-enabled/airtime.conf
 fi
 
 if [ "$apache" = "f" -a ${_i} -eq 1 ]; then
@@ -936,7 +943,7 @@ if [ "$icecast" = "t" ]; then
     loud "\n-----------------------------------------------------"
     loud "               * Configuring Icecast *                "
     loud "-----------------------------------------------------"
-    
+
     verbose "\n * Enabling Icecast 2..."
     icecast_unit_name="icecast2"
     if [ "$dist" != "centos" ]; then
@@ -947,7 +954,7 @@ if [ "$icecast" = "t" ]; then
 	icecast_config="/etc/icecast.xml"
     fi
     systemInitCommand enable ${icecast_unit_name}
-    # only update icecast password if 
+    # only update icecast password if
     if [ ! -e "/etc/airtime/airtime.conf" ] && [ ! -e "/etc/airtime/airtime.conf.tmp" ]; then
         icecast_pass=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-12};)
         echo $icecast_pass > /tmp/icecast_pass
@@ -1099,8 +1106,8 @@ if [ $skip_postgres -eq 0 ]; then
         count=$(psql -d postgres -tAc "SELECT count(*) FROM pg_roles WHERE rolname='airtime';")
         if [[ $count -eq 0 ]]; then
             psql -d postgres -tAc "CREATE USER airtime WITH ENCRYPTED PASSWORD 'airtime'; ALTER USER airtime CREATEDB;"
-            [[ $? -eq 0 ]] && 
-                  echo "Created airtime user in PostgreSQL" || 
+            [[ $? -eq 0 ]] &&
+                  echo "Created airtime user in PostgreSQL" ||
                   echo "$0:${FUNCNAME}(): ERROR: Can't create airtime user in PostgreSQL!"
         else
             echo "airtime user already exists in PostgreSQL"
