@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-__all__ = ["api_client"]
+__all__ = ["version1"]

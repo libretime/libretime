@@ -21,14 +21,15 @@ from threading import Thread
 
 import mutagen
 
-from api_clients import api_client as apc
+from api_clients import version1 as v1_api_client
+from api_clients import version2 as api_client
 
 def api_client(logger):
     """
     api_client returns the correct instance of AirtimeApiClient. Although there is only one
     instance to choose from at the moment.
     """
-    return apc.AirtimeApiClient(logger)
+    return v1_api_client.AirtimeApiClient(logger)
 
 # loading config file
 try:

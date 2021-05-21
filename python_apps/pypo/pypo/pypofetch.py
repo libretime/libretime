@@ -16,7 +16,8 @@ from queue import Empty
 from threading import Thread, Timer
 from subprocess import Popen, PIPE
 
-from api_clients import api_client
+from api_clients import version1 as v1_api_client
+from api_clients import version2 as api_client
 from .timeout import ls_timeout
 
 
@@ -28,7 +29,7 @@ signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
 logging.captureWarnings(True)
 
-POLL_INTERVAL = 480
+POLL_INTERVAL = 400
 
 class PypoFetch(Thread):
 
@@ -38,6 +39,7 @@ class PypoFetch(Thread):
         #Hacky...
         PypoFetch.ref = self
 
+        self.v1_api_client = v1_api_client.AirtimeApiClient()
         self.api_client = api_client.AirtimeApiClient()
         self.fetch_queue = pypoFetch_q
         self.push_queue = pypoPush_q
@@ -150,7 +152,7 @@ class PypoFetch(Thread):
     def set_bootstrap_variables(self):
         self.logger.debug('Getting information needed on bootstrap from Airtime')
         try:
-            info = self.api_client.get_bootstrap_info()
+            info = self.v1_api_client.get_bootstrap_info()
         except Exception as e:
             self.logger.exception('Unable to get bootstrap info.. Exiting pypo...')
 
@@ -255,7 +257,7 @@ class PypoFetch(Thread):
             stream_id = info[0]
             status = info[1]
             if(status == "true"):
-                self.api_client.notify_liquidsoap_status("OK", stream_id, str(fake_time))
+                self.v1_api_client.notify_liquidsoap_status("OK", stream_id, str(fake_time))
 
 
     @ls_timeout
@@ -343,7 +345,7 @@ class PypoFetch(Thread):
                 media_item = media[key]
                 if (media_item['type'] == 'file'):
                     fileExt = self.sanity_check_media_item(media_item)
-                    dst = os.path.join(download_dir, "{}{}".format(media_item['id'], fileExt))
+                    dst = os.path.join(download_dir, f'{media_item["id"]}{fileExt}')
                     media_item['dst'] = dst
                     media_item['file_ready'] = False
                     media_filtered[key] = media_item
@@ -434,10 +436,14 @@ class PypoFetch(Thread):
                 self.logger.exception("Problem removing file '%s'" % f)
 
     def manual_schedule_fetch(self):
-        success, self.schedule_data = self.api_client.get_schedule()
-        if success:
+        try:
+            self.schedule_data = self.api_client.get_schedule()
             self.process_schedule(self.schedule_data)
-        return success
+            return True
+        except Exception as e:
+            self.logger.error('Unable to fetch schedule')
+            self.logger.exception(e)
+        return False
 
     def persistent_manual_schedule_fetch(self, max_attempts=1):
         success = False
@@ -452,7 +458,7 @@ class PypoFetch(Thread):
     # push metadata to TuneIn. We have to do this because TuneIn turns
     # off metadata if it does not receive a request every 5 minutes.
     def update_metadata_on_tunein(self):
-        self.api_client.update_metadata_on_tunein()
+        self.v1_api_client.update_metadata_on_tunein()
         Timer(120, self.update_metadata_on_tunein).start()
 
     def main(self):

@@ -20,7 +20,7 @@ from queue import Empty, Queue
 
 from threading import Thread
 
-from api_clients import api_client
+from api_clients import version1 as api_client
 from .timeout import ls_timeout
 
 logging.captureWarnings(True)

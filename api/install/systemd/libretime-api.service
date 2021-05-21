@@ -1,0 +1,11 @@
+[Unit]
+Description=LibreTime API Service
+
+[Service]
+ExecStart=/usr/bin/uwsgi /etc/airtime/libretime-api.ini
+User=libretime-api
+Group=libretime-api
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

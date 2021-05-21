@@ -7,7 +7,7 @@ import traceback
 import logging
 import time
 
-from api_clients import api_client
+from api_clients import version1 as api_client
 
 class ListenerStat(Thread):
 

@@ -23,6 +23,7 @@ libmad-ocaml
 libopus0
 libportaudio2
 libpulse0
+libpq-dev
 libsamplerate0
 libsoundtouch-ocaml
 libssl-dev
@@ -70,6 +71,8 @@ rabbitmq-server
 silan
 sysvinit-utils
 unzip
+uwsgi
+uwsgi-plugin-python3
 vorbisgain
 vorbis-tools
 vorbis-tools

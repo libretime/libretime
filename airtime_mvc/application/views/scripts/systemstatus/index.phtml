@@ -14,6 +14,7 @@
     $liquidsoap =    $externalServices["liquidsoap"];
     $analyzer =      $externalServices["analyzer"];
     $celery =        $externalServices['celery'];
+    $api =           $externalServices['api'];
 
     $r1 = array_reduce($phpDependencies, "booleanReduce", true);
     $r2 = array_reduce($externalServices, "booleanReduce", true);
@@ -165,6 +166,26 @@
                     <?php echo _(" and ensure that it's running with ") ?>
                     <br/><code>systemctl status libretime-celery</code><br/>
                     <?php echo _("If not, try ") ?><br/><code>sudo systemctl restart libretime-celery</code>
+                <?php
+                }
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <td class="component">
+                API
+            </td>
+            <td class="description">
+                <?php echo _("LibreTime API service") ?>
+            </td>
+            <td class="solution <?php if ($api) {echo 'check';?>" >
+                <?php
+                } else {
+                    ?>">
+                    <?php echo _("Check that the libretime-api service is installed correctly in ") ?><code>/etc/systemd/system/</code>,
+                    <?php echo _(" and ensure that it's running with ") ?>
+                    <br/><code>systemctl status libretime-api</code><br/>
+                    <?php echo _("If not, try ") ?><br/><code>sudo systemctl restart libretime-api</code>
                 <?php
                 }
                 ?>
