@@ -48,7 +48,7 @@ class AirtimeApiClient:
         str_current = current_time.isoformat(timespec='seconds')
         str_end = end_time.isoformat(timespec='seconds')
         data = self.services.schedule_url(params={
-            'ends__range': (f'{str_current}Z,{str_end}Z'),
+            'ends__range': ('{str_current}Z,{str_end}Z'.format(str_current, str_end)),
         })
         result = {'media': {} }
         for item in data:
@@ -94,7 +94,7 @@ class AirtimeApiClient:
                 # Stream events are instantaneous
                 current['end'] = current['start']
 
-                result[f'{key}_0'] = {
+                result['{}_0'.format(key)] = {
                     'id': current['id'],
                     'type': 'stream_output_start',
                     'start': current['start'],
@@ -113,7 +113,7 @@ class AirtimeApiClient:
                     'independent_event': current['independent_event'],
                 }
 
-                result[f'{end.isoformat()}_0'] = {
+                result['{}_0'.format(end.isoformat()] = {
                     'type': 'stream_output_end',
                     'start': current['end'],
                     'end': current['end'],
