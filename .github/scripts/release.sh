@@ -25,10 +25,6 @@ fi
 
 echo "Creating tarball for LibreTime ${suffix}."
 
-# Adding dos2unix package
-apt update -y -q
-apt install dos2unix php composer -y
-
 echo -n "Creating VERSION file for ${suffix}..."
 echo -n "${suffix}" > ./VERSION
 echo " Done"
