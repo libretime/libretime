@@ -946,12 +946,10 @@ SELECT si1.starts            AS starts,
        si1.description       AS instance_description,
        si1.created           AS created,
        si1.last_scheduled    AS last_scheduled,
-       si1.time_filled       AS time_filled,
-       f.soundcloud_id
+       si1.time_filled       AS time_filled
 FROM cc_show_instances      AS si1
 LEFT JOIN cc_show_instances AS si2  ON si1.instance_id = si2.id
 LEFT JOIN cc_show           AS show ON show.id         = si1.show_id
-LEFT JOIN cc_files          AS f    ON f.id            = si1.file_id
 WHERE si1.modified_instance = FALSE
 SQL;
         //only want shows that are starting at the time or later.
@@ -1081,8 +1079,6 @@ SQL;
             $event["linked"]        = intval($show["linked"]);
             $event["record"]        = intval($show["record"]);
             $event["rebroadcast"]   = intval($show["rebroadcast"]);
-            $event["soundcloud_id"] = is_null($show["soundcloud_id"])
-                ? -1 : $show["soundcloud_id"];
             
             //for putting the now playing icon on the show.
             if ($now > $startsDT && $now < $endsDT) {

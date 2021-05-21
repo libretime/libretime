@@ -1389,38 +1389,6 @@ class Application_Model_Preference
         self::setValue("last_tunein_metadata_update", $value);
     }
 
-    /* Third Party */
-
-    // SoundCloud
-
-    public static function getDefaultSoundCloudLicenseType() {
-        $val = self::getValue("soundcloud_license_type");
-        // If we don't have a value set, return all-rights-reserved by default
-        return empty($val) ? DEFAULT_SOUNDCLOUD_LICENSE_TYPE : $val;
-    }
-
-    public static function setDefaultSoundCloudLicenseType($value) {
-        self::setValue("soundcloud_license_type", $value);
-    }
-
-    public static function getDefaultSoundCloudSharingType() {
-        $val = self::getValue("soundcloud_sharing_type");
-        // If we don't have a value set, return public by default
-        return empty($val) ? DEFAULT_SOUNDCLOUD_SHARING_TYPE : $val;
-    }
-
-    public static function setDefaultSoundCloudSharingType($value) {
-        self::setValue("soundcloud_sharing_type", $value);
-    }
-
-    public static function getSoundCloudRequestToken() {
-        return self::getValue("soundcloud_request_token");
-    }
-
-    public static function setSoundCloudRequestToken($value) {
-        self::setValue("soundcloud_request_token", $value);
-    }
-
     // TaskManager Lock Timestamp
 
     public static function getTaskManagerLock() {
@@ -1574,68 +1542,6 @@ class Application_Model_Preference
     }
 
     /**
-     * Accessors for station bandwidth limit.
-     */
-    public static function getBandwidthLimit() {
-        return self::getValue("bandwidth_limit");
-    }
-
-    public static function setBandwidthLimit($value) {
-        self::setValue("bandwidth_limit", $value);
-    }
-
-    /**
-     * Accessors for bandwidth limit counter.
-     * Tracks bandwidth usage.
-     *
-     * @see ApiController::bandwidthUsageAction()
-     * @see BandwidthLimitTask
-     */
-
-    public static function getBandwidthLimitCounter() {
-        return self::getValue("bandwidth_limit_counter");
-    }
-
-    public static function incrementBandwidthLimitCounter($value) {
-        $counter = intval(self::getValue("bandwidth_limit_counter"));
-        self::setValue("bandwidth_limit_counter", $counter + intval($value));
-    }
-
-    public static function resetBandwidthLimitCounter() {
-        self::setValue("bandwidth_limit_counter", 0);
-    }
-
-    /**
-     * Accessors for bandwidth limit reset timer.
-     * Used to determine when to reset the bandwidth counter for the station.
-     *
-     * @see BandwidthLimitTask
-     */
-
-    public static function getBandwidthLimitResetTimer() {
-        return self::getValue("bandwidth_limit_reset_timer");
-    }
-
-    public static function setBandwidthLimitResetTimer($value) {
-        self::setValue("bandwidth_limit_reset_timer", $value);
-    }
-
-    /**
-     * Accessors for bandwidth limit update timer.
-     * Used to determine when the bandwidth was last updated for this station.
-     *
-     * @see ApiController::bandwidthUsageAction()
-     */
-
-    public static function getBandwidthLimitUpdateTimer() {
-        return self::getValue("bandwidth_limit_update_timer");
-    }
-
-    public static function setBandwidthLimitUpdateTimer() {
-        self::setValue("bandwidth_limit_update_timer", microtime(true));
-    }
-
-    /**
      * Getter for CORS URLs
      *
      * @return string
@@ -1652,5 +1558,24 @@ class Application_Model_Preference
      */
     public static function SetAllowedCorsUrls($value) {
         self::setValue('allowed_cors_urls', $value);
+    }
+
+    /**
+     * Getter for feature preview mode.
+     *
+     * @return bool
+     */
+    public static function GetFeaturePreviewMode() {
+        return self::getValue('feature_preview_mode') === '1';
+    }
+
+    /**
+     * Setter for feature preview mode.
+     *
+     * @param bool $value
+     * @return void
+     */
+    public static function SetFeaturePreviewMode($value) {
+        return self::setValue('feature_preview_mode', $value);
     }
 }

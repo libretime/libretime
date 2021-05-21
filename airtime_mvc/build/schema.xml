@@ -69,11 +69,6 @@
     <column name="contributor" phpName="DbContributor" type="VARCHAR" size="512" required="false"/>
     <column name="language" phpName="DbLanguage" type="VARCHAR" size="512" required="false"/>
     <column name="file_exists" phpName="DbFileExists" type="BOOLEAN" required="false" defaultValue="true"/>
-    <column name="soundcloud_id" phpName="DbSoundcloudId" type="Integer" required="false"/>
-    <column name="soundcloud_error_code" phpName="DbSoundcloudErrorCode" type="Integer" required="false"/>
-    <column name="soundcloud_error_msg" phpName="DbSoundcloudErrorMsg" type="VARCHAR" size="512" required="false"/>
-    <column name="soundcloud_link_to_file" phpName="DbSoundcloudLinkToFile" type="VARCHAR" size="4096" required="false"/>
-    <column name="soundcloud_upload_time" phpName="DbSoundCloundUploadTime" type="TIMESTAMP" size="6" required="false"/>
     <column name="replay_gain" phpName="DbReplayGain" type="NUMERIC" required="false"/>
     <column name="owner_id" phpName="DbOwnerId" type="INTEGER" required="false"/>
     <column name="cuein" phpName="DbCuein" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>

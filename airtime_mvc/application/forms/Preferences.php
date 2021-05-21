@@ -30,9 +30,6 @@ class Application_Form_Preferences extends Zend_Form
         $tuneinPreferences = new Application_Form_TuneInPreferences();
         $this->addSubForm($tuneinPreferences, 'preferences_tunein');
 
-        $soundcloud_pref = new Application_Form_SoundCloudPreferences();
-        $this->addSubForm($soundcloud_pref, 'preferences_soundcloud');
-
         $danger_pref = new Application_Form_DangerousPreferences();
         $this->addSubForm($danger_pref, 'preferences_danger');
 

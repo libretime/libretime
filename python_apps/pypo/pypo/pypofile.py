@@ -64,17 +64,22 @@ class PypoFile(Thread):
         if do_copy:
             self.logger.info("copying from %s to local cache %s" % (src, dst))
 
-            CONFIG_SECTION = "general"
-            username = self._config.get(CONFIG_SECTION, 'api_key')
-            baseurl = self._config.get(CONFIG_SECTION, 'base_url')
-            try:
-                port = self._config.get(CONFIG_SECTION, 'base_port')
-            except NoOptionError as e:
-                port = 80
-            try:
-                protocol = self._config.get(CONFIG_SECTION, 'protocol')
-            except NoOptionError as e:
-                protocol = str(("http", "https")[int(port) == 443])
+            CONFIG_SECTION = 'general'
+            username = self._config[CONFIG_SECTION].get('api_key')
+            baseurl = self._config[CONFIG_SECTION].get('base_url')
+            port = self._config[CONFIG_SECTION].get('base_port', 80)
+            positive_values = ['Yes', 'yes', 'True', 'true', True]
+            force_ssl = self._config[CONFIG_SECTION].get('force_ssl', False)
+            if force_ssl in positive_values:
+                protocol = 'https'
+                self.logger.debug('protocol set to https from force_ssl configuration setting')
+            else:
+                try:
+                    protocol = self._config[CONFIG_SECTION]['protocol']
+                    self.logger.debug('protocol set to %s from configuration setting' % (protocol))
+                except (NoOptionError, KeyError) as e:
+                    protocol = str(("http", "https")[int(port) == 443])
+                    self.logger.debug('guessing protocol as %s from port configuration' % (protocol))
 
             try:
                 host = [protocol, baseurl, port]
@@ -84,15 +89,15 @@ class PypoFile(Thread):
                                                              media_item["id"])
                 with open(dst, "wb") as handle:
                     response = requests.get(url, auth=requests.auth.HTTPBasicAuth(username, ''), stream=True, verify=False)
-                    
+
                     if not response.ok:
                         self.logger.error(response)
                         raise Exception("%s - Error occurred downloading file" % response.status_code)
-                    
+
                     for chunk in response.iter_content(1024):
                         if not chunk:
                             break
-                        
+
                         handle.write(chunk)
 
                 #make file world readable and owner writable
@@ -160,11 +165,11 @@ class PypoFile(Thread):
 
         """
         Remove this media_item from the dictionary. On the next iteration
-        (from the main function) we won't consider it for prioritization 
+        (from the main function) we won't consider it for prioritization
         anymore. If on the next iteration we have received a new schedule,
-        it is very possible we will have to deal with the same media_items 
+        it is very possible we will have to deal with the same media_items
         again. In this situation, the worst possible case is that we try to
-        copy the file again and realize we already have it (thus aborting the copy). 
+        copy the file again and realize we already have it (thus aborting the copy).
         """
         del schedule[highest_priority]
 
@@ -179,7 +184,7 @@ class PypoFile(Thread):
             logging.debug("Failed to open config file at %s: %s" % (config_path, e.strerror))
             sys.exit()
         except Exception as e:
-            logging.debug(e.strerror) 
+            logging.debug(e.strerror)
             sys.exit()
 
         return config

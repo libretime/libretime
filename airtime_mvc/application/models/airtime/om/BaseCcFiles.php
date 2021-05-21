@@ -392,36 +392,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     protected $file_exists;
 
     /**
-     * The value for the soundcloud_id field.
-     * @var        int
-     */
-    protected $soundcloud_id;
-
-    /**
-     * The value for the soundcloud_error_code field.
-     * @var        int
-     */
-    protected $soundcloud_error_code;
-
-    /**
-     * The value for the soundcloud_error_msg field.
-     * @var        string
-     */
-    protected $soundcloud_error_msg;
-
-    /**
-     * The value for the soundcloud_link_to_file field.
-     * @var        string
-     */
-    protected $soundcloud_link_to_file;
-
-    /**
-     * The value for the soundcloud_upload_time field.
-     * @var        string
-     */
-    protected $soundcloud_upload_time;
-
-    /**
      * The value for the replay_gain field.
      * @var        string
      */
@@ -1373,85 +1343,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     {
 
         return $this->file_exists;
-    }
-
-    /**
-     * Get the [soundcloud_id] column value.
-     *
-     * @return int
-     */
-    public function getDbSoundcloudId()
-    {
-
-        return $this->soundcloud_id;
-    }
-
-    /**
-     * Get the [soundcloud_error_code] column value.
-     *
-     * @return int
-     */
-    public function getDbSoundcloudErrorCode()
-    {
-
-        return $this->soundcloud_error_code;
-    }
-
-    /**
-     * Get the [soundcloud_error_msg] column value.
-     *
-     * @return string
-     */
-    public function getDbSoundcloudErrorMsg()
-    {
-
-        return $this->soundcloud_error_msg;
-    }
-
-    /**
-     * Get the [soundcloud_link_to_file] column value.
-     *
-     * @return string
-     */
-    public function getDbSoundcloudLinkToFile()
-    {
-
-        return $this->soundcloud_link_to_file;
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [soundcloud_upload_time] column value.
-     *
-     *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
-     *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getDbSoundCloundUploadTime($format = 'Y-m-d H:i:s')
-    {
-        if ($this->soundcloud_upload_time === null) {
-            return null;
-        }
-
-
-        try {
-            $dt = new DateTime($this->soundcloud_upload_time);
-        } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->soundcloud_upload_time, true), $x);
-        }
-
-        if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
-            return $dt;
-        }
-
-        if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        }
-
-        return $dt->format($format);
-
     }
 
     /**
@@ -2824,113 +2715,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     } // setDbFileExists()
 
     /**
-     * Set the value of [soundcloud_id] column.
-     *
-     * @param  int $v new value
-     * @return CcFiles The current object (for fluent API support)
-     */
-    public function setDbSoundcloudId($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (int) $v;
-        }
-
-        if ($this->soundcloud_id !== $v) {
-            $this->soundcloud_id = $v;
-            $this->modifiedColumns[] = CcFilesPeer::SOUNDCLOUD_ID;
-        }
-
-
-        return $this;
-    } // setDbSoundcloudId()
-
-    /**
-     * Set the value of [soundcloud_error_code] column.
-     *
-     * @param  int $v new value
-     * @return CcFiles The current object (for fluent API support)
-     */
-    public function setDbSoundcloudErrorCode($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (int) $v;
-        }
-
-        if ($this->soundcloud_error_code !== $v) {
-            $this->soundcloud_error_code = $v;
-            $this->modifiedColumns[] = CcFilesPeer::SOUNDCLOUD_ERROR_CODE;
-        }
-
-
-        return $this;
-    } // setDbSoundcloudErrorCode()
-
-    /**
-     * Set the value of [soundcloud_error_msg] column.
-     *
-     * @param  string $v new value
-     * @return CcFiles The current object (for fluent API support)
-     */
-    public function setDbSoundcloudErrorMsg($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
-        }
-
-        if ($this->soundcloud_error_msg !== $v) {
-            $this->soundcloud_error_msg = $v;
-            $this->modifiedColumns[] = CcFilesPeer::SOUNDCLOUD_ERROR_MSG;
-        }
-
-
-        return $this;
-    } // setDbSoundcloudErrorMsg()
-
-    /**
-     * Set the value of [soundcloud_link_to_file] column.
-     *
-     * @param  string $v new value
-     * @return CcFiles The current object (for fluent API support)
-     */
-    public function setDbSoundcloudLinkToFile($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
-        }
-
-        if ($this->soundcloud_link_to_file !== $v) {
-            $this->soundcloud_link_to_file = $v;
-            $this->modifiedColumns[] = CcFilesPeer::SOUNDCLOUD_LINK_TO_FILE;
-        }
-
-
-        return $this;
-    } // setDbSoundcloudLinkToFile()
-
-    /**
-     * Sets the value of [soundcloud_upload_time] column to a normalized version of the date/time value specified.
-     *
-     * @param mixed $v string, integer (timestamp), or DateTime value.
-     *               Empty strings are treated as null.
-     * @return CcFiles The current object (for fluent API support)
-     */
-    public function setDbSoundCloundUploadTime($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->soundcloud_upload_time !== null || $dt !== null) {
-            $currentDateAsString = ($this->soundcloud_upload_time !== null && $tmpDt = new DateTime($this->soundcloud_upload_time)) ? $tmpDt->format('Y-m-d H:i:s') : null;
-            $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
-            if ($currentDateAsString !== $newDateAsString) {
-                $this->soundcloud_upload_time = $newDateAsString;
-                $this->modifiedColumns[] = CcFilesPeer::SOUNDCLOUD_UPLOAD_TIME;
-            }
-        } // if either are not null
-
-
-        return $this;
-    } // setDbSoundCloundUploadTime()
-
-    /**
      * Set the value of [replay_gain] column.
      *
      * @param  string $v new value
@@ -3325,23 +3109,18 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $this->contributor = ($row[$startcol + 54] !== null) ? (string) $row[$startcol + 54] : null;
             $this->language = ($row[$startcol + 55] !== null) ? (string) $row[$startcol + 55] : null;
             $this->file_exists = ($row[$startcol + 56] !== null) ? (boolean) $row[$startcol + 56] : null;
-            $this->soundcloud_id = ($row[$startcol + 57] !== null) ? (int) $row[$startcol + 57] : null;
-            $this->soundcloud_error_code = ($row[$startcol + 58] !== null) ? (int) $row[$startcol + 58] : null;
-            $this->soundcloud_error_msg = ($row[$startcol + 59] !== null) ? (string) $row[$startcol + 59] : null;
-            $this->soundcloud_link_to_file = ($row[$startcol + 60] !== null) ? (string) $row[$startcol + 60] : null;
-            $this->soundcloud_upload_time = ($row[$startcol + 61] !== null) ? (string) $row[$startcol + 61] : null;
-            $this->replay_gain = ($row[$startcol + 62] !== null) ? (string) $row[$startcol + 62] : null;
-            $this->owner_id = ($row[$startcol + 63] !== null) ? (int) $row[$startcol + 63] : null;
-            $this->cuein = ($row[$startcol + 64] !== null) ? (string) $row[$startcol + 64] : null;
-            $this->cueout = ($row[$startcol + 65] !== null) ? (string) $row[$startcol + 65] : null;
-            $this->silan_check = ($row[$startcol + 66] !== null) ? (boolean) $row[$startcol + 66] : null;
-            $this->hidden = ($row[$startcol + 67] !== null) ? (boolean) $row[$startcol + 67] : null;
-            $this->is_scheduled = ($row[$startcol + 68] !== null) ? (boolean) $row[$startcol + 68] : null;
-            $this->is_playlist = ($row[$startcol + 69] !== null) ? (boolean) $row[$startcol + 69] : null;
-            $this->filesize = ($row[$startcol + 70] !== null) ? (int) $row[$startcol + 70] : null;
-            $this->description = ($row[$startcol + 71] !== null) ? (string) $row[$startcol + 71] : null;
-            $this->artwork = ($row[$startcol + 72] !== null) ? (string) $row[$startcol + 72] : null;
-            $this->track_type = ($row[$startcol + 73] !== null) ? (string) $row[$startcol + 73] : null;
+            $this->replay_gain = ($row[$startcol + 57] !== null) ? (string) $row[$startcol + 57] : null;
+            $this->owner_id = ($row[$startcol + 58] !== null) ? (int) $row[$startcol + 58] : null;
+            $this->cuein = ($row[$startcol + 59] !== null) ? (string) $row[$startcol + 59] : null;
+            $this->cueout = ($row[$startcol + 60] !== null) ? (string) $row[$startcol + 60] : null;
+            $this->silan_check = ($row[$startcol + 61] !== null) ? (boolean) $row[$startcol + 61] : null;
+            $this->hidden = ($row[$startcol + 62] !== null) ? (boolean) $row[$startcol + 62] : null;
+            $this->is_scheduled = ($row[$startcol + 63] !== null) ? (boolean) $row[$startcol + 63] : null;
+            $this->is_playlist = ($row[$startcol + 64] !== null) ? (boolean) $row[$startcol + 64] : null;
+            $this->filesize = ($row[$startcol + 65] !== null) ? (int) $row[$startcol + 65] : null;
+            $this->description = ($row[$startcol + 66] !== null) ? (string) $row[$startcol + 66] : null;
+            $this->artwork = ($row[$startcol + 67] !== null) ? (string) $row[$startcol + 67] : null;
+            $this->track_type = ($row[$startcol + 68] !== null) ? (string) $row[$startcol + 68] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -3351,7 +3130,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 72; // 72 = CcFilesPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 69; // 69 = CcFilesPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating CcFiles object", $e);
@@ -3934,21 +3713,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if ($this->isColumnModified(CcFilesPeer::FILE_EXISTS)) {
             $modifiedColumns[':p' . $index++]  = '"file_exists"';
         }
-        if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_ID)) {
-            $modifiedColumns[':p' . $index++]  = '"soundcloud_id"';
-        }
-        if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_ERROR_CODE)) {
-            $modifiedColumns[':p' . $index++]  = '"soundcloud_error_code"';
-        }
-        if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_ERROR_MSG)) {
-            $modifiedColumns[':p' . $index++]  = '"soundcloud_error_msg"';
-        }
-        if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_LINK_TO_FILE)) {
-            $modifiedColumns[':p' . $index++]  = '"soundcloud_link_to_file"';
-        }
-        if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_UPLOAD_TIME)) {
-            $modifiedColumns[':p' . $index++]  = '"soundcloud_upload_time"';
-        }
         if ($this->isColumnModified(CcFilesPeer::REPLAY_GAIN)) {
             $modifiedColumns[':p' . $index++]  = '"replay_gain"';
         }
@@ -4166,21 +3930,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                         break;
                     case '"file_exists"':
                         $stmt->bindValue($identifier, $this->file_exists, PDO::PARAM_BOOL);
-                        break;
-                    case '"soundcloud_id"':
-                        $stmt->bindValue($identifier, $this->soundcloud_id, PDO::PARAM_INT);
-                        break;
-                    case '"soundcloud_error_code"':
-                        $stmt->bindValue($identifier, $this->soundcloud_error_code, PDO::PARAM_INT);
-                        break;
-                    case '"soundcloud_error_msg"':
-                        $stmt->bindValue($identifier, $this->soundcloud_error_msg, PDO::PARAM_STR);
-                        break;
-                    case '"soundcloud_link_to_file"':
-                        $stmt->bindValue($identifier, $this->soundcloud_link_to_file, PDO::PARAM_STR);
-                        break;
-                    case '"soundcloud_upload_time"':
-                        $stmt->bindValue($identifier, $this->soundcloud_upload_time, PDO::PARAM_STR);
                         break;
                     case '"replay_gain"':
                         $stmt->bindValue($identifier, $this->replay_gain, PDO::PARAM_INT);
@@ -4605,54 +4354,39 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                 return $this->getDbFileExists();
                 break;
             case 57:
-                return $this->getDbSoundcloudId();
-                break;
-            case 58:
-                return $this->getDbSoundcloudErrorCode();
-                break;
-            case 59:
-                return $this->getDbSoundcloudErrorMsg();
-                break;
-            case 60:
-                return $this->getDbSoundcloudLinkToFile();
-                break;
-            case 61:
-                return $this->getDbSoundCloundUploadTime();
-                break;
-            case 62:
                 return $this->getDbReplayGain();
                 break;
-            case 63:
+            case 58:
                 return $this->getDbOwnerId();
                 break;
-            case 64:
+            case 59:
                 return $this->getDbCuein();
                 break;
-            case 65:
+            case 60:
                 return $this->getDbCueout();
                 break;
-            case 66:
+            case 61:
                 return $this->getDbSilanCheck();
                 break;
-            case 67:
+            case 62:
                 return $this->getDbHidden();
                 break;
-            case 68:
+            case 63:
                 return $this->getDbIsScheduled();
                 break;
-            case 69:
+            case 64:
                 return $this->getDbIsPlaylist();
                 break;
-            case 70:
+            case 65:
                 return $this->getDbFilesize();
                 break;
-            case 71:
+            case 66:
                 return $this->getDbDescription();
                 break;
-            case 72:
+            case 67:
                 return $this->getDbArtwork();
                 break;
-            case 73:
+            case 68:
                 return $this->getDbTrackType();
                 break;
             default:
@@ -4741,23 +4475,18 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $keys[54] => $this->getDbContributor(),
             $keys[55] => $this->getDbLanguage(),
             $keys[56] => $this->getDbFileExists(),
-            $keys[57] => $this->getDbSoundcloudId(),
-            $keys[58] => $this->getDbSoundcloudErrorCode(),
-            $keys[59] => $this->getDbSoundcloudErrorMsg(),
-            $keys[60] => $this->getDbSoundcloudLinkToFile(),
-            $keys[61] => $this->getDbSoundCloundUploadTime(),
-            $keys[62] => $this->getDbReplayGain(),
-            $keys[63] => $this->getDbOwnerId(),
-            $keys[64] => $this->getDbCuein(),
-            $keys[65] => $this->getDbCueout(),
-            $keys[66] => $this->getDbSilanCheck(),
-            $keys[67] => $this->getDbHidden(),
-            $keys[68] => $this->getDbIsScheduled(),
-            $keys[69] => $this->getDbIsPlaylist(),
-            $keys[70] => $this->getDbFilesize(),
-            $keys[71] => $this->getDbDescription(),
-            $keys[72] => $this->getDbArtwork(),
-            $keys[73] => $this->getDbTrackType(),
+            $keys[57] => $this->getDbReplayGain(),
+            $keys[58] => $this->getDbOwnerId(),
+            $keys[59] => $this->getDbCuein(),
+            $keys[60] => $this->getDbCueout(),
+            $keys[61] => $this->getDbSilanCheck(),
+            $keys[62] => $this->getDbHidden(),
+            $keys[63] => $this->getDbIsScheduled(),
+            $keys[64] => $this->getDbIsPlaylist(),
+            $keys[65] => $this->getDbFilesize(),
+            $keys[66] => $this->getDbDescription(),
+            $keys[67] => $this->getDbArtwork(),
+            $keys[68] => $this->getDbTrackType(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -5004,54 +4733,39 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                 $this->setDbFileExists($value);
                 break;
             case 57:
-                $this->setDbSoundcloudId($value);
-                break;
-            case 58:
-                $this->setDbSoundcloudErrorCode($value);
-                break;
-            case 59:
-                $this->setDbSoundcloudErrorMsg($value);
-                break;
-            case 60:
-                $this->setDbSoundcloudLinkToFile($value);
-                break;
-            case 61:
-                $this->setDbSoundCloundUploadTime($value);
-                break;
-            case 62:
                 $this->setDbReplayGain($value);
                 break;
-            case 63:
+            case 58:
                 $this->setDbOwnerId($value);
                 break;
-            case 64:
+            case 59:
                 $this->setDbCuein($value);
                 break;
-            case 65:
+            case 60:
                 $this->setDbCueout($value);
                 break;
-            case 66:
+            case 61:
                 $this->setDbSilanCheck($value);
                 break;
-            case 67:
+            case 62:
                 $this->setDbHidden($value);
                 break;
-            case 68:
+            case 63:
                 $this->setDbIsScheduled($value);
                 break;
-            case 69:
+            case 64:
                 $this->setDbIsPlaylist($value);
                 break;
-            case 70:
+            case 65:
                 $this->setDbFilesize($value);
                 break;
-            case 71:
+            case 66:
                 $this->setDbDescription($value);
                 break;
-            case 72:
+            case 67:
                 $this->setDbArtwork($value);
                 break;
-            case 73:
+            case 68:
                 $this->setDbTrackType($value);
                 break;
         } // switch()
@@ -5135,23 +4849,18 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if (array_key_exists($keys[54], $arr)) $this->setDbContributor($arr[$keys[54]]);
         if (array_key_exists($keys[55], $arr)) $this->setDbLanguage($arr[$keys[55]]);
         if (array_key_exists($keys[56], $arr)) $this->setDbFileExists($arr[$keys[56]]);
-        if (array_key_exists($keys[57], $arr)) $this->setDbSoundcloudId($arr[$keys[57]]);
-        if (array_key_exists($keys[58], $arr)) $this->setDbSoundcloudErrorCode($arr[$keys[58]]);
-        if (array_key_exists($keys[59], $arr)) $this->setDbSoundcloudErrorMsg($arr[$keys[59]]);
-        if (array_key_exists($keys[60], $arr)) $this->setDbSoundcloudLinkToFile($arr[$keys[60]]);
-        if (array_key_exists($keys[61], $arr)) $this->setDbSoundCloundUploadTime($arr[$keys[61]]);
-        if (array_key_exists($keys[62], $arr)) $this->setDbReplayGain($arr[$keys[62]]);
-        if (array_key_exists($keys[63], $arr)) $this->setDbOwnerId($arr[$keys[63]]);
-        if (array_key_exists($keys[64], $arr)) $this->setDbCuein($arr[$keys[64]]);
-        if (array_key_exists($keys[65], $arr)) $this->setDbCueout($arr[$keys[65]]);
-        if (array_key_exists($keys[66], $arr)) $this->setDbSilanCheck($arr[$keys[66]]);
-        if (array_key_exists($keys[67], $arr)) $this->setDbHidden($arr[$keys[67]]);
-        if (array_key_exists($keys[68], $arr)) $this->setDbIsScheduled($arr[$keys[68]]);
-        if (array_key_exists($keys[69], $arr)) $this->setDbIsPlaylist($arr[$keys[69]]);
-        if (array_key_exists($keys[70], $arr)) $this->setDbFilesize($arr[$keys[70]]);
-        if (array_key_exists($keys[71], $arr)) $this->setDbDescription($arr[$keys[71]]);
-        if (array_key_exists($keys[72], $arr)) $this->setDbArtwork($arr[$keys[72]]);
-        if (array_key_exists($keys[73], $arr)) $this->setDbTrackType($arr[$keys[73]]);
+        if (array_key_exists($keys[57], $arr)) $this->setDbReplayGain($arr[$keys[57]]);
+        if (array_key_exists($keys[58], $arr)) $this->setDbOwnerId($arr[$keys[58]]);
+        if (array_key_exists($keys[59], $arr)) $this->setDbCuein($arr[$keys[59]]);
+        if (array_key_exists($keys[60], $arr)) $this->setDbCueout($arr[$keys[60]]);
+        if (array_key_exists($keys[61], $arr)) $this->setDbSilanCheck($arr[$keys[61]]);
+        if (array_key_exists($keys[62], $arr)) $this->setDbHidden($arr[$keys[62]]);
+        if (array_key_exists($keys[63], $arr)) $this->setDbIsScheduled($arr[$keys[63]]);
+        if (array_key_exists($keys[64], $arr)) $this->setDbIsPlaylist($arr[$keys[64]]);
+        if (array_key_exists($keys[65], $arr)) $this->setDbFilesize($arr[$keys[65]]);
+        if (array_key_exists($keys[66], $arr)) $this->setDbDescription($arr[$keys[66]]);
+        if (array_key_exists($keys[67], $arr)) $this->setDbArtwork($arr[$keys[67]]);
+        if (array_key_exists($keys[68], $arr)) $this->setDbTrackType($arr[$keys[68]]);
     }
 
     /**
@@ -5220,11 +4929,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if ($this->isColumnModified(CcFilesPeer::CONTRIBUTOR)) $criteria->add(CcFilesPeer::CONTRIBUTOR, $this->contributor);
         if ($this->isColumnModified(CcFilesPeer::LANGUAGE)) $criteria->add(CcFilesPeer::LANGUAGE, $this->language);
         if ($this->isColumnModified(CcFilesPeer::FILE_EXISTS)) $criteria->add(CcFilesPeer::FILE_EXISTS, $this->file_exists);
-        if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_ID)) $criteria->add(CcFilesPeer::SOUNDCLOUD_ID, $this->soundcloud_id);
-        if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_ERROR_CODE)) $criteria->add(CcFilesPeer::SOUNDCLOUD_ERROR_CODE, $this->soundcloud_error_code);
-        if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_ERROR_MSG)) $criteria->add(CcFilesPeer::SOUNDCLOUD_ERROR_MSG, $this->soundcloud_error_msg);
-        if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_LINK_TO_FILE)) $criteria->add(CcFilesPeer::SOUNDCLOUD_LINK_TO_FILE, $this->soundcloud_link_to_file);
-        if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_UPLOAD_TIME)) $criteria->add(CcFilesPeer::SOUNDCLOUD_UPLOAD_TIME, $this->soundcloud_upload_time);
         if ($this->isColumnModified(CcFilesPeer::REPLAY_GAIN)) $criteria->add(CcFilesPeer::REPLAY_GAIN, $this->replay_gain);
         if ($this->isColumnModified(CcFilesPeer::OWNER_ID)) $criteria->add(CcFilesPeer::OWNER_ID, $this->owner_id);
         if ($this->isColumnModified(CcFilesPeer::CUEIN)) $criteria->add(CcFilesPeer::CUEIN, $this->cuein);
@@ -5356,11 +5060,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $copyObj->setDbContributor($this->getDbContributor());
         $copyObj->setDbLanguage($this->getDbLanguage());
         $copyObj->setDbFileExists($this->getDbFileExists());
-        $copyObj->setDbSoundcloudId($this->getDbSoundcloudId());
-        $copyObj->setDbSoundcloudErrorCode($this->getDbSoundcloudErrorCode());
-        $copyObj->setDbSoundcloudErrorMsg($this->getDbSoundcloudErrorMsg());
-        $copyObj->setDbSoundcloudLinkToFile($this->getDbSoundcloudLinkToFile());
-        $copyObj->setDbSoundCloundUploadTime($this->getDbSoundCloundUploadTime());
         $copyObj->setDbReplayGain($this->getDbReplayGain());
         $copyObj->setDbOwnerId($this->getDbOwnerId());
         $copyObj->setDbCuein($this->getDbCuein());
@@ -7759,11 +7458,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $this->contributor = null;
         $this->language = null;
         $this->file_exists = null;
-        $this->soundcloud_id = null;
-        $this->soundcloud_error_code = null;
-        $this->soundcloud_error_msg = null;
-        $this->soundcloud_link_to_file = null;
-        $this->soundcloud_upload_time = null;
         $this->replay_gain = null;
         $this->owner_id = null;
         $this->cuein = null;

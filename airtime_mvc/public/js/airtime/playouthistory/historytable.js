@@ -7,46 +7,10 @@ var AIRTIME = (function(AIRTIME) {
     mod = AIRTIME.history;
     
     var $historyContentDiv;
-    
-    var oTableTools = {
-        "sSwfPath": baseUrl+"js/datatables/plugin/TableTools-2.1.5/swf/copy_csv_xls_pdf.swf",
-        "aButtons": [
-             {
-                 "sExtends": "copy",
-                 "fnComplete": function(nButton, oConfig, oFlash, text) {
-                     var lines = text.split('\n').length,
-                         len = this.s.dt.nTFoot === null ? lines-1 : lines-2,
-                         plural = (len==1) ? "" : "s";
-                     alert(sprintf($.i18n._('Copied %s row%s to the clipboard'), len, plural));
-                 },
-                 //set because only the checkbox row is not sortable.
-                 "mColumns": "sortable"
-             },
-             {
-                 "sExtends": "csv",
-                 "fnClick": setFlashFileName,
-                 //set because only the checkbox row is not sortable.
-                 "mColumns": "sortable"
-             },
-             {
-                 "sExtends": "pdf",
-                 "fnClick": setFlashFileName,
-                 "sPdfOrientation": "landscape",
-                 //set because only the checkbox row is not sortable.
-                 "mColumns": "sortable"
-             },
-             {
-                 "sExtends": "print",
-                 "sInfo" : sprintf($.i18n._("%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."), "<h6>", "</h6><p>"),
-                 //set because only the checkbox row is not sortable.
-                 "mColumns": "sortable"
-             }
-         ]
-    };
-    
+        
     var lengthMenu = [[10, 25, 50, 100, 500, -1], [10, 25, 50, 100, 500, $.i18n._("All")]];
     
-    var sDom = 'l<"dt-process-rel"r><"H"T><"dataTables_scrolling"t><"F"ip>';
+    var sDom = 'l<"dt-process-rel"r><"H"><"dataTables_scrolling"t><"F"ip>';
     
     var selectedLogItems = {};
     
@@ -154,25 +118,6 @@ var AIRTIME = (function(AIRTIME) {
             filename = filename+".csv";
         }
         return filename;
-    }
-
-    function setFlashFileName( nButton, oConfig, oFlash ) {
-        var filename = getFileName(oConfig.sExtends);
-        oFlash.setFileName( filename );
-        
-        if (oConfig.sExtends == "pdf") {
-            this.fnSetText( oFlash,
-                "title:"+ this.fnGetTitle(oConfig) +"\n"+
-                "message:"+ oConfig.sPdfMessage +"\n"+
-                "colWidth:"+ this.fnCalcColRatios(oConfig) +"\n"+
-                "orientation:"+ oConfig.sPdfOrientation +"\n"+
-                "size:"+ oConfig.sPdfSize +"\n"+
-                "--/TableToolsOpts--\n" +
-                this.fnGetTableData(oConfig));
-        }
-        else {
-            this.fnSetText(oFlash, this.fnGetTableData(oConfig));
-        }
     }
     
     /* This callback can be used for all history tables */
@@ -298,7 +243,6 @@ var AIRTIME = (function(AIRTIME) {
 				"</button>" +
 			"</div>");
 
-
 		$menu.append("<div class='btn-group'>" +
             "<button class='btn btn-small dropdown-toggle' data-toggle='dropdown'>" +
                 $.i18n._("Select")+" <span class='caret'></span>" +
@@ -308,13 +252,23 @@ var AIRTIME = (function(AIRTIME) {
                 "<li class='his-dselect-page'><a href='#'>"+$.i18n._("Deselect this page")+"</a></li>" +
                 "<li class='his-dselect-all'><a href='#'>"+$.i18n._("Deselect all")+"</a></li>" +
             "</ul>" +
-        "</div>");
-        
+		"</div>");
+
+		$menu.append("<div class='btn-group'>" +
+            "<button class='btn btn-small dropdown-toggle' data-toggle='dropdown'>" +
+                $.i18n._("Export")+" <span class='caret'></span>" +
+            "</button>" +
+            "<ul class='dropdown-menu'>" +
+                "<li id='csv_export'><a href='#'>"+$.i18n._("Export as CSV")+"</a></li>" +
+                "<li id='pdf_export'><a href='#'>"+$.i18n._("Export as PDF")+"</a></li>" +
+            "</ul>" +
+		"</div>");
+
         $menu.append("<div class='btn-group'>" +
             "<button class='btn btn-small' id='his_trash'>" +
                 "<i class='icon-white icon-trash'></i>" +
             "</button>" +
-        "</div>");
+		"</div>");
                   
         $el.append($menu);
     }
@@ -357,7 +311,6 @@ var AIRTIME = (function(AIRTIME) {
             "bJQueryUI": true,
             "bAutoWidth": true,
             "sDom": sDom, 
-            "oTableTools": oTableTools
         });
         oTable.fnSetFilteringDelay(350);
        
@@ -430,7 +383,6 @@ var AIRTIME = (function(AIRTIME) {
             "bJQueryUI": true,
             "bAutoWidth": true,
             "sDom": sDom, 
-            "oTableTools": oTableTools
         });
         oTable.fnSetFilteringDelay(350);
         
@@ -565,7 +517,9 @@ var AIRTIME = (function(AIRTIME) {
     	        	removeHistoryDialog();
     	        }
     	    });
-    	}
+		}
+		
+		hisSubmit(); // Fixes display bug
     	
     	/*
          * Icon hover states for search.
@@ -625,7 +579,114 @@ var AIRTIME = (function(AIRTIME) {
     			makeHistoryDialog(json.dialog);
     			
     		}, "json");
-    	});
+		});
+
+		$historyContentDiv.on("click", "#pdf_export", async function(){
+			// Get date/time from pickers
+			var startDay = document.querySelector('#his_date_start').value;
+			var startTime = document.querySelector('#his_time_start').value;
+			var endDay = document.querySelector('#his_date_end').value;
+			var endTime = document.querySelector('#his_time_end').value;
+
+			var url = baseUrl + "api/item-history-feed?start=" + startDay + " " + startTime + "&end=" + endDay + " " + endTime;
+			var requestData = await fetch(url);
+			var hisData = await requestData.json();
+
+			if (!hisData.length) {
+				alert("The date range selected doesn't have any items to export.");
+				return
+			} else {
+				// Generate PDF template
+				var dd = {
+					content: [
+						{text: 'Libretime', style: 'subheader'},
+						{text: 'Playout History from ' + startDay + ' ' + startTime + ' to ' + endDay + ' ' + endTime, style: 'header'},
+						{
+							style: 'mainTable',
+							table: {
+								headerRows: 1,
+								body: [
+									[{text: 'Start Time', style: 'tableHeader'}, {text: 'End Time', style: 'tableHeader'}, {text: 'Song', style: 'tableHeader'}, {text: 'Artist', style: 'tableHeader'}],
+								]
+							}
+						}
+					],
+					styles: {
+						header: {
+							fontSize: 18,
+							bold: true,
+							margin: [0, 0, 0, 10]
+						},
+						subheader: {
+							fontSize: 14,
+							bold: true,
+							margin: [0, 10, 0, 5]
+						},
+						mainTable: {
+							margin: [0, 5, 0, 15]
+						},
+						tableHeader: {
+							bold: true,
+							fontSize: 13,
+							color: 'black'
+						}
+					},
+					defaultStyle: {
+
+					}
+				};
+				hisData.forEach(element => {
+					// Removing extra fields
+					delete element.checkbox;
+					delete element.history_id;
+					delete element.instance_id;					
+					dd.content[2].table.body.push(Object.values(element));
+				});
+				// Make PDF and start download
+				pdfMake.createPdf(dd).download();
+			};
+		});
+		
+		$historyContentDiv.on("click", "#csv_export", async function(){
+			// Get date/time from pickers
+			var startDay = document.querySelector('#his_date_start').value;
+			var startTime = document.querySelector('#his_time_start').value;
+			var endDay = document.querySelector('#his_date_end').value;
+			var endTime = document.querySelector('#his_time_end').value;
+
+			var url = baseUrl + "api/item-history-feed?start=" + startDay + " " + startTime + "&end=" + endDay + " " + endTime;
+			var requestData = await fetch(url);
+			var hisData = await requestData.json();
+
+			if (!hisData.length) {
+				alert("The date range selected doesn't have any items to export.");
+				return
+			} else {
+				// Clean returned data
+				hisData.forEach(element => {
+					// Start date/time
+					element.startDate = element.starts.split(" ")[0];
+					element.startTime = element.starts.split(" ")[1];
+					// End date/time
+					element.endDate = element.ends.split(" ")[0];
+					element.endTime = element.ends.split(" ")[1];
+					// Moving Title and Artist fields to the end
+					element.title = element.track_title;
+					element.artist = element.artist_name;
+					// Removing extra fields
+					delete element.checkbox;
+					delete element.history_id;
+					delete element.instance_id;
+					delete element.starts;  // we already converted these, so we don't need them anymore
+					delete element.ends;
+					delete element.track_title;
+					delete element.artist_name;
+				});
+			};
+
+			var csvX = new CSVExport(hisData);  // Actual export function
+			return false  // Was part of the demo. Please leave as is.
+		});
     	
     	$('body').on("click", ".his_file_cancel, .his_item_cancel", function(e) {
     		removeHistoryDialog();
@@ -766,23 +827,26 @@ var AIRTIME = (function(AIRTIME) {
 			
 			return AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
     	}
-    	
+		
+		function hisSubmit(){
+			var fn, info;
+		
+			info = getStartEnd();
+			
+			fn = fnServerData;
+			fn.start = info.start;
+			fn.end = info.end;
+			
+			if (inShowsTab) {
+				showSummaryList(info.start, info.end);
+			}
+			else {
+				redrawTables();
+			};
+		};
+
     	$historyContentDiv.find("#his_submit").click(function(ev){
-    		var fn,
-    			info;
-    		
-    		info = getStartEnd();
-    		
-    		fn = fnServerData;
-    	    fn.start = info.start;
-    	    fn.end = info.end;
-    	    
-    	    if (inShowsTab) {
-    	    	showSummaryList(info.start, info.end);
-    	    }
-    	    else {
-    	    	redrawTables();
-    	    }  
+			hisSubmit();
     	});
     	
     	$historyContentDiv.on("click", ".his-select-page", selectCurrentPage);

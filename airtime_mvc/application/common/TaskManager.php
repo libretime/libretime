@@ -332,39 +332,6 @@ class StationPodcastTask implements AirtimeTask {
 }
 
 /**
- * TODO: this and the above StationPodcastTask should probably be unified since the
- *       behaviour is essentially identical
- *
- * Class BandwidthLimitTask
- *
- * Checks the bandwidth limit rollover timer and resets the allotted
- * limit if enough time has passed (default: 1 month)
- */
-class BandwidthLimitTask implements AirtimeTask {
-
-    const BANDWIDTH_LIMIT_RESET_TIMER_SECONDS = 2.628e+6;
-
-    /**
-     * Check whether the task should be run
-     *
-     * @return bool true if the task needs to be run, otherwise false
-     */
-    public function shouldBeRun() {
-        $lastReset = Application_Model_Preference::getBandwidthLimitResetTimer();
-        return empty($lastReset) || (microtime(true) > ($lastReset + self::BANDWIDTH_LIMIT_RESET_TIMER_SECONDS));
-    }
-
-    /**
-     * Run the task
-     */
-    public function run() {
-        Application_Model_Preference::resetStationPodcastDownloadCounter();
-        Application_Model_Preference::setBandwidthLimitResetTimer(microtime(true));
-    }
-
-}
-
-/**
  * Class TaskFactory Factory class to abstract task instantiation
  */
 class TaskFactory {

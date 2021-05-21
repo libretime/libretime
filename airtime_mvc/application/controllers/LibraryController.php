@@ -119,7 +119,7 @@ class LibraryController extends Zend_Controller_Action
             if ($isAdminOrPM || $file->getFileOwnerId() == $user->getId()) {
                 $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."library/delete");
                 $menu["edit"] = array("name"=> _("Edit..."), "icon" => "edit", "url" => $baseUrl."library/edit-file-md/id/{$id}");
-                $menu["publish"] = array("name"=> _("Publish..."), "icon" => "soundcloud", "url" => $baseUrl."library/publish/id/{$id}");
+                $menu["publish"] = array("name"=> _("Publish..."), "url" => $baseUrl."library/publish/id/{$id}");
             }
 
             // It's important that we always return the parent id (cc_files id)
@@ -129,27 +129,6 @@ class LibraryController extends Zend_Controller_Action
             $url = $baseUrl."api/get-media/file/$id/download/true";
             $menu["download"] = array("name" => _("Download"), "icon" => "download", "url" => $url);
 
-            // SOUNDCLOUD MENU OPTION
-            $ownerId = empty($obj) ? $file->getFileOwnerId() : $obj->getCreatorId();
-            if ($isAdminOrPM || $ownerId == $user->getId()) {
-                $soundcloudService = new Application_Service_SoundcloudService();
-                if ($type === "audioclip" && $soundcloudService->hasAccessToken()) {
-                    $serviceId = $soundcloudService->getServiceId($id);
-                    if (!is_null($file) && $serviceId != 0) {
-                        $trackRef = ThirdPartyTrackReferencesQuery::create()
-                            ->filterByDbService(SOUNDCLOUD_SERVICE_NAME)
-                            ->findOneByDbFileId($id);
-
-                        //create a menu separator
-                        $menu["sep1"] = "-----------";
-
-                        //create a sub menu for Soundcloud actions.
-                        $menu["soundcloud"] = array("name" => _(SOUNDCLOUD), "icon" => "soundcloud", "items" => array());
-                        $menu["soundcloud"]["items"]["view"] = array("name" => _("View track"), "icon" => "soundcloud", "url" => $baseUrl . "soundcloud/view-on-sound-cloud/id/{$id}");
-                        $menu["soundcloud"]["items"]["update"] = array("name" => _("Update track"), "icon" => "soundcloud", "url" => $baseUrl . "soundcloud/update/id/{$trackRef->getDbForeignId()}");
-                    }
-                }
-            }
         } elseif ($type === "playlist" || $type === "block") {
             if ($type === 'playlist') {
                 $obj = new Application_Model_Playlist($id);

@@ -31,10 +31,8 @@ containers.
 
 ### Setup
 
-There are known bugs when using LibreTime behind a reverse proxy ([#957](https://github.com/LibreTime/libretime/issues/957)
-tracks the issue and contains a temporary workaround). For SSL redirection to work, you
-need two domains: one for LibreTime and one for Icecast. Here, these will be
-`libretime.example.com` and `icecast.example.com`.
+For SSL redirection to work, you need two domains: one for LibreTime and one for Icecast.
+Here, these will be `libretime.example.com` and `icecast.example.com`.
 
 You will also require two VMs, servers or containers. Alternatively the reverse proxy can
 be located on the server, proxying connections to containers also on the host. Setting up

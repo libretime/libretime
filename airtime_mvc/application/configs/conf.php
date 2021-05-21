@@ -64,13 +64,7 @@ class Config {
         $CC_CONFIG['dsn']['database'] = $values['database']['dbname'];
 
         $CC_CONFIG['apiKey'] = array($values['general']['api_key']);
-        
-        $CC_CONFIG['soundcloud-connection-retries'] = $values['soundcloud']['connection_retries'];
-        $CC_CONFIG['soundcloud-connection-wait'] = $values['soundcloud']['time_between_retries'];
 
-        $CC_CONFIG['soundcloud-client-id'] = $values['soundcloud']['soundcloud_client_id'];
-        $CC_CONFIG['soundcloud-client-secret'] = $values['soundcloud']['soundcloud_client_secret'];
-        $CC_CONFIG['soundcloud-redirect-uri'] = $values['soundcloud']['soundcloud_redirect_uri'];
         if (isset($values['facebook']['facebook_app_id'])) {
             $CC_CONFIG['facebook-app-id'] = $values['facebook']['facebook_app_id'];
             $CC_CONFIG['facebook-app-url'] = $values['facebook']['facebook_app_url'];

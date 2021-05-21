@@ -2,7 +2,7 @@
 Description=LibreTime Media Analyzer Service
 
 [Service]
-ExecStart=/usr/bin/airtime_analyzer
+ExecStart=/usr/bin/libretime-analyzer
 User=libretime-analyzer
 Group=libretime-analyzer
 Restart=always

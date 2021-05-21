@@ -6,13 +6,12 @@ class Application_Service_PublishService {
      * @var array map of arbitrary source names to descriptive labels
      */
     private static $SOURCES = array(
-        "soundcloud"        => SOUNDCLOUD,
         "station_podcast"   => "My Podcast"
     );
 
     /**
      * Publish or remove the file with the given file ID from the services
-     * specified in the request data (ie. SoundCloud, the station podcast)
+     * specified in the request data (ie. the station podcast)
      *
      * @param int $fileId   ID of the file to be published
      * @param array $data   request data containing what services to publish to

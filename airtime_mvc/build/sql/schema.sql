@@ -81,11 +81,6 @@ CREATE TABLE "cc_files"
     "contributor" VARCHAR(512),
     "language" VARCHAR(512),
     "file_exists" BOOLEAN DEFAULT 't',
-    "soundcloud_id" INTEGER,
-    "soundcloud_error_code" INTEGER,
-    "soundcloud_error_msg" VARCHAR(512),
-    "soundcloud_link_to_file" VARCHAR(4096),
-    "soundcloud_upload_time" TIMESTAMP(6),
     "replay_gain" NUMERIC,
     "owner_id" INTEGER,
     "cuein" interval DEFAULT '00:00:00',
@@ -115,9 +110,9 @@ CREATE TABLE "cc_track_types"
 (
     "id" serial NOT NULL,
     "code" VARCHAR(16) DEFAULT '' NOT NULL,
+    "visibility" BOOLEAN DEFAULT 't' NOT NULL,
     "type_name" VARCHAR(64) DEFAULT '' NOT NULL,
     "description" VARCHAR(255) DEFAULT '' NOT NULL,
-    "visibility" boolean DEFAULT true NOT NULL,
     PRIMARY KEY ("id"),
     CONSTRAINT "cc_track_types_id_idx" UNIQUE ("id"),
     CONSTRAINT "cc_track_types_code_idx" UNIQUE ("code")

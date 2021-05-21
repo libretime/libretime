@@ -162,4 +162,4 @@ def test_mp3_bad_channels():
     #Mutagen doesn't extract comments from mp3s it seems
 
 def test_unparsable_file():
-    MetadataAnalyzer.analyze('README.rst', dict())
+    MetadataAnalyzer.analyze('tests/test_data/unparsable.txt', dict())

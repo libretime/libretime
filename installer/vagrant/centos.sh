@@ -88,7 +88,8 @@ yum install -y \
   php-mbstring \
   php-json \
   php-process \
-  python36-devel \
+  python38-devel \
+  python38-psycopg2 \
   httpd \
   icecast \
   liquidsoap \

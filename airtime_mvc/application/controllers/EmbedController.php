@@ -26,7 +26,7 @@ class EmbedController extends Zend_Controller_Action
         $request = $this->getRequest();
 
         $this->view->playerhtml5_js = "/js/airtime/player/playerhtml5.js?".$CC_CONFIG['airtime_version'];
-        $this->view->jquery = "/js/libs/jquery-1.10.2.js";
+        $this->view->jquery = "/js/libs/jquery-1.10.2.min.js";
         $this->view->metadata_api_url = "/api/live-info";
         $this->view->player_title = json_encode($this->view->escape($request->getParam('title')));
         $this->view->jquery_i18n = "/js/i18n/jquery.i18n.js?";
@@ -69,18 +69,6 @@ class EmbedController extends Zend_Controller_Action
         $this->view->availableDesktopStreams = json_encode($availableDesktopStreams);
     }
 
-    public function currentDayProgramAction()
-    {
-        $this->view->layout()->disableLayout();
-
-        $CC_CONFIG = Config::getConfig();
-
-        $this->view->css = "/widgets/css/airtime-widgets.css?".$CC_CONFIG['airtime_version'];
-        $this->view->jquery = "/widgets/js/jquery-1.6.1.min.js?".$CC_CONFIG['airtime_version'];
-        $this->view->jquery_custom = "/widgets/js/jquery-ui-1.8.10.custom.min.js?".$CC_CONFIG['airtime_version'];
-        $this->view->widget_js = "/widgets/js/jquery.showinfo.js?".$CC_CONFIG['airtime_version'];
-    }
-
     public function weeklyProgramAction()
     {
         $this->view->layout()->disableLayout();
@@ -98,7 +86,7 @@ class EmbedController extends Zend_Controller_Action
             $this->view->widgetStyle = "basic";
             $this->view->css = "/css/embed/weekly-schedule-widget-basic.css?" . $CC_CONFIG['airtime_version'];
         }
-        $this->view->jquery = "/widgets/js/jquery-1.6.1.min.js?".$CC_CONFIG['airtime_version'];
+        $this->view->jquery = "/js/libs/jquery-1.8.3.min.js?".$CC_CONFIG['airtime_version'];
 
         $weeklyScheduleData = WidgetHelper::getWeekInfoV2();
 

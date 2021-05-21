@@ -38,8 +38,10 @@ $(document).ready(function() {
     language = language.replace("-", "_");
     $("#setup_language").val(language);
 
-    var timezone = jstz.determine();
-    var timezone_name = timezone.name();
+    dayjs.extend(utc)
+    dayjs.extend(timezone)
+
+    var timezone_name = dayjs.tz.guess();
     if (timezone_name === undefined) {
         timezone_name = "America/Toronto";
     }
