@@ -53,7 +53,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.6'
+          python-version: '3.5'
       - name: Setup PostgreSQL
         run: |
           sudo systemctl start postgresql.service
@@ -70,11 +70,13 @@ jobs:
         run: sudo ./.github/scripts/install-xenial.sh
       - name: Run Python tests
         run: |
-          pip install --upgrade pip
+          pip3 install --upgrade pip
           sudo ./.github/scripts/python-pkg-install.sh
           ./.github/scripts/python-pkg-test.sh
       - name: Run PHP tests
         run: |
+          echo "::group::Install PHP dependencies"
           composer install --no-progress --dev
+          echo "::endgroup::"
           cd airtime_mvc/tests
           php ../../vendor/bin/phpunit
