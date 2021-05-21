@@ -32,7 +32,7 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/form/password-restore.phtml:40
 #: airtime_mvc/application/forms/PasswordRestore.php:46
 msgid "Back"
-msgstr ""
+msgstr "Terug"
 
 #: airtime_mvc/application/views/scripts/login/index.phtml:3
 #: airtime_mvc/application/views/scripts/index/index.phtml:30
@@ -47,7 +47,7 @@ msgstr "Welkom op de %s demo! U kunt zich aanmelden met de gebruikersnaam 'admin
 
 #: airtime_mvc/application/views/scripts/login/password-restore.phtml:3
 msgid "Password Reset"
-msgstr ""
+msgstr "Vervang Wachtwoord"
 
 #: airtime_mvc/application/views/scripts/login/password-change.phtml:3
 msgid "New password"
@@ -55,7 +55,7 @@ msgstr "Nieuw wachtwoord"
 
 #: airtime_mvc/application/views/scripts/login/password-change.phtml:6
 msgid "Please enter and confirm your new password in the fields below."
-msgstr "Voer in en bevestig uw nieuwe wachtwoord in de velden hieronder."
+msgstr "Voor bevesting nieuwe wachtwoord in de velden hieronder."
 
 #: airtime_mvc/application/views/scripts/playouthistory/index.phtml:2
 #: airtime_mvc/application/configs/navigation.php:121
@@ -82,11 +82,11 @@ msgstr "Mediamappen beheren"
 #: airtime_mvc/application/views/scripts/preference/index.phtml:2
 #: airtime_mvc/application/configs/navigation.php:72
 msgid "General"
-msgstr ""
+msgstr "Algemeen"
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:2
 msgid "Stream Settings"
-msgstr "Instellingen voor stream"
+msgstr "Instelling stream"
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:5
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:118
@@ -110,7 +110,7 @@ msgstr "opslaan"
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:11
 msgid "Global"
-msgstr ""
+msgstr "Algemeen"
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:88
 msgid "dB"
@@ -118,7 +118,7 @@ msgstr "dB"
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:106
 msgid "Output Streams"
-msgstr ""
+msgstr "Uitgaande Streams"
 
 #: airtime_mvc/application/views/scripts/showbuilder/index.phtml:5
 #: airtime_mvc/application/views/scripts/showbuilder/builderDialog.phtml:10
@@ -131,7 +131,7 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/showbuilder/builderDialog.phtml:29
 #: airtime_mvc/application/views/scripts/showbuilder/builderDialog.phtml:30
 msgid "Scheduled Shows"
-msgstr ""
+msgstr "Ingeroosterd"
 
 #: airtime_mvc/application/views/scripts/form/edit-user.phtml:1
 #: airtime_mvc/application/configs/navigation.php:78
@@ -153,11 +153,11 @@ msgstr "Extra opties"
 
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:144
 msgid "The following info will be displayed to listeners in their media player:"
-msgstr "De volgende info worden getoond aan luisteraars in hun mediaspeler"
+msgstr "Aan de Luisteraars wordt de volgende info getoond in de mediaspeler"
 
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:177
 msgid "(Your radio station website)"
-msgstr "(Uw radio station website)"
+msgstr "(Je radio station website)"
 
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:215
 msgid "Stream URL: "
@@ -170,11 +170,11 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/preferences.phtml:6
 msgid "TuneIn Settings"
-msgstr ""
+msgstr "TuneIn Instellingen"
 
 #: airtime_mvc/application/views/scripts/form/preferences.phtml:12
 msgid "Dangerous Options"
-msgstr ""
+msgstr "risicovolle!! Instellingen"
 
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:4
 msgid "Search Criteria:"
@@ -425,7 +425,7 @@ msgstr "Gebruikerstype"
 #: airtime_mvc/application/views/scripts/listenerstat/show.phtml:2
 #: airtime_mvc/application/views/scripts/listenerstat/index.phtml:2
 msgid "Listeners"
-msgstr ""
+msgstr "luisteraar"
 
 #: airtime_mvc/application/views/scripts/listenerstat/show.phtml:5
 #: airtime_mvc/application/views/scripts/listenerstat/index.phtml:6
@@ -496,7 +496,7 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:149
 #: airtime_mvc/application/forms/AddShowWhat.php:26
 msgid "Name:"
-msgstr "naam"
+msgstr "Naam"
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:25
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:34
@@ -562,7 +562,7 @@ msgstr "Fade out:"
 #: airtime_mvc/application/forms/EditAudioMD.php:268
 #: airtime_mvc/application/forms/EditHistory.php:141
 msgid "Cancel"
-msgstr "anuleren"
+msgstr "annuleren"
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:78
 msgid "Save playlist"
@@ -615,7 +615,7 @@ msgstr "Oorspronkelijke lengte:"
 #: airtime_mvc/application/views/scripts/plupload/index.phtml:73
 #: airtime_mvc/application/layouts/scripts/layout.phtml:56
 msgid "Upload"
-msgstr ""
+msgstr "Upload"
 
 #: airtime_mvc/application/views/scripts/plupload/index.phtml:78
 msgid "Drop files here or click to browse your computer."
