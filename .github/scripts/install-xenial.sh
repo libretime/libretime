@@ -24,5 +24,6 @@ apt-get install -y gstreamer1.0-plugins-base \
   pkg-config \
   libcairo2-dev
 
-# Making directory; not sure why...
-mkdir -p /tmp/log/libretime
+# Making log directory for PHP tests
+mkdir -p $LIBRETIME_LOG_DIR
+chown runner:runner $LIBRETIME_LOG_DIR
