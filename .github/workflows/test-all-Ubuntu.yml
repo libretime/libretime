@@ -34,7 +34,7 @@ jobs:
           php-version: '7.2'
       - name: Install prerequisites
         run:
-          sudo ./.github/scripts/install-bionic.sh
+          sudo -E ./.github/scripts/install-bionic.sh
       - name: Run Python tests
         run: |
           sudo ./.github/scripts/python-pkg-install.sh
@@ -67,7 +67,7 @@ jobs:
         with:
           php-version: '7.0'
       - name: Install prerequisites
-        run: sudo ./.github/scripts/install-xenial.sh
+        run: sudo -E ./.github/scripts/install-xenial.sh
       - name: Run Python tests
         run: |
           pip3 install --upgrade pip
