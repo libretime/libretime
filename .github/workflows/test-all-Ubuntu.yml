@@ -14,6 +14,9 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       fail-fast: false
+    env:
+      ENVIRONMENT: testing
+      LIBRETIME_LOG_DIR: /tmp/log/libretime
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -32,12 +35,11 @@ jobs:
         with:
           php-version: '7.2'
       - name: Install prerequisites
-        run: |
-          ENVIRONMENT=testing && LIBRETIME_LOG_DIR=/tmp/log/libretime
-          sudo bash ./.github/scripts/install-bionic.sh
+        run:
+          sudo ./.github/scripts/install-bionic.sh
       - name: Run Python tests
         run: |
-          sudo bash ./.github/scripts/python-pkg-install.sh
+          sudo ./.github/scripts/python-pkg-install.sh
           ./.github/scripts/python-pkg-test.sh
       - name: Run PHP tests
         run: |
@@ -48,6 +50,9 @@ jobs:
     runs-on: ubuntu-16.04
     strategy:
       fail-fast: false
+    env:
+      ENVIRONMENT: testing
+      LIBRETIME_LOG_DIR: /tmp/log/libretime
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -66,13 +71,11 @@ jobs:
         with:
           php-version: '7.0'
       - name: Install prerequisites
-        run: |
-          ENVIRONMENT=testing && LIBRETIME_LOG_DIR=/tmp/log/libretime
-          sudo bash ./.github/scripts/install-xenial.sh
+        run: sudo ./.github/scripts/install-xenial.sh
       - name: Run Python tests
         run: |
           pip install --upgrade pip
-          sudo bash ./.github/scripts/python-pkg-install.sh
+          sudo ./.github/scripts/python-pkg-install.sh
           ./.github/scripts/python-pkg-test.sh
       - name: Run PHP tests
         run: |

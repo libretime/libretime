@@ -1,4 +1,5 @@
 #/bin/bash
+pip3 install nose
 
 pip3 install -e python_apps/airtime_analyzer/.
 pip3 install -e python_apps/airtime-celery/.

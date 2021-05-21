@@ -8,14 +8,14 @@ cd python_apps/airtime_analyzer
 if ! nosetests . -x; then
     failed='t'
 fi
-echo "::endgroup"
+echo "::endgroup::"
 
 echo "::group::API Client"
 cd ../api_clients
 if ! nosetests . -x; then
     failed='t'
 fi
-echo "::endgroup"
+echo "::endgroup::"
 
 # Reset to repo root
 cd ../..
