@@ -168,7 +168,7 @@ def WatchAddAction(option, opt, value, parser):
             res = api_client.add_watched_dir(path)
         except Exception, e:
             exit("Unable to connect to the server.")
-        # sucess
+        # success
         if(res['msg']['code'] == 0):
             print "%s added to watched folder list successfully" % path
         else:
@@ -212,7 +212,7 @@ def WatchRemoveAction(option, opt, value, parser):
             res = api_client.remove_watched_dir(path)
         except Exception, e:
             exit("Unable to connect to the Airtime server.")
-        # sucess
+        # success
         if(res['msg']['code'] == 0):
             print "%s removed from watch folder list successfully." % path
         else:
@@ -233,11 +233,11 @@ def StorageSetAction(option, opt, value, parser):
     if(not bypass):
         errorIfMultipleOption(parser.rargs, "Only [-f] and [--force] option is allowed with this option.")
         possibleInput = ['y','Y','n','N']
-        confirm = raw_input("Are you sure you want to change the storage direcory? (y/N)")
+        confirm = raw_input("Are you sure you want to change the storage directory? (y/N)")
         confirm = confirm or 'N'
         while(confirm  not in possibleInput):
             print "Not an acceptable input: %s\n" % confirm
-            confirm = raw_input("Are you sure you want to change the storage direcory? (y/N) ")
+            confirm = raw_input("Are you sure you want to change the storage directory? (y/N) ")
             confirm = confirm or 'N'
         if(confirm == 'n' or confirm =='N'):
             sys.exit(1)

@@ -189,7 +189,7 @@ class MessageListener:
                 (NACK is a negative acknowledgement. We could use ACK instead, but this might come
                  in handy in the future.)
                 Exceptions in this context are unexpected, unhandled errors. We try to recover
-                from as many errors as possble in AnalyzerPipeline, but we're safeguarding ourselves
+                from as many errors as possible in AnalyzerPipeline, but we're safeguarding ourselves
                 here from any catastrophic or genuinely unexpected errors:
             '''
             channel.basic_nack(delivery_tag=method_frame.delivery_tag, multiple=False,

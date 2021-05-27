@@ -20,7 +20,7 @@ These instructions come from Certbot's website and assume that you are using an 
 running on Ubuntu 18.04 LTS (the Apache web server is installed with LibreTime by default).
 Instructions for other Debian-based OSes are similar, but check with Certbot for clarification.
 
-Note: all instructions require you to have sudo priveledges
+Note: all instructions require you to have sudo privileges
 
 First, add Certbot's PPA using:
 

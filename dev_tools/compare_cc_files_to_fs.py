@@ -94,7 +94,7 @@ class AirtimeMediaMonitorBootstrap():
     and reads the list of files in the local file system. Its purpose is to discover which files
     exist on the file system but not in the database and vice versa, as well as which files have
     been modified since the database was last updated. In each case, this method will call an
-    appropiate method to ensure that the database actually represents the filesystem.
+    appropriate method to ensure that the database actually represents the filesystem.
     dir_id -- row id of the directory in the cc_watched_dirs database table
     dir    -- pathname of the directory
     """

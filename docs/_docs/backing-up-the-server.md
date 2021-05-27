@@ -34,7 +34,7 @@ be backed up.
 /srv
   /airtime
     /stor
-      /imported - Sucessfully imported media
+      /imported - Successfully imported media
       /organize - A temporary holding place for uploaded media as the importer works
 /etc
   /airtime

@@ -305,7 +305,7 @@ class Recorder(Thread):
     def run(self):
         """
         Main loop of the thread:
-        Wait for schedule updates from RabbitMQ, but in case there arent any,
+        Wait for schedule updates from RabbitMQ, but in case there aren't any,
         poll the server to get the upcoming schedule.
         """
         try:

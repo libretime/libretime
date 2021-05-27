@@ -65,7 +65,7 @@ end
 
 # we need this function for special transition case(from default to queue)
 # we don't want the trasition fade to have effect on the first song that would
-# be played siwtching out of the default(silent) source
+# be played switching out of the default(silent) source
 def transition_default(a,b) =
   log("transition called...")
   if !just_switched then

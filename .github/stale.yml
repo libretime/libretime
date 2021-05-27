@@ -45,7 +45,7 @@ markComment: >
 
 # Comment to post when closing a stale Issue or Pull Request.
 closeComment: >
-  This issue has been autmatically closed after is was marked as stale and
+  This issue has been automatically closed after is was marked as stale and
   did not receive any further inputs.
 
   Feel free to let us know on [discourse](https://discourse.libretime.org/) or

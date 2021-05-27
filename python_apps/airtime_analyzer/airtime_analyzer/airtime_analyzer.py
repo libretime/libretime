@@ -39,7 +39,7 @@ class AirtimeAnalyzerServer:
         StatusReporter.start_thread(http_retry_queue_path)
 
         # Start listening for RabbitMQ messages telling us about newly
-        # uploaded files. This blocks until we recieve a shutdown signal.
+        # uploaded files. This blocks until we receive a shutdown signal.
         self._msg_listener = MessageListener(rmq_config)
 
         StatusReporter.stop_thread()

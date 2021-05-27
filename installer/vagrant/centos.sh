@@ -144,7 +144,7 @@ sed -i \
 
 
 # celery will not run unless we install a specific version (https://github.com/pypa/setuptools/issues/942)
-# this will need to be figured out later on and will get overriden by the docs installer anyhow :(
+# this will need to be figured out later on and will get overridden by the docs installer anyhow :(
 pip3 install setuptools==33.1.1
 pip3 freeze setuptools==33.1.1
 

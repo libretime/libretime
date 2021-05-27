@@ -596,7 +596,7 @@ paths:
           required: false
   /show-history-feed:
     get:
-      summary: BROKEN - Retrieve the show shedules for a given time range and show
+      summary: BROKEN - Retrieve the show schedules for a given time range and show
       parameters:
         - name: api_key
           in: path
@@ -1074,7 +1074,7 @@ paths:
   /handle-watched-dir-missing:
     post:
       summary: |-
-        BROKEN (LibreTime does not currentl handle watched directories) -
+        BROKEN (LibreTime does not currently handle watched directories) -
         Handles missing watched directories.
       parameters:
         - name: dir
@@ -1290,7 +1290,7 @@ paths:
           required: true
   /get-usability-hint:
     get:
-      summary: Returns the usibility hint tool-tip for a UI item
+      summary: Returns the usability hint tool-tip for a UI item
       parameters:
         - name: api_key
           in: path

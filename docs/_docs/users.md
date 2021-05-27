@@ -29,7 +29,7 @@ To add further user accounts to the system, one for each of your station staff t
 
 - Everything DJs can do, plus
 - Manage other users' libraries in addition to their own
-- Create, edit, and delete color-coded shows on the Calender and assign them to DJs (if needed)
+- Create, edit, and delete color-coded shows on the Calendar and assign them to DJs (if needed)
 - Shows can be scheduled to repeat, with the option of linking content between the shows (helpful if a DJ livestreams in each week)
 - View listener statistics
 - Export playout logs for analysis or reporting for music royalties

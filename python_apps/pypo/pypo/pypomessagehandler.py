@@ -73,7 +73,7 @@ class PypoMessageHandler(Thread):
             self.logger.info("Handling command: " + command)
 
             if command == 'update_schedule':
-                self.logger.info("Updating schdule...")
+                self.logger.info("Updating schedule...")
                 self.pypo_queue.put(message)
             elif command == 'reset_liquidsoap_bootstrap':
                 self.logger.info("Resetting bootstrap vars...")
@@ -116,7 +116,7 @@ class PypoMessageHandler(Thread):
 
     """
     Main loop of the thread:
-    Wait for schedule updates from RabbitMQ, but in case there arent any,
+    Wait for schedule updates from RabbitMQ, but in case there aren't any,
     poll the server to get the upcoming schedule.
     """
     def run(self):

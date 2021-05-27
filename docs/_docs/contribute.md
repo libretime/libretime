@@ -37,7 +37,7 @@ jekyll serve
 
 ## Code
 
-Are you familar with coding in PHP? Have you made projects in Liquidsoap and some of the other services we use?
+Are you familiar with coding in PHP? Have you made projects in Liquidsoap and some of the other services we use?
 Take a look at the [list of bugs and feature requests](https://github.com/LibreTime/libretime/issues), and then
 fork our repo and have a go! Just use the **Fork** button at the top of our **Code** page, clone the forked repo to
 your desktop, open up a favorite editor and make some changes, and then commit, push, and open a pull request.
@@ -47,12 +47,12 @@ will suit you well, use the links for a quick 101.
 ## Testing and CI/CD
 
 Before submitting code to the project, it's a good idea to test it first. To do this, it's easiest to install
-LibreTime in a virtural machine on your local system or in a cloud VM. We have instructions for setting up a virtural
+LibreTime in a virtual machine on your local system or in a cloud VM. We have instructions for setting up a virtual
 instance of LibreTime with [Vagrant](/docs/vagrant) and [Multipass](/docs/multipass).
 
 If you would like to try LibreTime in a Docker image,
 Odclive has instructions [here](https://github.com/kessibi/libretime-docker) for setting up a test image
-and a more persistant install.
+and a more persistent install.
 
 ## Modifying the Database
 LibreTime is designed to work with a [PostgreSQL](https://www.postgresql.org/) database server running locally.

@@ -21,7 +21,7 @@ Please report new issues and/or feature requests in the issue tracker. Join our 
         Liquidsoap support
         No watched folder support
         No Line In recording support
-        Playout wont work if locale is missing
+        Playout won't work if locale is missing
         Lack of i18n toolchain is disturbing
 
 ## Features
@@ -155,7 +155,7 @@ Currently LibreTime does not support watching folders. Uploading files through t
 ### No line in support
 
 This feature went missing from LibreTime due to the fact that we based our code off of the saas-dev branch of legacy upstream and support for recording hasn't been ported to the new airtime analyzer ingest system. #42 currently tracks the progress being made on line in recording.
-Playout wont work if locale is missing
+Playout won't work if locale is missing
 
 Some minimal OS installs do not have a default locale configured. This only seems to affect some VPS installs as they often do not have a locale setup in the default images provided.
 

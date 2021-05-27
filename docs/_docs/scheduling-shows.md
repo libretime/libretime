@@ -43,7 +43,7 @@ of the pane to add your show to the calendar.
 | _When_ | |
 | Start Time (Required) | The time and date the show starts. Note that the time element is in 24 hour time. If the **Now** option is selected, the show will be created to immediately start. |
 | End Time (Required) | The time and date the show ends. Defaults to a time one hour after the start time, which can be seen in the **Duration** field, which is uneditable. |
-| Repeats? | If checked, allows for options to schedule a repeated show. Shows can repeat weekly up to monthly in increments of one week and can be scheduled on multiple days of the same week. An end date can be set, otherwise the show can be deleted by clicking on its entry in the calendar and clicking Delete > Future Occurances. If **Linked ?** is checked, the playlist scheduled for the next show will also play for all future shows. |
+| Repeats? | If checked, allows for options to schedule a repeated show. Shows can repeat weekly up to monthly in increments of one week and can be scheduled on multiple days of the same week. An end date can be set, otherwise the show can be deleted by clicking on its entry in the calendar and clicking Delete > Future Occurrences. If **Linked ?** is checked, the playlist scheduled for the next show will also play for all future shows. |
 | _Autoloading Playlist_ | |
 | Add Autoloading Playlist? | If checked, allows for the following options |
 | Select Playlist | Select the playlist the show will autofill from (shows autofill exactly one hour before air). If you wish to use a smartblock you must add it to a playlist and then select that playlist. This can be used to auto-schedule new podcast episodes to air. |

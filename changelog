@@ -110,7 +110,7 @@
     * fixed master/source override URL being reverted to original setting after clicking 'Save' in stream settings.
     * Add several helpful tips in the Stream Settings page and some UI cleanup
     * DJ user type cannot delete Playlists that aren't their own or delete tracks
-    * Playlist Builder should remember your position instead of reseting to the first page everytime an operation was performed
+    * Playlist Builder should remember your position instead of resetting to the first page every time an operation was performed
     * If Master or Live input source is disconnected, Airtime will no longer automatically switch off that source. This should allow the source to
       reconnect and continue playback.
   
@@ -157,7 +157,7 @@
     * "Listen" preview player no longer falls behind the broadcast (you can only mute the stream now, not stop it)
     * Tracks that cannot be played will be rejected on upload and put in to the directory "/srv/airtime/stor/problem_files" (but currently it will not tell you that it rejected them - sorry\!)
     * Library is automatically refreshed when media import is finished
-    * Show "Disk Full" message when trying to upload a file that wont fit on the disk
+    * Show "Disk Full" message when trying to upload a file that won't fit on the disk
     * Reduced CPU utilization for OGG streams
     * New command line utilities:
       * airtime-test-soundcard - verify that the soundcard is working
@@ -237,7 +237,7 @@
       * Better error checking in cases where two users alter the same data at
         the same time (for example, in playlists and shows)
       * Playlists: Removed intermediate "Add Playlist" screen where it asked you
-        to fill in the name and description of the playlist. This wasnt
+        to fill in the name and description of the playlist. This wasn't
         necessary since everything could be changed from the playlist editor
         itself.
       * Added "airtime-log" command to display, dump, and view all of Airtime's
@@ -324,7 +324,7 @@
     - Prevent users from doing a manual install of Airtime if they already have
       the Debian package version installed
   * Changes
-    - Support Settings moved to a seperate page accessible by Admin user only. 
+    - Support Settings moved to a separate page accessible by Admin user only. 
 
 1.9.0 - August 9, 2011
 
