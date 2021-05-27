@@ -39,10 +39,10 @@ repos:
     hooks:
       - id: black
 
-  - repo: https://github.com/pre-commit/mirrors-pylint
-    rev: v3.0.0a3
-    hooks:
-      - id: pylint
+  # - repo: https://github.com/pre-commit/mirrors-pylint
+  #   rev: v3.0.0a3
+  #   hooks:
+  #     - id: pylint
 
   - repo: https://github.com/codespell-project/codespell
     rev: v2.0.0
