@@ -1,4 +1,4 @@
-#/bin/bash
+#!/usr/bin/env bash
 
 # Adding repos and packages
 add-apt-repository -y ppa:libretime/libretime
