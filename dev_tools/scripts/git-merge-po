@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# https://gist.github.com/mezis/1605647 
+# https://gist.github.com/mezis/1605647
 # by Julien Letessier (mezis)
 #
 # Custom Git merge driver - merges PO files using msgcat(1)
@@ -8,15 +8,15 @@
 # - Install gettext
 #
 # - Place this script in your PATH
-# 
+#
 # - Add this to your .git/config :
 #
 #   [merge "pofile"]
 #     name = Gettext merge driver
 #     driver = git merge-po %O %A %B
-# 
+#
 # - Add this to .gitattributes :
-# 
+#
 #   *.po   merge=pofile
 #   *.pot  merge=pofile
 #

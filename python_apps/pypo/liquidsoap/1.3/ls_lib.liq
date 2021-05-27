@@ -16,7 +16,7 @@ def notify_stream(m)
   #escaping the apostrophe, and then starting a new string right after it. This is why we use 3 apostrophes.
   json_str = string.replace(pattern="'",(fun (s) -> "'\''"), json_str)
   command = "timeout --signal=KILL 45 pyponotify --webstream='#{json_str}' --media-id=#{!current_dyn_id} &"
-  
+
   if !current_dyn_id != "-1" then
     log(command)
     system(command)
@@ -24,7 +24,7 @@ def notify_stream(m)
 end
 
 # A function applied to each metadata chunk
-def append_title(m) =  
+def append_title(m) =
   log("Using stream_format #{!stream_metadata_type}")
 
   if list.mem_assoc("mapped", m) then
@@ -82,9 +82,9 @@ end
 
 
 # Define a transition that fades out the
-# old source, adds a single, and then 
+# old source, adds a single, and then
 # plays the new source
-def to_live(old,new) = 
+def to_live(old,new) =
   # Fade out old source
   old = fade.final(old)
   # Compose this in sequence with
@@ -233,7 +233,7 @@ def clear_queue(s)
 end
 
 def set_dynamic_source_id(id) =
-    current_dyn_id := id 
+    current_dyn_id := id
     string_of(!current_dyn_id)
 end
 

@@ -74,7 +74,7 @@ tar -czf $target_file \
         --exclude dev_tools \
         --exclude vendor/phing \
         --exclude vendor/simplepie/simplepie/tests \
-    libretime-${suffix} 
+    libretime-${suffix}
 echo " Done"
 popd
 

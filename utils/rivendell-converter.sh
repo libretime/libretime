@@ -4,7 +4,7 @@
 # database and set appropriate tags to each MP3 file.
 
 # Notes:
-# 1 - Rivendell store files in .wav format, airtime uses .mp3 format 
+# 1 - Rivendell store files in .wav format, airtime uses .mp3 format
 # 2 - WAV does not have Meta-tag support so all meta-tags need to be fetched from Rivendell database.
 
 

@@ -31,7 +31,7 @@ patch -f /var/lib/pgsql/data/pg_hba.conf << EOD
 --- pg_hba.conf.orig	2020-12-19 13:10:46.828960307 +0000
 +++ pg_hba.conf	2020-12-19 13:11:37.356290128 +0000
 @@ -78,10 +78,11 @@
- 
+
  # "local" is for Unix domain socket connections only
  local   all             all                                     peer
 +local   all             all                                     md5
@@ -153,7 +153,7 @@ echo 'date.timezone=Europe/Zurich' >> /etc/php.d/timezone.ini
 systemctl restart httpd
 
 # icecast needs to be available to everyone
-sed -i -e 's@<bind-address>127.0.0.1</bind-address>@<bind-address>0.0.0.0</bind-address>@' /etc/icecast.xml 
+sed -i -e 's@<bind-address>127.0.0.1</bind-address>@<bind-address>0.0.0.0</bind-address>@' /etc/icecast.xml
 systemctl enable --now icecast
 
 # let em use alsa

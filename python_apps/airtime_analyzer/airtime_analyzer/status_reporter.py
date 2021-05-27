@@ -216,7 +216,7 @@ class StatusReporter:
         # r = requests.Request(method='PUT', url=callback_url, data=put_payload,
         #                     auth=requests.auth.HTTPBasicAuth(api_key, ''))
         """
-        r = requests.Request(method='PUT', url=callback_url, data=put_payload, 
+        r = requests.Request(method='PUT', url=callback_url, data=put_payload,
                              auth=requests.auth.HTTPBasicAuth(api_key, ''))
 
         StatusReporter._send_http_request(r)
@@ -235,11 +235,11 @@ class StatusReporter:
             StatusReporter._ipc_queue.put(r.prepare())
         """
 
-        """ 
+        """
         # Encode the audio metadata as json and post it back to the callback_url
         put_payload = json.dumps(audio_metadata)
         logging.debug("sending http put with payload: " + put_payload)
-        r = requests.put(callback_url, data=put_payload, 
+        r = requests.put(callback_url, data=put_payload,
                          auth=requests.auth.HTTPBasicAuth(api_key, ''),
                          timeout=StatusReporter._HTTP_REQUEST_TIMEOUT)
         logging.debug("HTTP request returned status: " + str(r.status_code))
@@ -266,7 +266,7 @@ class StatusReporter:
         put_payload = json.dumps(audio_metadata)
         # logging.debug("sending http put with payload: " + put_payload)
         """
-        r = requests.put(callback_url, data=put_payload, 
+        r = requests.put(callback_url, data=put_payload,
                          auth=requests.auth.HTTPBasicAuth(api_key, ''),
                          timeout=StatusReporter._HTTP_REQUEST_TIMEOUT)
         """

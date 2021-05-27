@@ -90,7 +90,7 @@ fi
 rm -rf liquidsoap-full
 git clone https://github.com/savonet/liquidsoap-full
 cd liquidsoap-full
-git checkout master 
+git checkout master
 make init
 make update
 

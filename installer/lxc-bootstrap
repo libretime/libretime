@@ -22,7 +22,7 @@ echo "...Done"
 set -e
 
 ###
-# ! NOTE: If you run into errors resolving the archives when running apt-get update, 
+# ! NOTE: If you run into errors resolving the archives when running apt-get update,
 #         clear your /var/cache/lxc directory and retry.
 ###
 

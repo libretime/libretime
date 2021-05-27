@@ -19,36 +19,36 @@ QUEUE = "airtime-uploads"
 
 """ A message listener class that waits for messages from Airtime through RabbitMQ
     notifying us about new uploads.
-    
+
     This is probably the most important class in this application. It connects
     to RabbitMQ (or an AMQP server) and listens for messages that notify us
     when a user uploads a new file to Airtime, either through the web interface
     or via FTP (on Airtime Pro). When we get a notification, we spawn a child
     process that extracts the uploaded audio file's metadata and moves it into
-    Airtime's music library directory. Lastly, the extracted metadata is 
+    Airtime's music library directory. Lastly, the extracted metadata is
     reported back to the Airtime web application.
-    
+
     There's a couple of Very Important technical details and constraints that you
     need to know if you're going to work on this code:
-    
-    1) airtime_analyzer is designed so it doesn't have to run on the same 
+
+    1) airtime_analyzer is designed so it doesn't have to run on the same
        computer as the web server. It just needs access to your Airtime library
-       folder (stor). 
+       folder (stor).
     2) airtime_analyzer is multi-tenant - One process can be used for many
        Airtime instances. It's designed NOT to know about whether it's running
-       in a single tenant or multi-tenant environment. All the information it 
+       in a single tenant or multi-tenant environment. All the information it
        needs to import a file into an Airtime instance is passed in via those
        RabbitMQ messages.
     3) We're using a "topic exchange" for the new upload notification RabbitMQ
-       messages. This means if we run several airtime_analyzer processes on 
+       messages. This means if we run several airtime_analyzer processes on
        different computers, RabbitMQ will do round-robin dispatching of the
        file notification. This is cheap, easy load balancing and
        redundancy for us. You can even run multiple airtime_analyzer processes
        on one machine if you want.
     4) We run the actual work (metadata analysis and file moving) in a separate
        child process so that if it crashes, we can stop RabbitMQ from resending
-       the file notification message to another airtime_analyzer process (NACK), 
-       which would otherwise cause cascading failure. We also do this so that we 
+       the file notification message to another airtime_analyzer process (NACK),
+       which would otherwise cause cascading failure. We also do this so that we
        can report the problem file to the Airtime web interface ("import failed").
 
     So that is a quick overview of the design constraints for this application, and
@@ -164,10 +164,10 @@ class MessageListener:
         api_key = ""
         file_prefix = ""
 
-        """ Spin up a worker process. We use the multiprocessing module and multiprocessing.Queue 
+        """ Spin up a worker process. We use the multiprocessing module and multiprocessing.Queue
             to pass objects between the processes so that if the analyzer process crashes, it does not
-            take down the rest of the daemon and we NACK that message so that it doesn't get 
-            propagated to other airtime_analyzer daemons (eg. running on other servers). 
+            take down the rest of the daemon and we NACK that message so that it doesn't get
+            propagated to other airtime_analyzer daemons (eg. running on other servers).
             We avoid cascading failure this way.
         """
         try:
@@ -208,8 +208,8 @@ class MessageListener:
 
         except Exception as e:
             logging.exception(e)
-            """ If ANY exception happens while processing a file, we're going to NACK to the 
-                messaging server and tell it to remove the message from the queue. 
+            """ If ANY exception happens while processing a file, we're going to NACK to the
+                messaging server and tell it to remove the message from the queue.
                 (NACK is a negative acknowledgement. We could use ACK instead, but this might come
                  in handy in the future.)
                 Exceptions in this context are unexpected, unhandled errors. We try to recover

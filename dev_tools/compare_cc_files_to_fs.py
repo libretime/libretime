@@ -30,7 +30,7 @@ class AirtimeMediaMonitorBootstrap:
         config = ConfigObj("/etc/airtime/airtime.conf")
         self.api_client = apc.api_client_factory(config)
 
-        """        
+        """
         try:
             logging.config.fileConfig("logging.cfg")
         except Exception, e:

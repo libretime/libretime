@@ -5,7 +5,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 usage () {
-    echo "Use --enable <user> or --disable flag. Enable is to set up environment" 
+    echo "Use --enable <user> or --disable flag. Enable is to set up environment"
     echo "for specified user. --disable is to reset it back to pypo user"
 }
 
@@ -28,7 +28,7 @@ elif [ "$1" = "--disable" ]; then
     echo "Changing ownership to user $1"
     chmod 644 /etc/airtime/airtime.conf
     chown -Rv $user:$user /var/tmp/airtime/pypo/
-    chmod -v a+r /etc/airtime/api_client.cfg    
+    chmod -v a+r /etc/airtime/api_client.cfg
 
 
     /etc/init.d/airtime-playout stop-liquidsoap

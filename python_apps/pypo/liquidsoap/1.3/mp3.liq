@@ -1,4 +1,4 @@
-            if bitrate == 24 then 
+            if bitrate == 24 then
                 if stereo then
                     ignore(output_stereo(%mp3(bitrate = 24, stereo = true), !source))
                 else
