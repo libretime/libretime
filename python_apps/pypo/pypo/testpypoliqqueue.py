@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 from .pypoliqqueue import PypoLiqQueue
 from .telnetliquidsoap import DummyTelnetLiquidsoap, TelnetLiquidsoap

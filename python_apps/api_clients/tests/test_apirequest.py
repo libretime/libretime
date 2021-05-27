@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import unittest
 import json
 from mock import MagicMock, patch

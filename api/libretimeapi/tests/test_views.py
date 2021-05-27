@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 from django.contrib.auth.models import AnonymousUser
 from django.conf import settings

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Main CLI entrypoint for the libretime-analyzer app.
 """

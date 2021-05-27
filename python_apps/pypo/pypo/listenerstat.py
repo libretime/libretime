@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from threading import Thread
 import urllib.request, urllib.error, urllib.parse
 import defusedxml.minidom

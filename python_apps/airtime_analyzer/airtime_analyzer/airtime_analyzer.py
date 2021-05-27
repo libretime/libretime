@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Contains the main application class for airtime_analyzer.
 """
 import logging

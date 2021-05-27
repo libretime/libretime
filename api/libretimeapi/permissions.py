@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from rest_framework.permissions import BasePermission
 from django.conf import settings
 from .models.user_constants import DJ

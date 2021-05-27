@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # TODO: use an abstract base class (ie. import from abc ...) once we have python >=3.3 that supports @staticmethod with @abstractmethod
 
 

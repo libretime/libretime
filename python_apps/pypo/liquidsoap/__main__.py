@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """ Runs Airtime liquidsoap
 """
 import argparse

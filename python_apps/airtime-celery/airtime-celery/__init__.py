@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 
 # Make the celeryconfig module visible to celery

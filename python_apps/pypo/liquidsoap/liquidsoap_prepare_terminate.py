@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from configobj import ConfigObj
 import telnetlib
 import sys

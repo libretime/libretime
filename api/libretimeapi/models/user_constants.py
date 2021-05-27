@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 GUEST = 'G'
 DJ = 'H'
 PROGRAM_MANAGER = 'P'

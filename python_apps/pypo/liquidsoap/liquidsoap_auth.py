@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 from api_clients import version1 as api_client
 import sys
