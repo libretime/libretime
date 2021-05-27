@@ -164,4 +164,3 @@ if (isset($opts->v)){
 }
 
 echo PHP_EOL;
-

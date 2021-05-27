@@ -57,4 +57,3 @@
                     ignore(output_mono(%vorbis(quality=0.9, channels = 1), mean(!source)))
                 end
             end
-

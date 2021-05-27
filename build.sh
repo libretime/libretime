@@ -25,4 +25,3 @@ else
         echo "could not detect version for VERSION file" > VERSION
     fi
 fi
-

@@ -65,4 +65,3 @@
                     ignore(output_mono(%opus(bitrate = 320, channels = 1, signal="music", application="audio", complexity=10, vbr="constrained"), mean(!source)))
                 end
             end
-

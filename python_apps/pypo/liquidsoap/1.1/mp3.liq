@@ -65,4 +65,3 @@
                     ignore(output_mono(%mp3(bitrate = 320, stereo = false), mean(!source)))
                 end
             end
-

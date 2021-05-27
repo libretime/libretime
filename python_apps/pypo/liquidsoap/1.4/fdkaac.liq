@@ -21,4 +21,3 @@
             elsif bitrate == 320 then
                 ignore(output_stereo(%fdkaac(bitrate = 320, aot="mpeg4_aac_lc", afterburner=true, sbr_mode=true), !source))
             end
-

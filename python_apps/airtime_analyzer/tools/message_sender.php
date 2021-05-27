@@ -44,4 +44,3 @@ $channel->basic_publish($msg, $exchange, $routingKey);
 print "Sent $message ($routingKey)\n";
 $channel->close();
 $connection->close();
-

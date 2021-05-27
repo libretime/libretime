@@ -1246,4 +1246,3 @@ echo    " To get started with Libretime, visit ${IP}            "
 echo    " or, if you've set up your own web configuration,    "
 echo    " the Libretime webroot on your webserver               "
 echo    "-----------------------------------------------------"
-
