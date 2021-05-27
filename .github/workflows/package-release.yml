@@ -2,10 +2,10 @@ name: Create Release .tar.gz
 
 on:
   push:
-    branches: [ master ]
     # Sequence of patterns matched against refs/tags
     tags:
-    - '\d+.\d+.\d+(~\s+\.\d+)*' # Originally '*', changes by @paddatrapper
+      # MAJ.MIN.BUG version with an optional -TYPE.VER (for example 3.0.0-alpha.8)
+      - '\d+.\d+.\d+(-\w+\.\d+)*'
   workflow_dispatch:
 
 jobs:
