@@ -134,7 +134,7 @@ class PlayoutHistoryTemplateFieldViewSet(viewsets.ModelViewSet):
 class PreferenceViewSet(viewsets.ModelViewSet):
     queryset = Preference.objects.all()
     serializer_class = PreferenceSerializer
-    model_permission_name = "perference"
+    model_permission_name = "preference"
 
 
 class ScheduleViewSet(viewsets.ModelViewSet):

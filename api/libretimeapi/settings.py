@@ -178,12 +178,12 @@ LOGGING = {
         "django": {
             "handlers": ["file", "console"],
             "level": "INFO",
-            "propogate": True,
+            "propagate": True,
         },
         "libretimeapi": {
             "handlers": ["file", "console"],
             "level": "INFO",
-            "propogate": True,
+            "propagate": True,
         },
     },
 }
