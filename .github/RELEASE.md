@@ -86,8 +86,8 @@ storage_backend=file
 You can then remove the files and the symlink.
 
 rm /etc/airtime/cloud_storage.conf \
-   /etc/airtime/rabbitmq-analyzer.ini \
-   /etc/airtime/production
+ /etc/airtime/rabbitmq-analyzer.ini \
+ /etc/airtime/production
 
 While you're at you may also want to remove the amazon_s3 section if it was in any of the files.
 

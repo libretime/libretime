@@ -12,7 +12,7 @@ podcast tabs, and a live feed of your station with information on the the curren
 
 ## Modifying the LibreTime Radio Page
 
-The background of the mini-site that appears when you visit the server's domain in your web browser can be changed by modifying the page's CSS file, located at */usr/share/airtime/php/airtime_mvc/public/css/radio-page/radio-page.css*.
+The background of the mini-site that appears when you visit the server's domain in your web browser can be changed by modifying the page's CSS file, located at _/usr/share/airtime/php/airtime_mvc/public/css/radio-page/radio-page.css_.
 
 ```
 html {

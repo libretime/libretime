@@ -5,7 +5,7 @@ git: hd-audio-modules.md
 category: admin
 ---
 
-This listing is provided to help ensure that the correct model parameter is passed to the ALSA kernel module for an Intel HDA soundcard, if one is fitted to your LibreTime server. See the chapter *Preparing the server* in this book for more details.
+This listing is provided to help ensure that the correct model parameter is passed to the ALSA kernel module for an Intel HDA soundcard, if one is fitted to your LibreTime server. See the chapter _Preparing the server_ in this book for more details.
 
 ```
   Model name   Description
@@ -155,7 +155,7 @@ Conexant 5045
 
 Conexant 5047
 =============
-  laptop    Basic Laptop config 
+  laptop    Basic Laptop config
   laptop-hp Laptop config for some HP models (subdevice 30A5)
   laptop-eapd   Laptop config with EAPD support
   test      for testing/debugging purpose, almost all controls

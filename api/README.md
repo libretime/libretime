@@ -4,6 +4,7 @@ This API provides access to LibreTime's database via a Django application. This
 API supersedes the [PHP API](../airtime_mvc/application/controllers/ApiController.php).
 
 ## Deploying
+
 Deploying in a production environment is done in the [`install`](../install)
 script which installs LibreTime. This is how the API is installed in the Vagrant
 development images too. This method does not automatically reflect changes to
@@ -18,6 +19,7 @@ Endpoint exploration and documentation is available from
 instance.
 
 ### Development
+
 For a live reloading version within Vagrant:
 
 ```
@@ -38,6 +40,7 @@ sudo -u www-data LIBRETIME_DEBUG=True python3 bin/libretime-api test libretimeap
 ```
 
 ## 3rd Party Licences
+
 `libretimeapi/tests/resources/song.mp3`: Steps - Tears On The Dancefloor (Album
 Teaser) by mceyedol. Downloaded from
 https://soundcloud.com/mceyedol/steps-tears-on-the-dancefloor-album-teaser

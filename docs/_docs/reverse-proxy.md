@@ -4,7 +4,6 @@ layout: article
 category: install
 ---
 
-
 In some deployments, the LibreTime server is deployed behind a reverse proxy,
 for example in containerization use-cases such as Docker and LXC. LibreTime
 makes extensive use of its API for some site functionality, which causes

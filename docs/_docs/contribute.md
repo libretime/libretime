@@ -6,7 +6,7 @@ permalink: /contribute
 ---
 
 > LibreTime is a fork of AirTime due to stalled development of the open source version. For background on this,
-see this [open letter to the Airtime community](https://gist.github.com/hairmare/8c03b69c9accc90cfe31fd7e77c3b07d).
+> see this [open letter to the Airtime community](https://gist.github.com/hairmare/8c03b69c9accc90cfe31fd7e77c3b07d).
 
 ## Bug reporting
 
@@ -28,7 +28,7 @@ supported? Follow [this guide](/docs/interface-localization) to add your languag
 ## Write documentation
 
 Our site is now built by Jekyll, which has an installation guide [here](https://jekyllrb.com/docs/installation/) to help get you started.
- After cloning our repo locally, enter the `docs/` directory and run
+After cloning our repo locally, enter the `docs/` directory and run
 
 ```
 bundle install
@@ -55,6 +55,7 @@ Odclive has instructions [here](https://github.com/kessibi/libretime-docker) for
 and a more persistent install.
 
 ## Modifying the Database
+
 LibreTime is designed to work with a [PostgreSQL](https://www.postgresql.org/) database server running locally.
 LibreTime uses [PropelORM](http://propelorm.org) to interact with the ZendPHP components and create the database.
 
@@ -63,4 +64,4 @@ If you are a developer seeking to add new columns to the database here are the s
 1. Modify `airtime_mvc/build/schema.xml` with any changes.
 2. Run `dev_tools/propel_generate.sh`
 3. Update the upgrade.sql under `airtime_mvc/application/controllers/upgrade_sql/VERSION` for example
- `ALTER TABLE imported_podcast ADD COLUMN album_override boolean default 'f' NOT NULL;`
+   `ALTER TABLE imported_podcast ADD COLUMN album_override boolean default 'f' NOT NULL;`

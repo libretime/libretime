@@ -8,7 +8,7 @@ The Listener Stats page on the Analytics menu shows graphs of listener connectio
 
 ![](/img/portfolio/stream-stats.jpg)
 
-If the status indicator is red, check that the **Admin User** and **Admin Password** settings are correct under **Additional Options** for the named mount point, such as *libretime\_128*, on the **Streams** page of the **Settings** menu.
+If the status indicator is red, check that the **Admin User** and **Admin Password** settings are correct under **Additional Options** for the named mount point, such as _libretime_128_, on the **Streams** page of the **Settings** menu.
 
 To choose which particular streams should have statistics displayed, click the check boxes for the individual colour-coded mount points, just below the graph.
 

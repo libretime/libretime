@@ -4,7 +4,6 @@ title: Settings
 category: admin
 ---
 
-
 ## General Settings
 
 ![](/img/station-info-settings.png)
@@ -19,7 +18,7 @@ Description** and **Station Logo** here.
 The **Default Interface Language** drop-down menu sets the default localization
 for your LibreTime instance, and the **Station Timezone** drop-down menu can be
 used to display local time at your station. LibreTime stores show times
-internally in UTC format (similar to *Greenwich Mean Time*), but displays local
+internally in UTC format (similar to _Greenwich Mean Time_), but displays local
 time for the convenience of your station staff. You can also set the day of the
 week that you wish to start your station's weekly schedule on, which defaults
 to Sunday.
@@ -29,7 +28,7 @@ The **Track Type Default** enables you to select a track type default for upload
 Initially, the **Default Fade In** and **Default Fade Out** times for automated
 fades are set to half a second, and the **Default Crossfade Duration** is set to
 zero seconds. Custom fade and crossfade times can be set for adjacent items in a
-playlist or static smart block. See the chapter *Library* for details.
+playlist or static smart block. See the chapter _Library_ for details.
 
 The **Intro Autoloading Playlist** enables you to select a playlist that will be
 scheduled at the beginning of every show that has enabled an autoloading
@@ -60,8 +59,8 @@ refactors. You can switch back at any time.
 You can enable live, read-only access to the LibreTime schedule calendar for
 your station's public website with the **Public LibreTime API** option, if you
 wish. (There is more about this feature in the
-[*Exporting the schedule*](/docs/playout-history) chapter, in the
-*Advanced Configuration* section of this book).
+[_Exporting the schedule_](/docs/playout-history) chapter, in the
+_Advanced Configuration_ section of this book).
 
 The **Allowed CORS URLs** is intended to deal with situations where you want a
 remote site with a different domain to access the API. This is relevant when
@@ -90,7 +89,7 @@ Individual LibreTime users can choose another interface localization when they
 log in, or set personal preferences for localization and time zone by clicking
 their username on the right side of the menu bar.
 
-----
+---
 
 ## Track Types {#types}
 
@@ -105,7 +104,7 @@ their username on the right side of the menu bar.
 1. On the "Visibility" drop down menu, choose to enable or disable the track type. By default, it is enabled. If disabled, it won't be shown across Libretime or in the API for developers.
 1. Click **Save**.
 
-----
+---
 
 ## Stream Settings
 
@@ -115,11 +114,11 @@ their username on the right side of the menu bar.
 
 You can configure direct Icecast and SHOUTcast streams and sound card output by clicking **Streams** on the **System** menu.
 
-At the top left of the **Stream Settings** page are global settings including **Hardware Audio Output**, which enables playout from the default sound card on the server, if one is fitted. The default **Output Type** of *ALSA* on the drop-down menu will be suitable for most servers with a sound card. If not, you have the option to choose from other Liquidsoap interfaces available, such as *OSS* or *PortAudio*.
+At the top left of the **Stream Settings** page are global settings including **Hardware Audio Output**, which enables playout from the default sound card on the server, if one is fitted. The default **Output Type** of _ALSA_ on the drop-down menu will be suitable for most servers with a sound card. If not, you have the option to choose from other Liquidsoap interfaces available, such as _OSS_ or _PortAudio_.
 
 The second checkbox under Global Settings enables the sending of **Icecast Vorbis Metadata** with direct streams. This setting is optional, because some media players have a bug which makes them disconnect from Ogg Vorbis streams when an Icecast server notifies the player that a new track is starting.
 
-The **Stream Label** radio button allows you to set the metadata that will be sent with direct streams; *Artist* and *Title*, *Show*, *Artist* and *Title*, or *Station name* and *Show name*.
+The **Stream Label** radio button allows you to set the metadata that will be sent with direct streams; _Artist_ and _Title_, _Show_, _Artist_ and _Title_, or _Station name_ and _Show name_.
 
 The **Off Air Metadata** field configures the text that will be sent to any configured streaming servers, and from there on to media players, when Airtime is not streaming any output.
 
@@ -137,7 +136,7 @@ Airtime supports two types of live input stream; the **Show Source**, which enab
 
 The **Auto Switch Off** and **Auto Switch On** checkboxes enable playout to be switched automatically to the highest priority source whenever an authenticated input source disconnects from or connects to Airtime, respectively. The field **Switch Transition Fade** sets the length of the audio fade as scheduled playout is switched to a remote input source, and back.
 
-Each type of input stream requires a username and password before the remote broadcaster can connect to Airtime. The **Master Username** and **Master Password** can be set in the Input Stream Settings box, while the authentication for individual Show Sources is set up in Airtime's schedule calendar. See the *Calendar* chapter for details.
+Each type of input stream requires a username and password before the remote broadcaster can connect to Airtime. The **Master Username** and **Master Password** can be set in the Input Stream Settings box, while the authentication for individual Show Sources is set up in Airtime's schedule calendar. See the _Calendar_ chapter for details.
 
 Input streams must have a **Port** for the remote broadcaster to connect to, which should be a number in the range from 1024 to 49151. If you have the Icecast or SHOUTcast streaming server running on the same machine as Airtime, you should avoid using port 8000 or 8001 for either type of Airtime input stream. This is because both Icecast and SHOUTcast use port 8000, and SHOUTcast also uses port 8001. If the usernames and passwords were similar, remote broadcasters might accidentally connect to the streaming server directly, bypassing Airtime.
 
@@ -155,7 +154,7 @@ If you have checked the **Auto Switch On** box in the Stream Settings page, the 
 
 ![](/img/libretime-show-source-stream.png)
 
-If you have the **Auto Switch Off** box checked LibreTime will resume scheduled playback whenever a stream disconnects. Otherwise you will need to slide to disable a source after a DJ stops streaming. 
+If you have the **Auto Switch Off** box checked LibreTime will resume scheduled playback whenever a stream disconnects. Otherwise you will need to slide to disable a source after a DJ stops streaming.
 
 You can also force disconnection of a live remote source, for example when the remote input source has crashed and is no longer sending audio data, click the **X** icon to the left of the source name.
 
@@ -167,11 +166,10 @@ On the right side of the page, you can configure up to three independent output 
 
 To configure another stream, click the bar with the stream number to expand its box, and make sure **Enabled** is checked. Enter at least the streaming **Server** IP address or domain name, and **Port** details. The default port for Icecast and SHOUTcast servers is 8000.
 
-Click **Additional Options** to expand a box in which you can enter the usernames, passwords and metadata to send to the streaming server. The default **Username** for Icecast servers is *source*, and if this the name in use on your streaming server, you can leave this field empty. The **Admin User** and **Admin Password** settings are optional, and are used to query the streaming server for audience numbers by the **Listener Stats** page on the **System** menu.
+Click **Additional Options** to expand a box in which you can enter the usernames, passwords and metadata to send to the streaming server. The default **Username** for Icecast servers is _source_, and if this the name in use on your streaming server, you can leave this field empty. The **Admin User** and **Admin Password** settings are optional, and are used to query the streaming server for audience numbers by the **Listener Stats** page on the **System** menu.
 
 You can also set the specific **Mount Point** that listeners will connect to here. Then click one of the **Save** buttons in the upper or lower right corner of the page to update the Airtime server's settings.
 
 Airtime supports output to Icecast in Ogg Vorbis, Ogg Opus, MP3 and AAC formats. When selecting a SHOUTcast server from the **Service Type** drop-down menu, you are restricted to using MP3 or AAC formats only, so the choice of Ogg Vorbis and Opus formats is greyed out in the **Stream Type** drop-down menu. The SHOUTcast username for stream sources is fixed, so you do not need to enter this value under **Additional Options**, but you will usually have to enter a password.
 
-Any connection problems between Liquidsoap and Icecast or SHOUTcast are shown on the Stream Settings page. For example, if you enter the wrong password, you will see an *Authentication Required* error message. To fix this, enter the correct password in the **Additional Options** box, and click the **Save** button. If the streaming server is down for any reason, or you have entered an incorrect **Server** name or **Port** number, you will see the message *Can not connect to the streaming server*.
-
+Any connection problems between Liquidsoap and Icecast or SHOUTcast are shown on the Stream Settings page. For example, if you enter the wrong password, you will see an _Authentication Required_ error message. To fix this, enter the correct password in the **Additional Options** box, and click the **Save** button. If the streaming server is down for any reason, or you have entered an incorrect **Server** name or **Port** number, you will see the message _Can not connect to the streaming server_.

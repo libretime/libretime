@@ -91,13 +91,13 @@ directory.
 With the above instructions LibreTime is installed on Ubuntu Xenial Xerus. The Vagrant setup
 offers the option to choose a different operation system according to you needs.
 
-| OS     | Command             | Comment |
-| ------ | ------------------- | ------- |
-| Debian 10   | `vagrant up debian-buster`  | Install on Debian Buster. |
-| Debian 9   | `vagrant up debian-stretch` | Install on current Debian Stretch. |
-| Ubuntu 18.04 | `vagrant up ubuntu-bionic`  | Install on current Ubuntu Bionic Beaver. |
-| Ubuntu 16.04 | `vagrant up ubuntu-xenial`  | Install on Ubuntu Xenial Xerus. |
-| CentOS | `vagrant up centos` | CentOS 8 with native systemd support and activated SELinux. |
+| OS           | Command                     | Comment                                                     |
+| ------------ | --------------------------- | ----------------------------------------------------------- |
+| Debian 10    | `vagrant up debian-buster`  | Install on Debian Buster.                                   |
+| Debian 9     | `vagrant up debian-stretch` | Install on current Debian Stretch.                          |
+| Ubuntu 18.04 | `vagrant up ubuntu-bionic`  | Install on current Ubuntu Bionic Beaver.                    |
+| Ubuntu 16.04 | `vagrant up ubuntu-xenial`  | Install on Ubuntu Xenial Xerus.                             |
+| CentOS       | `vagrant up centos`         | CentOS 8 with native systemd support and activated SELinux. |
 
 ## Troubleshooting
 
