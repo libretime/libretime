@@ -15,18 +15,20 @@ class LoginAttempt(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_login_attempts'
+        db_table = "cc_login_attempts"
 
 
 class Session(models.Model):
     sessid = models.CharField(primary_key=True, max_length=32)
-    userid = models.ForeignKey('User', models.DO_NOTHING, db_column='userid', blank=True, null=True)
+    userid = models.ForeignKey(
+        "User", models.DO_NOTHING, db_column="userid", blank=True, null=True
+    )
     login = models.CharField(max_length=255, blank=True, null=True)
     ts = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'cc_sess'
+        db_table = "cc_sess"
 
 
 USER_TYPE_CHOICES = ()
@@ -35,12 +37,14 @@ for item in USER_TYPES.items():
 
 
 class User(AbstractBaseUser):
-    username = models.CharField(db_column='login', unique=True, max_length=255)
-    password = models.CharField(db_column='pass', max_length=255)  # Field renamed because it was a Python reserved word.
+    username = models.CharField(db_column="login", unique=True, max_length=255)
+    password = models.CharField(
+        db_column="pass", max_length=255
+    )  # Field renamed because it was a Python reserved word.
     type = models.CharField(max_length=1, choices=USER_TYPE_CHOICES)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    last_login = models.DateTimeField(db_column='lastlogin', blank=True, null=True)
+    last_login = models.DateTimeField(db_column="lastlogin", blank=True, null=True)
     lastfail = models.DateTimeField(blank=True, null=True)
     skype_contact = models.CharField(max_length=1024, blank=True, null=True)
     jabber_contact = models.CharField(max_length=1024, blank=True, null=True)
@@ -48,13 +52,13 @@ class User(AbstractBaseUser):
     cell_phone = models.CharField(max_length=1024, blank=True, null=True)
     login_attempts = models.IntegerField(blank=True, null=True)
 
-    USERNAME_FIELD = 'username'
-    EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['type', 'email', 'first_name', 'last_name']
+    USERNAME_FIELD = "username"
+    EMAIL_FIELD = "email"
+    REQUIRED_FIELDS = ["type", "email", "first_name", "last_name"]
     objects = UserManager()
 
     def get_full_name(self):
-        return '{} {}'.format(self.first_name, self.last_name)
+        return "{} {}".format(self.first_name, self.last_name)
 
     def get_short_name(self):
         return self.first_name
@@ -66,7 +70,7 @@ class User(AbstractBaseUser):
             self.password = hashlib.md5(password.encode()).hexdigest()
 
     def is_staff(self):
-        print('is_staff')
+        print("is_staff")
         return self.type == ADMIN
 
     def check_password(self, password):
@@ -82,6 +86,7 @@ class User(AbstractBaseUser):
     (managed = True), then this can be replaced with
     django.contrib.auth.models.PermissionMixin.
     """
+
     def is_superuser(self):
         return self.type == ADMIN
 
@@ -125,7 +130,7 @@ class User(AbstractBaseUser):
 
     class Meta:
         managed = False
-        db_table = 'cc_subjs'
+        db_table = "cc_subjs"
 
 
 class UserToken(models.Model):
@@ -139,4 +144,4 @@ class UserToken(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_subjs_token'
+        db_table = "cc_subjs_token"

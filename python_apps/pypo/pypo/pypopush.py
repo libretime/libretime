@@ -29,10 +29,12 @@ PUSH_INTERVAL = 2
 
 
 def is_stream(media_item):
-    return media_item['type'] == 'stream_output_start'
+    return media_item["type"] == "stream_output_start"
+
 
 def is_file(media_item):
-    return media_item['type'] == 'file'
+    return media_item["type"] == "file"
+
 
 class PypoPush(Thread):
     def __init__(self, q, telnet_lock, pypo_liquidsoap, config):
@@ -44,19 +46,18 @@ class PypoPush(Thread):
         self.config = config
 
         self.pushed_objects = {}
-        self.logger = logging.getLogger('push')
+        self.logger = logging.getLogger("push")
         self.current_prebuffering_stream_id = None
         self.queue_id = 0
 
         self.future_scheduled_queue = Queue()
         self.pypo_liquidsoap = pypo_liquidsoap
 
-        self.plq = PypoLiqQueue(self.future_scheduled_queue, \
-                self.pypo_liquidsoap, \
-                self.logger)
+        self.plq = PypoLiqQueue(
+            self.future_scheduled_queue, self.pypo_liquidsoap, self.logger
+        )
         self.plq.daemon = True
         self.plq.start()
-
 
     def main(self):
         loops = 0
@@ -72,10 +73,11 @@ class PypoPush(Thread):
                 raise
             else:
                 self.logger.debug(media_schedule)
-                #separate media_schedule list into currently_playing and
-                #scheduled_for_future lists
-                currently_playing, scheduled_for_future = \
-                        self.separate_present_future(media_schedule)
+                # separate media_schedule list into currently_playing and
+                # scheduled_for_future lists
+                currently_playing, scheduled_for_future = self.separate_present_future(
+                    media_schedule
+                )
 
                 self.pypo_liquidsoap.verify_correct_present_media(currently_playing)
                 self.future_scheduled_queue.put(scheduled_for_future)
@@ -84,7 +86,6 @@ class PypoPush(Thread):
                 self.logger.info("heartbeat")
                 loops = 0
             loops += 1
-
 
     def separate_present_future(self, media_schedule):
         tnow = datetime.utcnow()
@@ -96,7 +97,7 @@ class PypoPush(Thread):
         for mkey in sorted_keys:
             media_item = media_schedule[mkey]
 
-            diff_td = tnow - media_item['start']
+            diff_td = tnow - media_item["start"]
             diff_sec = self.date_interval_to_seconds(diff_td)
 
             if diff_sec >= 0:
@@ -111,8 +112,10 @@ class PypoPush(Thread):
         Convert timedelta object into int representing the number of seconds. If
         number of seconds is less than 0, then return 0.
         """
-        seconds = (interval.microseconds + \
-                   (interval.seconds + interval.days * 24 * 3600) * 10 ** 6) / float(10 ** 6)
+        seconds = (
+            interval.microseconds
+            + (interval.seconds + interval.days * 24 * 3600) * 10 ** 6
+        ) / float(10 ** 6)
 
         return seconds
 
@@ -120,18 +123,18 @@ class PypoPush(Thread):
     def stop_web_stream_all(self):
         try:
             self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(self.config['LS_HOST'], self.config['LS_PORT'])
+            tn = telnetlib.Telnet(self.config["LS_HOST"], self.config["LS_PORT"])
 
-            #msg = 'dynamic_source.read_stop_all xxx\n'
-            msg = 'http.stop\n'
+            # msg = 'dynamic_source.read_stop_all xxx\n'
+            msg = "http.stop\n"
             self.logger.debug(msg)
             tn.write(msg)
 
-            msg = 'dynamic_source.output_stop\n'
+            msg = "dynamic_source.output_stop\n"
             self.logger.debug(msg)
             tn.write(msg)
 
-            msg = 'dynamic_source.id -1\n'
+            msg = "dynamic_source.id -1\n"
             self.logger.debug(msg)
             tn.write(msg)
 
@@ -145,10 +148,10 @@ class PypoPush(Thread):
 
     def run(self):
         while True:
-            try: self.main()
+            try:
+                self.main()
             except Exception as e:
                 top = traceback.format_exc()
-                self.logger.error('Pypo Push Exception: %s', top)
+                self.logger.error("Pypo Push Exception: %s", top)
                 time.sleep(5)
-        self.logger.info('PypoPush thread exiting')
-
+        self.logger.info("PypoPush thread exiting")

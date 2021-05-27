@@ -18,6 +18,7 @@ from configobj import ConfigObj
 from datetime import datetime
 from optparse import OptionParser
 import importlib
+
 try:
     from queue import Queue
 except ImportError:  # Python 2.7.5 (CentOS 7)

@@ -27,7 +27,7 @@ class Show(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_show'
+        db_table = "cc_show"
 
 
 class ShowDays(models.Model):
@@ -47,16 +47,16 @@ class ShowDays(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_show_days'
+        db_table = "cc_show_days"
 
 
 class ShowHost(models.Model):
     show = models.ForeignKey(Show, models.DO_NOTHING)
-    subjs = models.ForeignKey('User', models.DO_NOTHING)
+    subjs = models.ForeignKey("User", models.DO_NOTHING)
 
     class Meta:
         managed = False
-        db_table = 'cc_show_hosts'
+        db_table = "cc_show_hosts"
 
 
 class ShowInstance(models.Model):
@@ -66,7 +66,7 @@ class ShowInstance(models.Model):
     show = models.ForeignKey(Show, models.DO_NOTHING)
     record = models.SmallIntegerField(blank=True, null=True)
     rebroadcast = models.SmallIntegerField(blank=True, null=True)
-    instance = models.ForeignKey('self', models.DO_NOTHING, blank=True, null=True)
+    instance = models.ForeignKey("self", models.DO_NOTHING, blank=True, null=True)
     file = models.ForeignKey(File, models.DO_NOTHING, blank=True, null=True)
     time_filled = models.DurationField(blank=True, null=True)
     created = models.DateTimeField()
@@ -79,7 +79,7 @@ class ShowInstance(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_show_instances'
+        db_table = "cc_show_instances"
 
 
 class ShowRebroadcast(models.Model):
@@ -92,4 +92,4 @@ class ShowRebroadcast(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_show_rebroadcast'
+        db_table = "cc_show_rebroadcast"

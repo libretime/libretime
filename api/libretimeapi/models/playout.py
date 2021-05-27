@@ -4,13 +4,13 @@ from .files import File
 
 
 class ListenerCount(models.Model):
-    timestamp = models.ForeignKey('Timestamp', models.DO_NOTHING)
-    mount_name = models.ForeignKey('MountName', models.DO_NOTHING)
+    timestamp = models.ForeignKey("Timestamp", models.DO_NOTHING)
+    mount_name = models.ForeignKey("MountName", models.DO_NOTHING)
     listener_count = models.IntegerField()
 
     class Meta:
         managed = False
-        db_table = 'cc_listener_count'
+        db_table = "cc_listener_count"
 
 
 class LiveLog(models.Model):
@@ -20,18 +20,20 @@ class LiveLog(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_live_log'
+        db_table = "cc_live_log"
 
 
 class PlayoutHistory(models.Model):
     file = models.ForeignKey(File, models.DO_NOTHING, blank=True, null=True)
     starts = models.DateTimeField()
     ends = models.DateTimeField(blank=True, null=True)
-    instance = models.ForeignKey('ShowInstance', models.DO_NOTHING, blank=True, null=True)
+    instance = models.ForeignKey(
+        "ShowInstance", models.DO_NOTHING, blank=True, null=True
+    )
 
     class Meta:
         managed = False
-        db_table = 'cc_playout_history'
+        db_table = "cc_playout_history"
 
 
 class PlayoutHistoryMetadata(models.Model):
@@ -41,7 +43,7 @@ class PlayoutHistoryMetadata(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_playout_history_metadata'
+        db_table = "cc_playout_history_metadata"
 
 
 class PlayoutHistoryTemplate(models.Model):
@@ -50,7 +52,7 @@ class PlayoutHistoryTemplate(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_playout_history_template'
+        db_table = "cc_playout_history_template"
 
 
 class PlayoutHistoryTemplateField(models.Model):
@@ -63,7 +65,7 @@ class PlayoutHistoryTemplateField(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_playout_history_template_field'
+        db_table = "cc_playout_history_template_field"
 
 
 class Timestamp(models.Model):
@@ -71,4 +73,4 @@ class Timestamp(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_timestamp'
+        db_table = "cc_timestamp"

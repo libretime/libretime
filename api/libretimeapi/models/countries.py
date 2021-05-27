@@ -8,5 +8,4 @@ class Country(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_country'
-
+        db_table = "cc_country"
