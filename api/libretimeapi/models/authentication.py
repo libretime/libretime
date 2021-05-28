@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import hashlib
 from django.contrib import auth
 from django.contrib.auth.models import AbstractBaseUser, Permission

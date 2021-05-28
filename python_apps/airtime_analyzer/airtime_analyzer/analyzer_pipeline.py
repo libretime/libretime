@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """ Analyzes and imports an audio file into the Airtime library.
 """
 import logging

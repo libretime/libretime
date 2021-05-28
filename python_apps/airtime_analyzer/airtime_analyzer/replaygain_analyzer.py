@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import subprocess
 import logging
 from .analyzer import Analyzer

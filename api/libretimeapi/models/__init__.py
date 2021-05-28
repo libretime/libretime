@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from .authentication import *
 from .celery import *
 from .countries import *

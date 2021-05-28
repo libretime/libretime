@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import logging
 from django.contrib.auth.models import Group, Permission
 from .models.user_constants import GUEST, DJ, PROGRAM_MANAGER, USER_TYPES

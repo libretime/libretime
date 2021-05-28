@@ -1,5 +1,4 @@
 #!/usr/bin/python2 import sys
-# -*- coding: utf-8 -*-
 import os
 import logging
 from configobj import ConfigObj

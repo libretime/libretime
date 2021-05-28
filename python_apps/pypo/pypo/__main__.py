@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Python part of radio playout (pypo)
 """

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from nose.tools import *
 from airtime_analyzer.analyzer import Analyzer
 

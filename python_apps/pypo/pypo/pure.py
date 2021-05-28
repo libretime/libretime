@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import re
 from packaging.version import Version, parse
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import configparser
 import os
 from .utils import read_config_file, get_random_string

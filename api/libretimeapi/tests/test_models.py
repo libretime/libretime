@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from rest_framework.test import APITestCase
 from django.contrib.auth.models import Group
 from django.apps import apps

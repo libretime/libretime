@@ -24,7 +24,6 @@ repos:
         args: [--fix=lf]
       - id: trailing-whitespace
 
-      - id: fix-encoding-pragma
       - id: requirements-txt-fixer
       - id: name-tests-test
         # TODO: Remove once the django api uses pytest

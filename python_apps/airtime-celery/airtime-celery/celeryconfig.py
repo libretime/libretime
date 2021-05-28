@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 from configobj import ConfigObj
 from kombu import Exchange, Queue

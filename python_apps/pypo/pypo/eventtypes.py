@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 FILE = "file"
 EVENT = "event"
 STREAM_BUFFER_START = "stream_buffer_start"

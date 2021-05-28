@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from .pypofetch import PypoFetch
 from .telnetliquidsoap import TelnetLiquidsoap
 

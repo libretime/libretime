@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import telnetlib
 from .timeout import ls_timeout
 import traceback

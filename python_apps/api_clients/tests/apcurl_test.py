@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import unittest
 from api_clients.utils import ApcUrl, UrlBadParam, IncompleteUrl
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.db import models
 from .playlists import Playlist
 from .files import File
