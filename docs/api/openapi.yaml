@@ -1,5 +1,6 @@
 ---
-openapi: "3.0.0"
+# yaml-language-server: $schema=https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.1/schema.json
+openapi: "3.1.0"
 info:
   title: LibreTime API overview
   version: 1.1
