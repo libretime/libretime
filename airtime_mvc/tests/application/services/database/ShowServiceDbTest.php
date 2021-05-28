@@ -463,29 +463,6 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
     }
 
     /** Test the creation of a weekly repeating, record and rebroadcast(RR) show **/
-    public function testCreateWeeklyRepeatRRShow()
-    {
-        TestHelper::loginUser();
-
-        $data = ShowServiceData::getWeeklyRepeatRRData();
-        $showService = new Application_Service_ShowService(null, $data);
-        $showService->addUpdateShow($data);
-
-        $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
-            $this->getConnection()
-        );
-        $ds->addTable('cc_show', 'select * from cc_show');
-        $ds->addTable('cc_show_days', 'select * from cc_show_days');
-        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, modified_instance from cc_show_instances');
-        $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
-        $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
-
-        $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_createWeeklyRepeatRRShow.yml"),
-            $ds
-        );
-    }
-
     public function testEditRepeatingShowChangeNoEndOption()
     {
         TestHelper::loginUser();

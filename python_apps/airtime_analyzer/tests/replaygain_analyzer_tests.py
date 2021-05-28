@@ -13,8 +13,8 @@ def check_default_metadata(metadata):
     assert abs(metadata['cuein']) < tolerance_seconds
     assert abs(metadata['cueout'] - length_seconds) < tolerance_seconds
     '''
-    tolerance = 0.30
-    expected_replaygain = 5.0
+    tolerance = 0.60
+    expected_replaygain = 5.2
     print(metadata['replay_gain'])
     assert abs(metadata['replay_gain'] - expected_replaygain) < tolerance
 
@@ -26,7 +26,6 @@ def test_missing_replaygain():
 
 def test_invalid_filepath():
     metadata = ReplayGainAnalyzer.analyze(u'non-existent-file', dict())
-
 
 def test_mp3_utf8():
     metadata = ReplayGainAnalyzer.analyze(u'tests/test_data/44100Hz-16bit-stereo-utf8.mp3', dict())

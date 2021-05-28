@@ -1,0 +1,48 @@
+name: Create Release .tar.gz
+
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      # MAJ.MIN.BUG version with an optional -TYPE.VER (for example 3.0.0-alpha.8)
+      - '\d+.\d+.\d+(-\w+\.\d+)*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Upload Release Asset
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Read file contents
+        id: release_notes_file
+        uses: andstor/file-reader-action@v1
+        with:
+          path: ./.github/RELEASE.md
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: ${ steps.release_notes_file.outputs.contents }
+          draft: true
+          prerelease: true
+      - name: Build project
+        run: |-
+          sudo apt update -y -q
+          sudo apt install dos2unix php composer -y
+          ./.github/scripts/release.sh ${{ github.ref }}
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ../libretime-${{ github.ref }}.tar.gz
+          asset_name: libretime-${{ github.ref }}.tar.gz
+          asset_content_type: application/tgz

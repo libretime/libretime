@@ -113,7 +113,7 @@ class AirtimeApiClient:
                     'independent_event': current['independent_event'],
                 }
 
-                result['{}_0'.format(end.isoformat()] = {
+                result['{}_0'.format(end.isoformat())] = {
                     'type': 'stream_output_end',
                     'start': current['end'],
                     'end': current['end'],
