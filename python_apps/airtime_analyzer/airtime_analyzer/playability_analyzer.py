@@ -34,7 +34,7 @@ class PlayabilityAnalyzer(Analyzer):
             subprocess.check_output(command, stderr=subprocess.STDOUT, close_fds=True)
 
         except OSError as e:  # liquidsoap was not found
-            logging.warn(
+            logging.warning(
                 "Failed to run: %s - %s. %s"
                 % (command[0], e.strerror, "Do you have liquidsoap installed?")
             )
@@ -42,7 +42,7 @@ class PlayabilityAnalyzer(Analyzer):
             subprocess.CalledProcessError,
             Exception,
         ) as e:  # liquidsoap returned an error code
-            logging.warn(e)
+            logging.warning(e)
             raise UnplayableFileError()
 
         return metadata
