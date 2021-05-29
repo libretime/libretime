@@ -9,7 +9,7 @@ from airtime_analyzer.analyzer_pipeline import AnalyzerPipeline
 from .conftest import AUDIO_FILENAME, AUDIO_IMPORT_DEST
 
 
-def test_basic(src_dir, dest_dir):
+def test_run_analysis(src_dir, dest_dir):
     queue = Queue()
     AnalyzerPipeline.run_analysis(
         queue,

@@ -9,7 +9,7 @@ from airtime_analyzer.filemover_analyzer import FileMoverAnalyzer
 from .conftest import AUDIO_FILENAME
 
 
-def test_dont_use_analyze():
+def test_analyze():
     with pytest.raises(Exception):
         FileMoverAnalyzer.analyze("foo", dict())
 
@@ -28,7 +28,7 @@ def test_move_wrong_params(params, exception):
         FileMoverAnalyzer.move(*params)
 
 
-def test_basic(src_dir, dest_dir):
+def test_move(src_dir, dest_dir):
     FileMoverAnalyzer.move(
         os.path.join(src_dir, AUDIO_FILENAME),
         dest_dir,
@@ -38,7 +38,7 @@ def test_basic(src_dir, dest_dir):
     assert os.path.exists(os.path.join(dest_dir, AUDIO_FILENAME))
 
 
-def test_basic_samefile(src_dir):
+def test_move_samefile(src_dir):
     FileMoverAnalyzer.move(
         os.path.join(src_dir, AUDIO_FILENAME),
         src_dir,
@@ -70,7 +70,7 @@ def import_and_restore(src_dir, dest_dir) -> dict:
     return metadata
 
 
-def test_duplicate_file(src_dir, dest_dir):
+def test_move_duplicate_file(src_dir, dest_dir):
     # Import the file once
     import_and_restore(src_dir, dest_dir)
 
@@ -82,7 +82,7 @@ def test_duplicate_file(src_dir, dest_dir):
     assert os.path.exists(os.path.join(dest_dir, AUDIO_FILENAME))
 
 
-def test_double_duplicate_files(src_dir, dest_dir):
+def test_move_triplicate_file(src_dir, dest_dir):
     # Here we use mock to patch out the time.localtime() function so that it
     # always returns the same value. This allows us to consistently simulate this test cases
     # where the last two of the three files are imported at the same time as the timestamp.
@@ -108,7 +108,7 @@ def test_double_duplicate_files(src_dir, dest_dir):
     assert len(os.path.basename(metadata2["full_path"]).split("_")) == 3
 
 
-def test_bad_permissions_destination_dir(src_dir):
+def test_move_bad_permissions_dest_dir(src_dir):
     with pytest.raises(OSError):
         # /sys is using sysfs on Linux, which is unwritable
         FileMoverAnalyzer.move(

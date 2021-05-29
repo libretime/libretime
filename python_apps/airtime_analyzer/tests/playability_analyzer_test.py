@@ -26,23 +26,23 @@ def test_analyze(filepath):
     PlayabilityAnalyzer.analyze(filepath, dict())
 
 
-def test_missing_liquidsoap():
+def test_analyze_missing_liquidsoap():
     old = PlayabilityAnalyzer.LIQUIDSOAP_EXECUTABLE
     PlayabilityAnalyzer.LIQUIDSOAP_EXECUTABLE = "foobar"
     PlayabilityAnalyzer.analyze("tests/test_data/44100Hz-16bit-mono.mp3", dict())
     PlayabilityAnalyzer.LIQUIDSOAP_EXECUTABLE = old
 
 
-def test_invalid_filepath():
+def test_analyze_invalid_filepath():
     with pytest.raises(UnplayableFileError):
         test_analyze("non-existent-file")
 
 
-# def test_invalid_wma():
+# def test_analyze_invalid_wma():
 #     with pytest.raises(UnplayableFileError):
 #         test_analyze("tests/test_data/44100Hz-16bit-stereo-invalid.wma")
 
 
-def test_unknown():
+def test_analyze_unknown():
     with pytest.raises(UnplayableFileError):
         test_analyze("https://www.google.com")
