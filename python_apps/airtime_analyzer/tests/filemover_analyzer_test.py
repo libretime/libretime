@@ -49,6 +49,10 @@ def test_basic_samefile(src_dir):
 
 
 def import_and_restore(src_dir, dest_dir) -> dict:
+    """
+    Small helper to test the FileMoverAnalyzer.move function.
+    Move the file and restore it back to it's origine.
+    """
     # Import the file
     metadata = FileMoverAnalyzer.move(
         os.path.join(src_dir, AUDIO_FILENAME),
