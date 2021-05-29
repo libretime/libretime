@@ -4,7 +4,6 @@
 .DS_Store
 .idea/
 .vagrant/
-*.log
 *~
 VERSION
 
