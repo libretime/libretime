@@ -6,9 +6,7 @@ import time
 import mock
 import pytest
 from airtime_analyzer.filemover_analyzer import FileMoverAnalyzer
-
-AUDIO_FILE = "tests/test_data/44100Hz-16bit-mono.mp3"
-AUDIO_FILENAME = os.path.basename(AUDIO_FILE)
+from .conftest import AUDIO_FILENAME
 
 
 def test_dont_use_analyze():
@@ -28,19 +26,6 @@ def test_dont_use_analyze():
 def test_move_wrong_params(params, exception):
     with pytest.raises(exception):
         FileMoverAnalyzer.move(*params)
-
-
-@pytest.fixture()
-def dest_dir():
-    with tempfile.TemporaryDirectory(prefix="dest") as tmpdir:
-        yield tmpdir
-
-
-@pytest.fixture()
-def src_dir():
-    with tempfile.TemporaryDirectory(prefix="src") as tmpdir:
-        shutil.copy(AUDIO_FILE, tmpdir)
-        yield tmpdir
 
 
 def test_basic(src_dir, dest_dir):
