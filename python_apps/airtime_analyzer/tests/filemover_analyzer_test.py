@@ -99,12 +99,13 @@ def test_double_duplicate_files(src_dir, dest_dir):
     # thanks to us mocking out time.localtime()
     metadata2 = import_and_restore(src_dir, dest_dir)
 
+    # Check if file exists and if filename is <original>_<date>.<ext>
     assert os.path.exists(metadata1["full_path"])
-    # Check if filename is <original>_<date>.<ext>
-    assert len(metadata1["full_path"].split("_")) == 2
+    assert len(os.path.basename(metadata1["full_path"]).split("_")) == 2
+
+    # Check if file exists and if filename is <original>_<date>_<uuid>.<ext>
     assert os.path.exists(metadata2["full_path"])
-    # Check if filename is <original>_<date>_<uuid>.<ext>
-    assert len(metadata2["full_path"].split("_")) == 3
+    assert len(os.path.basename(metadata2["full_path"]).split("_")) == 3
 
 
 def test_bad_permissions_destination_dir(src_dir):
