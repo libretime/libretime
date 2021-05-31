@@ -456,17 +456,17 @@ Highlights:
 
 1.8.0 - April 19, 2011
   * The biggest feature of this release is the ability to edit shows. You can
-    change everything from ‘Name’, ‘Description’, and ‘URL’, to repeat and
+    change everything from 'Name', 'Description', and 'URL', to repeat and
     rebroadcast days. Show instances will be dynamically created or removed as
     needed.  Radio stations will be pleased to know they can now have up to
     ten rebroadcast shows too.
-  * Airtime’s calendar now looks, feels and performs better than ever. Loading
+  * Airtime's calendar now looks, feels and performs better than ever. Loading
     a station schedule is now five to eight times faster. In our tests of 1.7,
     if the month calendar had shows scheduled for every hour of every day, it
     used to take 16 seconds to load. Now in 1.8 it takes two seconds.
   * It is possible to have up to ten rebroadcast shows now, in 1.7 it was only
     up to five.
-  * Airtime’s new installation script has two options for increased install
+  * Airtime's new installation script has two options for increased install
     flexibility:  --preserve to keep your existing config files, or --overwrite
     to replace your existing config files with new ones. Uninstall no longer
     removes Airtime config files or the music storage directory.

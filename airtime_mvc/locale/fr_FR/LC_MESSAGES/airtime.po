@@ -5656,7 +5656,7 @@ msgstr "Impossible de se connecter au serveur RabbitMQ! Veuillez vérifier si le
 #~ msgid ""
 #~ "Our new Dashboard view now has a powerful tabbed editing interface, so updating your tracks and playlists\n"
 #~ "                        is easier than ever."
-#~ msgstr "Notre nouvelle vue Tableau de bord dispose désormais d’une puissante interface d’édition par onglets. La mise à jour de vos pistes et de vos listes de lecture est donc plus simple que jamais."
+#~ msgstr "Notre nouvelle vue Tableau de bord dispose désormais d'une puissante interface d'édition par onglets. La mise à jour de vos pistes et de vos listes de lecture est donc plus simple que jamais."
 
 #~ msgid ""
 #~ "We've streamlined the Airtime interface to make navigation easier. With the most important tools\n"

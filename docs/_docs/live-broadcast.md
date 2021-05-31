@@ -79,7 +79,7 @@ directory by default.
 Everything should now be working and you can broadcast for your entire time
 slot. If you choose to stop streaming before it is over click the white square
 **Stop** button to disconnect. Then go to the LibreTime page and if the Show
-Source didn’t automatically disconnect you can click it to the right and it
+Source didn't automatically disconnect you can click it to the right and it
 should turn gray.
 
 You are now done streaming.
