@@ -61,7 +61,7 @@ for remote input connection details.
 1. When its almost your show time go to your LibreTime page and look at the time
    in the top right when your show starts go to Butt.
 2. Click the white Play button (third button in the middle).
-3. If it says connecting… and then stream time with a counter– congratulations,
+3. If it says connecting... and then stream time with a counter– congratulations,
    your are connected!
 4. Go to the LibreTime page and at the top right under Source Streams the
    tab besides Show Source is to the left and Orange – if it is and Current
