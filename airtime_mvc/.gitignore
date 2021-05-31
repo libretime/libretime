@@ -1,0 +1,6 @@
+## Custom .gitignore
+################################################################################
+
+/tests/*.jar
+/tests/results.html
+/tests/test_results.xml
