@@ -36,19 +36,19 @@ Enter the server names you require, press **Ctrl+O** to write out the _/etc/ntp.
 
 The server should respond:
 
-    * Stopping NTP server ntpd                                 [ OK ]
-    * Starting NTP server ntpd                                 [ OK ]
+    * Stopping NTP server ntpd                                 [ OK ]
+    * Starting NTP server ntpd                                 [ OK ]
 
 Then use the **ntpq -p** command to confirm that **ntp** is working. This command should produce output similar to the following:
 
     ntpq -p
-      remote      refid     st t  when poll reach  delay offset jitter
+      remote      refid     st t  when poll reach  delay offset jitter
     ==================================================================
-    europium. 193.79.237.14  2 u   28   64    3  39.571  12.600  3.590
-    norb.v4.c 46.227.200.72  3 u   28   64    3  47.856  -6.908 10.028
-    82.113.15 193.62.22.82   2 u   29   64    3  11.458  -0.513  2.629
-    ntppub.le 158.43.192.66  2 u   91   64    2 122.781  44.864  0.001
-    dns0.rmpl 195.66.241.3   2 u   27   64    3  22.171   1.464  4.242
+    europium. 193.79.237.14  2 u   28   64    3  39.571  12.600  3.590
+    norb.v4.c 46.227.200.72  3 u   28   64    3  47.856  -6.908 10.028
+    82.113.15 193.62.22.82   2 u   29   64    3  11.458  -0.513  2.629
+    ntppub.le 158.43.192.66  2 u   91   64    2 122.781  44.864  0.001
+    dns0.rmpl 195.66.241.3   2 u   27   64    3  22.171   1.464  4.242
 
 ### Adjusting the server time zone
 

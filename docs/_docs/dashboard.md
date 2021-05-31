@@ -28,7 +28,7 @@ the name of the show from the drop-down menu which will appear.
 
 ![](/img/filter.png)
 
-On the left side of the page, the **Start** and **End** times, **Duration**
+On the left side of the page, the **Start** and **End** times, **Duration**
 and **Title** of each content item are shown. On the right, **Creator**,
 **Album**, **Cue** or **Fade** times and **Mime** type (file format) can also be
 shown. This information can help you to prepare voice tracks for insertion into

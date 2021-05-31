@@ -24,10 +24,10 @@ When sending metadata about your stream to an Icecast server in non-Latin alphab
 
 The solution is to specify that the metadata for the MP3 mount point you are using should be interpreted using UTF-8 encoding. You can do this by adding the following stanza to the _/etc/icecast2/icecast.xml_ file, where _libretime.mp3_ is the name of your mount point:
 
-      <mount>
-           <mount-name>/libretime.mp3</mount-name>
-           <charset>UTF-8</charset>
-      </mount>
+      <mount>
+           <mount-name>/libretime.mp3</mount-name>
+           <charset>UTF-8</charset>
+      </mount>
 
 After saving the _/etc/icecast2/icecast.xml_ file, you should restart the Icecast server:
 
@@ -71,7 +71,7 @@ The example _<mount>_ section provided in the _icecast.xml_ file is commented ou
 
 These mount point definitions mean that a client connecting to a URL such as *http://icecast.example.com:8000/stream.ogg* will first fall back to the _/live.ogg_ mount point if it is available. If not, the client will fall back in turn to the _/airtime_128_ mount point for LibreTime playout.
 
-Setting the value of _<fallback-override>_ to 1 (enabled) means that when the _/live.ogg_ mount point becomes available again, the client will be re-connected to it.  If you wish to hide the _/airtime_128_ and _/live.ogg_ mount points from the public Icecast web interface, set the value of _<hidden>_ in each of these definitions to 1.
+Setting the value of _<fallback-override>_ to 1 (enabled) means that when the _/live.ogg_ mount point becomes available again, the client will be re-connected to it. If you wish to hide the _/airtime_128_ and _/live.ogg_ mount points from the public Icecast web interface, set the value of _<hidden>_ in each of these definitions to 1.
 
 ## Source configuration
 

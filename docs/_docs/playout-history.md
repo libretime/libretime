@@ -32,7 +32,7 @@ The **History Templates** page on the History menu enables you to prepare report
 
 ![](/img/new-hist-temp.png)
 
-Either of these actions opens a page in which you can name the new template, and add or remove elements from the list on the left. To add a new element from the list on the right, click the plus icon for the item you require. If the element you require is not listed, you can use the **Add New Field** box at the lower end of the right side column. Select _string_, _boolean_, *integer*, or _float_, depending on the type of data that you wish to log, and then click the **+ Add** button.
+Either of these actions opens a page in which you can name the new template, and add or remove elements from the list on the left. To add a new element from the list on the right, click the plus icon for the item you require. If the element you require is not listed, you can use the **Add New Field** box at the lower end of the right side column. Select _string_, _boolean_, _integer_, or _float_, depending on the type of data that you wish to log, and then click the **+ Add** button.
 
 When the template is in the format you require, click the **Save** button, and **Set Default Template** if you wish. The new template will now be listed on the History Templates page. If you have set a new default template, any changes will be visible on the tabs of the Playout History page.
 

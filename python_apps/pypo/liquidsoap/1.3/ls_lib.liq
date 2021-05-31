@@ -244,7 +244,7 @@ end
 #cc-4633
 
 
-# NOTE
+# NOTE
 # A few values are hardcoded and may be dependent:
 #  - the delay in gracetime is linked with the buffer duration of input.http
 #    (delay should be a bit less than buffer)
@@ -288,7 +288,7 @@ def input.http_restart(~id,~initial_url="http://dummy/url")
   # Dummy output should be useless if HTTP stream is meant
   # to be listened to immediately. Otherwise, apply it.
   #
-  # output.dummy(fallible=true,source)
+  # output.dummy(fallible=true,source)
 
   source
 
@@ -311,7 +311,7 @@ def cross_http(~debug=true,~http_input_id,source)
     end
   end
 
-  # We use both metadata and status to know about the current URL.
+  # We use both metadata and status to know about the current URL.
   # Using only metadata may be more precise is crazy corner cases,
   # but it's also asking too much: the metadata may not pass through
   # before the crosser is instantiated.
@@ -333,18 +333,18 @@ def cross_http(~debug=true,~http_input_id,source)
     end
     if !change then
       change := false
-      # In principle one should avoid crossing on a live stream
+      # In principle one should avoid crossing on a live stream
       # it'd be okay to do it here (eg. use add instead of sequence)
       # because it's only once per URL, but be cautious.
       sequence([fade.out(duration=cross_d,a),fade.in(b)])
     else
-      # This is done on tracks inside a single stream.
+      # This is done on tracks inside a single stream.
       # Do NOT cross here or you'll gradually empty the buffer!
       sequence([a,b])
     end
   end
 
-  # Setting conservative=true would mess with the delayed switch below
+  # Setting conservative=true would mess with the delayed switch below
   cross(duration=cross_d,conservative=false,crosser,source)
 
 end

@@ -61,7 +61,7 @@ On file ingest, LibreTime analyzes each Ogg Vorbis, MP3, AAC or FLAC file's loud
 
 Because of this automatic gain adjustment, any files with average loudness higher than -14 dBFS will not sound louder than quieter files at playout time, but the lower crest factor in the louder files (their relatively low peak-to-average ratio) may be apparent in the output, making those files sound less dynamic. This may be an issue for contemporary popular music, which can average at -9 dBFS or louder before ReplayGain adjustment. (See <http://www.soundonsound.com/sos/sep11/articles/loudness.htm> for a detailed analysis of the problem).
 
-Your station's producers should therefore aim for 14dB between peak and average loudness to maintain the crest factor of their prepared material (also known as _DR14_ on some dynamic range meters, such as the command-line DR14 T.meter available from <http://sourceforge.net/projects/dr14tmeter/>). If the producers are working to a different loudness standard, the ReplayGain modifier in LibreTime's Stream Settings page can be adjusted to suit their material.
+Your station's producers should therefore aim for 14dB between peak and average loudness to maintain the crest factor of their prepared material (also known as _DR14_ on some dynamic range meters, such as the command-line DR14 T.meter available from <http://sourceforge.net/projects/dr14tmeter/>). If the producers are working to a different loudness standard, the ReplayGain modifier in LibreTime's Stream Settings page can be adjusted to suit their material.
 
 Large transient peaks in otherwise quiet files should be avoided, to guard against the need for peak limiting when ReplayGain is applied to those quieter files.
 
@@ -72,7 +72,7 @@ Here is an example of a very quiet file where the use of ReplayGain would make t
     $ vorbisgain -d Peter_Lawson-Three_Gymn.ogg
     Analyzing files...
 
-       Gain   | Peak | Scale | New Peak | Track
+       Gain   | Peak | Scale | New Peak | Track
     ----------+------+-------+----------+------
     +17.39 dB | 4536 |  7.40 |    33585 | Peter_Lawson-Three_Gymn.ogg
 
@@ -81,9 +81,9 @@ And here is an example of a very loud file, with lower crest factor, where the o
     $ vorbisgain -d Snoop_Dogg-Doggfather.ogg
     Analyzing files...
 
-       Gain   | Peak  | Scale | New Peak | Track
+       Gain   | Peak  | Scale | New Peak | Track
     ----------+-------+-------+----------+------
-     -7.86 dB | 36592 |  0.40 |    14804 | Snoop_Dogg-Doggfather.ogg
+     -7.86 dB | 36592 |  0.40 |    14804 | Snoop_Dogg-Doggfather.ogg
 
 In the output from vorbisgain, _Peak_ is the maximum sample value of the file before any ReplayGain has been applied, where a value of 32,767 represents full scale when decoding to signed 16 bit samples. Note that lossy compressed files can have peaks greater than full scale, due to encoding artifacts. The _New Peak_ value for the Snoop Dogg file may be relatively low due to the hard limiting used in the mastering of that piece of music.
 

@@ -193,6 +193,6 @@ rabbitmqctl add_vhost /airtime
 rabbitmqctl add_user airtime XXXXXXXXXXXXXXXXXXXX
 rabbitmqctl set_permissions -p /airtime airtime
    "airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
-   "airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
-   "airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
+   "airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
+   "airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
 ```
