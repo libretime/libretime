@@ -1,10 +1,10 @@
-name: test-all-Ubuntu
+name: Python and PHP Tests
 on:
   push:
     paths-ignore:
     - 'docs/**'
   pull_request:
-    types: [opened, ready_for_review, review_requested]
+    types: [opened, ready_for_review, review_requested, edited, reopened, synchronize]
     paths-ignore:
     - 'docs/**'
   workflow_dispatch:
