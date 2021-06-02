@@ -48,7 +48,7 @@ class AirtimeApiClient:
         str_current = current_time.isoformat(timespec='seconds')
         str_end = end_time.isoformat(timespec='seconds')
         data = self.services.schedule_url(params={
-            'ends__range': ('{str_current}Z,{str_end}Z'.format(str_current, str_end)),
+            'ends__range': ('{}Z,{}Z'.format(str_current, str_end)),
         })
         result = {'media': {} }
         for item in data:
