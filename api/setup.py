@@ -1,6 +1,7 @@
 import os
 import shutil
-from setuptools import setup, find_packages
+
+from setuptools import find_packages, setup
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 print(script_path)

@@ -1,8 +1,10 @@
 from __future__ import print_function
-from setuptools import setup
-from subprocess import call
-import sys
+
 import os
+import sys
+from subprocess import call
+
+from setuptools import setup
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 print(script_path)

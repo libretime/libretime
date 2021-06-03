@@ -1,6 +1,7 @@
-from configobj import ConfigObj
-import telnetlib
 import sys
+import telnetlib
+
+from configobj import ConfigObj
 
 try:
     config = ConfigObj("/etc/airtime/airtime.conf")

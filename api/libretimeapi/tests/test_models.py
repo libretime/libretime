@@ -1,9 +1,9 @@
-from rest_framework.test import APITestCase
-from django.contrib.auth.models import Group
 from django.apps import apps
+from django.contrib.auth.models import Group
 from libretimeapi.models import User
-from libretimeapi.models.user_constants import GUEST, DJ
+from libretimeapi.models.user_constants import DJ, GUEST
 from libretimeapi.permission_constants import GROUPS
+from rest_framework.test import APITestCase
 
 
 class TestUserManager(APITestCase):

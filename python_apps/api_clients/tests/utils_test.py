@@ -1,6 +1,7 @@
-import datetime
 import configparser
+import datetime
 import unittest
+
 from api_clients import utils
 
 

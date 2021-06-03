@@ -1,6 +1,7 @@
 import configparser
 import os
-from .utils import read_config_file, get_random_string
+
+from .utils import get_random_string, read_config_file
 
 LIBRETIME_CONF_DIR = os.getenv("LIBRETIME_CONF_DIR", "/etc/airtime")
 DEFAULT_CONFIG_PATH = os.getenv(

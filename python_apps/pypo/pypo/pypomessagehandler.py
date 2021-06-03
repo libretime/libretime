@@ -1,18 +1,18 @@
+import json
 import logging
-import traceback
 import os
 import sys
-from threading import Thread
 import time
+import traceback
+from threading import Thread
+
+from amqp.exceptions import AMQPError
 
 # For RabbitMQ
 from kombu.connection import Connection
 from kombu.messaging import Exchange, Queue
-from kombu.simple import SimpleQueue
-from amqp.exceptions import AMQPError
-import json
-
 from kombu.mixins import ConsumerMixin
+from kombu.simple import SimpleQueue
 
 logging.captureWarnings(True)
 

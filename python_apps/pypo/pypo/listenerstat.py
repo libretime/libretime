@@ -1,12 +1,14 @@
-from threading import Thread
-import urllib.request, urllib.error, urllib.parse
-import defusedxml.minidom
 import base64
-from datetime import datetime
-import traceback
 import logging
 import time
+import traceback
+import urllib.error
+import urllib.parse
+import urllib.request
+from datetime import datetime
+from threading import Thread
 
+import defusedxml.minidom
 from api_clients import version1 as api_client
 
 

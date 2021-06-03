@@ -1,15 +1,12 @@
-from .pypoliqqueue import PypoLiqQueue
-from .telnetliquidsoap import DummyTelnetLiquidsoap, TelnetLiquidsoap
-
-
+import logging
+import signal
+import sys
+from datetime import datetime, timedelta
 from queue import Queue
 from threading import Lock
 
-import sys
-import signal
-import logging
-from datetime import datetime
-from datetime import timedelta
+from .pypoliqqueue import PypoLiqQueue
+from .telnetliquidsoap import DummyTelnetLiquidsoap, TelnetLiquidsoap
 
 
 def keyboardInterruptHandler(signum, frame):

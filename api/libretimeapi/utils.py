@@ -1,7 +1,7 @@
 import configparser
-import sys
-import string
 import random
+import string
+import sys
 
 
 def read_config_file(config_path):

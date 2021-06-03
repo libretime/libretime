@@ -1,5 +1,5 @@
-from nose.tools import *
 from airtime_analyzer.cuepoint_analyzer import CuePointAnalyzer
+from nose.tools import *
 
 
 def check_default_metadata(metadata):

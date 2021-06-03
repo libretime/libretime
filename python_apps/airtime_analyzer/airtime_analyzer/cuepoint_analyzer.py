@@ -1,8 +1,9 @@
-import subprocess
-import logging
-import traceback
-import json
 import datetime
+import json
+import logging
+import subprocess
+import traceback
+
 from .analyzer import Analyzer
 
 

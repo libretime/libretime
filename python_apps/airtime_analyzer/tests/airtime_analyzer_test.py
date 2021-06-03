@@ -1,5 +1,5 @@
-from nose.tools import *
 import airtime_analyzer
+from nose.tools import *
 
 
 def setup():

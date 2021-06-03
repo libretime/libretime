@@ -1,15 +1,11 @@
-from threading import Thread
-from collections import deque
-from datetime import datetime
-
-import traceback
+import signal
 import sys
 import time
-
-
+import traceback
+from collections import deque
+from datetime import datetime
 from queue import Empty
-
-import signal
+from threading import Thread
 
 
 def keyboardInterruptHandler(signum, frame):

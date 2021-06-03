@@ -1,5 +1,5 @@
-import shutil
 import os
+import shutil
 import sys
 
 if os.geteuid() != 0:

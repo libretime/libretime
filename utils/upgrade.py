@@ -1,10 +1,11 @@
 #!/usr/bin/python
 
-import ConfigParser
 import argparse
+import sys
+
+import ConfigParser
 import requests
 from urlparse import urlparse
-import sys
 
 CONFIG_PATH = "/etc/airtime/airtime.conf"
 GENERAL_CONFIG_SECTION = "general"

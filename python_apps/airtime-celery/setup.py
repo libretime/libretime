@@ -1,8 +1,9 @@
-from pathlib import Path
-from setuptools import setup
-from subprocess import call
 import os
 import sys
+from pathlib import Path
+from subprocess import call
+
+from setuptools import setup
 
 # Change directory since setuptools uses relative paths
 script_path = os.path.dirname(os.path.realpath(__file__))

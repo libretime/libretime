@@ -1,7 +1,8 @@
-import subprocess
 import logging
-from .analyzer import Analyzer
 import re
+import subprocess
+
+from .analyzer import Analyzer
 
 
 class ReplayGainAnalyzer(Analyzer):

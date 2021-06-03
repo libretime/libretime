@@ -1,9 +1,10 @@
-import unittest
 import json
-from mock import patch, MagicMock
-from configobj import ConfigObj
-from api_clients.version1 import api_config
+import unittest
+
 from api_clients.utils import RequestProvider
+from api_clients.version1 import api_config
+from configobj import ConfigObj
+from mock import MagicMock, patch
 
 
 class TestRequestProvider(unittest.TestCase):

@@ -1,25 +1,21 @@
-import logging
-import json
-import time
 import datetime
-import os
-import sys
-import pytz
-import signal
+import json
+import logging
 import math
-import traceback
+import os
 import re
-
-from configobj import ConfigObj
-
-from subprocess import Popen
-from subprocess import PIPE
+import signal
+import sys
+import time
+import traceback
+from subprocess import PIPE, Popen
 from threading import Thread
 
 import mutagen
-
+import pytz
 from api_clients import version1 as v1_api_client
 from api_clients import version2 as api_client
+from configobj import ConfigObj
 
 
 def api_client(logger):

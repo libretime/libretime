@@ -1,11 +1,12 @@
-from nose.tools import *
+import multiprocessing
 import os
 import shutil
-import multiprocessing
 import time
-import mock
 from pprint import pprint
+
+import mock
 from airtime_analyzer.filemover_analyzer import FileMoverAnalyzer
+from nose.tools import *
 
 DEFAULT_AUDIO_FILE = u"tests/test_data/44100Hz-16bit-mono.mp3"
 DEFAULT_IMPORT_DEST = u"Test Artist/Test Album/44100Hz-16bit-mono.mp3"

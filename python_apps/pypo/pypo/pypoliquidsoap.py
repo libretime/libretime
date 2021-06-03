@@ -1,11 +1,9 @@
-from .pypofetch import PypoFetch
-from .telnetliquidsoap import TelnetLiquidsoap
-
-from datetime import datetime
-from datetime import timedelta
+import time
+from datetime import datetime, timedelta
 
 from . import eventtypes
-import time
+from .pypofetch import PypoFetch
+from .telnetliquidsoap import TelnetLiquidsoap
 
 
 class PypoLiquidsoap:

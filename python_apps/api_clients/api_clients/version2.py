@@ -7,10 +7,13 @@
 # schedule a playlist one minute from the current time.
 ###############################################################################
 import datetime
-from dateutil.parser import isoparse
 import logging
+import sys
+
 from configobj import ConfigObj
-from .utils import RequestProvider, time_in_seconds, time_in_milliseconds, fromisoformat
+from dateutil.parser import isoparse
+
+from .utils import RequestProvider, fromisoformat, time_in_milliseconds, time_in_seconds
 
 LIBRETIME_API_VERSION = "2.0"
 

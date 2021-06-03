@@ -1,7 +1,8 @@
 __author__ = "asantoni"
 
-import subprocess
 import logging
+import subprocess
+
 from .analyzer import Analyzer
 
 

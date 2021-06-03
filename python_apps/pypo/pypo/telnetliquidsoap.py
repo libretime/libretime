@@ -1,6 +1,7 @@
 import telnetlib
-from .timeout import ls_timeout
 import traceback
+
+from .timeout import ls_timeout
 
 
 def create_liquidsoap_annotation(media):

@@ -1,12 +1,12 @@
+import logging
 import os
-import time
 import shutil
 import sys
-import logging
+import time
+from subprocess import PIPE, Popen
 
-from configobj import ConfigObj
-from subprocess import Popen, PIPE
 from api_clients import api_client as apc
+from configobj import ConfigObj
 
 """
 The purpose of this script is that you can run it, and it will compare what the database has to what your filesystem

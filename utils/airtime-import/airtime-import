@@ -1,12 +1,13 @@
 #!/usr/bin/python2 import sys
-import os
-import logging
-from configobj import ConfigObj
-from optparse import OptionParser, OptionValueError
-from api_clients import api_client as apc
 import json
+import logging
+import os
 import shutil
+from optparse import OptionParser, OptionValueError
+
 import commands
+from api_clients import api_client as apc
+from configobj import ConfigObj
 
 # sys.path.append('/usr/lib/airtime/media-monitor/mm2/')
 from mm2.media.monitor.pure import is_file_supported

@@ -1,9 +1,11 @@
 from __future__ import print_function
+
 import datetime
-import mutagen
+
 import mock
-from nose.tools import *
+import mutagen
 from airtime_analyzer.metadata_analyzer import MetadataAnalyzer
+from nose.tools import *
 
 
 def setup():

@@ -1,9 +1,10 @@
 import os
-from django.contrib.auth.models import AnonymousUser
+
 from django.conf import settings
-from rest_framework.test import APITestCase, APIRequestFactory
-from model_bakery import baker
+from django.contrib.auth.models import AnonymousUser
 from libretimeapi.views import FileViewSet
+from model_bakery import baker
+from rest_framework.test import APIRequestFactory, APITestCase
 
 
 class TestFileViewSet(APITestCase):

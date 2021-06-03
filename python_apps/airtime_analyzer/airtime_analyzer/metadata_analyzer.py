@@ -1,11 +1,13 @@
-import time
 import datetime
-import mutagen
-import magic
-import wave
+import hashlib
 import logging
 import os
-import hashlib
+import time
+import wave
+
+import magic
+import mutagen
+
 from .analyzer import Analyzer
 
 

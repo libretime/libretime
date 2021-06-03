@@ -2,15 +2,16 @@
 """
 import logging
 import logging.handlers
-import sys
 import signal
+import sys
 import traceback
-from . import config_file
 from functools import partial
+
+from . import config_file
+from .message_listener import MessageListener
 from .metadata_analyzer import MetadataAnalyzer
 from .replaygain_analyzer import ReplayGainAnalyzer
 from .status_reporter import StatusReporter
-from .message_listener import MessageListener
 
 
 class AirtimeAnalyzerServer:

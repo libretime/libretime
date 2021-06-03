@@ -1,11 +1,12 @@
-from nose.tools import *
+import datetime
+import multiprocessing
 import os
 import shutil
-import multiprocessing
 from queue import Queue
-import datetime
-from airtime_analyzer.analyzer_pipeline import AnalyzerPipeline
+
 from airtime_analyzer import config_file
+from airtime_analyzer.analyzer_pipeline import AnalyzerPipeline
+from nose.tools import *
 
 DEFAULT_AUDIO_FILE = u"tests/test_data/44100Hz-16bit-mono.mp3"
 DEFAULT_IMPORT_DEST = u"Test Artist/Test Album/44100Hz-16bit-mono.mp3"

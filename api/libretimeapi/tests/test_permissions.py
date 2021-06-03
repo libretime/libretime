@@ -1,16 +1,17 @@
 import os
+
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
-from django.conf import settings
-from rest_framework.test import APITestCase, APIRequestFactory
-from model_bakery import baker
-from libretimeapi.permissions import IsSystemTokenOrUser
+from libretimeapi.models.user_constants import ADMIN, DJ, GUEST, PROGRAM_MANAGER
 from libretimeapi.permission_constants import (
-    GUEST_PERMISSIONS,
     DJ_PERMISSIONS,
+    GUEST_PERMISSIONS,
     PROGRAM_MANAGER_PERMISSIONS,
 )
-from libretimeapi.models.user_constants import GUEST, DJ, PROGRAM_MANAGER, ADMIN
+from libretimeapi.permissions import IsSystemTokenOrUser
+from model_bakery import baker
+from rest_framework.test import APIRequestFactory, APITestCase
 
 
 class TestIsSystemTokenOrUser(APITestCase):

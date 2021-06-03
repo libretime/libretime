@@ -1,7 +1,8 @@
-import json
 import datetime
+import json
 import logging
 import socket
+
 import requests
 from requests.auth import AuthBase
 

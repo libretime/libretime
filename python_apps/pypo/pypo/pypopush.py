@@ -1,24 +1,20 @@
-from datetime import datetime
-from datetime import timedelta
-from configobj import ConfigObj
-
-import sys
-import time
-import logging.config
-import telnetlib
 import calendar
+import logging.config
 import math
-import traceback
 import os
-
-from .pypofetch import PypoFetch
-from .pypoliqqueue import PypoLiqQueue
-
+import sys
+import telnetlib
+import time
+import traceback
+from datetime import datetime, timedelta
 from queue import Empty, Queue
-
 from threading import Thread
 
 from api_clients import version1 as api_client
+from configobj import ConfigObj
+
+from .pypofetch import PypoFetch
+from .pypoliqqueue import PypoLiqQueue
 from .timeout import ls_timeout
 
 logging.captureWarnings(True)

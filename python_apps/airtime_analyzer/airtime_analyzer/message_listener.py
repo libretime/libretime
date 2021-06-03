@@ -1,12 +1,14 @@
-import sys
-import pika
 import json
-import time
-import select
-import signal
 import logging
 import multiprocessing
 import queue
+import select
+import signal
+import sys
+import time
+
+import pika
+
 from .analyzer_pipeline import AnalyzerPipeline
 from .status_reporter import StatusReporter
 

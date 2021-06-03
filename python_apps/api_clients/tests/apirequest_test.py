@@ -1,7 +1,8 @@
-import unittest
 import json
-from mock import MagicMock, patch
+import unittest
+
 from api_clients.utils import ApcUrl, ApiRequest
+from mock import MagicMock, patch
 
 
 class ResponseInfo:

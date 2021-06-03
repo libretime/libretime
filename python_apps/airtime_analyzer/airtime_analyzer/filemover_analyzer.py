@@ -1,8 +1,7 @@
+import errno
 import logging
 import os
-import time
 import shutil
-import os, errno
 import time
 import uuid
 

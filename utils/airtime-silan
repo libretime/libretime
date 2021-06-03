@@ -1,13 +1,13 @@
 #!/usr/bin/python
-from configobj import ConfigObj
-from api_clients import api_client as apc
-
-import logging
 import json
+import logging
 import os
-import sys
 import subprocess
+import sys
 import traceback
+
+from api_clients import api_client as apc
+from configobj import ConfigObj
 
 # create logger
 logger = logging.getLogger()

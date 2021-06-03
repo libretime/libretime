@@ -6,17 +6,18 @@
 # probably want to create a script on your server side to automatically
 # schedule a playlist one minute from the current time.
 ###############################################################################
+import base64
+import json
+import logging
 import sys
 import time
-import urllib.parse
-import requests
-import logging
-import json
-import base64
 import traceback
+import urllib.parse
+
+import requests
 from configobj import ConfigObj
 
-from .utils import RequestProvider, ApiRequest, get_protocol
+from .utils import ApiRequest, RequestProvider, get_protocol
 
 AIRTIME_API_VERSION = "1.1"
 

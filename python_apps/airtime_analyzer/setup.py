@@ -1,5 +1,6 @@
-from setuptools import setup
 import os
+
+from setuptools import setup
 
 # Change directory since setuptools uses relative paths
 os.chdir(os.path.dirname(os.path.realpath(__file__)))

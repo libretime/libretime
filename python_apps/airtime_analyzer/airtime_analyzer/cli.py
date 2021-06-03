@@ -2,10 +2,11 @@
 Main CLI entrypoint for the libretime-analyzer app.
 """
 
-import daemon
 import argparse
 import os
+
 import airtime_analyzer.airtime_analyzer as aa
+import daemon
 
 VERSION = "1.0"
 LIBRETIME_CONF_DIR = os.getenv("LIBRETIME_CONF_DIR", "/etc/airtime")

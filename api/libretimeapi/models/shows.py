@@ -1,6 +1,7 @@
 from django.db import models
-from .playlists import Playlist
+
 from .files import File
+from .playlists import Playlist
 
 
 class Show(models.Model):

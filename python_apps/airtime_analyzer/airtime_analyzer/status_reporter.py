@@ -1,13 +1,14 @@
-import requests
+import collections
 import json
 import logging
-import collections
+import pickle
 import queue
+import threading
 import time
 import traceback
-import pickle
-import threading
 from urllib.parse import urlparse
+
+import requests
 
 # Disable urllib3 warnings because these can cause a rare deadlock due to Python 2's crappy internal non-reentrant locking
 # around POSIX stuff. See SAAS-714. The hasattr() is for compatibility with older versions of requests.

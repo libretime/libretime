@@ -1,10 +1,9 @@
-import subprocess
+import getopt
+import grp
 import os
 import pwd
-import grp
+import subprocess
 import sys
-
-import getopt
 
 """
 we need to run the program as non-root because Liquidsoap refuses to run as root.

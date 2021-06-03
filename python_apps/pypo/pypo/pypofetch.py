@@ -1,21 +1,22 @@
-import os
-import sys
-import time
-import logging.config
-import json
-import telnetlib
 import copy
-import subprocess
-import signal
-from datetime import datetime
+import json
+import logging.config
 import mimetypes
-from . import pure
+import os
+import signal
+import subprocess
+import sys
+import telnetlib
+import time
+from datetime import datetime
 from queue import Empty
+from subprocess import PIPE, Popen
 from threading import Thread, Timer
-from subprocess import Popen, PIPE
 
 from api_clients import version1 as v1_api_client
 from api_clients import version2 as api_client
+
+from . import pure
 from .timeout import ls_timeout
 
 

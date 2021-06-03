@@ -1,15 +1,16 @@
 """ Analyzes and imports an audio file into the Airtime library.
 """
-import logging
-import threading
-import multiprocessing
-from queue import Queue
 import configparser
-from .metadata_analyzer import MetadataAnalyzer
-from .filemover_analyzer import FileMoverAnalyzer
+import logging
+import multiprocessing
+import threading
+from queue import Queue
+
 from .cuepoint_analyzer import CuePointAnalyzer
-from .replaygain_analyzer import ReplayGainAnalyzer
+from .filemover_analyzer import FileMoverAnalyzer
+from .metadata_analyzer import MetadataAnalyzer
 from .playability_analyzer import *
+from .replaygain_analyzer import ReplayGainAnalyzer
 
 
 class AnalyzerPipeline:

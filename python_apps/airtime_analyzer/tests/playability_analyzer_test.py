@@ -1,5 +1,5 @@
-from nose.tools import *
 from airtime_analyzer.playability_analyzer import *
+from nose.tools import *
 
 
 def check_default_metadata(metadata):

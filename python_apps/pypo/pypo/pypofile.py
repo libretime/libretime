@@ -1,20 +1,20 @@
-from threading import Thread
-from queue import Empty
-from configparser import NoOptionError
-
+import configparser
+import hashlib
+import json
 import logging
+import os
 import shutil
+import stat
+import sys
 import time
 import traceback
-import os
-import sys
-import stat
+from configparser import NoOptionError
+from queue import Empty
+from threading import Thread
+
 import requests
-import configparser
-import json
-import hashlib
-from requests.exceptions import ConnectionError, HTTPError, Timeout
 from api_clients import version2 as api_client
+from requests.exceptions import ConnectionError, HTTPError, Timeout
 
 CONFIG_PATH = "/etc/airtime/airtime.conf"
 
