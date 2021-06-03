@@ -31,3 +31,18 @@ For bug reports, please provide the following details:
 
 Please wrap all code and error messages in [markdown code
 fences](https://help.github.com/articles/creating-and-highlighting-code-blocks/).
+
+### Contributing code
+
+To make sure that you don't accidentally commit code that does not follow the coding style, you can
+install a [`pre-commit`](https://pre-commit.com/) hook that will check that everything is in order:
+
+```bash
+pre-commit install
+```
+
+You can also run it anytime using:
+
+```bash
+pre-commit run --all-files
+```
