@@ -17,7 +17,7 @@ from airtime_analyzer.playability_analyzer import (
         ("tests/test_data/44100Hz-16bit-mp3-missingid3header.mp3"),
         ("tests/test_data/44100Hz-16bit-mono.ogg"),
         ("tests/test_data/44100Hz-16bit-stereo.ogg"),
-        ("tests/test_data/44100Hz-16bit-stereo-invalid.wma"),
+        # ("tests/test_data/44100Hz-16bit-stereo-invalid.wma"),
         ("tests/test_data/44100Hz-16bit-stereo.m4a"),
         ("tests/test_data/44100Hz-16bit-stereo.wav"),
     ],
@@ -38,9 +38,10 @@ def test_analyze_invalid_filepath():
         test_analyze("non-existent-file")
 
 
-# def test_analyze_invalid_wma():
-#     with pytest.raises(UnplayableFileError):
-#         test_analyze("tests/test_data/44100Hz-16bit-stereo-invalid.wma")
+# This test is not be consistent with all Liquidsoap versions.
+def test_analyze_invalid_wma():
+    with pytest.raises(UnplayableFileError):
+        test_analyze("tests/test_data/44100Hz-16bit-stereo-invalid.wma")
 
 
 def test_analyze_unknown():
