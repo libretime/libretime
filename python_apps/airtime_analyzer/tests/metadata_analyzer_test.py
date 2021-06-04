@@ -1,6 +1,7 @@
 import datetime
 
 import mock
+import mutagen
 import pytest
 from airtime_analyzer.metadata_analyzer import MetadataAnalyzer
 
