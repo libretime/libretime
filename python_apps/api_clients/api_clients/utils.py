@@ -198,5 +198,8 @@ def fromisoformat(time_string):
     only added in Python 3.7. Until LibreTime drops Python 3.6 support, this
     wrapper uses the old way of doing it.
     """
-    datetime_obj = datetime.datetime.strptime(time_string, "%H:%M:%S.%f")
+    try:
+        datetime_obj = datetime.datetime.strptime(time_string, "%H:%M:%S.%f")
+    except ValueError:
+        datetime_obj = datetime.datetime.strptime(time_string, "%H:%M:%S")
     return datetime_obj.time()

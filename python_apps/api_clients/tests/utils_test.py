@@ -51,6 +51,7 @@ def test_get_protocol_force_https(payload, use_config, values, expected):
     [
         ("00:00:00.500000", datetime.time(microsecond=500000)),
         ("00:04:30.092540", datetime.time(minute=4, second=30, microsecond=92540)),
+        ("00:04:30", datetime.time(minute=4, second=30)),
     ],
 )
 def test_fromisoformat(payload, expected):
