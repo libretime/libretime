@@ -10,7 +10,7 @@ import datetime
 from dateutil.parser import isoparse
 import logging
 from configobj import ConfigObj
-from .utils import RequestProvider, time_in_seconds, time_in_milliseconds
+from .utils import RequestProvider, time_in_seconds, time_in_milliseconds, fromisoformat
 
 LIBRETIME_API_VERSION = "2.0"
 
@@ -70,11 +70,11 @@ class AirtimeApiClient:
                 current['type'] = 'file'
                 current['id'] = item['file_id']
 
-                fade_in = time_in_milliseconds(datetime.time.fromisoformat(item['fade_in']))
-                fade_out = time_in_milliseconds(datetime.time.fromisoformat(item['fade_out']))
+                fade_in = time_in_milliseconds(fromisoformat(item['fade_in']))
+                fade_out = time_in_milliseconds(fromisoformat(item['fade_out']))
 
-                cue_in = time_in_seconds(datetime.time.fromisoformat(item['cue_in']))
-                cue_out = time_in_seconds(datetime.time.fromisoformat(item['cue_out']))
+                cue_in = time_in_seconds(fromisoformat(item['cue_in']))
+                cue_out = time_in_seconds(fromisoformat(item['cue_out']))
 
                 current['fade_in'] = fade_in
                 current['fade_out'] = fade_out
