@@ -86,4 +86,13 @@ class TestGetProtocol(unittest.TestCase):
         for value in negative_values:
             self.assertEqual(get_force_ssl(value, True), 'http')
 
+    def test_fromisoformat(self):
+        time = {
+            "00:00:00.500000": datetime.time(microsecond=500000),
+            "00:04:30.092540": datetime.time(minute=4, second=30, microsecond=92540),
+        }
+        for time_string, expected in time.items():
+            result = utils.fromisoformat(time_string)
+            self.assertEqual(result, expected)
+
 if __name__ == '__main__': unittest.main()

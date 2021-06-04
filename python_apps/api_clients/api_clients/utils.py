@@ -1,4 +1,5 @@
 import json
+import datetime
 import logging
 import socket
 import requests
@@ -164,3 +165,11 @@ def time_in_seconds(time):
 def time_in_milliseconds(time):
     return time_in_seconds(time) * 1000
 
+def fromisoformat(time_string):
+    """
+    This is required for Python 3.6 support. datetime.time.fromisoformat was
+    only added in Python 3.7. Until LibreTime drops Python 3.6 support, this
+    wrapper uses the old way of doing it.
+    """
+    datetime_obj = datetime.datetime.strptime(time_string, "%H:%M:%S.%f")
+    return datetime_obj.time()
