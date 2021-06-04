@@ -1,10 +1,12 @@
-import pytest
 import os
-import tempfile
 import shutil
+import tempfile
+
+import pytest
 
 AUDIO_FILE = "tests/test_data/44100Hz-16bit-mono.mp3"
 AUDIO_FILENAME = os.path.basename(AUDIO_FILE)
+AUDIO_IMPORT_DEST = "Test Artist/Test Album/44100Hz-16bit-mono.mp3"
 
 
 @pytest.fixture()
