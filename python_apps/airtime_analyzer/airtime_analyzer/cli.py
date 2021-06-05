@@ -6,7 +6,6 @@ import argparse
 import os
 
 import airtime_analyzer.airtime_analyzer as aa
-import daemon
 
 VERSION = "1.0"
 LIBRETIME_CONF_DIR = os.getenv("LIBRETIME_CONF_DIR", "/etc/airtime")
@@ -18,7 +17,6 @@ def main():
     """Entry-point for this application"""
     print("LibreTime Analyzer {}".format(VERSION))
     parser = argparse.ArgumentParser()
-    parser.add_argument("-d", "--daemon", help="run as a daemon", action="store_true")
     parser.add_argument(
         "--debug", help="log full debugging output", action="store_true"
     )
@@ -42,20 +40,11 @@ def main():
     if args.http_retry_queue_file:
         http_retry_queue_path = args.http_retry_queue_file
 
-    if args.daemon:
-        with daemon.DaemonContext():
-            aa.AirtimeAnalyzerServer(
-                rmq_config_path=rmq_config_path,
-                http_retry_queue_path=http_retry_queue_path,
-                debug=args.debug,
-            )
-    else:
-        # Run without daemonizing
-        aa.AirtimeAnalyzerServer(
-            rmq_config_path=rmq_config_path,
-            http_retry_queue_path=http_retry_queue_path,
-            debug=args.debug,
-        )
+    aa.AirtimeAnalyzerServer(
+        rmq_config_path=rmq_config_path,
+        http_retry_queue_path=http_retry_queue_path,
+        debug=args.debug,
+    )
 
 
 if __name__ == "__main__":
