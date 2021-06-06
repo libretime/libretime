@@ -29,7 +29,6 @@ libtaglib-ocaml
 libvo-aacenc0
 liquidsoap
 lsb-release
-lsb-release
 lsof
 mpg123
 patch
@@ -62,7 +61,6 @@ systemd-sysv
 unzip
 uwsgi
 uwsgi-plugin-python3
-vorbis-tools
 vorbis-tools
 vorbisgain
 xmlstarlet
