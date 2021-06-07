@@ -1,0 +1,48 @@
+# See https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/configuration-options-for-dependency-updates
+version: 2
+updates:
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # TODO: Enable when the future Dockerfiles lands in the repository
+  # Maintain dependencies for Docker files
+  # - package-ecosystem: "docker"
+  #   directory: "/docker"
+  #   schedule:
+  #     interval: "weekly"
+
+  # Maintain dependencies for Python apps
+  - package-ecosystem: "pip"
+    directory: "/api"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "pip"
+    directory: "/python_apps/airtime_analyzer"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "pip"
+    directory: "/python_apps/airtime-celery"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "pip"
+    directory: "/python_apps/api_clients"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "pip"
+    directory: "/python_apps/pypo"
+    schedule:
+      interval: "daily"
+
+  # TODO: Enable when the future UI lands in the repository
+  # Maintain dependencies for NPM packages
+  # - package-ecosystem: "npm"
+  #   directory: "/ui"
+  #   schedule:
+  #     interval: "daily"
