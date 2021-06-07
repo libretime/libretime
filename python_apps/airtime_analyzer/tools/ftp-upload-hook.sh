@@ -16,27 +16,27 @@ post_file() {
     mv "${file_path}" "${stripped_file_path}"
     file_path="${stripped_file_path}"
     filename="${file_path##*/}"
-	
+
     airtime_conf_path=/etc/airtime/airtime.conf
-	
+
 
     #instance_path will look like 1/1384, for example
     http_path=$(grep base_url ${airtime_conf_path} | awk '{print $3;}' )
-    http_port=$(grep base_port ${airtime_conf_path} | awk '{print $3;}' ) 
-	
+    http_port=$(grep base_port ${airtime_conf_path} | awk '{print $3;}' )
+
     #post request url - http://bananas.airtime.pro/rest/media, for example
     url=http://
     url+=$http_path
     url+=:
     url+=$http_port
     url+=/rest/media
-	
-	
-    api_key=$(grep api_key ${airtime_conf_path} | awk '{print $3;}' ) 
+
+
+    api_key=$(grep api_key ${airtime_conf_path} | awk '{print $3;}' )
 
     # -f is needed to make curl fail if there's an HTTP error code
     # -L is needed to follow redirects! (just in case)
-    until curl -fL --max-time 30 $url -u $api_key":" -X POST -F "file=@${file_path}" 
+    until curl -fL --max-time 30 $url -u $api_key":" -X POST -F "file=@${file_path}"
     do
         retry_count=$[$retry_count+1]
         if [ $retry_count -ge $max_retry ]; then

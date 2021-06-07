@@ -1,4 +1,4 @@
-title: LibreTime 
+title: LibreTime
 description: An open source radio automation server made for (and by) low-power FM stations and the rest of us.
 logo: 144px.png
 baseurl: "" # The subpath of your site, e.g. /blog
@@ -9,7 +9,7 @@ includes_dir: _includes
 
 favicon: favicon.ico
 
-exclude: ['README']
+exclude: ["README"]
 
 # Collections Settings
 collections:
@@ -20,4 +20,3 @@ collections:
 # Build settings
 plugins:
   - kramdown
-  

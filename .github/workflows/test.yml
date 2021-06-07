@@ -2,14 +2,29 @@ name: Python and PHP Tests
 on:
   push:
     paths-ignore:
-    - 'docs/**'
+      - "docs/**"
   pull_request:
-    types: [opened, ready_for_review, review_requested, edited, reopened, synchronize]
+    types:
+      [
+        opened,
+        ready_for_review,
+        review_requested,
+        edited,
+        reopened,
+        synchronize,
+      ]
     paths-ignore:
-    - 'docs/**'
+      - "docs/**"
   workflow_dispatch:
 
 jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: pre-commit/action@v2.0.3
+
   test-bionic:
     runs-on: ubuntu-18.04
     env:
@@ -19,7 +34,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.6'
+          python-version: "3.6"
       - name: Setup PostgreSQL
         run: |
           sudo systemctl start postgresql.service
@@ -31,10 +46,9 @@ jobs:
       - name: Setup PHP with specific version
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.2'
+          php-version: "7.2"
       - name: Install prerequisites
-        run:
-          sudo -E ./.github/scripts/install-bionic.sh
+        run: sudo -E ./.github/scripts/install-bionic.sh
       - name: Run Python tests
         run: |
           sudo ./.github/scripts/python-pkg-install.sh
@@ -62,7 +76,7 @@ jobs:
       - name: Setup PHP with specific version
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.0'
+          php-version: "7.0"
       - name: Install prerequisites
         run: sudo -E ./.github/scripts/install-xenial.sh
       - name: Run PHP tests

@@ -1,11 +1,13 @@
 """ Runs Airtime liquidsoap
 """
 import argparse
-import os
-from . import generate_liquidsoap_cfg
 import logging
+import os
 import subprocess
+
 from pypo import pure
+
+from . import generate_liquidsoap_cfg
 
 PYPO_HOME = "/var/tmp/airtime/pypo/"
 

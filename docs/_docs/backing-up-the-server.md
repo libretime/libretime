@@ -5,11 +5,11 @@ category: admin
 ---
 
 > At the moment, there is not a way to automatically restore a Libretime backup.
-> To restore a failed Libretime instance, install a fresh copy, go through the 
-> standard setup process, and reupload the backed-up media files. A *Watched Folders* 
+> To restore a failed Libretime instance, install a fresh copy, go through the
+> standard setup process, and reupload the backed-up media files. A _Watched Folders_
 > feature is [currently in development](https://github.com/LibreTime/libretime/issues/70).
 
-A backup script is supplied for your convenience in the *utils/* folder of the Libretime repo.
+A backup script is supplied for your convenience in the _utils/_ folder of the Libretime repo.
 Run it using:
 
 ```
@@ -27,14 +27,14 @@ crontab with `sudo crontab -e`:
 
 > For more information on how Cron works, check out [this Redhat guide](https://www.redhat.com/sysadmin/automate-linux-tasks-cron).
 
-If you wish to deploy your own backup solution, the following files and folders need to 
+If you wish to deploy your own backup solution, the following files and folders need to
 be backed up.
 
 ```
 /srv
   /airtime
     /stor
-      /imported - Sucessfully imported media
+      /imported - Successfully imported media
       /organize - A temporary holding place for uploaded media as the importer works
 /etc
   /airtime
@@ -43,11 +43,11 @@ be backed up.
     liquidsoap.cfg - The main configuration file for Liquidsoap
 ```
 
-In addition, you should keep a copy of the database current to the backup. The below code 
+In addition, you should keep a copy of the database current to the backup. The below code
 can be used to export the Libretime database to a file.
 
 ```
-sudo -u postgres pg_dumpall filename 
+sudo -u postgres pg_dumpall filename
 # or to a zipped archive
 sudo -u postgres pg_dumpall | gzip -c > archivename.gz
 ```
@@ -58,9 +58,8 @@ the backup server also contains an LibreTime installation, it should be possible
 to switch playout to this second machine relatively quickly, in case of a
 hardware failure or other emergency on the production server.)
 
-Two notible backup tools are [rsync](http://rsync.samba.org/) (without version control) and 
-[rdiff-backup](http://www.nongnu.org/rdiff-backup/) (with version control). *rsync* comes
+Two notible backup tools are [rsync](http://rsync.samba.org/) (without version control) and
+[rdiff-backup](http://www.nongnu.org/rdiff-backup/) (with version control). _rsync_ comes
 preinstalled with Ubuntu Server.
 
-> **Note:** Standard *rsync* backups, which are used by the backup script, cannot restore files deleted in the backup itself
-
+> **Note:** Standard _rsync_ backups, which are used by the backup script, cannot restore files deleted in the backup itself

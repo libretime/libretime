@@ -1,4 +1,5 @@
 from django.db import models
+
 from .authentication import User
 from .files import File
 
@@ -7,14 +8,14 @@ class ImportedPodcast(models.Model):
     auto_ingest = models.BooleanField()
     auto_ingest_timestamp = models.DateTimeField(blank=True, null=True)
     album_override = models.BooleanField()
-    podcast = models.ForeignKey('Podcast', models.DO_NOTHING)
+    podcast = models.ForeignKey("Podcast", models.DO_NOTHING)
 
     def get_owner(self):
         return self.podcast.owner
 
     class Meta:
         managed = False
-        db_table = 'imported_podcast'
+        db_table = "imported_podcast"
 
 
 class Podcast(models.Model):
@@ -31,17 +32,19 @@ class Podcast(models.Model):
     itunes_subtitle = models.CharField(max_length=4096, blank=True, null=True)
     itunes_category = models.CharField(max_length=4096, blank=True, null=True)
     itunes_explicit = models.CharField(max_length=4096, blank=True, null=True)
-    owner = models.ForeignKey(User, models.DO_NOTHING, db_column='owner', blank=True, null=True)
+    owner = models.ForeignKey(
+        User, models.DO_NOTHING, db_column="owner", blank=True, null=True
+    )
 
     def get_owner(self):
         return self.owner
 
     class Meta:
         managed = False
-        db_table = 'podcast'
+        db_table = "podcast"
         permissions = [
-            ('change_own_podcast', 'Change the podcasts where they are the owner'),
-            ('delete_own_podcast', 'Delete the podcasts where they are the owner'),
+            ("change_own_podcast", "Change the podcasts where they are the owner"),
+            ("delete_own_podcast", "Delete the podcasts where they are the owner"),
         ]
 
 
@@ -59,10 +62,16 @@ class PodcastEpisode(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'podcast_episodes'
+        db_table = "podcast_episodes"
         permissions = [
-            ('change_own_podcastepisode', 'Change the episodes of podcasts where they are the owner'),
-            ('delete_own_podcastepisode', 'Delete the episodes of podcasts where they are the owner'),
+            (
+                "change_own_podcastepisode",
+                "Change the episodes of podcasts where they are the owner",
+            ),
+            (
+                "delete_own_podcastepisode",
+                "Delete the episodes of podcasts where they are the owner",
+            ),
         ]
 
 
@@ -74,4 +83,4 @@ class StationPodcast(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'station_podcast'
+        db_table = "station_podcast"

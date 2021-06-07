@@ -26,7 +26,7 @@ build_env () {
         echo "Please use -u to assign sudo username before build environments."
         exit 1
     fi
-  
+
     echo "build_env $1"
     #exec > >(tee ./liquidsoap_compile_logs/build_env_$1.log)
     os=`echo $1 | awk '/(debian)/'`
@@ -40,7 +40,7 @@ build_env () {
         useradd tmp
 	echo "User tmp is created."
     fi
-    
+
     apt-get update
     apt-get --force-yes -y install debootstrap dchroot
     echo [$1] > /etc/schroot/chroot.d/$1.conf
@@ -87,7 +87,7 @@ compile_liq () {
     else
         mv ./liquidsoap-compile_logs/compile_liq_$1.log ./liquidsoap-compile_logs/fail_to_compile_liq_$1.log
     fi
-}  
+}
 
 os_versions=("ubuntu_lucid_32" "ubuntu_lucid_64" "ubuntu_precise_32" "ubuntu_precise_64" "ubuntu_quantal_32" "ubuntu_quantal_64" "ubuntu_raring_32" "ubuntu_raring_64" "debian_squeeze_32" "debian_squeeze_64" "debian_wheezy_32" "debian_wheezy_64")
 
@@ -147,7 +147,7 @@ do
                          compile_liq ${os_versions[$i]} | tee ./liquidsoap-compile_logs/compile_liq_${os_versions[$i]}.log
                          flag=0
                      fi
-                 done    
+                 done
                  if [ $flag = 1 ];then
                      echo "Unsupported Platform from:"
                      for k in "${os_versions[@]}"
@@ -167,4 +167,3 @@ do
 	     ;;
     esac
 done
-

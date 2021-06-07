@@ -47,7 +47,7 @@ end
 # cue cut fix for liquidsoap <1.2.2
 #
 # This was most likely broken on 1.1.1 (debian) as well.
-# 
+#
 # adapted from https://github.com/savonet/liquidsoap/issues/390#issuecomment-277562081
 #
 def fix_cue_in(~cue_in_metadata='liq_cue_in', m) =
@@ -80,9 +80,9 @@ def create_source()
     sources := list.append([l], !sources)
     server.register(namespace="queues",
                 "s#{!source_id}_skip",
-                fun (s) -> begin log("queues.s#{!source_id}_skip") 
-                    clear_queue(l) 
-                    "Done" 
+                fun (s) -> begin log("queues.s#{!source_id}_skip")
+                    clear_queue(l)
+                    "Done"
                 end)
     source_id := !source_id + 1
 end

@@ -21,8 +21,8 @@ if ($argc <= 1)
     exit();
 }
 
-$message = $argv[1]; 
- 
+$message = $argv[1];
+
 $connection = new AMQPConnection(HOST, PORT, USER, PASS, VHOST);
 if (!isset($connection))
 {
@@ -31,10 +31,10 @@ if (!isset($connection))
 }
 
 $channel = $connection->channel();
- 
+
 // declare/create the queue
 $channel->queue_declare($queue, false, true, false, false);
-  
+
 // declare/create the exchange as a topic exchange.
 $channel->exchange_declare($exchange, $exchangeType, false, true, false);
 
@@ -44,4 +44,3 @@ $channel->basic_publish($msg, $exchange, $routingKey);
 print "Sent $message ($routingKey)\n";
 $channel->close();
 $connection->close();
-

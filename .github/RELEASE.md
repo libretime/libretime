@@ -21,7 +21,7 @@ Please report new issues and/or feature requests in the issue tracker. Join our 
         Liquidsoap support
         No watched folder support
         No Line In recording support
-        Playout wont work if locale is missing
+        Playout won't work if locale is missing
         Lack of i18n toolchain is disturbing
 
 ## Features
@@ -86,8 +86,8 @@ storage_backend=file
 You can then remove the files and the symlink.
 
 rm /etc/airtime/cloud_storage.conf \
-   /etc/airtime/rabbitmq-analyzer.ini \
-   /etc/airtime/production
+ /etc/airtime/rabbitmq-analyzer.ini \
+ /etc/airtime/production
 
 While you're at you may also want to remove the amazon_s3 section if it was in any of the files.
 
@@ -155,7 +155,7 @@ Currently LibreTime does not support watching folders. Uploading files through t
 ### No line in support
 
 This feature went missing from LibreTime due to the fact that we based our code off of the saas-dev branch of legacy upstream and support for recording hasn't been ported to the new airtime analyzer ingest system. #42 currently tracks the progress being made on line in recording.
-Playout wont work if locale is missing
+Playout won't work if locale is missing
 
 Some minimal OS installs do not have a default locale configured. This only seems to affect some VPS installs as they often do not have a locale setup in the default images provided.
 

@@ -1,23 +1,25 @@
-from rest_framework.permissions import BasePermission
 from django.conf import settings
+from rest_framework.permissions import BasePermission
+
 from .models.user_constants import DJ
 
 REQUEST_PERMISSION_TYPE_MAP = {
-    'GET': 'view',
-    'HEAD': 'view',
-    'OPTIONS': 'view',
-    'POST': 'change',
-    'PUT': 'change',
-    'DELETE': 'delete',
-    'PATCH': 'change',
+    "GET": "view",
+    "HEAD": "view",
+    "OPTIONS": "view",
+    "POST": "change",
+    "PUT": "change",
+    "DELETE": "delete",
+    "PATCH": "change",
 }
+
 
 def get_own_obj(request, view):
     user = request.user
     if user is None or user.type != DJ:
-        return ''
-    if request.method == 'GET':
-        return ''
+        return ""
+    if request.method == "GET":
+        return ""
     qs = view.queryset.all()
     try:
         model_owners = []
@@ -26,32 +28,34 @@ def get_own_obj(request, view):
             if owner not in model_owners:
                 model_owners.append(owner)
         if len(model_owners) == 1 and user in model_owners:
-            return 'own_'
+            return "own_"
     except AttributeError:
-        return ''
-    return ''
+        return ""
+    return ""
+
 
 def get_permission_for_view(request, view):
     try:
         permission_type = REQUEST_PERMISSION_TYPE_MAP[request.method]
-        if view.__class__.__name__ == 'APIRootView':
-            return '{}_apiroot'.format(permission_type)
+        if view.__class__.__name__ == "APIRootView":
+            return "{}_apiroot".format(permission_type)
         model = view.model_permission_name
         own_obj = get_own_obj(request, view)
-        return '{permission_type}_{own_obj}{model}'.format(permission_type=permission_type,
-                                                           own_obj=own_obj,
-                                                           model=model)
+        return "{permission_type}_{own_obj}{model}".format(
+            permission_type=permission_type, own_obj=own_obj, model=model
+        )
     except AttributeError:
         return None
 
-def check_authorization_header(request):
-    auth_header = request.META.get('Authorization')
-    if not auth_header:
-        auth_header = request.META.get('HTTP_AUTHORIZATION', '')
 
-    if auth_header.startswith('Api-Key'):
+def check_authorization_header(request):
+    auth_header = request.META.get("Authorization")
+    if not auth_header:
+        auth_header = request.META.get("HTTP_AUTHORIZATION", "")
+
+    if auth_header.startswith("Api-Key"):
         token = auth_header.split()[1]
-        if token == settings.CONFIG.get('general', 'api_key'):
+        if token == settings.CONFIG.get("general", "api_key"):
             return True
     return False
 
@@ -62,6 +66,7 @@ class IsAdminOrOwnUser(BasePermission):
     Django's standard permission system. For details see
     https://www.django-rest-framework.org/api-guide/permissions/#custom-permissions
     """
+
     def has_permission(self, request, view):
         if request.user.is_superuser():
             return True
@@ -83,6 +88,7 @@ class IsSystemTokenOrUser(BasePermission):
     an API-Key header. All standard-users (i.e. not using the API-Key) have their
     permissions checked against Django's standard permission system.
     """
+
     def has_permission(self, request, view):
         if request.user and request.user.is_authenticated:
             perm = get_permission_for_view(request, view)
@@ -90,7 +96,7 @@ class IsSystemTokenOrUser(BasePermission):
             # model. This use-case allows users to view the base of the API
             # explorer. Their assigned group permissions determine further access
             # into the explorer.
-            if perm == 'view_apiroot':
+            if perm == "view_apiroot":
                 return True
             return request.user.has_perm(perm)
         return check_authorization_header(request)

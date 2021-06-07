@@ -1,40 +1,40 @@
 /*!
  * Start Bootstrap - Libretime v1.0.0 ()
- * Copyright 2013-2018 
+ * Copyright 2013-2018
  * Licensed under MIT (https://github.com/BlackrockDigital/libretime-website/blob/master/LICENSE)
  */
 body,html{
   width:100%;height:100%
   }
-  
+
 body{
   font-family:Merriweather,'Helvetica Neue',Arial,sans-serif;
   padding-top: 57px;
   }
-  
+
 hr{
   max-width:auto;border-width:2px;border-color:#f05f40
   }
-  
+
 hr.light{
   border-color:#fff
   }
-  
+
 img{
  width:100%;
  max-width: 600px;
 }
-  
+
 a{
   color:#f05f40;
   -webkit-transition:all .2s;
   transition:all .2s;
   }
-  
+
 a:hover{
   color:#f05f40
   }
-  
+
 h1,h2,h3,h4,h5,h6{
   font-family:'Open Sans','Helvetica Neue',Arial,sans-serif;
   }
@@ -58,34 +58,34 @@ th{
  text-align: center;
  color: white;
 }
- 
+
 tr, td{
  padding: 5px;
  text-align: left;
  border: 2px solid #f05f40
 }
 
-/* Theme Colors */  
+/* Theme Colors */
 .bg-primary{
   background-color:#f05f40!important
   }
-  
+
 .bg-dark{
   background-color:#212529!important
   }
-  
+
 .footer-dark{
  background-color:#212529!important;
  padding:2rem 0
   }
-  
+
 .text-faded{
   color:rgba(255,255,255,.9)
   }
- 
+
 div.text-footer{
  text-align: center;
-  } 
+  }
 
 /* Changed padding */
 section{padding:2rem 0}
@@ -98,7 +98,7 @@ img::-moz-selection{color:#fff;background:0 0}
 
 #mainNav{
   border-bottom:1px solid rgba(33,37,41,.1);background-color:#fff;font-family:'Open Sans','Helvetica Neue',Arial,sans-serif;-webkit-transition:all .2s;transition:all .2s
-  } 
+  }
 
 #mainNav .navbar-brand{
   font-weight:700;
@@ -106,7 +106,7 @@ img::-moz-selection{color:#fff;background:0 0}
   color:#f05f40;
   font-family:'Open Sans','Helvetica Neue',Arial,sans-serif
   }
-  
+
 #mainNav .navbar-brand:focus,
 #mainNav .navbar-brand:hover{color:#f05f40}
 #mainNav .navbar-nav>li.nav-item>a.nav-link,
@@ -123,7 +123,7 @@ img::-moz-selection{color:#fff;background:0 0}
 @media (min-width:992px){
   #mainNav{border-color:transparent;background-color:transparent
   }
-  
+
 #mainNav .navbar-brand{color:rgba(255,255,255,.7)}
 #mainNav .navbar-brand:focus,#mainNav .navbar-brand:hover{color:#fff}
 #mainNav .navbar-nav>li.nav-item>a.nav-link{padding:.5rem 1rem}
@@ -204,7 +204,7 @@ header.masthead p{font-weight:300}
 .btn-primary:active,.btn-primary:focus{
   -webkit-box-shadow:0 0 0 .2rem rgba(240,95,64,.5)!important;box-shadow:0 0 0 .2rem rgba(240,95,64,.5)!important
   }
-  
+
 .btn-outline-full-width{border:1px solid #888;margin:5px;width:100%}
 
 /* Blockquotes */
@@ -215,12 +215,12 @@ font-size: .9rem;
 margin: 10px;
 padding: 10px 20px;
 }
- 
+
 blockquote p {
 margin: 0;
 line-height: 25px;
 }
- 
+
 blockquote .small {
 display: block;
 font-size: 80%;
@@ -250,7 +250,7 @@ padding: 10px 20px;
   bottom: 0;
   right: 0;
   display: inline-flex;
-   
+
   cursor: pointer;
   align-items: center;
   justify-content: center;
@@ -266,7 +266,7 @@ padding: 10px 20px;
   visibility: visible;
   opacity: 1;
 }
- 
+
 .hide {
   visibility: hidden;
   opacity: 0;
@@ -283,12 +283,12 @@ padding: 10px 20px;
     overflow: hidden;
     word-wrap: normal !important;
     clip: rect(1px, 1px, 1px, 1px);
- 
+
     &:focus {
         display: block;
         top: 5px;
         left: 5px;
-        z-index: 100000; 
+        z-index: 100000;
         clip-path: none;
         background-color: #eee;
         padding: 15px 23px 14px;
@@ -336,7 +336,7 @@ padding: 10px 20px;
   position: absolute;
   top: 0;
   left: 0;
-  content: "—";
+  content: "-";
   color: #FF6745;
 }
 

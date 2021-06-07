@@ -5,12 +5,12 @@ category: interface
 ---
 
 > Note: if your Libretime server is accessible from the public Internet (ex. being hosted in a cloud VM)
-it is strongly recommended to create a second administrator account with a secure password and then
-delete the `admin` account.
+> it is strongly recommended to create a second administrator account with a secure password and then
+> delete the `admin` account.
 
 ## User Account Types
 
-To add further user accounts to the system, one for each of your station staff that need access to Airtime, click the **New User** button with the plus icon. Enter a user name, password and contact details, and then select the **User Type** from the drop down menu, which can be *Admin*, *Program Manager*, *DJ*, or *Guest*. The difference between these user types is:
+To add further user accounts to the system, one for each of your station staff that need access to Airtime, click the **New User** button with the plus icon. Enter a user name, password and contact details, and then select the **User Type** from the drop down menu, which can be _Admin_, _Program Manager_, _DJ_, or _Guest_. The difference between these user types is:
 
 **Guests**
 
@@ -29,7 +29,7 @@ To add further user accounts to the system, one for each of your station staff t
 
 - Everything DJs can do, plus
 - Manage other users' libraries in addition to their own
-- Create, edit, and delete color-coded shows on the Calender and assign them to DJs (if needed)
+- Create, edit, and delete color-coded shows on the Calendar and assign them to DJs (if needed)
 - Shows can be scheduled to repeat, with the option of linking content between the shows (helpful if a DJ livestreams in each week)
 - View listener statistics
 - Export playout logs for analysis or reporting for music royalties
@@ -58,4 +58,3 @@ side of its row in the table. You cannot delete your own user account, and usern
 
 Users can update their own password, and their contact, language and time zone details, by clicking their username on the
 right side of the main menu bar, next to the **Logout** link.
-

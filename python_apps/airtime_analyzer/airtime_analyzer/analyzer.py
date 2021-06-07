@@ -2,8 +2,7 @@
 
 
 class Analyzer:
-    """ Abstract base class for all "analyzers".
-    """
+    """Abstract base class for all "analyzers"."""
 
     @staticmethod
     def analyze(filename, metadata):

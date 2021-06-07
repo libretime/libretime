@@ -1,13 +1,13 @@
 <?PHP
 
-/* 
+/*
 
 
    The purpose of this script is to take a file from cc_files table, and insert it into
    the schedule table. DB columns at the time of writing are
- 
+
  starts | ends | file_id | clip_length | fade_in | fade_out | cue_in | cue_out | media_item_played | instance_id
- 
+
  an example of data in this row is:
  "9" | "2012-02-29 17:10:00" | "2012-02-29 17:15:05.037166" | 1 | "00:05:05.037166" | "00:00:00" | "00:00:00" | "00:00:00" | "00:05:05.037166" | FALSE | 5
 
@@ -19,25 +19,25 @@ function query($conn, $query){
         echo "Error executing query $query.\n";
         exit(1);
     }
-    
+
     return $result;
 }
 
 function getFileFromCcFiles($conn){
     $query = "SELECT * from cc_files LIMIT 2";
-    
+
     $result = query($conn, $query);
-    
+
     $files = array();
     while ($row = pg_fetch_array($result)) {
         $files[] = $row;
     }
-    
+
     if (count($files) == 0){
         echo "Library is empty. Could not choose random file.";
         exit(1);
     }
-    
+
     return $files;
 }
 
@@ -60,7 +60,7 @@ function insertIntoCcShow($conn){
     while ($row = pg_fetch_array($result)) {
       $show_id = $row["currval"];
     }
-    
+
     return $show_id;
 }
 
@@ -70,7 +70,7 @@ function insertIntoCcShowInstances($conn, $show_id, $starts, $ends, $files){
      * Column values:
      * starts | ends | show_id | record | rebroadcast | instance_id | file_id | time_filled | last_scheduled | modified_instance
      *  */
-     
+
     $nowDateTime = new DateTime("now", new DateTimeZone("UTC"));
 
     $now = $nowDateTime->format("Y-m-d H:i:s");
@@ -79,7 +79,7 @@ function insertIntoCcShowInstances($conn, $show_id, $starts, $ends, $files){
     $values = "('$starts', '$ends', $show_id, 0, 0, NULL, NULL, TIMESTAMP '$ends' - TIMESTAMP '$starts', '$now', 'f')";
     $query = "INSERT INTO cc_show_instances $columns values $values ";
     echo $query.PHP_EOL;
-     
+
     $result = query($conn, $query);
 
     $query = "SELECT currval('cc_show_instances_id_seq');";
@@ -92,7 +92,7 @@ function insertIntoCcShowInstances($conn, $show_id, $starts, $ends, $files){
     while ($row = pg_fetch_array($result)) {
       $show_instance_id = $row["currval"];
     }
-    
+
     return $show_instance_id;
 }
 
@@ -102,9 +102,9 @@ function insertIntoCcShowInstances($conn, $show_id, $starts, $ends, $files){
  */
 function insertIntoCcSchedule($conn, $files, $show_instance_id, $p_starts, $p_ends){
     $columns = "(starts, ends, file_id, clip_length, fade_in, fade_out, cue_in, cue_out, media_item_played, instance_id)";
-    
+
     $starts = $p_starts;
-    
+
     foreach($files as $file){
 
         $endsDateTime = new DateTime($starts, new DateTimeZone("UTC"));
@@ -115,9 +115,9 @@ function insertIntoCcSchedule($conn, $files, $show_instance_id, $p_starts, $p_en
         $values = "('$starts', '$ends', $file[id], '$file[length]', '00:00:00', '00:00:00', '00:00:00', '$file[length]', 'f', $show_instance_id)";
         $query = "INSERT INTO cc_schedule $columns VALUES $values";
         echo $query.PHP_EOL;
-        
+
         $starts = $ends;
-        $result = query($conn, $query);        
+        $result = query($conn, $query);
     }
 }
 
@@ -131,7 +131,7 @@ function getEndTime($startDateTime, $p_files){
     foreach ($p_files as $file){
         $startDateTime->add(getDateInterval($file['length']));
     }
-    
+
     return $startDateTime;
 }
 
@@ -142,7 +142,7 @@ function rabbitMqNotify(){
     echo "Contacting $url".PHP_EOL;
     $ch = curl_init($url);
     curl_exec($ch);
-    curl_close($ch);    
+    curl_close($ch);
 }
 
 $conn = pg_connect("host=localhost port=5432 dbname=airtime user=airtime password=airtime");
@@ -152,9 +152,9 @@ if (!$conn) {
 }
 
 if (count($argv) > 1){
-    if ($argv[1] == "--clean"){    
+    if ($argv[1] == "--clean"){
         $tables = array("cc_schedule", "cc_show_instances", "cc_show");
-        
+
         foreach($tables as $table){
             $query = "DELETE FROM $table";
             echo $query.PHP_EOL;
@@ -162,9 +162,9 @@ if (count($argv) > 1){
         }
         rabbitMqNotify();
         exit(0);
-    } else { 
+    } else {
         $str = <<<EOD
-This script schedules a file to play 30 seconds in the future. It 
+This script schedules a file to play 30 seconds in the future. It
 modifies the database tables cc_schedule, cc_show_instances and cc_show.
 You can clean up these tables using the --clean option.
 EOD;
@@ -178,7 +178,7 @@ $startDateTime = new DateTime("now + 30sec", new DateTimeZone("UTC"));
 $starts = $startDateTime->format("Y-m-d H:i:s");
 //$ends = $endDateTime->format("Y-m-d H:i:s");
 
-$files = getFileFromCcFiles($conn); 
+$files = getFileFromCcFiles($conn);
 $show_id = insertIntoCcShow($conn);
 
 $endDateTime = getEndTime(clone $startDateTime, $files);

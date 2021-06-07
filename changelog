@@ -49,14 +49,14 @@
 	* Much faster library import (Silan analyzer runs in background)
 	* Fixed zombie process sometimes being created
   * Other
-    * Upgrade to Mutagen (tag reader) 1.21 
+    * Upgrade to Mutagen (tag reader) 1.21
 
 2.3.0 - Jan 21st, 2013
   * New features
     * Localization (Chinese, Czech, English, French, German, Italian, Korean,
 	Portuguese, Russian, Spanish)
     * User management page for non-admin users
-    * Listener statistics (Icecast/Shoutcast) 
+    * Listener statistics (Icecast/Shoutcast)
     * Airtime no longer requires Apache document root
     * Replay Gain offset in real-time
     * Enable/disable replay gain
@@ -110,10 +110,10 @@
     * fixed master/source override URL being reverted to original setting after clicking 'Save' in stream settings.
     * Add several helpful tips in the Stream Settings page and some UI cleanup
     * DJ user type cannot delete Playlists that aren't their own or delete tracks
-    * Playlist Builder should remember your position instead of reseting to the first page everytime an operation was performed
+    * Playlist Builder should remember your position instead of resetting to the first page every time an operation was performed
     * If Master or Live input source is disconnected, Airtime will no longer automatically switch off that source. This should allow the source to
       reconnect and continue playback.
-  
+
   * Bug fixes
     * Fixed playout engine sometimes not receiving new schedule which could result in dead air
     * Fixed script timeout which caused Apache to become unresponsive
@@ -157,7 +157,7 @@
     * "Listen" preview player no longer falls behind the broadcast (you can only mute the stream now, not stop it)
     * Tracks that cannot be played will be rejected on upload and put in to the directory "/srv/airtime/stor/problem_files" (but currently it will not tell you that it rejected them - sorry\!)
     * Library is automatically refreshed when media import is finished
-    * Show "Disk Full" message when trying to upload a file that wont fit on the disk
+    * Show "Disk Full" message when trying to upload a file that won't fit on the disk
     * Reduced CPU utilization for OGG streams
     * New command line utilities:
       * airtime-test-soundcard - verify that the soundcard is working
@@ -174,7 +174,7 @@
     * Fixed Airtime could stop automatically recording after 2 hours if the web interface isn't used.
     * Fixed upgrading from 1.8.2 when the stor directory was a symlink would cause filenames to not be preserved.
     * Fixed Day View in the Now Playing tab showed some items on incorrect days.
-    * Fixed problems with having an equal '=' sign as an icecast password 
+    * Fixed problems with having an equal '=' sign as an icecast password
   * Other
     * Various optimizations to make Airtime feel snappier in the browser. Various views should
       load much quicker.
@@ -237,7 +237,7 @@
       * Better error checking in cases where two users alter the same data at
         the same time (for example, in playlists and shows)
       * Playlists: Removed intermediate "Add Playlist" screen where it asked you
-        to fill in the name and description of the playlist. This wasnt
+        to fill in the name and description of the playlist. This wasn't
         necessary since everything could be changed from the playlist editor
         itself.
       * Added "airtime-log" command to display, dump, and view all of Airtime's
@@ -295,11 +295,11 @@
     - Fixed pypo hanging if web server is unavailable
     - Fixed items that were being dragged and dropped in the Playlist Builder
       being obscured by other UI elements.
-    
+
 1.9.3 - August 26th, 2011
   * Improvements
     - It is now possible to upgrade your system while a show is playing.
-      Playout will be temporarily interrupted for about 5-10 seconds and then 
+      Playout will be temporarily interrupted for about 5-10 seconds and then
       playout will resume.  Previously playout would not resume until the next
       scheduled show.
   * Fixes
@@ -324,7 +324,7 @@
     - Prevent users from doing a manual install of Airtime if they already have
       the Debian package version installed
   * Changes
-    - Support Settings moved to a seperate page accessible by Admin user only. 
+    - Support Settings moved to a separate page accessible by Admin user only.
 
 1.9.0 - August 9, 2011
 
@@ -333,20 +333,20 @@ The cool stuff:
     - Human-readable file structure.  The directory structure and file names on
       disk are now human-readable.  This means you can easily find files using
       your file browser on your server.
-    - Magic file synchronization.  Edits to your files are automatically 
+    - Magic file synchronization.  Edits to your files are automatically
       noticed by Airtime. If you edit any files on disk, such as trimming the
       length of a track, Airtime will automatically notice this and adjust the
       playlist lengths and shows for that audio file.
-    - Auto-import and multiple-directory support.  You can set any number of 
-      directories to be watched by Airtime.  Any new files you add to watched 
+    - Auto-import and multiple-directory support.  You can set any number of
+      directories to be watched by Airtime.  Any new files you add to watched
       directories will be automatically imported into Airtime, and any deleted
       files will be automatically removed.
-    - The "airtime-import" command line tool can now set watched directories 
+    - The "airtime-import" command line tool can now set watched directories
       and change the storage directory.
     - Graceful recovery from reboot.  If the playout engine starts up and
       detects that a show should be playing at the current time, it will skip
-      to the right point in the track and start playing.  Previously, Airtime 
-      would not play anything until the next show started. This also fixes a 
+      to the right point in the track and start playing.  Previously, Airtime
+      would not play anything until the next show started. This also fixes a
       problem where the metadata on the stream was lost when a file had
       cue-in/out values set.  Thanks to the Liquidsoap developers for
       implementing the ability to do all of this!
@@ -354,28 +354,28 @@ The cool stuff:
     - A new "Program Manager" role.  A program manager can create shows but
       can't change the preferences or modify users.
     - No more rebooting after install!  Airtime now uses standard SystemV initd
-      scripts instead of non-standard daemontools. This also makes for a much 
+      scripts instead of non-standard daemontools. This also makes for a much
       faster install.
-    - Frontend widgets are much easier to use and their theme can be modified 
+    - Frontend widgets are much easier to use and their theme can be modified
       with CSS (Click here for more info and installation instructions).
     - Improved installation - only one command to install on Ubuntu!
 
   * Improvements:
-    - Cumulative time shown on playlists.  The Playlist Builder now shows the 
+    - Cumulative time shown on playlists.  The Playlist Builder now shows the
       total time since the beginning of the playlist for each song.
-    - "End Time" instead of "Duration".  In the Add/Edit Show dialog, we 
+    - "End Time" instead of "Duration".  In the Add/Edit Show dialog, we
       replaced the "Duration" field with "End Time".  Users reported that this
       was a much more intuitive way to schedule the show.  Duration is still
       shown as a read-only field.
     - Feedback & promotion system.  Airtime now includes a way to send feedback
-      and promote your site on the Sourcefabric web page. This will greatly 
-      enhance our ability to understand who is using the software, which in 
-      turn will allow us to make appropriate features and receive grant 
+      and promote your site on the Sourcefabric web page. This will greatly
+      enhance our ability to understand who is using the software, which in
+      turn will allow us to make appropriate features and receive grant
       funding.
     - The show recorder can now instantly cancel a show thanks to the use of
       RabbitMQ.
     - Only admins have the ability to delete files now.
-    - The playout engine now runs with a higher priority. This should help 
+    - The playout engine now runs with a higher priority. This should help
       prevent any problems with audio skipping.
     - Airtime has been contained. It is now easier to run other apps on the
       same system with Airtime because it no longer messes with the system-wide
@@ -386,12 +386,12 @@ The cool stuff:
       page( above the search box).
 
   * Bug fixes:
-    - Fixed bug where you couldn't import a file with a name longer than 255 
+    - Fixed bug where you couldn't import a file with a name longer than 255
       characters.
     - Fixed bug where searching an audio archive of 15K+ files was slow.
     - Fixed bug where upgrading from more than one version back
       (e.g. 1.8.0 -> 1.9.0) did not work.
-    - Fixed bug where the wrong file length was reported for very large CBR 
+    - Fixed bug where the wrong file length was reported for very large CBR
       mp3 files (thanks to mutagen developers for the patch!)
 
 1.8.2 - June 8, 2011
@@ -456,30 +456,30 @@ Highlights:
 
 1.8.0 - April 19, 2011
   * The biggest feature of this release is the ability to edit shows. You can
-    change everything from ‘Name’, ‘Description’, and ‘URL’, to repeat and 
+    change everything from 'Name', 'Description', and 'URL', to repeat and
     rebroadcast days. Show instances will be dynamically created or removed as
-    needed.  Radio stations will be pleased to know they can now have up to 
+    needed.  Radio stations will be pleased to know they can now have up to
     ten rebroadcast shows too.
-  * Airtime’s calendar now looks, feels and performs better than ever. Loading
-    a station schedule is now five to eight times faster. In our tests of 1.7, 
-    if the month calendar had shows scheduled for every hour of every day, it 
+  * Airtime's calendar now looks, feels and performs better than ever. Loading
+    a station schedule is now five to eight times faster. In our tests of 1.7,
+    if the month calendar had shows scheduled for every hour of every day, it
     used to take 16 seconds to load. Now in 1.8 it takes two seconds.
   * It is possible to have up to ten rebroadcast shows now, in 1.7 it was only
     up to five.
-  * Airtime’s new installation script has two options for increased install 
-    flexibility:  --preserve to keep your existing config files, or --overwrite 
-    to replace your existing config files with new ones. Uninstall no longer 
+  * Airtime's new installation script has two options for increased install
+    flexibility:  --preserve to keep your existing config files, or --overwrite
+    to replace your existing config files with new ones. Uninstall no longer
     removes Airtime config files or the music storage directory.
-  * New improved look & feel of the calendar (thanks to the "FullCalendar" 
+  * New improved look & feel of the calendar (thanks to the "FullCalendar"
     jQuery project).
-  * Installation now puts files in standard locations in the Linux file 
+  * Installation now puts files in standard locations in the Linux file
     hierarchy, which prepares the project to be accepted into Ubuntu and Debian.
-    Also because of our wish to be part of those projects, the default output 
-    stream type is now OGG instead of MP3 -- due to MP3 licensing issues. 
+    Also because of our wish to be part of those projects, the default output
+    stream type is now OGG instead of MP3 -- due to MP3 licensing issues.
     This configuration can be changed in "/etc/airtime/liquidsoap.conf".
-  * You now have the ability to start and stop pypo and the show recorder from 
-    the command line with the commands "airtime-pypo-start", 
-    "airtime-pypo-stop", "airtime-show-recorder-start", and 
+  * You now have the ability to start and stop pypo and the show recorder from
+    the command line with the commands "airtime-pypo-start",
+    "airtime-pypo-stop", "airtime-show-recorder-start", and
     "airtime-show-recorder-stop".
   * Bug fixes:
     - CC-2192 Schedule sent to pypo is not sorted by start time.
@@ -520,7 +520,7 @@ Highlights:
   * Bug fixes:
     - CC-2082 OGG stream dies after every song when using MPlayer
     - CC-1894 Warn users about time zone differences or clock drift problems on
-      the server 
+      the server
     - CC-2058 Utilities are not in the system $PATH
     - CC-2051 Unable to change user password
     - CC-2030 Icon needed for Cue In/Out
@@ -531,7 +531,7 @@ Bug fixes:
   * CC-1973 Liquidsoap crashes after multi-day playout
   * CC-1970 API key fix (Security fix) - Each time you run the install scripts,
     a new API key is now generated.
-  * CC-1992 Editing metadata goes blank on 'submit' 
+  * CC-1992 Editing metadata goes blank on 'submit'
   * CC-1993 ui start time and song time unsynchronized
 
 1.6.0 - Feb 14, 2011

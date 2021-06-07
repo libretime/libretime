@@ -28,7 +28,7 @@ the name of the show from the drop-down menu which will appear.
 
 ![](/img/filter.png)
 
-On the left side of the page, the **Start** and **End** times, **Duration**
+On the left side of the page, the **Start** and **End** times, **Duration**
 and **Title** of each content item are shown. On the right, **Creator**,
 **Album**, **Cue** or **Fade** times and **Mime** type (file format) can also be
 shown. This information can help you to prepare voice tracks for insertion into
@@ -103,11 +103,11 @@ use the checkboxes on the left side of the library table to select specific
 items. Then drag one of the items into the show to add all of the selected
 items, or click the **Add to selected show** button, which has a plus icon. If
 you wish, you can also use the **Trashcan** button to permanently remove items
-from LibreTime's library. Only *admin* users have permission to delete all
+from LibreTime's library. Only _admin_ users have permission to delete all
 items.
 
 To insert checkbox selected items at a specific time in the show schedule, click
-one of the songs in the schedule table.  Then click the **Add to selected show**
+one of the songs in the schedule table. Then click the **Add to selected show**
 button in the library table. This will insert the library songs after the
 selected scheduled song.
 

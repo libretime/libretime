@@ -14,5 +14,5 @@ If any of the check mark icons in the **Status** column have changed to a red wa
 administrator for assistance. (The chapter [Troubleshooting](/docs/troubleshooting) contains some tips). LibreTime will
 do its best to restart any failing services, but sometimes manual intervention may be required; for example, in the case of hardware failure.
 
-If you have run out of storage space, a LibreTime user with *admin* privileges could log in and delete media files
+If you have run out of storage space, a LibreTime user with _admin_ privileges could log in and delete media files
 that are no longer required from the **Library**. Alternatively, you could ask your system administrator to install additional storage capacity.

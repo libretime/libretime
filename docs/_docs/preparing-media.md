@@ -10,20 +10,20 @@ Before uploading media to an LibreTime server, there are a number of factors whi
 
 LibreTime automatically imports any metadata that is in the files' ID3 tags. If these tags are incorrect or are missing information, you will have to either edit the metadata manually, or suffer the consequences. For example, if the files have creator or genre metadata missing, it will be impossible to search for, create playlists or generate smart blocks according to these criteria until you add it.
 
-There are a number of programs available which can be used to correct mistakes or incomplete information in ID3 tags. You can use a music library manager (like Apple Music, Rhythmbox, or Windows Media Player) to edit ID3 tags as well, but you may be required to import the files into your library, which may not always be convenient.  
+There are a number of programs available which can be used to correct mistakes or incomplete information in ID3 tags. You can use a music library manager (like Apple Music, Rhythmbox, or Windows Media Player) to edit ID3 tags as well, but you may be required to import the files into your library, which may not always be convenient.
 
 - [TagScanner](https://www.xdlab.ru/en/) (Windows)
 - [Mp3tag](https://www.mp3tag.de/en/index.html) (Windows)
 - [MusicBrainz Picard](https://picard.musicbrainz.org/) (Mac, Windows, Linux)
 - [Ex Falso](http://code.google.com/p/quodlibet/) (Linux)
 
-The *Tags From Path* feature of Ex Falso is a particularly useful time saver if you have a large archive of untagged files. Sometimes there is useful creator or title information in the file name or directory path structure, which can be converted into an ID3 tag automatically.
+The _Tags From Path_ feature of Ex Falso is a particularly useful time saver if you have a large archive of untagged files. Sometimes there is useful creator or title information in the file name or directory path structure, which can be converted into an ID3 tag automatically.
 
 ![](/img/Screenshot175-Ex_Falso.png)
 
 ## Metadata in legacy character sets
 
-LibreTime expects file tag metadata to be stored in the international *UTF-8* character set. Programs such as **Ex Falso** (described above) encode metadata in UTF-8 by default. If you have an archive of files encoded with metadata in a legacy character set, such as the Cyrillic encoding *Windows-1251*, you should convert these files before import.
+LibreTime expects file tag metadata to be stored in the international _UTF-8_ character set. Programs such as **Ex Falso** (described above) encode metadata in UTF-8 by default. If you have an archive of files encoded with metadata in a legacy character set, such as the Cyrillic encoding _Windows-1251_, you should convert these files before import.
 
 The program **mid3iconv** (part of the **python-mutagen** package in Debian and Ubuntu) can be used to batch convert the metadata character set of files on the command line. You can install **python-mutagen** with the command:
 
@@ -41,27 +41,27 @@ To actually convert all of the tags and strip any legacy ID3v1 tag present from 
 
 The name of the original character set follows the **-e** option. Other legacy character sets that mid3iconv can convert to UTF-8 include:
 
-	KOI8-R: Russian
-	KOI8-U: Ukrainian
+    KOI8-R: Russian
+    KOI8-U: Ukrainian
 
-	GBK: Traditional Chinese
-	GB2312: Simplified Chinese
+    GBK: Traditional Chinese
+    GB2312: Simplified Chinese
 
-	EUC-KR: Korean
-	EUC-JP: Japanese
+    EUC-KR: Korean
+    EUC-JP: Japanese
 
-	CP1253: Greek
-	CP1254: Turkish
-	CP1255: Hebrew
-	CP1256: Arabic
+    CP1253: Greek
+    CP1254: Turkish
+    CP1255: Hebrew
+    CP1256: Arabic
 
 ## Audio loudness
 
-On file ingest, LibreTime analyzes each Ogg Vorbis, MP3, AAC or FLAC file's loudness, and stores a *ReplayGain* value for that file in its database. At playout time, the ReplayGain value is provided to Liquidsoap so that gain can be automatically adjusted to provide an average output of -14 dBFS loudness (14 decibels below full scale). See <http://www.replaygain.org/> for more details of ReplayGain.
+On file ingest, LibreTime analyzes each Ogg Vorbis, MP3, AAC or FLAC file's loudness, and stores a _ReplayGain_ value for that file in its database. At playout time, the ReplayGain value is provided to Liquidsoap so that gain can be automatically adjusted to provide an average output of -14 dBFS loudness (14 decibels below full scale). See <http://www.replaygain.org/> for more details of ReplayGain.
 
 Because of this automatic gain adjustment, any files with average loudness higher than -14 dBFS will not sound louder than quieter files at playout time, but the lower crest factor in the louder files (their relatively low peak-to-average ratio) may be apparent in the output, making those files sound less dynamic. This may be an issue for contemporary popular music, which can average at -9 dBFS or louder before ReplayGain adjustment. (See <http://www.soundonsound.com/sos/sep11/articles/loudness.htm> for a detailed analysis of the problem).
 
-Your station's producers should therefore aim for 14dB between peak and average loudness to maintain the crest factor of their prepared material (also known as *DR14* on some dynamic range meters, such as the command-line DR14 T.meter available from <http://sourceforge.net/projects/dr14tmeter/>). If the producers are working to a different loudness standard, the ReplayGain modifier in LibreTime's Stream Settings page can be adjusted to suit their material.
+Your station's producers should therefore aim for 14dB between peak and average loudness to maintain the crest factor of their prepared material (also known as _DR14_ on some dynamic range meters, such as the command-line DR14 T.meter available from <http://sourceforge.net/projects/dr14tmeter/>). If the producers are working to a different loudness standard, the ReplayGain modifier in LibreTime's Stream Settings page can be adjusted to suit their material.
 
 Large transient peaks in otherwise quiet files should be avoided, to guard against the need for peak limiting when ReplayGain is applied to those quieter files.
 
@@ -72,7 +72,7 @@ Here is an example of a very quiet file where the use of ReplayGain would make t
     $ vorbisgain -d Peter_Lawson-Three_Gymn.ogg
     Analyzing files...
 
-       Gain   | Peak | Scale | New Peak | Track
+       Gain   | Peak | Scale | New Peak | Track
     ----------+------+-------+----------+------
     +17.39 dB | 4536 |  7.40 |    33585 | Peter_Lawson-Three_Gymn.ogg
 
@@ -81,11 +81,11 @@ And here is an example of a very loud file, with lower crest factor, where the o
     $ vorbisgain -d Snoop_Dogg-Doggfather.ogg
     Analyzing files...
 
-       Gain   | Peak  | Scale | New Peak | Track
+       Gain   | Peak  | Scale | New Peak | Track
     ----------+-------+-------+----------+------
-     -7.86 dB | 36592 |  0.40 |    14804 | Snoop_Dogg-Doggfather.ogg
+     -7.86 dB | 36592 |  0.40 |    14804 | Snoop_Dogg-Doggfather.ogg
 
-In the output from vorbisgain, *Peak* is the maximum sample value of the file before any ReplayGain has been applied, where a value of 32,767 represents full scale when decoding to signed 16 bit samples. Note that lossy compressed files can have peaks greater than full scale, due to encoding artifacts. The *New Peak* value for the Snoop Dogg file may be relatively low due to the hard limiting used in the mastering of that piece of music.
+In the output from vorbisgain, _Peak_ is the maximum sample value of the file before any ReplayGain has been applied, where a value of 32,767 represents full scale when decoding to signed 16 bit samples. Note that lossy compressed files can have peaks greater than full scale, due to encoding artifacts. The _New Peak_ value for the Snoop Dogg file may be relatively low due to the hard limiting used in the mastering of that piece of music.
 
 ## Silence in media files
 

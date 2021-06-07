@@ -1,5 +1,5 @@
-
 import configparser
+
 
 def read_config_file(config_path):
     """Parse the application's config file located at config_path."""

@@ -5,11 +5,20 @@ class File(models.Model):
     name = models.CharField(max_length=255)
     mime = models.CharField(max_length=255)
     ftype = models.CharField(max_length=128)
-    directory = models.ForeignKey('MusicDir', models.DO_NOTHING, db_column='directory', blank=True, null=True)
+    directory = models.ForeignKey(
+        "MusicDir", models.DO_NOTHING, db_column="directory", blank=True, null=True
+    )
     filepath = models.TextField(blank=True, null=True)
     import_status = models.IntegerField()
-    currently_accessing = models.IntegerField(db_column='currentlyaccessing')
-    edited_by = models.ForeignKey('User', models.DO_NOTHING, db_column='editedby', blank=True, null=True, related_name='edited_files')
+    currently_accessing = models.IntegerField(db_column="currentlyaccessing")
+    edited_by = models.ForeignKey(
+        "User",
+        models.DO_NOTHING,
+        db_column="editedby",
+        blank=True,
+        null=True,
+        related_name="edited_files",
+    )
     mtime = models.DateTimeField(blank=True, null=True)
     utime = models.DateTimeField(blank=True, null=True)
     lptime = models.DateTimeField(blank=True, null=True)
@@ -58,8 +67,10 @@ class File(models.Model):
     contributor = models.CharField(max_length=512, blank=True, null=True)
     language = models.CharField(max_length=512, blank=True, null=True)
     file_exists = models.BooleanField(blank=True, null=True)
-    replay_gain = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
-    owner = models.ForeignKey('User', models.DO_NOTHING, blank=True, null=True)
+    replay_gain = models.DecimalField(
+        max_digits=8, decimal_places=2, blank=True, null=True
+    )
+    owner = models.ForeignKey("User", models.DO_NOTHING, blank=True, null=True)
     cuein = models.DurationField(blank=True, null=True)
     cueout = models.DurationField(blank=True, null=True)
     silan_check = models.BooleanField(blank=True, null=True)
@@ -76,10 +87,10 @@ class File(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_files'
+        db_table = "cc_files"
         permissions = [
-            ('change_own_file', 'Change the files where they are the owner'),
-            ('delete_own_file', 'Delete the files where they are the owner'),
+            ("change_own_file", "Change the files where they are the owner"),
+            ("delete_own_file", "Delete the files where they are the owner"),
         ]
 
 
@@ -91,15 +102,16 @@ class MusicDir(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_music_dirs'
+        db_table = "cc_music_dirs"
 
 
 class CloudFile(models.Model):
     storage_backend = models.CharField(max_length=512)
     resource_id = models.TextField()
-    filename = models.ForeignKey(File, models.DO_NOTHING, blank=True, null=True,
-                                 db_column='cc_file_id')
+    filename = models.ForeignKey(
+        File, models.DO_NOTHING, blank=True, null=True, db_column="cc_file_id"
+    )
 
     class Meta:
         managed = False
-        db_table = 'cloud_file'
+        db_table = "cloud_file"

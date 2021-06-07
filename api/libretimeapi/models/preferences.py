@@ -2,14 +2,16 @@ from django.db import models
 
 
 class Preference(models.Model):
-    subjid = models.ForeignKey('User', models.DO_NOTHING, db_column='subjid', blank=True, null=True)
+    subjid = models.ForeignKey(
+        "User", models.DO_NOTHING, db_column="subjid", blank=True, null=True
+    )
     keystr = models.CharField(unique=True, max_length=255, blank=True, null=True)
     valstr = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'cc_pref'
-        unique_together = (('subjid', 'keystr'),)
+        db_table = "cc_pref"
+        unique_together = (("subjid", "keystr"),)
 
 
 class MountName(models.Model):
@@ -17,7 +19,7 @@ class MountName(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_mount_name'
+        db_table = "cc_mount_name"
 
 
 class StreamSetting(models.Model):
@@ -27,4 +29,4 @@ class StreamSetting(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_stream_setting'
+        db_table = "cc_stream_setting"

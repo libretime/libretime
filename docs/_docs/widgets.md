@@ -12,7 +12,7 @@ Before using the widgets, make sure Libretime's Public API is enabled in **Setti
 
 ![](/img/widgets_settings.png)
 
-> **Note:** Your Libretime instance needs to be accessible to the public *without the use of a VPN or SSH tunneling* in order for the widgets to work.
+> **Note:** Your Libretime instance needs to be accessible to the public _without the use of a VPN or SSH tunneling_ in order for the widgets to work.
 
 ## Streaming Player Widget
 

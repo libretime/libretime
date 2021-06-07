@@ -8,11 +8,11 @@
     <script>
       // Set a variable for our button element.
       const scrollToTopButton = document.getElementById('js-top');
-      
+
       const scrollFunc = () => {
         // Get the current scroll value
         let y = window.scrollY;
-         
+
         // If the scroll value is greater than the window height, let's add a class to the scroll-to-top button to show it!
         if (y > 0) {
           scrollToTopButton.className = "top-link show";
@@ -24,7 +24,7 @@
       const scrollToTop = () => {
         // Let's set a variable for the number of pixels we are from the top of the document.
         const c = document.documentElement.scrollTop || document.body.scrollTop;
-         
+
         // If that number is greater than 0, we'll scroll back to 0, or the top of the document.
         // We'll also animate that scroll with requestAnimationFrame:
         // https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
@@ -41,4 +41,3 @@
         scrollToTop();
       }
     </script>
-    

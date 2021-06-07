@@ -1,0 +1,10 @@
+hda
+HDA
+conexant
+
+# TODO: See https://github.com/savonet/liquidsoap/issues/1654
+prefered
+
+# TODO: Remove once docs/lunr.js is shipped using a package manager
+ment
+enviroments

@@ -1,4 +1,5 @@
 from django.db import models
+
 from .files import File
 
 
@@ -11,7 +12,8 @@ class ThirdPartyTrackReference(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'third_party_track_references'
+        db_table = "third_party_track_references"
+
 
 class TrackType(models.Model):
     code = models.CharField(max_length=16, unique=True)
@@ -21,5 +23,4 @@ class TrackType(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_track_types'
-
+        db_table = "cc_track_types"

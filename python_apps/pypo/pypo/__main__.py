@@ -3,6 +3,7 @@ Python part of radio playout (pypo)
 """
 
 
+import importlib
 import locale
 import logging
 import os
@@ -11,18 +12,20 @@ import signal
 import sys
 import telnetlib
 import time
+from datetime import datetime
+from optparse import OptionParser
 
 from api_clients import version1 as api_client
 from configobj import ConfigObj
-from datetime import datetime
-from optparse import OptionParser
-import importlib
+
 try:
     from queue import Queue
 except ImportError:  # Python 2.7.5 (CentOS 7)
     from queue import Queue
+
 from threading import Lock
 
+from . import pure
 from .listenerstat import ListenerStat
 from .pypofetch import PypoFetch
 from .pypofile import PypoFile
@@ -31,8 +34,6 @@ from .pypomessagehandler import PypoMessageHandler
 from .pypopush import PypoPush
 from .recorder import Recorder
 from .timeout import ls_timeout
-from . import pure
-
 
 LOG_PATH = "/var/log/airtime/pypo/pypo.log"
 LOG_LEVEL = logging.INFO

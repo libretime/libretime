@@ -1,30 +1,39 @@
 """ Analyzes and imports an audio file into the Airtime library.
 """
-import logging
-import threading
-import multiprocessing
-from queue import Queue
 import configparser
-from .metadata_analyzer import MetadataAnalyzer
-from .filemover_analyzer import FileMoverAnalyzer
+import logging
+import multiprocessing
+import threading
+from queue import Queue
+
 from .cuepoint_analyzer import CuePointAnalyzer
-from .replaygain_analyzer import ReplayGainAnalyzer
+from .filemover_analyzer import FileMoverAnalyzer
+from .metadata_analyzer import MetadataAnalyzer
 from .playability_analyzer import *
+from .replaygain_analyzer import ReplayGainAnalyzer
+
 
 class AnalyzerPipeline:
-    """ Analyzes and imports an audio file into the Airtime library.
+    """Analyzes and imports an audio file into the Airtime library.
 
-        This currently performs metadata extraction (eg. gets the ID3 tags from an MP3),
-        then moves the file to the Airtime music library (stor/imported), and returns
-        the results back to the parent process. This class is used in an isolated process
-        so that if it crashes, it does not kill the entire airtime_analyzer daemon and
-        the failure to import can be reported back to the web application.
+    This currently performs metadata extraction (eg. gets the ID3 tags from an MP3),
+    then moves the file to the Airtime music library (stor/imported), and returns
+    the results back to the parent process. This class is used in an isolated process
+    so that if it crashes, it does not kill the entire airtime_analyzer daemon and
+    the failure to import can be reported back to the web application.
     """
 
     IMPORT_STATUS_FAILED = 2
 
     @staticmethod
-    def run_analysis(queue, audio_file_path, import_directory, original_filename, storage_backend, file_prefix):
+    def run_analysis(
+        queue,
+        audio_file_path,
+        import_directory,
+        original_filename,
+        storage_backend,
+        file_prefix,
+    ):
         """Analyze and import an audio file, and put all extracted metadata into queue.
 
         Keyword arguments:
@@ -49,14 +58,29 @@ class AnalyzerPipeline:
             if not isinstance(queue, Queue):
                 raise TypeError("queue must be a Queue.Queue()")
             if not isinstance(audio_file_path, str):
-                raise TypeError("audio_file_path must be unicode. Was of type " + type(audio_file_path).__name__ + " instead.")
+                raise TypeError(
+                    "audio_file_path must be unicode. Was of type "
+                    + type(audio_file_path).__name__
+                    + " instead."
+                )
             if not isinstance(import_directory, str):
-                raise TypeError("import_directory must be unicode. Was of type " + type(import_directory).__name__ + " instead.")
+                raise TypeError(
+                    "import_directory must be unicode. Was of type "
+                    + type(import_directory).__name__
+                    + " instead."
+                )
             if not isinstance(original_filename, str):
-                raise TypeError("original_filename must be unicode. Was of type " + type(original_filename).__name__ + " instead.")
+                raise TypeError(
+                    "original_filename must be unicode. Was of type "
+                    + type(original_filename).__name__
+                    + " instead."
+                )
             if not isinstance(file_prefix, str):
-                raise TypeError("file_prefix must be unicode. Was of type " + type(file_prefix).__name__ + " instead.")
-
+                raise TypeError(
+                    "file_prefix must be unicode. Was of type "
+                    + type(file_prefix).__name__
+                    + " instead."
+                )
 
             # Analyze the audio file we were told to analyze:
             # First, we extract the ID3 tags and other metadata:
@@ -68,9 +92,11 @@ class AnalyzerPipeline:
             metadata = ReplayGainAnalyzer.analyze(audio_file_path, metadata)
             metadata = PlayabilityAnalyzer.analyze(audio_file_path, metadata)
 
-            metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata)
+            metadata = FileMoverAnalyzer.move(
+                audio_file_path, import_directory, original_filename, metadata
+            )
 
-            metadata["import_status"] = 0 # Successfully imported
+            metadata["import_status"] = 0  # Successfully imported
 
             # Note that the queue we're putting the results into is our interprocess communication
             # back to the main process.
@@ -92,9 +118,8 @@ class AnalyzerPipeline:
     def python_logger_deadlock_workaround():
         # Workaround for: http://bugs.python.org/issue6721#msg140215
         logger_names = list(logging.Logger.manager.loggerDict.keys())
-        logger_names.append(None) # Root logger
+        logger_names.append(None)  # Root logger
         for name in logger_names:
             for handler in logging.getLogger(name).handlers:
                 handler.createLock()
         logging._lock = threading.RLock()
-

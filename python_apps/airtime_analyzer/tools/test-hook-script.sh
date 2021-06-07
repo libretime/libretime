@@ -3,7 +3,7 @@
 post_file() {
     file_path=${1}
     filename="${file_path##*/}"
-    
+
     #kill process after 30 minutes (360*5=30 minutes)
     max_retry=10
     retry_count=0

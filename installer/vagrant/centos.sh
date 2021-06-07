@@ -31,7 +31,7 @@ patch -f /var/lib/pgsql/data/pg_hba.conf << EOD
 --- pg_hba.conf.orig	2020-12-19 13:10:46.828960307 +0000
 +++ pg_hba.conf	2020-12-19 13:11:37.356290128 +0000
 @@ -78,10 +78,11 @@
- 
+
  # "local" is for Unix domain socket connections only
  local   all             all                                     peer
 +local   all             all                                     md5
@@ -144,7 +144,7 @@ sed -i \
 
 
 # celery will not run unless we install a specific version (https://github.com/pypa/setuptools/issues/942)
-# this will need to be figured out later on and will get overriden by the docs installer anyhow :(
+# this will need to be figured out later on and will get overridden by the docs installer anyhow :(
 pip3 install setuptools==33.1.1
 pip3 freeze setuptools==33.1.1
 
@@ -153,7 +153,7 @@ echo 'date.timezone=Europe/Zurich' >> /etc/php.d/timezone.ini
 systemctl restart httpd
 
 # icecast needs to be available to everyone
-sed -i -e 's@<bind-address>127.0.0.1</bind-address>@<bind-address>0.0.0.0</bind-address>@' /etc/icecast.xml 
+sed -i -e 's@<bind-address>127.0.0.1</bind-address>@<bind-address>0.0.0.0</bind-address>@' /etc/icecast.xml
 systemctl enable --now icecast
 
 # let em use alsa

@@ -6,7 +6,7 @@ category: interface
 
 > **About Autoloading Playlists**
 >
-> Libretime will schedule tracks from a selected playlist an hour before a show is 
+> Libretime will schedule tracks from a selected playlist an hour before a show is
 > scheduled to air. This is a great way to automatically schedule weekly shows which are received
 > via. podcasts.
 
@@ -40,20 +40,20 @@ Smart blocks are automatically filled with media files from the LibreTime librar
 
 To create a smart block, click the **Smartblocks** button on the left sidebar, and select **New** from the toolbar. Like a playlist, smart blocks can have a title and description, which you can edit. This helps you find relevant smart blocks in searches.
 
-Fill out the smart block's **Name**, **Search Criteria**, and **Limit to** sections. The search criteria can be any one of LibreTime's metadata categories, such as **Title**, **Creator** or **Genre**. The modifier depends on whether the metadata in question contains letters or numbers. For example, **Title** has modifiers including *contains* and *starts with*, whereas the modifiers for **BPM** include *is greater than* and *is in the range*.
+Fill out the smart block's **Name**, **Search Criteria**, and **Limit to** sections. The search criteria can be any one of LibreTime's metadata categories, such as **Title**, **Creator** or **Genre**. The modifier depends on whether the metadata in question contains letters or numbers. For example, **Title** has modifiers including _contains_ and _starts with_, whereas the modifiers for **BPM** include _is greater than_ and _is in the range_.
 
 If you have a large number of files which meet the criteria that you specify, you may wish to limit the duration of the smart block using the **Limit to** field, so that it fits within the show you have in mind. Select **hours**, **minutes** or **items** from the drop-down menu, and click the **Generate** button again, if it is a static smart block. Then click the **Save** button.
 
 > **Note:** Smart Blocks by default will not overflow the length of a scheduled show.
-> This is to prevent tracks from being cut-off because they exceed the time limit of a show. 
+> This is to prevent tracks from being cut-off because they exceed the time limit of a show.
 > If you want a smartblock to schedule tracks until it is longer than the Time Limit you can check **"Allow last track to exceed time limit"**
 > (helpful for avoiding dead air on autoscheduled shows).
 
 ![](/img/Smartblock-advanced.png)
 
-You can also set the **smart block type**. A **Static** smart block will save the criteria and generate the block content immediately. This enables you to edit the contents of the block in the **Library** page before adding it to a show. A **Dynamic** smart block will only save the criteria, and the specific content will be generated at the time the block is added to a show. After that, the content of the show can be changed or re-ordered in the **Now Playing** page. 
+You can also set the **smart block type**. A **Static** smart block will save the criteria and generate the block content immediately. This enables you to edit the contents of the block in the **Library** page before adding it to a show. A **Dynamic** smart block will only save the criteria, and the specific content will be generated at the time the block is added to a show. After that, the content of the show can be changed or re-ordered in the **Now Playing** page.
 
-Click the **plus button** on the left to add OR criteria, such as **Creator** containing *beck* OR *jimi*. To add AND criteria, such as **Creator** containing *jimi* AND BPM in the range *120* to *130*, click the **plus button** on the right. (The criteria are not case sensitive). Click **Preview** to see the results.
+Click the **plus button** on the left to add OR criteria, such as **Creator** containing _beck_ OR _jimi_. To add AND criteria, such as **Creator** containing _jimi_ AND BPM in the range _120_ to _130_, click the **plus button** on the right. (The criteria are not case sensitive). Click **Preview** to see the results.
 
 > If you see the message **0 files meet the criteria**, it might mean that the files in the Library have not been tagged with the correct metadata. See the chapter [Preparing media](/docs/preparing-media) for tips on tagging content.
 

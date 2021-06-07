@@ -18,7 +18,7 @@ permalink: /install
 - Wired internet connection and static IP address for on-prem install
 
 [DigitalOcean](https://www.digitalocean.com/pricing/#Compute) and [Linode](https://www.linode.com/pricing/#row--compute)
- have similar plans that meet Cloud Install requirements. Both plans cost $10/month.
+have similar plans that meet Cloud Install requirements. Both plans cost $10/month.
 
 ## Preparing the server
 
@@ -67,7 +67,6 @@ sudo ufw allow 8001,8002/tcp
 ## Installing LibreTime
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/Djo_55LgjXE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
 
 Installing LibreTime consists of running the following commands in the terminal:
 

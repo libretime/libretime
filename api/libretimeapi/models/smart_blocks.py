@@ -5,7 +5,7 @@ class SmartBlock(models.Model):
     name = models.CharField(max_length=255)
     mtime = models.DateTimeField(blank=True, null=True)
     utime = models.DateTimeField(blank=True, null=True)
-    creator = models.ForeignKey('User', models.DO_NOTHING, blank=True, null=True)
+    creator = models.ForeignKey("User", models.DO_NOTHING, blank=True, null=True)
     description = models.CharField(max_length=512, blank=True, null=True)
     length = models.DurationField(blank=True, null=True)
     type = models.CharField(max_length=7, blank=True, null=True)
@@ -15,16 +15,22 @@ class SmartBlock(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_block'
+        db_table = "cc_block"
         permissions = [
-            ('change_own_smartblock', 'Change the smartblocks where they are the owner'),
-            ('delete_own_smartblock', 'Delete the smartblocks where they are the owner'),
+            (
+                "change_own_smartblock",
+                "Change the smartblocks where they are the owner",
+            ),
+            (
+                "delete_own_smartblock",
+                "Delete the smartblocks where they are the owner",
+            ),
         ]
 
 
 class SmartBlockContent(models.Model):
     block = models.ForeignKey(SmartBlock, models.DO_NOTHING, blank=True, null=True)
-    file = models.ForeignKey('File', models.DO_NOTHING, blank=True, null=True)
+    file = models.ForeignKey("File", models.DO_NOTHING, blank=True, null=True)
     position = models.IntegerField(blank=True, null=True)
     trackoffset = models.FloatField()
     cliplength = models.DurationField(blank=True, null=True)
@@ -38,10 +44,16 @@ class SmartBlockContent(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_blockcontents'
+        db_table = "cc_blockcontents"
         permissions = [
-            ('change_own_smartblockcontent', 'Change the content of smartblocks where they are the owner'),
-            ('delete_own_smartblockcontent', 'Delete the content of smartblocks where they are the owner'),
+            (
+                "change_own_smartblockcontent",
+                "Change the content of smartblocks where they are the owner",
+            ),
+            (
+                "delete_own_smartblockcontent",
+                "Delete the content of smartblocks where they are the owner",
+            ),
         ]
 
 
@@ -58,9 +70,14 @@ class SmartBlockCriteria(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_blockcriteria'
+        db_table = "cc_blockcriteria"
         permissions = [
-            ('change_own_smartblockcriteria', 'Change the criteria of smartblocks where they are the owner'),
-            ('delete_own_smartblockcriteria', 'Delete the criteria of smartblocks where they are the owner'),
+            (
+                "change_own_smartblockcriteria",
+                "Change the criteria of smartblocks where they are the owner",
+            ),
+            (
+                "delete_own_smartblockcriteria",
+                "Delete the criteria of smartblocks where they are the owner",
+            ),
         ]
-

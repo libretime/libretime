@@ -2,7 +2,7 @@
                 source := add(normalize=false, [amplify(0.00001, noise()), !source])
             end
 
-            if bitrate == 24 or bitrate == 32 or bitrate == 48 then 
+            if bitrate == 24 or bitrate == 32 or bitrate == 48 then
                 if stereo then
                     ignore(output_stereo(%vorbis(quality=-0.1, channels = 2), !source))
                 else
@@ -57,4 +57,3 @@
                     ignore(output_mono(%vorbis(quality=0.9, channels = 1), mean(!source)))
                 end
             end
-

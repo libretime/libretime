@@ -1,4 +1,5 @@
 from django.db import models
+
 from .files import File
 from .smart_blocks import SmartBlock
 
@@ -7,7 +8,7 @@ class Playlist(models.Model):
     name = models.CharField(max_length=255)
     mtime = models.DateTimeField(blank=True, null=True)
     utime = models.DateTimeField(blank=True, null=True)
-    creator = models.ForeignKey('User', models.DO_NOTHING, blank=True, null=True)
+    creator = models.ForeignKey("User", models.DO_NOTHING, blank=True, null=True)
     description = models.CharField(max_length=512, blank=True, null=True)
     length = models.DurationField(blank=True, null=True)
 
@@ -16,7 +17,7 @@ class Playlist(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_playlist'
+        db_table = "cc_playlist"
 
 
 class PlaylistContent(models.Model):
@@ -38,4 +39,4 @@ class PlaylistContent(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_playlistcontents'
+        db_table = "cc_playlistcontents"

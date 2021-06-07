@@ -32,14 +32,13 @@ The **History Templates** page on the History menu enables you to prepare report
 
 ![](/img/new-hist-temp.png)
 
-Either of these actions opens a page in which you can name the new template, and add or remove elements from the list on the left. To add a new element from the list on the right, click the plus icon for the item you require. If the element you require is not listed, you can use the **Add New Field** box at the lower end of the right side column. Select *string*, *boolean*, *integer*, or *float*, depending on the type of data that you wish to log, and then click the **+ Add** button.
+Either of these actions opens a page in which you can name the new template, and add or remove elements from the list on the left. To add a new element from the list on the right, click the plus icon for the item you require. If the element you require is not listed, you can use the **Add New Field** box at the lower end of the right side column. Select _string_, _boolean_, _integer_, or _float_, depending on the type of data that you wish to log, and then click the **+ Add** button.
 
 When the template is in the format you require, click the **Save** button, and **Set Default Template** if you wish. The new template will now be listed on the History Templates page. If you have set a new default template, any changes will be visible on the tabs of the Playout History page.
 
-
 ## Exporting the schedule {#exporting}
 
-LibreTime has a feature which enables your station's show and schedule information to be displayed on remote websites. This feature is included in LibreTime because you would not usually invite the general public to access your LibreTime server directly. If you had very large numbers of people requesting data from the LibreTime server at once, the burst of network traffic might overload the server, potentially disrupting your broadcasts. If carried out maliciously, this network overload is known as a *denial of service attack*.
+LibreTime has a feature which enables your station's show and schedule information to be displayed on remote websites. This feature is included in LibreTime because you would not usually invite the general public to access your LibreTime server directly. If you had very large numbers of people requesting data from the LibreTime server at once, the burst of network traffic might overload the server, potentially disrupting your broadcasts. If carried out maliciously, this network overload is known as a _denial of service attack_.
 
 Instead, your public-facing web server can retrieve the schedule information from the LibreTime API. It can be presented using Javascript widgets and styled with CSS, in any format that you require.
 
@@ -167,17 +166,17 @@ In this case, the metadata returned would be in a different format from the abov
     "sunday":[],
     "AIRTIME_API_VERSION":"1.1"})
 
-If you see the message *You are not allowed to access this resource* when attempting to display schedule information in your web browser, log in to the LibreTime administration interface, click *System* in the main menu, then *Preferences*. Set **Allow Remote Websites To Access "Schedule" Info?** to **Enabled**, click the **Save** button, then refresh the browser window opened on the schedule export URL. If you do not wish to make schedule information available to the public, set this option to **Disabled** instead.
+If you see the message _You are not allowed to access this resource_ when attempting to display schedule information in your web browser, log in to the LibreTime administration interface, click _System_ in the main menu, then _Preferences_. Set **Allow Remote Websites To Access "Schedule" Info?** to **Enabled**, click the **Save** button, then refresh the browser window opened on the schedule export URL. If you do not wish to make schedule information available to the public, set this option to **Disabled** instead.
 
 ### Caching schedule information
 
 If the LibreTime server is behind a firewall, or you want to protect the LibreTime server from large numbers of schedule requests, you may wish to cache the schedule information on a public-facing or intermediate server. You can then create a firewall rule that only allows the schedule server to connect to the LibreTime server, in addition to any remote users of the LibreTime web interface.
 
-Your system administrator can set up schedule caching on a standard Apache and PHP enabled web server with the *curl* program installed, using the following steps:
+Your system administrator can set up schedule caching on a standard Apache and PHP enabled web server with the _curl_ program installed, using the following steps:
 
 1. Create a shell script on the schedule server (schedule.example.com) that polls the remote LibreTime server (libretime.example.com), and writes the metadata returned into a pair of local temporary files:
 
-    sudo nano /usr/local/bin/libretime-schedule.sh
+   sudo nano /usr/local/bin/libretime-schedule.sh
 
 The content of this file should be like the following script, replacing libretime.example.com with the name of your LibreTime server:
 
@@ -189,27 +188,27 @@ The content of this file should be like the following script, replacing libretim
 
 2. Make the script executable:
 
-    sudo chmod +x /usr/local/bin/libretime-schedule.sh
+   sudo chmod +x /usr/local/bin/libretime-schedule.sh
 
 3. Create an Apache VirtualHost configuration for the schedule server:
 
-    sudo nano /etc/apache2/sites-available/schedule
+   sudo nano /etc/apache2/sites-available/schedule
 
-containing a definition like the following, replacing *schedule.example.com* with the name of your schedule server:
+containing a definition like the following, replacing _schedule.example.com_ with the name of your schedule server:
 
     <VirtualHost *:80>
        ServerName schedule.example.com
        DocumentRoot /var/www/schedule/
     </VirtualHost>
 
-4. In the schedule server's DocumentRoot folder, create the folders *api/live-info/* and *api/week-info/*
+4. In the schedule server's DocumentRoot folder, create the folders _api/live-info/_ and _api/week-info/_
 
-    sudo mkdir -p /var/www/schedule/api/live-info/
-    sudo mkdir -p /var/www/schedule/api/week-info/
+   sudo mkdir -p /var/www/schedule/api/live-info/
+   sudo mkdir -p /var/www/schedule/api/week-info/
 
-5. Create an index.php file in the *api/live-info/* folder:
+5. Create an index.php file in the _api/live-info/_ folder:
 
-    sudo nano /var/www/schedule/api/live-info/index.php
+   sudo nano /var/www/schedule/api/live-info/index.php
 
 containing the following code:
 
@@ -226,9 +225,9 @@ containing the following code:
     echo $content;
     ?>
 
-6. Create an index.php file in the *api/week-info/* folder:
+6. Create an index.php file in the _api/week-info/_ folder:
 
-    sudo nano /var/www/schedule/api/week-info/index.php
+   sudo nano /var/www/schedule/api/week-info/index.php
 
 containing the following code:
 
@@ -247,12 +246,12 @@ containing the following code:
 
 7. Enable the new configuration and reload the Apache web server:
 
-    sudo a2ensite schedule
-    sudo /etc/init.d/apache2 reload
+   sudo a2ensite schedule
+   sudo /etc/init.d/apache2 reload
 
 8. Create a cron job to run the shell script each minute:
 
-    sudo nano /etc/cron.d/libretime-schedule
+   sudo nano /etc/cron.d/libretime-schedule
 
 containing the line:
 

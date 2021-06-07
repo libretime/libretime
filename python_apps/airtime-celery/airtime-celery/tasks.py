@@ -2,21 +2,21 @@ from future.standard_library import install_aliases
 
 install_aliases()
 
-import os
-import json
-import requests
 import cgi
+import json
+import os
 import posixpath
 import shutil
 import tempfile
 import traceback
-import mutagen
-from io import StringIO
-from celery import Celery
-from celery.utils.log import get_task_logger
 from contextlib import closing
+from io import StringIO
 from urllib.parse import urlsplit
 
+import mutagen
+import requests
+from celery import Celery
+from celery.utils.log import get_task_logger
 
 celery = Celery()
 logger = get_task_logger(__name__)

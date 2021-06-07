@@ -41,7 +41,7 @@ function exitIfNotRoot()
 function printUsage($userMsg = "")
 {
     global $opts;
-    
+
     $msg = $opts->getUsageMessage();
     if (strlen($userMsg)>0)
         echo $userMsg;
@@ -64,11 +64,11 @@ function viewSpecificLog($key){
     } else printUsage();
 }
 
-function dumpAllLogs(){   
+function dumpAllLogs(){
     $dateStr = gmdate("Y-m-d-H-i-s");
 
     $dir = getcwd();
-    
+
     $filename = "$dir/airtime-log-all-$dateStr.tgz";
     echo "Creating Airtime logs tgz file at $filename";
     $command = "tar cfz $filename /var/log/airtime 2>/dev/null";
@@ -82,7 +82,7 @@ function dumpSpecificLog($key){
         $dateStr = gmdate("Y-m-d-H-i-s");
 
         $dir = getcwd();
-        
+
         $filename = "$dir/airtime-log-$key-$dateStr.tgz";
         echo "Creating Airtime logs tgz file at $filename";
         $dir = dirname($log_files[$key]);
@@ -104,7 +104,7 @@ function tailSpecificLog($key){
     if (isKeyValid($key)){
         echo "Tail $key log";
         pcntl_exec(exec("which tail"), array("-F", $log_files[$key]));
-        pcntl_wait($status);        
+        pcntl_wait($status);
     } else printUsage();
 }
 
@@ -164,4 +164,3 @@ if (isset($opts->v)){
 }
 
 echo PHP_EOL;
-

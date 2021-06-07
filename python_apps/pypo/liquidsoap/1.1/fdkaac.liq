@@ -1,4 +1,4 @@
-            if bitrate == 24 then 
+            if bitrate == 24 then
                 ignore(output_stereo(%fdkaac(bitrate = 24, aot="mpeg4_he_aac_v2", afterburner=false, sbr_mode=true), !source))
             elsif bitrate == 32 then
                 ignore(output_stereo(%fdkaac(bitrate = 32, aot="mpeg4_he_aac_v2", afterburner=false, sbr_mode=true), !source))
@@ -21,4 +21,3 @@
             elsif bitrate == 320 then
                 ignore(output_stereo(%fdkaac(bitrate = 320, aot="mpeg4_aac_lc", afterburner=true, sbr_mode=true), !source))
             end
-

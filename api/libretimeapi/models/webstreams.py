@@ -1,5 +1,6 @@
-from django.db import models
 from django.contrib.auth import get_user_model
+from django.db import models
+
 from .schedule import Schedule
 
 
@@ -20,10 +21,10 @@ class Webstream(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_webstream'
+        db_table = "cc_webstream"
         permissions = [
-            ('change_own_webstream', 'Change the webstreams where they are the owner'),
-            ('delete_own_webstream', 'Delete the webstreams where they are the owner'),
+            ("change_own_webstream", "Change the webstreams where they are the owner"),
+            ("delete_own_webstream", "Delete the webstreams where they are the owner"),
         ]
 
 
@@ -37,4 +38,4 @@ class WebstreamMetadata(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cc_webstream_metadata'
+        db_table = "cc_webstream_metadata"

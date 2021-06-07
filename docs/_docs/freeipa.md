@@ -56,11 +56,11 @@ LibreTime needs direct access to LDAP so it can fetch additional information. It
 a [system account](https://www.freeipa.org/page/HowTo/LDAP#System_Accounts) that you need to
 set up beforehand.
 
-You can configure everything pertaining to how LibreTime accesses LDAP in 
+You can configure everything pertaining to how LibreTime accesses LDAP in
 `/etc/airtime/airtime.conf`. The default file has the following values you need to change.
 
 ```ini
-# 
+#
 # ----------------------------------------------------------------------
 #                          L D A P
 # ----------------------------------------------------------------------

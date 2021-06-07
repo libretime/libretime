@@ -1832,11 +1832,11 @@
 	*/
 	var splitDateTime = function(dateFormat, dateTimeString, dateSettings, timeSettings) {
 		try {
-			// The idea is to get the number separator occurances in datetime and the time format requested (since time has 
+			// The idea is to get the number separator occurrences in datetime and the time format requested (since time has 
 			// fewer unknowns, mostly numbers and am/pm). We will use the time pattern to split.
 			var separator = timeSettings && timeSettings.separator ? timeSettings.separator : $.datetimepicker._defaults.separator,
 				format = timeSettings && timeSettings.timeFormat ? timeSettings.timeFormat : $.datetimepicker._defaults.timeFormat,
-				timeParts = format.split(separator), // how many occurances of separator may be in our format?
+				timeParts = format.split(separator), // how many occurrences of separator may be in our format?
 				timePartsLen = timeParts.length,
 				allParts = dateTimeString.split(separator),
 				allPartsLen = allParts.length;

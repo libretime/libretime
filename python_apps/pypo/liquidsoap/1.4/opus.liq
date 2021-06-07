@@ -1,4 +1,4 @@
-            if bitrate == 24 then 
+            if bitrate == 24 then
                 if stereo then
                     ignore(output_stereo(%opus(bitrate = 24, channels = 2, signal="music", application="audio", complexity=10, vbr="constrained"), !source))
                 else
@@ -65,4 +65,3 @@
                     ignore(output_mono(%opus(bitrate = 320, channels = 1, signal="music", application="audio", complexity=10, vbr="constrained"), mean(!source)))
                 end
             end
-

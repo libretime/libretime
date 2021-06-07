@@ -10,6 +10,7 @@ To increase the security of your server, you can enable encrypted access to the 
 
 One of the fastest, easiest, and cheapest ways to get an SSL certificate is through [Certbot](https://certbot.eff.org/), as created by the
 Electronic Frontier Foundation. There are some requirements for this process:
+
 - you have an HTTP website (already installed and configured by default by the LibreTime installer) and
 - this website is open to the public internet (likely via. port forwarding if your computer is behind a firewall) and
 - the server is accessible to the public via. port 80
@@ -20,7 +21,7 @@ These instructions come from Certbot's website and assume that you are using an 
 running on Ubuntu 18.04 LTS (the Apache web server is installed with LibreTime by default).
 Instructions for other Debian-based OSes are similar, but check with Certbot for clarification.
 
-Note: all instructions require you to have sudo priveledges
+Note: all instructions require you to have sudo privileges
 
 First, add Certbot's PPA using:
 
@@ -45,11 +46,11 @@ Head to your server's IP address to check to see that the installation worked.
 
 ### Deploying a self-signed certificate
 
-The Debian/Ubuntu package *ssl-cert* creates a *snakeoil* certificate and key based on your server's hostname. This gratis certificate and key pair created under the */etc/ssl/certs*/ and */etc/ssl/private/* directories will not be recognised by users' browsers without manual intervention. You can install the *ssl-cert* package with the command:
+The Debian/Ubuntu package _ssl-cert_ creates a _snakeoil_ certificate and key based on your server's hostname. This gratis certificate and key pair created under the _/etc/ssl/certs_/ and _/etc/ssl/private/_ directories will not be recognised by users' browsers without manual intervention. You can install the _ssl-cert_ package with the command:
 
     sudo apt-get install ssl-cert
 
-If the hostname of your server does not match the domain name you intend to use with the LibreTime virtual host, the user's browser will present an additional security warning. You can set the domain name of the certificate by editing the file */usr/share/ssl-cert/ssleay.cnf* to replace the *@HostName@* variable:
+If the hostname of your server does not match the domain name you intend to use with the LibreTime virtual host, the user's browser will present an additional security warning. You can set the domain name of the certificate by editing the file _/usr/share/ssl-cert/ssleay.cnf_ to replace the _@HostName@_ variable:
 
     commonName                      = @HostName@
 
@@ -69,9 +70,9 @@ Next, edit the virtual host configuration for your LibreTime server to include a
 
     sudo nano /etc/apache2/sites-available/airtime-vhost.conf
 
-Using the following configuration for Apache 2.2 as a guide, replace *airtime.example.com* with the name of your server and *admin@example.com* with your email address. The older SSLv2 and SSLv3 protocols and SSL compression should be disabled, as they are generally believed to be insecure. You may wish to create a *ServerAlias* for users to access the administration interface over https:// if required.
+Using the following configuration for Apache 2.2 as a guide, replace _airtime.example.com_ with the name of your server and *admin@example.com* with your email address. The older SSLv2 and SSLv3 protocols and SSL compression should be disabled, as they are generally believed to be insecure. You may wish to create a _ServerAlias_ for users to access the administration interface over https:// if required.
 
-On port 80, Apache's *alias* module is used to set a *Redirect permanent* for the login page. Optionally, access could be denied to all sites except *localhost* and any other LibreTime servers on your network, so that unencrypted communication between LibreTime components can continue.
+On port 80, Apache's _alias_ module is used to set a _Redirect permanent_ for the login page. Optionally, access could be denied to all sites except _localhost_ and any other LibreTime servers on your network, so that unencrypted communication between LibreTime components can continue.
 
 ```
 <VirtualHost *:443>
@@ -114,7 +115,7 @@ On port 80, Apache's *alias* module is used to set a *Redirect permanent* for th
               Order allow,deny
               Allow from all
       </Directory>
-</VirtualHost> 
+</VirtualHost>
 ```
 
 Save the file with **Ctrl+O** and exit the **nano** editor with **Ctrl+X**. Then restart Apache with the command:
@@ -129,7 +130,7 @@ The first time you access an LibreTime server with a self-signed certificate ove
 
 ![](/img/Screenshot547-connection_untrusted.png)
 
-On the next page in Firefox, click the **Get Certificate** button to inspect the details of the self-signed certificate. If all is well, click the **Confirm Security Exception** button. You should now be able to proceed to the https:// login page.  
+On the next page in Firefox, click the **Get Certificate** button to inspect the details of the self-signed certificate. If all is well, click the **Confirm Security Exception** button. You should now be able to proceed to the https:// login page.
 
 ![](/img/Screenshot548-confirm_exception.png)
 

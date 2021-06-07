@@ -14,7 +14,7 @@ SoundExchange in the USA, and similar organizations in other territories. These
 organizations are usually membership societies or government-sanctioned national
 authorities which are intended to collect money from broadcasters to compensate
 copyright holders. The royalty collection societies require payment before you
-can stream just about any music released commercially to the general public —
+can stream just about any music released commercially to the general public -
 whether you make any money out of streaming, or not. It's not so much the
 percentage of revenue demanded, but that there are usually annual minimum fees
 to pay, which can hurt small stations disproportionately.

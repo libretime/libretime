@@ -1,10 +1,10 @@
 # Maintainer: Zachary Klosko (kloskoz@vcu.edu)
 
 hostname: libretimeTest
-timezone: America/New York  # change as needed
+timezone: America/New York # change as needed
 ntp:
-  pools: ['north-america.pool.ntp.org']
-  servers: ['0.north-america.pool.ntp.org', '0.pool.ntp.org']
+  pools: ["north-america.pool.ntp.org"]
+  servers: ["0.north-america.pool.ntp.org", "0.pool.ntp.org"]
 
 password: hackme
 chpasswd: { expire: False }

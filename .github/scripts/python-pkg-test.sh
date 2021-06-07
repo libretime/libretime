@@ -1,4 +1,4 @@
-#/bin/bash
+#!/usr/bin/env bash
 
 failed='f'
 # Starting at repo root

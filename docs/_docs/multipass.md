@@ -30,6 +30,7 @@ If you want to delete the image and start again, run `multipass delete ltTEST &&
 ### Cloud-init options in cloud-init.yaml
 
 You may wish to change the below fields as per your location.
+
 ```
 timezone: America/New York  # change as needed
 ntp:
