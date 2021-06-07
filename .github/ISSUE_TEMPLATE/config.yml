@@ -1,0 +1,9 @@
+blank_issues_enabled: false
+contact_links:
+  - name: LibreTime Forum
+    url: https://discourse.libretime.org/
+    about: Please find existing questions and discussions here.
+
+  - name: LibreTime Chat
+    url: https://chat.libretime.org/
+    about: Discuss with the LibreTime community.
