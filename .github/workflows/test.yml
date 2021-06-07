@@ -1,20 +1,12 @@
 name: Python and PHP Tests
+
 on:
   push:
-    paths-ignore:
-      - "docs/**"
+    branches:
+      - master
   pull_request:
-    types:
-      [
-        opened,
-        ready_for_review,
-        review_requested,
-        edited,
-        reopened,
-        synchronize,
-      ]
-    paths-ignore:
-      - "docs/**"
+    branches:
+      - master
   workflow_dispatch:
 
 jobs:
