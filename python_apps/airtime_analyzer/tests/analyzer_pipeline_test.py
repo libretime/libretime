@@ -37,10 +37,10 @@ def test_run_analysis(src_dir, dest_dir):
 @pytest.mark.parametrize(
     "params,exception",
     [
-        ((Queue(), u"", u"", u""), TypeError),
-        ((Queue(), "", u"", u""), TypeError),
-        ((Queue(), u"", "", u""), TypeError),
-        ((Queue(), u"", u"", ""), TypeError),
+        ((Queue(), "", "", ""), TypeError),
+        ((Queue(), "", "", ""), TypeError),
+        ((Queue(), "", "", ""), TypeError),
+        ((Queue(), "", "", ""), TypeError),
     ],
 )
 def test_run_analysis_wrong_params(params, exception):
