@@ -22,7 +22,6 @@ setup(
         "mutagen==1.42.0",
         "pika~=1.1.0",
         "file-magic",
-        "python-daemon",
         "requests>=2.7.0",
         "rgain3==1.0.0",
         "pycairo==1.19.1",
