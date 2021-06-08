@@ -1,3 +1,5 @@
-coverage
 mock
-nose
+pylint
+pytest
+pytest-cov
+pytest-xdist

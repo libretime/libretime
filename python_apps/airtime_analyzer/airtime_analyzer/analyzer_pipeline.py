@@ -9,7 +9,7 @@ from queue import Queue
 from .cuepoint_analyzer import CuePointAnalyzer
 from .filemover_analyzer import FileMoverAnalyzer
 from .metadata_analyzer import MetadataAnalyzer
-from .playability_analyzer import *
+from .playability_analyzer import PlayabilityAnalyzer, UnplayableFileError
 from .replaygain_analyzer import ReplayGainAnalyzer
 
 

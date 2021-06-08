@@ -9,8 +9,14 @@ from .analyzer import Analyzer
 
 
 class FileMoverAnalyzer(Analyzer):
-    """This analyzer copies a file over from a temporary directory (stor/organize)
+    """
+    This analyzer copies a file over from a temporary directory (stor/organize)
     into the Airtime library (stor/imported).
+
+    If you import three copies of the same file, the behaviour is:
+    - The filename is of the first file preserved.
+    - The filename of the second file has the timestamp attached to it.
+    - The filename of the third file has a UUID placed after the timestamp, but ONLY IF it's imported within 1 second of the second file (ie. if the timestamp is the same).
     """
 
     @staticmethod

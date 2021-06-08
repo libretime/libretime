@@ -1,12 +1,27 @@
+import pytest
 from airtime_analyzer.cuepoint_analyzer import CuePointAnalyzer
-from nose.tools import *
 
 
-def check_default_metadata(metadata):
-    """Check that the values extract by Silan/CuePointAnalyzer on our test audio files match what we expect.
-    :param metadata: a metadata dictionary
-    :return: Nothing
-    """
+@pytest.mark.parametrize(
+    "filepath",
+    [
+        ("tests/test_data/44100Hz-16bit-mono.mp3"),
+        ("tests/test_data/44100Hz-16bit-dualmono.mp3"),
+        ("tests/test_data/44100Hz-16bit-stereo.mp3"),
+        ("tests/test_data/44100Hz-16bit-stereo-utf8.mp3"),
+        ("tests/test_data/44100Hz-16bit-simplestereo.mp3"),
+        ("tests/test_data/44100Hz-16bit-jointstereo.mp3"),
+        # ("tests/test_data/44100Hz-16bit-mp3-missingid3header.mp3"),
+        ("tests/test_data/44100Hz-16bit-mono.ogg"),
+        ("tests/test_data/44100Hz-16bit-stereo.ogg"),
+        # ("tests/test_data/44100Hz-16bit-stereo-invalid.wma"),
+        ("tests/test_data/44100Hz-16bit-stereo.m4a"),
+        ("tests/test_data/44100Hz-16bit-stereo.wav"),
+    ],
+)
+def test_analyze(filepath):
+    metadata = CuePointAnalyzer.analyze(filepath, dict())
+
     # We give silan some leeway here by specifying a tolerance
     tolerance_seconds = 0.1
     length_seconds = 3.9
@@ -15,83 +30,18 @@ def check_default_metadata(metadata):
     assert abs(float(metadata["cueout"]) - length_seconds) < tolerance_seconds
 
 
-def test_missing_silan():
-    old_silan = CuePointAnalyzer.SILAN_EXECUTABLE
-    CuePointAnalyzer.SILAN_EXECUTABLE = "foosdaf"
-    metadata = CuePointAnalyzer.analyze(
-        u"tests/test_data/44100Hz-16bit-stereo-utf8.mp3", dict()
-    )
-    CuePointAnalyzer.SILAN_EXECUTABLE = old_silan  # Need to put this back
+def test_analyze_missing_silan():
+    old = CuePointAnalyzer.SILAN_EXECUTABLE
+    CuePointAnalyzer.SILAN_EXECUTABLE = "foobar"
+    CuePointAnalyzer.analyze("tests/test_data/44100Hz-16bit-mono.mp3", dict())
+    CuePointAnalyzer.SILAN_EXECUTABLE = old
 
 
-def test_invalid_filepath():
-    metadata = CuePointAnalyzer.analyze(u"non-existent-file", dict())
+def test_analyze_invalid_filepath():
+    with pytest.raises(KeyError):
+        test_analyze("non-existent-file")
 
 
-def test_mp3_utf8():
-    metadata = CuePointAnalyzer.analyze(
-        u"tests/test_data/44100Hz-16bit-stereo-utf8.mp3", dict()
-    )
-    check_default_metadata(metadata)
-
-
-def test_mp3_dualmono():
-    metadata = CuePointAnalyzer.analyze(
-        u"tests/test_data/44100Hz-16bit-dualmono.mp3", dict()
-    )
-    check_default_metadata(metadata)
-
-
-def test_mp3_jointstereo():
-    metadata = CuePointAnalyzer.analyze(
-        u"tests/test_data/44100Hz-16bit-jointstereo.mp3", dict()
-    )
-    check_default_metadata(metadata)
-
-
-def test_mp3_simplestereo():
-    metadata = CuePointAnalyzer.analyze(
-        u"tests/test_data/44100Hz-16bit-simplestereo.mp3", dict()
-    )
-    check_default_metadata(metadata)
-
-
-def test_mp3_stereo():
-    metadata = CuePointAnalyzer.analyze(
-        u"tests/test_data/44100Hz-16bit-stereo.mp3", dict()
-    )
-    check_default_metadata(metadata)
-
-
-def test_mp3_mono():
-    metadata = CuePointAnalyzer.analyze(
-        u"tests/test_data/44100Hz-16bit-mono.mp3", dict()
-    )
-    check_default_metadata(metadata)
-
-
-def test_ogg_stereo():
-    metadata = CuePointAnalyzer.analyze(
-        u"tests/test_data/44100Hz-16bit-stereo.ogg", dict()
-    )
-    check_default_metadata(metadata)
-
-
-def test_invalid_wma():
-    metadata = CuePointAnalyzer.analyze(
-        u"tests/test_data/44100Hz-16bit-stereo-invalid.wma", dict()
-    )
-
-
-def test_m4a_stereo():
-    metadata = CuePointAnalyzer.analyze(
-        u"tests/test_data/44100Hz-16bit-stereo.m4a", dict()
-    )
-    check_default_metadata(metadata)
-
-
-def test_wav_stereo():
-    metadata = CuePointAnalyzer.analyze(
-        u"tests/test_data/44100Hz-16bit-stereo.wav", dict()
-    )
-    check_default_metadata(metadata)
+def test_analyze_invalid_wma():
+    with pytest.raises(KeyError):
+        test_analyze("tests/test_data/44100Hz-16bit-stereo-invalid.wma")

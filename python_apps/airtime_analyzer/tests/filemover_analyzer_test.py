@@ -1,132 +1,120 @@
-import multiprocessing
 import os
 import shutil
+import tempfile
 import time
-from pprint import pprint
 
 import mock
+import pytest
 from airtime_analyzer.filemover_analyzer import FileMoverAnalyzer
-from nose.tools import *
 
-DEFAULT_AUDIO_FILE = u"tests/test_data/44100Hz-16bit-mono.mp3"
-DEFAULT_IMPORT_DEST = u"Test Artist/Test Album/44100Hz-16bit-mono.mp3"
+from .conftest import AUDIO_FILENAME
 
 
-def setup():
-    pass
+def test_analyze():
+    with pytest.raises(Exception):
+        FileMoverAnalyzer.analyze("foo", dict())
 
 
-def teardown():
-    pass
+@pytest.mark.parametrize(
+    "params,exception",
+    [
+        ((42, "", "", dict()), TypeError),
+        (("", 23, "", dict()), TypeError),
+        (("", "", 5, dict()), TypeError),
+        (("", "", "", 12345), TypeError),
+    ],
+)
+def test_move_wrong_params(params, exception):
+    with pytest.raises(exception):
+        FileMoverAnalyzer.move(*params)
 
 
-@raises(Exception)
-def test_dont_use_analyze():
-    FileMoverAnalyzer.analyze(u"foo", dict())
+def test_move(src_dir, dest_dir):
+    FileMoverAnalyzer.move(
+        os.path.join(src_dir, AUDIO_FILENAME),
+        dest_dir,
+        AUDIO_FILENAME,
+        dict(),
+    )
+    assert os.path.exists(os.path.join(dest_dir, AUDIO_FILENAME))
 
 
-@raises(TypeError)
-def test_move_wrong_string_param1():
-    FileMoverAnalyzer.move(42, "", "", dict())
+def test_move_samefile(src_dir):
+    FileMoverAnalyzer.move(
+        os.path.join(src_dir, AUDIO_FILENAME),
+        src_dir,
+        AUDIO_FILENAME,
+        dict(),
+    )
+    assert os.path.exists(os.path.join(src_dir, AUDIO_FILENAME))
 
 
-@raises(TypeError)
-def test_move_wrong_string_param2():
-    FileMoverAnalyzer.move(u"", 23, u"", dict())
+def import_and_restore(src_dir, dest_dir) -> dict:
+    """
+    Small helper to test the FileMoverAnalyzer.move function.
+    Move the file and restore it back to it's origine.
+    """
+    # Import the file
+    metadata = FileMoverAnalyzer.move(
+        os.path.join(src_dir, AUDIO_FILENAME),
+        dest_dir,
+        AUDIO_FILENAME,
+        dict(),
+    )
 
-
-@raises(TypeError)
-def test_move_wrong_string_param3():
-    FileMoverAnalyzer.move("", "", 5, dict())
-
-
-@raises(TypeError)
-def test_move_wrong_dict_param():
-    FileMoverAnalyzer.move("", "", "", 12345)
-
-
-@raises(FileNotFoundError)
-def test_move_wrong_string_param3():
-    FileMoverAnalyzer.move("", "", "", dict())
-
-
-def test_basic():
-    filename = os.path.basename(DEFAULT_AUDIO_FILE)
-    FileMoverAnalyzer.move(DEFAULT_AUDIO_FILE, u".", filename, dict())
-    # Move the file back
-    shutil.move("./" + filename, DEFAULT_AUDIO_FILE)
-    assert os.path.exists(DEFAULT_AUDIO_FILE)
-
-
-def test_basic_samefile():
-    filename = os.path.basename(DEFAULT_AUDIO_FILE)
-    FileMoverAnalyzer.move(DEFAULT_AUDIO_FILE, u"tests/test_data", filename, dict())
-    assert os.path.exists(DEFAULT_AUDIO_FILE)
-
-
-def test_duplicate_file():
-    filename = os.path.basename(DEFAULT_AUDIO_FILE)
-    # Import the file once
-    FileMoverAnalyzer.move(DEFAULT_AUDIO_FILE, u".", filename, dict())
     # Copy it back to the original location
-    shutil.copy("./" + filename, DEFAULT_AUDIO_FILE)
+    shutil.copy(
+        os.path.join(dest_dir, AUDIO_FILENAME),
+        os.path.join(src_dir, AUDIO_FILENAME),
+    )
+
+    return metadata
+
+
+def test_move_duplicate_file(src_dir, dest_dir):
+    # Import the file once
+    import_and_restore(src_dir, dest_dir)
+
     # Import it again. It shouldn't overwrite the old file and instead create a new
-    metadata = dict()
-    metadata = FileMoverAnalyzer.move(DEFAULT_AUDIO_FILE, u".", filename, metadata)
-    # Cleanup: move the file (eg. 44100Hz-16bit-mono.mp3) back
-    shutil.move("./" + filename, DEFAULT_AUDIO_FILE)
-    # Remove the renamed duplicate, eg. 44100Hz-16bit-mono_03-26-2014-11-58.mp3
-    os.remove(metadata["full_path"])
-    assert os.path.exists(DEFAULT_AUDIO_FILE)
+    metadata = import_and_restore(src_dir, dest_dir)
+
+    assert metadata["full_path"] != os.path.join(dest_dir, AUDIO_FILENAME)
+    assert os.path.exists(metadata["full_path"])
+    assert os.path.exists(os.path.join(dest_dir, AUDIO_FILENAME))
 
 
-""" If you import three copies of the same file, the behaviour is:
-    - The filename is of the first file preserved.
-    - The filename of the second file has the timestamp attached to it.
-    - The filename of the third file has a UUID placed after the timestamp, but ONLY IF
-      it's imported within 1 second of the second file (ie. if the timestamp is the same).
-"""
-
-
-def test_double_duplicate_files():
+def test_move_triplicate_file(src_dir, dest_dir):
     # Here we use mock to patch out the time.localtime() function so that it
     # always returns the same value. This allows us to consistently simulate this test cases
     # where the last two of the three files are imported at the same time as the timestamp.
     with mock.patch("airtime_analyzer.filemover_analyzer.time") as mock_time:
         mock_time.localtime.return_value = time.localtime()  # date(2010, 10, 8)
-        mock_time.side_effect = lambda *args, **kw: time(*args, **kw)
+        mock_time.side_effect = time.time
 
-    filename = os.path.basename(DEFAULT_AUDIO_FILE)
     # Import the file once
-    FileMoverAnalyzer.move(DEFAULT_AUDIO_FILE, u".", filename, dict())
-    # Copy it back to the original location
-    shutil.copy("./" + filename, DEFAULT_AUDIO_FILE)
+    import_and_restore(src_dir, dest_dir)
     # Import it again. It shouldn't overwrite the old file and instead create a new
-    first_dup_metadata = dict()
-    first_dup_metadata = FileMoverAnalyzer.move(
-        DEFAULT_AUDIO_FILE, u".", filename, first_dup_metadata
-    )
-    # Copy it back again!
-    shutil.copy("./" + filename, DEFAULT_AUDIO_FILE)
+    metadata1 = import_and_restore(src_dir, dest_dir)
+
     # Reimport for the third time, which should have the same timestamp as the second one
     # thanks to us mocking out time.localtime()
-    second_dup_metadata = dict()
-    second_dup_metadata = FileMoverAnalyzer.move(
-        DEFAULT_AUDIO_FILE, u".", filename, second_dup_metadata
-    )
-    # Cleanup: move the file (eg. 44100Hz-16bit-mono.mp3) back
-    shutil.move("./" + filename, DEFAULT_AUDIO_FILE)
-    # Remove the renamed duplicate, eg. 44100Hz-16bit-mono_03-26-2014-11-58.mp3
-    os.remove(first_dup_metadata["full_path"])
-    os.remove(second_dup_metadata["full_path"])
-    assert os.path.exists(DEFAULT_AUDIO_FILE)
+    metadata2 = import_and_restore(src_dir, dest_dir)
+
+    # Check if file exists and if filename is <original>_<date>.<ext>
+    assert os.path.exists(metadata1["full_path"])
+    assert len(os.path.basename(metadata1["full_path"]).split("_")) == 2
+
+    # Check if file exists and if filename is <original>_<date>_<uuid>.<ext>
+    assert os.path.exists(metadata2["full_path"])
+    assert len(os.path.basename(metadata2["full_path"]).split("_")) == 3
 
 
-@raises(OSError)
-def test_bad_permissions_destination_dir():
-    filename = os.path.basename(DEFAULT_AUDIO_FILE)
-    dest_dir = u"/sys/foobar"  # /sys is using sysfs on Linux, which is unwritable
-    FileMoverAnalyzer.move(DEFAULT_AUDIO_FILE, dest_dir, filename, dict())
-    # Move the file back
-    shutil.move(os.path.join(dest_dir, filename), DEFAULT_AUDIO_FILE)
-    assert os.path.exists(DEFAULT_AUDIO_FILE)
+def test_move_bad_permissions_dest_dir(src_dir):
+    with pytest.raises(OSError):
+        # /sys is using sysfs on Linux, which is unwritable
+        FileMoverAnalyzer.move(
+            os.path.join(src_dir, AUDIO_FILENAME),
+            "/sys/foobar",
+            AUDIO_FILENAME,
+            dict(),
+        )

@@ -1,150 +1,191 @@
-from __future__ import print_function
-
 import datetime
 
 import mock
 import mutagen
+import pytest
 from airtime_analyzer.metadata_analyzer import MetadataAnalyzer
-from nose.tools import *
 
 
-def setup():
-    pass
+@pytest.mark.parametrize(
+    "params,exception",
+    [
+        ((42, dict()), TypeError),
+        (("foo", 3), TypeError),
+    ],
+)
+def test_analyze_wrong_params(params, exception):
+    with pytest.raises(exception):
+        MetadataAnalyzer.analyze(*params)
 
 
-def teardown():
-    pass
+def default_metadata(metadata):
+    return {
+        "album_title": "Test Album",
+        "artist_name": "Test Artist",
+        "cuein": 0.0,
+        "cueout": "0:00:03.839410",
+        "ftype": "audioclip",
+        "genre": "Test Genre",
+        "hidden": False,
+        "length_seconds": metadata["length_seconds"],
+        "length": str(datetime.timedelta(seconds=metadata["length_seconds"])),
+        "sample_rate": 44100,
+        "track_number": "1",
+        "track_title": "Test Title",
+        "year": "1999",
+    }
 
 
-def check_default_metadata(metadata):
-    assert metadata["track_title"] == "Test Title"
-    assert metadata["artist_name"] == "Test Artist"
-    assert metadata["album_title"] == "Test Album"
-    assert metadata["year"] == "1999"
-    assert metadata["genre"] == "Test Genre"
-    assert metadata["track_number"] == "1"
-    assert metadata["length"] == str(
-        datetime.timedelta(seconds=metadata["length_seconds"])
-    )
-
-
-def test_mp3_mono():
-    metadata = MetadataAnalyzer.analyze(
-        "tests/test_data/44100Hz-16bit-mono.mp3", dict()
-    )
-    check_default_metadata(metadata)
-    assert metadata["channels"] == 1
-    assert metadata["bit_rate"] == 63998
+@pytest.mark.parametrize(
+    "filepath,expected",
+    [
+        (
+            "tests/test_data/44100Hz-16bit-mono.mp3",
+            {
+                "bit_rate": 63998,
+                "channels": 1,
+                "filesize": 32298,
+                "md5": "a93c9503c85cd2fbe7658711a08c24b1",
+                "mime": "audio/mp3",
+                "track_total": "10",
+            },
+        ),
+        (
+            "tests/test_data/44100Hz-16bit-dualmono.mp3",
+            {
+                "bit_rate": 127998,
+                "channels": 2,
+                "filesize": 63436,
+                "md5": "aee8bf340b484f921bca99390962f0d5",
+                "mime": "audio/mp3",
+                "track_total": "10",
+            },
+        ),
+        (
+            "tests/test_data/44100Hz-16bit-stereo.mp3",
+            {
+                "bit_rate": 127998,
+                "channels": 2,
+                "filesize": 63436,
+                "md5": "063b20072f71a18b9d4f14434286fdc5",
+                "mime": "audio/mp3",
+                "track_total": "10",
+            },
+        ),
+        (
+            "tests/test_data/44100Hz-16bit-stereo-utf8.mp3",
+            {
+                "album_title": "Ä ä Ü ü ß",
+                "artist_name": "てすと",
+                "bit_rate": 127998,
+                "channels": 2,
+                "filesize": 63436,
+                "genre": "Я Б Г Д Ж Й",
+                "md5": "0bb41e7f65db3f31cf449de18f713fca",
+                "mime": "audio/mp3",
+                "track_title": "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃ",
+                "track_total": "10",
+            },
+        ),
+        (
+            "tests/test_data/44100Hz-16bit-simplestereo.mp3",
+            {
+                "bit_rate": 127998,
+                "channels": 2,
+                "filesize": 63436,
+                "md5": "2330d4429bec7b35fa40185319069267",
+                "mime": "audio/mp3",
+                "track_total": "10",
+            },
+        ),
+        (
+            "tests/test_data/44100Hz-16bit-jointstereo.mp3",
+            {
+                "bit_rate": 127998,
+                "channels": 2,
+                "filesize": 63436,
+                "md5": "063b20072f71a18b9d4f14434286fdc5",
+                "mime": "audio/mp3",
+                "track_total": "10",
+            },
+        ),
+        # (
+        #     "tests/test_data/44100Hz-16bit-mp3-missingid3header.mp3",
+        #     {
+        #         "bit_rate": 63998,
+        #         "channels": 1,
+        #         "filesize": 32298,
+        #         "md5": "a93c9503c85cd2fbe7658711a08c24b1",
+        #         "mime": "audio/mp3",
+        #         "track_total": "10",
+        #     },
+        # ),
+        (
+            "tests/test_data/44100Hz-16bit-mono.ogg",
+            {
+                "bit_rate": 80000,
+                "channels": 1,
+                "filesize": 36326,
+                "md5": "699e091994f3b69a77ed074951520e18",
+                "mime": "audio/vorbis",
+                "track_total": "10",
+                "comment": "Test Comment",
+            },
+        ),
+        (
+            "tests/test_data/44100Hz-16bit-stereo.ogg",
+            {
+                "bit_rate": 112000,
+                "channels": 2,
+                "filesize": 41081,
+                "md5": "185a3b9cd1bd2db4d168ff9c2c86046e",
+                "mime": "audio/vorbis",
+                "track_total": "10",
+                "comment": "Test Comment",
+            },
+        ),
+        # (
+        #     "tests/test_data/44100Hz-16bit-stereo-invalid.wma",
+        #     {
+        #         "bit_rate": 63998,
+        #         "channels": 1,
+        #         "filesize": 32298,
+        #         "md5": "a93c9503c85cd2fbe7658711a08c24b1",
+        #         "mime": "audio/mp3",
+        #         "track_total": "10",
+        #     },
+        # ),
+        (
+            "tests/test_data/44100Hz-16bit-stereo.m4a",
+            {
+                "bit_rate": 102619,
+                "channels": 2,
+                "cueout": "0:00:03.862630",
+                "filesize": 51972,
+                "md5": "c2c822e0cd6c03f3f6bd7158a6ed8c56",
+                "mime": "audio/mp4",
+                # "track_total": "10",
+                "comment": "Test Comment",
+            },
+        ),
+        # (
+        #     "tests/test_data/44100Hz-16bit-stereo.wav",
+        #     {
+        #         "bit_rate": 112000,
+        #         "channels": 2,
+        #         "filesize": 677316,
+        #         "md5": "6bd5df4f161375e4634cbd4968fb5c23",
+        #         "mime": "audio/x-wav",
+        #         "track_total": "10",
+        #         "comment": "Test Comment",
+        #     },
+        # ),
+    ],
+)
+def test_analyze(filepath, expected):
+    metadata = MetadataAnalyzer.analyze(filepath, dict())
     assert abs(metadata["length_seconds"] - 3.9) < 0.1
-    assert metadata["mime"] == "audio/mp3"  # Not unicode because MIMEs aren't.
-    assert metadata["track_total"] == "10"  # MP3s can have a track_total
-    # Mutagen doesn't extract comments from mp3s it seems
-
-
-def test_mp3_jointstereo():
-    metadata = MetadataAnalyzer.analyze(
-        "tests/test_data/44100Hz-16bit-jointstereo.mp3", dict()
-    )
-    check_default_metadata(metadata)
-    assert metadata["channels"] == 2
-    assert metadata["bit_rate"] == 127998
-    assert abs(metadata["length_seconds"] - 3.9) < 0.1
-    assert metadata["mime"] == "audio/mp3"
-    assert metadata["track_total"] == "10"  # MP3s can have a track_total
-
-
-def test_mp3_simplestereo():
-    metadata = MetadataAnalyzer.analyze(
-        "tests/test_data/44100Hz-16bit-simplestereo.mp3", dict()
-    )
-    check_default_metadata(metadata)
-    assert metadata["channels"] == 2
-    assert metadata["bit_rate"] == 127998
-    assert abs(metadata["length_seconds"] - 3.9) < 0.1
-    assert metadata["mime"] == "audio/mp3"
-    assert metadata["track_total"] == "10"  # MP3s can have a track_total
-
-
-def test_mp3_dualmono():
-    metadata = MetadataAnalyzer.analyze(
-        "tests/test_data/44100Hz-16bit-dualmono.mp3", dict()
-    )
-    check_default_metadata(metadata)
-    assert metadata["channels"] == 2
-    assert metadata["bit_rate"] == 127998
-    assert abs(metadata["length_seconds"] - 3.9) < 0.1
-    assert metadata["mime"] == "audio/mp3"
-    assert metadata["track_total"] == "10"  # MP3s can have a track_total
-
-
-def test_ogg_mono():
-    metadata = MetadataAnalyzer.analyze(
-        "tests/test_data/44100Hz-16bit-mono.ogg", dict()
-    )
-    check_default_metadata(metadata)
-    assert metadata["channels"] == 1
-    assert metadata["bit_rate"] == 80000
-    assert abs(metadata["length_seconds"] - 3.8) < 0.1
-    assert metadata["mime"] == "audio/vorbis"
-    assert metadata["comment"] == "Test Comment"
-
-
-def test_ogg_stereo():
-    metadata = MetadataAnalyzer.analyze(
-        "tests/test_data/44100Hz-16bit-stereo.ogg", dict()
-    )
-    check_default_metadata(metadata)
-    assert metadata["channels"] == 2
-    assert metadata["bit_rate"] == 112000
-    assert abs(metadata["length_seconds"] - 3.8) < 0.1
-    assert metadata["mime"] == "audio/vorbis"
-    assert metadata["comment"] == "Test Comment"
-
-
-""" faac and avconv can't seem to create a proper mono AAC file... ugh
-def test_aac_mono():
-    metadata = MetadataAnalyzer.analyze('tests/test_data/44100Hz-16bit-mono.m4a')
-    print("Mono AAC metadata:")
-    print(metadata)
-    check_default_metadata(metadata)
-    assert metadata['channels'] == 1
-    assert metadata['bit_rate'] == 80000
-    assert abs(metadata['length_seconds'] - 3.8) < 0.1
-    assert metadata['mime'] == 'audio/mp4'
-    assert metadata['comment'] == 'Test Comment'
-"""
-
-
-def test_aac_stereo():
-    metadata = MetadataAnalyzer.analyze(
-        "tests/test_data/44100Hz-16bit-stereo.m4a", dict()
-    )
-    check_default_metadata(metadata)
-    assert metadata["channels"] == 2
-    assert metadata["bit_rate"] == 102619
-    assert abs(metadata["length_seconds"] - 3.8) < 0.1
-    assert metadata["mime"] == "audio/mp4"
-    assert metadata["comment"] == "Test Comment"
-
-
-def test_mp3_utf8():
-    metadata = MetadataAnalyzer.analyze(
-        "tests/test_data/44100Hz-16bit-stereo-utf8.mp3", dict()
-    )
-    # Using a bunch of different UTF-8 codepages here. Test data is from:
-    #   http://winrus.com/utf8-jap.htm
-    assert metadata["track_title"] == "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃ"
-    assert metadata["artist_name"] == "てすと"
-    assert metadata["album_title"] == "Ä ä Ü ü ß"
-    assert metadata["year"] == "1999"
-    assert metadata["genre"] == "Я Б Г Д Ж Й"
-    assert metadata["track_number"] == "1"
-    assert metadata["channels"] == 2
-    assert metadata["bit_rate"] < 130000
-    assert metadata["bit_rate"] > 127000
-    assert abs(metadata["length_seconds"] - 3.9) < 0.1
-    assert metadata["mime"] == "audio/mp3"
-    assert metadata["track_total"] == "10"  # MP3s can have a track_total
+    assert metadata == {**default_metadata(metadata), **expected}
 
 
 def test_invalid_wma():
@@ -158,47 +199,50 @@ def test_wav_stereo():
     metadata = MetadataAnalyzer.analyze(
         "tests/test_data/44100Hz-16bit-stereo.wav", dict()
     )
-    assert metadata["mime"] == "audio/x-wav"
-    assert abs(metadata["length_seconds"] - 3.9) < 0.1
-    assert metadata["channels"] == 2
-    assert metadata["sample_rate"] == 44100
+    assert metadata == {
+        "sample_rate": 44100,
+        "channels": 2,
+        "filesize": 677316,
+        "md5": "6bd5df4f161375e4634cbd4968fb5c23",
+        "mime": "audio/x-wav",
+        "cueout": "0:00:03.839410",
+        "ftype": "audioclip",
+        "hidden": False,
+        "length": "0:00:03.839410",
+        "length_seconds": 3.8394104308390022,
+    }
 
 
-# Make sure the parameter checking works
-@raises(FileNotFoundError)
-def test_move_wrong_string_param1():
-    not_unicode = "asdfasdf"
-    MetadataAnalyzer.analyze(not_unicode, dict())
-
-
-@raises(TypeError)
-def test_move_wrong_metadata_dict():
-    not_a_dict = list()
-    MetadataAnalyzer.analyze("asdfasdf", not_a_dict)
-
-
-# Test an mp3 file where the number of channels is invalid or missing:
 def test_mp3_bad_channels():
+    """
+    Test an mp3 file where the number of channels is invalid or missing.
+    """
+    # It'd be a pain in the ass to construct a real MP3 with an invalid number
+    # of channels by hand because that value is stored in every MP3 frame in the file
     filename = "tests/test_data/44100Hz-16bit-mono.mp3"
-    """
-        It'd be a pain in the ass to construct a real MP3 with an invalid number
-        of channels by hand because that value is stored in every MP3 frame in the file
-    """
     audio_file = mutagen.File(filename, easy=True)
     audio_file.info.mode = 1777
     with mock.patch("airtime_analyzer.metadata_analyzer.mutagen") as mock_mutagen:
         mock_mutagen.File.return_value = audio_file
-        # mock_mutagen.side_effect = lambda *args, **kw: audio_file #File(*args, **kw)
 
     metadata = MetadataAnalyzer.analyze(filename, dict())
-    check_default_metadata(metadata)
-    assert metadata["channels"] == 1
-    assert metadata["bit_rate"] == 63998
-    assert abs(metadata["length_seconds"] - 3.9) < 0.1
-    assert metadata["mime"] == "audio/mp3"  # Not unicode because MIMEs aren't.
-    assert metadata["track_total"] == "10"  # MP3s can have a track_total
-    # Mutagen doesn't extract comments from mp3s it seems
+    assert metadata == {
+        **default_metadata(metadata),
+        "bit_rate": 63998,
+        "channels": 1,
+        "filesize": 32298,
+        "md5": "a93c9503c85cd2fbe7658711a08c24b1",
+        "mime": "audio/mp3",
+        "track_total": "10",
+    }
 
 
 def test_unparsable_file():
-    MetadataAnalyzer.analyze("tests/test_data/unparsable.txt", dict())
+    metadata = MetadataAnalyzer.analyze("tests/test_data/unparsable.txt", dict())
+    assert metadata == {
+        "filesize": 10,
+        "ftype": "audioclip",
+        "hidden": False,
+        "md5": "4d5e4b1c8e8febbd31fa9ce7f088beae",
+        "mime": "text/plain",
+    }
