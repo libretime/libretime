@@ -238,4 +238,11 @@ def test_mp3_bad_channels():
 
 
 def test_unparsable_file():
-    MetadataAnalyzer.analyze("tests/test_data/unparsable.txt", dict())
+    metadata = MetadataAnalyzer.analyze("tests/test_data/unparsable.txt", dict())
+    assert metadata == {
+        "filesize": 10,
+        "ftype": "audioclip",
+        "hidden": False,
+        "md5": "4d5e4b1c8e8febbd31fa9ce7f088beae",
+        "mime": "text/plain",
+    }
