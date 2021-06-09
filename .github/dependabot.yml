@@ -21,7 +21,7 @@ updates:
       interval: "daily"
 
   - package-ecosystem: "pip"
-    directory: "/airtime_analyzer"
+    directory: "/analyzer"
     schedule:
       interval: "daily"
 
