@@ -13,8 +13,9 @@ from queue import Empty
 from threading import Thread
 
 import requests
-from api_clients import version2 as api_client
 from requests.exceptions import ConnectionError, HTTPError, Timeout
+
+from api_clients import version2 as api_client
 
 CONFIG_PATH = "/etc/airtime/airtime.conf"
 

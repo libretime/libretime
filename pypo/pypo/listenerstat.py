@@ -9,6 +9,7 @@ from datetime import datetime
 from threading import Thread
 
 import defusedxml.minidom
+
 from api_clients import version1 as api_client
 
 

@@ -6,11 +6,12 @@ import shutil
 from optparse import OptionParser, OptionValueError
 
 import commands
-from api_clients import api_client as apc
 from configobj import ConfigObj
 
 # sys.path.append('/usr/lib/airtime/media-monitor/mm2/')
 from mm2.media.monitor.pure import is_file_supported
+
+from api_clients import api_client as apc
 
 # create logger
 logger = logging.getLogger()
