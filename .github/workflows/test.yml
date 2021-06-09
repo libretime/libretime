@@ -86,7 +86,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer install --no-progress --dev
+          composer install --no-progress
         working-directory: airtime_mvc
 
       - name: Run PHP tests
