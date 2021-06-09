@@ -2,7 +2,9 @@
 
 set -e # Exit if any of the steps fails.
 
+pushd airtime_mvc
 composer install --no-dev --no-interaction
+popd
 
 git_build=""
 if [ -d .git ]; then

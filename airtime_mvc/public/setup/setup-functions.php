@@ -6,7 +6,7 @@ define("RMQ_INI_TEMP_PATH", "/tmp/rabbitmq.ini.tmp");
 // load autoloader since this files is an entry path see 
 // the end of the file for the "server" that is being
 // executed.
-require_once __DIR__ . '/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 /**
  * Class Setup
