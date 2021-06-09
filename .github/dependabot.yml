@@ -21,22 +21,22 @@ updates:
       interval: "daily"
 
   - package-ecosystem: "pip"
-    directory: "/python_apps/airtime_analyzer"
+    directory: "/airtime_analyzer"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "pip"
-    directory: "/python_apps/airtime-celery"
+    directory: "/airtime-celery"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "pip"
-    directory: "/python_apps/api_clients"
+    directory: "/api_clients"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "pip"
-    directory: "/python_apps/pypo"
+    directory: "/pypo"
     schedule:
       interval: "daily"
 

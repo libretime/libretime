@@ -102,7 +102,7 @@ jobs:
       fail-fast: false
       matrix:
         release: [bionic, buster]
-        context: [python_apps/airtime_analyzer, python_apps/api_clients]
+        context: [airtime_analyzer, api_clients]
 
     container: ghcr.io/libretime/libretime-dev:${{ matrix.release }}
     defaults:

@@ -42,8 +42,8 @@ jobs:
       - name: Generate packages list
         run: |
           tools/packages.py --dev --format line ${{ matrix.release }} \
-            python_apps/airtime_analyzer \
-            python_apps/pypo \
+            airtime_analyzer \
+            pypo \
             > packages.list
 
       - name: Generate Dockerfile
