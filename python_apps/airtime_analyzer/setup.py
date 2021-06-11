@@ -24,7 +24,8 @@ setup(
         "file-magic",
         "requests>=2.7.0",
         "rgain3==1.1.0",
-        "pycairo==1.19.1",
+        # Required until we drop support for Python 3.5 (Xenial)
+        "pycairo<=1.20.1",
     ],
     zip_safe=False,
 )
