@@ -25,7 +25,6 @@ setup(
         "requests>=2.7.0",
         "rgain3==1.0.0",
         "pycairo==1.19.1",
-        "PyGObject<=3.36.1",
     ],
     zip_safe=False,
 )
