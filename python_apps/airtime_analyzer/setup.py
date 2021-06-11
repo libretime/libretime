@@ -23,7 +23,7 @@ setup(
         "pika>=1.0.0",
         "file-magic",
         "requests>=2.7.0",
-        "rgain3==1.0.0",
+        "rgain3==1.1.0",
         "pycairo==1.19.1",
     ],
     zip_safe=False,
