@@ -49,7 +49,7 @@ setup(
     author_email="duncan.sommerville@sourcefabric.org",
     license="MIT",
     packages=["airtime-celery"],
-    install_requires=["celery==4.4.7", "kombu==4.6.10", "configobj"],
+    install_requires=["celery==5.1.1", "kombu==4.6.10", "configobj"],
     zip_safe=False,
     data_files=data_files,
 )
