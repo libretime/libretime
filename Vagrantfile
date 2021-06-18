@@ -48,10 +48,6 @@ Vagrant.configure("2") do |config|
     os.vm.box = "bento/ubuntu-18.04"
     provision_libretime(os, "debian.sh", installer_args)
   end
-  config.vm.define "ubuntu-xenial" do |os|
-    os.vm.box = "bento/ubuntu-16.04"
-    provision_libretime(os, "debian.sh", installer_args)
-  end
   config.vm.define "debian-buster" do |os|
     os.vm.box = "bento/debian-10"
     provision_libretime(os, "debian.sh", installer_args)

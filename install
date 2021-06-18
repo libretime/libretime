@@ -625,7 +625,6 @@ is_debian_dist=false
 is_debian_buster=false
 is_ubuntu_dist=false
 is_ubuntu_bionic=false
-is_ubuntu_xenial=false
 is_centos_dist=false
 is_centos_7=false
 is_centos_8=false
@@ -641,13 +640,8 @@ case "${dist}-${code}" in
         is_ubuntu_bionic=true
         ;;
     ubuntu-16.04|ubuntu-xenial|ubuntu-xenial_docker_minimal)
-        code="xenial"
-        is_ubuntu_dist=true
-        is_ubuntu_xenial=true
-        ;;
-    ubuntu-14.04|ubuntu-trusty)
-        echo -e "ERROR: Ubuntu Trusty is archived and does not receive any security or other updates since 2019-04-17." >&2
-        echo -e "The LibreTime installer dropped support for installing LibreTime on Trusty in 3.0.0-alpha.8." >&2
+        echo -e "ERROR: Ubuntu Xenial is archived and does not receive any security or other updates since 2021-04-01." >&2
+        echo -e "The LibreTime installer dropped support for installing LibreTime on Xenial in 3.0.0-alpha.10." >&2
         exit 1
         ;;
     debian-9|debian-stretch)
@@ -1076,8 +1070,6 @@ if $is_debian_buster; then
     loudCmd "a2enmod rewrite php7.3 proxy proxy_http"
 elif $is_ubuntu_bionic; then
     loudCmd "a2enmod rewrite php7.2 proxy proxy_http"
-elif $is_ubuntu_xenial; then
-    loudCmd "a2enmod rewrite php7.0 proxy proxy_http"
 elif $is_centos_dist; then
     verbose "TODO: enable Apache modules mod_rewrite, mod_php, mod_proxy and mod_proxy_http manually"
 else
@@ -1227,7 +1219,6 @@ if $is_centos_dist; then
 else
     # not on centos
     ip_device="eth0"
-    $is_ubuntu_xenial && ip_device="enp0s8"
     IP=$(ifconfig ${ip_device} 2>/dev/null |awk -F'[ :]+' '/inet addr:/ {print $4}')
 fi
 verbose "...Done"
