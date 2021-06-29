@@ -21,7 +21,7 @@ setup(
     scripts=[],
     install_requires=[
         "configobj",
-        "python-dateutil",
+        "python-dateutil>=2.7.0",
     ],
     zip_safe=False,
     data_files=[],
