@@ -22,6 +22,7 @@ setup(
     install_requires=[
         "configobj",
         "python-dateutil>=2.7.0",
+        "requests",
     ],
     zip_safe=False,
     data_files=[],

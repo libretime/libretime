@@ -59,7 +59,7 @@ class AirtimeApiClient:
         result = {"media": {}}
         for item in data:
             start = isoparse(item["starts"])
-            key = start.strftime("%YYYY-%mm-%dd-%HH-%MM-%SS")
+            key = start.strftime("%Y-%m-%d-%H-%M-%S")
             end = isoparse(item["ends"])
 
             show_instance = self.services.show_instance_url(id=item["instance_id"])
@@ -69,6 +69,7 @@ class AirtimeApiClient:
                 "start": start.strftime("%Y-%m-%d-%H-%M-%S"),
                 "end": end.strftime("%Y-%m-%d-%H-%M-%S"),
                 "row_id": item["id"],
+                "show_name": show["name"],
             }
             current = result["media"][key]
             if item["file"]:
@@ -90,6 +91,7 @@ class AirtimeApiClient:
                 info = self.services.file_url(id=item["file_id"])
                 current["metadata"] = info
                 current["uri"] = item["file"]
+                current["replay_gain"] = info["replay_gain"]
                 current["filesize"] = info["filesize"]
             elif item["stream"]:
                 current["independent_event"] = True
