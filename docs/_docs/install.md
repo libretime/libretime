@@ -11,7 +11,7 @@ permalink: /install
 
 - One of the following Linux distributions
   - Ubuntu 16.04 LTS, 18.04 LTS
-  - Debian 9, 10
+  - Debian 10
   - Raspberry Pi OS 9, 10 (formerly Raspbian)
 - 1 Ghz Processor
 - 2 GB RAM recommended (1 GB required)
