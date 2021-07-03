@@ -26,7 +26,7 @@ Version from the upgrade popup if you can reach it.
 **Installation method:**
 
 - OS: [e.g. Ubuntu]
-- OS Version [e.g. 16.04.5 LTS (Xenial Xerus)]
+- OS Version [e.g. 18.04.5 LTS (Bionic Beaver)]
 - Method: [e.g. `./install` script or packages]
 - Details: [how did you call the install script, where did you get packages from]
 

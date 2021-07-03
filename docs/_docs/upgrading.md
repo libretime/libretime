@@ -26,28 +26,25 @@ requirements as per semver.
 > downtime, so you should always have a fallback system available during the
 > upgrade to ensure broadcast continuity.
 
-Before upgrading a production LibreTime server, you should back up both the
-PostgreSQL database and the storage server used by LibreTime. This is especially
-important if you have not already set up a regular back up routine. This extra
-back up is a safety measure in case of accidental data loss during the upgrade,
-for example due to the wrong command being entered when moving files. See
-[Backing up the server](/docs/backing-up-the-server) in this manual for details
-of how to perform these back ups.
-
-The LibreTime [installation script](/install) will detect an existing LibreTime
-deployment and back up any configuration files that it finds. We recommend
-taking your own manual backups of the configuration yourself nevertheless. The
-install script also tries to restart the needed services during an upgrade. In
-any case you should monitor if this happened and also take a quick look at the
-logs files to be sure everything is still fine. Now might be the time to reboot
-the system or virtual machine LibreTime is running on since regular reboots are
-part of a healthy system anyway.
-
-After the upgrade has completed, you may need to clear your web browser's cache
-before logging into the new version of the LibreTime administration interface.
-If the playout engine starts up and detects that a show should be playing at the
-current time, it will skip to the correct point in the current item and start
-playing.
+1. Take a [backup of the server](/docs/backing-up-the-server). This is
+   especially important if you have not already set up a regular back up routine.
+   This extra back up is a safety measure in case of accidental data loss during
+   the upgrade, for example due to the wrong command being entered when moving
+   files. It is also recommended to backup all the configuration files under
+   `/etc/airtime/`.
+2. Run `./install -fiap` as described in the [install documentation](/install).
+   This will detect an existing LibreTime deployment and backup any
+   configuration files that if finds. The install script also tries to restart
+   the needed services during an upgrade. In any case you should monitor if this
+   happened and also take a quick look at the logs files to be sure everything
+   is still fine. Now might be the time to reboot the system or virtual machine
+   LibreTime is running on since regular reboots are part of a healthy system
+   anyway.
+3. Log into the new version of the LibreTime administration interface. If the
+   playout engine starts up and detects that a show should be playing at the
+   current time, it will skip to the correct point in the current time and start
+   playing. If you encounter issues trying to connect to the new administration
+   interface, you may need to clear your web browser's cache.
 
 > **Note:** Airtime's _linked files_ and _watched folders_ features currently do
 > not work in Libretime.

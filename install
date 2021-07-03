@@ -146,8 +146,7 @@ function systemInitDetect() {
     verbose "\nDetecting init system type ..."
     # Get the path of the command where pid=1 following any symlinks
     pid_1_path=$(readlink --canonicalize -n /proc/1/exe)
-    # returns '/sbin/init' (Debian Wheezy & Ubuntu Trusty)
-    # returns '(/usr)?/lib/systemd/systemd' (Debian Stretch, Debian Jessie, Debian Buster, Ubuntu Xenial, CentOS 7)
+    # returns '(/usr)?/lib/systemd/systemd' (Debian Buster, CentOS 7)
     verbose "Detected path to PID=1 process: $pid_1_path"
     # Get package of PID=1 path as it identifies the init system.
     # Allow this to fail, at least then the init system can be guessed from the
@@ -724,11 +723,6 @@ if [ "$ignore_dependencies" = "f" ]; then
         # Get apt-get version by returning the 2nd parameter from the 1st line of output
         apt_version=$(apt-get --version |awk 'NR == 1 { print $2 }')
         # returns 1.8.0~alpha3 (Debian Buster)
-        # returns: 1.4.7 (Debian Stretch)
-        # returns: 0.9.7.9 (Debian Wheezy)
-        # returns: 1.0.1ubuntu2 (Ubuntu Trusty)
-        # returns: 1.0.9.8.4 (Debian Jessie)
-        # returns: 1.2.9 (Ubuntu Xenial)
         verbose "Detected apt-get version as: $apt_version"
         apt_version_formatted=$(awk 'BEGIN {FS = "."} {printf "%03d.%03d\n", $1,$2}' <<<  $apt_version)
         [[ "$apt_version_formatted" < "001.001" ]] && apt_force_options="--force-yes"
