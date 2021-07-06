@@ -623,7 +623,6 @@ fi
 # Validate the distribution and release is a supported one; set boolean flags.
 is_debian_dist=false
 is_debian_buster=false
-is_debian_stretch=false
 is_ubuntu_dist=false
 is_ubuntu_bionic=false
 is_ubuntu_xenial=false
@@ -652,9 +651,9 @@ case "${dist}-${code}" in
         exit 1
         ;;
     debian-9|debian-stretch)
-        code="stretch"
-        is_debian_dist=true
-        is_debian_stretch=true
+        echo -e "ERROR: Debian Stretch is archived and does not receive any security or other updates since 2020-06-06." >&2
+        echo -e "The LibreTime installer dropped support for installing LibreTime on Stretch in 3.0.0-alpha.10." >&2
+        exit 1
         ;;
     debian-10|debian-buster)
         code="buster"
@@ -663,11 +662,10 @@ case "${dist}-${code}" in
         ;;
     #Fix for Raspbian 9 (stretch)
     raspbian-9|9)
-	code="stretch"
-	dist="debian"
-	is_debian_dist=true
-	is_debian_stretch=true
-	;;
+        echo -e "ERROR: Raspbian Stretch is archived and does not receive any security or other updates since 2020-06-06." >&2
+        echo -e "The LibreTime installer dropped support for installing LibreTime on Stretch in 3.0.0-alpha.10." >&2
+        exit 1
+        ;;
     #End of fix
     #Fix for Raspbian 10 (buster)
     raspbian-10|10)
@@ -681,11 +679,6 @@ case "${dist}-${code}" in
     debian-8|debian-jessie)
         echo -e "ERROR: Debian Jessie is archived and does not receive any security or other updates since 2018-05-17." >&2
         echo -e "The LibreTime installer dropped support for installing LibreTime on Jessie in 3.0.0-alpha.8." >&2
-        exit 1
-        ;;
-    debian-7|debian-wheezy)
-        echo -e "ERROR: Debian Wheezy is archived and does not receive any security or other updates since 2018-05-31." >&2
-        echo -e "The LibreTime installer dropped support for installing LibreTime on Wheezy in 3.0.0-alpha.6." >&2
         exit 1
         ;;
     centos-8)
@@ -1083,7 +1076,7 @@ if $is_debian_buster; then
     loudCmd "a2enmod rewrite php7.3 proxy proxy_http"
 elif $is_ubuntu_bionic; then
     loudCmd "a2enmod rewrite php7.2 proxy proxy_http"
-elif $is_ubuntu_xenial || $is_debian_stretch; then
+elif $is_ubuntu_xenial; then
     loudCmd "a2enmod rewrite php7.0 proxy proxy_http"
 elif $is_centos_dist; then
     verbose "TODO: enable Apache modules mod_rewrite, mod_php, mod_proxy and mod_proxy_http manually"
