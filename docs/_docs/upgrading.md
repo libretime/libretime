@@ -46,10 +46,10 @@ requirements as per semver.
    playing. If you encounter issues trying to connect to the new administration
    interface, you may need to clear your web browser's cache.
 
+### Migrating from Airtime
+
 > **Note:** Airtime's _linked files_ and _watched folders_ features currently do
 > not work in Libretime.
-
-### Migrating from Airtime
 
 LibreTime has dropped support for Ubuntu 16.04, which is the last supported
 version of Ubuntu that Airtime supports. The following instructions describe how
