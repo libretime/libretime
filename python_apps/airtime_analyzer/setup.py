@@ -19,14 +19,16 @@ setup(
         ]
     },
     install_requires=[
-        "mutagen>=1.31.0",
-        "pika>=1.0.0",
+        # These versions are pinned due to rgain3's dependency on PyGObject
+        # (gstreamer). Changing them results in pip being unable to find
+        # py3cairo.
+        "mutagen==1.42.0",
+        "pika~=1.1.0",
         "file-magic",
         "requests>=2.7.0",
-        "rgain3==1.1.0",
-        # 3.36.1 is the latest version that does not fail to find py3cairo package
-        "PyGObject>=3.34.0,<=3.36.1",
+        "rgain3==1.0.0",
         "pycairo==1.19.1",
+        "PyGObject<=3.36.1",
     ],
     zip_safe=False,
 )
