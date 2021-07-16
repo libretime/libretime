@@ -58,31 +58,3 @@ jobs:
           composer install --no-progress --dev
           cd airtime_mvc/tests
           php ../../vendor/bin/phpunit
-  test-xenial-php:
-    runs-on: ubuntu-16.04
-    env:
-      ENVIRONMENT: testing
-      LIBRETIME_LOG_DIR: /tmp/log/libretime
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup PostgreSQL
-        run: |
-          sudo systemctl start postgresql.service
-          pg_isready
-          sudo -u postgres psql -c 'CREATE DATABASE libretime;'
-          sudo -u postgres psql -c "CREATE USER libretime WITH PASSWORD 'libretime';"
-          sudo -u postgres psql -c 'GRANT CONNECT ON DATABASE libretime TO libretime;'
-          sudo -u postgres psql -c 'ALTER USER libretime CREATEDB;'
-      - name: Setup PHP with specific version
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: "7.0"
-      - name: Install prerequisites
-        run: sudo -E ./.github/scripts/install-xenial.sh
-      - name: Run PHP tests
-        run: |
-          echo "::group::Install PHP dependencies"
-          composer install --no-progress --dev
-          echo "::endgroup::"
-          cd airtime_mvc/tests
-          php ../../vendor/bin/phpunit

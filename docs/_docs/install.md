@@ -10,9 +10,9 @@ permalink: /install
 ## Minimum System Requirements
 
 - One of the following Linux distributions
-  - Ubuntu 16.04 LTS, 18.04 LTS
+  - Ubuntu 18.04 LTS
   - Debian 10
-  - Raspberry Pi OS 9, 10 (formerly Raspbian)
+  - Raspberry Pi OS 10 (formerly Raspbian)
 - 1 Ghz Processor
 - 2 GB RAM recommended (1 GB required)
 - Wired internet connection and static IP address for on-prem install
