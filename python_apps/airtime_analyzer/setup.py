@@ -23,7 +23,7 @@ setup(
         "pika>=1.0.0",
         "file-magic",
         "requests>=2.7.0",
-        "rgain3==1.1.0",
+        "rgain3==1.1.1",
         "PyGObject>=3.34.0",
         # If this version is changed, it needs changing in the install script too
         "pycairo==1.19.1",
