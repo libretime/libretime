@@ -96,24 +96,34 @@ class ApiRequest:
         self.logger.debug(final_url)
         try:
             if _post_data:
-                response = requests.post(
+                res = requests.post(
                     final_url,
                     data=_post_data,
                     auth=self.auth,
                     timeout=ApiRequest.API_HTTP_REQUEST_TIMEOUT,
                 )
             else:
-                response = requests.get(
+                res = requests.get(
                     final_url,
                     params=params,
                     auth=self.auth,
                     timeout=ApiRequest.API_HTTP_REQUEST_TIMEOUT,
                 )
-            if "application/json" in response.headers["content-type"]:
-                return response.json()
-            return response
+
+            # Check for bad HTTP status code
+            res.raise_for_status()
+
+            if "application/json" in res.headers["content-type"]:
+                return res.json()
+            return res
         except requests.exceptions.Timeout:
             self.logger.error("HTTP request to %s timed out", final_url)
+            raise
+        except requests.exceptions.HTTPError:
+            self.logger.error(
+                f"HTTP request to '{res.request.url}' failed"
+                f" with status '{res.status_code}':\n{res.text}"
+            )
             raise
 
     def req(self, *args, **kwargs):
