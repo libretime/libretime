@@ -95,7 +95,7 @@ class ApiRequest:
         final_url = self.url.params(**kwargs).url()
         self.logger.debug(final_url)
         try:
-            if _post_data:
+            if _post_data is not None:
                 res = requests.post(
                     final_url,
                     data=_post_data,
