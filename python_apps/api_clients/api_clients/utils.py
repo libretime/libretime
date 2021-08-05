@@ -95,7 +95,7 @@ class ApiRequest:
         final_url = self.url.params(**kwargs).url()
         self.logger.debug(final_url)
         try:
-            if _post_data:
+            if _post_data is not None:
                 res = requests.post(
                     final_url,
                     data=_post_data,
@@ -121,8 +121,9 @@ class ApiRequest:
             raise
         except requests.exceptions.HTTPError:
             self.logger.error(
-                f"HTTP request to '{res.request.url}' failed"
-                f" with status '{res.status_code}':\n{res.text}"
+                f"{res.request.method} {res.request.url} request failed '{res.status_code}':"
+                f"\nPayload: {res.request.body}"
+                f"\nResponse: {res.text}"
             )
             raise
 

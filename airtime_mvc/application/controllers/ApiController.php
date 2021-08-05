@@ -1427,7 +1427,16 @@ class ApiController extends Zend_Controller_Action
 
     public function pushStreamStatsAction() {
         $request = $this->getRequest();
-        $data = json_decode($request->getParam("data"), true);
+
+        $data_blob = $request->getParam("data");
+        $data = json_decode($data_blob, true);
+
+        if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+            $message = "An error occured while decoding the 'data' JSON blob: '$data_blob'";
+            Logging::error($message);
+            $this->jsonError(400, $message);
+            return;
+        }
 
         Application_Model_ListenerStat::insertDataPoints($data);
         $this->view->data = $data;
@@ -1435,7 +1444,16 @@ class ApiController extends Zend_Controller_Action
 
     public function updateStreamSettingTableAction() {
         $request = $this->getRequest();
-        $data = json_decode($request->getParam("data"), true);
+
+        $data_blob = $request->getParam("data");
+        $data = json_decode($data_blob, true);
+
+        if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+            $message = "An error occured while decoding the 'data' JSON blob: '$data_blob'";
+            Logging::error($message);
+            $this->jsonError(400, $message);
+            return;
+        }
 
         foreach ($data as $k=>$v) {
             Application_Model_StreamSetting::SetListenerStatError($k, $v);
@@ -1710,5 +1728,19 @@ class ApiController extends Zend_Controller_Action
 
         // enable cors access from configured URLs
         CORSHelper::enableCrossOriginRequests($request, $response);
+    }
+
+    /**
+     * Respond with a JSON error message with a custom HTTP status code.
+     * 
+     * This logic should be handled by Zend, but I lack understanding of this
+     * framework, and prefer not break it or spend too much time on it.
+     */
+    private final function jsonError($status, $message)
+    {
+        $this->getResponse()
+            ->setHttpResponseCode($status)
+            ->setHeader('Content-Type', 'application/json')
+            ->setBody(json_encode(['error' => $message]));
     }
 }
