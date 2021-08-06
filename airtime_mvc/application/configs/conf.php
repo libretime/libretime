@@ -32,6 +32,7 @@ class Config {
         $CC_CONFIG['stationId'] = $values['general']['station_id'];
         $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
         $CC_CONFIG['forceSSL'] = isset($values['general']['force_ssl']) ? $values['general']['force_ssl'] : FALSE;
+        $CC_CONFIG['protocol'] = isset($values['general']['protocol']) ? $values['general']['protocol'] : '';
         if (isset($values['general']['dev_env'])) {
             $CC_CONFIG['dev_env'] = $values['general']['dev_env'];
         } else {
