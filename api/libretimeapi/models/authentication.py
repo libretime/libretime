@@ -71,7 +71,6 @@ class User(AbstractBaseUser):
             self.password = hashlib.md5(password.encode()).hexdigest()
 
     def is_staff(self):
-        print("is_staff")
         return self.type == ADMIN
 
     def check_password(self, password):
