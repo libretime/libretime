@@ -128,6 +128,8 @@ class ScheduleSerializer(serializers.HyperlinkedModelSerializer):
     file_id = serializers.IntegerField(source="file.id", read_only=True)
     stream_id = serializers.IntegerField(source="stream.id", read_only=True)
     instance_id = serializers.IntegerField(source="instance.id", read_only=True)
+    cue_out = serializers.DurationField(source="get_cueout", read_only=True)
+    ends = serializers.DateTimeField(source="get_ends", read_only=True)
 
     class Meta:
         model = Schedule
