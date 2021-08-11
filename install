@@ -1152,9 +1152,11 @@ if [ ! -d "/etc/airtime" ]; then
     mkdir /etc/airtime
 fi
 
-if [ ! -e "/etc/airtime/airtime.conf" ] && [ ! -e "/etc/airtime/airtime.conf.tmp" ]; then
+if [ "$icecast" = "t" ]; then
+  if [ ! -e "/etc/airtime/airtime.conf" ] && [ ! -e "/etc/airtime/airtime.conf.tmp" ]; then
     # need to copy the icecast_pass from temp to /etc/airtime so web-based installer can read it
     cp /tmp/icecast_pass /etc/airtime/icecast_pass
+  fi
 fi
 
 chown -R ${web_user}:${web_user} /etc/airtime
