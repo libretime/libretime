@@ -22,6 +22,28 @@ class Schedule(models.Model):
     def get_owner(self):
         return self.instance.get_owner()
 
+    def get_cueout(self):
+        """
+        Returns a cueout that is based on the current show. Cueout of a specific
+        item can potentially overrun the show that it is scheduled in. In that
+        case, the cueout should be the end of the show. This prevents the next
+        show having overlapping items playing.
+        """
+        if self.instance.ends < self.ends:
+            return self.instance.ends - self.starts
+        return self.cue_out
+
+    def get_ends(self):
+        """
+        Returns an item end that is based on the current show. Ends of a
+        specific item can potentially overrun the show that it is scheduled in.
+        In that case, the end should be the end of the show. This prevents the
+        next show having overlapping items playing.
+        """
+        if self.instance.ends < self.ends:
+            return self.instance.ends
+        return self.ends
+
     class Meta:
         managed = False
         db_table = "cc_schedule"
