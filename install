@@ -713,7 +713,7 @@ if [ "$ignore_dependencies" = "f" ]; then
     if [ -x /usr/bin/apt-get ]; then
         verbose "\n * Reading requirements-${dist}-${code}.apt..."
         loudCmd "apt-get -q update"
-        package_list_file="${SCRIPT_DIR}/installer/lib/requirements-${dist}-${code}.apt"
+        package_list_file="${SCRIPT_DIR}/installer/apt/requirements-${dist}-${code}.apt"
         if [ ! -f "$package_list_file" ]; then
             echo "ERROR: package file does not exist: $package_list_file" >&2
             exit 1
