@@ -21,7 +21,7 @@ def __timeout(func, timeout_duration, default, args, kwargs):
             timeout_duration = timeout_duration * 2
         it.join(timeout_duration)
 
-        if it.isAlive():
+        if it.is_alive():
             """Restart Liquidsoap and try the command one more time. If it
             fails again then there is something critically wrong..."""
             if first_attempt:
