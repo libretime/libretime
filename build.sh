@@ -1,4 +1,7 @@
-#!/usr/bin/env bash -e
+#!/usr/bin/env bash
+
+set -e # Exit if any of the steps fails.
+
 composer install --no-dev --no-interaction
 
 git_build=""
@@ -14,7 +17,7 @@ if [ "${git_build}" = "y" ]; then
     git_version=$(git rev-parse --short HEAD)
     echo " * Overriding empty version with sha1 commit-ish: ${git_version}"
   fi
-  echo ${git_version} > VERSION
+  echo "${git_version}" > VERSION
 else
   # if no file was in tarball we create one letting the user know
   # if you run in to this you should grab an enriched tarball built

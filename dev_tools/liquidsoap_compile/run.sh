@@ -105,12 +105,12 @@ while getopts b:c:u: arg; do
     b)
       if [ "$OPTARG" = "all" ]; then
         echo "Building all platforms on server..."
-        for i in $(seq 0 $(($num - 1))); do
+        for i in $(seq 0 $((num - 1))); do
           build_env ${os_versions[$i]} | tee ./liquidsoap-compile_logs/build_env_${os_versions[$i]}.log
         done
       else
         flag=1
-        for i in $(seq 0 $(($num - 1))); do
+        for i in $(seq 0 $((num - 1))); do
           if [ "$OPTARG" = ${os_versions[$i]} ]; then
             echo "Building platform: $OPTARG ..."
             build_env ${os_versions[$i]} | tee ./liquidsoap-compile_logs/build_env_${os_versions[$i]}.log
@@ -129,13 +129,13 @@ while getopts b:c:u: arg; do
     c)
       if [ "$OPTARG" = "all" ]; then
         echo "Compiling liquidsoap for all platforms on server..."
-        for i in $(seq 0 $(($num - 1))); do
+        for i in $(seq 0 $((num - 1))); do
           compile_liq ${os_versions[$i]} | tee ./liquidsoap-compile_logs/compile_liq_${os_versions[$i]}.log
         done
 
       else
         flag=1
-        for i in $(seq 0 $(($num - 1))); do
+        for i in $(seq 0 $((num - 1))); do
           if [ "$OPTARG" = ${os_versions[$i]} ]; then
             echo "Compiling liquidsoap for platform: $OPTARG ..."
             compile_liq ${os_versions[$i]} | tee ./liquidsoap-compile_logs/compile_liq_${os_versions[$i]}.log

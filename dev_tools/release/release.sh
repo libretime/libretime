@@ -1,4 +1,6 @@
-#!/usr/bin/env bash -e
+#!/usr/bin/env bash
+
+set -e
 
 #release.sh 1.8.2
 #creates a libretime folder with a "1.8.2" suffix

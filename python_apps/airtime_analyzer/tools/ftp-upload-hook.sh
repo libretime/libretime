@@ -1,4 +1,6 @@
-#!/usr/bin/env bash -xv
+#!/usr/bin/env bash
+
+set -xv
 
 post_file() {
   #kill process after 30 minutes (360*5=30 minutes)
@@ -35,7 +37,7 @@ post_file() {
   # -f is needed to make curl fail if there's an HTTP error code
   # -L is needed to follow redirects! (just in case)
   until curl -fL --max-time 30 $url -u $api_key":" -X POST -F "file=@${file_path}"; do
-    retry_count=$(($retry_count + 1))
+    retry_count=$((retry_count + 1))
     if [ $retry_count -ge $max_retry ]; then
       break
     fi

@@ -14,7 +14,7 @@ if ! make -C python_apps/api_clients test; then
 fi
 echo "::endgroup::"
 
-if [[ "$failed" = "true" ]]; then
+if [[ $failed == "true" ]]; then
   echo "Python tests failed"
   exit 1
 fi

@@ -1,4 +1,7 @@
-#!/usr/bin/env bash -e
+#!/usr/bin/env bash
+
+set -e
+
 # Absolute path to this script
 SCRIPT=$(readlink -f $0)
 # Absolute directory this script is in
