@@ -5,8 +5,8 @@ set -e
 apt-get install -y --force-yes lsb-release sudo
 dist=$(lsb_release -is)
 code=$(lsb_release -cs)
-cpu=$(getconf LONG_BIT)
-cpuvalue=
+# cpu=$(getconf LONG_BIT)
+# cpuvalue=
 
 #enable apt.sourcefabric.org source
 set +e
@@ -32,7 +32,7 @@ if [ "$dist" = "Ubuntu" ]; then
 fi
 
 #enable squeeze backports to get lame packages
-if [ "$dist" = "Debian" -a "$code" = "squeeze" ]; then
+if [[ "$dist" == "Debian" && "$code" == "squeeze" ]]; then
   set +e
   grep -E "deb http://backports.debian.org/debian-backports squeeze-backports main" /etc/apt/sources.list
   returncode=$?
@@ -42,12 +42,12 @@ if [ "$dist" = "Debian" -a "$code" = "squeeze" ]; then
   fi
 fi
 
-echo "System is $cpu bit..."
-if [ "$cpu" = "64" ]; then
-  cpuvalue="amd64"
-else
-  cpuvalue="i386"
-fi
+# echo "System is $cpu bit..."
+# if [ "$cpu" = "64" ]; then
+#   cpuvalue="amd64"
+# else
+#   cpuvalue="i386"
+# fi
 
 apt-get update
 apt-get -o Dpkg::Options::="--force-confold" upgrade

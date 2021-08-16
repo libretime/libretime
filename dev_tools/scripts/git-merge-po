@@ -22,7 +22,8 @@
 #
 # - When merging branches, conflicts in PO files will be marked with "#-#-#-#"
 #
-O=$1
+
+# O=$1
 A=$2
 B=$3
 

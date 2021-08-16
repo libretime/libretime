@@ -20,6 +20,7 @@ PIDFILE=/var/run/$NAME.pid
 [ -x "$DAEMON" ] || exit 0
 
 # Read configuration variable file if it is present
+# shellcheck disable=SC1090
 [ -r /etc/default/$NAME ] && . /etc/default/$NAME
 
 # Load the VERBOSE setting and other rcS variables

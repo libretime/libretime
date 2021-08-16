@@ -17,7 +17,7 @@ post_file() {
   stripped_file_path=${file_path//','/''}
   mv "${file_path}" "${stripped_file_path}"
   file_path="${stripped_file_path}"
-  filename="${file_path##*/}"
+  # filename="${file_path##*/}"
 
   airtime_conf_path=/etc/airtime/airtime.conf
 

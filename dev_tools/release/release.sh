@@ -19,13 +19,13 @@ if [ $# == 0 ]; then
   exit
 elif [ $# == 1 ]; then
   suffix=$1
-  version=$1
+  # version=$1
 else
   suffix=$1-$2
-  version=$1
+  # version=$1
 fi
 
-dir=$(dirname $(readlink -f $0))
+# dir=$(dirname "$(readlink -f "$0")")
 gitrepo=$(readlink -f ./../../)
 
 echo "Creating tarball for LibreTime ${suffix}."

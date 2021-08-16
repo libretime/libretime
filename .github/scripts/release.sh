@@ -17,10 +17,8 @@ if [ $# == 0 ]; then
     exit 1
 elif [ $# == 1 ]; then
     suffix=$1
-    version=$1
 else
     suffix=$1-$2
-    version=$1
 fi
 
 echo "Creating tarball for LibreTime ${suffix}."
@@ -41,9 +39,9 @@ echo " Done"
 #echo "Done"
 
 cd ..
-find libretime-${suffix} -type f -exec dos2unix {} \;
+find "libretime-${suffix}" -type f -exec dos2unix {} \;
 echo -n "Creating tarball..."
-tar -czf libretime-${suffix}.tar.gz \
+tar -czf "libretime-${suffix}.tar.gz" \
         --owner=root --group=root \
         --exclude-vcs \
         --exclude .zfproject.xml \

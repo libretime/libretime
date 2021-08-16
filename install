@@ -678,14 +678,14 @@ case "${dist}-${code}" in
     is_debian_buster=true
     ;;
   #Fix for Raspbian 9 (stretch)
-  raspbian-9 | 9)
+  raspbian-9)
     echo -e "ERROR: Raspbian Stretch is archived and does not receive any security or other updates since 2020-06-06." >&2
     echo -e "The LibreTime installer dropped support for installing LibreTime on Stretch in 3.0.0-alpha.10." >&2
     exit 1
     ;;
   #End of fix
   #Fix for Raspbian 10 (buster)
-  raspbian-10 | 10)
+  raspbian-10)
     code="buster"
     dist="debian"
     # shellcheck disable=SC2034
@@ -811,8 +811,8 @@ will be moved to /etc/airtime/airtime.conf.tmp"
       rm -f /etc/apache2/sites-available/airtime.conf /etc/apache2/sites-enabled/airtime.conf
     fi
 
-    if [ -d /usr/share/airtime -a web_root = /usr/share/airtime ]; then
-      rm -rf /usr/share/airtime
+    if [[ -d "/usr/share/airtime" && $web_root == "/usr/share/airtime" ]]; then
+      rm -rf "/usr/share/airtime"
     fi
 
     mv /etc/airtime/airtime.conf /etc/airtime/airtime.conf.tmp
@@ -821,17 +821,17 @@ will be moved to /etc/airtime/airtime.conf.tmp"
 fi
 
 API2_APACHE_CONF=$(grep -F "ProxyPass" /etc/apache2/sites-available/airtime.conf || true)
-if [ -z "${API2_APACHE_CONF}" -a "$apache" = "t" ]; then
+if [[ -z "${API2_APACHE_CONF}" && "$apache" == "t" ]]; then
   # Remove Apache configuration so that the ProxyPass configuration for API 2.0
   # is installed
   rm -f /etc/apache2/sites-available/airtime.conf /etc/apache2/sites-enabled/airtime.conf
 fi
 
-if [ "$apache" = "f" -a ${_i} -eq 1 ]; then
+if [[ "$apache" = "f" && ${_i} -eq 1 ]]; then
   echo -e "Install default Airtime apache configuration? (Y/n): \c"
   read IN
   IN=${IN:-$default_value}
-  if [ "$IN" = "y" -o "$IN" = "Y" ]; then
+  if [[ "$IN" = "y" || "$IN" = "Y" ]]; then
     apache="t"
   fi
 fi
@@ -861,7 +861,7 @@ if [ "$apache" = "t" ]; then
   loud "                * Configuring Apache *                "
   loud "-----------------------------------------------------"
   # Detect Apache root folder, e.g. /etc/apache2 or /etc/httpd
-  eval $($apache_bin -V | awk '/HTTPD_ROOT|SERVER_CONFIG_FILE/ { print $2 }')
+  eval "$($apache_bin -V | awk '/HTTPD_ROOT|SERVER_CONFIG_FILE/ { print $2 }')"
   apache_conf="${HTTPD_ROOT}/${SERVER_CONFIG_FILE}"
   verbose "Detected Apache root folder is: ${HTTPD_ROOT}"
   if [[ ! -e $apache_conf ]]; then
@@ -896,7 +896,7 @@ if [ "$apache" = "t" ]; then
   # install apache, we should overwrite any existing configuration. If we don't do this, doing
   # an in-place installation over an old Airtime install (which installs to /usr/share by default)
   # will fail
-  if [ "$upgrade" = "t" -o ! -f ${apache_sitedir}${airtimeconfigfile} ]; then
+  if [[ "$upgrade" == "t" || ! -f "${apache_sitedir}${airtimeconfigfile}" ]]; then
     verbose "\n * Creating Apache config for Airtime..."
     listen_port=""
     if [ "$web_port" != "80" ]; then
@@ -929,7 +929,7 @@ if [ "$apache" = "t" ]; then
   fi
 fi
 
-if [ "$icecast" = "f" -a ${_i} -eq 1 ]; then
+if [[ "$icecast" == "f" && ${_i} -eq 1 ]]; then
   echo -e "Install default Airtime Icecast configuration? (Y/n): \c"
   read -r IN
   IN=${IN:-$default_value}
@@ -1123,7 +1123,7 @@ EOF
     echo -e "Create default airtime postgres user? (Y/n): \c"
     read IN
     IN=${IN:-$default_value}
-    if [ "$IN" = "y" -o "$IN" = "Y" ]; then
+    if [[ "$IN" = "y" || "$IN" = "Y"  ]]; then
       setupAirtimePostgresUser
     fi
   fi
@@ -1138,7 +1138,7 @@ if [ $skip_rabbitmq -eq 0 ]; then
   RABBITMQ_VHOST=/airtime
   RABBITMQ_USER=airtime
   RABBITMQ_PASSWORD=airtime
-  EXCHANGES="airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
+  # EXCHANGES="airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
 
   # Ignore errors in this check to avoid dying when vhost isn't found
   set +e
@@ -1197,14 +1197,14 @@ if [ "$ignore_dependencies" = "f" ]; then
   else
     set +e
     verbose "\n * Generating locales"
-    for i in $(ls ${web_root}/../locale | grep ".._.."); do
+    for locale_file in "${web_root}"/../locale/*_*; do
+      locale=$(basename "$locale_file")
       if [ "$dist" = "debian" ]; then
-        grep -qi "^$i" /etc/locale.gen
-        if [ $? -ne 0 ]; then
-          verbose "$i.UTF-8 UTF-8" >> /etc/locale.gen
+        if ! grep -qi "^$locale" /etc/locale.gen; then
+          verbose "$locale.UTF-8 UTF-8" >> /etc/locale.gen
         fi
       else
-        loudCmd "locale-gen \"$i.utf8\""
+        loudCmd "locale-gen \"$locale.utf8\""
       fi
     done
     set -e

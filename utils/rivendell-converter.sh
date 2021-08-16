@@ -21,17 +21,17 @@ db="Rivendell" #Edit this only if you changed Rivendell's database name :-)
 rivendell_dir=$1
 end_dir=$2
 
-cd "$rivendell_dir"
+cd "$rivendell_dir" || (echo "could not cd in $rivendell_dir" && exit 1)
 
 for file in *; do
   lame "$file"
 done
 
 mv "$rivendell_dir"/*.mp3 "$end_dir"
-cd "$end_dir"
+cd "$end_dir" || (echo "could not cd in $end_dir" && exit 1)
 
 for file in *; do
-  id=$(echo $file | head -c 10)
+  id=$(echo "$file" | head -c 10)
   title=$(mysql -u $user -p$pass -sN -e "SELECT CU.DESCRIPTION FROM CUTS CU, CART CA WHERE CA.NUMBER=CU.CART_NUMBER AND CU.CUT_NAME=\"${id}\"" $db)
   artist=$(mysql -u $user -p$pass -sN -e "SELECT CA.ARTIST FROM CUTS CU, CART CA WHERE CA.NUMBER=CU.CART_NUMBER AND CU.CUT_NAME=\"${id}\"" $db)
   album=$(mysql -u $user -p$pass -sN -e "SELECT CA.ALBUM FROM CUTS CU, CART CA WHERE CA.NUMBER=CU.CART_NUMBER AND CU.CUT_NAME=\"${id}\"" $db)

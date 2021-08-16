@@ -28,6 +28,6 @@ SCRIPT=$(readlink -f $0)
 # Absolute directory this script is in
 SCRIPTPATH=$(dirname $SCRIPT)
 
-cd $SCRIPTPATH
+cd $SCRIPTPATH || exit 1
 
 python airtime-test-soundcard.py "$@" || exit 1
