@@ -714,23 +714,15 @@ if [ "$ignore_dependencies" = "f" ]; then
         verbose "\n * Reading requirements-${dist}-${code}.apt..."
         loudCmd "apt-get -q update"
         package_list_file="${SCRIPT_DIR}/installer/apt/requirements-${dist}-${code}.apt"
+
         if [ ! -f "$package_list_file" ]; then
             echo "ERROR: package file does not exist: $package_list_file" >&2
             exit 1
         fi
-        # For apt-get version 1.1 or higher, --force-yes is deprecated so use new options.
-        apt_force_options="--allow-downgrades --allow-remove-essential --allow-change-held-packages"
-        # Get apt-get version by returning the 2nd parameter from the 1st line of output
-        apt_version=$(apt-get --version |awk 'NR == 1 { print $2 }')
-        # returns 1.8.0~alpha3 (Debian Buster)
-        verbose "Detected apt-get version as: $apt_version"
-        apt_version_formatted=$(awk 'BEGIN {FS = "."} {printf "%03d.%03d\n", $1,$2}' <<<  $apt_version)
-        [[ "$apt_version_formatted" < "001.001" ]] && apt_force_options="--force-yes"
-        verbose "Using apt-get force options: $apt_force_options"
-        loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m ${apt_force_options} install $(grep -vE '^\s*#' $package_list_file | tr '\n' ' ')"
-        if [ "$in_place" = "t" ]; then
-            loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m install git"
-        fi
+
+        package_list="$(grep -vE '^\s*#' "$package_list_file" | tr '\n' ' ')"
+        loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y install $package_list"
+        [[ "$in_place" == "t" ]] && loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y install git"
     else
         echo "WARNING: installing dependencies is not supported for this distribution" >&2
     fi
