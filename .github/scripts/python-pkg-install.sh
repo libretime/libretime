@@ -2,9 +2,9 @@
 
 echo "::group::Install Python apps"
 for app in python_apps/*; do
-  if [[ -f "python_apps/$app/requirements-dev.txt" ]]; then
-    pip3 install -r "python_apps/$app/requirements-dev.txt"
+  if [[ -f "$app/requirements-dev.txt" ]]; then
+    pip3 install -r "$app/requirements-dev.txt"
   fi
-  pip3 install -e "python_apps/$app"
+  pip3 install -e "$app"
 done
 echo "::endgroup::"
