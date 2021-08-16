@@ -1,21 +1,19 @@
 #!/bin/bash
 
-if [ -z "$1" ]
-        then
-                ## Use config
-                backup_folder=~/libretime_backup/
-        else
-                ## User arg as config
-                backup_folder=$1
+if [ -z "$1" ]; then
+  ## Use config
+  backup_folder=~/libretime_backup/
+else
+  ## User arg as config
+  backup_folder=$1
 fi
-
 
 airtime_conf_path=/etc/airtime/airtime.conf
 uploads_folder=/srv/airtime/stor/
 
-psdl_db=$(grep dbname ${airtime_conf_path} | awk '{print $3;}' )
-psql_user=$(grep dbuser ${airtime_conf_path} | awk '{print $3;}' )
-psql_password=$(grep dbpass ${airtime_conf_path} | awk '{print $3;}' )
+psdl_db=$(grep dbname ${airtime_conf_path} | awk '{print $3;}')
+psql_user=$(grep dbuser ${airtime_conf_path} | awk '{print $3;}')
+psql_password=$(grep dbpass ${airtime_conf_path} | awk '{print $3;}')
 
 ## Remove old backup
 rm -rf $backup_folder

@@ -4,14 +4,14 @@
 #return with a non-zero return value.
 
 if [[ $EUID -ne 0 ]]; then
-    echo "Please run as root user."
-    exit 1
+  echo "Please run as root user."
+  exit 1
 fi
 
-SCRIPT_DIR="$( cd "$( dirname "$0" )" && pwd )"
+SCRIPT_DIR="$( cd "$( dirname "$0")" && pwd)"
 AIRTIMEROOT=${SCRIPT_DIR}
 
-showhelp () {
+showhelp() {
     echo "Usage: sudo bash install [options]
     -h, --help, -?
                 Display usage information
@@ -57,19 +57,18 @@ showhelp () {
                 Skips all postgres related install tasks (Useful if you configure
                 postgresql as part of another script / docker builds)
     --no-rabbitmq
-                Skips all rabbitmq related install tasks.
-                "
+                Skips all rabbitmq related install tasks."
     exit 0
 }
 
-showversion () {
-    if [ ! -f "$SCRIPT_DIR/VERSION" ]; then
-        echo "Please initialize LibreTime by running ./build.sh"
-        exit 1
-    fi
-    version=$(cat "$SCRIPT_DIR/VERSION")
-    echo "LibreTime Version ${version}"
-    exit 0
+showversion() {
+  if [ ! -f "$SCRIPT_DIR/VERSION" ]; then
+    echo "Please initialize LibreTime by running ./build.sh"
+    exit 1
+  fi
+  version=$(cat "$SCRIPT_DIR/VERSION")
+  echo "LibreTime Version ${version}"
+  exit 0
 }
 
 web_user=""
@@ -96,38 +95,38 @@ skip_rabbitmq=0
 default_value="Y"
 
 function verbose() {
-    if [[ ${_v} -eq 1 ]]; then
-        echo -e "$@"
-    fi
+  if [[ ${_v} -eq 1 ]]; then
+    echo -e "$@"
+  fi
 }
 
 function loud() {
-    if [[ ${_q} -eq 0 ]]; then
-        echo -e "$@"
-    fi
+  if [[ ${_q} -eq 0 ]]; then
+    echo -e "$@"
+  fi
 }
 
 # Evaluate commands silently if quiet.
 # If not quiet, output command if verbose.
 function loudCmd() {
-    if [[ ${_q} -eq 0 ]]; then
-        verbose "$@"
-        eval $@
-    else
-        eval $@ > /dev/null
-    fi
+  if [[ ${_q} -eq 0 ]]; then
+    verbose "$@"
+    eval $@
+  else
+    eval $@ > /dev/null
+  fi
 }
 
 function checkCommandExists() {
-    set +e
-    command=$@
-    eval hash ${command} 2>/dev/null
-    commandFound=$?
-    if [[ ! ${commandFound} -eq 0 ]]; then
-        echo -e "Error: ${command} not found. Please ensure you have the corresponding dependency installed."
-        exit
-    fi
-    set -e
+  set +e
+  command=$@
+  eval hash ${command} 2> /dev/null
+  commandFound=$?
+  if [[ ! ${commandFound} -eq 0 ]]; then
+    echo -e "Error: ${command} not found. Please ensure you have the corresponding dependency installed."
+    exit
+  fi
+  set -e
 }
 
 # Function to determine if systemd, Upstart or System V Init is the active
@@ -143,27 +142,37 @@ has_systemd_init=false
 has_upstart_init=false
 has_systemv_init=false
 function systemInitDetect() {
-    verbose "\nDetecting init system type ..."
-    # Get the path of the command where pid=1 following any symlinks
-    pid_1_path=$(readlink --canonicalize -n /proc/1/exe)
-    # returns '(/usr)?/lib/systemd/systemd' (Debian Buster, CentOS 7)
-    verbose "Detected path to PID=1 process: $pid_1_path"
-    # Get package of PID=1 path as it identifies the init system.
-    # Allow this to fail, at least then the init system can be guessed from the
-    # PID 1 executable alone
-    pid_1_package=$(dpkg -S $pid_1_path 2>/dev/null ||
-                    rpm --qf '%{name}\n' -qf $pid_1_path 2>/dev/null ||
-                    echo "unknown")
-    verbose "Detected package name for PID=1 process: $pid_1_package"
-    case "${pid_1_package}:${pid_1_path}" in
-      *systemd*) has_systemd_init=true; verbose "Detected init system type: systemd" ;;
-      *upstart*) has_upstart_init=true; verbose "Detected init system type: Upstart" ;;
-      *sysvinit*) has_systemv_init=true; verbose "Detected init system type: System V" ;;
-      *) echo "ERROR: Unable to detect init system using package or path of PID=1 process!" >&2
-         exit 1
-         ;;
-    esac
-    return 0
+  verbose "\nDetecting init system type ..."
+  # Get the path of the command where pid=1 following any symlinks
+  pid_1_path=$(readlink --canonicalize -n /proc/1/exe)
+  # returns '(/usr)?/lib/systemd/systemd' (Debian Buster, CentOS 7)
+  verbose "Detected path to PID=1 process: $pid_1_path"
+  # Get package of PID=1 path as it identifies the init system.
+  # Allow this to fail, at least then the init system can be guessed from the
+  # PID 1 executable alone
+  pid_1_package=$(dpkg -S $pid_1_path 2> /dev/null ||
+    rpm --qf '%{name}\n' -qf $pid_1_path 2> /dev/null ||
+    echo "unknown")
+  verbose "Detected package name for PID=1 process: $pid_1_package"
+  case "${pid_1_package}:${pid_1_path}" in
+    *systemd*)
+      has_systemd_init=true
+      verbose "Detected init system type: systemd"
+      ;;
+    *upstart*)
+      has_upstart_init=true
+      verbose "Detected init system type: Upstart"
+      ;;
+    *sysvinit*)
+      has_systemv_init=true
+      verbose "Detected init system type: System V"
+      ;;
+    *)
+      echo "ERROR: Unable to detect init system using package or path of PID=1 process!" >&2
+      exit 1
+      ;;
+  esac
+  return 0
 }
 
 # Function to wrap installation of services for systemd, Upstart and System V
@@ -174,165 +183,165 @@ function systemInitDetect() {
 # Usage:
 #   systemInitInstall service-name [user]
 function systemInitInstall() {
-    local service_name="$1"
-    local user="$2"
-    local source_base_path=""
-    local source_path=""
-    local target_path=""
-    local alt_path=""
-    local source_config_path=""
-    local target_config_path=""
-    local python_source_path="${SCRIPT_DIR-$PWD}/python_apps"
-    verbose "\n * Installing service $service_name ..."
-    if $has_systemd_init; then
-        case "$service_name" in
-            libretime-analyzer)
-                source_path="${python_source_path}/airtime_analyzer/install/systemd/${service_name}.service"
-                target_path="/etc/systemd/system/${service_name}.service"
-                alt_path=$(echo $target_path | sed 's/libretime-/airtime_/')
-                ;;
-            libretime-celery)
-                source_path="${python_source_path}/airtime-celery/install/systemd/${service_name}.service"
-                target_path="/etc/systemd/system/${service_name}.service"
-                alt_path=$(echo $target_path | sed 's/libretime-/airtime-/')
-                ;;
-            libretime-liquidsoap|libretime-playout)
-                source_path="${python_source_path}/pypo/install/systemd/${service_name}.service"
-                target_path="/etc/systemd/system/${service_name}.service"
-                alt_path=$(echo $target_path | sed 's/libretime-/airtime-/')
-                ;;
-            libretime-api)
-                source_path="${SCRIPT_DIR-$PWD}/api/install/systemd/${service_name}.service"
-                target_path="/etc/systemd/system/${service_name}.service"
-                alt_path=$(echo $target_path | sed 's/libretime-/airtime-/')
-                ;;
-        esac
-        if [[ ! -e $source_path ]]; then
-            echo "$0:${FUNCNAME}(): ERROR: service \"$service_name\" with source path \"$source_path\" does not exist!" >&2
-            exit 1
-        fi
-        # Stop and disable the service if it already exists
-        if [[ -e $target_path ]]; then
-            verbose "Service $service_name already exists - stopping and disabling."
-            loudCmd "systemctl disable ${service_name}.service"
-            loudCmd "systemctl stop ${service_name}.service"
-        fi
-        local old_style_unit_exists="f"
-        # Migrate old style airtime unit exist if it exists
-        if [[ -e $alt_path && ! -L $alt_path ]]; then
-            local old_service=$(echo $service_name | sed 's/libretime/airtime/' | sed 's/-analyzer/_analyzer/')
-            verbose "Old service $old_service already exists - migrating."
-            loudCmd "systemctl disable ${old_service}.service"
-            loudCmd "systemctl stop ${old_service}.service"
-            loudCmd "rm $alt_path"
-            old_style_unit_exists="t"
-        fi
-        # If no user defined, then just copy, otherwise filter
-        if [[ -z $user ]]; then
-            loudCmd "cp $source_path $target_path"
-        else
-            sed -e "s/User=.*/User=${user}/" \
-                -e "s/Group=.*/Group=${user}/" $source_path > $target_path
-        fi
-        if [[ $old_style_unit_exists == "t" ]]; then
-            verbose "Maintaining compatibility with old systemd unit names"
-            # Alias to old Airtime names
-            loudCmd "ln -s $source_path $alt_path"
-        fi
-        chmod 0644 $target_path
-        chown root:root $target_path
-        verbose "Service ${service_name} installed into ${target_path}"
-        # Enable and start the service
-        loudCmd "systemctl enable ${service_name}.service"
-        verbose "Service ${service_name} enabled and started"
-    elif $has_upstart_init; then
-        case "$service_name" in
-            libretime-analyzer)
-                source_path="${python_source_path}/airtime_analyzer/install/upstart/${service_name}.conf"
-                target_path="/etc/init/${service_name}.conf"
-                user=${user:-$web_user}
-                ;;
-            libretime-celery)
-                source_path="${python_source_path}/airtime-celery/install/upstart/${service_name}.conf"
-                target_path="/etc/init/${service_name}.conf"
-                user=""
-                ;;
-            libretime-liquidsoap|libretime-playout)
-                source_path="${python_source_path}/pypo/install/upstart/${service_name}.conf.template"
-                target_path="/etc/init/${service_name}.conf"
-                user=${user:-$web_user}
-                ;;
-        esac
-        if [[ ! -e $source_path ]]; then
-            echo "$0:${FUNCNAME}(): ERROR: service \"$service_name\" with source path \"$source_path\" does not exist!" >&2
-            exit 1
-        fi
-        # Stop the service if it already exists
-        if [[ -e $target_path ]]; then
-            verbose "Service $service_name already exists - stopping."
-            loudCmd "service ${service_name} stop"
-        fi
-        # If no user defined, then just copy, otherwise filter
-        if [[ -z $user ]]; then
-            loudCmd "cp $source_path $target_path"
-        else
-            sed -e "s/WEB_USER/${user}/g" \
-                -e "/^set[gu]id/{s/www-data/${user}/}" $source_path > $target_path
-        fi
-        chmod 0644 $target_path
-        chown root:root $target_path
-        verbose "Service ${service_name} installed into ${target_path}"
-        loudCmd "initctl check-config $service_name"
-    elif $has_systemv_init; then
-        case "$service_name" in
-            libretime-analyzer)
-                source_path="${python_source_path}/airtime_analyzer/install/sysvinit/${service_name}"
-                target_path="/etc/init.d/${service_name}"
-                user=${user:-$web_user}
-                ;;
-            libretime-celery)
-                source_path="${python_source_path}/airtime-celery/install/sysvinit/${service_name}"
-                target_path="/etc/init.d/${service_name}"
-                source_config_path="${python_source_path}/${service_name}/install/conf/${service_name}"
-                target_config_path="/etc/default/${service_name}"
-                user=""
-                ;;
-            libretime-liquidsoap|libretime-playout)
-                source_path="${python_source_path}/pypo/install/sysvinit/${service_name}"
-                target_path="/etc/init.d/${service_name}"
-                user=${user:-$web_user}
-                ;;
-        esac
-        if [[ ! -e $source_path ]]; then
-            echo "$0:${FUNCNAME}(): ERROR: service \"$service_name\" with source path \"$source_path\" does not exist!" >&2
-            exit 1
-        fi
-        # Stop the service if it already exists
-        if [[ -e $target_path ]]; then
-            verbose "Service $service_name already exists - stopping."
-            loudCmd "invoke-rc.d $service_name stop"
-        fi
-        # If no user defined, then just copy, otherwise filter
-        if [[ -z $user ]]; then
-            loudCmd "cp $source_path $target_path"
-            [[ -n $source_config_path ]] &&
-                loudCmd "cp $source_config_path $target_config_path"
-        else
-            sed -e "/^USERID/{s/www-data/${user}/}" \
-                -e "/^GROUPID/{s/www-data/${user}/}" $source_path > $target_path
-        fi
-        chmod 0644 $target_path
-        chown root:root $target_path
-        if [[ -n $target_config_path ]]; then
-            chmod 0644 $target_config_path
-            chown root:root $target_config_path
-        fi
-        verbose "Service ${service_name} installed into ${target_path}"
-        # Create symlinks for the appropriate runlevels
-        loudCmd "update-rc.d $service_name defaults"
-        verbose "Service ${service_name} enabled"
+  local service_name="$1"
+  local user="$2"
+  local source_base_path=""
+  local source_path=""
+  local target_path=""
+  local alt_path=""
+  local source_config_path=""
+  local target_config_path=""
+  local python_source_path="${SCRIPT_DIR-$PWD}/python_apps"
+  verbose "\n * Installing service $service_name ..."
+  if $has_systemd_init; then
+    case "$service_name" in
+      libretime-analyzer)
+        source_path="${python_source_path}/airtime_analyzer/install/systemd/${service_name}.service"
+        target_path="/etc/systemd/system/${service_name}.service"
+        alt_path=$(echo $target_path | sed 's/libretime-/airtime_/')
+        ;;
+      libretime-celery)
+        source_path="${python_source_path}/airtime-celery/install/systemd/${service_name}.service"
+        target_path="/etc/systemd/system/${service_name}.service"
+        alt_path=$(echo $target_path | sed 's/libretime-/airtime-/')
+        ;;
+      libretime-liquidsoap | libretime-playout)
+        source_path="${python_source_path}/pypo/install/systemd/${service_name}.service"
+        target_path="/etc/systemd/system/${service_name}.service"
+        alt_path=$(echo $target_path | sed 's/libretime-/airtime-/')
+        ;;
+      libretime-api)
+        source_path="${SCRIPT_DIR-$PWD}/api/install/systemd/${service_name}.service"
+        target_path="/etc/systemd/system/${service_name}.service"
+        alt_path=$(echo $target_path | sed 's/libretime-/airtime-/')
+        ;;
+    esac
+    if [[ ! -e $source_path ]]; then
+      echo "$0:${FUNCNAME}(): ERROR: service \"$service_name\" with source path \"$source_path\" does not exist!" >&2
+      exit 1
     fi
-    return 0
+    # Stop and disable the service if it already exists
+    if [[ -e $target_path ]]; then
+      verbose "Service $service_name already exists - stopping and disabling."
+      loudCmd "systemctl disable ${service_name}.service"
+      loudCmd "systemctl stop ${service_name}.service"
+    fi
+    local old_style_unit_exists="f"
+    # Migrate old style airtime unit exist if it exists
+    if [[ -e $alt_path && ! -L $alt_path ]]; then
+      local old_service=$(echo $service_name | sed 's/libretime/airtime/' | sed 's/-analyzer/_analyzer/')
+      verbose "Old service $old_service already exists - migrating."
+      loudCmd "systemctl disable ${old_service}.service"
+      loudCmd "systemctl stop ${old_service}.service"
+      loudCmd "rm $alt_path"
+      old_style_unit_exists="t"
+    fi
+    # If no user defined, then just copy, otherwise filter
+    if [[ -z $user ]]; then
+      loudCmd "cp $source_path $target_path"
+    else
+      sed -e "s/User=.*/User=${user}/" \
+        -e "s/Group=.*/Group=${user}/" $source_path > $target_path
+    fi
+    if [[ $old_style_unit_exists == "t" ]]; then
+      verbose "Maintaining compatibility with old systemd unit names"
+      # Alias to old Airtime names
+      loudCmd "ln -s $source_path $alt_path"
+    fi
+    chmod 0644 $target_path
+    chown root:root $target_path
+    verbose "Service ${service_name} installed into ${target_path}"
+    # Enable and start the service
+    loudCmd "systemctl enable ${service_name}.service"
+    verbose "Service ${service_name} enabled and started"
+  elif $has_upstart_init; then
+    case "$service_name" in
+      libretime-analyzer)
+        source_path="${python_source_path}/airtime_analyzer/install/upstart/${service_name}.conf"
+        target_path="/etc/init/${service_name}.conf"
+        user=${user:-$web_user}
+        ;;
+      libretime-celery)
+        source_path="${python_source_path}/airtime-celery/install/upstart/${service_name}.conf"
+        target_path="/etc/init/${service_name}.conf"
+        user=""
+        ;;
+      libretime-liquidsoap | libretime-playout)
+        source_path="${python_source_path}/pypo/install/upstart/${service_name}.conf.template"
+        target_path="/etc/init/${service_name}.conf"
+        user=${user:-$web_user}
+        ;;
+    esac
+    if [[ ! -e $source_path ]]; then
+      echo "$0:${FUNCNAME}(): ERROR: service \"$service_name\" with source path \"$source_path\" does not exist!" >&2
+      exit 1
+    fi
+    # Stop the service if it already exists
+    if [[ -e $target_path ]]; then
+      verbose "Service $service_name already exists - stopping."
+      loudCmd "service ${service_name} stop"
+    fi
+    # If no user defined, then just copy, otherwise filter
+    if [[ -z $user ]]; then
+      loudCmd "cp $source_path $target_path"
+    else
+      sed -e "s/WEB_USER/${user}/g" \
+        -e "/^set[gu]id/{s/www-data/${user}/}" $source_path > $target_path
+    fi
+    chmod 0644 $target_path
+    chown root:root $target_path
+    verbose "Service ${service_name} installed into ${target_path}"
+    loudCmd "initctl check-config $service_name"
+  elif $has_systemv_init; then
+    case "$service_name" in
+      libretime-analyzer)
+        source_path="${python_source_path}/airtime_analyzer/install/sysvinit/${service_name}"
+        target_path="/etc/init.d/${service_name}"
+        user=${user:-$web_user}
+        ;;
+      libretime-celery)
+        source_path="${python_source_path}/airtime-celery/install/sysvinit/${service_name}"
+        target_path="/etc/init.d/${service_name}"
+        source_config_path="${python_source_path}/${service_name}/install/conf/${service_name}"
+        target_config_path="/etc/default/${service_name}"
+        user=""
+        ;;
+      libretime-liquidsoap | libretime-playout)
+        source_path="${python_source_path}/pypo/install/sysvinit/${service_name}"
+        target_path="/etc/init.d/${service_name}"
+        user=${user:-$web_user}
+        ;;
+    esac
+    if [[ ! -e $source_path ]]; then
+      echo "$0:${FUNCNAME}(): ERROR: service \"$service_name\" with source path \"$source_path\" does not exist!" >&2
+      exit 1
+    fi
+    # Stop the service if it already exists
+    if [[ -e $target_path ]]; then
+      verbose "Service $service_name already exists - stopping."
+      loudCmd "invoke-rc.d $service_name stop"
+    fi
+    # If no user defined, then just copy, otherwise filter
+    if [[ -z $user ]]; then
+      loudCmd "cp $source_path $target_path"
+      [[ -n $source_config_path ]] &&
+        loudCmd "cp $source_config_path $target_config_path"
+    else
+      sed -e "/^USERID/{s/www-data/${user}/}" \
+        -e "/^GROUPID/{s/www-data/${user}/}" $source_path > $target_path
+    fi
+    chmod 0644 $target_path
+    chown root:root $target_path
+    if [[ -n $target_config_path ]]; then
+      chmod 0644 $target_config_path
+      chown root:root $target_config_path
+    fi
+    verbose "Service ${service_name} installed into ${target_path}"
+    # Create symlinks for the appropriate runlevels
+    loudCmd "update-rc.d $service_name defaults"
+    verbose "Service ${service_name} enabled"
+  fi
+  return 0
 }
 
 # Function to wrap different systemd vs. Upstart init commands depending
@@ -342,235 +351,240 @@ function systemInitInstall() {
 # Where _command_ is one of: start, stop, status, reload, restart
 #   enable, disable and either daemon-reload or reload-configuration.
 function systemInitCommand() {
-    local command=$1; shift
-    case "$command" in
-        start|stop|status|reload|restart)
-            if $has_systemd_init; then
-                loudCmd "systemctl $command $@"
-            elif $has_upstart_init; then
-                for svc_name in $@; do
-                    loudCmd "service $svc_name $command"
-                done
-            elif $has_systemv_init; then
-                for svc_name in $@; do
-                    loudCmd "invoke-rc.d $svc_name $command"
-                done
-            fi
-            ;;
-        enable|disable)  # TODO: REMOVE
-            $has_systemd_init &&
-                loudCmd "systemctl $command $1.service"
-            if $has_systemv_init; then
-                if [[ "$command" = "enable" ]]
-                then loudCmd "update-rc.d $1 defaults"
-                else loudCmd "update-rc.d $1 enable"
-                fi
-            fi
-            ;;
-        daemon-reload|reload-configuration)
-            $has_systemd_init &&
-                loudCmd "systemctl daemon-reload"
-            $has_upstart_init &&
-                loudCmd "initctl reload-configuration"
-            ;;
-        *) echo -e "$0:${FUNCNAME}(): ERROR: command \"$command\" is not supported!" >&2
-           exit 1
-           ;;
-    esac
-    return 0
+  local command=$1
+  shift
+  case "$command" in
+    start | stop | status | reload | restart)
+      if $has_systemd_init; then
+        loudCmd "systemctl $command $@"
+      elif $has_upstart_init; then
+        for svc_name in $@; do
+          loudCmd "service $svc_name $command"
+        done
+      elif $has_systemv_init; then
+        for svc_name in $@; do
+          loudCmd "invoke-rc.d $svc_name $command"
+        done
+      fi
+      ;;
+    enable | disable) # TODO: REMOVE
+      $has_systemd_init &&
+        loudCmd "systemctl $command $1.service"
+      if $has_systemv_init; then
+        if [[ "$command" = "enable" ]]; then
+          loudCmd "update-rc.d $1 defaults"
+        else
+          loudCmd "update-rc.d $1 enable"
+        fi
+      fi
+      ;;
+    daemon-reload | reload-configuration)
+      $has_systemd_init &&
+        loudCmd "systemctl daemon-reload"
+      $has_upstart_init &&
+        loudCmd "initctl reload-configuration"
+      ;;
+    *)
+      echo -e "$0:${FUNCNAME}(): ERROR: command \"$command\" is not supported!" >&2
+      exit 1
+      ;;
+  esac
+  return 0
 }
 
 while :; do
-    case "$1" in
-        --help)
+  case "$1" in
+    --help)
+      showhelp
+      ;;
+    --version)
+      showversion
+      ;;
+    --verbose)
+      _v=1
+      ;;
+    --quiet | --silent)
+      _q=1
+      ;;
+    --force)
+      _i=0
+      ;;
+    --distribution)
+      if [ "$2" ]; then
+        dist=$2
+        shift 2
+        continue
+      else
+        echo 'ERROR: Must specify a non-empty "--distribution DISTRIBUTION" argument.' >&2
+        exit 1
+      fi
+      ;;
+    --distribution=?*)
+      dist=${1#*=} # Delete everything up to "=" and assign the remainder.
+      ;;
+    --distribution=)
+      echo 'ERROR: Must specify a non-empty "--distribution DISTRIBUTION" argument.' >&2
+      exit 1
+      ;;
+    --release)
+      if [ "$2" ]; then
+        code=$2
+        shift 2
+        continue
+      else
+        echo 'ERROR: Must specify a non-empty "--release RELEASE" argument.' >&2
+        exit 1
+      fi
+      ;;
+    --release=?*)
+      code=${1#*=} # Delete everything up to "=" and assign the remainder.
+      ;;
+    --release=)
+      echo 'ERROR: Must specify a non-empty "--release RELEASE" argument.' >&2
+      exit 1
+      ;;
+    --ignore-dependencies)
+      ignore_dependencies="t"
+      ;;
+    --apache)
+      apache="t"
+      ;;
+    --icecast)
+      icecast="t"
+      ;;
+    --postgres)
+      postgres="t"
+      ;;
+    --in-place)
+      in_place="t"
+      ;;
+    --web-user)
+      if [ "$2" ]; then
+        web_user=$2
+        shift 2
+        continue
+      else
+        echo 'ERROR: Must specify a non-empty "--web-user WEB_USER" argument.' >&2
+        exit 1
+      fi
+      ;;
+    --web-user=?*)
+      web_user=${1#*=} # Delete everything up to "=" and assign the remainder.
+      ;;
+    --web-user=)
+      echo 'ERROR: Must specify a non-empty "--web-user=WEB_USER" argument.' >&2
+      exit 1
+      ;;
+    --web-root)
+      if [ "$2" ]; then
+        web_root=$(readlink -f $2)
+        shift 2
+        continue
+      else
+        echo 'ERROR: Must specify a non-empty "--web-root WEB_ROOT" argument.' >&2
+        exit 1
+      fi
+      ;;
+    --web-root=?*)
+      web_root=${1#*=} # Delete everything up to "=" and assign the remainder.
+      ;;
+    --web-root=)
+      echo 'ERROR: Must specify a non-empty "--web-root=WEB_ROOT" argument.' >&2
+      exit 1
+      ;;
+    --web-port)
+      echo 'ERROR: Please specify a port number.' >&2
+      exit 1
+      ;;
+    --web-port=)
+      echo 'ERROR: Please specify a port number.' >&2
+      exit 1
+      ;;
+    --web-port=?*)
+      web_port=${1#*=}
+      ;;
+    --selinux)
+      selinux="t"
+      ;;
+    --no-postgres)
+      skip_postgres=1
+      ;;
+    --no-rabbitmq)
+      skip_rabbitmq=1
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -?*)
+      for ((i = 1; i < ${#1}; i++)); do
+        case "${1:$i:1}" in
+          h | \?)
             showhelp
             ;;
-        --version)
+          V)
             showversion
             ;;
-        --verbose)
+          v)
             _v=1
             ;;
-        --quiet|--silent)
+          q)
             _q=1
             ;;
-        --force)
+          f)
             _i=0
             ;;
-        --distribution)
-            if [ "$2" ]; then
-                dist=$2
-                shift 2
-                continue
-            else
-                echo 'ERROR: Must specify a non-empty "--distribution DISTRIBUTION" argument.' >&2
-                exit 1
-            fi
-            ;;
-        --distribution=?*)
-            dist=${1#*=} # Delete everything up to "=" and assign the remainder.
-            ;;
-        --distribution=)
-            echo 'ERROR: Must specify a non-empty "--distribution DISTRIBUTION" argument.' >&2
-            exit 1
-            ;;
-        --release)
-            if [ "$2" ]; then
-                code=$2
-                shift 2
-                continue
-            else
-                echo 'ERROR: Must specify a non-empty "--release RELEASE" argument.' >&2
-                exit 1
-            fi
-            ;;
-        --release=?*)
-            code=${1#*=} # Delete everything up to "=" and assign the remainder.
-            ;;
-        --release=)
-            echo 'ERROR: Must specify a non-empty "--release RELEASE" argument.' >&2
-            exit 1
-            ;;
-        --ignore-dependencies)
+          d)
             ignore_dependencies="t"
             ;;
-        --apache)
+          a)
             apache="t"
             ;;
-        --icecast)
+          i)
             icecast="t"
             ;;
-        --postgres)
+          p)
             postgres="t"
             ;;
-        --in-place)
+          I)
             in_place="t"
             ;;
-        --web-user)
+          w)
             if [ "$2" ]; then
-                web_user=$2
-                shift 2
-                continue
+              web_user=$2
+              continue
             else
-                echo 'ERROR: Must specify a non-empty "--web-user WEB_USER" argument.' >&2
-                exit 1
+              echo 'ERROR: Must specify a non-empty "-w WEB_USER" argument.' >&2
+              exit 1
             fi
             ;;
-        --web-user=?*)
-            web_user=${1#*=} # Delete everything up to "=" and assign the remainder.
-            ;;
-        --web-user=)
-            echo 'ERROR: Must specify a non-empty "--web-user=WEB_USER" argument.' >&2
-            exit 1
-            ;;
-        --web-root)
+          r)
             if [ "$2" ]; then
-                web_root=$(readlink -f $2)
-                shift 2
-                continue
+              web_root=$(readlink -f $2)
+              continue
             else
-                echo 'ERROR: Must specify a non-empty "--web-root WEB_ROOT" argument.' >&2
-                exit 1
+              echo 'ERROR: Must specify a non-empty "-d WEB_ROOT" argument.' >&2
+              exit 1
             fi
             ;;
-        --web-root=?*)
-            web_root=${1#*=} # Delete everything up to "=" and assign the remainder.
-            ;;
-        --web-root=)
-            echo 'ERROR: Must specify a non-empty "--web-root=WEB_ROOT" argument.' >&2
+          *)
+            echo "$0: error - unrecognized option '${1:$i:1}'" >&2
+            echo "Try 'install --help' for more information."
             exit 1
             ;;
-        --web-port)
-            echo 'ERROR: Please specify a port number.' >&2
-            exit 1
-            ;;
-        --web-port=)
-            echo 'ERROR: Please specify a port number.' >&2
-            exit 1
-            ;;
-        --web-port=?*)
-            web_port=${1#*=}
-            ;;
-        --selinux)
-            selinux="t"
-            ;;
-        --no-postgres)
-            skip_postgres=1
-            ;;
-        --no-rabbitmq)
-            skip_rabbitmq=1
-            ;;
-        --)
-            shift
-            break
-            ;;
-        -?*)
-            for ((i = 1; i < ${#1}; i++)); do
-                case "${1:$i:1}" in
-                    h|\?)
-                        showhelp
-                        ;;
-                    V)
-                        showversion
-                        ;;
-                    v)
-                        _v=1
-                        ;;
-                    q)
-                        _q=1
-                        ;;
-                    f)
-                        _i=0
-                        ;;
-                    d)
-                        ignore_dependencies="t"
-                        ;;
-                    a)
-                        apache="t"
-                        ;;
-                    i)
-                        icecast="t"
-                        ;;
-                    p)
-                        postgres="t"
-                        ;;
-                    I)
-                        in_place="t"
-                        ;;
-                    w)
-                        if [ "$2" ]; then
-                            web_user=$2
-                            continue
-                        else
-                            echo 'ERROR: Must specify a non-empty "-w WEB_USER" argument.' >&2
-                            exit 1
-                        fi
-                        ;;
-                    r)
-                        if [ "$2" ]; then
-                            web_root=$(readlink -f $2)
-                            continue
-                        else
-                            echo 'ERROR: Must specify a non-empty "-d WEB_ROOT" argument.' >&2
-                            exit 1
-                        fi
-                        ;;
-                    *)
-                        echo "$0: error - unrecognized option '${1:$i:1}'" >&2;
-                        echo "Try 'install --help' for more information."
-                        exit 1
-                esac
-            done
-            ;;
-        *)
-            break
-    esac
-    shift
+        esac
+      done
+      ;;
+    *)
+      break
+      ;;
+  esac
+  shift
 done
 
 if [ -z web_root -a ! -d web_root ]; then
-    echo "$web_root doesn't exist!"
-    exit 1
+  echo "$web_root doesn't exist!"
+  exit 1
 fi
 echo -e "\n.____    ._____.               ___________.__                "
 echo "|    |   |__\_ |_________   ___\__    ___/|__| _____   ____  "
@@ -581,42 +595,49 @@ echo -e "        \/       \/            \/                  \/     \/\n"
 
 echo -e "Detecting distribution and release ..."
 if [ -e /etc/os-release ]; then
-    # Access $ID, $VERSION_ID and $PRETTY_NAME
-    source /etc/os-release
-    echo "Detected distribution id: $ID"
-    echo "Detected distribution release id: $VERSION_ID"
-    echo "Detected distribution description: $PRETTY_NAME"
+  # Access $ID, $VERSION_ID and $PRETTY_NAME
+  source /etc/os-release
+  echo "Detected distribution id: $ID"
+  echo "Detected distribution release id: $VERSION_ID"
+  echo "Detected distribution description: $PRETTY_NAME"
 else
-    ID=unknown
-    VERSION_ID=unknown
-    PRETTY_NAME="Unknown distribution and release"
-    echo "WARNING: /etc/os-release configuration not found. Unable to detect distribution." >&2
-    if [ -z "$dist" -o -z "$code" ]; then
-        echo "ERROR: One or both of --distribution and --release options were not specified." >&2
-        echo "This is an unsupported distribution and/or version!" >&2
-        exit 1
-    fi
+  ID=unknown
+  VERSION_ID=unknown
+  PRETTY_NAME="Unknown distribution and release"
+  echo "WARNING: /etc/os-release configuration not found. Unable to detect distribution." >&2
+  if [ -z "$dist" -o -z "$code" ]; then
+    echo "ERROR: One or both of --distribution and --release options were not specified." >&2
+    echo "This is an unsupported distribution and/or version!" >&2
+    exit 1
+  fi
 fi
 
 # Validate --distribution parameter has a sane value for this OS.
 if [ -n "$dist" ]; then
-    dist=${dist,,}
-    verbose "Checking --distribution \"$dist\" to ensure it has a sane value."
-    # If $ID detected above does not match parameter, then do some checking
-    if [ "$dist" != "$ID" ]; then
-        verbose "Detected distribution \"$ID\" does not match specified one of \"$dist\". Checking ..."
-        case "$dist" in
-            centos|rhel)   pkg_installer=/usr/bin/yum; verbose "Detected yum package installer" ;;
-            debian|ubuntu) pkg_installer=/usr/bin/apt-get; verbose "Detected apt-get package installer" ;;
-            *) echo "ERROR: the value \"$dist\" specified for --distribution is unsupported." >&2
-               exit 1
-               ;;
-        esac
-        if [ ! -x "$pkg_installer" ]; then
-            echo "ERROR: The value \"$dist\" specified for --distribution does not appear compatible!" >&2
-            exit 1
-        fi
+  dist=${dist,,}
+  verbose "Checking --distribution \"$dist\" to ensure it has a sane value."
+  # If $ID detected above does not match parameter, then do some checking
+  if [ "$dist" != "$ID" ]; then
+    verbose "Detected distribution \"$ID\" does not match specified one of \"$dist\". Checking ..."
+    case "$dist" in
+      centos | rhel)
+        pkg_installer=/usr/bin/yum
+        verbose "Detected yum package installer"
+        ;;
+      debian | ubuntu)
+        pkg_installer=/usr/bin/apt-get
+        verbose "Detected apt-get package installer"
+        ;;
+      *)
+        echo "ERROR: the value \"$dist\" specified for --distribution is unsupported." >&2
+        exit 1
+        ;;
+    esac
+    if [ ! -x "$pkg_installer" ]; then
+      echo "ERROR: The value \"$dist\" specified for --distribution does not appear compatible!" >&2
+      exit 1
     fi
+  fi
 fi
 
 # Validate the distribution and release is a supported one; set boolean flags.
@@ -633,55 +654,55 @@ code="${code:-$VERSION_ID}"
 code="${code,,}"
 verbose "Validating dist-code: ${dist}-${code}"
 case "${dist}-${code}" in
-    ubuntu-18.04)
-        code="bionic"
-        is_ubuntu_dist=true
-        is_ubuntu_bionic=true
-        ;;
-    ubuntu-16.04|ubuntu-xenial|ubuntu-xenial_docker_minimal)
-        echo -e "ERROR: Ubuntu Xenial is archived and does not receive any security or other updates since 2021-04-01." >&2
-        echo -e "The LibreTime installer dropped support for installing LibreTime on Xenial in 3.0.0-alpha.10." >&2
-        exit 1
-        ;;
-    debian-9|debian-stretch)
-        echo -e "ERROR: Debian Stretch is archived and does not receive any security or other updates since 2020-06-06." >&2
-        echo -e "The LibreTime installer dropped support for installing LibreTime on Stretch in 3.0.0-alpha.10." >&2
-        exit 1
-        ;;
-    debian-10|debian-buster)
-        code="buster"
-        is_debian_dist=true
-        is_debian_buster=true
-        ;;
-    #Fix for Raspbian 9 (stretch)
-    raspbian-9|9)
-        echo -e "ERROR: Raspbian Stretch is archived and does not receive any security or other updates since 2020-06-06." >&2
-        echo -e "The LibreTime installer dropped support for installing LibreTime on Stretch in 3.0.0-alpha.10." >&2
-        exit 1
-        ;;
-    #End of fix
-    #Fix for Raspbian 10 (buster)
-    raspbian-10|10)
-        code="buster"
-        dist="debian"
-        is_debian_dist=true
-        is_debian_buster=true
-        ;;
-    #End of fix
+  ubuntu-18.04)
+    code="bionic"
+    is_ubuntu_dist=true
+    is_ubuntu_bionic=true
+    ;;
+  ubuntu-16.04 | ubuntu-xenial | ubuntu-xenial_docker_minimal)
+    echo -e "ERROR: Ubuntu Xenial is archived and does not receive any security or other updates since 2021-04-01." >&2
+    echo -e "The LibreTime installer dropped support for installing LibreTime on Xenial in 3.0.0-alpha.10." >&2
+    exit 1
+    ;;
+  debian-9 | debian-stretch)
+    echo -e "ERROR: Debian Stretch is archived and does not receive any security or other updates since 2020-06-06." >&2
+    echo -e "The LibreTime installer dropped support for installing LibreTime on Stretch in 3.0.0-alpha.10." >&2
+    exit 1
+    ;;
+  debian-10 | debian-buster)
+    code="buster"
+    is_debian_dist=true
+    is_debian_buster=true
+    ;;
+  #Fix for Raspbian 9 (stretch)
+  raspbian-9 | 9)
+    echo -e "ERROR: Raspbian Stretch is archived and does not receive any security or other updates since 2020-06-06." >&2
+    echo -e "The LibreTime installer dropped support for installing LibreTime on Stretch in 3.0.0-alpha.10." >&2
+    exit 1
+    ;;
+  #End of fix
+  #Fix for Raspbian 10 (buster)
+  raspbian-10 | 10)
+    code="buster"
+    dist="debian"
+    is_debian_dist=true
+    is_debian_buster=true
+    ;;
+  #End of fix
 
-    debian-8|debian-jessie)
-        echo -e "ERROR: Debian Jessie is archived and does not receive any security or other updates since 2018-05-17." >&2
-        echo -e "The LibreTime installer dropped support for installing LibreTime on Jessie in 3.0.0-alpha.8." >&2
-        exit 1
-        ;;
-    centos-8)
-        is_centos_dist=true
-        is_centos_8=true
-        ;;
-    *)
-        echo -e "ERROR: Distribution \"$PRETTY_NAME\" is not supported with \"${dist}-${code}\"!" >&2
-        exit 1
-        ;;
+  debian-8 | debian-jessie)
+    echo -e "ERROR: Debian Jessie is archived and does not receive any security or other updates since 2018-05-17." >&2
+    echo -e "The LibreTime installer dropped support for installing LibreTime on Jessie in 3.0.0-alpha.8." >&2
+    exit 1
+    ;;
+  centos-8)
+    is_centos_dist=true
+    is_centos_8=true
+    ;;
+  *)
+    echo -e "ERROR: Distribution \"$PRETTY_NAME\" is not supported with \"${dist}-${code}\"!" >&2
+    exit 1
+    ;;
 esac
 verbose "Using distribution id \"$dist\", release code \"$code\""
 
@@ -689,256 +710,256 @@ verbose "Using distribution id \"$dist\", release code \"$code\""
 systemInitDetect
 
 if $is_centos_dist; then
-    python_bin="python3.8"
-    apache_bin="httpd"
-    apache_service="httpd"
-    web_user="${web_user:-apache}"
+  python_bin="python3.8"
+  apache_bin="httpd"
+  apache_service="httpd"
+  web_user="${web_user:-apache}"
 else
-    python_bin="python3"
-    apache_bin="apache2ctl"
-    apache_service="apache2"
-    web_user="${web_user:-www-data}"
+  python_bin="python3"
+  apache_bin="apache2ctl"
+  apache_service="apache2"
+  web_user="${web_user:-www-data}"
 fi
 
 if [ "$ignore_dependencies" = "f" ]; then
-    set +e
-    loud "\n-----------------------------------------------------"
-    loud "         * Installing External Dependencies *        "
-    loud "-----------------------------------------------------"
+  set +e
+  loud "\n-----------------------------------------------------"
+  loud "         * Installing External Dependencies *        "
+  loud "-----------------------------------------------------"
 
-    if $is_ubuntu_dist; then
-    	loudCmd "add-apt-repository -y ppa:libretime/libretime"
-    	fi
+  if $is_ubuntu_dist; then
+    loudCmd "add-apt-repository -y ppa:libretime/libretime"
+  fi
 
-    if [ -x /usr/bin/apt-get ]; then
-        verbose "\n * Reading requirements-${dist}-${code}.apt..."
-        loudCmd "apt-get -q update"
-        package_list_file="${SCRIPT_DIR}/installer/apt/requirements-${dist}-${code}.apt"
+  if [ -x /usr/bin/apt-get ]; then
+    verbose "\n * Reading requirements-${dist}-${code}.apt..."
+    loudCmd "apt-get -q update"
+    package_list_file="${SCRIPT_DIR}/installer/apt/requirements-${dist}-${code}.apt"
 
-        if [ ! -f "$package_list_file" ]; then
-            echo "ERROR: package file does not exist: $package_list_file" >&2
-            exit 1
-        fi
-
-        package_list="$(grep -vE '^\s*#' "$package_list_file" | tr '\n' ' ')"
-        loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y install $package_list"
-        [[ "$in_place" == "t" ]] && loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y install git"
-    else
-        echo "WARNING: installing dependencies is not supported for this distribution" >&2
+    if [ ! -f "$package_list_file" ]; then
+      echo "ERROR: package file does not exist: $package_list_file" >&2
+      exit 1
     fi
-    set -e
+
+    package_list="$(grep -vE '^\s*#' "$package_list_file" | tr '\n' ' ')"
+    loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y install $package_list"
+    [[ "$in_place" == "t" ]] && loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y install git"
+  else
+    echo "WARNING: installing dependencies is not supported for this distribution" >&2
+  fi
+  set -e
 else
-    checkCommandExists "${apache_bin}"
-    checkCommandExists "rabbitmqctl"
-    checkCommandExists "psql"
-    if [ "$in_place" = "t" ]; then
-        checkCommandExists "git"
-    fi
+  checkCommandExists "${apache_bin}"
+  checkCommandExists "rabbitmqctl"
+  checkCommandExists "psql"
+  if [ "$in_place" = "t" ]; then
+    checkCommandExists "git"
+  fi
 fi
 
 # Check if composer exists and install if it doesn't
 set +e
-eval hash "composer" 2>/dev/null
+eval hash "composer" 2> /dev/null
 commandFound=$?
 set -e
 if [[ ! ${commandFound} -eq 0 ]]; then
-    curl -sS https://getcomposer.org/installer > get-composer.php
-    php ./get-composer.php --install-dir=/usr/local/bin --filename=composer
-    rm get-composer.php
-    PATH="${PATH}:/usr/local/bin"
+  curl -sS https://getcomposer.org/installer > get-composer.php
+  php ./get-composer.php --install-dir=/usr/local/bin --filename=composer
+  rm get-composer.php
+  PATH="${PATH}:/usr/local/bin"
 fi
 
 # Run composer (install PHP dependencies) and create a VERSION file
 loudCmd "./build.sh"
 if [ -f /etc/airtime/airtime.conf ]; then
-    # TODO use VERSION or some other way to check for updates and handle
-    # media-monitor case on it's own
-    OLD_CONF=$(grep -F "[media-monitor]" /etc/airtime/airtime.conf || true)
+  # TODO use VERSION or some other way to check for updates and handle
+  # media-monitor case on it's own
+  OLD_CONF=$(grep -F "[media-monitor]" /etc/airtime/airtime.conf || true)
 
-    if [ -n "${OLD_CONF}" ]; then
-        upgrade="t"
+  if [ -n "${OLD_CONF}" ]; then
+    upgrade="t"
 
-        set +e
-        verbose "Stopping airtime services..."
-        systemInitCommand stop airtime_analyzer airtime-celery airtime-playout airtime-liquidsoap airtime-media-monitor
-        verbose "...Done"
+    set +e
+    verbose "Stopping airtime services..."
+    systemInitCommand stop airtime_analyzer airtime-celery airtime-playout airtime-liquidsoap airtime-media-monitor
+    verbose "...Done"
 
-        verbose "Disabling obsolete services..."
-        systemInitCommand disable airtime-media-monitor
-        verbose "...Done"
+    verbose "Disabling obsolete services..."
+    systemInitCommand disable airtime-media-monitor
+    verbose "...Done"
 
-        echo "Looks like you have an old version of Airtime. Your current /etc/airtime/airtime.conf \
+    echo "Looks like you have an old version of Airtime. Your current /etc/airtime/airtime.conf \
 will be moved to /etc/airtime/airtime.conf.tmp"
-        # If we don't remove the existing python files in /usr/lib and the
-        # /etc/init.d startup scripts, services won't work properly
-        if [ -d /usr/lib/airtime/ ]; then
-            rm -rf /usr/lib/airtime/
-        fi
-
-        rm -f /etc/init.d/airtime*
-        rm -f /etc/init/airtime*
-        rm -f /etc/default/airtime-celery
-
-        if [ "$apache" = "t" ]; then
-            # If the user selects an "in-place" install or passes in a web root,
-            # we need to replace the old apache airtime.conf
-            rm -f /etc/apache2/sites-available/airtime.conf /etc/apache2/sites-enabled/airtime.conf
-        fi
-
-        if [ -d /usr/share/airtime -a web_root = /usr/share/airtime ]; then
-            rm -rf /usr/share/airtime
-        fi
-
-        mv /etc/airtime/airtime.conf /etc/airtime/airtime.conf.tmp
-        set -e
+    # If we don't remove the existing python files in /usr/lib and the
+    # /etc/init.d startup scripts, services won't work properly
+    if [ -d /usr/lib/airtime/ ]; then
+      rm -rf /usr/lib/airtime/
     fi
+
+    rm -f /etc/init.d/airtime*
+    rm -f /etc/init/airtime*
+    rm -f /etc/default/airtime-celery
+
+    if [ "$apache" = "t" ]; then
+      # If the user selects an "in-place" install or passes in a web root,
+      # we need to replace the old apache airtime.conf
+      rm -f /etc/apache2/sites-available/airtime.conf /etc/apache2/sites-enabled/airtime.conf
+    fi
+
+    if [ -d /usr/share/airtime -a web_root = /usr/share/airtime ]; then
+      rm -rf /usr/share/airtime
+    fi
+
+    mv /etc/airtime/airtime.conf /etc/airtime/airtime.conf.tmp
+    set -e
+  fi
 fi
 
 API2_APACHE_CONF=$(grep -F "ProxyPass" /etc/apache2/sites-available/airtime.conf || true)
 if [ -z "${API2_APACHE_CONF}" -a "$apache" = "t" ]; then
-    # Remove Apache configuration so that the ProxyPass configuration for API 2.0
-    # is installed
-    rm -f /etc/apache2/sites-available/airtime.conf /etc/apache2/sites-enabled/airtime.conf
+  # Remove Apache configuration so that the ProxyPass configuration for API 2.0
+  # is installed
+  rm -f /etc/apache2/sites-available/airtime.conf /etc/apache2/sites-enabled/airtime.conf
 fi
 
 if [ "$apache" = "f" -a ${_i} -eq 1 ]; then
-    echo -e "Install default Airtime apache configuration? (Y/n): \c"
-    read IN
-    IN=${IN:-$default_value}
-    if [ "$IN" = "y" -o "$IN" = "Y" ]; then
-        apache="t"
-    fi
+  echo -e "Install default Airtime apache configuration? (Y/n): \c"
+  read IN
+  IN=${IN:-$default_value}
+  if [ "$IN" = "y" -o "$IN" = "Y" ]; then
+    apache="t"
+  fi
 fi
 
 if [ "$in_place" = "t" ]; then
-    verbose "\n * Setting current Airtime directory as web root..."
-    web_root=${AIRTIMEROOT}/airtime_mvc/public
+  verbose "\n * Setting current Airtime directory as web root..."
+  web_root=${AIRTIMEROOT}/airtime_mvc/public
 elif [ -n "$web_root" ]; then
-    verbose "\n * Creating Apache web root directory..."
-    cp -R ${AIRTIMEROOT}/airtime_mvc ${web_root}
-    cp -R ${AIRTIMEROOT}/vendor ${web_root}
-    cp ${AIRTIMEROOT}/VERSION ${web_root}
-    web_root=${web_root}/airtime_mvc/public/
+  verbose "\n * Creating Apache web root directory..."
+  cp -R ${AIRTIMEROOT}/airtime_mvc ${web_root}
+  cp -R ${AIRTIMEROOT}/vendor ${web_root}
+  cp ${AIRTIMEROOT}/VERSION ${web_root}
+  web_root=${web_root}/airtime_mvc/public/
 else
-    verbose "\n * Creating default Apache web root directory /usr/share/airtime/php..."
-    web_root="/usr/share/airtime/php"
-    mkdir -p ${web_root}
-    cp -R ${AIRTIMEROOT}/airtime_mvc ${web_root}
-    cp -R ${AIRTIMEROOT}/vendor ${web_root}
-    cp ${AIRTIMEROOT}/VERSION ${web_root}
-    web_root=${web_root}/airtime_mvc/public/
+  verbose "\n * Creating default Apache web root directory /usr/share/airtime/php..."
+  web_root="/usr/share/airtime/php"
+  mkdir -p ${web_root}
+  cp -R ${AIRTIMEROOT}/airtime_mvc ${web_root}
+  cp -R ${AIRTIMEROOT}/vendor ${web_root}
+  cp ${AIRTIMEROOT}/VERSION ${web_root}
+  web_root=${web_root}/airtime_mvc/public/
 fi
 verbose "...Done"
 
 if [ "$apache" = "t" ]; then
-    loud "\n-----------------------------------------------------"
-    loud "                * Configuring Apache *                "
-    loud "-----------------------------------------------------"
-    # Detect Apache root folder, e.g. /etc/apache2 or /etc/httpd
-    eval $($apache_bin -V |awk '/HTTPD_ROOT|SERVER_CONFIG_FILE/ { print $2 }')
-    apache_conf="${HTTPD_ROOT}/${SERVER_CONFIG_FILE}"
-    verbose "Detected Apache root folder is: ${HTTPD_ROOT}"
-    if [[ ! -e $apache_conf ]]; then
-        echo -e "ERROR: Apache binary \"$apache_bin\" points to a non-existent file \"$apache_conf\""
-        exit 1
+  loud "\n-----------------------------------------------------"
+  loud "                * Configuring Apache *                "
+  loud "-----------------------------------------------------"
+  # Detect Apache root folder, e.g. /etc/apache2 or /etc/httpd
+  eval $($apache_bin -V | awk '/HTTPD_ROOT|SERVER_CONFIG_FILE/ { print $2 }')
+  apache_conf="${HTTPD_ROOT}/${SERVER_CONFIG_FILE}"
+  verbose "Detected Apache root folder is: ${HTTPD_ROOT}"
+  if [[ ! -e $apache_conf ]]; then
+    echo -e "ERROR: Apache binary \"$apache_bin\" points to a non-existent file \"$apache_conf\""
+    exit 1
+  fi
+  verbose "Detected Apache primary .conf file is: ${apache_conf}"
+  if [[ -d ${HTTPD_ROOT}/sites-available ]]; then # debian & ubuntu
+    apache_sitedir="${HTTPD_ROOT}/sites-available/"
+  elif [[ -d ${HTTPD_ROOT}/conf.d ]]; then # centos
+    apache_sitedir="${HTTPD_ROOT}/conf.d/"
+  else
+    echo -e "ERROR: unknown location of Apache sites-available or virtual host directory!" >&2
+    exit 1
+  fi
+  verbose "Detected Apache sites configuration folder: ${apache_sitedir}"
+
+  set +e
+  # Parse: Server version: Apache/2.2.22 (Ubuntu) -> 2
+  apache_major_version=$($apache_bin -v | awk -F'[ /.]+' 'NR == 1 { print $4 }')
+  set -e
+
+  if [[ "$apache_major_version" -ge 2 ]]; then
+    airtimeconfigfile="airtime.conf"
+    oldconfigfile="airtime-vhost.conf"
+  else
+    airtimeconfigfile="airtime"
+    oldconfigfile="airtime-vhost"
+  fi
+
+  # If we're upgrading (installing over an existing Airtime install) and we've been told to
+  # install apache, we should overwrite any existing configuration. If we don't do this, doing
+  # an in-place installation over an old Airtime install (which installs to /usr/share by default)
+  # will fail
+  if [ "$upgrade" = "t" -o ! -f ${apache_sitedir}${airtimeconfigfile} ]; then
+    verbose "\n * Creating Apache config for Airtime..."
+    listen_port=""
+    if [ "$web_port" != "80" ]; then
+      listen_port="Listen ${web_port}"
     fi
-    verbose "Detected Apache primary .conf file is: ${apache_conf}"
-    if [[ -d ${HTTPD_ROOT}/sites-available ]]; then  # debian & ubuntu
-        apache_sitedir="${HTTPD_ROOT}/sites-available/"
-    elif [[ -d ${HTTPD_ROOT}/conf.d ]]; then   # centos
-        apache_sitedir="${HTTPD_ROOT}/conf.d/"
-    else
-        echo -e "ERROR: unknown location of Apache sites-available or virtual host directory!" >&2
-        exit 1
+
+    apache_template_file=${SCRIPT_DIR}/installer/apache/airtime-vhost-2.4
+    if [[ "$apache_major_version" -eq 1 ]]; then
+      # fall back to apache 1 config
+      apache_template_file=${SCRIPT_DIR}/installer/apache/airtime-vhost
     fi
-    verbose "Detected Apache sites configuration folder: ${apache_sitedir}"
+    sed \
+      -e "s@WEB_PORT_LISTEN@${listen_port}@g" \
+      -e "s@WEB_PORT@${web_port}@g" \
+      -e "s@WEB_ROOT@${web_root}@g" \
+      ${apache_template_file} > ${apache_sitedir}${airtimeconfigfile}
 
-    set +e
-    # Parse: Server version: Apache/2.2.22 (Ubuntu) -> 2
-    apache_major_version=$($apache_bin -v |awk -F'[ /.]+' 'NR == 1 { print $4 }')
-    set -e
-
-    if [[ "$apache_major_version" -ge 2 ]]; then
-        airtimeconfigfile="airtime.conf"
-        oldconfigfile="airtime-vhost.conf"
-    else
-        airtimeconfigfile="airtime"
-        oldconfigfile="airtime-vhost"
+    # The a2ensite/a2dissite utilities are not available on CentOS
+    if [[ -x /usr/sbin/a2ensite ]]; then
+      loudCmd "a2dissite 000-default"
+      # If Airtime was previously installed with apt, the vhost file name is different,
+      # so we need to specifically disable it.
+      if [ -f "/etc/apache2/sites-available/${oldconfigfile}" ]; then
+        loudCmd "a2dissite airtime-vhost"
+      fi
+      loudCmd "a2ensite airtime"
     fi
-
-    # If we're upgrading (installing over an existing Airtime install) and we've been told to
-    # install apache, we should overwrite any existing configuration. If we don't do this, doing
-    # an in-place installation over an old Airtime install (which installs to /usr/share by default)
-    # will fail
-    if [ "$upgrade" = "t" -o ! -f ${apache_sitedir}${airtimeconfigfile} ]; then
-        verbose "\n * Creating Apache config for Airtime..."
-        listen_port=""
-        if [ "$web_port" != "80" ]; then
-            listen_port="Listen ${web_port}"
-        fi
-
-        apache_template_file=${SCRIPT_DIR}/installer/apache/airtime-vhost-2.4
-        if [[ "$apache_major_version" -eq 1 ]]; then
-            # fall back to apache 1 config
-            apache_template_file=${SCRIPT_DIR}/installer/apache/airtime-vhost
-        fi
-        sed \
-            -e "s@WEB_PORT_LISTEN@${listen_port}@g" \
-            -e "s@WEB_PORT@${web_port}@g" \
-            -e "s@WEB_ROOT@${web_root}@g" \
-            ${apache_template_file} > ${apache_sitedir}${airtimeconfigfile}
-
-        # The a2ensite/a2dissite utilities are not available on CentOS
-        if [[ -x /usr/sbin/a2ensite ]]; then
-            loudCmd "a2dissite 000-default"
-            # If Airtime was previously installed with apt, the vhost file name is different,
-            # so we need to specifically disable it.
-            if [ -f "/etc/apache2/sites-available/${oldconfigfile}" ]; then
-                loudCmd "a2dissite airtime-vhost"
-            fi
-            loudCmd "a2ensite airtime"
-        fi
-    else
-        verbose "\nApache config for Airtime already exists, skipping"
-    fi
+  else
+    verbose "\nApache config for Airtime already exists, skipping"
+  fi
 fi
 
 if [ "$icecast" = "f" -a ${_i} -eq 1 ]; then
-    echo -e "Install default Airtime Icecast configuration? (Y/n): \c"
-    read IN
-    IN=${IN:-$default_value}
-    if [ "$IN" = "y" -o "$IN" = "Y" ]; then
-        icecast="t"
-    fi
+  echo -e "Install default Airtime Icecast configuration? (Y/n): \c"
+  read IN
+  IN=${IN:-$default_value}
+  if [ "$IN" = "y" -o "$IN" = "Y" ]; then
+    icecast="t"
+  fi
 fi
 
 if [ "$icecast" = "t" ]; then
-    loud "\n-----------------------------------------------------"
-    loud "               * Configuring Icecast *                "
-    loud "-----------------------------------------------------"
+  loud "\n-----------------------------------------------------"
+  loud "               * Configuring Icecast *                "
+  loud "-----------------------------------------------------"
 
-    verbose "\n * Enabling Icecast 2..."
-    icecast_unit_name="icecast2"
-    if [ "$dist" != "centos" ]; then
-        sed -i 's/ENABLE=false/ENABLE=true/g' /etc/default/icecast2
-        icecast_config="/etc/icecast2/icecast.xml"
-    else
-        icecast_unit_name="icecast"
-	icecast_config="/etc/icecast.xml"
-    fi
-    systemInitCommand enable ${icecast_unit_name}
-    # only update icecast password if
-    if [ ! -e "/etc/airtime/airtime.conf" ] && [ ! -e "/etc/airtime/airtime.conf.tmp" ]; then
-        icecast_pass=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-12};)
-        echo $icecast_pass > /tmp/icecast_pass
-        loud "\n New install detected setting icecast password to random value."
-        xmlstarlet ed --inplace -u /icecast/authentication/source-password -v $icecast_pass $icecast_config
-        xmlstarlet ed --inplace -u /icecast/authentication/relay-password -v $icecast_pass $icecast_config
-        xmlstarlet ed --inplace -u /icecast/authentication/admin-password -v $icecast_pass $icecast_config
-    fi
-    # restart in case icecast was already started (like is the case on debian)
-    systemInitCommand restart ${icecast_unit_name}
-    verbose "...Done"
+  verbose "\n * Enabling Icecast 2..."
+  icecast_unit_name="icecast2"
+  if [ "$dist" != "centos" ]; then
+    sed -i 's/ENABLE=false/ENABLE=true/g' /etc/default/icecast2
+    icecast_config="/etc/icecast2/icecast.xml"
+  else
+    icecast_unit_name="icecast"
+    icecast_config="/etc/icecast.xml"
+  fi
+  systemInitCommand enable ${icecast_unit_name}
+  # only update icecast password if
+  if [ ! -e "/etc/airtime/airtime.conf" ] && [ ! -e "/etc/airtime/airtime.conf.tmp" ]; then
+    icecast_pass=$(tr -dc _A-Z-a-z-0-9 < /dev/urandom | head -c${1:-12})
+    echo $icecast_pass > /tmp/icecast_pass
+    loud "\n New install detected setting icecast password to random value."
+    xmlstarlet ed --inplace -u /icecast/authentication/source-password -v $icecast_pass $icecast_config
+    xmlstarlet ed --inplace -u /icecast/authentication/relay-password -v $icecast_pass $icecast_config
+    xmlstarlet ed --inplace -u /icecast/authentication/admin-password -v $icecast_pass $icecast_config
+  fi
+  # restart in case icecast was already started (like is the case on debian)
+  systemInitCommand restart ${icecast_unit_name}
+  verbose "...Done"
 fi
 
 loud "\n-----------------------------------------------------"
@@ -962,16 +983,16 @@ chown -R ${web_user}:${web_user} /run/airtime
 verbose "...Done"
 
 if [ ! -d /var/log/airtime ]; then
-    loud "\n-----------------------------------------------------"
-    loud "              * Installing Log Files *               "
-    loud "-----------------------------------------------------"
+  loud "\n-----------------------------------------------------"
+  loud "              * Installing Log Files *               "
+  loud "-----------------------------------------------------"
 
-    verbose "\n * Creating /var/log/airtime"
-    loudCmd "mkdir -p /var/log/airtime"
+  verbose "\n * Creating /var/log/airtime"
+  loudCmd "mkdir -p /var/log/airtime"
 
-    verbose "\n * Copying logrotate files..."
-    loudCmd "cp ${AIRTIMEROOT}/airtime_mvc/build/airtime-php.logrotate /etc/logrotate.d/airtime-php"
-    loudCmd "cp ${AIRTIMEROOT}/python_apps/pypo/liquidsoap/airtime-liquidsoap.logrotate /etc/logrotate.d/airtime-liquidsoap"
+  verbose "\n * Copying logrotate files..."
+  loudCmd "cp ${AIRTIMEROOT}/airtime_mvc/build/airtime-php.logrotate /etc/logrotate.d/airtime-php"
+  loudCmd "cp ${AIRTIMEROOT}/python_apps/pypo/liquidsoap/airtime-liquidsoap.logrotate /etc/logrotate.d/airtime-liquidsoap"
 fi
 
 verbose "\n * Installing API client..."
@@ -990,9 +1011,9 @@ verbose "\n * Installing airtime-celery..."
 loudCmd "$python_bin ${AIRTIMEROOT}/python_apps/airtime-celery/setup.py install --no-init-script"
 # Create the Celery user
 if $is_centos_dist; then
-    loudCmd "id celery 2>/dev/null || adduser --no-create-home -c 'LibreTime Celery' -r celery || true"
+  loudCmd "id celery 2>/dev/null || adduser --no-create-home -c 'LibreTime Celery' -r celery || true"
 else
-    loudCmd "id celery 2>/dev/null || adduser --no-create-home --gecos 'LibreTime Celery' --disabled-login --firstuid 1 --lastuid 999 celery"
+  loudCmd "id celery 2>/dev/null || adduser --no-create-home --gecos 'LibreTime Celery' --disabled-login --firstuid 1 --lastuid 999 celery"
 fi
 # Add celery to the www-data group
 loudCmd "usermod -G ${web_user} -a celery"
@@ -1012,8 +1033,8 @@ loudCmd "python3 ${AIRTIMEROOT}/api/setup.py install --install-scripts=/usr/bin"
 systemInitInstall libretime-api $web_user
 mkdir -p /etc/airtime
 sed -e "s@WEB_USER@${web_user}@g" \
-    -e "s@WEB_ROOT@${web_root}@g" \
-    ${AIRTIMEROOT}/installer/uwsgi/libretime-api.ini > /etc/airtime/libretime-api.ini
+  -e "s@WEB_ROOT@${web_root}@g" \
+  ${AIRTIMEROOT}/installer/uwsgi/libretime-api.ini > /etc/airtime/libretime-api.ini
 loudCmd "libretime-api collectstatic --clear --noinput"
 verbose "...Done"
 
@@ -1031,117 +1052,117 @@ loud "              * Configuring PHP in Apache *          "
 loud "-----------------------------------------------------"
 # Test common locations for php conf directory
 php_conf_dirs=(
-    "/etc/php/7.3/apache2/conf.d"   # Debian Buster
-    "/etc/php/7.2/apache2/conf.d"   # Ubuntu Bionic
-    "/etc/php/7.0/apache2/conf.d"   # Ubuntu Xenial
-    "/etc/php5/apache2/conf.d"      # Debian Stretch, Debian Jessie, Ubuntu Trusty
-    "/etc/php.d"                    # CentOS 7
+  "/etc/php/7.3/apache2/conf.d" # Debian Buster
+  "/etc/php/7.2/apache2/conf.d" # Ubuntu Bionic
+  "/etc/php/7.0/apache2/conf.d" # Ubuntu Xenial
+  "/etc/php5/apache2/conf.d"    # Debian Stretch, Debian Jessie, Ubuntu Trusty
+  "/etc/php.d"                  # CentOS 7
 )
 for php_conf in ${php_conf_dirs[@]}; do
-    [[ -d $php_conf ]] && break
+  [[ -d $php_conf ]] && break
 done
 if [[ -d $php_conf ]]; then
-    libretime_phpini="${php_conf}/airtime.ini"
+  libretime_phpini="${php_conf}/airtime.ini"
 else
-    echo -e "ERROR: PHP Apache configuration folder does not exist or is in an unknown location!" >&2
-    exit 1
+  echo -e "ERROR: PHP Apache configuration folder does not exist or is in an unknown location!" >&2
+  exit 1
 fi
 verbose "Detected php conf directory at: $php_conf"
 if [ ! -f "${libretime_phpini}" ]; then
-    verbose "\n * Creating LibreTime PHP config for Apache..."
-    cp ${SCRIPT_DIR}/installer/php/airtime.ini ${libretime_phpini}
+  verbose "\n * Creating LibreTime PHP config for Apache..."
+  cp ${SCRIPT_DIR}/installer/php/airtime.ini ${libretime_phpini}
 else
-    verbose "\nAirtime PHP config for Apache already exists, skipping"
+  verbose "\nAirtime PHP config for Apache already exists, skipping"
 fi
 
 # Enable Apache modules
 if $is_debian_buster; then
-    loudCmd "a2enmod rewrite php7.3 proxy proxy_http"
+  loudCmd "a2enmod rewrite php7.3 proxy proxy_http"
 elif $is_ubuntu_bionic; then
-    loudCmd "a2enmod rewrite php7.2 proxy proxy_http"
+  loudCmd "a2enmod rewrite php7.2 proxy proxy_http"
 elif $is_centos_dist; then
-    verbose "TODO: enable Apache modules mod_rewrite, mod_php, mod_proxy and mod_proxy_http manually"
+  verbose "TODO: enable Apache modules mod_rewrite, mod_php, mod_proxy and mod_proxy_http manually"
 else
-    loudCmd "a2enmod rewrite php5 proxy proxy_http"
+  loudCmd "a2enmod rewrite php5 proxy proxy_http"
 fi
 
 if [ $skip_postgres -eq 0 ]; then
-    loud "\n-----------------------------------------------------"
-    loud "              * Configuring PostgreSQL *              "
-    loud "-----------------------------------------------------"
+  loud "\n-----------------------------------------------------"
+  loud "              * Configuring PostgreSQL *              "
+  loud "-----------------------------------------------------"
 
-    # Ensure postgres is running - It isn't after you install the postgres package on Ubuntu 15.04
-    systemInitCommand start postgresql
+  # Ensure postgres is running - It isn't after you install the postgres package on Ubuntu 15.04
+  systemInitCommand start postgresql
 
-    setupAirtimePostgresUser() {
-        # here-doc to execute this block as postgres user
-        su postgres <<'EOF'
-        set +e
-        count=$(psql -d postgres -tAc "SELECT count(*) FROM pg_roles WHERE rolname='airtime';")
-        if [[ $count -eq 0 ]]; then
-            psql -d postgres -tAc "CREATE USER airtime WITH ENCRYPTED PASSWORD 'airtime'; ALTER USER airtime CREATEDB;"
-            [[ $? -eq 0 ]] &&
-                  echo "Created airtime user in PostgreSQL" ||
-                  echo "$0:${FUNCNAME}(): ERROR: Can't create airtime user in PostgreSQL!"
-        else
-            echo "airtime user already exists in PostgreSQL"
-        fi
-        set -e
+  setupAirtimePostgresUser() {
+    # here-doc to execute this block as postgres user
+    su postgres << 'EOF'
+set +e
+count=$(psql -d postgres -tAc "SELECT count(*) FROM pg_roles WHERE rolname='airtime';")
+if [[ $count -eq 0 ]]; then
+psql -d postgres -tAc "CREATE USER airtime WITH ENCRYPTED PASSWORD 'airtime'; ALTER USER airtime CREATEDB;"
+[[ $? -eq 0 ]] &&
+echo "Created airtime user in PostgreSQL" ||
+echo "$0:${FUNCNAME}(): ERROR: Can't create airtime user in PostgreSQL!"
+else
+echo "airtime user already exists in PostgreSQL"
+fi
+set -e
 # don't indent this!
 EOF
-    }
+  }
 
-    if [ "$postgres" = "t" ]; then
-        setupAirtimePostgresUser
-    elif [ ${_i} -eq 1 ]; then
-        echo -e "Create default airtime postgres user? (Y/n): \c"
-        read IN
-        IN=${IN:-$default_value}
-        if [ "$IN" = "y" -o "$IN" = "Y" ]; then
-            setupAirtimePostgresUser
-        fi
+  if [ "$postgres" = "t" ]; then
+    setupAirtimePostgresUser
+  elif [ ${_i} -eq 1 ]; then
+    echo -e "Create default airtime postgres user? (Y/n): \c"
+    read IN
+    IN=${IN:-$default_value}
+    if [ "$IN" = "y" -o "$IN" = "Y" ]; then
+      setupAirtimePostgresUser
     fi
+  fi
 fi
 
 if [ $skip_rabbitmq -eq 0 ]; then
 
-    loud "\n-----------------------------------------------------"
-    loud "               * Configuring RabbitMQ *               "
-    loud "-----------------------------------------------------"
+  loud "\n-----------------------------------------------------"
+  loud "               * Configuring RabbitMQ *               "
+  loud "-----------------------------------------------------"
 
-    RABBITMQ_VHOST=/airtime
-    RABBITMQ_USER=airtime
-    RABBITMQ_PASSWORD=airtime
-    EXCHANGES="airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
+  RABBITMQ_VHOST=/airtime
+  RABBITMQ_USER=airtime
+  RABBITMQ_PASSWORD=airtime
+  EXCHANGES="airtime-pypo|pypo-fetch|airtime-analyzer|media-monitor"
 
-    # Ignore errors in this check to avoid dying when vhost isn't found
-    set +e
-    rabbitmqctl list_vhosts | grep -w "^${RABBITMQ_VHOST}$" > /dev/null
-    RESULT="$?"
-    set -e
+  # Ignore errors in this check to avoid dying when vhost isn't found
+  set +e
+  rabbitmqctl list_vhosts | grep -w "^${RABBITMQ_VHOST}$" > /dev/null
+  RESULT="$?"
+  set -e
 
-    # Only run these if the vhost doesn't exist
-    if [ "$RESULT" != "0" ]; then
-        verbose "\n * Creating RabbitMQ user ${RABBITMQ_USER}..."
+  # Only run these if the vhost doesn't exist
+  if [ "$RESULT" != "0" ]; then
+    verbose "\n * Creating RabbitMQ user ${RABBITMQ_USER}..."
 
-        rabbitmqctl add_vhost ${RABBITMQ_VHOST}
-        rabbitmqctl add_user ${RABBITMQ_USER} ${RABBITMQ_PASSWORD}
-    else
-        verbose "\nRabbitMQ user already exists, skipping creation"
-    fi
+    rabbitmqctl add_vhost ${RABBITMQ_VHOST}
+    rabbitmqctl add_user ${RABBITMQ_USER} ${RABBITMQ_PASSWORD}
+  else
+    verbose "\nRabbitMQ user already exists, skipping creation"
+  fi
 
-    verbose "\n * Setting RabbitMQ user permissions..."
-    #loudCmd "rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} \"$EXCHANGES\" \"$EXCHANGES\" \"$EXCHANGES\""
-    loudCmd "rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} .\* .\* .\*"
+  verbose "\n * Setting RabbitMQ user permissions..."
+  #loudCmd "rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} \"$EXCHANGES\" \"$EXCHANGES\" \"$EXCHANGES\""
+  loudCmd "rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} .\* .\* .\*"
 fi
 
 if [ ! -d "/etc/airtime" ]; then
-    loud "\n-----------------------------------------------------"
-    loud "                * Installing Libretime *               "
-    loud "-----------------------------------------------------"
+  loud "\n-----------------------------------------------------"
+  loud "                * Installing Libretime *               "
+  loud "-----------------------------------------------------"
 
-    verbose "\n * Creating /etc/airtime/ directory..."
-    mkdir /etc/airtime
+  verbose "\n * Creating /etc/airtime/ directory..."
+  mkdir /etc/airtime
 fi
 
 if [ "$icecast" = "t" ]; then
@@ -1154,63 +1175,62 @@ fi
 chown -R ${web_user}:${web_user} /etc/airtime
 
 if [ ! -d "/srv/airtime" ]; then
-    mkdir -p /srv/airtime
+  mkdir -p /srv/airtime
 fi
 chown -R ${web_user}:${web_user} /srv/airtime
-
 
 # We only generate the locales for Airtime if you're allowing us
 # to install our dependencies, so that we won't automatically do this
 # when this install script runs from our DEB package.
 if [ "$ignore_dependencies" = "f" ]; then
-    loud "\n-----------------------------------------------------"
-    loud "                * Installing Locales *               "
-    loud "-----------------------------------------------------"
+  loud "\n-----------------------------------------------------"
+  loud "                * Installing Locales *               "
+  loud "-----------------------------------------------------"
 
-    if $is_centos_dist; then
-        loud "\n not required on $dist"
-    else
-        set +e
-        verbose "\n * Generating locales"
-        for i in `ls ${web_root}/../locale | grep ".._.."`; do
-            if [ "$dist" = "debian" ]; then
-                grep -qi "^$i" /etc/locale.gen
-                if [ $? -ne 0 ]; then
-                    verbose "$i.UTF-8 UTF-8" >> /etc/locale.gen
-                fi
-            else
-                loudCmd "locale-gen \"$i.utf8\""
-            fi
-        done
-        set -e
-    fi
+  if $is_centos_dist; then
+    loud "\n not required on $dist"
+  else
+    set +e
+    verbose "\n * Generating locales"
+    for i in $(ls ${web_root}/../locale | grep ".._.."); do
+      if [ "$dist" = "debian" ]; then
+        grep -qi "^$i" /etc/locale.gen
+        if [ $? -ne 0 ]; then
+          verbose "$i.UTF-8 UTF-8" >> /etc/locale.gen
+        fi
+      else
+        loudCmd "locale-gen \"$i.utf8\""
+      fi
+    done
+    set -e
+  fi
 
-    if [ "$dist" = "debian" ]; then
-        loudCmd "/usr/sbin/locale-gen"
-    fi
+  if [ "$dist" = "debian" ]; then
+    loudCmd "/usr/sbin/locale-gen"
+  fi
 fi
 
 # If the user requested it we run restorecon on files that need
 # tagging for selinux.
 if [ "$selinux" = "t" ]; then
-    loud "\n-----------------------------------------------------"
-    loud "              * Restoring SELinux Tags *             "
-    loud "-----------------------------------------------------"
+  loud "\n-----------------------------------------------------"
+  loud "              * Restoring SELinux Tags *             "
+  loud "-----------------------------------------------------"
 
-    verbose "\n * Running restorecon..."
-    loudCmd "restorecon -Rv /etc/airtime /srv/airtime > /dev/null 2>&1"
-    verbose "...Done"
+  verbose "\n * Running restorecon..."
+  loudCmd "restorecon -Rv /etc/airtime /srv/airtime > /dev/null 2>&1"
+  verbose "...Done"
 fi
 
 verbose "\n * Reloading apache..."
 systemInitCommand restart ${apache_service}
 # NOTE: ip command works on all supported platforms
 if $is_centos_dist; then
-    IP=$(ip -o -4 address show dev eth0 | grep -Po 'inet \K[\d.]+')
+  IP=$(ip -o -4 address show dev eth0 | grep -Po 'inet \K[\d.]+')
 else
-    # not on centos
-    ip_device="eth0"
-    IP=$(ifconfig ${ip_device} 2>/dev/null |awk -F'[ :]+' '/inet addr:/ {print $4}')
+  # not on centos
+  ip_device="eth0"
+  IP=$(ifconfig ${ip_device} 2> /dev/null | awk -F'[ :]+' '/inet addr:/ {print $4}')
 fi
 verbose "...Done"
 

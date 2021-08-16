@@ -3,68 +3,61 @@
 # return with a non-zero return value.
 
 if [[ $EUID -ne 0 ]]; then
-    echo "Please run as root user."
-    exit 1
+  echo "Please run as root user."
+  exit 1
 fi
 
 getStorDirFromDatabase() {
-    # here-doc to execute this block as postgres user
-    result=`su postgres <<'EOF'
-    set +e
-    echo $(psql -d airtime -tAc "SELECT directory FROM cc_music_dirs WHERE type='stor'")
-    set -e
-# don't indent this!
-EOF`
-    echo $result
+  echo $(sudo -u postgres psql -d airtime -tAc "SELECT directory FROM cc_music_dirs WHERE type='stor'")
 }
 
 dropLibreTimeDatabase() {
-    # here-doc to execute this block as postgres user
-    su postgres <<'EOF'
-    set +e
-    # DROP DATABASE cannot be executed from a function or multi-command string
-    psql -d postgres -tAc "DROP DATABASE IF EXISTS airtime_test"
-    psql -d postgres -tAc "DROP DATABASE IF EXISTS airtime"
-    psql -d postgres -tAc "DROP USER IF EXISTS airtime"
-    set -e
+  # here-doc to execute this block as postgres user
+  su postgres << 'EOF'
+set +e
+# DROP DATABASE cannot be executed from a function or multi-command string
+psql -d postgres -tAc "DROP DATABASE IF EXISTS airtime_test"
+psql -d postgres -tAc "DROP DATABASE IF EXISTS airtime"
+psql -d postgres -tAc "DROP USER IF EXISTS airtime"
+set -e
 # don't indent this!
 EOF
 }
 
 removeRabbitmqLibreTimeSettings() {
-    if [ -f /etc/airtime/airtime.conf ]; then
-        RMQ_VHOST=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^vhost/ ) print $2}' /etc/airtime/airtime.conf)
-        RMQ_USER=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^user/ ) print $2}' /etc/airtime/airtime.conf)
-    else
-        RMQ_VHOST=/airtime
-        RMQ_USER=airtime
-    fi
+  if [ -f /etc/airtime/airtime.conf ]; then
+    RMQ_VHOST=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^vhost/ ) print $2}' /etc/airtime/airtime.conf)
+    RMQ_USER=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^user/ ) print $2}' /etc/airtime/airtime.conf)
+  else
+    RMQ_VHOST=/airtime
+    RMQ_USER=airtime
+  fi
 
-    rabbitmqctl delete_vhost ${RMQ_VHOST}
-    rabbitmqctl delete_user ${RMQ_USER}
+  rabbitmqctl delete_vhost ${RMQ_VHOST}
+  rabbitmqctl delete_user ${RMQ_USER}
 }
 
-SCRIPT_DIR="$( cd "$( dirname "$0" )" && pwd )"
+SCRIPT_DIR="$( cd "$( dirname "$0")"  && pwd)"
 AIRTIMEROOT=${SCRIPT_DIR}
 
 STOR_DIR=$(getStorDirFromDatabase)
 
 FILES=(
-     "/etc/airtime"
-     "/var/log/airtime"
-     "/usr/lib/airtime"
-     "/usr/share/airtime"
-     "/etc/init/airtime*"
-     "/etc/systemd/system/libretime*"
-     "/usr/local/bin/airtime-*"
-     "/usr/bin/airtime*"
-     "/etc/apache2/sites-available/airtime*"
-     "/etc/apache2/sites-enabled/airtime*"
-    )
+  "/etc/airtime"
+  "/var/log/airtime"
+  "/usr/lib/airtime"
+  "/usr/share/airtime"
+  "/etc/init/airtime*"
+  "/etc/systemd/system/libretime*"
+  "/usr/local/bin/airtime-*"
+  "/usr/bin/airtime*"
+  "/etc/apache2/sites-available/airtime*"
+  "/etc/apache2/sites-enabled/airtime*"
+)
 
 echo -e "The following files, directories, and services will be removed:\n"
 for i in ${FILES[*]}; do
-    echo $i
+  echo $i
 done
 echo "pip3 airtime-playout"
 
@@ -73,18 +66,18 @@ echo -e "\nIf your web root is not listed, you will need to manually remove it."
 echo -e "\nThis will *permanently* remove LibreTime and all related files from your computer. \
 Any files in LibreTime directories and subdirectories will be deleted. Are you sure you want to proceed? [y/N]: \c"
 read IN
-if [[ ! ( "$IN" = "y" || "$IN" = "Y" ) ]]; then
-    exit 0
+if [[ ! ("$IN" = "y" || "$IN" = "Y")   ]]; then
+  exit 0
 fi
 
 if [ -n "${STOR_DIR}" ]; then
-    echo -e "\nDo you want to remove your music storage directory ${STOR_DIR} and all of its subdirectories? [y/N]: \c"
-    read IN
-    if [[ ( "$IN" = "y" || "$IN" = "Y" ) ]]; then
-        rm -rf "${STOR_DIR}"
-    fi
+  echo -e "\nDo you want to remove your music storage directory ${STOR_DIR} and all of its subdirectories? [y/N]: \c"
+  read IN
+  if [[ ("$IN" = "y" || "$IN" = "Y") ]]; then
+    rm -rf "${STOR_DIR}"
+  fi
 else
-    echo -e "\nNo stor directory found, skipping..."
+  echo -e "\nNo stor directory found, skipping..."
 fi
 
 echo -e "\nUninstalling LibreTime..."
@@ -94,14 +87,14 @@ removeRabbitmqLibreTimeSettings
 set -e
 
 for i in ${FILES[*]}; do
-    rm -rf $i
+  rm -rf $i
 done
 
 echo -e "\nDo you want to drop your current LibreTime database? [y/N]: \c"
 read IN
 if [[ "$IN" = "y" || "$IN" = "Y" ]]; then
-    echo -e "\nDropping LibreTime database..."
-    dropLibreTimeDatabase
+  echo -e "\nDropping LibreTime database..."
+  dropLibreTimeDatabase
 fi
 
 pip3 uninstall -y airtime-playout airtime-media-monitor airtime-analyzer
