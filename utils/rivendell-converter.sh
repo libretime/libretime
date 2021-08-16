@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # A bash script to convert all Rivendell's audio-library to MP3, extract meta-tags from Rivendell's
 # database and set appropriate tags to each MP3 file.

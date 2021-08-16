@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # the base url of the bamboo server
 baseurl="$1/updateAndBuild.action?buildKey="

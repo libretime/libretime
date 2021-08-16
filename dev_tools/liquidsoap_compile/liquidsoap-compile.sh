@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 apt-get install -y --force-yes lsb-release sudo
 dist=$(lsb_release -is)
 code=$(lsb_release -cs)

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 /etc/init.d/rabbitmq-server status | grep "\[{pid"
 pid_found="$?"

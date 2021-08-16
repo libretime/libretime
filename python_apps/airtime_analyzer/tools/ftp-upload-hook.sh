@@ -1,4 +1,4 @@
-#!/bin/bash -xv
+#!/usr/bin/env bash -xv
 
 post_file() {
   #kill process after 30 minutes (360*5=30 minutes)

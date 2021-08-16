@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 # -e Causes bash script to exit if any of the steps
 # return with a non-zero return value.
 

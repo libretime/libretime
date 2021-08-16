@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 composer install --no-dev --no-interaction
 
 git_build=""
