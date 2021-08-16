@@ -13,4 +13,4 @@ shell-format:
 
 shell-check:
 	shfmt -f . | xargs shfmt -i 2 -ci -sr -kp -d
-	shfmt -f . | xargs shellcheck --color=always || true
+	shfmt -f . | xargs shellcheck --color=always --severity=$${SEVERITY:-style}

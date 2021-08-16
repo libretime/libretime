@@ -44,7 +44,7 @@ jobs:
             shfmt_{tag}_linux_amd64 \
             /usr/bin/shfmt
 
-      - run: make shell-check
+      - run: SEVERITY=warning make shell-check
 
   test:
     strategy:
