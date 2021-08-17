@@ -31,7 +31,8 @@ class Config {
         $CC_CONFIG['basePort'] = $values['general']['base_port'];
         $CC_CONFIG['stationId'] = $values['general']['station_id'];
         $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
-        $CC_CONFIG['forceSSL'] = isset($values['general']['force_ssl']) ? $values['general']['force_ssl'] : FALSE;
+        $CC_CONFIG['forceSSL'] = isset($values['general']['force_ssl']) ? Config::isYesValue($values['general']['force_ssl']) : FALSE;
+        $CC_CONFIG['protocol'] = isset($values['general']['protocol']) ? $values['general']['protocol'] : '';
         if (isset($values['general']['dev_env'])) {
             $CC_CONFIG['dev_env'] = $values['general']['dev_env'];
         } else {
@@ -106,5 +107,16 @@ class Config {
             self::loadConfig();
         }
         return self::$CC_CONFIG;
+    }
+
+    /**
+     * Check if the string is one of 'yes' or 'true' (case insensitive).
+     */
+    public static function isYesValue($value)
+    {
+        if (is_bool($value))    return $value;
+        if (!is_string($value)) return false;
+
+        return in_array(strtolower($value), ['yes', 'true']);
     }
 }

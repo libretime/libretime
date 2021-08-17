@@ -32,6 +32,7 @@ class Application_Common_HTTPHelper
         $baseDir = $CC_CONFIG['baseDir'];
         $basePort = $CC_CONFIG['basePort'];
         $forceSSL = $CC_CONFIG['forceSSL'];
+        $configProtocol = $CC_CONFIG['protocol'];
         if (empty($baseDir)) {
             $baseDir = "/";
         }
@@ -42,15 +43,22 @@ class Application_Common_HTTPHelper
             $baseDir = $baseDir . "/";
         }
 
+        # Set in reverse order of preference. ForceSSL configuration takes absolute preference, then
+        # the protocol set in config. If neither are set, the port is used to determine the scheme
         $scheme = "http";
-        if ($forceSSL || ($secured && !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')) {
+        if ($secured && $basePort == "443") {
             $scheme = "https";
-            $basePort = "443"; //Airtime Pro compatibility hack
+        }
+        if (!empty($configProtocol)) {
+          $scheme = $configProtocol;
+        }
+        if ($forceSSL) {
+          $scheme = "https";
         }
 
         $portStr = "";
-        if (!(($scheme == "http" && $basePort == "80")
-            || ($scheme == "https" && $basePort == "443"))) {
+        if (($scheme == "http" && $basePort !== "80")
+            || ($scheme == "https" && $basePort !== "443")) {
             $portStr = ":${basePort}";
         }
         $stationUrl = "$scheme://${baseUrl}${portStr}${baseDir}";
