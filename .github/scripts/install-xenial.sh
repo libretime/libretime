@@ -25,5 +25,5 @@ apt-get install -y gstreamer1.0-plugins-base \
   libcairo2-dev
 
 # Making log directory for PHP tests
-mkdir -p $LIBRETIME_LOG_DIR
-chown runner:runner $LIBRETIME_LOG_DIR
+mkdir -p "$LIBRETIME_LOG_DIR"
+chown runner:runner "$LIBRETIME_LOG_DIR"

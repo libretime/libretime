@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Additional Repos
 yum install -y epel-release
@@ -9,15 +9,15 @@ dnf config-manager --enable powertools
 
 # xiph multimedia (for icecast)
 curl -o /etc/yum.repos.d/multimedia:xiph.repo \
-    https://download.opensuse.org/repositories/multimedia:/xiph/CentOS_8/multimedia:xiph.repo
+  https://download.opensuse.org/repositories/multimedia:/xiph/CentOS_8/multimedia:xiph.repo
 
 # RaBe Liquidsoap Distribution (RaBe LSD)
 curl -o /etc/yum.repos.d/home:radiorabe:liquidsoap.repo \
-    https://download.opensuse.org/repositories/home:/radiorabe:/liquidsoap/CentOS_8/home:radiorabe:liquidsoap.repo
+  https://download.opensuse.org/repositories/home:/radiorabe:/liquidsoap/CentOS_8/home:radiorabe:liquidsoap.repo
 
 # RaBe Audio Packages for Enterprise Linux (RaBe APEL)
 curl -o /etc/yum.repos.d/home:radiorabe:audio.repo \
-    https://download.opensuse.org/repositories/home:/radiorabe:/audio/CentOS_8/home:radiorabe:audio.repo
+  https://download.opensuse.org/repositories/home:/radiorabe:/audio/CentOS_8/home:radiorabe:audio.repo
 
 # Update all the things (just to be sure we are on latest)
 yum update -y
@@ -57,7 +57,6 @@ su -l postgres bash -c 'createdb -O airtime airtime'
 
 echo "ALTER USER airtime WITH PASSWORD 'airtime';" | su -l postgres bash -c psql
 echo "GRANT ALL PRIVILEGES ON DATABASE airtime TO airtime;" | su -l postgres bash -c psql
-
 
 # RabbitMQ
 curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.rpm.sh | sudo bash
@@ -141,7 +140,6 @@ sed -i \
   -e 's/#LoadModule mpm_prefork_module/LoadModule mpm_prefork_module/' \
   -e 's/LoadModule mpm_event_module/#LoadModule mpm_event_module/' \
   /etc/httpd/conf.modules.d/00-mpm.conf
-
 
 # celery will not run unless we install a specific version (https://github.com/pypa/setuptools/issues/942)
 # this will need to be figured out later on and will get overridden by the docs installer anyhow :(

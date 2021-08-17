@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #-------------------------------------------------------------------------------
 #   Copyright (c) 2011 Sourcefabric O.P.S.
 #
@@ -24,10 +24,10 @@
 #  This script send data to data collection server
 #
 # Absolute path to this script
-SCRIPT=`readlink -f $0`
+SCRIPT=$(readlink -f $0)
 # Absolute directory this script is in
-SCRIPTPATH=`dirname $SCRIPT`
+SCRIPTPATH=$(dirname $SCRIPT)
 
-cd $SCRIPTPATH
+cd $SCRIPTPATH || exit 1
 
 python airtime-test-stream.py "$@" || exit 1

@@ -1,10 +1,12 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+
+set -e
 #-e Causes bash script to exit if any of the installers
 #return with a non-zero return value.
 
 if [[ $EUID -ne 0 ]]; then
-    echo "Please run as root user."
-    exit 1
+  echo "Please run as root user."
+  exit 1
 fi
 
 dist=$1
@@ -52,9 +54,9 @@ echo "...Done"
 
 IP=$(lxc-info -i -n ${name} -H)
 echo -e "\n * Opening ${name} in your browser..."
-if hash xdg-open 2>/dev/null; then
+if hash xdg-open 2> /dev/null; then
   xdg-open "http://${IP}/"
-elif hash gnome-open 2>/dev/null; then
+elif hash gnome-open 2> /dev/null; then
   gnome-open "http://${IP}/"
 fi
 echo "...Done"

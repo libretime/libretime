@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 ### BEGIN INIT INFO
 # Provides:          airtime-playout
@@ -20,6 +20,7 @@ PIDFILE=/var/run/$NAME.pid
 [ -x "$DAEMON" ] || exit 0
 
 # Read configuration variable file if it is present
+# shellcheck disable=SC1090
 [ -r /etc/default/$NAME ] && . /etc/default/$NAME
 
 # Load the VERBOSE setting and other rcS variables
@@ -30,49 +31,49 @@ PIDFILE=/var/run/$NAME.pid
 # and status_of_proc is working.
 . /lib/lsb/init-functions
 
-start () {
-        start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID \
-            --make-pidfile --pidfile $PIDFILE --startas $DAEMON
+start() {
+  start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID \
+    --make-pidfile --pidfile $PIDFILE --startas $DAEMON
 }
 
-stop () {
-        # Send TERM after 5 seconds, wait at most 30 seconds.
-        start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE
-        rm -f $PIDFILE
+stop() {
+  # Send TERM after 5 seconds, wait at most 30 seconds.
+  start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE
+  rm -f $PIDFILE
 }
 
 case "${1:-''}" in
   'start')
-            # start commands here
-            echo -n "Starting $NAME: "
-            start
-            echo "Done."
-        ;;
+    # start commands here
+    echo -n "Starting $NAME: "
+    start
+    echo "Done."
+    ;;
   'stop')
-            # stop commands here
-            echo -n "Stopping $NAME: "
-            stop
-            echo "Done."
-        ;;
+    # stop commands here
+    echo -n "Stopping $NAME: "
+    stop
+    echo "Done."
+    ;;
   'restart')
-           # restart commands here
-           echo -n "Restarting $NAME: "
-           stop
-           start
-           echo "Done."
-        ;;
+    # restart commands here
+    echo -n "Restarting $NAME: "
+    stop
+    start
+    echo "Done."
+    ;;
   'force-reload')
-           # reload commands here
-           echo -n "Reloading $NAME: "
-           stop
-           start
-           echo "Done."
-        ;;
+    # reload commands here
+    echo -n "Reloading $NAME: "
+    stop
+    start
+    echo "Done."
+    ;;
   'status')
-	   status_of_proc "$DAEMON" "$NAME" && exit 0 || exit $?
-        ;;
-  *)      # no parameter specified
-        echo "Usage: $SELF start|stop|restart|status"
-        exit 1
-        ;;
+    status_of_proc "$DAEMON" "$NAME" && exit 0 || exit $?
+    ;;
+  *)    # no parameter specified
+    echo "Usage: $SELF start|stop|restart|status"
+    exit 1
+    ;;
 esac

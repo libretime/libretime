@@ -1,4 +1,6 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+
+set -e
 
 #release.sh 1.8.2
 #creates a libretime folder with a "1.8.2" suffix
@@ -13,17 +15,17 @@
 #creates tarballs with a "1.8.2-RC" suffix
 
 if [ $# == 0 ]; then
-    echo "Zero arguments"
-    exit
+  echo "Zero arguments"
+  exit
 elif [ $# == 1 ]; then
-    suffix=$1
-    version=$1
+  suffix=$1
+  # version=$1
 else
-    suffix=$1-$2
-    version=$1
+  suffix=$1-$2
+  # version=$1
 fi
 
-dir=$(dirname $(readlink -f $0))
+# dir=$(dirname "$(readlink -f "$0")")
 gitrepo=$(readlink -f ./../../)
 
 echo "Creating tarball for LibreTime ${suffix}."
@@ -64,19 +66,18 @@ pushd /tmp/
 find libretime-${suffix} -type f -exec dos2unix {} \;
 echo -n "Creating tarball..."
 tar -czf $target_file \
-        --owner=root --group=root \
-        --exclude-vcs \
-        --exclude .zfproject.xml \
-        --exclude .gitignore \
-        --exclude .gitattributes \
-        --exclude .travis.yml \
-        --exclude travis \
-        --exclude dev_tools \
-        --exclude vendor/phing \
-        --exclude vendor/simplepie/simplepie/tests \
-    libretime-${suffix}
+  --owner=root --group=root \
+  --exclude-vcs \
+  --exclude .zfproject.xml \
+  --exclude .gitignore \
+  --exclude .gitattributes \
+  --exclude .travis.yml \
+  --exclude travis \
+  --exclude dev_tools \
+  --exclude vendor/phing \
+  --exclude vendor/simplepie/simplepie/tests \
+  libretime-${suffix}
 echo " Done"
 popd
-
 
 echo "Output file available at $target_file"

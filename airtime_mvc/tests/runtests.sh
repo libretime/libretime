@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #Create a RabbitMQ airtime_tests user
 #This is necessary for tests to run
@@ -14,8 +14,8 @@ rabbitmqctl list_vhosts | grep $RABBITMQ_VHOST
 RESULT="$?"
 
 if [ $RESULT = "0" ]; then
-    rabbitmqctl delete_vhost $RABBITMQ_VHOST
-    rabbitmqctl delete_user $RABBITMQ_USER
+  rabbitmqctl delete_vhost $RABBITMQ_VHOST
+  rabbitmqctl delete_user $RABBITMQ_USER
 fi
 
 rabbitmqctl add_vhost $RABBITMQ_VHOST
@@ -29,9 +29,8 @@ export RABBITMQ_VHOST
 export AIRTIME_UNIT_TEST="1"
 
 #Change the working directory to this script's directory
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $DIR
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$DIR" || (echo "could not cd in $DIR!" && exit 1)
 
 #Run the unit tests
 phpunit --verbose --log-junit test_results.xml
-

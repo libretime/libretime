@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Absolute path to this script
-SCRIPT=`readlink -f $0`
+SCRIPT=$(readlink -f $0)
 # Absolute directory this script is in
-SCRIPTPATH=`dirname $SCRIPT`
+SCRIPTPATH=$(dirname $SCRIPT)
 
 php -q $SCRIPTPATH/airtime-log.php "$@" || exit 1
