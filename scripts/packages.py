@@ -68,7 +68,7 @@ def run():
     )
     args = parser.parse_args()
 
-    packages = list_packages(args.paths, args.distribution)
+    packages = list_packages(args.path, args.distribution)
 
     if args.format == "list":
         print("\n".join(packages))
