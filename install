@@ -583,10 +583,12 @@ while :; do
   shift
 done
 
-if [[ -z $web_root || ! -d $web_root ]]; then
-  echo "$web_root doesn't exist!"
+# If web_root is given, check that it exists
+if [[ -n $web_root && ! -d $web_root ]]; then
+  echo "$web_root directory not found!"
   exit 1
 fi
+
 echo -e "\n.____    ._____.               ___________.__                "
 echo "|    |   |__\_ |_________   ___\__    ___/|__| _____   ____  "
 echo "|    |   |  || __ \_  __ \_/ __ \|    |   |  |/     \_/ __ \ "
