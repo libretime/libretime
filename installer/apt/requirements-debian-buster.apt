@@ -5,7 +5,6 @@ ecasound
 flac
 gcc
 gir1.2-gtk-3.0
-git
 gstreamer1.0-plugins-bad
 gstreamer1.0-plugins-good
 gstreamer1.0-plugins-ugly
@@ -31,7 +30,6 @@ liquidsoap
 lsb-release
 lsof
 mpg123
-patch
 php-amqplib
 php-apcu
 php-pear

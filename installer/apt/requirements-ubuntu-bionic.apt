@@ -45,7 +45,6 @@ liquidsoap-plugin-vorbis
 lsb-release
 lsof
 mpg123
-patch
 php-apcu
 php-bcmath
 php-mbstring
