@@ -55,4 +55,6 @@ repos:
     rev: v2.1.0
     hooks:
       - id: codespell
-        args: [--ignore-words=.codespellignore]
+        args:
+          - --ignore-words=.codespellignore
+          - --builtin=clear,rare,informal
