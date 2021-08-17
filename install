@@ -71,7 +71,7 @@ showversion() {
 }
 
 web_user=""
-web_root=""
+web_root="/usr/share/airtime"
 web_port="80"
 in_place="f"
 postgres="f"
