@@ -1,15 +1,12 @@
 apache2
-coreutils
 curl
 ecasound
-flac
 gcc
 gir1.2-gtk-3.0
 gstreamer1.0-plugins-bad
 gstreamer1.0-plugins-good
 gstreamer1.0-plugins-ugly
 icecast2
-lame
 libapache2-mod-php7.3
 libcairo2-dev
 libgirepository1.0-dev
@@ -18,7 +15,6 @@ libpq-dev
 liquidsoap
 lsb-release
 lsof
-mpg123
 php-amqplib
 php-apcu
 php-pear
@@ -32,7 +28,6 @@ php7.3-pgsql
 pkg-config
 postgresql
 postgresql-client
-pwgen
 python3
 python3-cairo
 python3-dev
