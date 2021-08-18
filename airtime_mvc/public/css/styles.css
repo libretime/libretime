@@ -2063,7 +2063,7 @@ span.errors.sp-errors{
 }
 .collapsible-header .arrow-icon, .collapsible-header-disabled  .arrow-icon {
     display:block;
-    background:url(images/arrows_collapse.png) no-repeat 0 0;
+    background:url(images/arrows_collapse.png) no-repeat 0 -11px;
     height:11px;
     width:11px;
     position:absolute;
@@ -2072,7 +2072,7 @@ span.errors.sp-errors{
 
 }
 .collapsible-header.closed .arrow-icon, .collapsible-header-disabled.close  .arrow-icon {
-    background-position: 0 -11px !important;
+    background-position: 0 0 !important;
 }
 #schedule-add-show .button-bar {
     height: 28px;
