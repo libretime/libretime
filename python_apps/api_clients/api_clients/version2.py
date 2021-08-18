@@ -6,9 +6,9 @@
 # probably want to create a script on your server side to automatically
 # schedule a playlist one minute from the current time.
 ###############################################################################
-import datetime
 import logging
 import sys
+from datetime import datetime, timedelta
 
 from configobj import ConfigObj
 from dateutil.parser import isoparse
@@ -46,8 +46,8 @@ class AirtimeApiClient:
             sys.exit(1)
 
     def get_schedule(self):
-        current_time = datetime.datetime.utcnow()
-        end_time = current_time + datetime.timedelta(hours=1)
+        current_time = datetime.utcnow()
+        end_time = current_time + timedelta(days=1)
 
         str_current = current_time.isoformat(timespec="seconds")
         str_end = end_time.isoformat(timespec="seconds")
