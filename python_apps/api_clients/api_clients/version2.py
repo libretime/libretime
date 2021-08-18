@@ -47,7 +47,7 @@ class AirtimeApiClient:
 
     def get_schedule(self):
         current_time = datetime.datetime.utcnow()
-        end_time = current_time + datetime.timedelta(hours=1)
+        end_time = current_time + datetime.timedelta(days=1)
 
         str_current = current_time.isoformat(timespec="seconds")
         str_end = end_time.isoformat(timespec="seconds")
