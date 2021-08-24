@@ -777,7 +777,7 @@ if [[ ! ${commandFound} -eq 0 ]]; then
 fi
 
 # Run composer (install PHP dependencies) and create a VERSION file
-loudCmd "./build.sh"
+loudCmd "bash ./build.sh"
 if [ -f /etc/airtime/airtime.conf ]; then
   # TODO use VERSION or some other way to check for updates and handle
   # media-monitor case on it's own
