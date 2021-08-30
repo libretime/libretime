@@ -15,6 +15,7 @@ apt-get install -y gstreamer1.0-plugins-base \
   liquidsoap-plugin-vorbis \
   python3-gst-1.0 \
   silan \
+  ffmpeg \
   gcc \
   gir1.2-gtk-3.0 \
   python3-setuptools \
