@@ -27,7 +27,7 @@ def test_run_analysis(src_dir, dest_dir):
     assert metadata["year"] == "1999"
     assert metadata["genre"] == "Test Genre"
     assert metadata["mime"] == "audio/mp3"
-    assert abs(metadata["length_seconds"] - 3.9) < 0.1
+    assert metadata["length_seconds"] == pytest.approx(10.0, abs=0.1)
     assert metadata["length"] == str(
         datetime.timedelta(seconds=metadata["length_seconds"])
     )

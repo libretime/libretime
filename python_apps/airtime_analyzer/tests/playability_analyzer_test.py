@@ -4,23 +4,12 @@ from airtime_analyzer.playability_analyzer import (
     UnplayableFileError,
 )
 
+from .fixtures import FILE_INVALID_DRM, FILES, Fixture
+
 
 @pytest.mark.parametrize(
     "filepath",
-    [
-        ("tests/test_data/44100Hz-16bit-mono.mp3"),
-        ("tests/test_data/44100Hz-16bit-dualmono.mp3"),
-        ("tests/test_data/44100Hz-16bit-stereo.mp3"),
-        ("tests/test_data/44100Hz-16bit-stereo-utf8.mp3"),
-        ("tests/test_data/44100Hz-16bit-simplestereo.mp3"),
-        ("tests/test_data/44100Hz-16bit-jointstereo.mp3"),
-        ("tests/test_data/44100Hz-16bit-mp3-missingid3header.mp3"),
-        ("tests/test_data/44100Hz-16bit-mono.ogg"),
-        ("tests/test_data/44100Hz-16bit-stereo.ogg"),
-        # ("tests/test_data/44100Hz-16bit-stereo-invalid.wma"),
-        ("tests/test_data/44100Hz-16bit-stereo.m4a"),
-        ("tests/test_data/44100Hz-16bit-stereo.wav"),
-    ],
+    map(lambda i: str(i.path), FILES),
 )
 def test_analyze(filepath):
     PlayabilityAnalyzer.analyze(filepath, dict())
@@ -29,7 +18,7 @@ def test_analyze(filepath):
 def test_analyze_missing_liquidsoap():
     old = PlayabilityAnalyzer.LIQUIDSOAP_EXECUTABLE
     PlayabilityAnalyzer.LIQUIDSOAP_EXECUTABLE = "foobar"
-    PlayabilityAnalyzer.analyze("tests/test_data/44100Hz-16bit-mono.mp3", dict())
+    PlayabilityAnalyzer.analyze(str(FILES[0].path), dict())
     PlayabilityAnalyzer.LIQUIDSOAP_EXECUTABLE = old
 
 
@@ -41,7 +30,7 @@ def test_analyze_invalid_filepath():
 # This test is not be consistent with all Liquidsoap versions.
 def test_analyze_invalid_wma():
     with pytest.raises(UnplayableFileError):
-        test_analyze("tests/test_data/44100Hz-16bit-stereo-invalid.wma")
+        test_analyze(FILE_INVALID_DRM)
 
 
 def test_analyze_unknown():
