@@ -91,7 +91,7 @@ class ApiRequest:
             self.logger = logger
         self.auth = KeyAuth(api_key)
 
-    def __call__(self, _post_data=None, _put_data=None, params=None, **kwargs):
+    def __call__(self, *, _post_data=None, _put_data=None, params=None, **kwargs):
         final_url = self.url.params(**kwargs).url()
         self.logger.debug(final_url)
         try:
