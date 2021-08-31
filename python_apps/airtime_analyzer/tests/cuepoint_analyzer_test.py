@@ -1,47 +1,38 @@
 import pytest
 from airtime_analyzer.cuepoint_analyzer import CuePointAnalyzer
 
+from .fixtures import FILE_INVALID_DRM, FILES, Fixture
+
 
 @pytest.mark.parametrize(
-    "filepath",
-    [
-        ("tests/test_data/44100Hz-16bit-mono.mp3"),
-        ("tests/test_data/44100Hz-16bit-dualmono.mp3"),
-        ("tests/test_data/44100Hz-16bit-stereo.mp3"),
-        ("tests/test_data/44100Hz-16bit-stereo-utf8.mp3"),
-        ("tests/test_data/44100Hz-16bit-simplestereo.mp3"),
-        ("tests/test_data/44100Hz-16bit-jointstereo.mp3"),
-        # ("tests/test_data/44100Hz-16bit-mp3-missingid3header.mp3"),
-        ("tests/test_data/44100Hz-16bit-mono.ogg"),
-        ("tests/test_data/44100Hz-16bit-stereo.ogg"),
-        # ("tests/test_data/44100Hz-16bit-stereo-invalid.wma"),
-        ("tests/test_data/44100Hz-16bit-stereo.m4a"),
-        ("tests/test_data/44100Hz-16bit-stereo.wav"),
-    ],
+    "filepath,length,cuein,cueout",
+    map(lambda i: (str(i.path), i.length, i.cuein, i.cueout), FILES),
 )
-def test_analyze(filepath):
+def test_analyze(filepath, length, cuein, cueout):
     metadata = CuePointAnalyzer.analyze(filepath, dict())
 
-    # We give silan some leeway here by specifying a tolerance
-    tolerance_seconds = 0.1
-    length_seconds = 3.9
-    assert abs(metadata["length_seconds"] - length_seconds) < tolerance_seconds
-    assert abs(float(metadata["cuein"])) < tolerance_seconds
-    assert abs(float(metadata["cueout"]) - length_seconds) < tolerance_seconds
+    assert metadata["length_seconds"] == pytest.approx(length, abs=0.1)
+
+    # Silan does not work with m4a files yet
+    if filepath.endswith("m4a"):
+        return
+
+    assert float(metadata["cuein"]) == pytest.approx(cuein, abs=0.5)
+    assert float(metadata["cueout"]) == pytest.approx(cueout, abs=0.5)
 
 
 def test_analyze_missing_silan():
     old = CuePointAnalyzer.SILAN_EXECUTABLE
     CuePointAnalyzer.SILAN_EXECUTABLE = "foobar"
-    CuePointAnalyzer.analyze("tests/test_data/44100Hz-16bit-mono.mp3", dict())
+    CuePointAnalyzer.analyze(str(FILES[0].path), dict())
     CuePointAnalyzer.SILAN_EXECUTABLE = old
 
 
 def test_analyze_invalid_filepath():
     with pytest.raises(KeyError):
-        test_analyze("non-existent-file")
+        test_analyze("non-existent-file", None, None, None)
 
 
 def test_analyze_invalid_wma():
     with pytest.raises(KeyError):
-        test_analyze("tests/test_data/44100Hz-16bit-stereo-invalid.wma")
+        test_analyze(FILE_INVALID_DRM, None, None, None)

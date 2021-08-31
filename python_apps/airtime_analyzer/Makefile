@@ -10,7 +10,10 @@ lint:
 	pylint ${MODULE_APP}
 	pylint ${MODULE_TESTS}
 
-test:
+fixtures:
+	bash tests/fixtures/generate.sh
+
+test: fixtures
 	pytest -n ${CPU_CORES} --color=yes -v --cov=${MODULE_APP} ${MODULE_TESTS}
 
 all: lint test

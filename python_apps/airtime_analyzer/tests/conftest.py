@@ -4,9 +4,11 @@ from tempfile import TemporaryDirectory
 
 import pytest
 
-AUDIO_FILE = "tests/test_data/44100Hz-16bit-mono.mp3"
-AUDIO_FILENAME = os.path.basename(AUDIO_FILE)
-AUDIO_IMPORT_DEST = "Test Artist/Test Album/44100Hz-16bit-mono.mp3"
+from .fixtures import fixtures_path
+
+AUDIO_FILENAME = "s1-stereo-tagged.mp3"
+AUDIO_FILE = fixtures_path / AUDIO_FILENAME
+AUDIO_IMPORT_DEST = f"Test Artist/Test Album/{AUDIO_FILENAME}"
 
 # TODO: Use pathlib for file manipulation
 
