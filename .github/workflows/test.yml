@@ -1,21 +1,11 @@
-name: Python and PHP Tests
+name: Tests
+
 on:
   push:
-    paths-ignore:
-      - "docs/**"
+    # branches: [master]
   pull_request:
-    types:
-      [
-        opened,
-        ready_for_review,
-        review_requested,
-        edited,
-        reopened,
-        synchronize,
-      ]
-    paths-ignore:
-      - "docs/**"
-  workflow_dispatch:
+    types: [opened, reopened, synchronize, edited]
+    branches: [master]
 
 jobs:
   pre-commit:
@@ -46,14 +36,12 @@ jobs:
 
       - run: SEVERITY=warning make shell-check
 
-  test:
+  test-legacy:
     strategy:
       matrix:
         include:
           - runs-on: ubuntu-18.04
-            python-version: "3.6"
             php-version: "7.2"
-            prerequisites-script: install-bionic.sh
 
     runs-on: ${{ matrix.runs-on }}
     env:
@@ -61,9 +49,7 @@ jobs:
       LIBRETIME_LOG_DIR: /tmp/log/libretime
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
+
       - name: Setup PostgreSQL
         run: |
           sudo systemctl start postgresql.service
@@ -72,18 +58,69 @@ jobs:
           sudo -u postgres psql -c "CREATE USER libretime WITH PASSWORD 'libretime';"
           sudo -u postgres psql -c 'GRANT CONNECT ON DATABASE libretime TO libretime;'
           sudo -u postgres psql -c 'ALTER USER libretime CREATEDB;'
-      - name: Setup PHP with specific version
+
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
-      - name: Install prerequisites
-        run: sudo -E ./.github/scripts/${{ matrix.prerequisites-script }}
-      - name: Run Python tests
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
         run: |
-          sudo ./.github/scripts/python-pkg-install.sh
-          ./.github/scripts/python-pkg-test.sh
-      - name: Run PHP tests
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install dependencies
         run: |
           composer install --no-progress --dev
+
+      - name: Run PHP tests
+        run: |
+          sudo mkdir -p "$LIBRETIME_LOG_DIR"
+          sudo chown runner:runner "$LIBRETIME_LOG_DIR"
+
           cd airtime_mvc/tests
           php ../../vendor/bin/phpunit
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        release: [bionic, buster]
+        context: [python_apps/airtime_analyzer, python_apps/api_clients]
+
+    container: ghcr.io/${{ github.repository_owner }}/libretime-dev:${{ matrix.release }}
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.context }}-${{ hashFiles('**/setup.py', '**/requirements-dev.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.context }}
+
+      - name: Install dependencies
+        run: |
+          python3 -m venv venv && source venv/bin/activate
+          pip install --upgrade pip setuptools wheel
+          pip install -r requirements-dev.txt
+          pip install -e .
+        working-directory: ${{ matrix.context }}
+
+      - name: Test
+        run: |
+          source venv/bin/activate
+          make test
+        working-directory: ${{ matrix.context }}
