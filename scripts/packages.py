@@ -11,10 +11,11 @@ from typing import Iterator, Set
 DEFAULT_PACKAGES_FILENAME = "packages.ini"
 FORMATS = ("list", "line")
 SYSTEMS = ("buster", "bionic")
+DEFAULT_SECTION = "common"
 
 
 def load_packages(raw: str, distribution: str) -> Set[str]:
-    manager = ConfigParser(default_section="common")
+    manager = ConfigParser(default_section=DEFAULT_SECTION)
     manager.read_string(raw)
 
     packages = set()
