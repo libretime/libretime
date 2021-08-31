@@ -33,7 +33,7 @@ jobs:
 
       - name: Generate packages list
         run: |
-          scripts/packages.py -f line ${{ matrix.release }} \
+          scripts/packages.py --dev --format line ${{ matrix.release }} \
             python_apps/airtime_analyzer \
             python_apps/pypo \
             > packages.list
