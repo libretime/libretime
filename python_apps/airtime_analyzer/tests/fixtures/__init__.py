@@ -24,9 +24,21 @@ FILES = [
     Fixture(here / "s1-jointstereo.mp3", *s1, -1.6),
     Fixture(here / "s1-mono.mp3", *s1, -0.7),
     Fixture(here / "s1-stereo.mp3", *s1, -1.6),
+    # Sample 1 MP3 -12dB
+    Fixture(here / "s1-mono-12.mp3", *s1, +8.3),
+    Fixture(here / "s1-stereo-12.mp3", *s1, +10.0),
+    # Sample 1 MP3 +12dB
+    Fixture(here / "s1-mono+12.mp3", *s1, -13.6),
+    Fixture(here / "s1-stereo+12.mp3", *s1, -12.0),
     # Sample 1 FLAC
     Fixture(here / "s1-mono.flac", *s1, -1.6),
     Fixture(here / "s1-stereo.flac", *s1, -2.3),
+    # Sample 1 FLAC -12dB
+    Fixture(here / "s1-mono-12.flac", *s1, +10.0),
+    Fixture(here / "s1-stereo-12.flac", *s1, +9.3),
+    # Sample 1 FLAC +12dB
+    Fixture(here / "s1-mono+12.flac", *s1, -12.0),
+    Fixture(here / "s1-stereo+12.flac", *s1, -12.0),
     # Sample 1 AAC
     Fixture(here / "s1-mono.m4a", *s1, -4.5),
     Fixture(here / "s1-stereo.m4a", *s1, -2.3),

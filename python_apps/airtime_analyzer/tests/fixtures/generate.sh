@@ -36,7 +36,7 @@ generate() {
   fi
 }
 
-# Generated sample 1
+# Generate sample 1
 generate  s1.flac s1-mono.flac         -ac 1   -acodec flac
 generate  s1.flac s1-mono.m4a          -ac 1   -acodec aac
 generate  s1.flac s1-mono.mp3          -ac 1   -acodec libmp3lame
@@ -47,7 +47,18 @@ generate  s1.flac s1-stereo.mp3        -ac 2   -acodec libmp3lame
 generate  s1.flac s1-stereo.ogg        -ac 2   -acodec libvorbis
 generate  s1.flac s1-jointstereo.mp3   -ac 2   -acodec libmp3lame    -joint_stereo 1
 
-# Generated sample 2
+# Generate sample 1 +/-12dB
+generate  s1.flac s1-mono-12.flac         -ac 1   -acodec flac          -af volume=-12dB
+generate  s1.flac s1-stereo-12.flac       -ac 2   -acodec flac          -af volume=-12dB
+generate  s1.flac s1-mono-12.mp3          -ac 1   -acodec libmp3lame    -af volume=-12dB
+generate  s1.flac s1-stereo-12.mp3        -ac 2   -acodec libmp3lame    -af volume=-12dB
+
+generate  s1.flac s1-mono+12.flac         -ac 1   -acodec flac          -af volume=+12dB
+generate  s1.flac s1-stereo+12.flac       -ac 2   -acodec flac          -af volume=+12dB
+generate  s1.flac s1-mono+12.mp3          -ac 1   -acodec libmp3lame    -af volume=+12dB
+generate  s1.flac s1-stereo+12.mp3        -ac 2   -acodec libmp3lame    -af volume=+12dB
+
+# Generate sample 2
 generate  s2.flac s2-mono.flac         -ac 1   -acodec flac
 generate  s2.flac s2-mono.m4a          -ac 1   -acodec aac
 generate  s2.flac s2-mono.mp3          -ac 1   -acodec libmp3lame
