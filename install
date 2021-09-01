@@ -750,7 +750,7 @@ if [ "$ignore_dependencies" = "f" ]; then
 
     set -e
     package_list=$(
-      "${SCRIPT_DIR}/installer/packages.py" --format=line "${code}" "${packages_files[@]}" ||
+      "${SCRIPT_DIR}/scripts/packages.py" --format=line "${code}" "${packages_files[@]}" ||
         (echo "ERROR: could not generate packages list" >&2 && exit 1)
     )
     set +e
