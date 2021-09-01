@@ -647,6 +647,7 @@ fi
 # Validate the distribution and release is a supported one; set boolean flags.
 is_debian_dist=false
 is_debian_buster=false
+is_debian_bullseye=false
 is_ubuntu_dist=false
 is_ubuntu_focal=false
 is_ubuntu_bionic=false
@@ -684,6 +685,11 @@ case "${dist}-${code}" in
     code="buster"
     is_debian_dist=true
     is_debian_buster=true
+    ;;
+  debian-11 | debian-bullseye)
+    code="bullseye"
+    is_debian_dist=true
+    is_debian_bullseye=true
     ;;
   #Fix for Raspbian 9 (stretch)
   raspbian-9)
@@ -1081,13 +1087,14 @@ loud "              * Configuring PHP in Apache *          "
 loud "-----------------------------------------------------"
 # Test common locations for php conf directory
 php_conf_dirs=(
-  "/etc/php/7.4/apache2/conf.d" # Ubuntu Focal
+  "/etc/php/7.4/apache2/conf.d" # Debian Bullseye, Ubuntu Focal
   "/etc/php/7.3/apache2/conf.d" # Debian Buster
   "/etc/php/7.2/apache2/conf.d" # Ubuntu Bionic
   "/etc/php/7.0/apache2/conf.d" # Ubuntu Xenial
   "/etc/php5/apache2/conf.d"    # Debian Stretch, Debian Jessie, Ubuntu Trusty
   "/etc/php.d"                  # CentOS 7
 )
+
 for php_conf in "${php_conf_dirs[@]}"; do
   [[ -d $php_conf ]] && break
 done
@@ -1106,7 +1113,7 @@ else
 fi
 
 # Enable Apache modules
-if $is_ubuntu_focal; then
+if $is_debian_bullseye || $is_ubuntu_focal; then
   loudCmd "a2enmod rewrite php7.4 proxy proxy_http"
 elif $is_debian_buster; then
   loudCmd "a2enmod rewrite php7.3 proxy proxy_http"

@@ -96,6 +96,15 @@ Vagrant.configure('2') do |config|
     setup_libretime(os, 'debian.sh')
   end
 
+  config.vm.define 'debian-bullseye' do |os|
+    os.vm.box = 'debian/bullseye64'
+    config.vm.provider 'virtualbox' do |v, override|
+      override.vm.box = 'bento/debian-11'
+    end
+    setup_nfs(config, 4)
+    setup_libretime(os, 'debian.sh')
+  end
+
   config.vm.define 'debian-buster' do |os|
     os.vm.box = 'debian/buster64'
     config.vm.provider 'virtualbox' do |v, override|
