@@ -1,0 +1,77 @@
+name: Tools
+
+on:
+  schedule:
+    - cron: "0 3 * * 0"
+  push:
+    branches: [master]
+    paths:
+      - "**/packages.ini"
+      - ".github/workflows/tools.yml"
+
+jobs:
+  docker-dev-image:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - distribution: ubuntu
+            release: bionic
+          - distribution: debian
+            release: buster
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate packages list
+        run: |
+          scripts/packages.py --dev --format line ${{ matrix.release }} \
+            python_apps/airtime_analyzer \
+            python_apps/pypo \
+            > packages.list
+
+      - name: Generate Dockerfile
+        run: |
+          cat <<EOF >> Dockerfile
+          FROM ${{ matrix.distribution }}:${{ matrix.release }}
+
+          COPY packages.list packages.list
+          EOF
+
+          [[ "${{ matrix.release }}" == "bionic" ]] && \
+          cat <<EOF >> Dockerfile
+          RUN apt-get update && \
+              apt-get install -y software-properties-common && \
+              add-apt-repository -y ppa:libretime/libretime
+          EOF
+
+          cat <<EOF >> Dockerfile
+          RUN apt-get update && \
+              apt-get -y install \
+              python3 \
+              python3-pip \
+              $(cat packages.list)
+
+          ARG USER=docker
+          ARG UID=1000
+          ARG GID=1000
+
+          RUN useradd -m ${USER} --uid=${UID}
+          USER ${UID}:${GID}
+          WORKDIR /home/${USER}
+          EOF
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/libretime-dev:${{ matrix.release }}
