@@ -88,7 +88,7 @@ class PypoFile(Thread):
                 os.chmod(dst, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
 
                 if media_item["filesize"] == 0:
-                    file_size = self.report_file_size_and_md5_to_libretime(
+                    file_size = self.report_file_size_and_md5_to_api(
                         dst, media_item["id"]
                     )
                     media_item["filesize"] = file_size
@@ -98,7 +98,7 @@ class PypoFile(Thread):
                 self.logger.error("Could not copy from %s to %s" % (src, dst))
                 self.logger.error(e)
 
-    def report_file_size_and_md5_to_libretime(self, file_path, file_id):
+    def report_file_size_and_md5_to_api(self, file_path, file_id):
         try:
             file_size = os.path.getsize(file_path)
 
