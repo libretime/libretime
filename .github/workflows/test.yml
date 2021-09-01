@@ -96,7 +96,7 @@ jobs:
         release: [bionic, buster]
         context: [python_apps/airtime_analyzer, python_apps/api_clients]
 
-    container: ghcr.io/${{ github.repository_owner }}/libretime-dev:${{ matrix.release }}
+    container: ghcr.io/libretime/libretime-dev:${{ matrix.release }}
     defaults:
       run:
         shell: bash

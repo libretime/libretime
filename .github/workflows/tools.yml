@@ -20,14 +20,22 @@ jobs:
           - distribution: debian
             release: buster
 
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_ORG: libretime
+      IMAGE_NAME: libretime-dev
+
+    # See https://github.com/LibreTime/libretime/issues/1216
+    # See https://github.com/LibreTime/libretime/actions/runs/1190504235
+    if: ${{ github.repository_owner == 'LibreTime' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Login to DockerHub
+      - name: Login to the Container registry
         uses: docker/login-action@v1
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -74,4 +82,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/libretime-dev:${{ matrix.release }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_ORG }}/${{ env.IMAGE_NAME }}:${{ matrix.release }}
