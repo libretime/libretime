@@ -41,7 +41,7 @@ FILES = [
     Fixture(here / "s1-stereo+12.flac", *s1, -12.0),
     # Sample 1 AAC
     Fixture(here / "s1-mono.m4a", *s1, -4.5),
-    Fixture(here / "s1-stereo.m4a", *s1, -2.3),
+    Fixture(here / "s1-stereo.m4a", *s1, -2.9),
     # Sample 1 Vorbis
     Fixture(here / "s1-mono.ogg", *s1, -4.3),
     Fixture(here / "s1-stereo.ogg", *s1, -2.3),
