@@ -739,16 +739,23 @@ if [ "$ignore_dependencies" = "f" ]; then
   fi
 
   if [ -x /usr/bin/apt-get ]; then
-    verbose "\n * Reading requirements-${dist}-${code}.apt..."
+    verbose "\n * Reading packages.ini files..."
+
+    packages_files=(
+      "${SCRIPT_DIR}/"
+      "${SCRIPT_DIR}/api"
+      "${SCRIPT_DIR}/python_apps/airtime_analyzer"
+      "${SCRIPT_DIR}/python_apps/pypo"
+    )
+
+    set -e
+    package_list=$(
+      "${SCRIPT_DIR}/scripts/packages.py" --format=line "${code}" "${packages_files[@]}" ||
+        (echo "ERROR: could not generate packages list" >&2 && exit 1)
+    )
+    set +e
+
     loudCmd "apt-get -q update"
-    package_list_file="${SCRIPT_DIR}/installer/apt/requirements-${dist}-${code}.apt"
-
-    if [ ! -f "$package_list_file" ]; then
-      echo "ERROR: package file does not exist: $package_list_file" >&2
-      exit 1
-    fi
-
-    package_list="$(grep -vE '^\s*#' "$package_list_file" | tr '\n' ' ')"
     loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y install $package_list"
     [[ "$in_place" == "t" ]] && loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y install git"
   else
