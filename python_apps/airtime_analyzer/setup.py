@@ -8,9 +8,14 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
 setup(
     name="libretime-analyzer",
     version="0.1",
-    description="Libretime Analyzer Worker and File Importer",
-    url="https://libretime.org",
+    description="Libretime Analyzer",
     author="LibreTime Contributors",
+    url="https://github.com/libretime/libretime",
+    project_urls={
+        "Bug Tracker": "https://github.com/libretime/libretime/issues",
+        "Documentation": "https://libretime.org",
+        "Source Code": "https://github.com/libretime/libretime",
+    },
     license="AGPLv3",
     packages=["airtime_analyzer"],
     entry_points={

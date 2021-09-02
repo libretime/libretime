@@ -5,13 +5,17 @@ from setuptools import setup
 # Change directory since setuptools uses relative paths
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
-
 setup(
     name="airtime-playout",
     version="1.0",
-    description="Airtime Playout Engine",
-    url="http://github.com/sourcefabric/Airtime",
-    author="sourcefabric",
+    description="LibreTime Playout",
+    author="LibreTime Contributors",
+    url="https://github.com/libretime/libretime",
+    project_urls={
+        "Bug Tracker": "https://github.com/libretime/libretime/issues",
+        "Documentation": "https://libretime.org",
+        "Source Code": "https://github.com/libretime/libretime",
+    },
     license="AGPLv3",
     packages=[
         "pypo",
