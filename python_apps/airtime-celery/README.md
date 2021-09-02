@@ -1,31 +1,20 @@
 # airtime-celery
 
-airtime-celery is a [Celery](http://www.celeryproject.org/) daemon for handling backend tasks asynchronously.
-Communication and the Celery results backend are both handled with amqp (RabbitMQ).
+airtime-celery is a [Celery](http://www.celeryproject.org/) daemon for handling backend tasks asynchronously. Communication and the Celery results backend are both handled with amqp (RabbitMQ).
 
 # Installation
 
 ```sh
-sudo python setup.py install
+sudo python3 setup.py install
 ```
 
-Each instance of airtime-celery has its own worker, and multiple instances can be run in parallel.
-[Celery is thread-safe](http://celery.readthedocs.org/en/latest/userguide/application.html), so this parallelization won't cause conflicts.
-
-# Usage
-
-This program must be run with sudo:
-
-```sh
-sudo service airtime-celery {start | stop | restart | graceful | kill | dryrun | create-paths}
-```
+Each instance of airtime-celery has its own worker, and multiple instances can be run in parallel. [Celery is thread-safe](http://celery.readthedocs.org/en/latest/userguide/application.html), so this parallelization won't cause conflicts.
 
 # Developers
 
 To debug, you can run celery directly from the command line:
 
 ```sh
-cd /my/airtime/root/python_apps/airtime-celery
 RMQ_CONFIG_FILE=${LIBRETIME_CONF_DIR}/airtime.conf celery -A airtime-celery.tasks worker --loglevel=info
 ```
 
@@ -34,7 +23,6 @@ This worker can be run alongside the service without issue.
 You may want to use the setuptools develop target to install:
 
 ```sh
-cd /my/airtime/root/python_apps/airtime-celery
 sudo python setup.py develop
 ```
 
