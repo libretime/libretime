@@ -723,6 +723,13 @@ if $has_systemv_init; then
     exit 1
 fi
 
+# Upstart is not supported, fail fast instead of cleaning the whole script
+# from Upstart related entries.
+if $has_upstart_init; then
+    echo "ERROR: Installation on Upstart init system is not supported!" >&2
+    exit 1
+fi
+
 if $is_centos_dist; then
   python_bin="python3.8"
   apache_bin="httpd"
