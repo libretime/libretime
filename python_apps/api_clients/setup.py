@@ -1,14 +1,9 @@
-from __future__ import print_function
-
 import os
-import sys
-from subprocess import call
 
 from setuptools import setup
 
-script_path = os.path.dirname(os.path.realpath(__file__))
-print(script_path)
-os.chdir(script_path)
+# Change directory since setuptools uses relative paths
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 setup(
     name="api_clients",
@@ -18,12 +13,10 @@ setup(
     author="LibreTime Contributors",
     license="AGPLv3",
     packages=["api_clients"],
-    scripts=[],
     install_requires=[
         "configobj",
         "python-dateutil>=2.7.0",
         "requests",
     ],
     zip_safe=False,
-    data_files=[],
 )
