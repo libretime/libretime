@@ -2,6 +2,11 @@
 
 This document regroup all information about Campcaster / AirTime and its authors before the LibreTime fork.
 
+Table of content:
+
+- [Changelog](#changelog)
+- [Credits](#credits)
+
 ## Changelog
 
 #### 2.5.0 - October 8th, 2013
