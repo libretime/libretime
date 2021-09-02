@@ -1,3 +1,4 @@
+import distro
 import pytest
 from airtime_analyzer.cuepoint_analyzer import CuePointAnalyzer
 
@@ -15,6 +16,10 @@ def test_analyze(filepath, length, cuein, cueout):
 
     # Silan does not work with m4a files yet
     if filepath.endswith("m4a"):
+        return
+
+    # Silan does not work with mp3 on debian buster
+    if filepath.endswith("mp3") and "buster" == distro.codename():
         return
 
     assert float(metadata["cuein"]) == pytest.approx(cuein, abs=0.5)

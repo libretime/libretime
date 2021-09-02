@@ -1,3 +1,4 @@
+import distro
 import pytest
 from airtime_analyzer.playability_analyzer import (
     PlayabilityAnalyzer,
@@ -27,8 +28,11 @@ def test_analyze_invalid_filepath():
         test_analyze("non-existent-file")
 
 
-# This test is not be consistent with all Liquidsoap versions.
 def test_analyze_invalid_wma():
+    # Liquisoap does not fail with wma files on debian buster
+    if "buster" == distro.codename():
+        return
+
     with pytest.raises(UnplayableFileError):
         test_analyze(FILE_INVALID_DRM)
 
