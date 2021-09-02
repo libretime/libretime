@@ -8,7 +8,7 @@ from typing import Iterator, List, Set
 
 DEFAULT_PACKAGES_FILENAME = "packages.ini"
 FORMATS = ("list", "line")
-SYSTEMS = ("buster", "bullseye", "bionic", "focal")
+DISTRIBUTIONS = ("buster", "bullseye", "bionic", "focal")
 
 SETTINGS_SECTION = "=settings"
 DEVELOPMENT_SECTION = "=development"
@@ -19,6 +19,9 @@ def load_packages(
     distribution: str,
     development: bool = False,
 ) -> Set[str]:
+    if distribution not in DISTRIBUTIONS:
+        raise ValueError(f"Invalid distribution '{distribution}'")
+
     manager = ConfigParser(default_section=SETTINGS_SECTION)
     manager.read_string(raw)
 
@@ -79,7 +82,7 @@ def run():
     )
     parser.add_argument(
         "distribution",
-        choices=SYSTEMS,
+        choices=DISTRIBUTIONS,
         help="list packages for the given distribution.",
     )
     parser.add_argument(
