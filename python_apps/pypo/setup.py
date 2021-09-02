@@ -15,8 +15,6 @@ setup(
     license="AGPLv3",
     packages=[
         "pypo",
-        "pypo.media",
-        "pypo.media.update",
         "liquidsoap",
     ],
     package_data={"": ["**/*.liq", "*.cfg", "*.types"]},
