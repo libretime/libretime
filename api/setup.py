@@ -1,20 +1,24 @@
 import os
-import shutil
 
 from setuptools import find_packages, setup
 
-script_path = os.path.dirname(os.path.realpath(__file__))
-print(script_path)
-os.chdir(script_path)
+# Change directory since setuptools uses relative paths
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 setup(
     name="libretime-api",
     version="2.0.0a1",
+    description="LibreTime API",
+    author="LibreTime Contributors",
+    url="https://github.com/libretime/libretime",
+    project_urls={
+        "Bug Tracker": "https://github.com/libretime/libretime/issues",
+        "Documentation": "https://libretime.org",
+        "Source Code": "https://github.com/libretime/libretime",
+    },
+    license="AGPLv3",
     packages=find_packages(),
     include_package_data=True,
-    description="LibreTime API backend server",
-    url="https://github.com/LibreTime/libretime",
-    author="LibreTime Contributors",
     scripts=["bin/libretime-api"],
     install_requires=[
         "coreapi",
@@ -25,9 +29,4 @@ setup(
         "model_bakery",
         "psycopg2",
     ],
-    project_urls={
-        "Bug Tracker": "https://github.com/LibreTime/libretime/issues",
-        "Documentation": "https://libretime.org",
-        "Source Code": "https://github.com/LibreTime/libretime",
-    },
 )

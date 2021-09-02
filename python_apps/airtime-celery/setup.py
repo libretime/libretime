@@ -8,10 +8,14 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
 setup(
     name="airtime-celery",
     version="0.1",
-    description="Airtime Celery service",
-    url="http://github.com/sourcefabric/Airtime",
-    author="Sourcefabric",
-    author_email="duncan.sommerville@sourcefabric.org",
+    description="LibreTime Celery",
+    author="LibreTime Contributors",
+    url="https://github.com/libretime/libretime",
+    project_urls={
+        "Bug Tracker": "https://github.com/libretime/libretime/issues",
+        "Documentation": "https://libretime.org",
+        "Source Code": "https://github.com/libretime/libretime",
+    },
     license="MIT",
     packages=["airtime-celery"],
     install_requires=[
