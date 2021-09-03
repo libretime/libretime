@@ -91,7 +91,7 @@ class ApiRequest:
             self.logger = logger
         self.auth = KeyAuth(api_key)
 
-    def __call__(self, _post_data=None, params=None, **kwargs):
+    def __call__(self, *, _post_data=None, _put_data=None, params=None, **kwargs):
         final_url = self.url.params(**kwargs).url()
         self.logger.debug(final_url)
         try:
@@ -99,6 +99,13 @@ class ApiRequest:
                 res = requests.post(
                     final_url,
                     data=_post_data,
+                    auth=self.auth,
+                    timeout=ApiRequest.API_HTTP_REQUEST_TIMEOUT,
+                )
+            elif _put_data is not None:
+                res = requests.put(
+                    final_url,
+                    data=_put_data,
                     auth=self.auth,
                     timeout=ApiRequest.API_HTTP_REQUEST_TIMEOUT,
                 )

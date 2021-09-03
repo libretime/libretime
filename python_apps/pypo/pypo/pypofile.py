@@ -88,8 +88,8 @@ class PypoFile(Thread):
                 os.chmod(dst, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
 
                 if media_item["filesize"] == 0:
-                    file_size = self.report_file_size_and_md5_to_airtime(
-                        dst, media_item["id"], host, username
+                    file_size = self.report_file_size_and_md5_to_api(
+                        dst, media_item["id"]
                     )
                     media_item["filesize"] = file_size
 
@@ -98,7 +98,7 @@ class PypoFile(Thread):
                 self.logger.error("Could not copy from %s to %s" % (src, dst))
                 self.logger.error(e)
 
-    def report_file_size_and_md5_to_airtime(self, file_path, file_id, host, api_key):
+    def report_file_size_and_md5_to_api(self, file_path, file_id):
         try:
             file_size = os.path.getsize(file_path)
 
@@ -117,18 +117,13 @@ class PypoFile(Thread):
             )
             self.logger.error(e)
 
-        # Make PUT request to Airtime to update the file size and hash
+        # Make PUT request to LibreTime to update the file size and hash
         error_msg = (
-            "Could not update media file %s with file size and md5 hash" % file_id
+            "Could not update media file %s with file size and md5 hash:" % file_id
         )
         try:
-            put_url = "%s://%s:%s/rest/media/%s" % (host[0], host[1], host[2], file_id)
-            payload = json.dumps({"filesize": file_size, "md5": md5_hash})
-            response = requests.put(
-                put_url, data=payload, auth=requests.auth.HTTPBasicAuth(api_key, "")
-            )
-            if not response.ok:
-                self.logger.error(error_msg)
+            payload = {"filesize": file_size, "md5": md5_hash}
+            response = self.api_client.update_file(file_id, payload)
         except (ConnectionError, Timeout):
             self.logger.error(error_msg)
         except Exception as e:

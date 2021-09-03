@@ -130,3 +130,8 @@ class AirtimeApiClient:
                     "independent_event": current["independent_event"],
                 }
         return result
+
+    def update_file(self, file_id, payload):
+        data = self.services.file_url(id=file_id)
+        data.update(payload)
+        return self.services.file_url(id=file_id, _put_data=data)
