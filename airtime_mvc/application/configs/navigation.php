@@ -13,14 +13,16 @@
  * in the menu.phtml script when they are output.
  */
 $pages = array();
-$pages[] = array(
-    'label'      => _('My Podcast'),
-    'module'     => 'default',
-    'controller' => 'podcast',
-    'action'     => 'station',
-    'resource'   => 'podcast',
-    'class'      => '<i class="icon-music icon-white"></i>'
-);
+// Disable My podcasts
+// See https://github.com/LibreTime/libretime/issues/1320
+// $pages[] = array(
+//     'label'      => _('My Podcast'),
+//     'module'     => 'default',
+//     'controller' => 'podcast',
+//     'action'     => 'station',
+//     'resource'   => 'podcast',
+//     'class'      => '<i class="icon-music icon-white"></i>'
+// );
 $pages[] = array(
     'label'      => _('Radio Page'),
     'uri'        => '/',
