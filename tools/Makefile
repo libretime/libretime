@@ -12,7 +12,7 @@ venv:
 	pip install -r requirements-dev.txt
 
 lint: venv
-	pylint scripts
+	pylint tools
 
 test: venv
 	pytest -n ${CPU_CORES} --color=yes -v .
