@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from .packages import list_packages, load_packages
+from tools.packages import list_packages, load_packages
 
-package_ini = """
+PACKAGE_INI = """
 [common]
 postgresql = buster
 # Some comment
@@ -20,13 +20,13 @@ result2 = {"apache2", "curl", "ffmpeg"}
 
 
 def test_load_packages():
-    assert load_packages(package_ini, "buster", False) == result1
-    assert load_packages(package_ini, "bionic", True) == result2
+    assert load_packages(PACKAGE_INI, "buster", False) == result1
+    assert load_packages(PACKAGE_INI, "bionic", True) == result2
 
 
 def test_list_packages(tmp_path: Path):
     package_file = tmp_path / "packages.ini"
-    package_file.write_text(package_ini)
+    package_file.write_text(PACKAGE_INI)
 
     assert list_packages([tmp_path, package_file], "buster", False) == result1
     assert list_packages([tmp_path, package_file], "bionic", True) == result2
