@@ -1,5 +1,6 @@
+from unittest.mock import MagicMock, patch
+
 from api_clients.utils import ApcUrl, ApiRequest
-from mock import MagicMock, patch
 
 
 def test_api_request_init():

@@ -2,8 +2,8 @@ import os
 import shutil
 import tempfile
 import time
+from unittest import mock
 
-import mock
 import pytest
 from airtime_analyzer.filemover_analyzer import FileMoverAnalyzer
 
