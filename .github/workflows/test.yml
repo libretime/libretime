@@ -36,6 +36,14 @@ jobs:
 
       - run: SEVERITY=warning make shell-check
 
+  test-tools:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - run: make all
+        working-directory: tools
+
   test-legacy:
     strategy:
       matrix:
