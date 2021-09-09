@@ -17,6 +17,8 @@ jobs:
         include:
           - distribution: ubuntu
             release: bionic
+          - distribution: ubuntu
+            release: focal
           - distribution: debian
             release: buster
           - distribution: debian
