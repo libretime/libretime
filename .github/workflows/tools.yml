@@ -43,7 +43,7 @@ jobs:
         run: |
           tools/packages.py --dev --format line ${{ matrix.release }} \
             analyzer \
-            pypo \
+            playout \
             > packages.list
 
       - name: Generate Dockerfile
