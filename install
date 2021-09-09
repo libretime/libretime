@@ -1022,7 +1022,7 @@ if [ ! -d /var/log/airtime ]; then
 fi
 
 verbose "\n * Installing API client..."
-loudCmd "$python_bin ${AIRTIMEROOT}/api_clients/setup.py install --install-scripts=/usr/bin"
+loudCmd "$python_bin ${AIRTIMEROOT}/api_client/setup.py install --install-scripts=/usr/bin"
 verbose "...Done"
 
 verbose "\n * Installing playout and liquidsoap..."
