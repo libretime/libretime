@@ -15,9 +15,8 @@ import time
 from datetime import datetime
 from optparse import OptionParser
 
-from configobj import ConfigObj
-
 from api_clients import version1 as api_client
+from configobj import ConfigObj
 
 try:
     from queue import Queue

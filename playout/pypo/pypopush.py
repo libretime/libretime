@@ -10,9 +10,8 @@ from datetime import datetime, timedelta
 from queue import Empty, Queue
 from threading import Thread
 
-from configobj import ConfigObj
-
 from api_clients import version1 as api_client
+from configobj import ConfigObj
 
 from .pypofetch import PypoFetch
 from .pypoliqqueue import PypoLiqQueue
