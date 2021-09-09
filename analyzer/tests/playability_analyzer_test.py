@@ -30,8 +30,8 @@ def test_analyze_invalid_filepath():
 
 
 def test_analyze_invalid_wma():
-    # Liquisoap does not fail with wma files on debian buster or Ubuntu Focal
-    if distro.codename() in ("buster", "focal"):
+    # Liquisoap does not fail with wma files on buster, bullseye, focal
+    if distro.codename() in ("buster", "bullseye", "focal"):
         return
 
     with pytest.raises(UnplayableFileError):
