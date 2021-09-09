@@ -2,7 +2,6 @@ import datetime
 from configparser import ConfigParser
 
 import pytest
-
 from api_clients import utils
 
 
