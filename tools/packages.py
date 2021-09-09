@@ -7,7 +7,7 @@ from typing import Iterator, Set
 
 DEFAULT_PACKAGES_FILENAME = "packages.ini"
 FORMATS = ("list", "line")
-SYSTEMS = ("buster", "bionic")
+SYSTEMS = ("buster", "bullseye", "bionic")
 
 SETTINGS_SECTION = "=settings"
 DEVELOPMENT_SECTION = "=development"
