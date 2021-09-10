@@ -2,6 +2,7 @@ import datetime
 import json
 import logging
 import socket
+from datetime import time
 
 import requests
 from requests.auth import AuthBase
