@@ -5,6 +5,7 @@ CPU_CORES := $(shell nproc)
 
 # PIP_INSTALL := --editable .[dev]
 # PYLINT_ARG :=
+# MYPY_ARG :=
 # PYTEST_ARG :=
 
 VENV := venv
@@ -18,6 +19,11 @@ $(VENV):
 .pylint: $(VENV)
 	source $(VENV)/bin/activate
 	pylint --output-format=colorized $(PYLINT_ARG) || true
+
+.PHONY: .mypy
+.mypy: $(VENV)
+	source $(VENV)/bin/activate
+	mypy $(MYPY_ARG) || true
 
 .PHONY: .pytest
 .pytest: $(VENV)

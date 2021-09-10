@@ -26,6 +26,7 @@ setup(
     extras_require={
         "prod": [],
         "dev": [
+            "mypy",
             "pylint",
         ],
     },

@@ -37,6 +37,7 @@ setup(
         "prod": [],
         "dev": [
             "distro",
+            "mypy",
             "pylint",
             "pytest",
             "pytest-cov",
