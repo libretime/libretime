@@ -23,5 +23,11 @@ setup(
         "kombu==4.6.10",
         "configobj",
     ],
+    extras_require={
+        "prod": [],
+        "dev": [
+            "pylint",
+        ],
+    },
     zip_safe=False,
 )

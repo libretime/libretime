@@ -33,5 +33,15 @@ setup(
         # If this version is changed, it needs changing in the install script too
         "pycairo==1.19.1",
     ],
+    extras_require={
+        "prod": [],
+        "dev": [
+            "distro",
+            "pylint",
+            "pytest",
+            "pytest-cov",
+            "pytest-xdist",
+        ],
+    },
     zip_safe=False,
 )

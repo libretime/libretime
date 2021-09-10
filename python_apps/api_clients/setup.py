@@ -23,5 +23,14 @@ setup(
         "python-dateutil>=2.7.0",
         "requests",
     ],
+    extras_require={
+        "prod": [],
+        "dev": [
+            "pylint",
+            "pytest",
+            "pytest-cov",
+            "pytest-xdist",
+        ],
+    },
     zip_safe=False,
 )

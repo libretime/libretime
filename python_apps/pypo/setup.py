@@ -37,5 +37,11 @@ setup(
         "pytz",
         "requests",
     ],
+    extras_require={
+        "prod": [],
+        "dev": [
+            "pylint",
+        ],
+    },
     zip_safe=False,
 )
