@@ -23,6 +23,7 @@ setup(
             "libretime-analyzer=airtime_analyzer.cli:main",
         ]
     },
+    python_requires=">=3.6",
     install_requires=[
         "mutagen>=1.31.0",
         "pika>=1.0.0",
