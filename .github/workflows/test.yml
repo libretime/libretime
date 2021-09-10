@@ -126,8 +126,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        release: [bionic, buster]
         context: [python_apps/airtime_analyzer, python_apps/api_clients]
+        release: [bionic, buster]
 
     container: ghcr.io/libretime/libretime-dev:${{ matrix.release }}
     defaults:
@@ -140,20 +140,10 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ matrix.context }}-${{ hashFiles('**/setup.py', '**/requirements-dev.txt') }}
+          key: ${{ runner.os }}-pip-${{ matrix.context }}-${{ hashFiles('**/setup.py') }}
           restore-keys: |
             ${{ runner.os }}-pip-${{ matrix.context }}
 
-      - name: Install dependencies
-        run: |
-          python3 -m venv venv && source venv/bin/activate
-          pip install --upgrade pip setuptools wheel
-          pip install -r requirements-dev.txt
-          pip install -e .
-        working-directory: ${{ matrix.context }}
-
       - name: Test
-        run: |
-          source venv/bin/activate
-          make test
+        run: make test
         working-directory: ${{ matrix.context }}
