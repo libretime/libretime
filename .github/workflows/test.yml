@@ -96,6 +96,31 @@ jobs:
           cd airtime_mvc/tests
           php ../../vendor/bin/phpunit
 
+  # Start lint the code without failing the entire workflow, should be merged
+  # into 'test' when the entire matrix succeeds.
+  lint:
+    runs-on: ubuntu-latest
+    container: ghcr.io/libretime/libretime-dev:buster
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/setup.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Lint
+        run: |
+          make -C api lint
+          make -C python_apps/airtime_analyzer lint
+          make -C python_apps/airtime-celery lint
+          make -C python_apps/api_clients lint
+          make -C python_apps/pypo lint
+
   test:
     runs-on: ubuntu-latest
     strategy:
