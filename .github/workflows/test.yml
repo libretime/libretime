@@ -113,6 +113,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
+      - name: Add annotations matchers
+        run: |
+          echo "::add-matcher::.github/annotations/pylint.json"
+
       - name: Lint
         run: |
           make -C api lint
