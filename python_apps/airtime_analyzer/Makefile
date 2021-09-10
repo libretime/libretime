@@ -1,19 +1,15 @@
-.PHONY: lint test
+all: lint test
 
-SHELL := bash
-CPU_CORES := $(shell nproc)
+include ../../tools/python.mk
 
-MODULE_APP := airtime_analyzer
-MODULE_TESTS := tests
+PIP_INSTALL := --editable .[dev]
+PYLINT_ARG := airtime_analyzer tests
+PYTEST_ARG := --cov=airtime_analyzer tests
 
-lint:
-	pylint ${MODULE_APP}
-	pylint ${MODULE_TESTS}
+lint: .pylint
 
 fixtures:
 	bash tests/fixtures/generate.sh
 
-test: fixtures
-	pytest -n ${CPU_CORES} --color=yes -v --cov=${MODULE_APP} ${MODULE_TESTS}
-
-all: lint test
+test: fixtures .pytest
+clean: .clean

@@ -1,16 +1,11 @@
-.PHONY: lint test
-
-SHELL := bash
-CPU_CORES := $(shell nproc)
-
-MODULE_APP := api_clients
-MODULE_TESTS := tests
-
-lint:
-	pylint ${MODULE_APP}
-	pylint ${MODULE_TESTS}
-
-test:
-	pytest -n ${CPU_CORES} --color=yes -v --cov=${MODULE_APP} ${MODULE_TESTS}
-
 all: lint test
+
+include ../../tools/python.mk
+
+PIP_INSTALL := --editable .[dev]
+PYLINT_ARG := api_clients tests
+PYTEST_ARG := --cov=api_clients tests
+
+lint: .pylint
+test: .pytest
+clean: .clean

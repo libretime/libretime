@@ -1,23 +1,11 @@
-.PHONY: lint test
-.ONESHELL:
-
-SHELL := bash
-CPU_CORES := $(shell nproc)
-
 all: lint test
 
-venv:
-	python3 -m venv venv
-	source venv/bin/activate
-	pip install -r requirements-dev.txt
+include python.mk
 
-lint: venv
-	source venv/bin/activate
-	pylint tools
+PIP_INSTALL := -r requirements-dev.txt
+PYLINT_ARG := tools
+PYTEST_ARG := .
 
-test: venv
-	source venv/bin/activate
-	pytest -n ${CPU_CORES} --color=yes -v .
-
-clean:
-	rm -Rf venv
+lint: .pylint
+test: .pytest
+clean: .clean
