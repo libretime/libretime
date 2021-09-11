@@ -84,18 +84,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
 
-      - name: Install dependencies
-        run: |
-          composer install --no-progress --dev
-        working-directory: airtime_mvc
-
-      - name: Run PHP tests
+      - name: Run tests
         run: |
           sudo mkdir -p "$LIBRETIME_LOG_DIR"
           sudo chown runner:runner "$LIBRETIME_LOG_DIR"
-
-          php ../vendor/bin/phpunit
-        working-directory: airtime_mvc/tests
+          make test
+        working-directory: airtime_mvc
 
   test:
     runs-on: ubuntu-latest

@@ -797,8 +797,9 @@ if [[ ! ${commandFound} -eq 0 ]]; then
   PATH="${PATH}:/usr/local/bin"
 fi
 
-# Run composer (install PHP dependencies) and create a VERSION file
-loudCmd "bash ./build.sh"
+make VERSION # Create a VERSION file
+make -C airtime_mvc build # Install php dependencies with composer
+
 if [ -f /etc/airtime/airtime.conf ]; then
   # TODO use VERSION or some other way to check for updates and handle
   # media-monitor case on it's own
