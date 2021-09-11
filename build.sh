@@ -2,7 +2,9 @@
 
 set -e # Exit if any of the steps fails.
 
+pushd airtime_mvc || (echo "could not cd in airtime_mvc!" && exit 1)
 composer install --no-dev --no-interaction
+popd || exit
 
 git_build=""
 if [ -d .git ]; then

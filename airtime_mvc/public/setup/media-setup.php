@@ -3,7 +3,7 @@
 define("CONFIG_PATH", dirname(dirname( __DIR__)) . "/application/configs/");
 define("DEFAULT_STOR_DIR", "/srv/airtime/stor/");
 
-require_once(dirname(dirname( __DIR__)) . "/../vendor/propel/propel1/runtime/lib/Propel.php");
+require_once(dirname(dirname( __DIR__)) . "/vendor/propel/propel1/runtime/lib/Propel.php");
 require_once(CONFIG_PATH . 'conf.php');
 
 require_once(dirname(dirname( __DIR__)) . "/application/models/airtime/map/CcMusicDirsTableMap.php");

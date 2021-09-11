@@ -11,4 +11,4 @@ cd "$SCRIPTPATH/../airtime_mvc/" || (echo "could not cd in $SCRIPTPATH/../airtim
 path=$(pwd)
 cd build
 sed -i "s|\"project\.home =.*$\"|\"project.home = $path\"|g" build.properties
-../../vendor/propel/propel1/generator/bin/propel-gen
+../vendor/propel/propel1/generator/bin/propel-gen

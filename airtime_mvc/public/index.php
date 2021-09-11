@@ -28,7 +28,7 @@ define('BUILD_PATH', ROOT_PATH . 'build/');
 define('SETUP_PATH', BUILD_PATH . 'airtime-setup/');
 define('APPLICATION_PATH', ROOT_PATH . 'application/');
 define('CONFIG_PATH', APPLICATION_PATH . 'configs/');
-define('VENDOR_PATH', ROOT_PATH . '../vendor/');
+define('VENDOR_PATH', ROOT_PATH . 'vendor/');
 define('REST_MODULE_CONTROLLER_PATH', APPLICATION_PATH . 'modules/rest/controllers/');
 
 define("AIRTIME_CONFIG_STOR", "/etc/airtime/");
