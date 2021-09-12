@@ -2,7 +2,7 @@
 
 define("CONFIG_PATH", dirname(dirname( __DIR__)) . "/application/configs/");
 
-require_once(dirname(dirname( __DIR__)) . "/../vendor/propel/propel1/runtime/lib/Propel.php");
+require_once(dirname(dirname( __DIR__)) . "/vendor/propel/propel1/runtime/lib/Propel.php");
 require_once(CONFIG_PATH . 'conf.php');
 require_once(dirname(dirname( __DIR__)) . "/application/models/airtime/CcPref.php");
 require_once(dirname(dirname( __DIR__)) . "/application/models/airtime/CcPrefPeer.php");

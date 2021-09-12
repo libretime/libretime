@@ -1,12 +1,12 @@
 {
   "autoload": {
     "classmap": [
-      "airtime_mvc/application/"
+      "application/"
     ]
   },
   "autoload-dev": {
     "classmap": [
-      "airtime_mvc/tests/application/",
+      "tests/application/",
       "vendor/phpunit/dbunit/src/"
     ]
   },

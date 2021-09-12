@@ -797,8 +797,9 @@ if [[ ! ${commandFound} -eq 0 ]]; then
   PATH="${PATH}:/usr/local/bin"
 fi
 
-# Run composer (install PHP dependencies) and create a VERSION file
-loudCmd "bash ./build.sh"
+make VERSION # Create a VERSION file
+make -C airtime_mvc build # Install php dependencies with composer
+
 if [ -f /etc/airtime/airtime.conf ]; then
   # TODO use VERSION or some other way to check for updates and handle
   # media-monitor case on it's own
@@ -865,7 +866,6 @@ if [ "$in_place" = "t" ]; then
 elif [ -n "$web_root" ]; then
   verbose "\n * Creating Apache web root directory..."
   cp -R ${AIRTIMEROOT}/airtime_mvc ${web_root}
-  cp -R ${AIRTIMEROOT}/vendor ${web_root}
   cp ${AIRTIMEROOT}/VERSION ${web_root}
   web_root=${web_root}/airtime_mvc/public/
 else
@@ -873,7 +873,6 @@ else
   web_root="/usr/share/airtime/php"
   mkdir -p ${web_root}
   cp -R ${AIRTIMEROOT}/airtime_mvc ${web_root}
-  cp -R ${AIRTIMEROOT}/vendor ${web_root}
   cp ${AIRTIMEROOT}/VERSION ${web_root}
   web_root=${web_root}/airtime_mvc/public/
 fi

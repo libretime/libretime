@@ -2,7 +2,7 @@
 error_reporting(E_ALL | E_STRICT);
 
 // load composer autoloader
-require_once __DIR__.'/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 // Define path to application directory
 defined('APPLICATION_PATH')
@@ -30,13 +30,13 @@ set_include_path(implode(PATH_SEPARATOR, array(
 // Ensure vendor/ is on the include path
 set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
-    realpath(APPLICATION_PATH . '/../../vendor'),
-    realpath(APPLICATION_PATH . '/../../vendor/zf1s/zend-loader/library')
+    realpath(APPLICATION_PATH . '/../vendor'),
+    realpath(APPLICATION_PATH . '/../vendor/zf1s/zend-loader/library')
 )));
 
 set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
-    realpath(APPLICATION_PATH . '/../../vendor/propel/propel1/runtime/lib')
+    realpath(APPLICATION_PATH . '/../vendor/propel/propel1/runtime/lib')
 )));
 
 // Ensure library/ is on include_path
