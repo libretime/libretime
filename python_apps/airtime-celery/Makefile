@@ -6,5 +6,6 @@ PIP_INSTALL := --editable .[dev]
 PYLINT_ARG := airtime-celery
 MYPY_ARG := airtime-celery
 
+format: .format
 lint: .pylint .mypy
 clean: .clean

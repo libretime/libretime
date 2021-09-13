@@ -6,5 +6,6 @@ PIP_INSTALL := --editable .[dev]
 PYLINT_ARG := liquidsoap pypo
 MYPY_ARG := liquidsoap pypo
 
+format: .format
 lint: .pylint .mypy
 clean: .clean
