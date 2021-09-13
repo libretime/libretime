@@ -8,12 +8,21 @@ CPU_CORES = $(shell nproc)
 # MYPY_ARG =
 # PYTEST_ARG =
 
+SHARED_DEV_REQUIREMENTS = \
+	black \
+	isort \
+	mypy \
+	pylint \
+	pytest \
+	pytest-cov \
+	pytest-xdist
+
 VENV = venv
 $(VENV):
 	python3 -m venv $(VENV)
 	source $(VENV)/bin/activate
 	pip install --upgrade pip setuptools wheel
-	pip install $(PIP_INSTALL)
+	pip install $(SHARED_DEV_REQUIREMENTS) $(PIP_INSTALL)
 
 .PHONY: .format
 .format: $(VENV)

@@ -1,4 +1,0 @@
-mypy
-pylint
-pytest
-pytest-xdist
