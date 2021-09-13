@@ -18,10 +18,21 @@ setup(
     },
     license="AGPLv3",
     packages=["api_clients"],
+    python_requires=">=3.6",
     install_requires=[
         "configobj",
         "python-dateutil>=2.7.0",
         "requests",
     ],
+    extras_require={
+        "prod": [],
+        "dev": [
+            "mypy",
+            "pylint",
+            "pytest",
+            "pytest-cov",
+            "pytest-xdist",
+        ],
+    },
     zip_safe=False,
 )

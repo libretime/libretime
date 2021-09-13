@@ -27,6 +27,7 @@ setup(
         "bin/airtime-liquidsoap",
         "bin/pyponotify",
     ],
+    python_requires=">=3.6",
     install_requires=[
         "amqplib",
         "configobj",
@@ -37,5 +38,12 @@ setup(
         "pytz",
         "requests",
     ],
+    extras_require={
+        "prod": [],
+        "dev": [
+            "mypy",
+            "pylint",
+        ],
+    },
     zip_safe=False,
 )

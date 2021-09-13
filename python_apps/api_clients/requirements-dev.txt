@@ -1,4 +1,0 @@
-pylint
-pytest
-pytest-cov
-pytest-xdist

@@ -91,13 +91,42 @@ jobs:
           make test
         working-directory: airtime_mvc
 
+  # Start lint the code without failing the entire workflow, should be merged
+  # into 'test' when the entire matrix succeeds.
+  lint:
+    runs-on: ubuntu-latest
+    container: ghcr.io/libretime/libretime-dev:buster
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/setup.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Add annotations matchers
+        run: |
+          echo "::add-matcher::.github/annotations/pylint.json"
+
+      - name: Lint
+        run: |
+          make -C api lint
+          make -C python_apps/airtime_analyzer lint
+          make -C python_apps/airtime-celery lint
+          make -C python_apps/api_clients lint
+          make -C python_apps/pypo lint
+
   test:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        release: [bionic, buster]
         context: [python_apps/airtime_analyzer, python_apps/api_clients]
+        release: [bionic, buster]
 
     container: ghcr.io/libretime/libretime-dev:${{ matrix.release }}
     defaults:
@@ -110,20 +139,10 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ matrix.context }}-${{ hashFiles('**/setup.py', '**/requirements-dev.txt') }}
+          key: ${{ runner.os }}-pip-${{ matrix.context }}-${{ hashFiles('**/setup.py') }}
           restore-keys: |
             ${{ runner.os }}-pip-${{ matrix.context }}
 
-      - name: Install dependencies
-        run: |
-          python3 -m venv venv && source venv/bin/activate
-          pip install --upgrade pip setuptools wheel
-          pip install -r requirements-dev.txt
-          pip install -e .
-        working-directory: ${{ matrix.context }}
-
       - name: Test
-        run: |
-          source venv/bin/activate
-          make test
+        run: make test
         working-directory: ${{ matrix.context }}
