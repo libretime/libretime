@@ -7,6 +7,7 @@ PYLINT_ARG := tools
 MYPY_ARG := .
 PYTEST_ARG := .
 
+format: .format
 lint: .pylint .mypy
 test: .pytest
 clean: .clean

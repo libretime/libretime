@@ -15,6 +15,12 @@ $(VENV):
 	pip install --upgrade pip setuptools wheel
 	pip install $(PIP_INSTALL)
 
+.PHONY: .format
+.format: $(VENV)
+	source $(VENV)/bin/activate
+	black .
+	isort --profile black .
+
 .PHONY: .pylint
 .pylint: $(VENV)
 	source $(VENV)/bin/activate
