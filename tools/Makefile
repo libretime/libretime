@@ -2,10 +2,10 @@ all: lint test
 
 include python.mk
 
-PIP_INSTALL := -r requirements-dev.txt
-PYLINT_ARG := tools
-MYPY_ARG := .
-PYTEST_ARG := .
+PIP_INSTALL = -r requirements-dev.txt
+PYLINT_ARG = tools
+MYPY_ARG = .
+PYTEST_ARG = .
 
 format: .format
 lint: .pylint .mypy

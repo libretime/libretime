@@ -1,14 +1,14 @@
 .ONESHELL:
 
-SHELL := bash
-CPU_CORES := $(shell nproc)
+SHELL = bash
+CPU_CORES = $(shell nproc)
 
-# PIP_INSTALL := --editable .[dev]
-# PYLINT_ARG :=
-# MYPY_ARG :=
-# PYTEST_ARG :=
+# PIP_INSTALL = --editable .
+# PYLINT_ARG =
+# MYPY_ARG =
+# PYTEST_ARG =
 
-VENV := venv
+VENV = venv
 $(VENV):
 	python3 -m venv $(VENV)
 	source $(VENV)/bin/activate
