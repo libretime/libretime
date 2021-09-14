@@ -1,19 +1,34 @@
 .ONESHELL:
 
-SHELL := bash
-CPU_CORES := $(shell nproc)
+SHELL = bash
+CPU_CORES = $(shell nproc)
 
-# PIP_INSTALL := --editable .[dev]
-# PYLINT_ARG :=
-# MYPY_ARG :=
-# PYTEST_ARG :=
+# PIP_INSTALL = --editable .
+# PYLINT_ARG =
+# MYPY_ARG =
+# PYTEST_ARG =
 
-VENV := venv
+SHARED_DEV_REQUIREMENTS = \
+	black \
+	isort \
+	mypy \
+	pylint \
+	pytest \
+	pytest-cov \
+	pytest-xdist
+
+VENV = venv
 $(VENV):
 	python3 -m venv $(VENV)
 	source $(VENV)/bin/activate
 	pip install --upgrade pip setuptools wheel
-	pip install $(PIP_INSTALL)
+	pip install $(SHARED_DEV_REQUIREMENTS) $(PIP_INSTALL)
+
+.PHONY: .format
+.format: $(VENV)
+	source $(VENV)/bin/activate
+	black .
+	isort --profile black .
 
 .PHONY: .pylint
 .pylint: $(VENV)

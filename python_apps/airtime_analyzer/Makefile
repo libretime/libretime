@@ -7,6 +7,7 @@ PYLINT_ARG := airtime_analyzer tests
 MYPY_ARG := airtime_analyzer tests
 PYTEST_ARG := --cov=airtime_analyzer tests
 
+format: .format
 lint: .pylint .mypy
 
 fixtures:

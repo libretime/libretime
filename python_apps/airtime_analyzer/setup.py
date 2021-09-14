@@ -35,14 +35,8 @@ setup(
         "pycairo==1.19.1",
     ],
     extras_require={
-        "prod": [],
         "dev": [
             "distro",
-            "mypy",
-            "pylint",
-            "pytest",
-            "pytest-cov",
-            "pytest-xdist",
         ],
     },
     zip_safe=False,

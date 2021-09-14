@@ -35,8 +35,6 @@ setup(
         ],
         "dev": [
             "psycopg2-binary",
-            "mypy",
-            "pylint",
         ],
     },
 )
