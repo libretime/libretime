@@ -1,4 +1,4 @@
-.PHONY: build
+.PHONY: build php-cs-fixer
 
 SHELL = bash
 
@@ -10,3 +10,10 @@ test: vendor
 
 build:
 	composer install --no-progress --no-interaction --no-dev
+
+tools/php-cs-fixer:
+	mkdir -p tools/php-cs-fixer
+	composer require --working-dir=tools/php-cs-fixer friendsofphp/php-cs-fixer
+
+php-cs-fixer: tools/php-cs-fixer
+	tools/php-cs-fixer/vendor/bin/php-cs-fixer fix

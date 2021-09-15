@@ -8,6 +8,10 @@
 /tests/results.html
 /tests/test_results.xml
 
+# Tools
+/tools/
+.php-cs-fixer.cache
+
 ## Github Composer .gitignore
 ## See https://github.com/github/gitignore/blob/master/Composer.gitignore
 ################################################################################
