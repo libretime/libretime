@@ -21,6 +21,10 @@ VENV = venv
 $(VENV):
 	python3 -m venv $(VENV)
 	source $(VENV)/bin/activate
+	$(MAKE) install
+
+install: venv
+	source $(VENV)/bin/activate
 	pip install --upgrade pip setuptools wheel
 	pip install $(SHARED_DEV_REQUIREMENTS) $(PIP_INSTALL)
 
