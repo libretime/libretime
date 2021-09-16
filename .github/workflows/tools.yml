@@ -70,13 +70,17 @@ jobs:
               DEBIAN_FRONTEND=noninteractive apt-get -y install \
               python3 \
               python3-pip \
+              sudo \
               $(cat packages.list)
 
           ARG USER=docker
           ARG UID=1000
           ARG GID=1000
 
-          RUN useradd -m ${USER} --uid=${UID}
+          RUN adduser --disabled-password --uid=${UID} --gecos '' ${USER} && \
+              adduser ${USER} sudo && \
+              echo '%sudo	ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
           USER ${UID}:${GID}
           WORKDIR /home/${USER}
           EOF
