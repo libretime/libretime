@@ -11,7 +11,7 @@
     ]
   },
   "require": {
-    "composer/semver": "^3.1",
+    "composer/semver": "^3.2",
     "james-heinrich/getid3": "^1.9",
     "massivescale/celery-php": "^2.1",
     "php-amqplib/php-amqplib": "^2.6",
