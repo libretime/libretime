@@ -14,7 +14,7 @@
     "composer/semver": "^3.2",
     "james-heinrich/getid3": "^1.9",
     "massivescale/celery-php": "^2.1",
-    "php-amqplib/php-amqplib": "^2.6",
+    "php-amqplib/php-amqplib": "^2.12",
     "propel/propel1": "1.7.0-stable",
     "raven/raven": "0.12.0",
     "simplepie/simplepie": "^1.5",
