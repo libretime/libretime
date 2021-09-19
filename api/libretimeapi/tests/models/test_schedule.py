@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 from django.test import SimpleTestCase
-from libretimeapi.models import Schedule, Show, ShowInstance
+from libretimeapi.models import Schedule, ShowInstance
 
 
 class TestSchedule(SimpleTestCase):
