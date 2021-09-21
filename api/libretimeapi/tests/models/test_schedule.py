@@ -1,10 +1,10 @@
 from datetime import datetime, timedelta
 
-from django.test import SimpleTestCase
+from django.test import TestCase
 from libretimeapi.models import Schedule, ShowInstance
 
 
-class TestSchedule(SimpleTestCase):
+class TestSchedule(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.show_instance = ShowInstance(

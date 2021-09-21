@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
@@ -66,13 +66,13 @@ class TestScheduleViewSet(APITestCase):
         )
         show = baker.make(
             "libretimeapi.ShowInstance",
-            starts=datetime.now(tz=datetime.timezone.utc) - timedelta(minutes=5),
-            ends=datetime.now(tz=datetime.timezone.utc) + timedelta(minutes=5),
+            starts=datetime.now(tz=timezone.utc) - timedelta(minutes=5),
+            ends=datetime.now(tz=timezone.utc) + timedelta(minutes=5),
         )
         scheduleItem = baker.make(
             "libretimeapi.Schedule",
-            starts=datetime.now(tz=datetime.timezone.utc),
-            ends=datetime.now(tz=datetime.timezone.utc) + f.length,
+            starts=datetime.now(tz=timezone.utc),
+            ends=datetime.now(tz=timezone.utc) + f.length,
             cue_out=f.cueout,
             instance=show,
             file=f,
@@ -100,13 +100,13 @@ class TestScheduleViewSet(APITestCase):
         )
         show = baker.make(
             "libretimeapi.ShowInstance",
-            starts=datetime.now(tz=datetime.timezone.utc) - timedelta(minutes=5),
-            ends=datetime.now(tz=datetime.timezone.utc) + timedelta(seconds=20),
+            starts=datetime.now(tz=timezone.utc) - timedelta(minutes=5),
+            ends=datetime.now(tz=timezone.utc) + timedelta(seconds=20),
         )
         scheduleItem = baker.make(
             "libretimeapi.Schedule",
-            starts=datetime.now(tz=datetime.timezone.utc),
-            ends=datetime.now(tz=datetime.timezone.utc) + f.length,
+            starts=datetime.now(tz=timezone.utc),
+            ends=datetime.now(tz=timezone.utc) + f.length,
             instance=show,
             file=f,
         )
@@ -120,3 +120,47 @@ class TestScheduleViewSet(APITestCase):
         self.assertNotEqual(
             dateparse.parse_datetime(result[0]["ends"]), scheduleItem.ends
         )
+
+    def test_schedule_item_invalid(self):
+        music_dir = baker.make(
+            "libretimeapi.MusicDir",
+            directory=os.path.join(os.path.dirname(__file__), "resources"),
+        )
+        f = baker.make(
+            "libretimeapi.File",
+            directory=music_dir,
+            mime="audio/mp3",
+            filepath="song.mp3",
+            length=timedelta(seconds=40.86),
+            cuein=timedelta(seconds=0),
+            cueout=timedelta(seconds=40.8131),
+        )
+        show = baker.make(
+            "libretimeapi.ShowInstance",
+            starts=datetime.now(tz=timezone.utc) - timedelta(minutes=5),
+            ends=datetime.now(tz=timezone.utc) + timedelta(minutes=5),
+        )
+        scheduleItem = baker.make(
+            "libretimeapi.Schedule",
+            starts=datetime.now(tz=timezone.utc),
+            ends=datetime.now(tz=timezone.utc) + f.length,
+            cue_out=f.cueout,
+            instance=show,
+            file=f,
+        )
+        invalidScheduleItem = baker.make(
+            "libretimeapi.Schedule",
+            starts=show.ends + timedelta(minutes=1),
+            ends=show.ends + timedelta(minutes=1) + f.length,
+            cue_out=f.cueout,
+            instance=show,
+            file=f,
+        )
+        self.client.credentials(HTTP_AUTHORIZATION="Api-Key {}".format(self.token))
+        response = self.client.get(self.path, {"is_valid": True})
+        self.assertEqual(response.status_code, 200)
+        result = response.json()
+        # The invalid item should be filtered out and not returned
+        self.assertEqual(len(result), 1)
+        self.assertEqual(dateparse.parse_datetime(result[0]["ends"]), scheduleItem.ends)
+        self.assertEqual(dateparse.parse_duration(result[0]["cue_out"]), f.cueout)
