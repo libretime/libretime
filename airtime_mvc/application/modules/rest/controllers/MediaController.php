@@ -131,7 +131,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         try {
             // REST uploads are not from Zend_Form, hence we handle them using Zend_File_transfer directly
             // we need to specify an explicit adapter since autodetection broke in php 7.2
-            $upload = new Zend_File_Transfer('Zend_File_Transfer_Adapter_Http');
+            $upload = new Zend_File_Transfer('Http');
             // this error should not really get hit, letting the user know if it does is nice for debugging
             // see: https://github.com/LibreTime/libretime/issues/3#issuecomment-281143417
             if (!$upload->isValid('file')) {
