@@ -141,7 +141,7 @@ class PreferenceViewSet(viewsets.ModelViewSet):
 class ScheduleViewSet(viewsets.ModelViewSet):
     queryset = Schedule.objects.all()
     serializer_class = ScheduleSerializer
-    filter_fields = ("starts", "ends", "playout_status", "broadcasted")
+    filter_fields = ("starts", "ends", "playout_status", "broadcasted", "is_valid")
     model_permission_name = "schedule"
 
 
