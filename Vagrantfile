@@ -40,6 +40,11 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  config.vm.provider "libvirt" do |v|
+    # to run without OOMing we need at least 1GB of RAM
+    v.memory = 1024
+  end
+
   # default installer args used for all distros
   installer_args="--force --in-place --verbose --postgres --apache --icecast "
 
