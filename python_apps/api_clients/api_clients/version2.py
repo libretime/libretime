@@ -54,6 +54,7 @@ class AirtimeApiClient:
         data = self.services.schedule_url(
             params={
                 "ends__range": ("{}Z,{}Z".format(str_current, str_end)),
+                "is_valid": True,
             }
         )
         result = {"media": {}}

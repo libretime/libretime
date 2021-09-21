@@ -68,6 +68,14 @@ class Schedule(models.Model):
             return self.instance.ends
         return self.ends
 
+    @property
+    def is_valid(self):
+        """
+        A schedule item is valid if it starts before the end of the show instance
+        it is in
+        """
+        return self.starts < self.instance.ends
+
     class Meta:
         managed = False
         db_table = "cc_schedule"
