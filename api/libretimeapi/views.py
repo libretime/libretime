@@ -1,6 +1,7 @@
 import os
 
 from django.conf import settings
+from django.db.models import F
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
@@ -141,8 +142,18 @@ class PreferenceViewSet(viewsets.ModelViewSet):
 class ScheduleViewSet(viewsets.ModelViewSet):
     queryset = Schedule.objects.all()
     serializer_class = ScheduleSerializer
-    filter_fields = ("starts", "ends", "playout_status", "broadcasted", "is_valid")
+    filter_fields = ("starts", "ends", "playout_status", "broadcasted")
     model_permission_name = "schedule"
+
+    def get_queryset(self):
+        filter_valid = self.request.query_params.get("is_valid")
+        if filter_valid is None:
+            return self.queryset.all()
+        filter_valid = filter_valid.strip().lower() in ("true", "yes", "1")
+        if filter_valid:
+            return self.queryset.filter(starts__lt=F("instance__ends"))
+        else:
+            return self.queryset.filter(starts__gte=F("instance__ends"))
 
 
 class ServiceRegisterViewSet(viewsets.ModelViewSet):
