@@ -2,7 +2,7 @@ import datetime
 import json
 import logging
 import socket
-from datetime import time
+from time import sleep
 
 import requests
 from requests.auth import AuthBase
@@ -146,7 +146,7 @@ class ApiRequest:
             try:
                 return self.__req()
             except Exception:
-                time.sleep(delay)
+                sleep(delay)
         return self.__req()
 
 
@@ -198,17 +198,17 @@ class RequestProvider:
             return super(RequestProvider, self).__getattribute__(attr)
 
 
-def time_in_seconds(time):
+def time_in_seconds(value):
     return (
-        time.hour * 60 * 60
-        + time.minute * 60
-        + time.second
-        + time.microsecond / 1000000.0
+        value.hour * 60 * 60
+        + value.minute * 60
+        + value.second
+        + value.microsecond / 1000000.0
     )
 
 
-def time_in_milliseconds(time):
-    return time_in_seconds(time) * 1000
+def time_in_milliseconds(value):
+    return time_in_seconds(value) * 1000
 
 
 def fromisoformat(time_string):
