@@ -995,12 +995,13 @@ loud "-----------------------------------------------------"
 
 python_version=$($python_bin --version 2>&1 | awk '{ print $2 }')
 verbose "Detected Python version: $python_version"
+pip_cmd="$python_bin -m pip"
 
 verbose "\n * Installing necessary python services..."
-loudCmd "$python_bin -mpip install setuptools --upgrade"
+loudCmd "$pip_cmd install setuptools --upgrade"
 # Required here because PyGObject requires it, but it is installed after PyGObject
 # when pip parses the setup.py file in airtime_analyzer
-loudCmd "$python_bin -mpip install pycairo==1.19.1"
+loudCmd "$pip_cmd install pycairo==1.19.1"
 verbose "...Done"
 
 verbose "\n * Creating /run/airtime..."
