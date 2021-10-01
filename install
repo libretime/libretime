@@ -1052,7 +1052,7 @@ systemInitInstall libretime-celery
 verbose "...Done"
 
 verbose "\n * Installing libretime-analyzer..."
-loudCmd "$python_bin ${AIRTIMEROOT}/python_apps/airtime_analyzer/setup.py install --install-scripts=/usr/bin"
+loudCmd "$pip_cmd install ${AIRTIMEROOT}/python_apps/airtime_analyzer"
 systemInitInstall libretime-analyzer "$web_user"
 verbose "...Done"
 
