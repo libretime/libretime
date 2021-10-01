@@ -1057,7 +1057,7 @@ systemInitInstall libretime-analyzer "$web_user"
 verbose "...Done"
 
 verbose "\n * Installing API..."
-loudCmd "$pip_cmd install ${AIRTIMEROOT}/api"
+loudCmd "$pip_cmd install ${AIRTIMEROOT}/api[prod]"
 systemInitInstall libretime-api "$web_user"
 mkdir -p /etc/airtime
 sed -e "s@WEB_USER@${web_user}@g" \
