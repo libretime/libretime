@@ -55,6 +55,7 @@ class AirtimeApiClient:
             params={
                 "ends__range": ("{}Z,{}Z".format(str_current, str_end)),
                 "is_valid": True,
+                "playout_status__gt": 0,
             }
         )
         result = {"media": {}}
