@@ -1036,7 +1036,7 @@ systemInitInstall libretime-playout "$web_user"
 verbose "...Done"
 
 verbose "\n * Installing airtime-celery..."
-loudCmd "$python_bin ${AIRTIMEROOT}/python_apps/airtime-celery/setup.py install"
+loudCmd "$pip_cmd install ${AIRTIMEROOT}/python_apps/airtime-celery"
 # Create the Celery user
 if $is_centos_dist; then
   loudCmd "id celery 2>/dev/null || adduser --no-create-home -c 'LibreTime Celery' -r celery || true"
