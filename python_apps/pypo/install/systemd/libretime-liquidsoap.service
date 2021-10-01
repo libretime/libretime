@@ -2,7 +2,7 @@
 Description=Libretime Liquidsoap Service
 
 [Service]
-ExecStart=/usr/bin/airtime-liquidsoap
+ExecStart=/usr/local/bin/airtime-liquidsoap
 User=libretime-playout
 Group=libretime-playout
 Restart=always
