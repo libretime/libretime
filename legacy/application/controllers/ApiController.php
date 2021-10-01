@@ -369,7 +369,7 @@ class ApiController extends Zend_Controller_Action
             $result['timezoneOffset'] = Application_Common_DateHelper::getTimezoneOffset($timezone);
 
             // XSS exploit prevention
-            SecurityHelper::htmlescape_recursive($result);
+            // SecurityHelper::htmlescape_recursive($result);
 
             // convert image paths to point to api endpoints
             WidgetHelper::findAndConvertPaths($result);
