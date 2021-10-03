@@ -11,8 +11,8 @@ usage() {
 
 if [ "$1" = "--enable" ]; then
 
-  /etc/init.d/airtime-playout stop
-  /etc/init.d/airtime-playout start-liquidsoap
+  /etc/init.d/libretime-playout stop
+  /etc/init.d/libretime-playout start-liquidsoap
 
   user=$2
 
@@ -30,8 +30,8 @@ elif [ "$1" = "--disable" ]; then
   chown -Rv $user:$user /var/tmp/airtime/pypo/
   chmod -v a+r /etc/airtime/api_client.cfg
 
-  /etc/init.d/airtime-playout stop-liquidsoap
-  /etc/init.d/airtime-playout start
+  /etc/init.d/libretime-playout stop-liquidsoap
+  /etc/init.d/libretime-playout start
 else
   usage
 fi
