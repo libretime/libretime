@@ -15,7 +15,7 @@
     "james-heinrich/getid3": "^1.9",
     "massivescale/celery-php": "^2.1",
     "php-amqplib/php-amqplib": "^2.12",
-    "propel/propel1": "1.7.0-stable",
+    "propel/propel1": "^1.7",
     "simplepie/simplepie": "^1.5",
     "zf1s/zend-acl": "^1.13",
     "zf1s/zend-application": "^1.13",

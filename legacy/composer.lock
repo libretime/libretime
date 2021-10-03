@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e7646913da55a0d2d617e57ae50733a7",
+    "content-hash": "b4fa226ba0d576476c58c930977b7ab0",
     "packages": [
         {
             "name": "composer/semver",
@@ -636,16 +636,16 @@
         },
         {
             "name": "propel/propel1",
-            "version": "1.7.0",
+            "version": "1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/propelorm/Propel.git",
-                "reference": "09058f1443bc287e550b9342a4379aac2e0a0b8f"
+                "reference": "d46b050b41f2a4c7a0ef58bd1b84c07bd5e1d2cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/propelorm/Propel/zipball/09058f1443bc287e550b9342a4379aac2e0a0b8f",
-                "reference": "09058f1443bc287e550b9342a4379aac2e0a0b8f",
+                "url": "https://api.github.com/repos/propelorm/Propel/zipball/d46b050b41f2a4c7a0ef58bd1b84c07bd5e1d2cd",
+                "reference": "d46b050b41f2a4c7a0ef58bd1b84c07bd5e1d2cd",
                 "shasum": ""
             },
             "require": {
@@ -653,7 +653,8 @@
                 "php": ">=5.2.4"
             },
             "require-dev": {
-                "pear-pear.php.net/pear_packagefilemanager2": "@stable"
+                "pear-pear.php.net/pear_packagefilemanager2": "@stable",
+                "phpunit/phpunit": "~4.0||~5.0"
             },
             "bin": [
                 "generator/bin/propel-gen",
@@ -697,9 +698,9 @@
             ],
             "support": {
                 "issues": "https://github.com/propelorm/Propel/issues",
-                "source": "https://github.com/propelorm/Propel/tree/1.7.0"
+                "source": "https://github.com/propelorm/Propel/tree/1.7.2"
             },
-            "time": "2013-10-21T12:52:56+00:00"
+            "time": "2019-11-05T14:55:42+00:00"
         },
         {
             "name": "simplepie/simplepie",
