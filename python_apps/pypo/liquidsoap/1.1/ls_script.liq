@@ -212,7 +212,7 @@ def make_scheduled_play_unavailable()
 end
 
 def update_source_status(sourcename, status) =
-    command = "timeout --signal=KILL 45 pyponotify --source-name=#{sourcename} --source-status=#{status} &"
+    command = "timeout --signal=KILL 45 libretime-playout-notify --source-name=#{sourcename} --source-status=#{status} &"
     system(command)
     log(command)
 end
@@ -438,6 +438,6 @@ if s4_enable == true then
 end
 
 
-command = "timeout --signal=KILL 45 pyponotify --liquidsoap-started &"
+command = "timeout --signal=KILL 45 libretime-playout-notify --liquidsoap-started &"
 log(command)
 system(command)

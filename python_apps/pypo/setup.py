@@ -25,9 +25,9 @@ setup(
     ],
     package_data={"": ["**/*.liq", "*.cfg", "*.types"]},
     scripts=[
-        "bin/airtime-playout",
-        "bin/airtime-liquidsoap",
-        "bin/pyponotify",
+        "bin/libretime-playout",
+        "bin/libretime-liquidsoap",
+        "bin/libretime-playout-notify",
     ],
     python_requires=">=3.6",
     install_requires=[
