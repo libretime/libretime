@@ -30,9 +30,9 @@ def find_liquidsoap_binary():
     the location of this binary.
     """
 
-    rv = subprocess.call("which airtime-liquidsoap > /dev/null", shell=True)
+    rv = subprocess.call("which libretime-liquidsoap > /dev/null", shell=True)
     if rv == 0:
-        return "airtime-liquidsoap"
+        return "libretime-liquidsoap"
 
     return None
 

@@ -36,7 +36,7 @@ def run():
     )
     exec_args = [
         "/usr/bin/liquidsoap",
-        "airtime-liquidsoap",
+        "libretime-liquidsoap",
         script_path,
         "--verbose",
         "-f",
