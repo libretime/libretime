@@ -114,11 +114,11 @@ SQL;
             );
             $utcTimezone = new DateTimeZone('UTC');
             $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
-            if (sizeof($data) > 0) {
+            if (count($data) > 0) {
                 $t = new DateTime($data[0]['timestamp'], $utcTimezone);
                 $t->setTimezone($displayTimezone);
                 // tricking javascript so it thinks the server timezone is in UTC
-                $average_listeners = array_sum(array_column($data, 'listeners')) / sizeof($data);
+                $average_listeners = array_sum(array_column($data, 'listeners')) / count($data);
                 $max_num_listeners = max(array_column($data, 'listeners'));
                 $entry = ['show' => $showName, 'time' => $t->format('Y-m-d H:i:s'), 'average_number_of_listeners' => $average_listeners,
                     'maximum_number_of_listeners' => $max_num_listeners, ];

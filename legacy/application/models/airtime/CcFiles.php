@@ -340,7 +340,7 @@ class CcFiles extends BaseCcFiles
 
     public function setDbTrackNumber($v)
     {
-        $max = pow(2, 31) - 1;
+        $max = 2 ** 31 - 1;
         $v = ($v > $max) ? $max : $v;
 
         return parent::setDbTrackNumber($v);

@@ -82,7 +82,7 @@ class Application_Service_PodcastService
                 array_push($categories, $category->get_scheme() . ':' . $category->get_term());
             }
         }
-        $podcastArray['category'] = htmlspecialchars(implode($categories));
+        $podcastArray['category'] = htmlspecialchars(implode('', $categories));
 
         //TODO: put in constants
         $itunesChannel = 'http://www.itunes.com/dtds/podcast-1.0.dtd';

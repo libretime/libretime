@@ -301,7 +301,7 @@ class Application_Model_User
             $params[$p] = $type[$i];
         }
 
-        $sql_type = join(' OR ', $types);
+        $sql_type = implode(' OR ', $types);
 
         $sql = $sql_gen . ' WHERE (' . $sql_type . ') ';
 

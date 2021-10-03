@@ -456,7 +456,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
                 Logging::info($testenclosures);
                 // we need to check if this is an array otherwise sizeof will fail and stop this whole script
                 if (is_array($testenclosures)) {
-                    $numenclosures = sizeof($testenclosures);
+                    $numenclosures = count($testenclosures);
                     // now we loop through and look for a audio file and then stop the loop at the first one we find
                     for ($i = 0; $i < $numenclosures + 1; ++$i) {
                         $enclosure_attribs = array_values($testenclosures[$i]['attribs'])[0];

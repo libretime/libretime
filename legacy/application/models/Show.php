@@ -353,7 +353,7 @@ SQL;
 
         $sql_gen = 'UPDATE cc_show_instances ' .
             'SET ends = (ends + :deltaDay1::INTERVAL + :interval1::INTERVAL) ' .
-            'WHERE (id IN (' . implode($instanceIds, ',') . ') ' .
+            'WHERE (id IN (' . implode(',', $instanceIds) . ') ' .
             'AND ends > :current_timestamp1) ' .
             "AND ((ends + :deltaDay2::INTERVAL + :interval2::INTERVAL - starts) <= interval '24:00')";
 
@@ -371,7 +371,7 @@ SQL;
 
         $sql_gen = 'UPDATE cc_show_days ' .
             'SET duration = (CAST(duration AS interval) + :deltaDay3::INTERVAL + :interval3::INTERVAL) ' .
-            'WHERE id IN (' . implode($showDayIds, ',') . ') ' .
+            'WHERE id IN (' . implode(',', $showDayIds) . ') ' .
             "AND ((CAST(duration AS interval) + :deltaDay4::INTERVAL + :interval4::INTERVAL) <= interval '24:00')";
 
         Application_Common_Database::prepareAndExecute(
@@ -671,7 +671,7 @@ SQL;
      */
     public function getStartDate()
     {
-        list($date) = explode(' ', $this->getStartDateAndTime());
+        [$date] = explode(' ', $this->getStartDateAndTime());
 
         return $date;
     }
@@ -684,7 +684,7 @@ SQL;
      */
     public function getStartTime()
     {
-        list(, $time) = explode(' ', $this->getStartDateAndTime());
+        [, $time] = explode(' ', $this->getStartDateAndTime());
 
         return $time;
     }
@@ -1214,9 +1214,9 @@ SQL;
         }
 
         //$hashValue = (md5($date->format('d'))[0] % $cols) + ((intval($date->format('h'))/24) % $rows);
-        $row = intval($date->format('w')) % sizeof($palette);
+        $row = intval($date->format('w')) % count($palette);
         $foo = $date->format('H');
-        $col = intval(intval($date->format('H')) / 24.0 * sizeof($palette[0]));
+        $col = intval(intval($date->format('H')) / 24.0 * count($palette[0]));
         //$color = $palette[$hashValue % sizeof($palette)];
         return $palette[$row][$col];
     }

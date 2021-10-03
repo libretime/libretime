@@ -353,7 +353,7 @@ class Application_Service_CalendarService
             $con->beginTransaction();
 
             //new starts,ends are in UTC
-            list($newStartsDateTime, $newEndsDateTime) = $this->validateShowMove(
+            [$newStartsDateTime, $newEndsDateTime] = $this->validateShowMove(
                 $deltaDay,
                 $deltaMin
             );

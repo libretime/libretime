@@ -59,7 +59,7 @@ class Application_Form_Player extends Zend_Form_SubForm
             break;
         }
 
-        $streamURL->setAttrib('numberOfEnabledStreams', sizeof($urlOptions) - $opusStreamCount);
+        $streamURL->setAttrib('numberOfEnabledStreams', count($urlOptions) - $opusStreamCount);
         $streamURL->removeDecorator('label');
         $this->addElement($streamURL);
 

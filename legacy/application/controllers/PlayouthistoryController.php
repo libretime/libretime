@@ -27,7 +27,7 @@ class PlayouthistoryController extends Zend_Controller_Action
 
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Analytics');
 
-        list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
+        [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
 
         $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
         $startsDT->setTimezone($userTimezone);
@@ -83,7 +83,7 @@ class PlayouthistoryController extends Zend_Controller_Action
             $params = $request->getParams();
             $instance = $request->getParam('instance_id', null);
 
-            list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
+            [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($request);
 
             $historyService = new Application_Service_HistoryService();
             $r = $historyService->getFileSummaryData($startsDT, $endsDT, $params);
@@ -106,7 +106,7 @@ class PlayouthistoryController extends Zend_Controller_Action
             $params = $request->getParams();
             $instance = $request->getParam('instance_id', null);
 
-            list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
+            [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($request);
 
             $historyService = new Application_Service_HistoryService();
             $r = $historyService->getPlayedItemData($startsDT, $endsDT, $params, $instance);
@@ -129,7 +129,7 @@ class PlayouthistoryController extends Zend_Controller_Action
             $params = $request->getParams();
             $instance = $request->getParam('instance_id', null);
 
-            list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
+            [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($request);
 
             $historyService = new Application_Service_HistoryService();
             $shows = $historyService->getShowList($startsDT, $endsDT);

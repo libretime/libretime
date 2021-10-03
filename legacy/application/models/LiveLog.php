@@ -59,7 +59,7 @@ class Application_Model_LiveLog
                     $duration = $start->diff($end);
                     $duration = $duration->format('%H:%i:%s');
                     $intervals = explode(':', $duration);
-                    for ($i = 0; $i < sizeof($intervals); ++$i) {
+                    for ($i = 0; $i < count($intervals); ++$i) {
                         if (!isset($intervals[$i])) {
                             $intervals[$i] = 0;
                         }
@@ -199,7 +199,7 @@ class Application_Model_LiveLog
                             $clip_length = $track['clip_length'];
                             //Convert clip_length into seconds
                             $clip_length_intervals = explode(':', $clip_length);
-                            for ($i = 0; $i < sizeof($clip_length_intervals); ++$i) {
+                            for ($i = 0; $i < count($clip_length_intervals); ++$i) {
                                 if (!isset($clip_length_intervals[$i])) {
                                     $clip_length_intervals[$i] = 0;
                                 }
@@ -209,7 +209,7 @@ class Application_Model_LiveLog
                             $extra_time = $extra_time->format('%H:%i:%s');
                             //Convert extra_time into seconds;
                             $extra_time_intervals = explode(':', $extra_time);
-                            for ($i = 0; $i < sizeof($extra_time_intervals); ++$i) {
+                            for ($i = 0; $i < count($extra_time_intervals); ++$i) {
                                 if (!isset($extra_time_intervals[$i])) {
                                     $extra_time_intervals[$i] = 0;
                                 }
@@ -240,7 +240,7 @@ class Application_Model_LiveLog
                         }
 
                         $intervals = explode(':', $clip_length);
-                        for ($i = 0; $i < sizeof($intervals); ++$i) {
+                        for ($i = 0; $i < count($intervals); ++$i) {
                             if (!isset($intervals[$i])) {
                                 $intervals[$i] = 0;
                             }

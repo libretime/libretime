@@ -177,13 +177,13 @@ class Application_Common_DateHelper
         }
 
         if (1 === substr_count($p_time, '.')) {
-            list($hhmmss, $ms) = explode('.', $p_time);
+            [$hhmmss, $ms] = explode('.', $p_time);
         } else {
             $hhmmss = $p_time;
             $ms = 0;
         }
 
-        list($hours, $minutes, $seconds) = explode(':', $hhmmss);
+        [$hours, $minutes, $seconds] = explode(':', $hhmmss);
 
         $totalSeconds = ($hours * 3600 + $minutes * 60 + $seconds) . ".{$ms}";
 

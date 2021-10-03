@@ -174,7 +174,7 @@ class PluploadController extends Zend_Controller_Action
         if ($unit) {
             // Find the position of the unit in the ordered string which is the power
             // of magnitude to multiply a kilobyte by.
-            return round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
+            return round($size * 1024 ** stripos('bkmgtpezy', $unit[0]));
         }
 
         return round($size);

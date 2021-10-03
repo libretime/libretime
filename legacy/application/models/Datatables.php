@@ -20,8 +20,8 @@ class Application_Model_Datatables
                         $input2 = null;
                     }
                 } elseif ($dbname == 'bit_rate' || $dbname == 'sample_rate') {
-                    $input1 = isset($info[0]) ? doubleval($info[0]) * 1000 : null;
-                    $input2 = isset($info[1]) ? doubleval($info[1]) * 1000 : null;
+                    $input1 = isset($info[0]) ? floatval($info[0]) * 1000 : null;
+                    $input2 = isset($info[1]) ? floatval($info[1]) * 1000 : null;
                 } else {
                     $input1 = isset($info[0]) ? $info[0] : null;
                     $input2 = isset($info[1]) ? $info[1] : null;
@@ -82,10 +82,10 @@ class Application_Model_Datatables
             $orig2searchTerm = [];
             foreach ($data as $key => $d) {
                 if (strstr($key, 'mDataProp_')) {
-                    list($dump, $index) = explode('_', $key);
+                    [$dump, $index] = explode('_', $key);
                     $current2dbname[$index] = $d;
                 } elseif (strstr($key, 'sSearch_')) {
-                    list($dump, $index) = explode('_', $key);
+                    [$dump, $index] = explode('_', $key);
                     $orig2searchTerm[$index] = $d;
                 }
             }
@@ -112,7 +112,7 @@ class Application_Model_Datatables
 
             $advancedWhere = self::buildWhereClauseForAdvancedSearch($dbname2searchTerm);
             if (!empty($advancedWhere['clause'])) {
-                $where[] = join(' AND ', $advancedWhere['clause']);
+                $where[] = implode(' AND ', $advancedWhere['clause']);
                 $params = $advancedWhere['params'];
             }
         }
@@ -122,7 +122,7 @@ class Application_Model_Datatables
         }
 
         $selectorCount = 'SELECT COUNT(*) ';
-        $selectorRows = 'SELECT ' . join(',', $displayColumns) . ' ';
+        $selectorRows = 'SELECT ' . implode(',', $displayColumns) . ' ';
 
         $sql = $selectorCount . ' FROM ' . $fromTable;
         $sqlTotalRows = $sql;
@@ -157,14 +157,14 @@ class Application_Model_Datatables
             $orderby[] = $data["mDataProp_{$num}"] . ' ' . $data['sSortDir_' . $i];
         }
         $orderby[] = 'id';
-        $orderby = join(',', $orderby);
+        $orderby = implode(',', $orderby);
         // End Order By clause
 
         $displayLength = intval($data['iDisplayLength']);
         $needToBind = false;
         if (count($where) > 0) {
             $needToBind = true;
-            $where = join(' OR ', $where);
+            $where = implode(' OR ', $where);
             $sql = $selectorCount . ' FROM ' . $fromTable . ' WHERE ' . $where;
             $sqlTotalDisplayRows = $sql;
 

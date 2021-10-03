@@ -1138,7 +1138,7 @@ SQL;
             $time = explode(':', $rebroadcast['start_time']);
             $offset = ['days' => $days[0], 'hours' => $time[0], 'mins' => $time[1]];
 
-            list($utcStartDateTime, $utcEndDateTime) = $this->createUTCStartEndDateTime(
+            [$utcStartDateTime, $utcEndDateTime] = $this->createUTCStartEndDateTime(
                 $showStartDate,
                 $showDay->getDbDuration(),
                 $offset
@@ -1168,7 +1168,7 @@ SQL;
         //DateTime object
         $start = $showDay->getLocalStartDateAndTime();
 
-        list($utcStartDateTime, $utcEndDateTime) = $this->createUTCStartEndDateTime(
+        [$utcStartDateTime, $utcEndDateTime] = $this->createUTCStartEndDateTime(
             $start,
             $showDay->getDbDuration()
         );
@@ -1253,7 +1253,7 @@ SQL;
         $previousDate = clone $start;
 
         foreach ($datePeriod as $date) {
-            list($utcStartDateTime, $utcEndDateTime) = $this->createUTCStartEndDateTime(
+            [$utcStartDateTime, $utcEndDateTime] = $this->createUTCStartEndDateTime(
                 $date,
                 $duration
             );
@@ -1338,7 +1338,7 @@ SQL;
         }
 
         // We will only need this if the repeat type is MONTHLY_WEEKLY
-        list($weekNumberOfMonth, $dayOfWeek) =
+        [$weekNumberOfMonth, $dayOfWeek] =
             self::getMonthlyWeeklyRepeatInterval(
                 new DateTime($first_show, new DateTimeZone($timezone))
             );
@@ -1353,7 +1353,7 @@ SQL;
         }
 
         while ($start->getTimestamp() < $end->getTimestamp()) {
-            list($utcStartDateTime, $utcEndDateTime) = $this->createUTCStartEndDateTime(
+            [$utcStartDateTime, $utcEndDateTime] = $this->createUTCStartEndDateTime(
                 $start,
                 $duration
             );
@@ -1932,7 +1932,7 @@ SQL;
 
         $endDateTime = clone $startDateTime;
         $duration = explode(':', $duration);
-        list($hours, $mins) = array_slice($duration, 0, 2);
+        [$hours, $mins] = array_slice($duration, 0, 2);
         $endDateTime->add(new DateInterval("PT{$hours}H{$mins}M"));
 
         $startDateTime->setTimezone(new DateTimeZone('UTC'));

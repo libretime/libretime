@@ -61,7 +61,7 @@ class PodcastManager
         $episodeList = $service->getPodcastEpisodes($podcast->getDbPodcastId());
         $episodes = [];
         usort($episodeList, [__CLASS__, '_sortByEpisodePubDate']);
-        for ($i = 0; $i < sizeof($episodeList); ++$i) {
+        for ($i = 0; $i < count($episodeList); ++$i) {
             $episodeData = $episodeList[$i];
             $ts = $podcast->getDbAutoIngestTimestamp();
             // If the timestamp for this podcast is empty (no previous episodes have been ingested) and there are no

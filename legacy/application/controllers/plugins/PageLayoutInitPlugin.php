@@ -118,7 +118,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
         if (!$csrf_namespace->authtoken) {
             // If we don't have a token, regenerate it and set a 1 week timeout
             // Should we log the user out here if the token is expired?
-            $csrf_namespace->authtoken = sha1(uniqid(rand(), 1));
+            $csrf_namespace->authtoken = sha1(uniqid(random_int(0, getrandmax()), 1));
             $csrf_namespace->setExpirationSeconds(168 * 60 * 60);
         }
 

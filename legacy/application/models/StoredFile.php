@@ -803,10 +803,10 @@ SQL;
             }
         }
 
-        $plSelect = 'SELECT ' . join(',', $plSelect);
-        $blSelect = 'SELECT ' . join(',', $blSelect);
-        $fileSelect = 'SELECT ' . join(',', $fileSelect);
-        $streamSelect = 'SELECT ' . join(',', $streamSelect);
+        $plSelect = 'SELECT ' . implode(',', $plSelect);
+        $blSelect = 'SELECT ' . implode(',', $blSelect);
+        $fileSelect = 'SELECT ' . implode(',', $fileSelect);
+        $streamSelect = 'SELECT ' . implode(',', $streamSelect);
 
         $type = intval($datatables['type']);
 

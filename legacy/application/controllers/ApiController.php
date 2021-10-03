@@ -1344,7 +1344,7 @@ class ApiController extends Zend_Controller_Action
         $data = json_decode($request->getParam('data'));
 
         foreach ($data as $pair) {
-            list($id, $gain) = $pair;
+            [$id, $gain] = $pair;
             // TODO : move this code into model -- RG
             $file = Application_Model_StoredFile::RecallById($p_id = $id)->getPropelOrm();
             $file->setDbReplayGain($gain);
@@ -1360,7 +1360,7 @@ class ApiController extends Zend_Controller_Action
         $data = json_decode($request->getParam('data'), $assoc = true);
 
         foreach ($data as $pair) {
-            list($id, $info) = $pair;
+            [$id, $info] = $pair;
             // TODO : move this code into model -- RG
             $file = Application_Model_StoredFile::RecallById($p_id = $id)->getPropelOrm();
 
@@ -1504,7 +1504,7 @@ class ApiController extends Zend_Controller_Action
             $params = $request->getParams();
             $instance = $request->getParam('instance_id', null);
 
-            list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
+            [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($request);
 
             $historyService = new Application_Service_HistoryService();
             $results = $historyService->getPlayedItemData($startsDT, $endsDT, $params, $instance);
@@ -1528,7 +1528,7 @@ class ApiController extends Zend_Controller_Action
             $params = $request->getParams();
             $userId = $request->getParam('user_id', null);
 
-            list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
+            [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($request);
 
             $historyService = new Application_Service_HistoryService();
             $shows = $historyService->getShowList($startsDT, $endsDT, $userId);
@@ -1582,7 +1582,7 @@ class ApiController extends Zend_Controller_Action
             $params = $request->getParams();
             $showId = $request->getParam('show_id', null);
 
-            list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
+            [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($request);
 
             if ((!isset($showId)) || (!is_numeric($showId))) {
                 //if (!isset($showId)) {

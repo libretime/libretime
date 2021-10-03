@@ -991,7 +991,7 @@ final class Application_Model_Scheduler
                         $insert_sql = 'INSERT INTO cc_schedule ' .
                             '(starts, ends, cue_in, cue_out, fade_in, fade_out, ' .
                             'clip_length, position, instance_id, file_id, stream_id) VALUES ' .
-                            implode($values, ',') . ' RETURNING id';
+                            implode(',', $values) . ' RETURNING id';
 
                         $stmt = $this->con->prepare($insert_sql);
                         if ($stmt->execute()) {
@@ -1020,7 +1020,7 @@ final class Application_Model_Scheduler
                             "WHERE starts >= '{$initalStartDT->format(DEFAULT_MICROTIME_FORMAT)}' " .
                             "AND instance_id = {$instanceId} ";
                         if (count($excludeIds) > 0) {
-                            $followingItems_sql .= 'AND id NOT IN (' . implode($excludeIds, ',') . ') ';
+                            $followingItems_sql .= 'AND id NOT IN (' . implode(',', $excludeIds) . ') ';
                         }
                         $followingItems_sql .= 'ORDER BY starts';
                         $followingSchedItems = Application_Common_Database::prepareAndExecute(
