@@ -495,7 +495,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
      */
     public function setDbDescription($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -679,7 +679,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
      */
     public function setDbTimeFilled($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 

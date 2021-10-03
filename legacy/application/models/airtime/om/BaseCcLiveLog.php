@@ -194,7 +194,7 @@ abstract class BaseCcLiveLog extends BaseObject implements Persistent
      */
     public function setDbState($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 

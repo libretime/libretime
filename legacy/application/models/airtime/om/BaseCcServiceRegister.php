@@ -91,7 +91,7 @@ abstract class BaseCcServiceRegister extends BaseObject implements Persistent
      */
     public function setDbName($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -112,7 +112,7 @@ abstract class BaseCcServiceRegister extends BaseObject implements Persistent
      */
     public function setDbIp($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 

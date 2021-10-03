@@ -321,7 +321,7 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
      */
     public function setDbDownloadUrl($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -342,7 +342,7 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
      */
     public function setDbEpisodeGuid($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -363,7 +363,7 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
      */
     public function setDbEpisodeTitle($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -384,7 +384,7 @@ abstract class BasePodcastEpisodes extends BaseObject implements Persistent
      */
     public function setDbEpisodeDescription($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 

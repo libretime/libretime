@@ -217,7 +217,7 @@ abstract class BaseCcSubjsToken extends BaseObject implements Persistent
      */
     public function setDbAction($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -238,7 +238,7 @@ abstract class BaseCcSubjsToken extends BaseObject implements Persistent
      */
     public function setDbToken($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 

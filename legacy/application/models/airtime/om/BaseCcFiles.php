@@ -1484,7 +1484,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbName($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -1505,7 +1505,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbMime($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -1526,7 +1526,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbFtype($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -1572,7 +1572,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbFilepath($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -1729,7 +1729,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbMd5($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -1750,7 +1750,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbTrackTitle($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -1771,7 +1771,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbArtistName($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -1834,7 +1834,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbFormat($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -1855,7 +1855,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbLength($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -1876,7 +1876,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbAlbumTitle($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -1897,7 +1897,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbGenre($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -1918,7 +1918,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbComments($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -1939,7 +1939,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbYear($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2002,7 +2002,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbUrl($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2044,7 +2044,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbRating($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2065,7 +2065,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbEncodedBy($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2086,7 +2086,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbDiscNumber($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2107,7 +2107,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbMood($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2128,7 +2128,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbLabel($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2149,7 +2149,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbComposer($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2170,7 +2170,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbEncoder($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2191,7 +2191,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbChecksum($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2212,7 +2212,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbLyrics($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2233,7 +2233,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbOrchestra($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2254,7 +2254,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbConductor($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2275,7 +2275,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbLyricist($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2296,7 +2296,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbOriginalLyricist($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2317,7 +2317,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbRadioStationName($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2338,7 +2338,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbInfoUrl($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2359,7 +2359,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbArtistUrl($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2380,7 +2380,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbAudioSourceUrl($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2401,7 +2401,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbRadioStationUrl($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2422,7 +2422,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbBuyThisUrl($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2443,7 +2443,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbIsrcNumber($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2464,7 +2464,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbCatalogNumber($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2485,7 +2485,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbOriginalArtist($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2506,7 +2506,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbCopyright($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2527,7 +2527,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbReportDatetime($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2548,7 +2548,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbReportLocation($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2569,7 +2569,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbReportOrganization($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2590,7 +2590,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbSubject($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2611,7 +2611,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbContributor($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2632,7 +2632,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbLanguage($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2728,7 +2728,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbCuein($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2749,7 +2749,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbCueout($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2907,7 +2907,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbDescription($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2928,7 +2928,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbArtwork($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -2949,7 +2949,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbTrackType($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 

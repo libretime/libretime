@@ -108,7 +108,7 @@ abstract class BaseCcStreamSetting extends BaseObject implements Persistent
      */
     public function setDbKeyName($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -129,7 +129,7 @@ abstract class BaseCcStreamSetting extends BaseObject implements Persistent
      */
     public function setDbValue($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -150,7 +150,7 @@ abstract class BaseCcStreamSetting extends BaseObject implements Persistent
      */
     public function setDbType($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 

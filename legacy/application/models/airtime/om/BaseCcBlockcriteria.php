@@ -202,7 +202,7 @@ abstract class BaseCcBlockcriteria extends BaseObject implements Persistent
      */
     public function setDbCriteria($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -223,7 +223,7 @@ abstract class BaseCcBlockcriteria extends BaseObject implements Persistent
      */
     public function setDbModifier($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -244,7 +244,7 @@ abstract class BaseCcBlockcriteria extends BaseObject implements Persistent
      */
     public function setDbValue($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -265,7 +265,7 @@ abstract class BaseCcBlockcriteria extends BaseObject implements Persistent
      */
     public function setDbExtra($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
