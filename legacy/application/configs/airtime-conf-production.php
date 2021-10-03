@@ -26,7 +26,7 @@ $conf = [
         ],
         'default' => 'airtime',
     ],
-    'generator_version' => '1.7.0',
+    'generator_version' => '1.7.2',
 ];
 $conf['classmap'] = include dirname(__FILE__) . DIRECTORY_SEPARATOR . 'classmap-airtime-conf.php';
 
