@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b4fa226ba0d576476c58c930977b7ab0",
+    "content-hash": "a3865b7427df3626b2d81294b93dd7e6",
     "packages": [
         {
             "name": "composer/semver",
@@ -153,6 +153,73 @@
                 "source": "https://github.com/JamesHeinrich/getID3/tree/v1.9.21"
             },
             "time": "2021-09-22T16:34:51+00:00"
+        },
+        {
+            "name": "jooola/propel1",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jooola/propel1.git",
+                "reference": "419193e7f7fe3b7123cd4fc475264adef7005831"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jooola/propel1/zipball/419193e7f7fe3b7123cd4fc475264adef7005831",
+                "reference": "419193e7f7fe3b7123cd4fc475264adef7005831",
+                "shasum": ""
+            },
+            "require": {
+                "phing/phing": "~2.4",
+                "php": ">=5.2.4"
+            },
+            "require-dev": {
+                "pear-pear.php.net/pear_packagefilemanager2": "@stable",
+                "phpunit/phpunit": "~4.0||~5.0"
+            },
+            "default-branch": true,
+            "bin": [
+                "generator/bin/propel-gen",
+                "generator/bin/propel-gen.bat"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.7-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "runtime/lib",
+                    "generator/lib"
+                ]
+            },
+            "include-path": [
+                "runtime/lib",
+                "generator/lib"
+            ],
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "William Durand",
+                    "email": "william.durand1@gmail.com",
+                    "homepage": "http://www.willdurand.fr"
+                }
+            ],
+            "description": "Propel is an open-source Object-Relational Mapping (ORM) for PHP5.",
+            "homepage": "http://www.propelorm.org/",
+            "keywords": [
+                "active record",
+                "database",
+                "mapping",
+                "orm",
+                "persistence"
+            ],
+            "support": {
+                "source": "https://github.com/jooola/propel1/tree/master"
+            },
+            "time": "2021-10-03T22:21:13+00:00"
         },
         {
             "name": "massivescale/celery-php",
@@ -633,74 +700,6 @@
                 }
             ],
             "time": "2021-08-16T04:24:45+00:00"
-        },
-        {
-            "name": "propel/propel1",
-            "version": "1.7.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/propelorm/Propel.git",
-                "reference": "d46b050b41f2a4c7a0ef58bd1b84c07bd5e1d2cd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/propelorm/Propel/zipball/d46b050b41f2a4c7a0ef58bd1b84c07bd5e1d2cd",
-                "reference": "d46b050b41f2a4c7a0ef58bd1b84c07bd5e1d2cd",
-                "shasum": ""
-            },
-            "require": {
-                "phing/phing": "~2.4",
-                "php": ">=5.2.4"
-            },
-            "require-dev": {
-                "pear-pear.php.net/pear_packagefilemanager2": "@stable",
-                "phpunit/phpunit": "~4.0||~5.0"
-            },
-            "bin": [
-                "generator/bin/propel-gen",
-                "generator/bin/propel-gen.bat"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.7-dev"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "runtime/lib",
-                    "generator/lib"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "include-path": [
-                "runtime/lib",
-                "generator/lib"
-            ],
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "William Durand",
-                    "email": "william.durand1@gmail.com",
-                    "homepage": "http://www.willdurand.fr"
-                }
-            ],
-            "description": "Propel is an open-source Object-Relational Mapping (ORM) for PHP5.",
-            "homepage": "http://www.propelorm.org/",
-            "keywords": [
-                "Active Record",
-                "database",
-                "mapping",
-                "orm",
-                "persistence"
-            ],
-            "support": {
-                "issues": "https://github.com/propelorm/Propel/issues",
-                "source": "https://github.com/propelorm/Propel/tree/1.7.2"
-            },
-            "time": "2019-11-05T14:55:42+00:00"
         },
         {
             "name": "simplepie/simplepie",
@@ -3940,7 +3939,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "jooola/propel1": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
