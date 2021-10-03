@@ -6,7 +6,7 @@ from setuptools import setup
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 setup(
-    name="api_clients",
+    name="libretime-api-client",
     version="2.0.0",
     description="LibreTime API Client",
     author="LibreTime Contributors",

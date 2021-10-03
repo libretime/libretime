@@ -8,7 +8,7 @@ here = Path(__file__).parent
 chdir(here)
 
 setup(
-    name="airtime-playout",
+    name="libretime-playout",
     version="1.0",
     description="LibreTime Playout",
     author="LibreTime Contributors",
@@ -31,7 +31,7 @@ setup(
     ],
     python_requires=">=3.6",
     install_requires=[
-        f"api_clients @ file://localhost/{here.parent}/api_clients#egg=api_clients",
+        f"libretime-api-client @ file://localhost/{here.parent}/api_clients#egg=libretime-api-client",
         "amqplib",
         "configobj",
         "defusedxml",
