@@ -289,18 +289,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     protected $info_url;
 
     /**
-     * The value for the artwork field.
-     * @var        string
-     */
-    protected $artwork;
-
-    /**
-     * The value for the track_type field.
-     * @var        string
-     */
-    protected $track_type;
-
-    /**
      * The value for the artist_url field.
      * @var        string
      */
@@ -457,6 +445,18 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @var        string
      */
     protected $description;
+
+    /**
+     * The value for the artwork field.
+     * @var        string
+     */
+    protected $artwork;
+
+    /**
+     * The value for the track_type field.
+     * @var        string
+     */
+    protected $track_type;
 
     /**
      * @var        CcSubjs
@@ -1159,28 +1159,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [artwork] column value.
-     *
-     * @return string
-     */
-    public function getDbArtwork()
-    {
-
-        return $this->artwork;
-    }
-
-    /**
-     * Get the [track_type] column value.
-     *
-     * @return string
-     */
-    public function getDbTrackType()
-    {
-
-        return $this->track_type;
-    }
-
-    /**
      * Get the [artist_url] column value.
      *
      * @return string
@@ -1453,6 +1431,28 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     {
 
         return $this->description;
+    }
+
+    /**
+     * Get the [artwork] column value.
+     *
+     * @return string
+     */
+    public function getDbArtwork()
+    {
+
+        return $this->artwork;
+    }
+
+    /**
+     * Get the [track_type] column value.
+     *
+     * @return string
+     */
+    public function getDbTrackType()
+    {
+
+        return $this->track_type;
     }
 
     /**
@@ -1762,46 +1762,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
 
         return $this;
     } // setDbTrackTitle()
-
-    /**
-     * Set the value of [artwork] column.
-     *
-     * @param  string $v new value
-     * @return CcFiles The current object (for fluent API support)
-     */
-    public function setDbArtwork($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
-        }
-
-        if ($this->artwork !== $v) {
-            $this->artwork = $v;
-            $this->modifiedColumns[] = CcFilesPeer::ARTWORK;
-        }
-
-        return $this;
-    } // setDbArtwork()
-
-    /**
-     * Set the value of [track_type] column.
-     *
-     * @param  string $v new value
-     * @return CcFiles The current object (for fluent API support)
-     */
-    public function setDbTrackType($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
-        }
-
-        if ($this->track_type !== $v) {
-            $this->track_type = $v;
-            $this->modifiedColumns[] = CcFilesPeer::TRACK_TYPE;
-        }
-
-        return $this;
-    } // setDbTrackType()
 
     /**
      * Set the value of [artist_name] column.
@@ -2959,6 +2919,48 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
 
         return $this;
     } // setDbDescription()
+
+    /**
+     * Set the value of [artwork] column.
+     *
+     * @param  string $v new value
+     * @return CcFiles The current object (for fluent API support)
+     */
+    public function setDbArtwork($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->artwork !== $v) {
+            $this->artwork = $v;
+            $this->modifiedColumns[] = CcFilesPeer::ARTWORK;
+        }
+
+
+        return $this;
+    } // setDbArtwork()
+
+    /**
+     * Set the value of [track_type] column.
+     *
+     * @param  string $v new value
+     * @return CcFiles The current object (for fluent API support)
+     */
+    public function setDbTrackType($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->track_type !== $v) {
+            $this->track_type = $v;
+            $this->modifiedColumns[] = CcFilesPeer::TRACK_TYPE;
+        }
+
+
+        return $this;
+    } // setDbTrackType()
 
     /**
      * Indicates whether the columns in this object are only set to default values.

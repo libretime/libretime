@@ -1926,64 +1926,6 @@ abstract class BaseCcFilesQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the artwork column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByDbArtwork('fooValue');   // WHERE artwork = 'fooValue'
-     * $query->filterByDbArtwork('%fooValue%'); // WHERE artwork LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $dbArtwork The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return CcFilesQuery The current query, for fluid interface
-     */
-    public function filterByDbArtwork($dbArtwork = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($dbArtwork)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $dbArtwork)) {
-                $dbArtwork = str_replace('*', '%', $dbArtwork);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(CcFilesPeer::ARTWORK, $dbArtwork, $comparison);
-    }
-
-    /**
-     * Filter the query on the track_type column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByDbTrackType('fooValue');   // WHERE track_type = 'fooValue'
-     * $query->filterByDbTrackType('%fooValue%'); // WHERE track_type LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $dbTrackType The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return CcFilesQuery The current query, for fluid interface
-     */
-    public function filterByDbTrackType($dbTrackType = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($dbTrackType)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $dbTrackType)) {
-                $dbTrackType = str_replace('*', '%', $dbTrackType);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(CcFilesPeer::TRACK_TYPE, $dbTrackType, $comparison);
-    }
-
-    /**
      * Filter the query on the artist_url column
      *
      * Example usage:
@@ -2737,6 +2679,64 @@ abstract class BaseCcFilesQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CcFilesPeer::DESCRIPTION, $dbDescription, $comparison);
+    }
+
+    /**
+     * Filter the query on the artwork column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbArtwork('fooValue');   // WHERE artwork = 'fooValue'
+     * $query->filterByDbArtwork('%fooValue%'); // WHERE artwork LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbArtwork The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcFilesQuery The current query, for fluid interface
+     */
+    public function filterByDbArtwork($dbArtwork = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbArtwork)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbArtwork)) {
+                $dbArtwork = str_replace('*', '%', $dbArtwork);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CcFilesPeer::ARTWORK, $dbArtwork, $comparison);
+    }
+
+    /**
+     * Filter the query on the track_type column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbTrackType('fooValue');   // WHERE track_type = 'fooValue'
+     * $query->filterByDbTrackType('%fooValue%'); // WHERE track_type LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbTrackType The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcFilesQuery The current query, for fluid interface
+     */
+    public function filterByDbTrackType($dbTrackType = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbTrackType)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbTrackType)) {
+                $dbTrackType = str_replace('*', '%', $dbTrackType);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CcFilesPeer::TRACK_TYPE, $dbTrackType, $comparison);
     }
 
     /**
