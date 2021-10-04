@@ -28,10 +28,11 @@ setup(
         "django-url-filter",
         "markdown",
         "model_bakery",
-        "psycopg2",  # TODO: Move to prod requires
     ],
     extras_require={
-        "prod": [],
+        "prod": [
+            "psycopg2",
+        ],
         "dev": [
             "psycopg2-binary",
         ],
