@@ -757,6 +757,7 @@ if [ "$ignore_dependencies" = "f" ]; then
 
     packages_files=(
       "${SCRIPT_DIR}/"
+      "${SCRIPT_DIR}/airtime_mvc"
       "${SCRIPT_DIR}/api"
       "${SCRIPT_DIR}/python_apps/airtime_analyzer"
       "${SCRIPT_DIR}/python_apps/pypo"
