@@ -4,7 +4,7 @@ in this file.
 Running a diff between the original column filter plugin (dataTables.columnFilter_orig.js) and
 our modified one (dataTables.columnFilter.js):
 
-denise@denise-DX4860:~/airtime/airtime_mvc/public/js/datatables/plugin$ diff -u dataTables.columnFilter_orig.js dataTables.columnFilter.js
+denise@denise-DX4860:~/airtime/legacy/public/js/datatables/plugin$ diff -u dataTables.columnFilter_orig.js dataTables.columnFilter.js
 --- dataTables.columnFilter_orig.js	2012-10-17 11:41:05.000000000 -0400
 +++ dataTables.columnFilter.js	2012-11-22 12:20:03.997107451 -0500
 @@ -103,7 +103,8 @@

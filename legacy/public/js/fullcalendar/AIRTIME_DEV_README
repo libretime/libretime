@@ -3,7 +3,7 @@ in this file.
 
 Running a diff between the original fullcalendar.js and our modified one:
 
-denise@denise-DX4860:~/airtime/airtime_mvc/public/js/fullcalendar$ diff -u fullcalendar_orig.js fullcalendar.js
+denise@denise-DX4860:~/airtime/legacy/public/js/fullcalendar$ diff -u fullcalendar_orig.js fullcalendar.js
 --- fullcalendar_orig.js	2013-10-08 16:03:35.442375219 -0400
 +++ fullcalendar.js	2013-10-08 16:53:02.586338519 -0400
 @@ -227,7 +227,7 @@

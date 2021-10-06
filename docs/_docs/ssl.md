@@ -88,10 +88,10 @@ On port 80, Apache's _alias_ module is used to set a _Redirect permanent_ for th
 
       ServerAdmin admin@example.com
 
-      DocumentRoot /usr/share/airtime/php/airtime_mvc/public
+      DocumentRoot /usr/share/airtime/php/legacy/public
       DirectoryIndex index.php
 
-      <Directory /usr/share/airtime/php/airtime_mvc/public>
+      <Directory /usr/share/airtime/php/legacy/public>
               Options -Indexes FollowSymLinks MultiViews
               AllowOverride all
               Order allow,deny
@@ -104,12 +104,12 @@ On port 80, Apache's _alias_ module is used to set a _Redirect permanent_ for th
 
       ServerAdmin admin@example.com
 
-      DocumentRoot /usr/share/airtime/php/airtime_mvc/public
+      DocumentRoot /usr/share/airtime/php/legacy/public
       Redirect permanent /login https://airtime.example.com/login
 
       SetEnv APPLICATION_ENV "production"
 
-      <Directory /usr/share/airtime/php/airtime_mvc/public>
+      <Directory /usr/share/airtime/php/legacy/public>
               Options -Indexes FollowSymLinks MultiViews
               AllowOverride All
               Order allow,deny

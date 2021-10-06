@@ -107,7 +107,7 @@ The UI works best if you don't use it in an opinionated fashion and change just 
 
 If you want a secure environment you should work through the preparing the server docs (up until the dragons) and be prepared to fix some of the issues the installer gets wrong manually by hacking the config file after the fact.
 
-If you want to skip the installer GUI completely you can configure LibreTime using airtime_mvc/build/airtime.example.conf as an template. Due to some python/PHP differences you must remove all comments from the example to use it 😞. You'll also have to create some folder structures manually and check if the music dir got properly created directly in the database. Referencing a second `install -fiap` install on a non productive system for reference can help with this type of bootstrap.
+If you want to skip the installer GUI completely you can configure LibreTime using legacy/build/airtime.example.conf as an template. Due to some python/PHP differences you must remove all comments from the example to use it 😞. You'll also have to create some folder structures manually and check if the music dir got properly created directly in the database. Referencing a second `install -fiap` install on a non productive system for reference can help with this type of bootstrap.
 
 ### Media-Monitor config needs manual removing
 

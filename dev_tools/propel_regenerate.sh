@@ -7,7 +7,7 @@ SCRIPT=$(readlink -f "$0")
 # Absolute directory this script is in
 SCRIPTPATH=$(dirname "$SCRIPT")
 
-cd "$SCRIPTPATH/../airtime_mvc/" || (echo "could not cd in $SCRIPTPATH/../airtime_mvc/" && exit 1)
+cd "$SCRIPTPATH/../legacy/" || (echo "could not cd in $SCRIPTPATH/../legacy/" && exit 1)
 path=$(pwd)
 cd build
 sed -i "s|\"project\.home =.*$\"|\"project.home = $path\"|g" build.properties

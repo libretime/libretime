@@ -3,7 +3,7 @@ in this file.
 
 Running a diff between the original serverbrowser.js and our modified one:
 
-denise@denise-DX4860:~/airtime/airtime_mvc/public/js/serverbrowse$ diff -u serverbrowser_orig.js serverbrowser.js
+denise@denise-DX4860:~/airtime/legacy/public/js/serverbrowse$ diff -u serverbrowser_orig.js serverbrowser.js
 --- serverbrowser_orig.js	2012-11-28 11:42:43.250237696 -0500
 +++ serverbrowser.js	2012-11-28 11:44:57.738242930 -0500
 @@ -65,14 +65,14 @@

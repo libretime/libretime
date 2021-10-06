@@ -1,7 +1,7 @@
 # LibreTime API
 
 This API provides access to LibreTime's database via a Django application. This
-API supersedes the [PHP API](../airtime_mvc/application/controllers/ApiController.php).
+API supersedes the [PHP API](../legacy/application/controllers/ApiController.php).
 
 ## Deploying
 

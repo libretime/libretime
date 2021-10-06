@@ -10,7 +10,7 @@ function getContent() {
     var isPreRelease = getIsPreRelease();
 
     var msg = "";
-    // See file airtime_mvc/application/views/helpers/VersionNotify.php for more info
+    // See file legacy/application/views/helpers/VersionNotify.php for more info
     if(isUpToDate()) {
         msg = $.i18n._("You are running the latest version");
     } else {

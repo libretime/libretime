@@ -89,7 +89,7 @@ jobs:
           sudo mkdir -p "$LIBRETIME_LOG_DIR"
           sudo chown runner:runner "$LIBRETIME_LOG_DIR"
           make test
-        working-directory: airtime_mvc
+        working-directory: legacy
 
   # Start lint the code without failing the entire workflow, should be merged
   # into 'test' when the entire matrix succeeds.

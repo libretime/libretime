@@ -1,5 +1,5 @@
 <?php
-set_include_path(__DIR__.'/../../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
+set_include_path(__DIR__.'/../../legacy/library' . PATH_SEPARATOR . get_include_path());
 
 #require_once('Zend/Loader/Autoloader.php');
 class AirtimeInstall
