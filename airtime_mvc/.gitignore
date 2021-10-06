@@ -1,6 +1,9 @@
 ## Custom .gitignore
 ################################################################################
 
+# Revert global python gitignore
+!build/
+
 /tests/*.jar
 /tests/results.html
 /tests/test_results.xml
