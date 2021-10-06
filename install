@@ -1005,12 +1005,6 @@ loudCmd "$pip_cmd install setuptools --upgrade"
 loudCmd "$pip_cmd install pycairo==1.19.1"
 verbose "...Done"
 
-verbose "\n * Creating /run/airtime..."
-mkdir -p /run/airtime
-chmod 755 /run/airtime
-chown -R "${web_user}:${web_user}" /run/airtime
-verbose "...Done"
-
 if [ ! -d /var/log/airtime ]; then
   loud "\n-----------------------------------------------------"
   loud "              * Installing Log Files *               "
