@@ -42,6 +42,9 @@
 </form>
 
 <script>
+    $("#corsUrl").text(function() {
+        return window.location.origin;
+    });
     $("#corsSlideToggle").click(function() {
         $("#corsFormBody").slideToggle(500);
         $("#corsCaret").toggleClass("caret-up");
