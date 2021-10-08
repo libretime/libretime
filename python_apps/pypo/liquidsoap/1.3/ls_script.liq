@@ -3,8 +3,6 @@
 set("log.file.path", log_file)
 set("server.telnet", true)
 set("server.telnet.port", 1234)
-# set("init.daemon.pidfile.path", "/var/run/airtime/airtime-liquidsoap.pid")
-
 
 #Dynamic source list
 #dyn_sources = ref []
