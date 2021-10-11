@@ -28,7 +28,7 @@ echo -n "${suffix}" > ./VERSION
 echo " Done"
 
 echo -n "Running composer install..."
-pushd airtime_mvc || (echo "could not cd in airtime_mvc!" && exit 1)
+pushd legacy || (echo "could not cd in legacy!" && exit 1)
 composer install --quiet --no-dev --ignore-platform-reqs
 popd || exit
 echo " Done"
@@ -36,8 +36,8 @@ echo " Done"
 # Adding back; may be useful later...
 #echo "Minimizing LibreTime Javascript files..."
 #cd $dir
-#find $target/airtime_mvc/public/js/airtime/ -iname "*.js" -exec bash -c 'echo {}; jsmin/jsmin < {} > {}.min' \;
-#find $target/airtime_mvc/public/js/airtime/ -iname "*.js" -exec mv {}.min {} \;
+#find $target/legacy/public/js/airtime/ -iname "*.js" -exec bash -c 'echo {}; jsmin/jsmin < {} > {}.min' \;
+#find $target/legacy/public/js/airtime/ -iname "*.js" -exec mv {}.min {} \;
 #echo "Done"
 
 cd ..
@@ -52,7 +52,7 @@ tar -czf "libretime-${suffix}.tar.gz" \
         --exclude .travis.yml \
         --exclude travis \
         --exclude dev_tools \
-        --exclude airtime_mvc/vendor/phing \
-        --exclude airtime_mvc/vendor/simplepie/simplepie/tests \
+        --exclude legacy/vendor/phing \
+        --exclude legacy/vendor/simplepie/simplepie/tests \
     libretime
 echo " Done"

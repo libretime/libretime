@@ -757,7 +757,7 @@ if [ "$ignore_dependencies" = "f" ]; then
 
     packages_files=(
       "${SCRIPT_DIR}/"
-      "${SCRIPT_DIR}/airtime_mvc"
+      "${SCRIPT_DIR}/legacy"
       "${SCRIPT_DIR}/api"
       "${SCRIPT_DIR}/python_apps/airtime_analyzer"
       "${SCRIPT_DIR}/python_apps/pypo"
@@ -799,7 +799,7 @@ if [[ ! ${commandFound} -eq 0 ]]; then
 fi
 
 make VERSION # Create a VERSION file
-make -C airtime_mvc build # Install php dependencies with composer
+make -C legacy build # Install php dependencies with composer
 
 if [ -f /etc/airtime/airtime.conf ]; then
   # TODO use VERSION or some other way to check for updates and handle
@@ -863,19 +863,19 @@ fi
 
 if [ "$in_place" = "t" ]; then
   verbose "\n * Setting current Airtime directory as web root..."
-  web_root=${AIRTIMEROOT}/airtime_mvc/public
+  web_root=${AIRTIMEROOT}/legacy/public
 elif [ -n "$web_root" ]; then
   verbose "\n * Creating Apache web root directory..."
-  cp -R ${AIRTIMEROOT}/airtime_mvc ${web_root}
+  cp -R ${AIRTIMEROOT}/legacy ${web_root}
   cp ${AIRTIMEROOT}/VERSION ${web_root}
-  web_root=${web_root}/airtime_mvc/public/
+  web_root=${web_root}/legacy/public/
 else
   verbose "\n * Creating default Apache web root directory /usr/share/airtime/php..."
   web_root="/usr/share/airtime/php"
   mkdir -p ${web_root}
-  cp -R ${AIRTIMEROOT}/airtime_mvc ${web_root}
+  cp -R ${AIRTIMEROOT}/legacy ${web_root}
   cp ${AIRTIMEROOT}/VERSION ${web_root}
-  web_root=${web_root}/airtime_mvc/public/
+  web_root=${web_root}/legacy/public/
 fi
 verbose "...Done"
 
@@ -1014,7 +1014,7 @@ if [ ! -d /var/log/airtime ]; then
   loudCmd "mkdir -p /var/log/airtime"
 
   verbose "\n * Copying logrotate files..."
-  loudCmd "cp ${AIRTIMEROOT}/airtime_mvc/build/airtime-php.logrotate /etc/logrotate.d/airtime-php"
+  loudCmd "cp ${AIRTIMEROOT}/legacy/build/airtime-php.logrotate /etc/logrotate.d/airtime-php"
   loudCmd "cp ${AIRTIMEROOT}/python_apps/pypo/liquidsoap/airtime-liquidsoap.logrotate /etc/logrotate.d/airtime-liquidsoap"
 fi
 

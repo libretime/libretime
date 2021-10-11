@@ -115,9 +115,9 @@ API uses Django to interact with the same database.
 
 If you are a developer seeking to add new columns to the database here are the steps.
 
-1. Modify `airtime_mvc/build/schema.xml` with any changes.
+1. Modify `legacy/build/schema.xml` with any changes.
 2. Run `dev_tools/propel_generate.sh`
-3. Update the upgrade.sql under `airtime_mvc/application/controllers/upgrade_sql/VERSION` for example
+3. Update the upgrade.sql under `legacy/application/controllers/upgrade_sql/VERSION` for example
    `ALTER TABLE imported_podcast ADD COLUMN album_override boolean default 'f' NOT NULL;`
 4. Update the models under `api/libretimeapi/models/` to reflect the new
    changes.

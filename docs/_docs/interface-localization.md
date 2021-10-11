@@ -12,7 +12,7 @@ First, you should check if a localization is already under way for your locale o
 
 GNU **gettext** means using a .po file for each language or dialect, a specially formatted plain text file with groups of three or more lines, like this example from LibreTime's Korean localization:
 
-    #: airtime_mvc/application/configs/navigation.php:57
+    #: legacy/application/configs/navigation.php:57
     msgid "Media Folders"
     msgstr "미디어 폴더"
 
@@ -32,17 +32,17 @@ After forking the LibreTime git repository, make sure you're in the **master** b
       devel
     * master
 
-Create a new locale directory (e.g. _airtime_mvc/locale/de_CH/LC_MESSAGES/_ for German as spoken in Switzerland):
+Create a new locale directory (e.g. _legacy/locale/de_CH/LC_MESSAGES/_ for German as spoken in Switzerland):
 
-    mkdir -p airtime_mvc/locale/de_CH/LC_MESSAGES/
+    mkdir -p legacy/locale/de_CH/LC_MESSAGES/
 
 Copy the template _airtime.po_ file into the directory you just created:
 
-    cp airtime_mvc_locale/template/airtime.po airtime_mvc/locale/de_CH/LC_MESSAGES
+    cp legacy_locale/template/airtime.po legacy/locale/de_CH/LC_MESSAGES
 
 and update the header information in the new copy of the _airtime.po_ file using the **nano** editor:
 
-    nano airtime_mvc/locale/de_CH/LC_MESSAGES/airtime.po
+    nano legacy/locale/de_CH/LC_MESSAGES/airtime.po
 
 For the example of Swiss German, the header of the file should now look like this:
 

@@ -1,0 +1,5653 @@
+# LANGUAGE (xx_XX) translation for Airtime.
+# Copyright (C) 2012 Sourcefabric
+# This file is distributed under the same license as the Airtime package.
+#
+# Translators:
+# Andrey Podshivalov, 2014-2015
+# Andrey Podshivalov, 2014
+# Andrey Podshivalov, 2014
+# Sourcefabric <contact@sourcefabric.org>, 2012
+# Андрей Подшивалов, 2014
+# Yaroslav Grebnev <yarik2720@ya.ru>, 2017. #zanata
+# Yuriy <korotkov13@gmail.com>, 2017. #zanata
+# Stepan Curuci <stepan@curuci.eu>, 2020 #Poedit
+msgid ""
+msgstr ""
+"Project-Id-Version: Airtime 2.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-01-06 10:49+0000\n"
+"PO-Revision-Date: 2020-03-31 03:52+0300\n"
+"Last-Translator: Stepan Curuci <stepan@curuci.eu>\n"
+"Language-Team: Russian (Russia) (http://www.transifex.com/sourcefabric/airtime/language/ru_RU/)\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Poedit 2.3\n"
+
+#: legacy/application/views/scripts/login/password-restore-after.phtml:3
+msgid "Email Sent!"
+msgstr "Письмо отправлено!"
+
+#: legacy/application/views/scripts/login/password-restore-after.phtml:6
+msgid "A password reset link has been sent to your email address. Please check your email and follow the instructions inside to reset your password. If you don't see the email, please check your spam folder!"
+msgstr "Ссылка на сброс пароля была отправлена на вашу электронную почту. Пожалуйста проверьте и следуйте инструкциям в прилагаемом письме, чтобы сбросить пароль. Если Вы не видите письмо в папке Входящие, проверьте папку Спам"
+
+#: legacy/application/views/scripts/login/password-restore-after.phtml:11
+#: legacy/application/views/scripts/form/password-restore.phtml:40
+#: legacy/application/forms/PasswordRestore.php:46
+msgid "Back"
+msgstr "Назад"
+
+#: legacy/application/views/scripts/login/index.phtml:3
+#: legacy/application/views/scripts/index/index.phtml:30
+#: legacy/application/forms/Login.php:77
+msgid "Login"
+msgstr "Вход"
+
+#: legacy/application/views/scripts/login/index.phtml:7
+#, php-format
+msgid "Welcome to the %s demo! You can log in using the username 'admin' and the password 'admin'."
+msgstr "Добро пожаловать в %s демо! Вы можете авторизоваться, введя логин 'admin' и пароль 'admin'."
+
+#: legacy/application/views/scripts/login/password-restore.phtml:3
+msgid "Password Reset"
+msgstr "Сброс пароля"
+
+#: legacy/application/views/scripts/login/password-change.phtml:3
+msgid "New password"
+msgstr "Новый пароль"
+
+#: legacy/application/views/scripts/login/password-change.phtml:6
+msgid "Please enter and confirm your new password in the fields below."
+msgstr "Пожалуйста, введите и подтвердите новый пароль ниже."
+
+#: legacy/application/views/scripts/playouthistory/index.phtml:2
+#: legacy/application/configs/navigation.php:121
+msgid "Playout History"
+msgstr "История воспроизведения треков"
+
+#: legacy/application/views/scripts/playouthistory/index.phtml:8
+msgid "Log Sheet"
+msgstr "Лог треков"
+
+#: legacy/application/views/scripts/playouthistory/index.phtml:9
+msgid "File Summary"
+msgstr "Сводка по файлам"
+
+#: legacy/application/views/scripts/playouthistory/index.phtml:11
+msgid "Show Summary"
+msgstr "Сводка по программам"
+
+#: legacy/application/views/scripts/preference/directory-config.phtml:2
+#: legacy/application/controllers/LocaleController.php:181
+msgid "Manage Media Folders"
+msgstr "Управление папками медиа-файлов"
+
+#: legacy/application/views/scripts/preference/index.phtml:2
+#: legacy/application/configs/navigation.php:72
+msgid "General"
+msgstr "Основные"
+
+#: legacy/application/views/scripts/preference/stream-setting.phtml:2
+msgid "Stream Settings"
+msgstr "Настройки потока"
+
+#: legacy/application/views/scripts/preference/stream-setting.phtml:5
+#: legacy/application/views/scripts/preference/stream-setting.phtml:118
+#: legacy/application/views/scripts/form/edit-user.phtml:163
+#: legacy/application/views/scripts/playlist/playlist.phtml:78
+#: legacy/application/views/scripts/playlist/smart-block.phtml:92
+#: legacy/application/views/scripts/webstream/webstream.phtml:48
+#: legacy/application/views/scripts/podcast/podcast.phtml:46
+#: legacy/application/views/scripts/podcast/station.phtml:9
+#: legacy/application/views/scripts/podcast/station.phtml:127
+#: legacy/application/views/scripts/playouthistorytemplate/template-contents.phtml:85
+#: legacy/application/controllers/LocaleController.php:308
+#: legacy/application/forms/EditAudioMD.php:278
+#: legacy/application/forms/AddUser.php:109
+#: legacy/application/forms/Preferences.php:37
+#: legacy/application/forms/PasswordChange.php:43
+#: legacy/application/forms/AddTracktype.php:60
+#: legacy/application/forms/EditHistory.php:131
+msgid "Save"
+msgstr "Сохранить"
+
+#: legacy/application/views/scripts/preference/stream-setting.phtml:11
+msgid "Global"
+msgstr "Глобальные настройки"
+
+#: legacy/application/views/scripts/preference/stream-setting.phtml:88
+msgid "dB"
+msgstr "дБ"
+
+#: legacy/application/views/scripts/preference/stream-setting.phtml:106
+msgid "Output Streams"
+msgstr "Исходящие Потоки"
+
+#: legacy/application/views/scripts/showbuilder/index.phtml:5
+#: legacy/application/views/scripts/showbuilder/builderDialog.phtml:10
+#: legacy/application/layouts/scripts/layout.phtml:64
+msgid "Dashboard"
+msgstr "Панель управления"
+
+#: legacy/application/views/scripts/showbuilder/index.phtml:26
+#: legacy/application/views/scripts/showbuilder/index.phtml:27
+#: legacy/application/views/scripts/showbuilder/builderDialog.phtml:29
+#: legacy/application/views/scripts/showbuilder/builderDialog.phtml:30
+msgid "Scheduled Shows"
+msgstr "Запланированные Программы"
+
+#: legacy/application/views/scripts/form/edit-user.phtml:1
+#: legacy/application/configs/navigation.php:78
+msgid "My Profile"
+msgstr "Мой профиль"
+
+#: legacy/application/views/scripts/form/stream-setting-form.phtml:4
+msgid "Stream "
+msgstr "Поток "
+
+#: legacy/application/views/scripts/form/stream-setting-form.phtml:41
+#: legacy/application/views/scripts/form/stream-setting-form.phtml:55
+msgid "(Required)"
+msgstr "*"
+
+#: legacy/application/views/scripts/form/stream-setting-form.phtml:84
+msgid "Additional Options"
+msgstr "Дополнительные настройки"
+
+#: legacy/application/views/scripts/form/stream-setting-form.phtml:144
+msgid "The following info will be displayed to listeners in their media player:"
+msgstr "Следующая информация будет отображаться слушателям в их плеере:"
+
+#: legacy/application/views/scripts/form/stream-setting-form.phtml:177
+msgid "(Your radio station website)"
+msgstr "(Веб-сайт вашей радиостанции)"
+
+#: legacy/application/views/scripts/form/stream-setting-form.phtml:215
+msgid "Stream URL: "
+msgstr "URL потока: "
+
+#: legacy/application/views/scripts/form/add-show-autoplaylist.phtml:14
+#: legacy/application/controllers/LocaleController.php:468
+msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/docs/playlists'>More information</a>"
+msgstr "Содержимое автозагружаемого Плейлиста добавляется в Программу за один час до ее выхода в эфир. <a target='_blank' href='http://libretime.org/docs/playlists'>Больше информации</a>"
+
+#: legacy/application/views/scripts/form/preferences.phtml:6
+msgid "TuneIn Settings"
+msgstr "Настройки TuneIn"
+
+#: legacy/application/views/scripts/form/preferences.phtml:12
+msgid "Dangerous Options"
+msgstr "Опасные настройки"
+
+#: legacy/application/views/scripts/form/smart-block-criteria.phtml:4
+msgid "Search Criteria:"
+msgstr "Критерии поиска:"
+
+#: legacy/application/views/scripts/form/smart-block-criteria.phtml:13
+msgid "or"
+msgstr "или"
+
+#: legacy/application/views/scripts/form/smart-block-criteria.phtml:14
+msgid "and"
+msgstr "и"
+
+#: legacy/application/views/scripts/form/smart-block-criteria.phtml:35
+#: legacy/application/views/scripts/form/smart-block-criteria.phtml:42
+msgid " ago "
+msgstr ""
+
+#: legacy/application/views/scripts/form/smart-block-criteria.phtml:38
+msgid "New Modifier"
+msgstr "Новый модификатор"
+
+#: legacy/application/views/scripts/form/smart-block-criteria.phtml:41
+msgid " to "
+msgstr " к "
+
+#: legacy/application/views/scripts/form/smart-block-criteria.phtml:62
+msgid "New Criteria"
+msgstr "Новый критерий"
+
+#: legacy/application/views/scripts/form/smart-block-criteria.phtml:82
+msgid "Advanced options"
+msgstr "Дополнительные опции"
+
+#: legacy/application/views/scripts/form/edit-history-item.phtml:45
+msgid "Choose Show Instance"
+msgstr "Выберите экземпляр программы"
+
+#: legacy/application/views/scripts/form/edit-history-item.phtml:53
+#: legacy/application/controllers/LocaleController.php:416
+#: legacy/application/forms/EditHistoryItem.php:57
+msgid "No Show"
+msgstr "Нет программы"
+
+#: legacy/application/views/scripts/form/edit-history-item.phtml:56
+msgid "Find"
+msgstr "Найти"
+
+#: legacy/application/views/scripts/form/preferences_watched_dirs.phtml:9
+#: legacy/application/views/scripts/form/preferences_watched_dirs.phtml:27
+msgid "Choose folder"
+msgstr "Выбрать папку"
+
+#: legacy/application/views/scripts/form/preferences_watched_dirs.phtml:10
+msgid "Set"
+msgstr "Установить"
+
+#: legacy/application/views/scripts/form/preferences_watched_dirs.phtml:19
+msgid "Current Import Folder:"
+msgstr "Текущая папка импорта:"
+
+#: legacy/application/views/scripts/form/preferences_watched_dirs.phtml:28
+#: legacy/application/views/scripts/form/add-show-rebroadcast-absolute.phtml:40
+#: legacy/application/views/scripts/form/add-show-rebroadcast.phtml:41
+#: legacy/application/views/scripts/playouthistorytemplate/template-contents.phtml:75
+#: legacy/application/controllers/LocaleController.php:66
+msgid "Add"
+msgstr "Добавить"
+
+#: legacy/application/views/scripts/form/preferences_watched_dirs.phtml:43
+#, php-format
+msgid "Rescan watched directory (This is useful if it is network mount and may be out of sync with %s)"
+msgstr "Пересканировать наблюдаемую папку (Полезно для сетевой папки, которая может быть не синхронизирована с %s)."
+
+#: legacy/application/views/scripts/form/preferences_watched_dirs.phtml:44
+msgid "Remove watched directory"
+msgstr "Удалить просматриваемую папку"
+
+#: legacy/application/views/scripts/form/preferences_watched_dirs.phtml:49
+msgid "You are not watching any media folders."
+msgstr "Не выставлена просматриваемая папка с треками."
+
+#: legacy/application/views/scripts/form/add-show-rebroadcast-absolute.phtml:4
+msgid "Choose Days:"
+msgstr "Выберите дни:"
+
+#: legacy/application/views/scripts/form/add-show-rebroadcast-absolute.phtml:18
+#: legacy/application/views/scripts/form/add-show-rebroadcast.phtml:18
+#: legacy/application/controllers/LocaleController.php:75
+#: legacy/application/forms/AddShowStyle.php:64
+#: legacy/application/forms/GeneralPreferences.php:55
+msgid "Remove"
+msgstr "Удалить"
+
+#: legacy/application/views/scripts/form/add-show-rebroadcast.phtml:4
+msgid "Repeat Days:"
+msgstr "Повторить в дни:"
+
+#: legacy/application/views/scripts/form/showbuilder.phtml:7
+msgid "Find Shows"
+msgstr "Найти Программы"
+
+#: legacy/application/views/scripts/form/password-restore.phtml:5
+msgid "Please enter both your username and email address."
+msgstr "Пожалуйста, введите ваши логин и e-mail."
+
+#: legacy/application/views/scripts/form/player.phtml:29
+msgid ""
+"Customize the player by configuring the options below. When you are done,\n"
+"            copy the embeddable code below and paste it into your website's HTML."
+msgstr "Измените плеер, настроив параметры ниже. Когда вы закончите, скопируйте встраиваемый код из области ниже и вставьте в необходимый HTML блок на вашем сайте."
+
+#: legacy/application/views/scripts/form/player.phtml:44
+msgid "Stream Compatibility"
+msgstr "Совместимость потоков с устройствами"
+
+#: legacy/application/views/scripts/form/player.phtml:46
+msgid "Desktop"
+msgstr "Компьютер/ноутбук"
+
+#: legacy/application/views/scripts/form/player.phtml:47
+msgid "Mobile"
+msgstr "Мобильный телефон"
+
+#: legacy/application/views/scripts/form/player.phtml:57
+#: legacy/application/views/scripts/form/player.phtml:58
+#: legacy/application/views/scripts/form/player.phtml:59
+msgid "Yes (Flash)"
+msgstr "Да (Flash)"
+
+#: legacy/application/views/scripts/form/player.phtml:60
+msgid "MP3/OGG* only"
+msgstr "Только MP3/OGG*"
+
+#: legacy/application/views/scripts/form/player.phtml:61
+msgid "MP3/AAC only"
+msgstr "Только MP3/AAC"
+
+#: legacy/application/views/scripts/form/player.phtml:64
+msgid "* Chrome on Android is known to take about 4 seconds to buffer a 128 kbps MP3 stream. Lower bitrates take longer to buffer."
+msgstr "* Известно, что для Chrome на Android требуется около 4 секунд для буферизации потока MP3 со скоростью 128 кбит/с. Более низкие битрейты требуют больше времени для буферизации."
+
+#: legacy/application/views/scripts/form/daterange.phtml:6
+#: legacy/application/views/scripts/form/daterange.phtml:7
+msgid "Filter History"
+msgstr "Фильтр истории"
+
+#: legacy/application/views/scripts/form/add-show-live-stream.phtml:10
+#: legacy/application/views/scripts/form/preferences_livestream.phtml:30
+#: legacy/application/views/scripts/partialviews/header.phtml:44
+msgid "Show Source"
+msgstr "Источник: Show"
+
+#: legacy/application/views/scripts/form/add-show-live-stream.phtml:12
+msgid "DJs can use these settings to connect with compatible software and broadcast live during this show. Assign a DJ below."
+msgstr "DJ-и могут использовать эти настройки для подключения совместимого программного обеспечения и вещать в прямом эфире во время текущей программы. Отметьте DJ-ев ниже."
+
+#: legacy/application/views/scripts/form/login.phtml:40
+msgid "Forgot your password?"
+msgstr "Забыли пароль?"
+
+#: legacy/application/views/scripts/form/preferences_livestream.phtml:1
+msgid "Live Broadcasting"
+msgstr "Живое вещание"
+
+#: legacy/application/views/scripts/form/preferences_livestream.phtml:11
+#: legacy/application/views/scripts/partialviews/header.phtml:35
+msgid "Master Source"
+msgstr "Источник: Master"
+
+#: legacy/application/views/scripts/form/preferences_livestream.phtml:13
+msgid "Use these settings in your broadcasting software to stream live at any time."
+msgstr "Используйте эти настройки в программном обеспечении для трансляции в любое время с приоритетом над всеми Программами."
+
+#: legacy/application/views/scripts/form/preferences_livestream.phtml:19
+#: legacy/application/views/scripts/form/preferences_livestream.phtml:36
+msgid "Override"
+msgstr "Переопределить "
+
+#: legacy/application/views/scripts/form/preferences_livestream.phtml:22
+#: legacy/application/views/scripts/form/preferences_livestream.phtml:40
+msgid "OK"
+msgstr "OK "
+
+#: legacy/application/views/scripts/form/preferences_livestream.phtml:22
+#: legacy/application/views/scripts/form/preferences_livestream.phtml:40
+msgid "RESET"
+msgstr "Сброс "
+
+#: legacy/application/views/scripts/form/preferences_livestream.phtml:32
+msgid "DJs can use these settings in their broadcasting software to broadcast live only during shows assigned to them."
+msgstr "DJ-и могут использовать эти настройки в программном обеспечении для живого вещания, только во время назначенных им Программ."
+
+#: legacy/application/views/scripts/form/preferences_danger.phtml:6
+msgid "<strong>Warning:</strong> These functions will have <strong>permanent and lasting effects</strong> on your Airtime station. Think carefully before using them!"
+msgstr "<strong>ВНИМАНИЕ:</strong> Применение этих функций <strong>необратимо</strong> повлияет на вашу радиостанцию Libretime. Будьте внимательны, прежде чем использовать их!"
+
+#: legacy/application/views/scripts/form/setup-lang-timezone.phtml:1
+#: legacy/application/views/scripts/dashboard/help.phtml:2
+#, php-format
+msgid "Welcome to %s!"
+msgstr "Добро пожаловать %s!"
+
+#: legacy/application/views/scripts/form/setup-lang-timezone.phtml:12
+msgid "You can change these later in your preferences and user settings."
+msgstr "Это можно настроить позже в настройках пользователя."
+
+#: legacy/application/views/scripts/index/index.phtml:60
+#: legacy/application/views/scripts/podcast/podcast_url_dialog.phtml:17
+msgid "Subscribe"
+msgstr "Подписаться"
+
+#: legacy/application/views/scripts/index/index.phtml:73
+msgid "Now Playing:"
+msgstr "Сейчас играет:"
+
+#: legacy/application/views/scripts/user/add-user.phtml:3
+msgid "Manage Users"
+msgstr "Управление пользователями"
+
+#: legacy/application/views/scripts/user/add-user.phtml:10
+msgid "New User"
+msgstr "Новый пользователь"
+
+#: legacy/application/views/scripts/user/add-user.phtml:17
+#: legacy/application/views/scripts/tracktype/add-tracktype.phtml:18
+msgid "id"
+msgstr "id"
+
+#: legacy/application/views/scripts/user/add-user.phtml:18
+#: legacy/application/forms/PasswordRestore.php:25
+#: legacy/application/forms/StreamSettingSubForm.php:164
+msgid "Username"
+msgstr "Логин"
+
+#: legacy/application/views/scripts/user/add-user.phtml:19
+msgid "First Name"
+msgstr "Имя"
+
+#: legacy/application/views/scripts/user/add-user.phtml:20
+msgid "Last Name"
+msgstr "Фамилия"
+
+#: legacy/application/views/scripts/user/add-user.phtml:21
+msgid "User Type"
+msgstr "Категория"
+
+#: legacy/application/views/scripts/listenerstat/show.phtml:2
+#: legacy/application/views/scripts/listenerstat/index.phtml:2
+msgid "Listeners"
+msgstr "Слушатели"
+
+#: legacy/application/views/scripts/listenerstat/show.phtml:5
+#: legacy/application/views/scripts/listenerstat/index.phtml:6
+msgid "Date Range"
+msgstr "Выберите интервал дат ниже"
+
+#: legacy/application/views/scripts/listenerstat/show.phtml:13
+msgid "Show Name"
+msgstr "Программа"
+
+#: legacy/application/views/scripts/listenerstat/show.phtml:14
+msgid "Air Date"
+msgstr "Дата эфира"
+
+#: legacy/application/views/scripts/listenerstat/show.phtml:15
+msgid "Average Listeners"
+msgstr "Слушателей в среднем"
+
+#: legacy/application/views/scripts/listenerstat/show.phtml:16
+msgid "Maximum Number of Listeners"
+msgstr "Максимум слушателей"
+
+#: legacy/application/views/scripts/listenerstat/index.phtml:10
+msgid "Stream Data Collection Status"
+msgstr "Состояние потоков для сбора данных:"
+
+#: legacy/application/views/scripts/playlist/update.phtml:10
+msgid " track matches your search criteria."
+msgid_plural " tracks match your search criteria."
+msgstr[0] " трек соответствует вашим критериям поиска."
+msgstr[1] " трека соответствуют вашим критериям поиска."
+msgstr[2] " треков соответствуют вашим критериям поиска."
+
+#: legacy/application/views/scripts/playlist/update.phtml:25
+msgid "</br>This is only a preview of possible content generated by the smart block based upon the above criteria."
+msgstr "</br>Это только предварительный просмотр возможного контента, сгенерированного Смарт-блоком на основе вышеуказанных критериев."
+
+#: legacy/application/views/scripts/playlist/update.phtml:76
+msgid "Expand Static Block"
+msgstr "Развернуть статический Блок"
+
+#: legacy/application/views/scripts/playlist/update.phtml:81
+msgid "Expand Dynamic Block"
+msgstr "Развернуть динамический Блок"
+
+#: legacy/application/views/scripts/playlist/update.phtml:159
+msgid "Choose some search criteria above and click Generate to create this playlist."
+msgstr "Выберите несколько критериев поиска выше и нажмите кнопку «Сгенерировать», чтобы создать этот Плейлист."
+
+#: legacy/application/views/scripts/playlist/update.phtml:161
+msgid "A track list will be generated when you schedule this smart block into a show."
+msgstr "Список воспроизведения будет составлен, как только вы добавите Смарт-блок в Программу."
+
+#: legacy/application/views/scripts/playlist/update.phtml:164
+msgid "Drag tracks here from your library to add them to the playlist"
+msgstr "Перетащите треки сюда из Библиотеки, чтобы добавить их в Плейлист"
+
+#: legacy/application/views/scripts/playlist/playlist.phtml:10
+#: legacy/application/views/scripts/playlist/smart-block.phtml:10
+#: legacy/application/views/scripts/webstream/webstream.phtml:8
+#: legacy/application/views/scripts/podcast/podcast.phtml:4
+msgid "Editing "
+msgstr "Редактирование "
+
+#: legacy/application/views/scripts/playlist/playlist.phtml:20
+#: legacy/application/views/scripts/playlist/smart-block.phtml:20
+#: legacy/application/views/scripts/webstream/webstream.phtml:17
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:36
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:149
+#: legacy/application/forms/AddShowWhat.php:26
+msgid "Name:"
+msgstr "Имя:"
+
+#: legacy/application/views/scripts/playlist/playlist.phtml:25
+#: legacy/application/views/scripts/playlist/smart-block.phtml:34
+#: legacy/application/views/scripts/library/publish-dialog.phtml:17
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:43
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:152
+#: legacy/application/forms/EditAudioMD.php:116
+#: legacy/application/forms/AddShowWhat.php:54
+#: legacy/application/forms/AddTracktype.php:36
+msgid "Description:"
+msgstr "Описание:"
+
+#: legacy/application/views/scripts/playlist/playlist.phtml:37
+#: legacy/application/views/scripts/playlist/smart-block.phtml:48
+#: legacy/application/forms/AddShowWhen.php:89
+msgid "Duration:"
+msgstr "Длительность:"
+
+#: legacy/application/views/scripts/playlist/playlist.phtml:40
+#: legacy/application/views/scripts/playlist/smart-block.phtml:51
+msgid "Toggle Details"
+msgstr "Отобразить Подробнее"
+
+#: legacy/application/views/scripts/playlist/playlist.phtml:44
+msgid "Shuffle playlist"
+msgstr "Перемешать Плейлист"
+
+#: legacy/application/views/scripts/playlist/playlist.phtml:44
+#: legacy/application/forms/SmartBlockCriteria.php:580
+msgid "Shuffle"
+msgstr "Перемешать"
+
+#: legacy/application/views/scripts/playlist/playlist.phtml:48
+#: legacy/application/views/scripts/playlist/smart-block.phtml:61
+msgid "Playlist crossfade"
+msgstr "Сведение в Плейлисте"
+
+#: legacy/application/views/scripts/playlist/playlist.phtml:52
+msgid "Empty playlist content"
+msgstr "Очистить Плейлист"
+
+#: legacy/application/views/scripts/playlist/playlist.phtml:52
+#: legacy/application/views/scripts/playlist/smart-block.phtml:65
+msgid "Clear"
+msgstr "Очистить"
+
+#: legacy/application/views/scripts/playlist/playlist.phtml:60
+msgid "Fade in:  "
+msgstr "Сведение (сек): "
+
+#: legacy/application/views/scripts/playlist/playlist.phtml:63
+#: legacy/application/views/scripts/playlist/set-fade.phtml:6
+#: legacy/application/views/scripts/playlist/smart-block.phtml:77
+msgid "Fade out: "
+msgstr "Затухание (сек): "
+
+#: legacy/application/views/scripts/playlist/playlist.phtml:75
+#: legacy/application/views/scripts/playlist/smart-block.phtml:89
+#: legacy/application/views/scripts/webstream/webstream.phtml:45
+#: legacy/application/views/scripts/podcast/podcast.phtml:41
+#: legacy/application/controllers/LocaleController.php:309
+#: legacy/application/controllers/LocaleController.php:333
+#: legacy/application/forms/EditAudioMD.php:268
+#: legacy/application/forms/EditHistory.php:141
+msgid "Cancel"
+msgstr "Отменить"
+
+#: legacy/application/views/scripts/playlist/playlist.phtml:78
+msgid "Save playlist"
+msgstr "Сохранить Плейлист"
+
+#: legacy/application/views/scripts/playlist/playlist.phtml:86
+msgid "No open playlist"
+msgstr "Нет открытого Плейлиста"
+
+#: legacy/application/views/scripts/playlist/set-fade.phtml:3
+#: legacy/application/views/scripts/playlist/set-cue.phtml:3
+msgid "Show Waveform"
+msgstr "Показать волну трека"
+
+#: legacy/application/views/scripts/playlist/set-fade.phtml:6
+#: legacy/application/views/scripts/playlist/set-fade.phtml:19
+msgid "(ss.t)"
+msgstr "(сс.t)"
+
+#: legacy/application/views/scripts/playlist/set-fade.phtml:19
+#: legacy/application/views/scripts/playlist/smart-block.phtml:73
+msgid "Fade in: "
+msgstr "Сведение (сек): "
+
+#: legacy/application/views/scripts/playlist/smart-block.phtml:65
+msgid "Remove all content from this smart block"
+msgstr "Удалить все треки из этого Смарт-блока"
+
+#: legacy/application/views/scripts/playlist/smart-block.phtml:98
+msgid "No smart block currently open"
+msgstr "Нет открытого Смарт-блока"
+
+#: legacy/application/views/scripts/playlist/set-cue.phtml:5
+msgid "Cue In: "
+msgstr "Начало звучания: "
+
+#: legacy/application/views/scripts/playlist/set-cue.phtml:5
+#: legacy/application/views/scripts/playlist/set-cue.phtml:12
+msgid "(hh:mm:ss.t)"
+msgstr "(чч:мм:сс.t)"
+
+#: legacy/application/views/scripts/playlist/set-cue.phtml:12
+msgid "Cue Out: "
+msgstr "Окончание звучания: "
+
+#: legacy/application/views/scripts/playlist/set-cue.phtml:19
+msgid "Original Length:"
+msgstr "Исходная длина трека:"
+
+#: legacy/application/views/scripts/plupload/index.phtml:73
+#: legacy/application/layouts/scripts/layout.phtml:56
+msgid "Upload"
+msgstr "Загрузить"
+
+#: legacy/application/views/scripts/plupload/index.phtml:78
+msgid "Drop files here or click to browse your computer."
+msgstr "Перенесите файлы сюда или кликните, чтобы выбрать файлы с компьютера."
+
+#: legacy/application/views/scripts/plupload/index.phtml:91
+msgid "Storage"
+msgstr "Хранилище"
+
+#: legacy/application/views/scripts/plupload/index.phtml:93
+#: legacy/application/controllers/LocaleController.php:329
+msgid "in use"
+msgstr "используется"
+
+#: legacy/application/views/scripts/plupload/index.phtml:96
+#, php-format
+msgid "%01.1fGB of %01.1fGB"
+msgstr "%01.1fGB из %01.1fGB"
+
+#: legacy/application/views/scripts/plupload/index.phtml:109
+#: legacy/application/controllers/LocaleController.php:112
+#: legacy/application/controllers/LocaleController.php:417
+msgid "All"
+msgstr "Все"
+
+#: legacy/application/views/scripts/plupload/index.phtml:110
+msgid "Failed"
+msgstr "Не удалось"
+
+#: legacy/application/views/scripts/plupload/index.phtml:111
+msgid "Pending"
+msgstr "Ожидание"
+
+#: legacy/application/views/scripts/plupload/index.phtml:114
+msgid "Recent Uploads"
+msgstr "Последние загрузки"
+
+#: legacy/application/views/scripts/widgets/lib-table.phtml:4
+#: legacy/application/views/scripts/library/library.phtml:10
+msgid "Advanced Search Options"
+msgstr "Дополнительные параметры поиска"
+
+#: legacy/application/views/scripts/webstream/webstream.phtml:24
+#: legacy/application/views/scripts/podcast/station.phtml:33
+#: legacy/application/views/scripts/systemstatus/index.phtml:31
+#: legacy/application/views/scripts/tracktype/add-tracktype.phtml:21
+#: legacy/application/controllers/LocaleController.php:441
+#: legacy/application/forms/SmartBlockCriteria.php:64
+#: legacy/application/forms/StreamSettingSubForm.php:148
+#: legacy/application/models/Block.php:1444
+#: legacy/application/models/Block.php:1544
+msgid "Description"
+msgstr "Описание"
+
+#: legacy/application/views/scripts/webstream/webstream.phtml:30
+msgid "Stream URL:"
+msgstr "URL потока:"
+
+#: legacy/application/views/scripts/webstream/webstream.phtml:35
+msgid "Default Length:"
+msgstr "Длительность по умолчанию:"
+
+#: legacy/application/views/scripts/webstream/webstream.phtml:53
+msgid "No webstream"
+msgstr "Нет веб-потока"
+
+#: legacy/application/views/scripts/podcast/featureupgrade-pane.phtml:17
+#: legacy/application/views/scripts/library/publish-dialog.phtml:49
+#: legacy/application/views/scripts/schedule/add-show-form.phtml:3
+#: legacy/application/controllers/LocaleController.php:378
+#: legacy/application/controllers/LocaleController.php:406
+msgid "Close"
+msgstr "Закрыть"
+
+#: legacy/application/views/scripts/podcast/podcast.phtml:11
+msgid "Podcast Name: "
+msgstr "Название Подкаста: "
+
+#: legacy/application/views/scripts/podcast/podcast.phtml:15
+msgid "Podcast URL: "
+msgstr "Ссылка на Подкаст: "
+
+#: legacy/application/views/scripts/podcast/podcast.phtml:19
+msgid "Download latest episodes:"
+msgstr "Загружать последние эпизоды:"
+
+#: legacy/application/views/scripts/podcast/podcast.phtml:25
+msgid "Scheduling:"
+msgstr "Запланировано:"
+
+#: legacy/application/views/scripts/podcast/podcast.phtml:28
+msgid "Generate Smartblock and Playlist"
+msgstr "Создать Смарт-блок и Плейлист"
+
+#: legacy/application/views/scripts/podcast/podcast.phtml:30
+msgid "Smartblock and Playlist generated"
+msgstr "Смарт-блок и Плейлист созданы"
+
+#: legacy/application/views/scripts/podcast/podcast.phtml:45
+msgid "Save podcast"
+msgstr "Сохранить Подкаст"
+
+#: legacy/application/views/scripts/podcast/podcast_url_dialog.phtml:8
+msgid "RSS Feed URL:"
+msgstr "Ссылка RSS ленты:"
+
+#: legacy/application/views/scripts/podcast/station.phtml:6
+#: legacy/application/controllers/LocaleController.php:131
+#: legacy/application/configs/navigation.php:17
+msgid "My Podcast"
+msgstr "Мой Подкаст"
+
+#: legacy/application/views/scripts/podcast/station.phtml:8
+#: legacy/application/views/scripts/podcast/station.phtml:126
+msgid "Save station podcast"
+msgstr "Сохранить Подкаст станции"
+
+#: legacy/application/views/scripts/podcast/station.phtml:12
+msgid "View Feed"
+msgstr "Просмотр Ленты"
+
+#: legacy/application/views/scripts/podcast/station.phtml:20
+msgid "General Fields"
+msgstr "Основные поля"
+
+#: legacy/application/views/scripts/podcast/station.phtml:24
+#: legacy/application/views/scripts/playouthistorytemplate/template-contents.phtml:9
+#: legacy/application/forms/StreamSettingSubForm.php:142
+msgid "Name"
+msgstr "Название"
+
+#: legacy/application/views/scripts/podcast/station.phtml:28
+#: legacy/application/views/scripts/schedule/show-content-dialog.phtml:7
+#: legacy/application/controllers/LocaleController.php:87
+#: legacy/application/services/HistoryService.php:1116
+#: legacy/application/services/HistoryService.php:1157
+#: legacy/application/services/HistoryService.php:1174
+#: legacy/application/forms/SmartBlockCriteria.php:65
+#: legacy/application/models/Block.php:1445
+#: legacy/application/models/Block.php:1545
+msgid "Creator"
+msgstr "Автор"
+
+#: legacy/application/views/scripts/podcast/station.phtml:37
+#: legacy/application/controllers/LocaleController.php:98
+#: legacy/application/services/HistoryService.php:1128
+#: legacy/application/forms/SmartBlockCriteria.php:70
+#: legacy/application/models/Block.php:1450
+#: legacy/application/models/Block.php:1550
+msgid "Language"
+msgstr "Язык"
+
+#: legacy/application/views/scripts/podcast/station.phtml:48
+#: legacy/application/controllers/LocaleController.php:93
+#: legacy/application/services/HistoryService.php:1124
+#: legacy/application/services/HistoryService.php:1178
+#: legacy/application/forms/SmartBlockCriteria.php:61
+#: legacy/application/models/Block.php:1441
+#: legacy/application/models/Block.php:1541
+msgid "Copyright"
+msgstr "Копирайт"
+
+#: legacy/application/views/scripts/podcast/station.phtml:52
+#: legacy/application/controllers/LocaleController.php:442
+msgid "Link"
+msgstr "Ссылка"
+
+#: legacy/application/views/scripts/podcast/station.phtml:58
+msgid "iTunes Fields"
+msgstr "Данные iTunes"
+
+#: legacy/application/views/scripts/podcast/station.phtml:62
+#: legacy/application/controllers/LocaleController.php:440
+msgid "Author"
+msgstr "Автор"
+
+#: legacy/application/views/scripts/podcast/station.phtml:67
+msgid "Keywords"
+msgstr "Ключевые слова"
+
+#: legacy/application/views/scripts/podcast/station.phtml:72
+msgid "Summary"
+msgstr "Краткое описание"
+
+#: legacy/application/views/scripts/podcast/station.phtml:77
+msgid "Subtitle"
+msgstr "Подзаголовок"
+
+#: legacy/application/views/scripts/podcast/station.phtml:82
+msgid "Category"
+msgstr "Категория"
+
+#: legacy/application/views/scripts/podcast/station.phtml:87
+msgid "Explicit"
+msgstr "Откровенное содержимое"
+
+#: legacy/application/views/scripts/podcast/station.phtml:93
+msgid "Privacy Settings"
+msgstr "Настройки конфиденциальности"
+
+#: legacy/application/views/scripts/podcast/station.phtml:106
+#: legacy/application/controllers/LocaleController.php:483
+msgid "Feed URL"
+msgstr "Ссылка на ленту"
+
+#: legacy/application/views/scripts/podcast/station.phtml:117
+#, php-format
+msgid ""
+"For detailed information on what these metadata fields mean, please see the %sRSS specification%s\n"
+"                    or %sApple's podcasting documentation%s."
+msgstr "Для подробной информации значений данных разделов, пожалуйста просмотрите %sRSS спецификацию%s или %sдокументацию Подкастов Apple%s."
+
+#: legacy/application/views/scripts/library/library.phtml:3
+msgid "File import in progress..."
+msgstr "Добавление файлов в процессе..."
+
+#: legacy/application/views/scripts/library/edit-file-md.phtml:4
+msgid "You do not have permission to edit this track."
+msgstr "У вас нет прав на изменение этого трека."
+
+#: legacy/application/views/scripts/library/publish-dialog.phtml:4
+msgid "Publishing"
+msgstr "Публикуется"
+
+#: legacy/application/views/scripts/library/publish-dialog.phtml:6
+msgid "Edit Metadata..."
+msgstr "Править мета-данные..."
+
+#: legacy/application/views/scripts/library/publish-dialog.phtml:11
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:9
+#: legacy/application/forms/EditAudioMD.php:52
+#: legacy/application/forms/Player.php:15
+msgid "Title:"
+msgstr "Название:"
+
+#: legacy/application/views/scripts/library/publish-dialog.phtml:14
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:10
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:37
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:151
+#: legacy/application/forms/EditAudioMD.php:62
+msgid "Creator:"
+msgstr "Автор:"
+
+#: legacy/application/views/scripts/library/publish-dialog.phtml:20
+msgid "Publish to:"
+msgstr "Опубликовать в:"
+
+#: legacy/application/views/scripts/library/publish-dialog.phtml:27
+msgid "You have already published this track to all available sources!"
+msgstr "Вы уже опубликовали этот трек во всех возможных источниках!"
+
+#: legacy/application/views/scripts/library/publish-dialog.phtml:28
+msgid "Published tracks can be removed or updated below."
+msgstr "Опубликованные треки могут быть удалены или обновлены ниже."
+
+#: legacy/application/views/scripts/library/publish-dialog.phtml:32
+msgid "Published on:"
+msgstr "Опубликовано в:"
+
+#: legacy/application/views/scripts/library/publish-dialog.phtml:36
+#: legacy/application/controllers/LocaleController.php:438
+msgid "Unpublish"
+msgstr "Снять с публикации"
+
+#: legacy/application/views/scripts/library/publish-dialog.phtml:39
+msgid "You haven't published this track to any sources!"
+msgstr "Вы еще нигде не публиковали данный трек!"
+
+#: legacy/application/views/scripts/library/publish-dialog.phtml:40
+msgid "Check the boxes above and hit 'Publish' to publish this track to the marked sources."
+msgstr "Установите галочки в нужных местах и нажмите «Опубликовать» для публикации этого трека в отмеченных сервисах."
+
+#: legacy/application/views/scripts/library/publish-dialog.phtml:53
+#: legacy/application/views/scripts/library/publish-dialog.phtml:54
+#: legacy/application/controllers/LocaleController.php:74
+msgid "Publish"
+msgstr "Опубликовать"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:11
+#: legacy/application/forms/EditAudioMD.php:72
+msgid "Album:"
+msgstr "Альбом:"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:12
+msgid "Track:"
+msgstr "Трек:"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:13
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:39
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:41
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:150
+msgid "Length:"
+msgstr "Длительность:"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:14
+msgid "Sample Rate:"
+msgstr "Частота дискретизации:"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:15
+#: legacy/application/forms/StreamSettingSubForm.php:74
+msgid "Bit Rate:"
+msgstr "Битрейт:"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:16
+#: legacy/application/forms/EditAudioMD.php:187
+msgid "Mood:"
+msgstr "Настроение:"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:17
+#: legacy/application/forms/EditAudioMD.php:134
+#: legacy/application/forms/AddShowWhat.php:45
+msgid "Genre:"
+msgstr "Жанр:"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:18
+#: legacy/application/forms/EditAudioMD.php:144
+msgid "Year:"
+msgstr "Год:"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:19
+#: legacy/application/forms/EditAudioMD.php:157
+msgid "Label:"
+msgstr "Метка:"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:20
+#: legacy/application/forms/EditAudioMD.php:197
+msgid "BPM:"
+msgstr "BPM:"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:21
+#: legacy/application/forms/EditAudioMD.php:167
+msgid "Composer:"
+msgstr "Композитор:"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:22
+#: legacy/application/forms/EditAudioMD.php:177
+msgid "Conductor:"
+msgstr "Исполнитель:"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:23
+#: legacy/application/forms/EditAudioMD.php:207
+msgid "Copyright:"
+msgstr "Авторское право:"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:24
+msgid "Isrc Number:"
+msgstr "ISRC номер:"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:25
+#: legacy/application/forms/EditAudioMD.php:227
+msgid "Website:"
+msgstr "Сайт:"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:26
+msgid "Artwork:"
+msgstr ""
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:27
+msgid "Artwork Data:"
+msgstr ""
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:28
+#: legacy/application/forms/EditAudioMD.php:237
+#: legacy/application/forms/Login.php:66
+#: legacy/application/forms/EditUser.php:118
+msgid "Language:"
+msgstr "Язык:"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:29
+#: legacy/application/forms/EditAudioMD.php:109
+msgid "Track Type:"
+msgstr ""
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:30
+msgid "File Path:"
+msgstr "Путь к папке:"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:48
+msgid "Web Stream"
+msgstr "Веб-поток"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:49
+msgid "Dynamic Smart Block"
+msgstr "Динамический Смарт-блок"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:50
+msgid "Static Smart Block"
+msgstr "Статический Смарт-блок"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:51
+msgid "Audio Track"
+msgstr "Аудиодорожка"
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:66
+msgid "Playlist Contents: "
+msgstr "Содержимое Плейлиста: "
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:68
+msgid "Static Smart Block Contents: "
+msgstr "Содержимое статического Смарт-блока: "
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:107
+msgid "Dynamic Smart Block Criteria: "
+msgstr "Критерии динамического Смарт-блока: "
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:140
+msgid "Limit to "
+msgstr "Ограничить до "
+
+#: legacy/application/views/scripts/library/get-file-metadata.ajax.phtml:153
+#: legacy/application/forms/AddShowWhat.php:36
+msgid "URL:"
+msgstr "URL:"
+
+#: legacy/application/views/scripts/systemstatus/index.phtml:26
+#, php-format
+msgid "%s Version"
+msgstr "Версия %s:"
+
+#: legacy/application/views/scripts/systemstatus/index.phtml:30
+msgid "Service"
+msgstr "Служба"
+
+#: legacy/application/views/scripts/systemstatus/index.phtml:32
+#: legacy/application/controllers/LocaleController.php:388
+#: legacy/application/controllers/LocaleController.php:389
+#: legacy/application/configs/navigation.php:103
+msgid "Status"
+msgstr "Статус системы"
+
+#: legacy/application/views/scripts/systemstatus/index.phtml:41
+msgid "PDO and PostgreSQL libraries"
+msgstr "Библиотеки PDO и PostgreSQL"
+
+#: legacy/application/views/scripts/systemstatus/index.phtml:58
+msgid "Database configuration for LibreTime"
+msgstr "Конфигурация базы данных LibreTime"
+
+#: legacy/application/views/scripts/systemstatus/index.phtml:77
+msgid "RabbitMQ configuration for LibreTime"
+msgstr "Конфигурация RabbitMQ для LibreTime"
+
+#: legacy/application/views/scripts/systemstatus/index.phtml:98
+#: legacy/application/configs/config-check.php:171
+msgid "LibreTime media analyzer service"
+msgstr "Служба медиа анализатора LibreTime"
+
+#: legacy/application/views/scripts/systemstatus/index.phtml:104
+#: legacy/application/configs/config-check.php:177
+msgid "Check that the libretime-analyzer service is installed correctly in "
+msgstr "Проверьте, что служба libretime-analyzer правильно установлена в "
+
+#: legacy/application/views/scripts/systemstatus/index.phtml:105
+#: legacy/application/views/scripts/systemstatus/index.phtml:125
+#: legacy/application/views/scripts/systemstatus/index.phtml:145
+#: legacy/application/views/scripts/systemstatus/index.phtml:165
+#: legacy/application/configs/config-check.php:178
+#: legacy/application/configs/config-check.php:198
+#: legacy/application/configs/config-check.php:218
+#: legacy/application/configs/config-check.php:238
+msgid " and ensure that it's running with "
+msgstr " а также убедитесь, что она запущена "
+
+#: legacy/application/views/scripts/systemstatus/index.phtml:107
+#: legacy/application/views/scripts/systemstatus/index.phtml:127
+#: legacy/application/views/scripts/systemstatus/index.phtml:147
+#: legacy/application/views/scripts/systemstatus/index.phtml:167
+#: legacy/application/configs/config-check.php:180
+#: legacy/application/configs/config-check.php:200
+#: legacy/application/configs/config-check.php:220
+#: legacy/application/configs/config-check.php:240
+msgid "If not, try "
+msgstr "Если нет - попробуйте запустить"
+
+#: legacy/application/views/scripts/systemstatus/index.phtml:118
+#: legacy/application/configs/config-check.php:191
+msgid "LibreTime playout service"
+msgstr "Служба воспроизведения LibreTime"
+
+#: legacy/application/views/scripts/systemstatus/index.phtml:124
+#: legacy/application/configs/config-check.php:197
+msgid "Check that the libretime-playout service is installed correctly in "
+msgstr "Проверьте, что служба libretime-playout правильно установлена в "
+
+#: legacy/application/views/scripts/systemstatus/index.phtml:138
+#: legacy/application/configs/config-check.php:211
+msgid "LibreTime liquidsoap service"
+msgstr "Служба Liquidsoap LibreTime"
+
+#: legacy/application/views/scripts/systemstatus/index.phtml:144
+#: legacy/application/configs/config-check.php:217
+msgid "Check that the libretime-liquidsoap service is installed correctly in "
+msgstr "Проверьте, что служба libretime-liquidsoap правильно установлена в "
+
+#: legacy/application/views/scripts/systemstatus/index.phtml:158
+#: legacy/application/configs/config-check.php:231
+msgid "LibreTime Celery Task service"
+msgstr "Служба Celery Task LibreTime"
+
+#: legacy/application/views/scripts/systemstatus/index.phtml:164
+#: legacy/application/configs/config-check.php:237
+msgid "Check that the libretime-celery service is installed correctly in "
+msgstr "Проверьте, что служба libretime-celery правильно установлена в "
+
+#: legacy/application/views/scripts/systemstatus/index.phtml:175
+msgid "Disk Space"
+msgstr "Дисковое пространство:"
+
+#: legacy/application/views/scripts/embed/weekly-program.phtml:87
+msgid "Looks like there are no shows scheduled on this day."
+msgstr "Похоже, в этот день не запланировано ни одной Программы."
+
+#: legacy/application/views/scripts/embed/weekly-program.phtml:96
+#: legacy/application/views/scripts/embed/player.phtml:247
+#: legacy/application/models/Preference.php:513
+#, php-format
+msgid "Powered by %s"
+msgstr "При поддержке %s"
+
+#: legacy/application/views/scripts/embed/player.phtml:242
+#: legacy/application/controllers/LocaleController.php:432
+msgid "Next"
+msgstr "Следующая"
+
+#: legacy/application/views/scripts/audiopreview/audio-preview.phtml:23
+msgid "previous"
+msgstr "предыдущая"
+
+#: legacy/application/views/scripts/audiopreview/audio-preview.phtml:28
+msgid "play"
+msgstr "играть"
+
+#: legacy/application/views/scripts/audiopreview/audio-preview.phtml:32
+msgid "pause"
+msgstr "пауза"
+
+#: legacy/application/views/scripts/audiopreview/audio-preview.phtml:37
+msgid "next"
+msgstr "следующий"
+
+#: legacy/application/views/scripts/audiopreview/audio-preview.phtml:42
+msgid "stop"
+msgstr "стоп"
+
+#: legacy/application/views/scripts/audiopreview/audio-preview.phtml:60
+#: legacy/application/views/scripts/dashboard/stream-player.phtml:90
+msgid "mute"
+msgstr "Без звука"
+
+#: legacy/application/views/scripts/audiopreview/audio-preview.phtml:63
+#: legacy/application/views/scripts/dashboard/stream-player.phtml:91
+msgid "unmute"
+msgstr "Включить звук"
+
+#: legacy/application/views/scripts/audiopreview/audio-preview.phtml:69
+msgid "max volume"
+msgstr "Макс. громкость"
+
+#: legacy/application/views/scripts/audiopreview/audio-preview.phtml:79
+msgid "Update Required"
+msgstr "Требуется обновление"
+
+#: legacy/application/views/scripts/audiopreview/audio-preview.phtml:80
+#, php-format
+msgid "To play the media you will need to either update your browser to a recent version or update your %sFlash plugin%s."
+msgstr "Для проигрывания медиа-файла необходимо обновить браузер до последней версии или обновить %sфлэш-плагин%s."
+
+#: legacy/application/views/scripts/playouthistorytemplate/template-contents.phtml:2
+msgid "Creating File Summary Template"
+msgstr "Создание шаблона сводки файлов"
+
+#: legacy/application/views/scripts/playouthistorytemplate/template-contents.phtml:4
+msgid "Creating Log Sheet Template"
+msgstr "Создание шаблона таблицы логов"
+
+#: legacy/application/views/scripts/playouthistorytemplate/template-contents.phtml:46
+msgid "Add more elements"
+msgstr "Добавить еще элементы"
+
+#: legacy/application/views/scripts/playouthistorytemplate/template-contents.phtml:67
+msgid "Add New Field"
+msgstr "Добавить новое поле"
+
+#: legacy/application/views/scripts/playouthistorytemplate/template-contents.phtml:83
+msgid "Set Default Template"
+msgstr "Установить шаблон по умолчанию"
+
+#: legacy/application/views/scripts/playouthistorytemplate/index.phtml:3
+msgid "Playout History Templates"
+msgstr "Шаблоны истории воспроизведения треков"
+
+#: legacy/application/views/scripts/playouthistorytemplate/index.phtml:5
+msgid "Log Sheet Templates"
+msgstr "Шаблоны таблицы логов"
+
+#: legacy/application/views/scripts/playouthistorytemplate/index.phtml:6
+msgid "New Log Sheet Template"
+msgstr "Новый шаблон лога треков"
+
+#: legacy/application/views/scripts/playouthistorytemplate/index.phtml:9
+msgid "No Log Sheet Templates"
+msgstr "Нет шаблона таблицы логов"
+
+#: legacy/application/views/scripts/playouthistorytemplate/index.phtml:27
+#: legacy/application/views/scripts/playouthistorytemplate/index.phtml:58
+#: legacy/application/controllers/LocaleController.php:413
+msgid "Set Default"
+msgstr "Установить по умолчанию"
+
+#: legacy/application/views/scripts/playouthistorytemplate/index.phtml:36
+msgid "File Summary Templates"
+msgstr "Шаблоны сводки файлов"
+
+#: legacy/application/views/scripts/playouthistorytemplate/index.phtml:37
+msgid "New File Summary Template"
+msgstr "Новый шаблон сводки файлов"
+
+#: legacy/application/views/scripts/playouthistorytemplate/index.phtml:40
+msgid "No File Summary Templates"
+msgstr "Нет шаблона сводки файлов"
+
+#: legacy/application/views/scripts/dashboard/about.phtml:2
+msgid "About"
+msgstr "О программе"
+
+#: legacy/application/views/scripts/dashboard/about.phtml:9
+#, php-format
+msgid "%1$s %2$s, the open radio software for scheduling and remote station management."
+msgstr "%1$s %2$s, радио-приложение c открытым кодом для планирования и удаленного управления радиостанцией."
+
+#: legacy/application/views/scripts/dashboard/about.phtml:22
+#, php-format
+msgid "%1$s %2$s is distributed under the %3$s"
+msgstr "%1$s %2$s распространяется под %3$s"
+
+#: legacy/application/views/scripts/dashboard/help.phtml:3
+#, php-format
+msgid "Here's how you can get started using %s to automate your broadcasts: "
+msgstr "Как использовать %s для автоматизации ваших трансляций: "
+
+#: legacy/application/views/scripts/dashboard/help.phtml:6
+msgid "Upload audio tracks"
+msgstr "Загрузить аудио теки"
+
+#: legacy/application/views/scripts/dashboard/help.phtml:7
+msgid "Click the 'Upload' button in the left corner to upload tracks to your library."
+msgstr "Нажмите на кнопку «Загрузить» в левом углу, чтобы начать загрузку треков в Библиотеку."
+
+#: legacy/application/views/scripts/dashboard/help.phtml:8
+msgid "Schedule a show"
+msgstr "Запланировать Программу"
+
+#: legacy/application/views/scripts/dashboard/help.phtml:9
+msgid "Click on 'Calendar' in the navigation bar on the left. From there click the '+ New Show' button and fill out the required fields."
+msgstr "Выберите «Календарь» в навигационной панели слева. Нажмите кнопку «Новая Программа» и заполните необходимые поля."
+
+#: legacy/application/views/scripts/dashboard/help.phtml:10
+msgid "Add tracks to your show"
+msgstr "Добавить треки в Программу"
+
+#: legacy/application/views/scripts/dashboard/help.phtml:11
+msgid "Click on your show in the calendar and select 'Schedule Show'. In the popup window drag tracks into your show."
+msgstr "Выберите вашу Программу в календаре и нажмите «Запланировать Программу». В появившемся окне добавьте треки в вашу Программу."
+
+#: legacy/application/views/scripts/dashboard/help.phtml:16
+msgid "Now you're good to go!"
+msgstr "Теперь можно двигаться дальше!"
+
+#: legacy/application/views/scripts/dashboard/help.phtml:19
+#, php-format
+msgid "For more detailed help, read the %suser manual%s."
+msgstr "Для более подробной справки читайте %sруководство пользователя%s ."
+
+#: legacy/application/views/scripts/dashboard/stream-player.phtml:2
+#: legacy/application/layouts/scripts/livestream.phtml:9
+msgid "Live stream"
+msgstr "Прямой эфир"
+
+#: legacy/application/views/scripts/dashboard/stream-player.phtml:3
+msgid "Share"
+msgstr "Поделиться"
+
+#: legacy/application/views/scripts/dashboard/stream-player.phtml:64
+msgid "Select stream:"
+msgstr "Выберите поток:"
+
+#: legacy/application/views/scripts/dashboard/table-test.phtml:2
+msgid "Table Test"
+msgstr "Таблица тестов"
+
+#: legacy/application/views/scripts/schedule/add-show-form.phtml:6
+#: legacy/application/views/scripts/schedule/add-show-form.phtml:47
+msgid "Add this show"
+msgstr "Добавить эту Программу"
+
+#: legacy/application/views/scripts/schedule/add-show-form.phtml:6
+#: legacy/application/views/scripts/schedule/add-show-form.phtml:47
+msgid "Update show"
+msgstr "Обновить Программу"
+
+#: legacy/application/views/scripts/schedule/add-show-form.phtml:10
+msgid "What"
+msgstr "Что"
+
+#: legacy/application/views/scripts/schedule/add-show-form.phtml:14
+msgid "When"
+msgstr "Когда"
+
+#: legacy/application/views/scripts/schedule/add-show-form.phtml:28
+msgid "Autoloading Playlist"
+msgstr "Автозагружаемый Плейлист"
+
+#: legacy/application/views/scripts/schedule/add-show-form.phtml:32
+msgid "Live Stream Input"
+msgstr "Вход для прямого эфира"
+
+#: legacy/application/views/scripts/schedule/add-show-form.phtml:36
+msgid "Who"
+msgstr "Кто"
+
+#: legacy/application/views/scripts/schedule/add-show-form.phtml:40
+msgid "Style"
+msgstr "Стиль"
+
+#: legacy/application/views/scripts/schedule/show-content-dialog.phtml:5
+#: legacy/application/controllers/LocaleController.php:283
+msgid "Start"
+msgstr "Начало"
+
+#: legacy/application/views/scripts/schedule/show-content-dialog.phtml:6
+#: legacy/application/controllers/LocaleController.php:86
+#: legacy/application/services/HistoryService.php:1115
+#: legacy/application/services/HistoryService.php:1156
+#: legacy/application/services/HistoryService.php:1173
+#: legacy/application/forms/SmartBlockCriteria.php:80
+#: legacy/application/models/Block.php:1461
+#: legacy/application/models/Block.php:1561
+msgid "Title"
+msgstr "Название"
+
+#: legacy/application/views/scripts/schedule/show-content-dialog.phtml:8
+#: legacy/application/controllers/LocaleController.php:88
+#: legacy/application/services/HistoryService.php:1117
+#: legacy/application/forms/SmartBlockCriteria.php:56
+#: legacy/application/models/Block.php:1436
+#: legacy/application/models/Block.php:1536
+msgid "Album"
+msgstr "Альбом"
+
+#: legacy/application/views/scripts/schedule/show-content-dialog.phtml:9
+#: legacy/application/controllers/LocaleController.php:101
+#: legacy/application/services/HistoryService.php:1118
+#: legacy/application/services/HistoryService.php:1176
+#: legacy/application/forms/SmartBlockCriteria.php:73
+#: legacy/application/models/Block.php:1454
+#: legacy/application/models/Block.php:1554
+msgid "Length"
+msgstr "Длительность"
+
+#: legacy/application/views/scripts/schedule/show-content-dialog.phtml:10
+#: legacy/application/controllers/LocaleController.php:95
+#: legacy/application/services/HistoryService.php:1119
+#: legacy/application/forms/SmartBlockCriteria.php:67
+#: legacy/application/forms/StreamSettingSubForm.php:127
+#: legacy/application/models/Block.php:1447
+#: legacy/application/models/Block.php:1547
+msgid "Genre"
+msgstr "Жанр"
+
+#: legacy/application/views/scripts/tracktype/add-tracktype.phtml:4
+msgid "Manage Track Types"
+msgstr "Управление типами треков"
+
+#: legacy/application/views/scripts/tracktype/add-tracktype.phtml:11
+msgid "New Track Type"
+msgstr "Новый тип"
+
+#: legacy/application/views/scripts/tracktype/add-tracktype.phtml:19
+msgid "Code"
+msgstr "Код"
+
+#: legacy/application/views/scripts/tracktype/add-tracktype.phtml:20
+#: legacy/application/controllers/LocaleController.php:97
+#: legacy/application/services/HistoryService.php:1121
+#: legacy/application/forms/SmartBlockCriteria.php:69
+#: legacy/application/models/Block.php:1449
+#: legacy/application/models/Block.php:1549
+msgid "Label"
+msgstr "Метка"
+
+#: legacy/application/views/scripts/tracktype/add-tracktype.phtml:22
+msgid "Visibility"
+msgstr "Видимость"
+
+#: legacy/application/views/scripts/partialviews/header.phtml:9
+msgid "Previous:"
+msgstr "Предыдущий:"
+
+#: legacy/application/views/scripts/partialviews/header.phtml:16
+msgid "Next:"
+msgstr "Следующий:"
+
+#: legacy/application/views/scripts/partialviews/header.phtml:30
+msgid "Source Streams"
+msgstr "Внешние источники"
+
+#: legacy/application/views/scripts/partialviews/header.phtml:54
+msgid "ON AIR"
+msgstr "В ЭФИРЕ"
+
+#: legacy/application/views/scripts/partialviews/header.phtml:55
+msgid "Listen"
+msgstr "Слушать"
+
+#: legacy/application/views/scripts/partialviews/header.phtml:62
+msgid "Logout"
+msgstr "Выйти"
+
+#: legacy/application/views/scripts/partialviews/dashboard-sub-nav.php:3
+#: legacy/application/controllers/LocaleController.php:84
+msgid "Tracks"
+msgstr "Треки"
+
+#: legacy/application/views/scripts/partialviews/dashboard-sub-nav.php:8
+#: legacy/application/controllers/LocaleController.php:114
+msgid "Playlists"
+msgstr "Плейлисты"
+
+#: legacy/application/views/scripts/partialviews/dashboard-sub-nav.php:13
+#: legacy/application/controllers/LocaleController.php:115
+msgid "Smart Blocks"
+msgstr "Смарт-блоки"
+
+#: legacy/application/views/scripts/partialviews/dashboard-sub-nav.php:18
+msgid "Webstreams"
+msgstr "Веб-потоки"
+
+#: legacy/application/views/scripts/embeddablewidgets/schedule.phtml:5
+#: legacy/application/configs/navigation.php:56
+msgid "Weekly Schedule"
+msgstr "Расписание программ"
+
+#: legacy/application/views/scripts/embeddablewidgets/schedule.phtml:11
+#: legacy/application/views/scripts/embeddablewidgets/schedule.phtml:14
+#: legacy/application/views/scripts/embeddablewidgets/facebook.phtml:16
+#: legacy/application/forms/Player.php:77
+msgid "Preview:"
+msgstr "Предпросмотр:"
+
+#: legacy/application/views/scripts/embeddablewidgets/schedule.phtml:20
+#: legacy/application/forms/Player.php:71
+msgid "Embeddable code:"
+msgstr "Встраиваемый код:"
+
+#: legacy/application/views/scripts/embeddablewidgets/schedule.phtml:24
+msgid "Copy this code and paste it into your website's HTML to embed the weekly schedule in your site. Adjust the height and width attributes to your desired size."
+msgstr "Скопируйте и добавьте этот код в HTML сайта, чтобы добавить еженедельное расписание. Настройте высоту и ширину виджета, изменив соответствующие значения «height» и «width» в этом коде."
+
+#: legacy/application/views/scripts/embeddablewidgets/facebook.phtml:5
+msgid "Facebook Radio Player"
+msgstr "Радио-плеер для Facebook"
+
+#: legacy/application/views/scripts/embeddablewidgets/facebook.phtml:8
+msgid "Add to My Facebook Page"
+msgstr "Добавить на Facebook"
+
+#: legacy/application/views/scripts/embeddablewidgets/facebook.phtml:27
+msgid "Tips:"
+msgstr "Советы:"
+
+#: legacy/application/views/scripts/embeddablewidgets/facebook.phtml:29
+msgid "To make the tab more visible on your Facebook page, click 'More', and 'Manage Tabs':"
+msgstr "Чтобы сделать вкладку более заметной на вашей странице Facebook, нажмите «More», затем «Manage Tabs»"
+
+#: legacy/application/views/scripts/embeddablewidgets/facebook.phtml:32
+msgid "Then, drag the Radio Player item higher in the list, and click Save. It will now appear as one of the default tabs instead of being buried under 'More':"
+msgstr "Затем, перетащите элемент «Радиоплеер» вверх списка и нажмите «Save». Теперь он будет отображаться как одна из вкладок по умолчанию, а не скрываться под «More»"
+
+#: legacy/application/views/scripts/embeddablewidgets/player.phtml:6
+#: legacy/application/configs/navigation.php:50
+msgid "Player"
+msgstr "Плеер"
+
+#: legacy/application/views/scripts/error/error-403.phtml:5
+#: legacy/application/views/scripts/error/error-500.phtml:5
+#: legacy/application/views/scripts/error/error-404.phtml:5
+#: legacy/application/views/scripts/error/error-400.phtml:5
+#: legacy/application/views/scripts/error/error.phtml:6
+msgid "An error has occurred."
+msgstr "Произошла ошибка."
+
+#: legacy/application/views/scripts/error/error-403.phtml:10
+msgid "Access Denied!"
+msgstr "Доступ запрещен!"
+
+#: legacy/application/views/scripts/error/error-403.phtml:11
+msgid "You do not have permission to access this page!"
+msgstr "У Вас нет прав для просмотра данной страницы!"
+
+#: legacy/application/views/scripts/error/error-403.phtml:13
+#: legacy/application/views/scripts/error/error-500.phtml:13
+#: legacy/application/views/scripts/error/error-404.phtml:13
+#: legacy/application/views/scripts/error/error-400.phtml:13
+#: legacy/application/views/scripts/error/error.phtml:14
+#: legacy/application/configs/navigation.php:152
+msgid "Help"
+msgstr "Справка"
+
+#: legacy/application/views/scripts/error/error-500.phtml:10
+msgid "Oops!"
+msgstr "Упс!"
+
+#: legacy/application/views/scripts/error/error-500.phtml:11
+#: legacy/application/controllers/LocaleController.php:26
+msgid "Something went wrong!"
+msgstr "Что-то пошло не так!"
+
+#: legacy/application/views/scripts/error/error-404.phtml:10
+msgid "Page not found!"
+msgstr "Страница не найдена!"
+
+#: legacy/application/views/scripts/error/error-404.phtml:11
+msgid "We couldn't find the page you were looking for."
+msgstr "Мы не можем найти страницу, которую Вы пытаетесь открыть."
+
+#: legacy/application/views/scripts/error/error-400.phtml:10
+msgid "Bad Request!"
+msgstr "Неверный запрос!"
+
+#: legacy/application/views/scripts/error/error-400.phtml:11
+msgid "The requested action is not supported!"
+msgstr "Запрашиваемое действие не поддерживается!"
+
+#: legacy/application/views/scripts/error/error.phtml:12
+msgid "Looks like the page you were looking for doesn't exist!"
+msgstr "Похоже, что страница, которую вы ищете, не существует!"
+
+#: legacy/application/layouts/scripts/audio-player.phtml:5
+#: legacy/application/controllers/LocaleController.php:25
+msgid "Audio Player"
+msgstr "Аудио плеер"
+
+#: legacy/application/layouts/scripts/layout.phtml:45
+#: legacy/application/controllers/LocaleController.php:85
+msgid "Playlist"
+msgstr "Плейлист"
+
+#: legacy/application/layouts/scripts/layout.phtml:48
+#: legacy/application/controllers/LocaleController.php:477
+msgid "Smart Block"
+msgstr "Смарт-блок"
+
+#: legacy/application/layouts/scripts/layout.phtml:51
+msgid "Webstream"
+msgstr "Веб-поток"
+
+#: legacy/application/layouts/scripts/layout.phtml:70
+msgid "Podcasts"
+msgstr "Подкасты"
+
+#: legacy/application/layouts/scripts/layout.phtml:126
+#: legacy/application/layouts/scripts/layout.phtml:152
+msgid "Play"
+msgstr "Воспроизвести"
+
+#: legacy/application/layouts/scripts/layout.phtml:127
+#: legacy/application/layouts/scripts/layout.phtml:153
+msgid "Stop"
+msgstr "Стоп"
+
+#: legacy/application/layouts/scripts/layout.phtml:131
+#: legacy/application/controllers/LocaleController.php:295
+#: legacy/application/forms/SmartBlockCriteria.php:62
+#: legacy/application/models/Block.php:1442
+#: legacy/application/models/Block.php:1542
+msgid "Cue In"
+msgstr "Начало звучания"
+
+#: legacy/application/layouts/scripts/layout.phtml:133
+msgid "Set Cue In"
+msgstr "Установить начало звучания"
+
+#: legacy/application/layouts/scripts/layout.phtml:138
+#: legacy/application/controllers/LocaleController.php:296
+#: legacy/application/forms/SmartBlockCriteria.php:63
+#: legacy/application/models/Block.php:1443
+#: legacy/application/models/Block.php:1543
+msgid "Cue Out"
+msgstr "Окончание звучания"
+
+#: legacy/application/layouts/scripts/layout.phtml:140
+msgid "Set Cue Out"
+msgstr "Установить окончание звучания"
+
+#: legacy/application/layouts/scripts/layout.phtml:157
+msgid "Cursor"
+msgstr "Курсор"
+
+#: legacy/application/layouts/scripts/layout.phtml:158
+#: legacy/application/controllers/LocaleController.php:297
+msgid "Fade In"
+msgstr "Сведение"
+
+#: legacy/application/layouts/scripts/layout.phtml:159
+#: legacy/application/controllers/LocaleController.php:298
+msgid "Fade Out"
+msgstr "Затухание"
+
+#: legacy/application/layouts/scripts/layout.phtml:174
+msgid "Welcome to LibreTime"
+msgstr ""
+
+#: legacy/application/layouts/scripts/layout.phtml:175
+msgid ""
+"LibreTime is free software for radio stations built by a community.\n"
+"                You can find out more information at LibreTime.org. We are built as a fork of Airtime.\n"
+"                If you have any questions you can also go to https://discourse.libretime.org and ask them."
+msgstr ""
+
+#: legacy/application/layouts/scripts/login.phtml:23
+#, php-format
+msgid "%1$s copyright &copy; %2$s All rights reserved.<br />Maintained and distributed under the %3$s by %4$s"
+msgstr "%1$s Copyright &copy; %2$s Все права защищены.<br />Поддерживается и распространяется под лицензией %3$s командой %4$s"
+
+#: legacy/application/controllers/DashboardController.php:35
+#: legacy/application/controllers/DashboardController.php:84
+msgid "You don't have permission to disconnect source."
+msgstr "У вас нет прав отсоединить источник."
+
+#: legacy/application/controllers/DashboardController.php:37
+#: legacy/application/controllers/DashboardController.php:86
+msgid "There is no source connected to this input."
+msgstr "Нет источника, подключенного к этому входу."
+
+#: legacy/application/controllers/DashboardController.php:81
+msgid "You don't have permission to switch source."
+msgstr "У вас нет прав для переключения источника."
+
+#: legacy/application/controllers/LoginController.php:54
+msgid "Please enter your username and password."
+msgstr "Пожалуйста введите ваш логин и пароль."
+
+#: legacy/application/controllers/LoginController.php:160
+msgid "Email could not be sent. Check your mail server settings and ensure it has been configured properly."
+msgstr "E-mail не может быть отправлен. Проверьте настройки почтового сервера и убедитесь, что он был настроен должным образом."
+
+#: legacy/application/controllers/LoginController.php:163
+msgid "That username or email address could not be found."
+msgstr "Такой пользователь или e-mail не найдены."
+
+#: legacy/application/controllers/LoginController.php:166
+msgid "There was a problem with the username or email address you entered."
+msgstr "Неправильно ввели логин или e-mail."
+
+#: legacy/application/controllers/LoginController.php:244
+msgid "Wrong username or password provided. Please try again."
+msgstr "Неверный логин или пароль. Пожалуйста, попробуйте еще раз."
+
+#: legacy/application/controllers/WebstreamController.php:28
+#: legacy/application/controllers/WebstreamController.php:32
+msgid "Untitled Webstream"
+msgstr "Веб-поток без названия"
+
+#: legacy/application/controllers/WebstreamController.php:154
+msgid "Webstream saved."
+msgstr "Веб-поток сохранен."
+
+#: legacy/application/controllers/WebstreamController.php:162
+msgid "Invalid form values."
+msgstr "Недопустимые значения."
+
+#: legacy/application/controllers/ErrorController.php:87
+msgid "Page not found."
+msgstr "Страница не найдена."
+
+#: legacy/application/controllers/ErrorController.php:96
+msgid "The requested action is not supported."
+msgstr "Запрашиваемое действие не поддерживается."
+
+#: legacy/application/controllers/ErrorController.php:107
+msgid "You do not have permission to access this resource."
+msgstr "У вас нет доступа к данному ресурсу."
+
+#: legacy/application/controllers/ErrorController.php:118
+msgid "An internal application error has occurred."
+msgstr "Произошла внутренняя ошибка."
+
+#: legacy/application/controllers/UserController.php:86
+msgid "User added successfully!"
+msgstr "Пользователь успешно добавлен!"
+
+#: legacy/application/controllers/UserController.php:88
+msgid "User updated successfully!"
+msgstr "Пользователь успешно обновлен!"
+
+#: legacy/application/controllers/UserController.php:188
+msgid "Settings updated successfully!"
+msgstr "Настройки успешно обновлены!"
+
+#: legacy/application/controllers/ShowbuilderController.php:134
+#: legacy/application/controllers/LibraryController.php:93
+#: legacy/application/controllers/LocaleController.php:174
+#: legacy/application/forms/SmartBlockCriteria.php:568
+msgid "Preview"
+msgstr "Прослушать"
+
+#: legacy/application/controllers/ShowbuilderController.php:136
+msgid "Select cursor"
+msgstr "Выбрать курсор"
+
+#: legacy/application/controllers/ShowbuilderController.php:137
+msgid "Remove cursor"
+msgstr "Удалить курсор"
+
+#: legacy/application/controllers/ShowbuilderController.php:142
+#: legacy/application/controllers/LibraryController.php:120
+#: legacy/application/controllers/LibraryController.php:155
+#: legacy/application/controllers/LibraryController.php:174
+#: legacy/application/controllers/LocaleController.php:73
+#: legacy/application/services/CalendarService.php:188
+#: legacy/application/services/CalendarService.php:205
+#: legacy/application/services/CalendarService.php:210
+msgid "Delete"
+msgstr "Удалить"
+
+#: legacy/application/controllers/ShowbuilderController.php:156
+msgid "show does not exist"
+msgstr "Программы не существует"
+
+#: legacy/application/controllers/PreferenceController.php:74
+msgid "Preferences updated."
+msgstr "Настройки сохранены."
+
+#: legacy/application/controllers/PreferenceController.php:308
+msgid "Stream Setting Updated."
+msgstr "Настройки потока обновлены."
+
+#: legacy/application/controllers/PreferenceController.php:356
+msgid "path should be specified"
+msgstr "необходимо указать путь"
+
+#: legacy/application/controllers/PreferenceController.php:451
+msgid "Problem with Liquidsoap..."
+msgstr "Проблема с Liquidsoap ..."
+
+#: legacy/application/controllers/PreferenceController.php:513
+msgid "Request method not accepted"
+msgstr "Метод запроса не принят"
+
+#: legacy/application/controllers/IndexController.php:90
+#, php-format
+msgid "%s Podcast"
+msgstr "%s Подкаст"
+
+#: legacy/application/controllers/IndexController.php:91
+msgid "No tracks have been published yet."
+msgstr "Ни одного трека пока не опубликовано."
+
+#: legacy/application/controllers/LibraryController.php:29
+#: legacy/application/controllers/PlaylistController.php:149
+#, php-format
+msgid "%s not found"
+msgstr "%s не найден"
+
+#: legacy/application/controllers/LibraryController.php:38
+#: legacy/application/controllers/PlaylistController.php:170
+msgid "Something went wrong."
+msgstr "Что-то пошло не так."
+
+#: legacy/application/controllers/LibraryController.php:113
+#: legacy/application/controllers/LibraryController.php:143
+#: legacy/application/controllers/LibraryController.php:166
+msgid "Add to Playlist"
+msgstr "Добавить в Плейлист"
+
+#: legacy/application/controllers/LibraryController.php:115
+msgid "Add to Smart Block"
+msgstr "Добавить в Смарт-блок"
+
+#: legacy/application/controllers/LibraryController.php:121
+#: legacy/application/controllers/LibraryController.php:150
+#: legacy/application/controllers/LibraryController.php:172
+msgid "Edit..."
+msgstr "Редактировать..."
+
+#: legacy/application/controllers/LibraryController.php:129
+#: legacy/application/controllers/ScheduleController.php:708
+msgid "Download"
+msgstr "Загрузка"
+
+#: legacy/application/controllers/LibraryController.php:134
+msgid "Duplicate Playlist"
+msgstr "Дублировать Плейлист"
+
+#: legacy/application/controllers/LibraryController.php:137
+msgid "Duplicate Smartblock"
+msgstr "Дублировать Смарт-блок"
+
+#: legacy/application/controllers/LibraryController.php:179
+msgid "No action available"
+msgstr "Нет доступных действий"
+
+#: legacy/application/controllers/LibraryController.php:199
+msgid "You don't have permission to delete selected items."
+msgstr "У вас нет разрешения на удаление выбранных объектов."
+
+#: legacy/application/controllers/LibraryController.php:245
+msgid "Could not delete file because it is scheduled in the future."
+msgstr "Нельзя удалить запланированный файл."
+
+#: legacy/application/controllers/LibraryController.php:248
+msgid "Could not delete file(s)."
+msgstr "Нельзя удалить файл(ы)"
+
+#: legacy/application/controllers/LibraryController.php:289
+#: legacy/application/controllers/LibraryController.php:324
+#, php-format
+msgid "Copy of %s"
+msgstr "Копия %s"
+
+#: legacy/application/controllers/ListenerstatController.php:50
+msgid "Please make sure admin user/password is correct on Settings->Streams page."
+msgstr "Пожалуйста, убедитесь, что логин/пароль admin-а указаны верно в Настройки -> Аудио потоки."
+
+#: legacy/application/controllers/ApiController.php:103
+#: legacy/application/controllers/ApiController.php:715
+msgid "You are not allowed to access this resource."
+msgstr "Вы не имеете доступа к этому ресурсу."
+
+#: legacy/application/controllers/ApiController.php:348
+#: legacy/application/controllers/ApiController.php:423
+#: legacy/application/controllers/ApiController.php:491
+#: legacy/application/controllers/ApiController.php:543
+#: legacy/application/controllers/ApiController.php:634
+#: legacy/application/controllers/ApiController.php:650
+#: legacy/application/controllers/ApiController.php:682
+msgid "You are not allowed to access this resource. "
+msgstr "Вы не имеете доступа к этому ресурсу. "
+
+#: legacy/application/controllers/ApiController.php:888
+#: legacy/application/controllers/ApiController.php:908
+#: legacy/application/controllers/ApiController.php:920
+#, php-format
+msgid "File does not exist in %s"
+msgstr "Файл не существует в %s"
+
+#: legacy/application/controllers/ApiController.php:971
+msgid "Bad request. no 'mode' parameter passed."
+msgstr "Неверный запрос. Параметр «режим» не прошел."
+
+#: legacy/application/controllers/ApiController.php:981
+msgid "Bad request. 'mode' parameter is invalid"
+msgstr "Неверный запрос. Параметр «режим» является недопустимым"
+
+#: legacy/application/controllers/TracktypeController.php:68
+msgid "Track Type added successfully!"
+msgstr ""
+
+#: legacy/application/controllers/TracktypeController.php:70
+msgid "Track Type updated successfully!"
+msgstr ""
+
+#: legacy/application/controllers/EmbeddablewidgetsController.php:28
+msgid ""
+"To configure and use the embeddable player you must:<br><br>\n"
+"            1. Enable at least one MP3, AAC, or OGG stream under Settings -> Streams<br>\n"
+"            2. Enable the Public LibreTime API under Settings -> Preferences"
+msgstr ""
+"Чтобы настроить и использовать внешний плеер вам нужно:<br><br>\n"
+"            1. Активировать как минимум один MP3, AAC, или OGG поток в разделе Настройки -> Аудио потоки<br>\n"
+"            2. Включить Публичный API для LibreTime в разделе Настройки -> Основные"
+
+#: legacy/application/controllers/EmbeddablewidgetsController.php:41
+msgid ""
+"To use the embeddable weekly schedule widget you must:<br><br>\n"
+"            Enable the Public LibreTime API under Settings -> Preferences"
+msgstr ""
+"Чтобы настроить и использовать внешний виджет расписания программ вам нужно:<br><br>\n"
+"            Включить Публичный API для LibreTime в разделе Настройки -> Основные"
+
+#: legacy/application/controllers/EmbeddablewidgetsController.php:54
+msgid ""
+"To add the Radio Tab to your Facebook Page, you must first:<br><br>\n"
+"            Enable the Public LibreTime API under Settings -> Preferences"
+msgstr ""
+"Для добавления раздела радио на вашу Страницу в Facebook, вам нужно:<br><br>\n"
+"            Включить Публичный API для LibreTime в разделе Настройки -> Основные"
+
+#: legacy/application/controllers/PlaylistController.php:53
+#, php-format
+msgid "You are viewing an older version of %s"
+msgstr "Вы просматриваете старые версии %s"
+
+#: legacy/application/controllers/PlaylistController.php:142
+msgid "You cannot add tracks to dynamic blocks."
+msgstr "Вы не можете добавить треки в динамические блоки."
+
+#: legacy/application/controllers/PlaylistController.php:163
+#, php-format
+msgid "You don't have permission to delete selected %s(s)."
+msgstr "У вас нет разрешения на удаление выбранных %s(s)."
+
+#: legacy/application/controllers/PlaylistController.php:176
+msgid "You can only add tracks to smart block."
+msgstr "Вы можете добавить треки только в Смарт-блок."
+
+#: legacy/application/controllers/PlaylistController.php:182
+#: legacy/application/controllers/LocaleController.php:48
+msgid "You can only add tracks, smart blocks, and webstreams to playlists."
+msgstr "Вы можете добавить только треки, Смарт-блоки и веб-потоки в Плейлисты."
+
+#: legacy/application/controllers/PlaylistController.php:194
+msgid "Untitled Playlist"
+msgstr "Плейлист без названия"
+
+#: legacy/application/controllers/PlaylistController.php:196
+msgid "Untitled Smart Block"
+msgstr "Смарт-блок без названия"
+
+#: legacy/application/controllers/PlaylistController.php:523
+msgid "Unknown Playlist"
+msgstr "Неизвестный Плейлист"
+
+#: legacy/application/controllers/LocaleController.php:28
+msgid "Recording:"
+msgstr "Запись:"
+
+#: legacy/application/controllers/LocaleController.php:29
+msgid "Master Stream"
+msgstr "Master-Steam"
+
+#: legacy/application/controllers/LocaleController.php:30
+msgid "Live Stream"
+msgstr "Live Stream"
+
+#: legacy/application/controllers/LocaleController.php:31
+msgid "Nothing Scheduled"
+msgstr "Ничего нет"
+
+#: legacy/application/controllers/LocaleController.php:32
+msgid "Current Show:"
+msgstr "Текущая Программа:"
+
+#: legacy/application/controllers/LocaleController.php:33
+msgid "Current"
+msgstr "Играет"
+
+#: legacy/application/controllers/LocaleController.php:35
+msgid "You are running the latest version"
+msgstr "Вы используете последнюю версию"
+
+#: legacy/application/controllers/LocaleController.php:36
+msgid "New version available: "
+msgstr "Доступна новая версия: "
+
+#: legacy/application/controllers/LocaleController.php:37
+msgid "You have a pre-release version of LibreTime intalled."
+msgstr "У вас установлена предварительная версия LibreTime."
+
+#: legacy/application/controllers/LocaleController.php:38
+msgid "A patch update for your LibreTime installation is available."
+msgstr "Доступен патч обновлений для текущей версии LibreTime."
+
+#: legacy/application/controllers/LocaleController.php:39
+msgid "A feature update for your LibreTime installation is available."
+msgstr "Доступно обновление функций для текущей версии LibreTime."
+
+#: legacy/application/controllers/LocaleController.php:40
+msgid "A major update for your LibreTime installation is available."
+msgstr "Доступно важное обновление для текущей версии LibreTime."
+
+#: legacy/application/controllers/LocaleController.php:41
+msgid "Multiple major updates for LibreTime installation are available. Please upgrade as soon as possible."
+msgstr "Множественные важные обновления доступны для текущей версии LibreTime. Пожалуйста, обновитесь как можно скорее."
+
+#: legacy/application/controllers/LocaleController.php:43
+msgid "Add to current playlist"
+msgstr "Добавить в текущий Плейлист"
+
+#: legacy/application/controllers/LocaleController.php:44
+msgid "Add to current smart block"
+msgstr "Добавить в текущий Смарт-блок"
+
+#: legacy/application/controllers/LocaleController.php:45
+msgid "Adding 1 Item"
+msgstr "Добавление одного элемента"
+
+#: legacy/application/controllers/LocaleController.php:46
+#, php-format
+msgid "Adding %s Items"
+msgstr "Добавление %s элементов"
+
+#: legacy/application/controllers/LocaleController.php:47
+msgid "You can only add tracks to smart blocks."
+msgstr "Вы можете добавить только треки в Смарт-блоки."
+
+#: legacy/application/controllers/LocaleController.php:51
+msgid "Please select a cursor position on timeline."
+msgstr "Переместите курсор по временной шкале."
+
+#: legacy/application/controllers/LocaleController.php:52
+msgid "You haven't added any tracks"
+msgstr "Вы не добавили ни одного трека"
+
+#: legacy/application/controllers/LocaleController.php:53
+msgid "You haven't added any playlists"
+msgstr "Вы не добавили ни одного Плейлиста"
+
+#: legacy/application/controllers/LocaleController.php:54
+msgid "You haven't added any podcasts"
+msgstr "У вас не добавлено ни одного подкаста"
+
+#: legacy/application/controllers/LocaleController.php:55
+msgid "You haven't added any smart blocks"
+msgstr "Вы не добавили ни одного Смарт-блока"
+
+#: legacy/application/controllers/LocaleController.php:56
+msgid "You haven't added any webstreams"
+msgstr "Вы не добавили ни одного веб-потока"
+
+#: legacy/application/controllers/LocaleController.php:57
+msgid "Learn about tracks"
+msgstr "Узнать больше о треках"
+
+#: legacy/application/controllers/LocaleController.php:58
+msgid "Learn about playlists"
+msgstr "Узнать больше о Плейлистах"
+
+#: legacy/application/controllers/LocaleController.php:59
+msgid "Learn about podcasts"
+msgstr "Узнать больше о Подкастах"
+
+#: legacy/application/controllers/LocaleController.php:60
+msgid "Learn about smart blocks"
+msgstr "Узнать больше об Смарт-блоках"
+
+#: legacy/application/controllers/LocaleController.php:61
+msgid "Learn about webstreams"
+msgstr "Узнать больше о веб-потоках"
+
+#: legacy/application/controllers/LocaleController.php:62
+msgid "Click 'New' to create one."
+msgstr "Выберите «Новый» для создания."
+
+#: legacy/application/controllers/LocaleController.php:67
+msgid "New"
+msgstr "Новый"
+
+#: legacy/application/controllers/LocaleController.php:68
+#: legacy/application/services/CalendarService.php:152
+msgid "Edit"
+msgstr "Редактировать"
+
+#: legacy/application/controllers/LocaleController.php:69
+msgid "Add to Schedule"
+msgstr "Добавить в расписание"
+
+#: legacy/application/controllers/LocaleController.php:70
+msgid "Add to next show"
+msgstr "Добавить к следующему шоу"
+
+#: legacy/application/controllers/LocaleController.php:71
+msgid "Add to current show"
+msgstr "Добавить к текущему шоу"
+
+#: legacy/application/controllers/LocaleController.php:72
+msgid "Add after selected items"
+msgstr ""
+
+#: legacy/application/controllers/LocaleController.php:76
+msgid "Edit Metadata"
+msgstr "Править мета-данные"
+
+#: legacy/application/controllers/LocaleController.php:77
+msgid "Add to selected show"
+msgstr "Добавить в выбранную Программу"
+
+#: legacy/application/controllers/LocaleController.php:78
+msgid "Select"
+msgstr "Выбрать"
+
+#: legacy/application/controllers/LocaleController.php:79
+msgid "Select this page"
+msgstr "Выбрать текущую страницу"
+
+#: legacy/application/controllers/LocaleController.php:80
+msgid "Deselect this page"
+msgstr "Отменить выбор текущей страницы"
+
+#: legacy/application/controllers/LocaleController.php:81
+msgid "Deselect all"
+msgstr "Отменить все выделения"
+
+#: legacy/application/controllers/LocaleController.php:82
+msgid "Are you sure you want to delete the selected item(s)?"
+msgstr "Вы действительно хотите удалить выбранные элементы?"
+
+#: legacy/application/controllers/LocaleController.php:83
+msgid "Scheduled"
+msgstr "Запланирован"
+
+#: legacy/application/controllers/LocaleController.php:89
+msgid "Bit Rate"
+msgstr "Битрейт"
+
+#: legacy/application/controllers/LocaleController.php:90
+#: legacy/application/forms/SmartBlockCriteria.php:58
+#: legacy/application/models/Block.php:1438
+#: legacy/application/models/Block.php:1538
+msgid "BPM"
+msgstr "BPM"
+
+#: legacy/application/controllers/LocaleController.php:91
+#: legacy/application/services/HistoryService.php:1122
+#: legacy/application/services/HistoryService.php:1177
+#: legacy/application/forms/SmartBlockCriteria.php:59
+#: legacy/application/models/Block.php:1439
+#: legacy/application/models/Block.php:1539
+msgid "Composer"
+msgstr "Композитор"
+
+#: legacy/application/controllers/LocaleController.php:92
+#: legacy/application/services/HistoryService.php:1127
+#: legacy/application/forms/SmartBlockCriteria.php:60
+#: legacy/application/models/Block.php:1440
+#: legacy/application/models/Block.php:1540
+msgid "Conductor"
+msgstr "Дирижер"
+
+#: legacy/application/controllers/LocaleController.php:94
+#: legacy/application/forms/SmartBlockCriteria.php:66
+#: legacy/application/models/Block.php:1446
+#: legacy/application/models/Block.php:1546
+msgid "Encoded By"
+msgstr "Закодировано"
+
+#: legacy/application/controllers/LocaleController.php:96
+#: legacy/application/services/HistoryService.php:1123
+#: legacy/application/forms/SmartBlockCriteria.php:68
+#: legacy/application/models/Block.php:1448
+#: legacy/application/models/Block.php:1548
+msgid "ISRC"
+msgstr "ISRC"
+
+#: legacy/application/controllers/LocaleController.php:99
+#: legacy/application/forms/SmartBlockCriteria.php:71
+#: legacy/application/models/Block.php:1452
+#: legacy/application/models/Block.php:1552
+msgid "Last Modified"
+msgstr "Изменен"
+
+#: legacy/application/controllers/LocaleController.php:100
+#: legacy/application/forms/SmartBlockCriteria.php:72
+#: legacy/application/models/Block.php:1453
+#: legacy/application/models/Block.php:1553
+msgid "Last Played"
+msgstr "Последнее проигрывание"
+
+#: legacy/application/controllers/LocaleController.php:102
+#: legacy/application/forms/SmartBlockCriteria.php:75
+#: legacy/application/models/Block.php:1456
+#: legacy/application/models/Block.php:1556
+msgid "Mime"
+msgstr "Mime"
+
+#: legacy/application/controllers/LocaleController.php:103
+#: legacy/application/services/HistoryService.php:1120
+#: legacy/application/forms/SmartBlockCriteria.php:76
+#: legacy/application/models/Block.php:1457
+#: legacy/application/models/Block.php:1557
+msgid "Mood"
+msgstr "Настроение"
+
+#: legacy/application/controllers/LocaleController.php:104
+#: legacy/application/forms/SmartBlockCriteria.php:77
+#: legacy/application/models/Block.php:1458
+#: legacy/application/models/Block.php:1558
+msgid "Owner"
+msgstr "Владелец"
+
+#: legacy/application/controllers/LocaleController.php:105
+#: legacy/application/forms/SmartBlockCriteria.php:78
+#: legacy/application/models/Block.php:1459
+#: legacy/application/models/Block.php:1559
+msgid "Replay Gain"
+msgstr "Replay Gain"
+
+#: legacy/application/controllers/LocaleController.php:106
+msgid "Sample Rate"
+msgstr "Sample Rate"
+
+#: legacy/application/controllers/LocaleController.php:107
+#: legacy/application/forms/SmartBlockCriteria.php:81
+#: legacy/application/models/Block.php:1462
+#: legacy/application/models/Block.php:1562
+msgid "Track Number"
+msgstr "Номер трека"
+
+#: legacy/application/controllers/LocaleController.php:108
+#: legacy/application/forms/SmartBlockCriteria.php:82
+#: legacy/application/models/Block.php:1463
+#: legacy/application/models/Block.php:1563
+msgid "Uploaded"
+msgstr "Загружено"
+
+#: legacy/application/controllers/LocaleController.php:109
+#: legacy/application/forms/SmartBlockCriteria.php:83
+#: legacy/application/models/Block.php:1464
+#: legacy/application/models/Block.php:1564
+msgid "Website"
+msgstr "Вебсайт"
+
+#: legacy/application/controllers/LocaleController.php:110
+#: legacy/application/services/HistoryService.php:1125
+#: legacy/application/forms/SmartBlockCriteria.php:84
+#: legacy/application/models/Block.php:1465
+#: legacy/application/models/Block.php:1565
+msgid "Year"
+msgstr "Год"
+
+#: legacy/application/controllers/LocaleController.php:111
+msgid "Loading..."
+msgstr "Загрузка..."
+
+#: legacy/application/controllers/LocaleController.php:113
+msgid "Files"
+msgstr "Файлы"
+
+#: legacy/application/controllers/LocaleController.php:116
+msgid "Web Streams"
+msgstr "Веб-потоки"
+
+#: legacy/application/controllers/LocaleController.php:117
+msgid "Unknown type: "
+msgstr "Неизвестный тип: "
+
+#: legacy/application/controllers/LocaleController.php:118
+msgid "Are you sure you want to delete the selected item?"
+msgstr "Вы действительно хотите удалить выбранный элемент?"
+
+#: legacy/application/controllers/LocaleController.php:119
+#: legacy/application/controllers/LocaleController.php:224
+msgid "Uploading in progress..."
+msgstr "Загружается ..."
+
+#: legacy/application/controllers/LocaleController.php:120
+msgid "Retrieving data from the server..."
+msgstr "Получение данных с сервера ..."
+
+#: legacy/application/controllers/LocaleController.php:122
+msgid "Import"
+msgstr "Импорт"
+
+#: legacy/application/controllers/LocaleController.php:123
+msgid "Imported?"
+msgstr "Импортировано?"
+
+#: legacy/application/controllers/LocaleController.php:124
+#: legacy/application/services/CalendarService.php:61
+#: legacy/application/services/CalendarService.php:93
+msgid "View"
+msgstr "Посмотреть"
+
+#: legacy/application/controllers/LocaleController.php:125
+msgid "Error code: "
+msgstr "Код ошибки: "
+
+#: legacy/application/controllers/LocaleController.php:126
+msgid "Error msg: "
+msgstr "Сообщение об ошибке: "
+
+#: legacy/application/controllers/LocaleController.php:127
+msgid "Input must be a positive number"
+msgstr "Ввод должен быть положительным числом"
+
+#: legacy/application/controllers/LocaleController.php:128
+msgid "Input must be a number"
+msgstr "Ввод должен быть числом"
+
+#: legacy/application/controllers/LocaleController.php:129
+msgid "Input must be in the format: yyyy-mm-dd"
+msgstr "Ввод должен быть в формате: гггг-мм-дд"
+
+#: legacy/application/controllers/LocaleController.php:130
+msgid "Input must be in the format: hh:mm:ss.t"
+msgstr "Ввод должен быть в формате: чч:мм:сс"
+
+#: legacy/application/controllers/LocaleController.php:134
+#, php-format
+msgid "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"
+msgstr "Вы загружаете файлы. %sПереход на другой экран отменит процесс загрузки. %sВы уверены, что хотите покинуть страницу?"
+
+#: legacy/application/controllers/LocaleController.php:136
+msgid "Open Media Builder"
+msgstr "Открыть медиа-построитель"
+
+#: legacy/application/controllers/LocaleController.php:137
+msgid "please put in a time '00:00:00 (.0)'"
+msgstr "пожалуйста, установите время '00:00:00.0'"
+
+#: legacy/application/controllers/LocaleController.php:138
+msgid "Please enter a valid time in seconds. Eg. 0.5"
+msgstr "Пожалуйста, укажите допустимое время в секундах. Например: 0.5"
+
+#: legacy/application/controllers/LocaleController.php:139
+msgid "Your browser does not support playing this file type: "
+msgstr "Ваш браузер не поддерживает воспроизведения данного типа файлов: "
+
+#: legacy/application/controllers/LocaleController.php:140
+msgid "Dynamic block is not previewable"
+msgstr "Динамический Блок не подлежит предпросмотру"
+
+#: legacy/application/controllers/LocaleController.php:141
+msgid "Limit to: "
+msgstr "Ограничить до: "
+
+#: legacy/application/controllers/LocaleController.php:142
+msgid "Playlist saved"
+msgstr "Плейлист сохранен"
+
+#: legacy/application/controllers/LocaleController.php:143
+msgid "Playlist shuffled"
+msgstr "Плейлист перемешан"
+
+#: legacy/application/controllers/LocaleController.php:145
+msgid "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
+msgstr "LibreTime не уверен в статусе этого файла. Это могло произойти, если файл находится на недоступном удаленном диске или в папке, которая более не доступна для просмотра."
+
+#: legacy/application/controllers/LocaleController.php:147
+#, php-format
+msgid "Listener Count on %s: %s"
+msgstr "Количество слушателей %s : %s"
+
+#: legacy/application/controllers/LocaleController.php:149
+msgid "Remind me in 1 week"
+msgstr "Напомнить мне через одну неделю"
+
+#: legacy/application/controllers/LocaleController.php:150
+msgid "Remind me never"
+msgstr "Никогда не напоминать"
+
+#: legacy/application/controllers/LocaleController.php:151
+msgid "Yes, help Airtime"
+msgstr "Да, помочь LibreTime"
+
+#: legacy/application/controllers/LocaleController.php:152
+#: legacy/application/controllers/LocaleController.php:202
+msgid "Image must be one of jpg, jpeg, png, or gif"
+msgstr "Изображение должно быть в формате: jpg, jpeg, png или gif"
+
+#: legacy/application/controllers/LocaleController.php:155
+msgid "A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show."
+msgstr "Статический Смарт-блок сохранит критерии и немедленно создаст список воспроизведения в блоке. Это позволяет редактировать и просматривать его в Библиотеке, прежде чем добавить его в Программу."
+
+#: legacy/application/controllers/LocaleController.php:157
+msgid "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."
+msgstr "Динамический Смарт-блок сохраняет только параметры. Контент блока будет сгенерирован только после добавления его в Программу. Вы не сможете просматривать и редактировать содержимое в Библиотеке."
+
+#: legacy/application/controllers/LocaleController.php:159
+#, php-format
+msgid "The desired block length will not be reached if %s cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
+msgstr "Желаемая длительность блока не будет достигнута, если %s не найдет достаточно уникальных треков, соответствующих вашим критериям. Поставьте галочку, если хотите, чтобы повторяющиеся треки заполнили остальное время до окончания Программы в Смарт-блоке."
+
+#: legacy/application/controllers/LocaleController.php:160
+msgid "Smart block shuffled"
+msgstr "Смарт-блок перемешан"
+
+#: legacy/application/controllers/LocaleController.php:161
+msgid "Smart block generated and criteria saved"
+msgstr "Смарт-блок создан и критерии сохранены"
+
+#: legacy/application/controllers/LocaleController.php:162
+msgid "Smart block saved"
+msgstr "Смарт-блок сохранен"
+
+#: legacy/application/controllers/LocaleController.php:163
+msgid "Processing..."
+msgstr "Подождите..."
+
+#: legacy/application/controllers/LocaleController.php:164
+#: legacy/application/forms/SmartBlockCriteria.php:96
+#: legacy/application/forms/SmartBlockCriteria.php:112
+#: legacy/application/forms/SmartBlockCriteria.php:128
+#: legacy/application/forms/SmartBlockCriteria.php:190
+#: legacy/application/forms/SmartBlockCriteria.php:374
+#: legacy/application/forms/SmartBlockCriteria.php:625
+#: legacy/application/forms/SmartBlockCriteria.php:686
+#: legacy/application/models/Block.php:1469
+#: legacy/application/models/Block.php:1569
+msgid "Select modifier"
+msgstr "Выберите модификатор"
+
+#: legacy/application/controllers/LocaleController.php:165
+#: legacy/application/forms/SmartBlockCriteria.php:97
+#: legacy/application/models/Block.php:1470
+#: legacy/application/models/Block.php:1570
+msgid "contains"
+msgstr "содержит"
+
+#: legacy/application/controllers/LocaleController.php:166
+#: legacy/application/forms/SmartBlockCriteria.php:98
+#: legacy/application/models/Block.php:1471
+#: legacy/application/models/Block.php:1571
+msgid "does not contain"
+msgstr "не содержит"
+
+#: legacy/application/controllers/LocaleController.php:167
+#: legacy/application/forms/SmartBlockCriteria.php:99
+#: legacy/application/forms/SmartBlockCriteria.php:113
+#: legacy/application/forms/SmartBlockCriteria.php:132
+#: legacy/application/forms/SmartBlockCriteria.php:191
+#: legacy/application/models/Block.php:1472
+#: legacy/application/models/Block.php:1479
+#: legacy/application/models/Block.php:1572
+#: legacy/application/models/Block.php:1579
+msgid "is"
+msgstr "является"
+
+#: legacy/application/controllers/LocaleController.php:168
+#: legacy/application/forms/SmartBlockCriteria.php:100
+#: legacy/application/forms/SmartBlockCriteria.php:114
+#: legacy/application/forms/SmartBlockCriteria.php:133
+#: legacy/application/forms/SmartBlockCriteria.php:192
+#: legacy/application/models/Block.php:1473
+#: legacy/application/models/Block.php:1480
+#: legacy/application/models/Block.php:1573
+#: legacy/application/models/Block.php:1580
+msgid "is not"
+msgstr "не является"
+
+#: legacy/application/controllers/LocaleController.php:169
+#: legacy/application/forms/SmartBlockCriteria.php:101
+#: legacy/application/models/Block.php:1474
+#: legacy/application/models/Block.php:1574
+msgid "starts with"
+msgstr "начинается с"
+
+#: legacy/application/controllers/LocaleController.php:170
+#: legacy/application/forms/SmartBlockCriteria.php:102
+#: legacy/application/models/Block.php:1475
+#: legacy/application/models/Block.php:1575
+msgid "ends with"
+msgstr "заканчивается"
+
+#: legacy/application/controllers/LocaleController.php:171
+#: legacy/application/forms/SmartBlockCriteria.php:115
+#: legacy/application/forms/SmartBlockCriteria.php:134
+#: legacy/application/models/Block.php:1481
+#: legacy/application/models/Block.php:1581
+msgid "is greater than"
+msgstr "больше, чем"
+
+#: legacy/application/controllers/LocaleController.php:172
+#: legacy/application/forms/SmartBlockCriteria.php:116
+#: legacy/application/forms/SmartBlockCriteria.php:135
+#: legacy/application/models/Block.php:1482
+#: legacy/application/models/Block.php:1582
+msgid "is less than"
+msgstr "меньше, чем"
+
+#: legacy/application/controllers/LocaleController.php:173
+#: legacy/application/forms/SmartBlockCriteria.php:117
+#: legacy/application/forms/SmartBlockCriteria.php:136
+#: legacy/application/models/Block.php:1483
+#: legacy/application/models/Block.php:1583
+msgid "is in the range"
+msgstr "в диапазоне"
+
+#: legacy/application/controllers/LocaleController.php:175
+#: legacy/application/forms/SmartBlockCriteria.php:571
+msgid "Generate"
+msgstr "Сгенерировать"
+
+#: legacy/application/controllers/LocaleController.php:177
+msgid "Choose Storage Folder"
+msgstr "Выберите папку хранения"
+
+#: legacy/application/controllers/LocaleController.php:178
+msgid "Choose Folder to Watch"
+msgstr "Выберите папку для просмотра"
+
+#: legacy/application/controllers/LocaleController.php:180
+msgid ""
+"Are you sure you want to change the storage folder?\n"
+"This will remove the files from your Airtime library!"
+msgstr ""
+"Вы уверены, что хотите изменить папку хранения? \n"
+" Файлы из вашей Библиотеки будут удалены!"
+
+#: legacy/application/controllers/LocaleController.php:182
+msgid "Are you sure you want to remove the watched folder?"
+msgstr "Вы уверены, что хотите удалить просматриваемую папку?"
+
+#: legacy/application/controllers/LocaleController.php:183
+msgid "This path is currently not accessible."
+msgstr "Этот путь в настоящий момент недоступен."
+
+#: legacy/application/controllers/LocaleController.php:185
+#, php-format
+msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
+msgstr "Некоторые типы потоков требуют специальных настроек. Подробности об активации %sAAC+ поддержка%s или %sOpus поддержка%s представлены."
+
+#: legacy/application/controllers/LocaleController.php:186
+msgid "Connected to the streaming server"
+msgstr "Подключено к потоковому серверу"
+
+#: legacy/application/controllers/LocaleController.php:187
+msgid "The stream is disabled"
+msgstr "Поток отключен"
+
+#: legacy/application/controllers/LocaleController.php:188
+#: legacy/application/forms/StreamSettingSubForm.php:191
+msgid "Getting information from the server..."
+msgstr "Получение информации с сервера ..."
+
+#: legacy/application/controllers/LocaleController.php:189
+msgid "Can not connect to the streaming server"
+msgstr "Не удалось подключиться к потоковому серверу"
+
+#: legacy/application/controllers/LocaleController.php:191
+#, fuzzy, php-format
+msgid "If %s is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."
+msgstr "Если LibreTime находится за маршрутизатором или брандмауэром, вам может понадобиться настроить переадресацию портов и информация в этом поле будет неверной. В этом случае вам необходимо вручную обновить это поле так, чтобы оно показывало верный хост:порт/точка-монтирования, к которому должен подключиться ваш источник. Допустимый диапазон портов находится между 1024 и 49151."
+
+#: legacy/application/controllers/LocaleController.php:192
+#, php-format
+msgid "For more details, please read the %s%s Manual%s"
+msgstr "Для более подробной информации, пожалуйста, прочитайте %sРуководство %s%s"
+
+#: legacy/application/controllers/LocaleController.php:194
+msgid "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
+msgstr "Поставьте галочку, для активации мета-данных OGG потока (название композиции, имя исполнителя и название Программы). В VLC и mplayer наблюдается серьезная ошибка при воспроизведении потоков OGG/VORBIS, в которых мета-данные включены: они будут отключаться от потока после каждой песни. Если вы используете поток OGG и ваши слушатели не требуют поддержки этих аудиоплееров - можете смело включить эту опцию."
+
+#: legacy/application/controllers/LocaleController.php:195
+msgid "Check this box to automatically switch off Master/Show source upon source disconnection."
+msgstr "Поставьте галочку, для автоматического отключения внешнего источника Master или Show от сервера LibreTime."
+
+#: legacy/application/controllers/LocaleController.php:196
+msgid "Check this box to automatically switch on Master/Show source upon source connection."
+msgstr "Поставьте галочку, для автоматического подключения внешнего источника Master или Show к серверу LibreTime."
+
+#: legacy/application/controllers/LocaleController.php:197
+msgid "If your Icecast server expects a username of 'source', this field can be left blank."
+msgstr "Если ваш сервер Icecast ожидает логин «source» - это поле можно оставить пустым."
+
+#: legacy/application/controllers/LocaleController.php:198
+#: legacy/application/controllers/LocaleController.php:208
+msgid "If your live streaming client does not ask for a username, this field should be 'source'."
+msgstr "Если ваш клиент потокового вещания не запрашивает логин, укажите в этом поле «source»."
+
+#: legacy/application/controllers/LocaleController.php:199
+msgid "WARNING: This will restart your stream and may cause a short dropout for your listeners!"
+msgstr "ВНИМАНИЕ: Данная операция перезапустит поток и может повлечь за собой отключение слушателей на короткое время!"
+
+#: legacy/application/controllers/LocaleController.php:200
+msgid "This is the admin username and password for Icecast/SHOUTcast to get listener statistics."
+msgstr "Имя пользователя администратора и его пароль от Icecast/Shoutcast сервера, используется для сбора статистики о слушателях."
+
+#: legacy/application/controllers/LocaleController.php:204
+msgid "Warning: You cannot change this field while the show is currently playing"
+msgstr "Внимание: Вы не можете изменить данное поле, пока Программа в эфире"
+
+#: legacy/application/controllers/LocaleController.php:205
+msgid "No result found"
+msgstr "Не найдено"
+
+#: legacy/application/controllers/LocaleController.php:206
+msgid "This follows the same security pattern for the shows: only users assigned to the show can connect."
+msgstr "Действует та же схема безопасности Программы: только пользователи, назначенные для этой Программы, могут подключиться."
+
+#: legacy/application/controllers/LocaleController.php:207
+msgid "Specify custom authentication which will work only for this show."
+msgstr "Укажите пользователя, который будет работать только в этой Программе."
+
+#: legacy/application/controllers/LocaleController.php:209
+msgid "The show instance doesn't exist anymore!"
+msgstr "Программы больше не существует!"
+
+#: legacy/application/controllers/LocaleController.php:210
+msgid "Warning: Shows cannot be re-linked"
+msgstr "Внимание: Программы не могут быть пересвязаны"
+
+#: legacy/application/controllers/LocaleController.php:211
+msgid "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"
+msgstr "Связывая ваши повторяющиеся Программы любые запланированные медиа-элементы в любой повторяющейся Программе будут также запланированы в других повторяющихся Программах"
+
+#: legacy/application/controllers/LocaleController.php:212
+msgid "Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the Interface Timezone in your user settings."
+msgstr "Часовой пояс по умолчанию установлен на часовой пояс радиостанции. Программы в календаре будут отображаться по вашему местному времени, заданному в настройках вашего пользователя в интерфейсе часового пояса."
+
+#: legacy/application/controllers/LocaleController.php:216
+msgid "Show"
+msgstr "Программа"
+
+#: legacy/application/controllers/LocaleController.php:217
+msgid "Show is empty"
+msgstr "Пустая Программа"
+
+#: legacy/application/controllers/LocaleController.php:218
+msgid "1m"
+msgstr "1 мин"
+
+#: legacy/application/controllers/LocaleController.php:219
+msgid "5m"
+msgstr "5 мин"
+
+#: legacy/application/controllers/LocaleController.php:220
+msgid "10m"
+msgstr "10 мин"
+
+#: legacy/application/controllers/LocaleController.php:221
+msgid "15m"
+msgstr "15 мин"
+
+#: legacy/application/controllers/LocaleController.php:222
+msgid "30m"
+msgstr "30 мин"
+
+#: legacy/application/controllers/LocaleController.php:223
+msgid "60m"
+msgstr "60 мин"
+
+#: legacy/application/controllers/LocaleController.php:225
+msgid "Retreiving data from the server..."
+msgstr "Получение данных с сервера ..."
+
+#: legacy/application/controllers/LocaleController.php:226
+msgid "This show has no scheduled content."
+msgstr "В этой Программе нет запланированного контента."
+
+#: legacy/application/controllers/LocaleController.php:227
+msgid "This show is not completely filled with content."
+msgstr "Данная Программа не до конца заполнена контентом."
+
+#: legacy/application/controllers/LocaleController.php:231
+msgid "January"
+msgstr "Январь"
+
+#: legacy/application/controllers/LocaleController.php:232
+msgid "February"
+msgstr "Февраль"
+
+#: legacy/application/controllers/LocaleController.php:233
+msgid "March"
+msgstr "Март"
+
+#: legacy/application/controllers/LocaleController.php:234
+msgid "April"
+msgstr "Апрель"
+
+#: legacy/application/controllers/LocaleController.php:235
+#: legacy/application/controllers/LocaleController.php:247
+msgid "May"
+msgstr "Май"
+
+#: legacy/application/controllers/LocaleController.php:236
+msgid "June"
+msgstr "Июнь"
+
+#: legacy/application/controllers/LocaleController.php:237
+msgid "July"
+msgstr "Июль"
+
+#: legacy/application/controllers/LocaleController.php:238
+msgid "August"
+msgstr "Август"
+
+#: legacy/application/controllers/LocaleController.php:239
+msgid "September"
+msgstr "Сентябрь"
+
+#: legacy/application/controllers/LocaleController.php:240
+msgid "October"
+msgstr "Октябрь"
+
+#: legacy/application/controllers/LocaleController.php:241
+msgid "November"
+msgstr "Ноябрь"
+
+#: legacy/application/controllers/LocaleController.php:242
+msgid "December"
+msgstr "Декабрь"
+
+#: legacy/application/controllers/LocaleController.php:243
+msgid "Jan"
+msgstr "Янв"
+
+#: legacy/application/controllers/LocaleController.php:244
+msgid "Feb"
+msgstr "Фев"
+
+#: legacy/application/controllers/LocaleController.php:245
+msgid "Mar"
+msgstr "Март"
+
+#: legacy/application/controllers/LocaleController.php:246
+msgid "Apr"
+msgstr "Апр"
+
+#: legacy/application/controllers/LocaleController.php:248
+msgid "Jun"
+msgstr "Июн"
+
+#: legacy/application/controllers/LocaleController.php:249
+msgid "Jul"
+msgstr "Июл"
+
+#: legacy/application/controllers/LocaleController.php:250
+msgid "Aug"
+msgstr "Авг"
+
+#: legacy/application/controllers/LocaleController.php:251
+msgid "Sep"
+msgstr "Сент"
+
+#: legacy/application/controllers/LocaleController.php:252
+msgid "Oct"
+msgstr "Окт"
+
+#: legacy/application/controllers/LocaleController.php:253
+msgid "Nov"
+msgstr "Нояб"
+
+#: legacy/application/controllers/LocaleController.php:254
+msgid "Dec"
+msgstr "Дек"
+
+#: legacy/application/controllers/LocaleController.php:255
+msgid "Today"
+msgstr "Сегодня"
+
+#: legacy/application/controllers/LocaleController.php:256
+msgid "Day"
+msgstr "День"
+
+#: legacy/application/controllers/LocaleController.php:257
+msgid "Week"
+msgstr "Неделя"
+
+#: legacy/application/controllers/LocaleController.php:258
+msgid "Month"
+msgstr "Месяц"
+
+#: legacy/application/controllers/LocaleController.php:259
+#: legacy/application/forms/GeneralPreferences.php:218
+msgid "Sunday"
+msgstr "Воскресенье"
+
+#: legacy/application/controllers/LocaleController.php:260
+#: legacy/application/forms/GeneralPreferences.php:219
+msgid "Monday"
+msgstr "Понедельник"
+
+#: legacy/application/controllers/LocaleController.php:261
+#: legacy/application/forms/GeneralPreferences.php:220
+msgid "Tuesday"
+msgstr "Вторник"
+
+#: legacy/application/controllers/LocaleController.php:262
+#: legacy/application/forms/GeneralPreferences.php:221
+msgid "Wednesday"
+msgstr "Среда"
+
+#: legacy/application/controllers/LocaleController.php:263
+#: legacy/application/forms/GeneralPreferences.php:222
+msgid "Thursday"
+msgstr "Четверг"
+
+#: legacy/application/controllers/LocaleController.php:264
+#: legacy/application/forms/GeneralPreferences.php:223
+msgid "Friday"
+msgstr "Пятница"
+
+#: legacy/application/controllers/LocaleController.php:265
+#: legacy/application/forms/GeneralPreferences.php:224
+msgid "Saturday"
+msgstr "Суббота"
+
+#: legacy/application/controllers/LocaleController.php:266
+#: legacy/application/forms/AddShowRepeats.php:35
+msgid "Sun"
+msgstr "Вс"
+
+#: legacy/application/controllers/LocaleController.php:267
+#: legacy/application/forms/AddShowRepeats.php:36
+msgid "Mon"
+msgstr "Пн"
+
+#: legacy/application/controllers/LocaleController.php:268
+#: legacy/application/forms/AddShowRepeats.php:37
+msgid "Tue"
+msgstr "Вт"
+
+#: legacy/application/controllers/LocaleController.php:269
+#: legacy/application/forms/AddShowRepeats.php:38
+msgid "Wed"
+msgstr "Ср"
+
+#: legacy/application/controllers/LocaleController.php:270
+#: legacy/application/forms/AddShowRepeats.php:39
+msgid "Thu"
+msgstr "Чт"
+
+#: legacy/application/controllers/LocaleController.php:271
+#: legacy/application/forms/AddShowRepeats.php:40
+msgid "Fri"
+msgstr "Пт"
+
+#: legacy/application/controllers/LocaleController.php:272
+#: legacy/application/forms/AddShowRepeats.php:41
+msgid "Sat"
+msgstr "Сб"
+
+#: legacy/application/controllers/LocaleController.php:273
+msgid "Shows longer than their scheduled time will be cut off by a following show."
+msgstr "Программы, превышающие время, запланированное в расписании, будут обрезаны следующей Программой."
+
+#: legacy/application/controllers/LocaleController.php:274
+msgid "Cancel Current Show?"
+msgstr "Отменить эту Программу?"
+
+#: legacy/application/controllers/LocaleController.php:275
+#: legacy/application/controllers/LocaleController.php:324
+msgid "Stop recording current show?"
+msgstr "Остановить запись текущей Программы?"
+
+#: legacy/application/controllers/LocaleController.php:276
+msgid "Ok"
+msgstr "Оk"
+
+#: legacy/application/controllers/LocaleController.php:277
+msgid "Contents of Show"
+msgstr "Содержимое Программы"
+
+#: legacy/application/controllers/LocaleController.php:280
+msgid "Remove all content?"
+msgstr "Удалить все содержимое?"
+
+#: legacy/application/controllers/LocaleController.php:282
+msgid "Delete selected item(s)?"
+msgstr "Удалить выбранные элементы?"
+
+#: legacy/application/controllers/LocaleController.php:284
+msgid "End"
+msgstr "Конец"
+
+#: legacy/application/controllers/LocaleController.php:285
+msgid "Duration"
+msgstr "Длительность"
+
+#: legacy/application/controllers/LocaleController.php:286
+msgid "Filtering out "
+msgstr "Фильтрация "
+
+#: legacy/application/controllers/LocaleController.php:287
+msgid " of "
+msgstr " из "
+
+#: legacy/application/controllers/LocaleController.php:288
+msgid " records"
+msgstr " записи"
+
+#: legacy/application/controllers/LocaleController.php:289
+msgid "There are no shows scheduled during the specified time period."
+msgstr "Нет Программ, запланированных в указанный период времени."
+
+#: legacy/application/controllers/LocaleController.php:299
+msgid "Show Empty"
+msgstr "Программа пуста"
+
+#: legacy/application/controllers/LocaleController.php:300
+msgid "Recording From Line In"
+msgstr "Запись с линейного входа"
+
+#: legacy/application/controllers/LocaleController.php:301
+msgid "Track preview"
+msgstr "Предпросмотр трека"
+
+#: legacy/application/controllers/LocaleController.php:305
+msgid "Cannot schedule outside a show."
+msgstr "Нельзя планировать вне рамок Программы."
+
+#: legacy/application/controllers/LocaleController.php:306
+msgid "Moving 1 Item"
+msgstr "Перемещение одного элемента"
+
+#: legacy/application/controllers/LocaleController.php:307
+#, php-format
+msgid "Moving %s Items"
+msgstr "Перемещение %s элементов"
+
+#: legacy/application/controllers/LocaleController.php:310
+msgid "Fade Editor"
+msgstr "Редактор затухания"
+
+#: legacy/application/controllers/LocaleController.php:311
+msgid "Cue Editor"
+msgstr "Редактор начала трека"
+
+#: legacy/application/controllers/LocaleController.php:312
+msgid "Waveform features are available in a browser supporting the Web Audio API"
+msgstr "Функционал звуковой волны доступен в браузерах с поддержкой Веб-Аудио API"
+
+#: legacy/application/controllers/LocaleController.php:315
+msgid "Select all"
+msgstr "Выбрать все"
+
+#: legacy/application/controllers/LocaleController.php:316
+msgid "Select none"
+msgstr "Снять выделения"
+
+#: legacy/application/controllers/LocaleController.php:317
+msgid "Trim overbooked shows"
+msgstr "Обрезать пересекающиеся Программы"
+
+#: legacy/application/controllers/LocaleController.php:318
+msgid "Remove selected scheduled items"
+msgstr "Удалить выбранные запланированные элементы"
+
+#: legacy/application/controllers/LocaleController.php:319
+msgid "Jump to the current playing track"
+msgstr "Перейти к текущей проигрываемой дорожке"
+
+#: legacy/application/controllers/LocaleController.php:320
+msgid "Jump to Current"
+msgstr "Перейти к текущему треку"
+
+#: legacy/application/controllers/LocaleController.php:321
+msgid "Cancel current show"
+msgstr "Отмена текущей Программы"
+
+#: legacy/application/controllers/LocaleController.php:326
+msgid "Open library to add or remove content"
+msgstr "Открыть Библиотеку, чтобы добавить или удалить содержимое"
+
+#: legacy/application/controllers/LocaleController.php:327
+msgid "Add / Remove Content"
+msgstr "Добавить/удалить содержимое"
+
+#: legacy/application/controllers/LocaleController.php:330
+msgid "Disk"
+msgstr "Диск"
+
+#: legacy/application/controllers/LocaleController.php:332
+msgid "Look in"
+msgstr "Посмотреть"
+
+#: legacy/application/controllers/LocaleController.php:334
+msgid "Open"
+msgstr "Открыть"
+
+#: legacy/application/controllers/LocaleController.php:336
+#: legacy/application/forms/AddUser.php:101
+msgid "Admin"
+msgstr "Админ"
+
+#: legacy/application/controllers/LocaleController.php:337
+#: legacy/application/forms/AddUser.php:99
+msgid "DJ"
+msgstr "Диджей"
+
+#: legacy/application/controllers/LocaleController.php:338
+#: legacy/application/forms/AddUser.php:100
+msgid "Program Manager"
+msgstr "Менеджер"
+
+#: legacy/application/controllers/LocaleController.php:339
+#: legacy/application/forms/AddUser.php:98
+msgid "Guest"
+msgstr "Гость"
+
+#: legacy/application/controllers/LocaleController.php:340
+msgid "Guests can do the following:"
+msgstr "Гости могут следующее:"
+
+#: legacy/application/controllers/LocaleController.php:341
+msgid "View schedule"
+msgstr "- Видеть запланированные Программы;"
+
+#: legacy/application/controllers/LocaleController.php:342
+msgid "View show content"
+msgstr "- Видеть содержимое Программы;"
+
+#: legacy/application/controllers/LocaleController.php:343
+msgid "DJs can do the following:"
+msgstr "DJ может:"
+
+#: legacy/application/controllers/LocaleController.php:344
+msgid "Manage assigned show content"
+msgstr "- Управлять контентом назначенной ему Программы;"
+
+#: legacy/application/controllers/LocaleController.php:345
+msgid "Import media files"
+msgstr "- Импортировать медиа-файлы;"
+
+#: legacy/application/controllers/LocaleController.php:346
+msgid "Create playlists, smart blocks, and webstreams"
+msgstr "- Создавать Плейлисты, Смарт-блоки и веб-потоки;"
+
+#: legacy/application/controllers/LocaleController.php:347
+msgid "Manage their own library content"
+msgstr "- Управлять собственным контентом в Библиотеке;"
+
+#: legacy/application/controllers/LocaleController.php:348
+msgid "Program Managers can do the following:"
+msgstr "Менеджеры Программ могут следующее:"
+
+#: legacy/application/controllers/LocaleController.php:349
+msgid "View and manage show content"
+msgstr "- Видеть и управлять контентом Программы;"
+
+#: legacy/application/controllers/LocaleController.php:350
+msgid "Schedule shows"
+msgstr "- Планировать Программы;"
+
+#: legacy/application/controllers/LocaleController.php:351
+msgid "Manage all library content"
+msgstr "- Управлять всем контентом Библиотеки;"
+
+#: legacy/application/controllers/LocaleController.php:352
+msgid "Admins can do the following:"
+msgstr "Администраторы могут:"
+
+#: legacy/application/controllers/LocaleController.php:353
+msgid "Manage preferences"
+msgstr "- Управлять настройками;"
+
+#: legacy/application/controllers/LocaleController.php:354
+msgid "Manage users"
+msgstr "- Управлять пользователями;"
+
+#: legacy/application/controllers/LocaleController.php:355
+msgid "Manage watched folders"
+msgstr "- Управлять просматриваемыми папками;"
+
+#: legacy/application/controllers/LocaleController.php:356
+msgid "Send support feedback"
+msgstr "- Отправлять отзыв поддержке;"
+
+#: legacy/application/controllers/LocaleController.php:357
+msgid "View system status"
+msgstr "- Видеть Статус Системы;"
+
+#: legacy/application/controllers/LocaleController.php:358
+msgid "Access playout history"
+msgstr "- Получить доступ к истории воспроизведений;"
+
+#: legacy/application/controllers/LocaleController.php:359
+msgid "View listener stats"
+msgstr "- Видеть статистику слушателей;"
+
+#: legacy/application/controllers/LocaleController.php:361
+msgid "Show / hide columns"
+msgstr "Показать/скрыть столбцы"
+
+#: legacy/application/controllers/LocaleController.php:362
+msgid "Columns"
+msgstr "Столбцы"
+
+#: legacy/application/controllers/LocaleController.php:364
+msgid "From {from} to {to}"
+msgstr "С {from} до {to}"
+
+#: legacy/application/controllers/LocaleController.php:365
+msgid "kbps"
+msgstr "кбит/с"
+
+#: legacy/application/controllers/LocaleController.php:366
+msgid "yyyy-mm-dd"
+msgstr "гггг-мм-дд"
+
+#: legacy/application/controllers/LocaleController.php:367
+msgid "hh:mm:ss.t"
+msgstr "чч:мм:сс.t"
+
+#: legacy/application/controllers/LocaleController.php:368
+msgid "kHz"
+msgstr "кГц"
+
+#: legacy/application/controllers/LocaleController.php:371
+msgid "Su"
+msgstr "Вс"
+
+#: legacy/application/controllers/LocaleController.php:372
+msgid "Mo"
+msgstr "Пн"
+
+#: legacy/application/controllers/LocaleController.php:373
+msgid "Tu"
+msgstr "Вт"
+
+#: legacy/application/controllers/LocaleController.php:374
+msgid "We"
+msgstr "Ср"
+
+#: legacy/application/controllers/LocaleController.php:375
+msgid "Th"
+msgstr "Чт"
+
+#: legacy/application/controllers/LocaleController.php:376
+msgid "Fr"
+msgstr "Пт"
+
+#: legacy/application/controllers/LocaleController.php:377
+msgid "Sa"
+msgstr "Сб"
+
+#: legacy/application/controllers/LocaleController.php:380
+msgid "Hour"
+msgstr "Часы"
+
+#: legacy/application/controllers/LocaleController.php:381
+msgid "Minute"
+msgstr "Минуты"
+
+#: legacy/application/controllers/LocaleController.php:382
+msgid "Done"
+msgstr "Готово"
+
+#: legacy/application/controllers/LocaleController.php:385
+msgid "Select files"
+msgstr "Выбрать файлы"
+
+#: legacy/application/controllers/LocaleController.php:386
+#: legacy/application/controllers/LocaleController.php:387
+msgid "Add files to the upload queue and click the start button."
+msgstr "Добавьте файлы в очередь загрузки и нажмите кнопку Старт."
+
+#: legacy/application/controllers/LocaleController.php:390
+msgid "Add Files"
+msgstr "Добавить файлы"
+
+#: legacy/application/controllers/LocaleController.php:391
+msgid "Stop Upload"
+msgstr "Остановить загрузку"
+
+#: legacy/application/controllers/LocaleController.php:392
+msgid "Start upload"
+msgstr "Начать загрузку"
+
+#: legacy/application/controllers/LocaleController.php:393
+msgid "Add files"
+msgstr "Добавить файлы"
+
+#: legacy/application/controllers/LocaleController.php:394
+#, php-format
+msgid "Uploaded %d/%d files"
+msgstr "Загружено  %d/%d файлов"
+
+#: legacy/application/controllers/LocaleController.php:395
+msgid "N/A"
+msgstr "н/д"
+
+#: legacy/application/controllers/LocaleController.php:396
+msgid "Drag files here."
+msgstr "Перетащите файлы сюда."
+
+#: legacy/application/controllers/LocaleController.php:397
+msgid "File extension error."
+msgstr "Неверное расширение файла."
+
+#: legacy/application/controllers/LocaleController.php:398
+msgid "File size error."
+msgstr "Неверный размер файла."
+
+#: legacy/application/controllers/LocaleController.php:399
+msgid "File count error."
+msgstr "Ошибка подсчета файла."
+
+#: legacy/application/controllers/LocaleController.php:400
+msgid "Init error."
+msgstr "Ошибка инициализации."
+
+#: legacy/application/controllers/LocaleController.php:401
+msgid "HTTP Error."
+msgstr "Ошибка HTTP."
+
+#: legacy/application/controllers/LocaleController.php:402
+msgid "Security error."
+msgstr "Ошибка безопасности."
+
+#: legacy/application/controllers/LocaleController.php:403
+msgid "Generic error."
+msgstr "Общая ошибка."
+
+#: legacy/application/controllers/LocaleController.php:404
+msgid "IO error."
+msgstr "Ошибка записи/чтения."
+
+#: legacy/application/controllers/LocaleController.php:405
+#, php-format
+msgid "File: %s"
+msgstr "Файл: %s"
+
+#: legacy/application/controllers/LocaleController.php:407
+#, php-format
+msgid "%d files queued"
+msgstr "%d файлов в очереди"
+
+#: legacy/application/controllers/LocaleController.php:408
+msgid "File: %f, size: %s, max file size: %m"
+msgstr "Файл: %f, размер: %s, максимальный размер файла: %m"
+
+#: legacy/application/controllers/LocaleController.php:409
+msgid "Upload URL might be wrong or doesn't exist"
+msgstr "URL загрузки указан неверно или не существует"
+
+#: legacy/application/controllers/LocaleController.php:410
+msgid "Error: File too large: "
+msgstr "Ошибка: Файл слишком большой: "
+
+#: legacy/application/controllers/LocaleController.php:411
+msgid "Error: Invalid file extension: "
+msgstr "Ошибка: Неверное расширение файла: "
+
+#: legacy/application/controllers/LocaleController.php:414
+msgid "Create Entry"
+msgstr "Создать"
+
+#: legacy/application/controllers/LocaleController.php:415
+msgid "Edit History Record"
+msgstr "Редактировать историю"
+
+#: legacy/application/controllers/LocaleController.php:418
+#, php-format
+msgid "Copied %s row%s to the clipboard"
+msgstr "Скопировано %s строк %s в буфер обмена"
+
+#: legacy/application/controllers/LocaleController.php:419
+#, php-format
+msgid "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."
+msgstr "%sПредпросмотр печати%sПожалуйста, используйте функцию печати для вашего браузера для печати этой таблицы. Нажмите Esc после завершения."
+
+#: legacy/application/controllers/LocaleController.php:420
+msgid "New Show"
+msgstr "Новая Программа"
+
+#: legacy/application/controllers/LocaleController.php:421
+msgid "New Log Entry"
+msgstr "Новая запись в журнале"
+
+#: legacy/application/controllers/LocaleController.php:423
+msgid "No data available in table"
+msgstr "В таблице нет данных"
+
+#: legacy/application/controllers/LocaleController.php:424
+msgid "(filtered from _MAX_ total entries)"
+msgstr "(отфильтровано из _MAX_ записей)"
+
+#: legacy/application/controllers/LocaleController.php:430
+msgid "First"
+msgstr "Первая"
+
+#: legacy/application/controllers/LocaleController.php:431
+msgid "Last"
+msgstr "Последняя"
+
+#: legacy/application/controllers/LocaleController.php:433
+msgid "Previous"
+msgstr "Предыдущая"
+
+#: legacy/application/controllers/LocaleController.php:434
+msgid "Search:"
+msgstr "Поиск:"
+
+#: legacy/application/controllers/LocaleController.php:435
+#: legacy/application/controllers/LocaleController.php:448
+msgid "No matching records found"
+msgstr "Записи отсутствуют."
+
+#: legacy/application/controllers/LocaleController.php:436
+msgid "Drag tracks here from the library"
+msgstr "Перетащите треки сюда из Библиотеки"
+
+#: legacy/application/controllers/LocaleController.php:437
+msgid "No tracks were played during the selected time period."
+msgstr "В течение выбранного периода времени треки не воспроизводились."
+
+#: legacy/application/controllers/LocaleController.php:439
+msgid "No matching results found."
+msgstr "Результаты не найдены."
+
+#: legacy/application/controllers/LocaleController.php:443
+msgid "Publication Date"
+msgstr "Дата публикации"
+
+#: legacy/application/controllers/LocaleController.php:444
+msgid "Import Status"
+msgstr "Статус загрузки"
+
+#: legacy/application/controllers/LocaleController.php:445
+msgid "Actions"
+msgstr "Действия"
+
+#: legacy/application/controllers/LocaleController.php:446
+msgid "Delete from Library"
+msgstr "Удалить из Библиотеки"
+
+#: legacy/application/controllers/LocaleController.php:447
+msgid "Successfully imported"
+msgstr "Успешно загружено"
+
+#: legacy/application/controllers/LocaleController.php:449
+msgid "Show _MENU_"
+msgstr "Показать _MENU_"
+
+#: legacy/application/controllers/LocaleController.php:450
+msgid "Show _MENU_ entries"
+msgstr "Показать _MENU_ записей"
+
+#: legacy/application/controllers/LocaleController.php:451
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "Записи с _START_ до _END_ из _TOTAL_ записей"
+
+#: legacy/application/controllers/LocaleController.php:452
+msgid "Showing _START_ to _END_ of _TOTAL_ tracks"
+msgstr "Показано с _START_ по _END_ из _TOTAL_ треков"
+
+#: legacy/application/controllers/LocaleController.php:453
+msgid "Showing _START_ to _END_ of _TOTAL_ track types"
+msgstr "Показано с _START_ по _END_ из _TOTAL_ типов трека"
+
+#: legacy/application/controllers/LocaleController.php:454
+msgid "Showing _START_ to _END_ of _TOTAL_ users"
+msgstr "Показано с _START_ по _END_ из _TOTAL_ пользователей"
+
+#: legacy/application/controllers/LocaleController.php:455
+msgid "Showing 0 to 0 of 0 entries"
+msgstr "Записи с 0 до 0 из 0 записей"
+
+#: legacy/application/controllers/LocaleController.php:456
+msgid "Showing 0 to 0 of 0 tracks"
+msgstr "Показано с 0 по 0 из 0 треков"
+
+#: legacy/application/controllers/LocaleController.php:457
+msgid "Showing 0 to 0 of 0 track types"
+msgstr ""
+
+#: legacy/application/controllers/LocaleController.php:458
+msgid "(filtered from _MAX_ total track types)"
+msgstr ""
+
+#: legacy/application/controllers/LocaleController.php:460
+msgid "Are you sure you want to delete this tracktype?"
+msgstr "Вы уверены что хотите удалить этот тип трека?"
+
+#: legacy/application/controllers/LocaleController.php:461
+msgid "No track types were found."
+msgstr "Типы треков не были найдены."
+
+#: legacy/application/controllers/LocaleController.php:462
+msgid "No track types found"
+msgstr "Типы треков не найдены"
+
+#: legacy/application/controllers/LocaleController.php:463
+msgid "No matching track types found"
+msgstr "Не найдено подходящих типов треков"
+
+#: legacy/application/controllers/LocaleController.php:464
+#: legacy/application/forms/GeneralPreferences.php:126
+#: legacy/application/forms/GeneralPreferences.php:141
+#: legacy/application/forms/GeneralPreferences.php:159
+#: legacy/application/forms/AddTracktype.php:51
+msgid "Enabled"
+msgstr "Включено"
+
+#: legacy/application/controllers/LocaleController.php:465
+#: legacy/application/forms/GeneralPreferences.php:125
+#: legacy/application/forms/GeneralPreferences.php:140
+#: legacy/application/forms/GeneralPreferences.php:158
+#: legacy/application/forms/AddTracktype.php:50
+msgid "Disabled"
+msgstr "Отключено"
+
+#: legacy/application/controllers/LocaleController.php:466
+msgid "Cancel upload"
+msgstr "Отменить загрузку"
+
+#: legacy/application/controllers/LocaleController.php:467
+msgid "Type"
+msgstr "Тип"
+
+#: legacy/application/controllers/LocaleController.php:469
+msgid "Podcast settings saved"
+msgstr "Настройки подкаста сохранены"
+
+#: legacy/application/controllers/LocaleController.php:470
+msgid "Are you sure you want to delete this user?"
+msgstr "Вы уверены что хотите удалить этого пользователя?"
+
+#: legacy/application/controllers/LocaleController.php:471
+msgid "Can't delete yourself!"
+msgstr "Вы не можете удалить себя!"
+
+#: legacy/application/controllers/LocaleController.php:472
+msgid "You haven't published any episodes!"
+msgstr "У вас нет опубликованных эпизодов!"
+
+#: legacy/application/controllers/LocaleController.php:473
+msgid "You can publish your uploaded content from the 'Tracks' view."
+msgstr "Вы можете опубликовать ваш загруженный контент из панели «Треки»."
+
+#: legacy/application/controllers/LocaleController.php:474
+msgid "Try it now"
+msgstr "Попробовать сейчас"
+
+#: legacy/application/controllers/LocaleController.php:475
+msgid "<p>If this option is unchecked, the smartblock will schedule as many tracks as can be played out <strong>in their entirety</strong> within the specified duration. This will usually result in audio playback that is slightly less than the specified duration.</p><p>If this option is checked, the smartblock will also schedule one final track which will overflow the specified duration. This final track may be cut off mid-way if the show into which the smartblock is added finishes.</p>"
+msgstr "<p> Если галочка не установлена, то Смарт-блок будет планировать столько треков, сколько может быть <strong>полностью</strong> воспроизведено, в течение указанного периода времени. Обычно это приводит к воспроизведению аудио, которое немного меньше указанной длительности. </p><p> Если галочка установлена, то Смарт-блок также запланирует одну последнюю дорожку, которая будет превышать указанный период времени. Этот последний трек может быть обрезан, если закончится Программа, в которое добавлен Смарт-блок. </p>"
+
+#: legacy/application/controllers/LocaleController.php:476
+msgid "Playlist preview"
+msgstr "Предпросмотр плейлиста"
+
+#: legacy/application/controllers/LocaleController.php:478
+msgid "Webstream preview"
+msgstr "Предпросмотр веб-потока"
+
+#: legacy/application/controllers/LocaleController.php:479
+msgid "You don't have permission to view the library."
+msgstr "У вас нет разрешений для просмотра Библиотеки"
+
+#: legacy/application/controllers/LocaleController.php:480
+#: legacy/application/forms/AddShowWhen.php:24
+msgid "Now"
+msgstr "С текущего момента"
+
+#: legacy/application/controllers/LocaleController.php:481
+msgid "Click 'New' to create one now."
+msgstr "Нажмите «Новый» чтобы создать новый"
+
+#: legacy/application/controllers/LocaleController.php:482
+msgid "Click 'Upload' to add some now."
+msgstr "Нажмите «Загрузить» чтобы добавить новый"
+
+#: legacy/application/controllers/LocaleController.php:484
+msgid "Import Date"
+msgstr "Дата импорта"
+
+#: legacy/application/controllers/LocaleController.php:485
+msgid "Add New Podcast"
+msgstr "Добавить новый подкаст"
+
+#: legacy/application/controllers/LocaleController.php:486
+msgid ""
+"Cannot schedule outside a show.\n"
+"Try creating a show first."
+msgstr ""
+"Нельзя планировать аудио вне рамок Программы.\n"
+"Попробуйте сначала создать Программу"
+
+#: legacy/application/controllers/LocaleController.php:487
+msgid "No files have been uploaded yet."
+msgstr "Еще ни одного файла не загружено"
+
+#: legacy/application/controllers/LocaleController.php:493
+msgid "On Air"
+msgstr "В прямом эфире"
+
+#: legacy/application/controllers/LocaleController.php:494
+msgid "Off Air"
+msgstr "Не в эфире"
+
+#: legacy/application/controllers/LocaleController.php:495
+msgid "Offline"
+msgstr "Офлайн"
+
+#: legacy/application/controllers/LocaleController.php:496
+msgid "Nothing scheduled"
+msgstr "Ничего не запланировано"
+
+#: legacy/application/controllers/LocaleController.php:497
+msgid "Click 'Add' to create one now."
+msgstr "Нажмите «Добавить» чтобы создать новый"
+
+#: legacy/application/controllers/ScheduleController.php:384
+#, php-format
+msgid "Rebroadcast of show %s from %s at %s"
+msgstr "Ретрансляция Программы %s от %s в %s"
+
+#: legacy/application/services/PodcastService.php:161
+msgid "Auto-generated smartblock for podcast"
+msgstr "Автоматически сгенерированный Смарт-блок для подкаста"
+
+#: legacy/application/services/CalendarService.php:50
+msgid "Record file doesn't exist"
+msgstr "Записанный файл не существует"
+
+#: legacy/application/services/CalendarService.php:54
+msgid "View Recorded File Metadata"
+msgstr "Просмотр мета-данных записанного файла"
+
+#: legacy/application/services/CalendarService.php:81
+msgid "Schedule Tracks"
+msgstr "Запланировать Треки"
+
+#: legacy/application/services/CalendarService.php:106
+msgid "Clear Show"
+msgstr "Очистить Программу"
+
+#: legacy/application/services/CalendarService.php:120
+#: legacy/application/services/CalendarService.php:125
+msgid "Cancel Show"
+msgstr "Отменить Программу"
+
+#: legacy/application/services/CalendarService.php:146
+#: legacy/application/services/CalendarService.php:165
+msgid "Edit Instance"
+msgstr "Редактировать этот Экземпляр"
+
+#: legacy/application/services/CalendarService.php:158
+#: legacy/application/services/CalendarService.php:172
+msgid "Edit Show"
+msgstr "Редактировать Программу"
+
+#: legacy/application/services/CalendarService.php:194
+msgid "Delete Instance"
+msgstr "Удалить этот Экземпляр"
+
+#: legacy/application/services/CalendarService.php:200
+msgid "Delete Instance and All Following"
+msgstr "Удалить этот Экземпляр и все связанные"
+
+#: legacy/application/services/CalendarService.php:254
+msgid "Permission denied"
+msgstr "Доступ запрещен"
+
+#: legacy/application/services/CalendarService.php:258
+msgid "Can't drag and drop repeating shows"
+msgstr "Невозможно перетащить повторяющиеся Программы"
+
+#: legacy/application/services/CalendarService.php:267
+msgid "Can't move a past show"
+msgstr "Невозможно переместить завершившуюся Программу"
+
+#: legacy/application/services/CalendarService.php:302
+msgid "Can't move show into past"
+msgstr "Невозможно переместить Программу в прошлое"
+
+#: legacy/application/services/CalendarService.php:309
+#: legacy/application/forms/AddShowWhen.php:293
+#: legacy/application/forms/AddShowWhen.php:321
+#: legacy/application/forms/AddShowWhen.php:327
+msgid "Cannot schedule overlapping shows"
+msgstr "Нельзя запланировать пересекающиеся Программы."
+
+#: legacy/application/services/CalendarService.php:322
+msgid "Can't move a recorded show less than 1 hour before its rebroadcasts."
+msgstr "Невозможно переместить записанную Программу менее, чем за один час до ее ретрансляции."
+
+#: legacy/application/services/CalendarService.php:332
+msgid "Show was deleted because recorded show does not exist!"
+msgstr "Программа была удалена, потому что записанной Программы не существует!"
+
+#: legacy/application/services/CalendarService.php:339
+msgid "Must wait 1 hour to rebroadcast."
+msgstr "Подождите один час до ретрансляции."
+
+#: legacy/application/services/HistoryService.php:1126
+msgid "Track"
+msgstr "Трек"
+
+#: legacy/application/services/HistoryService.php:1129
+#: legacy/application/forms/SmartBlockCriteria.php:74
+#: legacy/application/models/Block.php:1455
+#: legacy/application/models/Block.php:1555
+msgid "Track Type"
+msgstr ""
+
+#: legacy/application/services/HistoryService.php:1154
+#: legacy/application/forms/EditHistoryItem.php:32
+msgid "Start Time"
+msgstr "Время начала"
+
+#: legacy/application/services/HistoryService.php:1155
+#: legacy/application/forms/EditHistoryItem.php:44
+msgid "End Time"
+msgstr "Время окончания"
+
+#: legacy/application/services/HistoryService.php:1175
+msgid "Played"
+msgstr "Проиграно"
+
+#: legacy/application/forms/AddShowAutoPlaylist.php:18
+msgid "Add Autoloading Playlist ?"
+msgstr "Добавить?"
+
+#: legacy/application/forms/AddShowAutoPlaylist.php:25
+msgid "Select Playlist"
+msgstr "Выбрать Плейлист"
+
+#: legacy/application/forms/AddShowAutoPlaylist.php:32
+msgid "Repeat Playlist Until Show is Full ?"
+msgstr "Повторять Плейлист, пока Программа не заполнится?"
+
+#: legacy/application/forms/SmartBlockCriteria.php:55
+#: legacy/application/models/Block.php:1435
+#: legacy/application/models/Block.php:1535
+msgid "Select criteria"
+msgstr "Выбрать критерии"
+
+#: legacy/application/forms/SmartBlockCriteria.php:57
+#: legacy/application/models/Block.php:1437
+#: legacy/application/models/Block.php:1537
+msgid "Bit Rate (Kbps)"
+msgstr "Битрейт (Kbps)"
+
+#: legacy/application/forms/SmartBlockCriteria.php:79
+#: legacy/application/models/Block.php:1460
+#: legacy/application/models/Block.php:1560
+msgid "Sample Rate (kHz)"
+msgstr "Частота дискретизации (кГц)"
+
+#: legacy/application/forms/SmartBlockCriteria.php:129
+#: legacy/application/models/Block.php:1476
+#: legacy/application/models/Block.php:1576
+msgid "before"
+msgstr ""
+
+#: legacy/application/forms/SmartBlockCriteria.php:130
+#: legacy/application/models/Block.php:1477
+#: legacy/application/models/Block.php:1577
+msgid "after"
+msgstr ""
+
+#: legacy/application/forms/SmartBlockCriteria.php:131
+#: legacy/application/models/Block.php:1478
+#: legacy/application/models/Block.php:1578
+msgid "between"
+msgstr ""
+
+#: legacy/application/forms/SmartBlockCriteria.php:147
+#: legacy/application/forms/SmartBlockCriteria.php:465
+#: legacy/application/forms/SmartBlockCriteria.php:507
+msgid "Select unit of time"
+msgstr ""
+
+#: legacy/application/forms/SmartBlockCriteria.php:148
+msgid "minute(s)"
+msgstr ""
+
+#: legacy/application/forms/SmartBlockCriteria.php:149
+msgid "hour(s)"
+msgstr ""
+
+#: legacy/application/forms/SmartBlockCriteria.php:150
+msgid "day(s)"
+msgstr ""
+
+#: legacy/application/forms/SmartBlockCriteria.php:151
+msgid "week(s)"
+msgstr ""
+
+#: legacy/application/forms/SmartBlockCriteria.php:152
+msgid "month(s)"
+msgstr ""
+
+#: legacy/application/forms/SmartBlockCriteria.php:153
+msgid "year(s)"
+msgstr ""
+
+#: legacy/application/forms/SmartBlockCriteria.php:164
+msgid "hours"
+msgstr "часов"
+
+#: legacy/application/forms/SmartBlockCriteria.php:165
+msgid "minutes"
+msgstr "минут"
+
+#: legacy/application/forms/SmartBlockCriteria.php:166
+#: legacy/application/models/Block.php:334
+msgid "items"
+msgstr "элементы"
+
+#: legacy/application/forms/SmartBlockCriteria.php:167
+msgid "time remaining in show"
+msgstr "оставшееся время программы"
+
+#: legacy/application/forms/SmartBlockCriteria.php:176
+msgid "Randomly"
+msgstr "Случайно"
+
+#: legacy/application/forms/SmartBlockCriteria.php:177
+msgid "Newest"
+msgstr "Новые"
+
+#: legacy/application/forms/SmartBlockCriteria.php:178
+msgid "Oldest"
+msgstr "Старые"
+
+#: legacy/application/forms/SmartBlockCriteria.php:179
+msgid "Most recently played"
+msgstr "Давно проигранные"
+
+#: legacy/application/forms/SmartBlockCriteria.php:180
+msgid "Least recently played"
+msgstr "Недавно проигранные"
+
+#: legacy/application/forms/SmartBlockCriteria.php:202
+msgid "Select Track Type"
+msgstr ""
+
+#: legacy/application/forms/SmartBlockCriteria.php:263
+msgid "Type:"
+msgstr "Тип:"
+
+#: legacy/application/forms/SmartBlockCriteria.php:266
+msgid "Dynamic"
+msgstr "Динамический"
+
+#: legacy/application/forms/SmartBlockCriteria.php:267
+msgid "Static"
+msgstr "Статический"
+
+#: legacy/application/forms/SmartBlockCriteria.php:432
+msgid "Select track type"
+msgstr ""
+
+#: legacy/application/forms/SmartBlockCriteria.php:517
+msgid "Allow Repeated Tracks:"
+msgstr "Разрешить повторение треков:"
+
+#: legacy/application/forms/SmartBlockCriteria.php:525
+msgid "Allow last track to exceed time limit:"
+msgstr "Разрешить последнему треку превышать лимит времени:"
+
+#: legacy/application/forms/SmartBlockCriteria.php:534
+msgid "Sort Tracks:"
+msgstr "Сортировка треков:"
+
+#: legacy/application/forms/SmartBlockCriteria.php:552
+msgid "Limit to:"
+msgstr "Ограничить в:"
+
+#: legacy/application/forms/SmartBlockCriteria.php:565
+msgid "Generate playlist content and save criteria"
+msgstr "Сгенерировать содержимое Плейлиста и сохранить критерии"
+
+#: legacy/application/forms/SmartBlockCriteria.php:578
+msgid "Shuffle playlist content"
+msgstr "Перемешать содержимое Плейлиста"
+
+#: legacy/application/forms/SmartBlockCriteria.php:813
+#: legacy/application/forms/SmartBlockCriteria.php:825
+msgid "Limit cannot be empty or smaller than 0"
+msgstr "Интервал не может быть пустым или менее 0"
+
+#: legacy/application/forms/SmartBlockCriteria.php:818
+msgid "Limit cannot be more than 24 hrs"
+msgstr "Интервал не может быть более 24 часов"
+
+#: legacy/application/forms/SmartBlockCriteria.php:828
+msgid "The value should be an integer"
+msgstr "Значение должно быть целым числом"
+
+#: legacy/application/forms/SmartBlockCriteria.php:831
+msgid "500 is the max item limit value you can set"
+msgstr "500 является максимально допустимым значением"
+
+#: legacy/application/forms/SmartBlockCriteria.php:842
+msgid "You must select Criteria and Modifier"
+msgstr "Вы должны выбрать Критерии и Модификаторы"
+
+#: legacy/application/forms/SmartBlockCriteria.php:849
+msgid "'Length' should be in '00:00:00' format"
+msgstr "«Длительность» должна быть в формате '00:00:00'"
+
+#: legacy/application/forms/SmartBlockCriteria.php:857
+msgid "Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
+msgstr ""
+
+#: legacy/application/forms/SmartBlockCriteria.php:863
+#: legacy/application/forms/SmartBlockCriteria.php:888
+msgid "You must select a time unit for a relative datetime."
+msgstr ""
+
+#: legacy/application/forms/SmartBlockCriteria.php:868
+#: legacy/application/forms/SmartBlockCriteria.php:894
+msgid "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
+msgstr "Значение должно быть в формате временной метки (например, 0000-00-00 или 00:00:00)"
+
+#: legacy/application/forms/SmartBlockCriteria.php:883
+msgid "Only non-negative integer numbers are allowed for a relative date time"
+msgstr ""
+
+#: legacy/application/forms/SmartBlockCriteria.php:909
+msgid "The value has to be numeric"
+msgstr "Значение должно быть числом"
+
+#: legacy/application/forms/SmartBlockCriteria.php:914
+msgid "The value should be less then 2147483648"
+msgstr "Значение должно быть меньше, чем 2147483648"
+
+#: legacy/application/forms/SmartBlockCriteria.php:919
+#, php-format
+msgid "The value should be less than %s characters"
+msgstr "Значение должно быть менее %s символов"
+
+#: legacy/application/forms/SmartBlockCriteria.php:926
+msgid "Value cannot be empty"
+msgstr "Значение не может быть пустым"
+
+#: legacy/application/forms/EditAudioMD.php:90
+msgid "Owner:"
+msgstr ""
+
+#: legacy/application/forms/EditAudioMD.php:102
+msgid "Select a Type"
+msgstr ""
+
+#: legacy/application/forms/EditAudioMD.php:217
+msgid "ISRC Number:"
+msgstr "ISRC номер:"
+
+#: legacy/application/forms/EditAudioMD.php:288
+msgid "Publish..."
+msgstr "Опубликовать..."
+
+#: legacy/application/forms/WatchedDirPreferences.php:14
+msgid "Import Folder:"
+msgstr "Импорт папки:"
+
+#: legacy/application/forms/WatchedDirPreferences.php:25
+msgid "Watched Folders:"
+msgstr "Просматриваемые папки:"
+
+#: legacy/application/forms/WatchedDirPreferences.php:40
+msgid "Not a valid Directory"
+msgstr "Не является допустимой папкой"
+
+#: legacy/application/forms/AddShowRepeats.php:10
+msgid "Link:"
+msgstr "Связать?"
+
+#: legacy/application/forms/AddShowRepeats.php:16
+msgid "Repeat Type:"
+msgstr "Тип повтора:"
+
+#: legacy/application/forms/AddShowRepeats.php:19
+msgid "weekly"
+msgstr "еженедельно"
+
+#: legacy/application/forms/AddShowRepeats.php:20
+msgid "every 2 weeks"
+msgstr "каждые 2 недели"
+
+#: legacy/application/forms/AddShowRepeats.php:21
+msgid "every 3 weeks"
+msgstr "каждые 3 недели"
+
+#: legacy/application/forms/AddShowRepeats.php:22
+msgid "every 4 weeks"
+msgstr "каждые 4 недели"
+
+#: legacy/application/forms/AddShowRepeats.php:23
+msgid "monthly"
+msgstr "ежемесячно"
+
+#: legacy/application/forms/AddShowRepeats.php:32
+msgid "Select Days:"
+msgstr "Выберите дни недели:"
+
+#: legacy/application/forms/AddShowRepeats.php:47
+msgid "Repeat By:"
+msgstr "Повторять:"
+
+#: legacy/application/forms/AddShowRepeats.php:50
+msgid "day of the month"
+msgstr "день месяца"
+
+#: legacy/application/forms/AddShowRepeats.php:50
+msgid "day of the week"
+msgstr "день недели"
+
+#: legacy/application/forms/AddShowRepeats.php:56
+#: legacy/application/forms/ShowListenerStat.php:44
+#: legacy/application/forms/ShowBuilder.php:46
+#: legacy/application/forms/DateRange.php:44
+msgid "Date End:"
+msgstr "Дата окончания:"
+
+#: legacy/application/forms/AddShowRepeats.php:69
+msgid "No End?"
+msgstr "Бесконечно?"
+
+#: legacy/application/forms/AddShowRepeats.php:106
+msgid "End date must be after start date"
+msgstr "Дата окончания должна быть после даты начала"
+
+#: legacy/application/forms/AddShowRepeats.php:113
+msgid "Please select a repeat day"
+msgstr "Укажите день повтора"
+
+#: legacy/application/forms/customvalidators/ConditionalNotEmpty.php:32
+#: legacy/application/forms/helpers/ValidationTypes.php:8
+msgid "Value is required and can't be empty"
+msgstr "Поля не могут быть пустыми"
+
+#: legacy/application/forms/AddShowWhen.php:16
+msgid "'%value%' does not fit the time format 'HH:mm'"
+msgstr "'%value%' не соответствует формату времени 'HH:mm'"
+
+#: legacy/application/forms/AddShowWhen.php:22
+msgid "Start Time:"
+msgstr "Время начала:"
+
+#: legacy/application/forms/AddShowWhen.php:25
+#: legacy/application/forms/AddShowWhen.php:37
+msgid "In the Future:"
+msgstr "В будущем:"
+
+#: legacy/application/forms/AddShowWhen.php:64
+msgid "End Time:"
+msgstr "Время завершения:"
+
+#: legacy/application/forms/AddShowWhen.php:98
+msgid "Timezone:"
+msgstr "Часовой пояс:"
+
+#: legacy/application/forms/AddShowWhen.php:107
+msgid "Repeats?"
+msgstr "Повторы?"
+
+#: legacy/application/forms/AddShowWhen.php:139
+msgid "Cannot create show in the past"
+msgstr "Нельзя создать Программу в прошлом"
+
+#: legacy/application/forms/AddShowWhen.php:147
+msgid "Cannot modify start date/time of the show that is already started"
+msgstr "Нельзя изменить дату/время начала Программы, которая уже началась"
+
+#: legacy/application/forms/AddShowWhen.php:156
+#: legacy/application/models/Show.php:320
+msgid "End date/time cannot be in the past"
+msgstr "Дата/время окончания не могут быть в прошлом"
+
+#: legacy/application/forms/AddShowWhen.php:164
+msgid "Cannot have duration < 0m"
+msgstr "Не может длиться меньше 0 мин."
+
+#: legacy/application/forms/AddShowWhen.php:168
+msgid "Cannot have duration 00h 00m"
+msgstr "Не может длиться 00 ч 00 мин"
+
+#: legacy/application/forms/AddShowWhen.php:175
+msgid "Cannot have duration greater than 24h"
+msgstr "Программа не может длиться больше 24 часов"
+
+#: legacy/application/forms/AddUser.php:28
+#: legacy/application/forms/Login.php:39
+#: legacy/application/forms/LiveStreamingPreferences.php:42
+#: legacy/application/forms/EditUser.php:36
+msgid "Username:"
+msgstr "Логин:"
+
+#: legacy/application/forms/AddUser.php:37
+#: legacy/application/forms/Login.php:52
+#: legacy/application/forms/LiveStreamingPreferences.php:58
+#: legacy/application/forms/EditUser.php:47
+msgid "Password:"
+msgstr "Пароль:"
+
+#: legacy/application/forms/AddUser.php:45
+#: legacy/application/forms/EditUser.php:56
+msgid "Verify Password:"
+msgstr "Пароль еще раз:"
+
+#: legacy/application/forms/AddUser.php:54
+#: legacy/application/forms/EditUser.php:66
+msgid "Firstname:"
+msgstr "Имя:"
+
+#: legacy/application/forms/AddUser.php:60
+#: legacy/application/forms/EditUser.php:74
+msgid "Lastname:"
+msgstr "Фамилия:"
+
+#: legacy/application/forms/AddUser.php:66
+#: legacy/application/forms/EditUser.php:82
+msgid "Email:"
+msgstr "E-mail:"
+
+#: legacy/application/forms/AddUser.php:75
+#: legacy/application/forms/EditUser.php:93
+msgid "Mobile Phone:"
+msgstr "Номер телефона:"
+
+#: legacy/application/forms/AddUser.php:81
+#: legacy/application/forms/EditUser.php:101
+msgid "Skype:"
+msgstr "Skype:"
+
+#: legacy/application/forms/AddUser.php:87
+#: legacy/application/forms/EditUser.php:109
+msgid "Jabber:"
+msgstr "Jabber:"
+
+#: legacy/application/forms/AddUser.php:94
+msgid "User Type:"
+msgstr "Категория:"
+
+#: legacy/application/forms/AddUser.php:119
+#: legacy/application/forms/EditUser.php:142
+msgid "Login name is not unique."
+msgstr "Логин не является уникальным."
+
+#: legacy/application/forms/AddShowLiveStream.php:11
+#, php-format
+msgid "Use %s Authentication:"
+msgstr "Использовать %s Аутентификацию:"
+
+#: legacy/application/forms/AddShowLiveStream.php:17
+msgid "Use Custom Authentication:"
+msgstr "Использование пользовательской идентификации:"
+
+#: legacy/application/forms/AddShowLiveStream.php:26
+msgid "Custom Username"
+msgstr "Пользовательский логин"
+
+#: legacy/application/forms/AddShowLiveStream.php:38
+msgid "Custom Password"
+msgstr "Пользовательский пароль"
+
+#: legacy/application/forms/AddShowLiveStream.php:49
+msgid "Host:"
+msgstr "Хост:"
+
+#: legacy/application/forms/AddShowLiveStream.php:55
+msgid "Port:"
+msgstr "Порт:"
+
+#: legacy/application/forms/AddShowLiveStream.php:61
+msgid "Mount:"
+msgstr "Точка монтирования:"
+
+#: legacy/application/forms/AddShowLiveStream.php:78
+msgid "Username field cannot be empty."
+msgstr "Поле «Логин» не может быть пустым."
+
+#: legacy/application/forms/AddShowLiveStream.php:83
+msgid "Password field cannot be empty."
+msgstr "Поле «Пароль» не может быть пустым."
+
+#: legacy/application/forms/SetupLanguageTimezone.php:18
+msgid "Station Language"
+msgstr "Язык радиостанции"
+
+#: legacy/application/forms/SetupLanguageTimezone.php:23
+#: legacy/application/forms/GeneralPreferences.php:187
+msgid "Station Timezone"
+msgstr "Часовой пояс станции:"
+
+#: legacy/application/forms/PodcastPreferences.php:8
+msgid "Feed Privacy"
+msgstr "Приватность ленты"
+
+#: legacy/application/forms/PodcastPreferences.php:10
+msgid "Public"
+msgstr "Публичный"
+
+#: legacy/application/forms/PodcastPreferences.php:11
+msgid "Private"
+msgstr "Частный"
+
+#: legacy/application/forms/ShowListenerStat.php:16
+#: legacy/application/forms/ShowBuilder.php:18
+#: legacy/application/forms/DateRange.php:16
+msgid "Date Start:"
+msgstr "Дата начала:"
+
+#: legacy/application/forms/ShowListenerStat.php:35
+#: legacy/application/forms/ShowListenerStat.php:63
+#: legacy/application/forms/ShowBuilder.php:37
+#: legacy/application/forms/ShowBuilder.php:65
+#: legacy/application/forms/AddShowAbsoluteRebroadcastDates.php:26
+#: legacy/application/forms/DateRange.php:35
+#: legacy/application/forms/DateRange.php:63
+#: legacy/application/forms/LiveStreamingPreferences.php:92
+#: legacy/application/forms/LiveStreamingPreferences.php:119
+#: legacy/application/forms/AddShowRebroadcastDates.php:31
+#: legacy/application/forms/StreamSettingSubForm.php:102
+#: legacy/application/forms/StreamSettingSubForm.php:121
+#: legacy/application/forms/StreamSettingSubForm.php:136
+#: legacy/application/forms/StreamSettingSubForm.php:158
+#: legacy/application/forms/StreamSettingSubForm.php:168
+#: legacy/application/forms/StreamSettingSubForm.php:177
+#: legacy/application/forms/StreamSettingSubForm.php:186
+msgid "Invalid character entered"
+msgstr "Неверно введенный символ"
+
+#: legacy/application/forms/AddShowWho.php:10
+msgid "Search Users:"
+msgstr "Поиск пользователей:"
+
+#: legacy/application/forms/AddShowWho.php:24
+msgid "DJs:"
+msgstr "Диджеи:"
+
+#: legacy/application/forms/ShowBuilder.php:72
+#: legacy/application/forms/ShowBuilder.php:89
+msgid "Filter by Show"
+msgstr "Фильтровать по Программам"
+
+#: legacy/application/forms/ShowBuilder.php:80
+msgid "All My Shows:"
+msgstr "Все мои Программы:"
+
+#: legacy/application/forms/ShowBuilder.php:91
+msgid "My Shows"
+msgstr "Мои Программы"
+
+#: legacy/application/forms/AddShowStyle.php:12
+msgid "Background Colour:"
+msgstr "Цвет фона:"
+
+#: legacy/application/forms/AddShowStyle.php:31
+msgid "Text Colour:"
+msgstr "Цвет текста:"
+
+#: legacy/application/forms/AddShowStyle.php:49
+msgid "Current Logo:"
+msgstr "Текущий логотип:"
+
+#: legacy/application/forms/AddShowStyle.php:72
+msgid "Show Logo:"
+msgstr "Логотип Программы:"
+
+#: legacy/application/forms/AddShowStyle.php:87
+msgid "Logo Preview:"
+msgstr "Предпросмотр логотипа:"
+
+#: legacy/application/forms/AddShowAbsoluteRebroadcastDates.php:66
+#: legacy/application/forms/AddShowRebroadcastDates.php:71
+msgid "Day must be specified"
+msgstr "Укажите день"
+
+#: legacy/application/forms/AddShowAbsoluteRebroadcastDates.php:71
+#: legacy/application/forms/AddShowRebroadcastDates.php:76
+msgid "Time must be specified"
+msgstr "Укажите время"
+
+#: legacy/application/forms/AddShowAbsoluteRebroadcastDates.php:94
+#: legacy/application/forms/AddShowRebroadcastDates.php:103
+msgid "Must wait at least 1 hour to rebroadcast"
+msgstr "Нужно подождать хотя бы один час для ретрансляции"
+
+#: legacy/application/forms/AddShowWhat.php:30
+msgid "Untitled Show"
+msgstr "Программа без названия"
+
+#: legacy/application/forms/AddShowWhat.php:69
+msgid "Instance Description:"
+msgstr "Описание экземпляра:"
+
+#: legacy/application/forms/GeneralPreferences.php:27
+msgid "Station Name"
+msgstr "Название Станции:"
+
+#: legacy/application/forms/GeneralPreferences.php:35
+msgid "Station Description"
+msgstr "Описание Станции:"
+
+#: legacy/application/forms/GeneralPreferences.php:44
+msgid "Station Logo:"
+msgstr "Логотип Станции:"
+
+#: legacy/application/forms/GeneralPreferences.php:45
+msgid "Note: Anything larger than 600x600 will be resized."
+msgstr "Примечание: файлы, превышающие размер 600x600 пикселей, будут уменьшены."
+
+#: legacy/application/forms/GeneralPreferences.php:64
+msgid "Default Crossfade Duration (s):"
+msgstr "Стандартная длительность сведения треков (сек):"
+
+#: legacy/application/forms/GeneralPreferences.php:70
+#: legacy/application/forms/GeneralPreferences.php:84
+#: legacy/application/forms/GeneralPreferences.php:98
+#: legacy/application/forms/LiveStreamingPreferences.php:34
+msgid "Please enter a time in seconds (eg. 0.5)"
+msgstr "Пожалуйста введите время в секундах (например 0.5)"
+
+#: legacy/application/forms/GeneralPreferences.php:78
+msgid "Default Fade In (s):"
+msgstr "Сведение по умолчанию (сек):"
+
+#: legacy/application/forms/GeneralPreferences.php:92
+msgid "Default Fade Out (s):"
+msgstr "Затухание по умолчанию (сек):"
+
+#: legacy/application/forms/GeneralPreferences.php:104
+msgid "Track Type Upload Default"
+msgstr ""
+
+#: legacy/application/forms/GeneralPreferences.php:111
+msgid "Intro Autoloading Playlist"
+msgstr "Вступительный автозагружаемый плейлист (Intro)"
+
+#: legacy/application/forms/GeneralPreferences.php:117
+msgid "Outro Autoloading Playlist"
+msgstr "Завершающий автозагружаемый плейлист (Outro)"
+
+#: legacy/application/forms/GeneralPreferences.php:123
+msgid "Overwrite Podcast Episode Metatags"
+msgstr "Перезапись мета-тегов эпизодов Подкастов:"
+
+#: legacy/application/forms/GeneralPreferences.php:129
+msgid "Enabling this feature will cause podcast episode tracks to have their Artist, Title, and Album metatags set from podcast feed values. Note that enabling this feature is recommended in order to ensure reliable scheduling of episodes via smartblocks."
+msgstr "Включение этой функции приведет к тому, что для дорожек эпизодов Подкастов будут установлены мета-теги «Исполнитель», «Название» и «Альбом» из тегов в ленте Подкаста. Обратите внимание, что включение этой функции рекомендуется для обеспечения надежного планирования эпизодов с помощью Смарт-блоков."
+
+#: legacy/application/forms/GeneralPreferences.php:138
+msgid "Generate a smartblock and a playlist upon creation of a new podcast"
+msgstr "Генерация Смарт-блока и Плейлиста после создания нового Подкаста:"
+
+#: legacy/application/forms/GeneralPreferences.php:144
+msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
+msgstr "Если эта опция включена, новый Смарт-блок и Плейлист, соответствующие новой дорожке Подкаста, будут созданы сразу же после создания нового Подкаста. Обратите внимание, что функция «Перезапись мета-тегов эпизодов Подкастов» также должна быть включена, чтобы Смарт-блоки могли гарантированно находить эпизоды."
+
+#: legacy/application/forms/GeneralPreferences.php:155
+msgid "Public LibreTime API"
+msgstr "Разрешить публичный API для LibreTime?"
+
+#: legacy/application/forms/GeneralPreferences.php:156
+msgid "Required for embeddable schedule widget."
+msgstr "Требуется для встраиваемого виджета-расписания."
+
+#: legacy/application/forms/GeneralPreferences.php:162
+msgid ""
+"Enabling this feature will allow LibreTime to provide schedule data\n"
+"                                            to external widgets that can be embedded in your website."
+msgstr "Активация данной функции позволит LibreTime предоставлять данные на внешние виджеты, которые могут быть встроены на сайт."
+
+#: legacy/application/forms/GeneralPreferences.php:174
+msgid "Allowed CORS URLs"
+msgstr "Разрешенные адреса CORS:"
+
+#: legacy/application/forms/GeneralPreferences.php:175
+msgid "Remote URLs that are allowed to access this LibreTime instance in a browser. One URL per line."
+msgstr "Внешние URL адреса, которым разрешен доступ к данному экземпляру LibreTime в браузере. Укажите каждый адрес отдельной строкой."
+
+#: legacy/application/forms/GeneralPreferences.php:180
+msgid "Default Language"
+msgstr "Язык по умолчанию:"
+
+#: legacy/application/forms/GeneralPreferences.php:194
+msgid "Week Starts On"
+msgstr "Неделя начинается с:"
+
+#: legacy/application/forms/GeneralPreferences.php:210
+msgid "Display login button on your Radio Page?"
+msgstr "Отображать кнопку «Вход» на Странице Радио?"
+
+#: legacy/application/forms/AddShowRR.php:10
+msgid "Record from Line In?"
+msgstr "Запись с линейного входа?"
+
+#: legacy/application/forms/AddShowRR.php:16
+msgid "Rebroadcast?"
+msgstr "Ретрансляция?"
+
+#: legacy/application/forms/PasswordRestore.php:14
+msgid "Email"
+msgstr "Электронная почта"
+
+#: legacy/application/forms/PasswordRestore.php:36
+msgid "Reset password"
+msgstr "Сбросить пароль"
+
+#: legacy/application/forms/LiveStreamingPreferences.php:19
+msgid "Auto Switch Off:"
+msgstr "Авто-откл. внешнего потока:"
+
+#: legacy/application/forms/LiveStreamingPreferences.php:25
+msgid "Auto Switch On:"
+msgstr "Авто-вкл. внешнего потока:"
+
+#: legacy/application/forms/LiveStreamingPreferences.php:31
+msgid "Switch Transition Fade (s):"
+msgstr "Затухание при переключ. (сек):"
+
+#: legacy/application/forms/LiveStreamingPreferences.php:66
+msgid "Master Source Host:"
+msgstr "Хост для источника Master:"
+
+#: legacy/application/forms/LiveStreamingPreferences.php:78
+msgid "Master Source Port:"
+msgstr "Порт для источника Master:"
+
+#: legacy/application/forms/LiveStreamingPreferences.php:81
+#: legacy/application/forms/LiveStreamingPreferences.php:111
+#: legacy/application/forms/StreamSettingSubForm.php:112
+msgid "Only numbers are allowed."
+msgstr "Разрешены только числа."
+
+#: legacy/application/forms/LiveStreamingPreferences.php:89
+msgid "Master Source Mount:"
+msgstr "Точка монтирования для источника Master:"
+
+#: legacy/application/forms/LiveStreamingPreferences.php:99
+msgid "Show Source Host:"
+msgstr "Хост для источника Show:"
+
+#: legacy/application/forms/LiveStreamingPreferences.php:108
+msgid "Show Source Port:"
+msgstr "Порт для источника Show:"
+
+#: legacy/application/forms/LiveStreamingPreferences.php:116
+msgid "Show Source Mount:"
+msgstr "Точка монтирования для источника Show:"
+
+#: legacy/application/forms/PasswordChange.php:17
+#: legacy/application/forms/StreamSettingSubForm.php:117
+msgid "Password"
+msgstr "Пароль"
+
+#: legacy/application/forms/PasswordChange.php:28
+msgid "Confirm new password"
+msgstr "Подтвердить новый пароль"
+
+#: legacy/application/forms/PasswordChange.php:36
+msgid "Password confirmation does not match your password."
+msgstr "Подтверждение пароля не совпадает с вашим паролем."
+
+#: legacy/application/forms/DangerousPreferences.php:12
+msgid "Delete All Tracks in Library"
+msgstr "Удалить все треки в Библиотеке"
+
+#: legacy/application/forms/AddTracktype.php:21
+msgid "Type Name:"
+msgstr "Название типа"
+
+#: legacy/application/forms/AddTracktype.php:27
+msgid "Code:"
+msgstr "Код:"
+
+#: legacy/application/forms/AddTracktype.php:46
+msgid "Visibility:"
+msgstr "Видимость:"
+
+#: legacy/application/forms/AddTracktype.php:70
+msgid "Code is not unique."
+msgstr ""
+
+#: legacy/application/forms/AddShowRebroadcastDates.php:15
+msgid "days"
+msgstr "дней"
+
+#: legacy/application/forms/StreamSettingSubForm.php:52
+msgid "Enabled:"
+msgstr "Активировать:"
+
+#: legacy/application/forms/StreamSettingSubForm.php:59
+msgid "Mobile:"
+msgstr "Мобильный:"
+
+#: legacy/application/forms/StreamSettingSubForm.php:66
+msgid "Stream Type:"
+msgstr "Тип потока:"
+
+#: legacy/application/forms/StreamSettingSubForm.php:82
+msgid "Service Type:"
+msgstr "Тип сервиса:"
+
+#: legacy/application/forms/StreamSettingSubForm.php:90
+msgid "Channels:"
+msgstr "Аудио каналы:"
+
+#: legacy/application/forms/StreamSettingSubForm.php:91
+msgid "1 - Mono"
+msgstr "Моно"
+
+#: legacy/application/forms/StreamSettingSubForm.php:91
+msgid "2 - Stereo"
+msgstr "Стерео"
+
+#: legacy/application/forms/StreamSettingSubForm.php:98
+msgid "Server"
+msgstr "Сервер"
+
+#: legacy/application/forms/StreamSettingSubForm.php:108
+msgid "Port"
+msgstr "Порт"
+
+#: legacy/application/forms/StreamSettingSubForm.php:133
+msgid "URL"
+msgstr "URL"
+
+#: legacy/application/forms/StreamSettingSubForm.php:154
+msgid "Mount Point"
+msgstr "Точка монтирования"
+
+#: legacy/application/forms/StreamSettingSubForm.php:174
+msgid "Admin User"
+msgstr "Администратор"
+
+#: legacy/application/forms/StreamSettingSubForm.php:183
+msgid "Admin Password"
+msgstr "Пароль администратора"
+
+#: legacy/application/forms/StreamSettingSubForm.php:211
+msgid "Server cannot be empty."
+msgstr "Сервер не может быть пустым."
+
+#: legacy/application/forms/StreamSettingSubForm.php:216
+msgid "Port cannot be empty."
+msgstr "Порт не может быть пустым."
+
+#: legacy/application/forms/StreamSettingSubForm.php:222
+msgid "Mount cannot be empty with Icecast server."
+msgstr "Точка монтирования не может быть пустой в Icecast сервер."
+
+#: legacy/application/forms/EditUser.php:128
+msgid "Interface Timezone:"
+msgstr "Часовой пояс:"
+
+#: legacy/application/forms/Player.php:14
+msgid "Now Playing"
+msgstr "Сейчас играет"
+
+#: legacy/application/forms/Player.php:25
+msgid "Select Stream:"
+msgstr "Выбрать поток:"
+
+#: legacy/application/forms/Player.php:28
+msgid "Auto detect the most appropriate stream to use."
+msgstr "Автоопределение наиболее приоритетного потока вещания."
+
+#: legacy/application/forms/Player.php:29
+msgid "Select a stream:"
+msgstr "Выберите поток:"
+
+#: legacy/application/forms/Player.php:41
+msgid " - Mobile friendly"
+msgstr " - Совместимость с мобильными"
+
+#: legacy/application/forms/Player.php:45
+msgid " - The player does not support Opus streams."
+msgstr " - Проигрыватель не поддерживает вещание Opus ."
+
+#: legacy/application/forms/Player.php:72
+msgid "Copy this code and paste it into your website's HTML to embed the player in your site."
+msgstr "Скопируйте и добавьте этот код в HTML сайта, чтобы добавить плеер."
+
+#: legacy/application/forms/TuneInPreferences.php:20
+msgid "Push metadata to your station on TuneIn?"
+msgstr "Добавить мета-данные вашей станции в TuneIn?"
+
+#: legacy/application/forms/TuneInPreferences.php:25
+msgid "Station ID:"
+msgstr "ID станции:"
+
+#: legacy/application/forms/TuneInPreferences.php:31
+msgid "Partner Key:"
+msgstr "Ключ партнера:"
+
+#: legacy/application/forms/TuneInPreferences.php:37
+msgid "Partner Id:"
+msgstr "Идентификатор партнера:"
+
+#: legacy/application/forms/TuneInPreferences.php:78
+#: legacy/application/forms/TuneInPreferences.php:87
+msgid "Invalid TuneIn Settings. Please ensure your TuneIn settings are correct and try again."
+msgstr "Неверные параметры TuneIn. Убедитесь в правильности настроек TuneIn и повторите попытку."
+
+#: legacy/application/forms/helpers/ValidationTypes.php:19
+msgid "'%value%' is no valid email address in the basic format local-part@hostname"
+msgstr "'%value%' не является действительным адресом электронной почты в формате local-part@hostname"
+
+#: legacy/application/forms/helpers/ValidationTypes.php:33
+msgid "'%value%' does not fit the date format '%format%'"
+msgstr "'%value%' не соответствует формату даты '%format%'"
+
+#: legacy/application/forms/helpers/ValidationTypes.php:59
+msgid "'%value%' is less than %min% characters long"
+msgstr "'%value%' имеет менее %min% символов"
+
+#: legacy/application/forms/helpers/ValidationTypes.php:64
+msgid "'%value%' is more than %max% characters long"
+msgstr "'%value%' имеет более %max% символов"
+
+#: legacy/application/forms/helpers/ValidationTypes.php:76
+msgid "'%value%' is not between '%min%' and '%max%', inclusively"
+msgstr "'%value%' не входит в промежуток '%min%' и '%max%', включительно"
+
+#: legacy/application/forms/helpers/ValidationTypes.php:89
+msgid "Passwords do not match"
+msgstr "Пароли не совпадают"
+
+#: legacy/application/forms/StreamSetting.php:26
+msgid "Hardware Audio Output:"
+msgstr "Аппаратный аудио выход"
+
+#: legacy/application/forms/StreamSetting.php:33
+msgid "Output Type"
+msgstr "Тип выхода"
+
+#: legacy/application/forms/StreamSetting.php:35
+msgid "ALSA"
+msgstr "ALSA"
+
+#: legacy/application/forms/StreamSetting.php:36
+msgid "AO"
+msgstr "AO"
+
+#: legacy/application/forms/StreamSetting.php:37
+msgid "OSS"
+msgstr "OSS"
+
+#: legacy/application/forms/StreamSetting.php:38
+msgid "Portaudio"
+msgstr "Portaudio"
+
+#: legacy/application/forms/StreamSetting.php:39
+msgid "Pulseaudio"
+msgstr "Pulseaudio"
+
+#: legacy/application/forms/StreamSetting.php:40
+msgid "Jack"
+msgstr "Джек"
+
+#: legacy/application/forms/StreamSetting.php:46
+msgid "Icecast Vorbis Metadata"
+msgstr "Мета-данные Icecast Vorbis"
+
+#: legacy/application/forms/StreamSetting.php:56
+msgid "Stream Label:"
+msgstr "Мета-данные потока:"
+
+#: legacy/application/forms/StreamSetting.php:57
+msgid "Artist - Title"
+msgstr "Исполнитель - Название трека "
+
+#: legacy/application/forms/StreamSetting.php:58
+msgid "Show - Artist - Title"
+msgstr "Программа - Исполнитель - Название трека"
+
+#: legacy/application/forms/StreamSetting.php:59
+msgid "Station name - Show name"
+msgstr "Название станции - Программа"
+
+#: legacy/application/forms/StreamSetting.php:65
+msgid "Off Air Metadata"
+msgstr "Мета-данные при выкл. эфире"
+
+#: legacy/application/forms/StreamSetting.php:71
+msgid "Enable Replay Gain"
+msgstr "Включить коэфф. усиления"
+
+#: legacy/application/forms/StreamSetting.php:77
+msgid "Replay Gain Modifier"
+msgstr "Изменить коэфф. усиления"
+
+#: legacy/application/forms/StreamSetting.php:85
+msgid "Streaming Server:"
+msgstr "Сервер вещания:"
+
+#: legacy/application/forms/StreamSetting.php:86
+msgid "Default Streaming"
+msgstr "Встроенное вещание"
+
+#: legacy/application/forms/StreamSetting.php:86
+msgid "Custom / 3rd Party Streaming"
+msgstr "Вещание на внешние сервера"
+
+#: legacy/application/common/DateHelper.php:213
+#, php-format
+msgid "The year %s must be within the range of 1753 - 9999"
+msgstr "%s год должен быть в пределах 1753 - 9999"
+
+#: legacy/application/common/DateHelper.php:216
+#, php-format
+msgid "%s-%s-%s is not a valid date"
+msgstr "%s - %s - %s недопустимая дата"
+
+#: legacy/application/common/DateHelper.php:240
+#, php-format
+msgid "%s:%s:%s is not a valid time"
+msgstr "%s : %s : %s недопустимое время"
+
+#: legacy/application/common/UsabilityHints.php:66
+msgid "Upload some tracks below to add them to your library!"
+msgstr "Загрузите несколько треков ниже, чтобы добавить их в вашу Библиотеку!"
+
+#: legacy/application/common/UsabilityHints.php:68
+#, php-format
+msgid "It looks like you haven't uploaded any audio files yet. %sUpload a file now%s."
+msgstr "Похоже, что вы еще не загрузили ни одного аудиофайла. %sЗагрузить файл сейчас%s."
+
+#: legacy/application/common/UsabilityHints.php:74
+msgid "Click the 'New Show' button and fill out the required fields."
+msgstr "Нажмите на кнопку «Новая Программа» и заполните необходимые поля."
+
+#: legacy/application/common/UsabilityHints.php:76
+#, php-format
+msgid "It looks like you don't have any shows scheduled. %sCreate a show now%s."
+msgstr "Похоже, что вы не запланировали ни одной Программы. %sСоздать Программу сейчас%s."
+
+#: legacy/application/common/UsabilityHints.php:84
+msgid "To start broadcasting, cancel the current linked show by clicking on it and selecting 'Cancel Show'."
+msgstr "Для начала вещания завершите текущую связанную Программу, выбрав её и нажав «Завершить Программу»."
+
+#: legacy/application/common/UsabilityHints.php:86
+#, php-format
+msgid ""
+"Linked shows need to be filled with tracks before it starts. To start broadcasting cancel the current linked show and schedule an unlinked show.\n"
+"                    %sCreate an unlinked show now%s."
+msgstr "Связанные Программы необходимо заполнить до их начала. Для начала вещания отмените текущую связанную Программу и запланируйте новую  %sнесвязанную Программу сейчас%s."
+
+#: legacy/application/common/UsabilityHints.php:91
+msgid "To start broadcasting, click on the current show and select 'Schedule Tracks'"
+msgstr "Для начала вещания выберите текущую Программу и выберите «Запланировать Треки»"
+
+#: legacy/application/common/UsabilityHints.php:93
+#, php-format
+msgid "It looks like the current show needs more tracks. %sAdd tracks to your show now%s."
+msgstr "Похоже, что в текущей Программе не хватает треков. %sДобавьте треки в Программу сейчас%s."
+
+#: legacy/application/common/UsabilityHints.php:100
+msgid "Click on the show starting next and select 'Schedule Tracks'"
+msgstr "Выберите следующую Программу и нажмите «Запланировать Треки»"
+
+#: legacy/application/common/UsabilityHints.php:102
+#, php-format
+msgid "It looks like the next show is empty. %sAdd tracks to your show now%s."
+msgstr "Похоже, следующая Программа пуста. %sДобавьте треки в Программу сейчас%s."
+
+#: legacy/application/common/LocaleHelper.php:22
+msgid "English"
+msgstr "Английский"
+
+#: legacy/application/common/LocaleHelper.php:23
+msgid "Afar"
+msgstr "Афар"
+
+#: legacy/application/common/LocaleHelper.php:24
+msgid "Abkhazian"
+msgstr "Абхазский"
+
+#: legacy/application/common/LocaleHelper.php:25
+msgid "Afrikaans"
+msgstr "Африкаанс"
+
+#: legacy/application/common/LocaleHelper.php:26
+msgid "Amharic"
+msgstr "Амхарский"
+
+#: legacy/application/common/LocaleHelper.php:27
+msgid "Arabic"
+msgstr "Арабский"
+
+#: legacy/application/common/LocaleHelper.php:28
+msgid "Assamese"
+msgstr "Ассамский"
+
+#: legacy/application/common/LocaleHelper.php:29
+msgid "Aymara"
+msgstr "Аймара"
+
+#: legacy/application/common/LocaleHelper.php:30
+msgid "Azerbaijani"
+msgstr "Азербаджанский"
+
+#: legacy/application/common/LocaleHelper.php:31
+msgid "Bashkir"
+msgstr "Башкирский"
+
+#: legacy/application/common/LocaleHelper.php:32
+msgid "Belarusian"
+msgstr "Белорусский"
+
+#: legacy/application/common/LocaleHelper.php:33
+msgid "Bulgarian"
+msgstr "Болгарский"
+
+#: legacy/application/common/LocaleHelper.php:34
+msgid "Bihari"
+msgstr "Бихари"
+
+#: legacy/application/common/LocaleHelper.php:35
+msgid "Bislama"
+msgstr "Бислама"
+
+#: legacy/application/common/LocaleHelper.php:36
+msgid "Bengali/Bangla"
+msgstr "Бенгали"
+
+#: legacy/application/common/LocaleHelper.php:37
+msgid "Tibetan"
+msgstr "Тибетский"
+
+#: legacy/application/common/LocaleHelper.php:38
+msgid "Breton"
+msgstr "Бретонский"
+
+#: legacy/application/common/LocaleHelper.php:39
+msgid "Catalan"
+msgstr "Каталанский"
+
+#: legacy/application/common/LocaleHelper.php:40
+msgid "Corsican"
+msgstr "Корсиканский"
+
+#: legacy/application/common/LocaleHelper.php:41
+msgid "Czech"
+msgstr "Чешский"
+
+#: legacy/application/common/LocaleHelper.php:42
+msgid "Welsh"
+msgstr "Вэльский"
+
+#: legacy/application/common/LocaleHelper.php:43
+msgid "Danish"
+msgstr "Данский"
+
+#: legacy/application/common/LocaleHelper.php:44
+msgid "German"
+msgstr "Немецкий"
+
+#: legacy/application/common/LocaleHelper.php:45
+msgid "Bhutani"
+msgstr "Бутан"
+
+#: legacy/application/common/LocaleHelper.php:46
+msgid "Greek"
+msgstr "Греческий"
+
+#: legacy/application/common/LocaleHelper.php:47
+msgid "Esperanto"
+msgstr "Эсперанто"
+
+#: legacy/application/common/LocaleHelper.php:48
+msgid "Spanish"
+msgstr "Испанский"
+
+#: legacy/application/common/LocaleHelper.php:49
+msgid "Estonian"
+msgstr "Эстонский"
+
+#: legacy/application/common/LocaleHelper.php:50
+msgid "Basque"
+msgstr "Басков"
+
+#: legacy/application/common/LocaleHelper.php:51
+msgid "Persian"
+msgstr "Персидский"
+
+#: legacy/application/common/LocaleHelper.php:52
+msgid "Finnish"
+msgstr "Финский"
+
+#: legacy/application/common/LocaleHelper.php:53
+msgid "Fiji"
+msgstr "Фиджи"
+
+#: legacy/application/common/LocaleHelper.php:54
+msgid "Faeroese"
+msgstr "Фарси"
+
+#: legacy/application/common/LocaleHelper.php:55
+msgid "French"
+msgstr "Французский"
+
+#: legacy/application/common/LocaleHelper.php:56
+msgid "Frisian"
+msgstr "Фризский"
+
+#: legacy/application/common/LocaleHelper.php:57
+msgid "Irish"
+msgstr "Ирландский"
+
+#: legacy/application/common/LocaleHelper.php:58
+msgid "Scots/Gaelic"
+msgstr "Шотландский"
+
+#: legacy/application/common/LocaleHelper.php:59
+msgid "Galician"
+msgstr "Галицийский"
+
+#: legacy/application/common/LocaleHelper.php:60
+msgid "Guarani"
+msgstr "Гуананский"
+
+#: legacy/application/common/LocaleHelper.php:61
+msgid "Gujarati"
+msgstr "Гуджарати"
+
+#: legacy/application/common/LocaleHelper.php:62
+msgid "Hausa"
+msgstr "Науса"
+
+#: legacy/application/common/LocaleHelper.php:63
+msgid "Hindi"
+msgstr "Хинди"
+
+#: legacy/application/common/LocaleHelper.php:64
+msgid "Croatian"
+msgstr "Хорватский"
+
+#: legacy/application/common/LocaleHelper.php:65
+msgid "Hungarian"
+msgstr "Венгерский"
+
+#: legacy/application/common/LocaleHelper.php:66
+msgid "Armenian"
+msgstr "Армянский"
+
+#: legacy/application/common/LocaleHelper.php:67
+msgid "Interlingua"
+msgstr "Интернациональный"
+
+#: legacy/application/common/LocaleHelper.php:68
+msgid "Interlingue"
+msgstr "Интерлинг"
+
+#: legacy/application/common/LocaleHelper.php:69
+msgid "Inupiak"
+msgstr "Инупиак"
+
+#: legacy/application/common/LocaleHelper.php:70
+msgid "Indonesian"
+msgstr "Индонезийский"
+
+#: legacy/application/common/LocaleHelper.php:71
+msgid "Icelandic"
+msgstr "Исландский"
+
+#: legacy/application/common/LocaleHelper.php:72
+msgid "Italian"
+msgstr "Итальянский"
+
+#: legacy/application/common/LocaleHelper.php:73
+msgid "Hebrew"
+msgstr "Иврит"
+
+#: legacy/application/common/LocaleHelper.php:74
+msgid "Japanese"
+msgstr "Японский"
+
+#: legacy/application/common/LocaleHelper.php:75
+msgid "Yiddish"
+msgstr "Иудейский"
+
+#: legacy/application/common/LocaleHelper.php:76
+msgid "Javanese"
+msgstr "Яванский"
+
+#: legacy/application/common/LocaleHelper.php:77
+msgid "Georgian"
+msgstr "Грузинский"
+
+#: legacy/application/common/LocaleHelper.php:78
+msgid "Kazakh"
+msgstr "Казахский"
+
+#: legacy/application/common/LocaleHelper.php:79
+msgid "Greenlandic"
+msgstr "Гренландский"
+
+#: legacy/application/common/LocaleHelper.php:80
+msgid "Cambodian"
+msgstr "Камбоджийский"
+
+#: legacy/application/common/LocaleHelper.php:81
+msgid "Kannada"
+msgstr "Каннадский"
+
+#: legacy/application/common/LocaleHelper.php:82
+msgid "Korean"
+msgstr "Корейский"
+
+#: legacy/application/common/LocaleHelper.php:83
+msgid "Kashmiri"
+msgstr "Кашмирский"
+
+#: legacy/application/common/LocaleHelper.php:84
+msgid "Kurdish"
+msgstr "Курдский"
+
+#: legacy/application/common/LocaleHelper.php:85
+msgid "Kirghiz"
+msgstr "Киргизский"
+
+#: legacy/application/common/LocaleHelper.php:86
+msgid "Latin"
+msgstr "Латынь"
+
+#: legacy/application/common/LocaleHelper.php:87
+msgid "Lingala"
+msgstr "Лингала"
+
+#: legacy/application/common/LocaleHelper.php:88
+msgid "Laothian"
+msgstr "Лаосский"
+
+#: legacy/application/common/LocaleHelper.php:89
+msgid "Lithuanian"
+msgstr "Литовский"
+
+#: legacy/application/common/LocaleHelper.php:90
+msgid "Latvian/Lettish"
+msgstr "Латвийский"
+
+#: legacy/application/common/LocaleHelper.php:91
+msgid "Malagasy"
+msgstr "Малайзийский"
+
+#: legacy/application/common/LocaleHelper.php:92
+msgid "Maori"
+msgstr "Маори"
+
+#: legacy/application/common/LocaleHelper.php:93
+msgid "Macedonian"
+msgstr "Македонский"
+
+#: legacy/application/common/LocaleHelper.php:94
+msgid "Malayalam"
+msgstr "Малаямский"
+
+#: legacy/application/common/LocaleHelper.php:95
+msgid "Mongolian"
+msgstr "Монгольский"
+
+#: legacy/application/common/LocaleHelper.php:96
+msgid "Moldavian"
+msgstr "Молдавский"
+
+#: legacy/application/common/LocaleHelper.php:97
+msgid "Marathi"
+msgstr "Маратхи"
+
+#: legacy/application/common/LocaleHelper.php:98
+msgid "Malay"
+msgstr "Малайзийский"
+
+#: legacy/application/common/LocaleHelper.php:99
+msgid "Maltese"
+msgstr "Мальтийский"
+
+#: legacy/application/common/LocaleHelper.php:100
+msgid "Burmese"
+msgstr "Бирманский"
+
+#: legacy/application/common/LocaleHelper.php:101
+msgid "Nauru"
+msgstr "Науру"
+
+#: legacy/application/common/LocaleHelper.php:102
+msgid "Nepali"
+msgstr "Непальский"
+
+#: legacy/application/common/LocaleHelper.php:103
+msgid "Dutch"
+msgstr "Немецкий"
+
+#: legacy/application/common/LocaleHelper.php:104
+msgid "Norwegian"
+msgstr "Норвежский"
+
+#: legacy/application/common/LocaleHelper.php:105
+msgid "Occitan"
+msgstr "Окситанский"
+
+#: legacy/application/common/LocaleHelper.php:106
+msgid "(Afan)/Oromoor/Oriya"
+msgstr "(Афан)/Оромур/Ория"
+
+#: legacy/application/common/LocaleHelper.php:107
+msgid "Punjabi"
+msgstr "Панджаби Эм Си"
+
+#: legacy/application/common/LocaleHelper.php:108
+msgid "Polish"
+msgstr "Польский"
+
+#: legacy/application/common/LocaleHelper.php:109
+msgid "Pashto/Pushto"
+msgstr "Пушту"
+
+#: legacy/application/common/LocaleHelper.php:110
+msgid "Portuguese"
+msgstr "Португальский"
+
+#: legacy/application/common/LocaleHelper.php:111
+msgid "Quechua"
+msgstr "Кечуа"
+
+#: legacy/application/common/LocaleHelper.php:112
+msgid "Rhaeto-Romance"
+msgstr "Рэето-романс"
+
+#: legacy/application/common/LocaleHelper.php:113
+msgid "Kirundi"
+msgstr "Кирунди"
+
+#: legacy/application/common/LocaleHelper.php:114
+msgid "Romanian"
+msgstr "Румынский"
+
+#: legacy/application/common/LocaleHelper.php:115
+msgid "Russian"
+msgstr "Русский"
+
+#: legacy/application/common/LocaleHelper.php:116
+msgid "Kinyarwanda"
+msgstr "Киньяруанда"
+
+#: legacy/application/common/LocaleHelper.php:117
+msgid "Sanskrit"
+msgstr "Санскрит"
+
+#: legacy/application/common/LocaleHelper.php:118
+msgid "Sindhi"
+msgstr "Синди"
+
+#: legacy/application/common/LocaleHelper.php:119
+msgid "Sangro"
+msgstr "Сангро"
+
+#: legacy/application/common/LocaleHelper.php:120
+msgid "Serbo-Croatian"
+msgstr "Сербский"
+
+#: legacy/application/common/LocaleHelper.php:121
+msgid "Singhalese"
+msgstr "Синигальский"
+
+#: legacy/application/common/LocaleHelper.php:122
+msgid "Slovak"
+msgstr "Словацкий"
+
+#: legacy/application/common/LocaleHelper.php:123
+msgid "Slovenian"
+msgstr "Славянский"
+
+#: legacy/application/common/LocaleHelper.php:124
+msgid "Samoan"
+msgstr "Самоанский"
+
+#: legacy/application/common/LocaleHelper.php:125
+msgid "Shona"
+msgstr "Шона"
+
+#: legacy/application/common/LocaleHelper.php:126
+msgid "Somali"
+msgstr "Сомалийский"
+
+#: legacy/application/common/LocaleHelper.php:127
+msgid "Albanian"
+msgstr "Албанский"
+
+#: legacy/application/common/LocaleHelper.php:128
+msgid "Serbian"
+msgstr "Сербский"
+
+#: legacy/application/common/LocaleHelper.php:129
+msgid "Siswati"
+msgstr "Сисвати"
+
+#: legacy/application/common/LocaleHelper.php:130
+msgid "Sesotho"
+msgstr "Сесото"
+
+#: legacy/application/common/LocaleHelper.php:131
+msgid "Sundanese"
+msgstr "Сунданский"
+
+#: legacy/application/common/LocaleHelper.php:132
+msgid "Swedish"
+msgstr "Шведский"
+
+#: legacy/application/common/LocaleHelper.php:133
+msgid "Swahili"
+msgstr "Суахили"
+
+#: legacy/application/common/LocaleHelper.php:134
+msgid "Tamil"
+msgstr "Тамильский"
+
+#: legacy/application/common/LocaleHelper.php:135
+msgid "Tegulu"
+msgstr "Телугу"
+
+#: legacy/application/common/LocaleHelper.php:136
+msgid "Tajik"
+msgstr "Таджикский"
+
+#: legacy/application/common/LocaleHelper.php:137
+msgid "Thai"
+msgstr "Тайский"
+
+#: legacy/application/common/LocaleHelper.php:138
+msgid "Tigrinya"
+msgstr "Тигринья"
+
+#: legacy/application/common/LocaleHelper.php:139
+msgid "Turkmen"
+msgstr "Туркменский"
+
+#: legacy/application/common/LocaleHelper.php:140
+msgid "Tagalog"
+msgstr "Тагальский"
+
+#: legacy/application/common/LocaleHelper.php:141
+msgid "Setswana"
+msgstr "Сетсвана"
+
+#: legacy/application/common/LocaleHelper.php:142
+msgid "Tonga"
+msgstr "Тонга"
+
+#: legacy/application/common/LocaleHelper.php:143
+msgid "Turkish"
+msgstr "Турецкий"
+
+#: legacy/application/common/LocaleHelper.php:144
+msgid "Tsonga"
+msgstr "Тсонга"
+
+#: legacy/application/common/LocaleHelper.php:145
+msgid "Tatar"
+msgstr "Татарский"
+
+#: legacy/application/common/LocaleHelper.php:146
+msgid "Twi"
+msgstr "Тви"
+
+#: legacy/application/common/LocaleHelper.php:147
+msgid "Ukrainian"
+msgstr "Украинский"
+
+#: legacy/application/common/LocaleHelper.php:148
+msgid "Urdu"
+msgstr "Урду"
+
+#: legacy/application/common/LocaleHelper.php:149
+msgid "Uzbek"
+msgstr "Узбекский"
+
+#: legacy/application/common/LocaleHelper.php:150
+msgid "Vietnamese"
+msgstr "Въетнамский"
+
+#: legacy/application/common/LocaleHelper.php:151
+msgid "Volapuk"
+msgstr "Волапукский"
+
+#: legacy/application/common/LocaleHelper.php:152
+msgid "Wolof"
+msgstr "Волоф"
+
+#: legacy/application/common/LocaleHelper.php:153
+msgid "Xhosa"
+msgstr "Хоса"
+
+#: legacy/application/common/LocaleHelper.php:154
+msgid "Yoruba"
+msgstr "Юрубский"
+
+#: legacy/application/common/LocaleHelper.php:155
+msgid "Chinese"
+msgstr "Китайский"
+
+#: legacy/application/common/LocaleHelper.php:156
+msgid "Zulu"
+msgstr "Зулу"
+
+#: legacy/application/common/Timezone.php:21
+msgid "Use station default"
+msgstr "Время станции по умолчанию"
+
+#: legacy/application/models/Playlist.php:810
+#: legacy/application/models/Block.php:836
+msgid "Cue in and cue out are null."
+msgstr "Время начала и окончания звучания трека не заполнены."
+
+#: legacy/application/models/Playlist.php:841
+#: legacy/application/models/Playlist.php:866
+#: legacy/application/models/Block.php:882
+#: legacy/application/models/Block.php:903
+msgid "Can't set cue in to be larger than cue out."
+msgstr "Время начала звучания не может быть позже времени окончания."
+
+#: legacy/application/models/Playlist.php:849
+#: legacy/application/models/Playlist.php:893
+#: legacy/application/models/Block.php:871
+#: legacy/application/models/Block.php:927
+msgid "Can't set cue out to be greater than file length."
+msgstr "Время окончания звучания не может превышать длину трека."
+
+#: legacy/application/models/Playlist.php:885
+#: legacy/application/models/Block.php:938
+msgid "Can't set cue out to be smaller than cue in."
+msgstr "Время окончания звучания не может быть раньше времени начала."
+
+#: legacy/application/models/Webstream.php:166
+msgid "Length needs to be greater than 0 minutes"
+msgstr "Длительность должна быть более 0 минут"
+
+#: legacy/application/models/Webstream.php:171
+msgid "Length should be of form \"00h 00m\""
+msgstr "Длительность должна быть указана в формате '00h 00min'"
+
+#: legacy/application/models/Webstream.php:184
+msgid "URL should be of form \"http://domain\""
+msgstr "URL должен быть в формате \"http://домен\""
+
+#: legacy/application/models/Webstream.php:187
+msgid "URL should be 512 characters or less"
+msgstr "Длина URL должна составлять не более 512 символов"
+
+#: legacy/application/models/Webstream.php:193
+msgid "No MIME type found for webstream."
+msgstr "Для веб-потока не найдено MIME типа."
+
+#: legacy/application/models/Webstream.php:209
+msgid "Webstream name cannot be empty"
+msgstr "Имя веб-потока должно быть заполнено"
+
+#: legacy/application/models/Webstream.php:278
+msgid "Could not parse XSPF playlist"
+msgstr "Не удалось анализировать XSPF Плейлист"
+
+#: legacy/application/models/Webstream.php:298
+msgid "Could not parse PLS playlist"
+msgstr "Не удалось анализировать PLS Плейлист"
+
+#: legacy/application/models/Webstream.php:318
+msgid "Could not parse M3U playlist"
+msgstr "Не удалось анализировать M3U Плейлист"
+
+#: legacy/application/models/Webstream.php:332
+msgid "Invalid webstream - This appears to be a file download."
+msgstr "Неверный веб-поток - скорее всего это загрузка файла."
+
+#: legacy/application/models/Webstream.php:336
+#, php-format
+msgid "Unrecognized stream type: %s"
+msgstr "Нераспознанный тип потока: %s"
+
+#: legacy/application/models/ShowBuilder.php:209
+#, php-format
+msgid "Rebroadcast of %s from %s"
+msgstr "Ретрансляция %s из %s"
+
+#: legacy/application/models/Preference.php:643
+msgid "Select Country"
+msgstr "Выберите страну"
+
+#: legacy/application/models/Scheduler.php:77
+msgid "Cannot move items out of linked shows"
+msgstr "Невозможно переместить элементы из связанных Программ"
+
+#: legacy/application/models/Scheduler.php:123
+msgid "The schedule you're viewing is out of date! (sched mismatch)"
+msgstr "Расписание, которое вы просматриваете - устарело! (Несоответствие расписания)"
+
+#: legacy/application/models/Scheduler.php:128
+msgid "The schedule you're viewing is out of date! (instance mismatch)"
+msgstr "Расписание, которое вы просматриваете - устарело! (Несоответствие экземпляров)"
+
+#: legacy/application/models/Scheduler.php:136
+#: legacy/application/models/Scheduler.php:491
+#: legacy/application/models/Scheduler.php:528
+#: legacy/application/models/Scheduler.php:563
+msgid "The schedule you're viewing is out of date!"
+msgstr "Расписание, которое вы просматриваете - устарело!"
+
+#: legacy/application/models/Scheduler.php:147
+#, php-format
+msgid "You are not allowed to schedule show %s."
+msgstr "Вы не допущены к планированию Программы %s."
+
+#: legacy/application/models/Scheduler.php:151
+msgid "You cannot add files to recording shows."
+msgstr "Вы не можете добавлять файлы в записываемую Программу."
+
+#: legacy/application/models/Scheduler.php:157
+#, php-format
+msgid "The show %s is over and cannot be scheduled."
+msgstr "Программа %s окончилась и не может быть добавлена в расписание."
+
+#: legacy/application/models/Scheduler.php:164
+#, php-format
+msgid "The show %s has been previously updated!"
+msgstr "Программа %s была обновлена ранее!"
+
+#: legacy/application/models/Scheduler.php:185
+msgid "Content in linked shows cannot be changed while on air!"
+msgstr "Контент в связанных Программах не может быть изменен пока Программа в эфире!"
+
+#: legacy/application/models/Scheduler.php:202
+msgid "Cannot schedule a playlist that contains missing files."
+msgstr "Нельзя запланировать Плейлист, которой содержит отсутствующие файлы."
+
+#: legacy/application/models/Scheduler.php:227
+#: legacy/application/models/Scheduler.php:320
+msgid "A selected File does not exist!"
+msgstr "Выбранный файл не существует!"
+
+#: legacy/application/models/MusicDir.php:160
+#, php-format
+msgid "%s is already watched."
+msgstr "%s уже просматривается."
+
+#: legacy/application/models/MusicDir.php:164
+#, php-format
+msgid "%s contains nested watched directory: %s"
+msgstr "%s содержит вложенную просматриваемую папку: %s"
+
+#: legacy/application/models/MusicDir.php:168
+#, php-format
+msgid "%s is nested within existing watched directory: %s"
+msgstr "%s вложено в существующую просматриваемую папку: %s"
+
+#: legacy/application/models/MusicDir.php:189
+#: legacy/application/models/MusicDir.php:370
+#, php-format
+msgid "%s is not a valid directory."
+msgstr "%s не является действительной папкой."
+
+#: legacy/application/models/MusicDir.php:232
+#, php-format
+msgid "%s is already set as the current storage dir or in the watched folders list"
+msgstr "%s уже установлена в качестве текущей папки хранения или в списке просматриваемых папок"
+
+#: legacy/application/models/MusicDir.php:388
+#, php-format
+msgid "%s is already set as the current storage dir or in the watched folders list."
+msgstr "%s уже установлена в качестве текущей папки хранения или в списке просматриваемых папок."
+
+#: legacy/application/models/MusicDir.php:431
+#, php-format
+msgid "%s doesn't exist in the watched list."
+msgstr "%s не существует в просматриваемом списке."
+
+#: legacy/application/models/Library.php:39
+#: legacy/application/models/Library.php:62
+msgid "None"
+msgstr "Ничего"
+
+#: legacy/application/models/Auth.php:33
+#, php-format
+msgid ""
+"Hi %s, \n"
+"\n"
+"Please click this link to reset your password: "
+msgstr ""
+"Привет %s, \n"
+"\n"
+"Пожалуйста нажми ссылку, чтобы сбросить свой пароль: "
+
+#: legacy/application/models/Auth.php:35
+#, php-format
+msgid ""
+"\n"
+"\n"
+"If you have any problems, please contact our support team: %s"
+msgstr ""
+"\n"
+"\n"
+"Если возникли неполадки, пожалуйста свяжитесь с нашей службой поддержки: %s"
+
+#: legacy/application/models/Auth.php:36
+#, php-format
+msgid ""
+"\n"
+"\n"
+"Thank you,\n"
+"The %s Team"
+msgstr ""
+"\n"
+"\n"
+"Спасибо,\n"
+"Команда %s"
+
+#: legacy/application/models/Auth.php:38
+#, php-format
+msgid "%s Password Reset"
+msgstr "%s Сброс пароля"
+
+#: legacy/application/models/Schedule.php:209
+msgid "livestream"
+msgstr "живой аудио поток"
+
+#: legacy/application/models/Show.php:222
+msgid "Shows can have a max length of 24 hours."
+msgstr "Максимальная продолжительность Программы - 24 часа."
+
+#: legacy/application/models/Show.php:331
+msgid ""
+"Cannot schedule overlapping shows.\n"
+"Note: Resizing a repeating show affects all of its repeats."
+msgstr ""
+"Нельзя планировать пересекающиеся Программы.\n"
+"Примечание: изменение размера повторяющейся Программы влияет на все ее связанные Экземпляры."
+
+#: legacy/application/models/Block.php:1451
+#: legacy/application/models/Block.php:1551
+msgid "Upload Time"
+msgstr "Время загрузки"
+
+#: legacy/application/configs/navigation.php:25
+msgid "Radio Page"
+msgstr "Страница Радио"
+
+#: legacy/application/configs/navigation.php:33
+msgid "Calendar"
+msgstr "Календарь"
+
+#: legacy/application/configs/navigation.php:41
+msgid "Widgets"
+msgstr "Виджеты"
+
+#: legacy/application/configs/navigation.php:64
+msgid "Settings"
+msgstr "Настройки"
+
+#: legacy/application/configs/navigation.php:83
+msgid "Users"
+msgstr "Пользователи"
+
+#: legacy/application/configs/navigation.php:89
+msgid "Track Types"
+msgstr "Типы треков"
+
+#: legacy/application/configs/navigation.php:96
+msgid "Streams"
+msgstr "Аудио потоки"
+
+#: legacy/application/configs/navigation.php:112
+msgid "Analytics"
+msgstr "Аналитика"
+
+#: legacy/application/configs/navigation.php:128
+msgid "History Templates"
+msgstr "Шаблоны истории"
+
+#: legacy/application/configs/navigation.php:135
+msgid "Listener Stats"
+msgstr "Статистика по слушателям"
+
+#: legacy/application/configs/navigation.php:142
+msgid "Show Listener Stats"
+msgstr "Статистика прослушиваний"
+
+#: legacy/application/configs/navigation.php:160
+msgid "Getting Started"
+msgstr "С чего начать"
+
+#: legacy/application/configs/navigation.php:167
+msgid "User Manual"
+msgstr "Руководство пользователя"
+
+#: legacy/application/configs/navigation.php:172
+msgid "Get Help Online"
+msgstr "Получить справку онлайн"
+
+#: legacy/application/configs/navigation.php:177
+msgid "Contribute to LibreTime"
+msgstr ""
+
+#: legacy/application/configs/navigation.php:182
+msgid "What's New?"
+msgstr "Что нового?"
+
+#: legacy/public/setup/rabbitmq-setup.php:72
+msgid "Couldn't connect to RabbitMQ server! Please check if the server is running and your credentials are correct."
+msgstr "Не могу подключиться к RabbitMQ серверу! Пожалуйста проверьте, включен ли сервер и все ли верно настроено."
+
+#~ msgid "Facebook"
+#~ msgstr "Facebook"
+
+#~ msgid "Service Status"
+#~ msgstr "Статус службы"
+
+#~ msgid "FAQ"
+#~ msgstr "Частые вопросы"
+
+#~ msgid "View track"
+#~ msgstr "Просмотреть трек"
+
+#~ msgid "Update track"
+#~ msgstr "Обновить трек"
+
+#~ msgid "Welcome to the new Airtime Pro!"
+#~ msgstr "Добро пожаловать в новый LibreTime!"
+
+#~ msgid "Support setting updated."
+#~ msgstr "Настройка поддержки обновлена."
+
+#~ msgid "Support Feedback"
+#~ msgstr "Отзывы о поддержке"
+
+#~ msgid "Type the characters you see in the picture below."
+#~ msgstr "Введите символы, которые вы видите на картинке ниже."
+
+#~ msgid "Phone:"
+#~ msgstr "Телефон:"
+
+#~ msgid "Station Web Site:"
+#~ msgstr "Сайт станции:"
+
+#~ msgid "Country:"
+#~ msgstr "Страна:"
+
+#~ msgid "City:"
+#~ msgstr "Город:"
+
+#~ msgid "Station Description:"
+#~ msgstr "Описание станции:"
+
+#~ msgid "Promote my station on %s"
+#~ msgstr "Продвигать мою станцию на %s"
+
+#~ msgid "By checking this box, I agree to %s's %sprivacy policy%s."
+#~ msgstr "Устанавливая данную отметку я соглашаюсь с %s %sполитикой конфиденциальности%s."
+
+#~ msgid "You have to agree to privacy policy."
+#~ msgstr "Вы должны согласиться с политикой конфиденциальности."
+
+#~ msgid "Default License:"
+#~ msgstr "Лицензия по умолчанию:"
+
+#~ msgid "All rights are reserved"
+#~ msgstr "Все права защищены"
+
+#~ msgid "The work is in the public domain"
+#~ msgstr "Работа находится в свободном доступе"
+
+#~ msgid "Creative Commons Attribution"
+#~ msgstr "Creative Commons Attribution"
+
+#~ msgid "Creative Commons Attribution Noncommercial"
+#~ msgstr "Creative Commons Attribution Noncommercial"
+
+#~ msgid "Creative Commons Attribution No Derivative Works"
+#~ msgstr "Creative Commons Attribution No Derivative Works"
+
+#~ msgid "Creative Commons Attribution Share Alike"
+#~ msgstr "Creative Commons Attribution Share Alike"
+
+#~ msgid "Creative Commons Attribution Noncommercial Non Derivate Works"
+#~ msgstr "Creative Commons Attribution Noncommercial Non Derivate Works"
+
+#~ msgid "Creative Commons Attribution Noncommercial Share Alike"
+#~ msgstr "Creative Commons Attribution Noncommercial Share Alike"
+
+#~ msgid "Default Sharing Type:"
+#~ msgstr "Способ распространения по-умолчанию:"
+
+#~ msgid "Airtime Pro has a new look!"
+#~ msgstr "LibreTime приобрел новый вид!"
+
+#~ msgid ""
+#~ "Your favorite features are now even easier to use - and we've even\n"
+#~ "                    added a few new ones! Check out the video above or read on to find out more."
+#~ msgstr "Ваши любимые возможности теперь еще проще использовать, и мы даже добавили несколько новых! Просмотрите видео или читайте дальше, чтобы узнать больше."
+
+#~ msgid ""
+#~ "Our new Dashboard view now has a powerful tabbed editing interface, so updating your tracks and playlists\n"
+#~ "                        is easier than ever."
+#~ msgstr "Интерфейс нашей новой Панели управления теперь имеет мощный функционал с разделами, чтобы обновление ваших треков и Плейлистов было еще проще."
+
+#~ msgid ""
+#~ "We've streamlined the Airtime interface to make navigation easier. With the most important tools\n"
+#~ "                        just a click away, you'll be on air and hands-free in no time."
+#~ msgstr "Мы упростили интерфейс, чтобы сделать навигацию проще. С самыми важными инструментами вы в один клик будете в эфире без каких-либо дополнительных действий."
+
+#~ msgid "Got a huge music library? No problem! With the new Upload page, you can drag and drop whole folders to our private cloud."
+#~ msgstr "У вас огромная музыкальная Библиотека? Замечательно! С новой страницей загрузки вы сможете переносить целые папки в персональное хранилище."
+
+#~ msgid ""
+#~ "The new Airtime is smoother, sleeker, and faster - on even more devices! We're committed to improving the Airtime\n"
+#~ "                        experience, no matter how you're connected."
+#~ msgstr "Новая версия LibreTime плавнее и быстрее на еще большем количестве устройств! Мы стремимся улучшить впечатления от использования LibreTime не зависимо от того, как подключаетесь вы и ваши слушатели."
+
+#~ msgid "Help improve %s by letting us know how you're using it. This information will be collected regularly in order to enhance your user experience.<br />Click the box below and we'll make sure the features you use are constantly improving."
+#~ msgstr "Помогите усовершенствовать %s сообщив нам как вы используете приложение. Информация будет собираться постоянно в целях усовершенствования использования.<br />Кликните ниже и мы будем знать, какие возможности вы используете."
+
+#~ msgid "Click the box below to promote your station on %s."
+#~ msgstr "Кликните отметку ниже для продвижения вашей радиостанции на %s."
+
+#~ msgid "(for verification purposes only, will not be published)"
+#~ msgstr "(Только для проверки, не будет опубликовано)"
+
+#~ msgid "Show me what I am sending "
+#~ msgstr "Покажите мне, что я отправляю "
+
+#~ msgid "Terms and Conditions"
+#~ msgstr "Правила и условия использования"
+
+#~ msgid "files meet the criteria"
+#~ msgstr "файлы соответствуют критериям"
+
+#~ msgid "file meets the criteria"
+#~ msgstr "файл соответствует критериям"
+
+#~ msgid "(In order to promote your station, 'Send support feedback' must be enabled)."
+#~ msgstr "(В целях продвижения вашей станции, опция «Отправить отзывы о поддержке» должна быть включена)."
+
+#~ msgid "Viewing "
+#~ msgstr "Просмотр "
+
+#~ msgid "Monthly Listener Bandwidth Usage"
+#~ msgstr "Ежемесячная пропускная способность слушателей"
+
+#~ msgid "Your trial expires in"
+#~ msgstr "Ваш ознакомительный период истекает через"
+
+#~ msgid "Smartblock and Playlist Generated"
+#~ msgstr "Смарт-блок и Плейлист сгенерированы"
+
+#~ msgid "Override album name with podcast name during ingest."
+#~ msgstr "Перезаписывать название Альбома на название Подкаста в процессе загрузки."
+
+#~ msgid "Record & Rebroadcast"
+#~ msgstr "Запись и Ретрансляция"
+
+#~ msgid "Help Translate Libretime"
+#~ msgstr "Помогите перевести Libretime"
+
+#~ msgid " If not, try <br/><code>sudo service libretime-celery restart</code>"
+#~ msgstr " Если нет - попробуйте запустить <br/><code>sudo service libretime-celery restart</code>"
+
+#~ msgid "Powered by LibreTime"
+#~ msgstr "При поддержке LibreTime"
+
+#~ msgid "of"
+#~ msgstr "из"
