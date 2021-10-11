@@ -6,7 +6,7 @@ cc_music_dirs:
         type: 'stor'
         exists: 't'
         watched: 't'
-    
+
 
 cc_files:
     -
@@ -79,7 +79,7 @@ cc_files:
         is_playlist: 'f'
         filesize: '5126748'
 
-
+    -
         id: '4'
         mime: 'audio/mp3'
         ftype: 'audioclip'
@@ -103,6 +103,7 @@ cc_files:
         is_playlist: 'f'
         filesize: '5126748'
 
+    -
         id: '5'
         mime: 'audio/mp3'
         ftype: 'audioclip'
@@ -128,6 +129,7 @@ cc_files:
 
 
 
+    -
         id: '6'
         mime: 'audio/mp3'
         ftype: 'audioclip'
@@ -152,6 +154,7 @@ cc_files:
         filesize: '5126748'
 
 
+    -
         id: '7'
         mime: 'audio/mp3'
         ftype: 'audioclip'
@@ -174,4 +177,3 @@ cc_files:
         is_scheduled: 'f'
         is_playlist: 'f'
         filesize: '5126748'
-
