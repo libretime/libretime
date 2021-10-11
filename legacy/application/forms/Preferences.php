@@ -6,9 +6,9 @@ class Application_Form_Preferences extends Zend_Form
     {
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/preferences.phtml'))
-        ));
+        $this->setDecorators([
+            ['ViewScript', ['viewScript' => 'form/preferences.phtml']],
+        ]);
 
         $general_pref = new Application_Form_GeneralPreferences();
 
@@ -36,7 +36,7 @@ class Application_Form_Preferences extends Zend_Form
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel(_('Save'));
         //$submit->removeDecorator('Label');
-        $submit->setAttribs(array('class'=>'btn right-floated'));
+        $submit->setAttribs(['class' => 'btn right-floated']);
         $submit->removeDecorator('DtDdWrapper');
 
         $this->addElement($submit);

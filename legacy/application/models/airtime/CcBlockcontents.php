@@ -1,44 +1,45 @@
 <?php
 
-
-
 /**
  * Skeleton subclass for representing a row from the 'cc_blockcontents' table.
- *
- *
  *
  * You should add additional methods to this class to meet the
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
- *
- * @package    propel.generator.airtime
  */
-class CcBlockcontents extends BaseCcBlockcontents {
+class CcBlockcontents extends BaseCcBlockcontents
+{
     /**
      * Get the [optionally formatted] temporal [fadein] column value.
      *
-     * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
-     * @throws     PropelException - if unable to parse/validate the date/time value.
+     * @param mixed $format
+     *
+     * @throws propelException - if unable to parse/validate the date/time value
+     *
+     * @return mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
      */
-    public function getDbFadein($format = "s.u")
+    public function getDbFadein($format = 's.u')
     {
         return parent::getDbFadein($format);
     }
-    
+
     /**
      * Get the [optionally formatted] temporal [fadein] column value.
      *
-     * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
-     * @throws     PropelException - if unable to parse/validate the date/time value.
+     * @param mixed $format
+     *
+     * @throws propelException - if unable to parse/validate the date/time value
+     *
+     * @return mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
      */
-    public function getDbFadeout($format = "s.u")
+    public function getDbFadeout($format = 's.u')
     {
         return parent::getDbFadeout($format);
     }
-    
+
     /**
-     *
-     * @param String in format SS.uuuuuu, Datetime, or DateTime accepted string.
+     * @param string in format SS.uuuuuu, Datetime, or DateTime accepted string.
+     * @param mixed $v
      *
      * @return CcBlockcontents The current object (for fluent API support)
      */
@@ -47,35 +48,33 @@ class CcBlockcontents extends BaseCcBlockcontents {
         $microsecond = 0;
         if ($v instanceof DateTime) {
             $dt = $v;
-        }
-        else if (preg_match('/^[0-9]{1,2}(\.\d{1,6})?$/', $v)) {
+        } elseif (preg_match('/^[0-9]{1,2}(\.\d{1,6})?$/', $v)) {
             // in php 5.3.2 createFromFormat() with "u" is not supported(bug)
             // Hence we need to do parsing.
             $info = explode('.', $v);
             $microsecond = $info[1];
-            $dt = DateTime::createFromFormat("s", $info[0]);
-        }
-        else {
+            $dt = DateTime::createFromFormat('s', $info[0]);
+        } else {
             try {
                 $dt = new DateTime($v);
             } catch (Exception $x) {
                 throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
             }
         }
-    
+
         if ($microsecond == 0) {
             $this->fadein = $dt->format('H:i:s.u');
         } else {
-            $this->fadein = $dt->format('H:i:s').".".$microsecond;
+            $this->fadein = $dt->format('H:i:s') . '.' . $microsecond;
         }
         $this->modifiedColumns[] = CcBlockcontentsPeer::FADEIN;
-    
+
         return $this;
     } // setDbFadein()
-    
+
     /**
-     *
-     * @param String in format SS.uuuuuu, Datetime, or DateTime accepted string.
+     * @param string in format SS.uuuuuu, Datetime, or DateTime accepted string.
+     * @param mixed $v
      *
      * @return CcBlockcontents The current object (for fluent API support)
      */
@@ -84,15 +83,13 @@ class CcBlockcontents extends BaseCcBlockcontents {
         $microsecond = 0;
         if ($v instanceof DateTime) {
             $dt = $v;
-        }
-        else if (preg_match('/^[0-9]{1,2}(\.\d{1,6})?$/', $v)) {
+        } elseif (preg_match('/^[0-9]{1,2}(\.\d{1,6})?$/', $v)) {
             // in php 5.3.2 createFromFormat() with "u" is not supported(bug)
             // Hence we need to do parsing.
             $info = explode('.', $v);
             $microsecond = $info[1];
-            $dt = DateTime::createFromFormat("s", $info[0]);
-        }
-        else {
+            $dt = DateTime::createFromFormat('s', $info[0]);
+        } else {
             try {
                 $dt = new DateTime($v);
             } catch (Exception $x) {
@@ -103,11 +100,10 @@ class CcBlockcontents extends BaseCcBlockcontents {
         if ($microsecond == 0) {
             $this->fadeout = $dt->format('H:i:s.u');
         } else {
-            $this->fadeout = $dt->format('H:i:s').".".$microsecond;
+            $this->fadeout = $dt->format('H:i:s') . '.' . $microsecond;
         }
         $this->modifiedColumns[] = CcBlockcontentsPeer::FADEOUT;
-    
+
         return $this;
     } // setDbFadeout()
-
 } // CcBlockcontents

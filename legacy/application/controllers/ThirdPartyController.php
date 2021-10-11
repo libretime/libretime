@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Class ThirdPartyController abstract superclass for third-party service authorization
+ * Class ThirdPartyController abstract superclass for third-party service authorization.
  */
-abstract class ThirdPartyController extends Zend_Controller_Action {
-
+abstract class ThirdPartyController extends Zend_Controller_Action
+{
     /**
      * @var string base url and port for redirection
      */
@@ -16,15 +16,13 @@ abstract class ThirdPartyController extends Zend_Controller_Action {
     protected $_service;
 
     /**
-     * Disable controller rendering and initialize
-     *
-     * @return void
+     * Disable controller rendering and initialize.
      */
-    public function init() {
+    public function init()
+    {
         $this->_baseUrl = Application_Common_HTTPHelper::getStationUrl();
 
         $this->view->layout()->disableLayout();  // Don't inject the standard Now Playing header.
         $this->_helper->viewRenderer->setNoRender(true);  // Don't use (phtml) templates
     }
-
 }

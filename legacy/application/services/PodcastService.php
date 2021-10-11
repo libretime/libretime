@@ -1,24 +1,25 @@
 <?php
 
+class InvalidPodcastException extends Exception
+{
+}
 
-class InvalidPodcastException extends Exception {}
-
-class PodcastNotFoundException extends Exception {}
-
+class PodcastNotFoundException extends Exception
+{
+}
 
 class Application_Service_PodcastService
 {
-
     // These fields should never be modified with POST/PUT data
-    private static $privateFields = array(
-        "id",
-        "url",
-        "type",
-        "owner"
-    );
+    private static $privateFields = [
+        'id',
+        'url',
+        'type',
+        'owner',
+    ];
 
     /**
-     * Returns parsed rss feed, or false if the given URL cannot be downloaded
+     * Returns parsed rss feed, or false if the given URL cannot be downloaded.
      *
      * @param string $feedUrl String containing the podcast feed URL
      *
@@ -31,6 +32,7 @@ class Application_Service_PodcastService
             $feed->set_feed_url($feedUrl);
             $feed->enable_cache(false);
             $feed->init();
+
             return $feed;
         } catch (Exception $e) {
             return false;
@@ -38,13 +40,14 @@ class Application_Service_PodcastService
     }
 
     /** Creates a Podcast object from the given podcast URL.
-     *  This is used by our Podcast REST API
+     *  This is used by our Podcast REST API.
      *
      * @param string $feedUrl Podcast RSS Feed Url
      *
-     * @return array Podcast Array with a full list of episodes
      * @throws Exception
      * @throws InvalidPodcastException
+     *
+     * @return array Podcast Array with a full list of episodes
      */
     public static function createFromFeedUrl($feedUrl)
     {
@@ -60,55 +63,55 @@ class Application_Service_PodcastService
 
         // Ensure we are only creating Podcast with the given URL, and excluding
         // any extra data fields that may have been POSTED
-        $podcastArray = array();
-        $podcastArray["url"] = $feedUrl;
+        $podcastArray = [];
+        $podcastArray['url'] = $feedUrl;
 
-        $podcastArray["title"] = htmlspecialchars($rss->get_title());
-        $podcastArray["description"] = htmlspecialchars($rss->get_description());
-        $podcastArray["link"] = htmlspecialchars($rss->get_link());
-        $podcastArray["language"] = htmlspecialchars($rss->get_language());
-        $podcastArray["copyright"] = htmlspecialchars($rss->get_copyright());
+        $podcastArray['title'] = htmlspecialchars($rss->get_title());
+        $podcastArray['description'] = htmlspecialchars($rss->get_description());
+        $podcastArray['link'] = htmlspecialchars($rss->get_link());
+        $podcastArray['language'] = htmlspecialchars($rss->get_language());
+        $podcastArray['copyright'] = htmlspecialchars($rss->get_copyright());
 
         $author = $rss->get_author();
-        $name = empty($author) ? "" : $author->get_name();
-        $podcastArray["creator"] = htmlspecialchars($name);
+        $name = empty($author) ? '' : $author->get_name();
+        $podcastArray['creator'] = htmlspecialchars($name);
 
-        $categories = array();
+        $categories = [];
         if (is_array($rss->get_categories())) {
             foreach ($rss->get_categories() as $category) {
-                array_push($categories, $category->get_scheme() . ":" . $category->get_term());
+                array_push($categories, $category->get_scheme() . ':' . $category->get_term());
             }
         }
-        $podcastArray["category"] = htmlspecialchars(implode($categories));
+        $podcastArray['category'] = htmlspecialchars(implode($categories));
 
         //TODO: put in constants
-        $itunesChannel = "http://www.itunes.com/dtds/podcast-1.0.dtd";
+        $itunesChannel = 'http://www.itunes.com/dtds/podcast-1.0.dtd';
 
         $itunesSubtitle = $rss->get_channel_tags($itunesChannel, 'subtitle');
-        $podcastArray["itunes_subtitle"] = isset($itunesSubtitle[0]["data"]) ? $itunesSubtitle[0]["data"] : "";
+        $podcastArray['itunes_subtitle'] = isset($itunesSubtitle[0]['data']) ? $itunesSubtitle[0]['data'] : '';
 
         $itunesCategory = $rss->get_channel_tags($itunesChannel, 'category');
-        $categoryArray = array();
+        $categoryArray = [];
         if (is_array($itunesCategory)) {
             foreach ($itunesCategory as $c => $data) {
-                foreach ($data["attribs"] as $attrib) {
-                    array_push($categoryArray, $attrib["text"]);
+                foreach ($data['attribs'] as $attrib) {
+                    array_push($categoryArray, $attrib['text']);
                 }
             }
         }
-        $podcastArray["itunes_category"] = implode(",", $categoryArray);
+        $podcastArray['itunes_category'] = implode(',', $categoryArray);
 
         $itunesAuthor = $rss->get_channel_tags($itunesChannel, 'author');
-        $podcastArray["itunes_author"] = isset($itunesAuthor[0]["data"]) ? $itunesAuthor[0]["data"] : "";
+        $podcastArray['itunes_author'] = isset($itunesAuthor[0]['data']) ? $itunesAuthor[0]['data'] : '';
 
         $itunesSummary = $rss->get_channel_tags($itunesChannel, 'summary');
-        $podcastArray["itunes_summary"] = isset($itunesSummary[0]["data"]) ? $itunesSummary[0]["data"] : "";
+        $podcastArray['itunes_summary'] = isset($itunesSummary[0]['data']) ? $itunesSummary[0]['data'] : '';
 
         $itunesKeywords = $rss->get_channel_tags($itunesChannel, 'keywords');
-        $podcastArray["itunes_keywords"] = isset($itunesKeywords[0]["data"]) ? $itunesKeywords[0]["data"] : "";
+        $podcastArray['itunes_keywords'] = isset($itunesKeywords[0]['data']) ? $itunesKeywords[0]['data'] : '';
 
         $itunesExplicit = $rss->get_channel_tags($itunesChannel, 'explicit');
-        $podcastArray["itunes_explicit"] = isset($itunesExplicit[0]["data"]) ? $itunesExplicit[0]["data"] : "";
+        $podcastArray['itunes_explicit'] = isset($itunesExplicit[0]['data']) ? $itunesExplicit[0]['data'] : '';
 
         self::validatePodcastMetadata($podcastArray);
 
@@ -130,10 +133,10 @@ class Application_Service_PodcastService
                 self::createPodcastSmartblockAndPlaylist($podcast);
             }
 
-
             return $podcast->toArray(BasePeer::TYPE_FIELDNAME);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $podcast->delete();
+
             throw $e;
         }
     }
@@ -141,9 +144,8 @@ class Application_Service_PodcastService
     /**
      * @param $podcast
      * @param $title passed in directly from web UI input
-     * This will automatically create a smartblock and playlist for this podcast.
+     * This will automatically create a smartblock and playlist for this podcast
      */
-
     public static function createPodcastSmartblockAndPlaylist($podcast, $title = null)
     {
         if (is_array($podcast)) {
@@ -158,7 +160,7 @@ class Application_Service_PodcastService
         $newBl = new Application_Model_Block();
         $newBl->setCreator(Application_Model_User::getCurrentUser()->getId());
         $newBl->setName($title);
-        $newBl->setDescription(_("Auto-generated smartblock for podcast"));
+        $newBl->setDescription(_('Auto-generated smartblock for podcast'));
         $newBl->saveType('dynamic');
         // limit the smartblock to 1 item
         $row = new CcBlockcriteria();
@@ -194,11 +196,10 @@ class Application_Service_PodcastService
         $row->save();
     }
 
-
     public static function createStationPodcast()
     {
         $podcast = new Podcast();
-        $podcast->setDbUrl(Application_Common_HTTPHelper::getStationUrl() . "feeds/station-rss");
+        $podcast->setDbUrl(Application_Common_HTTPHelper::getStationUrl() . 'feeds/station-rss');
 
         $title = Application_Model_Preference::GetStationName();
         $title = empty($title) ? "My Station's Podcast" : $title;
@@ -219,6 +220,7 @@ class Application_Service_PodcastService
         // Set the download key when we create the station podcast
         // The value is randomly generated in the setter
         Application_Model_Preference::setStationPodcastDownloadKey();
+
         return $podcast->getDbId();
     }
 
@@ -228,26 +230,28 @@ class Application_Service_PodcastService
         try {
             if (Zend_Auth::getInstance()->hasIdentity()) {
                 $service_user = new Application_Service_UserService();
+
                 return $service_user->getCurrentUser()->getDbId();
-            } else {
-                $defaultOwner = CcSubjsQuery::create()
-                    ->filterByDbType('A')
-                    ->orderByDbId()
-                    ->findOne();
-                if (!$defaultOwner) {
-                    // what to do if there is no admin user?
-                    // should we handle this case?
-                    return null;
-                }
-                return $defaultOwner->getDbId();
             }
-        } catch(Exception $e) {
+            $defaultOwner = CcSubjsQuery::create()
+                ->filterByDbType('A')
+                ->orderByDbId()
+                ->findOne()
+            ;
+            if (!$defaultOwner) {
+                // what to do if there is no admin user?
+                // should we handle this case?
+                return null;
+            }
+
+            return $defaultOwner->getDbId();
+        } catch (Exception $e) {
             Logging::info($e->getMessage());
         }
     }
 
     /**
-     * Trims the podcast metadata to fit the table's column max size
+     * Trims the podcast metadata to fit the table's column max size.
      *
      * @param $podcastArray
      */
@@ -271,12 +275,13 @@ class Application_Service_PodcastService
 
     /**
      * Fetches a Podcast's rss feed and returns all its episodes with
-     * the Podcast object
+     * the Podcast object.
      *
      * @param $podcastId
      *
      * @throws PodcastNotFoundException
      * @throws InvalidPodcastException
+     *
      * @return array - Podcast Array with a full list of episodes
      */
     public static function getPodcastById($podcastId)
@@ -287,14 +292,16 @@ class Application_Service_PodcastService
         }
 
         $podcast = $podcast->toArray(BasePeer::TYPE_FIELDNAME);
-        $podcast["itunes_explicit"] = ($podcast["itunes_explicit"] == "yes") ? true : false;
+        $podcast['itunes_explicit'] = ($podcast['itunes_explicit'] == 'yes') ? true : false;
+
         return $podcast;
     }
 
     /**
-     * Deletes a Podcast and its podcast episodes
+     * Deletes a Podcast and its podcast episodes.
      *
      * @param $podcastId
+     *
      * @throws Exception
      * @throws PodcastNotFoundException
      */
@@ -314,35 +321,39 @@ class Application_Service_PodcastService
     }
 
     /**
-     * Build a response with podcast data and embedded HTML to load on the frontend
+     * Build a response with podcast data and embedded HTML to load on the frontend.
      *
-     * @param int $podcastId            ID of the podcast to build a response for
-     * @param Zend_View_Interface $view Zend view object to render the response HTML
-     *
-     * @return array the response array containing the podcast data and editor HTML
+     * @param int                 $podcastId ID of the podcast to build a response for
+     * @param Zend_View_Interface $view      Zend view object to render the response HTML
      *
      * @throws PodcastNotFoundException
+     *
+     * @return array the response array containing the podcast data and editor HTML
      */
-    public static function buildPodcastEditorResponse($podcastId, $view) {
+    public static function buildPodcastEditorResponse($podcastId, $view)
+    {
         // Check the StationPodcast table rather than checking
         // the station podcast ID key in preferences for extensibility
         $podcast = StationPodcastQuery::create()->findOneByDbPodcastId($podcastId);
         $path = $podcast ? 'podcast/station.phtml' : 'podcast/podcast.phtml';
         $podcast = Application_Service_PodcastService::getPodcastById($podcastId);
-        return array(
-            "podcast" => json_encode($podcast),
-            "html" => $view->render($path),
-        );
+
+        return [
+            'podcast' => json_encode($podcast),
+            'html' => $view->render($path),
+        ];
     }
 
     /**
-     * Updates a Podcast object with the given metadata
+     * Updates a Podcast object with the given metadata.
      *
      * @param $podcastId
      * @param $data
-     * @return array
+     *
      * @throws Exception
      * @throws PodcastNotFoundException
+     *
+     * @return array
      */
     public static function updatePodcastFromArray($podcastId, $data)
     {
@@ -351,31 +362,32 @@ class Application_Service_PodcastService
             throw new PodcastNotFoundException();
         }
 
-        self::removePrivateFields($data["podcast"]);
-        self::validatePodcastMetadata($data["podcast"]);
-        if (array_key_exists("auto_ingest", $data["podcast"])) {
+        self::removePrivateFields($data['podcast']);
+        self::validatePodcastMetadata($data['podcast']);
+        if (array_key_exists('auto_ingest', $data['podcast'])) {
             self::_updateAutoIngestTimestamp($podcast, $data);
         }
 
-        $data["podcast"]["itunes_explicit"] = $data["podcast"]["itunes_explicit"] ? "yes" : "clean";
-        $podcast->fromArray($data["podcast"], BasePeer::TYPE_FIELDNAME);
+        $data['podcast']['itunes_explicit'] = $data['podcast']['itunes_explicit'] ? 'yes' : 'clean';
+        $podcast->fromArray($data['podcast'], BasePeer::TYPE_FIELDNAME);
         $podcast->save();
 
         return $podcast->toArray(BasePeer::TYPE_FIELDNAME);
     }
 
     /**
-     * Update the automatic ingestion timestamp for the given Podcast
+     * Update the automatic ingestion timestamp for the given Podcast.
      *
-     * @param Podcast $podcast  Podcast object to update
-     * @param array $data       Podcast update data array
+     * @param Podcast $podcast Podcast object to update
+     * @param array   $data    Podcast update data array
      */
-    private static function _updateAutoIngestTimestamp($podcast, $data) {
+    private static function _updateAutoIngestTimestamp($podcast, $data)
+    {
         // Get podcast data with lazy loaded columns since we can't directly call getDbAutoIngest()
         $currData = $podcast->toArray(BasePeer::TYPE_FIELDNAME, true);
         // Add an auto-ingest timestamp when turning auto-ingest on
-        if ($data["podcast"]["auto_ingest"] == 1 && $currData["auto_ingest"] != 1) {
-            $data["podcast"]["auto_ingest_timestamp"] = gmdate('r');
+        if ($data['podcast']['auto_ingest'] == 1 && $currData['auto_ingest'] != 1) {
+            $data['podcast']['auto_ingest_timestamp'] = gmdate('r');
         }
     }
 
@@ -386,19 +398,21 @@ class Application_Service_PodcastService
         }
     }
 
-    private static function addEscapedChild($node, $name, $value = null, $namespace = null) {
+    private static function addEscapedChild($node, $name, $value = null, $namespace = null)
+    {
         if (empty($value)) {
             return null;
         }
         $child = $node->addChild($name, null, $namespace);
         $child[0] = $value;
+
         return $child;
     }
 
     public static function createStationRssFeed()
     {
         $stationPodcastId = Application_Model_Preference::getStationPodcastId();
-        
+
         try {
             $podcast = PodcastQuery::create()->findPk($stationPodcastId);
             if (!$podcast) {
@@ -407,107 +421,105 @@ class Application_Service_PodcastService
 
             $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"/>');
 
-            $channel = $xml->addChild("channel");
-            self::addEscapedChild($channel, "title", $podcast->getDbTitle());
-            self::addEscapedChild($channel, "link", $podcast->getDbLink());
-            self::addEscapedChild($channel, "description", $podcast->getDbDescription());
-            self::addEscapedChild($channel, "language", $podcast->getDbLanguage());
-            self::addEscapedChild($channel, "copyright", $podcast->getDbCopyright());
+            $channel = $xml->addChild('channel');
+            self::addEscapedChild($channel, 'title', $podcast->getDbTitle());
+            self::addEscapedChild($channel, 'link', $podcast->getDbLink());
+            self::addEscapedChild($channel, 'description', $podcast->getDbDescription());
+            self::addEscapedChild($channel, 'language', $podcast->getDbLanguage());
+            self::addEscapedChild($channel, 'copyright', $podcast->getDbCopyright());
 
-            $xml->addAttribute('xmlns:xmlns:atom', "http://www.w3.org/2005/Atom");
+            $xml->addAttribute('xmlns:xmlns:atom', 'http://www.w3.org/2005/Atom');
 
-            $atomLink = $channel->addChild("xmlns:atom:link");
-            $atomLink->addAttribute("href", Application_Common_HTTPHelper::getStationUrl() . "feeds/station-rss");
-            $atomLink->addAttribute("rel", "self");
-            $atomLink->addAttribute("type", "application/rss+xml");
+            $atomLink = $channel->addChild('xmlns:atom:link');
+            $atomLink->addAttribute('href', Application_Common_HTTPHelper::getStationUrl() . 'feeds/station-rss');
+            $atomLink->addAttribute('rel', 'self');
+            $atomLink->addAttribute('type', 'application/rss+xml');
 
-            $imageUrl = Application_Common_HTTPHelper::getStationUrl()."api/station-logo";
-            $image = $channel->addChild("image");
-            $image->addChild("title", htmlspecialchars($podcast->getDbTitle()));
-            self::addEscapedChild($image, "url", $imageUrl);
-            self::addEscapedChild($image, "link", Application_Common_HTTPHelper::getStationUrl());
+            $imageUrl = Application_Common_HTTPHelper::getStationUrl() . 'api/station-logo';
+            $image = $channel->addChild('image');
+            $image->addChild('title', htmlspecialchars($podcast->getDbTitle()));
+            self::addEscapedChild($image, 'url', $imageUrl);
+            self::addEscapedChild($image, 'link', Application_Common_HTTPHelper::getStationUrl());
 
             $xml->addAttribute('xmlns:xmlns:itunes', ITUNES_XML_NAMESPACE_URL);
-            self::addEscapedChild($channel, "xmlns:itunes:author", $podcast->getDbItunesAuthor());
-            self::addEscapedChild($channel, "xmlns:itunes:keywords", $podcast->getDbItunesKeywords());
-            self::addEscapedChild($channel, "xmlns:itunes:summary", $podcast->getDbItunesSummary());
-            self::addEscapedChild($channel, "xmlns:itunes:subtitle", $podcast->getDbItunesSubtitle());
-            self::addEscapedChild($channel, "xmlns:itunes:explicit", $podcast->getDbItunesExplicit());
-            $owner = $channel->addChild("xmlns:itunes:owner");
-            self::addEscapedChild($owner, "xmlns:itunes:name", Application_Model_Preference::GetStationName());
-            self::addEscapedChild($owner, "xmlns:itunes:email", Application_Model_Preference::GetEmail());
+            self::addEscapedChild($channel, 'xmlns:itunes:author', $podcast->getDbItunesAuthor());
+            self::addEscapedChild($channel, 'xmlns:itunes:keywords', $podcast->getDbItunesKeywords());
+            self::addEscapedChild($channel, 'xmlns:itunes:summary', $podcast->getDbItunesSummary());
+            self::addEscapedChild($channel, 'xmlns:itunes:subtitle', $podcast->getDbItunesSubtitle());
+            self::addEscapedChild($channel, 'xmlns:itunes:explicit', $podcast->getDbItunesExplicit());
+            $owner = $channel->addChild('xmlns:itunes:owner');
+            self::addEscapedChild($owner, 'xmlns:itunes:name', Application_Model_Preference::GetStationName());
+            self::addEscapedChild($owner, 'xmlns:itunes:email', Application_Model_Preference::GetEmail());
 
-            $itunesImage = $channel->addChild("xmlns:itunes:image");
-            $itunesImage->addAttribute("href", $imageUrl);
+            $itunesImage = $channel->addChild('xmlns:itunes:image');
+            $itunesImage->addAttribute('href', $imageUrl);
 
             // Need to split categories into separate tags
-            $itunesCategories = explode(",", $podcast->getDbItunesCategory());
+            $itunesCategories = explode(',', $podcast->getDbItunesCategory());
             foreach ($itunesCategories as $c) {
                 if (!empty($c)) {
-                    $category = $channel->addChild("xmlns:itunes:category");
-                    $category->addAttribute("text", $c);
+                    $category = $channel->addChild('xmlns:itunes:category');
+                    $category->addAttribute('text', $c);
                 }
             }
 
             $episodes = PodcastEpisodesQuery::create()->filterByDbPodcastId($stationPodcastId)->find();
             foreach ($episodes as $episode) {
-                $item = $channel->addChild("item");
+                $item = $channel->addChild('item');
                 $publishedFile = CcFilesQuery::create()->findPk($episode->getDbFileId());
 
                 //title
-                self::addEscapedChild($item, "title", $publishedFile->getDbTrackTitle());
+                self::addEscapedChild($item, 'title', $publishedFile->getDbTrackTitle());
 
                 //link - do we need this?
 
                 //pubDate
-                self::addEscapedChild($item, "pubDate", gmdate(DATE_RFC2822, strtotime($episode->getDbPublicationDate())));
+                self::addEscapedChild($item, 'pubDate', gmdate(DATE_RFC2822, strtotime($episode->getDbPublicationDate())));
 
                 //category
-                foreach($itunesCategories as $c) {
+                foreach ($itunesCategories as $c) {
                     if (!empty($c)) {
-                        self::addEscapedChild($item, "category", $c);
+                        self::addEscapedChild($item, 'category', $c);
                     }
                 }
 
                 //guid
-                $guid = self::addEscapedChild($item, "guid", $episode->getDbEpisodeGuid());
-                $guid->addAttribute("isPermaLink", "false");
+                $guid = self::addEscapedChild($item, 'guid', $episode->getDbEpisodeGuid());
+                $guid->addAttribute('isPermaLink', 'false');
 
                 //description
-                self::addEscapedChild($item, "description", $publishedFile->getDbDescription());
+                self::addEscapedChild($item, 'description', $publishedFile->getDbDescription());
 
                 //encolsure - url, length, type attribs
-                $enclosure = $item->addChild("enclosure");
-                $enclosure->addAttribute("url", $episode->getDbDownloadUrl());
-                $enclosure->addAttribute("length", $publishedFile->getDbFilesize());
-                $enclosure->addAttribute("type", $publishedFile->getDbMime());
+                $enclosure = $item->addChild('enclosure');
+                $enclosure->addAttribute('url', $episode->getDbDownloadUrl());
+                $enclosure->addAttribute('length', $publishedFile->getDbFilesize());
+                $enclosure->addAttribute('type', $publishedFile->getDbMime());
 
                 //itunes:subtitle
                 // From http://www.apple.com/ca/itunes/podcasts/specs.html#subtitle :
                 // 'The contents of the <itunes:subtitle> tag are displayed in the Description column in iTunes.'
                 // self::addEscapedChild($item, "xmlns:itunes:subtitle", $publishedFile->getDbTrackTitle());
-                self::addEscapedChild($item, "xmlns:itunes:subtitle", $publishedFile->getDbDescription());
+                self::addEscapedChild($item, 'xmlns:itunes:subtitle', $publishedFile->getDbDescription());
 
                 //itunes:summary
-                self::addEscapedChild($item, "xmlns:itunes:summary", $publishedFile->getDbDescription());
+                self::addEscapedChild($item, 'xmlns:itunes:summary', $publishedFile->getDbDescription());
 
                 //itunes:author
-                self::addEscapedChild($item, "xmlns:itunes:author", $publishedFile->getDbArtistName());
+                self::addEscapedChild($item, 'xmlns:itunes:author', $publishedFile->getDbArtistName());
 
                 //itunes:explicit - skip this?
 
                 //itunes:duration
-                self::addEscapedChild($item, "xmlns:itunes:duration", explode('.', $publishedFile->getDbLength())[0]);
+                self::addEscapedChild($item, 'xmlns:itunes:duration', explode('.', $publishedFile->getDbLength())[0]);
             }
 
             //Format it nicely with newlines...
             $dom = new DOMDocument();
             $dom->loadXML($xml->asXML());
             $dom->formatOutput = true;
-            $formattedXML = $dom->saveXML();
 
-            return $formattedXML;
-
+            return $dom->saveXML();
         } catch (FeedException $e) {
             return false;
         }

@@ -1,4 +1,5 @@
 <?php
+
 error_reporting(E_ALL | E_STRICT);
 
 // load composer autoloader
@@ -16,34 +17,34 @@ defined('APPLICATION_ENV')
     || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'testing'));
 
 // Ensure library/ is on include_path
-set_include_path(implode(PATH_SEPARATOR, array(
+set_include_path(implode(PATH_SEPARATOR, [
     realpath('./library'),
     get_include_path(),
-)));
+]));
 
 // Ensure library/ is on include_path
-set_include_path(implode(PATH_SEPARATOR, array(
+set_include_path(implode(PATH_SEPARATOR, [
     get_include_path(),
-    realpath(APPLICATION_PATH . '/../library')
-)));
+    realpath(APPLICATION_PATH . '/../library'),
+]));
 
 // Ensure vendor/ is on the include path
-set_include_path(implode(PATH_SEPARATOR, array(
+set_include_path(implode(PATH_SEPARATOR, [
     get_include_path(),
     realpath(APPLICATION_PATH . '/../vendor'),
-    realpath(APPLICATION_PATH . '/../vendor/zf1s/zend-loader/library')
-)));
+    realpath(APPLICATION_PATH . '/../vendor/zf1s/zend-loader/library'),
+]));
 
-set_include_path(implode(PATH_SEPARATOR, array(
+set_include_path(implode(PATH_SEPARATOR, [
     get_include_path(),
-    realpath(APPLICATION_PATH . '/../vendor/propel/propel1/runtime/lib')
-)));
+    realpath(APPLICATION_PATH . '/../vendor/propel/propel1/runtime/lib'),
+]));
 
 // Ensure library/ is on include_path
-set_include_path(implode(PATH_SEPARATOR, array(
+set_include_path(implode(PATH_SEPARATOR, [
     get_include_path(),
-    realpath(APPLICATION_PATH . '/../../install_minimal/include')
-)));
+    realpath(APPLICATION_PATH . '/../../install_minimal/include'),
+]));
 
 require_once CONFIG_PATH . '/constants.php';
 
@@ -75,9 +76,9 @@ set_include_path(APPLICATION_PATH . '/../tests/application/helpers' . PATH_SEPAR
 //cloud storage files
 set_include_path(APPLICATION_PATH . '/cloud_storage' . PATH_SEPARATOR . get_include_path());
 
-require_once APPLICATION_PATH.'/configs/conf.php';
+require_once APPLICATION_PATH . '/configs/conf.php';
+
 require_once 'propel/propel1/runtime/lib/Propel.php';
-Propel::init("../application/configs/airtime-conf-production.php");
+Propel::init('../application/configs/airtime-conf-production.php');
 
 Zend_Session::start();
-

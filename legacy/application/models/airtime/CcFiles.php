@@ -3,15 +3,10 @@
 /**
  * Skeleton subclass for representing a row from the 'cc_files' table.
  *
- *
- *
  * You should add additional methods to this class to meet the
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
- *
- * @package    propel.generator.campcaster
  */
-
 class InvalidMetadataException extends Exception
 {
 }
@@ -22,20 +17,18 @@ class LibreTimeFileNotFoundException extends Exception
 
 class OverDiskQuotaException extends Exception
 {
-
 }
 
-class CcFiles extends BaseCcFiles {
+class CcFiles extends BaseCcFiles
+{
+    public const MUSIC_DIRS_STOR_PK = 1;
 
-    const MUSIC_DIRS_STOR_PK = 1;
-
-    const IMPORT_STATUS_SUCCESS = 0;
-    const IMPORT_STATUS_PENDING = 1;
-    const IMPORT_STATUS_FAILED = 2;
-
+    public const IMPORT_STATUS_SUCCESS = 0;
+    public const IMPORT_STATUS_PENDING = 1;
+    public const IMPORT_STATUS_FAILED = 2;
 
     //fields that are not modifiable via our RESTful API
-    private static $blackList = array(
+    private static $blackList = [
         'id',
         'directory',
         'filepath',
@@ -45,19 +38,20 @@ class CcFiles extends BaseCcFiles {
         'lptime',
         'silan_check',
         'is_scheduled',
-        'is_playlist'
-    );
+        'is_playlist',
+    ];
 
     //fields we should never expose through our RESTful API
-    private static $privateFields = array(
+    private static $privateFields = [
         'file_exists',
         'silan_check',
         'is_scheduled',
-        'is_playlist'
-    );
+        'is_playlist',
+    ];
 
     /**
      * Retrieve a sanitized version of the file metadata, suitable for public access.
+     *
      * @param $fileId
      */
     public static function getSanitizedFileById($fileId)
@@ -65,17 +59,19 @@ class CcFiles extends BaseCcFiles {
         $file = CcFilesQuery::create()->findPk($fileId);
         if ($file) {
             return CcFiles::sanitizeResponse($file);
-        } else {
-            throw new LibreTimeFileNotFoundException();
         }
+
+        throw new LibreTimeFileNotFoundException();
     }
 
     /** Used to create a CcFiles object from an array containing metadata and a file uploaded by POST.
      *  This is used by our Media REST API!
-     * @param $fileArray An array containing metadata for a CcFiles object.
+     *
+     * @param $fileArray An array containing metadata for a CcFiles object
+     *
+     * @throws Exception
      *
      * @return object the sanitized response
-     * @throws Exception
      */
     public static function createFromUpload($fileArray)
     {
@@ -100,6 +96,7 @@ class CcFiles extends BaseCcFiles {
             if (file_exists($tempFilePath)) {
                 unlink($tempFilePath);
             }
+
             throw $e;
         }
     }
@@ -107,38 +104,43 @@ class CcFiles extends BaseCcFiles {
     /** Import a music file to the library from a local file on disk (something pre-existing).
      *  This function allows you to copy a file rather than move it, which is useful for importing
      *  static music files (like sample tracks).
-     * @param string $filePath The full path to the audio file to import.
-     * @param bool $copyFile True if you want to just copy the false, false if you want to move it (default false)
+     *
+     * @param string $filePath  the full path to the audio file to import
+     * @param bool   $copyFile  True if you want to just copy the false, false if you want to move it (default false)
+     * @param mixed  $fileArray
+     *
      * @throws Exception
      */
-    public static function createFromLocalFile($fileArray, $filePath, $copyFile=false)
+    public static function createFromLocalFile($fileArray, $filePath, $copyFile = false)
     {
         $info = pathinfo($filePath);
-        $fileName =  basename($filePath).'.'.$info['extension'];
+        $fileName = basename($filePath) . '.' . $info['extension'];
         self::createAndImport($fileArray, $filePath, $fileName, $copyFile);
     }
 
     /** Create a new CcFiles object/row and import a file for it.
      *  You shouldn't call this directly. Either use createFromUpload() or createFromLocalFile().
-     * @param array $fileArray Any metadata to pre-fill for the audio file
-     * @param string $filePath The full path to the audio file to import
+     *
+     * @param array  $fileArray        Any metadata to pre-fill for the audio file
+     * @param string $filePath         The full path to the audio file to import
      * @param string $originalFilename
-     * @param bool $copyFile
-     * @return mixed
+     * @param bool   $copyFile
+     *
      * @throws Exception
      * @throws PropelException
+     *
+     * @return mixed
      */
-    private static function createAndImport($fileArray, $filePath, $originalFilename, $copyFile=false)
+    private static function createAndImport($fileArray, $filePath, $originalFilename, $copyFile = false)
     {
         $file = new CcFiles();
 
-        try
-        {
+        try {
             //Only accept files with a file extension that we support.
             // Let the analyzer do the heavy lifting in terms of mime verification and playability
             $fileExtension = pathinfo($originalFilename, PATHINFO_EXTENSION);
             if (!in_array(strtolower($fileExtension), array_values(FileDataHelper::getAudioMimeTypeArray()))) {
-                throw new Exception("Bad file extension.");
+                throw new Exception('Bad file extension.');
             }
 
             $fileArray = self::removeBlacklistedFields($fileArray);
@@ -146,14 +148,14 @@ class CcFiles extends BaseCcFiles {
             self::validateFileArray($fileArray);
 
             $storDir = Application_Model_MusicDir::getStorDir();
-            $importedStorageDir = $storDir->getDirectory() . "imported/" . self::getOwnerId() . "/";
-            $importedDbPath = "imported/" . self::getOwnerId() . "/";
+            $importedStorageDir = $storDir->getDirectory() . 'imported/' . self::getOwnerId() . '/';
+            $importedDbPath = 'imported/' . self::getOwnerId() . '/';
             $artwork = FileDataHelper::saveArtworkData($filePath, $originalFilename, $importedStorageDir, $importedDbPath);
             $trackType = FileDataHelper::saveTrackType();
 
             $file->fromArray($fileArray);
             $file->setDbOwnerId(self::getOwnerId());
-            $now  = new DateTime("now", new DateTimeZone("UTC"));
+            $now = new DateTime('now', new DateTimeZone('UTC'));
             $file->setDbTrackTitle($originalFilename);
             $file->setDbArtwork($artwork);
             $file->setDbTrackType($trackType);
@@ -161,28 +163,35 @@ class CcFiles extends BaseCcFiles {
             $file->setDbHidden(true);
             $file->save();
 
-            $callbackUrl = Application_Common_HTTPHelper::getStationUrl() . "/rest/media/" . $file->getPrimaryKey();
+            $callbackUrl = Application_Common_HTTPHelper::getStationUrl() . '/rest/media/' . $file->getPrimaryKey();
 
-            Application_Service_MediaService::importFileToLibrary($callbackUrl, $filePath,
-                $originalFilename, self::getOwnerId(), $copyFile);
+            Application_Service_MediaService::importFileToLibrary(
+                $callbackUrl,
+                $filePath,
+                $originalFilename,
+                self::getOwnerId(),
+                $copyFile
+            );
 
             return CcFiles::sanitizeResponse($file);
-
         } catch (Exception $e) {
             $file->setDbImportStatus(self::IMPORT_STATUS_FAILED);
             $file->setDbHidden(true);
             $file->save();
+
             throw $e;
         }
     }
 
     /** Update a file with metadata specified in an array.
-     * @param $fileId string The ID of the file to update in the DB.
+     * @param $fileId string The ID of the file to update in the DB
      * @param $fileArray array An associative array containing metadata. Replaces those fields if they exist.
-     * @return array A sanitized version of the file metadata array.
+     *
      * @throws Exception
      * @throws LibreTimeFileNotFoundException
      * @throws PropelException
+     *
+     * @return array a sanitized version of the file metadata array
      */
     public static function updateFromArray($fileId, $fileArray)
     {
@@ -192,29 +201,26 @@ class CcFiles extends BaseCcFiles {
         $fileArray = self::stripTimeStampFromYearTag($fileArray);
 
         try {
-
             self::validateFileArray($fileArray);
-            if ($file && isset($fileArray["resource_id"])) {
-
+            if ($file && isset($fileArray['resource_id'])) {
                 $file->fromArray($fileArray, BasePeer::TYPE_FIELDNAME);
 
                 //store the original filename
-                $file->setDbFilepath($fileArray["filename"]);
+                $file->setDbFilepath($fileArray['filename']);
 
-                $fileSizeBytes = $fileArray["filesize"];
+                $fileSizeBytes = $fileArray['filesize'];
                 if (!isset($fileSizeBytes) || $fileSizeBytes === false) {
-                    throw new LibreTimeFileNotFoundException("Invalid filesize for $fileId");
+                    throw new LibreTimeFileNotFoundException("Invalid filesize for {$fileId}");
                 }
 
                 $cloudFile = new CloudFile();
-                $cloudFile->setStorageBackend($fileArray["storage_backend"]);
-                $cloudFile->setResourceId($fileArray["resource_id"]);
+                $cloudFile->setStorageBackend($fileArray['storage_backend']);
+                $cloudFile->setResourceId($fileArray['resource_id']);
                 $cloudFile->setCcFiles($file);
                 $cloudFile->save();
 
                 Application_Model_Preference::updateDiskUsage($fileSizeBytes);
-            } else if ($file) {
-
+            } elseif ($file) {
                 // Since we check for this value when deleting files, set it first
                 $file->setDbDirectory(self::MUSIC_DIRS_STOR_PK);
 
@@ -223,18 +229,18 @@ class CcFiles extends BaseCcFiles {
                 //Our RESTful API takes "full_path" as a field, which we then split and translate to match
                 //our internal schema. Internally, file path is stored relative to a directory, with the directory
                 //as a foreign key to cc_music_dirs.
-                if (isset($fileArray["full_path"])) {
-                    $fileSizeBytes = filesize($fileArray["full_path"]);
+                if (isset($fileArray['full_path'])) {
+                    $fileSizeBytes = filesize($fileArray['full_path']);
                     if (!isset($fileSizeBytes) || $fileSizeBytes === false) {
-                        throw new LibreTimeFileNotFoundException("Invalid filesize for $fileId");
+                        throw new LibreTimeFileNotFoundException("Invalid filesize for {$fileId}");
                     }
                     Application_Model_Preference::updateDiskUsage($fileSizeBytes);
 
-                    $fullPath = $fileArray["full_path"];
+                    $fullPath = $fileArray['full_path'];
                     $storDir = Application_Model_MusicDir::getStorDir()->getDirectory();
                     $pos = strpos($fullPath, $storDir);
 
-                    if ($pos !== FALSE) {
+                    if ($pos !== false) {
                         assert($pos == 0); //Path must start with the stor directory path
 
                         $filePathRelativeToStor = substr($fullPath, strlen($storDir));
@@ -245,15 +251,14 @@ class CcFiles extends BaseCcFiles {
                 throw new LibreTimeFileNotFoundException();
             }
 
-            $now = new DateTime("now", new DateTimeZone("UTC"));
+            $now = new DateTime('now', new DateTimeZone('UTC'));
             $file->setDbMtime($now);
             $file->save();
-        }
-        catch (LibreTimeFileNotFoundException $e)
-        {
+        } catch (LibreTimeFileNotFoundException $e) {
             $file->setDbImportStatus(self::IMPORT_STATUS_FAILED);
             $file->setDbHidden(true);
             $file->save();
+
             throw $e;
         }
 
@@ -262,6 +267,7 @@ class CcFiles extends BaseCcFiles {
 
     /** Delete a file from the database and disk (or cloud).
      * @param $id The file ID
+     *
      * @throws DeleteScheduledFileException
      * @throws Exception
      * @throws FileNoPermissionException
@@ -278,9 +284,7 @@ class CcFiles extends BaseCcFiles {
         } else {
             throw new LibreTimeFileNotFoundException();
         }
-
     }
-
 
     private static function validateFileArray(&$fileArray)
     {
@@ -298,7 +302,7 @@ class CcFiles extends BaseCcFiles {
          * genre is more than 64 chars, for example, we don't want to reject
          * tracks for that reason
          */
-        foreach($fileArray as $tag => &$value) {
+        foreach ($fileArray as $tag => &$value) {
             if ($fileForm->getElement($tag)) {
                 $stringLengthValidator = $fileForm->getElement($tag)->getValidator('StringLength');
                 //$stringLengthValidator will be false if the StringLength validator doesn't exist on the current element
@@ -315,56 +319,55 @@ class CcFiles extends BaseCcFiles {
             $errors = $fileForm->getErrors();
             $messages = $fileForm->getMessages();
             Logging::error($messages);
-            throw new Exception("Data validation failed: $errors - $messages");
+
+            throw new Exception("Data validation failed: {$errors} - {$messages}");
         }
 
         return true;
     }
 
-
     public function getCueLength()
-	{
-		$cuein = $this->getDbCuein();
-		$cueout = $this->getDbCueout();
+    {
+        $cuein = $this->getDbCuein();
+        $cueout = $this->getDbCueout();
 
-		$cueinSec = Application_Common_DateHelper::calculateLengthInSeconds($cuein);
-		$cueoutSec = Application_Common_DateHelper::calculateLengthInSeconds($cueout);
-		$lengthSec = bcsub($cueoutSec, $cueinSec, 6);
+        $cueinSec = Application_Common_DateHelper::calculateLengthInSeconds($cuein);
+        $cueoutSec = Application_Common_DateHelper::calculateLengthInSeconds($cueout);
+        $lengthSec = bcsub($cueoutSec, $cueinSec, 6);
 
-		$length = Application_Common_DateHelper::secondsToPlaylistTime($lengthSec);
-
-		return $length;
-	}
+        return Application_Common_DateHelper::secondsToPlaylistTime($lengthSec);
+    }
 
     public function setDbTrackNumber($v)
     {
-        $max = pow(2, 31)-1;
+        $max = pow(2, 31) - 1;
         $v = ($v > $max) ? $max : $v;
 
         return parent::setDbTrackNumber($v);
     }
 
     // returns true if the file exists and is not hidden
-    public function visible() {
+    public function visible()
+    {
         return $this->getDbFileExists() && !$this->getDbHidden();
     }
 
     public function reassignTo($user)
     {
-        $this->setDbOwnerId( $user->getDbId() );
+        $this->setDbOwnerId($user->getDbId());
         $this->save();
     }
 
     /**
-     *
-     * Strips out the private fields we do not want to send back in API responses
+     * Strips out the private fields we do not want to send back in API responses.
      *
      * @param CcFiles $file a CcFiles object
      *
      * @return array
      */
     //TODO: rename this function?
-    public static function sanitizeResponse($file) {
+    public static function sanitizeResponse($file)
+    {
         $response = $file->toArray(BasePeer::TYPE_FIELDNAME);
 
         foreach (self::$privateFields as $key) {
@@ -398,7 +401,7 @@ class CcFiles extends BaseCcFiles {
      */
     public function getURLsForTrackPreviewOrDownload()
     {
-        return array($this->getAbsoluteFilePath());
+        return [$this->getAbsoluteFilePath()];
     }
 
     /**
@@ -408,10 +411,11 @@ class CcFiles extends BaseCcFiles {
     {
         $music_dir = Application_Model_MusicDir::getDirByPK($this->getDbDirectory());
         if (!$music_dir) {
-            throw new Exception("Invalid music_dir for file " . $this->getDbId() . " in database.");
+            throw new Exception('Invalid music_dir for file ' . $this->getDbId() . ' in database.');
         }
         $directory = $music_dir->getDirectory();
-        $filepath  = $this->getDbFilepath();
+        $filepath = $this->getDbFilepath();
+
         return Application_Common_OsPath::join($directory, $filepath);
     }
 
@@ -422,18 +426,18 @@ class CcFiles extends BaseCcFiles {
     {
         $music_dir = Application_Model_MusicDir::getDirByPK($this->getDbDirectory());
         if (!$music_dir) {
-            throw new Exception("Invalid music_dir for file " . $this->getDbId() . " in database.");
+            throw new Exception('Invalid music_dir for file ' . $this->getDbId() . ' in database.');
         }
         $directory = $music_dir->getDirectory();
-        $filepath  = $this->getDbArtwork();
+        $filepath = $this->getDbArtwork();
 
         return Application_Common_OsPath::join($directory, $filepath);
     }
 
     /**
-     *
      * Strips out fields from incoming request data that should never be modified
-     * from outside of Airtime
+     * from outside of Airtime.
+     *
      * @param array $data
      */
     private static function removeBlacklistedFields($data)
@@ -445,29 +449,31 @@ class CcFiles extends BaseCcFiles {
         return $data;
     }
 
-
     private static function getOwnerId()
     {
         try {
             if (Zend_Auth::getInstance()->hasIdentity()) {
                 $service_user = new Application_Service_UserService();
+
                 return $service_user->getCurrentUser()->getDbId();
-            } else {
-                $defaultOwner = CcSubjsQuery::create()
-                    ->filterByDbType('A')
-                    ->orderByDbId()
-                    ->findOne();
-                if (!$defaultOwner) {
-                    // what to do if there is no admin user?
-                    // should we handle this case?
-                    return null;
-                }
-                return $defaultOwner->getDbId();
             }
-        } catch(Exception $e) {
+            $defaultOwner = CcSubjsQuery::create()
+                ->filterByDbType('A')
+                ->orderByDbId()
+                ->findOne()
+            ;
+            if (!$defaultOwner) {
+                // what to do if there is no admin user?
+                // should we handle this case?
+                return null;
+            }
+
+            return $defaultOwner->getDbId();
+        } catch (Exception $e) {
             Logging::info($e->getMessage());
         }
     }
+
     /*
      * It's possible that the year tag will be a timestamp but Airtime doesn't support this.
      * The year field in cc_files can only be 16 chars max.
@@ -476,11 +482,12 @@ class CcFiles extends BaseCcFiles {
      */
     private static function stripTimeStampFromYearTag($metadata)
     {
-        if (isset($metadata["year"])) {
-            if (preg_match("/^(\d{4})-(\d{2})-(\d{2})(?:\s+(\d{2}):(\d{2}):(\d{2}))?$/", $metadata["year"])) {
-                $metadata["year"] = substr($metadata["year"], 0, 4);
+        if (isset($metadata['year'])) {
+            if (preg_match("/^(\d{4})-(\d{2})-(\d{2})(?:\s+(\d{2}):(\d{2}):(\d{2}))?$/", $metadata['year'])) {
+                $metadata['year'] = substr($metadata['year'], 0, 4);
             }
         }
+
         return $metadata;
     }
 
@@ -488,27 +495,28 @@ class CcFiles extends BaseCcFiles {
     {
         //Remove invalid UTF-8 characters
         //reject overly long 2 byte sequences, as well as characters above U+10000 and replace with ?
-        $string = preg_replace('/[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]'.
-            '|[\x00-\x7F][\x80-\xBF]+'.
-            '|([\xC0\xC1]|[\xF0-\xFF])[\x80-\xBF]*'.
-            '|[\xC2-\xDF]((?![\x80-\xBF])|[\x80-\xBF]{2,})'.
+        $string = preg_replace(
+            '/[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]' .
+            '|[\x00-\x7F][\x80-\xBF]+' .
+            '|([\xC0\xC1]|[\xF0-\xFF])[\x80-\xBF]*' .
+            '|[\xC2-\xDF]((?![\x80-\xBF])|[\x80-\xBF]{2,})' .
             '|[\xE0-\xEF](([\x80-\xBF](?![\x80-\xBF]))|(?![\x80-\xBF]{2})|[\x80-\xBF]{3,})/S',
-            '?', $string );
+            '?',
+            $string
+        );
 
         //reject overly long 3 byte sequences and UTF-16 surrogates and replace with ?
-        $string = preg_replace('/\xE0[\x80-\x9F][\x80-\xBF]'.
-            '|\xED[\xA0-\xBF][\x80-\xBF]/S','?', $string );
+        $string = preg_replace('/\xE0[\x80-\x9F][\x80-\xBF]' .
+            '|\xED[\xA0-\xBF][\x80-\xBF]/S', '?', $string);
 
         //Do a final encoding conversion to
-        $string = mb_convert_encoding($string, 'UTF-8', 'UTF-8');
-        return $string;
+        return mb_convert_encoding($string, 'UTF-8', 'UTF-8');
     }
 
     private function removeEmptySubFolders($path)
     {
-        exec("find $path -empty -type d -delete");
+        exec("find {$path} -empty -type d -delete");
     }
-
 
     /**
      * Checks if the file is a regular file that can be previewed and downloaded.
@@ -519,7 +527,6 @@ class CcFiles extends BaseCcFiles {
     }
 
     /**
-     *
      * Deletes the file from the stor directory on disk.
      */
     public function deletePhysicalFile()
@@ -529,17 +536,16 @@ class CcFiles extends BaseCcFiles {
         if (file_exists($filepath)) {
             unlink($filepath);
             // also delete related images (dataURI and jpeg files)
-            foreach (glob("$artworkpath*", GLOB_NOSORT) as $filename) {
+            foreach (glob("{$artworkpath}*", GLOB_NOSORT) as $filename) {
                 unlink($filename);
             }
             unlink($artworkpath);
         } else {
-            throw new Exception("Could not locate file ".$filepath);
+            throw new Exception('Could not locate file ' . $filepath);
         }
     }
 
     /**
-     *
      * This function refers to the file's Amazon S3 resource id.
      * Returns null because cc_files are stored on local disk.
      */
@@ -552,5 +558,4 @@ class CcFiles extends BaseCcFiles {
     {
         return $this->id;
     }
-
 } // CcFiles

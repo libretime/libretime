@@ -1,7 +1,7 @@
 <?php
 
-class Logging {
-
+class Logging
+{
     private static $_logger;
     private static $_path;
 
@@ -9,17 +9,18 @@ class Logging {
     {
         if (!isset(self::$_logger)) {
             $writer = new Zend_Log_Writer_Stream(self::$_path);
-            
-            if (Zend_Version::compareVersion("1.11") > 0) {
+
+            if (Zend_Version::compareVersion('1.11') > 0) {
                 //Running Zend version 1.10 or lower. Need to instantiate our
                 //own Zend Log class with backported code from 1.11.
-                require_once __DIR__."/AirtimeLog.php";
+                require_once __DIR__ . '/AirtimeLog.php';
                 self::$_logger = new Airtime_Zend_Log($writer);
             } else {
                 self::$_logger = new Zend_Log($writer);
             }
             self::$_logger->registerErrorHandler();
         }
+
         return self::$_logger;
     }
 
@@ -27,27 +28,29 @@ class Logging {
     {
         self::$_path = $path;
     }
-    
+
     public static function toString($p_msg)
     {
         if (is_array($p_msg) || is_object($p_msg)) {
             return print_r($p_msg, true);
-        } else if (is_bool($p_msg)) {
-            return $p_msg ? "true" : "false";
-        } else {
-            return $p_msg;
         }
+        if (is_bool($p_msg)) {
+            return $p_msg ? 'true' : 'false';
+        }
+
+        return $p_msg;
     }
 
     /** @param debugMode Prints the function name, file, and line number. This is slow as it uses debug_backtrace()
      *                   so don't use it unless you need it.
+     * @param mixed $debugMode
      */
-    private static function getLinePrefix($debugMode=false)
+    private static function getLinePrefix($debugMode = false)
     {
-        $linePrefix = "";
+        $linePrefix = '';
 
         if (array_key_exists('SERVER_NAME', $_SERVER)) {
-            $linePrefix .= $_SERVER['SERVER_NAME'] . " ";
+            $linePrefix .= $_SERVER['SERVER_NAME'] . ' ';
         }
 
         if ($debugMode) {
@@ -56,16 +59,16 @@ class Logging {
             $caller = $bt[1];
             $file = basename($caller['file']);
             $line = $caller['line'];
-            $function = "Unknown function";
+            $function = 'Unknown function';
             if (array_key_exists(2, $bt)) {
                 $function = $bt[2]['function'];
             }
-            $linePrefix .= "[$file:$line - $function()] - ";
+            $linePrefix .= "[{$file}:{$line} - {$function}()] - ";
         }
 
         return $linePrefix;
     }
-    
+
     public static function info($p_msg)
     {
         $logger = self::getLogger();
@@ -81,17 +84,17 @@ class Logging {
     public static function error($p_msg)
     {
         $logger = self::getLogger();
-        $logger->err(self::getLinePrefix(true) .  self::toString($p_msg));
+        $logger->err(self::getLinePrefix(true) . self::toString($p_msg));
 
         //Escape the % symbols in any of our errors because Sentry chokes (vsprint formatting error).
         $msg = self::toString($p_msg);
-        $msg = str_replace("%", "%%", $msg);
+        $msg = str_replace('%', '%%', $msg);
         SentryLogger::getInstance()->captureError($msg);
     }
-    
+
     public static function debug($p_msg)
     {
-        if (!(defined('APPLICATION_ENV') && APPLICATION_ENV == "development")) {
+        if (!(defined('APPLICATION_ENV') && APPLICATION_ENV == 'development')) {
             return;
         }
 
@@ -103,8 +106,8 @@ class Logging {
 
     public static function debug_sparse(array $p_msg)
     {
-        Logging::debug("Sparse output:");
-        Logging::debug( array_filter($p_msg) );
+        Logging::debug('Sparse output:');
+        Logging::debug(array_filter($p_msg));
     }
 
     public static function enablePropelLogging()
@@ -138,8 +141,7 @@ class Logging {
             return;
         }
 
-        switch($err['type'])
-        {
+        switch ($err['type']) {
             case E_ERROR:
             case E_WARNING:
             case E_PARSE:
@@ -153,17 +155,16 @@ class Logging {
                 if (array_key_exists('message', $err)) {
                     $errorStr .= $err['message'];
                 }
-                if (array_key_exists('file', $err))
-                {
-                    $errorStr .= ' at ' .$err['file'];
+                if (array_key_exists('file', $err)) {
+                    $errorStr .= ' at ' . $err['file'];
                 }
-                if (array_key_exists('line', $err))
-                {
+                if (array_key_exists('line', $err)) {
                     $errorStr .= ':' . $err['line'];
                 }
 
                 $errorStr .= "\n" . var_export($err, true);
                 Logging::error($errorStr);
+
                 break;
         }
     }
@@ -173,6 +174,4 @@ class Logging {
         //Static callback:
         register_shutdown_function('Logging::loggingShutdownCallback');
     }
-
 }
-

@@ -2,15 +2,16 @@
 
 // Global functions for translating domain-specific strings
 
-class Application_Common_LocaleHelper {
-
+class Application_Common_LocaleHelper
+{
     /**
-     * Return an array of all ISO 639-1 language codes and their corresponding translated language names
+     * Return an array of all ISO 639-1 language codes and their corresponding translated language names.
      *
      * @return array the array of language codes to names
      */
-    public static function getISO6391LanguageCodes() {
-        /**
+    public static function getISO6391LanguageCodes()
+    {
+        /*
          * From: http://www.binarytides.com/php-array-of-iso-639-1-language-codes-and-names/
          *
          * ISO 639-1 Language Codes
@@ -18,7 +19,7 @@ class Application_Common_LocaleHelper {
          * 1. http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
          * 2. http://blog.xoundboy.com/?p=235
          */
-        return array(
+        return [
             'en' => _('English'),
             'aa' => _('Afar'),
             'ab' => _('Abkhazian'),
@@ -154,7 +155,6 @@ class Application_Common_LocaleHelper {
             'yo' => _('Yoruba'),
             'zh' => _('Chinese'),
             'zu' => _('Zulu'),
-        );
+        ];
     }
-
 }

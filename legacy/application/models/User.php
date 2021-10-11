@@ -30,6 +30,7 @@ class Application_Model_User
     public function isHostOfShow($showId)
     {
         $userId = $this->_userInstance->getDbId();
+
         return CcShowHostsQuery::create()
             ->filterByDbShow($showId)
             ->filterByDbHost($userId)->count() > 0;
@@ -49,32 +50,34 @@ class Application_Model_User
     {
         return $this->isUserType(UTYPE_ADMIN);
     }
-    
+
     public function isSuperAdmin()
     {
         return $this->isUserType(UTYPE_SUPERADMIN);
     }
-    
+
     public function canSchedule($p_showId)
     {
         $type = $this->getType();
         $result = false;
 
-        if ($this->isAdmin() ||
-            $this->isSuperAdmin() ||
-            $this->isPM() ||
-            self::isHostOfShow($p_showId)) {
+        if ($this->isAdmin()
+            || $this->isSuperAdmin()
+            || $this->isPM()
+            || self::isHostOfShow($p_showId)) {
             $result = true;
         }
+
         return $result;
     }
 
     public function isSourcefabricAdmin()
     {
         $username = $this->getLogin();
-        if ($username == "sourcefabric_admin") {
+        if ($username == 'sourcefabric_admin') {
             return true;
         }
+
         return false;
     }
 
@@ -83,9 +86,10 @@ class Application_Model_User
     public function isUserType($type)
     {
         if (!is_array($type)) {
-            $type = array($type);
+            $type = [$type];
         }
         $real_type = $this->_userInstance->getDbType();
+
         return in_array($real_type, $type);
     }
 
@@ -204,7 +208,6 @@ class Application_Model_User
         $user = $this->_userInstance;
 
         return $user->getDbJabberContact();
-
     }
 
     public function save()
@@ -218,6 +221,7 @@ class Application_Model_User
             $this->_userInstance->delete();
         }
     }
+
     public function getOwnedFiles()
     {
         $user = $this->_userInstance;
@@ -243,9 +247,7 @@ class Application_Model_User
 
     private function createUser()
     {
-        $user = new CcSubjs();
-
-        return $user;
+        return new CcSubjs();
     }
 
     public static function getUsersOfType($type)
@@ -254,92 +256,95 @@ class Application_Model_User
     }
 
     /**
-     * Get the first admin user from the database
+     * Get the first admin user from the database.
      *
      * This function gets used in UserController in the delete action. The controller
      * uses it to figure out who to reassign the deleted users files to.
      *
      * @param $ignoreUser String optional userid of a user that shall be ignored when
-     *                           when looking for the "first" admin.
+     *                           when looking for the "first" admin
      *
-     * @return CcSubj|null
+     * @return null|CcSubj
      */
-    public static function getFirstAdmin($ignoreUser = null) {
+    public static function getFirstAdmin($ignoreUser = null)
+    {
         $superAdmins = Application_Model_User::getUsersOfType('S');
         if (count($superAdmins) > 0) { // found superadmin => pick first one
             return $superAdmins[0];
-        } else {
-            // get all admin users
-            $query = CcSubjsQuery::create()->filterByDbType('A');
-            // ignore current user if one was specified
-            if ($ignoreUser !== null) {
-                $query->filterByDbId($ignoreUser, Criteria::NOT_EQUAL);
-            }
-            $admins = $query->find();
-            if (count($admins) > 0) { // found admin => pick first one
-                return $admins[0];
-            }
-            Logging::warn("Warning. no admins found in database");
-            return null;
         }
+        // get all admin users
+        $query = CcSubjsQuery::create()->filterByDbType('A');
+        // ignore current user if one was specified
+        if ($ignoreUser !== null) {
+            $query->filterByDbId($ignoreUser, Criteria::NOT_EQUAL);
+        }
+        $admins = $query->find();
+        if (count($admins) > 0) { // found admin => pick first one
+            return $admins[0];
+        }
+        Logging::warn('Warning. no admins found in database');
+
+        return null;
     }
 
-    public static function getUsers(array $type, $search=null)
+    public static function getUsers(array $type, $search = null)
     {
-        $con     = Propel::getConnection();
+        $con = Propel::getConnection();
 
-        $sql_gen = "SELECT login AS value, login AS label, id as index FROM cc_subjs ";
+        $sql_gen = 'SELECT login AS value, login AS label, id as index FROM cc_subjs ';
 
-        $types = array();
-        $params = array();
-        for ($i=0; $i<count($type); $i++) {
+        $types = [];
+        $params = [];
+        for ($i = 0; $i < count($type); ++$i) {
             $p = ":type{$i}";
-            $types[] = "type = $p";
+            $types[] = "type = {$p}";
             $params[$p] = $type[$i];
         }
 
-        $sql_type = join(" OR ", $types);
+        $sql_type = join(' OR ', $types);
 
-        $sql      = $sql_gen ." WHERE (". $sql_type.") ";
+        $sql = $sql_gen . ' WHERE (' . $sql_type . ') ';
 
-        $sql .= " AND login ILIKE :search";
-        $params[":search"] = "%$search%";
+        $sql .= ' AND login ILIKE :search';
+        $params[':search'] = "%{$search}%";
 
-        $sql = $sql ." ORDER BY login";
+        $sql = $sql . ' ORDER BY login';
 
-        return Application_Common_Database::prepareAndExecute($sql, $params, "all");
+        return Application_Common_Database::prepareAndExecute($sql, $params, 'all');
     }
 
     public static function getUserCount()
     {
-        $sql_gen = "SELECT count(*) AS cnt FROM cc_subjs";
+        $sql_gen = 'SELECT count(*) AS cnt FROM cc_subjs';
 
-        $query = Application_Common_Database::prepareAndExecute($sql_gen, array(), 
-            Application_Common_Database::COLUMN);
+        $query = Application_Common_Database::prepareAndExecute(
+            $sql_gen,
+            [],
+            Application_Common_Database::COLUMN
+        );
 
         return ($query !== false) ? $query : null;
     }
 
-    public static function getHosts($search=null)
+    public static function getHosts($search = null)
     {
-        return Application_Model_User::getUsers(array('H'), $search);
+        return Application_Model_User::getUsers(['H'], $search);
     }
 
-    public static function getNonGuestUsers($search=null)
+    public static function getNonGuestUsers($search = null)
     {
-        return Application_Model_User::getUsers(array('H','A','S','P'), $search);
+        return Application_Model_User::getUsers(['H', 'A', 'S', 'P'], $search);
     }
 
     public static function getUsersDataTablesInfo($datatables)
     {
-
         $con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME);
 
-        $displayColumns = array("id", "login", "first_name", "last_name", "type");
-        $fromTable = "cc_subjs";
+        $displayColumns = ['id', 'login', 'first_name', 'last_name', 'type'];
+        $fromTable = 'cc_subjs';
 
         // get current user
-        $username = "";
+        $username = '';
         $auth = Zend_Auth::getInstance();
 
         if ($auth->hasIdentity()) {
@@ -349,39 +354,40 @@ class Application_Model_User
         $res = Application_Model_Datatables::findEntries($con, $displayColumns, $fromTable, $datatables);
 
         // mark record which is for the current user
-        foreach($res['aaData'] as $key => &$record){
+        foreach ($res['aaData'] as $key => &$record) {
             if ($record['login'] == $username) {
-                $record['delete'] = "self";
+                $record['delete'] = 'self';
             } else {
-                $record['delete'] = "";
+                $record['delete'] = '';
             }
-            
-            if($record['login'] == 'sourcefabric_admin'){
+
+            if ($record['login'] == 'sourcefabric_admin') {
                 //arrays in PHP are basically associative arrays that can be iterated in order.
                 //Deleting an earlier element does not change the keys of elements that come after it. --MK
                 unset($res['aaData'][$key]);
-                $res['iTotalDisplayRecords']--;
-                $res['iTotalRecords']--;
+                --$res['iTotalDisplayRecords'];
+                --$res['iTotalRecords'];
             }
 
             $record = array_map('htmlspecialchars', $record);
         }
 
         $res['aaData'] = array_values($res['aaData']);
-        
+
         return $res;
     }
 
     public static function getUserData($id)
     {
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 SELECT login, first_name, last_name, type, id, email, cell_phone, skype_contact,
        jabber_contact
 FROM cc_subjs
 WHERE id = :id
 SQL;
-        return Application_Common_Database::prepareAndExecute($sql, array(
-            ":id" => $id), 'single');
+
+        return Application_Common_Database::prepareAndExecute($sql, [
+            ':id' => $id, ], 'single');
     }
 
     public static function getCurrentUser()
@@ -390,6 +396,7 @@ SQL;
         if (is_null($userinfo)) {
             return null;
         }
+
         try {
             return new self($userinfo->id);
         } catch (Exception $e) {

@@ -13,8 +13,7 @@ class Application_Service_UserService
     }
 
     /**
-     *
-     * Returns a CcSubjs object
+     * Returns a CcSubjs object.
      */
     public function getCurrentUser()
     {
@@ -24,5 +23,4 @@ class Application_Service_UserService
 
         return $this->currentUser;
     }
-
 }

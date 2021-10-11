@@ -1,27 +1,20 @@
 <?php
 
-interface OAuth2Controller {
-
+interface OAuth2Controller
+{
     /**
-     * Send user to a third-party service to authorize before being redirected
-     *
-     * @return void
+     * Send user to a third-party service to authorize before being redirected.
      */
     public function authorizeAction();
 
     /**
-     * Clear the previously saved request token from the preferences
-     *
-     * @return void
+     * Clear the previously saved request token from the preferences.
      */
     public function deauthorizeAction();
 
     /**
      * Called when user successfully completes third-party authorization
-     * Store the returned request token for future requests
-     *
-     * @return void
+     * Store the returned request token for future requests.
      */
     public function redirectAction();
-
 }

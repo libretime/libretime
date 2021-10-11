@@ -2,14 +2,13 @@
 
 class Application_Model_Systemstatus
 {
-
     public static function GetMonitStatus($p_ip)
     {
         $CC_CONFIG = Config::getConfig();
 //         $monit_user = $CC_CONFIG['monit_user'];
 //         $monit_password = $CC_CONFIG['monit_password'];
 
-        $url = "http://$p_ip:2812/_status?format=xml";
+        $url = "http://{$p_ip}:2812/_status?format=xml";
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -23,8 +22,8 @@ class Application_Model_Systemstatus
         curl_close($ch);
 
         $docRoot = null;
-        if ($result !== FALSE && $info["http_code"] === 200) {
-            if ($result != "") {
+        if ($result !== false && $info['http_code'] === 200) {
+            if ($result != '') {
                 $xmlDoc = new DOMDocument();
                 $xmlDoc->loadXML($result);
                 $docRoot = $xmlDoc->documentElement;
@@ -36,84 +35,83 @@ class Application_Model_Systemstatus
 
     public static function ExtractServiceInformation($p_docRoot, $p_serviceName)
     {
-        $starting = array(
-                        "name"=>"",
-                        "process_id"=>"STARTING...",
-                        "uptime_seconds"=>"-1",
-                        "status"=>0,
-                        "memory_perc"=>"0%",
-                        "memory_kb"=>"0",
-                        "cpu_perc"=>"0%");
+        $starting = [
+            'name' => '',
+            'process_id' => 'STARTING...',
+            'uptime_seconds' => '-1',
+            'status' => 0,
+            'memory_perc' => '0%',
+            'memory_kb' => '0',
+            'cpu_perc' => '0%', ];
 
-        $notMonitored = array(
-                        "name"=>$p_serviceName,
-                        "process_id"=>"NOT MONITORED",
-                        "uptime_seconds"=>"1",
-                        "status"=>1,
-                        "memory_perc"=>"0%",
-                        "memory_kb"=>"0",
-                        "cpu_perc"=>"0%"
-                      );
+        $notMonitored = [
+            'name' => $p_serviceName,
+            'process_id' => 'NOT MONITORED',
+            'uptime_seconds' => '1',
+            'status' => 1,
+            'memory_perc' => '0%',
+            'memory_kb' => '0',
+            'cpu_perc' => '0%',
+        ];
 
-        $notRunning = array(
-                        "name"=>$p_serviceName,
-                        "process_id"=>"FAILED",
-                        "uptime_seconds"=>"-1",
-                        "status"=>0,
-                        "memory_perc"=>"0%",
-                        "memory_kb"=>"0",
-                        "cpu_perc"=>"0%"
-                      );
+        $notRunning = [
+            'name' => $p_serviceName,
+            'process_id' => 'FAILED',
+            'uptime_seconds' => '-1',
+            'status' => 0,
+            'memory_perc' => '0%',
+            'memory_kb' => '0',
+            'cpu_perc' => '0%',
+        ];
         $data = $notRunning;
 
         if (!is_null($p_docRoot)) {
-            foreach ($p_docRoot->getElementsByTagName("service") AS $item) {
-                if ($item->getElementsByTagName("name")->item(0)->nodeValue == $p_serviceName) {
-
-                    $monitor = $item->getElementsByTagName("monitor");
+            foreach ($p_docRoot->getElementsByTagName('service') as $item) {
+                if ($item->getElementsByTagName('name')->item(0)->nodeValue == $p_serviceName) {
+                    $monitor = $item->getElementsByTagName('monitor');
                     if ($monitor->length > 0) {
                         $status = $monitor->item(0)->nodeValue;
-                        if ($status == "2") {
+                        if ($status == '2') {
                             $data = $starting;
                         } elseif ($status == 1) {
                             //is monitored, but is it running?
-                            $pid = $item->getElementsByTagName("pid");
+                            $pid = $item->getElementsByTagName('pid');
                             if ($pid->length == 0) {
                                 $data = $notRunning;
-                            } else {
-                                //running!
                             }
+                            //running!
                         } elseif ($status == 0) {
                             $data = $notMonitored;
                         }
                     }
 
-                    $process_id = $item->getElementsByTagName("name");
+                    $process_id = $item->getElementsByTagName('name');
                     if ($process_id->length > 0) {
-                        $data["name"] = $process_id->item(0)->nodeValue;
+                        $data['name'] = $process_id->item(0)->nodeValue;
                     }
 
-                    $process_id = $item->getElementsByTagName("pid");
+                    $process_id = $item->getElementsByTagName('pid');
                     if ($process_id->length > 0) {
-                        $data["process_id"] = $process_id->item(0)->nodeValue;
-                        $data["status"] = 0;
+                        $data['process_id'] = $process_id->item(0)->nodeValue;
+                        $data['status'] = 0;
                     }
 
-                    $uptime = $item->getElementsByTagName("uptime");
+                    $uptime = $item->getElementsByTagName('uptime');
                     if ($uptime->length > 0) {
-                        $data["uptime_seconds"] = $uptime->item(0)->nodeValue;
+                        $data['uptime_seconds'] = $uptime->item(0)->nodeValue;
                     }
 
-                    $memory = $item->getElementsByTagName("memory");
+                    $memory = $item->getElementsByTagName('memory');
                     if ($memory->length > 0) {
-                        $data["memory_perc"] = $memory->item(0)->getElementsByTagName("percenttotal")->item(0)->nodeValue."%";
-                        $data["memory_kb"] = $memory->item(0)->getElementsByTagName("kilobytetotal")->item(0)->nodeValue;
+                        $data['memory_perc'] = $memory->item(0)->getElementsByTagName('percenttotal')->item(0)->nodeValue . '%';
+                        $data['memory_kb'] = $memory->item(0)->getElementsByTagName('kilobytetotal')->item(0)->nodeValue;
                     }
 
-                    $cpu = $item->getElementsByTagName("cpu");
+                    $cpu = $item->getElementsByTagName('cpu');
                     if ($cpu->length > 0) {
-                        $data["cpu_perc"] = $cpu->item(0)->getElementsByTagName("percent")->item(0)->nodeValue."%";
+                        $data['cpu_perc'] = $cpu->item(0)->getElementsByTagName('percent')->item(0)->nodeValue . '%';
                     }
+
                     break;
                 }
             }
@@ -124,15 +122,15 @@ class Application_Model_Systemstatus
 
     public static function GetPlatformInfo()
     {
-        $keys = array("release", "machine", "memory", "swap");
-        $data = array();
+        $keys = ['release', 'machine', 'memory', 'swap'];
+        $data = [];
         foreach ($keys as $key) {
-            $data[$key] = "UNKNOWN";
+            $data[$key] = 'UNKNOWN';
         }
 
-        $docRoot = self::GetMonitStatus("localhost");
+        $docRoot = self::GetMonitStatus('localhost');
         if (!is_null($docRoot)) {
-            foreach ($docRoot->getElementsByTagName("platform") AS $item) {
+            foreach ($docRoot->getElementsByTagName('platform') as $item) {
                 foreach ($keys as $key) {
                     $keyElement = $item->getElementsByTagName($key);
                     if ($keyElement->length > 0) {
@@ -147,73 +145,66 @@ class Application_Model_Systemstatus
 
     public static function GetPypoStatus()
     {
-        $component = CcServiceRegisterQuery::create()->findOneByDbName("pypo");
+        $component = CcServiceRegisterQuery::create()->findOneByDbName('pypo');
         if (is_null($component)) {
             return null;
-        } else {
-            $ip = $component->getDbIp();
-
-            $docRoot = self::GetMonitStatus($ip);
-            $data = self::ExtractServiceInformation($docRoot, "airtime-playout");
-
-            return $data;
         }
+        $ip = $component->getDbIp();
+
+        $docRoot = self::GetMonitStatus($ip);
+
+        return self::ExtractServiceInformation($docRoot, 'airtime-playout');
     }
 
     public static function GetLiquidsoapStatus()
     {
-        $component = CcServiceRegisterQuery::create()->findOneByDbName("pypo");
+        $component = CcServiceRegisterQuery::create()->findOneByDbName('pypo');
         if (is_null($component)) {
             return null;
-        } else {
-            $ip = $component->getDbIp();
-
-            $docRoot = self::GetMonitStatus($ip);
-            $data = self::ExtractServiceInformation($docRoot, "airtime-liquidsoap");
-
-            return $data;
         }
+        $ip = $component->getDbIp();
+
+        $docRoot = self::GetMonitStatus($ip);
+
+        return self::ExtractServiceInformation($docRoot, 'airtime-liquidsoap');
     }
 
     public static function GetMediaMonitorStatus()
     {
-        $component = CcServiceRegisterQuery::create()->findOneByDbName("media-monitor");
+        $component = CcServiceRegisterQuery::create()->findOneByDbName('media-monitor');
         if (is_null($component)) {
             return null;
-        } else {
-            $ip = $component->getDbIp();
-
-            $docRoot = self::GetMonitStatus($ip);
-            $data = self::ExtractServiceInformation($docRoot, "airtime-analyzer");
-
-            return $data;
         }
+        $ip = $component->getDbIp();
+
+        $docRoot = self::GetMonitStatus($ip);
+
+        return self::ExtractServiceInformation($docRoot, 'airtime-analyzer');
     }
 
     public static function GetIcecastStatus()
     {
-        $docRoot = self::GetMonitStatus("localhost");
-        $data = self::ExtractServiceInformation($docRoot, "icecast2");
+        $docRoot = self::GetMonitStatus('localhost');
 
-        return $data;
+        return self::ExtractServiceInformation($docRoot, 'icecast2');
     }
 
     public static function GetRabbitMqStatus()
     {
-        if (isset($_SERVER["RABBITMQ_HOST"])) {
-            $rabbitmq_host = $_SERVER["RABBITMQ_HOST"];
+        if (isset($_SERVER['RABBITMQ_HOST'])) {
+            $rabbitmq_host = $_SERVER['RABBITMQ_HOST'];
         } else {
-            $rabbitmq_host = "localhost";
+            $rabbitmq_host = 'localhost';
         }
         $docRoot = self::GetMonitStatus($rabbitmq_host);
-        $data = self::ExtractServiceInformation($docRoot, "rabbitmq-server");
+        $data = self::ExtractServiceInformation($docRoot, 'rabbitmq-server');
 
         return $data;
     }
 
     public static function GetDiskInfo()
     {
-        $partitions = array();
+        $partitions = [];
         /* First lets get all the watched directories. Then we can group them
         * into the same partitions by comparing the partition sizes. */
         $musicDirs = Application_Model_MusicDir::getWatchedDirs();
@@ -221,13 +212,14 @@ class Application_Model_Systemstatus
         foreach ($musicDirs as $md) {
             $totalSpace = disk_total_space($md->getDirectory());
             if (!isset($partitions[$totalSpace])) {
-                $partitions[$totalSpace] = new StdClass;
+                $partitions[$totalSpace] = new StdClass();
                 $partitions[$totalSpace]->totalSpace = $totalSpace;
                 $partitions[$totalSpace]->totalFreeSpace = disk_free_space($md->getDirectory());
                 $partitions[$totalSpace]->usedSpace = $totalSpace - $partitions[$totalSpace]->totalFreeSpace;
             }
             $partitions[$totalSpace]->dirs[] = $md->getDirectory();
         }
+
         return array_values($partitions);
     }
 

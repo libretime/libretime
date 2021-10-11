@@ -2,7 +2,6 @@
 
 class Application_Form_AddTracktype extends Zend_Form
 {
-
     public function init()
     {
         $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
@@ -10,12 +9,12 @@ class Application_Form_AddTracktype extends Zend_Form
         $this->setAttrib('id', 'tracktype_form');
 
         $hidden = new Zend_Form_Element_Hidden('tracktype_id');
-        $hidden->setDecorators(array('ViewHelper'));
+        $hidden->setDecorators(['ViewHelper']);
         $this->addElement($hidden);
 
-        $this->addElement('hash', 'csrf', array(
-           'salt' => 'unique'
-        ));
+        $this->addElement('hash', 'csrf', [
+            'salt' => 'unique',
+        ]);
 
         $typeName = new Zend_Form_Element_Text('type_name');
         $typeName->setLabel(_('Type Name:'));
@@ -34,10 +33,11 @@ class Application_Form_AddTracktype extends Zend_Form
 
         $description = new Zend_Form_Element_Textarea('description');
         $description->setLabel(_('Description:'))
-            ->setFilters(array('StringTrim'))
-            ->setValidators(array(
-                new Zend_Validate_StringLength(array('max' => 200))
-            ));
+            ->setFilters(['StringTrim'])
+            ->setValidators([
+                new Zend_Validate_StringLength(['max' => 200]),
+            ])
+        ;
         $description->setAttrib('class', 'input_text');
         $description->addFilter('StringTrim');
         $this->addElement($description);
@@ -46,10 +46,10 @@ class Application_Form_AddTracktype extends Zend_Form
         $visibility->setLabel(_('Visibility:'));
         $visibility->setAttrib('class', 'input_select');
         $visibility->setAttrib('style', 'width: 40%');
-        $visibility->setMultiOptions(array(
-                "0" => _("Disabled"),
-                "1" => _("Enabled")
-            ));
+        $visibility->setMultiOptions([
+            '0' => _('Disabled'),
+            '1' => _('Enabled'),
+        ]);
         //$visibility->getValue();
         $visibility->setRequired(true);
         $this->addElement($visibility);
@@ -67,7 +67,7 @@ class Application_Form_AddTracktype extends Zend_Form
             $count = CcTracktypesQuery::create()->filterByDbCode($data['code'])->count();
 
             if ($count != 0) {
-                $this->getElement('code')->setErrors(array(_("Code is not unique.")));
+                $this->getElement('code')->setErrors([_('Code is not unique.')]);
 
                 return false;
             }
@@ -75,5 +75,4 @@ class Application_Form_AddTracktype extends Zend_Form
 
         return true;
     }
-
 }

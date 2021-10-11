@@ -1,12 +1,14 @@
 <?php
+
 class Application_Model_ListenerStat
 {
     public function __construct()
     {
     }
 
-    public static function getDataPointsWithinRange($p_start, $p_end) {
-        $sql = <<<SQL
+    public static function getDataPointsWithinRange($p_start, $p_end)
+    {
+        $sql = <<<'SQL'
 SELECT mount_name, count(*)
     FROM cc_listener_count AS lc
     INNER JOIN cc_timestamp AS ts ON (lc.timestamp_id = ts.ID)
@@ -14,16 +16,18 @@ SELECT mount_name, count(*)
 WHERE (ts.timestamp >=:p1 AND ts.timestamp <=:p2)
 group by mount_name
 SQL;
-        $data = Application_Common_Database::prepareAndExecute($sql,
-                array('p1'=>$p_start, 'p2'=>$p_end));
-        $out = array();
+        $data = Application_Common_Database::prepareAndExecute(
+            $sql,
+            ['p1' => $p_start, 'p2' => $p_end]
+        );
+        $out = [];
 
         foreach ($data as $d) {
-            $jump = intval($d['count']/1000);
+            $jump = intval($d['count'] / 1000);
             $jump = max(1, $jump);
-            $remainder = $jump == 1?0:1;
+            $remainder = $jump == 1 ? 0 : 1;
 
-            $sql = <<<SQL
+            $sql = <<<'SQL'
 SELECT *
 FROM
     (SELECT lc.id, ts.timestamp, lc.listener_count, mn.mount_name,
@@ -34,66 +38,69 @@ FROM
     WHERE (ts.timestamp >=:p1 AND ts.timestamp <= :p2) AND mount_name=:p3) as temp
 WHERE (temp.rownum%:p4) = :p5;
 SQL;
-            $result = Application_Common_Database::prepareAndExecute($sql,
-                    array('p1'=>$p_start, 'p2'=>$p_end, 'p3'=>$d['mount_name'], 'p4'=>$jump, 'p5'=>$remainder));
+            $result = Application_Common_Database::prepareAndExecute(
+                $sql,
+                ['p1' => $p_start, 'p2' => $p_end, 'p3' => $d['mount_name'], 'p4' => $jump, 'p5' => $remainder]
+            );
 
-            $utcTimezone = new DateTimeZone("UTC");
+            $utcTimezone = new DateTimeZone('UTC');
             $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
-            
+
             foreach ($result as $r) {
                 $t = new DateTime($r['timestamp'], $utcTimezone);
                 $t->setTimezone($displayTimezone);
                 // tricking javascript so it thinks the server timezone is in UTC
                 $dt = new DateTime($t->format(DEFAULT_TIMESTAMP_FORMAT), $utcTimezone);
 
-                $r['timestamp'] = $dt->format("U");
+                $r['timestamp'] = $dt->format('U');
                 $out[$r['mount_name']][] = $r;
             }
         }
 
         return $out;
         $enabledStreamIds = Application_Model_StreamSetting::getEnabledStreamIds();
-        $enabledOut = array();
+        $enabledOut = [];
 
         foreach ($enabledStreamIds as $sId) {
+            $sql = 'SELECT value FROM cc_stream_setting'
+            . ' WHERE keyname = :key';
 
-        	$sql = "SELECT value FROM cc_stream_setting"
-        	." WHERE keyname = :key";
+            $result = Application_Common_Database::prepareAndExecute($sql, ['key' => $sId . '_mount'], 'single');
 
-        	$result = Application_Common_Database::prepareAndExecute($sql, array('key' => $sId."_mount"), "single");
+            $enabledMountPoint = $result['value'];
 
-        	$enabledMountPoint = $result["value"];
-
-        	if (isset($out[$enabledMountPoint])) {
-        		$enabledOut[$enabledMountPoint] = $out[$enabledMountPoint];
-        	}
-        	else {
-        	    //TODO fix this hack (here for CC-5254)
-        	    //all shoutcast streams are automatically put under "shoutcast" mount point.
-        	    if (isset($out["shoutcast"])) {
-        	        $enabledOut["shoutcast"] = $out["shoutcast"];
-        	    }
-        	}
+            if (isset($out[$enabledMountPoint])) {
+                $enabledOut[$enabledMountPoint] = $out[$enabledMountPoint];
+            } else {
+                //TODO fix this hack (here for CC-5254)
+                //all shoutcast streams are automatically put under "shoutcast" mount point.
+                if (isset($out['shoutcast'])) {
+                    $enabledOut['shoutcast'] = $out['shoutcast'];
+                }
+            }
         }
 
         return $enabledOut;
     }
-// this will currently log the average number of listeners to a specific show during a certain range
-    public static function getShowDataPointsWithinRange($p_start, $p_end, $show_id) {
+
+    // this will currently log the average number of listeners to a specific show during a certain range
+    public static function getShowDataPointsWithinRange($p_start, $p_end, $show_id)
+    {
         $showData = [];
         $ccShow = CcShowQuery::create()->findPk($show_id);
         $showName = $ccShow->getDbName();
 
-
         // this query selects all show instances that aired in this date range that match the show_id
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 SELECT id, starts, ends FROM cc_show_instances WHERE show_id =:p1 
 AND starts >=:p2 AND ends <=:p3
 SQL;
-        $data = Application_Common_Database::prepareAndExecute($sql,
-            array('p1'=>$show_id,'p2'=>$p_start, 'p3'=>$p_end));
+        $data = Application_Common_Database::prepareAndExecute(
+            $sql,
+            ['p1' => $show_id, 'p2' => $p_start, 'p3' => $p_end]
+        );
         foreach ($data as $d) {
-            $sql = <<<SQL
+            $sql = <<<'SQL'
 SELECT timestamp, SUM(listener_count) AS listeners
     FROM cc_listener_count AS lc
     INNER JOIN cc_timestamp AS ts ON (lc.timestamp_id = ts.ID)
@@ -101,9 +108,11 @@ SELECT timestamp, SUM(listener_count) AS listeners
 WHERE (ts.timestamp >=:p1 AND ts.timestamp <=:p2)
 GROUP BY timestamp
 SQL;
-            $data = Application_Common_Database::prepareAndExecute($sql,
-                array('p1'=>$d['starts'], 'p2'=>$d['ends']));
-            $utcTimezone = new DateTimeZone("UTC");
+            $data = Application_Common_Database::prepareAndExecute(
+                $sql,
+                ['p1' => $d['starts'], 'p2' => $d['ends']]
+            );
+            $utcTimezone = new DateTimeZone('UTC');
             $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
             if (sizeof($data) > 0) {
                 $t = new DateTime($data[0]['timestamp'], $utcTimezone);
@@ -111,27 +120,31 @@ SQL;
                 // tricking javascript so it thinks the server timezone is in UTC
                 $average_listeners = array_sum(array_column($data, 'listeners')) / sizeof($data);
                 $max_num_listeners = max(array_column($data, 'listeners'));
-                $entry = array("show" => $showName, "time" => $t->format( 'Y-m-d H:i:s')
-                , "average_number_of_listeners" => $average_listeners,
-                    "maximum_number_of_listeners" => $max_num_listeners);
+                $entry = ['show' => $showName, 'time' => $t->format('Y-m-d H:i:s'), 'average_number_of_listeners' => $average_listeners,
+                    'maximum_number_of_listeners' => $max_num_listeners, ];
                 array_push($showData, $entry);
             }
-            }
-            return($showData);
+        }
+
+        return $showData;
     }
-    public static function getAllShowDataPointsWithinRange($p_start, $p_end) {
+
+    public static function getAllShowDataPointsWithinRange($p_start, $p_end)
+    {
         // this query selects the id of all show instances that aired in this date range
         $all_show_data = [];
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 SELECT show_id FROM cc_show_instances 
 WHERE starts >=:p1 AND ends <=:p2
 GROUP BY show_id
 SQL;
-        $data = Application_Common_Database::prepareAndExecute($sql,
-            array('p1'=>$p_start, 'p2'=>$p_end));
+        $data = Application_Common_Database::prepareAndExecute(
+            $sql,
+            ['p1' => $p_start, 'p2' => $p_end]
+        );
 
-        foreach($data as $show_id) {
-            $all_show_data = array_merge(self::getShowDataPointsWithinRange($p_start,$p_end,$show_id['show_id']), $all_show_data);
+        foreach ($data as $show_id) {
+            $all_show_data = array_merge(self::getShowDataPointsWithinRange($p_start, $p_end, $show_id['show_id']), $all_show_data);
         }
         /* option to sort by number of listeners currently commented out
         usort($all_show_data, function($a, $b) {
@@ -141,32 +154,33 @@ SQL;
         return $all_show_data;
     }
 
-    public static function insertDataPoints($p_dataPoints) {
+    public static function insertDataPoints($p_dataPoints)
+    {
+        $timestamp_sql = 'INSERT INTO cc_timestamp (timestamp) VALUES
+            (:ts::TIMESTAMP) RETURNING id;';
 
+        $mount_name_check_sql = 'SELECT id from cc_mount_name WHERE
+            mount_name = :mn;';
 
-        $timestamp_sql = "INSERT INTO cc_timestamp (timestamp) VALUES
-            (:ts::TIMESTAMP) RETURNING id;";
+        $mount_name_insert_sql = 'INSERT INTO cc_mount_name (mount_name) VALUES
+                (:mn) RETURNING id;';
 
-        $mount_name_check_sql = "SELECT id from cc_mount_name WHERE
-            mount_name = :mn;";
-
-        $mount_name_insert_sql = "INSERT INTO cc_mount_name (mount_name) VALUES
-                (:mn) RETURNING id;";
-
-        $stats_sql = "INSERT INTO cc_listener_count (timestamp_id,
+        $stats_sql = 'INSERT INTO cc_listener_count (timestamp_id,
             listener_count, mount_name_id) VALUES (:timestamp_id,
-            :listener_count, :mount_name_id)";
+            :listener_count, :mount_name_id)';
 
         foreach ($p_dataPoints as $dp) {
             $timestamp_id = Application_Common_Database::prepareAndExecute(
                 $timestamp_sql,
-                array('ts'=> $dp['timestamp']),
-                "column");
+                ['ts' => $dp['timestamp']],
+                'column'
+            );
 
             $mount_name_id = Application_Common_Database::prepareAndExecute(
                 $mount_name_check_sql,
-                array('mn' => $dp['mount_name']),
-                "column");
+                ['mn' => $dp['mount_name']],
+                'column'
+            );
 
             if (strlen($mount_name_id) == 0) {
                 //there is a race condition here where theoretically the row
@@ -174,20 +188,18 @@ SQL;
                 //unlikely and won't break anything even if it happens.
                 $mount_name_id = Application_Common_Database::prepareAndExecute(
                     $mount_name_insert_sql,
-                    array('mn' => $dp['mount_name']),
-                    "column");
+                    ['mn' => $dp['mount_name']],
+                    'column'
+                );
             }
 
-            Application_Common_Database::prepareAndExecute($stats_sql,
-                array('timestamp_id' => $timestamp_id,
-                'listener_count' => $dp["num_listeners"],
-                'mount_name_id' => $mount_name_id,
-                )
+            Application_Common_Database::prepareAndExecute(
+                $stats_sql,
+                ['timestamp_id' => $timestamp_id,
+                    'listener_count' => $dp['num_listeners'],
+                    'mount_name_id' => $mount_name_id,
+                ]
             );
         }
-
     }
-
-
-
 }

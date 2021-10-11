@@ -1,7 +1,7 @@
 <?php
 
-class PodcastManager {
-
+class PodcastManager
+{
     /**
      * @var int how often, in seconds, to check for and ingest new podcast episodes
      */
@@ -9,23 +9,26 @@ class PodcastManager {
 
     /**
      * Check whether $_PODCAST_POLL_INTERVAL_SECONDS have passed since the last call to
-     * downloadNewestEpisodes
+     * downloadNewestEpisodes.
      *
      * @return bool true if $_PODCAST_POLL_INTERVAL_SECONDS has passed since the last check
      */
-    public static function hasPodcastPollIntervalPassed() {
+    public static function hasPodcastPollIntervalPassed()
+    {
         $lastPolled = Application_Model_Preference::getPodcastPollLock();
+
         return empty($lastPolled) || (microtime(true) > $lastPolled + self::$_PODCAST_POLL_INTERVAL_SECONDS);
     }
 
     /**
      * Find all podcasts flagged for automatic ingest whose most recent episode has
-     * yet to be downloaded and download it with Celery
+     * yet to be downloaded and download it with Celery.
      *
      * @throws InvalidPodcastException
      * @throws PodcastNotFoundException
      */
-    public static function downloadNewestEpisodes() {
+    public static function downloadNewestEpisodes()
+    {
         $autoIngestPodcasts = static::_getAutoIngestPodcasts();
         $service = new Application_Service_PodcastEpisodeService();
         foreach ($autoIngestPodcasts as $podcast) {
@@ -46,59 +49,67 @@ class PodcastManager {
 
     /**
      * Given an ImportedPodcast, find all uningested episodes since the last automatic ingest,
-     * and add them to a given episodes array
+     * and add them to a given episodes array.
      *
-     * @param ImportedPodcast $podcast                            the podcast to search
-     * @param Application_Service_PodcastEpisodeService $service  podcast episode service object
+     * @param ImportedPodcast                           $podcast the podcast to search
+     * @param Application_Service_PodcastEpisodeService $service podcast episode service object
      *
      * @return array array of episodes to append be downloaded
      */
-    protected static function _findUningestedEpisodes($podcast, $service) {
+    protected static function _findUningestedEpisodes($podcast, $service)
+    {
         $episodeList = $service->getPodcastEpisodes($podcast->getDbPodcastId());
-        $episodes = array();
-        usort($episodeList, array(__CLASS__, "_sortByEpisodePubDate"));
-        for ($i = 0; $i < sizeof($episodeList); $i++) {
+        $episodes = [];
+        usort($episodeList, [__CLASS__, '_sortByEpisodePubDate']);
+        for ($i = 0; $i < sizeof($episodeList); ++$i) {
             $episodeData = $episodeList[$i];
             $ts = $podcast->getDbAutoIngestTimestamp();
             // If the timestamp for this podcast is empty (no previous episodes have been ingested) and there are no
             //  episodes in the list of episodes to ingest, don't skip this episode - we should try to ingest the
             //  most recent episode when the user first sets the podcast to automatic ingest.
             // If the publication date of this episode is before the ingest timestamp, we don't need to ingest it
-            if ((empty($ts) && ($i > 0)) || strtotime($episodeData["pub_date"]) < strtotime($ts)) {
+            if ((empty($ts) && ($i > 0)) || strtotime($episodeData['pub_date']) < strtotime($ts)) {
                 continue;
             }
-            $episode = PodcastEpisodesQuery::create()->findOneByDbEpisodeGuid($episodeData["guid"]);
+            $episode = PodcastEpisodesQuery::create()->findOneByDbEpisodeGuid($episodeData['guid']);
             // Make sure there's no existing episode placeholder or import, and that the data is non-empty
             if (empty($episode) && !empty($episodeData)) {
                 $placeholder = $service->addPlaceholder($podcast->getDbPodcastId(), $episodeData);
                 array_push($episodes, $placeholder);
             }
         }
+
         return $episodes;
     }
 
     /**
-     * Find all podcasts flagged for automatic ingest
+     * Find all podcasts flagged for automatic ingest.
      *
      * @return PropelObjectCollection collection of ImportedPodcast objects
      *                                flagged for automatic ingest
      */
-    protected static function _getAutoIngestPodcasts() {
+    protected static function _getAutoIngestPodcasts()
+    {
         return ImportedPodcastQuery::create()
             ->filterByDbAutoIngest(true)
-            ->find();
+            ->find()
+        ;
     }
 
     /**
-     * Custom sort function for podcast episodes
+     * Custom sort function for podcast episodes.
      *
      * @param array $a first episode array to compare
      * @param array $b second episode array to compare
+     *
      * @return bool boolean for ordering
      */
-    protected static function _sortByEpisodePubDate($a, $b) {
-        if ($a["pub_date"] == $b["pub_date"]) return 0;
-        return (strtotime($a["pub_date"]) < strtotime($b["pub_date"])) ? 1 : -1;  // Descending order
-    }
+    protected static function _sortByEpisodePubDate($a, $b)
+    {
+        if ($a['pub_date'] == $b['pub_date']) {
+            return 0;
+        }
 
+        return (strtotime($a['pub_date']) < strtotime($b['pub_date'])) ? 1 : -1;  // Descending order
+    }
 }

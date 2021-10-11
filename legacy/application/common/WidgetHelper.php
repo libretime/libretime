@@ -1,6 +1,6 @@
 <?php
 
-define("DAYS_PER_WEEK", 7);
+define('DAYS_PER_WEEK', 7);
 
 class WidgetHelper
 {
@@ -9,11 +9,11 @@ class WidgetHelper
         //weekStart is in station time.
         $weekStartDateTime = Application_Common_DateHelper::getWeekStartDateTime();
 
-        $dow = array("monday", "tuesday", "wednesday", "thursday", "friday",
-            "saturday", "sunday", "nextmonday", "nexttuesday", "nextwednesday",
-            "nextthursday", "nextfriday", "nextsaturday", "nextsunday");
+        $dow = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday',
+            'saturday', 'sunday', 'nextmonday', 'nexttuesday', 'nextwednesday',
+            'nextthursday', 'nextfriday', 'nextsaturday', 'nextsunday', ];
 
-        $result = array();
+        $result = [];
 
         // default to the station timezone
         $timezone = Application_Model_Preference::GetDefaultTimezone();
@@ -24,11 +24,11 @@ class WidgetHelper
                 $timezone = $userDefinedTimezone;
             }
         }
-        $utcTimezone = new DateTimeZone("UTC");
+        $utcTimezone = new DateTimeZone('UTC');
 
         $weekStartDateTime->setTimezone($utcTimezone);
         $utcDayStart = $weekStartDateTime->format(DEFAULT_TIMESTAMP_FORMAT);
-        for ($i = 0; $i < 14; $i++) {
+        for ($i = 0; $i < 14; ++$i) {
             //have to be in station timezone when adding 1 day for daylight savings.
             $weekStartDateTime->setTimezone(new DateTimeZone($timezone));
             $weekStartDateTime->add(new DateInterval('P1D'));
@@ -37,13 +37,13 @@ class WidgetHelper
             $weekStartDateTime->setTimezone($utcTimezone);
 
             $utcDayEnd = $weekStartDateTime->format(DEFAULT_TIMESTAMP_FORMAT);
-            $shows = Application_Model_Show::getNextShows($utcDayStart, "ALL", $utcDayEnd);
+            $shows = Application_Model_Show::getNextShows($utcDayStart, 'ALL', $utcDayEnd);
             $utcDayStart = $utcDayEnd;
 
             // convert to user-defined timezone, or default to station
             Application_Common_DateHelper::convertTimestampsToTimezone(
                 $shows,
-                array("starts", "ends", "start_timestamp","end_timestamp"),
+                ['starts', 'ends', 'start_timestamp', 'end_timestamp'],
                 $timezone
             );
 
@@ -61,7 +61,7 @@ class WidgetHelper
 
     /**
      * Returns a weeks worth of shows in UTC, and an info array of the current week's days.
-     * Returns an array of two arrays:
+     * Returns an array of two arrays:.
      *
      * The first array is 7 consecutive week days, starting with the current day.
      *
@@ -77,11 +77,11 @@ class WidgetHelper
      */
     public static function getWeekInfoV2()
     {
-        $weekStartDateTime = new DateTime("now", new DateTimeZone(Application_Model_Preference::GetTimezone()));
+        $weekStartDateTime = new DateTime('now', new DateTimeZone(Application_Model_Preference::GetTimezone()));
 
-        $result = array();
+        $result = [];
 
-        $utcTimezone = new DateTimeZone("UTC");
+        $utcTimezone = new DateTimeZone('UTC');
 
         $weekStartDateTime->setTimezone($utcTimezone);
 
@@ -90,23 +90,23 @@ class WidgetHelper
         // schedule widget data to account for show date changes when
         // converting their start day/time to the client's local timezone.
         $showQueryDateRangeStart = clone $weekStartDateTime;
-        $showQueryDateRangeStart->sub(new DateInterval("P1D"));
+        $showQueryDateRangeStart->sub(new DateInterval('P1D'));
         $showQueryDateRangeStart->setTime(0, 0, 0);
 
-        for ($dayOfWeekCounter = 0; $dayOfWeekCounter < DAYS_PER_WEEK; $dayOfWeekCounter++) {
-            $dateParse = date_parse($weekStartDateTime->format("Y-m-d H:i:s"));
+        for ($dayOfWeekCounter = 0; $dayOfWeekCounter < DAYS_PER_WEEK; ++$dayOfWeekCounter) {
+            $dateParse = date_parse($weekStartDateTime->format('Y-m-d H:i:s'));
 
             // Associate data to its date so that when we convert this array
             // to json the order remains the same - in chronological order.
             // We also format the key to be for example: "2015-6-1" to match
             // javascript date formats so it's easier to sort the shows by day.
-            $result["weekDays"][$weekStartDateTime->format("Y-n-j")] = array();
-            $result["weekDays"][$weekStartDateTime->format("Y-n-j")]["dayOfMonth"] = $dateParse["day"];
-            $result["weekDays"][$weekStartDateTime->format("Y-n-j")]["dayOfWeek"] = strtoupper(_(date("D", $weekStartDateTime->getTimestamp())));
+            $result['weekDays'][$weekStartDateTime->format('Y-n-j')] = [];
+            $result['weekDays'][$weekStartDateTime->format('Y-n-j')]['dayOfMonth'] = $dateParse['day'];
+            $result['weekDays'][$weekStartDateTime->format('Y-n-j')]['dayOfWeek'] = strtoupper(_(date('D', $weekStartDateTime->getTimestamp())));
 
             // Shows scheduled for this day will get added to this array when
             // we convert the show times to the client's local timezone in weekly-program.phtml
-            $result["weekDays"][$weekStartDateTime->format("Y-n-j")]["shows"] = array();
+            $result['weekDays'][$weekStartDateTime->format('Y-n-j')]['shows'] = [];
 
             // $weekStartDateTime has to be in station timezone when adding 1 day for daylight savings.
             // TODO: is this necessary since we set the time to "00:00" ?
@@ -127,21 +127,22 @@ class WidgetHelper
         $showQueryDateRangeEnd->setTime(23, 59, 0);
 
         $shows = Application_Model_Show::getNextShows(
-            $showQueryDateRangeStart->format("Y-m-d H:i:s"),
-            "ALL",
-            $showQueryDateRangeEnd->format("Y-m-d H:i:s"));
+            $showQueryDateRangeStart->format('Y-m-d H:i:s'),
+            'ALL',
+            $showQueryDateRangeEnd->format('Y-m-d H:i:s')
+        );
 
         // Convert each start and end time string to DateTime objects
         // so we can get a real timestamp. The timestamps will be used
         // to convert into javascript Date objects.
-        foreach($shows as &$show) {
-            $dtStarts = new DateTime($show["starts"], new DateTimeZone("UTC"));
-            $show["starts_timestamp"] = $dtStarts->getTimestamp();
+        foreach ($shows as &$show) {
+            $dtStarts = new DateTime($show['starts'], new DateTimeZone('UTC'));
+            $show['starts_timestamp'] = $dtStarts->getTimestamp();
 
-            $dtEnds = new DateTime($show["ends"], new DateTimeZone("UTC"));
-            $show["ends_timestamp"] = $dtEnds->getTimestamp();
+            $dtEnds = new DateTime($show['ends'], new DateTimeZone('UTC'));
+            $show['ends_timestamp'] = $dtEnds->getTimestamp();
         }
-        $result["shows"] = $shows;
+        $result['shows'] = $shows;
 
         // convert image paths to point to api endpoints
         //TODO: do we need this here?
@@ -152,7 +153,7 @@ class WidgetHelper
 
     /**
      * Recursively find image_path keys in the various $result subarrays,
-     * and convert them to point to the show-logo endpoint
+     * and convert them to point to the show-logo endpoint.
      *
      * @param unknown $arr the array to search
      */
@@ -163,9 +164,9 @@ class WidgetHelper
 
         foreach ($arr as &$a) {
             if (is_array($a)) {
-                if (array_key_exists("image_path", $a)) {
-                    $a["image_path"] = $a["image_path"] && $a["image_path"] !== '' ?
-                        Application_Common_HTTPHelper::getStationUrl()."api/show-logo?id=".$a["id"] : '';
+                if (array_key_exists('image_path', $a)) {
+                    $a['image_path'] = $a['image_path'] && $a['image_path'] !== '' ?
+                        Application_Common_HTTPHelper::getStationUrl() . 'api/show-logo?id=' . $a['id'] : '';
                 } else {
                     self::findAndConvertPaths($a);
                 }

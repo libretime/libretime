@@ -7,9 +7,7 @@ class SamplerateFormatter
      */
     private $_samplerate;
 
-    /*
-     * @param string $samplerate Hz
-     */
+    // @param string $samplerate Hz
     public function __construct($samplerate)
     {
         $this->_samplerate = $samplerate;

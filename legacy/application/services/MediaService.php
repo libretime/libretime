@@ -2,8 +2,7 @@
 
 class Application_Service_MediaService
 {
-
-    const PENDING_FILE_TIMEOUT_SECONDS = 3600;
+    public const PENDING_FILE_TIMEOUT_SECONDS = 3600;
 
     /**
      * @var array store an internal array of the pending files so we don't have
@@ -12,24 +11,27 @@ class Application_Service_MediaService
     private static $_pendingFiles;
 
     /** Move (or copy) a file to the stor/organize directory and send it off to the
-    analyzer to be processed.
+     * analyzer to be processed.
+     *
      * @param $callbackUrl
      * @param $filePath string Path to the local file to import to the library
-     * @param $originalFilename string The original filename, if you want it to be preserved after import.
-     * @param $ownerId string The ID of the user that will own the file inside Airtime.
+     * @param $originalFilename string The original filename, if you want it to be preserved after import
+     * @param $ownerId string The ID of the user that will own the file inside Airtime
      * @param $copyFile bool True if you want to copy the file to the "organize" directory, false if you want to move it (default)
-     * @return Ambigous
+     *
      * @throws Exception
+     *
+     * @return Ambigous
      */
     public static function importFileToLibrary($callbackUrl, $filePath, $originalFilename, $ownerId, $copyFile)
     {
         $CC_CONFIG = Config::getConfig();
-        $apiKey = $CC_CONFIG["apiKey"][0];
+        $apiKey = $CC_CONFIG['apiKey'][0];
 
-        $importedStorageDirectory = "";
-        if ($CC_CONFIG["current_backend"] == "file") {
+        $importedStorageDirectory = '';
+        if ($CC_CONFIG['current_backend'] == 'file') {
             $storDir = Application_Model_MusicDir::getStorDir();
-            $importedStorageDirectory = $storDir->getDirectory() . "/imported/" . $ownerId;
+            $importedStorageDirectory = $storDir->getDirectory() . '/imported/' . $ownerId;
         }
 
         //Copy the temporary file over to the "organize" folder so that it's off our webserver
@@ -38,24 +40,28 @@ class Application_Service_MediaService
 
         //Dispatch a message to libretime-analyzer through RabbitMQ,
         //notifying it that there's a new upload to process!
-        $storageBackend = new ProxyStorageBackend($CC_CONFIG["current_backend"]);
-        Application_Model_RabbitMq::SendMessageToAnalyzer($newTempFilePath,
-            $importedStorageDirectory, basename($originalFilename),
-            $callbackUrl, $apiKey,
-            $CC_CONFIG["current_backend"],
-            $storageBackend->getFilePrefix());
+        $storageBackend = new ProxyStorageBackend($CC_CONFIG['current_backend']);
+        Application_Model_RabbitMq::SendMessageToAnalyzer(
+            $newTempFilePath,
+            $importedStorageDirectory,
+            basename($originalFilename),
+            $callbackUrl,
+            $apiKey,
+            $CC_CONFIG['current_backend'],
+            $storageBackend->getFilePrefix()
+        );
 
         return $newTempFilePath;
     }
 
-
     /**
      * @param $fileId
      * @param bool $inline Set the Content-Disposition header to inline to prevent a download dialog from popping up (or attachment if false)
+     *
      * @throws Exception
      * @throws LibreTimeFileNotFoundException
      */
-    public static function streamFileDownload($fileId, $inline=false)
+    public static function streamFileDownload($fileId, $inline = false)
     {
         $media = Application_Model_StoredFile::RecallById($fileId);
         if ($media == null) {
@@ -64,7 +70,7 @@ class Application_Service_MediaService
         // Make sure we don't have some wrong result because of caching
         clearstatcache();
 
-        $filePath = "";
+        $filePath = '';
 
         if ($media->getPropelOrm()->isValidPhysicalFile()) {
             $filename = $media->getPropelOrm()->getFilename();
@@ -96,10 +102,12 @@ class Application_Service_MediaService
             do {
                 //Read from $filePath and stream it to the browser.
                 $filePath = array_shift($filePaths);
+
                 try {
-                    $size= $media->getFileSize();
+                    $size = $media->getFileSize();
                     $mimeType = $media->getPropelOrm()->getDbMime();
                     Application_Common_FileIO::smartReadFile($filePath, $size, $mimeType);
+
                     break; //Break out of the loop if we successfully read the file!
                 } catch (LibreTimeFileNotFoundException $e) {
                     //If we have no alternate filepaths left, then let the exception bubble up.
@@ -111,43 +119,44 @@ class Application_Service_MediaService
             } while (sizeof($filePaths) > 0);
 
             exit;
-
-        } else {
-            throw new LibreTimeFileNotFoundException($filePath);
         }
+
+        throw new LibreTimeFileNotFoundException($filePath);
     }
 
     /**
      * Check if there are any files that have been stuck
-     * in Pending status for over an hour
+     * in Pending status for over an hour.
      *
      * @return bool true if there are any files stuck pending,
      *              otherwise false
      */
-    public static function areFilesStuckInPending() {
+    public static function areFilesStuckInPending()
+    {
         $oneHourAgo = gmdate(DEFAULT_TIMESTAMP_FORMAT, (microtime(true) - self::PENDING_FILE_TIMEOUT_SECONDS));
         self::$_pendingFiles = CcFilesQuery::create()
             ->filterByDbImportStatus(CcFiles::IMPORT_STATUS_PENDING)
             ->filterByDbUtime($oneHourAgo, Criteria::LESS_EQUAL)
-            ->find();
+            ->find()
+        ;
         $pendingEpisodes = Application_Service_PodcastEpisodeService::getStuckPendingImports();
+
         return !self::$_pendingFiles->isEmpty() || !empty($pendingEpisodes);
     }
 
     /**
-     * Clean up stuck imports by changing their import status to Failed
+     * Clean up stuck imports by changing their import status to Failed.
      */
-    public static function clearStuckPendingImports() {
+    public static function clearStuckPendingImports()
+    {
         $pendingEpisodes = Application_Service_PodcastEpisodeService::getStuckPendingImports();
         foreach (self::$_pendingFiles as $file) {
-            /** @var $file CcFiles */
+            // @var $file CcFiles
             $file->setDbImportStatus(CcFiles::IMPORT_STATUS_FAILED)->save();
         }
         foreach ($pendingEpisodes as $episode) {
-            /** @var $episode PodcastEpisodes */
+            // @var $episode PodcastEpisodes
             $episode->delete();
         }
     }
-
 }
-

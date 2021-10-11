@@ -2,11 +2,11 @@
 
 class Application_Validate_UserNameValidate extends Zend_Validate_Abstract
 {
-    const LOGIN = 'login';
+    public const LOGIN = 'login';
 
-    protected $_messageTemplates = array(
-        self::LOGIN => "'%value%' is already taken"
-    );
+    protected $_messageTemplates = [
+        self::LOGIN => "'%value%' is already taken",
+    ];
 
     public function isValid($value)
     {
@@ -16,10 +16,10 @@ class Application_Validate_UserNameValidate extends Zend_Validate_Abstract
 
         if ($count != 0) {
             $this->_error(self::LOGIN);
+
             return false;
         }
 
         return true;
     }
 }
-

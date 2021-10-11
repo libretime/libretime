@@ -1,6 +1,7 @@
 <?php
-Class Application_Form_Helper_ValidationTypes {
 
+class Application_Form_Helper_ValidationTypes
+{
     public static function overrideNotEmptyValidator()
     {
         $validator = new Zend_Validate_NotEmpty();
@@ -11,7 +12,7 @@ Class Application_Form_Helper_ValidationTypes {
 
         return $validator;
     }
-    
+
     public static function overrideEmailAddressValidator()
     {
         $validator = new Zend_Validate_EmailAddress();
@@ -48,7 +49,7 @@ Class Application_Form_Helper_ValidationTypes {
 
         return $validator;
     }
-    
+
     public static function overrideStringLengthValidator($p_min, $p_max)
     {
         $validator = new Zend_Validate_StringLength();
@@ -86,11 +87,10 @@ Class Application_Form_Helper_ValidationTypes {
         $validator->setToken($p_matchAgainst);
 
         $validator->setMessage(
-            _("Passwords do not match"),
+            _('Passwords do not match'),
             Zend_Validate_Identical::NOT_SAME
         );
 
         return $validator;
     }
-    
 }

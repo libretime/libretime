@@ -1,28 +1,23 @@
 <?php
 
-interface Publish {
-
+interface Publish
+{
     /**
-     * Publish the file with the given file ID
+     * Publish the file with the given file ID.
      *
      * @param int $fileId ID of the file to be published
-     *
-     * @return void
      */
     public function publish($fileId);
 
     /**
-     * Unpublish the file with the given file ID
+     * Unpublish the file with the given file ID.
      *
      * @param int $fileId ID of the file to be unpublished
-     *
-     * @return void
      */
     public function unpublish($fileId);
 
-
     /**
-     * Fetch the publication status for the file with the given ID
+     * Fetch the publication status for the file with the given ID.
      *
      * @param int $fileId the ID of the file to check
      *
@@ -32,5 +27,4 @@ interface Publish {
      *             2 if the source is unreachable (disconnected)
      */
     public function getPublishStatus($fileId);
-
 }

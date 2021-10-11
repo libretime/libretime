@@ -1,28 +1,29 @@
 <?php
+
 class UsersettingsController extends Zend_Controller_Action
 {
-
     public function init()
     {
-        /* Initialize action controller here */
+        // Initialize action controller here
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('get-now-playing-screen-settings', 'json')
-                    ->addActionContext('set-now-playing-screen-settings', 'json')
-                    ->addActionContext('get-library-datatable', 'json')
-                    ->addActionContext('set-library-datatable', 'json')
-                    ->addActionContext('get-timeline-datatable', 'json')
-                    ->addActionContext('set-timeline-datatable', 'json')
-                    ->addActionContext('remindme', 'json')
-                    ->addActionContext('remindme-never', 'json')
-                    ->addActionContext('donotshowregistrationpopup', 'json')
-                    ->addActionContext('set-library-screen-settings', 'json')
-                    ->initContext();
+            ->addActionContext('set-now-playing-screen-settings', 'json')
+            ->addActionContext('get-library-datatable', 'json')
+            ->addActionContext('set-library-datatable', 'json')
+            ->addActionContext('get-timeline-datatable', 'json')
+            ->addActionContext('set-timeline-datatable', 'json')
+            ->addActionContext('remindme', 'json')
+            ->addActionContext('remindme-never', 'json')
+            ->addActionContext('donotshowregistrationpopup', 'json')
+            ->addActionContext('set-library-screen-settings', 'json')
+            ->initContext()
+        ;
     }
 
     public function setNowPlayingScreenSettingsAction()
     {
         $request = $this->getRequest();
-        $settings = $request->getParam("settings");
+        $settings = $request->getParam('settings');
 
         Application_Model_Preference::setNowPlayingScreenSettings($settings);
     }
@@ -38,7 +39,7 @@ class UsersettingsController extends Zend_Controller_Action
     public function setLibraryDatatableAction()
     {
         $request = $this->getRequest();
-        $settings = $request->getParam("settings");
+        $settings = $request->getParam('settings');
 
         Application_Model_Preference::setCurrentLibraryTableSetting($settings);
     }
@@ -56,7 +57,7 @@ class UsersettingsController extends Zend_Controller_Action
     public function setTimelineDatatableAction()
     {
         $request = $this->getRequest();
-        $settings = $request->getParam("settings");
+        $settings = $request->getParam('settings');
 
         Application_Model_Preference::setTimelineDatatableSetting($settings);
     }
@@ -76,7 +77,7 @@ class UsersettingsController extends Zend_Controller_Action
         Zend_Session::namespaceUnset('referrer');
         Application_Model_Preference::SetRemindMeDate();
     }
-    
+
     public function remindmeNeverAction()
     {
         SessionHelper::reopenSessionForWriting();
@@ -95,7 +96,7 @@ class UsersettingsController extends Zend_Controller_Action
     public function setLibraryScreenSettingsAction()
     {
         $request = $this->getRequest();
-        $settings = $request->getParam("settings");
+        $settings = $request->getParam('settings');
         Application_Model_Preference::setLibraryScreenSettings($settings);
     }
 }

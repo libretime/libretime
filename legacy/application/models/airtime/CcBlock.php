@@ -1,27 +1,23 @@
 <?php
 
-
-
 /**
  * Skeleton subclass for representing a row from the 'cc_block' table.
- *
- * 
  *
  * You should add additional methods to this class to meet the
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
- *
- * @package    propel.generator.airtime
  */
-class CcBlock extends BaseCcBlock {
-/**
+class CcBlock extends BaseCcBlock
+{
+    /**
      * Get the [optionally formatted] temporal [utime] column value.
      *
+     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     *                       If format is NULL, then the raw DateTime object will be returned.
      *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                          If format is NULL, then the raw DateTime object will be returned.
-     * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
-     * @throws     PropelException - if unable to parse/validate the date/time value.
+     * @throws propelException - if unable to parse/validate the date/time value
+     *
+     * @return mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
      */
     public function getDbUtime($format = 'Y-m-d H:i:s')
     {
@@ -30,29 +26,31 @@ class CcBlock extends BaseCcBlock {
         }
 
         try {
-            $dt = new DateTime($this->utime, new DateTimeZone("UTC"));
+            $dt = new DateTime($this->utime, new DateTimeZone('UTC'));
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->utime, true), $x);
+            throw new PropelException('Internally stored date/time/timestamp value could not be converted to DateTime: ' . var_export($this->utime, true), $x);
         }
 
         if ($format === null) {
             // Because propel.useDateTimeClass is TRUE, we return a DateTime object.
             return $dt;
-        } elseif (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        } else {
-            return $dt->format($format);
         }
+        if (strpos($format, '%') !== false) {
+            return strftime($format, $dt->format('U'));
+        }
+
+        return $dt->format($format);
     }
 
     /**
      * Get the [optionally formatted] temporal [mtime] column value.
      *
+     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     *                       If format is NULL, then the raw DateTime object will be returned.
      *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                          If format is NULL, then the raw DateTime object will be returned.
-     * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
-     * @throws     PropelException - if unable to parse/validate the date/time value.
+     * @throws propelException - if unable to parse/validate the date/time value
+     *
+     * @return mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
      */
     public function getDbMtime($format = 'Y-m-d H:i:s')
     {
@@ -61,19 +59,20 @@ class CcBlock extends BaseCcBlock {
         }
 
         try {
-            $dt = new DateTime($this->mtime, new DateTimeZone("UTC"));
+            $dt = new DateTime($this->mtime, new DateTimeZone('UTC'));
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->mtime, true), $x);
+            throw new PropelException('Internally stored date/time/timestamp value could not be converted to DateTime: ' . var_export($this->mtime, true), $x);
         }
 
         if ($format === null) {
             // Because propel.useDateTimeClass is TRUE, we return a DateTime object.
             return $dt;
-        } elseif (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        } else {
-            return $dt->format($format);
         }
+        if (strpos($format, '%') !== false) {
+            return strftime($format, $dt->format('U'));
+        }
+
+        return $dt->format($format);
     }
 
     /**
@@ -86,7 +85,7 @@ class CcBlock extends BaseCcBlock {
      */
     public function computeDbLength(PropelPDO $con)
     {
-        $sql = <<<SQL
+        $sql = <<<'SQL'
         SELECT SUM(cliplength) FROM cc_blockcontents as bc
         JOIN cc_files as f ON bc.file_id = f.id
         WHERE BLOCK_ID = :b1
@@ -98,7 +97,7 @@ SQL;
         $length = $stmt->fetchColumn();
 
         if (is_null($length)) {
-            $length = "00:00:00";
+            $length = '00:00:00';
         }
 
         return $length;

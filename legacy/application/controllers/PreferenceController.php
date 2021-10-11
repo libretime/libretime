@@ -2,21 +2,21 @@
 
 class PreferenceController extends Zend_Controller_Action
 {
-
     public function init()
     {
-        /* Initialize action controller here */
+        // Initialize action controller here
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('server-browse', 'json')
-                    ->addActionContext('change-stor-directory', 'json')
-                    ->addActionContext('reload-watch-directory', 'json')
-                    ->addActionContext('remove-watch-directory', 'json')
-                    ->addActionContext('is-import-in-progress', 'json')
-                    ->addActionContext('change-stream-setting', 'json')
-                    ->addActionContext('get-liquidsoap-status', 'json')
-                    ->addActionContext('set-source-connection-url', 'json')
-                    ->addActionContext('get-admin-password-status', 'json')
-                    ->initContext();
+            ->addActionContext('change-stor-directory', 'json')
+            ->addActionContext('reload-watch-directory', 'json')
+            ->addActionContext('remove-watch-directory', 'json')
+            ->addActionContext('is-import-in-progress', 'json')
+            ->addActionContext('change-stream-setting', 'json')
+            ->addActionContext('get-liquidsoap-status', 'json')
+            ->addActionContext('set-source-connection-url', 'json')
+            ->addActionContext('get-admin-password-status', 'json')
+            ->initContext()
+        ;
     }
 
     public function indexAction()
@@ -28,54 +28,53 @@ class PreferenceController extends Zend_Controller_Action
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/preferences.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->statusMsg = "";
+        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/preferences/preferences.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->statusMsg = '';
 
         $form = new Application_Form_Preferences();
-        $values = array();
+        $values = [];
 
         SessionHelper::reopenSessionForWriting();
 
         if ($request->isPost()) {
             $values = $request->getPost();
-            if ($form->isValid($values))
-            {
-                Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
-                Application_Model_Preference::SetStationDescription($values["stationDescription"]);
-                Application_Model_Preference::SetTrackTypeDefault($values["tracktypeDefault"]);
-                Application_Model_Preference::SetDefaultCrossfadeDuration($values["stationDefaultCrossfadeDuration"]);
-                Application_Model_Preference::SetDefaultFadeIn($values["stationDefaultFadeIn"]);
-                Application_Model_Preference::SetDefaultFadeOut($values["stationDefaultFadeOut"]);
-                Application_Model_Preference::SetPodcastAlbumOverride($values["podcastAlbumOverride"]);
-                Application_Model_Preference::SetPodcastAutoSmartblock($values["podcastAutoSmartblock"]);
-                Application_Model_Preference::SetIntroPlaylist($values["introPlaylistSelect"]);
-                Application_Model_Preference::SetOutroPlaylist($values["outroPlaylistSelect"]);
-                Application_Model_Preference::SetAllow3rdPartyApi($values["thirdPartyApi"]);
-                Application_Model_Preference::SetAllowedCorsUrls($values["allowedCorsUrls"]);
-                Application_Model_Preference::SetDefaultLocale($values["locale"]);
-                Application_Model_Preference::SetDefaultTimezone($values["timezone"]);
-                Application_Model_Preference::SetWeekStartDay($values["weekStartDay"]);
-                Application_Model_Preference::setRadioPageDisplayLoginButton($values["radioPageLoginButton"]);
-                Application_Model_Preference::SetFeaturePreviewMode($values["featurePreviewMode"]);
+            if ($form->isValid($values)) {
+                Application_Model_Preference::SetHeadTitle($values['stationName'], $this->view);
+                Application_Model_Preference::SetStationDescription($values['stationDescription']);
+                Application_Model_Preference::SetTrackTypeDefault($values['tracktypeDefault']);
+                Application_Model_Preference::SetDefaultCrossfadeDuration($values['stationDefaultCrossfadeDuration']);
+                Application_Model_Preference::SetDefaultFadeIn($values['stationDefaultFadeIn']);
+                Application_Model_Preference::SetDefaultFadeOut($values['stationDefaultFadeOut']);
+                Application_Model_Preference::SetPodcastAlbumOverride($values['podcastAlbumOverride']);
+                Application_Model_Preference::SetPodcastAutoSmartblock($values['podcastAutoSmartblock']);
+                Application_Model_Preference::SetIntroPlaylist($values['introPlaylistSelect']);
+                Application_Model_Preference::SetOutroPlaylist($values['outroPlaylistSelect']);
+                Application_Model_Preference::SetAllow3rdPartyApi($values['thirdPartyApi']);
+                Application_Model_Preference::SetAllowedCorsUrls($values['allowedCorsUrls']);
+                Application_Model_Preference::SetDefaultLocale($values['locale']);
+                Application_Model_Preference::SetDefaultTimezone($values['timezone']);
+                Application_Model_Preference::SetWeekStartDay($values['weekStartDay']);
+                Application_Model_Preference::setRadioPageDisplayLoginButton($values['radioPageLoginButton']);
+                Application_Model_Preference::SetFeaturePreviewMode($values['featurePreviewMode']);
 
                 $logoUploadElement = $form->getSubForm('preferences_general')->getElement('stationLogo');
                 $logoUploadElement->receive();
                 $imagePath = $logoUploadElement->getFileName();
 
                 // Only update the image logo if the new logo is non-empty
-                if (!empty($imagePath) && $imagePath != "") {
+                if (!empty($imagePath) && $imagePath != '') {
                     Application_Model_Preference::SetStationLogo($imagePath);
                 }
 
-                Application_Model_Preference::setTuneinEnabled($values["enable_tunein"]);
-                Application_Model_Preference::setTuneinStationId($values["tunein_station_id"]);
-                Application_Model_Preference::setTuneinPartnerKey($values["tunein_partner_key"]);
-                Application_Model_Preference::setTuneinPartnerId($values["tunein_partner_id"]);
+                Application_Model_Preference::setTuneinEnabled($values['enable_tunein']);
+                Application_Model_Preference::setTuneinStationId($values['tunein_station_id']);
+                Application_Model_Preference::setTuneinPartnerKey($values['tunein_partner_key']);
+                Application_Model_Preference::setTuneinPartnerId($values['tunein_partner_id']);
 
-                $this->view->statusMsg = "<div class='success'>". _("Preferences updated.")."</div>";
+                $this->view->statusMsg = "<div class='success'>" . _('Preferences updated.') . '</div>';
                 $form = new Application_Form_Preferences();
                 $this->view->form = $form;
-                //$this->_helper->json->sendJson(array("valid"=>"true", "html"=>$this->view->render('preference/index.phtml')));
+            //$this->_helper->json->sendJson(array("valid"=>"true", "html"=>$this->view->render('preference/index.phtml')));
             } else {
                 $this->view->form = $form;
                 //$this->_helper->json->sendJson(array("valid"=>"false", "html"=>$this->view->render('preference/index.phtml')));
@@ -86,7 +85,8 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->form = $form;
     }
 
-    public function stationPodcastSettingsAction() {
+    public function stationPodcastSettingsAction()
+    {
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
@@ -101,11 +101,11 @@ class PreferenceController extends Zend_Controller_Action
         $stationPodcast = PodcastQuery::create()->findOneByDbId(Application_Model_Preference::getStationPodcastId());
         $key = Application_Model_Preference::getStationPodcastDownloadKey();
         $url = Application_Common_HTTPHelper::getStationUrl() .
-            (((int) $values->stationPodcastPrivacy) ? "feeds/station-rss?sharing_token=$key" : "feeds/station-rss");
+            (((int) $values->stationPodcastPrivacy) ? "feeds/station-rss?sharing_token={$key}" : 'feeds/station-rss');
         $stationPodcast->setDbUrl($url)->save();
         Application_Model_Preference::setStationPodcastPrivacy($values->stationPodcastPrivacy);
 
-        $this->_helper->json->sendJson(array("url" => $url));
+        $this->_helper->json->sendJson(['url' => $url]);
     }
 
     public function directoryConfigAction()
@@ -122,11 +122,12 @@ class PreferenceController extends Zend_Controller_Action
 
         if (!SecurityHelper::verifyCSRFToken($this->_getParam('csrf_token'))) {
             Logging::error(__FILE__ . ': Invalid CSRF token');
-            $this->_helper->json->sendJson(array("jsonrpc" => "2.0", "valid" => false, "error" => "CSRF token did not match."));
+            $this->_helper->json->sendJson(['jsonrpc' => '2.0', 'valid' => false, 'error' => 'CSRF token did not match.']);
+
             return;
         }
 
-        Application_Model_Preference::SetStationLogo("");
+        Application_Model_Preference::SetStationLogo('');
     }
 
     public function streamSettingAction()
@@ -139,17 +140,17 @@ class PreferenceController extends Zend_Controller_Action
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/streamsetting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/preferences/streamsetting.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
 
         SessionHelper::reopenSessionForWriting();
 
-        $name_map = array(
-				'ogg' => 'Ogg Vorbis',
-                'fdkaac' => 'AAC+',
-                'aac' => 'AAC',
-                'opus' => 'Opus',
-                'mp3' => 'MP3',
-        );
+        $name_map = [
+            'ogg' => 'Ogg Vorbis',
+            'fdkaac' => 'AAC+',
+            'aac' => 'AAC',
+            'opus' => 'Opus',
+            'mp3' => 'MP3',
+        ];
 
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
         $form = new Application_Form_StreamSetting();
@@ -160,11 +161,11 @@ class PreferenceController extends Zend_Controller_Action
         $form->addElement($csrf_element);
 
         $live_stream_subform = new Application_Form_LiveStreamingPreferences();
-        $form->addSubForm($live_stream_subform, "live_stream_subform");
+        $form->addSubForm($live_stream_subform, 'live_stream_subform');
 
         // get predefined type and bitrate from pref table
         $temp_types = Application_Model_Preference::GetStreamType();
-        $stream_types = array();
+        $stream_types = [];
         foreach ($temp_types as $type) {
             $type = strtolower(trim($type));
             if (isset($name_map[$type])) {
@@ -177,10 +178,10 @@ class PreferenceController extends Zend_Controller_Action
 
         $temp_bitrate = Application_Model_Preference::GetStreamBitrate();
         $max_bitrate = intval(Application_Model_Preference::GetMaxBitrate());
-        $stream_bitrates = array();
+        $stream_bitrates = [];
         foreach ($temp_bitrate as $type) {
             if (intval($type) <= $max_bitrate) {
-                $stream_bitrates[trim($type)] = strtoupper(trim($type))." kbit/s";
+                $stream_bitrates[trim($type)] = strtoupper(trim($type)) . ' kbit/s';
             }
         }
 
@@ -188,7 +189,7 @@ class PreferenceController extends Zend_Controller_Action
         $setting = Application_Model_StreamSetting::getStreamSetting();
         $form->setSetting($setting);
 
-        for ($i=1; $i<=$num_of_stream; $i++) {
+        for ($i = 1; $i <= $num_of_stream; ++$i) {
             $subform = new Application_Form_StreamSettingSubForm();
             $subform->setPrefix($i);
             $subform->setSetting($setting);
@@ -196,7 +197,7 @@ class PreferenceController extends Zend_Controller_Action
             $subform->setStreamBitrates($stream_bitrates);
             $subform->startForm();
             $subform->toggleState();
-            $form->addSubForm($subform, "s".$i."_subform");
+            $form->addSubForm($subform, 's' . $i . '_subform');
         }
 
         $live_stream_subform->updateVariables();
@@ -208,36 +209,36 @@ class PreferenceController extends Zend_Controller_Action
              * $form->isValid() is expecting it in
              */
             $postData = explode('&', $params['data']);
-            $s1_data = array();
-            $s2_data = array();
-            $s3_data = array();
-            $s4_data = array();
-            $values = array();
-            foreach($postData as $k=>$v) {
+            $s1_data = [];
+            $s2_data = [];
+            $s3_data = [];
+            $s4_data = [];
+            $values = [];
+            foreach ($postData as $k => $v) {
                 $v = explode('=', urldecode($v));
-                if (strpos($v[0], "s1_data") !== false) {
+                if (strpos($v[0], 's1_data') !== false) {
                     /* In this case $v[0] may be 's1_data[enable]' , for example.
                      * We only want the 'enable' part
                      */
                     preg_match('/\[(.*)\]/', $v[0], $matches);
                     $s1_data[$matches[1]] = $v[1];
-                } elseif (strpos($v[0], "s2_data") !== false) {
+                } elseif (strpos($v[0], 's2_data') !== false) {
                     preg_match('/\[(.*)\]/', $v[0], $matches);
                     $s2_data[$matches[1]] = $v[1];
-                } elseif (strpos($v[0], "s3_data") !== false) {
-                   preg_match('/\[(.*)\]/', $v[0], $matches);
+                } elseif (strpos($v[0], 's3_data') !== false) {
+                    preg_match('/\[(.*)\]/', $v[0], $matches);
                     $s3_data[$matches[1]] = $v[1];
-                } elseif (strpos($v[0], "s4_data") !== false) {
-                   preg_match('/\[(.*)\]/', $v[0], $matches);
+                } elseif (strpos($v[0], 's4_data') !== false) {
+                    preg_match('/\[(.*)\]/', $v[0], $matches);
                     $s4_data[$matches[1]] = $v[1];
                 } else {
                     $values[$v[0]] = $v[1];
                 }
             }
-            $values["s1_data"] = $s1_data;
-            $values["s2_data"] = $s2_data;
-            $values["s3_data"] = $s3_data;
-            $values["s4_data"] = $s4_data;
+            $values['s1_data'] = $s1_data;
+            $values['s2_data'] = $s2_data;
+            $values['s3_data'] = $s3_data;
+            $values['s4_data'] = $s4_data;
 
             if ($form->isValid($values)) {
                 Application_Model_StreamSetting::setStreamSetting($values);
@@ -245,68 +246,67 @@ class PreferenceController extends Zend_Controller_Action
                 /* If the admin password values are empty then we should not
                  * set the pseudo password ('xxxxxx') on the front-end
                  */
-                $s1_set_admin_pass = !empty($values["s1_data"]["admin_pass"]);
-                $s2_set_admin_pass = !empty($values["s2_data"]["admin_pass"]);
-                $s3_set_admin_pass = !empty($values["s3_data"]["admin_pass"]);
-                $s4_set_admin_pass = !empty($values["s4_data"]["admin_pass"]);
+                $s1_set_admin_pass = !empty($values['s1_data']['admin_pass']);
+                $s2_set_admin_pass = !empty($values['s2_data']['admin_pass']);
+                $s3_set_admin_pass = !empty($values['s3_data']['admin_pass']);
+                $s4_set_admin_pass = !empty($values['s4_data']['admin_pass']);
 
                 // this goes into cc_pref table
                 $this->setStreamPreferences($values);
 
                 // compare new values with current value
-                $changeRGenabled = Application_Model_Preference::GetEnableReplayGain() != $values["enableReplayGain"];
-                $changeRGmodifier = Application_Model_Preference::getReplayGainModifier() != $values["replayGainModifier"];
+                $changeRGenabled = Application_Model_Preference::GetEnableReplayGain() != $values['enableReplayGain'];
+                $changeRGmodifier = Application_Model_Preference::getReplayGainModifier() != $values['replayGainModifier'];
                 if ($changeRGenabled || $changeRGmodifier) {
-                    Application_Model_Preference::SetEnableReplayGain($values["enableReplayGain"]);
-                    Application_Model_Preference::setReplayGainModifier($values["replayGainModifier"]);
-                    $md = array('schedule' => Application_Model_Schedule::getSchedule());
-                    Application_Model_RabbitMq::SendMessageToPypo("update_schedule", $md);
+                    Application_Model_Preference::SetEnableReplayGain($values['enableReplayGain']);
+                    Application_Model_Preference::setReplayGainModifier($values['replayGainModifier']);
+                    $md = ['schedule' => Application_Model_Schedule::getSchedule()];
+                    Application_Model_RabbitMq::SendMessageToPypo('update_schedule', $md);
                     //Application_Model_RabbitMq::PushSchedule();
                 }
 
                 // pulling this from the 2.5.x branch
                 if (!Application_Model_Preference::GetMasterDjConnectionUrlOverride()) {
-                    $master_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["master_source_port"].$values["master_source_mount"];
-                    if (empty($values["master_source_port"]) || empty($values["master_source_mount"])) {
+                    $master_connection_url = 'http://' . $_SERVER['SERVER_NAME'] . ':' . $values['master_source_port'] . $values['master_source_mount'];
+                    if (empty($values['master_source_port']) || empty($values['master_source_mount'])) {
                         Application_Model_Preference::SetMasterDJSourceConnectionURL('N/A');
                     } else {
                         Application_Model_Preference::SetMasterDJSourceConnectionURL($master_connection_url);
                     }
                 } else {
-                    Application_Model_Preference::SetMasterDJSourceConnectionURL($values["master_source_host"]);
+                    Application_Model_Preference::SetMasterDJSourceConnectionURL($values['master_source_host']);
                 }
 
                 if (!Application_Model_Preference::GetLiveDjConnectionUrlOverride()) {
-                    $live_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["show_source_port"].$values["show_source_mount"];
-                    if (empty($values["show_source_port"]) || empty($values["show_source_mount"])) {
+                    $live_connection_url = 'http://' . $_SERVER['SERVER_NAME'] . ':' . $values['show_source_port'] . $values['show_source_mount'];
+                    if (empty($values['show_source_port']) || empty($values['show_source_mount'])) {
                         Application_Model_Preference::SetLiveDJSourceConnectionURL('N/A');
                     } else {
                         Application_Model_Preference::SetLiveDJSourceConnectionURL($live_connection_url);
                     }
                 } else {
-                    Application_Model_Preference::SetLiveDJSourceConnectionURL($values["show_source_host"]);
+                    Application_Model_Preference::SetLiveDJSourceConnectionURL($values['show_source_host']);
                 }
 
-
-                Application_Model_StreamSetting::setMasterLiveStreamPort($values["master_source_port"]);
-                Application_Model_StreamSetting::setMasterLiveStreamMountPoint($values["master_source_mount"]);
-                Application_Model_StreamSetting::setDjLiveStreamPort($values["show_source_port"]);
-                Application_Model_StreamSetting::setDjLiveStreamMountPoint($values["show_source_mount"]);
+                Application_Model_StreamSetting::setMasterLiveStreamPort($values['master_source_port']);
+                Application_Model_StreamSetting::setMasterLiveStreamMountPoint($values['master_source_mount']);
+                Application_Model_StreamSetting::setDjLiveStreamPort($values['show_source_port']);
+                Application_Model_StreamSetting::setDjLiveStreamMountPoint($values['show_source_mount']);
 
                 Application_Model_StreamSetting::setOffAirMeta($values['offAirMeta']);
 
                 // store stream update timestamp
                 Application_Model_Preference::SetStreamUpdateTimestamp();
 
-                $data = array();
+                $data = [];
                 $info = Application_Model_StreamSetting::getStreamSetting();
                 $data['setting'] = $info;
-                for ($i=1; $i<=$num_of_stream; $i++) {
-                    Application_Model_StreamSetting::setLiquidsoapError($i, "waiting");
+                for ($i = 1; $i <= $num_of_stream; ++$i) {
+                    Application_Model_StreamSetting::setLiquidsoapError($i, 'waiting');
                 }
 
-                Application_Model_RabbitMq::SendMessageToPypo("update_stream_setting", $data);
-                $this->view->statusMsg = "<div class='success'>"._("Stream Setting Updated.")."</div>";
+                Application_Model_RabbitMq::SendMessageToPypo('update_stream_setting', $data);
+                $this->view->statusMsg = "<div class='success'>" . _('Stream Setting Updated.') . '</div>';
             }
         }
 
@@ -315,61 +315,61 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->form = $form;
         if ($request->isPost()) {
             if ($form->isValid($values)) {
-                $this->_helper->json->sendJson(array(
-                                                   "valid" => "true",
-                                                   "html" => $this->view->render('preference/stream-setting.phtml'),
-                                                   "s1_set_admin_pass" => $s1_set_admin_pass,
-                                                   "s2_set_admin_pass" => $s2_set_admin_pass,
-                                                   "s3_set_admin_pass" => $s3_set_admin_pass,
-                                                   "s4_set_admin_pass" => $s4_set_admin_pass,
-                                               ));
+                $this->_helper->json->sendJson([
+                    'valid' => 'true',
+                    'html' => $this->view->render('preference/stream-setting.phtml'),
+                    's1_set_admin_pass' => $s1_set_admin_pass,
+                    's2_set_admin_pass' => $s2_set_admin_pass,
+                    's3_set_admin_pass' => $s3_set_admin_pass,
+                    's4_set_admin_pass' => $s4_set_admin_pass,
+                ]);
             } else {
-                $this->_helper->json->sendJson(array("valid" => "false", "html" => $this->view->render('preference/stream-setting.phtml')));
+                $this->_helper->json->sendJson(['valid' => 'false', 'html' => $this->view->render('preference/stream-setting.phtml')]);
             }
         }
     }
 
     /**
-     * Set stream settings preferences
+     * Set stream settings preferences.
      *
      * @param array $values stream setting preference values
      */
-    private function setStreamPreferences($values) {
+    private function setStreamPreferences($values)
+    {
         Application_Model_Preference::setUsingCustomStreamSettings($values['customStreamSettings']);
         Application_Model_Preference::SetStreamLabelFormat($values['streamFormat']);
-        Application_Model_Preference::SetLiveStreamMasterUsername($values["master_username"]);
-        Application_Model_Preference::SetLiveStreamMasterPassword($values["master_password"]);
-        Application_Model_Preference::SetDefaultTransitionFade($values["transition_fade"]);
-        Application_Model_Preference::SetAutoTransition($values["auto_transition"]);
-        Application_Model_Preference::SetAutoSwitch($values["auto_switch"]);
-
+        Application_Model_Preference::SetLiveStreamMasterUsername($values['master_username']);
+        Application_Model_Preference::SetLiveStreamMasterPassword($values['master_password']);
+        Application_Model_Preference::SetDefaultTransitionFade($values['transition_fade']);
+        Application_Model_Preference::SetAutoTransition($values['auto_transition']);
+        Application_Model_Preference::SetAutoSwitch($values['auto_switch']);
     }
 
     public function serverBrowseAction()
     {
         $request = $this->getRequest();
-        $path = $request->getParam("path", null);
+        $path = $request->getParam('path', null);
 
-        $result = array();
+        $result = [];
 
         if (is_null($path)) {
-            $element = array();
-            $element["name"] = _("path should be specified");
-            $element["isFolder"] = false;
-            $element["isError"] = true;
+            $element = [];
+            $element['name'] = _('path should be specified');
+            $element['isFolder'] = false;
+            $element['isError'] = true;
             $result[$path] = $element;
         } else {
-            $path = $path.'/';
+            $path = $path . '/';
             $handle = opendir($path);
             if ($handle !== false) {
                 while (false !== ($file = readdir($handle))) {
-                    if ($file != "." && $file != "..") {
+                    if ($file != '.' && $file != '..') {
                         //only show directories that aren't private.
-                        if (is_dir($path.$file) && substr($file, 0, 1) != ".") {
-                            $element = array();
-                            $element["name"] = $file;
-                            $element["isFolder"] = true;
-                            $element["isError"] = false;
+                        if (is_dir($path . $file) && substr($file, 0, 1) != '.') {
+                            $element = [];
+                            $element['name'] = $file;
+                            $element['isFolder'] = true;
+                            $element['isError'] = false;
                             $result[$file] = $element;
                         }
                     }
@@ -383,14 +383,14 @@ class PreferenceController extends Zend_Controller_Action
 
     public function changeStorDirectoryAction()
     {
-        $chosen = $this->getRequest()->getParam("dir");
-        $element = $this->getRequest()->getParam("element");
+        $chosen = $this->getRequest()->getParam('dir');
+        $element = $this->getRequest()->getParam('element');
         $watched_dirs_form = new Application_Form_WatchedDirPreferences();
 
         $res = Application_Model_MusicDir::setStorDir($chosen);
         if ($res['code'] != 0) {
-            $watched_dirs_form->populate(array('storageFolder' => $chosen));
-            $watched_dirs_form->getElement($element)->setErrors(array($res['error']));
+            $watched_dirs_form->populate(['storageFolder' => $chosen]);
+            $watched_dirs_form->getElement($element)->setErrors([$res['error']]);
         }
 
         $this->view->subform = $watched_dirs_form->render();
@@ -398,14 +398,14 @@ class PreferenceController extends Zend_Controller_Action
 
     public function reloadWatchDirectoryAction()
     {
-        $chosen = $this->getRequest()->getParam("dir");
-        $element = $this->getRequest()->getParam("element");
+        $chosen = $this->getRequest()->getParam('dir');
+        $element = $this->getRequest()->getParam('element');
         $watched_dirs_form = new Application_Form_WatchedDirPreferences();
 
         $res = Application_Model_MusicDir::addWatchedDir($chosen);
         if ($res['code'] != 0) {
-            $watched_dirs_form->populate(array('watchedFolder' => $chosen));
-            $watched_dirs_form->getElement($element)->setErrors(array($res['error']));
+            $watched_dirs_form->populate(['watchedFolder' => $chosen]);
+            $watched_dirs_form->getElement($element)->setErrors([$res['error']]);
         }
 
         $this->view->subform = $watched_dirs_form->render();
@@ -415,17 +415,17 @@ class PreferenceController extends Zend_Controller_Action
     {
         $dir_path = $this->getRequest()->getParam('dir');
         $dir = Application_Model_MusicDir::getDirByPath($dir_path);
-        $data = array( 'directory' => $dir->getDirectory(),
-                              'id' => $dir->getId());
+        $data = ['directory' => $dir->getDirectory(),
+            'id' => $dir->getId(), ];
         Application_Model_RabbitMq::SendMessageToMediaMonitor('rescan_watch', $data);
-        Logging::info("Unhiding all files belonging to:: $dir_path");
+        Logging::info("Unhiding all files belonging to:: {$dir_path}");
         $dir->unhideFiles();
         $this->_helper->json->sendJson(null);
     }
 
     public function removeWatchDirectoryAction()
     {
-        $chosen = $this->getRequest()->getParam("dir");
+        $chosen = $this->getRequest()->getParam('dir');
 
         $dir = Application_Model_MusicDir::removeWatchedDir($chosen);
 
@@ -437,7 +437,7 @@ class PreferenceController extends Zend_Controller_Action
     {
         $now = time();
         $res = false;
-        if (Application_Model_Preference::GetImportTimestamp()+10 > $now) {
+        if (Application_Model_Preference::GetImportTimestamp() + 10 > $now) {
             $res = true;
         }
         $this->_helper->json->sendJson($res);
@@ -445,15 +445,15 @@ class PreferenceController extends Zend_Controller_Action
 
     public function getLiquidsoapStatusAction()
     {
-        $out = array();
+        $out = [];
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
-        for ($i=1; $i<=$num_of_stream; $i++) {
+        for ($i = 1; $i <= $num_of_stream; ++$i) {
             $status = Application_Model_StreamSetting::getLiquidsoapError($i);
-            $status = $status == NULL?_("Problem with Liquidsoap..."):$status;
+            $status = $status == null ? _('Problem with Liquidsoap...') : $status;
             if (!Application_Model_StreamSetting::getStreamEnabled($i)) {
-                $status = "N/A";
+                $status = 'N/A';
             }
-            $out[] = array("id"=>$i, "status"=>$status);
+            $out[] = ['id' => $i, 'status' => $status];
         }
         $this->_helper->json->sendJson($out);
     }
@@ -463,9 +463,9 @@ class PreferenceController extends Zend_Controller_Action
         SessionHelper::reopenSessionForWriting();
 
         $request = $this->getRequest();
-        $type = $request->getParam("type", null);
-        $url = urldecode($request->getParam("url", null));
-        $override = $request->getParam("override", false);
+        $type = $request->getParam('type', null);
+        $url = urldecode($request->getParam('url', null));
+        $override = $request->getParam('override', false);
 
         if ($type == 'masterdj') {
             Application_Model_Preference::SetMasterDJSourceConnectionURL($url);
@@ -482,13 +482,13 @@ class PreferenceController extends Zend_Controller_Action
     {
         SessionHelper::reopenSessionForWriting();
 
-        $out = array();
+        $out = [];
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
-        for ($i=1; $i<=$num_of_stream; $i++) {
-            if (Application_Model_StreamSetting::getAdminPass('s'.$i)=='') {
-                $out["s".$i] = false;
+        for ($i = 1; $i <= $num_of_stream; ++$i) {
+            if (Application_Model_StreamSetting::getAdminPass('s' . $i) == '') {
+                $out['s' . $i] = false;
             } else {
-                $out["s".$i] = true;
+                $out['s' . $i] = true;
             }
         }
         $this->_helper->json->sendJson($out);
@@ -501,7 +501,8 @@ class PreferenceController extends Zend_Controller_Action
 
         if (!SecurityHelper::verifyCSRFToken($this->_getParam('csrf_token'))) {
             Logging::error(__FILE__ . ': Invalid CSRF token');
-            $this->_helper->json->sendJson(array("jsonrpc" => "2.0", "valid" => false, "error" => "CSRF token did not match."));
+            $this->_helper->json->sendJson(['jsonrpc' => '2.0', 'valid' => false, 'error' => 'CSRF token did not match.']);
+
             return;
         }
 
@@ -510,8 +511,10 @@ class PreferenceController extends Zend_Controller_Action
         $method = $_SERVER['REQUEST_METHOD'];
         if (!($method == 'POST')) {
             $this->getResponse()
-                 ->setHttpResponseCode(405)
-                 ->appendBody(_("Request method not accepted") . ": $method");
+                ->setHttpResponseCode(405)
+                ->appendBody(_('Request method not accepted') . ": {$method}")
+            ;
+
             return;
         }
 
@@ -520,16 +523,19 @@ class PreferenceController extends Zend_Controller_Action
         $this->deleteStoredFiles();
 
         $this->getResponse()
-             ->setHttpResponseCode(200)
-             ->appendBody("OK");
+            ->setHttpResponseCode(200)
+            ->appendBody('OK')
+        ;
     }
 
-    private function deleteFutureScheduleItems() {
-        $utcTimezone = new DateTimeZone("UTC");
-        $nowDateTime = new DateTime("now", $utcTimezone);
+    private function deleteFutureScheduleItems()
+    {
+        $utcTimezone = new DateTimeZone('UTC');
+        $nowDateTime = new DateTime('now', $utcTimezone);
         $scheduleItems = CcScheduleQuery::create()
             ->filterByDbEnds($nowDateTime->format(DEFAULT_TIMESTAMP_FORMAT), Criteria::GREATER_THAN)
-            ->find();
+            ->find()
+        ;
 
         // Delete all the schedule items
         foreach ($scheduleItems as $i) {
@@ -549,20 +555,22 @@ class PreferenceController extends Zend_Controller_Action
         }
     }
 
-    private function deleteCloudFiles() {
+    private function deleteCloudFiles()
+    {
         try {
             $CC_CONFIG = Config::getConfig();
 
-            foreach ($CC_CONFIG["supportedStorageBackends"] as $storageBackend) {
+            foreach ($CC_CONFIG['supportedStorageBackends'] as $storageBackend) {
                 $proxyStorageBackend = new ProxyStorageBackend($storageBackend);
                 $proxyStorageBackend->deleteAllCloudFileObjects();
             }
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Logging::info($e->getMessage());
         }
     }
 
-    private function deleteStoredFiles() {
+    private function deleteStoredFiles()
+    {
         // Delete all files from the database
         $files = CcFilesQuery::create()->find();
         foreach ($files as $file) {
@@ -572,5 +580,4 @@ class PreferenceController extends Zend_Controller_Action
             $storedFile->delete(true);
         }
     }
-
 }

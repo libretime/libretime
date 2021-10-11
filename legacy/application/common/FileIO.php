@@ -12,11 +12,10 @@ class Application_Common_FileIO
      *
      * @param string $filePath - the full filepath or URL pointing to the location of the file
      * @param string $mimeType - the file's mime type. Defaults to 'audio/mp3'
-     * @param integer $size - the file size, in bytes
-     * @return void
+     * @param int    $size     - the file size, in bytes
      *
-     * @link https://groups.google.com/d/msg/jplayer/nSM2UmnSKKA/Hu76jDZS4xcJ
-     * @link http://php.net/manual/en/function.readfile.php#86244
+     * @see https://groups.google.com/d/msg/jplayer/nSM2UmnSKKA/Hu76jDZS4xcJ
+     * @see http://php.net/manual/en/function.readfile.php#86244
      */
     public static function smartReadFile($filePath, $size, $mimeType)
     {
@@ -36,12 +35,11 @@ class Application_Common_FileIO
         }
 
         if ($size <= 0) {
-            throw new Exception("Invalid file size returned for file at $filePath");
+            throw new Exception("Invalid file size returned for file at {$filePath}");
         }
 
-
         $begin = 0;
-        $end   = $size - 1;
+        $end = $size - 1;
 
         ob_start(); //Must start a buffer here for these header() functions
 
@@ -59,14 +57,14 @@ class Application_Common_FileIO
         } else {
             header('HTTP/1.1 200 OK');
         }
-        header("Content-Type: $mimeType");
-        header("Content-Transfer-Encoding: binary");
+        header("Content-Type: {$mimeType}");
+        header('Content-Transfer-Encoding: binary');
         header('Cache-Control: public, must-revalidate, max-age=0');
         header('Pragma: no-cache');
         header('Accept-Ranges: bytes');
         header('Content-Length:' . (($end - $begin) + 1));
         if (isset($_SERVER['HTTP_RANGE'])) {
-            header("Content-Range: bytes $begin-$end/$size");
+            header("Content-Range: bytes {$begin}-{$end}/{$size}");
         }
 
         //We can have multiple levels of output buffering. Need to
@@ -76,15 +74,13 @@ class Application_Common_FileIO
             ob_end_flush();
         }
 
-
         //These two lines were removed from Airtime 2.5.x at some point after Libretime forked from Airtime.
         //These lines allow seek to work for files.
         //Issue #349
         $cur = $begin;
-        fseek($fm,$begin,0);
+        fseek($fm, $begin, 0);
 
-
-        while(!feof($fm) && (connection_status() == 0) && ($cur <= $end)) {       
+        while (!feof($fm) && (connection_status() == 0) && ($cur <= $end)) {
             echo fread($fm, 1024 * 8);
         }
         fclose($fm);

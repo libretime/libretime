@@ -6,7 +6,7 @@ class UpgradeController extends Zend_Controller_Action
     {
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
-        
+
         if (!RestAuth::verifyAuth(true, false, $this)) {
             return;
         }
@@ -16,23 +16,25 @@ class UpgradeController extends Zend_Controller_Action
 
             if (!$didWePerformAnUpgrade) {
                 $this->getResponse()
-                     ->setHttpResponseCode(200)
-                     ->appendBody("No upgrade was performed. The current schema version is " . Application_Model_Preference::GetSchemaVersion() . ".<br>");
+                    ->setHttpResponseCode(200)
+                    ->appendBody('No upgrade was performed. The current schema version is ' . Application_Model_Preference::GetSchemaVersion() . '.<br>')
+                ;
             } else {
                 $this->getResponse()
-                     ->setHttpResponseCode(200)
-                     ->appendBody("Upgrade to Airtime schema version " . Application_Model_Preference::GetSchemaVersion() . " OK<br>");
+                    ->setHttpResponseCode(200)
+                    ->appendBody('Upgrade to Airtime schema version ' . Application_Model_Preference::GetSchemaVersion() . ' OK<br>')
+                ;
             }
-        } 
-        catch (Exception $e) 
-        {
+        } catch (Exception $e) {
             $this->getResponse()
-                 ->setHttpResponseCode(400)
-                 ->appendBody($e->getMessage());
+                ->setHttpResponseCode(400)
+                ->appendBody($e->getMessage())
+            ;
         }
     }
 
-    public function downgradeAction() {
+    public function downgradeAction()
+    {
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
@@ -41,7 +43,7 @@ class UpgradeController extends Zend_Controller_Action
         }
 
         $request = $this->getRequest();
-        $toVersion = $request->getParam("version");
+        $toVersion = $request->getParam('version');
 
         try {
             $downgradePerformed = UpgradeManager::doDowngrade($toVersion);
@@ -49,17 +51,19 @@ class UpgradeController extends Zend_Controller_Action
             if (!$downgradePerformed) {
                 $this->getResponse()
                     ->setHttpResponseCode(200)
-                    ->appendBody("No downgrade was performed. The current schema version is " . Application_Model_Preference::GetSchemaVersion() . ".<br>");
+                    ->appendBody('No downgrade was performed. The current schema version is ' . Application_Model_Preference::GetSchemaVersion() . '.<br>')
+                ;
             } else {
                 $this->getResponse()
                     ->setHttpResponseCode(200)
-                    ->appendBody("Downgrade to Airtime schema version " . Application_Model_Preference::GetSchemaVersion() . " OK<br>");
+                    ->appendBody('Downgrade to Airtime schema version ' . Application_Model_Preference::GetSchemaVersion() . ' OK<br>')
+                ;
             }
         } catch (Exception $e) {
             $this->getResponse()
                 ->setHttpResponseCode(400)
-                ->appendBody($e->getMessage());
+                ->appendBody($e->getMessage())
+            ;
         }
     }
-
 }

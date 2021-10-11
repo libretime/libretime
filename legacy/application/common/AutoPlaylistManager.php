@@ -1,30 +1,33 @@
 <?php
 
-class AutoPlaylistManager {
+class AutoPlaylistManager
+{
     /**
      * @var int how often, in seconds, to check for and ingest new podcast episodes
      */
     private static $_AUTOPLAYLIST_POLL_INTERVAL_SECONDS = 60;  // 10 minutes
-    
+
     /**
      * Check whether $_AUTOPLAYLIST_POLL_INTERVAL_SECONDS have passed since the last call to
-     * buildAutoPlaylist
+     * buildAutoPlaylist.
      *
      * @return bool true if $_AUTOPLAYLIST_POLL_INTERVAL_SECONDS has passed since the last check
      */
-    public static function hasAutoPlaylistPollIntervalPassed() {
+    public static function hasAutoPlaylistPollIntervalPassed()
+    {
         $lastPolled = Application_Model_Preference::getAutoPlaylistPollLock();
+
         return empty($lastPolled) || (microtime(true) > $lastPolled + self::$_AUTOPLAYLIST_POLL_INTERVAL_SECONDS);
     }
 
-     /**
-     * Find all shows with autoplaylists who have yet to have their playlists built and added to the schedule
-     *
+    /**
+     * Find all shows with autoplaylists who have yet to have their playlists built and added to the schedule.
      */
-    public static function buildAutoPlaylist() {
+    public static function buildAutoPlaylist()
+    {
         $autoPlaylists = static::_upcomingAutoPlaylistShows();
         foreach ($autoPlaylists as $autoplaylist) {
-            // creates a ShowInstance object to build the playlist in from the ShowInstancesQuery Object     
+            // creates a ShowInstance object to build the playlist in from the ShowInstancesQuery Object
             $si = new Application_Model_ShowInstance($autoplaylist->getDbId());
             $playlistid = $si->GetAutoPlaylistId();
             // call the addPlaylist to show function and don't check for user permission to avoid call to non-existant user object
@@ -45,7 +48,7 @@ class AutoPlaylistManager {
                 //Logging::info('adding intro');
                 $si->addPlaylistToShowStart($introplaylistid, false);
             }
-            while(!$full) {
+            while (!$full) {
                 // we do not want to try to schedule an empty playlist
                 if ($playlistid != null) {
                     $si->addPlaylistToShow($playlistid, false);
@@ -53,8 +56,7 @@ class AutoPlaylistManager {
                 $ps = $si->getPercentScheduled();
                 if ($ps > 100) {
                     $full = true;
-                }
-                elseif (!$repeatuntilfull) {
+                } elseif (!$repeatuntilfull) {
                     break;
                 }
                 // we want to avoid an infinite loop if all of the playlists are null
@@ -84,26 +86,28 @@ class AutoPlaylistManager {
     }
 
     /**
-     * Find all show instances starting in the next hour with autoplaylists not yet added to the schedule
+     * Find all show instances starting in the next hour with autoplaylists not yet added to the schedule.
      *
      * @return PropelObjectCollection collection of ShowInstance objects
      *                                that have unbuilt autoplaylists
      */
-    protected static function _upcomingAutoPlaylistShows() {
-	    //setting now so that past shows aren't referenced
-            $now = new DateTime("now", new DateTimeZone("UTC"));
-	    // only build playlists for shows that start up to an hour from now
-	    $future = clone $now;
-	    $future->add(new DateInterval('PT1H'));
-	    
+    protected static function _upcomingAutoPlaylistShows()
+    {
+        //setting now so that past shows aren't referenced
+        $now = new DateTime('now', new DateTimeZone('UTC'));
+        // only build playlists for shows that start up to an hour from now
+        $future = clone $now;
+        $future->add(new DateInterval('PT1H'));
+
         return CcShowInstancesQuery::create()
             ->filterByDbModifiedInstance(false)
-            ->filterByDbStarts($now,Criteria::GREATER_THAN) 
-          ->filterByDbStarts($future,Criteria::LESS_THAN)
+            ->filterByDbStarts($now, Criteria::GREATER_THAN)
+            ->filterByDbStarts($future, Criteria::LESS_THAN)
             ->useCcShowQuery('a', 'left join')
-                ->filterByDbHasAutoPlaylist(true)
+            ->filterByDbHasAutoPlaylist(true)
             ->endUse()
             ->filterByDbAutoPlaylistBuilt(false)
-            ->find();
+            ->find()
+        ;
     }
 }

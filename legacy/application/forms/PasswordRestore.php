@@ -1,52 +1,51 @@
 <?php
 
-/**
- */
 class Application_Form_PasswordRestore extends Zend_Form
 {
     public function init()
     {
-        $this->setDecorators(array(
-                array('ViewScript', array('viewScript' => 'form/password-restore.phtml'))
-        ));
+        $this->setDecorators([
+            ['ViewScript', ['viewScript' => 'form/password-restore.phtml']],
+        ]);
 
-        $this->addElement('text', 'email', array(
+        $this->addElement('text', 'email', [
             'label' => _('Email'),
             'required' => true,
-            'filters' => array(
+            'filters' => [
                 'stringTrim',
-            ),
-            'decorators' => array(
-                'ViewHelper'
-            )
-        ));
+            ],
+            'decorators' => [
+                'ViewHelper',
+            ],
+        ]);
 
-        $this->addElement('text', 'username', array(
+        $this->addElement('text', 'username', [
             'label' => _('Username'),
             'required' => false,
-            'filters' => array(
+            'filters' => [
                 'stringTrim',
-            ),
-            'decorators' => array(
-                'ViewHelper'
-            )
-        ));
+            ],
+            'decorators' => [
+                'ViewHelper',
+            ],
+        ]);
 
-        $this->addElement('submit', 'submit', array(
+        $this->addElement('submit', 'submit', [
             'label' => _('Reset password'),
             'ignore' => true,
             'class' => 'ui-button ui-widget ui-state-default ui-button-text-only center',
-            'decorators' => array(
-                'ViewHelper'
-            )
-        ));
+            'decorators' => [
+                'ViewHelper',
+            ],
+        ]);
 
-        $cancel = new Zend_Form_Element_Button("cancel");
+        $cancel = new Zend_Form_Element_Button('cancel');
         $cancel->class = 'ui-button ui-widget ui-state-default ui-button-text-only center';
-        $cancel->setLabel(_("Back"))
-               ->setIgnore(True)
-               ->setAttrib('onclick', 'window.location = ' . Zend_Controller_Front::getInstance()->getBaseUrl('login'))
-               ->setDecorators(array('ViewHelper'));
+        $cancel->setLabel(_('Back'))
+            ->setIgnore(true)
+            ->setAttrib('onclick', 'window.location = ' . Zend_Controller_Front::getInstance()->getBaseUrl('login'))
+            ->setDecorators(['ViewHelper'])
+        ;
         $this->addElement($cancel);
     }
 }

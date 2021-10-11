@@ -2,17 +2,16 @@
 
 class Application_Form_AddShowWho extends Zend_Form_SubForm
 {
-
     public function init()
     {
         // Add hosts autocomplete
-        $this->addElement('text', 'add_show_hosts_autocomplete', array(
-            'label'      => _('Search Users:'),
-            'class'      => 'input_text ui-autocomplete-input',
-            'required'   => false
-        ));
+        $this->addElement('text', 'add_show_hosts_autocomplete', [
+            'label' => _('Search Users:'),
+            'class' => 'input_text ui-autocomplete-input',
+            'required' => false,
+        ]);
 
-        $options = array();
+        $options = [];
         $hosts = Application_Model_User::getHosts();
 
         foreach ($hosts as $host) {
@@ -22,7 +21,8 @@ class Application_Form_AddShowWho extends Zend_Form_SubForm
         //Add hosts selection
         $hosts = new Zend_Form_Element_MultiCheckbox('add_show_hosts');
         $hosts->setLabel(_('DJs:'))
-            ->setMultiOptions($options);
+            ->setMultiOptions($options)
+        ;
 
         $this->addElement($hosts);
     }
@@ -32,7 +32,7 @@ class Application_Form_AddShowWho extends Zend_Form_SubForm
         $elements = $this->getElements();
         foreach ($elements as $element) {
             if ($element->getType() != 'Zend_Form_Element_Hidden') {
-                $element->setAttrib('disabled','disabled');
+                $element->setAttrib('disabled', 'disabled');
             }
         }
     }

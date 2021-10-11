@@ -1,9 +1,13 @@
 <?php
+
 //require_once "../application/configs/conf.php";
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase //PHPUnit_Framework_TestCase
 {
-
     private $_connectionMock;
 
     public function setUp()
@@ -12,7 +16,6 @@ class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase //PHPUnit_Framework
         TestHelper::setupZendBootstrap();
         parent::setUp();
     }
-
 
     public function getConnection()
     {
@@ -27,29 +30,26 @@ class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase //PHPUnit_Framework
             );
             Zend_Db_Table_Abstract::setDefaultAdapter($connection);
         }
+
         return $this->_connectionMock;
     }
 
-
     /**
-     * Load a dataset into the database for the block database tests
+     * Load a dataset into the database for the block database tests.
      *
      * Defines how the initial state of the database should look before each test is executed
      * Called once during setUp() and gets recreated for each new test
      */
     public function getDataSet()
     {
-        $dataset =  new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/seed_files.yml' );
-        return $dataset;
+        return new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/seed_files.yml');
     }
 
-
     /**
-     * Test if the single newest file is added to the Database
-     *
+     * Test if the single newest file is added to the Database.
      */
-
-    public function testGetListofFilesMeetCriteriaSingleMatch() {
+    public function testGetListofFilesMeetCriteriaSingleMatch()
+    {
         TestHelper::loginUser();
         $CC_CONFIG = Config::getConfig();
         $testqry = CcFilesQuery::create();
@@ -67,13 +67,11 @@ class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase //PHPUnit_Framework
         // need to load a example criteria into the database
     }
 
-
     /**
-     * Test if the single newest file is added to the Database
-     *
+     * Test if the single newest file is added to the Database.
      */
-
-    public function testMultiTrackandAlbumsGetLoaded() {
+    public function testMultiTrackandAlbumsGetLoaded()
+    {
         TestHelper::loginUser();
         $CC_CONFIG = Config::getConfig();
         $testqry = CcFilesQuery::create();
@@ -91,5 +89,4 @@ class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase //PHPUnit_Framework
         // add assertion that the length is less than 1 hour...
         // need to load a example criteria into the database
     }
-
 }

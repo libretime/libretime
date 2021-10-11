@@ -1,16 +1,17 @@
 <?php
+
 class Application_Model_ServiceRegister
 {
     public static function GetRemoteIpAddr()
     {
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
             //check ip from share internet
-            $ip=$_SERVER['HTTP_CLIENT_IP'];
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
         } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             //to check ip is pass from proxy
-            $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
         } else {
-            $ip=$_SERVER['REMOTE_ADDR'];
+            $ip = $_SERVER['REMOTE_ADDR'];
         }
 
         return $ip;
@@ -29,12 +30,11 @@ class Application_Model_ServiceRegister
         // to allow access via an ipv6 address.
         // http://[::1]:2812 does not respond.
         // Bug: http://savannah.nongnu.org/bugs/?27608
-        if ($p_ipAddress == "::1") {
-            $p_ipAddress = "127.0.0.1";
+        if ($p_ipAddress == '::1') {
+            $p_ipAddress = '127.0.0.1';
         }
 
         $component->setDbIp($p_ipAddress);
         $component->save();
     }
-
 }
