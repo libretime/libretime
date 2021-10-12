@@ -27,7 +27,7 @@ function openAddShowForm(nowOrFuture) {
             $('#schedule-record-rebroadcast').hide();
             $('#schedule-show-who').hide();
             $('#schedule-show-style').hide();
-            
+
         }
         $("#schedule-show-what").show(0, function(){
             $add_show_name = $("#add_show_name");
@@ -101,18 +101,18 @@ function calculateShowColor() {
 //$el is DOM element #add-show-form
 //form is the new form contents to append to $el
 function redrawAddShowForm($el, form) {
-    
+
     //need to clean up the color picker.
     $el.find("#schedule-show-style input").each(function(i, el){
-        var $input = $(this), 
+        var $input = $(this),
             colId = $input.data("colorpickerId");
-        
+
         $("#"+colId).remove();
         $input.removeData();
     });
-    
+
     $el.empty().append(form);
-    
+
     setAddShowEvents($el);
 }
 
@@ -121,7 +121,7 @@ function closeAddShowForm(event) {
     event.preventDefault();
 
     var $el = $("#add-show-form");
-    
+
     $el.hide();
     windowResize();
 
@@ -146,7 +146,7 @@ function startDpSelect(dateText, inst) {
 
 function endDpSelect(dateText, inst) {
     var time, date;
-    
+
     time = dateText.split("-");
     date = new Date(time[0], time[1] - 1, time[2]);
 
@@ -187,7 +187,7 @@ function findHosts(request, callback) {
     noResult[0]['value'] = $("#add_show_hosts_autocomplete").val();
     noResult[0]['label'] = $.i18n._("No result found");
     noResult[0]['index'] = null;
-    
+
     $.post(url,
         {format: "json", term: search},
 
@@ -202,12 +202,12 @@ function findHosts(request, callback) {
 }
 
 function beginEditShow(data){
-    
+
     if (data.show_error == true){
         alertShowErrorAndReload();
         return false;
     }
-    
+
     redrawAddShowForm($("#add-show-form"), data.newForm);
     toggleAddShowButton();
     openAddShowForm(false);
@@ -234,11 +234,11 @@ function hashCode(str) { // java String#hashCode
        hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
     return hash;
-} 
+}
 
 function intToRGB(i){
-    return (padZeroes(((i>>16)&0xFF).toString(16), 2) + 
-           padZeroes(((i>>8)&0xFF).toString(16), 2)+ 
+    return (padZeroes(((i>>16)&0xFF).toString(16), 2) +
+           padZeroes(((i>>8)&0xFF).toString(16), 2)+
            padZeroes((i&0xFF).toString(16), 2)
            );
 }
@@ -302,11 +302,11 @@ function setAddShowEvents(form) {
     if(!form.find("#add_show_rebroadcast").attr('checked')) {
         form.find("#schedule-record-rebroadcast > fieldset:not(:first-child)").hide();
     }
-    
+
     // If we're adding a new show or the show has no logo, hide the "Current Logo" element tree
     $("[id^=add_show_logo_current]").toggle(($("#add_show_logo_current").attr("src") !== "")
             && ($(".button-bar.bottom").find(".ui-button-text").text() === "Update show"));
-    
+
     var submitButton = $(".button-bar.bottom").find(".add-show-submit");
     $("[id^=add_show_instance_description]").toggle(submitButton.attr("data-action") === "edit-repeating-show-instance");
 
@@ -319,7 +319,7 @@ function setAddShowEvents(form) {
     form.find("#add_show_repeats").click(function(){
         $(this).blur();
         form.find("#schedule-show-when > fieldset:last").toggle();
-        
+
         var checkBoxSelected = false;
         var days = form.find("#add_show_day_check-element input").each( function() {
                 var currentCheckBox = $(this).attr("checked");
@@ -327,14 +327,14 @@ function setAddShowEvents(form) {
                     checkBoxSelected = true;
                 }
             });
-        
+
 
         if (!checkBoxSelected){
             var d = getDateFromString(form.find("#add_show_start_date").attr("value"));
             if ( d != null)
                 form.find("#add_show_day_check-"+d.getDay()).attr('checked', true);
         }
-        
+
         //must switch rebroadcast displays
         if(form.find("#add_show_rebroadcast").attr('checked')) {
 
@@ -356,13 +356,13 @@ function setAddShowEvents(form) {
             }
             return false;
         }
-        
+
         //only display the warning message if a show is being edited
         if ($(".button-bar.bottom").find(".ui-button-text").text() === "Update show") {
             if ($(this).attr("checked") && $("#show-link-warning").length === 0) {
                 $(this).parent().after("<ul id='show-link-warning' class='errors'><li>"+$.i18n._("Warning: All other repetitions of this show will have their contents replaced to match the show you selected 'Edit Show' with.")+"</li></ul>");
             }
-            
+
             if (!$(this).attr("checked") && $("#show-link-warning").length !== 0) {
                 $("#show-link-warning").remove();
             }
@@ -484,7 +484,7 @@ function setAddShowEvents(form) {
             at: "right center"
         }
     });
-    
+
     form.find(".show_autoplaylist_help_icon").qtip({
         content: {
             text: $.i18n._("Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/docs/playlists'>More information</a>")
@@ -679,7 +679,7 @@ function setAddShowEvents(form) {
         select: autoSelect,
         delay: 200
     });
-    
+
     form.find("#add_show_hosts_autocomplete").keypress(function(e){
         if( e.which == 13 ){
             return false;
@@ -698,13 +698,13 @@ function setAddShowEvents(form) {
             $(this).ColorPickerSetColor(this.value);
         }
     });
-    
+
     // when an image is uploaded, we want to show it to the user
     form.find("#add_show_logo").change(function(event) {
         if (this.files && this.files[0]) {
             $("#add_show_logo_preview").show();
             var reader = new FileReader(); // browser compatibility?
-            
+
             reader.onload = function (e) {
                 $("#add_show_logo_preview")
                     .attr('src', e.target.result);
@@ -723,14 +723,14 @@ function setAddShowEvents(form) {
             $("#add_show_logo_preview").hide();
         }
     });
-    
+
     form.find("#add_show_logo_current_remove").click(function() {
         if (confirm($.i18n._('Are you sure you want to delete the current logo?'))) {
             var showId = $("#add_show_id").attr("value");
-            
+
             if (showId && $("#add_show_logo_current").attr("src") !== "") {
                 var action = '/rest/show-image?csrf_token=' + $('#csrf').val() + '&id=' + showId;
-                
+
                 $.ajax({
                     url: action,
                     data: '',
@@ -743,15 +743,15 @@ function setAddShowEvents(form) {
             }
         }
     });
-    
+
     form.find("#add-show-close").click(closeAddShowForm);
 
     form.find(".add-show-submit").click(function(event) {
         event.preventDefault();
-        
+
         var addShowButton = $(this);
-        
-        $('#schedule-add-show').block({ 
+
+        $('#schedule-add-show').block({
             message: null,
             applyPlatformOpacityRules: false
         });
@@ -762,10 +762,10 @@ function setAddShowEvents(form) {
         if (form.find("#add_show_record").attr("disabled", true)) {
             form.find("#add_show_record").attr("disabled", false);
         }
-        
+
         var startDateDisabled = false,
             startTimeDisabled = false;
-        
+
         // Similarly, we need to re-enable start date and time if they're disabled
         if (form.find("#add_show_start_date").prop("disabled") === true) {
             form.find("#add_show_start_date").attr("disabled", false);
@@ -780,7 +780,7 @@ function setAddShowEvents(form) {
         // We need to notify the application if date and time were disabled
         data.push({name: 'start_date_disabled', value: startDateDisabled});
         data.push({name: 'start_time_disabled', value: startTimeDisabled});
-        
+
         var hosts = $('#add_show_hosts-element input').map(function() {
             if($(this).attr("checked")) {
                 return $(this).val();
@@ -796,7 +796,7 @@ function setAddShowEvents(form) {
         var start_date = $("#add_show_start_date").val(),
             end_date = $("#add_show_end_date").val(),
             action = baseUrl+"Schedule/"+String(addShowButton.attr("data-action"));
-        
+
         var image;
         if ($('#add_show_logo')[0] && $('#add_show_logo')[0].files
                 && $('#add_show_logo')[0].files[0]) {
@@ -805,12 +805,12 @@ function setAddShowEvents(form) {
         }
 
         $.ajax({
-            url: action, 
+            url: action,
             data: {format: "json", data: data, hosts: hosts, days: days},
             success: function(json) {
                 if (json.showId && image) { // Successfully added the show, and it contains an image to upload
                     var imageAction = '/rest/show-image?csrf_token=' + $('#csrf').val() + '&id=' + json.showId;
-                    
+
                     // perform a second xhttprequest in order to send the show image
                     $.ajax({
                         url: imageAction,
@@ -823,20 +823,20 @@ function setAddShowEvents(form) {
                 }
 
                 $('#schedule-add-show').unblock();
-                
+
                 var $addShowForm = $("#add-show-form");
-                
+
                 if (json.form) {
-                    
+
                     redrawAddShowForm($addShowForm, json.form);
-    
+
                     $("#add_show_end_date").val(end_date);
                     $("#add_show_start_date").val(start_date);
                     showErrorSections();
                 } else if (json.edit) {
                     $("#schedule_calendar").removeAttr("style")
                         .fullCalendar('render');
-    
+
                     $addShowForm.hide();
                     toggleAddShowButton();
                     $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json){
@@ -858,23 +858,23 @@ function setAddShowEvents(form) {
 
     var regDate = new RegExp(/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$/);
     var regTime = new RegExp(/^[0-2][0-9]:[0-5][0-9]$/);
-    
+
     // when start date/time changes, set end date/time to start date/time+1 hr
     $('#add_show_start_date, #add_show_start_time').bind('input', 'change', function(){
         var startDateString = $('#add_show_start_date').val();
         var startTimeString = $('#add_show_start_time').val();
-        
+
         if(regDate.test(startDateString) && regTime.test(startTimeString)){
             var startDate = startDateString.split('-');
             var startTime = startTimeString.split(':');
             var startDateTime = new Date(startDate[0], parseInt(startDate[1], 10)-1, startDate[2], startTime[0], startTime[1], 0, 0);
-    
+
             var endDateString = $('#add_show_end_date_no_repeat').val();
             var endTimeString = $('#add_show_end_time').val()
             var endDate = endDateString.split('-');
             var endTime = endTimeString.split(':');
             var endDateTime = new Date(endDate[0], parseInt(endDate[1], 10)-1, endDate[2], endTime[0], endTime[1], 0, 0);
-    
+
             if(startDateTime.getTime() >= endDateTime.getTime()){
                 var duration = $('#add_show_duration').val();
                 // parse duration
@@ -888,13 +888,13 @@ function setAddShowEvents(form) {
                 }
                 endDateTime = new Date(startDateTime.getTime() + time);
             }
-    
+
             var endDateFormat = endDateTime.getFullYear() + '-' + pad(endDateTime.getMonth()+1,2) + '-' + pad(endDateTime.getDate(),2);
             var endTimeFormat = pad(endDateTime.getHours(),2) + ':' + pad(endDateTime.getMinutes(),2);
-    
+
             $('#add_show_end_date_no_repeat').val(endDateFormat);
             $('#add_show_end_time').val(endTimeFormat);
-    
+
             // calculate duration
             var startDateTimeString = startDateString + " " + startTimeString;
             var endDateTimeString = $('#add_show_end_date_no_repeat').val() + " " + $('#add_show_end_time').val();
@@ -907,7 +907,7 @@ function setAddShowEvents(form) {
     $('#add_show_end_date_no_repeat, #add_show_end_time').bind('input', 'change', function(){
         var endDateString = $('#add_show_end_date_no_repeat').val();
         var endTimeString = $('#add_show_end_time').val()
-        
+
         if(regDate.test(endDateString) && regTime.test(endTimeString)){
             var startDateString = $('#add_show_start_date').val();
             var startTimeString = $('#add_show_start_time').val();
@@ -918,7 +918,7 @@ function setAddShowEvents(form) {
             var endDate = endDateString.split('-');
             var endTime = endTimeString.split(':');
             var endDateTime = new Date(endDate[0], parseInt(endDate[1], 10)-1, endDate[2], endTime[0], endTime[1], 0, 0);
-    
+
             if(startDateTime.getTime() > endDateTime.getTime()){
                 $('#add_show_end_date_no_repeat').css('background-color', '#F49C9C');
                 $('#add_show_end_time').css('background-color', '#F49C9C');
@@ -926,7 +926,7 @@ function setAddShowEvents(form) {
                 $('#add_show_end_date_no_repeat').css('background-color', '');
                 $('#add_show_end_time').css('background-color', '');
             }
-    
+
             // calculate duration
             var startDateTimeString = startDateString + " " + startTimeString;
             var endDateTimeString = endDateString + " " + endTimeString;
@@ -940,7 +940,7 @@ function setAddShowEvents(form) {
     }else{
         $('#custom_auth_div').hide()
     }
-    
+
     $('#cb_custom_auth').change(function(){
         if($(this).attr('checked')){
             $('#custom_auth_div').show()
@@ -951,17 +951,17 @@ function setAddShowEvents(form) {
 
     function calculateDuration(startDateTime, endDateTime, timezone){
         var loadingIcon = $('#icon-loader-small');
-        
+
         loadingIcon.show();
         $.post(
-            baseUrl+"Schedule/calculate-duration", 
-            {startTime: startDateTime, endTime: endDateTime, timezone: timezone}, 
+            baseUrl+"Schedule/calculate-duration",
+            {startTime: startDateTime, endTime: endDateTime, timezone: timezone},
             function(data) {
                 $('#add_show_duration').val(JSON.parse(data));
                 loadingIcon.hide();
         });
     }
-    
+
     // Since Zend's setAttrib won't apply through the wrapper, set accept=image/* here
     $("#add_show_logo").prop("accept", "image/*");
 

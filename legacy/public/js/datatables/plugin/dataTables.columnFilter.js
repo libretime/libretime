@@ -1,17 +1,17 @@
 /*
 * File:        jquery.dataTables.columnFilter.js
 * Version:     1.4.8.
-* Author:      Jovan Popovic 
-* 
+* Author:      Jovan Popovic
+*
 * Copyright 2011-2012 Jovan Popovic, all rights reserved.
 *
 * This source file is free software, under either the GPL v2 license or a
 * BSD style license, as supplied with this software.
-* 
-* This source file is distributed in the hope that it will be useful, but 
-* WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-* or FITNESS FOR A PARTICULAR PURPOSE. 
-* 
+*
+* This source file is distributed in the hope that it will be useful, but
+* WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+* or FITNESS FOR A PARTICULAR PURPOSE.
+*
 * Parameters:"
 * @sPlaceHolder                 String      Place where inline filtering function should be placed ("tfoot", "thead:before", "thead:after"). Default is "tfoot"
 * @sRangeSeparator              String      Separator that will be used when range values are sent to the server-side. Default value is "~".
@@ -65,7 +65,7 @@
             // use all rows
             else aiRows = oSettings.aiDisplayMaster; // all row numbers
 
-            // set up data array    
+            // set up data array
             var asResultData = new Array();
 
             for (var i = 0, c = aiRows.length; i < c; i++) {
@@ -139,7 +139,7 @@
                         if (oTable.fnSettings().oFeatures.bServerSide && iFilterLength != 0) {
                             //If filter length is set in the server-side processing mode
                             //Check has the user entered at least iFilterLength new characters
-    
+
                             var currentFilter = oTable.fnSettings().aoPreSearchCols[index].sSearch;
                             var iLastFilterLength = $(this).data("dt-iLastFilterLength");
                             if (typeof iLastFilterLength == "undefined")
@@ -181,7 +181,7 @@
         function fnCreateRangeInput(oTable) {
 
             //var currentFilter = oTable.fnSettings().aoPreSearchCols[i].sSearch;
-            
+
             var label = "";
             if (th.attr('id') == "bit_rate") {
                 label = $.i18n._("kbps");
@@ -192,7 +192,7 @@
             } else if (th.attr('id') == "sample_rate") {
                 label = $.i18n._("kHz");
             }
-            
+
             th.html(_fnRangeLabelPart(0));
             var sFromId = oTable.attr("id") + '_range_from_' + i;
             var from = $('<input type="text" class="number_range_filter" id="' + sFromId + '" rel="' + i + '" placeholder="' + label + '"/>');
@@ -251,7 +251,7 @@
                     var iMax = document.getElementById(sToId).value * 1;
                     if (iMin != 0 && iMax != 0 && iMin > iMax)
                         return;
-    
+
                     oTable.fnDraw();
                     fnOnFiltered();
                 }
@@ -377,8 +377,8 @@
         function fnCreateSelect(oTable, aData, bRegex) {
             var oSettings = oTable.fnSettings();
             if (aData == null && oSettings.sAjaxSource != "" && !oSettings.oFeatures.bServerSide) {
-                // Add a function to the draw callback, which will check for the Ajax data having 
-                // been loaded. Use a closure for the individual column elements that are used to 
+                // Add a function to the draw callback, which will check for the Ajax data having
+                // been loaded. Use a closure for the individual column elements that are used to
                 // built the column filter, since 'i' and 'th' (etc) are locally "global".
                 oSettings.aoDrawCallback.push({
                     "fn": (function (iColumn, nTh, sLabel) {
@@ -557,7 +557,7 @@
             });
             oTable.fnFilter('', index, true, false);
             return false;
-            }); 
+            });
             */
         }
 
@@ -589,7 +589,7 @@
         };
 
         properties = $.extend(defaults, options);
-        
+
         return this.each(function () {
 
             if (!oTable.fnSettings().oFeatures.bFilter)
@@ -636,7 +636,7 @@
 
                 oHost = oTable.fnSettings().nTHead;
 
-                
+
             }
 
             //$(sFilterRow + " th", oHost).each(function (index) {//bug with ColVis
@@ -700,7 +700,7 @@
                     }
                 }
             });
-            
+
             for (j = 0; j < aiCustomSearch_Indexes.length; j++) {
                 //var index = aiCustomSearch_Indexes[j];
                 var fnSearch_ = function () {

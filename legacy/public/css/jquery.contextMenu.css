@@ -15,13 +15,13 @@
 .context-menu-list {
     margin:0;
     padding:5px 0;
-    
+
     min-width: 120px;
     max-width: 250px;
     display: inline-block;
     position: absolute;
     list-style-type: none;
-    
+
     border: 1px solid #333333;
 
     -webkit-border-radius: 2px;
@@ -29,13 +29,13 @@
             border-radius: 2px;
 
     background: #f0f0f0;
-    
+
     -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
        -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         -ms-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
          -o-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-    
+
     font-family: Arial, Helvetica, sans-serif;
     font-size: 14px;
 }
@@ -50,7 +50,7 @@
     width: 100%;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 
 .context-menu-item.icon {
@@ -100,7 +100,7 @@
 /* icons
     #protip:
     In case you want to use sprites for icons (which I would suggest you do) have a look at
-    http://css-tricks.com/13224-pseudo-spriting/ to get an idea of how to implement 
+    http://css-tricks.com/13224-pseudo-spriting/ to get an idea of how to implement
     .context-menu-item.icon:before {}
  */
 .context-menu-item.icon { min-height: 26px; background-repeat: no-repeat; background-position: 4px 2px; }
@@ -138,7 +138,7 @@
 .context-menu-input > label > select {
     display: block;
     width: 100%;
-    
+
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
         -ms-box-sizing: border-box;

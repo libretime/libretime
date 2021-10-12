@@ -44,7 +44,7 @@ denise@denise-DX4860:~/airtime/legacy/public/js/datatables/plugin$ diff -u dataT
 +                        if (oTable.fnSettings().oFeatures.bServerSide && iFilterLength != 0) {
 +                            //If filter length is set in the server-side processing mode
 +                            //Check has the user entered at least iFilterLength new characters
-+    
++
 +                            var currentFilter = oTable.fnSettings().aoPreSearchCols[index].sSearch;
 +                            var iLastFilterLength = $(this).data("dt-iLastFilterLength");
 +                            if (typeof iLastFilterLength == "undefined")
@@ -70,7 +70,7 @@ denise@denise-DX4860:~/airtime/legacy/public/js/datatables/plugin$ diff -u dataT
 -                    fnOnFiltered();
                  });
              }
- 
+
 @@ -168,7 +172,8 @@
              input.blur(function () {
                  if (this.value == "") {
@@ -83,9 +83,9 @@ denise@denise-DX4860:~/airtime/legacy/public/js/datatables/plugin$ diff -u dataT
          }
 @@ -176,13 +181,25 @@
          function fnCreateRangeInput(oTable) {
- 
+
              //var currentFilter = oTable.fnSettings().aoPreSearchCols[i].sSearch;
-+            
++
 +            var label = "";
 +            if (th.attr('id') == "bit_rate") {
 +                label = $.i18n._("kbps");
@@ -96,7 +96,7 @@ denise@denise-DX4860:~/airtime/legacy/public/js/datatables/plugin$ diff -u dataT
 +            } else if (th.attr('id') == "sample_rate") {
 +                label = $.i18n._("kHz");
 +            }
-+            
++
              th.html(_fnRangeLabelPart(0));
              var sFromId = oTable.attr("id") + '_range_from_' + i;
 -            var from = $('<input type="text" class="number_range_filter" id="' + sFromId + '" rel="' + i + '"/>');
@@ -110,8 +110,8 @@ denise@denise-DX4860:~/airtime/legacy/public/js/datatables/plugin$ diff -u dataT
              th.append(_fnRangeLabelPart(2));
              th.wrapInner('<span class="filterColumn filter_number_range" />');
 @@ -228,14 +245,16 @@
- 
- 
+
+
              $('#' + sFromId + ',#' + sToId, th).keyup(function () {
 -
 -                var iMin = document.getElementById(sFromId).value * 1;
@@ -127,13 +127,13 @@ denise@denise-DX4860:~/airtime/legacy/public/js/datatables/plugin$ diff -u dataT
 +                    var iMax = document.getElementById(sToId).value * 1;
 +                    if (iMin != 0 && iMax != 0 && iMin > iMax)
 +                        return;
-+    
++
 +                    oTable.fnDraw();
 +                    fnOnFiltered();
 +                }
              });
- 
- 
+
+
 @@ -566,7 +585,7 @@
              sRangeSeparator: "~",
              iFilteringDelay: 500,
@@ -141,12 +141,12 @@ denise@denise-DX4860:~/airtime/legacy/public/js/datatables/plugin$ diff -u dataT
 -            sRangeFormat: "From {from} to {to}"
 +            sRangeFormat: $.i18n._("From {from} to {to}")
          };
- 
+
          properties = $.extend(defaults, options);
 @@ -730,4 +749,4 @@
- 
- 
- 
+
+
+
 -})(jQuery);
 \ No newline at end of file
 +})(jQuery);

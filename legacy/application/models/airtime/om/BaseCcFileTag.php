@@ -4,7 +4,7 @@
 /**
  * Base class that represents a row from the 'cc_file_tag' table.
  *
- * 
+ *
  *
  * @package    propel.generator.airtime.om
  */
@@ -68,7 +68,7 @@ abstract class BaseCcFileTag extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [id] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getDbId()
@@ -78,7 +78,7 @@ abstract class BaseCcFileTag extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [file_id] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getDbFileId()
@@ -88,7 +88,7 @@ abstract class BaseCcFileTag extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [tag_id] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getDbTagId()
@@ -98,7 +98,7 @@ abstract class BaseCcFileTag extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [id] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcFileTag The current object (for fluent API support)
 	 */
@@ -118,7 +118,7 @@ abstract class BaseCcFileTag extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [file_id] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcFileTag The current object (for fluent API support)
 	 */
@@ -142,7 +142,7 @@ abstract class BaseCcFileTag extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [tag_id] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcFileTag The current object (for fluent API support)
 	 */
@@ -298,7 +298,7 @@ abstract class BaseCcFileTag extends BaseObject  implements Persistent
 		if ($con === null) {
 			$con = Propel::getConnection(CcFileTagPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
-		
+
 		$con->beginTransaction();
 		try {
 			$ret = $this->preDelete($con);
@@ -340,7 +340,7 @@ abstract class BaseCcFileTag extends BaseObject  implements Persistent
 		if ($con === null) {
 			$con = Propel::getConnection(CcFileTagPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
-		
+
 		$con->beginTransaction();
 		$isInsert = $this->isNew();
 		try {
@@ -573,7 +573,7 @@ abstract class BaseCcFileTag extends BaseObject  implements Persistent
 	 * type constants.
 	 *
 	 * @param     string  $keyType (optional) One of the class type constants BasePeer::TYPE_PHPNAME, BasePeer::TYPE_STUDLYPHPNAME,
-	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM. 
+	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM.
 	 *                    Defaults to BasePeer::TYPE_PHPNAME.
 	 * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
 	 * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.

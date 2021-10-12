@@ -4,7 +4,7 @@
 /**
  * Base class that represents a row from the 'cc_backup' table.
  *
- * 
+ *
  *
  * @package    propel.generator.airtime.om
  */
@@ -70,7 +70,7 @@ abstract class BaseCcBackup extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [token] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getToken()
@@ -80,7 +80,7 @@ abstract class BaseCcBackup extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [sessionid] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getSessionid()
@@ -90,7 +90,7 @@ abstract class BaseCcBackup extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [status] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getStatus()
@@ -100,7 +100,7 @@ abstract class BaseCcBackup extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [optionally formatted] temporal [fromtime] column value.
-	 * 
+	 *
 	 *
 	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
 	 *							If format is NULL, then the raw DateTime object will be returned.
@@ -133,7 +133,7 @@ abstract class BaseCcBackup extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [optionally formatted] temporal [totime] column value.
-	 * 
+	 *
 	 *
 	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
 	 *							If format is NULL, then the raw DateTime object will be returned.
@@ -166,7 +166,7 @@ abstract class BaseCcBackup extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [token] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcBackup The current object (for fluent API support)
 	 */
@@ -186,7 +186,7 @@ abstract class BaseCcBackup extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [sessionid] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcBackup The current object (for fluent API support)
 	 */
@@ -206,7 +206,7 @@ abstract class BaseCcBackup extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [status] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcBackup The current object (for fluent API support)
 	 */
@@ -226,7 +226,7 @@ abstract class BaseCcBackup extends BaseObject  implements Persistent
 
 	/**
 	 * Sets the value of [fromtime] column to a normalized version of the date/time value specified.
-	 * 
+	 *
 	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcBackup The current object (for fluent API support)
@@ -262,7 +262,7 @@ abstract class BaseCcBackup extends BaseObject  implements Persistent
 			$currNorm = ($this->fromtime !== null && $tmpDt = new DateTime($this->fromtime)) ? $tmpDt->format('Y-m-d\\TH:i:sO') : null;
 			$newNorm = ($dt !== null) ? $dt->format('Y-m-d\\TH:i:sO') : null;
 
-			if ( ($currNorm !== $newNorm) // normalized values don't match 
+			if ( ($currNorm !== $newNorm) // normalized values don't match
 					)
 			{
 				$this->fromtime = ($dt ? $dt->format('Y-m-d\\TH:i:sO') : null);
@@ -275,7 +275,7 @@ abstract class BaseCcBackup extends BaseObject  implements Persistent
 
 	/**
 	 * Sets the value of [totime] column to a normalized version of the date/time value specified.
-	 * 
+	 *
 	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcBackup The current object (for fluent API support)
@@ -311,7 +311,7 @@ abstract class BaseCcBackup extends BaseObject  implements Persistent
 			$currNorm = ($this->totime !== null && $tmpDt = new DateTime($this->totime)) ? $tmpDt->format('Y-m-d\\TH:i:sO') : null;
 			$newNorm = ($dt !== null) ? $dt->format('Y-m-d\\TH:i:sO') : null;
 
-			if ( ($currNorm !== $newNorm) // normalized values don't match 
+			if ( ($currNorm !== $newNorm) // normalized values don't match
 					)
 			{
 				$this->totime = ($dt ? $dt->format('Y-m-d\\TH:i:sO') : null);
@@ -450,7 +450,7 @@ abstract class BaseCcBackup extends BaseObject  implements Persistent
 		if ($con === null) {
 			$con = Propel::getConnection(CcBackupPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
-		
+
 		$con->beginTransaction();
 		try {
 			$ret = $this->preDelete($con);
@@ -492,7 +492,7 @@ abstract class BaseCcBackup extends BaseObject  implements Persistent
 		if ($con === null) {
 			$con = Propel::getConnection(CcBackupPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
-		
+
 		$con->beginTransaction();
 		$isInsert = $this->isNew();
 		try {
@@ -686,7 +686,7 @@ abstract class BaseCcBackup extends BaseObject  implements Persistent
 	 * type constants.
 	 *
 	 * @param     string  $keyType (optional) One of the class type constants BasePeer::TYPE_PHPNAME, BasePeer::TYPE_STUDLYPHPNAME,
-	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM. 
+	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM.
 	 *                    Defaults to BasePeer::TYPE_PHPNAME.
 	 * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
 	 *

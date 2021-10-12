@@ -1006,4 +1006,3 @@ abstract class BaseCcPrefPeer
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
 BaseCcPrefPeer::buildTableMap();
-

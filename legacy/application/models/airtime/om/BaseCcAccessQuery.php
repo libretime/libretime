@@ -4,7 +4,7 @@
 /**
  * Base class that represents a query for the 'cc_access' table.
  *
- * 
+ *
  *
  * @method     CcAccessQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     CcAccessQuery orderByGunid($order = Criteria::ASC) Order by the gunid column
@@ -134,7 +134,7 @@ abstract class BaseCcAccessQuery extends ModelCriteria
 	 * @return    PropelObjectCollection|array|mixed the list of results, formatted by the current formatter
 	 */
 	public function findPks($keys, $con = null)
-	{	
+	{
 		$criteria = $this->isKeepQuery() ? clone $this : $this;
 		return $this
 			->filterByPrimaryKeys($keys)
@@ -167,7 +167,7 @@ abstract class BaseCcAccessQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the id column
-	 * 
+	 *
 	 * @param     int|array $id The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -184,7 +184,7 @@ abstract class BaseCcAccessQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the gunid column
-	 * 
+	 *
 	 * @param     string $gunid The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -206,7 +206,7 @@ abstract class BaseCcAccessQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the token column
-	 * 
+	 *
 	 * @param     string|array $token The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -237,7 +237,7 @@ abstract class BaseCcAccessQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the chsum column
-	 * 
+	 *
 	 * @param     string $chsum The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -259,7 +259,7 @@ abstract class BaseCcAccessQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the ext column
-	 * 
+	 *
 	 * @param     string $ext The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -281,7 +281,7 @@ abstract class BaseCcAccessQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the type column
-	 * 
+	 *
 	 * @param     string $type The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -303,7 +303,7 @@ abstract class BaseCcAccessQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the parent column
-	 * 
+	 *
 	 * @param     string|array $parent The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -334,7 +334,7 @@ abstract class BaseCcAccessQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the owner column
-	 * 
+	 *
 	 * @param     int|array $owner The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -365,7 +365,7 @@ abstract class BaseCcAccessQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the ts column
-	 * 
+	 *
 	 * @param     string|array $ts The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -410,7 +410,7 @@ abstract class BaseCcAccessQuery extends ModelCriteria
 
 	/**
 	 * Adds a JOIN clause to the query using the CcSubjs relation
-	 * 
+	 *
 	 * @param     string $relationAlias optional alias for the relation
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
@@ -420,7 +420,7 @@ abstract class BaseCcAccessQuery extends ModelCriteria
 	{
 		$tableMap = $this->getTableMap();
 		$relationMap = $tableMap->getRelation('CcSubjs');
-		
+
 		// create a ModelJoin object for this join
 		$join = new ModelJoin();
 		$join->setJoinType($joinType);
@@ -428,7 +428,7 @@ abstract class BaseCcAccessQuery extends ModelCriteria
 		if ($previousJoin = $this->getPreviousJoin()) {
 			$join->setPreviousJoin($previousJoin);
 		}
-		
+
 		// add the ModelJoin to the current object
 		if($relationAlias) {
 			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
@@ -436,7 +436,7 @@ abstract class BaseCcAccessQuery extends ModelCriteria
 		} else {
 			$this->addJoinObject($join, 'CcSubjs');
 		}
-		
+
 		return $this;
 	}
 
@@ -444,7 +444,7 @@ abstract class BaseCcAccessQuery extends ModelCriteria
 	 * Use the CcSubjs relation CcSubjs object
 	 *
 	 * @see       useQuery()
-	 * 
+	 *
 	 * @param     string $relationAlias optional alias for the relation,
 	 *                                   to be used as main alias in the secondary query
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
@@ -470,7 +470,7 @@ abstract class BaseCcAccessQuery extends ModelCriteria
 		if ($ccAccess) {
 			$this->addUsingAlias(CcAccessPeer::ID, $ccAccess->getId(), Criteria::NOT_EQUAL);
 	  }
-	  
+
 		return $this;
 	}
 

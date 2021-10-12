@@ -4,7 +4,7 @@
 /**
  * Base class that represents a query for the 'cc_backup' table.
  *
- * 
+ *
  *
  * @method     CcBackupQuery orderByToken($order = Criteria::ASC) Order by the token column
  * @method     CcBackupQuery orderBySessionid($order = Criteria::ASC) Order by the sessionid column
@@ -114,7 +114,7 @@ abstract class BaseCcBackupQuery extends ModelCriteria
 	 * @return    PropelObjectCollection|array|mixed the list of results, formatted by the current formatter
 	 */
 	public function findPks($keys, $con = null)
-	{	
+	{
 		$criteria = $this->isKeepQuery() ? clone $this : $this;
 		return $this
 			->filterByPrimaryKeys($keys)
@@ -147,7 +147,7 @@ abstract class BaseCcBackupQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the token column
-	 * 
+	 *
 	 * @param     string $token The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -169,7 +169,7 @@ abstract class BaseCcBackupQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the sessionid column
-	 * 
+	 *
 	 * @param     string $sessionid The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -191,7 +191,7 @@ abstract class BaseCcBackupQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the status column
-	 * 
+	 *
 	 * @param     string $status The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -213,7 +213,7 @@ abstract class BaseCcBackupQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the fromtime column
-	 * 
+	 *
 	 * @param     string|array $fromtime The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -244,7 +244,7 @@ abstract class BaseCcBackupQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the totime column
-	 * 
+	 *
 	 * @param     string|array $totime The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -285,7 +285,7 @@ abstract class BaseCcBackupQuery extends ModelCriteria
 		if ($ccBackup) {
 			$this->addUsingAlias(CcBackupPeer::TOKEN, $ccBackup->getToken(), Criteria::NOT_EQUAL);
 	  }
-	  
+
 		return $this;
 	}
 

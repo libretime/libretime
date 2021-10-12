@@ -28,7 +28,7 @@ WaveformDrawer.prototype.loaderStates = {
         "decoding": "progress progress-success progress-striped active",
         "loader": "bar"
     },
-    
+
     "jQueryUI": {
         "downloading": "ui-progressbar ui-widget ui-widget-content ui-corner-all",
         "decoding": "ui-progressbar ui-widget ui-widget-content ui-corner-all",
@@ -43,7 +43,7 @@ WaveformDrawer.prototype.loaderStates = {
 };
 
 WaveformDrawer.prototype.getPeaks = function(buffer, cues) {
-    
+
     // Frames per pixel
     var res = this.config.getResolution(),
         peaks = [],
@@ -53,16 +53,16 @@ WaveformDrawer.prototype.getPeaks = function(buffer, cues) {
         numChan = buffer.numberOfChannels,
         weight = 1 / (numChan),
         makeMono = this.config.isDisplayMono(),
-        chan, 
-        start, 
-        end, 
-        vals, 
-        max, 
+        chan,
+        start,
+        end,
+        vals,
+        max,
         min,
         maxPeak = -Infinity; //used to scale the waveform on the canvas.
 
     for (i = 0; i < pixels; i++) {
-        
+
         peaks[i] = [];
 
         for (c = 0; c < numChan; c++) {
@@ -87,13 +87,13 @@ WaveformDrawer.prototype.getPeaks = function(buffer, cues) {
             peaks[i].push({max:max, min:min});
             maxPeak = Math.max.apply(Math, [maxPeak, Math.abs(max), Math.abs(min)]);
         }
-    
+
         if (makeMono) {
             max = min = 0;
 
             for (c = 0 ; c < numChan; c++) {
                 max = max + weight * peaks[i][c].max;
-                min = min + weight * peaks[i][c].min;     
+                min = min + weight * peaks[i][c].min;
             }
 
             peaks[i] = []; //need to clear out old stuff (maybe we should keep it for toggling views?).
@@ -110,7 +110,7 @@ WaveformDrawer.prototype.setTimeShift = function(pixels) {
 
     for (i = 0, len = this.channels.length; i < len; i++) {
         this.channels[i].div.style.left = pixels+"px";
-    } 
+    }
 };
 
 WaveformDrawer.prototype.updateLoader = function(percent) {
@@ -129,7 +129,7 @@ WaveformDrawer.prototype.drawLoading = function() {
 
     div = document.createElement("div");
     div.style.height = this.height+"px";
-    
+
     loader = document.createElement("div");
     loader.style.height = "10px";
     loader.className = this.loaderStates["loader"];
@@ -156,10 +156,10 @@ WaveformDrawer.prototype.drawBuffer = function(buffer, pixelOffset, cues) {
         numChan = makeMono? 1 : buffer.numberOfChannels,
         numSamples = cues.cueout - cues.cuein + 1,
         fragment = document.createDocumentFragment(),
-        wrapperHeight; 
+        wrapperHeight;
 
     this.container.innerHTML = "";
-    this.channels = [];  
+    this.channels = [];
 
     //width and height is per waveform canvas.
     this.width = Math.ceil(numSamples / res);
@@ -190,11 +190,11 @@ WaveformDrawer.prototype.drawBuffer = function(buffer, pixelOffset, cues) {
 
         top = top + this.height;
     }
-  
+
     wrapperHeight = numChan * this.height;
     this.container.style.height = wrapperHeight+"px";
     this.container.appendChild(fragment);
-    
+
 
     this.getPeaks(buffer, cues);
     this.updateEditor();
@@ -217,11 +217,11 @@ WaveformDrawer.prototype.drawFrame = function(chanNum, index, peaks, maxPeak, cu
     h = Math.ceil(max - min);
 
     //to prevent blank space when there is basically silence in the track.
-    h = h === 0 ? 1 : h; 
+    h = h === 0 ? 1 : h;
 
     if (cursorPos >= (x + pixelOffset)) {
         cc.fillStyle = colors.progressColor;
-    } 
+    }
     else {
         cc.fillStyle = colors.waveColor;
     }
@@ -240,7 +240,7 @@ WaveformDrawer.prototype.draw = function(cursorPos, pixelOffset, start, end) {
 
     if (i < 0 && len < 0) {
         return;
-    } 
+    }
 
     if (i < 0) {
         i = 0;
@@ -251,13 +251,13 @@ WaveformDrawer.prototype.draw = function(cursorPos, pixelOffset, start, end) {
     }
 
     this.clear(i, len);
- 
+
     for (; i < len; i++) {
 
         peaks[i].forEach(function(peak, chanNum) {
             that.drawFrame(chanNum, i, peak, that.maxPeak, cursorPos, pixelOffset);
         });
-    } 
+    }
 };
 
 /*
@@ -285,7 +285,7 @@ WaveformDrawer.prototype.updateEditor = function(cursorPos, pixelOffset, start, 
         this.drawHighlight(selected.start, selected.end, border);
     }
 
-    for (i = 0, len = this.channels.length; i < len; i++) {  
+    for (i = 0, len = this.channels.length; i < len; i++) {
         fragment.appendChild(this.channels[i].div);
     }
 
@@ -316,7 +316,7 @@ WaveformDrawer.prototype.sCurveFadeIn = function sCurveFadeIn(ctx, width) {
 };
 
 WaveformDrawer.prototype.sCurveFadeOut = function sCurveFadeOut(ctx, width) {
-    return Curves.createSCurveBuffer(width, -(Math.PI/2));  
+    return Curves.createSCurveBuffer(width, -(Math.PI/2));
 };
 
 WaveformDrawer.prototype.logarithmicFadeIn = function logarithmicFadeIn(ctx, width) {
@@ -324,7 +324,7 @@ WaveformDrawer.prototype.logarithmicFadeIn = function logarithmicFadeIn(ctx, wid
 };
 
 WaveformDrawer.prototype.logarithmicFadeOut = function logarithmicFadeOut(ctx, width) {
-    return Curves.createLogarithmicBuffer(width, 10, -1);  
+    return Curves.createLogarithmicBuffer(width, 10, -1);
 };
 
 WaveformDrawer.prototype.exponentialFadeIn = function exponentialFadeIn(ctx, width) {
@@ -332,7 +332,7 @@ WaveformDrawer.prototype.exponentialFadeIn = function exponentialFadeIn(ctx, wid
 };
 
 WaveformDrawer.prototype.exponentialFadeOut = function exponentialFadeOut(ctx, width) {
-    return Curves.createExponentialBuffer(width, -1);  
+    return Curves.createExponentialBuffer(width, -1);
 };
 
 WaveformDrawer.prototype.linearFadeIn = function linearFadeIn(ctx, width) {
@@ -340,7 +340,7 @@ WaveformDrawer.prototype.linearFadeIn = function linearFadeIn(ctx, width) {
 };
 
 WaveformDrawer.prototype.linearFadeOut = function linearFadeOut(ctx, width) {
-    return Curves.createLinearBuffer(width, -1);  
+    return Curves.createLinearBuffer(width, -1);
 };
 
 WaveformDrawer.prototype.drawFadeCurve = function(ctx, shape, type, width) {
@@ -380,7 +380,7 @@ WaveformDrawer.prototype.removeFade = function(id) {
         for (i = len-1; i >= 0; i--) {
             el = els[i];
             el.parentNode.removeChild(el);
-        }    
+        }
     }
 };
 
@@ -397,7 +397,7 @@ WaveformDrawer.prototype.drawFade = function(id, type, shape, start, end) {
 
     if ((end - start) === 0) {
         return;
-    } 
+    }
 
     width = ~~(end - start + 1);
     left = start;
@@ -418,8 +418,8 @@ WaveformDrawer.prototype.drawFade = function(id, type, shape, start, end) {
     this.drawFadeCurve(ctx, shape, type, width);
 
     div.appendChild(canv);
-    fragment.appendChild(div);   
-      
+    fragment.appendChild(div);
+
     for (i = 0, len = this.channels.length; i < len; i++) {
         dup = fragment.cloneNode(true);
         tmpCtx = dup.querySelector('canvas').getContext('2d');
@@ -447,4 +447,3 @@ WaveformDrawer.prototype.drawFades = function(fades) {
         }
     }
 };
-

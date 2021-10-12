@@ -91,28 +91,28 @@ div.jp-video div.jp-interface {
 
 /* Used to hide non-ui fields **/
 span.audioFileID {
-    display:none; 
+    display:none;
 }
 span.audioFileTitle {
-    display:none; 
+    display:none;
 }
 span.audioFileArtist {
-    display:none; 
+    display:none;
 }
 span.playlistID {
-    display:none; 
+    display:none;
 }
 span.playlistIndex {
-    display:none; 
+    display:none;
 }
 
 /* Not sure if this should be here. Daniel Franklin added this but not
  * sure if it is actually needed. Commenting out for now...
 span.showID {
-    display:none; 
+    display:none;
 }
 span.showIndex {
-    display:none; 
+    display:none;
 }
 * */
 /* @group CONTROLS */
@@ -266,7 +266,7 @@ a.jp-volume-max {
 
 div.jp-audio div.jp-type-single a.jp-mute,
 div.jp-audio div.jp-type-single a.jp-unmute {
-	margin-left: 210px;	
+	margin-left: 210px;
 }
 
 div.jp-audio div.jp-type-playlist a.jp-mute,
@@ -275,7 +275,7 @@ div.jp-audio div.jp-type-playlist a.jp-unmute {
 }
 
 div.jp-audio a.jp-volume-max {
-	margin-left: 56px;	
+	margin-left: 56px;
 }
 
 div.jp-video a.jp-mute,

@@ -4,7 +4,7 @@
 /**
  * Base class that represents a row from the 'cc_playlistcriteria' table.
  *
- * 
+ *
  *
  * @package    propel.generator.airtime.om
  */
@@ -87,7 +87,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [id] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getDbId()
@@ -97,7 +97,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [criteria] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getDbCriteria()
@@ -107,7 +107,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [modifier] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getDbModifier()
@@ -117,7 +117,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [value] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getDbValue()
@@ -127,7 +127,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [extra] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getDbExtra()
@@ -137,7 +137,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [playlist_id] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getDbPlaylistId()
@@ -147,7 +147,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [set_number] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getDbSetNumber()
@@ -157,7 +157,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [id] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcPlaylistcriteria The current object (for fluent API support)
 	 */
@@ -177,7 +177,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [criteria] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcPlaylistcriteria The current object (for fluent API support)
 	 */
@@ -197,7 +197,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [modifier] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcPlaylistcriteria The current object (for fluent API support)
 	 */
@@ -217,7 +217,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [value] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcPlaylistcriteria The current object (for fluent API support)
 	 */
@@ -237,7 +237,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [extra] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcPlaylistcriteria The current object (for fluent API support)
 	 */
@@ -257,7 +257,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [playlist_id] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcPlaylistcriteria The current object (for fluent API support)
 	 */
@@ -281,7 +281,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [set_number] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcPlaylistcriteria The current object (for fluent API support)
 	 */
@@ -433,7 +433,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 		if ($con === null) {
 			$con = Propel::getConnection(CcPlaylistcriteriaPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
-		
+
 		$con->beginTransaction();
 		try {
 			$ret = $this->preDelete($con);
@@ -475,7 +475,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 		if ($con === null) {
 			$con = Propel::getConnection(CcPlaylistcriteriaPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
-		
+
 		$con->beginTransaction();
 		$isInsert = $this->isNew();
 		try {
@@ -707,7 +707,7 @@ abstract class BaseCcPlaylistcriteria extends BaseObject  implements Persistent
 	 * type constants.
 	 *
 	 * @param     string  $keyType (optional) One of the class type constants BasePeer::TYPE_PHPNAME, BasePeer::TYPE_STUDLYPHPNAME,
-	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM. 
+	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM.
 	 *                    Defaults to BasePeer::TYPE_PHPNAME.
 	 * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
 	 * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.

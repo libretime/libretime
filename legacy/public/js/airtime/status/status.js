@@ -1,6 +1,6 @@
 function generatePartitions(partitions){
 
-    var rowTemplate = 
+    var rowTemplate =
             '<tr class="partition-info">'+
                 '<td><span class="strong">'+$.i18n._("Disk")+' #%s</span>'+
                     '<ul id="watched-dir-list-%s">'+
@@ -25,7 +25,7 @@ function generatePartitions(partitions){
 
         var spaceUsedGb = sprintf("%01.1f", spaceUsed/Math.pow(2, 30));
         var totalSpaceGb = sprintf("%01.1f", totalSpace/Math.pow(2, 30));
-        
+
         var row = sprintf(rowTemplate, i+1, i, spaceUsedGb, totalSpaceGb, percUsed, percUsed);
         var tr = $(row);
         lastElement.after(tr);
@@ -38,7 +38,7 @@ function generatePartitions(partitions){
         }
         lastElement = tr;
     }
-    
+
 }
 
 function success(data, textStatus, jqXHR){
@@ -49,14 +49,14 @@ function success(data, textStatus, jqXHR){
         if (s) {
             var children = $("#"+s.name).children();
             $(children[0]).text(s.name);
-            
+
             var status_class = "not-available-icon";
             if (s.status == 0){
                 status_class = "checked-icon";
             } else if (s.status == 1) {
                 status_class = "warning-icon";
             }
-            
+
             $($(children[1]).children()[0]).attr("class", status_class);
             $(children[2]).text(sprintf('%(days)sd %(hours)sh %(minutes)sm %(seconds)ss', convertSecondsToDaysHoursMinutesSeconds(s.uptime_seconds)));
             $(children[3]).text(s.cpu_perc);
@@ -71,7 +71,7 @@ function success(data, textStatus, jqXHR){
 
 function updateStatus(getDiskInfo){
     $.getJSON( baseUrl+"api/status/format/json/diskinfo/"+getDiskInfo, null, success);
-    
+
 }
 
 $(document).ready(function() {

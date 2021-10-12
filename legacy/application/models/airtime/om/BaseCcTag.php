@@ -4,7 +4,7 @@
 /**
  * Base class that represents a row from the 'cc_tag' table.
  *
- * 
+ *
  *
  * @package    propel.generator.airtime.om
  */
@@ -95,7 +95,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [id] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getDbId()
@@ -105,7 +105,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [tag_name] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getDbTagName()
@@ -115,7 +115,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [tag_type] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getDbTagType()
@@ -125,7 +125,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [id] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcTag The current object (for fluent API support)
 	 */
@@ -145,7 +145,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [tag_name] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcTag The current object (for fluent API support)
 	 */
@@ -165,7 +165,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [tag_type] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcTag The current object (for fluent API support)
 	 */
@@ -319,7 +319,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 		if ($con === null) {
 			$con = Propel::getConnection(CcTagPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
-		
+
 		$con->beginTransaction();
 		try {
 			$ret = $this->preDelete($con);
@@ -361,7 +361,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 		if ($con === null) {
 			$con = Propel::getConnection(CcTagPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
-		
+
 		$con->beginTransaction();
 		$isInsert = $this->isNew();
 		try {
@@ -605,7 +605,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 	 * type constants.
 	 *
 	 * @param     string  $keyType (optional) One of the class type constants BasePeer::TYPE_PHPNAME, BasePeer::TYPE_STUDLYPHPNAME,
-	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM. 
+	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM.
 	 *                    Defaults to BasePeer::TYPE_PHPNAME.
 	 * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
 	 *

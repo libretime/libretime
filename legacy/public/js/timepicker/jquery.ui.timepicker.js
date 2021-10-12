@@ -115,7 +115,7 @@
             showHours: true,                // display the hours section of the dialog
             showMinutes: true,              // display the minute section of the dialog
             optionalMinutes: false,         // optionally parse inputs of whole hours with minutes omitted
-						
+
             // buttons
             showCloseButton: false,         // shows an OK button to confirm the edit
             showNowButton: false,           // Shows the 'now' button
@@ -229,7 +229,7 @@
                     case 13:
                         $.timepicker._updateSelectedValue(inst);
                         $.timepicker._hideTimepicker();
-                            
+
 						return false; // don't submit the form
 						break; // select the value on enter
                     case 27: $.timepicker._hideTimepicker();
@@ -507,7 +507,7 @@
                 showDeselectButton = this._get(inst, 'showDeselectButton'),
                 deselectButtonText = this._get(inst, 'deselectButtonText'),
                 showButtonPanel = showCloseButton || showNowButton || showDeselectButton;
-            
+
 
 
             // prepare all hours and minutes, makes it easier to distribute by rows
@@ -525,7 +525,7 @@
                         pmItems++;
                     }
                 }
-                hourCounter = 0; 
+                hourCounter = 0;
 
                 amRows = Math.floor(amItems / hours.length * rows);
                 pmRows = Math.floor(pmItems / hours.length * rows);
@@ -584,7 +584,7 @@
                 html += this._generateHTMLMinutes(inst);
                 html += '</td>';
             }
-            
+
             html += '</tr>';
 
 
@@ -682,7 +682,7 @@
                     minuteLabel +
                     '</div>' +
                     '<table class="ui-timepicker">';
-            
+
             minuteCounter = 0;
             for (row = 1; row <= rows; row++) {
                 html += '<tr>';
@@ -792,7 +792,7 @@
             var $target = $(target),
                 target_id = $target.attr('id'),
                 inst = $.data(target, PROP_NAME);
-            
+
             if (!$target.hasClass(this.markerClassName)) {
                 return;
             }
@@ -1102,7 +1102,7 @@
                     retVal.hours = 0;
                 }
             }
-            
+
             return retVal;
         },
 
@@ -1151,7 +1151,7 @@
             // added for onMinuteShow callback
             var onMinuteShow = this._get(inst, 'onMinuteShow');
             if (onMinuteShow) {
-                // this will trigger a callback on selected hour to make sure selected minute is allowed. 
+                // this will trigger a callback on selected hour to make sure selected minute is allowed.
                 this._updateMinuteDisplay(inst);
             }
 
@@ -1205,7 +1205,7 @@
             this._updateAlternate(inst, newTime);
             return newTime;
         },
-        
+
         /* this function process selected time and return it parsed according to instance options */
         _getParsedTime: function(inst) {
 
@@ -1228,7 +1228,7 @@
                 displayHours = selectedHours ? selectedHours : 0,
                 parsedTime = '';
 
-            if (showPeriod) { 
+            if (showPeriod) {
                 if (inst.hours == 0) {
                     displayHours = 12;
                 }
@@ -1261,10 +1261,10 @@
             if (showHours) {
                 if (period.length > 0) { parsedTime += this._get(inst, 'periodSeparator') + period; }
             }
-            
+
             return parsedTime;
         },
-        
+
         /* Update any alternate field to synchronise with the main field. */
         _updateAlternate: function(inst, newTime) {
             var altField = this._get(inst, 'altField');

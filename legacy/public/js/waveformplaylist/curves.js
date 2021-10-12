@@ -13,7 +13,7 @@ Curves.createLinearBuffer = function createLinearBuffer(length, rotation) {
         }
         else {
             curve[i] = 1 - x;
-        }  
+        }
     }
     return curve;
 };
@@ -27,7 +27,7 @@ Curves.createExponentialBuffer = function createExponentialBuffer(length, rotati
     for (i = 0; i < length; i++) {
         x = i / scale;
         index = rotation > 0 ? i : length - 1 - i;
-       
+
         curve[index] = Math.exp(2 * x - 1) / Math.exp(1);
     }
     return curve;
@@ -69,4 +69,3 @@ Curves.createLogarithmicBuffer = function createLogarithmicBuffer(length, base, 
 
     return curve;
 };
-

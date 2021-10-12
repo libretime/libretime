@@ -4,7 +4,7 @@
 /**
  * Base class that represents a query for the 'cc_file_tag' table.
  *
- * 
+ *
  *
  * @method     CcFileTagQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method     CcFileTagQuery orderByDbFileId($order = Criteria::ASC) Order by the file_id column
@@ -114,7 +114,7 @@ abstract class BaseCcFileTagQuery extends ModelCriteria
 	 * @return    PropelObjectCollection|array|mixed the list of results, formatted by the current formatter
 	 */
 	public function findPks($keys, $con = null)
-	{	
+	{
 		$criteria = $this->isKeepQuery() ? clone $this : $this;
 		return $this
 			->filterByPrimaryKeys($keys)
@@ -147,7 +147,7 @@ abstract class BaseCcFileTagQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the id column
-	 * 
+	 *
 	 * @param     int|array $dbId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -164,7 +164,7 @@ abstract class BaseCcFileTagQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the file_id column
-	 * 
+	 *
 	 * @param     int|array $dbFileId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -195,7 +195,7 @@ abstract class BaseCcFileTagQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the tag_id column
-	 * 
+	 *
 	 * @param     int|array $dbTagId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -240,7 +240,7 @@ abstract class BaseCcFileTagQuery extends ModelCriteria
 
 	/**
 	 * Adds a JOIN clause to the query using the CcFiles relation
-	 * 
+	 *
 	 * @param     string $relationAlias optional alias for the relation
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
@@ -250,7 +250,7 @@ abstract class BaseCcFileTagQuery extends ModelCriteria
 	{
 		$tableMap = $this->getTableMap();
 		$relationMap = $tableMap->getRelation('CcFiles');
-		
+
 		// create a ModelJoin object for this join
 		$join = new ModelJoin();
 		$join->setJoinType($joinType);
@@ -258,7 +258,7 @@ abstract class BaseCcFileTagQuery extends ModelCriteria
 		if ($previousJoin = $this->getPreviousJoin()) {
 			$join->setPreviousJoin($previousJoin);
 		}
-		
+
 		// add the ModelJoin to the current object
 		if($relationAlias) {
 			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
@@ -266,7 +266,7 @@ abstract class BaseCcFileTagQuery extends ModelCriteria
 		} else {
 			$this->addJoinObject($join, 'CcFiles');
 		}
-		
+
 		return $this;
 	}
 
@@ -274,7 +274,7 @@ abstract class BaseCcFileTagQuery extends ModelCriteria
 	 * Use the CcFiles relation CcFiles object
 	 *
 	 * @see       useQuery()
-	 * 
+	 *
 	 * @param     string $relationAlias optional alias for the relation,
 	 *                                   to be used as main alias in the secondary query
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
@@ -304,7 +304,7 @@ abstract class BaseCcFileTagQuery extends ModelCriteria
 
 	/**
 	 * Adds a JOIN clause to the query using the CcTag relation
-	 * 
+	 *
 	 * @param     string $relationAlias optional alias for the relation
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
@@ -314,7 +314,7 @@ abstract class BaseCcFileTagQuery extends ModelCriteria
 	{
 		$tableMap = $this->getTableMap();
 		$relationMap = $tableMap->getRelation('CcTag');
-		
+
 		// create a ModelJoin object for this join
 		$join = new ModelJoin();
 		$join->setJoinType($joinType);
@@ -322,7 +322,7 @@ abstract class BaseCcFileTagQuery extends ModelCriteria
 		if ($previousJoin = $this->getPreviousJoin()) {
 			$join->setPreviousJoin($previousJoin);
 		}
-		
+
 		// add the ModelJoin to the current object
 		if($relationAlias) {
 			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
@@ -330,7 +330,7 @@ abstract class BaseCcFileTagQuery extends ModelCriteria
 		} else {
 			$this->addJoinObject($join, 'CcTag');
 		}
-		
+
 		return $this;
 	}
 
@@ -338,7 +338,7 @@ abstract class BaseCcFileTagQuery extends ModelCriteria
 	 * Use the CcTag relation CcTag object
 	 *
 	 * @see       useQuery()
-	 * 
+	 *
 	 * @param     string $relationAlias optional alias for the relation,
 	 *                                   to be used as main alias in the secondary query
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
@@ -364,7 +364,7 @@ abstract class BaseCcFileTagQuery extends ModelCriteria
 		if ($ccFileTag) {
 			$this->addUsingAlias(CcFileTagPeer::ID, $ccFileTag->getDbId(), Criteria::NOT_EQUAL);
 	  }
-	  
+
 		return $this;
 	}
 

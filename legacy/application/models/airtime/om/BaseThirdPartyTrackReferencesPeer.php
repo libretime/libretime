@@ -1019,4 +1019,3 @@ abstract class BaseThirdPartyTrackReferencesPeer
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
 BaseThirdPartyTrackReferencesPeer::buildTableMap();
-

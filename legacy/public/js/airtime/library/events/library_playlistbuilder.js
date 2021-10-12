@@ -127,9 +127,9 @@ var AIRTIME = (function(AIRTIME) {
         var $toolbar = $(".lib-content .fg-toolbar:first");
 
         mod.createToolbarButtons();
-        
+
         $toolbar.append($menu);
-                            
+
 
         // add to playlist button
         $toolbar

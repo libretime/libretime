@@ -12,7 +12,7 @@ BufferLoader.prototype.init = function(params) {
     loader.loadCount = 0;
 
     loader.defaultParams = {
-        
+
     };
 
     loader.params = Object.create(params);
@@ -27,7 +27,7 @@ BufferLoader.prototype.requestBuffer = function(url, name) {
 
     request.open("GET", url, true);
     request.responseType = "arraybuffer";
-    
+
     request.onload = function() {
         loader.context.decodeAudioData(request.response, function(buffer) {
             if (!buffer) {
@@ -67,12 +67,12 @@ BufferLoader.prototype.loadAudio = function(aUrls, callback) {
 
     this.urlList = paths;
 
-    var i, 
+    var i,
         length;
 
     for (i = 0, length = paths.length; i < length; i++) {
         this.requestBuffer(paths[i], names[i]);
-    }  
+    }
 }
 
 BufferLoader.prototype.onAudioFileLoad = function(name, buffer) {

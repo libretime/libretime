@@ -39,13 +39,13 @@ PlaylistEditor.prototype.init = function(tracks) {
     }
 
     this.timeScale = timeScale;
-    
+
     for (i = 0, len = tracks.length; i < len; i++) {
 
         trackEditor = new TrackEditor();
         trackEditor.setConfig(this.config);
         trackElem = trackEditor.loadTrack(tracks[i]);
-    
+
         this.trackEditors.push(trackEditor);
         fragment.appendChild(trackElem);
 
@@ -73,7 +73,7 @@ PlaylistEditor.prototype.init = function(tracks) {
     div.onscroll = this.onTrackScroll.bind(that);
 
     this.sampleRate = this.config.getSampleRate();
-   
+
     this.scrollTimeout = false;
 
     //for setInterval that's toggled during play/stop.
@@ -89,15 +89,15 @@ PlaylistEditor.prototype.init = function(tracks) {
     audioControls.on("trimaudio", "onTrimAudio", this);
     audioControls.on("removeaudio", "onRemoveAudio", this);
     audioControls.on("changestate", "onStateChange", this);
-    audioControls.on("changeselection", "onSelectionChange", this); 
+    audioControls.on("changeselection", "onSelectionChange", this);
 };
 
 PlaylistEditor.prototype.removeTrack = function(trackEditor) {
-    var i, 
-        len, 
+    var i,
+        len,
         editor,
         editors = this.trackEditors;
-    
+
     for (i = 0, len = editors.length; i < len; i++) {
         editor = editors[i];
 
@@ -121,7 +121,7 @@ PlaylistEditor.prototype.onTrimAudio = function() {
         return;
     }
 
-    track.trim(selected.start, selected.end); 
+    track.trim(selected.start, selected.end);
 };
 
 PlaylistEditor.prototype.onRemoveAudio = function() {
@@ -137,7 +137,7 @@ PlaylistEditor.prototype.onRemoveAudio = function() {
 };
 
 PlaylistEditor.prototype.onSelectionChange = function(args) {
-    
+
     if (this.activeTrack === undefined) {
         return;
     }
@@ -173,11 +173,11 @@ PlaylistEditor.prototype.onTrackScroll = function(e) {
 
     //limit the scroll firing to every 25ms.
     that.scrollTimeout = setTimeout(function() {
-        
+
         that.config.setTrackScroll(el.scrollLeft, el.scrollTop);
         that.fire('trackscroll', e);
         that.scrollTimeout = false;
-    }, 25);   
+    }, 25);
 };
 
 PlaylistEditor.prototype.activateTrack = function(trackEditor) {
@@ -201,7 +201,7 @@ PlaylistEditor.prototype.activateTrack = function(trackEditor) {
 };
 
 PlaylistEditor.prototype.onSelectUpdate = function(event) {
-    
+
     this.activateTrack(event.editor);
 };
 
@@ -215,13 +215,13 @@ PlaylistEditor.prototype.onCursorSelection = function(args) {
 };
 
 PlaylistEditor.prototype.rewind = function() {
-    
+
     if (this.activeTrack !== undefined) {
         this.activeTrack.resetCursor();
     }
     else {
         this.resetCursor();
-    } 
+    }
 
     this.stop();
 };
@@ -304,7 +304,7 @@ PlaylistEditor.prototype.updateEditor = function() {
         cursorPos = this.config.getCursorPos(),
         cursorPixel,
         playbackSec,
-        selected = this.getSelected(), 
+        selected = this.getSelected(),
         start, end,
         highlighted = false;
 
@@ -319,7 +319,7 @@ PlaylistEditor.prototype.updateEditor = function() {
         if (elapsed) {
             playbackSec = cursorPos + elapsed;
             cursorPixel = Math.ceil(playbackSec * this.sampleRate / res);
-            
+
             for (i = 0, len = editors.length; i < len; i++) {
                 editors[i].updateEditor(cursorPixel, start, end, highlighted);
             }
@@ -336,7 +336,7 @@ PlaylistEditor.prototype.updateEditor = function() {
         for (i = 0, len = editors.length; i < len; i++) {
             editors[i].updateEditor(-1, undefined, undefined, true);
         }
-    } 
+    }
 };
 
 PlaylistEditor.prototype.getJson = function() {
@@ -376,4 +376,3 @@ PlaylistEditor.prototype.restore = function() {
     this.trackContainer.innerHTML='';
     this.init(state);
 };
-

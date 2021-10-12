@@ -4,7 +4,7 @@
 /**
  * Base class that represents a query for the 'cc_playout_history_template_field' table.
  *
- * 
+ *
  *
  * @method     CcPlayoutHistoryTemplateTagQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method     CcPlayoutHistoryTemplateTagQuery orderByDbTemplateId($order = Criteria::ASC) Order by the template_id column
@@ -122,7 +122,7 @@ abstract class BaseCcPlayoutHistoryTemplateTagQuery extends ModelCriteria
 	 * @return    PropelObjectCollection|array|mixed the list of results, formatted by the current formatter
 	 */
 	public function findPks($keys, $con = null)
-	{	
+	{
 		$criteria = $this->isKeepQuery() ? clone $this : $this;
 		return $this
 			->filterByPrimaryKeys($keys)
@@ -155,7 +155,7 @@ abstract class BaseCcPlayoutHistoryTemplateTagQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the id column
-	 * 
+	 *
 	 * @param     int|array $dbId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -172,7 +172,7 @@ abstract class BaseCcPlayoutHistoryTemplateTagQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the template_id column
-	 * 
+	 *
 	 * @param     int|array $dbTemplateId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -203,7 +203,7 @@ abstract class BaseCcPlayoutHistoryTemplateTagQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the name column
-	 * 
+	 *
 	 * @param     string $dbName The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -225,7 +225,7 @@ abstract class BaseCcPlayoutHistoryTemplateTagQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the type column
-	 * 
+	 *
 	 * @param     string $dbType The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -247,7 +247,7 @@ abstract class BaseCcPlayoutHistoryTemplateTagQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the is_file_md column
-	 * 
+	 *
 	 * @param     boolean|string $dbIsFileMD The value to use as filter.
 	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -264,7 +264,7 @@ abstract class BaseCcPlayoutHistoryTemplateTagQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the position column
-	 * 
+	 *
 	 * @param     int|array $dbTagPosition The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -309,7 +309,7 @@ abstract class BaseCcPlayoutHistoryTemplateTagQuery extends ModelCriteria
 
 	/**
 	 * Adds a JOIN clause to the query using the CcPlayoutHistoryTemplate relation
-	 * 
+	 *
 	 * @param     string $relationAlias optional alias for the relation
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
@@ -319,7 +319,7 @@ abstract class BaseCcPlayoutHistoryTemplateTagQuery extends ModelCriteria
 	{
 		$tableMap = $this->getTableMap();
 		$relationMap = $tableMap->getRelation('CcPlayoutHistoryTemplate');
-		
+
 		// create a ModelJoin object for this join
 		$join = new ModelJoin();
 		$join->setJoinType($joinType);
@@ -327,7 +327,7 @@ abstract class BaseCcPlayoutHistoryTemplateTagQuery extends ModelCriteria
 		if ($previousJoin = $this->getPreviousJoin()) {
 			$join->setPreviousJoin($previousJoin);
 		}
-		
+
 		// add the ModelJoin to the current object
 		if($relationAlias) {
 			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
@@ -335,7 +335,7 @@ abstract class BaseCcPlayoutHistoryTemplateTagQuery extends ModelCriteria
 		} else {
 			$this->addJoinObject($join, 'CcPlayoutHistoryTemplate');
 		}
-		
+
 		return $this;
 	}
 
@@ -343,7 +343,7 @@ abstract class BaseCcPlayoutHistoryTemplateTagQuery extends ModelCriteria
 	 * Use the CcPlayoutHistoryTemplate relation CcPlayoutHistoryTemplate object
 	 *
 	 * @see       useQuery()
-	 * 
+	 *
 	 * @param     string $relationAlias optional alias for the relation,
 	 *                                   to be used as main alias in the secondary query
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
@@ -369,7 +369,7 @@ abstract class BaseCcPlayoutHistoryTemplateTagQuery extends ModelCriteria
 		if ($ccPlayoutHistoryTemplateTag) {
 			$this->addUsingAlias(CcPlayoutHistoryTemplateTagPeer::ID, $ccPlayoutHistoryTemplateTag->getDbId(), Criteria::NOT_EQUAL);
 	  }
-	  
+
 		return $this;
 	}
 

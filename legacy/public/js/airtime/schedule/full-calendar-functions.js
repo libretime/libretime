@@ -369,7 +369,7 @@ function eventDrop(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui
             }
 
             //Workaround for cases where FullCalendar handles events over DST
-            //time changes in a different way than Airtime does. 
+            //time changes in a different way than Airtime does.
             //(Airtime preserves show duration, FullCalendar doesn't.)
             scheduleRefetchEvents(json);
 

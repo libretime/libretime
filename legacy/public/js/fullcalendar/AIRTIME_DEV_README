@@ -14,7 +14,7 @@ denise@denise-DX4860:~/airtime/legacy/public/js/fullcalendar$ diff -u fullcalend
 +	var date = adjustDateToServerDate(new Date(), options["serverTimezoneOffset"]);
  	var events = [];
  	var _dragElement;
- 	
+
 @@ -2273,7 +2273,7 @@
  	function updateCells(firstTime) {
  		var dowDirty = firstTime || rowCnt == 1; // could the cells' day-of-weeks need updating?
@@ -48,4 +48,3 @@ denise@denise-DX4860:~/airtime/legacy/public/js/fullcalendar$ diff -u fullcalend
 adjustDateToServerDate() function is defined in "js/airtime/common/common.js"
 
 Please make this change before updating!!!
-

@@ -1,8 +1,8 @@
 var Fades = function() {};
 
 Fades.prototype.init = function init(sampleRate) {
-    
-    this.sampleRate = sampleRate;  
+
+    this.sampleRate = sampleRate;
 }
 
 /*
@@ -18,20 +18,20 @@ The duration parameter is the amount of time in seconds (after the time paramete
 During the time interval: startTime <= t < startTime + duration, values will be calculated:
 
       v(t) = values[N * (t - startTime) / duration], where N is the length of the values array.
-      
+
 After the end of the curve time interval (t >= startTime + duration), the value will remain constant at the final curve value, until there is another automation event (if any).
 */
-   
+
 Fades.prototype.sCurveFadeIn = function sCurveFadeIn(gain, start, duration, options) {
     var curve;
-        
+
     curve = Curves.createSCurveBuffer(this.sampleRate, (Math.PI/2));
     gain.setValueCurveAtTime(curve, start, duration);
 };
 
 Fades.prototype.sCurveFadeOut = function sCurveFadeOut(gain, start, duration, options) {
     var curve;
-        
+
     curve = Curves.createSCurveBuffer(this.sampleRate, -(Math.PI/2));
     gain.setValueCurveAtTime(curve, start, duration);
 };
@@ -48,7 +48,7 @@ The endTime parameter is the time in the same time coordinate system as AudioCon
 The value during the time interval T0 <= t < T1 (where T0 is the time of the previous event and T1 is the endTime parameter passed into this method) will be calculated as:
 
       v(t) = V0 + (V1 - V0) * ((t - T0) / (T1 - T0))
-      
+
 Where V0 is the value at the time T0 and V1 is the value parameter passed into this method.
 
 If there are no more events after this LinearRampToValue event then for t >= T1, v(t) = V1
@@ -79,7 +79,7 @@ The endTime parameter is the time in the same time coordinate system as AudioCon
 The value during the time interval T0 <= t < T1 (where T0 is the time of the previous event and T1 is the endTime parameter passed into this method) will be calculated as:
 
       v(t) = V0 * (V1 / V0) ^ ((t - T0) / (T1 - T0))
-      
+
 Where V0 is the value at the time T0 and V1 is the value parameter passed into this method.
 
 If there are no more events after this ExponentialRampToValue event then for t >= T1, v(t) = V1

@@ -1,7 +1,6 @@
 ---
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
-exclude: ^(legacy.*)$
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1
@@ -15,7 +14,7 @@ repos:
 
       - id: check-json
       - id: check-yaml
-      - id: check-yaml
+      - id: check-xml
       - id: check-toml
 
       - id: check-merge-conflict
@@ -53,3 +52,4 @@ repos:
         args:
           - --ignore-words=.codespellignore
           - --builtin=clear,rare,informal
+        exclude: ^(legacy.*)$

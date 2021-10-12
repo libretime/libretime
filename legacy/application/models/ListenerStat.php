@@ -92,7 +92,7 @@ SQL;
 
         // this query selects all show instances that aired in this date range that match the show_id
         $sql = <<<'SQL'
-SELECT id, starts, ends FROM cc_show_instances WHERE show_id =:p1 
+SELECT id, starts, ends FROM cc_show_instances WHERE show_id =:p1
 AND starts >=:p2 AND ends <=:p3
 SQL;
         $data = Application_Common_Database::prepareAndExecute(
@@ -134,7 +134,7 @@ SQL;
         // this query selects the id of all show instances that aired in this date range
         $all_show_data = [];
         $sql = <<<'SQL'
-SELECT show_id FROM cc_show_instances 
+SELECT show_id FROM cc_show_instances
 WHERE starts >=:p1 AND ends <=:p2
 GROUP BY show_id
 SQL;

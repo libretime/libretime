@@ -1,5 +1,5 @@
 AIRTIME = (function(AIRTIME) {
-    
+
     var viewport,
         $lib,
         $libWrapper,
@@ -16,23 +16,23 @@ AIRTIME = (function(AIRTIME) {
         dateEndId = "#sb_date_end",
         timeEndId = "#sb_time_end",
         mod;
-    
+
     if (AIRTIME.builderMain === undefined) {
         AIRTIME.builderMain = {};
     }
     mod = AIRTIME.builderMain;
-    
+
     oBaseDatePickerSettings = {
         dateFormat: 'yy-mm-dd',
         //i18n_months, i18n_days_short are in common.js
         monthNames: i18n_months,
         dayNamesMin: i18n_days_short,
-        onClick: function(sDate, oDatePicker) {     
+        onClick: function(sDate, oDatePicker) {
             $(this).datepicker( "setDate", sDate );
         },
         onClose: validateTimeRange
     };
-    
+
     oBaseTimePickerSettings = {
         showPeriodLabels: false,
         showCloseButton: true,
@@ -43,7 +43,7 @@ AIRTIME = (function(AIRTIME) {
         minuteText: $.i18n._("Minute"),
         onClose: validateTimeRange
     };
-    
+
     function setWidgetSize() {
         viewport = AIRTIME.utilities.findViewportDimensions();
         widgetHeight = viewport.height - 180;
@@ -52,27 +52,27 @@ AIRTIME = (function(AIRTIME) {
         var libTableHeight = widgetHeight - 175,
             builderTableHeight = widgetHeight - 95,
             oTable;
-        
+
         if ($fs.is(':visible')) {
             builderTableHeight = builderTableHeight - 40;
         }
-        
+
         //set the heights of the main widgets.
         $builder//.height(widgetHeight)
             .find(".dataTables_scrolling")
                     //.css("max-height", builderTableHeight)
                     .end();
             //.width(screenWidth);
-        
+
         $lib//.height(widgetHeight)
             .find(".dataTables_scrolling")
                 //.css("max-height", libTableHeight)
                 .end();
-        
+
         if ($lib.filter(':visible').length > 0) {
-            
+
             //$lib.width(Math.floor(screenWidth * 0.47));
-                
+
             $builder//.width(Math.floor(screenWidth * 0.47))
                 .find("#sb_edit")
                     .remove()
@@ -80,18 +80,18 @@ AIRTIME = (function(AIRTIME) {
                 .find("#sb_date_start")
                     .css("margin-left", 0)
                     .end();
-            
+
             oTable = $('#show_builder_table').dataTable();
             //oTable.fnDraw();
-        }   
+        }
     }
-    
+
     function showSearchSubmit() {
         var fn,
             op,
             oTable = $('#show_builder_table').dataTable(),
             check;
-                  
+
         check = validateTimeRange();
 
         if (check.isValid) {
@@ -204,15 +204,15 @@ AIRTIME = (function(AIRTIME) {
         $builder.find(timeStartId)
         	.timepicker(oBaseTimePickerSettings)
         	.blur(validateTimeRange);
-        
+
         $builder.find(dateEndId)
         	.datepicker(oBaseDatePickerSettings)
         	.blur(validateTimeRange);
-        
+
         $builder.find(timeEndId)
         	.timepicker(oBaseTimePickerSettings)
         	.blur(validateTimeRange);
-        
+
 
         oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId,
                 dateEndId, timeEndId);
@@ -223,7 +223,7 @@ AIRTIME = (function(AIRTIME) {
         if (AIRTIME.library !== undefined) {
         	AIRTIME.library.libraryInit();
         }
-        
+
         AIRTIME.showbuilder.builderDataTable();
         setWidgetSize();
 

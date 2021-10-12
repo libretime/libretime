@@ -4,7 +4,7 @@
 /**
  * Base static class for performing query and update operations on the 'cc_file_tag' table.
  *
- * 
+ *
  *
  * @package    propel.generator.airtime.om
  */
@@ -24,7 +24,7 @@ abstract class BaseCcFileTagPeer {
 
 	/** the related TableMap class for this table */
 	const TM_CLASS = 'CcFileTagTableMap';
-	
+
 	/** The total number of columns. */
 	const NUM_COLUMNS = 3;
 
@@ -331,7 +331,7 @@ abstract class BaseCcFileTagPeer {
 		}
 		return null; // just to be explicit
 	}
-	
+
 	/**
 	 * Clear the instance pool.
 	 *
@@ -341,7 +341,7 @@ abstract class BaseCcFileTagPeer {
 	{
 		self::$instances = array();
 	}
-	
+
 	/**
 	 * Method to invalidate the instance pool of all tables related to cc_file_tag
 	 * by a foreign key with ON DELETE CASCADE
@@ -370,7 +370,7 @@ abstract class BaseCcFileTagPeer {
 	}
 
 	/**
-	 * Retrieves the primary key from the DB resultset row 
+	 * Retrieves the primary key from the DB resultset row
 	 * For tables with a single-column primary key, that simple pkey value will be returned.  For tables with
 	 * a multi-column primary key, an array of the primary key columns will be returned.
 	 *
@@ -382,7 +382,7 @@ abstract class BaseCcFileTagPeer {
 	{
 		return (int) $row[$startcol];
 	}
-	
+
 	/**
 	 * The returned array will contain objects of the default type or
 	 * objects that inherit from the default.
@@ -393,7 +393,7 @@ abstract class BaseCcFileTagPeer {
 	public static function populateObjects(PDOStatement $stmt)
 	{
 		$results = array();
-	
+
 		// set the class once to avoid overhead in the loop
 		$cls = CcFileTagPeer::getOMClass(false);
 		// populate the object(s)
@@ -466,9 +466,9 @@ abstract class BaseCcFileTagPeer {
 		if (!$criteria->hasSelectClause()) {
 			CcFileTagPeer::addSelectColumns($criteria);
 		}
-		
+
 		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
-		
+
 		// Set the correct dbName
 		$criteria->setDbName(self::DATABASE_NAME);
 
@@ -516,9 +516,9 @@ abstract class BaseCcFileTagPeer {
 		if (!$criteria->hasSelectClause()) {
 			CcFileTagPeer::addSelectColumns($criteria);
 		}
-		
+
 		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
-		
+
 		// Set the correct dbName
 		$criteria->setDbName(self::DATABASE_NAME);
 
@@ -698,9 +698,9 @@ abstract class BaseCcFileTagPeer {
 		if (!$criteria->hasSelectClause()) {
 			CcFileTagPeer::addSelectColumns($criteria);
 		}
-		
+
 		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
-		
+
 		// Set the correct dbName
 		$criteria->setDbName(self::DATABASE_NAME);
 
@@ -833,7 +833,7 @@ abstract class BaseCcFileTagPeer {
 		// it will be impossible for the BasePeer::createSelectSql() method to determine which
 		// tables go into the FROM clause.
 		$criteria->setPrimaryTableName(CcFileTagPeer::TABLE_NAME);
-		
+
 		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
 			$criteria->setDistinct();
 		}
@@ -841,16 +841,16 @@ abstract class BaseCcFileTagPeer {
 		if (!$criteria->hasSelectClause()) {
 			CcFileTagPeer::addSelectColumns($criteria);
 		}
-		
+
 		$criteria->clearOrderByColumns(); // ORDER BY should not affect count
-		
+
 		// Set the correct dbName
 		$criteria->setDbName(self::DATABASE_NAME);
 
 		if ($con === null) {
 			$con = Propel::getConnection(CcFileTagPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
-	
+
 		$criteria->addJoin(CcFileTagPeer::TAG_ID, CcTagPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doCount($criteria, $con);
@@ -883,7 +883,7 @@ abstract class BaseCcFileTagPeer {
 		// it will be impossible for the BasePeer::createSelectSql() method to determine which
 		// tables go into the FROM clause.
 		$criteria->setPrimaryTableName(CcFileTagPeer::TABLE_NAME);
-		
+
 		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
 			$criteria->setDistinct();
 		}
@@ -891,16 +891,16 @@ abstract class BaseCcFileTagPeer {
 		if (!$criteria->hasSelectClause()) {
 			CcFileTagPeer::addSelectColumns($criteria);
 		}
-		
+
 		$criteria->clearOrderByColumns(); // ORDER BY should not affect count
-		
+
 		// Set the correct dbName
 		$criteria->setDbName(self::DATABASE_NAME);
 
 		if ($con === null) {
 			$con = Propel::getConnection(CcFileTagPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
-	
+
 		$criteria->addJoin(CcFileTagPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doCount($criteria, $con);
@@ -968,7 +968,7 @@ abstract class BaseCcFileTagPeer {
 				if ($key2 !== null) {
 					$obj2 = CcTagPeer::getInstanceFromPool($key2);
 					if (!$obj2) {
-	
+
 						$cls = CcTagPeer::getOMClass(false);
 
 					$obj2 = new $cls();
@@ -1041,7 +1041,7 @@ abstract class BaseCcFileTagPeer {
 				if ($key2 !== null) {
 					$obj2 = CcFilesPeer::getInstanceFromPool($key2);
 					if (!$obj2) {
-	
+
 						$cls = CcFilesPeer::getOMClass(false);
 
 					$obj2 = new $cls();
@@ -1258,7 +1258,7 @@ abstract class BaseCcFileTagPeer {
 			// use transaction because $criteria could contain info
 			// for more than one table or we could emulating ON DELETE CASCADE, etc.
 			$con->beginTransaction();
-			
+
 			$affectedRows += BasePeer::doDelete($criteria, $con);
 			CcFileTagPeer::clearRelatedInstancePool();
 			$con->commit();
@@ -1362,4 +1362,3 @@ abstract class BaseCcFileTagPeer {
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
 BaseCcFileTagPeer::buildTableMap();
-

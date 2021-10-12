@@ -4,7 +4,7 @@
 /**
  * Base class that represents a row from the 'cc_show_schedule' table.
  *
- * 
+ *
  *
  * @package    propel.generator.airtime.om
  */
@@ -69,7 +69,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [id] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getDbId()
@@ -79,7 +79,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [instance_id] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getDbInstanceId()
@@ -89,7 +89,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [position] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getDbPosition()
@@ -99,7 +99,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [group_id] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getDbGroupId()
@@ -109,7 +109,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [id] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcShowSchedule The current object (for fluent API support)
 	 */
@@ -129,7 +129,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [instance_id] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcShowSchedule The current object (for fluent API support)
 	 */
@@ -153,7 +153,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [position] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcShowSchedule The current object (for fluent API support)
 	 */
@@ -173,7 +173,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [group_id] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcShowSchedule The current object (for fluent API support)
 	 */
@@ -322,7 +322,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 		if ($con === null) {
 			$con = Propel::getConnection(CcShowSchedulePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
-		
+
 		$con->beginTransaction();
 		try {
 			$ret = $this->preDelete($con);
@@ -364,7 +364,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 		if ($con === null) {
 			$con = Propel::getConnection(CcShowSchedulePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
-		
+
 		$con->beginTransaction();
 		$isInsert = $this->isNew();
 		try {
@@ -587,7 +587,7 @@ abstract class BaseCcShowSchedule extends BaseObject  implements Persistent
 	 * type constants.
 	 *
 	 * @param     string  $keyType (optional) One of the class type constants BasePeer::TYPE_PHPNAME, BasePeer::TYPE_STUDLYPHPNAME,
-	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM. 
+	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM.
 	 *                    Defaults to BasePeer::TYPE_PHPNAME.
 	 * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
 	 * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.

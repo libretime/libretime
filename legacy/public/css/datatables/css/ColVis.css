@@ -18,7 +18,7 @@
 	cursor: pointer;
 }
 
-button.ColVis_Button::-moz-focus-inner { 
+button.ColVis_Button::-moz-focus-inner {
 	border: none !important;
 	padding: 0;
 }

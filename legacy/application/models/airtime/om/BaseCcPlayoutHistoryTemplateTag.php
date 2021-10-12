@@ -4,7 +4,7 @@
 /**
  * Base class that represents a row from the 'cc_playout_history_template_field' table.
  *
- * 
+ *
  *
  * @package    propel.generator.airtime.om
  */
@@ -103,7 +103,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 
 	/**
 	 * Get the [id] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getDbId()
@@ -113,7 +113,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 
 	/**
 	 * Get the [template_id] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getDbTemplateId()
@@ -123,7 +123,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 
 	/**
 	 * Get the [name] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getDbName()
@@ -133,7 +133,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 
 	/**
 	 * Get the [type] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getDbType()
@@ -143,7 +143,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 
 	/**
 	 * Get the [is_file_md] column value.
-	 * 
+	 *
 	 * @return     boolean
 	 */
 	public function getDbIsFileMD()
@@ -153,7 +153,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 
 	/**
 	 * Get the [position] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getDbTagPosition()
@@ -163,7 +163,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 
 	/**
 	 * Set the value of [id] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcPlayoutHistoryTemplateTag The current object (for fluent API support)
 	 */
@@ -183,7 +183,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 
 	/**
 	 * Set the value of [template_id] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcPlayoutHistoryTemplateTag The current object (for fluent API support)
 	 */
@@ -207,7 +207,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 
 	/**
 	 * Set the value of [name] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcPlayoutHistoryTemplateTag The current object (for fluent API support)
 	 */
@@ -227,7 +227,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 
 	/**
 	 * Set the value of [type] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcPlayoutHistoryTemplateTag The current object (for fluent API support)
 	 */
@@ -247,7 +247,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 
 	/**
 	 * Set the value of [is_file_md] column.
-	 * 
+	 *
 	 * @param      boolean $v new value
 	 * @return     CcPlayoutHistoryTemplateTag The current object (for fluent API support)
 	 */
@@ -267,7 +267,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 
 	/**
 	 * Set the value of [position] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcPlayoutHistoryTemplateTag The current object (for fluent API support)
 	 */
@@ -422,7 +422,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 		if ($con === null) {
 			$con = Propel::getConnection(CcPlayoutHistoryTemplateTagPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
-		
+
 		$con->beginTransaction();
 		try {
 			$ret = $this->preDelete($con);
@@ -464,7 +464,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 		if ($con === null) {
 			$con = Propel::getConnection(CcPlayoutHistoryTemplateTagPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
-		
+
 		$con->beginTransaction();
 		$isInsert = $this->isNew();
 		try {
@@ -693,7 +693,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 	 * type constants.
 	 *
 	 * @param     string  $keyType (optional) One of the class type constants BasePeer::TYPE_PHPNAME, BasePeer::TYPE_STUDLYPHPNAME,
-	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM. 
+	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM.
 	 *                    Defaults to BasePeer::TYPE_PHPNAME.
 	 * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
 	 * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
