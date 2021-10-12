@@ -4,7 +4,7 @@
 /**
  * Base class that represents a row from the 'cc_access' table.
  *
- * 
+ *
  *
  * @package    propel.generator.airtime.om
  */
@@ -125,7 +125,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [id] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getId()
@@ -135,7 +135,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [gunid] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getGunid()
@@ -145,7 +145,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [token] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getToken()
@@ -155,7 +155,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [chsum] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getChsum()
@@ -165,7 +165,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [ext] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getExt()
@@ -175,7 +175,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [type] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getType()
@@ -185,7 +185,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [parent] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getParent()
@@ -195,7 +195,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [owner] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getOwner()
@@ -205,7 +205,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [optionally formatted] temporal [ts] column value.
-	 * 
+	 *
 	 *
 	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
 	 *							If format is NULL, then the raw DateTime object will be returned.
@@ -238,7 +238,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [id] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcAccess The current object (for fluent API support)
 	 */
@@ -258,7 +258,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [gunid] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcAccess The current object (for fluent API support)
 	 */
@@ -278,7 +278,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [token] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcAccess The current object (for fluent API support)
 	 */
@@ -298,7 +298,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [chsum] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcAccess The current object (for fluent API support)
 	 */
@@ -318,7 +318,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [ext] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcAccess The current object (for fluent API support)
 	 */
@@ -338,7 +338,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [type] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcAccess The current object (for fluent API support)
 	 */
@@ -358,7 +358,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [parent] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcAccess The current object (for fluent API support)
 	 */
@@ -378,7 +378,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [owner] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcAccess The current object (for fluent API support)
 	 */
@@ -402,7 +402,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 
 	/**
 	 * Sets the value of [ts] column to a normalized version of the date/time value specified.
-	 * 
+	 *
 	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcAccess The current object (for fluent API support)
@@ -438,7 +438,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 			$currNorm = ($this->ts !== null && $tmpDt = new DateTime($this->ts)) ? $tmpDt->format('Y-m-d\\TH:i:sO') : null;
 			$newNorm = ($dt !== null) ? $dt->format('Y-m-d\\TH:i:sO') : null;
 
-			if ( ($currNorm !== $newNorm) // normalized values don't match 
+			if ( ($currNorm !== $newNorm) // normalized values don't match
 					)
 			{
 				$this->ts = ($dt ? $dt->format('Y-m-d\\TH:i:sO') : null);
@@ -597,7 +597,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 		if ($con === null) {
 			$con = Propel::getConnection(CcAccessPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
-		
+
 		$con->beginTransaction();
 		try {
 			$ret = $this->preDelete($con);
@@ -639,7 +639,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 		if ($con === null) {
 			$con = Propel::getConnection(CcAccessPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
-		
+
 		$con->beginTransaction();
 		$isInsert = $this->isNew();
 		try {
@@ -877,7 +877,7 @@ abstract class BaseCcAccess extends BaseObject  implements Persistent
 	 * type constants.
 	 *
 	 * @param     string  $keyType (optional) One of the class type constants BasePeer::TYPE_PHPNAME, BasePeer::TYPE_STUDLYPHPNAME,
-	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM. 
+	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM.
 	 *                    Defaults to BasePeer::TYPE_PHPNAME.
 	 * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
 	 * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.

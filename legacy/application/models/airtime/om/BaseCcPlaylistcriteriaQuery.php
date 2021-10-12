@@ -4,7 +4,7 @@
 /**
  * Base class that represents a query for the 'cc_playlistcriteria' table.
  *
- * 
+ *
  *
  * @method     CcPlaylistcriteriaQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method     CcPlaylistcriteriaQuery orderByDbCriteria($order = Criteria::ASC) Order by the criteria column
@@ -126,7 +126,7 @@ abstract class BaseCcPlaylistcriteriaQuery extends ModelCriteria
 	 * @return    PropelObjectCollection|array|mixed the list of results, formatted by the current formatter
 	 */
 	public function findPks($keys, $con = null)
-	{	
+	{
 		$criteria = $this->isKeepQuery() ? clone $this : $this;
 		return $this
 			->filterByPrimaryKeys($keys)
@@ -159,7 +159,7 @@ abstract class BaseCcPlaylistcriteriaQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the id column
-	 * 
+	 *
 	 * @param     int|array $dbId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -176,7 +176,7 @@ abstract class BaseCcPlaylistcriteriaQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the criteria column
-	 * 
+	 *
 	 * @param     string $dbCriteria The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -198,7 +198,7 @@ abstract class BaseCcPlaylistcriteriaQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the modifier column
-	 * 
+	 *
 	 * @param     string $dbModifier The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -220,7 +220,7 @@ abstract class BaseCcPlaylistcriteriaQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the value column
-	 * 
+	 *
 	 * @param     string $dbValue The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -242,7 +242,7 @@ abstract class BaseCcPlaylistcriteriaQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the extra column
-	 * 
+	 *
 	 * @param     string $dbExtra The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -264,7 +264,7 @@ abstract class BaseCcPlaylistcriteriaQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the playlist_id column
-	 * 
+	 *
 	 * @param     int|array $dbPlaylistId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -295,7 +295,7 @@ abstract class BaseCcPlaylistcriteriaQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the set_number column
-	 * 
+	 *
 	 * @param     int|array $dbSetNumber The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -340,7 +340,7 @@ abstract class BaseCcPlaylistcriteriaQuery extends ModelCriteria
 
 	/**
 	 * Adds a JOIN clause to the query using the CcPlaylist relation
-	 * 
+	 *
 	 * @param     string $relationAlias optional alias for the relation
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
@@ -350,7 +350,7 @@ abstract class BaseCcPlaylistcriteriaQuery extends ModelCriteria
 	{
 		$tableMap = $this->getTableMap();
 		$relationMap = $tableMap->getRelation('CcPlaylist');
-		
+
 		// create a ModelJoin object for this join
 		$join = new ModelJoin();
 		$join->setJoinType($joinType);
@@ -358,7 +358,7 @@ abstract class BaseCcPlaylistcriteriaQuery extends ModelCriteria
 		if ($previousJoin = $this->getPreviousJoin()) {
 			$join->setPreviousJoin($previousJoin);
 		}
-		
+
 		// add the ModelJoin to the current object
 		if($relationAlias) {
 			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
@@ -366,7 +366,7 @@ abstract class BaseCcPlaylistcriteriaQuery extends ModelCriteria
 		} else {
 			$this->addJoinObject($join, 'CcPlaylist');
 		}
-		
+
 		return $this;
 	}
 
@@ -374,7 +374,7 @@ abstract class BaseCcPlaylistcriteriaQuery extends ModelCriteria
 	 * Use the CcPlaylist relation CcPlaylist object
 	 *
 	 * @see       useQuery()
-	 * 
+	 *
 	 * @param     string $relationAlias optional alias for the relation,
 	 *                                   to be used as main alias in the secondary query
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
@@ -400,7 +400,7 @@ abstract class BaseCcPlaylistcriteriaQuery extends ModelCriteria
 		if ($ccPlaylistcriteria) {
 			$this->addUsingAlias(CcPlaylistcriteriaPeer::ID, $ccPlaylistcriteria->getDbId(), Criteria::NOT_EQUAL);
 	  }
-	  
+
 		return $this;
 	}
 

@@ -1,23 +1,23 @@
 var AIRTIME = (function(AIRTIME){
     var mod;
-    
+
     if (AIRTIME.schedule === undefined) {
         AIRTIME.schedule = {};
     }
     mod = AIRTIME.schedule;
-    
+
     return AIRTIME;
-    
+
 }(AIRTIME || {}));
 
 var serverTimezoneOffset = 0;
 
 function closeDialogCalendar(event, ui) {
-    
+
     $el = $(this);
     $el.dialog('destroy');
     $el.remove();
-    
+
     //need to refetch the events to update scheduled status.
     $("#schedule_calendar").fullCalendar( 'refetchEvents' );
 }
@@ -51,7 +51,7 @@ function confirmCancelRecordedShow(show_instance_id){
 function findViewportDimensions() {
     var viewportwidth,
         viewportheight;
-    
+
     // the more standards compliant browsers (mozilla/netscape/opera/IE7) use
     // window.innerWidth and window.innerHeight
     if (typeof window.innerWidth != 'undefined') {
@@ -70,7 +70,7 @@ function findViewportDimensions() {
         viewportwidth = document.getElementsByTagName('body')[0].clientWidth;
         viewportheight = document.getElementsByTagName('body')[0].clientHeight;
     }
-    
+
     return {
         width: viewportwidth,
         height: viewportheight-45
@@ -189,10 +189,10 @@ function buildScheduleDialog (json, instance_id) {
     fnServer.ops.showFilter = 0;
     fnServer.ops.showInstanceFilter = instance_id;
     fnServer.ops.myShows = 0;
-    
+
     AIRTIME.library.libraryInit();
     AIRTIME.showbuilder.builderDataTable();
-    
+
     dialog.dialog('open');
     highlightMediaTypeSelector(dialog);
     buildTimerange(dialog);
@@ -203,15 +203,15 @@ function buildContentDialog (json){
         viewport = findViewportDimensions(),
         height = viewport.height * 2/3,
         width = viewport.width * 4/5;
-    
+
     if (json.show_error == true){
         alertShowErrorAndReload();
     }
-          
+
     dialog.find("#show_progressbar").progressbar({
         value: json.percentFilled
     });
-     
+
     dialog.dialog({
         autoOpen: false,
         title: $.i18n._("Contents of Show") +" '" + json.showTitle + "'",
@@ -258,7 +258,7 @@ function createFullCalendar(data){
             left: 'prev, next, today',
             center: 'title',
             right: 'agendaDay, agendaWeek, month'
-        }, 
+        },
         defaultView: getTimeScalePreference(data),
         slotMinutes: getTimeIntervalPreference(data),
         firstDay: data.calendarInit.weekStartDay,
@@ -314,7 +314,7 @@ function createFullCalendar(data){
         lazyFetching: true,
         serverTimestamp: parseInt(data.calendarInit.timestamp, 10),
         serverTimezoneOffset: parseInt(data.calendarInit.timezoneOffset, 10),
-       
+
         events: getFullCalendarEvents,
 
         //callbacks (in full-calendar-functions.js)
@@ -342,31 +342,31 @@ $(document).ready(function() {
         trigger: "left",
         ignoreRightClick: true,
         className: 'calendar-context-menu',
-        
+
         build: function($el, e) {
-            var data, 
-                items, 
+            var data,
+                items,
                 callback;
-            
+
             data = $el.data("event");
-            
+
             function processMenuItems(oItems) {
-                
+
                 //define a schedule callback.
                 if (oItems.schedule !== undefined) {
-                    
+
                     callback = function() {
                         $.post(oItems.schedule.url, {format: "json", id: data.id}, function(json){
                             buildScheduleDialog(json, data.id);
                         });
                     };
-                    
+
                     oItems.schedule.callback = callback;
                 }
-                
+
                 //define a clear callback.
                 if (oItems.clear !== undefined) {
-                    
+
                     callback = function() {
                         if (confirm($.i18n._("Remove all content?"))) {
                             $.post(oItems.clear.url, {format: "json", id: data.id}, function(json){
@@ -376,13 +376,13 @@ $(document).ready(function() {
                     };
                     oItems.clear.callback = callback;
                 }
-                
+
                 //define an edit callback.
                 if (oItems.edit !== undefined) {
                     if(oItems.edit.items !== undefined){
                         var edit = oItems.edit.items;
-                        
-                        
+
+
                         //edit a single instance
                         callback = function() {
                             $.get(edit.instance.url, {format: "json", showId: data.showId, instanceId: data.id, type: "instance"}, function(json){
@@ -390,7 +390,7 @@ $(document).ready(function() {
                             });
                         };
                         edit.instance.callback = callback;
-                        
+
                         //edit this instance and all
                         callback = function() {
                             $.get(edit.all.url, {format: "json", showId: data.showId, instanceId: data.id, type: "all"}, function(json){
@@ -410,7 +410,7 @@ $(document).ready(function() {
 
                 //define a content callback.
                 if (oItems.content !== undefined) {
-                    
+
                     callback = function() {
                         $.get(oItems.content.url, {format: "json", id: data.id}, function(json){
                             buildContentDialog(json);
@@ -418,16 +418,16 @@ $(document).ready(function() {
                     };
                     oItems.content.callback = callback;
                 }
-                
+
                 //define a cancel recorded show callback.
                 if (oItems.cancel_recorded !== undefined) {
-                    
+
                     callback = function() {
                         confirmCancelRecordedShow(data.id);
                     };
                     oItems.cancel_recorded.callback = callback;
                 }
-                
+
                 //define a view recorded callback.
                 if (oItems.view_recorded !== undefined) {
                     callback = function() {
@@ -438,23 +438,23 @@ $(document).ready(function() {
                     };
                     oItems.view_recorded.callback = callback;
                 }
-                
+
                 //define a cancel callback.
                 if (oItems.cancel !== undefined) {
-                    
+
                     callback = function() {
                         confirmCancelShow(data.id);
                     };
                     oItems.cancel.callback = callback;
                 }
-                
+
                 //define a delete callback.
                 if (oItems.del !== undefined) {
-                    
+
                     //repeating show multiple delete options
                     if (oItems.del.items !== undefined) {
                         var del = oItems.del.items;
-                        
+
                         //delete a single instance
                         callback = function() {
                             $.post(del.single.url, {format: "json", id: data.id}, function(json){
@@ -462,15 +462,15 @@ $(document).ready(function() {
                             });
                         };
                         del.single.callback = callback;
-                        
+
                         //delete this instance and all following instances.
                         callback = function() {
                             $.post(del.following.url, {format: "json", id: data.id}, function(json){
                                 scheduleRefetchEvents(json);
                             });
                         };
-                        del.following.callback = callback;  
-                        
+                        del.following.callback = callback;
+
                     }
                     //single show
                     else {
@@ -479,10 +479,10 @@ $(document).ready(function() {
                                 scheduleRefetchEvents(json);
                             });
                         };
-                        oItems.del.callback = callback; 
+                        oItems.del.callback = callback;
                     }
                 }
-            
+
                 items = oItems;
             }
 

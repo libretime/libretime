@@ -21,7 +21,7 @@
                 } elseif ($j+1 <= $this->modRowMap[$i]-1) {
                     $n = $j+1;
                     $nextIndex = $i."_".$n;
-                    
+
                 }
                 $nextDisabled = $this->element->getElement("sp_criteria_field_".$nextIndex)->getAttrib('disabled') == 'disabled'?true:false;
         ?>
@@ -37,17 +37,17 @@
                 <a <?php if ($disabled) { echo 'style=display:none'; } ?>  class='modifier_add_link' id='modifier_add_<?php echo $i ?>'>
                     + <?php echo(_("New Modifier")); ?>
                 </a>
-                
+
                 <span class='sp_text_font' id="extra_criteria" <?php echo $this->element->getElement("sp_criteria_extra_".$i."_".$j)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>><?php echo _(" to "); ?><?php echo $this->element->getElement('sp_criteria_extra_'.$i."_".$j) ?></span>
                 <span class='sp_text_font' id="extra_datetime_select" <?php echo $this->element->getElement("sp_criteria_extra_datetime_select_".$i."_".$j)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>><?php echo $this->element->getElement('sp_criteria_extra_datetime_select_'.$i."_".$j) ?><?php echo _(" ago "); ?></span>
-                
+
                 <a style='margin-right:3px' class='btn btn-small btn-danger' id='criteria_remove_<?php echo $i ?>'>
                     <i class='icon-white icon-remove spl-no-r-margin'></i>
                 </a>
                 <span class='db-logic-label' <?php if ($nextDisabled) echo 'style="display:none"';?>>
                     <?php echo $logicLabel;?>
                 </span>
-                
+
                 <?php if($this->element->getElement("sp_criteria_field_".$i."_".$j)->hasErrors()) : ?>
                 <?php foreach($this->element->getElement("sp_criteria_field_".$i."_".$j)->getMessages() as $error): ?>
                 <span class='errors sp-errors'>
@@ -57,7 +57,7 @@
                 <?php endif; ?>
             </div>
             <?php } ?>
-            
+
         <?php } ?>
         <a class='btn btn-small btn-new' id='criteria_add'><i class='icon-white icon-plus'></i><?php echo(_("New Criteria")); ?></a>
         </dd>
@@ -91,7 +91,7 @@
                 <?php $i=0;
                     $value = $this->element->getElement('sp_type')->getValue();
                     foreach ($this->element->getElement('sp_type')->getMultiOptions() as $radio) : ?>
-                    
+
                     <label class='sp-label' for='sp_type-<?php echo $i?>'>
                         <input type="radio" value="<?php echo $i ?>" id="sp_type-<?php echo $i ?>" name="sp_type" <?php if($i == $value){echo 'checked="checked"';}?> ><?php echo $radio ?>
                     </label>

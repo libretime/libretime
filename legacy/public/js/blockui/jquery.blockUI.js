@@ -44,7 +44,7 @@ $.growlUI = function(title, message, timeout, onClose) {
 	$.blockUI({
 		message: $m, fadeIn: 700, fadeOut: 1000, centerY: false,
 		timeout: timeout, showOverlay: false,
-		onUnblock: onClose, 
+		onUnblock: onClose,
 		css: $.blockUI.defaults.growlCSS
 	});
 };
@@ -76,9 +76,9 @@ $.blockUI.defaults = {
 
 	title: null,	  // title string; only used when theme == true
 	draggable: true,  // only used when theme == true (requires jquery-ui.js to be loaded)
-	
+
 	theme: false, // set to true to use with jQuery UI themes
-	
+
 	// styles for the message when blocking; if you wish to disable
 	// these and use an external stylesheet then do this in your code:
 	// $.blockUI.defaults.css = {};
@@ -94,7 +94,7 @@ $.blockUI.defaults = {
 		backgroundColor:'#fff',
 		cursor:		'wait'
 	},
-	
+
 	// minimal style set used when themes are used
 	themedCSS: {
 		width:	'30%',
@@ -125,7 +125,7 @@ $.blockUI.defaults = {
 		'-moz-border-radius':	 '10px',
 		'border-radius': 		 '10px'
 	},
-	
+
 	// IE issues: 'about:blank' fails on HTTPS and javascript:false is s-l-o-w
 	// (hat tip to Jorge H. N. de Vasconcelos)
 	iframeSrc: /^https/i.test(window.location.href || '') ? 'javascript:false' : 'about:blank',
@@ -169,7 +169,7 @@ $.blockUI.defaults = {
 
 	// suppresses the use of overlay styles on FF/Linux (due to performance issues with opacity)
 	applyPlatformOpacityRules: true,
-	
+
 	// callback method invoked when fadeIn has completed and blocking message is visible
 	onBlock: null,
 
@@ -227,11 +227,11 @@ function install(el, opts) {
 	// layer2 is the overlay layer which has opacity and a wait cursor (by default)
 	// layer3 is the message content that is displayed while blocking
 
-	var lyr1 = ($.browser.msie || opts.forceIframe) 
+	var lyr1 = ($.browser.msie || opts.forceIframe)
 		? $('<iframe class="blockUI" style="z-index:'+ (z++) +';display:none;border:none;margin:0;padding:0;position:absolute;width:100%;height:100%;top:0;left:0" src="'+opts.iframeSrc+'"></iframe>')
 		: $('<div class="blockUI" style="display:none"></div>');
-	
-	var lyr2 = opts.theme 
+
+	var lyr2 = opts.theme
 	 	? $('<div class="blockUI blockOverlay ui-widget-overlay" style="z-index:'+ (z++) +';display:none"></div>')
 	 	: $('<div class="blockUI blockOverlay" style="z-index:'+ (z++) +';display:none;border:none;margin:0;padding:0;width:100%;height:100%;top:0;left:0"></div>');
 
@@ -250,7 +250,7 @@ function install(el, opts) {
 	}
 	else if (full) {
 		s = '<div class="blockUI ' + opts.blockMsgClass + ' blockPage" style="z-index:'+(z+10)+';display:none;position:fixed"></div>';
-	}			 
+	}
 	else {
 		s = '<div class="blockUI ' + opts.blockMsgClass + ' blockElement" style="z-index:'+(z+10)+';display:none;position:absolute"></div>';
 	}
@@ -262,7 +262,7 @@ function install(el, opts) {
 			lyr3.css(themedCSS);
 			lyr3.addClass('ui-widget-content');
 		}
-		else 
+		else
 			lyr3.css(css);
 	}
 
@@ -280,7 +280,7 @@ function install(el, opts) {
 	$.each(layers, function() {
 		this.appendTo($par);
 	});
-	
+
 	if (opts.theme && opts.draggable && $.fn.draggable) {
 		lyr3.draggable({
 			handle: '.ui-dialog-titlebar',
@@ -443,7 +443,7 @@ function bind(b, el, opts) {
 		$el.data('blockUI.isBlocked', b);
 
 	// don't bind events when overlay is not in use or if bindEvents is false
-	if (!opts.bindEvents || (b && !opts.showOverlay)) 
+	if (!opts.bindEvents || (b && !opts.showOverlay))
 		return;
 
 	// bind anchors and inputs for mouse and key events

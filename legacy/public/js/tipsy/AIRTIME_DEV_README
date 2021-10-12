@@ -6,9 +6,9 @@ denise@denise-DX4860:~/airtime/legacy/public/js/tipsy$ diff -u jquery.tipsy_orig
 --- jquery.tipsy_orig.js	2012-12-13 12:03:48.780751104 -0500
 +++ jquery.tipsy.js	2012-12-13 12:08:15.564761493 -0500
 @@ -173,12 +173,10 @@
-         
+
          if (!options.live) this.each(function() { get(this); });
-         
+
 -        if (options.trigger != 'manual') {
 -            var binder   = options.live ? 'live' : 'bind',
 -                eventIn  = options.trigger == 'hover' ? 'mouseenter' : 'focus',
@@ -19,5 +19,5 @@ denise@denise-DX4860:~/airtime/legacy/public/js/tipsy$ diff -u jquery.tipsy_orig
 +            eventIn  = options.trigger == 'hover' ? 'mouseenter' : 'focus',
 +            eventOut = options.trigger == 'hover' ? 'mouseleave' : 'blur';
 +        this[binder](eventIn, enter)[binder](eventOut, leave);
-         
+
          return this;

@@ -57,7 +57,7 @@
             if (settings) $.extend(config, settings);
 // Required configuration elements
 // We need to set some configuration elements without user
-// For example there should be 2 buttons on the bottom, 
+// For example there should be 2 buttons on the bottom,
 // And dialog should be opened after button is pressed, not when it created
 // Also we need to know about dialog resizing
             $.extend(config, {
@@ -83,7 +83,7 @@
                     recalculateSize(event, ui);
                 },
             });
-            
+
             function systemImageUrl()
             {
                 if (config.systemImageUrl.length == 0) {
@@ -92,7 +92,7 @@
                     return config.systemImageUrl;
                 }
             }
-            
+
             var privateConfig = {
 // This stack array will store history navigation data
 // When user open new directory, old directory will be added to this list
@@ -105,19 +105,19 @@
 // Exception: if 'config.multiselect' is false, only one element will be stored in this array.
                 selectedItems: [],
             }
-            
+
 // Main dialog div
 // It will be converted into jQuery-ui dialog box using my configuration parameters
 // It contains 3 divs
             var browserDlg = $('<div title="' + config.title + '"></div>').css({'overflow': 'hidden'}).appendTo(document.body);
             browserDlg.dialog(config);
-            
+
 // First div on the top
 // It contains textbox field and buttons
 // User can enter any paths he want to open in this textbox and press enter
 // There is 3 buttons on the panel:
             var enterPathDiv = $('<div></div>').addClass('ui-widget-content').appendTo(browserDlg).css({'height': '30px', 'width': '100%', 'padding-top': '7px'});
-            
+
             var enterButton = $('<div></div>').css({'float': 'left', 'vertical-align': 'middle', 'margin-left': '6px'}).addClass('ui-corner-all').hover(
                 function() { $(this).addClass('ui-state-hover'); },
                 function() { $(this).removeClass('ui-state-hover'); }
@@ -131,9 +131,9 @@
                     loadPath(enterText.val());
                 }
             }).appendTo(enterButton.clone(false).appendTo(enterPathDiv));
-            
 
-// Back button. 
+
+// Back button.
 // When user click on it, 2 last elements of the history pop from the list, and reload second of them.
             var enterBack = $('<div></div>').addClass('ui-corner-all ui-icon ui-icon-circle-arrow-w').click(function(){
                 privateConfig.browserHistory.pop(); // Remove current element. It is not required now.
@@ -152,7 +152,7 @@
                     loadPath(backPath + config.separatorPath + '..');
                 }
             }).appendTo(enterButton.clone(true).appendTo(enterPathDiv));
-            
+
 // Second div is on the left
 // It contains images and texts for pre-defined paths
 // User just click on them and it will open pre-defined path
@@ -172,24 +172,24 @@
                     $('<span></span>').text(path.text).appendTo(knownDiv);
                 });
             }
-            
+
 // Third div is everywhere :)
 // It show files and folders in the current path
 // User can click on path to select or deselect it
 // Doubleclick on path will open it
 // Also doubleclick on file will select this file and close dialog
             var browserPathDiv = $('<div></div>').addClass('ui-widget-content').css({'float': 'right', 'overflow': 'auto'}).appendTo(browserDlg);
-            
+
 // Now everything is done
 // When user will be ready - he just click on the area you select for this plugin and dialog will appear
             $(this).click(function() {
                 privateConfig.browserHistory = [];
                 var startpath = removeBackPath(config.onLoad());
-                
+
                 startpath = startpath.split(config.separatorPath);
                 startpath.pop();
                 startpath = startpath.join(config.separatorPath);
-                
+
                 if(!checkBasePath(startpath)){
                     startpath = config.basePath;
                 }
@@ -208,7 +208,7 @@
                 if(confPath.length > curPath.length)
                     return false;
                 var result = true;
-                $.each(confPath, function(index, partConfPath) { 
+                $.each(confPath, function(index, partConfPath) {
                     if(partConfPath != curPath[index]){
                         result = false;
                     }
@@ -223,7 +223,7 @@
                 var confPath = config.basePath.split(config.separatorPath);
                 var curPath = path.split(config.separatorPath);
                 var newcurPath = [];
-                $.each(curPath, function(index, partCurPath) { 
+                $.each(curPath, function(index, partCurPath) {
                     if(partCurPath == ".."){
                         newcurPath.pop();
                     }else{
@@ -233,7 +233,7 @@
                 return newcurPath.join(config.separatorPath);
             }
 
-// This function will be called when user click 'Open' 
+// This function will be called when user click 'Open'
 // It check if any path is selected, and call config.onSelect function with path list
             function doneOk(){
                 var newCurPath = [];
@@ -243,7 +243,7 @@
                 if(newCurPath.length == 0) {
                     newCurPath.push(privateConfig.browserHistory.pop());
                 }
-                
+
                 if(config.multiselect)
                     config.onSelect(newCurPath);
                 else {
@@ -256,7 +256,7 @@
                 }
                 browserDlg.dialog("close");
             }
-            
+
 // Function recalculate and set new width and height for left and right div elements
 // height have '-2' because of the borders
 // width have '-4' because of a border an 2 pixels space between divs
@@ -331,22 +331,22 @@
 // If path is not under 'config.basePath', alert will be shown and nothing will be opened
             function loadPath(path) {
                 privateConfig.selectedItems = [];
-                
+
                 // First we need to remove all '..' parts of the path
                 path = removeBackPath(path);
-                
+
                 // Then we need to check, if path based on 'config.basePath'
                 if(!checkBasePath(path)) {
                     alert('Path should be based from ' + config.basePath);
                     return;
                 }
-                
+
                 // Then we can put this path into history
                 privateConfig.browserHistory.push(path);
-                
+
                 // Show it to user
                 enterText.val(path);
-                
+
                 // And load
                 $.ajax({
                     url: config.handlerUrl,

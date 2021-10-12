@@ -14,20 +14,19 @@ The new _fnDomBaseButton looks like this:
             nButton = document.createElement('button'),
             nSpan = document.createElement('span'),
             sEvent = this.s.activate=="mouseover" ? "mouseover" : "click";
-        
+
         //nButton.className = !this.s.dt.bJUI ? "ColVis_Button TableTools_Button" :
             //"ColVis_Button TableTools_Button ui-button ui-state-default";
         nButton.className = "btn-toolbar btn btn-small dropdown-toggle ColVis_MasterButton";
-        
+
         nButton.appendChild( nSpan );
         $(nButton).append("<span class='caret'></span>");
         nSpan.innerHTML = text;
-        
+
         $(nButton).bind( 'click', function (e) {
             that._fnCollectionShow();
             e.preventDefault();
         } );
-        
+
         return nButton;
     },
-    

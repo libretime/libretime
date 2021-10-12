@@ -4,7 +4,7 @@
 /**
  * Base static class for performing query and update operations on the 'cc_tag' table.
  *
- * 
+ *
  *
  * @package    propel.generator.airtime.om
  */
@@ -24,7 +24,7 @@ abstract class BaseCcTagPeer {
 
 	/** the related TableMap class for this table */
 	const TM_CLASS = 'CcTagTableMap';
-	
+
 	/** The total number of columns. */
 	const NUM_COLUMNS = 3;
 
@@ -331,7 +331,7 @@ abstract class BaseCcTagPeer {
 		}
 		return null; // just to be explicit
 	}
-	
+
 	/**
 	 * Clear the instance pool.
 	 *
@@ -341,20 +341,20 @@ abstract class BaseCcTagPeer {
 	{
 		self::$instances = array();
 	}
-	
+
 	/**
 	 * Method to invalidate the instance pool of all tables related to cc_tag
 	 * by a foreign key with ON DELETE CASCADE
 	 */
 	public static function clearRelatedInstancePool()
 	{
-		// Invalidate objects in CcFileTagPeer instance pool, 
+		// Invalidate objects in CcFileTagPeer instance pool,
 		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
 		CcFileTagPeer::clearInstancePool();
-		// Invalidate objects in CcPlayoutHistoryMetaDataPeer instance pool, 
+		// Invalidate objects in CcPlayoutHistoryMetaDataPeer instance pool,
 		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
 		CcPlayoutHistoryMetaDataPeer::clearInstancePool();
-		// Invalidate objects in CcPlayoutHistoryTemplateTagPeer instance pool, 
+		// Invalidate objects in CcPlayoutHistoryTemplateTagPeer instance pool,
 		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
 		CcPlayoutHistoryTemplateTagPeer::clearInstancePool();
 	}
@@ -379,7 +379,7 @@ abstract class BaseCcTagPeer {
 	}
 
 	/**
-	 * Retrieves the primary key from the DB resultset row 
+	 * Retrieves the primary key from the DB resultset row
 	 * For tables with a single-column primary key, that simple pkey value will be returned.  For tables with
 	 * a multi-column primary key, an array of the primary key columns will be returned.
 	 *
@@ -391,7 +391,7 @@ abstract class BaseCcTagPeer {
 	{
 		return (int) $row[$startcol];
 	}
-	
+
 	/**
 	 * The returned array will contain objects of the default type or
 	 * objects that inherit from the default.
@@ -402,7 +402,7 @@ abstract class BaseCcTagPeer {
 	public static function populateObjects(PDOStatement $stmt)
 	{
 		$results = array();
-	
+
 		// set the class once to avoid overhead in the loop
 		$cls = CcTagPeer::getOMClass(false);
 		// populate the object(s)
@@ -646,7 +646,7 @@ abstract class BaseCcTagPeer {
 			// use transaction because $criteria could contain info
 			// for more than one table or we could emulating ON DELETE CASCADE, etc.
 			$con->beginTransaction();
-			
+
 			$affectedRows += BasePeer::doDelete($criteria, $con);
 			CcTagPeer::clearRelatedInstancePool();
 			$con->commit();
@@ -750,4 +750,3 @@ abstract class BaseCcTagPeer {
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
 BaseCcTagPeer::buildTableMap();
-

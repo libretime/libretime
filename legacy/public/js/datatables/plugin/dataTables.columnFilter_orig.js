@@ -1,17 +1,17 @@
 /*
 * File:        jquery.dataTables.columnFilter.js
 * Version:     1.4.8.
-* Author:      Jovan Popovic 
-* 
+* Author:      Jovan Popovic
+*
 * Copyright 2011-2012 Jovan Popovic, all rights reserved.
 *
 * This source file is free software, under either the GPL v2 license or a
 * BSD style license, as supplied with this software.
-* 
-* This source file is distributed in the hope that it will be useful, but 
-* WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-* or FITNESS FOR A PARTICULAR PURPOSE. 
-* 
+*
+* This source file is distributed in the hope that it will be useful, but
+* WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+* or FITNESS FOR A PARTICULAR PURPOSE.
+*
 * Parameters:"
 * @sPlaceHolder                 String      Place where inline filtering function should be placed ("tfoot", "thead:before", "thead:after"). Default is "tfoot"
 * @sRangeSeparator              String      Separator that will be used when range values are sent to the server-side. Default value is "~".
@@ -65,7 +65,7 @@
             // use all rows
             else aiRows = oSettings.aiDisplayMaster; // all row numbers
 
-            // set up data array    
+            // set up data array
             var asResultData = new Array();
 
             for (var i = 0, c = aiRows.length; i < c; i++) {
@@ -358,8 +358,8 @@
         function fnCreateSelect(oTable, aData, bRegex) {
             var oSettings = oTable.fnSettings();
             if (aData == null && oSettings.sAjaxSource != "" && !oSettings.oFeatures.bServerSide) {
-                // Add a function to the draw callback, which will check for the Ajax data having 
-                // been loaded. Use a closure for the individual column elements that are used to 
+                // Add a function to the draw callback, which will check for the Ajax data having
+                // been loaded. Use a closure for the individual column elements that are used to
                 // built the column filter, since 'i' and 'th' (etc) are locally "global".
                 oSettings.aoDrawCallback.push({
                     "fn": (function (iColumn, nTh, sLabel) {
@@ -538,7 +538,7 @@
             });
             oTable.fnFilter('', index, true, false);
             return false;
-            }); 
+            });
             */
         }
 
@@ -570,7 +570,7 @@
         };
 
         properties = $.extend(defaults, options);
-        
+
         return this.each(function () {
 
             if (!oTable.fnSettings().oFeatures.bFilter)
@@ -617,7 +617,7 @@
 
                 oHost = oTable.fnSettings().nTHead;
 
-                
+
             }
 
             //$(sFilterRow + " th", oHost).each(function (index) {//bug with ColVis
@@ -681,7 +681,7 @@
                     }
                 }
             });
-            
+
             for (j = 0; j < aiCustomSearch_Indexes.length; j++) {
                 //var index = aiCustomSearch_Indexes[j];
                 var fnSearch_ = function () {

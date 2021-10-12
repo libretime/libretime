@@ -1,20 +1,20 @@
 function populateForm(entries){
     //$('#user_details').show();
-        
+
     $('.errors').remove();
     $('.success').remove();
-    
+
     if (entries.type === 'S')
-    {	
+    {
     	$("#user_details").hide();
     	$("#user_details_superadmin_message").show();
     	$('#type').attr('disabled', '1');
     } else {
     	$("#user_details").show();
     	$("#user_details_superadmin_message").hide();
-    	$('#type').removeAttr('disabled');    	
+    	$('#type').removeAttr('disabled');
     }
-    
+
     $('#user_id').val(entries.id);
     $('#login').val(entries.login);
     $('#first_name').val(entries.first_name);
@@ -24,7 +24,7 @@ function populateForm(entries){
     $('#cell_phone').val(entries.cell_phone);
     $('#skype').val(entries.skype_contact);
     $('#jabber').val(entries.jabber_contact);
-    
+
     if (entries.id.length != 0){
         $('#login').attr('readonly', 'readonly');
         $('#password').val("xxxxxx");
@@ -80,7 +80,7 @@ function rowCallback( nRow, aData, iDisplayIndex ){
     	$('td:eq(3)', nRow).html( $.i18n._('Super Admin') );
     	$('td:eq(4)', nRow).html(""); //Disable deleting the super admin
     }
-    
+
     return nRow;
 }
 
@@ -92,10 +92,10 @@ function populateUserTable() {
         "sAjaxSource": baseUrl+"User/get-user-data-table-info/format/json",
         "fnServerData": function ( sSource, aoData, fnCallback ) {
             $.ajax( {
-                "dataType": 'json', 
-                "type": "POST", 
-                "url": sSource, 
-                "data": aoData, 
+                "dataType": 'json',
+                "type": "POST",
+                "url": sSource,
+                "data": aoData,
                 "success": fnCallback
             } );
         },

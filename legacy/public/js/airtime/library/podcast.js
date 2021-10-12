@@ -62,12 +62,12 @@ var AIRTIME = (function (AIRTIME) {
         $scope.createSmartblock =  function () {
             // send smarblock creation instruction to API
             $.post(
-                endpoint + "smartblock", 
+                endpoint + "smartblock",
                 {
-                    csrf_token: $("#csrf").val(), 
+                    csrf_token: $("#csrf").val(),
                     id: $scope.podcast.id,
                     title: $scope.podcast.title
-                }, 
+                },
                 function() {
                     // show success message
                     var successMsg = $('.active-tab .pc-sb-success')
@@ -77,9 +77,9 @@ var AIRTIME = (function (AIRTIME) {
                     }, 5000);
 
                     // save podcast but do not display notification beside save button below
-                    $http.put(endpoint + $scope.podcast.id, 
+                    $http.put(endpoint + $scope.podcast.id,
                         {
-                            csrf_token: $scope.csrf, 
+                            csrf_token: $scope.csrf,
                             podcast: $scope.podcast
                         })
                         .success(function () {
@@ -596,12 +596,12 @@ var AIRTIME = (function (AIRTIME) {
      * Delete one or more podcast episodes.
      *
      * @param {id:string, type:string}[] data  Array of data objects to be deleted
-     * @param podcastId:string 
+     * @param podcastId:string
      */
     mod.deleteSelectedEpisodes = function (data, podcastId) {
         $.each(data, function () {
             AIRTIME.library.fnDeleteItems(data, podcastId);
-        });        
+        });
     };
 
     /**
@@ -825,7 +825,7 @@ var AIRTIME = (function (AIRTIME) {
         if (typeof PodcastEpisodeTable === 'undefined') {
             _initPodcastEpisodeTable();
         }
-        
+
         var podcastEpisodeTableObj = new PodcastEpisodeTable(
             domNode, // DOM node to create the table inside.
             true,    // Enable item selection

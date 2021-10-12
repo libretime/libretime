@@ -23,7 +23,7 @@ AudioControls.prototype.events = {
    "btn_play": {
         click: "playAudio"
     },
- 
+
     "btn_stop": {
         click: "stopAudio"
     },
@@ -60,7 +60,7 @@ AudioControls.prototype.events = {
     "btn_open": {
         click: "open"
     },
-    
+
     "btn_trim_audio": {
         click: "trimAudio"
     },
@@ -151,7 +151,7 @@ AudioControls.prototype.cueToSeconds = function(value) {
 
         "hh:mm:ss.uuu": function(value) {
             return clockConverter(value);
-        } 
+        }
     };
 
     func = converter[this.timeFormat];
@@ -188,19 +188,19 @@ AudioControls.prototype.cueFormatters = function(format) {
         },
 
         "hh:mm:ss": function (seconds) {
-            return clockFormat(seconds, 0);   
+            return clockFormat(seconds, 0);
         },
 
         "hh:mm:ss.u": function (seconds) {
-            return clockFormat(seconds, 1);   
+            return clockFormat(seconds, 1);
         },
 
         "hh:mm:ss.uu": function (seconds) {
-            return clockFormat(seconds, 2);   
+            return clockFormat(seconds, 2);
         },
 
         "hh:mm:ss.uuu": function (seconds) {
-            return clockFormat(seconds, 3);   
+            return clockFormat(seconds, 3);
         }
     };
 
@@ -232,7 +232,7 @@ AudioControls.prototype.init = function(config) {
     }
 
     for (className in events) {
-    
+
         tmpEl = container.getElementsByClassName(className)[0];
         this.ctrls[className] = tmpEl;
 
@@ -243,7 +243,7 @@ AudioControls.prototype.init = function(config) {
                 tmpEl.addEventListener(event, func);
             }
         }
-    } 
+    }
 
     if (this.ctrls["time_format"]) {
         this.ctrls["time_format"].value = this.config.getTimeFormat();
@@ -458,7 +458,7 @@ AudioControls.prototype.zeroCrossing = function(e) {
         this.fire('trackedit', {
             type: "zeroCrossing"
         });
-    }  
+    }
 };
 
 AudioControls.prototype.trimAudio = function(e) {
@@ -472,7 +472,7 @@ AudioControls.prototype.trimAudio = function(e) {
         this.fire('trackedit', {
             type: "trimAudio"
         });
-    }  
+    }
 };
 
 AudioControls.prototype.removeAudio = function(e) {
@@ -486,7 +486,7 @@ AudioControls.prototype.removeAudio = function(e) {
         this.fire('trackedit', {
             type: "removeAudio"
         });
-    }  
+    }
 };
 
 AudioControls.prototype.createFade = function(e) {
@@ -502,11 +502,11 @@ AudioControls.prototype.createFade = function(e) {
         this.fire('trackedit', {
             type: "createFade",
             args: {
-                type: type, 
+                type: type,
                 shape: shape
             }
         });
-    }  
+    }
 };
 
 AudioControls.prototype.onAudioSelection = function() {
@@ -521,12 +521,12 @@ AudioControls.prototype.onAudioDeselection = function() {
     start, end in seconds
 */
 AudioControls.prototype.notifySelectionUpdate = function(start, end) {
-    
+
     this.fire('changeselection', {
         start: start,
         end: end
     });
-}; 
+};
 
 /*
     start, end in seconds
@@ -557,6 +557,5 @@ AudioControls.prototype.onCursorSelection = function(args) {
 AudioControls.prototype.onAudioUpdate = function(args) {
     if (this.ctrls["audio_pos"]) {
         this.ctrls["audio_pos"].innerHTML = this.cueFormatters(this.timeFormat)(args.seconds);
-    } 
+    }
 };
-

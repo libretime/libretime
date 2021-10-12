@@ -13,7 +13,7 @@ AudioPlayout.prototype.init = function(config) {
 
     this.fadeMaker = new Fades();
     this.fadeMaker.init(this.ac.sampleRate);
-    
+
     this.gainNode = undefined;
     this.destination = this.ac.destination;
 };
@@ -80,7 +80,7 @@ AudioPlayout.prototype.loadData = function (audioData, cb) {
             that.buffer = buffer;
             cb(buffer);
         },
-        function(err) { 
+        function(err) {
             console.log("err(decodeAudioData): "+err);
             cb(null, err);
         }
@@ -139,8 +139,8 @@ AudioPlayout.prototype.setSource = function(source) {
 };
 
 /*
-    source.start is picky when passing the end time. 
-    If rounding error causes a number to make the source think 
+    source.start is picky when passing the end time.
+    If rounding error causes a number to make the source think
     it is playing slightly more samples than it has it won't play at all.
     Unfortunately it doesn't seem to work if you just give it a start time.
 */
@@ -151,12 +151,11 @@ AudioPlayout.prototype.play = function(when, start, duration) {
     }
 
     this.setSource(this.ac.createBufferSource());
-  
+
     this.source.start(when || 0, start, duration);
 };
 
 AudioPlayout.prototype.stop = function(when) {
- 
+
     this.source && this.source.stop(when || 0);
 };
-

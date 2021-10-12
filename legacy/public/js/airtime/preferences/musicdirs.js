@@ -42,7 +42,7 @@ function setWatchedDirEvents() {
 
     $('#storageFolder-ok').click(function(){
         var url, chosen;
-        
+
         if(confirm(sprintf($.i18n._("Are you sure you want to change the storage folder?\nThis will remove the files from your %s library!"), PRODUCT_NAME))){
             url = baseUrl+"Preference/change-stor-directory";
             chosen = $('#storageFolder').val();
@@ -57,7 +57,7 @@ function setWatchedDirEvents() {
                 });
         }
         else {
-            $('#storageFolder').val("");	
+            $('#storageFolder').val("");
         }
     });
 
@@ -77,7 +77,7 @@ function setWatchedDirEvents() {
                 setWatchedDirEvents();
             });
     });
-    
+
     $('.selected-item').find('.ui-icon-refresh').click(function(){
         var folder = $(this).prev().text();
         $.get(baseUrl+"Preference/rescan-watch-directory", {format: "json", dir: folder});
@@ -125,5 +125,5 @@ $(document).ready(function() {
         show: 'mouseover',
         hide: 'mouseout'
     });
-    
+
 });

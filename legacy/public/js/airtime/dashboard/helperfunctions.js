@@ -15,27 +15,27 @@ function popup(mylink){
  * a javascript date object representing this date. */
 function getDateFromString(time){
     var date = time.split("-");
-    
+
     if (date.length != 3){
         return null;
     }
-    
+
     var year = parseInt(date[0], 10);
     var month = parseInt(date[1], 10) -1;
     var day = parseInt(date[2], 10);
-    
+
     if (isNaN(year) || isNaN(month) || isNaN(day)){
         return null;
     }
-    
+
     return new Date(year, month, day);
-    
+
 }
 
 function convertSecondsToDaysHoursMinutesSeconds(seconds){
     if (seconds < 0)
         seconds = 0;
-    
+
     seconds = parseInt(seconds, 10);
 
     var days = parseInt(seconds / 86400);
@@ -47,26 +47,26 @@ function convertSecondsToDaysHoursMinutesSeconds(seconds){
     var minutes = parseInt(seconds / 60);
     seconds -= minutes*60;
 
-    return {days:days, hours:hours, minutes:minutes, seconds:seconds}; 
+    return {days:days, hours:hours, minutes:minutes, seconds:seconds};
 }
 
 /* Takes an input parameter of milliseconds and converts these into
  * the format HH:MM:SS */
 function convertToHHMMSS(timeInMS){
 	var time = parseInt(timeInMS);
-	
+
 	var hours = parseInt(time / 3600000);
 	time -= 3600000*hours;
-		
+
 	var minutes = parseInt(time / 60000);
 	time -= 60000*minutes;
-	
+
 	var seconds = parseInt(time / 1000);
-	
+
 	hours = hours.toString();
 	minutes = minutes.toString();
 	seconds = seconds.toString();
-	
+
 	if (hours.length == 1)
 		hours = "0" + hours;
 	if (minutes.length == 1)
@@ -78,37 +78,37 @@ function convertToHHMMSS(timeInMS){
 
 function convertToHHMMSSmm(timeInMS){
 	var time = parseInt(timeInMS);
-	
+
 	var hours = parseInt(time / 3600000);
 	time -= 3600000*hours;
-		
+
 	var minutes = parseInt(time / 60000);
 	time -= 60000*minutes;
-	
+
 	var seconds = parseInt(time / 1000);
 	time -= 1000*seconds;
-	
+
 	var ms = parseInt(time);
-	
+
 	hours = hours.toString();
 	minutes = minutes.toString();
 	seconds = seconds.toString();
 	ms = ms.toString();
-	
+
 	if (hours.length == 1)
 		hours = "0" + hours;
 	if (minutes.length == 1)
 		minutes = "0" + minutes;
 	if (seconds.length == 1)
 		seconds = "0" + seconds;
-		
+
 	if (ms.length == 3)
 		ms = ms.substring(0, 2);
 	else if (ms.length == 2)
 		ms = "0" + ms.substring(0,1);
 	else if (ms.length == 1)
 		ms = "00";
-		
+
 	if (hours == "00")
 		return minutes + ":" + seconds + "." + ms;
 	else
@@ -117,25 +117,25 @@ function convertToHHMMSSmm(timeInMS){
 
 function convertDateToHHMM(epochTime){
 	var d = new Date(epochTime);
-	
+
 	var hours = d.getUTCHours().toString();
 	var minutes = d.getUTCMinutes().toString();
-	
+
 	if (hours.length == 1)
 		hours = "0" + hours;
 	if (minutes.length == 1)
 		minutes = "0" + minutes;
-        
+
 	return hours + ":" + minutes;
 }
 
 function convertDateToHHMMSS(epochTime){
 	var d = new Date(epochTime);
-	
+
 	var hours = d.getUTCHours().toString();
 	var minutes = d.getUTCMinutes().toString();
 	var seconds = d.getUTCSeconds().toString();
-	
+
 	if (hours.length == 1)
 		hours = "0" + hours;
 	if (minutes.length == 1)
@@ -153,7 +153,7 @@ function convertDateToPosixTime(s){
 
     var date = datetime[0].split("-");
     var time = datetime[1].split(":");
-    
+
 	var year = date[0];
 	var month = date[1];
 	var day = date[2];
@@ -230,4 +230,3 @@ function isInView(el) {
     rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
     );
 }
-

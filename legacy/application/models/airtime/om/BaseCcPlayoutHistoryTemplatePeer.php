@@ -766,4 +766,3 @@ abstract class BaseCcPlayoutHistoryTemplatePeer
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
 BaseCcPlayoutHistoryTemplatePeer::buildTableMap();
-

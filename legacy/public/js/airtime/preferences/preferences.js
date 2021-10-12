@@ -15,7 +15,7 @@ function setConfigureMailServerListener() {
     configMailServer.click(function(event){
         setMailServerInputReadonly();
     });
-    
+
     var msRequiresAuth = $("#msRequiresAuth");
     msRequiresAuth.click(function(event){
         setMsAuthenticationFieldsReadonly($(this));
@@ -57,7 +57,7 @@ function setMailServerInputReadonly() {
     var mailServer = $("#mailServer");
     var port = $("#port");
     var requiresAuthCB = $("#msRequiresAuth");
-    
+
     if (configMailServer.is(':checked')) {
         mailServer.removeAttr("readonly");
         port.removeAttr("readonly");
@@ -67,7 +67,7 @@ function setMailServerInputReadonly() {
         port.attr("readonly", "readonly");
         requiresAuthCB.parent().hide();
     }
-    
+
     setMsAuthenticationFieldsReadonly(requiresAuthCB);
 }
 
@@ -102,7 +102,7 @@ function setMsAuthenticationFieldsReadonly(ele) {
     var email = $("#email");
     var password = $("#ms_password");
     var configureMailServer = $("#configureMailServer");
-    
+
     if (ele.is(':checked') && configureMailServer.is(':checked')) {
         email.removeAttr("readonly");
         password.removeAttr("readonly");
@@ -144,7 +144,7 @@ $(document).ready(function() {
     $('#pref_save').live('click', function() {
         var data = $('#pref_form').serialize();
         var url = baseUrl+'Preference/index';
-        
+
         $.post(url, {format: "json", data: data}, function(json){
             $('#content').empty().append(json.html);
             setTimeout(removeSuccessMsg, 5000);
@@ -186,7 +186,7 @@ $(document).ready(function() {
     }
 
     showErrorSections();
-    
+
     setMailServerInputReadonly();
     setPodcastAutoSmartblockReadonly();
     setSystemFromEmailReadonly();

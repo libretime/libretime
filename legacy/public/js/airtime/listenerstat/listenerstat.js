@@ -4,7 +4,7 @@ $(document).ready(function() {
     timeStartId = "#his_time_start",
     dateEndId = "#his_date_end",
     timeEndId = "#his_time_end";
-    
+
     // set width dynamically
     var width = $("#listenerstat_content").width();
     width = width * .91;
@@ -12,7 +12,7 @@ $(document).ready(function() {
     $("#listenerstat_content").find("#legend").width(width);
 
     getDataAndPlot();
-    
+
     listenerstat_content.find("#his_submit").click(function(){
     	var oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
    	 	var start = oRange.start;
@@ -61,7 +61,7 @@ function plot(datasets){
         firstTimestamp = new Date(8640000000000000);
         // smallest
         lastTimestamp = new Date(0);
-        
+
         data = [];
         if (doAll != null)
         {
@@ -74,13 +74,13 @@ function plot(datasets){
                 }
                 data.push(val);
             });
-        }   
+        }
         else
         {
             $('#legend .legendCB').each(
                 function(){
                     if (this.checked)
-                    {         
+                    {
                          data.push(datasets[this.id]);
                          if (firstTimestamp.getTime() > datasets[this.id].data[0][0].getTime()) {
                              firstTimestamp = datasets[this.id].data[0][0];
@@ -96,10 +96,10 @@ function plot(datasets){
                 }
             );
         }
-        
+
         numOfTicks = 10;
         tickSize = (lastTimestamp.getTime() - firstTimestamp.getTime())/1000/numOfTicks;
-        
+
         plot = $.plot($("#flot_placeholder"), data, {
             yaxis: { min: 0, tickDecimals: 0, color: '#d6d6d6', tickColor: '#d6d6d6' },
             xaxis: { mode: "time", timeformat:"%y/%m/%0d %H:%M", tickSize: [tickSize, "second"],
@@ -130,7 +130,7 @@ function plot(datasets){
                  }
             }
         });
-        
+
         function showTooltip(x, y, contents) {
             $('<div id="tooltip">' + contents + '</div>').css( {
                 position: 'absolute',
@@ -149,10 +149,10 @@ function plot(datasets){
             if (item) {
                 if (previousPoint != item.dataIndex) {
                     previousPoint = item.dataIndex;
-                    
+
                     $("#tooltip").remove();
                     var y = item.datapoint[1].toFixed(2);
-                    
+
                     showTooltip(item.pageX, item.pageY,
                                 sprintf($.i18n._("Listener Count on %s: %s"), item.series.label, Math.floor(y)));
                 }
@@ -165,8 +165,8 @@ function plot(datasets){
 
         $('#legend').find("input").click(function(){setTimeout(plotByChoice,100);});
     }
-    
-    plotByChoice(true);  
+
+    plotByChoice(true);
     oBaseDatePickerSettings = {
         dateFormat: 'yy-mm-dd',
         //i18n_months, i18n_days_short are in common.js
@@ -176,7 +176,7 @@ function plot(datasets){
             $(this).datepicker( "setDate", sDate );
         }
     };
-    
+
     oBaseTimePickerSettings = {
         showPeriodLabels: false,
         showCloseButton: true,
@@ -186,7 +186,7 @@ function plot(datasets){
         hourText: $.i18n._("Hour"),
         minuteText: $.i18n._("Minute")
     };
-    
+
     listenerstat_content.find(dateStartId).datepicker(oBaseDatePickerSettings);
     listenerstat_content.find(timeStartId).timepicker(oBaseTimePickerSettings);
     listenerstat_content.find(dateEndId).datepicker(oBaseDatePickerSettings);

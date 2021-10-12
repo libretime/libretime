@@ -10,7 +10,7 @@
  * License:     GPL v2 or BSD 3 point style
  * Project:     Just a little bit of fun :-)
  * Contact:     www.sprymedia.co.uk/contact
- * 
+ *
  * Copyright 2010-2011 Allan Jardine, all rights reserved.
  *
  * This source file is free software, under either the GPL v2 license or a
@@ -21,7 +21,7 @@
 
 (function($) {
 
-/** 
+/**
  * ColVis provides column visiblity control for DataTables
  * @class ColVis
  * @constructor
@@ -34,17 +34,17 @@ ColVis = function( oDTSettings, oInit )
 	{
 		alert( "Warning: ColVis must be initialised with the keyword 'new'" );
 	}
-	
+
 	if ( typeof oInit == 'undefined' )
 	{
 		oInit = {};
 	}
-	
-	
+
+
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Public class variables
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	
+
 	/**
 	 * @namespace Settings object which contains customisable information for ColVis instance
 	 */
@@ -56,7 +56,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  null
 		 */
 		"dt": null,
-		
+
 		/**
 		 * Customisation object
 		 *  @property oInit
@@ -64,7 +64,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  passed in
 		 */
 		"oInit": oInit,
-		
+
 		/**
 		 * Callback function to tell the user when the state has changed
 		 *  @property fnStateChange
@@ -72,7 +72,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  null
 		 */
 		"fnStateChange": null,
-		
+
 		/**
 		 * Mode of activation. Can be 'click' or 'mouseover'
 		 *  @property activate
@@ -80,7 +80,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  click
 		 */
 		"activate": "click",
-		
+
 		/**
 		 * Position of the collection menu when shown - align "left" or "right"
 		 *  @property sAlign
@@ -88,7 +88,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  right
 		 */
 		"sAlign": "left",
-		
+
 		/**
 		 * Text used for the button
 		 *  @property buttonText
@@ -96,7 +96,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  Show / hide columns
 		 */
 		"buttonText": "Show / hide columns",
-		
+
 		/**
 		 * Flag to say if the collection is hidden
 		 *  @property hidden
@@ -104,7 +104,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  true
 		 */
 		"hidden": true,
-		
+
 		/**
 		 * List of columns (integers) which should be excluded from the list
 		 *  @property aiExclude
@@ -112,7 +112,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  []
 		 */
 		"aiExclude": [],
-		
+
 		/**
 		 * Store the original viisbility settings so they could be restored
 		 *  @property abOriginal
@@ -120,7 +120,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  []
 		 */
 		"abOriginal": [],
-		
+
 		/**
 		 * Show Show-All button
 		 *  @property bShowAll
@@ -128,7 +128,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  []
 		 */
 		"bShowAll": false,
-		
+
 		/**
 		 * Show All button text
 		 *  @property sShowAll
@@ -136,7 +136,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  Restore original
 		 */
 		"sShowAll": "Show All",
-		
+
 		/**
 		 * Show restore button
 		 *  @property bRestore
@@ -144,7 +144,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  []
 		 */
 		"bRestore": false,
-		
+
 		/**
 		 * Restore button text
 		 *  @property sRestore
@@ -152,7 +152,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  Restore original
 		 */
 		"sRestore": "Restore original",
-		
+
 		/**
 		 * Overlay animation duration in mS
 		 *  @property iOverlayFade
@@ -160,7 +160,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  500
 		 */
 		"iOverlayFade": 500,
-		
+
 		/**
 		 * Label callback for column names. Takes three parameters: 1. the column index, 2. the column
 		 * title detected by DataTables and 3. the TH node for the column
@@ -169,7 +169,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  null
 		 */
 		"fnLabel": null,
-		
+
 		/**
 		 * Indicate if ColVis should automatically calculate the size of buttons or not. The default
 		 * is for it to do so. Set to "css" to disable the automatic sizing
@@ -178,7 +178,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  auto
 		 */
 		"sSize": "auto",
-		
+
 		/**
 		 * Indicate if the column list should be positioned by Javascript, visually below the button
 		 * or allow CSS to do the positioning
@@ -188,8 +188,8 @@ ColVis = function( oDTSettings, oInit )
 		 */
 		"bCssPosition": false
 	};
-	
-	
+
+
 	/**
 	 * @namespace Common and useful DOM elements for the class instance
 	 */
@@ -201,7 +201,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  null
 		 */
 		"wrapper": null,
-		
+
 		/**
 		 * Activation button
 		 *  @property button
@@ -209,7 +209,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  null
 		 */
 		"button": null,
-		
+
 		/**
 		 * Collection list node
 		 *  @property collection
@@ -217,7 +217,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  null
 		 */
 		"collection": null,
-		
+
 		/**
 		 * Background node used for shading the display and event capturing
 		 *  @property background
@@ -225,7 +225,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  null
 		 */
 		"background": null,
-		
+
 		/**
 		 * Element to position over the activation button to catch mouse events when using mouseover
 		 *  @property catcher
@@ -233,7 +233,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  null
 		 */
 		"catcher": null,
-		
+
 		/**
 		 * List of button elements
 		 *  @property buttons
@@ -241,7 +241,7 @@ ColVis = function( oDTSettings, oInit )
 		 *  @default  []
 		 */
 		"buttons": [],
-		
+
 		/**
 		 * Restore button
 		 *  @property restore
@@ -250,10 +250,10 @@ ColVis = function( oDTSettings, oInit )
 		 */
 		"restore": null
 	};
-	
+
 	/* Store global reference */
 	ColVis.aInstances.push( this );
-	
+
 	/* Constructor logic */
 	this.s.dt = oDTSettings;
 	this._fnConstruct();
@@ -266,7 +266,7 @@ ColVis.prototype = {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Public methods
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	
+
 	/**
 	 * Rebuild the list of buttons for this instance (i.e. if there is a column header update)
 	 *  @method  fnRebuild
@@ -283,56 +283,56 @@ ColVis.prototype = {
 			}
 		}
 		this.dom.buttons.splice( 0, this.dom.buttons.length );
-		
+
 		if ( this.dom.restore )
 		{
 			this.dom.restore.parentNode( this.dom.restore );
 		}
-		
+
 		/* Re-add them (this is not the optimal way of doing this, it is fast and effective) */
 		this._fnAddButtons();
-		
+
 		/* Update the checkboxes */
 		this._fnDrawCallback();
 	},
-	
-	
-	
+
+
+
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Private methods (they are of course public in JS, but recommended as private)
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	
+
 	/**
 	 * Constructor logic
 	 *  @method  _fnConstruct
 	 *  @returns void
-	 *  @private 
+	 *  @private
 	 */
 	"_fnConstruct": function ()
 	{
 		this._fnApplyCustomisation();
-		
+
 		var that = this;
 		var i, iLen;
 		this.dom.wrapper = document.createElement('div');
 		this.dom.wrapper.className = "ColVis TableTools";
-		
+
 		this.dom.button = this._fnDomBaseButton( this.s.buttonText );
 		this.dom.button.className += " ColVis_MasterButton";
 		this.dom.wrapper.appendChild( this.dom.button );
-		
+
 		this.dom.catcher = this._fnDomCatcher();
 		this.dom.collection = this._fnDomCollection();
 		this.dom.background = this._fnDomBackground();
-		
+
 		this._fnAddButtons();
-		
+
 		/* Store the original visbility information */
 		for ( i=0, iLen=this.s.dt.aoColumns.length ; i<iLen ; i++ )
 		{
 			this.s.abOriginal.push( this.s.dt.aoColumns[i].bVisible );
 		}
-		
+
 		/* Update on each draw */
 		this.s.dt.aoDrawCallback.push( {
 			"fn": function () {
@@ -351,77 +351,77 @@ ColVis.prototype = {
 
 			var mStore = that.s.abOriginal.splice( oReorder.iFrom, 1 )[0];
 			that.s.abOriginal.splice( oReorder.iTo, 0, mStore );
-			
+
 			that.fnRebuild();
 		} );
 	},
-	
-	
+
+
 	/**
 	 * Apply any customisation to the settings from the DataTables initialisation
 	 *  @method  _fnApplyCustomisation
 	 *  @returns void
-	 *  @private 
+	 *  @private
 	 */
 	"_fnApplyCustomisation": function ()
 	{
 		var oConfig = this.s.oInit;
-		
+
 		if ( typeof oConfig.activate != 'undefined' )
 		{
 			this.s.activate = oConfig.activate;
 		}
-		
+
 		if ( typeof oConfig.buttonText != 'undefined' )
 		{
 			this.s.buttonText = oConfig.buttonText;
 		}
-		
+
 		if ( typeof oConfig.aiExclude != 'undefined' )
 		{
 			this.s.aiExclude = oConfig.aiExclude;
 		}
-		
+
 		if ( typeof oConfig.bRestore != 'undefined' )
 		{
 			this.s.bRestore = oConfig.bRestore;
 		}
-		
+
 		if ( typeof oConfig.sRestore != 'undefined' )
 		{
 			this.s.sRestore = oConfig.sRestore;
 		}
-		
+
 		if ( typeof oConfig.bShowAll != 'undefined' )
 		{
 			this.s.bShowAll = oConfig.bShowAll;
 		}
-		
+
 		if ( typeof oConfig.sShowAll != 'undefined' )
 		{
 			this.s.sShowAll = oConfig.sShowAll;
 		}
-		
+
 		if ( typeof oConfig.sAlign != 'undefined' )
 		{
 			this.s.sAlign = oConfig.sAlign;
 		}
-		
+
 		if ( typeof oConfig.fnStateChange != 'undefined' )
 		{
 			this.s.fnStateChange = oConfig.fnStateChange;
 		}
-		
+
 		if ( typeof oConfig.iOverlayFade != 'undefined' )
 		{
 			this.s.iOverlayFade = oConfig.iOverlayFade;
 		}
-		
+
 		if ( typeof oConfig.fnLabel != 'undefined' )
 		{
 			this.s.fnLabel = oConfig.fnLabel;
 		}
-		
+
 		if ( typeof oConfig.sSize != 'undefined' )
 		{
 			this.s.sSize = oConfig.sSize;
@@ -432,19 +432,19 @@ ColVis.prototype = {
 			this.s.bCssPosition = oConfig.bCssPosition;
 		}
 	},
-	
-	
+
+
 	/**
 	 * On each table draw, check the visibility checkboxes as needed. This allows any process to
 	 * update the table's column visibility and ColVis will still be accurate.
 	 *  @method  _fnDrawCallback
 	 *  @returns void
-	 *  @private 
+	 *  @private
 	 */
 	"_fnDrawCallback": function ()
 	{
 		var aoColumns = this.s.dt.aoColumns;
-		
+
 		for ( var i=0, iLen=aoColumns.length ; i<iLen ; i++ )
 		{
 			if ( this.dom.buttons[i] !== null )
@@ -460,20 +460,20 @@ ColVis.prototype = {
 			}
 		}
 	},
-	
-	
+
+
 	/**
 	 * Loop through the columns in the table and as a new button for each one.
 	 *  @method  _fnAddButtons
 	 *  @returns void
-	 *  @private 
+	 *  @private
 	 */
 	"_fnAddButtons": function ()
 	{
 		var
 			nButton,
 			sExclude = ","+this.s.aiExclude.join(',')+",";
-		
+
 		for ( var i=0, iLen=this.s.dt.aoColumns.length ; i<iLen ; i++ )
 		{
 			if ( sExclude.indexOf( ","+i+"," ) == -1 )
@@ -487,7 +487,7 @@ ColVis.prototype = {
 				this.dom.buttons.push( null );
 			}
 		}
-		
+
 		if ( this.s.bRestore )
 		{
 			nButton = this._fnDomRestoreButton();
@@ -495,7 +495,7 @@ ColVis.prototype = {
 			this.dom.buttons.push( nButton );
 			this.dom.collection.appendChild( nButton );
 		}
-		
+
 		if ( this.s.bShowAll )
 		{
 			nButton = this._fnDomShowAllButton();
@@ -504,13 +504,13 @@ ColVis.prototype = {
 			this.dom.collection.appendChild( nButton );
 		}
 	},
-	
-	
+
+
 	/**
 	 * Create a button which allows a "restore" action
 	 *  @method  _fnDomRestoreButton
 	 *  @returns {Node} Created button
-	 *  @private 
+	 *  @private
 	 */
 	"_fnDomRestoreButton": function ()
 	{
@@ -518,12 +518,12 @@ ColVis.prototype = {
 			that = this,
 			nButton = document.createElement('button'),
 			nSpan = document.createElement('span');
-		
+
 		nButton.className = !this.s.dt.bJUI ? "ColVis_Button TableTools_Button" :
 			"ColVis_Button TableTools_Button ui-button ui-state-default";
 		nButton.appendChild( nSpan );
 		$(nSpan).html( '<span class="ColVis_title">'+this.s.sRestore+'</span>' );
-		
+
 		$(nButton).click( function (e) {
 			for ( var i=0, iLen=that.s.abOriginal.length ; i<iLen ; i++ )
 			{
@@ -533,16 +533,16 @@ ColVis.prototype = {
 			that.s.dt.oInstance.fnAdjustColumnSizing( false );
 			that.s.dt.oInstance.fnDraw( false );
 		} );
-		
+
 		return nButton;
 	},
-	
-	
+
+
 	/**
 	 * Create a button which allows a "show all" action
 	 *  @method  _fnDomShowAllButton
 	 *  @returns {Node} Created button
-	 *  @private 
+	 *  @private
 	 */
 	"_fnDomShowAllButton": function ()
 	{
@@ -550,12 +550,12 @@ ColVis.prototype = {
 			that = this,
 			nButton = document.createElement('button'),
 			nSpan = document.createElement('span');
-		
+
 		nButton.className = !this.s.dt.bJUI ? "ColVis_Button TableTools_Button" :
 			"ColVis_Button TableTools_Button ui-button ui-state-default";
 		nButton.appendChild( nSpan );
 		$(nSpan).html( '<span class="ColVis_title">'+this.s.sShowAll+'</span>' );
-		
+
 		$(nButton).click( function (e) {
 			for ( var i=0, iLen=that.s.abOriginal.length ; i<iLen ; i++ )
 			{
@@ -568,17 +568,17 @@ ColVis.prototype = {
 			that.s.dt.oInstance.fnAdjustColumnSizing( false );
 			that.s.dt.oInstance.fnDraw( false );
 		} );
-		
+
 		return nButton;
 	},
-	
-	
+
+
 	/**
 	 * Create the DOM for a show / hide button
 	 *  @method  _fnDomColumnButton
 	 *  @param {int} i Column in question
 	 *  @returns {Node} Created button
-	 *  @private 
+	 *  @private
 	 */
 	"_fnDomColumnButton": function ( i )
 	{
@@ -588,23 +588,23 @@ ColVis.prototype = {
 			nButton = document.createElement('button'),
 			nSpan = document.createElement('span'),
 			dt = this.s.dt;
-		
+
 		nButton.className = !dt.bJUI ? "ColVis_Button TableTools_Button" :
 			"ColVis_Button TableTools_Button ui-button ui-state-default";
-		
+
 		nButton.appendChild( nSpan );
 		var sTitle = this.s.fnLabel===null ? oColumn.sTitle : this.s.fnLabel( i, oColumn.sTitle, oColumn.nTh );
 		$(nSpan).html(
 			'<span class="ColVis_radio"><input type="checkbox"/></span>'+
 			'<span class="ColVis_title">'+sTitle+'</span>' );
-		
+
 		$(nButton).click( function (e) {
 			var showHide = !$('input', this).is(":checked");
 			if ( e.target.nodeName.toLowerCase() == "input" )
 			{
 				showHide = $('input', this).is(":checked");
 			}
-			
+
 			/* Need to consider the case where the initialiser created more than one table - change the
 			 * API index that DataTables is using
 			 */
@@ -625,22 +625,22 @@ ColVis.prototype = {
 			}
 
 			$.fn.dataTableExt.iApiIndex = oldIndex; /* Restore */
-			
+
 			if ( that.s.fnStateChange !== null )
 			{
 				that.s.fnStateChange.call( that, i, showHide );
 			}
 		} );
-		
+
 		return nButton;
 	},
-	
-	
+
+
 	/**
 	 * Get the position in the DataTables instance array of the table for this instance of ColVis
 	 *  @method  _fnDataTablesApiIndex
 	 *  @returns {int} Index
-	 *  @private 
+	 *  @private
 	 */
 	"_fnDataTablesApiIndex": function ()
 	{
@@ -653,14 +653,14 @@ ColVis.prototype = {
 		}
 		return 0;
 	},
-	
-	
+
+
 	/**
 	 * Create the DOM needed for the button and apply some base properties. All buttons start here
 	 *  @method  _fnDomBaseButton
 	 *  @param   {String} text Button text
 	 *  @returns {Node} DIV element for the button
-	 *  @private 
+	 *  @private
 	 */
 	"_fnDomBaseButton": function ( text )
 	{
@@ -670,28 +670,28 @@ ColVis.prototype = {
 			nCaret = document.createElement('span'),
 			nSpan = document.createElement('span'),
 			sEvent = this.s.activate=="mouseover" ? "mouseover" : "click";
-		
+
 		nButton.className = "btn-toolbar btn btn-small dropdown-toggle";
 		nCaret.className = "caret";
-		
+
 		nButton.appendChild( nSpan );
 		nButton.appendChild( nCaret );
 		nSpan.innerHTML = text;
-		
+
 		$(nButton).bind( sEvent, function (e) {
 			that._fnCollectionShow();
 			e.preventDefault();
 		} );
-		
+
 		return nButton;
 	},
-	
-	
+
+
 	/**
 	 * Create the element used to contain list the columns (it is shown and hidden as needed)
 	 *  @method  _fnDomCollection
 	 *  @returns {Node} div container for the collection
-	 *  @private 
+	 *  @private
 	 */
 	"_fnDomCollection": function ()
 	{
@@ -700,60 +700,60 @@ ColVis.prototype = {
 		nHidden.style.display = "none";
 		nHidden.className = !this.s.dt.bJUI ? "ColVis_collection TableTools_collection" :
 			"ColVis_collection TableTools_collection ui-buttonset ui-buttonset-multi";
-		
+
 		if ( !this.s.bCssPosition )
 		{
 			nHidden.style.position = "absolute";
 		}
 		$(nHidden).css('opacity', 0);
-		
+
 		return nHidden;
 	},
-	
-	
+
+
 	/**
 	 * An element to be placed on top of the activate button to catch events
 	 *  @method  _fnDomCatcher
 	 *  @returns {Node} div container for the collection
-	 *  @private 
+	 *  @private
 	 */
 	"_fnDomCatcher": function ()
 	{
-		var 
+		var
 			that = this,
 			nCatcher = document.createElement('div');
 		nCatcher.className = "ColVis_catcher TableTools_catcher";
-		
+
 		$(nCatcher).click( function () {
 			that._fnCollectionHide.call( that, null, null );
 		} );
-		
+
 		return nCatcher;
 	},
-	
-	
+
+
 	/**
-	 * Create the element used to shade the background, and capture hide events (it is shown and 
+	 * Create the element used to shade the background, and capture hide events (it is shown and
 	 * hidden as needed)
 	 *  @method  _fnDomBackground
 	 *  @returns {Node} div container for the background
-	 *  @private 
+	 *  @private
 	 */
 	"_fnDomBackground": function ()
 	{
 		var that = this;
-		
+
 		var nBackground = document.createElement('div');
 		nBackground.style.position = "absolute";
 		nBackground.style.left = "0px";
 		nBackground.style.top = "0px";
 		nBackground.className = "ColVis_collectionBackground TableTools_collectionBackground";
 		$(nBackground).css('opacity', 0);
-		
+
 		$(nBackground).click( function () {
 			that._fnCollectionHide.call( that, null, null );
 		} );
-		
+
 		/* When considering a mouse over action for the activation, we also consider a mouse out
 		 * which is the same as a mouse over the background - without all the messing around of
 		 * bubbling events. Use the catcher element to avoid messing around with bubbling
@@ -765,16 +765,16 @@ ColVis.prototype = {
 				that._fnCollectionHide.call( that, null, null );
 			} );
 		}
-		
+
 		return nBackground;
 	},
-	
-	
+
+
 	/**
 	 * Show the show / hide list and the background
 	 *  @method  _fnCollectionShow
 	 *  @returns void
-	 *  @private 
+	 *  @private
 	 */
 	"_fnCollectionShow": function ()
 	{
@@ -784,7 +784,7 @@ ColVis.prototype = {
 		var nBackground = this.dom.background;
 		var iDivX = parseInt(oPos.left, 10);
 		var iDivY = parseInt(oPos.top + $(this.dom.button).outerHeight(), 10);
-		
+
 		if ( !this.s.bCssPosition )
 		{
 			nHidden.style.top = iDivY+"px";
@@ -792,23 +792,23 @@ ColVis.prototype = {
 		}
 		nHidden.style.display = "block";
 		$(nHidden).css('opacity',0);
-		
+
 		var iWinHeight = $(window).height(), iDocHeight = $(document).height(),
 		 	iWinWidth = $(window).width(), iDocWidth = $(document).width();
-		
+
 		nBackground.style.height = ((iWinHeight>iDocHeight)? iWinHeight : iDocHeight) +"px";
 		nBackground.style.width = ((iWinWidth<iDocWidth)? iWinWidth : iDocWidth) +"px";
-		
+
 		var oStyle = this.dom.catcher.style;
 		oStyle.height = $(this.dom.button).outerHeight()+"px";
 		oStyle.width = $(this.dom.button).outerWidth()+"px";
 		oStyle.top = oPos.top+"px";
 		oStyle.left = iDivX+"px";
-		
+
 		document.body.appendChild( nBackground );
 		document.body.appendChild( nHidden );
 		document.body.appendChild( this.dom.catcher );
-		
+
 		/* Resize the buttons */
 		if ( this.s.sSize == "auto" )
 		{
@@ -832,7 +832,7 @@ ColVis.prototype = {
 			}
 			this.dom.collection.style.width = iMax+"px";
 		}
-		
+
 		/* Visual corrections to try and keep the collection visible */
 		if ( !this.s.bCssPosition )
 		{
@@ -841,13 +841,13 @@ ColVis.prototype = {
 
 			var iDivWidth = $(nHidden).outerWidth();
 			var iDivHeight = $(nHidden).outerHeight();
-			
+
 			if ( iDivX + iDivWidth > iDocWidth )
 			{
 				nHidden.style.left = (iDocWidth-iDivWidth)+"px";
 			}
 		}
-		
+
 		/* This results in a very small delay for the end user but it allows the animation to be
 		 * much smoother. If you don't want the animation, then the setTimeout can be removed
 		 */
@@ -863,37 +863,37 @@ ColVis.prototype = {
 				}
 			});
 		}, 10 );
-		
+
 		this.s.hidden = false;
 	},
-	
-	
+
+
 	/**
 	 * Hide the show / hide list and the background
 	 *  @method  _fnCollectionHide
 	 *  @returns void
-	 *  @private 
+	 *  @private
 	 */
 	"_fnCollectionHide": function (  )
 	{
 		var that = this;
-		
+
 		if ( !this.s.hidden && this.dom.collection !== null )
 		{
 			this.s.hidden = true;
-			
+
 			$(this.dom.collection).animate({"opacity": 0}, that.s.iOverlayFade, function (e) {
 				this.style.display = "none";
 			} );
-			
+
 			$(this.dom.background).animate({"opacity": 0}, that.s.iOverlayFade, function (e) {
 				document.body.removeChild( that.dom.background );
 				document.body.removeChild( that.dom.catcher );
 			} );
 		}
 	},
-	
-	
+
+
 	/**
 	 * Alter the colspan on any fnOpen rows
 	 */
@@ -901,7 +901,7 @@ ColVis.prototype = {
 	{
 		var aoOpen = this.s.dt.aoOpenRows;
 		var iVisible = this.s.dt.oApi._fnVisbleColumns( this.s.dt );
-		
+
 		for ( var i=0, iLen=aoOpen.length ; i<iLen ; i++ ) {
 			aoOpen[i].nTr.getElementsByTagName('td')[0].colSpan = iVisible;
 		}
@@ -930,7 +930,7 @@ ColVis.fnRebuild = function ( oTable )
 	{
 		nTable = oTable.fnSettings().nTable;
 	}
-	
+
 	for ( var i=0, iLen=ColVis.aInstances.length ; i<iLen ; i++ )
 	{
 		if ( typeof oTable == 'undefined' || nTable == ColVis.aInstances[i].s.dt.nTable )

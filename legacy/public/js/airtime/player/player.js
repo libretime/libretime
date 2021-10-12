@@ -91,4 +91,3 @@ $(document).ready(function() {
         clearTimeout(typingTimer);
     });
 });
-

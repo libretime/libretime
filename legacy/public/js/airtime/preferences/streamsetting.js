@@ -52,7 +52,7 @@ function hideForShoutcast(ele){
     div.find("select[id$=data-type]").find("option[value='mp3']").attr('selected','selected');
     div.find("select[id$=data-type]").find("option[value='ogg']").attr("disabled","disabled");
     div.find("select[id$=data-type]").find("option[value='opus']").attr("disabled","disabled");
-    
+
     restrictOggBitrate(ele, false)
 }
 
@@ -116,13 +116,13 @@ function setLiveSourceConnectionOverrideListener(){
         $(this).parent().find("div[id$='_dj_connection_url_actions']").show();
         event.preventDefault();
     });
-    
+
     // set action for "OK" and "X"
     var live_dj_actions = $("#live_dj_connection_url_actions");
     var live_dj_input = live_dj_actions.parent().find("dd[id$='_source_host-element']").children();
     var master_dj_actions = $("#master_dj_connection_url_actions");
     var master_dj_input = master_dj_actions.parent().find("dd[id$='_source_host-element']").children();
-    
+
     live_dj_actions.find("#ok").click(function(event){
     	event.preventDefault();
         var url = live_dj_input.val();
@@ -132,7 +132,7 @@ function setLiveSourceConnectionOverrideListener(){
         $.get(baseUrl+"Preference/set-source-connection-url", {format: "json", type: "livedj", url:encodeURIComponent(url), override: 1});
     	event.preventDefault();
     });
-    
+
     live_dj_actions.find("#reset").click(function(event){
     	event.preventDefault();
         var port = $("#show_source_port").val();
@@ -147,7 +147,7 @@ function setLiveSourceConnectionOverrideListener(){
         $.get(baseUrl+"Preference/set-source-connection-url", {format: "json", type: "livedj", url:encodeURIComponent(url), override: 0});
     	event.preventDefault();
     });
-    
+
     master_dj_actions.find("#ok").click(function(event){
         var url = master_dj_input.val();
         master_dj_input.val(url);
@@ -156,7 +156,7 @@ function setLiveSourceConnectionOverrideListener(){
         $.get(baseUrl+"Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url), override: 1});
         event.preventDefault();
     });
-    
+
     master_dj_actions.find("#reset").click(function(event){
         var port = $("#master_source_port").val();
         var mount = $("#master_source_mount").val();
@@ -178,25 +178,25 @@ function setupEventListeners() {
     $("dd[id=outputStreamURL-element]").each(function(){
         rebuildStreamURL($(this));
     })
-    
+
     $("input[id$=-host], input[id$=-port], input[id$=-mount]").keyup(function(){
         rebuildStreamURL($(this));
     });
-    
+
     $("input[id$=-port]").keypress(function(e){
         validate($(this),e);
     });
-    
+
     $("select[id$=-output]").change(function(){
         rebuildStreamURL($(this));
     });
-    
+
     if(!$("#output_sound_device").is(':checked')){
         $("select[id=output_sound_device_type]").attr('disabled', 'disabled');
     }else{
         $("select[id=output_sound_device_type]").removeAttr('disabled');
     }
-    
+
     $("#output_sound_device").change(function(){
         if($(this).is(':checked')){
         	$("select[id=output_sound_device_type]").removeAttr('disabled');
@@ -204,7 +204,7 @@ function setupEventListeners() {
         	$("select[id=output_sound_device_type]").attr('disabled', 'disabled');
         }
     });
-    
+
     $("select[id$=data-type]").change(function(){
         if($(this).val() == 'ogg'){
             restrictOggBitrate($(this), true);
@@ -218,7 +218,7 @@ function setupEventListeners() {
             restrictOggBitrate($(this), true);
         }
     });
-    
+
     $("select[id$=data-output]").change(function(){
         if($(this).val() == 'shoutcast'){
             hideForShoutcast($(this));
@@ -226,31 +226,31 @@ function setupEventListeners() {
             showForIcecast($(this));
         }
     });
-    
+
     $("select[id$=data-output]").each(function(){
         if($(this).val() == 'shoutcast'){
             hideForShoutcast($(this));
         }
     });
-    
+
     $('.toggle legend').click(function() {
         $(this).parent().toggleClass('closed');
         return false;
     });
-    
+
     $('.collapsible-header').click(function() {
         $(this).next().toggle('fast');
         $(this).toggleClass("closed");
         return false;
     });
-    
+
     setLiveSourceConnectionOverrideListener();
-    
+
     showErrorSections();
     checkLiquidsoapStatus();
-    
+
     var userManualAnchorOpen = "<a target='_blank' href='" + USER_MANUAL_URL + "'>";
-    
+
     // qtip for help text
     $(".override_help_icon").qtip({
         content: {
@@ -274,7 +274,7 @@ function setupEventListeners() {
             at: "right center"
         },
     });
-    
+
     $(".icecast_metadata_help_icon").qtip({
         content: {
             text: $.i18n._("Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option.")
@@ -295,7 +295,7 @@ function setupEventListeners() {
             at: "right center"
         },
     });
-    
+
     $("#auto_transition_help").qtip({
         content: {
             text: $.i18n._("Check this box to automatically switch off Master/Show source upon source disconnection.")
@@ -316,7 +316,7 @@ function setupEventListeners() {
             at: "right center"
         },
     });
-    
+
     $("#auto_switch_help").qtip({
         content: {
             text: $.i18n._("Check this box to automatically switch on Master/Show source upon source connection.")
@@ -337,7 +337,7 @@ function setupEventListeners() {
             at: "right center"
         },
     });
-    
+
     $(".stream_username_help_icon").qtip({
         content: {
             text: $.i18n._("If your Icecast server expects a username of 'source', this field can be left blank.")
@@ -358,7 +358,7 @@ function setupEventListeners() {
             at: "right center"
         },
     });
-    
+
     $(".admin_username_help_icon").qtip({
         content: {
             text: $.i18n._("This is the admin username and password for Icecast/SHOUTcast to get listener statistics.")
@@ -379,7 +379,7 @@ function setupEventListeners() {
             at: "right center"
         },
     });
-    
+
     $(".master_username_help_icon").qtip({
         content: {
             text: $.i18n._("If your live streaming client does not ask for a username, this field should be 'source'.")
@@ -400,14 +400,14 @@ function setupEventListeners() {
             at: "right center"
         },
     });
-    
+
     $(".stream_type_help_icon").qtip({
     	content: {
             text: sprintf(
-                	$.i18n._("Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."), 
-                    "<a target='_blank' href='https://wiki.sourcefabric.org/x/NgPQ'>", 
+                	$.i18n._("Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."),
+                    "<a target='_blank' href='https://wiki.sourcefabric.org/x/NgPQ'>",
                     "</a>",
-                    "<a target='_blank' href='https://wiki.sourcefabric.org/x/KgPQ'>", 
+                    "<a target='_blank' href='https://wiki.sourcefabric.org/x/KgPQ'>",
                     "</a>")
         },
         hide: {
@@ -460,7 +460,7 @@ function setPseudoAdminPassword(s1, s2, s3, s4) {
 function getAdminPasswordStatus() {
     $.ajax({ url: baseUrl+'Preference/get-admin-password-status/format/json', dataType:"json", success:function(data){
         setPseudoAdminPassword(data.s1, data.s2, data.s3, data.s4);
-      }});   
+      }});
 }
 
 $(document).ready(function() {
@@ -481,7 +481,7 @@ $(document).ready(function() {
                 $('#content').empty().append(json.html);
                 if (json.valid) {
                     window.location.reload();
-                } 
+                }
                 setupEventListeners();
                 setSliderForReplayGain();
                 getAdminPasswordStatus();
@@ -496,4 +496,3 @@ $(document).ready(function() {
         }
     });
 });
-

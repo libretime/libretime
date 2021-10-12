@@ -18,7 +18,7 @@ TimeScale.prototype.init = function(config) {
     if (div === undefined) {
         return;
     }
-    
+
     canv = document.createElement("canvas");
     this.canv = canv;
     this.context = canv.getContext('2d');
@@ -77,7 +77,7 @@ TimeScale.prototype.formatTime = function(seconds) {
 };
 
 TimeScale.prototype.clear = function() {
-   
+
     this.container.innerHTML = "";
     this.context.clearRect(0, 0, this.width, this.height);
 };
@@ -125,7 +125,7 @@ TimeScale.prototype.drawScale = function(offset) {
                 sTime = this.formatTime(counter);
                 time = document.createTextNode(sTime);
                 div = document.createElement("div");
-        
+
                 div.style.left = pix+"px";
                 div.appendChild(time);
                 fragment.appendChild(div);
@@ -145,7 +145,7 @@ TimeScale.prototype.drawScale = function(offset) {
             cc.fillRect(pix, scaleY, 1, scaleHeight);
         }
 
-        counter++;  
+        counter++;
     }
 
     container.appendChild(fragment);
@@ -153,7 +153,7 @@ TimeScale.prototype.drawScale = function(offset) {
 
 TimeScale.prototype.onTrackScroll = function() {
     var scroll = this.config.getTrackScroll(),
-        scrollX = scroll.left;    
+        scrollX = scroll.left;
 
     if (scrollX !== this.prevScrollPos) {
         this.prevScrollPos = scrollX;
@@ -163,8 +163,7 @@ TimeScale.prototype.onTrackScroll = function() {
 
 TimeScale.prototype.onResolutionChange = function() {
     var scroll = this.config.getTrackScroll(),
-        scrollX = scroll.left;    
+        scrollX = scroll.left;
 
     this.drawScale(scrollX);
 };
-

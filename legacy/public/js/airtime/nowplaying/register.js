@@ -1,11 +1,11 @@
 $(document).ready(function(){
-    
+
     function doNotShowPopup(){
         $.get(baseUrl+"Usersettings/donotshowregistrationpopup", {format:"json"});
     }
 
     var dialog = $("#register_popup");
-    
+
     dialog.dialog({
         autoOpen: false,
         width: 500,
@@ -30,7 +30,7 @@ $(document).ready(function(){
             {
                 id: "remind_never",
                 text: $.i18n._("Remind me never"),
-                "class": "btn", 
+                "class": "btn",
                 click: function() {
                     var url =baseUrl+'Usersettings/remindme-never';
                     $.ajax({
@@ -50,23 +50,23 @@ $(document).ready(function(){
             }
          ]
     });
-    
+
     var button = $("#help_airtime");
-    
+
     if($("#link_to_terms_and_condition").length > 0 ){
         button.removeAttr('disabled').removeClass('ui-state-disabled');
     }else{
         button.attr('disabled', 'disabled' ).addClass('ui-state-disabled');
     }
     dialog.dialog('open');
-    
+
 
     $('.collapsible-header').live('click',function() {
         $(this).next().toggle('fast');
         $(this).toggleClass("close");
         return false;
     }).next().hide();
-    
+
     $("#SupportFeedback").live('click', function(){
         var pub = $("#Publicise");
         var privacy = $("#Privacy");
@@ -95,7 +95,7 @@ $(document).ready(function(){
     if( promote.is(":checked")){
         $("#public-info").show();
     }
-    
+
     $("#Privacy").live('click', function(){
         var support = $("#SupportFeedback");
         var button = $("#help_airtime");
@@ -105,32 +105,32 @@ $(document).ready(function(){
             button.attr('disabled', 'disabled' ).addClass('ui-state-disabled');
         }
     });
-    
+
     if($("#SupportFeedback").is(':checked') && ($("#Privacy").length == 0 || $("#Privacy").is(':checked'))){
         button.removeAttr('disabled').removeClass('ui-state-disabled');
     }else{
         button.attr('disabled', 'disabled' ).addClass('ui-state-disabled');
     }
-    
+
     $('.toggle legend').live('click',function() {
         $('.toggle').toggleClass('closed');
         return false;
     });
-    
+
     $("#Logo").live('change', function(ev){
         var content, res, logoEl;
-        
+
         content = $(this).val();
         res = content.match(/(jpg|jpeg|png|gif)$/gi);
         logoEl = $("#Logo-element");
-        
+
         //not an accepted image extension.
         if (!res) {
-            var ul, li; 
-                
+            var ul, li;
+
             ul = logoEl.find('.errors');
             li = $("<li/>").append($.i18n._("Image must be one of jpg, jpeg, png, or gif"));
-            
+
             //errors ul has already been created.
             if (ul.length > 0) {
                 ul.empty()
@@ -142,7 +142,7 @@ $(document).ready(function(){
                     .find(".errors")
                         .append(li);
             }
-            
+
             $(this).val("");
         }
         else {
@@ -150,7 +150,7 @@ $(document).ready(function(){
         }
     });
 });
-        
+
 function resizeImg(ele, targetWidth, targetHeight){
     var img = $(ele);
 

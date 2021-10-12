@@ -12,21 +12,21 @@
         <?php echo $this->layout()->content ?>
     </div>
     <div class="footer">
-        <?php 
+        <?php
             $company = COMPANY_NAME . " " . COMPANY_SUFFIX;
-            $licenseSiteAnchor = "<a href='" . LICENSE_URL . "'>" 
-                                  . LICENSE_VERSION 
+            $licenseSiteAnchor = "<a href='" . LICENSE_URL . "'>"
+                                  . LICENSE_VERSION
                               . "</a>";
             $companySiteAnchor = "<a href='" . COMPANY_SITE_URL . "'>"
                                   . $company
                                 . "</a>";
             echo sprintf(_('%1$s copyright &copy; %2$s All rights reserved.<br />'
-                . 'Maintained and distributed under the %3$s by %4$s'), 
+                . 'Maintained and distributed under the %3$s by %4$s'),
             PRODUCT_NAME, $company,
             $licenseSiteAnchor,
             $companySiteAnchor);
-        ?> 
+        ?>
     </div>
- 
+
 </body>
 </html>

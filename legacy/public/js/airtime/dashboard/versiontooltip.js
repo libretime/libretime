@@ -32,7 +32,7 @@ function getContent() {
         }
         msg += '</ul>';
     }
-    
+
     return msg;
 }
 

@@ -4,7 +4,7 @@
 /**
  * Base class that represents a query for the 'cc_tag' table.
  *
- * 
+ *
  *
  * @method     CcTagQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method     CcTagQuery orderByDbTagName($order = Criteria::ASC) Order by the tag_name column
@@ -118,7 +118,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 	 * @return    PropelObjectCollection|array|mixed the list of results, formatted by the current formatter
 	 */
 	public function findPks($keys, $con = null)
-	{	
+	{
 		$criteria = $this->isKeepQuery() ? clone $this : $this;
 		return $this
 			->filterByPrimaryKeys($keys)
@@ -151,7 +151,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the id column
-	 * 
+	 *
 	 * @param     int|array $dbId The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -168,7 +168,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the tag_name column
-	 * 
+	 *
 	 * @param     string $dbTagName The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -190,7 +190,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the tag_type column
-	 * 
+	 *
 	 * @param     string $dbTagType The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -226,7 +226,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 
 	/**
 	 * Adds a JOIN clause to the query using the CcFileTag relation
-	 * 
+	 *
 	 * @param     string $relationAlias optional alias for the relation
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
@@ -236,7 +236,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 	{
 		$tableMap = $this->getTableMap();
 		$relationMap = $tableMap->getRelation('CcFileTag');
-		
+
 		// create a ModelJoin object for this join
 		$join = new ModelJoin();
 		$join->setJoinType($joinType);
@@ -244,7 +244,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 		if ($previousJoin = $this->getPreviousJoin()) {
 			$join->setPreviousJoin($previousJoin);
 		}
-		
+
 		// add the ModelJoin to the current object
 		if($relationAlias) {
 			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
@@ -252,7 +252,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 		} else {
 			$this->addJoinObject($join, 'CcFileTag');
 		}
-		
+
 		return $this;
 	}
 
@@ -260,7 +260,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 	 * Use the CcFileTag relation CcFileTag object
 	 *
 	 * @see       useQuery()
-	 * 
+	 *
 	 * @param     string $relationAlias optional alias for the relation,
 	 *                                   to be used as main alias in the secondary query
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
@@ -290,7 +290,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 
 	/**
 	 * Adds a JOIN clause to the query using the CcPlayoutHistoryMetaData relation
-	 * 
+	 *
 	 * @param     string $relationAlias optional alias for the relation
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
@@ -300,7 +300,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 	{
 		$tableMap = $this->getTableMap();
 		$relationMap = $tableMap->getRelation('CcPlayoutHistoryMetaData');
-		
+
 		// create a ModelJoin object for this join
 		$join = new ModelJoin();
 		$join->setJoinType($joinType);
@@ -308,7 +308,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 		if ($previousJoin = $this->getPreviousJoin()) {
 			$join->setPreviousJoin($previousJoin);
 		}
-		
+
 		// add the ModelJoin to the current object
 		if($relationAlias) {
 			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
@@ -316,7 +316,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 		} else {
 			$this->addJoinObject($join, 'CcPlayoutHistoryMetaData');
 		}
-		
+
 		return $this;
 	}
 
@@ -324,7 +324,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 	 * Use the CcPlayoutHistoryMetaData relation CcPlayoutHistoryMetaData object
 	 *
 	 * @see       useQuery()
-	 * 
+	 *
 	 * @param     string $relationAlias optional alias for the relation,
 	 *                                   to be used as main alias in the secondary query
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
@@ -354,7 +354,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 
 	/**
 	 * Adds a JOIN clause to the query using the CcPlayoutHistoryTemplateTag relation
-	 * 
+	 *
 	 * @param     string $relationAlias optional alias for the relation
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
@@ -364,7 +364,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 	{
 		$tableMap = $this->getTableMap();
 		$relationMap = $tableMap->getRelation('CcPlayoutHistoryTemplateTag');
-		
+
 		// create a ModelJoin object for this join
 		$join = new ModelJoin();
 		$join->setJoinType($joinType);
@@ -372,7 +372,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 		if ($previousJoin = $this->getPreviousJoin()) {
 			$join->setPreviousJoin($previousJoin);
 		}
-		
+
 		// add the ModelJoin to the current object
 		if($relationAlias) {
 			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
@@ -380,7 +380,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 		} else {
 			$this->addJoinObject($join, 'CcPlayoutHistoryTemplateTag');
 		}
-		
+
 		return $this;
 	}
 
@@ -388,7 +388,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 	 * Use the CcPlayoutHistoryTemplateTag relation CcPlayoutHistoryTemplateTag object
 	 *
 	 * @see       useQuery()
-	 * 
+	 *
 	 * @param     string $relationAlias optional alias for the relation,
 	 *                                   to be used as main alias in the secondary query
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
@@ -414,7 +414,7 @@ abstract class BaseCcTagQuery extends ModelCriteria
 		if ($ccTag) {
 			$this->addUsingAlias(CcTagPeer::ID, $ccTag->getDbId(), Criteria::NOT_EQUAL);
 	  }
-	  
+
 		return $this;
 	}
 

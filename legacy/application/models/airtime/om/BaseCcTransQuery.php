@@ -4,7 +4,7 @@
 /**
  * Base class that represents a query for the 'cc_trans' table.
  *
- * 
+ *
  *
  * @method     CcTransQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     CcTransQuery orderByTrtok($order = Criteria::ASC) Order by the trtok column
@@ -190,7 +190,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 	 * @return    PropelObjectCollection|array|mixed the list of results, formatted by the current formatter
 	 */
 	public function findPks($keys, $con = null)
-	{	
+	{
 		$criteria = $this->isKeepQuery() ? clone $this : $this;
 		return $this
 			->filterByPrimaryKeys($keys)
@@ -223,7 +223,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the id column
-	 * 
+	 *
 	 * @param     int|array $id The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -240,7 +240,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the trtok column
-	 * 
+	 *
 	 * @param     string $trtok The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -262,7 +262,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the direction column
-	 * 
+	 *
 	 * @param     string $direction The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -284,7 +284,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the state column
-	 * 
+	 *
 	 * @param     string $state The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -306,7 +306,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the trtype column
-	 * 
+	 *
 	 * @param     string $trtype The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -328,7 +328,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the lock column
-	 * 
+	 *
 	 * @param     string $lock The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -350,7 +350,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the target column
-	 * 
+	 *
 	 * @param     string $target The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -372,7 +372,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the rtrtok column
-	 * 
+	 *
 	 * @param     string $rtrtok The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -394,7 +394,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the mdtrtok column
-	 * 
+	 *
 	 * @param     string $mdtrtok The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -416,7 +416,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the gunid column
-	 * 
+	 *
 	 * @param     string $gunid The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -438,7 +438,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the pdtoken column
-	 * 
+	 *
 	 * @param     string|array $pdtoken The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -469,7 +469,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the url column
-	 * 
+	 *
 	 * @param     string $url The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -491,7 +491,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the localfile column
-	 * 
+	 *
 	 * @param     string $localfile The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -513,7 +513,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the fname column
-	 * 
+	 *
 	 * @param     string $fname The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -535,7 +535,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the title column
-	 * 
+	 *
 	 * @param     string $title The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -557,7 +557,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the expectedsum column
-	 * 
+	 *
 	 * @param     string $expectedsum The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -579,7 +579,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the realsum column
-	 * 
+	 *
 	 * @param     string $realsum The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -601,7 +601,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the expectedsize column
-	 * 
+	 *
 	 * @param     int|array $expectedsize The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -632,7 +632,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the realsize column
-	 * 
+	 *
 	 * @param     int|array $realsize The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -663,7 +663,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the uid column
-	 * 
+	 *
 	 * @param     int|array $uid The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -694,7 +694,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the errmsg column
-	 * 
+	 *
 	 * @param     string $errmsg The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -716,7 +716,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the jobpid column
-	 * 
+	 *
 	 * @param     int|array $jobpid The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -747,7 +747,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the start column
-	 * 
+	 *
 	 * @param     string|array $start The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -778,7 +778,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 
 	/**
 	 * Filter the query on the ts column
-	 * 
+	 *
 	 * @param     string|array $ts The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
@@ -819,7 +819,7 @@ abstract class BaseCcTransQuery extends ModelCriteria
 		if ($ccTrans) {
 			$this->addUsingAlias(CcTransPeer::ID, $ccTrans->getId(), Criteria::NOT_EQUAL);
 	  }
-	  
+
 		return $this;
 	}
 

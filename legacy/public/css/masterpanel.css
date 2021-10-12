@@ -113,7 +113,7 @@
 		background-position: right -170px;
 		padding-top:3px;
 		}
-	
+
 .source-info-block li:first-child .line-to-on-air, .source-info-block li:first-child .line-to-on-air.off {
 	background-position: right -50px;
 	margin-bottom:-3px;
@@ -126,10 +126,10 @@
 	background-position: right -150px;
 	margin-top:-3px;
 	height:18px;
-	}	
+	}
 .source-info-block li:last-child .line-to-on-air.on {
 	background-position: right -170px;
-	}	
+	}
 
 .source-switch-button {
 	font-size:11px;
@@ -223,7 +223,7 @@
 	cursor:default;
 	background-color:#262626;
 	background-position:0 0;
-	} 
+	}
 
 .source-info-block + .on-air-block {
 	padding-right:2px;
@@ -265,7 +265,7 @@
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #c21717), color-stop(100%, #8d1010));
 	background: -moz-linear-gradient(top, #c21717 0, #8d1010 100%);
 	color:#fff;
-	
+
 	-webkit-box-shadow:inset 0 1px 0px rgba(255, 255, 255, 0.3);
 	-moz-box-shadow:inset 0 1px 0px rgba(255, 255, 255, 0.3);
 	box-shadow:inset 0 1px 0px rgba(255, 255, 255, 0.3);
@@ -294,7 +294,7 @@
 	margin-top:34px;
 	display:block;
 	text-align:center;
-	
+
 }
 .listen-control-button {
 	margin-top:6px;

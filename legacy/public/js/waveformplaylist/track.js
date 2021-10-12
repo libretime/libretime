@@ -80,7 +80,7 @@ TrackEditor.prototype.init = function(src, start, end, fades, cues, stateConfig)
     });
 
     this.enabledStates = statesEnabled;
-   
+
     makePublisher(this);
 
     this.container = document.createElement("div");
@@ -106,19 +106,19 @@ TrackEditor.prototype.init = function(src, start, end, fades, cues, stateConfig)
 
     this.fades = {};
     if (fades !== undefined && fades.length > 0) {
-    
+
         for (var i = 0; i < fades.length; i++) {
             this.fades[this.getFadeId()] = fades[i];
         }
     }
-    
+
     if (cues.cuein !== undefined) {
         this.setCuePoints(this.secondsToSamples(cues.cuein), this.secondsToSamples(cues.cueout));
     }
-    
+
     this.active = false;
     this.selectedArea = undefined; //selected area of track stored as inclusive buffer indices to the audio buffer.
-    
+
     this.container.classList.add("channel-wrapper");
     this.container.style.left = this.leftOffset;
 
@@ -146,9 +146,9 @@ TrackEditor.prototype.loadTrack = function(track) {
     var el;
 
     el = this.init(
-        track.src, 
-        track.start, 
-        track.end, 
+        track.src,
+        track.start,
+        track.end,
         track.fades,
         {
             cuein: track.cuein,
@@ -185,7 +185,7 @@ TrackEditor.prototype.loadBuffer = function(src) {
         if (e.lengthComputable) {
             percentComplete = e.loaded / e.total * 100;
             that.drawer.updateLoader(percentComplete);
-        } 
+        }
 
     }, false);
 
@@ -236,7 +236,7 @@ TrackEditor.prototype.onTrackLoad = function(buffer, err) {
         this.config.setResolution(res);
         this.resolution = res;
     }
-   
+
     this.drawTrack(buffer);
 
     if (this.selectedArea !== undefined) {
@@ -294,8 +294,8 @@ TrackEditor.prototype.timeShift = function(e) {
     e.preventDefault();
 
     var el = e.currentTarget, //want the events placed on the channel wrapper.
-        startX = e.pageX, 
-        diffX = 0, 
+        startX = e.pageX,
+        diffX = 0,
         origX = 0,
         updatedX = 0,
         editor = this,
@@ -304,13 +304,13 @@ TrackEditor.prototype.timeShift = function(e) {
         scrollX = scroll.left;
 
     origX = editor.leftOffset / res;
-    
+
     //dynamically put an event on the element.
     el.onmousemove = function(e) {
         e.preventDefault();
 
         var endX = e.pageX;
-        
+
         diffX = endX - startX;
         updatedX = origX + diffX;
         editor.drawer.setTimeShift(updatedX);
@@ -337,7 +337,7 @@ TrackEditor.prototype.timeShift = function(e) {
 TrackEditor.prototype.notifySelectUpdate = function(startTime, endTime) {
 
     this.updateEditor(-1, undefined, undefined, true);
-   
+
     this.fire('changecursor', {
         start: startTime,
         end: endTime,
@@ -392,7 +392,7 @@ TrackEditor.prototype.adjustSelectedArea = function(start, end) {
     start, end in pixels
 */
 TrackEditor.prototype.setSelectedArea = function(start, end, shiftKey) {
-    var left, 
+    var left,
         right,
         currentStart,
         currentEnd,
@@ -501,7 +501,7 @@ TrackEditor.prototype.selectStart = function(e) {
             selectStart,
             selectEnd,
             startTime, endTime;
-        
+
         if (currentX > startX) {
             selectStart = startX;
             selectEnd = currentX;
@@ -534,7 +534,7 @@ TrackEditor.prototype.selectStart = function(e) {
         maxX = editor.samplesToPixels(offset + editor.selectedArea.end);
 
         el.onmousemove = el.onmouseup = null;
-        
+
         //if more than one pixel is selected, listen to possible fade events.
         if (Math.abs(minX - maxX)) {
             editor.activateAudioSelection();
@@ -547,7 +547,7 @@ TrackEditor.prototype.selectStart = function(e) {
         endTime = editor.samplesToSeconds(offset + editor.selectedArea.end);
 
         editor.config.setCursorPos(startTime);
-        editor.notifySelectUpdate(startTime, endTime);    
+        editor.notifySelectUpdate(startTime, endTime);
     };
 };
 
@@ -555,7 +555,7 @@ TrackEditor.prototype.selectCursorPos = function(e) {
     var editor = this,
         startX = e.layerX || e.offsetX, //relative to e.target (want the canvas).
         offset = this.leftOffset,
-        startTime, 
+        startTime,
         endTime,
         layerOffset;
 
@@ -616,7 +616,7 @@ TrackEditor.prototype.selectFadeOut = function(e) {
 /* end of state methods */
 
 TrackEditor.prototype.saveFade = function(id, type, shape, start, end) {
-    
+
     this.fades[id] = {
         type: type,
         shape: shape,
@@ -671,7 +671,7 @@ TrackEditor.prototype.setCuePoints = function(cuein, cueout) {
     start, end are indices into the audio buffer and are inclusive.
 */
 TrackEditor.prototype.trim = function(start, end) {
-    
+
     this.setCuePoints(start, end+1);
     this.resetCursor();
     this.drawTrack(this.getBuffer());
@@ -684,7 +684,7 @@ TrackEditor.prototype.trim = function(start, end) {
     start, end are indices into the audio buffer and are inclusive.
 */
 TrackEditor.prototype.removeAudio = function(start, end) {
-    
+
 };
 
 TrackEditor.prototype.onTrackEdit = function(event) {
@@ -758,7 +758,7 @@ TrackEditor.prototype.setState = function(state) {
 
     if (prevState) {
         prevStateClasses = this.classes[prevState];
-       
+
         if (enabledStates[prevState] === true) {
             for (event in prevStateEvents) {
                 container.removeEventListener(event, prevStateEvents[event]);
@@ -773,7 +773,7 @@ TrackEditor.prototype.setState = function(state) {
             for (i = 0, len = disabledClasses.length; i < len; i++) {
                 container.classList.remove(disabledClasses[i]);
             }
-        }  
+        }
     }
 
     if (enabledStates[state] === true) {
@@ -803,7 +803,7 @@ TrackEditor.prototype.onResolutionChange = function(res) {
     this.drawTrack(this.getBuffer());
 
     if (this.active === true && this.selectedArea !== undefined) {
-        
+
         this.updateEditor(-1, this.samplesToPixels(selected.start), this.samplesToPixels(selected.end), true);
     }
 };
@@ -815,7 +815,7 @@ TrackEditor.prototype.isPlaying = function() {
 /*
     startTime, endTime in seconds (float).
 */
-TrackEditor.prototype.schedulePlay = function(now, delay, startTime, endTime) { 
+TrackEditor.prototype.schedulePlay = function(now, delay, startTime, endTime) {
     var start,
         duration,
         relPos,
@@ -852,8 +852,8 @@ TrackEditor.prototype.schedulePlay = function(now, delay, startTime, endTime) {
 };
 
 TrackEditor.prototype.scheduleStop = function(when) {
-   
-    this.playout.stop(when); 
+
+    this.playout.stop(when);
 };
 
 TrackEditor.prototype.resetCursor = function() {
@@ -865,8 +865,8 @@ TrackEditor.prototype.resetCursor = function() {
 TrackEditor.prototype.updateEditor = function(cursorPos, start, end, highlighted) {
     var pixelOffset = this.getPixelOffset(),
         selected;
- 
-    if (this.selectedArea) {   
+
+    if (this.selectedArea) {
         //must pass selected area in pixels.
         selected = {
             start: this.samplesToPixels(this.selectedArea.start),
@@ -898,4 +898,3 @@ TrackEditor.prototype.getTrackDetails = function() {
 
     return d;
 };
-

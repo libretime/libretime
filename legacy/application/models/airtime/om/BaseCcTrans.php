@@ -4,7 +4,7 @@
 /**
  * Base class that represents a row from the 'cc_trans' table.
  *
- * 
+ *
  *
  * @package    propel.generator.airtime.om
  */
@@ -206,7 +206,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [id] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getId()
@@ -216,7 +216,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [trtok] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getTrtok()
@@ -226,7 +226,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [direction] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getDirection()
@@ -236,7 +236,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [state] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getState()
@@ -246,7 +246,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [trtype] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getTrtype()
@@ -256,7 +256,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [lock] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getLock()
@@ -266,7 +266,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [target] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getTarget()
@@ -276,7 +276,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [rtrtok] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getRtrtok()
@@ -286,7 +286,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [mdtrtok] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getMdtrtok()
@@ -296,7 +296,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [gunid] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getGunid()
@@ -306,7 +306,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [pdtoken] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getPdtoken()
@@ -316,7 +316,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [url] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getUrl()
@@ -326,7 +326,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [localfile] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getLocalfile()
@@ -336,7 +336,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [fname] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getFname()
@@ -346,7 +346,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [title] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getTitle()
@@ -356,7 +356,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [expectedsum] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getExpectedsum()
@@ -366,7 +366,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [realsum] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getRealsum()
@@ -376,7 +376,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [expectedsize] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getExpectedsize()
@@ -386,7 +386,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [realsize] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getRealsize()
@@ -396,7 +396,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [uid] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getUid()
@@ -406,7 +406,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [errmsg] column value.
-	 * 
+	 *
 	 * @return     string
 	 */
 	public function getErrmsg()
@@ -416,7 +416,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [jobpid] column value.
-	 * 
+	 *
 	 * @return     int
 	 */
 	public function getJobpid()
@@ -426,7 +426,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [optionally formatted] temporal [start] column value.
-	 * 
+	 *
 	 *
 	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
 	 *							If format is NULL, then the raw DateTime object will be returned.
@@ -459,7 +459,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Get the [optionally formatted] temporal [ts] column value.
-	 * 
+	 *
 	 *
 	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
 	 *							If format is NULL, then the raw DateTime object will be returned.
@@ -492,7 +492,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [id] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -512,7 +512,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [trtok] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -532,7 +532,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [direction] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -552,7 +552,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [state] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -572,7 +572,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [trtype] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -592,7 +592,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [lock] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -612,7 +612,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [target] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -632,7 +632,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [rtrtok] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -652,7 +652,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [mdtrtok] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -672,7 +672,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [gunid] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -692,7 +692,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [pdtoken] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -712,7 +712,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [url] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -732,7 +732,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [localfile] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -752,7 +752,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [fname] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -772,7 +772,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [title] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -792,7 +792,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [expectedsum] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -812,7 +812,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [realsum] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -832,7 +832,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [expectedsize] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -852,7 +852,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [realsize] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -872,7 +872,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [uid] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -892,7 +892,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [errmsg] column.
-	 * 
+	 *
 	 * @param      string $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -912,7 +912,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Set the value of [jobpid] column.
-	 * 
+	 *
 	 * @param      int $v new value
 	 * @return     CcTrans The current object (for fluent API support)
 	 */
@@ -932,7 +932,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Sets the value of [start] column to a normalized version of the date/time value specified.
-	 * 
+	 *
 	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcTrans The current object (for fluent API support)
@@ -968,7 +968,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 			$currNorm = ($this->start !== null && $tmpDt = new DateTime($this->start)) ? $tmpDt->format('Y-m-d\\TH:i:sO') : null;
 			$newNorm = ($dt !== null) ? $dt->format('Y-m-d\\TH:i:sO') : null;
 
-			if ( ($currNorm !== $newNorm) // normalized values don't match 
+			if ( ($currNorm !== $newNorm) // normalized values don't match
 					)
 			{
 				$this->start = ($dt ? $dt->format('Y-m-d\\TH:i:sO') : null);
@@ -981,7 +981,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 
 	/**
 	 * Sets the value of [ts] column to a normalized version of the date/time value specified.
-	 * 
+	 *
 	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
 	 *						be treated as NULL for temporal objects.
 	 * @return     CcTrans The current object (for fluent API support)
@@ -1017,7 +1017,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 			$currNorm = ($this->ts !== null && $tmpDt = new DateTime($this->ts)) ? $tmpDt->format('Y-m-d\\TH:i:sO') : null;
 			$newNorm = ($dt !== null) ? $dt->format('Y-m-d\\TH:i:sO') : null;
 
-			if ( ($currNorm !== $newNorm) // normalized values don't match 
+			if ( ($currNorm !== $newNorm) // normalized values don't match
 					)
 			{
 				$this->ts = ($dt ? $dt->format('Y-m-d\\TH:i:sO') : null);
@@ -1179,7 +1179,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 		if ($con === null) {
 			$con = Propel::getConnection(CcTransPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
-		
+
 		$con->beginTransaction();
 		try {
 			$ret = $this->preDelete($con);
@@ -1221,7 +1221,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 		if ($con === null) {
 			$con = Propel::getConnection(CcTransPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
-		
+
 		$con->beginTransaction();
 		$isInsert = $this->isNew();
 		try {
@@ -1480,7 +1480,7 @@ abstract class BaseCcTrans extends BaseObject  implements Persistent
 	 * type constants.
 	 *
 	 * @param     string  $keyType (optional) One of the class type constants BasePeer::TYPE_PHPNAME, BasePeer::TYPE_STUDLYPHPNAME,
-	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM. 
+	 *                    BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM.
 	 *                    Defaults to BasePeer::TYPE_PHPNAME.
 	 * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
 	 *

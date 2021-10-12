@@ -49,8 +49,8 @@ var Config = function(params) {
 
         params = Object.create(params);
         Object.keys(defaultParams).forEach(function(key) {
-            if (!(key in params)) { 
-                params[key] = defaultParams[key]; 
+            if (!(key in params)) {
+                params[key] = defaultParams[key];
             }
         });
 
@@ -122,13 +122,13 @@ var Config = function(params) {
                 fontColor: params.fontColor,
                 fadeColor: params.fadeColor,
                 selectBorderColor: params.selectBorderColor,
-                selectBackgroundColor: params.selectBackgroundColor, 
+                selectBackgroundColor: params.selectBackgroundColor,
             };
         };
 
         that.getTrackScroll = function getTrackScroll() {
             var scroll = params.trackscroll;
-        
+
             return {
                 left: scroll.left,
                 top: scroll.top

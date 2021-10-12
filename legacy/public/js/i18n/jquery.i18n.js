@@ -19,9 +19,9 @@
    * i18n property list
    */
   $.i18n = {
-    
+
     dict: null,
-    
+
     /**
      * setDictionary()
      *
@@ -32,11 +32,11 @@
     setDictionary: function(i18n_dict) {
         this.dict = i18n_dict;
     },
-    
+
     /**
      * _()
      *
-     * Looks the given string up in the dictionary and returns the translation if 
+     * Looks the given string up in the dictionary and returns the translation if
      * one exists. If a translation is not found, returns the original word.
      *
      * @param  string str           : The string to translate.
@@ -49,7 +49,7 @@
         if (this.dict && this.dict[str]) {
             result = this.dict[str];
         }
-        
+
         // Substitute any params.
         return this.printf(result, params);
     },
@@ -69,7 +69,7 @@
 
         var result = '';
         var search = /%(\d+)\$s/g;
-        
+
         // Replace %n1$ where n is a number.
         var matches = search.exec(str);
         while (matches) {
@@ -87,12 +87,12 @@
                 if (parts[i].length > 0 && parts[i].lastIndexOf('%') == (parts[i].length - 1)) {
                     parts[i] += 's' + parts.splice(i + 1, 1)[0];
                 }
-                
+
                 // Append the part and the substitution to the result.
                 result += parts[i] + args[i];
             }
         }
-        
+
         return result + parts[parts.length - 1];
     }
 
@@ -104,10 +104,10 @@
    * Allows you to translate a jQuery selector.
    *
    * eg $('h1')._t('some text')
-   * 
+   *
    * @param  string str           : The string to translate .
    * @param  property_list params : Params for using printf() on the string.
-   * 
+   *
    * @return element              : Chained and translated element(s).
   */
   $.fn._t = function(str, params) {

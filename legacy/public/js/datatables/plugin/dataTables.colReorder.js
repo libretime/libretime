@@ -739,7 +739,7 @@ ColReorder.prototype = {
 		this.s.dt.oInstance.oApi._fnSaveState( this.s.dt );
 
 		this._fnSetColumnIndexes();
-		
+
 		if ( this.s.reorderCallback !== null )
 		{
 			this.s.reorderCallback.call( this );

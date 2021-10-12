@@ -1,6 +1,6 @@
 <div id="content" class="jp-container">
 <h1><?php echo _("Live stream") ?></h1>
-<a id="popup-link" href="#"><?php echo _("Share") ?></a> 
+<a id="popup-link" href="#"><?php echo _("Share") ?></a>
 <?php $ids = Application_Model_StreamSetting::getEnabledStreamIds(); ?>
 <script>
 function setjPlayer(url, type, serverType){
@@ -10,7 +10,7 @@ function setjPlayer(url, type, serverType){
     if(serverType == 'shoutcast'){
         obj[type] = url + ";stream/1";
     }
-    
+
     $("#jquery_jplayer_1").jPlayer("destroy");
     $("#jquery_jplayer_1").jPlayer({
         ready: function () {
@@ -62,7 +62,7 @@ $(document).ready(function(){
   </div>
         <div class="jp-stream stream-player-label">
             <div class="jp-stream-text"><?php echo _("Select stream:"); ?></div>
-                
+
               <form id="form1" method="post" action="">
                 <select id="combo-box">
                     <?php

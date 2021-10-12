@@ -4,7 +4,7 @@
 /**
  * Base static class for performing query and update operations on the 'cc_playlistcriteria' table.
  *
- * 
+ *
  *
  * @package    propel.generator.airtime.om
  */
@@ -24,7 +24,7 @@ abstract class BaseCcPlaylistcriteriaPeer {
 
 	/** the related TableMap class for this table */
 	const TM_CLASS = 'CcPlaylistcriteriaTableMap';
-	
+
 	/** The total number of columns. */
 	const NUM_COLUMNS = 7;
 
@@ -351,7 +351,7 @@ abstract class BaseCcPlaylistcriteriaPeer {
 		}
 		return null; // just to be explicit
 	}
-	
+
 	/**
 	 * Clear the instance pool.
 	 *
@@ -361,7 +361,7 @@ abstract class BaseCcPlaylistcriteriaPeer {
 	{
 		self::$instances = array();
 	}
-	
+
 	/**
 	 * Method to invalidate the instance pool of all tables related to cc_playlistcriteria
 	 * by a foreign key with ON DELETE CASCADE
@@ -390,7 +390,7 @@ abstract class BaseCcPlaylistcriteriaPeer {
 	}
 
 	/**
-	 * Retrieves the primary key from the DB resultset row 
+	 * Retrieves the primary key from the DB resultset row
 	 * For tables with a single-column primary key, that simple pkey value will be returned.  For tables with
 	 * a multi-column primary key, an array of the primary key columns will be returned.
 	 *
@@ -402,7 +402,7 @@ abstract class BaseCcPlaylistcriteriaPeer {
 	{
 		return (int) $row[$startcol];
 	}
-	
+
 	/**
 	 * The returned array will contain objects of the default type or
 	 * objects that inherit from the default.
@@ -413,7 +413,7 @@ abstract class BaseCcPlaylistcriteriaPeer {
 	public static function populateObjects(PDOStatement $stmt)
 	{
 		$results = array();
-	
+
 		// set the class once to avoid overhead in the loop
 		$cls = CcPlaylistcriteriaPeer::getOMClass(false);
 		// populate the object(s)
@@ -486,9 +486,9 @@ abstract class BaseCcPlaylistcriteriaPeer {
 		if (!$criteria->hasSelectClause()) {
 			CcPlaylistcriteriaPeer::addSelectColumns($criteria);
 		}
-		
+
 		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
-		
+
 		// Set the correct dbName
 		$criteria->setDbName(self::DATABASE_NAME);
 
@@ -602,9 +602,9 @@ abstract class BaseCcPlaylistcriteriaPeer {
 		if (!$criteria->hasSelectClause()) {
 			CcPlaylistcriteriaPeer::addSelectColumns($criteria);
 		}
-		
+
 		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
-		
+
 		// Set the correct dbName
 		$criteria->setDbName(self::DATABASE_NAME);
 
@@ -891,7 +891,7 @@ abstract class BaseCcPlaylistcriteriaPeer {
 			// use transaction because $criteria could contain info
 			// for more than one table or we could emulating ON DELETE CASCADE, etc.
 			$con->beginTransaction();
-			
+
 			$affectedRows += BasePeer::doDelete($criteria, $con);
 			CcPlaylistcriteriaPeer::clearRelatedInstancePool();
 			$con->commit();
@@ -995,4 +995,3 @@ abstract class BaseCcPlaylistcriteriaPeer {
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
 BaseCcPlaylistcriteriaPeer::buildTableMap();
-
