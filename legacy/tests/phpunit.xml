@@ -15,10 +15,10 @@
     </filter>
 
     <php>
-        <env name="ENVIRONMENT" value="testing"/>
-        <env name="AIRTIME_UNIT_TEST" value="1"/>
-        <env name="LIBRETIME_CONF_DIR" value="./conf"/>
-        <env name="LIBRETIME_LOG_DIR" value="./log"/>
+        <env name="ENVIRONMENT" value="testing" />
+        <env name="AIRTIME_UNIT_TEST" value="1" />
+        <env name="LIBRETIME_CONF_DIR" value="./conf" />
+        <env name="LIBRETIME_LOG_DIR" value="./log" />
     </php>
 
     <!-- Disabling broken code coverage report. It's not using our autoloader for some reason...
