@@ -91,12 +91,19 @@ class PypoPush(Thread):
         for mkey in sorted_keys:
             media_item = media_schedule[mkey]
 
+            # Ignore track that already ended
+            if media_item["end"] < tnow:
+                self.logger.debug(f"ignoring ended media_item: {media_item}")
+                continue
+
             diff_td = tnow - media_item["start"]
             diff_sec = self.date_interval_to_seconds(diff_td)
 
             if diff_sec >= 0:
+                self.logger.debug(f"adding media_item to present: {media_item}")
                 present.append(media_item)
             else:
+                self.logger.debug(f"adding media_item to future: {media_item}")
                 future[mkey] = media_item
 
         return present, future
