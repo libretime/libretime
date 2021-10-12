@@ -2,7 +2,6 @@
 
 class Rest_PodcastController extends Zend_Rest_Controller
 {
-
     public function init()
     {
         $this->view->layout()->disableLayout();
@@ -13,13 +12,11 @@ class Rest_PodcastController extends Zend_Rest_Controller
     }
 
     /**
-     * headAction is needed as it is defined as an abstract function in the base controller
-     *
-     * @return void
+     * headAction is needed as it is defined as an abstract function in the base controller.
      */
     public function headAction()
     {
-        Logging::info("HEAD action received");
+        Logging::info('HEAD action received');
     }
 
     public function indexAction()
@@ -38,20 +35,24 @@ class Rest_PodcastController extends Zend_Rest_Controller
             // Don't return the Station podcast - we fetch it separately
             ->filterByDbId($stationPodcastId, Criteria::NOT_EQUAL)
             ->leftJoinImportedPodcast()
-            ->withColumn('auto_ingest_timestamp');
+            ->withColumn('auto_ingest_timestamp')
+        ;
         $total = $result->count();
-        if ($limit > 0) { $result->setLimit($limit); }
+        if ($limit > 0) {
+            $result->setLimit($limit);
+        }
         $result->setOffset($offset)
-            ->orderBy($sortColumn, $sortDir);
+            ->orderBy($sortColumn, $sortDir)
+        ;
         $result = $result->find();
 
         $podcastArray = $result->toArray(null, false, BasePeer::TYPE_FIELDNAME);
 
-
         $this->getResponse()
             ->setHttpResponseCode(200)
             ->setHeader('X-TOTAL-COUNT', $total)
-            ->appendBody(json_encode($podcastArray));
+            ->appendBody(json_encode($podcastArray))
+        ;
     }
 
     public function getAction()
@@ -64,12 +65,12 @@ class Rest_PodcastController extends Zend_Rest_Controller
         try {
             $this->getResponse()
                 ->setHttpResponseCode(200)
-                ->appendBody(json_encode(Application_Service_PodcastService::getPodcastById($id)));
+                ->appendBody(json_encode(Application_Service_PodcastService::getPodcastById($id)))
+            ;
         } catch (PodcastNotFoundException $e) {
             $this->podcastNotFoundResponse();
             Logging::error($e->getMessage());
         } catch (Exception $e) {
-
         }
     }
 
@@ -80,28 +81,28 @@ class Rest_PodcastController extends Zend_Rest_Controller
         if ($id = $this->_getParam('id', false)) {
             $resp = $this->getResponse();
             $resp->setHttpResponseCode(400);
-            $resp->appendBody("ERROR: ID should not be specified when using POST. POST is only used for podcast creation, and an ID will be chosen by Airtime");
+            $resp->appendBody('ERROR: ID should not be specified when using POST. POST is only used for podcast creation, and an ID will be chosen by Airtime');
+
             return;
         }
 
         try {
             $requestData = $this->getRequest()->getPost();
-            $podcast = Application_Service_PodcastService::createFromFeedUrl($requestData["url"]);
+            $podcast = Application_Service_PodcastService::createFromFeedUrl($requestData['url']);
 
             $path = 'podcast/podcast.phtml';
 
             $this->view->podcast = $podcast;
-            $this->_helper->json->sendJson(array(
-                                               "podcast"=>json_encode($podcast),
-                                               "html"=>$this->view->render($path),
-                                           ));
-        }
-        catch (InvalidPodcastException $e) {
+            $this->_helper->json->sendJson([
+                'podcast' => json_encode($podcast),
+                'html' => $this->view->render($path),
+            ]);
+        } catch (InvalidPodcastException $e) {
             $this->getResponse()
                 ->setHttpResponseCode(400)
-                ->appendBody("Invalid podcast!");
-        }
-        catch (Exception $e) {
+                ->appendBody('Invalid podcast!')
+            ;
+        } catch (Exception $e) {
             Logging::error($e->getMessage());
             $this->unknownErrorResponse();
         }
@@ -120,13 +121,12 @@ class Rest_PodcastController extends Zend_Rest_Controller
 
             $this->getResponse()
                 ->setHttpResponseCode(201)
-                ->appendBody(json_encode($podcast));
-        }
-        catch (PodcastNotFoundException $e) {
+                ->appendBody(json_encode($podcast))
+            ;
+        } catch (PodcastNotFoundException $e) {
             $this->podcastNotFoundResponse();
             Logging::error($e->getMessage());
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->unknownErrorResponse();
             Logging::error($e->getMessage());
         }
@@ -142,26 +142,28 @@ class Rest_PodcastController extends Zend_Rest_Controller
         try {
             Application_Service_PodcastService::deletePodcastById($id);
             $this->getResponse()
-                ->setHttpResponseCode(204);
-        }
-        catch (PodcastNotFoundException $e) {
+                ->setHttpResponseCode(204)
+            ;
+        } catch (PodcastNotFoundException $e) {
             $this->podcastNotFoundResponse();
             Logging::error($e->getMessage());
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->unknownErrorResponse();
             Logging::error($e->getMessage());
         }
     }
 
     /**
-     * Endpoint for performing bulk actions (deleting multiple podcasts, opening multiple editors)
+     * Endpoint for performing bulk actions (deleting multiple podcasts, opening multiple editors).
      */
-    public function bulkAction() {
+    public function bulkAction()
+    {
         if ($this->_request->getMethod() != HttpRequestType::POST) {
             $this->getResponse()
                 ->setHttpResponseCode(405)
-                ->appendBody("ERROR: Method not accepted");
+                ->appendBody('ERROR: Method not accepted')
+            ;
+
             return;
         }
 
@@ -170,33 +172,34 @@ class Rest_PodcastController extends Zend_Rest_Controller
         $responseBody = [];
 
         // XXX: Should this be a map of HttpRequestType => function call instead? Would be a bit cleaner
-        switch($method) {
+        switch ($method) {
             case HttpRequestType::DELETE:
-                foreach($ids as $id) {
+                foreach ($ids as $id) {
                     Application_Service_PodcastService::deletePodcastById($id);
                 }
+
                 break;
+
             case HttpRequestType::GET:
                 $path = 'podcast/podcast.phtml';
-                foreach($ids as $id) {
-                    $responseBody[] = array(
-                        "podcast"   => json_encode(Application_Service_PodcastService::getPodcastById($id)),
-                        "html"      => $this->view->render($path)
-                    );
+                foreach ($ids as $id) {
+                    $responseBody[] = [
+                        'podcast' => json_encode(Application_Service_PodcastService::getPodcastById($id)),
+                        'html' => $this->view->render($path),
+                    ];
                 }
+
                 break;
         }
 
         $this->_helper->json->sendJson($responseBody);
     }
 
-
     /**
-     * Endpoint for triggering the generation of a smartblock and playlist to match the podcast name
+     * Endpoint for triggering the generation of a smartblock and playlist to match the podcast name.
      */
-
-    public function smartblockAction() {
-
+    public function smartblockAction()
+    {
         $title = $this->_getParam('title', []);
         $id = $this->_getParam('id', []);
         if (!$id) {
@@ -208,22 +211,21 @@ class Rest_PodcastController extends Zend_Rest_Controller
         Application_Service_PodcastService::createPodcastSmartblockAndPlaylist($podcast, $title);
     }
 
-
-
     /**
      * @throws PodcastNotFoundException
      *
      * @deprecated
      */
-    public function stationAction() {
+    public function stationAction()
+    {
         $stationPodcastId = Application_Model_Preference::getStationPodcastId();
         $podcast = Application_Service_PodcastService::getPodcastById($stationPodcastId);
         $path = 'podcast/station.phtml';
         $this->view->podcast = $podcast;
-        $this->_helper->json->sendJson(array(
-                                           "podcast"    => json_encode($podcast),
-                                           "html"       => $this->view->render($path)
-                                       ));
+        $this->_helper->json->sendJson([
+            'podcast' => json_encode($podcast),
+            'html' => $this->view->render($path),
+        ]);
     }
 
     private function getId()
@@ -231,9 +233,11 @@ class Rest_PodcastController extends Zend_Rest_Controller
         if (!$id = $this->_getParam('id', false)) {
             $resp = $this->getResponse();
             $resp->setHttpResponseCode(400);
-            $resp->appendBody("ERROR: No podcast ID specified.");
+            $resp->appendBody('ERROR: No podcast ID specified.');
+
             return false;
         }
+
         return $id;
     }
 
@@ -241,14 +245,13 @@ class Rest_PodcastController extends Zend_Rest_Controller
     {
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(500);
-        $resp->appendBody("An unknown error occurred.");
+        $resp->appendBody('An unknown error occurred.');
     }
 
     private function podcastNotFoundResponse()
     {
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(404);
-        $resp->appendBody("ERROR: Podcast not found.");
+        $resp->appendBody('ERROR: Podcast not found.');
     }
-
 }

@@ -45,15 +45,15 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
     public function getDefaultLength()
     {
         $dateString = $this->webstream->getDbLength();
-        $arr = explode(":", $dateString);
+        $arr = explode(':', $dateString);
         if (count($arr) == 3) {
             list($hours, $min, $sec) = $arr;
             $di = new DateInterval("PT{$hours}H{$min}M{$sec}S");
 
-            return $di->format("%Hh %Im");
+            return $di->format('%Hh %Im');
         }
 
-        return "";
+        return '';
     }
 
     public function getLength()
@@ -77,28 +77,28 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
         $username = $subjs->getDbLogin();
 
-        return array(
-            "name"        => $this->webstream->getDbName(),
-            "length"      => $this->webstream->getDbLength(),
-            "description" => $this->webstream->getDbDescription(),
-            "login"       => $username,
-            "url"         => $this->webstream->getDbUrl(),
-        );
+        return [
+            'name' => $this->webstream->getDbName(),
+            'length' => $this->webstream->getDbLength(),
+            'description' => $this->webstream->getDbDescription(),
+            'login' => $username,
+            'url' => $this->webstream->getDbUrl(),
+        ];
     }
 
     public static function deleteStreams($p_ids, $p_userId)
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
-        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
-        
+        $isAdminOrPM = $user->isUserType([UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER]);
+
         if (!$isAdminOrPM) {
             //Make sure the user has ownership of ALL the selected webstreams before
             $leftOver = self::streamsNotOwnedByUser($p_ids, $p_userId);
             if (count($leftOver) == 0) {
                 CcWebstreamQuery::create()->findPKs($p_ids)->delete();
             } else {
-                throw new WebstreamNoPermissionException;
+                throw new WebstreamNoPermissionException();
             }
         } else {
             CcWebstreamQuery::create()->findPKs($p_ids)->delete();
@@ -109,27 +109,25 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
     private static function streamsNotOwnedByUser($p_ids, $p_userId)
     {
         $ownedByUser = CcWebstreamQuery::create()->filterByDbCreatorId($p_userId)->find()->getData();
-        $ownedStreams = array();
+        $ownedStreams = [];
         foreach ($ownedByUser as $pl) {
             if (in_array($pl->getDbId(), $p_ids)) {
                 $ownedStreams[] = $pl->getDbId();
             }
         }
 
-        $leftOvers = array_diff($p_ids, $ownedStreams);
-
-        return $leftOvers;
+        return array_diff($p_ids, $ownedStreams);
     }
 
     public static function analyzeFormData($parameters)
     {
-        $valid = array("length" => array(true, ''),
-            "url" => array(true, ''),
-            "name" => array(true, ''));
+        $valid = ['length' => [true, ''],
+            'url' => [true, ''],
+            'name' => [true, ''], ];
 
         $di = null;
-        $length = $parameters["length"];
-        $result = preg_match("/^(?:([0-9]{1,2})h)?\s*(?:([0-9]{1,2})m)?$/", $length, $matches);
+        $length = $parameters['length'];
+        $result = preg_match('/^(?:([0-9]{1,2})h)?\s*(?:([0-9]{1,2})m)?$/', $length, $matches);
 
         $invalid_date_interval = false;
         if ($result == 1 && count($matches) == 2) {
@@ -143,7 +141,6 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         }
 
         if (!$invalid_date_interval) {
-
             //Due to the way our Regular Expression is set up, we could have $minutes or $hours
             //not set. Do simple test here
             if (!is_numeric($hours)) {
@@ -154,8 +151,8 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             }
 
             //minutes cannot be over 59. Need to convert anything > 59 minutes into hours.
-            $hours += intval($minutes/60);
-            $minutes = $minutes%60;
+            $hours += intval($minutes / 60);
+            $minutes = $minutes % 60;
 
             $di = new DateInterval("PT{$hours}H{$minutes}M");
 
@@ -165,17 +162,16 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
                 $valid['length'][0] = false;
                 $valid['length'][1] = _('Length needs to be greater than 0 minutes');
             }
-
         } else {
             $valid['length'][0] = false;
             $valid['length'][1] = _('Length should be of form "00h 00m"');
         }
 
-        $url = $parameters["url"];
+        $url = $parameters['url'];
         //simple validator that checks to make sure that the url starts with
         //http(s),
         //and that the domain is at least 1 letter long
-        $result = preg_match("/^(http|https):\/\/.+/", $url, $matches);
+        $result = preg_match('/^(http|https):\/\/.+/', $url, $matches);
 
         $mime = null;
         $mediaUrl = null;
@@ -186,16 +182,15 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             $valid['url'][0] = false;
             $valid['url'][1] = _('URL should be 512 characters or less');
         } else {
-
             try {
                 list($mime, $content_length_found) = self::discoverStreamMime($url);
                 if (is_null($mime)) {
-                    throw new Exception(_("No MIME type found for webstream."));
+                    throw new Exception(_('No MIME type found for webstream.'));
                 }
                 $mediaUrl = self::getMediaUrl($url, $mime, $content_length_found);
 
-                if (preg_match("/(x-mpegurl)|(xspf\+xml)|(pls\+xml)|(x-scpls)/", $mime)) {
-                     list($mime, $content_length_found) = self::discoverStreamMime($mediaUrl);
+                if (preg_match('/(x-mpegurl)|(xspf\+xml)|(pls\+xml)|(x-scpls)/', $mime)) {
+                    list($mime, $content_length_found) = self::discoverStreamMime($mediaUrl);
                 }
             } catch (Exception $e) {
                 $valid['url'][0] = false;
@@ -203,15 +198,15 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             }
         }
 
-        $name = $parameters["name"];
+        $name = $parameters['name'];
         if (strlen($name) == 0) {
             $valid['name'][0] = false;
             $valid['name'][1] = _('Webstream name cannot be empty');
         }
 
-        $id = $parameters["id"];
+        $id = $parameters['id'];
 
-        return array($valid, $mime, $mediaUrl, $di);
+        return [$valid, $mime, $mediaUrl, $di];
     }
 
     public static function isValid($analysis)
@@ -221,6 +216,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
                 return false;
             }
         }
+
         return true;
     }
 
@@ -228,14 +224,14 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
     //This function should not be defined in the interface.
     public function setMetadata($key, $val)
     {
-        throw new Exception("Not implemented.");
+        throw new Exception('Not implemented.');
     }
 
     public function setName($name)
     {
         $this->webstream->setDbName($name);
     }
-    
+
     public function setLastPlayed($timestamp)
     {
         $this->webstream->setDbLPtime($timestamp);
@@ -255,7 +251,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
         // close cURL resource, and free up system resources
         curl_close($ch);
-        
+
         return $content;
     }
 
@@ -263,7 +259,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
     {
         $content = self::getUrlData($url);
 
-        $dom = new DOMDocument;
+        $dom = new DOMDocument();
         //TODO: What if invalid xml?
         $dom->loadXML($content);
         $tracks = $dom->getElementsByTagName('track');
@@ -275,28 +271,28 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             }
         }
 
-        throw new Exception(_("Could not parse XSPF playlist"));
+        throw new Exception(_('Could not parse XSPF playlist'));
     }
-    
+
     private static function getPlsUrl($url)
     {
         $content = self::getUrlData($url);
 
-        $matches = array();
+        $matches = [];
         $numStreams = 0; //Number of streams explicitly listed in the PLS.
-        
-        if (preg_match("/NumberOfEntries=([0-9]*)/", $content, $matches) !== FALSE) {
+
+        if (preg_match('/NumberOfEntries=([0-9]*)/', $content, $matches) !== false) {
             $numStreams = $matches[1];
         }
 
         //Find all the stream URLs in the playlist
-        if (preg_match_all("/File[0-9]*=(.*)/", $content, $matches) !== FALSE) {
+        if (preg_match_all('/File[0-9]*=(.*)/', $content, $matches) !== false) {
             //This array contains all the streams! If we need fallback stream URLs in the future,
             //they're already in this array...
             return $matches[1][0];
-        } else {
-            throw new Exception(_("Could not parse PLS playlist"));
         }
+
+        throw new Exception(_('Could not parse PLS playlist'));
     }
 
     private static function getM3uUrl($url)
@@ -308,39 +304,37 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         if (strpos($content, "\r\n") !== false) {
             $delim = "\r\n";
         }
-        $lines = explode("$delim", $content);
-        #$lines = preg_split('/$\R?^/m', $content);
+        $lines = explode("{$delim}", $content);
+        //$lines = preg_split('/$\R?^/m', $content);
 
         if (count($lines) > 0) {
             return $lines[0];
         }
 
-        throw new Exception(_("Could not parse M3U playlist"));
+        throw new Exception(_('Could not parse M3U playlist'));
     }
 
     private static function getMediaUrl($url, $mime, $content_length_found)
     {
-
-        if (preg_match("/x-mpegurl/", $mime)) {
+        if (preg_match('/x-mpegurl/', $mime)) {
             $media_url = self::getM3uUrl($url);
-        } elseif (preg_match("/xspf\+xml/", $mime)) {
+        } elseif (preg_match('/xspf\+xml/', $mime)) {
             $media_url = self::getXspfUrl($url);
-        } elseif (preg_match("/pls\+xml/", $mime) || preg_match("/x-scpls/", $mime)) {
+        } elseif (preg_match('/pls\+xml/', $mime) || preg_match('/x-scpls/', $mime)) {
             $media_url = self::getPlsUrl($url);
-        } elseif (preg_match("/(mpeg|ogg|audio\/aacp|audio\/aac)/", $mime)) {
+        } elseif (preg_match('/(mpeg|ogg|audio\/aacp|audio\/aac)/', $mime)) {
             if ($content_length_found) {
-                throw new Exception(_("Invalid webstream - This appears to be a file download."));
+                throw new Exception(_('Invalid webstream - This appears to be a file download.'));
             }
             $media_url = $url;
         } else {
-            throw new Exception(sprintf(_("Unrecognized stream type: %s"), $mime));
+            throw new Exception(sprintf(_('Unrecognized stream type: %s'), $mime));
         }
 
         return $media_url;
-
     }
 
-    /* PHP get_headers has an annoying property where if the passed in URL is 
+    /* PHP get_headers has an annoying property where if the passed in URL is
      * a redirect, then it goes to the new URL, and returns headers from both
      * requests. We only want the headers from the final request. Here's an
      * example:
@@ -362,18 +356,20 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
      * 14 => "icy-br: 68",
      * 15 => "Server: MediaGateway 3.2.1-04",
      * */
-    private static function cleanHeaders($headers) {
+    private static function cleanHeaders($headers)
+    {
         //find the position of HTTP/1  200 OK
         //
         $position = 0;
         foreach ($headers as $i => $v) {
-            if (preg_match("/^HTTP.*200 OK$/i", $v)) {
+            if (preg_match('/^HTTP.*200 OK$/i', $v)) {
                 $position = $i;
+
                 break;
             }
         }
 
-        return array_slice($headers, $position); 
+        return array_slice($headers, $position);
     }
 
     private static function discoverStreamMime($url)
@@ -383,25 +379,25 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
             $mime = null;
             $content_length_found = false;
-    
+
             if ($headers !== false) {
                 $headers = self::cleanHeaders($headers);
                 foreach ($headers as $h) {
-                    if (preg_match("/^content-type:/i", $h)) {
-                        list(, $value) = explode(":", $h, 2);
+                    if (preg_match('/^content-type:/i', $h)) {
+                        list(, $value) = explode(':', $h, 2);
                         $mime = trim($value);
                     }
-                    if (preg_match("/^content-length:/i", $h)) {
+                    if (preg_match('/^content-length:/i', $h)) {
                         $content_length_found = true;
                     }
                 }
             }
         } catch (Exception $e) {
-            Logging::info("Invalid stream URL");
+            Logging::info('Invalid stream URL');
             Logging::info($e->getMessage());
         }
 
-        return array($mime, $content_length_found);
+        return [$mime, $content_length_found];
     }
 
     public static function save($parameters, $mime, $mediaUrl, $di)
@@ -415,15 +411,15 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             $webstream = new CcWebstream();
         }
 
-        $webstream->setDbName($parameters["name"]);
-        $webstream->setDbDescription($parameters["description"]);
+        $webstream->setDbName($parameters['name']);
+        $webstream->setDbDescription($parameters['description']);
         $webstream->setDbUrl($mediaUrl);
 
-        $dblength = $di->format("%H:%I");
+        $dblength = $di->format('%H:%I');
         $webstream->setDbLength($dblength);
         $webstream->setDbCreatorId($userInfo->id);
-        $webstream->setDbUtime(new DateTime("now", new DateTimeZone('UTC')));
-        $webstream->setDbMtime(new DateTime("now", new DateTimeZone('UTC')));
+        $webstream->setDbUtime(new DateTime('now', new DateTimeZone('UTC')));
+        $webstream->setDbMtime(new DateTime('now', new DateTimeZone('UTC')));
 
         $ws = new Application_Model_Webstream($webstream);
 
@@ -432,24 +428,25 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
         return $webstream->getDbId();
     }
-    
-    /*
-     * method is not used, webstreams aren't currently kept track of for isScheduled.
-     */
-    public static function setIsScheduled($p_webstreamId, $p_status) {
-    
-    	$webstream = CcWebstreamQuery::create()->findPK($p_webstreamId);
-    	$updateIsScheduled = false;
-    
-    	if (isset($webstream) && !in_array($p_webstreamId,
-    			Application_Model_Schedule::getAllFutureScheduledWebstreams())) {
-    		//$webstream->setDbIsScheduled($p_status)->save();
-    		$updateIsScheduled = true;
-    	}
-    
-    	return $updateIsScheduled;
+
+    // method is not used, webstreams aren't currently kept track of for isScheduled.
+    public static function setIsScheduled($p_webstreamId, $p_status)
+    {
+        $webstream = CcWebstreamQuery::create()->findPK($p_webstreamId);
+        $updateIsScheduled = false;
+
+        if (isset($webstream) && !in_array(
+            $p_webstreamId,
+            Application_Model_Schedule::getAllFutureScheduledWebstreams()
+        )) {
+            //$webstream->setDbIsScheduled($p_status)->save();
+            $updateIsScheduled = true;
+        }
+
+        return $updateIsScheduled;
     }
 }
 
-class WebstreamNoPermissionException extends Exception {}
-
+class WebstreamNoPermissionException extends Exception
+{
+}

@@ -11,15 +11,13 @@ class Rest_MediaController extends Zend_Rest_Controller
     }
 
     /**
-     * headAction is needed as it is defined as an abstract function in the base controller
-     *
-     * @return void
+     * headAction is needed as it is defined as an abstract function in the base controller.
      */
     public function headAction()
     {
-        Logging::info("HEAD action received");
+        Logging::info('HEAD action received');
     }
-    
+
     public function indexAction()
     {
         $totalFileCount = CcFilesQuery::create()->count();
@@ -39,29 +37,29 @@ class Rest_MediaController extends Zend_Rest_Controller
             ->filterByDbImportStatus(0)
             ->setLimit($limit)
             ->setOffset($offset)
-            ->orderBy($sortColumn, $sortDir);
-            //->orderByDbId();
-
+            ->orderBy($sortColumn, $sortDir)
+        ;
+        //->orderByDbId();
 
         $queryCount = $query->count();
         $queryResult = $query->find();
 
-        $files_array = array();
-        foreach ($queryResult as $file)
-        {
+        $files_array = [];
+        foreach ($queryResult as $file) {
             array_push($files_array, CcFiles::sanitizeResponse($file));
         }
 
         $this->getResponse()
             ->setHttpResponseCode(200)
             ->setHeader('X-TOTAL-COUNT', $totalFileCount)
-            ->appendBody(json_encode($files_array));
-        
-        /** TODO: Use this simpler code instead after we upgrade to Propel 1.7 (Airtime 2.6.x branch):
-        $this->getResponse()
-            ->setHttpResponseCode(200)
-            ->appendBody(json_encode(CcFilesQuery::create()->find()->toArray(BasePeer::TYPE_FIELDNAME)));
-        */
+            ->appendBody(json_encode($files_array))
+        ;
+
+        /* TODO: Use this simpler code instead after we upgrade to Propel 1.7 (Airtime 2.6.x branch):
+         * $this->getResponse()
+         * ->setHttpResponseCode(200)
+         * ->appendBody(json_encode(CcFilesQuery::create()->find()->toArray(BasePeer::TYPE_FIELDNAME)));
+         */
     }
 
     public function downloadAction()
@@ -73,28 +71,30 @@ class Rest_MediaController extends Zend_Rest_Controller
 
         // In case the download fails
         $counterIncremented = false;
+
         try {
             $this->getResponse()
-                ->setHttpResponseCode(200);
+                ->setHttpResponseCode(200)
+            ;
             $inline = false;
             // SAAS-1081 - download counter for station podcast downloads
-            if ($key = $this->getRequest()->getParam("download_key", false)) {
+            if ($key = $this->getRequest()->getParam('download_key', false)) {
                 Application_Model_Preference::incrementStationPodcastDownloadCounter();
                 $counterIncremented = true;
             }
             Application_Service_MediaService::streamFileDownload($id, $inline);
-        }
-        catch (LibreTimeFileNotFoundException $e) {
+        } catch (LibreTimeFileNotFoundException $e) {
             $this->fileNotFoundResponse();
             Logging::error($e->getMessage());
-        }
-        catch (Exception $e) {
-            if ($counterIncremented) Application_Model_Preference::decrementStationPodcastDownloadCounter();
+        } catch (Exception $e) {
+            if ($counterIncremented) {
+                Application_Model_Preference::decrementStationPodcastDownloadCounter();
+            }
             $this->unknownErrorResponse();
             Logging::error($e->getMessage());
         }
     }
-    
+
     public function getAction()
     {
         $id = $this->getId();
@@ -105,18 +105,17 @@ class Rest_MediaController extends Zend_Rest_Controller
         try {
             $this->getResponse()
                 ->setHttpResponseCode(200)
-                ->appendBody(json_encode(CcFiles::getSanitizedFileById($id)));
-        }
-        catch (LibreTimeFileNotFoundException $e) {
+                ->appendBody(json_encode(CcFiles::getSanitizedFileById($id)))
+            ;
+        } catch (LibreTimeFileNotFoundException $e) {
             $this->fileNotFoundResponse();
             Logging::error($e->getMessage());
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->unknownErrorResponse();
             Logging::error($e->getMessage());
         }
     }
-    
+
     public function postAction()
     {
         //If we do get an ID on a POST, then that doesn't make any sense
@@ -124,7 +123,8 @@ class Rest_MediaController extends Zend_Rest_Controller
         if ($id = $this->_getParam('id', false)) {
             $resp = $this->getResponse();
             $resp->setHttpResponseCode(400);
-            $resp->appendBody("ERROR: ID should not be specified when using POST. POST is only used for file creation, and an ID will be chosen by Airtime"); 
+            $resp->appendBody('ERROR: ID should not be specified when using POST. POST is only used for file creation, and an ID will be chosen by Airtime');
+
             return;
         }
 
@@ -135,7 +135,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             // this error should not really get hit, letting the user know if it does is nice for debugging
             // see: https://github.com/LibreTime/libretime/issues/3#issuecomment-281143417
             if (!$upload->isValid('file')) {
-                throw new Exception("invalid file uploaded");
+                throw new Exception('invalid file uploaded');
             }
             $fileInfo = $upload->getFileInfo('file');
             // this should have more info on any actual faults detected by php
@@ -145,18 +145,17 @@ class Rest_MediaController extends Zend_Rest_Controller
             $sanitizedFile = CcFiles::createFromUpload($fileInfo);
             $this->getResponse()
                 ->setHttpResponseCode(201)
-                ->appendBody(json_encode($sanitizedFile));
-        }
-        catch (InvalidMetadataException $e) {
+                ->appendBody(json_encode($sanitizedFile))
+            ;
+        } catch (InvalidMetadataException $e) {
             $this->invalidDataResponse();
             Logging::error($e->getMessage());
-        }
-        catch (OverDiskQuotaException $e) {
+        } catch (OverDiskQuotaException $e) {
             $this->getResponse()
                 ->setHttpResponseCode(400)
-                ->appendBody("ERROR: Disk Quota reached.");
-        }
-        catch (Exception $e) {
+                ->appendBody('ERROR: Disk Quota reached.')
+            ;
+        } catch (Exception $e) {
             $this->serviceUnavailableResponse();
             Logging::error($e->getMessage() . "\n" . $e->getTraceAsString());
         }
@@ -175,17 +174,15 @@ class Rest_MediaController extends Zend_Rest_Controller
 
             $this->getResponse()
                 ->setHttpResponseCode(201)
-                ->appendBody(json_encode($sanitizedFile));
-        }
-        catch (InvalidMetadataException $e) {
+                ->appendBody(json_encode($sanitizedFile))
+            ;
+        } catch (InvalidMetadataException $e) {
             $this->invalidDataResponse();
             Logging::error($e->getMessage());
-        }
-        catch (LibreTimeFileNotFoundException $e) {
+        } catch (LibreTimeFileNotFoundException $e) {
             $this->fileNotFoundResponse();
             Logging::error($e->getMessage());
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->unknownErrorResponse();
             Logging::error($e->getMessage());
         }
@@ -197,45 +194,49 @@ class Rest_MediaController extends Zend_Rest_Controller
         if (!$id) {
             return;
         }
+
         try {
             CcFiles::deleteById($id);
             $this->getResponse()
-                ->setHttpResponseCode(204);
-        }
-        catch (LibreTimeFileNotFoundException $e) {
+                ->setHttpResponseCode(204)
+            ;
+        } catch (LibreTimeFileNotFoundException $e) {
             $this->fileNotFoundResponse();
             Logging::error($e->getMessage());
-        }
-        catch (Exception $e) {
-            $this->unknownErrorResponse();
-            Logging::error($e->getMessage());
-        }
-    }
-
-    /**
-     * Publish endpoint for individual media items
-     */
-    public function publishAction() {
-        $id = $this->getId();
-        try {
-            // Is there a better way to do this?
-            $data = json_decode($this->getRequest()->getRawBody(), true)["sources"];
-            Application_Service_PublishService::publish($id, $data);
-            $this->getResponse()
-                ->setHttpResponseCode(200);
         } catch (Exception $e) {
             $this->unknownErrorResponse();
             Logging::error($e->getMessage());
         }
     }
 
-    public function publishSourcesAction() {
+    /**
+     * Publish endpoint for individual media items.
+     */
+    public function publishAction()
+    {
+        $id = $this->getId();
+
+        try {
+            // Is there a better way to do this?
+            $data = json_decode($this->getRequest()->getRawBody(), true)['sources'];
+            Application_Service_PublishService::publish($id, $data);
+            $this->getResponse()
+                ->setHttpResponseCode(200)
+            ;
+        } catch (Exception $e) {
+            $this->unknownErrorResponse();
+            Logging::error($e->getMessage());
+        }
+    }
+
+    public function publishSourcesAction()
+    {
         $id = $this->_getParam('id', false);
         $sources = Application_Service_PublishService::getSourceLists($id);
         $this->getResponse()
             ->setHttpResponseCode(200)
-            ->appendBody(json_encode($sources));
-
+            ->appendBody(json_encode($sources))
+        ;
     }
 
     private function getId()
@@ -243,9 +244,11 @@ class Rest_MediaController extends Zend_Rest_Controller
         if (!$id = $this->_getParam('id', false)) {
             $resp = $this->getResponse();
             $resp->setHttpResponseCode(400);
-            $resp->appendBody("ERROR: No file ID specified."); 
+            $resp->appendBody('ERROR: No file ID specified.');
+
             return false;
-        } 
+        }
+
         return $id;
     }
 
@@ -253,28 +256,27 @@ class Rest_MediaController extends Zend_Rest_Controller
     {
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(404);
-        $resp->appendBody("ERROR: Media not found."); 
+        $resp->appendBody('ERROR: Media not found.');
     }
-    
+
     private function importFailedResponse()
     {
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(200);
-        $resp->appendBody("ERROR: Import Failed.");
+        $resp->appendBody('ERROR: Import Failed.');
     }
 
     private function unknownErrorResponse()
     {
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(400);
-        $resp->appendBody("An unknown error occurred.");
+        $resp->appendBody('An unknown error occurred.');
     }
 
     private function serviceUnavailableResponse()
     {
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(400);
-        $resp->appendBody("An error occurred while processing your upload. Please try again in a few minutes.");
+        $resp->appendBody('An error occurred while processing your upload. Please try again in a few minutes.');
     }
 }
-

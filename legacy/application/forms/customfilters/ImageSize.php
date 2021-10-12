@@ -1,15 +1,14 @@
 <?php
 /**
- * custom filter for image uploads
+ * custom filter for image uploads.
  *
- * WARNING: you need to include this file directly when using it, it clashes with the 
+ * WARNING: you need to include this file directly when using it, it clashes with the
  * way zf1 Zend_Loader_PluginLoader expects it to be found. Another way around this
  * might be to rename the class and have the new name get loaded proper.
  *
  * Since this is only getting used in a few places I am re-adding the
  * require_once there to get this fixed for now.
  */
-
 class Zend_Filter_ImageSize implements Zend_Filter_Interface
 {
     public function filter($value)
@@ -37,7 +36,7 @@ class Zend_Filter_ImageSize implements Zend_Filter_Interface
             imagecopyresampled($resized, $image, 0, 0, 0, 0, $newWidth, $newHeight, $origWidth, $origHeight);
 
             // determine type and store to disk
-            $explodeResult = explode(".", $value);
+            $explodeResult = explode('.', $value);
             $type = strtolower($explodeResult[count($explodeResult) - 1]);
             $writeFunc = 'image' . $type;
             if ($type == 'jpeg' || $type == 'jpg') {

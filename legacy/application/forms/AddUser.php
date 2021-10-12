@@ -2,7 +2,6 @@
 
 class Application_Form_AddUser extends Zend_Form
 {
-
     public function init()
     {
         /*
@@ -13,16 +12,16 @@ class Application_Form_AddUser extends Zend_Form
         $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
         $emailValidator = Application_Form_Helper_ValidationTypes::overrideEmailAddressValidator();
         $notDemoValidator = new Application_Validate_NotDemoValidate();
-        
+
         $this->setAttrib('id', 'user_form');
-        
+
         $hidden = new Zend_Form_Element_Hidden('user_id');
-        $hidden->setDecorators(array('ViewHelper'));
+        $hidden->setDecorators(['ViewHelper']);
         $this->addElement($hidden);
 
-        $this->addElement('hash', 'csrf', array(
-           'salt' => 'unique'
-        ));
+        $this->addElement('hash', 'csrf', [
+            'salt' => 'unique',
+        ]);
 
         $login = new Zend_Form_Element_Text('login');
         $login->setLabel(_('Username:'));
@@ -94,12 +93,12 @@ class Application_Form_AddUser extends Zend_Form
         $select->setLabel(_('User Type:'));
         $select->setAttrib('class', 'input_select');
         $select->setAttrib('style', 'width: 40%');
-        $select->setMultiOptions(array(
-                "G" => _("Guest"),
-                "H" => _("DJ"),
-                "P" => _("Program Manager"),
-                "A" => _("Admin"),
-            ));
+        $select->setMultiOptions([
+            'G' => _('Guest'),
+            'H' => _('DJ'),
+            'P' => _('Program Manager'),
+            'A' => _('Admin'),
+        ]);
         $select->setRequired(false);
         $this->addElement($select);
 
@@ -116,7 +115,7 @@ class Application_Form_AddUser extends Zend_Form
             $count = CcSubjsQuery::create()->filterByDbLogin($data['login'])->count();
 
             if ($count != 0) {
-                $this->getElement('login')->setErrors(array(_("Login name is not unique.")));
+                $this->getElement('login')->setErrors([_('Login name is not unique.')]);
 
                 return false;
             }
@@ -127,10 +126,13 @@ class Application_Form_AddUser extends Zend_Form
 
     // We need to add the password identical validator here in case
     // Zend version is less than 1.10.5
-    public function isValid($data) {
+    public function isValid($data)
+    {
         $passwordIdenticalValidator = Application_Form_Helper_ValidationTypes::overridePasswordIdenticalValidator(
-            $data['password']);
+            $data['password']
+        );
         $this->getElement('passwordVerify')->addValidator($passwordIdenticalValidator);
+
         return parent::isValid($data);
     }
 }

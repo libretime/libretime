@@ -2,15 +2,15 @@
 
 class Airtime_View_Helper_LoggedInAs extends Zend_View_Helper_Abstract
 {
-    public function loggedInAs ()
+    public function loggedInAs()
     {
-        $username = "";
+        $username = '';
         $auth = Zend_Auth::getInstance();
 
         if ($auth->hasIdentity()) {
             $username = $auth->getIdentity()->login;
         }
+
         return $username;
     }
 }
-

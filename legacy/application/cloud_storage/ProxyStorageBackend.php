@@ -1,10 +1,7 @@
 <?php
 
-
 /**
- *
  * Controls access to the storage backend class where a file is stored.
- *
  */
 class ProxyStorageBackend extends StorageBackend
 {
@@ -13,6 +10,8 @@ class ProxyStorageBackend extends StorageBackend
     /**
      * Receives the file's storage backend and instantiates the appropriate
      * object.
+     *
+     * @param mixed $storageBackend
      */
     public function __construct($storageBackend)
     {
@@ -21,7 +20,7 @@ class ProxyStorageBackend extends StorageBackend
         // The storage backend in the airtime.conf directly corresponds to
         // the name of the class that implements it, so we can create the
         // right backend object dynamically:
-        if ($storageBackend == "file") {
+        if ($storageBackend == 'file') {
             $this->storageBackend = new FileStorageBackend();
         } else {
             $this->storageBackend = new $storageBackend($CC_CONFIG[$storageBackend]);
@@ -42,7 +41,7 @@ class ProxyStorageBackend extends StorageBackend
     {
         $this->storageBackend->deletePhysicalFile($resourceId);
     }
-    
+
     public function deleteAllCloudFileObjects()
     {
         $this->storageBackend->deleteAllCloudFileObjects();

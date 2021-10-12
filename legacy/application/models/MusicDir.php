@@ -1,6 +1,8 @@
 <?php
 
-class NestedDirectoryException extends Exception { }
+class NestedDirectoryException extends Exception
+{
+}
 
 class Application_Model_MusicDir
 {
@@ -65,31 +67,35 @@ class Application_Model_MusicDir
     /**
      * There are 2 cases where this function can be called.
      * 1. When watched dir was removed
-     * 2. When some dir was watched, but it was unmounted
+     * 2. When some dir was watched, but it was unmounted.
      *
      *  In case of 1, $userAddedWatchedDir should be true
      *  In case of 2, $userAddedWatchedDir should be false
      *
      *  When $userAddedWatchedDir is true, it will set "Watched" flag to false
      *  otherwise, it will set "Exists" flag to true
+     *
+     * @param mixed $userAddedWatchedDir
      */
-    public function remove($userAddedWatchedDir=true)
+    public function remove($userAddedWatchedDir = true)
     {
-
         $music_dir_id = $this->getId();
 
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 SELECT DISTINCT s.instance_id
 FROM cc_music_dirs            AS md
 LEFT JOIN cc_files            AS f ON f.directory = md.id
 RIGHT JOIN cc_schedule        AS s ON s.file_id = f.id
 WHERE md.id = :musicDirId;
 SQL;
-        $show_instances = Application_Common_Database::prepareAndExecute($sql,
-            array( ':musicDirId' => $music_dir_id ), 'all' );
+        $show_instances = Application_Common_Database::prepareAndExecute(
+            $sql,
+            [':musicDirId' => $music_dir_id],
+            'all'
+        );
 
         // get all the files on this dir
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 UPDATE cc_files
 SET file_exists = 'f'
 WHERE id IN
@@ -99,8 +105,11 @@ WHERE id IN
      WHERE md.id = :musicDirId);
 SQL;
 
-        $affected = Application_Common_Database::prepareAndExecute($sql,
-            array( ':musicDirId' => $music_dir_id ), 'all');
+        $affected = Application_Common_Database::prepareAndExecute(
+            $sql,
+            [':musicDirId' => $music_dir_id],
+            'all'
+        );
 
         // set RemovedFlag to true
         if ($userAddedWatchedDir) {
@@ -111,7 +120,7 @@ SQL;
         //$res = $this->_dir->delete();
 
         foreach ($show_instances as $show_instance_row) {
-            $temp_show = new Application_Model_ShowInstance($show_instance_row["instance_id"]);
+            $temp_show = new Application_Model_ShowInstance($show_instance_row['instance_id']);
             $temp_show->updateScheduledTime();
         }
         Application_Model_RabbitMq::PushSchedule();
@@ -120,14 +129,15 @@ SQL;
     /**
      * Checks if p_dir1 is the ancestor of p_dir2. Returns
      * true if it is the ancestor, false otherwise. Note that
-     * /home/user is considered the ancestor of /home/user
+     * /home/user is considered the ancestor of /home/user.
      *
      * @param string $p_dir1
-     *      The potential ancestor directory.
+     *                       The potential ancestor directory
      * @param string $p_dir2
-     *      The potential descendent directory.
-     * @return boolean
-     *      Returns true if it is the ancestor, false otherwise.
+     *                       The potential descendent directory
+     *
+     * @return bool
+     *              Returns true if it is the ancestor, false otherwise
      */
     private static function isAncestorDir($p_dir1, $p_dir2)
     {
@@ -144,8 +154,7 @@ SQL;
      * or vice-versa. Throws a NestedDirectoryException if invalid.
      *
      * @param string $p_path
-     *      The path we want to validate
-     * @return void
+     *                       The path we want to validate
      */
     public static function isPathValid($p_path)
     {
@@ -157,15 +166,15 @@ SQL;
             $diff = strlen($dir) - strlen($p_path);
             if ($diff == 0) {
                 if ($dir == $p_path) {
-                    throw new NestedDirectoryException(sprintf(_("%s is already watched."), $p_path));
+                    throw new NestedDirectoryException(sprintf(_('%s is already watched.'), $p_path));
                 }
             } elseif ($diff > 0) {
                 if (self::isAncestorDir($p_path, $dir)) {
-                    throw new NestedDirectoryException(sprintf(_("%s contains nested watched directory: %s"), $p_path, $dir));
+                    throw new NestedDirectoryException(sprintf(_('%s contains nested watched directory: %s'), $p_path, $dir));
                 }
-            } else { /* diff < 0*/
+            } else { // diff < 0
                 if (self::isAncestorDir($dir, $p_path)) {
-                    throw new NestedDirectoryException(sprintf(_("%s is nested within existing watched directory: %s"), $p_path, $dir));
+                    throw new NestedDirectoryException(sprintf(_('%s is nested within existing watched directory: %s'), $p_path, $dir));
                 }
             }
         }
@@ -173,7 +182,7 @@ SQL;
 
     /** There are 2 cases where this function can be called.
      * 1. When watched dir was added
-     * 2. When some dir was watched, but it was unmounted somehow, but gets mounted again
+     * 2. When some dir was watched, but it was unmounted somehow, but gets mounted again.
      *
      *  In case of 1, $userAddedWatchedDir should be true
      *  In case of 2, $userAddedWatchedDir should be false
@@ -182,14 +191,17 @@ SQL;
      *  otherwise, it will set "Exists" flag to true
      *
      *  @param $nestedWatch - if true, bypass path check, and Watched to false
-    **/
-    public static function addDir($p_path, $p_type, $userAddedWatchedDir=true, $nestedWatch=false)
+     * @param mixed $p_path
+     * @param mixed $p_type
+     * @param mixed $userAddedWatchedDir
+     */
+    public static function addDir($p_path, $p_type, $userAddedWatchedDir = true, $nestedWatch = false)
     {
         if (!is_dir($p_path)) {
-            return array("code"=>2, "error"=>sprintf(_("%s is not a valid directory."), $p_path));
+            return ['code' => 2, 'error' => sprintf(_('%s is not a valid directory.'), $p_path)];
         }
-        $real_path = Application_Common_OsPath::normpath($p_path)."/";
-        if ($real_path != "/") {
+        $real_path = Application_Common_OsPath::normpath($p_path) . '/';
+        if ($real_path != '/') {
             $p_path = $real_path;
         }
 
@@ -203,7 +215,7 @@ SQL;
         }
 
         $dir->setType($p_type);
-        $p_path = Application_Common_OsPath::normpath($p_path)."/";
+        $p_path = Application_Common_OsPath::normpath($p_path) . '/';
 
         try {
             /* isPathValid() checks if path is a substring or a superstring of an
@@ -221,57 +233,64 @@ SQL;
             }
             $dir->setDirectory($p_path);
 
-            return array("code"=>0);
+            return ['code' => 0];
         } catch (NestedDirectoryException $nde) {
             $msg = $nde->getMessage();
 
-            return array("code"=>1, "error"=>"$msg");
+            return ['code' => 1, 'error' => "{$msg}"];
         } catch (Exception $e) {
-            return array("code"=>1,
-                "error" => sprintf(
-                    _("%s is already set as the current storage dir or in the".
-                        " watched folders list"), 
+            return ['code' => 1,
+                'error' => sprintf(
+                    _('%s is already set as the current storage dir or in the' .
+                        ' watched folders list'),
                     $p_path
-                )
-            );
+                ),
+            ];
         }
-
     }
 
     /** There are 2 cases where this function can be called.
      * 1. When watched dir was added
-     * 2. When some dir was watched, but it was unmounted somehow, but gets mounted again
+     * 2. When some dir was watched, but it was unmounted somehow, but gets mounted again.
      *
      *  In case of 1, $userAddedWatchedDir should be true
      *  In case of 2, $userAddedWatchedDir should be false
      *
      *  When $userAddedWatchedDir is true, it will set "Watched" flag to true
      *  otherwise, it will set "Exists" flag to true
-    **/
-    public static function addWatchedDir($p_path, $userAddedWatchedDir=true, $nestedWatch=false)
+     *
+     * @param mixed $p_path
+     * @param mixed $userAddedWatchedDir
+     * @param mixed $nestedWatch
+     */
+    public static function addWatchedDir($p_path, $userAddedWatchedDir = true, $nestedWatch = false)
     {
-        $res = self::addDir($p_path, "watched", $userAddedWatchedDir, $nestedWatch);
+        $res = self::addDir($p_path, 'watched', $userAddedWatchedDir, $nestedWatch);
 
-        if ($res['code'] != 0) { return $res; }
+        if ($res['code'] != 0) {
+            return $res;
+        }
 
         //convert "linked" files (Airtime <= 1.8.2) to watched files.
         $propel_link_dir = CcMusicDirsQuery::create()
-           ->filterByType('link')
-           ->findOne();
+            ->filterByType('link')
+            ->findOne()
+        ;
 
         //see if any linked files exist.
         if (isset($propel_link_dir)) {
-
             //newly added watched directory object
             $propel_new_watch = CcMusicDirsQuery::create()
-               ->filterByDirectory(Application_Common_OsPath::normpath($p_path)."/")
-               ->findOne();
+                ->filterByDirectory(Application_Common_OsPath::normpath($p_path) . '/')
+                ->findOne()
+            ;
 
             //any files of the deprecated "link" type.
             $link_files = CcFilesQuery::create()
-               ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
-               ->filterByDbDirectory($propel_link_dir->getId())
-               ->find();
+                ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
+                ->filterByDbDirectory($propel_link_dir->getId())
+                ->find()
+            ;
 
             $newly_watched_dir = $propel_new_watch->getDirectory();
 
@@ -280,7 +299,6 @@ SQL;
 
                 //convert "link" file into a watched file.
                 if ((strlen($newly_watched_dir) < strlen($link_filepath)) && (substr($link_filepath, 0, strlen($newly_watched_dir)) === $newly_watched_dir)) {
-
                     //get the filepath path not including the watched directory.
                     $sub_link_filepath = substr($link_filepath, strlen($newly_watched_dir));
 
@@ -291,9 +309,9 @@ SQL;
             }
         }
 
-        $data = array();
-        $data["directory"] = $p_path;
-        Application_Model_RabbitMq::SendMessageToMediaMonitor("new_watch", $data);
+        $data = [];
+        $data['directory'] = $p_path;
+        Application_Model_RabbitMq::SendMessageToMediaMonitor('new_watch', $data);
 
         return $res;
     }
@@ -304,44 +322,43 @@ SQL;
         if (!$dir) {
             return null;
         }
-        $mus_dir = new Application_Model_MusicDir($dir);
 
-        return $mus_dir;
+        return new Application_Model_MusicDir($dir);
     }
 
     public static function getDirByPath($p_path)
     {
         $dir = CcMusicDirsQuery::create()
-                    ->filterByDirectory($p_path)
-                    ->findOne();
-        if ($dir == NULL) {
+            ->filterByDirectory($p_path)
+            ->findOne()
+        ;
+        if ($dir == null) {
             return null;
-        } else {
-            $mus_dir = new Application_Model_MusicDir($dir);
-
-            return $mus_dir;
         }
+
+        return new Application_Model_MusicDir($dir);
     }
 
     /**
-     * Search and returns watched dirs
+     * Search and returns watched dirs.
      *
      * @param $exists search condition with exists flag
      * @param $watched search condition with watched flag
      */
-    public static function getWatchedDirs($exists=true, $watched=true)
+    public static function getWatchedDirs($exists = true, $watched = true)
     {
-        $result = array();
+        $result = [];
 
         $dirs = CcMusicDirsQuery::create()
-                    ->filterByType("watched");
+            ->filterByType('watched')
+        ;
         if ($exists !== null) {
             $dirs = $dirs->filterByExists($exists);
         }
         if ($watched !== null) {
             $dirs = $dirs->filterByWatched($watched);
         }
-         $dirs = $dirs->find();
+        $dirs = $dirs->find();
 
         foreach ($dirs as $dir) {
             $result[] = new Application_Model_MusicDir($dir);
@@ -353,56 +370,55 @@ SQL;
     public static function getStorDir()
     {
         $dir = CcMusicDirsQuery::create()
-                    ->filterByType("stor")
-                    ->findOne();
+            ->filterByType('stor')
+            ->findOne()
+        ;
 
-        $mus_dir = new Application_Model_MusicDir($dir);
-
-        return $mus_dir;
+        return new Application_Model_MusicDir($dir);
     }
 
     public static function setStorDir($p_dir)
     {
         // we want to be consistent when storing dir path.
         // path should always ends with trailing '/'
-        $p_dir = Application_Common_OsPath::normpath($p_dir)."/";
+        $p_dir = Application_Common_OsPath::normpath($p_dir) . '/';
         if (!is_dir($p_dir)) {
-            return array("code"=>2, "error"=>sprintf(_("%s is not a valid directory."), $p_dir));
-        } elseif (Application_Model_Preference::GetImportTimestamp()+10 > time()) {
-            return array("code"=>3, "error"=>"Airtime is currently importing files. Please wait until this is complete before changing the storage directory.");
+            return ['code' => 2, 'error' => sprintf(_('%s is not a valid directory.'), $p_dir)];
+        }
+        if (Application_Model_Preference::GetImportTimestamp() + 10 > time()) {
+            return ['code' => 3, 'error' => 'Airtime is currently importing files. Please wait until this is complete before changing the storage directory.'];
         }
         $dir = self::getStorDir();
         // if $p_dir doesn't exist in DB
         $exist = $dir->getDirByPath($p_dir);
-        if ($exist == NULL) {
+        if ($exist == null) {
             $dir->setDirectory($p_dir);
             $dirId = $dir->getId();
-            $data = array();
-            $data["directory"] = $p_dir;
-            $data["dir_id"] = $dirId;
-            Application_Model_RabbitMq::SendMessageToMediaMonitor("change_stor", $data);
+            $data = [];
+            $data['directory'] = $p_dir;
+            $data['dir_id'] = $dirId;
+            Application_Model_RabbitMq::SendMessageToMediaMonitor('change_stor', $data);
 
-            return array("code"=>0);
-        } else {
-            return array("code"=>1,
-                "error"=>sprintf(_("%s is already set as the current storage dir or in the watched folders list."), $p_dir));
+            return ['code' => 0];
         }
+
+        return ['code' => 1,
+            'error' => sprintf(_('%s is already set as the current storage dir or in the watched folders list.'), $p_dir), ];
     }
 
     public static function getWatchedDirFromFilepath($p_filepath)
     {
         $dirs = CcMusicDirsQuery::create()
-                    ->filterByType(array("watched", "stor"))
-                    ->filterByExists(true)
-                    ->filterByWatched(true)
-                    ->find();
+            ->filterByType(['watched', 'stor'])
+            ->filterByExists(true)
+            ->filterByWatched(true)
+            ->find()
+        ;
 
         foreach ($dirs as $dir) {
             $directory = $dir->getDirectory();
             if (substr($p_filepath, 0, strlen($directory)) === $directory) {
-                $mus_dir = new Application_Model_MusicDir($dir);
-
-                return $mus_dir;
+                return new Application_Model_MusicDir($dir);
             }
         }
 
@@ -411,32 +427,34 @@ SQL;
 
     /** There are 2 cases where this function can be called.
      * 1. When watched dir was removed
-     * 2. When some dir was watched, but it was unmounted
+     * 2. When some dir was watched, but it was unmounted.
      *
      *  In case of 1, $userAddedWatchedDir should be true
      *  In case of 2, $userAddedWatchedDir should be false
      *
      *  When $userAddedWatchedDir is true, it will set "Watched" flag to false
      *  otherwise, it will set "Exists" flag to true
-    **/
-    public static function removeWatchedDir($p_dir, $userAddedWatchedDir=true)
+     *
+     * @param mixed $p_dir
+     * @param mixed $userAddedWatchedDir
+     */
+    public static function removeWatchedDir($p_dir, $userAddedWatchedDir = true)
     {
         //make sure that $p_dir has a trailing "/"
-        $real_path = Application_Common_OsPath::normpath($p_dir)."/";
-        if ($real_path != "/") {
+        $real_path = Application_Common_OsPath::normpath($p_dir) . '/';
+        if ($real_path != '/') {
             $p_dir = $real_path;
         }
         $dir = Application_Model_MusicDir::getDirByPath($p_dir);
         if (is_null($dir)) {
-            return array("code"=>1, "error"=>sprintf(_("%s doesn't exist in the watched list."), $p_dir));
-        } else {
-            $dir->remove($userAddedWatchedDir);
-            $data = array();
-            $data["directory"] = $p_dir;
-            Application_Model_RabbitMq::SendMessageToMediaMonitor("remove_watch", $data);
-
-            return array("code"=>0);
+            return ['code' => 1, 'error' => sprintf(_("%s doesn't exist in the watched list."), $p_dir)];
         }
+        $dir->remove($userAddedWatchedDir);
+        $data = [];
+        $data['directory'] = $p_dir;
+        Application_Model_RabbitMq::SendMessageToMediaMonitor('remove_watch', $data);
+
+        return ['code' => 0];
     }
 
     public static function splitFilePath($p_filepath)
@@ -450,19 +468,18 @@ SQL;
         $length_dir = strlen($mus_dir->getDirectory());
         $fp = substr($p_filepath, $length_dir);
 
-        return array($mus_dir->getDirectory(), trim($fp));
+        return [$mus_dir->getDirectory(), trim($fp)];
     }
 
-
-    public function unhideFiles() 
+    public function unhideFiles()
     {
         $files = $this->_dir->getCcFiless();
         $hid = 0;
         foreach ($files as $file) {
-            $hid++;
+            ++$hid;
             $file->setDbHidden(false);
             $file->save();
         }
-        Logging::info("unhide '$hid' files");
+        Logging::info("unhide '{$hid}' files");
     }
 }

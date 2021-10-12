@@ -6,20 +6,22 @@
 
 require_once __DIR__ . '/constants.php';
 
-class Config {
-    private static $CC_CONFIG = null;
+class Config
+{
+    private static $CC_CONFIG;
     private static $rootDir;
-    public static function loadConfig() {
 
-        self::$rootDir = __DIR__."/../..";
-        $CC_CONFIG = array(
-                /* ================================================ storage configuration */
-                "rootDir" => self::$rootDir
-        );
-        
+    public static function loadConfig()
+    {
+        self::$rootDir = __DIR__ . '/../..';
+        $CC_CONFIG = [
+            // ================================================ storage configuration
+            'rootDir' => self::$rootDir,
+        ];
+
         //In the unit testing environment, LIBRETIME_CONF_DIR will our local airtime.conf in legacy/application/test/conf:
-        $filename = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : LIBRETIME_CONF_DIR . "/airtime.conf";
-        
+        $filename = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : LIBRETIME_CONF_DIR . '/airtime.conf';
+
         $values = parse_ini_file($filename, true);
 
         // Name of the web server user
@@ -31,7 +33,7 @@ class Config {
         $CC_CONFIG['basePort'] = $values['general']['base_port'];
         $CC_CONFIG['stationId'] = $values['general']['station_id'];
         $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
-        $CC_CONFIG['forceSSL'] = isset($values['general']['force_ssl']) ? Config::isYesValue($values['general']['force_ssl']) : FALSE;
+        $CC_CONFIG['forceSSL'] = isset($values['general']['force_ssl']) ? Config::isYesValue($values['general']['force_ssl']) : false;
         $CC_CONFIG['protocol'] = isset($values['general']['protocol']) ? $values['general']['protocol'] : '';
         if (isset($values['general']['dev_env'])) {
             $CC_CONFIG['dev_env'] = $values['general']['dev_env'];
@@ -53,10 +55,10 @@ class Config {
 
         // Tells us where file uploads will be uploaded to.
         // It will either be set to a cloud storage backend or local file storage.
-        $CC_CONFIG["current_backend"] = $values["current_backend"]["storage_backend"];
+        $CC_CONFIG['current_backend'] = $values['current_backend']['storage_backend'];
 
         $CC_CONFIG['cache_ahead_hours'] = $values['general']['cache_ahead_hours'];
-        
+
         // Database config
         $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
         $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
@@ -64,7 +66,7 @@ class Config {
         $CC_CONFIG['dsn']['phptype'] = 'pgsql';
         $CC_CONFIG['dsn']['database'] = $values['database']['dbname'];
 
-        $CC_CONFIG['apiKey'] = array($values['general']['api_key']);
+        $CC_CONFIG['apiKey'] = [$values['general']['api_key']];
 
         if (isset($values['facebook']['facebook_app_id'])) {
             $CC_CONFIG['facebook-app-id'] = $values['facebook']['facebook_app_id'];
@@ -87,35 +89,44 @@ class Config {
             $CC_CONFIG['ldap_filter_field'] = $values['ldap']['filter_field'];
         }
 
-        if(isset($values['demo']['demo'])){
+        if (isset($values['demo']['demo'])) {
             $CC_CONFIG['demo'] = $values['demo']['demo'];
         }
         self::$CC_CONFIG = $CC_CONFIG;
     }
-    
-    public static function setAirtimeVersion() {
-        $version = @file_get_contents(self::$rootDir."/../VERSION");
+
+    public static function setAirtimeVersion()
+    {
+        $version = @file_get_contents(self::$rootDir . '/../VERSION');
         if (!$version) {
             // fallback to constant from constants.php if no other info is available
             $version = LIBRETIME_MAJOR_VERSION;
         }
         self::$CC_CONFIG['airtime_version'] = trim($version);
     }
-    
-    public static function getConfig() {
+
+    public static function getConfig()
+    {
         if (is_null(self::$CC_CONFIG)) {
             self::loadConfig();
         }
+
         return self::$CC_CONFIG;
     }
 
     /**
      * Check if the string is one of 'yes' or 'true' (case insensitive).
+     *
+     * @param mixed $value
      */
     public static function isYesValue($value)
     {
-        if (is_bool($value))    return $value;
-        if (!is_string($value)) return false;
+        if (is_bool($value)) {
+            return $value;
+        }
+        if (!is_string($value)) {
+            return false;
+        }
 
         return in_array(strtolower($value), ['yes', 'true']);
     }

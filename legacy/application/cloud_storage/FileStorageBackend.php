@@ -10,7 +10,7 @@ class FileStorageBackend extends StorageBackend
 
     public function getDownloadURLs($resourceId, $contentDispositionFilename)
     {
-        return "";
+        return '';
     }
 
     public function deletePhysicalFile($resourceId)
@@ -20,11 +20,11 @@ class FileStorageBackend extends StorageBackend
 
     public function deleteAllCloudFileObjects()
     {
-        return "";
+        return '';
     }
 
     public function getFilePrefix()
     {
-        return "";
+        return '';
     }
 }

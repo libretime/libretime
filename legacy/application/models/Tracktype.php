@@ -88,68 +88,68 @@ class Application_Model_Tracktype
 
     private function createTracktype()
     {
-        $tracktype = new CcTracktypes();
-
-        return $tracktype;
+        return new CcTracktypes();
     }
 
-    public static function getTracktypes($search=null)
+    public static function getTracktypes($search = null)
     {
-        return Application_Model_Tracktype::getTracktypesData(array(true), $search);
+        return Application_Model_Tracktype::getTracktypesData([true], $search);
     }
 
-    public static function getTracktypesData(array $visible, $search=null)
+    public static function getTracktypesData(array $visible, $search = null)
     {
-        $con     = Propel::getConnection();
+        $con = Propel::getConnection();
 
-        $sql_gen = "SELECT id, code, type_name, description FROM cc_track_types ";
+        $sql_gen = 'SELECT id, code, type_name, description FROM cc_track_types ';
 
-        $visibility = array();
-        $params = array();
-        for ($i=0; $i<count($visible); $i++) {
+        $visibility = [];
+        $params = [];
+        for ($i = 0; $i < count($visible); ++$i) {
             $p = ":visibility{$i}";
-            $visibility[] = "visibility = $p";
+            $visibility[] = "visibility = {$p}";
             $params[$p] = $visible[$i];
         }
 
-        $sql_type = join(" OR ", $visibility);
+        $sql_type = join(' OR ', $visibility);
 
-        $sql      = $sql_gen ." WHERE (". $sql_type.") ";
+        $sql = $sql_gen . ' WHERE (' . $sql_type . ') ';
 
-        $sql .= " AND code ILIKE :search";
-        $params[":search"] = "%$search%";
+        $sql .= ' AND code ILIKE :search';
+        $params[':search'] = "%{$search}%";
 
-        $sql = $sql ." ORDER BY id";
+        $sql = $sql . ' ORDER BY id';
 
-        return Application_Common_Database::prepareAndExecute($sql, $params, "all");
+        return Application_Common_Database::prepareAndExecute($sql, $params, 'all');
     }
 
     public static function getTracktypeCount()
     {
-        $sql_gen = "SELECT count(*) AS cnt FROM cc_track_types";
+        $sql_gen = 'SELECT count(*) AS cnt FROM cc_track_types';
 
-        $query = Application_Common_Database::prepareAndExecute($sql_gen, array(),
-            Application_Common_Database::COLUMN);
+        $query = Application_Common_Database::prepareAndExecute(
+            $sql_gen,
+            [],
+            Application_Common_Database::COLUMN
+        );
 
         return ($query !== false) ? $query : null;
     }
 
     public static function getTracktypesDataTablesInfo($datatables)
     {
-
         $con = Propel::getConnection(CcTracktypesPeer::DATABASE_NAME);
 
-        $displayColumns = array("id", "code", "type_name", "description", "visibility");
-        $fromTable = "cc_track_types";
-        $tracktypename = "";
+        $displayColumns = ['id', 'code', 'type_name', 'description', 'visibility'];
+        $fromTable = 'cc_track_types';
+        $tracktypename = '';
 
         $res = Application_Model_Datatables::findEntries($con, $displayColumns, $fromTable, $datatables);
 
-        foreach($res['aaData'] as $key => &$record){
+        foreach ($res['aaData'] as $key => &$record) {
             if ($record['code'] == $tracktypename) {
-                $record['delete'] = "self";
+                $record['delete'] = 'self';
             } else {
-                $record['delete'] = "";
+                $record['delete'] = '';
             }
             $record = array_map('htmlspecialchars', $record);
         }
@@ -161,13 +161,13 @@ class Application_Model_Tracktype
 
     public static function getTracktypeData($id)
     {
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 SELECT code, type_name, description, visibility, id
 FROM cc_track_types
 WHERE id = :id
 SQL;
-        return Application_Common_Database::prepareAndExecute($sql, array(
-            ":id" => $id), 'single');
-    }
 
+        return Application_Common_Database::prepareAndExecute($sql, [
+            ':id' => $id, ], 'single');
+    }
 }

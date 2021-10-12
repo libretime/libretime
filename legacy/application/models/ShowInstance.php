@@ -36,15 +36,15 @@ class Application_Model_ShowInstance
     {
         $timestamp = gmdate(DEFAULT_TIMESTAMP_FORMAT);
         $instance_id = $this->getShowInstanceId();
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 DELETE FROM cc_show_instances
 WHERE starts > :timestamp::TIMESTAMP
 AND instance_id = :instanceId
 AND rebroadcast = 1;
 SQL;
-        Application_Common_Database::prepareAndExecute( $sql, array(
+        Application_Common_Database::prepareAndExecute($sql, [
             ':instanceId' => $instance_id,
-            ':timestamp'  => $timestamp), 'execute');
+            ':timestamp' => $timestamp, ], 'execute');
     }
 
     /* This function is weird. It should return a boolean, but instead returns
@@ -67,12 +67,12 @@ SQL;
 
         return $show->getDbName();
     }
-    
+
     public function getImagePath()
     {
-    	$show = CcShowQuery::create()->findPK($this->getShowId());
-    
-    	return $show->getDbImagePath();
+        $show = CcShowQuery::create()->findPK($this->getShowId());
+
+        return $show->getDbImagePath();
     }
 
     public function getGenre()
@@ -82,43 +82,47 @@ SQL;
         return $show->getDbGenre();
     }
 
-
     public function hasAutoPlaylist()
     {
         $show = CcShowQuery::create()->findPK($this->getShowId());
-        return $show->getDbHasAutoPlaylist();
 
+        return $show->getDbHasAutoPlaylist();
     }
-    
+
     public function getAutoPlaylistId()
     {
         $show = CcShowQuery::create()->findPK($this->getShowId());
+
         return $show->getDbAutoPlaylistId();
-        
     }
 
     public function getAutoPlaylistRepeat()
     {
         $show = CcShowQuery::create()->findPK($this->getShowId());
-        return $show->getDbAutoPlaylistRepeat();
 
+        return $show->getDbAutoPlaylistRepeat();
     }
 
-
     /**
-     * Return the start time of the Show (UTC time)
+     * Return the start time of the Show (UTC time).
+     *
+     * @param mixed $format
+     *
      * @return string in format DEFAULT_TIMESTAMP_FORMAT (PHP time notation)
      */
-    public function getShowInstanceStart($format=DEFAULT_TIMESTAMP_FORMAT)
+    public function getShowInstanceStart($format = DEFAULT_TIMESTAMP_FORMAT)
     {
         return $this->_showInstance->getDbStarts($format);
     }
 
     /**
-     * Return the end time of the Show (UTC time)
+     * Return the end time of the Show (UTC time).
+     *
+     * @param mixed $format
+     *
      * @return string in format DEFAULT_TIMESTAMP_FORMAT (PHP time notation)
      */
-    public function getShowInstanceEnd($format=DEFAULT_TIMESTAMP_FORMAT)
+    public function getShowInstanceEnd($format = DEFAULT_TIMESTAMP_FORMAT)
     {
         return $this->_showInstance->getDbEnds($format);
     }
@@ -126,7 +130,7 @@ SQL;
     public function getStartDate()
     {
         $showStart = $this->getShowInstanceStart();
-        $showStartExplode = explode(" ", $showStart);
+        $showStartExplode = explode(' ', $showStart);
 
         return $showStartExplode[0];
     }
@@ -134,17 +138,17 @@ SQL;
     public function getStartTime()
     {
         $showStart = $this->getShowInstanceStart();
-        $showStartExplode = explode(" ", $showStart);
+        $showStartExplode = explode(' ', $showStart);
 
         return $showStartExplode[1];
     }
 
     public function getRecordedFile()
     {
-        $file_id =  $this->_showInstance->getDbRecordedFile();
+        $file_id = $this->_showInstance->getDbRecordedFile();
 
         if (isset($file_id)) {
-            $file =  Application_Model_StoredFile::RecallById($file_id);
+            $file = Application_Model_StoredFile::RecallById($file_id);
 
             if (isset($file)) {
                 $filePaths = $file->getFilePaths();
@@ -160,21 +164,24 @@ SQL;
     public function setShowStart($start)
     {
         $this->_showInstance->setDbStarts($start)
-            ->save();
+            ->save()
+        ;
         Application_Model_RabbitMq::PushSchedule();
     }
 
     public function setShowEnd($end)
     {
         $this->_showInstance->setDbEnds($end)
-            ->save();
+            ->save()
+        ;
         Application_Model_RabbitMq::PushSchedule();
     }
 
     public function setAutoPlaylistBuilt($bool)
     {
         $this->_showInstance->setDbAutoPlaylistBuilt($bool)
-            ->save();
+            ->save()
+        ;
     }
 
     public function updateScheduledTime()
@@ -229,18 +236,20 @@ SQL;
     /**
      * Add a playlist as the last item of the current show.
      *
-     * @param int $plId
-     *         Playlist ID.
+     * @param int   $plId
+     *                             Playlist ID
+     * @param mixed $pl_id
+     * @param mixed $checkUserPerm
      */
     public function addPlaylistToShow($pl_id, $checkUserPerm = true)
     {
-        $ts = intval($this->_showInstance->getDbLastScheduled("U")) ? : 0;
+        $ts = intval($this->_showInstance->getDbLastScheduled('U')) ?: 0;
         $id = $this->_showInstance->getDbId();
         $lastid = $this->getLastAudioItemId();
         $scheduler = new Application_Model_Scheduler($checkUserPerm);
         $scheduler->scheduleAfter(
-            array(array("id" => $lastid, "instance"  => $id, "timestamp" => $ts)),
-            array(array("id" => $pl_id, "type" => "playlist"))
+            [['id' => $lastid, 'instance' => $id, 'timestamp' => $ts]],
+            [['id' => $pl_id, 'type' => 'playlist']]
         );
         // doing this to update the database schedule so that subsequent adds will work.
         $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
@@ -250,39 +259,41 @@ SQL;
     /**
      * Add a playlist as the first item of the current show.
      *
-     * @param int $plId
-     *         Playlist ID.
+     * @param int   $plId
+     *                             Playlist ID
+     * @param mixed $pl_id
+     * @param mixed $checkUserPerm
      */
     public function addPlaylistToShowStart($pl_id, $checkUserPerm = true)
     {
-        $ts = intval($this->_showInstance->getDbLastScheduled("U")) ? : 0;
+        $ts = intval($this->_showInstance->getDbLastScheduled('U')) ?: 0;
         $id = $this->_showInstance->getDbId();
         $scheduler = new Application_Model_Scheduler($checkUserPerm);
         $scheduler->scheduleAfter(
-            array(array("id" => 0, "instance"  => $id, "timestamp" => $ts)),
-            array(array("id" => $pl_id, "type" => "playlist"))
+            [['id' => 0, 'instance' => $id, 'timestamp' => $ts]],
+            [['id' => $pl_id, 'type' => 'playlist']]
         );
         // doing this to update the database schedule so that subsequent adds will work.
         $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
         $this->_showInstance->updateScheduleStatus($con);
     }
 
-
     /**
      * Add a media file as the last item in the show.
      *
-     * @param int $file_id
+     * @param int   $file_id
+     * @param mixed $checkUserPerm
      */
     public function addFileToShow($file_id, $checkUserPerm = true)
     {
-        $ts = intval($this->_showInstance->getDbLastScheduled("U")) ? : 0;
+        $ts = intval($this->_showInstance->getDbLastScheduled('U')) ?: 0;
         $id = $this->_showInstance->getDbId();
 
         $scheduler = new Application_Model_Scheduler();
         $scheduler->setCheckUserPermissions($checkUserPerm);
         $scheduler->scheduleAfter(
-            array(array("id" => 0, "instance" => $id, "timestamp" => $ts)),
-            array(array("id" => $file_id, "type" => "audioclip"))
+            [['id' => 0, 'instance' => $id, 'timestamp' => $ts]],
+            [['id' => $file_id, 'type' => 'audioclip']]
         );
     }
 
@@ -290,7 +301,7 @@ SQL;
      * Add the given playlists to the show.
      *
      * @param array $plIds
-     *         An array of playlist IDs.
+     *                     An array of playlist IDs
      */
     public function scheduleShow($plIds)
     {
@@ -303,20 +314,21 @@ SQL;
     {
         CcScheduleQuery::create()
             ->filterByDbInstanceId($this->_instanceId)
-            ->delete();
+            ->delete()
+        ;
         Application_Model_RabbitMq::PushSchedule();
         $this->updateScheduledTime();
     }
 
     private function checkToDeleteShow($showId)
-
     {
         //UTC DateTime object
         $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
 
         $showDays = CcShowDaysQuery::create()
             ->filterByDbShowId($showId)
-            ->findOne();
+            ->findOne()
+        ;
 
         $showEnd = $showDays->getDbLastShow();
 
@@ -339,30 +351,32 @@ SQL;
             ->filterByDbShowId($showId)
             ->filterByDbModifiedInstance(false)
             ->filterByDbRebroadcast(0)
-            ->find();
+            ->find()
+        ;
 
         if (is_null($showInstances)) {
             return true;
         }
         //only 1 show instance left of the show, make it non repeating.
-        else if (count($showInstances) === 1) {
+        if (count($showInstances) === 1) {
             $showInstance = $showInstances[0];
 
             $showDaysOld = CcShowDaysQuery::create()
                 ->filterByDbShowId($showId)
-                ->find();
+                ->find()
+            ;
 
             $tz = $showDaysOld[0]->getDbTimezone();
 
-            $startDate = new DateTime($showInstance->getDbStarts(), new DateTimeZone("UTC"));
+            $startDate = new DateTime($showInstance->getDbStarts(), new DateTimeZone('UTC'));
             $startDate->setTimeZone(new DateTimeZone($tz));
             $endDate = self::addDeltas($startDate, 1, 0);
 
             //make a new rule for a non repeating show.
             $showDayNew = new CcShowDays();
-            $showDayNew->setDbFirstShow($startDate->format("Y-m-d"));
-            $showDayNew->setDbLastShow($endDate->format("Y-m-d"));
-            $showDayNew->setDbStartTime($startDate->format("H:i:s"));
+            $showDayNew->setDbFirstShow($startDate->format('Y-m-d'));
+            $showDayNew->setDbLastShow($endDate->format('Y-m-d'));
+            $showDayNew->setDbStartTime($startDate->format('H:i:s'));
             $showDayNew->setDbTimezone($tz);
             $showDayNew->setDbDay($startDate->format('w'));
             $showDayNew->setDbDuration($showDaysOld[0]->getDbDuration());
@@ -378,7 +392,8 @@ SQL;
             $showInstances = CcShowInstancesQuery::create()
                 ->filterByDbShowId($showId)
                 ->filterByDbModifiedInstance(true)
-                ->delete();
+                ->delete()
+            ;
         }
 
         return false;
@@ -397,11 +412,11 @@ SQL;
 
         if ($current_timestamp <= $this->getShowInstanceEnd()) {
             if ($show->isRepeating()) {
-
                 CcShowInstancesQuery::create()
                     ->findPK($this->_instanceId)
                     ->setDbModifiedInstance(true)
-                    ->save();
+                    ->save()
+                ;
 
                 if ($this->isRebroadcast()) {
                     return;
@@ -411,19 +426,21 @@ SQL;
                 if ($recording) {
                     CcShowInstancesQuery::create()
                         ->filterByDbOriginalShow($this->_instanceId)
-                        ->delete();
+                        ->delete()
+                    ;
                 }
 
-                /* Automatically delete all files scheduled in cc_schedules table. */
+                // Automatically delete all files scheduled in cc_schedules table.
                 CcScheduleQuery::create()
                     ->filterByDbInstanceId($this->_instanceId)
-                    ->delete();
-
+                    ->delete()
+                ;
 
                 if ($this->checkToDeleteShow($showId)) {
                     CcShowQuery::create()
                         ->filterByDbId($showId)
-                        ->delete();
+                        ->delete()
+                    ;
                 }
             } else {
                 if ($this->isRebroadcast()) {
@@ -442,16 +459,18 @@ SQL;
     public function setRecordedFile($file_id)
     {
         $showInstance = CcShowInstancesQuery::create()
-            ->findPK($this->_instanceId);
+            ->findPK($this->_instanceId)
+        ;
         $showInstance->setDbRecordedFile($file_id)
-            ->save();
+            ->save()
+        ;
 
         $rebroadcasts = CcShowInstancesQuery::create()
             ->filterByDbOriginalShow($this->_instanceId)
-            ->find();
+            ->find()
+        ;
 
         foreach ($rebroadcasts as $rebroadcast) {
-
             try {
                 $rebroad = new Application_Model_ShowInstance($rebroadcast->getDbId());
                 $rebroad->addFileToShow($file_id, false);
@@ -465,22 +484,21 @@ SQL;
     {
         $time = $this->_showInstance->getDbTimeFilled();
 
-        if ($time != "00:00:00" && !empty($time)) {
-            $time_arr = explode(".", $time);
+        if ($time != '00:00:00' && !empty($time)) {
+            $time_arr = explode('.', $time);
             if (count($time_arr) > 1) {
-                $time_arr[1] = "." . $time_arr[1];
+                $time_arr[1] = '.' . $time_arr[1];
                 $milliseconds = number_format(round($time_arr[1], 2), 2);
                 $time = $time_arr[0] . substr($milliseconds, 1);
             } else {
-                $time = $time_arr[0] . ".00";
+                $time = $time_arr[0] . '.00';
             }
         } else {
-            $time = "00:00:00.00";
+            $time = '00:00:00.00';
         }
 
         return $time;
     }
-
 
     public function getTimeScheduledSecs()
     {
@@ -500,19 +518,20 @@ SQL;
     // should return the amount of seconds remaining to be scheduled in a show instance
     public function getSecondsRemaining()
     {
-        return ($this->getDurationSecs() - $this->getTimeScheduledSecs());
+        return $this->getDurationSecs() - $this->getTimeScheduledSecs();
     }
 
     public function getPercentScheduled()
     {
         $durationSeconds = $this->getDurationSecs();
         $timeSeconds = $this->getTimeScheduledSecs();
-    
+
         if ($durationSeconds != 0) { //Prevent division by zero if the show duration is somehow zero.
             $percent = ceil(($timeSeconds / $durationSeconds) * 100);
         } else {
             $percent = 0;
         }
+
         return $percent;
     }
 
@@ -522,23 +541,23 @@ SQL;
         $end = $this->getShowInstanceEnd(null);
 
         $interval = $start->diff($end);
-        $days = $interval->format("%d");
-        $hours = sprintf("%02d" ,$interval->format("%h"));
+        $days = $interval->format('%d');
+        $hours = sprintf('%02d', $interval->format('%h'));
 
         if ($days > 0) {
             $totalHours = $days * 24 + $hours;
             //$interval object does not have milliseconds so hard code to .00
-            $returnStr = $totalHours . ":" . $interval->format("%I:%S") . ".00";
+            $returnStr = $totalHours . ':' . $interval->format('%I:%S') . '.00';
         } else {
-            $returnStr = $hours . ":" . $interval->format("%I:%S") . ".00";
+            $returnStr = $hours . ':' . $interval->format('%I:%S') . '.00';
         }
 
         return $returnStr;
     }
 
-    public static function getContentCount($p_start, $p_end) 
+    public static function getContentCount($p_start, $p_end)
     {
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 SELECT instance_id,
        count(*) AS instance_count
 FROM cc_schedule
@@ -547,34 +566,32 @@ WHERE ends > :p_start::TIMESTAMP
 GROUP BY instance_id
 SQL;
 
-        $counts = Application_Common_Database::prepareAndExecute($sql, array(
-            ':p_start' => $p_start->format("Y-m-d G:i:s"),
-            ':p_end' => $p_end->format("Y-m-d G:i:s"))
-        , 'all');
+        $counts = Application_Common_Database::prepareAndExecute($sql, [
+            ':p_start' => $p_start->format('Y-m-d G:i:s'),
+            ':p_end' => $p_end->format('Y-m-d G:i:s'), ], 'all');
 
-        $real_counts = array();
+        $real_counts = [];
         foreach ($counts as $c) {
             $real_counts[$c['instance_id']] = $c['instance_count'];
         }
-        return $real_counts;
 
+        return $real_counts;
     }
 
     public static function getIsFull($p_start, $p_end)
     {
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 SELECT id, ends-starts-'00:00:05' < time_filled as filled
 from cc_show_instances
 WHERE ends > :p_start::TIMESTAMP
 AND starts < :p_end::TIMESTAMP
 SQL;
 
-        $res = Application_Common_Database::prepareAndExecute($sql, array(
-            ':p_start' => $p_start->format("Y-m-d G:i:s"),
-            ':p_end' => $p_end->format("Y-m-d G:i:s"))
-        , 'all');
+        $res = Application_Common_Database::prepareAndExecute($sql, [
+            ':p_start' => $p_start->format('Y-m-d G:i:s'),
+            ':p_end' => $p_end->format('Y-m-d G:i:s'), ], 'all');
 
-        $isFilled = array();
+        $isFilled = [];
         foreach ($res as $r) {
             $isFilled[$r['id']] = $r['filled'];
         }
@@ -586,6 +603,7 @@ SQL;
     {
         $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
         $con->beginTransaction();
+
         try {
             // query the show instances to find whether a show instance has an autoplaylist
             $showInstances = CcShowInstancesQuery::create()
@@ -593,15 +611,15 @@ SQL;
                 ->filterByDbStarts($p_start->format(DEFAULT_TIMESTAMP_FORMAT), Criteria::GREATER_THAN)
                 ->leftJoinCcShow()
                 ->where('CcShow.has_autoplaylist = ?', 'true')
-                ->find($con);
-            $hasAutoplaylist = array();
+                ->find($con)
+            ;
+            $hasAutoplaylist = [];
             foreach ($showInstances->toArray() as $ap) {
                 $hasAutoplaylist[$ap['DbId']] = true;
             }
-            return $hasAutoplaylist;
-        }
 
-        catch (Exception $e) {
+            return $hasAutoplaylist;
+        } catch (Exception $e) {
             $con->rollback();
             Logging::info("Couldn't query show instances for calendar to find which had autoplaylists");
             Logging::info($e->getMessage());
@@ -610,7 +628,7 @@ SQL;
 
     public function showEmpty()
     {
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 SELECT s.starts
 FROM cc_schedule AS s
 WHERE s.instance_id = :instance_id
@@ -618,22 +636,25 @@ WHERE s.instance_id = :instance_id
   AND ((s.stream_id IS NOT NULL)
        OR (s.file_id IS NOT NULL)) LIMIT 1
 SQL;
-        # TODO : use prepareAndExecute properly
-        $res = Application_Common_Database::prepareAndExecute($sql,
-            array( ':instance_id' => $this->_instanceId ), 'all' );
-        # TODO : A bit retarded. fix this later
+        // TODO : use prepareAndExecute properly
+        $res = Application_Common_Database::prepareAndExecute(
+            $sql,
+            [':instance_id' => $this->_instanceId],
+            'all'
+        );
+        // TODO : A bit retarded. fix this later
         foreach ($res as $r) {
             return false;
         }
-        return true;
 
+        return true;
     }
 
     public function getShowListContent($timezone = null)
     {
         $con = Propel::getConnection();
 
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 SELECT *
 FROM (
         (SELECT s.starts,
@@ -675,33 +696,31 @@ ORDER BY starts;
 SQL;
 
         $stmt = $con->prepare($sql);
-        $stmt->execute(array(
+        $stmt->execute([
             ':instance_id1' => $this->_instanceId,
-            ':instance_id2' => $this->_instanceId
-        ));
+            ':instance_id2' => $this->_instanceId,
+        ]);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-       
+
         if (isset($timezone)) {
             $displayTimezone = new DateTimeZone($timezone);
-        } else { 
+        } else {
             $userTimezone = Application_Model_Preference::GetUserTimezone();
             $displayTimezone = new DateTimeZone($userTimezone);
         }
 
-        $utcTimezone = new DateTimeZone("UTC");
+        $utcTimezone = new DateTimeZone('UTC');
 
         foreach ($results as &$row) {
-
-            $dt = new DateTime($row["starts"], $utcTimezone);
+            $dt = new DateTime($row['starts'], $utcTimezone);
             $dt->setTimezone($displayTimezone);
-            $row["starts"] = $dt->format(DEFAULT_TIMESTAMP_FORMAT);
+            $row['starts'] = $dt->format(DEFAULT_TIMESTAMP_FORMAT);
 
             if (isset($row['length'])) {
-                $formatter = new LengthFormatter($row["length"]);
-                $row["length"] = $formatter->format();
+                $formatter = new LengthFormatter($row['length']);
+                $row['length'] = $formatter->format();
             }
         }
-
 
         return $results;
     }
@@ -710,46 +729,51 @@ SQL;
     {
         $con = Propel::getConnection();
 
-        $sql = "SELECT id FROM cc_schedule "
-            ."WHERE instance_id = :instanceId "
-            ."ORDER BY ends DESC "
-            ."LIMIT 1";
+        $sql = 'SELECT id FROM cc_schedule '
+            . 'WHERE instance_id = :instanceId '
+            . 'ORDER BY ends DESC '
+            . 'LIMIT 1';
 
-        $query = Application_Common_Database::prepareAndExecute( $sql,
-            array(':instanceId' => $this->_instanceId), 'column');
+        $query = Application_Common_Database::prepareAndExecute(
+            $sql,
+            [':instanceId' => $this->_instanceId],
+            'column'
+        );
 
         return ($query !== false) ? $query : null;
     }
-
 
     public function getLastAudioItemEnd()
     {
         $con = Propel::getConnection();
 
-        $sql = "SELECT ends FROM cc_schedule "
-            ."WHERE instance_id = :instanceId "
-            ."ORDER BY ends DESC "
-            ."LIMIT 1";
+        $sql = 'SELECT ends FROM cc_schedule '
+            . 'WHERE instance_id = :instanceId '
+            . 'ORDER BY ends DESC '
+            . 'LIMIT 1';
 
-        $query = Application_Common_Database::prepareAndExecute( $sql,
-            array(':instanceId' => $this->_instanceId), 'column');
+        $query = Application_Common_Database::prepareAndExecute(
+            $sql,
+            [':instanceId' => $this->_instanceId],
+            'column'
+        );
 
         return ($query !== false) ? $query : null;
     }
 
     public static function GetLastShowInstance($p_timeNow)
     {
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 SELECT si.id
 FROM cc_show_instances si
 WHERE si.ends < :timeNow::TIMESTAMP
   AND si.modified_instance = 'f'
 ORDER BY si.ends DESC LIMIT 1;
 SQL;
-        $id = Application_Common_Database( $sql, array(
-            ':timeNow' => $p_timeNow ), 'column' );
+        $id = Application_Common_Database($sql, [
+            ':timeNow' => $p_timeNow, ], 'column');
 
-        return ($id ? new Application_Model_ShowInstance($id) : null );
+        return $id ? new Application_Model_ShowInstance($id) : null;
     }
 
     public static function GetCurrentShowInstance($p_timeNow)
@@ -760,7 +784,7 @@ SQL;
          * is actually playing, and so this is the one we want.
          */
 
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 SELECT si.id
 FROM cc_show_instances si
 WHERE si.starts <= :timeNow1::TIMESTAMP
@@ -769,16 +793,16 @@ WHERE si.starts <= :timeNow1::TIMESTAMP
 ORDER BY si.starts DESC LIMIT 1
 SQL;
 
-        $id = Application_Common_Database( $sql, array(
+        $id = Application_Common_Database($sql, [
             ':timeNow1' => $p_timeNow,
-            ':timeNow2' => $p_timeNow ), 'column');
+            ':timeNow2' => $p_timeNow, ], 'column');
 
-        return ( $id ? new Application_Model_ShowInstance($id) : null );
+        return $id ? new Application_Model_ShowInstance($id) : null;
     }
 
     public static function GetNextShowInstance($p_timeNow)
     {
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 SELECT si.id
 FROM cc_show_instances si
 WHERE si.starts > :timeNow::TIMESTAMP
@@ -786,27 +810,35 @@ AND si.modified_instance = 'f'
 ORDER BY si.starts
 LIMIT 1
 SQL;
-        $id = Application_Common_Database::prepareAndExecute( $sql,
-            array( 'timeNow' => $p_timeNow ), 'column' );
-        return ( $id ? new Application_Model_ShowInstance($id) : null );
+        $id = Application_Common_Database::prepareAndExecute(
+            $sql,
+            ['timeNow' => $p_timeNow],
+            'column'
+        );
+
+        return $id ? new Application_Model_ShowInstance($id) : null;
     }
 
     // returns number of show instances that ends later than $day
     public static function GetShowInstanceCount($day)
     {
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 SELECT count(*) AS cnt
 FROM cc_show_instances
 WHERE ends < :day
 SQL;
-        return Application_Common_Database::prepareAndExecute( $sql,
-            array( ':day' => $day ), 'column' );
+
+        return Application_Common_Database::prepareAndExecute(
+            $sql,
+            [':day' => $day],
+            'column'
+        );
     }
 
     // this returns end timestamp of all shows that are in the range and has live DJ set up
     public static function GetEndTimeOfNextShowWithLiveDJ($p_startTime, $p_endTime)
     {
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 SELECT ends
 FROM cc_show_instances AS si
 JOIN cc_show AS sh ON si.show_id = sh.id
@@ -816,9 +848,10 @@ WHERE si.ends > :startTime::TIMESTAMP
        OR live_stream_using_custom_auth)
 ORDER BY si.ends
 SQL;
-        return Application_Common_Database::prepareAndExecute( $sql, array(
+
+        return Application_Common_Database::prepareAndExecute($sql, [
             ':startTime' => $p_startTime,
-            ':endTime'   => $p_endTime), 'all');
+            ':endTime' => $p_endTime, ], 'all');
     }
 
     public function isRepeating()

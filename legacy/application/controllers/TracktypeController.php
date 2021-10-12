@@ -2,14 +2,14 @@
 
 class TracktypeController extends Zend_Controller_Action
 {
-
     public function init()
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('get-tracktype-data-table-info', 'json')
-                    ->addActionContext('get-tracktype-data', 'json')
-                    ->addActionContext('remove-tracktype', 'json')
-                    ->initContext();
+            ->addActionContext('get-tracktype-data', 'json')
+            ->addActionContext('remove-tracktype', 'json')
+            ->initContext()
+        ;
     }
 
     public function addTracktypeAction()
@@ -25,57 +25,58 @@ class TracktypeController extends Zend_Controller_Action
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $js_files = array(
+        $js_files = [
             'js/datatables/js/jquery.dataTables.js?',
             'js/datatables/plugin/dataTables.pluginAPI.js?',
-            'js/airtime/tracktype/tracktype.js?'
-        );
+            'js/airtime/tracktype/tracktype.js?',
+        ];
 
         foreach ($js_files as $js) {
             $this->view->headScript()->appendFile(
-                $baseUrl.$js.$CC_CONFIG['airtime_version'],'text/javascript');
+                $baseUrl . $js . $CC_CONFIG['airtime_version'],
+                'text/javascript'
+            );
         }
 
-        $this->view->headLink()->appendStylesheet($baseUrl.'css/tracktypes.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl . 'css/tracktypes.css?' . $CC_CONFIG['airtime_version']);
 
         $form = new Application_Form_AddTracktype();
 
-        $this->view->successMessage = "";
+        $this->view->successMessage = '';
 
         if ($request->isPost()) {
             $params = $request->getPost();
             $postData = explode('&', $params['data']);
-            $formData = array();
-            foreach($postData as $k=>$v) {
+            $formData = [];
+            foreach ($postData as $k => $v) {
                 $v = explode('=', $v);
                 $formData[$v[0]] = urldecode($v[1]);
             }
 
-                if ($form->validateCode($formData)) {
-                    $tracktype = new Application_Model_Tracktype($formData['tracktype_id']);
-                    if (empty($formData['tracktype_id'])) {
-                        $tracktype->setCode($formData['code']);
-                    }
-                    $tracktype->setTypeName($formData['type_name']);
-                    $tracktype->setDescription($formData['description']);
-                    $tracktype->setVisibility($formData['visibility']);
-                    $tracktype->save();
+            if ($form->validateCode($formData)) {
+                $tracktype = new Application_Model_Tracktype($formData['tracktype_id']);
+                if (empty($formData['tracktype_id'])) {
+                    $tracktype->setCode($formData['code']);
+                }
+                $tracktype->setTypeName($formData['type_name']);
+                $tracktype->setDescription($formData['description']);
+                $tracktype->setVisibility($formData['visibility']);
+                $tracktype->save();
 
-                    $form->reset();
-                    $this->view->form = $form;
+                $form->reset();
+                $this->view->form = $form;
 
-                    if (strlen($formData['tracktype_id']) == 0) {
-                        $this->view->successMessage = "<div class='success'>"._("Track Type added successfully!")."</div>";
-                    } else {
-                        $this->view->successMessage = "<div class='success'>"._("Track Type updated successfully!")."</div>";
-                    }
-
-                    $this->_helper->json->sendJson(array("valid"=>"true", "html"=>$this->view->render('tracktype/add-tracktype.phtml')));
+                if (strlen($formData['tracktype_id']) == 0) {
+                    $this->view->successMessage = "<div class='success'>" . _('Track Type added successfully!') . '</div>';
                 } else {
-                    $this->view->form = $form;
-                    $this->_helper->json->sendJson(array("valid"=>"false", "html"=>$this->view->render('tracktype/add-tracktype.phtml')));
+                    $this->view->successMessage = "<div class='success'>" . _('Track Type updated successfully!') . '</div>';
                 }
 
+                $this->_helper->json->sendJson(['valid' => 'true', 'html' => $this->view->render('tracktype/add-tracktype.phtml')]);
+            } else {
+                $this->view->form = $form;
+                $this->_helper->json->sendJson(['valid' => 'false', 'html' => $this->view->render('tracktype/add-tracktype.phtml')]);
+            }
         }
 
         $this->view->form = $form;
@@ -102,8 +103,7 @@ class TracktypeController extends Zend_Controller_Action
 
         $tracktype = new Application_Model_Tracktype($delId);
 
-        # Delete the track type
+        // Delete the track type
         $this->view->entries = $tracktype->delete();
     }
-
 }

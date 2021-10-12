@@ -1,12 +1,11 @@
 <?php
 
-final class HttpRequestType {
-
-    const GET = "GET";
-    const POST = "POST";
-    const PUT = "PUT";
-    const DELETE = "DELETE";
-    const PATCH = "PATCH";
-    const OPTIONS = "OPTIONS";
-
+final class HttpRequestType
+{
+    public const GET = 'GET';
+    public const POST = 'POST';
+    public const PUT = 'PUT';
+    public const DELETE = 'DELETE';
+    public const PATCH = 'PATCH';
+    public const OPTIONS = 'OPTIONS';
 }

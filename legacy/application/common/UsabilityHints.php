@@ -2,12 +2,12 @@
 
 class Application_Common_UsabilityHints
 {
-
     /**
      * @param $userPath User's current location in Airtime (i.e. /Plupload)
+     *
      * @return string
      */
-    public static function getUsabilityHint($userPath=null)
+    public static function getUsabilityHint($userPath = null)
     {
         // We want to display hints in this order:
         // 1. Check if files are uploaded
@@ -42,17 +42,16 @@ class Application_Common_UsabilityHints
             if (strpos(strtolower($userPath), 'showbuilder') !== false) {
                 $userIsOnShowbuilderPage = true;
             }
-
         } else {
             // If $userPath is not set the request came from inside Airtime so
             // we can use Zend's Front Controller to get the user's current location.
             $currentController = strtolower(Zend_Controller_Front::getInstance()->getRequest()->getControllerName());
 
-            if ($currentController == "schedule") {
+            if ($currentController == 'schedule') {
                 $userIsOnCalendarPage = true;
             }
 
-            if ($currentController == "plupload") {
+            if ($currentController == 'plupload') {
                 $userIsOnAddMediaPage = true;
             }
 
@@ -63,48 +62,59 @@ class Application_Common_UsabilityHints
 
         if (self::zeroFilesUploaded()) {
             if ($userIsOnAddMediaPage) {
-                return _("Upload some tracks below to add them to your library!");
-            } else {
-                return sprintf(_("It looks like you haven't uploaded any audio files yet. %sUpload a file now%s."),
-                    "<a href=\"/plupload\">",
-                    "</a>");
+                return _('Upload some tracks below to add them to your library!');
             }
-        } else if (!self::isFutureOrCurrentShowScheduled()) {
+
+            return sprintf(
+                _("It looks like you haven't uploaded any audio files yet. %sUpload a file now%s."),
+                '<a href="/plupload">',
+                '</a>'
+            );
+        }
+        if (!self::isFutureOrCurrentShowScheduled()) {
             if ($userIsOnCalendarPage) {
                 return _("Click the 'New Show' button and fill out the required fields.");
-            } else {
-                return sprintf(_("It looks like you don't have any shows scheduled. %sCreate a show now%s."),
-                    "<a href=\"/schedule\">",
-                    "</a>");
             }
-        } else if (self::isCurrentShowEmpty()) {
+
+            return sprintf(
+                _("It looks like you don't have any shows scheduled. %sCreate a show now%s."),
+                '<a href="/schedule">',
+                '</a>'
+            );
+        }
+        if (self::isCurrentShowEmpty()) {
             // If the current show is linked users cannot add content to it so we have to provide a different message.
             if (self::isCurrentShowLinked()) {
                 if ($userIsOnCalendarPage) {
                     return _("To start broadcasting, cancel the current linked show by clicking on it and selecting 'Cancel Show'.");
-                } else {
-                    return sprintf(_("Linked shows need to be filled with tracks before it starts. To start broadcasting cancel the current linked show and schedule an unlinked show.
-                    %sCreate an unlinked show now%s."), "<a href=\"/schedule\">", "</a>");
                 }
-            } else {
-                if ($userIsOnCalendarPage) {
-                    return _("To start broadcasting, click on the current show and select 'Schedule Tracks'");
-                } else {
-                    return sprintf(_("It looks like the current show needs more tracks. %sAdd tracks to your show now%s."),
-                        "<a href=\"/schedule\">",
-                        "</a>");
-                }
+
+                return sprintf(_('Linked shows need to be filled with tracks before it starts. To start broadcasting cancel the current linked show and schedule an unlinked show.
+                    %sCreate an unlinked show now%s.'), '<a href="/schedule">', '</a>');
             }
-        } else if (!self::getCurrentShow() && self::isNextShowEmpty()) {
+            if ($userIsOnCalendarPage) {
+                return _("To start broadcasting, click on the current show and select 'Schedule Tracks'");
+            }
+
+            return sprintf(
+                _('It looks like the current show needs more tracks. %sAdd tracks to your show now%s.'),
+                '<a href="/schedule">',
+                '</a>'
+            );
+        }
+        if (!self::getCurrentShow() && self::isNextShowEmpty()) {
             if ($userIsOnCalendarPage) {
                 return _("Click on the show starting next and select 'Schedule Tracks'");
-            } else {
-                return sprintf(_("It looks like the next show is empty. %sAdd tracks to your show now%s."),
-                    "<a href=\"/schedule\">",
-                    "</a>");
             }
+
+            return sprintf(
+                _('It looks like the next show is empty. %sAdd tracks to your show now%s.'),
+                '<a href="/schedule">',
+                '</a>'
+            );
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -115,13 +125,14 @@ class Application_Common_UsabilityHints
         $fileCount = CcFilesQuery::create()
             ->filterByDbFileExists(true)
             ->filterByDbHidden(false)
-            ->count();
+            ->count()
+        ;
 
         if ($fileCount == 0) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -135,9 +146,9 @@ class Application_Common_UsabilityHints
 
         if (is_null($futureShow) && is_null($currentShow)) {
             return false;
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     private static function isCurrentShowEmpty()
@@ -146,18 +157,18 @@ class Application_Common_UsabilityHints
 
         if (is_null($currentShow)) {
             return false;
-        } else {
-            $now = new DateTime("now", new DateTimeZone("UTC"));
-            $scheduledTracks = CcScheduleQuery::create()
-                ->filterByDbInstanceId($currentShow->getDbId())
-                ->filterByDbEnds($now, Criteria::GREATER_EQUAL)
-                ->find();
-            if ($scheduledTracks->count() == 0) {
-                return true;
-            } else {
-                return false;
-            }
         }
+        $now = new DateTime('now', new DateTimeZone('UTC'));
+        $scheduledTracks = CcScheduleQuery::create()
+            ->filterByDbInstanceId($currentShow->getDbId())
+            ->filterByDbEnds($now, Criteria::GREATER_EQUAL)
+            ->find()
+        ;
+        if ($scheduledTracks->count() == 0) {
+            return true;
+        }
+
+        return false;
     }
 
     private static function isNextShowEmpty()
@@ -166,40 +177,42 @@ class Application_Common_UsabilityHints
 
         if (is_null($futureShow)) {
             return false;
-        } else {
-            $now = new DateTime("now", new DateTimeZone("UTC"));
-            $scheduledTracks = CcScheduleQuery::create()
-                ->filterByDbInstanceId($futureShow->getDbId())
-                ->filterByDbStarts($now, Criteria::GREATER_EQUAL)
-                ->find();
-            if ($scheduledTracks->count() == 0) {
-                return true;
-            } else {
-                return false;
-            }
         }
+        $now = new DateTime('now', new DateTimeZone('UTC'));
+        $scheduledTracks = CcScheduleQuery::create()
+            ->filterByDbInstanceId($futureShow->getDbId())
+            ->filterByDbStarts($now, Criteria::GREATER_EQUAL)
+            ->find()
+        ;
+        if ($scheduledTracks->count() == 0) {
+            return true;
+        }
+
+        return false;
     }
 
     private static function getCurrentShow()
     {
-        $now = new DateTime("now", new DateTimeZone("UTC"));
+        $now = new DateTime('now', new DateTimeZone('UTC'));
 
         return CcShowInstancesQuery::create()
             ->filterByDbStarts($now, Criteria::LESS_THAN)
             ->filterByDbEnds($now, Criteria::GREATER_THAN)
             ->filterByDbModifiedInstance(false)
-            ->findOne();
+            ->findOne()
+        ;
     }
 
     private static function getNextFutureShow()
     {
-        $now = new DateTime("now", new DateTimeZone("UTC"));
+        $now = new DateTime('now', new DateTimeZone('UTC'));
 
         return CcShowInstancesQuery::create()
             ->filterByDbStarts($now, Criteria::GREATER_THAN)
             ->filterByDbModifiedInstance(false)
             ->orderByDbStarts()
-            ->findOne();
+            ->findOne()
+        ;
     }
 
     private static function isCurrentShowLinked()
@@ -208,14 +221,15 @@ class Application_Common_UsabilityHints
         if (!is_null($currentShow)) {
             $show = CcShowQuery::create()
                 ->filterByDbId($currentShow->getDbShowId())
-                ->findOne();
+                ->findOne()
+            ;
             if ($show->isLinked()) {
                 return true;
-            } else {
-                return false;
             }
-        } else {
+
             return false;
         }
+
+        return false;
     }
 }

@@ -1,6 +1,11 @@
 <?php
-require_once "../application/configs/conf.php";
 
+require_once '../application/configs/conf.php';
+
+/**
+ * @internal
+ * @coversNothing
+ */
 class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
 {
     private $_connectionMock;
@@ -16,7 +21,7 @@ class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
 
     public function appBootstrap()
     {
-        $this->application = new Zend_Application(APPLICATION_ENV, APPLICATION_PATH .'/configs/application.ini');
+        $this->application = new Zend_Application(APPLICATION_ENV, APPLICATION_PATH . '/configs/application.ini');
         $this->application->bootstrap();
     }
 
@@ -33,6 +38,7 @@ class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
             );
             Zend_Db_Table_Abstract::setDefaultAdapter($connection);
         }
+
         return $this->_connectionMock;
     }
 
@@ -53,7 +59,7 @@ class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $data = ShowServiceData::getOverlappingShowCheckTestData();
         $showService = new Application_Service_ShowService(null, $data);
 
-        /** Create shows to test against **/
+        // Create shows to test against
         $showService->addUpdateShow($data);
 
         $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
@@ -65,49 +71,49 @@ class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
-        /** Make sure shows were created correctly **/
+        // Make sure shows were created correctly
         $this->assertDataSetsEqual(
-            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/datasets/test_checkOverlappingShows.yml"),
+            new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . '/datasets/test_checkOverlappingShows.yml'),
             $ds
         );
 
-        $utcTimezone = new DateTimeZone("UTC");
+        $utcTimezone = new DateTimeZone('UTC');
 
-        /** Test that overlapping check works when creating a new show **/
+        /** Test that overlapping check works when creating a new show */
         $overlapping = Application_Model_Schedule::checkOverlappingShows(
-            new DateTime("2014-02-01 00:00:00", $utcTimezone),
-            new DateTime("2014-02-01 01:00:00", $utcTimezone)
+            new DateTime('2014-02-01 00:00:00', $utcTimezone),
+            new DateTime('2014-02-01 01:00:00', $utcTimezone)
         );
         $this->assertEquals($overlapping, false);
 
         $overlapping = Application_Model_Schedule::checkOverlappingShows(
-            new DateTime("2014-01-05 00:00:00", $utcTimezone),
-            new DateTime("2014-01-05 02:00:00", $utcTimezone)
+            new DateTime('2014-01-05 00:00:00', $utcTimezone),
+            new DateTime('2014-01-05 02:00:00', $utcTimezone)
         );
         $this->assertEquals($overlapping, true);
 
         $overlapping = Application_Model_Schedule::checkOverlappingShows(
-            new DateTime("2014-01-05 01:00:00", $utcTimezone),
-            new DateTime("2014-01-05 02:00:00", $utcTimezone)
+            new DateTime('2014-01-05 01:00:00', $utcTimezone),
+            new DateTime('2014-01-05 02:00:00', $utcTimezone)
         );
         $this->assertEquals($overlapping, false);
 
         $overlapping = Application_Model_Schedule::checkOverlappingShows(
-            new DateTime("2014-01-31 00:30:00", $utcTimezone),
-            new DateTime("2014-01-31 01:30:00", $utcTimezone)
+            new DateTime('2014-01-31 00:30:00', $utcTimezone),
+            new DateTime('2014-01-31 01:30:00', $utcTimezone)
         );
         $this->assertEquals($overlapping, true);
 
         $overlapping = Application_Model_Schedule::checkOverlappingShows(
-            new DateTime("2014-01-20 23:55:00", $utcTimezone),
-            new DateTime("2014-01-21 00:00:05", $utcTimezone)
+            new DateTime('2014-01-20 23:55:00', $utcTimezone),
+            new DateTime('2014-01-21 00:00:05', $utcTimezone)
         );
         $this->assertEquals($overlapping, true);
 
-        /** Test overlapping check works when editing an entire show **/
+        /** Test overlapping check works when editing an entire show */
         $overlapping = Application_Model_Schedule::checkOverlappingShows(
-            new DateTime("2014-01-05 00:00:00", $utcTimezone),
-            new DateTime("2014-01-05 02:00:00", $utcTimezone),
+            new DateTime('2014-01-05 00:00:00', $utcTimezone),
+            new DateTime('2014-01-05 02:00:00', $utcTimezone),
             true,
             null,
             1
@@ -115,20 +121,20 @@ class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $this->assertEquals($overlapping, false);
 
         /** Delete a repeating instance, create a new show in it's place and
-         *  test if we can modify the repeating show after **/
+         *  test if we can modify the repeating show after */
         $ccShowInstance = CcShowInstancesQuery::create()->findPk(1);
         $ccShowInstance->setDbModifiedInstance(true)->save();
 
         $newShowData = ShowServiceData::getNoRepeatNoRRData();
-        $newShowData["add_show_start_date"] = "2014-01-05";
-        $newShowData["add_show_end_date_no_repeat"] = "2014-01-05";
-        $newShowData["add_show_end_date"] = "2014-01-05";
+        $newShowData['add_show_start_date'] = '2014-01-05';
+        $newShowData['add_show_end_date_no_repeat'] = '2014-01-05';
+        $newShowData['add_show_end_date'] = '2014-01-05';
 
         $showService->addUpdateShow($newShowData);
 
         $overlapping = Application_Model_Schedule::checkOverlappingShows(
-            new DateTime("2014-01-06 00:00:00", $utcTimezone),
-            new DateTime("2014-01-06 00:30:00", $utcTimezone),
+            new DateTime('2014-01-06 00:00:00', $utcTimezone),
+            new DateTime('2014-01-06 00:30:00', $utcTimezone),
             true,
             null,
             1

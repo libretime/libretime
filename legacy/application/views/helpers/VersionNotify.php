@@ -1,6 +1,5 @@
 <?php
 
-use Composer\Semver\Comparator;
 use Composer\Semver\Semver;
 use Composer\Semver\VersionParser;
 
@@ -11,28 +10,29 @@ use Composer\Semver\VersionParser;
  * 2. Returns the matching icon based on result of 1, as HTML
  * 3. Returns the matching tooltip message based on result of 1, as HTML
  *    (stored in pair of invisible div tags)
- * 4. Returns the current version, as HTML (stored in pair of invisible div tags)
+ * 4. Returns the current version, as HTML (stored in pair of invisible div tags).
  */
-class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract {
-
+class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract
+{
     /**
      * @var VersionParser
      */
     private $versionParser;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->versionParser = new VersionParser();
     }
 
     /**
-     * Prepare data for update notifier widget
+     * Prepare data for update notifier widget.
      *
      * Grabs the version from the VERSION file created by build.sh and compares
      * it against the versions available from github using the semver code from
      * the composer project.
      */
-    public function versionNotify() {
-
+    public function versionNotify()
+    {
         $config = Config::getConfig();
 
         // retrieve and validate current and latest versions,
@@ -59,13 +59,13 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract {
             $hasStable = !empty($stableVersions) && !$isGitRelease;
             // no warning if no major release available, orange warning if you are on unreleased code
             $class = $hasStable ? 'update2' : 'uptodate';
-        } else if ($hasPatch || $hasMultiMajor) {
+        } elseif ($hasPatch || $hasMultiMajor) {
             // current patch or more than 1 major behind
             $class = 'outdated';
-        } else if ($hasMinor) {
+        } elseif ($hasMinor) {
             // green warning for feature update
             $class = 'update';
-        } else if ($hasMajor) {
+        } elseif ($hasMajor) {
             // orange warning for 1 major beind
             $class = 'update2';
         } else {
@@ -74,7 +74,7 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract {
         $latest = SemVer::rsort($latest);
         $highestVersion = $latest[0];
 
-        $data = (object) array(
+        $data = (object) [
             'link' => $link,
             'latest' => $highestVersion,
             'current' => $current,
@@ -83,27 +83,27 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract {
             'hasMajor' => $hasMajor,
             'isPreRelease' => $isPreRelease,
             'hasMultiMajor' => $hasMultiMajor,
-        );
+        ];
 
-        $result = sprintf('<script>var versionNotifyInfo = %s;</script>', json_encode($data))
+        return sprintf('<script>var versionNotifyInfo = %s;</script>', json_encode($data))
                 . "<div id='version-icon' class='" . $class . "'></div>";
-        return $result;
     }
 
-    private function normalizeVersion($version, $isGit) {
+    private function normalizeVersion($version, $isGit)
+    {
         try {
             $this->versionParser->normalize($version);
-        } catch(UnexpectedValueException $e) {
+        } catch (UnexpectedValueException $e) {
             // recover by assuming an unknown version
-            $version= '0.0.0';
+            $version = '0.0.0';
         }
 
-        $parts = array();
+        $parts = [];
         if (!$isGit) {
-            $parts = preg_split("/(\.|-)/", $version);
+            $parts = preg_split('/(\.|-)/', $version);
         }
         if (count($parts) < 3) {
-            $parts = array(0, 0, 0);
+            $parts = [0, 0, 0];
         }
 
         return $parts;

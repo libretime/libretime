@@ -1,6 +1,7 @@
 <?php
-class ErrorController extends Zend_Controller_Action {
 
+class ErrorController extends Zend_Controller_Action
+{
     public function init()
     {
         //The default layout includes the Dashboard header, which may contain private information.
@@ -18,7 +19,8 @@ class ErrorController extends Zend_Controller_Action {
         }
     }
 
-    public function errorAction() {
+    public function errorAction()
+    {
         $errors = $this->_getParam('error_handler');
 
         if ($errors) {
@@ -27,21 +29,27 @@ class ErrorController extends Zend_Controller_Action {
             Logging::error($errors->exception->getTraceAsString());
 
             switch ($errors->type) {
-                case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ROUTE :
-                case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER :
+                case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ROUTE:
+                case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
                     $this->error404Action();
+
                     break;
-                case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION :
+
+                case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
                     $this->error400Action();
+
                     break;
-                default :
+
+                default:
                     $this->error500Action();
+
                     break;
             }
         } else {
             //$exceptions = $this->_getAllParams();
             //Logging::error($exceptions);
             $this->error404Action();
+
             return;
         }
 
@@ -51,7 +59,7 @@ class ErrorController extends Zend_Controller_Action {
             $log->crit($this->view->message, $errors->exception);
         }*/
         //Logging that actually works: -- Albert
-        Logging::error($this->view->message . ": " . $errors->exception);
+        Logging::error($this->view->message . ': ' . $errors->exception);
 
         // conditionally display exceptions
         if ($this->getInvokeArg('displayExceptions') == true) {
@@ -68,50 +76,51 @@ class ErrorController extends Zend_Controller_Action {
         $this->view->headLink()->appendStylesheet($staticBaseDir . 'css/styles.css?' . $CC_CONFIG['airtime_version']);
     }
 
-    public function getLog() {
+    public function getLog()
+    {
         $bootstrap = $this->getInvokeArg('bootstrap');
         if (!$bootstrap->hasPluginResource('Log')) {
             return false;
         }
-        $log = $bootstrap->getResource('Log');
 
-        return $log;
+        return $bootstrap->getResource('Log');
     }
 
     /**
-     * 404 error - route or controller
+     * 404 error - route or controller.
      */
-    public function error404Action() {
+    public function error404Action()
+    {
         $this->_helper->viewRenderer('error');
         $this->getResponse()->setHttpResponseCode(404);
         $this->view->message = _('Page not found.');
     }
 
     /**
-     * 400 error - no such action
+     * 400 error - no such action.
      */
-    public function error400Action() {
+    public function error400Action()
+    {
         $this->_helper->viewRenderer('error-400');
         $this->getResponse()->setHttpResponseCode(400);
         $this->view->message = _('The requested action is not supported.');
-
     }
 
     /**
-     * 403 error - permission denied
+     * 403 error - permission denied.
      */
-    public function error403Action() {
-
+    public function error403Action()
+    {
         $this->_helper->viewRenderer('error-403');
         $this->getResponse()->setHttpResponseCode(403);
         $this->view->message = _('You do not have permission to access this resource.');
     }
 
     /**
-     * 500 error - internal server error
+     * 500 error - internal server error.
      */
-    public function error500Action() {
-
+    public function error500Action()
+    {
         $this->_helper->viewRenderer('error-500');
 
         $this->getResponse()->setHttpResponseCode(500);

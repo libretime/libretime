@@ -2,35 +2,32 @@
 
 class LoginController extends Zend_Controller_Action
 {
-
     public function init()
     {
         $CC_CONFIG = Config::getConfig();
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $this->view->headLink(array('rel' => 'icon', 'href' => $baseUrl . 'favicon.ico?' . $CC_CONFIG['airtime_version'], 'type' => 'image/x-icon'), 'PREPEND')
+        $this->view->headLink(['rel' => 'icon', 'href' => $baseUrl . 'favicon.ico?' . $CC_CONFIG['airtime_version'], 'type' => 'image/x-icon'], 'PREPEND')
             ->appendStylesheet($baseUrl . 'css/bootstrap.css?' . $CC_CONFIG['airtime_version'])
             ->appendStylesheet($baseUrl . 'css/redmond/jquery-ui-1.8.8.custom.css?' . $CC_CONFIG['airtime_version'])
-            ->appendStylesheet($baseUrl . 'css/styles.css?' . $CC_CONFIG['airtime_version']);
-
+            ->appendStylesheet($baseUrl . 'css/styles.css?' . $CC_CONFIG['airtime_version'])
+        ;
     }
 
     public function indexAction()
     {
         $CC_CONFIG = Config::getConfig();
-        
+
         $request = $this->getRequest();
         $response = $this->getResponse();
         $stationLocale = Application_Model_Preference::GetDefaultLocale();
-        
+
         //Enable AJAX requests from www.airtime.pro for the sign-in process.
         CORSHelper::enableCrossOriginRequests($request, $response);
 
-        
         Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', $stationLocale));
 
         if (Zend_Session::isStarted()) {
-
             //Open the session for writing, because we close it for writing by default in Bootstrap.php as an optimization.
             SessionHelper::reopenSessionForWriting();
 
@@ -46,18 +43,16 @@ class LoginController extends Zend_Controller_Action
         $this->_helper->layout->setLayout('login');
 
         $this->view->error = false;
-        
+
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
         $form = new Application_Form_Login();
 
-        $message = _("Please enter your username and password.");
+        $message = _('Please enter your username and password.');
 
         if ($request->isPost()) {
-
             //Open the session for writing, because we close it for writing by default in Bootstrap.php as an optimization.
             //session_start();
-
 
             if ($form->isValid($request->getPost())) {
                 //get the username and password from the form
@@ -69,8 +64,9 @@ class LoginController extends Zend_Controller_Action
 
                 //pass to the adapter the submitted username and password
                 $authAdapter->setIdentity($username)
-                            ->setCredential($password);
-                
+                    ->setCredential($password)
+                ;
+
                 $result = $auth->authenticate($authAdapter);
                 if ($result->isValid()) {
                     Zend_Session::regenerateId();
@@ -142,11 +138,12 @@ class LoginController extends Zend_Controller_Action
 
                 if (empty($username)) {
                     $query->filterByDbEmail($email);
-                } else if (empty($email)) {
+                } elseif (empty($email)) {
                     $query->filterByDbLogin($username);
                 } else {
                     $query->filterByDbEmail($email)
-                        ->filterByDbLogin($username);
+                        ->filterByDbLogin($username)
+                    ;
                 }
                 $user = $query->findOne();
 
@@ -157,13 +154,13 @@ class LoginController extends Zend_Controller_Action
                     if ($success) {
                         $this->_helper->redirector('password-restore-after', 'login');
                     } else {
-                        $form->email->addError($this->view->translate(_("Email could not be sent. Check your mail server settings and ensure it has been configured properly.")));
+                        $form->email->addError($this->view->translate(_('Email could not be sent. Check your mail server settings and ensure it has been configured properly.')));
                     }
                 } else {
-                    $form->email->addError($this->view->translate(_("That username or email address could not be found.")));
+                    $form->email->addError($this->view->translate(_('That username or email address could not be found.')));
                 }
             } else { //Form is not valid
-                $form->email->addError($this->view->translate(_("There was a problem with the username or email address you entered.")));
+                $form->email->addError($this->view->translate(_('There was a problem with the username or email address you entered.')));
             }
         }
 
@@ -174,7 +171,7 @@ class LoginController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $stationLocale = Application_Model_Preference::GetDefaultLocale();
-        
+
         Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', $stationLocale));
 
         //uses separate layout without a navigation.
@@ -187,25 +184,24 @@ class LoginController extends Zend_Controller_Action
         $this->_helper->layout->setLayout('login');
 
         $request = $this->getRequest();
-        $token = $request->getParam("token", false);
-        $user_id = $request->getParam("user_id", 0);
+        $token = $request->getParam('token', false);
+        $user_id = $request->getParam('user_id', 0);
 
         $form = new Application_Form_PasswordChange();
         $auth = new Application_Model_Auth();
         $user = CcSubjsQuery::create()->findPK($user_id);
-        
+
         $stationLocale = Application_Model_Preference::GetDefaultLocale();
 
         Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', $stationLocale));
 
         //check validity of token
         if (!$auth->checkToken($user_id, $token, 'password.restore')) {
-            Logging::debug("token not valid");
+            Logging::debug('token not valid');
             $this->_helper->redirector('index', 'login');
         }
 
         if ($request->isPost() && $form->isValid($request->getPost())) {
-
             $user->setDbPass(md5($form->password->getValue()));
             $user->save();
 
@@ -216,7 +212,8 @@ class LoginController extends Zend_Controller_Action
 
             $authAdapter = Application_Model_Auth::getAuthAdapter();
             $authAdapter->setIdentity($user->getDbLogin())
-            ->setCredential($form->password->getValue());
+                ->setCredential($form->password->getValue())
+            ;
 
             $zend_auth->authenticate($authAdapter);
 
@@ -234,18 +231,20 @@ class LoginController extends Zend_Controller_Action
     }
 
     /**
-     * populates view with results from a login error and adds a new form
+     * populates view with results from a login error and adds a new form.
      *
-     * @param  String $username user that failed to login
+     * @param string $username user that failed to login
+     *
      * @return new form
      */
     private function loginError($username)
     {
-        $this->view->message = _("Wrong username or password provided. Please try again.");
+        $this->view->message = _('Wrong username or password provided. Please try again.');
         Application_Model_Subjects::increaseLoginAttempts($username);
         Application_Model_LoginAttempts::increaseAttempts($_SERVER['REMOTE_ADDR']);
-        $form = new Application_Form_Login();                            
+        $form = new Application_Form_Login();
         $this->view->error = true;
+
         return $form;
     }
 }

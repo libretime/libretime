@@ -2,12 +2,10 @@
 
 class Application_Form_SetupLanguageTimezone extends Zend_Form_SubForm
 {
-
     public function init()
     {
-
-        $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/setup-lang-timezone.phtml'))));
+        $this->setDecorators([
+            ['ViewScript', ['viewScript' => 'form/setup-lang-timezone.phtml']], ]);
 
         $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
         $csrf_element = new Zend_Form_Element_Hidden('csrf');
@@ -15,14 +13,13 @@ class Application_Form_SetupLanguageTimezone extends Zend_Form_SubForm
         $this->addElement($csrf_element);
 
         $language = new Zend_Form_Element_Select('setup_language');
-        $language->setLabel(_("Station Language"));
+        $language->setLabel(_('Station Language'));
         $language->setMultiOptions(Application_Model_Locale::getLocales());
         $this->addElement($language);
 
         $timezone = new Zend_Form_Element_Select('setup_timezone');
-        $timezone->setLabel(_("Station Timezone"));
+        $timezone->setLabel(_('Station Timezone'));
         $timezone->setMultiOptions(Application_Common_Timezone::getTimezones());
         $this->addElement($timezone);
     }
 }
-

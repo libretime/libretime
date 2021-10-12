@@ -4,7 +4,7 @@ class Application_Common_Timezone
 {
     public static function getTimezones()
     {
-        $regions = array(
+        $regions = [
             'Africa' => DateTimeZone::AFRICA,
             'America' => DateTimeZone::AMERICA,
             'Antarctica' => DateTimeZone::ANTARCTICA,
@@ -15,15 +15,15 @@ class Application_Common_Timezone
             'Europe' => DateTimeZone::EUROPE,
             'Indian' => DateTimeZone::INDIAN,
             'Pacific' => DateTimeZone::PACIFIC,
-            'UTC' => DateTimeZone::UTC
-        );
+            'UTC' => DateTimeZone::UTC,
+        ];
 
-        $tzlist = array(NULL => _("Use station default"));
+        $tzlist = [null => _('Use station default')];
 
         foreach ($regions as $name => $mask) {
             $ids = DateTimeZone::listIdentifiers($mask);
             foreach ($ids as $id) {
-                $tzlist[$id] = str_replace("_", " ", $id);
+                $tzlist[$id] = str_replace('_', ' ', $id);
             }
         }
 

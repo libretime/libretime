@@ -1,9 +1,9 @@
 <?php
 /**
- * Auth adaptor for FreeIPA
+ * Auth adaptor for FreeIPA.
  */
-
-class LibreTime_Auth_Adaptor_FreeIpa implements Zend_Auth_Adapter_Interface {
+class LibreTime_Auth_Adaptor_FreeIpa implements Zend_Auth_Adapter_Interface
+{
     /**
      * @var string
      */
@@ -18,36 +18,44 @@ class LibreTime_Auth_Adaptor_FreeIpa implements Zend_Auth_Adapter_Interface {
     private $user;
 
     /**
-     * username from form
+     * username from form.
+     *
+     * @param mixed $username
      *
      * @return self
      */
-    function setIdentity($username) {
+    public function setIdentity($username)
+    {
         $this->username = $username;
+
         return $this;
     }
 
     /**
-     * password from form
+     * password from form.
      *
      * This is ignored by FreeIPA but needs to get passed for completeness
      *
+     * @param mixed $password
+     *
      * @return self
      */
-    function setCredential($password) {
+    public function setCredential($password)
+    {
         $this->password = $password;
+
         return $this;
     }
 
     /**
-     * Check if apache logged the user and get data from ldap
+     * Check if apache logged the user and get data from ldap.
      *
      * @return Zend_Auth_Result
      */
-    function authenticate() 
+    public function authenticate()
     {
         if (array_key_exists('EXTERNAL_AUTH_ERROR', $_SERVER)) {
-            return new Zend_Auth_Result(Zend_Auth_Result::FAILURE, null, array($_SERVER['EXTERNAL_AUTH_ERROR']));
+            return new Zend_Auth_Result(Zend_Auth_Result::FAILURE, null, [$_SERVER['EXTERNAL_AUTH_ERROR']]);
         }
         if (!array_key_exists('REMOTE_USER', $_SERVER)) {
             return new Zend_Auth_Result(Zend_Auth_Result::FAILURE, null);
@@ -56,7 +64,7 @@ class LibreTime_Auth_Adaptor_FreeIpa implements Zend_Auth_Adapter_Interface {
         $remoteUser = $_SERVER['REMOTE_USER'];
 
         $subj = CcSubjsQuery::create()->findOneByDbLogin($remoteUser);
-        $subjId =null;
+        $subjId = null;
         if ($subj) {
             $subjId = $subj->getDBId();
         }
@@ -89,6 +97,7 @@ class LibreTime_Auth_Adaptor_FreeIpa implements Zend_Auth_Adapter_Interface {
         $user->setJabber($userInfo['jabber']);
         $user->save();
         $this->user = $user;
+
         try {
             return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $user);
         } catch (Exception $e) {
@@ -98,20 +107,22 @@ class LibreTime_Auth_Adaptor_FreeIpa implements Zend_Auth_Adapter_Interface {
     }
 
     /**
-     * return dummy object for internal auth handling
-     * 
+     * return dummy object for internal auth handling.
+     *
      * we need to build a dummpy object since the auth layer knows nothing about the db
      *
      * @return stdClass
      */
-    public function getResultRowObject() {
-        $o = new \stdClass;
+    public function getResultRowObject()
+    {
+        $o = new \stdClass();
         $o->id = $this->user->getId();
-        $o->username  = $this->user->getLogin();
-        $o->password  = $this->user->getPassword();
-        $o->real_name = implode(' ', array($this->user->getFirstName(), $this->user->getLastName()));
+        $o->username = $this->user->getLogin();
+        $o->password = $this->user->getPassword();
+        $o->real_name = implode(' ', [$this->user->getFirstName(), $this->user->getLastName()]);
         $o->type = $this->user->getType();
         $o->login = $this->user->getLogin();
+
         return $o;
     }
 }

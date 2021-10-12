@@ -1,8 +1,9 @@
 <?php
 
-class Application_Form_StationPodcast extends Zend_Form {
-
-    public function init() {
+class Application_Form_StationPodcast extends Zend_Form
+{
+    public function init()
+    {
         // Station Podcast form
         $podcastPreferences = new Application_Form_PodcastPreferences();
         $this->addSubForm($podcastPreferences, 'preferences_podcast');
@@ -12,8 +13,8 @@ class Application_Form_StationPodcast extends Zend_Form {
         $csrf_element->setValue($csrf_namespace->authtoken)
             ->setRequired('true')
             ->removeDecorator('HtmlTag')
-            ->removeDecorator('Label');
+            ->removeDecorator('Label')
+        ;
         $this->addElement($csrf_element);
     }
-
 }

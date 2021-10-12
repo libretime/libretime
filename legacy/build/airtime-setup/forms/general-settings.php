@@ -10,12 +10,12 @@
     <div id="generalFormBody">
         <div class="form-group">
             <label class="control-label" for="generalHost">Webserver Host</label>
-            <input required class="form-control" type="text" name="generalHost" id="generalHost" placeholder="Host" value="<?=$_SERVER["SERVER_NAME"]?>"/>
+            <input required class="form-control" type="text" name="generalHost" id="generalHost" placeholder="Host" value="<?php echo $_SERVER['SERVER_NAME']; ?>"/>
             <span class="glyphicon glyphicon-remove form-control-feedback"></span>
         </div>
         <div class="form-group">
             <label class="control-label" for="generalPort">Webserver Port</label>
-            <input required class="form-control" type="text" name="generalPort" id="generalPort" placeholder="Port" value="<?=$_SERVER["SERVER_PORT"]?>"/>
+            <input required class="form-control" type="text" name="generalPort" id="generalPort" placeholder="Port" value="<?php echo $_SERVER['SERVER_PORT']; ?>"/>
             <span class="glyphicon glyphicon-remove form-control-feedback"></span>
         </div>
         <input class="form-control" type="hidden" name="generalErr" id="generalErr" aria-describedby="helpBlock"/>

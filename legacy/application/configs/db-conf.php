@@ -5,6 +5,6 @@
  * yet available because airtime.conf hasn't been updated yet. This situation ends up throwing a lot of errors to stdout.
  * airtime*/
 
-require_once("conf.php");
+require_once 'conf.php';
 
 $CC_CONFIG = Config::getConfig();

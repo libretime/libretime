@@ -1,9 +1,11 @@
 <?php
 
-class LibreTime_Model_FreeIpa {
-
+class LibreTime_Model_FreeIpa
+{
     /**
-     * get userinfo in the format needed by the Auth Adaptor
+     * get userinfo in the format needed by the Auth Adaptor.
+     *
+     * @param mixed $username
      *
      * @return array
      */
@@ -19,13 +21,13 @@ class LibreTime_Model_FreeIpa {
         }
         $ldapUser = $ldapResults->getFirst();
 
-        $groupMap = array(
-            UTYPE_GUEST           => $config['ldap_groupmap_guest'],
-            UTYPE_HOST            => $config['ldap_groupmap_host'],
+        $groupMap = [
+            UTYPE_GUEST => $config['ldap_groupmap_guest'],
+            UTYPE_HOST => $config['ldap_groupmap_host'],
             UTYPE_PROGRAM_MANAGER => $config['ldap_groupmap_program_manager'],
-            UTYPE_ADMIN           => $config['ldap_groupmap_admin'],
-            UTYPE_SUPERADMIN      => $config['ldap_groupmap_superadmin'],
-        );
+            UTYPE_ADMIN => $config['ldap_groupmap_admin'],
+            UTYPE_SUPERADMIN => $config['ldap_groupmap_superadmin'],
+        ];
         $type = UTYPE_GUEST;
         foreach ($groupMap as $groupType => $group) {
             if (in_array($group, $ldapUser['memberof'])) {
@@ -39,36 +41,37 @@ class LibreTime_Model_FreeIpa {
         $mail = $ldapUser['mail'][0];
 
         // return full user info for auth adapter
-        return array(
-            'type'       => $type,
+        return [
+            'type' => $type,
             'first_name' => $firstName,
-            'last_name'  => $lastName,
-            'email'      => $mail,
-            'cell_phone' => '', # empty since I did not find it in ldap
-            'skype'      => '', # empty until we decide on a field
-            'jabber'     => ''  # empty until we decide on a field
-        );
+            'last_name' => $lastName,
+            'email' => $mail,
+            'cell_phone' => '', // empty since I did not find it in ldap
+            'skype' => '', // empty until we decide on a field
+            'jabber' => '',  // empty until we decide on a field
+        ];
     }
 
     /**
-     * Bind to ldap so we can fetch additional user info
+     * Bind to ldap so we can fetch additional user info.
      *
      * @return Zend_Ldap
      */
     private static function _getLdapConnection()
     {
         $config = Config::getConfig();
-       
-        $options = array(
-            'host'              => $config['ldap_hostname'],
-            'username'          => $config['ldap_binddn'],
-            'password'          => $config['ldap_password'],
-            'bindRequiresDn'    => true,
+
+        $options = [
+            'host' => $config['ldap_hostname'],
+            'username' => $config['ldap_binddn'],
+            'password' => $config['ldap_password'],
+            'bindRequiresDn' => true,
             'accountDomainName' => $config['ldap_account_domain'],
-            'baseDn'            => $config['ldap_basedn']
-        );
+            'baseDn' => $config['ldap_basedn'],
+        ];
         $conn = new Zend_Ldap($options);
         $conn->connect();
+
         return $conn;
     }
 }

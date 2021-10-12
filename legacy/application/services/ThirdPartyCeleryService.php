@@ -1,7 +1,7 @@
 <?php
 
-abstract class Application_Service_ThirdPartyCeleryService extends Application_Service_ThirdPartyService {
-
+abstract class Application_Service_ThirdPartyCeleryService extends Application_Service_ThirdPartyService
+{
     /**
      * @var string broker exchange name for third-party tasks
      */
@@ -13,24 +13,29 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
     protected static $_CELERY_TASKS;
 
     /**
-     * Execute a Celery task with the given name and data parameters
+     * Execute a Celery task with the given name and data parameters.
      *
      * @param string $taskName the name of the celery task to execute
-     * @param array $data      the data array to send as task parameters
-     * @param int $fileId      the unique identifier for the file involved in the task
-     *
-     * @return CeleryTasks the created task
+     * @param array  $data     the data array to send as task parameters
+     * @param int    $fileId   the unique identifier for the file involved in the task
      *
      * @throws Exception
+     *
+     * @return CeleryTasks the created task
      */
-    protected function _executeTask($taskName, $data, $fileId = null) {
+    protected function _executeTask($taskName, $data, $fileId = null)
+    {
         try {
-            $brokerTaskId = CeleryManager::sendCeleryMessage($taskName,
-                                                             static::$_CELERY_EXCHANGE_NAME,
-                                                             $data);
+            $brokerTaskId = CeleryManager::sendCeleryMessage(
+                $taskName,
+                static::$_CELERY_EXCHANGE_NAME,
+                $data
+            );
+
             return $this->_createTaskReference($fileId, $brokerTaskId, $taskName);
         } catch (Exception $e) {
-            Logging::error("Invalid request: " . $e->getMessage());
+            Logging::error('Invalid request: ' . $e->getMessage());
+
             throw $e;
         }
     }
@@ -44,21 +49,23 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
      *                             receive completed task messages
      * @param $taskName     string broker task name
      *
-     * @return CeleryTasks the created task
-     *
      * @throws Exception
      * @throws PropelException
+     *
+     * @return CeleryTasks the created task
      */
-    protected function _createTaskReference($fileId, $brokerTaskId, $taskName) {
+    protected function _createTaskReference($fileId, $brokerTaskId, $taskName)
+    {
         $trackReferenceId = $this->createTrackReference($fileId);
         $task = new CeleryTasks();
         $task->setDbTaskId($brokerTaskId);
         $task->setDbName($taskName);
-        $utc = new DateTimeZone("UTC");
-        $task->setDbDispatchTime(new DateTime("now", $utc));
+        $utc = new DateTimeZone('UTC');
+        $task->setDbDispatchTime(new DateTime('now', $utc));
         $task->setDbStatus(CELERY_PENDING_STATUS);
         $task->setDbTrackReference($trackReferenceId);
         $task->save();
+
         return $task;
     }
 
@@ -72,13 +79,14 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
      * @throws Exception
      * @throws PropelException
      */
-    public function updateTask($task, $status) {
+    public function updateTask($task, $status)
+    {
         $task->setDbStatus($status);
         $task->save();
     }
 
     /**
-     * Update a ThirdPartyTrackReferences object for a completed upload
+     * Update a ThirdPartyTrackReferences object for a completed upload.
      *
      * Manipulation and use of the track object is left up to child implementations
      *
@@ -87,23 +95,25 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
      * @param $result   mixed       Celery task result message
      * @param $status   string      Celery task status
      *
-     * @return ThirdPartyTrackReferences the updated ThirdPartyTrackReferences object
-     *
      * @throws Exception
      * @throws PropelException
+     *
+     * @return ThirdPartyTrackReferences the updated ThirdPartyTrackReferences object
      */
-    public function updateTrackReference($task, $trackId, $result, $status) {
+    public function updateTrackReference($task, $trackId, $result, $status)
+    {
         static::updateTask($task, $status);
         $ref = ThirdPartyTrackReferencesQuery::create()
-            ->findOneByDbId($trackId);
+            ->findOneByDbId($trackId)
+        ;
         if (is_null($ref)) {
             $ref = new ThirdPartyTrackReferences();
         }
         $ref->setDbService(static::$_SERVICE_NAME);
-        $utc = new DateTimeZone("UTC");
-        $ref->setDbUploadTime(new DateTime("now", $utc));
+        $utc = new DateTimeZone('UTC');
+        $ref->setDbUploadTime(new DateTime('now', $utc));
         $ref->save();
+
         return $ref;
     }
-
 }

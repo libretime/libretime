@@ -1,25 +1,26 @@
 <?php
 
-class Application_Service_PublishService {
-
+class Application_Service_PublishService
+{
     /**
      * @var array map of arbitrary source names to descriptive labels
      */
-    private static $SOURCES = array(
-        "station_podcast"   => "My Podcast"
-    );
+    private static $SOURCES = [
+        'station_podcast' => 'My Podcast',
+    ];
 
     /**
      * Publish or remove the file with the given file ID from the services
-     * specified in the request data (ie. the station podcast)
+     * specified in the request data (ie. the station podcast).
      *
-     * @param int $fileId   ID of the file to be published
+     * @param int   $fileId ID of the file to be published
      * @param array $data   request data containing what services to publish to
      */
-    public static function publish($fileId, $data) {
+    public static function publish($fileId, $data)
+    {
         foreach ($data as $k => $v) {
             $service = PublishServiceFactory::getService($k);
-            $service->$v($fileId);
+            $service->{$v}($fileId);
         }
     }
 
@@ -35,26 +36,27 @@ class Application_Service_PublishService {
      *
      * @return array array containing published and toPublish arrays. Has the form
      *               [
-     *                   "toPublish" => [
-     *                                      "source" => "label",
-     *                                      ...
-     *                                  ]
-     *                   "published" => [
-     *                                      "source" => "label",
-     *                                      ...
-     *                                  ]
+     *               "toPublish" => [
+     *               "source" => "label",
+     *               ...
+     *               ]
+     *               "published" => [
+     *               "source" => "label",
+     *               ...
+     *               ]
      *               ]
      */
-    public static function getSourceLists($fileId) {
-        $sources = array();
+    public static function getSourceLists($fileId)
+    {
+        $sources = [];
         foreach (self::$SOURCES as $source => $label) {
             $service = PublishServiceFactory::getService($source);
             $status = $service->getPublishStatus($fileId);
-            array_push($sources, array(
-                "source" => $source,
-                "label"  => _($label),
-                "status" => $status
-            ));
+            array_push($sources, [
+                'source' => $source,
+                'label' => _($label),
+                'status' => $status,
+            ]);
         }
 
         return $sources;
@@ -69,7 +71,8 @@ class Application_Service_PublishService {
      * @return bool true if the file has been published to any source,
      *              otherwise false
      */
-    public static function isPublished($fileId) {
+    public static function isPublished($fileId)
+    {
         foreach (self::$SOURCES as $source => $label) {
             $service = PublishServiceFactory::getService($source);
             // 1: published or -1: pending
@@ -77,7 +80,7 @@ class Application_Service_PublishService {
                 return true;
             }
         }
+
         return false;
     }
-
 }

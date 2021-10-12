@@ -1,6 +1,5 @@
 <?php
 
-
 class CORSHelper
 {
     public static function enableCrossOriginRequests(&$request, &$response)
@@ -9,11 +8,12 @@ class CORSHelper
         $origin = $request->getHeader('Origin');
         $allowedOrigins = self::getAllowedOrigins($request);
 
-        if ((!(preg_match("/https?:\/\/localhost/", $origin) === 1)) && ($origin != "") &&
-            (!in_array($origin, $allowedOrigins))
+        if ((!(preg_match('/https?:\/\/localhost/', $origin) === 1)) && ($origin != '')
+            && (!in_array($origin, $allowedOrigins))
         ) {
             //Don't allow CORS from other domains to prevent XSS.
             Logging::error("request origin '{$origin}' is not in allowed '" . implode(', ', $allowedOrigins) . "'!");
+
             throw new Zend_Controller_Action_Exception('Forbidden', 403);
         }
         //Allow AJAX requests from configured websites. We use this to allow other pages to use LibreTimes API.
@@ -23,14 +23,14 @@ class CORSHelper
     }
 
     /**
-     * Get all allowed origins
+     * Get all allowed origins.
      *
      * @param Request $request request object
      */
     public static function getAllowedOrigins($request)
     {
         $allowedCorsUrls = array_map(
-            function($v) { return trim($v); },
+            function ($v) { return trim($v); },
             explode(PHP_EOL, Application_Model_Preference::GetAllowedCorsUrls())
         );
 
@@ -41,8 +41,8 @@ class CORSHelper
 
         $portString = '';
         if (
-            $scheme == 'https' && $port != 443 ||
-            $scheme == 'http' && $port != 80
+            $scheme == 'https' && $port != 443
+            || $scheme == 'http' && $port != 80
         ) {
             $portString = sprintf(':%s', $port);
         }
@@ -52,8 +52,9 @@ class CORSHelper
             $host,
             $portString
         );
-        return array_merge($allowedCorsUrls, array(
-            $requestedUrl
-        ));
+
+        return array_merge($allowedCorsUrls, [
+            $requestedUrl,
+        ]);
     }
 }
