@@ -136,13 +136,13 @@ function checkAnalyzerService()
 }
 
 /**
- * Check if airtime-playout is currently running.
+ * Check if libretime-playout is currently running.
  *
- * @return bool true if airtime-playout is running
+ * @return bool true if libretime-playout is running
  */
 function checkPlayoutService()
 {
-    exec('pgrep -f airtime-playout', $out, $status);
+    exec('pgrep -f libretime-playout', $out, $status);
     if ($out > 0) {
         return posix_kill(rtrim($out[0]), 0);
     }
@@ -151,13 +151,13 @@ function checkPlayoutService()
 }
 
 /**
- * Check if airtime-liquidsoap is currently running.
+ * Check if libretime-liquidsoap is currently running.
  *
- * @return bool true if airtime-liquidsoap is running
+ * @return bool true if libretime-liquidsoap is running
  */
 function checkLiquidsoapService()
 {
-    exec('pgrep -f airtime-liquidsoap', $out, $status);
+    exec('pgrep -f libretime-liquidsoap', $out, $status);
     if ($out > 0) {
         return posix_kill(rtrim($out[0]), 0);
     }
@@ -166,9 +166,9 @@ function checkLiquidsoapService()
 }
 
 /**
- * Check if airtime-celery is currently running.
+ * Check if libretime-celery is currently running.
  *
- * @return bool true if airtime-celery is running
+ * @return bool true if libretime-celery is running
  */
 function checkCeleryService()
 {
