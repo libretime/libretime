@@ -100,7 +100,7 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract
 
         $parts = [];
         if (!$isGit) {
-            $parts = preg_split("/(\.|-)/", $version);
+            $parts = preg_split('/(\.|-)/', $version);
         }
         if (count($parts) < 3) {
             $parts = [0, 0, 0];

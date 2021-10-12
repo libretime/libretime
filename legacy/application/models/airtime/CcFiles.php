@@ -483,7 +483,7 @@ class CcFiles extends BaseCcFiles
     private static function stripTimeStampFromYearTag($metadata)
     {
         if (isset($metadata['year'])) {
-            if (preg_match("/^(\d{4})-(\d{2})-(\d{2})(?:\s+(\d{2}):(\d{2}):(\d{2}))?$/", $metadata['year'])) {
+            if (preg_match('/^(\d{4})-(\d{2})-(\d{2})(?:\s+(\d{2}):(\d{2}):(\d{2}))?$/', $metadata['year'])) {
                 $metadata['year'] = substr($metadata['year'], 0, 4);
             }
         }

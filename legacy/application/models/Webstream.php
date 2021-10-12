@@ -127,7 +127,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
         $di = null;
         $length = $parameters['length'];
-        $result = preg_match("/^(?:([0-9]{1,2})h)?\s*(?:([0-9]{1,2})m)?$/", $length, $matches);
+        $result = preg_match('/^(?:([0-9]{1,2})h)?\s*(?:([0-9]{1,2})m)?$/', $length, $matches);
 
         $invalid_date_interval = false;
         if ($result == 1 && count($matches) == 2) {
@@ -171,7 +171,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         //simple validator that checks to make sure that the url starts with
         //http(s),
         //and that the domain is at least 1 letter long
-        $result = preg_match("/^(http|https):\/\/.+/", $url, $matches);
+        $result = preg_match('/^(http|https):\/\/.+/', $url, $matches);
 
         $mime = null;
         $mediaUrl = null;
@@ -189,7 +189,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
                 }
                 $mediaUrl = self::getMediaUrl($url, $mime, $content_length_found);
 
-                if (preg_match("/(x-mpegurl)|(xspf\+xml)|(pls\+xml)|(x-scpls)/", $mime)) {
+                if (preg_match('/(x-mpegurl)|(xspf\+xml)|(pls\+xml)|(x-scpls)/', $mime)) {
                     list($mime, $content_length_found) = self::discoverStreamMime($mediaUrl);
                 }
             } catch (Exception $e) {
@@ -318,11 +318,11 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
     {
         if (preg_match('/x-mpegurl/', $mime)) {
             $media_url = self::getM3uUrl($url);
-        } elseif (preg_match("/xspf\+xml/", $mime)) {
+        } elseif (preg_match('/xspf\+xml/', $mime)) {
             $media_url = self::getXspfUrl($url);
-        } elseif (preg_match("/pls\+xml/", $mime) || preg_match('/x-scpls/', $mime)) {
+        } elseif (preg_match('/pls\+xml/', $mime) || preg_match('/x-scpls/', $mime)) {
             $media_url = self::getPlsUrl($url);
-        } elseif (preg_match("/(mpeg|ogg|audio\/aacp|audio\/aac)/", $mime)) {
+        } elseif (preg_match('/(mpeg|ogg|audio\/aacp|audio\/aac)/', $mime)) {
             if ($content_length_found) {
                 throw new Exception(_('Invalid webstream - This appears to be a file download.'));
             }

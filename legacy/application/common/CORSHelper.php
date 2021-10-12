@@ -8,7 +8,7 @@ class CORSHelper
         $origin = $request->getHeader('Origin');
         $allowedOrigins = self::getAllowedOrigins($request);
 
-        if ((!(preg_match("/https?:\/\/localhost/", $origin) === 1)) && ($origin != '')
+        if ((!(preg_match('/https?:\/\/localhost/', $origin) === 1)) && ($origin != '')
             && (!in_array($origin, $allowedOrigins))
         ) {
             //Don't allow CORS from other domains to prevent XSS.

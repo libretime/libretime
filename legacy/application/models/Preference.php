@@ -913,7 +913,7 @@ class Application_Model_Preference
 
     public static function SetLatestVersion($version)
     {
-        $pattern = "/^[0-9]+\.[0-9]+\.[0-9]+/";
+        $pattern = '/^[0-9]+\.[0-9]+\.[0-9]+/';
         if (preg_match($pattern, $version)) {
             self::setValue('latest_version', $version);
         }
@@ -932,8 +932,8 @@ class Application_Model_Preference
     public static function SetLatestLink($link)
     {
         $pattern = '#^(http|https|ftp)://' .
-                    "([a-zA-Z0-9]+\.)*[a-zA-Z0-9]+" .
-                    "(/[a-zA-Z0-9\-\.\_\~\:\?\#\[\]\@\!\$\&\'\(\)\*\+\,\;\=]+)*/?$#";
+            '([a-zA-Z0-9]+\.)*[a-zA-Z0-9]+' .
+            '(/[a-zA-Z0-9\-\.\_\~\:\?\#\[\]\@\!\$\&\'\(\)\*\+\,\;\=]+)*/?$#';
         if (preg_match($pattern, $link)) {
             self::setValue('latest_link', $link);
         }

@@ -850,7 +850,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                         $column = CcFilesPeer::getTableMap()->getColumnByPhpName($criteria2PeerMap[$d['sp_criteria_field']]);
                         // validation on type of column
                         if (in_array($d['sp_criteria_field'], ['length', 'cuein', 'cueout'])) {
-                            if (!preg_match("/^(\d{2}):(\d{2}):(\d{2})/", $d['sp_criteria_value'])) {
+                            if (!preg_match('/^(\d{2}):(\d{2}):(\d{2})/', $d['sp_criteria_value'])) {
                                 $element->addError(_("'Length' should be in '00:00:00' format"));
                                 $isValid = false;
                             }
@@ -868,7 +868,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                                     $isValid = false;
                                 }
                             } else {
-                                if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
+                                if (!preg_match('/(\d{4})-(\d{2})-(\d{2})/', $d['sp_criteria_value'])) {
                                     $element->addError(_('The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)'));
                                     $isValid = false;
                                 } else {
@@ -893,7 +893,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                                         $isValid = false;
                                     }
                                 } else {
-                                    if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_extra'])) {
+                                    if (!preg_match('/(\d{4})-(\d{2})-(\d{2})/', $d['sp_criteria_extra'])) {
                                         $element->addError(_('The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)'));
                                         $isValid = false;
                                     } else {
