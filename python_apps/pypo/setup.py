@@ -1,9 +1,11 @@
-import os
+from os import chdir
+from pathlib import Path
 
 from setuptools import setup
 
 # Change directory since setuptools uses relative paths
-os.chdir(os.path.dirname(os.path.realpath(__file__)))
+here = Path(__file__).parent
+chdir(here)
 
 setup(
     name="airtime-playout",
@@ -29,6 +31,7 @@ setup(
     ],
     python_requires=">=3.6",
     install_requires=[
+        f"api_clients @ file://localhost/{here.parent}/api_clients#egg=api_clients",
         "amqplib",
         "configobj",
         "defusedxml",
