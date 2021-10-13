@@ -7,5 +7,5 @@ PYLINT_ARG := liquidsoap pypo
 MYPY_ARG := liquidsoap pypo
 
 format: .format
-lint: .pylint .mypy
+lint: .format-check .pylint .mypy
 clean: .clean
