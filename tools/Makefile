@@ -8,6 +8,6 @@ MYPY_ARG = .
 PYTEST_ARG = .
 
 format: .format
-lint: .pylint .mypy
+lint: .format-check .pylint .mypy
 test: .pytest
 clean: .clean
