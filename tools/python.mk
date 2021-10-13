@@ -32,7 +32,13 @@ install: venv
 .format: $(VENV)
 	source $(VENV)/bin/activate
 	black .
-	isort --profile black .
+	isort . --profile black
+
+.PHONY: .format-check
+.format-check: $(VENV)
+	source $(VENV)/bin/activate
+	black . --check
+	isort . --profile black --check
 
 .PHONY: .pylint
 .pylint: $(VENV)
