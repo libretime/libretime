@@ -5,6 +5,7 @@ import time
 from unittest import mock
 
 import pytest
+
 from airtime_analyzer.filemover_analyzer import FileMoverAnalyzer
 
 from .conftest import AUDIO_FILENAME

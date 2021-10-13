@@ -3,6 +3,7 @@ from unittest import mock
 
 import mutagen
 import pytest
+
 from airtime_analyzer.metadata_analyzer import MetadataAnalyzer
 
 from .fixtures import FILE_INVALID_DRM, FILE_INVALID_TXT, FILES_TAGGED, FixtureMeta
