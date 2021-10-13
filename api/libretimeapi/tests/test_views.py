@@ -4,9 +4,10 @@ from datetime import datetime, timedelta, timezone
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.utils import dateparse
-from libretimeapi.views import FileViewSet
 from model_bakery import baker
 from rest_framework.test import APIRequestFactory, APITestCase
+
+from libretimeapi.views import FileViewSet
 
 
 class TestFileViewSet(APITestCase):

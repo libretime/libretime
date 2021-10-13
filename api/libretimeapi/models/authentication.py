@@ -4,6 +4,7 @@ from django.contrib import auth
 from django.contrib.auth.models import AbstractBaseUser, Permission
 from django.core.exceptions import PermissionDenied
 from django.db import models
+
 from libretimeapi.managers import UserManager
 from libretimeapi.permission_constants import GROUPS
 
