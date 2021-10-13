@@ -106,6 +106,16 @@ jobs:
   # into 'test' when the entire matrix succeeds.
   lint:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        context:
+          - analyzer
+          - api
+          - api_client
+          - playout
+          - worker
+
     container: ghcr.io/libretime/libretime-dev:buster
     defaults:
       run:
@@ -124,12 +134,8 @@ jobs:
           echo "::add-matcher::.github/annotations/pylint.json"
 
       - name: Lint
-        run: |
-          make -C api lint
-          make -C analyzer lint
-          make -C worker lint
-          make -C api_client lint
-          make -C playout lint
+        run: make lint
+        working-directory: ${{ matrix.context }}
 
   test:
     runs-on: ubuntu-latest
