@@ -1,4 +1,5 @@
 from django.urls import include, path
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework import routers
 
 from .views import *
@@ -46,6 +47,12 @@ router.register("track-types", TrackTypeViewSet)
 
 urlpatterns = [
     path("api/v2/", include(router.urls)),
+    path("api/v2/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "api/v2/schema/swagger-ui/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
     path("api/v2/version/", version),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 ]

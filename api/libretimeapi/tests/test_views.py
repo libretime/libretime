@@ -164,3 +164,56 @@ class TestScheduleViewSet(APITestCase):
         self.assertEqual(len(result), 1)
         self.assertEqual(dateparse.parse_datetime(result[0]["ends"]), scheduleItem.ends)
         self.assertEqual(dateparse.parse_duration(result[0]["cue_out"]), f.cueout)
+
+    def test_schedule_item_range(self):
+        music_dir = baker.make(
+            "libretimeapi.MusicDir",
+            directory=os.path.join(os.path.dirname(__file__), "resources"),
+        )
+        f = baker.make(
+            "libretimeapi.File",
+            directory=music_dir,
+            mime="audio/mp3",
+            filepath="song.mp3",
+            length=timedelta(seconds=40.86),
+            cuein=timedelta(seconds=0),
+            cueout=timedelta(seconds=40.8131),
+        )
+        filter_point = datetime.now(tz=timezone.utc)
+
+        show = baker.make(
+            "libretimeapi.ShowInstance",
+            starts=filter_point - timedelta(minutes=5),
+            ends=filter_point + timedelta(minutes=5),
+        )
+        schedule_item = baker.make(
+            "libretimeapi.Schedule",
+            starts=filter_point,
+            ends=filter_point + f.length,
+            cue_out=f.cueout,
+            instance=show,
+            file=f,
+        )
+        previous_item = baker.make(
+            "libretimeapi.Schedule",
+            starts=filter_point - timedelta(minutes=5),
+            ends=filter_point - timedelta(minutes=5) + f.length,
+            cue_out=f.cueout,
+            instance=show,
+            file=f,
+        )
+        self.client.credentials(HTTP_AUTHORIZATION="Api-Key {}".format(self.token))
+        range_start = (filter_point - timedelta(minutes=1)).isoformat(
+            timespec="seconds"
+        )
+        range_end = (filter_point + timedelta(minutes=1)).isoformat(timespec="seconds")
+        response = self.client.get(
+            self.path, {"starts__range": "{},{}".format(range_start, range_end)}
+        )
+        self.assertEqual(response.status_code, 200)
+        result = response.json()
+        # The previous_item should be filtered out and not returned
+        self.assertEqual(len(result), 1)
+        self.assertEqual(
+            dateparse.parse_datetime(result[0]["starts"]), schedule_item.starts
+        )

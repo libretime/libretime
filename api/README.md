@@ -15,8 +15,8 @@ restarting:
 
 Connections to the API are proxied through the Apache web server by default.
 Endpoint exploration and documentation is available from
-`http://example.com/api/v2/`, where `example.com` is the URL for the LibreTime
-instance.
+`http://example.com/api/v2/schema/swagger-ui/`, where `example.com` is the URL
+for the LibreTime instance.
 
 ### Development
 
