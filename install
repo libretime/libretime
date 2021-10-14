@@ -999,7 +999,7 @@ verbose "Detected Python version: $python_version"
 pip_cmd="$python_bin -m pip"
 
 verbose "\n * Installing necessary python services..."
-loudCmd "$pip_cmd install setuptools --upgrade"
+loudCmd "$pip_cmd install --upgrade setuptools~=58.0"
 # Required here because PyGObject requires it, but it is installed after PyGObject
 # when pip parses the setup.py file in airtime_analyzer
 loudCmd "$pip_cmd install pycairo==1.19.1"
