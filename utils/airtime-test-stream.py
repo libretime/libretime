@@ -30,7 +30,7 @@ def printUsage():
 
 def find_liquidsoap_binary():
     """
-    With libretime 3.0 we are no longer depending upon the airtime-liquidsoap binary
+    With libretime 3.0 we are no longer depending upon the libretime-liquidsoap binary
     but use a generic install of liquidsoap. This takes care of checking if it is on the
     path and will lead to an error otherwise.
     """

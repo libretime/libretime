@@ -1015,7 +1015,7 @@ if [ ! -d /var/log/airtime ]; then
 
   verbose "\n * Copying logrotate files..."
   loudCmd "cp ${AIRTIMEROOT}/legacy/build/airtime-php.logrotate /etc/logrotate.d/airtime-php"
-  loudCmd "cp ${AIRTIMEROOT}/python_apps/pypo/liquidsoap/airtime-liquidsoap.logrotate /etc/logrotate.d/airtime-liquidsoap"
+  loudCmd "cp ${AIRTIMEROOT}/python_apps/pypo/liquidsoap/logrotate.conf /etc/logrotate.d/libretime-liquidsoap"
 fi
 
 verbose "\n * Installing API client..."

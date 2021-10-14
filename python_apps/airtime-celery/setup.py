@@ -6,7 +6,7 @@ from setuptools import setup
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 setup(
-    name="airtime-celery",
+    name="libretime-celery",
     version="0.1",
     description="LibreTime Celery",
     author="LibreTime Contributors",
