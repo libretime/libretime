@@ -92,7 +92,7 @@ Please reference these links for further information on how to install from pack
 
 ## Updating
 
-See [the docs](http://libretime.org/manual/upgrading/) for complete information on updating. Please ensure that you have proper [backups](http://libretime.org/manual/backing-up-the-server/) and a rollback scenario in place before updating.
+See [the docs](https://libretime.org/docs/upgrading) for complete information on updating. Please ensure that you have proper [backups](https://libretime.org/docs/backing-up-the-server) and a rollback scenario in place before updating.
 If the update does not go smoothly, it may cause significant downtime, so you should always have a fallback system available during the update to ensure broadcast continuity.
 
 If you installed from GitHub you can `git pull` in your local working copy and re-run the `./install` script with the same `--web-root` and `--web-user` arguments you used during the initial install. Tarball users can leave out the git pull part and just call the new version of the install script.
