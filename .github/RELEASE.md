@@ -121,6 +121,26 @@ sudo rm -rf \
   /var/run/airtime \
   /run/airtime \
   /usr/share/airtime/php/airtime_mvc
+
+# Remove old Python scripts
+sudo rm -f \
+  /usr/bin/sqlformat \
+  /usr/bin/django-admin \
+  /usr/bin/django-admin.py \
+  /usr/bin/markdown_py \
+  /usr/bin/libretime-api \
+  /usr/bin/mutagen-inspect \
+  /usr/bin/mutagen-pony \
+  /usr/bin/mid3cp \
+  /usr/bin/mid3iconv \
+  /usr/bin/mid3v2 \
+  /usr/bin/moggsplit \
+  /usr/bin/collectiongain \
+  /usr/bin/replaygain \
+  /usr/bin/libretime-analyzer \
+  /usr/bin/airtime-playout \
+  /usr/bin/pyponotify \
+  /usr/bin/airtime-liquidsoap
 ```
 
 <a id="issues-3.0.0-alpha.10">
