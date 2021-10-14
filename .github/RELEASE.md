@@ -31,6 +31,7 @@ Please report new issues and/or feature requests in [the issue tracker](https://
 - Support `Authorization: Api-Key` header in API v1
 - Use pip for LibreTime Python package installation
 - Move Python scripts into `/usr/local/bin`
+- Add REST API v2
 
 <a id="bugfixes-3.0.0-alpha.10">
 
