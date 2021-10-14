@@ -1,11 +1,17 @@
 SHELL = bash
 
-all: vendor
+all: vendor locale-build
 
 PHP-CS-FIXER = tools/vendor/bin/php-cs-fixer
 $(PHP-CS-FIXER):
 	mkdir -p tools
 	composer require --working-dir=tools friendsofphp/php-cs-fixer
+
+include locale/Makefile
+
+locale-update: .locale-update
+locale-build:
+	$(MAKE) -C locale build
 
 vendor:
 	composer install --no-progress --no-interaction $(COMPOSER_ARGS)
