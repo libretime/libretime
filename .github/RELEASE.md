@@ -109,9 +109,9 @@ sudo pip3 uninstall \
 
 # Remove old entrypoints using
 sudo rm -f \
-  /usr/{bin,local/bin}/airtime-liquidsoap \
-  /usr/{bin,local/bin}/airtime-playout \
-  /usr/{bin,local/bin}/pyponotify
+  /usr/bin/airtime-liquidsoap \
+  /usr/bin/airtime-playout \
+  /usr/bin/pyponotify
 
 # Remove old config files
 sudo rm -f \
