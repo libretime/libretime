@@ -44,16 +44,15 @@ jobs:
       - run: make all
         working-directory: tools
 
-  php-cs-fixer:
+  lint-legacy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: shivammathur/setup-php@v2
         with:
           php-version: 7.4
-      - name: Run php-cs-fixer
-        run: |
-          make php-cs-fixer
+      - name: Lint
+        run: make lint
         working-directory: legacy
 
   test-legacy:
