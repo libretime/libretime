@@ -10,17 +10,17 @@ Please report new issues and/or feature requests in [the issue tracker](https://
 
 ## Table of Contents
 
-- <a href="#features-3.0.0-alpha.10">Features</a>
-- <a href="#bugfixes-3.0.0-alpha.10">Bugfixes</a>
-- <a href="#deprecated-3.0.0-alpha.10">Deprecated Features</a>
-- <a href="#contributors-3.0.0-alpha.10">Contributors</a>
-- <a href="#install-3.0.0-alpha.10">Installation</a>
-- <a href="#update-3.0.0-alpha.10">Updating</a>
-- <a href="#issues-3.0.0-alpha.10">Known Issues</a>
-  - <a href="#issues-installer-issues-3.0.0-alpha.10">Installer Issues</a>
-  - <a href="#issues-watched-3.0.0-alpha.10">No watched folder support</a>
-  - <a href="#issues-line-in-3.0.0-alpha.10">No Line In recording support</a>
-  - <a href="#issues-no-locale-3.0.0-alpha.10">Playout won't work if locale is missing</a>
+- [Features](#features-3.0.0-alpha.10)
+- [Bugfixes](#bugfixes-3.0.0-alpha.10)
+- [Deprecated Features](#deprecated-3.0.0-alpha.10)
+- [Contributors](#contributors-3.0.0-alpha.10")
+- [Installation](#install-3.0.0-alpha.10")
+- [Updating](#update-3.0.0-alpha.10")
+- [Known Issues](#issues-3.0.0-alpha.10")
+  - [Installer Issues](#issues-installer-issues-3.0.0-alpha.10")
+  - [No watched folder support](#issues-watched-3.0.0-alpha.10")
+  - [No Line In recording support](#issues-line-in-3.0.0-alpha.10")
+  - [Playout won't work if locale is missing](#issues-no-locale-3.0.0-alpha.10")
 
 <a id="features-3.0.0-alpha.10"/>
 
@@ -34,7 +34,7 @@ Please report new issues and/or feature requests in [the issue tracker](https://
 
 <a id="bugfixes-3.0.0-alpha.10">
 
-## Bugfixes
+## Bug Fixes
 
 - Renamed airtime_analyzer to libretime-analyzer
 - Prevent autoload playlists running on deleted show instances
