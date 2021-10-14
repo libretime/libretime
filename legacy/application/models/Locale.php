@@ -2,7 +2,7 @@
 
 final class Application_Model_Locale
 {
-    private static $domains = ['airtime'];
+    private static $domains = ['libretime'];
 
     public static $locales = [
         'en_CA' => 'English (Canada)',
@@ -55,7 +55,7 @@ final class Application_Model_Locale
             bind_textdomain_codeset($domain, $codeset);
         }
 
-        textdomain('airtime');
+        textdomain('libretime');
     }
 
     /**
