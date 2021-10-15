@@ -17,7 +17,7 @@ Please report new issues and/or feature requests in [the issue tracker](https://
 - [Installation](#install-3.0.0-alpha.10")
 - [Updating](#update-3.0.0-alpha.10")
 - [Known Issues](#issues-3.0.0-alpha.10")
-  - [Installer Issues](#issues-installer-issues-3.0.0-alpha.10")
+  - [Interface Customization Issues](#issues-interface-issues-3.0.0-alpha.10")
   - [No watched folder support](#issues-watched-3.0.0-alpha.10")
   - [No Line In recording support](#issues-line-in-3.0.0-alpha.10")
   - [Playout won't work if locale is missing](#issues-no-locale-3.0.0-alpha.10")
@@ -31,7 +31,7 @@ Please report new issues and/or feature requests in [the issue tracker](https://
 - Support `Authorization: Api-Key` header in API v1
 - Use pip for LibreTime Python package installation
 - Move Python scripts into `/usr/local/bin`
-- Add REST API v2
+- Add REST API v2 (unstable and subject to change)
 
 <a id="bugfixes-3.0.0-alpha.10">
 
@@ -88,6 +88,8 @@ We are preparing packages for supported distros and you can take those for a spi
 - [CentOS packages](https://build.opensuse.org/package/show/home:radiorabe:airtime/libretime)
 
 Please reference these links for further information on how to install from packages. The install docs will get updated to show how to install packages once we have validated that the packages work properly and when the packages are available from a repository allowing you to automate updating to a new version.
+
+If you want to skip the installer GUI completely you can configure LibreTime using `legacy/build/airtime.example.conf` as an template. Due to some python/PHP differences you must remove all comments from the example to use it 😞. You'll also have to create some folder structures manually and check if the music dir got properly created directly in the database. Referencing a second `install -fiap` install on a non productive system for reference can help with this type of bootstrap.
 
 <a id="update-3.0.0-alpha.10">
 
@@ -150,31 +152,29 @@ sudo rm -f \
 
 The following issues may need a workaround for the time being. Please search the [issues](https://github.com/LibreTime/libretime/issues) before reporting problems not listed below.
 
-<a id="issues-installer-issues-3.0.0-alpha.10">
+<a id="issues-interface-issues-3.0.0-alpha.10">
 
-### Installer Issues
+### Interface Customization Issues
 
 The UI works best if you don't use it in an opinionated fashion and change just the bare minimal.
-
-If you want to skip the installer GUI completely you can configure LibreTime using `legacy/build/airtime.example.conf` as an template. Due to some python/PHP differences you must remove all comments from the example to use it 😞. You'll also have to create some folder structures manually and check if the music dir got properly created directly in the database. Referencing a second `install -fiap` install on a non productive system for reference can help with this type of bootstrap.
 
 <a id="issues-watched-3.0.0-alpha.10">
 
 ### No watched folder support
 
-Currently LibreTime does not support watching folders. Uploading files through the web interface works fine and can be automated via a REST API. Re-implementing watched folder support is on the roadmap. Please consider helping out with the code to help speed things along if you want to use the feature.
+Currently LibreTime does not support watching folders. Uploading files through the web interface works fine and can be automated via a REST API. Re-implementing watched folder support is on the roadmap. Please consider helping out with the code to help speed things along if you want to use the feature. This is tracked in [#70](https://github.com/LibreTime/libretime/issues/70).
 
 <a id="issues-line-in-3.0.0-alpha.10">
 
 ### No line in support
 
-This feature went missing from LibreTime due to the fact that we based our code off of the saas-dev branch of legacy upstream and support for recording hasn't been ported to the new airtime analyzer ingest system. #42 currently tracks the progress being made on line in recording.
+This feature went missing from LibreTime due to the fact that we based our code off of the saas-dev branch of legacy upstream and support for recording hasn't been ported to the new airtime analyzer ingest system. #42 currently tracks the progress being made on line in recording. This is tracked in [#42](https://github.com/LibreTime/libretime/issues/42).
 
 <a id="issues-no-locale-3.0.0-alpha.10">
 
 ### Playout won't work if locale is missing
 
-Some minimal OS installs do not have a default locale configured. This only seems to affect some VPS installs as they often do not have a locale setup in the default images provided.
+Some minimal OS installs do not have a default locale configured. This only seems to affect some VPS installs as they often do not have a locale setup in the default images provided. This is tracked in [#317](https://github.com/LibreTime/libretime/issues/317).
 
 You can set up the locale using a combination of the following commands. You might also want to consult the documentation of your VPS provider as it may contain an official way to set up locales when provisioning a VPS.
 
