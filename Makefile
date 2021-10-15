@@ -17,3 +17,20 @@ shell-check:
 
 VERSION:
 	tools/version.sh
+
+# TODO: Add --ignore-platform-reqs to composer install
+.PHONY: tarball
+tarball: VERSION
+	$(MAKE) -C legacy build
+	cd .. && tar -czf libretime-$(shell cat VERSION | tr -d [:blank:]).tar.gz \
+		--owner=root --group=root \
+		--exclude-vcs \
+		--exclude .codespellignore \
+		--exclude .git* \
+		--exclude .pre-commit-config.yaml \
+		--exclude dev_tools \
+		--exclude jekyll.sh \
+		--exclude legacy/vendor/phing \
+		--exclude legacy/vendor/simplepie/simplepie/tests \
+		libretime
+	mv ../libretime-*.tar.gz .
