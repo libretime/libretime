@@ -5,13 +5,13 @@ final class Application_Model_Locale
     private static $domains = ['libretime'];
 
     public static $locales = [
-        'en_CA' => 'English (Canada)',
-        'en_GB' => 'English (Britain)',
         'en_US' => 'English (USA)',
         'cs_CZ' => 'Český',
-        'de_DE' => 'Deutsch',
         'de_AT' => 'Deutsch (Österreich)',
+        'de_DE' => 'Deutsch',
         'el_GR' => 'Ελληνικά',
+        'en_CA' => 'English (Canada)',
+        'en_GB' => 'English (Britain)',
         'es_ES' => 'Español',
         'fr_FR' => 'Français',
         'hr_HR' => 'Hrvatski',
