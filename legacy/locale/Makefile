@@ -1,9 +1,12 @@
 .PHONY: .locale-update build
-.DEFAULT: build
+.ONESHELL:
+
+all: clean build
 
 SHELL = bash
 
 DOMAIN = libretime
+ISSUE_TRACKER = https://github.com/LibreTime/libretime/issues
 PO_FILE = $(DOMAIN).po
 PO_FILES = $(wildcard */LC_MESSAGES/$(PO_FILE))
 MO_FILES = $(PO_FILES:.po=.mo)
@@ -11,6 +14,7 @@ MO_FILES = $(PO_FILES:.po=.mo)
 SRC = application build public
 
 XGETTEXT_ARGS = --default-domain=$(DOMAIN) \
+				--msgid-bugs-address=$(ISSUE_TRACKER) \
 				--language=php \
 				--from-code=UTF-8 \
 				--no-wrap \
@@ -21,8 +25,8 @@ MSGMERGE_ARGS = --no-fuzzy-matching \
 				--no-wrap \
 				--sort-by-file
 
-# This target is run by another Makefile
-.locale-update:
+update:
+	cd ..
 	find $(SRC) -name "*.phtml" -o -name "*.php" -type f -print0 | xargs -0 xgettext $(XGETTEXT_ARGS)
 	sed -i 's/CHARSET/UTF-8/g' $(PO_FILE)
 	find ./locale -name $(PO_FILE) -exec msgmerge $(MSGMERGE_ARGS) "{}" $(PO_FILE) \;
@@ -32,3 +36,6 @@ MSGMERGE_ARGS = --no-fuzzy-matching \
 	msgfmt $< -o $@
 
 build: $(MO_FILES)
+
+clean:
+	git clean -xdf
