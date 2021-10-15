@@ -127,23 +127,23 @@ sudo rm -rf \
 
 # Remove old Python scripts
 sudo rm -f \
-  /usr/bin/sqlformat \
+  /usr/bin/airtime-liquidsoap \
+  /usr/bin/airtime-playout \
+  /usr/bin/libretime-analyzer \
+  /usr/bin/libretime-api \
+  /usr/bin/collectiongain \
   /usr/bin/django-admin \
   /usr/bin/django-admin.py \
   /usr/bin/markdown_py \
-  /usr/bin/libretime-api \
-  /usr/bin/mutagen-inspect \
-  /usr/bin/mutagen-pony \
   /usr/bin/mid3cp \
   /usr/bin/mid3iconv \
   /usr/bin/mid3v2 \
   /usr/bin/moggsplit \
-  /usr/bin/collectiongain \
-  /usr/bin/replaygain \
-  /usr/bin/libretime-analyzer \
-  /usr/bin/airtime-playout \
+  /usr/bin/mutagen-inspect \
+  /usr/bin/mutagen-pony \
   /usr/bin/pyponotify \
-  /usr/bin/airtime-liquidsoap
+  /usr/bin/replaygain \
+  /usr/bin/sqlformat
 ```
 
 <a id="issues-3.0.0-alpha.10">
