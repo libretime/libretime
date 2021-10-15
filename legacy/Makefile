@@ -30,4 +30,4 @@ lint: $(PHP-CS-FIXER)
 
 .PHONY: build
 build:
-	COMPOSER_ARGS=--no-dev $(MAKE)
+	COMPOSER_ARGS="--no-dev --ignore-platform-reqs" $(MAKE)
