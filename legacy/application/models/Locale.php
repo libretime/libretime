@@ -19,11 +19,13 @@ final class Application_Model_Locale
         'it_IT' => 'Italiano',
         'ja_JP' => '日本語',
         'ko_KR' => '한국어',
+        // 'nl_NL' => '',
         'pl_PL' => 'Polski',
         'pt_BR' => 'Português (Brasil)',
         'ru_RU' => 'Русский',
         'sr_RS' => 'Српски (Ћирилица)',
         'sr_RS@latin' => 'Srpski (Latinica)',
+        // 'tr_TR' => '',
         'zh_CN' => '简体中文',
     ];
 
