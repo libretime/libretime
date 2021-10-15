@@ -1,19 +1,27 @@
-.PHONY: build php-cs-fixer
-
 SHELL = bash
 
-vendor:
-	composer install --no-progress --no-interaction
+all: vendor
 
+PHP-CS-FIXER = tools/vendor/bin/php-cs-fixer
+$(PHP-CS-FIXER):
+	mkdir -p tools
+	composer require --working-dir=tools friendsofphp/php-cs-fixer
+
+vendor:
+	composer install --no-progress --no-interaction $(COMPOSER_ARGS)
+
+.PHONY: test
 test: vendor
 	cd tests && ../vendor/bin/phpunit
 
+.PHONY: format
+format: $(PHP-CS-FIXER)
+	$(PHP-CS-FIXER) fix
+
+.PHONY: lint
+lint: $(PHP-CS-FIXER)
+	$(PHP-CS-FIXER) fix --dry-run --diff
+
+.PHONY: build
 build:
-	composer install --no-progress --no-interaction --no-dev
-
-tools/php-cs-fixer:
-	mkdir -p tools/php-cs-fixer
-	composer require --working-dir=tools/php-cs-fixer friendsofphp/php-cs-fixer
-
-php-cs-fixer: tools/php-cs-fixer
-	tools/php-cs-fixer/vendor/bin/php-cs-fixer fix
+	COMPOSER_ARGS=--no-dev $(MAKE)
