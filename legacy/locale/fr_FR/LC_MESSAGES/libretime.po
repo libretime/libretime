@@ -1,24 +1,25 @@
-# LANGUAGE (xx_XX) translation for Airtime.
+# Translation for LibreTime.
 # Copyright (C) 2012 Sourcefabric
-# This file is distributed under the same license as the Airtime package.
+# Copyright (C) 2021 LibreTime
+# This file is distributed under the same license as the LibreTime package.
 #
 # Translators:
-# AlbertFR <albert.bruc.ab@gmail.com>, 2014
+# Albert <albert.bruc.ab@gmail.com>, 2014
 # Sourcefabric <contact@sourcefabric.org>, 2012
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Airtime\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-06 10:49+0000\n"
+"Project-Id-Version: LibreTime\n"
+"Report-Msgid-Bugs-To: https://github.com/LibreTime/libretime/issues\n"
+"POT-Creation-Date: 2021-10-15 18:53+0200\n"
 "PO-Revision-Date: 2019-10-17 14:19+0200\n"
-"Last-Translator: A\n"
-"Language-Team: French (France) (http://www.transifex.com/sourcefabric/airtime/language/fr_FR/)\n"
+"Last-Translator: Albert <albert.bruc.ab@gmail.com>\n"
+"Language-Team: French (France)\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.1\n"
 
 #: legacy/application/views/scripts/login/password-restore-after.phtml:3
 msgid "Email Sent!"
