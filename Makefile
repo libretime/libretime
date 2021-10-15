@@ -18,7 +18,6 @@ shell-check:
 VERSION:
 	tools/version.sh
 
-# TODO: Add --ignore-platform-reqs to composer install
 .PHONY: tarball
 tarball: VERSION
 	$(MAKE) -C legacy build
