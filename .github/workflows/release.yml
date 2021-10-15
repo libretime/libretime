@@ -19,34 +19,13 @@ jobs:
           sudo apt-get update
           DEBIAN_FRONTEND=noninteractive sudo apt-get install -y gettext
 
-      - name: Read file contents
-        id: release_notes_file
-        uses: andstor/file-reader-action@v1
-        with:
-          path: ./.github/RELEASE.md
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: ${{ steps.release_notes_file.outputs.contents }}
-          draft: true
-          prerelease: true
-
       - name: Build tarball
         run: make tarball
 
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: libretime-${{ github.ref }}.tar.gz
-          asset_name: libretime-${{ github.ref }}.tar.gz
-          asset_content_type: application/tgz
+          body_path: .github/RELEASE.md
+          draft: true
+          prerelease: true
+          files: libretime-*.tar.gz
