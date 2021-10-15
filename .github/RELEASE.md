@@ -103,13 +103,13 @@ If you installed from GitHub you can `git pull` in your local working copy and r
 Once the update has taken place, you will need to run the following commands to clean up old scripts and configuration:
 
 ```
-# Remove the old packages using
+# Remove the old packages
 sudo pip3 uninstall \
   airtime-playout \
   airtime-celery \
   api_clients
 
-# Remove old entrypoints using
+# Remove old entrypoints
 sudo rm -f \
   /usr/bin/airtime-liquidsoap \
   /usr/bin/airtime-playout \
@@ -125,7 +125,7 @@ sudo rm -rf \
   /run/airtime \
   /usr/share/airtime/php/airtime_mvc
 
-# Remove old Python scripts
+# Remove old python libraries entrypoints
 sudo rm -f \
   /usr/bin/airtime-liquidsoap \
   /usr/bin/airtime-playout \
