@@ -15,14 +15,16 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/LibreTime/libretime/issues\n"
 "POT-Creation-Date: 2021-10-15 19:56+0200\n"
-"PO-Revision-Date: 2017-03-22 07:49-0400\n"
-"Last-Translator: Lucas Bickel <hairmare@purplehaze.ch>\n"
-"Language-Team: German (Germany)\n"
+"PO-Revision-Date: 2021-10-17 08:09+0000\n"
+"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/libretime/legacy/"
+"de/>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.9-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -317,7 +319,7 @@ msgstr "Lettisch"
 
 #: application/common/LocaleHelper.php:92
 msgid "Malagasy"
-msgstr " Madagassisch"
+msgstr "Madagassisch"
 
 #: application/common/LocaleHelper.php:93
 msgid "Maori"
@@ -365,7 +367,7 @@ msgstr "Nepalesisch"
 
 #: application/common/LocaleHelper.php:104
 msgid "Dutch"
-msgstr "Holländisch"
+msgstr "Niederländisch"
 
 #: application/common/LocaleHelper.php:105
 msgid "Norwegian"
@@ -381,7 +383,7 @@ msgstr "Oriya"
 
 #: application/common/LocaleHelper.php:108
 msgid "Punjabi"
-msgstr "Pundjabisch"
+msgstr "Pandschabi"
 
 #: application/common/LocaleHelper.php:109
 msgid "Polish"
@@ -585,7 +587,7 @@ msgstr ""
 
 #: application/common/UsabilityHints.php:65
 msgid "Upload some tracks below to add them to your library!"
-msgstr "Lade Tracks hoch um sie deiner Bibliotheke hinzuzufügen!"
+msgstr "Lade Tracks hoch, um sie deiner Bibliotheke hinzuzufügen!"
 
 #: application/common/UsabilityHints.php:69
 #, php-format
@@ -594,7 +596,8 @@ msgstr "Es sieht aus als ob du noch keine Audiodateien hochgeladen hast. %sAudio
 
 #: application/common/UsabilityHints.php:76
 msgid "Click the 'New Show' button and fill out the required fields."
-msgstr "Klicke den 'Neue Sendung' Knopf und fülle die erforderlichen Felder aus."
+msgstr ""
+"Klicke den „Neue Sendung“-Knopf und fülle die erforderlichen Felder aus."
 
 #: application/common/UsabilityHints.php:80
 #, php-format
@@ -614,7 +617,9 @@ msgstr ""
 
 #: application/common/UsabilityHints.php:96
 msgid "To start broadcasting, click on the current show and select 'Schedule Tracks'"
-msgstr "Klicke auf die aktuelle Sendung und wähle 'Sendungsinhalte verwalten' um mit der Übertragung zu beginnen."
+msgstr ""
+"Klicke auf die aktuelle Sendung und wähle „Sendungsinhalte verwalten“, um "
+"mit der Übertragung zu beginnen."
 
 #: application/common/UsabilityHints.php:100
 #, php-format
@@ -623,7 +628,7 @@ msgstr ""
 
 #: application/common/UsabilityHints.php:107
 msgid "Click on the show starting next and select 'Schedule Tracks'"
-msgstr "Klicke auf die nächste Sendung und wähle 'Sendungsinhalte verwalten'"
+msgstr "Klicke auf die nächste Sendung und wähle „Sendungsinhalte verwalten“"
 
 #: application/common/UsabilityHints.php:111
 #, php-format
@@ -911,12 +916,12 @@ msgstr "Löschen"
 #: application/controllers/LibraryController.php:151
 #: application/controllers/LibraryController.php:173
 msgid "Edit..."
-msgstr "Editieren..."
+msgstr "Bearbeiten …"
 
 #: application/controllers/LibraryController.php:131
 #: application/controllers/ScheduleController.php:736
 msgid "Download"
-msgstr "Download"
+msgstr "Herunterladen"
 
 #: application/controllers/LibraryController.php:135
 msgid "Duplicate Playlist"
