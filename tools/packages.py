@@ -2,18 +2,26 @@
 
 from argparse import ArgumentParser
 from configparser import ConfigParser
+from os import PathLike
 from pathlib import Path
-from typing import Iterator, Set
+from typing import Iterator, List, Set
 
 DEFAULT_PACKAGES_FILENAME = "packages.ini"
 FORMATS = ("list", "line")
-SYSTEMS = ("buster", "bullseye", "bionic", "focal")
+DISTRIBUTIONS = ("buster", "bullseye", "bionic", "focal")
 
 SETTINGS_SECTION = "=settings"
 DEVELOPMENT_SECTION = "=development"
 
 
-def load_packages(raw: str, distribution: str, development: bool = False) -> Set[str]:
+def load_packages(
+    raw: str,
+    distribution: str,
+    development: bool = False,
+) -> Set[str]:
+    if distribution not in DISTRIBUTIONS:
+        raise ValueError(f"Invalid distribution '{distribution}'")
+
     manager = ConfigParser(default_section=SETTINGS_SECTION)
     manager.read_string(raw)
 
@@ -29,9 +37,11 @@ def load_packages(raw: str, distribution: str, development: bool = False) -> Set
     return packages
 
 
-def list_packages_files(paths: str) -> Iterator[Path]:
-    for path in paths:
-        path = Path(path)
+def list_packages_files(
+    paths: List[PathLike],
+) -> Iterator[Path]:
+    for path_like in paths:
+        path = Path(path_like)
 
         if path.is_dir():
             path = path / DEFAULT_PACKAGES_FILENAME
@@ -42,7 +52,11 @@ def list_packages_files(paths: str) -> Iterator[Path]:
         yield path
 
 
-def list_packages(paths: str, distribution: str, development: bool = False) -> Set[str]:
+def list_packages(
+    paths: List[PathLike],
+    distribution: str,
+    development: bool = False,
+) -> Set[str]:
     packages = set()
     for package_file in list_packages_files(paths):
         raw = package_file.read_text()
@@ -68,7 +82,7 @@ def run():
     )
     parser.add_argument(
         "distribution",
-        choices=SYSTEMS,
+        choices=DISTRIBUTIONS,
         help="list packages for the given distribution.",
     )
     parser.add_argument(
