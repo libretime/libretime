@@ -4,13 +4,23 @@ from django.conf import settings
 from django.db.models import F
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
-from rest_framework import status, viewsets
+from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view
+from rest_framework import fields, status, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from .permissions import IsAdminOrOwnUser
 from .serializers import *
+
+FILTER_NUMERICAL_LOOKUPS = [
+    "exact",
+    "gt",
+    "lt",
+    "gte",
+    "lte",
+    "range",
+]
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -139,10 +149,27 @@ class PreferenceViewSet(viewsets.ModelViewSet):
     model_permission_name = "preference"
 
 
+@extend_schema_view(
+    list=extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="is_valid",
+                description="Filter on valid instances",
+                required=False,
+                type=bool,
+            ),
+        ]
+    )
+)
 class ScheduleViewSet(viewsets.ModelViewSet):
     queryset = Schedule.objects.all()
     serializer_class = ScheduleSerializer
-    filter_fields = ("starts", "ends", "playout_status", "broadcasted")
+    filter_fields = {
+        "starts": FILTER_NUMERICAL_LOOKUPS,
+        "ends": FILTER_NUMERICAL_LOOKUPS,
+        "playout_status": FILTER_NUMERICAL_LOOKUPS,
+        "broadcasted": FILTER_NUMERICAL_LOOKUPS,
+    }
     model_permission_name = "schedule"
 
     def get_queryset(self):

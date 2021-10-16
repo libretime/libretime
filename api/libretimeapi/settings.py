@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "url_filter",
+    "django_filters",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -114,8 +115,9 @@ REST_FRAMEWORK = {
         "libretimeapi.permissions.IsSystemTokenOrUser",
     ],
     "DEFAULT_FILTER_BACKENDS": [
-        "url_filter.integrations.drf.DjangoFilterBackend",
+        "django_filters.rest_framework.DjangoFilterBackend",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "URL_FIELD_NAME": "item_url",
 }
 
