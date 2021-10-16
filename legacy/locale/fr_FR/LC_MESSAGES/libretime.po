@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://github.com/LibreTime/libretime/issues\n"
 "POT-Creation-Date: 2021-10-15 19:56+0200\n"
 "PO-Revision-Date: 2021-10-16 23:57+0000\n"
-"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
+"Last-Translator: Jonas L. <lammler.jonas@riseup.net>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/libretime/legacy/"
 "fr/>\n"
 "Language: fr_FR\n"
@@ -783,7 +783,7 @@ msgstr "Obtenir de l'aide en ligne"
 
 #: application/configs/navigation.php:178
 msgid "Contribute to LibreTime"
-msgstr ""
+msgstr "Contribuer à LibreTime"
 
 #: application/configs/navigation.php:183
 msgid "What's New?"
@@ -4219,7 +4219,7 @@ msgstr "Joué"
 
 #: application/services/PodcastService.php:163
 msgid "Auto-generated smartblock for podcast"
-msgstr ""
+msgstr "Playlist intelligente géré automatiquement pour le podcast"
 
 #: application/views/scripts/partialviews/dashboard-sub-nav.php:18
 msgid "Webstreams"
