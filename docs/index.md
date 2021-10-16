@@ -8,8 +8,8 @@ photocredit: Top photo by <a href="https://unsplash.com/@leowieling?utm_source=u
 actions:
   - title: Stable Release
     text: The best so far. Just extract and run <code>sudo bash install -fiap</code>.
-    linkto: https://github.com/LibreTime/libretime/releases/download/3.0.0-alpha.8/libretime-3.0.0-alpha.8.tar.gz
-    linktext: Download 3.0-alpha-8
+    linkto: https://github.com/LibreTime/libretime/releases/download/3.0.0-alpha.10/libretime-3.0.0-alpha.10.tar.gz
+    linktext: Download 3.0-alpha-10
   - title: Rolling Commits
     text: Want the latest and greatest? Install from the source code.
     linkto: /install
