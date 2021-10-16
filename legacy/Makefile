@@ -9,7 +9,8 @@ $(PHP-CS-FIXER):
 
 include locale/Makefile
 
-locale-update: .locale-update
+locale-update:
+	$(MAKE) -C locale update
 locale-build:
 	$(MAKE) -C locale build
 
