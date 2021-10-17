@@ -1,6 +1,6 @@
 ![](https://github.com/LibreTime/libretime/raw/master/logo/logotype.png)
 
-[![Build Status](https://travis-ci.org/LibreTime/libretime.svg?branch=master)](https://travis-ci.org/LibreTime/libretime)
+[![Tests](https://github.com/LibreTime/libretime/actions/workflows/test.yml/badge.svg)](https://github.com/LibreTime/libretime/actions/workflows/test.yml)
 [![Financial Contributors on Open Collective](https://opencollective.com/libretime/all/badge.svg?label=financial+contributors)](https://opencollective.com/libretime)
 
 LibreTime makes it easy to run your own online or terrestrial radio station. It
@@ -107,8 +107,6 @@ version 3 of the License.
 
 Copyright (c) 2011-2017 Sourcefabric z.ú.
 
-Copyright (c) 2017 LibreTime Community
+Copyright (c) 2017-2021 LibreTime Community
 
-Please refer to the original [README](README),
-[CREDITS](CREDITS) and [LICENSE_3RD_PARTY](LICENSE_3RD_PARTY)
-for more information.
+Please refer to the [LEGACY](./LEGACY.md) file for more information.
