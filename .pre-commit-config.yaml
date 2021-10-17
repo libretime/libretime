@@ -39,11 +39,11 @@ repos:
     hooks:
       - id: black
 
-  - repo: https://github.com/pycqa/isort
-    rev: 5.9.3
-    hooks:
-      - id: isort
-        args: ["--profile", "black", "--filter-files"]
+  # - repo: https://github.com/pycqa/isort
+  #   rev: 5.9.3
+  #   hooks:
+  #     - id: isort
+  #       args: ["--profile", "black", "--filter-files"]
 
   - repo: https://github.com/codespell-project/codespell
     rev: v2.1.0
