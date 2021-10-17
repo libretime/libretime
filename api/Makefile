@@ -3,8 +3,8 @@ all: lint
 include ../tools/python.mk
 
 PIP_INSTALL := --editable .[dev]
-PYLINT_ARG := libretimeapi
-MYPY_ARG := libretimeapi
+PYLINT_ARG := libretime
+MYPY_ARG := libretime
 
 format: .format
 lint: .format-check .pylint .mypy

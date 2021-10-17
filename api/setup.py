@@ -17,12 +17,12 @@ setup(
         "Source Code": "https://github.com/libretime/libretime",
     },
     license="AGPLv3",
-    packages=find_packages(),
+    packages=["libretime.api"],
     include_package_data=True,
     python_requires=">=3.6",
     entry_points={
         "console_scripts": [
-            "libretime-api=libretimeapi.cli:main",
+            "libretime-api=libretime.api.cli:main",
         ]
     },
     install_requires=[
