@@ -3,9 +3,9 @@ all: lint test
 include ../tools/python.mk
 
 PIP_INSTALL := --editable .
-PYLINT_ARG := api_clients tests
-MYPY_ARG := api_clients tests
-PYTEST_ARG := --cov=api_clients tests
+PYLINT_ARG := libretime tests
+MYPY_ARG := libretime tests
+PYTEST_ARG := --cov=libretime tests
 
 format: .format
 lint: .format-check .pylint .mypy

@@ -13,9 +13,9 @@ from threading import Thread
 
 import mutagen
 import pytz
-from api_clients import version1 as v1_api_client
-from api_clients import version2 as api_client
 from configobj import ConfigObj
+from libretime.api_client import version1 as v1_api_client
+from libretime.api_client import version2 as api_client
 
 
 def api_client(logger):

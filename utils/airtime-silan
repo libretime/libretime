@@ -7,8 +7,9 @@ import subprocess
 import sys
 import traceback
 
-from api_clients import api_client as apc
 from configobj import ConfigObj
+
+from libretime.api_client import api_client as apc
 
 # create logger
 logger = logging.getLogger()

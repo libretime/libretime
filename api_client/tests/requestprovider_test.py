@@ -1,7 +1,7 @@
 import pytest
 
-from api_clients.utils import RequestProvider
-from api_clients.version1 import api_config
+from libretime.api_client.utils import RequestProvider
+from libretime.api_client.version1 import api_config
 
 
 @pytest.fixture()

@@ -20,12 +20,12 @@ import logging.config
 import sys
 from optparse import OptionParser
 
-# custom imports
-# from util import *
-from api_clients import version1 as api_client
-
 # additional modules (should be checked)
 from configobj import ConfigObj
+
+# custom imports
+# from util import *
+from libretime.api_client import version1 as api_client
 
 LOG_LEVEL = logging.INFO
 LOG_PATH = "/var/log/airtime/pypo/notify.log"
