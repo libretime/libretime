@@ -17,10 +17,10 @@ setup(
         "Source Code": "https://github.com/libretime/libretime",
     },
     license="AGPLv3",
-    packages=["airtime_analyzer"],
+    packages=["libretime.analyzer"],
     entry_points={
         "console_scripts": [
-            "libretime-analyzer=airtime_analyzer.cli:main",
+            "libretime-analyzer=libretime.analyzer.cli:main",
         ]
     },
     python_requires=">=3.6",

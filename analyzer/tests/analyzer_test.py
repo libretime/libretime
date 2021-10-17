@@ -1,6 +1,6 @@
 import pytest
 
-from airtime_analyzer.analyzer import Analyzer
+from libretime.analyzer.analyzer import Analyzer
 
 
 def test_analyze():

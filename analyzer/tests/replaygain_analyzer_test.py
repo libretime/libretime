@@ -1,6 +1,6 @@
 import pytest
 
-from airtime_analyzer.replaygain_analyzer import ReplayGainAnalyzer
+from libretime.analyzer.replaygain_analyzer import ReplayGainAnalyzer
 
 from .fixtures import FILE_INVALID_DRM, FILES, Fixture
 
