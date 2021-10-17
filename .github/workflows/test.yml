@@ -126,7 +126,7 @@ jobs:
       - name: Lint
         run: |
           make -C api lint
-          make -C python_apps/airtime_analyzer lint
+          make -C analyzer lint
           make -C python_apps/airtime-celery lint
           make -C python_apps/api_clients lint
           make -C python_apps/pypo lint
@@ -136,7 +136,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        context: [python_apps/airtime_analyzer, python_apps/api_clients]
+        context: [analyzer, python_apps/api_clients]
         release: [bionic, buster]
 
     container: ghcr.io/libretime/libretime-dev:${{ matrix.release }}
