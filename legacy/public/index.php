@@ -48,7 +48,7 @@ set_include_path(VENDOR_PATH . PATH_SEPARATOR . VENDOR_PATH . 'zf1s/zend-loader/
 // Ensure library/ is on include_path
 set_include_path(LIB_PATH . PATH_SEPARATOR . get_include_path());
 
-require_once VENDOR_PATH . '/autoload.php';
+require_once VENDOR_PATH . 'autoload.php';
 
 if (!class_exists('Propel')) {
     exit('Error: Propel not found. Did you install Airtime\'s third-party dependencies with composer? (Check the README.)');
