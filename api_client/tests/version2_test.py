@@ -1,4 +1,5 @@
 import pytest
+
 from api_clients.utils import RequestProvider
 from api_clients.version2 import AirtimeApiClient, api_config
 

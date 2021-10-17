@@ -8,7 +8,7 @@ MYPY_ARG := airtime_analyzer tests
 PYTEST_ARG := --cov=airtime_analyzer tests
 
 format: .format
-lint: .pylint .mypy
+lint: .format-check .pylint .mypy
 
 fixtures:
 	bash tests/fixtures/generate.sh

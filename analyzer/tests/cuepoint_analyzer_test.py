@@ -1,5 +1,6 @@
 import distro
 import pytest
+
 from airtime_analyzer.cuepoint_analyzer import CuePointAnalyzer
 
 from .fixtures import FILE_INVALID_DRM, FILES, Fixture

@@ -1,4 +1,5 @@
 import pytest
+
 from airtime_analyzer.analyzer import Analyzer
 
 

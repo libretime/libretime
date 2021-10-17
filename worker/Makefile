@@ -7,5 +7,5 @@ PYLINT_ARG := airtime-celery
 MYPY_ARG := airtime-celery
 
 format: .format
-lint: .pylint .mypy
+lint: .format-check .pylint .mypy
 clean: .clean

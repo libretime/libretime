@@ -1,4 +1,5 @@
 import pytest
+
 from api_clients.utils import RequestProvider
 from api_clients.version1 import api_config
 
