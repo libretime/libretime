@@ -12,14 +12,16 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/LibreTime/libretime/issues\n"
 "POT-Creation-Date: 2021-10-15 19:56+0200\n"
-"PO-Revision-Date: 2019-10-17 14:19+0200\n"
-"Last-Translator: Albert <albert.bruc.ab@gmail.com>\n"
-"Language-Team: French (France)\n"
+"PO-Revision-Date: 2021-10-16 23:57+0000\n"
+"Last-Translator: Jonas L. <lammler.jonas@riseup.net>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/libretime/legacy/"
+"fr/>\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.9-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -42,7 +44,7 @@ msgstr "Anglais"
 
 #: application/common/LocaleHelper.php:24
 msgid "Afar"
-msgstr "Au loin"
+msgstr "Afar"
 
 #: application/common/LocaleHelper.php:25
 msgid "Abkhazian"
@@ -90,11 +92,11 @@ msgstr "Bihari"
 
 #: application/common/LocaleHelper.php:36
 msgid "Bislama"
-msgstr "Bislama"
+msgstr "Bichelamar"
 
 #: application/common/LocaleHelper.php:37
 msgid "Bengali/Bangla"
-msgstr "Bengali / bengali"
+msgstr "Bengali"
 
 #: application/common/LocaleHelper.php:38
 msgid "Tibetan"
@@ -130,7 +132,7 @@ msgstr "Allemand"
 
 #: application/common/LocaleHelper.php:46
 msgid "Bhutani"
-msgstr "Bhutani"
+msgstr "Dzongkha"
 
 #: application/common/LocaleHelper.php:47
 msgid "Greek"
@@ -158,11 +160,11 @@ msgstr "Persan"
 
 #: application/common/LocaleHelper.php:53
 msgid "Finnish"
-msgstr "Finlandais"
+msgstr "Finnois"
 
 #: application/common/LocaleHelper.php:54
 msgid "Fiji"
-msgstr "Fidji"
+msgstr "Fidjien"
 
 #: application/common/LocaleHelper.php:55
 msgid "Faeroese"
@@ -182,7 +184,7 @@ msgstr "Irlandais"
 
 #: application/common/LocaleHelper.php:59
 msgid "Scots/Gaelic"
-msgstr "Écossais / gaélique"
+msgstr "Gaélique écossais"
 
 #: application/common/LocaleHelper.php:60
 msgid "Galician"
@@ -194,11 +196,11 @@ msgstr "Guarani"
 
 #: application/common/LocaleHelper.php:62
 msgid "Gujarati"
-msgstr "Gujarati"
+msgstr "Goudjarati"
 
 #: application/common/LocaleHelper.php:63
 msgid "Hausa"
-msgstr "Hausa"
+msgstr "Haoussa"
 
 #: application/common/LocaleHelper.php:64
 msgid "Hindi"
@@ -302,7 +304,7 @@ msgstr "Lingala"
 
 #: application/common/LocaleHelper.php:89
 msgid "Laothian"
-msgstr "Laothien"
+msgstr "Lao"
 
 #: application/common/LocaleHelper.php:90
 msgid "Lithuanian"
@@ -310,7 +312,7 @@ msgstr "Lituanien"
 
 #: application/common/LocaleHelper.php:91
 msgid "Latvian/Lettish"
-msgstr "Letton / letton"
+msgstr "Letton"
 
 #: application/common/LocaleHelper.php:92
 msgid "Malagasy"
@@ -378,7 +380,7 @@ msgstr "(Afan) / Oromoor / Oriya"
 
 #: application/common/LocaleHelper.php:108
 msgid "Punjabi"
-msgstr "Punjabi"
+msgstr "Pendjabi"
 
 #: application/common/LocaleHelper.php:109
 msgid "Polish"
@@ -386,7 +388,7 @@ msgstr "Polonais"
 
 #: application/common/LocaleHelper.php:110
 msgid "Pashto/Pushto"
-msgstr "Pachtou / pachtou"
+msgstr "Pachto"
 
 #: application/common/LocaleHelper.php:111
 msgid "Portuguese"
@@ -394,11 +396,11 @@ msgstr "Portugais"
 
 #: application/common/LocaleHelper.php:112
 msgid "Quechua"
-msgstr "Quechua"
+msgstr "Quetchua"
 
 #: application/common/LocaleHelper.php:113
 msgid "Rhaeto-Romance"
-msgstr "Rhéto-roman"
+msgstr "Romanche"
 
 #: application/common/LocaleHelper.php:114
 msgid "Kirundi"
@@ -434,7 +436,7 @@ msgstr "Serbo-croate"
 
 #: application/common/LocaleHelper.php:122
 msgid "Singhalese"
-msgstr "Cingalais"
+msgstr "Singhalais"
 
 #: application/common/LocaleHelper.php:123
 msgid "Slovak"
@@ -474,7 +476,7 @@ msgstr "Sesotho"
 
 #: application/common/LocaleHelper.php:132
 msgid "Sundanese"
-msgstr "Sundanese"
+msgstr "Soundanais"
 
 #: application/common/LocaleHelper.php:133
 msgid "Swedish"
@@ -490,7 +492,7 @@ msgstr "Tamil"
 
 #: application/common/LocaleHelper.php:136
 msgid "Tegulu"
-msgstr "Tegulu"
+msgstr "Télougou"
 
 #: application/common/LocaleHelper.php:137
 msgid "Tajik"
@@ -498,11 +500,11 @@ msgstr "Tadjik"
 
 #: application/common/LocaleHelper.php:138
 msgid "Thai"
-msgstr "Thaïlandais"
+msgstr "Thaï"
 
 #: application/common/LocaleHelper.php:139
 msgid "Tigrinya"
-msgstr "Tigrinya"
+msgstr "Tigrigna"
 
 #: application/common/LocaleHelper.php:140
 msgid "Turkmen"
@@ -518,7 +520,7 @@ msgstr "Setswana"
 
 #: application/common/LocaleHelper.php:143
 msgid "Tonga"
-msgstr "Tonga"
+msgstr "Tonguien"
 
 #: application/common/LocaleHelper.php:144
 msgid "Turkish"
@@ -554,7 +556,7 @@ msgstr "Vietnamien"
 
 #: application/common/LocaleHelper.php:152
 msgid "Volapuk"
-msgstr "Volapuk"
+msgstr "Volapük"
 
 #: application/common/LocaleHelper.php:153
 msgid "Wolof"
@@ -582,7 +584,8 @@ msgstr "Utiliser les réglages par défaut"
 
 #: application/common/UsabilityHints.php:65
 msgid "Upload some tracks below to add them to your library!"
-msgstr "Téléverser des pistes ci-dessous pour les ajouter à votre librairie !"
+msgstr ""
+"Téléversez des pistes ci-dessous pour les ajouter à votre bibliothèque !"
 
 #: application/common/UsabilityHints.php:69
 #, php-format
@@ -591,7 +594,8 @@ msgstr "Vous n'avez pas encore ajouté de fichiers audios. %sTéléverser un fic
 
 #: application/common/UsabilityHints.php:76
 msgid "Click the 'New Show' button and fill out the required fields."
-msgstr "Cliquez sur le bouton 'Nouvelle émission' et remplissez les champs requis."
+msgstr ""
+"Cliquez sur le bouton « Nouvelle émission » et remplissez les champs requis."
 
 #: application/common/UsabilityHints.php:80
 #, php-format
@@ -600,7 +604,9 @@ msgstr "Vous n'avez pas encore programmé d'émissions. %sCréer une émission%s
 
 #: application/common/UsabilityHints.php:89
 msgid "To start broadcasting, cancel the current linked show by clicking on it and selecting 'Cancel Show'."
-msgstr "Pour commencer la diffusion, annulez l'émission liée actuelle en cliquant dessus puis en sélectionnant 'Annuler l'émission'."
+msgstr ""
+"Pour commencer la diffusion, annulez l'émission liée actuelle en cliquant "
+"dessus puis en sélectionnant « Annuler l'émission »."
 
 #: application/common/UsabilityHints.php:92
 #, php-format
@@ -613,7 +619,9 @@ msgstr ""
 
 #: application/common/UsabilityHints.php:96
 msgid "To start broadcasting, click on the current show and select 'Schedule Tracks'"
-msgstr "Pour commencer la diffusion, cliquez sur une émission et sélectionnez 'Ajouter des pistes'"
+msgstr ""
+"Pour commencer la diffusion, cliquez sur une émission et sélectionnez « "
+"Ajouter des pistes »"
 
 #: application/common/UsabilityHints.php:100
 #, php-format
@@ -622,7 +630,7 @@ msgstr "L'émission actuelle est vide. %sAjouter des pistes audio%s."
 
 #: application/common/UsabilityHints.php:107
 msgid "Click on the show starting next and select 'Schedule Tracks'"
-msgstr "Cliquez sur l'émission suivante et sélectionner 'Ajouter des pistes'"
+msgstr "Cliquez sur l'émission suivante et sélectionner « Ajouter des pistes »"
 
 #: application/common/UsabilityHints.php:111
 #, php-format
@@ -631,11 +639,13 @@ msgstr "La prochaine émission est vide. %sAjouter des pistes à cette émission
 
 #: application/configs/config-check.php:175
 msgid "LibreTime media analyzer service"
-msgstr ""
+msgstr "Service d'analyseur de médias LibreTime"
 
 #: application/configs/config-check.php:182
 msgid "Check that the libretime-analyzer service is installed correctly in "
 msgstr ""
+"Vérifiez que le service libretime-analyzer est correctement installé dans le "
+"répertoire "
 
 #: application/configs/config-check.php:183
 #: application/configs/config-check.php:204
@@ -643,7 +653,7 @@ msgstr ""
 #: application/configs/config-check.php:246
 #: application/configs/config-check.php:267
 msgid " and ensure that it's running with "
-msgstr ""
+msgstr " et assurez-vous qu'il fonctionne avec "
 
 #: application/configs/config-check.php:185
 #: application/configs/config-check.php:206
@@ -651,11 +661,11 @@ msgstr ""
 #: application/configs/config-check.php:248
 #: application/configs/config-check.php:269
 msgid "If not, try "
-msgstr ""
+msgstr "Sinon, essayez "
 
 #: application/configs/config-check.php:196
 msgid "LibreTime playout service"
-msgstr ""
+msgstr "Service de diffusion LibreTime"
 
 #: application/configs/config-check.php:203
 msgid "Check that the libretime-playout service is installed correctly in "
@@ -679,7 +689,7 @@ msgstr ""
 
 #: application/configs/config-check.php:259
 msgid "LibreTime API service"
-msgstr ""
+msgstr "Service API LibreTime"
 
 #: application/configs/config-check.php:266
 msgid "Check that the libretime-api service is installed correctly in "
@@ -723,7 +733,7 @@ msgstr "Utilisateurs"
 
 #: application/configs/navigation.php:91
 msgid "Track Types"
-msgstr ""
+msgstr "Types de flux"
 
 #: application/configs/navigation.php:98
 msgid "Streams"
@@ -753,7 +763,7 @@ msgstr "Statistiques des auditeurs"
 
 #: application/configs/navigation.php:144
 msgid "Show Listener Stats"
-msgstr ""
+msgstr "Afficher les statistiques des auditeurs"
 
 #: application/configs/navigation.php:153
 msgid "Help"
@@ -769,11 +779,11 @@ msgstr "Manuel Utilisateur"
 
 #: application/configs/navigation.php:173
 msgid "Get Help Online"
-msgstr ""
+msgstr "Obtenir de l'aide en ligne"
 
 #: application/configs/navigation.php:178
 msgid "Contribute to LibreTime"
-msgstr ""
+msgstr "Contribuer à LibreTime"
 
 #: application/configs/navigation.php:183
 msgid "What's New?"
@@ -782,7 +792,7 @@ msgstr "Qu'est-ce qui a changé ?"
 #: application/controllers/ApiController.php:113
 #: application/controllers/ApiController.php:729
 msgid "You are not allowed to access this resource."
-msgstr "Vous n'êtes pas autorisé à accéder à cette ressource."
+msgstr "Vous n'avez pas le droit d'accéder à cette ressource."
 
 #: application/controllers/ApiController.php:356
 #: application/controllers/ApiController.php:432
@@ -792,7 +802,7 @@ msgstr "Vous n'êtes pas autorisé à accéder à cette ressource."
 #: application/controllers/ApiController.php:662
 #: application/controllers/ApiController.php:695
 msgid "You are not allowed to access this resource. "
-msgstr "Vous n'êtes pas autorisé à accéder à cette ressource. "
+msgstr "Vous n'avez pas le droit d'accéder à cette ressource. "
 
 #: application/controllers/ApiController.php:903
 #: application/controllers/ApiController.php:924
@@ -803,11 +813,11 @@ msgstr "Le fichier n'existe pas dans %s"
 
 #: application/controllers/ApiController.php:990
 msgid "Bad request. no 'mode' parameter passed."
-msgstr "Mauvaise requête. pas de \"mode\" paramètre passé."
+msgstr "Mauvaise requête. pas de « mode » paramètre passé."
 
 #: application/controllers/ApiController.php:1002
 msgid "Bad request. 'mode' parameter is invalid"
-msgstr "Mauvaise requête. Le paramètre  'mode'  est invalide"
+msgstr "Mauvaise requête. Le paramètre « mode » est invalide"
 
 #: application/controllers/DashboardController.php:35
 #: application/controllers/DashboardController.php:87
@@ -883,13 +893,13 @@ msgstr "Quelque chose s'est mal passé."
 #: application/controllers/ShowbuilderController.php:136
 #: application/forms/SmartBlockCriteria.php:574
 msgid "Preview"
-msgstr "Pré-Visualisation"
+msgstr "Prévisualisation"
 
 #: application/controllers/LibraryController.php:112
 #: application/controllers/LibraryController.php:144
 #: application/controllers/LibraryController.php:167
 msgid "Add to Playlist"
-msgstr "Ajouter une"
+msgstr "Ajouter à la liste"
 
 #: application/controllers/LibraryController.php:114
 msgid "Add to Smart Block"
@@ -904,13 +914,13 @@ msgstr "Ajouter un bloc intelligent"
 #: application/services/CalendarService.php:200
 #: application/services/CalendarService.php:205
 msgid "Delete"
-msgstr "Effacer"
+msgstr "Supprimer"
 
 #: application/controllers/LibraryController.php:120
 #: application/controllers/LibraryController.php:151
 #: application/controllers/LibraryController.php:173
 msgid "Edit..."
-msgstr "Editer..."
+msgstr "Modifier…"
 
 #: application/controllers/LibraryController.php:131
 #: application/controllers/ScheduleController.php:736
@@ -919,7 +929,7 @@ msgstr "Téléchargement"
 
 #: application/controllers/LibraryController.php:135
 msgid "Duplicate Playlist"
-msgstr "Dupliquer la playlist"
+msgstr "Dupliquer la liste de lecture"
 
 #: application/controllers/LibraryController.php:138
 msgid "Duplicate Smartblock"
@@ -2698,11 +2708,13 @@ msgstr "Le courriel n'a pas pu être envoyé. Vérifiez les paramètres du serve
 
 #: application/controllers/LoginController.php:160
 msgid "That username or email address could not be found."
-msgstr "Cet identifiant ou adresse mail n'a pu être trouvé."
+msgstr "Cet identifiant ou cette adresse courriel n'ont pu être trouvés."
 
 #: application/controllers/LoginController.php:163
 msgid "There was a problem with the username or email address you entered."
-msgstr "Il y a un problème avec l'identifiant ou adresse mail que vous avez entré."
+msgstr ""
+"Il y a un problème avec l'identifiant ou adresse courriel que vous avez "
+"entré(e)."
 
 #: application/controllers/LoginController.php:242
 msgid "Wrong username or password provided. Please try again."
@@ -2728,11 +2740,11 @@ msgstr "Vous pouvez seulement ajouter des pistes au bloc intelligent."
 
 #: application/controllers/PlaylistController.php:195
 msgid "Untitled Playlist"
-msgstr "Liste de lecture Sans Titre"
+msgstr "Liste de lecture sans titre"
 
 #: application/controllers/PlaylistController.php:197
 msgid "Untitled Smart Block"
-msgstr "Bloc intelligent Sans Titre"
+msgstr "Bloc intelligent sans titre"
 
 #: application/controllers/PlaylistController.php:529
 msgid "Unknown Playlist"
@@ -3117,7 +3129,7 @@ msgstr "Nom:"
 
 #: application/forms/AddUser.php:65 application/forms/EditUser.php:81
 msgid "Email:"
-msgstr "Courriel:"
+msgstr "Courriel :"
 
 #: application/forms/AddUser.php:74 application/forms/EditUser.php:92
 msgid "Mobile Phone:"
@@ -3404,7 +3416,7 @@ msgstr "La confirmation du mot de passe ne correspond pas à votre mot de passe.
 
 #: application/forms/PasswordRestore.php:12
 msgid "Email"
-msgstr "Email"
+msgstr "Courriel"
 
 #: application/forms/PasswordRestore.php:23
 #: application/forms/StreamSettingSubForm.php:177
@@ -3882,7 +3894,9 @@ msgstr "Une valeur est requise, ne peut pas être vide"
 
 #: application/forms/helpers/ValidationTypes.php:20
 msgid "'%value%' is no valid email address in the basic format local-part@hostname"
-msgstr "'%value%'  n'est pas une adresse de courriel valide dans le format de type partie-locale@nomdedomaine"
+msgstr ""
+"« %value% » n'est pas une adresse de courriel valide dans le format de type "
+"partie-locale@nomdedomaine"
 
 #: application/forms/helpers/ValidationTypes.php:34
 msgid "'%value%' does not fit the date format '%format%'"
@@ -4205,7 +4219,7 @@ msgstr "Joué"
 
 #: application/services/PodcastService.php:163
 msgid "Auto-generated smartblock for podcast"
-msgstr ""
+msgstr "Playlist intelligente géré automatiquement pour le podcast"
 
 #: application/views/scripts/partialviews/dashboard-sub-nav.php:18
 msgid "Webstreams"
