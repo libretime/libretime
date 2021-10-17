@@ -46,7 +46,7 @@ jobs:
       - name: Generate packages list
         run: |
           tools/packages.py --dev --format line ${{ matrix.release }} \
-            python_apps/airtime_analyzer \
+            analyzer \
             python_apps/pypo \
             > packages.list
 

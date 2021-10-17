@@ -1,6 +1,6 @@
 all: lint test
 
-include ../../tools/python.mk
+include ../tools/python.mk
 
 PIP_INSTALL := --editable .[dev]
 PYLINT_ARG := airtime_analyzer tests
