@@ -23,9 +23,9 @@ if ($argc <= 1)
 
 $message = $argv[1];
 
-$connection = new AMQPConnection(HOST, PORT, USER, PASS, VHOST);
-if (!isset($connection))
-{
+$connection = new AMQPStreamConnection(HOST, PORT, USER, PASS, VHOST);
+
+if (!isset($connection)) {
     echo "Failed to connect to the RabbitMQ server.";
     return;
 }

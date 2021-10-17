@@ -16,7 +16,7 @@ class Application_Model_RabbitMq
     {
         $CC_CONFIG = Config::getConfig();
 
-        $conn = new \PhpAmqpLib\Connection\AMQPConnection(
+        $conn = new \PhpAmqpLib\Connection\AMQPStreamConnection(
             $CC_CONFIG['rabbitmq']['host'],
             $CC_CONFIG['rabbitmq']['port'],
             $CC_CONFIG['rabbitmq']['user'],
@@ -99,7 +99,7 @@ class Application_Model_RabbitMq
     ) {
         $config = Config::getConfig();
 
-        $conn = new \PhpAmqpLib\Connection\AMQPConnection(
+        $conn = new \PhpAmqpLib\Connection\AMQPStreamConnection(
             $config['rabbitmq']['host'],
             $config['rabbitmq']['port'],
             $config['rabbitmq']['user'],
