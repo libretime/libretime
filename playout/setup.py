@@ -22,13 +22,13 @@ setup(
     packages=[
         "libretime.playout",
         "libretime.playout.notify",
-        "liquidsoap",
+        "libretime.liquidsoap",
     ],
     package_data={"": ["**/*.liq", "*.cfg", "*.types"]},
     entry_points={
         "console_scripts": [
             "libretime-playout=libretime.playout.main:run",
-            "libretime-liquidsoap=liquidsoap.main:run",
+            "libretime-liquidsoap=libretime.liquidsoap.main:run",
             "libretime-playout-notify=libretime.playout.notify.main:run",
         ]
     },
