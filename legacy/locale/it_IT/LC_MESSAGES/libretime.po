@@ -13,14 +13,16 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/LibreTime/libretime/issues\n"
 "POT-Creation-Date: 2021-10-15 19:56+0200\n"
-"PO-Revision-Date: 2015-09-05 08:33+0000\n"
-"Last-Translator: Daniel James <daniel@64studio.com>\n"
-"Language-Team: Italian (Italy)\n"
+"PO-Revision-Date: 2021-10-17 08:09+0000\n"
+"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
+"Language-Team: Italian <https://hosted.weblate.org/projects/libretime/legacy/"
+"it/>\n"
 "Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.9-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -30,12 +32,12 @@ msgstr "L'anno %s deve essere compreso nella serie 1753 - 9999"
 #: application/common/DateHelper.php:219
 #, php-format
 msgid "%s-%s-%s is not a valid date"
-msgstr "%s-%s-%s non Ã¨ una data valida"
+msgstr "%s-%s-%s non è una data valida"
 
 #: application/common/DateHelper.php:243
 #, php-format
 msgid "%s:%s:%s is not a valid time"
-msgstr "%s:%s:%s non Ã¨ un ora valida"
+msgstr "%s:%s:%s non è un ora valida"
 
 #: application/common/LocaleHelper.php:23
 msgid "English"
@@ -781,7 +783,7 @@ msgstr ""
 #: application/controllers/ApiController.php:113
 #: application/controllers/ApiController.php:729
 msgid "You are not allowed to access this resource."
-msgstr "Non Ã¨ permesso l'accesso  alla risorsa."
+msgstr "Non è permesso l'accesso alla risorsa."
 
 #: application/controllers/ApiController.php:356
 #: application/controllers/ApiController.php:432
@@ -791,27 +793,27 @@ msgstr "Non Ã¨ permesso l'accesso  alla risorsa."
 #: application/controllers/ApiController.php:662
 #: application/controllers/ApiController.php:695
 msgid "You are not allowed to access this resource. "
-msgstr "Non Ã¨ permesso l'accesso alla risorsa."
+msgstr "Non è permesso l'accesso alla risorsa. "
 
 #: application/controllers/ApiController.php:903
 #: application/controllers/ApiController.php:924
 #: application/controllers/ApiController.php:936
 #, php-format
 msgid "File does not exist in %s"
-msgstr ""
+msgstr "Il file non esiste in %s"
 
 #: application/controllers/ApiController.php:990
 msgid "Bad request. no 'mode' parameter passed."
-msgstr "Richiesta errata.  'modalitÃ ' parametro non riuscito."
+msgstr "Richiesta errata. «modalità» parametro non riuscito."
 
 #: application/controllers/ApiController.php:1002
 msgid "Bad request. 'mode' parameter is invalid"
-msgstr "Richiesta errata. 'modalitÃ ' parametro non valido"
+msgstr "Richiesta errata. «modalità» parametro non valido"
 
 #: application/controllers/DashboardController.php:35
 #: application/controllers/DashboardController.php:87
 msgid "You don't have permission to disconnect source."
-msgstr "Non Ã¨ consentito disconnettersi dalla fonte."
+msgstr "Non è consentito disconnettersi dalla fonte."
 
 #: application/controllers/DashboardController.php:37
 #: application/controllers/DashboardController.php:89
@@ -903,7 +905,7 @@ msgstr "Aggiungi al blocco intelligente"
 #: application/services/CalendarService.php:200
 #: application/services/CalendarService.php:205
 msgid "Delete"
-msgstr "Cancella"
+msgstr "Elimina"
 
 #: application/controllers/LibraryController.php:120
 #: application/controllers/LibraryController.php:151
@@ -2673,35 +2675,40 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:488
 msgid "Off Air"
-msgstr ""
+msgstr "Fuori onda"
 
 #: application/controllers/LocaleController.php:489
 msgid "Offline"
-msgstr ""
+msgstr "Fuori linea"
 
 #: application/controllers/LocaleController.php:490
 msgid "Nothing scheduled"
-msgstr ""
+msgstr "Niente di programmato"
 
 #: application/controllers/LocaleController.php:491
 msgid "Click 'Add' to create one now."
-msgstr ""
+msgstr "Clicca su «Aggiungi» per crearne uno ora."
 
 #: application/controllers/LoginController.php:51
 msgid "Please enter your username and password."
-msgstr ""
+msgstr "Inserisci il tuo nome utente e la tua password."
 
 #: application/controllers/LoginController.php:157
 msgid "Email could not be sent. Check your mail server settings and ensure it has been configured properly."
-msgstr "L' e-mail non puÃ² essere inviata. Controlli le impostazioni della sua mail e si accerti che Ã¨ stata configurata correttamente."
+msgstr ""
+"L' e-mail non può essere inviata. Controlli le impostazioni del tuo server "
+"di e-mail e si accerti che è stato configurato correttamente."
 
 #: application/controllers/LoginController.php:160
 msgid "That username or email address could not be found."
 msgstr ""
+"Non è stato possibile trovare quel nome utente o quell'indirizzo e-mail."
 
 #: application/controllers/LoginController.php:163
 msgid "There was a problem with the username or email address you entered."
 msgstr ""
+"C'è stato un problema con il nome utente o l'indirizzo e-mail che hai "
+"inserito."
 
 #: application/controllers/LoginController.php:242
 msgid "Wrong username or password provided. Please try again."
@@ -2714,7 +2721,7 @@ msgstr "Sta visualizzando una versione precedente di %s"
 
 #: application/controllers/PlaylistController.php:143
 msgid "You cannot add tracks to dynamic blocks."
-msgstr "Non puÃ² aggiungere tracce al blocco dinamico."
+msgstr "Non può aggiungere tracce al blocco dinamico."
 
 #: application/controllers/PlaylistController.php:164
 #, php-format
@@ -2723,7 +2730,7 @@ msgstr "Non ha i permessi per cancellare la selezione %s(s)."
 
 #: application/controllers/PlaylistController.php:177
 msgid "You can only add tracks to smart block."
-msgstr "PuÃ² solo aggiungere tracce al blocco intelligente."
+msgstr "Puoi solo aggiungere tracce al blocco intelligente."
 
 #: application/controllers/PlaylistController.php:195
 msgid "Untitled Playlist"
@@ -4039,7 +4046,7 @@ msgstr "Lo show % supera la lunghezza massima e non puÃ² essere programmato."
 #: application/models/Scheduler.php:167
 #, php-format
 msgid "The show %s has been previously updated!"
-msgstr "Lo show  %s Ã¨ giÃ  stato aggiornato! "
+msgstr "Il programma %s è già stato aggiornato!"
 
 #: application/models/Scheduler.php:187
 msgid "Content in linked shows cannot be changed while on air!"
@@ -4092,7 +4099,7 @@ msgstr "Nessun MIME type trovato per le webstream."
 
 #: application/models/Webstream.php:204
 msgid "Webstream name cannot be empty"
-msgstr "Webstream non puÃ² essere vuoto"
+msgstr "Webstream non può essere vuoto"
 
 #: application/models/Webstream.php:274
 msgid "Could not parse XSPF playlist"
@@ -4144,7 +4151,7 @@ msgstr ""
 #: application/services/CalendarService.php:153
 #: application/services/CalendarService.php:167
 msgid "Edit Show"
-msgstr "Edita show"
+msgstr "Modifica il programma"
 
 #: application/services/CalendarService.php:189
 msgid "Delete Instance"

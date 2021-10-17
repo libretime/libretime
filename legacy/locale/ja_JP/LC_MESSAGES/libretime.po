@@ -13,29 +13,31 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/LibreTime/libretime/issues\n"
 "POT-Creation-Date: 2021-10-15 19:56+0200\n"
-"PO-Revision-Date: 2015-09-05 08:33+0000\n"
-"Last-Translator: Daniel James <daniel@64studio.com>\n"
-"Language-Team: Japanese (Japan)\n"
+"PO-Revision-Date: 2021-10-17 08:09+0000\n"
+"Last-Translator: Kyle Robbertze <github@paddatrapper.com>\n"
+"Language-Team: Japanese <https://hosted.weblate.org/projects/libretime/"
+"legacy/ja/>\n"
 "Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 4.9-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
 msgid "The year %s must be within the range of 1753 - 9999"
-msgstr "%s年は、1753 - 9999の範囲内である必要があります。"
+msgstr "%s年は、1753 - 9999の範囲内である必要があります"
 
 #: application/common/DateHelper.php:219
 #, php-format
 msgid "%s-%s-%s is not a valid date"
-msgstr "%s-%s-%sは正しい日付ではありません。"
+msgstr "%s-%s-%sは正しい日付ではありません"
 
 #: application/common/DateHelper.php:243
 #, php-format
 msgid "%s:%s:%s is not a valid time"
-msgstr "%s:%s:%sは正しい時間ではありません。"
+msgstr "%s:%s:%sは正しい時間ではありません"
 
 #: application/common/LocaleHelper.php:23
 msgid "English"

@@ -12,14 +12,16 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/LibreTime/libretime/issues\n"
 "POT-Creation-Date: 2021-10-15 19:56+0200\n"
-"PO-Revision-Date: 2015-09-05 08:33+0000\n"
-"Last-Translator: Daniel James <daniel@64studio.com>\n"
-"Language-Team: Greek (Greece)\n"
+"PO-Revision-Date: 2021-10-17 08:09+0000\n"
+"Last-Translator: Kyle Robbertze <github@paddatrapper.com>\n"
+"Language-Team: Greek <https://hosted.weblate.org/projects/libretime/legacy/"
+"el/>\n"
 "Language: el_GR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.9-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -1190,7 +1192,7 @@ msgstr "Album"
 
 #: application/controllers/LocaleController.php:91
 msgid "Bit Rate"
-msgstr "Ρυθμός Bit:"
+msgstr "Ρυθμός Bit"
 
 #: application/controllers/LocaleController.php:92
 #: application/forms/SmartBlockCriteria.php:59

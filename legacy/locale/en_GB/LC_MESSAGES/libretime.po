@@ -12,14 +12,16 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/LibreTime/libretime/issues\n"
 "POT-Creation-Date: 2021-10-15 19:56+0200\n"
-"PO-Revision-Date: 2015-09-07 10:33+0000\n"
-"Last-Translator: Daniel James <daniel@64studio.com>\n"
-"Language-Team: English (United Kingdom)\n"
+"PO-Revision-Date: 2021-10-17 08:09+0000\n"
+"Last-Translator: Kyle Robbertze <github@paddatrapper.com>\n"
+"Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
+"libretime/legacy/en_GB/>\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.9-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -38,187 +40,187 @@ msgstr "%s:%s:%s is not a valid time"
 
 #: application/common/LocaleHelper.php:23
 msgid "English"
-msgstr ""
+msgstr "English (United Kingdom)"
 
 #: application/common/LocaleHelper.php:24
 msgid "Afar"
-msgstr ""
+msgstr "Afar"
 
 #: application/common/LocaleHelper.php:25
 msgid "Abkhazian"
-msgstr ""
+msgstr "Abkhazian"
 
 #: application/common/LocaleHelper.php:26
 msgid "Afrikaans"
-msgstr ""
+msgstr "Afrikaans"
 
 #: application/common/LocaleHelper.php:27
 msgid "Amharic"
-msgstr ""
+msgstr "Amharic"
 
 #: application/common/LocaleHelper.php:28
 msgid "Arabic"
-msgstr ""
+msgstr "Arabic"
 
 #: application/common/LocaleHelper.php:29
 msgid "Assamese"
-msgstr ""
+msgstr "Assamese"
 
 #: application/common/LocaleHelper.php:30
 msgid "Aymara"
-msgstr ""
+msgstr "Aymara"
 
 #: application/common/LocaleHelper.php:31
 msgid "Azerbaijani"
-msgstr ""
+msgstr "Azerbaijani"
 
 #: application/common/LocaleHelper.php:32
 msgid "Bashkir"
-msgstr ""
+msgstr "Bashkir"
 
 #: application/common/LocaleHelper.php:33
 msgid "Belarusian"
-msgstr ""
+msgstr "Bashkir"
 
 #: application/common/LocaleHelper.php:34
 msgid "Bulgarian"
-msgstr ""
+msgstr "Bulgarian"
 
 #: application/common/LocaleHelper.php:35
 msgid "Bihari"
-msgstr ""
+msgstr "Bihari"
 
 #: application/common/LocaleHelper.php:36
 msgid "Bislama"
-msgstr ""
+msgstr "Bislama"
 
 #: application/common/LocaleHelper.php:37
 msgid "Bengali/Bangla"
-msgstr ""
+msgstr "Bengali"
 
 #: application/common/LocaleHelper.php:38
 msgid "Tibetan"
-msgstr ""
+msgstr "Tibetan"
 
 #: application/common/LocaleHelper.php:39
 msgid "Breton"
-msgstr ""
+msgstr "Breton"
 
 #: application/common/LocaleHelper.php:40
 msgid "Catalan"
-msgstr ""
+msgstr "Catalan"
 
 #: application/common/LocaleHelper.php:41
 msgid "Corsican"
-msgstr ""
+msgstr "Corsican"
 
 #: application/common/LocaleHelper.php:42
 msgid "Czech"
-msgstr ""
+msgstr "Czech"
 
 #: application/common/LocaleHelper.php:43
 msgid "Welsh"
-msgstr ""
+msgstr "Welsh"
 
 #: application/common/LocaleHelper.php:44
 msgid "Danish"
-msgstr ""
+msgstr "Danish"
 
 #: application/common/LocaleHelper.php:45
 msgid "German"
-msgstr ""
+msgstr "German"
 
 #: application/common/LocaleHelper.php:46
 msgid "Bhutani"
-msgstr ""
+msgstr "Bhutani"
 
 #: application/common/LocaleHelper.php:47
 msgid "Greek"
-msgstr ""
+msgstr "Greek"
 
 #: application/common/LocaleHelper.php:48
 msgid "Esperanto"
-msgstr ""
+msgstr "Esperanto"
 
 #: application/common/LocaleHelper.php:49
 msgid "Spanish"
-msgstr ""
+msgstr "Spanish"
 
 #: application/common/LocaleHelper.php:50
 msgid "Estonian"
-msgstr ""
+msgstr "Estonian"
 
 #: application/common/LocaleHelper.php:51
 msgid "Basque"
-msgstr ""
+msgstr "Basque"
 
 #: application/common/LocaleHelper.php:52
 msgid "Persian"
-msgstr ""
+msgstr "Persian"
 
 #: application/common/LocaleHelper.php:53
 msgid "Finnish"
-msgstr ""
+msgstr "Finnish"
 
 #: application/common/LocaleHelper.php:54
 msgid "Fiji"
-msgstr ""
+msgstr "Fiji"
 
 #: application/common/LocaleHelper.php:55
 msgid "Faeroese"
-msgstr ""
+msgstr "Faeroese"
 
 #: application/common/LocaleHelper.php:56
 msgid "French"
-msgstr ""
+msgstr "French"
 
 #: application/common/LocaleHelper.php:57
 msgid "Frisian"
-msgstr ""
+msgstr "Frisian"
 
 #: application/common/LocaleHelper.php:58
 msgid "Irish"
-msgstr ""
+msgstr "Irish"
 
 #: application/common/LocaleHelper.php:59
 msgid "Scots/Gaelic"
-msgstr ""
+msgstr "Scots/Gaelic"
 
 #: application/common/LocaleHelper.php:60
 msgid "Galician"
-msgstr ""
+msgstr "Galician"
 
 #: application/common/LocaleHelper.php:61
 msgid "Guarani"
-msgstr ""
+msgstr "Guarani"
 
 #: application/common/LocaleHelper.php:62
 msgid "Gujarati"
-msgstr ""
+msgstr "Gujarati"
 
 #: application/common/LocaleHelper.php:63
 msgid "Hausa"
-msgstr ""
+msgstr "Hausa"
 
 #: application/common/LocaleHelper.php:64
 msgid "Hindi"
-msgstr ""
+msgstr "Hindi"
 
 #: application/common/LocaleHelper.php:65
 msgid "Croatian"
-msgstr ""
+msgstr "Croatian"
 
 #: application/common/LocaleHelper.php:66
 msgid "Hungarian"
-msgstr ""
+msgstr "Hungarian"
 
 #: application/common/LocaleHelper.php:67
 msgid "Armenian"
-msgstr ""
+msgstr "Armenian"
 
 #: application/common/LocaleHelper.php:68
 msgid "Interlingua"
-msgstr ""
+msgstr "Interlingua"
 
 #: application/common/LocaleHelper.php:69
 msgid "Interlingue"
@@ -226,31 +228,31 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:70
 msgid "Inupiak"
-msgstr ""
+msgstr "Inupiak"
 
 #: application/common/LocaleHelper.php:71
 msgid "Indonesian"
-msgstr ""
+msgstr "Indonesian"
 
 #: application/common/LocaleHelper.php:72
 msgid "Icelandic"
-msgstr ""
+msgstr "Icelandic"
 
 #: application/common/LocaleHelper.php:73
 msgid "Italian"
-msgstr ""
+msgstr "Italian"
 
 #: application/common/LocaleHelper.php:74
 msgid "Hebrew"
-msgstr ""
+msgstr "Hebrew"
 
 #: application/common/LocaleHelper.php:75
 msgid "Japanese"
-msgstr ""
+msgstr "Japanese"
 
 #: application/common/LocaleHelper.php:76
 msgid "Yiddish"
-msgstr ""
+msgstr "Yiddish"
 
 #: application/common/LocaleHelper.php:77
 msgid "Javanese"
@@ -607,7 +609,10 @@ msgstr "To start broadcasting, cancel the current linked show by clicking on it 
 msgid ""
 "Linked shows need to be filled with tracks before it starts. To start broadcasting cancel the current linked show and schedule an unlinked show.\n"
 "                    %sCreate an unlinked show now%s."
-msgstr "Linked shows need to be filled with tracks before they start. To start broadcasting cancel the current linked show and schedule an unlinked show. %sCreate an unlinked show now%s."
+msgstr ""
+"Linked shows need to be filled with tracks before it starts. To start "
+"broadcasting cancel the current linked show and schedule an unlinked show.\n"
+"                    %sCreate an unlinked show now%s."
 
 #: application/common/UsabilityHints.php:96
 msgid "To start broadcasting, click on the current show and select 'Schedule Tracks'"
@@ -3304,7 +3309,10 @@ msgstr "Required for embeddable schedule widget."
 msgid ""
 "Enabling this feature will allow LibreTime to provide schedule data\n"
 "                                            to external widgets that can be embedded in your website."
-msgstr "Enabling this feature will allow LibreTime to provide schedule data to external widgets that can be embedded in your website."
+msgstr ""
+"Enabling this feature will allow LibreTime to provide schedule data\n"
+"                                            to external widgets that can be "
+"embedded in your website."
 
 #: application/forms/GeneralPreferences.php:174
 msgid "Allowed CORS URLs"
@@ -3584,7 +3592,7 @@ msgstr ""
 
 #: application/forms/SmartBlockCriteria.php:211
 msgid "Select Track Type"
-msgstr ""
+msgstr "Select Track Type"
 
 #: application/forms/SmartBlockCriteria.php:268
 msgid "Type:"
@@ -3600,7 +3608,7 @@ msgstr "Static"
 
 #: application/forms/SmartBlockCriteria.php:434
 msgid "Select track type"
-msgstr ""
+msgstr "Select track type"
 
 #: application/forms/SmartBlockCriteria.php:519
 msgid "Allow Repeated Tracks:"
@@ -3608,7 +3616,7 @@ msgstr "Allow Repeated Tracks:"
 
 #: application/forms/SmartBlockCriteria.php:528
 msgid "Allow last track to exceed time limit:"
-msgstr ""
+msgstr "Allow last track to exceed time limit:"
 
 #: application/forms/SmartBlockCriteria.php:538
 msgid "Sort Tracks:"
@@ -3658,11 +3666,12 @@ msgstr "'Length' should be in '00:00:00' format"
 #: application/forms/SmartBlockCriteria.php:862
 msgid "Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
 msgstr ""
+"Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
 
 #: application/forms/SmartBlockCriteria.php:867
 #: application/forms/SmartBlockCriteria.php:892
 msgid "You must select a time unit for a relative datetime."
-msgstr ""
+msgstr "You must select a time unit for a relative date and time."
 
 #: application/forms/SmartBlockCriteria.php:872
 #: application/forms/SmartBlockCriteria.php:897
@@ -3671,7 +3680,7 @@ msgstr "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 0
 
 #: application/forms/SmartBlockCriteria.php:887
 msgid "Only non-negative integer numbers are allowed for a relative date time"
-msgstr ""
+msgstr "Only non-negative integer numbers are allowed for a relative date time"
 
 #: application/forms/SmartBlockCriteria.php:912
 msgid "The value has to be numeric"
@@ -3692,35 +3701,35 @@ msgstr "Value cannot be empty"
 
 #: application/forms/StreamSetting.php:25
 msgid "Hardware Audio Output:"
-msgstr ""
+msgstr "Hardware Audio Output:"
 
 #: application/forms/StreamSetting.php:33
 msgid "Output Type"
-msgstr ""
+msgstr "Output Type"
 
 #: application/forms/StreamSetting.php:35
 msgid "ALSA"
-msgstr ""
+msgstr "ALSA"
 
 #: application/forms/StreamSetting.php:36
 msgid "AO"
-msgstr ""
+msgstr "AO"
 
 #: application/forms/StreamSetting.php:37
 msgid "OSS"
-msgstr ""
+msgstr "OSS"
 
 #: application/forms/StreamSetting.php:38
 msgid "Portaudio"
-msgstr ""
+msgstr "Portaudio"
 
 #: application/forms/StreamSetting.php:39
 msgid "Pulseaudio"
-msgstr ""
+msgstr "Pulseaudio"
 
 #: application/forms/StreamSetting.php:40
 msgid "Jack"
-msgstr ""
+msgstr "Jack"
 
 #: application/forms/StreamSetting.php:47
 msgid "Icecast Vorbis Metadata"
@@ -3764,7 +3773,7 @@ msgstr "Custom / 3rd Party Streaming"
 
 #: application/forms/StreamSetting.php:91
 msgid "Default Streaming"
-msgstr ""
+msgstr "Default Streaming"
 
 #: application/forms/StreamSettingSubForm.php:52
 msgid "Enabled:"
@@ -3852,7 +3861,7 @@ msgstr "Partner Key:"
 
 #: application/forms/TuneInPreferences.php:37
 msgid "Partner Id:"
-msgstr "Partner Id:"
+msgstr "Partner ID:"
 
 #: application/forms/TuneInPreferences.php:78
 #: application/forms/TuneInPreferences.php:87
@@ -3918,6 +3927,9 @@ msgid ""
 "\n"
 "If you have any problems, please contact our support team: %s"
 msgstr ""
+"\n"
+"\n"
+"If you have any problems, please contact our support team: %s"
 
 #: application/models/Auth.php:36
 #, php-format
@@ -3927,6 +3939,10 @@ msgid ""
 "Thank you,\n"
 "The %s Team"
 msgstr ""
+"\n"
+"\n"
+"Thank you,\n"
+"The %s Team"
 
 #: application/models/Auth.php:38
 #, php-format
@@ -3957,7 +3973,7 @@ msgstr "Upload Time"
 
 #: application/models/Library.php:36 application/models/Library.php:59
 msgid "None"
-msgstr ""
+msgstr "None"
 
 #: application/models/MusicDir.php:169
 #, php-format
@@ -4194,7 +4210,7 @@ msgstr "Played"
 
 #: application/services/PodcastService.php:163
 msgid "Auto-generated smartblock for podcast"
-msgstr ""
+msgstr "Auto-generated smart-block for podcast"
 
 #: application/views/scripts/partialviews/dashboard-sub-nav.php:18
 msgid "Webstreams"
