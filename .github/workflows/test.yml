@@ -128,7 +128,7 @@ jobs:
           make -C api lint
           make -C analyzer lint
           make -C worker lint
-          make -C python_apps/api_clients lint
+          make -C api_client lint
           make -C python_apps/pypo lint
 
   test:
@@ -136,7 +136,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        context: [analyzer, python_apps/api_clients]
+        context: [analyzer, api_client]
         release: [bionic, buster]
 
     container: ghcr.io/libretime/libretime-dev:${{ matrix.release }}
