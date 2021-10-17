@@ -7,8 +7,6 @@ $(PHP-CS-FIXER):
 	mkdir -p tools
 	composer require --working-dir=tools friendsofphp/php-cs-fixer
 
-include locale/Makefile
-
 locale-update:
 	$(MAKE) -C locale update
 locale-build:
