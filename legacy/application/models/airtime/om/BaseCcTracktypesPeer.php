@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Base static class for performing query and update operations on the 'cc_track_types' table.
  *
@@ -56,6 +57,7 @@ abstract class BaseCcTracktypesPeer
      * @var        array CcTracktypes[]
      */
     public static $instances = array();
+
 
     /**
      * holds an array of fieldnames
@@ -216,7 +218,6 @@ abstract class BaseCcTracktypesPeer
 
         return $count;
     }
-
     /**
      * Selects one object from the DB.
      *
@@ -237,7 +238,6 @@ abstract class BaseCcTracktypesPeer
 
         return null;
     }
-
     /**
      * Selects several row from the DB.
      *
@@ -251,7 +251,6 @@ abstract class BaseCcTracktypesPeer
     {
         return CcTracktypesPeer::populateObjects(CcTracktypesPeer::doSelectStmt($criteria, $con));
     }
-
     /**
      * Prepares the Criteria object and uses the parent doSelect() method to execute a PDOStatement.
      *
@@ -282,7 +281,6 @@ abstract class BaseCcTracktypesPeer
         // BasePeer returns a PDOStatement
         return BasePeer::doSelect($criteria, $con);
     }
-
     /**
      * Adds an object to the instance pool.
      *
@@ -377,7 +375,6 @@ abstract class BaseCcTracktypesPeer
      */
     public static function clearRelatedInstancePool()
     {
-
     }
 
     /**
@@ -447,7 +444,6 @@ abstract class BaseCcTracktypesPeer
 
         return $results;
     }
-
     /**
      * Populates an object of the default type or an object that inherit from the default.
      *
@@ -634,8 +630,8 @@ abstract class BaseCcTracktypesPeer
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-    public static function doDelete($values, PropelPDO $con = null)
-    {
+     public static function doDelete($values, PropelPDO $con = null)
+     {
         if ($con === null) {
             $con = Propel::getConnection(CcTracktypesPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }

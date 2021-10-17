@@ -331,7 +331,7 @@ SQL;
 
     public function getDynamicBlockLength()
     {
-        list($value, $modifier) = $this->getLimitValueAndModifier();
+        [$value, $modifier] = $this->getLimitValueAndModifier();
         if ($modifier == 'items') {
             $length = $value . ' ' . _('items');
         } else {
@@ -1200,7 +1200,7 @@ SQL;
 
     public function hasItemLimit()
     {
-        list($value, $modifier) = $this->getLimitValueAndModifier();
+        [$value, $modifier] = $this->getLimitValueAndModifier();
 
         return $modifier == 'items';
     }

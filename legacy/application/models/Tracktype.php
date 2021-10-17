@@ -110,7 +110,7 @@ class Application_Model_Tracktype
             $params[$p] = $visible[$i];
         }
 
-        $sql_type = join(' OR ', $visibility);
+        $sql_type = implode(' OR ', $visibility);
 
         $sql = $sql_gen . ' WHERE (' . $sql_type . ') ';
 

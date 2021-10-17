@@ -75,7 +75,7 @@ abstract class BaseCcBlock extends BaseObject implements Persistent
 
     /**
      * The value for the type field.
-     * Note: this column has a database default value of: 'static'
+     * Note: this column has a database default value of: 'dynamic'
      * @var        string
      */
     protected $type;
@@ -151,7 +151,7 @@ abstract class BaseCcBlock extends BaseObject implements Persistent
     {
         $this->name = '';
         $this->length = '00:00:00';
-        $this->type = 'static';
+        $this->type = 'dynamic';
     }
 
     /**
@@ -329,7 +329,7 @@ abstract class BaseCcBlock extends BaseObject implements Persistent
      */
     public function setDbName($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -421,7 +421,7 @@ abstract class BaseCcBlock extends BaseObject implements Persistent
      */
     public function setDbDescription($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -442,7 +442,7 @@ abstract class BaseCcBlock extends BaseObject implements Persistent
      */
     public function setDbLength($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -463,7 +463,7 @@ abstract class BaseCcBlock extends BaseObject implements Persistent
      */
     public function setDbType($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -494,7 +494,7 @@ abstract class BaseCcBlock extends BaseObject implements Persistent
                 return false;
             }
 
-            if ($this->type !== 'static') {
+            if ($this->type !== 'dynamic') {
                 return false;
             }
 

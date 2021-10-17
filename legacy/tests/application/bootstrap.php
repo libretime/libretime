@@ -37,7 +37,7 @@ set_include_path(implode(PATH_SEPARATOR, [
 
 set_include_path(implode(PATH_SEPARATOR, [
     get_include_path(),
-    realpath(APPLICATION_PATH . '/../vendor/propel/propel1/runtime/lib'),
+    realpath(APPLICATION_PATH . '/../vendor/jooola/propel1/runtime/lib'),
 ]));
 
 // Ensure library/ is on include_path
@@ -78,7 +78,7 @@ set_include_path(APPLICATION_PATH . '/cloud_storage' . PATH_SEPARATOR . get_incl
 
 require_once APPLICATION_PATH . '/configs/conf.php';
 
-require_once 'propel/propel1/runtime/lib/Propel.php';
+require_once 'jooola/propel1/runtime/lib/Propel.php';
 Propel::init('../application/configs/airtime-conf-production.php');
 
 Zend_Session::start();

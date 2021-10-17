@@ -354,7 +354,7 @@ abstract class BaseCcWebstream extends BaseObject implements Persistent
      */
     public function setDbName($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -375,7 +375,7 @@ abstract class BaseCcWebstream extends BaseObject implements Persistent
      */
     public function setDbDescription($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -396,7 +396,7 @@ abstract class BaseCcWebstream extends BaseObject implements Persistent
      */
     public function setDbUrl($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -417,7 +417,7 @@ abstract class BaseCcWebstream extends BaseObject implements Persistent
      */
     public function setDbLength($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -528,7 +528,7 @@ abstract class BaseCcWebstream extends BaseObject implements Persistent
      */
     public function setDbMime($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 

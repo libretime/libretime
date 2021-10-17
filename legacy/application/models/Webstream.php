@@ -47,7 +47,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         $dateString = $this->webstream->getDbLength();
         $arr = explode(':', $dateString);
         if (count($arr) == 3) {
-            list($hours, $min, $sec) = $arr;
+            [$hours, $min, $sec] = $arr;
             $di = new DateInterval("PT{$hours}H{$min}M{$sec}S");
 
             return $di->format('%Hh %Im');
@@ -183,14 +183,14 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             $valid['url'][1] = _('URL should be 512 characters or less');
         } else {
             try {
-                list($mime, $content_length_found) = self::discoverStreamMime($url);
+                [$mime, $content_length_found] = self::discoverStreamMime($url);
                 if (is_null($mime)) {
                     throw new Exception(_('No MIME type found for webstream.'));
                 }
                 $mediaUrl = self::getMediaUrl($url, $mime, $content_length_found);
 
                 if (preg_match('/(x-mpegurl)|(xspf\+xml)|(pls\+xml)|(x-scpls)/', $mime)) {
-                    list($mime, $content_length_found) = self::discoverStreamMime($mediaUrl);
+                    [$mime, $content_length_found] = self::discoverStreamMime($mediaUrl);
                 }
             } catch (Exception $e) {
                 $valid['url'][0] = false;
@@ -384,7 +384,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
                 $headers = self::cleanHeaders($headers);
                 foreach ($headers as $h) {
                     if (preg_match('/^content-type:/i', $h)) {
-                        list(, $value) = explode(':', $h, 2);
+                        [, $value] = explode(':', $h, 2);
                         $mime = trim($value);
                     }
                     if (preg_match('/^content-length:/i', $h)) {

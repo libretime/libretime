@@ -23,7 +23,7 @@ class LengthFormatter
 
         $seconds = round($pieces[2], 1);
         $seconds = number_format($seconds, 1);
-        list($seconds, $milliStr) = explode('.', $seconds);
+        [$seconds, $milliStr] = explode('.', $seconds);
 
         if (intval($pieces[0]) !== 0) {
             $hours = ltrim($pieces[0], '0');

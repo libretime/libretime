@@ -111,12 +111,12 @@ class Application_Service_MediaService
                     break; //Break out of the loop if we successfully read the file!
                 } catch (LibreTimeFileNotFoundException $e) {
                     //If we have no alternate filepaths left, then let the exception bubble up.
-                    if (sizeof($filePaths) == 0) {
+                    if (count($filePaths) == 0) {
                         throw $e;
                     }
                 }
                 //Retry with the next alternate filepath in the list
-            } while (sizeof($filePaths) > 0);
+            } while (count($filePaths) > 0);
 
             exit;
         }

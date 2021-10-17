@@ -283,8 +283,8 @@ class LibraryController extends Zend_Controller_Action
         $newPl->setCreator(Application_Model_User::getCurrentUser()->getId());
         $newPl->setDescription($originalPl->getDescription());
 
-        list($plFadeIn) = $originalPl->getFadeInfo(0);
-        list(, $plFadeOut) = $originalPl->getFadeInfo($originalPl->getSize() - 1);
+        [$plFadeIn] = $originalPl->getFadeInfo(0);
+        [, $plFadeOut] = $originalPl->getFadeInfo($originalPl->getSize() - 1);
 
         $newPl->setfades($plFadeIn, $plFadeOut);
         $newPl->setName(sprintf(_('Copy of %s'), $originalPl->getName()));

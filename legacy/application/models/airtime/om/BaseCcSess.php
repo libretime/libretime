@@ -154,7 +154,7 @@ abstract class BaseCcSess extends BaseObject implements Persistent
      */
     public function setSessid($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -200,7 +200,7 @@ abstract class BaseCcSess extends BaseObject implements Persistent
      */
     public function setLogin($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 

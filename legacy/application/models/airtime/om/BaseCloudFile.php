@@ -151,7 +151,7 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
      */
     public function setStorageBackend($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -172,7 +172,7 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
      */
     public function setResourceId($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 

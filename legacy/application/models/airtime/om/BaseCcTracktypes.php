@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Base class that represents a row from the 'cc_track_types' table.
  *
@@ -43,8 +44,8 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
 
     /**
      * The value for the visibility field.
-     * Note: this column has a database default value of: 'U'
-     * @var        string
+     * Note: this column has a database default value of: true
+     * @var        boolean
      */
     protected $visibility;
 
@@ -131,7 +132,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
     /**
      * Get the [visibility] column value.
      *
-     * @return string
+     * @return boolean
      */
     public function getDbVisibility()
     {
@@ -178,6 +179,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
             $this->modifiedColumns[] = CcTracktypesPeer::ID;
         }
 
+
         return $this;
     } // setDbId()
 
@@ -189,7 +191,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
      */
     public function setDbCode($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -198,25 +200,35 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
             $this->modifiedColumns[] = CcTracktypesPeer::CODE;
         }
 
+
         return $this;
     } // setDbCode()
 
     /**
-     * Set the value of [visibility] column.
+     * Sets the value of the [visibility] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      *
-     * @param  string $v new value
+     * @param boolean|integer|string $v The new value
      * @return CcTracktypes The current object (for fluent API support)
      */
     public function setDbVisibility($v)
     {
-        if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
         }
 
         if ($this->visibility !== $v) {
             $this->visibility = $v;
             $this->modifiedColumns[] = CcTracktypesPeer::VISIBILITY;
         }
+
 
         return $this;
     } // setDbVisibility()
@@ -229,7 +241,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
      */
     public function setDbTypeName($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -237,6 +249,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
             $this->type_name = $v;
             $this->modifiedColumns[] = CcTracktypesPeer::TYPE_NAME;
         }
+
 
         return $this;
     } // setDbTypeName()
@@ -249,7 +262,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
      */
     public function setDbDescription($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -257,6 +270,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
             $this->description = $v;
             $this->modifiedColumns[] = CcTracktypesPeer::DESCRIPTION;
         }
+
 
         return $this;
     } // setDbDescription()
@@ -275,7 +289,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
                 return false;
             }
 
-            if ($this->visibility !== '1') {
+            if ($this->visibility !== true) {
                 return false;
             }
 
@@ -311,7 +325,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
             $this->code = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->visibility = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->visibility = ($row[$startcol + 2] !== null) ? (boolean) $row[$startcol + 2] : null;
             $this->type_name = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
             $this->description = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
             $this->resetModified();
@@ -383,6 +397,9 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
         }
         $this->hydrate($row, 0, true); // rehydrate
 
+        if ($deep) {  // also de-associate any related objects?
+
+        } // if (deep)
     }
 
     /**
@@ -674,6 +691,8 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
                 $failureMap = array_merge($failureMap, $retval);
             }
 
+
+
             $this->alreadyInValidation = false;
         }
 
@@ -740,11 +759,10 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
      *                    Defaults to BasePeer::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to true.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
-     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
+    public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
     {
         if (isset($alreadyDumpedObjects['CcTracktypes'][$this->getPrimaryKey()])) {
             return '*RECURSION*';
@@ -762,6 +780,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
+
 
         return $result;
     }
@@ -836,9 +855,9 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
 
         if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setDbCode($arr[$keys[1]]);
-        if (array_key_exists($keys[3], $arr)) $this->setDbVisibility($arr[$keys[2]]);
-        if (array_key_exists($keys[4], $arr)) $this->setDbTypeName($arr[$keys[3]]);
-        if (array_key_exists($keys[5], $arr)) $this->setDbDescription($arr[$keys[4]]);
+        if (array_key_exists($keys[2], $arr)) $this->setDbVisibility($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setDbTypeName($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setDbDescription($arr[$keys[4]]);
     }
 
     /**
@@ -922,18 +941,6 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
         $copyObj->setDbVisibility($this->getDbVisibility());
         $copyObj->setDbTypeName($this->getDbTypeName());
         $copyObj->setDbDescription($this->getDbDescription());
-
-        if ($deepCopy && !$this->startCopy) {
-            // important: temporarily setNew(false) because this affects the behavior of
-            // the getter/setter methods for fkey referrer objects.
-            $copyObj->setNew(false);
-            // store object hash to prevent cycle
-            $this->startCopy = true;
-
-            //unflag object copy
-            $this->startCopy = false;
-        } // if ($deepCopy)
-
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setDbId(NULL); // this is a auto-increment column, so set to default value
@@ -987,7 +994,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
     {
         $this->id = null;
         $this->code = null;
-        $this->visibility = false;
+        $this->visibility = null;
         $this->type_name = null;
         $this->description = null;
         $this->alreadyInSave = false;
@@ -1011,6 +1018,11 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
      */
     public function clearAllReferences($deep = false)
     {
+        if ($deep && !$this->alreadyInClearAllReferencesDeep) {
+            $this->alreadyInClearAllReferencesDeep = true;
+
+            $this->alreadyInClearAllReferencesDeep = false;
+        } // if ($deep)
 
     }
 

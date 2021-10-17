@@ -886,8 +886,8 @@ SQL;
         $start = self::AirtimeTimeToPypoTime($item['start']);
         $end = self::AirtimeTimeToPypoTime($item['end']);
 
-        list(, , , $start_hour) = explode('-', $start);
-        list(, , , $end_hour) = explode('-', $end);
+        [, , , $start_hour] = explode('-', $start);
+        [, , , $end_hour] = explode('-', $end);
 
         $same_hour = $start_hour == $end_hour;
         $independent_event = !$same_hour;
@@ -1139,7 +1139,7 @@ SQL;
             $needScheduleUntil->add(new DateInterval('P1D'));
         }
         Application_Model_Show::createAndFillShowInstancesPastPopulatedUntilDate($needScheduleUntil);
-        list($range_start, $range_end) = self::getRangeStartAndEnd($p_fromDateTime, $p_toDateTime);
+        [$range_start, $range_end] = self::getRangeStartAndEnd($p_fromDateTime, $p_toDateTime);
 
         $data = [];
         $data['media'] = [];

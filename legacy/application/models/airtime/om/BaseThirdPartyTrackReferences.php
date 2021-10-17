@@ -243,7 +243,7 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
      */
     public function setDbService($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -264,7 +264,7 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
      */
     public function setDbForeignId($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -333,7 +333,7 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
      */
     public function setDbStatus($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 

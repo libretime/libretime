@@ -249,7 +249,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject implements P
      */
     public function setDbName($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -270,7 +270,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject implements P
      */
     public function setDbLabel($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -291,7 +291,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject implements P
      */
     public function setDbType($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 

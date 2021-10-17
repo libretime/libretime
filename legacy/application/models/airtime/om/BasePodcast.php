@@ -374,7 +374,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function setDbUrl($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -395,7 +395,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function setDbTitle($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -416,7 +416,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function setDbCreator($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -437,7 +437,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function setDbDescription($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -458,7 +458,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function setDbLanguage($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -479,7 +479,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function setDbCopyright($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -500,7 +500,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function setDbLink($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -521,7 +521,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function setDbItunesAuthor($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -542,7 +542,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function setDbItunesKeywords($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -563,7 +563,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function setDbItunesSummary($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -584,7 +584,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function setDbItunesSubtitle($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -605,7 +605,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function setDbItunesCategory($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -626,7 +626,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function setDbItunesExplicit($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 

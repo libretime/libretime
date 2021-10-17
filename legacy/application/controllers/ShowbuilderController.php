@@ -195,7 +195,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $timestamp = intval($request->getParam('timestamp', -1));
         $instances = $request->getParam('instances', []);
 
-        list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
+        [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($request);
 
         $opts = ['myShows' => $my_shows, 'showFilter' => $show_filter];
         $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT, $opts);
@@ -217,7 +217,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $show_instance_filter = intval($request->getParam('showInstanceFilter', 0));
         $my_shows = intval($request->getParam('myShows', 0));
 
-        list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
+        [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($request);
 
         $opts = ['myShows' => $my_shows,
             'showFilter' => $show_filter,

@@ -586,7 +586,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
      */
     public function setDbClipLength($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -657,7 +657,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
      */
     public function setDbCueIn($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -678,7 +678,7 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
      */
     public function setDbCueOut($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 

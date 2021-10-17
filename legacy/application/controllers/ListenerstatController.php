@@ -29,7 +29,7 @@ class ListenerstatController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl . 'js/airtime/utilities/utilities.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->headLink()->appendStylesheet($baseUrl . 'css/jquery.ui.timepicker.css?' . $CC_CONFIG['airtime_version']);
 
-        list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
+        [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($request);
         $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
         $startsDT->setTimezone($userTimezone);
         $endsDT->setTimezone($userTimezone);
@@ -85,7 +85,7 @@ class ListenerstatController extends Zend_Controller_Action
 
         $form = new Application_Form_ShowListenerStat();
 
-        list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
+        [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($request);
         $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
         $startsDT->setTimezone($userTimezone);
         $endsDT->setTimezone($userTimezone);
@@ -101,7 +101,7 @@ class ListenerstatController extends Zend_Controller_Action
 
     public function getDataAction()
     {
-        list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
+        [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
         $data = Application_Model_ListenerStat::getDataPointsWithinRange(
             $startsDT->format(DEFAULT_TIMESTAMP_FORMAT),
             $endsDT->format(DEFAULT_TIMESTAMP_FORMAT)
@@ -111,7 +111,7 @@ class ListenerstatController extends Zend_Controller_Action
 
     public function getShowDataAction()
     {
-        list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
+        [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
         $show_id = $this->getRequest()->getParam('show_id', null);
         $data = Application_Model_ListenerStat::getShowDataPointsWithinRange(
             $startsDT->format(DEFAULT_TIMESTAMP_FORMAT),
@@ -123,7 +123,7 @@ class ListenerstatController extends Zend_Controller_Action
 
     public function getAllShowData()
     {
-        list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
+        [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
 
         return Application_Model_ListenerStat::getAllShowDataPointsWithinRange(
             $startsDT->format(DEFAULT_TIMESTAMP_FORMAT),
@@ -133,7 +133,7 @@ class ListenerstatController extends Zend_Controller_Action
 
     public function getAllShowDataAction()
     {
-        list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
+        [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
         $show_id = $this->getRequest()->getParam('show_id', null);
         $data = Application_Model_ListenerStat::getAllShowDataPointsWithinRange(
             $startsDT->format(DEFAULT_TIMESTAMP_FORMAT),

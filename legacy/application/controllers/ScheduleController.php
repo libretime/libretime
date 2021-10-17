@@ -148,11 +148,11 @@ class ScheduleController extends Zend_Controller_Action
 
         $calendar_interval = Application_Model_Preference::GetCalendarTimeScale();
         if ($calendar_interval == 'agendaDay') {
-            list($start, $end) = Application_Model_Show::getStartEndCurrentDayView();
+            [$start, $end] = Application_Model_Show::getStartEndCurrentDayView();
         } elseif ($calendar_interval == 'agendaWeek') {
-            list($start, $end) = Application_Model_Show::getStartEndCurrentWeekView();
+            [$start, $end] = Application_Model_Show::getStartEndCurrentWeekView();
         } elseif ($calendar_interval == 'month') {
-            list($start, $end) = Application_Model_Show::getStartEndCurrentMonthPlusView();
+            [$start, $end] = Application_Model_Show::getStartEndCurrentMonthPlusView();
         } else {
             Logging::error("Invalid Calendar Interval '{$calendar_interval}'");
         }
@@ -487,7 +487,7 @@ class ScheduleController extends Zend_Controller_Action
 
         $forms = $this->createShowFormAction();
 
-        list($data, $validateStartDate, $validateStartTime, $originalShowStartDateTime) =
+        [$data, $validateStartDate, $validateStartTime, $originalShowStartDateTime] =
             $service_showForm->preEditShowValidationCheck($data);
 
         if ($service_showForm->validateShowForms(
@@ -548,7 +548,7 @@ class ScheduleController extends Zend_Controller_Action
 
         $forms = $this->createShowFormAction();
 
-        list($data, $validateStartDate, $validateStartTime, $originalShowStartDateTime) =
+        [$data, $validateStartDate, $validateStartTime, $originalShowStartDateTime] =
             $service_showForm->preEditShowValidationCheck($data);
 
         if ($service_showForm->validateShowForms(

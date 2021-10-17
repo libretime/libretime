@@ -1,6 +1,6 @@
 <?php
 
-define('BUILD_PATH', dirname(dirname(__DIR__)) . '/build/');
+define('BUILD_PATH', dirname(__DIR__, 2) . '/build/');
 define('AIRTIME_CONF_TEMP_PATH', '/etc/airtime/airtime.conf.temp');
 define('RMQ_INI_TEMP_PATH', '/tmp/rabbitmq.ini.tmp');
 
@@ -89,7 +89,7 @@ abstract class Setup
     {
         $string = '';
         for ($i = 0; $i < $p_len; ++$i) {
-            $pos = mt_rand(0, strlen($p_chars) - 1);
+            $pos = random_int(0, strlen($p_chars) - 1);
             $string .= $p_chars[$pos];
         }
 

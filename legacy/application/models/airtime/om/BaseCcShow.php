@@ -460,7 +460,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      */
     public function setDbName($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -481,7 +481,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      */
     public function setDbUrl($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -502,7 +502,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      */
     public function setDbGenre($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -523,7 +523,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      */
     public function setDbDescription($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -544,7 +544,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      */
     public function setDbColor($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -565,7 +565,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      */
     public function setDbBackgroundColor($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -644,7 +644,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      */
     public function setDbLiveStreamUser($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -665,7 +665,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      */
     public function setDbLiveStreamPass($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -744,7 +744,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
      */
     public function setDbImagePath($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 

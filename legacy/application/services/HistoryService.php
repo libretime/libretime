@@ -122,7 +122,7 @@ class Application_Service_HistoryService
             ' FROM cc_files AS file' .
             ') AS file_md';
 
-            $fileMd = str_replace('%NON_NULL_FILE_SELECT%', join(', ', $nonNullFileSelect), $fileMd);
+            $fileMd = str_replace('%NON_NULL_FILE_SELECT%', implode(', ', $nonNullFileSelect), $fileMd);
 
             //null files are from manually added data (filling in webstream info etc)
             $nullFile = '(' .
@@ -135,11 +135,11 @@ class Application_Service_HistoryService
             //building the file inner query
 
             $fileSqlQuery =
-            'SELECT ' . join(', ', $fileSelect) .
+            'SELECT ' . implode(', ', $fileSelect) .
             " FROM {$historyFile}" .
             " LEFT JOIN {$fileMd} USING (file_id)" .
             ' UNION' .
-            ' SELECT ' . join(', ', $nullFileSelect) .
+            ' SELECT ' . implode(', ', $nullFileSelect) .
             " FROM {$nullFile}";
 
             foreach ($fileMdFilters as $filter) {
@@ -159,7 +159,7 @@ class Application_Service_HistoryService
         }
 
         $mainSqlQuery .=
-        'SELECT ' . join(', ', $mainSelect) .
+        'SELECT ' . implode(', ', $mainSelect) .
         " FROM {$historyRange}";
 
         if (isset($fileSqlQuery)) {
@@ -214,7 +214,7 @@ class Application_Service_HistoryService
         }
 
         if (count($orderBys) > 0) {
-            $orders = join(', ', $orderBys);
+            $orders = implode(', ', $orderBys);
 
             $mainSqlQuery .=
             " ORDER BY {$orders}";
@@ -340,7 +340,7 @@ class Application_Service_HistoryService
 		LEFT JOIN cc_files AS file ON (file.id = playout.file_id)) AS summary';
 
         $mainSqlQuery .=
-        'SELECT ' . join(', ', $select) .
+        'SELECT ' . implode(', ', $select) .
         " FROM {$fileSummaryTable}";
 
         //-------------------------------------------------------------------------
@@ -373,7 +373,7 @@ class Application_Service_HistoryService
         }
 
         if ($numOrderColumns > 0) {
-            $orders = join(', ', $orderBys);
+            $orders = implode(', ', $orderBys);
 
             $mainSqlQuery .=
             " ORDER BY {$orders}";

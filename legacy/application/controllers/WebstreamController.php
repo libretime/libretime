@@ -146,7 +146,7 @@ class WebstreamController extends Zend_Controller_Action
             return;
         }
 
-        list($analysis, $mime, $mediaUrl, $di) = Application_Model_Webstream::analyzeFormData($parameters);
+        [$analysis, $mime, $mediaUrl, $di] = Application_Model_Webstream::analyzeFormData($parameters);
 
         try {
             if (Application_Model_Webstream::isValid($analysis)) {

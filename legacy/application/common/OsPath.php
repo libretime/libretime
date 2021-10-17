@@ -70,7 +70,7 @@ class Application_Common_OsPath
             $paths[0] = DIRECTORY_SEPARATOR . $paths[0];
         }
 
-        return join(DIRECTORY_SEPARATOR, $paths);
+        return implode(DIRECTORY_SEPARATOR, $paths);
     }
 
     public static function getBaseDir()

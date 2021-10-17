@@ -167,7 +167,7 @@ class DatabaseSetup extends Setup
      */
     private function createDatabaseTables()
     {
-        $sqlDir = dirname(dirname(__DIR__)) . '/build/sql/';
+        $sqlDir = dirname(__DIR__, 2) . '/build/sql/';
         $files = ['schema.sql', 'sequences.sql', 'views.sql', 'triggers.sql', 'defaultdata.sql'];
         foreach ($files as $f) {
             try {

@@ -223,7 +223,7 @@ abstract class BaseCcWebstreamMetadata extends BaseObject implements Persistent
      */
     public function setDbLiquidsoapData($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 

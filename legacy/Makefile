@@ -30,3 +30,8 @@ lint: $(PHP-CS-FIXER)
 .PHONY: build
 build:
 	COMPOSER_ARGS="--no-dev --ignore-platform-reqs" $(MAKE)
+
+propel-gen: vendor
+	cd build && \
+	../vendor/bin/propel-gen \
+		-Dproject.home="$(shell pwd)"

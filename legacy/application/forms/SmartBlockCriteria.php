@@ -913,7 +913,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                                 $isValid = false;
                             }
                             // length check
-                            if ($d['sp_criteria_value'] >= pow(2, 31)) {
+                            if ($d['sp_criteria_value'] >= 2 ** 31) {
                                 $element->addError(_('The value should be less then 2147483648'));
                                 $isValid = false;
                             }

@@ -1,22 +1,23 @@
 <?php
 
+
 /**
  * Base class that represents a query for the 'cc_track_types' table.
  *
  *
  *
  * @method CcTracktypesQuery orderByDbId($order = Criteria::ASC) Order by the id column
- * @method CcTracktypesQuery orderByDbCOde($order = Criteria::ASC) Order by the code column
+ * @method CcTracktypesQuery orderByDbCode($order = Criteria::ASC) Order by the code column
  * @method CcTracktypesQuery orderByDbVisibility($order = Criteria::ASC) Order by the visibility column
  * @method CcTracktypesQuery orderByDbTypeName($order = Criteria::ASC) Order by the type_name column
  * @method CcTracktypesQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
-
+ *
  * @method CcTracktypesQuery groupByDbId() Group by the id column
- * @method CcTracktypesQuery groupByDbCOde() Group by the code column
+ * @method CcTracktypesQuery groupByDbCode() Group by the code column
  * @method CcTracktypesQuery groupByDbVisibility() Group by the visibility column
  * @method CcTracktypesQuery groupByDbTypeName() Group by the type_name column
  * @method CcTracktypesQuery groupByDbDescription() Group by the description column
-
+ *
  * @method CcTracktypesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method CcTracktypesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method CcTracktypesQuery innerJoin($relation) Adds a INNER JOIN clause to the query
@@ -25,16 +26,16 @@
  * @method CcTracktypes findOneOrCreate(PropelPDO $con = null) Return the first CcTracktypes matching the query, or a new CcTracktypes object populated from the query conditions when no match is found
  *
  * @method CcTracktypes findOneByDbCode(string $code) Return the first CcTracktypes filtered by the code column
- * @method CcTracktypes findOneByDbVisibility(string $visibility) Return the first CcTracktypes filtered by the visibility column
+ * @method CcTracktypes findOneByDbVisibility(boolean $visibility) Return the first CcTracktypes filtered by the visibility column
  * @method CcTracktypes findOneByDbTypeName(string $type_name) Return the first CcTracktypes filtered by the type_name column
  * @method CcTracktypes findOneByDbDescription(string $description) Return the first CcTracktypes filtered by the description column
-
+ *
  * @method array findByDbId(int $id) Return CcTracktypes objects filtered by the id column
  * @method array findByDbCode(string $code) Return CcTracktypes objects filtered by the code column
- * @method array findByDbVisibility(string $visibility) Return CcTracktypes objects filtered by the visibility column
+ * @method array findByDbVisibility(boolean $visibility) Return CcTracktypes objects filtered by the visibility column
  * @method array findByDbTypeName(string $type_name) Return CcTracktypes objects filtered by the type_name column
  * @method array findByDbDescription(string $description) Return CcTracktypes objects filtered by the description column
-
+ *
  * @package    propel.generator.airtime.om
  */
 abstract class BaseCcTracktypesQuery extends ModelCriteria
@@ -306,32 +307,30 @@ abstract class BaseCcTracktypesQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByDbVisibility('fooValue');   // WHERE visibility = 'fooValue'
-     * $query->filterByDbVisibility('%fooValue%'); // WHERE visibility LIKE '%fooValue%'
+     * $query->filterByDbVisibility(true); // WHERE visibility = true
+     * $query->filterByDbVisibility('yes'); // WHERE visibility = true
      * </code>
      *
-     * @param     string $dbVisibility The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     boolean|string $dbVisibility The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return CcTracktypesQuery The current query, for fluid interface
      */
     public function filterByDbVisibility($dbVisibility = null, $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($dbVisibility)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $dbVisibility)) {
-                $dbVisibility = str_replace('*', '%', $dbVisibility);
-                $comparison = Criteria::LIKE;
-            }
+        if (is_string($dbVisibility)) {
+            $dbVisibility = in_array(strtolower($dbVisibility), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
         }
 
         return $this->addUsingAlias(CcTracktypesPeer::VISIBILITY, $dbVisibility, $comparison);
     }
 
     /**
-     * Filter the query on the first_name column
+     * Filter the query on the type_name column
      *
      * Example usage:
      * <code>
@@ -339,53 +338,53 @@ abstract class BaseCcTracktypesQuery extends ModelCriteria
      * $query->filterByDbTypeName('%fooValue%'); // WHERE type_name LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $dbFirstName The value to use as filter.
+     * @param     string $dbTypeName The value to use as filter.
      *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return CcTracktypesQuery The current query, for fluid interface
      */
-    public function filterByDbFirstName($dbFirstName = null, $comparison = null)
+    public function filterByDbTypeName($dbTypeName = null, $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($dbFirstName)) {
+            if (is_array($dbTypeName)) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $dbFirstName)) {
-                $dbFirstName = str_replace('*', '%', $dbFirstName);
+            } elseif (preg_match('/[\%\*]/', $dbTypeName)) {
+                $dbTypeName = str_replace('*', '%', $dbTypeName);
                 $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(CcTracktypesPeer::FIRST_NAME, $dbFirstName, $comparison);
+        return $this->addUsingAlias(CcTracktypesPeer::TYPE_NAME, $dbTypeName, $comparison);
     }
 
     /**
-     * Filter the query on the last_name column
+     * Filter the query on the description column
      *
      * Example usage:
      * <code>
-     * $query->filterByDbLastName('fooValue');   // WHERE last_name = 'fooValue'
-     * $query->filterByDbLastName('%fooValue%'); // WHERE last_name LIKE '%fooValue%'
+     * $query->filterByDbDescription('fooValue');   // WHERE description = 'fooValue'
+     * $query->filterByDbDescription('%fooValue%'); // WHERE description LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $dbLastName The value to use as filter.
+     * @param     string $dbDescription The value to use as filter.
      *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return CcTracktypesQuery The current query, for fluid interface
      */
-    public function filterByDbLastName($dbLastName = null, $comparison = null)
+    public function filterByDbDescription($dbDescription = null, $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($dbLastName)) {
+            if (is_array($dbDescription)) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $dbLastName)) {
-                $dbLastName = str_replace('*', '%', $dbLastName);
+            } elseif (preg_match('/[\%\*]/', $dbDescription)) {
+                $dbDescription = str_replace('*', '%', $dbDescription);
                 $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(CcTracktypesPeer::LAST_NAME, $dbLastName, $comparison);
+        return $this->addUsingAlias(CcTracktypesPeer::DESCRIPTION, $dbDescription, $comparison);
     }
 
     /**

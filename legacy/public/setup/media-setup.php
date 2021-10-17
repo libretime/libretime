@@ -1,25 +1,25 @@
 <?php
 
-define('CONFIG_PATH', dirname(dirname(__DIR__)) . '/application/configs/');
+define('CONFIG_PATH', dirname(__DIR__, 2) . '/application/configs/');
 define('DEFAULT_STOR_DIR', '/srv/airtime/stor/');
 
-require_once dirname(dirname(__DIR__)) . '/vendor/propel/propel1/runtime/lib/Propel.php';
+require_once dirname(__DIR__, 2) . '/vendor/jooola/propel1/runtime/lib/Propel.php';
 
 require_once CONFIG_PATH . 'conf.php';
 
-require_once dirname(dirname(__DIR__)) . '/application/models/airtime/map/CcMusicDirsTableMap.php';
+require_once dirname(__DIR__, 2) . '/application/models/airtime/map/CcMusicDirsTableMap.php';
 
-require_once dirname(dirname(__DIR__)) . '/application/models/airtime/om/BaseCcMusicDirsQuery.php';
+require_once dirname(__DIR__, 2) . '/application/models/airtime/om/BaseCcMusicDirsQuery.php';
 
-require_once dirname(dirname(__DIR__)) . '/application/models/airtime/CcMusicDirsQuery.php';
+require_once dirname(__DIR__, 2) . '/application/models/airtime/CcMusicDirsQuery.php';
 
-require_once dirname(dirname(__DIR__)) . '/application/models/airtime/om/BaseCcMusicDirs.php';
+require_once dirname(__DIR__, 2) . '/application/models/airtime/om/BaseCcMusicDirs.php';
 
-require_once dirname(dirname(__DIR__)) . '/application/models/airtime/CcMusicDirs.php';
+require_once dirname(__DIR__, 2) . '/application/models/airtime/CcMusicDirs.php';
 
-require_once dirname(dirname(__DIR__)) . '/application/models/airtime/om/BaseCcMusicDirsPeer.php';
+require_once dirname(__DIR__, 2) . '/application/models/airtime/om/BaseCcMusicDirsPeer.php';
 
-require_once dirname(dirname(__DIR__)) . '/application/models/airtime/CcMusicDirsPeer.php';
+require_once dirname(__DIR__, 2) . '/application/models/airtime/CcMusicDirsPeer.php';
 
 /**
  * Author: sourcefabric

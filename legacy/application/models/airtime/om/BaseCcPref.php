@@ -176,7 +176,7 @@ abstract class BaseCcPref extends BaseObject implements Persistent
      */
     public function setKeystr($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -197,7 +197,7 @@ abstract class BaseCcPref extends BaseObject implements Persistent
      */
     public function setValstr($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 

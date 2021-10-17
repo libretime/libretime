@@ -1,5 +1,7 @@
 <?php
 
+
+
 /**
  * This class defines the structure of the 'cc_track_types' table.
  *
@@ -38,9 +40,9 @@ class CcTracktypesTableMap extends TableMap
         $this->setPrimaryKeyMethodInfo('cc_track_types_id_seq');
         // columns
         $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
-        $this->addColumn('code', 'DbCode', 'VARCHAR', true, 255, '');
-        $this->addColumn('visibility', 'DbVisibility', 'BOOLEAN', true, 1, true);
-        $this->addColumn('type_name', 'DbTypeName', 'VARCHAR', true, 255, '');
+        $this->addColumn('code', 'DbCode', 'VARCHAR', true, 16, '');
+        $this->addColumn('visibility', 'DbVisibility', 'BOOLEAN', true, null, true);
+        $this->addColumn('type_name', 'DbTypeName', 'VARCHAR', true, 64, '');
         $this->addColumn('description', 'DbDescription', 'VARCHAR', true, 255, '');
         // validators
     } // initialize()
@@ -50,7 +52,6 @@ class CcTracktypesTableMap extends TableMap
      */
     public function buildRelations()
     {
-
     } // buildRelations()
 
 } // CcTracktypesTableMap

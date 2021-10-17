@@ -126,7 +126,7 @@ class Application_Model_Auth
     {
         $string = '';
         for ($i = 0; $i < $length; ++$i) {
-            $string .= $allowed_chars[mt_rand(0, strlen($allowed_chars) - 1)];
+            $string .= $allowed_chars[random_int(0, strlen($allowed_chars) - 1)];
         }
 
         return $string;

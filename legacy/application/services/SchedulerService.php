@@ -298,7 +298,7 @@ class Application_Service_SchedulerService
                         $insert_sql = 'INSERT INTO cc_schedule (starts, ends, ' .
                             'clip_length, fade_in, fade_out, cue_in, cue_out, ' .
                             'file_id, stream_id, instance_id, position)  VALUES ' .
-                            implode($values, ',');
+                            implode(',', $values);
                         Application_Common_Database::prepareAndExecute(
                             $insert_sql,
                             [],

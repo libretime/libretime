@@ -499,7 +499,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      */
     public function setDbLogin($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -520,7 +520,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      */
     public function setDbPass($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -541,7 +541,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      */
     public function setDbType($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -562,7 +562,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      */
     public function setDbFirstName($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -583,7 +583,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      */
     public function setDbLastName($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -650,7 +650,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      */
     public function setDbSkypeContact($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -671,7 +671,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      */
     public function setDbJabberContact($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -692,7 +692,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      */
     public function setDbEmail($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 
@@ -713,7 +713,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      */
     public function setDbCellPhone($v)
     {
-        if ($v !== null && is_numeric($v)) {
+        if ($v !== null) {
             $v = (string) $v;
         }
 

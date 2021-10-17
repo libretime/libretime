@@ -89,7 +89,6 @@ class Logging
         //Escape the % symbols in any of our errors because Sentry chokes (vsprint formatting error).
         $msg = self::toString($p_msg);
         $msg = str_replace('%', '%%', $msg);
-        SentryLogger::getInstance()->captureError($msg);
     }
 
     public static function debug($p_msg)
