@@ -127,7 +127,7 @@ jobs:
         run: |
           make -C api lint
           make -C analyzer lint
-          make -C python_apps/airtime-celery lint
+          make -C worker lint
           make -C python_apps/api_clients lint
           make -C python_apps/pypo lint
 

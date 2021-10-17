@@ -201,7 +201,7 @@ function systemInitInstall() {
         alt_path="${target_path//libretime-/airtime_}"
         ;;
       libretime-celery)
-        source_path="${python_source_path}/airtime-celery/install/systemd/${service_name}.service"
+        source_path="${SCRIPT_DIR}/worker/install/systemd/${service_name}.service"
         target_path="/etc/systemd/system/${service_name}.service"
         alt_path="${target_path//libretime-/airtime-}"
         ;;
@@ -263,7 +263,7 @@ function systemInitInstall() {
         user=${user:-$web_user}
         ;;
       libretime-celery)
-        source_path="${python_source_path}/airtime-celery/install/upstart/${service_name}.conf"
+        source_path="${SCRIPT_DIR}/worker/install/upstart/${service_name}.conf"
         target_path="/etc/init/${service_name}.conf"
         user=""
         ;;
@@ -301,7 +301,7 @@ function systemInitInstall() {
         user=${user:-$web_user}
         ;;
       libretime-celery)
-        source_path="${python_source_path}/airtime-celery/install/sysvinit/${service_name}"
+        source_path="${SCRIPT_DIR}/worker/install/sysvinit/${service_name}"
         target_path="/etc/init.d/${service_name}"
         source_config_path="${python_source_path}/${service_name}/install/conf/${service_name}"
         target_config_path="/etc/default/${service_name}"
@@ -1030,8 +1030,8 @@ systemInitInstall libretime-liquidsoap "$web_user"
 systemInitInstall libretime-playout "$web_user"
 verbose "...Done"
 
-verbose "\n * Installing airtime-celery..."
-loudCmd "$pip_cmd install ${AIRTIMEROOT}/python_apps/airtime-celery"
+verbose "\n * Installing celery..."
+loudCmd "$pip_cmd install ${AIRTIMEROOT}/worker"
 # Create the Celery user
 if $is_centos_dist; then
   loudCmd "id celery 2>/dev/null || adduser --no-create-home -c 'LibreTime Celery' -r celery || true"
