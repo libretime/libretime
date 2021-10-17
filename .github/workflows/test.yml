@@ -129,7 +129,7 @@ jobs:
           make -C analyzer lint
           make -C worker lint
           make -C api_client lint
-          make -C python_apps/pypo lint
+          make -C playout lint
 
   test:
     runs-on: ubuntu-latest

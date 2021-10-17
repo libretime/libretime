@@ -1,6 +1,6 @@
 all: lint
 
-include ../../tools/python.mk
+include ../tools/python.mk
 
 PIP_INSTALL := --editable .
 PYLINT_ARG := liquidsoap pypo
