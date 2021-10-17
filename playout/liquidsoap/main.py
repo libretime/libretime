@@ -45,6 +45,3 @@ def run():
         print(f"Liquidsoap {liquidsoap_version} using script: {script_path}")
         exec_args.append("--debug")
     os.execl(*exec_args)
-
-
-run()
