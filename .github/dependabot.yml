@@ -20,6 +20,15 @@ updates:
   #     - docker
   #     - dependencies
 
+  # Maintain dependencies for legacy
+  - package-ecosystem: "composer"
+    directory: "/legacy"
+    schedule:
+      interval: "daily"
+    labels:
+      - php
+      - dependencies
+
   # Maintain dependencies for Python apps
   - package-ecosystem: "pip"
     directory: "/api"
