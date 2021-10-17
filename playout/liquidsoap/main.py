@@ -5,7 +5,7 @@ import logging
 import os
 import subprocess
 
-from pypo import pure
+from libretime.playout import pure
 
 from . import generate_liquidsoap_cfg
 
