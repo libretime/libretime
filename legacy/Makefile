@@ -10,7 +10,7 @@ $(PHP-CS-FIXER):
 locale-update:
 	$(MAKE) -C locale update
 locale-build:
-	$(MAKE) -C locale build
+	$(MAKE) -C locale clean build
 
 vendor:
 	composer install --no-progress --no-interaction $(COMPOSER_ARGS)
