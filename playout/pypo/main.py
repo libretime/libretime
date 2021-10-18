@@ -15,7 +15,7 @@ import time
 from datetime import datetime
 from optparse import OptionParser
 
-from api_clients import version1 as api_client
+from api_clients.version1 import AirtimeApiClient as ApiClient
 from configobj import ConfigObj
 
 try:
@@ -182,7 +182,7 @@ def get_liquidsoap_version(version_string):
     return False
 
 
-def liquidsoap_startup_test():
+def liquidsoap_startup_test(telnet_lock, ls_host, ls_port):
 
     liquidsoap_version_string = liquidsoap_get_info(
         telnet_lock, ls_host, ls_port, logger
@@ -210,7 +210,7 @@ def liquidsoap_startup_test():
     logger.info("Liquidsoap version string found %s" % liquidsoap_version_string)
 
 
-if __name__ == "__main__":
+def run():
     logger.info("###########################################")
     logger.info("#             *** pypo  ***               #")
     logger.info("#   Liquidsoap Scheduled Playout System   #")
@@ -224,7 +224,7 @@ if __name__ == "__main__":
 
     signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
-    api_client = api_client.AirtimeApiClient()
+    api_client = ApiClient()
     g = Global(api_client)
 
     while not g.selfcheck():
@@ -244,7 +244,7 @@ if __name__ == "__main__":
     ls_host = config["pypo"]["ls_host"]
     ls_port = config["pypo"]["ls_port"]
 
-    liquidsoap_startup_test()
+    liquidsoap_startup_test(telnet_lock, ls_host, ls_port)
 
     if options.test:
         g.test_api()

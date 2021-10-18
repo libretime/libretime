@@ -19,8 +19,12 @@ setup(
     license="AGPLv3",
     packages=find_packages(),
     include_package_data=True,
-    scripts=["bin/libretime-api"],
     python_requires=">=3.6",
+    entry_points={
+        "console_scripts": [
+            "libretime-api=libretimeapi.cli:main",
+        ]
+    },
     install_requires=[
         "coreapi",
         "django~=3.0",

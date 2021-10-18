@@ -1,6 +1,0 @@
-#!/usr/bin/env python3
-
-import runpy
-
-# Run the liquidsoap python module
-runpy.run_module("liquidsoap")

@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import traceback
 
 """
@@ -191,7 +189,7 @@ class Notify:
             )
 
 
-if __name__ == "__main__":
+def run():
     print()
     print("#########################################")
     print("#           *** pypo  ***               #")

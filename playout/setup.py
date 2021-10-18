@@ -24,11 +24,13 @@ setup(
         "liquidsoap",
     ],
     package_data={"": ["**/*.liq", "*.cfg", "*.types"]},
-    scripts=[
-        "bin/libretime-playout",
-        "bin/libretime-liquidsoap",
-        "bin/libretime-playout-notify",
-    ],
+    entry_points={
+        "console_scripts": [
+            "libretime-playout=pypo.main:run",
+            "libretime-liquidsoap=liquidsoap.main:run",
+            "libretime-playout-notify=pypo.notify.main:run",
+        ]
+    },
     python_requires=">=3.6",
     install_requires=[
         f"libretime-api-client @ file://localhost/{here.parent}/api_client#egg=libretime-api-client",
