@@ -1,6 +1,6 @@
 import os
 
-from setuptools import find_packages, setup
+from setuptools import setup
 
 # Change directory since setuptools uses relative paths
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
