@@ -1,5 +1,6 @@
 import configparser
 import os
+import sys
 
 from .utils import get_random_string, read_config_file
 
@@ -11,7 +12,9 @@ API_VERSION = "2.0.0"
 
 try:
     CONFIG = read_config_file(DEFAULT_CONFIG_PATH)
-except IOError:
+except IOError as e:
+    print(f"Unable to read config file {DEFAULT_CONFIG_PATH}", file=sys.stderr)
+    print(e, file=sys.stderr)
     CONFIG = configparser.ConfigParser()
 
 

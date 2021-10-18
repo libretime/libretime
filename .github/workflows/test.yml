@@ -166,3 +166,55 @@ jobs:
       - name: Test
         run: make test
         working-directory: ${{ matrix.context }}
+
+  test-with-database:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        context: [api]
+        release: [bionic, buster]
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: libretime
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    container: ghcr.io/libretime/libretime-dev:${{ matrix.release }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      LIBRETIME_CONF_FILE: /tmp/libretime-test.conf
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.context }}-${{ hashFiles('**/setup.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.context }}
+
+      - name: Setup libretime configuration
+        run: |
+          cat <<EOF > $LIBRETIME_CONF_FILE
+          [general]
+          api_key = test_key
+          [database]
+          host = postgres
+          dbname = libretime
+          dbuser = postgres
+          dbpass = libretime
+          EOF
+          cat $LIBRETIME_CONF_FILE
+
+      - name: Test
+        run: make test
+        working-directory: ${{ matrix.context }}
