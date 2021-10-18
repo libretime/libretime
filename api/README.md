@@ -30,13 +30,13 @@ sudo systemctl stop libretime-api
 sudo systemctl restart libretime-analyzer libretime-celery libretime-liquidsoap libretime-playout
 cd /vagrant/api
 sudo pip3 install -e .
-sudo -u www-data LIBRETIME_DEBUG=True python3 bin/libretime-api runserver 0.0.0.0:8081
+sudo -u www-data LIBRETIME_DEBUG=True libretime-api runserver 0.0.0.0:8081
 ```
 
 Unit tests can be run in the vagrant environment using
 
 ```
-sudo -u www-data LIBRETIME_DEBUG=True python3 bin/libretime-api test libretimeapi
+sudo -u www-data LIBRETIME_DEBUG=True libretime-api test libretimeapi
 ```
 
 ## 3rd Party Licences
