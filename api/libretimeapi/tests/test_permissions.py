@@ -92,8 +92,6 @@ class TestPermissions(APITestCase):
             self.assertEqual(
                 response.status_code, 403, msg="Invalid for model {}".format(model)
             )
-        response = self.logged_in_test_model("users", "guest", GUEST, self.client.get)
-        self.assertEqual(response.status_code, 403, msg="Invalid for model users")
 
     def test_dj_get_permissions(self):
         for model in self.URLS:
