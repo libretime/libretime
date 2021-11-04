@@ -19,8 +19,8 @@ def test_analyze(filepath, length, cuein, cueout):
     if filepath.endswith("m4a"):
         return
 
-    # Silan does not work with mp3 on debian buster
-    if filepath.endswith("mp3") and "buster" == distro.codename():
+    # Silan does not work with mp3 on debian buster or Ubuntu Focal
+    if filepath.endswith("mp3") and distro.codename() in ("buster", "focal"):
         return
 
     assert float(metadata["cuein"]) == pytest.approx(cuein, abs=0.5)

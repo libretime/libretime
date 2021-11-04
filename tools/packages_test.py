@@ -4,29 +4,32 @@ from tools.packages import list_packages, load_packages
 
 PACKAGE_INI = """
 [common]
-postgresql = buster
+postgresql = buster, focal
 # Some comment
 curl = buster, bionic
 
 [legacy]
-apache2 = bionic
+apache2 = bionic, focal
 
 [=development]
-ffmpeg = buster, bionic
+ffmpeg = buster, bionic, focal
 """
 
-result1 = {"curl", "postgresql"}
-result2 = {"apache2", "curl", "ffmpeg"}
+result_buster = {"curl", "postgresql"}
+result_bionic = {"apache2", "curl", "ffmpeg"}
+result_focal = {"postgresql", "apache2", "ffmpeg"}
 
 
 def test_load_packages():
-    assert load_packages(PACKAGE_INI, "buster", False) == result1
-    assert load_packages(PACKAGE_INI, "bionic", True) == result2
+    assert load_packages(PACKAGE_INI, "buster", False) == result_buster
+    assert load_packages(PACKAGE_INI, "bionic", True) == result_bionic
+    assert load_packages(PACKAGE_INI, "focal", True) == result_focal
 
 
 def test_list_packages(tmp_path: Path):
     package_file = tmp_path / "packages.ini"
     package_file.write_text(PACKAGE_INI)
 
-    assert list_packages([tmp_path, package_file], "buster", False) == result1
-    assert list_packages([tmp_path, package_file], "bionic", True) == result2
+    assert list_packages([tmp_path, package_file], "buster", False) == result_buster
+    assert list_packages([tmp_path, package_file], "bionic", True) == result_bionic
+    assert list_packages([tmp_path, package_file], "focal", True) == result_focal
