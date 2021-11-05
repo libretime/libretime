@@ -146,7 +146,10 @@ jobs:
       fail-fast: false
       matrix:
         context: [analyzer, api_client]
-        release: [bionic, buster, focal]
+        release:
+          - bionic
+          - buster
+          - focal
     container: ghcr.io/libretime/libretime-dev:${{ matrix.release }}
     defaults:
       run:
@@ -172,7 +175,10 @@ jobs:
       fail-fast: false
       matrix:
         context: [api]
-        release: [bionic, buster]
+        release:
+          - bionic
+          - buster
+          - focal
     services:
       postgres:
         image: postgres
