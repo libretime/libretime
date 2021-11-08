@@ -21,6 +21,7 @@ setup(
     license="AGPLv3",
     packages=[
         "pypo",
+        "pypo.notify",
         "liquidsoap",
     ],
     package_data={"": ["**/*.liq", "*.cfg", "*.types"]},
