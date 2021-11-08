@@ -46,7 +46,7 @@ FILES=(
 )
 
 echo -e "The following files, directories, and services will be removed:\n"
-for i in ${FILES[*]}; do
+for i in "${FILES[@]}"; do
   echo "$i"
 done
 echo "pip3 libretime-playout"
@@ -76,7 +76,7 @@ set +e
 removeRabbitmqLibreTimeSettings
 set -e
 
-for i in ${FILES[*]}; do
+for i in "${FILES[@]}"; do
   rm -rf "$i"
 done
 
