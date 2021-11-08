@@ -110,9 +110,9 @@ function loud() {
 function loudCmd() {
   if [[ ${_q} -eq 0 ]]; then
     verbose "$@"
-    eval "$@"
+    "$@"
   else
-    eval "$@" > /dev/null
+    "$@" > /dev/null
   fi
 }
 
