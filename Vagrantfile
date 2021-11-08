@@ -87,7 +87,7 @@ Vagrant.configure('2') do |config|
   # Define all the OS boxes we support
   config.vm.define "ubuntu-focal" do |os|
     os.vm.box = "bento/ubuntu-20.04"
-    provision_libretime(os, "debian.sh", installer_args)
+    setup_libretime(os, "debian.sh")
   end
 
   config.vm.define 'ubuntu-bionic' do |os|
