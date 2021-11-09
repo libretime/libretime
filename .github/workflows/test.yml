@@ -145,11 +145,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        context: [analyzer, api_client]
+        context:
+          - analyzer
+          - api_client
         release:
-          - bionic
           - buster
+          - bullseye
+          - bionic
           - focal
+
     container: ghcr.io/libretime/libretime-dev:${{ matrix.release }}
     defaults:
       run:
@@ -174,11 +178,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        context: [api]
+        context:
+          - api
         release:
-          - bionic
           - buster
+          - bullseye
+          - bionic
           - focal
+
     services:
       postgres:
         image: postgres

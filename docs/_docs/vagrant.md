@@ -91,12 +91,13 @@ directory.
 With the above instructions LibreTime is installed on Ubuntu Bionic. The Vagrant setup
 offers the option to choose a different operation system according to you needs.
 
-| OS           | Command                    | Comment                                                     |
-| ------------ | -------------------------- | ----------------------------------------------------------- |
-| Debian 10    | `vagrant up debian-buster` | Install on Debian Buster.                                   |
-| Ubuntu 20.04 | `vagrant up ubuntu-focal`  | Install on Ubuntu Focal Fossa.                              |
-| Ubuntu 18.04 | `vagrant up ubuntu-bionic` | Install on Ubuntu Bionic Beaver.                            |
-| CentOS       | `vagrant up centos`        | CentOS 8 with native systemd support and activated SELinux. |
+| OS           | Command                      | Comment                                                     |
+| ------------ | ---------------------------- | ----------------------------------------------------------- |
+| Debian 10    | `vagrant up debian-buster`   | Install on Debian Buster.                                   |
+| Debian 11    | `vagrant up debian-bullseye` | Install on Debian Bullseye.                                 |
+| Ubuntu 18.04 | `vagrant up ubuntu-bionic`   | Install on Ubuntu Bionic Beaver.                            |
+| Ubuntu 20.04 | `vagrant up ubuntu-focal`    | Install on Ubuntu Focal Fossa.                              |
+| CentOS       | `vagrant up centos`          | CentOS 8 with native systemd support and activated SELinux. |
 
 ## Troubleshooting
 
