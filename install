@@ -110,9 +110,12 @@ function loud() {
 function loudCmd() {
   if [[ ${_q} -eq 0 ]]; then
     verbose "$@"
-    "$@"
+    # Disable the shellcheck until quoting can be corrected
+    # shellcheck disable=2294
+    eval "$@"
   else
-    "$@" > /dev/null
+    # shellcheck disable=2294
+    eval "$@" > /dev/null
   fi
 }
 
