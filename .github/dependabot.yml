@@ -6,6 +6,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    commit-message:
+      prefix: "chore: "
     labels:
       - ci
       - dependencies
@@ -16,6 +18,8 @@ updates:
   #   directory: "/docker"
   #   schedule:
   #     interval: "weekly"
+  #   commit-message:
+  #     prefix: "chore: "
   #   labels:
   #     - docker
   #     - dependencies
@@ -25,6 +29,8 @@ updates:
     directory: "/legacy"
     schedule:
       interval: "daily"
+    commit-message:
+      prefix: "chore: "
     labels:
       - php
       - dependencies
@@ -34,6 +40,8 @@ updates:
     directory: "/api"
     schedule:
       interval: "daily"
+    commit-message:
+      prefix: "chore: "
     labels:
       - python
       - dependencies
@@ -42,6 +50,8 @@ updates:
     directory: "/analyzer"
     schedule:
       interval: "daily"
+    commit-message:
+      prefix: "chore: "
     labels:
       - python
       - dependencies
@@ -50,6 +60,8 @@ updates:
     directory: "/worker"
     schedule:
       interval: "daily"
+    commit-message:
+      prefix: "chore: "
     labels:
       - python
       - dependencies
@@ -58,6 +70,8 @@ updates:
     directory: "/api_client"
     schedule:
       interval: "daily"
+    commit-message:
+      prefix: "chore: "
     labels:
       - python
       - dependencies
@@ -66,6 +80,8 @@ updates:
     directory: "/playout"
     schedule:
       interval: "daily"
+    commit-message:
+      prefix: "chore: "
     labels:
       - python
       - dependencies
@@ -76,6 +92,8 @@ updates:
   #   directory: "/ui"
   #   schedule:
   #     interval: "daily"
+  #   commit-message:
+  #     prefix: "chore: "
   #   labels:
   #     - javascript
   #     - dependencies
