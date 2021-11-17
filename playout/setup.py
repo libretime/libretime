@@ -34,7 +34,6 @@ setup(
     },
     python_requires=">=3.6",
     install_requires=[
-        f"libretime-api-client @ file://localhost/{here.parent}/api_client#egg=libretime-api-client",
         "amqplib",
         "configobj",
         "defusedxml",
