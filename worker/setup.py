@@ -23,6 +23,8 @@ setup(
         "celery==4.4.7",
         "kombu==4.6.10",
         "configobj",
+        "mutagen>=1.31.0",
+        "requests>=2.7.0",
     ],
     zip_safe=False,
 )
