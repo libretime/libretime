@@ -27,7 +27,7 @@ setup(
     },
     install_requires=[
         "coreapi",
-        "django~=3.0",
+        "django>=3,<5",
         "djangorestframework",
         "django-filter",
         "drf-spectacular",
