@@ -11,181 +11,183 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/LibreTime/libretime/issues\n"
 "POT-Creation-Date: 2021-10-15 19:56+0200\n"
-"PO-Revision-Date: 2015-09-05 08:33+0000\n"
-"Last-Translator: Daniel James <daniel@64studio.com>\n"
-"Language-Team: Turkish (Turkey)\n"
+"PO-Revision-Date: 2021-12-11 19:50+0000\n"
+"Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
+"Language-Team: Turkish <https://hosted.weblate.org/projects/libretime/legacy/"
+"tr/>\n"
 "Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.10-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
 msgid "The year %s must be within the range of 1753 - 9999"
-msgstr ""
+msgstr "%s yılı 1753 - 9999 aralığında olmalıdır"
 
 #: application/common/DateHelper.php:219
 #, php-format
 msgid "%s-%s-%s is not a valid date"
-msgstr ""
+msgstr "%s-%s-%s geçerli bir tarih değil"
 
 #: application/common/DateHelper.php:243
 #, php-format
 msgid "%s:%s:%s is not a valid time"
-msgstr ""
+msgstr "%s:%s:%s geçerli bir zaman değil"
 
 #: application/common/LocaleHelper.php:23
 msgid "English"
-msgstr ""
+msgstr "İngilizce"
 
 #: application/common/LocaleHelper.php:24
 msgid "Afar"
-msgstr ""
+msgstr "Afarca"
 
 #: application/common/LocaleHelper.php:25
 msgid "Abkhazian"
-msgstr ""
+msgstr "Abhazca"
 
 #: application/common/LocaleHelper.php:26
 msgid "Afrikaans"
-msgstr ""
+msgstr "Afrikanca"
 
 #: application/common/LocaleHelper.php:27
 msgid "Amharic"
-msgstr ""
+msgstr "Amharca"
 
 #: application/common/LocaleHelper.php:28
 msgid "Arabic"
-msgstr ""
+msgstr "Arapça"
 
 #: application/common/LocaleHelper.php:29
 msgid "Assamese"
-msgstr ""
+msgstr "Assam dili"
 
 #: application/common/LocaleHelper.php:30
 msgid "Aymara"
-msgstr ""
+msgstr "Aymaraca"
 
 #: application/common/LocaleHelper.php:31
 msgid "Azerbaijani"
-msgstr ""
+msgstr "Azerice"
 
 #: application/common/LocaleHelper.php:32
 msgid "Bashkir"
-msgstr ""
+msgstr "Başkurtça"
 
 #: application/common/LocaleHelper.php:33
 msgid "Belarusian"
-msgstr ""
+msgstr "Belarusça"
 
 #: application/common/LocaleHelper.php:34
 msgid "Bulgarian"
-msgstr ""
+msgstr "Bulgarca"
 
 #: application/common/LocaleHelper.php:35
 msgid "Bihari"
-msgstr ""
+msgstr "Bihari"
 
 #: application/common/LocaleHelper.php:36
 msgid "Bislama"
-msgstr ""
+msgstr "Bislama"
 
 #: application/common/LocaleHelper.php:37
 msgid "Bengali/Bangla"
-msgstr ""
+msgstr "Bengalce"
 
 #: application/common/LocaleHelper.php:38
 msgid "Tibetan"
-msgstr ""
+msgstr "Tibetçe"
 
 #: application/common/LocaleHelper.php:39
 msgid "Breton"
-msgstr ""
+msgstr "Bretonca"
 
 #: application/common/LocaleHelper.php:40
 msgid "Catalan"
-msgstr ""
+msgstr "Katalanca"
 
 #: application/common/LocaleHelper.php:41
 msgid "Corsican"
-msgstr ""
+msgstr "Korsikaca"
 
 #: application/common/LocaleHelper.php:42
 msgid "Czech"
-msgstr ""
+msgstr "Çekçe"
 
 #: application/common/LocaleHelper.php:43
 msgid "Welsh"
-msgstr ""
+msgstr "Galce"
 
 #: application/common/LocaleHelper.php:44
 msgid "Danish"
-msgstr ""
+msgstr "Danca"
 
 #: application/common/LocaleHelper.php:45
 msgid "German"
-msgstr ""
+msgstr "Almanca"
 
 #: application/common/LocaleHelper.php:46
 msgid "Bhutani"
-msgstr ""
+msgstr "Bhutani"
 
 #: application/common/LocaleHelper.php:47
 msgid "Greek"
-msgstr ""
+msgstr "Yunanca"
 
 #: application/common/LocaleHelper.php:48
 msgid "Esperanto"
-msgstr ""
+msgstr "Esperanto"
 
 #: application/common/LocaleHelper.php:49
 msgid "Spanish"
-msgstr ""
+msgstr "İspanyolca"
 
 #: application/common/LocaleHelper.php:50
 msgid "Estonian"
-msgstr ""
+msgstr "Estonca"
 
 #: application/common/LocaleHelper.php:51
 msgid "Basque"
-msgstr ""
+msgstr "Baskça"
 
 #: application/common/LocaleHelper.php:52
 msgid "Persian"
-msgstr ""
+msgstr "Farsça"
 
 #: application/common/LocaleHelper.php:53
 msgid "Finnish"
-msgstr ""
+msgstr "Fince"
 
 #: application/common/LocaleHelper.php:54
 msgid "Fiji"
-msgstr ""
+msgstr "Fiji"
 
 #: application/common/LocaleHelper.php:55
 msgid "Faeroese"
-msgstr ""
+msgstr "Faroece"
 
 #: application/common/LocaleHelper.php:56
 msgid "French"
-msgstr ""
+msgstr "Fransızca"
 
 #: application/common/LocaleHelper.php:57
 msgid "Frisian"
-msgstr ""
+msgstr "Frizce"
 
 #: application/common/LocaleHelper.php:58
 msgid "Irish"
-msgstr ""
+msgstr "İrlandaca"
 
 #: application/common/LocaleHelper.php:59
 msgid "Scots/Gaelic"
-msgstr ""
+msgstr "İskoçça"
 
 #: application/common/LocaleHelper.php:60
 msgid "Galician"
-msgstr ""
+msgstr "Galiçyaca"
 
 #: application/common/LocaleHelper.php:61
 msgid "Guarani"
@@ -201,19 +203,19 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:64
 msgid "Hindi"
-msgstr ""
+msgstr "Hintçe"
 
 #: application/common/LocaleHelper.php:65
 msgid "Croatian"
-msgstr ""
+msgstr "Hırvatça"
 
 #: application/common/LocaleHelper.php:66
 msgid "Hungarian"
-msgstr ""
+msgstr "Macarca"
 
 #: application/common/LocaleHelper.php:67
 msgid "Armenian"
-msgstr ""
+msgstr "Ermenice"
 
 #: application/common/LocaleHelper.php:68
 msgid "Interlingua"
@@ -237,15 +239,15 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:73
 msgid "Italian"
-msgstr ""
+msgstr "İtalyanca"
 
 #: application/common/LocaleHelper.php:74
 msgid "Hebrew"
-msgstr ""
+msgstr "İbranice"
 
 #: application/common/LocaleHelper.php:75
 msgid "Japanese"
-msgstr ""
+msgstr "Japonca"
 
 #: application/common/LocaleHelper.php:76
 msgid "Yiddish"
@@ -257,11 +259,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:78
 msgid "Georgian"
-msgstr ""
+msgstr "Gürcüce"
 
 #: application/common/LocaleHelper.php:79
 msgid "Kazakh"
-msgstr ""
+msgstr "Kazakça"
 
 #: application/common/LocaleHelper.php:80
 msgid "Greenlandic"
@@ -277,7 +279,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:83
 msgid "Korean"
-msgstr ""
+msgstr "Korece"
 
 #: application/common/LocaleHelper.php:84
 msgid "Kashmiri"
@@ -285,15 +287,15 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:85
 msgid "Kurdish"
-msgstr ""
+msgstr "Kürtçe"
 
 #: application/common/LocaleHelper.php:86
 msgid "Kirghiz"
-msgstr ""
+msgstr "Kırgızca"
 
 #: application/common/LocaleHelper.php:87
 msgid "Latin"
-msgstr ""
+msgstr "Latince"
 
 #: application/common/LocaleHelper.php:88
 msgid "Lingala"
@@ -321,7 +323,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:94
 msgid "Macedonian"
-msgstr ""
+msgstr "Makedonca"
 
 #: application/common/LocaleHelper.php:95
 msgid "Malayalam"
@@ -329,7 +331,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:96
 msgid "Mongolian"
-msgstr ""
+msgstr "Moğolca"
 
 #: application/common/LocaleHelper.php:97
 msgid "Moldavian"
@@ -361,11 +363,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:104
 msgid "Dutch"
-msgstr ""
+msgstr "Felemenkçe"
 
 #: application/common/LocaleHelper.php:105
 msgid "Norwegian"
-msgstr ""
+msgstr "Norveççe"
 
 #: application/common/LocaleHelper.php:106
 msgid "Occitan"
@@ -381,7 +383,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:109
 msgid "Polish"
-msgstr ""
+msgstr "Lehçe"
 
 #: application/common/LocaleHelper.php:110
 msgid "Pashto/Pushto"
@@ -389,7 +391,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:111
 msgid "Portuguese"
-msgstr ""
+msgstr "Portekizce"
 
 #: application/common/LocaleHelper.php:112
 msgid "Quechua"
@@ -405,11 +407,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:115
 msgid "Romanian"
-msgstr ""
+msgstr "Rumence"
 
 #: application/common/LocaleHelper.php:116
 msgid "Russian"
-msgstr ""
+msgstr "Rusça"
 
 #: application/common/LocaleHelper.php:117
 msgid "Kinyarwanda"
@@ -417,7 +419,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:118
 msgid "Sanskrit"
-msgstr ""
+msgstr "Sanskritçe"
 
 #: application/common/LocaleHelper.php:119
 msgid "Sindhi"
@@ -437,11 +439,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:123
 msgid "Slovak"
-msgstr ""
+msgstr "Slovakça"
 
 #: application/common/LocaleHelper.php:124
 msgid "Slovenian"
-msgstr ""
+msgstr "Slovence"
 
 #: application/common/LocaleHelper.php:125
 msgid "Samoan"
@@ -457,11 +459,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:128
 msgid "Albanian"
-msgstr ""
+msgstr "Arnavutça"
 
 #: application/common/LocaleHelper.php:129
 msgid "Serbian"
-msgstr ""
+msgstr "Sırpça"
 
 #: application/common/LocaleHelper.php:130
 msgid "Siswati"
@@ -477,7 +479,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:133
 msgid "Swedish"
-msgstr ""
+msgstr "İsveççe"
 
 #: application/common/LocaleHelper.php:134
 msgid "Swahili"
@@ -485,7 +487,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:135
 msgid "Tamil"
-msgstr ""
+msgstr "Tamilce"
 
 #: application/common/LocaleHelper.php:136
 msgid "Tegulu"
@@ -493,7 +495,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:137
 msgid "Tajik"
-msgstr ""
+msgstr "Tacikçe"
 
 #: application/common/LocaleHelper.php:138
 msgid "Thai"
@@ -505,7 +507,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:140
 msgid "Turkmen"
-msgstr ""
+msgstr "Türkmence"
 
 #: application/common/LocaleHelper.php:141
 msgid "Tagalog"
@@ -521,7 +523,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:144
 msgid "Turkish"
-msgstr ""
+msgstr "Türkçe"
 
 #: application/common/LocaleHelper.php:145
 msgid "Tsonga"
@@ -529,7 +531,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:146
 msgid "Tatar"
-msgstr ""
+msgstr "Tatarca"
 
 #: application/common/LocaleHelper.php:147
 msgid "Twi"
@@ -537,15 +539,15 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:148
 msgid "Ukrainian"
-msgstr ""
+msgstr "Ukraynaca"
 
 #: application/common/LocaleHelper.php:149
 msgid "Urdu"
-msgstr ""
+msgstr "Urduca"
 
 #: application/common/LocaleHelper.php:150
 msgid "Uzbek"
-msgstr ""
+msgstr "Özbekçe"
 
 #: application/common/LocaleHelper.php:151
 msgid "Vietnamese"
@@ -569,7 +571,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:156
 msgid "Chinese"
-msgstr ""
+msgstr "Çince"
 
 #: application/common/LocaleHelper.php:157
 msgid "Zulu"
@@ -712,11 +714,11 @@ msgstr ""
 
 #: application/configs/navigation.php:80
 msgid "My Profile"
-msgstr ""
+msgstr "Profilim"
 
 #: application/configs/navigation.php:85
 msgid "Users"
-msgstr ""
+msgstr "Kullanıcılar"
 
 #: application/configs/navigation.php:91
 msgid "Track Types"
@@ -730,7 +732,7 @@ msgstr ""
 #: application/controllers/LocaleController.php:382
 #: application/controllers/LocaleController.php:383
 msgid "Status"
-msgstr ""
+msgstr "Durum"
 
 #: application/configs/navigation.php:114
 msgid "Analytics"
@@ -754,23 +756,23 @@ msgstr ""
 
 #: application/configs/navigation.php:153
 msgid "Help"
-msgstr ""
+msgstr "Yardım"
 
 #: application/configs/navigation.php:161
 msgid "Getting Started"
-msgstr ""
+msgstr "Başlarken"
 
 #: application/configs/navigation.php:168
 msgid "User Manual"
-msgstr ""
+msgstr "Kullanım Kılavuzu"
 
 #: application/configs/navigation.php:173
 msgid "Get Help Online"
-msgstr ""
+msgstr "Çevrim İçi Yardım Alın"
 
 #: application/configs/navigation.php:178
 msgid "Contribute to LibreTime"
-msgstr ""
+msgstr "LibreTime'a Katkıda Bulunun"
 
 #: application/configs/navigation.php:183
 msgid "What's New?"
@@ -841,7 +843,7 @@ msgstr ""
 
 #: application/controllers/ErrorController.php:96
 msgid "Page not found."
-msgstr ""
+msgstr "Sayfa bulunamadı."
 
 #: application/controllers/ErrorController.php:106
 msgid "The requested action is not supported."
@@ -873,7 +875,7 @@ msgstr ""
 #: application/controllers/LibraryController.php:38
 #: application/controllers/PlaylistController.php:171
 msgid "Something went wrong."
-msgstr ""
+msgstr "Bir şeyler yanlış gitti."
 
 #: application/controllers/LibraryController.php:92
 #: application/controllers/LocaleController.php:171
@@ -907,12 +909,12 @@ msgstr "Sil"
 #: application/controllers/LibraryController.php:151
 #: application/controllers/LibraryController.php:173
 msgid "Edit..."
-msgstr ""
+msgstr "Düzenle..."
 
 #: application/controllers/LibraryController.php:131
 #: application/controllers/ScheduleController.php:736
 msgid "Download"
-msgstr ""
+msgstr "İndir"
 
 #: application/controllers/LibraryController.php:135
 msgid "Duplicate Playlist"
@@ -954,7 +956,7 @@ msgstr "Audio Player"
 
 #: application/controllers/LocaleController.php:28
 msgid "Something went wrong!"
-msgstr ""
+msgstr "Bir şeyler yanlış gitti!"
 
 #: application/controllers/LocaleController.php:30
 msgid "Recording:"
@@ -1088,7 +1090,7 @@ msgstr "Ekle"
 
 #: application/controllers/LocaleController.php:69
 msgid "New"
-msgstr ""
+msgstr "Yeni"
 
 #: application/controllers/LocaleController.php:70
 #: application/services/CalendarService.php:147
@@ -1131,19 +1133,19 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:80
 msgid "Select"
-msgstr ""
+msgstr "Seç"
 
 #: application/controllers/LocaleController.php:81
 msgid "Select this page"
-msgstr ""
+msgstr "Bu sayfayı seç"
 
 #: application/controllers/LocaleController.php:82
 msgid "Deselect this page"
-msgstr ""
+msgstr "Bu sayfanın seçimini kaldır"
 
 #: application/controllers/LocaleController.php:83
 msgid "Deselect all"
-msgstr ""
+msgstr "Tümünün seçimini kaldır"
 
 #: application/controllers/LocaleController.php:84
 msgid "Are you sure you want to delete the selected item(s)?"
@@ -1189,7 +1191,7 @@ msgstr "Albüm"
 
 #: application/controllers/LocaleController.php:91
 msgid "Bit Rate"
-msgstr ""
+msgstr "Bit Hızı"
 
 #: application/controllers/LocaleController.php:92
 #: application/forms/SmartBlockCriteria.php:59
@@ -1340,7 +1342,7 @@ msgstr "Tümü"
 
 #: application/controllers/LocaleController.php:115
 msgid "Files"
-msgstr ""
+msgstr "Dosyalar"
 
 #: application/controllers/LocaleController.php:116
 #: application/views/scripts/partialviews/dashboard-sub-nav.php:8
@@ -1358,7 +1360,7 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:119
 msgid "Unknown type: "
-msgstr ""
+msgstr "Bilinmeyen tür: "
 
 #: application/controllers/LocaleController.php:120
 msgid "Are you sure you want to delete the selected item?"
@@ -1389,11 +1391,11 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:127
 msgid "Error code: "
-msgstr ""
+msgstr "Hata kodu: "
 
 #: application/controllers/LocaleController.php:128
 msgid "Error msg: "
-msgstr ""
+msgstr "Hata mesajı: "
 
 #: application/controllers/LocaleController.php:129
 msgid "Input must be a positive number"
@@ -1754,112 +1756,112 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:225
 msgid "January"
-msgstr ""
+msgstr "Ocak"
 
 #: application/controllers/LocaleController.php:226
 msgid "February"
-msgstr ""
+msgstr "Şubat"
 
 #: application/controllers/LocaleController.php:227
 msgid "March"
-msgstr ""
+msgstr "Mart"
 
 #: application/controllers/LocaleController.php:228
 msgid "April"
-msgstr ""
+msgstr "Nisan"
 
 #: application/controllers/LocaleController.php:229
 #: application/controllers/LocaleController.php:241
 msgid "May"
-msgstr ""
+msgstr "Mayıs"
 
 #: application/controllers/LocaleController.php:230
 msgid "June"
-msgstr ""
+msgstr "Haziran"
 
 #: application/controllers/LocaleController.php:231
 msgid "July"
-msgstr ""
+msgstr "Temmuz"
 
 #: application/controllers/LocaleController.php:232
 msgid "August"
-msgstr ""
+msgstr "Ağustos"
 
 #: application/controllers/LocaleController.php:233
 msgid "September"
-msgstr ""
+msgstr "Eylül"
 
 #: application/controllers/LocaleController.php:234
 msgid "October"
-msgstr ""
+msgstr "Ekim"
 
 #: application/controllers/LocaleController.php:235
 msgid "November"
-msgstr ""
+msgstr "Kasım"
 
 #: application/controllers/LocaleController.php:236
 msgid "December"
-msgstr ""
+msgstr "Aralık"
 
 #: application/controllers/LocaleController.php:237
 msgid "Jan"
-msgstr ""
+msgstr "Oca"
 
 #: application/controllers/LocaleController.php:238
 msgid "Feb"
-msgstr ""
+msgstr "Şub"
 
 #: application/controllers/LocaleController.php:239
 msgid "Mar"
-msgstr ""
+msgstr "Mar"
 
 #: application/controllers/LocaleController.php:240
 msgid "Apr"
-msgstr ""
+msgstr "Nis"
 
 #: application/controllers/LocaleController.php:242
 msgid "Jun"
-msgstr ""
+msgstr "Haz"
 
 #: application/controllers/LocaleController.php:243
 msgid "Jul"
-msgstr ""
+msgstr "Tem"
 
 #: application/controllers/LocaleController.php:244
 msgid "Aug"
-msgstr ""
+msgstr "Ağu"
 
 #: application/controllers/LocaleController.php:245
 msgid "Sep"
-msgstr ""
+msgstr "Eyl"
 
 #: application/controllers/LocaleController.php:246
 msgid "Oct"
-msgstr ""
+msgstr "Eki"
 
 #: application/controllers/LocaleController.php:247
 msgid "Nov"
-msgstr ""
+msgstr "Kas"
 
 #: application/controllers/LocaleController.php:248
 msgid "Dec"
-msgstr ""
+msgstr "Ara"
 
 #: application/controllers/LocaleController.php:249
 msgid "Today"
-msgstr ""
+msgstr "Bugün"
 
 #: application/controllers/LocaleController.php:250
 msgid "Day"
-msgstr ""
+msgstr "Gün"
 
 #: application/controllers/LocaleController.php:251
 msgid "Week"
-msgstr ""
+msgstr "Hafta"
 
 #: application/controllers/LocaleController.php:252
 msgid "Month"
-msgstr ""
+msgstr "Ay"
 
 #: application/controllers/LocaleController.php:253
 #: application/forms/GeneralPreferences.php:233
@@ -2236,35 +2238,35 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:362
 msgid "kHz"
-msgstr ""
+msgstr "kHz"
 
 #: application/controllers/LocaleController.php:365
 msgid "Su"
-msgstr ""
+msgstr "Pa"
 
 #: application/controllers/LocaleController.php:366
 msgid "Mo"
-msgstr ""
+msgstr "Pt"
 
 #: application/controllers/LocaleController.php:367
 msgid "Tu"
-msgstr ""
+msgstr "Sa"
 
 #: application/controllers/LocaleController.php:368
 msgid "We"
-msgstr ""
+msgstr "Ça"
 
 #: application/controllers/LocaleController.php:369
 msgid "Th"
-msgstr ""
+msgstr "Pe"
 
 #: application/controllers/LocaleController.php:370
 msgid "Fr"
-msgstr ""
+msgstr "Cu"
 
 #: application/controllers/LocaleController.php:371
 msgid "Sa"
-msgstr ""
+msgstr "Ct"
 
 #: application/controllers/LocaleController.php:372
 #: application/controllers/LocaleController.php:400
@@ -2273,15 +2275,15 @@ msgstr "Kapat"
 
 #: application/controllers/LocaleController.php:374
 msgid "Hour"
-msgstr "Cmt"
+msgstr "Saat"
 
 #: application/controllers/LocaleController.php:375
 msgid "Minute"
-msgstr ""
+msgstr "Dakika"
 
 #: application/controllers/LocaleController.php:376
 msgid "Done"
-msgstr "OK"
+msgstr "Bitti"
 
 #: application/controllers/LocaleController.php:379
 msgid "Select files"
@@ -2323,15 +2325,15 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:391
 msgid "File extension error."
-msgstr ""
+msgstr "Dosya uzantısı hatası."
 
 #: application/controllers/LocaleController.php:392
 msgid "File size error."
-msgstr ""
+msgstr "Dosya boyutu hatası."
 
 #: application/controllers/LocaleController.php:393
 msgid "File count error."
-msgstr ""
+msgstr "Dosya sayısı hatası."
 
 #: application/controllers/LocaleController.php:394
 msgid "Init error."
@@ -2339,24 +2341,24 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:395
 msgid "HTTP Error."
-msgstr ""
+msgstr "HTTP hatası."
 
 #: application/controllers/LocaleController.php:396
 msgid "Security error."
-msgstr ""
+msgstr "Güvenlik hatası."
 
 #: application/controllers/LocaleController.php:397
 msgid "Generic error."
-msgstr ""
+msgstr "Genel hata."
 
 #: application/controllers/LocaleController.php:398
 msgid "IO error."
-msgstr ""
+msgstr "GÇ hatası."
 
 #: application/controllers/LocaleController.php:399
 #, php-format
 msgid "File: %s"
-msgstr ""
+msgstr "Dosya: %s"
 
 #: application/controllers/LocaleController.php:401
 #, php-format
@@ -2373,11 +2375,11 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:404
 msgid "Error: File too large: "
-msgstr ""
+msgstr "Hata: Dosya çok büyük: "
 
 #: application/controllers/LocaleController.php:405
 msgid "Error: Invalid file extension: "
-msgstr ""
+msgstr "Hata: Geçersiz dosya uzantısı: "
 
 #: application/controllers/LocaleController.php:407
 msgid "Set Default"
@@ -2780,15 +2782,15 @@ msgstr ""
 
 #: application/controllers/UserController.php:87
 msgid "User added successfully!"
-msgstr ""
+msgstr "Kullanıcı başarıyla eklendi!"
 
 #: application/controllers/UserController.php:89
 msgid "User updated successfully!"
-msgstr ""
+msgstr "Kullanıcı başarıyla güncellendi!"
 
 #: application/controllers/UserController.php:189
 msgid "Settings updated successfully!"
-msgstr ""
+msgstr "Ayarlar başarıyla güncellendi!"
 
 #: application/controllers/WebstreamController.php:30
 #: application/controllers/WebstreamController.php:34
@@ -3470,16 +3472,16 @@ msgstr ""
 
 #: application/forms/ShowBuilder.php:83
 msgid "All My Shows:"
-msgstr "Tüm Show'larım:"
+msgstr "Tüm Şovlarım:"
 
 #: application/forms/ShowBuilder.php:95
 msgid "My Shows"
-msgstr ""
+msgstr "Şovlarım"
 
 #: application/forms/SmartBlockCriteria.php:56
 #: application/models/Block.php:1444 application/models/Block.php:1540
 msgid "Select criteria"
-msgstr "Kriter seçiniz"
+msgstr "Kriter seçin"
 
 #: application/forms/SmartBlockCriteria.php:58
 #: application/models/Block.php:1446 application/models/Block.php:1542
@@ -3500,47 +3502,47 @@ msgstr "Örnekleme Oranı (kHz)"
 #: application/forms/SmartBlockCriteria.php:134
 #: application/models/Block.php:1485 application/models/Block.php:1581
 msgid "before"
-msgstr ""
+msgstr "önce"
 
 #: application/forms/SmartBlockCriteria.php:135
 #: application/models/Block.php:1486 application/models/Block.php:1582
 msgid "after"
-msgstr ""
+msgstr "sonra"
 
 #: application/forms/SmartBlockCriteria.php:136
 #: application/models/Block.php:1487 application/models/Block.php:1583
 msgid "between"
-msgstr ""
+msgstr "arasında"
 
 #: application/forms/SmartBlockCriteria.php:152
 #: application/forms/SmartBlockCriteria.php:467
 #: application/forms/SmartBlockCriteria.php:509
 msgid "Select unit of time"
-msgstr ""
+msgstr "Zaman birimi seçin"
 
 #: application/forms/SmartBlockCriteria.php:153
 msgid "minute(s)"
-msgstr ""
+msgstr "dakika"
 
 #: application/forms/SmartBlockCriteria.php:154
 msgid "hour(s)"
-msgstr ""
+msgstr "saat"
 
 #: application/forms/SmartBlockCriteria.php:155
 msgid "day(s)"
-msgstr ""
+msgstr "gün"
 
 #: application/forms/SmartBlockCriteria.php:156
 msgid "week(s)"
-msgstr ""
+msgstr "hafta"
 
 #: application/forms/SmartBlockCriteria.php:157
 msgid "month(s)"
-msgstr ""
+msgstr "ay"
 
 #: application/forms/SmartBlockCriteria.php:158
 msgid "year(s)"
-msgstr ""
+msgstr "yıl"
 
 #: application/forms/SmartBlockCriteria.php:169
 msgid "hours"
@@ -3561,15 +3563,15 @@ msgstr ""
 
 #: application/forms/SmartBlockCriteria.php:183
 msgid "Randomly"
-msgstr ""
+msgstr "Rastgele"
 
 #: application/forms/SmartBlockCriteria.php:184
 msgid "Newest"
-msgstr ""
+msgstr "En yeni"
 
 #: application/forms/SmartBlockCriteria.php:185
 msgid "Oldest"
-msgstr ""
+msgstr "En eski"
 
 #: application/forms/SmartBlockCriteria.php:186
 msgid "Most recently played"
@@ -3697,27 +3699,27 @@ msgstr ""
 
 #: application/forms/StreamSetting.php:35
 msgid "ALSA"
-msgstr ""
+msgstr "ALSA"
 
 #: application/forms/StreamSetting.php:36
 msgid "AO"
-msgstr ""
+msgstr "AO"
 
 #: application/forms/StreamSetting.php:37
 msgid "OSS"
-msgstr ""
+msgstr "OSS"
 
 #: application/forms/StreamSetting.php:38
 msgid "Portaudio"
-msgstr ""
+msgstr "Portaudio"
 
 #: application/forms/StreamSetting.php:39
 msgid "Pulseaudio"
-msgstr ""
+msgstr "Pulseaudio"
 
 #: application/forms/StreamSetting.php:40
 msgid "Jack"
-msgstr ""
+msgstr "Jack"
 
 #: application/forms/StreamSetting.php:47
 msgid "Icecast Vorbis Metadata"
@@ -3971,7 +3973,7 @@ msgstr ""
 #: application/models/MusicDir.php:201 application/models/MusicDir.php:386
 #, php-format
 msgid "%s is not a valid directory."
-msgstr ""
+msgstr "%s geçerli bir dizin değil."
 
 #: application/models/MusicDir.php:244
 #, php-format
