@@ -3,9 +3,9 @@ all: lint test
 include ../tools/python.mk
 
 PIP_INSTALL := --editable .[dev]
-PYLINT_ARG := airtime_analyzer tests
-MYPY_ARG := airtime_analyzer tests
-PYTEST_ARG := --cov=airtime_analyzer tests
+PYLINT_ARG := libretime_analyzer tests
+MYPY_ARG := libretime_analyzer tests
+PYTEST_ARG := --cov=libretime_analyzer tests
 
 format: .format
 lint: .format-check .pylint .mypy
