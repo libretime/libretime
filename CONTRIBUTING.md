@@ -119,7 +119,7 @@ If you are a developer seeking to add new columns to the database here are the s
 2. Run `dev_tools/propel_generate.sh`
 3. Update the upgrade.sql under `legacy/application/controllers/upgrade_sql/VERSION` for example
    `ALTER TABLE imported_podcast ADD COLUMN album_override boolean default 'f' NOT NULL;`
-4. Update the models under `api/libretimeapi/models/` to reflect the new
+4. Update the models under `api/libretime_api/models/` to reflect the new
    changes.
 
 ## Documentation and financial contributions

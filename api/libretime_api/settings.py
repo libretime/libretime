@@ -33,7 +33,7 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
-    "libretimeapi.apps.LibreTimeAPIConfig",
+    "libretime_api.apps.LibreTimeAPIConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -55,7 +55,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "libretimeapi.urls"
+ROOT_URLCONF = "libretime_api.urls"
 
 TEMPLATES = [
     {
@@ -73,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "libretimeapi.wsgi.application"
+WSGI_APPLICATION = "libretime_api.wsgi.application"
 
 
 # Database
@@ -115,7 +115,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.BasicAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": [
-        "libretimeapi.permissions.IsSystemTokenOrUser",
+        "libretime_api.permissions.IsSystemTokenOrUser",
     ],
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
@@ -146,9 +146,9 @@ STATIC_URL = "/api/static/"
 if not DEBUG:
     STATIC_ROOT = os.getenv("LIBRETIME_STATIC_ROOT", "/usr/share/airtime/api")
 
-AUTH_USER_MODEL = "libretimeapi.User"
+AUTH_USER_MODEL = "libretime_api.User"
 
-TEST_RUNNER = "libretimeapi.tests.runners.ManagedModelTestRunner"
+TEST_RUNNER = "libretime_api.tests.runners.ManagedModelTestRunner"
 
 LOGGING = {
     "version": 1,
@@ -185,7 +185,7 @@ LOGGING = {
             "level": "INFO",
             "propagate": True,
         },
-        "libretimeapi": {
+        "libretime_api": {
             "handlers": ["file", "console"],
             "level": "INFO",
             "propagate": True,

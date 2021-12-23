@@ -7,7 +7,7 @@ from django.utils import dateparse
 from model_bakery import baker
 from rest_framework.test import APIRequestFactory, APITestCase
 
-from libretimeapi.views import FileViewSet
+from libretime_api.views import FileViewSet
 
 
 class TestFileViewSet(APITestCase):
@@ -30,11 +30,11 @@ class TestFileViewSet(APITestCase):
 
     def test_exists(self):
         music_dir = baker.make(
-            "libretimeapi.MusicDir",
+            "libretime_api.MusicDir",
             directory=os.path.join(os.path.dirname(__file__), "resources"),
         )
         f = baker.make(
-            "libretimeapi.File",
+            "libretime_api.File",
             directory=music_dir,
             mime="audio/mp3",
             filepath="song.mp3",
@@ -53,11 +53,11 @@ class TestScheduleViewSet(APITestCase):
 
     def test_schedule_item_full_length(self):
         music_dir = baker.make(
-            "libretimeapi.MusicDir",
+            "libretime_api.MusicDir",
             directory=os.path.join(os.path.dirname(__file__), "resources"),
         )
         f = baker.make(
-            "libretimeapi.File",
+            "libretime_api.File",
             directory=music_dir,
             mime="audio/mp3",
             filepath="song.mp3",
@@ -66,12 +66,12 @@ class TestScheduleViewSet(APITestCase):
             cueout=timedelta(seconds=40.8131),
         )
         show = baker.make(
-            "libretimeapi.ShowInstance",
+            "libretime_api.ShowInstance",
             starts=datetime.now(tz=timezone.utc) - timedelta(minutes=5),
             ends=datetime.now(tz=timezone.utc) + timedelta(minutes=5),
         )
         scheduleItem = baker.make(
-            "libretimeapi.Schedule",
+            "libretime_api.Schedule",
             starts=datetime.now(tz=timezone.utc),
             ends=datetime.now(tz=timezone.utc) + f.length,
             cue_out=f.cueout,
@@ -87,11 +87,11 @@ class TestScheduleViewSet(APITestCase):
 
     def test_schedule_item_trunc(self):
         music_dir = baker.make(
-            "libretimeapi.MusicDir",
+            "libretime_api.MusicDir",
             directory=os.path.join(os.path.dirname(__file__), "resources"),
         )
         f = baker.make(
-            "libretimeapi.File",
+            "libretime_api.File",
             directory=music_dir,
             mime="audio/mp3",
             filepath="song.mp3",
@@ -100,12 +100,12 @@ class TestScheduleViewSet(APITestCase):
             cueout=timedelta(seconds=40.8131),
         )
         show = baker.make(
-            "libretimeapi.ShowInstance",
+            "libretime_api.ShowInstance",
             starts=datetime.now(tz=timezone.utc) - timedelta(minutes=5),
             ends=datetime.now(tz=timezone.utc) + timedelta(seconds=20),
         )
         scheduleItem = baker.make(
-            "libretimeapi.Schedule",
+            "libretime_api.Schedule",
             starts=datetime.now(tz=timezone.utc),
             ends=datetime.now(tz=timezone.utc) + f.length,
             instance=show,
@@ -124,11 +124,11 @@ class TestScheduleViewSet(APITestCase):
 
     def test_schedule_item_invalid(self):
         music_dir = baker.make(
-            "libretimeapi.MusicDir",
+            "libretime_api.MusicDir",
             directory=os.path.join(os.path.dirname(__file__), "resources"),
         )
         f = baker.make(
-            "libretimeapi.File",
+            "libretime_api.File",
             directory=music_dir,
             mime="audio/mp3",
             filepath="song.mp3",
@@ -137,12 +137,12 @@ class TestScheduleViewSet(APITestCase):
             cueout=timedelta(seconds=40.8131),
         )
         show = baker.make(
-            "libretimeapi.ShowInstance",
+            "libretime_api.ShowInstance",
             starts=datetime.now(tz=timezone.utc) - timedelta(minutes=5),
             ends=datetime.now(tz=timezone.utc) + timedelta(minutes=5),
         )
         scheduleItem = baker.make(
-            "libretimeapi.Schedule",
+            "libretime_api.Schedule",
             starts=datetime.now(tz=timezone.utc),
             ends=datetime.now(tz=timezone.utc) + f.length,
             cue_out=f.cueout,
@@ -150,7 +150,7 @@ class TestScheduleViewSet(APITestCase):
             file=f,
         )
         invalidScheduleItem = baker.make(
-            "libretimeapi.Schedule",
+            "libretime_api.Schedule",
             starts=show.ends + timedelta(minutes=1),
             ends=show.ends + timedelta(minutes=1) + f.length,
             cue_out=f.cueout,
@@ -168,11 +168,11 @@ class TestScheduleViewSet(APITestCase):
 
     def test_schedule_item_range(self):
         music_dir = baker.make(
-            "libretimeapi.MusicDir",
+            "libretime_api.MusicDir",
             directory=os.path.join(os.path.dirname(__file__), "resources"),
         )
         f = baker.make(
-            "libretimeapi.File",
+            "libretime_api.File",
             directory=music_dir,
             mime="audio/mp3",
             filepath="song.mp3",
@@ -183,12 +183,12 @@ class TestScheduleViewSet(APITestCase):
         filter_point = datetime.now(tz=timezone.utc)
 
         show = baker.make(
-            "libretimeapi.ShowInstance",
+            "libretime_api.ShowInstance",
             starts=filter_point - timedelta(minutes=5),
             ends=filter_point + timedelta(minutes=5),
         )
         schedule_item = baker.make(
-            "libretimeapi.Schedule",
+            "libretime_api.Schedule",
             starts=filter_point,
             ends=filter_point + f.length,
             cue_out=f.cueout,
@@ -196,7 +196,7 @@ class TestScheduleViewSet(APITestCase):
             file=f,
         )
         previous_item = baker.make(
-            "libretimeapi.Schedule",
+            "libretime_api.Schedule",
             starts=filter_point - timedelta(minutes=5),
             ends=filter_point - timedelta(minutes=5) + f.length,
             cue_out=f.cueout,
