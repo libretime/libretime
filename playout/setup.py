@@ -22,13 +22,13 @@ setup(
     packages=[
         "pypo",
         "pypo.notify",
-        "liquidsoap",
+        "libretime_liquidsoap",
     ],
     package_data={"": ["**/*.liq", "*.cfg", "*.types"]},
     entry_points={
         "console_scripts": [
             "libretime-playout=pypo.main:run",
-            "libretime-liquidsoap=liquidsoap.main:run",
+            "libretime-liquidsoap=libretime_liquidsoap.main:run",
             "libretime-playout-notify=pypo.notify.main:run",
         ]
     },
