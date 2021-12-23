@@ -15,7 +15,7 @@ Each instance of airtime-celery has its own worker, and multiple instances can b
 To debug, you can run celery directly from the command line:
 
 ```sh
-RMQ_CONFIG_FILE=${LIBRETIME_CONF_DIR}/airtime.conf celery -A airtime-celery.tasks worker --loglevel=info
+RMQ_CONFIG_FILE=${LIBRETIME_CONF_DIR}/airtime.conf celery -A libretime_worker.tasks worker --loglevel=info
 ```
 
 This worker can be run alongside the service without issue.

@@ -17,7 +17,7 @@ setup(
         "Source Code": "https://github.com/libretime/libretime",
     },
     license="MIT",
-    packages=["airtime-celery"],
+    packages=["libretime_worker"],
     python_requires=">=3.6",
     install_requires=[
         "celery==4.4.7",
