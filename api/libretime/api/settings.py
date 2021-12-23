@@ -146,7 +146,7 @@ STATIC_URL = "/api/static/"
 if not DEBUG:
     STATIC_ROOT = os.getenv("LIBRETIME_STATIC_ROOT", "/usr/share/airtime/api")
 
-AUTH_USER_MODEL = "libretime.api.User"
+AUTH_USER_MODEL = "libretime_api.User"
 
 TEST_RUNNER = "libretime.api.tests.runners.ManagedModelTestRunner"
 

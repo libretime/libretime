@@ -109,7 +109,7 @@ class TestPermissions(APITestCase):
             first_name="test",
             last_name="user",
         )
-        f = baker.make("libretime.api.File", owner=user)
+        f = baker.make("libretime_api.File", owner=user)
         model = "files/{}".format(f.id)
         path = self.path.format(model)
         self.client.login(username="test-dj", password="test")
@@ -125,7 +125,7 @@ class TestPermissions(APITestCase):
             first_name="test",
             last_name="user",
         )
-        f = baker.make("libretime.api.File")
+        f = baker.make("libretime_api.File")
         model = "files/{}".format(f.id)
         path = self.path.format(model)
         self.client.login(username="test-dj", password="test")

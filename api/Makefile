@@ -12,4 +12,4 @@ clean: .clean
 
 test: $(VENV)
 	source $(VENV)/bin/activate
-	LIBRETIME_DEBUG=True $(VENV)/bin/libretime-api test libretimeapi
+	LIBRETIME_DEBUG=True $(VENV)/bin/libretime-api test libretime
