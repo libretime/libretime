@@ -1,6 +1,6 @@
 import pytest
 
-from api_clients.utils import ApcUrl, IncompleteUrl, UrlBadParam
+from libretime_api_client.utils import ApcUrl, IncompleteUrl, UrlBadParam
 
 
 @pytest.mark.parametrize(

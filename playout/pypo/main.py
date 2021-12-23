@@ -15,7 +15,7 @@ import time
 from datetime import datetime
 from optparse import OptionParser
 
-from api_clients.version1 import AirtimeApiClient as ApiClient
+from libretime_api_client.version1 import AirtimeApiClient as ApiClient
 from configobj import ConfigObj
 
 try:

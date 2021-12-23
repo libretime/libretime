@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock, patch
 
-from api_clients.utils import ApcUrl, ApiRequest
+from libretime_api_client.utils import ApcUrl, ApiRequest
 
 
 def test_api_request_init():

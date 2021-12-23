@@ -3,7 +3,7 @@ from configparser import ConfigParser
 
 import pytest
 
-from api_clients import utils
+from libretime_api_client import utils
 
 
 def test_time_in_seconds():
