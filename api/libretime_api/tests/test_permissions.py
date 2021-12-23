@@ -6,13 +6,13 @@ from django.contrib.auth.models import AnonymousUser
 from model_bakery import baker
 from rest_framework.test import APIRequestFactory, APITestCase
 
-from libretimeapi.models.user_constants import ADMIN, DJ, GUEST, PROGRAM_MANAGER
-from libretimeapi.permission_constants import (
+from libretime_api.models.user_constants import ADMIN, DJ, GUEST, PROGRAM_MANAGER
+from libretime_api.permission_constants import (
     DJ_PERMISSIONS,
     GUEST_PERMISSIONS,
     PROGRAM_MANAGER_PERMISSIONS,
 )
-from libretimeapi.permissions import IsSystemTokenOrUser
+from libretime_api.permissions import IsSystemTokenOrUser
 
 
 class TestIsSystemTokenOrUser(APITestCase):
@@ -109,7 +109,7 @@ class TestPermissions(APITestCase):
             first_name="test",
             last_name="user",
         )
-        f = baker.make("libretimeapi.File", owner=user)
+        f = baker.make("libretime_api.File", owner=user)
         model = "files/{}".format(f.id)
         path = self.path.format(model)
         self.client.login(username="test-dj", password="test")
@@ -125,7 +125,7 @@ class TestPermissions(APITestCase):
             first_name="test",
             last_name="user",
         )
-        f = baker.make("libretimeapi.File")
+        f = baker.make("libretime_api.File")
         model = "files/{}".format(f.id)
         path = self.path.format(model)
         self.client.login(username="test-dj", password="test")

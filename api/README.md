@@ -36,12 +36,12 @@ sudo -u www-data LIBRETIME_DEBUG=True libretime-api runserver 0.0.0.0:8081
 Unit tests can be run in the vagrant environment using
 
 ```
-sudo -u www-data LIBRETIME_DEBUG=True libretime-api test libretimeapi
+sudo -u www-data LIBRETIME_DEBUG=True libretime-api test libretime_api
 ```
 
 ## 3rd Party Licences
 
-`libretimeapi/tests/resources/song.mp3`: Steps - Tears On The Dancefloor (Album
+`libretime_api/tests/resources/song.mp3`: Steps - Tears On The Dancefloor (Album
 Teaser) by mceyedol. Downloaded from
 https://soundcloud.com/mceyedol/steps-tears-on-the-dancefloor-album-teaser
 released under a Creative Commons Licence
