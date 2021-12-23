@@ -4,7 +4,7 @@ import sys
 import time
 import traceback
 
-from api_clients.version1 import AirtimeApiClient
+from libretime_api_client.version1 import AirtimeApiClient
 
 
 def generate_liquidsoap_config(ss):

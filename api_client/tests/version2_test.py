@@ -1,7 +1,7 @@
 import pytest
 
-from api_clients.utils import RequestProvider
-from api_clients.version2 import AirtimeApiClient, api_config
+from libretime_api_client.utils import RequestProvider
+from libretime_api_client.version2 import AirtimeApiClient, api_config
 
 
 @pytest.fixture()

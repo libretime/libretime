@@ -17,7 +17,7 @@ setup(
         "Source Code": "https://github.com/libretime/libretime",
     },
     license="AGPLv3",
-    packages=["api_clients"],
+    packages=["libretime_api_client"],
     python_requires=">=3.6",
     install_requires=[
         "configobj",

@@ -6,7 +6,7 @@ import shutil
 from optparse import OptionParser, OptionValueError
 
 import commands
-from api_clients import api_client as apc
+from libretime_api_client import api_client as apc
 from configobj import ConfigObj
 
 # sys.path.append('/usr/lib/airtime/media-monitor/mm2/')
