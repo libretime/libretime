@@ -1,7 +1,7 @@
 import distro
 import pytest
 
-from airtime_analyzer.playability_analyzer import (
+from libretime_analyzer.playability_analyzer import (
     PlayabilityAnalyzer,
     UnplayableFileError,
 )

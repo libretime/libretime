@@ -5,7 +5,7 @@ from queue import Queue
 
 import pytest
 
-from airtime_analyzer.analyzer_pipeline import AnalyzerPipeline
+from libretime_analyzer.analyzer_pipeline import AnalyzerPipeline
 
 from .conftest import AUDIO_FILENAME, AUDIO_IMPORT_DEST
 
