@@ -20,16 +20,16 @@ setup(
     },
     license="AGPLv3",
     packages=[
-        "pypo",
-        "pypo.notify",
+        "libretime_playout",
+        "libretime_playout.notify",
         "libretime_liquidsoap",
     ],
     package_data={"": ["**/*.liq", "*.cfg", "*.types"]},
     entry_points={
         "console_scripts": [
-            "libretime-playout=pypo.main:run",
+            "libretime-playout=libretime_playout.main:run",
             "libretime-liquidsoap=libretime_liquidsoap.main:run",
-            "libretime-playout-notify=pypo.notify.main:run",
+            "libretime-playout-notify=libretime_playout.notify.main:run",
         ]
     },
     python_requires=">=3.6",

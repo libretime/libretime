@@ -3,8 +3,8 @@ all: lint
 include ../tools/python.mk
 
 PIP_INSTALL := --editable .
-PYLINT_ARG := libretime_liquidsoap pypo
-MYPY_ARG := libretime_liquidsoap pypo
+PYLINT_ARG := libretime_liquidsoap libretime_playout
+MYPY_ARG := libretime_liquidsoap libretime_playout
 
 format: .format
 lint: .format-check .pylint .mypy
