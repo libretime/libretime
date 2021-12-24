@@ -703,16 +703,16 @@
         },
         {
             "name": "simplepie/simplepie",
-            "version": "1.5.7",
+            "version": "1.5.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplepie/simplepie.git",
-                "reference": "76be63e72ea6867d9982bf9bd97ba706b196d602"
+                "reference": "d1d80f37264c9f1ed7fa3434eca14d179cb689b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/simplepie/simplepie/zipball/76be63e72ea6867d9982bf9bd97ba706b196d602",
-                "reference": "76be63e72ea6867d9982bf9bd97ba706b196d602",
+                "url": "https://api.github.com/repos/simplepie/simplepie/zipball/d1d80f37264c9f1ed7fa3434eca14d179cb689b1",
+                "reference": "d1d80f37264c9f1ed7fa3434eca14d179cb689b1",
                 "shasum": ""
             },
             "require": {
@@ -768,9 +768,9 @@
             ],
             "support": {
                 "issues": "https://github.com/simplepie/simplepie/issues",
-                "source": "https://github.com/simplepie/simplepie/tree/1.5.7"
+                "source": "https://github.com/simplepie/simplepie/tree/1.5.8"
             },
-            "time": "2021-12-19T07:39:23+00:00"
+            "time": "2021-12-24T02:53:50+00:00"
         },
         {
             "name": "zf1s/zend-acl",
