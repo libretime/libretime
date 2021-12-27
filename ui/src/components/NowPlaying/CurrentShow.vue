@@ -30,7 +30,7 @@ export default {
 </script>
 
 <style lang="sass">
-@use '../../assets/styles/base'
+
 
 .invis
   color: rgba(0, 0, 0, 0)

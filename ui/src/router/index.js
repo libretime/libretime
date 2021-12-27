@@ -10,6 +10,11 @@ Vue.use(VueRouter)
 // routes by implementing their views first and refactoring the topbar and nav later.
 const routes = [
   {
+    path: '/',
+    name: 'RadioPage',
+    component: () => import(/* webpackChunkName: "RadioPage" */ '../views/Index.vue'),
+  },
+  {
     path: '/library',
     name: 'Library',
     component: () => import(/* webpackChunkName: "library" */ '../views/Library.vue'),

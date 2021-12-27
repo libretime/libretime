@@ -10,14 +10,7 @@
 
       <v-main v-show="userLoggedIn">
         <v-container fluid>
-          <v-navigation-drawer
-            v-show="userLoggedIn"
-            :width="200"
-            app
-            clipped
-            permanent
-            expand-on-hover
-          >
+          <v-navigation-drawer v-show="userLoggedIn" :width="200" app permanent expand-on-hover>
             <main-nav @logout="processLogout" />
           </v-navigation-drawer>
           <router-view></router-view>
@@ -57,8 +50,7 @@ export default {
 </script>
 
 <style lang="sass">
-@use './assets/styles/base'
-
+@import './styles/globals.sass'
 body
-  background: base.$background
+  background: $background
 </style>

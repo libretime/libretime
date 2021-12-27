@@ -78,12 +78,12 @@ export default {
 </script>
 
 <style lang="sass">
-@use '../../assets/styles/base'
+
 $box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1) inset, 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 1px #000 inset
 
 .libretime_player
-  background: base.$background
-  font-family: base.$font-stack
+  background: $background
+  font-family: $font-stack
   width: 270px
   height: 191px
   position: relative
@@ -91,7 +91,7 @@ $box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1) inset, 0 1px 0 rgba(255, 255, 255, 0.1
   border-radius: 4px
   box-shadow: $box-shadow
   .libretime_header
-    background: base.$background
+    background: $background
     box-shadow: $box-shadow
     height: 37px
     // border-radius: 4px
@@ -159,7 +159,7 @@ $box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1) inset, 0 1px 0 rgba(255, 255, 255, 0.1
 
 .libretime_credit
   margin: 6px 20px
-  color: base.$libretime-orange
+  color: $libretime-orange
   font-size: 12px
   float: right
   // text-decoration: none

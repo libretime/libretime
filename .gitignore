@@ -147,3 +147,4 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+/ui/node_modules/

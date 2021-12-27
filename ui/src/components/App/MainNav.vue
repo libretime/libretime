@@ -3,7 +3,7 @@
   <v-card>
     <v-list-item class="px-2">
       <v-list-item-avatar>
-        <v-img src="../../assets/logo.png" />
+        <v-img src="../../assets/logo.svg" />
       </v-list-item-avatar>
     </v-list-item>
     <v-list dense nav>
@@ -61,7 +61,7 @@ export default {
 </script>
 
 <style lang="sass">
-@use '../../assets/styles/base'
+
 
 body
   background: #333333

@@ -20,5 +20,5 @@ export default {
 </script>
 
 <style lang="sass">
-@use '../../assets/styles/base'
+
 </style>

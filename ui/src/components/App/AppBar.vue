@@ -47,8 +47,6 @@ export default {
 </script>
 
 <style lang="sass">
-@use '../../assets/styles/base'
-
 .app-bar
   background: rgb(55,55,55)
   background: linear-gradient(0deg, rgba(55,55,55,1) 0%, rgba(99,99,99,1) 100%)

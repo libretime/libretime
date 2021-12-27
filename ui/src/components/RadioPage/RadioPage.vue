@@ -73,11 +73,9 @@ export default {
 </script>
 
 <style lang="sass">
-@use '../../assets/styles/base'
-
 // body
-//   background: radial-gradient(base.$background, base.$libretime-orange)
+//   background: radial-gradient($background, $libretime-orange)
 
 .station-name
-  color: base.$libretime-orange
+  color: $libretime-orange
 </style>
