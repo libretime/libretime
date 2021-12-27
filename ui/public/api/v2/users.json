@@ -1,0 +1,28 @@
+[
+    {
+        "item_url": "http://192.168.64.21/api/v2/users/2/",
+        "username": "dj",
+        "type": "H",
+        "first_name": "DJ",
+        "last_name": "Carlos",
+        "lastfail": null,
+        "skype_contact": "",
+        "jabber_contact": "",
+        "email": "dj@libretime.org",
+        "cell_phone": "",
+        "login_attempts": 0
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/users/1/",
+        "username": "admin",
+        "type": "A",
+        "first_name": "Adminstrator",
+        "last_name": "",
+        "lastfail": null,
+        "skype_contact": null,
+        "jabber_contact": null,
+        "email": "administrator@libretime.org",
+        "cell_phone": null,
+        "login_attempts": 0
+    }
+]

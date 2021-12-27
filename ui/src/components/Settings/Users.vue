@@ -13,7 +13,8 @@
 
 <script>
 import AddUser from '../../components/Settings/AddUser.vue'
-import api from '../../api'
+// import api from '../../api'
+const apidata = require('../../../public/api/v2/users.json')
 
 export default {
   name: 'Users',
@@ -27,22 +28,15 @@ export default {
         { text: 'Email', value: 'email' },
         { text: 'Role', value: 'fullType' },
       ],
-      userList: [
-        {
-          username: 'admin',
-          first_name: 'Administrator',
-          email: 'admin@libretime.org',
-          fullType: 'Administrator',
-        },
-      ],
+      userList: apidata,
     }
   },
-  created: () => {
+  mounted: () => {
     // Get list of users
-    api
-      .get('/users/')
-      .then((response) => (this.userList = response.data))
-      .catch((error) => console.log(error))
+    // api
+    //   .get('/users/')
+    //   .then((response) => (this.userList = response.data))
+    //   .catch((error) => console.log(error))
 
     // Replace role abbreviations with full names (i.e. A -> Administrator)
     this.userList.forEach((element) => {

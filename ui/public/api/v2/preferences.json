@@ -1,0 +1,170 @@
+[
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/2/",
+        "keystr": "enable_replay_gain",
+        "valstr": "1",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/3/",
+        "keystr": "scheduled_play_switch",
+        "valstr": "on",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/4/",
+        "keystr": "stream_type",
+        "valstr": "ogg, mp3, opus, aac",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/5/",
+        "keystr": "stream_bitrate",
+        "valstr": "24, 32, 48, 64, 96, 128, 160, 192, 224, 256, 320",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/6/",
+        "keystr": "num_of_streams",
+        "valstr": "3",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/7/",
+        "keystr": "max_bitrate",
+        "valstr": "320",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/8/",
+        "keystr": "plan_level",
+        "valstr": "disabled",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/9/",
+        "keystr": "locale",
+        "valstr": "en_CA",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/11/",
+        "keystr": "timezone",
+        "valstr": "UTC",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/12/",
+        "keystr": "import_timestamp",
+        "valstr": "0",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/13/",
+        "keystr": "whats_new_dialog_viewed",
+        "valstr": "1",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/14/",
+        "keystr": "podcast_album_override",
+        "valstr": "1",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/15/",
+        "keystr": "podcast_auto_smartblock",
+        "valstr": "0",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/16/",
+        "keystr": "default_icecast_password",
+        "valstr": "OSXy96qy5fqS",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/17/",
+        "keystr": "allowed_cors_urls",
+        "valstr": "http://192.168.64.21",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/20/",
+        "keystr": "podcast_poll_lock",
+        "valstr": "1640640355.6896",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/10/",
+        "keystr": "user_locale",
+        "valstr": "en_CA",
+        "subjid": "http://192.168.64.21/api/v2/users/1/"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/1/",
+        "keystr": "schema_version",
+        "valstr": "3.0.0-alpha.9.4",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/23/",
+        "keystr": "station_podcast_id",
+        "valstr": "1",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/24/",
+        "keystr": "station_podcast_download_key",
+        "valstr": "Sq4NJs2KQonZ",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/21/",
+        "keystr": "station_podcast_download_counter",
+        "valstr": "0",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/22/",
+        "keystr": "station_podcast_download_reset_timer",
+        "valstr": "1638636551.2192",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/28/",
+        "keystr": "library_screen",
+        "valstr": "a:1:{s:8:\"playlist\";s:5:\"false\";}",
+        "subjid": "http://192.168.64.21/api/v2/users/1/"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/25/",
+        "keystr": "shows_populated_until",
+        "valstr": "2022-01-09 21:32:54",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/27/",
+        "keystr": "disk_usage",
+        "valstr": "257625824",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/18/",
+        "keystr": "task_manager_lock",
+        "valstr": "1640641319.1581",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/19/",
+        "keystr": "autoplaylist_poll_lock",
+        "valstr": "1640641319.1685",
+        "subjid": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/preferences/26/",
+        "keystr": "library_datatable",
+        "valstr": "a:7:{s:7:\"iCreate\";s:13:\"1640640858381\";s:6:\"iStart\";s:1:\"0\";s:4:\"iEnd\";s:1:\"0\";s:7:\"iLength\";s:2:\"10\";s:9:\"aaSorting\";a:1:{i:0;a:3:{i:0;s:2:\"29\";i:1;s:4:\"desc\";i:2;s:1:\"1\";}}s:9:\"abVisCols\";a:34:{i:0;s:5:\"false\";i:1;s:4:\"true\";i:2;s:4:\"true\";i:3;s:4:\"true\";i:4;s:5:\"false\";i:5;s:4:\"true\";i:6;s:4:\"true\";i:7;s:5:\"false\";i:8;s:5:\"false\";i:9;s:5:\"false\";i:10;s:5:\"false\";i:11;s:5:\"false\";i:12;s:5:\"false\";i:13;s:5:\"false\";i:14;s:5:\"false\";i:15;s:5:\"false\";i:16;s:5:\"false\";i:17;s:4:\"true\";i:18;s:4:\"true\";i:19;s:5:\"false\";i:20;s:5:\"false\";i:21;s:5:\"false\";i:22;s:5:\"false\";i:23;s:5:\"false\";i:24;s:4:\"true\";i:25;s:5:\"false\";i:26;s:5:\"false\";i:27;s:5:\"false\";i:28;s:5:\"false\";i:29;s:5:\"false\";i:30;s:5:\"false\";i:31;s:4:\"true\";i:32;s:5:\"false\";i:33;s:5:\"false\";}s:10:\"ColReorder\";a:34:{i:0;s:1:\"0\";i:1;s:1:\"1\";i:2;s:1:\"2\";i:3;s:1:\"3\";i:4;s:1:\"4\";i:5;s:1:\"5\";i:6;s:1:\"6\";i:7;s:1:\"7\";i:8;s:1:\"8\";i:9;s:1:\"9\";i:10;s:2:\"10\";i:11;s:2:\"11\";i:12;s:2:\"12\";i:13;s:2:\"13\";i:14;s:2:\"14\";i:15;s:2:\"15\";i:16;s:2:\"16\";i:17;s:2:\"17\";i:18;s:2:\"18\";i:19;s:2:\"19\";i:20;s:2:\"20\";i:21;s:2:\"21\";i:22;s:2:\"22\";i:23;s:2:\"23\";i:24;s:2:\"24\";i:25;s:2:\"25\";i:26;s:2:\"26\";i:27;s:2:\"27\";i:28;s:2:\"28\";i:29;s:2:\"29\";i:30;s:2:\"30\";i:31;s:2:\"31\";i:32;s:2:\"32\";i:33;s:2:\"33\";}}",
+        "subjid": "http://192.168.64.21/api/v2/users/1/"
+    }
+]

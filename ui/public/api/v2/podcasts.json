@@ -1,0 +1,36 @@
+[
+    {
+        "item_url": "http://192.168.64.21/api/v2/podcasts/1/",
+        "url": "http://192.168.64.21/feeds/station-rss",
+        "title": "My Station's Podcast",
+        "creator": "",
+        "description": "Powered by LibreTime",
+        "language": "en",
+        "copyright": null,
+        "link": "http://192.168.64.21/",
+        "itunes_author": null,
+        "itunes_keywords": null,
+        "itunes_summary": null,
+        "itunes_subtitle": null,
+        "itunes_category": null,
+        "itunes_explicit": null,
+        "owner": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/podcasts/2/",
+        "url": "https://feeds.megaphone.fm/ADV9362943796",
+        "title": "Big Picture Science",
+        "creator": "SETI Institute",
+        "description": "The surprising connections in science and technology that give you the Big Picture. \n\nAstronomer Seth Shostak and science journalist Molly Bentley are joined each week by leading researchers, techies, and journalists to provide a smart and humorous take on science. \n\nOur regular &quot;Skeptic Check&quot; episodes cast a critical eye on pseudoscience.",
+        "language": "en",
+        "copyright": "SETI Institute 2021",
+        "link": "http://bigpicturescience.org/",
+        "itunes_author": "SETI Institute",
+        "itunes_keywords": "",
+        "itunes_summary": "The surprising connections in science and technology that give you the Big Picture. \n\nAstronomer Seth Shostak and science journalist Molly Bentley are joined each week by leading researchers, techies, and journalists to provide a smart and humorous take on science. \n\nOur regular \"Skeptic Check\" episodes cast a critical eye on pseudoscience.",
+        "itunes_subtitle": "Big Picture Science weaves together a universe of big ideas – from robots to memory to antimatter to dinosaurs.",
+        "itunes_category": "Science,Technology",
+        "itunes_explicit": "yes",
+        "owner": "http://192.168.64.21/api/v2/users/1/"
+    }
+]

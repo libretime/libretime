@@ -1,0 +1,8 @@
+[
+    {
+        "item_url": "http://192.168.64.21/api/v2/playout-history-metadata/1/",
+        "key": "showname",
+        "value": "Untitled Show",
+        "history": "http://192.168.64.21/api/v2/playout-history/1/"
+    }
+]

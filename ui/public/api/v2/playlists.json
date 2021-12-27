@@ -1,0 +1,20 @@
+[
+    {
+        "item_url": "http://192.168.64.21/api/v2/playlists/1/",
+        "name": "Playlist 1",
+        "mtime": "2021-12-27T21:29:37Z",
+        "utime": "2021-12-27T21:29:21Z",
+        "description": "",
+        "length": "00:10:40.059000",
+        "creator": "http://192.168.64.21/api/v2/users/1/"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/playlists/2/",
+        "name": "Big Picture Science",
+        "mtime": "2021-12-27T21:32:39Z",
+        "utime": "2021-12-27T21:32:39Z",
+        "description": null,
+        "length": "00:00:00",
+        "creator": "http://192.168.64.21/api/v2/users/1/"
+    }
+]

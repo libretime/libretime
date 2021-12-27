@@ -1,19 +1,9 @@
 <template>
   <div class="libretime-vue">
     <v-app dark>
-      <!-- Everything goes under here -->
-      <radio-page v-show="!userLoggedIn" @try-login="processLogin" />
-
-      <!-- <v-app-bar v-show="userLoggedIn" prominent dense app clipped-left>
-        <app-bar />
-      </v-app-bar> -->
-
-      <v-main v-show="userLoggedIn">
+      <v-main>
         <v-container fluid>
-          <v-navigation-drawer v-show="userLoggedIn" :width="200" app permanent expand-on-hover>
-            <main-nav @logout="processLogout" />
-          </v-navigation-drawer>
-          <router-view></router-view>
+          <router-view />
         </v-container>
       </v-main>
     </v-app>
@@ -21,14 +11,7 @@
 </template>
 
 <script>
-// import AppBar from './components/App/AppBar.vue'
-import MainNav from './components/App/MainNav.vue'
-import RadioPage from './components/RadioPage/RadioPage.vue'
 export default {
-  components: {
-    MainNav,
-    RadioPage,
-  },
   data() {
     return {
       stationName: 'WRIR',
@@ -50,7 +33,7 @@ export default {
 </script>
 
 <style lang="sass">
-@import './styles/globals.sass'
+@use './styles/globals.sass'
 body
-  background: $background
+  background: globals.$background
 </style>

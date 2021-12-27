@@ -40,14 +40,14 @@ export default {
   data() {
     return {
       navItemsTop: [
-        { title: 'Library', link: '/library', icon: 'mdi-album' },
-        { title: 'Calendar', link: '/calendar', icon: 'mdi-calendar-month' },
+        { title: 'Library', link: '/dashboard/library', icon: 'mdi-album' },
+        { title: 'Calendar', link: '/dashboard/calendar', icon: 'mdi-calendar-month' },
       ],
       navItemsBot: [
-        { title: 'Widgets', link: '/widgets', icon: 'mdi-toy-brick' },
-        { title: 'Settings', link: '/settings', icon: 'mdi-progress-wrench' },
-        { title: 'Analytics', link: '/playouthistory', icon: 'mdi-poll' },
-        { title: 'Help', link: '/help', icon: 'mdi-help-box' },
+        { title: 'Widgets', link: '/dashboard/widgets', icon: 'mdi-toy-brick' },
+        { title: 'Settings', link: '/dashboard/settings', icon: 'mdi-progress-wrench' },
+        { title: 'Analytics', link: '/dashboard/playouthistory', icon: 'mdi-poll' },
+        { title: 'Help', link: '/dashboard/help', icon: 'mdi-help-box' },
       ],
     }
   },

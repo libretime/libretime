@@ -1,0 +1,22 @@
+[
+    {
+        "item_url": "http://192.168.64.21/api/v2/podcast-episodes/2/",
+        "publication_date": "2021-12-20T08:00:00Z",
+        "download_url": "https://chrt.fm/track/58B918/traffic.megaphone.fm/ADV2936362037.mp3?updated=1640012900",
+        "episode_guid": "8d009654-3375-11ec-a598-0f1fab0f79b0",
+        "episode_title": "Attack of the Mutants",
+        "episode_description": "The omicron variant is surging. More contagious than delta, omicron demonstrates how viruses use mutations to quickly adapt.\nMutations drive evolution, although most don’t do much. But occasionally a mutation improves an organism. Omicron, the latest in a string of variants, is bad for us, but good for the virus.\nHow mutation of viruses ensures their own survival while threatening ours, and the prospect of a universal vaccine that would protect us against all a viruses’ variants.  \nGuests:\n\n\nRobert Garry – Professor of microbiology and virologist in the Tulane University School of Medicine\n\n\nKevin Saunders – Professor in the Duke University School of Medicine’s Human Vaccine Institute and professor of surgery\n\n\nFeaturing music by Dewey Dellay. \nBig Picture Science is part of the Airwave Media podcast network. Please contact sales@advertisecast.com to inquire about advertising on Big Picture Science.\nYou can get early access to ad-free versions of every episode by joining us on Patreon. Thanks for your support!\nLearn more about your ad choices. Visit megaphone.fm/adchoices",
+        "file": "http://192.168.64.21/api/v2/files/29/",
+        "podcast": "http://192.168.64.21/api/v2/podcasts/2/"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/podcast-episodes/1/",
+        "publication_date": "2021-12-27T08:05:00Z",
+        "download_url": "https://chrt.fm/track/58B918/traffic.megaphone.fm/ADV8299395064.mp3?updated=1640379724",
+        "episode_guid": "8d2181e8-3375-11ec-a598-93420106e42a",
+        "episode_title": "Mycology Education (rebroadcast)",
+        "episode_description": "Beneath our feet is a living network just as complex and extensive as the root systems in a forest. Fungi, which evolved in the oceans, were among the first to colonize the barren continents more than a half-billion years ago. They paved the way for land plants, animals, and (eventually) you. \nThink beyond penicillin and pizza, and take a moment to consider these amazing organisms. Able to survive every major extinction, essential as Nature’s decomposers, and the basis of both ale and antibiotics, fungi are essential to life. And their behavior is so complex you’ll be wondering if we shouldn’t call them intelligent!\nGuest:\n\nMerlin Sheldrake – Biologist and the author of Entangled Life: How Fungi Make our Worlds, Change our Minds and Shape our Futures.\n\nBig Picture Science is part of the Airwave Media podcast network. Please contact sales@advertisecast.com to inquire about advertising on Big Picture Science.\nYou can get early access to ad-free versions of every episode by joining us on Patreon. Thanks for your support!\nLearn more about your ad choices. Visit megaphone.fm/adchoices",
+        "file": "http://192.168.64.21/api/v2/files/30/",
+        "podcast": "http://192.168.64.21/api/v2/podcasts/2/"
+    }
+]

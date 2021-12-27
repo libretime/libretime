@@ -1,0 +1,9 @@
+[
+    {
+        "item_url": "http://192.168.64.21/api/v2/music-dirs/1/",
+        "directory": "/srv/airtime/stor/",
+        "type": "stor",
+        "exists": true,
+        "watched": true
+    }
+]

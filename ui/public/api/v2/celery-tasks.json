@@ -1,0 +1,18 @@
+[
+    {
+        "item_url": "http://192.168.64.21/api/v2/celery-tasks/1/",
+        "task_id": "php_61ca30fcedecf8.91295891",
+        "name": "podcast-download",
+        "dispatch_time": "2021-12-27T21:32:45Z",
+        "status": "SUCCESS",
+        "track_reference": "http://192.168.64.21/api/v2/third-party-track-references/1/"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/celery-tasks/2/",
+        "task_id": "php_61ca30fced6241.38650280",
+        "name": "podcast-download",
+        "dispatch_time": "2021-12-27T21:32:45Z",
+        "status": "SUCCESS",
+        "track_reference": "http://192.168.64.21/api/v2/third-party-track-references/2/"
+    }
+]

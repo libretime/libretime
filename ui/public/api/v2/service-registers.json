@@ -1,0 +1,10 @@
+[
+    {
+        "item_url": "http://192.168.64.21/api/v2/service-registers/pypo/",
+        "ip": "192.168.64.21"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/service-registers/show-recorder/",
+        "ip": "192.168.64.21"
+    }
+]

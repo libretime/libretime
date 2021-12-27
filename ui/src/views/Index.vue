@@ -1,5 +1,5 @@
 <template>
-  <radio-page v-show="!userLoggedIn" @try-login="processLogin" />
+  <radio-page />
 </template>
 
 <script>

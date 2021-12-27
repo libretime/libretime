@@ -90,5 +90,5 @@ export default {
 </script>
 
 <style lang="sass">
-@use '../../styles/WeeklyScheduleWidget.sass'
+@use '../../styles/Widgets.sass'
 </style>

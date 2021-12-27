@@ -1,0 +1,16 @@
+[
+    {
+        "item_url": "http://192.168.64.21/api/v2/track-types/1/",
+        "code": "MUS",
+        "type_name": "Music",
+        "description": "",
+        "visibility": true
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/track-types/2/",
+        "code": "SID",
+        "type_name": "Station ID",
+        "description": "",
+        "visibility": true
+    }
+]

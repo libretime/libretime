@@ -1,0 +1,18 @@
+[
+    {
+        "item_url": "http://192.168.64.21/api/v2/third-party-track-references/1/",
+        "service": "podcast",
+        "foreign_id": "2",
+        "upload_time": "2021-12-27T21:32:58Z",
+        "status": null,
+        "file": null
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/third-party-track-references/2/",
+        "service": "podcast",
+        "foreign_id": "1",
+        "upload_time": "2021-12-27T21:33:35Z",
+        "status": null,
+        "file": null
+    }
+]

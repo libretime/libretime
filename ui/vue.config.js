@@ -1,4 +1,5 @@
 const prefixer = require('postcss-prefix-selector')
+const path = require('path')
 
 module.exports = {
   // false to make embedding in airtime_mvc easy, can be switched to true once we get rid of the legacy ui
@@ -11,6 +12,15 @@ module.exports = {
       fallbackLocale: 'en',
       localeDir: 'locales',
       enableInSFC: true,
+    },
+  },
+
+  // @ as alias for /src
+  configureWebpack: {
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src'),
+      },
     },
   },
 

@@ -1,0 +1,14 @@
+[
+    {
+        "item_url": "http://192.168.64.21/api/v2/webstreams/1/",
+        "name": "Democracy Now",
+        "description": "",
+        "url": "http://mpeg.democracynow.org:8000/stream-64",
+        "length": "00:59:00",
+        "creator_id": 1,
+        "mtime": "2021-12-27T21:31:41Z",
+        "utime": "2021-12-27T21:31:41Z",
+        "lptime": null,
+        "mime": "audio/mpeg"
+    }
+]

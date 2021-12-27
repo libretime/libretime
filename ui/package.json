@@ -20,12 +20,12 @@
     "vue-blob-json-csv": "^0.1.7",
     "vue-i18n": "^8.17.3",
     "vue-router": "^3.2.0",
-    "vuetify": "^2.4.0"
+    "vuetify": "^2.6.1"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.12.10",
     "@intlify/vue-i18n-loader": "^2.0.0-beta.2",
-    "@mdi/font": "^5.8.55",
+    "@mdi/font": "^6.5.95",
     "@storybook/addon-a11y": "^6.1.11",
     "@storybook/addon-actions": "^6.1.11",
     "@storybook/addon-docs": "^6.1.11",

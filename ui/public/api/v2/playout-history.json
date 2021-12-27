@@ -1,0 +1,9 @@
+[
+    {
+        "item_url": "http://192.168.64.21/api/v2/playout-history/1/",
+        "starts": "2021-12-04T16:57:01Z",
+        "ends": "2021-12-04T17:00:22Z",
+        "file": "http://192.168.64.21/api/v2/files/2/",
+        "instance": "http://192.168.64.21/api/v2/show-instances/1/"
+    }
+]

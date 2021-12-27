@@ -15,37 +15,44 @@ const routes = [
     component: () => import(/* webpackChunkName: "RadioPage" */ '../views/Index.vue'),
   },
   {
-    path: '/library',
-    name: 'Library',
-    component: () => import(/* webpackChunkName: "library" */ '../views/Library.vue'),
-  },
-  {
-    path: '/calendar',
-    name: 'Calendar',
-    component: () => import(/* webpackChunkName: "calendar" */ '../views/Calendar.vue'),
-  },
-  {
-    path: '/widgets',
-    name: 'Widgets',
-    component: () => import(/* webpackChunkName: "widgets" */ '../views/Widgets.vue'),
-  },
-  {
-    path: '/playouthistory',
-    name: 'AnalyticsPlayoutHistory',
-    component: () =>
-      import(
-        /* webpackChunkName: "analyticsplayouthistory" */ '../views/AnalyticsPlayoutHistory.vue'
-      ),
-  },
-  {
-    path: '/settings',
-    name: 'Settings',
-    component: () => import(/* webpackChunkName: "settings" */ '../views/Settings.vue'),
-  },
-  {
-    path: '/help',
-    name: 'Help',
-    component: () => import(/* webpackChunkName: "help" */ '../views/Help.vue'),
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import(/* webpackChunkName: "Dashboard" */ '../views/Dashboard.vue'),
+    children: [
+      {
+        path: 'library',
+        name: 'Library',
+        component: () => import(/* webpackChunkName: "library" */ '../views/Library.vue'),
+      },
+      {
+        path: 'calendar',
+        name: 'Calendar',
+        component: () => import(/* webpackChunkName: "calendar" */ '../views/Calendar.vue'),
+      },
+      {
+        path: 'widgets',
+        name: 'Widgets',
+        component: () => import(/* webpackChunkName: "widgets" */ '../views/Widgets.vue'),
+      },
+      {
+        path: 'playouthistory',
+        name: 'AnalyticsPlayoutHistory',
+        component: () =>
+          import(
+            /* webpackChunkName: "analyticsplayouthistory" */ '../views/AnalyticsPlayoutHistory.vue'
+          ),
+      },
+      {
+        path: 'settings',
+        name: 'Settings',
+        component: () => import(/* webpackChunkName: "settings" */ '../views/Settings.vue'),
+      },
+      {
+        path: 'help',
+        name: 'Help',
+        component: () => import(/* webpackChunkName: "help" */ '../views/Help.vue'),
+      },
+    ],
   },
 ]
 

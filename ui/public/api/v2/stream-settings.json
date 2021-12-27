@@ -1,0 +1,352 @@
+[
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/off_air_meta/",
+        "value": "LibreTime - offline",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/output_sound_device/",
+        "value": "false",
+        "type": "boolean"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/output_sound_device_type/",
+        "value": "ALSA",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/icecast_vorbis_metadata/",
+        "value": "false",
+        "type": "boolean"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s1_enable/",
+        "value": "true",
+        "type": "boolean"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s1_output/",
+        "value": "icecast",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s1_type/",
+        "value": "ogg",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s1_bitrate/",
+        "value": "128",
+        "type": "integer"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s1_host/",
+        "value": "127.0.0.1",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s1_port/",
+        "value": "8000",
+        "type": "integer"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s1_user/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s1_admin_user/",
+        "value": "admin",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s1_mount/",
+        "value": "airtime_128",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s1_url/",
+        "value": "https://libretime.org",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s1_description/",
+        "value": "LibreTime Radio! Stream #1",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s1_genre/",
+        "value": "genre",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s2_enable/",
+        "value": "false",
+        "type": "boolean"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s2_output/",
+        "value": "icecast",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s2_type/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s2_bitrate/",
+        "value": "",
+        "type": "integer"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s2_host/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s2_port/",
+        "value": "",
+        "type": "integer"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s2_user/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s2_admin_user/",
+        "value": "admin",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s2_mount/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s2_url/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s2_description/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s2_genre/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s3_enable/",
+        "value": "false",
+        "type": "boolean"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s3_output/",
+        "value": "icecast",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s3_type/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s3_bitrate/",
+        "value": "",
+        "type": "integer"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s3_host/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s3_port/",
+        "value": "",
+        "type": "integer"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s3_user/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s3_admin_user/",
+        "value": "admin",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s3_mount/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s3_url/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s3_description/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s3_genre/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s1_name/",
+        "value": "LibreTime!",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s2_name/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s3_name/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s1_channels/",
+        "value": "stereo",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s2_channels/",
+        "value": "stereo",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s3_channels/",
+        "value": "stereo",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s4_enable/",
+        "value": "false",
+        "type": "boolean"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s4_output/",
+        "value": "icecast",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s4_name/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s4_type/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s4_bitrate/",
+        "value": "",
+        "type": "integer"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s4_host/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s4_port/",
+        "value": "",
+        "type": "integer"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s4_user/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s4_pass/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s4_admin_user/",
+        "value": "admin",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s4_admin_pass/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s4_mount/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s4_url/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s4_description/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s4_genre/",
+        "value": "",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s4_channels/",
+        "value": "stereo",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s1_pass/",
+        "value": "OSXy96qy5fqS",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s2_pass/",
+        "value": "OSXy96qy5fqS",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s2_admin_pass/",
+        "value": "OSXy96qy5fqS",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s3_pass/",
+        "value": "OSXy96qy5fqS",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s3_admin_pass/",
+        "value": "OSXy96qy5fqS",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s1_admin_pass/",
+        "value": "OSXy96qy5fqS",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/s1_liquidsoap_error/",
+        "value": "OK",
+        "type": "string"
+    },
+    {
+        "item_url": "http://192.168.64.21/api/v2/stream-settings/airtime_128_listener_stat_error/",
+        "value": "OK",
+        "type": "string"
+    }
+]

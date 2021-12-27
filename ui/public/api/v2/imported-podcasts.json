@@ -1,0 +1,9 @@
+[
+    {
+        "item_url": "http://192.168.64.21/api/v2/imported-podcasts/1/",
+        "auto_ingest": true,
+        "auto_ingest_timestamp": null,
+        "album_override": false,
+        "podcast": "http://192.168.64.21/api/v2/podcasts/2/"
+    }
+]
