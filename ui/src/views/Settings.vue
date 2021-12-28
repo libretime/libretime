@@ -14,7 +14,9 @@
       <v-col class="col-9">
         <general />
         <users />
+        <track-types />
         <stream />
+        <status />
       </v-col>
     </v-row>
   </v-container>
@@ -24,9 +26,11 @@
 import General from '../components/Settings/General.vue'
 import Stream from '../components/Settings/Stream.vue'
 import Users from '../components/Settings/Users.vue'
+import TrackTypes from '@/components/Settings/TrackTypes.vue'
+import Status from '@/components/Settings/Status.vue'
 export default {
   name: 'Settings',
-  components: { General, Users, Stream },
+  components: { General, Users, Stream, TrackTypes, Status },
   data() {
     return {
       display: 'general',

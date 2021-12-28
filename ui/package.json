@@ -52,7 +52,7 @@
     "prettier": "^2.2.1",
     "prism-react-renderer": "^1.1.1",
     "prismjs": "^1.17.1",
-    "sass": "^1.30.0",
+    "sass": "~1.32.0",
     "sass-loader": "^10.1.0",
     "vue-cli-plugin-i18n": "^1.0.1",
     "vue-cli-plugin-styleguidist": "^4.34.2",

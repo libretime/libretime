@@ -1,18 +1,23 @@
 <template>
   <v-container>
-    <p class="text-h5">Users</p>
-    <v-toolbar dense><add-user /></v-toolbar>
-    <v-data-table
-      :headers="headers"
-      :items="userList"
-      :items-per-page="10"
-      class="elevation-1"
-    ></v-data-table>
+    <v-row>
+      <v-col>
+        <p class="text-h5">Users</p>
+        <v-toolbar dense><add-user /></v-toolbar>
+        <v-data-table
+          :headers="headers"
+          :items="userList"
+          :items-per-page="10"
+          class="elevation-1"
+        ></v-data-table>
+      </v-col>
+      <v-col></v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
-import AddUser from '../../components/Settings/AddUser.vue'
+import AddUser from '@/components/Settings/AddUser.vue'
 // import api from '../../api'
 const apidata = require('../../../public/api/v2/users.json')
 

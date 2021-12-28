@@ -1,1 +1,35 @@
-[{"item_url":"http://192.168.64.21/api/v2/shows/1/?format=json","id":1,"name":"Untitled Show","url":"","genre":"","description":"","color":"","background_color":"","linked":false,"is_linkable":true,"image_path":"","has_autoplaylist":false,"autoplaylist_repeat":false,"autoplaylist":null},{"item_url":"http://192.168.64.21/api/v2/shows/2/?format=json","id":2,"name":"New Show","url":"","genre":"","description":"","color":"","background_color":"","linked":false,"is_linkable":true,"image_path":"","has_autoplaylist":false,"autoplaylist_repeat":false,"autoplaylist":null},{"item_url":"http://192.168.64.21/api/v2/shows/3/?format=json","id":3,"name":"Big Picture Science","url":"","genre":"","description":"","color":"","background_color":"","linked":false,"is_linkable":true,"image_path":"","has_autoplaylist":true,"autoplaylist_repeat":false,"autoplaylist":"http://192.168.64.21/api/v2/playlists/2/?format=json"},{"item_url":"http://192.168.64.21/api/v2/shows/4/?format=json","id":4,"name":"Cass Hour","url":"","genre":"","description":"","color":"","background_color":"","linked":true,"is_linkable":true,"image_path":"","has_autoplaylist":false,"autoplaylist_repeat":false,"autoplaylist":null}]
+[
+  {
+    "item_url":"http://192.168.64.21/api/v2/shows/1/?format=json",
+    "id":1,
+    "name":"Untitled Show",
+    "url":"",
+    "genre":"",
+    "description":"",
+    "color":"",
+    "background_color":"",
+    "linked":false,
+    "is_linkable":true,
+    "image_path":"",
+    "has_autoplaylist":false,
+    "autoplaylist_repeat":false,
+    "autoplaylist":null
+  },
+  {
+    "item_url":"http://192.168.64.21/api/v2/shows/2/?format=json",
+    "id":2,
+    "name":"New Show",
+    "url":"",
+    "genre":"",
+    "description":"",
+    "color":"",
+    "background_color":"",
+    "linked":false,
+    "is_linkable":true,
+    "image_path":"",
+    "has_autoplaylist":false,
+    "autoplaylist_repeat":false,
+    "autoplaylist":null
+  },
+  {
+    "item_url":"http://192.168.64.21/api/v2/shows/3/?format=json","id":3,"name":"Big Picture Science","url":"","genre":"","description":"","color":"","background_color":"","linked":false,"is_linkable":true,"image_path":"","has_autoplaylist":true,"autoplaylist_repeat":false,"autoplaylist":"http://192.168.64.21/api/v2/playlists/2/?format=json"},{"item_url":"http://192.168.64.21/api/v2/shows/4/?format=json","id":4,"name":"Cass Hour","url":"","genre":"","description":"","color":"","background_color":"","linked":true,"is_linkable":true,"image_path":"","has_autoplaylist":false,"autoplaylist_repeat":false,"autoplaylist":null}]
