@@ -21,7 +21,7 @@
 
 <script>
 export default {
-  name: 'GlobalSettings',
+  name: 'StreamGlobals',
   data() {
     return {
       hardwareAudio: false,

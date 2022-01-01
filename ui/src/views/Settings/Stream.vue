@@ -22,8 +22,8 @@
 </template>
 
 <script>
-import GlobalSettings from './StreamCards/GlobalSettings.vue'
-import OutputStreams from './StreamCards/OutputStreams.vue'
+import GlobalSettings from '@/components/Settings/StreamGlobals.vue'
+import OutputStreams from '@/components/Settings/OutputStreams.vue'
 export default {
   name: 'StreamSettings',
   components: { GlobalSettings, OutputStreams },

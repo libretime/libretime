@@ -1,7 +1,7 @@
 <template>
   <div>
+    <p class="text-h6">Manage Track Types</p>
     <v-row>
-      <p class="text-h6">Manage Track Types</p>
       <v-col>
         <v-toolbar dense>
           <v-btn color="primary" @click="resetForm">New Track Type</v-btn>

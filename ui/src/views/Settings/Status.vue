@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-simple-table>
-      <template v-slot:default>
+      <template #default>
         <thead>
           <tr>
             <th class="text-left">Service</th>

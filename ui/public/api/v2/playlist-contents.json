@@ -13,5 +13,37 @@
     "playlist":"http://192.168.64.21/api/v2/playlists/1/?format=json",
     "file":"http://192.168.64.21/api/v2/files/3/?format=json",
     "block":null
-    },
-    {"item_url":"http://192.168.64.21/api/v2/playlist-contents/2/?format=json","stream_id":null,"type":0,"position":1,"trackoffset":0.0,"cliplength":"00:03:58.492000","cuein":"00:00:00.214626","cueout":"00:03:58.706644","fadein":"00:00:00.500000","fadeout":"00:00:00","playlist":"http://192.168.64.21/api/v2/playlists/1/?format=json","file":"http://192.168.64.21/api/v2/files/7/?format=json","block":null},{"item_url":"http://192.168.64.21/api/v2/playlist-contents/3/?format=json","stream_id":null,"type":0,"position":2,"trackoffset":0.0,"cliplength":"00:03:04.563000","cuein":"00:00:00.237392","cueout":"00:03:04.800249","fadein":"00:00:00.500000","fadeout":"00:00:00","playlist":"http://192.168.64.21/api/v2/playlists/1/?format=json","file":"http://192.168.64.21/api/v2/files/9/?format=json","block":null},{"item_url":"http://192.168.64.21/api/v2/playlist-contents/4/?format=json","stream_id":null,"type":2,"position":null,"trackoffset":0.0,"cliplength":"00:00:00","cuein":"00:00:00","cueout":"00:00:00","fadein":"00:00:00","fadeout":"00:00:00","playlist":"http://192.168.64.21/api/v2/playlists/2/?format=json","file":null,"block":"http://192.168.64.21/api/v2/smart-blocks/2/?format=json"}]
+  },
+  {
+    "item_url":"http://192.168.64.21/api/v2/playlist-contents/2/?format=json",
+    "stream_id":null,
+    "type":0,
+    "position":1,
+    "trackoffset":0.0,
+    "cliplength":"00:03:58.492000",
+    "cuein":"00:00:00.214626",
+    "cueout":"00:03:58.706644",
+    "fadein":"00:00:00.500000",
+    "fadeout":"00:00:00",
+    "playlist":"http://192.168.64.21/api/v2/playlists/1/?format=json",
+    "file":"http://192.168.64.21/api/v2/files/7/?format=json",
+    "block":null
+  },
+  {
+    "item_url":"http://192.168.64.21/api/v2/playlist-contents/3/?format=json",
+    "stream_id":null,
+    "type":0,
+    "position":2,
+    "trackoffset":0.0,
+    "cliplength":"00:03:04.563000",
+    "cuein":"00:00:00.237392",
+    "cueout":"00:03:04.800249",
+    "fadein":"00:00:00.500000",
+    "fadeout":"00:00:00",
+    "playlist":"http://192.168.64.21/api/v2/playlists/1/?format=json",
+    "file":"http://192.168.64.21/api/v2/files/9/?format=json",
+    "block":null
+  },
+  {
+    "item_url":"http://192.168.64.21/api/v2/playlist-contents/4/?format=json","stream_id":null,"type":2,"position":null,"trackoffset":0.0,"cliplength":"00:00:00","cuein":"00:00:00","cueout":"00:00:00","fadein":"00:00:00","fadeout":"00:00:00","playlist":"http://192.168.64.21/api/v2/playlists/2/?format=json","file":null,
+    "block":"http://192.168.64.21/api/v2/smart-blocks/2/?format=json"}]

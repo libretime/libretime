@@ -1,0 +1,6 @@
+:8888
+
+header Access-Control-Allow-Origin *
+root * ./public
+try_files {path}.json {path} =404
+file_server

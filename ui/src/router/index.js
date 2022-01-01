@@ -46,6 +46,37 @@ const routes = [
         path: 'settings',
         name: 'Settings',
         component: () => import(/* webpackChunkName: "settings" */ '../views/Settings.vue'),
+        children: [
+          {
+            path: 'general',
+            name: 'GeneralSettings',
+            component: () =>
+              import(/* webpackChunkName: "GeneralSettings" */ '../views/Settings/General.vue'),
+          },
+          {
+            path: 'users',
+            name: 'Users',
+            component: () => import(/* webpackChunkName: "Users" */ '../views/Settings/Users.vue'),
+          },
+          {
+            path: 'streams',
+            name: 'StreamSettings',
+            component: () =>
+              import(/* webpackChunkName: "StreamSettings" */ '../views/Settings/Stream.vue'),
+          },
+          {
+            path: 'tracktypes',
+            name: 'TrackTypes',
+            component: () =>
+              import(/* webpackChunkName: "TrackTypes" */ '../views/Settings/TrackTypes.vue'),
+          },
+          {
+            path: 'status',
+            name: 'Status',
+            component: () =>
+              import(/* webpackChunkName: "Status" */ '../views/Settings/Status.vue'),
+          },
+        ],
       },
       {
         path: 'help',

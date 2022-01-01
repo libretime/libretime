@@ -24,7 +24,7 @@
         <v-spacer></v-spacer>
         <v-btn>Columns<v-icon>mdi-chevron-down</v-icon></v-btn>
       </v-toolbar>
-      <div v-if="!loading">
+      <div>
         <v-data-table
           :headers="headers"
           :items="files"
@@ -38,17 +38,15 @@
 </template>
 
 <script>
-// import devapi from '@/devapi'
-import dayjs from 'dayjs'
-import { customParseFormat } from 'dayjs/plugin/customParseFormat'
-const apidata = require('../../../public/api/v2/files.json')
-
+import useGetTrackLibrary from '@/composables/useGetTrackLibrary.js'
 export default {
-  name: 'TrackLibrary',
+  setup() {
+    const { files } = useGetTrackLibrary()
+    console.log(files)
+    return { files }
+  },
   data() {
     return {
-      loading: false,
-      errored: false,
       search: '',
       headers: [
         { text: 'Title', value: 'track_title' },
@@ -57,29 +55,47 @@ export default {
         { text: 'Genre', value: 'genre' },
         { text: 'Length', value: 'length' },
       ],
-      files: apidata,
     }
   },
-  // mounted: () => {
-  //   axios
-  //     .get('http://localhost:8080/api/v2/files.json')
-  //     .then((response) => {
-  //       this.files = response.data
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //       this.errored = true
-  //     })
-  //     .finally(() => (this.loading = false))
-  // },
-  methods: {
-    cleanLength: () => {
-      dayjs.extend(customParseFormat) // may not import correctly, docs unclear
-      this.trackList.forEach((x) => {
-        let temp = x.length.split('.', 1)
-        x.cleanLength = dayjs(temp[1], 'H:mm:ss')
-      })
-    },
-  },
 }
+
+// import dayjs from 'dayjs'
+// import { customParseFormat } from 'dayjs/plugin/customParseFormat'
+// import axios from 'axios'
+
+// export default {
+//   name: 'TrackLibrary',
+//   data() {
+//     return {
+//       loading: true,
+//       errored: false,
+//       search: '',
+//       headers: [
+//         { text: 'Title', value: 'track_title' },
+//         { text: 'Artist', value: 'artist_name' },
+//         { text: 'Album', value: 'album_title' },
+//         { text: 'Genre', value: 'genre' },
+//         { text: 'Length', value: 'length' },
+//       ],
+//       files: [],
+//     }
+//   },
+//   mounted: function () {
+//     axios
+//       .get('http://localhost:8888/api/v2/files.json')
+//       .then((response) => {
+//         this.files = response.data
+//         dayjs.extend(customParseFormat) // may not import correctly, docs unclear
+//         this.files.forEach(function (x) {
+//           let temp = x.length.split('.', 1)
+//           x.length = dayjs(temp[1], 'H:mm:ss')
+//         })
+//       })
+//       .catch((err) => {
+//         console.log(err)
+//         this.errored = true
+//       })
+//       .finally(() => (this.loading = false))
+//   },
+// }
 </script>

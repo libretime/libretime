@@ -5,51 +5,37 @@
         <v-list v-for="nav in sideNav" :key="nav" flat nav dense>
           <v-subheader>{{ nav.section }}</v-subheader>
           <v-list-item-group>
-            <v-list-item v-for="item in nav.items" :key="item" link @click="switchTab(item.tab)">
+            <v-list-item v-for="item in nav.items" :key="item" link :to="item.to">
               {{ item.name }}
             </v-list-item>
           </v-list-item-group>
         </v-list>
       </v-col>
       <v-col class="col-9">
-        <general />
-        <users />
-        <track-types />
-        <stream />
-        <status />
+        <router-view />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import General from '../components/Settings/General.vue'
-import Stream from '../components/Settings/Stream.vue'
-import Users from '../components/Settings/Users.vue'
-import TrackTypes from '@/components/Settings/TrackTypes.vue'
-import Status from '@/components/Settings/Status.vue'
 export default {
   name: 'Settings',
-  components: { General, Users, Stream, TrackTypes, Status },
   data() {
     return {
-      display: 'general',
       sideNav: [
         {
           section: 'SYSTEM',
           items: [
-            { name: 'General', tab: 'general' },
-            { name: 'User', link: 'users' },
-            { name: 'Stream Settings', link: 'stream' },
+            { name: 'General', to: '/dashboard/settings/general' },
+            { name: 'User', link: '/dashboard/settings/users' },
+            { name: 'Stream', link: '/dashboard/settings/streams' },
+            { name: 'Track Types', link: '/dashboard/settings/tracktypes' },
+            { name: 'Status', link: '/dashboard/settings/status' },
           ],
         },
       ],
     }
-  },
-  methods: {
-    switchTab: (tab) => {
-      this.display = tab
-    },
   },
 }
 </script>
