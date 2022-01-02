@@ -15,8 +15,8 @@ import time
 from datetime import datetime
 from optparse import OptionParser
 
-from libretime_api_client.version1 import AirtimeApiClient as ApiClient
 from configobj import ConfigObj
+from libretime_api_client.version1 import AirtimeApiClient as ApiClient
 
 try:
     from queue import Queue
