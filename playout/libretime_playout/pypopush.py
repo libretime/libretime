@@ -10,8 +10,8 @@ from datetime import datetime, timedelta
 from queue import Empty, Queue
 from threading import Thread
 
-from libretime_api_client import version1 as api_client
 from configobj import ConfigObj
+from libretime_api_client import version1 as api_client
 
 from .pypofetch import PypoFetch
 from .pypoliqqueue import PypoLiqQueue
