@@ -18,5 +18,5 @@ export default function () {
   //   let temp = x.length.split('.', 1)
   //   x.length = dayjs(temp[1], 'H:mm:ss')
   // })
-  return toRefs(tracks)
+  return { ...toRefs(tracks) }
 }

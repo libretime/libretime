@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p class="text-h5">Status</p>
     <v-simple-table>
       <template #default>
         <thead>

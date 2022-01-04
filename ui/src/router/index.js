@@ -51,30 +51,33 @@ const routes = [
             path: 'general',
             name: 'GeneralSettings',
             component: () =>
-              import(/* webpackChunkName: "generalsettings" */ '../views/Settings/General.vue'),
+              import(
+                /* webpackChunkName: "generalsettings" */ '../views/SettingsPages/General.vue'
+              ),
           },
           {
             path: 'users',
             name: 'Users',
-            component: () => import(/* webpackChunkName: "users" */ '../views/Settings/Users.vue'),
+            component: () =>
+              import(/* webpackChunkName: "users" */ '../views/SettingsPages/Users.vue'),
           },
           {
             path: 'streams',
             name: 'StreamSettings',
             component: () =>
-              import(/* webpackChunkName: "streams" */ '../views/Settings/Stream.vue'),
+              import(/* webpackChunkName: "streams" */ '../views/SettingsPages/Stream.vue'),
           },
           {
             path: 'tracktypes',
             name: 'TrackTypes',
             component: () =>
-              import(/* webpackChunkName: "tracktypes" */ '../views/Settings/TrackTypes.vue'),
+              import(/* webpackChunkName: "tracktypes" */ '../views/SettingsPages/TrackTypes.vue'),
           },
           {
             path: 'status',
             name: 'Status',
             component: () =>
-              import(/* webpackChunkName: "status" */ '../views/Settings/Status.vue'),
+              import(/* webpackChunkName: "status" */ '../views/SettingsPages/Status.vue'),
           },
         ],
       },
