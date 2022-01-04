@@ -25,12 +25,12 @@ jobs:
             playout
             ui
             worker
-
-            ci
           subjectPattern: ^(?![A-Z]).+$
           subjectPatternError: |
             The subject "{subject}" found in the pull request title "{title}"
             didn't match the configured pattern. Please ensure that the subject
             doesn't start with an uppercase character.
+
+            See https://www.conventionalcommits.org/en/v1.0.0/ for more details.
           wip: true
           validateSingleCommit: true
