@@ -17,13 +17,13 @@ SHARED_DEV_REQUIREMENTS = \
 	pytest-cov \
 	pytest-xdist
 
-VENV = venv
+VENV = .venv
 $(VENV):
 	python3 -m venv $(VENV)
 	source $(VENV)/bin/activate
 	$(MAKE) install
 
-install: venv
+install: $(VENV)
 	source $(VENV)/bin/activate
 	pip install --upgrade pip setuptools wheel
 	pip install $(SHARED_DEV_REQUIREMENTS) $(PIP_INSTALL)
@@ -52,7 +52,7 @@ install: venv
 
 .PHONY: .pytest
 .pytest: $(VENV)
-	source venv/bin/activate
+	source $(VENV)/bin/activate
 	pytest -n $(CPU_CORES) --color=yes -v $(PYTEST_ARG)
 
 .PHONY: .clean
