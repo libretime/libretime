@@ -29,7 +29,7 @@ class Config(BaseConfig):
     rabbitmq: RabbitMQ
     analyzer: Analyzer
 
-config = Config(filepath="/opt/libretime/analyzer/config.yml")
+config = Config(filepath="/etc/libretime/config.yml")
 ```
 
 ### App
