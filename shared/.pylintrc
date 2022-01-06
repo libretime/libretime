@@ -1,0 +1,5 @@
+[MESSAGES CONTROL]
+extension-pkg-whitelist = pydantic
+disable=missing-module-docstring,
+        missing-class-docstring,
+        missing-function-docstring,
