@@ -11,7 +11,7 @@ from pydantic.fields import ModelField
 from yaml import YAMLError, safe_load
 
 DEFAULT_ENV_PREFIX = "LIBRETIME"
-
+DEFAULT_CONFIG_FILEPATH = Path("/etc/libretime/config.yml")
 
 # pylint: disable=too-few-public-methods
 class BaseConfig(BaseModel):
@@ -27,10 +27,11 @@ class BaseConfig(BaseModel):
         self,
         *,
         env_prefix: str = DEFAULT_ENV_PREFIX,
+        env_delimiter: str = "_",
         filepath: Optional[Path] = None,
     ) -> None:
         file_values = self._load_file_values(filepath)
-        env_values = self._load_env_values(env_prefix)
+        env_values = self._load_env_values(env_prefix, env_delimiter)
 
         try:
             super().__init__(
@@ -43,22 +44,27 @@ class BaseConfig(BaseModel):
             logger.critical(error)
             sys.exit(1)
 
-    def _load_env_values(self, env_prefix: str) -> Dict[str, Any]:
-        return self._get_fields_from_env(env_prefix, self.__fields__)
+    def _load_env_values(self, env_prefix: str, env_delimiter: str) -> Dict[str, Any]:
+        return self._get_fields_from_env(env_prefix, env_delimiter, self.__fields__)
 
     def _get_fields_from_env(
         self,
         env_prefix: str,
+        env_delimiter: str,
         fields: Dict[str, ModelField],
     ) -> Dict[str, Any]:
         result: Dict[str, Any] = {}
 
+        if env_prefix != "":
+            env_prefix += env_delimiter
+
         for field in fields.values():
-            env_name = (env_prefix + "_" + field.name).upper()
+            env_name = (env_prefix + field.name).upper()
 
             if field.is_complex():
                 result[field.name] = self._get_fields_from_env(
                     env_name,
+                    env_delimiter,
                     field.type_.__fields__,
                 )
             else:
