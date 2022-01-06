@@ -11,7 +11,7 @@ from pydantic.fields import ModelField
 from yaml import YAMLError, safe_load
 
 DEFAULT_ENV_PREFIX = "LIBRETIME"
-
+DEFAULT_CONFIG_FILEPATH = Path("/etc/libretime/config.yml")
 
 # pylint: disable=too-few-public-methods
 class BaseConfig(BaseModel):
