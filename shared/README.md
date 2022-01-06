@@ -14,18 +14,18 @@ This library assumes that:
 
 First define a schema for your configuration in order to validate it. A schema is a class that inherit from `pydantic.BaseModel`. Some existing schemas can be reused such as `libretime_shared.config.RabbitMQ` or `libretime_shared.config.Database`.
 
-Load your configuration using `libretime_shared.config.load_config`.
+Load your configuration using a subclass of `libretime_shared.config.BaseConfig`.
 
 ```py
 from pydantic import BaseModel
 
-from libretime_shared.config import RabbitMQ, load_config
+from libretime_shared.config import RabbitMQ, BaseConfig
 
 class Analyzer(BaseModel):
     bpm_enabled: bool = False
     bpm_track_max_length: int
 
-class Config(BaseModel):
+class Config(BaseConfig):
     rabbitmq: RabbitMQ
     analyzer: Analyzer
 
