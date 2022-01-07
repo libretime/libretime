@@ -46,10 +46,10 @@ def level_from_verbosity(verbosity: int) -> LogLevel:
 
 
 def setup_logger(
-    verbosity: int,
+    level: LogLevel,
     filepath: Optional[Path] = None,
     serialize: bool = False,
-) -> LogLevel:
+) -> None:
     """
     Configure the logger and return the computed log level.
 
@@ -60,8 +60,6 @@ def setup_logger(
     :param serialize: generate JSON formatted log records
     :returns: log level guessed from the verbosity
     """
-    level = level_from_verbosity(verbosity)
-
     handlers = [dict(sink=sys.stderr, level=level.no, serialize=serialize)]
 
     if filepath is not None:
@@ -78,14 +76,12 @@ def setup_logger(
 
     logger.configure(handlers=handlers)
 
-    return level
-
 
 _empty_logger = deepcopy(logger)
 
 
 def create_task_logger(
-    verbosity: int,
+    level: LogLevel,
     filepath: Path,
     serialize: bool = False,
 ) -> "Logger":
@@ -98,8 +94,6 @@ def create_task_logger(
     :returns: new logger
     """
     task_logger = deepcopy(_empty_logger)
-
-    level = level_from_verbosity(verbosity)
 
     task_logger.configure(
         handlers=[
