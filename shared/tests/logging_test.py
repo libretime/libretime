@@ -4,6 +4,8 @@ import pytest
 from loguru import logger
 
 from libretime_shared.logging import (
+    DEBUG,
+    INFO,
     create_task_logger,
     level_from_verbosity,
     setup_logger,
@@ -32,9 +34,9 @@ def test_setup_logger(tmp_path: Path):
     log_filepath = tmp_path / "test.log"
     extra_log_filepath = tmp_path / "extra.log"
 
-    setup_logger(1, log_filepath)
+    setup_logger(INFO, log_filepath)
 
-    extra_logger = create_task_logger(2, extra_log_filepath, True)
+    extra_logger = create_task_logger(DEBUG, extra_log_filepath, True)
 
     logger.info("test info")
     extra_logger.info("extra info")
