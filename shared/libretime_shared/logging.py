@@ -49,7 +49,7 @@ def setup_logger(
     level: LogLevel,
     filepath: Optional[Path] = None,
     serialize: bool = False,
-):
+) -> None:
     """
     Configure the logger and return the computed log level.
 
