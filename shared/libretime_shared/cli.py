@@ -3,6 +3,7 @@ from typing import Callable
 import click
 
 from .config import DEFAULT_ENV_PREFIX
+from .logging import INFO, LOG_LEVEL_MAP
 
 
 def cli_logging_options(func: Callable) -> Callable:
@@ -10,26 +11,16 @@ def cli_logging_options(func: Callable) -> Callable:
     Decorator function to add logging options to a click application.
 
     This decorator add the following arguments:
-    - verbosity: int
-    - log_filepath: Path
+    - log_level: str
+    - log_filepath: Optional[Path]
     """
     func = click.option(
-        "-v",
-        "--verbose",
-        "verbosity",
-        envvar=f"{DEFAULT_ENV_PREFIX}_VERBOSITY",
-        count=True,
-        default=0,
-        help="Increase logging verbosity (use -vvv to debug).",
-    )(func)
-
-    func = click.option(
-        "-q",
-        "--quiet",
-        "verbosity",
-        is_flag=True,
-        flag_value=-1,
-        help="Decrease logging verbosity.",
+        "--log-level",
+        "log_level",
+        envvar=f"{DEFAULT_ENV_PREFIX}_LOG_LEVEL",
+        type=click.Choice(list(LOG_LEVEL_MAP.keys())),
+        default=INFO.name,
+        help="Name of the logging level.",
     )(func)
 
     func = click.option(

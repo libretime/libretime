@@ -5,7 +5,7 @@ from typing import Optional
 
 from loguru import logger
 
-from .logging import LogLevel, level_from_verbosity, setup_logger
+from .logging import LogLevel, level_from_name, setup_logger
 
 
 # pylint: disable=too-few-public-methods
@@ -26,13 +26,14 @@ class AbstractApp(ABC):
     def __init__(
         self,
         *,
-        verbosity: int,
+        log_level: str,
         log_filepath: Optional[PathLike] = None,
     ):
+        self.log_level = level_from_name(log_level)
+
         if log_filepath is not None:
             self.log_filepath = Path(log_filepath)
 
-        self.log_level = level_from_verbosity(verbosity)
         setup_logger(level=self.log_level, filepath=self.log_filepath)
 
         logger.info(f"Starting {self.name}...")

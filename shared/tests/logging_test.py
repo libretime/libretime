@@ -7,27 +7,30 @@ from libretime_shared.logging import (
     DEBUG,
     INFO,
     create_task_logger,
-    level_from_verbosity,
+    level_from_name,
     setup_logger,
 )
 
 
 @pytest.mark.parametrize(
-    "verbosity,level_name,level_no",
+    "name,level_name,level_no",
     [
-        (-100, "error", 40),
-        (-1, "error", 40),
-        (0, "warning", 30),
-        (1, "info", 20),
-        (2, "debug", 10),
-        (3, "trace", 5),
-        (100, "trace", 5),
+        ("error", "error", 40),
+        ("warning", "warning", 30),
+        ("info", "info", 20),
+        ("debug", "debug", 10),
+        ("trace", "trace", 5),
     ],
 )
-def test_level_from_verbosity(verbosity, level_name, level_no):
-    level = level_from_verbosity(verbosity)
+def test_level_from_name(name, level_name, level_no):
+    level = level_from_name(name)
     assert level.name == level_name
     assert level.no == level_no
+
+
+def test_level_from_name_invalid():
+    with pytest.raises(ValueError):
+        level_from_name("invalid")
 
 
 def test_setup_logger(tmp_path: Path):

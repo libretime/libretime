@@ -26,23 +26,27 @@ INFO = LogLevel(name="info", no=20)
 DEBUG = LogLevel(name="debug", no=10)
 TRACE = LogLevel(name="trace", no=5)
 
+LOG_LEVEL_MAP = {
+    ERROR.name: ERROR,
+    WARNING.name: WARNING,
+    INFO.name: INFO,
+    DEBUG.name: DEBUG,
+    TRACE.name: TRACE,
+}
 
-def level_from_verbosity(verbosity: int) -> LogLevel:
+
+def level_from_name(name: str) -> LogLevel:
     """
-    Find logging level, depending on the verbosity requested.
+    Find logging level, depending on the name provided.
 
-    -q         -1   =>  ERROR
-    default     0   =>  WARNING
-    -v          1   =>  INFO
-    -vv         2   =>  DEBUG
-    -vvv        3   =>  TRACE
-
-    :param verbosity: verbosity (between -1 and 3) of the logger
-    :returns: log level guessed from the verbosity
+    :param name: name (one of "error", "warning", "info", "debug", "trace") of the log level
+    :returns: log level guessed from the name
+    :raises ValueError: on invalid level name
     """
-    if verbosity < 0:
-        return ERROR
-    return [WARNING, INFO, DEBUG, TRACE][min(3, verbosity)]
+    name = name.lower()
+    if name not in LOG_LEVEL_MAP:
+        raise ValueError(f"invalid level name '{name}'")
+    return LOG_LEVEL_MAP[name]
 
 
 def setup_logger(
