@@ -23,6 +23,7 @@ jobs:
             installer
             legacy
             playout
+            shared
             ui
             worker
           subjectPattern: ^(?![A-Z]).+$
