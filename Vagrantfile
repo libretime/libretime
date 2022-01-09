@@ -3,18 +3,21 @@
 
 #
 # Tweak guest CPUS and MEMORY using:
+# export VAGRANT_NO_PORT_FORWARDING=true
 # export VAGRANT_CPUS=4
 # export VAGRANT_MEMORY=4096
 # vagrant up debian-buster
 #
 
 Vagrant.configure('2') do |config|
-  config.vm.network 'forwarded_port', guest: 8080, host: 8080 # web
-  config.vm.network 'forwarded_port', guest: 8081, host: 8081 # api
-  config.vm.network 'forwarded_port', guest: 8000, host: 8000 # icecast2
-  config.vm.network 'forwarded_port', guest: 8001, host: 8001 # liquidsoap
-  config.vm.network 'forwarded_port', guest: 8002, host: 8002 # liquidsoap
-  config.vm.network 'forwarded_port', guest: 5432, host: 5432 # database
+  if ! ENV.fetch('VAGRANT_NO_PORT_FORWARDING', 'false') == 'true'
+    config.vm.network 'forwarded_port', guest: 8080, host: 8080 # web
+    config.vm.network 'forwarded_port', guest: 8081, host: 8081 # api
+    config.vm.network 'forwarded_port', guest: 8000, host: 8000 # icecast2
+    config.vm.network 'forwarded_port', guest: 8001, host: 8001 # liquidsoap
+    config.vm.network 'forwarded_port', guest: 8002, host: 8002 # liquidsoap
+    config.vm.network 'forwarded_port', guest: 5432, host: 5432 # database
+  end
 
   config.vm.provider 'virtualbox' do |v|
     v.cpus = ENV.fetch('VAGRANT_CPUS', 2)
