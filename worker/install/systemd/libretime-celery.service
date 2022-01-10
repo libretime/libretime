@@ -5,11 +5,10 @@ Description=LibreTime Worker Service
 Environment=LIBRETIME_CONFIG_FILEPATH=/etc/airtime/airtime.conf
 WorkingDirectory=/var/lib/libretime/worker
 
-ExecStart=/usr/local/bin/celery worker \
+ExecStart=/usr/local/bin/celery \
     --app=libretime_worker.tasks:worker \
     --config=libretime_worker.config \
-    --time-limit=1800 \
-    --concurrency=1 \
+    worker \
     --loglevel=INFO
 User=libretime-worker
 Group=libretime-worker
