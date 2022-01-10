@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 from configparser import ConfigParser
 from os import PathLike
 from pathlib import Path
-from typing import Iterator, List, Set
+from typing import Iterator, List, Optional, Set
 
 DEFAULT_PACKAGES_FILENAME = "packages.ini"
 FORMATS = ("list", "line")
@@ -18,6 +18,7 @@ def load_packages(
     raw: str,
     distribution: str,
     development: bool = False,
+    exclude: Optional[List[str]] = None,
 ) -> Set[str]:
     if distribution not in DISTRIBUTIONS:
         raise ValueError(f"Invalid distribution '{distribution}'")
@@ -26,8 +27,9 @@ def load_packages(
     manager.read_string(raw)
 
     packages = set()
+    exclude = set(exclude or [])
     for section, entries in manager.items():
-        if not development and section == DEVELOPMENT_SECTION:
+        if not development and section == DEVELOPMENT_SECTION or section in exclude:
             continue
 
         for package, distributions in entries.items():
@@ -56,11 +58,12 @@ def list_packages(
     paths: List[PathLike],
     distribution: str,
     development: bool = False,
+    exclude: Optional[List[str]] = None,
 ) -> Set[str]:
     packages = set()
     for package_file in list_packages_files(paths):
         raw = package_file.read_text()
-        packages.update(load_packages(raw, distribution, development))
+        packages.update(load_packages(raw, distribution, development, exclude))
 
     return set(sorted(packages))
 
@@ -81,6 +84,12 @@ def run():
         action="store_true",
     )
     parser.add_argument(
+        "-e",
+        "--exclude",
+        nargs="+",
+        help="exclude packages sections.",
+    )
+    parser.add_argument(
         "distribution",
         choices=DISTRIBUTIONS,
         help="list packages for the given distribution.",
@@ -92,7 +101,7 @@ def run():
     )
     args = parser.parse_args()
 
-    packages = list_packages(args.path, args.distribution, args.dev)
+    packages = list_packages(args.path, args.distribution, args.dev, args.exclude)
 
     if args.format == "list":
         print("\n".join(packages))
