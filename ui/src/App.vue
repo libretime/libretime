@@ -31,9 +31,3 @@ export default {
   },
 }
 </script>
-
-<style lang="sass">
-@use './styles/globals.sass'
-body
-  background: globals.$background
-</style>

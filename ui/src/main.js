@@ -6,6 +6,7 @@ import vcalendar from './plugins/vcalendar'
 import vueblobjsoncsv from './plugins/vueblobjsoncsv'
 import router from './router'
 import VueCompositionAPI from '@vue/composition-api'
+import './styles/globals.sass'
 // import { makeServer } from './server'
 
 Vue.config.productionTip = false
