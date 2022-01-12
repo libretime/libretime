@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Callable
 
 import click
@@ -27,7 +28,7 @@ def cli_logging_options(func: Callable) -> Callable:
         "--log-filepath",
         "log_filepath",
         envvar=f"{DEFAULT_ENV_PREFIX}_LOG_FILEPATH",
-        type=click.Path(),
+        type=click.Path(path_type=Path),
         help="Path to the logging file.",
         default=None,
     )(func)
@@ -40,7 +41,7 @@ def cli_config_options(func: Callable) -> Callable:
     Decorator function to add config file options to a click application.
 
     This decorator add the following arguments:
-    - config_filepath: Path
+    - config_filepath: Optional[Path]
     """
 
     func = click.option(
@@ -48,7 +49,7 @@ def cli_config_options(func: Callable) -> Callable:
         "--config",
         "config_filepath",
         envvar=f"{DEFAULT_ENV_PREFIX}_CONFIG_FILEPATH",
-        type=click.Path(),
+        type=click.Path(path_type=Path),
         help="Path to the config file.",
         default=None,
     )(func)
