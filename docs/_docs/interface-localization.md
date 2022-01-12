@@ -8,7 +8,7 @@ The LibreTime administration interface can be localized using the standard GNU *
 
 ![](/img/Screenshot464-Korean_stream_setting.png)
 
-First, you should check if a localization is already under way for your locale of choice. The best way to do this is to take a look at the 'master' branch in the GitHub repository for LibreTime at <https://github.com/LibreTime/libretime>. You can also ask in the LibreTime development forum at <https://discourse.libretime.org/>, where you might find community members who can help you with the translation.
+First, you should check if a localization is already under way for your locale of choice. The best way to do this is to take a look at the 'main' branch in the GitHub repository for LibreTime at <https://github.com/LibreTime/libretime>. You can also ask in the LibreTime development forum at <https://discourse.libretime.org/>, where you might find community members who can help you with the translation.
 
 GNU **gettext** means using a .po file for each language or dialect, a specially formatted plain text file with groups of three or more lines, like this example from LibreTime's Korean localization:
 
@@ -22,15 +22,15 @@ If you use the cross-platform program **Poedit** (<http://www.poedit.net/>) to e
 
 Before manually translating strings in Poedit from scratch, you should take a look at the online translation services available, such as Lingohub (<https://lingohub.com>) or Google's Translator Toolkit (<http://translate.google.com/toolkit/>), which both support gettext .po files. If using automatic translation, you can then use Poedit to fine-tune the localization and fix any formatting errors.
 
-If you don't already have a GitHub account, you can sign up at <https://github.com/signup/free>. Once you have a GitHub account, you can fork a copy (<https://help.github.com/articles/fork-a-repo>) of the LibreTime project. Work for the next major version of the software is done in the **master** branch of each project, so that's the branch to **checkout** after you have made the initial **git clone**.
+If you don't already have a GitHub account, you can sign up at <https://github.com/signup/free>. Once you have a GitHub account, you can fork a copy (<https://help.github.com/articles/fork-a-repo>) of the LibreTime project. Work for the next major version of the software is done in the **main** branch of each project, so that's the branch to **checkout** after you have made the initial **git clone**.
 
 In the locale code _de_CH_, for example, _de_ represents the German language and the suffix _\_CH_ indicates the dialect spoken in Switzerland. Some languages have a wide variety of dialect localizations, which can be differentiated with a suffix in this way. You should update the header information in the .po file, which includes the language code and a country code, using one of the existing .po files as a guide.
 
-After forking the LibreTime git repository, make sure you're in the **master** branch:
+After forking the LibreTime git repository, make sure you're in the **main** branch:
 
     git branch
       devel
-    * master
+    * main
 
 Create a new locale directory (e.g. _legacy/locale/de_CH/LC_MESSAGES/_ for German as spoken in Switzerland):
 

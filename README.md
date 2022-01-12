@@ -1,4 +1,4 @@
-![](https://github.com/LibreTime/libretime/raw/master/logo/logotype.png)
+![](https://github.com/LibreTime/libretime/raw/main/logo/logotype.png)
 
 [![Tests](https://github.com/LibreTime/libretime/actions/workflows/test.yml/badge.svg)](https://github.com/LibreTime/libretime/actions/workflows/test.yml)
 [![Financial Contributors on Open Collective](https://opencollective.com/libretime/all/badge.svg?label=financial+contributors)](https://opencollective.com/libretime)
@@ -16,7 +16,7 @@ Check out the [documentation](http://libretime.org) for more information and
 start broadcasting!
 
 Please note that LibreTime is released with a [Contributor Code
-of Conduct](https://github.com/LibreTime/code-of-conduct/blob/master/CODE_OF_CONDUCT.md).
+of Conduct](https://github.com/LibreTime/code-of-conduct/blob/main/CODE_OF_CONDUCT.md).
 By participating in this project you agree to abide by its terms.
 
 Please submit enhancements, bugfixes or comments via GitHub.
