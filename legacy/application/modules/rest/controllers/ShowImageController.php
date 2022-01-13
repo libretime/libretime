@@ -326,6 +326,16 @@ class Rest_ShowImageController extends Zend_Rest_Controller
             return false;
         }
 
+        $id = filter_var($id, FILTER_VALIDATE_INT);
+
+        if ($id === false) {
+            $resp = $this->getResponse();
+            $resp->setHttpResponseCode(400);
+            $resp->appendBody('ERROR: Invalid show ID specified.');
+
+            return false;
+        }
+
         return $id;
     }
 }
