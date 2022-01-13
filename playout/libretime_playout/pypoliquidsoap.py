@@ -1,14 +1,15 @@
 import time
 from datetime import datetime, timedelta
 
+from loguru import logger
+
 from . import eventtypes
 from .pypofetch import PypoFetch
 from .telnetliquidsoap import TelnetLiquidsoap
 
 
 class PypoLiquidsoap:
-    def __init__(self, logger, telnet_lock, host, port):
-        self.logger = logger
+    def __init__(self, telnet_lock, host, port):
         self.liq_queue_tracker = {
             "s0": None,
             "s1": None,
@@ -18,7 +19,7 @@ class PypoLiquidsoap:
         }
 
         self.telnet_liquidsoap = TelnetLiquidsoap(
-            telnet_lock, logger, host, port, list(self.liq_queue_tracker.keys())
+            telnet_lock, host, port, list(self.liq_queue_tracker.keys())
         )
 
     def get_telnet_dispatcher(self):
@@ -64,10 +65,10 @@ class PypoLiquidsoap:
                 self.telnet_liquidsoap.queue_push(available_queue, media_item)
                 self.liq_queue_tracker[available_queue] = media_item
             except Exception as e:
-                self.logger.error(e)
+                logger.error(e)
                 raise
         else:
-            self.logger.warn(
+            logger.warning(
                 "File %s did not become ready in less than 5 seconds. Skipping...",
                 media_item["dst"],
             )
@@ -158,7 +159,7 @@ class PypoLiquidsoap:
 
                     if not correct:
                         # need to re-add
-                        self.logger.info("Track %s found to have new attr." % i)
+                        logger.info("Track %s found to have new attr." % i)
                         to_be_removed.add(i["row_id"])
                         to_be_added.add(i["row_id"])
 
@@ -166,9 +167,7 @@ class PypoLiquidsoap:
             to_be_added.update(schedule_ids - liq_queue_ids)
 
             if to_be_removed:
-                self.logger.info(
-                    "Need to remove items from Liquidsoap: %s" % to_be_removed
-                )
+                logger.info("Need to remove items from Liquidsoap: %s" % to_be_removed)
 
                 # remove files from Liquidsoap's queue
                 for i in self.liq_queue_tracker:
@@ -177,9 +176,7 @@ class PypoLiquidsoap:
                         self.stop(i)
 
             if to_be_added:
-                self.logger.info(
-                    "Need to add items to Liquidsoap *now*: %s" % to_be_added
-                )
+                logger.info("Need to add items to Liquidsoap *now*: %s" % to_be_added)
 
                 for i in scheduled_now_files:
                     if i["row_id"] in to_be_added:
@@ -196,7 +193,7 @@ class PypoLiquidsoap:
                 self.telnet_liquidsoap.stop_web_stream_buffer()
                 self.telnet_liquidsoap.stop_web_stream_output()
         except KeyError as e:
-            self.logger.error("Error: Malformed event in schedule. " + str(e))
+            logger.error("Error: Malformed event in schedule. " + str(e))
 
     def stop(self, queue):
         self.telnet_liquidsoap.queue_remove(queue)
@@ -220,7 +217,7 @@ class PypoLiquidsoap:
         diff_sec = self.date_interval_to_seconds(diff_td)
 
         if diff_sec > 0:
-            self.logger.debug(
+            logger.debug(
                 "media item was supposed to start %s ago. Preparing to start..",
                 diff_sec,
             )

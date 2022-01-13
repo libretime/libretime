@@ -27,8 +27,8 @@ setup(
     package_data={"": ["**/*.liq", "*.cfg", "*.types"]},
     entry_points={
         "console_scripts": [
-            "libretime-playout=libretime_playout.main:run",
-            "libretime-liquidsoap=libretime_liquidsoap.main:run",
+            "libretime-playout=libretime_playout.main:cli",
+            "libretime-liquidsoap=libretime_liquidsoap.main:cli",
             "libretime-playout-notify=libretime_playout.notify.main:run",
         ]
     },
@@ -43,5 +43,11 @@ setup(
         "pytz",
         "requests",
     ],
+    extras_require={
+        "dev": [
+            f"libretime-shared @ file://localhost/{here.parent / 'shared'}#egg=libretime_shared",
+            f"libretime-api-client @ file://localhost/{here.parent / 'api_client'}#egg=libretime_api_client",
+        ],
+    },
     zip_safe=False,
 )

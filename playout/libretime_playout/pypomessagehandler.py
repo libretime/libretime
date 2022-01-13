@@ -1,5 +1,4 @@
 import json
-import logging
 import os
 import sys
 import time
@@ -13,8 +12,7 @@ from kombu.connection import Connection
 from kombu.messaging import Exchange, Queue
 from kombu.mixins import ConsumerMixin
 from kombu.simple import SimpleQueue
-
-logging.captureWarnings(True)
+from loguru import logger
 
 
 class RabbitConsumer(ConsumerMixin):
@@ -36,13 +34,12 @@ class RabbitConsumer(ConsumerMixin):
 class PypoMessageHandler(Thread):
     def __init__(self, pq, rq, config):
         Thread.__init__(self)
-        self.logger = logging.getLogger("message_h")
         self.pypo_queue = pq
         self.recorder_queue = rq
         self.config = config
 
     def init_rabbit_mq(self):
-        self.logger.info("Initializing RabbitMQ stuff")
+        logger.info("Initializing RabbitMQ stuff")
         try:
             schedule_exchange = Exchange(
                 "airtime-pypo", "direct", durable=True, auto_delete=True
@@ -58,7 +55,7 @@ class PypoMessageHandler(Thread):
                 rabbit = RabbitConsumer(connection, [schedule_queue], self)
                 rabbit.run()
         except Exception as e:
-            self.logger.error(e)
+            logger.error(e)
 
     """
     Handle a message from RabbitMQ, put it into our yucky global var.
@@ -67,7 +64,7 @@ class PypoMessageHandler(Thread):
 
     def handle_message(self, message):
         try:
-            self.logger.info("Received event from RabbitMQ: %s" % message)
+            logger.info("Received event from RabbitMQ: %s" % message)
 
             try:
                 message = message.decode()
@@ -75,50 +72,48 @@ class PypoMessageHandler(Thread):
                 pass
             m = json.loads(message)
             command = m["event_type"]
-            self.logger.info("Handling command: " + command)
+            logger.info("Handling command: " + command)
 
             if command == "update_schedule":
-                self.logger.info("Updating schedule...")
+                logger.info("Updating schedule...")
                 self.pypo_queue.put(message)
             elif command == "reset_liquidsoap_bootstrap":
-                self.logger.info("Resetting bootstrap vars...")
+                logger.info("Resetting bootstrap vars...")
                 self.pypo_queue.put(message)
             elif command == "update_stream_setting":
-                self.logger.info("Updating stream setting...")
+                logger.info("Updating stream setting...")
                 self.pypo_queue.put(message)
             elif command == "update_stream_format":
-                self.logger.info("Updating stream format...")
+                logger.info("Updating stream format...")
                 self.pypo_queue.put(message)
             elif command == "update_station_name":
-                self.logger.info("Updating station name...")
+                logger.info("Updating station name...")
                 self.pypo_queue.put(message)
             elif command == "switch_source":
-                self.logger.info("switch_source command received...")
+                logger.info("switch_source command received...")
                 self.pypo_queue.put(message)
             elif command == "update_transition_fade":
-                self.logger.info("Updating trasition fade...")
+                logger.info("Updating trasition fade...")
                 self.pypo_queue.put(message)
             elif command == "disconnect_source":
-                self.logger.info("disconnect_source command received...")
+                logger.info("disconnect_source command received...")
                 self.pypo_queue.put(message)
             elif command == "update_recorder_schedule":
                 self.recorder_queue.put(message)
             elif command == "cancel_recording":
                 self.recorder_queue.put(message)
             else:
-                self.logger.info("Unknown command: %s" % command)
+                logger.info("Unknown command: %s" % command)
         except Exception as e:
-            self.logger.error("Exception in handling RabbitMQ message: %s", e)
+            logger.error("Exception in handling RabbitMQ message: %s", e)
 
     def main(self):
         try:
             self.init_rabbit_mq()
         except Exception as e:
-            self.logger.error("Exception: %s", e)
-            self.logger.error("traceback: %s", traceback.format_exc())
-        self.logger.error(
-            "Error connecting to RabbitMQ Server. Trying again in few seconds"
-        )
+            logger.error("Exception: %s", e)
+            logger.error("traceback: %s", traceback.format_exc())
+        logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
         time.sleep(5)
 
     """

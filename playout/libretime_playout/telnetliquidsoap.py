@@ -1,6 +1,8 @@
 import telnetlib
 import traceback
 
+from loguru import logger
+
 from .timeout import ls_timeout
 
 
@@ -42,11 +44,10 @@ def create_liquidsoap_annotation(media):
 
 
 class TelnetLiquidsoap:
-    def __init__(self, telnet_lock, logger, ls_host, ls_port, queues):
+    def __init__(self, telnet_lock, ls_host, ls_port, queues):
         self.telnet_lock = telnet_lock
         self.ls_host = ls_host
         self.ls_port = ls_port
-        self.logger = logger
         self.queues = queues
         self.current_prebuffering_stream_id = None
 
@@ -72,11 +73,11 @@ class TelnetLiquidsoap:
 
             for i in self.queues:
                 msg = "queues.%s_skip\n" % i
-                self.logger.debug(msg)
+                logger.debug(msg)
                 tn.write(msg.encode("utf-8"))
 
             tn.write("exit\n".encode("utf-8"))
-            self.logger.debug(tn.read_all().decode("utf-8"))
+            logger.debug(tn.read_all().decode("utf-8"))
         except Exception:
             raise
         finally:
@@ -89,11 +90,11 @@ class TelnetLiquidsoap:
             tn = self.__connect()
 
             msg = "queues.%s_skip\n" % queue_id
-            self.logger.debug(msg)
+            logger.debug(msg)
             tn.write(msg.encode("utf-8"))
 
             tn.write("exit\n".encode("utf-8"))
-            self.logger.debug(tn.read_all().decode("utf-8"))
+            logger.debug(tn.read_all().decode("utf-8"))
         except Exception:
             raise
         finally:
@@ -110,16 +111,16 @@ class TelnetLiquidsoap:
             tn = self.__connect()
             annotation = create_liquidsoap_annotation(media_item)
             msg = "%s.push %s\n" % (queue_id, annotation)
-            self.logger.debug(msg)
+            logger.debug(msg)
             tn.write(msg.encode("utf-8"))
 
             show_name = media_item["show_name"]
             msg = "vars.show_name %s\n" % show_name
             tn.write(msg.encode("utf-8"))
-            self.logger.debug(msg)
+            logger.debug(msg)
 
             tn.write("exit\n".encode("utf-8"))
-            self.logger.debug(tn.read_all().decode("utf-8"))
+            logger.debug(tn.read_all().decode("utf-8"))
         except Exception:
             raise
         finally:
@@ -133,19 +134,19 @@ class TelnetLiquidsoap:
             # dynamic_source.stop http://87.230.101.24:80/top100station.mp3
 
             msg = "http.stop\n"
-            self.logger.debug(msg)
+            logger.debug(msg)
             tn.write(msg.encode("utf-8"))
 
             msg = "dynamic_source.id -1\n"
-            self.logger.debug(msg)
+            logger.debug(msg)
             tn.write(msg.encode("utf-8"))
 
             tn.write("exit\n".encode("utf-8"))
-            self.logger.debug(tn.read_all().decode("utf-8"))
+            logger.debug(tn.read_all().decode("utf-8"))
 
         except Exception as e:
-            self.logger.error(str(e))
-            self.logger.error(traceback.format_exc())
+            logger.error(str(e))
+            logger.error(traceback.format_exc())
         finally:
             self.telnet_lock.release()
 
@@ -157,15 +158,15 @@ class TelnetLiquidsoap:
             # dynamic_source.stop http://87.230.101.24:80/top100station.mp3
 
             msg = "dynamic_source.output_stop\n"
-            self.logger.debug(msg)
+            logger.debug(msg)
             tn.write(msg.encode("utf-8"))
 
             tn.write("exit\n".encode("utf-8"))
-            self.logger.debug(tn.read_all().decode("utf-8"))
+            logger.debug(tn.read_all().decode("utf-8"))
 
         except Exception as e:
-            self.logger.error(str(e))
-            self.logger.error(traceback.format_exc())
+            logger.error(str(e))
+            logger.error(traceback.format_exc())
         finally:
             self.telnet_lock.release()
 
@@ -180,16 +181,16 @@ class TelnetLiquidsoap:
             tn.write(msg.encode("utf-8"))
 
             msg = "dynamic_source.output_start\n"
-            self.logger.debug(msg)
+            logger.debug(msg)
             tn.write(msg.encode("utf-8"))
 
             tn.write("exit\n".encode("utf-8"))
-            self.logger.debug(tn.read_all().decode("utf-8"))
+            logger.debug(tn.read_all().decode("utf-8"))
 
             self.current_prebuffering_stream_id = None
         except Exception as e:
-            self.logger.error(str(e))
-            self.logger.error(traceback.format_exc())
+            logger.error(str(e))
+            logger.error(traceback.format_exc())
         finally:
             self.telnet_lock.release()
 
@@ -200,20 +201,20 @@ class TelnetLiquidsoap:
             tn = telnetlib.Telnet(self.ls_host, self.ls_port)
 
             msg = "dynamic_source.id %s\n" % media_item["row_id"]
-            self.logger.debug(msg)
+            logger.debug(msg)
             tn.write(msg.encode("utf-8"))
 
             msg = "http.restart %s\n" % media_item["uri"]
-            self.logger.debug(msg)
+            logger.debug(msg)
             tn.write(msg.encode("utf-8"))
 
             tn.write("exit\n".encode("utf-8"))
-            self.logger.debug(tn.read_all().decode("utf-8"))
+            logger.debug(tn.read_all().decode("utf-8"))
 
             self.current_prebuffering_stream_id = media_item["row_id"]
         except Exception as e:
-            self.logger.error(str(e))
-            self.logger.error(traceback.format_exc())
+            logger.error(str(e))
+            logger.error(traceback.format_exc())
         finally:
             self.telnet_lock.release()
 
@@ -224,23 +225,23 @@ class TelnetLiquidsoap:
             tn = telnetlib.Telnet(self.ls_host, self.ls_port)
 
             msg = "dynamic_source.get_id\n"
-            self.logger.debug(msg)
+            logger.debug(msg)
             tn.write(msg.encode("utf-8"))
 
             tn.write("exit\n".encode("utf-8"))
             stream_id = tn.read_all().decode("utf-8").splitlines()[0]
-            self.logger.debug("stream_id: %s" % stream_id)
+            logger.debug("stream_id: %s" % stream_id)
 
             return stream_id
         except Exception as e:
-            self.logger.error(str(e))
-            self.logger.error(traceback.format_exc())
+            logger.error(str(e))
+            logger.error(traceback.format_exc())
         finally:
             self.telnet_lock.release()
 
     @ls_timeout
     def disconnect_source(self, sourcename):
-        self.logger.debug("Disconnecting source: %s", sourcename)
+        logger.debug("Disconnecting source: %s", sourcename)
         command = ""
         if sourcename == "master_dj":
             command += "master_harbor.stop\n"
@@ -250,12 +251,12 @@ class TelnetLiquidsoap:
         try:
             self.telnet_lock.acquire()
             tn = telnetlib.Telnet(self.ls_host, self.ls_port)
-            self.logger.info(command)
+            logger.info(command)
             tn.write(command.encode("utf-8"))
             tn.write("exit\n".encode("utf-8"))
             tn.read_all().decode("utf-8")
         except Exception as e:
-            self.logger.error(traceback.format_exc())
+            logger.error(traceback.format_exc())
         finally:
             self.telnet_lock.release()
 
@@ -266,7 +267,7 @@ class TelnetLiquidsoap:
 
             tn = telnetlib.Telnet(self.ls_host, self.ls_port)
             for i in commands:
-                self.logger.info(i)
+                logger.info(i)
                 if type(i) is str:
                     i = i.encode("utf-8")
                 tn.write(i)
@@ -274,13 +275,13 @@ class TelnetLiquidsoap:
             tn.write("exit\n".encode("utf-8"))
             tn.read_all().decode("utf-8")
         except Exception as e:
-            self.logger.error(str(e))
-            self.logger.error(traceback.format_exc())
+            logger.error(str(e))
+            logger.error(traceback.format_exc())
         finally:
             self.telnet_lock.release()
 
     def switch_source(self, sourcename, status):
-        self.logger.debug('Switching source: %s to "%s" status', sourcename, status)
+        logger.debug('Switching source: %s to "%s" status', sourcename, status)
         command = "streams."
         if sourcename == "master_dj":
             command += "master_dj_"
@@ -298,10 +299,9 @@ class TelnetLiquidsoap:
 
 
 class DummyTelnetLiquidsoap:
-    def __init__(self, telnet_lock, logger):
+    def __init__(self, telnet_lock):
         self.telnet_lock = telnet_lock
         self.liquidsoap_mock_queues = {}
-        self.logger = logger
 
         for i in range(4):
             self.liquidsoap_mock_queues["s" + str(i)] = []
@@ -311,7 +311,7 @@ class DummyTelnetLiquidsoap:
         try:
             self.telnet_lock.acquire()
 
-            self.logger.info("Pushing %s to queue %s" % (media_item, queue_id))
+            logger.info("Pushing %s to queue %s" % (media_item, queue_id))
             from datetime import datetime
 
             print("Time now: {:s}".format(datetime.utcnow()))
@@ -328,7 +328,7 @@ class DummyTelnetLiquidsoap:
         try:
             self.telnet_lock.acquire()
 
-            self.logger.info("Purging queue %s" % queue_id)
+            logger.info("Purging queue %s" % queue_id)
             from datetime import datetime
 
             print("Time now: {:s}".format(datetime.utcnow()))

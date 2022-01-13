@@ -1,16 +1,17 @@
-import logging
 import signal
 import sys
 from datetime import datetime, timedelta
 from queue import Queue
 from threading import Lock
 
+from libretime_shared.logging import TRACE, setup_logger
+from loguru import logger
+
 from .pypoliqqueue import PypoLiqQueue
 from .telnetliquidsoap import DummyTelnetLiquidsoap, TelnetLiquidsoap
 
 
 def keyboardInterruptHandler(signum, frame):
-    logger = logging.getLogger()
     logger.info("\nKeyboard Interrupt\n")
     sys.exit(0)
 
@@ -18,9 +19,7 @@ def keyboardInterruptHandler(signum, frame):
 signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
 # configure logging
-format = "%(levelname)s - %(pathname)s - %(lineno)s - %(asctime)s - %(message)s"
-logging.basicConfig(level=logging.DEBUG, format=format)
-logging.captureWarnings(True)
+setup_logger(TRACE)
 
 telnet_lock = Lock()
 pypoPush_q = Queue()
@@ -34,12 +33,15 @@ liq_queue_tracker = {
     "s3": None,
 }
 
-# dummy_telnet_liquidsoap = DummyTelnetLiquidsoap(telnet_lock, logging)
-dummy_telnet_liquidsoap = TelnetLiquidsoap(telnet_lock, logging, "localhost", 1234)
-
-plq = PypoLiqQueue(
-    pypoLiq_q, telnet_lock, logging, liq_queue_tracker, dummy_telnet_liquidsoap
+# dummy_telnet_liquidsoap = DummyTelnetLiquidsoap(telnet_lock)
+dummy_telnet_liquidsoap = TelnetLiquidsoap(
+    telnet_lock,
+    "localhost",
+    1234,
+    liq_queue_tracker,
 )
+
+plq = PypoLiqQueue(pypoLiq_q, dummy_telnet_liquidsoap)
 plq.daemon = True
 plq.start()
 

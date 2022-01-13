@@ -3,6 +3,8 @@ Description=Libretime Playout Service
 After=network-online.target
 
 [Service]
+Environment=LIBRETIME_LOG_FILEPATH=/var/log/libretime/playout.log
+
 ExecStart=/usr/local/bin/libretime-playout
 User=libretime-pypo
 Group=libretime-pypo

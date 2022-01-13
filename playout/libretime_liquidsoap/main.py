@@ -1,31 +1,33 @@
 """ Runs Airtime liquidsoap
 """
-import argparse
-import logging
 import os
 import subprocess
+from pathlib import Path
+from typing import Optional
 
-from libretime_playout import pure
+import click
+from libretime_shared.cli import cli_logging_options
+from libretime_shared.logging import level_from_name, setup_logger
+from loguru import logger
 
 from . import generate_liquidsoap_cfg
 
 PYPO_HOME = "/var/tmp/airtime/pypo/"
 
 
-def run():
-    """Entry-point for this application"""
-    print("Airtime Liquidsoap")
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-d", "--debug", help="run in debug mode", action="store_true")
-    args = parser.parse_args()
+@click.command()
+@cli_logging_options
+def cli(log_level: int, log_filepath: Optional[Path]):
+    """
+    Run liquidsoap.
+    """
+    log_level = level_from_name(log_level)
+    setup_logger(log_level, log_filepath)
 
     os.environ["HOME"] = PYPO_HOME
 
-    if args.debug:
-        logging.basicConfig(level=getattr(logging, "DEBUG", None))
-
-    generate_liquidsoap_cfg.run()
-    """ check liquidsoap version so we can run a scripts matching the liquidsoap minor version """
+    generate_liquidsoap_cfg.run(log_filepath)
+    # check liquidsoap version so we can run a scripts matching the liquidsoap minor version
     liquidsoap_version = subprocess.check_output(
         "liquidsoap 'print(liquidsoap.version) shutdown()'",
         shell=True,
@@ -40,7 +42,8 @@ def run():
         "--verbose",
         script_path,
     ]
-    if args.debug:
-        print(f"Liquidsoap {liquidsoap_version} using script: {script_path}")
+    if log_level.is_debug():
         exec_args.append("--debug")
+
+    logger.debug(f"Liquidsoap {liquidsoap_version} using script: {script_path}")
     os.execl(*exec_args)

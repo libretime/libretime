@@ -3,9 +3,6 @@ Python part of radio playout (pypo)
 """
 
 
-import importlib
-import locale
-import logging
 import os
 import re
 import signal
@@ -13,17 +10,18 @@ import sys
 import telnetlib
 import time
 from datetime import datetime
-from optparse import OptionParser
+from pathlib import Path
+from queue import Queue
+from threading import Lock
+from typing import Optional
 
+import click
 from configobj import ConfigObj
 from libretime_api_client.version1 import AirtimeApiClient as ApiClient
-
-try:
-    from queue import Queue
-except ImportError:  # Python 2.7.5 (CentOS 7)
-    from queue import Queue
-
-from threading import Lock
+from libretime_shared.cli import cli_logging_options
+from libretime_shared.config import DEFAULT_ENV_PREFIX
+from libretime_shared.logging import level_from_name, setup_logger
+from loguru import logger
 
 from . import pure
 from .listenerstat import ListenerStat
@@ -35,57 +33,6 @@ from .pypopush import PypoPush
 from .recorder import Recorder
 from .timeout import ls_timeout
 
-LOG_PATH = "/var/log/airtime/pypo/pypo.log"
-LOG_LEVEL = logging.INFO
-logging.captureWarnings(True)
-
-# Set up command-line options
-parser = OptionParser()
-
-# help screen / info
-usage = "%prog [options]" + " - python playout system"
-parser = OptionParser(usage=usage)
-
-# Options
-parser.add_option(
-    "-v",
-    "--compat",
-    help="Check compatibility with server API version",
-    default=False,
-    action="store_true",
-    dest="check_compat",
-)
-
-parser.add_option(
-    "-t",
-    "--test",
-    help="Do a test to make sure everything is working properly.",
-    default=False,
-    action="store_true",
-    dest="test",
-)
-
-parser.add_option(
-    "-b",
-    "--cleanup",
-    help="Cleanup",
-    default=False,
-    action="store_true",
-    dest="cleanup",
-)
-
-parser.add_option(
-    "-c",
-    "--check",
-    help="Check the cached schedule and exit",
-    default=False,
-    action="store_true",
-    dest="check",
-)
-
-# parse options
-(options, args) = parser.parse_args()
-
 LIQUIDSOAP_MIN_VERSION = "1.1.1"
 
 PYPO_HOME = "/var/tmp/airtime/pypo/"
@@ -94,42 +41,6 @@ PYPO_HOME = "/var/tmp/airtime/pypo/"
 def configure_environment():
     os.environ["HOME"] = PYPO_HOME
     os.environ["TERM"] = "xterm"
-
-
-configure_environment()
-
-# need to wait for Python 2.7 for this..
-logging.captureWarnings(True)
-
-# configure logging
-try:
-    # Set up logging
-    logFormatter = logging.Formatter(
-        "%(asctime)s [%(module)s] [%(levelname)-5.5s]  %(message)s"
-    )
-    rootLogger = logging.getLogger()
-    rootLogger.setLevel(LOG_LEVEL)
-    logger = rootLogger
-
-    fileHandler = logging.handlers.RotatingFileHandler(
-        filename=LOG_PATH, maxBytes=1024 * 1024 * 30, backupCount=8
-    )
-    fileHandler.setFormatter(logFormatter)
-    rootLogger.addHandler(fileHandler)
-
-    consoleHandler = logging.StreamHandler()
-    consoleHandler.setFormatter(logFormatter)
-    rootLogger.addHandler(consoleHandler)
-except Exception as e:
-    print("Couldn't configure logging: {}".format(e))
-    sys.exit(1)
-
-# loading config file
-try:
-    config = ConfigObj("/etc/airtime/airtime.conf")
-except Exception as e:
-    logger.error("Error loading config file: %s", e)
-    sys.exit(1)
 
 
 class Global:
@@ -144,13 +55,12 @@ class Global:
 
 
 def keyboardInterruptHandler(signum, frame):
-    logger = logging.getLogger()
     logger.info("\nKeyboard Interrupt\n")
     sys.exit(0)
 
 
 @ls_timeout
-def liquidsoap_get_info(telnet_lock, host, port, logger):
+def liquidsoap_get_info(telnet_lock, host, port):
     logger.debug("Checking to see if Liquidsoap is running")
     try:
         telnet_lock.acquire()
@@ -176,25 +86,16 @@ def get_liquidsoap_version(version_string):
     else:
         return None
 
-    if m:
-        current_version = m.group(1)
-        return pure.version_cmp(current_version, LIQUIDSOAP_MIN_VERSION) >= 0
-    return False
-
 
 def liquidsoap_startup_test(telnet_lock, ls_host, ls_port):
 
-    liquidsoap_version_string = liquidsoap_get_info(
-        telnet_lock, ls_host, ls_port, logger
-    )
+    liquidsoap_version_string = liquidsoap_get_info(telnet_lock, ls_host, ls_port)
     while not liquidsoap_version_string:
         logger.warning(
             "Liquidsoap doesn't appear to be running!, " + "Sleeping and trying again"
         )
         time.sleep(1)
-        liquidsoap_version_string = liquidsoap_get_info(
-            telnet_lock, ls_host, ls_port, logger
-        )
+        liquidsoap_version_string = liquidsoap_get_info(telnet_lock, ls_host, ls_port)
 
     while pure.version_cmp(liquidsoap_version_string, LIQUIDSOAP_MIN_VERSION) < 0:
         logger.warning(
@@ -203,14 +104,28 @@ def liquidsoap_startup_test(telnet_lock, ls_host, ls_port):
             % LIQUIDSOAP_MIN_VERSION
         )
         time.sleep(1)
-        liquidsoap_version_string = liquidsoap_get_info(
-            telnet_lock, ls_host, ls_port, logger
-        )
+        liquidsoap_version_string = liquidsoap_get_info(telnet_lock, ls_host, ls_port)
 
     logger.info("Liquidsoap version string found %s" % liquidsoap_version_string)
 
 
-def run():
+@click.command()
+@cli_logging_options
+def cli(log_level: str, log_filepath: Optional[Path]):
+    """
+    Run playout.
+    """
+    setup_logger(level_from_name(log_level), log_filepath)
+
+    configure_environment()
+
+    # loading config file
+    try:
+        config = ConfigObj("/etc/airtime/airtime.conf")
+    except Exception as e:
+        logger.error("Error loading config file: %s", e)
+        sys.exit(1)
+
     logger.info("###########################################")
     logger.info("#             *** pypo  ***               #")
     logger.info("#   Liquidsoap Scheduled Playout System   #")
@@ -246,15 +161,11 @@ def run():
 
     liquidsoap_startup_test(telnet_lock, ls_host, ls_port)
 
-    if options.test:
-        g.test_api()
-        sys.exit(0)
-
     pypoFetch_q = Queue()
     recorder_q = Queue()
     pypoPush_q = Queue()
 
-    pypo_liquidsoap = PypoLiquidsoap(logger, telnet_lock, ls_host, ls_port)
+    pypo_liquidsoap = PypoLiquidsoap(telnet_lock, ls_host, ls_port)
 
     """
     This queue is shared between pypo-fetch and pypo-file, where pypo-file
@@ -295,5 +206,3 @@ def run():
     # This allows CTRL-C to work!
     while True:
         time.sleep(1)
-
-    logger.info("System exit")

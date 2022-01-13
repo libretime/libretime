@@ -7,9 +7,10 @@ from datetime import datetime
 from queue import Empty
 from threading import Thread
 
+from loguru import logger
+
 
 def keyboardInterruptHandler(signum, frame):
-    logger = logging.getLogger()
     logger.info("\nKeyboard Interrupt\n")
     sys.exit(0)
 
@@ -18,10 +19,9 @@ signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
 
 class PypoLiqQueue(Thread):
-    def __init__(self, q, pypo_liquidsoap, logger):
+    def __init__(self, q, pypo_liquidsoap):
         Thread.__init__(self)
         self.queue = q
-        self.logger = logger
         self.pypo_liquidsoap = pypo_liquidsoap
 
     def main(self):
@@ -32,10 +32,10 @@ class PypoLiqQueue(Thread):
         while True:
             try:
                 if time_until_next_play is None:
-                    self.logger.info("waiting indefinitely for schedule")
+                    logger.info("waiting indefinitely for schedule")
                     media_schedule = self.queue.get(block=True)
                 else:
-                    self.logger.info(
+                    logger.info(
                         "waiting %ss until next scheduled item" % time_until_next_play
                     )
                     media_schedule = self.queue.get(
@@ -54,7 +54,7 @@ class PypoLiqQueue(Thread):
                 else:
                     time_until_next_play = None
             else:
-                self.logger.info("New schedule received: %s", media_schedule)
+                logger.info("New schedule received: %s", media_schedule)
 
                 # new schedule received. Replace old one with this.
                 schedule_deque.clear()
@@ -89,4 +89,4 @@ class PypoLiqQueue(Thread):
         try:
             self.main()
         except Exception as e:
-            self.logger.error("PypoLiqQueue Exception: %s", traceback.format_exc())
+            logger.error("PypoLiqQueue Exception: %s", traceback.format_exc())
