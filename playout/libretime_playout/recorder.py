@@ -1,6 +1,5 @@
 import datetime
 import json
-import logging
 import math
 import os
 import re
@@ -14,16 +13,16 @@ from threading import Thread
 import mutagen
 import pytz
 from configobj import ConfigObj
-from libretime_api_client import version1 as v1_api_client
-from libretime_api_client import version2 as api_client
+from libretime_api_client.version1 import AirtimeApiClient as AirtimeApiClientV1
+from loguru import logger
 
 
-def api_client(logger):
+def api_client():
     """
     api_client returns the correct instance of AirtimeApiClient. Although there is only one
     instance to choose from at the moment.
     """
-    return v1_api_client.AirtimeApiClient(logger)
+    return AirtimeApiClientV1()
 
 
 # loading config file
@@ -58,8 +57,7 @@ PUSH_INTERVAL = 2
 class ShowRecorder(Thread):
     def __init__(self, show_instance, show_name, filelength, start_time):
         Thread.__init__(self)
-        self.logger = logging.getLogger("recorder")
-        self.api_client = api_client(self.logger)
+        self.api_client = api_client()
         self.filelength = filelength
         self.start_time = start_time
         self.show_instance = show_instance
@@ -96,8 +94,8 @@ class ShowRecorder(Thread):
         )
         args = command.split(" ")
 
-        self.logger.info("starting record")
-        self.logger.info("command " + command)
+        logger.info("starting record")
+        logger.info("command " + command)
 
         self.p = Popen(args, stdout=PIPE, stderr=PIPE)
 
@@ -108,8 +106,8 @@ class ShowRecorder(Thread):
         for msg in outmsgs:
             m = re.search("^ERROR", msg)
             if not m == None:
-                self.logger.info("Recording error is found: %s", outmsgs)
-        self.logger.info("finishing record, return code %s", self.p.returncode)
+                logger.info("Recording error is found: %s", outmsgs)
+        logger.info("finishing record, return code %s", self.p.returncode)
         code = self.p.returncode
 
         self.p = None
@@ -118,7 +116,7 @@ class ShowRecorder(Thread):
 
     def cancel_recording(self):
         # send signal interrupt (2)
-        self.logger.info("Show manually cancelled!")
+        logger.info("Show manually cancelled!")
         if self.p is not None:
             self.p.send_signal(signal.SIGINT)
 
@@ -148,7 +146,7 @@ class ShowRecorder(Thread):
             full_date, full_time = self.start_time.split(" ", 1)
             # No idea why we translated - to : before
             # full_time = full_time.replace(":","-")
-            self.logger.info("time: %s" % full_time)
+            logger.info("time: %s" % full_time)
             artist = "Airtime Show Recorder"
             # set some metadata for our file daemon
             recorded_file = mutagen.File(filepath, easy=True)
@@ -161,38 +159,37 @@ class ShowRecorder(Thread):
 
         except Exception as e:
             top = traceback.format_exc()
-            self.logger.error("Exception: %s", e)
-            self.logger.error("traceback: %s", top)
+            logger.error("Exception: %s", e)
+            logger.error("traceback: %s", top)
 
     def run(self):
         code, filepath = self.record_show()
 
         if code == 0:
             try:
-                self.logger.info("Preparing to upload %s" % filepath)
+                logger.info("Preparing to upload %s" % filepath)
 
                 self.set_metadata_and_save(filepath)
 
                 self.upload_file(filepath)
                 os.remove(filepath)
             except Exception as e:
-                self.logger.error(e)
+                logger.error(e)
         else:
-            self.logger.info("problem recording show")
+            logger.info("problem recording show")
             os.remove(filepath)
 
 
 class Recorder(Thread):
     def __init__(self, q):
         Thread.__init__(self)
-        self.logger = logging.getLogger("recorder")
-        self.api_client = api_client(self.logger)
+        self.api_client = api_client()
         self.sr = None
         self.shows_to_record = {}
         self.server_timezone = ""
         self.queue = q
         self.loops = 0
-        self.logger.info("RecorderFetch: init complete")
+        logger.info("RecorderFetch: init complete")
 
         success = False
         while not success:
@@ -200,7 +197,7 @@ class Recorder(Thread):
                 self.api_client.register_component("show-recorder")
                 success = True
             except Exception as e:
-                self.logger.error(str(e))
+                logger.error(str(e))
                 time.sleep(10)
 
     def handle_message(self):
@@ -212,7 +209,7 @@ class Recorder(Thread):
                 pass
             msg = json.loads(message)
             command = msg["event_type"]
-            self.logger.info("Received msg from Pypo Message Handler: %s", msg)
+            logger.info("Received msg from Pypo Message Handler: %s", msg)
             if command == "cancel_recording":
                 if self.currently_recording():
                     self.cancel_recording()
@@ -224,7 +221,7 @@ class Recorder(Thread):
             self.start_record()
 
     def process_recorder_schedule(self, m):
-        self.logger.info("Parsing recording show schedules...")
+        logger.info("Parsing recording show schedules...")
         temp_shows_to_record = {}
         shows = m["shows"]
         for show in shows:
@@ -253,9 +250,9 @@ class Recorder(Thread):
             out = float(s)
 
             if out < 5:
-                self.logger.debug("Shows %s", self.shows_to_record)
-                self.logger.debug("Next show %s", next_show)
-                self.logger.debug("Now %s", tnow)
+                logger.debug("Shows %s", self.shows_to_record)
+                logger.debug("Next show %s", next_show)
+                logger.debug("Now %s", tnow)
         return out
 
     def cancel_recording(self):
@@ -274,7 +271,7 @@ class Recorder(Thread):
         try:
             delta = self.get_time_till_next_show()
             if delta < 5:
-                self.logger.debug("sleeping %s seconds until show", delta)
+                logger.debug("sleeping %s seconds until show", delta)
                 time.sleep(delta)
 
                 sorted_show_keys = sorted(self.shows_to_record.keys())
@@ -306,7 +303,7 @@ class Recorder(Thread):
                 # avoiding CC-5299
                 while True:
                     if self.currently_recording():
-                        self.logger.info("Previous record not finished, sleeping 100ms")
+                        logger.info("Previous record not finished, sleeping 100ms")
                         seconds_waiting = seconds_waiting + 0.1
                         time.sleep(0.1)
                     else:
@@ -326,8 +323,8 @@ class Recorder(Thread):
                 # self.time_till_next_show = self.get_time_till_next_show()
         except Exception as e:
             top = traceback.format_exc()
-            self.logger.error("Exception: %s", e)
-            self.logger.error("traceback: %s", top)
+            logger.error("Exception: %s", e)
+            logger.error("traceback: %s", top)
 
     def run(self):
         """
@@ -336,19 +333,19 @@ class Recorder(Thread):
         poll the server to get the upcoming schedule.
         """
         try:
-            self.logger.info("Started...")
+            logger.info("Started...")
             # Bootstrap: since we are just starting up, we need to grab the
             # most recent schedule.  After that we can just wait for updates.
             try:
                 temp = self.api_client.get_shows_to_record()
                 if temp is not None:
                     self.process_recorder_schedule(temp)
-                self.logger.info("Bootstrap recorder schedule received: %s", temp)
+                logger.info("Bootstrap recorder schedule received: %s", temp)
             except Exception as e:
-                self.logger.error(traceback.format_exc())
-                self.logger.error(e)
+                logger.error(traceback.format_exc())
+                logger.error(e)
 
-            self.logger.info("Bootstrap complete: got initial copy of the schedule")
+            logger.info("Bootstrap complete: got initial copy of the schedule")
 
             self.loops = 0
             heartbeat_period = math.floor(30 / PUSH_INTERVAL)
@@ -363,18 +360,18 @@ class Recorder(Thread):
                         temp = self.api_client.get_shows_to_record()
                         if temp is not None:
                             self.process_recorder_schedule(temp)
-                        self.logger.info("updated recorder schedule received: %s", temp)
+                        logger.info("updated recorder schedule received: %s", temp)
                     except Exception as e:
-                        self.logger.error(traceback.format_exc())
-                        self.logger.error(e)
+                        logger.error(traceback.format_exc())
+                        logger.error(e)
                 try:
                     self.handle_message()
                 except Exception as e:
-                    self.logger.error(traceback.format_exc())
-                    self.logger.error("Pypo Recorder Exception: %s", e)
+                    logger.error(traceback.format_exc())
+                    logger.error("Pypo Recorder Exception: %s", e)
                 time.sleep(PUSH_INTERVAL)
                 self.loops += 1
         except Exception as e:
             top = traceback.format_exc()
-            self.logger.error("Exception: %s", e)
-            self.logger.error("traceback: %s", top)
+            logger.error("Exception: %s", e)
+            logger.error("traceback: %s", top)

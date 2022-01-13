@@ -1,5 +1,4 @@
 import base64
-import logging
 import time
 import traceback
 import urllib.error
@@ -10,20 +9,17 @@ from threading import Thread
 
 import defusedxml.minidom
 from libretime_api_client import version1 as api_client
+from loguru import logger
 
 
 class ListenerStat(Thread):
 
     HTTP_REQUEST_TIMEOUT = 30  # 30 second HTTP request timeout
 
-    def __init__(self, config, logger=None):
+    def __init__(self, config):
         Thread.__init__(self)
         self.config = config
         self.api_client = api_client.AirtimeApiClient()
-        if logger is None:
-            self.logger = logging.getLogger()
-        else:
-            self.logger = logger
 
     def get_node_text(self, nodelist):
         rc = []
@@ -130,7 +126,7 @@ class ListenerStat(Thread):
                     try:
                         self.update_listener_stat_error(v["mount"], str(e))
                     except Exception as e:
-                        self.logger.error("Exception: %s", e)
+                        logger.error("Exception: %s", e)
 
         return stats
 
@@ -155,27 +151,6 @@ class ListenerStat(Thread):
                 if stats:
                     self.push_stream_stats(stats)
             except Exception as e:
-                self.logger.error("Exception: %s", e)
+                logger.error("Exception: %s", e)
 
             time.sleep(120)
-        self.logger.info("ListenerStat thread exiting")
-
-
-if __name__ == "__main__":
-    # create logger
-    logger = logging.getLogger("std_out")
-    logger.setLevel(logging.DEBUG)
-    # create console handler and set level to debug
-    # ch = logging.StreamHandler()
-    # ch.setLevel(logging.DEBUG)
-    # create formatter
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(lineno)s - %(levelname)s - %(message)s"
-    )
-    # add formatter to ch
-    # ch.setFormatter(formatter)
-    # add ch to logger
-    # logger.addHandler(ch)
-
-    # ls = ListenerStat(logger=logger)
-    # ls.run()

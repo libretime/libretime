@@ -1,5 +1,4 @@
 import calendar
-import logging.config
 import math
 import os
 import sys
@@ -12,12 +11,11 @@ from threading import Thread
 
 from configobj import ConfigObj
 from libretime_api_client import version1 as api_client
+from loguru import logger
 
 from .pypofetch import PypoFetch
 from .pypoliqqueue import PypoLiqQueue
 from .timeout import ls_timeout
-
-logging.captureWarnings(True)
 
 PUSH_INTERVAL = 2
 
@@ -40,16 +38,13 @@ class PypoPush(Thread):
         self.config = config
 
         self.pushed_objects = {}
-        self.logger = logging.getLogger("push")
         self.current_prebuffering_stream_id = None
         self.queue_id = 0
 
         self.future_scheduled_queue = Queue()
         self.pypo_liquidsoap = pypo_liquidsoap
 
-        self.plq = PypoLiqQueue(
-            self.future_scheduled_queue, self.pypo_liquidsoap, self.logger
-        )
+        self.plq = PypoLiqQueue(self.future_scheduled_queue, self.pypo_liquidsoap)
         self.plq.daemon = True
         self.plq.start()
 
@@ -63,10 +58,10 @@ class PypoPush(Thread):
             try:
                 media_schedule = self.queue.get(block=True)
             except Exception as e:
-                self.logger.error(str(e))
+                logger.error(str(e))
                 raise
             else:
-                self.logger.debug(media_schedule)
+                logger.debug(media_schedule)
                 # separate media_schedule list into currently_playing and
                 # scheduled_for_future lists
                 currently_playing, scheduled_for_future = self.separate_present_future(
@@ -77,7 +72,7 @@ class PypoPush(Thread):
                 self.future_scheduled_queue.put(scheduled_for_future)
 
             if loops % heartbeat_period == 0:
-                self.logger.info("heartbeat")
+                logger.info("heartbeat")
                 loops = 0
             loops += 1
 
@@ -93,17 +88,17 @@ class PypoPush(Thread):
 
             # Ignore track that already ended
             if media_item["end"] < tnow:
-                self.logger.debug(f"ignoring ended media_item: {media_item}")
+                logger.debug(f"ignoring ended media_item: {media_item}")
                 continue
 
             diff_td = tnow - media_item["start"]
             diff_sec = self.date_interval_to_seconds(diff_td)
 
             if diff_sec >= 0:
-                self.logger.debug(f"adding media_item to present: {media_item}")
+                logger.debug(f"adding media_item to present: {media_item}")
                 present.append(media_item)
             else:
-                self.logger.debug(f"adding media_item to future: {media_item}")
+                logger.debug(f"adding media_item to future: {media_item}")
                 future[mkey] = media_item
 
         return present, future
@@ -128,22 +123,22 @@ class PypoPush(Thread):
 
             # msg = 'dynamic_source.read_stop_all xxx\n'
             msg = "http.stop\n"
-            self.logger.debug(msg)
+            logger.debug(msg)
             tn.write(msg)
 
             msg = "dynamic_source.output_stop\n"
-            self.logger.debug(msg)
+            logger.debug(msg)
             tn.write(msg)
 
             msg = "dynamic_source.id -1\n"
-            self.logger.debug(msg)
+            logger.debug(msg)
             tn.write(msg)
 
             tn.write("exit\n")
-            self.logger.debug(tn.read_all())
+            logger.debug(tn.read_all())
 
         except Exception as e:
-            self.logger.error(str(e))
+            logger.error(str(e))
         finally:
             self.telnet_lock.release()
 
@@ -153,6 +148,6 @@ class PypoPush(Thread):
                 self.main()
             except Exception as e:
                 top = traceback.format_exc()
-                self.logger.error("Pypo Push Exception: %s", top)
+                logger.error("Pypo Push Exception: %s", top)
                 time.sleep(5)
-        self.logger.info("PypoPush thread exiting")
+        logger.info("PypoPush thread exiting")

@@ -1,13 +1,15 @@
-import logging
 import os
 import sys
 import time
 import traceback
+from pathlib import Path
+from typing import Optional
 
 from libretime_api_client.version1 import AirtimeApiClient
+from loguru import logger
 
 
-def generate_liquidsoap_config(ss):
+def generate_liquidsoap_config(ss, log_filepath: Optional[Path]):
     data = ss["msg"]
     fh = open("/etc/airtime/liquidsoap.cfg", "w")
     fh.write("################################################\n")
@@ -34,31 +36,31 @@ def generate_liquidsoap_config(ss):
         fh.write("ignore(%s)\n" % key)
 
     auth_path = os.path.dirname(os.path.realpath(__file__))
-    fh.write('log_file = "/var/log/airtime/pypo-liquidsoap/<script>.log"\n')
+    if log_filepath is not None:
+        fh.write(f'log_file = "{log_filepath.resolve()}"\n')
     fh.write('auth_path = "%s/liquidsoap_auth.py"\n' % auth_path)
     fh.close()
 
 
-def run():
-    logging.basicConfig(format="%(message)s")
+def run(log_filepath: Optional[Path]):
     attempts = 0
     max_attempts = 10
     successful = False
 
     while not successful:
         try:
-            ac = AirtimeApiClient(logging.getLogger())
+            ac = AirtimeApiClient(logger)
             ss = ac.get_stream_setting()
-            generate_liquidsoap_config(ss)
+            generate_liquidsoap_config(ss, log_filepath)
             successful = True
         except Exception as e:
             print("Unable to connect to the Airtime server.")
-            logging.error(str(e))
-            logging.error("traceback: %s", traceback.format_exc())
+            logger.error(str(e))
+            logger.error("traceback: %s", traceback.format_exc())
             if attempts == max_attempts:
-                logging.error("giving up and exiting...")
+                logger.error("giving up and exiting...")
                 sys.exit(1)
             else:
-                logging.info("Retrying in 3 seconds...")
+                logger.info("Retrying in 3 seconds...")
                 time.sleep(3)
         attempts += 1

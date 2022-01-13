@@ -1,5 +1,3 @@
-import traceback
-
 """
 Python part of radio playout (pypo)
 
@@ -16,9 +14,10 @@ Main case:
 """
 
 import json
-import logging.config
 import sys
+import traceback
 from optparse import OptionParser
+from pathlib import Path
 
 # additional modules (should be checked)
 from configobj import ConfigObj
@@ -26,9 +25,14 @@ from configobj import ConfigObj
 # custom imports
 # from util import *
 from libretime_api_client import version1 as api_client
+from libretime_shared.logging import INFO, setup_logger
+from loguru import logger
 
-LOG_LEVEL = logging.INFO
-LOG_PATH = "/var/log/airtime/pypo/notify.log"
+# TODO: Get log settings from cli/env variables
+DEFAULT_LOG_LEVEL = INFO
+DEFAULT_LOG_FILEPATH = Path("/var/log/libretime/playout-notify.log")
+
+setup_logger(DEFAULT_LOG_LEVEL, DEFAULT_LOG_FILEPATH)
 
 # help screeen / info
 usage = "%prog [options]" + " - notification gateway"
@@ -98,25 +102,6 @@ parser.add_option(
 # parse options
 (options, args) = parser.parse_args()
 
-# Set up logging
-logging.captureWarnings(True)
-logFormatter = logging.Formatter(
-    "%(asctime)s [%(module)s] [%(levelname)-5.5s]  %(message)s"
-)
-rootLogger = logging.getLogger()
-rootLogger.setLevel(LOG_LEVEL)
-
-fileHandler = logging.handlers.RotatingFileHandler(
-    filename=LOG_PATH, maxBytes=1024 * 1024 * 30, backupCount=8
-)
-fileHandler.setFormatter(logFormatter)
-rootLogger.addHandler(fileHandler)
-
-consoleHandler = logging.StreamHandler()
-consoleHandler.setFormatter(logFormatter)
-rootLogger.addHandler(consoleHandler)
-logger = rootLogger
-
 # need to wait for Python 2.7 for this..
 # logging.captureWarnings(True)
 
@@ -150,8 +135,7 @@ class Notify:
         logger.info("# Calling server to update liquidsoap status    #")
         logger.info("#################################################")
         logger.info("msg = " + str(msg))
-        response = self.api_client.notify_liquidsoap_status(msg, stream_id, time)
-        logger.info("Response: " + json.dumps(response))
+        self.api_client.notify_liquidsoap_status(msg, stream_id, time)
 
     def notify_source_status(self, source_name, status):
         logger.debug("#################################################")
@@ -165,8 +149,7 @@ class Notify:
         logger.debug("#################################################")
         logger.debug("# Calling server to update webstream data       #")
         logger.debug("#################################################")
-        response = self.api_client.notify_webstream_data(data, media_id)
-        logger.debug("Response: " + json.dumps(response))
+        self.api_client.notify_webstream_data(data, media_id)
 
     def run_with_options(self, options):
         if options.error and options.stream_id:

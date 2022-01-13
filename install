@@ -93,6 +93,12 @@ skip_postgres=0
 skip_rabbitmq=0
 default_value="Y"
 
+# <user:group> <path>
+mkdir_and_chown() {
+  mkdir -p "$2"
+  chown -R "$1" "$2"
+}
+
 function verbose() {
   if [[ ${_v} -eq 1 ]]; then
     echo -e "$@"
@@ -1027,11 +1033,16 @@ if [ ! -d /var/log/airtime ]; then
 
   verbose "\n * Creating /var/log/airtime"
   loudCmd "mkdir -p /var/log/airtime"
+  mkdir_and_chown "$web_user:$web_user" "/var/log/libretime"
 
   verbose "\n * Copying logrotate files..."
   loudCmd "cp ${AIRTIMEROOT}/legacy/build/airtime-php.logrotate /etc/logrotate.d/airtime-php"
   loudCmd "cp ${AIRTIMEROOT}/playout/install/logrotate/libretime-liquidsoap.conf /etc/logrotate.d/libretime-liquidsoap"
 fi
+
+verbose "\n * Installing Shared..."
+loudCmd "$pip_cmd install ${AIRTIMEROOT}/shared"
+verbose "...Done"
 
 verbose "\n * Installing API client..."
 loudCmd "$pip_cmd install ${AIRTIMEROOT}/api_client"

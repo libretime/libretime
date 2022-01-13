@@ -1,7 +1,6 @@
 import configparser
 import hashlib
 import json
-import logging
 import os
 import shutil
 import stat
@@ -14,17 +13,15 @@ from threading import Thread
 
 import requests
 from libretime_api_client import version2 as api_client
+from loguru import logger
 from requests.exceptions import ConnectionError, HTTPError, Timeout
 
 CONFIG_PATH = "/etc/airtime/airtime.conf"
-
-logging.captureWarnings(True)
 
 
 class PypoFile(Thread):
     def __init__(self, schedule_queue, config):
         Thread.__init__(self)
-        self.logger = logging.getLogger()
         self.media_queue = schedule_queue
         self.media = None
         self.cache_dir = os.path.join(config["cache_dir"], "scheduler")
@@ -56,7 +53,7 @@ class PypoFile(Thread):
             # become an issue here... This needs proper cache management.
             # https://github.com/LibreTime/libretime/issues/756#issuecomment-477853018
             # https://github.com/LibreTime/libretime/pull/845
-            self.logger.debug(
+            logger.debug(
                 "file %s already exists in local cache as %s, skipping copying..."
                 % (src, dst)
             )
@@ -66,16 +63,16 @@ class PypoFile(Thread):
         media_item["file_ready"] = not do_copy
 
         if do_copy:
-            self.logger.info("copying from %s to local cache %s" % (src, dst))
+            logger.info("copying from %s to local cache %s" % (src, dst))
             try:
                 with open(dst, "wb") as handle:
-                    self.logger.info(media_item)
+                    logger.info(media_item)
                     response = self.api_client.services.file_download_url(
                         id=media_item["id"]
                     )
 
                     if not response.ok:
-                        self.logger.error(response)
+                        logger.error(response)
                         raise Exception(
                             "%s - Error occurred downloading file"
                             % response.status_code
@@ -95,8 +92,8 @@ class PypoFile(Thread):
 
                 media_item["file_ready"] = True
             except Exception as e:
-                self.logger.error("Could not copy from %s to %s" % (src, dst))
-                self.logger.error(e)
+                logger.error("Could not copy from %s to %s" % (src, dst))
+                logger.error(e)
 
     def report_file_size_and_md5_to_api(self, file_path, file_id):
         try:
@@ -112,10 +109,10 @@ class PypoFile(Thread):
                 md5_hash = m.hexdigest()
         except (OSError, IOError) as e:
             file_size = 0
-            self.logger.error(
+            logger.error(
                 "Error getting file size and md5 hash for file id %s" % file_id
             )
-            self.logger.error(e)
+            logger.error(e)
 
         # Make PUT request to LibreTime to update the file size and hash
         error_msg = (
@@ -125,10 +122,10 @@ class PypoFile(Thread):
             payload = {"filesize": file_size, "md5": md5_hash}
             response = self.api_client.update_file(file_id, payload)
         except (ConnectionError, Timeout):
-            self.logger.error(error_msg)
+            logger.error(error_msg)
         except Exception as e:
-            self.logger.error(error_msg)
-            self.logger.error(e)
+            logger.error(error_msg)
+            logger.error(e)
 
         return file_size
 
@@ -148,7 +145,7 @@ class PypoFile(Thread):
         highest_priority = sorted_keys[0]
         media_item = schedule[highest_priority]
 
-        self.logger.debug("Highest priority item: %s" % highest_priority)
+        logger.debug("Highest priority item: %s" % highest_priority)
 
         """
         Remove this media_item from the dictionary. On the next iteration
@@ -168,12 +165,9 @@ class PypoFile(Thread):
         try:
             config.readfp(open(config_path))
         except IOError as e:
-            logging.debug(
+            logger.debug(
                 "Failed to open config file at %s: %s" % (config_path, e.strerror)
             )
-            sys.exit()
-        except Exception as e:
-            logging.debug(e.strerror)
             sys.exit()
 
         return config
@@ -206,8 +200,8 @@ class PypoFile(Thread):
                 import traceback
 
                 top = traceback.format_exc()
-                self.logger.error(str(e))
-                self.logger.error(top)
+                logger.error(str(e))
+                logger.error(top)
                 raise
 
     def run(self):
@@ -218,6 +212,6 @@ class PypoFile(Thread):
             self.main()
         except Exception as e:
             top = traceback.format_exc()
-            self.logger.error("PypoFile Exception: %s", top)
+            logger.error("PypoFile Exception: %s", top)
             time.sleep(5)
-        self.logger.info("PypoFile thread exiting")
+        logger.info("PypoFile thread exiting")
