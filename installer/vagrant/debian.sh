@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 DEBIAN_FRONTEND=noninteractive apt-get update --allow-releaseinfo-change
-DEBIAN_FRONTEND=noninteractive apt-get -y install alsa-utils
+DEBIAN_FRONTEND=noninteractive apt-get -y install alsa-utils auto-apt-proxy
 usermod -a -G audio vagrant
 usermod -a -G audio www-data
