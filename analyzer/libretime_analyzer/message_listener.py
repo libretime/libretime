@@ -1,13 +1,11 @@
 import json
-import logging
-import multiprocessing
 import queue
 import select
 import signal
-import sys
 import time
 
 import pika
+from loguru import logger
 
 from .analyzer_pipeline import AnalyzerPipeline
 from .status_reporter import StatusReporter
@@ -94,13 +92,13 @@ class MessageListener:
             except pika.exceptions.AMQPError as e:
                 if self._shutdown:
                     break
-                logging.error("Connection to message queue failed. ")
-                logging.error(e)
-                logging.info("Retrying in 5 seconds...")
+                logger.error("Connection to message queue failed. ")
+                logger.error(e)
+                logger.info("Retrying in 5 seconds...")
                 time.sleep(5)
 
         self.disconnect_from_messaging_server()
-        logging.info("Exiting cleanly.")
+        logger.info("Exiting cleanly.")
 
     def connect_to_messaging_server(self):
         """Connect to the RabbitMQ server and start listening for messages."""
@@ -124,7 +122,7 @@ class MessageListener:
             exchange=EXCHANGE, queue=QUEUE, routing_key=ROUTING_KEY
         )
 
-        logging.info(" Listening for messages...")
+        logger.info(" Listening for messages...")
         self._channel.basic_consume(QUEUE, self.msg_received_callback, auto_ack=False)
 
     def wait_for_messages(self):
@@ -152,7 +150,7 @@ class MessageListener:
         Here we parse the message, spin up an analyzer process, and report the
         metadata back to the Airtime web application (or report an error).
         """
-        logging.info(
+        logger.info(
             " - Received '%s' on routing_key '%s'" % (body, method_frame.routing_key)
         )
 
@@ -199,7 +197,7 @@ class MessageListener:
 
         except KeyError as e:
             # A field in msg_dict that we needed was missing (eg. audio_file_path)
-            logging.exception(
+            logger.exception(
                 "A mandatory airtime_analyzer message field was missing from the message."
             )
             # See the huge comment about NACK below.
@@ -208,7 +206,7 @@ class MessageListener:
             )  # Important that it doesn't requeue the message
 
         except Exception as e:
-            logging.exception(e)
+            logger.exception(e)
             """ If ANY exception happens while processing a file, we're going to NACK to the
                 messaging server and tell it to remove the message from the queue.
                 (NACK is a negative acknowledgement. We could use ACK instead, but this might come
@@ -258,8 +256,8 @@ class MessageListener:
         p.join()
         if p.exitcode == 0:
             results = q.get()
-            logging.info("Main process received results from child: ")
-            logging.info(results)
+            logger.info("Main process received results from child: ")
+            logger.info(results)
         else:
             raise Exception("Analyzer process terminated unexpectedly.")
         """
@@ -277,7 +275,7 @@ class MessageListener:
             )
             metadata = q.get()
         except Exception as e:
-            logging.error("Analyzer pipeline exception: %s" % str(e))
+            logger.error("Analyzer pipeline exception: %s" % str(e))
             metadata["import_status"] = AnalyzerPipeline.IMPORT_STATUS_FAILED
 
         # Ensure our queue doesn't fill up and block due to unexpected behaviour. Defensive code.

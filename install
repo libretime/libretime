@@ -1015,6 +1015,8 @@ loud "\n-----------------------------------------------------"
 loud "          * Installing Airtime Services *            "
 loud "-----------------------------------------------------"
 
+LIBRETIME_WORKING_DIR="/var/lib/libretime"
+
 python_version=$($python_bin --version 2>&1 | awk '{ print $2 }')
 verbose "Detected Python version: $python_version"
 pip_cmd="$python_bin -m pip"
@@ -1074,6 +1076,8 @@ verbose "...Done"
 
 verbose "\n * Installing libretime-analyzer..."
 loudCmd "$pip_cmd install ${AIRTIMEROOT}/analyzer"
+loudCmd "mkdir -p ${LIBRETIME_WORKING_DIR}/analyzer"
+loudCmd "chown -R ${web_user}:${web_user} ${LIBRETIME_WORKING_DIR}/analyzer"
 systemInitInstall libretime-analyzer "$web_user"
 verbose "...Done"
 

@@ -1,9 +1,11 @@
-import os
+from os import chdir
+from pathlib import Path
 
 from setuptools import setup
 
 # Change directory since setuptools uses relative paths
-os.chdir(os.path.dirname(os.path.realpath(__file__)))
+here = Path(__file__).parent
+chdir(here)
 
 setup(
     name="libretime-analyzer",
@@ -20,7 +22,7 @@ setup(
     packages=["libretime_analyzer"],
     entry_points={
         "console_scripts": [
-            "libretime-analyzer=libretime_analyzer.cli:main",
+            "libretime-analyzer=libretime_analyzer.main:cli",
         ]
     },
     python_requires=">=3.6",
@@ -37,6 +39,8 @@ setup(
     extras_require={
         "dev": [
             "distro",
+            f"libretime-api-client @ file://localhost/{here.parent / 'api_client'}#egg=libretime_api_client",
+            f"libretime-shared @ file://localhost/{here.parent / 'shared'}#egg=libretime_shared",
         ],
     },
     zip_safe=False,

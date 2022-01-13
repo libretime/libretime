@@ -1,10 +1,8 @@
 """ Analyzes and imports an audio file into the Airtime library.
 """
-import configparser
-import logging
-import multiprocessing
-import threading
 from queue import Queue
+
+from loguru import logger
 
 from .cuepoint_analyzer import CuePointAnalyzer
 from .filemover_analyzer import FileMoverAnalyzer
@@ -49,11 +47,6 @@ class AnalyzerPipeline:
             storage_backend: String indicating the storage backend (amazon_s3 or file)
             file_prefix:
         """
-        # It is super critical to initialize a separate log file here so that we
-        # don't inherit logging/locks from the parent process. Supposedly
-        # this can lead to Bad Things (deadlocks): http://bugs.python.org/issue6721
-        AnalyzerPipeline.python_logger_deadlock_workaround()
-
         try:
             if not isinstance(queue, Queue):
                 raise TypeError("queue must be a Queue.Queue()")
@@ -105,21 +98,11 @@ class AnalyzerPipeline:
             # it back to the Airtime web application.
             queue.put(metadata)
         except UnplayableFileError as e:
-            logging.exception(e)
+            logger.exception(e)
             metadata["import_status"] = AnalyzerPipeline.IMPORT_STATUS_FAILED
             metadata["reason"] = "The file could not be played."
             raise e
         except Exception as e:
             # Ensures the traceback for this child process gets written to our log files:
-            logging.exception(e)
+            logger.exception(e)
             raise e
-
-    @staticmethod
-    def python_logger_deadlock_workaround():
-        # Workaround for: http://bugs.python.org/issue6721#msg140215
-        logger_names = list(logging.Logger.manager.loggerDict.keys())
-        logger_names.append(None)  # Root logger
-        for name in logger_names:
-            for handler in logging.getLogger(name).handlers:
-                handler.createLock()
-        logging._lock = threading.RLock()
