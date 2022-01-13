@@ -1,4 +1,4 @@
-![](https://github.com/LibreTime/libretime/raw/master/logo/logotype.png)
+![](https://github.com/LibreTime/libretime/raw/main/logo/logotype.png)
 
 The complete LibreTime documentation is available at [libretime.org](http://libretime.org).
 

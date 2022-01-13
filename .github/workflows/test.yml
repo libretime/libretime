@@ -2,10 +2,10 @@ name: Tests
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
     types: [opened, reopened, synchronize, edited]
-    branches: [master]
+    branches: [main]
 
 jobs:
   pre-commit:

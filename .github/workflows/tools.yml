@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: "0 3 * * 0"
   push:
-    branches: [master]
+    branches: [main]
     paths:
       - "**/packages.ini"
       - ".github/workflows/tools.yml"

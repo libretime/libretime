@@ -12,7 +12,7 @@ permalink: /contribute
 ## Code of conduct
 
 Before any contribution, read and be prepared to adhere to our
-[code of conduct](https://github.com/libretime/code-of-conduct/blob/master/code_of_conduct.md).
+[code of conduct](https://github.com/libretime/code-of-conduct/blob/main/code_of_conduct.md).
 
 In addition, LibreTime follow the standardized
 [C4 development process](https://rfc.zeromq.org/spec:42/c4/), in which you can
