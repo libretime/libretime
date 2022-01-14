@@ -571,6 +571,7 @@ class AirtimeUpgrader300alpha6 extends AirtimeUpgrader
         return '3.0.0-alpha.6';
     }
 }
+
 /**
  * Class AirtimeUpgrader300alpha7.
  *
@@ -590,6 +591,7 @@ class AirtimeUpgrader300alpha7 extends AirtimeUpgrader
         return '3.0.0-alpha.7';
     }
 }
+
 /**
  * Class AirtimeUpgrader300alpha7-1.
  *
@@ -609,6 +611,7 @@ class AirtimeUpgrader300alpha7_1 extends AirtimeUpgrader
         return '3.0.0-alpha.7.1';
     }
 }
+
 /**
  * Class AirtimeUpgrader300alpha7-2.
  *
