@@ -253,7 +253,7 @@ class Application_Service_PodcastService
     /**
      * Trims the podcast metadata to fit the table's column max size.
      *
-     * @param $podcastArray
+     * @param PodcastArray &$podcastArray
      */
     private static function validatePodcastMetadata(&$podcastArray)
     {

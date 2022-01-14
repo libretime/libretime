@@ -8,10 +8,12 @@ class LibreTime_Auth_Adaptor_FreeIpa implements Zend_Auth_Adapter_Interface
      * @var string
      */
     private $username;
+
     /**
      * @var string
      */
     private $password;
+
     /**
      * @var Application_Model_User
      */
