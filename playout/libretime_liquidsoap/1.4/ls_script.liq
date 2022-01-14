@@ -1,6 +1,11 @@
 %include "/etc/airtime/liquidsoap.cfg"
 
-set("log.file.path", log_file)
+if (log_file != "") then
+    set("log.file.path", log_file)
+else
+    set("log.file", false)
+end
+
 set("server.telnet", true)
 set("server.telnet.port", 1234)
 
