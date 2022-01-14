@@ -36,8 +36,9 @@ def generate_liquidsoap_config(ss, log_filepath: Optional[Path]):
         fh.write("ignore(%s)\n" % key)
 
     auth_path = os.path.dirname(os.path.realpath(__file__))
-    if log_filepath is not None:
-        fh.write(f'log_file = "{log_filepath.resolve()}"\n')
+    log_file = log_filepath.resolve() if log_filepath is not None else ""
+
+    fh.write(f'log_file = "{log_file}"\n')
     fh.write('auth_path = "%s/liquidsoap_auth.py"\n' % auth_path)
     fh.close()
 
