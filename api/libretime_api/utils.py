@@ -1,23 +1,24 @@
-import configparser
 import random
 import string
 import sys
+from configparser import ConfigParser
 
 
-def read_config_file(config_path):
+def read_config_file(config_filepath):
     """Parse the application's config file located at config_path."""
-    config = configparser.ConfigParser()
+    config = ConfigParser()
     try:
-        config.readfp(open(config_path))
-    except IOError as e:
+        with open(config_filepath, encoding="utf-8") as config_file:
+            config.read_file(config_file)
+    except IOError as error:
         print(
-            "Failed to open config file at {}: {}".format(config_path, e.strerror),
+            f"Unable to read config file at {config_filepath}: {error.strerror}",
             file=sys.stderr,
         )
-        raise e
-    except Exception as e:
-        print(e.strerror, file=sys.stderr)
-        raise e
+        return ConfigParser()
+    except Exception as error:
+        print(error, file=sys.stderr)
+        raise error
     return config
 
 
