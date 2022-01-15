@@ -1,6 +1,4 @@
-import configparser
 import os
-import sys
 
 from .utils import get_random_string, read_config_file
 
@@ -15,13 +13,7 @@ LIBRETIME_STATIC_ROOT = os.getenv(
     "LIBRETIME_STATIC_ROOT",
     "/usr/share/airtime/api",
 )
-
-try:
-    CONFIG = read_config_file(LIBRETIME_CONFIG_FILEPATH)
-except IOError as e:
-    print(f"Unable to read config file {LIBRETIME_CONFIG_FILEPATH}", file=sys.stderr)
-    print(e, file=sys.stderr)
-    CONFIG = configparser.ConfigParser()
+CONFIG = read_config_file(LIBRETIME_CONFIG_FILEPATH)
 
 
 # Quick-start development settings - unsuitable for production
