@@ -148,6 +148,23 @@ AUTH_USER_MODEL = "libretime_api.User"
 
 TEST_RUNNER = "libretime_api.tests.runners.ManagedModelTestRunner"
 
+
+LOGGING_HANDLERS = {
+    "console": {
+        "level": "INFO",
+        "class": "logging.StreamHandler",
+        "formatter": "simple",
+    },
+}
+
+if LIBRETIME_LOG_FILEPATH is not None:
+    LOGGING_HANDLERS["file"] = {
+        "level": "DEBUG",
+        "class": "logging.FileHandler",
+        "filename": LIBRETIME_LOG_FILEPATH,
+        "formatter": "verbose",
+    }
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -161,30 +178,15 @@ LOGGING = {
             "style": "{",
         },
     },
-    "handlers": {
-        "file": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": os.path.join(
-                CONFIG.get("pypo", "log_base_dir", fallback=".").replace("'", ""),
-                "api.log",
-            ),
-            "formatter": "verbose",
-        },
-        "console": {
-            "level": "INFO",
-            "class": "logging.StreamHandler",
-            "formatter": "simple",
-        },
-    },
+    "handlers": LOGGING_HANDLERS,
     "loggers": {
         "django": {
-            "handlers": ["file", "console"],
+            "handlers": LOGGING_HANDLERS.keys(),
             "level": "INFO",
             "propagate": True,
         },
         "libretime_api": {
-            "handlers": ["file", "console"],
+            "handlers": LOGGING_HANDLERS.keys(),
             "level": "INFO",
             "propagate": True,
         },
