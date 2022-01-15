@@ -208,7 +208,7 @@ jobs:
       run:
         shell: bash
     env:
-      LIBRETIME_CONF_FILE: /tmp/libretime-test.conf
+      LIBRETIME_CONFIG_FILEPATH: /tmp/libretime-test.conf
 
     steps:
       - uses: actions/checkout@v2
@@ -222,7 +222,7 @@ jobs:
 
       - name: Setup libretime configuration
         run: |
-          cat <<EOF > $LIBRETIME_CONF_FILE
+          cat <<EOF > $LIBRETIME_CONFIG_FILEPATH
           [general]
           api_key = test_key
           [database]
@@ -231,7 +231,7 @@ jobs:
           dbuser = postgres
           dbpass = libretime
           EOF
-          cat $LIBRETIME_CONF_FILE
+          cat $LIBRETIME_CONFIG_FILEPATH
 
       - name: Test
         run: make test

@@ -4,16 +4,22 @@ import sys
 
 from .utils import get_random_string, read_config_file
 
-LIBRETIME_CONF_DIR = os.getenv("LIBRETIME_CONF_DIR", "/etc/airtime")
-DEFAULT_CONFIG_PATH = os.getenv(
-    "LIBRETIME_CONF_FILE", os.path.join(LIBRETIME_CONF_DIR, "airtime.conf")
-)
 API_VERSION = "2.0.0"
 
+LIBRETIME_LOG_FILEPATH = os.getenv("LIBRETIME_LOG_FILEPATH")
+LIBRETIME_CONFIG_FILEPATH = os.getenv(
+    "LIBRETIME_CONFIG_FILEPATH",
+    "/etc/airtime/airtime.conf",
+)
+LIBRETIME_STATIC_ROOT = os.getenv(
+    "LIBRETIME_STATIC_ROOT",
+    "/usr/share/airtime/api",
+)
+
 try:
-    CONFIG = read_config_file(DEFAULT_CONFIG_PATH)
+    CONFIG = read_config_file(LIBRETIME_CONFIG_FILEPATH)
 except IOError as e:
-    print(f"Unable to read config file {DEFAULT_CONFIG_PATH}", file=sys.stderr)
+    print(f"Unable to read config file {LIBRETIME_CONFIG_FILEPATH}", file=sys.stderr)
     print(e, file=sys.stderr)
     CONFIG = configparser.ConfigParser()
 
@@ -144,7 +150,7 @@ USE_TZ = True
 
 STATIC_URL = "/api/static/"
 if not DEBUG:
-    STATIC_ROOT = os.getenv("LIBRETIME_STATIC_ROOT", "/usr/share/airtime/api")
+    STATIC_ROOT = LIBRETIME_STATIC_ROOT
 
 AUTH_USER_MODEL = "libretime_api.User"
 
