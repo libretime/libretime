@@ -2,6 +2,8 @@
 Description=LibreTime API Service
 
 [Service]
+Environment=LIBRETIME_LOG_FILEPATH=/var/log/libretime/api.log
+
 ExecStart=/usr/bin/uwsgi /etc/airtime/libretime-api.ini
 User=libretime-api
 Group=libretime-api
