@@ -5,14 +5,14 @@ from queue import Queue
 
 import pytest
 
-from libretime_analyzer.analyzer_pipeline import AnalyzerPipeline
+from libretime_analyzer.pipeline import Pipeline
 
 from .conftest import AUDIO_FILENAME, AUDIO_IMPORT_DEST
 
 
 def test_run_analysis(src_dir, dest_dir):
     queue = Queue()
-    AnalyzerPipeline.run_analysis(
+    Pipeline.run_analysis(
         queue,
         os.path.join(src_dir, AUDIO_FILENAME),
         dest_dir,
@@ -46,4 +46,4 @@ def test_run_analysis(src_dir, dest_dir):
 )
 def test_run_analysis_wrong_params(params, exception):
     with pytest.raises(exception):
-        AnalyzerPipeline.run_analysis(*params)
+        Pipeline.run_analysis(*params)

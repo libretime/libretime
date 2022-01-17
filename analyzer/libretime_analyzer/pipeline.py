@@ -4,14 +4,14 @@ from queue import Queue
 
 from loguru import logger
 
-from .cuepoint_analyzer import CuePointAnalyzer
-from .filemover_analyzer import FileMoverAnalyzer
-from .metadata_analyzer import MetadataAnalyzer
-from .playability_analyzer import PlayabilityAnalyzer, UnplayableFileError
-from .replaygain_analyzer import ReplayGainAnalyzer
+from .steps.analyze_cuepoint import analyze_cuepoint
+from .steps.analyze_metadata import analyze_metadata
+from .steps.analyze_playability import UnplayableFileError, analyze_playability
+from .steps.analyze_replaygain import analyze_replaygain
+from .steps.organise_file import organise_file
 
 
-class AnalyzerPipeline:
+class Pipeline:
     """Analyzes and imports an audio file into the Airtime library.
 
     This currently performs metadata extraction (eg. gets the ID3 tags from an MP3),
@@ -80,12 +80,12 @@ class AnalyzerPipeline:
             metadata = dict()
             metadata["file_prefix"] = file_prefix
 
-            metadata = MetadataAnalyzer.analyze(audio_file_path, metadata)
-            metadata = CuePointAnalyzer.analyze(audio_file_path, metadata)
-            metadata = ReplayGainAnalyzer.analyze(audio_file_path, metadata)
-            metadata = PlayabilityAnalyzer.analyze(audio_file_path, metadata)
+            metadata = analyze_metadata(audio_file_path, metadata)
+            metadata = analyze_cuepoint(audio_file_path, metadata)
+            metadata = analyze_replaygain(audio_file_path, metadata)
+            metadata = analyze_playability(audio_file_path, metadata)
 
-            metadata = FileMoverAnalyzer.move(
+            metadata = organise_file(
                 audio_file_path, import_directory, original_filename, metadata
             )
 
@@ -99,7 +99,7 @@ class AnalyzerPipeline:
             queue.put(metadata)
         except UnplayableFileError as e:
             logger.exception(e)
-            metadata["import_status"] = AnalyzerPipeline.IMPORT_STATUS_FAILED
+            metadata["import_status"] = Pipeline.IMPORT_STATUS_FAILED
             metadata["reason"] = "The file could not be played."
             raise e
         except Exception as e:

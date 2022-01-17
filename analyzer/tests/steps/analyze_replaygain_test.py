@@ -1,8 +1,10 @@
+from unittest.mock import patch
+
 import pytest
 
-from libretime_analyzer.replaygain_analyzer import ReplayGainAnalyzer
+from libretime_analyzer.steps.analyze_replaygain import analyze_replaygain
 
-from .fixtures import FILE_INVALID_DRM, FILES, Fixture
+from ..fixtures import FILE_INVALID_DRM, FILES, Fixture
 
 
 @pytest.mark.parametrize(
@@ -10,15 +12,16 @@ from .fixtures import FILE_INVALID_DRM, FILES, Fixture
     map(lambda i: (str(i.path), i.replaygain), FILES),
 )
 def test_analyze(filepath, replaygain):
-    metadata = ReplayGainAnalyzer.analyze(filepath, dict())
+    metadata = analyze_replaygain(filepath, dict())
     assert metadata["replay_gain"] == pytest.approx(replaygain, abs=0.6)
 
 
 def test_analyze_missing_replaygain():
-    old = ReplayGainAnalyzer.REPLAYGAIN_EXECUTABLE
-    ReplayGainAnalyzer.REPLAYGAIN_EXECUTABLE = "foobar"
-    ReplayGainAnalyzer.analyze(str(FILES[0].path), dict())
-    ReplayGainAnalyzer.REPLAYGAIN_EXECUTABLE = old
+    with patch(
+        "libretime_analyzer.steps.analyze_replaygain.REPLAYGAIN_EXECUTABLE",
+        "foobar",
+    ):
+        analyze_replaygain(str(FILES[0].path), dict())
 
 
 def test_analyze_invalid_filepath():
