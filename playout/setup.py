@@ -29,7 +29,7 @@ setup(
         "console_scripts": [
             "libretime-playout=libretime_playout.main:cli",
             "libretime-liquidsoap=libretime_liquidsoap.main:cli",
-            "libretime-playout-notify=libretime_playout.notify.main:run",
+            "libretime-playout-notify=libretime_playout.notify.main:cli",
         ]
     },
     python_requires=">=3.6",
