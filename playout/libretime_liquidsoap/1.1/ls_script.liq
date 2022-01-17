@@ -217,9 +217,7 @@ def make_scheduled_play_unavailable()
 end
 
 def update_source_status(sourcename, status) =
-    command = "timeout --signal=KILL 45 libretime-playout-notify --source-name=#{sourcename} --source-status=#{status} &"
-    system(command)
-    log(command)
+    gateway("live '#{sourcename}' '#{status}'")
 end
 
 def live_dj_connect(header) =
@@ -442,7 +440,4 @@ if s4_enable == true then
                 s4_connected, s4_description, s4_channels)
 end
 
-
-command = "timeout --signal=KILL 45 libretime-playout-notify --liquidsoap-started &"
-log(command)
-system(command)
+gateway("started")

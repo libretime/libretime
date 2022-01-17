@@ -12,176 +12,92 @@ Main case:
    media id from it, and then calls back to the API to tell about it about it.
 
 """
-
-import json
-import sys
-import traceback
-from optparse import OptionParser
 from pathlib import Path
+from typing import Optional
 
-# additional modules (should be checked)
-from configobj import ConfigObj
-
-# custom imports
-# from util import *
-from libretime_api_client import version1 as api_client
-from libretime_shared.logging import INFO, setup_logger
+import click
+from libretime_api_client.version1 import AirtimeApiClient
+from libretime_shared.cli import cli_logging_options
+from libretime_shared.logging import level_from_name, setup_logger
 from loguru import logger
 
-# TODO: Get log settings from cli/env variables
-DEFAULT_LOG_LEVEL = INFO
-DEFAULT_LOG_FILEPATH = Path("/var/log/libretime/playout-notify.log")
 
-setup_logger(DEFAULT_LOG_LEVEL, DEFAULT_LOG_FILEPATH)
-
-# help screeen / info
-usage = "%prog [options]" + " - notification gateway"
-parser = OptionParser(usage=usage)
-
-# Options
-parser.add_option(
-    "-d",
-    "--data",
-    help="Pass JSON data from Liquidsoap into this script.",
-    metavar="data",
-)
-parser.add_option(
-    "-m",
-    "--media-id",
-    help="ID of the file that is currently playing.",
-    metavar="media_id",
-)
-parser.add_option(
-    "-e",
-    "--error",
-    action="store",
-    dest="error",
-    type="string",
-    help="Liquidsoap error msg.",
-    metavar="error_msg",
-)
-parser.add_option("-s", "--stream-id", help="ID stream", metavar="stream_id")
-parser.add_option(
-    "-c",
-    "--connect",
-    help="Liquidsoap connected",
-    action="store_true",
-    metavar="connect",
-)
-parser.add_option(
-    "-t",
-    "--time",
-    help="Liquidsoap boot up time",
-    action="store",
-    dest="time",
-    metavar="time",
-    type="string",
-)
-parser.add_option(
-    "-x", "--source-name", help="source connection name", metavar="source_name"
-)
-parser.add_option(
-    "-y", "--source-status", help="source connection status", metavar="source_status"
-)
-parser.add_option(
-    "-w",
-    "--webstream",
-    help="JSON metadata associated with webstream",
-    metavar="json_data",
-)
-parser.add_option(
-    "-n",
-    "--liquidsoap-started",
-    help="notify liquidsoap started",
-    metavar="json_data",
-    action="store_true",
-    default=False,
-)
+def api_client():
+    return AirtimeApiClient(logger=logger)
 
 
-# parse options
-(options, args) = parser.parse_args()
-
-# need to wait for Python 2.7 for this..
-# logging.captureWarnings(True)
-
-# loading config file
-try:
-    config = ConfigObj("/etc/airtime/airtime.conf")
-
-except Exception as e:
-    logger.error("Error loading config file: %s", e)
-    sys.exit()
+@click.group()
+@cli_logging_options
+def cli(log_level: str, log_filepath: Optional[Path]):
+    """
+    A gateway between Liquidsoap and the API.
+    """
+    setup_logger(level_from_name(log_level), log_filepath)
 
 
-class Notify:
-    def __init__(self):
-        self.api_client = api_client.AirtimeApiClient(logger=logger)
+@cli.command()
+@click.argument("media_id")
+def media(media_id):
+    """
+    Notify currently playing media.
 
-    def notify_liquidsoap_started(self):
-        logger.debug("Notifying server that Liquidsoap has started")
-        self.api_client.notify_liquidsoap_started()
-
-    def notify_media_start_playing(self, media_id):
-        logger.debug("#################################################")
-        logger.debug("# Calling server to update about what's playing #")
-        logger.debug("#################################################")
-        response = self.api_client.notify_media_item_start_playing(media_id)
-        logger.debug("Response: " + json.dumps(response))
-
-    # @pram time: time that LS started
-    def notify_liquidsoap_status(self, msg, stream_id, time):
-        logger.info("#################################################")
-        logger.info("# Calling server to update liquidsoap status    #")
-        logger.info("#################################################")
-        logger.info("msg = " + str(msg))
-        self.api_client.notify_liquidsoap_status(msg, stream_id, time)
-
-    def notify_source_status(self, source_name, status):
-        logger.debug("#################################################")
-        logger.debug("# Calling server to update source status        #")
-        logger.debug("#################################################")
-        logger.debug("msg = " + str(source_name) + " : " + str(status))
-        response = self.api_client.notify_source_status(source_name, status)
-        logger.debug("Response: " + json.dumps(response))
-
-    def notify_webstream_data(self, data, media_id):
-        logger.debug("#################################################")
-        logger.debug("# Calling server to update webstream data       #")
-        logger.debug("#################################################")
-        self.api_client.notify_webstream_data(data, media_id)
-
-    def run_with_options(self, options):
-        if options.error and options.stream_id:
-            self.notify_liquidsoap_status(
-                options.error, options.stream_id, options.time
-            )
-        elif options.connect and options.stream_id:
-            self.notify_liquidsoap_status("OK", options.stream_id, options.time)
-        elif options.source_name and options.source_status:
-            self.notify_source_status(options.source_name, options.source_status)
-        elif options.webstream:
-            self.notify_webstream_data(options.webstream, options.media_id)
-        elif options.media_id:
-            self.notify_media_start_playing(options.media_id)
-        elif options.liquidsoap_started:
-            self.notify_liquidsoap_started()
-        else:
-            logger.debug(
-                "Unrecognized option in options({}). Doing nothing".format(options)
-            )
+    Replaces: notify --media-id=#{m['schedule_table_id']}
+    """
+    logger.info(f"Sending currently playing media id '{media_id}'")
+    api_client().notify_media_item_start_playing(media_id)
 
 
-def run():
-    print()
-    print("#########################################")
-    print("#           *** pypo  ***               #")
-    print("#     pypo notification gateway         #")
-    print("#########################################")
+@cli.command()
+@click.argument("media_id")
+@click.argument("data")
+def webstream(media_id, data):
+    """
+    Notify currently playing webstream.
 
-    # initialize
-    try:
-        n = Notify()
-        n.run_with_options(options)
-    except Exception as e:
-        print(traceback.format_exc())
+    Replaces: notify --webstream='#{json_str}' --media-id=#{!current_dyn_id}
+    """
+    logger.info(f"Sending currently playing webstream '{media_id}' data '{data}'")
+    api_client().notify_webstream_data(data, media_id)
+
+
+@cli.command()
+@click.argument("name")
+@click.argument("status")
+def live(name, status):
+    """
+    Notify currently playing live input.
+
+    Replaces: notify --source-name=#{sourcename} --source-status=#{status}
+    """
+    logger.info(f"Sending currently playing live source '{name}' status '{status}'")
+    api_client().notify_source_status(name, status)
+
+
+@cli.command()
+@click.argument("stream_id")
+@click.argument("time")
+@click.option("--error", help="Error message if any occurred.")
+def stream(stream_id, time, error):
+    """
+    Notify about output stream status.
+
+    Replaces: notify --error='#{msg}' --stream-id=#{stream} --time=#{!time}
+    Replaces: notify --connect --stream-id=#{stream} --time=#{!time}
+    """
+    status = "OK"
+    if error is not None:
+        status = error
+
+    logger.info(f"Sending output stream '{stream_id}' status '{status}'")
+    api_client().notify_liquidsoap_status(status, stream_id, time)
+
+
+@cli.command()
+def started():
+    """
+    Notify liquidsoap startup status.
+
+    Replaces: notify --liquidsoap-started
+    """
+    logger.debug("Notifying server that Liquidsoap has started")
+    api_client().notify_liquidsoap_started()
