@@ -6,14 +6,9 @@ from unittest import mock
 
 import pytest
 
-from libretime_analyzer.filemover_analyzer import FileMoverAnalyzer
+from libretime_analyzer.steps.organise_file import organise_file
 
-from .conftest import AUDIO_FILENAME
-
-
-def test_analyze():
-    with pytest.raises(Exception):
-        FileMoverAnalyzer.analyze("foo", dict())
+from ..conftest import AUDIO_FILENAME
 
 
 @pytest.mark.parametrize(
@@ -27,11 +22,11 @@ def test_analyze():
 )
 def test_move_wrong_params(params, exception):
     with pytest.raises(exception):
-        FileMoverAnalyzer.move(*params)
+        organise_file(*params)
 
 
-def test_move(src_dir, dest_dir):
-    FileMoverAnalyzer.move(
+def test_organise_file(src_dir, dest_dir):
+    organise_file(
         os.path.join(src_dir, AUDIO_FILENAME),
         dest_dir,
         AUDIO_FILENAME,
@@ -40,8 +35,8 @@ def test_move(src_dir, dest_dir):
     assert os.path.exists(os.path.join(dest_dir, AUDIO_FILENAME))
 
 
-def test_move_samefile(src_dir):
-    FileMoverAnalyzer.move(
+def test_organise_file_samefile(src_dir):
+    organise_file(
         os.path.join(src_dir, AUDIO_FILENAME),
         src_dir,
         AUDIO_FILENAME,
@@ -52,11 +47,11 @@ def test_move_samefile(src_dir):
 
 def import_and_restore(src_dir, dest_dir) -> dict:
     """
-    Small helper to test the FileMoverAnalyzer.move function.
+    Small helper to test the organise_file function.
     Move the file and restore it back to it's origine.
     """
     # Import the file
-    metadata = FileMoverAnalyzer.move(
+    metadata = organise_file(
         os.path.join(src_dir, AUDIO_FILENAME),
         dest_dir,
         AUDIO_FILENAME,
@@ -88,7 +83,7 @@ def test_move_triplicate_file(src_dir, dest_dir):
     # Here we use mock to patch out the time.localtime() function so that it
     # always returns the same value. This allows us to consistently simulate this test cases
     # where the last two of the three files are imported at the same time as the timestamp.
-    with mock.patch("libretime_analyzer.filemover_analyzer.time") as mock_time:
+    with mock.patch("libretime_analyzer.steps.organise_file.time") as mock_time:
         mock_time.localtime.return_value = time.localtime()  # date(2010, 10, 8)
         mock_time.side_effect = time.time
 
@@ -113,7 +108,7 @@ def test_move_triplicate_file(src_dir, dest_dir):
 def test_move_bad_permissions_dest_dir(src_dir):
     with pytest.raises(OSError):
         # /sys is using sysfs on Linux, which is unwritable
-        FileMoverAnalyzer.move(
+        organise_file(
             os.path.join(src_dir, AUDIO_FILENAME),
             "/sys/foobar",
             AUDIO_FILENAME,

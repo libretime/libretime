@@ -7,7 +7,7 @@ import time
 import pika
 from loguru import logger
 
-from .analyzer_pipeline import AnalyzerPipeline
+from .pipeline import Pipeline
 from .status_reporter import StatusReporter
 
 EXCHANGE = "airtime-uploads"
@@ -265,7 +265,7 @@ class MessageListener:
 
         q = queue.Queue()
         try:
-            AnalyzerPipeline.run_analysis(
+            Pipeline.run_analysis(
                 q,
                 audio_file_path,
                 import_directory,
@@ -276,7 +276,7 @@ class MessageListener:
             metadata = q.get()
         except Exception as e:
             logger.error("Analyzer pipeline exception: %s" % str(e))
-            metadata["import_status"] = AnalyzerPipeline.IMPORT_STATUS_FAILED
+            metadata["import_status"] = Pipeline.IMPORT_STATUS_FAILED
 
         # Ensure our queue doesn't fill up and block due to unexpected behaviour. Defensive code.
         while not q.empty():

@@ -1,12 +1,14 @@
+from unittest.mock import patch
+
 import distro
 import pytest
 
-from libretime_analyzer.playability_analyzer import (
-    PlayabilityAnalyzer,
+from libretime_analyzer.steps.analyze_playability import (
     UnplayableFileError,
+    analyze_playability,
 )
 
-from .fixtures import FILE_INVALID_DRM, FILES, Fixture
+from ..fixtures import FILE_INVALID_DRM, FILES, Fixture
 
 
 @pytest.mark.parametrize(
@@ -14,14 +16,15 @@ from .fixtures import FILE_INVALID_DRM, FILES, Fixture
     map(lambda i: str(i.path), FILES),
 )
 def test_analyze(filepath):
-    PlayabilityAnalyzer.analyze(filepath, dict())
+    analyze_playability(filepath, dict())
 
 
 def test_analyze_missing_liquidsoap():
-    old = PlayabilityAnalyzer.LIQUIDSOAP_EXECUTABLE
-    PlayabilityAnalyzer.LIQUIDSOAP_EXECUTABLE = "foobar"
-    PlayabilityAnalyzer.analyze(str(FILES[0].path), dict())
-    PlayabilityAnalyzer.LIQUIDSOAP_EXECUTABLE = old
+    with patch(
+        "libretime_analyzer.steps.analyze_playability.LIQUIDSOAP_EXECUTABLE",
+        "foobar",
+    ):
+        analyze_playability(str(FILES[0].path), dict())
 
 
 def test_analyze_invalid_filepath():
