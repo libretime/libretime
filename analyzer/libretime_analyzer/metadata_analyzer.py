@@ -1,12 +1,11 @@
 import datetime
 import hashlib
-import logging
 import os
-import time
 import wave
 
 import magic
 import mutagen
+from loguru import logger
 
 from .analyzer import Analyzer
 
@@ -190,6 +189,6 @@ class MetadataAnalyzer(Analyzer):
             metadata["length_seconds"] = length_seconds
             metadata["cueout"] = metadata["length"]
         except wave.Error as ex:
-            logging.error("Invalid WAVE file: {}".format(str(ex)))
+            logger.error("Invalid WAVE file: {}".format(str(ex)))
             raise
         return metadata

@@ -1,6 +1,7 @@
-import logging
 import re
 import subprocess
+
+from loguru import logger
 
 from .analyzer import Analyzer
 
@@ -34,13 +35,13 @@ class ReplayGainAnalyzer(Analyzer):
             metadata["replay_gain"] = float(replaygain)
 
         except OSError as e:  # replaygain was not found
-            logging.warning(
+            logger.warning(
                 "Failed to run: %s - %s. %s"
                 % (command[0], e.strerror, "Do you have python-rgain installed?")
             )
         except subprocess.CalledProcessError as e:  # replaygain returned an error code
-            logging.warning("%s %s %s", e.cmd, e.output, e.returncode)
+            logger.warning("%s %s %s", e.cmd, e.output, e.returncode)
         except Exception as e:
-            logging.warning(e)
+            logger.warning(e)
 
         return metadata

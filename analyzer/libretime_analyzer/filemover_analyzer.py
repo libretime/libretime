@@ -1,9 +1,10 @@
 import errno
-import logging
 import os
 import shutil
 import time
 import uuid
+
+from loguru import logger
 
 from .analyzer import Analyzer
 
@@ -111,7 +112,7 @@ class FileMoverAnalyzer(Analyzer):
         mkdir_p(os.path.dirname(final_file_path))
 
         # Move the file into its final destination directory
-        logging.debug("Moving %s to %s" % (audio_file_path, final_file_path))
+        logger.debug("Moving %s to %s" % (audio_file_path, final_file_path))
         shutil.move(audio_file_path, final_file_path)
 
         metadata["full_path"] = final_file_path

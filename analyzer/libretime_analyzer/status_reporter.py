@@ -1,6 +1,5 @@
 import collections
 import json
-import logging
 import pickle
 import queue
 import threading
@@ -9,6 +8,7 @@ import traceback
 from urllib.parse import urlparse
 
 import requests
+from loguru import logger
 
 # Disable urllib3 warnings because these can cause a rare deadlock due to Python 2's crappy internal non-reentrant locking
 # around POSIX stuff. See SAAS-714. The hasattr() is for compatibility with older versions of requests.
@@ -62,7 +62,7 @@ def process_http_requests(ipc_queue, http_retry_queue_path):
         # If we fail to unpickle a saved queue of failed HTTP requests, then we'll just log an error
         # and continue because those HTTP requests are lost anyways. The pickled file will be
         # overwritten the next time the analyzer is shut down too.
-        logging.error("Failed to unpickle %s. Continuing..." % http_retry_queue_path)
+        logger.error("Failed to unpickle %s. Continuing..." % http_retry_queue_path)
         pass
 
     while True:
@@ -93,7 +93,7 @@ def process_http_requests(ipc_queue, http_retry_queue_path):
                         request = retry_queue.popleft()
                         send_http_request(request, retry_queue)
 
-            logging.info("Shutting down status_reporter")
+            logger.info("Shutting down status_reporter")
             # Pickle retry_queue to disk so that we don't lose uploads if we're shut down while
             # while the web server is down or unreachable.
             with open(http_retry_queue_path, "wb") as pickle_file:
@@ -102,9 +102,9 @@ def process_http_requests(ipc_queue, http_retry_queue_path):
         except Exception as e:  # Terrible top-level exception handler to prevent the thread from dying, just in case.
             if shutdown:
                 return
-            logging.exception("Unhandled exception in StatusReporter")
-            logging.exception(e)
-            logging.info("Restarting StatusReporter thread")
+            logger.exception("Unhandled exception in StatusReporter")
+            logger.exception(e)
+            logger.info("Restarting StatusReporter thread")
             time.sleep(2)  # Throttle it
 
 
@@ -122,11 +122,11 @@ def send_http_request(picklable_request, retry_queue):
             prepared_request, timeout=StatusReporter._HTTP_REQUEST_TIMEOUT, verify=False
         )  # SNI is a pain in the ass
         r.raise_for_status()  # Raise an exception if there was an http error code returned
-        logging.info("HTTP request sent successfully.")
+        logger.info("HTTP request sent successfully.")
     except requests.exceptions.HTTPError as e:
         if e.response.status_code == 422:
             # Do no retry the request if there was a metadata validation error
-            logging.error(
+            logger.error(
                 "HTTP request failed due to an HTTP exception. Exception was: %s"
                 % str(e)
             )
@@ -134,7 +134,7 @@ def send_http_request(picklable_request, retry_queue):
             # The request failed with an error 500 probably, so let's check if Airtime and/or
             # the web server are broken. If not, then our request was probably causing an
             # error 500 in the media API (ie. a bug), so there's no point in retrying it.
-            logging.error("HTTP request failed. Exception was: %s" % str(e))
+            logger.error("HTTP request failed. Exception was: %s" % str(e))
             parsed_url = urlparse(e.response.request.url)
             if is_web_server_broken(parsed_url.scheme + "://" + parsed_url.netloc):
                 # If the web server is having problems, retry the request later:
@@ -143,13 +143,13 @@ def send_http_request(picklable_request, retry_queue):
                 # You will have to find these bad requests in logs or you'll be
                 # notified by sentry.
     except requests.exceptions.ConnectionError as e:
-        logging.error(
+        logger.error(
             "HTTP request failed due to a connection error. Retrying later. %s" % str(e)
         )
         retry_queue.append(picklable_request)  # Retry it later
     except Exception as e:
-        logging.error("HTTP request failed with unhandled exception. %s" % str(e))
-        logging.error(traceback.format_exc())
+        logger.error("HTTP request failed with unhandled exception. %s" % str(e))
+        logger.error(traceback.format_exc())
         # Don't put the request into the retry queue, just give up on this one.
         # I'm doing this to protect against us getting some pathological request
         # that breaks our code. I don't want us pickling data that potentially
@@ -198,7 +198,7 @@ class StatusReporter:
 
     @classmethod
     def stop_thread(self):
-        logging.info("Terminating status_reporter process")
+        logger.info("Terminating status_reporter process")
         # StatusReporter._http_thread.terminate() # Triggers SIGTERM on the child process
         StatusReporter._ipc_queue.put("shutdown")  # Special trigger
         StatusReporter._http_thread.join()
@@ -238,12 +238,12 @@ class StatusReporter:
         """
         # Encode the audio metadata as json and post it back to the callback_url
         put_payload = json.dumps(audio_metadata)
-        logging.debug("sending http put with payload: " + put_payload)
+        logger.debug("sending http put with payload: " + put_payload)
         r = requests.put(callback_url, data=put_payload,
                          auth=requests.auth.HTTPBasicAuth(api_key, ''),
                          timeout=StatusReporter._HTTP_REQUEST_TIMEOUT)
-        logging.debug("HTTP request returned status: " + str(r.status_code))
-        logging.debug(r.text) # log the response body
+        logger.debug("HTTP request returned status: " + str(r.status_code))
+        logger.debug(r.text) # log the response body
 
         #TODO: queue up failed requests and try them again later.
         r.raise_for_status() # Raise an exception if there was an http error code returned
@@ -259,12 +259,12 @@ class StatusReporter:
                 + type(import_status).__name__
             )
 
-        logging.debug("Reporting import failure to Airtime REST API...")
+        logger.debug("Reporting import failure to Airtime REST API...")
         audio_metadata = dict()
         audio_metadata["import_status"] = import_status
         audio_metadata["comment"] = reason  # hack attack
         put_payload = json.dumps(audio_metadata)
-        # logging.debug("sending http put with payload: " + put_payload)
+        # logger.debug("sending http put with payload: " + put_payload)
         """
         r = requests.put(callback_url, data=put_payload,
                          auth=requests.auth.HTTPBasicAuth(api_key, ''),
@@ -276,8 +276,8 @@ class StatusReporter:
             )
         )
         """
-        logging.debug("HTTP request returned status: " + str(r.status_code))
-        logging.debug(r.text) # log the response body
+        logger.debug("HTTP request returned status: " + str(r.status_code))
+        logger.debug(r.text) # log the response body
 
         #TODO: queue up failed requests and try them again later.
         r.raise_for_status() # raise an exception if there was an http error code returned
