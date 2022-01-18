@@ -33,7 +33,6 @@ def test_base_config(tmp_path: Path):
         environ,
         dict(
             LIBRETIME_API="invalid",
-            LIBRETIME_API_KEY="f3bf04fc",
             LIBRETIME_DATABASE="invalid",
             LIBRETIME_DATABASE_PORT="8888",
             WRONGPREFIX_API_KEY="invalid",
