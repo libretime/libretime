@@ -120,6 +120,7 @@ jobs:
           - analyzer
           - api
           - api_client
+          - console
           - playout
           - shared
           - worker
