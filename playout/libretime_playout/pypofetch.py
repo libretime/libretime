@@ -2,13 +2,13 @@ import copy
 import json
 import mimetypes
 import os
-from pathlib import Path
 import signal
 import subprocess
 import sys
 import telnetlib
 import time
 from datetime import datetime
+from pathlib import Path
 from queue import Empty
 from subprocess import PIPE, Popen
 from threading import Thread, Timer
@@ -18,7 +18,7 @@ from libretime_api_client import version2 as api_client
 from loguru import logger
 
 from . import pure
-from .config import CACHE_DIR
+from .config import CACHE_DIR, Config
 from .timeout import ls_timeout
 
 
@@ -34,7 +34,13 @@ POLL_INTERVAL = 400
 
 class PypoFetch(Thread):
     def __init__(
-        self, pypoFetch_q, pypoPush_q, media_q, telnet_lock, pypo_liquidsoap, config
+        self,
+        pypoFetch_q,
+        pypoPush_q,
+        media_q,
+        telnet_lock,
+        pypo_liquidsoap,
+        config: Config,
     ):
         Thread.__init__(self)
 
@@ -186,7 +192,8 @@ class PypoFetch(Thread):
             while True:
                 try:
                     tn = telnetlib.Telnet(
-                        self.config["ls_host"], self.config["ls_port"]
+                        self.config.playout.liquidsoap_host,
+                        self.config.playout.liquidsoap_port,
                     )
                     tn.write("exit\n".encode("utf-8"))
                     tn.read_all()
@@ -219,7 +226,10 @@ class PypoFetch(Thread):
 
         try:
             self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(self.config["ls_host"], self.config["ls_port"])
+            tn = telnetlib.Telnet(
+                self.config.playout.liquidsoap_host,
+                self.config.playout.liquidsoap_port,
+            )
             # update the boot up time of Liquidsoap. Since Liquidsoap is not restarting,
             # we are manually adjusting the bootup time variable so the status msg will get
             # updated.
@@ -266,7 +276,10 @@ class PypoFetch(Thread):
         # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
         try:
             self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(self.config["ls_host"], self.config["ls_port"])
+            tn = telnetlib.Telnet(
+                self.config.playout.liquidsoap_host,
+                self.config.playout.liquidsoap_port,
+            )
             command = ("vars.stream_metadata_type %s\n" % stream_format).encode("utf-8")
             logger.info(command)
             tn.write(command)
@@ -283,7 +296,10 @@ class PypoFetch(Thread):
         # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
         try:
             self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(self.config["ls_host"], self.config["ls_port"])
+            tn = telnetlib.Telnet(
+                self.config.playout.liquidsoap_host,
+                self.config.playout.liquidsoap_port,
+            )
             command = ("vars.default_dj_fade %s\n" % fade).encode("utf-8")
             logger.info(command)
             tn.write(command)
@@ -301,7 +317,10 @@ class PypoFetch(Thread):
         try:
             try:
                 self.telnet_lock.acquire()
-                tn = telnetlib.Telnet(self.config["ls_host"], self.config["ls_port"])
+                tn = telnetlib.Telnet(
+                    self.config.playout.liquidsoap_host,
+                    self.config.playout.liquidsoap_port,
+                )
                 command = ("vars.station_name %s\n" % station_name).encode("utf-8")
                 logger.info(command)
                 tn.write(command)

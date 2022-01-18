@@ -42,6 +42,7 @@ setup(
         "packaging",
         "pytz",
         "requests",
+        "typing-extensions",
     ],
     extras_require={
         "dev": [
