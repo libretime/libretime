@@ -24,6 +24,7 @@ from libretime_shared.logging import level_from_name, setup_logger
 from loguru import logger
 
 from . import pure
+from .config import CACHE_DIR, RECORD_DIR
 from .listenerstat import ListenerStat
 from .pypofetch import PypoFetch
 from .pypofile import PypoFile
@@ -34,13 +35,6 @@ from .recorder import Recorder
 from .timeout import ls_timeout
 
 LIQUIDSOAP_MIN_VERSION = "1.1.1"
-
-PYPO_HOME = "/var/tmp/airtime/pypo/"
-
-
-def configure_environment():
-    os.environ["HOME"] = PYPO_HOME
-    os.environ["TERM"] = "xterm"
 
 
 class Global:
@@ -117,13 +111,17 @@ def cli(log_level: str, log_filepath: Optional[Path]):
     """
     setup_logger(level_from_name(log_level), log_filepath)
 
-    configure_environment()
-
     # loading config file
     try:
         config = ConfigObj("/etc/airtime/airtime.conf")
     except Exception as e:
         logger.error("Error loading config file: %s", e)
+
+    try:
+        for dir_path in [CACHE_DIR, RECORD_DIR]:
+            dir_path.mkdir(exist_ok=True)
+    except OSError as exception:
+        logger.error(exception)
         sys.exit(1)
 
     logger.info("###########################################")

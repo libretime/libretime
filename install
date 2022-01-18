@@ -1052,6 +1052,7 @@ verbose "...Done"
 
 verbose "\n * Installing playout and liquidsoap..."
 loudCmd "$pip_cmd install ${AIRTIMEROOT}/playout"
+mkdir_and_chown "${web_user}:${web_user}" "${LIBRETIME_WORKING_DIR}/playout"
 loudCmd "mkdir -p /var/log/airtime/{pypo,pypo-liquidsoap} /var/tmp/airtime/pypo/{cache,files,tmp} /var/tmp/airtime/show-recorder/"
 loudCmd "chown -R ${web_user}:${web_user} /var/log/airtime/{pypo,pypo-liquidsoap} /var/tmp/airtime/pypo/{cache,files,tmp} /var/tmp/airtime/show-recorder/"
 systemInitInstall libretime-liquidsoap "$web_user"
@@ -1076,8 +1077,7 @@ verbose "...Done"
 
 verbose "\n * Installing libretime-analyzer..."
 loudCmd "$pip_cmd install ${AIRTIMEROOT}/analyzer"
-loudCmd "mkdir -p ${LIBRETIME_WORKING_DIR}/analyzer"
-loudCmd "chown -R ${web_user}:${web_user} ${LIBRETIME_WORKING_DIR}/analyzer"
+mkdir_and_chown "${web_user}:${web_user}" "${LIBRETIME_WORKING_DIR}/analyzer"
 systemInitInstall libretime-analyzer "$web_user"
 verbose "...Done"
 

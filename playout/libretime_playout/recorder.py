@@ -16,6 +16,8 @@ from configobj import ConfigObj
 from libretime_api_client.version1 import AirtimeApiClient as AirtimeApiClientV1
 from loguru import logger
 
+from libretime_playout.config import RECORD_DIR
+
 
 def api_client():
     """
@@ -74,7 +76,7 @@ class ShowRecorder(Thread):
         else:
             filetype = "ogg"
 
-        joined_path = os.path.join(config["pypo"]["base_recorded_files"], filename)
+        joined_path = os.path.join(RECORD_DIR, filename)
         filepath = "%s.%s" % (joined_path, filetype)
 
         br = config["pypo"]["record_bitrate"]

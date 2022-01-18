@@ -24,7 +24,6 @@ class PypoFile(Thread):
         Thread.__init__(self)
         self.media_queue = schedule_queue
         self.media = None
-        self.cache_dir = os.path.join(config["cache_dir"], "scheduler")
         self._config = self.read_config_file(CONFIG_PATH)
         self.api_client = api_client.AirtimeApiClient()
 

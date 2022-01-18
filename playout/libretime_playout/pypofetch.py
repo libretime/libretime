@@ -2,6 +2,7 @@ import copy
 import json
 import mimetypes
 import os
+from pathlib import Path
 import signal
 import subprocess
 import sys
@@ -17,6 +18,7 @@ from libretime_api_client import version2 as api_client
 from loguru import logger
 
 from . import pure
+from .config import CACHE_DIR
 from .timeout import ls_timeout
 
 
@@ -52,20 +54,8 @@ class PypoFetch(Thread):
 
         self.pypo_liquidsoap = pypo_liquidsoap
 
-        self.cache_dir = os.path.join(config["cache_dir"], "scheduler")
+        self.cache_dir = CACHE_DIR
         logger.debug("Cache dir %s", self.cache_dir)
-
-        try:
-            if not os.path.isdir(dir):
-                """
-                We get here if path does not exist, or path does exist but
-                is a file. We are not handling the second case, but don't
-                think we actually care about handling it.
-                """
-                logger.debug("Cache dir does not exist. Creating...")
-                os.makedirs(dir)
-        except Exception as e:
-            pass
 
         self.schedule_data = []
         logger.info("PypoFetch: init complete")
