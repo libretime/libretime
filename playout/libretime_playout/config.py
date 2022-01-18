@@ -7,6 +7,9 @@ from typing_extensions import Literal
 CACHE_DIR = Path.cwd() / "scheduler"
 RECORD_DIR = Path.cwd() / "recorder"
 
+PUSH_INTERVAL = 2
+POLL_INTERVAL = 400
+
 
 class PlayoutConfig(BaseModel):
     liquidsoap_host: str = "localhost"
