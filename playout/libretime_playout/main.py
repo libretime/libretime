@@ -2,8 +2,6 @@
 Python part of radio playout (pypo)
 """
 
-
-import os
 import re
 import signal
 import sys

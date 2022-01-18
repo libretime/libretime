@@ -1,17 +1,14 @@
 import hashlib
 import os
-import shutil
 import stat
-import sys
 import time
 import traceback
 from queue import Empty
 from threading import Thread
 
-import requests
 from libretime_api_client import version2 as api_client
 from loguru import logger
-from requests.exceptions import ConnectionError, HTTPError, Timeout
+from requests.exceptions import ConnectionError, Timeout
 
 
 class PypoFile(Thread):

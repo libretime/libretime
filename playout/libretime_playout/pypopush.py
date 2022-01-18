@@ -1,19 +1,15 @@
-import calendar
 import math
-import os
-import sys
 import telnetlib
 import time
 import traceback
-from datetime import datetime, timedelta
-from queue import Empty, Queue
+from datetime import datetime
+from queue import Queue
 from threading import Thread
 
 from libretime_api_client import version1 as api_client
 from loguru import logger
 
 from .config import PUSH_INTERVAL, Config
-from .pypofetch import PypoFetch
 from .pypoliqqueue import PypoLiqQueue
 from .timeout import ls_timeout
 

@@ -1,17 +1,12 @@
 import json
-import os
-import sys
 import time
 import traceback
 from threading import Thread
-
-from amqp.exceptions import AMQPError
 
 # For RabbitMQ
 from kombu.connection import Connection
 from kombu.messaging import Exchange, Queue
 from kombu.mixins import ConsumerMixin
-from kombu.simple import SimpleQueue
 from libretime_shared.config import RabbitMQConfig
 from loguru import logger
 

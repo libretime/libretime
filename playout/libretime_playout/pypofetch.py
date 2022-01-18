@@ -8,7 +8,6 @@ import sys
 import telnetlib
 import time
 from datetime import datetime
-from pathlib import Path
 from queue import Empty
 from subprocess import PIPE, Popen
 from threading import Thread, Timer

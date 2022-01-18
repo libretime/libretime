@@ -1,6 +1,4 @@
-import re
-
-from packaging.version import Version, parse
+from packaging.version import parse
 
 
 def version_cmp(version1, version2):

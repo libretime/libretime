@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 from loguru import logger
 
 from . import eventtypes
-from .pypofetch import PypoFetch
 from .telnetliquidsoap import TelnetLiquidsoap
 
 

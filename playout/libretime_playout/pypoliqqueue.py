@@ -1,6 +1,5 @@
 import signal
 import sys
-import time
 import traceback
 from collections import deque
 from datetime import datetime

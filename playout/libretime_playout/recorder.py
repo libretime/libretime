@@ -4,7 +4,6 @@ import math
 import os
 import re
 import signal
-import sys
 import time
 import traceback
 from subprocess import PIPE, Popen
