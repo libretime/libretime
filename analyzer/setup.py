@@ -19,7 +19,10 @@ setup(
         "Source Code": "https://github.com/libretime/libretime",
     },
     license="AGPLv3",
-    packages=["libretime_analyzer"],
+    packages=[
+        "libretime_analyzer",
+        "libretime_analyzer.steps",
+    ],
     entry_points={
         "console_scripts": [
             "libretime-analyzer=libretime_analyzer.main:cli",
