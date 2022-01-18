@@ -15,7 +15,7 @@ import pytz
 from libretime_api_client.version1 import AirtimeApiClient as AirtimeApiClientV1
 from loguru import logger
 
-from libretime_playout.config import RECORD_DIR, Config
+from libretime_playout.config import PUSH_INTERVAL, RECORD_DIR, Config
 
 
 def api_client():
@@ -43,9 +43,6 @@ def getDateTimeObj(time):
     return datetime.datetime(
         date[0], date[1], date[2], my_time[0], my_time[1], my_time[2], 0, None
     )
-
-
-PUSH_INTERVAL = 2
 
 
 class ShowRecorder(Thread):
