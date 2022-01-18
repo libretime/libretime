@@ -9,10 +9,10 @@ from datetime import datetime, timedelta
 from queue import Empty, Queue
 from threading import Thread
 
-from configobj import ConfigObj
 from libretime_api_client import version1 as api_client
 from loguru import logger
 
+from .config import Config
 from .pypofetch import PypoFetch
 from .pypoliqqueue import PypoLiqQueue
 from .timeout import ls_timeout
@@ -29,7 +29,7 @@ def is_file(media_item):
 
 
 class PypoPush(Thread):
-    def __init__(self, q, telnet_lock, pypo_liquidsoap, config):
+    def __init__(self, q, telnet_lock, pypo_liquidsoap, config: Config):
         Thread.__init__(self)
         self.api_client = api_client.AirtimeApiClient()
         self.queue = q
@@ -119,7 +119,10 @@ class PypoPush(Thread):
     def stop_web_stream_all(self):
         try:
             self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(self.config["LS_HOST"], self.config["LS_PORT"])
+            tn = telnetlib.Telnet(
+                self.config.playout.liquidsoap_host,
+                self.config.playout.liquidsoap_port,
+            )
 
             # msg = 'dynamic_source.read_stop_all xxx\n'
             msg = "http.stop\n"

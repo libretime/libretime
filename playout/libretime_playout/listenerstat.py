@@ -11,12 +11,14 @@ import defusedxml.minidom
 from libretime_api_client import version1 as api_client
 from loguru import logger
 
+from .config import Config
+
 
 class ListenerStat(Thread):
 
     HTTP_REQUEST_TIMEOUT = 30  # 30 second HTTP request timeout
 
-    def __init__(self, config):
+    def __init__(self, config: Config):
         Thread.__init__(self)
         self.config = config
         self.api_client = api_client.AirtimeApiClient()
