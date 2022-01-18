@@ -33,3 +33,7 @@ tarball: VERSION
 		--exclude legacy/vendor/simplepie/simplepie/tests \
 		libretime
 	mv ../libretime-*.tar.gz .
+
+# Only clean subdirs
+clean:
+	git clean -xdf */
