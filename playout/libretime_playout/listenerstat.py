@@ -1,6 +1,5 @@
 import base64
 import time
-import traceback
 import urllib.error
 import urllib.parse
 import urllib.request

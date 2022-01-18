@@ -8,7 +8,7 @@ from libretime_shared.logging import TRACE, setup_logger
 from loguru import logger
 
 from .pypoliqqueue import PypoLiqQueue
-from .telnetliquidsoap import DummyTelnetLiquidsoap, TelnetLiquidsoap
+from .telnetliquidsoap import TelnetLiquidsoap
 
 
 def keyboardInterruptHandler(signum, frame):
