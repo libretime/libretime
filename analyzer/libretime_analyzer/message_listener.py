@@ -5,6 +5,7 @@ import signal
 import time
 
 import pika
+from libretime_shared.config import RabbitMQConfig
 from loguru import logger
 
 from .pipeline import Pipeline
@@ -56,24 +57,13 @@ QUEUE = "airtime-uploads"
 
 
 class MessageListener:
-    def __init__(self, rmq_config):
-        """Start listening for file upload notification messages
-        from RabbitMQ
-
-        Keyword arguments:
-            rmq_config: A ConfigParser object containing the [rabbitmq] configuration.
+    def __init__(self, config: RabbitMQConfig):
+        """
+        Start listening for file upload event messages from RabbitMQ.
         """
 
+        self.config = config
         self._shutdown = False
-
-        # Read the RabbitMQ connection settings from the rmq_config file
-        # The exceptions throw here by default give good error messages.
-        RMQ_CONFIG_SECTION = "rabbitmq"
-        self._host = rmq_config.get(RMQ_CONFIG_SECTION, "host")
-        self._port = rmq_config.getint(RMQ_CONFIG_SECTION, "port")
-        self._username = rmq_config.get(RMQ_CONFIG_SECTION, "user")
-        self._password = rmq_config.get(RMQ_CONFIG_SECTION, "password")
-        self._vhost = rmq_config.get(RMQ_CONFIG_SECTION, "vhost")
 
         # Set up a signal handler so we can shutdown gracefully
         # For some reason, this signal handler must be set up here. I'd rather
@@ -104,11 +94,12 @@ class MessageListener:
         """Connect to the RabbitMQ server and start listening for messages."""
         self._connection = pika.BlockingConnection(
             pika.ConnectionParameters(
-                host=self._host,
-                port=self._port,
-                virtual_host=self._vhost,
+                host=self.config.host,
+                port=self.config.port,
+                virtual_host=self.config.vhost,
                 credentials=pika.credentials.PlainCredentials(
-                    self._username, self._password
+                    self.config.user,
+                    self.config.password,
                 ),
             )
         )
