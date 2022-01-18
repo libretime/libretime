@@ -2,9 +2,9 @@ from pathlib import Path
 from typing import Optional
 
 import click
-from libretime_shared.app import AbstractApp
 from libretime_shared.cli import cli_config_options, cli_logging_options
 from libretime_shared.config import DEFAULT_ENV_PREFIX
+from libretime_shared.logging import level_from_name, setup_logger
 
 from .config import Config
 from .message_listener import MessageListener
@@ -34,33 +34,14 @@ def cli(
     """
     Run analyzer.
     """
-    Analyzer(
-        log_level=log_level,
-        log_filepath=log_filepath,
-        config_filepath=config_filepath,
-        retry_queue_filepath=retry_queue_filepath,
-    )
+    setup_logger(level_from_name(log_level), log_filepath)
+    config = Config(filepath=config_filepath)
 
+    # Start up the StatusReporter process
+    StatusReporter.start_thread(retry_queue_filepath)
 
-class Analyzer(AbstractApp):
-    name = "analyzer"
+    # Start listening for RabbitMQ messages telling us about newly
+    # uploaded files. This blocks until we receive a shutdown signal.
+    _msg_listener = MessageListener(config.rabbitmq)
 
-    def __init__(
-        self,
-        *,
-        config_filepath: Optional[Path],
-        retry_queue_filepath: Path,
-        **kwargs,
-    ):
-        super().__init__(**kwargs)
-
-        config = Config(filepath=config_filepath)
-
-        # Start up the StatusReporter process
-        StatusReporter.start_thread(retry_queue_filepath)
-
-        # Start listening for RabbitMQ messages telling us about newly
-        # uploaded files. This blocks until we receive a shutdown signal.
-        self._msg_listener = MessageListener(config.rabbitmq)
-
-        StatusReporter.stop_thread()
+    StatusReporter.stop_thread()
