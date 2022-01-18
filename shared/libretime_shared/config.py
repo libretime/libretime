@@ -1,4 +1,5 @@
 import sys
+from configparser import ConfigParser
 from os import environ
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -83,6 +84,12 @@ class BaseConfig(BaseModel):
     ) -> Dict[str, Any]:
         if filepath is None:
             return {}
+
+        # TODO: Remove ability to load ini files once yaml if fully supported.
+        if filepath.suffix == ".conf":
+            config = ConfigParser()
+            config.read_string(filepath.read_text(encoding="utf-8"))
+            return {s: dict(config.items(s)) for s in config.sections()}
 
         try:
             return safe_load(filepath.read_text(encoding="utf-8"))
