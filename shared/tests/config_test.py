@@ -4,13 +4,13 @@ from unittest import mock
 
 from pytest import mark, raises
 
-from libretime_shared.config import BaseConfig, Database
+from libretime_shared.config import BaseConfig, DatabaseConfig
 
 
 # pylint: disable=too-few-public-methods
 class FixtureConfig(BaseConfig):
     api_key: str
-    database: Database
+    database: DatabaseConfig
 
 
 FIXTURE_CONFIG_RAW = """

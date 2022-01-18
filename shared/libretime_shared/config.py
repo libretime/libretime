@@ -99,7 +99,7 @@ class BaseConfig(BaseModel):
 
 
 # pylint: disable=too-few-public-methods
-class Database(BaseModel):
+class DatabaseConfig(BaseModel):
     host: str = "localhost"
     port: int = 5432
     name: str = "libretime"
@@ -108,7 +108,7 @@ class Database(BaseModel):
 
 
 # pylint: disable=too-few-public-methods
-class RabbitMQ(BaseModel):
+class RabbitMQConfig(BaseModel):
     host: str = "localhost"
     port: int = 5672
     name: str = "libretime"

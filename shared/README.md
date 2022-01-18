@@ -19,15 +19,15 @@ Load your configuration using a subclass of `libretime_shared.config.BaseConfig`
 ```py
 from pydantic import BaseModel
 
-from libretime_shared.config import RabbitMQ, BaseConfig
+from libretime_shared.config import RabbitMQConfig, BaseConfig
 
-class Analyzer(BaseModel):
+class AnalyzerConfig(BaseModel):
     bpm_enabled: bool = False
     bpm_track_max_length: int
 
 class Config(BaseConfig):
-    rabbitmq: RabbitMQ
-    analyzer: Analyzer
+    rabbitmq: RabbitMQConfig
+    analyzer: AnalyzerConfig
 
 config = Config(filepath="/etc/libretime/config.yml")
 ```
