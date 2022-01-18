@@ -1,4 +1,5 @@
 from os import environ
+from pathlib import Path
 from unittest import mock
 
 from pytest import mark, raises
@@ -24,9 +25,9 @@ ignored: "ignored"
 """
 
 
-def test_base_config(tmpdir):
-    config_filepath = tmpdir.join("config.yml")
-    config_filepath.write(FIXTURE_CONFIG_RAW)
+def test_base_config(tmp_path: Path):
+    config_filepath = tmp_path / "config.yml"
+    config_filepath.write_text(FIXTURE_CONFIG_RAW)
 
     with mock.patch.dict(
         environ,
@@ -63,9 +64,9 @@ database
         (FIXTURE_CONFIG_RAW_MISSING, SystemExit),
     ],
 )
-def test_load_config_error(tmpdir, raw, exception):
-    config_filepath = tmpdir.join("config.yml")
-    config_filepath.write(raw)
+def test_load_config_error(tmp_path: Path, raw, exception):
+    config_filepath = tmp_path / "config.yml"
+    config_filepath.write_text(raw)
 
     with raises(exception):
         with mock.patch.dict(environ, {}):
