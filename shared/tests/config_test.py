@@ -67,6 +67,25 @@ def test_base_config_ini(tmp_path: Path):
         assert config.database.port == 6666
 
 
+# pylint: disable=too-few-public-methods
+class FixtureOptionalConfig(BaseConfig):
+    database = DatabaseConfig()
+
+
+def test_base_config_optional():
+    with mock.patch.dict(environ, dict()):
+        config = FixtureOptionalConfig()
+
+        assert config.database.host == "localhost"
+        assert config.database.port == 5432
+
+    with mock.patch.dict(environ, dict(LIBRETIME_DATABASE_HOST="changed")):
+        config = FixtureOptionalConfig()
+
+        assert config.database.host == "changed"
+        assert config.database.port == 5432
+
+
 FIXTURE_CONFIG_RAW_MISSING = """
 database:
     host: "localhost"
