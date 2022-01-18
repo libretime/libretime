@@ -294,6 +294,6 @@ class DatabaseSetup extends Setup
      */
     private function updateDjangoTables()
     {
-        shell_exec('LIBRETIME_CONF_FILE=/etc/airtime/airtime.conf.temp libretime-api migrate');
+        shell_exec('LIBRETIME_CONFIG_FILEPATH=/etc/airtime/airtime.conf.temp libretime-api migrate');
     }
 }
