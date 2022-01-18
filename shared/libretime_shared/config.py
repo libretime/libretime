@@ -62,11 +62,14 @@ class BaseConfig(BaseModel):
             env_name = (env_prefix + field.name).upper()
 
             if field.is_complex():
-                result[field.name] = self._get_fields_from_env(
+                children = self._get_fields_from_env(
                     env_name,
                     env_delimiter,
                     field.type_.__fields__,
                 )
+
+                if len(children) != 0:
+                    result[field.name] = children
             else:
                 if env_name in environ:
                     result[field.name] = environ[env_name]
