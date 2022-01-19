@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/LibreTime/libretime/issues\n"
 "POT-Creation-Date: 2021-10-15 19:56+0200\n"
-"PO-Revision-Date: 2021-12-11 19:50+0000\n"
-"Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
+"PO-Revision-Date: 2022-01-19 23:06+0000\n"
+"Last-Translator: ToldYouThat <itoldyouthat@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/libretime/legacy/"
 "tr/>\n"
 "Language: tr_TR\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.10-dev\n"
+"X-Generator: Weblate 4.11-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -195,7 +195,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:62
 msgid "Gujarati"
-msgstr ""
+msgstr "Guceratça"
 
 #: application/common/LocaleHelper.php:63
 msgid "Hausa"
@@ -231,11 +231,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:71
 msgid "Indonesian"
-msgstr ""
+msgstr "Endonezyaca"
 
 #: application/common/LocaleHelper.php:72
 msgid "Icelandic"
-msgstr ""
+msgstr "İzlandaca"
 
 #: application/common/LocaleHelper.php:73
 msgid "Italian"
@@ -251,11 +251,11 @@ msgstr "Japonca"
 
 #: application/common/LocaleHelper.php:76
 msgid "Yiddish"
-msgstr ""
+msgstr "Yidçe"
 
 #: application/common/LocaleHelper.php:77
 msgid "Javanese"
-msgstr ""
+msgstr "Cavaca"
 
 #: application/common/LocaleHelper.php:78
 msgid "Georgian"
