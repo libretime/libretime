@@ -69,6 +69,12 @@ generate  s2.flac s2-stereo.mp3        -ac 2   -acodec libmp3lame
 generate  s2.flac s2-stereo.ogg        -ac 2   -acodec libvorbis
 generate  s2.flac s2-jointstereo.mp3   -ac 2   -acodec libmp3lame    -joint_stereo 1
 
+# Generate sample 3
+generate  s3.flac s3-stereo.flac       -ac 2   -acodec flac
+generate  s3.flac s3-stereo.m4a        -ac 2   -acodec aac
+generate  s3.flac s3-stereo.mp3        -ac 2   -acodec libmp3lame
+generate  s3.flac s3-stereo.ogg        -ac 2   -acodec libvorbis
+
 # Tag sample 1
 tag metadata.txt  s1-mono.flac         s1-mono-tagged.flac
 tag metadata.txt  s1-mono.m4a          s1-mono-tagged.m4a
