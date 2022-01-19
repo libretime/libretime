@@ -110,7 +110,7 @@ def liquidsoap_startup_test(telnet_lock, ls_host, ls_port):
 
 
 @click.command()
-@cli_logging_options
+@cli_logging_options()
 def cli(log_level: str, log_filepath: Optional[Path]):
     """
     Run playout.

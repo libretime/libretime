@@ -27,7 +27,7 @@ def api_client():
 
 
 @click.group()
-@cli_logging_options
+@cli_logging_options()
 def cli(log_level: str, log_filepath: Optional[Path]):
     """
     A gateway between Liquidsoap and the API.
