@@ -587,7 +587,9 @@ msgstr ""
 
 #: application/common/UsabilityHints.php:69
 #, php-format
-msgid "It looks like you haven't uploaded any audio files yet. %sUpload a file now%s."
+msgid ""
+"It looks like you haven't uploaded any audio files yet. %sUpload a file now"
+"%s."
 msgstr ""
 
 #: application/common/UsabilityHints.php:76
@@ -596,27 +598,34 @@ msgstr ""
 
 #: application/common/UsabilityHints.php:80
 #, php-format
-msgid "It looks like you don't have any shows scheduled. %sCreate a show now%s."
+msgid ""
+"It looks like you don't have any shows scheduled. %sCreate a show now%s."
 msgstr ""
 
 #: application/common/UsabilityHints.php:89
-msgid "To start broadcasting, cancel the current linked show by clicking on it and selecting 'Cancel Show'."
+msgid ""
+"To start broadcasting, cancel the current linked show by clicking on it and "
+"selecting 'Cancel Show'."
 msgstr ""
 
 #: application/common/UsabilityHints.php:92
 #, php-format
 msgid ""
-"Linked shows need to be filled with tracks before it starts. To start broadcasting cancel the current linked show and schedule an unlinked show.\n"
+"Linked shows need to be filled with tracks before it starts. To start "
+"broadcasting cancel the current linked show and schedule an unlinked show.\n"
 "                    %sCreate an unlinked show now%s."
 msgstr ""
 
 #: application/common/UsabilityHints.php:96
-msgid "To start broadcasting, click on the current show and select 'Schedule Tracks'"
+msgid ""
+"To start broadcasting, click on the current show and select 'Schedule Tracks'"
 msgstr ""
 
 #: application/common/UsabilityHints.php:100
 #, php-format
-msgid "It looks like the current show needs more tracks. %sAdd tracks to your show now%s."
+msgid ""
+"It looks like the current show needs more tracks. %sAdd tracks to your show "
+"now%s."
 msgstr ""
 
 #: application/common/UsabilityHints.php:107
@@ -825,7 +834,8 @@ msgstr ""
 #: application/controllers/EmbeddablewidgetsController.php:26
 msgid ""
 "To configure and use the embeddable player you must:<br><br>\n"
-"            1. Enable at least one MP3, AAC, or OGG stream under Settings -> Streams<br>\n"
+"            1. Enable at least one MP3, AAC, or OGG stream under Settings -> "
+"Streams<br>\n"
 "            2. Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
 
@@ -947,7 +957,8 @@ msgid "Copy of %s"
 msgstr ""
 
 #: application/controllers/ListenerstatController.php:51
-msgid "Please make sure admin user/password is correct on Settings->Streams page."
+msgid ""
+"Please make sure admin user/password is correct on Settings->Streams page."
 msgstr ""
 
 #: application/controllers/LocaleController.php:27
@@ -1007,7 +1018,9 @@ msgid "A major update for your LibreTime installation is available."
 msgstr ""
 
 #: application/controllers/LocaleController.php:43
-msgid "Multiple major updates for LibreTime installation are available. Please upgrade as soon as possible."
+msgid ""
+"Multiple major updates for LibreTime installation are available. Please "
+"upgrade as soon as possible."
 msgstr ""
 
 #: application/controllers/LocaleController.php:45
@@ -1419,7 +1432,9 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:135
 #, php-format
-msgid "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"
+msgid ""
+"You are currently uploading files. %sGoing to another screen will cancel the "
+"upload process. %sAre you sure you want to leave the page?"
 msgstr ""
 
 #: application/controllers/LocaleController.php:137
@@ -1455,7 +1470,10 @@ msgid "Playlist shuffled"
 msgstr ""
 
 #: application/controllers/LocaleController.php:145
-msgid "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
+msgid ""
+"Airtime is unsure about the status of this file. This can happen when the "
+"file is on a remote drive that is unaccessible or the file is in a directory "
+"that isn't 'watched' anymore."
 msgstr ""
 
 #: application/controllers/LocaleController.php:147
@@ -1481,16 +1499,25 @@ msgid "Image must be one of jpg, jpeg, png, or gif"
 msgstr ""
 
 #: application/controllers/LocaleController.php:154
-msgid "A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show."
+msgid ""
+"A static smart block will save the criteria and generate the block content "
+"immediately. This allows you to edit and view it in the Library before "
+"adding it to a show."
 msgstr ""
 
 #: application/controllers/LocaleController.php:155
-msgid "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."
+msgid ""
+"A dynamic smart block will only save the criteria. The block content will "
+"get generated upon adding it to a show. You will not be able to view and "
+"edit the content in the Library."
 msgstr ""
 
 #: application/controllers/LocaleController.php:156
 #, php-format
-msgid "The desired block length will not be reached if %s cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
+msgid ""
+"The desired block length will not be reached if %s cannot find enough unique "
+"tracks to match your criteria. Enable this option if you wish to allow "
+"tracks to be added multiple times to the smart block."
 msgstr ""
 
 #: application/controllers/LocaleController.php:157
@@ -1619,7 +1646,9 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:181
 #, php-format
-msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
+msgid ""
+"Some stream types require extra configuration. Details about enabling %sAAC+ "
+"Support%s or %sOpus Support%s are provided."
 msgstr ""
 
 #: application/controllers/LocaleController.php:182
@@ -1641,7 +1670,12 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:186
 #, php-format
-msgid "If %s is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."
+msgid ""
+"If %s is behind a router or firewall, you may need to configure port "
+"forwarding and this field information will be incorrect. In this case you "
+"will need to manually update this field so it shows the correct host/port/"
+"mount that your DJ's need to connect to. The allowed range is between 1024 "
+"and 49151."
 msgstr ""
 
 #: application/controllers/LocaleController.php:187
@@ -1650,36 +1684,55 @@ msgid "For more details, please read the %s%s Manual%s"
 msgstr ""
 
 #: application/controllers/LocaleController.php:188
-msgid "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
+msgid ""
+"Check this option to enable metadata for OGG streams (stream metadata is the "
+"track title, artist, and show name that is displayed in an audio player). "
+"VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that "
+"has metadata information enabled: they will disconnect from the stream after "
+"every song. If you are using an OGG stream and your listeners do not require "
+"support for these audio players, then feel free to enable this option."
 msgstr ""
 
 #: application/controllers/LocaleController.php:189
-msgid "Check this box to automatically switch off Master/Show source upon source disconnection."
+msgid ""
+"Check this box to automatically switch off Master/Show source upon source "
+"disconnection."
 msgstr ""
 
 #: application/controllers/LocaleController.php:190
-msgid "Check this box to automatically switch on Master/Show source upon source connection."
+msgid ""
+"Check this box to automatically switch on Master/Show source upon source "
+"connection."
 msgstr ""
 
 #: application/controllers/LocaleController.php:191
-msgid "If your Icecast server expects a username of 'source', this field can be left blank."
+msgid ""
+"If your Icecast server expects a username of 'source', this field can be "
+"left blank."
 msgstr ""
 
 #: application/controllers/LocaleController.php:192
 #: application/controllers/LocaleController.php:202
-msgid "If your live streaming client does not ask for a username, this field should be 'source'."
+msgid ""
+"If your live streaming client does not ask for a username, this field should "
+"be 'source'."
 msgstr ""
 
 #: application/controllers/LocaleController.php:193
-msgid "WARNING: This will restart your stream and may cause a short dropout for your listeners!"
+msgid ""
+"WARNING: This will restart your stream and may cause a short dropout for "
+"your listeners!"
 msgstr ""
 
 #: application/controllers/LocaleController.php:194
-msgid "This is the admin username and password for Icecast/SHOUTcast to get listener statistics."
+msgid ""
+"This is the admin username and password for Icecast/SHOUTcast to get "
+"listener statistics."
 msgstr ""
 
 #: application/controllers/LocaleController.php:198
-msgid "Warning: You cannot change this field while the show is currently playing"
+msgid ""
+"Warning: You cannot change this field while the show is currently playing"
 msgstr ""
 
 #: application/controllers/LocaleController.php:199
@@ -1687,7 +1740,9 @@ msgid "No result found"
 msgstr ""
 
 #: application/controllers/LocaleController.php:200
-msgid "This follows the same security pattern for the shows: only users assigned to the show can connect."
+msgid ""
+"This follows the same security pattern for the shows: only users assigned to "
+"the show can connect."
 msgstr ""
 
 #: application/controllers/LocaleController.php:201
@@ -1703,11 +1758,16 @@ msgid "Warning: Shows cannot be re-linked"
 msgstr ""
 
 #: application/controllers/LocaleController.php:205
-msgid "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"
+msgid ""
+"By linking your repeating shows any media items scheduled in any repeat show "
+"will also get scheduled in the other repeat shows"
 msgstr ""
 
 #: application/controllers/LocaleController.php:206
-msgid "Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the Interface Timezone in your user settings."
+msgid ""
+"Timezone is set to the station timezone by default. Shows in the calendar "
+"will be displayed in your local time defined by the Interface Timezone in "
+"your user settings."
 msgstr ""
 
 #: application/controllers/LocaleController.php:210
@@ -1934,7 +1994,8 @@ msgid "Sat"
 msgstr "Cmt"
 
 #: application/controllers/LocaleController.php:267
-msgid "Shows longer than their scheduled time will be cut off by a following show."
+msgid ""
+"Shows longer than their scheduled time will be cut off by a following show."
 msgstr ""
 
 #: application/controllers/LocaleController.php:268
@@ -2057,7 +2118,8 @@ msgid "Cue Editor"
 msgstr ""
 
 #: application/controllers/LocaleController.php:306
-msgid "Waveform features are available in a browser supporting the Web Audio API"
+msgid ""
+"Waveform features are available in a browser supporting the Web Audio API"
 msgstr ""
 
 #: application/controllers/LocaleController.php:309
@@ -2405,7 +2467,9 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:413
 #, php-format
-msgid "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."
+msgid ""
+"%sPrint view%sPlease use your browser's print function to print this table. "
+"Press escape when finished."
 msgstr ""
 
 #: application/controllers/LocaleController.php:414
@@ -2583,7 +2647,10 @@ msgid "Type"
 msgstr ""
 
 #: application/controllers/LocaleController.php:462
-msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/docs/playlists'>More information</a>"
+msgid ""
+"Autoloading playlists' contents are added to shows one hour before the show "
+"airs. <a target='_blank' href='http://libretime.org/docs/playlists'>More "
+"information</a>"
 msgstr ""
 
 #: application/controllers/LocaleController.php:463
@@ -2611,7 +2678,14 @@ msgid "Try it now"
 msgstr ""
 
 #: application/controllers/LocaleController.php:469
-msgid "<p>If this option is unchecked, the smartblock will schedule as many tracks as can be played out <strong>in their entirety</strong> within the specified duration. This will usually result in audio playback that is slightly less than the specified duration.</p><p>If this option is checked, the smartblock will also schedule one final track which will overflow the specified duration. This final track may be cut off mid-way if the show into which the smartblock is added finishes.</p>"
+msgid ""
+"<p>If this option is unchecked, the smartblock will schedule as many tracks "
+"as can be played out <strong>in their entirety</strong> within the specified "
+"duration. This will usually result in audio playback that is slightly less "
+"than the specified duration.</p><p>If this option is checked, the smartblock "
+"will also schedule one final track which will overflow the specified "
+"duration. This final track may be cut off mid-way if the show into which the "
+"smartblock is added finishes.</p>"
 msgstr ""
 
 #: application/controllers/LocaleController.php:470
@@ -2690,7 +2764,9 @@ msgid "Please enter your username and password."
 msgstr ""
 
 #: application/controllers/LoginController.php:157
-msgid "Email could not be sent. Check your mail server settings and ensure it has been configured properly."
+msgid ""
+"Email could not be sent. Check your mail server settings and ensure it has "
+"been configured properly."
 msgstr ""
 
 #: application/controllers/LoginController.php:160
@@ -3280,7 +3356,11 @@ msgid "Overwrite Podcast Episode Metatags"
 msgstr ""
 
 #: application/forms/GeneralPreferences.php:129
-msgid "Enabling this feature will cause podcast episode tracks to have their Artist, Title, and Album metatags set from podcast feed values. Note that enabling this feature is recommended in order to ensure reliable scheduling of episodes via smartblocks."
+msgid ""
+"Enabling this feature will cause podcast episode tracks to have their "
+"Artist, Title, and Album metatags set from podcast feed values. Note that "
+"enabling this feature is recommended in order to ensure reliable scheduling "
+"of episodes via smartblocks."
 msgstr ""
 
 #: application/forms/GeneralPreferences.php:138
@@ -3288,7 +3368,11 @@ msgid "Generate a smartblock and a playlist upon creation of a new podcast"
 msgstr ""
 
 #: application/forms/GeneralPreferences.php:144
-msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
+msgid ""
+"If this option is enabled, a new smartblock and playlist matching the newest "
+"track of a podcast will be generated immediately upon creation of a new "
+"podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must "
+"also be enabled in order for smartblocks to reliably find episodes."
 msgstr ""
 
 #: application/forms/GeneralPreferences.php:155
@@ -3302,7 +3386,8 @@ msgstr ""
 #: application/forms/GeneralPreferences.php:162
 msgid ""
 "Enabling this feature will allow LibreTime to provide schedule data\n"
-"                                            to external widgets that can be embedded in your website."
+"                                            to external widgets that can be "
+"embedded in your website."
 msgstr ""
 
 #: application/forms/GeneralPreferences.php:174
@@ -3310,7 +3395,9 @@ msgid "Allowed CORS URLs"
 msgstr ""
 
 #: application/forms/GeneralPreferences.php:175
-msgid "Remote URLs that are allowed to access this LibreTime instance in a browser. One URL per line."
+msgid ""
+"Remote URLs that are allowed to access this LibreTime instance in a browser. "
+"One URL per line."
 msgstr ""
 
 #: application/forms/GeneralPreferences.php:180
@@ -3443,7 +3530,9 @@ msgid "Embeddable code:"
 msgstr ""
 
 #: application/forms/Player.php:73
-msgid "Copy this code and paste it into your website's HTML to embed the player in your site."
+msgid ""
+"Copy this code and paste it into your website's HTML to embed the player in "
+"your site."
 msgstr ""
 
 #: application/forms/Player.php:78
@@ -3655,7 +3744,8 @@ msgid "'Length' should be in '00:00:00' format"
 msgstr "Uzunluk  '00:00:00' türünde olmalıdır"
 
 #: application/forms/SmartBlockCriteria.php:862
-msgid "Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
+msgid ""
+"Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
 msgstr ""
 
 #: application/forms/SmartBlockCriteria.php:867
@@ -3665,8 +3755,11 @@ msgstr ""
 
 #: application/forms/SmartBlockCriteria.php:872
 #: application/forms/SmartBlockCriteria.php:897
-msgid "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
-msgstr "Değer saat biçiminde girilmelidir  (eör. 0000-00-00 veya 0000-00-00 00:00:00)"
+msgid ""
+"The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 "
+"00:00:00)"
+msgstr ""
+"Değer saat biçiminde girilmelidir  (eör. 0000-00-00 veya 0000-00-00 00:00:00)"
 
 #: application/forms/SmartBlockCriteria.php:887
 msgid "Only non-negative integer numbers are allowed for a relative date time"
@@ -3855,7 +3948,9 @@ msgstr ""
 
 #: application/forms/TuneInPreferences.php:78
 #: application/forms/TuneInPreferences.php:87
-msgid "Invalid TuneIn Settings. Please ensure your TuneIn settings are correct and try again."
+msgid ""
+"Invalid TuneIn Settings. Please ensure your TuneIn settings are correct and "
+"try again."
 msgstr ""
 
 #: application/forms/WatchedDirPreferences.php:13
@@ -3876,7 +3971,8 @@ msgid "Value is required and can't be empty"
 msgstr "Değer gerekli ve boş bırakılamaz"
 
 #: application/forms/helpers/ValidationTypes.php:20
-msgid "'%value%' is no valid email address in the basic format local-part@hostname"
+msgid ""
+"'%value%' is no valid email address in the basic format local-part@hostname"
 msgstr "'%value%' kullanici@site.com yapısına uymayan geçersiz bir adres"
 
 #: application/forms/helpers/ValidationTypes.php:34
@@ -3977,12 +4073,14 @@ msgstr "%s geçerli bir dizin değil."
 
 #: application/models/MusicDir.php:244
 #, php-format
-msgid "%s is already set as the current storage dir or in the watched folders list"
+msgid ""
+"%s is already set as the current storage dir or in the watched folders list"
 msgstr ""
 
 #: application/models/MusicDir.php:406
 #, php-format
-msgid "%s is already set as the current storage dir or in the watched folders list."
+msgid ""
+"%s is already set as the current storage dir or in the watched folders list."
 msgstr ""
 
 #: application/models/MusicDir.php:450
@@ -4195,14 +4293,17 @@ msgid "Webstreams"
 msgstr ""
 
 #: public/setup/rabbitmq-setup.php:80
-msgid "Couldn't connect to RabbitMQ server! Please check if the server is running and your credentials are correct."
+msgid ""
+"Couldn't connect to RabbitMQ server! Please check if the server is running "
+"and your credentials are correct."
 msgstr ""
 
 #~ msgid "All rights are reserved"
 #~ msgstr "Tüm Hakları Saklıdır"
 
 #~ msgid "By checking this box, I agree to %s's %sprivacy policy%s."
-#~ msgstr "Bu kutuyu işaretleyerek %s'un %sgizlilik politikası%s'nı onaylıyorum"
+#~ msgstr ""
+#~ "Bu kutuyu işaretleyerek %s'un %sgizlilik politikası%s'nı onaylıyorum"
 
 #~ msgid "City:"
 #~ msgstr "Şehir:"
