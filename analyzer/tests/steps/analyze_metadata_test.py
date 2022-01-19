@@ -31,6 +31,11 @@ def test_analyze_metadata(filepath: str, metadata: dict):
     assert len(found["md5"]) == 32
     del found["md5"]
 
+    # Handle filesize
+    assert found["filesize"] < 2e6  # ~2Mb
+    assert found["filesize"] > 1e5  # 100Kb
+    del found["filesize"]
+
     # Handle track formatted length/cueout
     assert metadata["length"] in found["length"]
     assert metadata["length"] in found["cueout"]
