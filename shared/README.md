@@ -69,8 +69,8 @@ def cli():
     pass
 
 @cli.command()
-@cli_config_options
-@cli_logging_options
+@cli_config_options()
+@cli_logging_options()
 def run(**kwargs):
     app = App(**kwargs)
     return app.run()

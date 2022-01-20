@@ -16,7 +16,7 @@ PYPO_HOME = "/var/tmp/airtime/pypo/"
 
 
 @click.command()
-@cli_logging_options
+@cli_logging_options()
 def cli(log_level: int, log_filepath: Optional[Path]):
     """
     Run liquidsoap.

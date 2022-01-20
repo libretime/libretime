@@ -17,8 +17,8 @@ DEFAULT_RETRY_QUEUE_FILEPATH = Path("retry_queue")
 
 
 @click.command()
-@cli_logging_options
-@cli_config_options
+@cli_logging_options()
+@cli_config_options()
 @click.option(
     "--retry-queue-filepath",
     envvar=f"{DEFAULT_ENV_PREFIX}_RETRY_QUEUE_FILEPATH",
