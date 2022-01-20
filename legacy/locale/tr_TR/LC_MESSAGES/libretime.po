@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/LibreTime/libretime/issues\n"
 "POT-Creation-Date: 2021-10-15 19:56+0200\n"
-"PO-Revision-Date: 2022-01-19 23:06+0000\n"
+"PO-Revision-Date: 2022-01-21 08:57+0000\n"
 "Last-Translator: ToldYouThat <itoldyouthat@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/libretime/legacy/"
 "tr/>\n"
@@ -267,7 +267,7 @@ msgstr "Kazakça"
 
 #: application/common/LocaleHelper.php:80
 msgid "Greenlandic"
-msgstr ""
+msgstr "Grönlandca"
 
 #: application/common/LocaleHelper.php:81
 msgid "Cambodian"
@@ -307,7 +307,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:90
 msgid "Lithuanian"
-msgstr ""
+msgstr "Litvanyaca"
 
 #: application/common/LocaleHelper.php:91
 msgid "Latvian/Lettish"
@@ -347,7 +347,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:100
 msgid "Maltese"
-msgstr ""
+msgstr "Maltaca"
 
 #: application/common/LocaleHelper.php:101
 msgid "Burmese"
@@ -359,7 +359,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:103
 msgid "Nepali"
-msgstr ""
+msgstr "Nepalce"
 
 #: application/common/LocaleHelper.php:104
 msgid "Dutch"
