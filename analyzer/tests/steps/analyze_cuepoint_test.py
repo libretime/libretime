@@ -5,14 +5,14 @@ import pytest
 
 from libretime_analyzer.steps.analyze_cuepoint import analyze_cuepoint
 
-from ..fixtures import FILE_INVALID_DRM, FILES, Fixture
+from ..fixtures import FILE_INVALID_DRM, FILES
 
 
 @pytest.mark.parametrize(
     "filepath,length,cuein,cueout",
     map(lambda i: (str(i.path), i.length, i.cuein, i.cueout), FILES),
 )
-def test_analyze(filepath, length, cuein, cueout):
+def test_analyze_cuepoint(filepath, length, cuein, cueout):
     metadata = analyze_cuepoint(filepath, dict())
 
     assert metadata["length_seconds"] == pytest.approx(length, abs=0.1)
@@ -33,7 +33,7 @@ def test_analyze(filepath, length, cuein, cueout):
     assert float(metadata["cueout"]) == pytest.approx(cueout, abs=0.5)
 
 
-def test_analyze_missing_silan():
+def test_analyze_cuepoint_missing_silan():
     with patch(
         "libretime_analyzer.steps.analyze_cuepoint.SILAN_EXECUTABLE",
         "foobar",
@@ -41,11 +41,11 @@ def test_analyze_missing_silan():
         analyze_cuepoint(str(FILES[0].path), dict())
 
 
-def test_analyze_invalid_filepath():
+def test_analyze_cuepoint_invalid_filepath():
     with pytest.raises(KeyError):
-        test_analyze("non-existent-file", None, None, None)
+        test_analyze_cuepoint("non-existent-file", None, None, None)
 
 
-def test_analyze_invalid_wma():
+def test_analyze_cuepoint_invalid_wma():
     with pytest.raises(KeyError):
-        test_analyze(FILE_INVALID_DRM, None, None, None)
+        test_analyze_cuepoint(FILE_INVALID_DRM, None, None, None)

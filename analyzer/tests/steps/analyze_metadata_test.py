@@ -1,12 +1,8 @@
-from datetime import timedelta
-from unittest import mock
-
-import mutagen
 import pytest
 
 from libretime_analyzer.steps.analyze_metadata import analyze_metadata
 
-from ..fixtures import FILE_INVALID_DRM, FILE_INVALID_TXT, FILES_TAGGED, FixtureMeta
+from ..fixtures import FILE_INVALID_DRM, FILE_INVALID_TXT, FILES_TAGGED
 
 
 @pytest.mark.parametrize(
@@ -16,7 +12,7 @@ from ..fixtures import FILE_INVALID_DRM, FILE_INVALID_TXT, FILES_TAGGED, Fixture
         (("foo", 3), TypeError),
     ],
 )
-def test_analyze_wrong_params(params, exception):
+def test_analyze_metadata_wrong_params(params, exception):
     with pytest.raises(exception):
         analyze_metadata(*params)
 
@@ -25,7 +21,7 @@ def test_analyze_wrong_params(params, exception):
     "filepath,metadata",
     map(lambda i: (str(i.path), i.metadata), FILES_TAGGED),
 )
-def test_analyze(filepath: str, metadata: dict):
+def test_analyze_metadata(filepath: str, metadata: dict):
     found = analyze_metadata(filepath, dict())
 
     # Mutagen does not support wav files yet
@@ -49,12 +45,12 @@ def test_analyze(filepath: str, metadata: dict):
     assert found == metadata
 
 
-def test_invalid_wma():
+def test_analyze_metadata_invalid_wma():
     metadata = analyze_metadata(str(FILE_INVALID_DRM), dict())
     assert metadata["mime"] == "audio/x-ms-wma"
 
 
-def test_unparsable_file():
+def test_analyze_metadata_unparsable_file():
     metadata = analyze_metadata(str(FILE_INVALID_TXT), dict())
     assert metadata == {
         "filesize": 10,

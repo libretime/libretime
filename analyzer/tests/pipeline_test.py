@@ -1,6 +1,5 @@
 import datetime
 import os
-import shutil
 from queue import Queue
 
 import pytest
