@@ -1,6 +1,5 @@
 import os
 import shutil
-import tempfile
 import time
 from unittest import mock
 
@@ -20,7 +19,7 @@ from ..conftest import AUDIO_FILENAME
         (("", "", "", 12345), TypeError),
     ],
 )
-def test_move_wrong_params(params, exception):
+def test_organise_file_wrong_params(params, exception):
     with pytest.raises(exception):
         organise_file(*params)
 
@@ -67,7 +66,7 @@ def import_and_restore(src_dir, dest_dir) -> dict:
     return metadata
 
 
-def test_move_duplicate_file(src_dir, dest_dir):
+def test_organise_file_duplicate_file(src_dir, dest_dir):
     # Import the file once
     import_and_restore(src_dir, dest_dir)
 
@@ -79,7 +78,7 @@ def test_move_duplicate_file(src_dir, dest_dir):
     assert os.path.exists(os.path.join(dest_dir, AUDIO_FILENAME))
 
 
-def test_move_triplicate_file(src_dir, dest_dir):
+def test_organise_file_triplicate_file(src_dir, dest_dir):
     # Here we use mock to patch out the time.localtime() function so that it
     # always returns the same value. This allows us to consistently simulate this test cases
     # where the last two of the three files are imported at the same time as the timestamp.
@@ -105,7 +104,7 @@ def test_move_triplicate_file(src_dir, dest_dir):
     assert len(os.path.basename(metadata2["full_path"]).split("_")) == 3
 
 
-def test_move_bad_permissions_dest_dir(src_dir):
+def test_organise_file_bad_permissions_dest_dir(src_dir):
     with pytest.raises(OSError):
         # /sys is using sysfs on Linux, which is unwritable
         organise_file(

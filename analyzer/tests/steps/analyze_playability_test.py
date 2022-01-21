@@ -8,18 +8,18 @@ from libretime_analyzer.steps.analyze_playability import (
     analyze_playability,
 )
 
-from ..fixtures import FILE_INVALID_DRM, FILES, Fixture
+from ..fixtures import FILE_INVALID_DRM, FILES
 
 
 @pytest.mark.parametrize(
     "filepath",
     map(lambda i: str(i.path), FILES),
 )
-def test_analyze(filepath):
+def test_analyze_playability(filepath):
     analyze_playability(filepath, dict())
 
 
-def test_analyze_missing_liquidsoap():
+def test_analyze_playability_missing_liquidsoap():
     with patch(
         "libretime_analyzer.steps.analyze_playability.LIQUIDSOAP_EXECUTABLE",
         "foobar",
@@ -27,20 +27,20 @@ def test_analyze_missing_liquidsoap():
         analyze_playability(str(FILES[0].path), dict())
 
 
-def test_analyze_invalid_filepath():
+def test_analyze_playability_invalid_filepath():
     with pytest.raises(UnplayableFileError):
-        test_analyze("non-existent-file")
+        test_analyze_playability("non-existent-file")
 
 
-def test_analyze_invalid_wma():
+def test_analyze_playability_invalid_wma():
     # Liquisoap does not fail with wma files on buster, bullseye, focal
     if distro.codename() in ("buster", "bullseye", "focal"):
         return
 
     with pytest.raises(UnplayableFileError):
-        test_analyze(FILE_INVALID_DRM)
+        test_analyze_playability(FILE_INVALID_DRM)
 
 
-def test_analyze_unknown():
+def test_analyze_playability_unknown():
     with pytest.raises(UnplayableFileError):
-        test_analyze("https://www.google.com")
+        test_analyze_playability("https://www.google.com")
