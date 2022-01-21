@@ -1,94 +1,69 @@
-import datetime
-import json
-import subprocess
+from datetime import timedelta
+from math import isclose
+from subprocess import CalledProcessError
 from typing import Any, Dict
 
 from loguru import logger
 
-SILAN_EXECUTABLE = "silan"
+from ..ffmpeg import compute_silences, probe_duration
 
 
-def analyze_cuepoint(filename: str, metadata: Dict[str, Any]):
-    """Extracts the cue-in and cue-out times along and sets the file duration based on that.
-        The cue points are there to skip the silence at the start and end of a track, and are determined
-        using "silan", which analyzes the loudness in a track.
-    :param filename: The full path to the file to analyzer
-    :param metadata: A metadata dictionary where the results will be put
-    :return: The metadata dictionary
+def analyze_cuepoint(filepath: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
     """
-    """ The silan -F 0.99 parameter tweaks the highpass filter. The default is 0.98, but at that setting,
-        the unit test on the short m4a file fails. With the new setting, it gets the correct cue-in time and
-        all the unit tests pass.
+    Extracts the cuein and cueout times along and sets the file duration using ffmpeg.
     """
-    command = [
-        SILAN_EXECUTABLE,
-        "-b",
-        "-F",
-        "0.99",
-        "-f",
-        "JSON",
-        "-t",
-        "1.0",
-        filename,
-    ]
+
     try:
-        results_json = subprocess.check_output(
-            command, stderr=subprocess.STDOUT, close_fds=True
-        )
-        try:
-            results_json = results_json.decode()
-        except (UnicodeDecodeError, AttributeError):
-            pass
-        silan_results = json.loads(results_json)
+        duration = probe_duration(filepath)
 
-        # Defensive coding against Silan wildly miscalculating the cue in and out times:
-        silan_length_seconds = float(silan_results["file duration"])
-        silan_cuein = format(silan_results["sound"][0][0], "f")
-        silan_cueout = format(silan_results["sound"][0][1], "f")
+        if "length_seconds" in metadata and not isclose(
+            metadata["length_seconds"],
+            duration,
+            abs_tol=0.1,
+        ):
+            logger.warning(
+                f"existing duration {metadata['length_seconds']} differs "
+                f"from the probed duration {duration}."
+            )
 
-        # Sanity check the results against any existing metadata passed to us (presumably extracted by Mutagen):
-        if "length_seconds" in metadata:
-            # Silan has a rare bug where it can massively overestimate the length or cue out time sometimes.
-            if (silan_length_seconds - metadata["length_seconds"] > 3) or (
-                float(silan_cueout) - metadata["length_seconds"] > 2
+        metadata["length_seconds"] = duration
+        metadata["length"] = str(timedelta(seconds=duration))
+        metadata["cuein"] = 0.0
+        metadata["cueout"] = duration
+
+        silences = compute_silences(filepath)
+
+        if len(silences) > 2:
+            # Only keep first and last silence
+            silences = silences[:: len(silences) - 1]
+
+        for silence in silences:
+            # Sanity check
+            if silence[0] >= silence[1]:
+                raise ValueError(
+                    f"silence starts ({silence[0]}) after ending ({silence[1]})"
+                )
+
+            # Is this really the first silence ?
+            if isclose(
+                0.0,
+                max(0.0, silence[0]),  # Clamp negative value
+                abs_tol=0.1,
             ):
-                # Don't trust anything silan says then...
-                raise Exception(
-                    "Silan cue out {0} or length {1} differs too much from the Mutagen length {2}. Ignoring Silan values.".format(
-                        silan_cueout,
-                        silan_length_seconds,
-                        metadata["length_seconds"],
-                    )
-                )
-            # Don't allow silan to trim more than the greater of 3 seconds or 5% off the start of a track
-            if float(silan_cuein) > max(silan_length_seconds * 0.05, 3):
-                raise Exception(
-                    "Silan cue in time {0} too big, ignoring.".format(silan_cuein)
-                )
-        else:
-            # Only use the Silan track length in the worst case, where Mutagen didn't give us one for some reason.
-            # (This is mostly to make the unit tests still pass.)
-            # Convert the length into a formatted time string.
-            metadata["length_seconds"] = silan_length_seconds  #
-            track_length = datetime.timedelta(seconds=metadata["length_seconds"])
-            metadata["length"] = str(track_length)
+                metadata["cuein"] = max(0.0, silence[1])
 
-        """ XXX: I've commented out the track_length stuff below because Mutagen seems more accurate than silan
-                    as of Mutagen version 1.31. We are always going to use Mutagen's length now because Silan's
-                    length can be off by a few seconds reasonably often.
-        """
+            # Is this really the last silence ?
+            elif isclose(
+                min(silence[1], duration),  # Clamp infinity value
+                duration,
+                abs_tol=0.1,
+            ):
+                metadata["cueout"] = min(silence[0], duration)
 
-        metadata["cuein"] = silan_cuein
-        metadata["cueout"] = silan_cueout
+        metadata["cuein"] = format(metadata["cuein"], "f")
+        metadata["cueout"] = format(metadata["cueout"], "f")
 
-    except OSError as e:  # silan was not found
-        logger.warning(
-            "Failed to run: %s - %s. %s"
-            % (command[0], e.strerror, "Do you have silan installed?")
-        )
-    except subprocess.CalledProcessError as e:  # silan returned an error code
-        logger.warning("%s %s %s", e.cmd, e.output, e.returncode)
-    except Exception as e:
-        logger.warning(e)
+    except (CalledProcessError, OSError):
+        pass
 
     return metadata
