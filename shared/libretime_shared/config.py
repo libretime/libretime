@@ -9,6 +9,7 @@ from loguru import logger
 # pylint: disable=no-name-in-module
 from pydantic import BaseModel, ValidationError
 from pydantic.fields import ModelField
+from pydantic.utils import deep_update
 from yaml import YAMLError, safe_load
 
 DEFAULT_ENV_PREFIX = "LIBRETIME"
@@ -38,12 +39,7 @@ class BaseConfig(BaseModel):
         env_values = self._load_env_values(env_prefix, env_delimiter)
 
         try:
-            super().__init__(
-                **{
-                    **file_values,
-                    **env_values,
-                },
-            )
+            super().__init__(**deep_update(file_values, env_values))
         except ValidationError as error:
             logger.critical(error)
             sys.exit(1)
