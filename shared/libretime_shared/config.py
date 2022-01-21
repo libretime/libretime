@@ -2,7 +2,7 @@ import sys
 from configparser import ConfigParser
 from os import environ
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 from loguru import logger
 
@@ -29,8 +29,11 @@ class BaseConfig(BaseModel):
         *,
         env_prefix: str = DEFAULT_ENV_PREFIX,
         env_delimiter: str = "_",
-        filepath: Optional[Path] = None,
+        filepath: Optional[Union[Path, str]] = None,
     ) -> None:
+        if filepath is not None:
+            filepath = Path(filepath)
+
         file_values = self._load_file_values(filepath)
         env_values = self._load_env_values(env_prefix, env_delimiter)
 
