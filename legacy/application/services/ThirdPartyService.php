@@ -35,8 +35,7 @@ abstract class Application_Service_ThirdPartyService
         // If the file ID given is null, create a new reference
         $ref = is_null($fileId) ? null : ThirdPartyTrackReferencesQuery::create()
             ->filterByDbService(static::$_SERVICE_NAME)
-            ->findOneByDbFileId($fileId)
-        ;
+            ->findOneByDbFileId($fileId);
         if (is_null($ref)) {
             $ref = new ThirdPartyTrackReferences();
         }
@@ -61,8 +60,7 @@ abstract class Application_Service_ThirdPartyService
     {
         $ref = ThirdPartyTrackReferencesQuery::create()
             ->filterByDbService(static::$_SERVICE_NAME)
-            ->findOneByDbFileId($fileId)
-        ;
+            ->findOneByDbFileId($fileId);
         $ref->delete();
     }
 
@@ -79,7 +77,7 @@ abstract class Application_Service_ThirdPartyService
         $ref = ThirdPartyTrackReferencesQuery::create()
             ->filterByDbService(static::$_SERVICE_NAME)
             ->findOneByDbFileId($fileId)  // There shouldn't be duplicates!
-        ;
+;
 
         return empty($ref) ? '' : $ref->getDbForeignId();
     }
@@ -97,13 +95,11 @@ abstract class Application_Service_ThirdPartyService
     {
         $ref = ThirdPartyTrackReferencesQuery::create()
             ->filterByDbService(static::$_SERVICE_NAME)
-            ->findOneByDbFileId($fileId)
-        ;
+            ->findOneByDbFileId($fileId);
         if (!empty($ref)) {
             $task = CeleryTasksQuery::create()
                 ->orderByDbDispatchTime(Criteria::DESC)
-                ->findOneByDbTrackReference($ref->getDbId())
-            ;
+                ->findOneByDbTrackReference($ref->getDbId());
 
             return $task->getDbStatus() == CELERY_PENDING_STATUS ? -1
                     : ($task->getDbStatus() == CELERY_FAILED_STATUS ? 0 : 1);

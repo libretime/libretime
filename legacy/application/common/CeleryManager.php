@@ -163,8 +163,7 @@ class CeleryManager
     {
         $query = CeleryTasksQuery::create()
             ->filterByDbStatus(CELERY_PENDING_STATUS)
-            ->filterByDbTaskId('', Criteria::NOT_EQUAL)
-        ;
+            ->filterByDbTaskId('', Criteria::NOT_EQUAL);
         if (!empty($taskName)) {
             $query->filterByDbName($taskName);
         }

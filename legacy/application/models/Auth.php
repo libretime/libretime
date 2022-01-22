@@ -45,8 +45,7 @@ class Application_Model_Auth
         CcSubjsTokenQuery::create()
             ->filterByDbAction($action)
             ->filterByDbUserId($user->getDbId())
-            ->delete()
-        ;
+            ->delete();
     }
 
     public function checkToken($user_id, $token, $action)
@@ -57,8 +56,7 @@ class Application_Model_Auth
             ->filterByDbAction($action)
             ->filterByDbUserId($user_id)
             ->filterByDbToken(sha1($token . $salt))
-            ->findOne()
-        ;
+            ->findOne();
 
         if (empty($token_info)) {
             return false;
@@ -96,8 +94,7 @@ class Application_Model_Auth
         $authAdapter->setTableName('cc_subjs')
             ->setIdentityColumn('login')
             ->setCredentialColumn('pass')
-            ->setCredentialTreatment('MD5(?)')
-        ;
+            ->setCredentialTreatment('MD5(?)');
 
         return $authAdapter;
     }

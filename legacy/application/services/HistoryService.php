@@ -450,8 +450,7 @@ class Application_Service_HistoryService
             $hostRecords = CcShowHostsQuery::create()
                 ->filterByDbHost($user->getId())
                 ->filterByDbShow($showIds)
-                ->find($this->con)
-            ;
+                ->find($this->con);
 
             $filteredShowIds = [];
 
@@ -563,8 +562,7 @@ class Application_Service_HistoryService
                     ->filterByDbStarts($recordStart)
                     ->filterByDbEnds($recordEnd)
                     ->filterByDbFileId($fileId)
-                    ->findOne($this->con)
-                ;
+                    ->findOne($this->con);
 
                 if (empty($prevRecord)) {
                     $history = new CcPlayoutHistory();
@@ -1172,8 +1170,7 @@ class Application_Service_HistoryService
 
         try {
             $query = CcPlayoutHistoryTemplateQuery::create()
-                ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
-            ;
+                ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND);
 
             if (isset($type)) {
                 $templates = $query->findByDbType($type);

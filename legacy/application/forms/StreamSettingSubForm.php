@@ -51,8 +51,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $enable = new Zend_Form_Element_Checkbox('enable');
         $enable->setLabel(_('Enabled:'))
             ->setValue($setting[$prefix . '_enable'] == 'true' ? 1 : 0)
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $this->addElement($enable);
         static::$customizable[] = $enable->getName();
 
@@ -67,8 +66,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $type->setLabel(_('Stream Type:'))
             ->setMultiOptions($stream_types)
             ->setValue(isset($setting[$prefix . '_type']) ? $setting[$prefix . '_type'] : 0)
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $this->addElement($type);
         static::$customizable[] = $type->getName();
 
@@ -76,8 +74,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $bitrate->setLabel(_('Bit Rate:'))
             ->setMultiOptions($stream_bitrates)
             ->setValue(isset($setting[$prefix . '_bitrate']) ? $setting[$prefix . '_bitrate'] : 0)
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $this->addElement($bitrate);
         static::$customizable[] = $bitrate->getName();
 
@@ -86,16 +83,14 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
             ->setMultiOptions(['icecast' => 'Icecast', 'shoutcast' => 'SHOUTcast'])
             ->setValue($useDefaults ? $streamDefaults['output'] :
                                (isset($setting[$prefix . '_output']) ? $setting[$prefix . '_output'] : 'icecast'))
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $this->addElement($output);
 
         $channels = new Zend_Form_Element_Select('channels');
         $channels->setLabel(_('Channels:'))
             ->setMultiOptions(['mono' => _('1 - Mono'), 'stereo' => _('2 - Stereo')])
             ->setValue(isset($setting[$prefix . '_channels']) ? $setting[$prefix . '_channels'] : 'stereo')
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $this->addElement($channels);
         static::$customizable[] = $channels->getName();
 
@@ -105,8 +100,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
                                (isset($setting[$prefix . '_host']) ? $setting[$prefix . '_host'] : ''))
             ->setValidators([
                 ['regex', false, ['/^[0-9a-zA-Z-_.]+$/', 'messages' => _('Invalid character entered')]], ])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $host->setAttrib('alt', 'domain');
         $this->addElement($host);
 
@@ -116,8 +110,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
                                (isset($setting[$prefix . '_port']) ? $setting[$prefix . '_port'] : ''))
             ->setValidators([new Zend_Validate_Between(['min' => 0, 'max' => 99999])])
             ->addValidator('regex', false, ['pattern' => '/^[0-9]+$/', 'messages' => ['regexNotMatch' => _('Only numbers are allowed.')]])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $this->addElement($port);
 
         $pass = new Zend_Form_Element_Text('pass');
@@ -126,16 +119,14 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
                                (isset($setting[$prefix . '_pass']) ? $setting[$prefix . '_pass'] : ''))
             ->setValidators([
                 ['regex', false, ['/^[^ &<>]+$/', 'messages' => _('Invalid character entered')]], ])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $pass->setAttrib('alt', 'regular_text');
         $this->addElement($pass);
 
         $genre = new Zend_Form_Element_Text('genre');
         $genre->setLabel(_('Genre'))
             ->setValue(isset($setting[$prefix . '_genre']) ? $setting[$prefix . '_genre'] : '')
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $this->addElement($genre);
 
         $url = new Zend_Form_Element_Text('url');
@@ -143,23 +134,20 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
             ->setValue(isset($setting[$prefix . '_url']) ? $setting[$prefix . '_url'] : '')
             ->setValidators([
                 ['regex', false, ['/^[0-9a-zA-Z\-_.:\/]+$/', 'messages' => _('Invalid character entered')]], ])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $url->setAttrib('alt', 'url');
         $this->addElement($url);
 
         $name = new Zend_Form_Element_Text('name');
         $name->setLabel(_('Name'))
             ->setValue(isset($setting[$prefix . '_name']) ? $setting[$prefix . '_name'] : '')
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $this->addElement($name);
 
         $description = new Zend_Form_Element_Text('description');
         $description->setLabel(_('Description'))
             ->setValue(isset($setting[$prefix . '_description']) ? $setting[$prefix . '_description'] : '')
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $this->addElement($description);
 
         $mount = new Zend_Form_Element_Text('mount');
@@ -168,8 +156,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
                                (isset($setting[$prefix . '_mount']) ? $setting[$prefix . '_mount'] : ''))
             ->setValidators([
                 ['regex', false, ['/^[^ &<>]+$/', 'messages' => _('Invalid character entered')]], ])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $mount->setAttrib('alt', 'regular_text');
         $this->addElement($mount);
 
@@ -179,8 +166,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
                                (isset($setting[$prefix . '_user']) ? $setting[$prefix . '_user'] : ''))
             ->setValidators([
                 ['regex', false, ['/^[^ &<>]+$/', 'messages' => _('Invalid character entered')]], ])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $user->setAttrib('alt', 'regular_text');
         $this->addElement($user);
 
@@ -189,8 +175,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
             ->setValue(Application_Model_StreamSetting::getAdminUser($prefix))
             ->setValidators([
                 ['regex', false, ['/^[^ &<>]+$/', 'messages' => _('Invalid character entered')]], ])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $adminUser->setAttrib('alt', 'regular_text');
         $this->addElement($adminUser);
 
@@ -199,8 +184,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
             ->setValue(Application_Model_StreamSetting::getAdminPass($prefix))
             ->setValidators([
                 ['regex', false, ['/^[^ &<>]+$/', 'messages' => _('Invalid character entered')]], ])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $adminPass->setAttrib('alt', 'regular_text');
         $this->addElement($adminPass);
 

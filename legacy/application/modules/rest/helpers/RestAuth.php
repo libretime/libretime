@@ -13,8 +13,7 @@ class RestAuth
 
         $action->getResponse()
             ->setHttpResponseCode(401)
-            ->appendBody(json_encode(['message' => 'ERROR: Incorrect API key.']))
-        ;
+            ->appendBody(json_encode(['message' => 'ERROR: Incorrect API key.']));
 
         return false;
     }
@@ -30,8 +29,7 @@ class RestAuth
             $defaultOwner = CcSubjsQuery::create()
                 ->filterByDbType(['A', 'S'], Criteria::IN)
                 ->orderByDbId()
-                ->findOne()
-            ;
+                ->findOne();
             if (!$defaultOwner) {
                 // what to do if there is no admin user?
                 // should we handle this case?

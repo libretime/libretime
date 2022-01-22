@@ -172,8 +172,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             ->appendStylesheet($baseUrl . 'css/qtip/jquery.qtip.min.css?' . $CC_CONFIG['airtime_version'])
             ->appendStylesheet($baseUrl . 'css/styles.css?' . $CC_CONFIG['airtime_version'])
             ->appendStylesheet($baseUrl . 'css/masterpanel.css?' . $CC_CONFIG['airtime_version'])
-            ->appendStylesheet($baseUrl . 'css/tipsy/jquery.tipsy.css?' . $CC_CONFIG['airtime_version'])
-        ;
+            ->appendStylesheet($baseUrl . 'css/tipsy/jquery.tipsy.css?' . $CC_CONFIG['airtime_version']);
     }
 
     protected function _initHeadScript()
@@ -203,8 +202,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             ->appendFile($baseUrl . 'locale/datatables-translation-table?' . $CC_CONFIG['airtime_version'], 'text/javascript')
 
             ->appendScript('$.i18n.setDictionary(general_dict)')
-            ->appendScript("var baseUrl='{$baseUrl}'")
-        ;
+            ->appendScript("var baseUrl='{$baseUrl}'");
 
         //These timezones are needed to adjust javascript Date objects on the client to make sense to the user's set timezone
         //or the server's set timezone.
@@ -228,8 +226,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             ->appendFile($baseUrl . 'js/tipsy/jquery.tipsy.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
 
             ->appendFile($baseUrl . 'js/airtime/common/common.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
-            ->appendFile($baseUrl . 'js/airtime/common/audioplaytest.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
-        ;
+            ->appendFile($baseUrl . 'js/airtime/common/audioplaytest.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
 
         $user = Application_Model_User::getCurrentUser();
         if (!is_null($user)) {

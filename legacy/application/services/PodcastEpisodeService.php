@@ -269,8 +269,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         PodcastEpisodesQuery::create()
             ->filterByDbPodcastId($id)
             ->findOneByDbFileId($fileId)
-            ->delete()
-        ;
+            ->delete();
     }
 
     /**
@@ -286,8 +285,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     public function getPublishStatus($fileId)
     {
         $stationPodcast = StationPodcastQuery::create()
-            ->findOneByDbPodcastId(Application_Model_Preference::getStationPodcastId())
-        ;
+            ->findOneByDbPodcastId(Application_Model_Preference::getStationPodcastId());
 
         return (int) $stationPodcast->hasEpisodeForFile($fileId);
     }
@@ -305,18 +303,15 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         $timeout = gmdate(DEFAULT_TIMESTAMP_FORMAT, (microtime(true) - self::PENDING_EPISODE_TIMEOUT_SECONDS));
         $episodes = PodcastEpisodesQuery::create()
             ->filterByDbFileId()
-            ->find()
-        ;
+            ->find();
         $stuckImports = [];
         foreach ($episodes as $episode) {
             $ref = ThirdPartyTrackReferencesQuery::create()
-                ->findOneByDbForeignId(strval($episode->getDbId()))
-            ;
+                ->findOneByDbForeignId(strval($episode->getDbId()));
             if (!empty($ref)) {
                 $task = CeleryTasksQuery::create()
                     ->filterByDbDispatchTime($timeout, Criteria::LESS_EQUAL)
-                    ->findOneByDbTrackReference($ref->getDbId())
-                ;
+                    ->findOneByDbTrackReference($ref->getDbId());
                 if (!empty($task)) {
                     array_push($stuckImports, $episode);
                 }
@@ -372,8 +367,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         $isStationPodcast = $podcastId == Application_Model_Preference::getStationPodcastId();
 
         $episodes = PodcastEpisodesQuery::create()
-            ->filterByDbPodcastId($podcastId)
-        ;
+            ->filterByDbPodcastId($podcastId);
         if ($isStationPodcast && $limit != 0) {
             $episodes = $episodes->setLimit($limit);
         }
@@ -382,8 +376,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         $episodes = $episodes->joinWith('PodcastEpisodes.CcFiles', Criteria::LEFT_JOIN)
             ->setOffset($offset)
             ->orderBy($sortColumn, $sortDir)
-            ->find()
-        ;
+            ->find();
 
         return $isStationPodcast ? $this->_getStationPodcastEpisodeArray($episodes)
                                  : $this->_getImportedPodcastEpisodeArray($podcast, $episodes);

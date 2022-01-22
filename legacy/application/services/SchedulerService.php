@@ -54,8 +54,7 @@ class Application_Service_SchedulerService
 
             $ccSchedules = CcScheduleQuery::create()
                 ->filterByDbInstanceId($instanceIds, Criteria::IN)
-                ->find($con)
-            ;
+                ->find($con);
 
             $interval = new DateInterval('PT' . abs($diff) . 'S');
             if ($diff < 0) {
@@ -69,8 +68,7 @@ class Application_Service_SchedulerService
                 $ccSchedule
                     ->setDbStarts($newStart)
                     ->setDbEnds($newEnd)
-                    ->save($con)
-                ;
+                    ->save($con);
             }
         }
     }
@@ -94,16 +92,14 @@ class Application_Service_SchedulerService
                 ->filterByDbInstanceId($instance->getDbId())
                 ->filterByDbId($schedIds, Criteria::NOT_IN)
                 ->orderByDbStarts()
-                ->find()
-            ;
+                ->find();
 
             foreach ($ccScheduleItems as $ccSchedule) {
                 //DateTime object
                 $itemEnd = $this->findEndTime($itemStart, $ccSchedule->getDbClipLength());
 
                 $ccSchedule->setDbStarts($itemStart)
-                    ->setDbEnds($itemEnd)
-                ;
+                    ->setDbEnds($itemEnd);
 
                 $itemStart = $itemEnd;
             }
@@ -184,8 +180,7 @@ class Application_Service_SchedulerService
                 ->filterByDbId($instancsIdsToFill, Criteria::NOT_IN)
                 ->orderByDbStarts(Criteria::DESC)
                 ->limit(1)
-                ->findOne()
-            ;
+                ->findOne();
 
             if (is_null($showInstanceWithMostRecentSchedule)) {
                 return null;
@@ -341,8 +336,7 @@ class Application_Service_SchedulerService
         foreach ($ccShow->getCcShowInstancess() as $ccShowInstance) {
             $ccSchedules = CcScheduleQuery::create()
                 ->filterByDbInstanceId($ccShowInstance->getDbId())
-                ->find()
-            ;
+                ->find();
 
             if ($ccSchedules->isEmpty()) {
                 $nextStartDT = $ccShowInstance->getDbStarts(null);
@@ -363,8 +357,7 @@ class Application_Service_SchedulerService
                         ->setDbCueOut($item->getDbCueOut())
                         ->setDbInstanceId($ccShowInstance->getDbId())
                         ->setDbPosition($item->getDbPosition())
-                        ->save()
-                    ;
+                        ->save();
 
                     $nextStartDT = self::findTimeDifference(
                         $endTimeDT,
@@ -375,8 +368,7 @@ class Application_Service_SchedulerService
                 $ccShowInstance
                     ->setDbTimeFilled($timeFilled)
                     ->setDbLastScheduled(gmdate(DEFAULT_TIMESTAMP_FORMAT))
-                    ->save()
-                ;
+                    ->save();
             }
         }
     }
@@ -450,8 +442,7 @@ class Application_Service_SchedulerService
             $ccSchedules = CcScheduleQuery::create()
                 ->filterByDbInstanceId($instanceIds, Criteria::IN)
                 ->setDistinct(CcSchedulePeer::FILE_ID)
-                ->find()
-            ;
+                ->find();
             $fileIds = [];
             foreach ($ccSchedules as $ccSchedule) {
                 $fileIds[] = $ccSchedule->getDbFileId();
@@ -460,8 +451,7 @@ class Application_Service_SchedulerService
             // Clear out the schedule
             CcScheduleQuery::create()
                 ->filterByDbInstanceId($instanceIds, Criteria::IN)
-                ->delete()
-            ;
+                ->delete();
 
             /* Now that the schedule has been cleared we need to make
              * sure we do not update the is_scheduled flag for tracks

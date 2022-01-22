@@ -17,19 +17,16 @@ class UpgradeController extends Zend_Controller_Action
             if (!$didWePerformAnUpgrade) {
                 $this->getResponse()
                     ->setHttpResponseCode(200)
-                    ->appendBody('No upgrade was performed. The current schema version is ' . Application_Model_Preference::GetSchemaVersion() . '.<br>')
-                ;
+                    ->appendBody('No upgrade was performed. The current schema version is ' . Application_Model_Preference::GetSchemaVersion() . '.<br>');
             } else {
                 $this->getResponse()
                     ->setHttpResponseCode(200)
-                    ->appendBody('Upgrade to Airtime schema version ' . Application_Model_Preference::GetSchemaVersion() . ' OK<br>')
-                ;
+                    ->appendBody('Upgrade to Airtime schema version ' . Application_Model_Preference::GetSchemaVersion() . ' OK<br>');
             }
         } catch (Exception $e) {
             $this->getResponse()
                 ->setHttpResponseCode(400)
-                ->appendBody($e->getMessage())
-            ;
+                ->appendBody($e->getMessage());
         }
     }
 
@@ -51,19 +48,16 @@ class UpgradeController extends Zend_Controller_Action
             if (!$downgradePerformed) {
                 $this->getResponse()
                     ->setHttpResponseCode(200)
-                    ->appendBody('No downgrade was performed. The current schema version is ' . Application_Model_Preference::GetSchemaVersion() . '.<br>')
-                ;
+                    ->appendBody('No downgrade was performed. The current schema version is ' . Application_Model_Preference::GetSchemaVersion() . '.<br>');
             } else {
                 $this->getResponse()
                     ->setHttpResponseCode(200)
-                    ->appendBody('Downgrade to Airtime schema version ' . Application_Model_Preference::GetSchemaVersion() . ' OK<br>')
-                ;
+                    ->appendBody('Downgrade to Airtime schema version ' . Application_Model_Preference::GetSchemaVersion() . ' OK<br>');
             }
         } catch (Exception $e) {
             $this->getResponse()
                 ->setHttpResponseCode(400)
-                ->appendBody($e->getMessage())
-            ;
+                ->appendBody($e->getMessage());
         }
     }
 }

@@ -8,8 +8,7 @@ class TracktypeController extends Zend_Controller_Action
         $ajaxContext->addActionContext('get-tracktype-data-table-info', 'json')
             ->addActionContext('get-tracktype-data', 'json')
             ->addActionContext('remove-tracktype', 'json')
-            ->initContext()
-        ;
+            ->initContext();
     }
 
     public function addTracktypeAction()

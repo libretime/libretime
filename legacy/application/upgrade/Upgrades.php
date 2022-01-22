@@ -302,23 +302,20 @@ class AirtimeUpgrader254 extends AirtimeUpgrader
         $numberOfSuperAdmins = CcSubjsQuery::create()
             ->filterByDbType(UTYPE_SUPERADMIN)
             ->filterByDbLogin('sourcefabric_admin', Criteria::NOT_EQUAL) //Ignore sourcefabric_admin users
-            ->count()
-        ;
+            ->count();
 
         //Only create a super admin if there isn't one already.
         if ($numberOfSuperAdmins == 0) {
             //Find the "admin" user and promote them to superadmin.
             $adminUser = CcSubjsQuery::create()
                 ->filterByDbLogin('admin')
-                ->findOne()
-            ;
+                ->findOne();
             if (!$adminUser) {
                 // Otherwise get the user with the lowest ID that is of type administrator:
                 $adminUser = CcSubjsQuery::create()
                     ->filterByDbType(UTYPE_ADMIN)
                     ->orderByDbId(Criteria::ASC)
-                    ->findOne()
-                ;
+                    ->findOne();
 
                 if (!$adminUser) {
                     throw new Exception("Failed to find any users of type 'admin' ('A').");
@@ -333,8 +330,7 @@ class AirtimeUpgrader254 extends AirtimeUpgrader
             //Also try to promote the sourcefabric_admin user
             $sofabAdminUser = CcSubjsQuery::create()
                 ->filterByDbLogin('sourcefabric_admin')
-                ->findOne()
-            ;
+                ->findOne();
             if ($sofabAdminUser) {
                 $sofabAdminUser = new Application_Model_User($sofabAdminUser->getDbId());
                 $sofabAdminUser->setType(UTYPE_SUPERADMIN);
@@ -409,8 +405,7 @@ class AirtimeUpgrader2511 extends AirtimeUpgrader
         $queryResult = CcFilesQuery::create()
             ->select(['disk_usage'])
             ->withColumn('SUM(CcFiles.filesize)', 'disk_usage')
-            ->find()
-        ;
+            ->find();
         $disk_usage = $queryResult[0];
         Application_Model_Preference::setDiskUsage($disk_usage);
     }

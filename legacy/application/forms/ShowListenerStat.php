@@ -18,8 +18,7 @@ class Application_Form_ShowListenerStat extends Zend_Form_SubForm
             ->setValidators([
                 'NotEmpty',
                 ['date', false, ['YYYY-MM-DD']], ])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $startDate->setAttrib('alt', 'date');
         $this->addElement($startDate);
 
@@ -33,8 +32,7 @@ class Application_Form_ShowListenerStat extends Zend_Form_SubForm
                 'NotEmpty',
                 ['date', false, ['HH:mm']],
                 ['regex', false, ['/^[0-2]?[0-9]:[0-5][0-9]$/', 'messages' => _('Invalid character entered')]], ])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $startTime->setAttrib('alt', 'time');
         $this->addElement($startTime);
 
@@ -48,8 +46,7 @@ class Application_Form_ShowListenerStat extends Zend_Form_SubForm
             ->setValidators([
                 'NotEmpty',
                 ['date', false, ['YYYY-MM-DD']], ])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $endDate->setAttrib('alt', 'date');
         $this->addElement($endDate);
 
@@ -63,8 +60,7 @@ class Application_Form_ShowListenerStat extends Zend_Form_SubForm
                 'NotEmpty',
                 ['date', false, ['HH:mm']],
                 ['regex', false, ['/^[0-2]?[0-9]:[0-5][0-9]$/', 'messages' => _('Invalid character entered')]], ])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $endTime->setAttrib('alt', 'time');
         $this->addElement($endTime);
     }

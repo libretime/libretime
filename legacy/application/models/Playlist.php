@@ -465,8 +465,7 @@ SQL;
                     ->filterByDbPlaylistId($this->id)
                     ->filterByDbPosition($pos, Criteria::GREATER_EQUAL)
                     ->orderByDbPosition()
-                    ->find($this->con)
-                ;
+                    ->find($this->con);
             } else {
                 //add to the end of the playlist
                 if ($addType == 'after') {
@@ -479,16 +478,14 @@ SQL;
                     $contentsToUpdate = CcPlaylistcontentsQuery::create()
                         ->filterByDbPlaylistId($this->id)
                         ->orderByDbPosition()
-                        ->find($this->con)
-                    ;
+                        ->find($this->con);
                 }
 
                 $contentsToUpdate = CcPlaylistcontentsQuery::create()
                     ->filterByDbPlaylistId($this->id)
                     ->filterByDbPosition($pos, Criteria::GREATER_EQUAL)
                     ->orderByDbPosition()
-                    ->find($this->con)
-                ;
+                    ->find($this->con);
             }
 
             foreach ($p_items as $ac) {
@@ -537,15 +534,13 @@ SQL;
             $contentsToMove = CcPlaylistcontentsQuery::create()
                 ->filterByDbId($p_items, Criteria::IN)
                 ->orderByDbPosition()
-                ->find($this->con)
-            ;
+                ->find($this->con);
 
             $otherContent = CcPlaylistcontentsQuery::create()
                 ->filterByDbId($p_items, Criteria::NOT_IN)
                 ->filterByDbPlaylistId($this->id)
                 ->orderByDbPosition()
-                ->find($this->con)
-            ;
+                ->find($this->con);
 
             $pos = 0;
             //moving items to beginning of the playlist.
@@ -612,13 +607,11 @@ SQL;
             $itemsToDelete = CcPlaylistcontentsQuery::create()
                 ->filterByPrimaryKeys($p_items)
                 ->filterByDbFileId(null, Criteria::NOT_EQUAL)
-                ->find($this->con)
-            ;
+                ->find($this->con);
 
             CcPlaylistcontentsQuery::create()
                 ->findPKs($p_items)
-                ->delete($this->con)
-            ;
+                ->delete($this->con);
 
             // now that the items have been deleted we can update the
             // is_playlist flag in cc_files
@@ -627,8 +620,7 @@ SQL;
             $contents = CcPlaylistcontentsQuery::create()
                 ->filterByDbPlaylistId($this->id)
                 ->orderByDbPosition()
-                ->find($this->con)
-            ;
+                ->find($this->con);
 
             //reset the positions of the remaining items.
             for ($i = 0; $i < count($contents); ++$i) {
@@ -653,8 +645,7 @@ SQL;
             ->joinWith(CcFilesPeer::OM_CLASS)
             ->filterByDbPlaylistId($this->id)
             ->filterByDbPosition($pos)
-            ->findOne()
-        ;
+            ->findOne();
 
         if (!$row) {
             return null;
@@ -770,8 +761,7 @@ SQL;
             $row = CcPlaylistcontentsQuery::create()
                 ->filterByDbPlaylistId($this->id)
                 ->filterByDbPosition(0)
-                ->findOne($this->con)
-            ;
+                ->findOne($this->con);
 
             $this->changeFadeInfo($row->getDbId(), $fadein, null);
         }
@@ -780,8 +770,7 @@ SQL;
             $row = CcPlaylistcontentsQuery::create()
                 ->filterByDbPlaylistId($this->id)
                 ->filterByDbPosition($this->getSize() - 1)
-                ->findOne($this->con)
-            ;
+                ->findOne($this->con);
 
             $this->changeFadeInfo($row->getDbId(), null, $fadeout);
         }
@@ -817,8 +806,7 @@ SQL;
             $row = CcPlaylistcontentsQuery::create()
                 ->joinWith(CcFilesPeer::OM_CLASS)
                 ->filterByPrimaryKey($id)
-                ->findOne($this->con)
-            ;
+                ->findOne($this->con);
 
             if (is_null($row)) {
                 throw new Exception('Playlist item does not exist.');
@@ -997,8 +985,7 @@ SQL;
         $itemsToDelete = CcPlaylistcontentsQuery::create()
             ->filterByDbPlaylistId($p_ids)
             ->filterByDbFileId(null, Criteria::NOT_EQUAL)
-            ->find()
-        ;
+            ->find();
 
         $updateIsPlaylistFlag = false;
 
@@ -1052,8 +1039,7 @@ SQL;
         $itemsToDelete = CcPlaylistcontentsQuery::create()
             ->filterByDbPlaylistId($this->id)
             ->filterByDbFileId(null, Criteria::NOT_EQUAL)
-            ->find()
-        ;
+            ->find();
 
         CcPlaylistcontentsQuery::create()->findByDbPlaylistId($this->id)->delete();
 
@@ -1139,8 +1125,7 @@ SQL;
             ->join('CcFiles.CcPlaylistcontents')
             ->where('CcPlaylistcontents.DbPlaylistId = ?', $this->pl->getDbId())
             ->where('CcFiles.DbFileExists = ?', 'false')
-            ->find()
-        ;
+            ->find();
 
         //Nicer Propel version but slightly slower because it generates a LEFT JOIN:
         /*

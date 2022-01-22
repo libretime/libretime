@@ -258,8 +258,7 @@ SQL;
                 ->filterByDbFirstShow($startsDT->format('Y-m-d'))
                 ->filterByDbStartTime($startsDT->format('H:i:s'))
                 ->filterByDbShowId($this->_showId)
-                ->findOne()
-            ;
+                ->findOne();
 
             /* Check if this cc_show_day rule is non-repeating. If it is, then
              * we know this instance was edited out of the repeating sequence
@@ -277,16 +276,14 @@ SQL;
                     ->filterByDbShowId($this->_showId)
                     ->filterByDbModifiedInstance(false)
                     ->filterByDbId($excludeIds, criteria::NOT_IN)
-                    ->find()
-                ;
+                    ->find();
             } elseif ($ccShowDay->getDbRepeatType() == -1) {
                 array_push($showDayIds, $ccShowDay->getDbId());
 
                 //treat edited instance as separate show for resize
                 $showInstances = CcShowInstancesQuery::create()
                     ->filterByDbId($instanceId)
-                    ->find()
-                ;
+                    ->find();
             }
         } else {
             $ccShowDays = $ccShow->getCcShowDayss();
@@ -296,8 +293,7 @@ SQL;
 
             $showInstances = CcShowInstancesQuery::create()
                 ->filterByDbShowId($this->_showId)
-                ->find($con)
-            ;
+                ->find($con);
         }
 
         /* Check two things:
@@ -400,8 +396,7 @@ SQL;
             $instances = CcShowInstancesQuery::create()
                 ->filterByDbEnds($nowDateTime->format(DEFAULT_TIMESTAMP_FORMAT), Criteria::GREATER_THAN)
                 ->filterByDbId($instanceIds, Criteria::IN)
-                ->find($con)
-            ;
+                ->find($con);
 
             foreach ($instances as $instance) {
                 $instance->updateScheduleStatus($con);
@@ -423,8 +418,7 @@ SQL;
 
         CcShowDaysQuery::create()
             ->filterByDbShowId($this->_showId)
-            ->update(['DbLastShow' => $timeinfo[0]])
-        ;
+            ->update(['DbLastShow' => $timeinfo[0]]);
 
         $sql = <<<'SQL'
 SELECT id from cc_show_instances
@@ -461,8 +455,7 @@ SQL;
             ->filterByDbShowId($this->getId())
             ->filterByDbRecord(1)
             ->filterByDbModifiedInstance(false)
-            ->findOne()
-        ;
+            ->findOne();
 
         return !is_null($showInstancesRow);
     }
@@ -480,8 +473,7 @@ SQL;
             ->filterByDbShowId($this->_showId)
             ->filterByDbRebroadcast(1)
             ->filterByDbModifiedInstance(false)
-            ->findOne()
-        ;
+            ->findOne();
 
         return !is_null($showInstancesRow);
     }
@@ -522,8 +514,7 @@ SQL;
     {
         $showDaysRow = CcShowDaysQuery::create()
             ->filterByDbShowId($this->_showId)
-            ->findOne()
-        ;
+            ->findOne();
 
         if (!is_null($showDaysRow)) {
             return $showDaysRow->getDbRepeatType() != -1;
@@ -545,8 +536,7 @@ SQL;
     {
         $showDaysRow = CcShowDaysQuery::create()
             ->filterByDbShowId($this->_showId)
-            ->findOne()
-        ;
+            ->findOne();
 
         if (!is_null($showDaysRow)) {
             return $showDaysRow->getDbRepeatType();
@@ -847,8 +837,7 @@ SQL;
     {
         return CcShowInstancesQuery::create()
             ->filterByDbShowId($this->getId())
-            ->findOne()
-        ;
+            ->findOne();
     }
 
     /**
@@ -913,8 +902,7 @@ SQL;
             );
 
             return CcShowInstancesQuery::create()
-                ->findPk($row)
-            ;
+                ->findPk($row);
         } catch (Exception $e) {
             return null;
         }
@@ -1049,12 +1037,10 @@ SQL;
         $repeatInfo = CcShowDaysQuery::create()
             ->filterByDbShowId($show_id)
             ->filterByDbDay($day)
-            ->findOne()
-        ;
+            ->findOne();
 
         $repeatInfo->setDbNextPopDate($nextInfo[0])
-            ->save()
-        ;
+            ->save();
     }
 
     /**

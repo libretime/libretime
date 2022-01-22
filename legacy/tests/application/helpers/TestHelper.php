@@ -8,8 +8,7 @@ class TestHelper
 
         //pass to the adapter the submitted username and password
         $authAdapter->setIdentity('admin')
-            ->setCredential('admin')
-        ;
+            ->setCredential('admin');
 
         $auth = Zend_Auth::getInstance();
         $result = $auth->authenticate($authAdapter);

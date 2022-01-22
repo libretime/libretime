@@ -16,8 +16,7 @@ class UsersettingsController extends Zend_Controller_Action
             ->addActionContext('remindme-never', 'json')
             ->addActionContext('donotshowregistrationpopup', 'json')
             ->addActionContext('set-library-screen-settings', 'json')
-            ->initContext()
-        ;
+            ->initContext();
     }
 
     public function setNowPlayingScreenSettingsAction()

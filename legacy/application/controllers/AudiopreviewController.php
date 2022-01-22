@@ -10,8 +10,7 @@ class AudiopreviewController extends Zend_Controller_Action
             ->addActionContext('get-show', 'json')
             ->addActionContext('playlist-preview', 'json')
             ->addActionContext('get-playlist', 'json')
-            ->initContext()
-        ;
+            ->initContext();
     }
 
     /**

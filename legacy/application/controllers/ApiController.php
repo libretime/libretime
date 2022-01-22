@@ -76,8 +76,7 @@ class ApiController extends Zend_Controller_Action
             ->addActionContext('get-usability-hint', 'json')
             ->addActionContext('poll-celery', 'json')
             ->addActionContext('recalculate-schedule', 'json') //RKTN-260
-            ->initContext()
-        ;
+            ->initContext();
     }
 
     public function checkAuth()
@@ -1412,8 +1411,7 @@ class ApiController extends Zend_Controller_Action
                 $previous_metadata = CcWebstreamMetadataQuery::create()
                     ->orderByDbStartTime('desc')
                     ->filterByDbInstanceId($media_id)
-                    ->findOne()
-                ;
+                    ->findOne();
 
                 $do_insert = true;
                 if ($previous_metadata) {
@@ -1723,8 +1721,7 @@ class ApiController extends Zend_Controller_Action
             ->filterByDbStarts($now, Criteria::GREATER_THAN)
             //->filterByDbModifiedInstance(false)
             ->orderByDbStarts()
-            ->find()
-        ;
+            ->find();
         //->find($this->con);
         $total = $showInstances->count();
         $progress = 0;
@@ -1771,7 +1768,6 @@ class ApiController extends Zend_Controller_Action
         $this->getResponse()
             ->setHttpResponseCode($status)
             ->setHeader('Content-Type', 'application/json')
-            ->setBody(json_encode(['error' => $message]))
-        ;
+            ->setBody(json_encode(['error' => $message]));
     }
 }

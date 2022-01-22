@@ -861,15 +861,13 @@ class Application_Model_Preference
         //New versions use schema_version
         $pref = CcPrefQuery::create()
             ->filterByKeystr('schema_version')
-            ->findOne()
-        ;
+            ->findOne();
 
         if (empty($pref)) {
             //Pre-2.5.2 releases all used this ambiguous "system_version" key to represent both the code and schema versions...
             $pref = CcPrefQuery::create()
                 ->filterByKeystr('system_version')
-                ->findOne()
-            ;
+                ->findOne();
         }
 
         return $pref->getValStr();

@@ -194,8 +194,7 @@ class Application_Model_StoredFile
                     } // get the user by id and set it like that
                     else {
                         $user = CcSubjsQuery::create()
-                            ->findPk($p_md['owner_id'])
-                        ;
+                            ->findPk($p_md['owner_id']);
                         if ($user) {
                             $owner = $user;
                         }
@@ -661,8 +660,7 @@ SQL;
         $file = CcFilesQuery::create()
             ->filterByDbDirectory($music_dir->getId())
             ->filterByDbFilepath($path_info[1])
-            ->findOne($con)
-        ;
+            ->findOne($con);
 
         return is_null($file) ? null : self::createWithFile($file, $con);
     }
@@ -679,8 +677,7 @@ SQL;
         $files = CcFilesQuery::create()
             ->filterByDbDirectory($music_dir->getId())
             ->filterByDbFilepath("{$path_info[1]}%")
-            ->find($con)
-        ;
+            ->find($con);
         $res = [];
         foreach ($files as $file) {
             $storedFile = new Application_Model_StoredFile($file, $con);
@@ -1142,15 +1139,13 @@ SQL;
     public function setFileExistsFlag($flag)
     {
         $this->_file->setDbFileExists($flag)
-            ->save()
-        ;
+            ->save();
     }
 
     public function setFileHiddenFlag($flag)
     {
         $this->_file->setDbHidden($flag)
-            ->save()
-        ;
+            ->save();
     }
 
     // This method seems to be unsued everywhere so I've commented it out

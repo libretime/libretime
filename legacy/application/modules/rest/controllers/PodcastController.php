@@ -35,15 +35,13 @@ class Rest_PodcastController extends Zend_Rest_Controller
             // Don't return the Station podcast - we fetch it separately
             ->filterByDbId($stationPodcastId, Criteria::NOT_EQUAL)
             ->leftJoinImportedPodcast()
-            ->withColumn('auto_ingest_timestamp')
-        ;
+            ->withColumn('auto_ingest_timestamp');
         $total = $result->count();
         if ($limit > 0) {
             $result->setLimit($limit);
         }
         $result->setOffset($offset)
-            ->orderBy($sortColumn, $sortDir)
-        ;
+            ->orderBy($sortColumn, $sortDir);
         $result = $result->find();
 
         $podcastArray = $result->toArray(null, false, BasePeer::TYPE_FIELDNAME);
@@ -51,8 +49,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
         $this->getResponse()
             ->setHttpResponseCode(200)
             ->setHeader('X-TOTAL-COUNT', $total)
-            ->appendBody(json_encode($podcastArray))
-        ;
+            ->appendBody(json_encode($podcastArray));
     }
 
     public function getAction()
@@ -65,8 +62,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
         try {
             $this->getResponse()
                 ->setHttpResponseCode(200)
-                ->appendBody(json_encode(Application_Service_PodcastService::getPodcastById($id)))
-            ;
+                ->appendBody(json_encode(Application_Service_PodcastService::getPodcastById($id)));
         } catch (PodcastNotFoundException $e) {
             $this->podcastNotFoundResponse();
             Logging::error($e->getMessage());
@@ -100,8 +96,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
         } catch (InvalidPodcastException $e) {
             $this->getResponse()
                 ->setHttpResponseCode(400)
-                ->appendBody('Invalid podcast!')
-            ;
+                ->appendBody('Invalid podcast!');
         } catch (Exception $e) {
             Logging::error($e->getMessage());
             $this->unknownErrorResponse();
@@ -121,8 +116,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
 
             $this->getResponse()
                 ->setHttpResponseCode(201)
-                ->appendBody(json_encode($podcast))
-            ;
+                ->appendBody(json_encode($podcast));
         } catch (PodcastNotFoundException $e) {
             $this->podcastNotFoundResponse();
             Logging::error($e->getMessage());
@@ -142,8 +136,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
         try {
             Application_Service_PodcastService::deletePodcastById($id);
             $this->getResponse()
-                ->setHttpResponseCode(204)
-            ;
+                ->setHttpResponseCode(204);
         } catch (PodcastNotFoundException $e) {
             $this->podcastNotFoundResponse();
             Logging::error($e->getMessage());
@@ -161,8 +154,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
         if ($this->_request->getMethod() != HttpRequestType::POST) {
             $this->getResponse()
                 ->setHttpResponseCode(405)
-                ->appendBody('ERROR: Method not accepted')
-            ;
+                ->appendBody('ERROR: Method not accepted');
 
             return;
         }

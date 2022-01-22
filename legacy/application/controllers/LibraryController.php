@@ -15,8 +15,7 @@ class LibraryController extends Zend_Controller_Action
             ->addActionContext('set-num-entries', 'json')
             ->addActionContext('edit-file-md', 'json')
             ->addActionContext('publish-dialog', 'html')
-            ->initContext()
-        ;
+            ->initContext();
     }
 
     public function indexAction()

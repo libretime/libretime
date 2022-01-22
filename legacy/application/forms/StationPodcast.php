@@ -13,8 +13,7 @@ class Application_Form_StationPodcast extends Zend_Form
         $csrf_element->setValue($csrf_namespace->authtoken)
             ->setRequired('true')
             ->removeDecorator('HtmlTag')
-            ->removeDecorator('Label')
-        ;
+            ->removeDecorator('Label');
         $this->addElement($csrf_element);
     }
 }

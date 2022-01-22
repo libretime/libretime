@@ -104,8 +104,7 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
     {
         static::updateTask($task, $status);
         $ref = ThirdPartyTrackReferencesQuery::create()
-            ->findOneByDbId($trackId)
-        ;
+            ->findOneByDbId($trackId);
         if (is_null($ref)) {
             $ref = new ThirdPartyTrackReferences();
         }

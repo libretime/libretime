@@ -77,8 +77,7 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
             ]]])
             ->addValidator('Count', false, 1)
             ->addValidator('Extension', false, 'jpg,jpeg,png,gif')
-            ->addFilter('ImageSize')
-        ;
+            ->addFilter('ImageSize');
 
         $this->addElement($upload);
 
@@ -99,8 +98,7 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
         $csrf_element->setValue($csrf_namespace->authtoken)
             ->setRequired('true')
             ->removeDecorator('HtmlTag')
-            ->removeDecorator('Label')
-        ;
+            ->removeDecorator('Label');
         $this->addElement($csrf_element);
     }
 

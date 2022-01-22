@@ -35,8 +35,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
         try {
             $totalPodcastEpisodesCount = PodcastEpisodesQuery::create()
                 ->filterByDbPodcastId($id)
-                ->count()
-            ;
+                ->count();
 
             // Check if offset and limit were sent with request.
             // Default limit to zero and offset to $totalFileCount
@@ -50,8 +49,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
             $this->getResponse()
                 ->setHttpResponseCode(201)
                 ->setHeader('X-TOTAL-COUNT', $totalPodcastEpisodesCount)
-                ->appendBody(json_encode($this->_service->getPodcastEpisodes($id, $offset, $limit, $sortColumn, $sortDir)))
-            ;
+                ->appendBody(json_encode($this->_service->getPodcastEpisodes($id, $offset, $limit, $sortColumn, $sortDir)));
         } catch (PodcastNotFoundException $e) {
             $this->podcastNotFoundResponse();
             Logging::error($e->getMessage());
@@ -77,8 +75,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
         try {
             $this->getResponse()
                 ->setHttpResponseCode(201)
-                ->appendBody(json_encode($this->_service->getPodcastEpisodeById($episodeId)))
-            ;
+                ->appendBody(json_encode($this->_service->getPodcastEpisodeById($episodeId)));
         } catch (PodcastNotFoundException $e) {
             $this->podcastNotFoundResponse();
             Logging::error($e->getMessage());
@@ -115,8 +112,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
             $episode = $this->_service->importEpisode($id, $requestData['episode']);
             $this->getResponse()
                 ->setHttpResponseCode(201)
-                ->appendBody(json_encode($episode))
-            ;
+                ->appendBody(json_encode($episode));
         } catch (Exception $e) {
             $this->unknownErrorResponse();
             Logging::error($e->getMessage());
@@ -138,8 +134,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
         try {
             $this->_service->deletePodcastEpisodeById($episodeId);
             $this->getResponse()
-                ->setHttpResponseCode(204)
-            ;
+                ->setHttpResponseCode(204);
         } catch (PodcastEpisodeNotFoundException $e) {
             $this->podcastEpisodeNotFoundResponse();
             Logging::error($e->getMessage());

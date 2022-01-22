@@ -7,8 +7,7 @@ class PluploadController extends Zend_Controller_Action
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('upload', 'json')
             ->addActionContext('recent-uploads', 'json')
-            ->initContext()
-        ;
+            ->initContext();
     }
 
     public function indexAction()
@@ -103,8 +102,7 @@ class PluploadController extends Zend_Controller_Action
             ->orderByDbUtime(Criteria::DESC)
             ->offset($rowStart)
             ->limit($limit)
-            ->find()
-        ;
+            ->find();
 
         $uploadsArray = [];
         $utcTimezone = new DateTimeZone('UTC');

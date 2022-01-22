@@ -520,8 +520,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ccFiles
             ->setDbCueIn('00:00:00')
             ->setDbCueOut('00:04:32')
-            ->save()
-        ;
+            ->save();
 
         $scheduleItems = [
             0 => [
@@ -578,8 +577,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ccFiles
             ->setDbCueIn('00:00:00')
             ->setDbCueOut('00:04:32')
-            ->save()
-        ;
+            ->save();
 
         $scheduleItems = [
             0 => [

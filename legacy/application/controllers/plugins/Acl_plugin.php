@@ -146,8 +146,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                         $this->getResponse()
                             ->setHttpResponseCode(401)
                             ->setBody($json)
-                            ->sendResponse()
-                        ;
+                            ->sendResponse();
 
                         //redirectAndExit() cleans up, sends the headers and stops the script
                         Zend_Controller_Action_HelperBroker::getStaticHelper('redirector')->redirectAndExit();
@@ -178,8 +177,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                     $this->getResponse()
                         ->setHttpResponseCode(401)
                         ->appendBody('ERROR: CSRF token mismatch.')
-                        ->sendResponse()
-                    ;
+                        ->sendResponse();
 
                     exit();
                 }
@@ -223,8 +221,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 
         $this->getResponse()
             ->setHttpResponseCode(401)
-            ->appendBody('ERROR: Incorrect API key.')
-        ;
+            ->appendBody('ERROR: Incorrect API key.');
 
         return false;
     }
@@ -247,8 +244,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         $controller = $request->getControllerName();
         $action = $request->getActionName();
         $stationPodcast = StationPodcastQuery::create()
-            ->findOneByDbPodcastId(Application_Model_Preference::getStationPodcastId())
-        ;
+            ->findOneByDbPodcastId(Application_Model_Preference::getStationPodcastId());
 
         return $module == 'rest' && $controller == 'media' && $action == 'download'
             && $key === Application_Model_Preference::getStationPodcastDownloadKey()

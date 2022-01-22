@@ -44,8 +44,7 @@ class Application_Form_PasswordRestore extends Zend_Form
         $cancel->setLabel(_('Back'))
             ->setIgnore(true)
             ->setAttrib('onclick', 'window.location = ' . Zend_Controller_Front::getInstance()->getBaseUrl('login'))
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $this->addElement($cancel);
     }
 }

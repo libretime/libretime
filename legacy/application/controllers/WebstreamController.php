@@ -9,8 +9,7 @@ class WebstreamController extends Zend_Controller_Action
             ->addActionContext('save', 'json')
             ->addActionContext('edit', 'json')
             ->addActionContext('delete', 'json')
-            ->initContext()
-        ;
+            ->initContext();
     }
 
     public function newAction()

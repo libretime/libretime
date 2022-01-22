@@ -58,15 +58,13 @@ final class Application_Model_Scheduler
     {
         $destinationInstanceId = $destination['instance'];
         $destinationCcShowInstance = CcShowInstancesQuery::create()
-            ->findPk($destinationInstanceId)
-        ;
+            ->findPk($destinationInstanceId);
         $isDestinationLinked = $destinationCcShowInstance->getCcShow()->isLinked();
 
         foreach ($itemsToMove as $itemToMove) {
             $sourceInstanceId = $itemToMove['instance'];
             $ccShowInstance = CcShowInstancesQuery::create()
-                ->findPk($sourceInstanceId)
-            ;
+                ->findPk($sourceInstanceId);
 
             //does the item being moved belong to a linked show
             $isSourceLinked = $ccShowInstance->getCcShow()->isLinked();
@@ -469,8 +467,7 @@ final class Application_Model_Scheduler
                 ->setDbCueOut('00:00:00')
                 ->setDbPlayoutStatus(-1)
                 ->setDbInstanceId($instanceId)
-                ->save($this->con)
-            ;
+                ->save($this->con);
         } else {
             $nextDT = $DT;
         }
@@ -495,8 +492,7 @@ final class Application_Model_Scheduler
         $schedule = CcScheduleQuery::create()
             ->filterByDbInstanceId($instanceId)
             ->orderByDbStarts()
-            ->find($this->con)
-        ;
+            ->find($this->con);
 
         $now = new DateTime('now', new DateTimeZone('UTC'));
         $itemStartDT = $instance->getDbStarts(null);
@@ -510,8 +506,7 @@ final class Application_Model_Scheduler
             }
             $item->setDbStarts($itemStartDT)
                 ->setDbEnds($itemEndDT)
-                ->save($this->con)
-            ;
+                ->save($this->con);
             $itemStartDT = $this->findTimeDifference($itemEndDT, $this->crossfadeDuration);
         }
     }
@@ -536,8 +531,7 @@ final class Application_Model_Scheduler
             ->filterByDbInstanceId($showInstance)
             ->filterByDbId($exclude, Criteria::NOT_IN)
             ->orderByDbStarts()
-            ->find($this->con)
-        ;
+            ->find($this->con);
 
         $now = new DateTime('now', new DateTimeZone('UTC'));
         $itemStartDT = $instance->getDbStarts(null);
@@ -551,8 +545,7 @@ final class Application_Model_Scheduler
             }
 
             $item->setDbStarts($itemStartDT)
-                ->setDbEnds($itemEndDT)
-            ;
+                ->setDbEnds($itemEndDT);
 
             $itemStartDT = $itemEndDT;
         }
@@ -579,8 +572,7 @@ final class Application_Model_Scheduler
             ->filterByDbInstanceId($showInstance)
             ->filterByDbId($exclude, Criteria::NOT_IN)
             ->orderByDbStarts()
-            ->find($this->con)
-        ;
+            ->find($this->con);
 
         foreach ($schedule as $item) {
             //START OF TIME RECALC HACK
@@ -608,8 +600,7 @@ final class Application_Model_Scheduler
             $itemEndDT = $this->findEndTime($itemStartDT, $item->getDbClipLength());
             $item->setDbStarts($itemStartDT)
                 ->setDbEnds($itemEndDT)
-                ->save($this->con)
-            ;
+                ->save($this->con);
             $itemStartDT = $this->findTimeDifference($itemEndDT, $this->crossfadeDuration);
         }
 
@@ -719,13 +710,11 @@ final class Application_Model_Scheduler
                     $instances = CcShowInstancesQuery::create()
                         ->filterByDbShowId($ccShow['id'])
                         ->filterByDbStarts(gmdate(DEFAULT_TIMESTAMP_FORMAT), Criteria::GREATER_THAN)
-                        ->find()
-                    ;
+                        ->find();
                 } else {
                     $instances = CcShowInstancesQuery::create()
                         ->filterByDbId($schedule['instance'])
-                        ->find()
-                    ;
+                        ->find();
                 }
 
                 $excludePositions = [];
@@ -1065,8 +1054,7 @@ final class Application_Model_Scheduler
             //update the status flag in cc_schedule.
             $instances = CcShowInstancesQuery::create()
                 ->filterByPrimaryKeys($affectedShowInstances)
-                ->find($this->con)
-            ;
+                ->find($this->con);
 
             $startProfile = microtime(true);
 
@@ -1083,8 +1071,7 @@ final class Application_Model_Scheduler
             //update the last scheduled timestamp.
             CcShowInstancesQuery::create()
                 ->filterByPrimaryKeys($affectedShowInstances)
-                ->update(['DbLastScheduled' => new DateTime('now', new DateTimeZone('UTC'))], $this->con)
-            ;
+                ->update(['DbLastScheduled' => new DateTime('now', new DateTimeZone('UTC'))], $this->con);
 
             $endProfile = microtime(true);
             Logging::debug('updating last scheduled timestamp.');
@@ -1298,8 +1285,7 @@ final class Application_Model_Scheduler
                         ->filterByDbPosition($removedItem->getDbPosition())
                         ->filterByDbInstanceId($instanceIds, Criteria::IN)
                         ->filterByDbId($removedItem->getDbId(), Criteria::NOT_EQUAL)
-                        ->delete($this->con)
-                    ;
+                        ->delete($this->con);
                 }
 
                 //check to truncate the currently playing item instead of deleting it.
@@ -1320,8 +1306,7 @@ final class Application_Model_Scheduler
                     $removedItem->setDbCueOut($cueout)
                         ->setDbClipLength($cliplength)
                         ->setDbEnds($this->nowDT)
-                        ->save($this->con)
-                    ;
+                        ->save($this->con);
                 } else {
                     $removedItem->delete($this->con);
                 }
@@ -1338,8 +1323,7 @@ final class Application_Model_Scheduler
             //update the status flag in cc_schedule.
             $instances = CcShowInstancesQuery::create()
                 ->filterByPrimaryKeys($effectedInstanceIds)
-                ->find($this->con)
-            ;
+                ->find($this->con);
 
             foreach ($instances as $instance) {
                 $instance->updateScheduleStatus($this->con);
@@ -1349,8 +1333,7 @@ final class Application_Model_Scheduler
             //update the last scheduled timestamp.
             CcShowInstancesQuery::create()
                 ->filterByPrimaryKeys($showInstances)
-                ->update(['DbLastScheduled' => new DateTime('now', new DateTimeZone('UTC'))], $this->con)
-            ;
+                ->update(['DbLastScheduled' => new DateTime('now', new DateTimeZone('UTC'))], $this->con);
 
             $this->con->commit();
 
@@ -1391,8 +1374,7 @@ final class Application_Model_Scheduler
                 $items = CcScheduleQuery::create()
                     ->filterByDbInstanceId($p_id)
                     ->filterByDbEnds($this->nowDT, Criteria::GREATER_THAN)
-                    ->find($this->con)
-                ;
+                    ->find($this->con);
 
                 if (count($items) > 0) {
                     $remove = [];

@@ -121,8 +121,7 @@ class Application_Model_StreamSetting
     {
         $rows = CcStreamSettingQuery::create()
             ->filterByDbKeyName("{$p_streamId}_%")
-            ->find()
-        ;
+            ->find();
 
         //This is way too much code because someone made only stupid decisions about how
         //the layout of this table worked. The git history doesn't lie.

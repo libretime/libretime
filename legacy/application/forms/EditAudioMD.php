@@ -25,8 +25,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         $artwork->setFilters(['StringTrim'])
             ->setValidators([
                 new Zend_Validate_StringLength(['max' => 2048]),
-            ])
-        ;
+            ]);
         $file_id->addDecorator('HtmlTag', ['tag' => 'div', 'style' => 'display:none']);
         $file_id->removeDecorator('Label');
         $file_id->setAttrib('class', 'artwork');
@@ -55,8 +54,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             ->setFilters(['StringTrim'])
             ->setValidators([
                 new Zend_Validate_StringLength(['max' => 512]),
-            ])
-        ;
+            ]);
         $this->addElement($track_title);
 
         // Add artist field
@@ -66,8 +64,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             ->setFilters(['StringTrim'])
             ->setValidators([
                 new Zend_Validate_StringLength(['max' => 512]),
-            ])
-        ;
+            ]);
         $this->addElement($artist_name);
 
         // Add album field
@@ -77,8 +74,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             ->setFilters(['StringTrim'])
             ->setValidators([
                 new Zend_Validate_StringLength(['max' => 512]),
-            ])
-        ;
+            ]);
         $this->addElement($album_title);
 
         // Add album field
@@ -121,8 +117,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             ->setFilters(['StringTrim'])
             ->setValidators([
                 new Zend_Validate_StringLength(['max' => 512]),
-            ])
-        ;
+            ]);
         $this->addElement($description);
 
         // Add track number field
@@ -130,8 +125,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         $track_number->class = 'input_text';
         $track_number->setLabel('Track Number:')
             ->setFilters(['StringTrim'])
-            ->setValidators([new Zend_Validate_Int()])
-        ;
+            ->setValidators([new Zend_Validate_Int()]);
         $this->addElement($track_number);
 
         // Add genre field
@@ -141,8 +135,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             ->setFilters(['StringTrim'])
             ->setValidators([
                 new Zend_Validate_StringLength(['max' => 64]),
-            ])
-        ;
+            ]);
         $this->addElement($genre);
 
         // Add year field
@@ -155,8 +148,7 @@ class Application_Form_EditAudioMD extends Zend_Form
                 Application_Form_Helper_ValidationTypes::overrrideDateValidator('YYYY-MM-DD'),
                 Application_Form_Helper_ValidationTypes::overrrideDateValidator('YYYY-MM'),
                 Application_Form_Helper_ValidationTypes::overrrideDateValidator('YYYY'),
-            ])
-        ;
+            ]);
         $this->addElement($year);
 
         // Add label field
@@ -166,8 +158,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             ->setFilters(['StringTrim'])
             ->setValidators([
                 new Zend_Validate_StringLength(['max' => 512]),
-            ])
-        ;
+            ]);
         $this->addElement($label);
 
         // Add composer field
@@ -177,8 +168,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             ->setFilters(['StringTrim'])
             ->setValidators([
                 new Zend_Validate_StringLength(['max' => 512]),
-            ])
-        ;
+            ]);
         $this->addElement($composer);
 
         // Add conductor field
@@ -188,8 +178,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             ->setFilters(['StringTrim'])
             ->setValidators([
                 new Zend_Validate_StringLength(['max' => 512]),
-            ])
-        ;
+            ]);
         $this->addElement($conductor);
 
         // Add mood field
@@ -199,8 +188,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             ->setFilters(['StringTrim'])
             ->setValidators([
                 new Zend_Validate_StringLength(['max' => 64]),
-            ])
-        ;
+            ]);
         $this->addElement($mood);
 
         // Add bmp field
@@ -210,8 +198,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             ->setFilters(['StringTrim'])
             ->setValidators([
                 new Zend_Validate_StringLength(['min' => 0, 'max' => 8]),
-                new Zend_Validate_Digits(), ])
-        ;
+                new Zend_Validate_Digits(), ]);
         $this->addElement($bpm);
 
         // Add copyright field
@@ -221,8 +208,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             ->setFilters(['StringTrim'])
             ->setValidators([
                 new Zend_Validate_StringLength(['max' => 512]),
-            ])
-        ;
+            ]);
         $this->addElement($copyright);
 
         // Add isrc number field
@@ -232,8 +218,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             ->setFilters(['StringTrim'])
             ->setValidators([
                 new Zend_Validate_StringLength(['max' => 512]),
-            ])
-        ;
+            ]);
         $this->addElement($isrc_number);
 
         // Add website field
@@ -243,8 +228,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             ->setFilters(['StringTrim'])
             ->setValidators([
                 new Zend_Validate_StringLength(['max' => 512]),
-            ])
-        ;
+            ]);
         $this->addElement($info_url);
 
         // Add language field
@@ -254,8 +238,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             ->setFilters(['StringTrim'])
             ->setValidators([
                 new Zend_Validate_StringLength(['max' => 512]),
-            ])
-        ;
+            ]);
         $this->addElement($language);
 
         $validCuePattern = '/^(?:[0-9]{1,2}:)?(?:[0-9]{1,2}:)?[0-9]{1,6}(\.\d{1,6})?$/';
