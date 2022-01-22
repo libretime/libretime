@@ -201,17 +201,18 @@ class AirtimeInstall
     public static function CreateDatabase()
     {
         $CC_CONFIG = Config::getConfig();
+        $host = $CC_CONFIG['dsn']['host'];
+        $port = $CC_CONFIG['dsn']['port'];
         $database = $CC_CONFIG['dsn']['database'];
         $username = $CC_CONFIG['dsn']['username'];
         $password = $CC_CONFIG['dsn']['password'];
-        $hostspec = $CC_CONFIG['dsn']['hostspec'];
 
         echo ' * Creating Airtime database: ' . $database . PHP_EOL;
 
         $dbExists = false;
 
         try {
-            $con = pg_connect('user=' . $username . ' password=' . $password . ' host=' . $hostspec);
+            $con = pg_connect("host={$host} port={$port} user={$username} password={$password}");
 
             pg_query($con, 'CREATE DATABASE ' . $database . ' WITH ENCODING \'UTF8\' TEMPLATE template0 OWNER ' . $username . ';');
         } catch (Exception $e) {
@@ -245,7 +246,7 @@ class AirtimeInstall
         }
     }
 
-    public static function CreateDatabaseTables($p_dbuser, $p_dbpasswd, $p_dbname, $p_dbhost)
+    public static function CreateDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost, $dbport)
     {
         echo ' * Creating database tables' . PHP_EOL;
         // Put Propel sql files in Database
@@ -253,7 +254,15 @@ class AirtimeInstall
         $dir = self::GetAirtimeSrcDir() . '/build/sql/';
         $files = ['schema.sql', 'sequences.sql', 'views.sql', 'triggers.sql', 'defaultdata.sql'];
         foreach ($files as $f) {
-            $command = "export PGPASSWORD={$p_dbpasswd} && /usr/bin/psql --username {$p_dbuser} --dbname {$p_dbname} --host {$p_dbhost} --file {$dir}{$f} 2>&1";
+            $command = <<<"END"
+PGPASSWORD={$dbpasswd} \\
+/usr/bin/psql \\
+    --host={$dbhost} \\
+    --port={$dbport} \\
+    --dbname={$dbname} \\
+    --username={$dbuser} \\
+    --file {$dir}{$f} 2>&1
+END;
             @exec($command, $output, $results);
         }
         AirtimeInstall::$databaseTablesCreated = true;
