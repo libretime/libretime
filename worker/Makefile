@@ -3,8 +3,8 @@ all: lint
 include ../tools/python.mk
 
 PIP_INSTALL := --editable .
-PYLINT_ARG := libretime_worker
-MYPY_ARG := libretime_worker
+PYLINT_ARG := libretime_worker || true
+MYPY_ARG := libretime_worker || true
 
 format: .format
 lint: .format-check .pylint .mypy
