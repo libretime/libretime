@@ -38,8 +38,8 @@ setup(
     extras_require={
         "dev": [
             "distro",
-            f"libretime-api-client @ file://localhost/{here.parent / 'api_client'}#egg=libretime_api_client",
-            f"libretime-shared @ file://localhost/{here.parent / 'shared'}#egg=libretime_shared",
+            f"libretime-api-client @ file://localhost{here.parent / 'api_client'}",
+            f"libretime-shared @ file://localhost{here.parent / 'shared'}",
         ],
     },
     zip_safe=False,
