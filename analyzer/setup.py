@@ -4,7 +4,7 @@ from pathlib import Path
 from setuptools import setup
 
 # Change directory since setuptools uses relative paths
-here = Path(__file__).parent
+here = Path(__file__).parent.resolve()
 chdir(here)
 
 setup(
