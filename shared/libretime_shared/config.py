@@ -85,6 +85,7 @@ class BaseConfig(BaseModel):
         if filepath is None:
             return {}
 
+        # pylint: disable=fixme
         # TODO: Remove ability to load ini files once yaml if fully supported.
         if filepath.suffix == ".conf":
             config = ConfigParser()
