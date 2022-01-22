@@ -28,7 +28,7 @@ def test_load_packages():
     assert load_packages(PACKAGE_INI, "focal", True, ["legacy"]) == result_exclude
 
 
-def test_list_packages(tmp_path: Path):
+def test_list_packages(tmp_path: Path) -> None:
     package_file = tmp_path / "packages.ini"
     package_file.write_text(PACKAGE_INI)
 
