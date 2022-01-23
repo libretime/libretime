@@ -7,8 +7,7 @@ class ListenerstatController extends Zend_Controller_Action
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext
             ->addActionContext('get-data', 'json')
-            ->initContext()
-        ;
+            ->initContext();
     }
 
     public function indexAction()

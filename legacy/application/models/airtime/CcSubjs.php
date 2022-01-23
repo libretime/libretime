@@ -30,8 +30,7 @@ class CcSubjs extends BaseCcSubjs
     public function isHostOfShowInstance($instanceId)
     {
         $showInstance = CcShowInstancesQuery::create()
-            ->findPk($instanceId)
-        ;
+            ->findPk($instanceId);
 
         return CcShowHostsQuery::create()
             ->filterByDbShow($showInstance->getDbShowId())

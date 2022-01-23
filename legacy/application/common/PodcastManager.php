@@ -92,8 +92,7 @@ class PodcastManager
     {
         return ImportedPodcastQuery::create()
             ->filterByDbAutoIngest(true)
-            ->find()
-        ;
+            ->find();
     }
 
     /**

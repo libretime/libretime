@@ -16,8 +16,7 @@ class PlayouthistoryController extends Zend_Controller_Action
             ->addActionContext('delete-list-items', 'json')
             ->addActionContext('update-list-item', 'json')
             ->addActionContext('update-file-item', 'json')
-            ->initContext()
-        ;
+            ->initContext();
     }
 
     public function indexAction()

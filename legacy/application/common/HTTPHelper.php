@@ -117,8 +117,7 @@ class ZendActionHttpException extends Exception
                       . " with status code {$statusCode}: {$message}");
         $action->getResponse()
             ->setHttpResponseCode($statusCode)
-            ->appendBody($message)
-        ;
+            ->appendBody($message);
         parent::__construct($message, $code, $previous);
     }
 }

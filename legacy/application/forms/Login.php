@@ -44,8 +44,7 @@ class Application_Form_Login extends Zend_Form
             ->setValue((isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1) ? 'admin' : '')
             ->addFilter('StringTrim')
             ->setDecorators(['ViewHelper'])
-            ->setValidators(['NotEmpty'])
-        ;
+            ->setValidators(['NotEmpty']);
         $this->addElement($username);
 
         // Add password element

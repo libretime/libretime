@@ -67,8 +67,7 @@ class Application_Model_ShowBuilder
         $host_shows = CcShowHostsQuery::create()
             ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
             ->filterByDbHost($this->user->getId())
-            ->find()
-        ;
+            ->find();
 
         foreach ($host_shows as $host_show) {
             $shows[] = $host_show->getDbShow();

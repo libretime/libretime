@@ -36,8 +36,7 @@ class Application_Form_AddTracktype extends Zend_Form
             ->setFilters(['StringTrim'])
             ->setValidators([
                 new Zend_Validate_StringLength(['max' => 200]),
-            ])
-        ;
+            ]);
         $description->setAttrib('class', 'input_text');
         $description->addFilter('StringTrim');
         $this->addElement($description);

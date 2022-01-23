@@ -136,8 +136,7 @@ class Application_Form_EditUser extends Zend_Form
         $count = CcSubjsQuery::create()
             ->filterByDbLogin($p_login)
             ->filterByDbId($p_userId, Criteria::NOT_EQUAL)
-            ->count()
-        ;
+            ->count();
 
         if ($count != 0) {
             $this->getElement('cu_login')->setErrors([_('Login name is not unique.')]);

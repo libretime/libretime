@@ -458,8 +458,7 @@ SQL;
                     ->filterByDbBlockId($this->id)
                     ->filterByDbPosition($pos, Criteria::GREATER_EQUAL)
                     ->orderByDbPosition()
-                    ->find($this->con)
-                ;
+                    ->find($this->con);
 
                 Logging::info('Adding to block');
                 Logging::info("at position {$pos}");
@@ -475,16 +474,14 @@ SQL;
                     $contentsToUpdate = CcBlockcontentsQuery::create()
                         ->filterByDbBlockId($this->id)
                         ->orderByDbPosition()
-                        ->find($this->con)
-                    ;
+                        ->find($this->con);
                 }
 
                 $contentsToUpdate = CcBlockcontentsQuery::create()
                     ->filterByDbBlockId($this->id)
                     ->filterByDbPosition($pos, Criteria::GREATER_EQUAL)
                     ->orderByDbPosition()
-                    ->find($this->con)
-                ;
+                    ->find($this->con);
 
                 Logging::info('Adding to block');
                 Logging::info("at position {$pos}");
@@ -550,15 +547,13 @@ SQL;
             $contentsToMove = CcBlockcontentsQuery::create()
                 ->filterByDbId($p_items, Criteria::IN)
                 ->orderByDbPosition()
-                ->find($this->con)
-            ;
+                ->find($this->con);
 
             $otherContent = CcBlockcontentsQuery::create()
                 ->filterByDbId($p_items, Criteria::NOT_IN)
                 ->filterByDbBlockId($this->id)
                 ->orderByDbPosition()
-                ->find($this->con)
-            ;
+                ->find($this->con);
 
             $pos = 0;
             //moving items to beginning of the block.
@@ -625,13 +620,11 @@ SQL;
             $itemsToDelete = CcBlockcontentsQuery::create()
                 ->filterByPrimaryKeys($p_items)
                 ->filterByDbFileId(null, Criteria::NOT_EQUAL)
-                ->find($this->con)
-            ;
+                ->find($this->con);
 
             CcBlockcontentsQuery::create()
                 ->findPKs($p_items)
-                ->delete($this->con)
-            ;
+                ->delete($this->con);
 
             // now that the items have been deleted we can update the
             // is_playlist flag in cc_files
@@ -640,8 +633,7 @@ SQL;
             $contents = CcBlockcontentsQuery::create()
                 ->filterByDbBlockId($this->id)
                 ->orderByDbPosition()
-                ->find($this->con)
-            ;
+                ->find($this->con);
 
             //reset the positions of the remaining items.
             for ($i = 0; $i < count($contents); ++$i) {
@@ -670,8 +662,7 @@ SQL;
             ->joinWith(CcFilesPeer::OM_CLASS)
             ->filterByDbBlockId($this->id)
             ->filterByDbPosition($pos)
-            ->findOne()
-        ;
+            ->findOne();
 
         //Propel returns values in form 00.000000 format which is for only seconds.
         //We only want to display 1 decimal
@@ -801,8 +792,7 @@ SQL;
             $row = CcBlockcontentsQuery::create()
                 ->filterByDbBlockId($this->id)
                 ->filterByDbPosition(0)
-                ->findOne($this->con)
-            ;
+                ->findOne($this->con);
 
             $this->changeFadeInfo($row->getDbId(), $fadein, null);
         }
@@ -812,8 +802,7 @@ SQL;
             $row = CcBlockcontentsQuery::create()
                 ->filterByDbBlockId($this->id)
                 ->filterByDbPosition($this->getSize() - 1)
-                ->findOne($this->con)
-            ;
+                ->findOne($this->con);
 
             $this->changeFadeInfo($row->getDbId(), null, $fadeout);
         }
@@ -848,8 +837,7 @@ SQL;
             $row = CcBlockcontentsQuery::create()
                 ->joinWith(CcFilesPeer::OM_CLASS)
                 ->filterByPrimaryKey($id)
-                ->findOne($this->con)
-            ;
+                ->findOne($this->con);
 
             if (is_null($row)) {
                 throw new Exception('Block item does not exist.');
@@ -1061,8 +1049,7 @@ SQL;
         $itemsToDelete = CcBlockcontentsQuery::create()
             ->filterByDbBlockId($p_ids)
             ->filterByDbFileId(null, Criteria::NOT_EQUAL)
-            ->find()
-        ;
+            ->find();
 
         $updateIsPlaylistFlag = false;
 
@@ -1115,8 +1102,7 @@ SQL;
         $itemsToDelete = CcBlockcontentsQuery::create()
             ->filterByDbBlockId($this->id)
             ->filterByDbFileId(null, Criteria::NOT_EQUAL)
-            ->find()
-        ;
+            ->find();
 
         CcBlockcontentsQuery::create()->findByDbBlockId($this->id)->delete();
 
@@ -1141,8 +1127,7 @@ SQL;
         $contents = CcBlockcontentsQuery::create()
             ->filterByDbBlockId($this->id)
             ->orderByDbPosition()
-            ->find()
-        ;
+            ->find();
         $shuffledPos = range(0, count($contents) - 1);
         shuffle($shuffledPos);
         foreach ($contents as $item) {
@@ -1245,8 +1230,7 @@ SQL;
                     $qry->setDbCriteria($field)
                         ->setDbModifier($d['sp_criteria_modifier'])
                         ->setDbValue($value)
-                        ->setDbBlockId($this->id)
-                    ;
+                        ->setDbBlockId($this->id);
 
                     if (isset($d['sp_criteria_extra'])) {
                         if ($field == 'utime' || $field == 'mtime' || $field == 'lptime') {
@@ -1276,8 +1260,7 @@ SQL;
             ->setDbModifier('N/A')
             ->setDbValue($p_criteriaData['etc']['sp_sort_options'])
             ->setDbBlockId($this->id)
-            ->save()
-        ;
+            ->save();
 
         // insert limit info
         $qry = new CcBlockcriteria();
@@ -1285,8 +1268,7 @@ SQL;
             ->setDbModifier($p_criteriaData['etc']['sp_limit_options'])
             ->setDbValue($p_criteriaData['etc']['sp_limit_value'])
             ->setDbBlockId($this->id)
-            ->save()
-        ;
+            ->save();
 
         // insert repeat track option
         $qry = new CcBlockcriteria();
@@ -1294,8 +1276,7 @@ SQL;
             ->setDbModifier('N/A')
             ->setDbValue($p_criteriaData['etc']['sp_repeat_tracks'])
             ->setDbBlockId($this->id)
-            ->save()
-        ;
+            ->save();
 
         // insert overflow track option
         $qry = new CcBlockcriteria();
@@ -1303,8 +1284,7 @@ SQL;
             ->setDbModifier('N/A')
             ->setDbValue($p_criteriaData['etc']['sp_overflow_tracks'])
             ->setDbBlockId($this->id)
-            ->save()
-        ;
+            ->save();
     }
 
     /**

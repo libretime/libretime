@@ -12,8 +12,7 @@ class ShowbuilderController extends Zend_Controller_Action
             ->addActionContext('check-builder-feed', 'json')
             ->addActionContext('builder-feed', 'json')
             ->addActionContext('context-menu', 'json')
-            ->initContext()
-        ;
+            ->initContext();
     }
 
     public function indexAction()

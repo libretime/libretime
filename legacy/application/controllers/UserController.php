@@ -10,8 +10,7 @@ class UserController extends Zend_Controller_Action
             ->addActionContext('get-user-data', 'json')
             ->addActionContext('remove-user', 'json')
             ->addActionContext('edit-user', 'json')
-            ->initContext()
-        ;
+            ->initContext();
     }
 
     public function addUserAction()

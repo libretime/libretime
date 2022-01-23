@@ -23,8 +23,7 @@ class CcShow extends BaseCcShow
         return CcShowDaysQuery::create()
             ->filterByDbShowId($this->id)
             ->filterByDbRepeatType(-1, Criteria::NOT_EQUAL)
-            ->find()
-        ;
+            ->find();
     }
 
     /**
@@ -57,8 +56,7 @@ class CcShow extends BaseCcShow
                     ->filterByCcShow($this)
                     ->orderByDbFirstShow()
                     ->limit(1)
-                    ->find($con)
-                ;
+                    ->find($con);
                 if (null !== $criteria) {
                     return $collCcShowDayss;
                 }
@@ -84,8 +82,7 @@ class CcShow extends BaseCcShow
             ->filterByDbShowId($this->id)
             ->filterByDbRepeatType(-1, Criteria::NOT_EQUAL)
             ->orderByDbFirstShow()
-            ->findOne()
-        ;
+            ->findOne();
     }
 
     /**
@@ -101,8 +98,7 @@ class CcShow extends BaseCcShow
         $ccShowDays = CcShowDaysQuery::create()
             ->filterByDbShowId($this->id)
             ->filterByDbRepeatType(0, Criteria::GREATER_EQUAL)
-            ->find()
-        ;
+            ->find();
 
         if (!$ccShowDays->isEmpty()) {
             return true;
@@ -121,8 +117,7 @@ class CcShow extends BaseCcShow
         $ccShowDays = CcShowDaysQuery::create()
             ->filterByDbShowId($this->id)
             ->filterByDbRepeatType(-1)
-            ->find()
-        ;
+            ->find();
 
         $startsUTC = [];
 
@@ -140,8 +135,7 @@ class CcShow extends BaseCcShow
         $excludeInstances = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->id)
             ->filterByDbStarts($startsUTC, criteria::IN)
-            ->find()
-        ;
+            ->find();
 
         $excludeIds = [];
         foreach ($excludeInstances as $instance) {
@@ -178,8 +172,7 @@ class CcShow extends BaseCcShow
                     ->filterByCcShow($this)
                     ->filterByDbStarts(gmdate('Y-m-d H:i:s'), Criteria::GREATER_THAN)
                     ->filterByDbModifiedInstance(false)
-                    ->find($con)
-                ;
+                    ->find($con);
                 if (null !== $criteria) {
                     return $collCcShowInstancess;
                 }
@@ -195,8 +188,7 @@ class CcShow extends BaseCcShow
         $ccShowDay = CcShowDaysQuery::create()
             ->filterByDbShowId($this->getDbId())
             ->filterByDbRecord(1)
-            ->findOne()
-        ;
+            ->findOne();
 
         return !is_null($ccShowDay);
     }
@@ -205,8 +197,7 @@ class CcShow extends BaseCcShow
     {
         $ccShowRebroadcast = CcShowRebroadcastQuery::create()
             ->filterByDbShowId($this->getDbId())
-            ->findOne()
-        ;
+            ->findOne();
 
         return !is_null($ccShowRebroadcast);
     }
@@ -216,8 +207,7 @@ class CcShow extends BaseCcShow
         return CcShowRebroadcastQuery::create()
             ->filterByDbShowId($this->getDbId())
             ->orderByDbDayOffset()
-            ->find()
-        ;
+            ->find();
     }
 
     public function getRebroadcastsAbsolute()
@@ -227,8 +217,7 @@ class CcShow extends BaseCcShow
             ->filterByDbRebroadcast(1)
             ->filterByDbModifiedInstance(false)
             ->orderByDbStarts()
-            ->find()
-        ;
+            ->find();
     }
 
     public function isLinked()
@@ -263,8 +252,7 @@ class CcShow extends BaseCcShow
             ->filterByCcShow($this)
             ->filterByDbModifiedInstance(false)
             ->orderByDbId()
-            ->find($con)
-        ;
+            ->find($con);
 
         /*if(null === $this->collCcShowInstancess || null !== $criteria) {
             if ($this->isNew() && null === $this->collCcShowInstancess) {
@@ -319,8 +307,7 @@ class CcShow extends BaseCcShow
         return CcShowInstancesQuery::create()
             ->filterByCcShow($this)
             ->filterByDbId($instanceId, Criteria::NOT_EQUAL)
-            ->find()
-        ;
+            ->find();
     }
 
     public function getShowInfo()

@@ -137,8 +137,7 @@ class Application_Service_MediaService
         self::$_pendingFiles = CcFilesQuery::create()
             ->filterByDbImportStatus(CcFiles::IMPORT_STATUS_PENDING)
             ->filterByDbUtime($oneHourAgo, Criteria::LESS_EQUAL)
-            ->find()
-        ;
+            ->find();
         $pendingEpisodes = Application_Service_PodcastEpisodeService::getStuckPendingImports();
 
         return !self::$_pendingFiles->isEmpty() || !empty($pendingEpisodes);

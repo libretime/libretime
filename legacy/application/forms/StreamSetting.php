@@ -25,8 +25,7 @@ class Application_Form_StreamSetting extends Zend_Form
         $output_sound_device->setLabel(_('Hardware Audio Output:'))
             ->setRequired(false)
             ->setValue(($setting['output_sound_device'] == 'true') ? 1 : 0)
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $this->addElement($output_sound_device);
 
         $output_sound_device_type = new Zend_Form_Element_Select('output_sound_device_type');
@@ -39,16 +38,14 @@ class Application_Form_StreamSetting extends Zend_Form
                 'Pulseaudio' => _('Pulseaudio'),
                 'Jack' => _('Jack'), ])
             ->setValue(isset($setting['output_sound_device_type']) ? $setting['output_sound_device_type'] : 0)
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $this->addElement($output_sound_device_type);
 
         $icecast_vorbis_metadata = new Zend_Form_Element_Checkbox('icecast_vorbis_metadata');
         $icecast_vorbis_metadata->setLabel(_('Icecast Vorbis Metadata'))
             ->setRequired(false)
             ->setValue(($setting['icecast_vorbis_metadata'] == 'true') ? 1 : 0)
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         if (Application_Model_Preference::GetEnableStreamConf() == 'false') {
             $icecast_vorbis_metadata->setAttrib('readonly', true);
         }
@@ -66,23 +63,20 @@ class Application_Form_StreamSetting extends Zend_Form
         $offAirMeta = new Zend_Form_Element_Text('offAirMeta');
         $offAirMeta->setLabel(_('Off Air Metadata'))
             ->setValue(Application_Model_StreamSetting::getOffAirMeta())
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $this->addElement($offAirMeta);
 
         $enable_replay_gain = new Zend_Form_Element_Checkbox('enableReplayGain');
         $enable_replay_gain->setLabel(_('Enable Replay Gain'))
             ->setValue(Application_Model_Preference::GetEnableReplayGain())
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $this->addElement($enable_replay_gain);
 
         $replay_gain = new Zend_Form_Element_Hidden('replayGainModifier');
         $replay_gain->setLabel(_('Replay Gain Modifier'))
             ->setValue(Application_Model_Preference::getReplayGainModifier())
             ->setAttribs(['style' => 'border: 0; color: #f6931f; font-weight: bold;'])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $this->addElement($replay_gain);
 
         $custom = Application_Model_Preference::getUsingCustomStreamSettings();

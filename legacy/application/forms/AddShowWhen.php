@@ -24,8 +24,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                 'future' => _('In the Future:'),
             ])
             ->setValue('future')
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         //$startDate->setAttrib('alt', 'date');
         $this->addElement($startNow);
 
@@ -39,8 +38,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             ->setValidators([
                 $notEmptyValidator,
                 $dateValidator, ])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $startDate->setAttrib('alt', 'date');
         $this->addElement($startDate);
 
@@ -67,8 +65,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             ->setValidators([
                 $notEmptyValidator,
                 $dateValidator, ])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $endDate->setAttrib('alt', 'date');
         $this->addElement($endDate);
 
@@ -81,8 +78,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             ->setValidators([
                 $notEmptyValidator,
                 $regexValidator, ])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $endTime->setAttrib('alt', 'time');
         $this->addElement($endTime);
 
@@ -101,8 +97,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             ->setMultiOptions(Application_Common_Timezone::getTimezones())
             ->setValue(Application_Model_Preference::GetUserTimezone())
             ->setAttrib('class', 'input_select add_show_input_select')
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $this->addElement($timezone);
 
         // Add repeats element

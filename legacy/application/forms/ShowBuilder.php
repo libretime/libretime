@@ -20,8 +20,7 @@ class Application_Form_ShowBuilder extends Zend_Form_SubForm
             ->setValidators([
                 'NotEmpty',
                 ['date', false, ['YYYY-MM-DD']], ])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $startDate->setAttrib('alt', 'date');
         $this->addElement($startDate);
 
@@ -35,8 +34,7 @@ class Application_Form_ShowBuilder extends Zend_Form_SubForm
                 'NotEmpty',
                 ['date', false, ['HH:mm']],
                 ['regex', false, ['/^[0-2]?[0-9]:[0-5][0-9]$/', 'messages' => _('Invalid character entered')]], ])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $startTime->setAttrib('alt', 'time');
         $this->addElement($startTime);
 
@@ -50,8 +48,7 @@ class Application_Form_ShowBuilder extends Zend_Form_SubForm
             ->setValidators([
                 'NotEmpty',
                 ['date', false, ['YYYY-MM-DD']], ])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $endDate->setAttrib('alt', 'date');
         $this->addElement($endDate);
 
@@ -65,8 +62,7 @@ class Application_Form_ShowBuilder extends Zend_Form_SubForm
                 'NotEmpty',
                 ['date', false, ['HH:mm']],
                 ['regex', false, ['/^[0-2]?[0-9]:[0-5][0-9]$/', 'messages' => _('Invalid character entered')]], ])
-            ->setDecorators(['ViewHelper'])
-        ;
+            ->setDecorators(['ViewHelper']);
         $endTime->setAttrib('alt', 'time');
         $this->addElement($endTime);
 
@@ -81,8 +77,7 @@ class Application_Form_ShowBuilder extends Zend_Form_SubForm
         if ($user->getType() === 'H') {
             $myShows = new Zend_Form_Element_Checkbox('sb_my_shows');
             $myShows->setLabel(_('All My Shows:'))
-                ->setDecorators(['ViewHelper'])
-            ;
+                ->setDecorators(['ViewHelper']);
             $this->addElement($myShows);
         }
     }
@@ -98,8 +93,7 @@ class Application_Form_ShowBuilder extends Zend_Form_SubForm
         $shows = CcShowQuery::create()
             ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
             ->orderByDbName()
-            ->find()
-        ;
+            ->find();
 
         foreach ($shows as $show) {
             $showNames[$show->getDbId()] = $show->getDbName();

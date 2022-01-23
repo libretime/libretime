@@ -107,7 +107,6 @@ class AutoPlaylistManager
             ->filterByDbHasAutoPlaylist(true)
             ->endUse()
             ->filterByDbAutoPlaylistBuilt(false)
-            ->find()
-        ;
+            ->find();
     }
 }

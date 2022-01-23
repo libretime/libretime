@@ -10,8 +10,7 @@ class LoginController extends Zend_Controller_Action
         $this->view->headLink(['rel' => 'icon', 'href' => $baseUrl . 'favicon.ico?' . $CC_CONFIG['airtime_version'], 'type' => 'image/x-icon'], 'PREPEND')
             ->appendStylesheet($baseUrl . 'css/bootstrap.css?' . $CC_CONFIG['airtime_version'])
             ->appendStylesheet($baseUrl . 'css/redmond/jquery-ui-1.8.8.custom.css?' . $CC_CONFIG['airtime_version'])
-            ->appendStylesheet($baseUrl . 'css/styles.css?' . $CC_CONFIG['airtime_version'])
-        ;
+            ->appendStylesheet($baseUrl . 'css/styles.css?' . $CC_CONFIG['airtime_version']);
     }
 
     public function indexAction()
@@ -64,8 +63,7 @@ class LoginController extends Zend_Controller_Action
 
                 //pass to the adapter the submitted username and password
                 $authAdapter->setIdentity($username)
-                    ->setCredential($password)
-                ;
+                    ->setCredential($password);
 
                 $result = $auth->authenticate($authAdapter);
                 if ($result->isValid()) {
@@ -142,8 +140,7 @@ class LoginController extends Zend_Controller_Action
                     $query->filterByDbLogin($username);
                 } else {
                     $query->filterByDbEmail($email)
-                        ->filterByDbLogin($username)
-                    ;
+                        ->filterByDbLogin($username);
                 }
                 $user = $query->findOne();
 
@@ -212,8 +209,7 @@ class LoginController extends Zend_Controller_Action
 
             $authAdapter = Application_Model_Auth::getAuthAdapter();
             $authAdapter->setIdentity($user->getDbLogin())
-                ->setCredential($form->password->getValue())
-            ;
+                ->setCredential($form->password->getValue());
 
             $zend_auth->authenticate($authAdapter);
 

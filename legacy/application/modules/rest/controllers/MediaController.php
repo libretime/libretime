@@ -37,8 +37,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             ->filterByDbImportStatus(0)
             ->setLimit($limit)
             ->setOffset($offset)
-            ->orderBy($sortColumn, $sortDir)
-        ;
+            ->orderBy($sortColumn, $sortDir);
         //->orderByDbId();
 
         $queryCount = $query->count();
@@ -52,8 +51,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         $this->getResponse()
             ->setHttpResponseCode(200)
             ->setHeader('X-TOTAL-COUNT', $totalFileCount)
-            ->appendBody(json_encode($files_array))
-        ;
+            ->appendBody(json_encode($files_array));
 
         /* TODO: Use this simpler code instead after we upgrade to Propel 1.7 (Airtime 2.6.x branch):
          * $this->getResponse()
@@ -74,8 +72,7 @@ class Rest_MediaController extends Zend_Rest_Controller
 
         try {
             $this->getResponse()
-                ->setHttpResponseCode(200)
-            ;
+                ->setHttpResponseCode(200);
             $inline = false;
             // SAAS-1081 - download counter for station podcast downloads
             if ($key = $this->getRequest()->getParam('download_key', false)) {
@@ -105,8 +102,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         try {
             $this->getResponse()
                 ->setHttpResponseCode(200)
-                ->appendBody(json_encode(CcFiles::getSanitizedFileById($id)))
-            ;
+                ->appendBody(json_encode(CcFiles::getSanitizedFileById($id)));
         } catch (LibreTimeFileNotFoundException $e) {
             $this->fileNotFoundResponse();
             Logging::error($e->getMessage());
@@ -145,16 +141,14 @@ class Rest_MediaController extends Zend_Rest_Controller
             $sanitizedFile = CcFiles::createFromUpload($fileInfo);
             $this->getResponse()
                 ->setHttpResponseCode(201)
-                ->appendBody(json_encode($sanitizedFile))
-            ;
+                ->appendBody(json_encode($sanitizedFile));
         } catch (InvalidMetadataException $e) {
             $this->invalidDataResponse();
             Logging::error($e->getMessage());
         } catch (OverDiskQuotaException $e) {
             $this->getResponse()
                 ->setHttpResponseCode(400)
-                ->appendBody('ERROR: Disk Quota reached.')
-            ;
+                ->appendBody('ERROR: Disk Quota reached.');
         } catch (Exception $e) {
             $this->serviceUnavailableResponse();
             Logging::error($e->getMessage() . "\n" . $e->getTraceAsString());
@@ -174,8 +168,7 @@ class Rest_MediaController extends Zend_Rest_Controller
 
             $this->getResponse()
                 ->setHttpResponseCode(201)
-                ->appendBody(json_encode($sanitizedFile))
-            ;
+                ->appendBody(json_encode($sanitizedFile));
         } catch (InvalidMetadataException $e) {
             $this->invalidDataResponse();
             Logging::error($e->getMessage());
@@ -198,8 +191,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         try {
             CcFiles::deleteById($id);
             $this->getResponse()
-                ->setHttpResponseCode(204)
-            ;
+                ->setHttpResponseCode(204);
         } catch (LibreTimeFileNotFoundException $e) {
             $this->fileNotFoundResponse();
             Logging::error($e->getMessage());
@@ -221,8 +213,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             $data = json_decode($this->getRequest()->getRawBody(), true)['sources'];
             Application_Service_PublishService::publish($id, $data);
             $this->getResponse()
-                ->setHttpResponseCode(200)
-            ;
+                ->setHttpResponseCode(200);
         } catch (Exception $e) {
             $this->unknownErrorResponse();
             Logging::error($e->getMessage());
@@ -235,8 +226,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         $sources = Application_Service_PublishService::getSourceLists($id);
         $this->getResponse()
             ->setHttpResponseCode(200)
-            ->appendBody(json_encode($sources))
-        ;
+            ->appendBody(json_encode($sources));
     }
 
     private function getId()

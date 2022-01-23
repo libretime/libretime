@@ -460,8 +460,7 @@ class CcFiles extends BaseCcFiles
             $defaultOwner = CcSubjsQuery::create()
                 ->filterByDbType('A')
                 ->orderByDbId()
-                ->findOne()
-            ;
+                ->findOne();
             if (!$defaultOwner) {
                 // what to do if there is no admin user?
                 // should we handle this case?

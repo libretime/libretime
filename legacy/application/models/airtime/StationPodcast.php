@@ -22,8 +22,7 @@ class StationPodcast extends BaseStationPodcast
     {
         $episodes = PodcastEpisodesQuery::create()
             ->filterByDbPodcastId($this->getDbPodcastId())
-            ->find()
-        ;
+            ->find();
         foreach ($episodes as $e) {
             if ($e->getDbFileId() == $fileId) {
                 return true;

@@ -46,8 +46,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             ->addValidator('Count', false, 1)
             ->addValidator('Extension', false, 'jpg,jpeg,png,gif')
             ->setMaxFileSize(1000000)
-            ->addFilter('ImageSize')
-        ;
+            ->addFilter('ImageSize');
         $stationLogoUpload->setAttrib('accept', 'image/*');
         $this->addElement($stationLogoUpload);
 

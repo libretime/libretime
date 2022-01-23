@@ -274,23 +274,20 @@ SQL;
         //convert "linked" files (Airtime <= 1.8.2) to watched files.
         $propel_link_dir = CcMusicDirsQuery::create()
             ->filterByType('link')
-            ->findOne()
-        ;
+            ->findOne();
 
         //see if any linked files exist.
         if (isset($propel_link_dir)) {
             //newly added watched directory object
             $propel_new_watch = CcMusicDirsQuery::create()
                 ->filterByDirectory(Application_Common_OsPath::normpath($p_path) . '/')
-                ->findOne()
-            ;
+                ->findOne();
 
             //any files of the deprecated "link" type.
             $link_files = CcFilesQuery::create()
                 ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
                 ->filterByDbDirectory($propel_link_dir->getId())
-                ->find()
-            ;
+                ->find();
 
             $newly_watched_dir = $propel_new_watch->getDirectory();
 
@@ -330,8 +327,7 @@ SQL;
     {
         $dir = CcMusicDirsQuery::create()
             ->filterByDirectory($p_path)
-            ->findOne()
-        ;
+            ->findOne();
         if ($dir == null) {
             return null;
         }
@@ -350,8 +346,7 @@ SQL;
         $result = [];
 
         $dirs = CcMusicDirsQuery::create()
-            ->filterByType('watched')
-        ;
+            ->filterByType('watched');
         if ($exists !== null) {
             $dirs = $dirs->filterByExists($exists);
         }
@@ -371,8 +366,7 @@ SQL;
     {
         $dir = CcMusicDirsQuery::create()
             ->filterByType('stor')
-            ->findOne()
-        ;
+            ->findOne();
 
         return new Application_Model_MusicDir($dir);
     }
@@ -412,8 +406,7 @@ SQL;
             ->filterByType(['watched', 'stor'])
             ->filterByExists(true)
             ->filterByWatched(true)
-            ->find()
-        ;
+            ->find();
 
         foreach ($dirs as $dir) {
             $directory = $dir->getDirectory();

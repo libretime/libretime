@@ -35,8 +35,7 @@ class ScheduleController extends Zend_Controller_Action
             ->addActionContext('get-current-show', 'json')
             ->addActionContext('update-future-is-scheduled', 'json')
             ->addActionContext('localize-start-end-time', 'json')
-            ->initContext()
-        ;
+            ->initContext();
 
         $this->sched_sess = new Zend_Session_Namespace('schedule');
     }

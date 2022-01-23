@@ -227,21 +227,18 @@ SQL;
                 $currentMediaType = 'track';
                 $currentFile = CcFilesQuery::create()
                     ->filterByDbId($currentMediaFileId)
-                    ->findOne()
-                ;
+                    ->findOne();
                 $currentMediaName = $currentFile->getDbArtistName() . ' - ' . $currentFile->getDbTrackTitle();
                 $currentMetadata = CcFiles::sanitizeResponse($currentFile);
             } elseif (isset($currentMediaStreamId)) {
                 $currentMediaType = 'webstream';
                 $currentWebstream = CcWebstreamQuery::create()
                     ->filterByDbId($currentMediaStreamId)
-                    ->findOne()
-                ;
+                    ->findOne();
                 $currentWebstreamMetadata = CcWebstreamMetadataQuery::create()
                     ->filterByDbInstanceId($currentMedia['id'])
                     ->orderByDbStartTime(Criteria::DESC)
-                    ->findOne()
-                ;
+                    ->findOne();
                 $currentMediaName = $currentWebstream->getDbName();
                 if (isset($currentWebstreamMetadata)) {
                     $currentMediaName .= ' - ' . $currentWebstreamMetadata->getDbLiquidsoapData();
@@ -265,8 +262,7 @@ SQL;
             ->filterByDbEnds($utcNow, Criteria::LESS_THAN)
             ->filterByDbPlayoutStatus(0, Criteria::GREATER_THAN)
             ->orderByDbStarts(Criteria::DESC)
-            ->findOne()
-        ;
+            ->findOne();
         if (isset($previousMedia)) {
             $previousMetadata = null;
             $previousMediaName = '';
@@ -276,8 +272,7 @@ SQL;
                 $previousMediaType = 'track';
                 $previousFile = CcFilesQuery::create()
                     ->filterByDbId($previousMediaFileId)
-                    ->findOne()
-                ;
+                    ->findOne();
                 if (isset($previousFile)) {
                     $previousMediaName = $previousFile->getDbArtistName() . ' - ' . $previousFile->getDbTrackTitle();
                     $previousMetadata = CcFiles::sanitizeResponse($previousFile);
@@ -287,8 +282,7 @@ SQL;
                 $previousMediaType = 'webstream';
                 $previousWebstream = CcWebstreamQuery::create()
                     ->filterByDbId($previousMediaStreamId)
-                    ->findOne()
-                ;
+                    ->findOne();
                 $previousMediaName = $previousWebstream->getDbName();
             } else {
                 $previousMediaType = null;
@@ -306,8 +300,7 @@ SQL;
             ->filterByDbStarts($utcNow, Criteria::GREATER_THAN)
             ->filterByDbPlayoutStatus(0, Criteria::GREATER_THAN)
             ->orderByDbStarts(Criteria::ASC)
-            ->findOne()
-        ;
+            ->findOne();
         if (isset($nextMedia)) {
             $nextMetadata = null;
             $nextMediaName = '';
@@ -317,16 +310,14 @@ SQL;
                 $nextMediaType = 'track';
                 $nextFile = CcFilesQuery::create()
                     ->filterByDbId($nextMediaFileId)
-                    ->findOne()
-                ;
+                    ->findOne();
                 $nextMetadata = CcFiles::sanitizeResponse($nextFile);
                 $nextMediaName = $nextFile->getDbArtistName() . ' - ' . $nextFile->getDbTrackTitle();
             } elseif (isset($nextMediaStreamId)) {
                 $nextMediaType = 'webstream';
                 $nextWebstream = CcWebstreamQuery::create()
                     ->filterByDbId($nextMediaStreamId)
-                    ->findOne()
-                ;
+                    ->findOne();
                 $nextMediaName = $nextWebstream->getDbName();
             } else {
                 $nextMediaType = null;
@@ -1181,13 +1172,11 @@ SQL;
             $ccShowInstance = CcShowInstancesQuery::create()
                 ->filterByDbShowId($showId)
                 ->filterByDbStarts($show_start->format(DEFAULT_TIMESTAMP_FORMAT))
-                ->findOne()
-            ;
+                ->findOne();
         } elseif (!is_null($instanceId)) {
             $ccShowInstance = CcShowInstancesQuery::create()
                 ->filterByDbId($instanceId)
-                ->findOne()
-            ;
+                ->findOne();
         }
         if ($update && ($ccShowInstance && $ccShowInstance->getDbModifiedInstance() == true)) {
             return false;

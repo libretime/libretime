@@ -29,8 +29,7 @@ class PlaylistController extends Zend_Controller_Action
             ->addActionContext('shuffle', 'json')
             ->addActionContext('empty-content', 'json')
             ->addActionContext('change-playlist', 'json')
-            ->initContext()
-        ;
+            ->initContext();
 
         //This controller writes to the session all over the place, so we're going to reopen it for writing here.
         SessionHelper::reopenSessionForWriting();

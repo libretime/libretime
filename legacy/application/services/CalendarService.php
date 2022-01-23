@@ -316,8 +316,7 @@ class Application_Service_CalendarService
             $rebroadcasts = CcShowInstancesQuery::create()
                 ->filterByDbOriginalShow($this->ccShow->getDbId())
                 ->filterByDbStarts($minRebroadcastStart->format(DEFAULT_TIMESTAMP_FORMAT), Criteria::LESS_THAN)
-                ->find()
-            ;
+                ->find();
 
             if (count($rebroadcasts) > 0) {
                 throw new Exception(_("Can't move a recorded show less than 1 hour before its rebroadcasts."));
@@ -327,8 +326,7 @@ class Application_Service_CalendarService
         if ($this->ccShow->isRebroadcast()) {
             $recordedShow = CcShowInstancesQuery::create()
                 ->filterByCcShow($this->ccShowInstance->getDbOriginalShow())
-                ->findOne()
-            ;
+                ->findOne();
             if (is_null($recordedShow)) {
                 $this->ccShowInstance->delete();
 
@@ -363,8 +361,7 @@ class Application_Service_CalendarService
             $this->ccShowInstance
                 ->setDbStarts($newStartsDateTime)
                 ->setDbEnds($newEndsDateTime)
-                ->save($con)
-            ;
+                ->save($con);
 
             if (!$this->ccShowInstance->getCcShow()->isRebroadcast()) {
                 //we can get the first show day because we know the show is
@@ -374,8 +371,7 @@ class Application_Service_CalendarService
                 $ccShowDay
                     ->setDbFirstShow($newStartsDateTime->setTimezone($showTimezone)->format('Y-m-d'))
                     ->setDbStartTime($newStartsDateTime->format('H:i'))
-                    ->save($con)
-                ;
+                    ->save($con);
             }
 
             $diff = $newStartsDateTime->getTimestamp() - $oldStartDateTime->getTimestamp();

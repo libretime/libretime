@@ -39,13 +39,11 @@ class Application_Model_Library
             $playlists = CcPlaylistQuery::create()
                 ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
                 ->orderByname()
-                ->find()
-            ;
+                ->find();
         } else {
             $playlists = CcPlaylistQuery::create()
                 ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
-                ->find()
-            ;
+                ->find();
         }
         foreach ($playlists as $playlist) {
             $playlistNames[$playlist->getDbId()] = $playlist->getDbName();

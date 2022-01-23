@@ -164,24 +164,21 @@ SQL;
     public function setShowStart($start)
     {
         $this->_showInstance->setDbStarts($start)
-            ->save()
-        ;
+            ->save();
         Application_Model_RabbitMq::PushSchedule();
     }
 
     public function setShowEnd($end)
     {
         $this->_showInstance->setDbEnds($end)
-            ->save()
-        ;
+            ->save();
         Application_Model_RabbitMq::PushSchedule();
     }
 
     public function setAutoPlaylistBuilt($bool)
     {
         $this->_showInstance->setDbAutoPlaylistBuilt($bool)
-            ->save()
-        ;
+            ->save();
     }
 
     public function updateScheduledTime()
@@ -314,8 +311,7 @@ SQL;
     {
         CcScheduleQuery::create()
             ->filterByDbInstanceId($this->_instanceId)
-            ->delete()
-        ;
+            ->delete();
         Application_Model_RabbitMq::PushSchedule();
         $this->updateScheduledTime();
     }
@@ -327,8 +323,7 @@ SQL;
 
         $showDays = CcShowDaysQuery::create()
             ->filterByDbShowId($showId)
-            ->findOne()
-        ;
+            ->findOne();
 
         $showEnd = $showDays->getDbLastShow();
 
@@ -351,8 +346,7 @@ SQL;
             ->filterByDbShowId($showId)
             ->filterByDbModifiedInstance(false)
             ->filterByDbRebroadcast(0)
-            ->find()
-        ;
+            ->find();
 
         if (is_null($showInstances)) {
             return true;
@@ -363,8 +357,7 @@ SQL;
 
             $showDaysOld = CcShowDaysQuery::create()
                 ->filterByDbShowId($showId)
-                ->find()
-            ;
+                ->find();
 
             $tz = $showDaysOld[0]->getDbTimezone();
 
@@ -392,8 +385,7 @@ SQL;
             $showInstances = CcShowInstancesQuery::create()
                 ->filterByDbShowId($showId)
                 ->filterByDbModifiedInstance(true)
-                ->delete()
-            ;
+                ->delete();
         }
 
         return false;
@@ -415,8 +407,7 @@ SQL;
                 CcShowInstancesQuery::create()
                     ->findPK($this->_instanceId)
                     ->setDbModifiedInstance(true)
-                    ->save()
-                ;
+                    ->save();
 
                 if ($this->isRebroadcast()) {
                     return;
@@ -426,21 +417,18 @@ SQL;
                 if ($recording) {
                     CcShowInstancesQuery::create()
                         ->filterByDbOriginalShow($this->_instanceId)
-                        ->delete()
-                    ;
+                        ->delete();
                 }
 
                 // Automatically delete all files scheduled in cc_schedules table.
                 CcScheduleQuery::create()
                     ->filterByDbInstanceId($this->_instanceId)
-                    ->delete()
-                ;
+                    ->delete();
 
                 if ($this->checkToDeleteShow($showId)) {
                     CcShowQuery::create()
                         ->filterByDbId($showId)
-                        ->delete()
-                    ;
+                        ->delete();
                 }
             } else {
                 if ($this->isRebroadcast()) {
@@ -459,16 +447,13 @@ SQL;
     public function setRecordedFile($file_id)
     {
         $showInstance = CcShowInstancesQuery::create()
-            ->findPK($this->_instanceId)
-        ;
+            ->findPK($this->_instanceId);
         $showInstance->setDbRecordedFile($file_id)
-            ->save()
-        ;
+            ->save();
 
         $rebroadcasts = CcShowInstancesQuery::create()
             ->filterByDbOriginalShow($this->_instanceId)
-            ->find()
-        ;
+            ->find();
 
         foreach ($rebroadcasts as $rebroadcast) {
             try {
@@ -611,8 +596,7 @@ SQL;
                 ->filterByDbStarts($p_start->format(DEFAULT_TIMESTAMP_FORMAT), Criteria::GREATER_THAN)
                 ->leftJoinCcShow()
                 ->where('CcShow.has_autoplaylist = ?', 'true')
-                ->find($con)
-            ;
+                ->find($con);
             $hasAutoplaylist = [];
             foreach ($showInstances->toArray() as $ap) {
                 $hasAutoplaylist[$ap['DbId']] = true;

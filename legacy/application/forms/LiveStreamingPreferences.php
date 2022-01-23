@@ -16,15 +16,13 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         // automatic trasition on source disconnection
         $auto_transition = new Zend_Form_Element_Checkbox('auto_transition');
         $auto_transition->setLabel(_('Auto Switch Off:'))
-            ->setValue(Application_Model_Preference::GetAutoTransition())
-        ;
+            ->setValue(Application_Model_Preference::GetAutoTransition());
         $this->addElement($auto_transition);
 
         // automatic switch on upon source connection
         $auto_switch = new Zend_Form_Element_Checkbox('auto_switch');
         $auto_switch->setLabel(_('Auto Switch On:'))
-            ->setValue(Application_Model_Preference::GetAutoSwitch())
-        ;
+            ->setValue(Application_Model_Preference::GetAutoSwitch());
         $this->addElement($auto_switch);
 
         // Default transition fade
@@ -33,8 +31,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             ->setFilters(['StringTrim'])
             ->addValidator('regex', false, ['/^\d*(\.\d+)?$/',
                 'messages' => _('Please enter a time in seconds (eg. 0.5)'), ])
-            ->setValue($defaultFade)
-        ;
+            ->setValue($defaultFade);
         $this->addElement($transition_fade);
 
         //Master username
@@ -43,8 +40,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             ->setAllowEmpty(true)
             ->setLabel(_('Username:'))
             ->setFilters(['StringTrim'])
-            ->setValue(Application_Model_Preference::GetLiveStreamMasterUsername())
-        ;
+            ->setValue(Application_Model_Preference::GetLiveStreamMasterUsername());
         $this->addElement($master_username);
 
         //Master password
@@ -59,8 +55,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             ->setAllowEmpty(true)
             ->setValue(Application_Model_Preference::GetLiveStreamMasterPassword())
             ->setLabel(_('Password:'))
-            ->setFilters(['StringTrim'])
-        ;
+            ->setFilters(['StringTrim']);
         $this->addElement($master_password);
 
         $masterSourceParams = parse_url(Application_Model_Preference::GetMasterDJSourceConnectionURL());
@@ -69,8 +64,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $masterSourceHost = new Zend_Form_Element_Text('master_source_host');
         $masterSourceHost->setLabel(_('Master Source Host:'))
             ->setAttrib('readonly', true)
-            ->setValue(Application_Model_Preference::GetMasterDJSourceConnectionURL())
-        ;
+            ->setValue(Application_Model_Preference::GetMasterDJSourceConnectionURL());
         $this->addElement($masterSourceHost);
 
         //liquidsoap harbor.input port
@@ -82,8 +76,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $masterSourcePort->setLabel(_('Master Source Port:'))
             ->setValue($m_port)
             ->setValidators([$betweenValidator])
-            ->addValidator('regex', false, ['pattern' => '/^[0-9]+$/', 'messages' => ['regexNotMatch' => _('Only numbers are allowed.')]])
-        ;
+            ->addValidator('regex', false, ['pattern' => '/^[0-9]+$/', 'messages' => ['regexNotMatch' => _('Only numbers are allowed.')]]);
 
         $this->addElement($masterSourcePort);
 
@@ -92,8 +85,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $masterSourceMount->setLabel(_('Master Source Mount:'))
             ->setValue($m_mount)
             ->setValidators([
-                ['regex', false, ['/^[^ &<>]+$/', 'messages' => _('Invalid character entered')]], ])
-        ;
+                ['regex', false, ['/^[^ &<>]+$/', 'messages' => _('Invalid character entered')]], ]);
         $this->addElement($masterSourceMount);
 
         $showSourceParams = parse_url(Application_Model_Preference::GetLiveDJSourceConnectionURL());
@@ -102,8 +94,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $showSourceHost = new Zend_Form_Element_Text('show_source_host');
         $showSourceHost->setLabel(_('Show Source Host:'))
             ->setAttrib('readonly', true)
-            ->setValue(Application_Model_Preference::GetLiveDJSourceConnectionURL())
-        ;
+            ->setValue(Application_Model_Preference::GetLiveDJSourceConnectionURL());
         $this->addElement($showSourceHost);
 
         //liquidsoap harbor.input port
@@ -113,8 +104,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $showSourcePort->setLabel(_('Show Source Port:'))
             ->setValue($l_port)
             ->setValidators([$betweenValidator])
-            ->addValidator('regex', false, ['pattern' => '/^[0-9]+$/', 'messages' => ['regexNotMatch' => _('Only numbers are allowed.')]])
-        ;
+            ->addValidator('regex', false, ['pattern' => '/^[0-9]+$/', 'messages' => ['regexNotMatch' => _('Only numbers are allowed.')]]);
         $this->addElement($showSourcePort);
 
         $l_mount = Application_Model_StreamSetting::getDjLiveStreamMountPoint();
@@ -122,8 +112,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $showSourceMount->setLabel(_('Show Source Mount:'))
             ->setValue($l_mount)
             ->setValidators([
-                ['regex', false, ['/^[^ &<>]+$/', 'messages' => _('Invalid character entered')]], ])
-        ;
+                ['regex', false, ['/^[^ &<>]+$/', 'messages' => _('Invalid character entered')]], ]);
         $this->addElement($showSourceMount);
     }
 

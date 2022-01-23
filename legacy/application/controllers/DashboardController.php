@@ -7,8 +7,7 @@ class DashboardController extends Zend_Controller_Action
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('switch-source', 'json')
             ->addActionContext('disconnect-source', 'json')
-            ->initContext()
-        ;
+            ->initContext();
     }
 
     public function indexAction()

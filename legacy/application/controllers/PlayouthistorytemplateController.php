@@ -10,8 +10,7 @@ class PlayouthistorytemplateController extends Zend_Controller_Action
             ->addActionContext('update-template', 'json')
             ->addActionContext('delete-template', 'json')
             ->addActionContext('set-template-default', 'json')
-            ->initContext()
-        ;
+            ->initContext();
     }
 
     public function indexAction()

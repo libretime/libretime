@@ -67,8 +67,7 @@ class Application_Form_Player extends Zend_Form_SubForm
         $embedSrc->setAttrib('readonly', 'readonly');
         $embedSrc->setAttrib('class', 'embed-player-text-box');
         $embedSrc->setAttrib('cols', '40')
-            ->setAttrib('rows', '4')
-        ;
+            ->setAttrib('rows', '4');
         $embedSrc->setLabel(_('Embeddable code:'));
         $embedSrc->setDescription(_("Copy this code and paste it into your website's HTML to embed the player in your site."));
         $embedSrc->setValue('<iframe frameborder="0" width="280" height="216" src="' . Application_Common_HTTPHelper::getStationUrl() . 'embed/player?stream=auto&title=Now Playing"></iframe>');

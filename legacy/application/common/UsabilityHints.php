@@ -125,8 +125,7 @@ class Application_Common_UsabilityHints
         $fileCount = CcFilesQuery::create()
             ->filterByDbFileExists(true)
             ->filterByDbHidden(false)
-            ->count()
-        ;
+            ->count();
 
         if ($fileCount == 0) {
             return true;
@@ -162,8 +161,7 @@ class Application_Common_UsabilityHints
         $scheduledTracks = CcScheduleQuery::create()
             ->filterByDbInstanceId($currentShow->getDbId())
             ->filterByDbEnds($now, Criteria::GREATER_EQUAL)
-            ->find()
-        ;
+            ->find();
         if ($scheduledTracks->count() == 0) {
             return true;
         }
@@ -182,8 +180,7 @@ class Application_Common_UsabilityHints
         $scheduledTracks = CcScheduleQuery::create()
             ->filterByDbInstanceId($futureShow->getDbId())
             ->filterByDbStarts($now, Criteria::GREATER_EQUAL)
-            ->find()
-        ;
+            ->find();
         if ($scheduledTracks->count() == 0) {
             return true;
         }
@@ -199,8 +196,7 @@ class Application_Common_UsabilityHints
             ->filterByDbStarts($now, Criteria::LESS_THAN)
             ->filterByDbEnds($now, Criteria::GREATER_THAN)
             ->filterByDbModifiedInstance(false)
-            ->findOne()
-        ;
+            ->findOne();
     }
 
     private static function getNextFutureShow()
@@ -211,8 +207,7 @@ class Application_Common_UsabilityHints
             ->filterByDbStarts($now, Criteria::GREATER_THAN)
             ->filterByDbModifiedInstance(false)
             ->orderByDbStarts()
-            ->findOne()
-        ;
+            ->findOne();
     }
 
     private static function isCurrentShowLinked()
@@ -221,8 +216,7 @@ class Application_Common_UsabilityHints
         if (!is_null($currentShow)) {
             $show = CcShowQuery::create()
                 ->filterByDbId($currentShow->getDbShowId())
-                ->findOne()
-            ;
+                ->findOne();
             if ($show->isLinked()) {
                 return true;
             }

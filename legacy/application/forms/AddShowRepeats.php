@@ -48,8 +48,7 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
             ->setMultiOptions(
                 [2 => _('day of the month'), 3 => _('day of the week')]
             )
-            ->setValue(2)
-        ;
+            ->setValue(2);
         $this->addElement($repeatMonthlyType);
 
         // Add end date element

@@ -10,8 +10,7 @@ class Zend_Controller_Plugin_Maintenance extends Zend_Controller_Plugin_Abstract
             $request->setModuleName('default')
                 ->setControllerName('index')
                 ->setActionName('maintenance')
-                ->setDispatched(true)
-            ;
+                ->setDispatched(true);
         }
     }
 }

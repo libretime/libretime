@@ -139,8 +139,7 @@ class MediaSetup extends Setup
 
             $dir->setDirectory(self::$path)
                 ->setType('stor')
-                ->save()
-            ;
+                ->save();
             self::$message = 'Successfully set up media folder!';
             Propel::close();
             unset($_SERVER['AIRTIME_CONF']);

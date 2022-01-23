@@ -217,8 +217,7 @@ class Application_Service_ShowFormService
             ->filterByDbModifiedInstance(false)
             ->filterByDbStarts(gmdate('Y-m-d H:i:s'), Criteria::GREATER_THAN)
             ->orderByDbStarts()
-            ->findOne()
-        ;
+            ->findOne();
 
         if (!$ccShowInstance) {
             return null;
@@ -517,8 +516,7 @@ class Application_Service_ShowFormService
             ->filterByDbModifiedInstance(false)
             ->filterByDbStarts(gmdate('Y-m-d H:i:s'), Criteria::GREATER_EQUAL)
             ->orderByDbStarts()
-            ->findOne()
-        ;
+            ->findOne();
 
         if (!$ccShowInstance) {
             return null;

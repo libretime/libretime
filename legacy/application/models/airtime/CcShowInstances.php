@@ -118,8 +118,7 @@ class CcShowInstances extends BaseCcShowInstances
             ->filterByDbInstanceId($this->id)
             ->filterByDbPlayoutStatus(0, Criteria::GREATER_EQUAL)
             ->filterByDbEnds($this->ends, Criteria::LESS_EQUAL)
-            ->update(['DbPlayoutStatus' => 1], $con)
-        ;
+            ->update(['DbPlayoutStatus' => 1], $con);
 
         //scheduled track is a boundary track
         CcScheduleQuery::create()
@@ -127,16 +126,14 @@ class CcShowInstances extends BaseCcShowInstances
             ->filterByDbPlayoutStatus(0, Criteria::GREATER_EQUAL)
             ->filterByDbStarts($this->ends, Criteria::LESS_THAN)
             ->filterByDbEnds($this->ends, Criteria::GREATER_THAN)
-            ->update(['DbPlayoutStatus' => 2], $con)
-        ;
+            ->update(['DbPlayoutStatus' => 2], $con);
 
         //scheduled track is overbooked.
         CcScheduleQuery::create()
             ->filterByDbInstanceId($this->id)
             ->filterByDbPlayoutStatus(0, Criteria::GREATER_EQUAL)
             ->filterByDbStarts($this->ends, Criteria::GREATER_THAN)
-            ->update(['DbPlayoutStatus' => 0], $con)
-        ;
+            ->update(['DbPlayoutStatus' => 0], $con);
 
         $this->setDbLastScheduled(gmdate('Y-m-d H:i:s'));
         $this->save($con);
@@ -155,8 +152,7 @@ class CcShowInstances extends BaseCcShowInstances
         $schedule = CcScheduleQuery::create()
             ->filterByDbInstanceId($this->id)
             ->orderByDbStarts()
-            ->find()
-        ;
+            ->find();
 
         $pos = 0;
         foreach ($schedule as $item) {

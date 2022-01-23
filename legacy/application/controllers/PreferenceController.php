@@ -15,8 +15,7 @@ class PreferenceController extends Zend_Controller_Action
             ->addActionContext('get-liquidsoap-status', 'json')
             ->addActionContext('set-source-connection-url', 'json')
             ->addActionContext('get-admin-password-status', 'json')
-            ->initContext()
-        ;
+            ->initContext();
     }
 
     public function indexAction()
@@ -512,8 +511,7 @@ class PreferenceController extends Zend_Controller_Action
         if (!($method == 'POST')) {
             $this->getResponse()
                 ->setHttpResponseCode(405)
-                ->appendBody(_('Request method not accepted') . ": {$method}")
-            ;
+                ->appendBody(_('Request method not accepted') . ": {$method}");
 
             return;
         }
@@ -524,8 +522,7 @@ class PreferenceController extends Zend_Controller_Action
 
         $this->getResponse()
             ->setHttpResponseCode(200)
-            ->appendBody('OK')
-        ;
+            ->appendBody('OK');
     }
 
     private function deleteFutureScheduleItems()
@@ -534,8 +531,7 @@ class PreferenceController extends Zend_Controller_Action
         $nowDateTime = new DateTime('now', $utcTimezone);
         $scheduleItems = CcScheduleQuery::create()
             ->filterByDbEnds($nowDateTime->format(DEFAULT_TIMESTAMP_FORMAT), Criteria::GREATER_THAN)
-            ->find()
-        ;
+            ->find();
 
         // Delete all the schedule items
         foreach ($scheduleItems as $i) {

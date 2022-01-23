@@ -236,8 +236,7 @@ class Application_Service_PodcastService
             $defaultOwner = CcSubjsQuery::create()
                 ->filterByDbType('A')
                 ->orderByDbId()
-                ->findOne()
-            ;
+                ->findOne();
             if (!$defaultOwner) {
                 // what to do if there is no admin user?
                 // should we handle this case?
