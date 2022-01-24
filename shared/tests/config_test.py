@@ -4,13 +4,14 @@ from unittest import mock
 
 from pytest import mark, raises
 
-from libretime_shared.config import BaseConfig, DatabaseConfig
+from libretime_shared.config import BaseConfig, DatabaseConfig, RabbitMQConfig
 
 
 # pylint: disable=too-few-public-methods
 class FixtureConfig(BaseConfig):
     api_key: str
     database: DatabaseConfig
+    rabbitmq: RabbitMQConfig = RabbitMQConfig()
 
 
 FIXTURE_CONFIG_RAW = """
@@ -19,7 +20,7 @@ api_key: "f3bf04fc"
 # Comment !
 database:
     host: "localhost"
-    port: 5672
+    port: 5432
 
 ignored: "ignored"
 """
@@ -35,6 +36,7 @@ def test_base_config(tmp_path: Path):
             LIBRETIME_API="invalid",
             LIBRETIME_DATABASE="invalid",
             LIBRETIME_DATABASE_PORT="8888",
+            LIBRETIME_RABBITMQ_HOST="changed",
             WRONGPREFIX_API_KEY="invalid",
         ),
     ):
@@ -43,6 +45,20 @@ def test_base_config(tmp_path: Path):
         assert config.api_key == "f3bf04fc"
         assert config.database.host == "localhost"
         assert config.database.port == 8888
+        assert config.rabbitmq.host == "changed"
+        assert config.rabbitmq.port == 5672
+
+    # Optional model: loading default values (rabbitmq)
+    with mock.patch.dict(environ, dict()):
+        config = FixtureConfig(filepath=config_filepath)
+        assert config.rabbitmq.host == "localhost"
+        assert config.rabbitmq.port == 5672
+
+    # Optional model: overriding using environment (rabbitmq)
+    with mock.patch.dict(environ, dict(LIBRETIME_RABBITMQ_HOST="changed")):
+        config = FixtureConfig(filepath=config_filepath)
+        assert config.rabbitmq.host == "changed"
+        assert config.rabbitmq.port == 5672
 
 
 FIXTURE_CONFIG_RAW_INI = """
@@ -65,25 +81,6 @@ def test_base_config_ini(tmp_path: Path):
         assert config.api_key == "f3bf04fc"
         assert config.database.host == "changed"
         assert config.database.port == 6666
-
-
-# pylint: disable=too-few-public-methods
-class FixtureOptionalConfig(BaseConfig):
-    database = DatabaseConfig()
-
-
-def test_base_config_optional():
-    with mock.patch.dict(environ, dict()):
-        config = FixtureOptionalConfig()
-
-        assert config.database.host == "localhost"
-        assert config.database.port == 5432
-
-    with mock.patch.dict(environ, dict(LIBRETIME_DATABASE_HOST="changed")):
-        config = FixtureOptionalConfig()
-
-        assert config.database.host == "changed"
-        assert config.database.port == 5432
 
 
 FIXTURE_CONFIG_RAW_MISSING = """

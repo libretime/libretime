@@ -23,5 +23,5 @@ class PlayoutConfig(BaseModel):
 
 
 class Config(BaseConfig):
-    rabbitmq = RabbitMQConfig()
-    playout = PlayoutConfig()
+    rabbitmq: RabbitMQConfig = RabbitMQConfig()
+    playout: PlayoutConfig = PlayoutConfig()
