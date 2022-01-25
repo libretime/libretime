@@ -64,18 +64,18 @@ def setup_logger(
     :param serialize: generate JSON formatted log records
     :returns: log level guessed from the verbosity
     """
-    handlers = [dict(sink=sys.stderr, level=level.no, serialize=serialize)]
+    handlers = [{"sink": sys.stderr, "level": level.no, "serialize": serialize}]
 
     if filepath is not None:
         handlers.append(
-            dict(
-                sink=filepath,
-                enqueue=True,
-                level=level.no,
-                serialize=serialize,
-                rotation="12:00",
-                retention="7 days",
-            )
+            {
+                "sink": filepath,
+                "enqueue": True,
+                "level": level.no,
+                "serialize": serialize,
+                "rotation": "12:00",
+                "retention": "7 days",
+            }
         )
 
     logger.configure(handlers=handlers)
@@ -101,14 +101,14 @@ def create_task_logger(
 
     task_logger.configure(
         handlers=[
-            dict(
-                sink=filepath,
-                enqueue=True,
-                level=level.no,
-                serialize=serialize,
-                rotation="12:00",
-                retention="7 days",
-            )
+            {
+                "sink": filepath,
+                "enqueue": True,
+                "level": level.no,
+                "serialize": serialize,
+                "rotation": "12:00",
+                "retention": "7 days",
+            }
         ],
     )
 
