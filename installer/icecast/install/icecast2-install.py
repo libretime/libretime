@@ -20,5 +20,5 @@ try:
     )
 
 except Exception as e:
-    print("exception: {}".format(e))
+    print(f"exception: {e}")
     sys.exit(1)

@@ -46,7 +46,7 @@ def organise_file(audio_file_path, import_directory, original_filename, metadata
             "metadata must be a dict. Was of type " + type(metadata).__name__
         )
     if not os.path.exists(audio_file_path):
-        raise FileNotFoundError("audio file not found: {}".format(audio_file_path))
+        raise FileNotFoundError(f"audio file not found: {audio_file_path}")
 
     # Import the file over to it's final location.
     # TODO: Also, handle the case where the move fails and write some code
@@ -80,7 +80,7 @@ def organise_file(audio_file_path, import_directory, original_filename, metadata
             metadata["full_path"] = final_file_path
             return metadata
         base_file_path, file_extension = os.path.splitext(final_file_path)
-        final_file_path = "%s_%s%s" % (
+        final_file_path = "{}_{}{}".format(
             base_file_path,
             time.strftime("%m-%d-%Y-%H-%M-%S", time.localtime()),
             file_extension,
@@ -89,7 +89,7 @@ def organise_file(audio_file_path, import_directory, original_filename, metadata
     # If THAT path exists, append a UUID instead:
     while os.path.exists(final_file_path):
         base_file_path, file_extension = os.path.splitext(final_file_path)
-        final_file_path = "%s_%s%s" % (
+        final_file_path = "{}_{}{}".format(
             base_file_path,
             str(uuid.uuid4()),
             file_extension,
@@ -99,7 +99,7 @@ def organise_file(audio_file_path, import_directory, original_filename, metadata
     mkdir_p(os.path.dirname(final_file_path))
 
     # Move the file into its final destination directory
-    logger.debug("Moving %s to %s" % (audio_file_path, final_file_path))
+    logger.debug(f"Moving {audio_file_path} to {final_file_path}")
     shutil.move(audio_file_path, final_file_path)
 
     metadata["full_path"] = final_file_path

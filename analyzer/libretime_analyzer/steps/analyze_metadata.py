@@ -25,7 +25,7 @@ def analyze_metadata(filename: str, metadata: Dict[str, Any]):
             "metadata must be a dict. Was of type " + type(metadata).__name__
         )
     if not os.path.exists(filename):
-        raise FileNotFoundError("audio file not found: {}".format(filename))
+        raise FileNotFoundError(f"audio file not found: {filename}")
 
     # Airtime <= 2.5.x nonsense:
     metadata["ftype"] = "audioclip"
@@ -186,6 +186,6 @@ def _analyze_wave(filename, metadata):
         metadata["length_seconds"] = length_seconds
         metadata["cueout"] = metadata["length"]
     except wave.Error as ex:
-        logger.error("Invalid WAVE file: {}".format(str(ex)))
+        logger.error(f"Invalid WAVE file: {str(ex)}")
         raise
     return metadata

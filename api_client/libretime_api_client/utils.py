@@ -35,7 +35,7 @@ class IncompleteUrl(UrlException):
         self.url = url
 
     def __str__(self):
-        return "Incomplete url: '{}'".format(self.url)
+        return f"Incomplete url: '{self.url}'"
 
 
 class UrlBadParam(UrlException):
@@ -44,7 +44,7 @@ class UrlBadParam(UrlException):
         self.param = param
 
     def __str__(self):
-        return "Bad param '{}' passed into url: '{}'".format(self.param, self.url)
+        return f"Bad param '{self.param}' passed into url: '{self.url}'"
 
 
 class KeyAuth(AuthBase):
@@ -52,7 +52,7 @@ class KeyAuth(AuthBase):
         self.key = key
 
     def __call__(self, r):
-        r.headers["Authorization"] = "Api-Key {}".format(self.key)
+        r.headers["Authorization"] = f"Api-Key {self.key}"
         return r
 
 
@@ -195,7 +195,7 @@ class RequestProvider:
         if attr in self:
             return self.requests[attr]
         else:
-            return super(RequestProvider, self).__getattribute__(attr)
+            return super().__getattribute__(attr)
 
 
 def time_in_seconds(value):

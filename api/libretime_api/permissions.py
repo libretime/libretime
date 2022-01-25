@@ -38,7 +38,7 @@ def get_permission_for_view(request, view):
     try:
         permission_type = REQUEST_PERMISSION_TYPE_MAP[request.method]
         if view.__class__.__name__ == "APIRootView":
-            return "{}_apiroot".format(permission_type)
+            return f"{permission_type}_apiroot"
         model = view.model_permission_name
         own_obj = get_own_obj(request, view)
         return "{permission_type}_{own_obj}{model}".format(

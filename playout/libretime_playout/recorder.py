@@ -68,7 +68,7 @@ class ShowRecorder(Thread):
         filename = filename.replace(" ", "-")
 
         joined_path = os.path.join(RECORD_DIR, filename)
-        filepath = "%s.%s" % (joined_path, self.config.playout.record_file_format)
+        filepath = f"{joined_path}.{self.config.playout.record_file_format}"
 
         br = self.config.playout.record_bitrate
         sr = self.config.playout.record_samplerate
@@ -77,7 +77,7 @@ class ShowRecorder(Thread):
 
         # -f:16,2,44100
         # -b:256
-        command = "ecasound -f:%s,%s,%s -i alsa -o %s,%s000 -t:%s" % (
+        command = "ecasound -f:{},{},{} -i alsa -o {},{}000 -t:{}".format(
             ss,
             c,
             sr,
@@ -145,7 +145,9 @@ class ShowRecorder(Thread):
             recorded_file = mutagen.File(filepath, easy=True)
             recorded_file["artist"] = artist
             recorded_file["date"] = full_date
-            recorded_file["title"] = "%s-%s-%s" % (self.show_name, full_date, full_time)
+            recorded_file["title"] = "{}-{}-{}".format(
+                self.show_name, full_date, full_time
+            )
             # You cannot pass ints into the metadata of a file. Even tracknumber needs to be a string
             recorded_file["tracknumber"] = self.show_instance
             recorded_file.save()
@@ -240,7 +242,7 @@ class Recorder(Thread):
             next_show = getDateTimeObj(start_time)
 
             delta = next_show - tnow
-            s = "%s.%s" % (delta.seconds, delta.microseconds)
+            s = f"{delta.seconds}.{delta.microseconds}"
             out = float(s)
 
             if out < 5:

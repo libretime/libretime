@@ -53,7 +53,7 @@ def process_http_requests(ipc_queue, http_retry_queue_path):
     try:
         with open(http_retry_queue_path, "rb") as pickle_file:
             retry_queue = pickle.load(pickle_file)
-    except IOError as e:
+    except OSError as e:
         if e.errno == 2:
             pass
         else:

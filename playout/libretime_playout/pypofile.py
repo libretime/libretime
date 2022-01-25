@@ -53,7 +53,7 @@ class PypoFile(Thread):
         media_item["file_ready"] = not do_copy
 
         if do_copy:
-            logger.info("copying from %s to local cache %s" % (src, dst))
+            logger.info(f"copying from {src} to local cache {dst}")
             try:
                 with open(dst, "wb") as handle:
                     logger.info(media_item)
@@ -82,7 +82,7 @@ class PypoFile(Thread):
 
                 media_item["file_ready"] = True
             except Exception as e:
-                logger.error("Could not copy from %s to %s" % (src, dst))
+                logger.error(f"Could not copy from {src} to {dst}")
                 logger.error(e)
 
     def report_file_size_and_md5_to_api(self, file_path, file_id):
@@ -97,7 +97,7 @@ class PypoFile(Thread):
                         break
                     m.update(data)
                 md5_hash = m.hexdigest()
-        except (OSError, IOError) as e:
+        except OSError as e:
             file_size = 0
             logger.error(
                 "Error getting file size and md5 hash for file id %s" % file_id

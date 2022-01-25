@@ -77,7 +77,7 @@ class MessageListener:
                 self.wait_for_messages()
             except (KeyboardInterrupt, SystemExit):
                 break  # Break out of the while loop and exit the application
-            except select.error:
+            except OSError:
                 pass
             except pika.exceptions.AMQPError as e:
                 if self._shutdown:
@@ -141,9 +141,7 @@ class MessageListener:
         Here we parse the message, spin up an analyzer process, and report the
         metadata back to the Airtime web application (or report an error).
         """
-        logger.info(
-            " - Received '%s' on routing_key '%s'" % (body, method_frame.routing_key)
-        )
+        logger.info(f" - Received '{body}' on routing_key '{method_frame.routing_key}'")
 
         # Declare all variables here so they exist in the exception handlers below, no matter what.
         audio_file_path = ""

@@ -126,7 +126,7 @@ api_config["bin_dir"] = "/usr/lib/airtime/api_clients/"
 ################################################################################
 # Airtime API Version 1 Client
 ################################################################################
-class AirtimeApiClient(object):
+class AirtimeApiClient:
     def __init__(self, logger=None, config_path="/etc/airtime/airtime.conf"):
         if logger is None:
             self.logger = logging
@@ -282,7 +282,7 @@ class AirtimeApiClient(object):
         if self.config["general"]["base_dir"].startswith("/"):
             self.config["general"]["base_dir"] = self.config["general"]["base_dir"][1:]
         protocol = get_protocol(self.config)
-        url = "%s://%s:%s/%s%s/%s" % (
+        url = "{}://{}:{}/{}{}/{}".format(
             protocol,
             self.config["general"]["base_url"],
             str(self.config["general"]["base_port"]),
@@ -298,7 +298,7 @@ class AirtimeApiClient(object):
         if self.config["general"]["base_dir"].startswith("/"):
             self.config["general"]["base_dir"] = self.config["general"]["base_dir"][1:]
         protocol = get_protocol(self.config)
-        url = "%s://%s:@%s:%s/%s/%s" % (
+        url = "{}://{}:@{}:{}/{}/{}".format(
             protocol,
             self.config["general"]["api_key"],
             self.config["general"]["base_url"],
@@ -348,9 +348,7 @@ class AirtimeApiClient(object):
         # Note that we must prefix every key with: mdX where x is a number
         # Is there a way to format the next line a little better? The
         # parenthesis make the code almost unreadable
-        md_list = dict(
-            (("md%d" % i), json.dumps(md)) for i, md in enumerate(valid_actions)
-        )
+        md_list = {("md%d" % i): json.dumps(md) for i, md in enumerate(valid_actions)}
         # For testing we add the following "dry" parameter to tell the
         # controller not to actually do any changes
         if dry:
