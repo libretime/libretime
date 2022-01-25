@@ -28,7 +28,7 @@ class TestIsSystemTokenOrUser(APITestCase):
         token = "doesnotexist"
         request = APIRequestFactory().get(self.path)
         request.user = AnonymousUser()
-        request.META["Authorization"] = "Api-Key {token}".format(token=token)
+        request.META["Authorization"] = f"Api-Key {token}"
         allowed = IsSystemTokenOrUser().has_permission(request, None)
         self.assertFalse(allowed)
 
@@ -36,7 +36,7 @@ class TestIsSystemTokenOrUser(APITestCase):
         token = settings.CONFIG.get("general", "api_key")
         request = APIRequestFactory().get(self.path)
         request.user = AnonymousUser()
-        request.META["Authorization"] = "Api-Key {token}".format(token=token)
+        request.META["Authorization"] = f"Api-Key {token}"
         allowed = IsSystemTokenOrUser().has_permission(request, None)
         self.assertTrue(allowed)
 
@@ -81,7 +81,7 @@ class TestPermissions(APITestCase):
         for model in self.URLS:
             response = self.logged_in_test_model(model, "guest", GUEST, self.client.get)
             self.assertEqual(
-                response.status_code, 200, msg="Invalid for model {}".format(model)
+                response.status_code, 200, msg=f"Invalid for model {model}"
             )
 
     def test_guest_permissions_failure(self):
@@ -90,14 +90,14 @@ class TestPermissions(APITestCase):
                 model, "guest", GUEST, self.client.post
             )
             self.assertEqual(
-                response.status_code, 403, msg="Invalid for model {}".format(model)
+                response.status_code, 403, msg=f"Invalid for model {model}"
             )
 
     def test_dj_get_permissions(self):
         for model in self.URLS:
             response = self.logged_in_test_model(model, "dj", DJ, self.client.get)
             self.assertEqual(
-                response.status_code, 200, msg="Invalid for model {}".format(model)
+                response.status_code, 200, msg=f"Invalid for model {model}"
             )
 
     def test_dj_post_permissions(self):
@@ -110,7 +110,7 @@ class TestPermissions(APITestCase):
             last_name="user",
         )
         f = baker.make("libretime_api.File", owner=user)
-        model = "files/{}".format(f.id)
+        model = f"files/{f.id}"
         path = self.path.format(model)
         self.client.login(username="test-dj", password="test")
         response = self.client.patch(path, {"name": "newFilename"})
@@ -126,7 +126,7 @@ class TestPermissions(APITestCase):
             last_name="user",
         )
         f = baker.make("libretime_api.File")
-        model = "files/{}".format(f.id)
+        model = f"files/{f.id}"
         path = self.path.format(model)
         self.client.login(username="test-dj", password="test")
         response = self.client.patch(path, {"name": "newFilename"})

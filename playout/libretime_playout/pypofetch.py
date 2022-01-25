@@ -192,7 +192,7 @@ class PypoFetch(Thread):
                         self.config.playout.liquidsoap_host,
                         self.config.playout.liquidsoap_port,
                     )
-                    tn.write("exit\n".encode("utf-8"))
+                    tn.write(b"exit\n")
                     tn.read_all()
                     logger.info("Liquidsoap is up and running")
                     break
@@ -237,11 +237,11 @@ class PypoFetch(Thread):
             logger.info(boot_up_time_command)
             tn.write(boot_up_time_command)
 
-            connection_status = ("streams.connection_status\n").encode("utf-8")
+            connection_status = b"streams.connection_status\n"
             logger.info(connection_status)
             tn.write(connection_status)
 
-            tn.write("exit\n".encode("utf-8"))
+            tn.write(b"exit\n")
 
             output = tn.read_all()
         except Exception as e:
@@ -280,7 +280,7 @@ class PypoFetch(Thread):
             command = ("vars.stream_metadata_type %s\n" % stream_format).encode("utf-8")
             logger.info(command)
             tn.write(command)
-            tn.write("exit\n".encode("utf-8"))
+            tn.write(b"exit\n")
             tn.read_all()
         except Exception as e:
             logger.exception(e)
@@ -300,7 +300,7 @@ class PypoFetch(Thread):
             command = ("vars.default_dj_fade %s\n" % fade).encode("utf-8")
             logger.info(command)
             tn.write(command)
-            tn.write("exit\n".encode("utf-8"))
+            tn.write(b"exit\n")
             tn.read_all()
         except Exception as e:
             logger.exception(e)
@@ -321,7 +321,7 @@ class PypoFetch(Thread):
                 command = ("vars.station_name %s\n" % station_name).encode("utf-8")
                 logger.info(command)
                 tn.write(command)
-                tn.write("exit\n".encode("utf-8"))
+                tn.write(b"exit\n")
                 tn.read_all()
             except Exception as e:
                 logger.exception(e)

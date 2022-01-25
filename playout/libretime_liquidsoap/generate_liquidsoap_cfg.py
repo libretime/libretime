@@ -21,15 +21,15 @@ def generate_liquidsoap_config(ss, log_filepath: Optional[Path]):
         try:
             if not "port" in key and not "bitrate" in key:  # Stupid hack
                 raise ValueError()
-            str_buffer = "%s = %s\n" % (key, int(value))
+            str_buffer = f"{key} = {int(value)}\n"
         except ValueError:
             try:  # Is it a boolean?
                 if value == "true" or value == "false":
-                    str_buffer = "%s = %s\n" % (key, value.lower())
+                    str_buffer = f"{key} = {value.lower()}\n"
                 else:
                     raise ValueError()  # Just drop into the except below
             except:  # Everything else is a string
-                str_buffer = '%s = "%s"\n' % (key, value)
+                str_buffer = f'{key} = "{value}"\n'
 
         fh.write(str_buffer)
         # ignore squashes unused variable errors from Liquidsoap

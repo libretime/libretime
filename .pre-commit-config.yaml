@@ -34,6 +34,12 @@ repos:
       - id: prettier
         files: \.(md|yml|yaml|json)$
 
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v2.31.0
+    hooks:
+      - id: pyupgrade
+        args: [--py3-plus, --py36-plus]
+
   - repo: https://github.com/psf/black
     rev: 21.12b0
     hooks:

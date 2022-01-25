@@ -46,7 +46,7 @@ plq.daemon = True
 plq.start()
 
 
-print("Time now: {:s}".format(datetime.utcnow()))
+print(f"Time now: {datetime.utcnow():s}")
 
 media_schedule = {}
 

@@ -58,7 +58,7 @@ def liquidsoap_get_info(telnet_lock, host, port):
         tn = telnetlib.Telnet(host, port)
         msg = "version\n"
         tn.write(msg.encode("utf-8"))
-        tn.write("exit\n".encode("utf-8"))
+        tn.write(b"exit\n")
         response = tn.read_all().decode("utf-8")
     except Exception as e:
         logger.error(e)

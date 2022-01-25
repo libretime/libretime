@@ -76,7 +76,7 @@ class TelnetLiquidsoap:
                 logger.debug(msg)
                 tn.write(msg.encode("utf-8"))
 
-            tn.write("exit\n".encode("utf-8"))
+            tn.write(b"exit\n")
             logger.debug(tn.read_all().decode("utf-8"))
         except Exception:
             raise
@@ -93,7 +93,7 @@ class TelnetLiquidsoap:
             logger.debug(msg)
             tn.write(msg.encode("utf-8"))
 
-            tn.write("exit\n".encode("utf-8"))
+            tn.write(b"exit\n")
             logger.debug(tn.read_all().decode("utf-8"))
         except Exception:
             raise
@@ -110,7 +110,7 @@ class TelnetLiquidsoap:
 
             tn = self.__connect()
             annotation = create_liquidsoap_annotation(media_item)
-            msg = "%s.push %s\n" % (queue_id, annotation)
+            msg = f"{queue_id}.push {annotation}\n"
             logger.debug(msg)
             tn.write(msg.encode("utf-8"))
 
@@ -119,7 +119,7 @@ class TelnetLiquidsoap:
             tn.write(msg.encode("utf-8"))
             logger.debug(msg)
 
-            tn.write("exit\n".encode("utf-8"))
+            tn.write(b"exit\n")
             logger.debug(tn.read_all().decode("utf-8"))
         except Exception:
             raise
@@ -141,7 +141,7 @@ class TelnetLiquidsoap:
             logger.debug(msg)
             tn.write(msg.encode("utf-8"))
 
-            tn.write("exit\n".encode("utf-8"))
+            tn.write(b"exit\n")
             logger.debug(tn.read_all().decode("utf-8"))
 
         except Exception as e:
@@ -161,7 +161,7 @@ class TelnetLiquidsoap:
             logger.debug(msg)
             tn.write(msg.encode("utf-8"))
 
-            tn.write("exit\n".encode("utf-8"))
+            tn.write(b"exit\n")
             logger.debug(tn.read_all().decode("utf-8"))
 
         except Exception as e:
@@ -184,7 +184,7 @@ class TelnetLiquidsoap:
             logger.debug(msg)
             tn.write(msg.encode("utf-8"))
 
-            tn.write("exit\n".encode("utf-8"))
+            tn.write(b"exit\n")
             logger.debug(tn.read_all().decode("utf-8"))
 
             self.current_prebuffering_stream_id = None
@@ -208,7 +208,7 @@ class TelnetLiquidsoap:
             logger.debug(msg)
             tn.write(msg.encode("utf-8"))
 
-            tn.write("exit\n".encode("utf-8"))
+            tn.write(b"exit\n")
             logger.debug(tn.read_all().decode("utf-8"))
 
             self.current_prebuffering_stream_id = media_item["row_id"]
@@ -228,7 +228,7 @@ class TelnetLiquidsoap:
             logger.debug(msg)
             tn.write(msg.encode("utf-8"))
 
-            tn.write("exit\n".encode("utf-8"))
+            tn.write(b"exit\n")
             stream_id = tn.read_all().decode("utf-8").splitlines()[0]
             logger.debug("stream_id: %s" % stream_id)
 
@@ -253,7 +253,7 @@ class TelnetLiquidsoap:
             tn = telnetlib.Telnet(self.ls_host, self.ls_port)
             logger.info(command)
             tn.write(command.encode("utf-8"))
-            tn.write("exit\n".encode("utf-8"))
+            tn.write(b"exit\n")
             tn.read_all().decode("utf-8")
         except Exception as e:
             logger.error(traceback.format_exc())
@@ -272,7 +272,7 @@ class TelnetLiquidsoap:
                     i = i.encode("utf-8")
                 tn.write(i)
 
-            tn.write("exit\n".encode("utf-8"))
+            tn.write(b"exit\n")
             tn.read_all().decode("utf-8")
         except Exception as e:
             logger.error(str(e))
@@ -311,10 +311,10 @@ class DummyTelnetLiquidsoap:
         try:
             self.telnet_lock.acquire()
 
-            logger.info("Pushing %s to queue %s" % (media_item, queue_id))
+            logger.info(f"Pushing {media_item} to queue {queue_id}")
             from datetime import datetime
 
-            print("Time now: {:s}".format(datetime.utcnow()))
+            print(f"Time now: {datetime.utcnow():s}")
 
             annotation = create_liquidsoap_annotation(media_item)
             self.liquidsoap_mock_queues[queue_id].append(annotation)
@@ -331,7 +331,7 @@ class DummyTelnetLiquidsoap:
             logger.info("Purging queue %s" % queue_id)
             from datetime import datetime
 
-            print("Time now: {:s}".format(datetime.utcnow()))
+            print(f"Time now: {datetime.utcnow():s}")
 
         except Exception:
             raise

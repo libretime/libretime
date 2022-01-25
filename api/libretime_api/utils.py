@@ -10,7 +10,7 @@ def read_config_file(config_filepath):
     try:
         with open(config_filepath, encoding="utf-8") as config_file:
             config.read_file(config_file)
-    except IOError as error:
+    except OSError as error:
         print(
             f"Unable to read config file at {config_filepath}: {error.strerror}",
             file=sys.stderr,

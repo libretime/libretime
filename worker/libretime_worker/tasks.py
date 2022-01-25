@@ -66,7 +66,7 @@ def podcast_download(
                 metadata_audiofile.save()
                 filetypeinfo = metadata_audiofile.pprint()
                 logger.info(
-                    "filetypeinfo is {0}".format(filetypeinfo.encode("ascii", "ignore"))
+                    "filetypeinfo is {}".format(filetypeinfo.encode("ascii", "ignore"))
                 )
                 re = requests.post(
                     callback_url,
@@ -85,7 +85,7 @@ def podcast_download(
         obj["status"] = 1
     except Exception as e:
         obj["error"] = e.message
-        logger.info("Error during file download: {0}".format(e))
+        logger.info(f"Error during file download: {e}")
         logger.debug("Original Traceback: %s" % (traceback.format_exc(e)))
         obj["status"] = 0
     return json.dumps(obj)
@@ -98,7 +98,7 @@ def podcast_override_metadata(m, podcast_name, override, track_title):
     # if the album override option is enabled replace the album id3 tag with the podcast name even if the album tag contains data
     if override is True:
         logger.debug(
-            "overriding album name to {0} in podcast".format(
+            "overriding album name to {} in podcast".format(
                 podcast_name.encode("ascii", "ignore")
             )
         )
@@ -111,7 +111,7 @@ def podcast_override_metadata(m, podcast_name, override, track_title):
             m["album"]
         except KeyError:
             logger.debug(
-                "setting new album name to {0} in podcast".format(
+                "setting new album name to {} in podcast".format(
                     podcast_name.encode("ascii", "ignore")
                 )
             )

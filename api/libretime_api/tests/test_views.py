@@ -18,13 +18,13 @@ class TestFileViewSet(APITestCase):
 
     def test_invalid(self):
         path = self.path.format(id="a")
-        self.client.credentials(HTTP_AUTHORIZATION="Api-Key {}".format(self.token))
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
         response = self.client.get(path)
         self.assertEqual(response.status_code, 400)
 
     def test_does_not_exist(self):
         path = self.path.format(id="1")
-        self.client.credentials(HTTP_AUTHORIZATION="Api-Key {}".format(self.token))
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
         response = self.client.get(path)
         self.assertEqual(response.status_code, 404)
 
@@ -40,7 +40,7 @@ class TestFileViewSet(APITestCase):
             filepath="song.mp3",
         )
         path = self.path.format(id=str(f.pk))
-        self.client.credentials(HTTP_AUTHORIZATION="Api-Key {}".format(self.token))
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
         response = self.client.get(path)
         self.assertEqual(response.status_code, 200)
 
@@ -78,7 +78,7 @@ class TestScheduleViewSet(APITestCase):
             instance=show,
             file=f,
         )
-        self.client.credentials(HTTP_AUTHORIZATION="Api-Key {}".format(self.token))
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
         response = self.client.get(self.path)
         self.assertEqual(response.status_code, 200)
         result = response.json()
@@ -111,7 +111,7 @@ class TestScheduleViewSet(APITestCase):
             instance=show,
             file=f,
         )
-        self.client.credentials(HTTP_AUTHORIZATION="Api-Key {}".format(self.token))
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
         response = self.client.get(self.path)
         self.assertEqual(response.status_code, 200)
         result = response.json()
@@ -157,7 +157,7 @@ class TestScheduleViewSet(APITestCase):
             instance=show,
             file=f,
         )
-        self.client.credentials(HTTP_AUTHORIZATION="Api-Key {}".format(self.token))
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
         response = self.client.get(self.path, {"is_valid": True})
         self.assertEqual(response.status_code, 200)
         result = response.json()
@@ -203,13 +203,13 @@ class TestScheduleViewSet(APITestCase):
             instance=show,
             file=f,
         )
-        self.client.credentials(HTTP_AUTHORIZATION="Api-Key {}".format(self.token))
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
         range_start = (filter_point - timedelta(minutes=1)).isoformat(
             timespec="seconds"
         )
         range_end = (filter_point + timedelta(minutes=1)).isoformat(timespec="seconds")
         response = self.client.get(
-            self.path, {"starts__range": "{},{}".format(range_start, range_end)}
+            self.path, {"starts__range": f"{range_start},{range_end}"}
         )
         self.assertEqual(response.status_code, 200)
         result = response.json()
