@@ -344,10 +344,13 @@ class FileDataHelper
     public static function renderImage($file)
     {
         $im = @imagecreatefromjpeg($file);
-        header('Content-Type: image/jpeg');
         $img = $im;
-        imagejpeg($img);
-        imagedestroy($img);
+
+        if ($im) {
+            header('Content-Type: image/jpeg');
+            imagejpeg($img);
+            imagedestroy($img);
+        }
     }
 
     /**
