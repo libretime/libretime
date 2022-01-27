@@ -266,8 +266,8 @@ SQL;
 
             //format the fades in format 00(.000000)
             $fades = $this->getFadeInfo($row['position']);
-            $row['fadein'] = $fades[0];
-            $row['fadeout'] = $fades[1];
+            $row['fadein'] = $fades[0] ?? null;
+            $row['fadeout'] = $fades[1] ?? null;
 
             // format the cues in format 00:00:00(.0)
             // we need to add the '.0' for cues and not fades
