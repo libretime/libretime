@@ -3,7 +3,7 @@ from unittest.mock import patch
 import distro
 import pytest
 
-from libretime_analyzer.steps.analyze_playability import (
+from libretime_analyzer.pipeline.analyze_playability import (
     UnplayableFileError,
     analyze_playability,
 )
@@ -21,7 +21,7 @@ def test_analyze_playability(filepath):
 
 def test_analyze_playability_missing_liquidsoap():
     with patch(
-        "libretime_analyzer.steps.analyze_playability.LIQUIDSOAP_EXECUTABLE",
+        "libretime_analyzer.pipeline.analyze_playability.LIQUIDSOAP_EXECUTABLE",
         "foobar",
     ):
         analyze_playability(str(FILES[0].path), dict())

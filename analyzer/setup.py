@@ -21,7 +21,7 @@ setup(
     license="AGPLv3",
     packages=[
         "libretime_analyzer",
-        "libretime_analyzer.steps",
+        "libretime_analyzer.pipeline",
     ],
     entry_points={
         "console_scripts": [
@@ -34,6 +34,7 @@ setup(
         "pika>=1.0.0",
         "file-magic",
         "requests>=2.7.0",
+        "typing_extensions",
     ],
     extras_require={
         "dev": [

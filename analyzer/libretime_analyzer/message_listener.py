@@ -8,7 +8,7 @@ import pika
 from libretime_shared.config import RabbitMQConfig
 from loguru import logger
 
-from .pipeline import Pipeline
+from .pipeline import Pipeline, PipelineStatus
 from .status_reporter import StatusReporter
 
 EXCHANGE = "airtime-uploads"
@@ -265,7 +265,7 @@ class MessageListener:
             metadata = q.get()
         except Exception as e:
             logger.error("Analyzer pipeline exception: %s" % str(e))
-            metadata["import_status"] = Pipeline.IMPORT_STATUS_FAILED
+            metadata["import_status"] = PipelineStatus.failed
 
         # Ensure our queue doesn't fill up and block due to unexpected behaviour. Defensive code.
         while not q.empty():

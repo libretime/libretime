@@ -1,6 +1,6 @@
 import pytest
 
-from libretime_analyzer.steps.analyze_metadata import analyze_metadata
+from libretime_analyzer.pipeline.analyze_metadata import analyze_metadata
 
 from ..fixtures import FILE_INVALID_DRM, FILE_INVALID_TXT, FILES_TAGGED
 

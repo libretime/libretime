@@ -1,14 +1,29 @@
 """ Analyzes and imports an audio file into the Airtime library.
 """
+from enum import Enum
 from queue import Queue
+from typing import Any, Dict
 
 from loguru import logger
+from typing_extensions import Protocol
 
-from .steps.analyze_cuepoint import analyze_cuepoint
-from .steps.analyze_metadata import analyze_metadata
-from .steps.analyze_playability import UnplayableFileError, analyze_playability
-from .steps.analyze_replaygain import analyze_replaygain
-from .steps.organise_file import organise_file
+from .analyze_cuepoint import analyze_cuepoint
+from .analyze_metadata import analyze_metadata
+from .analyze_playability import UnplayableFileError, analyze_playability
+from .analyze_replaygain import analyze_replaygain
+from .organise_file import organise_file
+
+
+class Step(Protocol):
+    @staticmethod
+    def __call__(filename: str, metadata: Dict[str, Any]):
+        ...
+
+
+class PipelineStatus(int, Enum):
+    succeed = 0
+    pending = 1
+    failed = 2
 
 
 class Pipeline:
@@ -20,8 +35,6 @@ class Pipeline:
     so that if it crashes, it does not kill the entire airtime_analyzer daemon and
     the failure to import can be reported back to the web application.
     """
-
-    IMPORT_STATUS_FAILED = 2
 
     @staticmethod
     def run_analysis(
@@ -99,7 +112,7 @@ class Pipeline:
             queue.put(metadata)
         except UnplayableFileError as e:
             logger.exception(e)
-            metadata["import_status"] = Pipeline.IMPORT_STATUS_FAILED
+            metadata["import_status"] = PipelineStatus.failed
             metadata["reason"] = "The file could not be played."
             raise e
         except Exception as e:

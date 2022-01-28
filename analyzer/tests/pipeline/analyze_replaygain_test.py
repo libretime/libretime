@@ -1,7 +1,7 @@
 import distro
 import pytest
 
-from libretime_analyzer.steps.analyze_replaygain import analyze_replaygain
+from libretime_analyzer.pipeline.analyze_replaygain import analyze_replaygain
 
 from ..fixtures import FILES
 
