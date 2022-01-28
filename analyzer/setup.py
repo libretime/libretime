@@ -21,7 +21,7 @@ setup(
     license="AGPLv3",
     packages=[
         "libretime_analyzer",
-        "libretime_analyzer.steps",
+        "libretime_analyzer.pipeline",
     ],
     entry_points={
         "console_scripts": [

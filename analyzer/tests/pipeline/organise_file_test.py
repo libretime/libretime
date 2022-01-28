@@ -82,7 +82,7 @@ def test_organise_file_triplicate_file(src_dir, dest_dir):
     # Here we use mock to patch out the time.localtime() function so that it
     # always returns the same value. This allows us to consistently simulate this test cases
     # where the last two of the three files are imported at the same time as the timestamp.
-    with mock.patch("libretime_analyzer.steps.organise_file.time") as mock_time:
+    with mock.patch("libretime_analyzer.pipeline.organise_file.time") as mock_time:
         mock_time.localtime.return_value = time.localtime()  # date(2010, 10, 8)
         mock_time.side_effect = time.time
 
