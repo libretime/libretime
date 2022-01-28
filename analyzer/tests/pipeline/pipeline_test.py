@@ -6,7 +6,7 @@ import pytest
 
 from libretime_analyzer.pipeline import Pipeline
 
-from .conftest import AUDIO_FILENAME, AUDIO_IMPORT_DEST
+from ..conftest import AUDIO_FILENAME, AUDIO_IMPORT_DEST
 
 
 def test_run_analysis(src_dir, dest_dir):
