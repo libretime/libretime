@@ -34,6 +34,7 @@ setup(
         "pika>=1.0.0",
         "file-magic",
         "requests>=2.7.0",
+        "typing_extensions",
     ],
     extras_require={
         "dev": [
