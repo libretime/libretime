@@ -1,6 +1,7 @@
 """ Analyzes and imports an audio file into the Airtime library.
 """
 from queue import Queue
+from typing import Any, Dict, Protocol
 
 from loguru import logger
 
@@ -9,6 +10,12 @@ from .analyze_metadata import analyze_metadata
 from .analyze_playability import UnplayableFileError, analyze_playability
 from .analyze_replaygain import analyze_replaygain
 from .organise_file import organise_file
+
+
+class Step(Protocol):
+    @staticmethod
+    def __call__(filename: str, metadata: Dict[str, Any]):
+        ...
 
 
 class Pipeline:
