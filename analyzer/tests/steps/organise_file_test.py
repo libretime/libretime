@@ -5,7 +5,7 @@ from unittest import mock
 
 import pytest
 
-from libretime_analyzer.steps.organise_file import organise_file
+from libretime_analyzer.pipeline.organise_file import organise_file
 
 from ..conftest import AUDIO_FILENAME
 

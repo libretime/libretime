@@ -1,6 +1,6 @@
 import pytest
 
-from libretime_analyzer.steps.analyze_cuepoint import analyze_cuepoint
+from libretime_analyzer.pipeline.analyze_cuepoint import analyze_cuepoint
 
 from ..fixtures import FILES
 

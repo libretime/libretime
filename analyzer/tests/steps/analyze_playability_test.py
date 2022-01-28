@@ -3,7 +3,7 @@ from unittest.mock import patch
 import distro
 import pytest
 
-from libretime_analyzer.steps.analyze_playability import (
+from libretime_analyzer.pipeline.analyze_playability import (
     UnplayableFileError,
     analyze_playability,
 )

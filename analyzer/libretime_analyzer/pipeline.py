@@ -4,11 +4,11 @@ from queue import Queue
 
 from loguru import logger
 
-from .steps.analyze_cuepoint import analyze_cuepoint
-from .steps.analyze_metadata import analyze_metadata
-from .steps.analyze_playability import UnplayableFileError, analyze_playability
-from .steps.analyze_replaygain import analyze_replaygain
-from .steps.organise_file import organise_file
+from .pipeline.analyze_cuepoint import analyze_cuepoint
+from .pipeline.analyze_metadata import analyze_metadata
+from .pipeline.analyze_playability import UnplayableFileError, analyze_playability
+from .pipeline.analyze_replaygain import analyze_replaygain
+from .pipeline.organise_file import organise_file
 
 
 class Pipeline:
