@@ -1,5 +1,6 @@
 """ Analyzes and imports an audio file into the Airtime library.
 """
+from enum import Enum
 from queue import Queue
 from typing import Any, Dict, Protocol
 
@@ -18,6 +19,12 @@ class Step(Protocol):
         ...
 
 
+class PipelineStatus(int, Enum):
+    succeed = 0
+    pending = 1
+    failed = 2
+
+
 class Pipeline:
     """Analyzes and imports an audio file into the Airtime library.
 
@@ -27,8 +34,6 @@ class Pipeline:
     so that if it crashes, it does not kill the entire airtime_analyzer daemon and
     the failure to import can be reported back to the web application.
     """
-
-    IMPORT_STATUS_FAILED = 2
 
     @staticmethod
     def run_analysis(
@@ -106,7 +111,7 @@ class Pipeline:
             queue.put(metadata)
         except UnplayableFileError as e:
             logger.exception(e)
-            metadata["import_status"] = Pipeline.IMPORT_STATUS_FAILED
+            metadata["import_status"] = PipelineStatus.failed
             metadata["reason"] = "The file could not be played."
             raise e
         except Exception as e:
