@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
---calculate_position()
+-- calculate_position()
 ----------------------------------------------------------------------------------
-DROP FUNCTION calculate_position() CASCADE;
+DROP FUNCTION IF EXISTS calculate_position CASCADE;
 
---remove this trigger for group adds/delete
+-- remove this trigger for group adds/delete
