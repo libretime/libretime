@@ -18,7 +18,8 @@ setup(
     package_data={"": ["py.typed"]},
     install_requires=[
         "click>=8.0.3",
-        "loguru",
+        # Pinned until https://github.com/Delgan/loguru/issues/581 is fixed
+        "loguru==0.5.3",
         "pydantic",
         "pyyaml",
     ],
