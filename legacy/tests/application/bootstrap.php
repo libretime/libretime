@@ -48,7 +48,7 @@ set_include_path(implode(PATH_SEPARATOR, [
 
 require_once CONFIG_PATH . '/constants.php';
 
-Logging::setLogPath(LIBRETIME_LOG_DIR . '/zendphp.log');
+Logging::setLogPath(LIBRETIME_LOG_DIR . '/legacy.log');
 
 set_include_path(APPLICATION_PATH . '/common' . PATH_SEPARATOR . get_include_path());
 
