@@ -13,8 +13,6 @@ class Config
 
         $CC_CONFIG = [];
 
-        // Name of the web server user
-        $CC_CONFIG['webServerUser'] = $values['general']['web_server_user'];
         $CC_CONFIG['rabbitmq'] = $values['rabbitmq'];
 
         $CC_CONFIG['baseDir'] = $values['general']['base_dir'];

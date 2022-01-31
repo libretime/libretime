@@ -143,41 +143,6 @@ class AirtimeInstall
         return true;
     }
 
-    /* TODO: This function should be moved to the media-monitor
-     * install script. */
-    public static function InstallStorageDirectory()
-    {
-        $CC_CONFIG = Config::getConfig();
-        echo '* Storage directory setup' . PHP_EOL;
-        $ini = parse_ini_file(__DIR__ . '/airtime-install.ini');
-        $stor_dir = $ini['storage_dir'];
-        $dirs = [$stor_dir, $stor_dir . '/organize'];
-        foreach ($dirs as $dir) {
-            if (!file_exists($dir)) {
-                if (mkdir($dir, 02775, true)) {
-                    $rp = realpath($dir);
-                    echo "* Directory {$rp} created" . PHP_EOL;
-                } else {
-                    echo "* Failed creating {$dir}" . PHP_EOL;
-
-                    exit(1);
-                }
-            } elseif (is_writable($dir)) {
-                $rp = realpath($dir);
-                echo "* Skipping directory already exists: {$rp}" . PHP_EOL;
-            } else {
-                $rp = realpath($dir);
-                echo "* Error: Directory already exists, but is not writable: {$rp}" . PHP_EOL;
-
-                exit(1);
-            }
-            echo "* Giving Apache permission to access {$rp}" . PHP_EOL;
-            $success = chown($rp, $CC_CONFIG['webServerUser']);
-            $success = chgrp($rp, $CC_CONFIG['webServerUser']);
-            $success = chmod($rp, 0775);
-        }
-    }
-
     public static function CreateDatabaseUser()
     {
         $CC_CONFIG = Config::getConfig();
@@ -317,7 +282,8 @@ END;
     public static function DirCheck()
     {
         echo 'Legend: "+" means the dir/file exists, "-" means that it does not.' . PHP_EOL;
-        $dirs = [AirtimeInstall::CONF_DIR_BINARIES,
+        $dirs = [
+            AirtimeInstall::CONF_DIR_BINARIES,
             AirtimeInstall::CONF_DIR_WWW,
             AirtimeIni::CONF_FILE_AIRTIME,
             AirtimeIni::CONF_FILE_LIQUIDSOAP,
@@ -326,7 +292,8 @@ END;
             '/usr/lib/airtime/pypo',
             '/var/log/airtime',
             '/var/log/airtime/pypo',
-            '/var/tmp/airtime/pypo', ];
+            '/var/tmp/airtime/pypo',
+        ];
         foreach ($dirs as $f) {
             if (file_exists($f)) {
                 echo "+ {$f}" . PHP_EOL;
