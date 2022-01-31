@@ -75,6 +75,7 @@ def setup_logger(
                 "serialize": serialize,
                 "rotation": "12:00",
                 "retention": "7 days",
+                "encoding": "utf-8",
             }
         )
 
@@ -108,6 +109,7 @@ def create_task_logger(
                 "serialize": serialize,
                 "rotation": "12:00",
                 "retention": "7 days",
+                "encoding": "utf-8",
             }
         ],
     )
