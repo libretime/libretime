@@ -48,5 +48,5 @@ def test_setup_logger(tmp_path: Path):
     extra_logger.complete()
     logger.complete()
 
-    assert len(log_filepath.read_text().splitlines()) == 1
-    assert len(extra_log_filepath.read_text().splitlines()) == 1
+    assert len(log_filepath.read_text(encoding="utf-8").splitlines()) == 1
+    assert len(extra_log_filepath.read_text(encoding="utf-8").splitlines()) == 1
