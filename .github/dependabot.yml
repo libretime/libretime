@@ -63,6 +63,14 @@ updates:
       - dependencies
 
   - package-ecosystem: "pip"
+    directory: "/shared"
+    schedule:
+      interval: "daily"
+    labels:
+      - python
+      - dependencies
+
+  - package-ecosystem: "pip"
     directory: "/worker"
     schedule:
       interval: "daily"
