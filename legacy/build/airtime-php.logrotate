@@ -1,4 +1,4 @@
-/var/log/airtime/zendphp.log {
+/var/log/libretime/legacy.log {
   compress
   rotate 10
   size 1000k

@@ -36,7 +36,7 @@ define('LIBRETIME_MAJOR_VERSION', '3');
 
 // grab values from env (i'll do this everywhere with a small function if we like it)
 define('LIBRETIME_CONF_DIR', getenv('LIBRETIME_CONF_DIR') ? getenv('LIBRETIME_CONF_DIR') : '/etc/airtime');
-define('LIBRETIME_LOG_DIR', getenv('LIBRETIME_LOG_DIR') ? getenv('LIBRETIME_LOG_DIR') : '/var/log/airtime');
+define('LIBRETIME_LOG_DIR', getenv('LIBRETIME_LOG_DIR') ? getenv('LIBRETIME_LOG_DIR') : '/var/log/libretime');
 
 // Defaults
 define('DEFAULT_LOGO_PLACEHOLDER', 1);

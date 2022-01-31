@@ -331,7 +331,7 @@ class AirtimeInstall
     {
         $CC_CONFIG = Config::getConfig();
         $path = AirtimeInstall::CONF_DIR_LOG;
-        $file = $path . '/zendphp.log';
+        $file = $path . '/legacy.log';
         if (!file_exists($path)) {
             mkdir($path, 0755, true);
         }

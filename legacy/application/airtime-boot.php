@@ -76,7 +76,7 @@ $application = new Zend_Application(
 );
 
 require_once APPLICATION_PATH . 'logging/Logging.php';
-Logging::setLogPath(LIBRETIME_LOG_DIR . '/zendphp.log');
+Logging::setLogPath(LIBRETIME_LOG_DIR . '/legacy.log');
 Logging::setupParseErrorLogging();
 
 // Create application, bootstrap, and run
