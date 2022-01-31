@@ -31,14 +31,6 @@ updates:
 
   # Maintain dependencies for Python apps
   - package-ecosystem: "pip"
-    directory: "/api"
-    schedule:
-      interval: "daily"
-    labels:
-      - python
-      - dependencies
-
-  - package-ecosystem: "pip"
     directory: "/analyzer"
     schedule:
       interval: "daily"
@@ -47,7 +39,7 @@ updates:
       - dependencies
 
   - package-ecosystem: "pip"
-    directory: "/worker"
+    directory: "/api"
     schedule:
       interval: "daily"
     labels:
@@ -64,6 +56,14 @@ updates:
 
   - package-ecosystem: "pip"
     directory: "/playout"
+    schedule:
+      interval: "daily"
+    labels:
+      - python
+      - dependencies
+
+  - package-ecosystem: "pip"
+    directory: "/worker"
     schedule:
       interval: "daily"
     labels:
