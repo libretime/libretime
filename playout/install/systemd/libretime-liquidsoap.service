@@ -4,6 +4,7 @@ Description=Libretime Liquidsoap Service
 [Service]
 Environment=LIBRETIME_LOG_FILEPATH=/var/log/libretime/liquidsoap.log
 Environment=LIBRETIME_CONFIG_FILEPATH=/etc/airtime/airtime.conf
+WorkingDirectory=/var/lib/libretime/playout
 
 ExecStart=/usr/local/bin/libretime-liquidsoap
 User=libretime-playout

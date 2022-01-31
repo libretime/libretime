@@ -12,8 +12,6 @@ from loguru import logger
 
 from . import generate_liquidsoap_cfg
 
-PYPO_HOME = "/var/tmp/airtime/pypo/"
-
 
 @click.command()
 @cli_logging_options()
@@ -23,8 +21,6 @@ def cli(log_level: int, log_filepath: Optional[Path]):
     """
     log_level = level_from_name(log_level)
     setup_logger(log_level, log_filepath)
-
-    os.environ["HOME"] = PYPO_HOME
 
     generate_liquidsoap_cfg.run(log_filepath)
     # check liquidsoap version so we can run a scripts matching the liquidsoap minor version
