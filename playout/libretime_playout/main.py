@@ -14,7 +14,7 @@ from threading import Lock
 from typing import Optional
 
 import click
-from libretime_api_client.version1 import AirtimeApiClient as ApiClient
+from libretime_api_client.v1 import ApiClient, API_VERSION
 from libretime_shared.cli import cli_config_options, cli_logging_options
 from libretime_shared.config import DEFAULT_ENV_PREFIX
 from libretime_shared.logging import level_from_name, setup_logger
@@ -39,7 +39,20 @@ class Global:
         self.api_client = api_client
 
     def selfcheck(self):
-        return self.api_client.is_server_compatible()
+        try:
+            payload = self.api_client.version()
+            api_version = payload["api_version"]
+        except Exception as exception:
+            logger.error(f"Unable to get API version: {exception}")
+            return False
+
+        logger.debug(f"Found API version {api_version}")
+
+        if api_version[0:3] != API_VERSION[0:3]:
+            logger.error(f"playout is incompatible with API version {API_VERSION}")
+            return False
+
+        return True
 
     def test_api(self):
         self.api_client.test()
