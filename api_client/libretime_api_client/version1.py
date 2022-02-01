@@ -142,36 +142,6 @@ class AirtimeApiClient:
             self.logger.exception("Error loading config file: %s", config_path)
             sys.exit(1)
 
-    def __get_api_version(self):
-        try:
-            return self.services.version_url()["api_version"]
-        except Exception as e:
-            self.logger.exception(e)
-            return -1
-
-    def is_server_compatible(self, verbose=True):
-        logger = self.logger
-        api_version = self.__get_api_version()
-        # logger.info('Airtime version found: ' + str(version))
-        if api_version == -1:
-            if verbose:
-                logger.info("Unable to get Airtime API version number.\n")
-            return False
-        elif api_version[0:3] != AIRTIME_API_VERSION[0:3]:
-            if verbose:
-                logger.info("Airtime API version found: " + str(api_version))
-                logger.info(
-                    "pypo is only compatible with API version: " + AIRTIME_API_VERSION
-                )
-            return False
-        else:
-            if verbose:
-                logger.info("Airtime API version found: " + str(api_version))
-                logger.info(
-                    "pypo is only compatible with API version: " + AIRTIME_API_VERSION
-                )
-            return True
-
     def get_schedule(self):
         # TODO : properly refactor this routine
         # For now the return type is a little messed up for compatibility reasons
