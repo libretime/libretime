@@ -142,12 +142,6 @@ class AirtimeApiClient:
             self.logger.exception("Error loading config file: %s", config_path)
             sys.exit(1)
 
-    def __get_airtime_version(self):
-        try:
-            return self.services.version_url()["airtime_version"]
-        except Exception:
-            return -1
-
     def __get_api_version(self):
         try:
             return self.services.version_url()["api_version"]
