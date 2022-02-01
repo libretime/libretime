@@ -30,6 +30,9 @@ setup(
     extras_require={
         "dev": [
             "types-requests",
+            # Consider responses
+            # https://github.com/getsentry/responses
+            "requests-mock",
         ],
     },
     zip_safe=False,
