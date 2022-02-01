@@ -21,6 +21,7 @@ setup(
     license="AGPLv3",
     packages=["libretime_api_client"],
     python_requires=">=3.6",
+    package_data={"": ["py.typed"]},
     install_requires=[
         "configobj",
         "python-dateutil>=2.7.0",
