@@ -142,14 +142,6 @@ class AirtimeApiClient:
             self.logger.exception("Error loading config file: %s", config_path)
             sys.exit(1)
 
-    def get_schedule(self):
-        # TODO : properly refactor this routine
-        # For now the return type is a little messed up for compatibility reasons
-        try:
-            return (True, self.services.export_url())
-        except:
-            return (False, None)
-
     def notify_liquidsoap_started(self):
         try:
             self.services.notify_liquidsoap_started()
