@@ -27,5 +27,10 @@ setup(
         "python-dateutil>=2.7.0",
         "requests",
     ],
+    extras_require={
+        "dev": [
+            "types-requests",
+        ],
+    },
     zip_safe=False,
 )
