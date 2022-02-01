@@ -58,7 +58,7 @@ class AbstractApiClient:
     session: Session
     base_url: str
 
-    def __init__(self, base_url):
+    def __init__(self, base_url: str):
         self.base_url = base_url
         self.session = Session(base_url=base_url)
 
