@@ -81,7 +81,7 @@ class PypoPush(Thread):
             media_item = media_schedule[mkey]
 
             # Ignore track that already ended
-            if media_item["end"] < tnow:
+            if media_item["type"] == "file" and media_item["end"] < tnow:
                 logger.debug(f"ignoring ended media_item: {media_item}")
                 continue
 
