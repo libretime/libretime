@@ -504,7 +504,7 @@ class PypoFetch(Thread):
 
         loops = 1
         while True:
-            logger.info("Loop #%s", loops)
+            logger.info(f"Loop #{loops}")
             manual_fetch_needed = False
             try:
                 """
