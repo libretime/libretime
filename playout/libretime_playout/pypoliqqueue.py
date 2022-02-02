@@ -53,7 +53,7 @@ class PypoLiqQueue(Thread):
                 else:
                     time_until_next_play = None
             else:
-                logger.info("New schedule received: %s", media_schedule)
+                logger.info("New schedule received")
 
                 # new schedule received. Replace old one with this.
                 schedule_deque.clear()
