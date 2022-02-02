@@ -127,7 +127,10 @@ class PypoLiquidsoap:
             ]
 
             scheduled_now_webstream = [
-                x for x in scheduled_now if x["type"] == eventtypes.STREAM_OUTPUT_START
+                x
+                for x in scheduled_now
+                if x["type"]
+                in (eventtypes.STREAM_OUTPUT_START, eventtypes.STREAM_BUFFER_START)
             ]
 
             schedule_ids = {x["row_id"] for x in scheduled_now_files}
@@ -184,6 +187,7 @@ class PypoLiquidsoap:
 
             # handle webstreams
             current_stream_id = self.telnet_liquidsoap.get_current_stream_id()
+            logger.debug(f"scheduled now webstream: {scheduled_now_webstream}")
             if scheduled_now_webstream:
                 if int(current_stream_id) != int(scheduled_now_webstream[0]["row_id"]):
                     self.play(scheduled_now_webstream[0])
