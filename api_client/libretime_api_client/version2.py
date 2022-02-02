@@ -58,7 +58,7 @@ class AirtimeApiClient:
                 "playout_status__gt": 0,
             }
         )
-        result = {"media": {}}
+        result = {}
         for item in data:
             start = isoparse(item["starts"])
             start_key = start.strftime("%Y-%m-%d-%H-%M-%S")
@@ -68,13 +68,13 @@ class AirtimeApiClient:
             show_instance = self.services.show_instance_url(id=item["instance_id"])
             show = self.services.show_url(id=show_instance["show_id"])
 
-            result["media"][start_key] = {
+            result[start_key] = {
                 "start": start_key,
                 "end": end_key,
                 "row_id": item["id"],
                 "show_name": show["name"],
             }
-            current = result["media"][start_key]
+            current = result[start_key]
             if item["file"]:
                 current["independent_event"] = False
                 current["type"] = "file"
@@ -132,7 +132,8 @@ class AirtimeApiClient:
                     "row_id": current["row_id"],
                     "independent_event": current["independent_event"],
                 }
-        return result
+
+        return {"media": result}
 
     def update_file(self, file_id, payload):
         data = self.services.file_url(id=file_id)
