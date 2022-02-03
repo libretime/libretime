@@ -27,13 +27,6 @@ function exception_error_handler($errno, $errstr, $errfile, $errline)
 
 set_error_handler('exception_error_handler');
 
-// Define application environment
-defined('APPLICATION_ENV')
-    || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
-
-defined('VERBOSE_STACK_TRACE')
-    || define('VERBOSE_STACK_TRACE', (getenv('VERBOSE_STACK_TRACE') ? getenv('VERBOSE_STACK_TRACE') : true));
-
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, [
     get_include_path(),
@@ -65,9 +58,6 @@ set_include_path(APPLICATION_PATH . '/upgrade' . PATH_SEPARATOR . get_include_pa
 //Common directory
 set_include_path(APPLICATION_PATH . '/common' . PATH_SEPARATOR . get_include_path());
 
-//Composer's autoloader
-require_once 'autoload.php';
-
 /** Zend_Application */
 $application = new Zend_Application(
     APPLICATION_ENV,
@@ -76,7 +66,7 @@ $application = new Zend_Application(
 );
 
 require_once APPLICATION_PATH . '/logging/Logging.php';
-Logging::setLogPath(LIBRETIME_LOG_DIR . '/legacy.log');
+Logging::setLogPath(LIBRETIME_LOG_FILEPATH);
 Logging::setupParseErrorLogging();
 
 // Create application, bootstrap, and run

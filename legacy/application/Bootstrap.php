@@ -1,6 +1,7 @@
 <?php
 
-require_once CONFIG_PATH . 'conf.php';
+require_once 'preload.php';
+
 $CC_CONFIG = Config::getConfig();
 
 require_once CONFIG_PATH . '/ACL.php';
@@ -8,12 +9,10 @@ require_once CONFIG_PATH . '/ACL.php';
 // Since we initialize the database during the configuration check,
 // check the $configRun global to avoid reinitializing unnecessarily
 if (!isset($configRun) || !$configRun) {
-    Propel::init(CONFIG_PATH . 'airtime-conf-production.php');
+    Propel::init(PROPEL_CONFIG_FILEPATH);
 }
 
-require_once CONFIG_PATH . 'constants.php';
-
-Logging::setLogPath(LIBRETIME_LOG_DIR . '/legacy.log');
+Logging::setLogPath(LIBRETIME_LOG_FILEPATH);
 
 Zend_Session::setOptions(['strict' => true]);
 Config::setAirtimeVersion();

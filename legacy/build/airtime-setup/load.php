@@ -92,7 +92,7 @@ function checkDatabaseConfiguration()
  */
 function configureDatabase()
 {
-    Propel::init(CONFIG_PATH . 'airtime-conf-production.php');
+    Propel::init(PROPEL_CONFIG_FILEPATH);
 }
 
 /**
@@ -103,10 +103,10 @@ function configureDatabase()
 function checkRMQConnection()
 {
     // Check for airtime.conf in /etc/airtime/ first, then check in the build directory,
-    if (file_exists(AIRTIME_CONFIG_STOR . AIRTIME_CONFIG)) {
-        $ini = parse_ini_file(AIRTIME_CONFIG_STOR . AIRTIME_CONFIG, true);
+    if (file_exists(LIBRETIME_CONFIG_FILEPATH)) {
+        $ini = parse_ini_file(LIBRETIME_CONFIG_FILEPATH, true);
     } else {
-        $ini = parse_ini_file(BUILD_PATH . 'airtime.example.conf', true);
+        $ini = parse_ini_file(SAMPLE_CONFIG_FILEPATH, true);
     }
 
     $conn = new \PhpAmqpLib\Connection\AMQPStreamConnection(

@@ -1,25 +1,5 @@
 <?php
 
-define('CONFIG_PATH', dirname(__DIR__, 2) . '/application/configs/');
-
-require_once dirname(__DIR__, 2) . '/vendor/jooola/propel1/runtime/lib/Propel.php';
-
-require_once CONFIG_PATH . 'conf.php';
-
-require_once dirname(__DIR__, 2) . '/application/models/airtime/CcPref.php';
-
-require_once dirname(__DIR__, 2) . '/application/models/airtime/CcPrefPeer.php';
-
-require_once dirname(__DIR__, 2) . '/application/models/airtime/CcPrefQuery.php';
-
-require_once dirname(__DIR__, 2) . '/application/models/airtime/map/CcPrefTableMap.php';
-
-require_once dirname(__DIR__, 2) . '/application/models/airtime/om/BaseCcPref.php';
-
-require_once dirname(__DIR__, 2) . '/application/models/airtime/om/BaseCcPrefPeer.php';
-
-require_once dirname(__DIR__, 2) . '/application/models/airtime/om/BaseCcPrefQuery.php';
-
 /**
  * User: sourcefabric
  * Date: 08/12/14.
@@ -86,8 +66,8 @@ class GeneralSetup extends Setup
     public function setupCorsUrl()
     {
         try {
-            $_SERVER['AIRTIME_CONF'] = AIRTIME_CONF_TEMP_PATH;
-            Propel::init(CONFIG_PATH . 'airtime-conf-production.php');
+            $_SERVER['LIBRETIME_CONFIG_FILEPATH'] = INSTALLER_CONFIG_FILEPATH;
+            Propel::init(PROPEL_CONFIG_FILEPATH);
             $con = Propel::getConnection();
         } catch (Exception $e) {
             self::$message = "Failed to insert Cors URL; database isn't configured properly!";
@@ -104,7 +84,6 @@ class GeneralSetup extends Setup
         try {
             Application_Model_Preference::SetAllowedCorsUrls(self::$cors_url);
             Propel::close();
-            //unset($_SERVER['AIRTIME_CONF']);
         } catch (Exception $e) {
             self::$message = 'Failed to insert ' . self::$cors_url . ' into cc_pref' . $e;
             self::$errors[] = self::CORS_URL;
