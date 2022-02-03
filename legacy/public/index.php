@@ -15,7 +15,7 @@ function showConfigCheckPage()
         checkConfiguration();
     }
 
-    require_once CONFIG_PATH . 'config-check.php';
+    require_once CONFIG_PATH . '/config-check.php';
 
     exit();
 }
@@ -31,7 +31,7 @@ function isApiCall()
 set_include_path(APPLICATION_PATH . '/modules/rest/controllers/' . PATH_SEPARATOR . get_include_path());
 
 // Vendors (Composer, zend-loader is explicitly specified due to https://github.com/zf1/zend-application/pull/2#issuecomment-102599655)
-set_include_path(VENDOR_PATH . PATH_SEPARATOR . VENDOR_PATH . 'zf1s/zend-loader/library/' . PATH_SEPARATOR . get_include_path());
+set_include_path(VENDOR_PATH . PATH_SEPARATOR . VENDOR_PATH . '/zf1s/zend-loader/library/' . PATH_SEPARATOR . get_include_path());
 
 // Ensure library/ is on include_path
 set_include_path(LIB_PATH . PATH_SEPARATOR . get_include_path());
@@ -40,7 +40,7 @@ if (!class_exists('Propel')) {
     exit('Error: Propel not found. Did you install Airtime\'s third-party dependencies with composer? (Check the README.)');
 }
 
-require_once SETUP_PATH . 'load.php';
+require_once SETUP_PATH . '/load.php';
 
 // This allows us to pass ?config as a parameter to any page
 // and get to the config checklist.
@@ -56,5 +56,5 @@ if (file_exists(LIBRETIME_CONFIG_FILEPATH)) {
 else {
     $airtimeSetup = true;
 
-    require_once SETUP_PATH . 'setup-config.php';
+    require_once SETUP_PATH . '/setup-config.php';
 }
