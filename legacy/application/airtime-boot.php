@@ -40,30 +40,30 @@ set_include_path(implode(PATH_SEPARATOR, [
     realpath(LIB_PATH),
 ]));
 
-set_include_path(APPLICATION_PATH . 'common' . PATH_SEPARATOR . get_include_path());
-set_include_path(APPLICATION_PATH . 'common/enum' . PATH_SEPARATOR . get_include_path());
-set_include_path(APPLICATION_PATH . 'common/interface' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . '/common' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . '/common/enum' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . '/common/interface' . PATH_SEPARATOR . get_include_path());
 
 //Propel classes.
-set_include_path(APPLICATION_PATH . 'models' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());
 
 //Controller plugins.
-set_include_path(APPLICATION_PATH . 'controllers' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . '/controllers' . PATH_SEPARATOR . get_include_path());
 
 //Controller plugins.
-set_include_path(APPLICATION_PATH . 'controllers/plugins' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . '/controllers/plugins' . PATH_SEPARATOR . get_include_path());
 
 //Services.
-set_include_path(APPLICATION_PATH . '/services/' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . '/services' . PATH_SEPARATOR . get_include_path());
 
 //cloud storage directory
 set_include_path(APPLICATION_PATH . '/cloud_storage' . PATH_SEPARATOR . get_include_path());
 
 //Upgrade directory
-set_include_path(APPLICATION_PATH . '/upgrade/' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . '/upgrade' . PATH_SEPARATOR . get_include_path());
 
 //Common directory
-set_include_path(APPLICATION_PATH . '/common/' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . '/common' . PATH_SEPARATOR . get_include_path());
 
 //Composer's autoloader
 require_once 'autoload.php';
@@ -71,11 +71,11 @@ require_once 'autoload.php';
 /** Zend_Application */
 $application = new Zend_Application(
     APPLICATION_ENV,
-    CONFIG_PATH . 'application.ini',
+    CONFIG_PATH . '/application.ini',
     true
 );
 
-require_once APPLICATION_PATH . 'logging/Logging.php';
+require_once APPLICATION_PATH . '/logging/Logging.php';
 Logging::setLogPath(LIBRETIME_LOG_DIR . '/legacy.log');
 Logging::setupParseErrorLogging();
 

@@ -8,7 +8,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
 
         // Remove reliance on .phtml files to render requests
         $this->_helper->viewRenderer->setNoRender(true);
-        $this->view->setScriptPath(APPLICATION_PATH . 'views/scripts/');
+        $this->view->setScriptPath(APPLICATION_PATH . '/views/scripts/');
     }
 
     /**

@@ -241,7 +241,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
     protected function _initViewHelpers()
     {
         $view = $this->_bootstrap->getResource('view');
-        $view->addHelperPath(APPLICATION_PATH . 'views/helpers', 'Airtime_View_Helper');
+        $view->addHelperPath(APPLICATION_PATH . '/views/helpers', 'Airtime_View_Helper');
     }
 
     protected function _initTitle()
