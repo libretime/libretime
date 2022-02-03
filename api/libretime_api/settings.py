@@ -80,11 +80,11 @@ WSGI_APPLICATION = "libretime_api.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": CONFIG.get("database", "dbname", fallback=""),
-        "USER": CONFIG.get("database", "dbuser", fallback=""),
-        "PASSWORD": CONFIG.get("database", "dbpass", fallback=""),
-        "HOST": CONFIG.get("database", "host", fallback=""),
-        "PORT": "5432",
+        "NAME": CONFIG.get("database", "name", fallback="libretime"),
+        "USER": CONFIG.get("database", "user", fallback="libretime"),
+        "PASSWORD": CONFIG.get("database", "password", fallback="libretime"),
+        "HOST": CONFIG.get("database", "host", fallback="localhost"),
+        "PORT": CONFIG.get("database", "port", fallback="5432"),
     }
 }
 
