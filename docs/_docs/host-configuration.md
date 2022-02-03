@@ -16,9 +16,10 @@ You can also set options for RabbitMQ messaging and the LibreTime server in this
 
     [database]
     host = localhost
-    dbname = airtime
-    dbuser = airtime
-    dbpass = airtime
+    port = 5432
+    name = libretime
+    user = libretime
+    password = libretime
 
     [rabbitmq]
     host = 127.0.0.1
