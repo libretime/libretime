@@ -1,15 +1,14 @@
 [Unit]
-Description=Libretime Playout Service
-After=network-online.target
+Description=LibreTime Playout Service
 
 [Service]
-Environment=LIBRETIME_LOG_FILEPATH=/var/log/libretime/playout.log
-Environment=LIBRETIME_CONFIG_FILEPATH=/etc/airtime/airtime.conf
-WorkingDirectory=/var/lib/libretime/playout
+Environment=LIBRETIME_LOG_FILEPATH=@@LOG_DIR@@/playout.log
+Environment=LIBRETIME_CONFIG_FILEPATH=@@CONFIG_FILEPATH@@
+WorkingDirectory=@@WORKING_DIR@@/playout
 
 ExecStart=/usr/local/bin/libretime-playout
-User=libretime-pypo
-Group=libretime-pypo
+User=libretime-playout
+Group=libretime-playout
 Restart=always
 
 [Install]

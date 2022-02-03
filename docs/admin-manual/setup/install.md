@@ -97,14 +97,24 @@ git checkout {vars.version}
 Install LibreTime with the recommended options:
 
 ```bash
-sudo ./install -fiap
+sudo ./install
 ```
 
-Additional options can be listed with the following command:
+While the `./install` script provide sensible defaults, it can be configured using environment variables. Changing the listening port of LibreTime or whether you want to install some dependency by yourself, you could run the following:
 
-```bash
-./install --help
+```sh
+# Install LibreTime on your system with the following tweaks:
+# - do not run the PostgreSQL setup tasks (remember to run the tasks yourself)
+# - do not install the liquidsoap package (remember to install liquidsoap yourself)
+# - set the listen port to 8080
+sudo \
+LIBRETIME_SETUP_POSTGRESQL=false \
+LIBRETIME_PACKAGES_EXCLUDES='liquidsoap' \
+LIBRETIME_LISTEN_PORT=8080 \
+./install
 ```
+
+Feel free to run `./install --help` to print a manual for the different configuration options.
 
 :::info
 

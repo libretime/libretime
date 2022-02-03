@@ -73,15 +73,16 @@ Vagrant.configure('2') do |config|
 
     $script = <<-SCRIPT
     cd /vagrant
-    ./install \
-      --force \
+    TMP_FILE=$(mktemp install.XXX.sh)
+    cp ./install "$TMP_FILE"
+
+    bash "$TMP_FILE" \
+      --listen-port 8080 \
+      --allow-restart \
       --in-place \
-      --verbose \
-      --postgres \
-      --apache \
-      --icecast \
-      --web-port=8080 \
-      #{install_args}
+      http://192.168.10.100:8080
+
+    rm "$TMP_FILE"
     SCRIPT
 
     config.vm.provision 'install', type: 'shell', inline: $script

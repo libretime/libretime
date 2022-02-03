@@ -2,9 +2,9 @@
 Description=LibreTime Worker Service
 
 [Service]
-Environment=LIBRETIME_LOG_FILEPATH=/var/log/libretime/worker.log
-Environment=LIBRETIME_CONFIG_FILEPATH=/etc/airtime/airtime.conf
-WorkingDirectory=/var/lib/libretime/worker
+Environment=LIBRETIME_LOG_FILEPATH=@@LOG_DIR@@/worker.log
+Environment=LIBRETIME_CONFIG_FILEPATH=@@CONFIG_FILEPATH@@
+WorkingDirectory=@@WORKING_DIR@@/worker
 
 ExecStart=/usr/bin/sh -c 'celery worker \
     --app=libretime_worker.tasks:worker \
