@@ -1233,37 +1233,6 @@ if [ ! -d "/srv/airtime" ]; then
 fi
 chown -R ${web_user}:${web_user} /srv/airtime
 
-# We only generate the locales for Airtime if you're allowing us
-# to install our dependencies, so that we won't automatically do this
-# when this install script runs from our DEB package.
-if [ "$ignore_dependencies" = "f" ]; then
-  loud "\n-----------------------------------------------------"
-  loud "                * Installing Locales *               "
-  loud "-----------------------------------------------------"
-
-  if $is_centos_dist; then
-    loud "\n not required on $dist"
-  else
-    set +e
-    verbose "\n * Generating locales"
-    for locale_file in "${web_root}"/../locale/*_*; do
-      locale=$(basename "$locale_file")
-      if [ "$dist" = "debian" ]; then
-        if ! grep -qi "^$locale" /etc/locale.gen; then
-          verbose "$locale.UTF-8 UTF-8" >> /etc/locale.gen
-        fi
-      else
-        loudCmd "locale-gen \"$locale.utf8\""
-      fi
-    done
-    set -e
-  fi
-
-  if [ "$dist" = "debian" ]; then
-    loudCmd "/usr/sbin/locale-gen"
-  fi
-fi
-
 # If the user requested it we run restorecon on files that need
 # tagging for selinux.
 if [ "$selinux" = "t" ]; then
