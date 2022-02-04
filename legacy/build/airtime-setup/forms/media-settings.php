@@ -6,11 +6,11 @@
     <span id="helpBlock" class="help-block help-message"></span>
     <p>
         Here you can set the default media storage directory for Airtime. If left blank, we'll create a new
-        directory located at <code>/srv/airtime/stor/</code> for you.
+        directory located at <code><?php echo INSTALLER_DEFAULT_STORAGE_PATH; ?></code> for you.
     </p>
     <div class="form-group">
         <label class="control-label" for="mediaFolder">Media folder</label>
-        <input class="form-control" type="text" name="mediaFolder" id="mediaFolder" placeholder="/path/to/my/airtime/music/directory/"/>
+        <input class="form-control" type="text" name="mediaFolder" id="mediaFolder" placeholder="/path/to/my/music/directory/" />
         <span class="glyphicon glyphicon-remove form-control-feedback"></span>
         <span id="mediaHelpBlock" class="help-block">
             Note that you need to enter the <strong>fully qualified</strong> path name!
