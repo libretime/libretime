@@ -12,7 +12,7 @@ define('VENDOR_PATH', ROOT_PATH . '/vendor');
 define('SAMPLE_CONFIG_FILEPATH', BUILD_PATH . '/airtime.example.conf');
 define('PROPEL_CONFIG_FILEPATH', CONFIG_PATH . '/airtime-conf-production.php');
 
-# Installer
+// Installer
 define('INSTALLER_CONFIG_FILEPATH', '/etc/airtime/airtime.conf.temp');
 define('INSTALLER_DEFAULT_STORAGE_PATH', '/srv/airtime/stor');
 

@@ -1,8 +1,6 @@
 <?php
 
-/*
- * THIS FILE IS NOT MEANT FOR CUSTOMIZING.
- */
+// THIS FILE IS NOT MEANT FOR CUSTOMIZING.
 
 class Config
 {

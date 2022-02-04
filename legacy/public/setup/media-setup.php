@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Author: sourcefabric
  * Date: 08/12/14.
