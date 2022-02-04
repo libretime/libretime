@@ -12,10 +12,6 @@ define('VENDOR_PATH', ROOT_PATH . '/vendor');
 define('SAMPLE_CONFIG_FILEPATH', BUILD_PATH . '/airtime.example.conf');
 define('PROPEL_CONFIG_FILEPATH', CONFIG_PATH . '/airtime-conf-production.php');
 
-// Installer
-define('INSTALLER_CONFIG_FILEPATH', '/etc/airtime/airtime.conf.temp');
-define('INSTALLER_DEFAULT_STORAGE_PATH', '/srv/airtime/stor');
-
 // Define application environment
 defined('APPLICATION_ENV') || define('APPLICATION_ENV', getenv('APPLICATION_ENV') ?: 'production');
 defined('VERBOSE_STACK_TRACE') || define('VERBOSE_STACK_TRACE', getenv('VERBOSE_STACK_TRACE') ?? true);
@@ -27,6 +23,10 @@ define('LIBRETIME_LOG_FILEPATH', getenv('LIBRETIME_LOG_FILEPATH') ?: LIBRETIME_L
 define('LIBRETIME_CONFIG_DIR', getenv('LIBRETIME_CONFIG_DIR') ?: '/etc/airtime');
 define('LIBRETIME_CONF_DIR', LIBRETIME_CONFIG_DIR); // Deprecated
 define('LIBRETIME_CONFIG_FILEPATH', getenv('LIBRETIME_CONFIG_FILEPATH') ?: LIBRETIME_CONFIG_DIR . '/airtime.conf');
+
+// Installer
+define('INSTALLER_CONFIG_FILEPATH', LIBRETIME_CONFIG_DIR . '/airtime.conf.temp');
+define('INSTALLER_DEFAULT_STORAGE_PATH', '/srv/libretime/storage');
 
 // Legacy constants
 define('PRODUCT_NAME', 'LibreTime');
