@@ -26,7 +26,7 @@ define('LIBRETIME_CONFIG_FILEPATH', getenv('LIBRETIME_CONFIG_FILEPATH') ?: LIBRE
 
 // Installer
 define('INSTALLER_CONFIG_FILEPATH', LIBRETIME_CONFIG_DIR . '/airtime.conf.temp');
-define('INSTALLER_DEFAULT_STORAGE_PATH', '/srv/libretime/storage');
+define('INSTALLER_DEFAULT_STORAGE_PATH', '/srv/airtime/stor');
 
 // Legacy constants
 define('PRODUCT_NAME', 'LibreTime');
