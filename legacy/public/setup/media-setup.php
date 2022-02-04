@@ -47,9 +47,9 @@ class MediaSetup extends Setup
         }
 
         // Finalize and move installer config file to libretime config file
-        if (file_exists('/etc/airtime/')) {
+        if (file_exists(LIBRETIME_CONFIG_DIR)) {
             if (!$this->moveAirtimeConfig()) {
-                self::$message = 'Error moving airtime.conf or deleting /tmp/airtime.conf.temp!';
+                self::$message = 'Error moving or deleting the installer config!';
                 self::$errors[] = 'ERR';
             }
 
