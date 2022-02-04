@@ -5,14 +5,11 @@ category: install
 permalink: /install
 ---
 
-> Note: this guide is assuming you are using Ubuntu 18.04 LTS for installation, which comes with `ufw` and `netplan`.
-
 ## Minimum System Requirements
 
 - One of the following Linux distributions
-  - Ubuntu 18.04 LTS
-  - Debian 10
-  - Raspberry Pi OS 10 (formerly Raspbian)
+  - Ubuntu [current LTS](https://wiki.ubuntu.com/Releases)
+  - Debian [current stable](https://www.debian.org/releases/)
 - 1 Ghz Processor
 - 2 GB RAM recommended (1 GB required)
 - Wired internet connection and static IP address for on-prem install
