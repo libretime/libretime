@@ -61,7 +61,9 @@ upgrading, please [file a bug](https://github.com/libretime/libretime/issues/new
    [install](/install).
 3. Before running the web-configuration, restore the Airtime database to the new
    PostgreSQL server, media database and configuration file
-4. Edit the configuration file to update any changed values
+4. Update the configuration file to match the new configuration schema and update any
+   changed values. See the [host configuration](/docs/host-configuration) documentation
+   for more details.
 5. Edit the Icecast password in `/etc/icecast2/icecast.xml` to reflect the
    password used in Airtime
 6. Restart the LibreTime services
