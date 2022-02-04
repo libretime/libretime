@@ -29,9 +29,9 @@ class MediaSetup extends Setup
     {
         // If the path passed in is empty, set it to the default
         if (strlen(self::$path) == 0) {
-            self::$path = DEFAULT_STORAGE_PATH;
-            if (!file_exists(DEFAULT_STORAGE_PATH)) {
-                mkdir(DEFAULT_STORAGE_PATH, 0755, true);
+            self::$path = INSTALLER_DEFAULT_STORAGE_PATH;
+            if (!file_exists(INSTALLER_DEFAULT_STORAGE_PATH)) {
+                mkdir(INSTALLER_DEFAULT_STORAGE_PATH, 0755, true);
             }
         }
 
@@ -47,7 +47,7 @@ class MediaSetup extends Setup
             self::$errors[] = self::MEDIA_FOLDER;
         }
 
-        // Finalize and move airtime.conf.temp
+        // Finalize and move installer config file to libretime config file
         if (file_exists('/etc/airtime/')) {
             if (!$this->moveAirtimeConfig()) {
                 self::$message = 'Error moving airtime.conf or deleting /tmp/airtime.conf.temp!';

@@ -1,9 +1,9 @@
 <?php
-    $tempConfigPath = '/etc/airtime/airtime.conf.tmp';
-    if (file_exists($tempConfigPath)) {
-        $airtimeConfig = parse_ini_file($tempConfigPath, true);
-        $db = $airtimeConfig['database'];
-    }
+$tempConfigPath = INSTALLER_CONFIG_FILEPATH;
+if (file_exists($tempConfigPath)) {
+    $airtimeConfig = parse_ini_file($tempConfigPath, true);
+    $db = $airtimeConfig['database'];
+}
 ?>
 
 <form action="#" role="form" id="dbSettingsForm">

@@ -8,7 +8,7 @@
  */
 class DatabaseSetup extends Setup
 {
-    // airtime.conf section header
+    // config file section header
     protected static $_section = '[database]';
 
     // Constant form field names for passing errors back to the front-end
@@ -17,7 +17,7 @@ class DatabaseSetup extends Setup
     public const DB_NAME = 'dbName';
     public const DB_HOST = 'dbHost';
 
-    // Array of key->value pairs for airtime.conf
+    // Array of key->value pairs for the config file
     protected static $_properties;
 
     /**
@@ -294,6 +294,6 @@ class DatabaseSetup extends Setup
      */
     private function updateDjangoTables()
     {
-        shell_exec('LIBRETIME_CONFIG_FILEPATH=/etc/airtime/airtime.conf.temp libretime-api migrate');
+        shell_exec('LIBRETIME_CONFIG_FILEPATH=' . INSTALLER_CONFIG_FILEPATH . ' libretime-api migrate');
     }
 }

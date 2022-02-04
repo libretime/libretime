@@ -102,7 +102,7 @@ function configureDatabase()
  */
 function checkRMQConnection()
 {
-    // Check for airtime.conf in /etc/airtime/ first, then check in the build directory,
+    // Check for installed config file first, then check in the build directory,
     if (file_exists(LIBRETIME_CONFIG_FILEPATH)) {
         $ini = parse_ini_file(LIBRETIME_CONFIG_FILEPATH, true);
     } else {

@@ -10,10 +10,10 @@
  */
 class GeneralSetup extends Setup
 {
-    // airtime.conf section header
+    // config file section header
     protected static $_section = '[general]';
 
-    // Array of key->value pairs for airtime.conf
+    // Array of key->value pairs for the config file
     protected static $_properties;
 
     // Constant form field names for passing errors back to the front-end

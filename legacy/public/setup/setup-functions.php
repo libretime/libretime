@@ -2,9 +2,6 @@
 
 require_once dirname(__DIR__, 2) . '/application/preload.php';
 
-define('INSTALLER_CONFIG_FILEPATH', '/etc/airtime/airtime.conf.temp');
-define('DEFAULT_STORAGE_PATH', '/srv/airtime/stor');
-
 /**
  * Class Setup.
  *
