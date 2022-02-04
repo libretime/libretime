@@ -1,28 +1,17 @@
 <?php
-/* THIS FILE IS NOT MEANT FOR CUSTOMIZING.
- * PLEASE EDIT THE FOLLOWING TO CHANGE YOUR CONFIG:
- * LIBRETIME_CONF_DIR/airtime.conf
- */
 
-require_once __DIR__ . '/constants.php';
+// THIS FILE IS NOT MEANT FOR CUSTOMIZING.
 
 class Config
 {
     private static $CC_CONFIG;
-    private static $rootDir;
 
     public static function loadConfig()
     {
-        self::$rootDir = __DIR__ . '/../..';
-        $CC_CONFIG = [
-            // ================================================ storage configuration
-            'rootDir' => self::$rootDir,
-        ];
-
-        //In the unit testing environment, LIBRETIME_CONF_DIR will our local airtime.conf in legacy/application/test/conf:
-        $filename = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : LIBRETIME_CONF_DIR . '/airtime.conf';
-
+        $filename = $_SERVER['LIBRETIME_CONFIG_FILEPATH'] ?? LIBRETIME_CONFIG_FILEPATH;
         $values = parse_ini_file($filename, true);
+
+        $CC_CONFIG = [];
 
         // Name of the web server user
         $CC_CONFIG['webServerUser'] = $values['general']['web_server_user'];
@@ -97,7 +86,7 @@ class Config
 
     public static function setAirtimeVersion()
     {
-        $version = @file_get_contents(self::$rootDir . '/../VERSION');
+        $version = @file_get_contents(dirname(ROOT_PATH) . '/VERSION');
         if (!$version) {
             // fallback to constant from constants.php if no other info is available
             $version = LIBRETIME_MAJOR_VERSION;

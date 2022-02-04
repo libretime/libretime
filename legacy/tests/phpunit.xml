@@ -16,8 +16,9 @@
 
     <php>
         <env name="ENVIRONMENT" value="testing" />
-        <env name="AIRTIME_UNIT_TEST" value="1" />
-        <env name="LIBRETIME_CONF_DIR" value="./conf" />
+        <env name="APPLICATION_ENV" value="testing" />
+        <env name="LIBRETIME_UNIT_TEST" value="1" />
+        <env name="LIBRETIME_CONFIG_DIR" value="./config" />
         <env name="LIBRETIME_LOG_DIR" value="./log" />
     </php>
 

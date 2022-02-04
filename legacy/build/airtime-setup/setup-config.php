@@ -1,4 +1,7 @@
 <?php
+
+require_once dirname(__DIR__, 2) . '/application/preload.php';
+
 ?>
 
 <html>
@@ -23,27 +26,27 @@
             <div class="form-slider">
                 <div id="databaseSettings" class="form-wrapper">
                     <?php
-                        require_once SETUP_PATH . 'forms/database-settings.php';
+                        require_once SETUP_PATH . '/forms/database-settings.php';
                     ?>
                 </div>
                 <div id="rabbitmqSettings" class="form-wrapper">
                     <?php
-                        require_once SETUP_PATH . 'forms/rabbitmq-settings.php';
+                        require_once SETUP_PATH . '/forms/rabbitmq-settings.php';
                     ?>
                 </div>
                 <div id="generalSettings" class="form-wrapper">
                     <?php
-                        require_once SETUP_PATH . 'forms/general-settings.php';
+                        require_once SETUP_PATH . '/forms/general-settings.php';
                     ?>
                 </div>
                 <div id="mediaSettings" class="form-wrapper">
                     <?php
-                        require_once SETUP_PATH . 'forms/media-settings.php';
+                        require_once SETUP_PATH . '/forms/media-settings.php';
                     ?>
                 </div>
                 <div id="finishSettings" class="form-wrapper">
                     <?php
-                        require_once SETUP_PATH . 'forms/finish-settings.php';
+                        require_once SETUP_PATH . '/forms/finish-settings.php';
                     ?>
                 </div>
             </div>

@@ -27,56 +27,46 @@ function exception_error_handler($errno, $errstr, $errfile, $errline)
 
 set_error_handler('exception_error_handler');
 
-// Define application environment
-defined('APPLICATION_ENV')
-    || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
-
-defined('VERBOSE_STACK_TRACE')
-    || define('VERBOSE_STACK_TRACE', (getenv('VERBOSE_STACK_TRACE') ? getenv('VERBOSE_STACK_TRACE') : true));
-
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, [
     get_include_path(),
     realpath(LIB_PATH),
 ]));
 
-set_include_path(APPLICATION_PATH . 'common' . PATH_SEPARATOR . get_include_path());
-set_include_path(APPLICATION_PATH . 'common/enum' . PATH_SEPARATOR . get_include_path());
-set_include_path(APPLICATION_PATH . 'common/interface' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . '/common' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . '/common/enum' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . '/common/interface' . PATH_SEPARATOR . get_include_path());
 
 //Propel classes.
-set_include_path(APPLICATION_PATH . 'models' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());
 
 //Controller plugins.
-set_include_path(APPLICATION_PATH . 'controllers' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . '/controllers' . PATH_SEPARATOR . get_include_path());
 
 //Controller plugins.
-set_include_path(APPLICATION_PATH . 'controllers/plugins' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . '/controllers/plugins' . PATH_SEPARATOR . get_include_path());
 
 //Services.
-set_include_path(APPLICATION_PATH . '/services/' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . '/services' . PATH_SEPARATOR . get_include_path());
 
 //cloud storage directory
 set_include_path(APPLICATION_PATH . '/cloud_storage' . PATH_SEPARATOR . get_include_path());
 
 //Upgrade directory
-set_include_path(APPLICATION_PATH . '/upgrade/' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . '/upgrade' . PATH_SEPARATOR . get_include_path());
 
 //Common directory
-set_include_path(APPLICATION_PATH . '/common/' . PATH_SEPARATOR . get_include_path());
-
-//Composer's autoloader
-require_once 'autoload.php';
+set_include_path(APPLICATION_PATH . '/common' . PATH_SEPARATOR . get_include_path());
 
 /** Zend_Application */
 $application = new Zend_Application(
     APPLICATION_ENV,
-    CONFIG_PATH . 'application.ini',
+    CONFIG_PATH . '/application.ini',
     true
 );
 
-require_once APPLICATION_PATH . 'logging/Logging.php';
-Logging::setLogPath(LIBRETIME_LOG_DIR . '/legacy.log');
+require_once APPLICATION_PATH . '/logging/Logging.php';
+Logging::setLogPath(LIBRETIME_LOG_FILEPATH);
 Logging::setupParseErrorLogging();
 
 // Create application, bootstrap, and run

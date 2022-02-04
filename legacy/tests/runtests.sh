@@ -26,7 +26,7 @@ export RABBITMQ_USER
 export RABBITMQ_PASSWORD
 export RABBITMQ_VHOST
 
-export AIRTIME_UNIT_TEST="1"
+export LIBRETIME_UNIT_TEST="1"
 
 #Change the working directory to this script's directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")" && pwd)"

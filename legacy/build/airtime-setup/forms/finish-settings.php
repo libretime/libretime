@@ -11,16 +11,16 @@
 sudo systemctl start libretime-api
 sudo systemctl start libretime-celery
 sudo systemctl start libretime-liquidsoap
-sudo systemctl start libretime-playout</pre
+sudo systemctl start libretime-playout</pre>
     <p>
         Click "Done!" to bring up the Libretime configuration checklist; if your configuration is all green,
         you're ready to get started with your personal Libretime station!
     </p>
     <p>
-        If you need to re-run the web installer, just remove <code>/etc/airtime/airtime.conf</code>.
+        If you need to re-run the web installer, just remove <code><?php echo LIBRETIME_CONFIG_FILEPATH; ?></code>.
     </p>
     <div>
-        <input type="submit" formtarget="finishSettingsForm" class="btn btn-primary btn-next" value="Done!"/>
+        <input type="submit" formtarget="finishSettingsForm" class="btn btn-primary btn-next" value="Done!" />
     </div>
 </form>
 

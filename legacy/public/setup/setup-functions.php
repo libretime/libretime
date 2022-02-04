@@ -1,13 +1,6 @@
 <?php
 
-define('BUILD_PATH', dirname(__DIR__, 2) . '/build/');
-define('AIRTIME_CONF_TEMP_PATH', '/etc/airtime/airtime.conf.temp');
-define('RMQ_INI_TEMP_PATH', '/tmp/rabbitmq.ini.tmp');
-
-// load autoloader since this files is an entry path see
-// the end of the file for the "server" that is being
-// executed.
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once dirname(__DIR__, 2) . '/application/preload.php';
 
 /**
  * Class Setup.
@@ -36,11 +29,11 @@ abstract class Setup
      */
     protected function writeToTemp()
     {
-        if (!file_exists(AIRTIME_CONF_TEMP_PATH)) {
-            copy(BUILD_PATH . 'airtime.example.conf', AIRTIME_CONF_TEMP_PATH);
+        if (!file_exists(INSTALLER_CONFIG_FILEPATH)) {
+            copy(SAMPLE_CONFIG_FILEPATH, INSTALLER_CONFIG_FILEPATH);
         }
-        //Logging::info(AIRTIME_CONF_TEMP_PATH);
-        $this->_write(AIRTIME_CONF_TEMP_PATH);
+        //Logging::info(CONFIG_TEMP_FILEPATH);
+        $this->_write(INSTALLER_CONFIG_FILEPATH);
     }
 
     protected function _write($filePath)

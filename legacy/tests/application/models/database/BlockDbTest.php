@@ -1,7 +1,5 @@
 <?php
 
-//require_once "../application/configs/conf.php";
-
 /**
  * @internal
  * @coversNothing

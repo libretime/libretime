@@ -130,7 +130,7 @@ class TestHelper
 
     public static function setupZendBootstrap()
     {
-        $application = new Zend_Application(APPLICATION_ENV, CONFIG_PATH . 'application.ini');
+        $application = new Zend_Application(APPLICATION_ENV, CONFIG_PATH . '/application.ini');
         $application->bootstrap();
 
         return $application;

@@ -2,19 +2,7 @@
 
 error_reporting(E_ALL | E_STRICT);
 
-// load composer autoloader
-require_once __DIR__ . '/../../vendor/autoload.php';
-
-// Define path to application directory
-defined('APPLICATION_PATH')
-    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../application/'));
-
-// Define path to configs directory
-define('CONFIG_PATH', APPLICATION_PATH . '/configs/');
-
-// Define application environment
-defined('APPLICATION_ENV')
-    || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'testing'));
+require_once dirname(__DIR__, 2) . '/application/preload.php';
 
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, [
@@ -46,9 +34,7 @@ set_include_path(implode(PATH_SEPARATOR, [
     realpath(APPLICATION_PATH . '/../../install_minimal/include'),
 ]));
 
-require_once CONFIG_PATH . '/constants.php';
-
-Logging::setLogPath(LIBRETIME_LOG_DIR . '/legacy.log');
+Logging::setLogPath(LIBRETIME_LOG_FILEPATH);
 
 set_include_path(APPLICATION_PATH . '/common' . PATH_SEPARATOR . get_include_path());
 
@@ -75,8 +61,6 @@ set_include_path(APPLICATION_PATH . '/../tests/application/helpers' . PATH_SEPAR
 
 //cloud storage files
 set_include_path(APPLICATION_PATH . '/cloud_storage' . PATH_SEPARATOR . get_include_path());
-
-require_once APPLICATION_PATH . '/configs/conf.php';
 
 require_once 'jooola/propel1/runtime/lib/Propel.php';
 Propel::init('../application/configs/airtime-conf-production.php');

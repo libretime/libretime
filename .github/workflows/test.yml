@@ -72,7 +72,6 @@ jobs:
     runs-on: ${{ matrix.runs-on }}
     env:
       ENVIRONMENT: testing
-      LIBRETIME_LOG_DIR: /tmp/log/libretime
     steps:
       - uses: actions/checkout@v2
 
@@ -103,10 +102,7 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Run tests
-        run: |
-          sudo mkdir -p "$LIBRETIME_LOG_DIR"
-          sudo chown runner:runner "$LIBRETIME_LOG_DIR"
-          make test
+        run: make test
         working-directory: legacy
 
   # Start lint the code without failing the entire workflow, should be merged

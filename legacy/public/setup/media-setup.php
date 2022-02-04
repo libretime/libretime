@@ -1,26 +1,5 @@
 <?php
 
-define('CONFIG_PATH', dirname(__DIR__, 2) . '/application/configs/');
-define('DEFAULT_STOR_DIR', '/srv/airtime/stor/');
-
-require_once dirname(__DIR__, 2) . '/vendor/jooola/propel1/runtime/lib/Propel.php';
-
-require_once CONFIG_PATH . 'conf.php';
-
-require_once dirname(__DIR__, 2) . '/application/models/airtime/map/CcMusicDirsTableMap.php';
-
-require_once dirname(__DIR__, 2) . '/application/models/airtime/om/BaseCcMusicDirsQuery.php';
-
-require_once dirname(__DIR__, 2) . '/application/models/airtime/CcMusicDirsQuery.php';
-
-require_once dirname(__DIR__, 2) . '/application/models/airtime/om/BaseCcMusicDirs.php';
-
-require_once dirname(__DIR__, 2) . '/application/models/airtime/CcMusicDirs.php';
-
-require_once dirname(__DIR__, 2) . '/application/models/airtime/om/BaseCcMusicDirsPeer.php';
-
-require_once dirname(__DIR__, 2) . '/application/models/airtime/CcMusicDirsPeer.php';
-
 /**
  * Author: sourcefabric
  * Date: 08/12/14.
@@ -32,7 +11,6 @@ require_once dirname(__DIR__, 2) . '/application/models/airtime/CcMusicDirsPeer.
 class MediaSetup extends Setup
 {
     public const MEDIA_FOLDER = 'mediaFolder';
-    public const LIBRETIME_CONF_FILE_NAME = 'airtime.conf';
 
     public static $path;
     public static $message;
@@ -50,9 +28,9 @@ class MediaSetup extends Setup
     {
         // If the path passed in is empty, set it to the default
         if (strlen(self::$path) == 0) {
-            self::$path = DEFAULT_STOR_DIR;
-            if (!file_exists(DEFAULT_STOR_DIR)) {
-                mkdir(DEFAULT_STOR_DIR, 0755, true);
+            self::$path = INSTALLER_DEFAULT_STORAGE_PATH;
+            if (!file_exists(INSTALLER_DEFAULT_STORAGE_PATH)) {
+                mkdir(INSTALLER_DEFAULT_STORAGE_PATH, 0755, true);
             }
         }
 
@@ -68,10 +46,10 @@ class MediaSetup extends Setup
             self::$errors[] = self::MEDIA_FOLDER;
         }
 
-        // Finalize and move airtime.conf.temp
-        if (file_exists('/etc/airtime/')) {
+        // Finalize and move installer config file to libretime config file
+        if (file_exists(LIBRETIME_CONFIG_DIR)) {
             if (!$this->moveAirtimeConfig()) {
-                self::$message = 'Error moving airtime.conf or deleting /tmp/airtime.conf.temp!';
+                self::$message = 'Error moving or deleting the installer config!';
                 self::$errors[] = 'ERR';
             }
 
@@ -80,7 +58,7 @@ class MediaSetup extends Setup
              * airtime.conf to airtime.conf.tmp during the setup process. Now that we're done,
              * we can rename it to airtime.conf.bak to avoid confusion.
              */
-            $fileName = LIBRETIME_CONF_DIR . '/' . self::LIBRETIME_CONF_FILE_NAME;
+            $fileName = LIBRETIME_CONFIG_FILEPATH;
             $tmpFile = $fileName . '.tmp';
             $bakFile = $fileName . '.bak';
             if (file_exists($tmpFile)) {
@@ -104,8 +82,8 @@ class MediaSetup extends Setup
      */
     public function moveAirtimeConfig()
     {
-        return copy(AIRTIME_CONF_TEMP_PATH, LIBRETIME_CONF_DIR . '/' . self::LIBRETIME_CONF_FILE_NAME)
-            && unlink(AIRTIME_CONF_TEMP_PATH);
+        return copy(INSTALLER_CONFIG_FILEPATH, LIBRETIME_CONFIG_FILEPATH)
+            && unlink(INSTALLER_CONFIG_FILEPATH);
     }
 
     /**
@@ -115,8 +93,8 @@ class MediaSetup extends Setup
     public function setupMusicDirectory()
     {
         try {
-            $_SERVER['AIRTIME_CONF'] = AIRTIME_CONF_TEMP_PATH;
-            Propel::init(CONFIG_PATH . 'airtime-conf-production.php');
+            $_SERVER['LIBRETIME_CONFIG_FILEPATH'] = INSTALLER_CONFIG_FILEPATH;
+            Propel::init(PROPEL_CONFIG_FILEPATH);
             $con = Propel::getConnection();
         } catch (Exception $e) {
             self::$message = "Failed to insert media folder; database isn't configured properly!";

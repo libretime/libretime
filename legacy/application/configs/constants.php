@@ -1,5 +1,34 @@
 <?php
 
+// Path constants
+define('ROOT_PATH', dirname(__DIR__, 2));
+define('LIB_PATH', ROOT_PATH . '/library');
+define('BUILD_PATH', ROOT_PATH . '/build');
+define('SETUP_PATH', BUILD_PATH . '/airtime-setup');
+define('APPLICATION_PATH', ROOT_PATH . '/application');
+define('CONFIG_PATH', APPLICATION_PATH . '/configs');
+define('VENDOR_PATH', ROOT_PATH . '/vendor');
+
+define('SAMPLE_CONFIG_FILEPATH', BUILD_PATH . '/airtime.example.conf');
+define('PROPEL_CONFIG_FILEPATH', CONFIG_PATH . '/airtime-conf-production.php');
+
+// Define application environment
+defined('APPLICATION_ENV') || define('APPLICATION_ENV', getenv('APPLICATION_ENV') ?: 'production');
+defined('VERBOSE_STACK_TRACE') || define('VERBOSE_STACK_TRACE', getenv('VERBOSE_STACK_TRACE') ?? true);
+
+// Project constants
+define('LIBRETIME_LOG_DIR', getenv('LIBRETIME_LOG_DIR') ?: '/var/log/libretime');
+define('LIBRETIME_LOG_FILEPATH', getenv('LIBRETIME_LOG_FILEPATH') ?: LIBRETIME_LOG_DIR . '/legacy.log');
+
+define('LIBRETIME_CONFIG_DIR', getenv('LIBRETIME_CONFIG_DIR') ?: '/etc/airtime');
+define('LIBRETIME_CONF_DIR', LIBRETIME_CONFIG_DIR); // Deprecated
+define('LIBRETIME_CONFIG_FILEPATH', getenv('LIBRETIME_CONFIG_FILEPATH') ?: LIBRETIME_CONFIG_DIR . '/airtime.conf');
+
+// Installer
+define('INSTALLER_CONFIG_FILEPATH', LIBRETIME_CONFIG_DIR . '/airtime.conf.temp');
+define('INSTALLER_DEFAULT_STORAGE_PATH', '/srv/libretime/storage');
+
+// Legacy constants
 define('PRODUCT_NAME', 'LibreTime');
 define('PRODUCT_SITE_URL', 'http://libretime.org');
 
@@ -33,10 +62,6 @@ define('AIRTIME_REST_VERSION', '1.1');
 define('AIRTIME_API_VERSION', '1.1');
 // XXX: it's important that we upgrade this on major version bumps, usually users get more exact info from VERSION in airtime root dir
 define('LIBRETIME_MAJOR_VERSION', '3');
-
-// grab values from env (i'll do this everywhere with a small function if we like it)
-define('LIBRETIME_CONF_DIR', getenv('LIBRETIME_CONF_DIR') ? getenv('LIBRETIME_CONF_DIR') : '/etc/airtime');
-define('LIBRETIME_LOG_DIR', getenv('LIBRETIME_LOG_DIR') ? getenv('LIBRETIME_LOG_DIR') : '/var/log/libretime');
 
 // Defaults
 define('DEFAULT_LOGO_PLACEHOLDER', 1);
@@ -105,9 +130,6 @@ define('TEMPLATE_FLOAT', 'float');
 define('UI_PLAYLISTCONTROLLER_OBJ_SESSNAME', 'PLAYLISTCONTROLLER_OBJ');
 /*define('UI_PLAYLIST_SESSNAME', 'PLAYLIST');
 define('UI_BLOCK_SESSNAME', 'BLOCK');*/
-
-//Sentry error logging
-define('SENTRY_CONFIG_PATH', LIBRETIME_CONF_DIR . '/sentry.airtime_web.ini');
 
 //TuneIn integration
 define('TUNEIN_API_URL', 'http://air.radiotime.com/Playing.ashx');
