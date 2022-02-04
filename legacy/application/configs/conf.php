@@ -49,11 +49,12 @@ class Config
         $CC_CONFIG['cache_ahead_hours'] = $values['general']['cache_ahead_hours'];
 
         // Database config
-        $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
-        $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
-        $CC_CONFIG['dsn']['hostspec'] = $values['database']['host'];
         $CC_CONFIG['dsn']['phptype'] = 'pgsql';
-        $CC_CONFIG['dsn']['database'] = $values['database']['dbname'];
+        $CC_CONFIG['dsn']['host'] = $values['database']['host'] ?? 'localhost';
+        $CC_CONFIG['dsn']['port'] = $values['database']['port'] ?? 5432;
+        $CC_CONFIG['dsn']['database'] = $values['database']['name'] ?? 'libretime';
+        $CC_CONFIG['dsn']['username'] = $values['database']['user'] ?? 'libretime';
+        $CC_CONFIG['dsn']['password'] = $values['database']['password'] ?? 'libretime';
 
         $CC_CONFIG['apiKey'] = [$values['general']['api_key']];
 

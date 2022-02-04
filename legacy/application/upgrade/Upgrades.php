@@ -119,10 +119,11 @@ abstract class AirtimeUpgrader
 {
     protected $_dir;
 
+    protected $host;
+    protected $port;
+    protected $database;
     protected $username;
     protected $password;
-    protected $host;
-    protected $database;
 
     /**
      * @param $dir string directory housing upgrade files
@@ -241,22 +242,45 @@ abstract class AirtimeUpgrader
     {
         $config = Config::getConfig();
 
+        $this->host = $config['dsn']['host'];
+        $this->port = $config['dsn']['port'];
         $this->username = $config['dsn']['username'];
         $this->password = $config['dsn']['password'];
-        $this->host = $config['dsn']['hostspec'];
         $this->database = $config['dsn']['database'];
+    }
+
+    protected function _runPsql($args)
+    {
+        $command = <<<"END"
+PGPASSWORD={$this->password} \\
+/usr/bin/psql --quiet \\
+    --host={$this->host} \\
+    --port={$this->port} \\
+    --dbname={$this->database} \\
+    --username={$this->username} \\
+    {$args}
+END;
+        passthru($command);
     }
 
     protected function _runUpgrade()
     {
-        passthru('export PGPASSWORD=' . $this->password . ' && /usr/bin/psql -h ' . $this->host . ' -U ' . $this->username . ' -q -f ' . $this->_dir . '/upgrade_sql/airtime_'
-                 . $this->getNewVersion() . '/upgrade.sql ' . $this->database . ' 2>&1 | grep -v -E "will create implicit sequence|will create implicit index"');
+        $sqlFile = "{$this->_dir}/upgrade_sql/airtime_{$this->getNewVersion()}/upgrade.sql";
+        $args = <<<"END"
+--file={$sqlFile} 2>&1 \\
+    | grep -v -E "will create implicit sequence|will create implicit index"
+END;
+        $this->_runPsql($args);
     }
 
     protected function _runDowngrade()
     {
-        passthru('export PGPASSWORD=' . $this->password . ' && /usr/bin/psql -h ' . $this->host . ' -U ' . $this->username . ' -q -f ' . $this->_dir . '/downgrade_sql/airtime_'
-                 . $this->getNewVersion() . '/downgrade.sql ' . $this->database . ' 2>&1 | grep -v -E "will create implicit sequence|will create implicit index"');
+        $sqlFile = "{$this->_dir}/downgrade_sql/airtime_{$this->getNewVersion()}/downgrade.sql";
+        $args = <<<"END"
+--file={$sqlFile} 2>&1 \\
+    | grep -v -E "will create implicit sequence|will create implicit index"
+END;
+        $this->_runPsql($args);
     }
 }
 

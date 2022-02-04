@@ -223,9 +223,10 @@ jobs:
           api_key = test_key
           [database]
           host = postgres
-          dbname = libretime
-          dbuser = postgres
-          dbpass = libretime
+          port = 5432
+          name = libretime
+          user = postgres
+          password = libretime
           EOF
           cat $LIBRETIME_CONFIG_FILEPATH
 
