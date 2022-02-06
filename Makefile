@@ -37,3 +37,7 @@ tarball: VERSION
 # Only clean subdirs
 clean:
 	git clean -xdf */
+
+docs-lint:
+	$(MAKE) -C .github/vale/styles
+	vale docs website/src/pages
