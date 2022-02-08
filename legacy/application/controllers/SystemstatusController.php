@@ -17,7 +17,7 @@ class SystemstatusController extends Zend_Controller_Action
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Settings');
 
         $partitions = Application_Model_Systemstatus::GetDiskInfo();
-        $this->view->status = new StdClass();
+        $this->view->status = new stdClass();
         $this->view->status->partitions = $partitions;
         $this->view->version = $this->version;
     }

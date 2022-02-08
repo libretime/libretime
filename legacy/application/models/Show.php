@@ -1219,7 +1219,7 @@ SQL;
      */
     private static function getPercentScheduled($p_starts, $p_ends, $p_time_filled)
     {
-        $utcTimezone = new DatetimeZone('UTC');
+        $utcTimezone = new DateTimeZone('UTC');
         $startDt = new DateTime($p_starts, $utcTimezone);
         $endDt = new DateTime($p_ends, $utcTimezone);
         $durationSeconds = intval($endDt->format('U')) - intval($startDt->format('U'));

@@ -213,7 +213,7 @@ class Application_Model_Systemstatus
         foreach ($musicDirs as $md) {
             $totalSpace = disk_total_space($md->getDirectory());
             if (!isset($partitions[$totalSpace])) {
-                $partitions[$totalSpace] = new StdClass();
+                $partitions[$totalSpace] = new stdClass();
                 $partitions[$totalSpace]->totalSpace = $totalSpace;
                 $partitions[$totalSpace]->totalFreeSpace = disk_free_space($md->getDirectory());
                 $partitions[$totalSpace]->usedSpace = $totalSpace - $partitions[$totalSpace]->totalFreeSpace;
