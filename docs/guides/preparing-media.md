@@ -1,14 +1,12 @@
 ---
-layout: article
 title: Preparing Media for Upload
-category: interface
 ---
 
 Before uploading media to an LibreTime server, there are a number of factors which should be considered. Getting your ingest workflow right will save you a lot of time later.
 
 ## Metadata quality
 
-LibreTime automatically imports any metadata that is in the files' ID3 tags. If these tags are incorrect or are missing information, you will have to either edit the metadata manually, or suffer the consequences. For example, if the files have creator or genre metadata missing, it will be impossible to search for, create playlists or generate smart blocks according to these criteria until you add it.
+LibreTime automatically imports any metadata that is in the files' ID3 tags. If these tags are incorrect or are missing information, you will have to either edit the metadata manually. Files with metadata such as track title and artist information may be difficult to locate in larger libraries, or add to shows, playlists, or smart blocks.
 
 There are a number of programs available which can be used to correct mistakes or incomplete information in ID3 tags. You can use a music library manager (like Apple Music, Rhythmbox, or Windows Media Player) to edit ID3 tags as well, but you may be required to import the files into your library, which may not always be convenient.
 
@@ -19,15 +17,13 @@ There are a number of programs available which can be used to correct mistakes o
 
 The _Tags From Path_ feature of Ex Falso is a particularly useful time saver if you have a large archive of untagged files. Sometimes there is useful creator or title information in the file name or directory path structure, which can be converted into an ID3 tag automatically.
 
-![](/img/Screenshot175-Ex_Falso.png)
+![](./preparing-media-screenshot175-ex_falso.png)
 
 ## Metadata in legacy character sets
 
 LibreTime expects file tag metadata to be stored in the international _UTF-8_ character set. Programs such as **Ex Falso** (described above) encode metadata in UTF-8 by default. If you have an archive of files encoded with metadata in a legacy character set, such as the Cyrillic encoding _Windows-1251_, you should convert these files before import.
 
-The program **mid3iconv** (part of the **python-mutagen** package in Debian and Ubuntu) can be used to batch convert the metadata character set of files on the command line. You can install **python-mutagen** with the command:
-
-    sudo apt-get install python-mutagen
+The program **mid3iconv** (part of the **python-mutagen** package in Debian and Ubuntu) can be used to batch convert the metadata character set of files on the command line. You can install **python-mutagen** with the `sudo apt-get install python-mutagen`.
 
 <span id="Convert_MP3_Tags_using_mid3iconv" class="mw-headline"> For example, to preview the conversion of tags from Windows-1251 </span><span id="Convert_MP3_Tags_using_mid3iconv" class="mw-headline">(CP1251)</span><span id="Convert_MP3_Tags_using_mid3iconv" class="mw-headline"> character set to UTF-8 for a whole archive of MP3 files, you could use the command: </span>
 
@@ -89,8 +85,14 @@ In the output from vorbisgain, _Peak_ is the maximum sample value of the file be
 
 ## Silence in media files
 
-Before importing media, it is good practice to check for any silent sections in the media files. While LibreTime compensates for leading and trailing silence with the use of automatic cue-in and cue-out points, it may be preferable to trim these files to the intended length before upload. This is because media in the LibreTime library could potentially be re-used in many different systems. There are many cross-platform audio editors, including [Audacity](https://www.audacityteam.org/) and [ocenaudio](https://www.ocenaudio.com/), that are suitable for the task of trimming audio files
+Before importing media, it is good practice to check for any silent sections in the media files. While LibreTime compensates for leading and trailing silence with the use of automatic cue-in and cue-out points, it is best to trim these files to the intended length before upload. Two notable audio file editors for removing silent sections are [Audacity](https://www.audacityteam.org/) and [Ocenaudio](https://www.ocenaudio.com/).
 
-Quiet introductions or extended fades can also lead to apparent gaps in your broadcast playout. This is more common when playing back audio from ripped CDs or dubbed from tape or vinyl; this issue is not as common with digitally-purchased music. For best results, long periods of silence should be removed from files before uploading to Libretime.
+:::danger
 
-![](/img/Screenshot126-Debra_silence.png)
+Gaps in playout or dead air can have legal repercussions for your station. Check with your station manager or local or state communications authority for more information.
+
+:::
+
+Quiet introductions or extended fades can also lead to apparent gaps in your broadcast playout. This is more common when playing back audio from ripped CDs or dubbed from tape or vinyl. Long periods of silence should be removed from files before uploading to Libretime.
+
+![](./preparing-media-screenshot126-debra_silence.png)

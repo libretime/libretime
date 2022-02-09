@@ -1,13 +1,12 @@
 ---
-layout: article
 title: Backing Up Libretime
-category: admin
 ---
 
-> At the moment, there is not a way to automatically restore a Libretime backup.
-> To restore a failed Libretime instance, install a fresh copy, go through the
-> standard setup process, and reupload the backed-up media files. A _Watched Folders_
-> feature is [currently in development](https://github.com/LibreTime/libretime/issues/70).
+:::info
+
+At the moment, there is no script to cleanly restore a Libretime backup. To restore a Libretime backup, install a fresh copy, go through the standard setup process, and reupload the backed-up media files.
+
+:::
 
 A backup script is supplied for your convenience in the _utils/_ folder of the Libretime repo.
 Run it using:
@@ -62,4 +61,8 @@ Two notible backup tools are [rsync](http://rsync.samba.org/) (without version c
 [rdiff-backup](http://www.nongnu.org/rdiff-backup/) (with version control). _rsync_ comes
 preinstalled with Ubuntu Server.
 
-> **Note:** Standard _rsync_ backups, which are used by the backup script, cannot restore files deleted in the backup itself
+:::note
+
+Standard rsync backups, which are used by the backup script, cannot restore files deleted in the backup itself
+
+:::

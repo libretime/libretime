@@ -1,7 +1,5 @@
 ---
-layout: article
 title: Troubleshooting
-category: admin
 ---
 
 Is something not working for your Libretime installation? Here's a quick guide to help you
@@ -27,7 +25,7 @@ If one of the services isn't working, text will display with a terminal command 
 or get status information for a particular service. For example (for Ubuntu 18.04), the following
 commands would restart or check the status of Libretime's Liquidsoap instance, respectively.
 
-```
+```bash
 sudo systemctl restart libretime-liquidsoap
 sudo systemctl status libretime-liquidsoap
 ```

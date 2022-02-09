@@ -1,7 +1,5 @@
 ---
-layout: article
 title: Built-in Microsite
-category: admin
 ---
 
 ![](/img/radio-page.png)
@@ -12,16 +10,16 @@ podcast tabs, and a live feed of your station with information on the the curren
 
 ## Modifying the LibreTime Radio Page
 
-The background of the mini-site that appears when you visit the server's domain in your web browser can be changed by modifying the page's CSS file, located at _/usr/share/airtime/php/legacy/public/css/radio-page/radio-page.css_.
+The background of the mini-site that appears when you visit the server's domain in your web browser can be changed by modifying the page's CSS file, located at `/usr/share/airtime/php/legacy/public/css/radio-page/radio-page.css`.
 
-```
+```css
 html {
-    background: url("img/background-testing-3.jpg") no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    overflow-y: auto;
+  background: url("img/background-testing-3.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  overflow-y: auto;
 }
 ```
 

@@ -60,6 +60,12 @@ const config = {
           src: "img/logo.svg",
         },
         items: [
+          {
+            type: "doc",
+            docId: "intro",
+            position: "left",
+            label: "Docs",
+          },
           { to: "/contribute", label: "Contribute", position: "left" },
           { type: "localeDropdown", position: "right" },
           {
@@ -72,6 +78,15 @@ const config = {
       footer: {
         style: "dark",
         links: [
+          {
+            title: "Docs",
+            items: [
+              {
+                label: "Install",
+                to: "/docs/intro",
+              },
+            ],
+          },
           {
             title: "Community",
             items: [

@@ -1,7 +1,5 @@
 ---
-layout: article
 title: Interface Localization
-category: admin
 ---
 
 The LibreTime administration interface can be localized using the standard GNU **gettext** method. Using GitHub for this task means you don't have to tackle the whole of a localization yourself; just as much as you can manage.
@@ -12,9 +10,11 @@ First, you should check if a localization is already under way for your locale o
 
 GNU **gettext** means using a .po file for each language or dialect, a specially formatted plain text file with groups of three or more lines, like this example from LibreTime's Korean localization:
 
-    #: legacy/application/configs/navigation.php:57
-    msgid "Media Folders"
-    msgstr "미디어 폴더"
+```
+#: legacy/application/configs/navigation.php:57
+msgid "Media Folders"
+msgstr "미디어 폴더"
+```
 
 The first of these three lines starts with the hash symbol, and references where this string of text is found in the source code by its file name and line number. If this string is found more than once in the source code, you will see other reference lines here. The second line contains the **msgid**, which is the original version of the string. The third line contains the **msgstr**, which is the translation of that string for the localization that this particular .po file relates to.
 
@@ -28,33 +28,43 @@ In the locale code _de_CH_, for example, _de_ represents the German language and
 
 After forking the LibreTime git repository, make sure you're in the **main** branch:
 
-    git branch
-      devel
-    * main
+```bash
+git branch
+  devel
+* main
+```
 
 Create a new locale directory (e.g. _legacy/locale/de_CH/LC_MESSAGES/_ for German as spoken in Switzerland):
 
-    mkdir -p legacy/locale/de_CH/LC_MESSAGES/
+```bash
+mkdir -p legacy/locale/de_CH/LC_MESSAGES/
+```
 
 Copy the template _airtime.po_ file into the directory you just created:
 
-    cp legacy_locale/template/airtime.po legacy/locale/de_CH/LC_MESSAGES
+```bash
+cp legacy_locale/template/airtime.po legacy/locale/de_CH/LC_MESSAGES
+```
 
 and update the header information in the new copy of the _airtime.po_ file using the **nano** editor:
 
-    nano legacy/locale/de_CH/LC_MESSAGES/airtime.po
+```bash
+nano legacy/locale/de_CH/LC_MESSAGES/airtime.po
+```
 
 For the example of Swiss German, the header of the file should now look like this:
 
-    # SWISS GERMAN (de_CH) translation for LibreTime.
-    # Copyright (C) 2013 Sourcefabric
-    # This file is distributed under the same license as the LibreTime package.
-    # Sourcefabric <contact@sourcefabric.org>, 2013.
-    #
-    msgid ""
-    msgstr ""
-    "Project-Id-Version: LibreTime 3.0-Alpha\n"
-    "Report-Msgid-Bugs-To: https://discourse.libretime.org/\n"
+```bash
+# SWISS GERMAN (de_CH) translation for LibreTime.
+# Copyright (C) 2013 Sourcefabric
+# This file is distributed under the same license as the LibreTime package.
+# Sourcefabric <contact@sourcefabric.org>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: LibreTime 3.0-Alpha\n"
+"Report-Msgid-Bugs-To: https://discourse.libretime.org/\n"
+```
 
 After using an online translation tool to begin a new localization, you can load the exported .po file into Poedit and complete your translation there. Enter the localization team's contact information and language into Poedit's **Edit -&gt; Preferences** and **Catalog -&gt; Settings** dialogs, which will be added to the .po file. When you save a .po file in Poedit, the corresponding binary .mo file will be compiled automatically.
 

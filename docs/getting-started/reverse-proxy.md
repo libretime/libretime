@@ -1,7 +1,6 @@
 ---
 title: Reverse Proxy
-layout: article
-category: install
+sidebar_position: 5
 ---
 
 In some deployments, the LibreTime server is deployed behind a reverse proxy,
@@ -10,7 +9,7 @@ makes extensive use of its API for some site functionality, which causes
 [Cross-Origin Resource Sharing (CORS)](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
 to occur. By default, CORS requests are blocked by your browser and the origins
 need to be added to the **Allowed CORS URLs** block in
-[**General Settings**](/docs/settings). These origins should include any
+[**General Settings**](/docs/guides/settings). These origins should include any
 domains that will be used externally to connect to your reverse proxy that you
 want handled by LibreTime. These URLS can also be set during the first run configuration
 that is displayed when you first install LibreTime
@@ -40,16 +39,7 @@ Nginx set up on `proxy` and LibreTime will be installed on `libretime`. You will
 access on both. `libretime` also needs to be able to be accessed from `proxy`
 (`ping libretime` on `proxy`).
 
-On `libretime`, install LibreTime as described in the [install guide](/install). In short
-this means run the following commands:
-
-```
-git clone https://github.com/LibreTime/libretime.git
-cd libretime
-sudo ./install -fiap
-```
-
-Once it has installed, replace `<hostname>localhost</hostname>` in
+On `libretime`, install LibreTime as described in the [install guide](/docs/getting-started/install). Once it has installed, replace `<hostname>localhost</hostname>` in
 `/etc/icecast2/icecast.xml` with the following:
 
 ```
@@ -57,15 +47,11 @@ Once it has installed, replace `<hostname>localhost</hostname>` in
 ```
 
 This is the hostname that people listening to your stream will connect to and what
-LibreTime will use to stream out to them. You will then need to restart Icecast:
-
-```
-sudo systemctl restart icecast2
-```
+LibreTime will use to stream out to them. You will then need to restart Icecast using `sudo systemctl restart icecast2`.
 
 On `proxy`, run the following:
 
-```
+```bash
 cat << EOF | sudo tee /etc/nginx/sites-available/libretime.conf
 server {
     listen 80;

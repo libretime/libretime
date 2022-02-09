@@ -1,38 +1,15 @@
 ---
-layout: article
 title: Upgrading Libretime
-category: admin
 ---
 
-## LibreTime versioning
+:::caution
 
-In a nutshell, given a version number MAJOR.MINOR.PATCH we increment the:
+While upgrading your installation may not cause any station downtime or data loss, always plan for the worst. Only upgrade your installation when Libretime isn't playing out shows, notify your DJs and essential personnel, and back up your database, configuration files, and media library before you make any changes.
 
-1. MAJOR version when we make incompatible API changes,
-2. MINOR version when we add functionality in a backwards-compatible manner, and
-3. PATCH version when we make backwards-compatible bug fixes.
+:::
 
-Any pre-release versions of LibreTime are denoted by appending a hyphen and a
-series of dot separated identifiers immediately following the patch version.
-This pre-release indicates that the version is unstable in a sense that it might
-contain incomplete features or not satisfy the intended compatibility
-requirements as per semver.
-
-## Upgrading
-
-> After your LibreTime server has been deployed for a few years, you may need to
-> upgrade the GNU/Linux distribution that it runs in order to maintain security
-> update support. If the upgrade does not go smoothly, it may cause significant
-> downtime, so you should always have a fallback system available during the
-> upgrade to ensure broadcast continuity.
-
-1. Take a [backup of the server](/docs/backing-up-the-server). This is
-   especially important if you have not already set up a regular back up routine.
-   This extra back up is a safety measure in case of accidental data loss during
-   the upgrade, for example due to the wrong command being entered when moving
-   files. It is also recommended to backup all the configuration files under
-   `/etc/airtime/`.
-2. Run `./install -fiap` as described in the [install documentation](/install).
+1. [Back up the server](/docs/server-config/backing-up-the-server) and make a copy of all the configuration files under `/etc/airtime/`.
+2. Run `./install -fiap` as described in the [installation guide](/docs/getting-started/install).
    This will detect an existing LibreTime deployment and backup any
    configuration files that if finds. The install script also tries to restart
    the needed services during an upgrade. In any case you should monitor if this
@@ -48,23 +25,25 @@ requirements as per semver.
 
 ### Migrating from Airtime
 
-> **Note:** Airtime's _linked files_ and _watched folders_ features currently do
-> not work in Libretime.
+:::note
+
+Airtime's _linked files_ and _watched folders_ features currently do not work in Libretime.
+
+:::
 
 LibreTime has dropped support for Ubuntu 16.04, which is the last supported
 version of Ubuntu that Airtime supports. The following instructions describe how
 to migrate from Airtime to LibreTime. If there are issues encountered while
 upgrading, please [file a bug](https://github.com/libretime/libretime/issues/new?labels=bug&template=bug_report.md)
 
-1. Take a [backup of the server](/docs/backing-up-the-server)
-2. Create a new system for LibreTime and run the install script, as described in
-   [install](/install).
+1. Take a [backup of the server](/docs/server-config/backing-up-the-server)
+2. Create a new system for LibreTime and run the install script, as described in the [install guide](/docs/getting-started/install).
 3. Before running the web-configuration, restore the Airtime database to the new
    PostgreSQL server, media database and configuration file
 4. Update the configuration file to match the new configuration schema and update any
-   changed values. See the [host configuration](/docs/host-configuration) documentation
+   changed values. See the [host configuration](/docs/server-config/host-configuration) documentation
    for more details.
 5. Edit the Icecast password in `/etc/icecast2/icecast.xml` to reflect the
    password used in Airtime
 6. Restart the LibreTime services
-7. Navigate to the LibreTime web-page
+7. Open LibreTime's dashboard and verify all services are running

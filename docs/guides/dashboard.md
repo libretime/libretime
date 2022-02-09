@@ -1,10 +1,12 @@
 ---
-layout: article
 title: Dashboard
-category: interface
 ---
 
-> Want to listen to Libretime's output stream? Click **Listen** below the **On Air** light.
+:::tip
+
+Want to listen to Libretime's output stream? Click **Listen** below the **On Air** light.
+
+:::
 
 The Dashboard is divided into two sections a Library section divided between
 Tracks, Playlists, Smart Blocks, Webstreams, and Podcasts, with the **Scheduled
@@ -21,12 +23,12 @@ yet. Click the calendar and clock icons above the table to change the date and
 time range, then click the **Find Shows** button (with the magnifying glass
 icon) to the right.
 
-![](/img/now-playing.png)
+![](./dashboard-now-playing.png)
 
 To display the content of a particular show, click **Filter by Show** and select
 the name of the show from the drop-down menu which will appear.
 
-![](/img/filter.png)
+![](./dashboard-filter.png)
 
 On the left side of the page, the **Start** and **End** times, **Duration**
 and **Title** of each content item are shown. On the right, **Creator**,
@@ -40,7 +42,7 @@ item at the same time of day.
 Click the **Show/hide columns** button on the right to configure the metadata
 displayed, by checking the boxes in the pop-up window.
 
-![](/img/columns.png)
+![](./dashboard-columns.png)
 
 The row for the currently playing item is displayed with a bright green
 background. Any underbooked shows (shows with insufficient content to fill the
@@ -48,7 +50,7 @@ time allowed) are displayed with a row indicating the length of the underbooking
 in minutes and seconds. These rows contain a red exclamation mark in the first
 column, and have a pink background.
 
-![](/img/end-gap.png)
+![](./dashboard-end-gap.png)
 
 ### Removing content from a running show
 
@@ -65,7 +67,7 @@ from the schedule. If you remove the currently playing item, playout will skip
 to the next item in the show automatically, so you should make sure you have
 enough items remaining in the show to avoid dead air.
 
-![](/img/delete-extra.png)
+![](./dashboard-delete-extra.png)
 
 If you have a long schedule displayed, and you wish to skip to the currently
 playing item, click the button with the end arrow icon, to the right of the
@@ -94,7 +96,7 @@ other sources such as microphones or telephone hybrids on its way to a
 transmitter, or a separate stream encoder. For instance, a live show's host may
 not wish to cut off a studio discussion in order to play music at a fixed time.
 
-![](/img/drag-and-drop.png)
+![](./dashboard-drag-and-drop.png)
 
 You can also select multiple items using the **Select** menu button, just
 beneath the simple search field, which has the options to **Select this page**
@@ -117,7 +119,3 @@ There is no need to select or drag the item first.
 Right-clicking on a song in the schedule table will show a pop-up. This pop-up
 menu also enables you to audition the entire show in advance of playout, or
 remove the item that was clicked on from the show.
-
-Multiple insertion points can be enabled, so that the same item is inserted into
-the schedule at different times. For example, you may wish to play a news report
-every hour, or a station ident after every five music files.
