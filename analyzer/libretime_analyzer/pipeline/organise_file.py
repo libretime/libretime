@@ -6,8 +6,10 @@ import uuid
 
 from loguru import logger
 
+from .context import Context
 
-def organise_file(audio_file_path, import_directory, original_filename, metadata):
+
+def organise_file(ctx: Context) -> Context:
     """Move the file at audio_file_path over into the import_directory/import,
     renaming it to original_filename.
 
@@ -26,27 +28,6 @@ def organise_file(audio_file_path, import_directory, original_filename, metadata
         original_filename: The filename of the file when it was uploaded to Airtime.
         metadata: A dictionary where the "full_path" of where the file is moved to will be added.
     """
-    if not isinstance(audio_file_path, str):
-        raise TypeError(
-            "audio_file_path must be string. Was of type "
-            + type(audio_file_path).__name__
-        )
-    if not isinstance(import_directory, str):
-        raise TypeError(
-            "import_directory must be string. Was of type "
-            + type(import_directory).__name__
-        )
-    if not isinstance(original_filename, str):
-        raise TypeError(
-            "original_filename must be string. Was of type "
-            + type(original_filename).__name__
-        )
-    if not isinstance(metadata, dict):
-        raise TypeError(
-            "metadata must be a dict. Was of type " + type(metadata).__name__
-        )
-    if not os.path.exists(audio_file_path):
-        raise FileNotFoundError(f"audio file not found: {audio_file_path}")
 
     # Import the file over to it's final location.
     # TODO: Also, handle the case where the move fails and write some code
@@ -54,14 +35,14 @@ def organise_file(audio_file_path, import_directory, original_filename, metadata
 
     max_dir_len = 48
     max_file_len = 48
-    final_file_path = import_directory
-    orig_file_basename, orig_file_extension = os.path.splitext(original_filename)
-    if "artist_name" in metadata:
+    final_file_path = ctx.storage_url
+    orig_file_basename, orig_file_extension = os.path.splitext(ctx.original_filename)
+    if "artist_name" in ctx.metadata:
         final_file_path += (
-            "/" + metadata["artist_name"][0:max_dir_len]
+            "/" + ctx.metadata["artist_name"][0:max_dir_len]
         )  # truncating with array slicing
-    if "album_title" in metadata:
-        final_file_path += "/" + metadata["album_title"][0:max_dir_len]
+    if "album_title" in ctx.metadata:
+        final_file_path += "/" + ctx.metadata["album_title"][0:max_dir_len]
     # Note that orig_file_extension includes the "." already
     final_file_path += "/" + orig_file_basename[0:max_file_len] + orig_file_extension
 
@@ -76,9 +57,9 @@ def organise_file(audio_file_path, import_directory, original_filename, metadata
     # you often do when you're debugging), then don't move the file at all.
 
     if os.path.exists(final_file_path):
-        if os.path.samefile(audio_file_path, final_file_path):
-            metadata["full_path"] = final_file_path
-            return metadata
+        if os.path.samefile(ctx.filepath, final_file_path):
+            ctx.metadata["full_path"] = final_file_path
+            return ctx
         base_file_path, file_extension = os.path.splitext(final_file_path)
         final_file_path = "{}_{}{}".format(
             base_file_path,
@@ -99,11 +80,11 @@ def organise_file(audio_file_path, import_directory, original_filename, metadata
     mkdir_p(os.path.dirname(final_file_path))
 
     # Move the file into its final destination directory
-    logger.debug(f"Moving {audio_file_path} to {final_file_path}")
-    shutil.move(audio_file_path, final_file_path)
+    logger.debug(f"Moving {ctx.filepath} to {final_file_path}")
+    shutil.move(ctx.filepath, final_file_path)
 
-    metadata["full_path"] = final_file_path
-    return metadata
+    ctx.metadata["full_path"] = final_file_path
+    return ctx
 
 
 def mkdir_p(path):

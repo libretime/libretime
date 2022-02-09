@@ -1,27 +1,27 @@
 from subprocess import CalledProcessError
-from typing import Any, Dict
 
 from ..ffmpeg import compute_replaygain, probe_replaygain
+from .context import Context
 
 
-def analyze_replaygain(filepath: str, metadata: Dict[str, Any]):
+def analyze_replaygain(ctx: Context) -> Context:
     """
     Extracts the Replaygain loudness normalization factor of a track using ffmpeg.
     """
     try:
         # First probe for existing replaygain metadata.
-        track_gain = probe_replaygain(filepath)
+        track_gain = probe_replaygain(ctx.filepath)
         if track_gain is not None:
-            metadata["replay_gain"] = track_gain
-            return metadata
+            ctx.metadata["replay_gain"] = track_gain
+            return ctx
     except (CalledProcessError, OSError):
         pass
 
     try:
-        track_gain = compute_replaygain(filepath)
+        track_gain = compute_replaygain(ctx.filepath)
         if track_gain is not None:
-            metadata["replay_gain"] = track_gain
+            ctx.metadata["replay_gain"] = track_gain
     except (CalledProcessError, OSError):
         pass
 
-    return metadata
+    return ctx

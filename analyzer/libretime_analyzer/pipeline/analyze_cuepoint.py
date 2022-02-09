@@ -1,37 +1,37 @@
 from datetime import timedelta
 from math import isclose
 from subprocess import CalledProcessError
-from typing import Any, Dict
 
 from loguru import logger
 
 from ..ffmpeg import compute_silences, probe_duration
+from .context import Context
 
 
-def analyze_cuepoint(filepath: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
+def analyze_cuepoint(ctx: Context) -> Context:
     """
     Extracts the cuein and cueout times along and sets the file duration using ffmpeg.
     """
 
     try:
-        duration = probe_duration(filepath)
+        duration = probe_duration(ctx.filepath)
 
-        if "length_seconds" in metadata and not isclose(
-            metadata["length_seconds"],
+        if "length_seconds" in ctx.metadata and not isclose(
+            ctx.metadata["length_seconds"],
             duration,
             abs_tol=0.1,
         ):
             logger.warning(
-                f"existing duration {metadata['length_seconds']} differs "
+                f"existing duration {ctx.metadata['length_seconds']} differs "
                 f"from the probed duration {duration}."
             )
 
-        metadata["length_seconds"] = duration
-        metadata["length"] = str(timedelta(seconds=duration))
-        metadata["cuein"] = 0.0
-        metadata["cueout"] = duration
+        ctx.metadata["length_seconds"] = duration
+        ctx.metadata["length"] = str(timedelta(seconds=duration))
+        ctx.metadata["cuein"] = 0.0
+        ctx.metadata["cueout"] = duration
 
-        silences = compute_silences(filepath)
+        silences = compute_silences(ctx.filepath)
 
         if len(silences) > 2:
             # Only keep first and last silence
@@ -50,7 +50,7 @@ def analyze_cuepoint(filepath: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
                 max(0.0, silence[0]),  # Clamp negative value
                 abs_tol=0.1,
             ):
-                metadata["cuein"] = max(0.0, silence[1])
+                ctx.metadata["cuein"] = max(0.0, silence[1])
 
             # Is this really the last silence ?
             elif isclose(
@@ -58,12 +58,12 @@ def analyze_cuepoint(filepath: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
                 duration,
                 abs_tol=0.1,
             ):
-                metadata["cueout"] = min(silence[0], duration)
+                ctx.metadata["cueout"] = min(silence[0], duration)
 
-        metadata["cuein"] = format(metadata["cuein"], "f")
-        metadata["cueout"] = format(metadata["cueout"], "f")
+        ctx.metadata["cuein"] = format(ctx.metadata["cuein"], "f")
+        ctx.metadata["cueout"] = format(ctx.metadata["cueout"], "f")
 
     except (CalledProcessError, OSError):
         pass
 
-    return metadata
+    return ctx

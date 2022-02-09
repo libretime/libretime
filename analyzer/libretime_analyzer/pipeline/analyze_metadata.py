@@ -2,66 +2,54 @@ import datetime
 import hashlib
 import os
 import wave
-from typing import Any, Dict
 
 import magic
 import mutagen
 from loguru import logger
 
+from .context import Context
 
-def analyze_metadata(filename: str, metadata: Dict[str, Any]):
-    """Extract audio metadata from tags embedded in the file (eg. ID3 tags)
 
-    Keyword arguments:
-        filename: The path to the audio file to extract metadata from.
-        metadata: A dictionary that the extracted metadata will be added to.
+def analyze_metadata(ctx: Context) -> Context:
     """
-    if not isinstance(filename, str):
-        raise TypeError(
-            "filename must be string. Was of type " + type(filename).__name__
-        )
-    if not isinstance(metadata, dict):
-        raise TypeError(
-            "metadata must be a dict. Was of type " + type(metadata).__name__
-        )
-    if not os.path.exists(filename):
-        raise FileNotFoundError(f"audio file not found: {filename}")
+    Extract audio metadata from tags embedded in the file.
+    """
 
     # Airtime <= 2.5.x nonsense:
-    metadata["ftype"] = "audioclip"
+    ctx.metadata["ftype"] = "audioclip"
     # Other fields we'll want to set for Airtime:
-    metadata["hidden"] = False
+    ctx.metadata["hidden"] = False
 
     # Get file size and md5 hash of the file
-    metadata["filesize"] = os.path.getsize(filename)
+    ctx.metadata["filesize"] = os.path.getsize(ctx.filepath)
 
-    with open(filename, "rb") as fh:
+    with open(ctx.filepath, "rb") as fh:
         m = hashlib.md5()
         while True:
             data = fh.read(8192)
             if not data:
                 break
             m.update(data)
-        metadata["md5"] = m.hexdigest()
+        ctx.metadata["md5"] = m.hexdigest()
 
     # Mutagen doesn't handle WAVE files so we use a different package
     ms = magic.open(magic.MIME_TYPE)
     ms.load()
-    with open(filename, "rb") as fh:
+    with open(ctx.filepath, "rb") as fh:
         mime_check = ms.buffer(fh.read(2014))
-    metadata["mime"] = mime_check
+    ctx.metadata["mime"] = mime_check
     if mime_check == "audio/x-wav":
-        return _analyze_wave(filename, metadata)
+        return _analyze_wave(ctx)
 
     # Extract metadata from an audio file using mutagen
-    audio_file = mutagen.File(filename, easy=True)
+    audio_file = mutagen.File(ctx.filepath, easy=True)
 
     # Bail if the file couldn't be parsed. The title should stay as the filename
     # inside Airtime.
     if (
         audio_file == None
     ):  # Don't use "if not" here. It is wrong due to mutagen's design.
-        return metadata
+        return ctx
     # Note that audio_file can equal {} if the file is valid but there's no metadata tags.
     # We can still try to grab the info variables below.
 
@@ -69,39 +57,39 @@ def analyze_metadata(filename: str, metadata: Dict[str, Any]):
     # in the file header. Mutagen breaks that out into a separate "info" object:
     info = audio_file.info
     if hasattr(info, "sample_rate"):  # Mutagen is annoying and inconsistent
-        metadata["sample_rate"] = info.sample_rate
+        ctx.metadata["sample_rate"] = info.sample_rate
     if hasattr(info, "length"):
-        metadata["length_seconds"] = info.length
+        ctx.metadata["length_seconds"] = info.length
         # Converting the length in seconds (float) to a formatted time string
         track_length = datetime.timedelta(seconds=info.length)
-        metadata["length"] = str(
+        ctx.metadata["length"] = str(
             track_length
         )  # time.strftime("%H:%M:%S.%f", track_length)
         # Other fields for Airtime
-        metadata["cueout"] = metadata["length"]
+        ctx.metadata["cueout"] = ctx.metadata["length"]
 
     # Set a default cue in time in seconds
-    metadata["cuein"] = 0.0
+    ctx.metadata["cuein"] = 0.0
 
     if hasattr(info, "bitrate"):
-        metadata["bit_rate"] = info.bitrate
+        ctx.metadata["bit_rate"] = info.bitrate
 
     # Use the mutagen to get the MIME type, if it has one. This is more reliable and
     # consistent for certain types of MP3s or MPEG files than the MIMEs returned by magic.
     if audio_file.mime:
-        metadata["mime"] = audio_file.mime[0]
+        ctx.metadata["mime"] = audio_file.mime[0]
 
     # Try to get the number of channels if mutagen can...
     try:
         # Special handling for getting the # of channels from MP3s. It's in the "mode" field
         # which is 0=Stereo, 1=Joint Stereo, 2=Dual Channel, 3=Mono. Part of the ID3 spec...
-        if metadata["mime"] in ["audio/mpeg", "audio/mp3"]:
+        if ctx.metadata["mime"] in ["audio/mpeg", "audio/mp3"]:
             if info.mode == 3:
-                metadata["channels"] = 1
+                ctx.metadata["channels"] = 1
             else:
-                metadata["channels"] = 2
+                ctx.metadata["channels"] = 2
         else:
-            metadata["channels"] = info.channels
+            ctx.metadata["channels"] = info.channels
     except (AttributeError, KeyError):
         # If mutagen can't figure out the number of channels, we'll just leave it out...
         pass
@@ -118,9 +106,9 @@ def analyze_metadata(filename: str, metadata: Dict[str, Any]):
         elif "-" in track_number:
             track_number_tokens = track_number.split("-")
             track_number = track_number_tokens[0]
-        metadata["track_number"] = track_number
+        ctx.metadata["track_number"] = track_number
         track_total = track_number_tokens[1]
-        metadata["track_total"] = track_total
+        ctx.metadata["track_total"] = track_total
     except (AttributeError, KeyError, IndexError):
         # If we couldn't figure out the track_number or track_total, just ignore it...
         pass
@@ -156,36 +144,36 @@ def analyze_metadata(filename: str, metadata: Dict[str, Any]):
 
     for mutagen_tag, airtime_tag in mutagen_to_airtime_mapping.items():
         try:
-            metadata[airtime_tag] = audio_file[mutagen_tag]
+            ctx.metadata[airtime_tag] = audio_file[mutagen_tag]
 
             # Some tags are returned as lists because there could be multiple values.
             # This is unusual so we're going to always just take the first item in the list.
-            if isinstance(metadata[airtime_tag], list):
-                if metadata[airtime_tag]:
-                    metadata[airtime_tag] = metadata[airtime_tag][0]
+            if isinstance(ctx.metadata[airtime_tag], list):
+                if ctx.metadata[airtime_tag]:
+                    ctx.metadata[airtime_tag] = ctx.metadata[airtime_tag][0]
                 else:  # Handle empty lists
-                    metadata[airtime_tag] = ""
+                    ctx.metadata[airtime_tag] = ""
 
         except KeyError:
             continue
 
-    return metadata
+    return ctx
 
 
-def _analyze_wave(filename, metadata):
+def _analyze_wave(ctx: Context) -> Context:
     try:
-        reader = wave.open(filename, "rb")
-        metadata["channels"] = reader.getnchannels()
-        metadata["sample_rate"] = reader.getframerate()
-        length_seconds = float(reader.getnframes()) / float(metadata["sample_rate"])
+        reader = wave.open(ctx.filepath, "rb")
+        ctx.metadata["channels"] = reader.getnchannels()
+        ctx.metadata["sample_rate"] = reader.getframerate()
+        length_seconds = float(reader.getnframes()) / float(ctx.metadata["sample_rate"])
         # Converting the length in seconds (float) to a formatted time string
         track_length = datetime.timedelta(seconds=length_seconds)
-        metadata["length"] = str(
+        ctx.metadata["length"] = str(
             track_length
         )  # time.strftime("%H:%M:%S.%f", track_length)
-        metadata["length_seconds"] = length_seconds
-        metadata["cueout"] = metadata["length"]
+        ctx.metadata["length_seconds"] = length_seconds
+        ctx.metadata["cueout"] = ctx.metadata["length"]
     except wave.Error as ex:
         logger.error(f"Invalid WAVE file: {str(ex)}")
         raise
-    return metadata
+    return ctx

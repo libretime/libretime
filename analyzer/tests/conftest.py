@@ -1,8 +1,9 @@
-import os
 import shutil
-from tempfile import TemporaryDirectory
+from pathlib import Path
 
 import pytest
+
+from libretime_analyzer.pipeline.context import Context
 
 from .fixtures import fixtures_path
 
@@ -10,17 +11,23 @@ AUDIO_FILENAME = "s1-stereo-tagged.mp3"
 AUDIO_FILE = fixtures_path / AUDIO_FILENAME
 AUDIO_IMPORT_DEST = f"Test Artist/Test Album/{AUDIO_FILENAME}"
 
-# TODO: Use pathlib for file manipulation
+
+@pytest.fixture()
+def dest_dir(tmp_path):
+    yield tmp_path
 
 
 @pytest.fixture()
-def dest_dir():
-    with TemporaryDirectory(prefix="dest") as tmpdir:
-        yield tmpdir
+def src_dir(tmp_path):
+    shutil.copy(AUDIO_FILE, tmp_path)
+    yield tmp_path
 
 
-@pytest.fixture()
-def src_dir():
-    with TemporaryDirectory(prefix="src") as tmpdir:
-        shutil.copy(AUDIO_FILE, tmpdir)
-        yield tmpdir
+def context_factory(filepath: Path):
+    return Context(
+        filepath=filepath,
+        original_filename="",
+        storage_url="",
+        callback_api_key="",
+        callback_url="",
+    )

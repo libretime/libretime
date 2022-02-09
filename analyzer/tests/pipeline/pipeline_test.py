@@ -1,48 +1,33 @@
 import datetime
-import os
-from queue import Queue
+from pathlib import Path
 
 import pytest
 
-from libretime_analyzer.pipeline import Pipeline
+from libretime_analyzer.pipeline.context import Context
+from libretime_analyzer.pipeline.pipeline import run_pipeline
 
 from ..conftest import AUDIO_FILENAME, AUDIO_IMPORT_DEST
 
 
-def test_run_analysis(src_dir, dest_dir):
-    queue = Queue()
-    Pipeline.run_analysis(
-        queue,
-        os.path.join(src_dir, AUDIO_FILENAME),
-        dest_dir,
-        AUDIO_FILENAME,
-        "file",
-        "",
+def test_run_pipeline(src_dir: Path, dest_dir: Path):
+    ctx = run_pipeline(
+        Context(
+            filepath=src_dir / AUDIO_FILENAME,
+            original_filename=AUDIO_FILENAME,
+            storage_url=str(dest_dir),
+            callback_api_key="",
+            callback_url="",
+        )
     )
-    metadata = queue.get()
 
-    assert metadata["track_title"] == "Test Title"
-    assert metadata["artist_name"] == "Test Artist"
-    assert metadata["album_title"] == "Test Album"
-    assert metadata["year"] == "1999"
-    assert metadata["genre"] == "Test Genre"
-    assert metadata["mime"] == "audio/mp3"
-    assert metadata["length_seconds"] == pytest.approx(15.0, abs=0.1)
-    assert metadata["length"] == str(
-        datetime.timedelta(seconds=metadata["length_seconds"])
+    assert ctx.metadata["track_title"] == "Test Title"
+    assert ctx.metadata["artist_name"] == "Test Artist"
+    assert ctx.metadata["album_title"] == "Test Album"
+    assert ctx.metadata["year"] == "1999"
+    assert ctx.metadata["genre"] == "Test Genre"
+    assert ctx.metadata["mime"] == "audio/mp3"
+    assert ctx.metadata["length_seconds"] == pytest.approx(15.0, abs=0.1)
+    assert ctx.metadata["length"] == str(
+        datetime.timedelta(seconds=ctx.metadata["length_seconds"])
     )
-    assert os.path.exists(os.path.join(dest_dir, AUDIO_IMPORT_DEST))
-
-
-@pytest.mark.parametrize(
-    "params,exception",
-    [
-        ((Queue(), "", "", ""), TypeError),
-        ((Queue(), "", "", ""), TypeError),
-        ((Queue(), "", "", ""), TypeError),
-        ((Queue(), "", "", ""), TypeError),
-    ],
-)
-def test_run_analysis_wrong_params(params, exception):
-    with pytest.raises(exception):
-        Pipeline.run_analysis(*params)
+    assert (dest_dir / AUDIO_IMPORT_DEST).exists()

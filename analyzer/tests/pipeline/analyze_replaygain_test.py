@@ -3,6 +3,7 @@ import pytest
 
 from libretime_analyzer.pipeline.analyze_replaygain import analyze_replaygain
 
+from ..conftest import context_factory
 from ..fixtures import FILES
 
 
@@ -18,5 +19,5 @@ def test_analyze_replaygain(filepath, replaygain):
     if distro.codename() == "bionic" and str(filepath).endswith("+12.mp3"):
         tolerance = 5
 
-    metadata = analyze_replaygain(filepath, dict())
-    assert metadata["replay_gain"] == pytest.approx(replaygain, abs=tolerance)
+    ctx = analyze_replaygain(context_factory(filepath))
+    assert ctx.metadata["replay_gain"] == pytest.approx(replaygain, abs=tolerance)
