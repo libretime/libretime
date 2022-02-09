@@ -32,7 +32,8 @@ repos:
     rev: v2.5.1
     hooks:
       - id: prettier
-        files: \.(md|yml|yaml|json)$
+        files: \.(md|mdx|yml|yaml|js|jsx|ts|tsx|json|css)$
+        exclude: ^legacy/public
 
   - repo: https://github.com/asottile/pyupgrade
     rev: v2.31.0
@@ -58,4 +59,4 @@ repos:
         args:
           - --ignore-words=.codespellignore
           - --builtin=clear,rare,informal
-        exclude: ^(legacy.*)$
+        exclude: (^legacy.*|yarn\.lock)$
