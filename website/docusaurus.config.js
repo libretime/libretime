@@ -24,6 +24,12 @@ const config = {
         indexPages: false,
       },
     ],
+    [
+      "@docusaurus/plugin-client-redirects",
+      {
+        redirects: require("./redirects"),
+      },
+    ],
   ],
 
   i18n: {
