@@ -52,12 +52,12 @@ the last few years, since not having the right licences could leave the operator
 liable to legal action.
 
 If you want to go down the commercial music route, check out the
-<http://www.prsformusic.com> and <http://www.ppluk.com> websites for UK licence
-details. In the USA, the <http://www.soundexchange.com> website currently quotes
+<https://www.prsformusic.com> and <https://www.ppluk.com> websites for UK licence
+details. In the USA, the <https://www.soundexchange.com> website currently quotes
 a 500 dollar minimum annual fee for non-commercial webcasters, plus a usage fee
 above a certain number of listener hours, for the right to stream music
-recordings to listeners. See the websites of [ASCAP](http://www.ascap.com),
-[BMI](http://www.bmi.com) and [SESAC](http://www.sesac.com) for details of music
+recordings to listeners. See the websites of [ASCAP](https://www.ascap.com),
+[BMI](https://www.bmi.com) and [SESAC](https://www.sesac.com) for details of music
 publishing royalties payable by webcasters streaming to the USA.
 
 Free content streaming offers an alternative for DIY Internet radio. Since
@@ -74,7 +74,7 @@ previously joined one of the many royalty collection societies around the world.
 You can ask for permission to stream when website visitors upload their own
 music files to you via a HTML form, much as the likes of SoundCloud do. Or you
 can collect files licensed under an appropriate Creative Commons licence
-(<http://www.creativecommons.org>) or other free content licence.
+(<https://www.creativecommons.org>) or other free content licence.
 
 Explicit permission to stream on your particular server is always going to be
 the ideal, so think about your own terms and conditions before you accept files
