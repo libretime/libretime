@@ -1,10 +1,9 @@
 ---
-title: How To Change Default Passwords
-layout: article
-category: admin
+title: Change Default Passwords
+sidebar_position: 3
 ---
 
-### Libretime
+## Libretime
 
 To change the password of the current user:
 
@@ -18,7 +17,7 @@ To change the password for a different user (requires _Administrator_ privileges
 2. Go to **Settings** > **Manage Users**
 3. Select the user, enter the new password twice, and click **Save**
 
-### PostgreSQL
+## PostgreSQL
 
 Two of the most important passwords that should be changed _immediately_ after installation
 are the passwords used by the PostgreSQL database.
@@ -32,15 +31,13 @@ It is strongly recommended that you do this before exposing your server to the i
 4. If all is successful, logout of PostgreSQL with `\q`, go back to _/etc/airtime/airtime.conf_ to edit the password
    in the config file, and restart all services mentioned in the previous section.
 
-### Icecast
+## Icecast
 
-Random passwords are generated for Icecast during the installation. To look up and change the passwords, look in the file below.
-
-`/etc/icecast2/icecast.xml`
+Random passwords are generated for Icecast during the installation. To look up and change the passwords, edit `/etc/icecast2/icecast.xml`.
 
 Replace the admin and _changeme_ fields below.
 
-```
+```xml
 <authentication>
     <!-- Sources log in with username 'source' -->
     <source-password>changeme</source-password>
@@ -52,19 +49,15 @@ Replace the admin and _changeme_ fields below.
   </authentication>
 ```
 
-Then, restart your icecast2 service.
-
-```
-sudo systemctl restart icecast2
-```
+Then, restart your icecast2 service with `sudo systemctl restart icecast2`.
 
 > Note: If you change the source password, you may need to manually configure Libretime to use the new password: go to **Settings** > **Streams**, set the streaming server to **Custom** and fill out the **Additional Options** below Stream 1.
 
-### Rabbitmq
+## RabbitMQ
 
-To change the default password for Rabbitmq, run the following command
+To change the default password for RabbitMQ, run the following command
 
-```
+```bash
 sudo rabbitmqctl change_password airtime newpassword
 ```
 

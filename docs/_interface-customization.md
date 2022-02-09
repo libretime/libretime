@@ -1,23 +1,24 @@
 ---
-layout: article
 title: Modifying the LibreTime interface
-git: interface-customization.md
-category: admin
 ---
 
 The LibreTime administration interface, as a web application, is fully customizable using the same methods that you might use to modify a website. For instance, you may wish to increase certain font sizes or change the colours in the LibreTime interface to better suit staff users with impaired vision. To do so, open one of the CSS files in the _/public/css/_ directory under the LibreTime _DocumentRoot_ directory in an editor such as **nano**:
 
-    sudo nano /usr/share/airtime/public/css/styles.css
+```bash
+sudo nano /usr/share/airtime/public/css/styles.css
+```
 
 To change the background colour of the administration interface from dark gray to white, the _background:_ property of the body tag could be changed to _\#ffffff_ as follows:
 
-    body {
-          font-size: 62.5%;
-          font-family:Arial, Helvetica, sans-serif;
-          background: #ffffff;
-          margin: 0;
-          padding: 0;
-    }
+```css
+body {
+  font-size: 62.5%;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  margin: 0;
+  padding: 0;
+}
+```
 
 Save the file with **Ctrl+S**, then refresh your browser to see the change to the interface background colour.
 
@@ -29,7 +30,9 @@ If you have installed Icecast, in the directory _/etc/icecast2/web/_ you will fi
 
 For example, you could change the _status.xsl_ page:
 
-    sudo nano /etc/icecast2/web/status.xsl
+```bash
+sudo nano /etc/icecast2/web/status.xsl
+```
 
 Modifying the _status.xsl_ page is a good place to start, because this is the default page that site visitors see when they browse port 8000 on your Icecast server. The most obvious change to make in the XSLT pages is the content of the _&lt;title&gt;_ and _&lt;h2&gt;_ tags, to announce the name of your station. You can also modify the _style.css_ file in this directory to change colour and layout options.
 

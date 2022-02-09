@@ -1,7 +1,5 @@
 ---
-layout: article
 title: Rights and Royalties
-category: manager
 ---
 
 If you're new to broadcasting, or have not streamed your station online before,

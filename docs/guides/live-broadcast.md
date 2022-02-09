@@ -1,11 +1,8 @@
 ---
-layout: article
-title: Broadcasting live with MIXXX or B.U.T.T.
-git: live-broadcast.md
-category: interface
+title: Broadcasting live
 ---
 
-## Live shows with MIXXX {#mixxx}
+## MIXXX
 
 [Mixxx](https://www.mixxx.org) is a cross-platform Open Source application for DJs.
 
@@ -18,25 +15,22 @@ Mixxx supports a wide variety of popular hardware control surfaces, which can be
 computer using a USB cable. A control surface might replace or augment an analogue mixer in your studio,
 depending on your live mixing and playout requirements.
 
-Mixxx 1.9.0 or later includes a live streaming client which, like LibreTime, is compatible with the **Icecast**
-and **SHOUTcast** media servers. This feature can also be used to stream from Mixxx directly into LibreTime,
+Mixxx 1.9.0 or later includes a live streaming client which, like LibreTime, is compatible with the Icecast
+and SHOUTcast media servers. This feature can also be used to stream from Mixxx directly into LibreTime,
 using either the **Show Source** or **Master Source**.
 
-![](/img/Screenshot369-Mixxx_streaming_preferences.png)
-
-To configure **Mixxx** for streaming into LibreTime, click **Options**, **Preferences**, then
+To configure Mixxx for streaming into LibreTime, click **Options**, **Preferences**, then
 **Live Broadcasting** on the main Mixxx menu. For server **Type**, select the default of **Icecast 2**.
 For **Host**, **Mount**, **Port**, **Login** and **Password**, use the **Input Stream Settings**
-configured in the LibreTime **Streams** page, on LibreTime's **System** menu. See [stream settings](stream-settings)
-for remote input connection details.
+configured in the LibreTime **Streams** page, on LibreTime's **System** menu.
 
-## Live shows with B.U.T.T. (Broadcast Using This Tool)
+## B.U.T.T. (Broadcast Using This Tool)
 
 <html>
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/4GLsU9hPTtM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </html>
 
-**Setup**
+### Setup
 
 1. Download and install [BUTT](https://danielnoethen.de/) for your OS.
    _Note: be sure you have butt version 0.1.17 or newer installed_
@@ -51,18 +45,14 @@ for remote input connection details.
    - Type **/show** under IceCast mountpoint:
    - Type your dj login under **IceCast user:**
 5. Click **ADD**
-6. Still in settings click, **Audio** and select your external sound card under
-   **Audio Device** _Note: if you only have an internal sound card you maybe able
-   to use it but that is OS specific and outside of this tutorial. We are assuming
-   you have a mic and mixer or a USB mixer hooked up to or as an external soundcard_
+6. Still in settings click, **Audio** and select your audio input device under
+   **Audio Device**
 
-**Show Time**
+### Show Time
 
-1. When its almost your show time go to your LibreTime page and look at the time
-   in the top right when your show starts go to Butt.
+1. When its almost your show time go to your LibreTime page and look at the time in the top right when your show starts go to Butt.
 2. Click the white Play button (third button in the middle).
-3. If it says connecting... and then stream time with a counter- congratulations,
-   your are connected!
+3. If it says connecting... and then stream time with a counter- congratulations, your are connected!
 4. Go to the LibreTime page and at the top right under Source Streams the
    tab besides Show Source is to the left and Orange - if it is and Current
    shows Live Show you are connected.
@@ -81,8 +71,3 @@ slot. If you choose to stop streaming before it is over click the white square
 **Stop** button to disconnect. Then go to the LibreTime page and if the Show
 Source didn't automatically disconnect you can click it to the right and it
 should turn gray.
-
-You are now done streaming.
-
-If you have issues connecting check with your system administrator to see if you
-have the details right.

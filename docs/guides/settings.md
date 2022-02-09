@@ -1,19 +1,17 @@
 ---
-layout: article
 title: Settings
-category: admin
 ---
 
 ## General Settings
 
-![](/img/station-info-settings.png)
+![](./settings-station-info-settings.png)
 
 On the **Settings** menu, click **General** to set your **Station Name**. This
 text is shown in your web browser's title bar when your station staff are logged
 into LibreTime, and optionally in stream metadata. You can also set a **Station
 Description** and **Station Logo** here.
 
-![](/img/general-playback-settings.png)
+![](./settings-general-playback-settings.png)
 
 The **Default Interface Language** drop-down menu sets the default localization
 for your LibreTime instance, and the **Station Timezone** drop-down menu can be
@@ -49,7 +47,7 @@ podcast to LibreTime. This can also be done manually by the generate smartblock
 and playlist button under a podcasts settings which is why it is disabled by
 default.
 
-![](/img/api-settings.png)
+![](./settings-api-settings.png)
 
 You can opt-in to test new features with the **Feature Previews** option.
 Features that we soft rollout this way may need more feedback or still have
@@ -59,7 +57,7 @@ refactors. You can switch back at any time.
 You can enable live, read-only access to the LibreTime schedule calendar for
 your station's public website with the **Public LibreTime API** option, if you
 wish. (There is more about this feature in the
-[_Exporting the schedule_](/docs/playout-history) chapter, in the
+[_Exporting the schedule_](/docs/guides/playout-history) chapter, in the
 _Advanced Configuration_ section of this book).
 
 The **Allowed CORS URLs** is intended to deal with situations where you want a
@@ -68,22 +66,20 @@ there is a reverse proxy server in front of LibreTime. If you are using a
 reverse proxy, the URLs that will be used to access it should be added here.
 
 The **Display login button on your Radio Page?** will determine whether visitors
-to your site see a link to login. If this is disabled DJs and admins will need
+to your site see a link to login. If this is disabled, DJs and admins will need
 to goto http://SITEURL/login to be able to login.
 
 The **Tune-In Settings** section is intended for stations that have partnered
 with TuneIn to automatically push their now playing metadata to TuneIn. This
 hasn't been tested and also requires special credentials from TuneIn.
 
-![](/img/dangerous-options.png)
+The **Dangerous Options** section provides an administrator the ability to erase LibreTime's track library.
 
-The **Dangerous Options** section provides an administrator the ability to erase
-the entire LibreTime library.
+:::danger
 
-When you are done remember click the **Save** button at the top or bottom of the
-form.
+Erasing Libretime's track library cannot be undone.
 
-![](/img/save-button.png)
+:::
 
 Individual LibreTime users can choose another interface localization when they
 log in, or set personal preferences for localization and time zone by clicking
@@ -91,7 +87,7 @@ their username on the right side of the menu bar.
 
 ---
 
-## Track Types {#types}
+## Track Types
 
 ### Create track types
 
@@ -148,11 +144,11 @@ If your Airtime server is behind a firewall, and you wish remote broadcasters to
 
 In the Master Panel, available input source streams are shown with an orange line connecting the source to the switch, which you could think of like a patch cable connecting a source to a broadcast mixer. When that switch is active, another orange line connects the switch to the On Air indicator, like a patch cable connecting a mixer to a transmitter.
 
-![](/img/libretime-master-source-stream.png)
+![](./settings-libretime-master-source-stream.png)
 
 If you have checked the **Auto Switch On** box in the Stream Settings page, the **Master Source** switch will move automatically to the active position, on the left, when an authenticated master source connects to Airtime. Otherwise, you can activate the switches manually by clicking the left side of each switch, or deactivate them by clicking the right side. The switches do not have to be dragged with the mouse, in the way that a switch on a hardware mixer would be pushed sideways. **Show Source** live input streams can also be manually activated or deactivated in the same way. If neither the show source or master source is active then LibreTime will default to what is scheduled to play in the Calendar.
 
-![](/img/libretime-show-source-stream.png)
+![](./settings-libretime-show-source-stream.png)
 
 If you have the **Auto Switch Off** box checked LibreTime will resume scheduled playback whenever a stream disconnects. Otherwise you will need to slide to disable a source after a DJ stops streaming.
 
