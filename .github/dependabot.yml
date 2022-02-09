@@ -78,7 +78,6 @@ updates:
       - python
       - dependencies
 
-  # TODO: Enable when the future UI lands in the repository
   # Maintain dependencies for NPM packages
   # - package-ecosystem: "npm"
   #   directory: "/ui"
@@ -87,3 +86,11 @@ updates:
   #   labels:
   #     - javascript
   #     - dependencies
+
+  - package-ecosystem: "npm"
+    directory: "/website"
+    schedule:
+      interval: "daily"
+    labels:
+      - javascript
+      - dependencies
