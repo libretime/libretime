@@ -109,7 +109,7 @@ and a more persistent install.
 ## Modifying the Database
 
 LibreTime is designed to work with a [PostgreSQL](https://www.postgresql.org/)
-database server running locally. LibreTime uses [PropelORM](http://propelorm.org)
+database server running locally. LibreTime uses [PropelORM](https://github.com/propelorm/Propel)
 to interact with the ZendPHP components and create the database. The version 2
 API uses Django to interact with the same database.
 

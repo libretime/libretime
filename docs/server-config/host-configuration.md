@@ -165,7 +165,7 @@ If the Airtime logs indicate failures to connect to the RabbitMQ server, such as
 2013-10-31 08:21:11,255 ERROR - [pypomessagehandler.py : main() : line
 99] - Error connecting to RabbitMQ Server. Trying again in few seconds
 
-2013-10-31 08:21:11,255 ERROR - \[pypomessagehandler.py : main() : line 99\] - Error connecting to RabbitMQ Server. Trying again in few seconds - See more at: http://forum.sourcefabric.org/discussion/16050/\#sthash.W8OJrNFm.dpuf
+2013-10-31 08:21:11,255 ERROR - \[pypomessagehandler.py : main() : line 99\] - Error connecting to RabbitMQ Server. Trying again in few seconds - See more at: https://forum.sourcefabric.org/discussion/16050/#sthash.W8OJrNFm.dpuf
 ```
 
 but the RabbitMQ server is running normally, this error might be due to a change in the server's hostname since Libretime installation. Directory names under _/var/lib/rabbitmq/mnesia/_ indicate that RabbitMQ's database files are organised according to the hostname of the server (ex. `rabbit@airtime`) where the hostname is _airtime.example.com_. If the hostname has changed, it may be necessary to reconfigure RabbitMQ manually, as follows:

@@ -57,8 +57,8 @@ the backup server also contains an LibreTime installation, it should be possible
 to switch playout to this second machine relatively quickly, in case of a
 hardware failure or other emergency on the production server.)
 
-Two notible backup tools are [rsync](http://rsync.samba.org/) (without version control) and
-[rdiff-backup](http://www.nongnu.org/rdiff-backup/) (with version control). _rsync_ comes
+Two notible backup tools are [rsync](https://rsync.samba.org/) (without version control) and
+[rdiff-backup](https://rdiff-backup.net/) (with version control). _rsync_ comes
 preinstalled with Ubuntu Server.
 
 :::note

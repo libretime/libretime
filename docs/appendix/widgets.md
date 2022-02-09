@@ -18,7 +18,7 @@ Libretime widgets cannot function through VPNs or SSH tunneling. The instance mu
 
 ## Streaming Player Widget
 
-The streaming player widget inserts your Libretime stream into your website. One example is from [WRCS Community Radio](http://wcrsfm.org/) in Columbus, Ohio, USA.
+The streaming player widget inserts your Libretime stream into your website. One example is from [WRCS Community Radio](https://wcrsfm.org/) in Columbus, Ohio, USA.
 
 <iframe frameborder="0" width="400" height="235" src="http://broadcast.wcrsfm.org/embed/player?stream=auto&title=Now Playing"></iframe>
 
