@@ -104,8 +104,8 @@ class PypoPush(Thread):
         """
         seconds = (
             interval.microseconds
-            + (interval.seconds + interval.days * 24 * 3600) * 10 ** 6
-        ) / float(10 ** 6)
+            + (interval.seconds + interval.days * 24 * 3600) * 10**6
+        ) / float(10**6)
 
         return seconds
 
