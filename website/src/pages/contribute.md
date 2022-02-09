@@ -1,13 +1,10 @@
 ---
-title: Contribute to LibreTime
-layout: article
-category: dev
-permalink: /contribute
+title: Contribute to Libretime
 ---
 
-> LibreTime is a fork of AirTime due to stalled development of the open source
-> version. For background on this, see this
-> [open letter to the Airtime community](https://gist.github.com/hairmare/8c03b69c9accc90cfe31fd7e77c3b07d).
+# Contribute to Libretime
+
+LibreTime is a fork of AirTime due to stalled development of the open source version. For background on this, see this [open letter to the Airtime community](https://gist.github.com/hairmare/8c03b69c9accc90cfe31fd7e77c3b07d).
 
 ## Code of conduct
 
@@ -26,14 +23,16 @@ report, reproduce the behavior, and find related reports.
 Before creating bug reports, please check the following list, to be sure that
 you need to create one:
 
-- **Check the [LibreTime forum](https://discourse.libretime.org/)** for existing
+- Check the [LibreTime forum](https://discourse.libretime.org/) for existing
   questions and discussion.
-- **Check that your issue does not already exist in the
-  [issue tracker](https://github.com/libretime/libretime/issues?q=is%3aissue+label%3abug)**.
+- Check that your issue does not already exist in the
+  [issue tracker](https://github.com/libretime/libretime/issues?q=is%3aissue+label%3abug).
 
-> **Note:** If you find a **Closed** issue that seems like it is the same thing
-> that you're experiencing, open a new issue and include a link to the original
-> issue in the body of your new one.
+:::note
+
+If you find a closed issue that seems like it is the same thing that you're experiencing, open a new issue and include a link to the original issue in the body of your new one.
+
+:::
 
 When you are creating a bug report, please include as many details as possible.
 Fill out the [required template](https://github.com/libretime/libretime/issues/new?labels=bug&template=bug_report.md),
@@ -72,9 +71,9 @@ financially, you can do so through our
 
 ## Translation
 
-LibreTime can run in over 15 different languages due to the gracious help of our
-volunteers. Is your language not supported? Follow [this guide](/docs/interface-localization)
-to add your language to LibreTime!
+LibreTime can run in over 15 different languages due to the gracious help of our volunteers.
+
+Libretime is now localized using [Weblate](https://weblate.org/en/). If you would like to contribute a language translation, create an account and start working on [our Weblate page](https://hosted.weblate.org/projects/libretime/).
 
 ## Write documentation
 
@@ -86,12 +85,3 @@ editing the existing content so it is more accessible or creating new content
 
 Issues pertaining to the documentation are usually marked with the [Documentation](https://github.com/libretime/libretime/labels/documentation)
 label.
-
-Our site is built by Jekyll, which has an installation guide [here](https://jekyllrb.com/docs/installation/)
-to help get you started. After cloning our repo locally, enter the `docs/`
-directory and run
-
-```
-bundle install
-jekyll serve
-```
