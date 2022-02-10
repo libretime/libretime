@@ -1,8 +1,8 @@
 ---
-title: Libretime 3.0 Alpha 10 Released
+title: LibreTime 3.0 Alpha 10 Released
 ---
 
-# Release Notes for Libretime 3.0 Alpha 10
+# Release Notes for LibreTime 3.0 Alpha 10
 
 The full tarball for the **3.0.0-alpha.10** release of LibreTime is available [here](https://github.com/LibreTime/libretime/releases/download/3.0.0-alpha.10/libretime-3.0.0-alpha.10.tar.gz).
 

@@ -2,7 +2,7 @@
 title: Settings
 ---
 
-## General Settings
+## General settings
 
 ![](./settings-station-info-settings.png)
 
@@ -67,7 +67,7 @@ reverse proxy, the URLs that will be used to access it should be added here.
 
 The **Display login button on your Radio Page?** will determine whether visitors
 to your site see a link to login. If this is disabled, DJs and admins will need
-to goto http://SITEURL/login to be able to login.
+to goto http://example.org/login to be able to login.
 
 The **Tune-In Settings** section is intended for stations that have partnered
 with TuneIn to automatically push their now playing metadata to TuneIn. This
@@ -77,7 +77,7 @@ The **Dangerous Options** section provides an administrator the ability to erase
 
 :::danger
 
-Erasing Libretime's track library cannot be undone.
+Erasing LibreTime's track library cannot be undone.
 
 :::
 
@@ -87,7 +87,7 @@ their username on the right side of the menu bar.
 
 ---
 
-## Track Types
+## Track types
 
 ### Create track types
 
@@ -97,12 +97,12 @@ their username on the right side of the menu bar.
 1. On the "Code" field, type a unique code that can be easily identifiable. Example, for Music use "MUS" or for Sound Effects use something like "FX".
 1. On the "Type Name" field, type a the name of the type of tracks. Example, "Station IDs".
 1. On the "Description" field, enter the description of the type given.
-1. On the "Visibility" drop down menu, choose to enable or disable the track type. By default, it is enabled. If disabled, it won't be shown across Libretime or in the API for developers.
+1. On the "Visibility" drop down menu, choose to enable or disable the track type. By default, it is enabled. If disabled, it won't be shown across LibreTime or in the API for developers.
 1. Click **Save**.
 
 ---
 
-## Stream Settings
+## Stream settings
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/QPNo52Fc0ck" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 

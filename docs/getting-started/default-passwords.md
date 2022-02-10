@@ -3,17 +3,17 @@ title: Change Default Passwords
 sidebar_position: 3
 ---
 
-## Libretime
+## LibreTime
 
 To change the password of the current user:
 
-1. Log in to Libretime
+1. Log in to LibreTime
 2. Click on the username in the upper right corner (next to Log Out)
 3. Enter the new password twice and click **Save**
 
 To change the password for a different user (requires _Administrator_ privileges):
 
-1. Log in to Libretime
+1. Log in to LibreTime
 2. Go to **Settings** > **Manage Users**
 3. Select the user, enter the new password twice, and click **Save**
 
@@ -28,7 +28,7 @@ It is strongly recommended that you do this before exposing your server to the i
    Make sure to include the semicolon at the end! A response of `ALTER ROLE` means that the command ran successfully.
 3. Change the password for the _airtime_ user with `ALTER USER airtime WITH PASSWORD 'new_password';`
    A response of `ALTER ROLE` means that the command ran successfully.
-4. If all is successful, logout of PostgreSQL with `\q`, go back to _/etc/airtime/airtime.conf_ to edit the password
+4. If all is successful, logout of PostgreSQL with `\q`, go back to `/etc/airtime/airtime.conf` to edit the password
    in the config file, and restart all services mentioned in the previous section.
 
 ## Icecast
@@ -51,7 +51,7 @@ Replace the admin and _changeme_ fields below.
 
 Then, restart your icecast2 service with `sudo systemctl restart icecast2`.
 
-> Note: If you change the source password, you may need to manually configure Libretime to use the new password: go to **Settings** > **Streams**, set the streaming server to **Custom** and fill out the **Additional Options** below Stream 1.
+> Note: If you change the source password, you may need to manually configure LibreTime to use the new password: go to **Settings** > **Streams**, set the streaming server to **Custom** and fill out the **Additional Options** below Stream 1.
 
 ## RabbitMQ
 

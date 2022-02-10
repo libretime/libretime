@@ -1,10 +1,10 @@
 ---
-title: Upgrading Libretime
+title: Upgrading LibreTime
 ---
 
 :::caution
 
-While upgrading your installation may not cause any station downtime or data loss, always plan for the worst. Only upgrade your installation when Libretime isn't playing out shows, notify your DJs and essential personnel, and back up your database, configuration files, and media library before you make any changes.
+While upgrading your installation may not cause any station downtime or data loss, always plan for the worst. Only upgrade your installation when LibreTime isn't playing out shows, notify your DJs and essential personnel, and back up your database, configuration files, and media library before you make any changes.
 
 :::
 
@@ -27,7 +27,7 @@ While upgrading your installation may not cause any station downtime or data los
 
 :::note
 
-Airtime's _linked files_ and _watched folders_ features currently do not work in Libretime.
+Airtime's _linked files_ and _watched folders_ features currently do not work in LibreTime.
 
 :::
 

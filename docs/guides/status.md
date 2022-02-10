@@ -1,5 +1,5 @@
 ---
-title: System Status
+title: System status
 ---
 
 On the **Settings** menu, the **Status** page provides an overview of the health and resource usage of the various

@@ -14,7 +14,7 @@ domains that will be used externally to connect to your reverse proxy that you
 want handled by LibreTime. These URLS can also be set during the first run configuration
 that is displayed when you first install LibreTime
 
-### Reverse Proxy Basics
+### Reverse proxy basics
 
 A reverse proxy allows the LibreTime server to not be connected to the open internet. In
 this configuration, it is rather behind another server that proxies traffic to it from
@@ -42,7 +42,7 @@ access on both. `libretime` also needs to be able to be accessed from `proxy`
 On `libretime`, install LibreTime as described in the [install guide](/docs/getting-started/install). Once it has installed, replace `<hostname>localhost</hostname>` in
 `/etc/icecast2/icecast.xml` with the following:
 
-```
+```xml
 <hostname>icecast.example.com</hostname>
 ```
 
@@ -103,7 +103,7 @@ http://localhost
 Finally, the configuration file needs updating. Under `[general]`, `force_ssl`
 needs to be set to true:
 
-```
+```ini
 [general]
 ...
 force_ssl = true

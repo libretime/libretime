@@ -27,37 +27,43 @@ The program **mid3iconv** (part of the **python-mutagen** package in Debian and 
 
 <span id="Convert_MP3_Tags_using_mid3iconv" class="mw-headline"> For example, to preview the conversion of tags from Windows-1251 </span><span id="Convert_MP3_Tags_using_mid3iconv" class="mw-headline">(CP1251)</span><span id="Convert_MP3_Tags_using_mid3iconv" class="mw-headline"> character set to UTF-8 for a whole archive of MP3 files, you could use the command: </span>
 
-    find . -name "*.mp3" -print0 | xargs -0 mid3iconv -e CP1251 -d -p
+```bash
+find . -name "*.mp3" -print0 | xargs -0 mid3iconv -e CP1251 -d -p
+```
 
 in the base directory of the archive. The **-d** option specifies that the new tag should be printed to the server console (debug mode), and the **-p** option specifies a preview run. This preview will enable you to confirm that the metadata is being read and converted correctly before writing the new tags.
 
 To actually convert all of the tags and strip any legacy ID3v1 tag present from each file at the same time, you could use the command:
 
-    find . -name "*.mp3" -print0 | xargs -0 mid3iconv -e CP1251 --remove-v1
+```bash
+find . -name "*.mp3" -print0 | xargs -0 mid3iconv -e CP1251 --remove-v1
+```
 
 The name of the original character set follows the **-e** option. Other legacy character sets that mid3iconv can convert to UTF-8 include:
 
-    KOI8-R: Russian
-    KOI8-U: Ukrainian
+```
+KOI8-R: Russian
+KOI8-U: Ukrainian
 
-    GBK: Traditional Chinese
-    GB2312: Simplified Chinese
+GBK: Traditional Chinese
+GB2312: Simplified Chinese
 
-    EUC-KR: Korean
-    EUC-JP: Japanese
+EUC-KR: Korean
+EUC-JP: Japanese
 
-    CP1253: Greek
-    CP1254: Turkish
-    CP1255: Hebrew
-    CP1256: Arabic
+CP1253: Greek
+CP1254: Turkish
+CP1255: Hebrew
+CP1256: Arabic
+```
 
 ## Audio loudness
 
 On file ingest, LibreTime analyzes each Ogg Vorbis, MP3, AAC or FLAC file's loudness, and stores a _ReplayGain_ value for that file in its database. At playout time, the ReplayGain value is provided to Liquidsoap so that gain can be automatically adjusted to provide an average output of -14 dBFS loudness (14 decibels below full scale). See https://en.wikipedia.org/wiki/ReplayGain for more details of ReplayGain.
 
-Because of this automatic gain adjustment, any files with average loudness higher than -14 dBFS will not sound louder than quieter files at playout time, but the lower crest factor in the louder files (their relatively low peak-to-average ratio) may be apparent in the output, making those files sound less dynamic. This may be an issue for contemporary popular music, which can average at -9 dBFS or louder before ReplayGain adjustment. (See <https://www.soundonsound.com/sound-advice/dynamic-range-loudness-war> for a detailed analysis of the problem).
+Because of this automatic gain adjustment, any files with average loudness higher than -14 dBFS will not sound louder than quieter files at playout time, but the lower crest factor in the louder files (their relatively low peak-to-average ratio) may be apparent in the output, making those files sound less dynamic. This may be an issue for contemporary popular music, which can average at -9 dBFS or louder before ReplayGain adjustment. (See https://www.soundonsound.com/sound-advice/dynamic-range-loudness-war for a detailed analysis of the problem).
 
-Your station's producers should therefore aim for 14dB between peak and average loudness to maintain the crest factor of their prepared material (also known as _DR14_ on some dynamic range meters, such as the command-line DR14 T.meter available from <https://sourceforge.net/projects/dr14tmeter/>). If the producers are working to a different loudness standard, the ReplayGain modifier in LibreTime's Stream Settings page can be adjusted to suit their material.
+Your station's producers should therefore aim for 14dB between peak and average loudness to maintain the crest factor of their prepared material (also known as _DR14_ on some dynamic range meters, such as the command-line DR14 T.meter available from https://sourceforge.net/projects/dr14tmeter/). If the producers are working to a different loudness standard, the ReplayGain modifier in LibreTime's Stream Settings page can be adjusted to suit their material.
 
 Large transient peaks in otherwise quiet files should be avoided, to guard against the need for peak limiting when ReplayGain is applied to those quieter files.
 
@@ -65,21 +71,25 @@ The **vorbisgain** command-line tool, available in the **vorbisgain** package in
 
 Here is an example of a very quiet file where the use of ReplayGain would make the output more than 17dB louder:
 
-    $ vorbisgain -d Peter_Lawson-Three_Gymn.ogg
-    Analyzing files...
+```bash
+$ vorbisgain -d Peter_Lawson-Three_Gymn.ogg
+Analyzing files...
 
-       Gain   | Peak | Scale | New Peak | Track
-    ----------+------+-------+----------+------
-    +17.39 dB | 4536 |  7.40 |    33585 | Peter_Lawson-Three_Gymn.ogg
+    Gain   | Peak | Scale | New Peak | Track
+----------+------+-------+----------+------
++17.39 dB | 4536 |  7.40 |    33585 | Peter_Lawson-Three_Gymn.ogg
+```
 
 And here is an example of a very loud file, with lower crest factor, where the output will be more than 7dB quieter with ReplayGain applied:
 
-    $ vorbisgain -d Snoop_Dogg-Doggfather.ogg
-    Analyzing files...
+```bash
+$ vorbisgain -d Snoop_Dogg-Doggfather.ogg
+Analyzing files...
 
-       Gain   | Peak  | Scale | New Peak | Track
-    ----------+-------+-------+----------+------
-     -7.86 dB | 36592 |  0.40 |    14804 | Snoop_Dogg-Doggfather.ogg
+   Gain   | Peak  | Scale | New Peak | Track
+----------+-------+-------+----------+------
+ -7.86 dB | 36592 |  0.40 |    14804 | Snoop_Dogg-Doggfather.ogg
+```
 
 In the output from vorbisgain, _Peak_ is the maximum sample value of the file before any ReplayGain has been applied, where a value of 32,767 represents full scale when decoding to signed 16 bit samples. Note that lossy compressed files can have peaks greater than full scale, due to encoding artifacts. The _New Peak_ value for the Snoop Dogg file may be relatively low due to the hard limiting used in the mastering of that piece of music.
 
@@ -93,6 +103,6 @@ Gaps in playout or dead air can have legal repercussions for your station. Check
 
 :::
 
-Quiet introductions or extended fades can also lead to apparent gaps in your broadcast playout. This is more common when playing back audio from ripped CDs or dubbed from tape or vinyl. Long periods of silence should be removed from files before uploading to Libretime.
+Quiet introductions or extended fades can also lead to apparent gaps in your broadcast playout. This is more common when playing back audio from ripped CDs or dubbed from tape or vinyl. Long periods of silence should be removed from files before uploading to LibreTime.
 
 ![](./preparing-media-screenshot126-debra_silence.png)

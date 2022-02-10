@@ -4,7 +4,7 @@ title: Dashboard
 
 :::tip
 
-Want to listen to Libretime's output stream? Click **Listen** below the **On Air** light.
+Want to listen to LibreTime's output stream? Click **Listen** below the **On Air** light.
 
 :::
 

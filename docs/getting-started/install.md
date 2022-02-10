@@ -3,7 +3,7 @@ title: Installation
 sidebar_position: 1
 ---
 
-## Minimum System Requirements
+## Minimum system requirements
 
 - One of the following Linux distributions
   - Ubuntu [current LTS](https://wiki.ubuntu.com/Releases)
@@ -16,7 +16,7 @@ sidebar_position: 1
 
 Configure the server to have a static IP address by modifying the Netplan configuration.
 
-```
+```bash
 cd /etc/netplan && ls  # find the netplan filename
 sudo nano ##-network-manager-all.yaml
 ```
@@ -107,7 +107,7 @@ If an error is returned, try adding `.service` to the end of each command.
 
 :::
 
-## User Permissions
+## User permissions
 
 If you plan to have LibreTime output analog audio directly to a mixing console or transmitter,
 the `www-data` user needs to be added to the `audio` user group using the command below:

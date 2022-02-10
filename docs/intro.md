@@ -4,11 +4,11 @@ sidebar_position: 1
 
 # Introduction
 
-Libretime is an open-source radio automation system. It can be used for music and show playout in a radio studio or start an internet radio station on its own. Libretime runs on Ubuntu and Debian Linux; [we're also working on making Docker images](https://github.com/LibreTime/libretime/issues/949).
+LibreTime is an open-source radio automation system. It can be used for music and show playout in a radio studio or start an internet radio station on its own. LibreTime runs on Ubuntu and Debian Linux; [we're also working on making Docker images](https://github.com/LibreTime/libretime/issues/949).
 
-## Getting Started
+## Getting started
 
-Get started by installing Libretime on your server. Open up your terminal and enter
+Get started by installing LibreTime on your server. Open up your terminal and enter
 
 ```bash
 git clone https://github.com/LibreTime/libretime.git
@@ -49,7 +49,7 @@ When you're done, click **Ok** at the bottom of the window.
 
 You just scheduled your first show! It will automatically begin playing back at the time your show is set to start. You can listen to what is playing live by clicking the **Listen** button under the On Air indicator in the top right corner.
 
-## Next Steps
+## Next steps
 
 - Make sure you [set the time on your server](/docs/getting-started/set-server-time)
 - Learn how to [work with podcasts](/docs/guides/podcasts)
