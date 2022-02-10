@@ -1,14 +1,14 @@
 ---
-title: Backing Up Libretime
+title: Backing up LibreTime
 ---
 
 :::info
 
-At the moment, there is no script to cleanly restore a Libretime backup. To restore a Libretime backup, install a fresh copy, go through the standard setup process, and reupload the backed-up media files.
+At the moment, there is no script to cleanly restore a LibreTime backup. To restore a LibreTime backup, install a fresh copy, go through the standard setup process, and reupload the backed-up media files.
 
 :::
 
-A backup script is supplied for your convenience in the _utils/_ folder of the Libretime repo.
+A backup script is supplied for your convenience in the `utils/` folder of the LibreTime repo.
 Run it using:
 
 ```
@@ -37,13 +37,13 @@ be backed up.
       /organize - A temporary holding place for uploaded media as the importer works
 /etc
   /airtime
-    airtime.conf - The main Libretime configuration
+    airtime.conf - The main LibreTime configuration
     icecast_pass - Holds the password for the Icecast server
     liquidsoap.cfg - The main configuration file for Liquidsoap
 ```
 
 In addition, you should keep a copy of the database current to the backup. The below code
-can be used to export the Libretime database to a file.
+can be used to export the LibreTime database to a file.
 
 ```
 sudo -u postgres pg_dumpall filename

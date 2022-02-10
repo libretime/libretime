@@ -1,5 +1,5 @@
 ---
-title: Local Development
+title: Local development
 ---
 
 ## Vagrant
@@ -112,7 +112,7 @@ multipass shell ltTEST
 ```
 
 Multipass isn't currently able to do an automated install from the cloud-init script.
-After you enter the shell for the first time, you will still need to [run the Libretime installer](/docs/getting-started/install).
+After you enter the shell for the first time, you will still need to [run the LibreTime installer](/docs/getting-started/install).
 
 The IP address of your new VM can be found by running `multipass list`. Copy and paste it into your web browser to access the LibreTime interface and complete the setup wizard.
 

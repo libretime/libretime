@@ -1,8 +1,8 @@
 ---
-title: Contribute to Libretime
+title: Contribute to LibreTime
 ---
 
-# Contribute to Libretime
+# Contribute to LibreTime
 
 LibreTime is a fork of AirTime due to stalled development of the open source version. For background on this, see this [open letter to the Airtime community](https://gist.github.com/hairmare/8c03b69c9accc90cfe31fd7e77c3b07d).
 
@@ -73,7 +73,7 @@ financially, you can do so through our
 
 LibreTime can run in over 15 different languages due to the gracious help of our volunteers.
 
-Libretime is now localized using [Weblate](https://weblate.org/en/). If you would like to contribute a language translation, create an account and start working on [our Weblate page](https://hosted.weblate.org/projects/libretime/).
+LibreTime is now localized using [Weblate](https://weblate.org/en/). If you would like to contribute a language translation, create an account and start working on [our Weblate page](https://hosted.weblate.org/projects/libretime/).
 
 ## Write documentation
 

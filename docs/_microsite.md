@@ -1,5 +1,5 @@
 ---
-title: Built-in Microsite
+title: Built-in microsite
 ---
 
 ![](/img/radio-page.png)
@@ -8,7 +8,7 @@ LibreTime includes a microsite, which can be accessed at _serverIP_ or a domain 
 logo and station description (set under Settings > General), the login button to the LibreTime interface, the schedule for the next seven days,
 podcast tabs, and a live feed of your station with information on the the currently playing artist and track.
 
-## Modifying the LibreTime Radio Page
+## Modifying the LibreTime radio page
 
 The background of the mini-site that appears when you visit the server's domain in your web browser can be changed by modifying the page's CSS file, located at `/usr/share/airtime/php/legacy/public/css/radio-page/radio-page.css`.
 

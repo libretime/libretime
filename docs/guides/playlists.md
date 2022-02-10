@@ -1,5 +1,5 @@
 ---
-title: Playlists and Smartblocks
+title: Playlists and smart blocks
 ---
 
 ## Creating a new playlist
@@ -24,9 +24,9 @@ When your playlist is complete, click the **New** button in the top left corner 
 
 If you want to edit the playlist content or metadata later, you can find it by **Title**, **Creator**, **Last Modified** date, **Length**, **Owner** or **Year** using one of the search tools on the Library page. Click the playlist in the search results list, and then click **Edit** from the pop-up menu. You can also **Preview** the entire playlist in a pop-up audition window, **Duplicate** or **Delete** one of your playlists from this menu.
 
-### Autoloading Playlists
+### Auto loading playlists
 
-Libretime will schedule tracks from a selected playlist an hour before a show is scheduled to air. This is a great way to automatically schedule weekly shows which are received via. podcasts.
+LibreTime will schedule tracks from a selected playlist an hour before a show is scheduled to air. This is a great way to automatically schedule weekly shows which are received via. podcasts.
 
 ## Creating a Smartblock
 

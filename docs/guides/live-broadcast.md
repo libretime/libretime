@@ -48,7 +48,7 @@ configured in the LibreTime **Streams** page, on LibreTime's **System** menu.
 6. Still in settings click, **Audio** and select your audio input device under
    **Audio Device**
 
-### Show Time
+### Show time
 
 1. When its almost your show time go to your LibreTime page and look at the time in the top right when your show starts go to Butt.
 2. Click the white Play button (third button in the middle).

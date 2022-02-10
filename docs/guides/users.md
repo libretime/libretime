@@ -1,5 +1,5 @@
 ---
-title: Managing Users
+title: Managing users
 ---
 
 :::danger
@@ -8,7 +8,7 @@ It is strongly recommended not to use the default `admin` account in production,
 
 :::
 
-## User Account Types
+## User account types
 
 To add further user accounts to the system, one for each of your station staff that need access to Airtime, click the **New User** button with the plus icon. Enter a user name, password and contact details, and then select the **User Type** from the drop down menu, which can be _Admin_, _Program Manager_, _DJ_, or _Guest_.
 
@@ -25,7 +25,7 @@ To add further user accounts to the system, one for each of your station staff t
 - Preview uploaded media _without_ affecting the live playout
 - Create Playlists, Smart Blocks, and connect Podcasts and Webstreams to LibreTime
 
-### Program Managers
+### Program managers
 
 - Everything DJs can do, plus
 - Manage other users' libraries in addition to their own

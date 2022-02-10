@@ -18,9 +18,11 @@ Although it is possible to set the date and time of the server manually, this is
 
 Optionally, open the **ntp** configuration file in the **nano** editor to add further time server names:
 
-    sudo nano /etc/ntp.conf
+```
+sudo nano /etc/ntp.conf
+```
 
-On Ubuntu GNU/Linux, the default time server is _ntp.ubuntu.com_, but there are many other time servers available on the public Internet, including the group of servers listed at <http://www.pool.ntp.org/> for each country. Using a variety of NTP servers located closely to your LibreTime server should produce the most accurate results. For example, for a server in the United Kingdom you could use the following list:
+On Ubuntu GNU/Linux, the default time server is `ntp.ubuntu.com`, but there are many other time servers available on the public Internet, including the group of servers listed at https://www.pool.ntp.org/ for each country. Using a variety of NTP servers located closely to your LibreTime server should produce the most accurate results. For example, for a server in the United Kingdom you could use the following list:
 
 ```title="/etc/ntp.conf"
 # You do need to talk to an NTP server or two (or three).
@@ -31,7 +33,7 @@ server 2.uk.pool.ntp.org
 server 3.uk.pool.ntp.org
 ```
 
-Enter the server names you require, press **Ctrl+O** to write out the _/etc/ntp.conf_ file, then **Ctrl+X** to exit **nano**. Restart the **ntp** service with `sudo systemctl restart ntp`.
+Enter the server names you require, press **Ctrl+O** to write out the `/etc/ntp.conf` file, then **Ctrl+X** to exit **nano**. Restart the **ntp** service with `sudo systemctl restart ntp`.
 
 The server should respond:
 

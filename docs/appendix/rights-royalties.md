@@ -1,5 +1,5 @@
 ---
-title: Rights and Royalties
+title: Rights and royalties
 ---
 
 If you're new to broadcasting, or have not streamed your station online before,
@@ -52,8 +52,8 @@ the last few years, since not having the right licences could leave the operator
 liable to legal action.
 
 If you want to go down the commercial music route, check out the
-<https://www.prsformusic.com> and <https://www.ppluk.com> websites for UK licence
-details. In the USA, the <https://www.soundexchange.com> website currently quotes
+https://www.prsformusic.com and https://www.ppluk.com websites for UK licence
+details. In the USA, the https://www.soundexchange.com website currently quotes
 a 500 dollar minimum annual fee for non-commercial webcasters, plus a usage fee
 above a certain number of listener hours, for the right to stream music
 recordings to listeners. See the websites of [ASCAP](https://www.ascap.com),
@@ -74,7 +74,7 @@ previously joined one of the many royalty collection societies around the world.
 You can ask for permission to stream when website visitors upload their own
 music files to you via a HTML form, much as the likes of SoundCloud do. Or you
 can collect files licensed under an appropriate Creative Commons licence
-(<https://www.creativecommons.org>) or other free content licence.
+(https://www.creativecommons.org) or other free content licence.
 
 Explicit permission to stream on your particular server is always going to be
 the ideal, so think about your own terms and conditions before you accept files
