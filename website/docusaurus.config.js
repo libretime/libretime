@@ -12,7 +12,7 @@ const config = {
   baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "throw",
-  favicon: "img/favicon.ico",
+  favicon: "img/icon.svg",
   organizationName: "libretime",
   projectName: "libretime",
   trailingSlash: true,
@@ -57,7 +57,7 @@ const config = {
         title: "Libretime",
         logo: {
           alt: "Libretime tower",
-          src: "img/logo.svg",
+          src: "img/icon.svg",
         },
         items: [
           {
