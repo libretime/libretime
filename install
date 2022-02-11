@@ -677,6 +677,7 @@ case "${dist}-${code}" in
     ;;
   ubuntu-18.04)
     code="bionic"
+    # shellcheck disable=SC2034
     is_ubuntu_dist=true
     is_ubuntu_bionic=true
     ;;
@@ -768,10 +769,6 @@ if [ "$ignore_dependencies" = "f" ]; then
   loud "\n-----------------------------------------------------"
   loud "         * Installing External Dependencies *        "
   loud "-----------------------------------------------------"
-
-  if $is_ubuntu_dist; then
-    loudCmd "add-apt-repository -y ppa:libretime/libretime"
-  fi
 
   if [ -x /usr/bin/apt-get ]; then
     verbose "\n * Reading packages.ini files..."
