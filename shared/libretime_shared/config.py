@@ -128,5 +128,5 @@ class RabbitMQConfig(BaseModel):
     def url(self) -> str:
         return (
             f"amqp://{self.user}:{self.password}"
-            f"@{self.host}:{self.port}/{self.vhost.lstrip('/')}"
+            f"@{self.host}:{self.port}/{self.vhost}"
         )
