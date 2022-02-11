@@ -13,14 +13,18 @@ AUDIO_IMPORT_DEST = f"Test Artist/Test Album/{AUDIO_FILENAME}"
 
 
 @pytest.fixture()
-def dest_dir(tmp_path):
-    yield tmp_path
+def dest_dir(tmp_path: Path):
+    dest = tmp_path / "dest"
+    dest.mkdir()
+    yield dest
 
 
 @pytest.fixture()
-def src_dir(tmp_path):
-    shutil.copy(AUDIO_FILE, tmp_path)
-    yield tmp_path
+def src_dir(tmp_path: Path):
+    src = tmp_path / "src"
+    src.mkdir()
+    shutil.copy(AUDIO_FILE, src)
+    yield src
 
 
 def context_factory(filepath: Path):
