@@ -31,7 +31,7 @@ setup(
     python_requires=">=3.6",
     install_requires=[
         "mutagen>=1.31.0",
-        "pika>=1.0.0",
+        "kombu",
         "file-magic",
         "requests>=2.7.0",
         "typing_extensions",
