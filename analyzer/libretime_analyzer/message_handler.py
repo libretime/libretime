@@ -3,8 +3,8 @@ from kombu.mixins import ConsumerProducerMixin
 from loguru import logger
 from pydantic import ValidationError
 
-from .report import report_to_callback
 from .pipeline import Context, run_pipeline
+from .report import report_to_callback
 
 ANALYZER_EXCHANGE = Exchange(
     name="analyzer",
