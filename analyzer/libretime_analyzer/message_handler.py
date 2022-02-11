@@ -3,6 +3,7 @@ from kombu.mixins import ConsumerProducerMixin
 from loguru import logger
 from pydantic import ValidationError
 
+from .report import report_to_callback
 from .pipeline import Context, run_pipeline
 
 ANALYZER_EXCHANGE = Exchange(
@@ -82,8 +83,13 @@ class MessageHandler(ConsumerProducerMixin):
             return
 
         try:
-            # TODO: Send request to api to save the result
+
             logger.info(f"received context {ctx}")
+
+            report_to_callback(ctx)
+
             message.ack()
         except Exception as exception:
             logger.error(exception)
+            # Only reque on unreachable server, failed request should be rejected
+            message.requeue()
