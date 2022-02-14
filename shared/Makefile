@@ -8,6 +8,6 @@ MYPY_ARG = libretime_shared
 PYTEST_ARG = --cov=libretime_shared tests
 
 format: .format
-lint: .pylint .mypy
+lint: .format-check .pylint .mypy
 test: .pytest
 clean: .clean
