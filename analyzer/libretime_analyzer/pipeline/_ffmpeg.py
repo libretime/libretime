@@ -38,6 +38,7 @@ def probe_replaygain(filepath: Path) -> Optional[float]:
 
     if track_gain_match:
         return float(track_gain_match.group(1))
+    return None
 
 
 _COMPUTE_REPLAYGAIN_RE = re.compile(
@@ -55,6 +56,7 @@ def compute_replaygain(filepath: Path) -> Optional[float]:
 
     if track_gain_match:
         return float(track_gain_match.group(1))
+    return None
 
 
 _SILENCE_DETECT_RE = re.compile(
