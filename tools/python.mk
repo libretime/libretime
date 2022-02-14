@@ -1,5 +1,6 @@
 .ONESHELL:
 
+.DEFAULT_GOAL = install
 SHELL = bash
 CPU_CORES = $(shell nproc)
 
