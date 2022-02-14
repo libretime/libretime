@@ -5,7 +5,7 @@ from typing import Any, Dict
 
 from loguru import logger
 
-from ..ffmpeg import compute_silences, probe_duration
+from ._ffmpeg import compute_silences, probe_duration
 
 
 def analyze_cuepoint(filepath: str, metadata: Dict[str, Any]) -> Dict[str, Any]:

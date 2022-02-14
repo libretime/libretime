@@ -1,7 +1,7 @@
 from subprocess import CalledProcessError
 from typing import Any, Dict
 
-from ..ffmpeg import compute_replaygain, probe_replaygain
+from ._ffmpeg import compute_replaygain, probe_replaygain
 
 
 def analyze_replaygain(filepath: str, metadata: Dict[str, Any]):
