@@ -6,10 +6,13 @@ CPU_CORES = $(shell nproc)
 # PIP_INSTALL = --editable .
 # PYLINT_ARG =
 # MYPY_ARG =
+# BANDIT_ARG =
 # PYTEST_ARG =
 
 SHARED_DEV_REQUIREMENTS = \
+	bandit \
 	black \
+	flake8 \
 	isort \
 	mypy \
 	pylint \
@@ -50,6 +53,11 @@ install: $(VENV)
 .mypy: $(VENV)
 	source $(VENV)/bin/activate
 	mypy $(MYPY_ARG)
+
+.PHONY: .bandit
+.bandit: $(VENV)
+	source $(VENV)/bin/activate
+	bandit -r $(BANDIT_ARG)
 
 .PHONY: .pytest
 .pytest: $(VENV)
