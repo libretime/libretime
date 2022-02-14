@@ -3,7 +3,7 @@ from math import inf
 import distro
 import pytest
 
-from libretime_analyzer.ffmpeg import (
+from libretime_analyzer.pipeline._ffmpeg import (
     _SILENCE_DETECT_RE,
     compute_replaygain,
     compute_silences,
@@ -11,7 +11,7 @@ from libretime_analyzer.ffmpeg import (
     probe_replaygain,
 )
 
-from .fixtures import FILES
+from ..fixtures import FILES
 
 
 @pytest.mark.skip(reason="fixtures files are missing replaygain metadata")
