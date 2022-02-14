@@ -30,9 +30,8 @@ setup(
     },
     python_requires=">=3.6",
     install_requires=[
-        "mutagen>=1.31.0",
+        "mutagen>=1.45.1",
         "pika>=1.0.0",
-        "file-magic",
         "requests>=2.7.0",
         "typing_extensions",
     ],
