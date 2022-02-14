@@ -118,9 +118,7 @@ def send_http_request(picklable_request, retry_queue):
         bare_request = picklable_request.create_request()
         s = requests.Session()
         prepared_request = s.prepare_request(bare_request)
-        r = s.send(
-            prepared_request, timeout=StatusReporter._HTTP_REQUEST_TIMEOUT, verify=False
-        )  # SNI is a pain in the ass
+        r = s.send(prepared_request, timeout=StatusReporter._HTTP_REQUEST_TIMEOUT)
         r.raise_for_status()  # Raise an exception if there was an http error code returned
         logger.info("HTTP request sent successfully.")
     except requests.exceptions.HTTPError as e:
@@ -163,7 +161,7 @@ def is_web_server_broken(url):
     caused by Airtime or the webserver itself being broken temporarily.
     """
     try:
-        test_req = requests.get(url, verify=False)
+        test_req = requests.get(url)
         test_req.raise_for_status()
     except Exception as e:
         return True
