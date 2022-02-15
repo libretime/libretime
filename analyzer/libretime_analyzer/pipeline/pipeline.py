@@ -1,121 +1,54 @@
-""" Analyzes and imports an audio file into the Airtime library.
-"""
-from enum import Enum
-from queue import Queue
-from typing import Any, Dict
+from typing import List
 
 from loguru import logger
 from typing_extensions import Protocol
 
 from .analyze_cuepoint import analyze_cuepoint
 from .analyze_metadata import analyze_metadata
-from .analyze_playability import UnplayableFileError, analyze_playability
+from .analyze_playability import analyze_playability
 from .analyze_replaygain import analyze_replaygain
+from .context import Context, Status
+from .exceptions import PipelineError, StepError
 from .organise_file import organise_file
 
 
 class Step(Protocol):
     @staticmethod
-    def __call__(filename: str, metadata: Dict[str, Any]):
+    def __call__(ctx: Context) -> Context:
         ...
 
 
-class PipelineStatus(int, Enum):
-    succeed = 0
-    pending = 1
-    failed = 2
-
-
-class Pipeline:
-    """Analyzes and imports an audio file into the Airtime library.
-
-    This currently performs metadata extraction (eg. gets the ID3 tags from an MP3),
-    then moves the file to the Airtime music library (stor/imported), and returns
-    the results back to the parent process. This class is used in an isolated process
-    so that if it crashes, it does not kill the entire airtime_analyzer daemon and
-    the failure to import can be reported back to the web application.
+def run_pipeline(ctx: Context) -> Context:
     """
+    Run each pipeline step on the incoming audio file.
 
-    @staticmethod
-    def run_analysis(
-        queue,
-        audio_file_path,
-        import_directory,
-        original_filename,
-        storage_backend,
-        file_prefix,
-    ):
-        """Analyze and import an audio file, and put all extracted metadata into queue.
+    If a `Step` raise a `StepError`, the pipeline will stop and the error will be
+    reported back to the API.
 
-        Keyword arguments:
-            queue: A multiprocessing.queues.Queue which will be used to pass the
-                   extracted metadata back to the parent process.
-            audio_file_path: Path on disk to the audio file to analyze.
-            import_directory: Path to the final Airtime "import" directory where
-                              we will move the file.
-            original_filename: The original filename of the file, which we'll try to
-                               preserve. The file at audio_file_path typically has a
-                               temporary randomly generated name, which is why we want
-                               to know what the original name was.
-            storage_backend: String indicating the storage backend (amazon_s3 or file)
-            file_prefix:
-        """
-        try:
-            if not isinstance(queue, Queue):
-                raise TypeError("queue must be a Queue.Queue()")
-            if not isinstance(audio_file_path, str):
-                raise TypeError(
-                    "audio_file_path must be unicode. Was of type "
-                    + type(audio_file_path).__name__
-                    + " instead."
-                )
-            if not isinstance(import_directory, str):
-                raise TypeError(
-                    "import_directory must be unicode. Was of type "
-                    + type(import_directory).__name__
-                    + " instead."
-                )
-            if not isinstance(original_filename, str):
-                raise TypeError(
-                    "original_filename must be unicode. Was of type "
-                    + type(original_filename).__name__
-                    + " instead."
-                )
-            if not isinstance(file_prefix, str):
-                raise TypeError(
-                    "file_prefix must be unicode. Was of type "
-                    + type(file_prefix).__name__
-                    + " instead."
-                )
+    If a `Step` raise a `PipelineError`, the pipeline will stop and the analyzer
+    reject the message. User should take action to fix any `PipelineError`, such as
+    missing executables or else.
+    """
+    steps: List[Step] = [
+        analyze_playability,
+        analyze_metadata,
+        analyze_cuepoint,
+        analyze_replaygain,
+        organise_file,
+    ]
 
-            # Analyze the audio file we were told to analyze:
-            # First, we extract the ID3 tags and other metadata:
-            metadata = dict()
-            metadata["file_prefix"] = file_prefix
+    if not ctx.filepath.is_file():
+        raise PipelineError(f"invalid or missing file {ctx.filepath}")
 
-            metadata = analyze_metadata(audio_file_path, metadata)
-            metadata = analyze_cuepoint(audio_file_path, metadata)
-            metadata = analyze_replaygain(audio_file_path, metadata)
-            metadata = analyze_playability(audio_file_path, metadata)
+    try:
+        for step in steps:
+            ctx = step(ctx)
 
-            metadata = organise_file(
-                audio_file_path, import_directory, original_filename, metadata
-            )
+        ctx.status = Status.SUCCEED
 
-            metadata["import_status"] = 0  # Successfully imported
+    except StepError as exception:
+        ctx.status = Status.FAILED
+        ctx.error = str(exception)
+        logger.warning(exception)
 
-            # Note that the queue we're putting the results into is our interprocess communication
-            # back to the main process.
-
-            # Pass all the file metadata back to the main analyzer process, which then passes
-            # it back to the Airtime web application.
-            queue.put(metadata)
-        except UnplayableFileError as e:
-            logger.exception(e)
-            metadata["import_status"] = PipelineStatus.failed
-            metadata["reason"] = "The file could not be played."
-            raise e
-        except Exception as e:
-            # Ensures the traceback for this child process gets written to our log files:
-            logger.exception(e)
-            raise e
+    return ctx

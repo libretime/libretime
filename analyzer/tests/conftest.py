@@ -4,6 +4,8 @@ from pathlib import Path
 import pytest
 from libretime_shared.logging import TRACE, setup_logger
 
+from libretime_analyzer.pipeline.context import Context
+
 from .fixtures import fixtures_path
 
 setup_logger(TRACE)
@@ -26,3 +28,17 @@ def src_dir(tmp_path: Path):
     src.mkdir()
     shutil.copy(AUDIO_FILE, src)
     yield src
+
+
+def context_factory(
+    filepath: Path,
+    original_filename=AUDIO_FILENAME,
+    storage_url="",
+):
+    return Context(
+        filepath=filepath,
+        original_filename=str(original_filename),
+        storage_url=str(storage_url),
+        callback_api_key="",
+        callback_url="",
+    )

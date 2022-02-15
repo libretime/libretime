@@ -1,4 +1,4 @@
-from subprocess import PIPE, CalledProcessError, CompletedProcess, run
+from subprocess import PIPE, CompletedProcess, run
 
 from loguru import logger
 
@@ -14,11 +14,7 @@ def run_(*args, **kwargs) -> CompletedProcess:
             **kwargs,
         )
 
-    except OSError as exception:  # executable was not found
+    except FileNotFoundError as exception:  # executable was not found
         cmd = args[0]
-        logger.warning(f"Failed to run: {cmd} - {exception}. Is {cmd} installed?")
-        raise exception
-
-    except CalledProcessError as exception:  # returned an error code
-        logger.error(exception)
+        logger.error(f"Failed to run: {cmd} - {exception}. Is {cmd} installed?")
         raise exception

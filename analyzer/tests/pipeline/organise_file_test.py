@@ -5,25 +5,24 @@ import pytest
 
 from libretime_analyzer.pipeline.organise_file import organise_file
 
-from ..conftest import AUDIO_FILENAME
+from ..conftest import AUDIO_FILENAME, context_factory
 
 
-def organise_file_args_factory(filepath: Path, dest_dir: Path):
-    return (
-        str(filepath),
-        str(dest_dir),
-        AUDIO_FILENAME,
-        {},
+def organise_file_context_factory(filepath: Path, dest_dir: Path):
+    return context_factory(
+        filepath,
+        original_filename=AUDIO_FILENAME,
+        storage_url=dest_dir,
     )
 
 
 def test_organise_file(src_dir: Path, dest_dir: Path):
-    organise_file(*organise_file_args_factory(src_dir / AUDIO_FILENAME, dest_dir))
+    organise_file(organise_file_context_factory(src_dir / AUDIO_FILENAME, dest_dir))
     assert (dest_dir / AUDIO_FILENAME).exists()
 
 
 def test_organise_file_samefile(src_dir: Path):
-    organise_file(*organise_file_args_factory(src_dir / AUDIO_FILENAME, src_dir))
+    organise_file(organise_file_context_factory(src_dir / AUDIO_FILENAME, src_dir))
     assert (src_dir / AUDIO_FILENAME).exists()
 
 
@@ -33,11 +32,11 @@ def test_organise_file_duplicate_file(src_dir: Path, dest_dir: Path):
         filename = f"{i}_{AUDIO_FILENAME}"
         shutil.copy(src_dir / AUDIO_FILENAME, src_dir / filename)
 
-        metadata = organise_file(
-            *organise_file_args_factory(src_dir / filename, dest_dir)
+        found = organise_file(
+            organise_file_context_factory(src_dir / filename, dest_dir)
         )
 
-        full_path = Path(metadata["full_path"])
+        full_path = Path(found.metadata["full_path"])
         assert full_path.exists()
         if i == 1:
             assert full_path.name == AUDIO_FILENAME
@@ -49,8 +48,5 @@ def test_organise_file_bad_permissions_dest_dir(src_dir: Path):
     with pytest.raises(OSError):
         # /sys is using sysfs on Linux, which is unwritable
         organise_file(
-            *organise_file_args_factory(
-                src_dir / AUDIO_FILENAME,
-                Path("/sys/foobar"),
-            )
+            organise_file_context_factory(src_dir / AUDIO_FILENAME, "/sys/foobar")
         )

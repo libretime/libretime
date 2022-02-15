@@ -1,52 +1,51 @@
 import hashlib
 from datetime import timedelta
 from pathlib import Path
-from typing import Any, Dict
 
 import mutagen
 from loguru import logger
 
+from .context import Context
 
-def analyze_metadata(filepath_: str, metadata: Dict[str, Any]):
+
+def analyze_metadata(ctx: Context) -> Context:
     """
     Extract audio metadata from tags embedded in the file using mutagen.
     """
-    filepath = Path(filepath_)
-
     # Airtime <= 2.5.x required fields
-    metadata["ftype"] = "audioclip"
-    metadata["hidden"] = False
+    ctx.metadata["ftype"] = "audioclip"
+    ctx.metadata["hidden"] = False
 
     # Get file properties
-    metadata["filesize"] = filepath.stat().st_size
-    metadata["md5"] = compute_md5(filepath)
+    ctx.metadata["filesize"] = ctx.filepath.stat().st_size
+    ctx.metadata["md5"] = compute_md5(ctx.filepath)
 
     # Get audio file metadata
-    extracted = mutagen.File(filepath, easy=True)
+    extracted = mutagen.File(ctx.filepath, easy=True)
     if extracted is None:
-        logger.warning(f"no metadata were extracted for {filepath}")
-        return metadata
+        logger.warning(f"no metadata were extracted for {ctx.filepath}")
+        return ctx
 
-    metadata["mime"] = extracted.mime[0]
+    ctx.metadata["mime"] = extracted.mime[0]
 
     info = extracted.info
     if hasattr(info, "sample_rate"):
-        metadata["sample_rate"] = info.sample_rate
+        ctx.metadata["sample_rate"] = info.sample_rate
 
     if hasattr(info, "bitrate"):
-        metadata["bit_rate"] = info.bitrate
+        ctx.metadata["bit_rate"] = info.bitrate
 
     if hasattr(info, "length"):
-        metadata["length_seconds"] = info.length
-        metadata["length"] = str(timedelta(seconds=info.length))
+        ctx.metadata["length_seconds"] = info.length
+        ctx.metadata["length"] = str(timedelta(seconds=info.length))
 
     try:
         # Special handling for the number of channels in mp3 files.
         # 0=stereo, 1=joint stereo, 2=dual channel, 3=mono
-        if metadata["mime"] in ("audio/mpeg", "audio/mp3"):
-            metadata["channels"] = 1 if info.mode == 3 else 2
+        if ctx.metadata["mime"] in ("audio/mpeg", "audio/mp3"):
+            ctx.metadata["channels"] = 1 if info.mode == 3 else 2
         else:
-            metadata["channels"] = info.channels
+            ctx.metadata["channels"] = info.channels
     except (AttributeError, KeyError):
         pass
 
@@ -63,9 +62,9 @@ def analyze_metadata(filepath_: str, metadata: Dict[str, Any]):
         elif "-" in track_number:
             track_number_tokens = track_number.split("-")
             track_number = track_number_tokens[0]
-        metadata["track_number"] = track_number
+        ctx.metadata["track_number"] = track_number
         track_total = track_number_tokens[1]
-        metadata["track_total"] = track_total
+        ctx.metadata["track_total"] = track_total
     except (AttributeError, KeyError, IndexError):
         pass
 
@@ -98,16 +97,16 @@ def analyze_metadata(filepath_: str, metadata: Dict[str, Any]):
 
     for extracted_key, metadata_key in extracted_tags_mapping.items():
         try:
-            metadata[metadata_key] = extracted[extracted_key]
-            if isinstance(metadata[metadata_key], list):
-                if len(metadata[metadata_key]):
-                    metadata[metadata_key] = metadata[metadata_key][0]
+            ctx.metadata[metadata_key] = extracted[extracted_key]
+            if isinstance(ctx.metadata[metadata_key], list):
+                if len(ctx.metadata[metadata_key]):
+                    ctx.metadata[metadata_key] = ctx.metadata[metadata_key][0]
                 else:
-                    metadata[metadata_key] = ""
+                    ctx.metadata[metadata_key] = ""
         except KeyError:
             continue
 
-    return metadata
+    return ctx
 
 
 def compute_md5(filepath: Path) -> str:

@@ -1,45 +1,29 @@
-__author__ = "asantoni"
+from subprocess import CalledProcessError
 
-import subprocess
-from typing import Any, Dict
-
-from loguru import logger
-
-
-class UnplayableFileError(Exception):
-    pass
+from ._liquidsoap import _liquidsoap
+from .context import Context
+from .exceptions import PipelineError, StepError
 
 
-LIQUIDSOAP_EXECUTABLE = "liquidsoap"
-
-
-def analyze_playability(filename: str, metadata: Dict[str, Any]):
-    """Checks if a file can be played by Liquidsoap.
-    :param filename: The full path to the file to analyzer
-    :param metadata: A metadata dictionary where the results will be put
-    :return: The metadata dictionary
+def analyze_playability(ctx: Context) -> Context:
     """
-    command = [
-        LIQUIDSOAP_EXECUTABLE,
-        "-v",
-        "-c",
-        "output.dummy(audio_to_stereo(single(argv(1))))",
-        "--",
-        filename,
-    ]
+    Checks if a file can be played by liquidsoap.
+    """
     try:
-        subprocess.check_output(command, stderr=subprocess.STDOUT, close_fds=True)
-
-    except OSError as e:  # liquidsoap was not found
-        logger.warning(
-            "Failed to run: %s - %s. %s"
-            % (command[0], e.strerror, "Do you have liquidsoap installed?")
+        _liquidsoap(
+            "--verbose",
+            "--check",
+            "output.dummy(audio_to_stereo(single(argv(1))))",
+            "--",
+            str(ctx.filepath),
         )
-    except (
-        subprocess.CalledProcessError,
-        Exception,
-    ) as e:  # liquidsoap returned an error code
-        logger.warning(e)
-        raise UnplayableFileError()
 
-    return metadata
+    except CalledProcessError as exception:  # liquidsoap returned an error
+        raise StepError("The file could not be played by liquidsoap.") from exception
+
+    except FileNotFoundError as exception:
+        raise PipelineError(
+            f"could not analyze playability for {ctx.filepath}"
+        ) from exception
+
+    return ctx
