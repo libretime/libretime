@@ -1,5 +1,5 @@
-import datetime
-import os
+from datetime import timedelta
+from pathlib import Path
 from queue import Queue
 
 import pytest
@@ -9,12 +9,12 @@ from libretime_analyzer.pipeline import Pipeline
 from ..conftest import AUDIO_FILENAME, AUDIO_IMPORT_DEST
 
 
-def test_run_analysis(src_dir, dest_dir):
+def test_run_analysis(src_dir: Path, dest_dir: Path):
     queue = Queue()
     Pipeline.run_analysis(
         queue,
-        os.path.join(src_dir, AUDIO_FILENAME),
-        dest_dir,
+        str(src_dir / AUDIO_FILENAME),
+        str(dest_dir),
         AUDIO_FILENAME,
         "file",
         "",
@@ -28,10 +28,8 @@ def test_run_analysis(src_dir, dest_dir):
     assert metadata["genre"] == "Test Genre"
     assert metadata["mime"] == "audio/mp3"
     assert metadata["length_seconds"] == pytest.approx(15.0, abs=0.1)
-    assert metadata["length"] == str(
-        datetime.timedelta(seconds=metadata["length_seconds"])
-    )
-    assert os.path.exists(os.path.join(dest_dir, AUDIO_IMPORT_DEST))
+    assert metadata["length"] == str(timedelta(seconds=metadata["length_seconds"]))
+    assert (dest_dir / AUDIO_IMPORT_DEST).exists()
 
 
 @pytest.mark.parametrize(
