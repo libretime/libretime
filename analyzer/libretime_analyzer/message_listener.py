@@ -125,9 +125,9 @@ class MessageListener:
         # If you try to close a connection that's already closed, you're going to have a bad time.
         # We're breaking EAFP because this can be called multiple times depending on exception
         # handling flow here.
-        if not self._channel.is_closed and not self._channel.is_closing:
+        if not self._channel.is_closed:
             self._channel.stop_consuming()
-        if not self._connection.is_closed and not self._connection.is_closing:
+        if not self._connection.is_closed:
             self._connection.close()
 
     def graceful_shutdown(self, signum, frame):
