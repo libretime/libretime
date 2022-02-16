@@ -18,7 +18,7 @@ Compress with: http://jscompress.com/
             csvOutput = "",
             csvRows = [],
             BREAK = '\r\n',
-            DELIMITER = ',',
+            DELIMITER = ';',
 			FILENAME = "export.csv";
 
         // Get and Write the headers
