@@ -35,11 +35,11 @@ Here, these will be `libretime.example.com` and `icecast.example.com`.
 You will also require two VMs, servers or containers. Alternatively the reverse proxy can
 be located on the server, proxying connections to containers also on the host. Setting up
 a containerization environment is beyond the scope of this guide. It assumes that you have
-Nginx set up on `proxy` and LibreTime will be installed on `libretime`. You will need root
-access on both. `libretime` also needs to be able to be accessed from `proxy`
-(`ping libretime` on `proxy`).
+Nginx set up on `localhost` and LibreTime will be installed on `192.168.1.10`. You will need root
+access on both. `192.168.1.10` also needs to be able to be accessed from `localhost`
+(`ping 192.168.1.10` on `localhost`).
 
-On `libretime`, install LibreTime as described in the [install guide](/docs/getting-started/install). Once it has installed, replace `<hostname>localhost</hostname>` in
+On `192.168.1.10`, install LibreTime as described in the [install guide](/docs/getting-started/install). Once it has installed, replace `<hostname>localhost</hostname>` in
 `/etc/icecast2/icecast.xml` with the following:
 
 ```xml
@@ -49,7 +49,7 @@ On `libretime`, install LibreTime as described in the [install guide](/docs/gett
 This is the hostname that people listening to your stream will connect to and what
 LibreTime will use to stream out to them. You will then need to restart Icecast using `sudo systemctl restart icecast2`.
 
-On `proxy`, run the following:
+On `localhost`, run the following:
 
 ```bash
 cat << EOF | sudo tee /etc/nginx/sites-available/libretime.conf
