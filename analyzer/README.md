@@ -61,9 +61,9 @@ To send an test message to libretime-analyzer, you can use the message_sender.ph
 For example, run:
 
 ```bash
-php tools/message_sender.php '{ "tmp_file_path" : "foo.mp3", "final_directory" : ".", "callback_url" : "http://airtime.localhost/rest/media/1", "api_key" : "YOUR_API_KEY" }'
+php tools/message_sender.php '{ "tmp_file_path" : "foo.mp3", "final_directory" : ".", "callback_url" : "http://localhost/rest/media/1", "api_key" : "YOUR_API_KEY" }'
 
-php tools/message_sender.php '{"tmp_file_path":"foo.mp3", "import_directory":"/srv/airtime/stor/imported/1","original_filename":"foo.mp3","callback_url": "http://airtime.localhost/rest/media/1", "api_key":"YOUR_API_KEY"}'
+php tools/message_sender.php '{"tmp_file_path":"foo.mp3", "import_directory":"/srv/airtime/stor/imported/1","original_filename":"foo.mp3","callback_url": "http://localhost/rest/media/1", "api_key":"YOUR_API_KEY"}'
 ```
 
 ## Logging

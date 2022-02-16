@@ -71,14 +71,14 @@ server {
     location / {
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
-        proxy_pass http://libretime/;
+        proxy_pass http://192.168.1.10/;
     }
 }
 EOF
 ```
 
 This Nginx configuration ensures that all traffic uses SSL to the reverse proxy, and
-traffic is proxied to `libretime`.
+traffic is proxied to `192.168.1.10`.
 
 Next, the SSL certificate needs to be generated and the site activated.
 
@@ -89,7 +89,7 @@ sudo certbot certonly -d libretime.example.com -a standalone
 sudo systemctl start nginx
 ```
 
-You can now go to *https://libretime.example.com* and go
+You can now go to `https://libretime.example.com` and go
 through the installer. On `General Settings`, you need to change the Webserver Port to
 `443` and add the following CORS URLs:
 

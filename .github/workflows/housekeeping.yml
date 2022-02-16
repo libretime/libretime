@@ -46,6 +46,9 @@ jobs:
             --exclude-all-private
             --exclude-mail
             --exclude 'example\.(com|org)'
+            --exclude '\$server_name\$request_uri'
+            --exclude 'https://dir.xiph.org/cgi-bin/yp-cgi'
+            --exclude 'https://radio.indymedia.org/cgi-bin/yp-cgi'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
