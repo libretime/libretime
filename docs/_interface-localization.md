@@ -52,20 +52,6 @@ and update the header information in the new copy of the `airtime.po` file using
 nano legacy/locale/de_CH/LC_MESSAGES/airtime.po
 ```
 
-For the example of Swiss German, the header of the file should now look like this:
-
-```bash
-# SWISS GERMAN (de_CH) translation for LibreTime.
-# Copyright (C) 2013 Sourcefabric
-# This file is distributed under the same license as the LibreTime package.
-# Sourcefabric <contact@sourcefabric.org>, 2013.
-#
-msgid ""
-msgstr ""
-"Project-Id-Version: LibreTime 3.0-Alpha\n"
-"Report-Msgid-Bugs-To: https://discourse.libretime.org/\n"
-```
-
 After using an online translation tool to begin a new localization, you can load the exported .po file into Poedit and complete your translation there. Enter the localization team's contact information and language into Poedit's **Edit -&gt; Preferences** and **Catalog -&gt; Settings** dialogs, which will be added to the .po file. When you save a .po file in Poedit, the corresponding binary .mo file will be compiled automatically.
 
 Finally, **git add**, **git commit** and **git push** these new .mo and .po files to your GitHub fork of the project, and send a git pull request (https://help.github.com/articles/using-pull-requests) to the LibreTime developers. The localization can then be added to a forthcoming LibreTime release.
