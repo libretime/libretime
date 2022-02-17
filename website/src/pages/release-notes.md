@@ -78,7 +78,7 @@ If you installed from GitHub you can `git pull` in your local working copy and r
 
 Once the update has taken place, you will need to run the following commands to clean up old scripts and configuration:
 
-```shell
+```bash
 # Remove the old packages
 sudo pip3 uninstall \
   airtime-playout \
@@ -144,14 +144,14 @@ Some minimal OS installs do not have a default locale configured. This only seem
 
 You can set up the locale using a combination of the following commands. You might also want to consult the documentation of your VPS provider as it may contain an official way to set up locales when provisioning a VPS.
 
-```shell
+```bash
 # Set locale using systemds localectl
 localectl set-locale LANG="en_US.utf8"
 ```
 
 These instructions do not seem to work on all Debian based distros so you might need to use update-locale as follows.
 
-```shell
+```bash
 #Purge all locales but en_US.UTF-8
 sudo locale-gen --purge en_US.UTF-8
 #Populate LANGUAGE=
