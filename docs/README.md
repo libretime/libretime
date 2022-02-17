@@ -1,6 +1,6 @@
 ---
 title: Welcome
-position: 00
+sidebar_position: 10
 ---
 
 Welcome to the **LibreTime documentation**, you should find everything you need to know about LibreTime.

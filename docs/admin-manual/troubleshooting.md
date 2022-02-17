@@ -1,5 +1,6 @@
 ---
 title: Troubleshooting
+sidebar_position: 90
 ---
 
 Is something not working for your LibreTime installation? Here's a quick guide to help you

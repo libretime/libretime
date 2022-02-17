@@ -1,6 +1,6 @@
 ---
 title: Change Default Passwords
-sidebar_position: 3
+sidebar_position: 80
 ---
 
 ## LibreTime

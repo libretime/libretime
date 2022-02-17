@@ -1,5 +1,6 @@
 ---
-title: FreeIPA configuration
+title: Custom authentication
+sidebar_position: 40
 ---
 
 You can configure LibreTime to delegate all authentication to a FreeIPA server.

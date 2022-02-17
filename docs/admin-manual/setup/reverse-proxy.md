@@ -1,6 +1,6 @@
 ---
-title: Reverse Proxy
-sidebar_position: 5
+title: Reverse proxy
+sidebar_position: 30
 ---
 
 In some deployments, the LibreTime server is deployed behind a reverse proxy,

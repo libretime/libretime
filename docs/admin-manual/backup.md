@@ -1,5 +1,6 @@
 ---
-title: Backing up LibreTime
+title: Backup
+sidebar_position: 10
 ---
 
 :::info

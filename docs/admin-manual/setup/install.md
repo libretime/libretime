@@ -1,6 +1,6 @@
 ---
-title: Installation
-sidebar_position: 1
+title: Install
+sidebar_position: 10
 ---
 
 ## Minimum system requirements

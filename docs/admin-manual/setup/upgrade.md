@@ -1,5 +1,6 @@
 ---
-title: Upgrading LibreTime
+title: Upgrade
+sidebar_position: 80
 ---
 
 :::caution

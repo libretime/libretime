@@ -1,6 +1,6 @@
 ---
 title: Setting the Server Time
-sidebar_position: 2
+sidebar_position: 20
 ---
 
 Accurate time keeping on your server is vital for LibreTime performance. You can confirm that the date and time of your server are set correctly with the `date` command.
