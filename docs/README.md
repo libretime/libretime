@@ -7,7 +7,7 @@ Welcome to the **LibreTime documentation**, you should find everything you need 
 
 :::caution
 
-:construction: LibreTime is in being modernized and is finalizing the forking process. Be aware that breaking change may occur.
+:construction: LibreTime is in being modernized and is finalizing the forking process. Be aware that breaking change may occur and that the documentation may not be up to date.
 
 :::
 
