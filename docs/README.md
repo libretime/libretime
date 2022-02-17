@@ -17,9 +17,9 @@ Welcome to the **LibreTime documentation**, you should find everything you need 
 
 The documentation is divided into multiple parts:
 
-- the [Admin manual](./admin-manual) provide guides and references for administrators to setup and configure LibreTime.
+- the [Administrator manual](./admin-manual) provide guides and references to setup and configure LibreTime.
 - the [User manual](./user-manual) provide guides and tutorials for managers, and content creators to use LibreTime.
-- the [Developer manual](./development) provide guides for developers to integrate LibreTime, or improve and contribute to LibreTime.
+- the [Developer manual](./developer-manual) provide guides to integrate LibreTime, or improve and contribute to LibreTime.
 
 ## Getting help
 
