@@ -1,14 +1,16 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
+const vars = require("./vars");
+
 const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "Libretime",
-  tagline: "Broadcast without limits",
-  url: "https://libretime.org",
+  title: vars.title,
+  tagline: vars.description,
+  url: vars.website,
   baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "throw",
@@ -40,7 +42,7 @@ const config = {
         docs: {
           path: "../docs",
           sidebarPath: require.resolve("./sidebars.js"),
-          editUrl: "https://github.com/libretime/libretime",
+          editUrl: `${vars.repository.href}/blob/main/docs`,
         },
         blog: false,
         theme: {
@@ -54,25 +56,29 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: "Libretime",
+        title: vars.title,
         logo: {
-          alt: "Libretime tower",
+          alt: "LibreTime tower",
           src: "img/icon.svg",
         },
         items: [
           {
-            type: "doc",
-            docId: "intro",
-            position: "left",
             label: "Docs",
+            to: "/docs",
+            position: "left",
+            type: "dropdown",
+            items: [
+              { label: "User manual", to: "/docs/user-manual" },
+              { label: "Admin manual", to: "/docs/admin-manual" },
+              { label: "Development", to: "/docs/development" },
+            ],
           },
-          { to: "/contribute", label: "Contribute", position: "left" },
-          { type: "localeDropdown", position: "right" },
-          {
-            href: "https://github.com/libretime/libretime",
-            label: "GitHub",
-            position: "right",
-          },
+          { label: "Contribute", to: "/contribute", position: "left" },
+
+          { ...vars.repository, position: "right" },
+          { ...vars.forum, position: "right" },
+          { ...vars.channel, position: "right" },
+          // { type: "localeDropdown", position: "right" },
         ],
       },
       footer: {
@@ -81,33 +87,18 @@ const config = {
           {
             title: "Docs",
             items: [
-              {
-                label: "Install",
-                to: "/docs/intro",
-              },
+              { label: "User manual", to: "/docs/user-manual" },
+              { label: "Admin manual", to: "/docs/admin-manual" },
+              { label: "Development", to: "/docs/development" },
             ],
           },
           {
             title: "Community",
-            items: [
-              {
-                label: "Discourse",
-                href: "https://discourse.libretime.org",
-              },
-              {
-                label: "Mattermost",
-                href: "https://chat.libretime.org",
-              },
-            ],
+            items: [vars.forum, vars.channel],
           },
           {
             title: "More",
-            items: [
-              {
-                label: "GitHub",
-                href: "https://github.com/libretime/libretime",
-              },
-            ],
+            items: [vars.repository],
           },
         ],
         copyright: `Code licensed under AGPLv3; docs licensed under GPLv2.`,
