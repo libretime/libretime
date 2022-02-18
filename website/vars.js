@@ -18,4 +18,19 @@ module.exports = {
     href: "https://chat.libretime.org",
     label: "Mattermost",
   },
+
+  home: {
+    links: [
+      { label: "Get started 🚀", to: "/docs/admin-manual" },
+      { label: "Release note", to: "/docs/releases/3.0.0-alpha.10" },
+    ],
+  },
+
+  doc: {
+    sections: [
+      { label: "User manual", to: "/docs/user-manual" },
+      { label: "Admin manual", to: "/docs/admin-manual" },
+      { label: "Developer manual", to: "/docs/developer-manual" },
+    ],
+  },
 };
