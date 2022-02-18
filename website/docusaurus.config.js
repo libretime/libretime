@@ -6,6 +6,12 @@ const vars = require("./vars");
 const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
+const docSections = [
+  { label: "User manual", to: "/docs/user-manual" },
+  { label: "Admin manual", to: "/docs/admin-manual" },
+  { label: "Developer manual", to: "/docs/developer-manual" },
+];
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: vars.title,
@@ -67,11 +73,7 @@ const config = {
             to: "/docs",
             position: "left",
             type: "dropdown",
-            items: [
-              { label: "User manual", to: "/docs/user-manual" },
-              { label: "Admin manual", to: "/docs/admin-manual" },
-              { label: "Development", to: "/docs/development" },
-            ],
+            items: docSections,
           },
           { label: "Contribute", to: "/contribute", position: "left" },
 
@@ -86,11 +88,7 @@ const config = {
         links: [
           {
             title: "Docs",
-            items: [
-              { label: "User manual", to: "/docs/user-manual" },
-              { label: "Admin manual", to: "/docs/admin-manual" },
-              { label: "Development", to: "/docs/development" },
-            ],
+            items: docSections,
           },
           {
             title: "Community",
