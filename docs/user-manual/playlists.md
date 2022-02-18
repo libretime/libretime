@@ -54,7 +54,7 @@ Click the **plus button** on the left to add OR criteria, such as **Creator** co
 
 :::tip
 
-If you see the message **0 files meet the criteria**, it might mean that the files in the Library have not been tagged with the correct metadata. See the chapter [Preparing media](/docs/guides/preparing-media) for tips on tagging content.
+If you see the message **0 files meet the criteria**, it might mean that the files in the Library have not been tagged with the correct metadata. See the chapter [Preparing media](./preparing-media.md) for tips on tagging content.
 
 :::
 

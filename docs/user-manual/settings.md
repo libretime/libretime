@@ -57,7 +57,7 @@ refactors. You can switch back at any time.
 You can enable live, read-only access to the LibreTime schedule calendar for
 your station's public website with the **Public LibreTime API** option, if you
 wish. (There is more about this feature in the
-[_Exporting the schedule_](/docs/guides/playout-history) chapter, in the
+[_Exporting the schedule_](./playout-history.md) chapter, in the
 _Advanced Configuration_ section of this book).
 
 The **Allowed CORS URLs** is intended to deal with situations where you want a

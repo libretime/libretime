@@ -12,7 +12,7 @@ Podcast feeds coming from Anchor.fm have been known to have a similar issue.
 
 :::
 
-The podcast interfaces provides you with the ability to generate [Smartblocks](/docs/guides/playlists) that can be used in conjunction with autoloading playlists to schedule the newest episode of a podcast without human intervention.
+The podcast interfaces provides you with the ability to generate [Smartblocks](./playlists.md) that can be used in conjunction with autoloading playlists to schedule the newest episode of a podcast without human intervention.
 
 <html>
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/g-4UcD8qvR8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

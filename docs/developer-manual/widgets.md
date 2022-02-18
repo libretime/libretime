@@ -24,7 +24,7 @@ The streaming player widget inserts your LibreTime stream into your website. One
 
 ![](./widgets-widgets_player.png)
 
-From **Widgets** > **Player**, enter a title for your streaming widget and select what stream you'd like to use. All selectible streams must first be configured in **Settings** > **Streams** (see [Settings](/docs/guides/settings)). **Auto detect** should be fine for most.
+From **Widgets** > **Player**, enter a title for your streaming widget and select what stream you'd like to use. All selectible streams must first be configured in **Settings** > **Streams** (see [Settings](../user-manual/settings.md)). **Auto detect** should be fine for most.
 
 ## Show schedule widget
 
