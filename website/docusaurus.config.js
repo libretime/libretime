@@ -21,7 +21,7 @@ const config = {
 
   plugins: [
     [
-      require.resolve("@cmfcmf/docusaurus-search-local"),
+      "@cmfcmf/docusaurus-search-local",
       {
         indexBlog: false,
         indexPages: false,
