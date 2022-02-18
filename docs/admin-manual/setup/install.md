@@ -5,6 +5,8 @@ sidebar_position: 10
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import CodeBlock from '@theme/CodeBlock';
+import vars from '@site/vars';
 
 This guide will walk you though the steps required to install LibreTime on your system.
 
@@ -43,16 +45,15 @@ Download the [latest released](https://github.com/libretime/libretime/releases) 
 
 Or directly from the CLI:
 
-```bash
-wget https://github.com/libretime/libretime/releases/download/3.0.0-alpha.10/libretime-3.0.0-alpha.10.tar.gz
-```
+<CodeBlock language="bash">
+wget https://github.com/libretime/libretime/releases/download/{vars.version}/libretime-{vars.version}.tar.gz
+</CodeBlock>
 
 And extract the tarball:
 
-```bash
-tar -xvf libretime-3.0.0-alpha.10.tar.gz
-cd libretime
-```
+<CodeBlock language="bash">
+tar -xvf libretime-{vars.version}.tar.gz && cd libretime
+</CodeBlock>
 
 </TabItem>
 <TabItem label="Git repository" value="git">
@@ -66,20 +67,9 @@ cd libretime
 
 And checkout the latest version:
 
-```bash
-git checkout 3.0.0-alpha.10
-```
-
-:::tip
-
-In order to upgrade Libretime, pull the latest changes from the repository and checkout the latest version.
-
-```bash
-git pull
-git checkout 3.0.0-alpha.10
-```
-
-:::
+<CodeBlock language="bash">
+git checkout {vars.version}
+</CodeBlock>
 
 </TabItem>
 </Tabs>
