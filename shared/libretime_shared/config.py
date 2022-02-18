@@ -3,6 +3,7 @@ from configparser import ConfigParser
 from os import environ
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
+from urllib.parse import urlunsplit
 
 from loguru import logger
 
@@ -96,6 +97,24 @@ class BaseConfig(BaseModel):
         except YAMLError as error:
             logger.critical(error)
             sys.exit(1)
+
+
+# pylint: disable=too-few-public-methods
+class GeneralConfig(BaseModel):
+    api_key: str
+
+    protocol: str = "http"
+    base_url: str = "localhost"
+    base_port: int = 80
+    base_dir: str = "/"
+    force_ssl: bool = False
+
+    @property
+    def public_url(self) -> str:
+        scheme = "https" if self.force_ssl else self.protocol
+
+        url = urlunsplit((scheme, self.base_url, self.base_dir, None, None))
+        return url.rstrip("/")
 
 
 # pylint: disable=too-few-public-methods
