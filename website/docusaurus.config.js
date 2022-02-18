@@ -3,9 +3,6 @@
 
 const vars = require("./vars");
 
-const lightCodeTheme = require("prism-react-renderer/themes/github");
-const darkCodeTheme = require("prism-react-renderer/themes/dracula");
-
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: vars.title,
@@ -96,8 +93,6 @@ const config = {
         copyright: `Code licensed under AGPLv3; docs licensed under GPLv2.`,
       },
       prism: {
-        theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
         additionalLanguages: ["apacheconf", "ini"],
       },
     }),
