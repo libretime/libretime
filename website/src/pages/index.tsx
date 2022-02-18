@@ -20,7 +20,7 @@ function HomepageHeader() {
               "button button--secondary button--lg",
               styles.buttonPadding
             )}
-            to="/docs/intro"
+            to="/docs/admin-manual"
           >
             Get started 🚀
           </Link>
