@@ -1,5 +1,5 @@
 ---
-title: Local development
+title: Development environment
 ---
 
 ## Vagrant
