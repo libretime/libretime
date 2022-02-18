@@ -15,7 +15,7 @@ This documentation assumes that you:
 
 :::tip
 
-Before following any steps, be sure that your system is up-to-date!
+Before following any steps, be sure that your system is up-to-date.
 
 :::
 
@@ -27,7 +27,7 @@ Before following any steps, be sure that your system is up-to-date!
 - [:gear: Configure your installation](./setup/configuration.md)
 - [:lock: Put your installation behind a reverse proxy](./setup/reverse-proxy.md)
 
-## What to do next?
+## Advanced
 
 - [:warning: Setup automated backups](./backup.md)
 - [:heavy_check_mark: Use a custom authentication system](./custom-authentication.md)

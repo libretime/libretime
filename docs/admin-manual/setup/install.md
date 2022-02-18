@@ -8,7 +8,7 @@ import TabItem from '@theme/TabItem';
 import CodeBlock from '@theme/CodeBlock';
 import vars from '@site/vars';
 
-This guide will walk you though the steps required to install LibreTime on your system.
+This guide walk you though the steps required to install LibreTime on your system.
 
 :::tip
 
@@ -28,7 +28,7 @@ You can install LibreTime using the one of the following methods:
   - Debian [current stable](https://www.debian.org/releases/)
 - 1 Ghz Processor
 - 2 GB RAM recommended (1 GB required)
-- A static IP address ([How to setup a static ip using Netplan](../tutorials/setup-a-static-ip-using-netplan.md))
+- A static external IP address ([How to setup a static ip using Netplan](../tutorials/setup-a-static-ip-using-netplan.md))
 
 ## Using the installer
 
@@ -43,7 +43,7 @@ You can either download the latest released tarball or clone the repository.
 
 Download the [latest released](https://github.com/libretime/libretime/releases) tarball from Github.
 
-Or directly from the CLI:
+Or directly from the command-line:
 
 <CodeBlock language="bash">
 wget https://github.com/libretime/libretime/releases/download/{vars.version}/libretime-{vars.version}.tar.gz
@@ -88,18 +88,18 @@ Additional options can be listed with the following command:
 ./install --help
 ```
 
-Once the installation is completed, open [http://localhost:80](http://localhost:80) in order to complete the [setup wizard](#setup-wizard).
+Once the installation is completed, open [http://localhost:80](http://localhost:80) to complete the [setup wizard](#setup-wizard).
 
 :::note
 
-- If installed on a remote device, make sure to replace `localhost` with your server's ip address!
-- If installed with a custom port, make sure to replace `80` with the custom port!
+- If installed on a remote device, make sure to replace `localhost` with your server's ip address.
+- If installed with a custom port, make sure to replace `80` with the custom port.
 
 :::
 
 :::warning
 
-Make sure that you have configured a **firewall** and it is not blocking connection to the desired ports!
+Make sure that you have configured a **firewall** and it's not blocking connection to the desired ports.
 
 - [How to setup a firewall using UFW](../tutorials/setup-a-firewall-using-ufw.md)
 
@@ -123,11 +123,11 @@ sudo adduser www-data audio
 
 ### Setup wizard
 
-The setup wizard will walk you through the rest of the installation process.
+The setup wizard walk you through the rest of the installation process.
 
 #### Changing default passwords
 
-It is recommended that you change the passwords prompted in the setup wizard. Be sure to apply the changes on the server before going to any next step.
+It's recommended that you change the passwords prompted in the setup wizard. Be sure to apply the changes on the server before going to any next step.
 
 You can change the default PostgreSQL user password using:
 
@@ -141,4 +141,4 @@ You can change the default RabbitMQ user password using:
 sudo rabbitmqctl change_password "airtime" "new-password"
 ```
 
-Once completed, we recommend [installing a reverse proxy](./reverse-proxy.md) in order to setup SSL termination and secure your installation.
+Once completed, it's recommended to [install a reverse proxy](./reverse-proxy.md) to setup SSL termination and secure your installation.

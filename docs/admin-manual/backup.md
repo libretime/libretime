@@ -5,7 +5,7 @@ sidebar_position: 10
 
 ## Create a backup
 
-This guide will walk you though the steps required to create a full backup of your installation.
+This guide walk you though the steps required to create a full backup of your installation.
 
 :::info
 

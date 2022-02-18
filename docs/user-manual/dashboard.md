@@ -94,7 +94,7 @@ playing immediately. This manual triggering of playout can be used as a live
 assist technique, in which the LibreTime server's soundcard output is mixed with
 other sources such as microphones or telephone hybrids on its way to a
 transmitter, or a separate stream encoder. For instance, a live show's host may
-not wish to cut off a studio discussion in order to play music at a fixed time.
+not wish to cut off a studio discussion to play music at a fixed time.
 
 ![](./dashboard-drag-and-drop.png)
 

@@ -21,7 +21,7 @@ Setting a higher bitrate for your output stream will only benefit your listeners
 
 ## UTF-8 metadata in Icecast MP3 streams
 
-When sending metadata about your stream to an Icecast server in non-Latin alphabets, you may find that Icecast does not display the characters correctly for an MP3 stream, even though they are displayed correctly for an Ogg Vorbis stream. In the following screenshot, Russian characters are being displayed incorrectly in the _Current Song_ field for the MP3 stream:
+When sending metadata about your stream to an Icecast server in non-Latin alphabets, you may find that Icecast does not display the characters correctly for an MP3 stream, even though they're displayed correctly for an Ogg Vorbis stream. In the following screenshot, Russian characters are being displayed incorrectly in the _Current Song_ field for the MP3 stream:
 
 ![](./icecast-screenshot223-icecast_utf-8_metadata.png)
 

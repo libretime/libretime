@@ -9,7 +9,7 @@ The streaming host configuration for LibreTime is shown in the file `/etc/airtim
 
 Optionally, you may wish to edit the file `/etc/airtime/airtime.conf` to set the PostgreSQL database host, and the username and password to connect to the database with.
 
-You can also set options for RabbitMQ messaging and the LibreTime server in this file, although you should not normally need to adjust the defaults unless you are running a large LibreTime system distributed across multiple servers. To run the LibreTime server in demo mode, which changes the greeting on the login page and prevents user accounts from being created or modified, set the value of _demo_ to 1.
+You can also set options for RabbitMQ messaging and the LibreTime server in this file, although you shouldn't normally need to adjust the defaults unless you are running a large LibreTime system distributed across multiple servers. To run the LibreTime server in demo mode, which changes the greeting on the login page and prevents user accounts from being created or modified, set the value of _demo_ to 1.
 
 ```ini title="/etc/airtime/airtime.conf"
 [database]
@@ -54,7 +54,7 @@ sudo systemctl restart libretime-analyzer
 
 ## Apache max file size configuration
 
-By default, the maximum upload file size is 40 MB, which may not be large enough for some stations, especially if they are uploading prerecorded shows. The setting for this is located in `/etc/apache2/sites-available/airtime.config`. Search for and update the following in megabytes:
+By default, the maximum upload file size is 40 MB, which may not be large enough for some stations, especially if they're uploading prerecorded shows. The setting for this is located in `/etc/apache2/sites-available/airtime.config`. Search for and update the following in megabytes:
 
 ```ini
 ; Maximum allowed size for uploaded files.
@@ -64,7 +64,7 @@ upload_max_filesize = 40M
 post_max_size = 40M
 ```
 
-For quick reference, 1024 MB = 1 GB and 2048 MB = 2 GB, but most will be okay with rounding to the nearest thousand. After updating the config file, restart Apache with `sudo systemctl restart apache2`.
+For quick reference, 1024 MB = 1 GB and 2048 MB = 2 GB, but most should be okay with rounding to the nearest thousand. After updating the config file, restart Apache with `sudo systemctl restart apache2`.
 
 ## Playout settings
 
@@ -152,7 +152,7 @@ If the Airtime logs indicate failures to connect to the RabbitMQ server, such as
 2013-10-31 08:21:11,255 ERROR - \[pypomessagehandler.py : main() : line 99\] - Error connecting to RabbitMQ Server. Trying again in few seconds - See more at: https://forum.sourcefabric.org/discussion/16050/#sthash.W8OJrNFm.dpuf
 ```
 
-but the RabbitMQ server is running normally, this error might be due to a change in the server's hostname since LibreTime installation. Directory names under `/var/lib/rabbitmq/mnesia/` indicate that RabbitMQ's database files are organised according to the hostname of the server (ex. `rabbit@airtime`) where the hostname is `airtime.example.com`. If the hostname has changed, it may be necessary to reconfigure RabbitMQ manually, as follows:
+but the RabbitMQ server is running normally, this error might be due to a change in the server's hostname since LibreTime installation. Directory names under `/var/lib/rabbitmq/mnesia/` indicate that RabbitMQ's database files are organized according to the hostname of the server (ex. `rabbit@airtime`) where the hostname is `airtime.example.com`. If the hostname has changed, it may be necessary to reconfigure RabbitMQ manually, as follows:
 
 1. Delete the files in `/var/lib/rabbitmq/mnesia/`
 

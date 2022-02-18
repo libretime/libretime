@@ -3,7 +3,7 @@ title: Migrate from Airtime
 sidebar_position: 90
 ---
 
-This guide will walk you though the steps required to migrate your data from Airtime to LibreTime.
+This guide walk you though the steps required to migrate your data from Airtime to LibreTime.
 
 :::info
 
@@ -17,17 +17,17 @@ LibreTime dropped support for Ubuntu 16.04, which is the last supported version 
 
 <!-- TODO: Airtime backup process might be different from the LibreTime one, we might need to write a dedicated backup guide here. -->
 
-Follow [the backup guide](../backup.md) in order to make a backup of your current Airtime installation.
+Follow [the backup guide](../backup.md) to make a backup of your current Airtime installation.
 
-## Install LibreTime
+## Install
 
 Install LibreTime on a new system by following the [install guide](./install.md), and **don't run the setup wizard**.
 
-## Restore the Airtime backup
+## Restore the backup
 
 Restore [the Airtime backup](../backup.md#restore) on the newly installed LibreTime server.
 
-You will have to restore the **database**, the **files storage** and the **configuration files**.
+You have to restore the **database**, the **files storage** and the **configuration files**.
 
 ## Update the configuration files
 

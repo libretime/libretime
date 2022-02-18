@@ -5,25 +5,25 @@ sidebar_position: 30
 
 In some deployments, the LibreTime server is deployed behind a reverse proxy,
 for example in containerization use-cases such as Docker and LXC. LibreTime
-makes extensive use of its API for some site functionality, which causes
+makes extensive use of its API for some site features, which causes
 [Cross-Origin Resource Sharing (CORS)](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
 to occur. By default, CORS requests are blocked by your browser and the origins
 need to be added to the **Allowed CORS URLs** block in
 [**General Settings**](../../user-manual/settings.md). These origins should include any
-domains that will be used externally to connect to your reverse proxy that you
+domains that are used externally to connect to your reverse proxy that you
 want handled by LibreTime. These URLS can also be set during the first run configuration
-that is displayed when you first install LibreTime
+that's displayed when you first install LibreTime
 
 ### Reverse proxy basics
 
 A reverse proxy allows the LibreTime server to not be connected to the open internet. In
-this configuration, it is rather behind another server that proxies traffic to it from
+this configuration, it's rather behind another server that proxies traffic to it from
 users. This provides some advantages in the containerization space, as this means that
 the containers can be on their own internal network, protected from outside access.
 
 A reverse proxy also allows SSL to be terminated in a single location for multiple sites.
 This means that all your traffic to the proxy from clients is encrypted, but the reverse
-proxy's traffic to the containers on the internal network is not. All the SSL certificates
+proxy's traffic to the containers on the internal network isn't. All the SSL certificates
 live on the reverse proxy and can be renewed there instead of on the individual
 containers.
 
@@ -32,7 +32,7 @@ containers.
 For SSL redirection to work, you need two domains: one for LibreTime and one for Icecast.
 Here, these will be `libretime.example.com` and `icecast.example.com`.
 
-You will also require two VMs, servers or containers. Alternatively the reverse proxy can
+You require two VMs, servers or containers. Alternatively the reverse proxy can
 be located on the server, proxying connections to containers also on the host. Setting up
 a containerization environment is beyond the scope of this guide. It assumes that you have
 Nginx set up on `localhost` and LibreTime will be installed on `192.168.1.10`. You will need root

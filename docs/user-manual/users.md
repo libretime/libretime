@@ -21,7 +21,7 @@ To add further user accounts to the system, one for each of your station staff t
 
 - Everything Guests can do, plus
 - Upload media (music, PSAs, underwriting, shows, etc.) to their own library (DJs cannot view other libraries)
-- Edit metadata, delete, and schedule media in their own library to shows they are assigned to
+- Edit metadata, delete, and schedule media in their own library to shows they're assigned to
 - Preview uploaded media _without_ affecting the live playout
 - Create Playlists, Smart Blocks, and connect Podcasts and Webstreams to LibreTime
 

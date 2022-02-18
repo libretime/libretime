@@ -3,7 +3,7 @@ title: Upgrade
 sidebar_position: 80
 ---
 
-This guide will walk you though the steps required to upgrade LibreTime.
+This guide walk you though the steps required to upgrade LibreTime.
 
 :::tip
 
@@ -13,16 +13,16 @@ You should always have a fallback system available during the upgrade to ensure 
 
 #### Make a backup
 
-Follow [the backup guide](../backup.md) in order to make an extra backup of your installation in case of accidental data loss during
+Follow [the backup guide](../backup.md) to make an extra backup of your installation in case of accidental data loss during
 the upgrade process.
 
 #### Install the new version
 
-Follow [the install guide](./install.md) in order to download and install the new version.
+Follow [the install guide](./install.md) to download and install the new version.
 
-#### Check the installation
+#### Verify
 
-Check that all the services are still running after the install process:
+Verify that all the services are still running after the install process:
 
 ```bash
 sudo systemctl status \
@@ -34,12 +34,12 @@ sudo systemctl status \
    apache2
 ```
 
-Check for any error in the logs after the install process:
+Verify for any error in the logs after the install process:
 
 ```bash
 sudo tail -n 20 /var/log/libretime/**/*.log
 ```
 
-Log into the interface and check for any error after the install process.
+Log into the interface and verify for any error after the install process.
 
 If you encounter issues with the new interface, you may need to clear your web browser's cache.
