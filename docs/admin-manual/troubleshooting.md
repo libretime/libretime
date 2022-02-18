@@ -3,34 +3,50 @@ title: Troubleshooting
 sidebar_position: 90
 ---
 
-Is something not working for your LibreTime installation? Here's a quick guide to help you
-troubleshoot most issues you'll run into.
+This guide will walk you though the steps required to troubleshoot LibreTime.
 
-## 1. Let's check the basics
+## Services status
 
-Is your server on? (We hate to ask.) Is it connected to the internet? Is it connected to your
-broadcast console or mixer if being used for soundcard output? If you're using a cloud host,
-does your cloud provider's status page indicate any system outages?
+When facing a problem with LibreTime the first reflex is to check whether the services are properly running.
 
-Once you know your physical (or virtual) system is functional, was a show scheduled for the
-current time with tracks or an autoplaylist scheduled?
-
-## 2. Are all services working?
-
-If you can log in to LibreTime, go to **Settings** > **Status** to see the service indicators.
-A fully working server should have green checkmarks next to all services.
+In the web interface, go to **Settings** > **Status** to see the state of the services.
 
 ![](./troubleshooting-status-page.png)
 
-If one of the services isn't working, text will display with a terminal command to restart the service
-or get status information for a particular service. For example (for Ubuntu 18.04), the following
-commands would restart or check the status of LibreTime's Liquidsoap instance, respectively.
+If a service is not running, you should check for details using the tool using to run those services.
+On a common setup, you can check the systemd service status:
 
 ```bash
-sudo systemctl restart libretime-liquidsoap
-sudo systemctl status libretime-liquidsoap
+sudo systemctl status libretime-celery
 ```
 
-If the service isn't wanting to restart, look at its status for clues as to why it stopped working.
+:::note
 
-> If you find yourself constantly needing to restart a service, there's a chance it was never set to autostart on system boot. Use `sudo systemctl enable servicename` to fix this problem.
+Be sure to replace the service name with the one that is down.
+
+:::
+
+## Logs
+
+The next place to search for details on potential errors are the log files.
+On a common setup, you should check for the following files:
+
+- `/var/log/libretime/analyzer.log` contains logs from the analyzer,
+- `/var/log/libretime/api.log` contains logs from the api,
+- `/var/log/libretime/legacy.log` contains logs from the legacy app,
+- `/var/log/libretime/liquidsoap.log` contains logs from liquidsoap,
+- `/var/log/libretime/playout.log` contains logs from playout.
+
+For some of the LibreTime services, you can set a higher log level using the `LIBRETIME_LOG_LEVEL` environment variable, or by running the service by hand and using a line flag:
+
+```bash
+sudo -u www-data libretime-analyzer --config /etc/airtime/airtime.conf --log-level debug
+```
+
+- `/var/log/syslog` contains most of the system logs combined. You can filter the LibreTime logs using:
+
+```bash
+sudo tail -f "/var/log/syslog" | grep "libretime-"
+```
+
+- `/var/log/apache2/error.log` contains logs from the web server.
