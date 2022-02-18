@@ -13,40 +13,28 @@ class Config
 
         $CC_CONFIG = [];
 
-        $CC_CONFIG['rabbitmq'] = $values['rabbitmq'];
+        // General
+        ////////////////////////////////////////////////////////////////////////////////
+        $CC_CONFIG['apiKey'] = [$values['general']['api_key']];
 
+        // Base URL
+        $CC_CONFIG['protocol'] = $values['general']['protocol'] ?? '';
         $CC_CONFIG['baseDir'] = $values['general']['base_dir'];
         $CC_CONFIG['baseUrl'] = $values['general']['base_url'];
         $CC_CONFIG['basePort'] = $values['general']['base_port'];
-        $CC_CONFIG['stationId'] = $values['general']['station_id'];
-        $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
-        $CC_CONFIG['forceSSL'] = isset($values['general']['force_ssl']) ? Config::isYesValue($values['general']['force_ssl']) : false;
-        $CC_CONFIG['protocol'] = isset($values['general']['protocol']) ? $values['general']['protocol'] : '';
-        if (isset($values['general']['dev_env'])) {
-            $CC_CONFIG['dev_env'] = $values['general']['dev_env'];
-        } else {
-            $CC_CONFIG['dev_env'] = 'production';
-        }
+        $CC_CONFIG['forceSSL'] = Config::isYesValue($values['general']['force_ssl'] ?? false);
 
-        $CC_CONFIG['auth'] = 'local';
-        if (isset($values['general']['auth'])) {
-            $CC_CONFIG['auth'] = $values['general']['auth'];
-        }
+        $CC_CONFIG['dev_env'] = $values['general']['dev_env'] ?? 'production';
+        $CC_CONFIG['auth'] = $values['general']['auth'] ?? 'local';
+        $CC_CONFIG['cache_ahead_hours'] = $values['general']['cache_ahead_hours'] ?? 1;
 
-        //Backported static_base_dir default value into saas for now.
-        if (array_key_exists('static_base_dir', $values['general'])) {
-            $CC_CONFIG['staticBaseDir'] = $values['general']['static_base_dir'];
-        } else {
-            $CC_CONFIG['staticBaseDir'] = '/';
-        }
+        // SAAS remaining fields
+        $CC_CONFIG['stationId'] = $values['general']['station_id'] ?? '';
+        $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'] ?? '';
+        $CC_CONFIG['staticBaseDir'] = $values['general']['static_base_dir'] ?? '/';
 
-        // Tells us where file uploads will be uploaded to.
-        // It will either be set to a cloud storage backend or local file storage.
-        $CC_CONFIG['current_backend'] = $values['current_backend']['storage_backend'];
-
-        $CC_CONFIG['cache_ahead_hours'] = $values['general']['cache_ahead_hours'];
-
-        // Database config
+        // Database
+        ////////////////////////////////////////////////////////////////////////////////
         $CC_CONFIG['dsn']['phptype'] = 'pgsql';
         $CC_CONFIG['dsn']['host'] = $values['database']['host'] ?? 'localhost';
         $CC_CONFIG['dsn']['port'] = $values['database']['port'] ?? 5432;
@@ -54,15 +42,28 @@ class Config
         $CC_CONFIG['dsn']['username'] = $values['database']['user'] ?? 'libretime';
         $CC_CONFIG['dsn']['password'] = $values['database']['password'] ?? 'libretime';
 
-        $CC_CONFIG['apiKey'] = [$values['general']['api_key']];
+        // RabbitMQ
+        ////////////////////////////////////////////////////////////////////////////////
+        $CC_CONFIG['rabbitmq']['host'] = $values['rabbitmq']['host'] ?? 'localhost';
+        $CC_CONFIG['rabbitmq']['port'] = $values['rabbitmq']['port'] ?? 5672;
+        $CC_CONFIG['rabbitmq']['vhost'] = $values['rabbitmq']['vhost'] ?? '/libretime';
+        $CC_CONFIG['rabbitmq']['user'] = $values['rabbitmq']['user'] ?? 'libretime';
+        $CC_CONFIG['rabbitmq']['password'] = $values['rabbitmq']['password'] ?? 'libretime';
 
+        // Storage
+        ////////////////////////////////////////////////////////////////////////////////
+        $CC_CONFIG['current_backend'] = $values['current_backend']['storage_backend'] ?? 'file';
+
+        // Facebook (DEPRECATED)
+        ////////////////////////////////////////////////////////////////////////////////
         if (isset($values['facebook']['facebook_app_id'])) {
             $CC_CONFIG['facebook-app-id'] = $values['facebook']['facebook_app_id'];
             $CC_CONFIG['facebook-app-url'] = $values['facebook']['facebook_app_url'];
             $CC_CONFIG['facebook-app-api-key'] = $values['facebook']['facebook_app_api_key'];
         }
 
-        // ldap config
+        // LDAP
+        ////////////////////////////////////////////////////////////////////////////////
         if (array_key_exists('ldap', $values)) {
             $CC_CONFIG['ldap_hostname'] = $values['ldap']['hostname'];
             $CC_CONFIG['ldap_binddn'] = $values['ldap']['binddn'];
@@ -77,9 +78,12 @@ class Config
             $CC_CONFIG['ldap_filter_field'] = $values['ldap']['filter_field'];
         }
 
+        // Demo
+        ////////////////////////////////////////////////////////////////////////////////
         if (isset($values['demo']['demo'])) {
             $CC_CONFIG['demo'] = $values['demo']['demo'];
         }
+
         self::$CC_CONFIG = $CC_CONFIG;
     }
 
