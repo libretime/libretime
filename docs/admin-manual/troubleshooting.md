@@ -37,7 +37,7 @@ On a common setup, you should search for the following files:
 - `/var/log/libretime/liquidsoap.log` contains logs from liquidsoap,
 - `/var/log/libretime/playout.log` contains logs from playout.
 
-For some LibreTime services, you can set a higher log level using the `LIBRETIME_LOG_LEVEL` environment variable, or by running the service by hand and using a line flag:
+For some LibreTime services, you can set a higher log level using the `LIBRETIME_LOG_LEVEL` environment variable, or by running the service by hand and using a command line flag:
 
 ```bash
 sudo -u www-data libretime-analyzer --config /etc/airtime/airtime.conf --log-level debug
