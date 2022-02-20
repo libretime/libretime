@@ -1,7 +1,7 @@
 import sys
 from copy import deepcopy
 from pathlib import Path
-from typing import TYPE_CHECKING, NamedTuple, Optional
+from typing import TYPE_CHECKING, NamedTuple, Optional, Tuple
 
 from loguru import logger
 
@@ -53,7 +53,7 @@ def setup_logger(
     level: LogLevel,
     filepath: Optional[Path] = None,
     serialize: bool = False,
-) -> None:
+) -> Tuple[LogLevel, Optional[Path]]:
     """
     Configure the logger and return the computed log level.
 
@@ -80,6 +80,8 @@ def setup_logger(
         )
 
     logger.configure(handlers=handlers)
+
+    return level, filepath
 
 
 _empty_logger = deepcopy(logger)
