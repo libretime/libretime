@@ -43,7 +43,7 @@ For some LibreTime services, you can set a higher log level using the `LIBRETIME
 sudo -u www-data libretime-analyzer --config /etc/airtime/airtime.conf --log-level debug
 ```
 
-- `/var/log/syslog` contains most of the system logs combined. You can filter the LibreTime logs using:
+- `/var/log/syslog` contains most of the system logs combined. This log file may contain information that the application logger wasn't able to log, such as early startup errors. You can get the LibreTime logs using:
 
 ```bash
 sudo tail -f "/var/log/syslog" | grep "libretime-"
