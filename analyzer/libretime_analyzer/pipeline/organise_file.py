@@ -19,7 +19,7 @@ def organise_file(
 
     If you import multiple copies of the same file, the behavior is:
     - The first filename is preserved.
-    - The next filenames receive the current date append to the name.
+    - The next filenames receive an uuid append to the name.
     """
     filepath = Path(filepath_)
 
