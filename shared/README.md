@@ -32,6 +32,8 @@ class Config(BaseConfig):
 config = Config(filepath="/etc/libretime/config.yml")
 ```
 
+> Don't instantiate a sub model if it has a required field, otherwise the `Config` class import will raise a `ValidationError`.
+
 ### App
 
 Create an app class that inherit from `libretime_shared.app.AbstractApp`.
