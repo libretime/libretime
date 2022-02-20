@@ -28,8 +28,8 @@ module.exports = {
 
   doc: {
     sections: [
-      { label: "User manual", to: "/docs/user-manual" },
       { label: "Admin manual", to: "/docs/admin-manual" },
+      { label: "User manual", to: "/docs/user-manual" },
       { label: "Developer manual", to: "/docs/developer-manual" },
     ],
   },
