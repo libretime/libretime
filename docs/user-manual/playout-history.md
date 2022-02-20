@@ -1,5 +1,5 @@
 ---
-title: Playout History
+title: Playout history
 ---
 
 On the History menu, the **Playout History** page enables you to view a list of files played within a specific date and time range. This page is designed to help your station prepare reports for music royalty collection societies and regulatory agencies.

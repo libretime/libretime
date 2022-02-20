@@ -1,5 +1,5 @@
 ---
-title: Setting the Server Time
+title: Setting the server time
 sidebar_position: 20
 ---
 

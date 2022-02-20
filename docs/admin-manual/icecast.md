@@ -1,5 +1,5 @@
 ---
-title: Icecast Configuration
+title: Icecast configuration
 sidebar_position: 30
 ---
 

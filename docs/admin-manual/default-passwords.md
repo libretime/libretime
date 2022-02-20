@@ -1,5 +1,5 @@
 ---
-title: Change Default Passwords
+title: Change default passwords
 sidebar_position: 80
 ---
 
