@@ -92,7 +92,7 @@ Once the installation is completed, open [http://localhost:80](http://localhost:
 
 :::note
 
-- If installed on a remote device, make sure to replace `localhost` with your server's ip address.
+- If installed on a remote device, make sure to replace `localhost` with your server's remote address.
 - If installed with a custom port, make sure to replace `80` with the custom port.
 
 :::
