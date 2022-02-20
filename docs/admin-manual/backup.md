@@ -27,7 +27,7 @@ On common setups, you need to backup the entire `/etc/airtime` folder.
 
 You need to backup the PostgreSQL database, which holds the entire data of your installation.
 
-Here is command example to dump your PostgreSQL database:
+Here is an example to dump your PostgreSQL database:
 
 ```bash
 sudo -u postgres pg_dump --file=libretime.sql libretime
