@@ -40,6 +40,22 @@ const config = {
           path: "../docs",
           sidebarPath: require.resolve("./sidebars.js"),
           editUrl: `${vars.repository.href}/blob/main/docs`,
+
+          async sidebarItemsGenerator({
+            defaultSidebarItemsGenerator,
+            ...args
+          }) {
+            const items = await defaultSidebarItemsGenerator(args);
+
+            return items.map((item) => {
+              // Reverse releases pages ordering
+              if (item.type === "category" && item.label === "Releases") {
+                return { ...item, items: item.items.reverse() };
+              }
+
+              return item;
+            });
+          },
         },
         blog: false,
         theme: {
