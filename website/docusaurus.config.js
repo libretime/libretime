@@ -8,7 +8,7 @@ const config = {
   title: vars.title,
   tagline: vars.description,
   url: vars.website,
-  baseUrl: "/libretime/",
+  baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "throw",
   favicon: "img/icon.svg",

@@ -2,7 +2,7 @@ module.exports = {
   title: "LibreTime",
   description: "Radio Broadcast & Automation Platform",
   version: "3.0.0-alpha.10",
-  website: "https://jooola.github.io",
+  website: "https://libretime.org",
 
   repository: {
     href: "https://github.com/libretime/libretime",
