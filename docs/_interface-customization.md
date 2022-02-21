@@ -26,7 +26,7 @@ Any custom changes that you make to the administration interface should be backe
 
 # Modifying the Icecast interface
 
-If you have installed Icecast, in the directory `/etc/icecast2/web/` you will find several XSLT and other files which are used to generate the Icecast web interface. If you are familiar with HTML you should be able to modify these pages, as they're well commented. You do have to be careful with syntax, because something as simple as a missing bracket can cause the Icecast web interface to break down.
+If you have installed Icecast, in the directory `/etc/icecast2/web/` you will find several XSLT and other files which are used to generate the Icecast web interface. If you are familiar with HTML you should be able to modify these pages, as they are well commented. You do have to be careful with syntax, because something as simple as a missing bracket can cause the Icecast web interface to break down.
 
 For example, you could change the `status.xsl` page:
 

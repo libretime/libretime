@@ -3,9 +3,8 @@ import clsx from "clsx";
 import Layout from "@theme/Layout";
 import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-import vars from "@site/vars";
-
 import styles from "./index.module.css";
+
 import HomepageFeatures from "../components/HomepageFeatures";
 
 function HomepageHeader() {
@@ -16,17 +15,24 @@ function HomepageHeader() {
         <h1 className="hero__title">{siteConfig.title}</h1>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
         <div className={styles.buttons}>
-          {vars.home.links.map((link) => (
-            <Link
-              className={clsx(
-                "button button--secondary button--lg",
-                styles.buttonPadding
-              )}
-              to={link.to}
-            >
-              {link.label}
-            </Link>
-          ))}
+          <Link
+            className={clsx(
+              "button button--secondary button--lg",
+              styles.buttonPadding
+            )}
+            to="/docs/intro"
+          >
+            Get started 🚀
+          </Link>
+          <Link
+            className={clsx(
+              "button button--secondary button--lg",
+              styles.buttonPadding
+            )}
+            to="/release-notes"
+          >
+            Release Notes
+          </Link>
         </div>
       </div>
     </header>
