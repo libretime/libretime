@@ -7,20 +7,23 @@ This guide walk you though the steps required to upgrade LibreTime.
 
 :::tip
 
-You should always have a fallback system available during the upgrade to ensure **broadcast continuity**.
+You should always have proper backups and a rollback scenario in place before updating. If the update does not go smoothly, it may cause significant downtime, so you should always have a fallback system available during the update to ensure **broadcast continuity**.
 
 :::
 
-#### Make a backup
+## Make a backup
 
-Follow [the backup guide](../backup.md) to make an extra backup of your installation in case of accidental data loss during
-the upgrade process.
+Follow [the backup guide](../backup.md) to make an extra backup of your installation and prepare a rollback scenario in case of accidental data loss during the upgrade process.
 
-#### Install the new version
+## Install the new version
 
-Follow [the install guide](./install.md) to download and install the new version.
+Follow [the install guide](./install.md#download) to download and install the new version, and re-run the `./install` script with the same arguments you used during the initial install.
 
-#### Verify
+## Apply upgrade instructions
+
+Be sure to carefully read **all** the [releases notes](../../../releases), from your current version to the targeted version, to apply upgrade or breaking changes instructions to your installation.
+
+## Verify
 
 Verify that all the services are still running after the install process:
 
@@ -37,7 +40,7 @@ sudo systemctl status \
 Verify for any error in the logs after the install process:
 
 ```bash
-sudo tail -n 20 /var/log/libretime/**/*.log
+sudo tail -f -n 100 "/var/log/syslog" | grep "libretime-"
 ```
 
 Log into the interface and verify for any error after the install process.

@@ -65,6 +65,17 @@ git clone https://github.com/libretime/libretime
 cd libretime
 ```
 
+:::info
+
+When upgrading, you can pull the latest changes from the repository before checking out the desired version:
+
+```bash
+cd libretime
+git pull
+```
+
+:::
+
 And checkout the latest version:
 
 <CodeBlock language="bash">
@@ -87,6 +98,12 @@ Additional options can be listed with the following command:
 ```bash
 ./install --help
 ```
+
+:::info
+
+When upgrading be sure to run the installer using the same arguments you used during the initial install.
+
+:::
 
 Once the installation is completed, open [http://localhost:80](http://localhost:80) to complete the [setup wizard](#setup-wizard).
 
@@ -142,3 +159,16 @@ sudo rabbitmqctl change_password "airtime" "new-password"
 ```
 
 Once completed, it's recommended to [install a reverse proxy](./reverse-proxy.md) to setup SSL termination and secure your installation.
+
+## Using packages
+
+:::note
+
+Usually the packages are built soon after a release is published.
+
+:::
+
+You can install LibreTime using packages on the distributions listed below, please follow further instruction provided by the links below:
+
+- [Debian / Ubuntu packages](https://github.com/LibreTime/libretime-debian-packaging/releases)
+- [CentOS packages](https://build.opensuse.org/package/show/home:radiorabe:airtime/libretime)
