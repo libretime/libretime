@@ -2,7 +2,7 @@ name: Website
 
 on:
   push:
-    branches: [main, docs_update]
+    branches: [main]
     paths:
       - .github/workflows/website.yml
       - website/**
@@ -60,7 +60,7 @@ jobs:
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.ref == 'refs/heads/docs_update' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./website/build
