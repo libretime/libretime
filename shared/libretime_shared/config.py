@@ -105,7 +105,7 @@ class GeneralConfig(BaseModel):
 
     protocol: str = "http"
     base_url: str = "localhost"
-    base_port: int = 80
+    base_port: Optional[int]
     base_dir: str = "/"
     force_ssl: bool = False
 
@@ -113,8 +113,13 @@ class GeneralConfig(BaseModel):
     def public_url(self) -> str:
         scheme = "https" if self.force_ssl else self.protocol
 
-        url = urlunsplit((scheme, self.base_url, self.base_dir, None, None))
-        return url.rstrip("/")
+        location = self.base_url
+        if self.base_port is not None:
+            location += f":{self.base_port}"
+
+        path = self.base_dir.rstrip("/")
+
+        return urlunsplit((scheme, location, path, None, None))
 
 
 # pylint: disable=too-few-public-methods
