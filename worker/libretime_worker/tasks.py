@@ -1,12 +1,10 @@
 import cgi
 import json
-import os
 import posixpath
 import shutil
 import tempfile
 import traceback
 from contextlib import closing
-from io import StringIO
 from urllib.parse import urlsplit
 
 import mutagen
@@ -14,11 +12,11 @@ import requests
 from celery import Celery
 from celery.utils.log import get_task_logger
 
-celery = Celery()
+worker = Celery()
 logger = get_task_logger(__name__)
 
 
-@celery.task(name="podcast-download", acks_late=True)
+@worker.task(name="podcast-download", acks_late=True)
 def podcast_download(
     id, url, callback_url, api_key, podcast_name, album_override, track_title
 ):
@@ -138,7 +136,7 @@ def get_filename(r):
             filename = params["filename"]
         except Exception as e:
             # We end up here if we get a Content-Disposition header with no filename
-            logger.warn(
+            logger.warning(
                 "Couldn't find file name in Content-Disposition header, using url"
             )
     if not filename:

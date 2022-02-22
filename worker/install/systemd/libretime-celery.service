@@ -1,13 +1,18 @@
 [Unit]
-Description=LibreTime Celery Service
-After=network.target
+Description=LibreTime Worker Service
 
 [Service]
-User=celery
-Group=celery
-Environment=RMQ_CONFIG_FILE=/etc/airtime/airtime.conf
-WorkingDirectory=/srv/airtime
-ExecStart=/usr/local/bin/celery worker -A libretime_worker.tasks:celery --time-limit=1800 --concurrency=1 --config=celeryconfig -l INFO
+Environment=LIBRETIME_CONFIG_FILEPATH=/etc/airtime/airtime.conf
+WorkingDirectory=/var/lib/libretime/worker
+
+ExecStart=/usr/local/bin/celery worker \
+    --app=libretime_worker.tasks:worker \
+    --config=libretime_worker.config \
+    --time-limit=1800 \
+    --concurrency=1 \
+    --loglevel=INFO
+User=libretime-worker
+Group=libretime-worker
 Restart=always
 
 [Install]

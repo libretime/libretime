@@ -1055,6 +1055,7 @@ verbose "...Done"
 
 verbose "\n * Installing celery..."
 loudCmd "$pip_cmd install ${AIRTIMEROOT}/worker"
+mkdir_and_chown "${web_user}:${web_user}" "${LIBRETIME_WORKING_DIR}/worker"
 # Create the Celery user
 if $is_centos_dist; then
   loudCmd "id celery 2>/dev/null || adduser --no-create-home -c 'LibreTime Celery' -r celery || true"

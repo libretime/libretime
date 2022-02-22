@@ -1,30 +1,19 @@
-import os
+from os import getenv
 
-from configobj import ConfigObj
 from kombu import Exchange, Queue
-
-# Get the broker string from airtime.conf
-RMQ_CONFIG_SECTION = "rabbitmq"
+from libretime_shared.config import BaseConfig, RabbitMQConfig
 
 
-def get_rmq_broker():
-    rmq_config = ConfigObj(os.environ["RMQ_CONFIG_FILE"])
-    rmq_settings = parse_rmq_config(rmq_config)
-    return "amqp://{username}:{password}@{host}:{port}/{vhost}".format(**rmq_settings)
+class Config(BaseConfig):
+    rabbitmq: RabbitMQConfig = RabbitMQConfig()
 
 
-def parse_rmq_config(rmq_config):
-    return {
-        "host": rmq_config[RMQ_CONFIG_SECTION]["host"],
-        "port": rmq_config[RMQ_CONFIG_SECTION]["port"],
-        "username": rmq_config[RMQ_CONFIG_SECTION]["user"],
-        "password": rmq_config[RMQ_CONFIG_SECTION]["password"],
-        "vhost": rmq_config[RMQ_CONFIG_SECTION]["vhost"],
-    }
+LIBRETIME_CONFIG_FILEPATH = getenv("LIBRETIME_CONFIG_FILEPATH")
 
+config = Config(filepath=LIBRETIME_CONFIG_FILEPATH)
 
 # Celery amqp settings
-BROKER_URL = get_rmq_broker()
+BROKER_URL = config.rabbitmq.url
 CELERY_RESULT_BACKEND = "amqp"  # Use RabbitMQ as the celery backend
 CELERY_RESULT_PERSISTENT = True  # Persist through a broker restart
 CELERY_TASK_RESULT_EXPIRES = 900  # Expire task results after 15 minutes
