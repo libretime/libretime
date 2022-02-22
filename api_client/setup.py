@@ -22,9 +22,13 @@ setup(
     packages=["libretime_api_client"],
     python_requires=">=3.6",
     install_requires=[
-        "configobj",
         "python-dateutil>=2.7.0",
         "requests",
     ],
+    extras_require={
+        "dev": [
+            f"libretime-shared @ file://localhost{here.parent / 'shared'}",
+        ],
+    },
     zip_safe=False,
 )

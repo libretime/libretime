@@ -1,34 +1,26 @@
-import pytest
-
 from libretime_api_client.utils import RequestProvider
-from libretime_api_client.version1 import api_config
 
 
-@pytest.fixture()
-def config():
-    return {
-        **api_config,
-        "general": {
-            "base_dir": "/test",
-            "base_port": 80,
-            "base_url": "localhost",
-            "api_key": "TEST_KEY",
-        },
-        "api_base": "api",
-    }
-
-
-def test_request_provider_init(config):
-    request_provider = RequestProvider(config, {})
+def test_request_provider_init():
+    request_provider = RequestProvider(
+        base_url="http://localhost/test",
+        api_key="test_key",
+        endpoints={},
+    )
     assert len(request_provider.available_requests()) == 0
 
 
-def test_request_provider_contains(config):
+def test_request_provider_contains():
     endpoints = {
         "upload_recorded": "/1/",
         "update_media_url": "/2/",
         "list_all_db_files": "/3/",
     }
-    request_provider = RequestProvider(config, endpoints)
+    request_provider = RequestProvider(
+        base_url="http://localhost/test",
+        api_key="test_key",
+        endpoints=endpoints,
+    )
+
     for endpoint in endpoints:
         assert endpoint in request_provider.requests

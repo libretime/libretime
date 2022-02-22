@@ -7,17 +7,15 @@
 # schedule a playlist one minute from the current time.
 ###############################################################################
 import logging
-import sys
 from datetime import datetime, timedelta
 
-from configobj import ConfigObj
 from dateutil.parser import isoparse
 
+from ._config import Config
 from .utils import RequestProvider, fromisoformat, time_in_milliseconds, time_in_seconds
 
 LIBRETIME_API_VERSION = "2.0"
 
-api_config = {}
 api_endpoints = {}
 
 api_endpoints["version_url"] = "version/"
@@ -27,23 +25,23 @@ api_endpoints["show_instance_url"] = "show-instances/{id}/"
 api_endpoints["show_url"] = "shows/{id}/"
 api_endpoints["file_url"] = "files/{id}/"
 api_endpoints["file_download_url"] = "files/{id}/download/"
-api_config["api_base"] = "api/v2"
 
 
 class AirtimeApiClient:
-    def __init__(self, logger=None, config_path="/etc/airtime/airtime.conf"):
-        if logger is None:
-            self.logger = logging
-        else:
-            self.logger = logger
+    API_BASE = "/api/v2"
 
-        try:
-            self.config = ConfigObj(config_path)
-            self.config.update(api_config)
-            self.services = RequestProvider(self.config, api_endpoints)
-        except Exception as e:
-            self.logger.exception("Error loading config file: %s", config_path)
-            sys.exit(1)
+    def __init__(self, logger=None, config_path="/etc/airtime/airtime.conf"):
+        self.logger = logger or logging
+
+        config = Config(filepath=config_path)
+        self.base_url = config.general.public_url
+        self.api_key = config.general.api_key
+
+        self.services = RequestProvider(
+            base_url=self.base_url + self.API_BASE,
+            api_key=self.api_key,
+            endpoints=api_endpoints,
+        )
 
     def get_schedule(self):
         current_time = datetime.utcnow()

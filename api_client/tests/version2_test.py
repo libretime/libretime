@@ -1,21 +1,23 @@
+from pathlib import Path
+
 import pytest
 
-from libretime_api_client.utils import RequestProvider
-from libretime_api_client.version2 import AirtimeApiClient, api_config
+from libretime_api_client.version2 import AirtimeApiClient
 
 
 @pytest.fixture()
-def config():
-    return {
-        **api_config,
-        "general": {
-            "base_dir": "/test",
-            "base_port": 80,
-            "base_url": "localhost",
-            "api_key": "TEST_KEY",
-        },
-        "api_base": "api",
-    }
+def config_filepath(tmp_path: Path):
+    filepath = tmp_path / "airtime.conf"
+    filepath.write_text(
+        """
+[general]
+api_key = TEST_KEY
+base_dir = /test
+base_port = 80
+base_url = localhost
+"""
+    )
+    return filepath
 
 
 class MockRequestProvider:
@@ -82,8 +84,8 @@ class MockRequestProvider:
         }
 
 
-def test_get_schedule(monkeypatch, config):
-    client = AirtimeApiClient(None, config)
+def test_get_schedule(monkeypatch, config_filepath):
+    client = AirtimeApiClient(config_path=config_filepath)
     client.services = MockRequestProvider()
     schedule = client.get_schedule()
     assert schedule == {

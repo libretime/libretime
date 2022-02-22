@@ -1,24 +1,9 @@
 import datetime
-import json
 import logging
-import socket
 from time import sleep
 
 import requests
 from requests.auth import AuthBase
-
-
-def get_protocol(config):
-    positive_values = ["Yes", "yes", "True", "true", True]
-    port = config["general"].get("base_port", 80)
-    force_ssl = config["general"].get("force_ssl", False)
-    if force_ssl in positive_values:
-        protocol = "https"
-    else:
-        protocol = config["general"].get("protocol")
-        if not protocol:
-            protocol = str(("http", "https")[int(port) == 443])
-    return protocol
 
 
 class UrlParamDict(dict):
@@ -151,38 +136,21 @@ class ApiRequest:
 
 
 class RequestProvider:
-    """Creates the available ApiRequest instance that can be read from
-    a config file"""
+    """
+    Creates the available ApiRequest instance
+    """
 
-    def __init__(self, cfg, endpoints):
-        self.config = cfg
+    def __init__(self, base_url: str, api_key: str, endpoints: dict):
         self.requests = {}
-        if self.config["general"]["base_dir"].startswith("/"):
-            self.config["general"]["base_dir"] = self.config["general"]["base_dir"][1:]
-
-        protocol = get_protocol(self.config)
-        base_port = self.config["general"]["base_port"]
-        base_url = self.config["general"]["base_url"]
-        base_dir = self.config["general"]["base_dir"]
-        api_base = self.config["api_base"]
-        api_url = "{protocol}://{base_url}:{base_port}/{base_dir}{api_base}/{action}".format_map(
-            UrlParamDict(
-                protocol=protocol,
-                base_url=base_url,
-                base_port=base_port,
-                base_dir=base_dir,
-                api_base=api_base,
-            )
-        )
-        self.url = ApcUrl(api_url)
+        self.url = ApcUrl(base_url + "/{action}")
 
         # Now we must discover the possible actions
         for action_name, action_value in endpoints.items():
             new_url = self.url.params(action=action_value)
             if "{api_key}" in action_value:
-                new_url = new_url.params(api_key=self.config["general"]["api_key"])
+                new_url = new_url.params(api_key=api_key)
             self.requests[action_name] = ApiRequest(
-                action_name, new_url, api_key=self.config["general"]["api_key"]
+                action_name, new_url, api_key=api_key
             )
 
     def available_requests(self):
