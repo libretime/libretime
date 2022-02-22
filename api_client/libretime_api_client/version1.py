@@ -9,20 +9,18 @@
 import base64
 import json
 import logging
-import sys
 import time
 import traceback
 import urllib.parse
 
 import requests
-from configobj import ConfigObj
 
-from .utils import ApiRequest, RequestProvider, get_protocol
+from ._config import Config
+from .utils import ApiRequest, RequestProvider
 
 AIRTIME_API_VERSION = "1.1"
 
 
-api_config = {}
 api_endpoints = {}
 
 # URL to get the version number of the server API
@@ -67,8 +65,6 @@ api_endpoints[
 # show-recorder
 api_endpoints["show_schedule_url"] = "recorded-shows/format/json/api_key/{api_key}"
 api_endpoints["upload_file_url"] = "rest/media"
-api_endpoints["upload_retries"] = "3"
-api_endpoints["upload_wait"] = "60"
 # pypo
 api_endpoints["export_url"] = "schedule/api_key/{api_key}"
 api_endpoints["get_media_url"] = "get-media/file/{file}/api_key/{api_key}"
@@ -119,28 +115,28 @@ api_endpoints[
 api_endpoints[
     "update_metadata_on_tunein"
 ] = "update-metadata-on-tunein/api_key/{api_key}"
-api_config["api_base"] = "api"
-api_config["bin_dir"] = "/usr/lib/airtime/api_clients/"
 
 
 ################################################################################
 # Airtime API Version 1 Client
 ################################################################################
 class AirtimeApiClient:
-    def __init__(self, logger=None, config_path="/etc/airtime/airtime.conf"):
-        if logger is None:
-            self.logger = logging
-        else:
-            self.logger = logger
+    API_BASE = "/api"
+    UPLOAD_RETRIES = 3
+    UPLOAD_WAIT = 60
 
-        # loading config file
-        try:
-            self.config = ConfigObj(config_path)
-            self.config.update(api_config)
-            self.services = RequestProvider(self.config, api_endpoints)
-        except Exception as e:
-            self.logger.exception("Error loading config file: %s", config_path)
-            sys.exit(1)
+    def __init__(self, logger=None, config_path="/etc/airtime/airtime.conf"):
+        self.logger = logger or logging
+
+        config = Config(filepath=config_path)
+        self.base_url = config.general.public_url
+        self.api_key = config.general.api_key
+
+        self.services = RequestProvider(
+            base_url=self.base_url + self.API_BASE,
+            api_key=self.api_key,
+            endpoints=api_endpoints,
+        )
 
     def __get_airtime_version(self):
         try:
@@ -213,8 +209,8 @@ class AirtimeApiClient:
         logger = self.logger
         response = ""
 
-        retries = int(self.config["upload_retries"])
-        retries_wait = int(self.config["upload_wait"])
+        retries = self.UPLOAD_RETRIES
+        retries_wait = self.UPLOAD_WAIT
 
         url = self.construct_rest_url("upload_file_url")
 
@@ -276,37 +272,13 @@ class AirtimeApiClient:
             self.logger.exception(e)
             return {}
 
-    def construct_url(self, config_action_key):
-        """Constructs the base url for every request"""
-        # TODO : Make other methods in this class use this this method.
-        if self.config["general"]["base_dir"].startswith("/"):
-            self.config["general"]["base_dir"] = self.config["general"]["base_dir"][1:]
-        protocol = get_protocol(self.config)
-        url = "{}://{}:{}/{}{}/{}".format(
-            protocol,
-            self.config["general"]["base_url"],
-            str(self.config["general"]["base_port"]),
-            self.config["general"]["base_dir"],
-            self.config["api_base"],
-            self.config[config_action_key],
-        )
-        url = url.replace("%%api_key%%", self.config["general"]["api_key"])
-        return url
-
-    def construct_rest_url(self, config_action_key):
-        """Constructs the base url for RESTful requests"""
-        if self.config["general"]["base_dir"].startswith("/"):
-            self.config["general"]["base_dir"] = self.config["general"]["base_dir"][1:]
-        protocol = get_protocol(self.config)
-        url = "{}://{}:@{}:{}/{}/{}".format(
-            protocol,
-            self.config["general"]["api_key"],
-            self.config["general"]["base_url"],
-            str(self.config["general"]["base_port"]),
-            self.config["general"]["base_dir"],
-            self.config[config_action_key],
-        )
-        return url
+    def construct_rest_url(self, action_key):
+        """
+        Constructs the base url for RESTful requests
+        """
+        url = urllib.parse.urlsplit(self.base_url)
+        url.username = self.api_key
+        return f"{url.geturl()}/{api_endpoints[action_key]}"
 
     """
     Caller of this method needs to catch any exceptions such as
