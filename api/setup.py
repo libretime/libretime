@@ -43,6 +43,7 @@ setup(
         "dev": [
             "model_bakery",
             "psycopg2-binary",
+            "pylint-django",
             f"libretime-shared @ file://localhost/{here.parent / 'shared'}#egg=libretime_shared",
         ],
     },

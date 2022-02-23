@@ -1,3 +1,7 @@
+[tool.pylint.master]
+load-plugins = "pylint_django"
+django-settings-module = "libretime_api.settings.testing"
+
 [tool.pylint.messages_control]
 extension-pkg-whitelist = "pydantic"
 disable = [
