@@ -41,6 +41,8 @@ setup(
             "psycopg2",
         ],
         "dev": [
+            "django-stubs",
+            "djangorestframework-stubs",
             "model_bakery",
             "psycopg2-binary",
             "pylint-django",

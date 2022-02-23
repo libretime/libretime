@@ -13,6 +13,15 @@ disable = [
 [tool.pylint.design]
 max-parents = 15
 
+[tool.mypy]
+plugins = [
+  "mypy_django_plugin.main",
+  "mypy_drf_plugin.main",
+]
+
+[tool.django-stubs]
+django_settings_module = "libretime_api.settings.testing"
+
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
