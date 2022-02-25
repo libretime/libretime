@@ -38,4 +38,4 @@ update:
 build: $(MO_FILES)
 
 clean:
-	git clean -xdf
+	@rm -f $(MO_FILES)
