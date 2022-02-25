@@ -1067,7 +1067,7 @@ loudCmd "usermod -G ${web_user} -a celery"
 # CentOS installs celery in /usr/bin which differs from other distros. Make
 # available in /usr/local/bin as systemd requires an absolute path.
 [[ ! -e /usr/local/bin/celery ]] && ln -s /usr/bin/celery /usr/local/bin/celery
-systemInitInstall libretime-celery
+systemInitInstall libretime-celery celery
 verbose "...Done"
 
 verbose "\n * Installing libretime-analyzer..."
