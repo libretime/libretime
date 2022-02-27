@@ -91,7 +91,7 @@ CREATE TABLE "cc_files"
     "is_playlist" BOOLEAN DEFAULT 'f',
     "filesize" INTEGER DEFAULT 0 NOT NULL,
     "description" VARCHAR(512),
-    "artwork" VARCHAR(512),
+    "artwork" VARCHAR(4096),
     "track_type" VARCHAR(16),
     PRIMARY KEY ("id")
 );
