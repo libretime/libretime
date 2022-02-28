@@ -60,3 +60,13 @@ repos:
           - --ignore-words=.codespellignore
           - --builtin=clear,rare,informal
         exclude: (^legacy.*|yarn\.lock)$
+
+  - repo: local
+    hooks:
+      - id: requirements.txt
+        name: requirements.txt
+        description: Generate requirements.txt
+        entry: tools/extract-requirements.sh dev
+        pass_filenames: false
+        language: script
+        files: setup.py$
