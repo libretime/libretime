@@ -6,5 +6,4 @@ django-filter
 djangorestframework
 drf-spectacular
 markdown
-model_bakery
 psycopg2

@@ -35,13 +35,13 @@ setup(
         "django-filter",
         "drf-spectacular",
         "markdown",
-        "model_bakery",
     ],
     extras_require={
         "prod": [
             "psycopg2",
         ],
         "dev": [
+            "model_bakery",
             "psycopg2-binary",
         ],
     },
