@@ -21,14 +21,9 @@ command -v sed > /dev/null || error "sed command not found!"
 
 for setup_path in */setup.py; do
   path="$(dirname "$setup_path")"
-  egg_path="$(echo "$path"/*.egg-info)"
 
-  # Only build egg if absent
-  if [[ ! -d "$egg_path" ]]; then
-    python3 "$setup_path" egg_info > /dev/null 2>&1 || true
-  fi
-
-  # Refresh egg_path with bash expansion
+  # Build egg
+  python3 "$setup_path" egg_info > /dev/null 2>&1 || true
   egg_path="$(echo "$path"/*.egg-info)"
 
   # Remove entire extra section from require file
