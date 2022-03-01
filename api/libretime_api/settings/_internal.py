@@ -1,32 +1,8 @@
-import os
-
-from .utils import get_random_string, read_config_file
-
-API_VERSION = "2.0.0"
-
-LIBRETIME_LOG_FILEPATH = os.getenv("LIBRETIME_LOG_FILEPATH")
-LIBRETIME_CONFIG_FILEPATH = os.getenv(
-    "LIBRETIME_CONFIG_FILEPATH",
-    "/etc/airtime/airtime.conf",
-)
-LIBRETIME_STATIC_ROOT = os.getenv(
-    "LIBRETIME_STATIC_ROOT",
-    "/usr/share/airtime/api",
-)
-CONFIG = read_config_file(LIBRETIME_CONFIG_FILEPATH)
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = get_random_string(CONFIG.get("general", "api_key", fallback=""))
+from os import getenv
+from typing import Optional
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("LIBRETIME_DEBUG", False)
-
-ALLOWED_HOSTS = ["*"]
-
+DEBUG = getenv("LIBRETIME_DEBUG")
 
 # Application definition
 
@@ -72,22 +48,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "libretime_api.wsgi.application"
 
-
-# Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": CONFIG.get("database", "name", fallback="libretime"),
-        "USER": CONFIG.get("database", "user", fallback="libretime"),
-        "PASSWORD": CONFIG.get("database", "password", fallback="libretime"),
-        "HOST": CONFIG.get("database", "host", fallback="localhost"),
-        "PORT": CONFIG.get("database", "port", fallback="5432"),
-    }
-}
-
-
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -129,66 +89,53 @@ REST_FRAMEWORK = {
     "URL_FIELD_NAME": "item_url",
 }
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/3.0/topics/i18n/
-
-LANGUAGE_CODE = "en-us"
-
-TIME_ZONE = "UTC"
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
-
-
 AUTH_USER_MODEL = "libretime_api.User"
 
 TEST_RUNNER = "libretime_api.tests.runners.ManagedModelTestRunner"
 
 
-LOGGING_HANDLERS = {
-    "console": {
-        "level": "INFO",
-        "class": "logging.StreamHandler",
-        "formatter": "simple",
-    },
-}
-
-if LIBRETIME_LOG_FILEPATH is not None:
-    LOGGING_HANDLERS["file"] = {
-        "level": "DEBUG",
-        "class": "logging.FileHandler",
-        "filename": LIBRETIME_LOG_FILEPATH,
-        "formatter": "verbose",
+# Logging
+def setup_logger(log_filepath: Optional[str]):
+    logging_handlers = {
+        "console": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
     }
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "simple": {
-            "format": "{levelname} {message}",
-            "style": "{",
+    if log_filepath is not None:
+        logging_handlers["file"] = {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": log_filepath,
+            "formatter": "verbose",
+        }
+
+    return {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "simple": {
+                "format": "{levelname} {message}",
+                "style": "{",
+            },
+            "verbose": {
+                "format": "{asctime} {module} {levelname} {message}",
+                "style": "{",
+            },
         },
-        "verbose": {
-            "format": "{asctime} {module} {levelname} {message}",
-            "style": "{",
+        "handlers": logging_handlers,
+        "loggers": {
+            "django": {
+                "handlers": logging_handlers.keys(),
+                "level": "INFO",
+                "propagate": True,
+            },
+            "libretime_api": {
+                "handlers": logging_handlers.keys(),
+                "level": "INFO",
+                "propagate": True,
+            },
         },
-    },
-    "handlers": LOGGING_HANDLERS,
-    "loggers": {
-        "django": {
-            "handlers": LOGGING_HANDLERS.keys(),
-            "level": "INFO",
-            "propagate": True,
-        },
-        "libretime_api": {
-            "handlers": LOGGING_HANDLERS.keys(),
-            "level": "INFO",
-            "propagate": True,
-        },
-    },
-}
+    }

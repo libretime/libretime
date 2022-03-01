@@ -7,6 +7,7 @@ import sys
 
 def main():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "libretime_api.settings")
+    os.environ.setdefault("LIBRETIME_CONFIG_FILEPATH", "/etc/airtime/airtime.conf")
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

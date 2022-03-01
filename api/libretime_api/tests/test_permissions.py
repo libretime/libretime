@@ -33,7 +33,7 @@ class TestIsSystemTokenOrUser(APITestCase):
         self.assertFalse(allowed)
 
     def test_token_correct(self):
-        token = settings.CONFIG.get("general", "api_key")
+        token = settings.CONFIG.general.api_key
         request = APIRequestFactory().get(self.path)
         request.user = AnonymousUser()
         request.META["Authorization"] = f"Api-Key {token}"

@@ -192,6 +192,7 @@ jobs:
       postgres:
         image: postgres
         env:
+          POSTGRES_USER: libretime
           POSTGRES_PASSWORD: libretime
         options: >-
           --health-cmd pg_isready
@@ -204,7 +205,8 @@ jobs:
       run:
         shell: bash
     env:
-      LIBRETIME_CONFIG_FILEPATH: /tmp/libretime-test.conf
+      LIBRETIME_GENERAL_API_KEY: test_key
+      LIBRETIME_DATABASE_HOST: postgres
 
     steps:
       - uses: actions/checkout@v2
@@ -215,20 +217,6 @@ jobs:
           key: ${{ runner.os }}-pip-${{ matrix.context }}-${{ hashFiles('**/setup.py') }}
           restore-keys: |
             ${{ runner.os }}-pip-${{ matrix.context }}
-
-      - name: Setup libretime configuration
-        run: |
-          cat <<EOF > $LIBRETIME_CONFIG_FILEPATH
-          [general]
-          api_key = test_key
-          [database]
-          host = postgres
-          port = 5432
-          name = libretime
-          user = postgres
-          password = libretime
-          EOF
-          cat $LIBRETIME_CONFIG_FILEPATH
 
       - name: Test
         run: make test
