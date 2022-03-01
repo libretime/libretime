@@ -23,6 +23,7 @@ class BaseConfig(BaseModel):
 
     :param filepath: yaml configuration file to read from
     :param env_prefix: prefix for the environment variable names
+    :param env_delimiter: delimiter for the environment variable names
     :returns: configuration class
     """
 
@@ -83,6 +84,11 @@ class BaseConfig(BaseModel):
         filepath: Optional[Path] = None,
     ) -> Dict[str, Any]:
         if filepath is None:
+            logger.debug("no config filepath is provided")
+            return {}
+
+        if not filepath.is_file():
+            logger.warning(f"provided config filepath '{filepath}' is not a file")
             return {}
 
         # pylint: disable=fixme
@@ -95,8 +101,9 @@ class BaseConfig(BaseModel):
         try:
             return safe_load(filepath.read_text(encoding="utf-8"))
         except YAMLError as error:
-            logger.critical(error)
-            sys.exit(1)
+            logger.error(f"config file '{filepath}' is not a valid yaml file: {error}")
+
+        return {}
 
 
 # pylint: disable=too-few-public-methods
