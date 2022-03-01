@@ -5,7 +5,9 @@ SHELL = bash
 all: setup
 
 setup:
-	command -v pre-commit > /dev/null && pre-commit install
+	command -v pre-commit > /dev/null && pre-commit install \
+		--hook-type pre-commit \
+		--hook-type commit-msg
 
 # https://google.github.io/styleguide/shellguide.html
 shell-format:
