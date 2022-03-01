@@ -32,7 +32,6 @@ ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     "libretime_api.apps.LibreTimeAPIConfig",
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -107,7 +106,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Rest Framework settings
+# https://www.django-rest-framework.org/api-guide/settings/
+
+renderer_classes = ["rest_framework.renderers.JSONRenderer"]
+if DEBUG:
+    renderer_classes += ["rest_framework.renderers.BrowsableAPIRenderer"]
+
 REST_FRAMEWORK = {
+    "DEFAULT_RENDERER_CLASSES": renderer_classes,
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.BasicAuthentication",
@@ -136,13 +143,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
-
-STATIC_URL = "/api/static/"
-if not DEBUG:
-    STATIC_ROOT = LIBRETIME_STATIC_ROOT
 
 AUTH_USER_MODEL = "libretime_api.User"
 
