@@ -1083,7 +1083,6 @@ mkdir -p /etc/airtime
 sed -e "s@WEB_USER@${web_user}@g" \
   -e "s@WEB_ROOT@${web_root}@g" \
   "${AIRTIMEROOT}/installer/uwsgi/libretime-api.ini" > /etc/airtime/libretime-api.ini
-loudCmd "libretime-api collectstatic --clear --noinput"
 verbose "...Done"
 
 verbose "\n * Setting permissions on /var/log/airtime..."
