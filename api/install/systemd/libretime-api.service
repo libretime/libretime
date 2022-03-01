@@ -7,6 +7,7 @@ NotifyAccess=all
 KillSignal=SIGQUIT
 
 Environment=LIBRETIME_LOG_FILEPATH=/var/log/libretime/api.log
+Environment=LIBRETIME_CONFIG_FILEPATH=/etc/airtime/airtime.conf
 
 ExecStart=/usr/bin/uwsgi /etc/airtime/libretime-api.ini
 User=libretime-api

@@ -55,7 +55,7 @@ def check_authorization_header(request):
 
     if auth_header.startswith("Api-Key"):
         token = auth_header.split()[1]
-        if token == settings.CONFIG.get("general", "api_key"):
+        if token == settings.CONFIG.general.api_key:
             return True
     return False
 
