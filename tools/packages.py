@@ -86,8 +86,8 @@ def run():
     parser.add_argument(
         "-e",
         "--exclude",
-        nargs="+",
         help="exclude packages sections.",
+        action="append",
     )
     parser.add_argument(
         "distribution",
