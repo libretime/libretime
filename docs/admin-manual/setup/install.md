@@ -65,6 +65,12 @@ git clone https://github.com/libretime/libretime
 cd libretime
 ```
 
+:::caution
+
+Don't use the https://github.com/libretime/libretime-debian-packaging repository, it is only used to create LibreTime packages.
+
+:::
+
 :::info
 
 When upgrading, you can pull the latest changes from the repository before checking out the desired version:
