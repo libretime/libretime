@@ -26,12 +26,8 @@ jobs:
 
     env:
       REGISTRY: ghcr.io
-      IMAGE_ORG: libretime
       IMAGE_NAME: libretime-dev
 
-    # See https://github.com/LibreTime/libretime/issues/1216
-    # See https://github.com/LibreTime/libretime/actions/runs/1190504235
-    if: ${{ github.repository_owner == 'LibreTime' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -89,5 +85,5 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_ORG }}/${{ env.IMAGE_NAME }}:${{ matrix.release }}
+          push: ${{ github.repository_owner == 'libretime' }}
+          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ matrix.release }}

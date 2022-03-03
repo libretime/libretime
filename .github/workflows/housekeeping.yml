@@ -12,7 +12,7 @@ on:
 
 jobs:
   find_closed_references:
-    if: github.repository_owner == 'LibreTime'
+    if: github.repository_owner == 'libretime'
     name: Find closed references
 
     runs-on: ubuntu-latest
@@ -30,7 +30,7 @@ jobs:
           ignore: .git,/docs/releases/*
 
   find_broken_links:
-    if: github.repository_owner == 'LibreTime'
+    if: github.repository_owner == 'libretime'
     name: Find broken links
 
     runs-on: ubuntu-latest
