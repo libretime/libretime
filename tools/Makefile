@@ -2,7 +2,9 @@ all: lint test
 
 include python.mk
 
-PIP_INSTALL =
+PIP_INSTALL = \
+	requests \
+	types-requests
 PYLINT_ARG = tools
 MYPY_ARG = .
 PYTEST_ARG = .
