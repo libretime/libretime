@@ -8,6 +8,7 @@
 ###############################################################################
 import logging
 from datetime import datetime, timedelta
+from typing import Dict
 
 from dateutil.parser import isoparse
 
@@ -15,6 +16,12 @@ from ._config import Config
 from .utils import RequestProvider, fromisoformat, time_in_milliseconds, time_in_seconds
 
 LIBRETIME_API_VERSION = "2.0"
+EVENT_KEY_FORMAT = "%Y-%m-%d-%H-%M-%S"
+
+
+def datetime_to_event_key(value: datetime) -> str:
+    return value.strftime(EVENT_KEY_FORMAT)
+
 
 api_endpoints = {}
 
@@ -47,93 +54,131 @@ class AirtimeApiClient:
         current_time = datetime.utcnow()
         end_time = current_time + timedelta(days=1)
 
-        str_current = current_time.isoformat(timespec="seconds")
-        str_end = end_time.isoformat(timespec="seconds")
-        data = self.services.schedule_url(
+        current_time_str = current_time.isoformat(timespec="seconds")
+        end_time_str = end_time.isoformat(timespec="seconds")
+
+        schedule = self.services.schedule_url(
             params={
-                "ends__range": (f"{str_current}Z,{str_end}Z"),
+                "ends__range": (f"{current_time_str}Z,{end_time_str}Z"),
                 "is_valid": True,
                 "playout_status__gt": 0,
             }
         )
-        result = {}
-        for item in data:
-            start = isoparse(item["starts"])
-            start_key = start.strftime("%Y-%m-%d-%H-%M-%S")
-            end = isoparse(item["ends"])
-            end_key = end.strftime("%Y-%m-%d-%H-%M-%S")
+
+        events = {}
+        for item in schedule:
+            item["starts"] = isoparse(item["starts"])
+            item["ends"] = isoparse(item["ends"])
 
             show_instance = self.services.show_instance_url(id=item["instance_id"])
             show = self.services.show_url(id=show_instance["show_id"])
 
-            result[start_key] = {
-                "start": start_key,
-                "end": end_key,
-                "row_id": item["id"],
-                "show_name": show["name"],
-            }
-            current = result[start_key]
             if item["file"]:
-                current["independent_event"] = False
-                current["type"] = "file"
-                current["id"] = item["file_id"]
+                file = self.services.file_url(id=item["file_id"])
+                events.update(generate_file_events(item, file, show))
 
-                fade_in = time_in_milliseconds(fromisoformat(item["fade_in"]))
-                fade_out = time_in_milliseconds(fromisoformat(item["fade_out"]))
-
-                cue_in = time_in_seconds(fromisoformat(item["cue_in"]))
-                cue_out = time_in_seconds(fromisoformat(item["cue_out"]))
-
-                current["fade_in"] = fade_in
-                current["fade_out"] = fade_out
-                current["cue_in"] = cue_in
-                current["cue_out"] = cue_out
-
-                info = self.services.file_url(id=item["file_id"])
-                current["metadata"] = info
-                current["uri"] = item["file"]
-                current["replay_gain"] = info["replay_gain"]
-                current["filesize"] = info["filesize"]
             elif item["stream"]:
-                current["independent_event"] = True
-                current["id"] = item["stream_id"]
-                info = self.services.webstream_url(id=item["stream_id"])
-                current["uri"] = info["url"]
-                current["type"] = "stream_buffer_start"
-                # Stream events are instantaneous
-                current["end"] = current["start"]
+                webstream = self.services.webstream_url(id=item["stream_id"])
+                events.update(generate_webstream_events(item, webstream, show))
 
-                result[f"{start_key}_0"] = {
-                    "id": current["id"],
-                    "type": "stream_output_start",
-                    "start": current["start"],
-                    "end": current["start"],
-                    "uri": current["uri"],
-                    "row_id": current["row_id"],
-                    "independent_event": current["independent_event"],
-                }
-
-                result[end_key] = {
-                    "type": "stream_buffer_end",
-                    "start": current["end"],
-                    "end": current["end"],
-                    "uri": current["uri"],
-                    "row_id": current["row_id"],
-                    "independent_event": current["independent_event"],
-                }
-
-                result[f"{end_key}_0"] = {
-                    "type": "stream_output_end",
-                    "start": current["end"],
-                    "end": current["end"],
-                    "uri": current["uri"],
-                    "row_id": current["row_id"],
-                    "independent_event": current["independent_event"],
-                }
-
-        return {"media": result}
+        return {"media": events}
 
     def update_file(self, file_id, payload):
         data = self.services.file_url(id=file_id)
         data.update(payload)
         return self.services.file_url(id=file_id, _put_data=data)
+
+
+def generate_file_events(
+    schedule: dict,
+    file: dict,
+    show: dict,
+) -> Dict[str, dict]:
+    """
+    Generate events for a scheduled file.
+    """
+    events = {}
+
+    schedule_start_event_key = datetime_to_event_key(schedule["starts"])
+    schedule_end_event_key = datetime_to_event_key(schedule["ends"])
+
+    events[schedule_start_event_key] = {
+        "type": "file",
+        "independent_event": False,
+        "row_id": schedule["id"],
+        "start": schedule_start_event_key,
+        "end": schedule_end_event_key,
+        "uri": file["url"],
+        "id": file["id"],
+        # Show data
+        "show_name": show["name"],
+        # Extra data
+        "fade_in": time_in_milliseconds(fromisoformat(schedule["fade_in"])),
+        "fade_out": time_in_milliseconds(fromisoformat(schedule["fade_out"])),
+        "cue_in": time_in_seconds(fromisoformat(schedule["cue_in"])),
+        "cue_out": time_in_seconds(fromisoformat(schedule["cue_out"])),
+        "metadata": file,
+        "replay_gain": file["replay_gain"],
+        "filesize": file["filesize"],
+    }
+
+    return events
+
+
+def generate_webstream_events(
+    schedule: dict,
+    webstream: dict,
+    show: dict,
+) -> Dict[str, dict]:
+    """
+    Generate events for a scheduled webstream.
+    """
+    events = {}
+
+    schedule_start_event_key = datetime_to_event_key(schedule["starts"])
+    schedule_end_event_key = datetime_to_event_key(schedule["ends"])
+
+    events[schedule_start_event_key] = {
+        "type": "stream_buffer_start",
+        "independent_event": True,
+        "row_id": schedule["id"],
+        "start": datetime_to_event_key(schedule["starts"] - timedelta(seconds=5)),
+        "end": datetime_to_event_key(schedule["starts"] - timedelta(seconds=5)),
+        "uri": webstream["url"],
+        "id": webstream["id"],
+    }
+
+    events[f"{schedule_start_event_key}_0"] = {
+        "type": "stream_output_start",
+        "independent_event": True,
+        "row_id": schedule["id"],
+        "start": schedule_start_event_key,
+        "end": schedule_end_event_key,
+        "uri": webstream["url"],
+        "id": webstream["id"],
+        # Show data
+        "show_name": show["name"],
+    }
+
+    # NOTE: stream_*_end were previously triggerered 1 second before the schedule end.
+    events[schedule_end_event_key] = {
+        "type": "stream_buffer_end",
+        "independent_event": True,
+        "row_id": schedule["id"],
+        "start": schedule_end_event_key,
+        "end": schedule_end_event_key,
+        "uri": webstream["url"],
+        "id": webstream["id"],
+    }
+
+    events[f"{schedule_end_event_key}_0"] = {
+        "type": "stream_output_end",
+        "independent_event": True,
+        "row_id": schedule["id"],
+        "start": schedule_end_event_key,
+        "end": schedule_end_event_key,
+        "uri": webstream["url"],
+        "id": webstream["id"],
+    }
+
+    return events
