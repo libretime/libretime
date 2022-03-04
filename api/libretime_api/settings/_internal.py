@@ -89,6 +89,11 @@ REST_FRAMEWORK = {
     "URL_FIELD_NAME": "item_url",
 }
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/3.0/howto/static-files/
+
+STATIC_URL = "/api/v2/static/"
+
 AUTH_USER_MODEL = "libretime_api.User"
 
 TEST_RUNNER = "libretime_api.tests.runners.ManagedModelTestRunner"
