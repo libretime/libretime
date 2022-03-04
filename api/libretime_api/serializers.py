@@ -47,6 +47,8 @@ class CountrySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class FileSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = File
         fields = "__all__"
@@ -253,6 +255,8 @@ class TimestampSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class WebstreamSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = Webstream
         fields = "__all__"
