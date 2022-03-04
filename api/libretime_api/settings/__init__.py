@@ -9,6 +9,7 @@ from ._internal import (
     MIDDLEWARE,
     REST_FRAMEWORK,
     ROOT_URLCONF,
+    STATIC_URL,
     TEMPLATES,
     TEST_RUNNER,
     WSGI_APPLICATION,
