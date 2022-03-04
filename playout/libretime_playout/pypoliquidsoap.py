@@ -129,8 +129,7 @@ class PypoLiquidsoap:
             scheduled_now_webstream = [
                 x
                 for x in scheduled_now
-                if x["type"]
-                in (eventtypes.STREAM_OUTPUT_START, eventtypes.STREAM_BUFFER_START)
+                if x["type"] in (eventtypes.STREAM_OUTPUT_START)
             ]
 
             schedule_ids = {x["row_id"] for x in scheduled_now_files}
