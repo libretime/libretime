@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/LibreTime/libretime/issues\n"
 "POT-Creation-Date: 2021-10-15 19:56+0200\n"
-"PO-Revision-Date: 2021-10-16 23:57+0000\n"
-"Last-Translator: Jonas L. <lammler.jonas@riseup.net>\n"
+"PO-Revision-Date: 2022-03-08 06:55+0000\n"
+"Last-Translator: Maxime Leroy <lisacintosh@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/libretime/legacy/"
 "fr/>\n"
 "Language: fr_FR\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.12-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -683,22 +683,26 @@ msgstr "Service de diffusion LibreTime"
 #: application/configs/config-check.php:203
 msgid "Check that the libretime-playout service is installed correctly in "
 msgstr ""
+"Vérifiez que le service « libretime-playout » est installé correctement dans "
 
 #: application/configs/config-check.php:217
 msgid "LibreTime liquidsoap service"
-msgstr ""
+msgstr "Service liquidsoap de LibreTime"
 
 #: application/configs/config-check.php:224
 msgid "Check that the libretime-liquidsoap service is installed correctly in "
 msgstr ""
+"Vérifiez que le service « libretime-liquidsoap » est installé correctement "
+"dans "
 
 #: application/configs/config-check.php:238
 msgid "LibreTime Celery Task service"
-msgstr ""
+msgstr "Service Celery Task de LibreTime"
 
 #: application/configs/config-check.php:245
 msgid "Check that the libretime-celery service is installed correctly in "
 msgstr ""
+"Vérifiez que le service « libretime-celery » est installé correctement dans "
 
 #: application/configs/config-check.php:259
 msgid "LibreTime API service"
@@ -707,6 +711,7 @@ msgstr "Service API LibreTime"
 #: application/configs/config-check.php:266
 msgid "Check that the libretime-api service is installed correctly in "
 msgstr ""
+"Vérifiez que le service « libretime-api » est installé correctement dans "
 
 #: application/configs/navigation.php:27
 msgid "Radio Page"
@@ -853,18 +858,31 @@ msgid ""
 "Streams<br>\n"
 "            2. Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
+"Pour configurer et utiliser le lecture intégré, vous devez :<br><br>\n"
+"            1. Activer au moins un flux MP3, AAC ou OGG dans Préférences "
+"-&gt; Flux<br>\n"
+"            2. Activer l'API publique de LibreTime depuis Préférences -&gt; "
+"Préférences"
 
 #: application/controllers/EmbeddablewidgetsController.php:39
 msgid ""
 "To use the embeddable weekly schedule widget you must:<br><br>\n"
 "            Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
+"Pour utiliser le widget intégré de programmation hebdomadaire, vous devez "
+":<br><br>\n"
+"            Activer l'API publique LibreTime dans Préférences -&gt; "
+"Préférences"
 
 #: application/controllers/EmbeddablewidgetsController.php:52
 msgid ""
 "To add the Radio Tab to your Facebook Page, you must first:<br><br>\n"
 "            Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
+"Pour ajouter un onglet radius à votre page Facebook vous devez d'abord "
+":<br><br>\n"
+"            Activer l'API publique LibreTime dans Préférences -&gt; "
+"Préférences"
 
 #: application/controllers/ErrorController.php:96
 msgid "Page not found."
@@ -947,7 +965,7 @@ msgstr "Dupliquer la liste de lecture"
 
 #: application/controllers/LibraryController.php:138
 msgid "Duplicate Smartblock"
-msgstr ""
+msgstr "Dupliquer le bloc intelligent"
 
 #: application/controllers/LibraryController.php:180
 msgid "No action available"
@@ -975,8 +993,8 @@ msgstr "Copie de %s"
 msgid ""
 "Please make sure admin user/password is correct on Settings->Streams page."
 msgstr ""
-"S'il vous plaît assurez-vous que l'utilisateur admin a un mot de passe "
-"correct sur le système-> page flux."
+"Veuillez vous assurer que l’administrateur a un mot de passe correct dans la "
+"page Préférences -&gt; Flux."
 
 #: application/controllers/LocaleController.php:27
 msgid "Audio Player"
@@ -988,7 +1006,7 @@ msgstr "Quelque chose s'est mal passé !"
 
 #: application/controllers/LocaleController.php:30
 msgid "Recording:"
-msgstr "Enregistrement:"
+msgstr "Enregistrement :"
 
 #: application/controllers/LocaleController.php:31
 msgid "Master Stream"
@@ -1004,7 +1022,7 @@ msgstr "Rien de Prévu"
 
 #: application/controllers/LocaleController.php:34
 msgid "Current Show:"
-msgstr "Émission en Cours:"
+msgstr "Émission en cours :"
 
 #: application/controllers/LocaleController.php:35
 msgid "Current"
@@ -1016,7 +1034,7 @@ msgstr "Vous exécutez la dernière version"
 
 #: application/controllers/LocaleController.php:38
 msgid "New version available: "
-msgstr "Nouvelle version disponible: "
+msgstr "Nouvelle version disponible : "
 
 #: application/controllers/LocaleController.php:39
 msgid "You have a pre-release version of LibreTime intalled."
@@ -1089,7 +1107,7 @@ msgstr "Vous n'avez pas ajouté de playlists"
 
 #: application/controllers/LocaleController.php:56
 msgid "You haven't added any podcasts"
-msgstr ""
+msgstr "Vous n'avez pas ajouté de podcast"
 
 #: application/controllers/LocaleController.php:57
 msgid "You haven't added any smart blocks"
@@ -1150,7 +1168,7 @@ msgstr "Ajouter à l'émission actuelle"
 
 #: application/controllers/LocaleController.php:74
 msgid "Add after selected items"
-msgstr ""
+msgstr "Ajouter après les éléments sélectionnés"
 
 #: application/controllers/LocaleController.php:76
 msgid "Publish"
@@ -1188,7 +1206,7 @@ msgstr "Tous déselectioner"
 
 #: application/controllers/LocaleController.php:84
 msgid "Are you sure you want to delete the selected item(s)?"
-msgstr "Étés-vous sûr de vouloir effacer le(s) élément(s) sélectionné(s)?"
+msgstr "Êtes-vous sûr(e) de vouloir effacer le(s) élément(s) sélectionné(s) ?"
 
 #: application/controllers/LocaleController.php:85
 msgid "Scheduled"
@@ -1327,7 +1345,7 @@ msgstr "Mime"
 #: application/models/Block.php:1466 application/models/Block.php:1562
 #: application/services/HistoryService.php:1058
 msgid "Mood"
-msgstr "Mood"
+msgstr "Humeur"
 
 #: application/controllers/LocaleController.php:106
 #: application/forms/SmartBlockCriteria.php:78
@@ -1338,6 +1356,7 @@ msgstr "Propriétaire"
 #: application/controllers/LocaleController.php:107
 #: application/forms/SmartBlockCriteria.php:79
 #: application/models/Block.php:1468 application/models/Block.php:1564
+#, fuzzy
 msgid "Replay Gain"
 msgstr "Replay Gain"
 
@@ -1386,7 +1405,7 @@ msgstr "Fichiers"
 #: application/controllers/LocaleController.php:116
 #: application/views/scripts/partialviews/dashboard-sub-nav.php:8
 msgid "Playlists"
-msgstr "Playlists"
+msgstr "Listes de lecture"
 
 #: application/controllers/LocaleController.php:117
 #: application/views/scripts/partialviews/dashboard-sub-nav.php:13
@@ -1399,11 +1418,11 @@ msgstr "Flux Web"
 
 #: application/controllers/LocaleController.php:119
 msgid "Unknown type: "
-msgstr "Type non reconnu: "
+msgstr "Type inconnu : "
 
 #: application/controllers/LocaleController.php:120
 msgid "Are you sure you want to delete the selected item?"
-msgstr "Êtes-vous sûr de vouloir supprimer l'élément sélectionné?"
+msgstr "Êtes-vous sûr de vouloir supprimer l'élément sélectionné ?"
 
 #: application/controllers/LocaleController.php:121
 #: application/controllers/LocaleController.php:218
@@ -1420,7 +1439,7 @@ msgstr "Importer"
 
 #: application/controllers/LocaleController.php:125
 msgid "Imported?"
-msgstr "Importé?"
+msgstr "Importé ?"
 
 #: application/controllers/LocaleController.php:126
 #: application/services/CalendarService.php:59
@@ -1430,11 +1449,11 @@ msgstr "Afficher"
 
 #: application/controllers/LocaleController.php:127
 msgid "Error code: "
-msgstr "Code d'erreur: "
+msgstr "Code d'erreur : "
 
 #: application/controllers/LocaleController.php:128
 msgid "Error msg: "
-msgstr "Message d'erreur: "
+msgstr "Message d'erreur : "
 
 #: application/controllers/LocaleController.php:129
 msgid "Input must be a positive number"
@@ -1446,11 +1465,11 @@ msgstr "L'entrée doit être un nombre"
 
 #: application/controllers/LocaleController.php:131
 msgid "Input must be in the format: yyyy-mm-dd"
-msgstr "L'entrée doit être au format suivant: aaaa-mm-jj"
+msgstr "L'entrée doit être au format : aaaa-mm-jj"
 
 #: application/controllers/LocaleController.php:132
 msgid "Input must be in the format: hh:mm:ss.t"
-msgstr "L'entrée doit être au format suivant: hh:mm:ss.t"
+msgstr "L'entrée doit être au format : hh:mm:ss.t"
 
 #: application/controllers/LocaleController.php:133
 msgid "My Podcast"
@@ -1463,8 +1482,8 @@ msgid ""
 "upload process. %sAre you sure you want to leave the page?"
 msgstr ""
 "Vous êtes en train de téléverser des fichiers. %s Aller vers un autre écran "
-"pour annuler le processus de téléversement. %s Êtes-vous sûr de vouloir "
-"quitter la page?"
+"pour annuler le processus de téléversement. %s Êtes-vous sûr(e) de vouloir "
+"quitter la page ?"
 
 #: application/controllers/LocaleController.php:137
 msgid "Open Media Builder"
@@ -1472,7 +1491,7 @@ msgstr "Ouvrir le Constructeur de Média"
 
 #: application/controllers/LocaleController.php:138
 msgid "please put in a time '00:00:00 (.0)'"
-msgstr "s'il vous plaît mettez en durée '00: 00:00 (.0) '"
+msgstr "veuillez mettre la durée '00:00:00 (.0)'"
 
 #: application/controllers/LocaleController.php:139
 msgid "Please enter a valid time in seconds. Eg. 0.5"
@@ -1481,7 +1500,7 @@ msgstr "Veuillez entrer un temps en secondes. Par exemple 0.5"
 #: application/controllers/LocaleController.php:140
 msgid "Your browser does not support playing this file type: "
 msgstr ""
-"Votre navigateur ne prend pas en charge la lecture de ce type de fichier: "
+"Votre navigateur ne prend pas en charge la lecture de ce type de fichier : "
 
 #: application/controllers/LocaleController.php:141
 msgid "Dynamic block is not previewable"
@@ -1489,7 +1508,7 @@ msgstr "Le Bloc dynamique n'est pas prévisualisable"
 
 #: application/controllers/LocaleController.php:142
 msgid "Limit to: "
-msgstr "Limiter à: "
+msgstr "Limiter à : "
 
 #: application/controllers/LocaleController.php:143
 msgid "Playlist saved"
@@ -1512,7 +1531,7 @@ msgstr ""
 #: application/controllers/LocaleController.php:147
 #, php-format
 msgid "Listener Count on %s: %s"
-msgstr "Nombre d'auditeur sur %s: %s"
+msgstr "Nombre d'auditeurs sur %s : %s"
 
 #: application/controllers/LocaleController.php:149
 msgid "Remind me in 1 week"
@@ -1559,6 +1578,10 @@ msgid ""
 "tracks to match your criteria. Enable this option if you wish to allow "
 "tracks to be added multiple times to the smart block."
 msgstr ""
+"La longueur de bloc désirée ne sera pas atteinte si %s ne trouve pas assez "
+"de pistes uniques qui correspondent à vos critères. Activez cette option si "
+"vous voulez autoriser les pistes à être ajoutées plusieurs fois à bloc "
+"intelligent."
 
 #: application/controllers/LocaleController.php:157
 msgid "Smart block shuffled"
@@ -1671,8 +1694,8 @@ msgid ""
 "Are you sure you want to change the storage folder?\n"
 "This will remove the files from your Airtime library!"
 msgstr ""
-"Êtes-vous sûr que vous voulez changer le répertoire de stockage? \n"
-"Cela supprimera les fichiers de votre médiathèque Airtime!"
+"Êtes-vous sûr que vous voulez changer le répertoire de stockage ? \n"
+"Cela supprimera les fichiers de votre médiathèque Airtime !"
 
 #: application/controllers/LocaleController.php:177
 msgid "Manage Media Folders"
@@ -1680,7 +1703,7 @@ msgstr "Gérer les Répertoires des Médias"
 
 #: application/controllers/LocaleController.php:178
 msgid "Are you sure you want to remove the watched folder?"
-msgstr "Êtes-vous sûr de vouloir supprimer le répertoire surveillé?"
+msgstr "Êtes-vous sûr(e) de vouloir supprimer le répertoire surveillé ?"
 
 #: application/controllers/LocaleController.php:179
 msgid "This path is currently not accessible."
@@ -1722,11 +1745,16 @@ msgid ""
 "mount that your DJ's need to connect to. The allowed range is between 1024 "
 "and 49151."
 msgstr ""
+"Si %s est derrière un routeur ou un pare-feu, vous devriez avoir besoin de "
+"configurer le suivi de port et les informations de ce champ seront "
+"incorrectes. Dans ce cas, vous aurez besoin de mettre à jour manuellement ce "
+"champ pour qu'il affiche l'hôte/port/montage correct pour que votre DJ "
+"puisse s'y connecter. L'intervalle autorisé est de 1024 à 49151."
 
 #: application/controllers/LocaleController.php:187
 #, php-format
 msgid "For more details, please read the %s%s Manual%s"
-msgstr ""
+msgstr "Pour plus d'informations, veuillez lire le manuel %s%s %s"
 
 #: application/controllers/LocaleController.php:188
 msgid ""
@@ -1783,8 +1811,8 @@ msgid ""
 "WARNING: This will restart your stream and may cause a short dropout for "
 "your listeners!"
 msgstr ""
-"AVERTISSEMENT: cela redémarrera votre flux et peut entraîner un court "
-"décrochage pour vos auditeurs!"
+"AVERTISSEMENT : cela redémarrera votre flux et peut entraîner un court "
+"décrochage pour vos auditeurs !"
 
 #: application/controllers/LocaleController.php:194
 msgid ""
@@ -1798,8 +1826,8 @@ msgstr ""
 msgid ""
 "Warning: You cannot change this field while the show is currently playing"
 msgstr ""
-"Attention: Vous ne pouvez pas modifier ce champ alors que l'émission est en "
-"cours de lecture"
+"Attention : Vous ne pouvez pas modifier ce champ pendant que l'émission est "
+"en cours de lecture"
 
 #: application/controllers/LocaleController.php:199
 msgid "No result found"
@@ -1810,7 +1838,7 @@ msgid ""
 "This follows the same security pattern for the shows: only users assigned to "
 "the show can connect."
 msgstr ""
-"Cela suit le même modèle de sécurité que pour les émissions: seuls les "
+"Cela suit le même modèle de sécurité que pour les émissions : seuls les "
 "utilisateurs affectés à l' émission peuvent se connecter."
 
 #: application/controllers/LocaleController.php:201
@@ -1821,11 +1849,11 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:203
 msgid "The show instance doesn't exist anymore!"
-msgstr "L'instance émission n'existe plus!"
+msgstr "L'instance de l'émission n'existe plus !"
 
 #: application/controllers/LocaleController.php:204
 msgid "Warning: Shows cannot be re-linked"
-msgstr "Attention: Les émissions ne peuvent pas être re-liés"
+msgstr "Attention : Les émissions ne peuvent pas être liées à nouveau"
 
 #: application/controllers/LocaleController.php:205
 msgid ""
@@ -2078,12 +2106,12 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:268
 msgid "Cancel Current Show?"
-msgstr "Annuler l'émission en Cours?"
+msgstr "Annuler l'émission en cours ?"
 
 #: application/controllers/LocaleController.php:269
 #: application/controllers/LocaleController.php:318
 msgid "Stop recording current show?"
-msgstr "Arrêter l'enregistrement de l'émission en cours  ?"
+msgstr "Arrêter l'enregistrement de l'émission en cours ?"
 
 #: application/controllers/LocaleController.php:270
 msgid "Ok"
@@ -2095,11 +2123,11 @@ msgstr "Contenu de l'émission"
 
 #: application/controllers/LocaleController.php:274
 msgid "Remove all content?"
-msgstr "Enlever tous les contenus?"
+msgstr "Enlever tous les contenus ?"
 
 #: application/controllers/LocaleController.php:276
 msgid "Delete selected item(s)?"
-msgstr "Selectionner le(s) élément(s)?"
+msgstr "Supprimer le(s) élément(s) sélectionné(s) ?"
 
 #: application/controllers/LocaleController.php:277
 msgid "Start"
@@ -2276,7 +2304,7 @@ msgstr "Invité"
 
 #: application/controllers/LocaleController.php:334
 msgid "Guests can do the following:"
-msgstr "Les Invités peuvent effectuer les opérations suivantes:"
+msgstr "Les Invités peuvent effectuer les opérations suivantes :"
 
 #: application/controllers/LocaleController.php:335
 msgid "View schedule"
@@ -2288,7 +2316,7 @@ msgstr "Voir le contenu des émissions"
 
 #: application/controllers/LocaleController.php:337
 msgid "DJs can do the following:"
-msgstr "Les DJs peuvent effectuer les opérations suivantes:"
+msgstr "Les DJs peuvent effectuer les opérations suivantes :"
 
 #: application/controllers/LocaleController.php:338
 msgid "Manage assigned show content"
@@ -2308,7 +2336,7 @@ msgstr "Gérer le contenu de leur propre audiotheque"
 
 #: application/controllers/LocaleController.php:342
 msgid "Program Managers can do the following:"
-msgstr ""
+msgstr "Les gestionnaires de programmes peuvent faire ceci :"
 
 #: application/controllers/LocaleController.php:343
 msgid "View and manage show content"
@@ -2324,7 +2352,7 @@ msgstr "Gérez tout le contenu de l'audiotheque"
 
 #: application/controllers/LocaleController.php:346
 msgid "Admins can do the following:"
-msgstr "Les Administrateurs peuvent effectuer les opérations suivantes:"
+msgstr "Les Administrateurs peuvent effectuer les opérations suivantes :"
 
 #: application/controllers/LocaleController.php:347
 msgid "Manage preferences"
@@ -2364,7 +2392,7 @@ msgstr "Colonnes"
 
 #: application/controllers/LocaleController.php:358
 msgid "From {from} to {to}"
-msgstr "De {from} à  {to}"
+msgstr "De {from} à {to}"
 
 #: application/controllers/LocaleController.php:359
 msgid "kbps"
@@ -2457,7 +2485,7 @@ msgstr "Ajouter des fichiers"
 #: application/controllers/LocaleController.php:388
 #, php-format
 msgid "Uploaded %d/%d files"
-msgstr "Téléversement de %d/%d fichiers"
+msgstr "Téléversement de %d sur %d fichiers"
 
 #: application/controllers/LocaleController.php:389
 msgid "N/A"
@@ -2502,7 +2530,7 @@ msgstr "Erreur d'E/S."
 #: application/controllers/LocaleController.php:399
 #, php-format
 msgid "File: %s"
-msgstr "Fichier: %s"
+msgstr "Fichier : %s"
 
 #: application/controllers/LocaleController.php:401
 #, php-format
@@ -2511,7 +2539,7 @@ msgstr "%d fichiers en file d'attente"
 
 #: application/controllers/LocaleController.php:402
 msgid "File: %f, size: %s, max file size: %m"
-msgstr "Fichier:%f, taille: %s, taille de fichier maximale: %m"
+msgstr "Fichier : %f, taille : %s, taille de fichier maximale : %m"
 
 #: application/controllers/LocaleController.php:403
 msgid "Upload URL might be wrong or doesn't exist"
@@ -2519,11 +2547,11 @@ msgstr "L'URL de téléversement est peut être erronée ou inexistante"
 
 #: application/controllers/LocaleController.php:404
 msgid "Error: File too large: "
-msgstr "Erreur: Fichier trop grand: "
+msgstr "Erreur : Fichier trop grand : "
 
 #: application/controllers/LocaleController.php:405
 msgid "Error: Invalid file extension: "
-msgstr "Erreur: extension de fichier non valide: "
+msgstr "Erreur : extension de fichier non valide : "
 
 #: application/controllers/LocaleController.php:407
 msgid "Set Default"
@@ -2553,8 +2581,8 @@ msgid ""
 "%sPrint view%sPlease use your browser's print function to print this table. "
 "Press escape when finished."
 msgstr ""
-"%sVue Imprimante%s Veuillez utiliser la fonction d'impression de votre "
-"navigateur pour imprimer ce tableau. Appuyez sur échapper lorsque vous avez "
+"%sVue Imprimante%sVeuillez utiliser la fonction d'impression de votre "
+"navigateur pour imprimer ce tableau. Appuyez sur « Échap » lorsque vous avez "
 "terminé."
 
 #: application/controllers/LocaleController.php:414
@@ -2567,19 +2595,19 @@ msgstr "Nouvelle entrée de log"
 
 #: application/controllers/LocaleController.php:417
 msgid "No data available in table"
-msgstr ""
+msgstr "Aucune date disponible dans le tableau"
 
 #: application/controllers/LocaleController.php:418
 msgid "(filtered from _MAX_ total entries)"
-msgstr ""
+msgstr "(limité à _MAX_ entrées au total)"
 
 #: application/controllers/LocaleController.php:424
 msgid "First"
-msgstr ""
+msgstr "Premier"
 
 #: application/controllers/LocaleController.php:425
 msgid "Last"
-msgstr ""
+msgstr "Dernier"
 
 #: application/controllers/LocaleController.php:426
 msgid "Next"
@@ -2587,24 +2615,24 @@ msgstr "Suivant"
 
 #: application/controllers/LocaleController.php:427
 msgid "Previous"
-msgstr ""
+msgstr "Précédent"
 
 #: application/controllers/LocaleController.php:428
 msgid "Search:"
-msgstr ""
+msgstr "Rechercher :"
 
 #: application/controllers/LocaleController.php:429
 #: application/controllers/LocaleController.php:442
 msgid "No matching records found"
-msgstr ""
+msgstr "Aucun enregistrement correspondant trouvé"
 
 #: application/controllers/LocaleController.php:430
 msgid "Drag tracks here from the library"
-msgstr ""
+msgstr "Glissez ici les pistes depuis la bibliothèque"
 
 #: application/controllers/LocaleController.php:431
 msgid "No tracks were played during the selected time period."
-msgstr ""
+msgstr "Aucune piste n'a été jouée dans l'intervalle de temps sélectionné."
 
 #: application/controllers/LocaleController.php:432
 msgid "Unpublish"
@@ -2612,7 +2640,7 @@ msgstr "Annuler la publication"
 
 #: application/controllers/LocaleController.php:433
 msgid "No matching results found."
-msgstr ""
+msgstr "Aucun résultat correspondant trouvé."
 
 #: application/controllers/LocaleController.php:434
 msgid "Author"
@@ -2631,79 +2659,79 @@ msgstr "Lien"
 
 #: application/controllers/LocaleController.php:437
 msgid "Publication Date"
-msgstr ""
+msgstr "Date de publication"
 
 #: application/controllers/LocaleController.php:438
 msgid "Import Status"
-msgstr ""
+msgstr "Status d'importation"
 
 #: application/controllers/LocaleController.php:439
 msgid "Actions"
-msgstr ""
+msgstr "Actions"
 
 #: application/controllers/LocaleController.php:440
 msgid "Delete from Library"
-msgstr ""
+msgstr "Supprimer de la bibliothèque"
 
 #: application/controllers/LocaleController.php:441
 msgid "Successfully imported"
-msgstr ""
+msgstr "Succès de l'importation"
 
 #: application/controllers/LocaleController.php:443
 msgid "Show _MENU_"
-msgstr ""
+msgstr "Afficher _MENU_"
 
 #: application/controllers/LocaleController.php:444
 msgid "Show _MENU_ entries"
-msgstr ""
+msgstr "Afficher les entrées du _MENU_"
 
 #: application/controllers/LocaleController.php:445
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
-msgstr ""
+msgstr "Affiche de _START_ à _END_ sur _TOTAL_ entrées"
 
 #: application/controllers/LocaleController.php:446
 msgid "Showing _START_ to _END_ of _TOTAL_ tracks"
-msgstr ""
+msgstr "Affiche de _START_ à _END_ sur _TOTAL_ pistes"
 
 #: application/controllers/LocaleController.php:447
 msgid "Showing _START_ to _END_ of _TOTAL_ track types"
-msgstr ""
+msgstr "Affiche de _START_ à _END_ sur _TOTAL_ types de piste"
 
 #: application/controllers/LocaleController.php:448
 msgid "Showing _START_ to _END_ of _TOTAL_ users"
-msgstr ""
+msgstr "Affiche de _START_ à _END_ sur _TOTAL_ utilisateurs"
 
 #: application/controllers/LocaleController.php:449
 msgid "Showing 0 to 0 of 0 entries"
-msgstr ""
+msgstr "Affiche de 0 à 0 sur 0 entrées"
 
 #: application/controllers/LocaleController.php:450
 msgid "Showing 0 to 0 of 0 tracks"
-msgstr ""
+msgstr "Affiche de 0 à 0 sur 0 pistes"
 
 #: application/controllers/LocaleController.php:451
 msgid "Showing 0 to 0 of 0 track types"
-msgstr ""
+msgstr "Affiche de 0 à 0 sur 0 types de piste"
 
 #: application/controllers/LocaleController.php:452
 msgid "(filtered from _MAX_ total track types)"
-msgstr ""
+msgstr "(limité à _MAX_ types de piste au total)"
 
 #: application/controllers/LocaleController.php:454
 msgid "Are you sure you want to delete this tracktype?"
-msgstr ""
+msgstr "Êtes-vous sûr(e) de vouloir supprimer ce type de piste ?"
 
 #: application/controllers/LocaleController.php:455
 msgid "No track types were found."
-msgstr ""
+msgstr "Aucun type de piste trouvé."
 
 #: application/controllers/LocaleController.php:456
 msgid "No track types found"
-msgstr ""
+msgstr "Aucun type de piste trouvé"
 
 #: application/controllers/LocaleController.php:457
 msgid "No matching track types found"
-msgstr ""
+msgstr "Aucun type de piste correspondant trouvé"
 
 #: application/controllers/LocaleController.php:458
 #: application/forms/AddTracktype.php:51
@@ -2725,11 +2753,11 @@ msgstr "Désactivé"
 
 #: application/controllers/LocaleController.php:460
 msgid "Cancel upload"
-msgstr ""
+msgstr "Annuler le téléversement"
 
 #: application/controllers/LocaleController.php:461
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: application/controllers/LocaleController.php:462
 msgid ""
@@ -2738,32 +2766,32 @@ msgid ""
 "information</a>"
 msgstr ""
 "Le contenu des playlists automatiques est ajouté aux émissions une heure "
-"avant leur départ. <a target='_blank' href='http://libretime.org/docs/"
-"playlists'>Plus d'informations</a>"
+"avant leur départ. <a href=\"http://libretime.org/docs/playlists\" target="
+"\"_blank\">Plus d'informations</a>"
 
 #: application/controllers/LocaleController.php:463
 msgid "Podcast settings saved"
-msgstr ""
+msgstr "Préférences des podcasts enregistrées"
 
 #: application/controllers/LocaleController.php:464
 msgid "Are you sure you want to delete this user?"
-msgstr ""
+msgstr "Êtes-vous sûr(e) de vouloir supprimer cet utilisateur ?"
 
 #: application/controllers/LocaleController.php:465
 msgid "Can't delete yourself!"
-msgstr ""
+msgstr "Impossible de vous supprimer vous-même !"
 
 #: application/controllers/LocaleController.php:466
 msgid "You haven't published any episodes!"
-msgstr ""
+msgstr "Vous n'avez pas publié d'épisode !"
 
 #: application/controllers/LocaleController.php:467
 msgid "You can publish your uploaded content from the 'Tracks' view."
-msgstr ""
+msgstr "Vous pouvez publier votre contenu téléversé depuis la vue « Pistes »."
 
 #: application/controllers/LocaleController.php:468
 msgid "Try it now"
-msgstr ""
+msgstr "Essayer maintenant"
 
 #: application/controllers/LocaleController.php:469
 msgid ""
@@ -2775,10 +2803,17 @@ msgid ""
 "duration. This final track may be cut off mid-way if the show into which the "
 "smartblock is added finishes.</p>"
 msgstr ""
+"<p>Si cette option est décochée, le bloc intelligent programmera autant de "
+"pistes qu'il pourra être jouée <strong>en entier&lt;/stron&gt; durant la "
+"durée spécifiée. Cela donne généralement une lecture audio légèrement plus "
+"courte que la durée spécifiée.</strong></p><p><strong>Si cette option est "
+"cochée, le bloc intelligent programmera une piste finale qui dépassera la "
+"durée spécifiée. Cette dernière piste peut être coupée en plein milieu si "
+"l'épisode contenu dans le bloc intelligent se termine.</strong></p>"
 
 #: application/controllers/LocaleController.php:470
 msgid "Playlist preview"
-msgstr ""
+msgstr "Aperçu de la liste de lecture"
 
 #: application/controllers/LocaleController.php:471
 msgid "Smart Block"
@@ -2786,46 +2821,48 @@ msgstr "Bloc intelligent"
 
 #: application/controllers/LocaleController.php:472
 msgid "Webstream preview"
-msgstr ""
+msgstr "Aperçu du webstream"
 
 #: application/controllers/LocaleController.php:473
 msgid "You don't have permission to view the library."
-msgstr ""
+msgstr "Vous n'avez pas l'autorisation de voir la bibliothèque."
 
 #: application/controllers/LocaleController.php:474
 #: application/forms/AddShowWhen.php:23
 msgid "Now"
-msgstr ""
+msgstr "Maintenant"
 
 #: application/controllers/LocaleController.php:475
 msgid "Click 'New' to create one now."
-msgstr ""
+msgstr "Cliquez « Nouveau » pour en créer un nouveau."
 
 #: application/controllers/LocaleController.php:476
 msgid "Click 'Upload' to add some now."
-msgstr ""
+msgstr "Cliquez « Téléverser » pour en ajouter de nouveaux."
 
 #: application/controllers/LocaleController.php:477
 msgid "Feed URL"
-msgstr ""
+msgstr "URL du flux"
 
 #: application/controllers/LocaleController.php:478
 msgid "Import Date"
-msgstr ""
+msgstr "Date d'importation"
 
 #: application/controllers/LocaleController.php:479
 msgid "Add New Podcast"
-msgstr ""
+msgstr "Ajouter un nouveau podcast"
 
 #: application/controllers/LocaleController.php:480
 msgid ""
 "Cannot schedule outside a show.\n"
 "Try creating a show first."
 msgstr ""
+"Impossible de programmer en-dehors d'un épisode.\n"
+"Veuillez d'abord créer un épisode."
 
 #: application/controllers/LocaleController.php:481
 msgid "No files have been uploaded yet."
-msgstr ""
+msgstr "Aucun fichier n'a encore été téléversé."
 
 #: application/controllers/LocaleController.php:487
 msgid "On Air"
@@ -2845,7 +2882,7 @@ msgstr "Aucun programme"
 
 #: application/controllers/LocaleController.php:491
 msgid "Click 'Add' to create one now."
-msgstr ""
+msgstr "Cliquez « Ajouter » pour en créer un nouveau maintenant."
 
 #: application/controllers/LoginController.php:51
 msgid "Please enter your username and password."
@@ -2872,8 +2909,7 @@ msgstr ""
 #: application/controllers/LoginController.php:242
 msgid "Wrong username or password provided. Please try again."
 msgstr ""
-"Mauvais nom d'utilisateur ou mot de passe fourni. S'il vous plaît essayez de "
-"nouveau."
+"Mauvais nom d'utilisateur ou mot de passe fourni. Veuillez essayer à nouveau."
 
 #: application/controllers/PlaylistController.php:53
 #, php-format
@@ -2944,23 +2980,23 @@ msgstr "l'émission n'existe pas"
 
 #: application/controllers/TracktypeController.php:70
 msgid "Track Type added successfully!"
-msgstr ""
+msgstr "Type de piste ajouté avec succès !"
 
 #: application/controllers/TracktypeController.php:72
 msgid "Track Type updated successfully!"
-msgstr ""
+msgstr "Type de piste mis à jour avec succès !"
 
 #: application/controllers/UserController.php:87
 msgid "User added successfully!"
-msgstr "Utilisateur ajouté avec succès!"
+msgstr "Utilisateur ajouté avec succès !"
 
 #: application/controllers/UserController.php:89
 msgid "User updated successfully!"
-msgstr "Utilisateur mis à jour avec succès!"
+msgstr "Utilisateur mis à jour avec succès !"
 
 #: application/controllers/UserController.php:189
 msgid "Settings updated successfully!"
-msgstr "Paramètres mis à jour avec succès!"
+msgstr "Paramètres mis à jour avec succès !"
 
 #: application/controllers/WebstreamController.php:30
 #: application/controllers/WebstreamController.php:34
@@ -3027,7 +3063,7 @@ msgstr "Utilisez l'authentification %s :"
 
 #: application/forms/AddShowLiveStream.php:17
 msgid "Use Custom Authentication:"
-msgstr "Utiliser l'authentification personnalisée:"
+msgstr "Utiliser l'authentification personnalisée :"
 
 #: application/forms/AddShowLiveStream.php:27
 msgid "Custom Username"
@@ -3043,11 +3079,11 @@ msgstr "Hôte:"
 
 #: application/forms/AddShowLiveStream.php:59
 msgid "Port:"
-msgstr "Port:"
+msgstr "Port :"
 
 #: application/forms/AddShowLiveStream.php:66
 msgid "Mount:"
-msgstr "Point de Montage:"
+msgstr "Point de Montage :"
 
 #: application/forms/AddShowLiveStream.php:85
 msgid "Username field cannot be empty."
@@ -3059,11 +3095,11 @@ msgstr "Le champ Mot de Passe ne peut être vide."
 
 #: application/forms/AddShowRR.php:9
 msgid "Record from Line In?"
-msgstr "Enregistrer à partir de 'Line In'?"
+msgstr "Enregistrer à partir de « Line In » ?"
 
 #: application/forms/AddShowRR.php:15
 msgid "Rebroadcast?"
-msgstr "Rediffusion?"
+msgstr "Rediffusion ?"
 
 #: application/forms/AddShowRebroadcastDates.php:14
 msgid "days"
@@ -3071,11 +3107,11 @@ msgstr "jours"
 
 #: application/forms/AddShowRepeats.php:8
 msgid "Link:"
-msgstr "Lien:"
+msgstr "Lien :"
 
 #: application/forms/AddShowRepeats.php:14
 msgid "Repeat Type:"
-msgstr "Type de Répétition:"
+msgstr "Type de Répétition :"
 
 #: application/forms/AddShowRepeats.php:17
 msgid "weekly"
@@ -3099,11 +3135,11 @@ msgstr "mensuel"
 
 #: application/forms/AddShowRepeats.php:30
 msgid "Select Days:"
-msgstr "Selection des Jours:"
+msgstr "Sélection des jours :"
 
 #: application/forms/AddShowRepeats.php:46
 msgid "Repeat By:"
-msgstr "Répétition par:"
+msgstr "Répéter par :"
 
 #: application/forms/AddShowRepeats.php:49
 msgid "day of the month"
@@ -3117,11 +3153,11 @@ msgstr "jour de la semaine"
 #: application/forms/ShowBuilder.php:47
 #: application/forms/ShowListenerStat.php:45
 msgid "Date End:"
-msgstr "Date de Fin:"
+msgstr "Date de fin :"
 
 #: application/forms/AddShowRepeats.php:70
 msgid "No End?"
-msgstr "Sans Fin?"
+msgstr "Sans fin ?"
 
 #: application/forms/AddShowRepeats.php:108
 msgid "End date must be after start date"
@@ -3133,27 +3169,27 @@ msgstr "Veuillez sélectionner un jour de répétition"
 
 #: application/forms/AddShowStyle.php:11
 msgid "Background Colour:"
-msgstr "Couleur de Fond:"
+msgstr "Couleur de fond :"
 
 #: application/forms/AddShowStyle.php:30
 msgid "Text Colour:"
-msgstr "Couleur du Texte:"
+msgstr "Couleur du texte :"
 
 #: application/forms/AddShowStyle.php:48
 msgid "Current Logo:"
-msgstr "Logo actuel:"
+msgstr "Logo actuel :"
 
 #: application/forms/AddShowStyle.php:71
 msgid "Show Logo:"
-msgstr "Montrer le logo:"
+msgstr "Montrer le logo :"
 
 #: application/forms/AddShowStyle.php:87
 msgid "Logo Preview:"
-msgstr "Prévisualisation du logo:"
+msgstr "Aperçu du logo :"
 
 #: application/forms/AddShowWhat.php:26
 msgid "Name:"
-msgstr "Nom:"
+msgstr "Nom :"
 
 #: application/forms/AddShowWhat.php:30
 msgid "Untitled Show"
@@ -3161,20 +3197,20 @@ msgstr "Émission sans Titre"
 
 #: application/forms/AddShowWhat.php:36
 msgid "URL:"
-msgstr "URL:"
+msgstr "URL :"
 
 #: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:140
 msgid "Genre:"
-msgstr "Genre:"
+msgstr "Genre :"
 
 #: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:35
 #: application/forms/EditAudioMD.php:120
 msgid "Description:"
-msgstr "Description:"
+msgstr "Description :"
 
 #: application/forms/AddShowWhat.php:69
 msgid "Instance Description:"
-msgstr "Description de l'élément:"
+msgstr "Description de l'instance :"
 
 #: application/forms/AddShowWhen.php:15
 msgid "'%value%' does not fit the time format 'HH:mm'"
@@ -3182,27 +3218,27 @@ msgstr "'%value%' ne correspond pas au format de durée 'HH:mm'"
 
 #: application/forms/AddShowWhen.php:21
 msgid "Start Time:"
-msgstr "Heure de début:"
+msgstr "Heure de début :"
 
 #: application/forms/AddShowWhen.php:24 application/forms/AddShowWhen.php:36
 msgid "In the Future:"
-msgstr "À venir:"
+msgstr "À venir :"
 
 #: application/forms/AddShowWhen.php:64
 msgid "End Time:"
-msgstr "Temps de fin:"
+msgstr "Temps de fin :"
 
 #: application/forms/AddShowWhen.php:91
 msgid "Duration:"
-msgstr "Durée:"
+msgstr "Durée :"
 
 #: application/forms/AddShowWhen.php:100
 msgid "Timezone:"
-msgstr "Fuseau horaire:"
+msgstr "Fuseau horaire :"
 
 #: application/forms/AddShowWhen.php:110
 msgid "Repeats?"
-msgstr "Répétitions?"
+msgstr "Répéter ?"
 
 #: application/forms/AddShowWhen.php:151
 msgid "Cannot create show in the past"
@@ -3220,7 +3256,7 @@ msgstr "La date/heure de Fin ne peut être dans le passé"
 
 #: application/forms/AddShowWhen.php:176
 msgid "Cannot have duration < 0m"
-msgstr "Ne peut pas avoir une durée <0m"
+msgstr "Ne peut pas avoir une durée &lt; 0m"
 
 #: application/forms/AddShowWhen.php:179
 msgid "Cannot have duration 00h 00m"
@@ -3238,51 +3274,51 @@ msgstr "Ne peux pas programmer des émissions qui se chevauchent"
 
 #: application/forms/AddShowWho.php:9
 msgid "Search Users:"
-msgstr "Recherche d'utilisateurs:"
+msgstr "Recherche d'utilisateurs :"
 
 #: application/forms/AddShowWho.php:23
 msgid "DJs:"
-msgstr "DJs:"
+msgstr "DJs :"
 
 #: application/forms/AddTracktype.php:20
 msgid "Type Name:"
-msgstr ""
+msgstr "Nom du type :"
 
 #: application/forms/AddTracktype.php:26
 msgid "Code:"
-msgstr ""
+msgstr "Code :"
 
 #: application/forms/AddTracktype.php:46
 msgid "Visibility:"
-msgstr ""
+msgstr "Visibilité :"
 
 #: application/forms/AddTracktype.php:70
 msgid "Code is not unique."
-msgstr ""
+msgstr "Ce code n'est pas unique."
 
 #: application/forms/AddUser.php:27 application/forms/EditUser.php:35
 #: application/forms/LiveStreamingPreferences.php:44
 #: application/forms/Login.php:39
 msgid "Username:"
-msgstr "Utilisateur:"
+msgstr "Utilisateur :"
 
 #: application/forms/AddUser.php:36 application/forms/EditUser.php:46
 #: application/forms/LiveStreamingPreferences.php:61
 #: application/forms/Login.php:53
 msgid "Password:"
-msgstr "Mot de Passe:"
+msgstr "Mot de Passe :"
 
 #: application/forms/AddUser.php:44 application/forms/EditUser.php:55
 msgid "Verify Password:"
-msgstr "Vérification du Mot de Passe:"
+msgstr "Vérification du mot de Passe :"
 
 #: application/forms/AddUser.php:53 application/forms/EditUser.php:65
 msgid "Firstname:"
-msgstr "Prénom:"
+msgstr "Prénom :"
 
 #: application/forms/AddUser.php:59 application/forms/EditUser.php:73
 msgid "Lastname:"
-msgstr "Nom:"
+msgstr "Nom :"
 
 #: application/forms/AddUser.php:65 application/forms/EditUser.php:81
 msgid "Email:"
@@ -3290,19 +3326,19 @@ msgstr "Courriel :"
 
 #: application/forms/AddUser.php:74 application/forms/EditUser.php:92
 msgid "Mobile Phone:"
-msgstr "Numéro de Mobile:"
+msgstr "Numéro de mobile :"
 
 #: application/forms/AddUser.php:80 application/forms/EditUser.php:100
 msgid "Skype:"
-msgstr "Skype:"
+msgstr "Skype :"
 
 #: application/forms/AddUser.php:86 application/forms/EditUser.php:108
 msgid "Jabber:"
-msgstr "Jabber:"
+msgstr "Jabber :"
 
 #: application/forms/AddUser.php:93
 msgid "User Type:"
-msgstr "Type d'utilisateur:"
+msgstr "Type d'utilisateur :"
 
 #: application/forms/AddUser.php:118 application/forms/EditUser.php:143
 msgid "Login name is not unique."
@@ -3315,72 +3351,72 @@ msgstr "Supprimer toutes les pistes de la librairie"
 #: application/forms/DateRange.php:15 application/forms/ShowBuilder.php:17
 #: application/forms/ShowListenerStat.php:15
 msgid "Date Start:"
-msgstr "Date de Début:"
+msgstr "Date de début :"
 
 #: application/forms/EditAudioMD.php:54 application/forms/Player.php:15
 msgid "Title:"
-msgstr "Titre:"
+msgstr "Titre :"
 
 #: application/forms/EditAudioMD.php:65
 msgid "Creator:"
-msgstr "Créateur:"
+msgstr "Créateur :"
 
 #: application/forms/EditAudioMD.php:76
 msgid "Album:"
-msgstr "Album:"
+msgstr "Album :"
 
 #: application/forms/EditAudioMD.php:94
 msgid "Owner:"
-msgstr ""
+msgstr "Propriétaire :"
 
 #: application/forms/EditAudioMD.php:106
 msgid "Select a Type"
-msgstr ""
+msgstr "Sélectionner un type"
 
 #: application/forms/EditAudioMD.php:113
 msgid "Track Type:"
-msgstr ""
+msgstr "Type de piste :"
 
 #: application/forms/EditAudioMD.php:151
 msgid "Year:"
-msgstr "Année:"
+msgstr "Année :"
 
 #: application/forms/EditAudioMD.php:165
 msgid "Label:"
-msgstr "Label:"
+msgstr "Étiquette :"
 
 #: application/forms/EditAudioMD.php:176
 msgid "Composer:"
-msgstr "Compositeur:"
+msgstr "Compositeur :"
 
 #: application/forms/EditAudioMD.php:187
 msgid "Conductor:"
-msgstr "Conducteur:"
+msgstr "Conducteur :"
 
 #: application/forms/EditAudioMD.php:198
 msgid "Mood:"
-msgstr "Atmosphère:"
+msgstr "Atmosphère :"
 
 #: application/forms/EditAudioMD.php:209
 msgid "BPM:"
-msgstr "BPM:"
+msgstr "BPM :"
 
 #: application/forms/EditAudioMD.php:220
 msgid "Copyright:"
-msgstr "Copyright:"
+msgstr "Copyright :"
 
 #: application/forms/EditAudioMD.php:231
 msgid "ISRC Number:"
-msgstr "Numéro ISRC:"
+msgstr "Numéro ISRC :"
 
 #: application/forms/EditAudioMD.php:242
 msgid "Website:"
-msgstr "Site Internet:"
+msgstr "Site Internet :"
 
 #: application/forms/EditAudioMD.php:253 application/forms/EditUser.php:117
 #: application/forms/Login.php:67
 msgid "Language:"
-msgstr "Langue:"
+msgstr "Langue :"
 
 #: application/forms/EditAudioMD.php:307
 msgid "Publish..."
@@ -3398,7 +3434,7 @@ msgstr "Heure de Fin"
 
 #: application/forms/EditUser.php:127
 msgid "Interface Timezone:"
-msgstr "Fuseau horaire de l'interface:"
+msgstr "Fuseau horaire de l'interface :"
 
 #: application/forms/GeneralPreferences.php:26
 msgid "Station Name"
@@ -3410,30 +3446,30 @@ msgstr "Description de la station"
 
 #: application/forms/GeneralPreferences.php:43
 msgid "Station Logo:"
-msgstr "Logo de la Station:"
+msgstr "Logo de la Station :"
 
 #: application/forms/GeneralPreferences.php:44
 msgid "Note: Anything larger than 600x600 will be resized."
-msgstr "Remarque: Tout ce qui est plus grand que 600x600 sera redimensionné."
+msgstr "Remarque : Tout ce qui est plus grand que 600x600 sera redimensionné."
 
 #: application/forms/GeneralPreferences.php:64
 msgid "Default Crossfade Duration (s):"
-msgstr "Durée du fondu enchaîné:"
+msgstr "Durée du fondu enchaîné (en sec) :"
 
 #: application/forms/GeneralPreferences.php:70
 #: application/forms/GeneralPreferences.php:84
 #: application/forms/GeneralPreferences.php:98
 #: application/forms/LiveStreamingPreferences.php:35
 msgid "Please enter a time in seconds (eg. 0.5)"
-msgstr "Veuillez entrer un temps en secondes (par exemple 0.5)"
+msgstr "Veuillez entrer un temps en secondes (ex.: 0.5)"
 
 #: application/forms/GeneralPreferences.php:78
 msgid "Default Fade In (s):"
-msgstr "Fondu en Entrée par défaut (s):"
+msgstr "Fondu en Entrée par défaut (en sec) :"
 
 #: application/forms/GeneralPreferences.php:92
 msgid "Default Fade Out (s):"
-msgstr "Fondu en Sorti par défaut (s):"
+msgstr "Fondu en Sortie par défaut (en sec) :"
 
 #: application/forms/GeneralPreferences.php:104
 msgid "Track Type Upload Default"
@@ -3528,35 +3564,37 @@ msgstr "La semaine commence le"
 
 #: application/forms/GeneralPreferences.php:210
 msgid "Display login button on your Radio Page?"
-msgstr "Afficher le bouton de connexion sur votre page radio?"
+msgstr "Afficher le bouton de connexion sur votre page radio ?"
 
 #: application/forms/GeneralPreferences.php:215
+#, fuzzy
 msgid "Feature Previews"
-msgstr ""
+msgstr "Aperçus de fonctionnalités"
 
 #: application/forms/GeneralPreferences.php:221
 msgid "Enable this to opt-in to test new features."
 msgstr ""
+"Activer ceci pour vous inscrire pour tester les nouvelles fonctionnalités."
 
 #: application/forms/LiveStreamingPreferences.php:18
 msgid "Auto Switch Off:"
-msgstr "Arrêt automatique:"
+msgstr "Arrêt automatique :"
 
 #: application/forms/LiveStreamingPreferences.php:25
 msgid "Auto Switch On:"
-msgstr "Mise en marche automatique:"
+msgstr "Mise en marche automatique :"
 
 #: application/forms/LiveStreamingPreferences.php:32
 msgid "Switch Transition Fade (s):"
-msgstr "Changement de transition en fondu (s):"
+msgstr "Changement de transition en fondu (en sec) :"
 
 #: application/forms/LiveStreamingPreferences.php:70
 msgid "Master Source Host:"
-msgstr "Hôte source maître:"
+msgstr "Hôte source maître :"
 
 #: application/forms/LiveStreamingPreferences.php:82
 msgid "Master Source Port:"
-msgstr "Port source maître:"
+msgstr "Port source maître :"
 
 #: application/forms/LiveStreamingPreferences.php:85
 #: application/forms/LiveStreamingPreferences.php:116
@@ -3565,20 +3603,21 @@ msgid "Only numbers are allowed."
 msgstr "Seuls les chiffres sont autorisés."
 
 #: application/forms/LiveStreamingPreferences.php:92
+#, fuzzy
 msgid "Master Source Mount:"
-msgstr "Point de montage - Source Maître:"
+msgstr "Point de montage - Source Maître :"
 
 #: application/forms/LiveStreamingPreferences.php:103
 msgid "Show Source Host:"
-msgstr "Hôte - Source Émission:"
+msgstr "Afficher l'hôte de la source :"
 
 #: application/forms/LiveStreamingPreferences.php:113
 msgid "Show Source Port:"
-msgstr "Port - Source Émission:"
+msgstr "Afficher le port de la source :"
 
 #: application/forms/LiveStreamingPreferences.php:122
 msgid "Show Source Mount:"
-msgstr "Point de montage - Source Émission:"
+msgstr "Afficher le point de montage de la source :"
 
 #: application/forms/Login.php:78
 msgid "Login"
@@ -3621,7 +3660,7 @@ msgstr "En Lecture"
 
 #: application/forms/Player.php:25
 msgid "Select Stream:"
-msgstr "Sélectionnez un flux:"
+msgstr "Sélectionnez un flux :"
 
 #: application/forms/Player.php:28
 msgid "Auto detect the most appropriate stream to use."
@@ -3629,7 +3668,7 @@ msgstr "Détecter automatiquement le flux le plus approprié à utiliser."
 
 #: application/forms/Player.php:29
 msgid "Select a stream:"
-msgstr "Sélectionnez un flux:"
+msgstr "Sélectionnez un flux :"
 
 #: application/forms/Player.php:41
 msgid " - Mobile friendly"
@@ -3641,7 +3680,7 @@ msgstr " - Le lecteur ne fonctionne pas avec des flux Opus."
 
 #: application/forms/Player.php:72
 msgid "Embeddable code:"
-msgstr "Code à intégrer:"
+msgstr "Code à intégrer :"
 
 #: application/forms/Player.php:73
 msgid ""
@@ -3653,11 +3692,11 @@ msgstr ""
 
 #: application/forms/Player.php:78
 msgid "Preview:"
-msgstr "Prévisualisation:"
+msgstr "Aperçu :"
 
 #: application/forms/PodcastPreferences.php:9
 msgid "Feed Privacy"
-msgstr "Feed Privacy"
+msgstr "Confidentialité du flux"
 
 #: application/forms/PodcastPreferences.php:11
 msgid "Public"
@@ -3677,7 +3716,7 @@ msgstr "Filtrer par émissions"
 
 #: application/forms/ShowBuilder.php:83
 msgid "All My Shows:"
-msgstr "Toutes mes émissions:"
+msgstr "Toutes mes émissions :"
 
 #: application/forms/ShowBuilder.php:95
 msgid "My Shows"
@@ -3697,7 +3736,7 @@ msgstr "Taux d'Echantillonage (Kbps)"
 #: application/models/Block.php:1464 application/models/Block.php:1560
 #: application/services/HistoryService.php:1067
 msgid "Track Type"
-msgstr ""
+msgstr "Type de piste"
 
 #: application/forms/SmartBlockCriteria.php:80
 #: application/models/Block.php:1469 application/models/Block.php:1565
@@ -3707,47 +3746,47 @@ msgstr "Taux d'Echantillonage (Khz)"
 #: application/forms/SmartBlockCriteria.php:134
 #: application/models/Block.php:1485 application/models/Block.php:1581
 msgid "before"
-msgstr ""
+msgstr "avant"
 
 #: application/forms/SmartBlockCriteria.php:135
 #: application/models/Block.php:1486 application/models/Block.php:1582
 msgid "after"
-msgstr ""
+msgstr "après"
 
 #: application/forms/SmartBlockCriteria.php:136
 #: application/models/Block.php:1487 application/models/Block.php:1583
 msgid "between"
-msgstr ""
+msgstr "entre"
 
 #: application/forms/SmartBlockCriteria.php:152
 #: application/forms/SmartBlockCriteria.php:467
 #: application/forms/SmartBlockCriteria.php:509
 msgid "Select unit of time"
-msgstr ""
+msgstr "Sélectionner une unité de temps"
 
 #: application/forms/SmartBlockCriteria.php:153
 msgid "minute(s)"
-msgstr ""
+msgstr "minute(s)"
 
 #: application/forms/SmartBlockCriteria.php:154
 msgid "hour(s)"
-msgstr ""
+msgstr "heure(s)"
 
 #: application/forms/SmartBlockCriteria.php:155
 msgid "day(s)"
-msgstr ""
+msgstr "jour(s)"
 
 #: application/forms/SmartBlockCriteria.php:156
 msgid "week(s)"
-msgstr ""
+msgstr "semaine(s)"
 
 #: application/forms/SmartBlockCriteria.php:157
 msgid "month(s)"
-msgstr ""
+msgstr "mois"
 
 #: application/forms/SmartBlockCriteria.php:158
 msgid "year(s)"
-msgstr ""
+msgstr "année(s)"
 
 #: application/forms/SmartBlockCriteria.php:169
 msgid "hours"
@@ -3764,7 +3803,7 @@ msgstr "éléments"
 
 #: application/forms/SmartBlockCriteria.php:172
 msgid "time remaining in show"
-msgstr ""
+msgstr "temps restant de l'émission"
 
 #: application/forms/SmartBlockCriteria.php:183
 msgid "Randomly"
@@ -3780,19 +3819,19 @@ msgstr "Plus vieux"
 
 #: application/forms/SmartBlockCriteria.php:186
 msgid "Most recently played"
-msgstr ""
+msgstr "Les plus joués récemment"
 
 #: application/forms/SmartBlockCriteria.php:187
 msgid "Least recently played"
-msgstr ""
+msgstr "Les moins jouées récemment"
 
 #: application/forms/SmartBlockCriteria.php:211
 msgid "Select Track Type"
-msgstr ""
+msgstr "Sélectionner un type de piste"
 
 #: application/forms/SmartBlockCriteria.php:268
 msgid "Type:"
-msgstr "Type:"
+msgstr "Type :"
 
 #: application/forms/SmartBlockCriteria.php:271
 msgid "Dynamic"
@@ -3804,23 +3843,23 @@ msgstr "Statique"
 
 #: application/forms/SmartBlockCriteria.php:434
 msgid "Select track type"
-msgstr ""
+msgstr "Sélectionner un type de piste"
 
 #: application/forms/SmartBlockCriteria.php:519
 msgid "Allow Repeated Tracks:"
-msgstr "Autoriser la répétition de pistes:"
+msgstr "Autoriser la répétition de pistes :"
 
 #: application/forms/SmartBlockCriteria.php:528
 msgid "Allow last track to exceed time limit:"
-msgstr "Autoriser la dernière piste à dépasser l'horaire:"
+msgstr "Autoriser la dernière piste à dépasser l'horaire :"
 
 #: application/forms/SmartBlockCriteria.php:538
 msgid "Sort Tracks:"
-msgstr "Trier les pistes:"
+msgstr "Trier les pistes :"
 
 #: application/forms/SmartBlockCriteria.php:558
 msgid "Limit to:"
-msgstr "Limiter à:"
+msgstr "Limiter à :"
 
 #: application/forms/SmartBlockCriteria.php:571
 msgid "Generate playlist content and save criteria"
@@ -3863,11 +3902,12 @@ msgstr "La 'Durée' doit être au format '00:00:00'"
 msgid ""
 "Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
 msgstr ""
+"Seuls les entiers positifs sont autorisés (de 1 à 5) pour la valeur de texte"
 
 #: application/forms/SmartBlockCriteria.php:867
 #: application/forms/SmartBlockCriteria.php:892
 msgid "You must select a time unit for a relative datetime."
-msgstr ""
+msgstr "Vous devez sélectionner une unité de temps pour une date relative."
 
 #: application/forms/SmartBlockCriteria.php:872
 #: application/forms/SmartBlockCriteria.php:897
@@ -3880,7 +3920,7 @@ msgstr ""
 
 #: application/forms/SmartBlockCriteria.php:887
 msgid "Only non-negative integer numbers are allowed for a relative date time"
-msgstr ""
+msgstr "Seuls les entiers positifs sont autorisés pour les dates relatives"
 
 #: application/forms/SmartBlockCriteria.php:912
 msgid "The value has to be numeric"
