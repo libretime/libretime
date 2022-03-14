@@ -31,7 +31,7 @@ class PlaylistController extends Zend_Controller_Action
             ->addActionContext('change-playlist', 'json')
             ->initContext();
 
-        //This controller writes to the session all over the place, so we're going to reopen it for writing here.
+        // This controller writes to the session all over the place, so we're going to reopen it for writing here.
         SessionHelper::reopenSessionForWriting();
     }
 
@@ -106,7 +106,7 @@ class PlaylistController extends Zend_Controller_Action
                 $form->startForm($obj->getId(), $formIsValid);
                 $this->view->form = $form;
                 $this->view->obj = $obj;
-                //$this->view->type = "sb";
+                // $this->view->type = "sb";
                 $this->view->id = $obj->getId();
 
                 if ($isJson) {
@@ -115,7 +115,7 @@ class PlaylistController extends Zend_Controller_Action
                 $this->view->html = $this->view->render($viewPath);
             } else {
                 $this->view->obj = $obj;
-                //$this->view->type = "pl";
+                // $this->view->type = "pl";
                 $this->view->id = $obj->getId();
                 if ($isJson) {
                     return $this->view->html = $this->view->render($viewPath);
@@ -185,7 +185,7 @@ class PlaylistController extends Zend_Controller_Action
 
     public function newAction()
     {
-        //$pl_sess = $this->pl_sess;
+        // $pl_sess = $this->pl_sess;
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $type = $this->_getParam('type');
 
@@ -306,7 +306,7 @@ class PlaylistController extends Zend_Controller_Action
                 $obj->addAudioClips($ids, $afterItem, $addType);
             } elseif ($obj->isStatic()) {
                 // if the dest is a block object
-                //check if any items are playlists
+                // check if any items are playlists
                 foreach ($ids as $id) {
                     if (is_array($id) && isset($id[1])) {
                         if ($id[1] != 'audioclip') {
@@ -574,7 +574,7 @@ class PlaylistController extends Zend_Controller_Action
                 $this->view->result = 1;
             }
             $this->view->name = $bl->getName();
-            //$this->view->type = "sb";
+            // $this->view->type = "sb";
             $this->view->id = $bl->getId();
             $this->view->modified = $bl->getLastModified('U');
         } elseif ($params['type'] == 'playlist') {
@@ -583,7 +583,7 @@ class PlaylistController extends Zend_Controller_Action
             $this->view->name = $params['name'];
         }
 
-        //$this->_helper->json->sendJson($result);
+        // $this->_helper->json->sendJson($result);
     }
 
     public function smartBlockGenerateAction()
@@ -591,7 +591,7 @@ class PlaylistController extends Zend_Controller_Action
         $request = $this->getRequest();
         $params = $request->getPost();
 
-        //make sure block exists
+        // make sure block exists
         try {
             $bl = new Application_Model_Block($params['obj_id']);
 
@@ -601,7 +601,7 @@ class PlaylistController extends Zend_Controller_Action
                 $result = $bl->generateSmartBlock($params['data']);
                 $this->view->result = $result['result'];
                 $this->createUpdateResponse($bl, true);
-            //$this->_helper->json->sendJson(array("result"=>0, "html"=>$this->createFullResponse($bl, true, true)));
+            // $this->_helper->json->sendJson(array("result"=>0, "html"=>$this->createFullResponse($bl, true, true)));
             } else {
                 $this->view->obj = $bl;
                 $this->view->id = $bl->getId();

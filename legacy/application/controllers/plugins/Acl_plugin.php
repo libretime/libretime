@@ -119,20 +119,20 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         ])) {
             $this->setRoleName('G');
         } elseif (Zend_Session::isStarted() && !Zend_Auth::getInstance()->hasIdentity()) {
-            //The controller uses sessions but we don't have an identity yet.
+            // The controller uses sessions but we don't have an identity yet.
 
             // If we don't have an identity and we're making a RESTful request,
             // we need to do API key verification
             if ($request->getModuleName() == 'rest') {
                 if (!$this->verifyAuth()) {
-                    //$this->denyAccess();
-                    //$this->getResponse()->sendResponse();
-                    //$r->gotoSimpleAndExit('index', 'login', $request->getModuleName());
+                    // $this->denyAccess();
+                    // $this->getResponse()->sendResponse();
+                    // $r->gotoSimpleAndExit('index', 'login', $request->getModuleName());
 
-                    //die();
+                    // die();
                     throw new Zend_Controller_Exception('Incorrect API key', 401);
                 }
-            } else { //Non-REST, regular Airtime web app requests
+            } else { // Non-REST, regular Airtime web app requests
                 // Redirect user to the landing page if they are trying to
                 // access a resource that requires a valid session.
                 // Skip the redirection if they are already on the landing page
@@ -148,7 +148,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                             ->setBody($json)
                             ->sendResponse();
 
-                        //redirectAndExit() cleans up, sends the headers and stops the script
+                        // redirectAndExit() cleans up, sends the headers and stops the script
                         Zend_Controller_Action_HelperBroker::getStaticHelper('redirector')->redirectAndExit();
                     } else {
                         $r = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
@@ -156,7 +156,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                     }
                 }
             }
-        } else { //We have a session/identity.
+        } else { // We have a session/identity.
             // If we have an identity and we're making a RESTful request,
             // we need to check the CSRF token
             if ($_SERVER['REQUEST_METHOD'] != 'GET' && $request->getModuleName() == 'rest') {

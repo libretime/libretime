@@ -8,7 +8,7 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
         $linked->setLabel(_('Link:'));
         $this->addElement($linked);
 
-        //Add type select
+        // Add type select
         $this->addElement('select', 'add_show_repeat_type', [
             'required' => true,
             'label' => _('Repeat Type:'),
@@ -98,7 +98,7 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
             $end_timestamp = $formData['add_show_end_date'];
             $showTimeZone = new DateTimeZone($formData['add_show_timezone']);
 
-            //We're assuming all data is valid at this point (timezone, etc.).
+            // We're assuming all data is valid at this point (timezone, etc.).
 
             $startDate = new DateTime($start_timestamp, $showTimeZone);
             $endDate = new DateTime($end_timestamp, $showTimeZone);

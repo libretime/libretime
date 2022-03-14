@@ -49,7 +49,7 @@ class Application_Form_AddTracktype extends Zend_Form
             '0' => _('Disabled'),
             '1' => _('Enabled'),
         ]);
-        //$visibility->getValue();
+        // $visibility->getValue();
         $visibility->setRequired(true);
         $this->addElement($visibility);
 

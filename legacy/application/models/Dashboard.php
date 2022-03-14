@@ -4,10 +4,10 @@ class Application_Model_Dashboard
 {
     public static function GetPreviousItem($p_timeNow)
     {
-        //get previous show and previous item in the schedule table.
-        //Compare the two and if the last show was recorded and started
-        //after the last item in the schedule table, then return the show's
-        //name. Else return the last item from the schedule.
+        // get previous show and previous item in the schedule table.
+        // Compare the two and if the last show was recorded and started
+        // after the last item in the schedule table, then return the show's
+        // name. Else return the last item from the schedule.
 
         $showInstance = Application_Model_ShowInstance::GetLastShowInstance($p_timeNow);
         $row = Application_Model_Schedule::GetLastScheduleItem($p_timeNow);
@@ -23,7 +23,7 @@ class Application_Model_Dashboard
         }
         if (count($row) == 0) {
             if ($showInstance->isRecorded()) {
-                //last item is a show instance
+                // last item is a show instance
                 return ['name' => $showInstance->getName(),
                     'starts' => $showInstance->getShowInstanceStart(),
                     'ends' => $showInstance->getShowInstanceEnd(), ];
@@ -31,7 +31,7 @@ class Application_Model_Dashboard
 
             return null;
         }
-        //return the one that started later.
+        // return the one that started later.
         if ($row[0]['starts'] >= $showInstance->getShowInstanceStart()) {
             return ['name' => $row[0]['artist_name'] . ' - ' . $row[0]['track_title'],
                 'starts' => $row[0]['starts'],
@@ -45,10 +45,10 @@ class Application_Model_Dashboard
 
     public static function GetCurrentItem($p_timeNow)
     {
-        //get previous show and previous item in the schedule table.
-        //Compare the two and if the last show was recorded and started
-        //after the last item in the schedule table, then return the show's
-        //name. Else return the last item from the schedule.
+        // get previous show and previous item in the schedule table.
+        // Compare the two and if the last show was recorded and started
+        // after the last item in the schedule table, then return the show's
+        // name. Else return the last item from the schedule.
 
         $row = [];
         $showInstance = Application_Model_ShowInstance::GetCurrentShowInstance($p_timeNow);
@@ -71,7 +71,7 @@ class Application_Model_Dashboard
                 'ends' => $row[0]['ends'], ];
         }
         if (count($row) == 0) {
-            //last item is a show instance
+            // last item is a show instance
             if ($showInstance->isRecorded()) {
                 return ['name' => $showInstance->getName(),
                     'starts' => $showInstance->getShowInstanceStart(),
@@ -93,10 +93,10 @@ class Application_Model_Dashboard
 
     public static function GetNextItem($p_timeNow)
     {
-        //get previous show and previous item in the schedule table.
-        //Compare the two and if the last show was recorded and started
-        //after the last item in the schedule table, then return the show's
-        //name. Else return the last item from the schedule.
+        // get previous show and previous item in the schedule table.
+        // Compare the two and if the last show was recorded and started
+        // after the last item in the schedule table, then return the show's
+        // name. Else return the last item from the schedule.
 
         $showInstance = Application_Model_ShowInstance::GetNextShowInstance($p_timeNow);
         $row = Application_Model_Schedule::GetNextScheduleItem($p_timeNow);
@@ -113,7 +113,7 @@ class Application_Model_Dashboard
         }
         if (count($row) == 0) {
             if ($showInstance->isRecorded()) {
-                //last item is a show instance
+                // last item is a show instance
                 return ['name' => $showInstance->getName(),
                     'starts' => $showInstance->getShowInstanceStart(),
                     'ends' => $showInstance->getShowInstanceEnd(), ];
@@ -121,7 +121,7 @@ class Application_Model_Dashboard
 
             return null;
         }
-        //return the one that starts sooner.
+        // return the one that starts sooner.
 
         if ($row[0]['starts'] <= $showInstance->getShowInstanceStart()) {
             return ['name' => $row[0]['artist_name'] . ' - ' . $row[0]['track_title'],

@@ -13,7 +13,7 @@ class ApiController extends Zend_Controller_Action
             $this->_helper->viewRenderer->setNoRender(true);
         }
 
-        //Ignore API key and session authentication for these APIs:
+        // Ignore API key and session authentication for these APIs:
         $ignoreAuth = ['live-info',
             'live-info-v2',
             'week-info',
@@ -75,7 +75,7 @@ class ApiController extends Zend_Controller_Action
             ->addActionContext('update-cue-values-by-silan', 'json')
             ->addActionContext('get-usability-hint', 'json')
             ->addActionContext('poll-celery', 'json')
-            ->addActionContext('recalculate-schedule', 'json') //RKTN-260
+            ->addActionContext('recalculate-schedule', 'json') // RKTN-260
             ->initContext();
     }
 
@@ -98,8 +98,8 @@ class ApiController extends Zend_Controller_Action
             return true;
         }
 
-        //Start the session so the authentication is
-        //enforced by the ACL plugin.
+        // Start the session so the authentication is
+        // enforced by the ACL plugin.
         Zend_Session::start();
         $authAdapter = Zend_Auth::getInstance();
         Application_Model_Auth::pinSessionToClient($authAdapter);
@@ -186,7 +186,7 @@ class ApiController extends Zend_Controller_Action
         }
     }
 
-    //Used by the SaaS monitoring
+    // Used by the SaaS monitoring
     public function onAirLightAction()
     {
         $request = $this->getRequest();
@@ -354,7 +354,7 @@ class ApiController extends Zend_Controller_Action
                 $timezone
             );
 
-            //Convert the UTC scheduler time ("now") to the user-defined timezone.
+            // Convert the UTC scheduler time ("now") to the user-defined timezone.
             $result['schedulerTime'] = Application_Common_DateHelper::UTCStringToTimezoneString($result['schedulerTime'], $timezone);
             $result['timezone'] = $upcase ? strtoupper($timezone) : $timezone;
             $result['timezoneOffset'] = Application_Common_DateHelper::getTimezoneOffset($timezone);
@@ -495,7 +495,7 @@ class ApiController extends Zend_Controller_Action
             $timezone
         );
 
-        //Convert the UTC scheduler time ("now") to the user-defined timezone.
+        // Convert the UTC scheduler time ("now") to the user-defined timezone.
         $result['station']['schedulerTime'] = Application_Common_DateHelper::UTCStringToTimezoneString($result['station']['schedulerTime'], $timezone);
         $result['station']['timezone'] = $upcase ? strtoupper($timezone) : $timezone;
     }
@@ -510,7 +510,7 @@ class ApiController extends Zend_Controller_Action
             $request = $this->getRequest();
             $result = WidgetHelper::getWeekInfo($this->getRequest()->getParam('timezone'));
 
-            //used by caller to determine if the airtime they are running or widgets in use is out of date.
+            // used by caller to determine if the airtime they are running or widgets in use is out of date.
             $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION;
 
             $this->returnJsonOrJsonp($request, $result);
@@ -551,7 +551,7 @@ class ApiController extends Zend_Controller_Action
                     throw new ZendActionHttpException($this, 400, 'ERROR: Show does not have an associated image.');
                 }
             } catch (Exception $e) {
-                //To avoid broken images on your site, we return the station logo if we can't find the show logo.
+                // To avoid broken images on your site, we return the station logo if we can't find the show logo.
                 $this->_redirect('api/station-logo');
 
                 return;
@@ -562,7 +562,7 @@ class ApiController extends Zend_Controller_Action
                 // but has been cached in a client's browser this will throw an exception
                 Application_Common_FileIO::smartReadFile($path, filesize($path), $mime_type);
             } catch (LibreTimeFileNotFoundException $e) {
-                //throw new ZendActionHttpException($this, 404, "ERROR: No image found at $path");
+                // throw new ZendActionHttpException($this, 404, "ERROR: No image found at $path");
                 $this->_redirect('api/station-logo');
 
                 return;
@@ -607,7 +607,7 @@ class ApiController extends Zend_Controller_Action
             $storDir = Application_Model_MusicDir::getStorDir();
             $fp = $storDir->getDirectory();
 
-            //$this->view->type = $type;
+            // $this->view->type = $type;
             $file = Application_Model_StoredFile::RecallById($trackid);
             $md = $file->getMetadata();
 
@@ -624,7 +624,7 @@ class ApiController extends Zend_Controller_Action
                     }
                 }
             } elseif ($return === 'artwork') {
-                //default
+                // default
                 foreach ($md as $key => $value) {
                     if ($key == 'MDATA_KEY_ARTWORK' && !is_null($value)) {
                         FileDataHelper::renderImage($fp . $md['MDATA_KEY_ARTWORK'] . '-512.jpg');
@@ -779,13 +779,13 @@ class ApiController extends Zend_Controller_Action
             $historyService = new Application_Service_HistoryService();
             $historyService->insertPlayedItem($media_id);
 
-            //set a 'last played' timestamp for media item
-            //needed for smart blocks
+            // set a 'last played' timestamp for media item
+            // needed for smart blocks
             $mediaType = Application_Model_Schedule::GetType($media_id);
             if ($mediaType == 'file') {
                 $file_id = Application_Model_Schedule::GetFileId($media_id);
                 if (!is_null($file_id)) {
-                    //we are dealing with a file not a stream
+                    // we are dealing with a file not a stream
                     $file = Application_Model_StoredFile::RecallById($file_id);
                     $now = new DateTime('now', new DateTimeZone('UTC'));
                     $file->setLastPlayedTime($now);
@@ -854,17 +854,17 @@ class ApiController extends Zend_Controller_Action
     {
         $showCanceled = false;
         $file = Application_Model_StoredFile::RecallById($file_id);
-        //$show_instance  = $this->_getParam('show_instance');
+        // $show_instance  = $this->_getParam('show_instance');
 
         try {
             $show_inst = new Application_Model_ShowInstance($show_instance_id);
             $show_inst->setRecordedFile($file_id);
         } catch (Exception $e) {
-            //we've reached here probably because the show was
-            //cancelled, and therefore the show instance does not exist
-            //anymore (ShowInstance constructor threw this error). We've
-            //done all we can do (upload the file and put it in the
-            //library), now lets just return.
+            // we've reached here probably because the show was
+            // cancelled, and therefore the show instance does not exist
+            // anymore (ShowInstance constructor threw this error). We've
+            // done all we can do (upload the file and put it in the
+            // library), now lets just return.
             $showCanceled = true;
         }
 
@@ -916,18 +916,18 @@ class ApiController extends Zend_Controller_Action
                 $filepath = $md['MDATA_KEY_FILEPATH'];
                 $file = Application_Model_StoredFile::RecallByFilepath($filepath, $con);
 
-                //File is not in database anymore.
+                // File is not in database anymore.
                 if (is_null($file)) {
                     $return_hash['error'] = sprintf(_('File does not exist in %s'), PRODUCT_NAME);
                 }
-                //Updating a metadata change.
+                // Updating a metadata change.
                 else {
-                    //CC-5207 - restart media-monitor causes it to reevaluate all
-                    //files in watched directories, and reset their cue-in/cue-out
-                    //values. Since media-monitor has nothing to do with cue points
-                    //let's unset it here. Note that on mode == "create", we still
-                    //want media-monitor sending info about cue_out which by default
-                    //will be equal to length of track until silan can take over.
+                    // CC-5207 - restart media-monitor causes it to reevaluate all
+                    // files in watched directories, and reset their cue-in/cue-out
+                    // values. Since media-monitor has nothing to do with cue points
+                    // let's unset it here. Note that on mode == "create", we still
+                    // want media-monitor sending info about cue_out which by default
+                    // will be equal to length of track until silan can take over.
                     unset($md['MDATA_KEY_CUE_IN'], $md['MDATA_KEY_CUE_OUT']);
 
                     $file->setMetadata($md);
@@ -942,7 +942,7 @@ class ApiController extends Zend_Controller_Action
                     $return_hash['error'] = sprintf(_('File does not exist in %s'), PRODUCT_NAME);
                 } else {
                     $filepath = $md['MDATA_KEY_FILEPATH'];
-                    //$filepath = str_replace("\\", "", $filepath);
+                    // $filepath = str_replace("\\", "", $filepath);
                     $file->setFilePath($filepath);
                 }
             } elseif ($mode == 'delete') {
@@ -959,7 +959,7 @@ class ApiController extends Zend_Controller_Action
                 }
             } elseif ($mode == 'delete_dir') {
                 $filepath = $md['MDATA_KEY_FILEPATH'];
-                //$filepath = str_replace("\\", "", $filepath);
+                // $filepath = str_replace("\\", "", $filepath);
                 $files = Application_Model_StoredFile::RecallByPartialFilepath($filepath, $con);
 
                 foreach ($files as $file) {
@@ -1283,7 +1283,7 @@ class ApiController extends Zend_Controller_Action
         $djtype = $request->getParam('djtype');
 
         if ($djtype == 'master') {
-            //check against master
+            // check against master
             if ($username == Application_Model_Preference::GetLiveStreamMasterUsername()
                     && $password == Application_Model_Preference::GetLiveStreamMasterPassword()) {
                 $this->view->msg = true;
@@ -1291,7 +1291,7 @@ class ApiController extends Zend_Controller_Action
                 $this->view->msg = false;
             }
         } elseif ($djtype == 'dj') {
-            //check against show dj auth
+            // check against show dj auth
             $showInfo = Application_Model_Show::getCurrentShow();
 
             // there is current playing show
@@ -1342,7 +1342,7 @@ class ApiController extends Zend_Controller_Action
     {
         $dir_id = $this->_getParam('dir_id');
 
-        //connect to db and get get sql
+        // connect to db and get get sql
         $rows = Application_Model_StoredFile::listAllFiles2($dir_id, 100);
 
         $this->_helper->json->sendJson($rows);
@@ -1350,7 +1350,7 @@ class ApiController extends Zend_Controller_Action
 
     public function getFilesWithoutSilanValueAction()
     {
-        //connect to db and get get sql
+        // connect to db and get get sql
         $rows = Application_Model_StoredFile::getAllFilesWithoutSilan();
 
         $this->_helper->json->sendJson($rows);
@@ -1382,16 +1382,16 @@ class ApiController extends Zend_Controller_Action
             // TODO : move this code into model -- RG
             $file = Application_Model_StoredFile::RecallById($p_id = $id)->getPropelOrm();
 
-            //What we are doing here is setting a more accurate length that was
-            //calculated with silan by actually scanning the entire file. This
-            //process takes a really long time, and so we only do it in the background
-            //after the file has already been imported -MK
+            // What we are doing here is setting a more accurate length that was
+            // calculated with silan by actually scanning the entire file. This
+            // process takes a really long time, and so we only do it in the background
+            // after the file has already been imported -MK
             try {
                 $length = $file->getDbLength();
                 if (isset($info['length'])) {
                     $length = $info['length'];
-                    //length decimal number in seconds. Need to convert it to format
-                    //HH:mm:ss to get around silly PHP limitations.
+                    // length decimal number in seconds. Need to convert it to format
+                    // HH:mm:ss to get around silly PHP limitations.
                     $length = Application_Common_DateHelper::secondsToPlaylistTime($length);
                     $file->setDbLength($length);
                 }
@@ -1406,7 +1406,7 @@ class ApiController extends Zend_Controller_Action
             } catch (Exception $e) {
                 Logging::info('Failed to update silan values for ' . $file->getDbTrackTitle());
                 Logging::info('File length analyzed by Silan is: ' . $length);
-                //set silan_check to true so we don't attempt to re-anaylze again
+                // set silan_check to true so we don't attempt to re-anaylze again
                 $file->setDbSilanCheck(true);
                 $file->save();
             }
@@ -1422,7 +1422,7 @@ class ApiController extends Zend_Controller_Action
         $media_id = intval($request->getParam('media_id'));
         $data_arr = json_decode($data);
 
-        //$media_id is -1 sometimes when a stream has stopped playing
+        // $media_id is -1 sometimes when a stream has stopped playing
         if (!is_null($media_id) && $media_id > 0) {
             if (isset($data_arr->title)) {
                 $data_title = substr($data_arr->title, 0, 1024);
@@ -1602,7 +1602,7 @@ class ApiController extends Zend_Controller_Action
             [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($request);
 
             if ((!isset($showId)) || (!is_numeric($showId))) {
-                //if (!isset($showId)) {
+                // if (!isset($showId)) {
                 $this->_helper->json->sendJson(
                     ['jsonrpc' => '2.0', 'error' => ['code' => 400, 'message' => 'missing invalid type for required show_id parameter. use type int.' . $showId]]
                 );
@@ -1712,7 +1712,7 @@ class ApiController extends Zend_Controller_Action
 
         header('Content-Type: application/x-mpegurl');
         header('Content-Disposition: attachment; filename=stream.m3u');
-        $m3uFile = "#EXTM3U\r\n\r\n"; //Windows linebreaks eh
+        $m3uFile = "#EXTM3U\r\n\r\n"; // Windows linebreaks eh
 
         $stationName = Application_Model_Preference::GetStationName();
         $streamData = Application_Model_StreamSetting::getEnabledStreamData();
@@ -1738,17 +1738,17 @@ class ApiController extends Zend_Controller_Action
 
         $showInstances = CcShowInstancesQuery::create()
             ->filterByDbStarts($now, Criteria::GREATER_THAN)
-            //->filterByDbModifiedInstance(false)
+            // ->filterByDbModifiedInstance(false)
             ->orderByDbStarts()
             ->find();
-        //->find($this->con);
+        // ->find($this->con);
         $total = $showInstances->count();
         $progress = 0;
         foreach ($showInstances as $instance) {
             echo round(floatval($progress / $total) * 100) . '% - ' . $instance->getDbId() . "\n<br>";
             flush();
             ob_flush();
-            //while(@ob_end_clean());
+            // while(@ob_end_clean());
             $scheduler->removeGaps2($instance->getDbId());
             ++$progress;
         }

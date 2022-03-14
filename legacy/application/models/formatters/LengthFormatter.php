@@ -30,12 +30,12 @@ class LengthFormatter
         }
 
         $minutes = $pieces[1];
-        //length is less than 1 hour
+        // length is less than 1 hour
         if (!isset($hours)) {
             if (intval($minutes) !== 0) {
                 $minutes = ltrim($minutes, '0');
             }
-            //length is less than 1 minute
+            // length is less than 1 minute
             else {
                 unset($minutes);
             }

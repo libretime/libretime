@@ -45,7 +45,7 @@ class Application_Model_StoredFile
         'bit_rate' => 'DbBitRate',
         'sample_rate' => 'DbSampleRate',
         'mime' => 'DbMime',
-        //"md5"          => "DbMd5",
+        // "md5"          => "DbMd5",
         'ftype' => 'DbFtype',
         'language' => 'DbLanguage',
         'replay_gain' => 'DbReplayGain',
@@ -183,7 +183,7 @@ class Application_Model_StoredFile
                     // if MDATA_OWNER_ID is not set then we default to the
                     // first admin user we find
                     if (!array_key_exists('owner_id', $p_md)) {
-                        //$admins = Application_Model_User::getUsers(array('A'));
+                        // $admins = Application_Model_User::getUsers(array('A'));
                         $admins = array_merge(
                             Application_Model_User::getUsersOfType('A')->getData(),
                             Application_Model_User::getUsersOfType('S')->getData()
@@ -268,7 +268,7 @@ class Application_Model_StoredFile
      */
     public function setDbColMetadataValue($p_category, $p_value)
     {
-        //don't blank out name, defaults to original filename on first insertion to database.
+        // don't blank out name, defaults to original filename on first insertion to database.
         if ($p_category == 'track_title' && (is_null($p_value) || $p_value == '')) {
             return;
         }
@@ -412,8 +412,8 @@ SQL;
             throw new Exception('Cannot delete file with filesize ' . $filesize);
         }
 
-        //Delete the physical file from either the local stor directory
-        //or from the cloud
+        // Delete the physical file from either the local stor directory
+        // or from the cloud
         if ($this->_file->getDbImportStatus() == CcFiles::IMPORT_STATUS_SUCCESS) {
             try {
                 $this->_file->deletePhysicalFile();
@@ -421,20 +421,20 @@ SQL;
                 if ($quiet) {
                     Logging::info($e);
                 } else {
-                    //Just log the exception and continue.
+                    // Just log the exception and continue.
                     Logging::error($e);
                 }
             }
         }
 
-        //Update the user's disk usage
+        // Update the user's disk usage
         Application_Model_Preference::updateDiskUsage(-1 * $filesize);
 
-        //Explicitly update any playlist's and block's length that contain
-        //the file getting deleted
+        // Explicitly update any playlist's and block's length that contain
+        // the file getting deleted
         self::updateBlockAndPlaylistLength($this->_file->getDbId());
 
-        //delete the file record from cc_files (and cloud_file, if applicable)
+        // delete the file record from cc_files (and cloud_file, if applicable)
         $this->_file->delete();
     }
 
@@ -607,7 +607,7 @@ SQL;
      */
     public static function RecallById($p_id = null, $con = null)
     {
-        //TODO
+        // TODO
         if (is_null($con)) {
             $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
         }
@@ -620,9 +620,9 @@ SQL;
                 throw new Exception('Could not recall file with id: ' . $p_id);
             }
 
-            //Attempt to get the cloud file object and return it. If no cloud
-            //file object is found then we are dealing with a regular stored
-            //object so return that
+            // Attempt to get the cloud file object and return it. If no cloud
+            // file object is found then we are dealing with a regular stored
+            // object so return that
             $cloudFile = CloudFileQuery::create()->findOneByCcFileId($p_id);
 
             if (is_null($cloudFile)) {
@@ -757,14 +757,14 @@ SQL;
                 $fileSelect[] = $key;
                 $streamSelect[] = 'NULL::INTERVAL AS ' . $key;
             }
-            //file length is displayed based on cueout - cuein.
+            // file length is displayed based on cueout - cuein.
             elseif ($key === 'length') {
                 $plSelect[] = $key;
                 $blSelect[] = $key;
                 $fileSelect[] = '(cueout - cuein)::INTERVAL AS length';
                 $streamSelect[] = $key;
             }
-            //same columns in each table.
+            // same columns in each table.
             elseif (in_array($key, ['utime', 'mtime'])) {
                 $plSelect[] = $key;
                 $blSelect[] = $key;
@@ -776,7 +776,7 @@ SQL;
                 $fileSelect[] = 'year AS ' . $key;
                 $streamSelect[] = 'EXTRACT(YEAR FROM utime)::varchar AS ' . $key;
             }
-            //need to cast certain data as ints for the union to search on.
+            // need to cast certain data as ints for the union to search on.
             elseif (in_array($key, ['track_number', 'bit_rate', 'sample_rate', 'bpm'])) {
                 $plSelect[] = 'NULL::int AS ' . $key;
                 $blSelect[] = 'NULL::int AS ' . $key;
@@ -810,29 +810,29 @@ SQL;
         $plTable = "({$plSelect} FROM cc_playlist AS PL LEFT JOIN cc_subjs AS sub ON (sub.id = PL.creator_id))";
         $blTable = "({$blSelect} FROM cc_block AS BL LEFT JOIN cc_subjs AS sub ON (sub.id = BL.creator_id))";
         $fileTable = "({$fileSelect} FROM cc_files AS FILES LEFT JOIN cc_subjs AS sub ON (sub.id = FILES.owner_id) WHERE file_exists = 'TRUE' AND hidden='FALSE')";
-        //$fileTable = "({$fileSelect} FROM cc_files AS FILES WHERE file_exists = 'TRUE')";
+        // $fileTable = "({$fileSelect} FROM cc_files AS FILES WHERE file_exists = 'TRUE')";
         $streamTable = "({$streamSelect} FROM cc_webstream AS ws LEFT JOIN cc_subjs AS sub ON (sub.id = ws.creator_id))";
         $unionTable = "({$plTable} UNION {$blTable} UNION {$fileTable} UNION {$streamTable}) AS RESULTS";
 
-        //choose which table we need to select data from.
+        // choose which table we need to select data from.
         switch ($type) {
             case MediaType::FILE:
-                $fromTable = $fileTable . ' AS File'; //need an alias for the table if it's standalone.
+                $fromTable = $fileTable . ' AS File'; // need an alias for the table if it's standalone.
 
                 break;
 
             case MediaType::PLAYLIST:
-                $fromTable = $plTable . ' AS Playlist'; //need an alias for the table if it's standalone.
+                $fromTable = $plTable . ' AS Playlist'; // need an alias for the table if it's standalone.
 
                 break;
 
             case MediaType::BLOCK:
-                $fromTable = $blTable . ' AS Block'; //need an alias for the table if it's standalone.
+                $fromTable = $blTable . ' AS Block'; // need an alias for the table if it's standalone.
 
                 break;
 
             case MediaType::WEBSTREAM:
-                $fromTable = $streamTable . ' AS StreamTable'; //need an alias for the table if it's standalone.
+                $fromTable = $streamTable . ' AS StreamTable'; // need an alias for the table if it's standalone.
 
                 break;
 
@@ -854,7 +854,7 @@ SQL;
         foreach ($results['aaData'] as &$row) {
             $row['id'] = intval($row['id']);
 
-            //taken from Datatables.php, needs to be cleaned up there.
+            // taken from Datatables.php, needs to be cleaned up there.
             if (isset($r['ftype'])) {
                 if ($r['ftype'] == 'playlist') {
                     $pl = new Application_Model_Playlist($r['id']);
@@ -896,7 +896,7 @@ SQL;
             $len_formatter = new LengthFormatter($row_length);
             $row['length'] = $len_formatter->format();
 
-            //convert mtime and utime to localtime
+            // convert mtime and utime to localtime
             $row['mtime'] = new DateTime($row['mtime'], $utcTimezone);
             $row['mtime']->setTimeZone($displayTimezone);
             $row['mtime'] = $row['mtime']->format(DEFAULT_TIMESTAMP_FORMAT);
@@ -904,7 +904,7 @@ SQL;
             $row['utime']->setTimeZone($displayTimezone);
             $row['utime'] = $row['utime']->format(DEFAULT_TIMESTAMP_FORMAT);
 
-            //need to convert last played to localtime if it exists.
+            // need to convert last played to localtime if it exists.
             if (isset($row['lptime'])) {
                 $row['lptime'] = new DateTime($row['lptime'], $utcTimezone);
                 $row['lptime']->setTimeZone($displayTimezone);
@@ -970,8 +970,8 @@ SQL;
             'organize',
             $originalFilename
         );
-        //if the uploaded file is not UTF-8 encoded, let's encode it. Assuming source
-        //encoding is ISO-8859-1
+        // if the uploaded file is not UTF-8 encoded, let's encode it. Assuming source
+        // encoding is ISO-8859-1
         $audio_stor = mb_detect_encoding($audio_stor, 'UTF-8') == 'UTF-8' ? $audio_stor : utf8_encode($audio_stor);
         if ($copyFile) {
             Logging::info("Copying file {$audio_file} to {$audio_stor}");
@@ -981,7 +981,7 @@ SQL;
         } else {
             Logging::info("Moving file {$audio_file} to {$audio_stor}");
 
-            //Ensure we have permissions to overwrite the file in stor, in case it already exists.
+            // Ensure we have permissions to overwrite the file in stor, in case it already exists.
             if (file_exists($audio_stor)) {
                 chmod($audio_stor, 0644);
             }
@@ -989,11 +989,11 @@ SQL;
             // Martin K.: changed to rename: Much less load + quicker since this is
             // an atomic operation
             if (rename($audio_file, $audio_stor) === false) {
-                //something went wrong likely there wasn't enough space in .
-                //the audio_stor to move the file too warn the user that   .
-                //the file wasn't uploaded and they should check if there  .
-                //is enough disk space                                     .
-                unlink($audio_file); //remove the file after failed rename
+                // something went wrong likely there wasn't enough space in .
+                // the audio_stor to move the file too warn the user that   .
+                // the file wasn't uploaded and they should check if there  .
+                // is enough disk space                                     .
+                unlink($audio_file); // remove the file after failed rename
 
                 throw new Exception('The file was not uploaded, this error can occur if the computer '
                     . 'hard drive does not have enough disk space or the stor '
@@ -1077,7 +1077,7 @@ SQL;
         return $results;
     }
 
-    //TODO: MERGE THIS FUNCTION AND "listAllFiles" -MK
+    // TODO: MERGE THIS FUNCTION AND "listAllFiles" -MK
     public static function listAllFiles2($dir_id = null, $limit = 'ALL')
     {
         $con = Propel::getConnection();
@@ -1151,10 +1151,10 @@ SQL;
     // This method seems to be unsued everywhere so I've commented it out
     // If it's absence does not have any effect then it will be completely
     // removed soon
-    //public function getFileExistsFlag()
-    //{
-    //return $this->_file->getDbFileExists();
-    //}
+    // public function getFileExistsFlag()
+    // {
+    // return $this->_file->getDbFileExists();
+    // }
 
     public function getFileOwnerId()
     {

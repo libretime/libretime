@@ -117,7 +117,7 @@ SQL;
         } else {
             self::setExistsFlag(false);
         }
-        //$res = $this->_dir->delete();
+        // $res = $this->_dir->delete();
 
         foreach ($show_instances as $show_instance_row) {
             $temp_show = new Application_Model_ShowInstance($show_instance_row['instance_id']);
@@ -271,19 +271,19 @@ SQL;
             return $res;
         }
 
-        //convert "linked" files (Airtime <= 1.8.2) to watched files.
+        // convert "linked" files (Airtime <= 1.8.2) to watched files.
         $propel_link_dir = CcMusicDirsQuery::create()
             ->filterByType('link')
             ->findOne();
 
-        //see if any linked files exist.
+        // see if any linked files exist.
         if (isset($propel_link_dir)) {
-            //newly added watched directory object
+            // newly added watched directory object
             $propel_new_watch = CcMusicDirsQuery::create()
                 ->filterByDirectory(Application_Common_OsPath::normpath($p_path) . '/')
                 ->findOne();
 
-            //any files of the deprecated "link" type.
+            // any files of the deprecated "link" type.
             $link_files = CcFilesQuery::create()
                 ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
                 ->filterByDbDirectory($propel_link_dir->getId())
@@ -294,9 +294,9 @@ SQL;
             foreach ($link_files as $link_file) {
                 $link_filepath = $link_file->getDbFilepath();
 
-                //convert "link" file into a watched file.
+                // convert "link" file into a watched file.
                 if ((strlen($newly_watched_dir) < strlen($link_filepath)) && (substr($link_filepath, 0, strlen($newly_watched_dir)) === $newly_watched_dir)) {
-                    //get the filepath path not including the watched directory.
+                    // get the filepath path not including the watched directory.
                     $sub_link_filepath = substr($link_filepath, strlen($newly_watched_dir));
 
                     $link_file->setDbDirectory($propel_new_watch->getId());
@@ -433,7 +433,7 @@ SQL;
      */
     public static function removeWatchedDir($p_dir, $userAddedWatchedDir = true)
     {
-        //make sure that $p_dir has a trailing "/"
+        // make sure that $p_dir has a trailing "/"
         $real_path = Application_Common_OsPath::normpath($p_dir) . '/';
         if ($real_path != '/') {
             $p_dir = $real_path;

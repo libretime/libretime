@@ -18,7 +18,7 @@ class IndexController extends Zend_Controller_Action
         $this->view->headScript()->appendScript('$.i18n.setDictionary(general_dict)');
         $this->view->headScript()->appendScript("var baseUrl='{$baseUrl}'");
 
-        //jplayer
+        // jplayer
         $this->view->headScript()->appendFile($baseUrl . 'js/jplayer/jquery.jplayer.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->headScript()->appendFile($baseUrl . 'js/jplayer/jplayer.playlist.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
 
@@ -27,7 +27,7 @@ class IndexController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl . 'css/radio-page/station-podcast.css?' . $CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl . 'css/bootstrap.css?' . $CC_CONFIG['airtime_version']);
 
-        //jplayer control buttons
+        // jplayer control buttons
         $this->view->headLink()->appendStylesheet($baseUrl . 'css/redmond/jquery-ui-1.8.8.custom.css?' . $CC_CONFIG['airtime_version']);
 
         $this->_helper->layout->setLayout('radio-page');
@@ -54,7 +54,7 @@ class IndexController extends Zend_Controller_Action
         }
         $this->view->displayLoginButton = $displayRadioPageLoginButtonValue;
 
-        //station feed episodes
+        // station feed episodes
         $stationPodcastId = Application_Model_Preference::getStationPodcastId();
         $podcastEpisodesService = new Application_Service_PodcastEpisodeService();
         $episodes = $podcastEpisodesService->getPodcastEpisodes($stationPodcastId, 0, 0, PodcastEpisodesPeer::PUBLICATION_DATE, 'DESC');

@@ -34,7 +34,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             ->setValue($defaultFade);
         $this->addElement($transition_fade);
 
-        //Master username
+        // Master username
         $master_username = new Zend_Form_Element_Text('master_username');
         $master_username->setAttrib('autocomplete', 'off')
             ->setAllowEmpty(true)
@@ -43,7 +43,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             ->setValue(Application_Model_Preference::GetLiveStreamMasterUsername());
         $this->addElement($master_username);
 
-        //Master password
+        // Master password
         if ($isDemo) {
             $master_password = new Zend_Form_Element_Text('master_password');
         } else {
@@ -67,7 +67,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             ->setValue(Application_Model_Preference::GetMasterDJSourceConnectionURL());
         $this->addElement($masterSourceHost);
 
-        //liquidsoap harbor.input port
+        // liquidsoap harbor.input port
         $betweenValidator = Application_Form_Helper_ValidationTypes::overrideBetweenValidator(1024, 49151);
 
         $m_port = Application_Model_StreamSetting::getMasterLiveStreamPort();
@@ -97,7 +97,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             ->setValue(Application_Model_Preference::GetLiveDJSourceConnectionURL());
         $this->addElement($showSourceHost);
 
-        //liquidsoap harbor.input port
+        // liquidsoap harbor.input port
         $l_port = Application_Model_StreamSetting::getDjLiveStreamPort();
 
         $showSourcePort = new Zend_Form_Element_Text('show_source_port');

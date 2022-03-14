@@ -12,7 +12,7 @@ final class LocaleController extends Zend_Controller_Action
         echo 'var datatables_dict =' .
             file_get_contents(
                 Application_Common_OsPath::join(
-                //$_SERVER["DOCUMENT_ROOT"],
+                // $_SERVER["DOCUMENT_ROOT"],
                 dirname(__FILE__) . '/../../public/', // Fixing this... -- Albert
                 'js/datatables/i18n/',
                     $locale . '.txt'
@@ -23,17 +23,17 @@ final class LocaleController extends Zend_Controller_Action
     public function generalTranslationTableAction()
     {
         $translations = [
-            //common/common.js
+            // common/common.js
             'Audio Player' => _('Audio Player'),
             'Something went wrong!' => _('Something went wrong!'),
-            //dashboard/dashboard.js
+            // dashboard/dashboard.js
             'Recording:' => _('Recording:'),
             'Master Stream' => _('Master Stream'),
             'Live Stream' => _('Live Stream'),
             'Nothing Scheduled' => _('Nothing Scheduled'),
             'Current Show:' => _('Current Show:'),
             'Current' => _('Current'),
-            //dashboard/versiontooltip.js
+            // dashboard/versiontooltip.js
             'You are running the latest version' => _('You are running the latest version'),
             'New version available: ' => _('New version available: '),
             'You have a pre-release version of LibreTime intalled.' => _('You have a pre-release version of LibreTime intalled.'),
@@ -41,15 +41,15 @@ final class LocaleController extends Zend_Controller_Action
             'A feature update for your LibreTime installation is available.' => _('A feature update for your LibreTime installation is available.'),
             'A major update for your LibreTime installation is available.' => _('A major update for your LibreTime installation is available.'),
             'Multiple major updates for LibreTime installation are available. Please upgrade as soon as possible.' => _('Multiple major updates for LibreTime installation are available. Please upgrade as soon as possible.'),
-            //library/events/library_playlistbuilder.js
+            // library/events/library_playlistbuilder.js
             'Add to current playlist' => _('Add to current playlist'),
             'Add to current smart block' => _('Add to current smart block'),
             'Adding 1 Item' => _('Adding 1 Item'),
             'Adding %s Items' => _('Adding %s Items'),
             'You can only add tracks to smart blocks.' => _('You can only add tracks to smart blocks.'),
             'You can only add tracks, smart blocks, and webstreams to playlists.' => _('You can only add tracks, smart blocks, and webstreams to playlists.'),
-            //library/events/library_showbuilder.js
-            //already in library/events/library_playlistbuilder.js
+            // library/events/library_showbuilder.js
+            // already in library/events/library_playlistbuilder.js
             'Please select a cursor position on timeline.' => _('Please select a cursor position on timeline.'),
             "You haven't added any tracks" => _("You haven't added any tracks"),
             "You haven't added any playlists" => _("You haven't added any playlists"),
@@ -62,9 +62,9 @@ final class LocaleController extends Zend_Controller_Action
             'Learn about smart blocks' => _('Learn about smart blocks'),
             'Learn about webstreams' => _('Learn about webstreams'),
             "Click 'New' to create one." => _("Click 'New' to create one."),
-            //"Adding 1 Item" => _("Adding 1 Item"),
-            //"Adding %s Items" => _("Adding %s Items"),
-            //library/library.js
+            // "Adding 1 Item" => _("Adding 1 Item"),
+            // "Adding %s Items" => _("Adding %s Items"),
+            // library/library.js
             'Add' => _('Add'),
             'New' => _('New'),
             'Edit' => _('Edit'),
@@ -120,7 +120,7 @@ final class LocaleController extends Zend_Controller_Action
             'Are you sure you want to delete the selected item?' => _('Are you sure you want to delete the selected item?'),
             'Uploading in progress...' => _('Uploading in progress...'),
             'Retrieving data from the server...' => _('Retrieving data from the server...'),
-            //library/podcast.js
+            // library/podcast.js
             'Import' => _('Import'),
             'Imported?' => _('Imported?'),
             'View' => _('View'),
@@ -131,9 +131,9 @@ final class LocaleController extends Zend_Controller_Action
             'Input must be in the format: yyyy-mm-dd' => _('Input must be in the format: yyyy-mm-dd'),
             'Input must be in the format: hh:mm:ss.t' => _('Input must be in the format: hh:mm:ss.t'),
             'My Podcast' => _('My Podcast'),
-            //library/plupload.js
+            // library/plupload.js
             'You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?' => _('You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?'),
-            //library/spl.js
+            // library/spl.js
             'Open Media Builder' => _('Open Media Builder'),
             "please put in a time '00:00:00 (.0)'" => _("please put in a time '00:00:00 (.0)'"),
             "Please enter a valid time in seconds. Eg. 0.5'" => _('Please enter a valid time in seconds. Eg. 0.5'),
@@ -143,14 +143,14 @@ final class LocaleController extends Zend_Controller_Action
             'Playlist saved' => _('Playlist saved'),
             'Playlist shuffled' => _('Playlist shuffled'),
             "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore." => _("Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."),
-            //listenerstat/listenerstat.js
+            // listenerstat/listenerstat.js
             'Listener Count on %s: %s' => _('Listener Count on %s: %s'),
-            //nowplaying/register.js
+            // nowplaying/register.js
             'Remind me in 1 week' => _('Remind me in 1 week'),
             'Remind me never' => _('Remind me never'),
             'Yes, help Airtime' => _('Yes, help Airtime'),
             'Image must be one of jpg, jpeg, png, or gif' => _('Image must be one of jpg, jpeg, png, or gif'),
-            //playlist/smart_blockbuilder.js
+            // playlist/smart_blockbuilder.js
             'A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show.' => _('A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show.'),
             'A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library.' => _('A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library.'),
             'The desired block length will not be reached if %s cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block.' => _('The desired block length will not be reached if %s cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block.'),
@@ -170,14 +170,14 @@ final class LocaleController extends Zend_Controller_Action
             'is in the range' => _('is in the range'),
             'Preview' => _('Preview'),
             'Generate' => _('Generate'),
-            //preferences/musicdirs.js
+            // preferences/musicdirs.js
             'Choose Storage Folder' => _('Choose Storage Folder'),
             'Choose Folder to Watch' => _('Choose Folder to Watch'),
             "Are you sure you want to change the storage folder?\nThis will remove the files from your Airtime library!" => _("Are you sure you want to change the storage folder?\nThis will remove the files from your Airtime library!"),
             'Manage Media Folders' => _('Manage Media Folders'),
             'Are you sure you want to remove the watched folder?' => _('Are you sure you want to remove the watched folder?'),
             'This path is currently not accessible.' => _('This path is currently not accessible.'),
-            //preferences/streamsetting.js
+            // preferences/streamsetting.js
             'Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided.' => _('Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided.'),
             'Connected to the streaming server' => _('Connected to the streaming server'),
             'The stream is disabled' => _('The stream is disabled'),
@@ -192,9 +192,9 @@ final class LocaleController extends Zend_Controller_Action
             "If your live streaming client does not ask for a username, this field should be 'source'." => _("If your live streaming client does not ask for a username, this field should be 'source'."),
             'WARNING: This will restart your stream and may cause a short dropout for your listeners!' => _('WARNING: This will restart your stream and may cause a short dropout for your listeners!'),
             'This is the admin username and password for Icecast/SHOUTcast to get listener statistics.' => _('This is the admin username and password for Icecast/SHOUTcast to get listener statistics.'),
-            //preferences/support-setting.js
+            // preferences/support-setting.js
             'Image must be one of jpg, jpeg, png, or gif' => _('Image must be one of jpg, jpeg, png, or gif'),
-            //schedule/add-show.js
+            // schedule/add-show.js
             'Warning: You cannot change this field while the show is currently playing' => _('Warning: You cannot change this field while the show is currently playing'),
             'No result found' => _('No result found'),
             'This follows the same security pattern for the shows: only users assigned to the show can connect.' => _('This follows the same security pattern for the shows: only users assigned to the show can connect.'),
@@ -204,9 +204,9 @@ final class LocaleController extends Zend_Controller_Action
             'Warning: Shows cannot be re-linked' => _('Warning: Shows cannot be re-linked'),
             'By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows' => _('By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows'),
             'Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the Interface Timezone in your user settings.' => _('Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the Interface Timezone in your user settings.'),
-            //schedule/full-calendar-functions
-            //already in schedule/add-show.js
-            //"The show instance doesn't exist anymore!" => _("The show instance doesn't exist anymore!"),
+            // schedule/full-calendar-functions
+            // already in schedule/add-show.js
+            // "The show instance doesn't exist anymore!" => _("The show instance doesn't exist anymore!"),
             'Show' => _('Show'),
             'Show is empty' => _('Show is empty'),
             '1m' => _('1m'),
@@ -219,9 +219,9 @@ final class LocaleController extends Zend_Controller_Action
             'Retreiving data from the server...' => _('Retreiving data from the server...'),
             'This show has no scheduled content.' => _('This show has no scheduled content.'),
             'This show is not completely filled with content.' => _('This show is not completely filled with content.'),
-            //already in schedule/add-show.js
-            //"The show instance doesn"t exist anymore!" => _("The show instance doesn"t exist anymore!"),
-            //schedule/schedule.js
+            // already in schedule/add-show.js
+            // "The show instance doesn"t exist anymore!" => _("The show instance doesn"t exist anymore!"),
+            // schedule/schedule.js
             'January' => _('January'),
             'February' => _('February'),
             'March' => _('March'),
@@ -269,10 +269,10 @@ final class LocaleController extends Zend_Controller_Action
             'Stop recording current show?' => _('Stop recording current show?'),
             'Ok' => _('Ok'),
             'Contents of Show' => _('Contents of Show'),
-            //already in schedule/add-show.js
-            //"The show instance doesn"t exist anymore!" => _("The show instance doesn"t exist anymore!"),
+            // already in schedule/add-show.js
+            // "The show instance doesn"t exist anymore!" => _("The show instance doesn"t exist anymore!"),
             'Remove all content?' => _('Remove all content?'),
-            //showbuilder/builder.js
+            // showbuilder/builder.js
             'Delete selected item(s)?' => _('Delete selected item(s)?'),
             'Start' => _('Start'),
             'End' => _('End'),
@@ -281,11 +281,11 @@ final class LocaleController extends Zend_Controller_Action
             ' of ' => _(' of '),
             ' records' => _(' records'),
             'There are no shows scheduled during the specified time period.' => _('There are no shows scheduled during the specified time period.'),
-            //already in library/library.js
-            //"Title" => _("Title"),
-            //"Creator" => _("Creator"),
-            //"Album" => _("Album"),
-            //"Mime" => _("Mime"),
+            // already in library/library.js
+            // "Title" => _("Title"),
+            // "Creator" => _("Creator"),
+            // "Album" => _("Album"),
+            // "Mime" => _("Mime"),
             'Cue In' => _('Cue In'),
             'Cue Out' => _('Cue Out'),
             'Fade In' => _('Fade In'),
@@ -293,9 +293,9 @@ final class LocaleController extends Zend_Controller_Action
             'Show Empty' => _('Show Empty'),
             'Recording From Line In' => _('Recording From Line In'),
             'Track preview' => _('Track preview'),
-            //already in library/spl.js
-            //"Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn"t "watched" anymore."
-            //=> _("Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn"t "watched" anymore."),
+            // already in library/spl.js
+            // "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn"t "watched" anymore."
+            // => _("Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn"t "watched" anymore."),
             'Cannot schedule outside a show.' => _('Cannot schedule outside a show.'),
             'Moving 1 Item' => _('Moving 1 Item'),
             'Moving %s Items' => _('Moving %s Items'),
@@ -304,8 +304,8 @@ final class LocaleController extends Zend_Controller_Action
             'Fade Editor' => _('Fade Editor'),
             'Cue Editor' => _('Cue Editor'),
             'Waveform features are available in a browser supporting the Web Audio API' => _('Waveform features are available in a browser supporting the Web Audio API'),
-            //already in library/library.js
-            //"Select" => _("Select"),
+            // already in library/library.js
+            // "Select" => _("Select"),
             'Select all' => _('Select all'),
             'Select none' => _('Select none'),
             'Trim overbooked shows' => _('Trim overbooked shows'),
@@ -313,20 +313,20 @@ final class LocaleController extends Zend_Controller_Action
             'Jump to the current playing track' => _('Jump to the current playing track'),
             'Jump to Current' => _('Jump to Current'),
             'Cancel current show' => _('Cancel current show'),
-            //already in schedule/schedule.js
-            //"Cancel Current Show?" => _("Cancel Current Show?"),
+            // already in schedule/schedule.js
+            // "Cancel Current Show?" => _("Cancel Current Show?"),
             'Stop recording current show?' => _('Stop recording current show?'),
-            //showbuilder/main_builder.js
+            // showbuilder/main_builder.js
             'Open library to add or remove content' => _('Open library to add or remove content'),
             'Add / Remove Content' => _('Add / Remove Content'),
-            //status/status.js
+            // status/status.js
             'in use' => _('in use'),
             'Disk' => _('Disk'),
-            //serverbrowse/serverbrowse.js
+            // serverbrowse/serverbrowse.js
             'Look in' => _('Look in'),
             'Cancel' => _('Cancel'),
             'Open' => _('Open'),
-            //user/user.js
+            // user/user.js
             'Admin' => _('Admin'),
             'DJ' => _('DJ'),
             'Program Manager' => _('Program Manager'),
@@ -351,17 +351,17 @@ final class LocaleController extends Zend_Controller_Action
             'View system status' => _('View system status'),
             'Access playout history' => _('Access playout history'),
             'View listener stats' => _('View listener stats'),
-            //dataTables/ColVis.js
+            // dataTables/ColVis.js
             'Show / hide columns' => _('Show / hide columns'),
             'Columns' => _('Columns'),
-            //datatables.columnFilter.js
+            // datatables.columnFilter.js
             'From {from} to {to}' => _('From {from} to {to}'),
             'kbps' => _('kbps'),
             'yyyy-mm-dd' => _('yyyy-mm-dd'),
             'hh:mm:ss.t' => _('hh:mm:ss.t'),
             'kHz' => _('kHz'),
-            //datepicker
-            //months are already in schedule/schedule.js
+            // datepicker
+            // months are already in schedule/schedule.js
             'Su' => _('Su'),
             'Mo' => _('Mo'),
             'Tu' => _('Tu'),
@@ -370,12 +370,12 @@ final class LocaleController extends Zend_Controller_Action
             'Fr' => _('Fr'),
             'Sa' => _('Sa'),
             'Close' => _('Close'),
-            //timepicker
+            // timepicker
             'Hour' => _('Hour'),
             'Minute' => _('Minute'),
             'Done' => _('Done'),
-            //plupload ships with translation files but a lot are incomplete
-            //so we will keep them here to prevent incomplete translations
+            // plupload ships with translation files but a lot are incomplete
+            // so we will keep them here to prevent incomplete translations
             'Select files' => _('Select files'),
             'Add files to the upload queue and click the start button.' => _('Add files to the upload queue and click the start button.'),
             'Filename' => _('Add files to the upload queue and click the start button.'),
@@ -403,7 +403,7 @@ final class LocaleController extends Zend_Controller_Action
             "Upload URL might be wrong or doesn't exist" => _("Upload URL might be wrong or doesn't exist"),
             'Error: File too large: ' => _('Error: File too large: '),
             'Error: Invalid file extension: ' => _('Error: Invalid file extension: '),
-            //history translations
+            // history translations
             'Set Default' => _('Set Default'),
             'Create Entry' => _('Create Entry'),
             'Edit History Record' => _('Edit History Record'),
@@ -413,14 +413,14 @@ final class LocaleController extends Zend_Controller_Action
             "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished." => _("%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."),
             'New Show' => _('New Show'),
             'New Log Entry' => _('New Log Entry'),
-            //Datatables:
+            // Datatables:
             'No data available in table' => _('No data available in table'),
             '(filtered from _MAX_ total entries)' => _('(filtered from _MAX_ total entries)'),
             ': activate to sort column ascending',
             ': activate to sort column descending',
-            //End of datatables
+            // End of datatables
 
-            //New entries from .js	"" => _(""),
+            // New entries from .js	"" => _(""),
             'First' => _('First'),
             'Last' => _('Last'),
             'Next' => _('Next'),
@@ -450,7 +450,7 @@ final class LocaleController extends Zend_Controller_Action
             'Showing 0 to 0 of 0 tracks' => _('Showing 0 to 0 of 0 tracks'),
             'Showing 0 to 0 of 0 track types' => _('Showing 0 to 0 of 0 track types'),
             '(filtered from _MAX_ total track types)' => _('(filtered from _MAX_ total track types)'),
-            //"This is used for tracks containing music." => _("This is used for tracks containing music."),
+            // "This is used for tracks containing music." => _("This is used for tracks containing music."),
             'Are you sure you want to delete this tracktype?' => _('Are you sure you want to delete this tracktype?'),
             'No track types were found.' => _('No track types were found.'),
             'No track types found' => _('No track types found'),
@@ -479,11 +479,11 @@ final class LocaleController extends Zend_Controller_Action
             'Add New Podcast' => _('Add New Podcast'),
             "Cannot schedule outside a show.\nTry creating a show first." => _("Cannot schedule outside a show.\nTry creating a show first."),
             'No files have been uploaded yet.' => _('No files have been uploaded yet.'),
-            //"Value is required and can't be empty" => _("Value is required and can't be empty"),
-            //"mute" => _("mute"),
-            //"max volume" => _("max volume"),
+            // "Value is required and can't be empty" => _("Value is required and can't be empty"),
+            // "mute" => _("mute"),
+            // "max volume" => _("max volume"),
 
-            //embed player
+            // embed player
             'On Air' => _('On Air'),
             'Off Air' => _('Off Air'),
             'Offline' => _('Offline'),

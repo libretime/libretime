@@ -32,7 +32,7 @@ abstract class Setup
         if (!file_exists(INSTALLER_CONFIG_FILEPATH)) {
             copy(SAMPLE_CONFIG_FILEPATH, INSTALLER_CONFIG_FILEPATH);
         }
-        //Logging::info(CONFIG_TEMP_FILEPATH);
+        // Logging::info(CONFIG_TEMP_FILEPATH);
         $this->_write(INSTALLER_CONFIG_FILEPATH);
     }
 

@@ -14,8 +14,8 @@ error_reporting(E_ALL | E_STRICT);
 
 function exception_error_handler($errno, $errstr, $errfile, $errline)
 {
-    //Check if the statement that threw this error wanted its errors to be
-    //suppressed. If so then return without with throwing exception.
+    // Check if the statement that threw this error wanted its errors to be
+    // suppressed. If so then return without with throwing exception.
     if (0 === error_reporting()) {
         return;
     }
@@ -37,25 +37,25 @@ set_include_path(APPLICATION_PATH . '/common' . PATH_SEPARATOR . get_include_pat
 set_include_path(APPLICATION_PATH . '/common/enum' . PATH_SEPARATOR . get_include_path());
 set_include_path(APPLICATION_PATH . '/common/interface' . PATH_SEPARATOR . get_include_path());
 
-//Propel classes.
+// Propel classes.
 set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());
 
-//Controller plugins.
+// Controller plugins.
 set_include_path(APPLICATION_PATH . '/controllers' . PATH_SEPARATOR . get_include_path());
 
-//Controller plugins.
+// Controller plugins.
 set_include_path(APPLICATION_PATH . '/controllers/plugins' . PATH_SEPARATOR . get_include_path());
 
-//Services.
+// Services.
 set_include_path(APPLICATION_PATH . '/services' . PATH_SEPARATOR . get_include_path());
 
-//cloud storage directory
+// cloud storage directory
 set_include_path(APPLICATION_PATH . '/cloud_storage' . PATH_SEPARATOR . get_include_path());
 
-//Upgrade directory
+// Upgrade directory
 set_include_path(APPLICATION_PATH . '/upgrade' . PATH_SEPARATOR . get_include_path());
 
-//Common directory
+// Common directory
 set_include_path(APPLICATION_PATH . '/common' . PATH_SEPARATOR . get_include_path());
 
 /** Zend_Application */

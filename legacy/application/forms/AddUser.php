@@ -29,7 +29,7 @@ class Application_Form_AddUser extends Zend_Form
         $login->setRequired(true);
         $login->addValidator($notEmptyValidator);
         $login->addFilter('StringTrim');
-        //$login->addValidator('UserNameValidate');
+        // $login->addValidator('UserNameValidate');
         $this->addElement($login);
 
         $password = new Zend_Form_Element_Password('password');

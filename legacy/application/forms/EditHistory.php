@@ -3,7 +3,7 @@
 class Application_Form_EditHistory extends Zend_Form
 {
     public const VALIDATE_DATETIME_FORMAT = 'yyyy-MM-dd HH:mm:ss';
-    //this is used by the javascript widget, unfortunately h/H is opposite from Zend.
+    // this is used by the javascript widget, unfortunately h/H is opposite from Zend.
     public const TIMEPICKER_DATETIME_FORMAT = 'yyyy-MM-dd hh:mm:ss';
 
     public const VALIDATE_DATE_FORMAT = 'yyyy-MM-dd';
@@ -151,8 +151,8 @@ class Application_Form_EditHistory extends Zend_Form
 
         for ($i = 0, $len = count($template); $i < $len; ++$i) {
             $item = $template[$i];
-            //don't dynamically add this as it should be included in the
-            //init() function already if it should show up in the UI..
+            // don't dynamically add this as it should be included in the
+            // init() function already if it should show up in the UI..
             if (in_array($item['name'], $required)) {
                 continue;
             }
@@ -187,7 +187,7 @@ class Application_Form_EditHistory extends Zend_Form
                     $options = isset($arr[self::ITEM_OPTIONS]) ? $arr[self::ITEM_OPTIONS] : null;
                     $validator = new $arr[self::ITEM_CLASS]($options);
 
-                    //extra validator info
+                    // extra validator info
                     if (isset($arr['params'])) {
                         foreach ($arr['params'] as $key => $value) {
                             $method = 'set' . ucfirst($key);

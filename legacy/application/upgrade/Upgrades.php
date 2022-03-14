@@ -32,7 +32,7 @@ class UpgradeManager
     public static function getSupportedSchemaVersions()
     {
         $config = Config::getConfig();
-        //What versions of the schema does the code support today:
+        // What versions of the schema does the code support today:
         return [$config['airtime_version']];
     }
 
@@ -167,17 +167,17 @@ abstract class AirtimeUpgrader
     protected function toggleMaintenanceScreen($toggle)
     {
         if ($toggle) {
-            //Disable Airtime UI
-            //create a temporary maintenance notification file
-            //when this file is on the server, zend framework redirects all
-            //requests to the maintenance page and sets a 503 response code
+            // Disable Airtime UI
+            // create a temporary maintenance notification file
+            // when this file is on the server, zend framework redirects all
+            // requests to the maintenance page and sets a 503 response code
             /* DISABLED because this does not work correctly
             $this->maintenanceFile = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."maintenance.txt" : "/tmp/maintenance.txt";
             $file = fopen($this->maintenanceFile, 'w');
             fclose($file);
              */
         }
-        //delete maintenance.txt to give users access back to Airtime
+        // delete maintenance.txt to give users access back to Airtime
             /* DISABLED because this does not work correctly
             if ($this->maintenanceFile) {
                 unlink($this->maintenanceFile);
@@ -298,7 +298,7 @@ class AirtimeUpgrader253 extends AirtimeUpgrader
 
     protected function _runUpgrade()
     {
-        //Update disk_usage value in cc_pref
+        // Update disk_usage value in cc_pref
         $storDir = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE'] . 'srv/airtime/stor' : '/srv/airtime/stor';
         $diskUsage = shell_exec("du -sb {$storDir} | awk '{print $1}'");
 
@@ -322,15 +322,15 @@ class AirtimeUpgrader254 extends AirtimeUpgrader
 
     protected function _runUpgrade()
     {
-        //First, ensure there are no superadmins already.
+        // First, ensure there are no superadmins already.
         $numberOfSuperAdmins = CcSubjsQuery::create()
             ->filterByDbType(UTYPE_SUPERADMIN)
-            ->filterByDbLogin('sourcefabric_admin', Criteria::NOT_EQUAL) //Ignore sourcefabric_admin users
+            ->filterByDbLogin('sourcefabric_admin', Criteria::NOT_EQUAL) // Ignore sourcefabric_admin users
             ->count();
 
-        //Only create a super admin if there isn't one already.
+        // Only create a super admin if there isn't one already.
         if ($numberOfSuperAdmins == 0) {
-            //Find the "admin" user and promote them to superadmin.
+            // Find the "admin" user and promote them to superadmin.
             $adminUser = CcSubjsQuery::create()
                 ->filterByDbLogin('admin')
                 ->findOne();
@@ -351,7 +351,7 @@ class AirtimeUpgrader254 extends AirtimeUpgrader
             $adminUser->save();
             Logging::info($_SERVER['HTTP_HOST'] . ': ' . $this->getNewVersion() . ' Upgrade: Promoted user ' . $adminUser->getLogin() . ' to be a Super Admin.');
 
-            //Also try to promote the sourcefabric_admin user
+            // Also try to promote the sourcefabric_admin user
             $sofabAdminUser = CcSubjsQuery::create()
                 ->filterByDbLogin('sourcefabric_admin')
                 ->findOne();

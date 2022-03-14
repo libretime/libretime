@@ -14,7 +14,7 @@ class Config
         $CC_CONFIG = [];
 
         // General
-        ////////////////////////////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////////////////////////
         $CC_CONFIG['apiKey'] = [$values['general']['api_key']];
 
         // Base URL
@@ -34,7 +34,7 @@ class Config
         $CC_CONFIG['staticBaseDir'] = $values['general']['static_base_dir'] ?? '/';
 
         // Database
-        ////////////////////////////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////////////////////////
         $CC_CONFIG['dsn']['phptype'] = 'pgsql';
         $CC_CONFIG['dsn']['host'] = $values['database']['host'] ?? 'localhost';
         $CC_CONFIG['dsn']['port'] = $values['database']['port'] ?? 5432;
@@ -43,7 +43,7 @@ class Config
         $CC_CONFIG['dsn']['password'] = $values['database']['password'] ?? 'libretime';
 
         // RabbitMQ
-        ////////////////////////////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////////////////////////
         $CC_CONFIG['rabbitmq']['host'] = $values['rabbitmq']['host'] ?? 'localhost';
         $CC_CONFIG['rabbitmq']['port'] = $values['rabbitmq']['port'] ?? 5672;
         $CC_CONFIG['rabbitmq']['vhost'] = $values['rabbitmq']['vhost'] ?? '/libretime';
@@ -51,11 +51,11 @@ class Config
         $CC_CONFIG['rabbitmq']['password'] = $values['rabbitmq']['password'] ?? 'libretime';
 
         // Storage
-        ////////////////////////////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////////////////////////
         $CC_CONFIG['current_backend'] = $values['current_backend']['storage_backend'] ?? 'file';
 
         // Facebook (DEPRECATED)
-        ////////////////////////////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////////////////////////
         if (isset($values['facebook']['facebook_app_id'])) {
             $CC_CONFIG['facebook-app-id'] = $values['facebook']['facebook_app_id'];
             $CC_CONFIG['facebook-app-url'] = $values['facebook']['facebook_app_url'];
@@ -63,7 +63,7 @@ class Config
         }
 
         // LDAP
-        ////////////////////////////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////////////////////////
         if (array_key_exists('ldap', $values)) {
             $CC_CONFIG['ldap_hostname'] = $values['ldap']['hostname'];
             $CC_CONFIG['ldap_binddn'] = $values['ldap']['binddn'];
@@ -79,7 +79,7 @@ class Config
         }
 
         // Demo
-        ////////////////////////////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////////////////////////
         if (isset($values['demo']['demo'])) {
             $CC_CONFIG['demo'] = $values['demo']['demo'];
         }

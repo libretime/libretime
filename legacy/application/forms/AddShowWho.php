@@ -18,7 +18,7 @@ class Application_Form_AddShowWho extends Zend_Form_SubForm
             $options[$host['index']] = $host['label'];
         }
 
-        //Add hosts selection
+        // Add hosts selection
         $hosts = new Zend_Form_Element_MultiCheckbox('add_show_hosts');
         $hosts->setLabel(_('DJs:'))
             ->setMultiOptions($options);

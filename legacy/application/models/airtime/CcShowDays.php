@@ -33,8 +33,8 @@ class CcShowDays extends BaseCcShowDays
             new DateTimeZone($this->getDbTimezone())
         );
 
-        //set timezone to that of the show
-        //$dt->setTimezone(new DateTimeZone($this->getDbTimezone()));
+        // set timezone to that of the show
+        // $dt->setTimezone(new DateTimeZone($this->getDbTimezone()));
     }
 
     /**

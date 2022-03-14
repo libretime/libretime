@@ -81,7 +81,7 @@ class UsersettingsController extends Zend_Controller_Action
     {
         SessionHelper::reopenSessionForWriting();
         Zend_Session::namespaceUnset('referrer');
-        //pass in true to indicate 'Remind me never' was clicked
+        // pass in true to indicate 'Remind me never' was clicked
         Application_Model_Preference::SetRemindMeDate(true);
     }
 

@@ -27,7 +27,7 @@ function isApiCall()
     return strpos($path, 'api') !== false;
 }
 
-//Rest Module Controllers - for custom Rest_RouteController.php
+// Rest Module Controllers - for custom Rest_RouteController.php
 set_include_path(APPLICATION_PATH . '/modules/rest/controllers/' . PATH_SEPARATOR . get_include_path());
 
 // Vendors (Composer, zend-loader is explicitly specified due to https://github.com/zf1/zend-application/pull/2#issuecomment-102599655)

@@ -26,7 +26,7 @@ class Application_Form_Preferences extends Zend_Form
 
         $this->addSubForm($general_pref, 'preferences_general');
 
-        //tunein form
+        // tunein form
         $tuneinPreferences = new Application_Form_TuneInPreferences();
         $this->addSubForm($tuneinPreferences, 'preferences_tunein');
 
@@ -35,7 +35,7 @@ class Application_Form_Preferences extends Zend_Form
 
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel(_('Save'));
-        //$submit->removeDecorator('Label');
+        // $submit->removeDecorator('Label');
         $submit->setAttribs(['class' => 'btn right-floated']);
         $submit->removeDecorator('DtDdWrapper');
 

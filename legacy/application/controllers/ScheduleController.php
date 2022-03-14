@@ -46,7 +46,7 @@ class ScheduleController extends Zend_Controller_Action
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        //Embed the schedule in our page response so we don't have to make an AJAX request to get this data after the page load.
+        // Embed the schedule in our page response so we don't have to make an AJAX request to get this data after the page load.
         $scheduleController = new ScheduleController($this->getRequest(), $this->getResponse());
         $scheduleController->eventFeedPreloadAction();
         $events = json_encode($scheduleController->view->events);
@@ -64,10 +64,10 @@ class ScheduleController extends Zend_Controller_Action
 
         $this->view->headScript()->appendFile($baseUrl . 'js/contextmenu/jquery.contextMenu.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
 
-        //full-calendar-functions.js requires this variable, so that datePicker widget can be offset to server time instead of client time
-        //this should be as a default, however with our new drop down timezone changing for shows, we should reset this offset then??
+        // full-calendar-functions.js requires this variable, so that datePicker widget can be offset to server time instead of client time
+        // this should be as a default, however with our new drop down timezone changing for shows, we should reset this offset then??
         $this->view->headScript()->appendScript('var timezoneOffset = ' . Application_Common_DateHelper::getStationTimezoneOffset() . '; //in seconds');
-        //set offset to ensure it loads last
+        // set offset to ensure it loads last
         $this->view->headScript()->offsetSetFile(90, $baseUrl . 'js/airtime/schedule/full-calendar-functions.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
 
         $this->view->headScript()->appendFile($baseUrl . 'js/fullcalendar/fullcalendar.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
@@ -89,7 +89,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl . 'css/add-show.css?' . $CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl . 'css/jquery.contextMenu.css?' . $CC_CONFIG['airtime_version']);
 
-        //Start Show builder JS/CSS requirements
+        // Start Show builder JS/CSS requirements
         $headScript = $this->view->headScript();
         AirtimeTableView::injectTableJavaScriptDependencies($headScript, $baseUrl, $CC_CONFIG['airtime_version']);
 
@@ -106,7 +106,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl . 'css/datatables/css/dataTables.colReorder.min.css?' . $CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl . 'css/showbuilder.css?' . $CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl . 'css/dashboard.css?' . $CC_CONFIG['airtime_version']);
-        //End Show builder JS/CSS requirements
+        // End Show builder JS/CSS requirements
 
         $this->createShowFormAction(true);
 
@@ -333,7 +333,7 @@ class ScheduleController extends Zend_Controller_Action
             'user'
         );
 
-        //TODO: Add timezone and timezoneOffset back into the ApiController's results.
+        // TODO: Add timezone and timezoneOffset back into the ApiController's results.
         $range['timezone'] = Application_Common_DateHelper::getUserTimezoneAbbreviation();
         $range['timezoneOffset'] = Application_Common_DateHelper::getUserTimezoneOffset();
 
@@ -346,7 +346,7 @@ class ScheduleController extends Zend_Controller_Action
         $live_dj_switch = Application_Model_Preference::GetSourceSwitchStatus('live_dj');
         $master_dj_switch = Application_Model_Preference::GetSourceSwitchStatus('master_dj');
 
-        //might not be the correct place to implement this but for now let's just do it here
+        // might not be the correct place to implement this but for now let's just do it here
         $source_status['live_dj_source'] = $live_dj;
         $source_status['master_dj_source'] = $master_dj;
         $this->view->source_status = $source_status;
@@ -384,7 +384,7 @@ class ScheduleController extends Zend_Controller_Action
             $originalShowName = $originalShow->getName();
             $originalShowStart = $originalShow->getShowInstanceStart();
 
-            //convert from UTC to user's timezone for display.
+            // convert from UTC to user's timezone for display.
             $displayTimeZone = new DateTimeZone(Application_Model_Preference::GetTimezone());
             $originalDateTime = new DateTime($originalShowStart, new DateTimeZone('UTC'));
             $originalDateTime->setTimezone($displayTimeZone);
@@ -464,7 +464,7 @@ class ScheduleController extends Zend_Controller_Action
         $js = $this->_getParam('data');
         $data = [];
 
-        //need to convert from serialized jQuery array.
+        // need to convert from serialized jQuery array.
         foreach ($js as $j) {
             $data[$j['name']] = $j['value'];
         }
@@ -520,7 +520,7 @@ class ScheduleController extends Zend_Controller_Action
         $js = $this->_getParam('data');
         $data = [];
 
-        //need to convert from serialized jQuery array.
+        // need to convert from serialized jQuery array.
         foreach ($js as $j) {
             $data[$j['name']] = $j['value'];
         }
@@ -530,7 +530,7 @@ class ScheduleController extends Zend_Controller_Action
         );
         $service_show = new Application_Service_ShowService(null, $data, true);
 
-        //TODO: move this to js
+        // TODO: move this to js
         $data['add_show_hosts'] = $this->_getParam('hosts');
         $data['add_show_day_check'] = $this->_getParam('days');
 
@@ -570,7 +570,7 @@ class ScheduleController extends Zend_Controller_Action
             if (!$validateStartTime) {
                 $this->view->when->getElement('add_show_start_time')->setOptions(['disabled' => true]);
             }
-            //$this->view->rr->getElement('add_show_record')->setOptions(array('disabled' => true));
+            // $this->view->rr->getElement('add_show_record')->setOptions(array('disabled' => true));
 
             $this->view->addNewShow = false;
             $this->view->action = 'edit-show';
@@ -585,7 +585,7 @@ class ScheduleController extends Zend_Controller_Action
         $js = $this->_getParam('data');
         $data = [];
 
-        //need to convert from serialized jQuery array.
+        // need to convert from serialized jQuery array.
         foreach ($js as $j) {
             $data[$j['name']] = $j['value'];
         }
@@ -612,11 +612,11 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->addNewShow = true;
 
         if ($data['add_show_start_now'] == 'now') {
-            //have to use the timezone the user has entered in the form to check past/present
+            // have to use the timezone the user has entered in the form to check past/present
             $showTimezone = new DateTimeZone($data['add_show_timezone']);
             $nowDateTime = new DateTime('now', $showTimezone);
-            //$showStartDateTime = new DateTime($start_time, $showTimezone);
-            //$showEndDateTime = new DateTime($end_time, $showTimezone);
+            // $showStartDateTime = new DateTime($start_time, $showTimezone);
+            // $showEndDateTime = new DateTime($end_time, $showTimezone);
 
             $data['add_show_start_time'] = $nowDateTime->format('H:i');
             $data['add_show_start_date'] = $nowDateTime->format('Y-m-d');
@@ -626,7 +626,7 @@ class ScheduleController extends Zend_Controller_Action
             // Get the show ID from the show service to pass as a parameter to the RESTful ShowImageController
             $this->view->showId = $service_show->addUpdateShow($data);
 
-            //send new show forms to the user
+            // send new show forms to the user
             $this->createShowFormAction(true);
             $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
 
@@ -734,7 +734,7 @@ class ScheduleController extends Zend_Controller_Action
         $menu[] = ['action' => ['type' => 'gourl', 'url' => $url],
             'title' => _('Download'), ];
 
-        //returns format jjmenu is looking for.
+        // returns format jjmenu is looking for.
         $this->_helper->json->sendJson($menu);
     }
 

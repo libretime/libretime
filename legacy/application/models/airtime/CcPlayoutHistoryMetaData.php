@@ -18,7 +18,7 @@ class CcPlayoutHistoryMetaData extends BaseCcPlayoutHistoryMetaData
      */
     public function setDbValue($v)
     {
-        //make sure the metadata isn't longer than the DB field.
+        // make sure the metadata isn't longer than the DB field.
         $v = substr($v, 0, 128);
 
         parent::setDbValue($v);

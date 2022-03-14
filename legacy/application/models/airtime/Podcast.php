@@ -29,8 +29,8 @@ class Podcast extends BasePodcast
         if (!is_null($importedPodcast)) {
             $importedPodcastArray = $importedPodcast->toArray($keyType);
 
-            //unset these values because we already have the podcast id in $podcastArray
-            //and we don't need the imported podcast ID
+            // unset these values because we already have the podcast id in $podcastArray
+            // and we don't need the imported podcast ID
             unset($importedPodcastArray['id'], $importedPodcastArray['podcast_id']);
 
             return array_merge($podcastArray, $importedPodcastArray);
@@ -63,6 +63,6 @@ class Podcast extends BasePodcast
             $importedPodcast->fromArray($arr, $keyType);
             $importedPodcast->save();
         }
-        //TODO: station podcast
+        // TODO: station podcast
     }
 }

@@ -51,7 +51,7 @@ class Application_Service_PodcastService
      */
     public static function createFromFeedUrl($feedUrl)
     {
-        //TODO: why is this so slow?
+        // TODO: why is this so slow?
         $rss = self::getPodcastFeed($feedUrl);
         if (!$rss) {
             throw new InvalidPodcastException();
@@ -84,7 +84,7 @@ class Application_Service_PodcastService
         }
         $podcastArray['category'] = htmlspecialchars(implode('', $categories));
 
-        //TODO: put in constants
+        // TODO: put in constants
         $itunesChannel = 'http://www.itunes.com/dtds/podcast-1.0.dtd';
 
         $itunesSubtitle = $rss->get_channel_tags($itunesChannel, 'subtitle');
@@ -224,7 +224,7 @@ class Application_Service_PodcastService
         return $podcast->getDbId();
     }
 
-    //TODO move this somewhere where it makes sense
+    // TODO move this somewhere where it makes sense
     private static function getOwnerId()
     {
         try {
@@ -467,53 +467,53 @@ class Application_Service_PodcastService
                 $item = $channel->addChild('item');
                 $publishedFile = CcFilesQuery::create()->findPk($episode->getDbFileId());
 
-                //title
+                // title
                 self::addEscapedChild($item, 'title', $publishedFile->getDbTrackTitle());
 
-                //link - do we need this?
+                // link - do we need this?
 
-                //pubDate
+                // pubDate
                 self::addEscapedChild($item, 'pubDate', gmdate(DATE_RFC2822, strtotime($episode->getDbPublicationDate())));
 
-                //category
+                // category
                 foreach ($itunesCategories as $c) {
                     if (!empty($c)) {
                         self::addEscapedChild($item, 'category', $c);
                     }
                 }
 
-                //guid
+                // guid
                 $guid = self::addEscapedChild($item, 'guid', $episode->getDbEpisodeGuid());
                 $guid->addAttribute('isPermaLink', 'false');
 
-                //description
+                // description
                 self::addEscapedChild($item, 'description', $publishedFile->getDbDescription());
 
-                //encolsure - url, length, type attribs
+                // encolsure - url, length, type attribs
                 $enclosure = $item->addChild('enclosure');
                 $enclosure->addAttribute('url', $episode->getDbDownloadUrl());
                 $enclosure->addAttribute('length', $publishedFile->getDbFilesize());
                 $enclosure->addAttribute('type', $publishedFile->getDbMime());
 
-                //itunes:subtitle
+                // itunes:subtitle
                 // From http://www.apple.com/ca/itunes/podcasts/specs.html#subtitle :
                 // 'The contents of the <itunes:subtitle> tag are displayed in the Description column in iTunes.'
                 // self::addEscapedChild($item, "xmlns:itunes:subtitle", $publishedFile->getDbTrackTitle());
                 self::addEscapedChild($item, 'xmlns:itunes:subtitle', $publishedFile->getDbDescription());
 
-                //itunes:summary
+                // itunes:summary
                 self::addEscapedChild($item, 'xmlns:itunes:summary', $publishedFile->getDbDescription());
 
-                //itunes:author
+                // itunes:author
                 self::addEscapedChild($item, 'xmlns:itunes:author', $publishedFile->getDbArtistName());
 
-                //itunes:explicit - skip this?
+                // itunes:explicit - skip this?
 
-                //itunes:duration
+                // itunes:duration
                 self::addEscapedChild($item, 'xmlns:itunes:duration', explode('.', $publishedFile->getDbLength())[0]);
             }
 
-            //Format it nicely with newlines...
+            // Format it nicely with newlines...
             $dom = new DOMDocument();
             $dom->loadXML($xml->asXML());
             $dom->formatOutput = true;

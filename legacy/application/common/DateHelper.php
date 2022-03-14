@@ -150,7 +150,7 @@ class Application_Common_DateHelper
      */
     public static function removeSecondsFromTime($p_dateTime)
     {
-        //Format is in hh:mm:ss. We want hh:mm
+        // Format is in hh:mm:ss. We want hh:mm
         $timeExplode = explode(':', $p_dateTime);
 
         if (count($timeExplode) == 3) {

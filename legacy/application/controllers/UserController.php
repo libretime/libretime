@@ -69,7 +69,7 @@ class UserController extends Zend_Controller_Action
                         $user->setPassword($formData['password']);
                     }
                     if (array_key_exists('type', $formData)) {
-                        if ($formData['type'] != UTYPE_SUPERADMIN) { //Don't allow any other user to be promoted to Super Admin
+                        if ($formData['type'] != UTYPE_SUPERADMIN) { // Don't allow any other user to be promoted to Super Admin
                             $user->setType($formData['type']);
                         }
                     }
@@ -136,12 +136,12 @@ class UserController extends Zend_Controller_Action
             if ($form->isValid($formData)
                        && $form->validateLogin($formData['cu_login'], $formData['cu_user_id'])) {
                 $user = new Application_Model_User($formData['cu_user_id']);
-                //Stupid hack because our schema enforces non-null first_name
-                //even though by default the admin user has no first name... (....)
+                // Stupid hack because our schema enforces non-null first_name
+                // even though by default the admin user has no first name... (....)
                 if (Application_Model_User::getCurrentUser()->isSuperAdmin()) {
                     if (empty($formData['cu_first_name'])) {
                         $formData['cu_first_name'] = 'admin';
-                        $formData['cu_last_name'] = 'admin'; //ditto, avoid non-null DB constraint
+                        $formData['cu_last_name'] = 'admin'; // ditto, avoid non-null DB constraint
                     }
                 }
                 if (isset($formData['cu_first_name'])) {
@@ -180,9 +180,9 @@ class UserController extends Zend_Controller_Action
                 Application_Model_Preference::SetUserLocale($formData['cu_locale']);
                 Application_Model_Preference::SetUserTimezone($formData['cu_timezone']);
 
-                //configure localization with new locale setting
+                // configure localization with new locale setting
                 Application_Model_Locale::configureLocalization($formData['cu_locale']);
-                //reinitialize form so language gets translated
+                // reinitialize form so language gets translated
                 $form = new Application_Form_EditUser();
 
                 $this->view->successMessage = "<div class='success'>" . _('Settings updated successfully!') . '</div>';
@@ -234,8 +234,8 @@ class UserController extends Zend_Controller_Action
         } elseif ($files_action == 'reassign_to') {
             // TODO : fix code to actually use the line below and pick a
             // real owner instead of defaulting to the first found admin
-            //$new_owner_id = $this->_getParam("new_owner");
-            //$new_owner    = new Application_Model_User($new_owner_id);
+            // $new_owner_id = $this->_getParam("new_owner");
+            // $new_owner    = new Application_Model_User($new_owner_id);
             $user->donateFilesTo($new_owner);
             Logging::info("Reassign to user {$new_owner->getDbId()}");
         }

@@ -42,10 +42,10 @@ final class Application_Model_Locale
         } else {
             $lang = $locale . '.' . $codeset;
         }
-        //putenv("LC_ALL=$lang");
-        //putenv("LANG=$lang");
-        //Setting the LANGUAGE env var supposedly lets gettext search inside our locale dir even if the system
-        //doesn't have the particular locale that we want installed. This doesn't actually seem to work though. -- Albert
+        // putenv("LC_ALL=$lang");
+        // putenv("LANG=$lang");
+        // Setting the LANGUAGE env var supposedly lets gettext search inside our locale dir even if the system
+        // doesn't have the particular locale that we want installed. This doesn't actually seem to work though. -- Albert
         putenv("LANGUAGE={$locale}");
         if (setlocale(LC_MESSAGES, $lang) === false) {
             Logging::warn('Your system does not have the ' . $lang . ' locale installed. Run: sudo locale-gen ' . $lang);

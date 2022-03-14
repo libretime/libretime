@@ -42,7 +42,7 @@ class TimeFilledFormatter
             $perfect = false;
         }
 
-        //0 over/under lap of content.
+        // 0 over/under lap of content.
         if ($perfect === true) {
             $formatted = '+ 0s';
         }

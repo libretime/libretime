@@ -60,7 +60,7 @@ class Rest_RouteController extends Zend_Controller_Router_Route
                 $path = explode(self::URI_DELIMITER, $path);
             }
 
-            //Store path count for method mapping
+            // Store path count for method mapping
             $pathElementCount = count($path);
 
             // Determine Action

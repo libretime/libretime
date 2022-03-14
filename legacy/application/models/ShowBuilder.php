@@ -4,9 +4,9 @@ class Application_Model_ShowBuilder
 {
     private $timezone;
 
-    //in UTC timezone
+    // in UTC timezone
     private $startDT;
-    //in UTC timezone
+    // in UTC timezone
     private $endDT;
 
     private $user;
@@ -41,8 +41,8 @@ class Application_Model_ShowBuilder
         'fadeout' => '',
         'image' => false,
         'mime' => null,
-        'color' => '', //in hex without the '#' sign.
-        'backgroundColor' => '', //in hex without the '#' sign.
+        'color' => '', // in hex without the '#' sign.
+        'backgroundColor' => '', // in hex without the '#' sign.
     ];
 
     /*
@@ -76,10 +76,10 @@ class Application_Model_ShowBuilder
         return $shows;
     }
 
-    //check to see if this row should be editable by the user.
+    // check to see if this row should be editable by the user.
     private function isAllowed($p_item, &$row)
     {
-        //cannot schedule in a recorded show.
+        // cannot schedule in a recorded show.
         if (intval($p_item['si_record']) === 1) {
             return;
         }
@@ -119,7 +119,7 @@ class Application_Model_ShowBuilder
         $row['backgroundColor'] = $backgroundColor;
     }
 
-    //information about whether a track is inside|boundary|outside a show.
+    // information about whether a track is inside|boundary|outside a show.
     private function getItemStatus($p_item, &$row)
     {
         $row['status'] = intval($p_item['playout_status']);
@@ -156,19 +156,19 @@ class Application_Model_ShowBuilder
             $row['scheduled'] = 2;
         }
 
-        //item is in the past.
+        // item is in the past.
         elseif ($this->epoch_now > $p_epochItemEnd) {
             $row['scheduled'] = 0;
         }
 
-        //item is the currently scheduled item.
+        // item is the currently scheduled item.
         elseif ($this->epoch_now >= $p_epochItemStart && $this->epoch_now < $p_epochItemEnd) {
             $row['scheduled'] = 1;
-            //how many seconds the view should wait to redraw itself.
+            // how many seconds the view should wait to redraw itself.
             $row['refresh'] = $p_epochItemEnd - $this->epoch_now;
         }
 
-        //item is in the future.
+        // item is in the future.
         elseif ($this->epoch_now < $p_epochItemStart) {
             $row['scheduled'] = 2;
         } else {
@@ -185,7 +185,7 @@ class Application_Model_ShowBuilder
     private function makeHeaderRow($p_item)
     {
         $row = $this->defaultRowArray;
-        //$this->isAllowed($p_item, $row);
+        // $this->isAllowed($p_item, $row);
         $this->getRowTimestamp($p_item, $row);
         $this->getItemColor($p_item, $row);
 
@@ -196,7 +196,7 @@ class Application_Model_ShowBuilder
         $showEndDT->setTimezone(new DateTimeZone($this->timezone));
         $endsEpoch = floatval($showEndDT->format('U.u'));
 
-        //is a rebroadcast show
+        // is a rebroadcast show
         if (intval($p_item['si_rebroadcast']) === 1) {
             $row['rebroadcast'] = true;
 
@@ -263,7 +263,7 @@ class Application_Model_ShowBuilder
             $endsEpoch = floatval($schedEndDT->format('U.u'));
             $showEndEpoch = floatval($showEndDT->format('U.u'));
 
-            //don't want an overbooked item to stay marked as current.
+            // don't want an overbooked item to stay marked as current.
             $this->getScheduledStatus($startsEpoch, min($endsEpoch, $showEndEpoch), $row);
 
             $row['id'] = intval($p_item['sched_id']);
@@ -294,7 +294,7 @@ class Application_Model_ShowBuilder
 
             $this->contentDT = $schedEndDT;
         }
-        //show is empty or is a special kind of show (recording etc)
+        // show is empty or is a special kind of show (recording etc)
         elseif (intval($p_item['si_record']) === 1) {
             $row['record'] = true;
             $row['instance'] = intval($p_item['si_id']);
@@ -403,7 +403,7 @@ class Application_Model_ShowBuilder
                     );
                 }
 
-                //check if any of the shows have a more recent timestamp.
+                // check if any of the shows have a more recent timestamp.
                 $showTimeStamp = intval($dt->format('U'));
                 if ($timestamp < $showTimeStamp) {
                     $outdated = true;
@@ -413,8 +413,8 @@ class Application_Model_ShowBuilder
             }
         }
 
-        //see if the displayed show instances have changed. (deleted,
-        //empty schedule etc)
+        // see if the displayed show instances have changed. (deleted,
+        // empty schedule etc)
         if ($outdated === false && count($instances)
             !== count($currentInstances)) {
             Logging::debug('show instances have changed.');
@@ -449,15 +449,15 @@ class Application_Model_ShowBuilder
         for ($i = 0, $rows = count($scheduled_items); $i < $rows; ++$i) {
             $item = $scheduled_items[$i];
 
-            //don't send back data for filler rows.
+            // don't send back data for filler rows.
             if (isset($item['playout_status'])
                 && $item['playout_status'] < 0) {
                 continue;
             }
 
-            //make a header row.
+            // make a header row.
             if ($current_id !== $item['si_id']) {
-                //make a footer row.
+                // make a footer row.
                 if ($current_id !== -1) {
                     // pass in the previous row as it's the last row for
                     // the previous show.
@@ -473,9 +473,9 @@ class Application_Model_ShowBuilder
                 $this->pos = 1;
             }
 
-            //make a normal data row.
+            // make a normal data row.
             $row = $this->makeScheduledItemRow($item);
-            //don't display the empty rows.
+            // don't display the empty rows.
             if (isset($row)) {
                 $display_items[] = $row;
             }
@@ -486,7 +486,7 @@ class Application_Model_ShowBuilder
             }
         }
 
-        //make the last footer if there were any scheduled items.
+        // make the last footer if there were any scheduled items.
         if (count($scheduled_items) > 0) {
             $display_items[] = $this->makeFooterRow($scheduled_items[
                 count($scheduled_items) - 1]);

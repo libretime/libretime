@@ -68,7 +68,7 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
-        //TODO: Get list of page IDs (deserialize)
+        // TODO: Get list of page IDs (deserialize)
 
         $request = $this->getRequest();
         if (!$request->isPost()) {
@@ -82,8 +82,8 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
         $facebookMicroserviceUrl = $CC_CONFIG['facebook-app-url'];
         $facebookMicroserviceApiKey = $CC_CONFIG['facebook-app-api-key'];
 
-        //Post the page tab ID and station subdomain to the social microservice so that mapping can be saved
-        //in a database.
+        // Post the page tab ID and station subdomain to the social microservice so that mapping can be saved
+        // in a database.
         foreach ($facebookPageIds as $facebookPageId) {
             $postfields = [];
             $postfields['facebookPageId'] = $facebookPageId;
@@ -113,6 +113,6 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
             curl_close($ch);
         }
 
-        //$arr = json_decode($jsondata, true); # Decode JSON String
+        // $arr = json_decode($jsondata, true); # Decode JSON String
     }
 }

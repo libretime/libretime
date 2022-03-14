@@ -34,12 +34,12 @@ class Application_Service_MediaService
             $importedStorageDirectory = $storDir->getDirectory() . '/imported/' . $ownerId;
         }
 
-        //Copy the temporary file over to the "organize" folder so that it's off our webserver
-        //and accessible by libretime-analyzer which could be running on a different machine.
+        // Copy the temporary file over to the "organize" folder so that it's off our webserver
+        // and accessible by libretime-analyzer which could be running on a different machine.
         $newTempFilePath = Application_Model_StoredFile::moveFileToStor($filePath, $originalFilename, $copyFile);
 
-        //Dispatch a message to libretime-analyzer through RabbitMQ,
-        //notifying it that there's a new upload to process!
+        // Dispatch a message to libretime-analyzer through RabbitMQ,
+        // notifying it that there's a new upload to process!
         $storageBackend = new ProxyStorageBackend($CC_CONFIG['current_backend']);
         Application_Model_RabbitMq::SendMessageToAnalyzer(
             $newTempFilePath,
@@ -75,13 +75,13 @@ class Application_Service_MediaService
         if ($media->getPropelOrm()->isValidPhysicalFile()) {
             $filename = $media->getPropelOrm()->getFilename();
 
-            //Download user left clicks a track and selects Download.
+            // Download user left clicks a track and selects Download.
             if (!$inline) {
-                //We are using Content-Disposition to specify
-                //to the browser what name the file should be saved as.
+                // We are using Content-Disposition to specify
+                // to the browser what name the file should be saved as.
                 header('Content-Disposition: attachment; filename="' . $filename . '"');
             } else {
-                //user clicks play button for track and downloads it.
+                // user clicks play button for track and downloads it.
                 header('Content-Disposition: inline; filename="' . $filename . '"');
             }
 
@@ -100,7 +100,7 @@ class Application_Service_MediaService
             assert(is_array($filePaths));
 
             do {
-                //Read from $filePath and stream it to the browser.
+                // Read from $filePath and stream it to the browser.
                 $filePath = array_shift($filePaths);
 
                 try {
@@ -108,14 +108,14 @@ class Application_Service_MediaService
                     $mimeType = $media->getPropelOrm()->getDbMime();
                     Application_Common_FileIO::smartReadFile($filePath, $size, $mimeType);
 
-                    break; //Break out of the loop if we successfully read the file!
+                    break; // Break out of the loop if we successfully read the file!
                 } catch (LibreTimeFileNotFoundException $e) {
-                    //If we have no alternate filepaths left, then let the exception bubble up.
+                    // If we have no alternate filepaths left, then let the exception bubble up.
                     if (count($filePaths) == 0) {
                         throw $e;
                     }
                 }
-                //Retry with the next alternate filepath in the list
+                // Retry with the next alternate filepath in the list
             } while (count($filePaths) > 0);
 
             exit;

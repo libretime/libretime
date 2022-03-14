@@ -45,7 +45,7 @@ class AutoPlaylistManager
             $si = new Application_Model_ShowInstance($autoplaylist->getDbId());
             // the intro playlist should be added exactly once
             if ($introplaylistid != null) {
-                //Logging::info('adding intro');
+                // Logging::info('adding intro');
                 $si->addPlaylistToShowStart($introplaylistid, false);
             }
             while (!$full) {
@@ -68,7 +68,7 @@ class AutoPlaylistManager
                 if ($tempPercentScheduled == $ps) {
                     break;
                 }
-                //now reset it to the current percent scheduled
+                // now reset it to the current percent scheduled
                 $tempPercentScheduled = $ps;
             }
             // the outroplaylist is added at the end, it will always overbook
@@ -93,7 +93,7 @@ class AutoPlaylistManager
      */
     protected static function _upcomingAutoPlaylistShows()
     {
-        //setting now so that past shows aren't referenced
+        // setting now so that past shows aren't referenced
         $now = new DateTime('now', new DateTimeZone('UTC'));
         // only build playlists for shows that start up to an hour from now
         $future = clone $now;

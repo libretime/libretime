@@ -96,7 +96,7 @@ class Application_Model_LiveLog
                         );
                     }
                 }
-                //Trim milliseconds
+                // Trim milliseconds
                 $seconds = explode('.', $seconds);
                 if (isset($seconds[0])) {
                     $minutes = (float) (($hours * 60) + $minutes . '.' . $seconds[0]);
@@ -197,7 +197,7 @@ class Application_Model_LiveLog
                              * clip length.
                              */
                             $clip_length = $track['clip_length'];
-                            //Convert clip_length into seconds
+                            // Convert clip_length into seconds
                             $clip_length_intervals = explode(':', $clip_length);
                             for ($i = 0; $i < count($clip_length_intervals); ++$i) {
                                 if (!isset($clip_length_intervals[$i])) {
@@ -207,7 +207,7 @@ class Application_Model_LiveLog
                             $clip_length_seconds = $clip_length_intervals[0] * 3600 + $clip_length_intervals[1] * 60 + $clip_length_intervals[2];
 
                             $extra_time = $extra_time->format('%H:%i:%s');
-                            //Convert extra_time into seconds;
+                            // Convert extra_time into seconds;
                             $extra_time_intervals = explode(':', $extra_time);
                             for ($i = 0; $i < count($extra_time_intervals); ++$i) {
                                 if (!isset($extra_time_intervals[$i])) {
@@ -218,7 +218,7 @@ class Application_Model_LiveLog
 
                             $clip_length_seconds -= $extra_time_seconds;
 
-                            //Convert new clip_length into "H-i-s" format
+                            // Convert new clip_length into "H-i-s" format
                             $clip_length_arr = [];
                             if ($clip_length_seconds / 3600 >= 1) {
                                 array_push($clip_length_arr, str_pad(floor($clip_length_seconds / 3600), 2, '0', STR_PAD_LEFT));
@@ -267,7 +267,7 @@ class Application_Model_LiveLog
                     }
 
                     if (!$p_keepData) {
-                        //Delete row because we do not need data anymore
+                        // Delete row because we do not need data anymore
                         $sql_delete = 'DELETE FROM CC_LIVE_LOG'
                                     . ' WHERE id = :id';
                         Application_Common_Database::prepareAndExecute(
@@ -389,7 +389,7 @@ class Application_Model_LiveLog
                     );
                 }
 
-                //If live broadcasting is off, turn scheduled play on
+                // If live broadcasting is off, turn scheduled play on
                 $scheduled = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play');
                 if ($state == 'L' && $scheduled == 'on' && !$override) {
                     self::SetNewLogTime('S', $dateTime);

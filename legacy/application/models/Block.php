@@ -32,7 +32,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
         'crossfadeDuration' => 0,
     ];
 
-    //using propel's phpNames.
+    // using propel's phpNames.
     private $categories = [
         'dc:title' => 'Name',
         'dc:creator' => 'Creator',
@@ -243,14 +243,14 @@ SQL;
             $offset -= $trackoffset;
             $offset_cliplength = Application_Common_DateHelper::secondsToPlaylistTime($offset);
 
-            //format the length for UI.
+            // format the length for UI.
             $formatter = new LengthFormatter($row['length']);
             $row['length'] = $formatter->format();
 
             $formatter = new LengthFormatter($offset_cliplength);
             $row['offset'] = $formatter->format();
 
-            //format the fades in format 00(.0)
+            // format the fades in format 00(.0)
             $fades = $this->getFadeInfo($row['position']);
             $row['fadein'] = $fades[0];
             $row['fadeout'] = $fades[1];
@@ -262,7 +262,7 @@ SQL;
             $row['cuein'] = str_pad(substr($row['cuein'], 0, 10), 10, '.0');
             $row['cueout'] = str_pad(substr($row['cueout'], 0, 10), 10, '.0');
 
-            //format original length
+            // format original length
             $formatter = new LengthFormatter($row['orig_length']);
             $row['orig_length'] = $formatter->format();
 
@@ -283,10 +283,10 @@ SQL;
      */
     public function normalizeFade($fade)
     {
-        //First get rid of the first six characters 00:00: which will be added back later for db update
+        // First get rid of the first six characters 00:00: which will be added back later for db update
         $fade = substr($fade, 6);
 
-        //Second add .000000 if the fade does't have milliseconds format already
+        // Second add .000000 if the fade does't have milliseconds format already
         $dbFadeStrPos = strpos($fade, '.');
         if ($dbFadeStrPos === false) {
             $fade .= '.000000';
@@ -296,7 +296,7 @@ SQL;
             }
         }
 
-        //done, just need to set back the formated values
+        // done, just need to set back the formated values
         return $fade;
     }
 
@@ -463,11 +463,11 @@ SQL;
                 Logging::info('Adding to block');
                 Logging::info("at position {$pos}");
             } else {
-                //add to the end of the block
+                // add to the end of the block
                 if ($addType == 'after') {
                     $pos = $this->getSize();
                 }
-                //add to the beginning of the block.
+                // add to the beginning of the block.
                 else {
                     $pos = 0;
 
@@ -488,7 +488,7 @@ SQL;
             }
 
             foreach ($p_items as $ac) {
-                //Logging::info("Adding audio file {$ac[0]}");
+                // Logging::info("Adding audio file {$ac[0]}");
                 try {
                     if (is_array($ac) && $ac[1] == 'audioclip') {
                         $res = $this->insertBlockElement($this->buildEntry($ac[0], $pos));
@@ -511,7 +511,7 @@ SQL;
                 }
             }
 
-            //reset the positions of the remaining items.
+            // reset the positions of the remaining items.
             for ($i = 0; $i < count($contentsToUpdate); ++$i) {
                 $contentsToUpdate[$i]->setDbPosition($pos);
                 $contentsToUpdate[$i]->save($this->con);
@@ -556,7 +556,7 @@ SQL;
                 ->find($this->con);
 
             $pos = 0;
-            //moving items to beginning of the block.
+            // moving items to beginning of the block.
             if (is_null($p_afterItem)) {
                 Logging::info('moving items to beginning of block');
 
@@ -635,7 +635,7 @@ SQL;
                 ->orderByDbPosition()
                 ->find($this->con);
 
-            //reset the positions of the remaining items.
+            // reset the positions of the remaining items.
             for ($i = 0; $i < count($contents); ++$i) {
                 $contents[$i]->setDbPosition($i);
                 $contents[$i]->save($this->con);
@@ -656,7 +656,7 @@ SQL;
 
     public function getFadeInfo($pos)
     {
-        //Logging::info("Getting fade info for pos {$pos}");
+        // Logging::info("Getting fade info for pos {$pos}");
 
         $row = CcBlockcontentsQuery::create()
             ->joinWith(CcFilesPeer::OM_CLASS)
@@ -664,8 +664,8 @@ SQL;
             ->filterByDbPosition($pos)
             ->findOne();
 
-        //Propel returns values in form 00.000000 format which is for only seconds.
-        //We only want to display 1 decimal
+        // Propel returns values in form 00.000000 format which is for only seconds.
+        // We only want to display 1 decimal
         $fadeIn = substr($row->getDbFadein(), 0, 4);
         $fadeOut = substr($row->getDbFadeout(), 0, 4);
 
@@ -719,9 +719,9 @@ SQL;
      */
     public function changeFadeInfo($id, $fadeIn, $fadeOut, $offset = null)
     {
-        //See issue CC-2065, pad the fadeIn and fadeOut so that it is TIME compatable with the DB schema
-        //For the top level PlayList either fadeIn or fadeOut will sometimes be Null so need a gaurd against
-        //setting it to nonNull for checks down below
+        // See issue CC-2065, pad the fadeIn and fadeOut so that it is TIME compatable with the DB schema
+        // For the top level PlayList either fadeIn or fadeOut will sometimes be Null so need a gaurd against
+        // setting it to nonNull for checks down below
         $fadeIn = $fadeIn ? '00:00:' . $fadeIn : $fadeIn;
         $fadeOut = $fadeOut ? '00:00:' . $fadeOut : $fadeOut;
 
@@ -745,7 +745,7 @@ SQL;
 
                 $result = Application_Common_Database::prepareAndExecute($sql, $params, 'column');
                 if ($result) {
-                    //"Fade In can't be larger than overall playlength.";
+                    // "Fade In can't be larger than overall playlength.";
                     $fadeIn = $clipLength;
                 }
                 $row->setDbFadein($fadeIn);
@@ -765,7 +765,7 @@ SQL;
 
                 $result = Application_Common_Database::prepareAndExecute($sql, $params, 'column');
                 if ($result) {
-                    //"Fade Out can't be larger than overall playlength.";
+                    // "Fade Out can't be larger than overall playlength.";
                     $fadeOut = $clipLength;
                 }
                 $row->setDbFadeout($fadeOut);
@@ -1113,7 +1113,7 @@ SQL;
             false
         );
 
-        //$this->block->reload();
+        // $this->block->reload();
         $this->block->setDbMtime(new DateTime('now', new DateTimeZone('UTC')));
         $this->block->save($this->con);
         $this->con->commit();
@@ -1195,7 +1195,7 @@ SQL;
         // delete criteria under $p_blockId
         CcBlockcriteriaQuery::create()->findByDbBlockId($this->id)->delete();
         // Logging::info($p_criteriaData);
-        //insert modifier rows
+        // insert modifier rows
         if (isset($p_criteriaData['criteria'])) {
             $critKeys = array_keys($p_criteriaData['criteria']);
             for ($i = 0; $i < count($critKeys); ++$i) {
@@ -1612,7 +1612,7 @@ SQL;
         $qry = CcFilesQuery::create();
         $qry->useFkOwnerQuery('subj', 'left join');
 
-        //Logging::info($storedCrit);
+        // Logging::info($storedCrit);
         if (isset($storedCrit['crit'])) {
             foreach ($storedCrit['crit'] as $crit) {
                 $i = 0;
@@ -1630,7 +1630,7 @@ SQL;
 
                     $column = CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$spCriteria]);
 
-                    //data should already be in UTC, do we have to do anything special here anymore?
+                    // data should already be in UTC, do we have to do anything special here anymore?
                     if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
                         $spCriteriaValue = $criteria['value'];
 

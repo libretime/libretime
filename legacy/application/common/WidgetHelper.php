@@ -6,7 +6,7 @@ class WidgetHelper
 {
     public static function getWeekInfo($userDefinedTimezone)
     {
-        //weekStart is in station time.
+        // weekStart is in station time.
         $weekStartDateTime = Application_Common_DateHelper::getWeekStartDateTime();
 
         $dow = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday',
@@ -29,11 +29,11 @@ class WidgetHelper
         $weekStartDateTime->setTimezone($utcTimezone);
         $utcDayStart = $weekStartDateTime->format(DEFAULT_TIMESTAMP_FORMAT);
         for ($i = 0; $i < 14; ++$i) {
-            //have to be in station timezone when adding 1 day for daylight savings.
+            // have to be in station timezone when adding 1 day for daylight savings.
             $weekStartDateTime->setTimezone(new DateTimeZone($timezone));
             $weekStartDateTime->add(new DateInterval('P1D'));
 
-            //convert back to UTC to get the actual timestamp used for search.
+            // convert back to UTC to get the actual timestamp used for search.
             $weekStartDateTime->setTimezone($utcTimezone);
 
             $utcDayEnd = $weekStartDateTime->format(DEFAULT_TIMESTAMP_FORMAT);
@@ -115,7 +115,7 @@ class WidgetHelper
 
             $weekStartDateTime->add(new DateInterval('P1D'));
 
-            //convert back to UTC to get the actual timestamp used for search.
+            // convert back to UTC to get the actual timestamp used for search.
             $weekStartDateTime->setTimezone($utcTimezone);
         }
 
@@ -145,7 +145,7 @@ class WidgetHelper
         $result['shows'] = $shows;
 
         // convert image paths to point to api endpoints
-        //TODO: do we need this here?
+        // TODO: do we need this here?
         self::findAndConvertPaths($result);
 
         return $result;

@@ -95,7 +95,7 @@ class EmbedController extends Zend_Controller_Action
         $this->view->schedule_data = json_encode($weeklyScheduleData);
 
         $currentDay = new DateTime('now', new DateTimeZone(Application_Model_Preference::GetTimezone()));
-        //day of the month without leading zeros (1 to 31)
+        // day of the month without leading zeros (1 to 31)
         $this->view->currentDayOfMonth = $currentDay->format('j');
     }
 }

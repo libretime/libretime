@@ -21,7 +21,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $baseUrl = Application_Common_OsPath::getBaseDir();
         $userType = Application_Model_User::GetCurrentUser()->getType();
 
-        //$this->_helper->layout->setLayout("showbuilder");
+        // $this->_helper->layout->setLayout("showbuilder");
 
         $this->view->headScript()->appendScript("localStorage.setItem( 'user-type', '{$userType}' );");
 
@@ -70,7 +70,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->csrf = $csrf_element;
 
         $request = $this->getRequest();
-        //populate date range form for show builder.
+        // populate date range form for show builder.
         $now = time();
         $from = $request->getParam('from', $now);
         $to = $request->getParam('to', $now + (3 * 60 * 60));
@@ -133,12 +133,12 @@ class ShowbuilderController extends Zend_Controller_Action
         $instance = $item->getCcShowInstances();
 
         $menu['preview'] = ['name' => _('Preview'), 'icon' => 'play'];
-        //select the cursor
+        // select the cursor
         $menu['selCurs'] = ['name' => _('Select cursor'), 'icon' => 'select-cursor'];
         $menu['delCurs'] = ['name' => _('Remove cursor'), 'icon' => 'select-cursor'];
 
         if ($now < floatval($item->getDbEnds('U.u')) && $user->canSchedule($instance->getDbShowId())) {
-            //remove/truncate the item from the schedule
+            // remove/truncate the item from the schedule
             $menu['del'] = ['name' => _('Delete'), 'icon' => 'delete', 'url' => $baseUrl . 'showbuilder/schedule-remove'];
         }
 
@@ -199,7 +199,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $opts = ['myShows' => $my_shows, 'showFilter' => $show_filter];
         $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT, $opts);
 
-        //only send the schedule back if updates have been made.
+        // only send the schedule back if updates have been made.
         // -1 default will always call the schedule to be sent back if no timestamp is defined.
         $this->view->update = $showBuilder->hasBeenUpdatedSince(
             $timestamp,

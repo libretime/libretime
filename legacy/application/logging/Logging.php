@@ -11,8 +11,8 @@ class Logging
             $writer = new Zend_Log_Writer_Stream(self::$_path);
 
             if (Zend_Version::compareVersion('1.11') > 0) {
-                //Running Zend version 1.10 or lower. Need to instantiate our
-                //own Zend Log class with backported code from 1.11.
+                // Running Zend version 1.10 or lower. Need to instantiate our
+                // own Zend Log class with backported code from 1.11.
                 require_once __DIR__ . '/AirtimeLog.php';
                 self::$_logger = new Airtime_Zend_Log($writer);
             } else {
@@ -54,7 +54,7 @@ class Logging
         }
 
         if ($debugMode) {
-            //debug_backtrace is SLOW so we don't want this invoke unless there was a real error! (hence $debugMode)
+            // debug_backtrace is SLOW so we don't want this invoke unless there was a real error! (hence $debugMode)
             $bt = debug_backtrace();
             $caller = $bt[1];
             $file = basename($caller['file']);
@@ -86,7 +86,7 @@ class Logging
         $logger = self::getLogger();
         $logger->err(self::getLinePrefix(true) . self::toString($p_msg));
 
-        //Escape the % symbols in any of our errors because Sentry chokes (vsprint formatting error).
+        // Escape the % symbols in any of our errors because Sentry chokes (vsprint formatting error).
         $msg = self::toString($p_msg);
         $msg = str_replace('%', '%%', $msg);
     }
@@ -132,9 +132,9 @@ class Logging
 
     public static function loggingShutdownCallback()
     {
-        //Catch the types of errors that PHP doesn't normally let us catch and
-        //would otherwise log to the apache log. We route these to our Airtime log to improve the modularity
-        //and reliability of our error logging. (All errors are in one spot!)
+        // Catch the types of errors that PHP doesn't normally let us catch and
+        // would otherwise log to the apache log. We route these to our Airtime log to improve the modularity
+        // and reliability of our error logging. (All errors are in one spot!)
         $err = error_get_last();
         if (!is_array($err) || !array_key_exists('type', $err)) {
             return;
@@ -149,7 +149,7 @@ class Logging
             case E_CORE_WARNING:
             case E_COMPILE_ERROR:
             case E_COMPILE_WARNING:
-                //error_log("Oh noes, a fatal: " . var_export($err, true), 1, 'fatals@example.com');
+                // error_log("Oh noes, a fatal: " . var_export($err, true), 1, 'fatals@example.com');
                 $errorStr = '';
                 if (array_key_exists('message', $err)) {
                     $errorStr .= $err['message'];
@@ -170,7 +170,7 @@ class Logging
 
     public static function setupParseErrorLogging()
     {
-        //Static callback:
+        // Static callback:
         register_shutdown_function('Logging::loggingShutdownCallback');
     }
 }

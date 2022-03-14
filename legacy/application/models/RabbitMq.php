@@ -37,8 +37,8 @@ class Application_Model_RabbitMq
             true
         );
 
-        //I'm pretty sure we DON'T want to autodelete ANY exchanges but I'm keeping the code
-        //the way it is just so I don't accidentally break anything when I add the Analyzer code in. -- Albert, March 13, 2014
+        // I'm pretty sure we DON'T want to autodelete ANY exchanges but I'm keeping the code
+        // the way it is just so I don't accidentally break anything when I add the Analyzer code in. -- Albert, March 13, 2014
         $channel->exchange_declare($exchange, $exchangeType, false, true, $autoDeleteExchange);
 
         $msg = new \PhpAmqpLib\Message\AMQPMessage($data, ['content_type' => 'text/plain']);
@@ -70,8 +70,8 @@ class Application_Model_RabbitMq
     {
         $exchange = 'airtime-pypo';
 
-        $now = new DateTime('@' . time()); //in UTC timezone
-        $end_timestamp = new DateTime('@' . (time() + 3600 * 2)); //in UTC timezone
+        $now = new DateTime('@' . time()); // in UTC timezone
+        $end_timestamp = new DateTime('@' . (time() + 3600 * 2)); // in UTC timezone
 
         $temp = [];
         $temp['event_type'] = $event_type;
@@ -126,7 +126,7 @@ class Application_Model_RabbitMq
         $data['file_prefix'] = $filePrefix;
 
         $jsonData = json_encode($data);
-        //self::sendMessage($exchange, 'topic', false, $jsonData, 'airtime-uploads');
+        // self::sendMessage($exchange, 'topic', false, $jsonData, 'airtime-uploads');
 
         if (!isset($conn)) {
             throw new Exception('Cannot connect to RabbitMQ server');
@@ -141,8 +141,8 @@ class Application_Model_RabbitMq
             true
         );
 
-        //I'm pretty sure we DON'T want to autodelete ANY exchanges but I'm keeping the code
-        //the way it is just so I don't accidentally break anything when I add the Analyzer code in. -- Albert, March 13, 2014
+        // I'm pretty sure we DON'T want to autodelete ANY exchanges but I'm keeping the code
+        // the way it is just so I don't accidentally break anything when I add the Analyzer code in. -- Albert, March 13, 2014
         $channel->exchange_declare($exchange, $exchangeType, false, true, $autoDeleteExchange);
 
         $msg = new \PhpAmqpLib\Message\AMQPMessage($jsonData, ['content_type' => 'text/plain']);

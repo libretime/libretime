@@ -72,8 +72,8 @@ SQL;
             if (isset($out[$enabledMountPoint])) {
                 $enabledOut[$enabledMountPoint] = $out[$enabledMountPoint];
             } else {
-                //TODO fix this hack (here for CC-5254)
-                //all shoutcast streams are automatically put under "shoutcast" mount point.
+                // TODO fix this hack (here for CC-5254)
+                // all shoutcast streams are automatically put under "shoutcast" mount point.
                 if (isset($out['shoutcast'])) {
                     $enabledOut['shoutcast'] = $out['shoutcast'];
                 }
@@ -183,9 +183,9 @@ SQL;
             );
 
             if (strlen($mount_name_id) == 0) {
-                //there is a race condition here where theoretically the row
-                //with value "mount_name" could appear, but this is *very*
-                //unlikely and won't break anything even if it happens.
+                // there is a race condition here where theoretically the row
+                // with value "mount_name" could appear, but this is *very*
+                // unlikely and won't break anything even if it happens.
                 $mount_name_id = Application_Common_Database::prepareAndExecute(
                     $mount_name_insert_sql,
                     ['mn' => $dp['mount_name']],

@@ -213,8 +213,8 @@ SQL;
      */
     public function delete()
     {
-        //usually we hide the show-instance, but in this case we are deleting the show template
-        //so delete all show-instances as well.
+        // usually we hide the show-instance, but in this case we are deleting the show template
+        // so delete all show-instances as well.
         CcShowInstancesQuery::create()->filterByDbOriginalShow($this->_showId)->delete();
 
         $show = CcShowQuery::create()->findPK($this->_showId);
@@ -232,7 +232,7 @@ SQL;
         $utcTimezone = new DateTimeZone('UTC');
         $nowDateTime = new DateTime('now', $utcTimezone);
 
-        //keep track of cc_show_day entries we need to update
+        // keep track of cc_show_day entries we need to update
         $showDayIds = [];
 
         /*
@@ -244,7 +244,7 @@ SQL;
          */
         $ccShow = CcShowQuery::create()->findPk($this->_showId);
         if ($ccShow->isRepeating()) {
-            //convert instance to local timezone
+            // convert instance to local timezone
             $ccShowInstance = CcShowInstancesQuery::create()->findPk($instanceId);
             $startsDT = $ccShowInstance->getDbStarts(null);
             $timezone = $ccShow->getFirstCcShowDay()->getDbTimezone();
@@ -271,7 +271,7 @@ SQL;
 
                 $excludeIds = $ccShow->getEditedRepeatingInstanceIds();
 
-                //exlcude edited instances from resize
+                // exlcude edited instances from resize
                 $showInstances = CcShowInstancesQuery::create()
                     ->filterByDbShowId($this->_showId)
                     ->filterByDbModifiedInstance(false)
@@ -280,7 +280,7 @@ SQL;
             } elseif ($ccShowDay->getDbRepeatType() == -1) {
                 array_push($showDayIds, $ccShowDay->getDbId());
 
-                //treat edited instance as separate show for resize
+                // treat edited instance as separate show for resize
                 $showInstances = CcShowInstancesQuery::create()
                     ->filterByDbId($instanceId)
                     ->find();
@@ -301,11 +301,11 @@ SQL;
            2. If the show being resized and any of its repeats overlap
               with other scheduled shows */
 
-        //keep track of instance ids for update show instances start/end times
+        // keep track of instance ids for update show instances start/end times
         $instanceIds = [];
         $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
 
-        //check if new show time overlaps with any other shows
+        // check if new show time overlaps with any other shows
         foreach ($showInstances as $si) {
             array_push($instanceIds, $si->getDbId());
 
@@ -319,15 +319,15 @@ SQL;
             $startsDateTime->setTimezone($displayTimezone);
             $endsDateTime->setTimezone($displayTimezone);
 
-            //$newStartsDateTime = Application_Model_ShowInstance::addDeltas($startsDateTime, $deltaDay, $deltaMin);
+            // $newStartsDateTime = Application_Model_ShowInstance::addDeltas($startsDateTime, $deltaDay, $deltaMin);
             $newEndsDateTime = Application_Model_ShowInstance::addDeltas($endsDateTime, $deltaDay, $deltaMin);
 
             if ($newEndsDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
                 return _('End date/time cannot be in the past');
             }
 
-            //convert our new starts/ends to UTC.
-            //$newStartsDateTime->setTimezone($utc);
+            // convert our new starts/ends to UTC.
+            // $newStartsDateTime->setTimezone($utc);
             $newEndsDateTime->setTimezone($utcTimezone);
 
             $overlapping = Application_Model_Schedule::checkOverlappingShows(
@@ -385,7 +385,7 @@ SQL;
         $con->beginTransaction();
 
         try {
-            //update the status flag in cc_schedule.
+            // update the status flag in cc_schedule.
 
             /* Since we didn't use a propel object when updating
              * cc_show_instances table we need to clear the instances
@@ -772,7 +772,7 @@ SQL;
      */
     private function updateDurationTime($p_data)
     {
-        //need to update cc_show_instances, cc_show_days
+        // need to update cc_show_instances, cc_show_days
         $con = Propel::getConnection();
         $timestamp = gmdate(DEFAULT_TIMESTAMP_FORMAT);
 
@@ -925,13 +925,13 @@ SQL;
 
         try {
             $con->beginTransaction();
-            //It is extremely important that we increase the transaction isolation level, so that if two
-            //requests cause the show schedule to be generated at the same time, one will be rolled back.
+            // It is extremely important that we increase the transaction isolation level, so that if two
+            // requests cause the show schedule to be generated at the same time, one will be rolled back.
             $con->exec('SET TRANSACTION ISOLATION LEVEL SERIALIZABLE');
 
-            //UTC DateTime object
+            // UTC DateTime object
             $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
-            //if application is requesting shows past our previous populated until date, generate shows up until this point.
+            // if application is requesting shows past our previous populated until date, generate shows up until this point.
             if (is_null($showsPopUntil) || $showsPopUntil->getTimestamp() < $needScheduleUntil->getTimestamp()) {
                 $service_show = new Application_Service_ShowService();
                 $ccShow = $service_show->delegateInstanceCreation(null, $needScheduleUntil, true);
@@ -940,7 +940,7 @@ SQL;
             $con->commit();
         } catch (Exception $e) {
             $con->rollBack();
-            //throw $e;
+            // throw $e;
             Logging::warn('Did not create show instances due to transaction error. This is usually safe
                            and caused by two concurrent transactions. ' . $e->getMessage());
         }
@@ -989,7 +989,7 @@ LEFT JOIN cc_show_instances AS si2  ON si1.instance_id = si2.id
 LEFT JOIN cc_show           AS show ON show.id         = si1.show_id
 WHERE si1.modified_instance = FALSE
 SQL;
-        //only want shows that are starting at the time or later.
+        // only want shows that are starting at the time or later.
         $start_string = $start_timestamp->format(DEFAULT_TIMESTAMP_FORMAT);
         $end_string = $end_timestamp->format(DEFAULT_TIMESTAMP_FORMAT);
 
@@ -1131,7 +1131,7 @@ SQL;
             $event['record'] = intval($show['record']);
             $event['rebroadcast'] = intval($show['rebroadcast']);
 
-            //for putting the now playing icon on the show.
+            // for putting the now playing icon on the show.
             if ($now > $startsDT && $now < $endsDT) {
                 $event['nowPlaying'] = true;
             } else {
@@ -1141,15 +1141,15 @@ SQL;
             if (!empty($show['background_color'])) {
                 $event['color'] = '#' . $show['background_color'];
             } else {
-                $event['color'] = '#' . self::getDefaultBackgroundColor($startsDT); //DEFAULT_SHOW_COLOR;
+                $event['color'] = '#' . self::getDefaultBackgroundColor($startsDT); // DEFAULT_SHOW_COLOR;
             }
 
-            //event colouring
+            // event colouring
             if ($show['color'] != '') {
                 $event['textColor'] = '#' . $show['color'];
             } else {
                 $bg = $event['color'];
-                //Calculate the text colour (black or white) based on the brightness of the background.
+                // Calculate the text colour (black or white) based on the brightness of the background.
                 $r = intval(substr($bg, 1, 2), 16);
                 $g = intval(substr($bg, 3, 2), 16);
                 $b = intval(substr($bg, 5, 2), 16);
@@ -1199,11 +1199,11 @@ SQL;
             array_push($palette, $dayPalette);
         }
 
-        //$hashValue = (md5($date->format('d'))[0] % $cols) + ((intval($date->format('h'))/24) % $rows);
+        // $hashValue = (md5($date->format('d'))[0] % $cols) + ((intval($date->format('h'))/24) % $rows);
         $row = intval($date->format('w')) % count($palette);
         $foo = $date->format('H');
         $col = intval(intval($date->format('H')) / 24.0 * count($palette[0]));
-        //$color = $palette[$hashValue % sizeof($palette)];
+        // $color = $palette[$hashValue % sizeof($palette)];
         return $palette[$row][$col];
     }
 
@@ -1224,7 +1224,7 @@ SQL;
         $endDt = new DateTime($p_ends, $utcTimezone);
         $durationSeconds = intval($endDt->format('U')) - intval($startDt->format('U'));
         $time_filled = Application_Common_DateHelper::playlistTimeToSeconds($p_time_filled);
-        if ($durationSeconds != 0) { //Prevent division by zero if the show duration somehow becomes zero.
+        if ($durationSeconds != 0) { // Prevent division by zero if the show duration somehow becomes zero.
             $percent = ceil(($time_filled / $durationSeconds) * 100);
         } else {
             $percent = 0;
@@ -1247,7 +1247,7 @@ SQL;
         if ($timeNow == null) {
             $timeNow = gmdate(DEFAULT_TIMESTAMP_FORMAT);
         }
-        //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
+        // TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
         $sql = <<<'SQL'
 SELECT si.starts AS start_timestamp,
        si.ends AS end_timestamp,
@@ -1298,7 +1298,7 @@ SQL;
      */
     public static function getPrevCurrentNext($utcNow, $utcEndStr, $showsToRetrieve)
     {
-        $timeZone = new DateTimeZone('UTC'); //This function works entirely in UTC.
+        $timeZone = new DateTimeZone('UTC'); // This function works entirely in UTC.
         assert(get_class($utcNow) === 'DateTime');
         assert($utcNow->getTimeZone() == $timeZone);
 
@@ -1390,14 +1390,14 @@ SQL;
      */
     public static function getPrevCurrentNextOld($utcNow)
     {
-        $timeZone = new DateTimeZone('UTC'); //This function works entirely in UTC.
+        $timeZone = new DateTimeZone('UTC'); // This function works entirely in UTC.
         assert(get_class($utcNow) === 'DateTime');
         assert($utcNow->getTimeZone() == $timeZone);
 
         $CC_CONFIG = Config::getConfig();
         $con = Propel::getConnection();
 
-        //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
+        // TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
         $sql = <<<'SQL'
 SELECT si.starts AS start_timestamp,
        si.ends AS end_timestamp,
@@ -1441,11 +1441,11 @@ SQL;
         $results['nextShow'] = [];
 
         for ($i = 0; $i < $numberOfRows; ++$i) {
-            //All shows start/end times are stored in the database as UTC.
+            // All shows start/end times are stored in the database as UTC.
             $showStartTime = new DateTime($rows[$i]['starts'], $timeZone);
             $showEndTime = new DateTime($rows[$i]['ends'], $timeZone);
 
-            //Find the show that is within the current time.
+            // Find the show that is within the current time.
             if (($showStartTime <= $utcNow) && ($showEndTime > $utcNow)) {
                 if ($i - 1 >= 0) {
                     $results['previousShow'][0] = [
@@ -1483,11 +1483,11 @@ SQL;
 
                 break;
             }
-            //Previous is any row that ends after time now capture it in case we need it later.
+            // Previous is any row that ends after time now capture it in case we need it later.
             if ($showEndTime < $utcNow) {
                 $previousShowIndex = $i;
             }
-            //if we hit this we know we've gone to far and can stop looping.
+            // if we hit this we know we've gone to far and can stop looping.
             if ($showStartTime > $utcNow) {
                 $results['nextShow'][0] = [
                     'id' => $rows[$i]['id'],
@@ -1506,8 +1506,8 @@ SQL;
                 break;
             }
         }
-        //If we didn't find a a current show because the time didn't fit we may still have
-        //found a previous show so use it.
+        // If we didn't find a a current show because the time didn't fit we may still have
+        // found a previous show so use it.
         if (count($results['previousShow']) == 0 && isset($previousShowIndex)) {
             $results['previousShow'][0] = [
                 'id' => $rows[$previousShowIndex]['id'],
@@ -1546,7 +1546,7 @@ SQL;
             $timeEnd = "'{$timeStart}' + INTERVAL '2 days'";
         }
 
-        //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
+        // TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
         $sql = <<<'SQL'
 SELECT si.starts AS start_timestamp,
        si.ends AS end_timestamp,
@@ -1570,9 +1570,9 @@ WHERE si.show_id = s.id
 ORDER BY si.starts
 SQL;
 
-        //PDO won't accept "ALL" as a limit value (complains it is not an
-        //integer, and so we must completely remove the limit clause if we
-        //want to show all results - MK
+        // PDO won't accept "ALL" as a limit value (complains it is not an
+        // integer, and so we must completely remove the limit clause if we
+        // want to show all results - MK
         if ($limit != 'ALL') {
             $sql .= PHP_EOL . 'LIMIT :lim';
             $params = [
@@ -1607,10 +1607,10 @@ SQL;
     {
         $utcTimeZone = new DateTimeZone('UTC');
 
-        //We have to get the start of the day in the user's timezone, and then convert that to UTC.
+        // We have to get the start of the day in the user's timezone, and then convert that to UTC.
         $start = new DateTime('first day of this month', new DateTimeZone(Application_Model_Preference::GetUserTimezone()));
 
-        $start->setTimezone($utcTimeZone); //Covert it to UTC.
+        $start->setTimezone($utcTimeZone); // Covert it to UTC.
         $monthInterval = new DateInterval('P1M');
         $end = clone $start;
         $end->add($monthInterval);
@@ -1627,14 +1627,14 @@ SQL;
     {
         $utcTimeZone = new DateTimeZone('UTC');
 
-        //We have to get the start of the day in the user's timezone, and then convert that to UTC.
+        // We have to get the start of the day in the user's timezone, and then convert that to UTC.
         $start = new DateTime('first day of this month', new DateTimeZone(Application_Model_Preference::GetUserTimezone()));
 
         $dayOfWeekNumeric = $start->format('w');
-        $start->sub(new DateInterval("P{$dayOfWeekNumeric}D")); //Subtract the index of the day of the week the month starts on. (adds this many days from the previous month)
-        $start->setTimezone($utcTimeZone); //Covert it to UTC.
+        $start->sub(new DateInterval("P{$dayOfWeekNumeric}D")); // Subtract the index of the day of the week the month starts on. (adds this many days from the previous month)
+        $start->setTimezone($utcTimeZone); // Covert it to UTC.
 
-        $fullCalendarMonthInterval = new DateInterval('P42D'); //42 days
+        $fullCalendarMonthInterval = new DateInterval('P42D'); // 42 days
         $end = clone $start;
         $end->add($fullCalendarMonthInterval);
 
@@ -1646,11 +1646,11 @@ SQL;
         $weekStartDayNum = Application_Model_Preference::GetWeekStartDay();
         $utcTimeZone = new DateTimeZone('UTC');
 
-        //We have to get the start of the week in the user's timezone, and then convert that to UTC.
+        // We have to get the start of the week in the user's timezone, and then convert that to UTC.
         $start = new DateTime('Sunday last week', new DateTimeZone(Application_Model_Preference::GetUserTimezone()));
-        $start->add(new DateInterval("P{$weekStartDayNum}D")); //Shift the start date to the station's "Week Starts on Day"
+        $start->add(new DateInterval("P{$weekStartDayNum}D")); // Shift the start date to the station's "Week Starts on Day"
 
-        $start->setTimezone($utcTimeZone); //Covert it to UTC.
+        $start->setTimezone($utcTimeZone); // Covert it to UTC.
         $weekInterval = new DateInterval('P1W');
         $end = clone $start;
         $end->add($weekInterval);
@@ -1662,10 +1662,10 @@ SQL;
     {
         $utcTimeZone = new DateTimeZone('UTC');
 
-        //We have to get the start of the day in the user's timezone, and then convert that to UTC.
+        // We have to get the start of the day in the user's timezone, and then convert that to UTC.
         $start = new DateTime('today', new DateTimeZone(Application_Model_Preference::GetUserTimezone()));
 
-        $start->setTimezone($utcTimeZone); //Covert it to UTC.
+        $start->setTimezone($utcTimeZone); // Covert it to UTC.
         $dayInterval = new DateInterval('P1D');
         $end = clone $start;
         $end->add($dayInterval);

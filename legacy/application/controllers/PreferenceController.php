@@ -73,10 +73,10 @@ class PreferenceController extends Zend_Controller_Action
                 $this->view->statusMsg = "<div class='success'>" . _('Preferences updated.') . '</div>';
                 $form = new Application_Form_Preferences();
                 $this->view->form = $form;
-            //$this->_helper->json->sendJson(array("valid"=>"true", "html"=>$this->view->render('preference/index.phtml')));
+            // $this->_helper->json->sendJson(array("valid"=>"true", "html"=>$this->view->render('preference/index.phtml')));
             } else {
                 $this->view->form = $form;
-                //$this->_helper->json->sendJson(array("valid"=>"false", "html"=>$this->view->render('preference/index.phtml')));
+                // $this->_helper->json->sendJson(array("valid"=>"false", "html"=>$this->view->render('preference/index.phtml')));
             }
         }
         $this->view->logoImg = Application_Model_Preference::GetStationLogo();
@@ -261,7 +261,7 @@ class PreferenceController extends Zend_Controller_Action
                     Application_Model_Preference::setReplayGainModifier($values['replayGainModifier']);
                     $md = ['schedule' => Application_Model_Schedule::getSchedule()];
                     Application_Model_RabbitMq::SendMessageToPypo('update_schedule', $md);
-                    //Application_Model_RabbitMq::PushSchedule();
+                    // Application_Model_RabbitMq::PushSchedule();
                 }
 
                 // pulling this from the 2.5.x branch
@@ -363,7 +363,7 @@ class PreferenceController extends Zend_Controller_Action
             if ($handle !== false) {
                 while (false !== ($file = readdir($handle))) {
                     if ($file != '.' && $file != '..') {
-                        //only show directories that aren't private.
+                        // only show directories that aren't private.
                         if (is_dir($path . $file) && substr($file, 0, 1) != '.') {
                             $element = [];
                             $element['name'] = $file;
@@ -376,7 +376,7 @@ class PreferenceController extends Zend_Controller_Action
             }
         }
         ksort($result);
-        //returns format serverBrowse is looking for.
+        // returns format serverBrowse is looking for.
         $this->_helper->json->sendJson($result);
     }
 

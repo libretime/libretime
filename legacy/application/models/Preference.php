@@ -4,8 +4,8 @@ class Application_Model_Preference
 {
     private static function getUserId()
     {
-        //pass in true so the check is made with the autoloader
-        //we need this check because saas calls this function from outside Zend
+        // pass in true so the check is made with the autoloader
+        // we need this check because saas calls this function from outside Zend
         if (!class_exists('Zend_Session', true) || !Zend_Session::isStarted() || !class_exists('Zend_Auth', true) || !Zend_Auth::getInstance()->hasIdentity()) {
             $userId = null;
         } else {
@@ -25,8 +25,8 @@ class Application_Model_Preference
     {
         $con = Propel::getConnection(CcPrefPeer::DATABASE_NAME);
 
-        //We are using row-level locking in Postgres via "FOR UPDATE" instead of a transaction here
-        //because sometimes this function needs to be called while a transaction is already started.
+        // We are using row-level locking in Postgres via "FOR UPDATE" instead of a transaction here
+        // because sometimes this function needs to be called while a transaction is already started.
 
         try {
             /* Comment this out while we reevaluate it in favor of a unique constraint
@@ -37,14 +37,14 @@ class Application_Model_Preference
                 throw new Exception("User id can't be null for a user preference {$key}.");
             }
 
-            //Check if key already exists
+            // Check if key already exists
             $sql = 'SELECT valstr FROM cc_pref'
                 . ' WHERE keystr = :key';
 
             $paramMap = [];
             $paramMap[':key'] = $key;
 
-            //For user specific preference, check if id matches as well
+            // For user specific preference, check if id matches as well
             if ($isUserValue) {
                 $sql .= ' AND subjid = :id';
                 $paramMap[':id'] = $userId;
@@ -62,7 +62,7 @@ class Application_Model_Preference
 
             $paramMap = [];
             if ($result > 1) {
-                //this case should not happen.
+                // this case should not happen.
                 throw new Exception('Invalid number of results returned. Should be ' .
                     "0 or 1, but is '{$result}' instead");
             }
@@ -148,21 +148,21 @@ class Application_Model_Preference
         try {
             $userId = null;
             if ($isUserValue) {
-                //This is nested in here because so we can still use getValue() when the session hasn't started yet.
+                // This is nested in here because so we can still use getValue() when the session hasn't started yet.
                 $userId = self::getUserId();
                 if (is_null($userId)) {
                     throw new Exception("User id can't be null for a user preference.");
                 }
             }
 
-            //Check if key already exists
+            // Check if key already exists
             $sql = 'SELECT COUNT(*) FROM cc_pref'
             . ' WHERE keystr = :key';
 
             $paramMap = [];
             $paramMap[':key'] = $key;
 
-            //For user specific preference, check if id matches as well
+            // For user specific preference, check if id matches as well
             if ($isUserValue) {
                 $sql .= ' AND subjid = :id';
                 $paramMap[':id'] = $userId;
@@ -172,7 +172,7 @@ class Application_Model_Preference
 
             $result = Application_Common_Database::prepareAndExecute($sql, $paramMap, Application_Common_Database::COLUMN);
 
-            //return an empty string if the result doesn't exist.
+            // return an empty string if the result doesn't exist.
             if ($result == 0) {
                 $res = '';
             } else {
@@ -182,7 +182,7 @@ class Application_Model_Preference
                 $paramMap = [];
                 $paramMap[':key'] = $key;
 
-                //For user specific preference, check if id matches as well
+                // For user specific preference, check if id matches as well
                 if ($isUserValue) {
                     $sql .= ' AND subjid = :id';
                     $paramMap[':id'] = $userId;
@@ -218,9 +218,9 @@ class Application_Model_Preference
 
         // in case this is called from airtime-saas script
         if ($view !== null) {
-            //set session variable to new station name so that html title is updated.
-            //should probably do this in a view helper to keep this controller as minimal as possible.
-            $view->headTitle()->exchangeArray([]); //clear headTitle ArrayObject
+            // set session variable to new station name so that html title is updated.
+            // should probably do this in a view helper to keep this controller as minimal as possible.
+            $view->headTitle()->exchangeArray([]); // clear headTitle ArrayObject
             $view->headTitle(self::GetHeadTitle());
         }
 
@@ -811,7 +811,7 @@ class Application_Model_Preference
     {
         self::setValue('num_of_streams', intval($num));
 
-        //Enable or disable each stream according to whatever was just changed.
+        // Enable or disable each stream according to whatever was just changed.
         for ($streamIdx = 1; $streamIdx <= MAX_NUM_STREAMS; ++$streamIdx) {
             $prefix = 's' . $streamIdx . '_';
             $enable = 'false';
@@ -819,7 +819,7 @@ class Application_Model_Preference
                 $enable = 'true';
             }
 
-            //Enable or disable the stream in the Stream Settings DB table.
+            // Enable or disable the stream in the Stream Settings DB table.
             Application_Model_StreamSetting::setIndividualStreamSetting([$prefix . 'enable' => $enable]);
         }
     }
@@ -855,16 +855,16 @@ class Application_Model_Preference
 
     public static function GetSchemaVersion()
     {
-        CcPrefPeer::clearInstancePool(); //Ensure we don't get a cached Propel object (cached DB results)
-        //because we're updating this version number within this HTTP request as well.
+        CcPrefPeer::clearInstancePool(); // Ensure we don't get a cached Propel object (cached DB results)
+        // because we're updating this version number within this HTTP request as well.
 
-        //New versions use schema_version
+        // New versions use schema_version
         $pref = CcPrefQuery::create()
             ->filterByKeystr('schema_version')
             ->findOne();
 
         if (empty($pref)) {
-            //Pre-2.5.2 releases all used this ambiguous "system_version" key to represent both the code and schema versions...
+            // Pre-2.5.2 releases all used this ambiguous "system_version" key to represent both the code and schema versions...
             $pref = CcPrefQuery::create()
                 ->filterByKeystr('system_version')
                 ->findOne();

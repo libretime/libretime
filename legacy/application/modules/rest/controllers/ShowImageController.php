@@ -156,7 +156,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
     {
         $ownerId = RestAuth::getOwnerId();
 
-        //Only accept files with a file extension that we support.
+        // Only accept files with a file extension that we support.
         $fileExtension = $this->getFileExtension($tempFilePath);
 
         if (!in_array(strtolower($fileExtension), explode(',', 'jpg,png,gif,jpeg'))) {
@@ -250,11 +250,11 @@ class Rest_ShowImageController extends Zend_Rest_Controller
         Logging::info("copyFileToStor: moving file {$image_file} to {$image_stor}");
 
         if (@rename($image_file, $image_stor) === false) {
-            //something went wrong likely there wasn't enough space in .
-            //the audio_stor to move the file too warn the user that   .
-            //the file wasn't uploaded and they should check if there  .
-            //is enough disk space                                     .
-            unlink($image_file); //remove the file after failed rename
+            // something went wrong likely there wasn't enough space in .
+            // the audio_stor to move the file too warn the user that   .
+            // the file wasn't uploaded and they should check if there  .
+            // is enough disk space                                     .
+            unlink($image_file); // remove the file after failed rename
 
             throw new Exception('The file was not uploaded, this error can occur if the computer '
                                 . 'hard drive does not have enough disk space or the stor '

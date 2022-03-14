@@ -4,7 +4,7 @@ class FileStorageBackend extends StorageBackend
 {
     public function getAbsoluteFilePath($resourceId)
     {
-        //TODO
+        // TODO
         return $resourceId;
     }
 
@@ -15,7 +15,7 @@ class FileStorageBackend extends StorageBackend
 
     public function deletePhysicalFile($resourceId)
     {
-        //TODO
+        // TODO
     }
 
     public function deleteAllCloudFileObjects()

@@ -38,28 +38,28 @@ Logging::setLogPath(LIBRETIME_LOG_FILEPATH);
 
 set_include_path(APPLICATION_PATH . '/common' . PATH_SEPARATOR . get_include_path());
 
-//Propel classes.
+// Propel classes.
 set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());
 
-//Services
+// Services
 set_include_path(APPLICATION_PATH . '/services' . PATH_SEPARATOR . get_include_path());
 
-//models
+// models
 set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());
 
-//Controllers.
+// Controllers.
 set_include_path(APPLICATION_PATH . '/controllers' . PATH_SEPARATOR . get_include_path());
 
-//Controller plugins.
+// Controller plugins.
 set_include_path(APPLICATION_PATH . '/controllers/plugins' . PATH_SEPARATOR . get_include_path());
 
-//test data
+// test data
 set_include_path(APPLICATION_PATH . '/../tests/application/testdata' . PATH_SEPARATOR . get_include_path());
 
-//helper functions
+// helper functions
 set_include_path(APPLICATION_PATH . '/../tests/application/helpers' . PATH_SEPARATOR . get_include_path());
 
-//cloud storage files
+// cloud storage files
 set_include_path(APPLICATION_PATH . '/cloud_storage' . PATH_SEPARATOR . get_include_path());
 
 require_once 'jooola/propel1/runtime/lib/Propel.php';

@@ -49,7 +49,7 @@ class CloudFile extends BaseCloudFile
         $filename = $this->getDbFilepath();
         $info = pathinfo($filename);
 
-        //Add the correct file extension based on the MIME type, for files that were uploaded with the wrong extension.
+        // Add the correct file extension based on the MIME type, for files that were uploaded with the wrong extension.
         $mime = $this->getDbMime();
         $extension = FileDataHelper::getFileExtensionFromMime($mime);
 

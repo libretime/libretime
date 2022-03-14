@@ -4,8 +4,8 @@ class ErrorController extends Zend_Controller_Action
 {
     public function init()
     {
-        //The default layout includes the Dashboard header, which may contain private information.
-        //We cannot show that.
+        // The default layout includes the Dashboard header, which may contain private information.
+        // We cannot show that.
         $this->view->layout()->disableLayout();
         $this->setupCSS();
 
@@ -46,8 +46,8 @@ class ErrorController extends Zend_Controller_Action
                     break;
             }
         } else {
-            //$exceptions = $this->_getAllParams();
-            //Logging::error($exceptions);
+            // $exceptions = $this->_getAllParams();
+            // Logging::error($exceptions);
             $this->error404Action();
 
             return;
@@ -58,7 +58,7 @@ class ErrorController extends Zend_Controller_Action
         if (($log = $this->getLog())) {
             $log->crit($this->view->message, $errors->exception);
         }*/
-        //Logging that actually works: -- Albert
+        // Logging that actually works: -- Albert
         Logging::error($this->view->message . ': ' . $errors->exception);
 
         // conditionally display exceptions

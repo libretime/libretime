@@ -191,5 +191,5 @@ $pages[] = [
 $container = new Zend_Navigation($pages);
 $container->id = 'nav';
 
-//store it in the registry:
+// store it in the registry:
 Zend_Registry::set('Zend_Navigation', $container);
