@@ -74,7 +74,7 @@ class Application_Model_Datatables
 
         if (isset($data['advSearch']) && $data['advSearch'] === 'true') {
             $librarySetting = Application_Model_Preference::getCurrentLibraryTableColumnMap();
-            //$displayColumns[] = 'owner';
+            // $displayColumns[] = 'owner';
 
             // map that maps original column position to db name
             $current2dbname = [];
@@ -173,27 +173,27 @@ class Application_Model_Datatables
             $sql = $selectorRows . ' FROM ' . $fromTable . ' ORDER BY ' . $orderby;
         }
 
-        //limit the results returned.
+        // limit the results returned.
         if ($displayLength !== -1) {
             $sql .= ' OFFSET ' . $data['iDisplayStart'] . ' LIMIT ' . $displayLength;
         }
 
         try {
-            //Logging::info($sqlTotalRows);
+            // Logging::info($sqlTotalRows);
 
             $r = $con->query($sqlTotalRows);
             $totalRows = $r->fetchColumn(0);
 
             if (isset($sqlTotalDisplayRows)) {
-                //Logging::info("sql is set");
-                //Logging::info($sqlTotalDisplayRows);
+                // Logging::info("sql is set");
+                // Logging::info($sqlTotalDisplayRows);
                 $totalDisplayRows = Application_Common_Database::prepareAndExecute($sqlTotalDisplayRows, $params, 'column');
             } else {
-                //Logging::info("sql is not set.");
+                // Logging::info("sql is not set.");
                 $totalDisplayRows = $totalRows;
             }
 
-            //TODO
+            // TODO
             if ($needToBind) {
                 $results = Application_Common_Database::prepareAndExecute($sql, $params);
             } else {

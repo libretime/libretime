@@ -15,7 +15,7 @@ class SchedulerTests extends PHPUnit_TestCase
         global $CC_CONFIG;
 
         // Clear the files table
-        //$sql = "DELETE FROM ".$CC_CONFIG["filesTable"];
+        // $sql = "DELETE FROM ".$CC_CONFIG["filesTable"];
 
         // Add a file
         $values = ['filepath' => dirname(__FILE__) . '/test10001.mp3'];
@@ -26,7 +26,7 @@ class SchedulerTests extends PHPUnit_TestCase
         $this->storedFile2 = Application_Model_StoredFile::Insert($values, false);
 
         // Clear the schedule table
-        //$sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"];
+        // $sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"];
     }
 
     public function testDateToId()

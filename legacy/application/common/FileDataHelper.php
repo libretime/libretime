@@ -44,7 +44,7 @@ class FileDataHelper
             $data['year'] = intval($data['year']);
         }
         if (array_key_exists('bpm', $data)) {
-            //Some BPM tags are silly and include the word "BPM". Let's strip that...
+            // Some BPM tags are silly and include the word "BPM". Let's strip that...
             $data['bpm'] = str_ireplace('BPM', '', $data['bpm']);
             // This will convert floats to ints too.
             $data['bpm'] = intval($data['bpm']);
@@ -143,7 +143,7 @@ class FileDataHelper
             $path_parts = pathinfo($filename);
             $file = $importDir . 'artwork/' . $path_parts['filename'];
 
-            //Save Data URI
+            // Save Data URI
             if (file_put_contents($file, $base64)) {
                 $get_img = $DbPath . 'artwork/' . $path_parts['filename'];
             } else {
@@ -204,7 +204,7 @@ class FileDataHelper
             $path_parts = pathinfo($fullpath);
             $file = $path_parts['filename'];
 
-            //Save Data URI
+            // Save Data URI
             if (file_put_contents($audioPath . '/' . $file, $base64)) {
                 $get_img = $dbPath . '/' . $file;
             } else {
@@ -261,7 +261,7 @@ class FileDataHelper
             $path_parts = pathinfo($fullpath);
             $file = $path_parts['filename'];
 
-            //Save Data URI
+            // Save Data URI
             if (file_put_contents($audioPath . '/' . $file, $base64)) {
                 $get_img = $dbPath . '/' . $file;
             } else {
@@ -429,7 +429,7 @@ class FileDataHelper
         $Image = 'data:image/jpeg;charset=utf-8;base64,' . base64_encode($file);
         $base64 = @$Image;
 
-        //Save Data URI
+        // Save Data URI
         if (file_put_contents($conv_filename, $base64)) {
         } else {
             Logging::error('Could not save Data URI');

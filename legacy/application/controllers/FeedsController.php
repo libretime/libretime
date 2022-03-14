@@ -40,7 +40,7 @@ class FeedsController extends Zend_Controller_Action
         $begin = 0;
         $end = $size - 1;
 
-        //ob_start(); //Must start a buffer here for these header() functions
+        // ob_start(); //Must start a buffer here for these header() functions
 
         if (isset($_SERVER['HTTP_RANGE'])) {
             if (preg_match('/bytes=\h*(\d+)-(\d*)[\D.*]?/i', $_SERVER['HTTP_RANGE'], $matches)) {

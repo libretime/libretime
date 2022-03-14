@@ -27,8 +27,8 @@ class StoredFileTest extends PHPUnit_TestCase
                                . '  [dc:type] = ' . $metadata['dc:type'] . "\n";
             $this->fail("Metadata has unexpected values:\n" . $str);
         }
-        //var_dump($metadata);
-        //$this->assertTrue(FALSE);
+        // var_dump($metadata);
+        // $this->assertTrue(FALSE);
     }
 
     public function testDeleteAndPutFile()
@@ -47,7 +47,7 @@ class StoredFileTest extends PHPUnit_TestCase
         $values = ['filepath' => $filePath,
             'dc:description' => 'Unit test ' . time(), ];
         $storedFile = Application_Model_StoredFile::Insert($values, false);
-        //var_dump($storedFile);
+        // var_dump($storedFile);
         $id = $storedFile->getId();
         if (!is_numeric($id)) {
             $this->fail('StoredFile not created correctly. id = ' . $id);
@@ -64,7 +64,7 @@ class StoredFileTest extends PHPUnit_TestCase
 
             return;
         }
-        //var_dump($md);
+        // var_dump($md);
 
         // Check if the length field has been set.
         $f2 = Application_Model_StoredFile::RecallByGunid($storedFile->getGunid());

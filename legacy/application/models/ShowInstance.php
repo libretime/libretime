@@ -318,7 +318,7 @@ SQL;
 
     private function checkToDeleteShow($showId)
     {
-        //UTC DateTime object
+        // UTC DateTime object
         $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
 
         $showDays = CcShowDaysQuery::create()
@@ -327,16 +327,16 @@ SQL;
 
         $showEnd = $showDays->getDbLastShow();
 
-        //there will always be more shows populated.
+        // there will always be more shows populated.
         if (is_null($showEnd)) {
             return false;
         }
 
         $lastShowStartDateTime = new DateTime("{$showEnd} {$showDays->getDbStartTime()}", new DateTimeZone($showDays->getDbTimezone()));
-        //end dates were non inclusive.
+        // end dates were non inclusive.
         $lastShowStartDateTime = self::addDeltas($lastShowStartDateTime, -1, 0);
 
-        //there's still some shows left to be populated.
+        // there's still some shows left to be populated.
         if ($lastShowStartDateTime->getTimestamp() > $showsPopUntil->getTimestamp()) {
             return false;
         }
@@ -351,7 +351,7 @@ SQL;
         if (is_null($showInstances)) {
             return true;
         }
-        //only 1 show instance left of the show, make it non repeating.
+        // only 1 show instance left of the show, make it non repeating.
         if (count($showInstances) === 1) {
             $showInstance = $showInstances[0];
 
@@ -365,7 +365,7 @@ SQL;
             $startDate->setTimeZone(new DateTimeZone($tz));
             $endDate = self::addDeltas($startDate, 1, 0);
 
-            //make a new rule for a non repeating show.
+            // make a new rule for a non repeating show.
             $showDayNew = new CcShowDays();
             $showDayNew->setDbFirstShow($startDate->format('Y-m-d'));
             $showDayNew->setDbLastShow($endDate->format('Y-m-d'));
@@ -378,10 +378,10 @@ SQL;
             $showDayNew->setDbRecord($showDaysOld[0]->getDbRecord());
             $showDayNew->save();
 
-            //delete the old rules for repeating shows
+            // delete the old rules for repeating shows
             $showDaysOld->delete();
 
-            //remove the old repeating deleted instances.
+            // remove the old repeating deleted instances.
             $showInstances = CcShowInstancesQuery::create()
                 ->filterByDbShowId($showId)
                 ->filterByDbModifiedInstance(true)
@@ -413,7 +413,7 @@ SQL;
                     return;
                 }
 
-                //delete the rebroadcasts of the removed recorded show.
+                // delete the rebroadcasts of the removed recorded show.
                 if ($recording) {
                     CcShowInstancesQuery::create()
                         ->filterByDbOriginalShow($this->_instanceId)
@@ -511,7 +511,7 @@ SQL;
         $durationSeconds = $this->getDurationSecs();
         $timeSeconds = $this->getTimeScheduledSecs();
 
-        if ($durationSeconds != 0) { //Prevent division by zero if the show duration is somehow zero.
+        if ($durationSeconds != 0) { // Prevent division by zero if the show duration is somehow zero.
             $percent = ceil(($timeSeconds / $durationSeconds) * 100);
         } else {
             $percent = 0;
@@ -531,7 +531,7 @@ SQL;
 
         if ($days > 0) {
             $totalHours = $days * 24 + $hours;
-            //$interval object does not have milliseconds so hard code to .00
+            // $interval object does not have milliseconds so hard code to .00
             $returnStr = $totalHours . ':' . $interval->format('%I:%S') . '.00';
         } else {
             $returnStr = $hours . ':' . $interval->format('%I:%S') . '.00';

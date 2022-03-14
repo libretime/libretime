@@ -471,7 +471,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
             } else {
                 $enclosure = $item->get_enclosure();
             }
-            //Logging::info($enclosure);
+            // Logging::info($enclosure);
             $itemId = $item->get_id();
             $ingested = in_array($itemId, $episodeIds) ? (empty($episodeFiles[$itemId]) ? -1 : 1) : 0;
             $file = $ingested > 0 && !empty($episodeFiles[$itemId]) ?

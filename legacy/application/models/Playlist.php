@@ -39,7 +39,7 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
         'crossfadeDuration' => 0,
     ];
 
-    //using propel's phpNames.
+    // using propel's phpNames.
     private $categories = [
         'dc:title' => 'Name',
         'dc:creator' => 'Creator',
@@ -132,8 +132,8 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
 
     public function getLastModified($format = null)
     {
-        //Logging::info($this->pl->getDbMtime($format));
-        //Logging::info($this->pl);
+        // Logging::info($this->pl->getDbMtime($format));
+        // Logging::info($this->pl);
         return $this->pl->getDbMtime($format);
     }
 
@@ -227,7 +227,7 @@ SQL;
               AND pc.TYPE = 2)) AS temp
    ORDER BY temp.position;
 SQL;
-        //Logging::info($sql);
+        // Logging::info($sql);
 
         $params = [
             ':playlist_id1' => $this->id, ':playlist_id2' => $this->id, ':playlist_id3' => $this->id, ];
@@ -239,7 +239,7 @@ SQL;
 
         $offset = 0;
         foreach ($rows as &$row) {
-            //Logging::info($row);
+            // Logging::info($row);
 
             $clipSec = Application_Common_DateHelper::playlistTimeToSeconds($row['length']);
             $row['trackSec'] = $clipSec;
@@ -252,7 +252,7 @@ SQL;
             $offset -= $trackoffset;
             $offset_cliplength = Application_Common_DateHelper::secondsToPlaylistTime($offset);
 
-            //format the length for UI.
+            // format the length for UI.
             if ($row['type'] == 2) {
                 $bl = new Application_Model_Block($row['item_id']);
                 $formatter = new LengthFormatter($bl->getLength());
@@ -264,7 +264,7 @@ SQL;
             $formatter = new LengthFormatter($offset_cliplength);
             $row['offset'] = $formatter->format();
 
-            //format the fades in format 00(.000000)
+            // format the fades in format 00(.000000)
             $fades = $this->getFadeInfo($row['position']);
             $row['fadein'] = $fades[0] ?? null;
             $row['fadeout'] = $fades[1] ?? null;
@@ -276,7 +276,7 @@ SQL;
             $row['cuein'] = str_pad(substr($row['cuein'], 0, 10), 10, '.0');
             $row['cueout'] = str_pad(substr($row['cueout'], 0, 10), 10, '.0');
 
-            //format original length
+            // format original length
             $formatter = new LengthFormatter($row['orig_length']);
             $row['orig_length'] = $formatter->format();
 
@@ -297,10 +297,10 @@ SQL;
      */
     public function normalizeFade($fade)
     {
-        //First get rid of the first six characters 00:00: which will be added back later for db update
+        // First get rid of the first six characters 00:00: which will be added back later for db update
         $fade = substr($fade, 6);
 
-        //Second add .000000 if the fade does't have milliseconds format already
+        // Second add .000000 if the fade does't have milliseconds format already
         $dbFadeStrPos = strpos($fade, '.');
         if ($dbFadeStrPos === false) {
             $fade .= '.000000';
@@ -310,7 +310,7 @@ SQL;
             }
         }
 
-        //done, just need to set back the formated values
+        // done, just need to set back the formated values
         return $fade;
     }
 
@@ -334,7 +334,7 @@ SQL;
         return Application_Common_Database::prepareAndExecute($sql, [':playlist_id' => $this->id]);
     }
 
-    //aggregate column on playlistcontents cliplength column.
+    // aggregate column on playlistcontents cliplength column.
     public function getLength()
     {
         if ($this->hasDynamicBlock()) {
@@ -467,11 +467,11 @@ SQL;
                     ->orderByDbPosition()
                     ->find($this->con);
             } else {
-                //add to the end of the playlist
+                // add to the end of the playlist
                 if ($addType == 'after') {
                     $pos = $this->getSize();
                 }
-                //add to the beginning of the playlist.
+                // add to the beginning of the playlist.
                 else {
                     $pos = 0;
 
@@ -500,7 +500,7 @@ SQL;
                 $pos = $pos + 1;
             }
 
-            //reset the positions of the remaining items.
+            // reset the positions of the remaining items.
             for ($i = 0; $i < count($contentsToUpdate); ++$i) {
                 $contentsToUpdate[$i]->setDbPosition($pos);
                 $contentsToUpdate[$i]->save($this->con);
@@ -543,7 +543,7 @@ SQL;
                 ->find($this->con);
 
             $pos = 0;
-            //moving items to beginning of the playlist.
+            // moving items to beginning of the playlist.
             if (is_null($p_afterItem)) {
                 Logging::info('moving items to beginning of playlist');
 
@@ -622,7 +622,7 @@ SQL;
                 ->orderByDbPosition()
                 ->find($this->con);
 
-            //reset the positions of the remaining items.
+            // reset the positions of the remaining items.
             for ($i = 0; $i < count($contents); ++$i) {
                 $contents[$i]->setDbPosition($i);
                 $contents[$i]->save($this->con);
@@ -650,8 +650,8 @@ SQL;
         if (!$row) {
             return null;
         }
-        //Propel returns values in form 00.000000 format which is for only seconds.
-        //We only want to display 1 decimal
+        // Propel returns values in form 00.000000 format which is for only seconds.
+        // We only want to display 1 decimal
         $fadeIn = substr($row->getDbFadein(), 0, 4);
         $fadeOut = substr($row->getDbFadeout(), 0, 4);
 
@@ -704,9 +704,9 @@ SQL;
      */
     public function changeFadeInfo($id, $fadeIn, $fadeOut, $offset = null)
     {
-        //See issue CC-2065, pad the fadeIn and fadeOut so that it is TIME compatable with the DB schema
-        //For the top level PlayList either fadeIn or fadeOut will sometimes be Null so need a gaurd against
-        //setting it to nonNull for checks down below
+        // See issue CC-2065, pad the fadeIn and fadeOut so that it is TIME compatable with the DB schema
+        // For the top level PlayList either fadeIn or fadeOut will sometimes be Null so need a gaurd against
+        // setting it to nonNull for checks down below
         $fadeIn = $fadeIn ? '00:00:' . $fadeIn : $fadeIn;
         $fadeOut = $fadeOut ? '00:00:' . $fadeOut : $fadeOut;
 
@@ -723,7 +723,7 @@ SQL;
             if (!is_null($fadeIn)) {
                 $sql = "SELECT :fadein::INTERVAL > INTERVAL '{$clipLength}'";
                 if (Application_Common_Database::prepareAndExecute($sql, [':fadein' => $fadeIn], 'column')) {
-                    //"Fade In can't be larger than overall playlength.";
+                    // "Fade In can't be larger than overall playlength.";
                     $fadeIn = $clipLength;
                 }
                 $row->setDbFadein($fadeIn);
@@ -736,7 +736,7 @@ SQL;
             if (!is_null($fadeOut)) {
                 $sql = "SELECT :fadeout::INTERVAL > INTERVAL '{$clipLength}'";
                 if (Application_Common_Database::prepareAndExecute($sql, [':fadeout' => $fadeOut], 'column')) {
-                    //Fade Out can't be larger than overall playlength.";
+                    // Fade Out can't be larger than overall playlength.";
                     $fadeOut = $clipLength;
                 }
                 $row->setDbFadeout($fadeOut);
@@ -1118,16 +1118,16 @@ SQL;
      */
     public function containsMissingFiles()
     {
-        $playlistContents = $this->pl->getCcPlaylistcontentss('type = 0'); //type=0 is only files, not other types of media
+        $playlistContents = $this->pl->getCcPlaylistcontentss('type = 0'); // type=0 is only files, not other types of media
 
-        //Slightly faster than the other Propel version below (this one does an INNER JOIN):
+        // Slightly faster than the other Propel version below (this one does an INNER JOIN):
         $missingFiles = CcFilesQuery::create()
             ->join('CcFiles.CcPlaylistcontents')
             ->where('CcPlaylistcontents.DbPlaylistId = ?', $this->pl->getDbId())
             ->where('CcFiles.DbFileExists = ?', 'false')
             ->find();
 
-        //Nicer Propel version but slightly slower because it generates a LEFT JOIN:
+        // Nicer Propel version but slightly slower because it generates a LEFT JOIN:
         /*
         $missingFiles = CcPlaylistcontentsQuery::create()
         ->filterByDbPlaylistId($this->pl->getDbId())

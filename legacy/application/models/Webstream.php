@@ -6,7 +6,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
     public function __construct($webstream)
     {
-        //TODO: hacky...
+        // TODO: hacky...
         if (is_int($webstream)) {
             $this->webstream = CcWebstreamQuery::create()->findPK($webstream);
             if (is_null($this->webstream)) {
@@ -93,7 +93,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         $isAdminOrPM = $user->isUserType([UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER]);
 
         if (!$isAdminOrPM) {
-            //Make sure the user has ownership of ALL the selected webstreams before
+            // Make sure the user has ownership of ALL the selected webstreams before
             $leftOver = self::streamsNotOwnedByUser($p_ids, $p_userId);
             if (count($leftOver) == 0) {
                 CcWebstreamQuery::create()->findPKs($p_ids)->delete();
@@ -141,8 +141,8 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         }
 
         if (!$invalid_date_interval) {
-            //Due to the way our Regular Expression is set up, we could have $minutes or $hours
-            //not set. Do simple test here
+            // Due to the way our Regular Expression is set up, we could have $minutes or $hours
+            // not set. Do simple test here
             if (!is_numeric($hours)) {
                 $hours = 0;
             }
@@ -150,7 +150,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
                 $minutes = 0;
             }
 
-            //minutes cannot be over 59. Need to convert anything > 59 minutes into hours.
+            // minutes cannot be over 59. Need to convert anything > 59 minutes into hours.
             $hours += intval($minutes / 60);
             $minutes = $minutes % 60;
 
@@ -168,9 +168,9 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         }
 
         $url = $parameters['url'];
-        //simple validator that checks to make sure that the url starts with
-        //http(s),
-        //and that the domain is at least 1 letter long
+        // simple validator that checks to make sure that the url starts with
+        // http(s),
+        // and that the domain is at least 1 letter long
         $result = preg_match('/^(http|https):\/\/.+/', $url, $matches);
 
         $mime = null;
@@ -221,7 +221,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
     }
 
     // TODO : Fix this interface
-    //This function should not be defined in the interface.
+    // This function should not be defined in the interface.
     public function setMetadata($key, $val)
     {
         throw new Exception('Not implemented.');
@@ -246,7 +246,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
         // grab URL and pass it to the browser
-        //TODO: What if invalid url?
+        // TODO: What if invalid url?
         $content = curl_exec($ch);
 
         // close cURL resource, and free up system resources
@@ -260,7 +260,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         $content = self::getUrlData($url);
 
         $dom = new DOMDocument();
-        //TODO: What if invalid xml?
+        // TODO: What if invalid xml?
         $dom->loadXML($content);
         $tracks = $dom->getElementsByTagName('track');
 
@@ -279,16 +279,16 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         $content = self::getUrlData($url);
 
         $matches = [];
-        $numStreams = 0; //Number of streams explicitly listed in the PLS.
+        $numStreams = 0; // Number of streams explicitly listed in the PLS.
 
         if (preg_match('/NumberOfEntries=([0-9]*)/', $content, $matches) !== false) {
             $numStreams = $matches[1];
         }
 
-        //Find all the stream URLs in the playlist
+        // Find all the stream URLs in the playlist
         if (preg_match_all('/File[0-9]*=(.*)/', $content, $matches) !== false) {
-            //This array contains all the streams! If we need fallback stream URLs in the future,
-            //they're already in this array...
+            // This array contains all the streams! If we need fallback stream URLs in the future,
+            // they're already in this array...
             return $matches[1][0];
         }
 
@@ -299,13 +299,13 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
     {
         $content = self::getUrlData($url);
 
-        //split into lines:
+        // split into lines:
         $delim = "\n";
         if (strpos($content, "\r\n") !== false) {
             $delim = "\r\n";
         }
         $lines = explode("{$delim}", $content);
-        //$lines = preg_split('/$\R?^/m', $content);
+        // $lines = preg_split('/$\R?^/m', $content);
 
         if (count($lines) > 0) {
             return $lines[0];
@@ -358,7 +358,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
      * */
     private static function cleanHeaders($headers)
     {
-        //find the position of HTTP/1  200 OK
+        // find the position of HTTP/1  200 OK
         //
         $position = 0;
         foreach ($headers as $i => $v) {
@@ -439,7 +439,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             $p_webstreamId,
             Application_Model_Schedule::getAllFutureScheduledWebstreams()
         )) {
-            //$webstream->setDbIsScheduled($p_status)->save();
+            // $webstream->setDbIsScheduled($p_status)->save();
             $updateIsScheduled = true;
         }
 

@@ -84,7 +84,7 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
 
             $show_end->add(new DateInterval("PT{$duration[0]}H"));
             $show_end->add(new DateInterval("PT{$duration[1]}M"));
-            $show_end->add(new DateInterval('PT1H')); //min time to wait until a rebroadcast
+            $show_end->add(new DateInterval('PT1H')); // min time to wait until a rebroadcast
 
             $rebroad_start = $day . ' ' . $formData['add_show_rebroadcast_time_absolute_' . $i];
             $rebroad_start = new DateTime($rebroad_start);

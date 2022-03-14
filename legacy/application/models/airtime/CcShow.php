@@ -94,7 +94,7 @@ class CcShow extends BaseCcShow
      */
     public function isRepeating()
     {
-        //get all cc_show_day entries that are repeating
+        // get all cc_show_day entries that are repeating
         $ccShowDays = CcShowDaysQuery::create()
             ->filterByDbShowId($this->id)
             ->filterByDbRepeatType(0, Criteria::GREATER_EQUAL)
@@ -113,7 +113,7 @@ class CcShow extends BaseCcShow
      */
     public function getEditedRepeatingInstanceIds()
     {
-        //get cc_show_days that have been edited (not repeating)
+        // get cc_show_days that have been edited (not repeating)
         $ccShowDays = CcShowDaysQuery::create()
             ->filterByDbShowId($this->id)
             ->filterByDbRepeatType(-1)
@@ -123,7 +123,7 @@ class CcShow extends BaseCcShow
 
         $utc = new DateTimeZone('UTC');
         foreach ($ccShowDays as $day) {
-            //convert to UTC
+            // convert to UTC
             $starts = new DateTime(
                 $day->getDbFirstShow() . ' ' . $day->getDbStartTime(),
                 new DateTimeZone($day->getDbTimezone())
@@ -301,7 +301,7 @@ class CcShow extends BaseCcShow
         return $instanceIds;
     }
 
-    //what is this??
+    // what is this??
     public function getOtherInstances($instanceId)
     {
         return CcShowInstancesQuery::create()

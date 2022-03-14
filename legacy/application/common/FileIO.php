@@ -24,11 +24,11 @@ class Application_Common_FileIO
             throw new LibreTimeFileNotFoundException($filePath);
         }
 
-        //Note that $size is allowed to be zero. If that's the case, it means we don't
-        //know the filesize, and we need to figure one out so modern browsers don't get
-        //confused. This should only affect files imported by legacy upstream since
-        //media monitor did not always set the proper size in the database but analyzer
-        //seems to always have a value for this.
+        // Note that $size is allowed to be zero. If that's the case, it means we don't
+        // know the filesize, and we need to figure one out so modern browsers don't get
+        // confused. This should only affect files imported by legacy upstream since
+        // media monitor did not always set the proper size in the database but analyzer
+        // seems to always have a value for this.
         if ($size === 0) {
             $fstats = fstat($fm);
             $size = $fstats['size'];
@@ -41,7 +41,7 @@ class Application_Common_FileIO
         $begin = 0;
         $end = $size - 1;
 
-        ob_start(); //Must start a buffer here for these header() functions
+        ob_start(); // Must start a buffer here for these header() functions
 
         if (isset($_SERVER['HTTP_RANGE'])) {
             if (preg_match('/bytes=\h*(\d+)-(\d*)[\D.*]?/i', $_SERVER['HTTP_RANGE'], $matches)) {
@@ -67,16 +67,16 @@ class Application_Common_FileIO
             header("Content-Range: bytes {$begin}-{$end}/{$size}");
         }
 
-        //We can have multiple levels of output buffering. Need to
-        //keep looping until all have been disabled!!!
-        //http://www.php.net/manual/en/function.ob-end-flush.php
+        // We can have multiple levels of output buffering. Need to
+        // keep looping until all have been disabled!!!
+        // http://www.php.net/manual/en/function.ob-end-flush.php
         while (ob_get_level() > 0) {
             ob_end_flush();
         }
 
-        //These two lines were removed from Airtime 2.5.x at some point after Libretime forked from Airtime.
-        //These lines allow seek to work for files.
-        //Issue #349
+        // These two lines were removed from Airtime 2.5.x at some point after Libretime forked from Airtime.
+        // These lines allow seek to work for files.
+        // Issue #349
         $cur = $begin;
         fseek($fm, $begin, 0);
 

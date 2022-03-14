@@ -14,7 +14,7 @@ class Application_Model_Systemstatus
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, $url);
         //         curl_setopt($ch, CURLOPT_USERPWD, "$monit_user:$monit_password");
-        //wait a max of 3 seconds before aborting connection attempt
+        // wait a max of 3 seconds before aborting connection attempt
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
         $result = curl_exec($ch);
 
@@ -75,12 +75,12 @@ class Application_Model_Systemstatus
                         if ($status == '2') {
                             $data = $starting;
                         } elseif ($status == 1) {
-                            //is monitored, but is it running?
+                            // is monitored, but is it running?
                             $pid = $item->getElementsByTagName('pid');
                             if ($pid->length == 0) {
                                 $data = $notRunning;
                             }
-                            //running!
+                            // running!
                         } elseif ($status == 0) {
                             $data = $notMonitored;
                         }

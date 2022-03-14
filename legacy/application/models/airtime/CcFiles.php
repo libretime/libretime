@@ -27,7 +27,7 @@ class CcFiles extends BaseCcFiles
     public const IMPORT_STATUS_PENDING = 1;
     public const IMPORT_STATUS_FAILED = 2;
 
-    //fields that are not modifiable via our RESTful API
+    // fields that are not modifiable via our RESTful API
     private static $blackList = [
         'id',
         'directory',
@@ -41,7 +41,7 @@ class CcFiles extends BaseCcFiles
         'is_playlist',
     ];
 
-    //fields we should never expose through our RESTful API
+    // fields we should never expose through our RESTful API
     private static $privateFields = [
         'file_exists',
         'silan_check',
@@ -85,8 +85,8 @@ class CcFiles extends BaseCcFiles
          * files won't get removed from the organize folder.
          */
 
-        //Extract the original filename, which we set as the temporary title for the track
-        //until it's finished being processed by the analyzer.
+        // Extract the original filename, which we set as the temporary title for the track
+        // until it's finished being processed by the analyzer.
         $originalFilename = $fileArray['file']['name'];
         $tempFilePath = $fileArray['file']['tmp_name'];
 
@@ -136,7 +136,7 @@ class CcFiles extends BaseCcFiles
         $file = new CcFiles();
 
         try {
-            //Only accept files with a file extension that we support.
+            // Only accept files with a file extension that we support.
             // Let the analyzer do the heavy lifting in terms of mime verification and playability
             $fileExtension = pathinfo($originalFilename, PATHINFO_EXTENSION);
             if (!in_array(strtolower($fileExtension), array_values(FileDataHelper::getAudioMimeTypeArray()))) {
@@ -205,7 +205,7 @@ class CcFiles extends BaseCcFiles
             if ($file && isset($fileArray['resource_id'])) {
                 $file->fromArray($fileArray, BasePeer::TYPE_FIELDNAME);
 
-                //store the original filename
+                // store the original filename
                 $file->setDbFilepath($fileArray['filename']);
 
                 $fileSizeBytes = $fileArray['filesize'];
@@ -226,9 +226,9 @@ class CcFiles extends BaseCcFiles
 
                 $file->fromArray($fileArray, BasePeer::TYPE_FIELDNAME);
 
-                //Our RESTful API takes "full_path" as a field, which we then split and translate to match
-                //our internal schema. Internally, file path is stored relative to a directory, with the directory
-                //as a foreign key to cc_music_dirs.
+                // Our RESTful API takes "full_path" as a field, which we then split and translate to match
+                // our internal schema. Internally, file path is stored relative to a directory, with the directory
+                // as a foreign key to cc_music_dirs.
                 if (isset($fileArray['full_path'])) {
                     $fileSizeBytes = filesize($fileArray['full_path']);
                     if (!isset($fileSizeBytes) || $fileSizeBytes === false) {
@@ -241,7 +241,7 @@ class CcFiles extends BaseCcFiles
                     $pos = strpos($fullPath, $storDir);
 
                     if ($pos !== false) {
-                        assert($pos == 0); //Path must start with the stor directory path
+                        assert($pos == 0); // Path must start with the stor directory path
 
                         $filePathRelativeToStor = substr($fullPath, strlen($storDir));
                         $file->setDbFilepath($filePathRelativeToStor);
@@ -293,7 +293,7 @@ class CcFiles extends BaseCcFiles
 
         // EditAudioMD form is used here for validation
         $fileForm = new Application_Form_EditAudioMD();
-        $fileForm->startForm(0); //The file ID doesn't matter here
+        $fileForm->startForm(0); // The file ID doesn't matter here
         $fileForm->populate($fileArray);
 
         /*
@@ -305,8 +305,8 @@ class CcFiles extends BaseCcFiles
         foreach ($fileArray as $tag => &$value) {
             if ($fileForm->getElement($tag)) {
                 $stringLengthValidator = $fileForm->getElement($tag)->getValidator('StringLength');
-                //$stringLengthValidator will be false if the StringLength validator doesn't exist on the current element
-                //in which case we don't have to truncate the extra characters
+                // $stringLengthValidator will be false if the StringLength validator doesn't exist on the current element
+                // in which case we don't have to truncate the extra characters
                 if ($stringLengthValidator) {
                     $value = substr($value, 0, $stringLengthValidator->getMax());
                 }
@@ -365,7 +365,7 @@ class CcFiles extends BaseCcFiles
      *
      * @return array
      */
-    //TODO: rename this function?
+    // TODO: rename this function?
     public static function sanitizeResponse($file)
     {
         $response = $file->toArray(BasePeer::TYPE_FIELDNAME);
@@ -389,7 +389,7 @@ class CcFiles extends BaseCcFiles
     {
         $info = pathinfo($this->getAbsoluteFilePath());
 
-        //filename doesn't contain the extension because PHP is awful
+        // filename doesn't contain the extension because PHP is awful
         $mime = $this->getDbMime();
         $extension = FileDataHelper::getFileExtensionFromMime($mime);
 
@@ -492,8 +492,8 @@ class CcFiles extends BaseCcFiles
 
     private static function stripInvalidUtf8Characters($string)
     {
-        //Remove invalid UTF-8 characters
-        //reject overly long 2 byte sequences, as well as characters above U+10000 and replace with ?
+        // Remove invalid UTF-8 characters
+        // reject overly long 2 byte sequences, as well as characters above U+10000 and replace with ?
         $string = preg_replace(
             '/[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]' .
             '|[\x00-\x7F][\x80-\xBF]+' .
@@ -504,11 +504,11 @@ class CcFiles extends BaseCcFiles
             $string
         );
 
-        //reject overly long 3 byte sequences and UTF-16 surrogates and replace with ?
+        // reject overly long 3 byte sequences and UTF-16 surrogates and replace with ?
         $string = preg_replace('/\xE0[\x80-\x9F][\x80-\xBF]' .
             '|\xED[\xA0-\xBF][\x80-\xBF]/S', '?', $string);
 
-        //Do a final encoding conversion to
+        // Do a final encoding conversion to
         return mb_convert_encoding($string, 'UTF-8', 'UTF-8');
     }
 

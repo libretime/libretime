@@ -31,15 +31,15 @@ class Application_Service_CalendarService
         $isAdminOrPM = $this->currentUser->isAdminOrPM();
         $isHostOfShow = $this->currentUser->isHostOfShow($this->ccShow->getDbId());
 
-        //DateTime objects in UTC
+        // DateTime objects in UTC
         $startDT = $this->ccShowInstance->getDbStarts(null);
         $endDT = $this->ccShowInstance->getDbEnds(null);
 
-        //timestamps
+        // timestamps
         $start = $startDT->getTimestamp();
         $end = $endDT->getTimestamp();
 
-        //show has ended
+        // show has ended
         if ($now > $end) {
             if ($this->ccShowInstance->isRecorded()) {
                 $ccFile = $this->ccShowInstance->getCcFiles();
@@ -68,10 +68,10 @@ class Application_Service_CalendarService
             $currentShowId = count($currentShow) == 1 ? $currentShow[0]['id'] : null;
             $showIsLinked = $this->ccShow->isLinked();
 
-            //user can add/remove content if the show has not ended
+            // user can add/remove content if the show has not ended
             if ($now < $end && ($isAdminOrPM || $isHostOfShow) && !$this->ccShowInstance->isRecorded()) {
-                //if the show is not linked OR if the show is linked AND not the current playing show
-                //the user can add/remove content
+                // if the show is not linked OR if the show is linked AND not the current playing show
+                // the user can add/remove content
                 if (!$showIsLinked || ($showIsLinked && $currentShowId != $this->ccShow->getDbId())) {
                     $menu['schedule'] = [
                         // "name"=> _("Add / Remove Content"),
@@ -81,8 +81,8 @@ class Application_Service_CalendarService
                 }
             }
 
-            //"Show Content" should be a menu item at all times except when
-            //the show is recorded
+            // "Show Content" should be a menu item at all times except when
+            // the show is recorded
             if (!$this->ccShowInstance->isRecorded()) {
                 $menu['content'] = [
                     // "name"=> _("Show Content"),
@@ -91,10 +91,10 @@ class Application_Service_CalendarService
                     'url' => $baseUrl . 'schedule/show-content-dialog', ];
             }
 
-            //user can remove all content if the show has not started
+            // user can remove all content if the show has not started
             if ($now < $start && ($isAdminOrPM || $isHostOfShow) && !$this->ccShowInstance->isRecorded()) {
-                //if the show is not linked OR if the show is linked AND not the current playing show
-                //the user can remove all content
+                // if the show is not linked OR if the show is linked AND not the current playing show
+                // the user can remove all content
                 if (!$showIsLinked || ($showIsLinked && $currentShowId != $this->ccShow->getDbId())) {
                     $menu['clear'] = [
                         // "name"=> _("Remove All Content"),
@@ -104,7 +104,7 @@ class Application_Service_CalendarService
                 }
             }
 
-            //show is currently playing and user is admin
+            // show is currently playing and user is admin
             if ($start <= $now && $now < $end && $isAdminOrPM) {
                 // Menu separator
                 $menu['sep1'] = '-----------';
@@ -171,13 +171,13 @@ class Application_Service_CalendarService
                 }
             }
 
-            //show hasn't started yet and user is admin
+            // show hasn't started yet and user is admin
             if ($now < $start && $isAdminOrPM) {
                 // Menu separator
                 $menu['sep3'] = '-----------';
 
-                //show is repeating so give user the option to delete all
-                //repeating instances or just the one
+                // show is repeating so give user the option to delete all
+                // repeating instances or just the one
                 if ($isRepeating) {
                     $menu['del'] = [
                         'name' => _('Delete'),
@@ -263,9 +263,9 @@ class Application_Service_CalendarService
             throw new Exception(_("Can't move a past show"));
         }
 
-        //the user is moving the show on the calendar from the perspective of local time.
-        //incase a show is moved across a time change border offsets should be added to the localtime
-        //stamp and then converted back to UTC to avoid show time changes!
+        // the user is moving the show on the calendar from the perspective of local time.
+        // incase a show is moved across a time change border offsets should be added to the localtime
+        // stamp and then converted back to UTC to avoid show time changes!
         $showTimezone = $this->ccShow->getFirstCcShowDay()->getDbTimezone();
         $startsDateTime->setTimezone(new DateTimeZone($showTimezone));
         $endsDateTime->setTimezone(new DateTimeZone($showTimezone));
@@ -286,11 +286,11 @@ class Application_Service_CalendarService
                     The key lesson here is that in general: duration != end - start
                     ... so be careful!
         */
-        //$newEndsDateTime = self::addDeltas($endsDateTime, $deltaDay, $deltaMin); <--- Wrong, don't do it.
+        // $newEndsDateTime = self::addDeltas($endsDateTime, $deltaDay, $deltaMin); <--- Wrong, don't do it.
         $newEndsDateTime = clone $newStartsDateTime;
         $newEndsDateTime = $newEndsDateTime->add($duration);
 
-        //convert our new starts/ends to UTC.
+        // convert our new starts/ends to UTC.
         $newStartsDateTime->setTimezone(new DateTimeZone('UTC'));
         $newEndsDateTime->setTimezone(new DateTimeZone('UTC'));
 
@@ -298,7 +298,7 @@ class Application_Service_CalendarService
             throw new Exception(_("Can't move show into past"));
         }
 
-        //check if show is overlapping
+        // check if show is overlapping
         $overlapping = Application_Model_Schedule::checkOverlappingShows(
             $newStartsDateTime,
             $newEndsDateTime,
@@ -310,9 +310,9 @@ class Application_Service_CalendarService
         }
 
         if ($this->ccShow->isRecorded()) {
-            //rebroadcasts should start at max 1 hour after a recorded show has ended.
+            // rebroadcasts should start at max 1 hour after a recorded show has ended.
             $minRebroadcastStart = self::addDeltas($newEndsDateTime, 0, 60);
-            //check if we are moving a recorded show less than 1 hour before any of its own rebroadcasts.
+            // check if we are moving a recorded show less than 1 hour before any of its own rebroadcasts.
             $rebroadcasts = CcShowInstancesQuery::create()
                 ->filterByDbOriginalShow($this->ccShow->getDbId())
                 ->filterByDbStarts($minRebroadcastStart->format(DEFAULT_TIMESTAMP_FORMAT), Criteria::LESS_THAN)
@@ -350,7 +350,7 @@ class Application_Service_CalendarService
             $con = Propel::getConnection();
             $con->beginTransaction();
 
-            //new starts,ends are in UTC
+            // new starts,ends are in UTC
             [$newStartsDateTime, $newEndsDateTime] = $this->validateShowMove(
                 $deltaDay,
                 $deltaMin
@@ -364,8 +364,8 @@ class Application_Service_CalendarService
                 ->save($con);
 
             if (!$this->ccShowInstance->getCcShow()->isRebroadcast()) {
-                //we can get the first show day because we know the show is
-                //not repeating, and therefore will only have one show day entry
+                // we can get the first show day because we know the show is
+                // not repeating, and therefore will only have one show day entry
                 $ccShowDay = $this->ccShow->getFirstCcShowDay();
                 $showTimezone = new DateTimeZone($ccShowDay->getDbTimezone());
                 $ccShowDay
@@ -390,7 +390,7 @@ class Application_Service_CalendarService
         }
     }
 
-    //TODO move the method resizeShow from Application_Model_Show here.
+    // TODO move the method resizeShow from Application_Model_Show here.
     public function resizeShow($deltaDay, $deltaMin)
     {
         try {

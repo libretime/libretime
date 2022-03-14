@@ -74,16 +74,16 @@ function createTestShow($showNumber, $showTime, $duration = '1:00')
     $data['add_show_record'] = 0;
     $data['add_show_hosts'] = '';
     $showId = Application_Model_Show::create($data);
-    //echo "show created, ID: $showId\n";
+    // echo "show created, ID: $showId\n";
 
     // populating the show with a playlist
     $instances = Application_Model_Show::getShows($showTime, $showTime);
     $instance = array_pop($instances);
     $show = new Application_Model_ShowInstance($instance['instance_id']);
-    //echo "Adding playlist to show instance ".$show->getShowInstanceId()."\n";
+    // echo "Adding playlist to show instance ".$show->getShowInstanceId()."\n";
     $show->scheduleShow([1]);
-    //echo "done\n";
-    //$show->scheduleShow(array($playlist->getId()));
+    // echo "done\n";
+    // $show->scheduleShow(array($playlist->getId()));
 }
 
 $showTime = new DateTime();

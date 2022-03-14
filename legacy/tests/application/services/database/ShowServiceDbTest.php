@@ -17,14 +17,14 @@ require_once '../application/configs/conf.php';
 class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
 {
     private $_connectionMock;
-    //private $_nowDT;
+    // private $_nowDT;
 
     public function setUp()
     {
         TestHelper::installTestDatabase();
         TestHelper::setupZendBootstrap();
 
-        //$this->_nowDT = new DateTime("now", new DateTimeZone("UTC"));
+        // $this->_nowDT = new DateTime("now", new DateTimeZone("UTC"));
 
         parent::setUp();
     }
@@ -308,11 +308,11 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
 
         $service_show = new Application_Service_ShowService(null, $data);
         $service_show->addUpdateShow($data);
-        //delete some single instances first
+        // delete some single instances first
         $service_show->deleteShow(1, true);
         $service_show->deleteShow(6, true);
         $service_show->deleteShow(8, true);
-        //delete all instances including and after where id=4
+        // delete all instances including and after where id=4
         $service_show->deleteShow(4);
 
         $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
@@ -338,10 +338,10 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $showService = new Application_Service_ShowService(null, $data);
 
         $showService->addUpdateShow($data);
-        //move the start date forward one week and the start time forward one hour
+        // move the start date forward one week and the start time forward one hour
         $editData = ShowServiceData::getEditRepeatInstanceData();
 
-        //need to create a new service so it gets constructed with the new data
+        // need to create a new service so it gets constructed with the new data
         $showService = new Application_Service_ShowService(null, $editData);
         $showService->editRepeatingShowInstance($editData);
 
@@ -398,7 +398,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
 
         $showService->addUpdateShow($data);
 
-        //simulate the user moves forward in the calendar
+        // simulate the user moves forward in the calendar
         $end = new DateTime('2044-03-12', new DateTimeZone('UTC'));
         $showService->delegateInstanceCreation(null, $end, true);
 
@@ -515,7 +515,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $showService = new Application_Service_ShowService(null, $data);
         $showService->addUpdateShow($data);
 
-        //insert some fake tracks into cc_schedule table
+        // insert some fake tracks into cc_schedule table
         $ccFiles = new CcFiles();
         $ccFiles
             ->setDbCueIn('00:00:00')
@@ -538,7 +538,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $scheduler = new Application_Model_Scheduler();
         $scheduler->scheduleAfter($scheduleItems, $mediaItems);
 
-        //delete the first repeat day
+        // delete the first repeat day
         $data['add_show_day_check'] = [6];
         $data['add_show_id'] = 1;
         $showService = new Application_Service_ShowService(null, $data, true);
@@ -572,7 +572,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $showService = new Application_Service_ShowService(null, $data);
         $showService->addUpdateShow($data);
 
-        //insert some fake tracks into cc_schedule table
+        // insert some fake tracks into cc_schedule table
         $ccFiles = new CcFiles();
         $ccFiles
             ->setDbCueIn('00:00:00')
@@ -595,7 +595,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $scheduler = new Application_Model_Scheduler();
         $scheduler->scheduleAfter($scheduleItems, $mediaItems);
 
-        //delete the first repeat day
+        // delete the first repeat day
         $data['add_show_day_check'] = [6];
         $data['add_show_id'] = 1;
         $showService = new Application_Service_ShowService(null, $data, true);
@@ -622,7 +622,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
     {
         TestHelper::loginUser();
 
-        //test change repeat type from weekly to no-repeat
+        // test change repeat type from weekly to no-repeat
         $data = ShowServiceData::getWeeklyRepeatNoEndNoRRData();
         $showService = new Application_Service_ShowService(null, $data);
         $showService->addUpdateShow($data);
@@ -652,7 +652,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
     {
         TestHelper::loginUser();
 
-        //test change repeat type weekly to bi-weekly
+        // test change repeat type weekly to bi-weekly
         $data = ShowServiceData::getWeeklyRepeatNoEndNoRRData();
         $showService = new Application_Service_ShowService(null, $data);
         $showService->addUpdateShow($data);

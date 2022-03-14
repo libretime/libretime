@@ -38,7 +38,7 @@ class Application_Model_StreamSetting
         $stmt->bindParam(':type', $type);
 
         if ($stmt->execute()) {
-            //do nothing
+            // do nothing
         } else {
             $msg = implode(',', $stmt->errorInfo());
 
@@ -50,7 +50,7 @@ class Application_Model_StreamSetting
     {
         $con = Propel::getConnection();
 
-        //Check if key already exists
+        // Check if key already exists
         $sql = 'SELECT value FROM cc_stream_setting'
         . ' WHERE keyname = :key';
 
@@ -79,8 +79,8 @@ class Application_Model_StreamSetting
             $port = $streamData[$prefix . 'port'];
             $mount = $streamData[$prefix . 'mount'];
             if ($streamData[$prefix . 'output'] == 'shoutcast') {
-                $url = "http://{$host}:{$port}/;"; //The semi-colon is important to make Shoutcast stream URLs play instead turn into a page.
-            } else { //Icecast
+                $url = "http://{$host}:{$port}/;"; // The semi-colon is important to make Shoutcast stream URLs play instead turn into a page.
+            } else { // Icecast
                 $url = "http://{$host}:{$port}/{$mount}";
             }
             $streams[$id] = [
@@ -123,19 +123,19 @@ class Application_Model_StreamSetting
             ->filterByDbKeyName("{$p_streamId}_%")
             ->find();
 
-        //This is way too much code because someone made only stupid decisions about how
-        //the layout of this table worked. The git history doesn't lie.
+        // This is way too much code because someone made only stupid decisions about how
+        // the layout of this table worked. The git history doesn't lie.
         $data = [];
         foreach ($rows as $row) {
             $key = $row->getDbKeyName();
             $value = $row->getDbValue();
             $type = $row->getDbType();
-            //Fix stupid defaults so we end up with proper typing in our JSON
+            // Fix stupid defaults so we end up with proper typing in our JSON
             if ($row->getDbType() == 'boolean') {
                 if (empty($value)) {
-                    //In Python, there is no way to tell the difference between ints and booleans,
-                    //which we need to differentiate between for when we're generating the Liquidsoap
-                    //config file. Returning booleans as a string is a workaround that lets us do that.
+                    // In Python, there is no way to tell the difference between ints and booleans,
+                    // which we need to differentiate between for when we're generating the Liquidsoap
+                    // config file. Returning booleans as a string is a workaround that lets us do that.
                     $value = 'false';
                 }
                 $data[$key] = $value;
@@ -149,7 +149,7 @@ class Application_Model_StreamSetting
             }
         }
 
-        //Add in defaults in case they don't exist in the database.
+        // Add in defaults in case they don't exist in the database.
         $keyPrefix = $p_streamId . '_';
         self::ensureKeyExists($keyPrefix . 'admin_pass', $data);
         self::ensureKeyExists($keyPrefix . 'admin_user', $data);
@@ -180,7 +180,7 @@ class Application_Model_StreamSetting
         $settings = self::getStreamData($p_streamId);
         foreach ($settings as $key => $value) {
             unset($settings[$key]);
-            $newKey = substr($key, strlen($p_streamId) + 1); //$p_streamId is assumed to be the key prefix.
+            $newKey = substr($key, strlen($p_streamId) + 1); // $p_streamId is assumed to be the key prefix.
             $settings[$newKey] = $value;
         }
 
@@ -219,7 +219,7 @@ class Application_Model_StreamSetting
     {
         $stream_setting = CcStreamSettingQuery::create()->filterByDbKeyName($key)->findOne();
         if (is_null($stream_setting)) {
-            //throw new Exception("Keyname $key does not exist!");
+            // throw new Exception("Keyname $key does not exist!");
             $stream_setting = new CcStreamSetting();
             $stream_setting->setDbKeyName($key);
             $stream_setting->setDbType('');
@@ -355,7 +355,7 @@ class Application_Model_StreamSetting
             $stmt->bindParam(':msg', $msg);
 
             if ($stmt->execute()) {
-                //do nothing
+                // do nothing
             } else {
                 $msg = implode(',', $stmt->errorInfo());
 

@@ -94,7 +94,7 @@ SQL;
      */
     public static function GetPlayOrderRange($utcTimeEnd = null, $showsToRetrieve = 5)
     {
-        //Everything in this function must be done in UTC. You will get a swift kick in the pants if you mess that up.
+        // Everything in this function must be done in UTC. You will get a swift kick in the pants if you mess that up.
 
         // when timeEnd is unspecified, return to the default behaviour - set a range of 48 hours from current time
         if (!$utcTimeEnd) {
@@ -120,13 +120,13 @@ SQL;
                 'schedulerTime' => $utcNow->format(DEFAULT_TIMESTAMP_FORMAT),
                 'source_enabled' => $source,
             ],
-            //Previous, current, next songs!
+            // Previous, current, next songs!
             'tracks' => [
                 'previous' => $results['previous'],
                 'current' => $results['current'],
                 'next' => $results['next'],
             ],
-            //Current and next shows
+            // Current and next shows
             'shows' => [
                 'previous' => $shows['previousShow'],
                 'current' => $shows['currentShow'],
@@ -154,11 +154,11 @@ SQL;
         return [
             'env' => APPLICATION_ENV,
             'schedulerTime' => $utcNow->format(DEFAULT_TIMESTAMP_FORMAT),
-            //Previous, current, next songs!
+            // Previous, current, next songs!
             'previous' => $results['previous'] != null ? $results['previous'] : (count($shows['previousShow']) > 0 ? $shows['previousShow'][0] : null),
             'current' => $results['current'] != null ? $results['current'] : ((count($shows['currentShow']) > 0 && $shows['currentShow'][0]['record'] == 1) ? $shows['currentShow'][0] : null),
             'next' => $results['next'] != null ? $results['next'] : (count($shows['nextShow']) > 0 ? $shows['nextShow'][0] : null),
-            //Current and next shows
+            // Current and next shows
             'currentShow' => $shows['currentShow'],
             'nextShow' => $shows['nextShow'],
             'source_enabled' => $source,
@@ -179,7 +179,7 @@ SQL;
      */
     public static function getPreviousCurrentNextMedia($utcNow, $currentShowInstanceId, $source)
     {
-        $timeZone = new DateTimeZone('UTC'); //This function works entirely in UTC.
+        $timeZone = new DateTimeZone('UTC'); // This function works entirely in UTC.
         assert(get_class($utcNow) === 'DateTime');
         assert($utcNow->getTimeZone() == $timeZone);
 
@@ -404,7 +404,7 @@ SQL;
         . ' LEFT JOIN cc_show_instances sit'
         . ' ON st.instance_id = sit.id'
         . ' WHERE st.starts > TIMESTAMP :timeNow'
-        . ' AND st.starts >= sit.starts' //this and the next line are necessary since we can overbook shows.
+        . ' AND st.starts >= sit.starts' // this and the next line are necessary since we can overbook shows.
         . ' AND st.starts < sit.ends'
         . ' ORDER BY st.starts'
         . ' LIMIT 1';
@@ -426,8 +426,8 @@ SQL;
         $p_start_str = $p_start->format(DEFAULT_TIMESTAMP_FORMAT);
         $p_end_str = $p_end->format(DEFAULT_TIMESTAMP_FORMAT);
 
-        //We need to search 48 hours before and after the show times so that that we
-        //capture all of the show's contents.
+        // We need to search 48 hours before and after the show times so that that we
+        // capture all of the show's contents.
         $p_track_start = $p_start->sub(new DateInterval('PT48H'))->format(DEFAULT_TIMESTAMP_FORMAT);
         $p_track_end = $p_end->add(new DateInterval('PT48H'))->format(DEFAULT_TIMESTAMP_FORMAT);
 
@@ -921,7 +921,7 @@ SQL;
         $start = self::AirtimeTimeToPypoTime($item['start']);
         $end = self::AirtimeTimeToPypoTime($item['end']);
 
-        //create an event to start stream buffering 5 seconds ahead of the streams actual time.
+        // create an event to start stream buffering 5 seconds ahead of the streams actual time.
         $buffer_start = new DateTime($item['start'], new DateTimeZone('UTC'));
         $buffer_start->sub(new DateInterval('PT5S'));
 
@@ -950,8 +950,8 @@ SQL;
         ];
         self::appendScheduleItem($data, $start, $schedule_item);
 
-        //since a stream never ends we have to insert an additional "kick stream" event. The "start"
-        //time of this event is the "end" time of the stream minus 1 second.
+        // since a stream never ends we have to insert an additional "kick stream" event. The "start"
+        // time of this event is the "end" time of the stream minus 1 second.
         $dt = new DateTime($item['end'], new DateTimeZone('UTC'));
         $dt->sub(new DateInterval('PT1S'));
 
@@ -997,7 +997,7 @@ SQL;
             $cache_ahead_hours = $CC_CONFIG['cache_ahead_hours'];
 
             if (is_numeric($cache_ahead_hours)) {
-                //make sure we are not dealing with a float
+                // make sure we are not dealing with a float
                 $cache_ahead_hours = intval($cache_ahead_hours);
             } else {
                 $cache_ahead_hours = 1;
@@ -1024,7 +1024,7 @@ SQL;
             $trackEndDateTime = new DateTime($item['end'], $utcTimeZone);
 
             if ($trackStartDateTime->getTimestamp() > $showEndDateTime->getTimestamp()) {
-                //do not send any tracks that start past their show's end time
+                // do not send any tracks that start past their show's end time
                 continue;
             }
 
@@ -1036,29 +1036,29 @@ SQL;
             }
 
             if (!is_null($item['file_id'])) {
-                //row is from "file"
+                // row is from "file"
                 $media_id = $item['file_id'];
                 $storedFile = Application_Model_StoredFile::RecallById($media_id);
                 $file = $storedFile->getPropelOrm();
-                //Even local files are downloaded through the REST API in case we need to transform
-                //their filenames (eg. in the case of a bad file extension, because Liquidsoap won't play them)
+                // Even local files are downloaded through the REST API in case we need to transform
+                // their filenames (eg. in the case of a bad file extension, because Liquidsoap won't play them)
                 $uri = Application_Common_HTTPHelper::getStationUrl() . 'rest/media/' . $media_id;
-                //$uri = $file->getAbsoluteFilePath();
+                // $uri = $file->getAbsoluteFilePath();
 
                 $filesize = $file->getFileSize();
                 self::createFileScheduleEvent($data, $item, $media_id, $uri, $filesize);
             } elseif (!is_null($item['stream_id'])) {
-                //row is type "webstream"
+                // row is type "webstream"
                 $media_id = $item['stream_id'];
                 $uri = $item['url'];
                 self::createStreamScheduleEvent($data, $item, $media_id, $uri);
             }
 
-            //throw new Exception("Unknown schedule type: ".print_r($item, true));
-                //It's currently possible (and normal) to get cc_schedule rows without
-                //a file_id or stream_id. If you're using linked shows, placeholder rows can be put
-                //in the schedule when you cancel a track or delete stuff, so we should not throw an exception
-                //here and instead just ignore it.
+            // throw new Exception("Unknown schedule type: ".print_r($item, true));
+                // It's currently possible (and normal) to get cc_schedule rows without
+                // a file_id or stream_id. If you're using linked shows, placeholder rows can be put
+                // in the schedule when you cancel a track or delete stuff, so we should not throw an exception
+                // here and instead just ignore it.
         }
     }
 
@@ -1122,8 +1122,8 @@ SQL;
 
     public static function getSchedule($p_fromDateTime = null, $p_toDateTime = null)
     {
-        //generate repeating shows if we are fetching the schedule
-        //for days beyond the shows_populated_until value in cc_pref
+        // generate repeating shows if we are fetching the schedule
+        // for days beyond the shows_populated_until value in cc_pref
         $needScheduleUntil = $p_toDateTime;
         if (is_null($needScheduleUntil)) {
             $needScheduleUntil = new DateTime('now', new DateTimeZone('UTC'));
@@ -1135,12 +1135,12 @@ SQL;
         $data = [];
         $data['media'] = [];
 
-        //Harbor kick times *MUST* be ahead of schedule events, so that pypo
-        //executes them first.
+        // Harbor kick times *MUST* be ahead of schedule events, so that pypo
+        // executes them first.
         self::createInputHarborKickTimes($data, $range_start, $range_end);
         self::createScheduledEvents($data, $range_start, $range_end);
 
-        //self::foldData($data["media"]);
+        // self::foldData($data["media"]);
         return $data;
     }
 
@@ -1167,7 +1167,7 @@ SQL;
         $instanceId = null,
         $showId = null
     ) {
-        //if the show instance does not exist or was deleted, return false
+        // if the show instance does not exist or was deleted, return false
         if (!is_null($showId)) {
             $ccShowInstance = CcShowInstancesQuery::create()
                 ->filterByDbShowId($showId)

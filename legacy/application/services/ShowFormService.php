@@ -122,7 +122,7 @@ class Application_Service_ShowFormService
     public function delegateShowFormPopulation($forms)
     {
         $this->populateFormWhat($forms['what']);
-        //local show start DT
+        // local show start DT
         $this->populateFormAutoPlaylist($forms['autoplaylist']);
         $showStart = $this->populateFormWhen($forms['when']);
         $this->populateFormRepeats($forms['repeats'], $showStart);
@@ -175,10 +175,10 @@ class Application_Service_ShowFormService
         $showStart = $ccShowDay->getLocalStartDateAndTime();
         $showEnd = $ccShowDay->getLocalEndDateAndTime();
 
-        //check if the first show is in the past
+        // check if the first show is in the past
         if ($ccShowDay->isShowStartInPast()) {
-            //for a non-repeating show, we should never allow user to change the start time.
-            //for a repeating show, we should allow because the form works as repeating template form
+            // for a non-repeating show, we should never allow user to change the start time.
+            // for a repeating show, we should allow because the form works as repeating template form
             if (!$ccShowDay->isRepeating()) {
                 $form->disableStartDateAndTime();
             } else {
@@ -193,7 +193,7 @@ class Application_Service_ShowFormService
             }
         }
 
-        //Disable starting a show 'now' when editing an existing show.
+        // Disable starting a show 'now' when editing an existing show.
         $form->getElement('add_show_start_now')->setAttrib('disable', ['now']);
 
         $form->populate(
@@ -237,23 +237,23 @@ class Application_Service_ShowFormService
     {
         $ccShowInstance = CcShowInstancesQuery::create()->findPk($this->instanceId);
 
-        //get timezone the show is created in
+        // get timezone the show is created in
         $timezone = $ccShowInstance->getCcShow()->getFirstCcShowDay()->getDbTimezone();
-        //$timezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
+        // $timezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
 
-        //DateTime object in UTC
+        // DateTime object in UTC
         $showStart = $ccShowInstance->getDbStarts(null);
         $showStart->setTimezone(new DateTimeZone($timezone));
 
         $showEnd = $ccShowInstance->getDbEnds(null);
         $showEnd->setTimezone(new DateTimeZone($timezone));
 
-        //if the show has started, do not allow editing on the start time
+        // if the show has started, do not allow editing on the start time
         if ($showStart->getTimestamp() <= time()) {
             $form->disableStartDateAndTime();
         }
 
-        //Disable starting a show 'now' when editing an existing show.
+        // Disable starting a show 'now' when editing an existing show.
         $form->getElement('add_show_start_now')->setAttrib('disable', ['now']);
 
         $form->populate(
@@ -297,18 +297,18 @@ class Application_Service_ShowFormService
 
         $service_show = new Application_Service_ShowService($this->ccShow->getDbId());
         $repeatEndDate = $service_show->getRepeatingEndDate();
-        //end dates are stored non-inclusively so we need to
-        //subtract one day
+        // end dates are stored non-inclusively so we need to
+        // subtract one day
         if (!is_null($repeatEndDate)) {
             $repeatEndDate->sub(new DateInterval('P1D'));
         }
 
-        //default monthly repeat type
+        // default monthly repeat type
         $monthlyRepeatType = 2;
         $repeatType = $ccShowDays[0]->getDbRepeatType();
         if ($repeatType == REPEAT_MONTHLY_WEEKLY) {
             $monthlyRepeatType = $repeatType;
-            //a repeat type of 2 means the show is repeating monthly
+            // a repeat type of 2 means the show is repeating monthly
             $repeatType = 2;
         } elseif ($repeatType == REPEAT_MONTHLY_MONTHLY) {
             $monthlyRepeatType = $repeatType;
@@ -445,7 +445,7 @@ class Application_Service_ShowFormService
         $formValues = [];
         $i = 1;
         foreach ($absolutRebroadcasts as $ar) {
-            //convert dates to user's local time
+            // convert dates to user's local time
             $start = new DateTime($ar->getDbStarts(), new DateTimeZone('UTC'));
             $start->setTimezone(new DateTimeZone($timezone));
             $formValues["add_show_rebroadcast_date_absolute_{$i}"] = $start->format('Y-m-d');
@@ -486,15 +486,15 @@ class Application_Service_ShowFormService
         $validateStartDate = $formData['start_date_disabled'] === 'false';
         $validateStartTime = $formData['start_time_disabled'] === 'false';
 
-        //CcShowDays object of the show currently being edited
+        // CcShowDays object of the show currently being edited
         $currentShowDay = $this->ccShow->getFirstCcShowDay();
 
-        //DateTime object
+        // DateTime object
         $dt = $currentShowDay->getLocalStartDateAndTime();
         $formData['add_show_record'] = $currentShowDay->getDbRecord();
 
-        //if the show is repeating, set the start date to the next
-        //repeating instance in the future
+        // if the show is repeating, set the start date to the next
+        // repeating instance in the future
         $originalShowStartDateTime = $this->getCurrentOrNextInstanceStartTime();
         if (!$originalShowStartDateTime) {
             $originalShowStartDateTime = $dt;

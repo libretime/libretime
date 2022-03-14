@@ -11,7 +11,7 @@ class Application_Service_SchedulerService
         'fadein' => '00:00:00',
         'fadeout' => '00:00:00',
         'sched_id' => null,
-        'type' => 0, //default type of '0' to represent files. type '1' represents a webstream
+        'type' => 0, // default type of '0' to represent files. type '1' represents a webstream
     ];
 
     private $epochNow;
@@ -23,10 +23,10 @@ class Application_Service_SchedulerService
     {
         $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
 
-        //subtracting one because sometimes when we cancel a track, we set its end time
-        //to epochNow and then send the new schedule to pypo. Sometimes the currently cancelled
-        //track can still be included in the new schedule because it may have a few ms left to play.
-        //subtracting 1 second from epochNow resolves this issue.
+        // subtracting one because sometimes when we cancel a track, we set its end time
+        // to epochNow and then send the new schedule to pypo. Sometimes the currently cancelled
+        // track can still be included in the new schedule because it may have a few ms left to play.
+        // subtracting 1 second from epochNow resolves this issue.
         $this->epochNow = microtime(true) - 1;
         $this->nowDT = DateTime::createFromFormat('U.u', $this->epochNow, new DateTimeZone('UTC'));
 
@@ -85,7 +85,7 @@ class Application_Service_SchedulerService
 
         foreach ($ccShowInstances as $instance) {
             Logging::info('Removing gaps from show instance #' . $instance->getDbId());
-            //DateTime object
+            // DateTime object
             $itemStart = $instance->getDbStarts(null);
 
             $ccScheduleItems = CcScheduleQuery::create()
@@ -95,7 +95,7 @@ class Application_Service_SchedulerService
                 ->find();
 
             foreach ($ccScheduleItems as $ccSchedule) {
-                //DateTime object
+                // DateTime object
                 $itemEnd = $this->findEndTime($itemStart, $ccSchedule->getDbClipLength());
 
                 $ccSchedule->setDbStarts($itemStart)
@@ -118,14 +118,14 @@ class Application_Service_SchedulerService
         $startEpoch = $instanceStart->format('U.u');
         $durationSeconds = Application_Common_DateHelper::playlistTimeToSeconds($clipLength);
 
-        //add two float numbers to 6 subsecond precision
-        //DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
+        // add two float numbers to 6 subsecond precision
+        // DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
         $endEpoch = bcadd($startEpoch, (string) $durationSeconds, 6);
 
         $dt = DateTime::createFromFormat('U.u', $endEpoch, new DateTimeZone('UTC'));
 
         if ($dt === false) {
-            //PHP 5.3.2 problem
+            // PHP 5.3.2 problem
             $dt = DateTime::createFromFormat('U', intval($endEpoch), new DateTimeZone('UTC'));
         }
 
@@ -136,14 +136,14 @@ class Application_Service_SchedulerService
     {
         $startEpoch = $p_startDT->format('U.u');
 
-        //add two float numbers to 6 subsecond precision
-        //DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
+        // add two float numbers to 6 subsecond precision
+        // DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
         $newEpoch = bcsub($startEpoch, (string) $p_seconds, 6);
 
         $dt = DateTime::createFromFormat('U.u', $newEpoch, new DateTimeZone('UTC'));
 
         if ($dt === false) {
-            //PHP 5.3.2 problem
+            // PHP 5.3.2 problem
             $dt = DateTime::createFromFormat('U', intval($newEpoch), new DateTimeZone('UTC'));
         }
 
@@ -210,11 +210,11 @@ class Application_Service_SchedulerService
      */
     public static function fillLinkedInstances($ccShow, $instanceIdsToFill, $instanceId = null)
     {
-        //Get the "template" schedule for the linked show (contents of the linked show) that will be
-        //copied into to all the new show instances.
+        // Get the "template" schedule for the linked show (contents of the linked show) that will be
+        // copied into to all the new show instances.
         $linkedShowSchedule = self::getLinkedShowSchedule($ccShow->getDbId(), $instanceIdsToFill, $instanceId);
 
-        //get time_filled so we can update cc_show_instances
+        // get time_filled so we can update cc_show_instances
         if (!empty($linkedShowSchedule)) {
             $timeFilled_sql = 'SELECT time_filled FROM cc_show_instances ' .
                "WHERE id = {$linkedShowSchedule[0]['instance_id']}";
@@ -224,8 +224,8 @@ class Application_Service_SchedulerService
                 Application_Common_Database::COLUMN
             );
         } else {
-            //We probably shouldn't return here because the code below will
-            //set this on each empty show instance...
+            // We probably shouldn't return here because the code below will
+            // set this on each empty show instance...
             $timeFilled = '00:00:00';
         }
 
@@ -233,23 +233,23 @@ class Application_Service_SchedulerService
 
         $con = Propel::getConnection();
 
-        //Here we begin to fill the new show instances (as specified by $instanceIdsToFill)
-        //with content from $linkedShowSchedule.
+        // Here we begin to fill the new show instances (as specified by $instanceIdsToFill)
+        // with content from $linkedShowSchedule.
         try {
             $con->beginTransaction();
 
             if (!empty($linkedShowSchedule)) {
                 foreach ($instanceIdsToFill as $id) {
-                    //Start by clearing the show instance that needs to be filling. This ensure
-                    //we're not going to get in trouble in case there's an programming error somewhere else.
+                    // Start by clearing the show instance that needs to be filling. This ensure
+                    // we're not going to get in trouble in case there's an programming error somewhere else.
                     self::clearShowInstanceContents($id);
 
                     // Now fill the show instance with the same content that $linkedShowSchedule has.
                     $instanceStart_sql = 'SELECT starts FROM cc_show_instances ' .
                         "WHERE id = {$id} " . 'ORDER BY starts';
 
-                    //What's tricky here is that when we copy the content, we have to adjust
-                    //the start and end times of each track so they're inside the new show instance's time slot.
+                    // What's tricky here is that when we copy the content, we have to adjust
+                    // the start and end times of each track so they're inside the new show instance's time slot.
                     $nextStartDT = new DateTime(
                         Application_Common_Database::prepareAndExecute(
                             $instanceStart_sql,
@@ -287,7 +287,7 @@ class Application_Service_SchedulerService
                             $endTimeDT,
                             $defaultCrossfadeDuration
                         );
-                    } //foreach show item
+                    } // foreach show item
 
                     if (!empty($values)) {
                         $insert_sql = 'INSERT INTO cc_schedule (starts, ends, ' .
@@ -301,13 +301,13 @@ class Application_Service_SchedulerService
                         );
                     }
 
-                    //update cc_schedule status column
+                    // update cc_schedule status column
                     $instance = CcShowInstancesQuery::create()->findPk($id);
                     $instance->updateScheduleStatus($con);
-                } //foreach linked instance
+                } // foreach linked instance
             }
 
-            //update time_filled and last_scheduled in cc_show_instances
+            // update time_filled and last_scheduled in cc_show_instances
             $now = gmdate(DEFAULT_TIMESTAMP_FORMAT);
             $whereClause = new Criteria();
             $whereClause->add(CcShowInstancesPeer::ID, $instanceIdsToFill, Criteria::IN);
@@ -363,7 +363,7 @@ class Application_Service_SchedulerService
                         $endTimeDT,
                         Application_Model_Preference::GetDefaultCrossfadeDuration()
                     );
-                } //foreach show item
+                } // foreach show item
 
                 $ccShowInstance
                     ->setDbTimeFilled($timeFilled)
@@ -376,7 +376,7 @@ class Application_Service_SchedulerService
     /** Clears a show instance's schedule (which is actually clearing cc_schedule during that show instance's time slot.) */
     private static function clearShowInstanceContents($instanceId)
     {
-        //Application_Common_Database::prepareAndExecute($delete_sql, array(), Application_Common_Database::EXECUTE);
+        // Application_Common_Database::prepareAndExecute($delete_sql, array(), Application_Common_Database::EXECUTE);
         $con = Propel::getConnection();
         $query = $con->prepare('DELETE FROM cc_schedule WHERE instance_id = :instance_id');
         $query->bindParam(':instance_id', $instanceId);

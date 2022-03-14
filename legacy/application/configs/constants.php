@@ -110,14 +110,14 @@ define('MDATA_KEY_TRACK_TYPE', 'track_type');
 define('UI_MDATA_VALUE_FORMAT_FILE', 'File');
 define('UI_MDATA_VALUE_FORMAT_STREAM', 'live stream');
 
-//User types
+// User types
 define('UTYPE_HOST', 'H');
 define('UTYPE_ADMIN', 'A');
 define('UTYPE_SUPERADMIN', 'S');
 define('UTYPE_GUEST', 'G');
 define('UTYPE_PROGRAM_MANAGER', 'P');
 
-//Constants for playout history template fields
+// Constants for playout history template fields
 define('TEMPLATE_DATE', 'date');
 define('TEMPLATE_TIME', 'time');
 define('TEMPLATE_DATETIME', 'datetime');
@@ -131,7 +131,7 @@ define('UI_PLAYLISTCONTROLLER_OBJ_SESSNAME', 'PLAYLISTCONTROLLER_OBJ');
 /*define('UI_PLAYLIST_SESSNAME', 'PLAYLIST');
 define('UI_BLOCK_SESSNAME', 'BLOCK');*/
 
-//TuneIn integration
+// TuneIn integration
 define('TUNEIN_API_URL', 'http://air.radiotime.com/Playing.ashx');
 
 // Celery
@@ -146,7 +146,7 @@ define('PODCAST_SERVICE_NAME', 'podcast');
 define('STATION_PODCAST_SERVICE_NAME', 'station_podcast');
 
 // Podcast Types
-//define('STATION_PODCAST', 0);
-//define('IMPORTED_PODCAST', 1);
+// define('STATION_PODCAST', 0);
+// define('IMPORTED_PODCAST', 1);
 
 define('ITUNES_XML_NAMESPACE_URL', 'http://www.itunes.com/dtds/podcast-1.0.dtd');

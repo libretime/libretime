@@ -43,7 +43,7 @@ class Application_Form_EditHistoryItem extends Application_Form_EditHistory
         $ends->addFilter('StringTrim');
         $ends->setLabel(_('End Time'));
         $ends->setDecorators(['ViewHelper']);
-        //$ends->setRequired(true);
+        // $ends->setRequired(true);
         $this->addElement($ends);
     }
 
@@ -57,7 +57,7 @@ class Application_Form_EditHistoryItem extends Application_Form_EditHistory
         $possibleInstances['0'] = _('No Show');
 
         $instance = new Zend_Form_Element_Select('his_instance_select');
-        //$instance->setLabel(_("Choose Show Instance"));
+        // $instance->setLabel(_("Choose Show Instance"));
         $instance->setMultiOptions($possibleInstances);
         $instance->setValue($default);
         $instance->setDecorators(['ViewHelper']);

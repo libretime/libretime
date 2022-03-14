@@ -79,7 +79,7 @@ class LibraryController extends Zend_Controller_Action
         $baseUrl = Application_Common_OsPath::getBaseDir();
         $id = $this->_getParam('id');
         $type = $this->_getParam('type');
-        //playlist||timeline
+        // playlist||timeline
         $screen = $this->_getParam('screen');
 
         $menu = [];
@@ -87,7 +87,7 @@ class LibraryController extends Zend_Controller_Action
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
 
-        //Open a jPlayer window and play the audio clip.
+        // Open a jPlayer window and play the audio clip.
         $menu['play'] = ['name' => _('Preview'), 'icon' => 'play', 'disabled' => false];
 
         $isAdminOrPM = $user->isUserType([UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER]);
@@ -184,11 +184,11 @@ class LibraryController extends Zend_Controller_Action
 
     public function deleteAction()
     {
-        //array containing id and type of media to delete.
+        // array containing id and type of media to delete.
         $mediaItems = $this->_getParam('media', null);
 
         $user = Application_Model_User::getCurrentUser();
-        //$isAdminOrPM = $user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        // $isAdminOrPM = $user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
         $files = [];
         $playlists = [];
@@ -221,7 +221,7 @@ class LibraryController extends Zend_Controller_Action
         } catch (BlockNoPermissionException $e) {
             $message = $noPermissionMsg;
         } catch (Exception $e) {
-            //TODO: warn user that not all blocks could be deleted.
+            // TODO: warn user that not all blocks could be deleted.
         }
 
         try {
@@ -229,7 +229,7 @@ class LibraryController extends Zend_Controller_Action
         } catch (WebstreamNoPermissionException $e) {
             $message = $noPermissionMsg;
         } catch (Exception $e) {
-            //TODO: warn user that not all streams could be deleted.
+            // TODO: warn user that not all streams could be deleted.
             Logging::info($e);
         }
 
@@ -243,7 +243,7 @@ class LibraryController extends Zend_Controller_Action
                 } catch (DeleteScheduledFileException $e) {
                     $message = _('Could not delete file because it is scheduled in the future.');
                 } catch (Exception $e) {
-                    //could throw a scheduled in future exception.
+                    // could throw a scheduled in future exception.
                     $message = _('Could not delete file(s).');
                     Logging::info($message . ': ' . $e->getMessage());
                 }
@@ -309,8 +309,8 @@ class LibraryController extends Zend_Controller_Action
         // the issue here is that the format that getCriteria provides is different from the format the saveCriteria
         // expects due to the useage of startForm. So we either need to write new code that simply copies the database
         // or figure out a way to instantiate a form inside of here and save it without modifying it.
-        //$newBlForm = new Application_Form_SmartBlockCriteria;
-        //$newBlForm->startForm($id);
+        // $newBlForm = new Application_Form_SmartBlockCriteria;
+        // $newBlForm->startForm($id);
         $criteria = CcBlockcriteriaQuery::create()->orderByDbCriteria()->findByDbBlockId($id);
         foreach ($criteria as &$c) {
             $row = new CcBlockcriteria();
@@ -366,9 +366,9 @@ class LibraryController extends Zend_Controller_Action
         if ($request->isPost()) {
             $js = $this->_getParam('data');
             $serialized = [];
-            //need to convert from serialized jQuery array.
+            // need to convert from serialized jQuery array.
             foreach ($js as $j) {
-                //on edit, if no artwork is set and audiofile has image, automatically add it
+                // on edit, if no artwork is set and audiofile has image, automatically add it
                 if ($j['name'] == 'artwork') {
                     if ($j['value'] == null || $j['value'] == '') {
                         $serialized['artwork'] = FileDataHelper::resetArtwork($file_id);
@@ -479,6 +479,6 @@ class LibraryController extends Zend_Controller_Action
     public function publishDialogAction()
     {
         $this->_helper->layout->disableLayout();
-        //This just spits out publish-dialog.phtml!
+        // This just spits out publish-dialog.phtml!
     }
 }

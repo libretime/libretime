@@ -4,7 +4,7 @@ class RestAuth
 {
     public static function verifyAuth($checkApiKey, $checkSession, $action)
     {
-        //Session takes precedence over API key for now:
+        // Session takes precedence over API key for now:
         if ($checkSession && self::verifySession()
             || $checkApiKey && self::verifyAPIKey($action)
         ) {
@@ -51,11 +51,11 @@ class RestAuth
 
     private static function verifyAPIKey($action)
     {
-        //The API key is passed in via HTTP "basic authentication":
+        // The API key is passed in via HTTP "basic authentication":
         // http://en.wikipedia.org/wiki/Basic_access_authentication
         $CC_CONFIG = Config::getConfig();
 
-        //Decode the API key that was passed to us in the HTTP request.
+        // Decode the API key that was passed to us in the HTTP request.
         $authHeader = $action->getRequest()->getHeader('Authorization');
         $encodedRequestApiKey = substr($authHeader, strlen('Basic '));
         $encodedStoredApiKey = base64_encode($CC_CONFIG['apiKey'][0] . ':');

@@ -42,7 +42,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
             $offset = $this->_getParam('offset', 0);
             $limit = $this->_getParam('limit', $totalPodcastEpisodesCount);
 
-            //Sorting parameters
+            // Sorting parameters
             $sortColumn = $this->_getParam('sort', PodcastEpisodesPeer::ID);
             $sortDir = $this->_getParam('sort_dir', Criteria::ASC);
 
@@ -90,8 +90,8 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
 
     public function postAction()
     {
-        //If we do get an episode ID on a POST, then that doesn't make any sense
-        //since POST is only for creating.
+        // If we do get an episode ID on a POST, then that doesn't make any sense
+        // since POST is only for creating.
         if ($episodeId = $this->_getParam('episode_id', false)) {
             $resp = $this->getResponse();
             $resp->setHttpResponseCode(400);

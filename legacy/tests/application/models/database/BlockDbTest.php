@@ -4,7 +4,7 @@
  * @internal
  * @coversNothing
  */
-class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase //PHPUnit_Framework_TestCase
+class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase // PHPUnit_Framework_TestCase
 {
     private $_connectionMock;
 
@@ -60,7 +60,7 @@ class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase //PHPUnit_Framework
         $bltest = new Application_Model_Block();
         $bltest->saveSmartBlockCriteria($testCriteria);
         $tracks = $bltest->getListOfFilesUnderLimit();
-        //$tracks = $bltest->getLength();
+        // $tracks = $bltest->getLength();
         $this->assertNotEmpty($tracks);
         // need to load a example criteria into the database
     }
@@ -82,7 +82,7 @@ class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase //PHPUnit_Framework
         $bltest = new Application_Model_Block();
         $bltest->saveSmartBlockCriteria($testCriteria);
         $tracks = $bltest->getListOfFilesUnderLimit();
-        //$tracks = $bltest->getLength();
+        // $tracks = $bltest->getLength();
         $this->assertNotEmpty($tracks);
         // add assertion that the length is less than 1 hour...
         // need to load a example criteria into the database

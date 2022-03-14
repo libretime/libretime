@@ -62,7 +62,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl . 'css/history_styles.css?' . $CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl . 'css/jquery.contextMenu.css?' . $CC_CONFIG['airtime_version']);
 
-        //set datatables columns for display of data.
+        // set datatables columns for display of data.
         $historyService = new Application_Service_HistoryService();
         $columns = json_encode($historyService->getDatatablesLogSheetColumns());
         $script = "localStorage.setItem( 'datatables-historyitem-aoColumns', JSON.stringify({$columns}) ); ";

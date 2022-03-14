@@ -362,8 +362,8 @@ class Application_Model_User
             }
 
             if ($record['login'] == 'sourcefabric_admin') {
-                //arrays in PHP are basically associative arrays that can be iterated in order.
-                //Deleting an earlier element does not change the keys of elements that come after it. --MK
+                // arrays in PHP are basically associative arrays that can be iterated in order.
+                // Deleting an earlier element does not change the keys of elements that come after it. --MK
                 unset($res['aaData'][$key]);
                 --$res['iTotalDisplayRecords'];
                 --$res['iTotalRecords'];
@@ -400,8 +400,8 @@ SQL;
         try {
             return new self($userinfo->id);
         } catch (Exception $e) {
-            //we get here if $userinfo->id is defined, but doesn't exist
-            //in the database anymore.
+            // we get here if $userinfo->id is defined, but doesn't exist
+            // in the database anymore.
             Zend_Auth::getInstance()->clearIdentity();
 
             return null;

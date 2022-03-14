@@ -11,7 +11,7 @@ final class Application_Model_Scheduler
         'fadein' => '00:00:00',
         'fadeout' => '00:00:00',
         'sched_id' => null,
-        'type' => 0, //default type of '0' to represent files. type '1' represents a webstream
+        'type' => 0, // default type of '0' to represent files. type '1' represents a webstream
     ];
 
     private $epochNow;
@@ -27,10 +27,10 @@ final class Application_Model_Scheduler
     {
         $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
 
-        //subtracting one because sometimes when we cancel a track, we set its end time
-        //to epochNow and then send the new schedule to pypo. Sometimes the currently cancelled
-        //track can still be included in the new schedule because it may have a few ms left to play.
-        //subtracting 1 second from epochNow resolves this issue.
+        // subtracting one because sometimes when we cancel a track, we set its end time
+        // to epochNow and then send the new schedule to pypo. Sometimes the currently cancelled
+        // track can still be included in the new schedule because it may have a few ms left to play.
+        // subtracting 1 second from epochNow resolves this issue.
         $this->epochNow = microtime(true) - 1;
         $this->nowDT = DateTime::createFromFormat('U.u', $this->epochNow, new DateTimeZone('UTC'));
 
@@ -66,7 +66,7 @@ final class Application_Model_Scheduler
             $ccShowInstance = CcShowInstancesQuery::create()
                 ->findPk($sourceInstanceId);
 
-            //does the item being moved belong to a linked show
+            // does the item being moved belong to a linked show
             $isSourceLinked = $ccShowInstance->getCcShow()->isLinked();
 
             if ($isDestinationLinked && !$isSourceLinked) {
@@ -88,7 +88,7 @@ final class Application_Model_Scheduler
     */
     private function validateRequest($items, $addRemoveAction = false, $cancelShow = false)
     {
-        //$items is where tracks get inserted (they are schedule locations)
+        // $items is where tracks get inserted (they are schedule locations)
 
         $nowEpoch = floatval($this->nowDT->format('U.u'));
 
@@ -98,13 +98,13 @@ final class Application_Model_Scheduler
         for ($i = 0; $i < count($items); ++$i) {
             $id = $items[$i]['id'];
 
-            //could be added to the beginning of a show, which sends id = 0;
+            // could be added to the beginning of a show, which sends id = 0;
             if ($id > 0) {
-                //schedule_id of where we are inserting after?
+                // schedule_id of where we are inserting after?
                 $schedInfo[$id] = $items[$i]['instance'];
             }
 
-            //format is instance_id => timestamp
+            // format is instance_id => timestamp
             $instanceInfo[$items[$i]['instance']] = $items[$i]['timestamp'];
         }
 
@@ -120,12 +120,12 @@ final class Application_Model_Scheduler
         $instanceIds = array_keys($instanceInfo);
         $showInstances = CcShowInstancesQuery::create()->findPKs($instanceIds, $this->con);
 
-        //an item has been deleted
+        // an item has been deleted
         if (count($schedIds) !== count($schedItems)) {
             throw new OutDatedScheduleException(_("The schedule you're viewing is out of date! (sched mismatch)"));
         }
 
-        //a show has been deleted
+        // a show has been deleted
         if (count($instanceIds) !== count($showInstances)) {
             throw new OutDatedScheduleException(_("The schedule you're viewing is out of date! (instance mismatch)"));
         }
@@ -175,8 +175,8 @@ final class Application_Model_Scheduler
             if ($addRemoveAction && !$cancelShow) {
                 $ccShow = $instance->getCcShow();
                 if ($ccShow->isLinked()) {
-                    //get all the linked shows instances and check if
-                    //any of them are currently playing
+                    // get all the linked shows instances and check if
+                    // any of them are currently playing
                     $ccShowInstances = $ccShow->getCcShowInstancess();
                     $timeNowUTC = gmdate(DEFAULT_TIMESTAMP_FORMAT);
                     foreach ($ccShowInstances as $ccShowInstance) {
@@ -237,7 +237,7 @@ final class Application_Model_Scheduler
             $data['cuein'] = $file->getDbCuein();
             $data['cueout'] = $file->getDbCueout();
 
-            //fade is in format SS.uuuuuu
+            // fade is in format SS.uuuuuu
             $data['fadein'] = Application_Model_Preference::GetDefaultFadeIn();
             $data['fadeout'] = Application_Model_Preference::GetDefaultFadeOut();
 
@@ -262,8 +262,8 @@ final class Application_Model_Scheduler
                     $data['cliplength'] = $plItem['length'];
                     $data['cuein'] = $plItem['cuein'];
                     $data['cueout'] = $plItem['cueout'];
-                    $data['fadein'] = '00.500000'; //$plItem['fadein'];
-                    $data['fadeout'] = '00.500000'; //$plItem['fadeout'];
+                    $data['fadein'] = '00.500000'; // $plItem['fadein'];
+                    $data['fadeout'] = '00.500000'; // $plItem['fadeout'];
                     $data['type'] = 1;
                     $files[] = $data;
                 } elseif ($plItem['type'] == 2) {
@@ -296,7 +296,7 @@ final class Application_Model_Scheduler
                                 $cueout = Application_Common_DateHelper::calculateLengthInSeconds($data['cueout']);
                                 $data['cliplength'] = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
 
-                                //fade is in format SS.uuuuuu
+                                // fade is in format SS.uuuuuu
                                 $data['fadein'] = $defaultFadeIn;
                                 $data['fadeout'] = $defaultFadeOut;
 
@@ -311,7 +311,7 @@ final class Application_Model_Scheduler
                 $showLimit -= $this->timeLengthOfFiles($files);
             }
         } elseif ($type == 'stream') {
-            //need to return
+            // need to return
             $stream = CcWebstreamQuery::create()->findPK($id, $this->con);
 
             if (is_null($stream) /* || !$file->visible() */) {
@@ -323,7 +323,7 @@ final class Application_Model_Scheduler
             $data['cueout'] = $stream->getDbLength();
             $data['type'] = 1;
 
-            //fade is in format SS.uuuuuu
+            // fade is in format SS.uuuuuu
             $data['fadein'] = Application_Model_Preference::GetDefaultFadeIn();
             $data['fadeout'] = Application_Model_Preference::GetDefaultFadeOut();
 
@@ -357,7 +357,7 @@ final class Application_Model_Scheduler
                         $cueout = Application_Common_DateHelper::calculateLengthInSeconds($data['cueout']);
                         $data['cliplength'] = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
 
-                        //fade is in format SS.uuuuuu
+                        // fade is in format SS.uuuuuu
                         $data['fadein'] = $defaultFadeIn;
                         $data['fadeout'] = $defaultFadeOut;
 
@@ -382,14 +382,14 @@ final class Application_Model_Scheduler
     {
         $startEpoch = $p_startDT->format('U.u');
 
-        //add two float numbers to 6 subsecond precision
-        //DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
+        // add two float numbers to 6 subsecond precision
+        // DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
         $newEpoch = bcsub($startEpoch, (string) $p_seconds, 6);
 
         $dt = DateTime::createFromFormat('U.u', $newEpoch, new DateTimeZone('UTC'));
 
         if ($dt === false) {
-            //PHP 5.3.2 problem
+            // PHP 5.3.2 problem
             $dt = DateTime::createFromFormat('U', intval($newEpoch), new DateTimeZone('UTC'));
         }
 
@@ -401,14 +401,14 @@ final class Application_Model_Scheduler
         $startEpoch = $p_startDT->format('U.u');
         $endEpoch = $p_endDT->format('U.u');
 
-        //add two float numbers to 6 subsecond precision
-        //DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
+        // add two float numbers to 6 subsecond precision
+        // DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
         $newEpoch = bcsub($endEpoch, (string) $startEpoch, 6);
 
         $dt = DateTime::createFromFormat('U.u', $newEpoch, new DateTimeZone('UTC'));
 
         if ($dt === false) {
-            //PHP 5.3.2 problem
+            // PHP 5.3.2 problem
             $dt = DateTime::createFromFormat('U', intval($newEpoch), new DateTimeZone('UTC'));
         }
 
@@ -427,14 +427,14 @@ final class Application_Model_Scheduler
         $startEpoch = $p_startDT->format('U.u');
         $durationSeconds = Application_Common_DateHelper::playlistTimeToSeconds($p_duration);
 
-        //add two float numbers to 6 subsecond precision
-        //DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
+        // add two float numbers to 6 subsecond precision
+        // DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
         $endEpoch = bcadd($startEpoch, (string) $durationSeconds, 6);
 
         $dt = DateTime::createFromFormat('U.u', $endEpoch, new DateTimeZone('UTC'));
 
         if ($dt === false) {
-            //PHP 5.3.2 problem
+            // PHP 5.3.2 problem
             $dt = DateTime::createFromFormat('U', intval($endEpoch), new DateTimeZone('UTC'));
         }
 
@@ -448,17 +448,17 @@ final class Application_Model_Scheduler
         $sEpoch = $DT->format('U.u');
         $nEpoch = $this->epochNow;
 
-        //check for if the show has started.
+        // check for if the show has started.
         if (bccomp($nEpoch, $sEpoch, 6) === 1) {
             $this->applyCrossfades = false;
-            //need some kind of placeholder for cc_schedule.
-            //playout_status will be -1.
+            // need some kind of placeholder for cc_schedule.
+            // playout_status will be -1.
             $nextDT = $this->nowDT;
 
             $length = bcsub($nEpoch, $sEpoch, 6);
             $cliplength = Application_Common_DateHelper::secondsToPlaylistTime($length);
 
-            //fillers are for only storing a chunk of time space that has already passed.
+            // fillers are for only storing a chunk of time space that has already passed.
             $filler = new CcSchedule();
             $filler->setDbStarts($DT)
                 ->setDbEnds($this->nowDT)
@@ -575,9 +575,9 @@ final class Application_Model_Scheduler
             ->find($this->con);
 
         foreach ($schedule as $item) {
-            //START OF TIME RECALC HACK
+            // START OF TIME RECALC HACK
 
-            //TODO: Copy the cue in, cue out, and track length from the cc_files table
+            // TODO: Copy the cue in, cue out, and track length from the cc_files table
             $file = $item->getCcFiles($this->con);
             if (!$file) {
                 continue;
@@ -589,13 +589,13 @@ final class Application_Model_Scheduler
             $cueIn = new DateTime($file->getDbCueIn());
             $clipLength = $this->findTimeDifference2($cueIn, $cueOut);
 
-            //The clip length is supposed to be cue out - cue in:
-            //FIXME: How do we correctly do time arithmetic in PHP without losing the millseconds?
+            // The clip length is supposed to be cue out - cue in:
+            // FIXME: How do we correctly do time arithmetic in PHP without losing the millseconds?
             $item->setDbClipLength($clipLength->format(DEFAULT_INTERVAL_FORMAT));
             $item->save($this->con);
-            //Ensure we don't get cached results
+            // Ensure we don't get cached results
             CcSchedulePeer::clearInstancePool();
-            //END OF TIME RECALC HACK
+            // END OF TIME RECALC HACK
 
             $itemEndDT = $this->findEndTime($itemStartDT, $item->getDbClipLength());
             $item->setDbStarts($itemStartDT)
@@ -604,7 +604,7 @@ final class Application_Model_Scheduler
             $itemStartDT = $this->findTimeDifference($itemEndDT, $this->crossfadeDuration);
         }
 
-        $instance->updateDbTimeFilled($this->con); //FIXME: TIME RECALC HACK (Albert)
+        $instance->updateDbTimeFilled($this->con); // FIXME: TIME RECALC HACK (Albert)
 
         $schedule->save($this->con);
     }
@@ -628,8 +628,8 @@ final class Application_Model_Scheduler
 
             $affectedShowInstances = [];
 
-            //dont want to recalculate times for moved items
-            //only moved items have a sched_id
+            // dont want to recalculate times for moved items
+            // only moved items have a sched_id
             $excludeIds = [];
 
             $startProfile = microtime(true);
@@ -646,7 +646,7 @@ final class Application_Model_Scheduler
             $linked = false;
 
             foreach ($scheduleItems as $schedule) {
-                //reset
+                // reset
                 $this->applyCrossfades = true;
 
                 $id = intval($schedule['id']);
@@ -719,10 +719,10 @@ final class Application_Model_Scheduler
 
                 $excludePositions = [];
                 foreach ($instances as &$instance) {
-                    //reset
+                    // reset
                     $this->applyCrossfades = true;
 
-                    //$instanceId = $instance["id"];
+                    // $instanceId = $instance["id"];
                     $instanceId = $instance->getDbId();
                     if ($id !== 0) {
                         /* We use the selected cursor's position to find the same
@@ -741,9 +741,9 @@ final class Application_Model_Scheduler
                         );
 
                         if (!$linkedItemEnds) {
-                            //With dynamic smart blocks there may be different number of items in
-                            //each show. In case the position does not exist we need to select
-                            //the end time of the last position
+                            // With dynamic smart blocks there may be different number of items in
+                            // each show. In case the position does not exist we need to select
+                            // the end time of the last position
                             $maxPos_sql = 'SELECT max(position) from cc_schedule ' .
                               "WHERE instance_id = {$instanceId}";
                             $pos = Application_Common_Database::prepareAndExecute(
@@ -752,7 +752,7 @@ final class Application_Model_Scheduler
                                 Application_Common_Database::COLUMN
                             );
 
-                            //show instance has no scheduled tracks
+                            // show instance has no scheduled tracks
                             if (empty($pos)) {
                                 $pos = 0;
                                 $nextStartDT = new DateTime($instance->getDbStarts(), new DateTimeZone('UTC'));
@@ -781,14 +781,14 @@ final class Application_Model_Scheduler
                             ++$pos;
                         }
 
-                        //$pos++;
+                        // $pos++;
                     }
-                    //selected empty row to add after
+                    // selected empty row to add after
                     else {
                         $showStartDT = new DateTime($instance->getDbStarts(), new DateTimeZone('UTC'));
                         $nextStartDT = $this->findNextStartTime($showStartDT, $instanceId);
 
-                        //first item in show so start position counter at 0
+                        // first item in show so start position counter at 0
                         $pos = 0;
 
                         /* Show is empty so we don't need to calculate crossfades
@@ -839,12 +839,12 @@ final class Application_Model_Scheduler
                     $doUpdate = false;
                     $values = [];
 
-                    //array that stores the cc_file ids so we can update the is_scheduled flag
+                    // array that stores the cc_file ids so we can update the is_scheduled flag
                     $fileIds = [];
 
                     foreach ($filesToInsert as &$file) {
-                        //item existed previously and is being moved.
-                        //need to keep same id for resources if we want REST.
+                        // item existed previously and is being moved.
+                        // need to keep same id for resources if we want REST.
                         if (isset($file['sched_id'])) {
                             $adjustFromDT = clone $nextStartDT;
                             $doUpdate = true;
@@ -975,7 +975,7 @@ final class Application_Model_Scheduler
 
                         $nextStartDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
                         ++$pos;
-                    }//all files have been inserted/moved
+                    }// all files have been inserted/moved
                     if ($doInsert) {
                         $insert_sql = 'INSERT INTO cc_schedule ' .
                             '(starts, ends, cue_in, cue_out, fade_in, fade_out, ' .
@@ -1018,7 +1018,7 @@ final class Application_Model_Scheduler
 
                         $pstart = microtime(true);
 
-                        //recalculate the start/end times after the inserted items.
+                        // recalculate the start/end times after the inserted items.
                         foreach ($followingSchedItems as $item) {
                             $endTimeDT = $this->findEndTime($nextStartDT, $item['clip_length']);
                             $endTimeDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
@@ -1044,14 +1044,14 @@ final class Application_Model_Scheduler
                     if ($moveAction) {
                         $this->calculateCrossfades($instanceId);
                     }
-                }//for each instance
-            }//for each schedule location
+                }// for each instance
+            }// for each schedule location
 
             $endProfile = microtime(true);
             Logging::debug('finished adding scheduled items.');
             Logging::debug(floatval($endProfile) - floatval($startProfile));
 
-            //update the status flag in cc_schedule.
+            // update the status flag in cc_schedule.
             $instances = CcShowInstancesQuery::create()
                 ->filterByPrimaryKeys($affectedShowInstances)
                 ->find($this->con);
@@ -1068,7 +1068,7 @@ final class Application_Model_Scheduler
 
             $startProfile = microtime(true);
 
-            //update the last scheduled timestamp.
+            // update the last scheduled timestamp.
             CcShowInstancesQuery::create()
                 ->filterByPrimaryKeys($affectedShowInstances)
                 ->update(['DbLastScheduled' => new DateTime('now', new DateTimeZone('UTC'))], $this->con);
@@ -1107,11 +1107,11 @@ final class Application_Model_Scheduler
         $this->con->beginTransaction();
 
         try {
-            //Increase the transaction isolation level to prevent two concurrent requests from potentially resulting
-            //in tracks scheduled at the same time.
+            // Increase the transaction isolation level to prevent two concurrent requests from potentially resulting
+            // in tracks scheduled at the same time.
             $this->con->exec('SET TRANSACTION ISOLATION LEVEL SERIALIZABLE');
 
-            $this->validateMediaItems($mediaItems); //Check for missing files, etc.
+            $this->validateMediaItems($mediaItems); // Check for missing files, etc.
             $this->validateRequest($scheduleItems, true);
 
             /*
@@ -1156,14 +1156,14 @@ final class Application_Model_Scheduler
      */
     public function moveItem($selectedItems, $afterItems, $adjustSched = true)
     {
-        //$startProfile = microtime(true);
+        // $startProfile = microtime(true);
 
         $this->con->beginTransaction();
-        //$this->con->useDebug(true);
+        // $this->con->useDebug(true);
 
         try {
-            //Increase the transaction isolation level to prevent two concurrent requests from potentially resulting
-            //in tracks scheduled at the same time.
+            // Increase the transaction isolation level to prevent two concurrent requests from potentially resulting
+            // in tracks scheduled at the same time.
             $this->con->exec('SET TRANSACTION ISOLATION LEVEL SERIALIZABLE');
 
             $this->validateItemMove($selectedItems, $afterItems[0]);
@@ -1171,16 +1171,16 @@ final class Application_Model_Scheduler
             $this->validateRequest($afterItems);
 
             $endProfile = microtime(true);
-            //Logging::debug("validating move request took:");
-            //Logging::debug(floatval($endProfile) - floatval($startProfile));
+            // Logging::debug("validating move request took:");
+            // Logging::debug(floatval($endProfile) - floatval($startProfile));
 
             $afterInstance = CcShowInstancesQuery::create()->findPK($afterItems[0]['instance'], $this->con);
 
-            //map show instances to cc_schedule primary keys.
+            // map show instances to cc_schedule primary keys.
             $modifiedMap = [];
             $movedData = [];
 
-            //prepare each of the selected items.
+            // prepare each of the selected items.
             for ($i = 0; $i < count($selectedItems); ++$i) {
                 $selected = CcScheduleQuery::create()->findPk($selectedItems[$i]['id'], $this->con);
                 $selectedInstance = $selected->getCcShowInstances($this->con);
@@ -1196,7 +1196,7 @@ final class Application_Model_Scheduler
 
                 $movedData[] = $data;
 
-                //figure out which items must be removed from calculated show times.
+                // figure out which items must be removed from calculated show times.
                 $showInstanceId = $selectedInstance->getDbId();
                 $schedId = $selected->getDbId();
                 if (isset($modifiedMap[$showInstanceId])) {
@@ -1206,33 +1206,33 @@ final class Application_Model_Scheduler
                 }
             }
 
-            //calculate times excluding the to be moved items.
+            // calculate times excluding the to be moved items.
             foreach ($modifiedMap as $instance => $schedIds) {
                 $startProfile = microtime(true);
 
                 $this->removeGaps($instance, $schedIds);
 
-                //$endProfile = microtime(true);
-                //Logging::debug("removing gaps from instance $instance:");
-                //Logging::debug(floatval($endProfile) - floatval($startProfile));
+                // $endProfile = microtime(true);
+                // Logging::debug("removing gaps from instance $instance:");
+                // Logging::debug(floatval($endProfile) - floatval($startProfile));
             }
 
-            //$startProfile = microtime(true);
+            // $startProfile = microtime(true);
 
             $this->insertAfter($afterItems, null, $movedData, $adjustSched, true);
 
-            //$endProfile = microtime(true);
-            //Logging::debug("inserting after removing gaps.");
-            //Logging::debug(floatval($endProfile) - floatval($startProfile));
+            // $endProfile = microtime(true);
+            // Logging::debug("inserting after removing gaps.");
+            // Logging::debug(floatval($endProfile) - floatval($startProfile));
 
             $modified = array_keys($modifiedMap);
-            //need to adjust shows we have moved items from.
+            // need to adjust shows we have moved items from.
             foreach ($modified as $instanceId) {
                 $instance = CcShowInstancesQuery::create()->findPK($instanceId, $this->con);
                 $instance->updateScheduleStatus($this->con);
             }
 
-            //$this->con->useDebug(false);
+            // $this->con->useDebug(false);
             $this->con->commit();
 
             Application_Model_RabbitMq::PushSchedule();
@@ -1267,10 +1267,10 @@ final class Application_Model_Scheduler
                 $instance = $removedItem->getCcShowInstances($this->con);
                 $effectedInstanceIds[$instance->getDbId()] = $instance->getDbId();
 
-                //check if instance is linked and if so get the schedule items
-                //for all linked instances so we can delete them too
+                // check if instance is linked and if so get the schedule items
+                // for all linked instances so we can delete them too
                 if (!$cancelShow && $instance->getCcShow()->isLinked()) {
-                    //returns all linked instances if linked
+                    // returns all linked instances if linked
                     $ccShowInstances = $this->getInstances($instance->getDbId());
 
                     $instanceIds = [];
@@ -1288,7 +1288,7 @@ final class Application_Model_Scheduler
                         ->delete($this->con);
                 }
 
-                //check to truncate the currently playing item instead of deleting it.
+                // check to truncate the currently playing item instead of deleting it.
                 if ($removedItem->isCurrentItem($this->epochNow)) {
                     $nEpoch = $this->epochNow;
                     $sEpoch = $removedItem->getDbStarts('U.u');
@@ -1300,9 +1300,9 @@ final class Application_Model_Scheduler
                     $cueOutSec = bcadd($cueinSec, $length, 6);
                     $cueout = Application_Common_DateHelper::secondsToPlaylistTime($cueOutSec);
 
-                    //Set DbEnds - 1 second because otherwise there can be a timing issue
-                    //when sending the new schedule to Pypo where Pypo thinks the track is still
-                    //playing.
+                    // Set DbEnds - 1 second because otherwise there can be a timing issue
+                    // when sending the new schedule to Pypo where Pypo thinks the track is still
+                    // playing.
                     $removedItem->setDbCueOut($cueout)
                         ->setDbClipLength($cliplength)
                         ->setDbEnds($this->nowDT)
@@ -1320,7 +1320,7 @@ final class Application_Model_Scheduler
                 }
             }
 
-            //update the status flag in cc_schedule.
+            // update the status flag in cc_schedule.
             $instances = CcShowInstancesQuery::create()
                 ->filterByPrimaryKeys($effectedInstanceIds)
                 ->find($this->con);
@@ -1330,7 +1330,7 @@ final class Application_Model_Scheduler
                 $instance->correctSchedulePositions();
             }
 
-            //update the last scheduled timestamp.
+            // update the last scheduled timestamp.
             CcShowInstancesQuery::create()
                 ->filterByPrimaryKeys($showInstances)
                 ->update(['DbLastScheduled' => new DateTime('now', new DateTimeZone('UTC'))], $this->con);

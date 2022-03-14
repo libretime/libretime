@@ -278,7 +278,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         $storedCrit = $bl->getCriteriaGrouped();
         Logging::info($storedCrit);
 
-        //need to convert criteria to be displayed in the user's timezone if there's some timestamp type.
+        // need to convert criteria to be displayed in the user's timezone if there's some timestamp type.
         self::convertTimestamps($storedCrit['crit']);
 
         /* $modRoadMap stores the number of same criteria
@@ -297,8 +297,8 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         if (isset($storedCrit['crit'])) {
             $criteriaKeys = array_keys($storedCrit['crit']);
         }
-        //the way the everything is currently built it setups 25 smartblock criteria forms and then disables them
-        //but this creates 29 elements
+        // the way the everything is currently built it setups 25 smartblock criteria forms and then disables them
+        // but this creates 29 elements
         $numElements = count($this->getCriteriaOptions());
         // loop through once for each potential criteria option ie album, composer, track
         // criteria from different groups are separated already by the getCriteriaGrouped call
@@ -309,7 +309,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             // if there is a criteria found then count the number of rows for this specific criteria ie > 1 track title
             // need to refactor this to maintain separation based upon criteria grouping
             if (isset($criteriaKeys[$i])) {
-                //Logging::info($criteriaKeys[$i]);
+                // Logging::info($criteriaKeys[$i]);
                 Logging::info($storedCrit['crit'][$criteriaKeys[$i]]);
                 $critCount = count($storedCrit['crit'][$criteriaKeys[$i]]);
             } else {
@@ -387,7 +387,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                         $criteriaValue = new Zend_Form_Element_Select('sp_criteria_value_' . $i . '_' . $j);
                         $criteriaValue->setAttrib('class', 'input_select sp_input_select')->setDecorators(['viewHelper']);
 
-                        if (isset($criteriaKeys[$i])) {  //do if $relativeTT above
+                        if (isset($criteriaKeys[$i])) {  // do if $relativeTT above
                             $criteriaValue->setAttrib('enabled', 'enabled');
                         } else {
                             $criteriaValue->setAttrib('disabled', 'disabled');
@@ -505,8 +505,8 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                     $criteriaExtraDatetimeSelect->setAttrib('disabled', 'disabled');
                 }
                 $this->addElement($criteriaExtraDatetimeSelect);
-            }//for
-        }//for
+            }// for
+        }// for
 
         $repeatTracks = new Zend_Form_Element_Checkbox('sp_repeat_tracks');
         $repeatTracks->setDecorators(['viewHelper'])
@@ -845,7 +845,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                                     $element->addError(_('Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value'));
                                     $isValid = false;
                                 // TODO validate this on numeric input with whatever parsing also do for extra
-                                    //if the modifier is before ago or between we skip validation until we confirm format
+                                    // if the modifier is before ago or between we skip validation until we confirm format
                                 } elseif (isset($d['sp_criteria_datetime_select']) && $d['sp_criteria_datetime_select'] == '0') {
                                     $element->addError(_('You must select a time unit for a relative datetime.'));
                                     $isValid = false;
@@ -912,9 +912,9 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                         $element->addError(_('Value cannot be empty'));
                         $isValid = false;
                     }
-                }//end foreach
-            }//for loop
-        }//if
+                }// end foreach
+            }// for loop
+        }// if
 
         return $isValid;
     }

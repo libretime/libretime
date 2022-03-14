@@ -17,7 +17,7 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
             ->setRequired(false);
         $this->addElement($cb_custom_auth);
 
-        //custom username
+        // custom username
         $custom_username = new Zend_Form_Element_Text('custom_username');
         $custom_username->setAttrib('class', 'input_text')
             ->setAttrib('autocomplete', 'off')
@@ -28,7 +28,7 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
                 new ConditionalNotEmpty(['cb_custom_auth' => '1']), ]);
         $this->addElement($custom_username);
 
-        //custom password
+        // custom password
         $custom_password = new Zend_Form_Element_Password('custom_password');
         $custom_password->setAttrib('class', 'input_text')
             ->setAttrib('autocomplete', 'off')

@@ -24,7 +24,7 @@ class WebstreamController extends Zend_Controller_Action
 
         $webstream = new CcWebstream();
 
-        //we're not saving this primary key in the DB so it's OK to be -1
+        // we're not saving this primary key in the DB so it's OK to be -1
         $webstream->setDbId(-1);
         $webstream->setDbName(_('Untitled Webstream'));
         $webstream->setDbDescription('');
@@ -35,7 +35,7 @@ class WebstreamController extends Zend_Controller_Action
         $webstream->setDbUtime(new DateTime('now', new DateTimeZone('UTC')));
         $webstream->setDbMtime(new DateTime('now', new DateTimeZone('UTC')));
 
-        //clear the session in case an old playlist was open: CC-4196
+        // clear the session in case an old playlist was open: CC-4196
         Application_Model_Library::changePlaylist(null, null);
 
         $this->view->obj = new Application_Model_Webstream($webstream);
@@ -116,7 +116,7 @@ class WebstreamController extends Zend_Controller_Action
                 /*we are updating a playlist. Ensure that if the user is a
                     host/dj, that he has the correct permission.*/
                 $user = Application_Model_User::getCurrentUser();
-                //only allow when webstream belongs to the DJ
+                // only allow when webstream belongs to the DJ
                 return $webstream->getDbCreatorId() == $user->getId();
             }
             /*we are creating a new stream. Don't need to check whether the

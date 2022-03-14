@@ -26,10 +26,10 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
         $controller = strtolower($request->getControllerName());
         $action = strtolower($request->getActionName());
 
-        //List of controllers where we don't need a session, and we don't need
-        //all the standard HTML / JS boilerplate.
+        // List of controllers where we don't need a session, and we don't need
+        // all the standard HTML / JS boilerplate.
         if (!in_array($controller, [
-            'index', //Radio Page
+            'index', // Radio Page
             'api',
             'auth',
             'error',
@@ -38,11 +38,11 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             'feeds',
         ])
         ) {
-            //Start the session
+            // Start the session
             Zend_Session::start();
             Application_Model_Auth::pinSessionToClient(Zend_Auth::getInstance());
 
-            //localization configuration
+            // localization configuration
             Application_Model_Locale::configureLocalization();
 
             $this->_initGlobals();
@@ -122,11 +122,11 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             $csrf_namespace->setExpirationSeconds(168 * 60 * 60);
         }
 
-        //Here we are closing the session for writing because otherwise no requests
-        //in this session will be handled in parallel. This gives a major boost to the perceived performance
-        //of the application (page load times are more consistent, no lock contention).
+        // Here we are closing the session for writing because otherwise no requests
+        // in this session will be handled in parallel. This gives a major boost to the perceived performance
+        // of the application (page load times are more consistent, no lock contention).
         session_write_close();
-        //Zend_Session::writeClose(true);
+        // Zend_Session::writeClose(true);
     }
 
     /**
@@ -140,7 +140,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
         $view->headScript()->appendScript("var PRODUCT_NAME = '" . PRODUCT_NAME . "';");
         $view->headScript()->appendScript("var USER_MANUAL_URL = '" . USER_MANUAL_URL . "';");
         $view->headScript()->appendScript("var COMPANY_NAME = '" . COMPANY_NAME . "';");
-        //Each page refresh or tab open has uniqID, not to be used for security
+        // Each page refresh or tab open has uniqID, not to be used for security
         $view->headScript()->appendScript("var UNIQID = '" . uniqid() . "';");
 
         $track_type_options = [];
@@ -204,8 +204,8 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             ->appendScript('$.i18n.setDictionary(general_dict)')
             ->appendScript("var baseUrl='{$baseUrl}'");
 
-        //These timezones are needed to adjust javascript Date objects on the client to make sense to the user's set timezone
-        //or the server's set timezone.
+        // These timezones are needed to adjust javascript Date objects on the client to make sense to the user's set timezone
+        // or the server's set timezone.
         $serverTimeZone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
         $now = new DateTime('now', $serverTimeZone);
         $offset = $now->format('Z') * -1;
@@ -218,7 +218,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             $view->headScript()->appendScript("var userTimezoneOffset = {$offset}; //in seconds");
         }
 
-        //scripts for now playing bar
+        // scripts for now playing bar
         $view->headScript()->appendFile($baseUrl . 'js/airtime/airtime_bootstrap.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'js/airtime/dashboard/helperfunctions.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'js/airtime/dashboard/dashboard.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')

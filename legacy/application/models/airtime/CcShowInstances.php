@@ -108,19 +108,19 @@ class CcShowInstances extends BaseCcShowInstances
         return $dt->format($format);
     }
 
-    //post save hook to update the cc_schedule status column for the tracks in the show.
+    // post save hook to update the cc_schedule status column for the tracks in the show.
     public function updateScheduleStatus(PropelPDO $con)
     {
         $this->updateDbTimeFilled($con);
 
-        //scheduled track is in the show
+        // scheduled track is in the show
         CcScheduleQuery::create()
             ->filterByDbInstanceId($this->id)
             ->filterByDbPlayoutStatus(0, Criteria::GREATER_EQUAL)
             ->filterByDbEnds($this->ends, Criteria::LESS_EQUAL)
             ->update(['DbPlayoutStatus' => 1], $con);
 
-        //scheduled track is a boundary track
+        // scheduled track is a boundary track
         CcScheduleQuery::create()
             ->filterByDbInstanceId($this->id)
             ->filterByDbPlayoutStatus(0, Criteria::GREATER_EQUAL)
@@ -128,7 +128,7 @@ class CcShowInstances extends BaseCcShowInstances
             ->filterByDbEnds($this->ends, Criteria::GREATER_THAN)
             ->update(['DbPlayoutStatus' => 2], $con);
 
-        //scheduled track is overbooked.
+        // scheduled track is overbooked.
         CcScheduleQuery::create()
             ->filterByDbInstanceId($this->id)
             ->filterByDbPlayoutStatus(0, Criteria::GREATER_EQUAL)

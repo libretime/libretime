@@ -21,13 +21,13 @@ class LoginController extends Zend_Controller_Action
         $response = $this->getResponse();
         $stationLocale = Application_Model_Preference::GetDefaultLocale();
 
-        //Enable AJAX requests from www.airtime.pro for the sign-in process.
+        // Enable AJAX requests from www.airtime.pro for the sign-in process.
         CORSHelper::enableCrossOriginRequests($request, $response);
 
         Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', $stationLocale));
 
         if (Zend_Session::isStarted()) {
-            //Open the session for writing, because we close it for writing by default in Bootstrap.php as an optimization.
+            // Open the session for writing, because we close it for writing by default in Bootstrap.php as an optimization.
             SessionHelper::reopenSessionForWriting();
 
             $auth = Zend_Auth::getInstance();
@@ -38,7 +38,7 @@ class LoginController extends Zend_Controller_Action
             }
         }
 
-        //uses separate layout without a navigation.
+        // uses separate layout without a navigation.
         $this->_helper->layout->setLayout('login');
 
         $this->view->error = false;
@@ -50,35 +50,35 @@ class LoginController extends Zend_Controller_Action
         $message = _('Please enter your username and password.');
 
         if ($request->isPost()) {
-            //Open the session for writing, because we close it for writing by default in Bootstrap.php as an optimization.
-            //session_start();
+            // Open the session for writing, because we close it for writing by default in Bootstrap.php as an optimization.
+            // session_start();
 
             if ($form->isValid($request->getPost())) {
-                //get the username and password from the form
+                // get the username and password from the form
                 $username = $form->getValue('username');
                 $password = $form->getValue('password');
                 $locale = $form->getValue('locale');
 
                 $authAdapter = Application_Model_Auth::getAuthAdapter();
 
-                //pass to the adapter the submitted username and password
+                // pass to the adapter the submitted username and password
                 $authAdapter->setIdentity($username)
                     ->setCredential($password);
 
                 $result = $auth->authenticate($authAdapter);
                 if ($result->isValid()) {
                     Zend_Session::regenerateId();
-                    //all info about this user from the login table omit only the password
+                    // all info about this user from the login table omit only the password
                     $userInfo = $authAdapter->getResultRowObject(null, 'password');
 
-                    //the default storage is a session with namespace Zend_Auth
+                    // the default storage is a session with namespace Zend_Auth
                     $authStorage = $auth->getStorage();
                     $authStorage->write($userInfo);
 
                     Application_Model_LoginAttempts::resetAttempts($_SERVER['REMOTE_ADDR']);
                     Application_Model_Subjects::resetLoginAttempts($username);
 
-                    //set the user locale in case user changed it in when logging in
+                    // set the user locale in case user changed it in when logging in
                     Application_Model_Preference::SetUserLocale($locale);
 
                     $this->_redirect('showbuilder');
@@ -98,7 +98,7 @@ class LoginController extends Zend_Controller_Action
 
     public function logoutAction()
     {
-        //Open the session for writing, because we close it for writing by default in Bootstrap.php as an optimization.
+        // Open the session for writing, because we close it for writing by default in Bootstrap.php as an optimization.
         SessionHelper::reopenSessionForWriting();
 
         $auth = Zend_Auth::getInstance();
@@ -122,7 +122,7 @@ class LoginController extends Zend_Controller_Action
 
         Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', $stationLocale));
 
-        //uses separate layout without a navigation.
+        // uses separate layout without a navigation.
         $this->_helper->layout->setLayout('login');
 
         $form = new Application_Form_PasswordRestore();
@@ -156,7 +156,7 @@ class LoginController extends Zend_Controller_Action
                 } else {
                     $form->email->addError($this->view->translate(_('That username or email address could not be found.')));
                 }
-            } else { //Form is not valid
+            } else { // Form is not valid
                 $form->email->addError($this->view->translate(_('There was a problem with the username or email address you entered.')));
             }
         }
@@ -171,13 +171,13 @@ class LoginController extends Zend_Controller_Action
 
         Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', $stationLocale));
 
-        //uses separate layout without a navigation.
+        // uses separate layout without a navigation.
         $this->_helper->layout->setLayout('login');
     }
 
     public function passwordChangeAction()
     {
-        //uses separate layout without a navigation.
+        // uses separate layout without a navigation.
         $this->_helper->layout->setLayout('login');
 
         $request = $this->getRequest();
@@ -192,7 +192,7 @@ class LoginController extends Zend_Controller_Action
 
         Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', $stationLocale));
 
-        //check validity of token
+        // check validity of token
         if (!$auth->checkToken($user_id, $token, 'password.restore')) {
             Logging::debug('token not valid');
             $this->_helper->redirector('index', 'login');
@@ -213,10 +213,10 @@ class LoginController extends Zend_Controller_Action
 
             $zend_auth->authenticate($authAdapter);
 
-            //all info about this user from the login table omit only the password
+            // all info about this user from the login table omit only the password
             $userInfo = $authAdapter->getResultRowObject(null, 'password');
 
-            //the default storage is a session with namespace Zend_Auth
+            // the default storage is a session with namespace Zend_Auth
             $authStorage = $zend_auth->getStorage();
             $authStorage->write($userInfo);
 

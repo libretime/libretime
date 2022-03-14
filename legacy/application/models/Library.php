@@ -34,7 +34,7 @@ class Application_Model_Library
     public static function getPlaylistNames($alphasort = false)
     {
         $playlistNames = [null => _('None')];
-        //if we want to return the playlists sorted alphabetically by name
+        // if we want to return the playlists sorted alphabetically by name
         if ($alphasort) {
             $playlists = CcPlaylistQuery::create()
                 ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)

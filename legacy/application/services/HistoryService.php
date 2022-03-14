@@ -19,7 +19,7 @@ class Application_Service_HistoryService
         return [self::TEMPLATE_TYPE_ITEM, self::TEMPLATE_TYPE_FILE];
     }
 
-    //opts is from datatables.
+    // opts is from datatables.
     public function getPlayedItemData($startDT, $endDT, $opts, $instanceId = null)
     {
         $mainSqlQuery = '';
@@ -52,8 +52,8 @@ class Application_Service_HistoryService
             }
         }
 
-        //-----------------------------------------------------------------------
-        //Using the instance_id to filter the data.
+        // -----------------------------------------------------------------------
+        // Using the instance_id to filter the data.
 
         $historyRange = '(' .
         'SELECT history.starts, history.ends, history.id AS history_id, history.instance_id' .
@@ -88,14 +88,14 @@ class Application_Service_HistoryService
         $numFileMdFields = count($fields_filemd);
 
         if ($numFileMdFields > 0) {
-            //these 3 selects are only needed if $fields_filemd has some fields.
+            // these 3 selects are only needed if $fields_filemd has some fields.
             $fileSelect = ['history_file.history_id'];
             $nonNullFileSelect = ['file.id as file_id'];
             $nullFileSelect = ['null_file.history_id'];
 
             $fileMdFilters = [];
 
-            //populate the different dynamic selects with file info.
+            // populate the different dynamic selects with file info.
             for ($i = 0; $i < $numFileMdFields; ++$i) {
                 $field = $fields_filemd[$i];
                 $key = $field['name'];
@@ -110,7 +110,7 @@ class Application_Service_HistoryService
                 $paramMap["meta_{$key}"] = $key;
             }
 
-            //the files associated with scheduled playback in Airtime.
+            // the files associated with scheduled playback in Airtime.
             $historyFile = '(' .
             'SELECT history.id AS history_id, history.file_id' .
             ' FROM cc_playout_history AS history' .
@@ -124,15 +124,15 @@ class Application_Service_HistoryService
 
             $fileMd = str_replace('%NON_NULL_FILE_SELECT%', implode(', ', $nonNullFileSelect), $fileMd);
 
-            //null files are from manually added data (filling in webstream info etc)
+            // null files are from manually added data (filling in webstream info etc)
             $nullFile = '(' .
             'SELECT history.id AS history_id' .
             ' FROM cc_playout_history AS history' .
             ' WHERE history.file_id IS NULL' .
             ') AS null_file';
 
-            //----------------------------------
-            //building the file inner query
+            // ----------------------------------
+            // building the file inner query
 
             $fileSqlQuery =
             'SELECT ' . implode(', ', $fileSelect) .
@@ -172,8 +172,8 @@ class Application_Service_HistoryService
             " LEFT JOIN {$filter} USING(history_id)";
         }
 
-        //----------------------------------------------------------------------
-        //need to count the total rows to tell Datatables.
+        // ----------------------------------------------------------------------
+        // need to count the total rows to tell Datatables.
         $stmt = $this->con->prepare($mainSqlQuery);
         foreach ($paramMap as $param => $v) {
             $stmt->bindValue($param, $v);
@@ -187,8 +187,8 @@ class Application_Service_HistoryService
             throw new Exception("Error: {$msg}");
         }
 
-        //------------------------------------------------------------------------
-        //Using Datatables parameters to sort the data.
+        // ------------------------------------------------------------------------
+        // Using Datatables parameters to sort the data.
 
         if (empty($opts['iSortingCols'])) {
             $orderBys = [];
@@ -209,7 +209,7 @@ class Application_Service_HistoryService
                     $orderBys[] = "{$key}_filter.{$key} {$sortDir}";
                 }
 
-                //throw new Exception("Error: $key is not part of the template.");
+                // throw new Exception("Error: $key is not part of the template.");
             }
         }
 
@@ -220,11 +220,11 @@ class Application_Service_HistoryService
             " ORDER BY {$orders}";
         }
 
-        //---------------------------------------------------------------
-        //using Datatables parameters to add limits/offsets
+        // ---------------------------------------------------------------
+        // using Datatables parameters to add limits/offsets
 
         $displayLength = empty($opts['iDisplayLength']) ? -1 : intval($opts['iDisplayLength']);
-        //limit the results returned.
+        // limit the results returned.
         if ($displayLength !== -1) {
             $mainSqlQuery .=
             ' OFFSET :offset LIMIT :limit';
@@ -247,8 +247,8 @@ class Application_Service_HistoryService
             throw new Exception("Error: {$msg}");
         }
 
-        //-----------------------------------------------------------------------
-        //processing results.
+        // -----------------------------------------------------------------------
+        // processing results.
 
         $timezoneUTC = new DateTimeZone('UTC');
         $timezoneLocal = new DateTimeZone($this->timezone);
@@ -265,12 +265,12 @@ class Application_Service_HistoryService
                 $result[$field['label']] = (bool) $result[$field['name']];
             }
 
-            //need to display the results in the station's timezone.
+            // need to display the results in the station's timezone.
             $dateTime = new DateTime($result['starts'], $timezoneUTC);
             $dateTime->setTimezone($timezoneLocal);
             $result['starts'] = $dateTime->format(DEFAULT_TIMESTAMP_FORMAT);
 
-            //if ends is null we don't want it to default to "now"
+            // if ends is null we don't want it to default to "now"
             if (isset($result['ends'])) {
                 $dateTime = new DateTime($result['ends'], $timezoneUTC);
                 $dateTime->setTimezone($timezoneLocal);
@@ -282,17 +282,17 @@ class Application_Service_HistoryService
                 $result[MDATA_KEY_DURATION] = $formatter->format();
             }
 
-            //need to add a checkbox..
+            // need to add a checkbox..
             $result['checkbox'] = '';
 
-            //$unicodeChar = '\u2612';
-            //$result["new"] = json_decode('"'.$unicodeChar.'"');
-            //$result["new"] = "U+2612";
+            // $unicodeChar = '\u2612';
+            // $result["new"] = json_decode('"'.$unicodeChar.'"');
+            // $result["new"] = "U+2612";
         }
 
         return [
             'sEcho' => empty($opts['sEcho']) ? null : intval($opts['sEcho']),
-            //"iTotalDisplayRecords" => intval($totalDisplayRows),
+            // "iTotalDisplayRecords" => intval($totalDisplayRows),
             'iTotalDisplayRecords' => intval($totalRows),
             'iTotalRecords' => intval($totalRows),
             'history' => $rows,
@@ -343,8 +343,8 @@ class Application_Service_HistoryService
         'SELECT ' . implode(', ', $select) .
         " FROM {$fileSummaryTable}";
 
-        //-------------------------------------------------------------------------
-        //need to count the total rows to tell Datatables.
+        // -------------------------------------------------------------------------
+        // need to count the total rows to tell Datatables.
         $stmt = $this->con->prepare($mainSqlQuery);
         foreach ($paramMap as $param => $v) {
             $stmt->bindValue($param, $v);
@@ -358,8 +358,8 @@ class Application_Service_HistoryService
             throw new Exception("Error: {$msg}");
         }
 
-        //------------------------------------------------------------------------
-        //Using Datatables parameters to sort the data.
+        // ------------------------------------------------------------------------
+        // Using Datatables parameters to sort the data.
 
         $numOrderColumns = $opts['iSortingCols'];
         $orderBys = [];
@@ -379,8 +379,8 @@ class Application_Service_HistoryService
             " ORDER BY {$orders}";
         }
 
-        //------------------------------------------------------------
-        //using datatables params to add limits/offsets
+        // ------------------------------------------------------------
+        // using datatables params to add limits/offsets
         $displayLength = intval($opts['iDisplayLength']);
         if ($displayLength !== -1) {
             $mainSqlQuery .=
@@ -404,8 +404,8 @@ class Application_Service_HistoryService
             throw new Exception("Error: {$msg}");
         }
 
-        //-----------------------------------------------------------------
-        //processing the results
+        // -----------------------------------------------------------------
+        // processing the results
         foreach ($rows as &$row) {
             if (isset($row[MDATA_KEY_DURATION])) {
                 $formatter = new LengthFormatter($row[MDATA_KEY_DURATION]);
@@ -415,7 +415,7 @@ class Application_Service_HistoryService
 
         return [
             'sEcho' => intval($opts['sEcho']),
-            //"iTotalDisplayRecords" => intval($totalDisplayRows),
+            // "iTotalDisplayRecords" => intval($totalDisplayRows),
             'iTotalDisplayRecords' => intval($totalRows),
             'iTotalRecords' => intval($totalRows),
             'history' => $rows,
@@ -436,7 +436,7 @@ class Application_Service_HistoryService
 
         Logging::info($shows);
 
-        //need to filter the list to only their shows
+        // need to filter the list to only their shows
         if ((!empty($user)) && ($user->isHost())) {
             $showIds = [];
 
@@ -475,7 +475,7 @@ class Application_Service_HistoryService
         $timezoneLocal = new DateTimeZone($this->timezone);
 
         foreach ($filteredShows as &$result) {
-            //need to display the results in the station's timezone.
+            // need to display the results in the station's timezone.
             $dateTime = new DateTime($result['starts'], $timezoneUTC);
             $dateTime->setTimezone($timezoneLocal);
             $result['starts'] = $dateTime->format(DEFAULT_TIMESTAMP_FORMAT);
@@ -495,7 +495,7 @@ class Application_Service_HistoryService
         try {
             $item = CcScheduleQuery::create()->findPK($schedId, $this->con);
 
-            //TODO figure out how to combine these all into 1 query.
+            // TODO figure out how to combine these all into 1 query.
             $showInstance = $item->getCcShowInstances($this->con);
             $show = $showInstance->getCcShow($this->con);
 
@@ -539,13 +539,13 @@ class Application_Service_HistoryService
                 throw new Exception('Invalid schedule id: ' . $schedId);
             }
 
-            //TODO figure out how to combine these all into 1 query.
+            // TODO figure out how to combine these all into 1 query.
             $showInstance = $item->getCcShowInstances($this->con);
             $show = $showInstance->getCcShow($this->con);
 
             $fileId = $item->getDbFileId();
 
-            //don't add webstreams
+            // don't add webstreams
             if (isset($fileId)) {
                 $metadata = [];
                 $metadata['showname'] = $show->getDbName();
@@ -555,7 +555,7 @@ class Application_Service_HistoryService
                 $recordStart = $item->getDbStarts(null);
                 $recordEnd = ($instanceEnd < $itemEnd) ? $instanceEnd : $itemEnd;
 
-                //first check if this is a duplicate
+                // first check if this is a duplicate
                 // (caused by restarting liquidsoap)
 
                 $prevRecord = CcPlayoutHistoryQuery::create()
@@ -640,7 +640,7 @@ class Application_Service_HistoryService
                         $value = $metadata[$key];
                     }
 
-                    //need to convert to the station's local time first.
+                    // need to convert to the station's local time first.
                     if ($field['type'] == TEMPLATE_DATETIME && !is_null($value)) {
                         $timezoneUTC = new DateTimeZone('UTC');
                         $timezoneLocal = new DateTimeZone($this->timezone);
@@ -771,7 +771,7 @@ class Application_Service_HistoryService
                 $field = $fields[$i];
                 $key = $field['name'];
 
-                //required is delt with before this loop.
+                // required is delt with before this loop.
                 if (in_array($key, $required)) {
                     continue;
                 }
@@ -793,7 +793,7 @@ class Application_Service_HistoryService
                 $f->setDbColMetadata($md);
             }
 
-            //Use this array to update existing values.
+            // Use this array to update existing values.
             $mds = $historyRecord->getCcPlayoutHistoryMetaDatas();
             foreach ($mds as $md) {
                 $prevmd[$md->getDbKey()] = $md;
@@ -820,7 +820,7 @@ class Application_Service_HistoryService
         }
     }
 
-    //start,end timestamp strings in local timezone.
+    // start,end timestamp strings in local timezone.
     public function populateShowInstances($start, $end)
     {
         $timezoneLocal = new DateTimeZone($this->timezone);
@@ -1004,14 +1004,14 @@ class Application_Service_HistoryService
         }
     }
 
-    //---------------- Following code is for History Templates --------------------------//
+    // ---------------- Following code is for History Templates --------------------------//
 
     public function getFieldTypes()
     {
         return [
-            //TEMPLATE_DATE,
-            //TEMPLATE_TIME,
-            //TEMPLATE_DATETIME,
+            // TEMPLATE_DATE,
+            // TEMPLATE_TIME,
+            // TEMPLATE_DATETIME,
             TEMPLATE_STRING,
             TEMPLATE_BOOLEAN,
             TEMPLATE_INT,
@@ -1026,7 +1026,7 @@ class Application_Service_HistoryService
             TEMPLATE_TIME => 'strval',
             TEMPLATE_DATETIME => 'strval',
             TEMPLATE_STRING => 'strval',
-            TEMPLATE_BOOLEAN => 'intval', //boolval only exists in php 5.5+
+            TEMPLATE_BOOLEAN => 'intval', // boolval only exists in php 5.5+
             TEMPLATE_INT => 'intval',
             TEMPLATE_FLOAT => 'floatval',
         ];
@@ -1083,7 +1083,7 @@ class Application_Service_HistoryService
 
         $fields[] = ['name' => 'starts', 'label' => _('Start Time'), 'type' => TEMPLATE_DATETIME, 'isFileMd' => false];
         $fields[] = ['name' => 'ends', 'label' => _('End Time'), 'type' => TEMPLATE_DATETIME, 'isFileMd' => false];
-        $fields[] = ['name' => MDATA_KEY_TITLE, 'label' => _('Title'), 'type' => TEMPLATE_STRING, 'isFileMd' => true]; //these fields can be populated from an associated file.
+        $fields[] = ['name' => MDATA_KEY_TITLE, 'label' => _('Title'), 'type' => TEMPLATE_STRING, 'isFileMd' => true]; // these fields can be populated from an associated file.
         $fields[] = ['name' => MDATA_KEY_CREATOR, 'label' => _('Creator'), 'type' => TEMPLATE_STRING, 'isFileMd' => true];
 
         $template['name'] = 'Log Sheet ' . date(DEFAULT_TIMESTAMP_FORMAT) . ' Template';
@@ -1219,7 +1219,7 @@ class Application_Service_HistoryService
 
     public function getDatatablesLogSheetColumns()
     {
-        //need to prepend a checkbox column.
+        // need to prepend a checkbox column.
         $checkbox = [
             'sTitle' => '',
             'mDataProp' => 'checkbox',
