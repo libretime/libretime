@@ -23,6 +23,20 @@ Follow [the install guide](./install.md#download) to download and install the ne
 
 Be sure to carefully read **all** the [releases notes](../../../releases), from your current version to the targeted version, to apply upgrade or breaking changes instructions to your installation.
 
+## Restart the services
+
+Restart all the services to make sure all the changes are applied.
+
+```bash
+sudo systemctl restart \
+   libretime-analyzer \
+   libretime-api \
+   libretime-celery \
+   libretime-playout \
+   libretime-liquidsoap \
+   apache2
+```
+
 ## Verify
 
 Verify that all the services are still running after the install process:
@@ -32,8 +46,8 @@ sudo systemctl status \
    libretime-analyzer \
    libretime-api \
    libretime-celery \
-   libretime-liquidsoap \
    libretime-playout \
+   libretime-liquidsoap \
    apache2
 ```
 
