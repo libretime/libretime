@@ -73,10 +73,11 @@ Don't use the https://github.com/libretime/libretime-debian-packaging repository
 
 :::info
 
-When upgrading, you can pull the latest changes from the repository before checking out the desired version:
+When upgrading, you should clean the local repository, pull the latest changes and finally check out the desired version:
 
 ```bash
 cd libretime
+git clean -xdf
 git pull
 ```
 
