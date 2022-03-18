@@ -38,7 +38,6 @@ In order to apply the changes made in this section, please restart the following
 
 ```
 libretime-api
-
 libretime-analyzer
 libretime-celery
 libretime-playout
@@ -106,7 +105,6 @@ In order to apply the changes made in this section, please restart the following
 
 ```
 libretime-api
-
 libretime-analyzer
 libretime-celery
 libretime-playout
