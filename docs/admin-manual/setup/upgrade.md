@@ -28,6 +28,7 @@ Be sure to carefully read **all** the [releases notes](../../../releases), from 
 Restart all the services to make sure all the changes are applied.
 
 ```bash
+sudo systemctl daemon-reload
 sudo systemctl restart \
    libretime-analyzer \
    libretime-api \
