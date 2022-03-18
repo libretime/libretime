@@ -3,122 +3,148 @@ title: Reverse proxy
 sidebar_position: 30
 ---
 
-In some deployments, the LibreTime server is deployed behind a reverse proxy,
-for example in containerization use-cases such as Docker and LXC. LibreTime
-makes extensive use of its API for some site features, which causes
-[Cross-Origin Resource Sharing (CORS)](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
-to occur. By default, CORS requests are blocked by your browser and the origins
-need to be added to the **Allowed CORS URLs** block in
-[**General Settings**](../../user-manual/settings.md). These origins should include any
-domains that are used externally to connect to your reverse proxy that you
-want handled by LibreTime. These URLS can also be set during the first run configuration
-that's displayed when you first install LibreTime
+This guide walk you though the steps required to setup a reverse proxy in front of LibreTime.
 
-### Reverse proxy basics
+Setting a reverse proxy in front of LibreTime is recommended, it prevents LibreTime to be
+open to the Internet, adds security by enabling `https` and let's you manage your certificates in
+a single place.
 
-A reverse proxy allows the LibreTime server to not be connected to the open internet. In
-this configuration, it's rather behind another server that proxies traffic to it from
-users. This provides some advantages in the containerization space, as this means that
-the containers can be on their own internal network, protected from outside access.
+:::warning
 
-A reverse proxy also allows SSL to be terminated in a single location for multiple sites.
-This means that all your traffic to the proxy from clients is encrypted, but the reverse
-proxy's traffic to the containers on the internal network isn't. All the SSL certificates
-live on the reverse proxy and can be renewed there instead of on the individual
-containers.
+The current input and output streams are Icecast based protocols and does not support being behind a reverse proxy. **Do not attempt** to [reverse proxy Icecast](#icecast) or the Liquidsoap harbor inputs.
 
-### Setup
+Modern protocols such as [HLS](https://en.wikipedia.org/wiki/HTTP_Live_Streaming) and [SRT](https://en.wikipedia.org/wiki/Secure_Reliable_Transport) will be implement in the future to fix those limitations.
 
-For SSL redirection to work, you need two domains: one for LibreTime and one for Icecast.
-Here, these will be `libretime.example.com` and `icecast.example.com`.
+:::
 
-You require two VMs, servers or containers. Alternatively the reverse proxy can
-be located on the server, proxying connections to containers also on the host. Setting up
-a containerization environment is beyond the scope of this guide. It assumes that you have
-Nginx set up on `localhost` and LibreTime will be installed on `192.168.1.10`. You will need root
-access on both. `192.168.1.10` also needs to be able to be accessed from `localhost`
-(`ping 192.168.1.10` on `localhost`).
+Below is a schema that illustrate the goals when setting up a reverse proxy in front of LibreTime:
 
-On `192.168.1.10`, install LibreTime as described in the [install guide](./install.md). Once it has installed, replace `<hostname>localhost</hostname>` in
-`/etc/icecast2/icecast.xml` with the following:
+```mermaid
+flowchart TD
+    internet[Internet]
 
-```xml
-<hostname>icecast.example.com</hostname>
+    subgraph internal[Your system or private network]
+        libretime[LibreTime service, listen on :8080]
+
+        icecast[Icecast service, listen on :8000]
+        liquidsoap[Liquidsoap service, listen on :8001 and 8002]
+
+        subgraph proxy[Your reverse proxy]
+            front_http[Listen on :80]
+            front_https[Listen on :443]
+            front_http -.-> |Redirect to https| front_https
+
+            router[Router]
+            front_https --> |Terminate https| router
+        end
+
+        router --> |If hostname is radio.example.com| libretime
+    end
+
+    internet ==> front_http
+    internet ==> front_https
+
+    internet ==> icecast
+    internet ==> liquidsoap
 ```
 
-This is the hostname that people listening to your stream will connect to and what
-LibreTime will use to stream out to them. You will then need to restart Icecast using `sudo systemctl restart icecast2`.
+## Prerequisites
 
-On `localhost`, run the following:
+You need a domain name (`radio.example.com`) and a `tls` certificate for that domain. You can get certificates from Let's Encrypt by using [Certbot](https://certbot.eff.org/).
 
-```bash
-cat << EOF | sudo tee /etc/nginx/sites-available/libretime.conf
+You need to identify the location of the services that should be exposed to the public:
+
+- the LibreTime web server (usually `localhost:8080`, for documentation clarity we use `libretime:8080`).
+
+:::info
+
+If LibreTime is running on the same host as the reverse proxy, you need to change the LibreTime web server default listening port because the reverse proxy needs to listen on the `80`and `443` ports.
+
+:::
+
+:::caution
+
+Be sure that your firewall and network allows communications from the reverse proxy to the services. You can use `ping`, `telnet` and `curl` to check that communication is working.
+
+:::
+
+## Install a reverse proxy
+
+### Apache
+
+:::info
+
+You follow one of these guides to configure Apache with a Let's Encrypt certificate.
+
+- [How To Secure Apache with Let's Encrypt on Ubuntu 20.04](https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-ubuntu-20-04)
+
+:::
+
+:construction:
+
+### Nginx
+
+:::info
+
+You follow one of these guides to configure Nginx with a Let's Encrypt certificate.
+
+- [How To Secure Nginx with Let's Encrypt on Ubuntu 20.04](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04)
+
+:::
+
+Once you installed nginx and retrieved the required certificates, you can configure the reverse proxy to work with LibreTime.
+
+Paste the following configuration in `/etc/nginx/sites-available/libretime.conf` and be sure to replace:
+
+- `radio.example.com` with your own station url,
+- `libretime:8080` with the location of your LibreTime web server;
+
+```nginx
 server {
     listen 80;
-    server_name libretime.example.com;
+    server_name radio.example.com;
     location / {
         rewrite ^ https://$server_name$request_uri? permanent;
     }
 }
+
 server {
     listen 443 ssl;
-    server_name libretime.example.com;
-    ssl_certificate /etc/letsencrypt/live/libretime.example.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/libretime.example.com/privkey.pem;
-    add_header Strict-Transport-Security "max-age=15552000;";
-    add_header X-Frame-Options "SAMEORIGIN";
-    client_max_body_size 512M;
+    server_name radio.example.com;
+
+    ssl_certificate /etc/letsencrypt/live/radio.example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/radio.example.com/privkey.pem;
+
     location / {
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_pass http://192.168.1.10/;
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host  $host;
+        proxy_set_header X-Forwarded-Port  $server_port;
+
+        proxy_pass http://libretime:8080/;
     }
 }
-EOF
 ```
 
-This Nginx configuration ensures that all traffic uses SSL to the reverse proxy, and
-traffic is proxied to `192.168.1.10`.
+Enable the nginx configuration and restart nginx using the commands below:
 
-Next, the SSL certificate needs to be generated and the site activated.
-
-```
-sudo apt install certbot
-sudo systemctl stop nginx
-sudo certbot certonly -d libretime.example.com -a standalone
-sudo systemctl start nginx
+```bash
+ln -s /etc/nginx/sites-available/libretime.conf /etc/nginx/sites-enabled/
+sudo systemctl restart nginx
 ```
 
-You can now go to `https://libretime.example.com` and go
-through the installer. On `General Settings`, you need to change the Webserver Port to
-`443` and add the following CORS URLs:
+## Icecast
 
-```
-https://libretime.example.com
-http://libretime.example.com
-https://localhost
-http://localhost
-```
+:::warning
 
-Finally, the configuration file needs updating. Under `general.force_ssl`
-needs to be set to true:
+If you attempt to listen an insecure Icecast stream on a secure website, a
+[mixed content error](https://support.mozilla.org/en-US/kb/mixed-content-blocking-firefox)
+will be raised by your browser and should prevent your player from listening to the stream.
 
-```yml
-general:
-  force_ssl: true
-```
+You follow one of these guides to configure a secure Icecast server with a Let's Encrypt certificate.
 
-## SSL Configuration
+- [Icecast HTTPS/SSL with Let’s Encrypt](https://mediarealm.com.au/articles/icecast-https-ssl-setup-lets-encrypt/)
 
-To increase the security of your server, you can enable encrypted access to the LibreTime administration interface, and direct your users towards this more secure login page. The main advantage of using this encryption is that your remote users' login names and passwords are not sent in plain text across the public Internet or untrusted local networks, such as shared Wi-Fi access points.
-
-## Deploying a certificate with Certbot
-
-One of the fastest, easiest, and cheapest ways to get an SSL certificate is through [Certbot](https://certbot.eff.org/), as created by the
-Electronic Frontier Foundation. To use Certbot, your LibreTime installation must be open to the internet on port 80.
-
-Follow [Certbot's documentation](https://certbot.eff.org/instructions) for your OS and webserver to install an SSL certificate. You'll need to renew the certificate every 90 days to keep your installation secure.
-
-## Mixed encrypted and unencrypted content
-
-Whether your certificate is self-signed or not, you will see browser security warnings whenever a https:// page is delivering unencrypted content, such as the stream from an Icecast server. In Firefox, an exclamation mark icon is displayed in the address bar of the **Listen** pop-up.
+:::
