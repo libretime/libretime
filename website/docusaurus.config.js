@@ -117,7 +117,7 @@ const config = {
         copyright: `Code licensed under AGPLv3; docs licensed under GPLv2.`,
       },
       prism: {
-        additionalLanguages: ["apacheconf", "ini"],
+        additionalLanguages: ["apacheconf", "ini", "nginx"],
       },
     }),
 };
