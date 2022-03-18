@@ -56,6 +56,7 @@ const config = {
               return item;
             });
           },
+          remarkPlugins: [require("mdx-mermaid")],
         },
         blog: false,
         theme: {
