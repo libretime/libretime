@@ -23,6 +23,14 @@ Follow [the install guide](./install.md#download) to download and install the ne
 
 Be sure to carefully read **all** the [releases notes](../../../releases), from your current version to the targeted version, to apply upgrade or breaking changes instructions to your installation.
 
+## Apply migrations
+
+Run the following command to apply the database migrations:
+
+```bash
+libretime-api migrate
+```
+
 ## Restart the services
 
 Restart all the services to make sure all the changes are applied.
