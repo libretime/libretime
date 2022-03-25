@@ -1,15 +1,17 @@
 <template>
   <v-container>
-    <p>This is the calendar</p>
+    <v-row>
+      <v-col class="col-9">
+        <p>Things will go here later</p>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 
-// Logo
-
 export default defineComponent({
-  name: "CalendarComponent",
+  name: "HelpView",
 });
 </script>
