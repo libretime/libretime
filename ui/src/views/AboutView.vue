@@ -1,8 +1,21 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <hello-world />
 </template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+
+// Components
+import HelloWorld from "../components/HelloWorld.vue";
+
+export default defineComponent({
+  name: "AboutView",
+
+  components: {
+    HelloWorld,
+  },
+});
+</script>
 
 <style>
 @media (min-width: 1024px) {
