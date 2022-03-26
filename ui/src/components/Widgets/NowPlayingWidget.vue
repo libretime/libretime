@@ -19,7 +19,7 @@
         <p class="libretime_next">Next</p>
         <p class="schedule_list">{{ nextArtist }} - {{ nextTitle }}</p>
       </div>
-      <p class="libretime_credit">Powered by Libretime</p>
+      <p class="credit">Powered by Libretime</p>
     </div>
   </v-container>
 </template>
