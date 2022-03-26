@@ -11,5 +11,7 @@ export default function (path: string) {
     })
     .then((res) => (contents.list = res.data))
     .catch((err) => console.log(err));
-  return contents;
+  return {
+    contents,
+  };
 }
