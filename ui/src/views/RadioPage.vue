@@ -19,12 +19,12 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import LoginForm from "@/components/RadioPage/LoginForm.vue"
+import LoginForm from "@/components/RadioPage/LoginForm.vue";
 
 export default defineComponent({
   name: "RadioPage",
   components: {
     LoginForm,
-  }
+  },
 });
 </script>

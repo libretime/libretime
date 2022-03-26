@@ -11,7 +11,9 @@
         </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="orange darken-3" text @click="state.dialog = false">Submit</v-btn>
+          <v-btn color="orange darken-3" text @click="state.dialog = false"
+            >Submit</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>

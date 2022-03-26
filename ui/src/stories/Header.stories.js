@@ -1,7 +1,7 @@
-import MyHeader from './Header.vue';
+import MyHeader from "./Header.vue";
 
 export default {
-  title: 'Example/Header',
+  title: "Example/Header",
   component: MyHeader,
 };
 
