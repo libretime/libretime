@@ -54,16 +54,16 @@ jobs:
           COPY packages.list packages.list
           EOF
 
-          [[ "${{ matrix.release }}" == "bionic" ]] && \
+          [[ "${{ matrix.distribution }}" == "ubuntu" ]] && \
           cat <<EOF >> Dockerfile
-          RUN apt-get update && \
-              DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common && \
+          RUN DEBIAN_FRONTEND=noninteractive apt-get --quiet update && \
+              DEBIAN_FRONTEND=noninteractive apt-get --quiet install -y software-properties-common && \
               add-apt-repository -y ppa:libretime/libretime
           EOF
 
           cat <<EOF >> Dockerfile
-          RUN apt-get update && \
-              DEBIAN_FRONTEND=noninteractive apt-get -y install \
+          RUN DEBIAN_FRONTEND=noninteractive apt-get --quiet update && \
+              DEBIAN_FRONTEND=noninteractive apt-get --quiet install -y \
               git \
               python3 \
               python3-pip \
