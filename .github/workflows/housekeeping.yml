@@ -55,7 +55,7 @@ jobs:
 
       - name: Create Report
         if: ${{ steps.lychee.outputs.exit_code != 0 }}
-        uses: peter-evans/create-issue-from-file@v3
+        uses: peter-evans/create-issue-from-file@v4
         with:
           issue-number: 1589
           title: Link Checker Report
