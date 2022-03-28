@@ -55,6 +55,7 @@ const router = createRouter({
           path: "settings",
           name: "settings",
           component: () => import("@/views/DashboardViews/Settings.vue"),
+          redirect: "/dashboard/settings/general",
           children: [
             {
               path: "general",
