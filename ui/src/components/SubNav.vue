@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer permanent width="200">
+  <v-navigation-drawer permanent width="150">
     <p class="text-overline">{{ subtitle }}</p>
     <v-list dense nav>
       <v-list-item v-for="nav in items" :key="nav.title" :to="nav.to" link>

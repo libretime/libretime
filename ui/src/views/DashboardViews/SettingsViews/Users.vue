@@ -1,6 +1,10 @@
 <template>
   <v-container>
-    <p>Users!</p>
+    <v-row>
+      <v-col>
+        <p class="text-h5">Users</p>
+      </v-col>
+    </v-row>
     <add-user />
   </v-container>
 </template>

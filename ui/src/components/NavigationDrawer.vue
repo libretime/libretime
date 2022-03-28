@@ -19,7 +19,7 @@
     <v-list dense nav>
       <v-list-item v-for="nav in navitems" :key="nav.title" :to="nav.to" link>
         <v-list-item-avatar>
-          <v-icon >{{ nav.icon }}</v-icon>
+          <v-icon>{{ nav.icon }}</v-icon>
         </v-list-item-avatar>
         <v-list-item-title>{{ nav.title }}</v-list-item-title>
       </v-list-item>

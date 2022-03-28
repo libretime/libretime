@@ -1,6 +1,11 @@
 <template>
   <v-container>
-    <p>My profile!</p>
+    <v-row>
+      <v-col>
+        <p class="text-h5">My Profile</p>
+        <v-btn color="grey" plain> Save </v-btn>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

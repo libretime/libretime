@@ -1,13 +1,98 @@
 <template>
   <v-container>
-    <p>Stream Settings!</p>
+    <v-row>
+      <v-col>
+        <p class="text-h5">Stream Settings</p>
+        <v-btn color="grey" plain> Save </v-btn>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <p>Global</p>
+        <v-checkbox
+          v-model="options.global.hardwareOut"
+          :label="`Hardware Audio Output`"
+        />
+        <v-checkbox
+          v-model="options.global.icecastMeta"
+          :label="`Icecast Vorbis Metadata`"
+        />
+        <v-text-field
+          v-model="options.global.offAirMeta"
+          :label="`Off Air Metadata`"
+        />
+        <v-checkbox
+          v-model="options.global.replayGain"
+          :label="`Enable Replay Gain`"
+        />
+        <v-slider
+          v-model="options.global.replayGainDB"
+          :min="-10"
+          :max="10"
+          :step="1"
+          thumb-label
+        />
+        <p>Live Broadcasting</p>
+        <v-checkbox v-model="options.live.autoOff" :label="`Auto Switch Off`" />
+        <v-checkbox v-model="options.live.autoOn" :label="`Auto Switch On`" />
+      </v-col>
+      <v-col>
+        <p>Output Streams</p>
+        <v-container class="pa-1" fluid>
+          <v-radio-group v-model="options.outputDefaults">
+            <v-radio label="Default Streaming" value="default"></v-radio>
+            <v-radio label="Custom Streaming" value="custom"></v-radio>
+          </v-radio-group>
+        </v-container>
+        <v-expansion-panels>
+          <v-expansion-panel>
+            <v-expansion-panel-title> Stream 1 </v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <output-stream-card />
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+          <v-expansion-panel>
+            <v-expansion-panel-title> Stream 2 </v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <output-stream-card />
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+          <v-expansion-panel>
+            <v-expansion-panel-title> Stream 3 </v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <output-stream-card />
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, reactive } from "vue";
+import OutputStreamCard from "@/components/Settings/OutputStreamCard.vue";
 
 export default defineComponent({
   name: "StreamSettingsView",
+  components: {
+    OutputStreamCard,
+  },
+  setup() {
+    const options = reactive({
+      outputDefaults: "default",
+      global: {
+        hardwareOut: false,
+        icecastMeta: false,
+        replayGain: false,
+        replayGainDB: 0,
+      },
+      live: {
+        autoOff: false,
+        autoOn: false,
+      },
+    });
+    return { options };
+  },
 });
 </script>
