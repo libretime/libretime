@@ -12,10 +12,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+// import { defineComponent } from "vue";
 
-export default defineComponent({
+// export default defineComponent({
+//   name: "SubNav",
+//   props: {
+//     subtitle: String,
+//     items: Array,
+//   },
+// });
+
+export default {
   name: "SubNav",
-  props: ["subtitle", "items"],
-});
+  props: {
+    subtitle: String,
+    items: Array,
+  },
+};
 </script>
