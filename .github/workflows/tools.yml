@@ -67,19 +67,7 @@ jobs:
               git \
               python3 \
               python3-pip \
-              sudo \
               $(cat packages.list)
-
-          ARG USER=docker
-          ARG UID=1000
-          ARG GID=1000
-
-          RUN adduser --disabled-password --uid=${UID} --gecos '' ${USER} && \
-              adduser ${USER} sudo && \
-              echo '%sudo	ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-          USER ${UID}:${GID}
-          WORKDIR /home/${USER}
           EOF
 
       - name: Build and push
