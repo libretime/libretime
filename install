@@ -1027,13 +1027,12 @@ verbose "\n * Installing necessary python services..."
 loudCmd "$pip_install setuptools~=58.0"
 verbose "...Done"
 
-if [ ! -d /var/log/airtime ]; then
+if [ ! -d /var/log/libretime ]; then
   loud "\n-----------------------------------------------------"
   loud "              * Installing Log Files *               "
   loud "-----------------------------------------------------"
 
-  verbose "\n * Creating /var/log/airtime"
-  loudCmd "mkdir -p /var/log/airtime"
+  verbose "\n * Creating /var/log/libretime"
   mkdir_and_chown "$web_user:$web_user" "/var/log/libretime"
 
   verbose "\n * Copying logrotate files..."
@@ -1052,8 +1051,6 @@ verbose "...Done"
 verbose "\n * Installing playout and liquidsoap..."
 loudCmd "$pip_install ${AIRTIMEROOT}/playout"
 mkdir_and_chown "${web_user}:${web_user}" "${LIBRETIME_WORKING_DIR}/playout"
-loudCmd "mkdir -p /var/log/airtime/{pypo,pypo-liquidsoap} /var/tmp/airtime/pypo/{cache,files,tmp} /var/tmp/airtime/show-recorder/"
-loudCmd "chown -R ${web_user}:${web_user} /var/log/airtime/{pypo,pypo-liquidsoap} /var/tmp/airtime/pypo/{cache,files,tmp} /var/tmp/airtime/show-recorder/"
 systemInitInstall libretime-liquidsoap "$web_user"
 systemInitInstall libretime-playout "$web_user"
 verbose "...Done"
