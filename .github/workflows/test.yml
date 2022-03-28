@@ -120,12 +120,9 @@ jobs:
           - shared
           - worker
 
-    container: ghcr.io/libretime/libretime-dev:buster
-    defaults:
-      run:
-        shell: bash
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
       - uses: actions/cache@v3
         with:
           path: ~/.cache/pip
