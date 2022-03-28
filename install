@@ -1087,10 +1087,9 @@ sed -e "s@WEB_USER@${web_user}@g" \
   "${AIRTIMEROOT}/installer/uwsgi/libretime-api.ini" > /etc/airtime/libretime-api.ini
 verbose "...Done"
 
-verbose "\n * Setting permissions on /var/log/airtime..."
+verbose "\n * Setting permissions on /var/log/libretime..."
 # Make the airtime log directory group-writable
-loudCmd "chmod -R 775 /var/log/airtime"
-loudCmd "chown -R ${web_user}:${web_user} /var/log/airtime/"
+loudCmd "chmod -R 775 /var/log/libretime"
 
 verbose "\n * Setting permissions on /var/tmp/airtime..."
 loudCmd "chmod -R a+x /var/tmp/airtime"
