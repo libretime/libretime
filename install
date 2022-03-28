@@ -1021,9 +1021,10 @@ LIBRETIME_WORKING_DIR="/var/lib/libretime"
 python_version=$($python_bin --version 2>&1 | awk '{ print $2 }')
 verbose "Detected Python version: $python_version"
 pip_cmd="$python_bin -m pip"
+pip_install="$pip_cmd install --upgrade"
 
 verbose "\n * Installing necessary python services..."
-loudCmd "$pip_cmd install --upgrade setuptools~=58.0"
+loudCmd "$pip_install setuptools~=58.0"
 verbose "...Done"
 
 if [ ! -d /var/log/airtime ]; then
@@ -1041,15 +1042,15 @@ if [ ! -d /var/log/airtime ]; then
 fi
 
 verbose "\n * Installing Shared..."
-loudCmd "$pip_cmd install ${AIRTIMEROOT}/shared"
+loudCmd "$pip_install ${AIRTIMEROOT}/shared"
 verbose "...Done"
 
 verbose "\n * Installing API client..."
-loudCmd "$pip_cmd install ${AIRTIMEROOT}/api_client"
+loudCmd "$pip_install ${AIRTIMEROOT}/api_client"
 verbose "...Done"
 
 verbose "\n * Installing playout and liquidsoap..."
-loudCmd "$pip_cmd install ${AIRTIMEROOT}/playout"
+loudCmd "$pip_install ${AIRTIMEROOT}/playout"
 mkdir_and_chown "${web_user}:${web_user}" "${LIBRETIME_WORKING_DIR}/playout"
 loudCmd "mkdir -p /var/log/airtime/{pypo,pypo-liquidsoap} /var/tmp/airtime/pypo/{cache,files,tmp} /var/tmp/airtime/show-recorder/"
 loudCmd "chown -R ${web_user}:${web_user} /var/log/airtime/{pypo,pypo-liquidsoap} /var/tmp/airtime/pypo/{cache,files,tmp} /var/tmp/airtime/show-recorder/"
@@ -1058,7 +1059,7 @@ systemInitInstall libretime-playout "$web_user"
 verbose "...Done"
 
 verbose "\n * Installing celery..."
-loudCmd "$pip_cmd install ${AIRTIMEROOT}/worker"
+loudCmd "$pip_install ${AIRTIMEROOT}/worker"
 mkdir_and_chown "${web_user}:${web_user}" "${LIBRETIME_WORKING_DIR}/worker"
 # Create the Celery user
 if $is_centos_dist; then
@@ -1075,13 +1076,13 @@ systemInitInstall libretime-celery celery
 verbose "...Done"
 
 verbose "\n * Installing libretime-analyzer..."
-loudCmd "$pip_cmd install ${AIRTIMEROOT}/analyzer"
+loudCmd "$pip_install ${AIRTIMEROOT}/analyzer"
 mkdir_and_chown "${web_user}:${web_user}" "${LIBRETIME_WORKING_DIR}/analyzer"
 systemInitInstall libretime-analyzer "$web_user"
 verbose "...Done"
 
 verbose "\n * Installing API..."
-loudCmd "$pip_cmd install ${AIRTIMEROOT}/api[prod]"
+loudCmd "$pip_install ${AIRTIMEROOT}/api[prod]"
 systemInitInstall libretime-api "$web_user"
 mkdir -p /etc/airtime
 sed -e "s@WEB_USER@${web_user}@g" \
