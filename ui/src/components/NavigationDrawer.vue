@@ -9,23 +9,19 @@
         :to="dashnav.to"
         link
       >
-        <v-list-item-icon>
-          <v-icon>{{ dashnav.icon }}</v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>{{ dashnav.title }}</v-list-item-title>
-        </v-list-item-content>
+        <v-list-item-avatar>
+          <v-icon>{{ dashnav.icon }} </v-icon>
+        </v-list-item-avatar>
+        <v-list-item-title>{{ dashnav.title }}</v-list-item-title>
       </v-list-item>
     </v-list>
     <v-divider />
     <v-list dense nav>
       <v-list-item v-for="nav in navitems" :key="nav.title" :to="nav.to" link>
-        <v-list-item-icon>
-          <v-icon>{{ nav.icon }}</v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>{{ nav.title }}</v-list-item-title>
-        </v-list-item-content>
+        <v-list-item-avatar>
+          <v-icon >{{ nav.icon }}</v-icon>
+        </v-list-item-avatar>
+        <v-list-item-title>{{ nav.title }}</v-list-item-title>
       </v-list-item>
     </v-list>
     <disk-quota-card />

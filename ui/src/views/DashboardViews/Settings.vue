@@ -11,7 +11,7 @@ import SubNav from "@/components/SubNav.vue";
 
 export default defineComponent({
   name: "SettingsParentView",
-  component: {
+  components: {
     SubNav,
   },
   setup() {
