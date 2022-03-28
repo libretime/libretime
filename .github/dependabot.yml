@@ -94,3 +94,7 @@ updates:
     labels:
       - javascript
       - dependencies
+    ignore:
+      # All @docusaurus/* packages should be updated with the @docusaurus/core package
+      - dependency-name: "@docusaurus/module-type-aliases"
+      - dependency-name: "@docusaurus/preset-classic"
