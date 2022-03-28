@@ -1091,10 +1091,6 @@ verbose "\n * Setting permissions on /var/log/libretime..."
 # Make the airtime log directory group-writable
 loudCmd "chmod -R 775 /var/log/libretime"
 
-verbose "\n * Setting permissions on /var/tmp/airtime..."
-loudCmd "chmod -R a+x /var/tmp/airtime"
-loudCmd "chown -R ${web_user}:${web_user} /var/tmp/airtime/"
-
 loud "\n-----------------------------------------------------"
 loud "              * Configuring PHP in Apache *          "
 loud "-----------------------------------------------------"
