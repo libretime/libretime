@@ -1,8 +1,6 @@
 <template>
   <div>
-    <v-app-bar app>
-      <p>Hi!</p>
-    </v-app-bar>
+    <now-playing-bar />
 
     <navigation-drawer />
 
@@ -13,11 +11,13 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
+import NowPlayingBar from "@/components/NowPlayingBar.vue"
 
 export default defineComponent({
   name: "DashboardView",
   components: {
     NavigationDrawer,
+    NowPlayingBar,
   },
 });
 </script>
