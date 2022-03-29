@@ -1,9 +1,7 @@
 <template>
   <div>
-    <now-playing-bar />
-
     <navigation-drawer />
-
+    <now-playing-bar />
     <router-view />
   </div>
 </template>
@@ -11,7 +9,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
-import NowPlayingBar from "@/components/NowPlayingBar.vue"
+import NowPlayingBar from "@/components/NowPlayingBar.vue";
 
 export default defineComponent({
   name: "DashboardView",

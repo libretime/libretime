@@ -3,6 +3,9 @@
     <v-row>
       <v-col>
         <p class="text-h6">General Settings</p>
+      </v-col>
+      <v-spacer></v-spacer>
+      <v-col>
         <v-btn color="grey" plain> Save </v-btn>
       </v-col>
     </v-row>

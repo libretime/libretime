@@ -1,7 +1,7 @@
 <template>
-  <v-app-bar app clipped-left height="125">
+  <v-app-bar height="125">
     <v-row class="app-bar">
-      <v-col class="col-1">
+      <!-- <v-col class="col-1">
         <v-container>
           <v-img
             class="align-sm-center child-flex"
@@ -11,7 +11,7 @@
             contain
           />
         </v-container>
-      </v-col>
+      </v-col> -->
       <v-col class="col-4">
         <div>
           <p class="body-2 ma-1"><b>Previous:</b> {{ npPrev }}</p>
