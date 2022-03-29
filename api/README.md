@@ -23,9 +23,9 @@ for the LibreTime instance.
 For a live reloading version within Vagrant:
 
 ```
-vagrant up debian-buster
+vagrant up buster
 # Run through the web setup http://localhost:8080
-vagrant ssh debian-buster
+vagrant ssh buster
 sudo systemctl stop libretime-api
 sudo systemctl restart libretime-analyzer libretime-celery libretime-liquidsoap libretime-playout
 cd /vagrant/api

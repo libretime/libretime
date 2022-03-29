@@ -6,7 +6,7 @@
 # export VAGRANT_NO_PORT_FORWARDING=true
 # export VAGRANT_CPUS=4
 # export VAGRANT_MEMORY=4096
-# vagrant up debian-buster
+# vagrant up buster
 #
 
 Vagrant.configure('2') do |config|
@@ -88,18 +88,18 @@ Vagrant.configure('2') do |config|
   end
 
   # Define all the OS boxes we support
-  config.vm.define "ubuntu-focal" do |os|
+  config.vm.define "focal" do |os|
     os.vm.box = "bento/ubuntu-20.04"
     setup_libretime(os, "debian.sh")
   end
 
-  config.vm.define 'ubuntu-bionic' do |os|
+  config.vm.define 'bionic' do |os|
     os.vm.box = 'bento/ubuntu-18.04'
     setup_nfs(config)
     setup_libretime(os, 'debian.sh')
   end
 
-  config.vm.define 'debian-bullseye' do |os|
+  config.vm.define 'bullseye' do |os|
     os.vm.box = 'debian/bullseye64'
     config.vm.provider 'virtualbox' do |v, override|
       override.vm.box = 'bento/debian-11'
@@ -108,7 +108,7 @@ Vagrant.configure('2') do |config|
     setup_libretime(os, 'debian.sh')
   end
 
-  config.vm.define 'debian-buster' do |os|
+  config.vm.define 'buster' do |os|
     os.vm.box = 'debian/buster64'
     config.vm.provider 'virtualbox' do |v, override|
       override.vm.box = 'bento/debian-10'
