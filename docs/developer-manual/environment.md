@@ -20,8 +20,8 @@ This is fixed by stopping virtualbox and re-creating the vagrant box:
 
 ```bash
 sudo systemctl stop virtualbox
-vagrant destroy ubuntu-bionic
-vagrant up ubuntu-bionic --provider=libvirt
+vagrant destroy bionic
+vagrant up bionic --provider=libvirt
 ```
 
 :::
@@ -42,7 +42,7 @@ sudo usermod -aG libvirt $USER
 ```bash
 vagrant box add bento/ubuntu-18.04 --provider=virtualbox
 vagrant mutate bento/ubuntu-18.04 libvirt
-vagrant up ubuntu-bionic --provider=libvirt
+vagrant up bionic --provider=libvirt
 ```
 
 On other distributions, you will need to install [libvirt](https://libvirt.org/) and `vagrant-mutate` and then run
@@ -56,7 +56,7 @@ sudo usermod -a -G libvirt $USER
 vagrant plugin install vagrant-mutate
 vagrant box fetch bento/ubuntu-18.04
 vagrant mutate bento/ubuntu-18.04 libvirt
-vagrant up ubuntu-bionic --provider=libvirt
+vagrant up bionic --provider=libvirt
 ```
 
 ### Starting LibreTime Vagrant
@@ -68,14 +68,14 @@ change the default provider if you have multiple installed. This can be done by 
 ```bash
 git clone https://github.com/libretime/libretime
 cd libretime
-vagrant up ubuntu-bionic
+vagrant up bionic
 ```
 
 If everything works out, you will find LibreTime on [port 8080](http://localhost:8080)
 and Icecast on [port 8000](http://localhost:8000).
 
 Once you reach the web setup GUI you can click through it using the default values. To
-connect to the vagrant machine you can run `vagrant ssh ubuntu-bionic` in the libretime
+connect to the vagrant machine you can run `vagrant ssh bionic` in the libretime
 directory.
 
 ### Alternative OS installations
@@ -83,13 +83,13 @@ directory.
 With the above instructions LibreTime is installed on Ubuntu Bionic. The Vagrant setup
 offers the option to choose a different operation system according to you needs.
 
-| OS           | Command                      | Comment                                                     |
-| ------------ | ---------------------------- | ----------------------------------------------------------- |
-| Debian 10    | `vagrant up debian-buster`   | Install on Debian Buster.                                   |
-| Debian 11    | `vagrant up debian-bullseye` | Install on Debian Bullseye.                                 |
-| Ubuntu 18.04 | `vagrant up ubuntu-bionic`   | Install on Ubuntu Bionic Beaver.                            |
-| Ubuntu 20.04 | `vagrant up ubuntu-focal`    | Install on Ubuntu Focal Fossa.                              |
-| CentOS       | `vagrant up centos`          | CentOS 8 with native systemd support and activated SELinux. |
+| OS           | Command               | Comment                                                     |
+| ------------ | --------------------- | ----------------------------------------------------------- |
+| Debian 10    | `vagrant up buster`   | Install on Debian Buster.                                   |
+| Debian 11    | `vagrant up bullseye` | Install on Debian Bullseye.                                 |
+| Ubuntu 18.04 | `vagrant up bionic`   | Install on Ubuntu Bionic Beaver.                            |
+| Ubuntu 20.04 | `vagrant up focal`    | Install on Ubuntu Focal Fossa.                              |
+| CentOS       | `vagrant up centos`   | CentOS 8 with native systemd support and activated SELinux. |
 
 ### Troubleshooting
 
