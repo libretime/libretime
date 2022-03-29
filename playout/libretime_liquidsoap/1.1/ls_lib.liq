@@ -3,7 +3,7 @@ def gateway(args)
   command = "libretime-playout-notify #{args}"
   suffix = "&"
   log(command)
-  system("#{prefix} #{command} #{suffix}")
+  system("LC_ALL=C.UTF-8 LANG=C.UTF-8 #{prefix} #{command} #{suffix}")
 end
 
 def notify(m)
