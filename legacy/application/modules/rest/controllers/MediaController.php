@@ -129,7 +129,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             // we need to specify an explicit adapter since autodetection broke in php 7.2
             $upload = new Zend_File_Transfer('Http');
             // this error should not really get hit, letting the user know if it does is nice for debugging
-            // see: https://github.com/LibreTime/libretime/issues/3#issuecomment-281143417
+            // see: https://github.com/libretime/libretime/issues/3#issuecomment-281143417
             if (!$upload->isValid('file')) {
                 throw new Exception('invalid file uploaded');
             }

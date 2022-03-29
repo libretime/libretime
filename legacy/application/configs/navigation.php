@@ -14,7 +14,7 @@
  */
 $pages = [];
 // Disable My podcasts
-// See https://github.com/LibreTime/libretime/issues/1320
+// See https://github.com/libretime/libretime/issues/1320
 // $pages[] = array(
 //     'label'      => _('My Podcast'),
 //     'module'     => 'default',

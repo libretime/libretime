@@ -9,7 +9,7 @@ _Do the changes in this PR implement a new feature?_
 **I have updated the documentation to reflect these changes**:
 
 _Are there documentation changes required as a result of these changes? See
-https://github.com/LibreTime/libretime/wiki/Documentation-Requirements_
+https://github.com/libretime/libretime/wiki/Documentation-Requirements_
 
 ### Testing Notes
 

@@ -43,15 +43,15 @@ define('SUPPORT_ADDRESS', 'https://discourse.libretime.org/');
 
 define('HELP_URL', 'https://discourse.libretime.org/');
 define('WHOS_USING_URL', 'https://github.com/orgs/LibreTime/people');
-define('TERMS_AND_CONDITIONS_URL', 'https://github.com/LibreTime/libretime/blob/main/README.md');
+define('TERMS_AND_CONDITIONS_URL', 'https://github.com/libretime/libretime/blob/main/README.md');
 define('PRIVACY_POLICY_URL', 'https://github.com/LibreTime/code-of-conduct/blob/main/CODE_OF_CONDUCT.md');
 define('USER_MANUAL_URL', 'http://libretime.org/docs');
 define('ABOUT_AIRTIME_URL', 'http://libretime.org');
 define('LIBRETIME_CONTRIBUTE_URL', 'https://libretime.org/contribute');
 define('LIBRETIME_DISCOURSE_URL', 'https://discourse.libretime.org');
 define('UI_REVAMP_EMBED_URL', 'https://www.youtube.com/embed/nqpNnCKGluY');
-define('LIBRETIME_WHATS_NEW_URL', 'https://github.com/LibreTime/libretime/releases');
-define('LIBRETIME_UPDATE_FEED', 'https://github.com/LibreTime/libretime/releases.atom');
+define('LIBRETIME_WHATS_NEW_URL', 'https://github.com/libretime/libretime/releases');
+define('LIBRETIME_UPDATE_FEED', 'https://github.com/libretime/libretime/releases.atom');
 define('LIBRETIME_EMAIL_FROM', 'noreply@libretime.org');
 
 define('LICENSE_VERSION', 'GNU AGPL v.3');

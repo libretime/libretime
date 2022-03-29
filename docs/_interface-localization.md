@@ -6,7 +6,7 @@ The LibreTime administration interface can be localized using the standard GNU *
 
 ![](/img/Screenshot464-Korean_stream_setting.png)
 
-First, you should check if a localization is already under way for your locale of choice. The best way to do this is to take a look at the 'main' branch in the GitHub repository for LibreTime at https://github.com/LibreTime/libretime. You can also ask in the LibreTime development forum at https://discourse.libretime.org/, where you might find community members who can help you with the translation.
+First, you should check if a localization is already under way for your locale of choice. The best way to do this is to take a look at the 'main' branch in the GitHub repository for LibreTime at https://github.com/libretime/libretime. You can also ask in the LibreTime development forum at https://discourse.libretime.org/, where you might find community members who can help you with the translation.
 
 GNU **gettext** means using a .po file for each language or dialect, a specially formatted plain text file with groups of three or more lines, like this example from LibreTime's Korean localization:
 

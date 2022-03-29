@@ -118,7 +118,7 @@ class LibraryController extends Zend_Controller_Action
                 $menu['del'] = ['name' => _('Delete'), 'icon' => 'delete', 'url' => $baseUrl . 'library/delete'];
                 $menu['edit'] = ['name' => _('Edit...'), 'icon' => 'edit', 'url' => $baseUrl . "library/edit-file-md/id/{$id}"];
                 // Disable My podcasts
-                // See https://github.com/LibreTime/libretime/issues/1320
+                // See https://github.com/libretime/libretime/issues/1320
                 // $menu["publish"] = array("name"=> _("Publish..."), "url" => $baseUrl."library/publish/id/{$id}");
             }
 

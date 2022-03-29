@@ -17,4 +17,4 @@ apt_upgrade: true
 # Clone repo on init (Change repo url if needed)
 # If you need to clone a branch, use git clone --branch branchname repourl
 runcmd:
-  - git clone https://github.com/LibreTime/libretime.git
+  - git clone https://github.com/libretime/libretime

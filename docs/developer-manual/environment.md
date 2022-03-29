@@ -66,7 +66,7 @@ change the default provider if you have multiple installed. This can be done by 
 `--provider=virtualbox` or `--provider=libvirt` as applicable.
 
 ```bash
-git clone https://github.com/libretime/libretime.git
+git clone https://github.com/libretime/libretime
 cd libretime
 vagrant up ubuntu-bionic
 ```
@@ -105,7 +105,7 @@ supported steps are `prepare` and `install`.
 Similar to Docker, Multipass works through a CLI. To use, clone this repo and then create a new Multipass VM.
 
 ```
-git clone https://github.com/libretime/libretime.git
+git clone https://github.com/libretime/libretime
 cd libretime
 multipass launch bionic -n ltTEST --cloud-init cloud-init.yaml
 multipass shell ltTEST

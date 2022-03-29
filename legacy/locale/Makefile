@@ -6,7 +6,7 @@ all: clean build
 SHELL = bash
 
 DOMAIN = libretime
-ISSUE_TRACKER = https://github.com/LibreTime/libretime/issues
+ISSUE_TRACKER = https://github.com/libretime/libretime/issues
 PO_FILE = $(DOMAIN).po
 PO_FILES = $(wildcard */LC_MESSAGES/$(PO_FILE))
 MO_FILES = $(PO_FILES:.po=.mo)

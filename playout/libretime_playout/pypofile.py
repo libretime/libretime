@@ -41,8 +41,8 @@ class PypoFile(Thread):
             # This used to be a filesize check that didn't end up working.
             # Once we have watched folders updated files from them might
             # become an issue here... This needs proper cache management.
-            # https://github.com/LibreTime/libretime/issues/756#issuecomment-477853018
-            # https://github.com/LibreTime/libretime/pull/845
+            # https://github.com/libretime/libretime/issues/756#issuecomment-477853018
+            # https://github.com/libretime/libretime/pull/845
             logger.debug(
                 "file %s already exists in local cache as %s, skipping copying..."
                 % (src, dst)

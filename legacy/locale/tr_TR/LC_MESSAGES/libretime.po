@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
-"Report-Msgid-Bugs-To: https://github.com/LibreTime/libretime/issues\n"
+"Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2021-10-15 19:56+0200\n"
 "PO-Revision-Date: 2022-01-21 08:57+0000\n"
 "Last-Translator: ToldYouThat <itoldyouthat@protonmail.com>\n"
