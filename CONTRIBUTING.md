@@ -66,9 +66,9 @@ requesting existed.
 
 Are you familiar with coding in PHP or Python? Have you made projects in
 Liquidsoap and some of the other services we use? Take a look at the
-[list of bugs and feature requests](https://github.com/LibreTime/libretime/issues),
+[list of bugs and feature requests](https://github.com/libretime/libretime/issues),
 and then fork our repo and have a go! Just use the **Fork** button at the top of
-our [GitHub page](https://github.com/LibreTime/libretime), clone the forked repo
+our [GitHub page](https://github.com/libretime/libretime), clone the forked repo
 to your desktop, open up a favorite editor and make some changes, and then
 commit, push, and open a pull request.
 

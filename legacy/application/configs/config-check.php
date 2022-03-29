@@ -62,7 +62,7 @@ $result = $r1 && $r2;
             <p>
                 Take a look at the checklist below for possible solutions. If you're tried the suggestions and are
                 still experiencing issues, read the
-                <a href="https://github.com/LibreTime/libretime/releases">release notes</a>,
+                <a href="https://github.com/libretime/libretime/releases">release notes</a>,
                 come <a href="https://discourse.libretime.org/">visit our discourse</a>
                 or, check <a href="http://www.libretime.org/">the website and main docs</a>.
             </p>

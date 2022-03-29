@@ -21,7 +21,7 @@ Follow [the install guide](./install.md#download) to download and install the ne
 
 ## Apply upgrade instructions
 
-Be sure to carefully read **all** the [releases notes](../../../releases), from your current version to the targeted version, to apply upgrade or breaking changes instructions to your installation.
+Be sure to carefully read **all** the [releases notes](../../releases/README.md), from your current version to the targeted version, to apply upgrade or breaking changes instructions to your installation.
 
 ## Apply migrations
 
