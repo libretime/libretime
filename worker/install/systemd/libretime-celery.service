@@ -6,12 +6,13 @@ Environment=LIBRETIME_LOG_FILEPATH=/var/log/libretime/worker.log
 Environment=LIBRETIME_CONFIG_FILEPATH=/etc/airtime/airtime.conf
 WorkingDirectory=/var/lib/libretime/worker
 
-ExecStart=/usr/local/bin/celery worker \
+ExecStart=/usr/bin/sh -c 'celery worker \
     --app=libretime_worker.tasks:worker \
     --config=libretime_worker.config \
     --time-limit=1800 \
     --concurrency=1 \
-    --loglevel=INFO
+    --loglevel=INFO \
+    --logfile=$LIBRETIME_LOG_FILEPATH'
 User=libretime-worker
 Group=libretime-worker
 Restart=always
