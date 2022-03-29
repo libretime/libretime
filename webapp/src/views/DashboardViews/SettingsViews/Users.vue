@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <p class="text-h5">Users</p>
+        <p class="text-h6">Users</p>
       </v-col>
     </v-row>
     <add-user />

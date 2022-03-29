@@ -2,13 +2,13 @@
   <v-container>
     <v-row>
       <v-col>
-        <p class="text-h5">Stream Settings</p>
+        <p class="text-h6">Stream Settings</p>
         <v-btn color="grey" plain> Save </v-btn>
       </v-col>
     </v-row>
     <v-row>
       <v-col>
-        <p>Global</p>
+        <p class="text-h6">Global</p>
         <v-checkbox
           v-model="options.global.hardwareOut"
           :label="`Hardware Audio Output`"
@@ -32,12 +32,16 @@
           :step="1"
           thumb-label
         />
-        <p>Live Broadcasting</p>
+        <p class="text-h6">Live Broadcasting</p>
         <v-checkbox v-model="options.live.autoOff" :label="`Auto Switch Off`" />
         <v-checkbox v-model="options.live.autoOn" :label="`Auto Switch On`" />
+        <v-text-field
+          v-model="options.live.transTime"
+          :label="`Switch Transition Fade (s)`"
+        />
       </v-col>
       <v-col>
-        <p>Output Streams</p>
+        <p class="text-h6">Output Streams</p>
         <v-container class="pa-1" fluid>
           <v-radio-group v-model="options.outputDefaults">
             <v-radio label="Default Streaming" value="default"></v-radio>
@@ -84,12 +88,14 @@ export default defineComponent({
       global: {
         hardwareOut: false,
         icecastMeta: false,
+        offAirMeta: "Libretime - Offline",
         replayGain: false,
         replayGainDB: 0,
       },
       live: {
         autoOff: false,
         autoOn: false,
+        transTime: "1",
       },
     });
     return { options };

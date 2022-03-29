@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar app height="125" clipped-left>
+  <v-app-bar app clipped-left height="125">
     <v-row class="app-bar">
       <v-col class="col-1">
         <v-container>

@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer app permanent clipped width="200">
+  <v-navigation-drawer app permanent width="200">
     <v-btn color="primary" block> Upload </v-btn>
     <p class="text-overline">Dashboard</p>
     <v-list dense nav>

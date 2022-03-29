@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <p class="text-h5">Status</p>
+    <p class="text-h6">Status</p>
     <v-table>
       <template #default>
         <thead>

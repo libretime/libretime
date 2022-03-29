@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <p class="text-h5">General Settings</p>
+        <p class="text-h6">General Settings</p>
         <v-btn color="grey" plain> Save </v-btn>
       </v-col>
     </v-row>
