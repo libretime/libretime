@@ -16,10 +16,10 @@ Check out the [documentation](https://libretime.org) for more information and
 start broadcasting!
 
 Please note that LibreTime is released with a [Contributor Code
-of Conduct](https://github.com/LibreTime/code-of-conduct/blob/main/CODE_OF_CONDUCT.md).
+of Conduct](https://github.com/libretime/organization/blob/main/CODE_OF_CONDUCT.md).
 By participating in this project you agree to abide by its terms.
 
-Please submit enhancements, bugfixes or comments via GitHub.
+Please submit enhancements, bug-fixes or comments via GitHub.
 
 ## Development Process
 
