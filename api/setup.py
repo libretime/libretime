@@ -25,7 +25,7 @@ setup(
     python_requires=">=3.6",
     entry_points={
         "console_scripts": [
-            "libretime-api=libretime_api.cli:main",
+            "libretime-api=libretime_api.manage:main",
         ]
     },
     install_requires=[

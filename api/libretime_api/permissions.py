@@ -1,7 +1,7 @@
 from django.conf import settings
 from rest_framework.permissions import BasePermission
 
-from .models.user_constants import DJ
+from .core.models.role import DJ
 
 REQUEST_PERMISSION_TYPE_MAP = {
     "GET": "view",

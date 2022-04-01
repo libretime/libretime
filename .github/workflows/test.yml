@@ -202,7 +202,6 @@ jobs:
       run:
         shell: bash
     env:
-      LIBRETIME_GENERAL_API_KEY: test_key
       LIBRETIME_DATABASE_HOST: postgres
 
     steps:
