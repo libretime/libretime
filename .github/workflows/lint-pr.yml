@@ -19,7 +19,7 @@ jobs:
           scopes: |
             analyzer
             api
-            api_client
+            api-client
             installer
             legacy
             playout
