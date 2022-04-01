@@ -45,3 +45,9 @@ USE_L10N = True
 USE_TZ = True
 
 LOGGING = setup_logger(LIBRETIME_LOG_FILEPATH)
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "LibreTime API",
+    "DESCRIPTION": "Radio Broadcast & Automation Platform",
+    "VERSION": API_VERSION,
+}
