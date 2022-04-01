@@ -1,3 +1,6 @@
+from typing import List, Type
+
+from django.db.models import Model
 from django.test.runner import DiscoverRunner
 
 
@@ -8,16 +11,21 @@ class ManagedModelTestRunner(DiscoverRunner):
     to execute the SQL manually to create them.
     """
 
+    unmanaged_models: List[Type[Model]] = []
+
     def setup_test_environment(self, *args, **kwargs):
         from django.apps import apps
 
-        self.unmanaged_models = [m for m in apps.get_models() if not m._meta.managed]
-        for m in self.unmanaged_models:
-            m._meta.managed = True
+        for model in apps.get_models():
+            if not model._meta.managed:
+                model._meta.managed = True
+                self.unmanaged_models.append(model)
+
         super().setup_test_environment(*args, **kwargs)
 
     def teardown_test_environment(self, *args, **kwargs):
         super().teardown_test_environment(*args, **kwargs)
+
         # reset unmanaged models
-        for m in self.unmanaged_models:
-            m._meta.managed = False
+        for model in self.unmanaged_models:
+            model._meta.managed = False

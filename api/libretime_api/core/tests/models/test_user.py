@@ -1,4 +1,3 @@
-from django.apps import apps
 from rest_framework.test import APITestCase
 
 from ....permission_constants import GROUPS

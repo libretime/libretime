@@ -1,5 +1,3 @@
-import os
-
 from django.conf import settings
 from model_bakery import baker
 from rest_framework.test import APITestCase
@@ -30,13 +28,13 @@ class TestFileViewSet(APITestCase):
             "storage.MusicDir",
             directory=str(fixture_path),
         )
-        f = baker.make(
+        file = baker.make(
             "storage.File",
             directory=music_dir,
             mime="audio/mp3",
             filepath=AUDIO_FILENAME,
         )
-        path = self.path.format(id=str(f.pk))
+        path = self.path.format(id=str(file.pk))
         self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
         response = self.client.get(path)
         self.assertEqual(response.status_code, 200)

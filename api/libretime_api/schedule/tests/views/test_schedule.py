@@ -1,4 +1,3 @@
-import os
 from datetime import datetime, timedelta, timezone
 
 from django.conf import settings
@@ -20,78 +19,7 @@ class TestScheduleViewSet(APITestCase):
             "storage.MusicDir",
             directory=str(fixture_path),
         )
-        f = baker.make(
-            "storage.File",
-            directory=music_dir,
-            mime="audio/mp3",
-            filepath=AUDIO_FILENAME,
-            length=timedelta(seconds=40.86),
-            cuein=timedelta(seconds=0),
-            cueout=timedelta(seconds=40.8131),
-        )
-        show = baker.make(
-            "schedule.ShowInstance",
-            starts=datetime.now(tz=timezone.utc) - timedelta(minutes=5),
-            ends=datetime.now(tz=timezone.utc) + timedelta(minutes=5),
-        )
-        scheduleItem = baker.make(
-            "schedule.Schedule",
-            starts=datetime.now(tz=timezone.utc),
-            ends=datetime.now(tz=timezone.utc) + f.length,
-            cue_out=f.cueout,
-            instance=show,
-            file=f,
-        )
-        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
-        response = self.client.get(self.path)
-        self.assertEqual(response.status_code, 200)
-        result = response.json()
-        self.assertEqual(dateparse.parse_datetime(result[0]["ends"]), scheduleItem.ends)
-        self.assertEqual(dateparse.parse_duration(result[0]["cue_out"]), f.cueout)
-
-    def test_schedule_item_trunc(self):
-        music_dir = baker.make(
-            "storage.MusicDir",
-            directory=str(fixture_path),
-        )
-        f = baker.make(
-            "storage.File",
-            directory=music_dir,
-            mime="audio/mp3",
-            filepath=AUDIO_FILENAME,
-            length=timedelta(seconds=40.86),
-            cuein=timedelta(seconds=0),
-            cueout=timedelta(seconds=40.8131),
-        )
-        show = baker.make(
-            "schedule.ShowInstance",
-            starts=datetime.now(tz=timezone.utc) - timedelta(minutes=5),
-            ends=datetime.now(tz=timezone.utc) + timedelta(seconds=20),
-        )
-        scheduleItem = baker.make(
-            "schedule.Schedule",
-            starts=datetime.now(tz=timezone.utc),
-            ends=datetime.now(tz=timezone.utc) + f.length,
-            instance=show,
-            file=f,
-        )
-        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
-        response = self.client.get(self.path)
-        self.assertEqual(response.status_code, 200)
-        result = response.json()
-        self.assertEqual(dateparse.parse_datetime(result[0]["ends"]), show.ends)
-        expected = show.ends - scheduleItem.starts
-        self.assertEqual(dateparse.parse_duration(result[0]["cue_out"]), expected)
-        self.assertNotEqual(
-            dateparse.parse_datetime(result[0]["ends"]), scheduleItem.ends
-        )
-
-    def test_schedule_item_invalid(self):
-        music_dir = baker.make(
-            "storage.MusicDir",
-            directory=str(fixture_path),
-        )
-        f = baker.make(
+        file = baker.make(
             "storage.File",
             directory=music_dir,
             mime="audio/mp3",
@@ -108,18 +36,91 @@ class TestScheduleViewSet(APITestCase):
         schedule_item = baker.make(
             "schedule.Schedule",
             starts=datetime.now(tz=timezone.utc),
-            ends=datetime.now(tz=timezone.utc) + f.length,
-            cue_out=f.cueout,
+            ends=datetime.now(tz=timezone.utc) + file.length,
+            cue_out=file.cueout,
             instance=show,
-            file=f,
+            file=file,
+        )
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
+        response = self.client.get(self.path)
+        self.assertEqual(response.status_code, 200)
+        result = response.json()
+        self.assertEqual(
+            dateparse.parse_datetime(result[0]["ends"]), schedule_item.ends
+        )
+        self.assertEqual(dateparse.parse_duration(result[0]["cue_out"]), file.cueout)
+
+    def test_schedule_item_trunc(self):
+        music_dir = baker.make(
+            "storage.MusicDir",
+            directory=str(fixture_path),
+        )
+        file = baker.make(
+            "storage.File",
+            directory=music_dir,
+            mime="audio/mp3",
+            filepath=AUDIO_FILENAME,
+            length=timedelta(seconds=40.86),
+            cuein=timedelta(seconds=0),
+            cueout=timedelta(seconds=40.8131),
+        )
+        show = baker.make(
+            "schedule.ShowInstance",
+            starts=datetime.now(tz=timezone.utc) - timedelta(minutes=5),
+            ends=datetime.now(tz=timezone.utc) + timedelta(seconds=20),
+        )
+        schedule_item = baker.make(
+            "schedule.Schedule",
+            starts=datetime.now(tz=timezone.utc),
+            ends=datetime.now(tz=timezone.utc) + file.length,
+            instance=show,
+            file=file,
+        )
+        self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
+        response = self.client.get(self.path)
+        self.assertEqual(response.status_code, 200)
+        result = response.json()
+        self.assertEqual(dateparse.parse_datetime(result[0]["ends"]), show.ends)
+        expected = show.ends - schedule_item.starts
+        self.assertEqual(dateparse.parse_duration(result[0]["cue_out"]), expected)
+        self.assertNotEqual(
+            dateparse.parse_datetime(result[0]["ends"]), schedule_item.ends
+        )
+
+    def test_schedule_item_invalid(self):
+        music_dir = baker.make(
+            "storage.MusicDir",
+            directory=str(fixture_path),
+        )
+        file = baker.make(
+            "storage.File",
+            directory=music_dir,
+            mime="audio/mp3",
+            filepath=AUDIO_FILENAME,
+            length=timedelta(seconds=40.86),
+            cuein=timedelta(seconds=0),
+            cueout=timedelta(seconds=40.8131),
+        )
+        show = baker.make(
+            "schedule.ShowInstance",
+            starts=datetime.now(tz=timezone.utc) - timedelta(minutes=5),
+            ends=datetime.now(tz=timezone.utc) + timedelta(minutes=5),
+        )
+        schedule_item = baker.make(
+            "schedule.Schedule",
+            starts=datetime.now(tz=timezone.utc),
+            ends=datetime.now(tz=timezone.utc) + file.length,
+            cue_out=file.cueout,
+            instance=show,
+            file=file,
         )
         invalid_schedule_item = baker.make(
             "schedule.Schedule",
             starts=show.ends + timedelta(minutes=1),
-            ends=show.ends + timedelta(minutes=1) + f.length,
-            cue_out=f.cueout,
+            ends=show.ends + timedelta(minutes=1) + file.length,
+            cue_out=file.cueout,
             instance=show,
-            file=f,
+            file=file,
         )
         self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
         response = self.client.get(self.path, {"is_valid": True})
@@ -130,14 +131,14 @@ class TestScheduleViewSet(APITestCase):
         self.assertEqual(
             dateparse.parse_datetime(result[0]["ends"]), schedule_item.ends
         )
-        self.assertEqual(dateparse.parse_duration(result[0]["cue_out"]), f.cueout)
+        self.assertEqual(dateparse.parse_duration(result[0]["cue_out"]), file.cueout)
 
     def test_schedule_item_range(self):
         music_dir = baker.make(
             "storage.MusicDir",
             directory=str(fixture_path),
         )
-        f = baker.make(
+        file = baker.make(
             "storage.File",
             directory=music_dir,
             mime="audio/mp3",
@@ -156,18 +157,18 @@ class TestScheduleViewSet(APITestCase):
         schedule_item = baker.make(
             "schedule.Schedule",
             starts=filter_point,
-            ends=filter_point + f.length,
-            cue_out=f.cueout,
+            ends=filter_point + file.length,
+            cue_out=file.cueout,
             instance=show,
-            file=f,
+            file=file,
         )
         previous_item = baker.make(
             "schedule.Schedule",
             starts=filter_point - timedelta(minutes=5),
-            ends=filter_point - timedelta(minutes=5) + f.length,
-            cue_out=f.cueout,
+            ends=filter_point - timedelta(minutes=5) + file.length,
+            cue_out=file.cueout,
             instance=show,
-            file=f,
+            file=file,
         )
         self.client.credentials(HTTP_AUTHORIZATION=f"Api-Key {self.token}")
         range_start = (filter_point - timedelta(minutes=1)).isoformat(

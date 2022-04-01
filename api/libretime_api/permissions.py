@@ -41,9 +41,7 @@ def get_permission_for_view(request, view):
             return f"{permission_type}_apiroot"
         model = view.model_permission_name
         own_obj = get_own_obj(request, view)
-        return "{permission_type}_{own_obj}{model}".format(
-            permission_type=permission_type, own_obj=own_obj, model=model
-        )
+        return f"{permission_type}_{own_obj}{model}"
     except AttributeError:
         return None
 

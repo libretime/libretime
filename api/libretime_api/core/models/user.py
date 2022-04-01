@@ -59,28 +59,26 @@ class User(AbstractBaseUser):
     def get_short_name(self):
         return self.first_name
 
-    def set_password(self, password):
-        if not password:
+    def set_password(self, raw_password):
+        if not raw_password:
             self.set_unusable_password()
         else:
-            self.password = hashlib.md5(password.encode()).hexdigest()
+            self.password = hashlib.md5(raw_password.encode()).hexdigest()
 
     def is_staff(self):
         return self.type == ADMIN
 
-    def check_password(self, password):
+    def check_password(self, raw_password):
         if self.has_usable_password():
-            test_password = hashlib.md5(password.encode()).hexdigest()
+            test_password = hashlib.md5(raw_password.encode()).hexdigest()
             return test_password == self.password
         return False
 
-    """
-    The following methods have to be re-implemented here, as PermissionsMixin
-    assumes that the User class has a 'group' attribute, which LibreTime does
-    not currently provide. Once Django starts managing the Database
-    (managed = True), then this can be replaced with
-    django.contrib.auth.models.PermissionMixin.
-    """
+    # The following methods have to be re-implemented here, as PermissionsMixin
+    # assumes that the User class has a 'group' attribute, which LibreTime does
+    # not currently provide. Once Django starts managing the Database
+    # (managed = True), then this can be replaced with
+    # django.contrib.auth.models.PermissionMixin.
 
     def is_superuser(self):
         return self.type == ADMIN
