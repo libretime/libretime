@@ -1,17 +1,10 @@
-import os
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from model_bakery import baker
 from rest_framework.test import APIRequestFactory, APITestCase
 
-from ..core.models import ADMIN, DJ, GUEST, PROGRAM_MANAGER
-from ..permission_constants import (
-    DJ_PERMISSIONS,
-    GUEST_PERMISSIONS,
-    PROGRAM_MANAGER_PERMISSIONS,
-)
+from ..core.models import DJ, GUEST
 from ..permissions import IsSystemTokenOrUser
 
 
@@ -60,9 +53,8 @@ class TestPermissions(APITestCase):
 
     def logged_in_test_model(self, model, name, user_type, fn):
         path = self.path.format(model)
-        user_created = get_user_model().objects.filter(username=name)
-        if not user_created:
-            user = get_user_model().objects.create_user(
+        if not get_user_model().objects.filter(username=name):
+            get_user_model().objects.create_user(
                 name,
                 email="test@example.com",
                 password="test",
@@ -109,15 +101,15 @@ class TestPermissions(APITestCase):
             first_name="test",
             last_name="user",
         )
-        f = baker.make("storage.File", owner=user)
-        model = f"files/{f.id}"
+        file = baker.make("storage.File", owner=user)
+        model = f"files/{file.id}"
         path = self.path.format(model)
         self.client.login(username="test-dj", password="test")
         response = self.client.patch(path, {"name": "newFilename"})
         self.assertEqual(response.status_code, 200)
 
     def test_dj_post_permissions_failure(self):
-        user = get_user_model().objects.create_user(
+        get_user_model().objects.create_user(
             "test-dj",
             email="test@example.com",
             password="test",
@@ -125,8 +117,8 @@ class TestPermissions(APITestCase):
             first_name="test",
             last_name="user",
         )
-        f = baker.make("storage.File")
-        model = f"files/{f.id}"
+        file = baker.make("storage.File")
+        model = f"files/{file.id}"
         path = self.path.format(model)
         self.client.login(username="test-dj", password="test")
         response = self.client.patch(path, {"name": "newFilename"})

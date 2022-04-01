@@ -74,7 +74,7 @@ class ShowInstance(models.Model):
     autoplaylist_built = models.BooleanField()
 
     def get_owner(self):
-        return show.get_owner()
+        return self.show.get_owner()
 
     class Meta:
         managed = False
@@ -87,7 +87,7 @@ class ShowRebroadcast(models.Model):
     show = models.ForeignKey("Show", models.DO_NOTHING)
 
     def get_owner(self):
-        return show.get_owner()
+        return self.show.get_owner()
 
     class Meta:
         managed = False

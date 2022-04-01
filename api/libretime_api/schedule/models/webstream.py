@@ -14,8 +14,7 @@ class Webstream(models.Model):
     mime = models.CharField(max_length=1024, blank=True, null=True)
 
     def get_owner(self):
-        User = get_user_model()
-        return User.objects.get(pk=self.creator_id)
+        return get_user_model().objects.get(pk=self.creator_id)
 
     class Meta:
         managed = False

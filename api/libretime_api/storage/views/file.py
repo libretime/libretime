@@ -2,9 +2,9 @@ import os
 
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
-from rest_framework import status, viewsets
+from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.response import Response
+from rest_framework.serializers import IntegerField
 
 from ..models import File
 from ..serializers import FileSerializer
@@ -17,17 +17,10 @@ class FileViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["GET"])
     def download(self, request, pk=None):
-        if pk is None:
-            return Response("No file requested", status=status.HTTP_400_BAD_REQUEST)
-        try:
-            pk = int(pk)
-        except ValueError:
-            return Response(
-                "File ID should be an integer", status=status.HTTP_400_BAD_REQUEST
-            )
+        pk = IntegerField().to_internal_value(data=pk)
 
-        filename = get_object_or_404(File, pk=pk)
-        directory = filename.directory
-        path = os.path.join(directory.directory, filename.filepath)
-        response = FileResponse(open(path, "rb"), content_type=filename.mime)
-        return response
+        file = get_object_or_404(File, pk=pk)
+        storage = file.directory
+        path = os.path.join(storage.directory, file.filepath)
+
+        return FileResponse(open(path, "rb"), content_type=file.mime)

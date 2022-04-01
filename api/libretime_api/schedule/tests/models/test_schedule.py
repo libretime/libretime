@@ -28,30 +28,30 @@ class TestSchedule(TestCase):
 
     def test_get_cueout(self):
         # No overlapping schedule datetimes, normal usecase:
-        s1_starts = datetime(year=2021, month=10, day=2, hour=1, minute=30)
-        s1 = self.create_schedule(s1_starts)
-        self.assertEqual(s1.get_cueout(), self.cue_out)
-        self.assertEqual(s1.get_ends(), s1_starts + self.length)
+        item1_starts = datetime(year=2021, month=10, day=2, hour=1, minute=30)
+        item1 = self.create_schedule(item1_starts)
+        self.assertEqual(item1.get_cueout(), self.cue_out)
+        self.assertEqual(item1.get_ends(), item1_starts + self.length)
 
         # Mixed overlapping schedule datetimes (only ends is overlapping):
-        s2_starts = datetime(year=2021, month=10, day=2, hour=1, minute=55)
-        s2 = self.create_schedule(s2_starts)
-        self.assertEqual(s2.get_cueout(), timedelta(minutes=5))
-        self.assertEqual(s2.get_ends(), self.show_instance.ends)
+        item_2_starts = datetime(year=2021, month=10, day=2, hour=1, minute=55)
+        item_2 = self.create_schedule(item_2_starts)
+        self.assertEqual(item_2.get_cueout(), timedelta(minutes=5))
+        self.assertEqual(item_2.get_ends(), self.show_instance.ends)
 
         # Fully overlapping schedule datetimes (starts and ends are overlapping):
-        s3_starts = datetime(year=2021, month=10, day=2, hour=2, minute=1)
-        s3 = self.create_schedule(s3_starts)
-        self.assertEqual(s3.get_cueout(), self.cue_out)
-        self.assertEqual(s3.get_ends(), self.show_instance.ends)
+        item3_starts = datetime(year=2021, month=10, day=2, hour=2, minute=1)
+        item3 = self.create_schedule(item3_starts)
+        self.assertEqual(item3.get_cueout(), self.cue_out)
+        self.assertEqual(item3.get_ends(), self.show_instance.ends)
 
     def test_is_valid(self):
         # Starts before the schedule ends
-        s1_starts = datetime(year=2021, month=10, day=2, hour=1, minute=30)
-        s1 = self.create_schedule(s1_starts)
-        self.assertTrue(s1.is_valid)
+        item1_starts = datetime(year=2021, month=10, day=2, hour=1, minute=30)
+        item1 = self.create_schedule(item1_starts)
+        self.assertTrue(item1.is_valid)
 
         # Starts after the schedule ends
-        s2_starts = datetime(year=2021, month=10, day=2, hour=3)
-        s2 = self.create_schedule(s2_starts)
-        self.assertFalse(s2.is_valid)
+        item_2_starts = datetime(year=2021, month=10, day=2, hour=3)
+        item_2 = self.create_schedule(item_2_starts)
+        self.assertFalse(item_2.is_valid)

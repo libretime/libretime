@@ -34,8 +34,9 @@ class ScheduleViewSet(viewsets.ModelViewSet):
         filter_valid = self.request.query_params.get("is_valid")
         if filter_valid is None:
             return self.queryset.all()
+
         filter_valid = filter_valid.strip().lower() in ("true", "yes", "1")
         if filter_valid:
             return self.queryset.filter(starts__lt=F("instance__ends"))
-        else:
-            return self.queryset.filter(starts__gte=F("instance__ends"))
+
+        return self.queryset.filter(starts__gte=F("instance__ends"))

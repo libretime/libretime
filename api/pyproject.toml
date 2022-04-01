@@ -10,6 +10,9 @@ disable = [
   "missing-module-docstring",
 ]
 
+[tool.pylint.design]
+max-parents = 15
+
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
