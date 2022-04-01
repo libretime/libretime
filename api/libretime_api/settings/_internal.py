@@ -98,7 +98,6 @@ AUTH_USER_MODEL = "libretime_api.User"
 
 TEST_RUNNER = "libretime_api.tests.runners.ManagedModelTestRunner"
 
-
 # Logging
 def setup_logger(log_filepath: Optional[str]):
     logging_handlers = {
