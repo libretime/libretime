@@ -47,7 +47,7 @@ updates:
       - dependencies
 
   - package-ecosystem: "pip"
-    directory: "/api_client"
+    directory: "/api-client"
     schedule:
       interval: "daily"
     labels:

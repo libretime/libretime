@@ -46,7 +46,7 @@ setup(
     ],
     extras_require={
         "dev": [
-            f"libretime-api-client @ file://localhost{here.parent / 'api_client'}",
+            f"libretime-api-client @ file://localhost{here.parent / 'api-client'}",
             f"libretime-shared @ file://localhost{here.parent / 'shared'}",
         ],
     },

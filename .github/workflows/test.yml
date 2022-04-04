@@ -115,7 +115,7 @@ jobs:
         context:
           - analyzer
           - api
-          - api_client
+          - api-client
           - playout
           - shared
           - worker
@@ -145,7 +145,7 @@ jobs:
       matrix:
         context:
           - analyzer
-          - api_client
+          - api-client
           - shared
         release:
           - buster

@@ -1045,7 +1045,7 @@ loudCmd "$pip_install ${AIRTIMEROOT}/shared"
 verbose "...Done"
 
 verbose "\n * Installing API client..."
-loudCmd "$pip_install ${AIRTIMEROOT}/api_client"
+loudCmd "$pip_install ${AIRTIMEROOT}/api-client"
 verbose "...Done"
 
 verbose "\n * Installing playout and liquidsoap..."
