@@ -1,10 +1,4 @@
-import logging
-
-from django.contrib.auth.models import Group, Permission
-
-from .models.user_constants import DJ, GUEST, PROGRAM_MANAGER, USER_TYPES
-
-logger = logging.getLogger(__name__)
+from .core.models import DJ, GUEST, PROGRAM_MANAGER, USER_TYPES
 
 GUEST_PERMISSIONS = [
     "view_schedule",
@@ -24,6 +18,7 @@ GUEST_PERMISSIONS = [
     "view_webstream",
     "view_apiroot",
 ]
+
 DJ_PERMISSIONS = GUEST_PERMISSIONS + [
     "add_file",
     "add_podcast",
