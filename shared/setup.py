@@ -17,7 +17,7 @@ setup(
     packages=["libretime_shared"],
     package_data={"": ["py.typed"]},
     install_requires=[
-        "click~=8.0.4",
+        "click>=8.0.4,<8.2.0",
         "loguru==0.6.0",
         "pydantic",
         "pyyaml",
