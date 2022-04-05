@@ -798,6 +798,7 @@ if [ "$ignore_dependencies" = "f" ]; then
       "${SCRIPT_DIR}/api"
       "${SCRIPT_DIR}/analyzer"
       "${SCRIPT_DIR}/playout"
+      "${SCRIPT_DIR}/${python_source_path}/libretime_watch"
     )
 
     set -e

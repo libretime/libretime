@@ -9,7 +9,6 @@ import pika
 import psycopg2
 import select
 import signal
-import subprocess
 import sys
 import time
 import types

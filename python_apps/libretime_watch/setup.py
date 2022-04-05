@@ -13,10 +13,10 @@ os.chdir(script_path)
 # on Airtime Pro:
 if '--no-init-script' in sys.argv:
     data_files = []
-    sys.argv.remove('--no-init-script') # super hax
+    sys.argv.remove('--no-init-script')  # super hax
 else:
     data_files = [('/etc/init.d', ['install/sysvinit/libretime-watch']),
-                  ('/etc/init',['install/upstart/libretime-watch.conf']),
+                  ('/etc/init', ['install/upstart/libretime-watch.conf']),
                   ('/etc/cron.d', ['install/cron/libretime-watch'])]
     print(data_files)
 
@@ -28,23 +28,22 @@ setup(name='libretime-watch',
       version='0.1.1',
       description='Libretime Watch existing directory',
       url='http://github.com/libretime/libretime',
-      author='HaJoHe',
-      author_email='rni@chef.net',
+      author='@kmahelona, HaJoHe',
+      author_email='keoni@tehiku.co.nz',
       license='MIT',
-#      py_modules=['libretime_watch/libretime_watch', 'libretime_watch/readconfig.py'],
       packages=['libretime_watch'],
       scripts=['bin/libretime-watch'],
       entry_points={
-        "console_scripts": [
-          # Console script to trigger a scan of the watch directories
-          "libretime-watch-trigger = libretime_watch.start_watching:main",
-          "libretime-watch-purge-queue = libretime_watch.purge_queue:main"
-        ]
+          "console_scripts": [
+              # Console script to trigger a scan of the watch directories
+              "libretime-watch-trigger = libretime_watch.start_watching:main",
+              "libretime-watch-purge-queue = libretime_watch.purge_queue:main"
+          ]
       },
       install_requires=[
           'mutagen~=1.43.0',
           'pika',
-          'psycopg2-binary', # database
+          'psycopg2-binary',  # database
           'jason',
           'setuptools',
           'python-magic',
@@ -58,4 +57,5 @@ setup(name='libretime-watch',
 if data_files:
     print("Remember to reload the initctl configuration")
     # Set proper permissions for cron file to run
-    os.chmod('/etc/cron.d/libretime-watch', stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
+    os.chmod('/etc/cron.d/libretime-watch', stat.S_IRUSR |
+             stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
