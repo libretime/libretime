@@ -1,7 +1,7 @@
 #!/bin/bash 
 
 ### BEGIN INIT INFO
-# Provides:          airtime_watch
+# Provides:          libretime_watch
 # Required-Start:    $local_fs $remote_fs $network $syslog $all
 # Required-Stop:     $local_fs $remote_fs $network $syslog
 # Default-Start:     2 3 4 5
@@ -30,14 +30,14 @@ PIDFILE=/var/run/$NAME.pid
 # and status_of_proc is working.
 . /lib/lsb/init-functions
 
-start () {
+start() {
         start-stop-daemon --start --background --quiet \
             --make-pidfile --pidfile $PIDFILE --startas $DAEMON &
-#        start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID \
-#            --make-pidfile --pidfile $PIDFILE --startas $DAEMON &
+  #        start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID \
+  #            --make-pidfile --pidfile $PIDFILE --startas $DAEMON &
 }
 
-stop () {
+stop() {
         # Send TERM after 5 seconds, wait at most 30 seconds.
         start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE
         rm -f $PIDFILE
@@ -71,10 +71,11 @@ case "${1:-''}" in
            echo "Done."
         ;;
   'status')
-	   status_of_proc "$DAEMON" "$NAME" && exit 0 || exit $?
+	      status_of_proc "$DAEMON" "$NAME" && exit 0 || exit $?
         ;;
-  *)      # no parameter specified
-        echo "Usage: $SELF start|stop|restart|status"
-        exit 1
+  *)
+            # no parameter specified
+            echo "Usage: $SELF start|stop|restart|status"
+            exit 1
         ;;
 esac
