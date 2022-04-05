@@ -1,0 +1,9 @@
+cc_pref:
+  - id: "1"
+    subjid: null
+    keystr: shows_populated_until
+    valstr: "2044-02-07 00:00:00"
+  - id: "2"
+    subjid: null
+    keystr: timezone
+    valstr: UTC

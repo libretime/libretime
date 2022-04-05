@@ -1,0 +1,21 @@
+<dl id="spl_cue_editor" class="inline-list">
+	<dd data-uri="<?php echo $this->uri; ?>">
+	  <input type="button" class="pl-waveform-cues-btn" value="<?php echo _("Show Waveform")?>"></input>
+	</dd>
+    <dt><?php echo _("Cue In: "); ?><span class='spl_cue_hint'><?php echo _("(hh:mm:ss.t)")?></span></dt>
+    <dd id="spl_cue_in_<?php echo $this->id; ?>" class="spl_cue_in"
+    	data-cue-in="<?php echo $this->cueIn; ?>"
+    	data-cue-sec="<?php echo $this->cueInSec; ?>">
+        <span contenteditable="true" class="spl_text_input"><?php echo $this->cueIn; ?></span>
+    </dd>
+    <dd class="edit-error"></dd>
+    <dt><?php echo _("Cue Out: "); ?><span class='spl_cue_hint'><?php echo _("(hh:mm:ss.t)")?></span></dt>
+    <dd id="spl_cue_out_<?php echo $this->id; ?>" class="spl_cue_out"
+    	data-cue-out="<?php echo $this->cueOut; ?>"
+    	data-cue-sec="<?php echo $this->cueOutSec; ?>">
+        <span contenteditable="true" class="spl_text_input"><?php echo $this->cueOut; ?></span>
+    </dd>
+    <dd class="edit-error"></dd>
+    <dt><?php echo _("Original Length:"); ?></dt>
+    <dd id="spl_original"><span><?php echo $this->origLength; ?></span></dd>
+</dl>

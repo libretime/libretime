@@ -1,0 +1,49 @@
+cc_show:
+  - id: "1"
+    name: "test show"
+    url: null
+    genre: null
+    description: null
+    color: ffffff
+    background_color: "364492"
+    live_stream_using_airtime_auth: false
+    live_stream_using_custom_auth: false
+    live_stream_user: null
+    live_stream_pass: null
+    linked: false
+    is_linkable: true
+    image_path: ""
+    has_autoplaylist: false
+    autoplaylist_id: null
+    autoplaylist_repeat: false
+cc_show_days:
+  - id: "1"
+    first_show: "2044-01-01"
+    last_show: null
+    start_time: "00:00:00"
+    timezone: UTC
+    duration: "01:00"
+    day: "5"
+    repeat_type: "3"
+    next_pop_date: "2044-03-04"
+    show_id: "1"
+    record: "0"
+cc_show_instances:
+  - id: "1"
+    starts: "2044-01-01 00:00:00"
+    ends: "2044-01-01 01:00:00"
+    show_id: "1"
+    record: "0"
+    rebroadcast: "0"
+    instance_id: null
+    modified_instance: false
+  - id: "2"
+    starts: "2044-02-05 00:00:00"
+    ends: "2044-02-05 01:00:00"
+    show_id: "1"
+    record: "0"
+    rebroadcast: "0"
+    instance_id: null
+    modified_instance: false
+cc_show_rebroadcast:
+cc_show_hosts:

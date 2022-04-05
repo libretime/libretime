@@ -1,9 +1,0 @@
-@charset "utf-8";
-
-.dataTables_filter input {
-	margin-left: 0;
-}
-
-.dataTables_processing {
-	top: 20px;
-}

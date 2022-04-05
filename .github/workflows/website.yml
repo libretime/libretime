@@ -1,0 +1,66 @@
+name: Website
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/website.yml
+      - website/**
+      - docs/**
+  pull_request:
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Vale
+        run: |
+          sudo pip3 install gh-release-install
+          sudo gh-release-install \
+            errata-ai/vale \
+            vale_{version}_Linux_64-bit.tar.gz --extract vale \
+            /usr/local/bin/vale
+
+      - name: Add annotations matchers
+        run: |
+          echo "::add-matcher::.github/annotations/vale.json"
+
+      - name: Run Vale
+        run: |
+          make -C .github/vale/styles
+          vale --output line docs website/src/pages || true
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+
+    needs: [lint]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: yarn
+          cache-dependency-path: ./website/yarn.lock
+
+      - name: Install
+        working-directory: website
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        working-directory: website
+        run: yarn build
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./website/build

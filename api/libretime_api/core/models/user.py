@@ -1,0 +1,126 @@
+import hashlib
+
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permission
+from django.db import models
+
+from ...permission_constants import GROUPS
+from .role import ADMIN, USER_TYPES
+
+USER_TYPE_CHOICES = ()
+for item in USER_TYPES.items():
+    USER_TYPE_CHOICES = USER_TYPE_CHOICES + (item,)
+
+
+class UserManager(BaseUserManager):
+    def create_user(self, username, type, email, first_name, last_name, password):
+        user = self.model(
+            username=username,
+            type=type,
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, username, email, first_name, last_name, password):
+        user = self.create_user(username, "A", email, first_name, last_name, password)
+        return user
+
+    def get_by_natural_key(self, username):
+        return self.get(username=username)
+
+
+class User(AbstractBaseUser):
+    username = models.CharField(db_column="login", unique=True, max_length=255)
+    password = models.CharField(
+        db_column="pass", max_length=255
+    )  # Field renamed because it was a Python reserved word.
+    type = models.CharField(max_length=1, choices=USER_TYPE_CHOICES)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    last_login = models.DateTimeField(db_column="lastlogin", blank=True, null=True)
+    lastfail = models.DateTimeField(blank=True, null=True)
+    skype_contact = models.CharField(max_length=1024, blank=True, null=True)
+    jabber_contact = models.CharField(max_length=1024, blank=True, null=True)
+    email = models.CharField(max_length=1024, blank=True, null=True)
+    cell_phone = models.CharField(max_length=1024, blank=True, null=True)
+    login_attempts = models.IntegerField(blank=True, null=True)
+
+    USERNAME_FIELD = "username"
+    EMAIL_FIELD = "email"
+    REQUIRED_FIELDS = ["type", "email", "first_name", "last_name"]
+    objects = UserManager()
+
+    def get_full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
+    def get_short_name(self):
+        return self.first_name
+
+    def set_password(self, raw_password):
+        if not raw_password:
+            self.set_unusable_password()
+        else:
+            self.password = hashlib.md5(raw_password.encode()).hexdigest()
+
+    def is_staff(self):
+        return self.type == ADMIN
+
+    def check_password(self, raw_password):
+        if self.has_usable_password():
+            test_password = hashlib.md5(raw_password.encode()).hexdigest()
+            return test_password == self.password
+        return False
+
+    # The following methods have to be re-implemented here, as PermissionsMixin
+    # assumes that the User class has a 'group' attribute, which LibreTime does
+    # not currently provide. Once Django starts managing the Database
+    # (managed = True), then this can be replaced with
+    # django.contrib.auth.models.PermissionMixin.
+
+    def is_superuser(self):
+        return self.type == ADMIN
+
+    def get_user_permissions(self, obj=None):
+        """
+        Users do not have permissions directly, only through groups
+        """
+        return []
+
+    def get_group_permissions(self, obj=None):
+        permissions = GROUPS[self.type]
+        if obj:
+            obj_name = obj.__class__.__name__.lower()
+            permissions = [perm for perm in permissions if obj_name in perm]
+        # get permissions objects
+        q = models.Q()
+        for perm in permissions:
+            q = q | models.Q(codename=perm)
+        return list(Permission.objects.filter(q))
+
+    def get_all_permissions(self, obj=None):
+        return self.get_user_permissions(obj) + self.get_group_permissions(obj)
+
+    def has_perm(self, perm, obj=None):
+        if self.is_superuser():
+            return True
+        if not perm:
+            return False
+        permissions = self.get_all_permissions(obj)
+        try:
+            permission = Permission.objects.get(codename=perm)
+            return permission in permissions
+        except Permission.DoesNotExist:
+            return False
+
+    def has_perms(self, perm_list, obj=None):
+        result = True
+        for permission in perm_list:
+            result = result and self.has_perm(permission, obj)
+        return result
+
+    class Meta:
+        managed = False
+        db_table = "cc_subjs"

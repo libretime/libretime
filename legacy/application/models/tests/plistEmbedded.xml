@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<playlist id="0e22c20310212a51">
+    <playlistElement id="0000000000000103" relativeOffset="00:00:00.000000" >
+        <audioClip   id="0000000000010003"
+                     playlength="00:00:11.500000"
+		             title = "three"
+                     uri="file:var/test10003.mp3"
+        />
+    </playlistElement>
+    <playlistElement id="0000000000000104" relativeOffset="00:00:11.500000">
+        <playlist id="0000000000000001"
+                  playlength="01:30:00.000000"
+                  title="My First Playlist">
+        </playlist>
+    </playlistElement>
+    <metadata
+        xmlns="http://mdlf.org/campcaster/elements/1.0/"
+        xmlns:ls="http://mdlf.org/campcaster/elements/1.0/"
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns:dcterms="http://purl.org/dc/terms/"
+    >
+        <dc:title>embedded playlist</dc:title>
+        <dcterms:extent>01:30:11.500000</dcterms:extent>
+    </metadata>
+</playlist>

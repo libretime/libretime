@@ -1,29 +1,34 @@
 WEB_PORT_LISTEN
 
 <VirtualHost *:WEB_PORT>
-   ServerAdmin foo@bar.org
-   DocumentRoot WEB_ROOT
-   php_admin_value upload_tmp_dir /tmp
-   php_value post_max_size 500M
-   php_value upload_max_filesize 500M
-   php_value request_order "GPC"
-   php_value session.gc_probability 0
-   php_value session.auto_start 0
+  ServerAdmin foo@bar.org
+  DocumentRoot WEB_ROOT
+  php_admin_value upload_tmp_dir /tmp
+  php_value post_max_size 500M
+  php_value upload_max_filesize 500M
+  php_value request_order "GPC"
+  php_value session.gc_probability 0
+  php_value session.auto_start 0
 
-   AddOutputFilterByType DEFLATE text/plain
-   AddOutputFilterByType DEFLATE text/html
-   AddOutputFilterByType DEFLATE text/xml
-   AddOutputFilterByType DEFLATE text/css
-   AddOutputFilterByType DEFLATE application/xml
-   AddOutputFilterByType DEFLATE application/xhtml+xml
-   AddOutputFilterByType DEFLATE application/rss+xml
-   AddOutputFilterByType DEFLATE application/javascript
-   AddOutputFilterByType DEFLATE application/x-javascript
-   AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE text/plain
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/xml
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE application/xhtml+xml
+  AddOutputFilterByType DEFLATE application/rss+xml
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/x-javascript
+  AddOutputFilterByType DEFLATE application/json
 
+  ProxyPreserveHost On
+  ProxyPass /api/v2/ http://localhost:8081/api/v2/
+  ProxyPassReverse /api/v2/ http://localhost:8081/api/v2/
+  ProxyPass /api-auth/ http://localhost:8081/api-auth/
+  ProxyPassReverse /api-auth/ http://localhost:8081/api-auth/
+  Alias /api/static /usr/share/airtime/api/
 
   <Directory WEB_ROOT>
-
       RewriteEngine On
       RewriteCond %{REQUEST_FILENAME} -s [OR]
       RewriteCond %{REQUEST_FILENAME} -l [OR]
@@ -34,6 +39,10 @@ WEB_PORT_LISTEN
       Allow from all
 
       Require all granted
-
   </Directory>
+
+  <Directory /usr/share/airtime/api>
+      Require all granted
+  </Directory>
+
 </VirtualHost>

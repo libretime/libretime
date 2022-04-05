@@ -1,0 +1,17 @@
+[tool.pylint.messages_control]
+extension-pkg-whitelist = "pydantic"
+disable = [
+  "missing-class-docstring",
+  "missing-function-docstring",
+  "missing-module-docstring",
+]
+
+[tool.mypy]
+allow_redefinition = true
+disallow_incomplete_defs= true
+disallow_untyped_calls= true
+disallow_untyped_defs= true
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"

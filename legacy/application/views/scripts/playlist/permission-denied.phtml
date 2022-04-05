@@ -1,0 +1,5 @@
+<?php if ($this->objType == "block") { $displayText = "smart block"; } else { $displayText = $this->escape($this->objType); } ?>
+<h3>You do not have permission to edit this <?php echo $displayText; ?>.</h3>
+<input class="obj_id" type="hidden" value="<?php echo $this->obj->getId(); ?>"/>
+<input class='obj_type' type='hidden' value="<?php echo $this->escape($this->objType); ?>"/>
+<input type="hidden" class="playlist_name_display" contenteditable="true" value="<?php echo $this->escape($this->obj->getName()); ?>">

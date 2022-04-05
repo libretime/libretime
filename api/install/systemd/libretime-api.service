@@ -1,0 +1,18 @@
+[Unit]
+Description=LibreTime API Service
+
+[Service]
+Type=notify
+NotifyAccess=all
+KillSignal=SIGQUIT
+
+Environment=LIBRETIME_LOG_FILEPATH=/var/log/libretime/api.log
+Environment=LIBRETIME_CONFIG_FILEPATH=/etc/airtime/airtime.conf
+
+ExecStart=/usr/bin/uwsgi /etc/airtime/libretime-api.ini
+User=libretime-api
+Group=libretime-api
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

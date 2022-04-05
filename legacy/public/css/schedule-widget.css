@@ -1,0 +1,130 @@
+#scheduleTabs {
+    font-family: Arial,Helvetica,sans-serif;
+}
+#scheduleTabs ul {
+    overflow:hidden;
+    height:50px;
+    /*background: url('../widgets/css/widget-img/schedule-tabs-list-bgr.png') repeat-x left bottom;*/
+    background: #2E9AFE;
+    list-style-type:none;
+    margin:0;
+    padding:0;
+}
+#scheduleTabs ul li {
+    float:left;
+    height:50px;
+    margin:0;
+    padding:0;
+}
+#scheduleTabs ul li a {
+    width: 50px;
+    display:block;
+    float:left;
+    /*height:40px;*/
+    padding:0 10px;
+    font-size:12px;
+    font-weight:bold;
+    color:#ffffff;
+    /*line-height:40px;*/
+    /*border-right:1px solid #dbdbdb;
+    border-left:1px solid #f4f4f4;*/
+    text-decoration:none;
+}
+#scheduleTabs ul li a:hover {
+    color:#000;
+    text-decoration:none;
+}
+
+#scheduleTabs ul li a span {
+    position:relative;
+    display:block;
+    text-align: center;
+}
+.day-of-month{
+    font-size: 20px;
+    padding-bottom:10px;
+
+}
+.day-of-week{
+    font-size: 10px;
+    padding-top:10px;
+}
+#scheduleTabs ul li.ui-tabs-selected a {
+    /*height:40px;*/
+    margin-top:0px;
+    width: 50px;
+    /*line-height:40px;*/
+    color:#ffffff;
+    background: #2ECCFA;
+    /*border:1px solid #cac9c9; border-bottom:none;*/
+}
+#scheduleTabs table {
+    clear:both;
+    padding:0px;
+    border-collapse:collapse;
+    width:100%;
+}
+#scheduleTabs table thead {
+    height:35px;
+    font-size:12px; color:#333333; line-height:35px;
+    background-color: #fff;
+    background: -moz-linear-gradient(top, #ffffff 10%, #f4f4f4 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(10%, #ffffff), color-stop(100%, #f4f4f4));
+    border-bottom:1px solid #d4d4d4;
+}
+#scheduleTabs table thead tr {
+    height:35px;
+}
+#scheduleTabs table thead tr td {
+    padding-left:10px;
+    font-size:11px; color:#999999; text-transform:uppercase;
+}
+#scheduleTabs table tfoot {
+}
+#scheduleTabs table tbody {
+    font-size:13px;
+    color:#ffffff;
+    font-weight:bold;
+    background: rgba(0, 0, 0, 1);
+}
+#scheduleTabs table tbody tr {
+    height:30px;
+}
+#scheduleTabs table tbody tr td {
+    height:30px;
+    padding-left:10px;
+    border-bottom:1px dotted #b3b3b3;
+}
+#scheduleTabs table tbody tr td h4 {
+    color:#ffffff;  font-size:12px;
+    margin:0;
+    padding:0;
+}
+#scheduleTabs table tbody tr td ul {
+    background:none !important;
+    list-style-type:none;
+}
+#scheduleTabs table tbody tr td ul li {
+    float:left;
+    height:30px !important;
+    padding:0 2px;
+    font-size:12px; color:#cc0000; font-weight:normal; line-height:30px !important;
+}
+#scheduleTabs table tbody tr td ul li a {
+    height:30px !important;
+    margin:0px !important; padding:0px !important;
+    font-size:12px; color:#68BD44 !important; font-weight:normal !important; text-transform:uppercase; line-height:30px !important;
+    background:none !important;
+    border:none !important;
+}
+#scheduleTabs table tbody tr td ul li a:hover {
+    text-decoration:underline;
+}
+
+#scheduleTabs.ui-tabs .ui-tabs-hide {
+    display: none;
+}
+
+.embedScheduleWidget {
+    width: 490px;
+}

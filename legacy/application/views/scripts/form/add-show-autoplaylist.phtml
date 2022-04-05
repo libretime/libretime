@@ -1,0 +1,36 @@
+<fieldset>
+    <dl>
+        <dt id="add_show_has_autoplaylist_label">
+            <label for="add_show_has_autoplaylist_label">
+                <?php echo $this->element->getElement('add_show_has_autoplaylist')->getLabel()?>
+            </label>
+        </dt>
+        <dd>
+            <?php echo $this->element->getElement('add_show_has_autoplaylist') ?>
+            <span class="show_autoplaylist_help_icon" aria-describedby="ui-tooltip-2"></span>
+        </dd>
+
+	<div id="add_show_playlist_dropdown">
+        <p><?php echo _("Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/docs/playlists'>More information</a>"); ?></p>
+        <dt id="add_show_autoplaylist_id">
+            <label for="add_show_autoplaylist_id" class="required">
+                <?php echo $this->element->getElement('add_show_autoplaylist_id')->getLabel()?>
+            </label>
+        </dt>
+        <dd>
+            <?php echo $this->element->getElement('add_show_autoplaylist_id') ?>
+        </div>
+        <div  id="add_show_autoplaylist_repeat">
+            <dt id="add_show_autoplaylist_repeat_label">
+            <label for="add_show_autoplaylist_repeat_label">
+                <?php echo $this->element->getElement('add_show_autoplaylist_repeat')->getLabel()?>
+            </label>
+            </dt>
+            <dd>
+            <?php echo $this->element->getElement('add_show_autoplaylist_repeat') ?>
+            </dd>
+        </div>
+
+
+    </dl>
+</fieldset>

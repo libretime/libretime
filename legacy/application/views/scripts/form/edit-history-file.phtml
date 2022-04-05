@@ -1,0 +1,37 @@
+<form>
+<?php $form = $this->element ?>
+
+<dl class="zend_form">
+
+ <?php $name = "his_file_id"; ?>
+  <dd id="<?php echo $name;?>-element">
+    <?php echo $form->getElement($name); ?>
+  </dd>
+
+<?php foreach ($form->getSubForm('his_file_template') as $index=>$el): ?>
+  <?php $name = $el->getName(); ?>
+
+  <dt id="<?php echo $name;?>-label">
+    <label for="<?php echo $name;?>"><?php echo $el->getLabel() ?></label>
+  </dt>
+  <dd id="<?php echo $name;?>-element">
+    <?php echo $el ?>
+    <?php if ($el->hasErrors()): ?>
+    <ul class='errors'>
+    <?php foreach($el->getMessages() as $error): ?>
+      <li><?php echo $error; ?></li>
+      <?php endforeach; ?>
+    </ul>
+    <?php endif; ?>
+  </dd>
+<?php endforeach; ?>
+
+<dd id="submitButtons-element">
+<?php foreach (array("his_file_save", "his_file_cancel") as $name): ?>
+<?php echo $form->getElement($name); ?>
+<?php endforeach;?>
+</dd>
+
+</dl>
+
+</form>

@@ -1,0 +1,79 @@
+name: Tools
+
+on:
+  schedule:
+    - cron: "0 3 * * 0"
+  push:
+    branches: [main]
+    paths:
+      - "**/packages.ini"
+      - ".github/workflows/tools.yml"
+
+jobs:
+  docker-dev-image:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - distribution: ubuntu
+            release: bionic
+          - distribution: ubuntu
+            release: focal
+          - distribution: debian
+            release: buster
+          - distribution: debian
+            release: bullseye
+
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: libretime-dev
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Login to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate packages list
+        run: |
+          tools/packages.py --dev --format line ${{ matrix.release }} \
+            analyzer \
+            playout \
+            > packages.list
+
+      - name: Generate Dockerfile
+        run: |
+          cat <<EOF >> Dockerfile
+          FROM ${{ matrix.distribution }}:${{ matrix.release }}
+
+          COPY packages.list packages.list
+          EOF
+
+          [[ "${{ matrix.distribution }}" == "ubuntu" ]] && \
+          cat <<EOF >> Dockerfile
+          RUN DEBIAN_FRONTEND=noninteractive apt-get --quiet update && \
+              DEBIAN_FRONTEND=noninteractive apt-get --quiet install -y software-properties-common && \
+              add-apt-repository -y ppa:libretime/libretime
+          EOF
+
+          cat <<EOF >> Dockerfile
+          RUN DEBIAN_FRONTEND=noninteractive apt-get --quiet update && \
+              DEBIAN_FRONTEND=noninteractive apt-get --quiet install -y \
+              git \
+              python3 \
+              python3-pip \
+              python3-venv \
+              $(cat packages.list)
+          EOF
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: ${{ github.repository_owner == 'libretime' }}
+          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ matrix.release }}

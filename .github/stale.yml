@@ -9,10 +9,9 @@ daysUntilClose: 30
 
 # Issues or Pull Requests with these labels will never be considered stale. Set to `[]` to disable
 exemptLabels:
-  - pinned
-  - security
-  - "[Status] Maybe Later"
-  - "3.0-release-blocker"
+  - "status: pinned"
+  - "status: maybe later"
+  - "security"
 
 # Set to true to ignore issues in a project (defaults to false)
 exemptProjects: false
@@ -24,7 +23,7 @@ exemptMilestones: true
 exemptAssignees: true
 
 # Label to use when marking as stale
-staleLabel: stale
+staleLabel: "status: stalled"
 
 # Comment to post when marking as stale. Set to `false` to disable
 markComment: >
@@ -45,7 +44,7 @@ markComment: >
 
 # Comment to post when closing a stale Issue or Pull Request.
 closeComment: >
-  This issue has been autmatically closed after is was marked as stale and
+  This issue has been automatically closed after is was marked as stale and
   did not receive any further inputs.
 
   Feel free to let us know on [discourse](https://discourse.libretime.org/) or

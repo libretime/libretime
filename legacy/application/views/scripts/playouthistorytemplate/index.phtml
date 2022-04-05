@@ -1,0 +1,65 @@
+<div id="history_template" class="prefpanel alpha-block padded-strong">
+  <div>
+    <h2><?php echo(_("Playout History Templates"));?></h2>
+
+    <div><h4><?php echo _("Log Sheet Templates") ?></h4></div>
+    <button id="new_item_template" class="btn btn-new"><?php echo _("New Log Sheet Template") ?></button>
+    <ul id="template_list">
+      <?php if (count($this->template_list) == 0): ?>
+        <li><?php echo _("No Log Sheet Templates") ?></li>
+      <?php endif; ?>
+      <?php foreach ($this->template_list as $id=>$name): ?>
+        <?php if (in_array($id, $this->configured)): ?>
+        <li data-template="<?php echo $id; ?>" data-name="<?php echo $name; ?>" class="template_configured">
+          <a class="template_name" href="<?php echo $this->baseUrl("Playouthistorytemplate/configure-template/id/{$id}"); ?>">
+            <?php echo $name; ?>
+          </a>
+          <i class="icon icon-ok"></i>
+        <?php else: ?>
+        <li data-template="<?php echo $id; ?>" data-name="<?php echo $name; ?>">
+          <a class="template_name" href="<?php echo $this->baseUrl("Playouthistorytemplate/configure-template/id/{$id}"); ?>">
+            <?php echo $name; ?>
+          </a>
+          <a class="template_remove" href="<?php echo $this->baseUrl("Playouthistorytemplate/delete-template/id/{$id}"); ?>">
+            <i class="icon icon-trash"></i>
+          </a>
+          <a class="template_default" href="<?php echo $this->baseUrl("Playouthistorytemplate/set-template-default/format/json/id/{$id}"); ?>">
+            <?php echo _("Set Default") ?>
+          </a>
+        <?php endif; ?>
+        </li>
+      <?php endforeach; ?>
+    </ul>
+  </div>
+  <br><br>
+  <div>
+    <div><h4><?php echo _("File Summary Templates") ?></h4></div>
+    <button id="new_file_template" class="btn btn-new"><?php echo _("New File Summary Template") ?></button>
+    <ul id="template_file">
+      <?php if (count($this->template_file) == 0): ?>
+        <li><?php echo _("No File Summary Templates") ?></li>
+      <?php endif; ?>
+      <?php foreach ($this->template_file as $id=>$name): ?>
+        <?php if (in_array($id, $this->configured)): ?>
+        <li data-template="<?php echo $id; ?>" data-name="<?php echo $name; ?>" class="template_configured">
+          <a class="template_name" href="<?php echo $this->baseUrl("Playouthistorytemplate/configure-template/id/{$id}"); ?>">
+            <?php echo $name; ?>
+          </a>
+          <i class="icon icon-ok"></i>
+        <?php else: ?>
+        <li data-template="<?php echo $id; ?>" data-name="<?php echo $name; ?>">
+          <a class="template_name" href="<?php echo $this->baseUrl("Playouthistorytemplate/configure-template/id/{$id}"); ?>">
+            <?php echo $name; ?>
+          </a>
+          <a class="template_remove" href="<?php echo $this->baseUrl("Playouthistorytemplate/delete-template/id/{$id}"); ?>">
+            <i class="icon icon-trash"></i>
+          </a>
+          <a class="template_default" href="<?php echo $this->baseUrl("Playouthistorytemplate/set-template-default/format/json/id/{$id}"); ?>">
+            <?php echo _("Set Default") ?>
+          </a>
+        <?php endif; ?>
+        </li>
+      <?php endforeach; ?>
+    </ul>
+  </div>
+</div>

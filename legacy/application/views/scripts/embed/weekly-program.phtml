@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <link rel="stylesheet" href="<?php echo $this->css?>" type="text/css">
+    <script src="<?php echo $this->jquery ?>" type="text/javascript"></script>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+    <script src="/js/libs/handlebars.min.js"></script>
+</head>
+
+<body>
+<div id="wpBody" class="schedule tab_content current">
+    <script id="wpWidget" type="text/x-handlebars-template">
+        <ul class="tabs">
+            {{#each this}}
+            <li>
+                {{dayOfWeek}}<span>{{dayOfMonth}}</span>
+            </li>
+            {{/each}}
+        </ul>
+
+        <div class="schedule_content">
+            {{#each this}}
+            <div id="day-{{dayOfMonth}}" class="schedule_item">
+                {{#if (noShowsCheck this.shows)}}
+                <div class="row empty-schedule"><?php echo _('Looks like there are no shows scheduled on this day.') ?></div>
+                {{else}}
+                {{#each shows}}
+                <div class="row">
+                    <div class="time_grid">{{show_start_hour}} - {{show_end_hour}}</div>
+                    <div class="name_grid">{{{name}}}</div>
+                </div>
+                {{/each}}
+                {{/if}}
+            </div>
+            {{/each}}
+        </div>
+
+        <div class="weekly-schedule-widget-footer" <?php if ($this->widgetStyle == "premium") echo "style='display:none'"; ?>>
+            <a href="<?php echo PRODUCT_SITE_URL; ?>" target="_blank"><?php printf(_('Powered by %s'), PRODUCT_NAME); ?></a>
+        </div>
+    </script>
+</div>
+
+<script type="text/javascript">
+    let importSchedule = <?php echo $this->schedule_data; ?>;  // Object prepared in JSON, w/o API call
+    let cleanSchedule = [];
+
+    // Insert shows into correct locations in importShows array (work-around for API v.1)
+    let importShows = importSchedule["shows"];
+    importShows.forEach(element => {
+        // Convert timestamps to JS (sec -> millisec)
+        var start_date = new Date(element.starts_timestamp*1000);
+        var end_date = new Date(element.ends_timestamp*1000);
+        // Check date of show so we know where to assign it to
+        var format_start_date = start_date.getFullYear() + "-" + (start_date.getMonth()+1) + "-" + start_date.getDate();
+        // Assign show to correct location
+        if (importSchedule["weekDays"][format_start_date] !== undefined) {
+            importSchedule["weekDays"][format_start_date]["shows"].push(
+                {
+                    "show_start_hour": start_date.toLocaleTimeString([], { hour: 'numeric', minute : 'numeric' }),
+                    "show_end_hour": end_date.toLocaleTimeString([], { hour: 'numeric', minute : 'numeric' }),
+                    "name": element.name
+                });
+        }
+    });
+
+    // Re-arraying data into a Handlebars-friendly format
+    for (var i = 0; i <= 6; i++) {
+        cleanSchedule.push(Object.values(importSchedule.weekDays)[i]);
+    }
+
+    // Checker
+    Handlebars.registerHelper('noShowsCheck', function(obj){
+        return obj.length == 0;
+    });
+
+    // Templating with Handlebars.js
+    var wpWidget = document.querySelector('#wpWidget').innerHTML;
+    var wpTemplate = Handlebars.compile(wpWidget);
+    var compiledHTML = wpTemplate(cleanSchedule);
+    document.querySelector('#wpBody').innerHTML = compiledHTML;
+
+    // Tabs logic
+    $(document).ready(function() {
+        //initialize first day to active
+        $('.tabs').find("li").first().addClass("active");
+        $('.schedule_content').find('.schedule_item').first().addClass("active");
+
+        $('.tabs li').click(function(){
+            //var tab_id = $(this).attr('data-tab');
+            var tab_id = "day-"+$(this).find('span').text();
+
+            $('.tabs li').removeClass('active');
+            $('.schedule_item').removeClass('active');
+
+            $(this).addClass('active');
+            $("#"+tab_id).addClass('active');
+        });
+    });
+
+</script>
+</body>
+</html>

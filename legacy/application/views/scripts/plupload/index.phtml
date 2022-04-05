@@ -1,0 +1,118 @@
+<style type="text/css">
+    #plupload_files input[type="file"] {
+        font-size: 200px !important;
+    }
+</style>
+<script type="text/javascript">
+    var LIBRETIME_PLUPLOAD_MAX_FILE_SIZE = "<?php echo $this->uploadMaxSize; ?>";
+</script>
+<div id="upload_form" class="lib-content ui-widget ui-widget-content block-shadow padded content-pane wide-panel<?php if ($this->quotaLimitReached) { ?> hidden <?php } ?>">
+    <?php
+    $partitions = Application_Model_Systemstatus::GetDiskInfo();
+    $status = new StdClass;
+    $disk = $partitions[0];
+    $used = $disk->totalSpace - $disk->totalFreeSpace;
+    $total = $disk->totalSpace;
+    $tracktypes = Application_Model_Tracktype::getTracktypes();
+
+    array_multisort(array_map(function ($element) {
+        return $element['type_name'];
+    }, $tracktypes), SORT_ASC, $tracktypes);
+
+    if (count($tracktypes) == 0) {
+        $hasTracktypes = "disabled";
+        $showTracktypesDropdown = false;
+    } else {
+        $hasTracktypes = "";
+        $showTracktypesDropdown = true;
+    }
+    ?>
+    <?php
+    if (isset($_COOKIE['tt_upload'])) {
+        $ttsaved = $_COOKIE['tt_upload'];
+    } else {
+        // Use default track type
+        $ttsaved = Application_Model_Preference::GetTrackTypeDefault();
+    }
+    ?>
+
+    <div id="upload_wrapper">
+
+        <div id="track_type_selection">
+            <form>
+                <?php
+                if ($showTracktypesDropdown != false) {  ?>
+                    <select id="select_type" class="form-control" <?php echo $hasTracktypes; ?>>
+                        <?php
+                        echo "<option value=''>Select Track Type</option>";
+                        foreach ($tracktypes as $key => $tt) {
+                            $selected = "";
+                            if ($ttsaved == $tt['code']) {
+                                $selected = "selected";
+                            }
+                            $code = $tt['code'];
+                            $typename = $tt['type_name'];
+                            echo "<option value='$code' $selected>$typename</option>";
+                        }
+                        ?>
+                    </select>
+                <?php } ?>
+            </form>
+        </div>
+
+        <?php
+        if ($showTracktypesDropdown) {
+            $ttTitle = "";
+            foreach ($tracktypes as $key => $tt) {
+                if ($ttsaved == $tt['code']) {
+                    $ttTitle = $tt['type_name'];
+                }
+            }
+        }
+        ?>
+        <H2><?php echo _("Upload") ?> <span id="upload_type" <?php echo ($showTracktypesDropdown && $ttTitle != "") ? 'style="color:#ff611f"' : "" ?>>
+                <?php echo ($showTracktypesDropdown && $ttTitle != "") ? $ttTitle : "Tracks"; ?></span></H2>
+        <form action="/rest/media" method="post" id="add-media-dropzone" class="dropzone dz-clickable">
+            <?php echo $this->form->getElement('csrf') ?>
+            <div class="dz-message">
+                <?php echo _("Drop files here or click to browse your computer.") ?>
+            </div>
+        </form>
+        <!--
+        <div id="filelist">Your browser doesn't have Flash, Silverlight or HTML5 support.</div>
+        <br />
+
+        <div id="container">
+                <a id="pickfiles" href="javascript:;">[Select files]</a>
+                <a id="uploadfiles" href="javascript:;">[Upload files]</a>
+        </div>
+        -->
+        <div id="uploads_disk_usage">
+            <div style="padding-bottom: 2px;"><?php echo _("Storage") ?></div>
+            <div class="disk_usage_progress_bar"></div>
+            <div class="disk_usage_percent_in_use"><?php echo sprintf("%01.1f%% ", $used / $total * 100) .  _("in use") ?></div>
+            <div class="disk_usage_used" style="width:<?php echo sprintf("%01.1f%%", min(100, $used / $total * 100)) ?>;"></div>
+
+            <div style="margin-top: 17px; font-size: 12px;"><?php echo sprintf(_("%01.1fGB of %01.1fGB"), $used / pow(2, 30), $total / pow(2, 30)); ?></div>
+        </div>
+    </div>
+</div>
+
+<div id="plupload_error">
+    <table></table>
+</div>
+
+<div id="recent_uploads_wrapper" class="lib-content ui-widget ui-widget-content block-shadow content-pane wide-panel">
+    <div id="recent_uploads" class="outer-datatable-wrapper padded">
+        <div id="recent_uploads_filter">
+            <form>
+                <input type="radio" name="upload_status" id="upload_status_all" checked /><label for="upload_status_all"><?php echo _("All") ?></label>
+                <input type="radio" name="upload_status" id="upload_status_failed" /><label for="upload_status_failed"><?php echo _("Failed") ?></label>
+                <input type="radio" name="upload_status" id="upload_status_pending" /><label for="upload_status_pending"><?php echo _("Pending") ?></label>
+            </form>
+        </div>
+        <H2><?php echo _("Recent Uploads") ?></H2>
+        <table id="recent_uploads_table" class="datatable lib-content ui-widget ui-widget-content block-shadow" cellpadding="0" cellspacing="0"></table>
+    </div>
+    <div style="clear: both;"></div>
+</div>

@@ -1,0 +1,18 @@
+cc_show:
+  - id: "1"
+    name: "test show"
+    url: null
+    genre: null
+    description: null
+    color: ffffff
+    background_color: "364492"
+    live_stream_using_airtime_auth: false
+    live_stream_using_custom_auth: false
+    live_stream_user: null
+    live_stream_pass: null
+    linked: false
+    is_linkable: true
+    image_path: ""
+    has_autoplaylist: false
+    autoplaylist_id: null
+    autoplaylist_repeat: false

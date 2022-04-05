@@ -1,0 +1,234 @@
+cc_show:
+  - id: "1"
+    name: "test show"
+    url: null
+    genre: null
+    description: null
+    color: ffffff
+    background_color: "364492"
+    live_stream_using_airtime_auth: false
+    live_stream_using_custom_auth: false
+    live_stream_user: null
+    live_stream_pass: null
+    linked: false
+    is_linkable: true
+    image_path: ""
+    has_autoplaylist: false
+    autoplaylist_id: null
+    autoplaylist_repeat: false
+cc_show_days:
+  - id: "1"
+    first_show: "2014-01-05"
+    last_show: null
+    start_time: "00:00:00"
+    timezone: UTC
+    duration: "01:00"
+    day: "0"
+    repeat_type: "0"
+    next_pop_date: "2014-02-02"
+    show_id: "1"
+    record: "0"
+  - id: "2"
+    first_show: "2014-01-06"
+    last_show: null
+    start_time: "00:00:00"
+    timezone: UTC
+    duration: "01:00"
+    day: "1"
+    repeat_type: "0"
+    next_pop_date: "2014-02-03"
+    show_id: "1"
+    record: "0"
+  - id: "3"
+    first_show: "2014-01-07"
+    last_show: null
+    start_time: "00:00:00"
+    timezone: UTC
+    duration: "01:00"
+    day: "2"
+    repeat_type: "0"
+    next_pop_date: "2014-02-04"
+    show_id: "1"
+    record: "0"
+  - id: "4"
+    first_show: "2014-01-08"
+    last_show: null
+    start_time: "00:00:00"
+    timezone: UTC
+    duration: "01:00"
+    day: "3"
+    repeat_type: "0"
+    next_pop_date: "2014-02-05"
+    show_id: "1"
+    record: "0"
+  - id: "5"
+    first_show: "2014-01-09"
+    last_show: null
+    start_time: "00:00:00"
+    timezone: UTC
+    duration: "01:00"
+    day: "4"
+    repeat_type: "0"
+    next_pop_date: "2014-02-06"
+    show_id: "1"
+    record: "0"
+  - id: "6"
+    first_show: "2014-01-10"
+    last_show: null
+    start_time: "00:00:00"
+    timezone: UTC
+    duration: "01:00"
+    day: "5"
+    repeat_type: "0"
+    next_pop_date: "2014-02-07"
+    show_id: "1"
+    record: "0"
+  - id: "7"
+    first_show: "2014-01-11"
+    last_show: null
+    start_time: "00:00:00"
+    timezone: UTC
+    duration: "01:00"
+    day: "6"
+    repeat_type: "0"
+    next_pop_date: "2014-02-01"
+    show_id: "1"
+    record: "0"
+cc_show_instances:
+  - id: "1"
+    starts: "2014-01-05 00:00:00"
+    ends: "2014-01-05 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "2"
+    starts: "2014-01-12 00:00:00"
+    ends: "2014-01-12 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "3"
+    starts: "2014-01-19 00:00:00"
+    ends: "2014-01-19 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "4"
+    starts: "2014-01-26 00:00:00"
+    ends: "2014-01-26 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "5"
+    starts: "2014-01-06 00:00:00"
+    ends: "2014-01-06 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "6"
+    starts: "2014-01-13 00:00:00"
+    ends: "2014-01-13 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "7"
+    starts: "2014-01-20 00:00:00"
+    ends: "2014-01-20 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "8"
+    starts: "2014-01-27 00:00:00"
+    ends: "2014-01-27 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "9"
+    starts: "2014-01-07 00:00:00"
+    ends: "2014-01-07 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "10"
+    starts: "2014-01-14 00:00:00"
+    ends: "2014-01-14 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "11"
+    starts: "2014-01-21 00:00:00"
+    ends: "2014-01-21 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "12"
+    starts: "2014-01-28 00:00:00"
+    ends: "2014-01-28 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "13"
+    starts: "2014-01-08 00:00:00"
+    ends: "2014-01-08 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "14"
+    starts: "2014-01-15 00:00:00"
+    ends: "2014-01-15 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "15"
+    starts: "2014-01-22 00:00:00"
+    ends: "2014-01-22 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "16"
+    starts: "2014-01-29 00:00:00"
+    ends: "2014-01-29 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "17"
+    starts: "2014-01-09 00:00:00"
+    ends: "2014-01-09 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "18"
+    starts: "2014-01-16 00:00:00"
+    ends: "2014-01-16 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "19"
+    starts: "2014-01-23 00:00:00"
+    ends: "2014-01-23 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "20"
+    starts: "2014-01-30 00:00:00"
+    ends: "2014-01-30 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "21"
+    starts: "2014-01-10 00:00:00"
+    ends: "2014-01-10 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "22"
+    starts: "2014-01-17 00:00:00"
+    ends: "2014-01-17 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "23"
+    starts: "2014-01-24 00:00:00"
+    ends: "2014-01-24 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "24"
+    starts: "2014-01-31 00:00:00"
+    ends: "2014-01-31 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "25"
+    starts: "2014-01-11 00:00:00"
+    ends: "2014-01-11 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "26"
+    starts: "2014-01-18 00:00:00"
+    ends: "2014-01-18 01:00:00"
+    show_id: "1"
+    modified_instance: false
+  - id: "27"
+    starts: "2014-01-25 00:00:00"
+    ends: "2014-01-25 01:00:00"
+    show_id: "1"
+    modified_instance: false
+cc_show_rebroadcast:
+cc_show_hosts:

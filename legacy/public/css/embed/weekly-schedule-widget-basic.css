@@ -1,0 +1,226 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0px;
+}
+
+.tab_content {
+    color: #fff;
+    text-align: center;
+    visibility: hidden;
+    max-width: 750px;
+    /*margin: 0 auto;*/
+    margin-bottom: 140px;
+    position: absolute;
+    /*left: 50%;
+    margin-left: -380px;*/
+}
+
+.tab_content.current {
+    /*display: block;*/
+    visibility: visible;
+}
+
+.schedule .tabs {
+    list-style: none;
+    padding-left: 0px;
+    margin: 0px;
+    background: rgba(53, 53, 53, 0.9);
+
+    -moz-border-top-left-radius: 4px;
+    -moz-border-top-right-radius: 4px;
+    -webkit-border-top-left-radius: 4px;
+    -webkit-border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+
+    -webkit-box-shadow: 0 3px 5px rgba(0,0,0,0.1) inset,0 1px 0 rgba(255,255,255,0.1),0 0 1px #000 inset;
+    -moz-box-shadow: 0 3px 5px rgba(0,0,0,0.1) inset,0 1px 0 rgba(255,255,255,0.1),0 0 1px #000 inset;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.1) inset,0 1px 0 rgba(255,255,255,0.1),0 0 1px #000 inset;
+}
+
+.schedule .tabs li {
+    width: 103px;
+    height: 80px;
+    display: inline-block;
+    font-size: 14px;
+    padding: 15px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.schedule .tabs li span {
+    font-size: 30px;
+    display: block;
+}
+
+.schedule .tabs li.active {
+    background: rgba(150, 150, 150, 0.9);
+}
+
+.schedule .tabs li.active:hover {
+    background: rgba(170, 170, 170, 0.9);
+    background: #aaa
+}
+
+.schedule .tabs li:hover {
+    background: rgba(160, 160, 160, 0.7);
+}
+
+.schedule_content {
+    background: rgba(53, 53, 53, 0.9);
+    max-height: 0px;
+    transition: max-height 2s ease;
+    height: 290px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    /*transition-delay: 1s;*/
+}
+
+.schedule.current .schedule_content {
+    max-height: 290px;
+}
+
+.tab_content.current ul {
+background: rgba(53, 53, 53, 1.0);
+}
+
+/*.schedule_content table {
+    opacity: 0;
+    *//*transition: all 1s ease;*//*
+}
+
+.schedule.current .schedule_content table {
+    opacity: 1;
+    -webkit-transition-delay: 0.6s;
+    transition-delay: 0.6s;
+}*/
+
+.schedule_item {
+    display: none;
+    font-size: 17px;
+    text-align: left;
+    padding: 10px 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.schedule_item.active {
+    display: block;
+}
+
+.schedule_item .row {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.empty-schedule {
+    text-transform: none;
+    text-align: center;
+    color: #aaaaaa;
+    line-height: 240px;
+}
+
+.schedule_item div.time_grid {
+    /*padding-right: 10px;*/
+    width: 30%;
+    font-weight: 300;
+    color: #AAAAAA;
+    display: inline-block;
+}
+
+.schedule_item div.name_grid {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 10px;
+    width: 67%;
+    display:inline-block;
+    vertical-align: middle;
+}
+
+.weekly-schedule-widget-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: right;
+    font-size: 11px;
+    padding: 16px 16px;
+    background: rgba(53, 53, 53, 0.9);
+
+    -moz-border-bottom-left-radius: 4px;
+    -moz-border-bottom-right-radius: 4px;
+    -webkit-border-bottom-left-radius: 4px;
+    -webkit-border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+
+}
+
+.weekly-schedule-widget-footer a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.weekly-schedule-widget-footer span {
+    color: #ff5d1a;
+}
+
+@media (max-width: 730px) {
+    .tab_content {
+        margin-top: 0px;
+        width: auto;
+        max-width: 100%;
+        margin-left: auto;
+        left: 10px;
+        right: 10px;
+    }
+
+    .schedule .tabs li {
+        width: 64px;
+        height: 64px;
+        padding: 6px;
+    }
+}
+
+@media (max-width: 630px) {
+    .schedule_item div.time_grid {
+        width: 37%;
+    }
+
+    .schedule_item div.name_grid {
+        width: 58%;
+    }
+}
+
+@media (max-width: 530px) {
+    .schedule_item {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+
+    .schedule_item div.time_grid {
+        width: 35%;
+    }
+
+    .schedule_item div.name_grid {
+        width: 60%;
+    }
+}
+
+@media (max-width: 500px) {
+    .schedule_item div.time_grid {
+        width: 40%;
+    }
+
+    .schedule_item div.name_grid {
+        width: 55%;
+    }
+}
+
+@media (max-width: 400px) {
+    .schedule_item div.time_grid {
+        width: 95%;
+    }
+
+    .schedule_item div.name_grid {
+        width: 95%;
+    }
+}

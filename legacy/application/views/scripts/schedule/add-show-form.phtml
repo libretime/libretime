@@ -1,0 +1,50 @@
+<div id="schedule-add-show" class="tabs ui-widget ui-widget-content block-shadow alpha-block padded">
+    <div class="button-bar">
+        <a href="#" id="add-show-close" class="add-show-close"><i class="icon-remove-sign icon-white"></i><span><?php echo _("Close") ?></span></a>
+        <button data-action="<?php echo isset($this->action) ? $this->action : "add-show" ?>" aria-disabled="false" role="button" class="add-show-submit right-floated ui-button ui-widget ui-state-default ui-button-text-icon-primary btn btn-small">
+            <span class="ui-icon ui-icon-plusthick"></span>
+            <span class="ui-button-text"><?php echo ($this->addNewShow ? _("Add this show") : _("Update show")); ?></span>
+        </button>
+    </div>
+    <div class="clear"></div>
+    <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("What") ?></h3>
+    <div id="schedule-show-what" class="collapsible-content">
+        <?php echo $this->what; ?>
+    </div>
+    <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("When") ?></h3>
+    <div id="schedule-show-when" class="collapsible-content">
+        <?php
+        if (!$this->addNewShow) {
+            $this->when->getElement('add_show_timezone')->setOptions(array('disabled' => true));
+            ?>
+            <input type="hidden" name="add_show_timezone" id="add_show_timezone" value=<?php echo $this->when->getElement('add_show_timezone')->getValue()?>>
+        <?php
+        }
+        ?>
+        <?php echo $this->when; ?>
+
+        <?php echo $this->repeats; ?>
+    </div>
+    <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("Autoloading Playlist") ?></h3>
+    <div id="schedule-show-auto" class="collapsible-content">
+        <?php echo $this->autoplaylist; ?>
+    </div>
+    <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("Live Stream Input") ?></h3>
+    <div id="live-stream-override" class="collapsible-content">
+        <?php echo $this->live; ?>
+    </div>
+    <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("Who") ?></h3>
+    <div id="schedule-show-who" class="collapsible-content">
+        <?php echo $this->who; ?>
+    </div>
+    <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("Style") ?></h3>
+    <div id="schedule-show-style" class="collapsible-content">
+        <?php echo $this->style; ?>
+    </div>
+    <div class="button-bar bottom">
+        <button data-action="<?php echo isset($this->action) ? $this->action : "add-show" ?>" aria-disabled="false" role="button" class="add-show-submit right-floated ui-button ui-widget ui-state-default ui-button-text-icon-primary btn btn-small">
+            <span class="ui-icon ui-icon-plusthick"></span>
+            <span class="ui-button-text"><?php echo ($this->addNewShow ? _("Add this show") :  _("Update show")); ?></span>
+        </button>
+    </div>
+</div>

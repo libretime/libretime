@@ -1,0 +1,31 @@
+<dl id="spl_editor" class="inline-list">
+	<dd>
+	  <input type="button" class="pl-waveform-fades-btn" value="<?php echo _("Show Waveform")?>"></input>
+	</dd>
+    <?php if ($this->item1Type == 0) {?>
+    <dt><?php echo _("Fade out: "); ?><span class='spl_cue_hint'><?php echo _("(ss.t)")?></span></dt>
+    <dd id="spl_fade_out_<?php echo $this->item1; ?>" class="spl_fade_out"
+    	data-fadeout="<?php echo $this->item1Url; ?>"
+    	data-cuein="<?php echo $this->cueIn1; ?>"
+    	data-cueout="<?php echo $this->cueOut1; ?>"
+    	data-length="<?php echo $this->fadeOut; ?>"
+    	data-type="logarithmic"
+    	data-item="<?php echo $this->item1; ?>">
+        <span contenteditable="true" class="spl_text_input"><?php echo $this->fadeOut; ?></span>
+    </dd>
+    <dd class="edit-error"></dd>
+    <?php }
+    if (isset($this->item2Url)) {?>
+    <dt><?php echo _("Fade in: "); ?><span class='spl_cue_hint'><?php echo _("(ss.t)")?></span></dt>
+    <dd id="spl_fade_in_<?php echo $this->item2; ?>" class="spl_fade_in"
+    	data-fadein="<?php echo $this->item2Url; ?>"
+    	data-offset="<?php if ($this->item1Type == 0) { echo $this->offset; } else { echo 0; } ?>"
+    	data-cuein="<?php echo $this->cueIn2; ?>"
+    	data-cueout="<?php echo $this->cueOut2; ?>" data-length="<?php echo $this->fadeIn; ?>"
+    	data-type="logarithmic"
+    	data-item="<?php echo $this->item2; ?>">
+        <span contenteditable="true" class="spl_text_input"><?php echo $this->fadeIn; ?></span>
+    </dd>
+    <dd class="edit-error"></dd>
+    <?php }?>
+</dl>

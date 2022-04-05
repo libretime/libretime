@@ -1,0 +1,43 @@
+<div><!-- jQuery UI changes the styling on the outermost div; use a blank div so as not to break the .wrapper styling-->
+    <div class="wrapper">
+        <div id="media_selector_wrapper">
+            <?php $subnavPrefix = ""; require_once APPLICATION_PATH . "/views/scripts/partialviews/dashboard-sub-nav.php"; ?>
+        </div>
+        <?php echo $this->csrf ?>
+
+        <div id="library_content" class="lib-content tabs content-pane wide-panel">
+            <div>
+                <h2 id="library_title"><?php echo _("Dashboard")." - " ?><span id="library_filter"></span></h2>
+            </div>
+            <div class="panel-header-calendar">
+                <div id="advanced-options" class="btn-group">
+                    <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                    </button>
+                    <div id="advanced_search" class="advanced_search form-horizontal dropdown-menu"></div>
+                </div>
+            </div>
+            <div class="outer-datatable-wrapper">
+                <table id="library_display" cellpadding="0" cellspacing="0" class="datatable"></table>
+            </div>
+        </div>
+
+        <div id="show_builder" class="sb-content content-pane wide-panel">
+            <div class="panel-header">
+                <ul class="nav nav-tabs">
+                    <li id="schedule-tab" role="presentation" class="active">
+                        <a href="javascript:void(0)" class="tab-name" title="<?php echo _("Scheduled Shows") ?>">
+                            <?php echo _("Scheduled Shows") ?>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="outer-datatable-wrapper active-tab">
+                <table id="show_builder_table" cellpadding="0" cellspacing="0" class="datatable"></table>
+                <div class="sb-timerange">
+                    <?php echo $this->sb_form; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

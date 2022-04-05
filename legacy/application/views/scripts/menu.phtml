@@ -1,0 +1,45 @@
+<ol class="navigation">
+<?php foreach ($this->container as $page) : ?>
+    <?php
+        // Host users do not have access to the General Preferences
+        // therefor we need to manually change the page parameters
+        // to point to the first allowed item in the Preferences
+        // which is 'My Profile' page
+        $user = Application_Model_User::getCurrentUser();
+        $isHost = $user->isUserType(array(UTYPE_HOST));
+        if ($isHost && $page->getTitle() === 'Settings') {
+                $page->set('resource', 'usersettings');
+		$page->set('controller', 'user');
+                $page->set('action','edit-user');
+        }
+	?>
+    <?php if($this->navigation()->accept($page)) : ?>
+        <li class="top <?php if($page->isActive(true)){echo 'active';} ?>">
+            <?php if($page->hasPages()) : ?>
+            <a class="top_link" href="<?php echo $page->getHref(); ?>">
+                <span class="down"><?php echo $page->getClass(); echo _($page->getLabel()); ?></span>
+            </a>
+            <ul class="sub">
+
+                <?php foreach ($page->getPages() as $sub) :
+                         if($sub->getId() == "manage_folder"){
+                             continue;
+                         } ?>
+
+                <?php if($this->navigation()->accept($sub)) : ?>
+
+                <li>
+                    <a href="<?php echo $sub->getHref(); ?>" <?php echo ($sub->getTarget() != "")?"target=\"".$sub->getTarget()."\"":""; ?>><?php echo $page->getClass(); echo _($sub->getLabel()); ?></a>
+                </li>
+                <?php endif; ?>
+                <?php endforeach; ?>
+            </ul>
+            <?php else: ?>
+            <a class="top_link" href="<?php echo $page->getHref(); ?>">
+                <span><?php echo $page->getClass(); echo _($page->getLabel()); ?></span>
+            </a>
+            <?php endif; ?>
+        </li>
+    <?php endif; ?>
+<?php endforeach; ?>
+</ol>

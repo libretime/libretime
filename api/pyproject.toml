@@ -1,0 +1,18 @@
+[tool.pylint.master]
+load-plugins = "pylint_django"
+django-settings-module = "libretime_api.settings.testing"
+
+[tool.pylint.messages_control]
+extension-pkg-whitelist = "pydantic"
+disable = [
+  "missing-class-docstring",
+  "missing-function-docstring",
+  "missing-module-docstring",
+]
+
+[tool.pylint.design]
+max-parents = 15
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"

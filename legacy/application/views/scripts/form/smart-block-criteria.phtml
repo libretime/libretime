@@ -1,0 +1,151 @@
+<form class="smart-block-form" method="post" action="">
+    <dl class='zend_form search-criteria'>
+        <div id='sp-success' class='success' style='display:none'></div>
+        <dt><label><?php echo(_("Search Criteria:"));?></label></dt>
+        <dd id='sp_criteria-element' class='criteria-element'>
+        <?php for ($i = 0; $i < $this->criteriasLength; $i++) {
+        // modRowMap holds the number of modifier rows for each criteria element
+        // i.e. if we have 'Album contains 1' and 'Album contains 2' the modRowMap
+        // for Album is 2
+        ?>
+        <?php for ($j = 0; $j < $this->modRowMap[$i]; $j++) {
+                // determine if logic label should be 'and' or 'or'
+                if ($this->modRowMap[$i] > 1 && $j != $this->modRowMap[$i]-1) $logicLabel = _('or');
+                else $logicLabel = _('and');
+
+                $disabled = $this->element->getElement("sp_criteria_field_".$i."_".$j)->getAttrib('disabled') == 'disabled'?true:false;
+                // determine if the next row is disabled and only display the logic label if it isn't
+                if ($j == $this->modRowMap[$i]-1 && $i < 25) {
+                    $n = $i+1;
+                    $nextIndex = $n."_0";
+                } elseif ($j+1 <= $this->modRowMap[$i]-1) {
+                    $n = $j+1;
+                    $nextIndex = $i."_".$n;
+
+                }
+                $nextDisabled = $this->element->getElement("sp_criteria_field_".$nextIndex)->getAttrib('disabled') == 'disabled'?true:false;
+        ?>
+            <div <?php if (/*($i > 0) && */ $disabled) {
+                          echo 'style="display:none"';
+                      }?> class="search-row-<?php echo $logicLabel ?>">
+                <?php echo $this->element->getElement("sp_criteria_field_".$i."_".$j) ?>
+                <?php echo $this->element->getElement("sp_criteria_modifier_".$i."_".$j)   /* @todo finish this */?>
+
+                <?php echo $this->element->getElement("sp_criteria_value_".$i."_".$j) ?>
+                <span class='sp_text_font' id="datetime_select" <?php echo $this->element->getElement("sp_criteria_datetime_select_".$i."_".$j)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>><?php echo $this->element->getElement('sp_criteria_datetime_select_'.$i."_".$j) ?><?php echo _(" ago "); ?></span>
+
+                <a <?php if ($disabled) { echo 'style=display:none'; } ?>  class='modifier_add_link' id='modifier_add_<?php echo $i ?>'>
+                    + <?php echo(_("New Modifier")); ?>
+                </a>
+
+                <span class='sp_text_font' id="extra_criteria" <?php echo $this->element->getElement("sp_criteria_extra_".$i."_".$j)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>><?php echo _(" to "); ?><?php echo $this->element->getElement('sp_criteria_extra_'.$i."_".$j) ?></span>
+                <span class='sp_text_font' id="extra_datetime_select" <?php echo $this->element->getElement("sp_criteria_extra_datetime_select_".$i."_".$j)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>><?php echo $this->element->getElement('sp_criteria_extra_datetime_select_'.$i."_".$j) ?><?php echo _(" ago "); ?></span>
+
+                <a style='margin-right:3px' class='btn btn-small btn-danger' id='criteria_remove_<?php echo $i ?>'>
+                    <i class='icon-white icon-remove spl-no-r-margin'></i>
+                </a>
+                <span class='db-logic-label' <?php if ($nextDisabled) echo 'style="display:none"';?>>
+                    <?php echo $logicLabel;?>
+                </span>
+
+                <?php if($this->element->getElement("sp_criteria_field_".$i."_".$j)->hasErrors()) : ?>
+                <?php foreach($this->element->getElement("sp_criteria_field_".$i."_".$j)->getMessages() as $error): ?>
+                <span class='errors sp-errors'>
+                    <?php echo $error; ?>
+                </span>
+                <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+            <?php } ?>
+
+        <?php } ?>
+        <a class='btn btn-small btn-new' id='criteria_add'><i class='icon-white icon-plus'></i><?php echo(_("New Criteria")); ?></a>
+        </dd>
+    </dl>
+    <dl>
+        <dt>
+            <label class='sp_text_font'><?php echo $this->element->getElement('sp_limit_value')->getLabel() ?></label>
+        </dt>
+        <dd id='sp_limit-element'>
+            <?php echo $this->element->getElement('sp_limit_value')?>
+            <?php echo $this->element->getElement('sp_limit_options') ?>
+            <?php if($this->element->getElement("sp_limit_value")->hasErrors()) : ?>
+                <?php foreach($this->element->getElement("sp_limit_value")->getMessages() as $error): ?>
+                    <span class='errors sp-errors'>
+                   <?php echo $error; ?>
+                </span>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </dd>
+    </dl>
+
+    <div class="collapsible-header"><span class="arrow-icon"></span><?php echo _("Advanced options"); ?></div>
+    <div class="smart-block-advanced">
+        <dl>
+            <dt>
+                <label class='sp-label'>
+                    <?php echo $this->element->getElement('sp_type')->getLabel() ?>
+                </label>
+            </dt>
+            <dd id='sp_type-element'>
+                <?php $i=0;
+                    $value = $this->element->getElement('sp_type')->getValue();
+                    foreach ($this->element->getElement('sp_type')->getMultiOptions() as $radio) : ?>
+
+                    <label class='sp-label' for='sp_type-<?php echo $i?>'>
+                        <input type="radio" value="<?php echo $i ?>" id="sp_type-<?php echo $i ?>" name="sp_type" <?php if($i == $value){echo 'checked="checked"';}?> ><?php echo $radio ?>
+                    </label>
+                <?php $i = $i + 1; ?>
+                <?php endforeach; ?>
+                <span class='playlist_type_help_icon'></span>
+            </dd>
+        </dl>
+        <dl>
+            <dt>
+                <label class='sp_text_font'><?php echo $this->element->getElement('sp_repeat_tracks')->getLabel() ?></label>
+            </dt>
+            <dd id='sp_repeat_tracks-element'>
+                <?php echo $this->element->getElement('sp_repeat_tracks')?>
+                <?php if($this->element->getElement("sp_repeat_tracks")->hasErrors()) : ?>
+                    <?php foreach($this->element->getElement("sp_repeat_tracks")->getMessages() as $error): ?>
+                        <span class='errors sp-errors'>
+                    <?php echo $error; ?>
+                    </span>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <span class='repeat_tracks_help_icon'></span>
+            </dd>
+        </dl>
+        <dl>
+            <dt>
+                <label class='sp_text_font'><?php echo $this->element->getElement('sp_overflow_tracks')->getLabel() ?></label>
+            </dt>
+            <dd id='sp_overflow_tracks-element'>
+                <?php echo $this->element->getElement('sp_overflow_tracks')?>
+                <?php if($this->element->getElement("sp_overflow_tracks")->hasErrors()) : ?>
+                    <?php foreach($this->element->getElement("sp_overflow_tracks")->getMessages() as $error): ?>
+                        <span class='errors sp-errors'>
+                    <?php echo $error; ?>
+                    </span>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <span class='overflow_tracks_help_icon'></span>
+            </dd>
+        </dl>
+        <dl>
+            <dt>
+                <label class='sp_text_font'><?php echo $this->element->getElement('sp_sort_options')->getLabel();?></label>
+            </dt>
+            <dd id='sp_sort-element'>
+                <?php echo $this->element->getElement('sp_sort_options') ?>
+                <?php if($this->element->getElement("sp_sort_options")->hasErrors()) : ?>
+                    <?php foreach($this->element->getElement("sp_sort_options")->getMessages() as $error): ?>
+                        <span class='errors sp-errors'>
+                    <?php echo $error; ?>
+                    </span>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </dd>
+        </dl>
+    </div>
+</form>

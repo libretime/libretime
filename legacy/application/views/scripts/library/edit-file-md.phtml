@@ -1,0 +1,39 @@
+<?php $get_artwork = FileDataHelper::getArtworkData($this->artwork, 256); ?>
+<div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong edit-md-dialog">
+    <div class="track-edit-header" style="top:15px">
+        <?php if ($this->permissionDenied) { ?> <h3><?php echo _("You do not have permission to edit this track.") ?></h3> <?php } ?>
+        <?php
+        /*
+        if ($this->permissionDenied) {
+          echo(_("Viewing "));
+        } else {
+          echo(_("Editing "));
+        } */
+        ?>
+        <div class="track-edit-right-wrapper">
+            <div class="track-edit-right">
+                <div class="inner_track_editor_title" style="width: 100%;">
+                    <h2 style="line-height: 26px !important;"><span class="title_obj_name"><?php echo($this->title); ?></span></h2>
+                    <h3 style="line-height: 2px !important;"><span class=""><?php echo($this->artist_name); ?></span></h3>
+                </div>
+            </div>
+        </div>
+        <div class="track-edit-left">
+            <div class="artwork-upload" data-id="<?php echo($this->id); ?>">
+                <div class="artwork-edit">
+                    <input type='file' class="artworkUpload artwork-uploaded-<?php echo($this->id); ?>" id="artworkUpload-<?php echo ($this->id); ?>" data-id="<?php echo($this->id); ?>" accept=".png, .jpg, .jpeg" />
+                    <label for="artworkUpload-<?php echo ($this->id); ?>"></label>
+                </div>
+                <div id="artwork-preview" class="artwork-preview">
+                    <div class="artwork-preview-<?php echo($this->id); ?>" id="artworkPreview" style="background-image: url(<?php echo $get_artwork; ?>);">
+                    </div>
+                </div>
+            </div>
+            <div>
+              <a href="#" class="delete-artwork" data-id="<?php echo($this->id); ?>" style="font-size: 11px;">Remove</a>
+            </div>
+        </div>
+    </div>
+    <div style="height: 160px;"></div>
+    <?php echo $this->form; ?>
+</div>

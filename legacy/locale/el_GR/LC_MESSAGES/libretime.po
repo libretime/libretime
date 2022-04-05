@@ -1,0 +1,4659 @@
+# Translation for LibreTime.
+# Copyright (C) 2012 Sourcefabric
+# Copyright (C) 2021 LibreTime
+# This file is distributed under the same license as the LibreTime package.
+#
+# Translators:
+# Katerina Michailidi <katerina.michailidis@sourcefabric.org>, 2014
+# Sourcefabric <contact@sourcefabric.org>, 2013
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: LibreTime\n"
+"Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
+"POT-Creation-Date: 2021-10-15 19:56+0200\n"
+"PO-Revision-Date: 2021-10-17 08:09+0000\n"
+"Last-Translator: Kyle Robbertze <github@paddatrapper.com>\n"
+"Language-Team: Greek <https://hosted.weblate.org/projects/libretime/legacy/"
+"el/>\n"
+"Language: el_GR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.9-dev\n"
+
+#: application/common/DateHelper.php:216
+#, php-format
+msgid "The year %s must be within the range of 1753 - 9999"
+msgstr "Το έτος %s πρέπει να είναι εντός του εύρους 1753 - 9999"
+
+#: application/common/DateHelper.php:219
+#, php-format
+msgid "%s-%s-%s is not a valid date"
+msgstr "%s-%s-%s δεν αποτελεί έγκυρη ημερομηνία"
+
+#: application/common/DateHelper.php:243
+#, php-format
+msgid "%s:%s:%s is not a valid time"
+msgstr "%s : %s : %s δεν αποτελεί έγκυρη ώρα"
+
+#: application/common/LocaleHelper.php:23
+msgid "English"
+msgstr ""
+
+#: application/common/LocaleHelper.php:24
+msgid "Afar"
+msgstr ""
+
+#: application/common/LocaleHelper.php:25
+msgid "Abkhazian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:26
+msgid "Afrikaans"
+msgstr ""
+
+#: application/common/LocaleHelper.php:27
+msgid "Amharic"
+msgstr ""
+
+#: application/common/LocaleHelper.php:28
+msgid "Arabic"
+msgstr ""
+
+#: application/common/LocaleHelper.php:29
+msgid "Assamese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:30
+msgid "Aymara"
+msgstr ""
+
+#: application/common/LocaleHelper.php:31
+msgid "Azerbaijani"
+msgstr ""
+
+#: application/common/LocaleHelper.php:32
+msgid "Bashkir"
+msgstr ""
+
+#: application/common/LocaleHelper.php:33
+msgid "Belarusian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:34
+msgid "Bulgarian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:35
+msgid "Bihari"
+msgstr ""
+
+#: application/common/LocaleHelper.php:36
+msgid "Bislama"
+msgstr ""
+
+#: application/common/LocaleHelper.php:37
+msgid "Bengali/Bangla"
+msgstr ""
+
+#: application/common/LocaleHelper.php:38
+msgid "Tibetan"
+msgstr ""
+
+#: application/common/LocaleHelper.php:39
+msgid "Breton"
+msgstr ""
+
+#: application/common/LocaleHelper.php:40
+msgid "Catalan"
+msgstr ""
+
+#: application/common/LocaleHelper.php:41
+msgid "Corsican"
+msgstr ""
+
+#: application/common/LocaleHelper.php:42
+msgid "Czech"
+msgstr ""
+
+#: application/common/LocaleHelper.php:43
+msgid "Welsh"
+msgstr ""
+
+#: application/common/LocaleHelper.php:44
+msgid "Danish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:45
+msgid "German"
+msgstr ""
+
+#: application/common/LocaleHelper.php:46
+msgid "Bhutani"
+msgstr ""
+
+#: application/common/LocaleHelper.php:47
+msgid "Greek"
+msgstr ""
+
+#: application/common/LocaleHelper.php:48
+msgid "Esperanto"
+msgstr ""
+
+#: application/common/LocaleHelper.php:49
+msgid "Spanish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:50
+msgid "Estonian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:51
+msgid "Basque"
+msgstr ""
+
+#: application/common/LocaleHelper.php:52
+msgid "Persian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:53
+msgid "Finnish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:54
+msgid "Fiji"
+msgstr ""
+
+#: application/common/LocaleHelper.php:55
+msgid "Faeroese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:56
+msgid "French"
+msgstr ""
+
+#: application/common/LocaleHelper.php:57
+msgid "Frisian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:58
+msgid "Irish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:59
+msgid "Scots/Gaelic"
+msgstr ""
+
+#: application/common/LocaleHelper.php:60
+msgid "Galician"
+msgstr ""
+
+#: application/common/LocaleHelper.php:61
+msgid "Guarani"
+msgstr ""
+
+#: application/common/LocaleHelper.php:62
+msgid "Gujarati"
+msgstr ""
+
+#: application/common/LocaleHelper.php:63
+msgid "Hausa"
+msgstr ""
+
+#: application/common/LocaleHelper.php:64
+msgid "Hindi"
+msgstr ""
+
+#: application/common/LocaleHelper.php:65
+msgid "Croatian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:66
+msgid "Hungarian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:67
+msgid "Armenian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:68
+msgid "Interlingua"
+msgstr ""
+
+#: application/common/LocaleHelper.php:69
+msgid "Interlingue"
+msgstr ""
+
+#: application/common/LocaleHelper.php:70
+msgid "Inupiak"
+msgstr ""
+
+#: application/common/LocaleHelper.php:71
+msgid "Indonesian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:72
+msgid "Icelandic"
+msgstr ""
+
+#: application/common/LocaleHelper.php:73
+msgid "Italian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:74
+msgid "Hebrew"
+msgstr ""
+
+#: application/common/LocaleHelper.php:75
+msgid "Japanese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:76
+msgid "Yiddish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:77
+msgid "Javanese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:78
+msgid "Georgian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:79
+msgid "Kazakh"
+msgstr ""
+
+#: application/common/LocaleHelper.php:80
+msgid "Greenlandic"
+msgstr ""
+
+#: application/common/LocaleHelper.php:81
+msgid "Cambodian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:82
+msgid "Kannada"
+msgstr ""
+
+#: application/common/LocaleHelper.php:83
+msgid "Korean"
+msgstr ""
+
+#: application/common/LocaleHelper.php:84
+msgid "Kashmiri"
+msgstr ""
+
+#: application/common/LocaleHelper.php:85
+msgid "Kurdish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:86
+msgid "Kirghiz"
+msgstr ""
+
+#: application/common/LocaleHelper.php:87
+msgid "Latin"
+msgstr ""
+
+#: application/common/LocaleHelper.php:88
+msgid "Lingala"
+msgstr ""
+
+#: application/common/LocaleHelper.php:89
+msgid "Laothian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:90
+msgid "Lithuanian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:91
+msgid "Latvian/Lettish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:92
+msgid "Malagasy"
+msgstr ""
+
+#: application/common/LocaleHelper.php:93
+msgid "Maori"
+msgstr ""
+
+#: application/common/LocaleHelper.php:94
+msgid "Macedonian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:95
+msgid "Malayalam"
+msgstr ""
+
+#: application/common/LocaleHelper.php:96
+msgid "Mongolian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:97
+msgid "Moldavian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:98
+msgid "Marathi"
+msgstr ""
+
+#: application/common/LocaleHelper.php:99
+msgid "Malay"
+msgstr ""
+
+#: application/common/LocaleHelper.php:100
+msgid "Maltese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:101
+msgid "Burmese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:102
+msgid "Nauru"
+msgstr ""
+
+#: application/common/LocaleHelper.php:103
+msgid "Nepali"
+msgstr ""
+
+#: application/common/LocaleHelper.php:104
+msgid "Dutch"
+msgstr ""
+
+#: application/common/LocaleHelper.php:105
+msgid "Norwegian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:106
+msgid "Occitan"
+msgstr ""
+
+#: application/common/LocaleHelper.php:107
+msgid "(Afan)/Oromoor/Oriya"
+msgstr ""
+
+#: application/common/LocaleHelper.php:108
+msgid "Punjabi"
+msgstr ""
+
+#: application/common/LocaleHelper.php:109
+msgid "Polish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:110
+msgid "Pashto/Pushto"
+msgstr ""
+
+#: application/common/LocaleHelper.php:111
+msgid "Portuguese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:112
+msgid "Quechua"
+msgstr ""
+
+#: application/common/LocaleHelper.php:113
+msgid "Rhaeto-Romance"
+msgstr ""
+
+#: application/common/LocaleHelper.php:114
+msgid "Kirundi"
+msgstr ""
+
+#: application/common/LocaleHelper.php:115
+msgid "Romanian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:116
+msgid "Russian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:117
+msgid "Kinyarwanda"
+msgstr ""
+
+#: application/common/LocaleHelper.php:118
+msgid "Sanskrit"
+msgstr ""
+
+#: application/common/LocaleHelper.php:119
+msgid "Sindhi"
+msgstr ""
+
+#: application/common/LocaleHelper.php:120
+msgid "Sangro"
+msgstr ""
+
+#: application/common/LocaleHelper.php:121
+msgid "Serbo-Croatian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:122
+msgid "Singhalese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:123
+msgid "Slovak"
+msgstr ""
+
+#: application/common/LocaleHelper.php:124
+msgid "Slovenian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:125
+msgid "Samoan"
+msgstr ""
+
+#: application/common/LocaleHelper.php:126
+msgid "Shona"
+msgstr ""
+
+#: application/common/LocaleHelper.php:127
+msgid "Somali"
+msgstr ""
+
+#: application/common/LocaleHelper.php:128
+msgid "Albanian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:129
+msgid "Serbian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:130
+msgid "Siswati"
+msgstr ""
+
+#: application/common/LocaleHelper.php:131
+msgid "Sesotho"
+msgstr ""
+
+#: application/common/LocaleHelper.php:132
+msgid "Sundanese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:133
+msgid "Swedish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:134
+msgid "Swahili"
+msgstr ""
+
+#: application/common/LocaleHelper.php:135
+msgid "Tamil"
+msgstr ""
+
+#: application/common/LocaleHelper.php:136
+msgid "Tegulu"
+msgstr ""
+
+#: application/common/LocaleHelper.php:137
+msgid "Tajik"
+msgstr ""
+
+#: application/common/LocaleHelper.php:138
+msgid "Thai"
+msgstr ""
+
+#: application/common/LocaleHelper.php:139
+msgid "Tigrinya"
+msgstr ""
+
+#: application/common/LocaleHelper.php:140
+msgid "Turkmen"
+msgstr ""
+
+#: application/common/LocaleHelper.php:141
+msgid "Tagalog"
+msgstr ""
+
+#: application/common/LocaleHelper.php:142
+msgid "Setswana"
+msgstr ""
+
+#: application/common/LocaleHelper.php:143
+msgid "Tonga"
+msgstr ""
+
+#: application/common/LocaleHelper.php:144
+msgid "Turkish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:145
+msgid "Tsonga"
+msgstr ""
+
+#: application/common/LocaleHelper.php:146
+msgid "Tatar"
+msgstr ""
+
+#: application/common/LocaleHelper.php:147
+msgid "Twi"
+msgstr ""
+
+#: application/common/LocaleHelper.php:148
+msgid "Ukrainian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:149
+msgid "Urdu"
+msgstr ""
+
+#: application/common/LocaleHelper.php:150
+msgid "Uzbek"
+msgstr ""
+
+#: application/common/LocaleHelper.php:151
+msgid "Vietnamese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:152
+msgid "Volapuk"
+msgstr ""
+
+#: application/common/LocaleHelper.php:153
+msgid "Wolof"
+msgstr ""
+
+#: application/common/LocaleHelper.php:154
+msgid "Xhosa"
+msgstr ""
+
+#: application/common/LocaleHelper.php:155
+msgid "Yoruba"
+msgstr ""
+
+#: application/common/LocaleHelper.php:156
+msgid "Chinese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:157
+msgid "Zulu"
+msgstr ""
+
+#: application/common/Timezone.php:21
+msgid "Use station default"
+msgstr ""
+
+#: application/common/UsabilityHints.php:65
+msgid "Upload some tracks below to add them to your library!"
+msgstr ""
+
+#: application/common/UsabilityHints.php:69
+#, php-format
+msgid "It looks like you haven't uploaded any audio files yet. %sUpload a file now%s."
+msgstr ""
+
+#: application/common/UsabilityHints.php:76
+msgid "Click the 'New Show' button and fill out the required fields."
+msgstr ""
+
+#: application/common/UsabilityHints.php:80
+#, php-format
+msgid "It looks like you don't have any shows scheduled. %sCreate a show now%s."
+msgstr ""
+
+#: application/common/UsabilityHints.php:89
+msgid "To start broadcasting, cancel the current linked show by clicking on it and selecting 'Cancel Show'."
+msgstr ""
+
+#: application/common/UsabilityHints.php:92
+#, php-format
+msgid ""
+"Linked shows need to be filled with tracks before it starts. To start broadcasting cancel the current linked show and schedule an unlinked show.\n"
+"                    %sCreate an unlinked show now%s."
+msgstr ""
+
+#: application/common/UsabilityHints.php:96
+msgid "To start broadcasting, click on the current show and select 'Schedule Tracks'"
+msgstr ""
+
+#: application/common/UsabilityHints.php:100
+#, php-format
+msgid "It looks like the current show needs more tracks. %sAdd tracks to your show now%s."
+msgstr ""
+
+#: application/common/UsabilityHints.php:107
+msgid "Click on the show starting next and select 'Schedule Tracks'"
+msgstr ""
+
+#: application/common/UsabilityHints.php:111
+#, php-format
+msgid "It looks like the next show is empty. %sAdd tracks to your show now%s."
+msgstr ""
+
+#: application/configs/config-check.php:175
+msgid "LibreTime media analyzer service"
+msgstr ""
+
+#: application/configs/config-check.php:182
+msgid "Check that the libretime-analyzer service is installed correctly in "
+msgstr ""
+
+#: application/configs/config-check.php:183
+#: application/configs/config-check.php:204
+#: application/configs/config-check.php:225
+#: application/configs/config-check.php:246
+#: application/configs/config-check.php:267
+msgid " and ensure that it's running with "
+msgstr ""
+
+#: application/configs/config-check.php:185
+#: application/configs/config-check.php:206
+#: application/configs/config-check.php:227
+#: application/configs/config-check.php:248
+#: application/configs/config-check.php:269
+msgid "If not, try "
+msgstr ""
+
+#: application/configs/config-check.php:196
+msgid "LibreTime playout service"
+msgstr ""
+
+#: application/configs/config-check.php:203
+msgid "Check that the libretime-playout service is installed correctly in "
+msgstr ""
+
+#: application/configs/config-check.php:217
+msgid "LibreTime liquidsoap service"
+msgstr ""
+
+#: application/configs/config-check.php:224
+msgid "Check that the libretime-liquidsoap service is installed correctly in "
+msgstr ""
+
+#: application/configs/config-check.php:238
+msgid "LibreTime Celery Task service"
+msgstr ""
+
+#: application/configs/config-check.php:245
+msgid "Check that the libretime-celery service is installed correctly in "
+msgstr ""
+
+#: application/configs/config-check.php:259
+msgid "LibreTime API service"
+msgstr ""
+
+#: application/configs/config-check.php:266
+msgid "Check that the libretime-api service is installed correctly in "
+msgstr ""
+
+#: application/configs/navigation.php:27
+msgid "Radio Page"
+msgstr ""
+
+#: application/configs/navigation.php:35
+msgid "Calendar"
+msgstr "Ημερολόγιο"
+
+#: application/configs/navigation.php:43
+msgid "Widgets"
+msgstr ""
+
+#: application/configs/navigation.php:52
+msgid "Player"
+msgstr ""
+
+#: application/configs/navigation.php:58
+msgid "Weekly Schedule"
+msgstr ""
+
+#: application/configs/navigation.php:66
+msgid "Settings"
+msgstr ""
+
+#: application/configs/navigation.php:74
+msgid "General"
+msgstr ""
+
+#: application/configs/navigation.php:80
+msgid "My Profile"
+msgstr ""
+
+#: application/configs/navigation.php:85
+msgid "Users"
+msgstr "Xρήστες"
+
+#: application/configs/navigation.php:91
+msgid "Track Types"
+msgstr ""
+
+#: application/configs/navigation.php:98
+msgid "Streams"
+msgstr "Streams"
+
+#: application/configs/navigation.php:105
+#: application/controllers/LocaleController.php:382
+#: application/controllers/LocaleController.php:383
+msgid "Status"
+msgstr "Κατάσταση"
+
+#: application/configs/navigation.php:114
+msgid "Analytics"
+msgstr ""
+
+#: application/configs/navigation.php:123
+msgid "Playout History"
+msgstr "Ιστορικό Playout"
+
+#: application/configs/navigation.php:130
+msgid "History Templates"
+msgstr "Ιστορικό Template"
+
+#: application/configs/navigation.php:137
+msgid "Listener Stats"
+msgstr "Στατιστικές Ακροατών"
+
+#: application/configs/navigation.php:144
+msgid "Show Listener Stats"
+msgstr ""
+
+#: application/configs/navigation.php:153
+msgid "Help"
+msgstr "Βοήθεια"
+
+#: application/configs/navigation.php:161
+msgid "Getting Started"
+msgstr "Έναρξη"
+
+#: application/configs/navigation.php:168
+msgid "User Manual"
+msgstr "Εγχειρίδιο Χρήστη"
+
+#: application/configs/navigation.php:173
+msgid "Get Help Online"
+msgstr ""
+
+#: application/configs/navigation.php:178
+msgid "Contribute to LibreTime"
+msgstr ""
+
+#: application/configs/navigation.php:183
+msgid "What's New?"
+msgstr ""
+
+#: application/controllers/ApiController.php:113
+#: application/controllers/ApiController.php:729
+msgid "You are not allowed to access this resource."
+msgstr "Δεν έχετε δικαίωμα πρόσβασης σε αυτό το βοήθημα"
+
+#: application/controllers/ApiController.php:356
+#: application/controllers/ApiController.php:432
+#: application/controllers/ApiController.php:501
+#: application/controllers/ApiController.php:556
+#: application/controllers/ApiController.php:645
+#: application/controllers/ApiController.php:662
+#: application/controllers/ApiController.php:695
+msgid "You are not allowed to access this resource. "
+msgstr "Δεν έχετε δικαίωμα πρόσβασης σε αυτό το βοήθημα. "
+
+#: application/controllers/ApiController.php:903
+#: application/controllers/ApiController.php:924
+#: application/controllers/ApiController.php:936
+#, php-format
+msgid "File does not exist in %s"
+msgstr ""
+
+#: application/controllers/ApiController.php:990
+msgid "Bad request. no 'mode' parameter passed."
+msgstr "Λανθασμένο αίτημα. Η παράμετρος «κατάσταση» δεν πέρασε."
+
+#: application/controllers/ApiController.php:1002
+msgid "Bad request. 'mode' parameter is invalid"
+msgstr "Λανθασμένο αίτημα. Η παράμετρος «κατάσταση» δεν είναι έγκυρη"
+
+#: application/controllers/DashboardController.php:35
+#: application/controllers/DashboardController.php:87
+msgid "You don't have permission to disconnect source."
+msgstr "Δεν έχετε άδεια για αποσύνδεση πηγής."
+
+#: application/controllers/DashboardController.php:37
+#: application/controllers/DashboardController.php:89
+msgid "There is no source connected to this input."
+msgstr "Δεν υπάρχει καμία πηγή που είναι συνδεδεμένη σε αυτή την είσοδο."
+
+#: application/controllers/DashboardController.php:84
+msgid "You don't have permission to switch source."
+msgstr "Δεν έχετε άδεια για αλλαγή πηγής."
+
+#: application/controllers/EmbeddablewidgetsController.php:26
+msgid ""
+"To configure and use the embeddable player you must:<br><br>\n"
+"            1. Enable at least one MP3, AAC, or OGG stream under Settings -> Streams<br>\n"
+"            2. Enable the Public LibreTime API under Settings -> Preferences"
+msgstr ""
+
+#: application/controllers/EmbeddablewidgetsController.php:39
+msgid ""
+"To use the embeddable weekly schedule widget you must:<br><br>\n"
+"            Enable the Public LibreTime API under Settings -> Preferences"
+msgstr ""
+
+#: application/controllers/EmbeddablewidgetsController.php:52
+msgid ""
+"To add the Radio Tab to your Facebook Page, you must first:<br><br>\n"
+"            Enable the Public LibreTime API under Settings -> Preferences"
+msgstr ""
+
+#: application/controllers/ErrorController.php:96
+msgid "Page not found."
+msgstr ""
+
+#: application/controllers/ErrorController.php:106
+msgid "The requested action is not supported."
+msgstr ""
+
+#: application/controllers/ErrorController.php:116
+msgid "You do not have permission to access this resource."
+msgstr ""
+
+#: application/controllers/ErrorController.php:127
+msgid "An internal application error has occurred."
+msgstr ""
+
+#: application/controllers/IndexController.php:88
+#, php-format
+msgid "%s Podcast"
+msgstr ""
+
+#: application/controllers/IndexController.php:89
+msgid "No tracks have been published yet."
+msgstr ""
+
+#: application/controllers/LibraryController.php:29
+#: application/controllers/PlaylistController.php:150
+#, php-format
+msgid "%s not found"
+msgstr "%s δεν βρέθηκε"
+
+#: application/controllers/LibraryController.php:38
+#: application/controllers/PlaylistController.php:171
+msgid "Something went wrong."
+msgstr "Κάτι πήγε στραβά."
+
+#: application/controllers/LibraryController.php:92
+#: application/controllers/LocaleController.php:171
+#: application/controllers/ShowbuilderController.php:136
+#: application/forms/SmartBlockCriteria.php:574
+msgid "Preview"
+msgstr "Προεπισκόπηση"
+
+#: application/controllers/LibraryController.php:112
+#: application/controllers/LibraryController.php:144
+#: application/controllers/LibraryController.php:167
+msgid "Add to Playlist"
+msgstr "Προσθήκη στη λίστα αναπαραγωγής"
+
+#: application/controllers/LibraryController.php:114
+msgid "Add to Smart Block"
+msgstr "Προσθήκη στο Smart Block"
+
+#: application/controllers/LibraryController.php:119
+#: application/controllers/LibraryController.php:156
+#: application/controllers/LibraryController.php:175
+#: application/controllers/LocaleController.php:75
+#: application/controllers/ShowbuilderController.php:143
+#: application/services/CalendarService.php:183
+#: application/services/CalendarService.php:200
+#: application/services/CalendarService.php:205
+msgid "Delete"
+msgstr "Διαγραφή"
+
+#: application/controllers/LibraryController.php:120
+#: application/controllers/LibraryController.php:151
+#: application/controllers/LibraryController.php:173
+msgid "Edit..."
+msgstr ""
+
+#: application/controllers/LibraryController.php:131
+#: application/controllers/ScheduleController.php:736
+msgid "Download"
+msgstr "Λήψη"
+
+#: application/controllers/LibraryController.php:135
+msgid "Duplicate Playlist"
+msgstr "Αντιγραφή Λίστας Αναπαραγωγής"
+
+#: application/controllers/LibraryController.php:138
+msgid "Duplicate Smartblock"
+msgstr ""
+
+#: application/controllers/LibraryController.php:180
+msgid "No action available"
+msgstr "Καμία διαθέσιμη δράση"
+
+#: application/controllers/LibraryController.php:200
+msgid "You don't have permission to delete selected items."
+msgstr "Δεν έχετε άδεια διαγραφής των επιλεγμένων στοιχείων."
+
+#: application/controllers/LibraryController.php:245
+msgid "Could not delete file because it is scheduled in the future."
+msgstr ""
+
+#: application/controllers/LibraryController.php:248
+msgid "Could not delete file(s)."
+msgstr ""
+
+#: application/controllers/LibraryController.php:290
+#: application/controllers/LibraryController.php:325
+#, php-format
+msgid "Copy of %s"
+msgstr "Αντιγραφή από %s"
+
+#: application/controllers/ListenerstatController.php:51
+msgid "Please make sure admin user/password is correct on Settings->Streams page."
+msgstr "Παρακαλούμε σιγουρευτείτε ότι ο χρήστης/κωδικός πρόσβασης διαχειριστή είναι σωστός στη σελίδα Σύστημα>Streams."
+
+#: application/controllers/LocaleController.php:27
+msgid "Audio Player"
+msgstr "Αναπαραγωγή ήχου"
+
+#: application/controllers/LocaleController.php:28
+msgid "Something went wrong!"
+msgstr ""
+
+#: application/controllers/LocaleController.php:30
+msgid "Recording:"
+msgstr "Εγγραφή"
+
+#: application/controllers/LocaleController.php:31
+msgid "Master Stream"
+msgstr "Κύριο Stream"
+
+#: application/controllers/LocaleController.php:32
+msgid "Live Stream"
+msgstr "Live Stream"
+
+#: application/controllers/LocaleController.php:33
+msgid "Nothing Scheduled"
+msgstr "Τίποτα δεν έχει προγραμματιστεί"
+
+#: application/controllers/LocaleController.php:34
+msgid "Current Show:"
+msgstr "Τρέχουσα Εκπομπή:"
+
+#: application/controllers/LocaleController.php:35
+msgid "Current"
+msgstr "Τρέχουσα"
+
+#: application/controllers/LocaleController.php:37
+msgid "You are running the latest version"
+msgstr "Χρησιμοποιείτε την τελευταία έκδοση"
+
+#: application/controllers/LocaleController.php:38
+msgid "New version available: "
+msgstr "Νέα έκδοση διαθέσιμη: "
+
+#: application/controllers/LocaleController.php:39
+msgid "You have a pre-release version of LibreTime intalled."
+msgstr ""
+
+#: application/controllers/LocaleController.php:40
+msgid "A patch update for your LibreTime installation is available."
+msgstr ""
+
+#: application/controllers/LocaleController.php:41
+msgid "A feature update for your LibreTime installation is available."
+msgstr ""
+
+#: application/controllers/LocaleController.php:42
+msgid "A major update for your LibreTime installation is available."
+msgstr ""
+
+#: application/controllers/LocaleController.php:43
+msgid "Multiple major updates for LibreTime installation are available. Please upgrade as soon as possible."
+msgstr ""
+
+#: application/controllers/LocaleController.php:45
+msgid "Add to current playlist"
+msgstr "Προσθήκη στην τρέχουσα λίστα αναπαραγωγής"
+
+#: application/controllers/LocaleController.php:46
+msgid "Add to current smart block"
+msgstr "Προσθήκη στο τρέχον smart block"
+
+#: application/controllers/LocaleController.php:47
+msgid "Adding 1 Item"
+msgstr "Προσθήκη 1 Στοιχείου"
+
+#: application/controllers/LocaleController.php:48
+#, php-format
+msgid "Adding %s Items"
+msgstr "Προσθήκη %s στοιχείου/ων"
+
+#: application/controllers/LocaleController.php:49
+msgid "You can only add tracks to smart blocks."
+msgstr "Μπορείτε να προσθέσετε μόνο κομμάτια στα smart blocks."
+
+#: application/controllers/LocaleController.php:50
+#: application/controllers/PlaylistController.php:183
+msgid "You can only add tracks, smart blocks, and webstreams to playlists."
+msgstr "Μπορείτε να προσθέσετε μόνο κομμάτια, smart blocks και webstreams σε λίστες αναπαραγωγής."
+
+#: application/controllers/LocaleController.php:53
+msgid "Please select a cursor position on timeline."
+msgstr "Παρακαλούμε επιλέξτε μια θέση δρομέα στο χρονοδιάγραμμα."
+
+#: application/controllers/LocaleController.php:54
+msgid "You haven't added any tracks"
+msgstr ""
+
+#: application/controllers/LocaleController.php:55
+msgid "You haven't added any playlists"
+msgstr ""
+
+#: application/controllers/LocaleController.php:56
+msgid "You haven't added any podcasts"
+msgstr ""
+
+#: application/controllers/LocaleController.php:57
+msgid "You haven't added any smart blocks"
+msgstr ""
+
+#: application/controllers/LocaleController.php:58
+msgid "You haven't added any webstreams"
+msgstr ""
+
+#: application/controllers/LocaleController.php:59
+msgid "Learn about tracks"
+msgstr ""
+
+#: application/controllers/LocaleController.php:60
+msgid "Learn about playlists"
+msgstr ""
+
+#: application/controllers/LocaleController.php:61
+msgid "Learn about podcasts"
+msgstr ""
+
+#: application/controllers/LocaleController.php:62
+msgid "Learn about smart blocks"
+msgstr ""
+
+#: application/controllers/LocaleController.php:63
+msgid "Learn about webstreams"
+msgstr ""
+
+#: application/controllers/LocaleController.php:64
+msgid "Click 'New' to create one."
+msgstr ""
+
+#: application/controllers/LocaleController.php:68
+msgid "Add"
+msgstr "Προσθήκη"
+
+#: application/controllers/LocaleController.php:69
+msgid "New"
+msgstr ""
+
+#: application/controllers/LocaleController.php:70
+#: application/services/CalendarService.php:147
+msgid "Edit"
+msgstr "Επεξεργασία"
+
+#: application/controllers/LocaleController.php:71
+msgid "Add to Schedule"
+msgstr ""
+
+#: application/controllers/LocaleController.php:72
+msgid "Add to next show"
+msgstr ""
+
+#: application/controllers/LocaleController.php:73
+msgid "Add to current show"
+msgstr ""
+
+#: application/controllers/LocaleController.php:74
+msgid "Add after selected items"
+msgstr ""
+
+#: application/controllers/LocaleController.php:76
+msgid "Publish"
+msgstr ""
+
+#: application/controllers/LocaleController.php:77
+#: application/forms/AddShowStyle.php:63
+#: application/forms/GeneralPreferences.php:55
+msgid "Remove"
+msgstr "Αφαίρεση"
+
+#: application/controllers/LocaleController.php:78
+msgid "Edit Metadata"
+msgstr "Επεξεργασία Μεταδεδομένων"
+
+#: application/controllers/LocaleController.php:79
+msgid "Add to selected show"
+msgstr "Προσθήκη στην επιλεγμένη εκπομπή"
+
+#: application/controllers/LocaleController.php:80
+msgid "Select"
+msgstr "Επιλογή"
+
+#: application/controllers/LocaleController.php:81
+msgid "Select this page"
+msgstr "Επιλέξτε αυτή τη σελίδα"
+
+#: application/controllers/LocaleController.php:82
+msgid "Deselect this page"
+msgstr "Καταργήστε αυτήν την σελίδα"
+
+#: application/controllers/LocaleController.php:83
+msgid "Deselect all"
+msgstr "Κατάργηση όλων"
+
+#: application/controllers/LocaleController.php:84
+msgid "Are you sure you want to delete the selected item(s)?"
+msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε το επιλεγμένο στοιχείο/α;"
+
+#: application/controllers/LocaleController.php:85
+msgid "Scheduled"
+msgstr "Προγραμματισμένο"
+
+#: application/controllers/LocaleController.php:86
+#: application/views/scripts/partialviews/dashboard-sub-nav.php:3
+msgid "Tracks"
+msgstr ""
+
+#: application/controllers/LocaleController.php:87
+msgid "Playlist"
+msgstr ""
+
+#: application/controllers/LocaleController.php:88
+#: application/forms/SmartBlockCriteria.php:81
+#: application/models/Block.php:1470 application/models/Block.php:1566
+#: application/services/HistoryService.php:1053
+#: application/services/HistoryService.php:1088
+#: application/services/HistoryService.php:1103
+msgid "Title"
+msgstr "Τίτλος"
+
+#: application/controllers/LocaleController.php:89
+#: application/forms/SmartBlockCriteria.php:66
+#: application/models/Block.php:1454 application/models/Block.php:1550
+#: application/services/HistoryService.php:1054
+#: application/services/HistoryService.php:1089
+#: application/services/HistoryService.php:1104
+msgid "Creator"
+msgstr "Δημιουργός"
+
+#: application/controllers/LocaleController.php:90
+#: application/forms/SmartBlockCriteria.php:57
+#: application/models/Block.php:1445 application/models/Block.php:1541
+#: application/services/HistoryService.php:1055
+msgid "Album"
+msgstr "Album"
+
+#: application/controllers/LocaleController.php:91
+msgid "Bit Rate"
+msgstr "Ρυθμός Bit"
+
+#: application/controllers/LocaleController.php:92
+#: application/forms/SmartBlockCriteria.php:59
+#: application/models/Block.php:1447 application/models/Block.php:1543
+msgid "BPM"
+msgstr "BPM"
+
+#: application/controllers/LocaleController.php:93
+#: application/forms/SmartBlockCriteria.php:60
+#: application/models/Block.php:1448 application/models/Block.php:1544
+#: application/services/HistoryService.php:1060
+#: application/services/HistoryService.php:1107
+msgid "Composer"
+msgstr "Συνθέτης"
+
+#: application/controllers/LocaleController.php:94
+#: application/forms/SmartBlockCriteria.php:61
+#: application/models/Block.php:1449 application/models/Block.php:1545
+#: application/services/HistoryService.php:1065
+msgid "Conductor"
+msgstr "Ενορχήστρωση"
+
+#: application/controllers/LocaleController.php:95
+#: application/forms/SmartBlockCriteria.php:62
+#: application/models/Block.php:1450 application/models/Block.php:1546
+#: application/services/HistoryService.php:1062
+#: application/services/HistoryService.php:1108
+msgid "Copyright"
+msgstr "Copyright"
+
+#: application/controllers/LocaleController.php:96
+#: application/forms/SmartBlockCriteria.php:67
+#: application/models/Block.php:1455 application/models/Block.php:1551
+msgid "Encoded By"
+msgstr "Κωδικοποιήθηκε από"
+
+#: application/controllers/LocaleController.php:97
+#: application/forms/SmartBlockCriteria.php:68
+#: application/forms/StreamSettingSubForm.php:135
+#: application/models/Block.php:1456 application/models/Block.php:1552
+#: application/services/HistoryService.php:1057
+msgid "Genre"
+msgstr "Είδος"
+
+#: application/controllers/LocaleController.php:98
+#: application/forms/SmartBlockCriteria.php:69
+#: application/models/Block.php:1457 application/models/Block.php:1553
+#: application/services/HistoryService.php:1061
+msgid "ISRC"
+msgstr "ISRC"
+
+#: application/controllers/LocaleController.php:99
+#: application/forms/SmartBlockCriteria.php:70
+#: application/models/Block.php:1458 application/models/Block.php:1554
+#: application/services/HistoryService.php:1059
+msgid "Label"
+msgstr "Εταιρεία"
+
+#: application/controllers/LocaleController.php:100
+#: application/forms/SmartBlockCriteria.php:71
+#: application/models/Block.php:1459 application/models/Block.php:1555
+#: application/services/HistoryService.php:1066
+msgid "Language"
+msgstr "Γλώσσα"
+
+#: application/controllers/LocaleController.php:101
+#: application/forms/SmartBlockCriteria.php:72
+#: application/models/Block.php:1461 application/models/Block.php:1557
+msgid "Last Modified"
+msgstr "Τελευταία τροποποίηση"
+
+#: application/controllers/LocaleController.php:102
+#: application/forms/SmartBlockCriteria.php:73
+#: application/models/Block.php:1462 application/models/Block.php:1558
+msgid "Last Played"
+msgstr "Τελευταία αναπαραγωγή"
+
+#: application/controllers/LocaleController.php:103
+#: application/forms/SmartBlockCriteria.php:74
+#: application/models/Block.php:1463 application/models/Block.php:1559
+#: application/services/HistoryService.php:1056
+#: application/services/HistoryService.php:1106
+msgid "Length"
+msgstr "Διάρκεια"
+
+#: application/controllers/LocaleController.php:104
+#: application/forms/SmartBlockCriteria.php:76
+#: application/models/Block.php:1465 application/models/Block.php:1561
+msgid "Mime"
+msgstr "Μίμος"
+
+#: application/controllers/LocaleController.php:105
+#: application/forms/SmartBlockCriteria.php:77
+#: application/models/Block.php:1466 application/models/Block.php:1562
+#: application/services/HistoryService.php:1058
+msgid "Mood"
+msgstr "Διάθεση"
+
+#: application/controllers/LocaleController.php:106
+#: application/forms/SmartBlockCriteria.php:78
+#: application/models/Block.php:1467 application/models/Block.php:1563
+msgid "Owner"
+msgstr "Ιδιοκτήτης"
+
+#: application/controllers/LocaleController.php:107
+#: application/forms/SmartBlockCriteria.php:79
+#: application/models/Block.php:1468 application/models/Block.php:1564
+msgid "Replay Gain"
+msgstr "Κέρδος Επανάληψης"
+
+#: application/controllers/LocaleController.php:108
+msgid "Sample Rate"
+msgstr "Ρυθμός δειγματοληψίας"
+
+#: application/controllers/LocaleController.php:109
+#: application/forms/SmartBlockCriteria.php:82
+#: application/models/Block.php:1471 application/models/Block.php:1567
+msgid "Track Number"
+msgstr "Αριθμός Κομματιού"
+
+#: application/controllers/LocaleController.php:110
+#: application/forms/SmartBlockCriteria.php:83
+#: application/models/Block.php:1472 application/models/Block.php:1568
+msgid "Uploaded"
+msgstr "Φορτώθηκε"
+
+#: application/controllers/LocaleController.php:111
+#: application/forms/SmartBlockCriteria.php:84
+#: application/models/Block.php:1473 application/models/Block.php:1569
+msgid "Website"
+msgstr "Ιστοσελίδα"
+
+#: application/controllers/LocaleController.php:112
+#: application/forms/SmartBlockCriteria.php:85
+#: application/models/Block.php:1474 application/models/Block.php:1570
+#: application/services/HistoryService.php:1063
+msgid "Year"
+msgstr "Έτος"
+
+#: application/controllers/LocaleController.php:113
+msgid "Loading..."
+msgstr "Φόρτωση..."
+
+#: application/controllers/LocaleController.php:114
+#: application/controllers/LocaleController.php:411
+msgid "All"
+msgstr "Όλα"
+
+#: application/controllers/LocaleController.php:115
+msgid "Files"
+msgstr "Αρχεία"
+
+#: application/controllers/LocaleController.php:116
+#: application/views/scripts/partialviews/dashboard-sub-nav.php:8
+msgid "Playlists"
+msgstr "Λίστες αναπαραγωγής"
+
+#: application/controllers/LocaleController.php:117
+#: application/views/scripts/partialviews/dashboard-sub-nav.php:13
+msgid "Smart Blocks"
+msgstr "Smart Blocks"
+
+#: application/controllers/LocaleController.php:118
+msgid "Web Streams"
+msgstr "Web Streams"
+
+#: application/controllers/LocaleController.php:119
+msgid "Unknown type: "
+msgstr "Άγνωστος τύπος: "
+
+#: application/controllers/LocaleController.php:120
+msgid "Are you sure you want to delete the selected item?"
+msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε το επιλεγμένο στοιχείο;"
+
+#: application/controllers/LocaleController.php:121
+#: application/controllers/LocaleController.php:218
+msgid "Uploading in progress..."
+msgstr "Ανέβασμα σε εξέλιξη..."
+
+#: application/controllers/LocaleController.php:122
+msgid "Retrieving data from the server..."
+msgstr "Ανάκτηση δεδομένων από τον διακομιστή..."
+
+#: application/controllers/LocaleController.php:124
+msgid "Import"
+msgstr ""
+
+#: application/controllers/LocaleController.php:125
+msgid "Imported?"
+msgstr ""
+
+#: application/controllers/LocaleController.php:126
+#: application/services/CalendarService.php:59
+#: application/services/CalendarService.php:89
+msgid "View"
+msgstr ""
+
+#: application/controllers/LocaleController.php:127
+msgid "Error code: "
+msgstr "Κωδικός σφάλματος: "
+
+#: application/controllers/LocaleController.php:128
+msgid "Error msg: "
+msgstr "Μήνυμα σφάλματος: "
+
+#: application/controllers/LocaleController.php:129
+msgid "Input must be a positive number"
+msgstr "Το input πρέπει να είναι θετικός αριθμός"
+
+#: application/controllers/LocaleController.php:130
+msgid "Input must be a number"
+msgstr "Το input πρέπει να είναι αριθμός"
+
+#: application/controllers/LocaleController.php:131
+msgid "Input must be in the format: yyyy-mm-dd"
+msgstr "Το input πρέπει να είναι υπό μορφής: εεεε-μμ-ηη"
+
+#: application/controllers/LocaleController.php:132
+msgid "Input must be in the format: hh:mm:ss.t"
+msgstr "Το input πρέπει να είναι υπό μορφής: ωω: λλ: ss.t"
+
+#: application/controllers/LocaleController.php:133
+msgid "My Podcast"
+msgstr ""
+
+#: application/controllers/LocaleController.php:135
+#, php-format
+msgid "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"
+msgstr "Προς το παρόν ανεβάζετε αρχεία. %sΠηγαίνοντας σε μια άλλη οθόνη θα ακυρώσετε τη διαδικασία του ανεβάσματος.%sΕίστε σίγουροι ότι θέλετε να εγκαταλείψετε τη σελίδα;"
+
+#: application/controllers/LocaleController.php:137
+msgid "Open Media Builder"
+msgstr "Άνοιγμα Δημιουργού Πολυμέσων"
+
+#: application/controllers/LocaleController.php:138
+msgid "please put in a time '00:00:00 (.0)'"
+msgstr "παρακαλούμε εισάγετε τιμή ώρας '00:00:00 (.0)'"
+
+#: application/controllers/LocaleController.php:139
+msgid "Please enter a valid time in seconds. Eg. 0.5"
+msgstr ""
+
+#: application/controllers/LocaleController.php:140
+msgid "Your browser does not support playing this file type: "
+msgstr "Ο περιηγητής ιστού σας δεν υποστηρίζει την αναπαραγωγή αρχείων αυτού του τύπου: "
+
+#: application/controllers/LocaleController.php:141
+msgid "Dynamic block is not previewable"
+msgstr "Αδύνατη η προεπισκόπιση του δυναμικού block"
+
+#: application/controllers/LocaleController.php:142
+msgid "Limit to: "
+msgstr "Όριο για: "
+
+#: application/controllers/LocaleController.php:143
+msgid "Playlist saved"
+msgstr "Οι λίστες αναπαραγωγής αποθηκεύτηκαν"
+
+#: application/controllers/LocaleController.php:144
+msgid "Playlist shuffled"
+msgstr "Ανασχηματισμός λίστας αναπαραγωγής"
+
+#: application/controllers/LocaleController.php:145
+msgid "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
+msgstr "To Airtime είναι αβέβαιο για την κατάσταση αυτού του αρχείου. Αυτό μπορεί να συμβεί όταν το αρχείο είναι σε μια απομακρυσμένη μονάδα δίσκου που είναι απροσπέλαστη ή το αρχείο είναι σε ευρετήριο που δεν «προβάλλεται» πια."
+
+#: application/controllers/LocaleController.php:147
+#, php-format
+msgid "Listener Count on %s: %s"
+msgstr "Καταμέτρηση Ακροατών για %s : %s"
+
+#: application/controllers/LocaleController.php:149
+msgid "Remind me in 1 week"
+msgstr "Υπενθύμιση σε 1 εβδομάδα"
+
+#: application/controllers/LocaleController.php:150
+msgid "Remind me never"
+msgstr "Καμία υπενθύμιση"
+
+#: application/controllers/LocaleController.php:151
+msgid "Yes, help Airtime"
+msgstr "Ναι, βοηθώ το Airtime"
+
+#: application/controllers/LocaleController.php:152
+#: application/controllers/LocaleController.php:196
+msgid "Image must be one of jpg, jpeg, png, or gif"
+msgstr "Η εικόνα πρέπει να είναι jpg, jpeg, png ή gif "
+
+#: application/controllers/LocaleController.php:154
+msgid "A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show."
+msgstr "Ένα στατικό smart block θα αποθηκεύσει τα κριτήρια και θα δημιουργήσει αμέσως το περιεχόμενο του block. Αυτό σας επιτρέπει να το επεξεργαστείτε και να το προβάλεται στη Βιβλιοθήκη πριν το προσθέσετε σε μια εκπομπή."
+
+#: application/controllers/LocaleController.php:155
+msgid "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."
+msgstr "Ένα στατικό smart block θα αποθηκεύσει μόνο τα κριτήρια. Το περιεχόμενο του block θα δημιουργηθεί κατά την προσθήκη του σε μια εκπομπή. Δεν θα μπορείτε να δείτε και να επεξεργαστείτε το περιεχόμενο στη Βιβλιοθήκη."
+
+#: application/controllers/LocaleController.php:156
+#, php-format
+msgid "The desired block length will not be reached if %s cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
+msgstr ""
+
+#: application/controllers/LocaleController.php:157
+msgid "Smart block shuffled"
+msgstr "Smart block shuffled"
+
+#: application/controllers/LocaleController.php:158
+msgid "Smart block generated and criteria saved"
+msgstr "Το Smart block δημιουργήθηκε και τα κριτήρια αποθηκεύτηκαν"
+
+#: application/controllers/LocaleController.php:159
+msgid "Smart block saved"
+msgstr "Το Smart block αποθηκεύτηκε"
+
+#: application/controllers/LocaleController.php:160
+msgid "Processing..."
+msgstr "Επεξεργασία..."
+
+#: application/controllers/LocaleController.php:161
+#: application/forms/SmartBlockCriteria.php:100
+#: application/forms/SmartBlockCriteria.php:117
+#: application/forms/SmartBlockCriteria.php:133
+#: application/forms/SmartBlockCriteria.php:198
+#: application/forms/SmartBlockCriteria.php:380
+#: application/forms/SmartBlockCriteria.php:630
+#: application/forms/SmartBlockCriteria.php:689
+#: application/models/Block.php:1478 application/models/Block.php:1574
+msgid "Select modifier"
+msgstr "Επιλέξτε τροποποιητή"
+
+#: application/controllers/LocaleController.php:162
+#: application/forms/SmartBlockCriteria.php:101
+#: application/models/Block.php:1479 application/models/Block.php:1575
+msgid "contains"
+msgstr "περιέχει"
+
+#: application/controllers/LocaleController.php:163
+#: application/forms/SmartBlockCriteria.php:102
+#: application/models/Block.php:1480 application/models/Block.php:1576
+msgid "does not contain"
+msgstr "δεν περιέχει"
+
+#: application/controllers/LocaleController.php:164
+#: application/forms/SmartBlockCriteria.php:103
+#: application/forms/SmartBlockCriteria.php:118
+#: application/forms/SmartBlockCriteria.php:137
+#: application/forms/SmartBlockCriteria.php:199
+#: application/models/Block.php:1481 application/models/Block.php:1488
+#: application/models/Block.php:1577 application/models/Block.php:1584
+msgid "is"
+msgstr "είναι"
+
+#: application/controllers/LocaleController.php:165
+#: application/forms/SmartBlockCriteria.php:104
+#: application/forms/SmartBlockCriteria.php:119
+#: application/forms/SmartBlockCriteria.php:138
+#: application/forms/SmartBlockCriteria.php:200
+#: application/models/Block.php:1482 application/models/Block.php:1489
+#: application/models/Block.php:1578 application/models/Block.php:1585
+msgid "is not"
+msgstr "δεν είναι"
+
+#: application/controllers/LocaleController.php:166
+#: application/forms/SmartBlockCriteria.php:105
+#: application/models/Block.php:1483 application/models/Block.php:1579
+msgid "starts with"
+msgstr "ξεκινά με"
+
+#: application/controllers/LocaleController.php:167
+#: application/forms/SmartBlockCriteria.php:106
+#: application/models/Block.php:1484 application/models/Block.php:1580
+msgid "ends with"
+msgstr "τελειώνει με"
+
+#: application/controllers/LocaleController.php:168
+#: application/forms/SmartBlockCriteria.php:120
+#: application/forms/SmartBlockCriteria.php:139
+#: application/models/Block.php:1490 application/models/Block.php:1586
+msgid "is greater than"
+msgstr "είναι μεγαλύτερος από"
+
+#: application/controllers/LocaleController.php:169
+#: application/forms/SmartBlockCriteria.php:121
+#: application/forms/SmartBlockCriteria.php:140
+#: application/models/Block.php:1491 application/models/Block.php:1587
+msgid "is less than"
+msgstr "είναι μικρότερος από"
+
+#: application/controllers/LocaleController.php:170
+#: application/forms/SmartBlockCriteria.php:122
+#: application/forms/SmartBlockCriteria.php:141
+#: application/models/Block.php:1492 application/models/Block.php:1588
+msgid "is in the range"
+msgstr "είναι στην κλίμακα"
+
+#: application/controllers/LocaleController.php:172
+#: application/forms/SmartBlockCriteria.php:576
+msgid "Generate"
+msgstr "Δημιουργία"
+
+#: application/controllers/LocaleController.php:174
+msgid "Choose Storage Folder"
+msgstr "Επιλογή Φακέλου Αποθήκευσης"
+
+#: application/controllers/LocaleController.php:175
+msgid "Choose Folder to Watch"
+msgstr "Επιλογή Φακέλου για Προβολή"
+
+#: application/controllers/LocaleController.php:176
+msgid ""
+"Are you sure you want to change the storage folder?\n"
+"This will remove the files from your Airtime library!"
+msgstr ""
+"Είστε βέβαιοι ότι θέλετε να αλλάξετε το φάκελο αποθήκευσης;\n"
+"Αυτό θα αφαιρέσει τα αρχεία από τη βιβλιοθήκη του Airtime!"
+
+#: application/controllers/LocaleController.php:177
+msgid "Manage Media Folders"
+msgstr "Διαχείριση Φακέλων Πολυμέσων"
+
+#: application/controllers/LocaleController.php:178
+msgid "Are you sure you want to remove the watched folder?"
+msgstr "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε το φάκελο που προβάλλεται;"
+
+#: application/controllers/LocaleController.php:179
+msgid "This path is currently not accessible."
+msgstr "Αυτή η διαδρομή δεν είναι προς το παρόν προσβάσιμη."
+
+#: application/controllers/LocaleController.php:181
+#, php-format
+msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
+msgstr "Κάποιοι τύποι stream απαιτούν επιπλέον ρυθμίσεις. Λεπτομέρειες για την ενεργοποίηση %sAAC+ Support%s ή %sOpus Support%s παρέχονται."
+
+#: application/controllers/LocaleController.php:182
+msgid "Connected to the streaming server"
+msgstr "Συνδέθηκε με τον διακομιστή streaming "
+
+#: application/controllers/LocaleController.php:183
+msgid "The stream is disabled"
+msgstr "Το stream είναι απενεργοποιημένο"
+
+#: application/controllers/LocaleController.php:184
+#: application/forms/StreamSettingSubForm.php:207
+msgid "Getting information from the server..."
+msgstr "Λήψη πληροφοριών από το διακομιστή..."
+
+#: application/controllers/LocaleController.php:185
+msgid "Can not connect to the streaming server"
+msgstr "Αδύνατη η σύνδεση με τον διακομιστή streaming "
+
+#: application/controllers/LocaleController.php:186
+#, php-format
+msgid "If %s is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."
+msgstr ""
+
+#: application/controllers/LocaleController.php:187
+#, php-format
+msgid "For more details, please read the %s%s Manual%s"
+msgstr ""
+
+#: application/controllers/LocaleController.php:188
+msgid "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
+msgstr "Τσεκάρετε αυτή την επιλογή για να ενεργοποιήσετε τα μεταδεδομένα για OGG streams (τα stream μεταδεδομένα είναι ο τίτλος του κομματιού και του καλλιτέχνη, που εμφανίζονται σε ένα audio player). VLC και mplayer προκαλούν βλάβες κατά την αναπαραγωγή ενός OGG / Vorbis stream, το οποίο έχει ενεργοποιημένες τις πληροφορίες μεταδεδομένων: θα αποσυνδέονται από το stream μετά από κάθε κομμάτι. Εάν χρησιμοποιείτε ένα OGG stream και οι ακροατές σας δεν απαιτούν υποστήριξη για αυτές τις συσκευές αναπαραγωγής ήχου, τότε μπορείτε να ενεργοποιήσετε αυτή την επιλογή."
+
+#: application/controllers/LocaleController.php:189
+msgid "Check this box to automatically switch off Master/Show source upon source disconnection."
+msgstr "Επιλέξτε αυτό το πλαίσιο για να σβήσει αυτόματα η Κύρια/Εμφάνιση πηγής κατά την αποσύνδεση πηγής."
+
+#: application/controllers/LocaleController.php:190
+msgid "Check this box to automatically switch on Master/Show source upon source connection."
+msgstr "Επιλέξτε αυτό το πλαίσιο για να ενεργοποιηθεί αυτόματα η η Κύρια/Εμφάνιση πηγής κατά την σύνδεση πηγής."
+
+#: application/controllers/LocaleController.php:191
+msgid "If your Icecast server expects a username of 'source', this field can be left blank."
+msgstr "Εάν ο διακομιστής Icecast περιμένει ένα όνομα χρήστη από την «πηγή», αυτό το πεδίο μπορεί να μείνει κενό."
+
+#: application/controllers/LocaleController.php:192
+#: application/controllers/LocaleController.php:202
+msgid "If your live streaming client does not ask for a username, this field should be 'source'."
+msgstr "Εάν ο live streaming πελάτη σας δεν ζητά ένα όνομα χρήστη, το πεδίο αυτό θα πρέπει να είναι η «πηγή»."
+
+#: application/controllers/LocaleController.php:193
+msgid "WARNING: This will restart your stream and may cause a short dropout for your listeners!"
+msgstr ""
+
+#: application/controllers/LocaleController.php:194
+msgid "This is the admin username and password for Icecast/SHOUTcast to get listener statistics."
+msgstr "Αυτό είναι το Icecast/SHOUTcast όνομα χρήστη και ο κωδικός πρόσβασης διαχειριστή για τις στατιστικές ακροατών."
+
+#: application/controllers/LocaleController.php:198
+msgid "Warning: You cannot change this field while the show is currently playing"
+msgstr "Προειδοποίηση: Δεν μπορείτε να κάνετε αλλαγές κατά την διάρκεια της εκπομπής "
+
+#: application/controllers/LocaleController.php:199
+msgid "No result found"
+msgstr "Δεν βρέθηκαν αποτελέσματα"
+
+#: application/controllers/LocaleController.php:200
+msgid "This follows the same security pattern for the shows: only users assigned to the show can connect."
+msgstr "Αυτό ακολουθεί το ίδιο πρότυπο ασφαλείας για τις εκπομπές: μόνο οι χρήστες της συγκεκριμένης εκπομπής μπορούν να συνδεθούν."
+
+#: application/controllers/LocaleController.php:201
+msgid "Specify custom authentication which will work only for this show."
+msgstr "Καθορίστε την προσαρμόσιμη πιστοποίηση, η οποία θα λειτουργήσει μόνο για αυτή την εκπομπή."
+
+#: application/controllers/LocaleController.php:203
+msgid "The show instance doesn't exist anymore!"
+msgstr "Η εκπομπή δεν υπάρχει πια!"
+
+#: application/controllers/LocaleController.php:204
+msgid "Warning: Shows cannot be re-linked"
+msgstr "Προειδοποίηση: οι εκπομπές δεν μπορούν να συνδεθούν εκ νέου"
+
+#: application/controllers/LocaleController.php:205
+msgid "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"
+msgstr "Κατά τη διασύνδεση επαναλαμβανόμενων εκπομπών, όλα τα προγραμματισμένα στοιχεία πολυμέσων κάθε εκπομπής θα προγραμματιστούν σε όλες τις επαναλαμβανόμενες εκπομπές"
+
+#: application/controllers/LocaleController.php:206
+msgid "Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the Interface Timezone in your user settings."
+msgstr "Η ζώνη ώρας είναι ρυθμισμένη ανάλογα με τη τοποθεσία του σταθμού. Οι εκμπομπές θα μεταδίδονται στην τοπική ώρα, ρυθμισμένη από το Interface Ζώνης ώρας στις ρυθμίσεις χρήστη "
+
+#: application/controllers/LocaleController.php:210
+msgid "Show"
+msgstr "Εκπομπή"
+
+#: application/controllers/LocaleController.php:211
+msgid "Show is empty"
+msgstr "Η εκπομπή είναι άδεια"
+
+#: application/controllers/LocaleController.php:212
+msgid "1m"
+msgstr "1λ"
+
+#: application/controllers/LocaleController.php:213
+msgid "5m"
+msgstr "5λ"
+
+#: application/controllers/LocaleController.php:214
+msgid "10m"
+msgstr "10λ"
+
+#: application/controllers/LocaleController.php:215
+msgid "15m"
+msgstr "15λ"
+
+#: application/controllers/LocaleController.php:216
+msgid "30m"
+msgstr "30λ"
+
+#: application/controllers/LocaleController.php:217
+msgid "60m"
+msgstr "60λ"
+
+#: application/controllers/LocaleController.php:219
+msgid "Retreiving data from the server..."
+msgstr "Ανάκτηση δεδομένων από το διακομιστή..."
+
+#: application/controllers/LocaleController.php:220
+msgid "This show has no scheduled content."
+msgstr "Αυτή η εκπομπή δεν έχει προγραμματισμένο περιεχόμενο."
+
+#: application/controllers/LocaleController.php:221
+msgid "This show is not completely filled with content."
+msgstr "Η εκπομπή δεν εντελώς γεμάτη με περιεχόμενο "
+
+#: application/controllers/LocaleController.php:225
+msgid "January"
+msgstr "Ιανουάριος"
+
+#: application/controllers/LocaleController.php:226
+msgid "February"
+msgstr "Φεβρουάριος"
+
+#: application/controllers/LocaleController.php:227
+msgid "March"
+msgstr "Μάρτιος"
+
+#: application/controllers/LocaleController.php:228
+msgid "April"
+msgstr "Απρίλης"
+
+#: application/controllers/LocaleController.php:229
+#: application/controllers/LocaleController.php:241
+msgid "May"
+msgstr "Μάιος"
+
+#: application/controllers/LocaleController.php:230
+msgid "June"
+msgstr "Ιούνιος"
+
+#: application/controllers/LocaleController.php:231
+msgid "July"
+msgstr "Ιούλιος"
+
+#: application/controllers/LocaleController.php:232
+msgid "August"
+msgstr "Αύγουστος"
+
+#: application/controllers/LocaleController.php:233
+msgid "September"
+msgstr "Σεπτέμβριος"
+
+#: application/controllers/LocaleController.php:234
+msgid "October"
+msgstr "Οκτώβριος"
+
+#: application/controllers/LocaleController.php:235
+msgid "November"
+msgstr "Νοέμβριος"
+
+#: application/controllers/LocaleController.php:236
+msgid "December"
+msgstr "Δεκέμβριος"
+
+#: application/controllers/LocaleController.php:237
+msgid "Jan"
+msgstr "Ιαν"
+
+#: application/controllers/LocaleController.php:238
+msgid "Feb"
+msgstr "Φεβ"
+
+#: application/controllers/LocaleController.php:239
+msgid "Mar"
+msgstr "Μαρ"
+
+#: application/controllers/LocaleController.php:240
+msgid "Apr"
+msgstr "Απρ"
+
+#: application/controllers/LocaleController.php:242
+msgid "Jun"
+msgstr "Ιουν"
+
+#: application/controllers/LocaleController.php:243
+msgid "Jul"
+msgstr "Ιουλ"
+
+#: application/controllers/LocaleController.php:244
+msgid "Aug"
+msgstr "Αυγ"
+
+#: application/controllers/LocaleController.php:245
+msgid "Sep"
+msgstr "Σεπ"
+
+#: application/controllers/LocaleController.php:246
+msgid "Oct"
+msgstr "Οκτ"
+
+#: application/controllers/LocaleController.php:247
+msgid "Nov"
+msgstr "Νοε"
+
+#: application/controllers/LocaleController.php:248
+msgid "Dec"
+msgstr "Δεκ"
+
+#: application/controllers/LocaleController.php:249
+msgid "Today"
+msgstr ""
+
+#: application/controllers/LocaleController.php:250
+msgid "Day"
+msgstr ""
+
+#: application/controllers/LocaleController.php:251
+msgid "Week"
+msgstr ""
+
+#: application/controllers/LocaleController.php:252
+msgid "Month"
+msgstr ""
+
+#: application/controllers/LocaleController.php:253
+#: application/forms/GeneralPreferences.php:233
+msgid "Sunday"
+msgstr "Κυριακή"
+
+#: application/controllers/LocaleController.php:254
+#: application/forms/GeneralPreferences.php:234
+msgid "Monday"
+msgstr "Δευτέρα"
+
+#: application/controllers/LocaleController.php:255
+#: application/forms/GeneralPreferences.php:235
+msgid "Tuesday"
+msgstr "Τρίτη"
+
+#: application/controllers/LocaleController.php:256
+#: application/forms/GeneralPreferences.php:236
+msgid "Wednesday"
+msgstr "Τετάρτη"
+
+#: application/controllers/LocaleController.php:257
+#: application/forms/GeneralPreferences.php:237
+msgid "Thursday"
+msgstr "Πέμπτη"
+
+#: application/controllers/LocaleController.php:258
+#: application/forms/GeneralPreferences.php:238
+msgid "Friday"
+msgstr "Παρασκευή"
+
+#: application/controllers/LocaleController.php:259
+#: application/forms/GeneralPreferences.php:239
+msgid "Saturday"
+msgstr "Σάββατο"
+
+#: application/controllers/LocaleController.php:260
+#: application/forms/AddShowRepeats.php:33
+msgid "Sun"
+msgstr "Κυρ"
+
+#: application/controllers/LocaleController.php:261
+#: application/forms/AddShowRepeats.php:34
+msgid "Mon"
+msgstr "Δευ"
+
+#: application/controllers/LocaleController.php:262
+#: application/forms/AddShowRepeats.php:35
+msgid "Tue"
+msgstr "Τρι"
+
+#: application/controllers/LocaleController.php:263
+#: application/forms/AddShowRepeats.php:36
+msgid "Wed"
+msgstr "Τετ"
+
+#: application/controllers/LocaleController.php:264
+#: application/forms/AddShowRepeats.php:37
+msgid "Thu"
+msgstr "Πεμ"
+
+#: application/controllers/LocaleController.php:265
+#: application/forms/AddShowRepeats.php:38
+msgid "Fri"
+msgstr "Παρ"
+
+#: application/controllers/LocaleController.php:266
+#: application/forms/AddShowRepeats.php:39
+msgid "Sat"
+msgstr "Σαβ"
+
+#: application/controllers/LocaleController.php:267
+msgid "Shows longer than their scheduled time will be cut off by a following show."
+msgstr "Εκπομπές μεγαλύτερες από την προγραμματισμένη διάρκειά τους θα διακόπτονται από την επόμενη εκπομπή."
+
+#: application/controllers/LocaleController.php:268
+msgid "Cancel Current Show?"
+msgstr "Ακύρωση Τρέχουσας Εκπομπής;"
+
+#: application/controllers/LocaleController.php:269
+#: application/controllers/LocaleController.php:318
+msgid "Stop recording current show?"
+msgstr "Πάυση ηχογράφησης τρέχουσας εκπομπής;"
+
+#: application/controllers/LocaleController.php:270
+msgid "Ok"
+msgstr "Οκ"
+
+#: application/controllers/LocaleController.php:271
+msgid "Contents of Show"
+msgstr "Περιεχόμενα Εκπομπής"
+
+#: application/controllers/LocaleController.php:274
+msgid "Remove all content?"
+msgstr "Αφαίρεση όλου του περιεχομένου;"
+
+#: application/controllers/LocaleController.php:276
+msgid "Delete selected item(s)?"
+msgstr "Διαγραφή επιλεγμένου στοιχείου/ων;"
+
+#: application/controllers/LocaleController.php:277
+msgid "Start"
+msgstr "Έναρξη"
+
+#: application/controllers/LocaleController.php:278
+msgid "End"
+msgstr "Τέλος"
+
+#: application/controllers/LocaleController.php:279
+msgid "Duration"
+msgstr "Διάρκεια"
+
+#: application/controllers/LocaleController.php:280
+msgid "Filtering out "
+msgstr ""
+
+#: application/controllers/LocaleController.php:281
+msgid " of "
+msgstr ""
+
+#: application/controllers/LocaleController.php:282
+msgid " records"
+msgstr ""
+
+#: application/controllers/LocaleController.php:283
+msgid "There are no shows scheduled during the specified time period."
+msgstr ""
+
+#: application/controllers/LocaleController.php:289
+#: application/forms/SmartBlockCriteria.php:63
+#: application/models/Block.php:1451 application/models/Block.php:1547
+msgid "Cue In"
+msgstr "Cue In"
+
+#: application/controllers/LocaleController.php:290
+#: application/forms/SmartBlockCriteria.php:64
+#: application/models/Block.php:1452 application/models/Block.php:1548
+msgid "Cue Out"
+msgstr "Cue Out"
+
+#: application/controllers/LocaleController.php:291
+msgid "Fade In"
+msgstr "Fade In"
+
+#: application/controllers/LocaleController.php:292
+msgid "Fade Out"
+msgstr "Fade Out"
+
+#: application/controllers/LocaleController.php:293
+msgid "Show Empty"
+msgstr "Η εκπομπή είναι άδεια"
+
+#: application/controllers/LocaleController.php:294
+msgid "Recording From Line In"
+msgstr "Ηχογράφηση Από Line In"
+
+#: application/controllers/LocaleController.php:295
+msgid "Track preview"
+msgstr "Προεπισκόπηση κομματιού"
+
+#: application/controllers/LocaleController.php:299
+msgid "Cannot schedule outside a show."
+msgstr "Δεν είναι δυνατός ο προγραμματισμός εκτός εκπομπής."
+
+#: application/controllers/LocaleController.php:300
+msgid "Moving 1 Item"
+msgstr "Μετακίνηση 1 Στοιχείου"
+
+#: application/controllers/LocaleController.php:301
+#, php-format
+msgid "Moving %s Items"
+msgstr "Μετακίνηση Στοιχείων %s"
+
+#: application/controllers/LocaleController.php:302
+#: application/forms/AddTracktype.php:60 application/forms/AddUser.php:108
+#: application/forms/EditAudioMD.php:297 application/forms/EditHistory.php:131
+#: application/forms/PasswordChange.php:41 application/forms/Preferences.php:37
+msgid "Save"
+msgstr "Αποθήκευση"
+
+#: application/controllers/LocaleController.php:303
+#: application/controllers/LocaleController.php:327
+#: application/forms/EditAudioMD.php:287 application/forms/EditHistory.php:141
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#: application/controllers/LocaleController.php:304
+msgid "Fade Editor"
+msgstr "Επεξεργαστής Fade"
+
+#: application/controllers/LocaleController.php:305
+msgid "Cue Editor"
+msgstr "Επεξεργαστής Cue"
+
+#: application/controllers/LocaleController.php:306
+msgid "Waveform features are available in a browser supporting the Web Audio API"
+msgstr "Τα χαρακτηριστικά της κυμματοειδούς μορφής είναι διαθέσιμα σε πρόγραμμα πλοήγησης που υποστηρίζει Web Audio API"
+
+#: application/controllers/LocaleController.php:309
+msgid "Select all"
+msgstr "Επιλογή όλων"
+
+#: application/controllers/LocaleController.php:310
+msgid "Select none"
+msgstr "Καμία Επιλογή"
+
+#: application/controllers/LocaleController.php:311
+msgid "Trim overbooked shows"
+msgstr ""
+
+#: application/controllers/LocaleController.php:312
+msgid "Remove selected scheduled items"
+msgstr "Αφαίρεση επιλεγμένων προγραμματισμένων στοιχείων "
+
+#: application/controllers/LocaleController.php:313
+msgid "Jump to the current playing track"
+msgstr "Μετάβαση στο τρέχον κομμάτι "
+
+#: application/controllers/LocaleController.php:314
+msgid "Jump to Current"
+msgstr ""
+
+#: application/controllers/LocaleController.php:315
+msgid "Cancel current show"
+msgstr "Ακύρωση τρέχουσας εκπομπής"
+
+#: application/controllers/LocaleController.php:320
+msgid "Open library to add or remove content"
+msgstr "Άνοιγμα βιβλιοθήκης για προσθήκη ή αφαίρεση περιεχομένου"
+
+#: application/controllers/LocaleController.php:321
+msgid "Add / Remove Content"
+msgstr "Προσθήκη / Αφαίρεση Περιεχομένου"
+
+#: application/controllers/LocaleController.php:323
+msgid "in use"
+msgstr "σε χρήση"
+
+#: application/controllers/LocaleController.php:324
+msgid "Disk"
+msgstr "Δίσκος"
+
+#: application/controllers/LocaleController.php:326
+msgid "Look in"
+msgstr "Κοιτάξτε σε"
+
+#: application/controllers/LocaleController.php:328
+msgid "Open"
+msgstr "Άνοιγμα"
+
+#: application/controllers/LocaleController.php:330
+#: application/forms/AddUser.php:100
+msgid "Admin"
+msgstr "Διαχειριστής"
+
+#: application/controllers/LocaleController.php:331
+#: application/forms/AddUser.php:98
+msgid "DJ"
+msgstr "DJ"
+
+#: application/controllers/LocaleController.php:332
+#: application/forms/AddUser.php:99
+msgid "Program Manager"
+msgstr "Διευθυντής Προγράμματος"
+
+#: application/controllers/LocaleController.php:333
+#: application/forms/AddUser.php:97
+msgid "Guest"
+msgstr "Επισκέπτης"
+
+#: application/controllers/LocaleController.php:334
+msgid "Guests can do the following:"
+msgstr "Οι επισκέπτες μπορούν να κάνουν τα παρακάτω"
+
+#: application/controllers/LocaleController.php:335
+msgid "View schedule"
+msgstr "Προβολή Προγράμματος"
+
+#: application/controllers/LocaleController.php:336
+msgid "View show content"
+msgstr "Προβολή περιεχομένου εκπομπής"
+
+#: application/controllers/LocaleController.php:337
+msgid "DJs can do the following:"
+msgstr "Οι DJ μπορούν να κάνουν τα παρακάτω"
+
+#: application/controllers/LocaleController.php:338
+msgid "Manage assigned show content"
+msgstr "Διαχείριση ανατεθημένου περιεχομένου εκπομπής"
+
+#: application/controllers/LocaleController.php:339
+msgid "Import media files"
+msgstr "Εισαγωγή αρχείων πολυμέσων"
+
+#: application/controllers/LocaleController.php:340
+msgid "Create playlists, smart blocks, and webstreams"
+msgstr "Δημιουργία λιστών αναπαραγωγής, smart blocks, και webstreams "
+
+#: application/controllers/LocaleController.php:341
+msgid "Manage their own library content"
+msgstr "Διαχείριση δικού τους περιεχομένου βιβλιοθήκης"
+
+#: application/controllers/LocaleController.php:342
+msgid "Program Managers can do the following:"
+msgstr ""
+
+#: application/controllers/LocaleController.php:343
+msgid "View and manage show content"
+msgstr "Προβολή και διαχείριση περιεχομένου εκπομπής"
+
+#: application/controllers/LocaleController.php:344
+msgid "Schedule shows"
+msgstr "Πρόγραμμα εκπομπών"
+
+#: application/controllers/LocaleController.php:345
+msgid "Manage all library content"
+msgstr "Διαχείριση όλου του περιεχομένου βιβλιοθήκης"
+
+#: application/controllers/LocaleController.php:346
+msgid "Admins can do the following:"
+msgstr "ΟΙ Διαχειριστές μπορούν να κάνουν τα παρακάτω:"
+
+#: application/controllers/LocaleController.php:347
+msgid "Manage preferences"
+msgstr "Διαχείριση προτιμήσεων"
+
+#: application/controllers/LocaleController.php:348
+msgid "Manage users"
+msgstr "Διαχείριση Χρηστών"
+
+#: application/controllers/LocaleController.php:349
+msgid "Manage watched folders"
+msgstr "Διαχείριση προβεβλημένων φακέλων "
+
+#: application/controllers/LocaleController.php:350
+msgid "Send support feedback"
+msgstr "Αποστολή Σχολίων Υποστήριξης"
+
+#: application/controllers/LocaleController.php:351
+msgid "View system status"
+msgstr "Προβολή κατάστασης συστήματος"
+
+#: application/controllers/LocaleController.php:352
+msgid "Access playout history"
+msgstr "Πρόσβαση στην ιστορία playout"
+
+#: application/controllers/LocaleController.php:353
+msgid "View listener stats"
+msgstr "Προβολή στατιστικών των ακροατών"
+
+#: application/controllers/LocaleController.php:355
+msgid "Show / hide columns"
+msgstr "Εμφάνιση / απόκρυψη στηλών"
+
+#: application/controllers/LocaleController.php:356
+msgid "Columns"
+msgstr ""
+
+#: application/controllers/LocaleController.php:358
+msgid "From {from} to {to}"
+msgstr "Από {από} σε {σε}"
+
+#: application/controllers/LocaleController.php:359
+msgid "kbps"
+msgstr "Kbps"
+
+#: application/controllers/LocaleController.php:360
+msgid "yyyy-mm-dd"
+msgstr "εεεε-μμ-ηη"
+
+#: application/controllers/LocaleController.php:361
+msgid "hh:mm:ss.t"
+msgstr "ωω:λλ:δδ.t"
+
+#: application/controllers/LocaleController.php:362
+msgid "kHz"
+msgstr "kHz"
+
+#: application/controllers/LocaleController.php:365
+msgid "Su"
+msgstr "Κυ"
+
+#: application/controllers/LocaleController.php:366
+msgid "Mo"
+msgstr "Δε"
+
+#: application/controllers/LocaleController.php:367
+msgid "Tu"
+msgstr "Τρ"
+
+#: application/controllers/LocaleController.php:368
+msgid "We"
+msgstr "Τε"
+
+#: application/controllers/LocaleController.php:369
+msgid "Th"
+msgstr "Πε"
+
+#: application/controllers/LocaleController.php:370
+msgid "Fr"
+msgstr "Πα"
+
+#: application/controllers/LocaleController.php:371
+msgid "Sa"
+msgstr "Σα"
+
+#: application/controllers/LocaleController.php:372
+#: application/controllers/LocaleController.php:400
+msgid "Close"
+msgstr "Κλείσιμο"
+
+#: application/controllers/LocaleController.php:374
+msgid "Hour"
+msgstr "Ώρα"
+
+#: application/controllers/LocaleController.php:375
+msgid "Minute"
+msgstr "Λεπτό"
+
+#: application/controllers/LocaleController.php:376
+msgid "Done"
+msgstr "Ολοκληρώθηκε"
+
+#: application/controllers/LocaleController.php:379
+msgid "Select files"
+msgstr "Επιλογή αρχείων"
+
+#: application/controllers/LocaleController.php:380
+#: application/controllers/LocaleController.php:381
+msgid "Add files to the upload queue and click the start button."
+msgstr "Προσθέστε αρχεία στην ουρά ανεβάσματος και κάντε κλίκ στο κουμπί έναρξης"
+
+#: application/controllers/LocaleController.php:384
+msgid "Add Files"
+msgstr "Προσθήκη Αρχείων"
+
+#: application/controllers/LocaleController.php:385
+msgid "Stop Upload"
+msgstr "Στάση Ανεβάσματος"
+
+#: application/controllers/LocaleController.php:386
+msgid "Start upload"
+msgstr "Έναρξη ανεβάσματος"
+
+#: application/controllers/LocaleController.php:387
+msgid "Add files"
+msgstr "Προσθήκη αρχείων"
+
+#: application/controllers/LocaleController.php:388
+#, php-format
+msgid "Uploaded %d/%d files"
+msgstr "Ανέβηκαν %d/%d αρχεία"
+
+#: application/controllers/LocaleController.php:389
+msgid "N/A"
+msgstr "N/A"
+
+#: application/controllers/LocaleController.php:390
+msgid "Drag files here."
+msgstr "Σύρετε αρχεία εδώ."
+
+#: application/controllers/LocaleController.php:391
+msgid "File extension error."
+msgstr "Σφάλμα επέκτασης αρχείου."
+
+#: application/controllers/LocaleController.php:392
+msgid "File size error."
+msgstr "Σφάλμα μεγέθους αρχείου."
+
+#: application/controllers/LocaleController.php:393
+msgid "File count error."
+msgstr "Σφάλμα μέτρησης αρχείων."
+
+#: application/controllers/LocaleController.php:394
+msgid "Init error."
+msgstr "Σφάλμα αρχικοποίησης."
+
+#: application/controllers/LocaleController.php:395
+msgid "HTTP Error."
+msgstr "Σφάλμα HTTP."
+
+#: application/controllers/LocaleController.php:396
+msgid "Security error."
+msgstr "Σφάλμα ασφάλειας."
+
+#: application/controllers/LocaleController.php:397
+msgid "Generic error."
+msgstr "Γενικό σφάλμα."
+
+#: application/controllers/LocaleController.php:398
+msgid "IO error."
+msgstr "Σφάλμα IO"
+
+#: application/controllers/LocaleController.php:399
+#, php-format
+msgid "File: %s"
+msgstr "Αρχείο: %s"
+
+#: application/controllers/LocaleController.php:401
+#, php-format
+msgid "%d files queued"
+msgstr "%d αρχεία σε αναμονή"
+
+#: application/controllers/LocaleController.php:402
+msgid "File: %f, size: %s, max file size: %m"
+msgstr "Αρχείο: %f, μέγεθος: %s, μέγιστο μέγεθος αρχείου: %m"
+
+#: application/controllers/LocaleController.php:403
+msgid "Upload URL might be wrong or doesn't exist"
+msgstr "Το URL είτε είναι λάθος ή δεν υφίσταται"
+
+#: application/controllers/LocaleController.php:404
+msgid "Error: File too large: "
+msgstr "Σφάλμα: Πολύ μεγάλο αρχείο: "
+
+#: application/controllers/LocaleController.php:405
+msgid "Error: Invalid file extension: "
+msgstr "Σφάλμα: Μη έγκυρη προέκταση αρχείου: "
+
+#: application/controllers/LocaleController.php:407
+msgid "Set Default"
+msgstr "Ως Προεπιλογή"
+
+#: application/controllers/LocaleController.php:408
+msgid "Create Entry"
+msgstr "Δημιουργία Εισόδου"
+
+#: application/controllers/LocaleController.php:409
+msgid "Edit History Record"
+msgstr "Επεξεργασία Ιστορικού"
+
+#: application/controllers/LocaleController.php:410
+#: application/forms/EditHistoryItem.php:57
+msgid "No Show"
+msgstr "Καμία Εκπομπή"
+
+#: application/controllers/LocaleController.php:412
+#, php-format
+msgid "Copied %s row%s to the clipboard"
+msgstr "Αντιγράφηκαν %s σειρές%s στο πρόχειρο"
+
+#: application/controllers/LocaleController.php:413
+#, php-format
+msgid "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."
+msgstr "%sΕκτύπωση προβολής%sΠαρακαλούμε να χρησιμοποιείσετε την λειτουργία εκτύπωσης του περιηγητή σας για να τυπώσετε τον πίνακα. Όταν τελειώσετε πατήστε escape"
+
+#: application/controllers/LocaleController.php:414
+msgid "New Show"
+msgstr ""
+
+#: application/controllers/LocaleController.php:415
+msgid "New Log Entry"
+msgstr ""
+
+#: application/controllers/LocaleController.php:417
+msgid "No data available in table"
+msgstr ""
+
+#: application/controllers/LocaleController.php:418
+msgid "(filtered from _MAX_ total entries)"
+msgstr ""
+
+#: application/controllers/LocaleController.php:424
+msgid "First"
+msgstr ""
+
+#: application/controllers/LocaleController.php:425
+msgid "Last"
+msgstr ""
+
+#: application/controllers/LocaleController.php:426
+msgid "Next"
+msgstr ""
+
+#: application/controllers/LocaleController.php:427
+msgid "Previous"
+msgstr ""
+
+#: application/controllers/LocaleController.php:428
+msgid "Search:"
+msgstr ""
+
+#: application/controllers/LocaleController.php:429
+#: application/controllers/LocaleController.php:442
+msgid "No matching records found"
+msgstr ""
+
+#: application/controllers/LocaleController.php:430
+msgid "Drag tracks here from the library"
+msgstr ""
+
+#: application/controllers/LocaleController.php:431
+msgid "No tracks were played during the selected time period."
+msgstr ""
+
+#: application/controllers/LocaleController.php:432
+msgid "Unpublish"
+msgstr ""
+
+#: application/controllers/LocaleController.php:433
+msgid "No matching results found."
+msgstr ""
+
+#: application/controllers/LocaleController.php:434
+msgid "Author"
+msgstr ""
+
+#: application/controllers/LocaleController.php:435
+#: application/forms/SmartBlockCriteria.php:65
+#: application/forms/StreamSettingSubForm.php:159
+#: application/models/Block.php:1453 application/models/Block.php:1549
+msgid "Description"
+msgstr "Περιγραφή"
+
+#: application/controllers/LocaleController.php:436
+msgid "Link"
+msgstr ""
+
+#: application/controllers/LocaleController.php:437
+msgid "Publication Date"
+msgstr ""
+
+#: application/controllers/LocaleController.php:438
+msgid "Import Status"
+msgstr ""
+
+#: application/controllers/LocaleController.php:439
+msgid "Actions"
+msgstr ""
+
+#: application/controllers/LocaleController.php:440
+msgid "Delete from Library"
+msgstr ""
+
+#: application/controllers/LocaleController.php:441
+msgid "Successfully imported"
+msgstr ""
+
+#: application/controllers/LocaleController.php:443
+msgid "Show _MENU_"
+msgstr ""
+
+#: application/controllers/LocaleController.php:444
+msgid "Show _MENU_ entries"
+msgstr ""
+
+#: application/controllers/LocaleController.php:445
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr ""
+
+#: application/controllers/LocaleController.php:446
+msgid "Showing _START_ to _END_ of _TOTAL_ tracks"
+msgstr ""
+
+#: application/controllers/LocaleController.php:447
+msgid "Showing _START_ to _END_ of _TOTAL_ track types"
+msgstr ""
+
+#: application/controllers/LocaleController.php:448
+msgid "Showing _START_ to _END_ of _TOTAL_ users"
+msgstr ""
+
+#: application/controllers/LocaleController.php:449
+msgid "Showing 0 to 0 of 0 entries"
+msgstr ""
+
+#: application/controllers/LocaleController.php:450
+msgid "Showing 0 to 0 of 0 tracks"
+msgstr ""
+
+#: application/controllers/LocaleController.php:451
+msgid "Showing 0 to 0 of 0 track types"
+msgstr ""
+
+#: application/controllers/LocaleController.php:452
+msgid "(filtered from _MAX_ total track types)"
+msgstr ""
+
+#: application/controllers/LocaleController.php:454
+msgid "Are you sure you want to delete this tracktype?"
+msgstr ""
+
+#: application/controllers/LocaleController.php:455
+msgid "No track types were found."
+msgstr ""
+
+#: application/controllers/LocaleController.php:456
+msgid "No track types found"
+msgstr ""
+
+#: application/controllers/LocaleController.php:457
+msgid "No matching track types found"
+msgstr ""
+
+#: application/controllers/LocaleController.php:458
+#: application/forms/AddTracktype.php:51
+#: application/forms/GeneralPreferences.php:126
+#: application/forms/GeneralPreferences.php:141
+#: application/forms/GeneralPreferences.php:159
+#: application/forms/GeneralPreferences.php:218
+msgid "Enabled"
+msgstr "Ενεργοποιημένο"
+
+#: application/controllers/LocaleController.php:459
+#: application/forms/AddTracktype.php:50
+#: application/forms/GeneralPreferences.php:125
+#: application/forms/GeneralPreferences.php:140
+#: application/forms/GeneralPreferences.php:158
+#: application/forms/GeneralPreferences.php:217
+msgid "Disabled"
+msgstr "Απενεργοποιημένο"
+
+#: application/controllers/LocaleController.php:460
+msgid "Cancel upload"
+msgstr ""
+
+#: application/controllers/LocaleController.php:461
+msgid "Type"
+msgstr ""
+
+#: application/controllers/LocaleController.php:462
+msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/docs/playlists'>More information</a>"
+msgstr ""
+
+#: application/controllers/LocaleController.php:463
+msgid "Podcast settings saved"
+msgstr ""
+
+#: application/controllers/LocaleController.php:464
+msgid "Are you sure you want to delete this user?"
+msgstr ""
+
+#: application/controllers/LocaleController.php:465
+msgid "Can't delete yourself!"
+msgstr ""
+
+#: application/controllers/LocaleController.php:466
+msgid "You haven't published any episodes!"
+msgstr ""
+
+#: application/controllers/LocaleController.php:467
+msgid "You can publish your uploaded content from the 'Tracks' view."
+msgstr ""
+
+#: application/controllers/LocaleController.php:468
+msgid "Try it now"
+msgstr ""
+
+#: application/controllers/LocaleController.php:469
+msgid "<p>If this option is unchecked, the smartblock will schedule as many tracks as can be played out <strong>in their entirety</strong> within the specified duration. This will usually result in audio playback that is slightly less than the specified duration.</p><p>If this option is checked, the smartblock will also schedule one final track which will overflow the specified duration. This final track may be cut off mid-way if the show into which the smartblock is added finishes.</p>"
+msgstr ""
+
+#: application/controllers/LocaleController.php:470
+msgid "Playlist preview"
+msgstr ""
+
+#: application/controllers/LocaleController.php:471
+msgid "Smart Block"
+msgstr ""
+
+#: application/controllers/LocaleController.php:472
+msgid "Webstream preview"
+msgstr ""
+
+#: application/controllers/LocaleController.php:473
+msgid "You don't have permission to view the library."
+msgstr ""
+
+#: application/controllers/LocaleController.php:474
+#: application/forms/AddShowWhen.php:23
+msgid "Now"
+msgstr ""
+
+#: application/controllers/LocaleController.php:475
+msgid "Click 'New' to create one now."
+msgstr ""
+
+#: application/controllers/LocaleController.php:476
+msgid "Click 'Upload' to add some now."
+msgstr ""
+
+#: application/controllers/LocaleController.php:477
+msgid "Feed URL"
+msgstr ""
+
+#: application/controllers/LocaleController.php:478
+msgid "Import Date"
+msgstr ""
+
+#: application/controllers/LocaleController.php:479
+msgid "Add New Podcast"
+msgstr ""
+
+#: application/controllers/LocaleController.php:480
+msgid ""
+"Cannot schedule outside a show.\n"
+"Try creating a show first."
+msgstr ""
+
+#: application/controllers/LocaleController.php:481
+msgid "No files have been uploaded yet."
+msgstr ""
+
+#: application/controllers/LocaleController.php:487
+msgid "On Air"
+msgstr ""
+
+#: application/controllers/LocaleController.php:488
+msgid "Off Air"
+msgstr ""
+
+#: application/controllers/LocaleController.php:489
+msgid "Offline"
+msgstr ""
+
+#: application/controllers/LocaleController.php:490
+msgid "Nothing scheduled"
+msgstr ""
+
+#: application/controllers/LocaleController.php:491
+msgid "Click 'Add' to create one now."
+msgstr ""
+
+#: application/controllers/LoginController.php:51
+msgid "Please enter your username and password."
+msgstr ""
+
+#: application/controllers/LoginController.php:157
+msgid "Email could not be sent. Check your mail server settings and ensure it has been configured properly."
+msgstr "Το e-mail δεν μπόρεσε να σταλεί. Ελέγξτε τις ρυθμίσεις email του διακομιστή σας και βεβαιωθείτε ότι έχει ρυθμιστεί σωστά."
+
+#: application/controllers/LoginController.php:160
+msgid "That username or email address could not be found."
+msgstr ""
+
+#: application/controllers/LoginController.php:163
+msgid "There was a problem with the username or email address you entered."
+msgstr ""
+
+#: application/controllers/LoginController.php:242
+msgid "Wrong username or password provided. Please try again."
+msgstr "Άκυρο όνομα χρήστη ή κωδικός πρόσβασης. Παρακαλώ δοκιμάστε ξανά."
+
+#: application/controllers/PlaylistController.php:53
+#, php-format
+msgid "You are viewing an older version of %s"
+msgstr "Βλέπετε μια παλαιότερη έκδοση του %s"
+
+#: application/controllers/PlaylistController.php:143
+msgid "You cannot add tracks to dynamic blocks."
+msgstr "Δεν μπορείτε να προσθέσετε κομμάτια σε δυναμικά blocks."
+
+#: application/controllers/PlaylistController.php:164
+#, php-format
+msgid "You don't have permission to delete selected %s(s)."
+msgstr "Δεν έχετε άδεια διαγραφής επιλεγμένων %s(s)."
+
+#: application/controllers/PlaylistController.php:177
+msgid "You can only add tracks to smart block."
+msgstr "Μπορείτε να προσθέσετε κομμάτια μόνο σε smart block."
+
+#: application/controllers/PlaylistController.php:195
+msgid "Untitled Playlist"
+msgstr "Λίστα Αναπαραγωγής χωρίς Τίτλο"
+
+#: application/controllers/PlaylistController.php:197
+msgid "Untitled Smart Block"
+msgstr "Smart Block χωρίς Τίτλο"
+
+#: application/controllers/PlaylistController.php:529
+msgid "Unknown Playlist"
+msgstr "Άγνωστη λίστα αναπαραγωγής"
+
+#: application/controllers/PreferenceController.php:74
+msgid "Preferences updated."
+msgstr "Οι προτιμήσεις ενημερώθηκαν."
+
+#: application/controllers/PreferenceController.php:309
+msgid "Stream Setting Updated."
+msgstr "Η Ρύθμιση Stream Ενημερώθηκε."
+
+#: application/controllers/PreferenceController.php:357
+msgid "path should be specified"
+msgstr "η διαδρομή πρέπει να καθοριστεί"
+
+#: application/controllers/PreferenceController.php:452
+msgid "Problem with Liquidsoap..."
+msgstr "Πρόβλημα με Liquidsoap ..."
+
+#: application/controllers/PreferenceController.php:515
+msgid "Request method not accepted"
+msgstr ""
+
+#: application/controllers/ScheduleController.php:395
+#, php-format
+msgid "Rebroadcast of show %s from %s at %s"
+msgstr "Αναμετάδοση της εκπομπής %s από %s σε %s"
+
+#: application/controllers/ShowbuilderController.php:138
+msgid "Select cursor"
+msgstr "Επιλέξτε cursor"
+
+#: application/controllers/ShowbuilderController.php:139
+msgid "Remove cursor"
+msgstr "Αφαίρεση cursor"
+
+#: application/controllers/ShowbuilderController.php:157
+msgid "show does not exist"
+msgstr "η εκπομπή δεν υπάρχει"
+
+#: application/controllers/TracktypeController.php:70
+msgid "Track Type added successfully!"
+msgstr ""
+
+#: application/controllers/TracktypeController.php:72
+msgid "Track Type updated successfully!"
+msgstr ""
+
+#: application/controllers/UserController.php:87
+msgid "User added successfully!"
+msgstr "Ο χρήστης προστέθηκε επιτυχώς!"
+
+#: application/controllers/UserController.php:89
+msgid "User updated successfully!"
+msgstr "Ο χρήστης ενημερώθηκε με επιτυχία!"
+
+#: application/controllers/UserController.php:189
+msgid "Settings updated successfully!"
+msgstr "Οι ρυθμίσεις ενημερώθηκαν επιτυχώς!"
+
+#: application/controllers/WebstreamController.php:30
+#: application/controllers/WebstreamController.php:34
+msgid "Untitled Webstream"
+msgstr "Webstream χωρίς Τίτλο"
+
+#: application/controllers/WebstreamController.php:157
+msgid "Webstream saved."
+msgstr "Το Webstream αποθηκεύτηκε."
+
+#: application/controllers/WebstreamController.php:165
+msgid "Invalid form values."
+msgstr "Άκυρες μορφές αξίας."
+
+#: application/forms/AddShowAbsoluteRebroadcastDates.php:24
+#: application/forms/AddShowRebroadcastDates.php:29
+#: application/forms/DateRange.php:35 application/forms/DateRange.php:65
+#: application/forms/LiveStreamingPreferences.php:95
+#: application/forms/LiveStreamingPreferences.php:125
+#: application/forms/ShowBuilder.php:37 application/forms/ShowBuilder.php:67
+#: application/forms/ShowListenerStat.php:35
+#: application/forms/ShowListenerStat.php:65
+#: application/forms/StreamSettingSubForm.php:107
+#: application/forms/StreamSettingSubForm.php:128
+#: application/forms/StreamSettingSubForm.php:145
+#: application/forms/StreamSettingSubForm.php:170
+#: application/forms/StreamSettingSubForm.php:181
+#: application/forms/StreamSettingSubForm.php:191
+#: application/forms/StreamSettingSubForm.php:201
+msgid "Invalid character entered"
+msgstr "Εισαγωγή άκυρου χαρακτήρα"
+
+#: application/forms/AddShowAbsoluteRebroadcastDates.php:64
+#: application/forms/AddShowRebroadcastDates.php:69
+msgid "Day must be specified"
+msgstr "Η μέρα πρέπει να προσδιοριστεί"
+
+#: application/forms/AddShowAbsoluteRebroadcastDates.php:69
+#: application/forms/AddShowRebroadcastDates.php:74
+msgid "Time must be specified"
+msgstr "Η ώρα πρέπει να προσδιοριστεί"
+
+#: application/forms/AddShowAbsoluteRebroadcastDates.php:93
+#: application/forms/AddShowRebroadcastDates.php:102
+msgid "Must wait at least 1 hour to rebroadcast"
+msgstr "Πρέπει να περιμένετε τουλάχιστον 1 ώρα για την αναμετάδοση"
+
+#: application/forms/AddShowAutoPlaylist.php:18
+msgid "Add Autoloading Playlist ?"
+msgstr ""
+
+#: application/forms/AddShowAutoPlaylist.php:25
+msgid "Select Playlist"
+msgstr ""
+
+#: application/forms/AddShowAutoPlaylist.php:32
+msgid "Repeat Playlist Until Show is Full ?"
+msgstr ""
+
+#: application/forms/AddShowLiveStream.php:10
+#, php-format
+msgid "Use %s Authentication:"
+msgstr ""
+
+#: application/forms/AddShowLiveStream.php:17
+msgid "Use Custom Authentication:"
+msgstr "Χρήση Προσαρμοσμένης Ταυτοποίησης:"
+
+#: application/forms/AddShowLiveStream.php:27
+msgid "Custom Username"
+msgstr "Προσαρμοσμένο Όνομα Χρήστη"
+
+#: application/forms/AddShowLiveStream.php:40
+msgid "Custom Password"
+msgstr "Προσαρμοσμένος Κωδικός Πρόσβασης"
+
+#: application/forms/AddShowLiveStream.php:52
+msgid "Host:"
+msgstr ""
+
+#: application/forms/AddShowLiveStream.php:59
+msgid "Port:"
+msgstr ""
+
+#: application/forms/AddShowLiveStream.php:66
+msgid "Mount:"
+msgstr ""
+
+#: application/forms/AddShowLiveStream.php:85
+msgid "Username field cannot be empty."
+msgstr "Το πεδίο 'Όνομα Χρήστη' δεν μπορεί να είναι κενό."
+
+#: application/forms/AddShowLiveStream.php:90
+msgid "Password field cannot be empty."
+msgstr "Το πεδίο 'Κωδικός Πρόσβασης' δεν μπορεί να είναι κενό."
+
+#: application/forms/AddShowRR.php:9
+msgid "Record from Line In?"
+msgstr "Ηχογράφηση από Line In;"
+
+#: application/forms/AddShowRR.php:15
+msgid "Rebroadcast?"
+msgstr "Αναμετάδοση;"
+
+#: application/forms/AddShowRebroadcastDates.php:14
+msgid "days"
+msgstr "ημέρες"
+
+#: application/forms/AddShowRepeats.php:8
+msgid "Link:"
+msgstr "Σύνδεσμος"
+
+#: application/forms/AddShowRepeats.php:14
+msgid "Repeat Type:"
+msgstr "Τύπος Επανάληψης:"
+
+#: application/forms/AddShowRepeats.php:17
+msgid "weekly"
+msgstr "εβδομαδιαία"
+
+#: application/forms/AddShowRepeats.php:18
+msgid "every 2 weeks"
+msgstr "κάθε 2 εβδομάδες"
+
+#: application/forms/AddShowRepeats.php:19
+msgid "every 3 weeks"
+msgstr "κάθε 3 εβδομάδες"
+
+#: application/forms/AddShowRepeats.php:20
+msgid "every 4 weeks"
+msgstr "κάθε 4 εβδομάδες"
+
+#: application/forms/AddShowRepeats.php:21
+msgid "monthly"
+msgstr "μηνιαία"
+
+#: application/forms/AddShowRepeats.php:30
+msgid "Select Days:"
+msgstr "Επιλέξτε Ημέρες:"
+
+#: application/forms/AddShowRepeats.php:46
+msgid "Repeat By:"
+msgstr "Επανάληψη από:"
+
+#: application/forms/AddShowRepeats.php:49
+msgid "day of the month"
+msgstr "ημέρα του μήνα"
+
+#: application/forms/AddShowRepeats.php:49
+msgid "day of the week"
+msgstr "ημέρα της εβδομάδας"
+
+#: application/forms/AddShowRepeats.php:57 application/forms/DateRange.php:45
+#: application/forms/ShowBuilder.php:47
+#: application/forms/ShowListenerStat.php:45
+msgid "Date End:"
+msgstr "Ημερομηνία Λήξης:"
+
+#: application/forms/AddShowRepeats.php:70
+msgid "No End?"
+msgstr "Χωρίς Τέλος;"
+
+#: application/forms/AddShowRepeats.php:108
+msgid "End date must be after start date"
+msgstr "Η ημερομηνία λήξης πρέπει να είναι μετά την ημερομηνία έναρξης"
+
+#: application/forms/AddShowRepeats.php:117
+msgid "Please select a repeat day"
+msgstr "Επιλέξτε ημέρα επανάληψης"
+
+#: application/forms/AddShowStyle.php:11
+msgid "Background Colour:"
+msgstr "Χρώμα Φόντου:"
+
+#: application/forms/AddShowStyle.php:30
+msgid "Text Colour:"
+msgstr "Χρώμα Κειμένου:"
+
+#: application/forms/AddShowStyle.php:48
+msgid "Current Logo:"
+msgstr ""
+
+#: application/forms/AddShowStyle.php:71
+msgid "Show Logo:"
+msgstr ""
+
+#: application/forms/AddShowStyle.php:87
+msgid "Logo Preview:"
+msgstr ""
+
+#: application/forms/AddShowWhat.php:26
+msgid "Name:"
+msgstr "Όνομα:"
+
+#: application/forms/AddShowWhat.php:30
+msgid "Untitled Show"
+msgstr "Εκπομπή χωρίς Τίτλο"
+
+#: application/forms/AddShowWhat.php:36
+msgid "URL:"
+msgstr "Διεύθυνση URL:"
+
+#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:140
+msgid "Genre:"
+msgstr "Είδος:"
+
+#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:35
+#: application/forms/EditAudioMD.php:120
+msgid "Description:"
+msgstr "Περιγραφή:"
+
+#: application/forms/AddShowWhat.php:69
+msgid "Instance Description:"
+msgstr ""
+
+#: application/forms/AddShowWhen.php:15
+msgid "'%value%' does not fit the time format 'HH:mm'"
+msgstr "'%value%' δεν ταιριάζει με τη μορφή της ώρας 'ΩΩ:λλ'"
+
+#: application/forms/AddShowWhen.php:21
+msgid "Start Time:"
+msgstr ""
+
+#: application/forms/AddShowWhen.php:24 application/forms/AddShowWhen.php:36
+msgid "In the Future:"
+msgstr ""
+
+#: application/forms/AddShowWhen.php:64
+msgid "End Time:"
+msgstr ""
+
+#: application/forms/AddShowWhen.php:91
+msgid "Duration:"
+msgstr "Διάρκεια:"
+
+#: application/forms/AddShowWhen.php:100
+msgid "Timezone:"
+msgstr "Ζώνη Ώρας"
+
+#: application/forms/AddShowWhen.php:110
+msgid "Repeats?"
+msgstr "Επαναλήψεις;"
+
+#: application/forms/AddShowWhen.php:151
+msgid "Cannot create show in the past"
+msgstr "Δεν είναι δυνατή η δημιουργία εκπομπής στο παρελθόν"
+
+#: application/forms/AddShowWhen.php:159
+msgid "Cannot modify start date/time of the show that is already started"
+msgstr "Αδύνατη η τροποποίηση ημερομηνίας/ώρας έναρξης της  εκπομπής που έχει ήδη αρχίσει"
+
+#: application/forms/AddShowWhen.php:168 application/models/Show.php:330
+msgid "End date/time cannot be in the past"
+msgstr "Η λήξη ημερομηνίας/χρόνου δεν μπορεί να είναι στο παρελθόν"
+
+#: application/forms/AddShowWhen.php:176
+msgid "Cannot have duration < 0m"
+msgstr "Δεν μπορεί να έχει διάρκεια < 0m"
+
+#: application/forms/AddShowWhen.php:179
+msgid "Cannot have duration 00h 00m"
+msgstr "Δεν μπορεί να έχει διάρκεια 00h 00m"
+
+#: application/forms/AddShowWhen.php:185
+msgid "Cannot have duration greater than 24h"
+msgstr "Δεν μπορεί να έχει διάρκεια μεγαλύτερη από 24 ώρες"
+
+#: application/forms/AddShowWhen.php:315 application/forms/AddShowWhen.php:346
+#: application/forms/AddShowWhen.php:351
+#: application/services/CalendarService.php:309
+msgid "Cannot schedule overlapping shows"
+msgstr "Δεν είναι δυνατός ο προγραμματισμός αλληλοεπικαλυπτόμενων εκπομπών"
+
+#: application/forms/AddShowWho.php:9
+msgid "Search Users:"
+msgstr "Αναζήτηση Χρηστών:"
+
+#: application/forms/AddShowWho.php:23
+msgid "DJs:"
+msgstr "DJs:"
+
+#: application/forms/AddTracktype.php:20
+msgid "Type Name:"
+msgstr ""
+
+#: application/forms/AddTracktype.php:26
+msgid "Code:"
+msgstr ""
+
+#: application/forms/AddTracktype.php:46
+msgid "Visibility:"
+msgstr ""
+
+#: application/forms/AddTracktype.php:70
+msgid "Code is not unique."
+msgstr ""
+
+#: application/forms/AddUser.php:27 application/forms/EditUser.php:35
+#: application/forms/LiveStreamingPreferences.php:44
+#: application/forms/Login.php:39
+msgid "Username:"
+msgstr "Όνομα Χρήστη:"
+
+#: application/forms/AddUser.php:36 application/forms/EditUser.php:46
+#: application/forms/LiveStreamingPreferences.php:61
+#: application/forms/Login.php:53
+msgid "Password:"
+msgstr "Κωδικός πρόσβασης:"
+
+#: application/forms/AddUser.php:44 application/forms/EditUser.php:55
+msgid "Verify Password:"
+msgstr "Επαλήθευση κωδικού πρόσβασης"
+
+#: application/forms/AddUser.php:53 application/forms/EditUser.php:65
+msgid "Firstname:"
+msgstr "Όνομα:"
+
+#: application/forms/AddUser.php:59 application/forms/EditUser.php:73
+msgid "Lastname:"
+msgstr "Επώνυμο:"
+
+#: application/forms/AddUser.php:65 application/forms/EditUser.php:81
+msgid "Email:"
+msgstr "Email:"
+
+#: application/forms/AddUser.php:74 application/forms/EditUser.php:92
+msgid "Mobile Phone:"
+msgstr "Κινητό Τηλέφωνο:"
+
+#: application/forms/AddUser.php:80 application/forms/EditUser.php:100
+msgid "Skype:"
+msgstr "Skype"
+
+#: application/forms/AddUser.php:86 application/forms/EditUser.php:108
+msgid "Jabber:"
+msgstr "Jabber"
+
+#: application/forms/AddUser.php:93
+msgid "User Type:"
+msgstr "Τύπος Χρήστη:"
+
+#: application/forms/AddUser.php:118 application/forms/EditUser.php:143
+msgid "Login name is not unique."
+msgstr "Το όνομα εισόδου δεν είναι μοναδικό."
+
+#: application/forms/DangerousPreferences.php:12
+msgid "Delete All Tracks in Library"
+msgstr ""
+
+#: application/forms/DateRange.php:15 application/forms/ShowBuilder.php:17
+#: application/forms/ShowListenerStat.php:15
+msgid "Date Start:"
+msgstr "Ημερομηνία Έναρξης:"
+
+#: application/forms/EditAudioMD.php:54 application/forms/Player.php:15
+msgid "Title:"
+msgstr "Τίτλος:"
+
+#: application/forms/EditAudioMD.php:65
+msgid "Creator:"
+msgstr "Δημιουργός:"
+
+#: application/forms/EditAudioMD.php:76
+msgid "Album:"
+msgstr "Album:"
+
+#: application/forms/EditAudioMD.php:94
+msgid "Owner:"
+msgstr ""
+
+#: application/forms/EditAudioMD.php:106
+msgid "Select a Type"
+msgstr ""
+
+#: application/forms/EditAudioMD.php:113
+msgid "Track Type:"
+msgstr ""
+
+#: application/forms/EditAudioMD.php:151
+msgid "Year:"
+msgstr "Έτος"
+
+#: application/forms/EditAudioMD.php:165
+msgid "Label:"
+msgstr "Δισκογραφική:"
+
+#: application/forms/EditAudioMD.php:176
+msgid "Composer:"
+msgstr "Συνθέτης:"
+
+#: application/forms/EditAudioMD.php:187
+msgid "Conductor:"
+msgstr "Μαέστρος:"
+
+#: application/forms/EditAudioMD.php:198
+msgid "Mood:"
+msgstr "Διάθεση:"
+
+#: application/forms/EditAudioMD.php:209
+msgid "BPM:"
+msgstr "BPM:"
+
+#: application/forms/EditAudioMD.php:220
+msgid "Copyright:"
+msgstr "Copyright:"
+
+#: application/forms/EditAudioMD.php:231
+msgid "ISRC Number:"
+msgstr "Αριθμός ISRC:"
+
+#: application/forms/EditAudioMD.php:242
+msgid "Website:"
+msgstr "Ιστοσελίδα:"
+
+#: application/forms/EditAudioMD.php:253 application/forms/EditUser.php:117
+#: application/forms/Login.php:67
+msgid "Language:"
+msgstr "Γλώσσα:"
+
+#: application/forms/EditAudioMD.php:307
+msgid "Publish..."
+msgstr ""
+
+#: application/forms/EditHistoryItem.php:32
+#: application/services/HistoryService.php:1086
+msgid "Start Time"
+msgstr "Ώρα Έναρξης"
+
+#: application/forms/EditHistoryItem.php:44
+#: application/services/HistoryService.php:1087
+msgid "End Time"
+msgstr "Ώρα Τέλους"
+
+#: application/forms/EditUser.php:127
+msgid "Interface Timezone:"
+msgstr "Interface Ζώνης ώρας:"
+
+#: application/forms/GeneralPreferences.php:26
+msgid "Station Name"
+msgstr "Όνομα Σταθμού"
+
+#: application/forms/GeneralPreferences.php:34
+msgid "Station Description"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:43
+msgid "Station Logo:"
+msgstr "Λογότυπο Σταθμού:"
+
+#: application/forms/GeneralPreferences.php:44
+msgid "Note: Anything larger than 600x600 will be resized."
+msgstr "Σημείωση: Οτιδήποτε μεγαλύτερο από 600x600 θα αλλάξει μέγεθος."
+
+#: application/forms/GeneralPreferences.php:64
+msgid "Default Crossfade Duration (s):"
+msgstr "Προεπιλεγμένη Διάρκεια Crossfade (s):"
+
+#: application/forms/GeneralPreferences.php:70
+#: application/forms/GeneralPreferences.php:84
+#: application/forms/GeneralPreferences.php:98
+#: application/forms/LiveStreamingPreferences.php:35
+msgid "Please enter a time in seconds (eg. 0.5)"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:78
+msgid "Default Fade In (s):"
+msgstr "Προεπιλεγμένο Fade In (s):"
+
+#: application/forms/GeneralPreferences.php:92
+msgid "Default Fade Out (s):"
+msgstr "Προεπιλεγμένο Fade Out (s):"
+
+#: application/forms/GeneralPreferences.php:104
+msgid "Track Type Upload Default"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:111
+msgid "Intro Autoloading Playlist"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:117
+msgid "Outro Autoloading Playlist"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:123
+msgid "Overwrite Podcast Episode Metatags"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:129
+msgid "Enabling this feature will cause podcast episode tracks to have their Artist, Title, and Album metatags set from podcast feed values. Note that enabling this feature is recommended in order to ensure reliable scheduling of episodes via smartblocks."
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:138
+msgid "Generate a smartblock and a playlist upon creation of a new podcast"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:144
+msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:155
+msgid "Public LibreTime API"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:156
+msgid "Required for embeddable schedule widget."
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:162
+msgid ""
+"Enabling this feature will allow LibreTime to provide schedule data\n"
+"                                            to external widgets that can be embedded in your website."
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:174
+msgid "Allowed CORS URLs"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:175
+msgid "Remote URLs that are allowed to access this LibreTime instance in a browser. One URL per line."
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:180
+msgid "Default Language"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:187
+#: application/forms/SetupLanguageTimezone.php:21
+msgid "Station Timezone"
+msgstr "Ζώνη Ώρας Σταθμού"
+
+#: application/forms/GeneralPreferences.php:194
+msgid "Week Starts On"
+msgstr "Η Εβδομάδα αρχίζει "
+
+#: application/forms/GeneralPreferences.php:210
+msgid "Display login button on your Radio Page?"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:215
+msgid "Feature Previews"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:221
+msgid "Enable this to opt-in to test new features."
+msgstr ""
+
+#: application/forms/LiveStreamingPreferences.php:18
+msgid "Auto Switch Off:"
+msgstr ""
+
+#: application/forms/LiveStreamingPreferences.php:25
+msgid "Auto Switch On:"
+msgstr ""
+
+#: application/forms/LiveStreamingPreferences.php:32
+msgid "Switch Transition Fade (s):"
+msgstr ""
+
+#: application/forms/LiveStreamingPreferences.php:70
+msgid "Master Source Host:"
+msgstr ""
+
+#: application/forms/LiveStreamingPreferences.php:82
+msgid "Master Source Port:"
+msgstr ""
+
+#: application/forms/LiveStreamingPreferences.php:85
+#: application/forms/LiveStreamingPreferences.php:116
+#: application/forms/StreamSettingSubForm.php:118
+msgid "Only numbers are allowed."
+msgstr "Επιτρέπονται μόνο αριθμοί."
+
+#: application/forms/LiveStreamingPreferences.php:92
+msgid "Master Source Mount:"
+msgstr ""
+
+#: application/forms/LiveStreamingPreferences.php:103
+msgid "Show Source Host:"
+msgstr ""
+
+#: application/forms/LiveStreamingPreferences.php:113
+msgid "Show Source Port:"
+msgstr ""
+
+#: application/forms/LiveStreamingPreferences.php:122
+msgid "Show Source Mount:"
+msgstr ""
+
+#: application/forms/Login.php:78
+msgid "Login"
+msgstr "Σύνδεση"
+
+#: application/forms/PasswordChange.php:15
+#: application/forms/StreamSettingSubForm.php:124
+msgid "Password"
+msgstr "Κωδικός πρόσβασης"
+
+#: application/forms/PasswordChange.php:26
+msgid "Confirm new password"
+msgstr "Επιβεβαίωση νέου κωδικού πρόσβασης"
+
+#: application/forms/PasswordChange.php:34
+msgid "Password confirmation does not match your password."
+msgstr "Η επιβεβαίωση κωδικού δεν ταιριάζει με τον κωδικό πρόσβασής σας."
+
+#: application/forms/PasswordRestore.php:12
+msgid "Email"
+msgstr ""
+
+#: application/forms/PasswordRestore.php:23
+#: application/forms/StreamSettingSubForm.php:177
+msgid "Username"
+msgstr "Όνομα Χρήστη"
+
+#: application/forms/PasswordRestore.php:34
+msgid "Reset password"
+msgstr "Επαναφορά κωδικού πρόσβασης"
+
+#: application/forms/PasswordRestore.php:44
+msgid "Back"
+msgstr ""
+
+#: application/forms/Player.php:14
+msgid "Now Playing"
+msgstr "Αναπαραγωγή σε Εξέλιξη"
+
+#: application/forms/Player.php:25
+msgid "Select Stream:"
+msgstr ""
+
+#: application/forms/Player.php:28
+msgid "Auto detect the most appropriate stream to use."
+msgstr ""
+
+#: application/forms/Player.php:29
+msgid "Select a stream:"
+msgstr ""
+
+#: application/forms/Player.php:41
+msgid " - Mobile friendly"
+msgstr ""
+
+#: application/forms/Player.php:45
+msgid " - The player does not support Opus streams."
+msgstr ""
+
+#: application/forms/Player.php:72
+msgid "Embeddable code:"
+msgstr ""
+
+#: application/forms/Player.php:73
+msgid "Copy this code and paste it into your website's HTML to embed the player in your site."
+msgstr ""
+
+#: application/forms/Player.php:78
+msgid "Preview:"
+msgstr ""
+
+#: application/forms/PodcastPreferences.php:9
+msgid "Feed Privacy"
+msgstr ""
+
+#: application/forms/PodcastPreferences.php:11
+msgid "Public"
+msgstr ""
+
+#: application/forms/PodcastPreferences.php:12
+msgid "Private"
+msgstr ""
+
+#: application/forms/SetupLanguageTimezone.php:16
+msgid "Station Language"
+msgstr ""
+
+#: application/forms/ShowBuilder.php:75 application/forms/ShowBuilder.php:93
+msgid "Filter by Show"
+msgstr ""
+
+#: application/forms/ShowBuilder.php:83
+msgid "All My Shows:"
+msgstr "Όλες οι Εκπομπές μου:"
+
+#: application/forms/ShowBuilder.php:95
+msgid "My Shows"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:56
+#: application/models/Block.php:1444 application/models/Block.php:1540
+msgid "Select criteria"
+msgstr "Επιλέξτε κριτήρια"
+
+#: application/forms/SmartBlockCriteria.php:58
+#: application/models/Block.php:1446 application/models/Block.php:1542
+msgid "Bit Rate (Kbps)"
+msgstr "Bit Rate (Kbps)"
+
+#: application/forms/SmartBlockCriteria.php:75
+#: application/models/Block.php:1464 application/models/Block.php:1560
+#: application/services/HistoryService.php:1067
+msgid "Track Type"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:80
+#: application/models/Block.php:1469 application/models/Block.php:1565
+msgid "Sample Rate (kHz)"
+msgstr "Ρυθμός Δειγματοληψίας (kHz)"
+
+#: application/forms/SmartBlockCriteria.php:134
+#: application/models/Block.php:1485 application/models/Block.php:1581
+msgid "before"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:135
+#: application/models/Block.php:1486 application/models/Block.php:1582
+msgid "after"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:136
+#: application/models/Block.php:1487 application/models/Block.php:1583
+msgid "between"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:152
+#: application/forms/SmartBlockCriteria.php:467
+#: application/forms/SmartBlockCriteria.php:509
+msgid "Select unit of time"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:153
+msgid "minute(s)"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:154
+msgid "hour(s)"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:155
+msgid "day(s)"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:156
+msgid "week(s)"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:157
+msgid "month(s)"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:158
+msgid "year(s)"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:169
+msgid "hours"
+msgstr "ώρες"
+
+#: application/forms/SmartBlockCriteria.php:170
+msgid "minutes"
+msgstr "λεπτά"
+
+#: application/forms/SmartBlockCriteria.php:171
+#: application/models/Block.php:336
+msgid "items"
+msgstr "στοιχεία"
+
+#: application/forms/SmartBlockCriteria.php:172
+msgid "time remaining in show"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:183
+msgid "Randomly"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:184
+msgid "Newest"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:185
+msgid "Oldest"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:186
+msgid "Most recently played"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:187
+msgid "Least recently played"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:211
+msgid "Select Track Type"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:268
+msgid "Type:"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:271
+msgid "Dynamic"
+msgstr "Δυναμικό"
+
+#: application/forms/SmartBlockCriteria.php:272
+msgid "Static"
+msgstr "Στατικό"
+
+#: application/forms/SmartBlockCriteria.php:434
+msgid "Select track type"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:519
+msgid "Allow Repeated Tracks:"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:528
+msgid "Allow last track to exceed time limit:"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:538
+msgid "Sort Tracks:"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:558
+msgid "Limit to:"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:571
+msgid "Generate playlist content and save criteria"
+msgstr "Δημιουργία λίστας αναπαραγωγής περιεχομένου και αποθήκευση κριτηρίων"
+
+#: application/forms/SmartBlockCriteria.php:583
+msgid "Shuffle playlist content"
+msgstr "Περιεχόμενο λίστας Shuffle "
+
+#: application/forms/SmartBlockCriteria.php:585
+msgid "Shuffle"
+msgstr "Shuffle"
+
+#: application/forms/SmartBlockCriteria.php:818
+#: application/forms/SmartBlockCriteria.php:830
+msgid "Limit cannot be empty or smaller than 0"
+msgstr "Το όριο δεν μπορεί να είναι κενό ή μικρότερο από 0"
+
+#: application/forms/SmartBlockCriteria.php:823
+msgid "Limit cannot be more than 24 hrs"
+msgstr "Το όριο δεν μπορεί να είναι ξεπερνάει τις 24 ώρες"
+
+#: application/forms/SmartBlockCriteria.php:833
+msgid "The value should be an integer"
+msgstr "Η τιμή πρέπει να είναι ακέραιος αριθμός"
+
+#: application/forms/SmartBlockCriteria.php:836
+msgid "500 is the max item limit value you can set"
+msgstr "Το 500 είναι η μέγιστη οριακή τιμή σημείου, που μπορείτε να ορίσετε"
+
+#: application/forms/SmartBlockCriteria.php:847
+msgid "You must select Criteria and Modifier"
+msgstr "Θα πρέπει να επιλέξετε Κριτήρια και Τροποποιητή"
+
+#: application/forms/SmartBlockCriteria.php:854
+msgid "'Length' should be in '00:00:00' format"
+msgstr "Το «Μήκος» θα πρέπει να είναι σε υπό μορφής  '00:00:00'"
+
+#: application/forms/SmartBlockCriteria.php:862
+msgid "Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:867
+#: application/forms/SmartBlockCriteria.php:892
+msgid "You must select a time unit for a relative datetime."
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:872
+#: application/forms/SmartBlockCriteria.php:897
+msgid "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
+msgstr "Η τιμή θα πρέπει να είναι υπο μορφής ώρας (π.χ. 0000-00-00 ή 0000-00-00 00:00:00)"
+
+#: application/forms/SmartBlockCriteria.php:887
+msgid "Only non-negative integer numbers are allowed for a relative date time"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:912
+msgid "The value has to be numeric"
+msgstr "Η τιμή πρέπει να είναι αριθμός"
+
+#: application/forms/SmartBlockCriteria.php:917
+msgid "The value should be less then 2147483648"
+msgstr "Η τιμή πρέπει να είναι μικρότερη από 2147483648"
+
+#: application/forms/SmartBlockCriteria.php:922
+#, php-format
+msgid "The value should be less than %s characters"
+msgstr "Η τιμή πρέπει να είναι μικρότερη από %s χαρακτήρες"
+
+#: application/forms/SmartBlockCriteria.php:929
+msgid "Value cannot be empty"
+msgstr "Η αξία δεν μπορεί να είναι κενή"
+
+#: application/forms/StreamSetting.php:25
+msgid "Hardware Audio Output:"
+msgstr ""
+
+#: application/forms/StreamSetting.php:33
+msgid "Output Type"
+msgstr ""
+
+#: application/forms/StreamSetting.php:35
+msgid "ALSA"
+msgstr ""
+
+#: application/forms/StreamSetting.php:36
+msgid "AO"
+msgstr ""
+
+#: application/forms/StreamSetting.php:37
+msgid "OSS"
+msgstr ""
+
+#: application/forms/StreamSetting.php:38
+msgid "Portaudio"
+msgstr ""
+
+#: application/forms/StreamSetting.php:39
+msgid "Pulseaudio"
+msgstr ""
+
+#: application/forms/StreamSetting.php:40
+msgid "Jack"
+msgstr ""
+
+#: application/forms/StreamSetting.php:47
+msgid "Icecast Vorbis Metadata"
+msgstr "Μεταδεδομένα Icecast Vorbis "
+
+#: application/forms/StreamSetting.php:58
+msgid "Stream Label:"
+msgstr "Stream Label:"
+
+#: application/forms/StreamSetting.php:59
+msgid "Artist - Title"
+msgstr "Καλλιτέχνης - Τίτλος"
+
+#: application/forms/StreamSetting.php:60
+msgid "Show - Artist - Title"
+msgstr "Εκπομπή - Καλλιτέχνης - Τίτλος"
+
+#: application/forms/StreamSetting.php:61
+msgid "Station name - Show name"
+msgstr "Όνομα Σταθμού - Όνομα Εκπομπής"
+
+#: application/forms/StreamSetting.php:67
+msgid "Off Air Metadata"
+msgstr "Μεταδεδομένα Off Air"
+
+#: application/forms/StreamSetting.php:74
+msgid "Enable Replay Gain"
+msgstr "Ενεργοποίηση Επανάληψη Κέρδους"
+
+#: application/forms/StreamSetting.php:81
+msgid "Replay Gain Modifier"
+msgstr "Τροποποιητής Επανάληψης Κέρδους"
+
+#: application/forms/StreamSetting.php:90
+msgid "Streaming Server:"
+msgstr ""
+
+#: application/forms/StreamSetting.php:91
+msgid "Custom / 3rd Party Streaming"
+msgstr ""
+
+#: application/forms/StreamSetting.php:91
+msgid "Default Streaming"
+msgstr ""
+
+#: application/forms/StreamSettingSubForm.php:52
+msgid "Enabled:"
+msgstr "Ενεργοποιημένο"
+
+#: application/forms/StreamSettingSubForm.php:60
+msgid "Mobile:"
+msgstr ""
+
+#: application/forms/StreamSettingSubForm.php:67
+msgid "Stream Type:"
+msgstr "Τύπος Stream:"
+
+#: application/forms/StreamSettingSubForm.php:76
+msgid "Bit Rate:"
+msgstr "Ρυθμός Δεδομένων:"
+
+#: application/forms/StreamSettingSubForm.php:85
+msgid "Service Type:"
+msgstr "Τύπος Υπηρεσίας:"
+
+#: application/forms/StreamSettingSubForm.php:94
+msgid "Channels:"
+msgstr "Κανάλια"
+
+#: application/forms/StreamSettingSubForm.php:95
+msgid "1 - Mono"
+msgstr "1 - Mono"
+
+#: application/forms/StreamSettingSubForm.php:95
+msgid "2 - Stereo"
+msgstr "2 - Stereo"
+
+#: application/forms/StreamSettingSubForm.php:103
+msgid "Server"
+msgstr "Διακομιστής"
+
+#: application/forms/StreamSettingSubForm.php:114
+msgid "Port"
+msgstr "Θύρα"
+
+#: application/forms/StreamSettingSubForm.php:142
+msgid "URL"
+msgstr "Διεύθυνση URL:"
+
+#: application/forms/StreamSettingSubForm.php:152
+msgid "Name"
+msgstr "Ονομασία"
+
+#: application/forms/StreamSettingSubForm.php:166
+msgid "Mount Point"
+msgstr "Σημείο Προσάρτησης"
+
+#: application/forms/StreamSettingSubForm.php:188
+msgid "Admin User"
+msgstr "Διαχειριστής Χρήστης"
+
+#: application/forms/StreamSettingSubForm.php:198
+msgid "Admin Password"
+msgstr "Κωδικός πρόσβασης Διαχειριστή"
+
+#: application/forms/StreamSettingSubForm.php:227
+msgid "Server cannot be empty."
+msgstr "Ο διακομιστής δεν μπορεί να είναι κενός."
+
+#: application/forms/StreamSettingSubForm.php:232
+msgid "Port cannot be empty."
+msgstr "Το Port δεν μπορεί να είναι κενό."
+
+#: application/forms/StreamSettingSubForm.php:238
+msgid "Mount cannot be empty with Icecast server."
+msgstr "Η προσάρτηση δεν μπορεί να είναι κενή με διακομιστή Icecast."
+
+#: application/forms/TuneInPreferences.php:20
+msgid "Push metadata to your station on TuneIn?"
+msgstr ""
+
+#: application/forms/TuneInPreferences.php:25
+msgid "Station ID:"
+msgstr ""
+
+#: application/forms/TuneInPreferences.php:31
+msgid "Partner Key:"
+msgstr ""
+
+#: application/forms/TuneInPreferences.php:37
+msgid "Partner Id:"
+msgstr ""
+
+#: application/forms/TuneInPreferences.php:78
+#: application/forms/TuneInPreferences.php:87
+msgid "Invalid TuneIn Settings. Please ensure your TuneIn settings are correct and try again."
+msgstr ""
+
+#: application/forms/WatchedDirPreferences.php:13
+msgid "Import Folder:"
+msgstr "Εισαγωγή Φακέλου:"
+
+#: application/forms/WatchedDirPreferences.php:24
+msgid "Watched Folders:"
+msgstr "Παροβεβλημμένοι Φάκελοι:"
+
+#: application/forms/WatchedDirPreferences.php:39
+msgid "Not a valid Directory"
+msgstr "Μη έγκυρο Ευρετήριο"
+
+#: application/forms/customvalidators/ConditionalNotEmpty.php:32
+#: application/forms/helpers/ValidationTypes.php:9
+msgid "Value is required and can't be empty"
+msgstr "Απαιτείται αξία και δεν μπορεί να είναι κενή"
+
+#: application/forms/helpers/ValidationTypes.php:20
+msgid "'%value%' is no valid email address in the basic format local-part@hostname"
+msgstr "'%value%' δεν αποτελεί έγκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου στη βασική μορφή local-part@hostname"
+
+#: application/forms/helpers/ValidationTypes.php:34
+msgid "'%value%' does not fit the date format '%format%'"
+msgstr "'%value%' δεν ταιριάζει με τη μορφή ημερομηνίας '%format%'"
+
+#: application/forms/helpers/ValidationTypes.php:60
+msgid "'%value%' is less than %min% characters long"
+msgstr "'%value%' είναι λιγότερο από %min% χαρακτήρες "
+
+#: application/forms/helpers/ValidationTypes.php:65
+msgid "'%value%' is more than %max% characters long"
+msgstr "'%value%' είναι περισσότερο από  %max% χαρακτήρες "
+
+#: application/forms/helpers/ValidationTypes.php:77
+msgid "'%value%' is not between '%min%' and '%max%', inclusively"
+msgstr "'%value%' δεν είναι μεταξύ '%min%' και '%max%', συνολικά"
+
+#: application/forms/helpers/ValidationTypes.php:90
+msgid "Passwords do not match"
+msgstr "Οι κωδικοί πρόσβασης δεν συμπίπτουν"
+
+#: application/models/Auth.php:33
+#, php-format
+msgid ""
+"Hi %s, \n"
+"\n"
+"Please click this link to reset your password: "
+msgstr ""
+
+#: application/models/Auth.php:35
+#, php-format
+msgid ""
+"\n"
+"\n"
+"If you have any problems, please contact our support team: %s"
+msgstr ""
+
+#: application/models/Auth.php:36
+#, php-format
+msgid ""
+"\n"
+"\n"
+"Thank you,\n"
+"The %s Team"
+msgstr ""
+
+#: application/models/Auth.php:38
+#, php-format
+msgid "%s Password Reset"
+msgstr ""
+
+#: application/models/Block.php:843 application/models/Playlist.php:811
+msgid "Cue in and cue out are null."
+msgstr "Cue in και cue out είναι μηδέν."
+
+#: application/models/Block.php:878 application/models/Block.php:933
+#: application/models/Playlist.php:850 application/models/Playlist.php:891
+msgid "Can't set cue out to be greater than file length."
+msgstr "Το cue out δεν μπορεί να είναι μεγαλύτερο από το μήκος του αρχείου."
+
+#: application/models/Block.php:890 application/models/Block.php:910
+#: application/models/Playlist.php:842 application/models/Playlist.php:865
+msgid "Can't set cue in to be larger than cue out."
+msgstr "Το cue in δεν μπορεί να είναι μεγαλύτερης διάρκειας από το cue out."
+
+#: application/models/Block.php:945 application/models/Playlist.php:883
+msgid "Can't set cue out to be smaller than cue in."
+msgstr "Το cue out δεν μπορεί να είναι μικρότερο από το cue in."
+
+#: application/models/Block.php:1460 application/models/Block.php:1556
+msgid "Upload Time"
+msgstr ""
+
+#: application/models/Library.php:36 application/models/Library.php:59
+msgid "None"
+msgstr ""
+
+#: application/models/MusicDir.php:169
+#, php-format
+msgid "%s is already watched."
+msgstr "%s έχει ήδη προβληθεί."
+
+#: application/models/MusicDir.php:173
+#, php-format
+msgid "%s contains nested watched directory: %s"
+msgstr "%s περιέχει ένθετο ευρετήριο προβεβλημένων: %s"
+
+#: application/models/MusicDir.php:177
+#, php-format
+msgid "%s is nested within existing watched directory: %s"
+msgstr "%s βρίσκεται σε υποκατηγορία υπάρχωντος ευρετηρίου προβεβλημμένων: %s"
+
+#: application/models/MusicDir.php:201 application/models/MusicDir.php:386
+#, php-format
+msgid "%s is not a valid directory."
+msgstr "%s μη έγκυρο ευρετήριο."
+
+#: application/models/MusicDir.php:244
+#, php-format
+msgid "%s is already set as the current storage dir or in the watched folders list"
+msgstr "%s έχει ήδη οριστεί ως το τρέχον ευρετήριο αποθήκευσης ή βρίσκεται στη λίστα προβεβλημένων φακέλων"
+
+#: application/models/MusicDir.php:406
+#, php-format
+msgid "%s is already set as the current storage dir or in the watched folders list."
+msgstr "%s έχει ήδη οριστεί ως το τρέχον ευρετήριο αποθήκευσης ή βρίσκεται στη λίστα προβεβλημένων φακέλων."
+
+#: application/models/MusicDir.php:450
+#, php-format
+msgid "%s doesn't exist in the watched list."
+msgstr "%s δεν υπάρχει στη λίστα προβεβλημένων."
+
+#: application/models/Preference.php:521
+#, php-format
+msgid "Powered by %s"
+msgstr ""
+
+#: application/models/Preference.php:651
+msgid "Select Country"
+msgstr "Επιλέξτε Χώρα"
+
+#: application/models/Schedule.php:210
+msgid "livestream"
+msgstr ""
+
+#: application/models/Scheduler.php:81
+msgid "Cannot move items out of linked shows"
+msgstr "Η μετακίνηση στοιχείων εκτός συνδεδεμένων εκπομπών είναι αδύνατη."
+
+#: application/models/Scheduler.php:127
+msgid "The schedule you're viewing is out of date! (sched mismatch)"
+msgstr "Το πρόγραμμα που βλέπετε δεν είναι έγκυρο! (αναντιστοιχία προγράμματος)"
+
+#: application/models/Scheduler.php:132
+msgid "The schedule you're viewing is out of date! (instance mismatch)"
+msgstr "Το πρόγραμμα που βλέπετε δεν είναι ενημερωμένο! (αναντιστοιχία παραδείγματος)"
+
+#: application/models/Scheduler.php:140 application/models/Scheduler.php:492
+#: application/models/Scheduler.php:532 application/models/Scheduler.php:573
+msgid "The schedule you're viewing is out of date!"
+msgstr "Το πρόγραμμα που βλέπετε δεν είναι ενημερωμένο!"
+
+#: application/models/Scheduler.php:149
+#, php-format
+msgid "You are not allowed to schedule show %s."
+msgstr "Δεν έχετε δικαίωμα προγραμματισμού εκπομπής%s.."
+
+#: application/models/Scheduler.php:153
+msgid "You cannot add files to recording shows."
+msgstr "Δεν μπορείτε να προσθεσετε αρχεία σε ηχογραφημένες εκπομπές."
+
+#: application/models/Scheduler.php:159
+#, php-format
+msgid "The show %s is over and cannot be scheduled."
+msgstr "Η εκπομπή %s έχει τελειώσει και δεν μπορεί να προγραμματιστεί."
+
+#: application/models/Scheduler.php:167
+#, php-format
+msgid "The show %s has been previously updated!"
+msgstr "Η εκπομπή %s έχει ενημερωθεί πρόσφατα!"
+
+#: application/models/Scheduler.php:187
+msgid "Content in linked shows cannot be changed while on air!"
+msgstr ""
+
+#: application/models/Scheduler.php:202
+msgid "Cannot schedule a playlist that contains missing files."
+msgstr ""
+
+#: application/models/Scheduler.php:228 application/models/Scheduler.php:320
+msgid "A selected File does not exist!"
+msgstr "Ένα επιλεγμένο αρχείο δεν υπάρχει!"
+
+#: application/models/Show.php:229
+msgid "Shows can have a max length of 24 hours."
+msgstr "Η μέγιστη διάρκει εκπομπών είναι 24 ώρες."
+
+#: application/models/Show.php:345
+msgid ""
+"Cannot schedule overlapping shows.\n"
+"Note: Resizing a repeating show affects all of its repeats."
+msgstr ""
+"Δεν είναι δυνατός ο προγραμματισμός αλληλοεπικαλυπτώμενων εκπομπών.\n"
+" Σημείωση: Η αλλαγή μεγέθους μιας εκπομπής επηρεάζει όλες τις επαναλήψεις της."
+
+#: application/models/ShowBuilder.php:210
+#, php-format
+msgid "Rebroadcast of %s from %s"
+msgstr "Αναμετάδοση του %s από %s"
+
+#: application/models/Webstream.php:163
+msgid "Length needs to be greater than 0 minutes"
+msgstr "Το μήκος πρέπει να είναι μεγαλύτερο από 0 λεπτά"
+
+#: application/models/Webstream.php:167
+msgid "Length should be of form \"00h 00m\""
+msgstr "Το μήκος πρέπει να είναι υπό μορφής \"00h 00m\""
+
+#: application/models/Webstream.php:180
+msgid "URL should be of form \"http://domain\""
+msgstr "Το URL θα πρέπει να είναι υπό μορφής \"http://domain \""
+
+#: application/models/Webstream.php:183
+msgid "URL should be 512 characters or less"
+msgstr "Το URL πρέπει να αποτελέιται από μέχρι και 512 χαρακτήρες "
+
+#: application/models/Webstream.php:188
+msgid "No MIME type found for webstream."
+msgstr "Δεν βρέθηκε τύπος MIME για webstream."
+
+#: application/models/Webstream.php:204
+msgid "Webstream name cannot be empty"
+msgstr "Το όνομα του webstream δεν μπορεί να είναι κενό"
+
+#: application/models/Webstream.php:274
+msgid "Could not parse XSPF playlist"
+msgstr "Δεν ήταν δυνατή η ανάλυση της λίστας αναπαραγωγής XSPF "
+
+#: application/models/Webstream.php:295
+msgid "Could not parse PLS playlist"
+msgstr "Αδυναμία ανάλυσης λίστας αναπαραγωγής PLS"
+
+#: application/models/Webstream.php:314
+msgid "Could not parse M3U playlist"
+msgstr "Δεν ήταν δυνατή η ανάλυση της λίστας αναπαραγωγής M3U"
+
+#: application/models/Webstream.php:327
+msgid "Invalid webstream - This appears to be a file download."
+msgstr "Μη έγκυρο webstream - Αυτό φαίνεται να αποτελεί αρχείο λήψης."
+
+#: application/models/Webstream.php:331
+#, php-format
+msgid "Unrecognized stream type: %s"
+msgstr "Άγνωστος τύπος stream: %s"
+
+#: application/services/CalendarService.php:48
+msgid "Record file doesn't exist"
+msgstr "Το αρχείο δεν υπάρχει"
+
+#: application/services/CalendarService.php:52
+msgid "View Recorded File Metadata"
+msgstr "Προβολή εγγεγραμμένων Αρχείων Μεταδεδομένων "
+
+#: application/services/CalendarService.php:78
+msgid "Schedule Tracks"
+msgstr ""
+
+#: application/services/CalendarService.php:101
+msgid "Clear Show"
+msgstr ""
+
+#: application/services/CalendarService.php:115
+#: application/services/CalendarService.php:120
+msgid "Cancel Show"
+msgstr ""
+
+#: application/services/CalendarService.php:141
+#: application/services/CalendarService.php:160
+msgid "Edit Instance"
+msgstr ""
+
+#: application/services/CalendarService.php:153
+#: application/services/CalendarService.php:167
+msgid "Edit Show"
+msgstr "Επεξεργασία Εκπομπής"
+
+#: application/services/CalendarService.php:189
+msgid "Delete Instance"
+msgstr ""
+
+#: application/services/CalendarService.php:195
+msgid "Delete Instance and All Following"
+msgstr ""
+
+#: application/services/CalendarService.php:250
+msgid "Permission denied"
+msgstr "Δεν έχετε δικαίωμα πρόσβασης"
+
+#: application/services/CalendarService.php:254
+msgid "Can't drag and drop repeating shows"
+msgstr "Δεν είναι δυνατό το drag and drop επαναλαμβανόμενων εκπομπών"
+
+#: application/services/CalendarService.php:263
+msgid "Can't move a past show"
+msgstr "Δεν είναι δυνατή η μετακίνηση περασμένης εκπομπής"
+
+#: application/services/CalendarService.php:298
+msgid "Can't move show into past"
+msgstr "Δεν είναι δυνατή η μετακίνηση εκπομπής στο παρελθόν"
+
+#: application/services/CalendarService.php:323
+msgid "Can't move a recorded show less than 1 hour before its rebroadcasts."
+msgstr "Δεν είναι δυνατή η μετακίνηση ηχογραφημένης εκπομπής σε λιγότερο από 1 ώρα πριν από την αναμετάδοση της."
+
+#: application/services/CalendarService.php:335
+msgid "Show was deleted because recorded show does not exist!"
+msgstr "Η εκπομπή διεγράφη επειδή δεν υπάρχει ηχογραφημένη εκπομπή!"
+
+#: application/services/CalendarService.php:342
+msgid "Must wait 1 hour to rebroadcast."
+msgstr "Πρέπει να περιμένετε 1 ώρα για την αναμετάδοση."
+
+#: application/services/HistoryService.php:1064
+msgid "Track"
+msgstr "Κομμάτι"
+
+#: application/services/HistoryService.php:1105
+msgid "Played"
+msgstr "Παίχτηκε"
+
+#: application/services/PodcastService.php:163
+msgid "Auto-generated smartblock for podcast"
+msgstr ""
+
+#: application/views/scripts/partialviews/dashboard-sub-nav.php:18
+msgid "Webstreams"
+msgstr ""
+
+#: public/setup/rabbitmq-setup.php:80
+msgid "Couldn't connect to RabbitMQ server! Please check if the server is running and your credentials are correct."
+msgstr ""
+
+#~ msgid " to "
+#~ msgstr " να "
+
+#~ msgid "(In order to promote your station, 'Send support feedback' must be enabled)."
+#~ msgstr "(Για να προωθήσετε τον σταθμό σας, η 'Αποστολή σχολίων υποστήριξης» πρέπει να είναι ενεργοποιημένη)."
+
+#~ msgid "(Required)"
+#~ msgstr "(Απαιτείται)"
+
+#~ msgid "(Your radio station website)"
+#~ msgstr "(Ιστοσελίδα του Ραδιοφωνικού σταθμού)"
+
+#~ msgid "(for verification purposes only, will not be published)"
+#~ msgstr "(Μόνο για σκοπούς επαλήθευσης, δεν θα δημοσιευθεί)"
+
+#~ msgid "(hh:mm:ss.t)"
+#~ msgstr "(ωω:λλ:δδ.t)"
+
+#~ msgid "(ss.t)"
+#~ msgstr "(Ss.t)"
+
+#~ msgid "About"
+#~ msgstr "Σχετικά"
+
+#~ msgid "Add New Field"
+#~ msgstr "Προσθήκη Νέου Πεδίου"
+
+#~ msgid "Add more elements"
+#~ msgstr "Προσθήκη περισσότερων στοιχείων"
+
+#~ msgid "Add this show"
+#~ msgstr "Προσθήκη αυτής της εκπομπής "
+
+#~ msgid "Additional Options"
+#~ msgstr "Πρόσθετες επιλογές"
+
+#~ msgid "Advanced Search Options"
+#~ msgstr "Προηγμένες Επιλογές Αναζήτησης"
+
+#~ msgid "All rights are reserved"
+#~ msgstr "Διατήρηση όλων των δικαιωμάτων"
+
+#~ msgid "Audio Track"
+#~ msgstr "Κομμάτι Ήχου"
+
+#~ msgid "Choose Days:"
+#~ msgstr "Επιλέξτε Ημέρες:"
+
+#~ msgid "Choose Show Instance"
+#~ msgstr "Επιλογή Παρουσίας Εκπομπής"
+
+#~ msgid "Choose folder"
+#~ msgstr "Επιλέξτε φάκελο"
+
+#~ msgid "City:"
+#~ msgstr "Πόλη"
+
+#~ msgid "Clear"
+#~ msgstr "Εκκαθάριση"
+
+#~ msgid "Content in linked shows must be scheduled before or after any one is broadcasted"
+#~ msgstr "Το περιεχόμενο συνδεδεμένων εκπομπών πρέπει να να προγραμματιστεί πριν ή μετά την αναμετάδοσή τους"
+
+#~ msgid "Country:"
+#~ msgstr "Χώρα"
+
+#~ msgid "Creating File Summary Template"
+#~ msgstr "Δημιουργία Αρχείου Περίληψης Template "
+
+#~ msgid "Creating Log Sheet Template"
+#~ msgstr "Δημιουργία Template Φόρμας Σύνδεσης"
+
+#~ msgid "Creative Commons Attribution"
+#~ msgstr "Απόδοση Creative Commons"
+
+#~ msgid "Creative Commons Attribution No Derivative Works"
+#~ msgstr "Απόδοση Creative Commons Όχι Παράγωγα Έργα"
+
+#~ msgid "Creative Commons Attribution Noncommercial"
+#~ msgstr "Απόδοση Creative Commons Μη Εμπορική Χρήση"
+
+#~ msgid "Creative Commons Attribution Noncommercial Non Derivate Works"
+#~ msgstr "Απόδοση Creative Commons Μη Εμπορική Χρήση Όχι Παράγωγα Έργα"
+
+#~ msgid "Creative Commons Attribution Noncommercial Share Alike"
+#~ msgstr "Απόδοση Creative Commons Μη Εμπορική Χρήση Share Alike"
+
+#~ msgid "Creative Commons Attribution Share Alike"
+#~ msgstr "Απόδοση Creative Commons Share Alike"
+
+#~ msgid "Cue In: "
+#~ msgstr "Cue In: "
+
+#~ msgid "Cue Out: "
+#~ msgstr "Cue Out: "
+
+#~ msgid "Current Import Folder:"
+#~ msgstr "Τρέχων Φάκελος Εισαγωγής:"
+
+#~ msgid "Cursor"
+#~ msgstr "Cursor"
+
+#~ msgid "Default Length:"
+#~ msgstr "Προεπιλεγμένη Διάρκεια:"
+
+#~ msgid "Default License:"
+#~ msgstr "Προεπιλεγμένη Άδεια :"
+
+#~ msgid "Disk Space"
+#~ msgstr "Χώρος δίσκου"
+
+#~ msgid "Dynamic Smart Block"
+#~ msgstr "Δυναμικά Smart Block"
+
+#~ msgid "Dynamic Smart Block Criteria: "
+#~ msgstr "Κριτήρια Δυναμικών Smart Block: "
+
+#~ msgid "Empty playlist content"
+#~ msgstr "Άδειασμα περιεχομένου λίστας αναπαραγωγής"
+
+#~ msgid "Expand Dynamic Block"
+#~ msgstr "Επέκταση Δυναμικών Block"
+
+#~ msgid "Expand Static Block"
+#~ msgstr "Επέκταση Στατικών Block"
+
+#~ msgid "Fade in: "
+#~ msgstr "Fade in: "
+
+#~ msgid "Fade out: "
+#~ msgstr "Fade out: "
+
+#~ msgid "File Path:"
+#~ msgstr "Διαδρομή Αρχείου"
+
+#~ msgid "File Summary"
+#~ msgstr "Περίληψη Αρχείων"
+
+#~ msgid "File Summary Templates"
+#~ msgstr "Template Περίληψης Αρχείου"
+
+#~ msgid "File import in progress..."
+#~ msgstr "Εισαγωγή αρχείου σε εξέλιξη..."
+
+#~ msgid "Filter History"
+#~ msgstr "Φιλτράρισμα Ιστορίας"
+
+#~ msgid "Find"
+#~ msgstr "Εύρεση"
+
+#~ msgid "Find Shows"
+#~ msgstr "Εύρεση Εκπομπών"
+
+#~ msgid "First Name"
+#~ msgstr "Όνομα"
+
+#, php-format
+#~ msgid "For more detailed help, read the %suser manual%s."
+#~ msgstr "Για περισσότερες αναλυτικές οδηγίες, διαβάστε το %sεγχειρίδιο%s ."
+
+#~ msgid "For more details, please read the %sAirtime Manual%s"
+#~ msgstr "Για περισσότερες λεπτομέρειες, παρακαλούμε διαβάστε το %sAirtime Εγχειρίδιο%s"
+
+#~ msgid "If Airtime is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."
+#~ msgstr "Αν το Airtime είναι πίσω από ένα τείχος προστασίας ή router, ίσως χρειαστεί να ρυθμίσετε την προώθηση port και οι πληροφορίες πεδίου θα είναι λανθασμένες. Σε αυτή την περίπτωση θα πρέπει να ενημερώσετε αυτό το πεδίο, ώστε να δείχνει το σωστό host/port/mount που χρειάζονται οι DJ σας για να συνδεθούν. Το επιτρεπόμενο εύρος είναι μεταξύ 1024 και 49151."
+
+#~ msgid "Isrc Number:"
+#~ msgstr "Αριθμός ISRC:"
+
+#~ msgid "Last Name"
+#~ msgstr "Επώνυμο"
+
+#~ msgid "Length:"
+#~ msgstr "Διάρκεια:"
+
+#~ msgid "Limit to "
+#~ msgstr "Όριο για "
+
+#~ msgid "Listen"
+#~ msgstr "Ακούστε!"
+
+#~ msgid "Live Stream Input"
+#~ msgstr "Είσοδος Live Stream "
+
+#~ msgid "Live stream"
+#~ msgstr "Ζωντανό Stream"
+
+#~ msgid "Log Sheet"
+#~ msgstr "Σελίδα Σύνδεσης"
+
+#~ msgid "Log Sheet Templates"
+#~ msgstr "Template Φόρμας Σύνδεσης"
+
+#~ msgid "Logout"
+#~ msgstr "Έξοδος"
+
+#~ msgid "Looks like the page you were looking for doesn't exist!"
+#~ msgstr "Η σελίδα που ψάχνατε δεν υπάρχει!"
+
+#~ msgid "Manage Users"
+#~ msgstr "Διαχείριση Χρηστών"
+
+#~ msgid "Master Source"
+#~ msgstr "Κύρια Πηγή "
+
+#~ msgid "New File Summary Template"
+#~ msgstr "Νέο Template Περίληψης Αρχείου"
+
+#~ msgid "New Log Sheet Template"
+#~ msgstr "Νέο Template Φόρμας Σύνδεσης"
+
+#~ msgid "New User"
+#~ msgstr "Νέος Χρήστης"
+
+#~ msgid "New password"
+#~ msgstr "Νέος κωδικός πρόσβασης"
+
+#~ msgid "Next:"
+#~ msgstr "Επόμενο"
+
+#~ msgid "No File Summary Templates"
+#~ msgstr "Κανένα Template Περίληψης Αρχείου"
+
+#~ msgid "No Log Sheet Templates"
+#~ msgstr "Κανένα Template Φόρμας Σύνδεσης"
+
+#~ msgid "No open playlist"
+#~ msgstr "Καμία ανοικτή λίστα αναπαραγωγής"
+
+#~ msgid "No webstream"
+#~ msgstr "Κανένα webstream"
+
+#~ msgid "OK"
+#~ msgstr "ΟΚ"
+
+#~ msgid "ON AIR"
+#~ msgstr "ON AIR"
+
+#~ msgid "Original Length:"
+#~ msgstr "Αρχική Διάρκεια:"
+
+#~ msgid "Page not found!"
+#~ msgstr "Η σελίδα δεν βρέθηκε!"
+
+#~ msgid "Phone:"
+#~ msgstr "Τηλέφωνο:"
+
+#~ msgid "Play"
+#~ msgstr "Αναπαραγωγή"
+
+#~ msgid "Playlist Contents: "
+#~ msgstr "Περιεχόμενα Λίστας Αναπαραγωγής: "
+
+#~ msgid "Playlist crossfade"
+#~ msgstr "Crossfade λίστας αναπαραγωγής"
+
+#~ msgid "Please enter and confirm your new password in the fields below."
+#~ msgstr "Παρακαλώ εισάγετε και επαληθεύστε τον νέο κωδικό πρόσβασής σας στα παρακάτω πεδία. "
+
+#~ msgid "Please upgrade to "
+#~ msgstr "Παρακαλούμε να αναβαθμίσετε σε "
+
+#~ msgid "Previous:"
+#~ msgstr "Προηγούμενο"
+
+#~ msgid "Progam Managers can do the following:"
+#~ msgstr "Οι Μάνατζερ Προγράμματος μπορούν να κάνουν τα παρακάτω:"
+
+#~ msgid "Register Airtime"
+#~ msgstr "Εγγραφή σε Airtime"
+
+#~ msgid "Remove watched directory"
+#~ msgstr "Αφαίρεση προβεβλημμένου ευρετηρίου"
+
+#~ msgid "Repeat Days:"
+#~ msgstr "Επανάληψη Ημερών:"
+
+#~ msgid "Sample Rate:"
+#~ msgstr "Ρυθμός δειγματοληψίας:"
+
+#~ msgid "Save playlist"
+#~ msgstr "Αποθήκευση λίστας αναπαραγωγής"
+
+#~ msgid "Select stream:"
+#~ msgstr "Επιλέξτε stream:"
+
+#~ msgid "Set"
+#~ msgstr "Ορισμός"
+
+#~ msgid "Set Cue In"
+#~ msgstr "Ρύθμιση Cue In"
+
+#~ msgid "Set Cue Out"
+#~ msgstr "Ρύθμιση Cue Out"
+
+#~ msgid "Set Default Template"
+#~ msgstr "Ορισμός Προεπιλεγμένου Template "
+
+#~ msgid "Share"
+#~ msgstr "Μοιραστείτε"
+
+#~ msgid "Show Source"
+#~ msgstr "Εμφάνιση Πηγής "
+
+#~ msgid "Show Summary"
+#~ msgstr "Προβολή Περίληψης"
+
+#~ msgid "Show Waveform"
+#~ msgstr "Εμφάνιση κυμματοειδούς μορφής"
+
+#~ msgid "Show me what I am sending "
+#~ msgstr "Δείξε μου τι στέλνω "
+
+#~ msgid "Shuffle playlist"
+#~ msgstr "Shuffle λίστα αναπαραγωγής"
+
+#~ msgid "Source Streams"
+#~ msgstr "Πηγή Streams"
+
+#~ msgid "Static Smart Block"
+#~ msgstr "Στατικά Smart Block"
+
+#~ msgid "Static Smart Block Contents: "
+#~ msgstr "Περιεχόμενα Στατικών Smart Block : "
+
+#~ msgid "Station Description:"
+#~ msgstr "Περιγραφή Σταθμού:"
+
+#~ msgid "Station Web Site:"
+#~ msgstr "Ιστοσελίδα Σταθμού:"
+
+#~ msgid "Stop"
+#~ msgstr "Παύση"
+
+#~ msgid "Stream "
+#~ msgstr "Stream  "
+
+#~ msgid "Stream Settings"
+#~ msgstr "Ρυθμίσεις Stream"
+
+#~ msgid "Stream URL:"
+#~ msgstr "URL Stream:"
+
+#~ msgid "Stream URL: "
+#~ msgstr "URL Stream: "
+
+#~ msgid "Style"
+#~ msgstr "Στυλ"
+
+#~ msgid "Support Feedback"
+#~ msgstr "Σχόλια Υποστήριξης"
+
+#~ msgid "Support setting updated."
+#~ msgstr "Η ρύθμιση υποστήριξης ενημερώθηκε."
+
+#~ msgid "Terms and Conditions"
+#~ msgstr "Όροι και Προϋποθέσεις"
+
+#~ msgid "The desired block length will not be reached if Airtime cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
+#~ msgstr "Η επιθυμητή διάρκεια του block δεν θα επιτευχθεί αν το Airtime δεν μπορέσει να βρεί αρκετά μοναδικά κομμάτια που να ταιριάζουν στα κριτήριά σας. Ενεργοποιήστε αυτή την επιλογή αν θέλετε να επιτρέψετε την πολλαπλή προσθήκη κομματιών στο smart block."
+
+#~ msgid "The following info will be displayed to listeners in their media player:"
+#~ msgstr "Η παρακάτω πληροφορία θα εμφανίζεται στις συσκευές αναπαραγωγής πολυμέσων των ακροατών σας:"
+
+#~ msgid "The work is in the public domain"
+#~ msgstr "Εργασία δημόσιας χρήσης"
+
+#~ msgid "This version is no longer supported."
+#~ msgstr "Αυτή η έκδοση δεν υποστηρίζεται πλέον."
+
+#~ msgid "This version will soon be obsolete."
+#~ msgstr "Αυτή η έκδοση θα παρωχηθεί σύντομα."
+
+#, php-format
+#~ msgid "To play the media you will need to either update your browser to a recent version or update your %sFlash plugin%s."
+#~ msgstr "Για να παίξετε τα πολυμέσα θα πρέπει είτε να αναβαθμίστε το πρόγραμμα περιήγησηής σας σε μια πρόσφατη έκδοση ή να ενημέρώσετε το %sFlash plugin %s σας."
+
+#~ msgid "Track:"
+#~ msgstr "Κομμάτι:"
+
+#~ msgid "Type the characters you see in the picture below."
+#~ msgstr "Πληκτρολογήστε τους χαρακτήρες που βλέπετε στην παρακάτω εικόνα."
+
+#~ msgid "Update Required"
+#~ msgstr "Απαιτείται Ενημέρωση "
+
+#~ msgid "Update show"
+#~ msgstr "Ενημέρωση εκπομπής"
+
+#~ msgid "User Type"
+#~ msgstr "Τύπος Χρήστη"
+
+#~ msgid "Web Stream"
+#~ msgstr "Web Stream"
+
+#~ msgid "What"
+#~ msgstr "Τι"
+
+#~ msgid "When"
+#~ msgstr "Πότε"
+
+#~ msgid "Who"
+#~ msgstr "Ποιός"
+
+#~ msgid "You are not watching any media folders."
+#~ msgstr "Δεν παρακολουθείτε κανέναν φάκελο πολυμέσων."
+
+#~ msgid "You have to agree to privacy policy."
+#~ msgstr "Πρέπει να συμφωνείτε με την πολιτική προστασίας προσωπικών δεδομένων."
+
+#~ msgid "Your trial expires in"
+#~ msgstr "Το δοκιμαστικό λήγει σε"
+
+#~ msgid "and"
+#~ msgstr "και"
+
+#~ msgid "dB"
+#~ msgstr "βΔ"
+
+#~ msgid "files meet the criteria"
+#~ msgstr "τα αρχεία πληρούν τα κριτήρια"
+
+#~ msgid "id"
+#~ msgstr "ταυτότητα"
+
+#~ msgid "max volume"
+#~ msgstr "μέγιστη ένταση"
+
+#~ msgid "mute"
+#~ msgstr "Σίγαση"
+
+#~ msgid "next"
+#~ msgstr "επόμενο"
+
+#~ msgid "or"
+#~ msgstr "ή"
+
+#~ msgid "pause"
+#~ msgstr "παύση"
+
+#~ msgid "play"
+#~ msgstr "αναπαραγωγή"
+
+#~ msgid "please put in a time in seconds '00 (.0)'"
+#~ msgstr "παρακαλούμε εισάγετε τιμή ώρας σε δευτερόλεπτα '00 (0,0)'"
+
+#~ msgid "previous"
+#~ msgstr "προηγούμενο"
+
+#~ msgid "stop"
+#~ msgstr "στάση"
+
+#~ msgid "unmute"
+#~ msgstr "Κατάργηση σίγασης"

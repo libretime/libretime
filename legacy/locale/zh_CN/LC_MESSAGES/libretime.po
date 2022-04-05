@@ -1,0 +1,4656 @@
+# Translation for LibreTime.
+# Copyright (C) 2012 Sourcefabric
+# Copyright (C) 2021 LibreTime
+# This file is distributed under the same license as the LibreTime package.
+#
+# Translators:
+# Sourcefabric <contact@sourcefabric.org>, 2012
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: LibreTime\n"
+"Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
+"POT-Creation-Date: 2021-10-15 19:56+0200\n"
+"PO-Revision-Date: 2015-09-05 08:33+0000\n"
+"Last-Translator: Daniel James <daniel@64studio.com>\n"
+"Language-Team: Chinese (China)\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: application/common/DateHelper.php:216
+#, php-format
+msgid "The year %s must be within the range of 1753 - 9999"
+msgstr "1753 - 9999 是可以接受的年代值，而不是“%s”"
+
+#: application/common/DateHelper.php:219
+#, php-format
+msgid "%s-%s-%s is not a valid date"
+msgstr "%s-%s-%s采用了错误的日期格式"
+
+#: application/common/DateHelper.php:243
+#, php-format
+msgid "%s:%s:%s is not a valid time"
+msgstr "%s:%s:%s 采用了错误的时间格式"
+
+#: application/common/LocaleHelper.php:23
+msgid "English"
+msgstr ""
+
+#: application/common/LocaleHelper.php:24
+msgid "Afar"
+msgstr ""
+
+#: application/common/LocaleHelper.php:25
+msgid "Abkhazian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:26
+msgid "Afrikaans"
+msgstr ""
+
+#: application/common/LocaleHelper.php:27
+msgid "Amharic"
+msgstr ""
+
+#: application/common/LocaleHelper.php:28
+msgid "Arabic"
+msgstr ""
+
+#: application/common/LocaleHelper.php:29
+msgid "Assamese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:30
+msgid "Aymara"
+msgstr ""
+
+#: application/common/LocaleHelper.php:31
+msgid "Azerbaijani"
+msgstr ""
+
+#: application/common/LocaleHelper.php:32
+msgid "Bashkir"
+msgstr ""
+
+#: application/common/LocaleHelper.php:33
+msgid "Belarusian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:34
+msgid "Bulgarian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:35
+msgid "Bihari"
+msgstr ""
+
+#: application/common/LocaleHelper.php:36
+msgid "Bislama"
+msgstr ""
+
+#: application/common/LocaleHelper.php:37
+msgid "Bengali/Bangla"
+msgstr ""
+
+#: application/common/LocaleHelper.php:38
+msgid "Tibetan"
+msgstr ""
+
+#: application/common/LocaleHelper.php:39
+msgid "Breton"
+msgstr ""
+
+#: application/common/LocaleHelper.php:40
+msgid "Catalan"
+msgstr ""
+
+#: application/common/LocaleHelper.php:41
+msgid "Corsican"
+msgstr ""
+
+#: application/common/LocaleHelper.php:42
+msgid "Czech"
+msgstr ""
+
+#: application/common/LocaleHelper.php:43
+msgid "Welsh"
+msgstr ""
+
+#: application/common/LocaleHelper.php:44
+msgid "Danish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:45
+msgid "German"
+msgstr ""
+
+#: application/common/LocaleHelper.php:46
+msgid "Bhutani"
+msgstr ""
+
+#: application/common/LocaleHelper.php:47
+msgid "Greek"
+msgstr ""
+
+#: application/common/LocaleHelper.php:48
+msgid "Esperanto"
+msgstr ""
+
+#: application/common/LocaleHelper.php:49
+msgid "Spanish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:50
+msgid "Estonian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:51
+msgid "Basque"
+msgstr ""
+
+#: application/common/LocaleHelper.php:52
+msgid "Persian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:53
+msgid "Finnish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:54
+msgid "Fiji"
+msgstr ""
+
+#: application/common/LocaleHelper.php:55
+msgid "Faeroese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:56
+msgid "French"
+msgstr ""
+
+#: application/common/LocaleHelper.php:57
+msgid "Frisian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:58
+msgid "Irish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:59
+msgid "Scots/Gaelic"
+msgstr ""
+
+#: application/common/LocaleHelper.php:60
+msgid "Galician"
+msgstr ""
+
+#: application/common/LocaleHelper.php:61
+msgid "Guarani"
+msgstr ""
+
+#: application/common/LocaleHelper.php:62
+msgid "Gujarati"
+msgstr ""
+
+#: application/common/LocaleHelper.php:63
+msgid "Hausa"
+msgstr ""
+
+#: application/common/LocaleHelper.php:64
+msgid "Hindi"
+msgstr ""
+
+#: application/common/LocaleHelper.php:65
+msgid "Croatian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:66
+msgid "Hungarian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:67
+msgid "Armenian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:68
+msgid "Interlingua"
+msgstr ""
+
+#: application/common/LocaleHelper.php:69
+msgid "Interlingue"
+msgstr ""
+
+#: application/common/LocaleHelper.php:70
+msgid "Inupiak"
+msgstr ""
+
+#: application/common/LocaleHelper.php:71
+msgid "Indonesian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:72
+msgid "Icelandic"
+msgstr ""
+
+#: application/common/LocaleHelper.php:73
+msgid "Italian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:74
+msgid "Hebrew"
+msgstr ""
+
+#: application/common/LocaleHelper.php:75
+msgid "Japanese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:76
+msgid "Yiddish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:77
+msgid "Javanese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:78
+msgid "Georgian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:79
+msgid "Kazakh"
+msgstr ""
+
+#: application/common/LocaleHelper.php:80
+msgid "Greenlandic"
+msgstr ""
+
+#: application/common/LocaleHelper.php:81
+msgid "Cambodian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:82
+msgid "Kannada"
+msgstr ""
+
+#: application/common/LocaleHelper.php:83
+msgid "Korean"
+msgstr ""
+
+#: application/common/LocaleHelper.php:84
+msgid "Kashmiri"
+msgstr ""
+
+#: application/common/LocaleHelper.php:85
+msgid "Kurdish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:86
+msgid "Kirghiz"
+msgstr ""
+
+#: application/common/LocaleHelper.php:87
+msgid "Latin"
+msgstr ""
+
+#: application/common/LocaleHelper.php:88
+msgid "Lingala"
+msgstr ""
+
+#: application/common/LocaleHelper.php:89
+msgid "Laothian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:90
+msgid "Lithuanian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:91
+msgid "Latvian/Lettish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:92
+msgid "Malagasy"
+msgstr ""
+
+#: application/common/LocaleHelper.php:93
+msgid "Maori"
+msgstr ""
+
+#: application/common/LocaleHelper.php:94
+msgid "Macedonian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:95
+msgid "Malayalam"
+msgstr ""
+
+#: application/common/LocaleHelper.php:96
+msgid "Mongolian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:97
+msgid "Moldavian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:98
+msgid "Marathi"
+msgstr ""
+
+#: application/common/LocaleHelper.php:99
+msgid "Malay"
+msgstr ""
+
+#: application/common/LocaleHelper.php:100
+msgid "Maltese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:101
+msgid "Burmese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:102
+msgid "Nauru"
+msgstr ""
+
+#: application/common/LocaleHelper.php:103
+msgid "Nepali"
+msgstr ""
+
+#: application/common/LocaleHelper.php:104
+msgid "Dutch"
+msgstr ""
+
+#: application/common/LocaleHelper.php:105
+msgid "Norwegian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:106
+msgid "Occitan"
+msgstr ""
+
+#: application/common/LocaleHelper.php:107
+msgid "(Afan)/Oromoor/Oriya"
+msgstr ""
+
+#: application/common/LocaleHelper.php:108
+msgid "Punjabi"
+msgstr ""
+
+#: application/common/LocaleHelper.php:109
+msgid "Polish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:110
+msgid "Pashto/Pushto"
+msgstr ""
+
+#: application/common/LocaleHelper.php:111
+msgid "Portuguese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:112
+msgid "Quechua"
+msgstr ""
+
+#: application/common/LocaleHelper.php:113
+msgid "Rhaeto-Romance"
+msgstr ""
+
+#: application/common/LocaleHelper.php:114
+msgid "Kirundi"
+msgstr ""
+
+#: application/common/LocaleHelper.php:115
+msgid "Romanian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:116
+msgid "Russian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:117
+msgid "Kinyarwanda"
+msgstr ""
+
+#: application/common/LocaleHelper.php:118
+msgid "Sanskrit"
+msgstr ""
+
+#: application/common/LocaleHelper.php:119
+msgid "Sindhi"
+msgstr ""
+
+#: application/common/LocaleHelper.php:120
+msgid "Sangro"
+msgstr ""
+
+#: application/common/LocaleHelper.php:121
+msgid "Serbo-Croatian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:122
+msgid "Singhalese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:123
+msgid "Slovak"
+msgstr ""
+
+#: application/common/LocaleHelper.php:124
+msgid "Slovenian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:125
+msgid "Samoan"
+msgstr ""
+
+#: application/common/LocaleHelper.php:126
+msgid "Shona"
+msgstr ""
+
+#: application/common/LocaleHelper.php:127
+msgid "Somali"
+msgstr ""
+
+#: application/common/LocaleHelper.php:128
+msgid "Albanian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:129
+msgid "Serbian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:130
+msgid "Siswati"
+msgstr ""
+
+#: application/common/LocaleHelper.php:131
+msgid "Sesotho"
+msgstr ""
+
+#: application/common/LocaleHelper.php:132
+msgid "Sundanese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:133
+msgid "Swedish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:134
+msgid "Swahili"
+msgstr ""
+
+#: application/common/LocaleHelper.php:135
+msgid "Tamil"
+msgstr ""
+
+#: application/common/LocaleHelper.php:136
+msgid "Tegulu"
+msgstr ""
+
+#: application/common/LocaleHelper.php:137
+msgid "Tajik"
+msgstr ""
+
+#: application/common/LocaleHelper.php:138
+msgid "Thai"
+msgstr ""
+
+#: application/common/LocaleHelper.php:139
+msgid "Tigrinya"
+msgstr ""
+
+#: application/common/LocaleHelper.php:140
+msgid "Turkmen"
+msgstr ""
+
+#: application/common/LocaleHelper.php:141
+msgid "Tagalog"
+msgstr ""
+
+#: application/common/LocaleHelper.php:142
+msgid "Setswana"
+msgstr ""
+
+#: application/common/LocaleHelper.php:143
+msgid "Tonga"
+msgstr ""
+
+#: application/common/LocaleHelper.php:144
+msgid "Turkish"
+msgstr ""
+
+#: application/common/LocaleHelper.php:145
+msgid "Tsonga"
+msgstr ""
+
+#: application/common/LocaleHelper.php:146
+msgid "Tatar"
+msgstr ""
+
+#: application/common/LocaleHelper.php:147
+msgid "Twi"
+msgstr ""
+
+#: application/common/LocaleHelper.php:148
+msgid "Ukrainian"
+msgstr ""
+
+#: application/common/LocaleHelper.php:149
+msgid "Urdu"
+msgstr ""
+
+#: application/common/LocaleHelper.php:150
+msgid "Uzbek"
+msgstr ""
+
+#: application/common/LocaleHelper.php:151
+msgid "Vietnamese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:152
+msgid "Volapuk"
+msgstr ""
+
+#: application/common/LocaleHelper.php:153
+msgid "Wolof"
+msgstr ""
+
+#: application/common/LocaleHelper.php:154
+msgid "Xhosa"
+msgstr ""
+
+#: application/common/LocaleHelper.php:155
+msgid "Yoruba"
+msgstr ""
+
+#: application/common/LocaleHelper.php:156
+msgid "Chinese"
+msgstr ""
+
+#: application/common/LocaleHelper.php:157
+msgid "Zulu"
+msgstr ""
+
+#: application/common/Timezone.php:21
+msgid "Use station default"
+msgstr ""
+
+#: application/common/UsabilityHints.php:65
+msgid "Upload some tracks below to add them to your library!"
+msgstr ""
+
+#: application/common/UsabilityHints.php:69
+#, php-format
+msgid "It looks like you haven't uploaded any audio files yet. %sUpload a file now%s."
+msgstr ""
+
+#: application/common/UsabilityHints.php:76
+msgid "Click the 'New Show' button and fill out the required fields."
+msgstr ""
+
+#: application/common/UsabilityHints.php:80
+#, php-format
+msgid "It looks like you don't have any shows scheduled. %sCreate a show now%s."
+msgstr ""
+
+#: application/common/UsabilityHints.php:89
+msgid "To start broadcasting, cancel the current linked show by clicking on it and selecting 'Cancel Show'."
+msgstr ""
+
+#: application/common/UsabilityHints.php:92
+#, php-format
+msgid ""
+"Linked shows need to be filled with tracks before it starts. To start broadcasting cancel the current linked show and schedule an unlinked show.\n"
+"                    %sCreate an unlinked show now%s."
+msgstr ""
+
+#: application/common/UsabilityHints.php:96
+msgid "To start broadcasting, click on the current show and select 'Schedule Tracks'"
+msgstr ""
+
+#: application/common/UsabilityHints.php:100
+#, php-format
+msgid "It looks like the current show needs more tracks. %sAdd tracks to your show now%s."
+msgstr ""
+
+#: application/common/UsabilityHints.php:107
+msgid "Click on the show starting next and select 'Schedule Tracks'"
+msgstr ""
+
+#: application/common/UsabilityHints.php:111
+#, php-format
+msgid "It looks like the next show is empty. %sAdd tracks to your show now%s."
+msgstr ""
+
+#: application/configs/config-check.php:175
+msgid "LibreTime media analyzer service"
+msgstr ""
+
+#: application/configs/config-check.php:182
+msgid "Check that the libretime-analyzer service is installed correctly in "
+msgstr ""
+
+#: application/configs/config-check.php:183
+#: application/configs/config-check.php:204
+#: application/configs/config-check.php:225
+#: application/configs/config-check.php:246
+#: application/configs/config-check.php:267
+msgid " and ensure that it's running with "
+msgstr ""
+
+#: application/configs/config-check.php:185
+#: application/configs/config-check.php:206
+#: application/configs/config-check.php:227
+#: application/configs/config-check.php:248
+#: application/configs/config-check.php:269
+msgid "If not, try "
+msgstr ""
+
+#: application/configs/config-check.php:196
+msgid "LibreTime playout service"
+msgstr ""
+
+#: application/configs/config-check.php:203
+msgid "Check that the libretime-playout service is installed correctly in "
+msgstr ""
+
+#: application/configs/config-check.php:217
+msgid "LibreTime liquidsoap service"
+msgstr ""
+
+#: application/configs/config-check.php:224
+msgid "Check that the libretime-liquidsoap service is installed correctly in "
+msgstr ""
+
+#: application/configs/config-check.php:238
+msgid "LibreTime Celery Task service"
+msgstr ""
+
+#: application/configs/config-check.php:245
+msgid "Check that the libretime-celery service is installed correctly in "
+msgstr ""
+
+#: application/configs/config-check.php:259
+msgid "LibreTime API service"
+msgstr ""
+
+#: application/configs/config-check.php:266
+msgid "Check that the libretime-api service is installed correctly in "
+msgstr ""
+
+#: application/configs/navigation.php:27
+msgid "Radio Page"
+msgstr ""
+
+#: application/configs/navigation.php:35
+msgid "Calendar"
+msgstr "节目日程"
+
+#: application/configs/navigation.php:43
+msgid "Widgets"
+msgstr ""
+
+#: application/configs/navigation.php:52
+msgid "Player"
+msgstr ""
+
+#: application/configs/navigation.php:58
+msgid "Weekly Schedule"
+msgstr ""
+
+#: application/configs/navigation.php:66
+msgid "Settings"
+msgstr ""
+
+#: application/configs/navigation.php:74
+msgid "General"
+msgstr ""
+
+#: application/configs/navigation.php:80
+msgid "My Profile"
+msgstr ""
+
+#: application/configs/navigation.php:85
+msgid "Users"
+msgstr "用户管理"
+
+#: application/configs/navigation.php:91
+msgid "Track Types"
+msgstr ""
+
+#: application/configs/navigation.php:98
+msgid "Streams"
+msgstr "媒体流设置"
+
+#: application/configs/navigation.php:105
+#: application/controllers/LocaleController.php:382
+#: application/controllers/LocaleController.php:383
+msgid "Status"
+msgstr "系统状态"
+
+#: application/configs/navigation.php:114
+msgid "Analytics"
+msgstr ""
+
+#: application/configs/navigation.php:123
+msgid "Playout History"
+msgstr "播出历史"
+
+#: application/configs/navigation.php:130
+msgid "History Templates"
+msgstr "历史记录模板"
+
+#: application/configs/navigation.php:137
+msgid "Listener Stats"
+msgstr "收听状态"
+
+#: application/configs/navigation.php:144
+msgid "Show Listener Stats"
+msgstr ""
+
+#: application/configs/navigation.php:153
+msgid "Help"
+msgstr "帮助"
+
+#: application/configs/navigation.php:161
+msgid "Getting Started"
+msgstr "基本用法"
+
+#: application/configs/navigation.php:168
+msgid "User Manual"
+msgstr "用户手册"
+
+#: application/configs/navigation.php:173
+msgid "Get Help Online"
+msgstr ""
+
+#: application/configs/navigation.php:178
+msgid "Contribute to LibreTime"
+msgstr ""
+
+#: application/configs/navigation.php:183
+msgid "What's New?"
+msgstr ""
+
+#: application/controllers/ApiController.php:113
+#: application/controllers/ApiController.php:729
+msgid "You are not allowed to access this resource."
+msgstr "你没有访问该资源的权限"
+
+#: application/controllers/ApiController.php:356
+#: application/controllers/ApiController.php:432
+#: application/controllers/ApiController.php:501
+#: application/controllers/ApiController.php:556
+#: application/controllers/ApiController.php:645
+#: application/controllers/ApiController.php:662
+#: application/controllers/ApiController.php:695
+msgid "You are not allowed to access this resource. "
+msgstr "你没有访问该资源的权限"
+
+#: application/controllers/ApiController.php:903
+#: application/controllers/ApiController.php:924
+#: application/controllers/ApiController.php:936
+#, php-format
+msgid "File does not exist in %s"
+msgstr ""
+
+#: application/controllers/ApiController.php:990
+msgid "Bad request. no 'mode' parameter passed."
+msgstr "请求错误。没有提供‘模式’参数。"
+
+#: application/controllers/ApiController.php:1002
+msgid "Bad request. 'mode' parameter is invalid"
+msgstr "请求错误。提供的‘模式’参数无效。"
+
+#: application/controllers/DashboardController.php:35
+#: application/controllers/DashboardController.php:87
+msgid "You don't have permission to disconnect source."
+msgstr "你没有断开输入源的权限。"
+
+#: application/controllers/DashboardController.php:37
+#: application/controllers/DashboardController.php:89
+msgid "There is no source connected to this input."
+msgstr "没有连接上的输入源。"
+
+#: application/controllers/DashboardController.php:84
+msgid "You don't have permission to switch source."
+msgstr "你没有切换的权限。"
+
+#: application/controllers/EmbeddablewidgetsController.php:26
+msgid ""
+"To configure and use the embeddable player you must:<br><br>\n"
+"            1. Enable at least one MP3, AAC, or OGG stream under Settings -> Streams<br>\n"
+"            2. Enable the Public LibreTime API under Settings -> Preferences"
+msgstr ""
+
+#: application/controllers/EmbeddablewidgetsController.php:39
+msgid ""
+"To use the embeddable weekly schedule widget you must:<br><br>\n"
+"            Enable the Public LibreTime API under Settings -> Preferences"
+msgstr ""
+
+#: application/controllers/EmbeddablewidgetsController.php:52
+msgid ""
+"To add the Radio Tab to your Facebook Page, you must first:<br><br>\n"
+"            Enable the Public LibreTime API under Settings -> Preferences"
+msgstr ""
+
+#: application/controllers/ErrorController.php:96
+msgid "Page not found."
+msgstr ""
+
+#: application/controllers/ErrorController.php:106
+msgid "The requested action is not supported."
+msgstr ""
+
+#: application/controllers/ErrorController.php:116
+msgid "You do not have permission to access this resource."
+msgstr ""
+
+#: application/controllers/ErrorController.php:127
+msgid "An internal application error has occurred."
+msgstr ""
+
+#: application/controllers/IndexController.php:88
+#, php-format
+msgid "%s Podcast"
+msgstr ""
+
+#: application/controllers/IndexController.php:89
+msgid "No tracks have been published yet."
+msgstr ""
+
+#: application/controllers/LibraryController.php:29
+#: application/controllers/PlaylistController.php:150
+#, php-format
+msgid "%s not found"
+msgstr "%s不存在"
+
+#: application/controllers/LibraryController.php:38
+#: application/controllers/PlaylistController.php:171
+msgid "Something went wrong."
+msgstr "未知错误。"
+
+#: application/controllers/LibraryController.php:92
+#: application/controllers/LocaleController.php:171
+#: application/controllers/ShowbuilderController.php:136
+#: application/forms/SmartBlockCriteria.php:574
+msgid "Preview"
+msgstr "预览"
+
+#: application/controllers/LibraryController.php:112
+#: application/controllers/LibraryController.php:144
+#: application/controllers/LibraryController.php:167
+msgid "Add to Playlist"
+msgstr "添加到播放列表"
+
+#: application/controllers/LibraryController.php:114
+msgid "Add to Smart Block"
+msgstr "添加到智能模块"
+
+#: application/controllers/LibraryController.php:119
+#: application/controllers/LibraryController.php:156
+#: application/controllers/LibraryController.php:175
+#: application/controllers/LocaleController.php:75
+#: application/controllers/ShowbuilderController.php:143
+#: application/services/CalendarService.php:183
+#: application/services/CalendarService.php:200
+#: application/services/CalendarService.php:205
+msgid "Delete"
+msgstr "删除"
+
+#: application/controllers/LibraryController.php:120
+#: application/controllers/LibraryController.php:151
+#: application/controllers/LibraryController.php:173
+msgid "Edit..."
+msgstr ""
+
+#: application/controllers/LibraryController.php:131
+#: application/controllers/ScheduleController.php:736
+msgid "Download"
+msgstr "下载"
+
+#: application/controllers/LibraryController.php:135
+msgid "Duplicate Playlist"
+msgstr "复制播放列表"
+
+#: application/controllers/LibraryController.php:138
+msgid "Duplicate Smartblock"
+msgstr ""
+
+#: application/controllers/LibraryController.php:180
+msgid "No action available"
+msgstr "没有操作选择"
+
+#: application/controllers/LibraryController.php:200
+msgid "You don't have permission to delete selected items."
+msgstr "你没有删除选定项目的权限。"
+
+#: application/controllers/LibraryController.php:245
+msgid "Could not delete file because it is scheduled in the future."
+msgstr ""
+
+#: application/controllers/LibraryController.php:248
+msgid "Could not delete file(s)."
+msgstr ""
+
+#: application/controllers/LibraryController.php:290
+#: application/controllers/LibraryController.php:325
+#, php-format
+msgid "Copy of %s"
+msgstr "%s的副本"
+
+#: application/controllers/ListenerstatController.php:51
+msgid "Please make sure admin user/password is correct on Settings->Streams page."
+msgstr "请检查系统->媒体流设置中，管理员用户/密码的设置是否正确。"
+
+#: application/controllers/LocaleController.php:27
+msgid "Audio Player"
+msgstr "音频播放器"
+
+#: application/controllers/LocaleController.php:28
+msgid "Something went wrong!"
+msgstr ""
+
+#: application/controllers/LocaleController.php:30
+msgid "Recording:"
+msgstr "录制："
+
+#: application/controllers/LocaleController.php:31
+msgid "Master Stream"
+msgstr "主输入源"
+
+#: application/controllers/LocaleController.php:32
+msgid "Live Stream"
+msgstr "节目定制输入源"
+
+#: application/controllers/LocaleController.php:33
+msgid "Nothing Scheduled"
+msgstr "没有安排节目内容"
+
+#: application/controllers/LocaleController.php:34
+msgid "Current Show:"
+msgstr "当前节目："
+
+#: application/controllers/LocaleController.php:35
+msgid "Current"
+msgstr "当前的"
+
+#: application/controllers/LocaleController.php:37
+msgid "You are running the latest version"
+msgstr "你已经在使用最新版"
+
+#: application/controllers/LocaleController.php:38
+msgid "New version available: "
+msgstr "版本有更新："
+
+#: application/controllers/LocaleController.php:39
+msgid "You have a pre-release version of LibreTime intalled."
+msgstr ""
+
+#: application/controllers/LocaleController.php:40
+msgid "A patch update for your LibreTime installation is available."
+msgstr ""
+
+#: application/controllers/LocaleController.php:41
+msgid "A feature update for your LibreTime installation is available."
+msgstr ""
+
+#: application/controllers/LocaleController.php:42
+msgid "A major update for your LibreTime installation is available."
+msgstr ""
+
+#: application/controllers/LocaleController.php:43
+msgid "Multiple major updates for LibreTime installation are available. Please upgrade as soon as possible."
+msgstr ""
+
+#: application/controllers/LocaleController.php:45
+msgid "Add to current playlist"
+msgstr "添加到播放列表"
+
+#: application/controllers/LocaleController.php:46
+msgid "Add to current smart block"
+msgstr "添加到只能模块"
+
+#: application/controllers/LocaleController.php:47
+msgid "Adding 1 Item"
+msgstr "添加1项"
+
+#: application/controllers/LocaleController.php:48
+#, php-format
+msgid "Adding %s Items"
+msgstr "添加%s项"
+
+#: application/controllers/LocaleController.php:49
+msgid "You can only add tracks to smart blocks."
+msgstr "智能模块只能添加声音文件。"
+
+#: application/controllers/LocaleController.php:50
+#: application/controllers/PlaylistController.php:183
+msgid "You can only add tracks, smart blocks, and webstreams to playlists."
+msgstr "播放列表只能添加声音文件，只能模块和网络流媒体。"
+
+#: application/controllers/LocaleController.php:53
+msgid "Please select a cursor position on timeline."
+msgstr "请在右部的时间表视图中选择一个游标位置。"
+
+#: application/controllers/LocaleController.php:54
+msgid "You haven't added any tracks"
+msgstr ""
+
+#: application/controllers/LocaleController.php:55
+msgid "You haven't added any playlists"
+msgstr ""
+
+#: application/controllers/LocaleController.php:56
+msgid "You haven't added any podcasts"
+msgstr ""
+
+#: application/controllers/LocaleController.php:57
+msgid "You haven't added any smart blocks"
+msgstr ""
+
+#: application/controllers/LocaleController.php:58
+msgid "You haven't added any webstreams"
+msgstr ""
+
+#: application/controllers/LocaleController.php:59
+msgid "Learn about tracks"
+msgstr ""
+
+#: application/controllers/LocaleController.php:60
+msgid "Learn about playlists"
+msgstr ""
+
+#: application/controllers/LocaleController.php:61
+msgid "Learn about podcasts"
+msgstr ""
+
+#: application/controllers/LocaleController.php:62
+msgid "Learn about smart blocks"
+msgstr ""
+
+#: application/controllers/LocaleController.php:63
+msgid "Learn about webstreams"
+msgstr ""
+
+#: application/controllers/LocaleController.php:64
+msgid "Click 'New' to create one."
+msgstr ""
+
+#: application/controllers/LocaleController.php:68
+msgid "Add"
+msgstr "添加"
+
+#: application/controllers/LocaleController.php:69
+msgid "New"
+msgstr ""
+
+#: application/controllers/LocaleController.php:70
+#: application/services/CalendarService.php:147
+msgid "Edit"
+msgstr "编辑"
+
+#: application/controllers/LocaleController.php:71
+msgid "Add to Schedule"
+msgstr ""
+
+#: application/controllers/LocaleController.php:72
+msgid "Add to next show"
+msgstr ""
+
+#: application/controllers/LocaleController.php:73
+msgid "Add to current show"
+msgstr ""
+
+#: application/controllers/LocaleController.php:74
+msgid "Add after selected items"
+msgstr ""
+
+#: application/controllers/LocaleController.php:76
+msgid "Publish"
+msgstr ""
+
+#: application/controllers/LocaleController.php:77
+#: application/forms/AddShowStyle.php:63
+#: application/forms/GeneralPreferences.php:55
+msgid "Remove"
+msgstr "移除"
+
+#: application/controllers/LocaleController.php:78
+msgid "Edit Metadata"
+msgstr "编辑元数据"
+
+#: application/controllers/LocaleController.php:79
+msgid "Add to selected show"
+msgstr "添加到所选的节目"
+
+#: application/controllers/LocaleController.php:80
+msgid "Select"
+msgstr "选择"
+
+#: application/controllers/LocaleController.php:81
+msgid "Select this page"
+msgstr "选择此页"
+
+#: application/controllers/LocaleController.php:82
+msgid "Deselect this page"
+msgstr "取消整页"
+
+#: application/controllers/LocaleController.php:83
+msgid "Deselect all"
+msgstr "全部取消"
+
+#: application/controllers/LocaleController.php:84
+msgid "Are you sure you want to delete the selected item(s)?"
+msgstr "确定删除选择的项？"
+
+#: application/controllers/LocaleController.php:85
+msgid "Scheduled"
+msgstr "已安排进日程"
+
+#: application/controllers/LocaleController.php:86
+#: application/views/scripts/partialviews/dashboard-sub-nav.php:3
+msgid "Tracks"
+msgstr ""
+
+#: application/controllers/LocaleController.php:87
+msgid "Playlist"
+msgstr ""
+
+#: application/controllers/LocaleController.php:88
+#: application/forms/SmartBlockCriteria.php:81
+#: application/models/Block.php:1470 application/models/Block.php:1566
+#: application/services/HistoryService.php:1053
+#: application/services/HistoryService.php:1088
+#: application/services/HistoryService.php:1103
+msgid "Title"
+msgstr "标题"
+
+#: application/controllers/LocaleController.php:89
+#: application/forms/SmartBlockCriteria.php:66
+#: application/models/Block.php:1454 application/models/Block.php:1550
+#: application/services/HistoryService.php:1054
+#: application/services/HistoryService.php:1089
+#: application/services/HistoryService.php:1104
+msgid "Creator"
+msgstr "作者"
+
+#: application/controllers/LocaleController.php:90
+#: application/forms/SmartBlockCriteria.php:57
+#: application/models/Block.php:1445 application/models/Block.php:1541
+#: application/services/HistoryService.php:1055
+msgid "Album"
+msgstr "专辑"
+
+#: application/controllers/LocaleController.php:91
+msgid "Bit Rate"
+msgstr "比特率"
+
+#: application/controllers/LocaleController.php:92
+#: application/forms/SmartBlockCriteria.php:59
+#: application/models/Block.php:1447 application/models/Block.php:1543
+msgid "BPM"
+msgstr "每分钟拍子数"
+
+#: application/controllers/LocaleController.php:93
+#: application/forms/SmartBlockCriteria.php:60
+#: application/models/Block.php:1448 application/models/Block.php:1544
+#: application/services/HistoryService.php:1060
+#: application/services/HistoryService.php:1107
+msgid "Composer"
+msgstr "作曲"
+
+#: application/controllers/LocaleController.php:94
+#: application/forms/SmartBlockCriteria.php:61
+#: application/models/Block.php:1449 application/models/Block.php:1545
+#: application/services/HistoryService.php:1065
+msgid "Conductor"
+msgstr "指挥"
+
+#: application/controllers/LocaleController.php:95
+#: application/forms/SmartBlockCriteria.php:62
+#: application/models/Block.php:1450 application/models/Block.php:1546
+#: application/services/HistoryService.php:1062
+#: application/services/HistoryService.php:1108
+msgid "Copyright"
+msgstr "版权"
+
+#: application/controllers/LocaleController.php:96
+#: application/forms/SmartBlockCriteria.php:67
+#: application/models/Block.php:1455 application/models/Block.php:1551
+msgid "Encoded By"
+msgstr "编曲"
+
+#: application/controllers/LocaleController.php:97
+#: application/forms/SmartBlockCriteria.php:68
+#: application/forms/StreamSettingSubForm.php:135
+#: application/models/Block.php:1456 application/models/Block.php:1552
+#: application/services/HistoryService.php:1057
+msgid "Genre"
+msgstr "风格"
+
+#: application/controllers/LocaleController.php:98
+#: application/forms/SmartBlockCriteria.php:69
+#: application/models/Block.php:1457 application/models/Block.php:1553
+#: application/services/HistoryService.php:1061
+msgid "ISRC"
+msgstr "ISRC码"
+
+#: application/controllers/LocaleController.php:99
+#: application/forms/SmartBlockCriteria.php:70
+#: application/models/Block.php:1458 application/models/Block.php:1554
+#: application/services/HistoryService.php:1059
+msgid "Label"
+msgstr "标签"
+
+#: application/controllers/LocaleController.php:100
+#: application/forms/SmartBlockCriteria.php:71
+#: application/models/Block.php:1459 application/models/Block.php:1555
+#: application/services/HistoryService.php:1066
+msgid "Language"
+msgstr "语种"
+
+#: application/controllers/LocaleController.php:101
+#: application/forms/SmartBlockCriteria.php:72
+#: application/models/Block.php:1461 application/models/Block.php:1557
+msgid "Last Modified"
+msgstr "最近更新于"
+
+#: application/controllers/LocaleController.php:102
+#: application/forms/SmartBlockCriteria.php:73
+#: application/models/Block.php:1462 application/models/Block.php:1558
+msgid "Last Played"
+msgstr "上次播放于"
+
+#: application/controllers/LocaleController.php:103
+#: application/forms/SmartBlockCriteria.php:74
+#: application/models/Block.php:1463 application/models/Block.php:1559
+#: application/services/HistoryService.php:1056
+#: application/services/HistoryService.php:1106
+msgid "Length"
+msgstr "时长"
+
+#: application/controllers/LocaleController.php:104
+#: application/forms/SmartBlockCriteria.php:76
+#: application/models/Block.php:1465 application/models/Block.php:1561
+msgid "Mime"
+msgstr "MIME信息"
+
+#: application/controllers/LocaleController.php:105
+#: application/forms/SmartBlockCriteria.php:77
+#: application/models/Block.php:1466 application/models/Block.php:1562
+#: application/services/HistoryService.php:1058
+msgid "Mood"
+msgstr "风格"
+
+#: application/controllers/LocaleController.php:106
+#: application/forms/SmartBlockCriteria.php:78
+#: application/models/Block.php:1467 application/models/Block.php:1563
+msgid "Owner"
+msgstr "所有者"
+
+#: application/controllers/LocaleController.php:107
+#: application/forms/SmartBlockCriteria.php:79
+#: application/models/Block.php:1468 application/models/Block.php:1564
+msgid "Replay Gain"
+msgstr "回放增益"
+
+#: application/controllers/LocaleController.php:108
+msgid "Sample Rate"
+msgstr "样本率"
+
+#: application/controllers/LocaleController.php:109
+#: application/forms/SmartBlockCriteria.php:82
+#: application/models/Block.php:1471 application/models/Block.php:1567
+msgid "Track Number"
+msgstr "曲目"
+
+#: application/controllers/LocaleController.php:110
+#: application/forms/SmartBlockCriteria.php:83
+#: application/models/Block.php:1472 application/models/Block.php:1568
+msgid "Uploaded"
+msgstr "上传于"
+
+#: application/controllers/LocaleController.php:111
+#: application/forms/SmartBlockCriteria.php:84
+#: application/models/Block.php:1473 application/models/Block.php:1569
+msgid "Website"
+msgstr "网址"
+
+#: application/controllers/LocaleController.php:112
+#: application/forms/SmartBlockCriteria.php:85
+#: application/models/Block.php:1474 application/models/Block.php:1570
+#: application/services/HistoryService.php:1063
+msgid "Year"
+msgstr "年代"
+
+#: application/controllers/LocaleController.php:113
+msgid "Loading..."
+msgstr "加载中..."
+
+#: application/controllers/LocaleController.php:114
+#: application/controllers/LocaleController.php:411
+msgid "All"
+msgstr "全部"
+
+#: application/controllers/LocaleController.php:115
+msgid "Files"
+msgstr "文件"
+
+#: application/controllers/LocaleController.php:116
+#: application/views/scripts/partialviews/dashboard-sub-nav.php:8
+msgid "Playlists"
+msgstr "播放列表"
+
+#: application/controllers/LocaleController.php:117
+#: application/views/scripts/partialviews/dashboard-sub-nav.php:13
+msgid "Smart Blocks"
+msgstr "智能模块"
+
+#: application/controllers/LocaleController.php:118
+msgid "Web Streams"
+msgstr "网络流媒体"
+
+#: application/controllers/LocaleController.php:119
+msgid "Unknown type: "
+msgstr "位置类型："
+
+#: application/controllers/LocaleController.php:120
+msgid "Are you sure you want to delete the selected item?"
+msgstr "确定删除所选项？"
+
+#: application/controllers/LocaleController.php:121
+#: application/controllers/LocaleController.php:218
+msgid "Uploading in progress..."
+msgstr "正在上传..."
+
+#: application/controllers/LocaleController.php:122
+msgid "Retrieving data from the server..."
+msgstr "数据正在从服务器下载中..."
+
+#: application/controllers/LocaleController.php:124
+msgid "Import"
+msgstr ""
+
+#: application/controllers/LocaleController.php:125
+msgid "Imported?"
+msgstr ""
+
+#: application/controllers/LocaleController.php:126
+#: application/services/CalendarService.php:59
+#: application/services/CalendarService.php:89
+msgid "View"
+msgstr ""
+
+#: application/controllers/LocaleController.php:127
+msgid "Error code: "
+msgstr "错误代码："
+
+#: application/controllers/LocaleController.php:128
+msgid "Error msg: "
+msgstr "错误信息："
+
+#: application/controllers/LocaleController.php:129
+msgid "Input must be a positive number"
+msgstr "输入只能为正数"
+
+#: application/controllers/LocaleController.php:130
+msgid "Input must be a number"
+msgstr "只允许数字输入"
+
+#: application/controllers/LocaleController.php:131
+msgid "Input must be in the format: yyyy-mm-dd"
+msgstr "输入格式应为：年-月-日（yyyy-mm-dd）"
+
+#: application/controllers/LocaleController.php:132
+msgid "Input must be in the format: hh:mm:ss.t"
+msgstr "输入格式应为：时:分:秒 （hh:mm:ss.t）"
+
+#: application/controllers/LocaleController.php:133
+msgid "My Podcast"
+msgstr ""
+
+#: application/controllers/LocaleController.php:135
+#, php-format
+msgid "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"
+msgstr "你正在上传文件。%s如果离开此页，上传过程将被打断。%s确定离开吗？"
+
+#: application/controllers/LocaleController.php:137
+msgid "Open Media Builder"
+msgstr "打开媒体编辑器"
+
+#: application/controllers/LocaleController.php:138
+msgid "please put in a time '00:00:00 (.0)'"
+msgstr "请输入时间‘00:00:00（.0）’"
+
+#: application/controllers/LocaleController.php:139
+msgid "Please enter a valid time in seconds. Eg. 0.5"
+msgstr ""
+
+#: application/controllers/LocaleController.php:140
+msgid "Your browser does not support playing this file type: "
+msgstr "你的浏览器不支持这种文件类型："
+
+#: application/controllers/LocaleController.php:141
+msgid "Dynamic block is not previewable"
+msgstr "动态智能模块无法预览"
+
+#: application/controllers/LocaleController.php:142
+msgid "Limit to: "
+msgstr "限制在："
+
+#: application/controllers/LocaleController.php:143
+msgid "Playlist saved"
+msgstr "播放列表已存储"
+
+#: application/controllers/LocaleController.php:144
+msgid "Playlist shuffled"
+msgstr "播放列表已经随机化"
+
+#: application/controllers/LocaleController.php:145
+msgid "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
+msgstr "文件的状态不可知。这可能是由于文件位于远程存储位置，或者所在的文件夹已经不再监控。"
+
+#: application/controllers/LocaleController.php:147
+#, php-format
+msgid "Listener Count on %s: %s"
+msgstr "听众统计%s：%s"
+
+#: application/controllers/LocaleController.php:149
+msgid "Remind me in 1 week"
+msgstr "一周以后再提醒我"
+
+#: application/controllers/LocaleController.php:150
+msgid "Remind me never"
+msgstr "不再提醒"
+
+#: application/controllers/LocaleController.php:151
+msgid "Yes, help Airtime"
+msgstr "是的，帮助Airtime"
+
+#: application/controllers/LocaleController.php:152
+#: application/controllers/LocaleController.php:196
+msgid "Image must be one of jpg, jpeg, png, or gif"
+msgstr "图像文件格式只能是jpg，jpeg，png或者gif"
+
+#: application/controllers/LocaleController.php:154
+msgid "A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show."
+msgstr "静态的智能模块将会保存条件设置并且马上生成所有内容。这样就可以让你在添加到节目中前，还可以编辑和预览该智能模块。"
+
+#: application/controllers/LocaleController.php:155
+msgid "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."
+msgstr "动态的智能模块将只保存条件设置。而模块的内容将在每次添加到节目中是动态生成。在媒体库中，你不能直接编辑和预览动态智能模块。"
+
+#: application/controllers/LocaleController.php:156
+#, php-format
+msgid "The desired block length will not be reached if %s cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
+msgstr ""
+
+#: application/controllers/LocaleController.php:157
+msgid "Smart block shuffled"
+msgstr "智能模块已经随机排列"
+
+#: application/controllers/LocaleController.php:158
+msgid "Smart block generated and criteria saved"
+msgstr "智能模块已经生成，条件设置已经保存"
+
+#: application/controllers/LocaleController.php:159
+msgid "Smart block saved"
+msgstr "智能模块已经保存"
+
+#: application/controllers/LocaleController.php:160
+msgid "Processing..."
+msgstr "加载中..."
+
+#: application/controllers/LocaleController.php:161
+#: application/forms/SmartBlockCriteria.php:100
+#: application/forms/SmartBlockCriteria.php:117
+#: application/forms/SmartBlockCriteria.php:133
+#: application/forms/SmartBlockCriteria.php:198
+#: application/forms/SmartBlockCriteria.php:380
+#: application/forms/SmartBlockCriteria.php:630
+#: application/forms/SmartBlockCriteria.php:689
+#: application/models/Block.php:1478 application/models/Block.php:1574
+msgid "Select modifier"
+msgstr "选择操作符"
+
+#: application/controllers/LocaleController.php:162
+#: application/forms/SmartBlockCriteria.php:101
+#: application/models/Block.php:1479 application/models/Block.php:1575
+msgid "contains"
+msgstr "包含"
+
+#: application/controllers/LocaleController.php:163
+#: application/forms/SmartBlockCriteria.php:102
+#: application/models/Block.php:1480 application/models/Block.php:1576
+msgid "does not contain"
+msgstr "不包含"
+
+#: application/controllers/LocaleController.php:164
+#: application/forms/SmartBlockCriteria.php:103
+#: application/forms/SmartBlockCriteria.php:118
+#: application/forms/SmartBlockCriteria.php:137
+#: application/forms/SmartBlockCriteria.php:199
+#: application/models/Block.php:1481 application/models/Block.php:1488
+#: application/models/Block.php:1577 application/models/Block.php:1584
+msgid "is"
+msgstr "是"
+
+#: application/controllers/LocaleController.php:165
+#: application/forms/SmartBlockCriteria.php:104
+#: application/forms/SmartBlockCriteria.php:119
+#: application/forms/SmartBlockCriteria.php:138
+#: application/forms/SmartBlockCriteria.php:200
+#: application/models/Block.php:1482 application/models/Block.php:1489
+#: application/models/Block.php:1578 application/models/Block.php:1585
+msgid "is not"
+msgstr "不是"
+
+#: application/controllers/LocaleController.php:166
+#: application/forms/SmartBlockCriteria.php:105
+#: application/models/Block.php:1483 application/models/Block.php:1579
+msgid "starts with"
+msgstr "起始于"
+
+#: application/controllers/LocaleController.php:167
+#: application/forms/SmartBlockCriteria.php:106
+#: application/models/Block.php:1484 application/models/Block.php:1580
+msgid "ends with"
+msgstr "结束于"
+
+#: application/controllers/LocaleController.php:168
+#: application/forms/SmartBlockCriteria.php:120
+#: application/forms/SmartBlockCriteria.php:139
+#: application/models/Block.php:1490 application/models/Block.php:1586
+msgid "is greater than"
+msgstr "大于"
+
+#: application/controllers/LocaleController.php:169
+#: application/forms/SmartBlockCriteria.php:121
+#: application/forms/SmartBlockCriteria.php:140
+#: application/models/Block.php:1491 application/models/Block.php:1587
+msgid "is less than"
+msgstr "小于"
+
+#: application/controllers/LocaleController.php:170
+#: application/forms/SmartBlockCriteria.php:122
+#: application/forms/SmartBlockCriteria.php:141
+#: application/models/Block.php:1492 application/models/Block.php:1588
+msgid "is in the range"
+msgstr "处于"
+
+#: application/controllers/LocaleController.php:172
+#: application/forms/SmartBlockCriteria.php:576
+msgid "Generate"
+msgstr "开始生成"
+
+#: application/controllers/LocaleController.php:174
+msgid "Choose Storage Folder"
+msgstr "选择存储文件夹"
+
+#: application/controllers/LocaleController.php:175
+msgid "Choose Folder to Watch"
+msgstr "选择监控的文件夹"
+
+#: application/controllers/LocaleController.php:176
+msgid ""
+"Are you sure you want to change the storage folder?\n"
+"This will remove the files from your Airtime library!"
+msgstr ""
+"确定更改存储路径？\n"
+"这项操作将从媒体库中删除所有文件！"
+
+#: application/controllers/LocaleController.php:177
+msgid "Manage Media Folders"
+msgstr "管理媒体文件夹"
+
+#: application/controllers/LocaleController.php:178
+msgid "Are you sure you want to remove the watched folder?"
+msgstr "确定取消该文件夹的监控？"
+
+#: application/controllers/LocaleController.php:179
+msgid "This path is currently not accessible."
+msgstr "指定的路径无法访问。"
+
+#: application/controllers/LocaleController.php:181
+#, php-format
+msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
+msgstr "某些类型的输出流需要第三方软件的设置，具体步骤如下：%sAAC+%s 和 %sOpus%s。"
+
+#: application/controllers/LocaleController.php:182
+msgid "Connected to the streaming server"
+msgstr "流服务器已连接"
+
+#: application/controllers/LocaleController.php:183
+msgid "The stream is disabled"
+msgstr "输出流已禁用"
+
+#: application/controllers/LocaleController.php:184
+#: application/forms/StreamSettingSubForm.php:207
+msgid "Getting information from the server..."
+msgstr "从服务器加载中..."
+
+#: application/controllers/LocaleController.php:185
+msgid "Can not connect to the streaming server"
+msgstr "无法连接流服务器"
+
+#: application/controllers/LocaleController.php:186
+#, php-format
+msgid "If %s is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."
+msgstr ""
+
+#: application/controllers/LocaleController.php:187
+#, php-format
+msgid "For more details, please read the %s%s Manual%s"
+msgstr ""
+
+#: application/controllers/LocaleController.php:188
+msgid "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
+msgstr "勾选此项会启用OGG格式流媒体的元数据（流的元数据包括歌曲名，歌手/作者，节目名，这些都会显示在音频播放器中。）VLC和mplayer有个已知的问题，他们在播放OGG/VORBIS媒体流时，如果该流已启用元数据，那么在每首歌的间隙都会断开流。所以，如果你使用OGG媒体流，同时你的听众不使用上述媒体播放器的话，你可以随意地勾选此项。"
+
+#: application/controllers/LocaleController.php:189
+msgid "Check this box to automatically switch off Master/Show source upon source disconnection."
+msgstr "勾选此项后，在输入流断开时，主输入源和节目定制输入源将会自动切换为关闭状态。"
+
+#: application/controllers/LocaleController.php:190
+msgid "Check this box to automatically switch on Master/Show source upon source connection."
+msgstr "勾选此项后，在输入流连接上时，主输入源和节目定制输入源将会自动切换到开启状态。"
+
+#: application/controllers/LocaleController.php:191
+msgid "If your Icecast server expects a username of 'source', this field can be left blank."
+msgstr "如果你的Icecast服务器所要求的用户名是‘source’，那么当前项可以留空。"
+
+#: application/controllers/LocaleController.php:192
+#: application/controllers/LocaleController.php:202
+msgid "If your live streaming client does not ask for a username, this field should be 'source'."
+msgstr "如果你的流客户端不需要用户名，那么当前项可以留空"
+
+#: application/controllers/LocaleController.php:193
+msgid "WARNING: This will restart your stream and may cause a short dropout for your listeners!"
+msgstr ""
+
+#: application/controllers/LocaleController.php:194
+msgid "This is the admin username and password for Icecast/SHOUTcast to get listener statistics."
+msgstr "此处填写Icecast或者SHOUTcast的管理员用户名和密码，用于获取收听数据的统计。"
+
+#: application/controllers/LocaleController.php:198
+msgid "Warning: You cannot change this field while the show is currently playing"
+msgstr ""
+
+#: application/controllers/LocaleController.php:199
+msgid "No result found"
+msgstr "搜索无结果"
+
+#: application/controllers/LocaleController.php:200
+msgid "This follows the same security pattern for the shows: only users assigned to the show can connect."
+msgstr "当前遵循与节目同样的安全模式：只有指定到当前节目的用户才能连接的上。"
+
+#: application/controllers/LocaleController.php:201
+msgid "Specify custom authentication which will work only for this show."
+msgstr "所设置的自定义认证设置只对当前的节目有效。"
+
+#: application/controllers/LocaleController.php:203
+msgid "The show instance doesn't exist anymore!"
+msgstr "此节目已不存在"
+
+#: application/controllers/LocaleController.php:204
+msgid "Warning: Shows cannot be re-linked"
+msgstr "注意：节目取消绑定后无法再次绑定"
+
+#: application/controllers/LocaleController.php:205
+msgid "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"
+msgstr "系列节目勾选绑定后，所有节目的内容都会一模一样，对任何未开始节目的更改都会影响到其他节目。"
+
+#: application/controllers/LocaleController.php:206
+msgid "Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the Interface Timezone in your user settings."
+msgstr "此时区设定的默认值是系统的时区设置。日程表中的节目时间则已用户定义的界面显示时区为准，两者可能有所不同。"
+
+#: application/controllers/LocaleController.php:210
+msgid "Show"
+msgstr "节目"
+
+#: application/controllers/LocaleController.php:211
+msgid "Show is empty"
+msgstr "节目内容为空"
+
+#: application/controllers/LocaleController.php:212
+msgid "1m"
+msgstr "1分钟"
+
+#: application/controllers/LocaleController.php:213
+msgid "5m"
+msgstr "5分钟"
+
+#: application/controllers/LocaleController.php:214
+msgid "10m"
+msgstr "10分钟"
+
+#: application/controllers/LocaleController.php:215
+msgid "15m"
+msgstr "15分钟"
+
+#: application/controllers/LocaleController.php:216
+msgid "30m"
+msgstr "30分钟"
+
+#: application/controllers/LocaleController.php:217
+msgid "60m"
+msgstr "60分钟"
+
+#: application/controllers/LocaleController.php:219
+msgid "Retreiving data from the server..."
+msgstr "从服务器下载数据中..."
+
+#: application/controllers/LocaleController.php:220
+msgid "This show has no scheduled content."
+msgstr "此节目没有安排内容。"
+
+#: application/controllers/LocaleController.php:221
+msgid "This show is not completely filled with content."
+msgstr "节目内容只填充了一部分。"
+
+#: application/controllers/LocaleController.php:225
+msgid "January"
+msgstr "一月"
+
+#: application/controllers/LocaleController.php:226
+msgid "February"
+msgstr "二月"
+
+#: application/controllers/LocaleController.php:227
+msgid "March"
+msgstr "三月"
+
+#: application/controllers/LocaleController.php:228
+msgid "April"
+msgstr "四月"
+
+#: application/controllers/LocaleController.php:229
+#: application/controllers/LocaleController.php:241
+msgid "May"
+msgstr "五月"
+
+#: application/controllers/LocaleController.php:230
+msgid "June"
+msgstr "六月"
+
+#: application/controllers/LocaleController.php:231
+msgid "July"
+msgstr "七月"
+
+#: application/controllers/LocaleController.php:232
+msgid "August"
+msgstr "八月"
+
+#: application/controllers/LocaleController.php:233
+msgid "September"
+msgstr "九月"
+
+#: application/controllers/LocaleController.php:234
+msgid "October"
+msgstr "十月"
+
+#: application/controllers/LocaleController.php:235
+msgid "November"
+msgstr "十一月"
+
+#: application/controllers/LocaleController.php:236
+msgid "December"
+msgstr "十二月"
+
+#: application/controllers/LocaleController.php:237
+msgid "Jan"
+msgstr "一月"
+
+#: application/controllers/LocaleController.php:238
+msgid "Feb"
+msgstr "二月"
+
+#: application/controllers/LocaleController.php:239
+msgid "Mar"
+msgstr "三月"
+
+#: application/controllers/LocaleController.php:240
+msgid "Apr"
+msgstr "四月"
+
+#: application/controllers/LocaleController.php:242
+msgid "Jun"
+msgstr "六月"
+
+#: application/controllers/LocaleController.php:243
+msgid "Jul"
+msgstr "七月"
+
+#: application/controllers/LocaleController.php:244
+msgid "Aug"
+msgstr "八月"
+
+#: application/controllers/LocaleController.php:245
+msgid "Sep"
+msgstr "九月"
+
+#: application/controllers/LocaleController.php:246
+msgid "Oct"
+msgstr "十月"
+
+#: application/controllers/LocaleController.php:247
+msgid "Nov"
+msgstr "十一月"
+
+#: application/controllers/LocaleController.php:248
+msgid "Dec"
+msgstr "十二月"
+
+#: application/controllers/LocaleController.php:249
+msgid "Today"
+msgstr ""
+
+#: application/controllers/LocaleController.php:250
+msgid "Day"
+msgstr ""
+
+#: application/controllers/LocaleController.php:251
+msgid "Week"
+msgstr ""
+
+#: application/controllers/LocaleController.php:252
+msgid "Month"
+msgstr ""
+
+#: application/controllers/LocaleController.php:253
+#: application/forms/GeneralPreferences.php:233
+msgid "Sunday"
+msgstr "周日"
+
+#: application/controllers/LocaleController.php:254
+#: application/forms/GeneralPreferences.php:234
+msgid "Monday"
+msgstr "周一"
+
+#: application/controllers/LocaleController.php:255
+#: application/forms/GeneralPreferences.php:235
+msgid "Tuesday"
+msgstr "周二"
+
+#: application/controllers/LocaleController.php:256
+#: application/forms/GeneralPreferences.php:236
+msgid "Wednesday"
+msgstr "周三"
+
+#: application/controllers/LocaleController.php:257
+#: application/forms/GeneralPreferences.php:237
+msgid "Thursday"
+msgstr "周四"
+
+#: application/controllers/LocaleController.php:258
+#: application/forms/GeneralPreferences.php:238
+msgid "Friday"
+msgstr "周五"
+
+#: application/controllers/LocaleController.php:259
+#: application/forms/GeneralPreferences.php:239
+msgid "Saturday"
+msgstr "周六"
+
+#: application/controllers/LocaleController.php:260
+#: application/forms/AddShowRepeats.php:33
+msgid "Sun"
+msgstr "周日"
+
+#: application/controllers/LocaleController.php:261
+#: application/forms/AddShowRepeats.php:34
+msgid "Mon"
+msgstr "周一"
+
+#: application/controllers/LocaleController.php:262
+#: application/forms/AddShowRepeats.php:35
+msgid "Tue"
+msgstr "周二"
+
+#: application/controllers/LocaleController.php:263
+#: application/forms/AddShowRepeats.php:36
+msgid "Wed"
+msgstr "周三"
+
+#: application/controllers/LocaleController.php:264
+#: application/forms/AddShowRepeats.php:37
+msgid "Thu"
+msgstr "周四"
+
+#: application/controllers/LocaleController.php:265
+#: application/forms/AddShowRepeats.php:38
+msgid "Fri"
+msgstr "周五"
+
+#: application/controllers/LocaleController.php:266
+#: application/forms/AddShowRepeats.php:39
+msgid "Sat"
+msgstr "周六"
+
+#: application/controllers/LocaleController.php:267
+msgid "Shows longer than their scheduled time will be cut off by a following show."
+msgstr "超出的节目内容将被随后的节目所取代。"
+
+#: application/controllers/LocaleController.php:268
+msgid "Cancel Current Show?"
+msgstr "取消当前的节目？"
+
+#: application/controllers/LocaleController.php:269
+#: application/controllers/LocaleController.php:318
+msgid "Stop recording current show?"
+msgstr "停止录制当前的节目？"
+
+#: application/controllers/LocaleController.php:270
+msgid "Ok"
+msgstr "确定"
+
+#: application/controllers/LocaleController.php:271
+msgid "Contents of Show"
+msgstr "浏览节目内容"
+
+#: application/controllers/LocaleController.php:274
+msgid "Remove all content?"
+msgstr "清空全部内容？"
+
+#: application/controllers/LocaleController.php:276
+msgid "Delete selected item(s)?"
+msgstr "删除选定的项目？"
+
+#: application/controllers/LocaleController.php:277
+msgid "Start"
+msgstr "开始"
+
+#: application/controllers/LocaleController.php:278
+msgid "End"
+msgstr "结束"
+
+#: application/controllers/LocaleController.php:279
+msgid "Duration"
+msgstr "时长"
+
+#: application/controllers/LocaleController.php:280
+msgid "Filtering out "
+msgstr ""
+
+#: application/controllers/LocaleController.php:281
+msgid " of "
+msgstr ""
+
+#: application/controllers/LocaleController.php:282
+msgid " records"
+msgstr ""
+
+#: application/controllers/LocaleController.php:283
+msgid "There are no shows scheduled during the specified time period."
+msgstr ""
+
+#: application/controllers/LocaleController.php:289
+#: application/forms/SmartBlockCriteria.php:63
+#: application/models/Block.php:1451 application/models/Block.php:1547
+msgid "Cue In"
+msgstr "切入"
+
+#: application/controllers/LocaleController.php:290
+#: application/forms/SmartBlockCriteria.php:64
+#: application/models/Block.php:1452 application/models/Block.php:1548
+msgid "Cue Out"
+msgstr "切出"
+
+#: application/controllers/LocaleController.php:291
+msgid "Fade In"
+msgstr "淡入"
+
+#: application/controllers/LocaleController.php:292
+msgid "Fade Out"
+msgstr "淡出"
+
+#: application/controllers/LocaleController.php:293
+msgid "Show Empty"
+msgstr "节目无内容"
+
+#: application/controllers/LocaleController.php:294
+msgid "Recording From Line In"
+msgstr "从线路输入录制"
+
+#: application/controllers/LocaleController.php:295
+msgid "Track preview"
+msgstr "试听媒体"
+
+#: application/controllers/LocaleController.php:299
+msgid "Cannot schedule outside a show."
+msgstr "没有指定节目，无法凭空安排内容。"
+
+#: application/controllers/LocaleController.php:300
+msgid "Moving 1 Item"
+msgstr "移动1个项目"
+
+#: application/controllers/LocaleController.php:301
+#, php-format
+msgid "Moving %s Items"
+msgstr "移动%s个项目"
+
+#: application/controllers/LocaleController.php:302
+#: application/forms/AddTracktype.php:60 application/forms/AddUser.php:108
+#: application/forms/EditAudioMD.php:297 application/forms/EditHistory.php:131
+#: application/forms/PasswordChange.php:41 application/forms/Preferences.php:37
+msgid "Save"
+msgstr "保存"
+
+#: application/controllers/LocaleController.php:303
+#: application/controllers/LocaleController.php:327
+#: application/forms/EditAudioMD.php:287 application/forms/EditHistory.php:141
+msgid "Cancel"
+msgstr "取消"
+
+#: application/controllers/LocaleController.php:304
+msgid "Fade Editor"
+msgstr "淡入淡出编辑器"
+
+#: application/controllers/LocaleController.php:305
+msgid "Cue Editor"
+msgstr "切入切出编辑器"
+
+#: application/controllers/LocaleController.php:306
+msgid "Waveform features are available in a browser supporting the Web Audio API"
+msgstr "想要启用波形图功能，需要支持Web Audio API的浏览器。"
+
+#: application/controllers/LocaleController.php:309
+msgid "Select all"
+msgstr "全选"
+
+#: application/controllers/LocaleController.php:310
+msgid "Select none"
+msgstr "全不选"
+
+#: application/controllers/LocaleController.php:311
+msgid "Trim overbooked shows"
+msgstr ""
+
+#: application/controllers/LocaleController.php:312
+msgid "Remove selected scheduled items"
+msgstr "移除所选的项目"
+
+#: application/controllers/LocaleController.php:313
+msgid "Jump to the current playing track"
+msgstr "跳转到当前播放的项目"
+
+#: application/controllers/LocaleController.php:314
+msgid "Jump to Current"
+msgstr ""
+
+#: application/controllers/LocaleController.php:315
+msgid "Cancel current show"
+msgstr "取消当前的节目"
+
+#: application/controllers/LocaleController.php:320
+msgid "Open library to add or remove content"
+msgstr "打开媒体库，添加或者删除节目内容"
+
+#: application/controllers/LocaleController.php:321
+msgid "Add / Remove Content"
+msgstr "添加 / 删除内容"
+
+#: application/controllers/LocaleController.php:323
+msgid "in use"
+msgstr "使用中"
+
+#: application/controllers/LocaleController.php:324
+msgid "Disk"
+msgstr "磁盘"
+
+#: application/controllers/LocaleController.php:326
+msgid "Look in"
+msgstr "查询"
+
+#: application/controllers/LocaleController.php:328
+msgid "Open"
+msgstr "打开"
+
+#: application/controllers/LocaleController.php:330
+#: application/forms/AddUser.php:100
+msgid "Admin"
+msgstr "系统管理员"
+
+#: application/controllers/LocaleController.php:331
+#: application/forms/AddUser.php:98
+msgid "DJ"
+msgstr "节目编辑"
+
+#: application/controllers/LocaleController.php:332
+#: application/forms/AddUser.php:99
+msgid "Program Manager"
+msgstr "节目主管"
+
+#: application/controllers/LocaleController.php:333
+#: application/forms/AddUser.php:97
+msgid "Guest"
+msgstr "游客"
+
+#: application/controllers/LocaleController.php:334
+msgid "Guests can do the following:"
+msgstr "游客的权限包括："
+
+#: application/controllers/LocaleController.php:335
+msgid "View schedule"
+msgstr "显示节目日程"
+
+#: application/controllers/LocaleController.php:336
+msgid "View show content"
+msgstr "显示节目内容"
+
+#: application/controllers/LocaleController.php:337
+msgid "DJs can do the following:"
+msgstr "节目编辑的权限包括："
+
+#: application/controllers/LocaleController.php:338
+msgid "Manage assigned show content"
+msgstr "为指派的节目管理节目内容"
+
+#: application/controllers/LocaleController.php:339
+msgid "Import media files"
+msgstr "导入媒体文件"
+
+#: application/controllers/LocaleController.php:340
+msgid "Create playlists, smart blocks, and webstreams"
+msgstr "创建播放列表，智能模块和网络流媒体"
+
+#: application/controllers/LocaleController.php:341
+msgid "Manage their own library content"
+msgstr "管理媒体库中属于自己的内容"
+
+#: application/controllers/LocaleController.php:342
+msgid "Program Managers can do the following:"
+msgstr ""
+
+#: application/controllers/LocaleController.php:343
+msgid "View and manage show content"
+msgstr "查看和管理节目内容"
+
+#: application/controllers/LocaleController.php:344
+msgid "Schedule shows"
+msgstr "安排节目日程"
+
+#: application/controllers/LocaleController.php:345
+msgid "Manage all library content"
+msgstr "管理媒体库的所有内容"
+
+#: application/controllers/LocaleController.php:346
+msgid "Admins can do the following:"
+msgstr "管理员的权限包括："
+
+#: application/controllers/LocaleController.php:347
+msgid "Manage preferences"
+msgstr "属性管理"
+
+#: application/controllers/LocaleController.php:348
+msgid "Manage users"
+msgstr "管理用户"
+
+#: application/controllers/LocaleController.php:349
+msgid "Manage watched folders"
+msgstr "管理监控文件夹"
+
+#: application/controllers/LocaleController.php:350
+msgid "Send support feedback"
+msgstr "提交反馈意见"
+
+#: application/controllers/LocaleController.php:351
+msgid "View system status"
+msgstr "显示系统状态"
+
+#: application/controllers/LocaleController.php:352
+msgid "Access playout history"
+msgstr "查看播放历史"
+
+#: application/controllers/LocaleController.php:353
+msgid "View listener stats"
+msgstr "显示收听统计数据"
+
+#: application/controllers/LocaleController.php:355
+msgid "Show / hide columns"
+msgstr "显示/隐藏栏"
+
+#: application/controllers/LocaleController.php:356
+msgid "Columns"
+msgstr ""
+
+#: application/controllers/LocaleController.php:358
+msgid "From {from} to {to}"
+msgstr "从{from}到{to}"
+
+#: application/controllers/LocaleController.php:359
+msgid "kbps"
+msgstr "千比特每秒"
+
+#: application/controllers/LocaleController.php:360
+msgid "yyyy-mm-dd"
+msgstr "年-月-日"
+
+#: application/controllers/LocaleController.php:361
+msgid "hh:mm:ss.t"
+msgstr "时:分:秒"
+
+#: application/controllers/LocaleController.php:362
+msgid "kHz"
+msgstr "千赫兹"
+
+#: application/controllers/LocaleController.php:365
+msgid "Su"
+msgstr "周天"
+
+#: application/controllers/LocaleController.php:366
+msgid "Mo"
+msgstr "周一"
+
+#: application/controllers/LocaleController.php:367
+msgid "Tu"
+msgstr "周二"
+
+#: application/controllers/LocaleController.php:368
+msgid "We"
+msgstr "周三"
+
+#: application/controllers/LocaleController.php:369
+msgid "Th"
+msgstr "周四"
+
+#: application/controllers/LocaleController.php:370
+msgid "Fr"
+msgstr "周五"
+
+#: application/controllers/LocaleController.php:371
+msgid "Sa"
+msgstr "周六"
+
+#: application/controllers/LocaleController.php:372
+#: application/controllers/LocaleController.php:400
+msgid "Close"
+msgstr "关闭"
+
+#: application/controllers/LocaleController.php:374
+msgid "Hour"
+msgstr "小时"
+
+#: application/controllers/LocaleController.php:375
+msgid "Minute"
+msgstr "分钟"
+
+#: application/controllers/LocaleController.php:376
+msgid "Done"
+msgstr "设定"
+
+#: application/controllers/LocaleController.php:379
+msgid "Select files"
+msgstr "选择文件"
+
+#: application/controllers/LocaleController.php:380
+#: application/controllers/LocaleController.php:381
+msgid "Add files to the upload queue and click the start button."
+msgstr "添加需要上传的文件到传输队列中，然后点击开始上传。"
+
+#: application/controllers/LocaleController.php:384
+msgid "Add Files"
+msgstr "添加文件"
+
+#: application/controllers/LocaleController.php:385
+msgid "Stop Upload"
+msgstr "停止上传"
+
+#: application/controllers/LocaleController.php:386
+msgid "Start upload"
+msgstr "开始上传"
+
+#: application/controllers/LocaleController.php:387
+msgid "Add files"
+msgstr "添加文件"
+
+#: application/controllers/LocaleController.php:388
+#, php-format
+msgid "Uploaded %d/%d files"
+msgstr "已经上传%d/%d个文件"
+
+#: application/controllers/LocaleController.php:389
+msgid "N/A"
+msgstr "未知"
+
+#: application/controllers/LocaleController.php:390
+msgid "Drag files here."
+msgstr "拖拽文件到此处。"
+
+#: application/controllers/LocaleController.php:391
+msgid "File extension error."
+msgstr "文件后缀名出错。"
+
+#: application/controllers/LocaleController.php:392
+msgid "File size error."
+msgstr "文件大小出错。"
+
+#: application/controllers/LocaleController.php:393
+msgid "File count error."
+msgstr "发生文件统计错误。"
+
+#: application/controllers/LocaleController.php:394
+msgid "Init error."
+msgstr "发生初始化错误。"
+
+#: application/controllers/LocaleController.php:395
+msgid "HTTP Error."
+msgstr "发生HTTP类型的错误"
+
+#: application/controllers/LocaleController.php:396
+msgid "Security error."
+msgstr "发生安全性错误。"
+
+#: application/controllers/LocaleController.php:397
+msgid "Generic error."
+msgstr "发生通用类型的错误。"
+
+#: application/controllers/LocaleController.php:398
+msgid "IO error."
+msgstr "输入输出错误。"
+
+#: application/controllers/LocaleController.php:399
+#, php-format
+msgid "File: %s"
+msgstr "文件：%s"
+
+#: application/controllers/LocaleController.php:401
+#, php-format
+msgid "%d files queued"
+msgstr "队列中有%d个文件"
+
+#: application/controllers/LocaleController.php:402
+msgid "File: %f, size: %s, max file size: %m"
+msgstr "文件：%f，大小：%s，最大的文件大小：%m"
+
+#: application/controllers/LocaleController.php:403
+msgid "Upload URL might be wrong or doesn't exist"
+msgstr "用于上传的地址有误或者不存在"
+
+#: application/controllers/LocaleController.php:404
+msgid "Error: File too large: "
+msgstr "错误：文件过大："
+
+#: application/controllers/LocaleController.php:405
+msgid "Error: Invalid file extension: "
+msgstr "错误：无效的文件后缀名："
+
+#: application/controllers/LocaleController.php:407
+msgid "Set Default"
+msgstr "设为默认"
+
+#: application/controllers/LocaleController.php:408
+msgid "Create Entry"
+msgstr "创建项目"
+
+#: application/controllers/LocaleController.php:409
+msgid "Edit History Record"
+msgstr "编辑历史记录"
+
+#: application/controllers/LocaleController.php:410
+#: application/forms/EditHistoryItem.php:57
+msgid "No Show"
+msgstr "无节目"
+
+#: application/controllers/LocaleController.php:412
+#, php-format
+msgid "Copied %s row%s to the clipboard"
+msgstr "复制%s行%s到剪贴板"
+
+#: application/controllers/LocaleController.php:413
+#, php-format
+msgid "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."
+msgstr "%s打印预览%s请使用浏览器的打印功能进行打印。按下Esc键可以退出当前状态。"
+
+#: application/controllers/LocaleController.php:414
+msgid "New Show"
+msgstr ""
+
+#: application/controllers/LocaleController.php:415
+msgid "New Log Entry"
+msgstr ""
+
+#: application/controllers/LocaleController.php:417
+msgid "No data available in table"
+msgstr ""
+
+#: application/controllers/LocaleController.php:418
+msgid "(filtered from _MAX_ total entries)"
+msgstr ""
+
+#: application/controllers/LocaleController.php:424
+msgid "First"
+msgstr ""
+
+#: application/controllers/LocaleController.php:425
+msgid "Last"
+msgstr ""
+
+#: application/controllers/LocaleController.php:426
+msgid "Next"
+msgstr ""
+
+#: application/controllers/LocaleController.php:427
+msgid "Previous"
+msgstr ""
+
+#: application/controllers/LocaleController.php:428
+msgid "Search:"
+msgstr ""
+
+#: application/controllers/LocaleController.php:429
+#: application/controllers/LocaleController.php:442
+msgid "No matching records found"
+msgstr ""
+
+#: application/controllers/LocaleController.php:430
+msgid "Drag tracks here from the library"
+msgstr ""
+
+#: application/controllers/LocaleController.php:431
+msgid "No tracks were played during the selected time period."
+msgstr ""
+
+#: application/controllers/LocaleController.php:432
+msgid "Unpublish"
+msgstr ""
+
+#: application/controllers/LocaleController.php:433
+msgid "No matching results found."
+msgstr ""
+
+#: application/controllers/LocaleController.php:434
+msgid "Author"
+msgstr ""
+
+#: application/controllers/LocaleController.php:435
+#: application/forms/SmartBlockCriteria.php:65
+#: application/forms/StreamSettingSubForm.php:159
+#: application/models/Block.php:1453 application/models/Block.php:1549
+msgid "Description"
+msgstr "描述"
+
+#: application/controllers/LocaleController.php:436
+msgid "Link"
+msgstr ""
+
+#: application/controllers/LocaleController.php:437
+msgid "Publication Date"
+msgstr ""
+
+#: application/controllers/LocaleController.php:438
+msgid "Import Status"
+msgstr ""
+
+#: application/controllers/LocaleController.php:439
+msgid "Actions"
+msgstr ""
+
+#: application/controllers/LocaleController.php:440
+msgid "Delete from Library"
+msgstr ""
+
+#: application/controllers/LocaleController.php:441
+msgid "Successfully imported"
+msgstr ""
+
+#: application/controllers/LocaleController.php:443
+msgid "Show _MENU_"
+msgstr ""
+
+#: application/controllers/LocaleController.php:444
+msgid "Show _MENU_ entries"
+msgstr ""
+
+#: application/controllers/LocaleController.php:445
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr ""
+
+#: application/controllers/LocaleController.php:446
+msgid "Showing _START_ to _END_ of _TOTAL_ tracks"
+msgstr ""
+
+#: application/controllers/LocaleController.php:447
+msgid "Showing _START_ to _END_ of _TOTAL_ track types"
+msgstr ""
+
+#: application/controllers/LocaleController.php:448
+msgid "Showing _START_ to _END_ of _TOTAL_ users"
+msgstr ""
+
+#: application/controllers/LocaleController.php:449
+msgid "Showing 0 to 0 of 0 entries"
+msgstr ""
+
+#: application/controllers/LocaleController.php:450
+msgid "Showing 0 to 0 of 0 tracks"
+msgstr ""
+
+#: application/controllers/LocaleController.php:451
+msgid "Showing 0 to 0 of 0 track types"
+msgstr ""
+
+#: application/controllers/LocaleController.php:452
+msgid "(filtered from _MAX_ total track types)"
+msgstr ""
+
+#: application/controllers/LocaleController.php:454
+msgid "Are you sure you want to delete this tracktype?"
+msgstr ""
+
+#: application/controllers/LocaleController.php:455
+msgid "No track types were found."
+msgstr ""
+
+#: application/controllers/LocaleController.php:456
+msgid "No track types found"
+msgstr ""
+
+#: application/controllers/LocaleController.php:457
+msgid "No matching track types found"
+msgstr ""
+
+#: application/controllers/LocaleController.php:458
+#: application/forms/AddTracktype.php:51
+#: application/forms/GeneralPreferences.php:126
+#: application/forms/GeneralPreferences.php:141
+#: application/forms/GeneralPreferences.php:159
+#: application/forms/GeneralPreferences.php:218
+msgid "Enabled"
+msgstr "启用"
+
+#: application/controllers/LocaleController.php:459
+#: application/forms/AddTracktype.php:50
+#: application/forms/GeneralPreferences.php:125
+#: application/forms/GeneralPreferences.php:140
+#: application/forms/GeneralPreferences.php:158
+#: application/forms/GeneralPreferences.php:217
+msgid "Disabled"
+msgstr "禁用"
+
+#: application/controllers/LocaleController.php:460
+msgid "Cancel upload"
+msgstr ""
+
+#: application/controllers/LocaleController.php:461
+msgid "Type"
+msgstr ""
+
+#: application/controllers/LocaleController.php:462
+msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/docs/playlists'>More information</a>"
+msgstr ""
+
+#: application/controllers/LocaleController.php:463
+msgid "Podcast settings saved"
+msgstr ""
+
+#: application/controllers/LocaleController.php:464
+msgid "Are you sure you want to delete this user?"
+msgstr ""
+
+#: application/controllers/LocaleController.php:465
+msgid "Can't delete yourself!"
+msgstr ""
+
+#: application/controllers/LocaleController.php:466
+msgid "You haven't published any episodes!"
+msgstr ""
+
+#: application/controllers/LocaleController.php:467
+msgid "You can publish your uploaded content from the 'Tracks' view."
+msgstr ""
+
+#: application/controllers/LocaleController.php:468
+msgid "Try it now"
+msgstr ""
+
+#: application/controllers/LocaleController.php:469
+msgid "<p>If this option is unchecked, the smartblock will schedule as many tracks as can be played out <strong>in their entirety</strong> within the specified duration. This will usually result in audio playback that is slightly less than the specified duration.</p><p>If this option is checked, the smartblock will also schedule one final track which will overflow the specified duration. This final track may be cut off mid-way if the show into which the smartblock is added finishes.</p>"
+msgstr ""
+
+#: application/controllers/LocaleController.php:470
+msgid "Playlist preview"
+msgstr ""
+
+#: application/controllers/LocaleController.php:471
+msgid "Smart Block"
+msgstr ""
+
+#: application/controllers/LocaleController.php:472
+msgid "Webstream preview"
+msgstr ""
+
+#: application/controllers/LocaleController.php:473
+msgid "You don't have permission to view the library."
+msgstr ""
+
+#: application/controllers/LocaleController.php:474
+#: application/forms/AddShowWhen.php:23
+msgid "Now"
+msgstr ""
+
+#: application/controllers/LocaleController.php:475
+msgid "Click 'New' to create one now."
+msgstr ""
+
+#: application/controllers/LocaleController.php:476
+msgid "Click 'Upload' to add some now."
+msgstr ""
+
+#: application/controllers/LocaleController.php:477
+msgid "Feed URL"
+msgstr ""
+
+#: application/controllers/LocaleController.php:478
+msgid "Import Date"
+msgstr ""
+
+#: application/controllers/LocaleController.php:479
+msgid "Add New Podcast"
+msgstr ""
+
+#: application/controllers/LocaleController.php:480
+msgid ""
+"Cannot schedule outside a show.\n"
+"Try creating a show first."
+msgstr ""
+
+#: application/controllers/LocaleController.php:481
+msgid "No files have been uploaded yet."
+msgstr ""
+
+#: application/controllers/LocaleController.php:487
+msgid "On Air"
+msgstr ""
+
+#: application/controllers/LocaleController.php:488
+msgid "Off Air"
+msgstr ""
+
+#: application/controllers/LocaleController.php:489
+msgid "Offline"
+msgstr ""
+
+#: application/controllers/LocaleController.php:490
+msgid "Nothing scheduled"
+msgstr ""
+
+#: application/controllers/LocaleController.php:491
+msgid "Click 'Add' to create one now."
+msgstr ""
+
+#: application/controllers/LoginController.php:51
+msgid "Please enter your username and password."
+msgstr ""
+
+#: application/controllers/LoginController.php:157
+msgid "Email could not be sent. Check your mail server settings and ensure it has been configured properly."
+msgstr "邮件发送失败。请检查邮件服务器设置，并确定设置无误。"
+
+#: application/controllers/LoginController.php:160
+msgid "That username or email address could not be found."
+msgstr ""
+
+#: application/controllers/LoginController.php:163
+msgid "There was a problem with the username or email address you entered."
+msgstr ""
+
+#: application/controllers/LoginController.php:242
+msgid "Wrong username or password provided. Please try again."
+msgstr "用户名或密码错误，请重试。"
+
+#: application/controllers/PlaylistController.php:53
+#, php-format
+msgid "You are viewing an older version of %s"
+msgstr "你所查看的%s已更改"
+
+#: application/controllers/PlaylistController.php:143
+msgid "You cannot add tracks to dynamic blocks."
+msgstr "动态智能模块不能添加声音文件。"
+
+#: application/controllers/PlaylistController.php:164
+#, php-format
+msgid "You don't have permission to delete selected %s(s)."
+msgstr "你没有删除所选%s的权限。"
+
+#: application/controllers/PlaylistController.php:177
+msgid "You can only add tracks to smart block."
+msgstr "智能模块只能添加媒体文件。"
+
+#: application/controllers/PlaylistController.php:195
+msgid "Untitled Playlist"
+msgstr "未命名的播放列表"
+
+#: application/controllers/PlaylistController.php:197
+msgid "Untitled Smart Block"
+msgstr "未命名的智能模块"
+
+#: application/controllers/PlaylistController.php:529
+msgid "Unknown Playlist"
+msgstr "位置播放列表"
+
+#: application/controllers/PreferenceController.php:74
+msgid "Preferences updated."
+msgstr "属性已更新。"
+
+#: application/controllers/PreferenceController.php:309
+msgid "Stream Setting Updated."
+msgstr "流设置已更新。"
+
+#: application/controllers/PreferenceController.php:357
+msgid "path should be specified"
+msgstr "请指定路径"
+
+#: application/controllers/PreferenceController.php:452
+msgid "Problem with Liquidsoap..."
+msgstr "Liquidsoap出错..."
+
+#: application/controllers/PreferenceController.php:515
+msgid "Request method not accepted"
+msgstr ""
+
+#: application/controllers/ScheduleController.php:395
+#, php-format
+msgid "Rebroadcast of show %s from %s at %s"
+msgstr "节目%s是节目%s的重播，时间是%s"
+
+#: application/controllers/ShowbuilderController.php:138
+msgid "Select cursor"
+msgstr "选择游标"
+
+#: application/controllers/ShowbuilderController.php:139
+msgid "Remove cursor"
+msgstr "删除游标"
+
+#: application/controllers/ShowbuilderController.php:157
+msgid "show does not exist"
+msgstr "节目不存在"
+
+#: application/controllers/TracktypeController.php:70
+msgid "Track Type added successfully!"
+msgstr ""
+
+#: application/controllers/TracktypeController.php:72
+msgid "Track Type updated successfully!"
+msgstr ""
+
+#: application/controllers/UserController.php:87
+msgid "User added successfully!"
+msgstr "用户已添加成功！"
+
+#: application/controllers/UserController.php:89
+msgid "User updated successfully!"
+msgstr "用于已成功更新！"
+
+#: application/controllers/UserController.php:189
+msgid "Settings updated successfully!"
+msgstr "设置更新成功！"
+
+#: application/controllers/WebstreamController.php:30
+#: application/controllers/WebstreamController.php:34
+msgid "Untitled Webstream"
+msgstr "未命名的网络流媒体"
+
+#: application/controllers/WebstreamController.php:157
+msgid "Webstream saved."
+msgstr "网络流媒体已保存。"
+
+#: application/controllers/WebstreamController.php:165
+msgid "Invalid form values."
+msgstr "无效的表格内容。"
+
+#: application/forms/AddShowAbsoluteRebroadcastDates.php:24
+#: application/forms/AddShowRebroadcastDates.php:29
+#: application/forms/DateRange.php:35 application/forms/DateRange.php:65
+#: application/forms/LiveStreamingPreferences.php:95
+#: application/forms/LiveStreamingPreferences.php:125
+#: application/forms/ShowBuilder.php:37 application/forms/ShowBuilder.php:67
+#: application/forms/ShowListenerStat.php:35
+#: application/forms/ShowListenerStat.php:65
+#: application/forms/StreamSettingSubForm.php:107
+#: application/forms/StreamSettingSubForm.php:128
+#: application/forms/StreamSettingSubForm.php:145
+#: application/forms/StreamSettingSubForm.php:170
+#: application/forms/StreamSettingSubForm.php:181
+#: application/forms/StreamSettingSubForm.php:191
+#: application/forms/StreamSettingSubForm.php:201
+msgid "Invalid character entered"
+msgstr "输入的字符不合要求"
+
+#: application/forms/AddShowAbsoluteRebroadcastDates.php:64
+#: application/forms/AddShowRebroadcastDates.php:69
+msgid "Day must be specified"
+msgstr "请指定天"
+
+#: application/forms/AddShowAbsoluteRebroadcastDates.php:69
+#: application/forms/AddShowRebroadcastDates.php:74
+msgid "Time must be specified"
+msgstr "请指定时间"
+
+#: application/forms/AddShowAbsoluteRebroadcastDates.php:93
+#: application/forms/AddShowRebroadcastDates.php:102
+msgid "Must wait at least 1 hour to rebroadcast"
+msgstr "至少间隔一个小时"
+
+#: application/forms/AddShowAutoPlaylist.php:18
+msgid "Add Autoloading Playlist ?"
+msgstr ""
+
+#: application/forms/AddShowAutoPlaylist.php:25
+msgid "Select Playlist"
+msgstr ""
+
+#: application/forms/AddShowAutoPlaylist.php:32
+msgid "Repeat Playlist Until Show is Full ?"
+msgstr ""
+
+#: application/forms/AddShowLiveStream.php:10
+#, php-format
+msgid "Use %s Authentication:"
+msgstr ""
+
+#: application/forms/AddShowLiveStream.php:17
+msgid "Use Custom Authentication:"
+msgstr "使用自定义的用户认证："
+
+#: application/forms/AddShowLiveStream.php:27
+msgid "Custom Username"
+msgstr "自定义用户名"
+
+#: application/forms/AddShowLiveStream.php:40
+msgid "Custom Password"
+msgstr "自定义密码"
+
+#: application/forms/AddShowLiveStream.php:52
+msgid "Host:"
+msgstr ""
+
+#: application/forms/AddShowLiveStream.php:59
+msgid "Port:"
+msgstr ""
+
+#: application/forms/AddShowLiveStream.php:66
+msgid "Mount:"
+msgstr ""
+
+#: application/forms/AddShowLiveStream.php:85
+msgid "Username field cannot be empty."
+msgstr "请填写用户名"
+
+#: application/forms/AddShowLiveStream.php:90
+msgid "Password field cannot be empty."
+msgstr "请填写密码"
+
+#: application/forms/AddShowRR.php:9
+msgid "Record from Line In?"
+msgstr "从线路输入录制？"
+
+#: application/forms/AddShowRR.php:15
+msgid "Rebroadcast?"
+msgstr "重播？"
+
+#: application/forms/AddShowRebroadcastDates.php:14
+msgid "days"
+msgstr "天"
+
+#: application/forms/AddShowRepeats.php:8
+msgid "Link:"
+msgstr "绑定："
+
+#: application/forms/AddShowRepeats.php:14
+msgid "Repeat Type:"
+msgstr "类型："
+
+#: application/forms/AddShowRepeats.php:17
+msgid "weekly"
+msgstr "每周"
+
+#: application/forms/AddShowRepeats.php:18
+msgid "every 2 weeks"
+msgstr "每隔2周"
+
+#: application/forms/AddShowRepeats.php:19
+msgid "every 3 weeks"
+msgstr "每隔3周"
+
+#: application/forms/AddShowRepeats.php:20
+msgid "every 4 weeks"
+msgstr "每隔4周"
+
+#: application/forms/AddShowRepeats.php:21
+msgid "monthly"
+msgstr "每月"
+
+#: application/forms/AddShowRepeats.php:30
+msgid "Select Days:"
+msgstr "选择天数："
+
+#: application/forms/AddShowRepeats.php:46
+msgid "Repeat By:"
+msgstr "重复类型："
+
+#: application/forms/AddShowRepeats.php:49
+msgid "day of the month"
+msgstr "按月的同一日期"
+
+#: application/forms/AddShowRepeats.php:49
+msgid "day of the week"
+msgstr "一个星期的同一日子"
+
+#: application/forms/AddShowRepeats.php:57 application/forms/DateRange.php:45
+#: application/forms/ShowBuilder.php:47
+#: application/forms/ShowListenerStat.php:45
+msgid "Date End:"
+msgstr "结束日期："
+
+#: application/forms/AddShowRepeats.php:70
+msgid "No End?"
+msgstr "无休止？"
+
+#: application/forms/AddShowRepeats.php:108
+msgid "End date must be after start date"
+msgstr "结束日期应晚于开始日期"
+
+#: application/forms/AddShowRepeats.php:117
+msgid "Please select a repeat day"
+msgstr "请选择在哪一天重复"
+
+#: application/forms/AddShowStyle.php:11
+msgid "Background Colour:"
+msgstr "背景色："
+
+#: application/forms/AddShowStyle.php:30
+msgid "Text Colour:"
+msgstr "文字颜色："
+
+#: application/forms/AddShowStyle.php:48
+msgid "Current Logo:"
+msgstr ""
+
+#: application/forms/AddShowStyle.php:71
+msgid "Show Logo:"
+msgstr ""
+
+#: application/forms/AddShowStyle.php:87
+msgid "Logo Preview:"
+msgstr ""
+
+#: application/forms/AddShowWhat.php:26
+msgid "Name:"
+msgstr "名字："
+
+#: application/forms/AddShowWhat.php:30
+msgid "Untitled Show"
+msgstr "未命名节目"
+
+#: application/forms/AddShowWhat.php:36
+msgid "URL:"
+msgstr "链接地址："
+
+#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:140
+msgid "Genre:"
+msgstr "风格："
+
+#: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:35
+#: application/forms/EditAudioMD.php:120
+msgid "Description:"
+msgstr "描述："
+
+#: application/forms/AddShowWhat.php:69
+msgid "Instance Description:"
+msgstr ""
+
+#: application/forms/AddShowWhen.php:15
+msgid "'%value%' does not fit the time format 'HH:mm'"
+msgstr "'%value%' 不符合形如 '小时:分'的格式要求，例如，‘01：59’"
+
+#: application/forms/AddShowWhen.php:21
+msgid "Start Time:"
+msgstr ""
+
+#: application/forms/AddShowWhen.php:24 application/forms/AddShowWhen.php:36
+msgid "In the Future:"
+msgstr ""
+
+#: application/forms/AddShowWhen.php:64
+msgid "End Time:"
+msgstr ""
+
+#: application/forms/AddShowWhen.php:91
+msgid "Duration:"
+msgstr "时长："
+
+#: application/forms/AddShowWhen.php:100
+msgid "Timezone:"
+msgstr "时区"
+
+#: application/forms/AddShowWhen.php:110
+msgid "Repeats?"
+msgstr "是否设置为系列节目？"
+
+#: application/forms/AddShowWhen.php:151
+msgid "Cannot create show in the past"
+msgstr "节目不能设置为过去的时间"
+
+#: application/forms/AddShowWhen.php:159
+msgid "Cannot modify start date/time of the show that is already started"
+msgstr "节目已经启动，无法修改开始时间/日期"
+
+#: application/forms/AddShowWhen.php:168 application/models/Show.php:330
+msgid "End date/time cannot be in the past"
+msgstr "节目结束的时间或日期不能设置为过去的时间"
+
+#: application/forms/AddShowWhen.php:176
+msgid "Cannot have duration < 0m"
+msgstr "节目时长不能小于0"
+
+#: application/forms/AddShowWhen.php:179
+msgid "Cannot have duration 00h 00m"
+msgstr "节目时长不能为0"
+
+#: application/forms/AddShowWhen.php:185
+msgid "Cannot have duration greater than 24h"
+msgstr "节目时长不能超过24小时"
+
+#: application/forms/AddShowWhen.php:315 application/forms/AddShowWhen.php:346
+#: application/forms/AddShowWhen.php:351
+#: application/services/CalendarService.php:309
+msgid "Cannot schedule overlapping shows"
+msgstr "节目时间设置与其他节目有冲突"
+
+#: application/forms/AddShowWho.php:9
+msgid "Search Users:"
+msgstr "查找用户："
+
+#: application/forms/AddShowWho.php:23
+msgid "DJs:"
+msgstr "选择节目编辑："
+
+#: application/forms/AddTracktype.php:20
+msgid "Type Name:"
+msgstr ""
+
+#: application/forms/AddTracktype.php:26
+msgid "Code:"
+msgstr ""
+
+#: application/forms/AddTracktype.php:46
+msgid "Visibility:"
+msgstr ""
+
+#: application/forms/AddTracktype.php:70
+msgid "Code is not unique."
+msgstr ""
+
+#: application/forms/AddUser.php:27 application/forms/EditUser.php:35
+#: application/forms/LiveStreamingPreferences.php:44
+#: application/forms/Login.php:39
+msgid "Username:"
+msgstr "用户名："
+
+#: application/forms/AddUser.php:36 application/forms/EditUser.php:46
+#: application/forms/LiveStreamingPreferences.php:61
+#: application/forms/Login.php:53
+msgid "Password:"
+msgstr "密码："
+
+#: application/forms/AddUser.php:44 application/forms/EditUser.php:55
+msgid "Verify Password:"
+msgstr "再次输入密码："
+
+#: application/forms/AddUser.php:53 application/forms/EditUser.php:65
+msgid "Firstname:"
+msgstr "名："
+
+#: application/forms/AddUser.php:59 application/forms/EditUser.php:73
+msgid "Lastname:"
+msgstr "姓："
+
+#: application/forms/AddUser.php:65 application/forms/EditUser.php:81
+msgid "Email:"
+msgstr "电邮："
+
+#: application/forms/AddUser.php:74 application/forms/EditUser.php:92
+msgid "Mobile Phone:"
+msgstr "手机："
+
+#: application/forms/AddUser.php:80 application/forms/EditUser.php:100
+msgid "Skype:"
+msgstr "Skype帐号："
+
+#: application/forms/AddUser.php:86 application/forms/EditUser.php:108
+msgid "Jabber:"
+msgstr "Jabber帐号："
+
+#: application/forms/AddUser.php:93
+msgid "User Type:"
+msgstr "用户类型："
+
+#: application/forms/AddUser.php:118 application/forms/EditUser.php:143
+msgid "Login name is not unique."
+msgstr "帐号重名。"
+
+#: application/forms/DangerousPreferences.php:12
+msgid "Delete All Tracks in Library"
+msgstr ""
+
+#: application/forms/DateRange.php:15 application/forms/ShowBuilder.php:17
+#: application/forms/ShowListenerStat.php:15
+msgid "Date Start:"
+msgstr "开始日期："
+
+#: application/forms/EditAudioMD.php:54 application/forms/Player.php:15
+msgid "Title:"
+msgstr "歌曲名："
+
+#: application/forms/EditAudioMD.php:65
+msgid "Creator:"
+msgstr "作者："
+
+#: application/forms/EditAudioMD.php:76
+msgid "Album:"
+msgstr "专辑名："
+
+#: application/forms/EditAudioMD.php:94
+msgid "Owner:"
+msgstr ""
+
+#: application/forms/EditAudioMD.php:106
+msgid "Select a Type"
+msgstr ""
+
+#: application/forms/EditAudioMD.php:113
+msgid "Track Type:"
+msgstr ""
+
+#: application/forms/EditAudioMD.php:151
+msgid "Year:"
+msgstr "年份："
+
+#: application/forms/EditAudioMD.php:165
+msgid "Label:"
+msgstr "标签："
+
+#: application/forms/EditAudioMD.php:176
+msgid "Composer:"
+msgstr "编曲："
+
+#: application/forms/EditAudioMD.php:187
+msgid "Conductor:"
+msgstr "制作："
+
+#: application/forms/EditAudioMD.php:198
+msgid "Mood:"
+msgstr "情怀："
+
+#: application/forms/EditAudioMD.php:209
+msgid "BPM:"
+msgstr "拍子（BPM）："
+
+#: application/forms/EditAudioMD.php:220
+msgid "Copyright:"
+msgstr "版权："
+
+#: application/forms/EditAudioMD.php:231
+msgid "ISRC Number:"
+msgstr "ISRC编号："
+
+#: application/forms/EditAudioMD.php:242
+msgid "Website:"
+msgstr "网站："
+
+#: application/forms/EditAudioMD.php:253 application/forms/EditUser.php:117
+#: application/forms/Login.php:67
+msgid "Language:"
+msgstr "语言："
+
+#: application/forms/EditAudioMD.php:307
+msgid "Publish..."
+msgstr ""
+
+#: application/forms/EditHistoryItem.php:32
+#: application/services/HistoryService.php:1086
+msgid "Start Time"
+msgstr "开始时间"
+
+#: application/forms/EditHistoryItem.php:44
+#: application/services/HistoryService.php:1087
+msgid "End Time"
+msgstr "结束时间"
+
+#: application/forms/EditUser.php:127
+msgid "Interface Timezone:"
+msgstr "用户界面使用的时区："
+
+#: application/forms/GeneralPreferences.php:26
+msgid "Station Name"
+msgstr "电台名称"
+
+#: application/forms/GeneralPreferences.php:34
+msgid "Station Description"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:43
+msgid "Station Logo:"
+msgstr "电台标志："
+
+#: application/forms/GeneralPreferences.php:44
+msgid "Note: Anything larger than 600x600 will be resized."
+msgstr "注意：大于600x600的图片将会被缩放"
+
+#: application/forms/GeneralPreferences.php:64
+msgid "Default Crossfade Duration (s):"
+msgstr "默认混合淡入淡出效果（秒）："
+
+#: application/forms/GeneralPreferences.php:70
+#: application/forms/GeneralPreferences.php:84
+#: application/forms/GeneralPreferences.php:98
+#: application/forms/LiveStreamingPreferences.php:35
+msgid "Please enter a time in seconds (eg. 0.5)"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:78
+msgid "Default Fade In (s):"
+msgstr "默认淡入效果（秒）："
+
+#: application/forms/GeneralPreferences.php:92
+msgid "Default Fade Out (s):"
+msgstr "默认淡出效果（秒）："
+
+#: application/forms/GeneralPreferences.php:104
+msgid "Track Type Upload Default"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:111
+msgid "Intro Autoloading Playlist"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:117
+msgid "Outro Autoloading Playlist"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:123
+msgid "Overwrite Podcast Episode Metatags"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:129
+msgid "Enabling this feature will cause podcast episode tracks to have their Artist, Title, and Album metatags set from podcast feed values. Note that enabling this feature is recommended in order to ensure reliable scheduling of episodes via smartblocks."
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:138
+msgid "Generate a smartblock and a playlist upon creation of a new podcast"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:144
+msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:155
+msgid "Public LibreTime API"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:156
+msgid "Required for embeddable schedule widget."
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:162
+msgid ""
+"Enabling this feature will allow LibreTime to provide schedule data\n"
+"                                            to external widgets that can be embedded in your website."
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:174
+msgid "Allowed CORS URLs"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:175
+msgid "Remote URLs that are allowed to access this LibreTime instance in a browser. One URL per line."
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:180
+msgid "Default Language"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:187
+#: application/forms/SetupLanguageTimezone.php:21
+msgid "Station Timezone"
+msgstr "系统使用的时区"
+
+#: application/forms/GeneralPreferences.php:194
+msgid "Week Starts On"
+msgstr "一周开始于"
+
+#: application/forms/GeneralPreferences.php:210
+msgid "Display login button on your Radio Page?"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:215
+msgid "Feature Previews"
+msgstr ""
+
+#: application/forms/GeneralPreferences.php:221
+msgid "Enable this to opt-in to test new features."
+msgstr ""
+
+#: application/forms/LiveStreamingPreferences.php:18
+msgid "Auto Switch Off:"
+msgstr ""
+
+#: application/forms/LiveStreamingPreferences.php:25
+msgid "Auto Switch On:"
+msgstr ""
+
+#: application/forms/LiveStreamingPreferences.php:32
+msgid "Switch Transition Fade (s):"
+msgstr ""
+
+#: application/forms/LiveStreamingPreferences.php:70
+msgid "Master Source Host:"
+msgstr ""
+
+#: application/forms/LiveStreamingPreferences.php:82
+msgid "Master Source Port:"
+msgstr ""
+
+#: application/forms/LiveStreamingPreferences.php:85
+#: application/forms/LiveStreamingPreferences.php:116
+#: application/forms/StreamSettingSubForm.php:118
+msgid "Only numbers are allowed."
+msgstr "只允许输入数字"
+
+#: application/forms/LiveStreamingPreferences.php:92
+msgid "Master Source Mount:"
+msgstr ""
+
+#: application/forms/LiveStreamingPreferences.php:103
+msgid "Show Source Host:"
+msgstr ""
+
+#: application/forms/LiveStreamingPreferences.php:113
+msgid "Show Source Port:"
+msgstr ""
+
+#: application/forms/LiveStreamingPreferences.php:122
+msgid "Show Source Mount:"
+msgstr ""
+
+#: application/forms/Login.php:78
+msgid "Login"
+msgstr "登录"
+
+#: application/forms/PasswordChange.php:15
+#: application/forms/StreamSettingSubForm.php:124
+msgid "Password"
+msgstr "密码"
+
+#: application/forms/PasswordChange.php:26
+msgid "Confirm new password"
+msgstr "确认新密码"
+
+#: application/forms/PasswordChange.php:34
+msgid "Password confirmation does not match your password."
+msgstr "新密码不匹配"
+
+#: application/forms/PasswordRestore.php:12
+msgid "Email"
+msgstr ""
+
+#: application/forms/PasswordRestore.php:23
+#: application/forms/StreamSettingSubForm.php:177
+msgid "Username"
+msgstr "用户名"
+
+#: application/forms/PasswordRestore.php:34
+msgid "Reset password"
+msgstr "重置密码"
+
+#: application/forms/PasswordRestore.php:44
+msgid "Back"
+msgstr ""
+
+#: application/forms/Player.php:14
+msgid "Now Playing"
+msgstr "直播室"
+
+#: application/forms/Player.php:25
+msgid "Select Stream:"
+msgstr ""
+
+#: application/forms/Player.php:28
+msgid "Auto detect the most appropriate stream to use."
+msgstr ""
+
+#: application/forms/Player.php:29
+msgid "Select a stream:"
+msgstr ""
+
+#: application/forms/Player.php:41
+msgid " - Mobile friendly"
+msgstr ""
+
+#: application/forms/Player.php:45
+msgid " - The player does not support Opus streams."
+msgstr ""
+
+#: application/forms/Player.php:72
+msgid "Embeddable code:"
+msgstr ""
+
+#: application/forms/Player.php:73
+msgid "Copy this code and paste it into your website's HTML to embed the player in your site."
+msgstr ""
+
+#: application/forms/Player.php:78
+msgid "Preview:"
+msgstr ""
+
+#: application/forms/PodcastPreferences.php:9
+msgid "Feed Privacy"
+msgstr ""
+
+#: application/forms/PodcastPreferences.php:11
+msgid "Public"
+msgstr ""
+
+#: application/forms/PodcastPreferences.php:12
+msgid "Private"
+msgstr ""
+
+#: application/forms/SetupLanguageTimezone.php:16
+msgid "Station Language"
+msgstr ""
+
+#: application/forms/ShowBuilder.php:75 application/forms/ShowBuilder.php:93
+msgid "Filter by Show"
+msgstr ""
+
+#: application/forms/ShowBuilder.php:83
+msgid "All My Shows:"
+msgstr "我的全部节目："
+
+#: application/forms/ShowBuilder.php:95
+msgid "My Shows"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:56
+#: application/models/Block.php:1444 application/models/Block.php:1540
+msgid "Select criteria"
+msgstr "选择属性"
+
+#: application/forms/SmartBlockCriteria.php:58
+#: application/models/Block.php:1446 application/models/Block.php:1542
+msgid "Bit Rate (Kbps)"
+msgstr "比特率（Kbps）"
+
+#: application/forms/SmartBlockCriteria.php:75
+#: application/models/Block.php:1464 application/models/Block.php:1560
+#: application/services/HistoryService.php:1067
+msgid "Track Type"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:80
+#: application/models/Block.php:1469 application/models/Block.php:1565
+msgid "Sample Rate (kHz)"
+msgstr "样本率（KHz）"
+
+#: application/forms/SmartBlockCriteria.php:134
+#: application/models/Block.php:1485 application/models/Block.php:1581
+msgid "before"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:135
+#: application/models/Block.php:1486 application/models/Block.php:1582
+msgid "after"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:136
+#: application/models/Block.php:1487 application/models/Block.php:1583
+msgid "between"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:152
+#: application/forms/SmartBlockCriteria.php:467
+#: application/forms/SmartBlockCriteria.php:509
+msgid "Select unit of time"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:153
+msgid "minute(s)"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:154
+msgid "hour(s)"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:155
+msgid "day(s)"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:156
+msgid "week(s)"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:157
+msgid "month(s)"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:158
+msgid "year(s)"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:169
+msgid "hours"
+msgstr "小时"
+
+#: application/forms/SmartBlockCriteria.php:170
+msgid "minutes"
+msgstr "分钟"
+
+#: application/forms/SmartBlockCriteria.php:171
+#: application/models/Block.php:336
+msgid "items"
+msgstr "个数"
+
+#: application/forms/SmartBlockCriteria.php:172
+msgid "time remaining in show"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:183
+msgid "Randomly"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:184
+msgid "Newest"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:185
+msgid "Oldest"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:186
+msgid "Most recently played"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:187
+msgid "Least recently played"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:211
+msgid "Select Track Type"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:268
+msgid "Type:"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:271
+msgid "Dynamic"
+msgstr "动态"
+
+#: application/forms/SmartBlockCriteria.php:272
+msgid "Static"
+msgstr "静态"
+
+#: application/forms/SmartBlockCriteria.php:434
+msgid "Select track type"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:519
+msgid "Allow Repeated Tracks:"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:528
+msgid "Allow last track to exceed time limit:"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:538
+msgid "Sort Tracks:"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:558
+msgid "Limit to:"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:571
+msgid "Generate playlist content and save criteria"
+msgstr "保存条件设置并生成播放列表内容"
+
+#: application/forms/SmartBlockCriteria.php:583
+msgid "Shuffle playlist content"
+msgstr "随机打乱歌曲次序"
+
+#: application/forms/SmartBlockCriteria.php:585
+msgid "Shuffle"
+msgstr "随机"
+
+#: application/forms/SmartBlockCriteria.php:818
+#: application/forms/SmartBlockCriteria.php:830
+msgid "Limit cannot be empty or smaller than 0"
+msgstr "限制的设置不能比0小"
+
+#: application/forms/SmartBlockCriteria.php:823
+msgid "Limit cannot be more than 24 hrs"
+msgstr "限制的设置不能大于24小时"
+
+#: application/forms/SmartBlockCriteria.php:833
+msgid "The value should be an integer"
+msgstr "值只能为整数"
+
+#: application/forms/SmartBlockCriteria.php:836
+msgid "500 is the max item limit value you can set"
+msgstr "最多只能允许500条内容"
+
+#: application/forms/SmartBlockCriteria.php:847
+msgid "You must select Criteria and Modifier"
+msgstr "条件和操作符不能为空"
+
+#: application/forms/SmartBlockCriteria.php:854
+msgid "'Length' should be in '00:00:00' format"
+msgstr "‘长度’格式应该为‘00:00:00’"
+
+#: application/forms/SmartBlockCriteria.php:862
+msgid "Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:867
+#: application/forms/SmartBlockCriteria.php:892
+msgid "You must select a time unit for a relative datetime."
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:872
+#: application/forms/SmartBlockCriteria.php:897
+msgid "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
+msgstr "时间格式错误，应该为形如0000-00-00 或 0000-00-00 00:00:00的格式"
+
+#: application/forms/SmartBlockCriteria.php:887
+msgid "Only non-negative integer numbers are allowed for a relative date time"
+msgstr ""
+
+#: application/forms/SmartBlockCriteria.php:912
+msgid "The value has to be numeric"
+msgstr "应该为数字"
+
+#: application/forms/SmartBlockCriteria.php:917
+msgid "The value should be less then 2147483648"
+msgstr "不能大于2147483648"
+
+#: application/forms/SmartBlockCriteria.php:922
+#, php-format
+msgid "The value should be less than %s characters"
+msgstr "不能小于%s个字符"
+
+#: application/forms/SmartBlockCriteria.php:929
+msgid "Value cannot be empty"
+msgstr "不能为空"
+
+#: application/forms/StreamSetting.php:25
+msgid "Hardware Audio Output:"
+msgstr ""
+
+#: application/forms/StreamSetting.php:33
+msgid "Output Type"
+msgstr ""
+
+#: application/forms/StreamSetting.php:35
+msgid "ALSA"
+msgstr ""
+
+#: application/forms/StreamSetting.php:36
+msgid "AO"
+msgstr ""
+
+#: application/forms/StreamSetting.php:37
+msgid "OSS"
+msgstr ""
+
+#: application/forms/StreamSetting.php:38
+msgid "Portaudio"
+msgstr ""
+
+#: application/forms/StreamSetting.php:39
+msgid "Pulseaudio"
+msgstr ""
+
+#: application/forms/StreamSetting.php:40
+msgid "Jack"
+msgstr ""
+
+#: application/forms/StreamSetting.php:47
+msgid "Icecast Vorbis Metadata"
+msgstr "Icecast的Vorbis元数据"
+
+#: application/forms/StreamSetting.php:58
+msgid "Stream Label:"
+msgstr "流标签："
+
+#: application/forms/StreamSetting.php:59
+msgid "Artist - Title"
+msgstr "歌手 - 歌名"
+
+#: application/forms/StreamSetting.php:60
+msgid "Show - Artist - Title"
+msgstr "节目 - 歌手 - 歌名"
+
+#: application/forms/StreamSetting.php:61
+msgid "Station name - Show name"
+msgstr "电台名 - 节目名"
+
+#: application/forms/StreamSetting.php:67
+msgid "Off Air Metadata"
+msgstr "非直播状态下的输出流元数据"
+
+#: application/forms/StreamSetting.php:74
+msgid "Enable Replay Gain"
+msgstr "启用回放增益"
+
+#: application/forms/StreamSetting.php:81
+msgid "Replay Gain Modifier"
+msgstr "回放增益调整"
+
+#: application/forms/StreamSetting.php:90
+msgid "Streaming Server:"
+msgstr ""
+
+#: application/forms/StreamSetting.php:91
+msgid "Custom / 3rd Party Streaming"
+msgstr ""
+
+#: application/forms/StreamSetting.php:91
+msgid "Default Streaming"
+msgstr ""
+
+#: application/forms/StreamSettingSubForm.php:52
+msgid "Enabled:"
+msgstr "启用："
+
+#: application/forms/StreamSettingSubForm.php:60
+msgid "Mobile:"
+msgstr ""
+
+#: application/forms/StreamSettingSubForm.php:67
+msgid "Stream Type:"
+msgstr "流格式："
+
+#: application/forms/StreamSettingSubForm.php:76
+msgid "Bit Rate:"
+msgstr "比特率："
+
+#: application/forms/StreamSettingSubForm.php:85
+msgid "Service Type:"
+msgstr "服务类型："
+
+#: application/forms/StreamSettingSubForm.php:94
+msgid "Channels:"
+msgstr "声道："
+
+#: application/forms/StreamSettingSubForm.php:95
+msgid "1 - Mono"
+msgstr "1 - 单声道"
+
+#: application/forms/StreamSettingSubForm.php:95
+msgid "2 - Stereo"
+msgstr "2 - 立体声"
+
+#: application/forms/StreamSettingSubForm.php:103
+msgid "Server"
+msgstr "服务器"
+
+#: application/forms/StreamSettingSubForm.php:114
+msgid "Port"
+msgstr "端口号"
+
+#: application/forms/StreamSettingSubForm.php:142
+msgid "URL"
+msgstr "链接地址"
+
+#: application/forms/StreamSettingSubForm.php:152
+msgid "Name"
+msgstr "名字"
+
+#: application/forms/StreamSettingSubForm.php:166
+msgid "Mount Point"
+msgstr "加载点"
+
+#: application/forms/StreamSettingSubForm.php:188
+msgid "Admin User"
+msgstr "管理员用户名"
+
+#: application/forms/StreamSettingSubForm.php:198
+msgid "Admin Password"
+msgstr "管理员密码"
+
+#: application/forms/StreamSettingSubForm.php:227
+msgid "Server cannot be empty."
+msgstr "请填写“服务器”。"
+
+#: application/forms/StreamSettingSubForm.php:232
+msgid "Port cannot be empty."
+msgstr "请填写“端口”。"
+
+#: application/forms/StreamSettingSubForm.php:238
+msgid "Mount cannot be empty with Icecast server."
+msgstr "请填写“加载点”。"
+
+#: application/forms/TuneInPreferences.php:20
+msgid "Push metadata to your station on TuneIn?"
+msgstr ""
+
+#: application/forms/TuneInPreferences.php:25
+msgid "Station ID:"
+msgstr ""
+
+#: application/forms/TuneInPreferences.php:31
+msgid "Partner Key:"
+msgstr ""
+
+#: application/forms/TuneInPreferences.php:37
+msgid "Partner Id:"
+msgstr ""
+
+#: application/forms/TuneInPreferences.php:78
+#: application/forms/TuneInPreferences.php:87
+msgid "Invalid TuneIn Settings. Please ensure your TuneIn settings are correct and try again."
+msgstr ""
+
+#: application/forms/WatchedDirPreferences.php:13
+msgid "Import Folder:"
+msgstr "导入文件夹："
+
+#: application/forms/WatchedDirPreferences.php:24
+msgid "Watched Folders:"
+msgstr "监控文件夹："
+
+#: application/forms/WatchedDirPreferences.php:39
+msgid "Not a valid Directory"
+msgstr "无效的路径"
+
+#: application/forms/customvalidators/ConditionalNotEmpty.php:32
+#: application/forms/helpers/ValidationTypes.php:9
+msgid "Value is required and can't be empty"
+msgstr "不能为空"
+
+#: application/forms/helpers/ValidationTypes.php:20
+msgid "'%value%' is no valid email address in the basic format local-part@hostname"
+msgstr "'%value%' 不是合法的电邮地址，应该类似于 local-part@hostname"
+
+#: application/forms/helpers/ValidationTypes.php:34
+msgid "'%value%' does not fit the date format '%format%'"
+msgstr "'%value%' 不符合格式要求： '%format%'"
+
+#: application/forms/helpers/ValidationTypes.php:60
+msgid "'%value%' is less than %min% characters long"
+msgstr "'%value%' 小于最小长度要求 %min% "
+
+#: application/forms/helpers/ValidationTypes.php:65
+msgid "'%value%' is more than %max% characters long"
+msgstr "'%value%' 大于最大长度要求 %max%"
+
+#: application/forms/helpers/ValidationTypes.php:77
+msgid "'%value%' is not between '%min%' and '%max%', inclusively"
+msgstr "'%value%' 应该介于 '%min%' 和 '%max%'之间"
+
+#: application/forms/helpers/ValidationTypes.php:90
+msgid "Passwords do not match"
+msgstr "两次密码输入不匹配"
+
+#: application/models/Auth.php:33
+#, php-format
+msgid ""
+"Hi %s, \n"
+"\n"
+"Please click this link to reset your password: "
+msgstr ""
+
+#: application/models/Auth.php:35
+#, php-format
+msgid ""
+"\n"
+"\n"
+"If you have any problems, please contact our support team: %s"
+msgstr ""
+
+#: application/models/Auth.php:36
+#, php-format
+msgid ""
+"\n"
+"\n"
+"Thank you,\n"
+"The %s Team"
+msgstr ""
+
+#: application/models/Auth.php:38
+#, php-format
+msgid "%s Password Reset"
+msgstr ""
+
+#: application/models/Block.php:843 application/models/Playlist.php:811
+msgid "Cue in and cue out are null."
+msgstr "切入点和切出点均为空"
+
+#: application/models/Block.php:878 application/models/Block.php:933
+#: application/models/Playlist.php:850 application/models/Playlist.php:891
+msgid "Can't set cue out to be greater than file length."
+msgstr "切出点不能超出文件原长度"
+
+#: application/models/Block.php:890 application/models/Block.php:910
+#: application/models/Playlist.php:842 application/models/Playlist.php:865
+msgid "Can't set cue in to be larger than cue out."
+msgstr "切入点不能晚于切出点"
+
+#: application/models/Block.php:945 application/models/Playlist.php:883
+msgid "Can't set cue out to be smaller than cue in."
+msgstr "切出点不能早于切入点"
+
+#: application/models/Block.php:1460 application/models/Block.php:1556
+msgid "Upload Time"
+msgstr ""
+
+#: application/models/Library.php:36 application/models/Library.php:59
+msgid "None"
+msgstr ""
+
+#: application/models/MusicDir.php:169
+#, php-format
+msgid "%s is already watched."
+msgstr "%s 已经监控"
+
+#: application/models/MusicDir.php:173
+#, php-format
+msgid "%s contains nested watched directory: %s"
+msgstr "%s 所含的子文件夹 %s 已经被监控"
+
+#: application/models/MusicDir.php:177
+#, php-format
+msgid "%s is nested within existing watched directory: %s"
+msgstr "%s 无法监控，因为父文件夹 %s 已经监控"
+
+#: application/models/MusicDir.php:201 application/models/MusicDir.php:386
+#, php-format
+msgid "%s is not a valid directory."
+msgstr "%s 不是文件夹。"
+
+#: application/models/MusicDir.php:244
+#, php-format
+msgid "%s is already set as the current storage dir or in the watched folders list"
+msgstr "%s 已经设置成媒体存储文件夹，或者监控文件夹。"
+
+#: application/models/MusicDir.php:406
+#, php-format
+msgid "%s is already set as the current storage dir or in the watched folders list."
+msgstr "%s 已经设置成媒体存储文件夹，或者监控文件夹。"
+
+#: application/models/MusicDir.php:450
+#, php-format
+msgid "%s doesn't exist in the watched list."
+msgstr "监控文件夹名单里不存在 %s "
+
+#: application/models/Preference.php:521
+#, php-format
+msgid "Powered by %s"
+msgstr ""
+
+#: application/models/Preference.php:651
+msgid "Select Country"
+msgstr "选择国家"
+
+#: application/models/Schedule.php:210
+msgid "livestream"
+msgstr ""
+
+#: application/models/Scheduler.php:81
+msgid "Cannot move items out of linked shows"
+msgstr "不能从绑定的节目系列里移出项目"
+
+#: application/models/Scheduler.php:127
+msgid "The schedule you're viewing is out of date! (sched mismatch)"
+msgstr "当前节目内容表（内容部分）需要刷新"
+
+#: application/models/Scheduler.php:132
+msgid "The schedule you're viewing is out of date! (instance mismatch)"
+msgstr "当前节目内容表（节目已更改）需要刷新"
+
+#: application/models/Scheduler.php:140 application/models/Scheduler.php:492
+#: application/models/Scheduler.php:532 application/models/Scheduler.php:573
+msgid "The schedule you're viewing is out of date!"
+msgstr "当前节目内容需要刷新！"
+
+#: application/models/Scheduler.php:149
+#, php-format
+msgid "You are not allowed to schedule show %s."
+msgstr "没有赋予修改节目 %s 的权限。"
+
+#: application/models/Scheduler.php:153
+msgid "You cannot add files to recording shows."
+msgstr "录音节目不能添加别的内容。"
+
+#: application/models/Scheduler.php:159
+#, php-format
+msgid "The show %s is over and cannot be scheduled."
+msgstr "节目%s已结束，不能在添加任何内容。"
+
+#: application/models/Scheduler.php:167
+#, php-format
+msgid "The show %s has been previously updated!"
+msgstr "节目%s已经更改，需要刷新后再尝试。"
+
+#: application/models/Scheduler.php:187
+msgid "Content in linked shows cannot be changed while on air!"
+msgstr ""
+
+#: application/models/Scheduler.php:202
+msgid "Cannot schedule a playlist that contains missing files."
+msgstr ""
+
+#: application/models/Scheduler.php:228 application/models/Scheduler.php:320
+msgid "A selected File does not exist!"
+msgstr "某个选中的文件不存在。"
+
+#: application/models/Show.php:229
+msgid "Shows can have a max length of 24 hours."
+msgstr "节目时长只能设置在24小时以内"
+
+#: application/models/Show.php:345
+msgid ""
+"Cannot schedule overlapping shows.\n"
+"Note: Resizing a repeating show affects all of its repeats."
+msgstr ""
+"节目时间设置于其他的节目有冲突。\n"
+"提示：修改系列节目中的一个，将影响整个节目系列"
+
+#: application/models/ShowBuilder.php:210
+#, php-format
+msgid "Rebroadcast of %s from %s"
+msgstr "%s是%s的重播"
+
+#: application/models/Webstream.php:163
+msgid "Length needs to be greater than 0 minutes"
+msgstr "节目时长必须大于0分钟"
+
+#: application/models/Webstream.php:167
+msgid "Length should be of form \"00h 00m\""
+msgstr "时间的格式应该是 \"00h 00m\""
+
+#: application/models/Webstream.php:180
+msgid "URL should be of form \"http://domain\""
+msgstr "地址的格式应该是 \"http://domain\""
+
+#: application/models/Webstream.php:183
+msgid "URL should be 512 characters or less"
+msgstr "地址的最大长度不能超过512字节"
+
+#: application/models/Webstream.php:188
+msgid "No MIME type found for webstream."
+msgstr "这个媒体流不存在MIME属性，无法添加"
+
+#: application/models/Webstream.php:204
+msgid "Webstream name cannot be empty"
+msgstr "媒体流的名字不能为空"
+
+#: application/models/Webstream.php:274
+msgid "Could not parse XSPF playlist"
+msgstr "发现XSPF格式的播放列表，但是格式错误"
+
+#: application/models/Webstream.php:295
+msgid "Could not parse PLS playlist"
+msgstr "发现PLS格式的播放列表，但是格式错误"
+
+#: application/models/Webstream.php:314
+msgid "Could not parse M3U playlist"
+msgstr "发现M3U格式的播放列表，但是格式错误"
+
+#: application/models/Webstream.php:327
+msgid "Invalid webstream - This appears to be a file download."
+msgstr "媒体流格式错误，当前“媒体流”只是一个可下载的文件"
+
+#: application/models/Webstream.php:331
+#, php-format
+msgid "Unrecognized stream type: %s"
+msgstr "未知的媒体流格式： %s"
+
+#: application/services/CalendarService.php:48
+msgid "Record file doesn't exist"
+msgstr "录制文件不存在"
+
+#: application/services/CalendarService.php:52
+msgid "View Recorded File Metadata"
+msgstr "查看录制文件的元数据"
+
+#: application/services/CalendarService.php:78
+msgid "Schedule Tracks"
+msgstr ""
+
+#: application/services/CalendarService.php:101
+msgid "Clear Show"
+msgstr ""
+
+#: application/services/CalendarService.php:115
+#: application/services/CalendarService.php:120
+msgid "Cancel Show"
+msgstr ""
+
+#: application/services/CalendarService.php:141
+#: application/services/CalendarService.php:160
+msgid "Edit Instance"
+msgstr ""
+
+#: application/services/CalendarService.php:153
+#: application/services/CalendarService.php:167
+msgid "Edit Show"
+msgstr "编辑节目"
+
+#: application/services/CalendarService.php:189
+msgid "Delete Instance"
+msgstr ""
+
+#: application/services/CalendarService.php:195
+msgid "Delete Instance and All Following"
+msgstr ""
+
+#: application/services/CalendarService.php:250
+msgid "Permission denied"
+msgstr "没有编辑权限"
+
+#: application/services/CalendarService.php:254
+msgid "Can't drag and drop repeating shows"
+msgstr "系列中的节目无法拖拽"
+
+#: application/services/CalendarService.php:263
+msgid "Can't move a past show"
+msgstr "已经结束的节目无法更改时间"
+
+#: application/services/CalendarService.php:298
+msgid "Can't move show into past"
+msgstr "节目不能设置到已过去的时间点"
+
+#: application/services/CalendarService.php:323
+msgid "Can't move a recorded show less than 1 hour before its rebroadcasts."
+msgstr "录音和重播节目之间的间隔必须大于等于1小时。"
+
+#: application/services/CalendarService.php:335
+msgid "Show was deleted because recorded show does not exist!"
+msgstr "录音节目不存在，节目已删除！"
+
+#: application/services/CalendarService.php:342
+msgid "Must wait 1 hour to rebroadcast."
+msgstr "重播节目必须设置于1小时之后。"
+
+#: application/services/HistoryService.php:1064
+msgid "Track"
+msgstr "曲目"
+
+#: application/services/HistoryService.php:1105
+msgid "Played"
+msgstr "已播放"
+
+#: application/services/PodcastService.php:163
+msgid "Auto-generated smartblock for podcast"
+msgstr ""
+
+#: application/views/scripts/partialviews/dashboard-sub-nav.php:18
+msgid "Webstreams"
+msgstr ""
+
+#: public/setup/rabbitmq-setup.php:80
+msgid "Couldn't connect to RabbitMQ server! Please check if the server is running and your credentials are correct."
+msgstr ""
+
+#~ msgid " to "
+#~ msgstr "到"
+
+#~ msgid "(In order to promote your station, 'Send support feedback' must be enabled)."
+#~ msgstr "（为了推广您的电台，请启用‘发送支持反馈’）"
+
+#~ msgid "(Required)"
+#~ msgstr "（必填）"
+
+#~ msgid "(Your radio station website)"
+#~ msgstr "（你电台的网站）"
+
+#~ msgid "(for verification purposes only, will not be published)"
+#~ msgstr "（仅作为验证目的使用，不会用于发布）"
+
+#~ msgid "(hh:mm:ss.t)"
+#~ msgstr "（时:分:秒.分秒）"
+
+#~ msgid "(ss.t)"
+#~ msgstr "（秒.分秒）"
+
+#~ msgid "About"
+#~ msgstr "关于"
+
+#~ msgid "Add New Field"
+#~ msgstr "添加新项目"
+
+#~ msgid "Add more elements"
+#~ msgstr "增加更多元素"
+
+#~ msgid "Add this show"
+#~ msgstr "添加此节目"
+
+#~ msgid "Additional Options"
+#~ msgstr "附属选项"
+
+#~ msgid "Advanced Search Options"
+#~ msgstr "高级查询选项"
+
+#~ msgid "All rights are reserved"
+#~ msgstr "版权所有"
+
+#~ msgid "Audio Track"
+#~ msgstr "音频文件"
+
+#~ msgid "Choose Days:"
+#~ msgstr "选择天数："
+
+#~ msgid "Choose Show Instance"
+#~ msgstr "选择节目项"
+
+#~ msgid "Choose folder"
+#~ msgstr "选择文件夹"
+
+#~ msgid "City:"
+#~ msgstr "城市："
+
+#~ msgid "Clear"
+#~ msgstr "清除"
+
+#~ msgid "Content in linked shows must be scheduled before or after any one is broadcasted"
+#~ msgstr "绑定的节目要么提前设置好，要么等待其中的任何一个节目结束后才能编辑内容"
+
+#~ msgid "Country:"
+#~ msgstr "国家："
+
+#~ msgid "Creating File Summary Template"
+#~ msgstr "创建文件播放记录模板"
+
+#~ msgid "Creating Log Sheet Template"
+#~ msgstr "创建历史记录表单模板"
+
+#~ msgid "Creative Commons Attribution"
+#~ msgstr "知识共享署名"
+
+#~ msgid "Creative Commons Attribution No Derivative Works"
+#~ msgstr "知识共享署名-不允许衍生"
+
+#~ msgid "Creative Commons Attribution Noncommercial"
+#~ msgstr "知识共享署名-非商业应用"
+
+#~ msgid "Creative Commons Attribution Noncommercial Non Derivate Works"
+#~ msgstr "知识共享署名-非商业应用且不允许衍生"
+
+#~ msgid "Creative Commons Attribution Noncommercial Share Alike"
+#~ msgstr "知识共享署名-非商业应用且相同方式共享"
+
+#~ msgid "Creative Commons Attribution Share Alike"
+#~ msgstr "知识共享署名-相同方式共享"
+
+#~ msgid "Cue In: "
+#~ msgstr "切入："
+
+#~ msgid "Cue Out: "
+#~ msgstr "切出："
+
+#~ msgid "Current Import Folder:"
+#~ msgstr "当前的导入文件夹："
+
+#~ msgid "Cursor"
+#~ msgstr "设置游标"
+
+#~ msgid "Default Length:"
+#~ msgstr "默认长度："
+
+#~ msgid "Default License:"
+#~ msgstr "默认版权策略："
+
+#~ msgid "Disk Space"
+#~ msgstr "磁盘空间"
+
+#~ msgid "Dynamic Smart Block"
+#~ msgstr "动态智能模块"
+
+#~ msgid "Dynamic Smart Block Criteria: "
+#~ msgstr "动态智能模块条件："
+
+#~ msgid "Empty playlist content"
+#~ msgstr "播放列表无内容"
+
+#~ msgid "Expand Dynamic Block"
+#~ msgstr "展开动态智能模块"
+
+#~ msgid "Expand Static Block"
+#~ msgstr "展开静态智能模块"
+
+#~ msgid "Fade in: "
+#~ msgstr "淡入："
+
+#~ msgid "Fade out: "
+#~ msgstr "淡出："
+
+#~ msgid "File Path:"
+#~ msgstr "文件路径："
+
+#~ msgid "File Summary"
+#~ msgstr "文件播放记录"
+
+#~ msgid "File Summary Templates"
+#~ msgstr "文件播放记录模板列表"
+
+#~ msgid "File import in progress..."
+#~ msgstr "导入文件进行中..."
+
+#~ msgid "Filter History"
+#~ msgstr "历史记录过滤"
+
+#~ msgid "Find"
+#~ msgstr "查找"
+
+#~ msgid "Find Shows"
+#~ msgstr "查找节目"
+
+#~ msgid "First Name"
+#~ msgstr "名"
+
+#, php-format
+#~ msgid "For more detailed help, read the %suser manual%s."
+#~ msgstr "详细的指导，可以参考%s用户手册%s。"
+
+#~ msgid "For more details, please read the %sAirtime Manual%s"
+#~ msgstr "更多的细节可以参阅%sAirtime用户手册%s"
+
+#~ msgid "If Airtime is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."
+#~ msgstr "如果Airtime配置在路由器或者防火墙之后，你可能需要配置端口转发，所以当前文本框内的信息需要调整。在这种情况下，就需要人工指定该信息以确定所显示的主机名/端口/加载点的正确性，从而让节目编辑能连接的上。端口所允许的范围，介于1024到49151之间。"
+
+#~ msgid "Isrc Number:"
+#~ msgstr "ISRC编号："
+
+#~ msgid "Last Name"
+#~ msgstr "姓"
+
+#~ msgid "Length:"
+#~ msgstr "长度："
+
+#~ msgid "Limit to "
+#~ msgstr "限制到"
+
+#~ msgid "Listen"
+#~ msgstr "收听"
+
+#~ msgid "Live Stream Input"
+#~ msgstr "输入流设置"
+
+#~ msgid "Live stream"
+#~ msgstr "插播流"
+
+#~ msgid "Log Sheet"
+#~ msgstr "历史记录表单"
+
+#~ msgid "Log Sheet Templates"
+#~ msgstr "历史记录表单模板"
+
+#~ msgid "Logout"
+#~ msgstr "登出"
+
+#~ msgid "Looks like the page you were looking for doesn't exist!"
+#~ msgstr "你所寻找的页面不存在！"
+
+#~ msgid "Manage Users"
+#~ msgstr "用户管理"
+
+#~ msgid "Master Source"
+#~ msgstr "主输入流"
+
+#~ msgid "New File Summary Template"
+#~ msgstr "新建文件播放记录模板"
+
+#~ msgid "New Log Sheet Template"
+#~ msgstr "新建历史记录模板"
+
+#~ msgid "New User"
+#~ msgstr "新建用户"
+
+#~ msgid "New password"
+#~ msgstr "新密码"
+
+#~ msgid "Next:"
+#~ msgstr "之后的："
+
+#~ msgid "No File Summary Templates"
+#~ msgstr "无文件播放记录模板"
+
+#~ msgid "No Log Sheet Templates"
+#~ msgstr "无历史记录表单模板"
+
+#~ msgid "No open playlist"
+#~ msgstr "没有打开的播放列表"
+
+#~ msgid "No webstream"
+#~ msgstr "没有网络流媒体"
+
+#~ msgid "OK"
+#~ msgstr "确定"
+
+#~ msgid "ON AIR"
+#~ msgstr "直播中"
+
+#~ msgid "Original Length:"
+#~ msgstr "原始长度："
+
+#~ msgid "Page not found!"
+#~ msgstr "页面不存在！"
+
+#~ msgid "Phone:"
+#~ msgstr "电话："
+
+#~ msgid "Play"
+#~ msgstr "试听"
+
+#~ msgid "Playlist Contents: "
+#~ msgstr "播放列表内容："
+
+#~ msgid "Playlist crossfade"
+#~ msgstr "播放列表交错淡入淡出效果"
+
+#~ msgid "Please enter and confirm your new password in the fields below."
+#~ msgstr "请再次输入你的新密码。"
+
+#~ msgid "Please upgrade to "
+#~ msgstr "请升级到"
+
+#~ msgid "Previous:"
+#~ msgstr "之前的："
+
+#~ msgid "Progam Managers can do the following:"
+#~ msgstr "节目主管的权限是："
+
+#~ msgid "Register Airtime"
+#~ msgstr "注册Airtime"
+
+#~ msgid "Remove watched directory"
+#~ msgstr "移除监控文件夹"
+
+#~ msgid "Repeat Days:"
+#~ msgstr "重复天数："
+
+#~ msgid "Sample Rate:"
+#~ msgstr "样本率："
+
+#~ msgid "Save playlist"
+#~ msgstr "保存播放列表"
+
+#~ msgid "Select stream:"
+#~ msgstr "选择流："
+
+#~ msgid "Set"
+#~ msgstr "设置"
+
+#~ msgid "Set Cue In"
+#~ msgstr "设为切入时间"
+
+#~ msgid "Set Cue Out"
+#~ msgstr "设为切出时间"
+
+#~ msgid "Set Default Template"
+#~ msgstr "设为默认模板"
+
+#~ msgid "Share"
+#~ msgstr "共享"
+
+#~ msgid "Show Source"
+#~ msgstr "节目定制的输入流"
+
+#~ msgid "Show Summary"
+#~ msgstr "节目播放记录"
+
+#~ msgid "Show Waveform"
+#~ msgstr "显示波形图"
+
+#~ msgid "Show me what I am sending "
+#~ msgstr "显示我所发送的信息"
+
+#~ msgid "Shuffle playlist"
+#~ msgstr "随机打乱播放列表"
+
+#~ msgid "Source Streams"
+#~ msgstr "输入流"
+
+#~ msgid "Static Smart Block"
+#~ msgstr "静态智能模块"
+
+#~ msgid "Static Smart Block Contents: "
+#~ msgstr "静态智能模块条件："
+
+#~ msgid "Station Description:"
+#~ msgstr "电台描述："
+
+#~ msgid "Station Web Site:"
+#~ msgstr "电台网址："
+
+#~ msgid "Stop"
+#~ msgstr "暂停"
+
+#~ msgid "Stream "
+#~ msgstr "流"
+
+#~ msgid "Stream Settings"
+#~ msgstr "流设定"
+
+#~ msgid "Stream URL:"
+#~ msgstr "流的链接地址："
+
+#~ msgid "Stream URL: "
+#~ msgstr "流的链接地址："
+
+#~ msgid "Style"
+#~ msgstr "风格"
+
+#~ msgid "Support Feedback"
+#~ msgstr "意见反馈"
+
+#~ msgid "Support setting updated."
+#~ msgstr "支持设定已更新。"
+
+#~ msgid "Terms and Conditions"
+#~ msgstr "使用条款"
+
+#~ msgid "The desired block length will not be reached if Airtime cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
+#~ msgstr "因为满足条件的声音文件数量有限，只能播放列表指定的时长可能无法达成。如果你不介意出现重复的项目，你可以启用此项。"
+
+#~ msgid "The following info will be displayed to listeners in their media player:"
+#~ msgstr "以下内容将会在听众的媒体播放器上显示："
+
+#~ msgid "The work is in the public domain"
+#~ msgstr "公开"
+
+#~ msgid "This version is no longer supported."
+#~ msgstr "这个版本即将停支持。"
+
+#~ msgid "This version will soon be obsolete."
+#~ msgstr "这个版本即将过时。"
+
+#, php-format
+#~ msgid "To play the media you will need to either update your browser to a recent version or update your %sFlash plugin%s."
+#~ msgstr "想要播放媒体，需要更新你的浏览器到最新的版本，或者更新你的%sFalsh插件%s。"
+
+#~ msgid "Track:"
+#~ msgstr "曲目编号："
+
+#~ msgid "Type the characters you see in the picture below."
+#~ msgstr "请输入图像里的字符。"
+
+#~ msgid "Update Required"
+#~ msgstr "需要更新升级"
+
+#~ msgid "Update show"
+#~ msgstr "更新节目"
+
+#~ msgid "User Type"
+#~ msgstr "用户类型"
+
+#~ msgid "Web Stream"
+#~ msgstr "网络流媒体"
+
+#~ msgid "What"
+#~ msgstr "名称"
+
+#~ msgid "When"
+#~ msgstr "时间"
+
+#~ msgid "Who"
+#~ msgstr "管理和编辑"
+
+#~ msgid "You are not watching any media folders."
+#~ msgstr "你没有正在监控的文件夹。"
+
+#~ msgid "You have to agree to privacy policy."
+#~ msgstr "请先接受隐私策略"
+
+#~ msgid "Your trial expires in"
+#~ msgstr "你的试用天数还剩"
+
+#~ msgid "and"
+#~ msgstr "和"
+
+#~ msgid "dB"
+#~ msgstr "分贝"
+
+#~ msgid "files meet the criteria"
+#~ msgstr "个文件符合条件"
+
+#~ msgid "id"
+#~ msgstr "编号"
+
+#~ msgid "max volume"
+#~ msgstr "最大音量"
+
+#~ msgid "mute"
+#~ msgstr "静音"
+
+#~ msgid "next"
+#~ msgstr "往后"
+
+#~ msgid "or"
+#~ msgstr "或"
+
+#~ msgid "pause"
+#~ msgstr "暂停"
+
+#~ msgid "play"
+#~ msgstr "播放"
+
+#~ msgid "please put in a time in seconds '00 (.0)'"
+#~ msgstr "请输入秒数‘00（.0）’"
+
+#~ msgid "previous"
+#~ msgstr "往前"
+
+#~ msgid "stop"
+#~ msgstr "停止"
+
+#~ msgid "unmute"
+#~ msgstr "取消静音"

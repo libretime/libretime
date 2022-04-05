@@ -1,0 +1,89 @@
+<fieldset>
+    <dl>
+        <dt id="add_show_start_now-label">
+            <label for="add_show_start_now">
+                <?php echo $this->element->getElement('add_show_start_now')->getLabel()?>
+            </label>
+        </dt>
+        <dd>
+            <?php echo $this->element->getElement('add_show_start_now') ?>
+        </dd>
+
+
+        <dt id="add_show_start_date-label">
+            <label for="add_show_start_date" class="required">
+                <?php //echo $this->element->getElement('add_show_start_date')->getLabel()?>
+            </label>
+        </dt>
+        <dd>
+            <?php echo $this->element->getElement('add_show_start_date') ?>
+            <?php echo $this->element->getElement('add_show_start_time') ?>
+        </dd>
+        <?php if($this->element->getElement('add_show_start_date')->hasErrors() || $this->element->getElement('add_show_start_time')->hasErrors()){ ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('add_show_start_date')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                    <?php foreach($this->element->getElement('add_show_start_time')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+        <?php } ?>
+
+
+
+        <dt id="add_show_end_date_no_repeat-label">
+            <label for="add_show_end_date_no_repeat" class="required">
+                <?php echo $this->element->getElement('add_show_end_date_no_repeat')->getLabel()?>
+            </label>
+        </dt>
+
+        <dd>
+            <?php echo $this->element->getElement('add_show_end_date_no_repeat') ?>
+            <?php echo $this->element->getElement('add_show_end_time') ?>
+        </dd>
+        <?php if($this->element->getElement('add_show_end_date_no_repeat')->hasErrors() || $this->element->getElement('add_show_end_time')->hasErrors()){ ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('add_show_end_date_no_repeat')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                    <?php foreach($this->element->getElement('add_show_end_time')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+        <?php } ?>
+        <dt id="add_show_duration-label">
+            <label for="add_show_duration" class="optional">
+                <?php echo $this->element->getElement('add_show_duration')->getLabel() ?>
+            </label>
+        </dt>
+        <dd id="add_show_duration-element">
+            <?php echo $this->element->getElement('add_show_duration') ?>
+            <img id="icon-loader-small"/>
+        </dd>
+        <?php if($this->element->getElement('add_show_duration')->hasErrors()){ ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('add_show_duration')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+        <?php } ?>
+
+        <dt id="add_show_timezone-label">
+            <label class="required">
+                <?php echo $this->element->getElement('add_show_timezone')->getLabel() ?>
+                <span class="show_timezone_help_icon"></span>
+            </label>
+        </dt>
+        <dd id="add_show_timezone-element">
+            <?php echo $this->element->getElement('add_show_timezone') ?>
+        </dd>
+
+        <dt id="add_show_repeats-label">
+            <label><?php echo $this->element->getElement('add_show_repeats')->getLabel() ?></label>
+        </dt>
+        <dd id="add_show_repeats-element">
+            <?php echo $this->element->getElement('add_show_repeats') ?>
+        </dd>
+     </dl>
+</fieldset>

@@ -1,0 +1,54 @@
+<fieldset class="padded" id="watched-folder-section">
+    <dl class="zend_form">
+
+        <dt id="storageFolder-label" class="block-display">
+            <label class="required" for="storageFolder"><?php echo $this->element->getElement('storageFolder')->getLabel() ?></label>
+        </dt>
+        <dd id="storageFolder-element" class="block-display">
+            <?php echo $this->element->getElement('storageFolder') ?>
+            <input id="storageFolder-selection" type="button" value="<?php echo _("Choose folder")?>"></input>
+            <input id="storageFolder-ok" type="button" value="<?php echo _("Set")?>"></input>
+            <?php if($this->element->getElement('storageFolder')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('storageFolder')->getMessages() as $error): ?>
+                        <li><?php echo $this->escape($error); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </dd>
+        <dd class="block-display selected-item"><strong><?php echo _("Current Import Folder:"); ?></strong><?php $stor = Application_Model_MusicDir::getStorDir(); echo $stor->getDirectory(); ?></dd>
+
+        <dt id="watchedFolder-label" class="block-display">
+            <label class="required" for="watchedFolder"><?php echo $this->element->getElement('watchedFolder')->getLabel() ?></label>
+
+        </dt>
+        <dd id="watchedFolder-element" class="block-display">
+            <?php echo $this->element->getElement('watchedFolder') ?>
+            <input id="watchedFolder-selection" type="button" value="<?php echo _("Choose folder")?>"></input>
+            <input id="watchedFolder-ok" type="button" value="<?php echo _("Add")?>"></input>
+            <?php if($this->element->getElement('watchedFolder')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('watchedFolder')->getMessages() as $error): ?>
+                        <li><?php echo $this->escape($error); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </dd>
+        <?php $watched_dirs = Application_Model_MusicDir::getWatchedDirs(null, true); ?>
+
+        <?php if (count($watched_dirs) > 0): ?>
+            <?php foreach($watched_dirs as $watched_dir): ?>
+                <dd class="block-display selected-item">
+                    <?php echo ($watched_dir->getExistsFlag())?"":"<span class='ui-icon-alert'><img src='/css/images/warning-icon.png'></span>"?><span id="folderPath" style="display:block; width:350px"><?php echo htmlspecialchars($watched_dir->getDirectory());?></span></span>
+                    <span title="<?php echo sprintf(_("Rescan watched directory (This is useful if it is network mount and may be out of sync with %s)"), PRODUCT_NAME)?>" class="ui-icon ui-icon-refresh"></span>
+                    <span title="<?php echo _("Remove watched directory")?>" class="ui-icon ui-icon-close"></span>
+                </dd>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <dd class="block-display selected-item">
+                <span><?php echo _("You are not watching any media folders."); ?></span>
+            </dd>
+        <?php endif; ?>
+
+    </dl>
+</fieldset>

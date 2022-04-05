@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  postgresql:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: libretime
+      POSTGRES_PASSWORD: libretime
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  adminer:
+    image: adminer
+    ports:
+      - 8089:8080
+
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_VHOST: /libretime
+      RABBITMQ_DEFAULT_USER: libretime
+      RABBITMQ_DEFAULT_PASS: libretime

@@ -1,0 +1,65 @@
+name: Housekeeping
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+    inputs:
+      issueLimit:
+        description: Max. number of issues to create
+        required: true
+        default: "5"
+
+jobs:
+  find_closed_references:
+    if: github.repository_owner == 'libretime'
+    name: Find closed references
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - uses: ory/closed-reference-notifier@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issueLimit: ${{ github.event.inputs.issueLimit || '5' }}
+          ignore: .git,/docs/releases/*
+
+  find_broken_links:
+    if: github.repository_owner == 'libretime'
+    name: Find broken links
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Check Links
+        id: lychee
+        uses: lycheeverse/lychee-action@v1.4.1
+        with:
+          args: >-
+            '**/*.md'
+            --require-https
+            --exclude-all-private
+            --exclude-mail
+            --exclude 'example\.(com|org)'
+            --exclude '\$server_name\$request_uri'
+            --exclude 'https://dir.xiph.org/cgi-bin/yp-cgi'
+            --exclude 'https://radio.indymedia.org/cgi-bin/yp-cgi'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Report
+        if: ${{ steps.lychee.outputs.exit_code != 0 }}
+        uses: peter-evans/create-issue-from-file@v4
+        with:
+          issue-number: 1589
+          title: Link Checker Report
+          content-filepath: ./lychee/out.md
+          labels: |
+            is: documentation
+            ci

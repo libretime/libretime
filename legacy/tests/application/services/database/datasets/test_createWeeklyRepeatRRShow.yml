@@ -1,0 +1,185 @@
+cc_show:
+  - id: "1"
+    name: "test show"
+    url: null
+    genre: null
+    description: null
+    color: ffffff
+    background_color: "364492"
+    live_stream_using_airtime_auth: false
+    live_stream_using_custom_auth: false
+    live_stream_user: null
+    live_stream_pass: null
+    linked: false
+    is_linkable: true
+    image_path: ""
+    has_autoplaylist: false
+    autoplaylist_id: null
+    autoplaylist_repeat: false
+cc_show_days:
+  - id: "1"
+    first_show: "2044-01-01"
+    last_show: null
+    start_time: "00:00:00"
+    timezone: UTC
+    duration: "01:00"
+    day: "5"
+    repeat_type: "0"
+    next_pop_date: "2044-02-12"
+    show_id: "1"
+    record: "1"
+cc_show_instances:
+  - id: "1"
+    starts: "2044-01-01 00:00:00"
+    ends: "2044-01-01 01:00:00"
+    show_id: "1"
+    record: "1"
+    rebroadcast: "0"
+    instance_id: null
+    modified_instance: false
+  - id: "2"
+    starts: "2044-01-02 00:00:00"
+    ends: "2044-01-02 01:00:00"
+    show_id: "1"
+    record: "0"
+    rebroadcast: "1"
+    instance_id: "1"
+    modified_instance: false
+  - id: "3"
+    starts: "2044-01-03 12:00:00"
+    ends: "2044-01-03 13:00:00"
+    show_id: "1"
+    record: "0"
+    rebroadcast: "1"
+    instance_id: "1"
+    modified_instance: false
+  - id: "4"
+    starts: "2044-01-08 00:00:00"
+    ends: "2044-01-08 01:00:00"
+    show_id: "1"
+    record: "1"
+    rebroadcast: "0"
+    instance_id: null
+    modified_instance: false
+  - id: "5"
+    starts: "2044-01-09 00:00:00"
+    ends: "2044-01-09 01:00:00"
+    show_id: "1"
+    record: "0"
+    rebroadcast: "1"
+    instance_id: "4"
+    modified_instance: false
+  - id: "6"
+    starts: "2044-01-10 12:00:00"
+    ends: "2044-01-10 13:00:00"
+    show_id: "1"
+    record: "0"
+    rebroadcast: "1"
+    instance_id: "4"
+    modified_instance: false
+  - id: "7"
+    starts: "2044-01-15 00:00:00"
+    ends: "2044-01-15 01:00:00"
+    show_id: "1"
+    record: "1"
+    rebroadcast: "0"
+    instance_id: null
+    modified_instance: false
+  - id: "8"
+    starts: "2044-01-16 00:00:00"
+    ends: "2044-01-16 01:00:00"
+    show_id: "1"
+    record: "0"
+    rebroadcast: "1"
+    instance_id: "7"
+    modified_instance: false
+  - id: "9"
+    starts: "2044-01-17 12:00:00"
+    ends: "2044-01-17 13:00:00"
+    show_id: "1"
+    record: "0"
+    rebroadcast: "1"
+    instance_id: "7"
+    modified_instance: false
+  - id: "10"
+    starts: "2044-01-22 00:00:00"
+    ends: "2044-01-22 01:00:00"
+    show_id: "1"
+    record: "1"
+    rebroadcast: "0"
+    instance_id: null
+    modified_instance: false
+  - id: "11"
+    starts: "2044-01-23 00:00:00"
+    ends: "2044-01-23 01:00:00"
+    show_id: "1"
+    record: "0"
+    rebroadcast: "1"
+    instance_id: "10"
+    modified_instance: false
+  - id: "12"
+    starts: "2044-01-24 12:00:00"
+    ends: "2044-01-24 13:00:00"
+    show_id: "1"
+    record: "0"
+    rebroadcast: "1"
+    instance_id: "10"
+    modified_instance: false
+  - id: "13"
+    starts: "2044-01-29 00:00:00"
+    ends: "2044-01-29 01:00:00"
+    show_id: "1"
+    record: "1"
+    rebroadcast: "0"
+    instance_id: null
+    modified_instance: false
+  - id: "14"
+    starts: "2044-01-30 00:00:00"
+    ends: "2044-01-30 01:00:00"
+    show_id: "1"
+    record: "0"
+    rebroadcast: "1"
+    instance_id: "13"
+    modified_instance: false
+  - id: "15"
+    starts: "2044-01-31 12:00:00"
+    ends: "2044-01-31 13:00:00"
+    show_id: "1"
+    record: "0"
+    rebroadcast: "1"
+    instance_id: "13"
+    modified_instance: false
+  - id: "16"
+    starts: "2044-02-05 00:00:00"
+    ends: "2044-02-05 01:00:00"
+    show_id: "1"
+    record: "1"
+    rebroadcast: "0"
+    instance_id: null
+    modified_instance: false
+  - id: "17"
+    starts: "2044-02-06 00:00:00"
+    ends: "2044-02-06 01:00:00"
+    show_id: "1"
+    record: "0"
+    rebroadcast: "1"
+    instance_id: "16"
+    modified_instance: false
+  - id: "18"
+    starts: "2044-02-07 12:00:00"
+    ends: "2044-02-07 13:00:00"
+    show_id: "1"
+    record: "0"
+    rebroadcast: "1"
+    instance_id: "16"
+    modified_instance: false
+cc_show_rebroadcast:
+  - id: "1"
+    day_offset: "1 days"
+    start_time: "00:00:00"
+    show_id: "1"
+  - id: "2"
+    day_offset: "2 days"
+    start_time: "12:00:00"
+    show_id: "1"
+cc_show_hosts:
