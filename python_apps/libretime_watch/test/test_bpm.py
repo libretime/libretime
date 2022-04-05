@@ -7,7 +7,6 @@ import requests
 from libretime_watch import metadata
 
 
-
 calib = (
     (120, 'https://upload.wikimedia.org/wikipedia/commons/3/3d/Tiempos_d%C3%A9biles_en_metr%C3%B3nomo_a_120_bpm.ogg'),
     (60, 'https://upload.wikimedia.org/wikipedia/commons/4/46/Tiempos_d%C3%A9biles_en_metr%C3%B3nomo_a_60_bpm.ogg'),

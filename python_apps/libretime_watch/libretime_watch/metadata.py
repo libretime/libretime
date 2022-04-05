@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 ##
-## Handling of all metadata stuff
+# Handling of all metadata stuff
 ##
 import codecs
 import datetime
@@ -47,29 +47,31 @@ config = {}
 
 
 ##
-## TO DO:
-## Use code in airtime_analyzer for importing files rather than duplicating. 
+# TO DO:
+# Use code in airtime_analyzer for importing files rather than duplicating.
 ##
 
 #
 # analysing the file
 #
-def replay_gain (filename):
+def replay_gain(filename):
     """Getting the replaygain via python-rplay"""
 
-    EXE="replaygain"
+    EXE = "replaygain"
 
     command = [EXE, '-d', filename]
     try:
-        results = subprocess.check_output(command, stderr=subprocess.STDOUT, close_fds=True)
+        results = subprocess.check_output(
+            command, stderr=subprocess.STDOUT, close_fds=True)
         exp = r'([+|-]?[0-9]+.[0-9]+)([ ]?dB)'
         m = re.search(exp, str(results))
         replaygain = float(m.groups()[0])
         logging.info("Replay gain: {0}".format(replaygain))
         return float(replaygain)
-    except OSError as e: # replaygain was not found
-        logging.warn("Failed to run: %s - %s. %s" % (command[0], e.strerror, "Do you have python-rgain installed?"))
-    except subprocess.CalledProcessError as e: # replaygain returned an error code
+    except OSError as e:  # replaygain was not found
+        logging.warn("Failed to run: %s - %s. %s" %
+                     (command[0], e.strerror, "Do you have python-rgain installed?"))
+    except subprocess.CalledProcessError as e:  # replaygain returned an error code
         logging.warn("%s %s %s", e.cmd, e.message, e.returncode)
     except Exception as e:
         logging.warn(e)
@@ -77,50 +79,59 @@ def replay_gain (filename):
 
     return None
 
-def cue_points (filename, cue_in, cue_out):
+
+def cue_points(filename, cue_in, cue_out):
     """Analyse file cue using silan
       return cue_in, cue_out
     """
 
-    EXE="silan"
+    EXE = "silan"
 
-    command = [EXE, '-q', '-b', '-F', '0.99', '-f', 'JSON', '-t', '1.0', filename]
+    command = [EXE, '-q', '-b', '-F', '0.99',
+               '-f', 'JSON', '-t', '1.0', filename]
     try:
-        results_json = subprocess.check_output(command, stderr=subprocess.STDOUT, close_fds=True)
+        results_json = subprocess.check_output(
+            command, stderr=subprocess.STDOUT, close_fds=True)
         silan_results = json.loads(results_json)
         # Defensive coding against Silan wildly miscalculating the cue in and out times:
         silan_cuein = float(format(silan_results['sound'][0][0], 'f'))
-        silan_cueout = float (format(silan_results['sound'][0][1], 'f'))
+        silan_cueout = float(format(silan_results['sound'][0][1], 'f'))
         # get cue_out(coming from mutagen) as seconds
-        x = datetime.datetime.strptime(cue_out, '%H:%M:%S.%f') - datetime.datetime(1900,1,1)
-        cue_out_sec= x.total_seconds()
+        x = datetime.datetime.strptime(
+            cue_out, '%H:%M:%S.%f') - datetime.datetime(1900, 1, 1)
+        cue_out_sec = x.total_seconds()
         # trust silan only, if the calculated value is within 95%..102% of the mutagen cue_out
         if silan_cueout > cue_out_sec * 0.95 and silan_cueout < cue_out_sec * 1.02:
-           cue_out =  datetime.timedelta(seconds=silan_cueout)
-           logging.info ("Silan defined a new cue_out: " + str(cue_out))
+            cue_out = datetime.timedelta(seconds=silan_cueout)
+            logging.info("Silan defined a new cue_out: " + str(cue_out))
         cue_in = datetime.timedelta(seconds=silan_cuein)
-        logging.info("Silan: "+str(silan_cuein)+" "+str(silan_cueout)+" "+str(cue_out_sec))
+        logging.info("Silan: "+str(silan_cuein)+" " +
+                     str(silan_cueout)+" "+str(cue_out_sec))
 
-    except OSError as e: # silan was not found
-        logging.warn("Failed to run: %s - %s. %s" % (command[0], e.strerror, "Do you have silan installed?"))
-    except subprocess.CalledProcessError as e: # silan returned an error code
+    except OSError as e:  # silan was not found
+        logging.warn("Failed to run: %s - %s. %s" %
+                     (command[0], e.strerror, "Do you have silan installed?"))
+    except subprocess.CalledProcessError as e:  # silan returned an error code
         logging.warn("%s %s %s", e.cmd, e.message, e.returncode)
     except Exception as e:
         logging.warn(e)
 
     return cue_in, cue_out
 
+
 def calculate_bpm(filename):
     # Attempt to calculate BPM
     cmd = [
-        'ffmpeg','-v', 'quiet', '-i', filename,
+        'ffmpeg', '-v', 'quiet', '-i', filename,
         '-f', 'f32le', '-c:a', 'pcm_f32le', '-ar', '44100', '-ac', '1',
-          'pipe:1']
+        'pipe:1']
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output = subprocess.check_output(['bpm', '-m', '30','-x', '240'], stdin=p.stdout)
+    output = subprocess.check_output(
+        ['bpm', '-m', '30', '-x', '240'], stdin=p.stdout)
     p.wait()
     bpm = round(float(output))
     return int(bpm)
+
 
 def md5_hash(filename):
     """encapsulate MD5 hashing into a function"""
@@ -129,25 +140,27 @@ def md5_hash(filename):
         while True:
             data = fh.read(8192)
             if not data:
-               break
+                break
             m.update(data)
         return m.hexdigest()
+
 
 def strim(varchar, length):
     """trim string to fit database varchar length."""
     return varchar[:length]
 
-def analyse_file (filename, database):
+
+def analyse_file(filename, database):
     """This method analyses the file and returns analyse_ok 
       It's filling the database dictionary with metadata read from
       the file
     """
     airtime.read_config(config)
 
-    analyse_ok=False
-    logging.info ("analyse Filename: "+filename)
+    analyse_ok = False
+    logging.info("analyse Filename: "+filename)
 
-    #try to determine the filetype
+    # try to determine the filetype
     try:
         # database["mime"] = magic.from_file(filename, mime=True)
         #
@@ -155,20 +168,21 @@ def analyse_file (filename, database):
         mtype, a = mime.guess_type(filename)
         database["mime"] = mtype
         #
-        logging.info("mime_check: {0} | mime: {1}".format(database["mime"], mtype))
+        logging.info("mime_check: {0} | mime: {1}".format(
+            database["mime"], mtype))
     except:
         logging.critical("Could not get mime type for {0}".format(filename))
         return False
 
     database["ftype"] = "audioclip"
-    database["filesize"] = os.path.getsize(filename) 
-    database["import_status"]=0
+    database["filesize"] = os.path.getsize(filename)
+    database["import_status"] = 0
 
-    #md5
+    # md5
     database["md5"] = md5_hash(filename)
 
     # Mp3
-    if database["mime"] in ['audio/mpeg','audio/mp3', 'application/octet-stream']:
+    if database["mime"] in ['audio/mpeg', 'audio/mp3', 'application/octet-stream']:
         try:
             audio = EasyID3(filename)
             f = MP3(filename)
@@ -207,27 +221,27 @@ def analyse_file (filename, database):
                 logging.error(e)
                 return False
     else:
-        logging.warning("Unsupported mime type: {} -- for audio {}".format(database["mime"], filename))
+        logging.warning(
+            "Unsupported mime type: {} -- for audio {}".format(database["mime"], filename))
         return False
-
 
     try:
         track_title = audio['title'][0]
     except:
         logging.warning("no title ID3 for {}".format(filename))
         # default title to filename
-        track_title=filename.split("/")[-1]
+        track_title = filename.split("/")[-1]
     finally:
         track_title = strim(track_title, 512)
-        database["track_title"]= track_title
+        database["track_title"] = track_title
 
     try:
         artist_name = audio['artist'][0]
         artist_name = strim(artist_name, 512)
         database["artist_name"] = artist_name
     except Exception as err:
-        logging.warning('no artist ID3 for '+filename) 
-        database["artist_name"]= ""
+        logging.warning('no artist ID3 for '+filename)
+        database["artist_name"] = ""
 
     for tag in [
             ('genre', 'genre', 64),
@@ -244,29 +258,29 @@ def analyse_file (filename, database):
             database[tag[0]] = value
         except Exception as err:
             logging.debug('no {0} ID3 for {1}'.format(tag, filename))
-            database[tag[0]]= ""
+            database[tag[0]] = ""
 
     try:
         album_title = audio['album'][0]
         album_title = strim(album_title, 512)
         database["album_title"] = album_title
     except Exception as err:
-        logging.debug('no album title for '+filename) 
-        database["album_title"]= ""
+        logging.debug('no album title for '+filename)
+        database["album_title"] = ""
 
     try:
         track_number = audio['tracknumber'][0]
-        if "/" in track_number: 
-        # TODO are slashes allowed in this format?
+        if "/" in track_number:
+            # TODO are slashes allowed in this format?
             track_number = track_number.split("/")[0]
         track_number = int(track_number)
         if track_number > 2147483647:
-        # make sure it doesn't exceed Postgres maximum integer value
+            # make sure it doesn't exceed Postgres maximum integer value
             track_number = 0
-        database["track_number"]= track_number
+        database["track_number"] = track_number
     except Exception as err:
-        logging.debug('no track_number for '+filename) 
-        database["track_number"]= 0
+        logging.debug('no track_number for '+filename)
+        database["track_number"] = 0
 
     try:
         bpm = None
@@ -287,19 +301,21 @@ def analyse_file (filename, database):
     database["sample_rate"] = f.info.sample_rate
 
     if hasattr(f.info, "length"):
-        #Converting the length in seconds (float) to a formatted time string
+        # Converting the length in seconds (float) to a formatted time string
         logging.info("TLEN: {0}".format(f.info.length))
         track_length = datetime.timedelta(seconds=f.info.length)
-        database["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
+        # time.strftime("%H:%M:%S.%f", track_length)
+        database["length"] = str(track_length)
         # Other fields for Airtime
         database["cueout"] = database["length"]
         replaygain = replay_gain(filename)
-        if replaygain: #...
+        if replaygain:  # ...
             database["replay_gain"] = replaygain
 
-    database["cuein"]= "00:00:00.0"
+    database["cuein"] = "00:00:00.0"
     # get better (?) cuein, cueout using silan
-    database["cuein"], database["cueout"] = cue_points (filename, database["cuein"], database["cueout"])
+    database["cuein"], database["cueout"] = cue_points(
+        filename, database["cuein"], database["cueout"])
     # mark as silan checked
     database["silan_check"] = "t"
 
@@ -314,10 +330,9 @@ def analyse_file (filename, database):
     else:
         database["channels"] = f.info.channels
 
-
     # Try to import artwork
     try:
-        del database['artwork'] # = '' # Reset this key
+        del database['artwork']  # = '' # Reset this key
     except KeyError:
         pass
 
@@ -332,7 +347,7 @@ def analyse_file (filename, database):
             return True
 
         fp = database["filepath"]
-        directory = filename.replace(fp,'') # Watch Directory
+        directory = filename.replace(fp, '')  # Watch Directory
         fp = '.'.join(fp.split('.')[0:-1])
         artwork_dir = os.path.join(config['airtime_dir'], 'artwork')
 
@@ -344,17 +359,18 @@ def analyse_file (filename, database):
 
         image = Image.open(BytesIO(picture.data))
         for size in [32, 64, 128, 256, 512]:
-            img_file_name =  "{0}-{1}.jpg".format(fp, size)
+            img_file_name = "{0}-{1}.jpg".format(fp, size)
             if size == 512:
                 base64_file_name = fp
             else:
-                base64_file_name =  "{0}-{1}".format(fp, size)
-            img_path = os.path.join(artwork_dir,img_file_name)
-            b64_path = os.path.join(artwork_dir,base64_file_name)
+                base64_file_name = "{0}-{1}".format(fp, size)
+            img_path = os.path.join(artwork_dir, img_file_name)
+            b64_path = os.path.join(artwork_dir, base64_file_name)
             processor = SmartResize(size, size)
             new_img = processor.process(image)
             background = Image.new("RGB", new_img.size, (255, 255, 255))
-            background.paste(new_img, mask=new_img.split()[3]) # 3 is the alpha channel
+            background.paste(new_img, mask=new_img.split()
+                             [3])  # 3 is the alpha channel
             background.save(img_path, format="JPEG")
             temp = BytesIO()
             background.save(temp, format="JPEG")
@@ -366,12 +382,12 @@ def analyse_file (filename, database):
             os.chown(b64_path, uid, gid)
             logging.info("Saving artwork: {0}".format(img_path))
 
-        database['artwork'] = os.path.join(artwork_dir.replace(config['airtime_dir'], ''), fp)
+        database['artwork'] = os.path.join(
+            artwork_dir.replace(config['airtime_dir'], ''), fp)
         logging.info('Saved album artwork: {0}'.format(database['artwork']))
 
     except Exception as e:
         logging.warning(e)
         logging.info('Could not extract album artwork.')
-
 
     return True

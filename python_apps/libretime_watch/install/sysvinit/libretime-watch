@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 ### BEGIN INIT INFO
 # Provides:          libretime_watch
@@ -71,7 +71,7 @@ case "${1:-''}" in
            echo "Done."
         ;;
   'status')
-	      status_of_proc "$DAEMON" "$NAME" && exit 0 || exit $?
+            status_of_proc "$DAEMON" "$NAME" && exit 0 || exit $?
         ;;
   *)
             # no parameter specified
