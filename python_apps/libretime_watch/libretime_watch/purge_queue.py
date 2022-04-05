@@ -31,7 +31,10 @@ def main():
   channel.exchange_declare(exchange=EXCHANGE,exchange_type=EXCHANGE_TYPE,durable=True, auto_delete=True )
   
   # Delete queue
+  print(channel)
+  print("deleting queue")
   channel.queue_delete(queue=QUEUE)
+  print("deleted {0}".format(QUEUE))
   connection.close()
 
   logging.info("Deleted watch folder queue.")

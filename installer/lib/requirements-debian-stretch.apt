@@ -4,6 +4,9 @@ coreutils
 curl
 ecasound
 ffmpeg
+coreutils
+curl
+ecasound
 flac
 git
 gstreamer1.0-plugins-bad
