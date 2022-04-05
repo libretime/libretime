@@ -273,21 +273,22 @@ $result = $r1 && $r2;
                         ?>
                     </td>
                 </tr>
-                <tr class="<?=$watchfolder ? 'success' : 'danger';?>">
+                <tr class="<?php echo $watchfolder ? 'success' : 'danger'; ?>">
                     <td class="component">
                         Watch Folder
                     </td>
                     <td class="description">
-                        <?php echo _("LibreTime Watch Folder service") ?>
+                        <?php echo _('LibreTime Watch Folder service'); ?>
                     </td>
-                    <td class="solution <?php if ($watchfolder) {echo 'check';?>" >
+                    <td class="solution <?php if ($watchfolder) {
+                            echo 'check'; ?>" >
                         <?php
                         } else {
                             ?>">
-                            <?php echo _("Check that the libretime-watch service is installed correctly in ") ?><code>/etc/systemd/system/</code>,
-                            <?php echo _(" and ensure that it's running with ") ?>
+                            <?php echo _('Check that the libretime-watch service is installed correctly in '); ?><code>/etc/systemd/system/</code>,
+                            <?php echo _(" and ensure that it's running with "); ?>
                             <br/><code>systemctl status libretime-watch</code><br/>
-                            <?php echo _("If not, try ") ?><br/><code>sudo systemctl restart libretime-watch</code>
+                            <?php echo _('If not, try '); ?><br/><code>sudo systemctl restart libretime-watch</code>
                         <?php
                         }
                         ?>
