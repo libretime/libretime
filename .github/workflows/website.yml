@@ -8,11 +8,13 @@ on:
       - website/**
       - docs/**
   pull_request:
+    branches: [main]
 
 jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
       - name: Install Vale
@@ -33,12 +35,14 @@ jobs:
           vale --output line docs website/src/pages || true
 
   deploy:
+    if: github.ref == 'refs/heads/main'
     name: Deploy
     runs-on: ubuntu-latest
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
 
     needs: [lint]
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
 
     steps:
       - uses: actions/checkout@v3
@@ -60,7 +64,6 @@ jobs:
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.ref == 'refs/heads/main' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./website/build
+          publish_dir: website/build
