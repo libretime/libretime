@@ -1,4 +1,4 @@
-name: Push API schema
+name: API schema
 
 on:
   push:
@@ -10,6 +10,9 @@ concurrency:
 
 jobs:
   generate:
+    if: github.repository_owner == 'libretime'
+    name: Generate
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
