@@ -1,7 +1,7 @@
 name: Website Preview
 
 on:
-  pull_request:
+  pull_request_target:
     branches: [main]
     types: [opened, synchronize, closed, reopened]
     paths:
@@ -20,6 +20,8 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.action != 'closed'
     name: Deploy
     runs-on: ubuntu-latest
+
+    environment: website-preview
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
@@ -92,6 +94,8 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     name: Clean
     runs-on: ubuntu-latest
+
+    environment: website-preview
 
     steps:
       - uses: actions/checkout@v3
