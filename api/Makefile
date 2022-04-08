@@ -14,3 +14,7 @@ clean: .clean
 test: $(VENV)
 	source $(VENV)/bin/activate
 	DJANGO_SETTINGS_MODULE=libretime_api.settings.testing libretime-api test libretime_api
+
+schema: $(VENV)
+	source $(VENV)/bin/activate
+	DJANGO_SETTINGS_MODULE=libretime_api.settings.testing libretime-api spectacular --file schema.yml

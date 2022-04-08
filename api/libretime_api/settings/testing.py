@@ -20,6 +20,7 @@ from .prod import (
     REST_FRAMEWORK,
     ROOT_URLCONF,
     SECRET_KEY,
+    SPECTACULAR_SETTINGS,
     STATIC_URL,
     TEMPLATES,
     TIME_ZONE,
