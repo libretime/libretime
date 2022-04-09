@@ -151,6 +151,7 @@ jobs:
           - bullseye
           - bionic
           - focal
+          - jammy
 
     container: ghcr.io/libretime/libretime-dev:${{ matrix.release }}
     defaults:
@@ -183,6 +184,7 @@ jobs:
           - bullseye
           - bionic
           - focal
+          - jammy
 
     services:
       postgres:
