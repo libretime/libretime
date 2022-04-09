@@ -33,8 +33,8 @@ def test_analyze_playability_invalid_filepath():
 
 
 def test_analyze_playability_invalid_wma():
-    # Liquisoap does not fail with wma files on buster, bullseye, focal
-    if distro.codename() in ("buster", "bullseye", "focal"):
+    # Liquisoap does not fail with wma files on buster, bullseye, focal, jammy
+    if distro.codename() in ("buster", "bullseye", "focal", "jammy"):
         return
 
     with pytest.raises(UnplayableFileError):
