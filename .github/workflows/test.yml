@@ -60,16 +60,15 @@ jobs:
         working-directory: legacy
 
   test-legacy:
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         include:
-          - runs-on: ubuntu-18.04
-            php-version: "7.2"
-          - runs-on: ubuntu-20.04
-            php-version: "7.4"
+          - php-version: "7.2" # Bionic
+          - php-version: "7.3" # Buster
+          - php-version: "7.4" # Bullseye, Focal
 
-    runs-on: ${{ matrix.runs-on }}
     env:
       ENVIRONMENT: testing
     steps:
