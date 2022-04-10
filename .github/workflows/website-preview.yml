@@ -1,0 +1,124 @@
+name: Website Preview
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_target:
+    types: [closed]
+    branches: [main]
+    paths:
+      - website/**
+      - docs/**
+
+env:
+  # PREVIEW_DEPLOY_KEY is present in the secrets
+  PREVIEW_EXTERNAL_REPOSITORY: libretime/libretime.github.io
+  PREVIEW_URL: https://libretime.github.io
+  PREVIEW_BASE_URL: /
+
+jobs:
+  deploy:
+    if: >
+      github.event.issue.pull_request
+      && (
+        github.event.comment.author_association == 'OWNER'
+        || github.event.comment.author_association == 'MEMBER'
+      )
+      && startsWith(github.event.comment.body, '/deploy-website')
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Notify deployment triggered
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          comment-id: ${{ github.event.comment.id }}
+          reactions: "+1"
+
+      - uses: actions/checkout@v3
+
+      - name: Checkout pull request
+        run: hub pr checkout ${{ github.event.issue.number }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: yarn
+          cache-dependency-path: website/yarn.lock
+
+      - uses: actions/cache@v3
+        with:
+          path: website/.docusaurus
+          key: docusaurus-main-pr-${{ github.event.issue.number }}
+          restore-keys: |
+            docusaurus-main-
+
+      - name: Install
+        working-directory: website
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        working-directory: website
+        run: yarn build
+        env:
+          URL: ${{ env.PREVIEW_URL }}
+          BASE_URL: ${{ env.PREVIEW_BASE_URL }}pr-${{ github.event.issue.number }}/
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          external_repository: ${{ env.PREVIEW_EXTERNAL_REPOSITORY }}
+          deploy_key: ${{ secrets.PREVIEW_DEPLOY_KEY }}
+          publish_dir: website/build
+          destination_dir: pr-${{ github.event.issue.number }}
+          full_commit_message: "deploy: pr-${{ github.event.issue.number }}"
+          keep_files: true
+
+      - name: Notify deployment succeeded
+        if: ${{ success() }}
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            **:rocket: Preview deployment succeeded!**
+
+            Preview: ${{ env.PREVIEW_URL }}${{ env.PREVIEW_BASE_URL }}pr-${{ github.event.issue.number }}/
+            Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Notify deployment failed
+        if: ${{ failure() }}
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            **:boom: Preview deployment failed!**
+
+            Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+  clean:
+    if: github.event.action == 'closed'
+    name: Clean
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: ${{ env.PREVIEW_EXTERNAL_REPOSITORY }}
+          ssh-key: ${{ secrets.PREVIEW_DEPLOY_KEY }}
+
+      - name: Clean preview
+        run: |
+          git config --local user.name 'github-actions[bot]'
+          git config --local user.email 'github-actions[bot]@users.noreply.github.com'
+
+          rm -fR pr-${{ github.event.pull_request.number }}
+
+          if ! git diff-index --quiet HEAD --; then
+            git add .
+            git commit -m "clean: pr-${{ github.event.pull_request.number }}"
+            git push
+          fi
