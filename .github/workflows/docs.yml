@@ -1,0 +1,35 @@
+name: Docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/docs.yml
+      - website/**
+      - docs/**
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Vale
+        run: |
+          sudo pip3 install gh-release-install
+          sudo gh-release-install \
+            errata-ai/vale \
+            vale_{version}_Linux_64-bit.tar.gz --extract vale \
+            /usr/local/bin/vale
+
+      - name: Add annotations matchers
+        run: |
+          echo "::add-matcher::.github/annotations/vale.json"
+
+      - name: Run Vale
+        run: |
+          make -C .github/vale/styles
+          vale --output line docs website/src/pages || true
