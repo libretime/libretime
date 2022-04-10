@@ -23,6 +23,13 @@ jobs:
           cache: yarn
           cache-dependency-path: ./website/yarn.lock
 
+      - uses: actions/cache@v3
+        with:
+          path: website/.docusaurus
+          key: docusaurus-main-${{ github.sha }}
+          restore-keys: |
+            docusaurus-main-
+
       - name: Install
         working-directory: website
         run: yarn install --frozen-lockfile
