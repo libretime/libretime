@@ -1,0 +1,81 @@
+name: Website Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches: [main]
+    paths:
+      - .github/workflows/website-preview.yml
+      - website/**
+      - docs/**
+
+env:
+  # PREVIEW_DEPLOY_KEY is present in the secrets
+  PREVIEW_EXTERNAL_REPOSITORY: libretime/libretime.github.io
+  PREVIEW_URL: https://libretime.github.io
+  PREVIEW_BASE_URL: /
+
+jobs:
+  deploy:
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: yarn
+          cache-dependency-path: ./website/yarn.lock
+
+      - uses: actions/cache@v3
+        with:
+          path: website/.docusaurus
+          key: docusaurus-${{ github.event.pull_request.number }}-${{ github.sha }}
+          restore-keys: |
+            docusaurus-${{ github.event.pull_request.number }}-
+
+      - name: Install
+        working-directory: website
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        working-directory: website
+        run: yarn build
+        env:
+          URL: ${{ env.PREVIEW_URL }}
+          BASE_URL: ${{ env.PREVIEW_BASE_URL }}pr-${{ github.event.pull_request.number }}/
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          external_repository: ${{ env.PREVIEW_EXTERNAL_REPOSITORY }}
+          deploy_key: ${{ secrets.PREVIEW_DEPLOY_KEY }}
+          publish_dir: website/build
+          destination_dir: pr-${{ github.event.pull_request.number }}
+          keep_files: true
+
+  clean:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    name: Clean
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: ${{ env.PREVIEW_EXTERNAL_REPOSITORY }}
+          ssh-key: ${{ secrets.PREVIEW_DEPLOY_KEY }}
+
+      - name: Clean preview
+        run: |
+          git config --global user.name github-actions
+          git config --global user.email github-actions@github.com
+
+          rm -fR pr-${{ github.event.pull_request.number }}
+
+          git add .
+          git commit -m "Clean pr-${{ github.event.pull_request.number }} preview"
+          git push

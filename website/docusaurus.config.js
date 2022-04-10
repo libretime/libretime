@@ -7,8 +7,8 @@ const vars = require("./vars");
 const config = {
   title: vars.title,
   tagline: vars.description,
-  url: vars.website,
-  baseUrl: "/",
+  url: process.env.URL || vars.website,
+  baseUrl: process.env.BASE_URL || "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "throw",
   favicon: "img/icon.svg",
