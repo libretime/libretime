@@ -770,14 +770,16 @@ if [ "$ignore_dependencies" = "f" ]; then
   loud "         * Installing External Dependencies *        "
   loud "-----------------------------------------------------"
 
-  if $is_ubuntu_dist; then
+  if [ -x /usr/bin/apt-get ]; then
+    loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -q update"
+
+    if $is_ubuntu_dist; then
       loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y install software-properties-common"
       loudCmd "add-apt-repository -y ppa:libretime/libretime"
-  fi
+      loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -q update"
+    fi
 
-  if [ -x /usr/bin/apt-get ]; then
     verbose "\n * Reading packages.ini files..."
-
     packages_files=(
       "${SCRIPT_DIR}/"
       "${SCRIPT_DIR}/legacy"
@@ -793,7 +795,6 @@ if [ "$ignore_dependencies" = "f" ]; then
     )
     set +e
 
-    loudCmd "apt-get -q update"
     loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y install $package_list"
     [[ "$in_place" == "t" ]] && loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y install git"
   else
