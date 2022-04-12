@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       pull-request-number:
-        description: "Pull request number from where the command was triggered"
+        description: "Pull request number to preview"
         required: true
         type: string
 
