@@ -18,8 +18,11 @@ shell-check:
 VERSION:
 	tools/version.sh
 
+bump-python-version: VERSION
+	tools/bump-python-version.sh
+
 .PHONY: tarball
-tarball: VERSION
+tarball: VERSION bump-python-version
 	$(MAKE) -C legacy build
 	cd .. && tar -czf libretime-$(shell cat VERSION | tr -d [:blank:]).tar.gz \
 		--owner=root --group=root \
