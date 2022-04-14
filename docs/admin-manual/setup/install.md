@@ -122,7 +122,17 @@ When upgrading be sure to run the installer using the same arguments you used du
 
 :::
 
-Once the installation is completed, open [http://localhost:80](http://localhost:80) to complete the [setup wizard](#setup-wizard).
+### Configure
+
+Once the installation is completed, edit the [configuration file](./configuration.md) at `/etc/airtime/airtime.conf` to match your needs.
+
+### Setup
+
+Once the configuration file is properly configured, run the migration to setup the database:
+
+```bash
+sudo -u www-data libretime-api migrate
+```
 
 :::note
 
