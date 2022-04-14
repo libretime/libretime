@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2021-10-15 19:56+0200\n"
-"PO-Revision-Date: 2022-03-08 06:55+0000\n"
-"Last-Translator: Maxime Leroy <lisacintosh@gmail.com>\n"
+"PO-Revision-Date: 2022-04-14 09:46+0000\n"
+"Last-Translator: Jonas L. <ljonas@riseup.net>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/libretime/legacy/"
 "fr/>\n"
 "Language: fr_FR\n"
@@ -1356,7 +1356,6 @@ msgstr "Propriétaire"
 #: application/controllers/LocaleController.php:107
 #: application/forms/SmartBlockCriteria.php:79
 #: application/models/Block.php:1468 application/models/Block.php:1564
-#, fuzzy
 msgid "Replay Gain"
 msgstr "Replay Gain"
 
@@ -1769,9 +1768,9 @@ msgstr ""
 "métadonnées incluent le titre de la piste, l'artiste et le nom de émission, "
 "et sont affichées dans un lecteur audio). VLC et mplayer ont un sérieux "
 "bogue lors de la lecture d'un flux Ogg / Vorbis qui affiche les informations "
-"de métadonnées: ils se déconnecteront après chaque chanson. Si vous utilisez "
-"un flux OGG et si vos auditeurs n'utilisent pas ces lecteurs audio, alors "
-"n'hésitez pas à activer cette option."
+"de métadonnées : ils se déconnecteront après chaque chanson. Si vous "
+"utilisez un flux OGG et si vos auditeurs n'utilisent pas ces lecteurs audio, "
+"alors n'hésitez pas à activer cette option."
 
 #: application/controllers/LocaleController.php:189
 msgid ""
@@ -3075,7 +3074,7 @@ msgstr "Mot de Passe personnalisé"
 
 #: application/forms/AddShowLiveStream.php:52
 msgid "Host:"
-msgstr "Hôte:"
+msgstr "Hôte :"
 
 #: application/forms/AddShowLiveStream.php:59
 msgid "Port:"
@@ -3461,7 +3460,7 @@ msgstr "Durée du fondu enchaîné (en sec) :"
 #: application/forms/GeneralPreferences.php:98
 #: application/forms/LiveStreamingPreferences.php:35
 msgid "Please enter a time in seconds (eg. 0.5)"
-msgstr "Veuillez entrer un temps en secondes (ex.: 0.5)"
+msgstr "Veuillez entrer un temps en secondes (ex. 0.5)"
 
 #: application/forms/GeneralPreferences.php:78
 msgid "Default Fade In (s):"
@@ -3473,15 +3472,15 @@ msgstr "Fondu en Sortie par défaut (en sec) :"
 
 #: application/forms/GeneralPreferences.php:104
 msgid "Track Type Upload Default"
-msgstr ""
+msgstr "Type de piste par défaut"
 
 #: application/forms/GeneralPreferences.php:111
 msgid "Intro Autoloading Playlist"
-msgstr ""
+msgstr "Playlist automatique d'intro"
 
 #: application/forms/GeneralPreferences.php:117
 msgid "Outro Autoloading Playlist"
-msgstr ""
+msgstr "Playlist automatique d'outro"
 
 #: application/forms/GeneralPreferences.php:123
 msgid "Overwrite Podcast Episode Metatags"
@@ -3567,7 +3566,6 @@ msgid "Display login button on your Radio Page?"
 msgstr "Afficher le bouton de connexion sur votre page radio ?"
 
 #: application/forms/GeneralPreferences.php:215
-#, fuzzy
 msgid "Feature Previews"
 msgstr "Aperçus de fonctionnalités"
 
@@ -3603,9 +3601,8 @@ msgid "Only numbers are allowed."
 msgstr "Seuls les chiffres sont autorisés."
 
 #: application/forms/LiveStreamingPreferences.php:92
-#, fuzzy
 msgid "Master Source Mount:"
-msgstr "Point de montage - Source Maître :"
+msgstr "Point de montage principal :"
 
 #: application/forms/LiveStreamingPreferences.php:103
 msgid "Show Source Host:"
@@ -3941,7 +3938,7 @@ msgstr "La Valeur ne peut pas être vide"
 
 #: application/forms/StreamSetting.php:25
 msgid "Hardware Audio Output:"
-msgstr "Sortie audio matérielle:"
+msgstr "Sortie audio matérielle :"
 
 #: application/forms/StreamSetting.php:33
 msgid "Output Type"
@@ -3977,7 +3974,7 @@ msgstr "Icecast Metadata Vorbis"
 
 #: application/forms/StreamSetting.php:58
 msgid "Stream Label:"
-msgstr "Label du Flux:"
+msgstr "Label du Flux :"
 
 #: application/forms/StreamSetting.php:59
 msgid "Artist - Title"
@@ -4005,7 +4002,7 @@ msgstr "Modifier le Niveau du Gain"
 
 #: application/forms/StreamSetting.php:90
 msgid "Streaming Server:"
-msgstr "Serveur de Streaming:"
+msgstr "Serveur de Streaming :"
 
 #: application/forms/StreamSetting.php:91
 msgid "Custom / 3rd Party Streaming"
@@ -4017,27 +4014,27 @@ msgstr "Streaming par défaut"
 
 #: application/forms/StreamSettingSubForm.php:52
 msgid "Enabled:"
-msgstr "Activé:"
+msgstr "Activé :"
 
 #: application/forms/StreamSettingSubForm.php:60
 msgid "Mobile:"
-msgstr "Mobile:"
+msgstr "Mobile :"
 
 #: application/forms/StreamSettingSubForm.php:67
 msgid "Stream Type:"
-msgstr "Type de Flux:"
+msgstr "Type de Flux :"
 
 #: application/forms/StreamSettingSubForm.php:76
 msgid "Bit Rate:"
-msgstr "Débit:"
+msgstr "Débit :"
 
 #: application/forms/StreamSettingSubForm.php:85
 msgid "Service Type:"
-msgstr "Type de service:"
+msgstr "Type de service :"
 
 #: application/forms/StreamSettingSubForm.php:94
 msgid "Channels:"
-msgstr "Cannaux:"
+msgstr "Canaux :"
 
 #: application/forms/StreamSettingSubForm.php:95
 msgid "1 - Mono"
@@ -4089,19 +4086,19 @@ msgstr "Le Point de Montage ne peut être vide avec un serveur Icecast."
 
 #: application/forms/TuneInPreferences.php:20
 msgid "Push metadata to your station on TuneIn?"
-msgstr "Pousser les métadonnées sur votre station sur TuneIn?"
+msgstr "Pousser les métadonnées sur votre station sur TuneIn ?"
 
 #: application/forms/TuneInPreferences.php:25
 msgid "Station ID:"
-msgstr "Identifiant de la station:"
+msgstr "Identifiant de la station :"
 
 #: application/forms/TuneInPreferences.php:31
 msgid "Partner Key:"
-msgstr "Clé partenaire:"
+msgstr "Clé partenaire :"
 
 #: application/forms/TuneInPreferences.php:37
 msgid "Partner Id:"
-msgstr "ID partenaire:"
+msgstr "ID partenaire :"
 
 #: application/forms/TuneInPreferences.php:78
 #: application/forms/TuneInPreferences.php:87
@@ -4114,11 +4111,11 @@ msgstr ""
 
 #: application/forms/WatchedDirPreferences.php:13
 msgid "Import Folder:"
-msgstr "Répertoire d'importation:"
+msgstr "Répertoire d'importation :"
 
 #: application/forms/WatchedDirPreferences.php:24
 msgid "Watched Folders:"
-msgstr "Répertoires Suveillés:"
+msgstr "Répertoires Surveillés :"
 
 #: application/forms/WatchedDirPreferences.php:39
 msgid "Not a valid Directory"
@@ -4165,7 +4162,7 @@ msgid ""
 msgstr ""
 "Bonjour %s , \n"
 "\n"
-"Veuillez cliquer sur ce lien pour réinitialiser votre mot de passe: "
+"Veuillez cliquer sur ce lien pour réinitialiser votre mot de passe : "
 
 #: application/models/Auth.php:35
 #, php-format
@@ -4176,7 +4173,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"En cas de problèmes, contactez notre équipe de support: %s"
+"En cas de problèmes, contactez notre équipe de support : %s"
 
 #: application/models/Auth.php:36
 #, php-format
@@ -4232,12 +4229,12 @@ msgstr "%s déjà examiné(s)."
 #: application/models/MusicDir.php:173
 #, php-format
 msgid "%s contains nested watched directory: %s"
-msgstr "%s contient un répertoire surveillé imbriqué: %s"
+msgstr "%s contient un répertoire surveillé imbriqué : %s"
 
 #: application/models/MusicDir.php:177
 #, php-format
 msgid "%s is nested within existing watched directory: %s"
-msgstr "%s est imbriqué avec un répertoire surveillé existant: %s"
+msgstr "%s est imbriqué avec un répertoire surveillé existant : %s"
 
 #: application/models/MusicDir.php:201 application/models/MusicDir.php:386
 #, php-format
@@ -4285,17 +4282,17 @@ msgstr "Vous ne pouvez pas déplacer les éléments sur les émissions liées"
 #: application/models/Scheduler.php:127
 msgid "The schedule you're viewing is out of date! (sched mismatch)"
 msgstr ""
-"Le calendrier que vous consultez n'est pas à jour! (décalage calendaire)"
+"Le calendrier que vous consultez n'est pas à jour ! (décalage calendaire)"
 
 #: application/models/Scheduler.php:132
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
 msgstr ""
-"La programmation que vous consultez n'est pas à jour! (décalage d'instance)"
+"La programmation que vous consultez n'est pas à jour ! (décalage d'instance)"
 
 #: application/models/Scheduler.php:140 application/models/Scheduler.php:492
 #: application/models/Scheduler.php:532 application/models/Scheduler.php:573
 msgid "The schedule you're viewing is out of date!"
-msgstr "Le calendrier que vous consultez n'est pas à jour!"
+msgstr "Le calendrier que vous consultez n'est pas à jour !"
 
 #: application/models/Scheduler.php:149
 #, php-format
@@ -4314,7 +4311,7 @@ msgstr "L émission %s est terminé et ne peut pas être programmé."
 #: application/models/Scheduler.php:167
 #, php-format
 msgid "The show %s has been previously updated!"
-msgstr "L'émission %s a été précédemment mise à jour!"
+msgstr "L'émission %s a été précédemment mise à jour !"
 
 #: application/models/Scheduler.php:187
 msgid "Content in linked shows cannot be changed while on air!"
@@ -4330,7 +4327,7 @@ msgstr ""
 
 #: application/models/Scheduler.php:228 application/models/Scheduler.php:320
 msgid "A selected File does not exist!"
-msgstr "Un fichier sélectionne n'existe pas!"
+msgstr "Un fichier sélectionne n'existe pas !"
 
 #: application/models/Show.php:229
 msgid "Shows can have a max length of 24 hours."
@@ -4342,7 +4339,7 @@ msgid ""
 "Note: Resizing a repeating show affects all of its repeats."
 msgstr ""
 "Ne peux pas programmer des émissions qui se chevauchent. \n"
-"Remarque: Le redimensionnement d'une émission répétée affecte l'ensemble de "
+"Remarque : Le redimensionnement d'une émission répétée affecte l'ensemble de "
 "ses répétitions."
 
 #: application/models/ShowBuilder.php:210
@@ -4393,7 +4390,7 @@ msgstr "Flux Web Invalide - Ceci semble être un fichier téléchargeable."
 #: application/models/Webstream.php:331
 #, php-format
 msgid "Unrecognized stream type: %s"
-msgstr "Type de flux non reconnu: %s"
+msgstr "Type de flux non reconnu : %s"
 
 #: application/services/CalendarService.php:48
 msgid "Record file doesn't exist"
@@ -4462,7 +4459,7 @@ msgstr ""
 msgid "Show was deleted because recorded show does not exist!"
 msgstr ""
 "L'émission a été effacée parce que l'enregistrement de l'émission n'existe "
-"pas!"
+"pas !"
 
 #: application/services/CalendarService.php:342
 msgid "Must wait 1 hour to rebroadcast."
@@ -4489,7 +4486,7 @@ msgid ""
 "Couldn't connect to RabbitMQ server! Please check if the server is running "
 "and your credentials are correct."
 msgstr ""
-"Impossible de se connecter au serveur RabbitMQ! Veuillez vérifier si le "
+"Impossible de se connecter au serveur RabbitMQ ! Veuillez vérifier si le "
 "serveur est en cours d'exécution et que vos informations d'identification "
 "sont correctes."
 
