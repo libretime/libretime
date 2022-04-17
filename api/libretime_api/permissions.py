@@ -1,3 +1,5 @@
+from secrets import compare_digest
+
 from django.conf import settings
 from rest_framework.permissions import BasePermission
 
@@ -53,8 +55,7 @@ def check_authorization_header(request):
 
     if auth_header.startswith("Api-Key"):
         token = auth_header.split()[1]
-        if token == settings.CONFIG.general.api_key:
-            return True
+        return compare_digest(token, settings.CONFIG.general.api_key)
     return False
 
 
