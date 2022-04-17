@@ -1,6 +1,8 @@
 <?php
 
 // THIS FILE IS NOT MEANT FOR CUSTOMIZING.
+use League\Uri\Contracts\UriException;
+use League\Uri\Uri;
 
 class Config
 {
@@ -17,12 +19,24 @@ class Config
         // //////////////////////////////////////////////////////////////////////////////
         $CC_CONFIG['apiKey'] = [$values['general']['api_key']];
 
-        // Base URL
-        $CC_CONFIG['protocol'] = $values['general']['protocol'] ?? '';
-        $CC_CONFIG['baseDir'] = $values['general']['base_dir'];
-        $CC_CONFIG['baseUrl'] = $values['general']['base_url'];
-        $CC_CONFIG['basePort'] = $values['general']['base_port'];
-        $CC_CONFIG['forceSSL'] = Config::isYesValue($values['general']['force_ssl'] ?? false);
+        // Explode public_url into multiple component with possible defaults for required fields
+        try {
+            $public_url = Uri::createFromString($values['general']['public_url']);
+        } catch (UriException $e) {
+            echo 'could not parse configuration field general.public_url: ' . $e->getMessage();
+
+            exit;
+        }
+
+        $scheme = $public_url->getScheme() ?? 'http';
+        $host = $public_url->getHost() ?? 'localhost';
+        $port = $public_url->getPort() ?? ($scheme == 'https' ? 443 : 80);
+        $path = rtrim($public_url->getPath() ?? '', '/') . '/'; // Path requires a trailing slash
+
+        $CC_CONFIG['protocol'] = $scheme;
+        $CC_CONFIG['baseUrl'] = $host;
+        $CC_CONFIG['basePort'] = $port;
+        $CC_CONFIG['baseDir'] = $path;
 
         $CC_CONFIG['dev_env'] = $values['general']['dev_env'] ?? 'production';
         $CC_CONFIG['auth'] = $values['general']['auth'] ?? 'local';

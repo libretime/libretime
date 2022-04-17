@@ -17,8 +17,7 @@ class GeneralSetup extends Setup
     protected static $_properties;
 
     // Constant form field names for passing errors back to the front-end
-    public const GENERAL_PORT = 'generalPort';
-    public const GENERAL_HOST = 'generalHost';
+    public const PUBLIC_URL = 'publicUrl';
     public const CORS_URL = 'corsUrl';
 
     public static $cors_url;
@@ -31,8 +30,7 @@ class GeneralSetup extends Setup
     {
         self::$_properties = [
             'api_key' => $this->generateRandomString(),
-            'base_url' => $settings[self::GENERAL_HOST],
-            'base_port' => $settings[self::GENERAL_PORT],
+            'public_url' => $settings[self::PUBLIC_URL],
             'cors_url' => $settings[self::CORS_URL],
         ];
         self::$cors_url = $settings[self::CORS_URL];

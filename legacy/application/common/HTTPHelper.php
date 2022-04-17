@@ -1,5 +1,7 @@
 <?php
 
+use League\Uri\Uri;
+
 class Application_Common_HTTPHelper
 {
     /**
@@ -30,11 +32,16 @@ class Application_Common_HTTPHelper
     public static function getStationUrl($secured = true)
     {
         $CC_CONFIG = Config::getConfig();
-        $baseUrl = $CC_CONFIG['baseUrl'];
-        $baseDir = $CC_CONFIG['baseDir'];
-        $basePort = $CC_CONFIG['basePort'];
-        $forceSSL = $CC_CONFIG['forceSSL'];
-        $configProtocol = $CC_CONFIG['protocol'];
+
+        $url = Uri::createFromComponents(
+            [
+                'scheme' => $CC_CONFIG['protocol'],
+                'host' => $CC_CONFIG['baseUrl'],
+                'port' => $CC_CONFIG['basePort'],
+                'path' => $CC_CONFIG['baseDir'],
+            ]
+        );
+
         if (empty($baseDir)) {
             $baseDir = '/';
         }
@@ -45,26 +52,7 @@ class Application_Common_HTTPHelper
             $baseDir = $baseDir . '/';
         }
 
-        // Set in reverse order of preference. ForceSSL configuration takes absolute preference, then
-        // the protocol set in config. If neither are set, the port is used to determine the scheme
-        $scheme = 'http';
-        if ($secured && $basePort == '443') {
-            $scheme = 'https';
-        }
-        if (!empty($configProtocol)) {
-            $scheme = $configProtocol;
-        }
-        if ($forceSSL) {
-            $scheme = 'https';
-        }
-
-        $portStr = '';
-        if (($scheme == 'http' && $basePort !== '80')
-            || ($scheme == 'https' && $basePort !== '443')) {
-            $portStr = ":{$basePort}";
-        }
-
-        return "{$scheme}://{$baseUrl}{$portStr}{$baseDir}";
+        return rtrim($url, '/') . '/';
     }
 
     /**
@@ -114,7 +102,7 @@ class ZendActionHttpException extends Exception
         Exception $previous = null
     ) {
         Logging::error('Error in action ' . $action->getRequest()->getActionName()
-                      . " with status code {$statusCode}: {$message}");
+            . " with status code {$statusCode}: {$message}");
         $action->getResponse()
             ->setHttpResponseCode($statusCode)
             ->appendBody($message);

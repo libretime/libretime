@@ -3,12 +3,11 @@ from configparser import ConfigParser
 from os import environ
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
-from urllib.parse import urlunsplit
 
 from loguru import logger
 
 # pylint: disable=no-name-in-module
-from pydantic import BaseModel, ValidationError
+from pydantic import AnyHttpUrl, BaseModel, ValidationError
 from pydantic.fields import ModelField
 from pydantic.utils import deep_update
 from yaml import YAMLError, safe_load
@@ -108,25 +107,8 @@ class BaseConfig(BaseModel):
 
 # pylint: disable=too-few-public-methods
 class GeneralConfig(BaseModel):
+    public_url: AnyHttpUrl
     api_key: str
-
-    protocol: str = "http"
-    base_url: str = "localhost"
-    base_port: Optional[int]
-    base_dir: str = "/"
-    force_ssl: bool = False
-
-    @property
-    def public_url(self) -> str:
-        scheme = "https" if self.force_ssl else self.protocol
-
-        location = self.base_url
-        if self.base_port is not None:
-            location += f":{self.base_port}"
-
-        path = self.base_dir.rstrip("/")
-
-        return urlunsplit((scheme, location, path, None, None))
 
 
 # pylint: disable=too-few-public-methods
