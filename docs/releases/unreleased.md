@@ -46,6 +46,14 @@ sudo apt purge \
     uwsgi-plugin-python3
 ```
 
+### New configuration schema
+
+The configuration schema was updated.
+
+The `general` section has been changed:
+
+- the `general.protocol`, `general.base_url`, `general.base_port`, `general.base_dir` and `general.force_ssl` entries were replaced with a single `general.public_url` entry, be sure to use a valid url with the new configuration entry.
+
 ## :warning: Known issues
 
 The following issues may need a workaround for the time being. Please search the [issues](https://github.com/libretime/libretime/issues) before reporting problems not listed below.

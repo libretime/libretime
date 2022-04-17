@@ -11,10 +11,8 @@ def config_filepath(tmp_path: Path):
     filepath.write_text(
         """
 [general]
+public_url = http://localhost/test
 api_key = TEST_KEY
-base_dir = /test
-base_port = 80
-base_url = localhost
 """
     )
     return filepath
