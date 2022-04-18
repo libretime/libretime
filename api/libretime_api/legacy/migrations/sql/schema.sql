@@ -1,22 +1,5 @@
 
 -----------------------------------------------------------------------
--- cc_music_dirs
------------------------------------------------------------------------
-
-DROP TABLE IF EXISTS "cc_music_dirs" CASCADE;
-
-CREATE TABLE "cc_music_dirs"
-(
-    "id" serial NOT NULL,
-    "directory" TEXT,
-    "type" VARCHAR(255),
-    "exists" BOOLEAN DEFAULT 't',
-    "watched" BOOLEAN DEFAULT 't',
-    PRIMARY KEY ("id"),
-    CONSTRAINT "cc_music_dir_unique" UNIQUE ("directory")
-);
-
------------------------------------------------------------------------
 -- cc_files
 -----------------------------------------------------------------------
 
@@ -28,7 +11,6 @@ CREATE TABLE "cc_files"
     "name" VARCHAR(255) DEFAULT '' NOT NULL,
     "mime" VARCHAR(255) DEFAULT '' NOT NULL,
     "ftype" VARCHAR(128) DEFAULT '' NOT NULL,
-    "directory" INTEGER,
     "filepath" TEXT DEFAULT '',
     "import_status" INTEGER DEFAULT 1 NOT NULL,
     "currentlyaccessing" INTEGER DEFAULT 0 NOT NULL,
@@ -791,10 +773,6 @@ ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_owner_fkey"
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey"
     FOREIGN KEY ("editedby")
     REFERENCES "cc_subjs" ("id");
-
-ALTER TABLE "cc_files" ADD CONSTRAINT "cc_music_dirs_folder_fkey"
-    FOREIGN KEY ("directory")
-    REFERENCES "cc_music_dirs" ("id");
 
 ALTER TABLE "cloud_file" ADD CONSTRAINT "cloud_file_FK_1"
     FOREIGN KEY ("cc_file_id")

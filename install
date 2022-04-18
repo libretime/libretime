@@ -396,7 +396,6 @@ info "creating project directories"
 mkdir_and_chown "$LIBRETIME_USER" "$CONFIG_DIR"
 mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR"
 mkdir_and_chown "$LIBRETIME_USER" "$LOG_DIR"
-mkdir_and_chown "$LIBRETIME_USER" "$STORAGE_DIR"
 
 if $is_first_install; then
   [[ -f "$CONFIG_TMP_FILEPATH" ]] || cp "$CONFIG_EXAMPLE_FILEPATH" "$CONFIG_TMP_FILEPATH"
@@ -406,6 +405,9 @@ if $is_first_install; then
     set_config "$LIBRETIME_PUBLIC_URL" general public_url
   fi
   set_config "$(generate_random_password)" general api_key
+
+  mkdir_and_chown "$LIBRETIME_USER" "$STORAGE_DIR"
+  set_config "$STORAGE_DIR" storage path
 fi
 
 # PostgreSQL

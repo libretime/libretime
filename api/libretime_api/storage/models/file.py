@@ -5,9 +5,6 @@ class File(models.Model):
     name = models.CharField(max_length=255)
     mime = models.CharField(max_length=255)
     ftype = models.CharField(max_length=128)
-    directory = models.ForeignKey(
-        "MusicDir", models.DO_NOTHING, db_column="directory", blank=True, null=True
-    )
     filepath = models.TextField(blank=True, null=True)
     import_status = models.IntegerField()
     currently_accessing = models.IntegerField(db_column="currentlyaccessing")

@@ -5,7 +5,7 @@ from django.utils import dateparse
 from model_bakery import baker
 from rest_framework.test import APITestCase
 
-from ...._fixtures import AUDIO_FILENAME, fixture_path
+from ...._fixtures import AUDIO_FILENAME
 
 
 class TestScheduleViewSet(APITestCase):
@@ -15,13 +15,8 @@ class TestScheduleViewSet(APITestCase):
         cls.token = settings.CONFIG.general.api_key
 
     def test_schedule_item_full_length(self):
-        music_dir = baker.make(
-            "storage.MusicDir",
-            directory=str(fixture_path),
-        )
         file = baker.make(
             "storage.File",
-            directory=music_dir,
             mime="audio/mp3",
             filepath=AUDIO_FILENAME,
             length=timedelta(seconds=40.86),
@@ -51,13 +46,8 @@ class TestScheduleViewSet(APITestCase):
         self.assertEqual(dateparse.parse_duration(result[0]["cue_out"]), file.cueout)
 
     def test_schedule_item_trunc(self):
-        music_dir = baker.make(
-            "storage.MusicDir",
-            directory=str(fixture_path),
-        )
         file = baker.make(
             "storage.File",
-            directory=music_dir,
             mime="audio/mp3",
             filepath=AUDIO_FILENAME,
             length=timedelta(seconds=40.86),
@@ -88,13 +78,8 @@ class TestScheduleViewSet(APITestCase):
         )
 
     def test_schedule_item_invalid(self):
-        music_dir = baker.make(
-            "storage.MusicDir",
-            directory=str(fixture_path),
-        )
         file = baker.make(
             "storage.File",
-            directory=music_dir,
             mime="audio/mp3",
             filepath=AUDIO_FILENAME,
             length=timedelta(seconds=40.86),
@@ -134,13 +119,8 @@ class TestScheduleViewSet(APITestCase):
         self.assertEqual(dateparse.parse_duration(result[0]["cue_out"]), file.cueout)
 
     def test_schedule_item_range(self):
-        music_dir = baker.make(
-            "storage.MusicDir",
-            directory=str(fixture_path),
-        )
         file = baker.make(
             "storage.File",
-            directory=music_dir,
             mime="audio/mp3",
             filepath=AUDIO_FILENAME,
             length=timedelta(seconds=40.86),

@@ -417,11 +417,11 @@ class LibraryController extends Zend_Controller_Action
                 $file = Application_Model_StoredFile::RecallById($id);
                 $this->view->type = $type;
                 $md = $file->getMetadata();
+                $storagePath = Config::getStoragePath();
 
                 foreach ($md as $key => $value) {
                     if ($key == 'MDATA_KEY_DIRECTORY' && !is_null($value)) {
-                        $musicDir = Application_Model_MusicDir::getDirByPK($value);
-                        $md['MDATA_KEY_FILEPATH'] = Application_Common_OsPath::join($musicDir->getDirectory(), $md['MDATA_KEY_FILEPATH']);
+                        $md['MDATA_KEY_FILEPATH'] = Application_Common_OsPath::join($storagePath, $md['MDATA_KEY_FILEPATH']);
                     }
                 }
 

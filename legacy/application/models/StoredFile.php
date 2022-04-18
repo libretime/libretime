@@ -498,14 +498,11 @@ SQL;
      */
     public function setFilePath($p_filepath)
     {
-        $path_info = Application_Model_MusicDir::splitFilePath($p_filepath);
+        $path_info = Application_Common_Storage::splitFilePath($p_filepath);
 
         if (is_null($path_info)) {
             return -1;
         }
-        $musicDir = Application_Model_MusicDir::getDirByPath($path_info[0]);
-
-        $this->_file->setDbDirectory($musicDir->getId());
         $this->_file->setDbFilepath($path_info[1]);
         $this->_file->save($this->_con);
     }
@@ -650,15 +647,13 @@ SQL;
      */
     public static function RecallByFilepath($p_filepath, $con)
     {
-        $path_info = Application_Model_MusicDir::splitFilePath($p_filepath);
+        $path_info = Application_Common_Storage::splitFilePath($p_filepath);
 
         if (is_null($path_info)) {
             return null;
         }
 
-        $music_dir = Application_Model_MusicDir::getDirByPath($path_info[0]);
         $file = CcFilesQuery::create()
-            ->filterByDbDirectory($music_dir->getId())
             ->filterByDbFilepath($path_info[1])
             ->findOne($con);
 
@@ -667,15 +662,13 @@ SQL;
 
     public static function RecallByPartialFilepath($partial_path, $con)
     {
-        $path_info = Application_Model_MusicDir::splitFilePath($partial_path);
+        $path_info = Application_Common_Storage::splitFilePath($partial_path);
 
         if (is_null($path_info)) {
             return null;
         }
-        $music_dir = Application_Model_MusicDir::getDirByPath($path_info[0]);
 
         $files = CcFilesQuery::create()
-            ->filterByDbDirectory($music_dir->getId())
             ->filterByDbFilepath("{$path_info[1]}%")
             ->find($con);
         $res = [];
@@ -848,8 +841,7 @@ SQL;
         $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
         $utcTimezone = new DateTimeZone('UTC');
 
-        $storDir = Application_Model_MusicDir::getStorDir();
-        $fp = $storDir->getDirectory();
+        $fp = Config::getStoragePath();
 
         foreach ($results['aaData'] as &$row) {
             $row['id'] = intval($row['id']);
@@ -951,8 +943,7 @@ SQL;
     {
         $audio_file = $tempFilePath;
 
-        $storDir = Application_Model_MusicDir::getStorDir();
-        $stor = $storDir->getDirectory();
+        $stor = Config::getStoragePath();
         // check if "organize" dir exists and if not create one
         if (!file_exists($stor . '/organize')) {
             if (!mkdir($stor . '/organize', 0777)) {

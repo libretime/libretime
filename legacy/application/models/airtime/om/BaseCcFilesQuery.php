@@ -10,7 +10,6 @@
  * @method CcFilesQuery orderByDbName($order = Criteria::ASC) Order by the name column
  * @method CcFilesQuery orderByDbMime($order = Criteria::ASC) Order by the mime column
  * @method CcFilesQuery orderByDbFtype($order = Criteria::ASC) Order by the ftype column
- * @method CcFilesQuery orderByDbDirectory($order = Criteria::ASC) Order by the directory column
  * @method CcFilesQuery orderByDbFilepath($order = Criteria::ASC) Order by the filepath column
  * @method CcFilesQuery orderByDbImportStatus($order = Criteria::ASC) Order by the import_status column
  * @method CcFilesQuery orderByDbCurrentlyaccessing($order = Criteria::ASC) Order by the currentlyaccessing column
@@ -80,7 +79,6 @@
  * @method CcFilesQuery groupByDbName() Group by the name column
  * @method CcFilesQuery groupByDbMime() Group by the mime column
  * @method CcFilesQuery groupByDbFtype() Group by the ftype column
- * @method CcFilesQuery groupByDbDirectory() Group by the directory column
  * @method CcFilesQuery groupByDbFilepath() Group by the filepath column
  * @method CcFilesQuery groupByDbImportStatus() Group by the import_status column
  * @method CcFilesQuery groupByDbCurrentlyaccessing() Group by the currentlyaccessing column
@@ -158,10 +156,6 @@
  * @method CcFilesQuery rightJoinCcSubjsRelatedByDbEditedby($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSubjsRelatedByDbEditedby relation
  * @method CcFilesQuery innerJoinCcSubjsRelatedByDbEditedby($relationAlias = null) Adds a INNER JOIN clause to the query using the CcSubjsRelatedByDbEditedby relation
  *
- * @method CcFilesQuery leftJoinCcMusicDirs($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcMusicDirs relation
- * @method CcFilesQuery rightJoinCcMusicDirs($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcMusicDirs relation
- * @method CcFilesQuery innerJoinCcMusicDirs($relationAlias = null) Adds a INNER JOIN clause to the query using the CcMusicDirs relation
- *
  * @method CcFilesQuery leftJoinCloudFile($relationAlias = null) Adds a LEFT JOIN clause to the query using the CloudFile relation
  * @method CcFilesQuery rightJoinCloudFile($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CloudFile relation
  * @method CcFilesQuery innerJoinCloudFile($relationAlias = null) Adds a INNER JOIN clause to the query using the CloudFile relation
@@ -200,7 +194,6 @@
  * @method CcFiles findOneByDbName(string $name) Return the first CcFiles filtered by the name column
  * @method CcFiles findOneByDbMime(string $mime) Return the first CcFiles filtered by the mime column
  * @method CcFiles findOneByDbFtype(string $ftype) Return the first CcFiles filtered by the ftype column
- * @method CcFiles findOneByDbDirectory(int $directory) Return the first CcFiles filtered by the directory column
  * @method CcFiles findOneByDbFilepath(string $filepath) Return the first CcFiles filtered by the filepath column
  * @method CcFiles findOneByDbImportStatus(int $import_status) Return the first CcFiles filtered by the import_status column
  * @method CcFiles findOneByDbCurrentlyaccessing(int $currentlyaccessing) Return the first CcFiles filtered by the currentlyaccessing column
@@ -270,7 +263,6 @@
  * @method array findByDbName(string $name) Return CcFiles objects filtered by the name column
  * @method array findByDbMime(string $mime) Return CcFiles objects filtered by the mime column
  * @method array findByDbFtype(string $ftype) Return CcFiles objects filtered by the ftype column
- * @method array findByDbDirectory(int $directory) Return CcFiles objects filtered by the directory column
  * @method array findByDbFilepath(string $filepath) Return CcFiles objects filtered by the filepath column
  * @method array findByDbImportStatus(int $import_status) Return CcFiles objects filtered by the import_status column
  * @method array findByDbCurrentlyaccessing(int $currentlyaccessing) Return CcFiles objects filtered by the currentlyaccessing column
@@ -442,7 +434,7 @@ abstract class BaseCcFilesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "name", "mime", "ftype", "directory", "filepath", "import_status", "currentlyaccessing", "editedby", "mtime", "utime", "lptime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist", "filesize", "description", "artwork", "track_type" FROM "cc_files" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "name", "mime", "ftype", "filepath", "import_status", "currentlyaccessing", "editedby", "mtime", "utime", "lptime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist", "filesize", "description", "artwork", "track_type" FROM "cc_files" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -658,50 +650,6 @@ abstract class BaseCcFilesQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CcFilesPeer::FTYPE, $dbFtype, $comparison);
-    }
-
-    /**
-     * Filter the query on the directory column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByDbDirectory(1234); // WHERE directory = 1234
-     * $query->filterByDbDirectory(array(12, 34)); // WHERE directory IN (12, 34)
-     * $query->filterByDbDirectory(array('min' => 12)); // WHERE directory >= 12
-     * $query->filterByDbDirectory(array('max' => 12)); // WHERE directory <= 12
-     * </code>
-     *
-     * @see       filterByCcMusicDirs()
-     *
-     * @param     mixed $dbDirectory The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return CcFilesQuery The current query, for fluid interface
-     */
-    public function filterByDbDirectory($dbDirectory = null, $comparison = null)
-    {
-        if (is_array($dbDirectory)) {
-            $useMinMax = false;
-            if (isset($dbDirectory['min'])) {
-                $this->addUsingAlias(CcFilesPeer::DIRECTORY, $dbDirectory['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($dbDirectory['max'])) {
-                $this->addUsingAlias(CcFilesPeer::DIRECTORY, $dbDirectory['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(CcFilesPeer::DIRECTORY, $dbDirectory, $comparison);
     }
 
     /**
@@ -2889,82 +2837,6 @@ abstract class BaseCcFilesQuery extends ModelCriteria
         return $this
             ->joinCcSubjsRelatedByDbEditedby($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'CcSubjsRelatedByDbEditedby', 'CcSubjsQuery');
-    }
-
-    /**
-     * Filter the query by a related CcMusicDirs object
-     *
-     * @param   CcMusicDirs|PropelObjectCollection $ccMusicDirs The related object(s) to use as filter
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return                 CcFilesQuery The current query, for fluid interface
-     * @throws PropelException - if the provided filter is invalid.
-     */
-    public function filterByCcMusicDirs($ccMusicDirs, $comparison = null)
-    {
-        if ($ccMusicDirs instanceof CcMusicDirs) {
-            return $this
-                ->addUsingAlias(CcFilesPeer::DIRECTORY, $ccMusicDirs->getId(), $comparison);
-        } elseif ($ccMusicDirs instanceof PropelObjectCollection) {
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-
-            return $this
-                ->addUsingAlias(CcFilesPeer::DIRECTORY, $ccMusicDirs->toKeyValue('PrimaryKey', 'Id'), $comparison);
-        } else {
-            throw new PropelException('filterByCcMusicDirs() only accepts arguments of type CcMusicDirs or PropelCollection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the CcMusicDirs relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return CcFilesQuery The current query, for fluid interface
-     */
-    public function joinCcMusicDirs($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('CcMusicDirs');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'CcMusicDirs');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the CcMusicDirs relation CcMusicDirs object
-     *
-     * @see       useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   CcMusicDirsQuery A secondary query class using the current class as primary query
-     */
-    public function useCcMusicDirsQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinCcMusicDirs($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'CcMusicDirs', 'CcMusicDirsQuery');
     }
 
     /**

@@ -1,5 +1,6 @@
 import os
 
+from django.conf import settings
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
@@ -20,7 +21,5 @@ class FileViewSet(viewsets.ModelViewSet):
         pk = IntegerField().to_internal_value(data=pk)
 
         file = get_object_or_404(File, pk=pk)
-        storage = file.directory
-        path = os.path.join(storage.directory, file.filepath)
-
+        path = os.path.join(settings.CONFIG.storage.path, file.filepath)
         return FileResponse(open(path, "rb"), content_type=file.mime)
