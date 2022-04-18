@@ -1,7 +1,7 @@
 import sys
 from os import environ
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from loguru import logger
 
@@ -62,11 +62,18 @@ class BaseConfig(BaseModel):
             env_name = (env_prefix + field.name).upper()
 
             if field.is_complex():
-                children = self._get_fields_from_env(
-                    env_name,
-                    env_delimiter,
-                    field.type_.__fields__,
-                )
+                children: Union[List[Any], Dict[str, Any]] = []
+
+                if field.sub_fields:
+                    if env_name in environ:
+                        children = [v.strip() for v in environ[env_name].split(",")]
+
+                else:
+                    children = self._get_fields_from_env(
+                        env_name,
+                        env_delimiter,
+                        field.type_.__fields__,
+                    )
 
                 if len(children) != 0:
                     result[field.name] = children
