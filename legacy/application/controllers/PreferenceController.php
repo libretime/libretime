@@ -380,58 +380,6 @@ class PreferenceController extends Zend_Controller_Action
         $this->_helper->json->sendJson($result);
     }
 
-    public function changeStorDirectoryAction()
-    {
-        $chosen = $this->getRequest()->getParam('dir');
-        $element = $this->getRequest()->getParam('element');
-        $watched_dirs_form = new Application_Form_WatchedDirPreferences();
-
-        $res = Application_Model_MusicDir::setStorDir($chosen);
-        if ($res['code'] != 0) {
-            $watched_dirs_form->populate(['storageFolder' => $chosen]);
-            $watched_dirs_form->getElement($element)->setErrors([$res['error']]);
-        }
-
-        $this->view->subform = $watched_dirs_form->render();
-    }
-
-    public function reloadWatchDirectoryAction()
-    {
-        $chosen = $this->getRequest()->getParam('dir');
-        $element = $this->getRequest()->getParam('element');
-        $watched_dirs_form = new Application_Form_WatchedDirPreferences();
-
-        $res = Application_Model_MusicDir::addWatchedDir($chosen);
-        if ($res['code'] != 0) {
-            $watched_dirs_form->populate(['watchedFolder' => $chosen]);
-            $watched_dirs_form->getElement($element)->setErrors([$res['error']]);
-        }
-
-        $this->view->subform = $watched_dirs_form->render();
-    }
-
-    public function rescanWatchDirectoryAction()
-    {
-        $dir_path = $this->getRequest()->getParam('dir');
-        $dir = Application_Model_MusicDir::getDirByPath($dir_path);
-        $data = ['directory' => $dir->getDirectory(),
-            'id' => $dir->getId(), ];
-        Application_Model_RabbitMq::SendMessageToMediaMonitor('rescan_watch', $data);
-        Logging::info("Unhiding all files belonging to:: {$dir_path}");
-        $dir->unhideFiles();
-        $this->_helper->json->sendJson(null);
-    }
-
-    public function removeWatchDirectoryAction()
-    {
-        $chosen = $this->getRequest()->getParam('dir');
-
-        $dir = Application_Model_MusicDir::removeWatchedDir($chosen);
-
-        $watched_dirs_form = new Application_Form_WatchedDirPreferences();
-        $this->view->subform = $watched_dirs_form->render();
-    }
-
     public function isImportInProgressAction()
     {
         $now = time();

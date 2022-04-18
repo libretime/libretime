@@ -93,8 +93,7 @@ class FileDataHelper
                 $get_file_content = file_get_contents($path);
             }
         } else {
-            $storDir = Application_Model_MusicDir::getStorDir();
-            $path = $storDir->getDirectory() . $file . '-' . $size;
+            $path = Config::getStoragePath() . $file . '-' . $size;
             if (!file_exists($path)) {
                 $get_file_content = $default;
             } else {
@@ -132,8 +131,8 @@ class FileDataHelper
             $Image = 'data:' . $mime . ';charset=utf-8;base64,' . base64_encode($getFileInfo['comments']['picture'][0]['data']);
             $base64 = @$Image;
 
-            if (!file_exists($importDir . '/' . 'artwork/')) {
-                if (!mkdir($importDir . '/' . 'artwork/', 0777, true)) {
+            if (!file_exists($importDir . 'artwork/')) {
+                if (!mkdir($importDir . 'artwork/', 0777, true)) {
                     Logging::error('Failed to create artwork directory.');
 
                     throw new Exception('Failed to create artwork directory.');
@@ -179,8 +178,7 @@ class FileDataHelper
         $file = Application_Model_StoredFile::RecallById($trackid);
         $md = $file->getMetadata();
 
-        $storDir = Application_Model_MusicDir::getStorDir();
-        $fp = $storDir->getDirectory();
+        $fp = Config::getStoragePath();
 
         $dbAudioPath = $md['MDATA_KEY_FILEPATH'];
         $fullpath = $fp . $dbAudioPath;
@@ -243,8 +241,7 @@ class FileDataHelper
         $file = Application_Model_StoredFile::RecallById($trackid);
         $md = $file->getMetadata();
 
-        $storDir = Application_Model_MusicDir::getStorDir();
-        $fp = $storDir->getDirectory();
+        $fp = Config::getStoragePath();
 
         $dbAudioPath = $md['MDATA_KEY_FILEPATH'];
         $fullpath = $fp . $dbAudioPath;
@@ -295,8 +292,7 @@ class FileDataHelper
         $file = Application_Model_StoredFile::RecallById($trackid);
         $md = $file->getMetadata();
 
-        $storDir = Application_Model_MusicDir::getStorDir();
-        $fp = $storDir->getDirectory();
+        $fp = Config::getStoragePath();
 
         $dbAudioPath = $md['MDATA_KEY_ARTWORK'];
         $fullpath = $fp . $dbAudioPath;

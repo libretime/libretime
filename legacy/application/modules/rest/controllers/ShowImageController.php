@@ -165,8 +165,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
             throw new Exception('Bad file extension.');
         }
 
-        $storDir = Application_Model_MusicDir::getStorDir();
-        $importedStorageDirectory = $storDir->getDirectory() . 'imported/' . $ownerId . '/show-images/' . $showId;
+        $importedStorageDirectory = Config::getStoragePath() . 'imported/' . $ownerId . '/show-images/' . $showId;
 
         try {
             $importedStorageDirectory = $this->copyFileToStor($tempFilePath, $importedStorageDirectory, $fileExtension);
@@ -276,8 +275,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
     {
         $ownerId = RestAuth::getOwnerId();
 
-        $storDir = Application_Model_MusicDir::getStorDir();
-        $importedStorageDirectory = $storDir->getDirectory() . 'imported/' . $ownerId . '/show-images/' . $showId;
+        $importedStorageDirectory = Config::getStoragePath() . 'imported/' . $ownerId . '/show-images/' . $showId;
 
         Logging::info('Deleting images from ' . $importedStorageDirectory);
 

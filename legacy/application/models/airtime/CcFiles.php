@@ -147,8 +147,7 @@ class CcFiles extends BaseCcFiles
 
             self::validateFileArray($fileArray);
 
-            $storDir = Application_Model_MusicDir::getStorDir();
-            $importedStorageDir = $storDir->getDirectory() . 'imported/' . self::getOwnerId() . '/';
+            $importedStorageDir = Config::getStoragePath() . 'imported/' . self::getOwnerId() . '/';
             $importedDbPath = 'imported/' . self::getOwnerId() . '/';
             $artwork = FileDataHelper::saveArtworkData($filePath, $originalFilename, $importedStorageDir, $importedDbPath);
             $trackType = FileDataHelper::saveTrackType();
@@ -221,9 +220,6 @@ class CcFiles extends BaseCcFiles
 
                 Application_Model_Preference::updateDiskUsage($fileSizeBytes);
             } elseif ($file) {
-                // Since we check for this value when deleting files, set it first
-                $file->setDbDirectory(self::MUSIC_DIRS_STOR_PK);
-
                 $file->fromArray($fileArray, BasePeer::TYPE_FIELDNAME);
 
                 // Our RESTful API takes "full_path" as a field, which we then split and translate to match
@@ -237,7 +233,7 @@ class CcFiles extends BaseCcFiles
                     Application_Model_Preference::updateDiskUsage($fileSizeBytes);
 
                     $fullPath = $fileArray['full_path'];
-                    $storDir = Application_Model_MusicDir::getStorDir()->getDirectory();
+                    $storDir = Config::getStoragePath();
                     $pos = strpos($fullPath, $storDir);
 
                     if ($pos !== false) {
@@ -409,11 +405,7 @@ class CcFiles extends BaseCcFiles
      */
     public function getAbsoluteFilePath()
     {
-        $music_dir = Application_Model_MusicDir::getDirByPK($this->getDbDirectory());
-        if (!$music_dir) {
-            throw new Exception('Invalid music_dir for file ' . $this->getDbId() . ' in database.');
-        }
-        $directory = $music_dir->getDirectory();
+        $directory = Config::getStoragePath();
         $filepath = $this->getDbFilepath();
 
         return Application_Common_OsPath::join($directory, $filepath);
@@ -424,11 +416,7 @@ class CcFiles extends BaseCcFiles
      */
     public function getAbsoluteArtworkPath()
     {
-        $music_dir = Application_Model_MusicDir::getDirByPK($this->getDbDirectory());
-        if (!$music_dir) {
-            throw new Exception('Invalid music_dir for file ' . $this->getDbId() . ' in database.');
-        }
-        $directory = $music_dir->getDirectory();
+        $directory = Config::getStoragePath();
         $filepath = $this->getDbArtwork();
 
         return Application_Common_OsPath::join($directory, $filepath);

@@ -49,84 +49,8 @@ class TestHelper
         $dbuser = $CC_CONFIG['dsn']['username'];
         $dbpasswd = $CC_CONFIG['dsn']['password'];
 
-        $databaseAlreadyExists = AirtimeInstall::createDatabase();
-        if ($databaseAlreadyExists) {
-            // Truncate all the tables
-            $con = Propel::getConnection();
-            $sql = "select * from pg_tables where tableowner = '{$dbuser}'";
-
-            try {
-                $rows = $con->query($sql)->fetchAll();
-            } catch (Exception $e) {
-                $rows = [];
-            }
-
-            // Add any tables that shouldn't be cleared here.
-            //   cc_subjs - Most of Airtime requires an admin account to work, which has id=1,
-            //              so don't clear it.
-            //   cc_music_dirs - Has foreign key constraints against cc_files, so we clear cc_files
-            //                   first and clear cc_music_dirs after
-            $tablesToNotClear = ['cc_subjs', 'cc_music_dirs'];
-
-            $con->beginTransaction();
-            foreach ($rows as $row) {
-                $tablename = $row['tablename'];
-                if (in_array($tablename, $tablesToNotClear)) {
-                    continue;
-                }
-                // echo "   * Clearing database table $tablename...";
-
-                // TRUNCATE is actually slower than DELETE in many cases:
-                // http://stackoverflow.com/questions/11419536/postgresql-truncation-speed
-                // $sql = "TRUNCATE TABLE $tablename CASCADE";
-                $sql = "DELETE FROM {$tablename}";
-                AirtimeInstall::InstallQuery($sql, false);
-            }
-
-            // Now that cc_files is empty, clearing cc_music_dirs should work
-            $sql = 'DELETE FROM cc_music_dirs';
-            AirtimeInstall::InstallQuery($sql, false);
-
-            //  Because files are stored relative to their watch directory,
-            //  we need to set the "stor" path before we can successfully
-            //  create a fake file in the database.
-            // Copy paste from airtime-db-install.php:
-            $stor_dir = '/tmp';
-            $con = Propel::getConnection();
-            $sql = "INSERT INTO cc_music_dirs (directory, type) VALUES ('{$stor_dir}', 'stor')";
-
-            try {
-                $con->exec($sql);
-            } catch (Exception $e) {
-                echo "  * Failed inserting {$stor_dir} in cc_music_dirs" . PHP_EOL;
-                echo "  * Message {$e->getMessage()}" . PHP_EOL;
-
-                return false;
-            }
-
-            $con->commit();
-
-            // Because we're DELETEing all the rows instead of using TRUNCATE (for speed),
-            // we have to reset the sequences so the auto-increment columns (like primary keys)
-            // all start at 1 again. This is hacky but it still lets all of this execute fast.
-            $sql = "SELECT c.relname FROM pg_class c WHERE c.relkind = 'S'";
-
-            try {
-                $rows = $con->query($sql)->fetchAll();
-            } catch (Exception $e) {
-                $rows = [];
-            }
-            $con->beginTransaction();
-            foreach ($rows as $row) {
-                $seqrelname = $row['relname'];
-                $sql = "ALTER SEQUENCE {$seqrelname} RESTART WITH 1";
-                AirtimeInstall::InstallQuery($sql, false);
-            }
-            $con->commit();
-        } else {
-            // Create all the database tables
-            AirtimeInstall::CreateDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost, $dbport);
-        }
+        AirtimeInstall::createDatabase();
+        AirtimeInstall::CreateDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost, $dbport);
     }
 
     public static function setupZendBootstrap()

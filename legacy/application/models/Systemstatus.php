@@ -205,21 +205,15 @@ class Application_Model_Systemstatus
 
     public static function GetDiskInfo()
     {
+        $storagePath = Config::getStoragePath();
+        $totalSpace = disk_total_space($storagePath);
+
         $partitions = [];
-        /* First lets get all the watched directories. Then we can group them
-        * into the same partitions by comparing the partition sizes. */
-        $musicDirs = Application_Model_MusicDir::getWatchedDirs();
-        $musicDirs[] = Application_Model_MusicDir::getStorDir();
-        foreach ($musicDirs as $md) {
-            $totalSpace = disk_total_space($md->getDirectory());
-            if (!isset($partitions[$totalSpace])) {
-                $partitions[$totalSpace] = new stdClass();
-                $partitions[$totalSpace]->totalSpace = $totalSpace;
-                $partitions[$totalSpace]->totalFreeSpace = disk_free_space($md->getDirectory());
-                $partitions[$totalSpace]->usedSpace = $totalSpace - $partitions[$totalSpace]->totalFreeSpace;
-            }
-            $partitions[$totalSpace]->dirs[] = $md->getDirectory();
-        }
+        $partitions[$totalSpace] = new stdClass();
+        $partitions[$totalSpace]->totalSpace = $totalSpace;
+        $partitions[$totalSpace]->totalFreeSpace = disk_free_space($storagePath);
+        $partitions[$totalSpace]->usedSpace = $totalSpace - $partitions[$totalSpace]->totalFreeSpace;
+        $partitions[$totalSpace]->dirs[] = $storagePath;
 
         return array_values($partitions);
     }

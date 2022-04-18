@@ -604,8 +604,7 @@ class ApiController extends Zend_Controller_Action
                 throw new ZendActionHttpException($this, 400, 'ERROR: No ID was given.');
             }
 
-            $storDir = Application_Model_MusicDir::getStorDir();
-            $fp = $storDir->getDirectory();
+            $fp = Config::getStoragePath();
 
             // $this->view->type = $type;
             $file = Application_Model_StoredFile::RecallById($trackid);
@@ -876,13 +875,9 @@ class ApiController extends Zend_Controller_Action
 
     public function mediaMonitorSetupAction()
     {
-        $this->view->stor = Application_Model_MusicDir::getStorDir()->getDirectory();
+        $this->view->stor = Config::getStoragePath();
 
-        $watchedDirs = Application_Model_MusicDir::getWatchedDirs();
         $watchedDirsPath = [];
-        foreach ($watchedDirs as $wd) {
-            $watchedDirsPath[] = $wd->getDirectory();
-        }
         $this->view->watched_dirs = $watchedDirsPath;
     }
 
@@ -1051,46 +1046,6 @@ class ApiController extends Zend_Controller_Action
             Application_Model_StoredFile::listAllFiles($dir_id, $all);
     }
 
-    public function listAllWatchedDirsAction()
-    {
-        $result = [];
-
-        $arrWatchedDirs = Application_Model_MusicDir::getWatchedDirs();
-        $storDir = Application_Model_MusicDir::getStorDir();
-
-        $result[$storDir->getId()] = $storDir->getDirectory();
-
-        foreach ($arrWatchedDirs as $watchedDir) {
-            $result[$watchedDir->getId()] = $watchedDir->getDirectory();
-        }
-
-        $this->view->dirs = $result;
-    }
-
-    public function addWatchedDirAction()
-    {
-        $request = $this->getRequest();
-        $path = base64_decode($request->getParam('path'));
-
-        $this->view->msg = Application_Model_MusicDir::addWatchedDir($path);
-    }
-
-    public function removeWatchedDirAction()
-    {
-        $request = $this->getRequest();
-        $path = base64_decode($request->getParam('path'));
-
-        $this->view->msg = Application_Model_MusicDir::removeWatchedDir($path);
-    }
-
-    public function setStorageDirAction()
-    {
-        $request = $this->getRequest();
-        $path = base64_decode($request->getParam('path'));
-
-        $this->view->msg = Application_Model_MusicDir::setStorDir($path);
-    }
-
     public function getStreamSettingAction()
     {
         $info = Application_Model_StreamSetting::getStreamSetting();
@@ -1169,84 +1124,6 @@ class ApiController extends Zend_Controller_Action
             );
         }
         Application_Model_Preference::SetSourceStatus($sourcename, $status);
-    }
-
-    // handles addition/deletion of mount point which watched dirs reside
-    public function updateFileSystemMountAction()
-    {
-        $request = $this->getRequest();
-
-        $params = $request->getParams();
-        $added_list = empty($params['added_dir']) ? [] : explode(',', $params['added_dir']);
-        $removed_list = empty($params['removed_dir']) ? [] : explode(',', $params['removed_dir']);
-
-        // get all watched dirs
-        $watched_dirs = Application_Model_MusicDir::getWatchedDirs(null, null);
-
-        foreach ($added_list as $ad) {
-            $ad .= '/';
-            foreach ($watched_dirs as $dir) {
-                $dirPath = $dir->getDirectory();
-
-                // if mount path itself was watched
-                if ($dirPath == $ad) {
-                    Application_Model_MusicDir::addWatchedDir($dirPath, false);
-                } elseif (substr($dirPath, 0, strlen($ad)) === $ad && $dir->getExistsFlag() == false) {
-                    // if dir contains any dir in removed_list( if watched dir resides on new mounted path )
-                    Application_Model_MusicDir::addWatchedDir($dirPath, false);
-                } elseif (substr($ad, 0, strlen($dirPath)) === $dirPath) {
-                    // is new mount point within the watched dir?
-                    // pyinotify doesn't notify anyhing in this case, so we add this mount point as
-                    // watched dir
-                    // bypass nested loop check
-                    Application_Model_MusicDir::addWatchedDir($ad, false, true);
-                }
-            }
-        }
-
-        foreach ($removed_list as $rd) {
-            $rd .= '/';
-            foreach ($watched_dirs as $dir) {
-                $dirPath = $dir->getDirectory();
-                // if dir contains any dir in removed_list( if watched dir resides on new mounted path )
-                if (substr($dirPath, 0, strlen($rd)) === $rd && $dir->getExistsFlag() == true) {
-                    Application_Model_MusicDir::removeWatchedDir($dirPath, false);
-                } elseif (substr($rd, 0, strlen($dirPath)) === $dirPath) {
-                    // is new mount point within the watched dir?
-                    // pyinotify doesn't notify anyhing in this case, so we walk through all files within
-                    // this watched dir in DB and mark them deleted.
-                    // In case of h) of use cases, due to pyinotify behaviour of noticing mounted dir, we need to
-                    // compare agaisnt all files in cc_files table
-
-                    $watchDir = Application_Model_MusicDir::getDirByPath($rd);
-                    // get all the files that is under $dirPath
-                    $files = Application_Model_StoredFile::listAllFiles(
-                        $dir->getId(),
-                        $all = false
-                    );
-                    foreach ($files as $f) {
-                        // if the file is from this mount
-                        $filePaths = $f->getFilePaths();
-                        $filePath = $filePaths[0];
-                        if (substr($filePath, 0, strlen($rd)) === $rd) {
-                            $f->delete();
-                        }
-                    }
-                    if ($watchDir) {
-                        Application_Model_MusicDir::removeWatchedDir($rd, false);
-                    }
-                }
-            }
-        }
-    }
-
-    // handles case where watched dir is missing
-    public function handleWatchedDirMissingAction()
-    {
-        $request = $this->getRequest();
-
-        $dir = base64_decode($request->getParam('dir'));
-        Application_Model_MusicDir::removeWatchedDir($dir, false);
     }
 
     /* This action is for use by our dev scripts, that make

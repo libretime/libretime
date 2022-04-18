@@ -110,6 +110,11 @@ class GeneralConfig(BaseModel):
 
 
 # pylint: disable=too-few-public-methods
+class StorageConfig(BaseModel):
+    path: str = "/srv/libretime"
+
+
+# pylint: disable=too-few-public-methods
 class DatabaseConfig(BaseModel):
     host: str = "localhost"
     port: int = 5432

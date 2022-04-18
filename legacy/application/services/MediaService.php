@@ -28,11 +28,7 @@ class Application_Service_MediaService
         $CC_CONFIG = Config::getConfig();
         $apiKey = $CC_CONFIG['apiKey'][0];
 
-        $importedStorageDirectory = '';
-        if ($CC_CONFIG['current_backend'] == 'file') {
-            $storDir = Application_Model_MusicDir::getStorDir();
-            $importedStorageDirectory = $storDir->getDirectory() . '/imported/' . $ownerId;
-        }
+        $importedStorageDirectory = Config::getStoragePath() . '/imported/' . $ownerId;
 
         // Copy the temporary file over to the "organize" folder so that it's off our webserver
         // and accessible by libretime-analyzer which could be running on a different machine.
@@ -40,15 +36,14 @@ class Application_Service_MediaService
 
         // Dispatch a message to libretime-analyzer through RabbitMQ,
         // notifying it that there's a new upload to process!
-        $storageBackend = new ProxyStorageBackend($CC_CONFIG['current_backend']);
         Application_Model_RabbitMq::SendMessageToAnalyzer(
             $newTempFilePath,
             $importedStorageDirectory,
             basename($originalFilename),
             $callbackUrl,
             $apiKey,
-            $CC_CONFIG['current_backend'],
-            $storageBackend->getFilePrefix()
+            '',
+            '',
         );
 
         return $newTempFilePath;
