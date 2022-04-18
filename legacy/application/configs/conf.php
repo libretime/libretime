@@ -78,6 +78,18 @@ class Config
         // //////////////////////////////////////////////////////////////////////////////
         $CC_CONFIG['current_backend'] = $values['current_backend']['storage_backend'] ?? 'file';
 
+        $CC_CONFIG['storagePath'] = $values['storage']['path'] ?? '/srv/libretime';
+        if (!is_dir($CC_CONFIG['storagePath'])) {
+            echo "the configured storage.path '{$CC_CONFIG['storagePath']}' does not exists!";
+
+            exit;
+        }
+        if (!is_writable($CC_CONFIG['storagePath'])) {
+            echo "the configured storage.path '{$CC_CONFIG['storagePath']}' is not writable!";
+
+            exit;
+        }
+
         // Facebook (DEPRECATED)
         // //////////////////////////////////////////////////////////////////////////////
         if (isset($values['facebook']['facebook_app_id'])) {

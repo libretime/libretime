@@ -364,11 +364,15 @@ SQL;
 
     public static function getStorDir()
     {
-        $dir = CcMusicDirsQuery::create()
-            ->filterByType('stor')
-            ->findOne();
+        $config = Config::getConfig();
+        $storagePath = rtrim($config['storagePath'], '/') . '/';
 
-        return new Application_Model_MusicDir($dir);
+        $storage = new CcMusicDirs();
+        $storage
+            ->setDirectory($storagePath)
+            ->setType('stor');
+
+        return new Application_Model_MusicDir($storage);
     }
 
     public static function setStorDir($p_dir)

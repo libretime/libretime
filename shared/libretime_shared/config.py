@@ -141,3 +141,8 @@ class RabbitMQConfig(BaseModel):
             f"amqp://{self.user}:{self.password}"
             f"@{self.host}:{self.port}/{self.vhost}"
         )
+
+
+# pylint: disable=too-few-public-methods
+class StorageConfig(BaseModel):
+    path: str = "/srv/airtime"

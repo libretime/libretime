@@ -1085,10 +1085,10 @@ class ApiController extends Zend_Controller_Action
 
     public function setStorageDirAction()
     {
-        $request = $this->getRequest();
-        $path = base64_decode($request->getParam('path'));
-
-        $this->view->msg = Application_Model_MusicDir::setStorDir($path);
+        throw new ZendActionHttpException($this, 410, 'Action has been removed.');
+        // $request = $this->getRequest();
+        // $path = base64_decode($request->getParam('path'));
+        // $this->view->msg = Application_Model_MusicDir::setStorDir($path);
     }
 
     public function getStreamSettingAction()

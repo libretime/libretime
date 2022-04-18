@@ -382,17 +382,18 @@ class PreferenceController extends Zend_Controller_Action
 
     public function changeStorDirectoryAction()
     {
-        $chosen = $this->getRequest()->getParam('dir');
-        $element = $this->getRequest()->getParam('element');
-        $watched_dirs_form = new Application_Form_WatchedDirPreferences();
+        throw new ZendActionHttpException($this, 410, 'Action has been removed.');
+        // $chosen = $this->getRequest()->getParam('dir');
+        // $element = $this->getRequest()->getParam('element');
+        // $watched_dirs_form = new Application_Form_WatchedDirPreferences();
 
-        $res = Application_Model_MusicDir::setStorDir($chosen);
-        if ($res['code'] != 0) {
-            $watched_dirs_form->populate(['storageFolder' => $chosen]);
-            $watched_dirs_form->getElement($element)->setErrors([$res['error']]);
-        }
+        // $res = Application_Model_MusicDir::setStorDir($chosen);
+        // if ($res['code'] != 0) {
+        //     $watched_dirs_form->populate(['storageFolder' => $chosen]);
+        //     $watched_dirs_form->getElement($element)->setErrors([$res['error']]);
+        // }
 
-        $this->view->subform = $watched_dirs_form->render();
+        // $this->view->subform = $watched_dirs_form->render();
     }
 
     public function reloadWatchDirectoryAction()

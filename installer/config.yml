@@ -17,6 +17,10 @@ general:
   # Specify a class like LibreTime_Auth_Adaptor_FreeIpa to replace the built-in adaptor
   auth: local
 
+storage:
+  # Path of the storage directory, default is /srv/libretime
+  path: /srv/libretime
+
 database:
   # The hostname of the PostgreSQL server, default is localhost
   host: localhost
