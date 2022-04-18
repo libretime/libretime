@@ -1,5 +1,6 @@
 from os import environ
 from pathlib import Path
+from typing import List
 from unittest import mock
 
 from pydantic import BaseModel
@@ -11,17 +12,21 @@ from libretime_shared.config import BaseConfig, DatabaseConfig, RabbitMQConfig
 # pylint: disable=too-few-public-methods
 class FixtureConfig(BaseConfig):
     api_key: str
+    allowed_hosts: List[str] = []
     database: DatabaseConfig
     rabbitmq: RabbitMQConfig = RabbitMQConfig()
 
 
 FIXTURE_CONFIG_RAW = """
 api_key: "f3bf04fc"
+allowed_hosts:
+  - example.com
+  - sub.example.com
 
 # Comment !
 database:
-    host: "localhost"
-    port: 5432
+  host: "localhost"
+  port: 5432
 
 ignored: "ignored"
 """
@@ -45,6 +50,7 @@ def test_base_config(tmp_path: Path):
         config = FixtureConfig(filepath=config_filepath)
 
         assert config.api_key == "f3bf04fc"
+        assert config.allowed_hosts == ["example.com", "sub.example.com"]
         assert config.database.host == "localhost"
         assert config.database.port == 8888
         assert config.rabbitmq.host == "changed"
@@ -53,12 +59,20 @@ def test_base_config(tmp_path: Path):
     # Optional model: loading default values (rabbitmq)
     with mock.patch.dict(environ, {}):
         config = FixtureConfig(filepath=config_filepath)
+        assert config.allowed_hosts == ["example.com", "sub.example.com"]
         assert config.rabbitmq.host == "localhost"
         assert config.rabbitmq.port == 5672
 
     # Optional model: overriding using environment (rabbitmq)
-    with mock.patch.dict(environ, {"LIBRETIME_RABBITMQ_HOST": "changed"}):
+    with mock.patch.dict(
+        environ,
+        {
+            "LIBRETIME_RABBITMQ_HOST": "changed",
+            "LIBRETIME_ALLOWED_HOSTS": "example.com, changed.example.com",
+        },
+    ):
         config = FixtureConfig(filepath=config_filepath)
+        assert config.allowed_hosts == ["example.com", "changed.example.com"]
         assert config.rabbitmq.host == "changed"
         assert config.rabbitmq.port == 5672
 
