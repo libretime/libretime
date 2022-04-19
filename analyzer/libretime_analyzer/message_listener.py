@@ -1,5 +1,4 @@
 import json
-import signal
 import time
 from json import JSONDecodeError
 from pathlib import Path
@@ -16,9 +15,8 @@ from pika.exceptions import (
 )
 from pydantic import ValidationError
 
-from libretime_analyzer.pipeline.context import Context
-
 from .pipeline import PipelineError, Status, run_pipeline
+from .pipeline.context import Context
 from .status_reporter import StatusReporter
 
 EXCHANGE = "airtime-uploads"
