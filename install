@@ -1038,7 +1038,7 @@ if [ ! -d /var/log/libretime ]; then
   mkdir_and_chown "$web_user:$web_user" "/var/log/libretime"
 
   verbose "\n * Copying logrotate files..."
-  loudCmd "cp ${AIRTIMEROOT}/legacy/build/airtime-php.logrotate /etc/logrotate.d/airtime-php"
+  loudCmd "cp ${AIRTIMEROOT}/legacy/install/logrotate/libretime-legacy.conf /etc/logrotate.d/airtime-php"
   loudCmd "cp ${AIRTIMEROOT}/playout/install/logrotate/libretime-liquidsoap.conf /etc/logrotate.d/libretime-liquidsoap"
 fi
 
