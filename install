@@ -1086,7 +1086,7 @@ systemInitInstall libretime-api "$web_user"
 mkdir -p /etc/airtime
 sed -e "s@WEB_USER@${web_user}@g" \
   -e "s@WEB_ROOT@${web_root}@g" \
-  "${AIRTIMEROOT}/installer/uwsgi/libretime-api.ini" > /etc/airtime/libretime-api.ini
+  "${AIRTIMEROOT}/api/install/uwsgi/libretime-api.ini" > /etc/airtime/libretime-api.ini
 verbose "...Done"
 
 verbose "\n * Setting permissions on /var/log/libretime..."
