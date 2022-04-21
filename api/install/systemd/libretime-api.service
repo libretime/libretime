@@ -3,13 +3,18 @@ Description=LibreTime API Service
 
 [Service]
 Type=notify
-NotifyAccess=all
-KillSignal=SIGQUIT
+KillMode=mixed
+PrivateTmp=true
 
 Environment=LIBRETIME_LOG_FILEPATH=/var/log/libretime/api.log
 Environment=LIBRETIME_CONFIG_FILEPATH=/etc/airtime/airtime.conf
 
-ExecStart=/usr/bin/uwsgi /etc/airtime/libretime-api.ini
+ExecStart=/usr/bin/gunicorn \
+        --workers 4 \
+        --log-file - \
+        --bind 127.0.0.1:8081 \
+        libretime_api.wsgi
+ExecReload=/bin/kill -s HUP $MAINPID
 User=libretime-api
 Group=libretime-api
 Restart=always
