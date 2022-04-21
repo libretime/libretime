@@ -887,19 +887,19 @@ fi
 
 if [ "$in_place" = "t" ]; then
   verbose "\n * Setting current Airtime directory as web root..."
-  web_root=${AIRTIMEROOT}/legacy/public
+  web_root=${AIRTIMEROOT}/legacy
 elif [ -n "$web_root" ]; then
   verbose "\n * Creating Apache web root directory..."
   cp -R ${AIRTIMEROOT}/legacy ${web_root}
   cp ${AIRTIMEROOT}/VERSION ${web_root}
-  web_root=${web_root}/legacy/public/
+  web_root=${web_root}/legacy
 else
   verbose "\n * Creating default Apache web root directory /usr/share/airtime/php..."
   web_root="/usr/share/airtime/php"
   mkdir -p ${web_root}
   cp -R ${AIRTIMEROOT}/legacy ${web_root}
   cp ${AIRTIMEROOT}/VERSION ${web_root}
-  web_root=${web_root}/legacy/public/
+  web_root=${web_root}/legacy
 fi
 verbose "...Done"
 
@@ -907,69 +907,32 @@ if [ "$apache" = "t" ]; then
   loud "\n-----------------------------------------------------"
   loud "                * Configuring Apache *                "
   loud "-----------------------------------------------------"
-  # Detect Apache root folder, e.g. /etc/apache2 or /etc/httpd
-  eval "$($apache_bin -V | awk '/HTTPD_ROOT|SERVER_CONFIG_FILE/ { print $2 }')"
-  apache_conf="${HTTPD_ROOT}/${SERVER_CONFIG_FILE}"
-  verbose "Detected Apache root folder is: ${HTTPD_ROOT}"
-  if [[ ! -e $apache_conf ]]; then
-    echo -e "ERROR: Apache binary \"$apache_bin\" points to a non-existent file \"$apache_conf\""
-    exit 1
-  fi
-  verbose "Detected Apache primary .conf file is: ${apache_conf}"
-  if [[ -d ${HTTPD_ROOT}/sites-available ]]; then # debian & ubuntu
-    apache_sitedir="${HTTPD_ROOT}/sites-available/"
-  elif [[ -d ${HTTPD_ROOT}/conf.d ]]; then # centos
-    apache_sitedir="${HTTPD_ROOT}/conf.d/"
-  else
-    echo -e "ERROR: unknown location of Apache sites-available or virtual host directory!" >&2
-    exit 1
-  fi
-  verbose "Detected Apache sites configuration folder: ${apache_sitedir}"
 
-  set +e
-  # Parse: Server version: Apache/2.2.22 (Ubuntu) -> 2
-  apache_major_version=$($apache_bin -v | awk -F'[ /.]+' 'NR == 1 { print $4 }')
-  set -e
-
-  if [[ "$apache_major_version" -ge 2 ]]; then
-    airtimeconfigfile="airtime.conf"
-    oldconfigfile="airtime-vhost.conf"
-  else
-    airtimeconfigfile="airtime"
-    oldconfigfile="airtime-vhost"
+  if $is_ubuntu_dist || $is_debian_dist; then
+    apache_site_dir="/etc/apache2/sites-available"
+  elif $is_centos_dist; then
+    apache_site_dir="/etc/httpd/conf.d"
   fi
 
-  # If we're upgrading (installing over an existing Airtime install) and we've been told to
-  # install apache, we should overwrite any existing configuration. If we don't do this, doing
-  # an in-place installation over an old Airtime install (which installs to /usr/share by default)
-  # will fail
-  if [[ "$upgrade" == "t" || ! -f "${apache_sitedir}${airtimeconfigfile}" ]]; then
-    verbose "\n * Creating Apache config for Airtime..."
+  apache_site_conf="${apache_site_dir}/libretime.conf"
+
+  if [[ "$upgrade" == "t" || ! -f "$apache_site_conf" ]]; then
+    verbose "\n * Creating Apache config for LibreTime..."
     listen_port=""
     if [ "$web_port" != "80" ]; then
       listen_port="Listen ${web_port}"
     fi
 
-    apache_template_file=${SCRIPT_DIR}/installer/apache/airtime-vhost-2.4
-    if [[ "$apache_major_version" -eq 1 ]]; then
-      # fall back to apache 1 config
-      apache_template_file=${SCRIPT_DIR}/installer/apache/airtime-vhost
-    fi
     sed \
-      -e "s@WEB_PORT_LISTEN@${listen_port}@g" \
-      -e "s@WEB_PORT@${web_port}@g" \
-      -e "s@WEB_ROOT@${web_root}@g" \
-      ${apache_template_file} > ${apache_sitedir}${airtimeconfigfile}
+      -e "s|@@LISTEN_PORT_STRING@@|${listen_port}|g" \
+      -e "s|@@LISTEN_PORT@@|${web_port}|g" \
+      -e "s|@@LEGACY_WEB_ROOT@@|${web_root}|g" \
+      "${SCRIPT_DIR}/installer/apache/libretime.conf" > "$apache_site_conf"
 
     # The a2ensite/a2dissite utilities are not available on CentOS
     if [[ -x /usr/sbin/a2ensite ]]; then
       loudCmd "a2dissite 000-default"
-      # If Airtime was previously installed with apt, the vhost file name is different,
-      # so we need to specifically disable it.
-      if [ -f "/etc/apache2/sites-available/${oldconfigfile}" ]; then
-        loudCmd "a2dissite airtime-vhost"
-      fi
-      loudCmd "a2ensite airtime"
+      loudCmd "a2ensite libretime"
     fi
   else
     verbose "\nApache config for Airtime already exists, skipping"
@@ -1096,32 +1059,6 @@ loudCmd "chmod -R 775 /var/log/libretime"
 loud "\n-----------------------------------------------------"
 loud "              * Configuring PHP in Apache *          "
 loud "-----------------------------------------------------"
-# Test common locations for php conf directory
-php_conf_dirs=(
-  "/etc/php/7.4/apache2/conf.d" # Debian Bullseye, Ubuntu Focal
-  "/etc/php/7.3/apache2/conf.d" # Debian Buster
-  "/etc/php/7.2/apache2/conf.d" # Ubuntu Bionic
-  "/etc/php/7.0/apache2/conf.d" # Ubuntu Xenial
-  "/etc/php5/apache2/conf.d"    # Debian Stretch, Debian Jessie, Ubuntu Trusty
-  "/etc/php.d"                  # CentOS 7
-)
-
-for php_conf in "${php_conf_dirs[@]}"; do
-  [[ -d $php_conf ]] && break
-done
-if [[ -d $php_conf ]]; then
-  libretime_phpini="${php_conf}/airtime.ini"
-else
-  echo -e "ERROR: PHP Apache configuration folder does not exist or is in an unknown location!" >&2
-  exit 1
-fi
-verbose "Detected php conf directory at: $php_conf"
-if [ ! -f "${libretime_phpini}" ]; then
-  verbose "\n * Creating LibreTime PHP config for Apache..."
-  cp ${SCRIPT_DIR}/installer/php/airtime.ini ${libretime_phpini}
-else
-  verbose "\nAirtime PHP config for Apache already exists, skipping"
-fi
 
 # Enable Apache modules
 if $is_debian_bullseye || $is_ubuntu_focal; then
@@ -1241,8 +1178,13 @@ if [ "$selinux" = "t" ]; then
   verbose "...Done"
 fi
 
-verbose "\n * Reloading apache..."
-systemInitCommand restart ${apache_service}
+if apachectl configtest; then
+  verbose "\n * Reloading apache..."
+  systemInitCommand restart ${apache_service}
+else
+  verbose "\n * Apache configuration is invalid! Please fix it before reloading apache..."
+fi
+
 # NOTE: ip command works on all supported platforms
 if $is_centos_dist; then
   IP=$(ip -o -4 address show dev eth0 | grep -Po 'inet \K[\d.]+')
