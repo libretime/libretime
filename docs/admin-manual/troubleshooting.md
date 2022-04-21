@@ -29,13 +29,22 @@ Be sure to replace the service name with the problematic one.
 ## Logs
 
 The next place to search for details on potential errors are the log files.
-On a common setup, you should search for the following files:
 
-- `/var/log/libretime/analyzer.log` contains logs from the analyzer,
-- `/var/log/libretime/api.log` contains logs from the api,
-- `/var/log/libretime/legacy.log` contains logs from the legacy app,
-- `/var/log/libretime/liquidsoap.log` contains logs from liquidsoap,
-- `/var/log/libretime/playout.log` contains logs from playout.
+The `/var/log/syslog` file contains most of the system logs combined. This log file may contain information that the application logger wasn't able to log, such as early startup errors. You can follow the logs using:
+
+```bash
+sudo tail -n 100 -f "/var/log/syslog"
+# Filter the logs
+sudo tail -n 100 -f "/var/log/syslog" | grep "libretime-"
+```
+
+On a common setup, to access LibreTime specific logs you should search for the following files:
+
+- The `/var/log/libretime/analyzer.log` file contains logs from the analyzer,
+- The `/var/log/libretime/api.log` file contains logs from the api,
+- The `/var/log/libretime/legacy.log` file contains logs from the legacy app,
+- The `/var/log/libretime/liquidsoap.log` file contains logs from liquidsoap,
+- The `/var/log/libretime/playout.log` file contains logs from playout.
 
 For some LibreTime services, you can set a higher log level using the `LIBRETIME_LOG_LEVEL` environment variable, or by running the service by hand and using a command line flag:
 
@@ -43,10 +52,4 @@ For some LibreTime services, you can set a higher log level using the `LIBRETIME
 sudo -u www-data libretime-analyzer --config /etc/airtime/airtime.conf --log-level debug
 ```
 
-- `/var/log/syslog` contains most of the system logs combined. This log file may contain information that the application logger wasn't able to log, such as early startup errors. You can get the LibreTime logs using:
-
-```bash
-sudo tail -f "/var/log/syslog" | grep "libretime-"
-```
-
-- `/var/log/apache2/error.log` contains logs from the web server.
+The `/var/log/apache2/error.log` file contains logs from the web server.
