@@ -77,38 +77,6 @@ jobs:
         run: make lint
         working-directory: ${{ matrix.context }}
 
-  test:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        context:
-        release:
-          - buster
-          - bullseye
-          - bionic
-          - focal
-          - jammy
-
-    container: ghcr.io/libretime/libretime-dev:${{ matrix.release }}
-    defaults:
-      run:
-        shell: bash
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ matrix.context }}-${{ hashFiles('**/setup.py') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-${{ matrix.context }}
-
-      - name: Test
-        run: make test
-        working-directory: ${{ matrix.context }}
-
   test-with-database:
     runs-on: ubuntu-latest
     strategy:
