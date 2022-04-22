@@ -6,6 +6,7 @@ on:
     paths:
       - .github/workflows/**
       - playout/**
+      - api-client/**
       - shared/**
 
   pull_request:
@@ -13,6 +14,7 @@ on:
     paths:
       - .github/workflows/**
       - playout/**
+      - api-client/**
       - shared/**
 
 jobs:
