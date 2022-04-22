@@ -57,7 +57,6 @@ jobs:
       matrix:
         context:
           - api
-          - api-client
           - playout
 
     steps:
@@ -84,7 +83,6 @@ jobs:
       fail-fast: false
       matrix:
         context:
-          - api-client
         release:
           - buster
           - bullseye
