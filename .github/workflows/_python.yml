@@ -15,6 +15,11 @@ on:
         default: true
         type: boolean
 
+      test-with-database:
+        required: false
+        default: false
+        type: boolean
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ inputs.context }}
   cancel-in-progress: true
@@ -59,6 +64,52 @@ jobs:
     defaults:
       run:
         shell: bash
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ inputs.context }}-${{ hashFiles('**/setup.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ inputs.context }}
+
+      - name: Test
+        run: make test
+        working-directory: ${{ inputs.context }}
+
+  test-with-database:
+    if: inputs.test-with-database
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        release:
+          - buster
+          - bullseye
+          - bionic
+          - focal
+          - jammy
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: libretime
+          POSTGRES_PASSWORD: libretime
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    container: ghcr.io/libretime/libretime-dev:${{ matrix.release }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      LIBRETIME_DATABASE_HOST: postgres
 
     steps:
       - uses: actions/checkout@v3
