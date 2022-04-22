@@ -112,7 +112,6 @@ jobs:
       fail-fast: false
       matrix:
         context:
-          - analyzer
           - api
           - api-client
           - playout
@@ -143,7 +142,6 @@ jobs:
       fail-fast: false
       matrix:
         context:
-          - analyzer
           - api-client
           - shared
         release:
