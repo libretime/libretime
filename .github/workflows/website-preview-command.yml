@@ -18,6 +18,7 @@ on:
 env:
   # PREVIEW_DEPLOY_KEY is present in the secrets
   PREVIEW_EXTERNAL_REPOSITORY: libretime/libretime.github.io
+  PREVIEW_EXTERNAL_REPOSITORY_BRANCH: gh-pages
   PREVIEW_URL: https://libretime.github.io
   PREVIEW_BASE_URL: /
 
@@ -93,6 +94,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           repository: ${{ env.PREVIEW_EXTERNAL_REPOSITORY }}
+          ref: ${{ env.PREVIEW_EXTERNAL_REPOSITORY_BRANCH }}
           ssh-key: ${{ secrets.PREVIEW_DEPLOY_KEY }}
 
       - name: Remove files
