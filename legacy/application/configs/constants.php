@@ -25,7 +25,7 @@ define('LIBRETIME_CONF_DIR', LIBRETIME_CONFIG_DIR); // Deprecated
 define('LIBRETIME_CONFIG_FILEPATH', getenv('LIBRETIME_CONFIG_FILEPATH') ?: LIBRETIME_CONFIG_DIR . '/airtime.conf');
 
 // Installer
-define('INSTALLER_CONFIG_FILEPATH', LIBRETIME_CONFIG_DIR . '/airtime.conf.temp');
+define('INSTALLER_CONFIG_FILEPATH', LIBRETIME_CONFIG_DIR . '/airtime.temp.conf');
 define('INSTALLER_DEFAULT_STORAGE_PATH', '/srv/airtime/stor');
 
 // Legacy constants

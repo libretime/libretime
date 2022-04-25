@@ -76,7 +76,7 @@ class MediaSetup extends Setup
     }
 
     /**
-     * Moves /tmp/airtime.conf.temp to /etc/airtime.conf and then removes it to complete setup.
+     * Moves /tmp/airtime.temp.conf to /etc/airtime.conf and then removes it to complete setup.
      *
      * @return bool false if either of the copy or removal operations fail
      */

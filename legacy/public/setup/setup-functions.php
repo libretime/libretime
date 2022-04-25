@@ -25,7 +25,7 @@ abstract class Setup
     abstract public function runSetup();
 
     /**
-     * Write new property values to a given section in airtime.conf.temp.
+     * Write new property values to a given section in airtime.temp.conf.
      */
     protected function writeToTemp()
     {
