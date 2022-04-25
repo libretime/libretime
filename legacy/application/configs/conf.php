@@ -1,5 +1,11 @@
 <?php
 
+// Propel load the configuration file direclty, we also need to load
+// the libraries in this files.
+require_once __DIR__ . '/constants.php';
+
+require_once VENDOR_PATH . '/autoload.php';
+
 // THIS FILE IS NOT MEANT FOR CUSTOMIZING.
 use League\Uri\Contracts\UriException;
 use League\Uri\Uri;
