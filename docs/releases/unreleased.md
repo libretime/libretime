@@ -32,6 +32,20 @@ sudo rm -f /etc/httpd/conf.d/airtime*
 sudo rm -f /etc/php.d/airtime.ini
 ```
 
+### Replaced uWSGI with Gunicorn
+
+[uWSGI](https://uwsgi-docs.readthedocs.io) was replaced by [Gunicorn](https://gunicorn.org/), the packages and configuration file should be removed from the system:
+
+```bash
+# Remove the configuration file
+sudo rm -f /etc/airtime/libretime-api.ini
+
+# Remove the packages
+sudo apt purge \
+    uwsgi \
+    uwsgi-plugin-python3
+```
+
 ## :warning: Known issues
 
 The following issues may need a workaround for the time being. Please search the [issues](https://github.com/libretime/libretime/issues) before reporting problems not listed below.
