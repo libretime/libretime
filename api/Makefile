@@ -18,3 +18,4 @@ test: $(VENV)
 schema: $(VENV)
 	source $(VENV)/bin/activate
 	DJANGO_SETTINGS_MODULE=libretime_api.settings.testing libretime-api spectacular --file schema.yml
+	if command -v npx > /dev/null; then npx prettier --write schema.yml; fi
