@@ -1,6 +1,5 @@
 ![](website/static/img/logo-512px.png)
 
-[![Tests](https://github.com/libretime/libretime/actions/workflows/test.yml/badge.svg)](https://github.com/libretime/libretime/actions/workflows/test.yml)
 [![Financial Contributors on Open Collective](https://opencollective.com/libretime/all/badge.svg?label=financial+contributors)](https://opencollective.com/libretime)
 
 LibreTime makes it easy to run your own online or terrestrial radio station. It
