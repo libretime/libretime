@@ -294,6 +294,6 @@ class DatabaseSetup extends Setup
      */
     private function updateDjangoTables()
     {
-        shell_exec('LIBRETIME_CONFIG_FILEPATH=' . INSTALLER_CONFIG_FILEPATH . ' libretime-api migrate');
+        shell_exec('DJANGO_SETTINGS_MODULE=libretime_api.settings.testing LIBRETIME_CONFIG_FILEPATH=' . INSTALLER_CONFIG_FILEPATH . ' libretime-api migrate');
     }
 }
