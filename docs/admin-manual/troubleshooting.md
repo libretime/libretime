@@ -52,4 +52,4 @@ For some LibreTime services, you can set a higher log level using the `LIBRETIME
 sudo -u www-data libretime-analyzer --config /etc/airtime/airtime.conf --log-level debug
 ```
 
-The `/var/log/apache2/error.log` file contains logs from the web server.
+The `/var/log/apache2/libretime.error.log` file contains logs from the web server.
