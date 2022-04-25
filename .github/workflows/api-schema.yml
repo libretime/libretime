@@ -18,17 +18,17 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v3
 
-      - name: Clone api-client repo
+      - name: Clone client repo
         uses: actions/checkout@v3
         with:
-          repository: "${{ github.repository_owner }}/api-client"
-          path: api-client-repo
+          repository: "${{ github.repository_owner }}/client"
+          path: client-repo
           ssh-key: "${{ secrets.API_CLIENT_DEPLOY_KEY }}"
 
       - name: Generate schema
         run: |
           make schema
-          cp schema.yml ../api-client-repo/schema.yml
+          cp schema.yml ../client-repo/schema.yml
         working-directory: api
 
       - name: Push schema changes to API clients
@@ -37,4 +37,4 @@ jobs:
           commit_message: "chore: update schema for ${{ github.repository }}@${{ github.sha }}"
           commit_user_name: "github-actions[bot]"
           commit_user_email: "github-actions[bot]@users.noreply.github.com"
-          repository: ./api-client-repo
+          repository: ./client-repo
