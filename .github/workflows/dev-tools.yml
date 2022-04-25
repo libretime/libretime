@@ -1,4 +1,4 @@
-name: Tools
+name: Dev Tools
 
 on:
   schedule:
@@ -6,8 +6,8 @@ on:
   push:
     branches: [main]
     paths:
+      - ".github/workflows/dev-tools.yml"
       - "**/packages.ini"
-      - ".github/workflows/tools.yml"
 
 jobs:
   docker-dev-image:
