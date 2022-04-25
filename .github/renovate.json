@@ -1,0 +1,33 @@
+{
+  "extends": [
+    "config:base",
+    ":enablePreCommit",
+    ":preserveSemverRanges",
+    ":disableDependencyDashboard"
+  ],
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "matchManagers": ["github-actions"],
+      "addLabels": ["ci"]
+    },
+    {
+      "matchManagers": ["composer"],
+      "addLabels": ["php"]
+    },
+    {
+      "matchManagers": ["pip_setup", "pip_requirements"],
+      "addLabels": ["python"]
+    },
+    {
+      "matchPaths": ["website/**"],
+      "addLabels": ["javascript"],
+      "extends": ["monorepo:docusaurus"]
+    },
+    {
+      "matchUpdateTypes": ["patch"],
+      "matchPaths": ["website/**", ".github/workflows/*"],
+      "automerge": true
+    }
+  ]
+}
