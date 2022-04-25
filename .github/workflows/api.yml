@@ -1,0 +1,68 @@
+name: API
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/**
+      - api/**
+      - shared/**
+
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/**
+      - api/**
+      - shared/**
+
+jobs:
+  python:
+    uses: ./.github/workflows/_python.yml
+    with:
+      context: api
+      test: false
+
+  test-with-database:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        release:
+          - buster
+          - bullseye
+          - bionic
+          - focal
+          - jammy
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: libretime
+          POSTGRES_PASSWORD: libretime
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    container: ghcr.io/libretime/libretime-dev:${{ matrix.release }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      LIBRETIME_DATABASE_HOST: postgres
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-api-${{ hashFiles('api/**/setup.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-api
+
+      - name: Test
+        run: make test
+        working-directory: api

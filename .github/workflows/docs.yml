@@ -5,10 +5,15 @@ on:
     branches: [main]
     paths:
       - .github/workflows/docs.yml
-      - website/**
       - docs/**
+      - website/**
+
   pull_request:
     branches: [main]
+    paths:
+      - .github/workflows/docs.yml
+      - docs/**
+      - website/**
 
 jobs:
   lint:

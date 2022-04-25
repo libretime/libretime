@@ -1,0 +1,22 @@
+name: API Client
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/**
+      - api-client/**
+      - shared/**
+
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/**
+      - api-client/**
+      - shared/**
+
+jobs:
+  python:
+    uses: ./.github/workflows/_python.yml
+    with:
+      context: api-client

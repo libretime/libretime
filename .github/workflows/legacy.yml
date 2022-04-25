@@ -1,0 +1,77 @@
+name: Legacy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/**
+      - api/**
+      - legacy/**
+
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/**
+      - api/**
+      - legacy/**
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+      - name: Lint
+        run: make lint
+        working-directory: legacy
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php-version: "7.2" # Bionic
+          - php-version: "7.3" # Buster
+          - php-version: "7.4" # Bullseye, Focal
+
+    env:
+      ENVIRONMENT: testing
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PostgreSQL
+        run: |
+          sudo systemctl start postgresql.service
+          pg_isready
+          sudo -u postgres psql -c 'CREATE DATABASE libretime;'
+          sudo -u postgres psql -c "CREATE USER libretime WITH PASSWORD 'libretime';"
+          sudo -u postgres psql -c 'GRANT CONNECT ON DATABASE libretime TO libretime;'
+          sudo -u postgres psql -c 'ALTER USER libretime CREATEDB;'
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Run tests
+        run: make test
+        working-directory: legacy

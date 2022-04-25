@@ -1,0 +1,21 @@
+name: Worker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/**
+      - worker/**
+
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/**
+      - worker/**
+
+jobs:
+  python:
+    uses: ./.github/workflows/_python.yml
+    with:
+      context: worker
+      test: false
