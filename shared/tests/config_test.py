@@ -120,28 +120,6 @@ def test_base_config_required_submodel(tmp_path: Path):
             FixtureWithRequiredSubmodelConfig(filepath=None)
 
 
-FIXTURE_CONFIG_RAW_INI = """
-[database]
-host = changed
-port = 6666
-"""
-
-
-def test_base_config_ini(tmp_path: Path):
-    config_filepath = tmp_path / "config.conf"
-    config_filepath.write_text(FIXTURE_CONFIG_RAW_INI)
-
-    with mock.patch.dict(
-        environ,
-        {"LIBRETIME_API_KEY": "f3bf04fc"},
-    ):
-        config = FixtureConfig(filepath=config_filepath)
-
-        assert config.api_key == "f3bf04fc"
-        assert config.database.host == "changed"
-        assert config.database.port == 6666
-
-
 FIXTURE_CONFIG_RAW_MISSING = """
 database:
     host: "localhost"
