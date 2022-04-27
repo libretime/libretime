@@ -3,7 +3,7 @@ title: Configuration
 sidebar_position: 20
 ---
 
-To configure LibreTime, you need to edit the `/etc/airtime/airtime.conf` file. This page describe the available options to configure your installation.
+To configure LibreTime, you need to edit the `/etc/airtime/config.yml` file. This page describe the available options to configure your installation.
 
 ## General
 

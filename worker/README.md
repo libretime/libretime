@@ -15,7 +15,7 @@ Each instance of airtime-celery has its own worker, and multiple instances can b
 To debug, you can run celery directly from the command line:
 
 ```sh
-RMQ_CONFIG_FILE=${LIBRETIME_CONF_DIR}/airtime.conf celery -A libretime_worker.tasks worker --loglevel=info
+RMQ_CONFIG_FILE=${LIBRETIME_CONF_DIR}/config.yml celery -A libretime_worker.tasks worker --loglevel=info
 ```
 
 This worker can be run alongside the service without issue.
@@ -46,6 +46,6 @@ If you run into issues getting Celery to accept tasks from Airtime:
 
 1. Make sure Celery is running ($ sudo service airtime-celery status).
 2. Check the log file (/var/log/airtime/airtime-celery[-DEV_ENV].log) to make sure Celery started correctly.
-3. Check your $LIBRETIME_CONF_DIR/airtime.conf rabbitmq settings. Make sure the settings here align with $LIBRETIME_CONF_DIR/$ENVIRONMENT/rabbitmq.ini.
+3. Check your $LIBRETIME_CONF_DIR/config.yml rabbitmq settings. Make sure the settings here align with $LIBRETIME_CONF_DIR/$ENVIRONMENT/rabbitmq.ini.
 4. Check RabbitMQ to make sure the celeryresults and task queues were created in the correct vhost.
 5. Make sure the RabbitMQ user (the default is airtime) has permissions on all vhosts being used.

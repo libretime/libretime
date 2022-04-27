@@ -40,7 +40,7 @@ On a common setup, you should search for the following files:
 For some LibreTime services, you can set a higher log level using the `LIBRETIME_LOG_LEVEL` environment variable, or by running the service by hand and using a command line flag:
 
 ```bash
-sudo -u www-data libretime-analyzer --config /etc/airtime/airtime.conf --log-level debug
+sudo -u www-data libretime-analyzer --config /etc/airtime/config.yml --log-level debug
 ```
 
 - `/var/log/syslog` contains most of the system logs combined. This log file may contain information that the application logger wasn't able to log, such as early startup errors. You can get the LibreTime logs using:

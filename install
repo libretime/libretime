@@ -176,7 +176,7 @@ PIP="$PYTHON -m pip"
 
 # Paths
 CONFIG_DIR="/etc/airtime"
-CONFIG_FILEPATH="$CONFIG_DIR/airtime.conf"
+CONFIG_FILEPATH="$CONFIG_DIR/config.yml"
 CONFIG_EXAMPLE_FILEPATH="$SCRIPT_DIR/installer/config.yml"
 WORKING_DIR="/var/lib/libretime"
 LOG_DIR="/var/log/libretime"

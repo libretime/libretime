@@ -4,7 +4,7 @@ import telnetlib
 from configobj import ConfigObj
 
 try:
-    config = ConfigObj("/etc/airtime/airtime.conf")
+    config = ConfigObj("/etc/airtime/config.yml")
     LS_HOST = config["pypo"]["ls_host"]
     LS_PORT = config["pypo"]["ls_port"]
 
