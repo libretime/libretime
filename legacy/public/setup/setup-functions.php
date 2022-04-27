@@ -124,7 +124,7 @@ require_once 'general-setup.php';
 require_once 'media-setup.php';
 
 // If config.yml exists, we shouldn't be here
-if (!file_exists('/etc/airtime/config.yml')) {
+if (!file_exists('/etc/libretime/config.yml')) {
     if (isset($_GET['obj']) && $objType = $_GET['obj']) {
         $obj = new $objType($_POST);
         if ($obj instanceof Setup) {

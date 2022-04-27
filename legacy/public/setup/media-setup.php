@@ -65,7 +65,7 @@ class MediaSetup extends Setup
                 rename($tmpFile, $bakFile);
             }
         } else {
-            self::$message = "Failed to move config.yml; /etc/airtime doesn't exist!";
+            self::$message = "Failed to move config.yml; /etc/libretime doesn't exist!";
             self::$errors[] = 'ERR';
         }
 
@@ -76,7 +76,7 @@ class MediaSetup extends Setup
     }
 
     /**
-     * Moves /tmp/airtime.temp.conf to /etc/airtime/config.yml and then removes it to complete setup.
+     * Moves /tmp/airtime.temp.conf to /etc/libretime/config.yml and then removes it to complete setup.
      *
      * @return bool false if either of the copy or removal operations fail
      */

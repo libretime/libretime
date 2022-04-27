@@ -37,7 +37,7 @@ api_endpoints["file_download_url"] = "files/{id}/download/"
 class AirtimeApiClient:
     API_BASE = "/api/v2"
 
-    def __init__(self, logger=None, config_path="/etc/airtime/config.yml"):
+    def __init__(self, logger=None, config_path="/etc/libretime/config.yml"):
         self.logger = logger or logging
 
         config = Config(filepath=config_path)

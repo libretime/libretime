@@ -125,12 +125,12 @@ setsebool -P git_system_use_nfs 1 # same for git
 
 semanage port -a -t http_port_t -p tcp 9080 # default vagrant web port
 
-# Allow apache full access to /vagrant and /etc/airtime
+# Allow apache full access to /vagrant and /etc/libretime
 semanage fcontext -a -t httpd_sys_rw_content_t "/vagrant(/.*)?"
-semanage fcontext -a -t httpd_sys_rw_content_t "/etc/airtime(/.*)?"
+semanage fcontext -a -t httpd_sys_rw_content_t "/etc/libretime(/.*)?"
 semanage fcontext -a -t httpd_sys_rw_content_t "/srv/airtime(/.*)?"
 
-restorecon -Rv /vagrant /etc/airtime /srv/airtime
+restorecon -Rv /vagrant /etc/libretime /srv/airtime
 
 # Disable default apache page
 sed -i -e 's/^/#/' /etc/httpd/conf.d/welcome.conf

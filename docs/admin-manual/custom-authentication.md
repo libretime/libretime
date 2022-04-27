@@ -58,7 +58,7 @@ a [system account](https://www.freeipa.org/page/HowTo/LDAP#System_Accounts) that
 set up beforehand.
 
 You can configure everything pertaining to how LibreTime accesses LDAP in
-`/etc/airtime/config.yml`. The default file has the following values you need to change.
+`/etc/libretime/config.yml`. The default file has the following values you need to change.
 
 ```ini
 #

@@ -125,7 +125,7 @@ class AirtimeApiClient:
     UPLOAD_RETRIES = 3
     UPLOAD_WAIT = 60
 
-    def __init__(self, logger=None, config_path="/etc/airtime/config.yml"):
+    def __init__(self, logger=None, config_path="/etc/libretime/config.yml"):
         self.logger = logger or logging
 
         config = Config(filepath=config_path)
