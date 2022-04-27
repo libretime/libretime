@@ -121,7 +121,7 @@ liquidsoap_host = localhost
 # Liquidsoap connection port, default is 1234
 liquidsoap_port = 1234
 
-# The format for recordings, allowed values are ogg|mp3, default is ogg
+# The format for recordings, allowed values are ogg,mp3, default is ogg
 record_file_format = ogg
 # The bitrate for recordings, default is 256
 record_bitrate = 256
