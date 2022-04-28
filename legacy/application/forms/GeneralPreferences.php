@@ -170,8 +170,9 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 
         $allowedCorsUrlsValue = Application_Model_Preference::GetAllowedCorsUrls();
         $allowedCorsUrls = new Zend_Form_Element_Textarea('allowedCorsUrls');
-        $allowedCorsUrls->setLabel(_('Allowed CORS URLs'));
-        $allowedCorsUrls->setDescription(_('Remote URLs that are allowed to access this LibreTime instance in a browser. One URL per line.'));
+        $allowedCorsUrls->setLabel(_('Allowed CORS URLs (DEPRECATED)'));
+        $allowedCorsUrls->setDescription(_('Remote URLs that are allowed to access this LibreTime instance in a browser. One URL per line. DEPRECATED: please move the allowed hosts settings to the configuration file.'));
+        $allowedCorsUrls->setAttrib('readonly', 'true');
         $allowedCorsUrls->setValue($allowedCorsUrlsValue);
         $this->addElement($allowedCorsUrls);
 
