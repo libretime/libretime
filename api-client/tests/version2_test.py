@@ -10,9 +10,9 @@ def config_filepath(tmp_path: Path):
     filepath = tmp_path / "airtime.conf"
     filepath.write_text(
         """
-[general]
-public_url = http://localhost/test
-api_key = TEST_KEY
+general:
+  public_url: http://localhost/test
+  api_key: TEST_KEY
 """
     )
     return filepath
