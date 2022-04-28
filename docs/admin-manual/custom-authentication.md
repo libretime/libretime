@@ -60,7 +60,7 @@ set up beforehand.
 You can configure everything pertaining to how LibreTime accesses LDAP in
 `/etc/libretime/config.yml`. The default file has the following values you need to change.
 
-```ini
+```yml
 #
 # ----------------------------------------------------------------------
 #                          L D A P
@@ -83,27 +83,27 @@ You can configure everything pertaining to how LibreTime accesses LDAP in
 #                 Lets LibreTime assign user types based on the
 #                 group a given user is in.
 #
-[ldap]
-hostname = ldap.example.org
-binddn = 'uid=libretime,cn=sysaccounts,cn=etc,dc=int,dc=example,dc=org'
-password = hackme
-account_domain = INT.EXAMPLE.ORG
-basedn = 'cn=users,cn=accounts,dc=int,dc=example,dc=org'
-filter_field = uid
-groupmap_guest = 'cn=guest,cn=groups,cn=accounts,dc=int,dc=example,dc=org'
-groupmap_host = 'cn=host,cn=groups,cn=accounts,dc=int,dc=example,dc=org'
-groupmap_program_manager = 'cn=program_manager,cn=groups,cn=accounts,dc=int,dc=example,dc=org'
-groupmap_admin = 'cn=admins,cn=groups,cn=accounts,dc=int,dc=example,dc=org'
-groupmap_superadmin = 'cn=superadmin,cn=groups,cn=accounts,dc=int,dc=example,dc=org'
+ldap:
+  hostname: ldap.example.org
+  binddn: "uid=libretime,cn=sysaccounts,cn=etc,dc=int,dc=example,dc=org"
+  password: hackme
+  account_domain: INT.EXAMPLE.ORG
+  basedn: "cn=users,cn=accounts,dc=int,dc=example,dc=org"
+  filter_field: uid
+  groupmap_guest: "cn=guest,cn=groups,cn=accounts,dc=int,dc=example,dc=org"
+  groupmap_host: "cn=host,cn=groups,cn=accounts,dc=int,dc=example,dc=org"
+  groupmap_program_manager: "cn=program_manager,cn=groups,cn=accounts,dc=int,dc=example,dc=org"
+  groupmap_admin: "cn=admins,cn=groups,cn=accounts,dc=int,dc=example,dc=org"
+  groupmap_superadmin: "cn=superadmin,cn=groups,cn=accounts,dc=int,dc=example,dc=org"
 ```
 
 ### Enable FreeIPA authentication
 
 After everything is set up properly you can enable FreeIPA auth in `config.yml`:
 
-```
-[general]
-auth = LibreTime_Auth_Adaptor_FreeIpa
+```yml
+general:
+  auth: LibreTime_Auth_Adaptor_FreeIpa
 ```
 
 You should now be able to use your FreeIPA credentials to log in to LibreTime.
