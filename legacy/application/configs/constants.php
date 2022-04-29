@@ -4,7 +4,6 @@
 define('ROOT_PATH', dirname(__DIR__, 2));
 define('LIB_PATH', ROOT_PATH . '/library');
 define('BUILD_PATH', ROOT_PATH . '/build');
-define('SETUP_PATH', BUILD_PATH . '/airtime-setup');
 define('APPLICATION_PATH', ROOT_PATH . '/application');
 define('CONFIG_PATH', APPLICATION_PATH . '/configs');
 define('VENDOR_PATH', ROOT_PATH . '/vendor');
