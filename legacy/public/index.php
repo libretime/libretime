@@ -2,6 +2,11 @@
 
 require_once dirname(__DIR__) . '/application/preload.php';
 
+// Early exit if a configuration file does not exists!
+if (!file_exists(LIBRETIME_CONFIG_FILEPATH)) {
+    exit("could not find a configuration file at '{$LIBRETIME_CONFIG_FILEPATH}', please make sure it is properly set!");
+}
+
 $configRun = false;
 $extensions = get_loaded_extensions();
 $airtimeSetup = false;
@@ -40,7 +45,7 @@ if (!class_exists('Propel')) {
     exit('Error: Propel not found. Did you install Airtime\'s third-party dependencies with composer? (Check the README.)');
 }
 
-require_once SETUP_PATH . '/load.php';
+require_once APPLICATION_PATH . '/check.php';
 
 // This allows us to pass ?config as a parameter to any page
 // and get to the config checklist.
@@ -48,13 +53,4 @@ if (array_key_exists('config', $_GET)) {
     showConfigCheckPage();
 }
 
-// If a configuration file exists, forward to our boot script
-if (file_exists(LIBRETIME_CONFIG_FILEPATH)) {
-    require_once APPLICATION_PATH . '/airtime-boot.php';
-}
-// Otherwise, we'll need to run our configuration setup
-else {
-    $airtimeSetup = true;
-
-    require_once SETUP_PATH . '/setup-config.php';
-}
+require_once APPLICATION_PATH . '/airtime-boot.php';
