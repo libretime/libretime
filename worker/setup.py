@@ -7,6 +7,9 @@ from setuptools import setup
 here = Path(__file__).parent.resolve()
 chdir(here)
 
+# TODO: remove comment below
+# Renovate should stop pushing to this branch !
+
 setup(
     name="libretime-celery",
     version="0.1",
