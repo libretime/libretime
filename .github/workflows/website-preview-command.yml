@@ -72,7 +72,8 @@ jobs:
           body: |
             **:rocket: Preview deployment succeeded!**
 
-            Preview: ${{ env.PREVIEW_URL }}${{ env.PREVIEW_BASE_URL }}pr-${{ github.event.inputs.pull-request-number }}/
+            Website preview: ${{ env.PREVIEW_URL }}${{ env.PREVIEW_BASE_URL }}pr-${{ github.event.inputs.pull-request-number }}/
+            New docs preview: ${{ env.PREVIEW_URL }}${{ env.PREVIEW_BASE_URL }}pr-${{ github.event.inputs.pull-request-number }}/docs/next/
             Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
       - name: Notify deployment failed
