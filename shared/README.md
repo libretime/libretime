@@ -34,28 +34,6 @@ config = Config(filepath="/etc/libretime/config.yml")
 
 > Don't instantiate a sub model if it has a required field, otherwise the `Config` class import will raise a `ValidationError`.
 
-### App
-
-Create an app class that inherit from `libretime_shared.app.AbstractApp`.
-
-```py
-from libretime_shared.app import AbstractApp
-
-class LiquidsoapApp(AbstractApp):
-    name = "liquidsoap"
-
-    def __init__(self, some_arg, **kwargs):
-        super().__init__(**kwargs)
-        self.some_arg = some_arg
-
-    def run(self):
-        ...
-
-
-app = LiquidsoapApp(**kwargs)
-app.run()
-```
-
 ### CLI
 
 Decorate your CLI commands with the shared decorators to add extra flags.
