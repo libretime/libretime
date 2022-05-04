@@ -46,6 +46,15 @@ sudo apt purge \
     uwsgi-plugin-python3
 ```
 
+### Logrotate config filepath
+
+The legacy logrotate config filepath was changed from `/etc/logrotate.d/airtime-php` to `/etc/logrotate.d/libretime-legacy`. The old configuration file must be removed:
+
+```bash
+# Remove the configuration file
+sudo rm -f /etc/logrotate.d/airtime-php
+```
+
 ### New configuration schema
 
 The configuration schema was updated.
