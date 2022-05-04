@@ -22,7 +22,7 @@ setup(
     packages=["libretime_worker"],
     python_requires=">=3.6",
     install_requires=[
-        "celery==4.4.7",
+        "celery==5.2.2",
         "kombu==4.6.11",
         "mutagen>=1.31.0",
         "requests>=2.7.0",
