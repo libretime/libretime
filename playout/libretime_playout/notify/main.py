@@ -33,7 +33,7 @@ def cli(log_level: str, log_filepath: Optional[Path]):
     """
     A gateway between Liquidsoap and the API.
     """
-    setup_logger(level_from_name(log_level), log_filepath)
+    setup_logger(level_from_name(log_level), log_filepath, rotate=False)
 
 
 @cli.command()
