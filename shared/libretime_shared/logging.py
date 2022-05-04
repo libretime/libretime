@@ -75,6 +75,7 @@ def setup_logger(
                 "serialize": serialize,
                 "rotation": "12:00",
                 "retention": "7 days",
+                "compression": "gz",
                 "encoding": "utf-8",
             }
         )
