@@ -112,7 +112,7 @@ def liquidsoap_startup_test(telnet_lock, liquidsoap_host, liquidsoap_port):
     logger.info("Liquidsoap version string found %s" % liquidsoap_version_string)
 
 
-@click.command()
+@click.command(context_settings={"auto_envvar_prefix": DEFAULT_ENV_PREFIX})
 @cli_logging_options()
 @cli_config_options()
 def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[Path]):

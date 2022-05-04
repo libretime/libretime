@@ -7,13 +7,14 @@ from typing import Optional
 
 import click
 from libretime_shared.cli import cli_logging_options
+from libretime_shared.config import DEFAULT_ENV_PREFIX
 from libretime_shared.logging import level_from_name, setup_logger
 from loguru import logger
 
 from . import generate_liquidsoap_cfg
 
 
-@click.command()
+@click.command(context_settings={"auto_envvar_prefix": DEFAULT_ENV_PREFIX})
 @cli_logging_options()
 def cli(log_level: int, log_filepath: Optional[Path]):
     """
