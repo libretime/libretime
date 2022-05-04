@@ -53,6 +53,7 @@ def setup_logger(
     level: LogLevel,
     filepath: Optional[Path] = None,
     serialize: bool = False,
+    rotate: bool = True,
 ) -> Tuple[LogLevel, Optional[Path]]:
     """
     Configure the logger and return the computed log level.
@@ -62,23 +63,29 @@ def setup_logger(
     :param verbosity: verbosity (between -1 and 3) of the logger
     :param filepath: write logs to filepath
     :param serialize: generate JSON formatted log records
+    :param rotate: enable log rotation and retention
     :returns: log level guessed from the verbosity
     """
     handlers = [{"sink": sys.stderr, "level": level.no, "serialize": serialize}]
 
     if filepath is not None:
-        handlers.append(
-            {
-                "sink": filepath,
-                "enqueue": True,
-                "level": level.no,
-                "serialize": serialize,
-                "rotation": "12:00",
-                "retention": "7 days",
-                "compression": "gz",
-                "encoding": "utf-8",
-            }
-        )
+        file_handler = {
+            "sink": filepath,
+            "enqueue": True,
+            "level": level.no,
+            "serialize": serialize,
+            "encoding": "utf-8",
+        }
+        if rotate:
+            file_handler.update(
+                {
+                    "rotation": "12:00",
+                    "retention": "7 days",
+                    "compression": "gz",
+                }
+            )
+
+        handlers.append(file_handler)
 
     logger.configure(handlers=handlers)
 
