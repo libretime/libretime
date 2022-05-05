@@ -1,7 +1,5 @@
 <?php
 
-define('RMQ_INI_SECTION', 'rabbitmq');
-
 function booleanReduce($a, $b)
 {
     return $a && $b;
@@ -102,19 +100,14 @@ function configureDatabase()
  */
 function checkRMQConnection()
 {
-    // Check for installed config file first, then check in the build directory,
-    if (file_exists(LIBRETIME_CONFIG_FILEPATH)) {
-        $ini = parse_ini_file(LIBRETIME_CONFIG_FILEPATH, true);
-    } else {
-        $ini = parse_ini_file(SAMPLE_CONFIG_FILEPATH, true);
-    }
+    $config = Config::getConfig();
 
     $conn = new \PhpAmqpLib\Connection\AMQPStreamConnection(
-        $ini[RMQ_INI_SECTION]['host'],
-        $ini[RMQ_INI_SECTION]['port'],
-        $ini[RMQ_INI_SECTION]['user'],
-        $ini[RMQ_INI_SECTION]['password'],
-        $ini[RMQ_INI_SECTION]['vhost']
+        $config['rabbitmq']['host'],
+        $config['rabbitmq']['port'],
+        $config['rabbitmq']['user'],
+        $config['rabbitmq']['password'],
+        $config['rabbitmq']['vhost']
     );
 
     return isset($conn);
