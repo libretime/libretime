@@ -1020,21 +1020,10 @@ systemInitInstall libretime-liquidsoap "$web_user"
 systemInitInstall libretime-playout "$web_user"
 verbose "...Done"
 
-verbose "\n * Installing celery..."
+verbose "\n * Installing worker..."
 loudCmd "$pip_install ${AIRTIMEROOT}/worker"
 mkdir_and_chown "${web_user}:${web_user}" "${LIBRETIME_WORKING_DIR}/worker"
-# Create the Celery user
-if $is_centos_dist; then
-  loudCmd "id celery 2>/dev/null || adduser --no-create-home -c 'LibreTime Celery' -r celery || true"
-else
-  loudCmd "id celery 2>/dev/null || adduser --no-create-home --gecos 'LibreTime Celery' --disabled-login --firstuid 1 --lastuid 999 celery"
-fi
-# Add celery to the www-data group
-loudCmd "usermod -G ${web_user} -a celery"
-# CentOS installs celery in /usr/bin which differs from other distros. Make
-# available in /usr/local/bin as systemd requires an absolute path.
-[[ ! -e /usr/local/bin/celery ]] && ln -s /usr/bin/celery /usr/local/bin/celery
-systemInitInstall libretime-celery celery
+systemInitInstall libretime-celery "$web_user"
 verbose "...Done"
 
 verbose "\n * Installing libretime-analyzer..."

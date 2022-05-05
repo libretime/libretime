@@ -165,10 +165,7 @@ function checkLiquidsoapService()
  */
 function checkCeleryService()
 {
-    exec('pgrep -f -u celery libretime_worker', $out, $status);
-    if (array_key_exists(0, $out) && $status == 0) {
-        return 1;
-    }
+    exec('systemctl is-active libretime-celery --quiet', $out, $status);
 
     return $status == 0;
 }
