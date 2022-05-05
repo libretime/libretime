@@ -15,12 +15,11 @@ VERSION = "1.0"
 DEFAULT_RETRY_QUEUE_FILEPATH = Path("retry_queue")
 
 
-@click.command()
+@click.command(context_settings={"auto_envvar_prefix": DEFAULT_ENV_PREFIX})
 @cli_logging_options()
 @cli_config_options()
 @click.option(
     "--retry-queue-filepath",
-    envvar=f"{DEFAULT_ENV_PREFIX}_RETRY_QUEUE_FILEPATH",
     type=click.Path(path_type=Path),
     help="Path to the retry queue file.",
     default=DEFAULT_RETRY_QUEUE_FILEPATH,

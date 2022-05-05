@@ -18,6 +18,7 @@ from typing import Optional
 import click
 from libretime_api_client.version1 import AirtimeApiClient
 from libretime_shared.cli import cli_logging_options
+from libretime_shared.config import DEFAULT_ENV_PREFIX
 from libretime_shared.logging import level_from_name, setup_logger
 from loguru import logger
 
@@ -26,7 +27,7 @@ def api_client():
     return AirtimeApiClient(logger=logger)
 
 
-@click.group()
+@click.group(context_settings={"auto_envvar_prefix": DEFAULT_ENV_PREFIX})
 @cli_logging_options()
 def cli(log_level: str, log_filepath: Optional[Path]):
     """

@@ -3,7 +3,6 @@ from typing import Any, Callable, Optional
 
 import click
 
-from .config import DEFAULT_ENV_PREFIX
 from .logging import INFO, LOG_LEVEL_MAP
 
 
@@ -19,7 +18,6 @@ def cli_logging_options() -> Callable:
         func = click.option(
             "--log-level",
             "log_level",
-            envvar=f"{DEFAULT_ENV_PREFIX}_LOG_LEVEL",
             type=click.Choice(list(LOG_LEVEL_MAP.keys())),
             default=INFO.name,
             help="Name of the logging level.",
@@ -28,7 +26,6 @@ def cli_logging_options() -> Callable:
         func = click.option(
             "--log-filepath",
             "log_filepath",
-            envvar=f"{DEFAULT_ENV_PREFIX}_LOG_FILEPATH",
             type=click.Path(path_type=Path),
             help="Path to the logging file.",
             default=None,
@@ -55,7 +52,6 @@ def cli_config_options(
             "--c",
             "--config",
             "config_filepath",
-            envvar=f"{DEFAULT_ENV_PREFIX}_CONFIG_FILEPATH",
             type=click.Path(path_type=Path),
             help="Path to the config file.",
             required=required,
