@@ -36,7 +36,7 @@ repos:
         exclude: ^legacy/public
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.32.0
+    rev: v2.32.1
     hooks:
       - id: pyupgrade
         args: [--py3-plus, --py36-plus]
