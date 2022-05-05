@@ -182,7 +182,6 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     {
         $CC_CONFIG = Config::getConfig();
         $stationUrl = Application_Common_HTTPHelper::getStationUrl();
-        $stationUrl .= substr($stationUrl, -1) == '/' ? '' : '/';
         $data = [
             'id' => $id,
             'url' => $url,
