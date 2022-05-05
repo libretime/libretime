@@ -42,16 +42,6 @@ class Application_Common_HTTPHelper
             ]
         );
 
-        if (empty($baseDir)) {
-            $baseDir = '/';
-        }
-        if ($baseDir[0] != '/') {
-            $baseDir = '/' . $baseDir;
-        }
-        if (substr($baseDir, -1) != '/') {
-            $baseDir = $baseDir . '/';
-        }
-
         return rtrim($url, '/') . '/';
     }
 
