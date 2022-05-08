@@ -706,5 +706,20 @@ service_restart_if_active libretime-liquidsoap
 
 if $is_first_install; then
   section "Instructions"
-  info "Edit your configuration files $CONFIG_FILEPATH to finalize the install process!"
+  printf "
+${yellow}\
+To finalize the installation process, start by editing your configuration file $CONFIG_FILEPATH.
+
+Once configured, run the following command to setup the database:
+
+${cyan}\
+$ sudo -u $LIBRETIME_USER libretime-api migrate
+
+${yellow}\
+Finally, run the following command to configure the default icecast passwords in the database:
+
+${cyan}\
+$ sudo libretime-api set_icecast_passwords --from-icecast-config
+
+${reset}"
 fi

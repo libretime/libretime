@@ -81,6 +81,8 @@ Vagrant.configure('2') do |config|
       --in-place \
       http://192.168.10.100:8080
 
+    libretime-api migrate
+    libretime-api set_icecast_passwords --from-icecast-config
     SCRIPT
 
     config.vm.provision 'install', type: 'shell', inline: $script
