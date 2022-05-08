@@ -1,5 +1,6 @@
 [Unit]
 Description=LibreTime API Service
+PartOf=libretime.target
 
 [Service]
 Type=notify

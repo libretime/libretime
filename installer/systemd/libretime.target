@@ -1,0 +1,10 @@
+[Unit]
+Description=LibreTime Services
+Wants=libretime-analyzer.service
+Wants=libretime-api.service
+Wants=libretime-celery.service
+Wants=libretime-liquidsoap.service
+Wants=libretime-playout.service
+
+[Install]
+WantedBy=multi-user.target
