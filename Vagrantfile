@@ -83,6 +83,8 @@ Vagrant.configure('2') do |config|
 
     libretime-api migrate
     libretime-api set_icecast_passwords --from-icecast-config
+
+    systemctl start libretime.target
     SCRIPT
 
     config.vm.provision 'install', type: 'shell', inline: $script
