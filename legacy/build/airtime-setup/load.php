@@ -180,10 +180,7 @@ function checkCeleryService()
  */
 function checkApiService()
 {
-    exec('pgrep -f -u www-data uwsgi', $out, $status);
-    if (array_key_exists(0, $out) && $status == 0) {
-        return 1;
-    }
+    exec('systemctl status libretime-api --quiet', $out, $status);
 
     return $status == 0;
 }
