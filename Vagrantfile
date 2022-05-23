@@ -72,16 +72,15 @@ Vagrant.configure('2') do |config|
                         path: 'installer/vagrant/%s' % prepare_script
 
     $script = <<-SCRIPT
+    set -e
     cd /vagrant
-    ./install \
-      --force \
+
+    bash install \
+      --listen-port 8080 \
+      --allow-restart \
       --in-place \
-      --verbose \
-      --postgres \
-      --apache \
-      --icecast \
-      --web-port=8080 \
-      #{install_args}
+      http://192.168.10.100:8080
+
     SCRIPT
 
     config.vm.provision 'install', type: 'shell', inline: $script

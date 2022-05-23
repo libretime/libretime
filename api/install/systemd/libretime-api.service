@@ -6,8 +6,8 @@ Type=notify
 KillMode=mixed
 PrivateTmp=true
 
-Environment=LIBRETIME_LOG_FILEPATH=/var/log/libretime/api.log
-Environment=LIBRETIME_CONFIG_FILEPATH=/etc/libretime/config.yml
+Environment=LIBRETIME_LOG_FILEPATH=@@LOG_DIR@@/api.log
+Environment=LIBRETIME_CONFIG_FILEPATH=@@CONFIG_FILEPATH@@
 
 ExecStart=/usr/bin/gunicorn \
         --workers 4 \
