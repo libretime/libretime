@@ -1,10 +1,10 @@
 [Unit]
-Description=Libretime Liquidsoap Service
+Description=LibreTime Liquidsoap Service
 
 [Service]
-Environment=LIBRETIME_LOG_FILEPATH=/var/log/libretime/liquidsoap.log
-Environment=LIBRETIME_CONFIG_FILEPATH=/etc/libretime/config.yml
-WorkingDirectory=/var/lib/libretime/playout
+Environment=LIBRETIME_LOG_FILEPATH=@@LOG_DIR@@/liquidsoap.log
+Environment=LIBRETIME_CONFIG_FILEPATH=@@CONFIG_FILEPATH@@
+WorkingDirectory=@@WORKING_DIR@@/playout
 
 ExecStart=/usr/local/bin/libretime-liquidsoap
 User=libretime-playout

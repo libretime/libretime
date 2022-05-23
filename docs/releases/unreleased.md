@@ -38,7 +38,7 @@ The configuration directory changed from `/etc/airtime` to `/etc/libretime`. Ple
 sudo mv /etc/airtime /etc/libretime
 ```
 
-The configuration file format changed to `yml`. Please rewrite your [configuration file](../admin-manual/setup/configuration.md) using the [yaml format](https://yaml.org/).
+The configuration file format changed to `yml`. Please rewrite your [configuration file](../admin-manual/setup/configuration.md) using the [yaml format](https://yaml.org/). An example configuration file `installer/config.yml` is present in the sources.
 
 ### Apache and PHP configuration files
 
