@@ -44,6 +44,10 @@ class Config
         $CC_CONFIG['basePort'] = $port;
         $CC_CONFIG['baseDir'] = $path;
 
+        // Allowed hosts
+        $CC_CONFIG['allowedCorsOrigins'] = $values['general']['allowed_cors_origins'] ?? [];
+        $CC_CONFIG['allowedCorsOrigins'][] = strval($public_url->withPath(''));
+
         $CC_CONFIG['dev_env'] = $values['general']['dev_env'] ?? 'production';
         $CC_CONFIG['auth'] = $values['general']['auth'] ?? 'local';
         $CC_CONFIG['cache_ahead_hours'] = $values['general']['cache_ahead_hours'] ?? 1;

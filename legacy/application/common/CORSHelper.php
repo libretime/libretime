@@ -1,5 +1,8 @@
 <?php
 
+use League\Uri\Contracts\UriException;
+use League\Uri\Uri;
+
 class CORSHelper
 {
     public static function enableCrossOriginRequests(&$request, &$response)
@@ -8,9 +11,7 @@ class CORSHelper
         $origin = $request->getHeader('Origin');
         $allowedOrigins = self::getAllowedOrigins($request);
 
-        if ((!(preg_match('/https?:\/\/localhost/', $origin) === 1)) && ($origin != '')
-            && (!in_array($origin, $allowedOrigins))
-        ) {
+        if (!($origin == '' || preg_match('/https?:\/\/localhost/', $origin) === 1 || in_array($origin, $allowedOrigins))) {
             // Don't allow CORS from other domains to prevent XSS.
             Logging::error("request origin '{$origin}' is not in allowed '" . implode(', ', $allowedOrigins) . "'!");
 
@@ -29,32 +30,56 @@ class CORSHelper
      */
     public static function getAllowedOrigins($request)
     {
-        $allowedCorsUrls = array_map(
-            function ($v) { return trim($v); },
-            explode(PHP_EOL, Application_Model_Preference::GetAllowedCorsUrls())
-        );
+        $config = Config::getConfig();
 
-        // always allow the configured server in (as reported by the server and not what is i baseUrl)
+        return array_merge(
+            $config['allowedCorsOrigins'],
+            self::getDatabaseAllowedOrigins(),
+            self::getServerAllowedOrigins($request),
+        );
+    }
+
+    /**
+     * Get configured server origins.
+     *
+     * @param Request $request request object
+     *
+     * @return array
+     */
+    private static function getServerAllowedOrigins($request)
+    {
         $scheme = $request->getServer('REQUEST_SCHEME');
         $host = $request->getServer('SERVER_NAME');
-        $port = $request->getServer('SERVER_PORT');
+        $port = intval($request->getServer('SERVER_PORT'));
 
-        $portString = '';
-        if (
-            $scheme == 'https' && $port != 443
-            || $scheme == 'http' && $port != 80
-        ) {
-            $portString = sprintf(':%s', $port);
+        try {
+            return [
+                strval(Uri::createFromComponents([
+                    'scheme' => $scheme,
+                    'host' => $host,
+                    'port' => $port,
+                ])),
+            ];
+        } catch (UriException|TypeError $e) {
+            Logging::warn("could not parse server origin : {$e}");
+
+            return [];
         }
-        $requestedUrl = sprintf(
-            '%s://%s%s',
-            $scheme,
-            $host,
-            $portString
-        );
+    }
 
-        return array_merge($allowedCorsUrls, [
-            $requestedUrl,
-        ]);
+    /**
+     * Get database allowed origins.
+     *
+     * @return array
+     */
+    private static function getDatabaseAllowedOrigins()
+    {
+        return array_map(
+            'trim',
+            explode(
+                PHP_EOL,
+                Application_Model_Preference::GetAllowedCorsUrls(),
+            )
+        );
     }
 }
