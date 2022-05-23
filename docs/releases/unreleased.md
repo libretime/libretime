@@ -16,6 +16,10 @@ The LibreTime project wants to thank the following contributors for authoring PR
 
 ## :fire: Deprecation and removal
 
+### Allowed CORS origins configuration location
+
+The allowed CORS origins configuration moved from the database to the configuration file. The field in the general preference form is deprecated and will be removed in the next release. Be sure to move your allowed CORS origins configuration to the [configuration file](../admin-manual/setup/configuration.md).
+
 ## :arrow_up: Upgrading
 
 ### New configuration file
