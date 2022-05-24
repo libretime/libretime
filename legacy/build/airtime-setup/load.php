@@ -120,10 +120,7 @@ function checkRMQConnection()
  */
 function checkAnalyzerService()
 {
-    exec('pgrep -f libretime-analyzer', $out, $status);
-    if (($out > 0) && $status == 0) {
-        return posix_kill(rtrim($out[0]), 0);
-    }
+    exec('systemctl is-active libretime-analyzer --quiet', $out, $status);
 
     return $status == 0;
 }
@@ -135,10 +132,7 @@ function checkAnalyzerService()
  */
 function checkPlayoutService()
 {
-    exec('pgrep -f libretime-playout', $out, $status);
-    if ($out > 0) {
-        return posix_kill(rtrim($out[0]), 0);
-    }
+    exec('systemctl is-active libretime-playout --quiet', $out, $status);
 
     return $status == 0;
 }
@@ -150,10 +144,7 @@ function checkPlayoutService()
  */
 function checkLiquidsoapService()
 {
-    exec('pgrep -f libretime-liquidsoap', $out, $status);
-    if ($out > 0) {
-        return posix_kill(rtrim($out[0]), 0);
-    }
+    exec('systemctl is-active libretime-liquidsoap --quiet', $out, $status);
 
     return $status == 0;
 }
