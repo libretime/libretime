@@ -11,3 +11,4 @@ Welcome to the **LibreTime developer manual**, you should find guides to integra
 ## Improve and contribute to LibreTime
 
 - Learn about the [architecture of LibreTime](./design/architecture.md)
+- Learn about the [database migrations](./design/database-migrations.md)

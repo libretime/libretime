@@ -214,28 +214,20 @@ class AirtimeInstall
     public static function CreateDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost, $dbport)
     {
         echo ' * Creating database tables' . PHP_EOL;
-        // Put Propel sql files in Database
-        // $command = AirtimeInstall::CONF_DIR_WWW."/library/propel/generator/bin/propel-gen ".AirtimeInstall::CONF_DIR_WWW."/build/ insert-sql 2>/dev/null";
-        $dir = self::GetAirtimeSrcDir() . '/build/sql/';
-        $files = ['schema.sql', 'sequences.sql', 'views.sql', 'triggers.sql', 'defaultdata.sql'];
-        foreach ($files as $f) {
-            $command = <<<"END"
-PGPASSWORD={$dbpasswd} \\
-/usr/bin/psql \\
-    --host={$dbhost} \\
-    --port={$dbport} \\
-    --dbname={$dbname} \\
-    --username={$dbuser} \\
-    --file {$dir}{$f} 2>&1
-END;
-            @exec($command, $output, $results);
+        $con = Propel::getConnection();
+        $sqlDir = dirname(ROOT_PATH) . '/api/libretime_api/legacy/migrations/sql/';
+        $files = ['schema.sql', 'data.sql'];
+        foreach ($files as $file) {
+            try {
+                $sql = file_get_contents($sqlDir . $file);
+                $con->exec($sql);
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+
+                throw $e;
+            }
         }
         AirtimeInstall::$databaseTablesCreated = true;
-    }
-
-    final public static function UpdateDatabaseTables()
-    {
-        UpgradeManager::doUpgrade();
     }
 
     public static function SetAirtimeVersion($p_version)

@@ -167,23 +167,17 @@ class DatabaseSetup extends Setup
      */
     private function createDatabaseTables()
     {
-        $sqlDir = dirname(__DIR__, 2) . '/build/sql/';
-        $files = ['schema.sql', 'sequences.sql', 'views.sql', 'triggers.sql', 'defaultdata.sql'];
-        foreach ($files as $f) {
+        $sqlDir = dirname(ROOT_PATH) . '/api/libretime_api/legacy/migrations/sql/';
+        $files = ['schema.sql', 'data.sql'];
+        foreach ($files as $file) {
             try {
-                /*
-                 * Unfortunately, we need to use exec here due to PDO's lack of support for importing
-                 * multi-line .sql files. PDO->exec() almost works, but any SQL errors stop the import,
-                 * so the necessary DROPs on non-existent tables make it unusable. Prepared statements
-                 * have multiple issues; they similarly die on any SQL errors, fail to read in multi-line
-                 * commands, and fail on any unescaped ? or $ characters.
-                 */
-                exec('export PGPASSWORD=' . self::$_properties['password'] . ' && /usr/bin/psql -U ' . self::$_properties['user']
-                    . ' --dbname ' . self::$_properties['name'] . ' -h ' . self::$_properties['host']
-                    . " -f {$sqlDir}{$f} 2>/dev/null", $out, $status);
-            } catch (Exception $e) {
+                $sql = file_get_contents($sqlDir . $file);
+                self::$dbh->exec($sql);
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+
                 throw new AirtimeDatabaseException(
-                    'There was an error setting up the Airtime schema!',
+                    'There was an error setting up the Airtime schema!: ' . $e->getMessage(),
                     [self::DB_NAME]
                 );
             }

@@ -21,6 +21,9 @@ setup(
     },
     license="AGPLv3",
     packages=find_packages(),
+    package_data={
+        "libretime_api": ["legacy/migrations/sql/*.sql"],
+    },
     include_package_data=True,
     python_requires=">=3.6",
     entry_points={

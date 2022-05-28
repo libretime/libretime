@@ -54,15 +54,9 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             $this->_initViewHelpers();
         }
 
-        // Skip upgrades and task management when running unit tests
+        // Skip task management when running unit tests
         if (getenv('AIRTIME_UNIT_TEST') != 1) {
             $taskManager = TaskManager::getInstance();
-
-            // Run the upgrade on each request (if it needs to be run)
-            // We can't afford to wait 7 minutes to run an upgrade: users could
-            // have several minutes of database errors while waiting for a
-            // schema change upgrade to happen after a deployment
-            $taskManager->runTask('UpgradeTask');
 
             // Piggyback the TaskManager onto API calls. This provides guaranteed consistency
             // (there is at least one API call made from pypo to Airtime every 7 minutes) and
