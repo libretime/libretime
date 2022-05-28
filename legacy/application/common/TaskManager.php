@@ -181,32 +181,6 @@ interface AirtimeTask
 }
 
 /**
- * Class UpgradeTask.
- *
- * Checks the current Airtime version and runs any outstanding upgrades
- */
-class UpgradeTask implements AirtimeTask
-{
-    /**
-     * Check the current Airtime schema version to see if an upgrade should be run.
-     *
-     * @return bool true if an upgrade is needed
-     */
-    public function shouldBeRun()
-    {
-        return UpgradeManager::checkIfUpgradeIsNeeded();
-    }
-
-    /**
-     * Run all upgrades above the current schema version.
-     */
-    public function run()
-    {
-        UpgradeManager::doUpgrade();
-    }
-}
-
-/**
  * Class CeleryTask.
  *
  * Checks the Celery broker task queue and runs callbacks for completed tasks

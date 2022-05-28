@@ -1,6 +1,0 @@
-# Sqlfile -> Database map
-schema.sql=airtime
-sequences.sql=campcaster
-views.sql=campcaster
-triggers.sql=campcaster
-defaultdata.sql=campcaster

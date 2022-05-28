@@ -1,0 +1,27 @@
+from django.db import migrations
+
+from ._migrations import legacy_migration_factory
+
+UP = """
+-- DELETE FROM cc_pref WHERE keystr = 'system_version';
+-- INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '2.5.5');
+
+ALTER TABLE cc_show ADD COLUMN image_path varchar(255) DEFAULT '';
+ALTER TABLE cc_show_instances ADD COLUMN description varchar(255) DEFAULT '';
+"""
+
+DOWN = None
+
+
+class Migration(migrations.Migration):
+    dependencies = [
+        ("legacy", "0005_2_5_4"),
+    ]
+    operations = [
+        migrations.RunPython(
+            code=legacy_migration_factory(
+                target="2.5.5",
+                sql=UP,
+            )
+        )
+    ]
