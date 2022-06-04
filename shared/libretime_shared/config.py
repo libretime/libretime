@@ -84,7 +84,6 @@ class BaseConfig(BaseModel):
 
         return result
 
-    # pylint: disable=no-self-use
     def _load_file_values(
         self,
         filepath: Optional[Path] = None,
