@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2021-10-15 19:56+0200\n"
-"PO-Revision-Date: 2021-10-18 15:49+0000\n"
-"Last-Translator: Artem <Localizer_in_Russian@protonmail.com>\n"
+"PO-Revision-Date: 2022-06-05 10:17+0000\n"
+"Last-Translator: МАН69К <weblate@mah69k.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/libretime/legacy/"
 "ru/>\n"
 "Language: ru_RU\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.13-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -1657,9 +1657,15 @@ msgid "Can not connect to the streaming server"
 msgstr "Не удалось подключиться к потоковому серверу"
 
 #: application/controllers/LocaleController.php:186
-#, fuzzy, php-format
+#, php-format
 msgid "If %s is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."
-msgstr "Если LibreTime находится за маршрутизатором или брандмауэром, вам может понадобиться настроить переадресацию портов и информация в этом поле будет неверной. В этом случае вам необходимо вручную обновить это поле так, чтобы оно показывало верный хост:порт/точка-монтирования, к которому должен подключиться ваш источник. Допустимый диапазон портов находится между 1024 и 49151."
+msgstr ""
+"Если %s находится за маршрутизатором или брандмауэром, вам может "
+"понадобиться настроить переадресацию портов и информация в этом поле будет "
+"неверной. В этом случае вам необходимо вручную обновить это поле так, чтобы "
+"оно показывало верный хост/порт/точку монтирования, к которому должен "
+"подключиться ваш источник. Допустимый диапазон портов находится между 1024 и "
+"49151."
 
 #: application/controllers/LocaleController.php:187
 #, php-format
@@ -2155,11 +2161,11 @@ msgstr "Гости могут следующее:"
 
 #: application/controllers/LocaleController.php:335
 msgid "View schedule"
-msgstr "- Видеть запланированные Программы;"
+msgstr "Просматривать расписание"
 
 #: application/controllers/LocaleController.php:336
 msgid "View show content"
-msgstr "- Видеть содержимое Программы;"
+msgstr "Просматривать содержимое программы"
 
 #: application/controllers/LocaleController.php:337
 msgid "DJs can do the following:"
@@ -2171,15 +2177,15 @@ msgstr "- Управлять контентом назначенной ему П
 
 #: application/controllers/LocaleController.php:339
 msgid "Import media files"
-msgstr "- Импортировать медиа-файлы;"
+msgstr "Импортировать медиа-файлы"
 
 #: application/controllers/LocaleController.php:340
 msgid "Create playlists, smart blocks, and webstreams"
-msgstr "- Создавать Плейлисты, Смарт-блоки и веб-потоки;"
+msgstr "Создавать плейлисты, смарт-блоки и вебстримы"
 
 #: application/controllers/LocaleController.php:341
 msgid "Manage their own library content"
-msgstr "- Управлять собственным контентом в Библиотеке;"
+msgstr "Управлять содержимым собственной библиотеки"
 
 #: application/controllers/LocaleController.php:342
 msgid "Program Managers can do the following:"
@@ -2187,15 +2193,15 @@ msgstr "Менеджеры Программ могут следующее:"
 
 #: application/controllers/LocaleController.php:343
 msgid "View and manage show content"
-msgstr "- Видеть и управлять контентом Программы;"
+msgstr "Просматривать и управлять содержимым программы"
 
 #: application/controllers/LocaleController.php:344
 msgid "Schedule shows"
-msgstr "- Планировать Программы;"
+msgstr "Планировать программы"
 
 #: application/controllers/LocaleController.php:345
 msgid "Manage all library content"
-msgstr "- Управлять всем контентом Библиотеки;"
+msgstr "Управлять содержимым всех библиотек"
 
 #: application/controllers/LocaleController.php:346
 msgid "Admins can do the following:"
@@ -2203,31 +2209,31 @@ msgstr "Администраторы могут:"
 
 #: application/controllers/LocaleController.php:347
 msgid "Manage preferences"
-msgstr "- Управлять настройками;"
+msgstr "Управлять настройками"
 
 #: application/controllers/LocaleController.php:348
 msgid "Manage users"
-msgstr "- Управлять пользователями;"
+msgstr "Управлять пользователями"
 
 #: application/controllers/LocaleController.php:349
 msgid "Manage watched folders"
-msgstr "- Управлять просматриваемыми папками;"
+msgstr "Управлять просматриваемыми папками"
 
 #: application/controllers/LocaleController.php:350
 msgid "Send support feedback"
-msgstr "- Отправлять отзыв поддержке;"
+msgstr "Отправлять отзыв поддержке"
 
 #: application/controllers/LocaleController.php:351
 msgid "View system status"
-msgstr "- Видеть Статус Системы;"
+msgstr "Просматривать статус системы"
 
 #: application/controllers/LocaleController.php:352
 msgid "Access playout history"
-msgstr "- Получить доступ к истории воспроизведений;"
+msgstr "Получить доступ к истории воспроизведений"
 
 #: application/controllers/LocaleController.php:353
 msgid "View listener stats"
-msgstr "- Видеть статистику слушателей;"
+msgstr "Видеть статистику слушателей"
 
 #: application/controllers/LocaleController.php:355
 msgid "Show / hide columns"
