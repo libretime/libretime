@@ -7005,7 +7005,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                 $this->thirdPartyTrackReferencessScheduledForDeletion = clone $this->collThirdPartyTrackReferencess;
                 $this->thirdPartyTrackReferencessScheduledForDeletion->clear();
             }
-            $this->thirdPartyTrackReferencessScheduledForDeletion[]= clone $thirdPartyTrackReferences;
+            $this->thirdPartyTrackReferencessScheduledForDeletion[]= $thirdPartyTrackReferences;
             $thirdPartyTrackReferences->setCcFiles(null);
         }
 
