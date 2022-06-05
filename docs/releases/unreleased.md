@@ -64,6 +64,20 @@ sudo rm -f /etc/httpd/conf.d/airtime*
 sudo rm -f /etc/php.d/airtime.ini
 ```
 
+### Shared files path
+
+:::caution
+
+Please run this **before the upgrade procedure**!
+
+:::
+
+The shared files path changed from `/usr/share/airtime` to `/usr/share/libretime`. The directory must be renamed:
+
+```bash
+sudo mv /usr/share/airtime /usr/share/libretime
+```
+
 ### Replaced uWSGI with Gunicorn
 
 [uWSGI](https://uwsgi-docs.readthedocs.io) was replaced by [Gunicorn](https://gunicorn.org/), the packages and configuration file should be removed from the system:
