@@ -182,7 +182,7 @@ CONFIG_EXAMPLE_FILEPATH="$SCRIPT_DIR/installer/config.yml"
 WORKING_DIR="/var/lib/libretime"
 LOG_DIR="/var/log/libretime"
 STORAGE_DIR="/srv/libretime"
-LEGACY_WEB_ROOT="/usr/share/airtime/legacy"
+LEGACY_WEB_ROOT="/usr/share/libretime/legacy"
 
 SERVICE_DIR="/usr/lib/systemd/system"
 
