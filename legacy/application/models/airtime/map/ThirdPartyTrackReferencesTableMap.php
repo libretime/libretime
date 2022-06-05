@@ -42,7 +42,7 @@ class ThirdPartyTrackReferencesTableMap extends TableMap
         $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
         $this->addColumn('service', 'DbService', 'VARCHAR', true, 256, null);
         $this->addColumn('foreign_id', 'DbForeignId', 'VARCHAR', false, 256, null);
-        $this->addForeignKey('file_id', 'DbFileId', 'INTEGER', 'cc_files', 'id', true, null, 0);
+        $this->addForeignKey('file_id', 'DbFileId', 'INTEGER', 'cc_files', 'id', false, null, 0);
         $this->addColumn('upload_time', 'DbUploadTime', 'TIMESTAMP', false, null, null);
         $this->addColumn('status', 'DbStatus', 'VARCHAR', false, 256, null);
         // validators

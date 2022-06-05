@@ -493,7 +493,7 @@ abstract class BaseThirdPartyTrackReferencesQuery extends ModelCriteria
      *
      * @return ThirdPartyTrackReferencesQuery The current query, for fluid interface
      */
-    public function joinCcFiles($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinCcFiles($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('CcFiles');
@@ -528,7 +528,7 @@ abstract class BaseThirdPartyTrackReferencesQuery extends ModelCriteria
      *
      * @return   CcFilesQuery A secondary query class using the current class as primary query
      */
-    public function useCcFilesQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useCcFilesQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
             ->joinCcFiles($relationAlias, $joinType)

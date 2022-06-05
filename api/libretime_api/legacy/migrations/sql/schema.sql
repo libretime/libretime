@@ -667,7 +667,7 @@ CREATE TABLE "third_party_track_references"
     "id" serial NOT NULL,
     "service" VARCHAR(256) NOT NULL,
     "foreign_id" VARCHAR(256),
-    "file_id" INTEGER DEFAULT 0 NOT NULL,
+    "file_id" INTEGER DEFAULT 0,
     "upload_time" TIMESTAMP,
     "status" VARCHAR(256),
     PRIMARY KEY ("id"),
