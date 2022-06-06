@@ -7,7 +7,7 @@ KillMode=mixed
 PrivateTmp=true
 
 Environment=LIBRETIME_LOG_FILEPATH=/var/log/libretime/api.log
-Environment=LIBRETIME_CONFIG_FILEPATH=/etc/airtime/config.yml
+Environment=LIBRETIME_CONFIG_FILEPATH=/etc/libretime/config.yml
 
 ExecStart=/usr/bin/gunicorn \
         --workers 4 \

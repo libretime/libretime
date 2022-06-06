@@ -32,6 +32,12 @@ The configuration file name changed from `airtime.conf` to `config.yml`. Please 
 sudo mv /etc/airtime/airtime.conf /etc/airtime/config.yml
 ```
 
+The configuration directory changed from `/etc/airtime` to `/etc/libretime`. Please rename your configuration directory using the following command:
+
+```bash
+sudo mv /etc/airtime /etc/libretime
+```
+
 The configuration file format changed to `yml`. Please rewrite your [configuration file](../admin-manual/setup/configuration.md) using the [yaml format](https://yaml.org/).
 
 ### Apache and PHP configuration files

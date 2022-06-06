@@ -843,7 +843,7 @@ if [ -f /etc/airtime/airtime.conf ]; then
     verbose "...Done"
 
     echo "Looks like you have an old version of Airtime. Your current /etc/airtime/airtime.conf \
-will be moved to /etc/airtime/airtime.conf.tmp"
+will be moved to /etc/libretime/airtime.conf.tmp"
     # If we don't remove the existing python files in /usr/lib and the
     # /etc/init.d startup scripts, services won't work properly
     if [ -d /usr/lib/airtime/ ]; then
@@ -864,7 +864,7 @@ will be moved to /etc/airtime/airtime.conf.tmp"
       rm -rf "/usr/share/airtime"
     fi
 
-    mv /etc/airtime/airtime.conf /etc/airtime/airtime.conf.tmp
+    mv /etc/airtime/airtime.conf /etc/libretime/airtime.conf.tmp
     set -e
   fi
 fi
@@ -964,7 +964,7 @@ if [ "$icecast" = "t" ]; then
   fi
   systemInitCommand enable "${icecast_unit_name}"
   # only update icecast password if
-  if [ ! -e "/etc/airtime/airtime.conf" ] && [ ! -e "/etc/airtime/airtime.conf.tmp" ]; then
+  if [ ! -e "/etc/libretime/airtime.conf" ] && [ ! -e "/etc/libretime/airtime.conf.tmp" ]; then
     icecast_pass=$(tr -dc _A-Z-a-z-0-9 < /dev/urandom | head -c"${1:-12}")
     echo "$icecast_pass" > /tmp/icecast_pass
     loud "\n New install detected setting icecast password to random value."
@@ -1128,23 +1128,23 @@ if [ $skip_rabbitmq -eq 0 ]; then
   loudCmd "rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} .\* .\* .\*"
 fi
 
-if [ ! -d "/etc/airtime" ]; then
+if [ ! -d "/etc/libretime" ]; then
   loud "\n-----------------------------------------------------"
   loud "                * Installing Libretime *               "
   loud "-----------------------------------------------------"
 
-  verbose "\n * Creating /etc/airtime/ directory..."
-  mkdir /etc/airtime
+  verbose "\n * Creating /etc/libretime/ directory..."
+  mkdir /etc/libretime
 fi
 
 if [ "$icecast" = "t" ]; then
-  if [ ! -e "/etc/airtime/airtime.conf" ] && [ ! -e "/etc/airtime/airtime.conf.tmp" ]; then
-    # need to copy the icecast_pass from temp to /etc/airtime so web-based installer can read it
-    cp /tmp/icecast_pass /etc/airtime/icecast_pass
+  if [ ! -e "/etc/libretime/airtime.conf" ] && [ ! -e "/etc/libretime/airtime.conf.tmp" ]; then
+    # need to copy the icecast_pass from temp to /etc/libretime so web-based installer can read it
+    cp /tmp/icecast_pass /etc/libretime/icecast_pass
   fi
 fi
 
-chown -R ${web_user}:${web_user} /etc/airtime
+chown -R ${web_user}:${web_user} /etc/libretime
 
 if [ ! -d "/srv/airtime" ]; then
   mkdir -p /srv/airtime
@@ -1159,7 +1159,7 @@ if [ "$selinux" = "t" ]; then
   loud "-----------------------------------------------------"
 
   verbose "\n * Running restorecon..."
-  loudCmd "restorecon -Rv /etc/airtime /srv/airtime > /dev/null 2>&1"
+  loudCmd "restorecon -Rv /etc/libretime /srv/airtime > /dev/null 2>&1"
   verbose "...Done"
 fi
 

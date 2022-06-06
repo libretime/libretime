@@ -20,7 +20,7 @@ defined('VERBOSE_STACK_TRACE') || define('VERBOSE_STACK_TRACE', getenv('VERBOSE_
 define('LIBRETIME_LOG_DIR', getenv('LIBRETIME_LOG_DIR') ?: '/var/log/libretime');
 define('LIBRETIME_LOG_FILEPATH', getenv('LIBRETIME_LOG_FILEPATH') ?: LIBRETIME_LOG_DIR . '/legacy.log');
 
-define('LIBRETIME_CONFIG_DIR', getenv('LIBRETIME_CONFIG_DIR') ?: '/etc/airtime');
+define('LIBRETIME_CONFIG_DIR', getenv('LIBRETIME_CONFIG_DIR') ?: '/etc/libretime');
 define('LIBRETIME_CONF_DIR', LIBRETIME_CONFIG_DIR); // Deprecated
 define('LIBRETIME_CONFIG_FILEPATH', getenv('LIBRETIME_CONFIG_FILEPATH') ?: LIBRETIME_CONFIG_DIR . '/config.yml');
 
