@@ -39,9 +39,15 @@ The `database` section configure the PostgreSQL connection.
 
 :::caution
 
-<!-- TODO: Add link to a guide on how to edit such values -->
-
 Before editing this section be sure to update the PostgreSQL server with the desired values.
+
+#### Changing a PostgreSQL user password
+
+You can change the `libretime` PostgreSQL user password using:
+
+```bash
+sudo -u postgres psql -c "ALTER USER libretime PASSWORD 'new-password';"
+```
 
 :::
 
@@ -71,9 +77,15 @@ The `rabbitmq` section configure the RabbitMQ connection.
 
 :::caution
 
-<!-- TODO: Add link to a guide on how to edit such values -->
-
 Before editing this section be sure to update the RabbitMQ server with the desired values.
+
+#### Changing a RabbitMq user password
+
+You can change the `libretime` RabbitMQ user password using:
+
+```bash
+sudo rabbitmqctl change_password "libretime" "new-password"
+```
 
 :::
 
