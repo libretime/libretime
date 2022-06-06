@@ -28,7 +28,7 @@ It is strongly recommended that you do this before exposing your server to the i
    Make sure to include the semicolon at the end! A response of `ALTER ROLE` means that the command ran successfully.
 3. Change the password for the _airtime_ user with `ALTER USER airtime WITH PASSWORD 'new_password';`
    A response of `ALTER ROLE` means that the command ran successfully.
-4. If all is successful, logout of PostgreSQL with `\q`, go back to `/etc/airtime/airtime.conf` to edit the password
+4. If all is successful, logout of PostgreSQL with `\q`, go back to `/etc/airtime/config.yml` to edit the password
    in the config file, and restart all services mentioned in the previous section.
 
 ## Icecast
@@ -61,4 +61,4 @@ To change the default password for RabbitMQ, run the following command
 sudo rabbitmqctl change_password airtime newpassword
 ```
 
-and then update the `/etc/airtime/airtime.conf` file with the new password.
+and then update the `/etc/airtime/config.yml` file with the new password.

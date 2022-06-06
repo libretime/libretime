@@ -55,8 +55,8 @@ class MediaSetup extends Setup
 
             /*
              * If we're upgrading from an old Airtime instance (pre-2.5.2) we rename their old
-             * airtime.conf to airtime.conf.tmp during the setup process. Now that we're done,
-             * we can rename it to airtime.conf.bak to avoid confusion.
+             * config.yml to config.yml.tmp during the setup process. Now that we're done,
+             * we can rename it to config.yml.bak to avoid confusion.
              */
             $fileName = LIBRETIME_CONFIG_FILEPATH;
             $tmpFile = $fileName . '.tmp';
@@ -65,7 +65,7 @@ class MediaSetup extends Setup
                 rename($tmpFile, $bakFile);
             }
         } else {
-            self::$message = "Failed to move airtime.conf; /etc/airtime doesn't exist!";
+            self::$message = "Failed to move config.yml; /etc/airtime doesn't exist!";
             self::$errors[] = 'ERR';
         }
 
@@ -76,7 +76,7 @@ class MediaSetup extends Setup
     }
 
     /**
-     * Moves /tmp/airtime.temp.conf to /etc/airtime.conf and then removes it to complete setup.
+     * Moves /tmp/airtime.temp.conf to /etc/airtime/config.yml and then removes it to complete setup.
      *
      * @return bool false if either of the copy or removal operations fail
      */

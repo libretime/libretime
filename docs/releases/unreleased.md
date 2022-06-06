@@ -26,6 +26,12 @@ Please run this **before the upgrade procedure**!
 
 :::
 
+The configuration file name changed from `airtime.conf` to `config.yml`. Please rename your configuration file using the following command:
+
+```bash
+sudo mv /etc/airtime/airtime.conf /etc/airtime/config.yml
+```
+
 The configuration file format changed to `yml`. Please rewrite your [configuration file](../admin-manual/setup/configuration.md) using the [yaml format](https://yaml.org/).
 
 ### Apache and PHP configuration files
