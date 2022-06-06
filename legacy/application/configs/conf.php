@@ -17,7 +17,7 @@ class Config
     public static function loadConfig()
     {
         $filename = $_SERVER['LIBRETIME_CONFIG_FILEPATH'] ?? LIBRETIME_CONFIG_FILEPATH;
-        $values = parse_ini_file($filename, true);
+        $values = yaml_parse_file($filename);
 
         $CC_CONFIG = [];
 
@@ -28,7 +28,7 @@ class Config
         // Explode public_url into multiple component with possible defaults for required fields
         try {
             $public_url = Uri::createFromString($values['general']['public_url']);
-        } catch (UriException $e) {
+        } catch (UriException|TypeError $e) {
             echo 'could not parse configuration field general.public_url: ' . $e->getMessage();
 
             exit;

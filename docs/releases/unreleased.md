@@ -18,6 +18,16 @@ The LibreTime project wants to thank the following contributors for authoring PR
 
 ## :arrow_up: Upgrading
 
+### New configuration file
+
+:::caution
+
+Please run this **before the upgrade procedure**!
+
+:::
+
+The configuration file format changed to `yml`. Please rewrite your [configuration file](../admin-manual/setup/configuration.md) using the [yaml format](https://yaml.org/).
+
 ### Apache and PHP configuration files
 
 :::caution
