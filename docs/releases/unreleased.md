@@ -20,7 +20,13 @@ The LibreTime project wants to thank the following contributors for authoring PR
 
 ### Apache and PHP configuration files
 
-The Apache configuration file has been updated and renamed, in addition the PHP configuration has been merged in the Apache configuration. The old configuration files must be removed from the system **before the upgrade procedure**:
+:::caution
+
+Please run this **before the upgrade procedure**!
+
+:::
+
+The Apache configuration file has been updated and renamed, in addition the PHP configuration has been merged in the Apache configuration. The old configuration files must be removed from the system:
 
 ```bash
 # On Debian/Ubuntu systems
