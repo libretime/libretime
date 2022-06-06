@@ -49,7 +49,7 @@ On a common setup, to access LibreTime specific logs you should search for the f
 For some LibreTime services, you can set a higher log level using the `LIBRETIME_LOG_LEVEL` environment variable, or by running the service by hand and using a command line flag:
 
 ```bash
-sudo -u www-data libretime-analyzer --config /etc/airtime/airtime.conf --log-level debug
+sudo -u www-data libretime-analyzer --config /etc/airtime/config.yml --log-level debug
 ```
 
 The `/var/log/apache2/libretime.error.log` file contains logs from the web server.

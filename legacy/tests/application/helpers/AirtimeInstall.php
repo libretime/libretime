@@ -48,8 +48,8 @@ class AirtimeInstall
         } catch (PropelException $e) {
             return null;
         }
-        if (file_exists('/etc/airtime/airtime.conf')) {
-            $values = parse_ini_file('/etc/airtime/airtime.conf', true);
+        if (file_exists('/etc/airtime/config.yml')) {
+            $values = parse_ini_file('/etc/airtime/config.yml', true);
         } else {
             return null;
         }

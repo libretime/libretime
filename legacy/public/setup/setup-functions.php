@@ -14,7 +14,7 @@ abstract class Setup
     protected static $_section;
 
     /**
-     * Array of key->value pairs for airtime.conf.
+     * Array of key->value pairs for config.yml.
      *
      * @var array
      */
@@ -51,7 +51,7 @@ abstract class Setup
             }
 
             if (substr(trim($line), 0, 1) == '#') {
-                /* Workaround to strip comments from airtime.conf.
+                /* Workaround to strip comments from config.yml.
                  * We need to do this because python's ConfigObj and PHP
                  * have different (and equally strict) rules about comment
                  * characters in configuration files.
@@ -123,8 +123,8 @@ require_once 'general-setup.php';
 
 require_once 'media-setup.php';
 
-// If airtime.conf exists, we shouldn't be here
-if (!file_exists('/etc/airtime/airtime.conf')) {
+// If config.yml exists, we shouldn't be here
+if (!file_exists('/etc/airtime/config.yml')) {
     if (isset($_GET['obj']) && $objType = $_GET['obj']) {
         $obj = new $objType($_POST);
         if ($obj instanceof Setup) {

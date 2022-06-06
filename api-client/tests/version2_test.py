@@ -7,7 +7,7 @@ from libretime_api_client.version2 import AirtimeApiClient
 
 @pytest.fixture()
 def config_filepath(tmp_path: Path):
-    filepath = tmp_path / "airtime.conf"
+    filepath = tmp_path / "config.yml"
     filepath.write_text(
         """
 general:
