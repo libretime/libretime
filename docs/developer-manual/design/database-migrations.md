@@ -16,7 +16,7 @@ The first Django migration is the initial schema creation using the `schema.sql`
 
 :::
 
-```
+```mermaid
 stateDiagram-v2
     state is_django_migration_applied <<choice>>
     [*] --> is_django_migration_applied: Is the django migration ID in the DB ?

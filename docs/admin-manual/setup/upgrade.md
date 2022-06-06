@@ -11,6 +11,14 @@ You should always have proper backups and a rollback scenario in place before up
 
 :::
 
+## Stop the services
+
+Run the following commands to apply the database migrations:
+
+```bash
+sudo systemctl stop libretime.target
+```
+
 ## Make a backup
 
 Follow [the backup guide](../backup.md) to make an extra backup of your installation and prepare a rollback scenario in case of accidental data loss during the upgrade process.
@@ -28,7 +36,7 @@ Be sure to carefully read **all** the [releases notes](../../releases/README.md)
 Run the following command to apply the database migrations:
 
 ```bash
-libretime-api migrate
+sudo -u www-data libretime-api migrate
 ```
 
 ## Restart the services
@@ -36,14 +44,7 @@ libretime-api migrate
 Restart all the services to make sure all the changes are applied.
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl restart \
-   libretime-analyzer \
-   libretime-api \
-   libretime-celery \
-   libretime-playout \
-   libretime-liquidsoap \
-   apache2
+sudo systemctl restart libretime.target
 ```
 
 ## Verify
@@ -51,13 +52,7 @@ sudo systemctl restart \
 Verify that all the services are still running after the install process:
 
 ```bash
-sudo systemctl status \
-   libretime-analyzer \
-   libretime-api \
-   libretime-celery \
-   libretime-playout \
-   libretime-liquidsoap \
-   apache2
+sudo systemctl --all --plain | egrep 'libretime|apache2'
 ```
 
 Verify for any error in the logs after the install process:

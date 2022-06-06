@@ -21,7 +21,7 @@ Follow [the backup guide](../backup.md) to make a backup of your current Airtime
 
 ## Install
 
-Install LibreTime on a new system by following the [install guide](./install.md), and **don't run the setup wizard**.
+Install LibreTime on a new system by [running the installer](./install.md#run-the-installer), and **don't run the setup tasks**.
 
 ## Restore the backup
 
