@@ -1,4 +1,4 @@
-%include "/etc/airtime/liquidsoap.cfg"
+%include "/etc/libretime/liquidsoap.cfg"
 
 if (log_file != "") then
     set("log.file.path", log_file)

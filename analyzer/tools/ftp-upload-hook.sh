@@ -19,7 +19,7 @@ post_file() {
   file_path="${stripped_file_path}"
   # filename="${file_path##*/}"
 
-  airtime_conf_path=/etc/airtime/config.yml
+  airtime_conf_path=/etc/libretime/config.yml
 
   #instance_path will look like 1/1384, for example
   http_path=$(grep base_url ${airtime_conf_path} | awk '{print $3;}')

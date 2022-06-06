@@ -46,7 +46,7 @@ The Icecast server has a _fallback-mount_ feature which can be used to move clie
 
 To enable fallback mounts, edit the main Icecast configuration file (`/etc/icecast2/icecast.xml`) to define the mount points you will use, and the relationship between them.
 
-The example mount section provided in the `icecast.xml` file is commented out by default. Before or after the commented section, add three mount point definitions. The default mount point used by LibreTime is `/airtime_128` which is shown in the `/etc/airtime/liquidsoap.cfg` file. You must also define a mount point for the live source (ex. `/live.ogg`) and a mount point for the public to connect to (ex. `/stream.ogg`).
+The example mount section provided in the `icecast.xml` file is commented out by default. Before or after the commented section, add three mount point definitions. The default mount point used by LibreTime is `/airtime_128` which is shown in the `/etc/libretime/liquidsoap.cfg` file. You must also define a mount point for the live source (ex. `/live.ogg`) and a mount point for the public to connect to (ex. `/stream.ogg`).
 
 ```xml title="/etc/icecast2/icecast.xml"
 <mount>
@@ -75,7 +75,7 @@ Setting the value of _fallback-override_ to 1 (enabled) means that when the `/li
 
 ## Source configuration
 
-Connect the other source to the Icecast server with the same parameters defined in the `/etc/airtime/liquidsoap.cfg` file, except for the mount point. This should one of the mount points you have defined in the `/etc/icecast2/icecast.xml` file, such as `/live.ogg` in the example above.
+Connect the other source to the Icecast server with the same parameters defined in the `/etc/libretime/liquidsoap.cfg` file, except for the mount point. This should one of the mount points you have defined in the `/etc/icecast2/icecast.xml` file, such as `/live.ogg` in the example above.
 
 :::tip Streaming with Mixxx
 

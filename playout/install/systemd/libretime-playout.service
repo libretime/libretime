@@ -4,7 +4,7 @@ After=network-online.target
 
 [Service]
 Environment=LIBRETIME_LOG_FILEPATH=/var/log/libretime/playout.log
-Environment=LIBRETIME_CONFIG_FILEPATH=/etc/airtime/config.yml
+Environment=LIBRETIME_CONFIG_FILEPATH=/etc/libretime/config.yml
 WorkingDirectory=/var/lib/libretime/playout
 
 ExecStart=/usr/local/bin/libretime-playout

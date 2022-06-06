@@ -21,7 +21,7 @@ Feel free to pick the backup software of your choice, but know that rsync and si
 
 ### Backup the configuration
 
-On common setups, you need to backup the entire `/etc/airtime` folder.
+On common setups, you need to backup the entire `/etc/libretime` folder.
 
 ### Backup the database
 

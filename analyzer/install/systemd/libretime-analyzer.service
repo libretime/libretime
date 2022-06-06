@@ -3,7 +3,7 @@ Description=LibreTime Media Analyzer Service
 
 [Service]
 Environment=LIBRETIME_LOG_FILEPATH=/var/log/libretime/analyzer.log
-Environment=LIBRETIME_CONFIG_FILEPATH=/etc/airtime/config.yml
+Environment=LIBRETIME_CONFIG_FILEPATH=/etc/libretime/config.yml
 WorkingDirectory=/var/lib/libretime/analyzer
 
 ExecStart=/usr/local/bin/libretime-analyzer

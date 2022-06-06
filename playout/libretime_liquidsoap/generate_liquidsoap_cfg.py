@@ -11,7 +11,7 @@ from loguru import logger
 
 def generate_liquidsoap_config(ss, log_filepath: Optional[Path]):
     data = ss["msg"]
-    fh = open("/etc/airtime/liquidsoap.cfg", "w")
+    fh = open("/etc/libretime/liquidsoap.cfg", "w")
     fh.write("################################################\n")
     fh.write("# THIS FILE IS AUTO GENERATED. DO NOT CHANGE!! #\n")
     fh.write("################################################\n")
