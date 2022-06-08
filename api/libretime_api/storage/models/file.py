@@ -2,11 +2,12 @@ from django.db import models
 
 
 class File(models.Model):
-    library = models.CharField(
-        max_length=16,
+    library = models.ForeignKey(
+        "storage.Library",
+        models.DO_NOTHING,
         blank=True,
         null=True,
-        db_column="track_type",
+        db_column="track_type_id",
     )
 
     owner = models.ForeignKey(

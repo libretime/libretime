@@ -22,6 +22,10 @@
  * @method CcTracktypesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method CcTracktypesQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
+ * @method CcTracktypesQuery leftJoinCcFiles($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcFiles relation
+ * @method CcTracktypesQuery rightJoinCcFiles($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcFiles relation
+ * @method CcTracktypesQuery innerJoinCcFiles($relationAlias = null) Adds a INNER JOIN clause to the query using the CcFiles relation
+ *
  * @method CcTracktypes findOne(PropelPDO $con = null) Return the first CcTracktypes matching the query
  * @method CcTracktypes findOneOrCreate(PropelPDO $con = null) Return the first CcTracktypes matching the query, or a new CcTracktypes object populated from the query conditions when no match is found
  *
@@ -385,6 +389,80 @@ abstract class BaseCcTracktypesQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CcTracktypesPeer::DESCRIPTION, $dbDescription, $comparison);
+    }
+
+    /**
+     * Filter the query by a related CcFiles object
+     *
+     * @param   CcFiles|PropelObjectCollection $ccFiles  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CcTracktypesQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCcFiles($ccFiles, $comparison = null)
+    {
+        if ($ccFiles instanceof CcFiles) {
+            return $this
+                ->addUsingAlias(CcTracktypesPeer::ID, $ccFiles->getDbTrackTypeId(), $comparison);
+        } elseif ($ccFiles instanceof PropelObjectCollection) {
+            return $this
+                ->useCcFilesQuery()
+                ->filterByPrimaryKeys($ccFiles->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCcFiles() only accepts arguments of type CcFiles or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CcFiles relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CcTracktypesQuery The current query, for fluid interface
+     */
+    public function joinCcFiles($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CcFiles');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CcFiles');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CcFiles relation CcFiles object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   CcFilesQuery A secondary query class using the current class as primary query
+     */
+    public function useCcFilesQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinCcFiles($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CcFiles', 'CcFilesQuery');
     }
 
     /**

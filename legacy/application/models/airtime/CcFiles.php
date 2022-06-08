@@ -153,7 +153,7 @@ class CcFiles extends BaseCcFiles
             $importedStorageDir = Config::getStoragePath() . 'imported/' . self::getOwnerId() . '/';
             $importedDbPath = 'imported/' . self::getOwnerId() . '/';
             $artwork = FileDataHelper::saveArtworkData($filePath, $originalFilename, $importedStorageDir, $importedDbPath);
-            $trackType = FileDataHelper::saveTrackType();
+            $trackTypeId = FileDataHelper::saveTrackType();
 
             $file->fromArray($fileArray);
             $file->setDbOwnerId(self::getOwnerId());
@@ -161,7 +161,9 @@ class CcFiles extends BaseCcFiles
             $file->setDbTrackTitle($originalFilename);
             $file->setDbMd5($md5);
             $file->setDbArtwork($artwork);
-            $file->setDbTrackType($trackType);
+            if ($trackTypeId) {
+                $file->setDbTrackTypeId($trackTypeId);
+            }
             $file->setDbUtime($now);
             $file->setDbHidden(true);
             $file->save();

@@ -64,6 +64,12 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
     protected $description;
 
     /**
+     * @var        PropelObjectCollection|CcFiles[] Collection to store aggregation of CcFiles objects.
+     */
+    protected $collCcFiless;
+    protected $collCcFilessPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      * @var        boolean
@@ -82,6 +88,12 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
      * @var        boolean
      */
     protected $alreadyInClearAllReferencesDeep = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $ccFilessScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -399,6 +411,8 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->collCcFiless = null;
+
         } // if (deep)
     }
 
@@ -521,6 +535,24 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->ccFilessScheduledForDeletion !== null) {
+                if (!$this->ccFilessScheduledForDeletion->isEmpty()) {
+                    foreach ($this->ccFilessScheduledForDeletion as $ccFiles) {
+                        // need to save related object because we set the relation to null
+                        $ccFiles->save($con);
+                    }
+                    $this->ccFilessScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collCcFiless !== null) {
+                foreach ($this->collCcFiless as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             $this->alreadyInSave = false;
@@ -692,6 +724,14 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
             }
 
 
+                if ($this->collCcFiless !== null) {
+                    foreach ($this->collCcFiless as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
 
             $this->alreadyInValidation = false;
         }
@@ -759,10 +799,11 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
      *                    Defaults to BasePeer::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to true.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
         if (isset($alreadyDumpedObjects['CcTracktypes'][$this->getPrimaryKey()])) {
             return '*RECURSION*';
@@ -781,6 +822,11 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->collCcFiless) {
+                $result['CcFiless'] = $this->collCcFiless->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+        }
 
         return $result;
     }
@@ -941,6 +987,24 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
         $copyObj->setDbVisibility($this->getDbVisibility());
         $copyObj->setDbTypeName($this->getDbTypeName());
         $copyObj->setDbDescription($this->getDbDescription());
+
+        if ($deepCopy && !$this->startCopy) {
+            // important: temporarily setNew(false) because this affects the behavior of
+            // the getter/setter methods for fkey referrer objects.
+            $copyObj->setNew(false);
+            // store object hash to prevent cycle
+            $this->startCopy = true;
+
+            foreach ($this->getCcFiless() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addCcFiles($relObj->copy($deepCopy));
+                }
+            }
+
+            //unflag object copy
+            $this->startCopy = false;
+        } // if ($deepCopy)
+
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setDbId(NULL); // this is a auto-increment column, so set to default value
@@ -987,6 +1051,297 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
         return self::$peer;
     }
 
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName)
+    {
+        if ('CcFiles' == $relationName) {
+            $this->initCcFiless();
+        }
+    }
+
+    /**
+     * Clears out the collCcFiless collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return CcTracktypes The current object (for fluent API support)
+     * @see        addCcFiless()
+     */
+    public function clearCcFiless()
+    {
+        $this->collCcFiless = null; // important to set this to null since that means it is uninitialized
+        $this->collCcFilessPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collCcFiless collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialCcFiless($v = true)
+    {
+        $this->collCcFilessPartial = $v;
+    }
+
+    /**
+     * Initializes the collCcFiless collection.
+     *
+     * By default this just sets the collCcFiless collection to an empty array (like clearcollCcFiless());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initCcFiless($overrideExisting = true)
+    {
+        if (null !== $this->collCcFiless && !$overrideExisting) {
+            return;
+        }
+        $this->collCcFiless = new PropelObjectCollection();
+        $this->collCcFiless->setModel('CcFiles');
+    }
+
+    /**
+     * Gets an array of CcFiles objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this CcTracktypes is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|CcFiles[] List of CcFiles objects
+     * @throws PropelException
+     */
+    public function getCcFiless($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collCcFilessPartial && !$this->isNew();
+        if (null === $this->collCcFiless || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collCcFiless) {
+                // return empty collection
+                $this->initCcFiless();
+            } else {
+                $collCcFiless = CcFilesQuery::create(null, $criteria)
+                    ->filterByCcTracktypes($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collCcFilessPartial && count($collCcFiless)) {
+                      $this->initCcFiless(false);
+
+                      foreach ($collCcFiless as $obj) {
+                        if (false == $this->collCcFiless->contains($obj)) {
+                          $this->collCcFiless->append($obj);
+                        }
+                      }
+
+                      $this->collCcFilessPartial = true;
+                    }
+
+                    $collCcFiless->getInternalIterator()->rewind();
+
+                    return $collCcFiless;
+                }
+
+                if ($partial && $this->collCcFiless) {
+                    foreach ($this->collCcFiless as $obj) {
+                        if ($obj->isNew()) {
+                            $collCcFiless[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collCcFiless = $collCcFiless;
+                $this->collCcFilessPartial = false;
+            }
+        }
+
+        return $this->collCcFiless;
+    }
+
+    /**
+     * Sets a collection of CcFiles objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $ccFiless A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return CcTracktypes The current object (for fluent API support)
+     */
+    public function setCcFiless(PropelCollection $ccFiless, PropelPDO $con = null)
+    {
+        $ccFilessToDelete = $this->getCcFiless(new Criteria(), $con)->diff($ccFiless);
+
+
+        $this->ccFilessScheduledForDeletion = $ccFilessToDelete;
+
+        foreach ($ccFilessToDelete as $ccFilesRemoved) {
+            $ccFilesRemoved->setCcTracktypes(null);
+        }
+
+        $this->collCcFiless = null;
+        foreach ($ccFiless as $ccFiles) {
+            $this->addCcFiles($ccFiles);
+        }
+
+        $this->collCcFiless = $ccFiless;
+        $this->collCcFilessPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related CcFiles objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related CcFiles objects.
+     * @throws PropelException
+     */
+    public function countCcFiless(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collCcFilessPartial && !$this->isNew();
+        if (null === $this->collCcFiless || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCcFiless) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getCcFiless());
+            }
+            $query = CcFilesQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByCcTracktypes($this)
+                ->count($con);
+        }
+
+        return count($this->collCcFiless);
+    }
+
+    /**
+     * Method called to associate a CcFiles object to this object
+     * through the CcFiles foreign key attribute.
+     *
+     * @param    CcFiles $l CcFiles
+     * @return CcTracktypes The current object (for fluent API support)
+     */
+    public function addCcFiles(CcFiles $l)
+    {
+        if ($this->collCcFiless === null) {
+            $this->initCcFiless();
+            $this->collCcFilessPartial = true;
+        }
+
+        if (!in_array($l, $this->collCcFiless->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddCcFiles($l);
+
+            if ($this->ccFilessScheduledForDeletion and $this->ccFilessScheduledForDeletion->contains($l)) {
+                $this->ccFilessScheduledForDeletion->remove($this->ccFilessScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	CcFiles $ccFiles The ccFiles object to add.
+     */
+    protected function doAddCcFiles($ccFiles)
+    {
+        $this->collCcFiless[]= $ccFiles;
+        $ccFiles->setCcTracktypes($this);
+    }
+
+    /**
+     * @param	CcFiles $ccFiles The ccFiles object to remove.
+     * @return CcTracktypes The current object (for fluent API support)
+     */
+    public function removeCcFiles($ccFiles)
+    {
+        if ($this->getCcFiless()->contains($ccFiles)) {
+            $this->collCcFiless->remove($this->collCcFiless->search($ccFiles));
+            if (null === $this->ccFilessScheduledForDeletion) {
+                $this->ccFilessScheduledForDeletion = clone $this->collCcFiless;
+                $this->ccFilessScheduledForDeletion->clear();
+            }
+            $this->ccFilessScheduledForDeletion[]= $ccFiles;
+            $ccFiles->setCcTracktypes(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this CcTracktypes is new, it will return
+     * an empty collection; or if this CcTracktypes has previously
+     * been saved, it will retrieve related CcFiless from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in CcTracktypes.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|CcFiles[] List of CcFiles objects
+     */
+    public function getCcFilessJoinFkOwner($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = CcFilesQuery::create(null, $criteria);
+        $query->joinWith('FkOwner', $join_behavior);
+
+        return $this->getCcFiless($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this CcTracktypes is new, it will return
+     * an empty collection; or if this CcTracktypes has previously
+     * been saved, it will retrieve related CcFiless from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in CcTracktypes.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|CcFiles[] List of CcFiles objects
+     */
+    public function getCcFilessJoinCcSubjsRelatedByDbEditedby($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = CcFilesQuery::create(null, $criteria);
+        $query->joinWith('CcSubjsRelatedByDbEditedby', $join_behavior);
+
+        return $this->getCcFiless($query, $con);
+    }
+
     /**
      * Clears the current object and sets all attributes to their default values
      */
@@ -1020,10 +1375,19 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
+            if ($this->collCcFiless) {
+                foreach ($this->collCcFiless as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
 
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
+        if ($this->collCcFiless instanceof PropelCollection) {
+            $this->collCcFiless->clearIterator();
+        }
+        $this->collCcFiless = null;
     }
 
     /**

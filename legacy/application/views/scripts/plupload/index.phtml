@@ -47,12 +47,12 @@
                         echo "<option value=''>Select Track Type</option>";
                         foreach ($tracktypes as $key => $tt) {
                             $selected = "";
-                            if ($ttsaved == $tt['code']) {
+                            if ($ttsaved == $tt['id']) {
                                 $selected = "selected";
                             }
-                            $code = $tt['code'];
+                            $id = $tt['id'];
                             $typename = $tt['type_name'];
-                            echo "<option value='$code' $selected>$typename</option>";
+                            echo "<option value='$id' $selected>$typename</option>";
                         }
                         ?>
                     </select>
@@ -64,7 +64,7 @@
         if ($showTracktypesDropdown) {
             $ttTitle = "";
             foreach ($tracktypes as $key => $tt) {
-                if ($ttsaved == $tt['code']) {
+                if ($ttsaved == $tt['id']) {
                     $ttTitle = $tt['type_name'];
                 }
             }

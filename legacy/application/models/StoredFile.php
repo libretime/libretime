@@ -54,7 +54,7 @@ class Application_Model_StoredFile
         'cueout' => 'DbCueOut',
         'description' => 'DbDescription',
         'artwork' => 'DbArtwork',
-        'track_type' => 'DbTrackType',
+        'track_type_id' => 'DbTrackTypeId',
     ];
 
     public function __construct($file, $con)
@@ -678,7 +678,7 @@ SQL;
             'bit_rate', 'sample_rate', 'isrc_number', 'encoded_by', 'label',
             'copyright', 'mime', 'language', 'filepath', 'owner_id',
             'conductor', 'replay_gain', 'lptime', 'is_playlist', 'is_scheduled',
-            'cuein', 'cueout', 'description', 'artwork', 'track_type',
+            'cuein', 'cueout', 'description', 'artwork', 'track_type_id',
         ];
     }
 

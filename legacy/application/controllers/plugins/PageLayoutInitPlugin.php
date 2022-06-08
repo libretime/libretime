@@ -144,7 +144,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
         }, $track_types), SORT_ASC, $track_types);
 
         foreach ($track_types as $key => $tt) {
-            $track_type_options[$tt['code']] = $tt['type_name'];
+            $track_type_options[$tt['id']] = ['name' => $tt['type_name'], 'code' => $tt['code']];
         }
         $ttarr = json_encode($track_type_options, JSON_FORCE_OBJECT);
         $view->headScript()->appendScript('var TRACKTYPES = ' . $ttarr . ';');

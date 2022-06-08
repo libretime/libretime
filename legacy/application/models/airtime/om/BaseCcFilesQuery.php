@@ -73,7 +73,7 @@
  * @method CcFilesQuery orderByDbFilesize($order = Criteria::ASC) Order by the filesize column
  * @method CcFilesQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
  * @method CcFilesQuery orderByDbArtwork($order = Criteria::ASC) Order by the artwork column
- * @method CcFilesQuery orderByDbTrackType($order = Criteria::ASC) Order by the track_type column
+ * @method CcFilesQuery orderByDbTrackTypeId($order = Criteria::ASC) Order by the track_type_id column
  *
  * @method CcFilesQuery groupByDbId() Group by the id column
  * @method CcFilesQuery groupByDbName() Group by the name column
@@ -142,7 +142,7 @@
  * @method CcFilesQuery groupByDbFilesize() Group by the filesize column
  * @method CcFilesQuery groupByDbDescription() Group by the description column
  * @method CcFilesQuery groupByDbArtwork() Group by the artwork column
- * @method CcFilesQuery groupByDbTrackType() Group by the track_type column
+ * @method CcFilesQuery groupByDbTrackTypeId() Group by the track_type_id column
  *
  * @method CcFilesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method CcFilesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -155,6 +155,10 @@
  * @method CcFilesQuery leftJoinCcSubjsRelatedByDbEditedby($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcSubjsRelatedByDbEditedby relation
  * @method CcFilesQuery rightJoinCcSubjsRelatedByDbEditedby($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSubjsRelatedByDbEditedby relation
  * @method CcFilesQuery innerJoinCcSubjsRelatedByDbEditedby($relationAlias = null) Adds a INNER JOIN clause to the query using the CcSubjsRelatedByDbEditedby relation
+ *
+ * @method CcFilesQuery leftJoinCcTracktypes($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcTracktypes relation
+ * @method CcFilesQuery rightJoinCcTracktypes($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcTracktypes relation
+ * @method CcFilesQuery innerJoinCcTracktypes($relationAlias = null) Adds a INNER JOIN clause to the query using the CcTracktypes relation
  *
  * @method CcFilesQuery leftJoinCcShowInstances($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcShowInstances relation
  * @method CcFilesQuery rightJoinCcShowInstances($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcShowInstances relation
@@ -253,7 +257,7 @@
  * @method CcFiles findOneByDbFilesize(int $filesize) Return the first CcFiles filtered by the filesize column
  * @method CcFiles findOneByDbDescription(string $description) Return the first CcFiles filtered by the description column
  * @method CcFiles findOneByDbArtwork(string $artwork) Return the first CcFiles filtered by the artwork column
- * @method CcFiles findOneByDbTrackType(string $track_type) Return the first CcFiles filtered by the track_type column
+ * @method CcFiles findOneByDbTrackTypeId(int $track_type_id) Return the first CcFiles filtered by the track_type_id column
  *
  * @method array findByDbId(int $id) Return CcFiles objects filtered by the id column
  * @method array findByDbName(string $name) Return CcFiles objects filtered by the name column
@@ -322,7 +326,7 @@
  * @method array findByDbFilesize(int $filesize) Return CcFiles objects filtered by the filesize column
  * @method array findByDbDescription(string $description) Return CcFiles objects filtered by the description column
  * @method array findByDbArtwork(string $artwork) Return CcFiles objects filtered by the artwork column
- * @method array findByDbTrackType(string $track_type) Return CcFiles objects filtered by the track_type column
+ * @method array findByDbTrackTypeId(int $track_type_id) Return CcFiles objects filtered by the track_type_id column
  *
  * @package    propel.generator.airtime.om
  */
@@ -430,7 +434,7 @@ abstract class BaseCcFilesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "name", "mime", "ftype", "filepath", "import_status", "currentlyaccessing", "editedby", "mtime", "utime", "lptime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist", "filesize", "description", "artwork", "track_type" FROM "cc_files" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "name", "mime", "ftype", "filepath", "import_status", "currentlyaccessing", "editedby", "mtime", "utime", "lptime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist", "filesize", "description", "artwork", "track_type_id" FROM "cc_files" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -2655,32 +2659,47 @@ abstract class BaseCcFilesQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the track_type column
+     * Filter the query on the track_type_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByDbTrackType('fooValue');   // WHERE track_type = 'fooValue'
-     * $query->filterByDbTrackType('%fooValue%'); // WHERE track_type LIKE '%fooValue%'
+     * $query->filterByDbTrackTypeId(1234); // WHERE track_type_id = 1234
+     * $query->filterByDbTrackTypeId(array(12, 34)); // WHERE track_type_id IN (12, 34)
+     * $query->filterByDbTrackTypeId(array('min' => 12)); // WHERE track_type_id >= 12
+     * $query->filterByDbTrackTypeId(array('max' => 12)); // WHERE track_type_id <= 12
      * </code>
      *
-     * @param     string $dbTrackType The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
+     * @see       filterByCcTracktypes()
+     *
+     * @param     mixed $dbTrackTypeId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return CcFilesQuery The current query, for fluid interface
      */
-    public function filterByDbTrackType($dbTrackType = null, $comparison = null)
+    public function filterByDbTrackTypeId($dbTrackTypeId = null, $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($dbTrackType)) {
+        if (is_array($dbTrackTypeId)) {
+            $useMinMax = false;
+            if (isset($dbTrackTypeId['min'])) {
+                $this->addUsingAlias(CcFilesPeer::TRACK_TYPE_ID, $dbTrackTypeId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($dbTrackTypeId['max'])) {
+                $this->addUsingAlias(CcFilesPeer::TRACK_TYPE_ID, $dbTrackTypeId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $dbTrackType)) {
-                $dbTrackType = str_replace('*', '%', $dbTrackType);
-                $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(CcFilesPeer::TRACK_TYPE, $dbTrackType, $comparison);
+        return $this->addUsingAlias(CcFilesPeer::TRACK_TYPE_ID, $dbTrackTypeId, $comparison);
     }
 
     /**
@@ -2833,6 +2852,82 @@ abstract class BaseCcFilesQuery extends ModelCriteria
         return $this
             ->joinCcSubjsRelatedByDbEditedby($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'CcSubjsRelatedByDbEditedby', 'CcSubjsQuery');
+    }
+
+    /**
+     * Filter the query by a related CcTracktypes object
+     *
+     * @param   CcTracktypes|PropelObjectCollection $ccTracktypes The related object(s) to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CcFilesQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCcTracktypes($ccTracktypes, $comparison = null)
+    {
+        if ($ccTracktypes instanceof CcTracktypes) {
+            return $this
+                ->addUsingAlias(CcFilesPeer::TRACK_TYPE_ID, $ccTracktypes->getDbId(), $comparison);
+        } elseif ($ccTracktypes instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(CcFilesPeer::TRACK_TYPE_ID, $ccTracktypes->toKeyValue('PrimaryKey', 'DbId'), $comparison);
+        } else {
+            throw new PropelException('filterByCcTracktypes() only accepts arguments of type CcTracktypes or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CcTracktypes relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CcFilesQuery The current query, for fluid interface
+     */
+    public function joinCcTracktypes($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CcTracktypes');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CcTracktypes');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CcTracktypes relation CcTracktypes object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   CcTracktypesQuery A secondary query class using the current class as primary query
+     */
+    public function useCcTracktypesQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinCcTracktypes($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CcTracktypes', 'CcTracktypesQuery');
     }
 
     /**
