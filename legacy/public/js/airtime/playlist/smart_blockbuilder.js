@@ -340,7 +340,7 @@ function setSmartBlockEvents() {
         disableAndHideDateTimeDropdown($(this), index);
         disableAndHideExtraDateTimeDropdown($(this), index);
 
-        if ($("#sp_criteria_field_" + index + " option:selected").val() === 'track_type') {
+        if ($("#sp_criteria_field_" + index + " option:selected").val() === 'track_type_id') {
             populateTracktypeSelect(this, false);
         } else {
             disableAndHideTracktypeDropdown($(this), index);
@@ -380,7 +380,7 @@ function setSmartBlockEvents() {
 
         var get_crit_field = $(this).siblings(':first-child');
         var crit_field = get_crit_field[0]["id"];
-        if ($("#" + crit_field + " option:selected").val() === 'track_type') {
+        if ($("#" + crit_field + " option:selected").val() === 'track_type_id') {
             if ($(this).val() == "is" || $(this).val() == "is not") {
                 enableAndShowTracktypeDropdown(criteria_value, index_num);
             } else {
@@ -941,7 +941,7 @@ var criteriaTypes = {
     "track_number": "n",
     "info_url": "s",
     "year": "n",
-    "track_type": "tt"
+    "track_type_id": "tt"
 };
 
 var stringCriteriaOptions = {
@@ -981,5 +981,12 @@ var stringIsNotOptions = {
     "is not": $.i18n._("is not")
 };
 
-let tracktypes = TRACKTYPES;
-var stringTracktypeOptions = Object.assign({ "": "Select Track Type" }, tracktypes);
+let tracktypes = {}
+
+for (var key in TRACKTYPES) {
+    if (TRACKTYPES.hasOwnProperty(key)) {
+        tracktypes[key] = TRACKTYPES[key].name;;
+    }
+}
+
+var stringTracktypeOptions = Object.assign({ 0: "Select Track Type" }, tracktypes);

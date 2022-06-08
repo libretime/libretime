@@ -106,7 +106,7 @@ class CcFilesTableMap extends TableMap
         $this->addColumn('filesize', 'DbFilesize', 'INTEGER', true, null, 0);
         $this->addColumn('description', 'DbDescription', 'VARCHAR', false, 512, null);
         $this->addColumn('artwork', 'DbArtwork', 'VARCHAR', false, 4096, null);
-        $this->addColumn('track_type', 'DbTrackType', 'VARCHAR', false, 16, null);
+        $this->addForeignKey('track_type_id', 'DbTrackTypeId', 'INTEGER', 'cc_track_types', 'id', false, null, null);
         // validators
     } // initialize()
 
@@ -117,6 +117,7 @@ class CcFilesTableMap extends TableMap
     {
         $this->addRelation('FkOwner', 'CcSubjs', RelationMap::MANY_TO_ONE, array('owner_id' => 'id', ), null, null);
         $this->addRelation('CcSubjsRelatedByDbEditedby', 'CcSubjs', RelationMap::MANY_TO_ONE, array('editedby' => 'id', ), null, null);
+        $this->addRelation('CcTracktypes', 'CcTracktypes', RelationMap::MANY_TO_ONE, array('track_type_id' => 'id', ), null, null);
         $this->addRelation('CcShowInstances', 'CcShowInstances', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null, 'CcShowInstancess');
         $this->addRelation('CcPlaylistcontents', 'CcPlaylistcontents', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null, 'CcPlaylistcontentss');
         $this->addRelation('CcBlockcontents', 'CcBlockcontents', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null, 'CcBlockcontentss');

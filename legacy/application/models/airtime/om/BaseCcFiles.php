@@ -447,10 +447,10 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     protected $artwork;
 
     /**
-     * The value for the track_type field.
-     * @var        string
+     * The value for the track_type_id field.
+     * @var        int
      */
-    protected $track_type;
+    protected $track_type_id;
 
     /**
      * @var        CcSubjs
@@ -461,6 +461,11 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @var        CcSubjs
      */
     protected $aCcSubjsRelatedByDbEditedby;
+
+    /**
+     * @var        CcTracktypes
+     */
+    protected $aCcTracktypes;
 
     /**
      * @var        PropelObjectCollection|CcShowInstances[] Collection to store aggregation of CcShowInstances objects.
@@ -1411,14 +1416,14 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [track_type] column value.
+     * Get the [track_type_id] column value.
      *
-     * @return string
+     * @return int
      */
-    public function getDbTrackType()
+    public function getDbTrackTypeId()
     {
 
-        return $this->track_type;
+        return $this->track_type_id;
     }
 
     /**
@@ -2883,25 +2888,29 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     } // setDbArtwork()
 
     /**
-     * Set the value of [track_type] column.
+     * Set the value of [track_type_id] column.
      *
-     * @param  string $v new value
+     * @param  int $v new value
      * @return CcFiles The current object (for fluent API support)
      */
-    public function setDbTrackType($v)
+    public function setDbTrackTypeId($v)
     {
-        if ($v !== null) {
-            $v = (string) $v;
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
         }
 
-        if ($this->track_type !== $v) {
-            $this->track_type = $v;
-            $this->modifiedColumns[] = CcFilesPeer::TRACK_TYPE;
+        if ($this->track_type_id !== $v) {
+            $this->track_type_id = $v;
+            $this->modifiedColumns[] = CcFilesPeer::TRACK_TYPE_ID;
+        }
+
+        if ($this->aCcTracktypes !== null && $this->aCcTracktypes->getDbId() !== $v) {
+            $this->aCcTracktypes = null;
         }
 
 
         return $this;
-    } // setDbTrackType()
+    } // setDbTrackTypeId()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -3062,7 +3071,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $this->filesize = ($row[$startcol + 64] !== null) ? (int) $row[$startcol + 64] : null;
             $this->description = ($row[$startcol + 65] !== null) ? (string) $row[$startcol + 65] : null;
             $this->artwork = ($row[$startcol + 66] !== null) ? (string) $row[$startcol + 66] : null;
-            $this->track_type = ($row[$startcol + 67] !== null) ? (string) $row[$startcol + 67] : null;
+            $this->track_type_id = ($row[$startcol + 67] !== null) ? (int) $row[$startcol + 67] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -3100,6 +3109,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         }
         if ($this->aFkOwner !== null && $this->owner_id !== $this->aFkOwner->getDbId()) {
             $this->aFkOwner = null;
+        }
+        if ($this->aCcTracktypes !== null && $this->track_type_id !== $this->aCcTracktypes->getDbId()) {
+            $this->aCcTracktypes = null;
         }
     } // ensureConsistency
 
@@ -3142,6 +3154,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
 
             $this->aFkOwner = null;
             $this->aCcSubjsRelatedByDbEditedby = null;
+            $this->aCcTracktypes = null;
             $this->collCcShowInstancess = null;
 
             $this->collCcPlaylistcontentss = null;
@@ -3286,6 +3299,13 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                     $affectedRows += $this->aCcSubjsRelatedByDbEditedby->save($con);
                 }
                 $this->setCcSubjsRelatedByDbEditedby($this->aCcSubjsRelatedByDbEditedby);
+            }
+
+            if ($this->aCcTracktypes !== null) {
+                if ($this->aCcTracktypes->isModified() || $this->aCcTracktypes->isNew()) {
+                    $affectedRows += $this->aCcTracktypes->save($con);
+                }
+                $this->setCcTracktypes($this->aCcTracktypes);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -3655,8 +3675,8 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if ($this->isColumnModified(CcFilesPeer::ARTWORK)) {
             $modifiedColumns[':p' . $index++]  = '"artwork"';
         }
-        if ($this->isColumnModified(CcFilesPeer::TRACK_TYPE)) {
-            $modifiedColumns[':p' . $index++]  = '"track_type"';
+        if ($this->isColumnModified(CcFilesPeer::TRACK_TYPE_ID)) {
+            $modifiedColumns[':p' . $index++]  = '"track_type_id"';
         }
 
         $sql = sprintf(
@@ -3870,8 +3890,8 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                     case '"artwork"':
                         $stmt->bindValue($identifier, $this->artwork, PDO::PARAM_STR);
                         break;
-                    case '"track_type"':
-                        $stmt->bindValue($identifier, $this->track_type, PDO::PARAM_STR);
+                    case '"track_type_id"':
+                        $stmt->bindValue($identifier, $this->track_type_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -3974,6 +3994,12 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             if ($this->aCcSubjsRelatedByDbEditedby !== null) {
                 if (!$this->aCcSubjsRelatedByDbEditedby->validate($columns)) {
                     $failureMap = array_merge($failureMap, $this->aCcSubjsRelatedByDbEditedby->getValidationFailures());
+                }
+            }
+
+            if ($this->aCcTracktypes !== null) {
+                if (!$this->aCcTracktypes->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aCcTracktypes->getValidationFailures());
                 }
             }
 
@@ -4276,7 +4302,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                 return $this->getDbArtwork();
                 break;
             case 67:
-                return $this->getDbTrackType();
+                return $this->getDbTrackTypeId();
                 break;
             default:
                 return null;
@@ -4374,7 +4400,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $keys[64] => $this->getDbFilesize(),
             $keys[65] => $this->getDbDescription(),
             $keys[66] => $this->getDbArtwork(),
-            $keys[67] => $this->getDbTrackType(),
+            $keys[67] => $this->getDbTrackTypeId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -4387,6 +4413,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             }
             if (null !== $this->aCcSubjsRelatedByDbEditedby) {
                 $result['CcSubjsRelatedByDbEditedby'] = $this->aCcSubjsRelatedByDbEditedby->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aCcTracktypes) {
+                $result['CcTracktypes'] = $this->aCcTracktypes->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->collCcShowInstancess) {
                 $result['CcShowInstancess'] = $this->collCcShowInstancess->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -4645,7 +4674,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                 $this->setDbArtwork($value);
                 break;
             case 67:
-                $this->setDbTrackType($value);
+                $this->setDbTrackTypeId($value);
                 break;
         } // switch()
     }
@@ -4738,7 +4767,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if (array_key_exists($keys[64], $arr)) $this->setDbFilesize($arr[$keys[64]]);
         if (array_key_exists($keys[65], $arr)) $this->setDbDescription($arr[$keys[65]]);
         if (array_key_exists($keys[66], $arr)) $this->setDbArtwork($arr[$keys[66]]);
-        if (array_key_exists($keys[67], $arr)) $this->setDbTrackType($arr[$keys[67]]);
+        if (array_key_exists($keys[67], $arr)) $this->setDbTrackTypeId($arr[$keys[67]]);
     }
 
     /**
@@ -4817,7 +4846,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if ($this->isColumnModified(CcFilesPeer::FILESIZE)) $criteria->add(CcFilesPeer::FILESIZE, $this->filesize);
         if ($this->isColumnModified(CcFilesPeer::DESCRIPTION)) $criteria->add(CcFilesPeer::DESCRIPTION, $this->description);
         if ($this->isColumnModified(CcFilesPeer::ARTWORK)) $criteria->add(CcFilesPeer::ARTWORK, $this->artwork);
-        if ($this->isColumnModified(CcFilesPeer::TRACK_TYPE)) $criteria->add(CcFilesPeer::TRACK_TYPE, $this->track_type);
+        if ($this->isColumnModified(CcFilesPeer::TRACK_TYPE_ID)) $criteria->add(CcFilesPeer::TRACK_TYPE_ID, $this->track_type_id);
 
         return $criteria;
     }
@@ -4947,7 +4976,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $copyObj->setDbFilesize($this->getDbFilesize());
         $copyObj->setDbDescription($this->getDbDescription());
         $copyObj->setDbArtwork($this->getDbArtwork());
-        $copyObj->setDbTrackType($this->getDbTrackType());
+        $copyObj->setDbTrackTypeId($this->getDbTrackTypeId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -5150,6 +5179,58 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         }
 
         return $this->aCcSubjsRelatedByDbEditedby;
+    }
+
+    /**
+     * Declares an association between this object and a CcTracktypes object.
+     *
+     * @param                  CcTracktypes $v
+     * @return CcFiles The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setCcTracktypes(CcTracktypes $v = null)
+    {
+        if ($v === null) {
+            $this->setDbTrackTypeId(NULL);
+        } else {
+            $this->setDbTrackTypeId($v->getDbId());
+        }
+
+        $this->aCcTracktypes = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the CcTracktypes object, it will not be re-added.
+        if ($v !== null) {
+            $v->addCcFiles($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated CcTracktypes object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return CcTracktypes The associated CcTracktypes object.
+     * @throws PropelException
+     */
+    public function getCcTracktypes(PropelPDO $con = null, $doQuery = true)
+    {
+        if ($this->aCcTracktypes === null && ($this->track_type_id !== null) && $doQuery) {
+            $this->aCcTracktypes = CcTracktypesQuery::create()->findPk($this->track_type_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aCcTracktypes->addCcFiless($this);
+             */
+        }
+
+        return $this->aCcTracktypes;
     }
 
 
@@ -7058,7 +7139,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $this->filesize = null;
         $this->description = null;
         $this->artwork = null;
-        $this->track_type = null;
+        $this->track_type_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -7123,6 +7204,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             if ($this->aCcSubjsRelatedByDbEditedby instanceof Persistent) {
               $this->aCcSubjsRelatedByDbEditedby->clearAllReferences($deep);
             }
+            if ($this->aCcTracktypes instanceof Persistent) {
+              $this->aCcTracktypes->clearAllReferences($deep);
+            }
 
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
@@ -7157,6 +7241,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $this->collPodcastEpisodess = null;
         $this->aFkOwner = null;
         $this->aCcSubjsRelatedByDbEditedby = null;
+        $this->aCcTracktypes = null;
     }
 
     /**

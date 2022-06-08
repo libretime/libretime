@@ -55,7 +55,7 @@ var AIRTIME = (function (AIRTIME) {
         "info_url": "s",
         "replay_gain": "n",
         "artwork": "s",
-        "track_type": "tt"
+        "track_type_id": "tt"
     };
 
     if (AIRTIME.library === undefined) {
@@ -591,7 +591,7 @@ var AIRTIME = (function (AIRTIME) {
             /* Cue Out */         { "sTitle": $.i18n._("Cue Out"), "mDataProp": "cueout", "bVisible": false, "sClass": "library_length", "sWidth": "80px" },
             /* Description */     { "sTitle": $.i18n._("Description"), "mDataProp": "description", "bVisible": false, "sClass": "library_description", "sWidth": "150px" },
             /* Encoded */         { "sTitle": $.i18n._("Encoded By"), "mDataProp": "encoded_by", "bVisible": false, "sClass": "library_encoded", "sWidth": "150px" },
-            /* Track Type */      { "sTitle": $.i18n._("Type"), "mDataProp": "track_type", "sClass": "library_track_type", "sWidth": "60px" },
+            /* Track Type */      { "sTitle": $.i18n._("Type"), "mDataProp": "track_type_id", "sClass": "library_track_type", "sWidth": "60px" },
             /* Genre */           { "sTitle": $.i18n._("Genre"), "mDataProp": "genre", "sClass": "library_genre", "sWidth": "100px" },
             /* ISRC Number */     { "sTitle": $.i18n._("ISRC"), "mDataProp": "isrc_number", "bVisible": false, "sClass": "library_isrc", "sWidth": "150px" },
             /* Label */           { "sTitle": $.i18n._("Label"), "mDataProp": "label", "bVisible": false, "sClass": "library_label", "sWidth": "125px" },
@@ -766,12 +766,12 @@ var AIRTIME = (function (AIRTIME) {
                             $(this).contextMenu({ x: $(e.target).offset().left, y: $(e.target).offset().top })
                         }).html("<div class='library_actions_btn'>...</div>");
 
-                    if (aData.track_type == null || aData.track_type == undefined || aData.track_type == 0) {
+                    if (aData.track_type_id == null || aData.track_type_id == undefined || aData.track_type_id == 0) {
                         var has_type = false;
                         var type_button = "";
                     } else {
                         var has_type = true;
-                        var type_button = "<div class='library_track_type_btn'>" + aData.track_type + "</div>";
+                        var type_button = "<div class='library_track_type_btn'>" + TRACKTYPES[aData.track_type_id].code + "</div>";
                     }
 
                     $(nRow).find('td.library_track_type')
@@ -782,8 +782,7 @@ var AIRTIME = (function (AIRTIME) {
                                 function (json) {
                                     var type_enabled = false;
                                     $.each(json, function (key, value) {
-
-                                        if (value['code'] == aData.track_type) {
+                                        if (value['id'] == aData.track_type_id) {
                                             $("#au_" + aData.id + " td.library_track_type div.library_track_type_btn").qtip({
                                                 overwrite: false,
                                                 content: {
@@ -1645,7 +1644,7 @@ var validationTypes = {
     "track_number": "i",
     "info_url": "s",
     "artwork": "s",
-    "track_type": "s",
+    "track_type_id": "s",
     "year": "i"
 };
 
@@ -1657,10 +1656,10 @@ function tracktypesJson() {
         jQuery.getJSON(
             baseUrl + "api/track-types",
             function (json) {
-                var ttSelect = $('#track_type .filter_select .select_filter');
+                var ttSelect = $('#track_type_id .filter_select .select_filter');
                 $.each(json, function (key, value) {
                     var option = $("<option/>", {
-                        value: value['code'],
+                        value: value['id'],
                         text: value['type_name']
                     });
                     ttSelect.append(option);

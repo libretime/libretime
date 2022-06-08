@@ -52,6 +52,7 @@ class CcTracktypesTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('CcFiles', 'CcFiles', RelationMap::ONE_TO_MANY, array('id' => 'track_type_id', ), null, null, 'CcFiless');
     } // buildRelations()
 
 } // CcTracktypesTableMap

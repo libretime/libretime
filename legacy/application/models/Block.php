@@ -85,7 +85,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
         'track_title' => 'DbTrackTitle',
         'track_number' => 'DbTrackNumber',
         'year' => 'DbYear',
-        'track_type' => 'DbTrackType',
+        'track_type_id' => 'DbTrackTypeId',
     ];
 
     public function __construct($id = null, $con = null)
@@ -1162,6 +1162,7 @@ SQL;
     public function saveSmartBlockCriteria($p_criteria)
     {
         $data = $this->organizeSmartPlaylistCriteria($p_criteria);
+
         // saving dynamic/static flag
         $blockType = $data['etc']['sp_type'] == 0 ? 'dynamic' : 'static';
         $this->saveType($blockType);
@@ -1448,7 +1449,7 @@ SQL;
             'mtime' => _('Last Modified'),
             'lptime' => _('Last Played'),
             'length' => _('Length'),
-            'track_type' => _('Track Type'),
+            'track_type_id' => _('Track Type'),
             'mime' => _('Mime'),
             'mood' => _('Mood'),
             'owner_id' => _('Owner'),
@@ -1546,7 +1547,7 @@ SQL;
             'mtime' => _('Last Modified'),
             'lptime' => _('Last Played'),
             'length' => _('Length'),
-            'track_type' => _('Track Type'),
+            'track_type_id' => _('Track Type'),
             'mime' => _('Mime'),
             'mood' => _('Mood'),
             'owner_id' => _('Owner'),

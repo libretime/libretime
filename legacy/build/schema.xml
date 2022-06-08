@@ -69,12 +69,15 @@
     <column name="filesize" phpName="DbFilesize" type="Integer" required="true" defaultValue="0" />
     <column name="description" phpName="DbDescription" type="VARCHAR" size="512" />
     <column name="artwork" phpName="DbArtwork" type="VARCHAR" size="4096" required="false" />
-    <column name="track_type" phpName="DbTrackType" type="VARCHAR" size="16" required="false" />
+    <column name="track_type_id" phpName="DbTrackTypeId" type="INTEGER" required="false" />
     <foreign-key foreignTable="cc_subjs" phpName="FkOwner" name="cc_files_owner_fkey">
       <reference local="owner_id" foreign="id" />
     </foreign-key>
     <foreign-key foreignTable="cc_subjs" name="cc_files_editedby_fkey">
       <reference local="editedby" foreign="id" />
+    </foreign-key>
+    <foreign-key foreignTable="cc_track_types" name="cc_files_track_type_fkey">
+      <reference local="track_type_id" foreign="id" />
     </foreign-key>
     <index name="cc_files_md5_idx">
       <index-column name="md5" />

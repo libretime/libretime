@@ -74,7 +74,7 @@ CREATE TABLE "cc_files"
     "filesize" INTEGER DEFAULT 0 NOT NULL,
     "description" VARCHAR(512),
     "artwork" VARCHAR(4096),
-    "track_type" VARCHAR(16),
+    "track_type_id" INTEGER,
     PRIMARY KEY ("id")
 );
 
@@ -719,6 +719,10 @@ ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_owner_fkey"
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey"
     FOREIGN KEY ("editedby")
     REFERENCES "cc_subjs" ("id");
+
+ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_track_type_fkey"
+    FOREIGN KEY ("track_type_id")
+    REFERENCES "cc_track_types" ("id");
 
 ALTER TABLE "cc_show" ADD CONSTRAINT "cc_playlist_autoplaylist_fkey"
     FOREIGN KEY ("autoplaylist_id")

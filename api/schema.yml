@@ -5667,10 +5667,6 @@ components:
         id:
           type: integer
           readOnly: true
-        library:
-          type: string
-          nullable: true
-          maxLength: 16
         import_status:
           allOf:
             - $ref: "#/components/schemas/ImportStatusEnum"
@@ -5910,6 +5906,10 @@ components:
           type: string
           nullable: true
           maxLength: 512
+        library:
+          type: string
+          format: uri
+          nullable: true
         owner:
           type: string
           format: uri
@@ -6091,10 +6091,6 @@ components:
         id:
           type: integer
           readOnly: true
-        library:
-          type: string
-          nullable: true
-          maxLength: 16
         import_status:
           allOf:
             - $ref: "#/components/schemas/ImportStatusEnum"
@@ -6334,6 +6330,10 @@ components:
           type: string
           nullable: true
           maxLength: 512
+        library:
+          type: string
+          format: uri
+          nullable: true
         owner:
           type: string
           format: uri

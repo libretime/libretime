@@ -46,7 +46,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         'track_number' => 'n',
         'info_url' => 's',
         'year' => 'n',
-        'track_type' => 'tt',
+        'track_type_id' => 'tt',
     ];
 
     private function getCriteriaOptions($option = null)
@@ -72,7 +72,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 'mtime' => _('Last Modified'),
                 'lptime' => _('Last Played'),
                 'length' => _('Length'),
-                'track_type' => _('Track Type'),
+                'track_type_id' => _('Track Type'),
                 'mime' => _('Mime'),
                 'mood' => _('Mood'),
                 'owner_id' => _('Owner'),
@@ -210,7 +210,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             $tracktypes = Application_Model_Tracktype::getTracktypes();
             $names[] = _('Select Track Type');
             foreach ($tracktypes as $arr => $a) {
-                $names[$a['code']] = $tracktypes[$arr]['type_name'];
+                $names[$a['id']] = $tracktypes[$arr]['type_name'];
             }
         }
 
@@ -793,7 +793,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             'track_title' => 'DbTrackTitle',
             'track_number' => 'DbTrackNumber',
             'year' => 'DbYear',
-            'track_type' => 'DbTrackType',
+            'track_type_id' => 'DbTrackTypeId',
         ];
 
         // things we need to check
