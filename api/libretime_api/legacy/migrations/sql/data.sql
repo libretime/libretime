@@ -31,7 +31,7 @@ INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_user', ''
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_pass', 'hackme', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_admin_user', 'admin', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_admin_pass', '', 'string');
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_mount', 'airtime_128', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_mount', 'main', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_url', 'https://libretime.org', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_description', 'LibreTime Radio! Stream #1', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_genre', 'genre', 'string');
@@ -370,3 +370,5 @@ INSERT INTO cc_pref("keystr", "valstr") VALUES('whats_new_dialog_viewed', 1);
 INSERT INTO cc_pref("keystr", "valstr") VALUES('podcast_album_override', 1);
 INSERT INTO cc_pref("keystr", "valstr") VALUES('podcast_auto_smartblock', 0);
 -- end
+
+INSERT INTO cc_pref("keystr", "valstr") VALUES('default_stream_mount_point', 'main');

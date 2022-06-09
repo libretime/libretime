@@ -46,17 +46,17 @@ The Icecast server has a _fallback-mount_ feature which can be used to move clie
 
 To enable fallback mounts, edit the main Icecast configuration file (`/etc/icecast2/icecast.xml`) to define the mount points you will use, and the relationship between them.
 
-The example mount section provided in the `icecast.xml` file is commented out by default. Before or after the commented section, add three mount point definitions. The default mount point used by LibreTime is `/airtime_128` which is shown in the `/etc/libretime/liquidsoap.cfg` file. You must also define a mount point for the live source (ex. `/live.ogg`) and a mount point for the public to connect to (ex. `/stream.ogg`).
+The example mount section provided in the `icecast.xml` file is commented out by default. Before or after the commented section, add three mount point definitions. The default mount point used by LibreTime is `/main` which is shown in the `/etc/libretime/liquidsoap.cfg` file. You must also define a mount point for the live source (ex. `/live.ogg`) and a mount point for the public to connect to (ex. `/stream.ogg`).
 
 ```xml title="/etc/icecast2/icecast.xml"
 <mount>
-     <mount-name>/airtime_128</mount-name>
+     <mount-name>/main</mount-name>
      <hidden>0</hidden>
 </mount>
 
 <mount>
      <mount-name>/live.ogg</mount-name>
-     <fallback-mount>/airtime_128</fallback-mount>
+     <fallback-mount>/main</fallback-mount>
      <fallback-override>1</fallback-override>
      <hidden>0</hidden>
 </mount>
@@ -69,9 +69,9 @@ The example mount section provided in the `icecast.xml` file is commented out by
 </mount>
 ```
 
-These mount point definitions mean that a client connecting to a URL such as *http://icecast.example.com:8000/stream.ogg* will first fall back to the `/live.ogg` mount point if it is available. If not, the client will fall back in turn to the `/airtime_128` mount point for LibreTime playout.
+These mount point definitions mean that a client connecting to a URL such as *http://icecast.example.com:8000/stream.ogg* will first fall back to the `/live.ogg` mount point if it is available. If not, the client will fall back in turn to the `/main` mount point for LibreTime playout.
 
-Setting the value of _fallback-override_ to 1 (enabled) means that when the `/live.ogg` mount point becomes available again, the client will be re-connected to it. If you wish to hide the `/airtime_128` and `/live.ogg` mount points from the public Icecast web interface, set the value of _hidden_ in each of these definitions to 1.
+Setting the value of _fallback-override_ to 1 (enabled) means that when the `/live.ogg` mount point becomes available again, the client will be re-connected to it. If you wish to hide the `/main` and `/live.ogg` mount points from the public Icecast web interface, set the value of _hidden_ in each of these definitions to 1.
 
 ## Source configuration
 

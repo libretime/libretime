@@ -36,7 +36,7 @@ For example, using the action _get-stream-setting_ returns the following output 
 
 {"keyname":"s1_port","value":"8000","type":"integer"},
 
-{"keyname":"s1_mount","value":"airtime_128","type":"string"},
+{"keyname":"s1_mount","value":"main","type":"string"},
 
 {"keyname":"s1_url","value":"http:\/\/airtime.sourcefabric.org","type":"string"},
 

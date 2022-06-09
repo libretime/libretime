@@ -289,7 +289,7 @@ class Application_Model_StreamSetting
             'user' => $config['stationId'],
             'pass' => Application_Model_Preference::getDefaultIcecastPassword(),
             // Manually setting default mountpoint
-            'mount' => 'airtime_128',
+            'mount' => Application_Model_Preference::getDefaultStreamMountpoint(),
         ];
     }
 

@@ -1452,6 +1452,16 @@ class Application_Model_Preference
         self::setValue('default_icecast_password', $value);
     }
 
+    public static function getDefaultStreamMountPoint()
+    {
+        return self::getValue('default_stream_mount_point');
+    }
+
+    public static function setDefaultStreamMountPoint($value)
+    {
+        self::setValue('default_stream_mount_point', $value);
+    }
+
     public static function getRadioPageDisplayLoginButton()
     {
         return self::getValue('radio_page_display_login_button');
