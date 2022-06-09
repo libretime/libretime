@@ -36,7 +36,8 @@ class Application_Form_StreamSetting extends Zend_Form
                 'OSS' => _('OSS'),
                 'Portaudio' => _('Portaudio'),
                 'Pulseaudio' => _('Pulseaudio'),
-                'Jack' => _('Jack'), ])
+                'Jack' => _('Jack'),
+            ])
             ->setValue(isset($setting['output_sound_device_type']) ? $setting['output_sound_device_type'] : 0)
             ->setDecorators(['ViewHelper']);
         $this->addElement($output_sound_device_type);
@@ -53,9 +54,11 @@ class Application_Form_StreamSetting extends Zend_Form
 
         $stream_format = new Zend_Form_Element_Radio('streamFormat');
         $stream_format->setLabel(_('Stream Label:'));
-        $stream_format->setMultiOptions([_('Artist - Title'),
+        $stream_format->setMultiOptions([
+            _('Artist - Title'),
             _('Show - Artist - Title'),
-            _('Station name - Show name'), ]);
+            _('Station name - Show name'),
+        ]);
         $stream_format->setValue(Application_Model_Preference::GetStreamLabelFormat());
         $stream_format->setDecorators(['ViewHelper']);
         $this->addElement($stream_format);
