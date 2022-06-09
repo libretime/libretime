@@ -1,0 +1,267 @@
+# See https://libretime.org/docs/admin-manual/setup/configuration/
+
+general:
+  # The public url.
+  # > this field is REQUIRED
+  public_url:
+  # The internal API authentication key.
+  # > this field is REQUIRED
+  api_key:
+
+  # List of origins allowed to access resources on the server, the public url
+  # origin is automatically included.
+  # > default is []
+  allowed_cors_origins: []
+
+  # How many hours ahead Playout should cache scheduled media files.
+  # > default is 1
+  cache_ahead_hours: 1
+
+  # Authentication adaptor to use for the legacy service, specify a class like
+  # LibreTime_Auth_Adaptor_FreeIpa to replace the built-in adaptor.
+  # > default is local
+  auth: local
+
+storage:
+  # Path of the storage directory.
+  # > default is /srv/libretime
+  path: /srv/libretime
+
+database:
+  # The hostname of the PostgreSQL server.
+  # > default is localhost
+  host: postgres
+  # The port of the PostgreSQL server.
+  # > default is 5432
+  port: 5432
+  # The name of the PostgreSQL database.
+  # > default is libretime
+  name: libretime
+  # The username of the PostgreSQL user.
+  # > default is libretime
+  user: libretime
+  # The password of the PostgreSQL user.
+  # > default is libretime
+  password: libretime
+
+rabbitmq:
+  # The hostname of the RabbitMQ server.
+  # > default is localhost
+  host: rabbitmq
+  # The port of the RabbitMQ server.
+  # > default is 5672
+  port: 5672
+  # The virtual host of RabbitMQ server.
+  # > default is /libretime
+  vhost: /libretime
+  # The username of the RabbitMQ user.
+  # > default is libretime
+  user: libretime
+  # The password of the RabbitMQ user.
+  # > default is libretime
+  password: libretime
+
+playout:
+  # Liquidsoap connection host.
+  # > default is localhost
+  liquidsoap_host: liquidsoap
+  # Liquidsoap connection port.
+  # > default is 1234
+  liquidsoap_port: 1234
+
+  # The format for recordings.
+  # > must be one of (ogg, mp3)
+  # > default is ogg
+  record_file_format: ogg
+  # The bitrate for recordings.
+  # > default is 256
+  record_bitrate: 256
+  # The samplerate for recordings.
+  # > default is 44100
+  record_samplerate: 44100
+  # The number of channels for recordings.
+  # > default is 2
+  record_channels: 2
+  # The sample size for recordings.
+  # > default is 16
+  record_sample_size: 16
+
+liquidsoap:
+  # Liquidsoap server listen address.
+  # > default is 127.0.0.1
+  server_listen_address: 0.0.0.0
+  # Liquidsoap server listen port.
+  # > default is 1234
+  server_listen_port: 1234
+
+  # Input harbor listen address.
+  # > default is ["0.0.0.0"]
+  harbor_listen_address: ["0.0.0.0"]
+
+stream:
+  # Inputs sources.
+  inputs:
+    # Main harbor input.
+    main:
+      # Harbor input public url. If not defined, the value will be generated from
+      # the [general.public_url] hostname, the input port and mount.
+      public_url:
+      # Mount point for the main harbor input.
+      # > default is main
+      mount: main
+      # Listen port for the main harbor input.
+      # > default is 8001
+      port: 8001
+
+    # Show harbor input.
+    show:
+      # Harbor input public url. If not defined, the value will be generated from
+      # the [general.public_url] hostname, the input port and mount.
+      public_url:
+      # Mount point for the show harbor input.
+      # > default is show
+      mount: show
+      # Listen port for the show harbor input.
+      # > default is 8002
+      port: 8002
+
+  # Output streams.
+  outputs:
+    # Default icecast output
+    # This can be reused to define multiple outputs without duplicating data
+    .default_icecast_output: &default_icecast_output
+      host: icecast
+      port: 8000
+      source_password: hackme
+      admin_password: hackme
+      name: LibreTime!
+      description: LibreTime Radio!
+      website: https://libretime.org
+      genre: various
+
+    # Icecast output streams.
+    # > max items is 3
+    icecast:
+      # The default Icecast output stream
+      - <<: *default_icecast_output
+        enabled: true
+        public_url:
+        mount: main
+        audio:
+          format: ogg
+          bitrate: 256
+
+      # You can define extra outputs by reusing the default output using a yaml anchor
+      - <<: *default_icecast_output
+        enabled: false
+        mount: extra
+
+      - # Whether the output is enabled.
+        # > default is false
+        enabled: false
+        # Output public url, If not defined, the value will be generated from
+        # the [general.public_url] hostname, the output port and mount.
+        public_url:
+        # Icecast server host.
+        # > default is localhost
+        host: localhost
+        # Icecast server port.
+        # > default is 8000
+        port: 8000
+        # Icecast server mount point.
+        # > this field is REQUIRED
+        mount: main
+        # Icecast source user.
+        # > default is source
+        source_user: source
+        # Icecast source password.
+        # > this field is REQUIRED
+        source_password: hackme
+        # Icecast admin user.
+        # > default is admin
+        admin_user: admin
+        # Icecast admin password. If not defined, statistics will not be collected.
+        admin_password: hackme
+
+        # Icecast output audio.
+        audio:
+          # Icecast output audio format.
+          # > must be one of (aac, mp3, ogg, opus)
+          # > this field is REQUIRED
+          format: ogg
+          # Icecast output audio bitrate.
+          # > must be one of (32, 48, 64, 96, 128, 160, 192, 224, 256, 320)
+          # > this field is REQUIRED
+          bitrate: 256
+
+          # format=ogg only field: Embed metadata (track title, artist, and show name)
+          # in the output stream. Some bugged players will disconnect from the stream
+          # after every songs when playing ogg streams that have metadata information
+          # enabled.
+          # > default is false
+          enable_metadata: false
+
+        # Icecast stream name.
+        name: LibreTime!
+        # Icecast stream description.
+        description: LibreTime Radio!
+        # Icecast stream website.
+        website: https://libretime.org
+        # Icecast stream genre.
+        genre: various
+
+    # Shoutcast output streams.
+    # > max items is 1
+    shoutcast:
+      - # Whether the output is enabled.
+        # > default is false
+        enabled: false
+        # Output public url. If not defined, the value will be generated from
+        # the [general.public_url] hostname and the output port.
+        public_url:
+        # Shoutcast server host.
+        # > default is localhost
+        host: localhost
+        # Shoutcast server port.
+        # > default is 8000
+        port: 8000
+        # Shoutcast source user.
+        # > default is source
+        source_user: source
+        # Shoutcast source password.
+        # > this field is REQUIRED
+        source_password: hackme
+        # Shoutcast admin user.
+        # > default is admin
+        admin_user: admin
+        # Shoutcast admin password. If not defined, statistics will not be collected.
+        admin_password: hackme
+
+        # Shoutcast output audio.
+        audio:
+          # Shoutcast output audio format.
+          # > must be one of (aac, mp3)
+          # > this field is REQUIRED
+          format: mp3
+          # Shoutcast output audio bitrate.
+          # > must be one of (32, 48, 64, 96, 128, 160, 192, 224, 256, 320)
+          # > this field is REQUIRED
+          bitrate: 256
+
+        # Shoutcast stream name.
+        name: LibreTime!
+        # Shoutcast stream website.
+        website: https://libretime.org
+        # Shoutcast stream genre.
+        genre: various
+
+    # System outputs.
+    # > max items is 1
+    system:
+      - # Whether the output is enabled.
+        # > default is false
+        enabled: false
+        # System output kind.
+        # > must be one of (alsa, ao, oss, portaudio, pulseaudio)
+        # > default is alsa
+        kind: alsa

@@ -1,0 +1,67 @@
+#
+# This file is used for development. It it not intended for production!
+# See https://libretime.org/docs/developer-manual/development/environment/#docker-compose
+#
+version: "3.9"
+
+services:
+  postgres:
+    ports:
+      - 5432:5432
+
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  playout:
+    build:
+      context: .
+      target: libretime-playout
+    volumes:
+      - ./playout:/src
+
+  liquidsoap:
+    build:
+      context: .
+      target: libretime-playout
+    ports:
+      - 1234:1234
+    volumes:
+      - ./playout:/src
+
+  analyzer:
+    build:
+      context: .
+      target: libretime-analyzer
+    volumes:
+      - ./analyzer:/src
+
+  worker:
+    build:
+      context: .
+      target: libretime-worker
+    volumes:
+      - ./worker:/src
+
+  api:
+    build:
+      context: .
+      target: libretime-api
+    volumes:
+      - ./api:/src
+    command: /usr/local/bin/libretime-api runserver 0.0.0.0:9001
+    environment:
+      LIBRETIME_DEBUG: "true"
+
+  legacy:
+    build:
+      context: .
+      target: libretime-legacy
+    volumes:
+      - ./legacy:/var/www/html
+
+  nginx:
+    volumes:
+      - ./legacy:/var/www/html

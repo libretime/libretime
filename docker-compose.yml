@@ -3,27 +3,108 @@ version: "3.9"
 services:
   postgres:
     image: postgres
-    ports:
-      - 5432:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: libretime
-      POSTGRES_PASSWORD: libretime
+      POSTGRES_PASSWORD: libretime # Change me !
     healthcheck:
       test: pg_isready -U libretime
 
   rabbitmq:
-    image: rabbitmq:management-alpine
-    ports:
-      - 5672:5672
-      - 15672:15672
+    image: rabbitmq:alpine
     environment:
       RABBITMQ_DEFAULT_VHOST: /libretime
       RABBITMQ_DEFAULT_USER: libretime
-      RABBITMQ_DEFAULT_PASS: libretime
+      RABBITMQ_DEFAULT_PASS: libretime # Change me !
     healthcheck:
       test: rabbitmq-diagnostics -q ping
 
+  playout:
+    image: ghcr.io/libretime/libretime-playout:${LIBRETIME_VERSION:-latest}
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
+      - libretime_playout:/app
+    environment:
+      LIBRETIME_GENERAL_PUBLIC_URL: http://nginx
+
+  liquidsoap:
+    image: ghcr.io/libretime/libretime-playout:${LIBRETIME_VERSION:-latest}
+    command: /usr/local/bin/libretime-liquidsoap
+    ports:
+      - 8001:8001
+      - 8002:8002
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
+      - libretime_playout:/app
+    environment:
+      LIBRETIME_GENERAL_PUBLIC_URL: http://nginx
+
+  analyzer:
+    image: ghcr.io/libretime/libretime-analyzer:${LIBRETIME_VERSION:-latest}
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
+      - libretime_storage:/srv/libretime
+    environment:
+      LIBRETIME_GENERAL_PUBLIC_URL: http://nginx
+
+  worker:
+    image: ghcr.io/libretime/libretime-worker:${LIBRETIME_VERSION:-latest}
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
+    environment:
+      LIBRETIME_GENERAL_PUBLIC_URL: http://nginx
+
+  api:
+    image: ghcr.io/libretime/libretime-api:${LIBRETIME_VERSION:-latest}
+    depends_on:
+      - postgres
+      - rabbitmq
+    volumes:
+      - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
+      - libretime_storage:/srv/libretime
+    healthcheck:
+      test: python3 -c "import requests; requests.get('http://localhost:9001/api/v2/version').raise_for_status()"
+
+  legacy:
+    image: ghcr.io/libretime/libretime-legacy:${LIBRETIME_VERSION:-latest}
+    depends_on:
+      - postgres
+      - rabbitmq
+    volumes:
+      - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
+      - libretime_assets:/var/www/html
+      - libretime_storage:/srv/libretime
+    environment:
+      LIBRETIME_LOG_FILEPATH: php://stderr
+
+  nginx:
+    image: nginx
+    ports:
+      - 8080:80
+    volumes:
+      - libretime_assets:/var/www/html:ro
+      - ${NGINX_CONFIG_FILEPATH:-./nginx.conf}:/etc/nginx/conf.d/default.conf:ro
+
+  icecast:
+    image: infiniteproject/icecast
+    ports:
+      - 8000:8000
+    environment:
+      ICECAST_SOURCE_PASSWORD: hackme # Change me !
+      ICECAST_ADMIN_PASSWORD: hackme # Change me !
+      ICECAST_RELAY_PASSWORD: hackme # Change me !
+
 volumes:
   postgres_data: {}
+  libretime_storage: {}
+  libretime_assets: {}
+  libretime_playout: {}
