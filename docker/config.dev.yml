@@ -1,0 +1,35 @@
+general:
+  public_url: http://localhost:8080
+  api_key: some_secret_api_key
+
+database:
+  host: postgres
+
+rabbitmq:
+  host: rabbitmq
+
+playout:
+  liquidsoap_host: liquidsoap
+
+liquidsoap:
+  server_listen_address: 0.0.0.0
+
+stream:
+  outputs:
+    .default_icecast_output: &default_icecast_output
+      host: icecast
+      port: 8000
+      source_password: hackme
+      admin_password: hackme
+      name: LibreTime!
+      description: LibreTime Radio!
+      website: https://libretime.org
+      genre: various
+
+    icecast:
+      - <<: *default_icecast_output
+        enabled: true
+        mount: main
+        audio:
+          format: ogg
+          bitrate: 256
