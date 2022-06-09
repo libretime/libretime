@@ -13,7 +13,7 @@ clean: .clean
 
 test: $(VENV)
 	source $(VENV)/bin/activate
-	DJANGO_SETTINGS_MODULE=libretime_api.settings.testing libretime-api test libretime_api
+	DJANGO_SETTINGS_MODULE=libretime_api.settings.testing pytest -n $(CPU_CORES) --color=yes -v libretime_api
 
 schema: $(VENV)
 	source $(VENV)/bin/activate
