@@ -16,6 +16,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
       - uses: pre-commit/action@v3.0.0
 
   check-shell:
@@ -23,6 +25,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
       - run: |
           python -m venv venv && source venv/bin/activate
           pip install gh-release-install
@@ -44,5 +48,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
       - run: make all
         working-directory: tools
