@@ -118,6 +118,10 @@ The `general` section has been changed:
 
 - the `general.protocol`, `general.base_url`, `general.base_port`, `general.base_dir` and `general.force_ssl` entries were replaced with a single `general.public_url` entry, be sure to use a valid url with the new configuration entry.
 
+A new `storage` section has been added:
+
+- the `storage.path` entry was added to move the storage configuration from the database to the configuration file, be sure to edit your configuration with the path to your storage. The default storage path value is `/srv/libretime`.
+
 ## :warning: Known issues
 
 The following issues may need a workaround for the time being. Please search the [issues](https://github.com/libretime/libretime/issues) before reporting problems not listed below.
