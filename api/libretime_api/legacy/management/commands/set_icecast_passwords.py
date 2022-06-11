@@ -61,7 +61,7 @@ class Command(BaseCommand):
         if source_password is not None:
             Preference.objects.update_or_create(
                 keystr="default_icecast_password",
-                valstr=source_password,
+                defaults={"valstr": source_password},
             )
 
         for key in ["s1", "s2", "s3", "s4"]:
