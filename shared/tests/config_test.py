@@ -3,21 +3,31 @@ from pathlib import Path
 from typing import List
 from unittest import mock
 
-from pydantic import BaseModel
+from pydantic import AnyHttpUrl, BaseModel
 from pytest import mark, raises
 
-from libretime_shared.config import BaseConfig, DatabaseConfig, RabbitMQConfig
+from libretime_shared.config import (
+    BaseConfig,
+    DatabaseConfig,
+    RabbitMQConfig,
+    no_trailing_slash_validator,
+)
 
 
 # pylint: disable=too-few-public-methods
 class FixtureConfig(BaseConfig):
+    public_url: AnyHttpUrl
     api_key: str
     allowed_hosts: List[str] = []
     database: DatabaseConfig
     rabbitmq: RabbitMQConfig = RabbitMQConfig()
 
+    # Validators
+    _public_url_no_trailing_slash = no_trailing_slash_validator("public_url")
+
 
 FIXTURE_CONFIG_RAW = """
+public_url: http://libretime.example.com/
 api_key: "f3bf04fc"
 allowed_hosts:
   - example.com
@@ -49,6 +59,7 @@ def test_base_config(tmp_path: Path):
     ):
         config = FixtureConfig(filepath=config_filepath)
 
+        assert config.public_url == "http://libretime.example.com"
         assert config.api_key == "f3bf04fc"
         assert config.allowed_hosts == ["example.com", "sub.example.com"]
         assert config.database.host == "localhost"
