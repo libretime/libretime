@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2021-10-15 19:56+0200\n"
-"PO-Revision-Date: 2022-04-14 09:46+0000\n"
-"Last-Translator: Jonas L. <ljonas@riseup.net>\n"
+"PO-Revision-Date: 2022-06-14 14:20+0000\n"
+"Last-Translator: rinka <kqarin@riseup.net>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/libretime/legacy/"
 "fr/>\n"
 "Language: fr_FR\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.12-dev\n"
+"X-Generator: Weblate 4.13-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -1237,7 +1237,7 @@ msgstr "Titre"
 #: application/services/HistoryService.php:1089
 #: application/services/HistoryService.php:1104
 msgid "Creator"
-msgstr "Créateur"
+msgstr "Créateur.ice"
 
 #: application/controllers/LocaleController.php:90
 #: application/forms/SmartBlockCriteria.php:57
@@ -1262,7 +1262,7 @@ msgstr "BPM"
 #: application/services/HistoryService.php:1060
 #: application/services/HistoryService.php:1107
 msgid "Composer"
-msgstr "Compositeur"
+msgstr "Compositeur.ice"
 
 #: application/controllers/LocaleController.php:94
 #: application/forms/SmartBlockCriteria.php:61
@@ -1277,7 +1277,7 @@ msgstr "Conducteur"
 #: application/services/HistoryService.php:1062
 #: application/services/HistoryService.php:1108
 msgid "Copyright"
-msgstr "Droit d'Auteur"
+msgstr "Droit d'Auteur.ice"
 
 #: application/controllers/LocaleController.php:96
 #: application/forms/SmartBlockCriteria.php:67
@@ -1361,7 +1361,7 @@ msgstr "Replay Gain"
 
 #: application/controllers/LocaleController.php:108
 msgid "Sample Rate"
-msgstr "Taux d'Echantillonnage"
+msgstr "Taux d'échantillonnage"
 
 #: application/controllers/LocaleController.php:109
 #: application/forms/SmartBlockCriteria.php:82
