@@ -7,3 +7,4 @@ djangorestframework~=3.13.1
 drf-spectacular~=0.22.1
 markdown
 psycopg2
+requests
