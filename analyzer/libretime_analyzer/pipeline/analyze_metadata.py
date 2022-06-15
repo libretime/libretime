@@ -1,9 +1,9 @@
-import hashlib
 from datetime import timedelta
 from pathlib import Path
 from typing import Any, Dict
 
 import mutagen
+from libretime_shared.files import compute_md5
 from loguru import logger
 
 
@@ -108,18 +108,3 @@ def analyze_metadata(filepath_: str, metadata: Dict[str, Any]):
             continue
 
     return metadata
-
-
-def compute_md5(filepath: Path) -> str:
-    """
-    Compute a file md5sum.
-    """
-    with filepath.open("rb") as file:
-        buffer = hashlib.md5()  # nosec
-        while True:
-            blob = file.read(8192)
-            if not blob:
-                break
-            buffer.update(blob)
-
-        return buffer.hexdigest()

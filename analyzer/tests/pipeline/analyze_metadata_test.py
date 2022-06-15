@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from libretime_analyzer.pipeline.analyze_metadata import analyze_metadata, compute_md5
+from libretime_analyzer.pipeline.analyze_metadata import analyze_metadata
 
 from ..fixtures import FILE_INVALID_DRM, FILE_INVALID_TXT, FILES_TAGGED
 
@@ -48,7 +48,3 @@ def test_analyze_metadata_unparsable_file():
         "hidden": False,
         "md5": "4d5e4b1c8e8febbd31fa9ce7f088beae",
     }
-
-
-def test_compute_md5():
-    assert compute_md5(FILE_INVALID_TXT) == "4d5e4b1c8e8febbd31fa9ce7f088beae"
