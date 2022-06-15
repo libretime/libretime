@@ -38,6 +38,7 @@ setup(
         "django-filter~=21.1.0",
         "drf-spectacular~=0.22.1",
         "markdown",
+        "requests",
     ],
     extras_require={
         "prod": [
@@ -50,6 +51,7 @@ setup(
             "psycopg2-binary",
             "pylint-django",
             "pytest-django",
+            "requests-mock",
             f"libretime-shared @ file://localhost/{here.parent / 'shared'}#egg=libretime_shared",
         ],
     },
