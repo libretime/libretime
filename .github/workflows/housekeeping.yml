@@ -43,6 +43,7 @@ jobs:
         with:
           args: >-
             '**/*.md'
+            --exclude-path 'website/versioned_docs'
             --require-https
             --exclude-all-private
             --exclude-mail
