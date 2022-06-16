@@ -49,6 +49,7 @@ jobs:
             --exclude-mail
             --exclude 'example\.(com|org)'
             --exclude '\$server_name\$request_uri'
+            --exclude '%7Bvars.version%7D'
             --exclude 'https://dir.xiph.org/cgi-bin/yp-cgi'
             --exclude 'https://radio.indymedia.org/cgi-bin/yp-cgi'
         env:
