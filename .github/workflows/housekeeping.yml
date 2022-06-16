@@ -52,6 +52,7 @@ jobs:
             --exclude '%7Bvars.version%7D'
             --exclude 'https://dir.xiph.org/cgi-bin/yp-cgi'
             --exclude 'https://radio.indymedia.org/cgi-bin/yp-cgi'
+            --exclude 'https://www.ascap.com'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
