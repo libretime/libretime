@@ -26,7 +26,11 @@
     },
     {
       "matchUpdateTypes": ["patch"],
-      "matchPaths": ["website/**", ".github/workflows/*"],
+      "matchPaths": [
+        ".github/workflows/*",
+        ".pre-commit-config.yaml",
+        "website/**"
+      ],
       "automerge": true
     }
   ]
