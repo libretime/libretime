@@ -4,7 +4,7 @@ First and foremost, thank you! We appreciate that you want to contribute to
 LibreTime, your time is valuable, and your contributions mean a lot to us.
 
 Before any contribution, read and be prepared to adhere to our
-[code of conduct](https://github.com/libretime/code-of-conduct/blob/main/code_of_conduct.md).
+[code of conduct](https://github.com/libretime/organization/blob/main/CODE_OF_CONDUCT.md).
 
 In addition, LibreTime follow the standardized
 [C4 development process](https://rfc.zeromq.org/spec:42/c4/), in which you can
