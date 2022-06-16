@@ -184,16 +184,3 @@ sudo systemctl --all --plain | grep libretime
 ```
 
 Once completed, it's recommended to [install a reverse proxy](./reverse-proxy.md) to setup SSL termination and secure your installation.
-
-## Using packages
-
-:::note
-
-Usually the packages are built soon after a release is published.
-
-:::
-
-You can install LibreTime using packages on the distributions listed below, please follow further instruction provided by the links below:
-
-- [Debian / Ubuntu packages](https://github.com/libretime/libretime-debian-packaging/releases)
-- [CentOS packages](https://build.opensuse.org/package/show/home:radiorabe:airtime/libretime)
