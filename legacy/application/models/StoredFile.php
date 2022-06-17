@@ -49,7 +49,6 @@ class Application_Model_StoredFile
         'ftype' => 'DbFtype',
         'language' => 'DbLanguage',
         'replay_gain' => 'DbReplayGain',
-        'directory' => 'DbDirectory',
         'owner_id' => 'DbOwnerId',
         'cuein' => 'DbCueIn',
         'cueout' => 'DbCueOut',
@@ -1120,11 +1119,6 @@ SQL;
         }
 
         return $rows;
-    }
-
-    public function getDirectory()
-    {
-        return $this->_file->getDbDirectory();
     }
 
     public function setFileExistsFlag($flag)
