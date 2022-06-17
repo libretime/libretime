@@ -59,7 +59,7 @@ repos:
         args:
           - --ignore-words=.codespellignore
           - --builtin=clear,rare,informal
-        exclude: (^legacy.*|yarn\.lock)$
+        exclude: (^api/schema.yml|^legacy.*|yarn\.lock)$
 
   - repo: local
     hooks:
