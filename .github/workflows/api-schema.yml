@@ -3,40 +3,104 @@ name: API schema
 on:
   push:
     branches: [main]
+    paths:
+      - .github/workflows/**
+      - api/**
+
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/**
+      - api/**
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
-  generate:
-    if: github.repository_owner == 'libretime'
-    name: Generate
-
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
       - uses: actions/setup-python@v4
         with:
           python-version: "3.x"
 
-      - name: Clone client repo
-        uses: actions/checkout@v3
+      - uses: actions/cache@v3
         with:
-          repository: "${{ github.repository_owner }}/client"
-          path: client-repo
-          ssh-key: "${{ secrets.API_CLIENT_DEPLOY_KEY }}"
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-api-${{ hashFiles('api/**/setup.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-api
 
-      - name: Generate schema
-        run: |
-          make schema
-          cp schema.yml ../client-repo/schema.yml
+      - name: Install
+        run: make install
         working-directory: api
 
-      - name: Push schema changes to API clients
-        uses: stefanzweifel/git-auto-commit-action@v4
+      - name: Get pull request commit range
+        if: github.event_name == 'pull_request'
+        run: echo "COMMIT_RANGE=origin/${{ github.base_ref }}..${{ github.sha }}" >> $GITHUB_ENV
+
+      - name: Get push commit range
+        if: github.event_name == 'push'
+        run: echo "COMMIT_RANGE=${{ github.event.before }}..${{ github.sha }}" >> $GITHUB_ENV
+
+      - name: Check if schema is outdated
+        run: |
+          for commit in $(git rev-list --reverse --no-merges ${{ env.COMMIT_RANGE }}); do
+              git checkout $commit
+
+              make --quiet schema
+              git add schema.yml
+              git diff-index --quiet HEAD -- || {
+                echo "ERROR: Schema is outdated for commit $commit"
+                git show --quiet
+                git diff -- schema.yml
+                exit 1
+              }
+          done
+        working-directory: api
+
+  dispatch:
+    if: >
+      github.repository_owner == 'libretime'
+      && github.event_name == 'push'
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
         with:
-          commit_message: "chore: update schema for ${{ github.repository }}@${{ github.sha }}"
-          commit_user_name: "github-actions[bot]"
-          commit_user_email: "github-actions[bot]@users.noreply.github.com"
-          repository: ./client-repo
+          fetch-depth: 0
+
+      - uses: actions/checkout@v3
+        with:
+          repository: libretime/client
+          path: client
+          ssh-key: "${{ secrets.API_CLIENT_DEPLOY_KEY }}"
+
+      - name: Dispatch schema update commits
+        run: |
+          git config --global user.email "libretime-bot"
+          git config --global user.name "libretime-bot@users.noreply.github.com"
+
+          for commit in $(git rev-list --reverse --no-merges ${{ github.event.before }}..${{ github.sha }} -- api/schema.yml); do
+            cp api/schema.yml client/
+
+            git show \
+              --quiet \
+              --format="%B%n${{ github.repository }}@%H" \
+              "$commit" \
+              > commit-message
+
+            pushd client/
+            git add schema.yml
+            git diff-index --quiet HEAD -- || {
+              git commit --file=../commit-message
+              git push
+            }
+            popd
+
+            rm commit-message
+          done
