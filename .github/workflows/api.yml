@@ -46,7 +46,9 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-    container: ghcr.io/libretime/libretime-dev:${{ matrix.release }}
+    container:
+      image: ghcr.io/libretime/libretime-dev:${{ matrix.release }}
+      options: --user 1001
     defaults:
       run:
         shell: bash
@@ -59,9 +61,9 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-api-${{ hashFiles('api/**/setup.py') }}
+          key: ${{ matrix.release }}-pip-api-${{ hashFiles('api/**/setup.py') }}
           restore-keys: |
-            ${{ runner.os }}-pip-api
+            ${{ matrix.release }}-pip-api
 
       - name: Test
         run: make test
