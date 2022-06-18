@@ -22,7 +22,7 @@ from ..serializers import ScheduleSerializer
 class ScheduleViewSet(viewsets.ModelViewSet):
     queryset = Schedule.objects.all()
     serializer_class = ScheduleSerializer
-    filter_fields = {
+    filterset_fields = {
         "starts": FILTER_NUMERICAL_LOOKUPS,
         "ends": FILTER_NUMERICAL_LOOKUPS,
         "playout_status": FILTER_NUMERICAL_LOOKUPS,
