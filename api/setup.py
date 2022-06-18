@@ -35,7 +35,7 @@ setup(
         "coreapi",
         "django~=3.2.13",
         "djangorestframework",
-        "django-filter",
+        "django-filter~=21.1.0",
         "drf-spectacular",
         "markdown",
     ],
