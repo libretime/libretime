@@ -37,7 +37,6 @@ setup(
         "djangorestframework~=3.13.1",
         "django-filter~=21.1.0",
         "drf-spectacular~=0.22.1",
-        "markdown",
         "requests",
     ],
     extras_require={

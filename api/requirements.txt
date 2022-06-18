@@ -5,6 +5,5 @@ django~=3.2.13
 django-filter~=21.1.0
 djangorestframework~=3.13.1
 drf-spectacular~=0.22.1
-markdown
 psycopg2
 requests
