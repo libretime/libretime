@@ -147,6 +147,9 @@ class CcFiles extends BaseCcFiles
 
             self::validateFileArray($fileArray);
 
+            // Early md5dum processing
+            $md5 = md5_file($filePath);
+
             $importedStorageDir = Config::getStoragePath() . 'imported/' . self::getOwnerId() . '/';
             $importedDbPath = 'imported/' . self::getOwnerId() . '/';
             $artwork = FileDataHelper::saveArtworkData($filePath, $originalFilename, $importedStorageDir, $importedDbPath);
@@ -156,6 +159,7 @@ class CcFiles extends BaseCcFiles
             $file->setDbOwnerId(self::getOwnerId());
             $now = new DateTime('now', new DateTimeZone('UTC'));
             $file->setDbTrackTitle($originalFilename);
+            $file->setDbMd5($md5);
             $file->setDbArtwork($artwork);
             $file->setDbTrackType($trackType);
             $file->setDbUtime($now);
