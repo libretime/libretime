@@ -1,11 +1,8 @@
 from rest_framework import routers
 
 from .views import (
-    ImportedPodcastViewSet,
     PlaylistContentViewSet,
     PlaylistViewSet,
-    PodcastEpisodeViewSet,
-    PodcastViewSet,
     ScheduleViewSet,
     ShowDaysViewSet,
     ShowHostViewSet,
@@ -15,7 +12,6 @@ from .views import (
     SmartBlockContentViewSet,
     SmartBlockCriteriaViewSet,
     SmartBlockViewSet,
-    StationPodcastViewSet,
     WebstreamMetadataViewSet,
     WebstreamViewSet,
 )
@@ -23,10 +19,6 @@ from .views import (
 router = routers.DefaultRouter()
 router.register("playlist-contents", PlaylistContentViewSet)
 router.register("playlists", PlaylistViewSet)
-router.register("podcast-episodes", PodcastEpisodeViewSet)
-router.register("podcasts", PodcastViewSet)
-router.register("station-podcasts", StationPodcastViewSet)
-router.register("imported-podcasts", ImportedPodcastViewSet)
 router.register("schedule", ScheduleViewSet)
 router.register("show-days", ShowDaysViewSet)
 router.register("show-hosts", ShowHostViewSet)

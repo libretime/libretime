@@ -13,6 +13,7 @@ INSTALLED_APPS = [
     "libretime_api.core",
     "libretime_api.history",
     "libretime_api.storage",
+    "libretime_api.podcasts",
     "libretime_api.schedule",
     "django.contrib.auth",
     "django.contrib.contenttypes",
