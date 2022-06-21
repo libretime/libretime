@@ -6989,14 +6989,14 @@ components:
           type: string
           format: uri
           readOnly: true
-        keystr:
+        key:
           type: string
           nullable: true
           maxLength: 255
-        valstr:
+        value:
           type: string
           nullable: true
-        subjid:
+        user:
           type: string
           format: uri
           nullable: true
@@ -7871,21 +7871,21 @@ components:
           type: string
           format: uri
           readOnly: true
-        keystr:
+        key:
           type: string
           nullable: true
           maxLength: 255
-        valstr:
+        value:
           type: string
           nullable: true
-        subjid:
+        user:
           type: string
           format: uri
           nullable: true
       required:
         - item_url
-        - keystr
-        - subjid
+        - key
+        - user
     Schedule:
       type: object
       properties:
