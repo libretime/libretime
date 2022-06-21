@@ -11,3 +11,7 @@ append_if_missing "host all all 0.0.0.0/0 md5" /etc/postgresql/*/main/pg_hba.con
 append_if_missing "host all all ::/0 md5" /etc/postgresql/*/main/pg_hba.conf
 
 systemctl restart postgresql.service
+
+# Setup rabbitmq management interface
+rabbitmq-plugins enable rabbitmq_management
+rabbitmqctl set_user_tags libretime administrator
