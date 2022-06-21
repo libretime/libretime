@@ -3,7 +3,7 @@ from secrets import compare_digest
 from django.conf import settings
 from rest_framework.permissions import BasePermission
 
-from .core.models.role import DJ
+from .core.models import Role
 
 REQUEST_PERMISSION_TYPE_MAP = {
     "GET": "view",
@@ -18,7 +18,7 @@ REQUEST_PERMISSION_TYPE_MAP = {
 
 def get_own_obj(request, view):
     user = request.user
-    if user is None or user.type != DJ:
+    if user is None or user.role != Role.EDITOR:
         return ""
     if request.method == "GET":
         return ""
@@ -67,12 +67,12 @@ class IsAdminOrOwnUser(BasePermission):
     """
 
     def has_permission(self, request, view):
-        if request.user.is_superuser:
+        if request.user.is_superuser():
             return True
         return False
 
     def has_object_permission(self, request, view, obj):
-        if request.user.is_superuser:
+        if request.user.is_superuser():
             return True
         return obj.username == request.user
 

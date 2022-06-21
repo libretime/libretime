@@ -7,14 +7,15 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = get_user_model()
         fields = [
             "item_url",
+            "role",
             "username",
-            "type",
+            "email",
             "first_name",
             "last_name",
-            "lastfail",
-            "skype_contact",
-            "jabber_contact",
-            "email",
-            "cell_phone",
             "login_attempts",
+            "last_login",
+            "last_failed_login",
+            "skype",
+            "jabber",
+            "phone",
         ]

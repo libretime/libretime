@@ -7468,42 +7468,46 @@ components:
           type: string
           format: uri
           readOnly: true
+        role:
+          $ref: "#/components/schemas/RoleEnum"
         username:
           type: string
           maxLength: 255
-        type:
-          $ref: "#/components/schemas/TypeEnum"
+        email:
+          type: string
+          nullable: true
+          maxLength: 1024
         first_name:
           type: string
           maxLength: 255
         last_name:
           type: string
           maxLength: 255
-        lastfail:
-          type: string
-          format: date-time
-          nullable: true
-        skype_contact:
-          type: string
-          nullable: true
-          maxLength: 1024
-        jabber_contact:
-          type: string
-          nullable: true
-          maxLength: 1024
-        email:
-          type: string
-          nullable: true
-          maxLength: 1024
-        cell_phone:
-          type: string
-          nullable: true
-          maxLength: 1024
         login_attempts:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
+        last_login:
+          type: string
+          format: date-time
+          nullable: true
+        last_failed_login:
+          type: string
+          format: date-time
+          nullable: true
+        skype:
+          type: string
+          nullable: true
+          maxLength: 1024
+        jabber:
+          type: string
+          nullable: true
+          maxLength: 1024
+        phone:
+          type: string
+          nullable: true
+          maxLength: 1024
     PatchedUserToken:
       type: object
       properties:
@@ -7886,6 +7890,13 @@ components:
         - item_url
         - key
         - user
+    RoleEnum:
+      enum:
+        - G
+        - H
+        - P
+        - A
+      type: string
     Schedule:
       type: object
       properties:
@@ -8429,13 +8440,6 @@ components:
       required:
         - code
         - item_url
-    TypeEnum:
-      enum:
-        - G
-        - H
-        - P
-        - A
-      type: string
     User:
       type: object
       properties:
@@ -8443,47 +8447,51 @@ components:
           type: string
           format: uri
           readOnly: true
+        role:
+          $ref: "#/components/schemas/RoleEnum"
         username:
           type: string
           maxLength: 255
-        type:
-          $ref: "#/components/schemas/TypeEnum"
+        email:
+          type: string
+          nullable: true
+          maxLength: 1024
         first_name:
           type: string
           maxLength: 255
         last_name:
           type: string
           maxLength: 255
-        lastfail:
-          type: string
-          format: date-time
-          nullable: true
-        skype_contact:
-          type: string
-          nullable: true
-          maxLength: 1024
-        jabber_contact:
-          type: string
-          nullable: true
-          maxLength: 1024
-        email:
-          type: string
-          nullable: true
-          maxLength: 1024
-        cell_phone:
-          type: string
-          nullable: true
-          maxLength: 1024
         login_attempts:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
+        last_login:
+          type: string
+          format: date-time
+          nullable: true
+        last_failed_login:
+          type: string
+          format: date-time
+          nullable: true
+        skype:
+          type: string
+          nullable: true
+          maxLength: 1024
+        jabber:
+          type: string
+          nullable: true
+          maxLength: 1024
+        phone:
+          type: string
+          nullable: true
+          maxLength: 1024
       required:
         - first_name
         - item_url
         - last_name
-        - type
+        - role
         - username
     UserToken:
       type: object
