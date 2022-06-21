@@ -75,6 +75,7 @@ Vagrant.configure('2') do |config|
     set -e
     cd /vagrant
 
+    LIBRETIME_POSTGRESQL_PASSWORD=libretime \
     bash install \
       --listen-port 8080 \
       --allow-restart \
@@ -88,6 +89,10 @@ Vagrant.configure('2') do |config|
     SCRIPT
 
     config.vm.provision 'install', type: 'shell', inline: $script
+
+    config.vm.provision 'post-install',
+                        type: 'shell',
+                        path: 'installer/vagrant/post-install.sh'
   end
 
   # Define all the OS boxes we support
