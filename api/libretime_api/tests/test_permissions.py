@@ -4,7 +4,7 @@ from django.contrib.auth.models import AnonymousUser
 from model_bakery import baker
 from rest_framework.test import APIRequestFactory, APITestCase
 
-from ..core.models import DJ, GUEST
+from ..core.models import Role
 from ..permissions import IsSystemTokenOrUser
 
 
@@ -51,18 +51,18 @@ class TestPermissions(APITestCase):
         "webstreams",
     ]
 
-    def logged_in_test_model(self, model, name, user_type, fn):
+    def logged_in_test_model(self, model, role, username, fn):
         path = self.path.format(model)
-        if not get_user_model().objects.filter(username=name):
+        if not get_user_model().objects.filter(username=username):
             get_user_model().objects.create_user(
-                name,
-                email="test@example.com",
+                role=role,
+                username=username,
                 password="test",
-                type=user_type,
+                email="test@example.com",
                 first_name="test",
                 last_name="user",
             )
-        self.client.login(username=name, password="test")
+        self.client.login(username=username, password="test")
         return fn(path)
 
     @classmethod
@@ -71,55 +71,74 @@ class TestPermissions(APITestCase):
 
     def test_guest_permissions_success(self):
         for model in self.URLS:
-            response = self.logged_in_test_model(model, "guest", GUEST, self.client.get)
+            response = self.logged_in_test_model(
+                model,
+                Role.GUEST,
+                "guest",
+                self.client.get,
+            )
             self.assertEqual(
-                response.status_code, 200, msg=f"Invalid for model {model}"
+                response.status_code,
+                200,
+                msg=f"Invalid for model {model}",
             )
 
     def test_guest_permissions_failure(self):
         for model in self.URLS:
             response = self.logged_in_test_model(
-                model, "guest", GUEST, self.client.post
+                model,
+                Role.GUEST,
+                "guest",
+                self.client.post,
             )
             self.assertEqual(
-                response.status_code, 403, msg=f"Invalid for model {model}"
+                response.status_code,
+                403,
+                msg=f"Invalid for model {model}",
             )
 
-    def test_dj_get_permissions(self):
+    def test_editor_get_permissions(self):
         for model in self.URLS:
-            response = self.logged_in_test_model(model, "dj", DJ, self.client.get)
+            response = self.logged_in_test_model(
+                model,
+                Role.EDITOR,
+                "editor",
+                self.client.get,
+            )
             self.assertEqual(
-                response.status_code, 200, msg=f"Invalid for model {model}"
+                response.status_code,
+                200,
+                msg=f"Invalid for model {model}",
             )
 
-    def test_dj_post_permissions(self):
+    def test_editor_post_permissions(self):
         user = get_user_model().objects.create_user(
-            "test-dj",
-            email="test@example.com",
+            role=Role.EDITOR,
+            username="editor2",
             password="test",
-            type=DJ,
+            email="test@example.com",
             first_name="test",
             last_name="user",
         )
         file = baker.make("storage.File", owner=user)
         model = f"files/{file.id}"
         path = self.path.format(model)
-        self.client.login(username="test-dj", password="test")
+        self.client.login(username="editor2", password="test")
         response = self.client.patch(path, {"name": "newFilename"})
         self.assertEqual(response.status_code, 200)
 
-    def test_dj_post_permissions_failure(self):
+    def test_editor_post_permissions_failure(self):
         get_user_model().objects.create_user(
-            "test-dj",
-            email="test@example.com",
+            role=Role.EDITOR,
+            username="editor2",
             password="test",
-            type=DJ,
+            email="test@example.com",
             first_name="test",
             last_name="user",
         )
         file = baker.make("storage.File")
         model = f"files/{file.id}"
         path = self.path.format(model)
-        self.client.login(username="test-dj", password="test")
+        self.client.login(username="editor2", password="test")
         response = self.client.patch(path, {"name": "newFilename"})
         self.assertEqual(response.status_code, 403)

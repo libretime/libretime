@@ -1,11 +1,8 @@
-GUEST = "G"
-DJ = "H"
-PROGRAM_MANAGER = "P"
-ADMIN = "A"
+from django.db import models
 
-USER_TYPES = {
-    GUEST: "Guest",
-    DJ: "DJ",
-    PROGRAM_MANAGER: "Program Manager",
-    ADMIN: "Admin",
-}
+
+class Role(models.TextChoices):
+    GUEST = "G", "Guest"
+    EDITOR = "H", "Editor"
+    MANAGER = "P", "Manager"
+    ADMIN = "A", "Admin"

@@ -4,18 +4,14 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 
 from ...permission_constants import GROUPS
-from .role import ADMIN, USER_TYPES
-
-USER_TYPE_CHOICES = ()
-for item in USER_TYPES.items():
-    USER_TYPE_CHOICES = USER_TYPE_CHOICES + (item,)
+from .role import Role
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, type, email, first_name, last_name, password):
+    def create_user(self, role, username, password, email, first_name, last_name):
         user = self.model(
+            role=role,
             username=username,
-            type=type,
             email=email,
             first_name=first_name,
             last_name=last_name,
@@ -24,33 +20,75 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, username, email, first_name, last_name, password):
-        user = self.create_user(username, "A", email, first_name, last_name, password)
-        return user
+    def create_superuser(self, username, password, email, first_name, last_name):
+        return self.create_user(
+            Role.ADMIN,
+            username,
+            password,
+            email,
+            first_name,
+            last_name,
+        )
 
     def get_by_natural_key(self, username):
         return self.get(username=username)
 
 
 class User(AbstractBaseUser):
+    role = models.CharField(
+        db_column="type",
+        max_length=1,
+        choices=Role.choices,
+    )
+
     username = models.CharField(db_column="login", unique=True, max_length=255)
-    password = models.CharField(
-        db_column="pass", max_length=255
-    )  # Field renamed because it was a Python reserved word.
-    type = models.CharField(max_length=1, choices=USER_TYPE_CHOICES)
+    password = models.CharField(db_column="pass", max_length=255)
+    email = models.CharField(max_length=1024, blank=True, null=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    last_login = models.DateTimeField(db_column="lastlogin", blank=True, null=True)
-    lastfail = models.DateTimeField(blank=True, null=True)
-    skype_contact = models.CharField(max_length=1024, blank=True, null=True)
-    jabber_contact = models.CharField(max_length=1024, blank=True, null=True)
-    email = models.CharField(max_length=1024, blank=True, null=True)
-    cell_phone = models.CharField(max_length=1024, blank=True, null=True)
-    login_attempts = models.IntegerField(blank=True, null=True)
+
+    login_attempts = models.IntegerField(
+        db_column="login_attempts",
+        blank=True,
+        null=True,
+    )
+    last_login = models.DateTimeField(
+        db_column="lastlogin",
+        blank=True,
+        null=True,
+    )
+    last_failed_login = models.DateTimeField(
+        db_column="lastfail",
+        blank=True,
+        null=True,
+    )
+
+    skype = models.CharField(
+        db_column="skype_contact",
+        max_length=1024,
+        blank=True,
+        null=True,
+    )
+    jabber = models.CharField(
+        db_column="jabber_contact",
+        max_length=1024,
+        blank=True,
+        null=True,
+    )
+    phone = models.CharField(
+        db_column="cell_phone",
+        max_length=1024,
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        managed = False
+        db_table = "cc_subjs"
 
     USERNAME_FIELD = "username"
     EMAIL_FIELD = "email"
-    REQUIRED_FIELDS = ["type", "email", "first_name", "last_name"]
+    REQUIRED_FIELDS = ["role", "email", "first_name", "last_name"]
     objects = UserManager()
 
     def get_full_name(self):
@@ -66,7 +104,7 @@ class User(AbstractBaseUser):
             self.password = hashlib.md5(raw_password.encode()).hexdigest()
 
     def is_staff(self):
-        return self.type == ADMIN
+        return self.role == Role.ADMIN
 
     def check_password(self, raw_password):
         if self.has_usable_password():
@@ -81,7 +119,7 @@ class User(AbstractBaseUser):
     # django.contrib.auth.models.PermissionMixin.
 
     def is_superuser(self):
-        return self.type == ADMIN
+        return self.role == Role.ADMIN
 
     def get_user_permissions(self, obj=None):
         """
@@ -90,7 +128,7 @@ class User(AbstractBaseUser):
         return []
 
     def get_group_permissions(self, obj=None):
-        permissions = GROUPS[self.type]
+        permissions = GROUPS[self.role]
         if obj:
             obj_name = obj.__class__.__name__.lower()
             permissions = [perm for perm in permissions if obj_name in perm]
@@ -120,7 +158,3 @@ class User(AbstractBaseUser):
         for permission in perm_list:
             result = result and self.has_perm(permission, obj)
         return result
-
-    class Meta:
-        managed = False
-        db_table = "cc_subjs"

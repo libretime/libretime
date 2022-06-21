@@ -1,4 +1,4 @@
-from .core.models import DJ, GUEST, PROGRAM_MANAGER
+from .core.models import Role
 
 GUEST_PERMISSIONS = [
     "view_schedule",
@@ -19,7 +19,7 @@ GUEST_PERMISSIONS = [
     "view_apiroot",
 ]
 
-DJ_PERMISSIONS = GUEST_PERMISSIONS + [
+EDITOR_PERMISSIONS = GUEST_PERMISSIONS + [
     "add_file",
     "add_podcast",
     "add_podcastepisode",
@@ -50,7 +50,8 @@ DJ_PERMISSIONS = GUEST_PERMISSIONS + [
     "delete_own_smartblockcriteria",
     "delete_own_webstream",
 ]
-PROGRAM_MANAGER_PERMISSIONS = GUEST_PERMISSIONS + [
+
+MANAGER_PERMISSIONS = GUEST_PERMISSIONS + [
     "add_show",
     "add_showdays",
     "add_showhost",
@@ -98,7 +99,7 @@ PROGRAM_MANAGER_PERMISSIONS = GUEST_PERMISSIONS + [
 ]
 
 GROUPS = {
-    GUEST: GUEST_PERMISSIONS,
-    DJ: DJ_PERMISSIONS,
-    PROGRAM_MANAGER: PROGRAM_MANAGER_PERMISSIONS,
+    Role.GUEST.value: GUEST_PERMISSIONS,
+    Role.EDITOR.value: EDITOR_PERMISSIONS,
+    Role.MANAGER.value: MANAGER_PERMISSIONS,
 }
