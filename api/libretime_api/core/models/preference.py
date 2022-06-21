@@ -29,9 +29,19 @@ class Preference(models.Model):
 
 
 class StreamSetting(models.Model):
-    keyname = models.CharField(primary_key=True, max_length=64)
-    value = models.CharField(max_length=255, blank=True, null=True)
-    type = models.CharField(max_length=16)
+    key = models.CharField(
+        db_column="keyname",
+        primary_key=True,
+        max_length=64,
+    )
+    value = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    type = models.CharField(
+        max_length=16,
+    )
 
     class Meta:
         managed = False
