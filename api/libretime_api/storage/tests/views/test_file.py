@@ -2,7 +2,7 @@ from django.conf import settings
 from model_bakery import baker
 from rest_framework.test import APITestCase
 
-from ...._fixtures import AUDIO_FILENAME, fixture_path
+from ...._fixtures import AUDIO_FILENAME
 
 
 class TestFileViewSet(APITestCase):

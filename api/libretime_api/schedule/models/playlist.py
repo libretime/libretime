@@ -52,7 +52,7 @@ class PlaylistContent(models.Model):
     fadeout = models.TimeField(blank=True, null=True)
 
     def get_owner(self):
-        return self.playlist.owner
+        return self.playlist.get_owner()
 
     class Meta:
         managed = False
