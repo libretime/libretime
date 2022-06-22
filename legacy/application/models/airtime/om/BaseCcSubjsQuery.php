@@ -46,10 +46,6 @@
  * @method CcSubjsQuery rightJoinCcFilesRelatedByDbEditedby($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcFilesRelatedByDbEditedby relation
  * @method CcSubjsQuery innerJoinCcFilesRelatedByDbEditedby($relationAlias = null) Adds a INNER JOIN clause to the query using the CcFilesRelatedByDbEditedby relation
  *
- * @method CcSubjsQuery leftJoinCcPerms($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcPerms relation
- * @method CcSubjsQuery rightJoinCcPerms($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcPerms relation
- * @method CcSubjsQuery innerJoinCcPerms($relationAlias = null) Adds a INNER JOIN clause to the query using the CcPerms relation
- *
  * @method CcSubjsQuery leftJoinCcShowHosts($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcShowHosts relation
  * @method CcSubjsQuery rightJoinCcShowHosts($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcShowHosts relation
  * @method CcSubjsQuery innerJoinCcShowHosts($relationAlias = null) Adds a INNER JOIN clause to the query using the CcShowHosts relation
@@ -876,80 +872,6 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
         return $this
             ->joinCcFilesRelatedByDbEditedby($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'CcFilesRelatedByDbEditedby', 'CcFilesQuery');
-    }
-
-    /**
-     * Filter the query by a related CcPerms object
-     *
-     * @param   CcPerms|PropelObjectCollection $ccPerms  the related object to use as filter
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return                 CcSubjsQuery The current query, for fluid interface
-     * @throws PropelException - if the provided filter is invalid.
-     */
-    public function filterByCcPerms($ccPerms, $comparison = null)
-    {
-        if ($ccPerms instanceof CcPerms) {
-            return $this
-                ->addUsingAlias(CcSubjsPeer::ID, $ccPerms->getSubj(), $comparison);
-        } elseif ($ccPerms instanceof PropelObjectCollection) {
-            return $this
-                ->useCcPermsQuery()
-                ->filterByPrimaryKeys($ccPerms->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByCcPerms() only accepts arguments of type CcPerms or PropelCollection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the CcPerms relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return CcSubjsQuery The current query, for fluid interface
-     */
-    public function joinCcPerms($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('CcPerms');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'CcPerms');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the CcPerms relation CcPerms object
-     *
-     * @see       useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   CcPermsQuery A secondary query class using the current class as primary query
-     */
-    public function useCcPermsQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinCcPerms($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'CcPerms', 'CcPermsQuery');
     }
 
     /**
