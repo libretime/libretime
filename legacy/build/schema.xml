@@ -109,28 +109,6 @@
       <parameter name="to" value="cc_files" />
     </behavior>
   </table>
-  <table name="cc_perms" phpName="CcPerms">
-    <column name="permid" phpName="Permid" type="INTEGER" primaryKey="true" required="true" />
-    <column name="subj" phpName="Subj" type="INTEGER" required="false" />
-    <column name="action" phpName="Action" type="VARCHAR" size="20" required="false" />
-    <column name="obj" phpName="Obj" type="INTEGER" required="false" />
-    <column name="type" phpName="Type" type="CHAR" size="1" required="false" />
-    <foreign-key foreignTable="cc_subjs" name="cc_perms_subj_fkey" onDelete="CASCADE">
-      <reference local="subj" foreign="id" />
-    </foreign-key>
-    <unique name="cc_perms_all_idx">
-      <unique-column name="subj" />
-      <unique-column name="action" />
-      <unique-column name="obj" />
-    </unique>
-    <unique name="cc_perms_permid_idx">
-      <unique-column name="permid" />
-    </unique>
-    <index name="cc_perms_subj_obj_idx">
-      <index-column name="subj" />
-      <index-column name="obj" />
-    </index>
-  </table>
   <table name="cc_show" phpName="CcShow">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true" />
     <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true" defaultValue="" />

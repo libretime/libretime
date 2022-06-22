@@ -116,26 +116,6 @@ CREATE TABLE "cloud_file"
 );
 
 -----------------------------------------------------------------------
--- cc_perms
------------------------------------------------------------------------
-
-DROP TABLE IF EXISTS "cc_perms" CASCADE;
-
-CREATE TABLE "cc_perms"
-(
-    "permid" INTEGER NOT NULL,
-    "subj" INTEGER,
-    "action" VARCHAR(20),
-    "obj" INTEGER,
-    "type" CHAR(1),
-    PRIMARY KEY ("permid"),
-    CONSTRAINT "cc_perms_all_idx" UNIQUE ("subj","action","obj"),
-    CONSTRAINT "cc_perms_permid_idx" UNIQUE ("permid")
-);
-
-CREATE INDEX "cc_perms_subj_obj_idx" ON "cc_perms" ("subj","obj");
-
------------------------------------------------------------------------
 -- cc_show
 -----------------------------------------------------------------------
 
@@ -758,11 +738,6 @@ ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey"
 ALTER TABLE "cloud_file" ADD CONSTRAINT "cloud_file_FK_1"
     FOREIGN KEY ("cc_file_id")
     REFERENCES "cc_files" ("id")
-    ON DELETE CASCADE;
-
-ALTER TABLE "cc_perms" ADD CONSTRAINT "cc_perms_subj_fkey"
-    FOREIGN KEY ("subj")
-    REFERENCES "cc_subjs" ("id")
     ON DELETE CASCADE;
 
 ALTER TABLE "cc_show" ADD CONSTRAINT "cc_playlist_autoplaylist_fkey"
