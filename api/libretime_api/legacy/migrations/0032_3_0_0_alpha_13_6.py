@@ -5,7 +5,7 @@ from django.db import migrations
 from ._migrations import legacy_migration_factory
 
 UP = """
-DROP TABLE IF EXISTS "cc_sess";
+DROP TABLE IF EXISTS "cc_sess" CASCADE;
 """
 
 DOWN = """
