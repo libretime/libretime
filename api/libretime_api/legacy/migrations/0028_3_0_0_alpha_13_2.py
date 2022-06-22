@@ -1,3 +1,5 @@
+# pylint: disable=invalid-name
+
 from django.db import migrations
 
 from ._migrations import legacy_migration_factory
