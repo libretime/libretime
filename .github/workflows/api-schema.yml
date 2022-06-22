@@ -82,8 +82,8 @@ jobs:
 
       - name: Dispatch schema update commits
         run: |
-          git config --global user.email "libretime-bot"
-          git config --global user.name "libretime-bot@users.noreply.github.com"
+          git config --global user.name "libretime-bot"
+          git config --global user.email "libretime-bot@users.noreply.github.com"
 
           for commit in $(git rev-list --reverse --no-merges ${{ github.event.before }}..${{ github.sha }} -- api/schema.yml); do
             cp api/schema.yml client/
