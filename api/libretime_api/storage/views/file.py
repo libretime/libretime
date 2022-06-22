@@ -17,7 +17,7 @@ class FileViewSet(viewsets.ModelViewSet):
     model_permission_name = "file"
 
     @action(detail=True, methods=["GET"])
-    def download(self, request, pk=None):
+    def download(self, request, pk=None):  # pylint: disable=invalid-name
         pk = IntegerField().to_internal_value(data=pk)
 
         file = get_object_or_404(File, pk=pk)

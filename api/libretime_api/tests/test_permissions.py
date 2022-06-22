@@ -51,7 +51,7 @@ class TestPermissions(APITestCase):
         "webstreams",
     ]
 
-    def logged_in_test_model(self, model, role, username, fn):
+    def logged_in_test_model(self, model, role, username, function):
         path = self.path.format(model)
         if not get_user_model().objects.filter(username=username):
             get_user_model().objects.create_user(
@@ -63,7 +63,7 @@ class TestPermissions(APITestCase):
                 last_name="user",
             )
         self.client.login(username=username, password="test")
-        return fn(path)
+        return function(path)
 
     @classmethod
     def setUpTestData(cls):

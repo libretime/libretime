@@ -99,7 +99,7 @@ class TestScheduleViewSet(APITestCase):
             instance=show,
             file=file,
         )
-        invalid_schedule_item = baker.make(
+        invalid_schedule_item = baker.make(  # pylint: disable=unused-variable
             "schedule.Schedule",
             starts=show.ends + timedelta(minutes=1),
             ends=show.ends + timedelta(minutes=1) + file.length,
@@ -142,7 +142,7 @@ class TestScheduleViewSet(APITestCase):
             instance=show,
             file=file,
         )
-        previous_item = baker.make(
+        previous_item = baker.make(  # pylint: disable=unused-variable
             "schedule.Schedule",
             starts=filter_point - timedelta(minutes=5),
             ends=filter_point - timedelta(minutes=5) + file.length,
