@@ -6110,21 +6110,21 @@ components:
           type: string
           format: uri
           readOnly: true
+        override_album:
+          type: boolean
         auto_ingest:
           type: boolean
-        auto_ingest_timestamp:
+        auto_ingested_at:
           type: string
           format: date-time
           nullable: true
-        album_override:
-          type: boolean
         podcast:
           type: string
           format: uri
       required:
-        - album_override
         - auto_ingest
         - item_url
+        - override_album
         - podcast
     ListenerCount:
       type: object
@@ -6523,14 +6523,14 @@ components:
           type: string
           format: uri
           readOnly: true
+        override_album:
+          type: boolean
         auto_ingest:
           type: boolean
-        auto_ingest_timestamp:
+        auto_ingested_at:
           type: string
           format: date-time
           nullable: true
-        album_override:
-          type: boolean
         podcast:
           type: string
           format: uri
@@ -6816,7 +6816,7 @@ components:
           type: string
           format: uri
           readOnly: true
-        publication_date:
+        published_at:
           type: string
           format: date-time
         download_url:
@@ -6830,13 +6830,13 @@ components:
           maxLength: 4096
         episode_description:
           type: string
+        podcast:
+          type: string
+          format: uri
         file:
           type: string
           format: uri
           nullable: true
-        podcast:
-          type: string
-          format: uri
     PatchedPreference:
       type: object
       properties:
@@ -7675,7 +7675,7 @@ components:
           type: string
           format: uri
           readOnly: true
-        publication_date:
+        published_at:
           type: string
           format: date-time
         download_url:
@@ -7689,13 +7689,13 @@ components:
           maxLength: 4096
         episode_description:
           type: string
+        podcast:
+          type: string
+          format: uri
         file:
           type: string
           format: uri
           nullable: true
-        podcast:
-          type: string
-          format: uri
       required:
         - download_url
         - episode_description
@@ -7703,7 +7703,7 @@ components:
         - episode_title
         - item_url
         - podcast
-        - publication_date
+        - published_at
     Preference:
       type: object
       properties:
