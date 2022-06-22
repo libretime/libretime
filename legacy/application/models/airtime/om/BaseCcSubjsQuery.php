@@ -66,10 +66,6 @@
  * @method CcSubjsQuery rightJoinCcPref($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcPref relation
  * @method CcSubjsQuery innerJoinCcPref($relationAlias = null) Adds a INNER JOIN clause to the query using the CcPref relation
  *
- * @method CcSubjsQuery leftJoinCcSess($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcSess relation
- * @method CcSubjsQuery rightJoinCcSess($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSess relation
- * @method CcSubjsQuery innerJoinCcSess($relationAlias = null) Adds a INNER JOIN clause to the query using the CcSess relation
- *
  * @method CcSubjsQuery leftJoinCcSubjsToken($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcSubjsToken relation
  * @method CcSubjsQuery rightJoinCcSubjsToken($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSubjsToken relation
  * @method CcSubjsQuery innerJoinCcSubjsToken($relationAlias = null) Adds a INNER JOIN clause to the query using the CcSubjsToken relation
@@ -1250,80 +1246,6 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
         return $this
             ->joinCcPref($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'CcPref', 'CcPrefQuery');
-    }
-
-    /**
-     * Filter the query by a related CcSess object
-     *
-     * @param   CcSess|PropelObjectCollection $ccSess  the related object to use as filter
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return                 CcSubjsQuery The current query, for fluid interface
-     * @throws PropelException - if the provided filter is invalid.
-     */
-    public function filterByCcSess($ccSess, $comparison = null)
-    {
-        if ($ccSess instanceof CcSess) {
-            return $this
-                ->addUsingAlias(CcSubjsPeer::ID, $ccSess->getUserid(), $comparison);
-        } elseif ($ccSess instanceof PropelObjectCollection) {
-            return $this
-                ->useCcSessQuery()
-                ->filterByPrimaryKeys($ccSess->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByCcSess() only accepts arguments of type CcSess or PropelCollection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the CcSess relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return CcSubjsQuery The current query, for fluid interface
-     */
-    public function joinCcSess($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('CcSess');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'CcSess');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the CcSess relation CcSess object
-     *
-     * @see       useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   CcSessQuery A secondary query class using the current class as primary query
-     */
-    public function useCcSessQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinCcSess($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'CcSess', 'CcSessQuery');
     }
 
     /**

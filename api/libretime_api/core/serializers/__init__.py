@@ -1,4 +1,4 @@
-from .auth import LoginAttemptSerializer, SessionSerializer, UserTokenSerializer
+from .auth import LoginAttemptSerializer, UserTokenSerializer
 from .country import CountrySerializer
 from .preference import PreferenceSerializer, StreamSettingSerializer
 from .service import ServiceRegisterSerializer

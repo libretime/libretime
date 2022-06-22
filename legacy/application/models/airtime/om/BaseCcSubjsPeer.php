@@ -430,9 +430,6 @@ abstract class BaseCcSubjsPeer
         // Invalidate objects in CcPrefPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         CcPrefPeer::clearInstancePool();
-        // Invalidate objects in CcSessPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        CcSessPeer::clearInstancePool();
         // Invalidate objects in CcSubjsTokenPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         CcSubjsTokenPeer::clearInstancePool();

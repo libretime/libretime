@@ -67,7 +67,6 @@ class CcSubjsTableMap extends TableMap
         $this->addRelation('CcPlaylist', 'CcPlaylist', RelationMap::ONE_TO_MANY, array('id' => 'creator_id', ), 'CASCADE', null, 'CcPlaylists');
         $this->addRelation('CcBlock', 'CcBlock', RelationMap::ONE_TO_MANY, array('id' => 'creator_id', ), 'CASCADE', null, 'CcBlocks');
         $this->addRelation('CcPref', 'CcPref', RelationMap::ONE_TO_MANY, array('id' => 'subjid', ), 'CASCADE', null, 'CcPrefs');
-        $this->addRelation('CcSess', 'CcSess', RelationMap::ONE_TO_MANY, array('id' => 'userid', ), 'CASCADE', null, 'CcSesss');
         $this->addRelation('CcSubjsToken', 'CcSubjsToken', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'CASCADE', null, 'CcSubjsTokens');
         $this->addRelation('Podcast', 'Podcast', RelationMap::ONE_TO_MANY, array('id' => 'owner', ), 'CASCADE', null, 'Podcasts');
     } // buildRelations()

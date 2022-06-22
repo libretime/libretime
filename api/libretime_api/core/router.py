@@ -6,7 +6,6 @@ from .views import (
     LoginAttemptViewSet,
     PreferenceViewSet,
     ServiceRegisterViewSet,
-    SessionViewSet,
     StreamSettingViewSet,
     ThirdPartyTrackReferenceViewSet,
     UserTokenViewSet,
@@ -18,7 +17,6 @@ router.register("countries", CountryViewSet)
 router.register("login-attempts", LoginAttemptViewSet)
 router.register("preferences", PreferenceViewSet)
 router.register("service-registers", ServiceRegisterViewSet)
-router.register("sessions", SessionViewSet)
 router.register("stream-settings", StreamSettingViewSet)
 router.register("users", UserViewSet)
 router.register("user-tokens", UserTokenViewSet)
