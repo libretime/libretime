@@ -9,12 +9,14 @@ class Podcast(models.Model):
     language = models.CharField(max_length=4096, blank=True, null=True)
     copyright = models.CharField(max_length=4096, blank=True, null=True)
     link = models.CharField(max_length=4096, blank=True, null=True)
+
     itunes_author = models.CharField(max_length=4096, blank=True, null=True)
     itunes_keywords = models.CharField(max_length=4096, blank=True, null=True)
     itunes_summary = models.CharField(max_length=4096, blank=True, null=True)
     itunes_subtitle = models.CharField(max_length=4096, blank=True, null=True)
     itunes_category = models.CharField(max_length=4096, blank=True, null=True)
     itunes_explicit = models.CharField(max_length=4096, blank=True, null=True)
+
     owner = models.ForeignKey(
         "core.User",
         on_delete=models.DO_NOTHING,
@@ -35,14 +37,16 @@ class Podcast(models.Model):
 
 
 class PodcastEpisode(models.Model):
+    podcast = models.ForeignKey("Podcast", on_delete=models.DO_NOTHING)
+
     file = models.ForeignKey(
         "storage.File",
         on_delete=models.DO_NOTHING,
         blank=True,
         null=True,
     )
-    podcast = models.ForeignKey("Podcast", on_delete=models.DO_NOTHING)
-    publication_date = models.DateTimeField()
+
+    published_at = models.DateTimeField(db_column="publication_date")
     download_url = models.CharField(max_length=4096)
     episode_guid = models.CharField(max_length=4096)
     episode_title = models.CharField(max_length=4096)
@@ -78,10 +82,15 @@ class StationPodcast(models.Model):
 
 
 class ImportedPodcast(models.Model):
-    auto_ingest = models.BooleanField()
-    auto_ingest_timestamp = models.DateTimeField(blank=True, null=True)
-    album_override = models.BooleanField()
     podcast = models.ForeignKey("Podcast", on_delete=models.DO_NOTHING)
+    override_album = models.BooleanField(db_column="album_override")
+
+    auto_ingest = models.BooleanField()
+    auto_ingested_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        db_column="auto_ingest_timestamp",
+    )
 
     def get_owner(self):
         return self.podcast.owner
