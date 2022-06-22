@@ -18,8 +18,8 @@ class Timestamp(models.Model):
 
 
 class ListenerCount(models.Model):
-    timestamp = models.ForeignKey("Timestamp", models.DO_NOTHING)
-    mount_name = models.ForeignKey("MountName", models.DO_NOTHING)
+    timestamp = models.ForeignKey("Timestamp", on_delete=models.DO_NOTHING)
+    mount_name = models.ForeignKey("MountName", on_delete=models.DO_NOTHING)
     listener_count = models.IntegerField()
 
     class Meta:

@@ -4,15 +4,25 @@ from django.db import models
 class Schedule(models.Model):
     starts = models.DateTimeField()
     ends = models.DateTimeField()
-    file = models.ForeignKey("storage.File", models.DO_NOTHING, blank=True, null=True)
-    stream = models.ForeignKey("Webstream", models.DO_NOTHING, blank=True, null=True)
+    file = models.ForeignKey(
+        "storage.File",
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
+    )
+    stream = models.ForeignKey(
+        "Webstream",
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
+    )
     clip_length = models.DurationField(blank=True, null=True)
     fade_in = models.TimeField(blank=True, null=True)
     fade_out = models.TimeField(blank=True, null=True)
     cue_in = models.DurationField()
     cue_out = models.DurationField()
     media_item_played = models.BooleanField(blank=True, null=True)
-    instance = models.ForeignKey("ShowInstance", models.DO_NOTHING)
+    instance = models.ForeignKey("ShowInstance", on_delete=models.DO_NOTHING)
     playout_status = models.SmallIntegerField()
     broadcasted = models.SmallIntegerField()
     position = models.IntegerField()

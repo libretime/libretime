@@ -10,11 +10,11 @@ class File(models.Model):
     currently_accessing = models.IntegerField(db_column="currentlyaccessing")
     edited_by = models.ForeignKey(
         "core.User",
-        models.DO_NOTHING,
-        db_column="editedby",
+        on_delete=models.DO_NOTHING,
         blank=True,
         null=True,
         related_name="edited_files",
+        db_column="editedby",
     )
     mtime = models.DateTimeField(blank=True, null=True)
     utime = models.DateTimeField(blank=True, null=True)
@@ -67,7 +67,12 @@ class File(models.Model):
     replay_gain = models.DecimalField(
         max_digits=8, decimal_places=2, blank=True, null=True
     )
-    owner = models.ForeignKey("core.User", models.DO_NOTHING, blank=True, null=True)
+    owner = models.ForeignKey(
+        "core.User",
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
+    )
     cuein = models.DurationField(blank=True, null=True)
     cueout = models.DurationField(blank=True, null=True)
     silan_check = models.BooleanField(blank=True, null=True)

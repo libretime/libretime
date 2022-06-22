@@ -16,7 +16,10 @@ class Podcast(models.Model):
     itunes_category = models.CharField(max_length=4096, blank=True, null=True)
     itunes_explicit = models.CharField(max_length=4096, blank=True, null=True)
     owner = models.ForeignKey(
-        "core.User", models.DO_NOTHING, db_column="owner", blank=True, null=True
+        "core.User",
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
     )
 
     def get_owner(self):
@@ -32,8 +35,13 @@ class Podcast(models.Model):
 
 
 class PodcastEpisode(models.Model):
-    file = models.ForeignKey("storage.File", models.DO_NOTHING, blank=True, null=True)
-    podcast = models.ForeignKey("Podcast", models.DO_NOTHING)
+    file = models.ForeignKey(
+        "storage.File",
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
+    )
+    podcast = models.ForeignKey("Podcast", on_delete=models.DO_NOTHING)
     publication_date = models.DateTimeField()
     download_url = models.CharField(max_length=4096)
     episode_guid = models.CharField(max_length=4096)
@@ -59,7 +67,7 @@ class PodcastEpisode(models.Model):
 
 
 class StationPodcast(models.Model):
-    podcast = models.ForeignKey("Podcast", models.DO_NOTHING)
+    podcast = models.ForeignKey("Podcast", on_delete=models.DO_NOTHING)
 
     def get_owner(self):
         return self.podcast.owner
@@ -73,7 +81,7 @@ class ImportedPodcast(models.Model):
     auto_ingest = models.BooleanField()
     auto_ingest_timestamp = models.DateTimeField(blank=True, null=True)
     album_override = models.BooleanField()
-    podcast = models.ForeignKey("Podcast", models.DO_NOTHING)
+    podcast = models.ForeignKey("Podcast", on_delete=models.DO_NOTHING)
 
     def get_owner(self):
         return self.podcast.owner

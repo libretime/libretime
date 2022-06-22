@@ -5,7 +5,12 @@ class SmartBlock(models.Model):
     name = models.CharField(max_length=255)
     mtime = models.DateTimeField(blank=True, null=True)
     utime = models.DateTimeField(blank=True, null=True)
-    creator = models.ForeignKey("core.User", models.DO_NOTHING, blank=True, null=True)
+    creator = models.ForeignKey(
+        "core.User",
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
+    )
     description = models.CharField(max_length=512, blank=True, null=True)
     length = models.DurationField(blank=True, null=True)
     type = models.CharField(max_length=7, blank=True, null=True)
@@ -29,8 +34,18 @@ class SmartBlock(models.Model):
 
 
 class SmartBlockContent(models.Model):
-    block = models.ForeignKey("SmartBlock", models.DO_NOTHING, blank=True, null=True)
-    file = models.ForeignKey("storage.File", models.DO_NOTHING, blank=True, null=True)
+    block = models.ForeignKey(
+        "SmartBlock",
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
+    )
+    file = models.ForeignKey(
+        "storage.File",
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
+    )
     position = models.IntegerField(blank=True, null=True)
     trackoffset = models.FloatField()
     cliplength = models.DurationField(blank=True, null=True)
@@ -63,7 +78,7 @@ class SmartBlockCriteria(models.Model):
     value = models.CharField(max_length=512)
     extra = models.CharField(max_length=512, blank=True, null=True)
     criteriagroup = models.IntegerField(blank=True, null=True)
-    block = models.ForeignKey("SmartBlock", models.DO_NOTHING)
+    block = models.ForeignKey("SmartBlock", on_delete=models.DO_NOTHING)
 
     def get_owner(self):
         return self.block.get_owner()
