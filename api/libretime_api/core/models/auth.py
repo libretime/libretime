@@ -15,22 +15,6 @@ class UserToken(models.Model):
         db_table = "cc_subjs_token"
 
 
-class Session(models.Model):
-    sessid = models.CharField(primary_key=True, max_length=32)
-    userid = models.ForeignKey(
-        "User",
-        on_delete=models.DO_NOTHING,
-        blank=True,
-        null=True,
-    )
-    login = models.CharField(max_length=255, blank=True, null=True)
-    ts = models.DateTimeField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = "cc_sess"
-
-
 class LoginAttempt(models.Model):
     ip = models.CharField(primary_key=True, max_length=32)
     attempts = models.IntegerField(blank=True, null=True)

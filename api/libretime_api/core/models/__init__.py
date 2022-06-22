@@ -1,4 +1,4 @@
-from .auth import LoginAttempt, Session, UserToken
+from .auth import LoginAttempt, UserToken
 from .country import Country
 from .preference import Preference, StreamSetting
 from .role import Role

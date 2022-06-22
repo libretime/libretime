@@ -373,21 +373,6 @@
       <index-column name="instance_id" />
     </index>
   </table>
-  <table name="cc_sess" phpName="CcSess">
-    <column name="sessid" phpName="Sessid" type="CHAR" size="32" primaryKey="true" required="true" />
-    <column name="userid" phpName="Userid" type="INTEGER" required="false" />
-    <column name="login" phpName="Login" type="VARCHAR" size="255" required="false" />
-    <column name="ts" phpName="Ts" type="TIMESTAMP" required="false" />
-    <foreign-key foreignTable="cc_subjs" name="cc_sess_userid_fkey" onDelete="CASCADE">
-      <reference local="userid" foreign="id" />
-    </foreign-key>
-    <index name="cc_sess_login_idx">
-      <index-column name="login" />
-    </index>
-    <index name="cc_sess_userid_idx">
-      <index-column name="userid" />
-    </index>
-  </table>
   <table name="cc_subjs" phpName="CcSubjs">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true" />
     <column name="login" phpName="DbLogin" type="VARCHAR" size="255" required="true" defaultValue="" />

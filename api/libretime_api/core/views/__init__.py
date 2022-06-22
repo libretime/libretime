@@ -1,4 +1,4 @@
-from .auth import LoginAttemptViewSet, SessionViewSet, UserTokenViewSet
+from .auth import LoginAttemptViewSet, UserTokenViewSet
 from .country import CountryViewSet
 from .preference import PreferenceViewSet, StreamSettingViewSet
 from .service import ServiceRegisterViewSet

@@ -387,25 +387,6 @@ CREATE TABLE "cc_schedule"
 CREATE INDEX "cc_schedule_instance_id_idx" ON "cc_schedule" ("instance_id");
 
 -----------------------------------------------------------------------
--- cc_sess
------------------------------------------------------------------------
-
-DROP TABLE IF EXISTS "cc_sess" CASCADE;
-
-CREATE TABLE "cc_sess"
-(
-    "sessid" CHAR(32) NOT NULL,
-    "userid" INTEGER,
-    "login" VARCHAR(255),
-    "ts" TIMESTAMP,
-    PRIMARY KEY ("sessid")
-);
-
-CREATE INDEX "cc_sess_login_idx" ON "cc_sess" ("login");
-
-CREATE INDEX "cc_sess_userid_idx" ON "cc_sess" ("userid");
-
------------------------------------------------------------------------
 -- cc_subjs
 -----------------------------------------------------------------------
 
@@ -882,11 +863,6 @@ ALTER TABLE "cc_schedule" ADD CONSTRAINT "cc_show_file_fkey"
 ALTER TABLE "cc_schedule" ADD CONSTRAINT "cc_show_stream_fkey"
     FOREIGN KEY ("stream_id")
     REFERENCES "cc_webstream" ("id")
-    ON DELETE CASCADE;
-
-ALTER TABLE "cc_sess" ADD CONSTRAINT "cc_sess_userid_fkey"
-    FOREIGN KEY ("userid")
-    REFERENCES "cc_subjs" ("id")
     ON DELETE CASCADE;
 
 ALTER TABLE "cc_subjs_token" ADD CONSTRAINT "cc_subjs_token_userid_fkey"
