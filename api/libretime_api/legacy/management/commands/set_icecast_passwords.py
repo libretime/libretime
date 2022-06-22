@@ -60,18 +60,18 @@ class Command(BaseCommand):
 
         if source_password is not None:
             Preference.objects.update_or_create(
-                keystr="default_icecast_password",
-                defaults={"valstr": source_password},
+                key="default_icecast_password",
+                defaults={"value": source_password},
             )
 
         for key in ["s1", "s2", "s3", "s4"]:
             if admin_password is not None:
                 StreamSetting.objects.update_or_create(
-                    keyname=f"{key}_admin_pass",
+                    key=f"{key}_admin_pass",
                     defaults={"value": admin_password},
                 )
             if source_password is not None:
                 StreamSetting.objects.update_or_create(
-                    keyname=f"{key}_pass",
+                    key=f"{key}_pass",
                     defaults={"value": source_password},
                 )
