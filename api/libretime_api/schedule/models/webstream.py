@@ -26,7 +26,7 @@ class Webstream(models.Model):
 
 
 class WebstreamMetadata(models.Model):
-    instance = models.ForeignKey("Schedule", models.DO_NOTHING)
+    instance = models.ForeignKey("Schedule", on_delete=models.DO_NOTHING)
     start_time = models.DateTimeField()
     liquidsoap_data = models.CharField(max_length=1024)
 

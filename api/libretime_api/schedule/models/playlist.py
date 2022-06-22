@@ -5,7 +5,12 @@ class Playlist(models.Model):
     name = models.CharField(max_length=255)
     mtime = models.DateTimeField(blank=True, null=True)
     utime = models.DateTimeField(blank=True, null=True)
-    creator = models.ForeignKey("core.User", models.DO_NOTHING, blank=True, null=True)
+    creator = models.ForeignKey(
+        "core.User",
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
+    )
     description = models.CharField(max_length=512, blank=True, null=True)
     length = models.DurationField(blank=True, null=True)
 
@@ -18,9 +23,24 @@ class Playlist(models.Model):
 
 
 class PlaylistContent(models.Model):
-    playlist = models.ForeignKey("Playlist", models.DO_NOTHING, blank=True, null=True)
-    file = models.ForeignKey("storage.File", models.DO_NOTHING, blank=True, null=True)
-    block = models.ForeignKey("SmartBlock", models.DO_NOTHING, blank=True, null=True)
+    playlist = models.ForeignKey(
+        "Playlist",
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
+    )
+    file = models.ForeignKey(
+        "storage.File",
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
+    )
+    block = models.ForeignKey(
+        "SmartBlock",
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
+    )
     stream_id = models.IntegerField(blank=True, null=True)
     type = models.SmallIntegerField()
     position = models.IntegerField(blank=True, null=True)

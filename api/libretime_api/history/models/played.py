@@ -2,11 +2,19 @@ from django.db import models
 
 
 class PlayoutHistory(models.Model):
-    file = models.ForeignKey("storage.File", models.DO_NOTHING, blank=True, null=True)
+    file = models.ForeignKey(
+        "storage.File",
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
+    )
     starts = models.DateTimeField()
     ends = models.DateTimeField(blank=True, null=True)
     instance = models.ForeignKey(
-        "schedule.ShowInstance", models.DO_NOTHING, blank=True, null=True
+        "schedule.ShowInstance",
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
     )
 
     class Meta:
@@ -15,7 +23,10 @@ class PlayoutHistory(models.Model):
 
 
 class PlayoutHistoryMetadata(models.Model):
-    history = models.ForeignKey("PlayoutHistory", models.DO_NOTHING)
+    history = models.ForeignKey(
+        "PlayoutHistory",
+        on_delete=models.DO_NOTHING,
+    )
     key = models.CharField(max_length=128)
     value = models.CharField(max_length=128)
 
@@ -34,7 +45,7 @@ class PlayoutHistoryTemplate(models.Model):
 
 
 class PlayoutHistoryTemplateField(models.Model):
-    template = models.ForeignKey("PlayoutHistoryTemplate", models.DO_NOTHING)
+    template = models.ForeignKey("PlayoutHistoryTemplate", on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=128)
     label = models.CharField(max_length=128)
     type = models.CharField(max_length=128)
