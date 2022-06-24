@@ -18,6 +18,7 @@ from loguru import logger
 
 from . import pure
 from .config import CACHE_DIR, POLL_INTERVAL, Config
+from .schedule import get_schedule
 from .timeout import ls_timeout
 
 
@@ -458,7 +459,7 @@ class PypoFetch(Thread):
 
     def manual_schedule_fetch(self):
         try:
-            self.schedule_data = self.api_client.get_schedule()
+            self.schedule_data = get_schedule(self.api_client)
             logger.debug(f"Received event from API client: {self.schedule_data}")
             self.process_schedule(self.schedule_data)
             return True

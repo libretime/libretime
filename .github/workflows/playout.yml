@@ -22,4 +22,3 @@ jobs:
     uses: ./.github/workflows/_python.yml
     with:
       context: playout
-      test: false
