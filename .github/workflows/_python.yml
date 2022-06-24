@@ -77,3 +77,9 @@ jobs:
       - name: Test
         run: make test
         working-directory: ${{ inputs.context }}
+
+      - name: Report coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ${{ inputs.context }}/coverage.xml
+          name: ${{ inputs.context }}

@@ -63,7 +63,7 @@ install: $(VENV)
 .PHONY: .pytest
 .pytest: $(VENV)
 	source $(VENV)/bin/activate
-	pytest -n $(CPU_CORES) --color=yes -v $(PYTEST_ARG)
+	pytest -n $(CPU_CORES) --color=yes -v --cov-report term --cov-report xml:./coverage.xml $(PYTEST_ARG)
 
 .PHONY: .clean
 .clean:
