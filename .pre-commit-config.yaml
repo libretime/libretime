@@ -33,7 +33,7 @@ repos:
     hooks:
       - id: prettier
         files: \.(md|mdx|yml|yaml|js|jsx|ts|tsx|json|css)$
-        exclude: ^legacy/public(?!/js/airtime)
+        exclude: ^legacy/public/(?!js/airtime)
 
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.3.1
