@@ -11,9 +11,14 @@ from datetime import datetime, timedelta
 from typing import Dict
 
 from dateutil.parser import isoparse
+from libretime_shared.datetime import (
+    fromisoformat,
+    time_in_milliseconds,
+    time_in_seconds,
+)
 
 from ._config import Config
-from .utils import RequestProvider, fromisoformat, time_in_milliseconds, time_in_seconds
+from .utils import RequestProvider
 
 LIBRETIME_API_VERSION = "2.0"
 EVENT_KEY_FORMAT = "%Y-%m-%d-%H-%M-%S"

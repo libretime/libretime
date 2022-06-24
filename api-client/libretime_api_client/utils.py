@@ -1,4 +1,3 @@
-import datetime
 import logging
 from time import sleep
 
@@ -164,29 +163,3 @@ class RequestProvider:
             return self.requests[attr]
         else:
             return super().__getattribute__(attr)
-
-
-def time_in_seconds(value):
-    return (
-        value.hour * 60 * 60
-        + value.minute * 60
-        + value.second
-        + value.microsecond / 1000000.0
-    )
-
-
-def time_in_milliseconds(value):
-    return time_in_seconds(value) * 1000
-
-
-def fromisoformat(time_string):
-    """
-    This is required for Python 3.6 support. datetime.time.fromisoformat was
-    only added in Python 3.7. Until LibreTime drops Python 3.6 support, this
-    wrapper uses the old way of doing it.
-    """
-    try:
-        datetime_obj = datetime.datetime.strptime(time_string, "%H:%M:%S.%f")
-    except ValueError:
-        datetime_obj = datetime.datetime.strptime(time_string, "%H:%M:%S")
-    return datetime_obj.time()

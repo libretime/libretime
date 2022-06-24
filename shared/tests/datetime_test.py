@@ -1,8 +1,12 @@
 from datetime import time
 
-from pytest import approx
+from pytest import approx, mark
 
-from libretime_shared.datetime import time_in_milliseconds, time_in_seconds
+from libretime_shared.datetime import (
+    fromisoformat,
+    time_in_milliseconds,
+    time_in_seconds,
+)
 
 
 def test_time_in_seconds():
@@ -13,3 +17,15 @@ def test_time_in_seconds():
 def test_time_in_milliseconds():
     value = time(hour=0, minute=0, second=0, microsecond=500000)
     assert time_in_milliseconds(value) == 500
+
+
+@mark.parametrize(
+    "payload, expected",
+    [
+        ("00:00:00.500000", time(microsecond=500000)),
+        ("00:04:30.092540", time(minute=4, second=30, microsecond=92540)),
+        ("00:04:30", time(minute=4, second=30)),
+    ],
+)
+def test_fromisoformat(payload, expected):
+    assert fromisoformat(payload) == expected
