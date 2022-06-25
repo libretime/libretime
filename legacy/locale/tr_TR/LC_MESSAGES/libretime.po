@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2021-10-15 19:56+0200\n"
-"PO-Revision-Date: 2022-01-21 08:57+0000\n"
-"Last-Translator: ToldYouThat <itoldyouthat@protonmail.com>\n"
+"PO-Revision-Date: 2022-06-26 13:19+0000\n"
+"Last-Translator: metezd <itoldyouthat@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/libretime/legacy/"
 "tr/>\n"
 "Language: tr_TR\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.11-dev\n"
+"X-Generator: Weblate 4.13.1-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -275,7 +275,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:82
 msgid "Kannada"
-msgstr ""
+msgstr "Kannada"
 
 #: application/common/LocaleHelper.php:83
 msgid "Korean"
@@ -343,7 +343,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:99
 msgid "Malay"
-msgstr ""
+msgstr "Malayca"
 
 #: application/common/LocaleHelper.php:100
 msgid "Maltese"
@@ -395,7 +395,7 @@ msgstr "Portekizce"
 
 #: application/common/LocaleHelper.php:112
 msgid "Quechua"
-msgstr ""
+msgstr "Keçuva"
 
 #: application/common/LocaleHelper.php:113
 msgid "Rhaeto-Romance"
