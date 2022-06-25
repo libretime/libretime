@@ -3,7 +3,7 @@ from datetime import time
 from pytest import approx, mark
 
 from libretime_shared.datetime import (
-    fromisoformat,
+    time_fromisoformat,
     time_in_milliseconds,
     time_in_seconds,
 )
@@ -27,5 +27,5 @@ def test_time_in_milliseconds():
         ("00:04:30", time(minute=4, second=30)),
     ],
 )
-def test_fromisoformat(payload, expected):
-    assert fromisoformat(payload) == expected
+def test_time_fromisoformat(payload, expected):
+    assert time_fromisoformat(payload) == expected
