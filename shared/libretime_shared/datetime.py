@@ -14,7 +14,7 @@ def time_in_milliseconds(value: time) -> float:
     return time_in_seconds(value) * 1000
 
 
-def fromisoformat(value: str) -> time:
+def time_fromisoformat(value: str) -> time:
     """
     This is required for Python 3.6 support. datetime.time.fromisoformat was
     only added in Python 3.7. Until LibreTime drops Python 3.6 support, this

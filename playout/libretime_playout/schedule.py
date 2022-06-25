@@ -4,7 +4,7 @@ from typing import Dict
 from dateutil.parser import isoparse
 from libretime_api_client.version2 import AirtimeApiClient as ApiClient
 from libretime_shared.datetime import (
-    fromisoformat,
+    time_fromisoformat,
     time_in_milliseconds,
     time_in_seconds,
 )
@@ -74,10 +74,10 @@ def generate_file_events(
         # Show data
         "show_name": show["name"],
         # Extra data
-        "fade_in": time_in_milliseconds(fromisoformat(schedule["fade_in"])),
-        "fade_out": time_in_milliseconds(fromisoformat(schedule["fade_out"])),
-        "cue_in": time_in_seconds(fromisoformat(schedule["cue_in"])),
-        "cue_out": time_in_seconds(fromisoformat(schedule["cue_out"])),
+        "fade_in": time_in_milliseconds(time_fromisoformat(schedule["fade_in"])),
+        "fade_out": time_in_milliseconds(time_fromisoformat(schedule["fade_out"])),
+        "cue_in": time_in_seconds(time_fromisoformat(schedule["cue_in"])),
+        "cue_out": time_in_seconds(time_fromisoformat(schedule["cue_out"])),
         "metadata": file,
         "replay_gain": file["replay_gain"],
         "filesize": file["filesize"],
