@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
         migrations.RunPython(
             code=legacy_migration_factory(
                 target="2.5.11",
-                sql=update_disk_usage,
+                before=update_disk_usage,
             )
         )
     ]
