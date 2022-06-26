@@ -27,5 +27,4 @@ def create_schema(_apps, _schema_editor):
 
 class Migration(migrations.Migration):
     initial = True
-    dependencies = []
     operations = [migrations.RunPython(create_schema)]

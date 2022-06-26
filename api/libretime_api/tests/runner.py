@@ -14,6 +14,7 @@ class ManagedModelTestRunner(DiscoverRunner):
     unmanaged_models: List[Type[Model]] = []
 
     def setup_test_environment(self, *args, **kwargs):
+        # pylint: disable=import-outside-toplevel
         from django.apps import apps
 
         for model in apps.get_models():
