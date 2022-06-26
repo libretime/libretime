@@ -2,9 +2,14 @@
 title: Webstreams
 ---
 
-<html>
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/Ha3X6aYdY04" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</html>
+<iframe
+    width="560"
+    height="315"
+    src="https://www.youtube-nocookie.com/embed/Ha3X6aYdY04"
+    frameborder="0"
+    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+></iframe>
 
 ## Adding a webstream
 

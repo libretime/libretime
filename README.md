@@ -77,19 +77,33 @@ Become a financial contributor and help us sustain our community on
 
 #### Individuals
 
-<a href="https://opencollective.com/libretime"><img src="https://opencollective.com/libretime/individuals.svg?width=890"></a>
+<a href="https://opencollective.com/libretime">
+    <img src="https://opencollective.com/libretime/individuals.svg?width=890">
+</a>
 
 #### Organizations
 
 [Support](https://opencollective.com/libretime/contribute) this project with
 your organization. Your logo will show up here with a link to your website.
 
-<a href="https://opencollective.com/libretime/organization/0/website"><img src="https://opencollective.com/libretime/organization/0/avatar.svg"></a>
-<a href="https://opencollective.com/libretime/organization/1/website"><img src="https://opencollective.com/libretime/organization/1/avatar.svg"></a>
-<a href="https://opencollective.com/libretime/organization/2/website"><img src="https://opencollective.com/libretime/organization/2/avatar.svg"></a>
-<a href="https://opencollective.com/libretime/organization/3/website"><img src="https://opencollective.com/libretime/organization/3/avatar.svg"></a>
-<a href="https://opencollective.com/libretime/organization/4/website"><img src="https://opencollective.com/libretime/organization/4/avatar.svg"></a>
-<a href="https://opencollective.com/libretime/organization/5/website"><img src="https://opencollective.com/libretime/organization/5/avatar.svg"></a>
+<a href="https://opencollective.com/libretime/organization/0/website">
+    <img src="https://opencollective.com/libretime/organization/0/avatar.svg">
+</a>
+<a href="https://opencollective.com/libretime/organization/1/website">
+    <img src="https://opencollective.com/libretime/organization/1/avatar.svg">
+</a>
+<a href="https://opencollective.com/libretime/organization/2/website">
+    <img src="https://opencollective.com/libretime/organization/2/avatar.svg">
+</a>
+<a href="https://opencollective.com/libretime/organization/3/website">
+    <img src="https://opencollective.com/libretime/organization/3/avatar.svg">
+</a>
+<a href="https://opencollective.com/libretime/organization/4/website">
+    <img src="https://opencollective.com/libretime/organization/4/avatar.svg">
+</a>
+<a href="https://opencollective.com/libretime/organization/5/website">
+    <img src="https://opencollective.com/libretime/organization/5/avatar.svg">
+</a>
 
 ## License
 
