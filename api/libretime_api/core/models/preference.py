@@ -5,21 +5,21 @@ class Preference(models.Model):
     user = models.ForeignKey(
         "core.User",
         on_delete=models.CASCADE,
-        db_column="subjid",
         blank=True,
         null=True,
+        db_column="subjid",
     )
     key = models.CharField(
-        db_column="keystr",
         max_length=255,
         unique=True,
         blank=True,
         null=True,
+        db_column="keystr",
     )
     value = models.TextField(
-        db_column="valstr",
         blank=True,
         null=True,
+        db_column="valstr",
     )
 
     class Meta:
@@ -30,9 +30,9 @@ class Preference(models.Model):
 
 class StreamSetting(models.Model):
     key = models.CharField(
-        db_column="keyname",
         primary_key=True,
         max_length=64,
+        db_column="keyname",
     )
     value = models.CharField(
         max_length=255,
