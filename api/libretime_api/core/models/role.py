@@ -3,6 +3,6 @@ from django.db import models
 
 class Role(models.TextChoices):
     GUEST = "G", "Guest"
-    EDITOR = "H", "Editor"
+    HOST = "H", "Host"
     MANAGER = "P", "Manager"
     ADMIN = "A", "Admin"

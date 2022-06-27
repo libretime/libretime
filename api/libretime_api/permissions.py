@@ -18,7 +18,7 @@ REQUEST_PERMISSION_TYPE_MAP = {
 
 def get_own_obj(request, view):
     user = request.user
-    if user is None or user.role != Role.EDITOR:
+    if user is None or user.role != Role.HOST:
         return ""
     if request.method == "GET":
         return ""
