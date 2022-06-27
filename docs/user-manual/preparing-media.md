@@ -25,7 +25,7 @@ LibreTime expects file tag metadata to be stored in the international _UTF-8_ ch
 
 The program **mid3iconv** (part of the **python-mutagen** package in Debian and Ubuntu) can be used to batch convert the metadata character set of files on the command line. You can install **python-mutagen** with the `sudo apt-get install python-mutagen`.
 
-<span id="Convert_MP3_Tags_using_mid3iconv" class="mw-headline"> For example, to preview the conversion of tags from Windows-1251 </span><span id="Convert_MP3_Tags_using_mid3iconv" class="mw-headline">(CP1251)</span><span id="Convert_MP3_Tags_using_mid3iconv" class="mw-headline"> character set to UTF-8 for a whole archive of MP3 files, you could use the command: </span>
+For example, to preview the conversion of tags from Windows-1251 (CP1251) character set to UTF-8 for a whole archive of MP3 files, you could use the command:
 
 ```bash
 find . -name "*.mp3" -print0 | xargs -0 mid3iconv -e CP1251 -d -p

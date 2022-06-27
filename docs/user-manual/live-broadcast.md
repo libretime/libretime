@@ -26,9 +26,14 @@ configured in the LibreTime **Streams** page, on LibreTime's **System** menu.
 
 ## B.U.T.T. (Broadcast Using This Tool)
 
-<html>
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/4GLsU9hPTtM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</html>
+<iframe
+   width="560"
+   height="315"
+   src="https://www.youtube-nocookie.com/embed/4GLsU9hPTtM"
+   frameborder="0"
+   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+   allowfullscreen
+></iframe>
 
 ### Setup
 
