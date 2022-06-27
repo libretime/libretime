@@ -35,7 +35,7 @@ class SmartBlock(models.Model):
 
 class SmartBlockContent(models.Model):
     block = models.ForeignKey(
-        "SmartBlock",
+        "schedule.SmartBlock",
         on_delete=models.DO_NOTHING,
         blank=True,
         null=True,
@@ -78,7 +78,7 @@ class SmartBlockCriteria(models.Model):
     value = models.CharField(max_length=512)
     extra = models.CharField(max_length=512, blank=True, null=True)
     criteriagroup = models.IntegerField(blank=True, null=True)
-    block = models.ForeignKey("SmartBlock", on_delete=models.DO_NOTHING)
+    block = models.ForeignKey("schedule.SmartBlock", on_delete=models.DO_NOTHING)
 
     def get_owner(self):
         return self.block.get_owner()

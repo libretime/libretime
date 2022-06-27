@@ -11,7 +11,7 @@ class Schedule(models.Model):
         null=True,
     )
     stream = models.ForeignKey(
-        "Webstream",
+        "schedule.Webstream",
         on_delete=models.DO_NOTHING,
         blank=True,
         null=True,
@@ -22,7 +22,7 @@ class Schedule(models.Model):
     cue_in = models.DurationField()
     cue_out = models.DurationField()
     media_item_played = models.BooleanField(blank=True, null=True)
-    instance = models.ForeignKey("ShowInstance", on_delete=models.DO_NOTHING)
+    instance = models.ForeignKey("schedule.ShowInstance", on_delete=models.DO_NOTHING)
     playout_status = models.SmallIntegerField()
     broadcasted = models.SmallIntegerField()
     position = models.IntegerField()

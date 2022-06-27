@@ -24,7 +24,7 @@ class PlayoutHistory(models.Model):
 
 class PlayoutHistoryMetadata(models.Model):
     history = models.ForeignKey(
-        "PlayoutHistory",
+        "history.PlayoutHistory",
         on_delete=models.DO_NOTHING,
     )
     key = models.CharField(max_length=128)
@@ -45,7 +45,10 @@ class PlayoutHistoryTemplate(models.Model):
 
 
 class PlayoutHistoryTemplateField(models.Model):
-    template = models.ForeignKey("PlayoutHistoryTemplate", on_delete=models.DO_NOTHING)
+    template = models.ForeignKey(
+        "history.PlayoutHistoryTemplate",
+        on_delete=models.DO_NOTHING,
+    )
     name = models.CharField(max_length=128)
     label = models.CharField(max_length=128)
     type = models.CharField(max_length=128)
