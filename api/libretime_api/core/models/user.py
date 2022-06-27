@@ -36,50 +36,50 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser):
     role = models.CharField(
-        db_column="type",
         max_length=1,
         choices=Role.choices,
+        db_column="type",
     )
 
-    username = models.CharField(db_column="login", unique=True, max_length=255)
-    password = models.CharField(db_column="pass", max_length=255)
+    username = models.CharField(unique=True, max_length=255, db_column="login")
+    password = models.CharField(max_length=255, db_column="pass")
     email = models.CharField(max_length=1024, blank=True, null=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
 
     login_attempts = models.IntegerField(
-        db_column="login_attempts",
         blank=True,
         null=True,
+        db_column="login_attempts",
     )
     last_login = models.DateTimeField(
-        db_column="lastlogin",
         blank=True,
         null=True,
+        db_column="lastlogin",
     )
     last_failed_login = models.DateTimeField(
-        db_column="lastfail",
         blank=True,
         null=True,
+        db_column="lastfail",
     )
 
     skype = models.CharField(
-        db_column="skype_contact",
         max_length=1024,
         blank=True,
         null=True,
+        db_column="skype_contact",
     )
     jabber = models.CharField(
-        db_column="jabber_contact",
         max_length=1024,
         blank=True,
         null=True,
+        db_column="jabber_contact",
     )
     phone = models.CharField(
-        db_column="cell_phone",
         max_length=1024,
         blank=True,
         null=True,
+        db_column="cell_phone",
     )
 
     class Meta:
