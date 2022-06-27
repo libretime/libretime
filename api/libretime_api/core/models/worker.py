@@ -21,7 +21,7 @@ class ThirdPartyTrackReference(models.Model):
 class CeleryTask(models.Model):
     task_id = models.CharField(max_length=256)
     track_reference = models.ForeignKey(
-        "ThirdPartyTrackReference",
+        "core.ThirdPartyTrackReference",
         on_delete=models.DO_NOTHING,
     )
     name = models.CharField(max_length=256, blank=True, null=True)

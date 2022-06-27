@@ -24,7 +24,7 @@ class Playlist(models.Model):
 
 class PlaylistContent(models.Model):
     playlist = models.ForeignKey(
-        "Playlist",
+        "schedule.Playlist",
         on_delete=models.DO_NOTHING,
         blank=True,
         null=True,
@@ -36,7 +36,7 @@ class PlaylistContent(models.Model):
         null=True,
     )
     block = models.ForeignKey(
-        "SmartBlock",
+        "schedule.SmartBlock",
         on_delete=models.DO_NOTHING,
         blank=True,
         null=True,

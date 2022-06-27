@@ -2,7 +2,10 @@ from django.db import models
 
 
 class UserToken(models.Model):
-    user = models.ForeignKey("User", on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(
+        "core.User",
+        on_delete=models.DO_NOTHING,
+    )
     action = models.CharField(max_length=255)
     token = models.CharField(unique=True, max_length=40)
     created = models.DateTimeField()

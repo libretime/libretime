@@ -3,7 +3,7 @@ from django.db import models
 
 class Preference(models.Model):
     user = models.ForeignKey(
-        "User",
+        "core.User",
         on_delete=models.CASCADE,
         db_column="subjid",
         blank=True,

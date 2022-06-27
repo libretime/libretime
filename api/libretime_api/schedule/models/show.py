@@ -17,7 +17,7 @@ class Show(models.Model):
     image_path = models.CharField(max_length=255, blank=True, null=True)
     has_autoplaylist = models.BooleanField()
     autoplaylist = models.ForeignKey(
-        "Playlist",
+        "schedule.Playlist",
         on_delete=models.DO_NOTHING,
         blank=True,
         null=True,
@@ -41,7 +41,7 @@ class ShowDays(models.Model):
     day = models.SmallIntegerField(blank=True, null=True)
     repeat_type = models.SmallIntegerField()
     next_pop_date = models.DateField(blank=True, null=True)
-    show = models.ForeignKey("Show", on_delete=models.DO_NOTHING)
+    show = models.ForeignKey("schedule.Show", on_delete=models.DO_NOTHING)
     record = models.SmallIntegerField(blank=True, null=True)
 
     def get_owner(self):
@@ -53,7 +53,7 @@ class ShowDays(models.Model):
 
 
 class ShowHost(models.Model):
-    show = models.ForeignKey("Show", on_delete=models.DO_NOTHING)
+    show = models.ForeignKey("schedule.Show", on_delete=models.DO_NOTHING)
     subjs = models.ForeignKey("core.User", on_delete=models.DO_NOTHING)
 
     class Meta:
@@ -65,7 +65,7 @@ class ShowInstance(models.Model):
     description = models.CharField(max_length=8192, blank=True, null=True)
     starts = models.DateTimeField()
     ends = models.DateTimeField()
-    show = models.ForeignKey("Show", on_delete=models.DO_NOTHING)
+    show = models.ForeignKey("schedule.Show", on_delete=models.DO_NOTHING)
     record = models.SmallIntegerField(blank=True, null=True)
     rebroadcast = models.SmallIntegerField(blank=True, null=True)
     instance = models.ForeignKey(
@@ -97,7 +97,7 @@ class ShowInstance(models.Model):
 class ShowRebroadcast(models.Model):
     day_offset = models.CharField(max_length=1024)
     start_time = models.TimeField()
-    show = models.ForeignKey("Show", on_delete=models.DO_NOTHING)
+    show = models.ForeignKey("schedule.Show", on_delete=models.DO_NOTHING)
 
     def get_owner(self):
         return self.show.get_owner()
