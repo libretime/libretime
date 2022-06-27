@@ -7,7 +7,7 @@ from ...models import Role, User
 class TestUserManager(APITestCase):
     def test_create_user(self):
         user = User.objects.create_user(
-            role=Role.EDITOR,
+            role=Role.HOST,
             username="test",
             password="test",
             email="test@example.com",

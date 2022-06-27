@@ -97,12 +97,12 @@ class TestPermissions(APITestCase):
                 msg=f"Invalid for model {model}",
             )
 
-    def test_editor_get_permissions(self):
+    def test_host_get_permissions(self):
         for model in self.URLS:
             response = self.logged_in_test_model(
                 model,
-                Role.EDITOR,
-                "editor",
+                Role.HOST,
+                "host",
                 self.client.get,
             )
             self.assertEqual(
@@ -111,10 +111,10 @@ class TestPermissions(APITestCase):
                 msg=f"Invalid for model {model}",
             )
 
-    def test_editor_post_permissions(self):
+    def test_host_post_permissions(self):
         user = get_user_model().objects.create_user(
-            role=Role.EDITOR,
-            username="editor2",
+            role=Role.HOST,
+            username="host2",
             password="test",
             email="test@example.com",
             first_name="test",
@@ -123,14 +123,14 @@ class TestPermissions(APITestCase):
         file = baker.make("storage.File", owner=user)
         model = f"files/{file.id}"
         path = self.path.format(model)
-        self.client.login(username="editor2", password="test")
+        self.client.login(username="host2", password="test")
         response = self.client.patch(path, {"name": "newFilename"})
         self.assertEqual(response.status_code, 200)
 
-    def test_editor_post_permissions_failure(self):
+    def test_host_post_permissions_failure(self):
         get_user_model().objects.create_user(
-            role=Role.EDITOR,
-            username="editor2",
+            role=Role.HOST,
+            username="host2",
             password="test",
             email="test@example.com",
             first_name="test",
@@ -139,6 +139,6 @@ class TestPermissions(APITestCase):
         file = baker.make("storage.File")
         model = f"files/{file.id}"
         path = self.path.format(model)
-        self.client.login(username="editor2", password="test")
+        self.client.login(username="host2", password="test")
         response = self.client.patch(path, {"name": "newFilename"})
         self.assertEqual(response.status_code, 403)

@@ -19,7 +19,7 @@ GUEST_PERMISSIONS = [
     "view_apiroot",
 ]
 
-EDITOR_PERMISSIONS = GUEST_PERMISSIONS + [
+HOST_PERMISSIONS = GUEST_PERMISSIONS + [
     "add_file",
     "add_podcast",
     "add_podcastepisode",
@@ -100,6 +100,6 @@ MANAGER_PERMISSIONS = GUEST_PERMISSIONS + [
 
 GROUPS = {
     Role.GUEST.value: GUEST_PERMISSIONS,
-    Role.EDITOR.value: EDITOR_PERMISSIONS,
+    Role.HOST.value: HOST_PERMISSIONS,
     Role.MANAGER.value: MANAGER_PERMISSIONS,
 }
