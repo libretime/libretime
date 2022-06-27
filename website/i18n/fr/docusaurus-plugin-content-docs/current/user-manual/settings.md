@@ -1,108 +1,67 @@
 ---
-title: Settings
+title: Paramètres
 ---
 
-## General settings
+## Paramètres généraux
 
 ![](./settings-station-info-settings.png)
 
-On the **Settings** menu, click **General** to set your **Station Name**. This
-text is shown in your web browser's title bar when your station staff are logged
-into LibreTime, and optionally in stream metadata. You can also set a **Station
-Description** and **Station Logo** here.
+Dans le menu **Paramètres**, cliquez sur **Général** pour définir le **nom de votre station**. Ce texte s'affiche dans la barre de titre de votre navigateur Web lorsque le personnel de votre station est connecté à LibreTime, et éventuellement dans les métadonnées du flux. Vous pouvez également définir une **description de la station** et un **logo de la station** ici.
 
 ![](./settings-general-playback-settings.png)
 
-The **Default Interface Language** drop-down menu sets the default localization
-for your LibreTime instance, and the **Station Timezone** drop-down menu can be
-used to display local time at your station. LibreTime stores show times
-internally in UTC format (similar to _Greenwich Mean Time_), but displays local
-time for the convenience of your station staff. You can also set the day of the
-week that you wish to start your station's weekly schedule on, which defaults
-to Sunday.
+Le menu déroulant **Langue d'interface par défaut** définit la localisation par défaut de votre instance de LibreTime, et le menu déroulant **Fuseau horaire de la station** peut être utilisé pour afficher l'heure locale de votre station. LibreTime stocke les heures d'affichage en interne au format UTC (similaire au Greenwich Mean Time), mais affiche l'heure locale pour la commodité du personnel de votre station. Vous pouvez également définir le jour de la semaine auquel vous souhaitez commencer la programmation hebdomadaire de votre station, qui est par défaut le dimanche.
 
-The **Track Type Default** enables you to select a track type default for uploads.
+Initialement, les **durées par défaut du fondu entrant** et du **fondu sortant** pour les fondus automatiques sont fixées à une demi-seconde, et la **durée par défaut du fondu enchaîné** est fixée à zéro seconde. Des durées de fondu et de fondu enchaîné personnalisées peuvent être définies pour des éléments adjacents dans une liste de lecture ou un bloc intelligent statique. Consultez le chapitre _Bibliothèque_ pour plus de détails.
 
-Initially, the **Default Fade In** and **Default Fade Out** times for automated
-fades are set to half a second, and the **Default Crossfade Duration** is set to
-zero seconds. Custom fade and crossfade times can be set for adjacent items in a
-playlist or static smart block. See the chapter _Library_ for details.
+La **liste de lecture d'introduction à chargement automatique** vous permet de sélectionner une liste de lecture qui sera programmée au début de chaque émission ayant activé une liste de lecture à chargement automatique. Elle peut être utilisée, par exemple, pour insérer un identifiant de station ou d'autres annonces au début de chaque émission.
 
-The **Intro Autoloading Playlist** enables you to select a playlist that will be
-scheduled at the beginning of every show that has enabled an autoloading
-playlist. This can be used for instance to insert a station ID or other
-announcements a the top of every show.
+La **liste de lecture d'outro en chargement automatique** vous permet de sélectionner une liste de lecture qui sera programmée après le contenu de chaque émission avec une liste de lecture en chargement automatique.
 
-The **Outro Autoloading Playlist** enables you to select a playlist that will be
-scheduled after the content of every show with an autoloading playlist.
+L'option **Overwrite Podcast Episode Metatags**, activée par défaut, permet à LibreTime de remplacer les champs Artist, Title \& Album sur toutes les pistes téléchargées à partir d'un podcast par les informations du flux RSS..
 
-The **Overwrite Podcast Episode Metatags** option which is enabled by default
-causes LibreTime to override the Artist, Title & Album fields on any tracks
-downloaded from a podcast with information from the RSS feed.
-
-The **Generate a smartblock and a playlist upon creation of a new podcast**
-option when enabled will create a smartblock matching the newest episode of a
-podcast and a playlist containing that smartblock automatically upon adding a
-podcast to LibreTime. This can also be done manually by the generate smartblock
-and playlist button under a podcasts settings which is why it is disabled by
-default.
+L'option **Générer un bloc intelligent et une liste de lecture lors de la création d'un nouveau podcast**, lorsqu'elle est activée, créera un bloc intelligent correspondant au plus récent épisode d'un podcast et une liste de lecture contenant ce bloc intelligent automatiquement lors de l'ajout d'un podcast à LibreTime. Ceci peut aussi être fait manuellement par le bouton **generate bloc intelligent et liste de lecture** dans les paramètres d'un podcast, c'est pourquoi cette option est désactivée par défaut.
 
 ![](./settings-api-settings.png)
 
-You can opt-in to test new features with the **Feature Previews** option.
-Features that we soft rollout this way may need more feedback or still have
-tolerable bugs. This contains but is not limited to features like large ui
-refactors. You can switch back at any time.
+Vous pouvez choisir de tester les nouvelles fonctionnalités avec l'option **Feature Previews**. Les fonctionnalités que nous déployons en douceur de cette façon peuvent nécessiter plus de commentaires ou avoir encore des bogues tolérables. Cela comprend, sans s'y limiter, des fonctionnalités telles que les refactors importants de l'interface utilisateur. Vous pouvez revenir en arrière à tout moment.
 
-You can enable live, read-only access to the LibreTime schedule calendar for
-your station's public website with the **Public LibreTime API** option, if you
-wish. (There is more about this feature in the
-[_Exporting the schedule_](./playout-history.md) chapter, in the
-_Advanced Configuration_ section of this book).
+Si vous le souhaitez, vous pouvez activer l'accès en lecture seule au calendrier LibreTime pour le site web public de votre station avec l'option **Public LibreTime API**. (Vous trouverez plus d'informations sur cette fonctionnalité dans le chapitre Exportation du calendrier,[_Exporting the schedule_](./playout-history.md) dans la section _Configuration avancée_ de ce manuel).
 
-The **Allowed CORS URLs** is intended to deal with situations where you want a
-remote site with a different domain to access the API. This is relevant when
-there is a reverse proxy server in front of LibreTime. If you are using a
-reverse proxy, the URLs that will be used to access it should be added here.
+L'option **Autoriser les URL CORS** est destinée à gérer les situations où vous souhaitez qu'un site distant avec un domaine différent puisse accéder à l'API. Ceci est pertinent lorsqu'il y a un serveur proxy inverse en face de LibreTime. Si vous utilisez un proxy inverse, les URLs qui seront utilisées pour y accéder doivent être ajoutées ici.
 
-The **Display login button on your Radio Page?** will determine whether visitors
-to your site see a link to login. If this is disabled, DJs and admins will need
-to goto http://example.org/login to be able to login.
+L'option **Afficher le bouton de connexion sur votre page Radio ?** déterminera si les visiteurs de votre site verront un lien pour se connecter. Si cette option est désactivée, les DJ et les administrateurs devront se rendre sur [http://example.org/login](http://example.org/login) pour pouvoir se connecter.
 
-The **Tune-In Settings** section is intended for stations that have partnered
-with TuneIn to automatically push their now playing metadata to TuneIn. This
-hasn't been tested and also requires special credentials from TuneIn.
+La section **Tune-In Settings** est destinée aux stations qui ont conclu un partenariat avec TuneIn afin de transmettre automatiquement leurs métadonnées de lecture à TuneIn. Ceci n'a pas été testé et nécessite également des informations d'identification spéciales de TuneIn.
 
-The **Dangerous Options** section provides an administrator the ability to erase LibreTime's track library.
+La section **Dangerous Options** permet à un administrateur d'effacer la bibliothèque de pistes de LibreTime.
 
 :::danger
 
-Erasing LibreTime's track library cannot be undone.
+L'effacement de la bibliothèque de titres de LibreTime ne peut être annulé.
 
 :::
 
-Individual LibreTime users can choose another interface localization when they
-log in, or set personal preferences for localization and time zone by clicking
-their username on the right side of the menu bar.
+Les utilisateurs individuels de LibreTime peuvent choisir une autre localisation de l'interface lorsqu'ils se connectent, ou définir des préférences personnelles pour la localisation et le fuseau horaire en cliquant sur leur nom d'utilisateur sur le côté droit de la barre de menu.
 
 ---
 
-## Track types
+## Types de pistes
 
-### Create track types
+### réer des types de pistes
 
-1. Click **Settings**
-1. Click **Track Types**
-1. Click **New Track Type**
-1. On the "Code" field, type a unique code that can be easily identifiable. Example, for Music use "MUS" or for Sound Effects use something like "FX".
-1. On the "Type Name" field, type a the name of the type of tracks. Example, "Station IDs".
-1. On the "Description" field, enter the description of the type given.
-1. On the "Visibility" drop down menu, choose to enable or disable the track type. By default, it is enabled. If disabled, it won't be shown across LibreTime or in the API for developers.
-1. Click **Save**.
+1. Cliquez sur **Paramètres**
+1. Cliquez sur **Track Types**
+1. Cliquez sur **New Track Type**
+1. Dans le champ "Code", tapez un code unique facilement identifiable. Par exemple, pour la musique, utilisez "MUS" ou pour les effets sonores, utilisez quelque chose comme "FX".
+1. Dans le champ "Nom du type", tapez le nom du type de piste. Exemple : "Station IDs".
+1. Dans le champ "Description", entrez la description du type donné.
+1. Dans le menu déroulant "Visibilité", choisissez d'activer ou de désactiver le type de piste. Par défaut, il est activé. S'il est désactivé, il ne sera pas affiché dans LibreTime ou dans l'API pour les développeur.euse.s.
+1. Cliquez sur **Sauvegarder**.
 
 ---
 
-## Stream settings
+## Paramètres des flux
 
 <iframe
     width="560"
@@ -113,66 +72,67 @@ their username on the right side of the menu bar.
     allowfullscreen
 ></iframe>
 
-### Global settings
+### Paramètres généraux
 
-You can configure direct Icecast and SHOUTcast streams and sound card output by clicking **Streams** on the **System** menu.
+Vous pouvez configurer les flux directs Icecast et SHOUTcast ainsi que la sortie de la carte son en cliquant sur **Flux** dans le menu **Système**.
 
-At the top left of the **Stream Settings** page are global settings including **Hardware Audio Output**, which enables playout from the default sound card on the server, if one is fitted. The default **Output Type** of _ALSA_ on the drop-down menu will be suitable for most servers with a sound card. If not, you have the option to choose from other Liquidsoap interfaces available, such as _OSS_ or _PortAudio_.
+En haut à gauche de la page **Stream Setting** se trouvent les **paramètres généraux**, dont **Hardware Audio Outputùù, qui permet la diffusion à partir de la carte son par défaut du serveur, si celui-ci en est équipé. Le **type de sortie par défaut,_ ALSA_ dans le menu déroulant, convient à la plupart des serveurs équipés d'une carte son. Si ce n'est pas le cas, vous avez la possibilité de choisir parmi les autres interfaces Liquidsoap disponibles, comme _OSS_ ou _PortAudio_.
 
-The second checkbox under Global Settings enables the sending of **Icecast Vorbis Metadata** with direct streams. This setting is optional, because some media players have a bug which makes them disconnect from Ogg Vorbis streams when an Icecast server notifies the player that a new track is starting.
+La deuxième case à cocher sous Global Settings permet l'envoi de **métadonnées Icecast Vorbis** avec les flux directs. Ce paramètre est facultatif, car certains lecteurs multimédias ont un bug qui les fait se déconnecter des flux Ogg Vorbis lorsqu'un serveur Icecast notifie au lecteur qu'une nouvelle piste commence.
 
-The **Stream Label** radio button allows you to set the metadata that will be sent with direct streams; _Artist_ and _Title_, _Show_, _Artist_ and _Title_, or _Station name_ and _Show name_.
+Le bouton **Label du flux** vous permet de définir les métadonnées qui seront envoyées avec les flux directs : artiste et titre, spectacle, artiste et titre, ou nom de la station et nom du spectacle.
 
-The **Off Air Metadata** field configures the text that will be sent to any configured streaming servers, and from there on to media players, when Airtime is not streaming any output.
+Le champ **Off Air Metadata** (Métadonnées hors antenne) permet de configurer le texte qui sera envoyé à tous les serveurs de diffusion en continu configurés, puis aux lecteurs multimédias, lorsque Airtime ne diffuse aucune sortie.
 
-Below this is the **Enable Replay Gain** checkbox which, if checked, automatically adjusts Airtime's output level to an average of -14dBFS, based on prior analysis of the level of individual files in the **Library**. This feature helps guard against unwanted changes in Airtime's output level caused by the typical variation in average level of recordings made in different studios at different times. The correction value for each file can be viewed by enabling the ReplayGain column in the **Library**.
+En dessous de ce champ se trouve la case à cocher **Enable Replay Gain** qui, si elle est cochée, ajuste automatiquement le niveau de sortie d'Airtime à une moyenne de -14dBFS, sur la base d'une analyse préalable du niveau des fichiers individuels de la **bibliothèque**. Cette fonction permet de se prémunir contre les changements indésirables du niveau de sortie d'Airtime causés par la variation typique du niveau moyen des enregistrements réalisés dans différents studios à différents moments. La valeur de correction pour chaque fichier peut être visualisée en activant la colonne ReplayGain dans la **Bibliothèque**.
 
-If Replay Gain is enabled, output level can be adjusted up to 10dB louder or quieter from the reference level of -14dBFS by clicking and dragging the **Replay Gain Modifier** control. Increasing level too far is likely to result in clipping (distortion) since the output level is adjusted to be greater than that of the original files. This scenario is indicated by amplitude correction factors greater than 1.0 in the Liquidsoap log file.
+Si la colonne Replay Gain est activée, le niveau de sortie peut être ajusté jusqu'à 10dB plus fort ou plus faible par rapport au niveau de référence de -14dBFS en cliquant et en faisant glisser la commande **Replay Gain Modifier**. Une augmentation trop importante du niveau risque d'entraîner un écrêtage (distorsion) puisque le niveau de sortie est réglé pour être supérieur à celui des fichiers d'origine. Ce scénario est indiqué par des facteurs de correction d'amplitude supérieurs à 1,0 dans le fichier journal de Liquidsoap.
 
-Click the **Save** button on the right side of the page to save any changes that you have made to global settings. If you are only using the hardware audio output, and will not be streaming to or from Airtime, you can leave the **Stream Settings** page after clicking the **Save** button.
+Cliquez sur le bouton **sauvegarder** sur le côté droit de la page pour enregistrer les modifications que vous avez apportées aux paramètres globaux. Si vous n'utilisez que la sortie audio matérielle et que vous n'avez pas l'intention de diffuser des flux vers ou depuis Airtime, vous pouvez quitter la page **Stream Settings** après avoir cliqué sur le bouton \*_sauvegarder_.
 
-### Input stream settings
+### Paramètres du flux d'entrée
 
-On the lower left side of the Stream Settings page you can configure remote live input streams from DJ programs such as **Mixxx** or **IDJC**, or smartphone applications used by broadcast journalists. A bug with **Butt** versions 1.14 to 1.16 causes streams not to connect to LibreTime. A fix has been introduced with **Butt** version 1.17 that allows it to be used by LibreTime.
+Dans la partie inférieure gauche de la page Stream Settings, vous pouvez configurer les flux d'entrée en direct à distance à partir de programmes DJ tels que **Mixxx** ou **IDJC**, ou d'applications smartphone utilisées par les journalistes de diffusion. Un bug avec les versions 1.14 à 1.16 de **Butt** fait que les flux ne se connectent pas à LibreTime. Un correctif a été introduit avec la version 1.17 de **Butt** qui lui permet d'être utilisé par LibreTime.
 
-Airtime supports two types of live input stream; the **Show Source**, which enables a specific person to stream in during their own show, and the **Master Source**, which can override the Show Source if necessary. If neither type of live input is available, Airtime will fall back to **Scheduled Play** (playlists, smart blocks, remote streams and files scheduled in Airtime, in advance of or during a show).
+Airtime prend en charge deux types de flux d'entrée en direct : la **Show Source**, qui permet à une personne spécifique de se connecter pendant sa propre émission, et la **Master Source**, qui peut remplacer la **Show Source** si nécessaire. Si aucun type d'entrée en direct n'est disponible, Airtime se rabat sur la lecture programmée (listes de lecture, blocs intelligents, flux distants et fichiers programmés dans Airtime, avant ou pendant une émission).
 
-The **Auto Switch Off** and **Auto Switch On** checkboxes enable playout to be switched automatically to the highest priority source whenever an authenticated input source disconnects from or connects to Airtime, respectively. The field **Switch Transition Fade** sets the length of the audio fade as scheduled playout is switched to a remote input source, and back.
+Les cases à cocher **Auto Switch Off** et **Auto Switch On** permettent de basculer automatiquement la diffusion vers la source la plus prioritaire lorsqu'une source d'entrée authentifiée se déconnecte ou se connecte à Airtime, respectivement. Le champ **Switch Transition Fade** définit la durée du fondu audio lorsque la diffusion programmée est commutée vers une source d'entrée distante, et inversement.
 
-Each type of input stream requires a username and password before the remote broadcaster can connect to Airtime. The **Master Username** and **Master Password** can be set in the Input Stream Settings box, while the authentication for individual Show Sources is set up in Airtime's schedule calendar. See the _Calendar_ chapter for details.
+Chaque type de flux d'entrée nécessite un nom d'utilisateur et un mot de passe avant que le diffuseur distant puisse se connecter à Airtime. Le **nom d'utilisateur principal** et le **mot de passe principal** peuvent être définis dans la boîte Input Stream Settings, tandis que l'authentification pour les Show Sources individuelles est configurée dans le calendrier de Airtime. Voir le chapitre _Calendrier_ pour plus de détails.
 
-Input streams must have a **Port** for the remote broadcaster to connect to, which should be a number in the range from 1024 to 49151. If you have the Icecast or SHOUTcast streaming server running on the same machine as Airtime, you should avoid using port 8000 or 8001 for either type of Airtime input stream. This is because both Icecast and SHOUTcast use port 8000, and SHOUTcast also uses port 8001. If the usernames and passwords were similar, remote broadcasters might accidentally connect to the streaming server directly, bypassing Airtime.
+Les flux d'entrée doivent avoir un **Port** auquel le diffuseur distant peut se connecter, qui doit être un nombre compris entre 1024 et 49151. Si le serveur de streaming Icecast ou SHOUTcast fonctionne sur la même machine qu'Airtime, vous devez éviter d'utiliser le port 8000 ou 8001 pour l'un ou l'autre type de flux d'entrée Airtime. En effet, Icecast et SHOUTcast utilisent tous deux le port 8000, et SHOUTcast utilise également le port 8001. Si les noms d'utilisateur et les mots de passe étaient similaires, les diffuseurs distants pourraient accidentellement se connecter directement au serveur de streaming, en contournant Airtime.
 
-To avoid further confusion, it is also recommended that you set a different **Mount Point** (the specific filename for broadcasters and listeners to connect to) from that used on your public Icecast or SHOUTcast server.
+Pour éviter toute confusion supplémentaire, il est également recommandé de définir un **point de montage** (le nom de fichier spécifique auquel les diffuseurs et les auditeurs doivent se connecter) différent de celui utilisé sur votre serveur public Icecast ou SHOUTcast.
 
-If your Airtime server is behind a firewall, and you wish remote broadcasters to connect input streams to it across the public Internet, you may need to click the **Override** link to set a **Connection URL** which is available from outside your local area network. This URL might be based on the domain name assigned to the router which forwards the appropriate port to your Airtime server. Then click **OK** to save the new connection URL.
+Si votre serveur Airtime se trouve derrière un pare-feu et que vous souhaitez que les diffuseurs distants se connectent à ses flux d'entrée via l'Internet public, vous devrez peut-être cliquer sur le lien Override pour définir une URL de connexion disponible en dehors de votre réseau local. Cette URL peut être basée sur le nom de domaine attribué au routeur qui transmet le port approprié à votre serveur. Ensuite, cliquez sur **OK** tpour sauvegarder la nouvelle connection URL.
 
 ### Switching input streams
 
-In the Master Panel, available input source streams are shown with an orange line connecting the source to the switch, which you could think of like a patch cable connecting a source to a broadcast mixer. When that switch is active, another orange line connects the switch to the On Air indicator, like a patch cable connecting a mixer to a transmitter.
+Dans le panneau principal, les flux de sources d'entrée disponibles sont affichés avec une ligne orange reliant la source au commutateur, que vous pouvez considérer comme un câble de raccordement reliant une source à un mélangeur de diffusion. Lorsque ce commutateur est actif, une autre ligne orange relie le commutateur à l'indicateur On Air, comme un câble patch reliant un mélangeur à un émetteur.
+uite)
 
 ![](./settings-libretime-master-source-stream.png)
 
-If you have checked the **Auto Switch On** box in the Stream Settings page, the **Master Source** switch will move automatically to the active position, on the left, when an authenticated master source connects to Airtime. Otherwise, you can activate the switches manually by clicking the left side of each switch, or deactivate them by clicking the right side. The switches do not have to be dragged with the mouse, in the way that a switch on a hardware mixer would be pushed sideways. **Show Source** live input streams can also be manually activated or deactivated in the same way. If neither the show source or master source is active then LibreTime will default to what is scheduled to play in the Calendar.
+Si vous avez coché la case **Auto Switch On** dans la page Stream Settings, le commutateur **Master Source** passera automatiquement en position active, à gauche, lorsqu'une source maître authentifiée se connectera à Airtime. Sinon, vous pouvez activer les commutateurs manuellement en cliquant sur le côté gauche de chaque commutateur, ou les désactiver en cliquant sur le côté droit. Il n'est pas nécessaire de faire glisser les commutateurs avec la souris, comme on le ferait avec un commutateur sur un mélangeur matériel. Les flux d'entrée en direct **Show Source** peuvent également être activés ou désactivés manuellement de la même manière. Si ni la source de démonstration ni la source principale ne sont actives, LibreTime utilisera par défaut ce qui est programmé dans le calendrier.
 
 ![](./settings-libretime-show-source-stream.png)
 
-If you have the **Auto Switch Off** box checked LibreTime will resume scheduled playback whenever a stream disconnects. Otherwise you will need to slide to disable a source after a DJ stops streaming.
+Si vous avez coché la case **Arrêt automatique**, LibreTime reprendra la lecture programmée dès qu'un flux se déconnectera. Sinon, vous devrez glisser pour désactiver une source après l'arrêt du streaming d'un DJ.
 
-You can also force disconnection of a live remote source, for example when the remote input source has crashed and is no longer sending audio data, click the **X** icon to the left of the source name.
+Vous pouvez également forcer la déconnexion d'une source distante en direct, par exemple lorsque la source d'entrée distante a planté et n'envoie plus de données audio, cliquez sur l'icône **X** à gauche du nom de la source.
 
-### Output stream settings
+### Paramètres du flux de sortie
 
-The Default Streaming radio button that is configured by default currently relies upon an insecure icecast password. You will want to change the Icecast2 password and select Custom Streaming. See the notice above for a tutorial on how to fix this.
+Le bouton radio Streaming par défaut qui est configuré par défaut repose actuellement sur un mot de passe Icecast non sécurisé. Vous voudrez modifier le mot de passe Icecast2 et sélectionner Custom Streaming. Voir l'avis ci-dessus pour un tutoriel sur la façon de résoudre ce problème.
 
-On the right side of the page, you can configure up to three independent output streams with different bit rates or formats, and send these streams to different Icecast or SHOUTcast servers. By default, only Stream 1 is enabled, with this stream being sent the Icecast server configured at installation time.
+Dans la partie droite de la page, vous pouvez configurer jusqu'à trois flux de sortie indépendants avec des débits ou des formats différents, et envoyer ces flux à différents serveurs Icecast ou SHOUTcast. Par défaut, seul le flux 1 est activé, ce flux étant envoyé au serveur Icecast configuré lors de l'installation.
 
-To configure another stream, click the bar with the stream number to expand its box, and make sure **Enabled** is checked. Enter at least the streaming **Server** IP address or domain name, and **Port** details. The default port for Icecast and SHOUTcast servers is 8000.
+Pour configurer un autre flux, cliquez sur la barre portant le numéro du flux pour développer sa case, et assurez-vous que la case **Enabled** est cochée. Saisissez au moins l'adresse IP ou le nom de domaine du **serveur de streaming**, ainsi que les détails du **port**. Le port par défaut des serveurs Icecast et SHOUTcast est 8000.
 
-Click **Additional Options** to expand a box in which you can enter the usernames, passwords and metadata to send to the streaming server. The default **Username** for Icecast servers is _source_, and if this the name in use on your streaming server, you can leave this field empty. The **Admin User** and **Admin Password** settings are optional, and are used to query the streaming server for audience numbers by the **Listener Stats** page on the **System** menu.
+Cliquez sur **Options supplémentaires** pour développer une boîte dans laquelle vous pouvez saisir les noms d'utilisateur, les mots de passe et les métadonnées à envoyer au serveur de streaming. Le **nom d'utilisateur** par défaut pour les serveurs Icecast est source. Si c'est le nom utilisé sur votre serveur de streaming, vous pouvez laisser ce champ vide. Les paramètres Admin User et Admin Password sont facultatifs. Ils sont utilisés pour interroger le serveur de streaming sur les chiffres d'audience par la page **Statistiques d'audience** du menu **System**.
 
-You can also set the specific **Mount Point** that listeners will connect to here. Then click one of the **Save** buttons in the upper or lower right corner of the page to update the Airtime server's settings.
+Vous pouvez également définir ici le **Point de montage** spécifique auquel les auditeurs se connecteront. Cliquez ensuite sur l'un des boutons **sauvegarder** dans le coin supérieur ou inférieur droit de la page pour mettre à jour les paramètres du serveur Airtime.
 
-Airtime supports output to Icecast in Ogg Vorbis, Ogg Opus, MP3 and AAC formats. When selecting a SHOUTcast server from the **Service Type** drop-down menu, you are restricted to using MP3 or AAC formats only, so the choice of Ogg Vorbis and Opus formats is greyed out in the **Stream Type** drop-down menu. The SHOUTcast username for stream sources is fixed, so you do not need to enter this value under **Additional Options**, but you will usually have to enter a password.
+Airtime prend en charge la sortie vers Icecast aux formats Ogg Vorbis, Ogg Opus, MP3 et AAC. Lorsque vous sélectionnez un serveur SHOUTcast dans le menu déroulant Type de **service**, vous êtes limité à l'utilisation des formats MP3 ou AAC. Le choix des formats Ogg Vorbis et Opus est donc grisé dans le menu déroulant **Type de flux**. Le nom d'utilisateur SHOUTcast pour les sources de streaming est fixe, vous n'avez donc pas besoin d'entrer cette valeur sous **Options supplémentaires**, mais vous devrez généralement entrer un mot de passe.
 
-Any connection problems between Liquidsoap and Icecast or SHOUTcast are shown on the Stream Settings page. For example, if you enter the wrong password, you will see an _Authentication Required_ error message. To fix this, enter the correct password in the **Additional Options** box, and click the **Save** button. If the streaming server is down for any reason, or you have entered an incorrect **Server** name or **Port** number, you will see the message _Can not connect to the streaming server_.
+Tout problème de connexion entre Liquidsoap et Icecast ou SHOUTcast est indiqué sur la page Stream Settings. Par exemple, si vous entrez un mauvais mot de passe, vous verrez un message d'erreur "Authentification requise". Pour résoudre ce problème, saisissez le bon mot de passe dans la case **Options supplémentaires**, puis cliquez sur le bouton **Enregistrer**. Si le **serveur de streaming** est hors service pour une raison quelconque, ou si vous avez saisi un nom de serveur ou un numéro de **port** incorrect, vous verrez apparaître le message _Can not connect to the streaming server_.

@@ -1,121 +1,62 @@
 ---
-title: Dashboard
+title: Dashboard (Tableau de bord)
 ---
 
-:::tip
+:::conseil
 
 Want to listen to LibreTime's output stream? Click **Listen** below the **On Air** light.
 
 :::
 
-The Dashboard is divided into two sections a Library section divided between
-Tracks, Playlists, Smart Blocks, Webstreams, and Podcasts, with the **Scheduled
-Shows** dialog on the right. This page provides an overview of the right-hand
-interface. Check the links to see information about the other sections which
-provide the content that can be scheduled.
+Le Dashboard (Tableau de bord)est divisé en deux sections : une section **Bibliothèque** divisée entre **Pistes**, **listes de lecture**, **Blocs intelligents,** **fLUX Web** et **Podcasts**, avec la boîte de dialogue **scheduled shows** (créneaux programmés) sur la droite. Cette page donne un aperçu de l'interface de droite.\* Vérifiez les liens pour obtenir des informations sur les autres sections qui fournissent le contenu qui peut être programmé.
 
-The **Scheduled Shows** page provides a view of the content your station is will
-playout, or has already played out, which defaults to showing the 3 hours
-ahead. This page also enables you to make last-minute changes to running shows.
+La page **scheduled shows** (créneaux programmés) offre une vue du contenu que votre station va diffuser, ou a déjà diffusé, qui affiche par défaut les 3 heures à venir.
+Cette page vous permet également d'apporter des modifications de dernière minute aux émissions en cours.
 
-If you've only just installed LibreTime, there might not be any content shown
-yet. Click the calendar and clock icons above the table to change the date and
-time range, then click the **Find Shows** button (with the magnifying glass
-icon) to the right.
+Si vous venez d'installer LibreTime, il se peut qu'aucun contenu ne soit encore affiché. Cliquez sur les icônes de **calendrier** et d'**horloge** au-dessus du tableau pour modifier la date et l'heure, puis cliquez sur le bouton** Rechercher des programmes** (avec l'icône de la loupe) à droite.
 
 ![](./dashboard-now-playing.png)
 
-To display the content of a particular show, click **Filter by Show** and select
-the name of the show from the drop-down menu which will appear.
+Pour afficher le contenu d'un programme particulier, cliquez sur **Filtrer par émission** et sélectionnez le nom du programme dans le menu déroulant qui apparaît.
 
 ![](./dashboard-filter.png)
 
-On the left side of the page, the **Start** and **End** times, **Duration**
-and **Title** of each content item are shown. On the right, **Creator**,
-**Album**, **Cue** or **Fade** times and **Mime** type (file format) can also be
-shown. This information can help you to prepare voice tracks for insertion into
-the show, including time checks if you wish. Putting current time information i
-to voice tracks describing specific content can, of course, limit the
-re-usability of those voice tracks, unless you always broadcast a particular
-item at the same time of day.
+Dans la partie gauche de la page, les heures de début et de fin, la durée et le titre de chaque élément de contenu sont affichés. Sur la droite, le.a créateur.ice, l'album, les temps de repérage ou de fondu et le type Mime (format de fichier) peuvent également être affichés. Ces informations peuvent vous aider à préparer les* pistes audio* pour l'insertion dans le programme, y compris les contrôles de temps si vous le souhaitez. Le fait de mettre des informations sur l'heure actuelle aux pistes audio décrivant un contenu spécifique peut, bien sûr, limiter la réutilisation de ces pistes audio, à moins que vous ne diffusiez toujours un élément particulier à la même heure de la journée.
 
-Click the **Show/hide columns** button on the right to configure the metadata
-displayed, by checking the boxes in the pop-up window.
+Cliquez sur le bouton **Afficher/masquer les colonnes** à droite pour configurer les métadonnées affichées, en cochant les cases dans la fenêtre contextuelle.
 
 ![](./dashboard-columns.png)
 
-The row for the currently playing item is displayed with a bright green
-background. Any underbooked shows (shows with insufficient content to fill the
-time allowed) are displayed with a row indicating the length of the underbooking
-in minutes and seconds. These rows contain a red exclamation mark in the first
-column, and have a pink background.
+La ligne correspondant à l'élément en cours de lecture s'affiche sur un fond vert vif. Les programmes sous-remplis (programmes dont le contenu est insuffisant pour remplir le temps imparti) sont affichés avec une ligne indiquant la durée de la sous -réservation en minutes et secondes. Ces lignes contiennent un point d'exclamation rouge dans la première colonne et ont un fond rose.
 
 ![](./dashboard-end-gap.png)
 
-### Removing content from a running show
+### Suppression du contenu d'un programme en cours
 
-If a show is overbooked, which means the total playout duration is longer than
-the time allowed for the show, a brown row indicates that the item will be faded
-out when the show ends. A red row indicates that the item will not be played at
-all. The length of the overbooking is shown in minutes and seconds in the last
-row of the show. To remove the extra items from the end of an overbooked show,
-click the **Scissors** button at the top left of the table.
+Si un programme est surbooké, c'est-à-dire que la durée totale de diffusion est supérieure au temps imparti pour le programme, une ligne marron indique que l'élément sera supprimé à la fin de l'émission. Une ligne rouge indique que l'élément ne sera pas diffusé du tout. La durée du surbooking est indiquée en minutes et en secondes dans la dernière ligne de l'émission. Pour supprimer les éléments supplémentaires à la fin d'un programme surbooké, cliquez sur l'icone **Ciseaux** en haut à gauche du tableau.
 
-Alternatively, check the boxes for items which have not yet completed playout,
-and click the **Trashcan** button, to the right of the Scissors, to remove them
-from the schedule. If you remove the currently playing item, playout will skip
-to the next item in the show automatically, so you should make sure you have
-enough items remaining in the show to avoid dead air.
+Vous pouvez également cocher les cases des éléments dont la diffusion n'est pas encore terminée et cliquer sur le bouton **Corbeille**, à droite du bouton **Ciseaux**, pour les supprimer de la programmation. Si vous supprimez l'élément en cours de lecture,Dashbo le playout passera automatiquement à l'élément suivant d du programme, vous devez donc vous assurer qu'il reste suffisamment d'éléments dans l'émission pour éviter les temps morts.
 
 ![](./dashboard-delete-extra.png)
 
-If you have a long schedule displayed, and you wish to skip to the currently
-playing item, click the button with the end arrow icon, to the right of the
-**Trashcan**.
+Si vous avez une long programme affiché et que vous souhaitez passer à l'élément en cours de lecture, cliquez sur le bouton avec l'icône de la flèche de fin, à droite de la **corbeille**.
 
-To cancel the current show completely, click the red button to the right again.
-A pop-up window will ask you to confirm the cancellation, as this action cannot
-be undone.
+Pour annuler complètement le programme en cours, cliquez à nouveau sur le bouton rouge à droite. Une fenêtre pop-up vous demandera de confirmer l'annulation, car cette action ne peut être annulée.
 
-Items which are no longer available have an exclamation mark icon in the second
-column. This may happen for media files which were part of previous shows, and
-were removed from LibreTime's library (main storage or watched folders)
-subsequently. Items which are included in forthcoming shows cannot be removed
-from the Library via the LibreTime interface.
+Les éléments qui ne sont plus disponibles ont une icône en forme de point d'exclamation dans la deuxième colonne. Cela peut se produire pour des fichiers multimédia qui faisaient partie d'émissions précédentes et qui ont été supprimés de la bibliothèque de LibreTime (stockage principal ou dossiers surveillés) par la suite. Les éléments qui font partie de programmes à venir ne peuvent pas être retirés de la bibliothèque via l'interface LibreTime.
 
-### Adding content to a running show
+### Ajouter du contenu à un programme en cours
 
-After you have found the items that you want using the search tools, you can
-then drag and drop them from the library table on the left side of the page into
-the shows on the right side, including the current playing show.
+Après avoir trouvé les éléments que vous souhaitez à l'aide des outils de recherche, vous pouvez les faire glisser et les déposer depuis le tableau de la bibliothèque sur le côté gauche de la page dans les programmes sur le côté droit, y compris le programme en cours.
 
-If the current show has nothing playing out at the time, the new item will begin
-playing immediately. This manual triggering of playout can be used as a live
-assist technique, in which the LibreTime server's soundcard output is mixed with
-other sources such as microphones or telephone hybrids on its way to a
-transmitter, or a separate stream encoder. For instance, a live show's host may
-not wish to cut off a studio discussion to play music at a fixed time.
+Si le programme en cours n'est pas en cours de diffusion, la lecture du nouvel élément commencera immédiatement. Ce déclenchement manuel de la diffusion peut être utilisé comme une technique d'assistance en direct, dans laquelle la sortie de la carte son du serveur LibreTime est mélangée avec d'autres sources telles que des microphones ou des hybrides téléphoniques sur son chemin vers un émetteur, ou un encodeur de flux séparé. Par exemple, l'animateur d'une émission en direct peut ne pas vouloir couper une discussion en studio pour jouer de la musique à une heure fixe.
 
 ![](./dashboard-drag-and-drop.png)
 
-You can also select multiple items using the **Select** menu button, just
-beneath the simple search field, which has the options to **Select this page**
-of search results, **Deselect this page** and **Deselect all**. Alternatively,
-use the checkboxes on the left side of the library table to select specific
-items. Then drag one of the items into the show to add all of the selected
-items, or click the **Add to selected show** button, which has a plus icon. If
-you wish, you can also use the **Trashcan** button to permanently remove items
-from LibreTime's library. Only _admin_ users have permission to delete all
-items.
+Vous pouvez également sélectionner plusieurs éléments à l'aide du bouton de menu **Sélectionner**, situé juste en dessous du champ de recherche simple, qui offre les options suivantes :**Sélectionner cette page** de résultats de recherche, **Désélectionner cette page** et **Désélectionner tout**. Vous pouvez également utiliser les cases à cocher situées à gauche du tableau de la bibliothèque pour sélectionner des éléments spécifiques. Faites ensuite glisser l'un des éléments dans la présentation pour ajouter tous les éléments sélectionnés, ou cliquez sur le bouton **Ajouter à la présentation sélectionnée**, qui comporte une icône plus. Si vous le souhaitez, vous pouvez également utiliser le bouton **Corbeille** pour supprimer définitivement des éléments de la bibliothèque de LibreTime. Seuls les utilisateurs admin ont la permission de supprimer tous les éléments.
 
-To insert checkbox selected items at a specific time in the show schedule, click
-one of the songs in the schedule table. Then click the **Add to selected show**
-button in the library table. This will insert the library songs after the
-selected scheduled song.
+Pour insérer des éléments sélectionnés dans une case à cocher à un moment précis de l'horaire du programme, cliquez sur l'un des morceaux dans le tableau des horaires. Puis cliquez sur le bouton **Ajouter au programme sélectionné** dans le tableau de la bibliothèque. Cela insérera les pistes de la bibliothèque après la piste programmée sélectionnée.
 
-To add a single item at the insertion point, double-click on it in the library.
-There is no need to select or drag the item first.
+Pour ajouter un seul élément au point d'insertion, double-cliquez dessus dans la bibliothèque. Il n'est pas nécessaire de sélectionner ou de faire glisser l'élément au préalable.
 
-Right-clicking on a song in the schedule table will show a pop-up. This pop-up
-menu also enables you to audition the entire show in advance of playout, or
-remove the item that was clicked on from the show.
+Si vous cliquez avec le bouton droit de la souris sur une pistes dans le tableau de programmation, une fenêtre contextuelle s'affiche. Ce menu contextuel vous permet également d'écouter l'ensemble du programme avant la diffusion, ou de supprimer du programme l'élément sur lequel vous avez cliqué.

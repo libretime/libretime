@@ -1,69 +1,69 @@
 ---
-title: Playlists and smart blocks
+title: Listes de lecture et blocs intelligents
 ---
 
-## Creating a new playlist
+## Création d'une nouvelle playlist
 
-You can create a new playlist on the toolbar of the **Playlists** page.
+Vous pouvez créer une nouvelle liste de lecture dans la barre d'outils de la page **Listes de lecture**.
 
 ![](./playlists-playlist-editor.png)
 
-Enter a **Name** and **Description** for the playlist, then click the **Save** button. Setting good quality metadata here will help you find the playlist using the search box later, so you should be as descriptive as possible.
+Saisissez un **nom** et une **description** pour la liste de lecture, puis cliquez sur le bouton **Enregistrer**. La définition de métadonnées de bonne qualité ici vous aidera à trouver la liste de lecture à l'aide de la boîte de recherche plus tard, vous devez donc être aussi descriptif que possible..
 
-### Adding content to a playlist
+### Ajouter du contenu à une playlist
 
-With a playlist open, drag and drop items from the search results on the left into the playlist on the right. Jingles and voice tracks can be added before, after or between music items.
+Lorsqu'une liste de lecture est ouverte, faites glisser et déposez les éléments des résultats de la recherche sur la gauche dans la liste de lecture sur la droite. Les jingles et les pistes vocales peuvent être ajoutés avant, après ou entre les éléments musicaux.
 
-After adding files to the playlist, the total playlist time is displayed in the top right corner. The duration of an individual file is shown in each row of the playlist in a white font, and beneath this figure the time since the beginning of the playlist is displayed in a smaller light grey font. This elapsed time figure can be used as a time check for voice tracks, although this option may limit the re-usability of the voice track.
+Après avoir ajouté des fichiers à la liste de lecture, la durée totale de la liste de lecture s'affiche dans le coin supérieur droit. La durée d'un fichier individuel est indiquée dans chaque rangée de la playlist dans une police blanche, et sous ce chiffre, le temps écoulé depuis le début de la playlist est affiché dans une police plus petite en gris clair. Ce chiffre de temps écoulé peut être utilisé comme contrôle de temps pour les pistes vocales, bien que cette option puisse limiter la réutilisation de la piste vocale.
 
-To audition a playlist file in your web browser, click the white triangle button on the left side of its row. (If the format of the file is not supported by your browser, the triangle in this button will be greyed out). If audition of the file format is supported, a pop-up window will open, with the playlist starting at the file you clicked.
+Pour écouter un fichier de liste de lecture dans votre navigateur Web, cliquez sur le bouton triangulaire blanc situé à gauche de sa ligne. (Si le format du fichier n'est pas pris en charge par votre navigateur, le triangle de ce bouton sera grisé). Si l'audition du format du fichier est prise en charge, une fenêtre pop-up s'ouvrira, avec la liste de lecture commençant au fichier sur lequel vous avez cliqué
 
-Click the small white **x** icon on the right hand side of each row to remove a file from the playlist. You can also drag and drop files to re-order them, or click the **Shuffle** button to re-order files automatically.
+Cliquez sur la petite icône **x** blanche à droite de chaque ligne pour supprimer un fichier de la liste de lecture. Vous pouvez également faire glisser et déposer les fichiers pour les réorganiser, ou cliquer sur le bouton **Aleatoire**" pour réorganiser les fichiers automatiquement.
 
-When your playlist is complete, click the **New** button in the top left corner to create another playlist, click the close icon (a white cross in a black circle) in the top right corner, or browse to another page of the LibreTime interface.
+Lorsque votre liste de lecture est complète, cliquez sur le bouton **Nouveau** dans le coin supérieur gauche pour créer une autre liste de lecture, cliquez sur l'icône de fermeture (une croix blanche dans un cercle noir) dans le coin supérieur droit, ou naviguez vers une autre page de l'interface LibreTime.
 
-If you want to edit the playlist content or metadata later, you can find it by **Title**, **Creator**, **Last Modified** date, **Length**, **Owner** or **Year** using one of the search tools on the Library page. Click the playlist in the search results list, and then click **Edit** from the pop-up menu. You can also **Preview** the entire playlist in a pop-up audition window, **Duplicate** or **Delete** one of your playlists from this menu.
+Si vous souhaitez modifier le contenu ou les métadonnées de la liste de lecture ultérieurement, vous pouvez la retrouver par **Titre**, **Créateur.ice**, **Date de dernière modification**, **Longueur**, **Propriétaire** ou **Année** en utilisant l'un des outils de recherche de la page **Bibliothèque**. Cliquez sur la **playlist** dans la liste des résultats de la recherche, puis cliquez sur **Modifier** dans le menu contextuel. Vous pouvez également prévisualiser l'ensemble de la liste de lecture dans une fenêtre d'audition contextuelle, dupliquer ou supprimer l'une de vos listes de lecture à partir de ce menu.
 
-### Auto loading playlists
+### Chargement automatique des playlists
 
-LibreTime will schedule tracks from a selected playlist an hour before a show is scheduled to air. This is a great way to automatically schedule weekly shows which are received via. podcasts.
+LibreTime programmera les pistes d'une liste de lecture sélectionnée une heure avant la diffusion d'une émission. C'est un excellent moyen de programmer automatiquement des émissions hebdomadaires qui sont reçues via des podcasts.
 
-## Creating a Smartblock
+## Création d'un bloc intelligent ( smartblock)
 
 ![](./playlists-smartblock-options.png)
 
-Smart blocks are automatically filled with media files from the LibreTime library, according to the criteria that you specify. This feature is intended to save staff time, compared to selecting items for a playlist manually, and can be used to schedule shows that operate in a consistent format.
+Les blocs intelligents sont automatiquement remplis de fichiers média de la bibliothèque LibreTime, selon les critères que vous spécifiez. Cette fonction est destinée à faire gagner du temps au personnel, par rapport à la sélection manuelle d'éléments pour une liste de lecture, et peut être utilisée pour programmer des qui fonctionnent dans un format cohérent.
 
-To create a smart block, click the **Smartblocks** button on the left sidebar, and select **New** from the toolbar. Like a playlist, smart blocks can have a title and description, which you can edit. This helps you find relevant smart blocks in searches.
+Pour créer un bloc intelligent, cliquez sur le bouton **bloc intelligent** dans la barre latérale gauche, puis sélectionnez Nouveau dans la barre d'outils. Comme pour les listes de lecture, les blocs intelligents peuvent avoir un titre et une description, que vous pouvez modifier. Cela vous aide à trouver des blocs intelligents pertinents dans les recherches.
 
-Fill out the smart block's **Name**, **Search Criteria**, and **Limit to** sections. The search criteria can be any one of LibreTime's metadata categories, such as **Title**, **Creator** or **Genre**. The modifier depends on whether the metadata in question contains letters or numbers. For example, **Title** has modifiers including _contains_ and _starts with_, whereas the modifiers for **BPM** include _is greater than_ and _is in the range_.
+Remplissez les sections **Nom**, **Critères de recherche** et **Limiter à**. Le critère de recherche peut être n'importe quelle catégorie de métadonnées de LibreTime, comme le **titre**, le.a **créateur.ice** ou le **genre**. Le modificateur dépend du fait que la métadonnée en question contient des lettres ou des chiffres. Par exemple, \*\*Titre a des modificateurs tels que contains et starts with, alors que les modificateurs pour BPM incluent is greater than et is in the range.
 
-If you have a large number of files which meet the criteria that you specify, you may wish to limit the duration of the smart block using the **Limit to** field, so that it fits within the show you have in mind. Select **hours**, **minutes** or **items** from the drop-down menu, and click the **Generate** button again, if it is a static smart block. Then click the **Save** button.
+Si vous disposez d'un grand nombre de fichiers qui répondent aux critères que vous spécifiez, vous pouvez limiter la durée du bloc intelligent à l'aide du champ
+Remplissez les sections **Nom**, **Critères de recherche** et **Limiter à**. Le critère de recherche peut être n'importe quelle catégorie de métadonnées de LibreTime, comme le **Limiter à**, afin qu'il s'inscrive dans le cadre du spectacle que vous avez en tête. Sélectionnez des heures, des minutes ou des éléments dans le menu déroulant, puis cliquez à nouveau sur le bouton **Générer** s'il s'agit d'un bloc intelligent statique. Cliquez ensuite sur le bouton **Enregistrer**.
 
 :::note
 
-Smart Blocks by default will not overflow the length of a scheduled show. This is to prevent tracks from being cut-off because they exceed the time limit of a show. If you want a smartblock to schedule tracks until it is longer than the Time Limit you can check **"Allow last track to exceed time limit"** (helpful for avoiding dead air on autoscheduled shows).
+Par défaut, les blocs intelligents ne dépasseront pas la durée d'un spectacle programmé. Cela permet d'éviter que des pistes soient coupées parce qu'elles dépassent la limite de temps d'un spectacle. Si vous souhaitez qu'un bloc intelligent programme des pistes jusqu'à ce qu'il soit plus long que la limite de temps, vous pouvez cocher la case **Autoriser la dernière piste à dépasser la limite de temps** (utile pour éviter les temps morts dans les émissions programmées automatiquement).
 
 :::
 
 ![](./playlists-smartblock-advanced.png)
 
-You can also set the **smart block type**. A **Static** smart block will save the criteria and generate the block content immediately. This enables you to edit the contents of the block in the **Library** page before adding it to a show. A **Dynamic** smart block will only save the criteria, and the specific content will be generated at the time the block is added to a show. After that, the content of the show can be changed or re-ordered in the **Now Playing** page.
+Vous pouvez également définir le type de bloc intelligent. Un bloc intelligent **statique** enregistre les critères et génère le contenu du bloc immédiatement. Cela vous permet de modifier le contenu du bloc dans la page **Bibliothèque** avant de l'ajouter à une émission. Un bloc intelligent **dynamique** enregistre uniquement les critères et le contenu spécifique est généré au moment où le bloc est ajouté à une présentation. Ensuite, le contenu de l'émission peut être modifié ou réorganisé dansla page **lecture en cours**.
 
-Click the **plus button** on the left to add OR criteria, such as **Creator** containing _beck_ OR _jimi_. To add AND criteria, such as **Creator** containing _jimi_ AND BPM in the range _120_ to _130_, click the **plus button** on the right. (The criteria are not case sensitive). Click **Preview** to see the results.
+Cliquez sur le bouton plus à gauche pour ajouter des critères OR, tels que les créateur.ice contenant "beck" OR "jimi". Pour ajouter des critères ET, tels que Créateur.ice contenant "jimi" ET BPM compris entre 120 et 130, cliquez sur le bouton plus à droite. (Les critères ne sont pas sensibles à la casse). Cliquez sur **Aperçu** pour voir les résultats.
 
-:::tip
+:::conseil
 
-If you see the message **0 files meet the criteria**, it might mean that the files in the Library have not been tagged with the correct metadata. See the chapter [Preparing media](./preparing-media.md) for tips on tagging content.
-
+Si vous voyez le message 0 fichier répond aux critères, cela peut signifier que les fichiers de la bibliothèque n'ont pas été étiquetés avec les métadonnées correctes. Consultez le chapitre **Préparation des médias** pour obtenir des conseils sur le balisage du contenu.
 :::
 
 ![](./playlists-smartblock-content.png)
 
-If you don't like the ordering which is generated, click the **Shuffle** button, or drag and drop the smart block contents into the order that you prefer. You can also remove items or add new items manually from the Library. Changes to static smart block contents are saved automatically when you add items, remove or re-order them, or click the **Generate** button. Click the **Save** button in the upper right corner to save any changes to smart block criteria.
+Si vous n'aimez pas l'ordre qui est généré, cliquez sur le bouton **Aléatoire** ou faites glisser et déposez le contenu du bloc intelligent dans l'ordre que vous préférez. Vous pouvez également supprimer des éléments ou en ajouter de nouveaux manuellement à partir de la bibliothèque. Les modifications apportées au contenu des blocs intelligents statiques sont enregistrées automatiquement lorsque vous ajoutez des éléments, les supprimez ou les réorganisez, ou lorsque vous cliquez sur le bouton **Générer**. Cliquez sur le bouton **Enregistrer** dans le coin supérieur droit pour enregistrer les modifications apportées aux critères du bloc intelligent.
 
-By default, a smart block will not contain repeated items, which will limit the duration of the block if you do not have sufficient items meeting the specified criteria in your **Library**. To override the default behaviour, check the **Allow Repeat Tracks** box. The **Sort tracks by** menu offers the options of **random**, **newest** or **oldest** items first.
+Par défaut, un bloc intelligent ne contient pas d'éléments répétés, ce qui limite la durée du bloc si votre **bibliothèque** ne contient pas suffisamment d'éléments répondant aux critères spécifiés. Pour ignorer le comportement par défaut, cochez la case **Autoriser les pistes répétées**. Le menu **Trier les pistes par** offre les options suivantes : **aléatoire**, **éléments les plus récents** ou **les plus anciens en premier**.
 
-Smart blocks can be added to shows in the same way as a manually created playlist is added. Smart blocks can also be added to one or more playlists. In the case of a playlist containing a static smart block, click **Expand Static Block** to view the contents. For a dynamic smart block, you can review the criteria and duration limit by clicking **Expand Dynamic Block**.
+Les blocs intelligents peuvent être ajoutés aux spectacles de la même manière qu'une liste de lecture créée manuellement. Les blocs intelligents peuvent également être ajoutés à une ou plusieurs listes de lecture. Dans le cas d'une liste de lecture contenant un bloc intelligent statique, cliquez sur **Développer le bloc statique** pour en afficher le contenu. Pour un bloc intelligent dynamique, vous pouvez examiner les critères et la durée limite en cliquant sur **Développer le bloc dynamique**.
 
-Once created, smart blocks can be found under the Smartblocks tab and refined at any time. They can be re-opened by right-clicking on the smart block and selecting **Edit** from the pop-up menu.
+Une fois créés, les blocs intelligents peuvent être trouvés sous l'onglet **bloc intelligent** et affinés à tout moment. Vous pouvez les rouvrir en cliquant avec le bouton droit de la souris sur le bloc intelligent et en sélectionnant **Editer** dans le menu contextuel.

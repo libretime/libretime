@@ -2,17 +2,17 @@
 title: Podcasts
 ---
 
-The Podcasts page allows you add subscriptions to podcasts which are often used to syndicated audio files using a URL called a RSS feed. This allows your LibreTime instance to automatically download new shows from the web.
+La page Podcasts vous permet d'ajouter des abonnements à des podcasts qui sont souvent utilisés pour syndiquer des fichiers audio en utilisant une URL appelée flux RSS. Cela permet à votre instance LibreTime de télécharger automatiquement les nouvelles émissions depuis le web.
 
 :::info
 
-All podcasts available on iTunes have a RSS feed but it is sometimes hidden. See issue [#510](https://github.com/libretime/libretime/issues/510) for more information. RSS feeds that do not end in _.xml_ may be accepted by LibreTime yet fail to download episodes. A work-around is to download the episode using a podcast client such as [gpodder](https://gpodder.github.io/) and then manually upload and schedule the episode.
+Tous les podcasts disponibles sur iTunes ont un flux RSS mais celui-ci est parfois caché. Voir le problème n°510 pour plus d'informations. Les flux RSS qui ne se terminent pas par .xml peuvent être acceptés par LibreTime mais ne pas télécharger les épisodes. Une solution consiste à télécharger l'épisode à l'aide d'un client de podcast tel que gpodder, puis à télécharger et programmer manuellement l'épisode.
 
-Podcast feeds coming from Anchor.fm have been known to have a similar issue.
+Les flux de podcast provenant d'Anchor.fm sont connus pour avoir un problème similaire.
 
 :::
 
-The podcast interfaces provides you with the ability to generate [Smartblocks](./playlists.md) that can be used in conjunction with autoloading playlists to schedule the newest episode of a podcast without human intervention.
+Les interfaces de podcast vous permettent de générer des Smartblocks [Smartblocks](./playlists.md) qui peuvent être utilisés en conjonction avec des listes de lecture automatiques pour programmer l'épisode le plus récent d'un podcast sans intervention humaine.
 
 <iframe
     width="560"
@@ -23,23 +23,21 @@ The podcast interfaces provides you with the ability to generate [Smartblocks](.
     allowfullscreen
 ></iframe>
 
-### Podcasts dashboard
+### Tableau de bord des podcasts
 
 ![](./podcasts-podcasts_dashboard.png)
 
-The podcasts dashboard is similar to the tracks view, allowing you to add, edit, and remove
-podcasts by the toolbar, in addition to sorting by columns.
+Le tableau de bord des podcasts est similaire à la vue des pistes, vous permettant d'ajouter, de modifier et de supprimer des podcasts par la barre d'outils, en plus du tri par colonnes.
 
-To add a podcast, click on the **+ Add** button on the toolbar and provide the podcast's RSS feed, which usually ends in _.xml_.
-Once the podcast's feed is recognized, the editor pane opens for the podcast.
+Pour ajouter un podcast, cliquez sur le bouton **+ Ajouter** de la barre d'outils et fournissez le flux RSS du podcast, qui se termine généralement par .xml. Une fois le flux du podcast reconnu, le panneau d'édition s'ouvre pour le podcast.
 
-### Editor
+### Éditeur
 
 ![](./podcasts-podcasts_editor.png)
 
-In the podcasts editor, you can rename the podcast, update settings for the podcast, and manage episodes.
-A search box is available to search for episodes within the feed.
+Dans l'éditeur de podcasts, vous pouvez renommer le podcast, mettre à jour les paramètres du podcast et gérer les épisodes.
+Un champ de recherche est disponible pour rechercher des épisodes dans le flux.
 
-- To import an episode directly into LibreTime, double-click on an episode or select it and click **+ Import**. The podcast will appear under tracks with the Podcast Name as the Album.
-- To delete an episode from LibreTime, select the episode and click on the red trash can on the toolbar.
-- If you would like LibreTime to automatically download the latest episodes of a podcast, make sure _Download latest episodes_ is checked. This can be used in conjunction with Smartblocks and Playlists to automate downloading and scheduling shows that are received via podcast feed.
+- Pour importer un épisode directement dans LibreTime, double-cliquez sur un épisode ou sélectionnez-le et cliquez sur **+ Importer**. Le podcast apparaîtra sous les pistes avec le nom du podcast comme album.
+- Pour supprimer un épisode de LibreTime, sélectionnez l'épisode et cliquez sur la poubelle rouge de la barre d'outils.
+- Si vous souhaitez que LibreTime télécharge automatiquement les derniers épisodes d'un podcast, assurez-vous que l'option ùùTélécharger les derniers épisodes\*\* est cochée. Cette option peut être utilisée en conjonction avec les Smartblocks et les Playlists pour automatiser le téléchargement et la programmation d'émissions reçues via le flux de podcasts.

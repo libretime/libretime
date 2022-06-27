@@ -11,18 +11,18 @@ title: Webstreams
     allowfullscreen
 ></iframe>
 
-## Adding a webstream
+## Ajouter un flux web
 
-A web stream URL and metadata can be added to the LibreTime library, so that a remote stream can be searched for and scheduled to be _pulled_ into a show. For example, at the top of the hour your station may pull a news report from journalists working in another studio. This is a different concept from **Master Source** and **Show Source** remote streams which are _pushed_ into the LibreTime playout schedule.
+Une URL de flux web et des métadonnées peuvent être ajoutées à la bibliothèque LibreTime, afin qu'un flux distant puisse être recherché et programmé pour être intégré à une émission. Par exemple, au début de l'heure, votre station peut extraire un reportage des journalistes travaillant dans un autre studio. Il s'agit d'un concept différent de celui des flux distants Master Source et Show Source qui sont poussés dans le programme de diffusion de LibreTime.
 
-To add a web stream, click the **+ New** button on the left side of the Webstreams page. Like a playlist, web streams in the Library can have a title and **Description**, which may help you find them in searches later.
+Pour ajouter un flux Web, cliquez sur le bouton **+ Nouveau** sur le côté gauche de la page Flux web. Comme une liste de lecture, les flux Web dans la bibliothèque peuvent avoir un titre et une description, ce qui peut vous aider à les retrouver dans des recherches ultérieures.
 
 ![](./webstreams-webstream.jpg)
 
-The **Stream URL** setting must include the _port number_ (such as 8000) and _mount point_ (such as remote_stream) of the remote stream, in addition to the streaming server name. A **Default Length** for the remote stream can also be set. If the stream is added at the end of a show which becomes overbooked as a result, it will be faded out when the show ends.
+Le paramètre **Stream URL** doit inclure le numéro de port (tel que 8000) et le point de montage (tel que remote_stream) du flux distant, en plus du nom du serveur de streaming. Une **longueur par défaut** pour le flux distant peut également être définie. Si le flux est ajouté à la fin d'une émission qui, de ce fait, est surbookée, il sera supprimé à la fin de l'émission.
 
 :::note
 
-LibreTime checks the remote webstream's status upon editing stream settings, so an offline stream will result in an error. There are many tools such as [BUTT](https://danielnoethen.de/butt/) and [MIXXX](https://www.mixxx.org) that can be used to send a test stream to LibreTime can save it; read more [here](./live-broadcast.md).
+LibreTime vérifie le statut du flux web distant lors de l'édition des paramètres du flux, donc un flux hors ligne entraînera une erreur. Il existe de nombreux outils tels que [BUTT](https://danielnoethen.de/butt/) et [MIXXX](https://www.mixxx.org) qui peuvent être utilisés pour envoyer un flux de test à LibreTime peut le sauvegarder ; lisez plus [ici](./live-broadcast.md).
 
 :::

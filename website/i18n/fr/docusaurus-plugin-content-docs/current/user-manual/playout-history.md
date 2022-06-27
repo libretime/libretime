@@ -1,54 +1,54 @@
 ---
-title: Playout history
+title: Historique de diffusion
 ---
 
-On the History menu, the **Playout History** page enables you to view a list of files played within a specific date and time range. This page is designed to help your station prepare reports for music royalty collection societies and regulatory agencies.
+Dans la page **Statistiques**, le menu **Historique de diffusion** vous permet d'afficher une liste des fichiers lus dans une plage de dates et d'heures spécifique. Cette page est conçue pour aider votre station à préparer les rapports destinés aux sociétés de perception des droits musicaux et aux organismes de réglementation.
 
-Search results can be copied to the clipboard using the **Copy** button, exported as data in **CSV** format (comma separated values), exported as a document in **PDF** format, or displayed in a printer-friendly format using the **Print** button. (Your web browser must have an Adobe Flash plugin installed for these buttons to appear). Press the **Esc** key to return to the LibreTime interface once the print job is complete.
+Les résultats de la recherche peuvent être copiés dans le presse-papiers à l'aide du bouton **Copier**, exportés sous forme de données au format **CSV** (comma separated values), exportés sous forme de document au format **PDF** ou affichés dans un format imprimable à l'aide du bouton **Imprimer**. (Votre navigateur web doit avoir un plugin Adobe Flash installé pour que ces boutons apparaissent). Une fois l'impression terminée, appuyez sur la touche \*\*Escùù pour revenir à l'interface LibreTime.
 
-This page has three tabs: **Log Sheet**, **File Summary** and **Show Summary**. On any of these tabs, you can select a date and time range by clicking the calendar and clock icons in the upper left corner of the page. Then click the search button, which has a magnifying glass icon, to the right. A list of files played during that date and time range will appear further down the page.
+Cette page comporte trois onglets : **log sheet**, **file summary** ,**show summary**. Sur chacun de ces onglets, vous pouvez sélectionner une plage de dates et d'heures en cliquant sur les icônes de calendrier et d'horloge dans le coin supérieur gauche de la page. Cliquez ensuite sur le bouton de recherche, qui comporte une icône en forme de loupe, à droite. Une liste des fichiers lus pendant cette période apparaîtra plus bas sur la page.
 
 ![](./playout-history-log-sheet.png)
 
-In the **Log Sheet** tab, the playout history is sorted by **Start Time** and **End Time** by default.
+Dans l'onglet **Log Sheet**, l'historique de la lecture est trié par défaut par **Heure de début** et **Heure de fin**.
 
-The number of times each file was played and the length of the files are shown in the **File Summary** tab. To make optimal use of this feature for royalty reporting purposes, music files must be tagged with **Composer** and **Copyright** metadata. The artist performing a piece of music may not be the original composer of the work, or the copyright holder of the sound recording.
+Le nombre de fois que chaque fichier a été lu et la longueur des fichiers sont indiqués dans l'onglet **file summary**. Pour une utilisation optimale de cette fonctionnalité à des fins de déclaration de redevances, les fichiers musicaux doivent être étiquetés avec les métadonnées **Composer** et **Copyright**. L'artiste qui interprète un morceau de musique peut ne pas être le compositeur original de l'œuvre, ni le détenteur des droits d'auteur de l'enregistrement sonore.
 
-On the **Show Summary** tab, click the name of a show within the search range to expand its row and see its playout details.
+Dans l'onglet **show summary**, cliquez sur le nom d'un spectacle dans la plage de recherche pour développer sa ligne et voir les détails de sa diffusion.
 
-### Manual logging
+### Enregistrement manuel
 
-If your station features playout from analogue sources such as turntables or microphones, there is no automatic metadata for LibreTime to collect from these inputs. To ensure that the playout history is complete, you can add log entries manually by clicking the **+ Create Entry** button. This action opens a pop-up window with default fields of Start Time, End Time, Title and Creator. Click the **Find** button to automatically fill the **Choose Show Instance** menu with the names of shows that took place within the specified time range. Then click the **Save** button to enter the new item into the playout history.
+Si votre station dispose d'une diffusion à partir de sources analogiques telles que des platines ou des microphones, LibreTime ne collecte pas automatiquement les métadonnées de ces entrées. Pour vous assurer que l'historique des diffusions est complet, vous pouvez ajouter des entrées manuellement en cliquant sur le bouton **+ Créer une nouvelle entrée de log**. Cette action ouvre une fenêtre pop-up avec des champs par défaut de Start Time, End Time, Title et Creator. Cliquez sur le bouton **Find** pour remplir automatiquement le menu **Choose Show Instance** avec les noms des émissions qui ont eu lieu dans la plage de temps spécifiée. Cliquez ensuite sur le bouton **Enregistrer** pour entrer le nouvel élément dans l'historique de diffusion.
 
-Log entries can also be manually deleted, using the button with the trashcan icon, to the right of the **+ Create Entry** button. Pages of entries can be selected for deletion using the **Select** drop-down menu.
+Les entrées du journal peuvent également être supprimées manuellement, en utilisant le bouton avec l'icône de la corbeille, à droite du bouton **+ Créer une entrée**. Les pages des entrées peuvent être sélectionnées pour être supprimées à l'aide du menu déroulant **Sélectionner**.
 
-## History templates
+## Modèle d'historique
 
 ![](./playout-history-history-templates.png)
 
-The **History Templates** page on the History menu enables you to prepare reports with the exact content required by regulatory agencies in the territories that you are broadcasting to. You can begin creating a custom template by clicking the button **New Log Sheet Template** or the button **New File Summary Template**.
+La page **Modèles d'historique** du menu **Historique** vous permet de préparer des rapports dont le contenu exact est exigé par les organismes de réglementation des territoires sur lesquels vous diffusez. Vous pouvez commencer à créer un modèle personnalisé en cliquant sur le bouton **new log sheet template** (Nouveau modèle de feuille de route) ou sur le bouton ** new file summery template** (Nouveau modèle de résumé de fichier).
 
 ![](./playout-history-new-hist-temp.png)
 
-Either of these actions opens a page in which you can name the new template, and add or remove elements from the list on the left. To add a new element from the list on the right, click the plus icon for the item you require. If the element you require is not listed, you can use the **Add New Field** box at the lower end of the right side column. Select _string_, _boolean_, _integer_, or _float_, depending on the type of data that you wish to log, and then click the **+ Add** button.
+L'une ou l'autre de ces actions ouvre une page dans laquelle vous pouvez nommer le nouveau modèle, et ajouter ou supprimer des éléments de la liste de gauche. Pour ajouter un nouvel élément dans la liste de droite, cliquez sur l'icône plus correspondant à l'élément souhaité. Si l'élément dont vous avez besoin ne figure pas dans la liste, vous pouvez utiliser la case **Ajouter un nouveau champ** située en bas de la colonne de droite. Sélectionnez _string_, _boolean_, _integer_, or _float_, selon le type de données que vous souhaitez enregistrer, puis cliquez sur le bouton **+ Ajouter**.
 
-When the template is in the format you require, click the **Save** button, and **Set Default Template** if you wish. The new template will now be listed on the History Templates page. If you have set a new default template, any changes will be visible on the tabs of the Playout History page.
+Lorsque le modèle a le format souhaité, cliquez sur le bouton **Enregistrer**, puis sur **Définir le modèle par défau**t si vous le souhaitez. Le nouveau modèle sera désormais répertorié sur la page **Modèles d'historique**. Si vous avez défini un nouveau modèle par défaut, les modifications seront visibles sur les onglets de la page Historique de diffusion.
 
-## Exporting the schedule {#exporting}
+## Exportation de la programmation #exporting}
 
-LibreTime has a feature which enables your station's show and schedule information to be displayed on remote websites. This feature is included in LibreTime because you would not usually invite the general public to access your LibreTime server directly. If you had very large numbers of people requesting data from the LibreTime server at once, the burst of network traffic might overload the server, potentially disrupting your broadcasts. If carried out maliciously, this network overload is known as a _denial of service attack_.
+LibreTime dispose d'une fonctionnalité qui permet d'afficher les informations relatives aux émissions et à la programmation de votre station sur des sites web distants. Cette fonctionnalité est incluse dans LibreTime car vous n'invitez généralement pas le grand public à accéder directement à votre serveur LibreTime. Si un très grand nombre de personnes demandaient des données au serveur LibreTime en même temps, l'explosion du trafic réseau pourrait surcharger le serveur et potentiellement perturber vos émissions. Si elle est malveillante, cette surcharge du réseau est connue comme une attaque par déni de service.
 
-Instead, your public-facing web server can retrieve the schedule information from the LibreTime API. It can be presented using Javascript widgets and styled with CSS, in any format that you require.
+Au lieu de cela, votre serveur web accessible au public peut récupérer les informations relatives aux horaires à partir de l'API LibreTime. Elles peuvent être présentées à l'aide de widgets Javascript et stylisées avec CSS, dans le format que vous souhaitez.
 
-There are two kinds of information that can be retrieved remotely from the LibreTime API without authentication; the metadata for the current show plus the following show (live-info), or the schedule for the current week and the week ahead (week-info). The week-info metadata includes show names, times, and individual show URLs on your public website. That way, the audience for your station can click through from the schedule information to find out more about a particular show, or download a previous show recording that you might have made available.
+Deux types d'informations peuvent être récupérés à distance depuis l'API de LibreTime sans authentification : les métadonnées de l'émission en cours et de l'émission suivante (live-info), ou la programmation de la semaine en cours et de la semaine à venir (week-info). Les métadonnées week-info comprennent les noms des émissions, les heures et les URL des émissions individuelles sur votre site Web public. Ainsi, le public de votre station peut cliquer sur les informations de la grille pour en savoir plus sur une émission particulière, ou télécharger un enregistrement d'une émission précédente que vous auriez pu mettre à disposition.
 
-If your LibreTime server was accessible at https://libretime.example.com the live show information could be retrieved by your web server using this URL:
+Si votre serveur LibreTime était accessible à l'adresse [https://libretime.example.com](https://libretime.example.com), les informations sur les émissions en direct pourraient être récupérées par votre serveur web en utilisant cette URL :
 
 ```
 https://libretime.example.com/api/live-info/?callback
 ```
 
-The comma-separated text metadata returned to your web server might be something like this:
+Les métadonnées de texte séparées par des virgules renvoyées à votre serveur Web pourraient ressembler à ceci :
 
 ```json
 {
@@ -127,13 +127,13 @@ The comma-separated text metadata returned to your web server might be something
 }
 ```
 
-The information for the current week's schedule could be retrieved using the URL:
+Les informations relatives à l'horaire de la semaine en cours peuvent être récupérées à l'aide de l'URL :
 
 ```
 https://libretime.example.com/api/week-info/?callback
 ```
 
-In this case, the metadata returned would be in a different format from the above example, something like the following. To keep the example short, this particular schedule export only contains four shows on a Monday. A full weekly schedule export would contain a great deal more text.
+Dans ce cas, les métadonnées renvoyées seraient dans un format différent de celui de l'exemple ci-dessus, quelque chose comme ce qui suit. Pour que l'exemple soit bref, cette exportation de programmation particulière ne contient que quatre émissions le lundi. Une exportation de programmation hebdomadaire complète contiendrait beaucoup plus de texte.
 
 ```json
 {
@@ -197,21 +197,21 @@ In this case, the metadata returned would be in a different format from the abov
 }
 ```
 
-If you see the message _You are not allowed to access this resource_ when attempting to display schedule information in your web browser, log in to the LibreTime administration interface, click _System_ in the main menu, then _Preferences_. Set **Allow Remote Websites To Access "Schedule" Info?** to **Enabled**, click the **Save** button, then refresh the browser window opened on the schedule export URL. If you do not wish to make schedule information available to the public, set this option to **Disabled** instead.
+Si vous voyez le message You are not allowed to access this resource (Vous n'êtes pas autorisé à accéder à cette ressource) lorsque vous tentez d'afficher des informations sur les horaires dans votre navigateur Web, connectez-vous à l'interface d'administration de LibreTime, cliquez sur **Système** dans le menu principal, puis sur **Préférences**. Réglez **Allow Remote Websites To Access "Schedule" Info ?** sur **activé** cliquez sur le bouton **Save**, puis rafraîchissez la fenêtre du navigateur ouverte sur l'URL d'exportation des horaires. Si vous ne souhaitez pas mettre les informations de programmation à la disposition du public, définissez plutôt cette option sur **Désactivé**
 
-### Caching schedule information
+### Mise en cache des informations sur les horaires
 
-If the LibreTime server is behind a firewall, or you want to protect the LibreTime server from large numbers of schedule requests, you may wish to cache the schedule information on a public-facing or intermediate server. You can then create a firewall rule that only allows the schedule server to connect to the LibreTime server, in addition to any remote users of the LibreTime web interface.
+Si le serveur LibreTime est derrière un pare-feu, ou si vous voulez protéger le serveur LibreTime d'un grand nombre de requêtes de programmation, vous pouvez mettre en cache les informations de programmation sur un serveur public ou intermédiaire. Vous pouvez alors créer une règle de pare-feu qui n'autorise que le serveur de programmation à se connecter au serveur LibreTime, en plus de tous les utilisateurs distants de l'interface web de LibreTime.
 
-Your system administrator can set up schedule caching on a standard Apache and PHP enabled web server with the _curl_ program installed, using the following steps:
+Votre administrateur système peut configurer la mise en cache des horaires sur un serveur web standard Apache et PHP avec le programme curl installé, en suivant les étapes suivantes :
 
-1. Create a shell script on the schedule server (schedule.example.com) that polls the remote LibreTime server (libretime.example.com), and writes the metadata returned into a pair of local temporary files:
+1. Créez un script shell sur le serveur de planification (schedule.example.com) qui interroge le serveur LibreTime distant (libretime.example.com), et écrit les métadonnées retournées dans une paire de fichiers temporaires locaux :
 
 ```
 sudo nano /usr/local/bin/libretime-schedule.sh
 ```
 
-The content of this file should be like the following script, replacing libretime.example.com with the name of your LibreTime server:
+Le contenu de ce fichier doit ressembler au script suivant, en remplaçant libretime.example.com par le nom de votre serveur LibreTime :
 
 ```bash
 #!/bin/sh
@@ -221,19 +221,19 @@ curl -s "https://libretime.example.com/api/live-info/?callback=***" > /tmp/live-
 curl -s "https://libretime.example.com/api/week-info/?callback=***" > /tmp/week-info
 ```
 
-2. Make the script executable:
+2. Rendez le script exécutable :
 
 ```
 sudo chmod +x /usr/local/bin/libretime-schedule.sh
 ```
 
-3. Create an Apache VirtualHost configuration for the schedule server:
+3. Créez une configuration VirtualHost Apache pour le serveur de planification :
 
 ```
 sudo nano /etc/apache2/sites-available/schedule
 ```
 
-containing a definition like the following, replacing `schedule.example.com` with the name of your schedule server:
+contenant une définition comme la suivante, en remplaçant schedule.example.com par le nom de votre serveur de planification :
 
 ```apacheconf
     <VirtualHost *:80>
@@ -242,20 +242,20 @@ containing a definition like the following, replacing `schedule.example.com` wit
     </VirtualHost>
 ```
 
-4. In the schedule server's DocumentRoot folder, create the folders `api/live-info/` and `api/week-info/`
+4. Dans le dossier DocumentRoot du serveur de planification, créez les dossiers api/live-info/ et api/week-info/.
 
 ```bash
 sudo mkdir -p /var/www/schedule/api/live-info/
 sudo mkdir -p /var/www/schedule/api/week-info/
 ```
 
-5. Create an index.php file in the `api/live-info/` folder:
+5. Créez un fichier index.php dans le dossier api/live-info/ :
 
 ```bash
 sudo nano /var/www/schedule/api/live-info/index.php
 ```
 
-containing the following code:
+contenant le code suivant :
 
 ```php
 <?php
@@ -272,13 +272,13 @@ echo $content;
 ?>
 ```
 
-6. Create an index.php file in the `api/week-info/` folder:
+6. Créez un fichier index.php dans le dossier api/week-info/ :
 
 ```
 sudo nano /var/www/schedule/api/week-info/index.php
 ```
 
-containing the following code:
+contenant le code suivant :
 
 ```php
 <?php
@@ -295,36 +295,36 @@ echo $content;
 ?>
 ```
 
-7. Enable the new configuration and reload the Apache web server:
+7. Activez la nouvelle configuration et rechargez le serveur web Apache :
 
 ```bash
 sudo a2ensite schedule
 sudo /etc/init.d/apache2 reload
 ```
 
-8. Create a cron job to run the shell script each minute:
+8. Créez une tâche cron pour exécuter le script shell chaque minute :
 
 ```bash
 sudo nano /etc/cron.d/libretime-schedule
 ```
 
-containing the line:
+contenant la ligne :
 
 ```
 * * * * * www-data /usr/local/bin/libretime-schedule.sh
 ```
 
-The schedule server will now be serving the same show information as the LibreTime server, with a cache lifetime of one minute. You can adjust the cache lifetime by altering the frequency of the cron job that polls the LibreTime server.
+Le serveur de planification va maintenant servir les mêmes informations de spectacle que le serveur LibreTime, avec une durée de vie du cache d'une minute. Vous pouvez ajuster la durée de vie du cache en modifiant la fréquence de la tâche cron qui interroge le serveur LibreTime.
 
-### Pushing schedule information via FTP or SSH
+### Pousser les informations de programmation via FTP ou SSH
 
-If there is no inbound access to the LibreTime server at all, an FTP script can be used to push cached schedule data from LibreTime to an external web server. The standard ftp command should be available on the LibreTime server and the external web server should have a suitably restricted FTP account set up. After following steps 1 and 2 above to export schedule data to a pair of temporary files on the LibreTime server, create a new script on the LibreTime server to automatically make the upload:
+S'il n'y a pas d'accès entrant au serveur LibreTime, un script FTP peut être utilisé pour pousser les données de programmation en cache de LibreTime vers un serveur web externe. La commande ftp standard doit être disponible sur le serveur LibreTime et le serveur web externe doit avoir un compte FTP restreint. Après avoir suivi les étapes 1 et 2 ci-dessus pour exporter les données de programmation vers une paire de fichiers temporaires sur le serveur LibreTime, créez un nouveau script sur le serveur LibreTime pour effectuer automatiquement le téléchargement :
 
 ```
 sudo nano /usr/local/bin/upload-schedule-data.sh
 ```
 
-Replace host, user and password values with appropriate values for your external web server:
+Remplacez les valeurs d'hôte, d'utilisateur et de mot de passe par les valeurs appropriées pour votre serveur Web externe :
 
 ```bash
 #!/bin/sh
@@ -342,6 +342,6 @@ bye
 EOT
 ```
 
-Then make the new script executable and create a cron job to launch it every minute, as in step 8 above. Steps 3 to 7 above should be carried out on the external web server so that it can convert the two temporary files uploaded via FTP into public schedule data.
+Ensuite, rendez le nouveau script exécutable et créez une tâche cron pour le lancer toutes les minutes, comme à l'étape 8 ci-dessus. Les étapes 3 à 7 ci-dessus doivent être exécutées sur le serveur web externe afin qu'il puisse convertir les deux fichiers temporaires téléchargés par FTP en données publiques de planification.
 
-If you have secure shell access (SSH) to the remote web server, you could write a script to use the secure copy command (scp) instead of ftp.
+Si vous disposez d'un accès shell sécurisé (SSH) au serveur web distant, vous pouvez écrire un script pour utiliser la commande de copie sécurisée (scp) au lieu de ftp.

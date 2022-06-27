@@ -1,13 +1,13 @@
 ---
-title: Listener statistics
+title: Statistiques d'audience
 ---
 
-The Listener Stats page on the Analytics menu shows graphs of listener connections to the configured streaming servers for the selected date and time range. On the right side, a green **Status** indicator shows **OK** if the connection to the streaming server is active.
+La page statistiques d'audience du menu Statistiques présente des graphiques de connexions des auditeur.ice.s aux serveurs de streaming configurés pour la date et l'intervalle de temps sélectionnés. Sur le côté droit, un indicateur d'état vert indique **OK** si la connexion au serveur de diffusion en continu est active.
 
 ![](./listener-stats-stream-stats.jpg)
 
-If the status indicator is red, check that the **Admin User** and **Admin Password** settings are correct under **Additional Options** for the named mount point, such as _libretime_128_, on the **Streams** page of the **Settings** menu.
+Si l'indicateur d'état est rouge, vérifiez que les paramètres **Admin User** et **Admin Password** sont corrects sous **Additional Options** pour le nom du point de montage, comme libretime_128, sur la page **Streams** du menu **Settings**.
 
-To choose which particular streams should have statistics displayed, click the check boxes for the individual colour-coded mount points, just below the graph.
+Pour choisir quels flux particuliers doivent avoir des statistiques affichées, cliquez sur les cases à cocher pour les points de montage individuels codés en couleur, juste en dessous du graphique.
 
-By default, statistics for the last 24 hours of streaming are shown. To change this date and time range, click the calendar and clock icons in the lower left corner of the page, then click the magnifying glass icon.
+Par défaut, les statistiques des 24 dernières heures de streaming sont affichées. Pour modifier cette plage de date et d'heures, cliquez sur les icônes de calendrier et d'horloge dans le coin inférieur gauche de la page, puis sur l'icône de la loupe.
