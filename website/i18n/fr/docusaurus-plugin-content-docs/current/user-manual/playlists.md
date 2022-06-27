@@ -53,7 +53,7 @@ Vous pouvez également définir le type de bloc intelligent. Un bloc intelligent
 
 Cliquez sur le bouton plus à gauche pour ajouter des critères OR, tels que les créateur.ice contenant "beck" OR "jimi". Pour ajouter des critères ET, tels que Créateur.ice contenant "jimi" ET BPM compris entre 120 et 130, cliquez sur le bouton plus à droite. (Les critères ne sont pas sensibles à la casse). Cliquez sur **Aperçu** pour voir les résultats.
 
-:::conseil
+:::tip
 
 Si vous voyez le message 0 fichier répond aux critères, cela peut signifier que les fichiers de la bibliothèque n'ont pas été étiquetés avec les métadonnées correctes. Consultez le chapitre **Préparation des médias** pour obtenir des conseils sur le balisage du contenu.
 :::

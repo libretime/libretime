@@ -2,7 +2,7 @@
 title: Dashboard (Tableau de bord)
 ---
 
-:::conseil
+:::tip
 
 Want to listen to LibreTime's output stream? Click **Listen** below the **On Air** light.
 
