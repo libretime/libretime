@@ -7,7 +7,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandParser
 from libretime_shared.files import compute_md5
 
-from ...models import File, TrackType
+from ...models import File, Library
 
 logger = logging.getLogger(__name__)
 
@@ -31,8 +31,8 @@ class Command(BaseCommand):
             required=True,
         )
         parser.add_argument(
-            "--track-type",
-            help="Track type for the new files.",
+            "--library",
+            help="Library for the new files.",
         )
         parser.add_argument(
             "--allowed-extensions",
@@ -59,11 +59,11 @@ class Command(BaseCommand):
         delete_if_exists = options.get("delete_if_exists", False)
 
         path = options.get("path")
-        track_type = options.get("track_type", None)
+        library = options.get("library", None)
         allowed_extensions = options.get("allowed_extensions")
 
         importer = Importer(url, auth_key, delete_after_upload, delete_if_exists)
-        importer.import_dir(Path(path).resolve(), track_type, allowed_extensions)
+        importer.import_dir(Path(path).resolve(), library, allowed_extensions)
 
 
 class Importer:
@@ -85,7 +85,7 @@ class Importer:
 
         return File.objects.filter(md5=file_md5).exists()
 
-    def _upload_file(self, filepath: Path, track_type: Optional[str]) -> None:
+    def _upload_file(self, filepath: Path, library: Optional[str]) -> None:
         try:
             resp = requests.post(
                 f"{self.url}/rest/media",
@@ -94,7 +94,7 @@ class Importer:
                     ("file", (filepath.name, filepath.open("rb"))),
                 ],
                 timeout=30,
-                cookies={"tt_upload": track_type} if track_type is not None else {},
+                cookies={"tt_upload": library} if library is not None else {},
             )
             resp.raise_for_status()
 
@@ -105,7 +105,7 @@ class Importer:
         logger.info(f"deleting {filepath}")
         filepath.unlink()
 
-    def _handle_file(self, filepath: Path, track_type: Optional[str]) -> None:
+    def _handle_file(self, filepath: Path, library: Optional[str]) -> None:
         logger.debug(f"handling file {filepath}")
 
         if not filepath.is_file():
@@ -117,7 +117,7 @@ class Importer:
                 self._delete_file(filepath)
             return
 
-        self._upload_file(filepath, track_type)
+        self._upload_file(filepath, library)
 
         if self.delete_after_upload:
             self._delete_file(filepath)
@@ -125,7 +125,7 @@ class Importer:
     def _walk_dir(
         self,
         path: Path,
-        track_type: Optional[str],
+        library: Optional[str],
         allowed_extensions: List[str],
     ) -> None:
         if not path.is_dir():
@@ -133,28 +133,28 @@ class Importer:
 
         for sub_path in path.iterdir():
             if sub_path.is_dir():
-                self._walk_dir(sub_path, track_type, allowed_extensions)
+                self._walk_dir(sub_path, library, allowed_extensions)
                 continue
 
             if sub_path.suffix.lower() not in allowed_extensions:
                 continue
 
-            self._handle_file(sub_path.resolve(), track_type)
+            self._handle_file(sub_path.resolve(), library)
 
-    def _check_track_type(self, track_type: str) -> bool:
-        return TrackType.objects.filter(code=track_type).exists()
+    def _check_library(self, library: str) -> bool:
+        return Library.objects.filter(code=library).exists()
 
     def import_dir(
         self,
         path: Path,
-        track_type: Optional[str],
+        library: Optional[str],
         allowed_extensions: List[str],
     ) -> None:
-        if track_type is not None and not self._check_track_type(track_type):
-            raise ValueError(f"provided track type {track_type} does not exist")
+        if library is not None and not self._check_library(library):
+            raise ValueError(f"provided library {library} does not exist")
 
         allowed_extensions = [
             (x if x.startswith(".") else "." + x) for x in allowed_extensions
         ]
 
-        self._walk_dir(path, track_type, allowed_extensions)
+        self._walk_dir(path, library, allowed_extensions)

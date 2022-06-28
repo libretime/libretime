@@ -761,6 +761,153 @@ paths:
       responses:
         "204":
           description: No response body
+  /api/v2/libraries/:
+    get:
+      operationId: libraries_list
+      tags:
+        - libraries
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Library"
+          description: ""
+    post:
+      operationId: libraries_create
+      tags:
+        - libraries
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Library"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Library"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Library"
+        required: true
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Library"
+          description: ""
+  /api/v2/libraries/{id}/:
+    get:
+      operationId: libraries_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this library.
+          required: true
+      tags:
+        - libraries
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Library"
+          description: ""
+    put:
+      operationId: libraries_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this library.
+          required: true
+      tags:
+        - libraries
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Library"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Library"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Library"
+        required: true
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Library"
+          description: ""
+    patch:
+      operationId: libraries_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this library.
+          required: true
+      tags:
+        - libraries
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchedLibrary"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/PatchedLibrary"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/PatchedLibrary"
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Library"
+          description: ""
+    delete:
+      operationId: libraries_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this library.
+          required: true
+      tags:
+        - libraries
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+      responses:
+        "204":
+          description: No response body
   /api/v2/listener-counts/:
     get:
       operationId: listener_counts_list
@@ -5013,153 +5160,6 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/track-types/:
-    get:
-      operationId: track_types_list
-      tags:
-        - track-types
-      security:
-        - cookieAuth: []
-        - basicAuth: []
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/TrackType"
-          description: ""
-    post:
-      operationId: track_types_create
-      tags:
-        - track-types
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/TrackType"
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "#/components/schemas/TrackType"
-          multipart/form-data:
-            schema:
-              $ref: "#/components/schemas/TrackType"
-        required: true
-      security:
-        - cookieAuth: []
-        - basicAuth: []
-      responses:
-        "201":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TrackType"
-          description: ""
-  /api/v2/track-types/{id}/:
-    get:
-      operationId: track_types_retrieve
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          description: A unique integer value identifying this track type.
-          required: true
-      tags:
-        - track-types
-      security:
-        - cookieAuth: []
-        - basicAuth: []
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TrackType"
-          description: ""
-    put:
-      operationId: track_types_update
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          description: A unique integer value identifying this track type.
-          required: true
-      tags:
-        - track-types
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/TrackType"
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "#/components/schemas/TrackType"
-          multipart/form-data:
-            schema:
-              $ref: "#/components/schemas/TrackType"
-        required: true
-      security:
-        - cookieAuth: []
-        - basicAuth: []
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TrackType"
-          description: ""
-    patch:
-      operationId: track_types_partial_update
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          description: A unique integer value identifying this track type.
-          required: true
-      tags:
-        - track-types
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PatchedTrackType"
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "#/components/schemas/PatchedTrackType"
-          multipart/form-data:
-            schema:
-              $ref: "#/components/schemas/PatchedTrackType"
-      security:
-        - cookieAuth: []
-        - basicAuth: []
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TrackType"
-          description: ""
-    delete:
-      operationId: track_types_destroy
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          description: A unique integer value identifying this track type.
-          required: true
-      tags:
-        - track-types
-      security:
-        - cookieAuth: []
-        - basicAuth: []
-      responses:
-        "204":
-          description: No response body
   /api/v2/user-tokens/:
     get:
       operationId: user_tokens_list
@@ -5834,6 +5834,10 @@ components:
         id:
           type: integer
           readOnly: true
+        library:
+          type: string
+          nullable: true
+          maxLength: 16
         name:
           type: string
           maxLength: 255
@@ -6082,10 +6086,6 @@ components:
           type: string
           nullable: true
           maxLength: 512
-        track_type:
-          type: string
-          nullable: true
-          maxLength: 16
         edited_by:
           type: string
           format: uri
@@ -6126,6 +6126,29 @@ components:
         - item_url
         - override_album
         - podcast
+    Library:
+      type: object
+      properties:
+        item_url:
+          type: string
+          format: uri
+          readOnly: true
+        name:
+          type: string
+          nullable: true
+          maxLength: 255
+        code:
+          type: string
+          maxLength: 16
+        description:
+          type: string
+          nullable: true
+          maxLength: 255
+        visible:
+          type: boolean
+      required:
+        - code
+        - item_url
     ListenerCount:
       type: object
       properties:
@@ -6256,6 +6279,10 @@ components:
         id:
           type: integer
           readOnly: true
+        library:
+          type: string
+          nullable: true
+          maxLength: 16
         name:
           type: string
           maxLength: 255
@@ -6504,10 +6531,6 @@ components:
           type: string
           nullable: true
           maxLength: 512
-        track_type:
-          type: string
-          nullable: true
-          maxLength: 16
         edited_by:
           type: string
           format: uri
@@ -6534,6 +6557,26 @@ components:
         podcast:
           type: string
           format: uri
+    PatchedLibrary:
+      type: object
+      properties:
+        item_url:
+          type: string
+          format: uri
+          readOnly: true
+        name:
+          type: string
+          nullable: true
+          maxLength: 255
+        code:
+          type: string
+          maxLength: 16
+        description:
+          type: string
+          nullable: true
+          maxLength: 255
+        visible:
+          type: boolean
     PatchedListenerCount:
       type: object
       properties:
@@ -7277,26 +7320,6 @@ components:
         timestamp:
           type: string
           format: date-time
-    PatchedTrackType:
-      type: object
-      properties:
-        item_url:
-          type: string
-          format: uri
-          readOnly: true
-        code:
-          type: string
-          maxLength: 16
-        type_name:
-          type: string
-          nullable: true
-          maxLength: 255
-        description:
-          type: string
-          nullable: true
-          maxLength: 255
-        visibility:
-          type: boolean
     PatchedUser:
       type: object
       properties:
@@ -8232,29 +8255,6 @@ components:
       required:
         - item_url
         - timestamp
-    TrackType:
-      type: object
-      properties:
-        item_url:
-          type: string
-          format: uri
-          readOnly: true
-        code:
-          type: string
-          maxLength: 16
-        type_name:
-          type: string
-          nullable: true
-          maxLength: 255
-        description:
-          type: string
-          nullable: true
-          maxLength: 255
-        visibility:
-          type: boolean
-      required:
-        - code
-        - item_url
     User:
       type: object
       properties:
