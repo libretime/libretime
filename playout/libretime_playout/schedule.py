@@ -80,7 +80,7 @@ def generate_file_events(
         "cue_out": time_in_seconds(time_fromisoformat(schedule["cue_out"])),
         "metadata": file,
         "replay_gain": file["replay_gain"],
-        "filesize": file["filesize"],
+        "filesize": file["size"],
     }
 
     return events
