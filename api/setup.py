@@ -32,15 +32,15 @@ setup(
         ]
     },
     install_requires=[
-        "django~=3.2.13",
-        "djangorestframework~=3.13.1",
-        "django-filter~=21.1.0",
-        "drf-spectacular~=0.22.1",
-        "requests",
+        "django-filter>=2.4.0,<22.0",
+        "django>=3.2.12,<4.0",
+        "djangorestframework>=3.12.1,<3.14",
+        "drf-spectacular>=0.22.1,<0.23",
+        "requests>=2.25.1,<2.29",
     ],
     extras_require={
         "prod": [
-            "psycopg2",
+            "psycopg2>=2.8.6,<2.10",
         ],
         "dev": [
             "django-stubs",
