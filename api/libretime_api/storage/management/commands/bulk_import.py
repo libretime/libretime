@@ -7,6 +7,8 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandParser
 from libretime_shared.files import compute_md5
 
+from ...models import File, TrackType
+
 logger = logging.getLogger(__name__)
 
 DEFAULT_ALLOWED_EXTENSIONS = [
@@ -79,8 +81,6 @@ class Importer:
         self.delete_if_exists = delete_if_exists
 
     def _check_file_md5(self, filepath: Path) -> bool:
-        from ...models import File
-
         file_md5 = compute_md5(filepath)
 
         return File.objects.filter(md5=file_md5).exists()
@@ -142,8 +142,6 @@ class Importer:
             self._handle_file(sub_path.resolve(), track_type)
 
     def _check_track_type(self, track_type: str) -> bool:
-        from ...models import TrackType
-
         return TrackType.objects.filter(code=track_type).exists()
 
     def import_dir(
