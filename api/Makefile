@@ -20,3 +20,6 @@ schema: $(VENV)
 	source $(VENV)/bin/activate
 	DJANGO_SETTINGS_MODULE=libretime_api.settings.testing libretime-api spectacular --file $(SCHEMA_FILE)
 	if command -v npx > /dev/null; then npx prettier --write $(SCHEMA_FILE); fi
+
+schema-foreach-commit:
+	git rebase main -x "$(MAKE) -C api schema"
