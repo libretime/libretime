@@ -2,6 +2,13 @@ from django.db import models
 
 
 class File(models.Model):
+    library = models.CharField(
+        max_length=16,
+        blank=True,
+        null=True,
+        db_column="track_type",
+    )
+
     name = models.CharField(max_length=255)
     mime = models.CharField(max_length=255)
     ftype = models.CharField(max_length=128)
@@ -82,7 +89,6 @@ class File(models.Model):
     filesize = models.IntegerField()
     description = models.CharField(max_length=512, blank=True, null=True)
     artwork = models.CharField(max_length=512, blank=True, null=True)
-    track_type = models.CharField(max_length=16, blank=True, null=True)
 
     def get_owner(self):
         return self.owner

@@ -26,13 +26,13 @@ def _import_paths(tmp_path: Path):
     return (tmp_path, test_file)
 
 
-@pytest.fixture(name="track_type")
-def _track_type():
+@pytest.fixture(name="library")
+def _library():
     return baker.make(
-        "storage.TrackType",
+        "storage.Library",
         code="MUS",
-        type_name="Music",
-        description="Description",
+        name="Music",
+        description="Some music",
     )
 
 
@@ -58,12 +58,12 @@ def _importer(requests_mock: Mocker):
 def test_importer(
     import_paths: Tuple[Path, Path],
     importer: MockImporter,
-    track_type,
+    library,
 ):
-    importer.import_dir(import_paths[0], track_type.code, [".mp3"])
+    importer.import_dir(import_paths[0], library.code, [".mp3"])
 
-    importer._handle_file.assert_called_with(import_paths[1], track_type.code)
-    importer._upload_file.assert_called_with(import_paths[1], track_type.code)
+    importer._handle_file.assert_called_with(import_paths[1], library.code)
+    importer._upload_file.assert_called_with(import_paths[1], library.code)
     importer._delete_file.assert_not_called()
 
 
@@ -71,13 +71,13 @@ def test_importer(
 def test_importer_and_delete(
     import_paths: Tuple[Path, Path],
     importer: MockImporter,
-    track_type,
+    library,
 ):
     importer.delete_after_upload = True
-    importer.import_dir(import_paths[0], track_type.code, [".mp3"])
+    importer.import_dir(import_paths[0], library.code, [".mp3"])
 
-    importer._handle_file.assert_called_with(import_paths[1], track_type.code)
-    importer._upload_file.assert_called_with(import_paths[1], track_type.code)
+    importer._handle_file.assert_called_with(import_paths[1], library.code)
+    importer._upload_file.assert_called_with(import_paths[1], library.code)
     importer._delete_file.assert_called_with(import_paths[1])
 
 
@@ -85,13 +85,13 @@ def test_importer_and_delete(
 def test_importer_existing_file(
     import_paths: Tuple[Path, Path],
     importer: MockImporter,
-    track_type,
+    library,
 ):
     baker.make("storage.File", md5="46305a7cf42ee53976c88d337e47e940")
 
-    importer.import_dir(import_paths[0], track_type.code, [".mp3"])
+    importer.import_dir(import_paths[0], library.code, [".mp3"])
 
-    importer._handle_file.assert_called_with(import_paths[1], track_type.code)
+    importer._handle_file.assert_called_with(import_paths[1], library.code)
     importer._upload_file.assert_not_called()
     importer._delete_file.assert_not_called()
 
@@ -100,25 +100,25 @@ def test_importer_existing_file(
 def test_importer_existing_file_and_delete(
     import_paths: Tuple[Path, Path],
     importer: MockImporter,
-    track_type,
+    library,
 ):
     baker.make("storage.File", md5="46305a7cf42ee53976c88d337e47e940")
 
     importer.delete_if_exists = True
-    importer.import_dir(import_paths[0], track_type.code, [".mp3"])
+    importer.import_dir(import_paths[0], library.code, [".mp3"])
 
-    importer._handle_file.assert_called_with(import_paths[1], track_type.code)
+    importer._handle_file.assert_called_with(import_paths[1], library.code)
     importer._upload_file.assert_not_called()
     importer._delete_file.assert_called_with(import_paths[1])
 
 
 @pytest.mark.django_db
-def test_importer_missing_track_type(
+def test_importer_missing_library(
     import_paths: Tuple[Path, Path],
     importer: MockImporter,
 ):
     with pytest.raises(
         ValueError,
-        match="provided track type MISSING does not exist",
+        match="provided library MISSING does not exist",
     ):
         importer.import_dir(import_paths[0], "MISSING", [".mp3"])
