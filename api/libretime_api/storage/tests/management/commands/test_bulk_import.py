@@ -36,11 +36,17 @@ def _track_type():
     )
 
 
+class MockImporter(Importer):
+    _handle_file: MagicMock
+    _upload_file: MagicMock
+    _delete_file: MagicMock
+
+
 @pytest.fixture(name="importer")
 def _importer(requests_mock: Mocker):
     requests_mock.post(f"{FAKE_URL}/rest/media", status_code=200)
 
-    obj = Importer(FAKE_URL, "auth")
+    obj: MockImporter = Importer(FAKE_URL, "auth")  # type: ignore
     obj._handle_file = MagicMock(wraps=obj._handle_file)
     obj._upload_file = MagicMock(wraps=obj._upload_file)
     obj._delete_file = MagicMock(wraps=obj._delete_file)
@@ -48,10 +54,10 @@ def _importer(requests_mock: Mocker):
     yield obj
 
 
+@pytest.mark.django_db
 def test_importer(
-    db,
     import_paths: Tuple[Path, Path],
-    importer: Importer,
+    importer: MockImporter,
     track_type,
 ):
     importer.import_dir(import_paths[0], track_type.code, [".mp3"])
@@ -61,10 +67,10 @@ def test_importer(
     importer._delete_file.assert_not_called()
 
 
+@pytest.mark.django_db
 def test_importer_and_delete(
-    db,
     import_paths: Tuple[Path, Path],
-    importer: Importer,
+    importer: MockImporter,
     track_type,
 ):
     importer.delete_after_upload = True
@@ -75,10 +81,10 @@ def test_importer_and_delete(
     importer._delete_file.assert_called_with(import_paths[1])
 
 
+@pytest.mark.django_db
 def test_importer_existing_file(
-    db,
     import_paths: Tuple[Path, Path],
-    importer: Importer,
+    importer: MockImporter,
     track_type,
 ):
     baker.make("storage.File", md5="46305a7cf42ee53976c88d337e47e940")
@@ -90,10 +96,10 @@ def test_importer_existing_file(
     importer._delete_file.assert_not_called()
 
 
+@pytest.mark.django_db
 def test_importer_existing_file_and_delete(
-    db,
     import_paths: Tuple[Path, Path],
-    importer: Importer,
+    importer: MockImporter,
     track_type,
 ):
     baker.make("storage.File", md5="46305a7cf42ee53976c88d337e47e940")
@@ -106,10 +112,10 @@ def test_importer_existing_file_and_delete(
     importer._delete_file.assert_called_with(import_paths[1])
 
 
+@pytest.mark.django_db
 def test_importer_missing_track_type(
-    db,
     import_paths: Tuple[Path, Path],
-    importer: Importer,
+    importer: MockImporter,
 ):
     with pytest.raises(
         ValueError,
