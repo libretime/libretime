@@ -121,6 +121,7 @@ class User(AbstractBaseUser):
     def is_superuser(self):
         return self.role == Role.ADMIN
 
+    # pylint: disable=unused-argument
     def get_user_permissions(self, obj=None):
         """
         Users do not have permissions directly, only through groups
@@ -129,14 +130,14 @@ class User(AbstractBaseUser):
 
     def get_group_permissions(self, obj=None):
         permissions = GROUPS[self.role]
-        if obj:
+        if obj is not None:
             obj_name = obj.__class__.__name__.lower()
             permissions = [perm for perm in permissions if obj_name in perm]
         # get permissions objects
-        q = models.Q()
+        query = models.Q()
         for perm in permissions:
-            q = q | models.Q(codename=perm)
-        return list(Permission.objects.filter(q))
+            query = query | models.Q(codename=perm)
+        return list(Permission.objects.filter(query))
 
     def get_all_permissions(self, obj=None):
         return self.get_user_permissions(obj) + self.get_group_permissions(obj)
