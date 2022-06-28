@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2021-10-15 19:56+0200\n"
-"PO-Revision-Date: 2022-06-26 13:19+0000\n"
+"PO-Revision-Date: 2022-06-28 07:22+0000\n"
 "Last-Translator: metezd <itoldyouthat@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/libretime/legacy/"
 "tr/>\n"
@@ -191,7 +191,7 @@ msgstr "Galiçyaca"
 
 #: application/common/LocaleHelper.php:61
 msgid "Guarani"
-msgstr ""
+msgstr "Guarani"
 
 #: application/common/LocaleHelper.php:62
 msgid "Gujarati"
@@ -199,7 +199,7 @@ msgstr "Guceratça"
 
 #: application/common/LocaleHelper.php:63
 msgid "Hausa"
-msgstr ""
+msgstr "Hausa dili"
 
 #: application/common/LocaleHelper.php:64
 msgid "Hindi"
@@ -219,11 +219,11 @@ msgstr "Ermenice"
 
 #: application/common/LocaleHelper.php:68
 msgid "Interlingua"
-msgstr ""
+msgstr "İnterlingua"
 
 #: application/common/LocaleHelper.php:69
 msgid "Interlingue"
-msgstr ""
+msgstr "İnterlingue"
 
 #: application/common/LocaleHelper.php:70
 msgid "Inupiak"
@@ -311,15 +311,15 @@ msgstr "Litvanyaca"
 
 #: application/common/LocaleHelper.php:91
 msgid "Latvian/Lettish"
-msgstr ""
+msgstr "Letonca/Lettçe"
 
 #: application/common/LocaleHelper.php:92
 msgid "Malagasy"
-msgstr ""
+msgstr "Madagaskarca"
 
 #: application/common/LocaleHelper.php:93
 msgid "Maori"
-msgstr ""
+msgstr "Maori dili"
 
 #: application/common/LocaleHelper.php:94
 msgid "Macedonian"
@@ -327,7 +327,7 @@ msgstr "Makedonca"
 
 #: application/common/LocaleHelper.php:95
 msgid "Malayalam"
-msgstr ""
+msgstr "Malayalamca"
 
 #: application/common/LocaleHelper.php:96
 msgid "Mongolian"
@@ -335,7 +335,7 @@ msgstr "Moğolca"
 
 #: application/common/LocaleHelper.php:97
 msgid "Moldavian"
-msgstr ""
+msgstr "Moldovyaca"
 
 #: application/common/LocaleHelper.php:98
 msgid "Marathi"
@@ -371,7 +371,7 @@ msgstr "Norveççe"
 
 #: application/common/LocaleHelper.php:106
 msgid "Occitan"
-msgstr ""
+msgstr "Oksitanca"
 
 #: application/common/LocaleHelper.php:107
 msgid "(Afan)/Oromoor/Oriya"
@@ -379,7 +379,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:108
 msgid "Punjabi"
-msgstr ""
+msgstr "Pencapça"
 
 #: application/common/LocaleHelper.php:109
 msgid "Polish"
@@ -387,7 +387,7 @@ msgstr "Lehçe"
 
 #: application/common/LocaleHelper.php:110
 msgid "Pashto/Pushto"
-msgstr ""
+msgstr "Peştuca/Puşto"
 
 #: application/common/LocaleHelper.php:111
 msgid "Portuguese"
@@ -431,7 +431,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:121
 msgid "Serbo-Croatian"
-msgstr ""
+msgstr "Sırpça-Hırvatça"
 
 #: application/common/LocaleHelper.php:122
 msgid "Singhalese"
