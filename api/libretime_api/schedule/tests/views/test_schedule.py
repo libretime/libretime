@@ -20,8 +20,8 @@ class TestScheduleViewSet(APITestCase):
             mime="audio/mp3",
             filepath=AUDIO_FILENAME,
             length=timedelta(seconds=40.86),
-            cuein=timedelta(seconds=0),
-            cueout=timedelta(seconds=40.8131),
+            cue_in=timedelta(seconds=0),
+            cue_out=timedelta(seconds=40.8131),
         )
         show = baker.make(
             "schedule.ShowInstance",
@@ -32,7 +32,7 @@ class TestScheduleViewSet(APITestCase):
             "schedule.Schedule",
             starts=datetime.now(tz=timezone.utc),
             ends=datetime.now(tz=timezone.utc) + file.length,
-            cue_out=file.cueout,
+            cue_out=file.cue_out,
             instance=show,
             file=file,
         )
@@ -43,7 +43,7 @@ class TestScheduleViewSet(APITestCase):
         self.assertEqual(
             dateparse.parse_datetime(result[0]["ends"]), schedule_item.ends
         )
-        self.assertEqual(dateparse.parse_duration(result[0]["cue_out"]), file.cueout)
+        self.assertEqual(dateparse.parse_duration(result[0]["cue_out"]), file.cue_out)
 
     def test_schedule_item_trunc(self):
         file = baker.make(
@@ -51,8 +51,8 @@ class TestScheduleViewSet(APITestCase):
             mime="audio/mp3",
             filepath=AUDIO_FILENAME,
             length=timedelta(seconds=40.86),
-            cuein=timedelta(seconds=0),
-            cueout=timedelta(seconds=40.8131),
+            cue_in=timedelta(seconds=0),
+            cue_out=timedelta(seconds=40.8131),
         )
         show = baker.make(
             "schedule.ShowInstance",
@@ -83,8 +83,8 @@ class TestScheduleViewSet(APITestCase):
             mime="audio/mp3",
             filepath=AUDIO_FILENAME,
             length=timedelta(seconds=40.86),
-            cuein=timedelta(seconds=0),
-            cueout=timedelta(seconds=40.8131),
+            cue_in=timedelta(seconds=0),
+            cue_out=timedelta(seconds=40.8131),
         )
         show = baker.make(
             "schedule.ShowInstance",
@@ -95,7 +95,7 @@ class TestScheduleViewSet(APITestCase):
             "schedule.Schedule",
             starts=datetime.now(tz=timezone.utc),
             ends=datetime.now(tz=timezone.utc) + file.length,
-            cue_out=file.cueout,
+            cue_out=file.cue_out,
             instance=show,
             file=file,
         )
@@ -103,7 +103,7 @@ class TestScheduleViewSet(APITestCase):
             "schedule.Schedule",
             starts=show.ends + timedelta(minutes=1),
             ends=show.ends + timedelta(minutes=1) + file.length,
-            cue_out=file.cueout,
+            cue_out=file.cue_out,
             instance=show,
             file=file,
         )
@@ -116,7 +116,7 @@ class TestScheduleViewSet(APITestCase):
         self.assertEqual(
             dateparse.parse_datetime(result[0]["ends"]), schedule_item.ends
         )
-        self.assertEqual(dateparse.parse_duration(result[0]["cue_out"]), file.cueout)
+        self.assertEqual(dateparse.parse_duration(result[0]["cue_out"]), file.cue_out)
 
     def test_schedule_item_range(self):
         file = baker.make(
@@ -124,8 +124,8 @@ class TestScheduleViewSet(APITestCase):
             mime="audio/mp3",
             filepath=AUDIO_FILENAME,
             length=timedelta(seconds=40.86),
-            cuein=timedelta(seconds=0),
-            cueout=timedelta(seconds=40.8131),
+            cue_in=timedelta(seconds=0),
+            cue_out=timedelta(seconds=40.8131),
         )
         filter_point = datetime.now(tz=timezone.utc)
 
@@ -138,7 +138,7 @@ class TestScheduleViewSet(APITestCase):
             "schedule.Schedule",
             starts=filter_point,
             ends=filter_point + file.length,
-            cue_out=file.cueout,
+            cue_out=file.cue_out,
             instance=show,
             file=file,
         )
@@ -146,7 +146,7 @@ class TestScheduleViewSet(APITestCase):
             "schedule.Schedule",
             starts=filter_point - timedelta(minutes=5),
             ends=filter_point - timedelta(minutes=5) + file.length,
-            cue_out=file.cueout,
+            cue_out=file.cue_out,
             instance=show,
             file=file,
         )

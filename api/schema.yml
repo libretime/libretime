@@ -5838,50 +5838,53 @@ components:
           type: string
           nullable: true
           maxLength: 16
-        name:
-          type: string
-          maxLength: 255
-        mime:
-          type: string
-          maxLength: 255
-        ftype:
-          type: string
-          maxLength: 128
+        import_status:
+          allOf:
+            - $ref: "#/components/schemas/ImportStatusEnum"
+          minimum: -2147483648
+          maximum: 2147483647
         filepath:
           type: string
           nullable: true
-        import_status:
+        size:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
-        currently_accessing:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-        mtime:
-          type: string
-          format: date-time
+        exists:
+          type: boolean
           nullable: true
-        utime:
+        mime:
           type: string
-          format: date-time
-          nullable: true
-        lptime:
-          type: string
-          format: date-time
-          nullable: true
+          maxLength: 255
         md5:
           type: string
           nullable: true
           maxLength: 32
-        track_title:
-          type: string
+        hidden:
+          type: boolean
           nullable: true
-          maxLength: 512
-        artist_name:
-          type: string
+        accessed:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        scheduled:
+          type: boolean
           nullable: true
-          maxLength: 512
+        part_of_list:
+          type: boolean
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_played_at:
+          type: string
+          format: date-time
+          nullable: true
         bit_rate:
           type: integer
           maximum: 2147483647
@@ -5896,10 +5899,58 @@ components:
           type: string
           nullable: true
           maxLength: 128
+        channels:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
         length:
           type: string
           nullable: true
+        bpm:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        replay_gain:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          nullable: true
+        cue_in:
+          type: string
+          nullable: true
+        cue_out:
+          type: string
+          nullable: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+          maxLength: 512
+        artwork:
+          type: string
+          nullable: true
+          maxLength: 512
+        artist_name:
+          type: string
+          nullable: true
+          maxLength: 512
+        artist_url:
+          type: string
+          nullable: true
+          maxLength: 512
+        original_artist:
+          type: string
+          nullable: true
+          maxLength: 512
         album_title:
+          type: string
+          nullable: true
+          maxLength: 512
+        track_title:
           type: string
           nullable: true
           maxLength: 512
@@ -5907,10 +5958,11 @@ components:
           type: string
           nullable: true
           maxLength: 64
-        comments:
+        mood:
           type: string
           nullable: true
-        year:
+          maxLength: 64
+        date:
           type: string
           nullable: true
           maxLength: 16
@@ -5919,37 +5971,22 @@ components:
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
-        channels:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-          nullable: true
-        url:
-          type: string
-          nullable: true
-          maxLength: 1024
-        bpm:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-          nullable: true
-        rating:
-          type: string
-          nullable: true
-          maxLength: 8
-        encoded_by:
-          type: string
-          nullable: true
-          maxLength: 255
         disc_number:
           type: string
           nullable: true
           maxLength: 8
-        mood:
+        comment:
           type: string
           nullable: true
-          maxLength: 64
+        language:
+          type: string
+          nullable: true
+          maxLength: 512
         label:
+          type: string
+          nullable: true
+          maxLength: 512
+        copyright:
           type: string
           nullable: true
           maxLength: 512
@@ -5957,25 +5994,29 @@ components:
           type: string
           nullable: true
           maxLength: 512
-        encoder:
-          type: string
-          nullable: true
-          maxLength: 64
-        checksum:
-          type: string
-          nullable: true
-          maxLength: 256
-        lyrics:
-          type: string
-          nullable: true
-        orchestra:
-          type: string
-          nullable: true
-          maxLength: 512
         conductor:
           type: string
           nullable: true
           maxLength: 512
+        orchestra:
+          type: string
+          nullable: true
+          maxLength: 512
+        encoder:
+          type: string
+          nullable: true
+          maxLength: 64
+        encoded_by:
+          type: string
+          nullable: true
+          maxLength: 255
+        isrc:
+          type: string
+          nullable: true
+          maxLength: 512
+        lyrics:
+          type: string
+          nullable: true
         lyricist:
           type: string
           nullable: true
@@ -5984,15 +6025,23 @@ components:
           type: string
           nullable: true
           maxLength: 512
-        radio_station_name:
+        subject:
           type: string
           nullable: true
           maxLength: 512
+        contributor:
+          type: string
+          nullable: true
+          maxLength: 512
+        rating:
+          type: string
+          nullable: true
+          maxLength: 8
+        url:
+          type: string
+          nullable: true
+          maxLength: 1024
         info_url:
-          type: string
-          nullable: true
-          maxLength: 512
-        artist_url:
           type: string
           nullable: true
           maxLength: 512
@@ -6000,15 +6049,7 @@ components:
           type: string
           nullable: true
           maxLength: 512
-        radio_station_url:
-          type: string
-          nullable: true
-          maxLength: 512
         buy_this_url:
-          type: string
-          nullable: true
-          maxLength: 512
-        isrc_number:
           type: string
           nullable: true
           maxLength: 512
@@ -6016,11 +6057,11 @@ components:
           type: string
           nullable: true
           maxLength: 512
-        original_artist:
+        radio_station_name:
           type: string
           nullable: true
           maxLength: 512
-        copyright:
+        radio_station_url:
           type: string
           nullable: true
           maxLength: 512
@@ -6036,73 +6077,27 @@ components:
           type: string
           nullable: true
           maxLength: 512
-        subject:
-          type: string
-          nullable: true
-          maxLength: 512
-        contributor:
-          type: string
-          nullable: true
-          maxLength: 512
-        language:
-          type: string
-          nullable: true
-          maxLength: 512
-        file_exists:
-          type: boolean
-          nullable: true
-        replay_gain:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
-          nullable: true
-        cuein:
-          type: string
-          nullable: true
-        cueout:
-          type: string
-          nullable: true
-        silan_check:
-          type: boolean
-          nullable: true
-        hidden:
-          type: boolean
-          nullable: true
-        is_scheduled:
-          type: boolean
-          nullable: true
-        is_playlist:
-          type: boolean
-          nullable: true
-        filesize:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-        description:
-          type: string
-          nullable: true
-          maxLength: 512
-        artwork:
-          type: string
-          nullable: true
-          maxLength: 512
-        edited_by:
-          type: string
-          format: uri
-          nullable: true
         owner:
           type: string
           format: uri
           nullable: true
+        edited_by:
+          type: string
+          format: uri
+          nullable: true
       required:
-        - currently_accessing
-        - filesize
-        - ftype
+        - accessed
         - id
-        - import_status
         - item_url
         - mime
         - name
+        - size
+    ImportStatusEnum:
+      enum:
+        - 0
+        - 1
+        - 2
+      type: integer
     ImportedPodcast:
       type: object
       properties:
@@ -6283,50 +6278,53 @@ components:
           type: string
           nullable: true
           maxLength: 16
-        name:
-          type: string
-          maxLength: 255
-        mime:
-          type: string
-          maxLength: 255
-        ftype:
-          type: string
-          maxLength: 128
+        import_status:
+          allOf:
+            - $ref: "#/components/schemas/ImportStatusEnum"
+          minimum: -2147483648
+          maximum: 2147483647
         filepath:
           type: string
           nullable: true
-        import_status:
+        size:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
-        currently_accessing:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-        mtime:
-          type: string
-          format: date-time
+        exists:
+          type: boolean
           nullable: true
-        utime:
+        mime:
           type: string
-          format: date-time
-          nullable: true
-        lptime:
-          type: string
-          format: date-time
-          nullable: true
+          maxLength: 255
         md5:
           type: string
           nullable: true
           maxLength: 32
-        track_title:
-          type: string
+        hidden:
+          type: boolean
           nullable: true
-          maxLength: 512
-        artist_name:
-          type: string
+        accessed:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        scheduled:
+          type: boolean
           nullable: true
-          maxLength: 512
+        part_of_list:
+          type: boolean
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_played_at:
+          type: string
+          format: date-time
+          nullable: true
         bit_rate:
           type: integer
           maximum: 2147483647
@@ -6341,10 +6339,58 @@ components:
           type: string
           nullable: true
           maxLength: 128
+        channels:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
         length:
           type: string
           nullable: true
+        bpm:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        replay_gain:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          nullable: true
+        cue_in:
+          type: string
+          nullable: true
+        cue_out:
+          type: string
+          nullable: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+          maxLength: 512
+        artwork:
+          type: string
+          nullable: true
+          maxLength: 512
+        artist_name:
+          type: string
+          nullable: true
+          maxLength: 512
+        artist_url:
+          type: string
+          nullable: true
+          maxLength: 512
+        original_artist:
+          type: string
+          nullable: true
+          maxLength: 512
         album_title:
+          type: string
+          nullable: true
+          maxLength: 512
+        track_title:
           type: string
           nullable: true
           maxLength: 512
@@ -6352,10 +6398,11 @@ components:
           type: string
           nullable: true
           maxLength: 64
-        comments:
+        mood:
           type: string
           nullable: true
-        year:
+          maxLength: 64
+        date:
           type: string
           nullable: true
           maxLength: 16
@@ -6364,37 +6411,22 @@ components:
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
-        channels:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-          nullable: true
-        url:
-          type: string
-          nullable: true
-          maxLength: 1024
-        bpm:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-          nullable: true
-        rating:
-          type: string
-          nullable: true
-          maxLength: 8
-        encoded_by:
-          type: string
-          nullable: true
-          maxLength: 255
         disc_number:
           type: string
           nullable: true
           maxLength: 8
-        mood:
+        comment:
           type: string
           nullable: true
-          maxLength: 64
+        language:
+          type: string
+          nullable: true
+          maxLength: 512
         label:
+          type: string
+          nullable: true
+          maxLength: 512
+        copyright:
           type: string
           nullable: true
           maxLength: 512
@@ -6402,25 +6434,29 @@ components:
           type: string
           nullable: true
           maxLength: 512
-        encoder:
-          type: string
-          nullable: true
-          maxLength: 64
-        checksum:
-          type: string
-          nullable: true
-          maxLength: 256
-        lyrics:
-          type: string
-          nullable: true
-        orchestra:
-          type: string
-          nullable: true
-          maxLength: 512
         conductor:
           type: string
           nullable: true
           maxLength: 512
+        orchestra:
+          type: string
+          nullable: true
+          maxLength: 512
+        encoder:
+          type: string
+          nullable: true
+          maxLength: 64
+        encoded_by:
+          type: string
+          nullable: true
+          maxLength: 255
+        isrc:
+          type: string
+          nullable: true
+          maxLength: 512
+        lyrics:
+          type: string
+          nullable: true
         lyricist:
           type: string
           nullable: true
@@ -6429,15 +6465,23 @@ components:
           type: string
           nullable: true
           maxLength: 512
-        radio_station_name:
+        subject:
           type: string
           nullable: true
           maxLength: 512
+        contributor:
+          type: string
+          nullable: true
+          maxLength: 512
+        rating:
+          type: string
+          nullable: true
+          maxLength: 8
+        url:
+          type: string
+          nullable: true
+          maxLength: 1024
         info_url:
-          type: string
-          nullable: true
-          maxLength: 512
-        artist_url:
           type: string
           nullable: true
           maxLength: 512
@@ -6445,15 +6489,7 @@ components:
           type: string
           nullable: true
           maxLength: 512
-        radio_station_url:
-          type: string
-          nullable: true
-          maxLength: 512
         buy_this_url:
-          type: string
-          nullable: true
-          maxLength: 512
-        isrc_number:
           type: string
           nullable: true
           maxLength: 512
@@ -6461,11 +6497,11 @@ components:
           type: string
           nullable: true
           maxLength: 512
-        original_artist:
+        radio_station_name:
           type: string
           nullable: true
           maxLength: 512
-        copyright:
+        radio_station_url:
           type: string
           nullable: true
           maxLength: 512
@@ -6481,61 +6517,11 @@ components:
           type: string
           nullable: true
           maxLength: 512
-        subject:
-          type: string
-          nullable: true
-          maxLength: 512
-        contributor:
-          type: string
-          nullable: true
-          maxLength: 512
-        language:
-          type: string
-          nullable: true
-          maxLength: 512
-        file_exists:
-          type: boolean
-          nullable: true
-        replay_gain:
-          type: string
-          format: decimal
-          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
-          nullable: true
-        cuein:
-          type: string
-          nullable: true
-        cueout:
-          type: string
-          nullable: true
-        silan_check:
-          type: boolean
-          nullable: true
-        hidden:
-          type: boolean
-          nullable: true
-        is_scheduled:
-          type: boolean
-          nullable: true
-        is_playlist:
-          type: boolean
-          nullable: true
-        filesize:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-        description:
-          type: string
-          nullable: true
-          maxLength: 512
-        artwork:
-          type: string
-          nullable: true
-          maxLength: 512
-        edited_by:
+        owner:
           type: string
           format: uri
           nullable: true
-        owner:
+        edited_by:
           type: string
           format: uri
           nullable: true
