@@ -32,7 +32,6 @@ setup(
         ]
     },
     install_requires=[
-        "coreapi~=2.3.3",
         "django~=3.2.13",
         "djangorestframework~=3.13.1",
         "django-filter~=21.1.0",
