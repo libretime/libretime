@@ -68,3 +68,10 @@ jobs:
       - name: Test
         run: make test
         working-directory: api
+
+      - name: Report coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: api/coverage.xml
+          flags: api
+          name: api
