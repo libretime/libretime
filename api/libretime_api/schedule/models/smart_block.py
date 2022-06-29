@@ -2,21 +2,36 @@ from django.db import models
 
 
 class SmartBlock(models.Model):
+    created_at = models.DateTimeField(blank=True, null=True, db_column="utime")
+    updated_at = models.DateTimeField(blank=True, null=True, db_column="mtime")
+
     name = models.CharField(max_length=255)
-    mtime = models.DateTimeField(blank=True, null=True)
-    utime = models.DateTimeField(blank=True, null=True)
-    creator = models.ForeignKey(
+    description = models.CharField(max_length=512, blank=True, null=True)
+    length = models.DurationField(blank=True, null=True)
+
+    class Kind(models.TextChoices):
+        STATIC = "static", "Static"
+        DYNAMIC = "dynamic", "Dynamic"
+
+    kind = models.CharField(
+        choices=Kind.choices,
+        default=Kind.DYNAMIC,
+        max_length=7,
+        blank=True,
+        null=True,
+        db_column="type",
+    )
+
+    owner = models.ForeignKey(
         "core.User",
         on_delete=models.DO_NOTHING,
         blank=True,
         null=True,
+        db_column="creator_id",
     )
-    description = models.CharField(max_length=512, blank=True, null=True)
-    length = models.DurationField(blank=True, null=True)
-    type = models.CharField(max_length=7, blank=True, null=True)
 
     def get_owner(self):
-        return self.creator
+        return self.owner
 
     class Meta:
         managed = False
@@ -46,13 +61,14 @@ class SmartBlockContent(models.Model):
         blank=True,
         null=True,
     )
+
     position = models.IntegerField(blank=True, null=True)
-    trackoffset = models.FloatField()
-    cliplength = models.DurationField(blank=True, null=True)
-    cuein = models.DurationField(blank=True, null=True)
-    cueout = models.DurationField(blank=True, null=True)
-    fadein = models.TimeField(blank=True, null=True)
-    fadeout = models.TimeField(blank=True, null=True)
+    offset = models.FloatField(db_column="trackoffset")
+    length = models.DurationField(blank=True, null=True, db_column="cliplength")
+    cue_in = models.DurationField(blank=True, null=True, db_column="cuein")
+    cue_out = models.DurationField(blank=True, null=True, db_column="cueout")
+    fade_in = models.TimeField(blank=True, null=True, db_column="fadein")
+    fade_out = models.TimeField(blank=True, null=True, db_column="fadeout")
 
     def get_owner(self):
         return self.block.get_owner()
@@ -73,12 +89,17 @@ class SmartBlockContent(models.Model):
 
 
 class SmartBlockCriteria(models.Model):
+    block = models.ForeignKey("schedule.SmartBlock", on_delete=models.DO_NOTHING)
+    group = models.IntegerField(
+        blank=True,
+        null=True,
+        db_column="criteriagroup",
+    )
+
     criteria = models.CharField(max_length=32)
-    modifier = models.CharField(max_length=16)
+    condition = models.CharField(max_length=16, db_column="modifier")
     value = models.CharField(max_length=512)
     extra = models.CharField(max_length=512, blank=True, null=True)
-    criteriagroup = models.IntegerField(blank=True, null=True)
-    block = models.ForeignKey("schedule.SmartBlock", on_delete=models.DO_NOTHING)
 
     def get_owner(self):
         return self.block.get_owner()

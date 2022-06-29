@@ -5468,6 +5468,9 @@ paths:
           description: No response body
 components:
   schemas:
+    BlankEnum:
+      enum:
+        - ""
     CeleryTask:
       type: object
       properties:
@@ -5794,7 +5797,7 @@ components:
         - item_url
         - override_album
         - podcast
-    KindEnum:
+    Kind1d2Enum:
       enum:
         - 0
         - 1
@@ -5893,6 +5896,9 @@ components:
       required:
         - item_url
         - mount_name
+    NullEnum:
+      enum:
+        - null
     PatchedCeleryTask:
       type: object
       properties:
@@ -6310,7 +6316,7 @@ components:
           readOnly: true
         kind:
           allOf:
-            - $ref: "#/components/schemas/KindEnum"
+            - $ref: "#/components/schemas/Kind1d2Enum"
           minimum: -32768
           maximum: 32767
         position:
@@ -6805,17 +6811,17 @@ components:
           type: string
           format: uri
           readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
         name:
           type: string
           maxLength: 255
-        mtime:
-          type: string
-          format: date-time
-          nullable: true
-        utime:
-          type: string
-          format: date-time
-          nullable: true
         description:
           type: string
           nullable: true
@@ -6823,11 +6829,13 @@ components:
         length:
           type: string
           nullable: true
-        type:
-          type: string
+        kind:
           nullable: true
-          maxLength: 7
-        creator:
+          oneOf:
+            - $ref: "#/components/schemas/SmartBlockKindEnum"
+            - $ref: "#/components/schemas/BlankEnum"
+            - $ref: "#/components/schemas/NullEnum"
+        owner:
           type: string
           format: uri
           nullable: true
@@ -6843,23 +6851,23 @@ components:
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
-        trackoffset:
+        offset:
           type: number
           format: double
-        cliplength:
+        length:
           type: string
           nullable: true
-        cuein:
+        cue_in:
           type: string
           nullable: true
-        cueout:
+        cue_out:
           type: string
           nullable: true
-        fadein:
+        fade_in:
           type: string
           format: time
           nullable: true
-        fadeout:
+        fade_out:
           type: string
           format: time
           nullable: true
@@ -6878,10 +6886,15 @@ components:
           type: string
           format: uri
           readOnly: true
+        group:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
         criteria:
           type: string
           maxLength: 32
-        modifier:
+        condition:
           type: string
           maxLength: 16
         value:
@@ -6891,11 +6904,6 @@ components:
           type: string
           nullable: true
           maxLength: 512
-        criteriagroup:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-          nullable: true
         block:
           type: string
           format: uri
@@ -7121,7 +7129,7 @@ components:
           readOnly: true
         kind:
           allOf:
-            - $ref: "#/components/schemas/KindEnum"
+            - $ref: "#/components/schemas/Kind1d2Enum"
           minimum: -32768
           maximum: 32767
         position:
@@ -7716,17 +7724,17 @@ components:
           type: string
           format: uri
           readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
         name:
           type: string
           maxLength: 255
-        mtime:
-          type: string
-          format: date-time
-          nullable: true
-        utime:
-          type: string
-          format: date-time
-          nullable: true
         description:
           type: string
           nullable: true
@@ -7734,11 +7742,13 @@ components:
         length:
           type: string
           nullable: true
-        type:
-          type: string
+        kind:
           nullable: true
-          maxLength: 7
-        creator:
+          oneOf:
+            - $ref: "#/components/schemas/SmartBlockKindEnum"
+            - $ref: "#/components/schemas/BlankEnum"
+            - $ref: "#/components/schemas/NullEnum"
+        owner:
           type: string
           format: uri
           nullable: true
@@ -7757,23 +7767,23 @@ components:
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
-        trackoffset:
+        offset:
           type: number
           format: double
-        cliplength:
+        length:
           type: string
           nullable: true
-        cuein:
+        cue_in:
           type: string
           nullable: true
-        cueout:
+        cue_out:
           type: string
           nullable: true
-        fadein:
+        fade_in:
           type: string
           format: time
           nullable: true
-        fadeout:
+        fade_out:
           type: string
           format: time
           nullable: true
@@ -7787,7 +7797,7 @@ components:
           nullable: true
       required:
         - item_url
-        - trackoffset
+        - offset
     SmartBlockCriteria:
       type: object
       properties:
@@ -7795,10 +7805,15 @@ components:
           type: string
           format: uri
           readOnly: true
+        group:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
         criteria:
           type: string
           maxLength: 32
-        modifier:
+        condition:
           type: string
           maxLength: 16
         value:
@@ -7808,20 +7823,20 @@ components:
           type: string
           nullable: true
           maxLength: 512
-        criteriagroup:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-          nullable: true
         block:
           type: string
           format: uri
       required:
         - block
+        - condition
         - criteria
         - item_url
-        - modifier
         - value
+    SmartBlockKindEnum:
+      enum:
+        - static
+        - dynamic
+      type: string
     StationPodcast:
       type: object
       properties:
