@@ -7035,6 +7035,16 @@ components:
         id:
           type: integer
           readOnly: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        last_played_at:
+          type: string
+          format: date-time
+          nullable: true
         name:
           type: string
           maxLength: 255
@@ -7046,24 +7056,14 @@ components:
           maxLength: 512
         length:
           type: string
-        creator_id:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-        mtime:
-          type: string
-          format: date-time
-        utime:
-          type: string
-          format: date-time
-        lptime:
-          type: string
-          format: date-time
-          nullable: true
         mime:
           type: string
           nullable: true
           maxLength: 1024
+        owner:
+          type: string
+          format: uri
+          nullable: true
     PatchedWebstreamMetadata:
       type: object
       properties:
@@ -7071,13 +7071,13 @@ components:
           type: string
           format: uri
           readOnly: true
-        start_time:
+        starts_at:
           type: string
           format: date-time
-        liquidsoap_data:
+        data:
           type: string
           maxLength: 1024
-        instance:
+        schedule:
           type: string
           format: uri
     Playlist:
@@ -7982,6 +7982,16 @@ components:
         id:
           type: integer
           readOnly: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        last_played_at:
+          type: string
+          format: date-time
+          nullable: true
         name:
           type: string
           maxLength: 255
@@ -7993,34 +8003,23 @@ components:
           maxLength: 512
         length:
           type: string
-        creator_id:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-        mtime:
-          type: string
-          format: date-time
-        utime:
-          type: string
-          format: date-time
-        lptime:
-          type: string
-          format: date-time
-          nullable: true
         mime:
           type: string
           nullable: true
           maxLength: 1024
+        owner:
+          type: string
+          format: uri
+          nullable: true
       required:
-        - creator_id
+        - created_at
         - description
         - id
         - item_url
         - length
-        - mtime
         - name
+        - updated_at
         - url
-        - utime
     WebstreamMetadata:
       type: object
       properties:
@@ -8028,20 +8027,20 @@ components:
           type: string
           format: uri
           readOnly: true
-        start_time:
+        starts_at:
           type: string
           format: date-time
-        liquidsoap_data:
+        data:
           type: string
           maxLength: 1024
-        instance:
+        schedule:
           type: string
           format: uri
       required:
-        - instance
+        - data
         - item_url
-        - liquidsoap_data
-        - start_time
+        - schedule
+        - starts_at
   securitySchemes:
     basicAuth:
       type: http

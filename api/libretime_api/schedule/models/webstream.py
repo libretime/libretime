@@ -1,20 +1,28 @@
-from django.contrib.auth import get_user_model
 from django.db import models
 
 
 class Webstream(models.Model):
+    created_at = models.DateTimeField(db_column="utime")
+    updated_at = models.DateTimeField(db_column="mtime")
+
+    last_played_at = models.DateTimeField(blank=True, null=True, db_column="lptime")
+
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     url = models.CharField(max_length=512)
     length = models.DurationField()
-    creator_id = models.IntegerField()
-    mtime = models.DateTimeField()
-    utime = models.DateTimeField()
-    lptime = models.DateTimeField(blank=True, null=True)
     mime = models.CharField(max_length=1024, blank=True, null=True)
 
+    owner = models.ForeignKey(
+        "core.User",
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
+        db_column="creator_id",
+    )
+
     def get_owner(self):
-        return get_user_model().objects.get(pk=self.creator_id)
+        return self.owner
 
     class Meta:
         managed = False
@@ -26,12 +34,16 @@ class Webstream(models.Model):
 
 
 class WebstreamMetadata(models.Model):
-    instance = models.ForeignKey("schedule.Schedule", on_delete=models.DO_NOTHING)
-    start_time = models.DateTimeField()
-    liquidsoap_data = models.CharField(max_length=1024)
+    schedule = models.ForeignKey(
+        "schedule.Schedule",
+        on_delete=models.DO_NOTHING,
+        db_column="instance_id",
+    )
+    starts_at = models.DateTimeField(db_column="start_time")
+    data = models.CharField(max_length=1024, db_column="liquidsoap_data")
 
     def get_owner(self):
-        return self.instance.get_owner()
+        return self.schedule.get_owner()
 
     class Meta:
         managed = False
