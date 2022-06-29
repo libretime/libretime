@@ -6634,19 +6634,23 @@ components:
         name:
           type: string
           maxLength: 255
-        url:
-          type: string
-          nullable: true
-          maxLength: 255
-        genre:
-          type: string
-          nullable: true
-          maxLength: 255
         description:
           type: string
           nullable: true
           maxLength: 8192
-        color:
+        genre:
+          type: string
+          nullable: true
+          maxLength: 255
+        url:
+          type: string
+          nullable: true
+          maxLength: 255
+        image:
+          type: string
+          nullable: true
+          maxLength: 255
+        foreground_color:
           type: string
           nullable: true
           maxLength: 6
@@ -6656,20 +6660,16 @@ components:
           maxLength: 6
         linked:
           type: boolean
-        is_linkable:
+        linkable:
           type: boolean
-        image_path:
-          type: string
-          nullable: true
-          maxLength: 255
-        has_autoplaylist:
-          type: boolean
-        autoplaylist_repeat:
-          type: boolean
-        autoplaylist:
+        auto_playlist:
           type: string
           format: uri
           nullable: true
+        auto_playlist_enabled:
+          type: boolean
+        auto_playlist_repeat:
+          type: boolean
     PatchedShowDays:
       type: object
       properties:
@@ -6677,10 +6677,10 @@ components:
           type: string
           format: uri
           readOnly: true
-        first_show:
+        first_show_on:
           type: string
           format: date
-        last_show:
+        last_show_on:
           type: string
           format: date
           nullable: true
@@ -6693,23 +6693,28 @@ components:
         duration:
           type: string
           maxLength: 1024
-        day:
-          type: integer
-          maximum: 32767
-          minimum: -32768
+        record_enabled:
           nullable: true
-        repeat_type:
-          type: integer
-          maximum: 32767
           minimum: -32768
-        next_pop_date:
+          maximum: 32767
+          oneOf:
+            - $ref: "#/components/schemas/RecordEnabledEnum"
+            - $ref: "#/components/schemas/NullEnum"
+        week_day:
+          nullable: true
+          minimum: -32768
+          maximum: 32767
+          oneOf:
+            - $ref: "#/components/schemas/WeekDayEnum"
+            - $ref: "#/components/schemas/NullEnum"
+        repeat_kind:
+          allOf:
+            - $ref: "#/components/schemas/RepeatKindEnum"
+          minimum: -32768
+          maximum: 32767
+        repeat_next_on:
           type: string
           format: date
-          nullable: true
-        record:
-          type: integer
-          maximum: 32767
-          minimum: -32768
           nullable: true
         show:
           type: string
@@ -6724,7 +6729,7 @@ components:
         show:
           type: string
           format: uri
-        subjs:
+        user:
           type: string
           format: uri
     PatchedShowInstance:
@@ -6737,40 +6742,9 @@ components:
         id:
           type: integer
           readOnly: true
-        description:
-          type: string
-          nullable: true
-          maxLength: 8192
-        starts:
+        created_at:
           type: string
           format: date-time
-        ends:
-          type: string
-          format: date-time
-        record:
-          type: integer
-          maximum: 32767
-          minimum: -32768
-          nullable: true
-        rebroadcast:
-          type: integer
-          maximum: 32767
-          minimum: -32768
-          nullable: true
-        time_filled:
-          type: string
-          nullable: true
-        created:
-          type: string
-          format: date-time
-        last_scheduled:
-          type: string
-          format: date-time
-          nullable: true
-        modified_instance:
-          type: boolean
-        autoplaylist_built:
-          type: boolean
         show:
           type: string
           format: uri
@@ -6781,11 +6755,44 @@ components:
           type: string
           format: uri
           nullable: true
-        file:
+        starts_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+        filled_time:
+          type: string
+          nullable: true
+        last_scheduled_at:
+          type: string
+          format: date-time
+          nullable: true
+        description:
+          type: string
+          nullable: true
+          maxLength: 8192
+        modified:
+          type: boolean
+        rebroadcast:
+          type: integer
+          maximum: 32767
+          minimum: -32768
+          nullable: true
+        auto_playlist_built:
+          type: boolean
+        record_enabled:
+          nullable: true
+          minimum: -32768
+          maximum: 32767
+          oneOf:
+            - $ref: "#/components/schemas/RecordEnabledEnum"
+            - $ref: "#/components/schemas/NullEnum"
+        record_file:
           type: string
           format: uri
           nullable: true
-        file_id:
+        record_file_id:
           type: integer
           readOnly: true
     PatchedShowRebroadcast:
@@ -7396,6 +7403,19 @@ components:
         - item_url
         - key
         - user
+    RecordEnabledEnum:
+      enum:
+        - 0
+        - 1
+      type: integer
+    RepeatKindEnum:
+      enum:
+        - 0
+        - 1
+        - 4
+        - 5
+        - 2
+      type: integer
     RoleEnum:
       enum:
         - G
@@ -7511,19 +7531,23 @@ components:
         name:
           type: string
           maxLength: 255
-        url:
-          type: string
-          nullable: true
-          maxLength: 255
-        genre:
-          type: string
-          nullable: true
-          maxLength: 255
         description:
           type: string
           nullable: true
           maxLength: 8192
-        color:
+        genre:
+          type: string
+          nullable: true
+          maxLength: 255
+        url:
+          type: string
+          nullable: true
+          maxLength: 255
+        image:
+          type: string
+          nullable: true
+          maxLength: 255
+        foreground_color:
           type: string
           nullable: true
           maxLength: 6
@@ -7533,26 +7557,22 @@ components:
           maxLength: 6
         linked:
           type: boolean
-        is_linkable:
+        linkable:
           type: boolean
-        image_path:
-          type: string
-          nullable: true
-          maxLength: 255
-        has_autoplaylist:
-          type: boolean
-        autoplaylist_repeat:
-          type: boolean
-        autoplaylist:
+        auto_playlist:
           type: string
           format: uri
           nullable: true
+        auto_playlist_enabled:
+          type: boolean
+        auto_playlist_repeat:
+          type: boolean
       required:
-        - autoplaylist_repeat
-        - has_autoplaylist
+        - auto_playlist_enabled
+        - auto_playlist_repeat
         - id
-        - is_linkable
         - item_url
+        - linkable
         - linked
         - name
     ShowDays:
@@ -7562,10 +7582,10 @@ components:
           type: string
           format: uri
           readOnly: true
-        first_show:
+        first_show_on:
           type: string
           format: date
-        last_show:
+        last_show_on:
           type: string
           format: date
           nullable: true
@@ -7578,32 +7598,37 @@ components:
         duration:
           type: string
           maxLength: 1024
-        day:
-          type: integer
-          maximum: 32767
-          minimum: -32768
+        record_enabled:
           nullable: true
-        repeat_type:
-          type: integer
-          maximum: 32767
           minimum: -32768
-        next_pop_date:
+          maximum: 32767
+          oneOf:
+            - $ref: "#/components/schemas/RecordEnabledEnum"
+            - $ref: "#/components/schemas/NullEnum"
+        week_day:
+          nullable: true
+          minimum: -32768
+          maximum: 32767
+          oneOf:
+            - $ref: "#/components/schemas/WeekDayEnum"
+            - $ref: "#/components/schemas/NullEnum"
+        repeat_kind:
+          allOf:
+            - $ref: "#/components/schemas/RepeatKindEnum"
+          minimum: -32768
+          maximum: 32767
+        repeat_next_on:
           type: string
           format: date
-          nullable: true
-        record:
-          type: integer
-          maximum: 32767
-          minimum: -32768
           nullable: true
         show:
           type: string
           format: uri
       required:
         - duration
-        - first_show
+        - first_show_on
         - item_url
-        - repeat_type
+        - repeat_kind
         - show
         - start_time
         - timezone
@@ -7617,13 +7642,13 @@ components:
         show:
           type: string
           format: uri
-        subjs:
+        user:
           type: string
           format: uri
       required:
         - item_url
         - show
-        - subjs
+        - user
     ShowInstance:
       type: object
       properties:
@@ -7634,40 +7659,9 @@ components:
         id:
           type: integer
           readOnly: true
-        description:
-          type: string
-          nullable: true
-          maxLength: 8192
-        starts:
+        created_at:
           type: string
           format: date-time
-        ends:
-          type: string
-          format: date-time
-        record:
-          type: integer
-          maximum: 32767
-          minimum: -32768
-          nullable: true
-        rebroadcast:
-          type: integer
-          maximum: 32767
-          minimum: -32768
-          nullable: true
-        time_filled:
-          type: string
-          nullable: true
-        created:
-          type: string
-          format: date-time
-        last_scheduled:
-          type: string
-          format: date-time
-          nullable: true
-        modified_instance:
-          type: boolean
-        autoplaylist_built:
-          type: boolean
         show:
           type: string
           format: uri
@@ -7678,24 +7672,57 @@ components:
           type: string
           format: uri
           nullable: true
-        file:
+        starts_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+        filled_time:
+          type: string
+          nullable: true
+        last_scheduled_at:
+          type: string
+          format: date-time
+          nullable: true
+        description:
+          type: string
+          nullable: true
+          maxLength: 8192
+        modified:
+          type: boolean
+        rebroadcast:
+          type: integer
+          maximum: 32767
+          minimum: -32768
+          nullable: true
+        auto_playlist_built:
+          type: boolean
+        record_enabled:
+          nullable: true
+          minimum: -32768
+          maximum: 32767
+          oneOf:
+            - $ref: "#/components/schemas/RecordEnabledEnum"
+            - $ref: "#/components/schemas/NullEnum"
+        record_file:
           type: string
           format: uri
           nullable: true
-        file_id:
+        record_file_id:
           type: integer
           readOnly: true
       required:
-        - autoplaylist_built
-        - created
-        - ends
-        - file_id
+        - auto_playlist_built
+        - created_at
+        - ends_at
         - id
         - item_url
-        - modified_instance
+        - modified
+        - record_file_id
         - show
         - show_id
-        - starts
+        - starts_at
     ShowRebroadcast:
       type: object
       properties:
@@ -8056,6 +8083,16 @@ components:
         - item_url
         - schedule
         - starts_at
+    WeekDayEnum:
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+      type: integer
   securitySchemes:
     basicAuth:
       type: http
