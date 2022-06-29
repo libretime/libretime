@@ -5794,6 +5794,12 @@ components:
         - item_url
         - override_album
         - podcast
+    KindEnum:
+      enum:
+        - 0
+        - 1
+        - 2
+      type: integer
     Library:
       type: object
       properties:
@@ -6273,17 +6279,17 @@ components:
           type: string
           format: uri
           readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
         name:
           type: string
           maxLength: 255
-        mtime:
-          type: string
-          format: date-time
-          nullable: true
-        utime:
-          type: string
-          format: date-time
-          nullable: true
         description:
           type: string
           nullable: true
@@ -6291,7 +6297,7 @@ components:
         length:
           type: string
           nullable: true
-        creator:
+        owner:
           type: string
           format: uri
           nullable: true
@@ -6302,37 +6308,33 @@ components:
           type: string
           format: uri
           readOnly: true
-        stream_id:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-          nullable: true
-        type:
-          type: integer
-          maximum: 32767
+        kind:
+          allOf:
+            - $ref: "#/components/schemas/KindEnum"
           minimum: -32768
+          maximum: 32767
         position:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
-        trackoffset:
+        offset:
           type: number
           format: double
-        cliplength:
+        length:
           type: string
           nullable: true
-        cuein:
+        cue_in:
           type: string
           nullable: true
-        cueout:
+        cue_out:
           type: string
           nullable: true
-        fadein:
+        fade_in:
           type: string
           format: time
           nullable: true
-        fadeout:
+        fade_out:
           type: string
           format: time
           nullable: true
@@ -6341,6 +6343,10 @@ components:
           format: uri
           nullable: true
         file:
+          type: string
+          format: uri
+          nullable: true
+        stream:
           type: string
           format: uri
           nullable: true
@@ -7081,17 +7087,17 @@ components:
           type: string
           format: uri
           readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
         name:
           type: string
           maxLength: 255
-        mtime:
-          type: string
-          format: date-time
-          nullable: true
-        utime:
-          type: string
-          format: date-time
-          nullable: true
         description:
           type: string
           nullable: true
@@ -7099,7 +7105,7 @@ components:
         length:
           type: string
           nullable: true
-        creator:
+        owner:
           type: string
           format: uri
           nullable: true
@@ -7113,37 +7119,33 @@ components:
           type: string
           format: uri
           readOnly: true
-        stream_id:
-          type: integer
-          maximum: 2147483647
-          minimum: -2147483648
-          nullable: true
-        type:
-          type: integer
-          maximum: 32767
+        kind:
+          allOf:
+            - $ref: "#/components/schemas/KindEnum"
           minimum: -32768
+          maximum: 32767
         position:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
-        trackoffset:
+        offset:
           type: number
           format: double
-        cliplength:
+        length:
           type: string
           nullable: true
-        cuein:
+        cue_in:
           type: string
           nullable: true
-        cueout:
+        cue_out:
           type: string
           nullable: true
-        fadein:
+        fade_in:
           type: string
           format: time
           nullable: true
-        fadeout:
+        fade_out:
           type: string
           format: time
           nullable: true
@@ -7155,14 +7157,18 @@ components:
           type: string
           format: uri
           nullable: true
+        stream:
+          type: string
+          format: uri
+          nullable: true
         block:
           type: string
           format: uri
           nullable: true
       required:
         - item_url
-        - trackoffset
-        - type
+        - kind
+        - offset
     PlayoutHistory:
       type: object
       properties:
