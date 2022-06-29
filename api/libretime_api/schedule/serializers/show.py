@@ -10,17 +10,17 @@ class ShowSerializer(serializers.HyperlinkedModelSerializer):
             "item_url",
             "id",
             "name",
-            "url",
-            "genre",
             "description",
-            "color",
+            "genre",
+            "url",
+            "image",
+            "foreground_color",
             "background_color",
             "linked",
-            "is_linkable",
-            "image_path",
-            "has_autoplaylist",
-            "autoplaylist_repeat",
-            "autoplaylist",
+            "linkable",
+            "auto_playlist",
+            "auto_playlist_enabled",
+            "auto_playlist_repeat",
         ]
 
 
@@ -38,28 +38,28 @@ class ShowHostSerializer(serializers.HyperlinkedModelSerializer):
 
 class ShowInstanceSerializer(serializers.HyperlinkedModelSerializer):
     show_id = serializers.IntegerField(source="show.id", read_only=True)
-    file_id = serializers.IntegerField(source="file.id", read_only=True)
+    record_file_id = serializers.IntegerField(source="record_file.id", read_only=True)
 
     class Meta:
         model = ShowInstance
         fields = [
             "item_url",
             "id",
-            "description",
-            "starts",
-            "ends",
-            "record",
-            "rebroadcast",
-            "time_filled",
-            "created",
-            "last_scheduled",
-            "modified_instance",
-            "autoplaylist_built",
+            "created_at",
             "show",
             "show_id",
             "instance",
-            "file",
-            "file_id",
+            "starts_at",
+            "ends_at",
+            "filled_time",
+            "last_scheduled_at",
+            "description",
+            "modified",
+            "rebroadcast",
+            "auto_playlist_built",
+            "record_enabled",
+            "record_file",
+            "record_file_id",
         ]
 
 
