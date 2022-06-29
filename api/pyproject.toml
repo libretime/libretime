@@ -27,6 +27,11 @@ plugins = [
 [tool.django-stubs]
 django_settings_module = "libretime_api.settings.testing"
 
+[tool.coverage.run]
+omit = [
+  "*/tests/*",
+]
+
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
