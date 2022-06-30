@@ -1,4 +1,8 @@
 ---
+coverage:
+  status:
+    project: off
+
 flags:
   analyzer:
     paths:
