@@ -2,6 +2,7 @@
 coverage:
   status:
     project: off
+    patch: off
 
 flags:
   analyzer:
