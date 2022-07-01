@@ -21,7 +21,8 @@ WHERE file_id = :file_id
   AND ends > NOW() AT TIME ZONE 'UTC'
 SQL;
         $count = Application_Common_Database::prepareAndExecute($sql, [
-            ':file_id' => $p_fileId, ], 'column');
+            ':file_id' => $p_fileId,
+        ], 'column');
 
         return is_numeric($count) && ($count != '0');
     }
@@ -347,7 +348,7 @@ SQL;
         $master_dj = Application_Model_Preference::GetSourceStatus('master_dj');
 
         return $master_dj ? self::MASTER_SOURCE_NAME
-                              : ($live_dj ? self::SHOW_SOURCE_NAME : self::SCHEDULED_SOURCE_NAME);
+            : ($live_dj ? self::SHOW_SOURCE_NAME : self::SCHEDULED_SOURCE_NAME);
     }
 
     public static function GetLastScheduleItem($p_timeNow)
@@ -381,14 +382,14 @@ SQL;
          * this is the *real* track that is currently playing. So this
          * is why we are ordering by track start time. */
         $sql = 'SELECT *'
-        . ' FROM cc_schedule st'
-        . ' LEFT JOIN cc_files ft'
-        . ' ON st.file_id = ft.id'
-        . ' WHERE st.starts <= TIMESTAMP :timeNow1'
-        . ' AND st.instance_id = :instanceId'
-        . ' AND st.ends > TIMESTAMP :timeNow2'
-        . ' ORDER BY st.starts DESC'
-        . ' LIMIT 1';
+            . ' FROM cc_schedule st'
+            . ' LEFT JOIN cc_files ft'
+            . ' ON st.file_id = ft.id'
+            . ' WHERE st.starts <= TIMESTAMP :timeNow1'
+            . ' AND st.instance_id = :instanceId'
+            . ' AND st.ends > TIMESTAMP :timeNow2'
+            . ' ORDER BY st.starts DESC'
+            . ' LIMIT 1';
 
         return Application_Common_Database::prepareAndExecute($sql, [':timeNow1' => $p_timeNow, ':instanceId' => $p_instanceId, ':timeNow2' => $p_timeNow]);
     }
@@ -396,18 +397,18 @@ SQL;
     public static function GetNextScheduleItem($p_timeNow)
     {
         $sql = 'SELECT'
-        . ' ft.artist_name, ft.track_title,'
-        . ' st.starts as starts, st.ends as ends'
-        . ' FROM cc_schedule st'
-        . ' LEFT JOIN cc_files ft'
-        . ' ON st.file_id = ft.id'
-        . ' LEFT JOIN cc_show_instances sit'
-        . ' ON st.instance_id = sit.id'
-        . ' WHERE st.starts > TIMESTAMP :timeNow'
-        . ' AND st.starts >= sit.starts' // this and the next line are necessary since we can overbook shows.
-        . ' AND st.starts < sit.ends'
-        . ' ORDER BY st.starts'
-        . ' LIMIT 1';
+            . ' ft.artist_name, ft.track_title,'
+            . ' st.starts as starts, st.ends as ends'
+            . ' FROM cc_schedule st'
+            . ' LEFT JOIN cc_files ft'
+            . ' ON st.file_id = ft.id'
+            . ' LEFT JOIN cc_show_instances sit'
+            . ' ON st.instance_id = sit.id'
+            . ' WHERE st.starts > TIMESTAMP :timeNow'
+            . ' AND st.starts >= sit.starts' // this and the next line are necessary since we can overbook shows.
+            . ' AND st.starts < sit.ends'
+            . ' ORDER BY st.starts'
+            . ' LIMIT 1';
 
         return Application_Common_Database::prepareAndExecute($sql, [':timeNow' => $p_timeNow]);
     }
@@ -595,7 +596,7 @@ SQL;
     public static function UpdateMediaPlayedStatus($p_id)
     {
         $sql = 'UPDATE cc_schedule'
-                . ' SET media_item_played=TRUE';
+            . ' SET media_item_played=TRUE';
         // we need to update 'broadcasted' column as well
         // check the current switch status
         $live_dj = Application_Model_Preference::GetSourceSwitchStatus('live_dj') == 'on';
@@ -630,7 +631,8 @@ SQL;
         return Application_Common_Database::prepareAndExecute($sql, [
             ':broadcastedValue' => $value,
             ':starts' => $now,
-            ':ends' => $now, ], 'execute');
+            ':ends' => $now,
+        ], 'execute');
     }
 
     public static function getSchduledPlaylistCount()
@@ -777,7 +779,8 @@ SQL;
         $rows = Application_Common_Database::prepareAndExecute($sql, [
             ':startTime1' => $p_startTime,
             ':endTime' => $p_endTime,
-            ':startTime2' => $p_startTime, ]);
+            ':startTime2' => $p_startTime,
+        ]);
 
         if (count($rows) < 3) {
             $dt = new DateTime('@' . time());
@@ -799,7 +802,8 @@ SQL;
                 [
                     ':startTime1' => $p_startTime,
                     ':rangeEnd' => $range_end,
-                    ':startTime2' => $p_startTime, ]
+                    ':startTime2' => $p_startTime,
+                ]
             );
         }
 
@@ -877,8 +881,8 @@ SQL;
         $start = self::AirtimeTimeToPypoTime($item['start']);
         $end = self::AirtimeTimeToPypoTime($item['end']);
 
-        [, , , $start_hour] = explode('-', $start);
-        [, , , $end_hour] = explode('-', $end);
+        [,,, $start_hour] = explode('-', $start);
+        [,,, $end_hour] = explode('-', $end);
 
         $same_hour = $start_hour == $end_hour;
         $independent_event = !$same_hour;
@@ -1055,10 +1059,10 @@ SQL;
             }
 
             // throw new Exception("Unknown schedule type: ".print_r($item, true));
-                // It's currently possible (and normal) to get cc_schedule rows without
-                // a file_id or stream_id. If you're using linked shows, placeholder rows can be put
-                // in the schedule when you cancel a track or delete stuff, so we should not throw an exception
-                // here and instead just ignore it.
+            // It's currently possible (and normal) to get cc_schedule rows without
+            // a file_id or stream_id. If you're using linked shows, placeholder rows can be put
+            // in the schedule when you cancel a track or delete stuff, so we should not throw an exception
+            // here and instead just ignore it.
         }
     }
 
@@ -1100,10 +1104,12 @@ SQL;
         $previous_previous_previous_key = null;
         $previous_previous_previous_val = null;
         foreach ($data as $k => $v) {
-            if ($v['type'] == 'stream_output_start'
+            if (
+                $v['type'] == 'stream_output_start'
                 && !is_null($previous_previous_val)
                 && $previous_previous_val['type'] == 'stream_output_end'
-                && self::areEventsLinked($previous_previous_val, $v)) {
+                && self::areEventsLinked($previous_previous_val, $v)
+            ) {
                 unset($data[$previous_previous_previous_key], $data[$previous_previous_key], $data[$previous_key]);
 
                 if ($previous_previous_val['uri'] == $v['uri']) {
@@ -1235,15 +1241,18 @@ SQL;
             $rows = Application_Common_Database::prepareAndExecute($sql, [
                 ':show_end1' => $show_end->format(DEFAULT_TIMESTAMP_FORMAT),
                 ':show_end2' => $show_end->format(DEFAULT_TIMESTAMP_FORMAT),
-                ':show_end3' => $show_end->format(DEFAULT_TIMESTAMP_FORMAT), ], 'all');
+                ':show_end3' => $show_end->format(DEFAULT_TIMESTAMP_FORMAT),
+            ], 'all');
         }
 
         foreach ($rows as $row) {
             $start = new DateTime($row['starts'], new DateTimeZone('UTC'));
             $end = new DateTime($row['ends'], new DateTimeZone('UTC'));
 
-            if ($show_start->getTimestamp() < $end->getTimestamp()
-                && $show_end->getTimestamp() > $start->getTimestamp()) {
+            if (
+                $show_start->getTimestamp() < $end->getTimestamp()
+                && $show_end->getTimestamp() > $start->getTimestamp()
+            ) {
                 $overlapping = true;
 
                 break;
