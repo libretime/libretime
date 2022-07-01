@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     setSmartBlockEvents();
 });
 
@@ -7,7 +7,7 @@ function setSmartBlockEvents() {
         form = activeTab.find('.smart-block-form');
 
     /********** ADD CRITERIA ROW **********/
-    form.find('#criteria_add').live('click', function(){
+    form.find('#criteria_add').live('click', function () {
 
         var div = $('dd[id="sp_criteria-element"]').children('div:visible:last');
 
@@ -47,7 +47,7 @@ function setSmartBlockEvents() {
     });
 
     /********** ADD MODIFIER ROW **********/
-    form.find('a[id^="modifier_add"]').live('click', function(){
+    form.find('a[id^="modifier_add"]').live('click', function () {
         var criteria_value = $(this).siblings('select[name^="sp_criteria_field"]').val();
 
 
@@ -95,7 +95,7 @@ function setSmartBlockEvents() {
     });
 
     /********** REMOVE ROW **********/
-    form.find('a[id^="criteria_remove"]').live('click', function(){
+    form.find('a[id^="criteria_remove"]').live('click', function () {
         var curr = $(this).parent();
         var curr_pos = curr.index();
         var list = curr.parent();
@@ -117,8 +117,8 @@ function setSmartBlockEvents() {
 
         if (count == 0) {
             disableAndHideDateTimeDropdown(curr.find(':first-child'), index);
-            disableAndHideExtraDateTimeDropdown(curr.find(':first-child'),index);
-            disableAndHideExtraField(curr.find(':first-child'),index);
+            disableAndHideExtraDateTimeDropdown(curr.find(':first-child'), index);
+            disableAndHideExtraField(curr.find(':first-child'), index);
         }
 
         /* assign next row to current row for all rows below and including
@@ -126,7 +126,7 @@ function setSmartBlockEvents() {
          */
 
 
-        for (var i=0; i<count; i++) {
+        for (var i = 0; i < count; i++) {
             index = getRowIndex(curr);
 
             var criteria = next.find('[name^="sp_criteria_field"]').val();
@@ -153,17 +153,17 @@ function setSmartBlockEvents() {
                 curr.find('[name^="sp_criteria_extra"]').val(criteria_extra);
                 disableAndHideExtraField(next.find(':first-child'), getRowIndex(next));
 
-            /* if only the current row has the extra criteria value,
-             * then just remove the current row's extra criteria element
-             */
+                /* if only the current row has the extra criteria value,
+                 * then just remove the current row's extra criteria element
+                 */
             } else if (curr.find('[name^="sp_criteria_extra"]').attr("disabled") != "disabled"
-                       && next.find('#extra_criteria').not(':visible')) {
+                && next.find('#extra_criteria').not(':visible')) {
                 disableAndHideExtraField(curr.find(':first-child'), index);
 
-            /* if only the next row has the extra criteria value,
-             * then add the extra criteria element to current row
-             * and assign next row's value to it
-             */
+                /* if only the next row has the extra criteria value,
+                 * then add the extra criteria element to current row
+                 * and assign next row's value to it
+                 */
             } else if (next.find('#extra_criteria').is(':visible')) {
                 criteria_extra = next.find('[name^="sp_criteria_extra"]').val();
                 enableAndShowExtraField(curr.find(':first-child'), index);
@@ -250,11 +250,11 @@ function setSmartBlockEvents() {
             item_to_hide.find('select[name^="sp_criteria_field"]').removeClass('sp-invisible');
         }
         item_to_hide.find('[name^="sp_criteria_field"]').val(0).end()
-                    .find('[name^="sp_criteria_modifier"]').val(0).end()
-                    .find('[name^="sp_criteria_datetime_select"]').end()
-                    .find('[name^="sp_criteria_value"]').val('').end()
-                    .find('[name^="sp_criteria_extra"]').val('')
-                    .find('[name^="sp_criteria_extra_datetime_select"]').end();
+            .find('[name^="sp_criteria_modifier"]').val(0).end()
+            .find('[name^="sp_criteria_datetime_select"]').end()
+            .find('[name^="sp_criteria_value"]').val('').end()
+            .find('[name^="sp_criteria_extra"]').val('')
+            .find('[name^="sp_criteria_extra_datetime_select"]').end();
 
         sizeTextBoxes(item_to_hide.find('[name^="sp_criteria_value"]'), 'sp_extra_input_text', 'sp_input_text');
         item_to_hide.hide();
@@ -288,17 +288,17 @@ function setSmartBlockEvents() {
     // moved to spl.js
 
     /********** GENERATE ACTION **********/
-    activeTab.find('button[id="generate_button"]').live("click", function(){
+    activeTab.find('button[id="generate_button"]').live("click", function () {
         buttonClickAction('generate', 'playlist/smart-block-generate');
     });
 
     /********** SHUFFLE ACTION **********/
-    activeTab.find('button[id="shuffle_button"]').live("click", function(){
+    activeTab.find('button[id="shuffle_button"]').live("click", function () {
         buttonClickAction('shuffle', 'playlist/smart-block-shuffle');
     });
 
     /********** CHANGE PLAYLIST TYPE **********/
-    form.find('dd[id="sp_type-element"]').live("change", function(){
+    form.find('dd[id="sp_type-element"]').live("change", function () {
         //buttonClickAction('generate', 'playlist/empty-content');
         $(".active-tab").find('button[id="save_button"]').click();
         setupUI();
@@ -306,7 +306,7 @@ function setSmartBlockEvents() {
     });
 
     /********** LIMIT CHANGE *************/
-    form.find('select[id="sp_limit_options"]').live("change", function() {
+    form.find('select[id="sp_limit_options"]').live("change", function () {
         var limVal = form.find('input[id="sp_limit_value"]');
         if ($(this).val() === 'remaining') {
             disableAndHideLimitValue();
@@ -317,19 +317,19 @@ function setSmartBlockEvents() {
     });
 
 
-        /********** CRITERIA CHANGE **********/
-    form.find('select[id^="sp_criteria"]:not([id^="sp_criteria_modifier"]):not([id^="sp_criteria_datetime"]):not([id^="sp_criteria_extra_datetime"]):not([id^="sp_criteria_value"])').live("change", function(){
+    /********** CRITERIA CHANGE **********/
+    form.find('select[id^="sp_criteria"]:not([id^="sp_criteria_modifier"]):not([id^="sp_criteria_datetime"]):not([id^="sp_criteria_extra_datetime"]):not([id^="sp_criteria_value"])').live("change", function () {
         var index = getRowIndex($(this).parent());
         //need to change the criteria value for any modifier rows
         var critVal = $(this).val();
         var divs = $(this).parent().nextAll(':visible');
-        $.each(divs, function(i, div){
+        $.each(divs, function (i, div) {
             var critSelect = $(div).children('select[id^="sp_criteria_field"]');
             if (critSelect.hasClass('sp-invisible')) {
                 critSelect.val(critVal);
-            /* If the select box is visible we know the modifier rows
-             * have ended
-             */
+                /* If the select box is visible we know the modifier rows
+                 * have ended
+                 */
             } else {
                 return false;
             }
@@ -338,19 +338,19 @@ function setSmartBlockEvents() {
         // disable extra field and hide the span
         disableAndHideExtraField($(this), index);
         disableAndHideDateTimeDropdown($(this), index);
-        disableAndHideExtraDateTimeDropdown($(this),index);
+        disableAndHideExtraDateTimeDropdown($(this), index);
 
-        if ($( "#sp_criteria_field_" + index +" option:selected" ).val() === 'track_type') {
-          populateTracktypeSelect(this, false);
+        if ($("#sp_criteria_field_" + index + " option:selected").val() === 'track_type') {
+            populateTracktypeSelect(this, false);
         } else {
-          disableAndHideTracktypeDropdown($(this),index);
-          populateModifierSelect(this, true);
+            disableAndHideTracktypeDropdown($(this), index);
+            populateModifierSelect(this, true);
         }
 
     });
 
     /********** MODIFIER CHANGE **********/
-    form.find('select[id^="sp_criteria_modifier"]').live("change", function(){
+    form.find('select[id^="sp_criteria_modifier"]').live("change", function () {
         var criteria_value = $(this).next(),
             index_num = getRowIndex($(this).parent());
 
@@ -360,7 +360,7 @@ function setSmartBlockEvents() {
         }
         else {
             disableAndHideDateTimeDropdown(criteria_value, index_num);
-            disableAndHideExtraDateTimeDropdown(criteria_value,index_num);
+            disableAndHideExtraDateTimeDropdown(criteria_value, index_num);
 
         }
 
@@ -371,16 +371,16 @@ function setSmartBlockEvents() {
         }
         if ($(this).val().match('between')) {
             enableAndShowExtraField(criteria_value, index_num);
-            enableAndShowDateTimeDropdown(criteria_value,index_num);
-            enableAndShowExtraDateTimeDropdown(criteria_value,index_num);
+            enableAndShowDateTimeDropdown(criteria_value, index_num);
+            enableAndShowExtraDateTimeDropdown(criteria_value, index_num);
         }
         else {
-            disableAndHideExtraDateTimeDropdown(criteria_value,index_num);
+            disableAndHideExtraDateTimeDropdown(criteria_value, index_num);
         }
 
         var get_crit_field = $(this).siblings(':first-child');
         var crit_field = get_crit_field[0]["id"];
-        if ($( "#" + crit_field +" option:selected" ).val() === 'track_type') {
+        if ($("#" + crit_field + " option:selected").val() === 'track_type') {
             if ($(this).val() == "is" || $(this).val() == "is not") {
                 enableAndShowTracktypeDropdown(criteria_value, index_num);
             } else {
@@ -412,7 +412,7 @@ function getRowIndex(ele) {
  */
 function appendModAddButton() {
     var divs = $('.active-tab .smart-block-form').find('div select[name^="sp_criteria_modifier"]').parent(':visible');
-    $.each(divs, function(i, div){
+    $.each(divs, function (i, div) {
         if (i > 0) {
             /* If the criteria field is hidden we know it is a modifier row
              * and can hide the previous row's modifier add button
@@ -425,7 +425,7 @@ function appendModAddButton() {
         }
 
         //always add modifier add button to the last row
-        if (i+1 == divs.length) {
+        if (i + 1 == divs.length) {
             $(div).find('a[id^="modifier_add"]').removeClass('sp-invisible');
         }
     });
@@ -443,7 +443,7 @@ function reindexElements() {
      */
     $('.db-logic-label').text('').hide();
 
-    $.each(divs, function(i, div){
+    $.each(divs, function (i, div) {
         if (i > 0 && index < 26) {
 
             /* If the current row's criteria field is hidden we know it is
@@ -462,32 +462,33 @@ function reindexElements() {
                 modIndex = 0;
             }
 
-            $(div).find('select[name^="sp_criteria_field"]').attr('name', 'sp_criteria_field_'+index+'_'+modIndex);
-            $(div).find('select[name^="sp_criteria_field"]').attr('id', 'sp_criteria_field_'+index+'_'+modIndex);
-            $(div).find('select[name^="sp_criteria_modifier"]').attr('name', 'sp_criteria_modifier_'+index+'_'+modIndex);
-            $(div).find('select[name^="sp_criteria_modifier"]').attr('id', 'sp_criteria_modifier_'+index+'_'+modIndex);
-            $(div).find('input[name^="sp_criteria_value"]').attr('name', 'sp_criteria_value_'+index+'_'+modIndex);
-            $(div).find('input[name^="sp_criteria_value"]').attr('id', 'sp_criteria_value_'+index+'_'+modIndex);
-            $(div).find('select[name^="sp_criteria_value"]').attr('name', 'sp_criteria_value_'+index+'_'+modIndex);
-            $(div).find('select[name^="sp_criteria_value"]').attr('id', 'sp_criteria_value_'+index+'_'+modIndex);
-            $(div).find('input[name^="sp_criteria_extra"]').attr('name', 'sp_criteria_extra_'+index+'_'+modIndex);
-            $(div).find('input[name^="sp_criteria_extra"]').attr('id', 'sp_criteria_extra_'+index+'_'+modIndex);
-            $(div).find('a[name^="modifier_add"]').attr('id', 'modifier_add_'+index);
-            $(div).find('a[id^="criteria_remove"]').attr('id', 'criteria_remove_'+index+'_'+modIndex);
+            $(div).find('select[name^="sp_criteria_field"]').attr('name', 'sp_criteria_field_' + index + '_' + modIndex);
+            $(div).find('select[name^="sp_criteria_field"]').attr('id', 'sp_criteria_field_' + index + '_' + modIndex);
+            $(div).find('select[name^="sp_criteria_modifier"]').attr('name', 'sp_criteria_modifier_' + index + '_' + modIndex);
+            $(div).find('select[name^="sp_criteria_modifier"]').attr('id', 'sp_criteria_modifier_' + index + '_' + modIndex);
+            $(div).find('input[name^="sp_criteria_value"]').attr('name', 'sp_criteria_value_' + index + '_' + modIndex);
+            $(div).find('input[name^="sp_criteria_value"]').attr('id', 'sp_criteria_value_' + index + '_' + modIndex);
+            $(div).find('select[name^="sp_criteria_value"]').attr('name', 'sp_criteria_value_' + index + '_' + modIndex);
+            $(div).find('select[name^="sp_criteria_value"]').attr('id', 'sp_criteria_value_' + index + '_' + modIndex);
+            $(div).find('input[name^="sp_criteria_extra"]').attr('name', 'sp_criteria_extra_' + index + '_' + modIndex);
+            $(div).find('input[name^="sp_criteria_extra"]').attr('id', 'sp_criteria_extra_' + index + '_' + modIndex);
+            $(div).find('a[name^="modifier_add"]').attr('id', 'modifier_add_' + index);
+            $(div).find('a[id^="criteria_remove"]').attr('id', 'criteria_remove_' + index + '_' + modIndex);
         } else if (i > 0) {
             $(div).remove();
         }
     });
 }
 
-function buttonClickAction(clickType, url){
+function buttonClickAction(clickType, url) {
     var data = $('.active-tab .smart-block-form').serializeArray(),
         obj_id = $('.active-tab .obj_id').val();
 
     enableLoadingIcon();
-    $.post(url, {format: "json", data: data, obj_id: obj_id, obj_type: "block",
-                 modified: AIRTIME.playlist.getModified()
-    }, function(data){
+    $.post(url, {
+        format: "json", data: data, obj_id: obj_id, obj_type: "block",
+        modified: AIRTIME.playlist.getModified()
+    }, function (data) {
         callback(data, clickType);
         disableLoadingIcon();
     });
@@ -536,8 +537,8 @@ function setupUI() {
 
     $(".playlist_type_help_icon").qtip({
         content: {
-            text: $.i18n._("A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show.")+"<br /><br />" +
-                  $.i18n._("A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library.")
+            text: $.i18n._("A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show.") + "<br /><br />" +
+                $.i18n._("A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library.")
         },
         hide: {
             delay: 500,
@@ -599,23 +600,23 @@ function setupUI() {
         }
     });
 
-    activeTab.find('.collapsible-header').off('click').on('click', function(){
+    activeTab.find('.collapsible-header').off('click').on('click', function () {
         $(this).toggleClass('visible');
         $('.smart-block-advanced').toggle();
     });
 }
 
 function enableAndShowTracktypeDropdown(valEle, index) {
-       console.log('tracktype show');
-       $("#sp_criteria_value_"+index).replaceWith('<select name="sp_criteria_value_'+index+'" id="sp_criteria_value_'+index+'" class="input_select sp_input_select"></select>');
-       $.each(stringTracktypeOptions, function(key, value){
-             $("#sp_criteria_value_"+index).append($('<option></option>').attr('value', key).text(value));
-       });
+    console.log('tracktype show');
+    $("#sp_criteria_value_" + index).replaceWith('<select name="sp_criteria_value_' + index + '" id="sp_criteria_value_' + index + '" class="input_select sp_input_select"></select>');
+    $.each(stringTracktypeOptions, function (key, value) {
+        $("#sp_criteria_value_" + index).append($('<option></option>').attr('value', key).text(value));
+    });
 }
 
 function disableAndHideTracktypeDropdown(valEle, index) {
-      console.log('tracktype hide');
-      $("#sp_criteria_value_"+index).replaceWith('<input type="text" name="sp_criteria_value_'+index+'" id="sp_criteria_value_'+index+'" value="" class="input_text sp_input_text">');
+    console.log('tracktype hide');
+    $("#sp_criteria_value_" + index).replaceWith('<input type="text" name="sp_criteria_value_' + index + '" id="sp_criteria_value_' + index + '" value="" class="input_text sp_input_text">');
 }
 
 /* Utilizing jQuery this function finds the #datetime_select element on the given row
@@ -624,12 +625,12 @@ function disableAndHideTracktypeDropdown(valEle, index) {
 function enableAndShowDateTimeDropdown(valEle, index) {
     console.log('datetime show');
     var spanDatetime = valEle.nextAll("#datetime_select");
-    spanDatetime.children('#sp_criteria_datetime_select_'+index).removeAttr("disabled");
-    spanDatetime.children('#sp_criteria_extra_datetime_select_'+index).removeAttr("disabled");
+    spanDatetime.children('#sp_criteria_datetime_select_' + index).removeAttr("disabled");
+    spanDatetime.children('#sp_criteria_extra_datetime_select_' + index).removeAttr("disabled");
     spanDatetime.show();
 
     //make value input smaller since we have extra element now
-    var criteria_val = $('#sp_criteria_value_'+index);
+    var criteria_val = $('#sp_criteria_value_' + index);
     sizeTextBoxes(criteria_val, 'sp_input_text', 'sp_extra_input_text');
 }
 
@@ -641,11 +642,11 @@ function enableAndShowDateTimeDropdown(valEle, index) {
 function disableAndHideDateTimeDropdown(valEle, index) {
     console.log('datetime hide');
     var spanDatetime = valEle.nextAll("#datetime_select");
-    spanDatetime.children('#sp_criteria_datetime_select_'+index).val("").attr("disabled", "disabled");
+    spanDatetime.children('#sp_criteria_datetime_select_' + index).val("").attr("disabled", "disabled");
     spanDatetime.hide();
 
     //make value input larger since we don't have extra field now
-    var criteria_value = $('#sp_criteria_value_'+index);
+    var criteria_value = $('#sp_criteria_value_' + index);
     sizeTextBoxes(criteria_value, 'sp_extra_input_text', 'sp_input_text');
 }
 
@@ -655,11 +656,11 @@ function disableAndHideDateTimeDropdown(valEle, index) {
 function enableAndShowExtraDateTimeDropdown(valEle, index) {
     console.log('datetime show');
     var spanDatetime = valEle.nextAll("#extra_datetime_select");
-    spanDatetime.children('#sp_criteria_extra_datetime_select_'+index).removeAttr("disabled");
+    spanDatetime.children('#sp_criteria_extra_datetime_select_' + index).removeAttr("disabled");
     spanDatetime.show();
 
     //make value input smaller since we have extra element now
-    var criteria_val = $('#sp_criteria_value_'+index);
+    var criteria_val = $('#sp_criteria_value_' + index);
     sizeTextBoxes(criteria_val, 'sp_input_text', 'sp_extra_input_text');
 }
 /* Utilizing jQuery this function finds the #datetime_select element on the given row
@@ -669,33 +670,33 @@ function enableAndShowExtraDateTimeDropdown(valEle, index) {
 function disableAndHideExtraDateTimeDropdown(valEle, index) {
     console.log('datetime hide');
     var spanDatetime = valEle.nextAll("#extra_datetime_select");
-    spanDatetime.children('#sp_criteria_extra_datetime_select_'+index).val("").attr("disabled", "disabled");
+    spanDatetime.children('#sp_criteria_extra_datetime_select_' + index).val("").attr("disabled", "disabled");
     spanDatetime.hide();
 
     //make value input larger since we don't have extra field now
-    var criteria_value = $('#sp_criteria_value_'+index);
+    var criteria_value = $('#sp_criteria_value_' + index);
     sizeTextBoxes(criteria_value, 'sp_extra_input_text', 'sp_input_text');
 }
 
 function enableAndShowExtraField(valEle, index) {
     var spanExtra = valEle.nextAll("#extra_criteria");
     console.log('shown');
-    spanExtra.children('#sp_criteria_extra_'+index).removeAttr("disabled");
+    spanExtra.children('#sp_criteria_extra_' + index).removeAttr("disabled");
     spanExtra.show();
 
     //make value input smaller since we have extra element now
-    var criteria_val = $('#sp_criteria_value_'+index);
+    var criteria_val = $('#sp_criteria_value_' + index);
     sizeTextBoxes(criteria_val, 'sp_input_text', 'sp_extra_input_text');
 }
 
 function disableAndHideExtraField(valEle, index) {
     var spanExtra = valEle.nextAll("#extra_criteria");
-    spanExtra.children('#sp_criteria_extra_'+index).val("").attr("disabled", "disabled");
+    spanExtra.children('#sp_criteria_extra_' + index).val("").attr("disabled", "disabled");
     spanExtra.hide();
     console.log('hidden');
 
     //make value input larger since we don't have extra field now
-    var criteria_value = $('#sp_criteria_value_'+index);
+    var criteria_value = $('#sp_criteria_value_' + index);
     sizeTextBoxes(criteria_value, 'sp_extra_input_text', 'sp_input_text');
 }
 function disableAndHideLimitValue() {
@@ -722,37 +723,37 @@ function populateModifierSelect(e, popAllMods) {
     if (popAllMods) {
         index = index.substring(0, 1);
     }
-    divs = $(e).parents().find('select[id^="sp_criteria_modifier_'+index+'"]');
+    divs = $(e).parents().find('select[id^="sp_criteria_modifier_' + index + '"]');
 
-    $.each(divs, function(i, div){
+    $.each(divs, function (i, div) {
         $(div).children().remove();
 
         if (criteria_type == 's') {
-            $.each(stringCriteriaOptions, function(key, value){
-                $(div).append($('<option></option>')
-                   .attr('value', key)
-                   .text(value));
-            });
-        }
-        else if(criteria_type == 'd') {
-            $.each(dateTimeCriteriaOptions, function(key, value){
+            $.each(stringCriteriaOptions, function (key, value) {
                 $(div).append($('<option></option>')
                     .attr('value', key)
                     .text(value));
             });
         }
-        else if(criteria_type == 'tt') {
-            $.each(stringIsNotOptions, function(key, value){
+        else if (criteria_type == 'd') {
+            $.each(dateTimeCriteriaOptions, function (key, value) {
+                $(div).append($('<option></option>')
+                    .attr('value', key)
+                    .text(value));
+            });
+        }
+        else if (criteria_type == 'tt') {
+            $.each(stringIsNotOptions, function (key, value) {
                 $(div).append($('<option></option>')
                     .attr('value', key)
                     .text(value));
             });
         }
         else {
-            $.each(numericCriteriaOptions, function(key, value){
+            $.each(numericCriteriaOptions, function (key, value) {
                 $(div).append($('<option></option>')
-                   .attr('value', key)
-                   .text(value));
+                    .attr('value', key)
+                    .text(value));
             });
         }
     });
@@ -767,13 +768,13 @@ function populateTracktypeSelect(e, popAllMods) {
     if (popAllMods) {
         index = index.substring(0, 1);
     }
-    divs = $(e).parents().find('select[id^="sp_criteria_modifier_'+index+'"]');
-    $.each(divs, function(i, div){
+    divs = $(e).parents().find('select[id^="sp_criteria_modifier_' + index + '"]');
+    $.each(divs, function (i, div) {
         $(div).children().remove();
-        $.each(stringIsNotOptions, function(key, value){
+        $.each(stringIsNotOptions, function (key, value) {
             $(div).append($('<option></option>')
-               .attr('value', key)
-               .text(value));
+                .attr('value', key)
+                .text(value));
         });
     });
 }
@@ -804,7 +805,7 @@ function callback(json, type) {
             if (type == 'shuffle') {
                 form.find('.success').text($.i18n._('Smart block shuffled'));
             } else if (type == 'generate') {
-            	form.find('.success').text($.i18n._('Smart block generated and criteria saved'));
+                form.find('.success').text($.i18n._('Smart block generated and criteria saved'));
                 //redraw library table so the length gets updated
                 dt.fnStandingRedraw();
             }
@@ -889,7 +890,7 @@ function groupCriteriaRows() {
     var visibleRows = $("#sp_criteria-element > div:visible"),
         prevRowGroup = "0";
 
-    visibleRows.each(function (index){
+    visibleRows.each(function (index) {
         if (index > 0) {
             var fieldId = $(this).find('select[id^="sp_criteria_field"]').attr("id");
             var currRowGroup = fieldId[fieldId.length - 3];
@@ -911,74 +912,74 @@ function groupCriteriaRows() {
 // or numeric value in order to populate the modifier
 // select list
 var criteriaTypes = {
-    0              : "",
-    "album_title"  : "s",
-    "bit_rate"     : "n",
-    "bpm"          : "n",
-    "composer"     : "s",
-    "conductor"    : "s",
-    "copyright"    : "s",
-    "cuein"        : "n",
-    "cueout"       : "n",
-    "description"  : "s",
-    "artist_name"  : "s",
-    "encoded_by"   : "s",
-    "utime"        : "d",
-    "mtime"        : "d",
-    "lptime"       : "d",
-    "genre"        : "s",
-    "isrc_number"  : "s",
-    "label"        : "s",
-    "language"     : "s",
-    "length"       : "n",
-    "mime"         : "s",
-    "mood"         : "s",
-    "owner_id"     : "s",
-    "replay_gain"  : "n",
-    "sample_rate"  : "n",
-    "track_title"  : "s",
-    "track_number" : "n",
-    "info_url"     : "s",
-    "year"         : "n",
-    "track_type"   : "tt"
+    0: "",
+    "album_title": "s",
+    "bit_rate": "n",
+    "bpm": "n",
+    "composer": "s",
+    "conductor": "s",
+    "copyright": "s",
+    "cuein": "n",
+    "cueout": "n",
+    "description": "s",
+    "artist_name": "s",
+    "encoded_by": "s",
+    "utime": "d",
+    "mtime": "d",
+    "lptime": "d",
+    "genre": "s",
+    "isrc_number": "s",
+    "label": "s",
+    "language": "s",
+    "length": "n",
+    "mime": "s",
+    "mood": "s",
+    "owner_id": "s",
+    "replay_gain": "n",
+    "sample_rate": "n",
+    "track_title": "s",
+    "track_number": "n",
+    "info_url": "s",
+    "year": "n",
+    "track_type": "tt"
 };
 
 var stringCriteriaOptions = {
-    "0" : $.i18n._("Select modifier"),
-    "contains" : $.i18n._("contains"),
-    "does not contain" : $.i18n._("does not contain"),
-    "is" : $.i18n._("is"),
-    "is not" : $.i18n._("is not"),
-    "starts with" : $.i18n._("starts with"),
-    "ends with" : $.i18n._("ends with")
+    "0": $.i18n._("Select modifier"),
+    "contains": $.i18n._("contains"),
+    "does not contain": $.i18n._("does not contain"),
+    "is": $.i18n._("is"),
+    "is not": $.i18n._("is not"),
+    "starts with": $.i18n._("starts with"),
+    "ends with": $.i18n._("ends with")
 };
 
 var numericCriteriaOptions = {
-    "0" : $.i18n._("Select modifier"),
-    "is" : $.i18n._("is"),
-    "is not" : $.i18n._("is not"),
-    "is greater than" : $.i18n._("is greater than"),
-    "is less than" : $.i18n._("is less than"),
-    "is in the range" : $.i18n._("is in the range")
+    "0": $.i18n._("Select modifier"),
+    "is": $.i18n._("is"),
+    "is not": $.i18n._("is not"),
+    "is greater than": $.i18n._("is greater than"),
+    "is less than": $.i18n._("is less than"),
+    "is in the range": $.i18n._("is in the range")
 };
 
 var dateTimeCriteriaOptions = {
-    "0" : $.i18n._("Select modifier"),
-    "before" : $.i18n._("before"),
-    "after" : $.i18n._("after"),
-    "between" : $.i18n._("between"),
-    "is" : $.i18n._("is"),
-    "is not" : $.i18n._("is not"),
-    "is greater than" : $.i18n._("is greater than"),
-    "is less than" : $.i18n._("is less than"),
-    "is in the range" : $.i18n._("is in the range")
+    "0": $.i18n._("Select modifier"),
+    "before": $.i18n._("before"),
+    "after": $.i18n._("after"),
+    "between": $.i18n._("between"),
+    "is": $.i18n._("is"),
+    "is not": $.i18n._("is not"),
+    "is greater than": $.i18n._("is greater than"),
+    "is less than": $.i18n._("is less than"),
+    "is in the range": $.i18n._("is in the range")
 };
 
 var stringIsNotOptions = {
-    "0" : $.i18n._("Select modifier"),
-    "is" : $.i18n._("is"),
-    "is not" : $.i18n._("is not")
+    "0": $.i18n._("Select modifier"),
+    "is": $.i18n._("is"),
+    "is not": $.i18n._("is not")
 };
 
 let tracktypes = TRACKTYPES;
-var stringTracktypeOptions = Object.assign({"": "Select Track Type"}, tracktypes);
+var stringTracktypeOptions = Object.assign({ "": "Select Track Type" }, tracktypes);

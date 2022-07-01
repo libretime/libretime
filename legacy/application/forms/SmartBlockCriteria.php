@@ -855,9 +855,9 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                             if (in_array($d['sp_criteria_modifier'], ['before', 'after', 'between'])) {
                                 if (!preg_match('/^[1-9][0-9]*$|0/', $d['sp_criteria_value'])) {
                                     $element->addError(_('Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value'));
-                                    $isValid = false;
-                                // TODO validate this on numeric input with whatever parsing also do for extra
+                                    // TODO validate this on numeric input with whatever parsing also do for extra
                                     // if the modifier is before ago or between we skip validation until we confirm format
+                                    $isValid = false;
                                 } elseif (isset($d['sp_criteria_datetime_select']) && $d['sp_criteria_datetime_select'] == '0') {
                                     $element->addError(_('You must select a time unit for a relative datetime.'));
                                     $isValid = false;

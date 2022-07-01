@@ -1688,13 +1688,13 @@ SQL;
                         // need to pull in the current time and subtract the value or figure out how to make it relative
                         $relativedate = new DateTime($spCriteriaValue);
                         $dt = $relativedate->format(DateTime::ISO8601);
+                        // Logging::info($spCriteriaValue);
                         $spCriteriaValue = "{$spCriteria} <= '{$dt}'";
-                    // Logging::info($spCriteriaValue);
                     } elseif ($spCriteriaModifier == 'after') {
                         $relativedate = new DateTime($spCriteriaValue);
                         $dt = $relativedate->format(DateTime::ISO8601);
+                        // Logging::info($spCriteriaValue);
                         $spCriteriaValue = "{$spCriteria} >= '{$dt}'";
-                    // Logging::info($spCriteriaValue);
                     } elseif ($spCriteriaModifier == 'between') {
                         $fromrelativedate = new DateTime($spCriteriaValue);
                         $fdt = $fromrelativedate->format(DateTime::ISO8601);
