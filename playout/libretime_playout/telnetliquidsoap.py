@@ -56,10 +56,10 @@ class TelnetLiquidsoap:
 
     def __is_empty(self, queue_id):
         return True
-        tn = self.__connect()
+        connection = self.__connect()
         msg = "%s.queue\nexit\n" % queue_id
-        tn.write(msg.encode("utf-8"))
-        output = tn.read_all().decode("utf-8").splitlines()
+        connection.write(msg.encode("utf-8"))
+        output = connection.read_all().decode("utf-8").splitlines()
         if len(output) == 3:
             return len(output[0]) == 0
         else:
@@ -69,15 +69,15 @@ class TelnetLiquidsoap:
     def queue_clear_all(self):
         try:
             self.telnet_lock.acquire()
-            tn = self.__connect()
+            connection = self.__connect()
 
             for i in self.queues:
                 msg = "queues.%s_skip\n" % i
                 logger.debug(msg)
-                tn.write(msg.encode("utf-8"))
+                connection.write(msg.encode("utf-8"))
 
-            tn.write(b"exit\n")
-            logger.debug(tn.read_all().decode("utf-8"))
+            connection.write(b"exit\n")
+            logger.debug(connection.read_all().decode("utf-8"))
         except Exception:
             raise
         finally:
@@ -87,14 +87,14 @@ class TelnetLiquidsoap:
     def queue_remove(self, queue_id):
         try:
             self.telnet_lock.acquire()
-            tn = self.__connect()
+            connection = self.__connect()
 
             msg = "queues.%s_skip\n" % queue_id
             logger.debug(msg)
-            tn.write(msg.encode("utf-8"))
+            connection.write(msg.encode("utf-8"))
 
-            tn.write(b"exit\n")
-            logger.debug(tn.read_all().decode("utf-8"))
+            connection.write(b"exit\n")
+            logger.debug(connection.read_all().decode("utf-8"))
         except Exception:
             raise
         finally:
@@ -108,19 +108,19 @@ class TelnetLiquidsoap:
             if not self.__is_empty(queue_id):
                 raise QueueNotEmptyException()
 
-            tn = self.__connect()
+            connection = self.__connect()
             annotation = create_liquidsoap_annotation(media_item)
             msg = f"{queue_id}.push {annotation}\n"
             logger.debug(msg)
-            tn.write(msg.encode("utf-8"))
+            connection.write(msg.encode("utf-8"))
 
             show_name = media_item["show_name"]
             msg = "vars.show_name %s\n" % show_name
-            tn.write(msg.encode("utf-8"))
+            connection.write(msg.encode("utf-8"))
             logger.debug(msg)
 
-            tn.write(b"exit\n")
-            logger.debug(tn.read_all().decode("utf-8"))
+            connection.write(b"exit\n")
+            logger.debug(connection.read_all().decode("utf-8"))
         except Exception:
             raise
         finally:
@@ -130,22 +130,22 @@ class TelnetLiquidsoap:
     def stop_web_stream_buffer(self):
         try:
             self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(self.ls_host, self.ls_port)
+            connection = telnetlib.Telnet(self.ls_host, self.ls_port)
             # dynamic_source.stop http://87.230.101.24:80/top100station.mp3
 
             msg = "http.stop\n"
             logger.debug(msg)
-            tn.write(msg.encode("utf-8"))
+            connection.write(msg.encode("utf-8"))
 
             msg = "dynamic_source.id -1\n"
             logger.debug(msg)
-            tn.write(msg.encode("utf-8"))
+            connection.write(msg.encode("utf-8"))
 
-            tn.write(b"exit\n")
-            logger.debug(tn.read_all().decode("utf-8"))
+            connection.write(b"exit\n")
+            logger.debug(connection.read_all().decode("utf-8"))
 
-        except Exception as e:
-            logger.error(str(e))
+        except Exception as exception:
+            logger.error(str(exception))
             logger.error(traceback.format_exc())
         finally:
             self.telnet_lock.release()
@@ -154,18 +154,18 @@ class TelnetLiquidsoap:
     def stop_web_stream_output(self):
         try:
             self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(self.ls_host, self.ls_port)
+            connection = telnetlib.Telnet(self.ls_host, self.ls_port)
             # dynamic_source.stop http://87.230.101.24:80/top100station.mp3
 
             msg = "dynamic_source.output_stop\n"
             logger.debug(msg)
-            tn.write(msg.encode("utf-8"))
+            connection.write(msg.encode("utf-8"))
 
-            tn.write(b"exit\n")
-            logger.debug(tn.read_all().decode("utf-8"))
+            connection.write(b"exit\n")
+            logger.debug(connection.read_all().decode("utf-8"))
 
-        except Exception as e:
-            logger.error(str(e))
+        except Exception as exception:
+            logger.error(str(exception))
             logger.error(traceback.format_exc())
         finally:
             self.telnet_lock.release()
@@ -174,22 +174,22 @@ class TelnetLiquidsoap:
     def start_web_stream(self, media_item):
         try:
             self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(self.ls_host, self.ls_port)
+            connection = telnetlib.Telnet(self.ls_host, self.ls_port)
 
             # TODO: DO we need this?
             msg = "streams.scheduled_play_start\n"
-            tn.write(msg.encode("utf-8"))
+            connection.write(msg.encode("utf-8"))
 
             msg = "dynamic_source.output_start\n"
             logger.debug(msg)
-            tn.write(msg.encode("utf-8"))
+            connection.write(msg.encode("utf-8"))
 
-            tn.write(b"exit\n")
-            logger.debug(tn.read_all().decode("utf-8"))
+            connection.write(b"exit\n")
+            logger.debug(connection.read_all().decode("utf-8"))
 
             self.current_prebuffering_stream_id = None
-        except Exception as e:
-            logger.error(str(e))
+        except Exception as exception:
+            logger.error(str(exception))
             logger.error(traceback.format_exc())
         finally:
             self.telnet_lock.release()
@@ -198,22 +198,22 @@ class TelnetLiquidsoap:
     def start_web_stream_buffer(self, media_item):
         try:
             self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(self.ls_host, self.ls_port)
+            connection = telnetlib.Telnet(self.ls_host, self.ls_port)
 
             msg = "dynamic_source.id %s\n" % media_item["row_id"]
             logger.debug(msg)
-            tn.write(msg.encode("utf-8"))
+            connection.write(msg.encode("utf-8"))
 
             msg = "http.restart %s\n" % media_item["uri"]
             logger.debug(msg)
-            tn.write(msg.encode("utf-8"))
+            connection.write(msg.encode("utf-8"))
 
-            tn.write(b"exit\n")
-            logger.debug(tn.read_all().decode("utf-8"))
+            connection.write(b"exit\n")
+            logger.debug(connection.read_all().decode("utf-8"))
 
             self.current_prebuffering_stream_id = media_item["row_id"]
-        except Exception as e:
-            logger.error(str(e))
+        except Exception as exception:
+            logger.error(str(exception))
             logger.error(traceback.format_exc())
         finally:
             self.telnet_lock.release()
@@ -222,19 +222,19 @@ class TelnetLiquidsoap:
     def get_current_stream_id(self):
         try:
             self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(self.ls_host, self.ls_port)
+            connection = telnetlib.Telnet(self.ls_host, self.ls_port)
 
             msg = "dynamic_source.get_id\n"
             logger.debug(msg)
-            tn.write(msg.encode("utf-8"))
+            connection.write(msg.encode("utf-8"))
 
-            tn.write(b"exit\n")
-            stream_id = tn.read_all().decode("utf-8").splitlines()[0]
+            connection.write(b"exit\n")
+            stream_id = connection.read_all().decode("utf-8").splitlines()[0]
             logger.debug("stream_id: %s" % stream_id)
 
             return stream_id
-        except Exception as e:
-            logger.error(str(e))
+        except Exception as exception:
+            logger.error(str(exception))
             logger.error(traceback.format_exc())
         finally:
             self.telnet_lock.release()
@@ -250,12 +250,12 @@ class TelnetLiquidsoap:
 
         try:
             self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(self.ls_host, self.ls_port)
+            connection = telnetlib.Telnet(self.ls_host, self.ls_port)
             logger.info(command)
-            tn.write(command.encode("utf-8"))
-            tn.write(b"exit\n")
-            tn.read_all().decode("utf-8")
-        except Exception as e:
+            connection.write(command.encode("utf-8"))
+            connection.write(b"exit\n")
+            connection.read_all().decode("utf-8")
+        except Exception:
             logger.error(traceback.format_exc())
         finally:
             self.telnet_lock.release()
@@ -265,17 +265,17 @@ class TelnetLiquidsoap:
         try:
             self.telnet_lock.acquire()
 
-            tn = telnetlib.Telnet(self.ls_host, self.ls_port)
-            for i in commands:
-                logger.info(i)
-                if type(i) is str:
-                    i = i.encode("utf-8")
-                tn.write(i)
+            connection = telnetlib.Telnet(self.ls_host, self.ls_port)
+            for line in commands:
+                logger.info(line)
+                if type(line) is str:
+                    line = line.encode("utf-8")
+                connection.write(line)
 
-            tn.write(b"exit\n")
-            tn.read_all().decode("utf-8")
-        except Exception as e:
-            logger.error(str(e))
+            connection.write(b"exit\n")
+            connection.read_all().decode("utf-8")
+        except Exception as exception:
+            logger.error(str(exception))
             logger.error(traceback.format_exc())
         finally:
             self.telnet_lock.release()
@@ -303,8 +303,8 @@ class DummyTelnetLiquidsoap:
         self.telnet_lock = telnet_lock
         self.liquidsoap_mock_queues = {}
 
-        for i in range(4):
-            self.liquidsoap_mock_queues["s" + str(i)] = []
+        for index in range(4):
+            self.liquidsoap_mock_queues["s" + str(index)] = []
 
     @ls_timeout
     def queue_push(self, queue_id, media_item):

@@ -15,13 +15,13 @@ def __timeout(func, timeout_duration, default, args, kwargs):
     first_attempt = True
 
     while True:
-        it = InterruptableThread()
-        it.start()
+        thread = InterruptableThread()
+        thread.start()
         if not first_attempt:
             timeout_duration = timeout_duration * 2
-        it.join(timeout_duration)
+        thread.join(timeout_duration)
 
-        if it.is_alive():
+        if thread.is_alive():
             # Restart Liquidsoap and try the command one more time. If it
             # fails again then there is something critically wrong...
             if first_attempt:
@@ -30,13 +30,13 @@ def __timeout(func, timeout_duration, default, args, kwargs):
             else:
                 raise Exception("Thread did not terminate")
         else:
-            return it.result
+            return thread.result
 
         first_attempt = False
 
 
-def ls_timeout(f, timeout=15, default=None):
+def ls_timeout(func, timeout=15, default=None):
     def new_f(*args, **kwargs):
-        return __timeout(f, timeout, default, args, kwargs)
+        return __timeout(func, timeout, default, args, kwargs)
 
     return new_f
