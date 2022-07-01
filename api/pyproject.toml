@@ -5,6 +5,7 @@ django-settings-module = "libretime_api.settings.testing"
 [tool.pylint.messages_control]
 extension-pkg-whitelist = "pydantic"
 disable = [
+  "fixme",
   "missing-class-docstring",
   "missing-function-docstring",
   "missing-module-docstring",
