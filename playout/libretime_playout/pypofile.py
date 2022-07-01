@@ -137,14 +137,12 @@ class PypoFile(Thread):
 
         logger.debug("Highest priority item: %s" % highest_priority)
 
-        """
-        Remove this media_item from the dictionary. On the next iteration
-        (from the main function) we won't consider it for prioritization
-        anymore. If on the next iteration we have received a new schedule,
-        it is very possible we will have to deal with the same media_items
-        again. In this situation, the worst possible case is that we try to
-        copy the file again and realize we already have it (thus aborting the copy).
-        """
+        # Remove this media_item from the dictionary. On the next iteration
+        # (from the main function) we won't consider it for prioritization
+        # anymore. If on the next iteration we have received a new schedule,
+        # it is very possible we will have to deal with the same media_items
+        # again. In this situation, the worst possible case is that we try to
+        # copy the file again and realize we already have it (thus aborting the copy).
         del schedule[highest_priority]
 
         return media_item
@@ -153,18 +151,14 @@ class PypoFile(Thread):
         while True:
             try:
                 if self.media is None or len(self.media) == 0:
-                    """
-                    We have no schedule, so we have nothing else to do. Let's
-                    do a blocked wait on the queue
-                    """
+                    # We have no schedule, so we have nothing else to do. Let's
+                    # do a blocked wait on the queue
                     self.media = self.media_queue.get(block=True)
                 else:
-                    """
-                    We have a schedule we need to process, but we also want
-                    to check if a newer schedule is available. In this case
-                    do a non-blocking queue.get and in either case (we get something
-                    or we don't), get back to work on preparing getting files.
-                    """
+                    # We have a schedule we need to process, but we also want
+                    # to check if a newer schedule is available. In this case
+                    # do a non-blocking queue.get and in either case (we get something
+                    # or we don't), get back to work on preparing getting files.
                     try:
                         self.media = self.media_queue.get_nowait()
                     except Empty as e:
