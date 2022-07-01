@@ -899,7 +899,11 @@ SQL;
         $schedule_item = [
             'id' => $media_id,
             'type' => 'file',
-            'metadata' => $fileMetadata,
+            'metadata' => [
+                'track_title' => $fileMetadata['track_title'],
+                'artist_name' => $fileMetadata['artist_name'],
+                'mime' => $fileMetadata['mime'],
+            ],
             'row_id' => $item['id'],
             'uri' => $uri,
             'fade_in' => Application_Model_Schedule::WallTimeToMillisecs($item['fade_in']),
