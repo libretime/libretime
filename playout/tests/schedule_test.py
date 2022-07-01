@@ -94,6 +94,9 @@ class ApiClientServicesMock:
             "url": None,
             "replay_gain": "-8.77",
             "size": 9505222,
+            "artist_name": "Bag Raiders",
+            "track_title": "Shooting Stars",
+            "mime": "audio/mp3",
         }
 
     @staticmethod
@@ -137,7 +140,11 @@ def test_get_schedule():
                 "fade_out": 500.0,
                 "cue_in": 1.31066,
                 "cue_out": 231.985,
-                "metadata": ApiClientServicesMock.file_url(),
+                "metadata": {
+                    "artist_name": "Bag Raiders",
+                    "track_title": "Shooting Stars",
+                    "mime": "audio/mp3",
+                },
                 "replay_gain": "-8.77",
                 "filesize": 9505222,
             },

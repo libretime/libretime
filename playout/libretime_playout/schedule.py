@@ -78,7 +78,11 @@ def generate_file_events(
         "fade_out": time_in_milliseconds(time_fromisoformat(schedule["fade_out"])),
         "cue_in": time_in_seconds(time_fromisoformat(schedule["cue_in"])),
         "cue_out": time_in_seconds(time_fromisoformat(schedule["cue_out"])),
-        "metadata": file,
+        "metadata": {
+            "track_title": file["track_title"],
+            "artist_name": file["artist_name"],
+            "mime": file["mime"],
+        },
         "replay_gain": file["replay_gain"],
         "filesize": file["size"],
     }
