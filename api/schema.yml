@@ -6139,7 +6139,7 @@ components:
           type: string
           nullable: true
           maxLength: 255
-        visible:
+        enabled:
           type: boolean
       required:
         - code
@@ -6561,7 +6561,7 @@ components:
           type: string
           nullable: true
           maxLength: 255
-        visible:
+        enabled:
           type: boolean
     PatchedListenerCount:
       type: object

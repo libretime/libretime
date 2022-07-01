@@ -10,7 +10,7 @@ class Library(models.Model):
     )
     code = models.CharField(max_length=16, unique=True)
     description = models.CharField(max_length=255, blank=True, null=True)
-    visible = models.BooleanField(
+    enabled = models.BooleanField(
         blank=True,
         default=True,
         db_column="visibility",
