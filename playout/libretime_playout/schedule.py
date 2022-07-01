@@ -9,6 +9,8 @@ from libretime_shared.datetime import (
     time_in_seconds,
 )
 
+from .events import EventKind
+
 EVENT_KEY_FORMAT = "%Y-%m-%d-%H-%M-%S"
 
 
@@ -64,7 +66,7 @@ def generate_file_events(
     schedule_end_event_key = datetime_to_event_key(schedule["ends"])
 
     events[schedule_start_event_key] = {
-        "type": "file",
+        "type": EventKind.FILE,
         "independent_event": False,
         "row_id": schedule["id"],
         "start": schedule_start_event_key,
@@ -104,7 +106,7 @@ def generate_webstream_events(
     schedule_end_event_key = datetime_to_event_key(schedule["ends"])
 
     events[schedule_start_event_key] = {
-        "type": "stream_buffer_start",
+        "type": EventKind.STREAM_BUFFER_START,
         "independent_event": True,
         "row_id": schedule["id"],
         "start": datetime_to_event_key(schedule["starts"] - timedelta(seconds=5)),
@@ -114,7 +116,7 @@ def generate_webstream_events(
     }
 
     events[f"{schedule_start_event_key}_0"] = {
-        "type": "stream_output_start",
+        "type": EventKind.STREAM_OUTPUT_START,
         "independent_event": True,
         "row_id": schedule["id"],
         "start": schedule_start_event_key,
@@ -127,7 +129,7 @@ def generate_webstream_events(
 
     # NOTE: stream_*_end were previously triggerered 1 second before the schedule end.
     events[schedule_end_event_key] = {
-        "type": "stream_buffer_end",
+        "type": EventKind.STREAM_BUFFER_END,
         "independent_event": True,
         "row_id": schedule["id"],
         "start": schedule_end_event_key,
@@ -137,7 +139,7 @@ def generate_webstream_events(
     }
 
     events[f"{schedule_end_event_key}_0"] = {
-        "type": "stream_output_end",
+        "type": EventKind.STREAM_OUTPUT_END,
         "independent_event": True,
         "row_id": schedule["id"],
         "start": schedule_end_event_key,

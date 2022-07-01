@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 from loguru import logger
 
-from . import eventtypes
+from .events import EventKind
 from .telnetliquidsoap import TelnetLiquidsoap
 
 
@@ -25,13 +25,13 @@ class PypoLiquidsoap:
         return self.telnet_liquidsoap
 
     def play(self, media_item):
-        if media_item["type"] == eventtypes.FILE:
+        if media_item["type"] == EventKind.FILE:
             self.handle_file_type(media_item)
-        elif media_item["type"] == eventtypes.EVENT:
+        elif media_item["type"] == EventKind.EVENT:
             self.handle_event_type(media_item)
-        elif media_item["type"] == eventtypes.STREAM_BUFFER_START:
+        elif media_item["type"] == EventKind.STREAM_BUFFER_START:
             self.telnet_liquidsoap.start_web_stream_buffer(media_item)
-        elif media_item["type"] == eventtypes.STREAM_OUTPUT_START:
+        elif media_item["type"] == EventKind.STREAM_OUTPUT_START:
             if (
                 media_item["row_id"]
                 != self.telnet_liquidsoap.current_prebuffering_stream_id
@@ -40,9 +40,9 @@ class PypoLiquidsoap:
                 # so that the prebuffering stage could take effect. Let's do the prebuffering now.
                 self.telnet_liquidsoap.start_web_stream_buffer(media_item)
             self.telnet_liquidsoap.start_web_stream(media_item)
-        elif media_item["type"] == eventtypes.STREAM_BUFFER_END:
+        elif media_item["type"] == EventKind.STREAM_BUFFER_END:
             self.telnet_liquidsoap.stop_web_stream_buffer()
-        elif media_item["type"] == eventtypes.STREAM_OUTPUT_END:
+        elif media_item["type"] == EventKind.STREAM_OUTPUT_END:
             self.telnet_liquidsoap.stop_web_stream_output()
         else:
             raise UnknownMediaItemType(str(media_item))
@@ -123,13 +123,11 @@ class PypoLiquidsoap:
 
         try:
             scheduled_now_files = [
-                x for x in scheduled_now if x["type"] == eventtypes.FILE
+                x for x in scheduled_now if x["type"] == EventKind.FILE
             ]
 
             scheduled_now_webstream = [
-                x
-                for x in scheduled_now
-                if x["type"] in (eventtypes.STREAM_OUTPUT_START)
+                x for x in scheduled_now if x["type"] in (EventKind.STREAM_OUTPUT_START)
             ]
 
             schedule_ids = {x["row_id"] for x in scheduled_now_files}
@@ -202,7 +200,7 @@ class PypoLiquidsoap:
         self.liq_queue_tracker[queue] = None
 
     def is_file(self, media_item):
-        return media_item["type"] == eventtypes.FILE
+        return media_item["type"] == EventKind.FILE
 
     def clear_queue_tracker(self):
         for i in self.liq_queue_tracker.keys():
