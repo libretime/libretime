@@ -22,8 +22,8 @@ def __timeout(func, timeout_duration, default, args, kwargs):
         it.join(timeout_duration)
 
         if it.is_alive():
-            """Restart Liquidsoap and try the command one more time. If it
-            fails again then there is something critically wrong..."""
+            # Restart Liquidsoap and try the command one more time. If it
+            # fails again then there is something critically wrong...
             if first_attempt:
                 # restart liquidsoap
                 pypofetch.PypoFetch.ref.restart_liquidsoap()

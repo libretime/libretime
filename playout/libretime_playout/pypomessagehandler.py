@@ -52,10 +52,8 @@ class PypoMessageHandler(Thread):
         except Exception as e:
             logger.error(e)
 
-    """
-    Handle a message from RabbitMQ, put it into our yucky global var.
-    Hopefully there is a better way to do this.
-    """
+    # Handle a message from RabbitMQ, put it into our yucky global var.
+    # Hopefully there is a better way to do this.
 
     def handle_message(self, message):
         try:
@@ -111,11 +109,9 @@ class PypoMessageHandler(Thread):
         logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
         time.sleep(5)
 
-    """
-    Main loop of the thread:
-    Wait for schedule updates from RabbitMQ, but in case there aren't any,
-    poll the server to get the upcoming schedule.
-    """
+    # Main loop of the thread:
+    # Wait for schedule updates from RabbitMQ, but in case there aren't any,
+    # poll the server to get the upcoming schedule.
 
     def run(self):
         while True:

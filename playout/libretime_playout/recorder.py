@@ -350,9 +350,7 @@ class Recorder(Thread):
             while True:
                 if self.loops * PUSH_INTERVAL > 3600:
                     self.loops = 0
-                    """
-                    Fetch recorder schedule
-                    """
+                    # Fetch recorder schedule
                     try:
                         temp = self.api_client.get_shows_to_record()
                         if temp is not None:

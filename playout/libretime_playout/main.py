@@ -170,12 +170,10 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
 
     pypo_liquidsoap = PypoLiquidsoap(telnet_lock, liquidsoap_host, liquidsoap_port)
 
-    """
-    This queue is shared between pypo-fetch and pypo-file, where pypo-file
-    is the consumer. Pypo-fetch will send every schedule it gets to pypo-file
-    and pypo will parse this schedule to determine which file has the highest
-    priority, and retrieve it.
-    """
+    # This queue is shared between pypo-fetch and pypo-file, where pypo-file
+    # is the consumer. Pypo-fetch will send every schedule it gets to pypo-file
+    # and pypo will parse this schedule to determine which file has the highest
+    # priority, and retrieve it.
     media_q = Queue()
 
     # Pass only the configuration sections needed; PypoMessageHandler only needs rabbitmq settings
