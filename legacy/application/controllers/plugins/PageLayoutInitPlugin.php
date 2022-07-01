@@ -36,8 +36,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             'upgrade',
             'embed',
             'feeds',
-        ])
-        ) {
+        ])) {
             // Start the session
             Zend_Session::start();
             Application_Model_Auth::pinSessionToClient(Zend_Auth::getInstance());

@@ -52,7 +52,8 @@ class Application_Model_Block implements Application_Model_LibraryEditable
         'is in the range' => Criteria::CUSTOM,
         'before' => Criteria::CUSTOM,
         'after' => Criteria::CUSTOM,
-        'between' => Criteria::CUSTOM, ];
+        'between' => Criteria::CUSTOM,
+    ];
 
     private static $criteria2PeerMap = [
         0 => 'Select criteria',
@@ -978,8 +979,10 @@ SQL;
             throw $e;
         }
 
-        return ['cliplength' => $cliplength, 'cueIn' => $cueIn, 'cueOut' => $cueOut, 'length' => $this->getUnformatedLength(),
-            'fadeIn' => $fadeIn, 'fadeOut' => $fadeOut, ];
+        return [
+            'cliplength' => $cliplength, 'cueIn' => $cueIn, 'cueOut' => $cueOut, 'length' => $this->getUnformatedLength(),
+            'fadeIn' => $fadeIn, 'fadeOut' => $fadeOut,
+        ];
     }
 
     public function getAllPLMetaData()
@@ -1487,7 +1490,8 @@ SQL;
                 $storedCrit['limit'] = [
                     'value' => $value,
                     'modifier' => $modifier,
-                    'display_modifier' => _($modifier), ];
+                    'display_modifier' => _($modifier),
+                ];
             } elseif ($criteria == 'repeat_tracks') {
                 $storedCrit['repeat_tracks'] = ['value' => $value];
             } elseif ($criteria == 'overflow_tracks') {
@@ -1502,7 +1506,8 @@ SQL;
                     'extra' => $extra,
                     'criteria_group' => $criteriagroup,
                     'display_name' => $criteriaOptions[$criteria],
-                    'display_modifier' => $modifierOptions[$modifier], ];
+                    'display_modifier' => $modifierOptions[$modifier],
+                ];
             }
         }
 
@@ -1583,7 +1588,8 @@ SQL;
                 $storedCrit['limit'] = [
                     'value' => $value,
                     'modifier' => $modifier,
-                    'display_modifier' => _($modifier), ];
+                    'display_modifier' => _($modifier),
+                ];
             } elseif ($criteria == 'repeat_tracks') {
                 $storedCrit['repeat_tracks'] = ['value' => $value];
             } elseif ($criteria == 'overflow_tracks') {
@@ -1597,7 +1603,8 @@ SQL;
                     'modifier' => $modifier,
                     'extra' => $extra,
                     'display_name' => $criteriaOptions[$criteria],
-                    'display_modifier' => $modifierOptions[$modifier], ];
+                    'display_modifier' => $modifierOptions[$modifier],
+                ];
             }
         }
 
@@ -1681,13 +1688,13 @@ SQL;
                         // need to pull in the current time and subtract the value or figure out how to make it relative
                         $relativedate = new DateTime($spCriteriaValue);
                         $dt = $relativedate->format(DateTime::ISO8601);
+                        // Logging::info($spCriteriaValue);
                         $spCriteriaValue = "{$spCriteria} <= '{$dt}'";
-                    // Logging::info($spCriteriaValue);
                     } elseif ($spCriteriaModifier == 'after') {
                         $relativedate = new DateTime($spCriteriaValue);
                         $dt = $relativedate->format(DateTime::ISO8601);
+                        // Logging::info($spCriteriaValue);
                         $spCriteriaValue = "{$spCriteria} >= '{$dt}'";
-                    // Logging::info($spCriteriaValue);
                     } elseif ($spCriteriaModifier == 'between') {
                         $fromrelativedate = new DateTime($spCriteriaValue);
                         $fdt = $fromrelativedate->format(DateTime::ISO8601);
