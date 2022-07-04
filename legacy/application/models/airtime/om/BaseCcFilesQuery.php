@@ -156,10 +156,6 @@
  * @method CcFilesQuery rightJoinCcSubjsRelatedByDbEditedby($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSubjsRelatedByDbEditedby relation
  * @method CcFilesQuery innerJoinCcSubjsRelatedByDbEditedby($relationAlias = null) Adds a INNER JOIN clause to the query using the CcSubjsRelatedByDbEditedby relation
  *
- * @method CcFilesQuery leftJoinCloudFile($relationAlias = null) Adds a LEFT JOIN clause to the query using the CloudFile relation
- * @method CcFilesQuery rightJoinCloudFile($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CloudFile relation
- * @method CcFilesQuery innerJoinCloudFile($relationAlias = null) Adds a INNER JOIN clause to the query using the CloudFile relation
- *
  * @method CcFilesQuery leftJoinCcShowInstances($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcShowInstances relation
  * @method CcFilesQuery rightJoinCcShowInstances($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcShowInstances relation
  * @method CcFilesQuery innerJoinCcShowInstances($relationAlias = null) Adds a INNER JOIN clause to the query using the CcShowInstances relation
@@ -2837,80 +2833,6 @@ abstract class BaseCcFilesQuery extends ModelCriteria
         return $this
             ->joinCcSubjsRelatedByDbEditedby($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'CcSubjsRelatedByDbEditedby', 'CcSubjsQuery');
-    }
-
-    /**
-     * Filter the query by a related CloudFile object
-     *
-     * @param   CloudFile|PropelObjectCollection $cloudFile  the related object to use as filter
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return                 CcFilesQuery The current query, for fluid interface
-     * @throws PropelException - if the provided filter is invalid.
-     */
-    public function filterByCloudFile($cloudFile, $comparison = null)
-    {
-        if ($cloudFile instanceof CloudFile) {
-            return $this
-                ->addUsingAlias(CcFilesPeer::ID, $cloudFile->getCcFileId(), $comparison);
-        } elseif ($cloudFile instanceof PropelObjectCollection) {
-            return $this
-                ->useCloudFileQuery()
-                ->filterByPrimaryKeys($cloudFile->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByCloudFile() only accepts arguments of type CloudFile or PropelCollection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the CloudFile relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return CcFilesQuery The current query, for fluid interface
-     */
-    public function joinCloudFile($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('CloudFile');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'CloudFile');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the CloudFile relation CloudFile object
-     *
-     * @see       useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   CloudFileQuery A secondary query class using the current class as primary query
-     */
-    public function useCloudFileQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinCloudFile($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'CloudFile', 'CloudFileQuery');
     }
 
     /**

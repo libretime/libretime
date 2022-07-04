@@ -122,10 +122,6 @@ class LibraryController extends Zend_Controller_Action
                 // $menu["publish"] = array("name"=> _("Publish..."), "url" => $baseUrl."library/publish/id/{$id}");
             }
 
-            // It's important that we always return the parent id (cc_files id)
-            // and not the cloud_file id (if applicable) for track download.
-            // Our application logic (StoredFile.php) will determine if the track
-            // is a cloud_file and handle it appropriately.
             $url = $baseUrl . "api/get-media/file/{$id}/download/true";
             $menu['download'] = ['name' => _('Download'), 'icon' => 'download', 'url' => $url];
         } elseif ($type === 'playlist' || $type === 'block') {

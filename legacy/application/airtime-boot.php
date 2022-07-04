@@ -49,9 +49,6 @@ set_include_path(APPLICATION_PATH . '/controllers/plugins' . PATH_SEPARATOR . ge
 // Services.
 set_include_path(APPLICATION_PATH . '/services' . PATH_SEPARATOR . get_include_path());
 
-// cloud storage directory
-set_include_path(APPLICATION_PATH . '/cloud_storage' . PATH_SEPARATOR . get_include_path());
-
 // Upgrade directory
 set_include_path(APPLICATION_PATH . '/upgrade' . PATH_SEPARATOR . get_include_path());
 
