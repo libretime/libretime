@@ -26,6 +26,7 @@ final class Application_Model_Locale
         'sr_RS' => 'Српски (Ћирилица)',
         'sr_RS@latin' => 'Srpski (Latinica)',
         // 'tr_TR' => '',
+        'uk_UA' => 'украї́нська мо́ва',
         'zh_CN' => '简体中文',
     ];
 
