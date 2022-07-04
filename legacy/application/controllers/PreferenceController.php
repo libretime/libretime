@@ -465,7 +465,6 @@ class PreferenceController extends Zend_Controller_Action
         }
 
         $this->deleteFutureScheduleItems();
-        $this->deleteCloudFiles();
         $this->deleteStoredFiles();
 
         $this->getResponse()
@@ -496,20 +495,6 @@ class PreferenceController extends Zend_Controller_Action
             }
 
             $i->delete();
-        }
-    }
-
-    private function deleteCloudFiles()
-    {
-        try {
-            $CC_CONFIG = Config::getConfig();
-
-            foreach ($CC_CONFIG['supportedStorageBackends'] as $storageBackend) {
-                $proxyStorageBackend = new ProxyStorageBackend($storageBackend);
-                $proxyStorageBackend->deleteAllCloudFileObjects();
-            }
-        } catch (Exception $e) {
-            Logging::info($e->getMessage());
         }
     }
 

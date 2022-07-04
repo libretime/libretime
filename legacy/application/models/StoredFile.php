@@ -385,7 +385,7 @@ SQL;
     }
 
     /**
-     * Deletes the physical file from the local file system or from the cloud.
+     * Deletes the physical file from the local file system.
      *
      * @param mixed $quiet
      */
@@ -412,7 +412,6 @@ SQL;
         }
 
         // Delete the physical file from either the local stor directory
-        // or from the cloud
         if ($this->_file->getDbImportStatus() == CcFiles::IMPORT_STATUS_SUCCESS) {
             try {
                 $this->_file->deletePhysicalFile();
@@ -433,7 +432,7 @@ SQL;
         // the file getting deleted
         self::updateBlockAndPlaylistLength($this->_file->getDbId());
 
-        // delete the file record from cc_files (and cloud_file, if applicable)
+        // delete the file record from cc_files
         $this->_file->delete();
     }
 
@@ -616,16 +615,7 @@ SQL;
                 throw new Exception('Could not recall file with id: ' . $p_id);
             }
 
-            // Attempt to get the cloud file object and return it. If no cloud
-            // file object is found then we are dealing with a regular stored
-            // object so return that
-            $cloudFile = CloudFileQuery::create()->findOneByCcFileId($p_id);
-
-            if (is_null($cloudFile)) {
-                return self::createWithFile($storedFile, $con);
-            }
-
-            return self::createWithFile($cloudFile, $con);
+            return self::createWithFile($storedFile, $con);
         }
 
         throw new Exception('No arguments passed to RecallById');
@@ -681,13 +671,15 @@ SQL;
 
     public static function getLibraryColumns()
     {
-        return ['id', 'track_title', 'artist_name', 'album_title',
+        return [
+            'id', 'track_title', 'artist_name', 'album_title',
             'genre', 'length', 'year', 'utime', 'mtime', 'ftype',
             'track_number', 'mood', 'bpm', 'composer', 'info_url',
             'bit_rate', 'sample_rate', 'isrc_number', 'encoded_by', 'label',
             'copyright', 'mime', 'language', 'filepath', 'owner_id',
             'conductor', 'replay_gain', 'lptime', 'is_playlist', 'is_scheduled',
-            'cuein', 'cueout', 'description', 'artwork', 'track_type', ];
+            'cuein', 'cueout', 'description', 'artwork', 'track_type',
+        ];
     }
 
     public static function searchLibraryFiles($datatables)

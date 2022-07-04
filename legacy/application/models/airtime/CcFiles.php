@@ -205,25 +205,7 @@ class CcFiles extends BaseCcFiles
 
         try {
             self::validateFileArray($fileArray);
-            if ($file && isset($fileArray['resource_id'])) {
-                $file->fromArray($fileArray, BasePeer::TYPE_FIELDNAME);
-
-                // store the original filename
-                $file->setDbFilepath($fileArray['filename']);
-
-                $fileSizeBytes = $fileArray['filesize'];
-                if (!isset($fileSizeBytes) || $fileSizeBytes === false) {
-                    throw new LibreTimeFileNotFoundException("Invalid filesize for {$fileId}");
-                }
-
-                $cloudFile = new CloudFile();
-                $cloudFile->setStorageBackend($fileArray['storage_backend']);
-                $cloudFile->setResourceId($fileArray['resource_id']);
-                $cloudFile->setCcFiles($file);
-                $cloudFile->save();
-
-                Application_Model_Preference::updateDiskUsage($fileSizeBytes);
-            } elseif ($file) {
+            if ($file) {
                 $file->fromArray($fileArray, BasePeer::TYPE_FIELDNAME);
 
                 // Our RESTful API takes "full_path" as a field, which we then split and translate to match
@@ -265,7 +247,7 @@ class CcFiles extends BaseCcFiles
         return CcFiles::sanitizeResponse($file);
     }
 
-    /** Delete a file from the database and disk (or cloud).
+    /** Delete a file from the database and disk.
      * @param $id The file ID
      *
      * @throws DeleteScheduledFileException

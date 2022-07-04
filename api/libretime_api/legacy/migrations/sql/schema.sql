@@ -101,21 +101,6 @@ CREATE TABLE "cc_track_types"
 );
 
 -----------------------------------------------------------------------
--- cloud_file
------------------------------------------------------------------------
-
-DROP TABLE IF EXISTS "cloud_file" CASCADE;
-
-CREATE TABLE "cloud_file"
-(
-    "id" serial NOT NULL,
-    "storage_backend" VARCHAR(512) NOT NULL,
-    "resource_id" TEXT NOT NULL,
-    "cc_file_id" INTEGER,
-    PRIMARY KEY ("id")
-);
-
------------------------------------------------------------------------
 -- cc_show
 -----------------------------------------------------------------------
 
@@ -734,11 +719,6 @@ ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_owner_fkey"
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey"
     FOREIGN KEY ("editedby")
     REFERENCES "cc_subjs" ("id");
-
-ALTER TABLE "cloud_file" ADD CONSTRAINT "cloud_file_FK_1"
-    FOREIGN KEY ("cc_file_id")
-    REFERENCES "cc_files" ("id")
-    ON DELETE CASCADE;
 
 ALTER TABLE "cc_show" ADD CONSTRAINT "cc_playlist_autoplaylist_fkey"
     FOREIGN KEY ("autoplaylist_id")

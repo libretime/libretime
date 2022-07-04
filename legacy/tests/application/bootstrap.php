@@ -59,9 +59,6 @@ set_include_path(APPLICATION_PATH . '/../tests/application/testdata' . PATH_SEPA
 // helper functions
 set_include_path(APPLICATION_PATH . '/../tests/application/helpers' . PATH_SEPARATOR . get_include_path());
 
-// cloud storage files
-set_include_path(APPLICATION_PATH . '/cloud_storage' . PATH_SEPARATOR . get_include_path());
-
 require_once 'jooola/propel1/runtime/lib/Propel.php';
 Propel::init('../application/configs/airtime-conf-production.php');
 
