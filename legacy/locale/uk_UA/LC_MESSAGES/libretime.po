@@ -8,12 +8,17 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2022-07-04 18:49+0200\n"
-"PO-Revision-Date: 2015-09-05 08:33+0000\n"
+"PO-Revision-Date: 2022-07-06 05:21+0000\n"
+"Last-Translator: Mykola <bondarchuk.nikola@gmail.com>\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/libretime/"
+"legacy/uk/>\n"
 "Language: uk_UA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.13.1-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -32,7 +37,7 @@ msgstr "%s:%s:%s is not a valid time"
 
 #: application/common/LocaleHelper.php:23
 msgid "English"
-msgstr ""
+msgstr "Англійська"
 
 #: application/common/LocaleHelper.php:24
 msgid "Afar"
@@ -40,19 +45,19 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:25
 msgid "Abkhazian"
-msgstr ""
+msgstr "Абхазька"
 
 #: application/common/LocaleHelper.php:26
 msgid "Afrikaans"
-msgstr ""
+msgstr "Африканська"
 
 #: application/common/LocaleHelper.php:27
 msgid "Amharic"
-msgstr ""
+msgstr "Амхарська"
 
 #: application/common/LocaleHelper.php:28
 msgid "Arabic"
-msgstr ""
+msgstr "Арабська"
 
 #: application/common/LocaleHelper.php:29
 msgid "Assamese"
@@ -64,19 +69,19 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:31
 msgid "Azerbaijani"
-msgstr ""
+msgstr "Азербайджанська"
 
 #: application/common/LocaleHelper.php:32
 msgid "Bashkir"
-msgstr ""
+msgstr "Башкирська"
 
 #: application/common/LocaleHelper.php:33
 msgid "Belarusian"
-msgstr ""
+msgstr "Білоруська"
 
 #: application/common/LocaleHelper.php:34
 msgid "Bulgarian"
-msgstr ""
+msgstr "Болгарська"
 
 #: application/common/LocaleHelper.php:35
 msgid "Bihari"
@@ -92,7 +97,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:38
 msgid "Tibetan"
-msgstr ""
+msgstr "Тибетська"
 
 #: application/common/LocaleHelper.php:39
 msgid "Breton"
@@ -108,7 +113,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:42
 msgid "Czech"
-msgstr ""
+msgstr "Чеська"
 
 #: application/common/LocaleHelper.php:43
 msgid "Welsh"
@@ -116,11 +121,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:44
 msgid "Danish"
-msgstr ""
+msgstr "Датська"
 
 #: application/common/LocaleHelper.php:45
 msgid "German"
-msgstr ""
+msgstr "Німецька"
 
 #: application/common/LocaleHelper.php:46
 msgid "Bhutani"
@@ -128,7 +133,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:47
 msgid "Greek"
-msgstr ""
+msgstr "Грецька"
 
 #: application/common/LocaleHelper.php:48
 msgid "Esperanto"
@@ -136,11 +141,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:49
 msgid "Spanish"
-msgstr ""
+msgstr "Іспанська"
 
 #: application/common/LocaleHelper.php:50
 msgid "Estonian"
-msgstr ""
+msgstr "Естонська"
 
 #: application/common/LocaleHelper.php:51
 msgid "Basque"
@@ -148,11 +153,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:52
 msgid "Persian"
-msgstr ""
+msgstr "Перська"
 
 #: application/common/LocaleHelper.php:53
 msgid "Finnish"
-msgstr ""
+msgstr "Фінська"
 
 #: application/common/LocaleHelper.php:54
 msgid "Fiji"
@@ -164,7 +169,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:56
 msgid "French"
-msgstr ""
+msgstr "Французька"
 
 #: application/common/LocaleHelper.php:57
 msgid "Frisian"
@@ -172,7 +177,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:58
 msgid "Irish"
-msgstr ""
+msgstr "Ірландська"
 
 #: application/common/LocaleHelper.php:59
 msgid "Scots/Gaelic"
@@ -200,15 +205,15 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:65
 msgid "Croatian"
-msgstr ""
+msgstr "Хорватська"
 
 #: application/common/LocaleHelper.php:66
 msgid "Hungarian"
-msgstr ""
+msgstr "Угорська"
 
 #: application/common/LocaleHelper.php:67
 msgid "Armenian"
-msgstr ""
+msgstr "Вірменська"
 
 #: application/common/LocaleHelper.php:68
 msgid "Interlingua"
@@ -224,27 +229,27 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:71
 msgid "Indonesian"
-msgstr ""
+msgstr "Індонезійська"
 
 #: application/common/LocaleHelper.php:72
 msgid "Icelandic"
-msgstr ""
+msgstr "Ісландська"
 
 #: application/common/LocaleHelper.php:73
 msgid "Italian"
-msgstr ""
+msgstr "Італійська"
 
 #: application/common/LocaleHelper.php:74
 msgid "Hebrew"
-msgstr ""
+msgstr "Іврит"
 
 #: application/common/LocaleHelper.php:75
 msgid "Japanese"
-msgstr ""
+msgstr "Японська"
 
 #: application/common/LocaleHelper.php:76
 msgid "Yiddish"
-msgstr ""
+msgstr "Ідиш"
 
 #: application/common/LocaleHelper.php:77
 msgid "Javanese"
@@ -252,15 +257,15 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:78
 msgid "Georgian"
-msgstr ""
+msgstr "Грузинська"
 
 #: application/common/LocaleHelper.php:79
 msgid "Kazakh"
-msgstr ""
+msgstr "Казахська"
 
 #: application/common/LocaleHelper.php:80
 msgid "Greenlandic"
-msgstr ""
+msgstr "Гренландська"
 
 #: application/common/LocaleHelper.php:81
 msgid "Cambodian"
@@ -272,7 +277,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:83
 msgid "Korean"
-msgstr ""
+msgstr "Корейська"
 
 #: application/common/LocaleHelper.php:84
 msgid "Kashmiri"
@@ -300,7 +305,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:90
 msgid "Lithuanian"
-msgstr ""
+msgstr "Литовська"
 
 #: application/common/LocaleHelper.php:91
 msgid "Latvian/Lettish"
@@ -316,7 +321,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:94
 msgid "Macedonian"
-msgstr ""
+msgstr "Македонська"
 
 #: application/common/LocaleHelper.php:95
 msgid "Malayalam"
@@ -324,11 +329,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:96
 msgid "Mongolian"
-msgstr ""
+msgstr "Монгольська"
 
 #: application/common/LocaleHelper.php:97
 msgid "Moldavian"
-msgstr ""
+msgstr "Молдавська"
 
 #: application/common/LocaleHelper.php:98
 msgid "Marathi"
@@ -356,11 +361,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:104
 msgid "Dutch"
-msgstr ""
+msgstr "Голландська"
 
 #: application/common/LocaleHelper.php:105
 msgid "Norwegian"
-msgstr ""
+msgstr "Норвезька"
 
 #: application/common/LocaleHelper.php:106
 msgid "Occitan"
@@ -376,7 +381,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:109
 msgid "Polish"
-msgstr ""
+msgstr "Польська"
 
 #: application/common/LocaleHelper.php:110
 msgid "Pashto/Pushto"
@@ -384,7 +389,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:111
 msgid "Portuguese"
-msgstr ""
+msgstr "Португальська"
 
 #: application/common/LocaleHelper.php:112
 msgid "Quechua"
@@ -400,7 +405,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:115
 msgid "Romanian"
-msgstr ""
+msgstr "Румунська"
 
 #: application/common/LocaleHelper.php:116
 msgid "Russian"
@@ -432,11 +437,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:123
 msgid "Slovak"
-msgstr ""
+msgstr "Словацька"
 
 #: application/common/LocaleHelper.php:124
 msgid "Slovenian"
-msgstr ""
+msgstr "Словенська"
 
 #: application/common/LocaleHelper.php:125
 msgid "Samoan"
@@ -452,11 +457,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:128
 msgid "Albanian"
-msgstr ""
+msgstr "Албанська"
 
 #: application/common/LocaleHelper.php:129
 msgid "Serbian"
-msgstr ""
+msgstr "Сербська"
 
 #: application/common/LocaleHelper.php:130
 msgid "Siswati"
@@ -472,7 +477,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:133
 msgid "Swedish"
-msgstr ""
+msgstr "Шведська"
 
 #: application/common/LocaleHelper.php:134
 msgid "Swahili"
@@ -516,7 +521,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:144
 msgid "Turkish"
-msgstr ""
+msgstr "Турецька"
 
 #: application/common/LocaleHelper.php:145
 msgid "Tsonga"
@@ -524,7 +529,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:146
 msgid "Tatar"
-msgstr ""
+msgstr "Татарська"
 
 #: application/common/LocaleHelper.php:147
 msgid "Twi"
@@ -532,7 +537,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:148
 msgid "Ukrainian"
-msgstr ""
+msgstr "Українська"
 
 #: application/common/LocaleHelper.php:149
 msgid "Urdu"
@@ -540,11 +545,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:150
 msgid "Uzbek"
-msgstr ""
+msgstr "Узбецька"
 
 #: application/common/LocaleHelper.php:151
 msgid "Vietnamese"
-msgstr ""
+msgstr "В'єтнамська"
 
 #: application/common/LocaleHelper.php:152
 msgid "Volapuk"
@@ -564,7 +569,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:156
 msgid "Chinese"
-msgstr ""
+msgstr "Китайська"
 
 #: application/common/LocaleHelper.php:157
 msgid "Zulu"
@@ -572,11 +577,12 @@ msgstr ""
 
 #: application/common/Timezone.php:21
 msgid "Use station default"
-msgstr ""
+msgstr "Використовувати станцію за замовчуванням"
 
 #: application/common/UsabilityHints.php:65
 msgid "Upload some tracks below to add them to your library!"
 msgstr ""
+"Завантажте декілька композицій нижче, щоб додати їх до своєї бібліотеки!"
 
 #: application/common/UsabilityHints.php:69
 #, php-format
@@ -683,23 +689,23 @@ msgstr ""
 
 #: application/configs/navigation.php:35
 msgid "Calendar"
-msgstr "Calendar"
+msgstr "Календар"
 
 #: application/configs/navigation.php:43
 msgid "Widgets"
-msgstr ""
+msgstr "Віджети"
 
 #: application/configs/navigation.php:52
 msgid "Player"
-msgstr ""
+msgstr "Плеєр"
 
 #: application/configs/navigation.php:58
 msgid "Weekly Schedule"
-msgstr ""
+msgstr "Тижневий розклад"
 
 #: application/configs/navigation.php:66
 msgid "Settings"
-msgstr ""
+msgstr "Налаштування"
 
 #: application/configs/navigation.php:74
 msgid "General"
@@ -707,74 +713,74 @@ msgstr ""
 
 #: application/configs/navigation.php:80
 msgid "My Profile"
-msgstr ""
+msgstr "Мій профіль"
 
 #: application/configs/navigation.php:85
 msgid "Users"
-msgstr "Users"
+msgstr "Користувачі"
 
 #: application/configs/navigation.php:91
 msgid "Track Types"
-msgstr ""
+msgstr "Типи треків"
 
 #: application/configs/navigation.php:98
 msgid "Streams"
-msgstr "Streams"
+msgstr "Потоки"
 
 #: application/configs/navigation.php:105
 #: application/controllers/LocaleController.php:382
 #: application/controllers/LocaleController.php:383
 msgid "Status"
-msgstr "Status"
+msgstr "Статус"
 
 #: application/configs/navigation.php:114
 msgid "Analytics"
-msgstr ""
+msgstr "Аналітика"
 
 #: application/configs/navigation.php:123
 msgid "Playout History"
-msgstr "Playout History"
+msgstr "Історія відтворення"
 
 #: application/configs/navigation.php:130
 msgid "History Templates"
-msgstr "History Templates"
+msgstr "Історія шаблонів"
 
 #: application/configs/navigation.php:137
 msgid "Listener Stats"
-msgstr "Listener Stats"
+msgstr "Статистика слухачів"
 
 #: application/configs/navigation.php:144
 msgid "Show Listener Stats"
-msgstr ""
+msgstr "Показати статистику слухачів"
 
 #: application/configs/navigation.php:153
 msgid "Help"
-msgstr "Help"
+msgstr "Допомога"
 
 #: application/configs/navigation.php:161
 msgid "Getting Started"
-msgstr "Getting Started"
+msgstr "Починаємо"
 
 #: application/configs/navigation.php:168
 msgid "User Manual"
-msgstr "User Manual"
+msgstr "Посібник користувача"
 
 #: application/configs/navigation.php:173
 msgid "Get Help Online"
-msgstr ""
+msgstr "Отримати допомогу онлайн"
 
 #: application/configs/navigation.php:178
 msgid "Contribute to LibreTime"
-msgstr ""
+msgstr "Зробіть внесок у LibreTime"
 
 #: application/configs/navigation.php:183
 msgid "What's New?"
-msgstr ""
+msgstr "Що нового?"
 
 #: application/controllers/ApiController.php:112
 #: application/controllers/ApiController.php:746
 msgid "You are not allowed to access this resource."
-msgstr "You are not allowed to access this resource."
+msgstr "Ви не маєте доступу до цього ресурсу."
 
 #: application/controllers/ApiController.php:374
 #: application/controllers/ApiController.php:450
@@ -784,14 +790,14 @@ msgstr "You are not allowed to access this resource."
 #: application/controllers/ApiController.php:679
 #: application/controllers/ApiController.php:712
 msgid "You are not allowed to access this resource. "
-msgstr "You are not allowed to access this resource. "
+msgstr "Ви не маєте доступу до цього ресурсу. "
 
 #: application/controllers/ApiController.php:916
 #: application/controllers/ApiController.php:937
 #: application/controllers/ApiController.php:949
 #, php-format
 msgid "File does not exist in %s"
-msgstr ""
+msgstr "Файл не існує в %s"
 
 #: application/controllers/ApiController.php:1003
 msgid "Bad request. no 'mode' parameter passed."
@@ -809,11 +815,11 @@ msgstr "You don't have permission to disconnect source."
 #: application/controllers/DashboardController.php:36
 #: application/controllers/DashboardController.php:88
 msgid "There is no source connected to this input."
-msgstr "There is no source connected to this input."
+msgstr "До цього входу не підключено джерело."
 
 #: application/controllers/DashboardController.php:83
 msgid "You don't have permission to switch source."
-msgstr "You don't have permission to switch source."
+msgstr "Ви не маєте дозволу перемикати джерело."
 
 #: application/controllers/EmbeddablewidgetsController.php:26
 msgid ""
@@ -821,6 +827,11 @@ msgid ""
 "            1. Enable at least one MP3, AAC, or OGG stream under Settings -> Streams<br>\n"
 "            2. Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
+"Щоб налаштувати та використовувати вбудований програвач, необхідно:<br><br>\n"
+"            1. Увімкніть принаймні один потік MP3, AAC або OGG у меню "
+"Налаштування -&gt; Потоки<br>\n"
+"            2. Увімкніть API Public LibreTime у меню Налаштування -&gt; "
+"Основні"
 
 #: application/controllers/EmbeddablewidgetsController.php:39
 msgid ""
@@ -836,24 +847,24 @@ msgstr ""
 
 #: application/controllers/ErrorController.php:96
 msgid "Page not found."
-msgstr ""
+msgstr "Сторінку не знайдено."
 
 #: application/controllers/ErrorController.php:106
 msgid "The requested action is not supported."
-msgstr ""
+msgstr "Задана дія не підтримується."
 
 #: application/controllers/ErrorController.php:116
 msgid "You do not have permission to access this resource."
-msgstr ""
+msgstr "Ви не маєте дозволу на доступ до цього ресурсу."
 
 #: application/controllers/ErrorController.php:127
 msgid "An internal application error has occurred."
-msgstr ""
+msgstr "Сталася внутрішня помилка програми."
 
 #: application/controllers/IndexController.php:88
 #, php-format
 msgid "%s Podcast"
-msgstr ""
+msgstr "%s Підкаст"
 
 #: application/controllers/IndexController.php:89
 msgid "No tracks have been published yet."
@@ -863,25 +874,25 @@ msgstr ""
 #: application/controllers/PlaylistController.php:149
 #, php-format
 msgid "%s not found"
-msgstr "%s not found"
+msgstr "%s не знайдено"
 
 #: application/controllers/LibraryController.php:37
 #: application/controllers/PlaylistController.php:170
 msgid "Something went wrong."
-msgstr "Something went wrong."
+msgstr "Щось пішло не так."
 
 #: application/controllers/LibraryController.php:91
 #: application/controllers/LocaleController.php:171
 #: application/controllers/ShowbuilderController.php:135
 #: application/forms/SmartBlockCriteria.php:563
 msgid "Preview"
-msgstr "Preview"
+msgstr "Попередній перегляд"
 
 #: application/controllers/LibraryController.php:111
 #: application/controllers/LibraryController.php:143
 #: application/controllers/LibraryController.php:166
 msgid "Add to Playlist"
-msgstr "Add to Playlist"
+msgstr "Додати в плейлист"
 
 #: application/controllers/LibraryController.php:113
 msgid "Add to Smart Block"
@@ -896,22 +907,22 @@ msgstr "Add to Smart Block"
 #: application/services/CalendarService.php:200
 #: application/services/CalendarService.php:205
 msgid "Delete"
-msgstr "Delete"
+msgstr "Видалити"
 
 #: application/controllers/LibraryController.php:119
 #: application/controllers/LibraryController.php:150
 #: application/controllers/LibraryController.php:172
 msgid "Edit..."
-msgstr ""
+msgstr "Редагувати..."
 
 #: application/controllers/LibraryController.php:130
 #: application/controllers/ScheduleController.php:735
 msgid "Download"
-msgstr "Download"
+msgstr "Завантажити"
 
 #: application/controllers/LibraryController.php:134
 msgid "Duplicate Playlist"
-msgstr "Duplicate Playlist"
+msgstr "Дублікат плейлиста"
 
 #: application/controllers/LibraryController.php:137
 msgid "Duplicate Smartblock"
@@ -919,11 +930,11 @@ msgstr ""
 
 #: application/controllers/LibraryController.php:179
 msgid "No action available"
-msgstr "No action available"
+msgstr "Немає доступних дій"
 
 #: application/controllers/LibraryController.php:199
 msgid "You don't have permission to delete selected items."
-msgstr "You don't have permission to delete selected items."
+msgstr "Ви не маєте дозволу на видалення вибраних елементів."
 
 #: application/controllers/LibraryController.php:244
 msgid "Could not delete file because it is scheduled in the future."
@@ -931,29 +942,31 @@ msgstr ""
 
 #: application/controllers/LibraryController.php:247
 msgid "Could not delete file(s)."
-msgstr ""
+msgstr "Не вдалося видалити файл(и)."
 
 #: application/controllers/LibraryController.php:289
 #: application/controllers/LibraryController.php:324
 #, php-format
 msgid "Copy of %s"
-msgstr "Copy of %s"
+msgstr "Копія %s"
 
 #: application/controllers/ListenerstatController.php:50
 msgid "Please make sure admin user/password is correct on Settings->Streams page."
-msgstr "Please make sure admin user/password is correct on Settings->Streams page."
+msgstr ""
+"Будь ласка, переконайтеся, що користувач/пароль адміністратора правильні на "
+"сторінці Налаштування-&gt;Потоки."
 
 #: application/controllers/LocaleController.php:27
 msgid "Audio Player"
-msgstr "Audio Player"
+msgstr "Аудіоплеєр"
 
 #: application/controllers/LocaleController.php:28
 msgid "Something went wrong!"
-msgstr ""
+msgstr "Щось пішло не так!"
 
 #: application/controllers/LocaleController.php:30
 msgid "Recording:"
-msgstr "Recording:"
+msgstr "Запис:"
 
 #: application/controllers/LocaleController.php:31
 msgid "Master Stream"
