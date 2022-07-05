@@ -1,9 +1,7 @@
 ---
-title: Icecast configuration
+title: Stream configuration
 sidebar_position: 30
 ---
-
-## Background
 
 LibreTime supports direct connection to two popular streaming media servers, the open source Icecast (https://www.icecast.org/) and the proprietary SHOUTcast (https://www.shoutcast.com). Apart from the software license, the main difference between these two servers is that Icecast supports simultaneous MP3, AAC, Ogg Vorbis or Ogg Opus streaming from LibreTime, whereas SHOUTcast only supports MP3 and AAC streams. The royalty-free Ogg Vorbis format has the advantage of better sound quality than MP3 at lower bitrates, which has a direct impact on the amount of bandwidth that your station will require to serve the same number of listeners. Ogg Opus also benefits from good sound quality at low bitrates, with the added advantage of lower latency than other streaming formats. Opus is now an [IETF standard](https://datatracker.ietf.org/doc/html/rfc6716) and requires Icecast 2.4 or later to be installed on the streaming server.
 
@@ -19,7 +17,9 @@ Setting a higher bitrate for your output stream will only benefit your listeners
 
 :::
 
-## UTF-8 metadata in Icecast MP3 streams
+## Icecast
+
+### UTF-8 metadata in Icecast MP3 streams
 
 When sending metadata about your stream to an Icecast server in non-Latin alphabets, you may find that Icecast does not display the characters correctly for an MP3 stream, even though they're displayed correctly for an Ogg Vorbis stream. In the following screenshot, Russian characters are being displayed incorrectly in the _Current Song_ field for the MP3 stream:
 
@@ -36,7 +36,7 @@ The solution is to specify that the metadata for the MP3 mount point you are usi
 
 After saving the `/etc/icecast2/icecast.xml` file, restart the Icecast server with `sudo systemctl restart icecast2`.
 
-## Icecast handover configuration
+### Icecast handover configuration
 
 In a typical radio station configuration, the live output from the broadcast studio and the scheduled output from LibreTime are mixed together before being sent further along the broadcast chain, to a transmitter or streaming media server on the Internet. (This may not be the case if your LibreTime server is remote from the studio, and you are using the **Show Source Mount Point** or **Master Source Mount Point** to mix live and scheduled content. See the _Stream Settings_ chapter for details).
 
@@ -73,7 +73,7 @@ These mount point definitions mean that a client connecting to a URL such as *ht
 
 Setting the value of _fallback-override_ to 1 (enabled) means that when the `/live.ogg` mount point becomes available again, the client will be re-connected to it. If you wish to hide the `/main` and `/live.ogg` mount points from the public Icecast web interface, set the value of _hidden_ in each of these definitions to 1.
 
-## Source configuration
+### Source configuration
 
 Connect the other source to the Icecast server with the same parameters defined in the `/etc/libretime/liquidsoap.cfg` file, except for the mount point. This should one of the mount points you have defined in the `/etc/icecast2/icecast.xml` file, such as `/live.ogg` in the example above.
 
@@ -85,7 +85,7 @@ To configure Mixxx for streaming to Icecast, click _Options_, _Preferences_, the
 
 By default, Icecast streams are buffered to guard against network problems, which causes latency for remote listeners. When monitoring the stream from a remote location, you may have to begin the live stream a few seconds before the previous stream ends to enable a smooth transition.
 
-## Promoting your station
+### Promoting your station
 
 :::note
 
