@@ -15,7 +15,7 @@ const FeatureList: FeatureItem[] = [
     image: "/img/undraw_happy_news.svg",
     description: (
       <>
-        Libretime was designed from the ground up to be easily installed and
+        LibreTime was designed from the ground up to be easily installed and
         used to get your radio station on the air quickly.
       </>
     ),
@@ -36,7 +36,7 @@ const FeatureList: FeatureItem[] = [
     description: (
       <>
         Audio playout to your broadcasting console or transmitter, or start an
-        internet radio station directly from the cloud. Libretime can do it all.
+        internet radio station directly from the cloud. LibreTime can do it all.
       </>
     ),
   },
