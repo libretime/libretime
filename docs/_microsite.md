@@ -6,7 +6,7 @@ title: Built-in microsite
 
 LibreTime includes a microsite, which can be accessed at _serverIP_ or a domain you've set up for your server. The site includes your
 logo and station description (set under Settings > General), the login button to the LibreTime interface, the schedule for the next seven days,
-podcast tabs, and a live feed of your station with information on the the currently playing artist and track.
+podcast tabs, and a live feed of your station with information on the currently playing artist and track.
 
 ## Modifying the LibreTime radio page
 
