@@ -50,18 +50,18 @@ sudo rm -f /{etc,usr/lib}/systemd/system/airtime*
 sudo rm -f /{etc,usr/lib}/systemd/system/libretime*
 ```
 
-Remove apache2 configuration files:
+Remove nginx configuration files:
 
 ```bash
-sudo rm -f /etc/apache2/sites-{available,enabled}/airtime*
-sudo rm -f /etc/apache2/sites-{available,enabled}/libretime*
+sudo rm -f /etc/nginx/sites-{available,enabled}/airtime*
+sudo rm -f /etc/nginx/sites-{available,enabled}/libretime*
 ```
 
-Remove php configuration files:
+Remove php-fpm configuration files:
 
 ```bash
-sudo rm -f /etc/php/*/apache2/conf.d/airtime*
-sudo rm -f /etc/php/*/apache2/conf.d/libretime*
+sudo rm -f /etc/php/*/fpm/pool.d/airtime*
+sudo rm -f /etc/php/*/fpm/pool.d/libretime*
 ```
 
 Remove logrotate configuration files:
