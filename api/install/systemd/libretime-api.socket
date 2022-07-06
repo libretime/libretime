@@ -5,7 +5,7 @@ PartOf=libretime-api.service
 [Socket]
 ListenStream=/run/libretime-api.sock
 SocketUser=@@DEFAULT_WEB_USER@@
-SocketMode=640
+SocketMode=660
 
 [Install]
 WantedBy=sockets.target
