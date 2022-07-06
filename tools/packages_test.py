@@ -9,15 +9,15 @@ postgresql = buster, focal
 curl = buster, bionic
 
 [legacy]
-apache2 = bionic, focal
+some-package = bionic, focal
 
 [=development]
 ffmpeg = buster, bionic, focal
 """
 
 result_buster = {"curl", "postgresql"}
-result_bionic = {"apache2", "curl", "ffmpeg"}
-result_focal = {"postgresql", "apache2", "ffmpeg"}
+result_bionic = {"some-package", "curl", "ffmpeg"}
+result_focal = {"postgresql", "some-package", "ffmpeg"}
 result_exclude = {"postgresql", "ffmpeg"}
 
 
