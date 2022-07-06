@@ -1,5 +1,6 @@
 [Unit]
 Description=LibreTime API Service
+Requires=libretime-api.socket
 PartOf=libretime.target
 
 [Service]
@@ -13,7 +14,7 @@ Environment=LIBRETIME_CONFIG_FILEPATH=@@CONFIG_FILEPATH@@
 ExecStart=/usr/bin/gunicorn \
         --workers 4 \
         --log-file - \
-        --bind 127.0.0.1:8081 \
+        --bind unix:/run/libretime-api.sock \
         libretime_api.wsgi
 ExecReload=/bin/kill -s HUP $MAINPID
 User=libretime
