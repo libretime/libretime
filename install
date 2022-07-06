@@ -93,6 +93,9 @@ EOF
   done <<< "$(grep -A1 '^# >' "$0")"
 }
 
+# Load .env file if exists
+[[ -f "$SCRIPT_DIR/.env" ]] && source "$SCRIPT_DIR/.env"
+
 # Configuration
 # > User used to run LibreTime.
 LIBRETIME_USER=${LIBRETIME_USER:-"www-data"}
