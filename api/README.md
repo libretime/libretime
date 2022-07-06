@@ -64,7 +64,7 @@ cd /vagrant/api
 sudo pip3 install -e .
 
 sudo systemctl stop libretime-api
-sudo -u www-data LIBRETIME_DEBUG=True libretime-api runserver 0.0.0.0:8081
+sudo -u libretime LIBRETIME_DEBUG=True libretime-api runserver 0.0.0.0:8081
 ```
 
 ## 3rd Party Licences

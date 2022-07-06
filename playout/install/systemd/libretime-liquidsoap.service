@@ -8,8 +8,8 @@ Environment=LIBRETIME_CONFIG_FILEPATH=@@CONFIG_FILEPATH@@
 WorkingDirectory=@@WORKING_DIR@@/playout
 
 ExecStart=/usr/local/bin/libretime-liquidsoap
-User=libretime-playout
-Group=libretime-playout
+User=libretime
+Group=libretime
 Restart=always
 
 [Install]

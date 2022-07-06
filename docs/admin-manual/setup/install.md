@@ -162,10 +162,10 @@ Feel free to run `./install --help` to get more details.
 
 #### Using hardware audio output
 
-If you plan to output analog audio directly to a mixing console or transmitter, the user running LibreTime (by default `www-data`) needs to be added to the `audio` user group using the command below:
+If you plan to output analog audio directly to a mixing console or transmitter, the user running LibreTime needs to be added to the `audio` user group using the command below:
 
 ```bash
-sudo adduser www-data audio
+sudo adduser libretime audio
 ```
 
 ### Setup
@@ -175,7 +175,7 @@ Once the installation is completed, edit the [configuration file](./configuratio
 Next, run the following commands to setup the database:
 
 ```bash
-sudo -u www-data libretime-api migrate
+sudo -u libretime libretime-api migrate
 ```
 
 Synchronize the new Icecast passwords into the database:

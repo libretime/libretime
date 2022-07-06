@@ -110,6 +110,21 @@ The worker service no longer uses a dedicated `celery` user to run. The old `cel
 sudo deluser celery
 ```
 
+### LibreTime user
+
+The LibreTime services now run using a dedicated `libretime` user instead of the default `www-data` user. Be sure to change the ownership of the LibreTime files:
+
+```bash
+# Configuration directory
+sudo chown -R libretime:libretime /etc/libretime
+# Logs directory
+sudo chown -R libretime:libretime /var/log/libretime
+# Runtime directory
+sudo chown -R libretime:libretime /var/lib/libretime
+# Storage directory
+sudo chown -R libretime:libretime /srv/libretime
+```
+
 ### New configuration schema
 
 The configuration schema was updated.

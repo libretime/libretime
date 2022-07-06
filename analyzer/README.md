@@ -23,16 +23,16 @@ rabbitmqctl set_permissions -p /airtime airtime .\* .\* .\*
 ## Usage
 
 This program must run as a user with permissions to write to your Airtime music library
-directory. For standard Airtime installations, run it as the www-data user:
+directory. For standard Airtime installations, run it as the libretime user:
 
 ```bash
-sudo -u www-data libretime-analyzer --daemon
+sudo -u libretime libretime-analyzer --daemon
 ```
 
 Or during development, add the --debug flag for more verbose output:
 
 ```bash
-sudo -u www-data libretime-analyzer --debug
+sudo -u libretime libretime-analyzer --debug
 ```
 
 To print usage instructions, run:

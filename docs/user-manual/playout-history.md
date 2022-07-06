@@ -311,7 +311,7 @@ sudo nano /etc/cron.d/libretime-schedule
 containing the line:
 
 ```
-* * * * * www-data /usr/local/bin/libretime-schedule.sh
+* * * * * libretime /usr/local/bin/libretime-schedule.sh
 ```
 
 The schedule server will now be serving the same show information as the LibreTime server, with a cache lifetime of one minute. You can adjust the cache lifetime by altering the frequency of the cron job that polls the LibreTime server.
