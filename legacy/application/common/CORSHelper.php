@@ -1,8 +1,5 @@
 <?php
 
-use League\Uri\Contracts\UriException;
-use League\Uri\Uri;
-
 class CORSHelper
 {
     public static function enableCrossOriginRequests(&$request, &$response)
@@ -35,36 +32,7 @@ class CORSHelper
         return array_merge(
             $config['allowedCorsOrigins'],
             self::getDatabaseAllowedOrigins(),
-            self::getServerAllowedOrigins($request),
         );
-    }
-
-    /**
-     * Get configured server origins.
-     *
-     * @param Request $request request object
-     *
-     * @return array
-     */
-    private static function getServerAllowedOrigins($request)
-    {
-        $scheme = $request->getServer('REQUEST_SCHEME');
-        $host = $request->getServer('SERVER_NAME');
-        $port = intval($request->getServer('SERVER_PORT'));
-
-        try {
-            return [
-                strval(Uri::createFromComponents([
-                    'scheme' => $scheme,
-                    'host' => $host,
-                    'port' => $port,
-                ])),
-            ];
-        } catch (UriException|TypeError $e) {
-            Logging::warn("could not parse server origin : {$e}");
-
-            return [];
-        }
     }
 
     /**
