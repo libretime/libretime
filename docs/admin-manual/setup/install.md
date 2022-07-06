@@ -137,6 +137,15 @@ LIBRETIME_PACKAGES_EXCLUDES='liquidsoap' \
   https://libretime.example.com
 ```
 
+You can persist the install configuration in a `.env` file next to the install script. For example, the above command could be persisted using the `.env` file below, and you should be able to run the install script without arguments:
+
+```
+LIBRETIME_PACKAGES_EXCLUDES='liquidsoap'
+LIBRETIME_LISTEN_PORT='8080'
+LIBRETIME_SETUP_POSTGRESQL=false
+LIBRETIME_PUBLIC_URL='https://libretime.example.com'
+```
+
 :::note
 
 The install script will use randomly generated passwords to create the PostgreSQL user, RabbitMQ user and to update the default Icecast passwords. Those passwords will be saved to the configuration files.
