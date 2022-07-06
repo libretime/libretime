@@ -46,8 +46,8 @@ sudo rm -Rf /usr/share/libretime
 Remove systemd services files:
 
 ```bash
-sudo rm -f /etc/systemd/system/airtime*
-sudo rm -f /etc/systemd/system/libretime*
+sudo rm -f /{etc,usr/lib}/systemd/system/airtime*
+sudo rm -f /{etc,usr/lib}/systemd/system/libretime*
 ```
 
 Remove apache2 configuration files:
