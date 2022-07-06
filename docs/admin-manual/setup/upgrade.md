@@ -36,7 +36,7 @@ Be sure to carefully read **all** the [releases notes](../../releases/README.md)
 Run the following command to apply the database migrations:
 
 ```bash
-sudo -u www-data libretime-api migrate
+sudo -u libretime libretime-api migrate
 ```
 
 ## Restart the services

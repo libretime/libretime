@@ -16,8 +16,8 @@ ExecStart=/usr/bin/gunicorn \
         --bind 127.0.0.1:8081 \
         libretime_api.wsgi
 ExecReload=/bin/kill -s HUP $MAINPID
-User=libretime-api
-Group=libretime-api
+User=libretime
+Group=libretime
 Restart=always
 
 [Install]

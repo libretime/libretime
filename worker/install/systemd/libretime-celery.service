@@ -14,8 +14,8 @@ ExecStart=/usr/bin/sh -c 'celery worker \
     --concurrency=1 \
     --loglevel=INFO \
     --logfile=$LIBRETIME_LOG_FILEPATH'
-User=libretime-worker
-Group=libretime-worker
+User=libretime
+Group=libretime
 Restart=always
 
 [Install]
