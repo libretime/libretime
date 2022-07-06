@@ -13,9 +13,10 @@ Environment=LIBRETIME_CONFIG_FILEPATH=@@CONFIG_FILEPATH@@
 
 ExecStart=/usr/bin/gunicorn \
         --workers 4 \
+        --worker-class uvicorn.workers.UvicornWorker \
         --log-file - \
         --bind unix:/run/libretime-api.sock \
-        libretime_api.wsgi
+        libretime_api.asgi
 ExecReload=/bin/kill -s HUP $MAINPID
 User=libretime
 Group=libretime
