@@ -52,7 +52,7 @@ sudo systemctl restart libretime.target
 Verify that all the services are still running after the install process:
 
 ```bash
-sudo systemctl --all --plain | egrep 'libretime|apache2'
+sudo systemctl --all --plain | egrep 'libretime|nginx|php.*-fpm'
 ```
 
 Verify for any error in the logs after the install process:

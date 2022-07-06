@@ -52,4 +52,4 @@ For some LibreTime services, you can set a higher log level using the `LIBRETIME
 sudo -u libretime libretime-analyzer --config /etc/libretime/config.yml --log-level debug
 ```
 
-The `/var/log/apache2/libretime.error.log` file contains logs from the web server.
+The `/var/log/nginx/libretime.error.log` file contains logs from the web server.

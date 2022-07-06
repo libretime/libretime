@@ -652,39 +652,40 @@ else
   chown -R "$LIBRETIME_USER:$LIBRETIME_USER" "$LEGACY_WEB_ROOT"
 fi
 
+PHP_VERSION="$(php-config --version | awk -F . '{ print $1 "." $2 }')"
+
+info "deploying libretime-legacy php-fpm config"
+template_file "$SCRIPT_DIR/legacy/install/php-fpm/libretime-legacy.conf" "/etc/php/$PHP_VERSION/fpm/pool.d/libretime-legacy.conf" \
+  sed \
+    -e "s|@@DEFAULT_WEB_USER@@|${DEFAULT_WEB_USER}|g" \
+    -e "s|@@USER@@|${LIBRETIME_USER}|g"
+
 info "deploying libretime-legacy logrotate config"
 template_file "$SCRIPT_DIR/legacy/install/logrotate/libretime-legacy.conf" "/etc/logrotate.d/libretime-legacy" \
   sed \
     -e "s|@@LOG_DIR@@|${LOG_DIR}|g" \
     -e "s|@@USER@@|${LIBRETIME_USER}|g"
 
-# Install Apache
+# Install Nginx
 ########################################################################################
 
-section "Apache"
+section "Nginx"
 
-info "disabling apache default site"
-a2dissite 000-default
+install_packages nginx
 
-info "enabling apache modules"
-a2enmod rewrite proxy proxy_http
+info "disabling nginx default site"
+rm -f "/etc/nginx/sites-enabled/default"
 
-info "deploying libretime apache config"
-listen_port_string=""
-if [[ "$LIBRETIME_LISTEN_PORT" != "80" ]]; then
-  listen_port_string="Listen $LIBRETIME_LISTEN_PORT"
-fi
-
-template_file "${SCRIPT_DIR}/installer/apache/libretime.conf" "/etc/apache2/sites-available/libretime.conf" \
+info "deploying libretime nginx config"
+template_file "${SCRIPT_DIR}/installer/nginx/libretime.conf" "/etc/nginx/sites-available/libretime.conf" \
   sed \
     -e "s|@@LISTEN_PORT@@|${LIBRETIME_LISTEN_PORT}|g" \
-    -e "s|@@LISTEN_PORT_STRING@@|${listen_port_string}|g" \
     -e "s|@@LEGACY_WEB_ROOT@@|${LEGACY_WEB_ROOT}|g"
 
-info "enabling libretime apache config"
+info "enabling libretime nginx config"
 ln -s --force \
-  "/etc/apache2/sites-available/libretime.conf" \
-  "/etc/apache2/sites-enabled/libretime.conf"
+  "/etc/nginx/sites-available/libretime.conf" \
+  "/etc/nginx/sites-enabled/libretime.conf"
 
 # Finalize
 ########################################################################################
@@ -704,17 +705,14 @@ install_service "libretime.target" "$SCRIPT_DIR/installer/systemd/libretime.targ
 
 systemctl daemon-reload
 
-if apache2ctl configtest; then
-  service_restart_if_active apache2
-else
-  warning "invalid apache configuration! fix it before restarting apache2."
-fi
+service_restart_if_active "php$PHP_VERSION-fpm"
+service_restart_if_active "nginx"
 
-service_restart_if_active libretime-api
-service_restart_if_active libretime-celery
-service_restart_if_active libretime-analyzer
-service_restart_if_active libretime-playout
-service_restart_if_active libretime-liquidsoap
+service_restart_if_active "libretime-api"
+service_restart_if_active "libretime-celery"
+service_restart_if_active "libretime-analyzer"
+service_restart_if_active "libretime-playout"
+service_restart_if_active "libretime-liquidsoap"
 
 # Instructions
 ########################################################################################

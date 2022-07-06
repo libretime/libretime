@@ -44,7 +44,7 @@ sudo mv /etc/airtime /etc/libretime
 
 The configuration file format changed to `yml`. Please rewrite your [configuration file](../admin-manual/setup/configuration.md) using the [yaml format](https://yaml.org/). An example configuration file `installer/config.yml` is present in the sources.
 
-### Apache and PHP configuration files
+### Nginx, Apache and PHP
 
 :::caution
 
@@ -52,16 +52,15 @@ Please run this **before the upgrade procedure**!
 
 :::
 
-The Apache configuration file has been updated and renamed, in addition the PHP configuration has been merged in the Apache configuration. The old configuration files must be removed from the system:
+The `apache2` web server has been replaced with `nginx` and `php-fpm`, be sure to uninstall `apache2` and clean related configuration files:
 
 ```bash
-# On Debian/Ubuntu systems
-sudo rm -f /etc/apache2/sites-*/airtime*
-sudo rm -f /etc/php/*/apache2/conf.d/airtime.ini
+sudo rm -f /etc/apache2/sites-*/{airtime,libretime}*
+sudo rm -f /etc/php/*/apache2/conf.d/{airtime,libretime}*
 
-# On CentOS systems
-sudo rm -f /etc/httpd/conf.d/airtime*
-sudo rm -f /etc/php.d/airtime.ini
+sudo apt purge apache2 'libapache2-mod-php*'
+
+sudo rm -f /var/lib/php/sessions/sess_*
 ```
 
 ### Shared files path
