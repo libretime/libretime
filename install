@@ -274,8 +274,9 @@ install_service() {
 
   template_file "$service_src" "$service_dest" \
     sed \
-      -e "s|User=.*|User=${LIBRETIME_USER}|" \
-      -e "s|Group=.*|Group=${LIBRETIME_USER}|" \
+      -e "s|^User=.*|User=${LIBRETIME_USER}|" \
+      -e "s|^Group=.*|Group=${LIBRETIME_USER}|" \
+      -e "s|@@DEFAULT_WEB_USER@@|${DEFAULT_WEB_USER}|g" \
       -e "s|@@CONFIG_DIR@@|${CONFIG_DIR}|g" \
       -e "s|@@CONFIG_FILEPATH@@|${CONFIG_FILEPATH}|g" \
       -e "s|@@LOG_DIR@@|${LOG_DIR}|g" \
@@ -555,6 +556,7 @@ install_packages $(list_packages "$SCRIPT_DIR/api")
 install_python_app "$SCRIPT_DIR/api[prod]"
 
 install_service "libretime-api.service" "$SCRIPT_DIR/api/install/systemd/libretime-api.service"
+install_service "libretime-api.socket" "$SCRIPT_DIR/api/install/systemd/libretime-api.socket"
 
 # Install Playout
 ########################################################################################

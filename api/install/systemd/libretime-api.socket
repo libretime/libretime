@@ -1,0 +1,11 @@
+[Unit]
+Description=LibreTime API Socket
+PartOf=libretime-api.service
+
+[Socket]
+ListenStream=/run/libretime-api.sock
+SocketUser=@@DEFAULT_WEB_USER@@
+SocketMode=640
+
+[Install]
+WantedBy=sockets.target
