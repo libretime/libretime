@@ -260,10 +260,9 @@ class Application_Model_StreamSetting
                     $v = trim($v);
                     if ($k != 'admin_pass') {
                         self::saveStreamSetting($keyname, $v);
-                    /* We use 'xxxxxx' as the admin password placeholder so we
-                     * only want to save it when it is a different string
-                     */
                     } elseif ($v != 'xxxxxx') {
+                        // We use 'xxxxxx' as the admin password placeholder so we
+                        // only want to save it when it is a different string
                         self::saveStreamSetting($keyname, $v);
                     }
                 }
@@ -283,7 +282,7 @@ class Application_Model_StreamSetting
         $config = Config::getConfig();
 
         return [
-            'host' => $config['baseUrl'],
+            'host' => $config['public_url_raw']->getHost(),
             'port' => DEFAULT_ICECAST_PORT,
             'output' => 'icecast',
             'user' => $config['stationId'],

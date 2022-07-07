@@ -510,13 +510,11 @@ SQL;
      */
     public function getFileUrl()
     {
-        $CC_CONFIG = Config::getConfig();
-
         $protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
 
         $serverName = $_SERVER['SERVER_NAME'];
         $serverPort = $_SERVER['SERVER_PORT'];
-        $subDir = $CC_CONFIG['baseDir'];
+        $subDir = Config::getBasePath();
 
         if ($protocol === 'https' && $serverPort == 80) {
             $serverPort = 443;

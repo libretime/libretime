@@ -25,24 +25,9 @@ class Config
         // //////////////////////////////////////////////////////////////////////////////
         $CC_CONFIG['apiKey'] = [$values['general']['api_key']];
 
-        // Explode public_url into multiple component with possible defaults for required fields
-        try {
-            $public_url = Uri::createFromString($values['general']['public_url']);
-        } catch (UriException|TypeError $e) {
-            echo 'could not parse configuration field general.public_url: ' . $e->getMessage();
-
-            exit;
-        }
-
-        $scheme = $public_url->getScheme() ?? 'http';
-        $host = $public_url->getHost() ?? 'localhost';
-        $port = $public_url->getPort() ?? ($scheme == 'https' ? 443 : 80);
-        $path = rtrim($public_url->getPath() ?? '', '/') . '/'; // Path requires a trailing slash
-
-        $CC_CONFIG['protocol'] = $scheme;
-        $CC_CONFIG['baseUrl'] = $host;
-        $CC_CONFIG['basePort'] = $port;
-        $CC_CONFIG['baseDir'] = $path;
+        $public_url = self::validateUrl('general.public_url', $values['general']['public_url']);
+        $CC_CONFIG['public_url_raw'] = $public_url;
+        $CC_CONFIG['public_url'] = strval($public_url);
 
         // Allowed hosts
         $CC_CONFIG['allowedCorsOrigins'] = $values['general']['allowed_cors_origins'] ?? [];
@@ -157,8 +142,37 @@ class Config
         return in_array(strtolower($value), ['yes', 'true']);
     }
 
+    /**
+     * Validate and sanitize url.
+     *
+     * @param mixed $key
+     * @param mixed $value
+     */
+    public static function validateUrl($key, $value)
+    {
+        try {
+            $url = Uri::createFromString($value);
+
+            return $url->withPath(rtrim($url->getPath() ?? '', '/') . '/');
+        } catch (UriException|TypeError $e) {
+            echo "could not parse configuration field {$key}: " . $e->getMessage();
+
+            exit;
+        }
+    }
+
     public static function getStoragePath()
     {
         return rtrim(self::getConfig()['storagePath'], '/') . '/';
+    }
+
+    public static function getPublicUrl()
+    {
+        return self::getConfig()['public_url'];
+    }
+
+    public static function getBasePath()
+    {
+        return self::getConfig()['public_url_raw']->getPath();
     }
 }
