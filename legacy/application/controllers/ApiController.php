@@ -14,7 +14,8 @@ class ApiController extends Zend_Controller_Action
         }
 
         // Ignore API key and session authentication for these APIs:
-        $ignoreAuth = ['live-info',
+        $ignoreAuth = [
+            'live-info',
             'live-info-v2',
             'week-info',
             'station-metadata',
@@ -119,7 +120,8 @@ class ApiController extends Zend_Controller_Action
         $config = Config::getConfig();
         $this->_helper->json->sendJson([
             'airtime_version' => $config['airtime_version'],
-            'api_version' => AIRTIME_API_VERSION, ]);
+            'api_version' => AIRTIME_API_VERSION,
+        ]);
     }
 
     /**
@@ -171,7 +173,8 @@ class ApiController extends Zend_Controller_Action
 
         $usage = Application_Model_Preference::getBandwidthLimitCounter();
         if (($usage > Application_Model_Preference::getBandwidthLimit())
-            && (Application_Model_Preference::getProvisioningStatus() == PROVISIONING_STATUS_ACTIVE)) {
+            && (Application_Model_Preference::getProvisioningStatus() == PROVISIONING_STATUS_ACTIVE)
+        ) {
             $CC_CONFIG = Config::getConfig();
             // Hacky way to get the user ID...
             $url = AIRTIMEPRO_API_URL . '/station/' . $CC_CONFIG['rabbitmq']['user'] . '/suspend';
@@ -208,15 +211,18 @@ class ApiController extends Zend_Controller_Action
 
         $isCurrentItemPlaying = $range['tracks']['current']['media_item_played'] ? true : false;
 
-        if ($isItemCurrentlyScheduled
+        if (
+            $isItemCurrentlyScheduled
             || Application_Model_Preference::GetSourceSwitchStatus('live_dj') == 'on'
-            || Application_Model_Preference::GetSourceSwitchStatus('master_dj') == 'on') {
+            || Application_Model_Preference::GetSourceSwitchStatus('master_dj') == 'on'
+        ) {
             $result['on_air_light_expected_status'] = true;
         }
 
         if (($isItemCurrentlyScheduled && $isCurrentItemPlaying)
             || Application_Model_Preference::GetSourceSwitchStatus('live_dj') == 'on'
-            || Application_Model_Preference::GetSourceSwitchStatus('master_dj') == 'on') {
+            || Application_Model_Preference::GetSourceSwitchStatus('master_dj') == 'on'
+        ) {
             $result['on_air_light'] = true;
         }
 
@@ -1001,7 +1007,8 @@ class ApiController extends Zend_Controller_Action
                 Logging::info($info_json);
                 array_push($responses, [
                     'error' => _("Bad request. no 'mode' parameter passed."),
-                    'key' => $k, ]);
+                    'key' => $k,
+                ]);
 
                 continue;
             }
@@ -1014,7 +1021,8 @@ class ApiController extends Zend_Controller_Action
                 array_push($responses, [
                     'error' => _("Bad request. 'mode' parameter is invalid"),
                     'key' => $k,
-                    'mode' => $mode, ]);
+                    'mode' => $mode,
+                ]);
 
                 continue;
             }
@@ -1161,8 +1169,10 @@ class ApiController extends Zend_Controller_Action
 
         if ($djtype == 'master') {
             // check against master
-            if ($username == Application_Model_Preference::GetLiveStreamMasterUsername()
-                    && $password == Application_Model_Preference::GetLiveStreamMasterPassword()) {
+            if (
+                $username == Application_Model_Preference::GetLiveStreamMasterUsername()
+                && $password == Application_Model_Preference::GetLiveStreamMasterPassword()
+            ) {
                 $this->view->msg = true;
             } else {
                 $this->view->msg = false;
