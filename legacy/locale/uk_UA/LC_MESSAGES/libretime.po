@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2022-07-04 18:49+0200\n"
-"PO-Revision-Date: 2022-07-07 18:01+0000\n"
+"PO-Revision-Date: 2022-07-07 19:07+0000\n"
 "Last-Translator: Mykola <bondarchuk.nikola@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/libretime/"
 "legacy/uk/>\n"
@@ -1663,7 +1663,7 @@ msgstr "Цей шлях зараз недоступний."
 msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
 msgstr ""
 "Деякі типи потоків потребують додаткового налаштування. Подано інформацію "
-"про ввімкнення  %sAAC+ Support%s або %sOpus Support%s."
+"про ввімкнення %sAAC+ Support%s або %sOpus Support%s."
 
 #: application/controllers/LocaleController.php:182
 msgid "Connected to the streaming server"
@@ -2315,7 +2315,7 @@ msgstr "гг:хх:ss.t"
 
 #: application/controllers/LocaleController.php:362
 msgid "kHz"
-msgstr "kHz"
+msgstr "кГц"
 
 #: application/controllers/LocaleController.php:365
 msgid "Su"
@@ -2758,11 +2758,11 @@ msgstr "Файли ще не завантажено."
 
 #: application/controllers/LocaleController.php:487
 msgid "On Air"
-msgstr "On Air"
+msgstr "В ефірі"
 
 #: application/controllers/LocaleController.php:488
 msgid "Off Air"
-msgstr "Off Air"
+msgstr "Не в ефірі"
 
 #: application/controllers/LocaleController.php:489
 msgid "Offline"
@@ -3165,7 +3165,7 @@ msgstr "Пошук користувачів:"
 
 #: application/forms/AddShowWho.php:23
 msgid "DJs:"
-msgstr "DJs:"
+msgstr "Діджеї:"
 
 #: application/forms/AddTracktype.php:20
 msgid "Type Name:"
@@ -3610,7 +3610,7 @@ msgstr "Тип треку"
 #: application/forms/SmartBlockCriteria.php:80
 #: application/models/Block.php:1449 application/models/Block.php:1545
 msgid "Sample Rate (kHz)"
-msgstr "Sample Rate (kHz)"
+msgstr "Частота дискретизації (kHz)"
 
 #: application/forms/SmartBlockCriteria.php:134
 #: application/models/Block.php:1465 application/models/Block.php:1561
@@ -3797,7 +3797,7 @@ msgstr "Значення має бути числовим"
 
 #: application/forms/SmartBlockCriteria.php:900
 msgid "The value should be less then 2147483648"
-msgstr "Значення має бути меншим  2147483648"
+msgstr "Значення має бути меншим, ніж 2147483648"
 
 #: application/forms/SmartBlockCriteria.php:905
 #, php-format
@@ -3953,9 +3953,8 @@ msgid "Port cannot be empty."
 msgstr "Порт не може бути порожнім."
 
 #: application/forms/StreamSettingSubForm.php:222
-#, fuzzy
 msgid "Mount cannot be empty with Icecast server."
-msgstr "Монтування не може бути порожнім із сервером Icecast."
+msgstr "Точка монтування не може бути порожнім на сервері Icecast."
 
 #: application/forms/TuneInPreferences.php:20
 msgid "Push metadata to your station on TuneIn?"
@@ -3998,11 +3997,9 @@ msgid "Value is required and can't be empty"
 msgstr "Значення є обов’язковим і не може бути порожнім"
 
 #: application/forms/helpers/ValidationTypes.php:20
-#, fuzzy
 msgid "'%value%' is no valid email address in the basic format local-part@hostname"
 msgstr ""
-"'%value%' не є дійсною електронною адресою в основному форматі local-"
-"part@hostname"
+"'%value%' не є дійсною електронною адресою в форматі local-part@hostname"
 
 #: application/forms/helpers/ValidationTypes.php:34
 msgid "'%value%' does not fit the date format '%format%'"
@@ -4065,26 +4062,22 @@ msgid "%s Password Reset"
 msgstr "%s Скидання паролю"
 
 #: application/models/Block.php:832 application/models/Playlist.php:800
-#, fuzzy
 msgid "Cue in and cue out are null."
-msgstr "Cue in and cue out are null."
+msgstr "Час початку та закінчення звучання треку не заповнені."
 
 #: application/models/Block.php:866 application/models/Block.php:921
 #: application/models/Playlist.php:838 application/models/Playlist.php:879
-#, fuzzy
 msgid "Can't set cue out to be greater than file length."
-msgstr "Can't set cue out to be greater than file length."
+msgstr "Час закінчення звучання не може перевищувати довжину треку."
 
 #: application/models/Block.php:878 application/models/Block.php:898
 #: application/models/Playlist.php:830 application/models/Playlist.php:853
-#, fuzzy
 msgid "Can't set cue in to be larger than cue out."
-msgstr "Can't set cue in to be larger than cue out."
+msgstr "Час початку звучання може бути пізніше часу закінчення."
 
 #: application/models/Block.php:933 application/models/Playlist.php:871
-#, fuzzy
 msgid "Can't set cue out to be smaller than cue in."
-msgstr "Can't set cue out to be smaller than cue in."
+msgstr "Час закінчення звучання не може бути раніше початку."
 
 #: application/models/Block.php:1440 application/models/Block.php:1536
 msgid "Upload Time"
@@ -4130,9 +4123,8 @@ msgid "You are not allowed to schedule show %s."
 msgstr "Вам не дозволено планувати програму %s."
 
 #: application/models/Scheduler.php:151
-#, fuzzy
 msgid "You cannot add files to recording shows."
-msgstr "Ви не можете додавати файли до програми, яка записується ."
+msgstr "Ви не можете додавати файли до Програми, що записується."
 
 #: application/models/Scheduler.php:157
 #, php-format
@@ -4140,9 +4132,9 @@ msgid "The show %s is over and cannot be scheduled."
 msgstr "Програма %s закінчилась, її не можливо запланувати."
 
 #: application/models/Scheduler.php:165
-#, fuzzy, php-format
+#, php-format
 msgid "The show %s has been previously updated!"
-msgstr "The show %s has been previously updated!"
+msgstr "Програма %s була оновлена раніше!"
 
 #: application/models/Scheduler.php:185
 msgid "Content in linked shows cannot be changed while on air!"
@@ -4161,18 +4153,18 @@ msgid "Shows can have a max length of 24 hours."
 msgstr "Програма може тривати не більше 24 годин."
 
 #: application/models/Show.php:341
-#, fuzzy
 msgid ""
 "Cannot schedule overlapping shows.\n"
 "Note: Resizing a repeating show affects all of its repeats."
 msgstr ""
-"Cannot schedule overlapping shows.\n"
-"Примітка: Зміна розміру повторюваного шоу впливає на всі його повтори."
+"Не можна планувати Програми, що перетинаються.\n"
+"Примітка: зміна розміру Програми, що повторюється, впливає на всі її "
+"пов'язані Примірники."
 
 #: application/models/ShowBuilder.php:209
-#, fuzzy, php-format
+#, php-format
 msgid "Rebroadcast of %s from %s"
-msgstr "Rebroadcast of %s from %s"
+msgstr "Ретрансляція %s від %s"
 
 #: application/models/Webstream.php:163
 msgid "Length needs to be greater than 0 minutes"
@@ -4271,7 +4263,6 @@ msgid "Can't move a past show"
 msgstr "Неможливо перемістити минулу програму"
 
 #: application/services/CalendarService.php:298
-#, fuzzy
 msgid "Can't move show into past"
 msgstr "Неможливо перенести програму в минуле"
 
@@ -4295,7 +4286,7 @@ msgstr "Трек"
 
 #: application/services/HistoryService.php:1103
 msgid "Played"
-msgstr "Played"
+msgstr "Програно"
 
 #: application/services/PodcastService.php:163
 msgid "Auto-generated smartblock for podcast"
