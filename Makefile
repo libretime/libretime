@@ -15,6 +15,7 @@ shell-check:
 	shfmt -f . | xargs git ls-files | xargs shfmt -i 2 -ci -sr -kp -d
 	shfmt -f . | xargs git ls-files | xargs shellcheck --color=always --severity=$${SEVERITY:-style}
 
+.PHONY: VERSION
 VERSION:
 	tools/version.sh
 
