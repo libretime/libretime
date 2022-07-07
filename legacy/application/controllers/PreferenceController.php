@@ -25,7 +25,7 @@ class PreferenceController extends Zend_Controller_Action
 
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Settings');
 
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         $this->view->headScript()->appendFile($baseUrl . 'js/airtime/preferences/preferences.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->statusMsg = '';
@@ -137,7 +137,7 @@ class PreferenceController extends Zend_Controller_Action
 
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Settings');
 
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         $this->view->headScript()->appendFile($baseUrl . 'js/airtime/preferences/streamsetting.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
 

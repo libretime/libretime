@@ -76,7 +76,7 @@ class LibraryController extends Zend_Controller_Action
 
     public function contextMenuAction()
     {
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
         $id = $this->_getParam('id');
         $type = $this->_getParam('type');
         // playlist||timeline

@@ -682,7 +682,7 @@ SQL;
 
     public static function searchLibraryFiles($datatables)
     {
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
 

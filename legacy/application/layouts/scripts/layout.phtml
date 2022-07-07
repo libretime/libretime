@@ -1,125 +1,133 @@
 <?php echo $this->doctype() ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <?php echo $this->headTitle() ?>
-	<?php echo $this->headLink() ?>
-	<?php echo $this->headScript() ?>
-	<?php $baseUrl = Application_Common_OsPath::getBaseDir(); ?>
+    <?php echo $this->headLink() ?>
+    <?php echo $this->headScript() ?>
+    <?php $baseUrl = Config::getBasePath(); ?>
 </head>
+
 <body>
     <div id="Panel" class="sticky">
-    <?php
-						/*
+        <?php
+        /*
 						NOTE: Temporarily disabled version notification to avoid confusion,
 						Users can check current version in Settings > Status.
 						*/
-						//echo $this->versionNotify();
-            $sss = $this->SourceSwitchStatus();
-            $scs = $this->SourceConnectionStatus();
-    ?>
-    <?php echo $this->partial('partialviews/header.phtml', array("live_dj_switch"=>$sss['live_dj'], "live_dj_connection"=>$scs['live_dj'], "master_dj_switch"=>$sss['master_dj'], "master_dj_connection"=>$scs['master_dj'],
-                "scheduled_play_switch"=>$sss['scheduled_play'])) ?>
-<?php 	$partial = array('menu.phtml', 'default');
-    $this->navigation()->menu()->setPartial($partial); ?>
+        //echo $this->versionNotify();
+        $sss = $this->SourceSwitchStatus();
+        $scs = $this->SourceConnectionStatus();
+        ?>
+        <?php echo $this->partial('partialviews/header.phtml', array(
+            "live_dj_switch" => $sss['live_dj'], "live_dj_connection" => $scs['live_dj'], "master_dj_switch" => $sss['master_dj'], "master_dj_connection" => $scs['master_dj'],
+            "scheduled_play_switch" => $sss['scheduled_play']
+        )) ?>
+        <?php $partial = array('menu.phtml', 'default');
+        $this->navigation()->menu()->setPartial($partial); ?>
 
 
-    <script type="text/javascript">
-        var schedulePreLoaded = <?php
-        //Awful hack to speed up loading - Embed the schedule in the response so that the dashboard
-        //doesn't have to make a separate AJAX request to get this data.
-    ScheduleController::printCurrentPlaylistForEmbedding();
- ?>;
-        //The DOM elements that these calls depend on exist by this point:
-        parseItems(schedulePreLoaded.entries);
-        parseSourceStatus(schedulePreLoaded.source_status);
-        parseSwitchStatus(schedulePreLoaded.switch_status);
-
-    </script>
-</div>
-
-<div id="media_type_nav"> <!-- class="content-pane" -->
-    <div class="btn-group">
-        <ul class="dropdown-menu">
-            <li id="new-playlist">
-                <a href="#"><?php echo _("Playlist") ?></a>
-            </li>
-            <li id="new-smart-block">
-                <a href="#"><?php echo _("Smart Block") ?></a>
-            </li>
-            <li id="new-webstream">
-                <a href="#"><?php echo _("Webstream") ?></a>
-            </li>
-        </ul>
-        <a href="<?php echo Application_Common_OsPath::getBaseDir() . 'plupload' ?>">
-            <button id="add_media_btn" class="btn btn-small dashboard-btn btn-new">
-                <span><?php echo _("Upload") ?></span>
-            </button>
-        </a>
+        <script type="text/javascript">
+            var schedulePreLoaded = <?php
+                                    //Awful hack to speed up loading - Embed the schedule in the response so that the dashboard
+                                    //doesn't have to make a separate AJAX request to get this data.
+                                    ScheduleController::printCurrentPlaylistForEmbedding();
+                                    ?>;
+            //The DOM elements that these calls depend on exist by this point:
+            parseItems(schedulePreLoaded.entries);
+            parseSourceStatus(schedulePreLoaded.source_status);
+            parseSwitchStatus(schedulePreLoaded.switch_status);
+        </script>
     </div>
 
-    <div class="media_type_selector top-link" data-selection-id="<?php echo MediaType::getDefault(); ?>">
-        <a href="<?php echo Application_Common_OsPath::getBaseDir() . 'showbuilder#' ?>">
-            <i class='icon-home icon-white'></i>
-            <?php echo _("Dashboard") ?>
-        </a>
-    </div>
-    <?php $subnavPrefix = "/showbuilder"; require_once APPLICATION_PATH . "/views/scripts/partialviews/dashboard-sub-nav.php"; ?>
-    <div class="media_type_selector dashboard_sub_nav" data-selection-id="<?php echo MediaType::PODCAST ?>">
-        <a href="<?php echo $subnavPrefix; ?>#podcasts">
-            <span class="selector-name"><i class='icon-headphones icon-white'></i><?php echo _("Podcasts") ?></span>
-        </a>
-    </div>
+    <div id="media_type_nav">
+        <!-- class="content-pane" -->
+        <div class="btn-group">
+            <ul class="dropdown-menu">
+                <li id="new-playlist">
+                    <a href="#"><?php echo _("Playlist") ?></a>
+                </li>
+                <li id="new-smart-block">
+                    <a href="#"><?php echo _("Smart Block") ?></a>
+                </li>
+                <li id="new-webstream">
+                    <a href="#"><?php echo _("Webstream") ?></a>
+                </li>
+            </ul>
+            <a href="<?php echo Config::getBasePath() . 'plupload' ?>">
+                <button id="add_media_btn" class="btn btn-small dashboard-btn btn-new">
+                    <span><?php echo _("Upload") ?></span>
+                </button>
+            </a>
+        </div>
 
-    <hr style="margin-left: 5px; margin-right: 5px">
-    <div id="nav">
-        <?php echo $this->navigation()->menu(); ?>
-    </div>
+        <div class="media_type_selector top-link" data-selection-id="<?php echo MediaType::getDefault(); ?>">
+            <a href="<?php echo Config::getBasePath() . 'showbuilder#' ?>">
+                <i class='icon-home icon-white'></i>
+                <?php echo _("Dashboard") ?>
+            </a>
+        </div>
+        <?php $subnavPrefix = "/showbuilder";
+        require_once APPLICATION_PATH . "/views/scripts/partialviews/dashboard-sub-nav.php"; ?>
+        <div class="media_type_selector dashboard_sub_nav" data-selection-id="<?php echo MediaType::PODCAST ?>">
+            <a href="<?php echo $subnavPrefix; ?>#podcasts">
+                <span class="selector-name"><i class='icon-headphones icon-white'></i><?php echo _("Podcasts") ?></span>
+            </a>
+        </div>
 
-    <script>
-    <?php
-    $partitions = Application_Model_Systemstatus::GetDiskInfo();
-    $status = new StdClass;
-    $disk = $partitions[0];
-    $used = $disk->totalSpace-$disk->totalFreeSpace;
-    $total = $disk->totalSpace;
-    echo "var remainingDiskSpace = ".$disk->totalFreeSpace.";";
-    ?>
-    </script>
-    <div id="disk_usage">
-        <!--<div style="padding-bottom: 2px;">Disk Usage</div>-->
-        <div class="disk_usage_progress_bar"></div>
-        <div class="disk_usage_percent_in_use"><?php echo sprintf("%01.1fGB of %01.1fGB", $used/pow(2, 30), $total/pow(2, 30)); ?></div>
-        <div class="disk_usage_used" style="width:<?php echo sprintf("%01.1f%%", min(100, $used/$total*100)) ?>;"></div>
+        <hr style="margin-left: 5px; margin-right: 5px">
+        <div id="nav">
+            <?php echo $this->navigation()->menu(); ?>
+        </div>
 
-        <!--<div style="margin-top: 15px; font-size: 12px;">
-            <?php //echo sprintf("%01.1fGB of %01.1fGB", $used/pow(2, 30), $total/pow(2, 30)); ?>
+        <script>
+            <?php
+            $partitions = Application_Model_Systemstatus::GetDiskInfo();
+            $status = new StdClass;
+            $disk = $partitions[0];
+            $used = $disk->totalSpace - $disk->totalFreeSpace;
+            $total = $disk->totalSpace;
+            echo "var remainingDiskSpace = " . $disk->totalFreeSpace . ";";
+            ?>
+        </script>
+        <div id="disk_usage">
+            <!--<div style="padding-bottom: 2px;">Disk Usage</div>-->
+            <div class="disk_usage_progress_bar"></div>
+            <div class="disk_usage_percent_in_use"><?php echo sprintf("%01.1fGB of %01.1fGB", $used / pow(2, 30), $total / pow(2, 30)); ?></div>
+            <div class="disk_usage_used" style="width:<?php echo sprintf("%01.1f%%", min(100, $used / $total * 100)) ?>;"></div>
+
+            <!--<div style="margin-top: 15px; font-size: 12px;">
+            <?php //echo sprintf("%01.1fGB of %01.1fGB", $used/pow(2, 30), $total/pow(2, 30));
+            ?>
         </div>-->
 
+        </div>
+
     </div>
 
-</div>
+    <?php $hint = Application_Common_UsabilityHints::getUsabilityHint(); ?>
+    <div class="usability_hint <?php if ($hint == "") {
+                                    echo "hidden";
+                                } ?>"><?php echo $hint; ?></div>
 
-<?php $hint = Application_Common_UsabilityHints::getUsabilityHint(); ?>
-<div class="usability_hint <?php if ($hint == "") { echo "hidden"; } ?>"><?php echo $hint; ?></div>
-
-<div class="wrapper <?php if (isset($this->layout()->parent_page)) echo "wrapper_panel";?>" id="content">
-    <?php echo $this->layout()->content ?>
-</div>
-<?php if (isset($this->layout()->parent_page)) { ?>
-    <div id="sub-menu">
-        <h3><?php //parent_page is passed in from controller
-            echo _($this->layout()->parent_page); ?></h3>
-        <hr>
-        <?php
-        $page = $this->navigation()->findOneBy('title', $this->layout()->parent_page);
-        echo $this->navigation()->menu()->render($page);
-        ?>
+    <div class="wrapper <?php if (isset($this->layout()->parent_page)) echo "wrapper_panel"; ?>" id="content">
+        <?php echo $this->layout()->content ?>
     </div>
-<?php } ?>
+    <?php if (isset($this->layout()->parent_page)) { ?>
+        <div id="sub-menu">
+            <h3><?php //parent_page is passed in from controller
+                echo _($this->layout()->parent_page); ?></h3>
+            <hr>
+            <?php
+            $page = $this->navigation()->findOneBy('title', $this->layout()->parent_page);
+            echo $this->navigation()->menu()->render($page);
+            ?>
+        </div>
+    <?php } ?>
 
-<script id="tmpl-pl-cues" type="text/template">
-<div class="waveform-cues">
+    <script id="tmpl-pl-cues" type="text/template">
+        <div class="waveform-cues">
   <div class="playlist-time-scale"></div>
   <div class="playlist-tracks"></div>
   <div class="playlist-controls">
@@ -144,8 +152,8 @@
 </div>
 </script>
 
-<script id="tmpl-pl-fades" type="text/template">
-<div class="waveform-fades">
+    <script id="tmpl-pl-fades" type="text/template">
+        <div class="waveform-fades">
   <div class="playlist-time-scale"></div>
   <div class="playlist-tracks"></div>
   <div class="playlist-controls left-floated">
@@ -161,11 +169,11 @@
 </div>
 </script>
 
-<?php
+    <?php
     // Show users the What's New dialog if they haven't seen it yet
     // TODO: If you're updating this, be sure to update defaultdata! (Suboptimal, is there a better way?)
     if (!Application_Model_Preference::getWhatsNewDialogViewed()) {
-        ?>
+    ?>
         <div id="whatsnew">
             <div>
                 <div id="whatsnew_video">
@@ -197,13 +205,14 @@
                 });
             });
         </script>
-        <?php
+    <?php
         Application_Model_Preference::setWhatsNewDialogViewed(true);
     }
-?>
+    ?>
 
-<div id="fb-root"></div>
+    <div id="fb-root"></div>
 
 
 </body>
+
 </html>

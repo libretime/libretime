@@ -24,7 +24,7 @@ class AudiopreviewController extends Zend_Controller_Action
         $audioFileID = $this->_getParam('audioFileID');
         $type = $this->_getParam('type');
 
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         $this->view->headScript()->appendFile(
             $baseUrl . 'js/airtime/audiopreview/preview_jplayer.js?' . $CC_CONFIG['airtime_version'],
@@ -81,7 +81,7 @@ class AudiopreviewController extends Zend_Controller_Action
         $playlistIndex = $this->_getParam('playlistIndex');
         $playlistID = $this->_getParam('playlistID');
 
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         $this->view->headScript()->appendFile($baseUrl . 'js/airtime/audiopreview/preview_jplayer.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->headScript()->appendFile($baseUrl . 'js/jplayer/jplayer.playlist.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
@@ -107,7 +107,7 @@ class AudiopreviewController extends Zend_Controller_Action
         $blockIndex = $this->_getParam('blockIndex');
         $blockId = $this->_getParam('blockId');
 
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         $this->view->headScript()->appendFile($baseUrl . 'js/airtime/audiopreview/preview_jplayer.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->headScript()->appendFile($baseUrl . 'js/jplayer/jplayer.playlist.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
@@ -182,7 +182,7 @@ class AudiopreviewController extends Zend_Controller_Action
 
     private function createElementMap($track)
     {
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         $elementMap = [
             'element_title' => isset($track['track_title']) ? $track['track_title'] : '',
@@ -229,7 +229,7 @@ class AudiopreviewController extends Zend_Controller_Action
         $showID = $this->_getParam('showID');
         $showIndex = $this->_getParam('showIndex');
 
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         $this->view->headScript()->appendFile($baseUrl . 'js/airtime/audiopreview/preview_jplayer.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->headScript()->appendFile($baseUrl . 'js/jplayer/jplayer.playlist.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
@@ -254,7 +254,7 @@ class AudiopreviewController extends Zend_Controller_Action
      */
     public function getShowAction()
     {
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);

@@ -5,7 +5,7 @@ class PodcastController extends Zend_Controller_Action
     public function init()
     {
         $CC_CONFIG = Config::getConfig();
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         $headScript = $this->view->headScript();
         AirtimeTableView::injectTableJavaScriptDependencies($headScript, $baseUrl, $CC_CONFIG['airtime_version']);

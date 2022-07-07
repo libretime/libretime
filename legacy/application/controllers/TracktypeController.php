@@ -22,7 +22,7 @@ class TracktypeController extends Zend_Controller_Action
 
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Settings');
 
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         $js_files = [
             'js/datatables/js/jquery.dataTables.js?',

@@ -140,11 +140,9 @@ class Application_Model_Auth
      */
     public static function pinSessionToClient($auth)
     {
-        $CC_CONFIG = Config::getConfig();
-
         $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
         $remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
-        $sessionIdentifier = 'Airtime' . '-' . $serverName . '-' . $remoteAddr . '-' . Application_Model_Preference::GetClientId() . '-' . $CC_CONFIG['baseDir'];
+        $sessionIdentifier = 'Airtime' . '-' . $serverName . '-' . $remoteAddr . '-' . Application_Model_Preference::GetClientId() . '-' . Config::getBasePath();
         $auth->setStorage(new Zend_Auth_Storage_Session($sessionIdentifier));
     }
 }

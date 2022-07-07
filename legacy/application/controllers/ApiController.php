@@ -1516,7 +1516,7 @@ class ApiController extends Zend_Controller_Action
      */
     public function showTracksAction()
     {
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
         $prefTimezone = Application_Model_Preference::GetTimezone();
 
         $instanceId = $this->_getParam('instance_id');

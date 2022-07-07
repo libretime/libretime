@@ -73,7 +73,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
         }
 
         $view = $this->_bootstrap->getResource('view');
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         $view->headScript()->appendScript("var baseUrl = '{$baseUrl}';");
         $this->_initTranslationGlobals($view);
@@ -156,7 +156,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
 
         $view = $this->_bootstrap->getResource('view');
 
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         $view->headLink(['rel' => 'icon', 'href' => $baseUrl . 'favicon.ico?' . $CC_CONFIG['airtime_version'], 'type' => 'image/x-icon'], 'PREPEND')
             ->appendStylesheet($baseUrl . 'css/bootstrap.css?' . $CC_CONFIG['airtime_version'])
@@ -178,7 +178,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
 
         $view = $this->_bootstrap->getResource('view');
 
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         $view->headScript()->appendFile($baseUrl . 'js/libs/jquery-1.8.3.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'js/libs/jquery-ui-1.8.24.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')

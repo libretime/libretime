@@ -16,7 +16,7 @@ class PlayouthistorytemplateController extends Zend_Controller_Action
     public function indexAction()
     {
         $CC_CONFIG = Config::getConfig();
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Analytics');
 
@@ -32,7 +32,7 @@ class PlayouthistorytemplateController extends Zend_Controller_Action
     public function configureTemplateAction()
     {
         $CC_CONFIG = Config::getConfig();
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Analytics');
 

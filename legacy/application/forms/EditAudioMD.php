@@ -8,7 +8,6 @@ class Application_Form_EditAudioMD extends Zend_Form
 
     public function startForm($p_id)
     {
-        $baseUrl = Application_Common_OsPath::getBaseDir();
         // Set the method for the display form to POST
         $this->setMethod('post');
 

@@ -1,6 +1,6 @@
 <div id="weekly-schedule-widget" class="prefpanel ui-widget simple-formblock clearfix padded-strong ">
 
-    <?php $baseUrl = Application_Common_OsPath::getBaseDir(); ?>
+    <?php $baseUrl = Config::getBasePath(); ?>
 
     <h2 style="text-align:center"><?php echo _("Facebook Radio Player") ?></h2>
     <div style="clear:both"></div>
@@ -27,10 +27,10 @@
         <h3 style="padding-left: 0px"><?php echo _("Tips:") ?></h3>
         <p>
             <?php echo _("To make the tab more visible on your Facebook page, click 'More', and 'Manage Tabs':") ?><br><br>
-            <img src="<?php echo($baseUrl) . "images/doc/facebook_widget1.png"?>"><br><br>
+            <img src="<?php echo ($baseUrl) . "images/doc/facebook_widget1.png" ?>"><br><br>
 
             <?php echo _("Then, drag the Radio Player item higher in the list, and click Save. It will now appear as one of the default tabs instead of being buried under 'More':") ?><br><br>
-            <img src="<?php echo($baseUrl) . "images/doc/facebook_widget2.png"?>">
+            <img src="<?php echo ($baseUrl) . "images/doc/facebook_widget2.png" ?>">
 
         </p>
     </div>
