@@ -1343,6 +1343,10 @@ SQL;
         $totalTime = 0;
         $totalItems = 0;
 
+        if ($files->isEmpty()) {
+            return $insertList;
+        }
+
         // this moves the pointer to the first element in the collection
         $files->getFirst();
         $iterator = $files->getIterator();
