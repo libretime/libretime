@@ -33,13 +33,15 @@ Please run this **before the upgrade procedure**!
 The database files track type field was previously not constrained and this might have lead to files referencing a now renamed or missing track type. To preserve as much data as possible during the database migration process, you need to check whether some files have broken or missing track type references and fix them accordingly. To list broken track type references, you can run the following command:
 
 ```bash
-sudo -u www-data libretime-api dbshell --command="
+sudo -u libretime libretime-api dbshell --command="
     SELECT f.id, f.track_type, f.track_title, f.artist_name, f.filepath
     FROM cc_files f
     WHERE NOT EXISTS (
         SELECT FROM cc_track_types tt
         WHERE tt.code = f.track_type
-    );"
+    )
+    AND f.track_type IS NOT NULL
+    AND f.track_type <> '';"
 ```
 
 If the above command outputs the following, no file needs fixing.
