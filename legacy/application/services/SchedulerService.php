@@ -190,7 +190,7 @@ class Application_Service_SchedulerService
 
         $linkedShowSchedule_sql = $con->prepare(
             'select * from cc_schedule where instance_id = :instance_id ' .
-            'order by starts'
+                'order by starts'
         );
         $linkedShowSchedule_sql->bindParam(':instance_id', $instanceId);
         $linkedShowSchedule_sql->execute();
@@ -217,7 +217,7 @@ class Application_Service_SchedulerService
         // get time_filled so we can update cc_show_instances
         if (!empty($linkedShowSchedule)) {
             $timeFilled_sql = 'SELECT time_filled FROM cc_show_instances ' .
-               "WHERE id = {$linkedShowSchedule[0]['instance_id']}";
+                "WHERE id = {$linkedShowSchedule[0]['instance_id']}";
             $timeFilled = Application_Common_Database::prepareAndExecute(
                 $timeFilled_sql,
                 [],

@@ -86,15 +86,18 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         $next = $method->invokeArgs($this->_showService, [
-            new DateTime('2044-02-01'), 'UTC', '00:00', 'first', 'Friday', ]);
+            new DateTime('2044-02-01'), 'UTC', '00:00', 'first', 'Friday',
+        ]);
         $this->assertEquals(new DateTime('2044-02-05', new DateTimeZone('UTC')), $next);
 
         $next = $method->invokeArgs($this->_showService, [
-            new DateTime('2044-02-01'), 'UTC', '00:00', 'fifth', 'Saturday', ]);
+            new DateTime('2044-02-01'), 'UTC', '00:00', 'fifth', 'Saturday',
+        ]);
         $this->assertEquals(new DateTime('2044-04-30', new DateTimeZone('UTC')), $next);
 
         $next = $method->invokeArgs($this->_showService, [
-            new DateTime('2044-02-01'), 'UTC', '00:00', 'fourth', 'Monday', ]);
+            new DateTime('2044-02-01'), 'UTC', '00:00', 'fourth', 'Monday',
+        ]);
         $this->assertEquals(new DateTime('2044-02-22', new DateTimeZone('UTC')), $next);
     }
 
@@ -111,7 +114,8 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
 
         $dt = $method->invokeArgs($this->_showService, [$localStartDT, '01:00']);
         $this->assertEquals([
-            $localStartDT->setTimezone($utcTimezone), $localEndDT->setTimezone($utcTimezone), ], $dt);
+            $localStartDT->setTimezone($utcTimezone), $localEndDT->setTimezone($utcTimezone),
+        ], $dt);
 
         // America/Toronto with offset for rebroadcast shows
         $localStartDT = new DateTime('2044-01-01 06:30', new DateTimeZone('America/Toronto'));
@@ -120,10 +124,13 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
         $localRebroadcastStartDT = new DateTime('2044-01-02 06:30', new DateTimeZone('America/Toronto'));
         $localRebroadcastEndDT = new DateTime('2044-01-02 07:30', new DateTimeZone('America/Toronto'));
 
-        $dt = $method->invokeArgs($this->_showService, [$localStartDT, '01:00',
-            ['days' => '1', 'hours' => '06', 'mins' => '30'], ]);
+        $dt = $method->invokeArgs($this->_showService, [
+            $localStartDT, '01:00',
+            ['days' => '1', 'hours' => '06', 'mins' => '30'],
+        ]);
         $this->assertEquals([
-            $localRebroadcastStartDT->setTimezone($utcTimezone), $localRebroadcastEndDT->setTimezone($utcTimezone), ], $dt);
+            $localRebroadcastStartDT->setTimezone($utcTimezone), $localRebroadcastEndDT->setTimezone($utcTimezone),
+        ], $dt);
 
         // Australia/Brisbane
         $localStartDT = new DateTime('2044-01-01 06:30', new DateTimeZone('Australia/Brisbane'));
@@ -131,7 +138,8 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
 
         $dt = $method->invokeArgs($this->_showService, [$localStartDT, '01:00']);
         $this->assertEquals([
-            $localStartDT->setTimezone($utcTimezone), $localEndDT->setTimezone($utcTimezone), ], $dt);
+            $localStartDT->setTimezone($utcTimezone), $localEndDT->setTimezone($utcTimezone),
+        ], $dt);
 
         // America/Vancouver
         $localStartDT = new DateTime('2044-01-01 06:30', new DateTimeZone('America/Vancouver'));
@@ -139,6 +147,7 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
 
         $dt = $method->invokeArgs($this->_showService, [$localStartDT, '01:00']);
         $this->assertEquals([
-            $localStartDT->setTimezone($utcTimezone), $localEndDT->setTimezone($utcTimezone), ], $dt);
+            $localStartDT->setTimezone($utcTimezone), $localEndDT->setTimezone($utcTimezone),
+        ], $dt);
     }
 }

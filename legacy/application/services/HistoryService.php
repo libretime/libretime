@@ -56,8 +56,8 @@ class Application_Service_HistoryService
         // Using the instance_id to filter the data.
 
         $historyRange = '(' .
-        'SELECT history.starts, history.ends, history.id AS history_id, history.instance_id' .
-        ' FROM cc_playout_history as history';
+            'SELECT history.starts, history.ends, history.id AS history_id, history.instance_id' .
+            ' FROM cc_playout_history as history';
 
         if (isset($instanceId)) {
             $historyRange .= ' WHERE history.instance_id = :instance';
@@ -71,11 +71,11 @@ class Application_Service_HistoryService
         $historyRange .= ') AS history_range';
 
         $manualMeta = '(' .
-        'SELECT %KEY%.value AS %KEY%, %KEY%.history_id' .
-        ' FROM (' .
-        ' SELECT * from cc_playout_history_metadata AS phm WHERE phm.key = :meta_%KEY%' .
-        ' ) AS %KEY%' .
-        ' ) AS %KEY%_filter';
+            'SELECT %KEY%.value AS %KEY%, %KEY%.history_id' .
+            ' FROM (' .
+            ' SELECT * from cc_playout_history_metadata AS phm WHERE phm.key = :meta_%KEY%' .
+            ' ) AS %KEY%' .
+            ' ) AS %KEY%_filter';
 
         $mainSelect = [
             'history_range.starts',
@@ -112,39 +112,39 @@ class Application_Service_HistoryService
 
             // the files associated with scheduled playback in Airtime.
             $historyFile = '(' .
-            'SELECT history.id AS history_id, history.file_id' .
-            ' FROM cc_playout_history AS history' .
-            ' WHERE history.file_id IS NOT NULL' .
-            ') AS history_file';
+                'SELECT history.id AS history_id, history.file_id' .
+                ' FROM cc_playout_history AS history' .
+                ' WHERE history.file_id IS NOT NULL' .
+                ') AS history_file';
 
             $fileMd = '(' .
-            'SELECT %NON_NULL_FILE_SELECT%' .
-            ' FROM cc_files AS file' .
-            ') AS file_md';
+                'SELECT %NON_NULL_FILE_SELECT%' .
+                ' FROM cc_files AS file' .
+                ') AS file_md';
 
             $fileMd = str_replace('%NON_NULL_FILE_SELECT%', implode(', ', $nonNullFileSelect), $fileMd);
 
             // null files are from manually added data (filling in webstream info etc)
             $nullFile = '(' .
-            'SELECT history.id AS history_id' .
-            ' FROM cc_playout_history AS history' .
-            ' WHERE history.file_id IS NULL' .
-            ') AS null_file';
+                'SELECT history.id AS history_id' .
+                ' FROM cc_playout_history AS history' .
+                ' WHERE history.file_id IS NULL' .
+                ') AS null_file';
 
             // ----------------------------------
             // building the file inner query
 
             $fileSqlQuery =
-            'SELECT ' . implode(', ', $fileSelect) .
-            " FROM {$historyFile}" .
-            " LEFT JOIN {$fileMd} USING (file_id)" .
-            ' UNION' .
-            ' SELECT ' . implode(', ', $nullFileSelect) .
-            " FROM {$nullFile}";
+                'SELECT ' . implode(', ', $fileSelect) .
+                " FROM {$historyFile}" .
+                " LEFT JOIN {$fileMd} USING (file_id)" .
+                ' UNION' .
+                ' SELECT ' . implode(', ', $nullFileSelect) .
+                " FROM {$nullFile}";
 
             foreach ($fileMdFilters as $filter) {
                 $fileSqlQuery .=
-                " LEFT JOIN {$filter} USING(history_id)";
+                    " LEFT JOIN {$filter} USING(history_id)";
             }
         }
 
@@ -159,17 +159,17 @@ class Application_Service_HistoryService
         }
 
         $mainSqlQuery .=
-        'SELECT ' . implode(', ', $mainSelect) .
-        " FROM {$historyRange}";
+            'SELECT ' . implode(', ', $mainSelect) .
+            " FROM {$historyRange}";
 
         if (isset($fileSqlQuery)) {
             $mainSqlQuery .=
-            " LEFT JOIN ( {$fileSqlQuery} ) as file_info USING(history_id)";
+                " LEFT JOIN ( {$fileSqlQuery} ) as file_info USING(history_id)";
         }
 
         foreach ($mdFilters as $filter) {
             $mainSqlQuery .=
-            " LEFT JOIN {$filter} USING(history_id)";
+                " LEFT JOIN {$filter} USING(history_id)";
         }
 
         // ----------------------------------------------------------------------
@@ -217,7 +217,7 @@ class Application_Service_HistoryService
             $orders = implode(', ', $orderBys);
 
             $mainSqlQuery .=
-            " ORDER BY {$orders}";
+                " ORDER BY {$orders}";
         }
 
         // ---------------------------------------------------------------
@@ -227,7 +227,7 @@ class Application_Service_HistoryService
         // limit the results returned.
         if ($displayLength !== -1) {
             $mainSqlQuery .=
-            ' OFFSET :offset LIMIT :limit';
+                ' OFFSET :offset LIMIT :limit';
 
             $paramMap['offset'] = intval($opts['iDisplayStart']);
             $paramMap['limit'] = $displayLength;
@@ -340,8 +340,8 @@ class Application_Service_HistoryService
 		LEFT JOIN cc_files AS file ON (file.id = playout.file_id)) AS summary';
 
         $mainSqlQuery .=
-        'SELECT ' . implode(', ', $select) .
-        " FROM {$fileSummaryTable}";
+            'SELECT ' . implode(', ', $select) .
+            " FROM {$fileSummaryTable}";
 
         // -------------------------------------------------------------------------
         // need to count the total rows to tell Datatables.
@@ -376,7 +376,7 @@ class Application_Service_HistoryService
             $orders = implode(', ', $orderBys);
 
             $mainSqlQuery .=
-            " ORDER BY {$orders}";
+                " ORDER BY {$orders}";
         }
 
         // ------------------------------------------------------------
@@ -384,7 +384,7 @@ class Application_Service_HistoryService
         $displayLength = intval($opts['iDisplayLength']);
         if ($displayLength !== -1) {
             $mainSqlQuery .=
-            ' OFFSET :offset LIMIT :limit';
+                ' OFFSET :offset LIMIT :limit';
 
             $paramMap['offset'] = $opts['iDisplayStart'];
             $paramMap['limit'] = $displayLength;

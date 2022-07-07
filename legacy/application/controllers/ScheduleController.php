@@ -53,13 +53,13 @@ class ScheduleController extends Zend_Controller_Action
 
         $this->view->headScript()->appendScript(
             "var calendarPref = {};\n" .
-            'calendarPref.weekStart = ' . Application_Model_Preference::GetWeekStartDay() . ";\n" .
-            'calendarPref.timestamp = ' . time() . ";\n" .
-            'calendarPref.timezoneOffset = ' . Application_Common_DateHelper::getUserTimezoneOffset() . ";\n" .
-            "calendarPref.timeScale = '" . Application_Model_Preference::GetCalendarTimeScale() . "';\n" .
-            'calendarPref.timeInterval = ' . Application_Model_Preference::GetCalendarTimeInterval() . ";\n" .
-            'calendarPref.weekStartDay = ' . Application_Model_Preference::GetWeekStartDay() . ";\n" .
-            "var calendarEvents = {$events};"
+                'calendarPref.weekStart = ' . Application_Model_Preference::GetWeekStartDay() . ";\n" .
+                'calendarPref.timestamp = ' . time() . ";\n" .
+                'calendarPref.timezoneOffset = ' . Application_Common_DateHelper::getUserTimezoneOffset() . ";\n" .
+                "calendarPref.timeScale = '" . Application_Model_Preference::GetCalendarTimeScale() . "';\n" .
+                'calendarPref.timeInterval = ' . Application_Model_Preference::GetCalendarTimeInterval() . ";\n" .
+                'calendarPref.weekStartDay = ' . Application_Model_Preference::GetWeekStartDay() . ";\n" .
+                "var calendarEvents = {$events};"
         );
 
         $this->view->headScript()->appendFile($baseUrl . 'js/contextmenu/jquery.contextMenu.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
@@ -731,8 +731,10 @@ class ScheduleController extends Zend_Controller_Action
         $baseUrl = $this->getRequest()->getBaseUrl();
         $url = $file->getRelativeFileUrl($baseUrl) . 'download/true';
         $menu = [];
-        $menu[] = ['action' => ['type' => 'gourl', 'url' => $url],
-            'title' => _('Download'), ];
+        $menu[] = [
+            'action' => ['type' => 'gourl', 'url' => $url],
+            'title' => _('Download'),
+        ];
 
         // returns format jjmenu is looking for.
         $this->_helper->json->sendJson($menu);

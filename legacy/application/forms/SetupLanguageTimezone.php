@@ -5,7 +5,8 @@ class Application_Form_SetupLanguageTimezone extends Zend_Form_SubForm
     public function init()
     {
         $this->setDecorators([
-            ['ViewScript', ['viewScript' => 'form/setup-lang-timezone.phtml']], ]);
+            ['ViewScript', ['viewScript' => 'form/setup-lang-timezone.phtml']],
+        ]);
 
         $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
         $csrf_element = new Zend_Form_Element_Hidden('csrf');

@@ -145,8 +145,10 @@ class Application_Model_ShowBuilder
      */
     private function getScheduledStatus($p_epochItemStart, $p_epochItemEnd, &$row)
     {
-        if ($row['footer'] === true && $this->epoch_now > $p_epochItemStart
-            && $this->epoch_now > $p_epochItemEnd) {
+        if (
+            $row['footer'] === true && $this->epoch_now > $p_epochItemStart
+            && $this->epoch_now > $p_epochItemEnd
+        ) {
             $row['scheduled'] = 0;
         } elseif ($row['footer'] === true && $this->epoch_now < $p_epochItemEnd) {
             $row['scheduled'] = 2;
@@ -177,7 +179,8 @@ class Application_Model_ShowBuilder
             $d = [
                 '$p_epochItemStart' => $p_epochItemStart,
                 '$p_epochItemEnd' => $p_epochItemEnd,
-                '$row' => $row, ];
+                '$row' => $row,
+            ];
             Logging::warn($d);
         }
     }
@@ -415,8 +418,10 @@ class Application_Model_ShowBuilder
 
         // see if the displayed show instances have changed. (deleted,
         // empty schedule etc)
-        if ($outdated === false && count($instances)
-            !== count($currentInstances)) {
+        if (
+            $outdated === false && count($instances)
+            !== count($currentInstances)
+        ) {
             Logging::debug('show instances have changed.');
             $outdated = true;
         }
@@ -450,8 +455,10 @@ class Application_Model_ShowBuilder
             $item = $scheduled_items[$i];
 
             // don't send back data for filler rows.
-            if (isset($item['playout_status'])
-                && $item['playout_status'] < 0) {
+            if (
+                isset($item['playout_status'])
+                && $item['playout_status'] < 0
+            ) {
                 continue;
             }
 
@@ -480,20 +487,22 @@ class Application_Model_ShowBuilder
                 $display_items[] = $row;
             }
 
-            if ($current_id !== -1
-                && !in_array($current_id, $this->showInstances)) {
+            if (
+                $current_id !== -1
+                && !in_array($current_id, $this->showInstances)
+            ) {
                 $this->showInstances[] = $current_id;
             }
         }
 
         // make the last footer if there were any scheduled items.
         if (count($scheduled_items) > 0) {
-            $display_items[] = $this->makeFooterRow($scheduled_items[
-                count($scheduled_items) - 1]);
+            $display_items[] = $this->makeFooterRow($scheduled_items[count($scheduled_items) - 1]);
         }
 
         return [
             'schedule' => $display_items,
-            'showInstances' => $this->showInstances, ];
+            'showInstances' => $this->showInstances,
+        ];
     }
 }

@@ -168,6 +168,7 @@ WHERE id = :id
 SQL;
 
         return Application_Common_Database::prepareAndExecute($sql, [
-            ':id' => $id, ], 'single');
+            ':id' => $id,
+        ], 'single');
     }
 }

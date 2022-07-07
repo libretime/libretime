@@ -25,11 +25,11 @@ class Application_Model_StreamSetting
 
         if ($result == 1) {
             $sql = 'UPDATE cc_stream_setting'
-            . ' SET value = :value, type = :type'
-            . ' WHERE keyname = :key';
+                . ' SET value = :value, type = :type'
+                . ' WHERE keyname = :key';
         } else {
             $sql = 'INSERT INTO cc_stream_setting (keyname, value, type)'
-            . ' VALUES (:key, :value, :type)';
+                . ' VALUES (:key, :value, :type)';
         }
 
         $stmt = $con->prepare($sql);
@@ -52,7 +52,7 @@ class Application_Model_StreamSetting
 
         // Check if key already exists
         $sql = 'SELECT value FROM cc_stream_setting'
-        . ' WHERE keyname = :key';
+            . ' WHERE keyname = :key';
 
         $stmt = $con->prepare($sql);
         $stmt->bindParam(':key', $key);
@@ -100,9 +100,9 @@ class Application_Model_StreamSetting
     {
         $con = Propel::getConnection();
         $sql = 'SELECT * '
-                . 'FROM cc_stream_setting '
-                . "WHERE keyname LIKE '%_enable' "
-                . "AND value='true'";
+            . 'FROM cc_stream_setting '
+            . "WHERE keyname LIKE '%_enable' "
+            . "AND value='true'";
 
         $ids = [];
 
@@ -392,7 +392,7 @@ class Application_Model_StreamSetting
 
         $keyname = 's' . $stream_id . '_enable';
         $sql = 'SELECT value FROM cc_stream_setting'
-        . ' WHERE keyname = :keyname';
+            . ' WHERE keyname = :keyname';
 
         $stmt = $con->prepare($sql);
         $stmt->bindParam(':keyname', $keyname);

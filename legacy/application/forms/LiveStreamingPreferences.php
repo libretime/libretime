@@ -29,8 +29,10 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $transition_fade = new Zend_Form_Element_Text('transition_fade');
         $transition_fade->setLabel(_('Switch Transition Fade (s):'))
             ->setFilters(['StringTrim'])
-            ->addValidator('regex', false, ['/^\d*(\.\d+)?$/',
-                'messages' => _('Please enter a time in seconds (eg. 0.5)'), ])
+            ->addValidator('regex', false, [
+                '/^\d*(\.\d+)?$/',
+                'messages' => _('Please enter a time in seconds (eg. 0.5)'),
+            ])
             ->setValue($defaultFade);
         $this->addElement($transition_fade);
 
@@ -85,7 +87,8 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $masterSourceMount->setLabel(_('Master Source Mount:'))
             ->setValue($m_mount)
             ->setValidators([
-                ['regex', false, ['/^[^ &<>]+$/', 'messages' => _('Invalid character entered')]], ]);
+                ['regex', false, ['/^[^ &<>]+$/', 'messages' => _('Invalid character entered')]],
+            ]);
         $this->addElement($masterSourceMount);
 
         $showSourceParams = parse_url(Application_Model_Preference::GetLiveDJSourceConnectionURL());
@@ -112,7 +115,8 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $showSourceMount->setLabel(_('Show Source Mount:'))
             ->setValue($l_mount)
             ->setValidators([
-                ['regex', false, ['/^[^ &<>]+$/', 'messages' => _('Invalid character entered')]], ]);
+                ['regex', false, ['/^[^ &<>]+$/', 'messages' => _('Invalid character entered')]],
+            ]);
         $this->addElement($showSourceMount);
     }
 
@@ -126,7 +130,8 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
 
         $this->setDecorators(
             [
-                ['ViewScript',
+                [
+                    'ViewScript',
                     [
                         'viewScript' => 'form/preferences_livestream.phtml',
                         'master_source_host' => isset($masterSourceHost) ? Application_Model_Preference::GetMasterDJSourceConnectionURL() : '',

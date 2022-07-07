@@ -61,10 +61,12 @@ class Application_Model_User
         $type = $this->getType();
         $result = false;
 
-        if ($this->isAdmin()
+        if (
+            $this->isAdmin()
             || $this->isSuperAdmin()
             || $this->isPM()
-            || self::isHostOfShow($p_showId)) {
+            || self::isHostOfShow($p_showId)
+        ) {
             $result = true;
         }
 
@@ -387,7 +389,8 @@ WHERE id = :id
 SQL;
 
         return Application_Common_Database::prepareAndExecute($sql, [
-            ':id' => $id, ], 'single');
+            ':id' => $id,
+        ], 'single');
     }
 
     public static function getCurrentUser()

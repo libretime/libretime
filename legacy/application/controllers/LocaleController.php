@@ -12,9 +12,9 @@ final class LocaleController extends Zend_Controller_Action
         echo 'var datatables_dict =' .
             file_get_contents(
                 Application_Common_OsPath::join(
-                // $_SERVER["DOCUMENT_ROOT"],
-                dirname(__FILE__) . '/../../public/', // Fixing this... -- Albert
-                'js/datatables/i18n/',
+                    // $_SERVER["DOCUMENT_ROOT"],
+                    dirname(__FILE__) . '/../../public/', // Fixing this... -- Albert
+                    'js/datatables/i18n/',
                     $locale . '.txt'
                 )
             );

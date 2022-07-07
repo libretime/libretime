@@ -189,7 +189,8 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
             'api_key' => $CC_CONFIG['apiKey'][0],
             'podcast_name' => $title,
             'album_override' => $album_override,
-            'track_title' => $track_title, ];
+            'track_title' => $track_title,
+        ];
         $task = $this->_executeTask(static::$_CELERY_TASKS[self::DOWNLOAD], $data);
         // Get the created ThirdPartyTaskReference and set the episode ID so
         // we can remove the placeholder if the import ends up stuck in a pending state
@@ -378,7 +379,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
             ->find();
 
         return $isStationPodcast ? $this->_getStationPodcastEpisodeArray($episodes)
-                                 : $this->_getImportedPodcastEpisodeArray($podcast, $episodes);
+            : $this->_getImportedPodcastEpisodeArray($podcast, $episodes);
     }
 
     /**

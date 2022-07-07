@@ -40,7 +40,8 @@ class Application_Form_Login extends Zend_Form
             ->setAttribs([
                 'autofocus' => 'true',
                 'class' => 'input_text',
-                'required' => 'true', ])
+                'required' => 'true',
+            ])
             ->setValue((isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1) ? 'admin' : '')
             ->addFilter('StringTrim')
             ->setDecorators(['ViewHelper'])

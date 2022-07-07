@@ -121,9 +121,11 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
     public static function analyzeFormData($parameters)
     {
-        $valid = ['length' => [true, ''],
+        $valid = [
+            'length' => [true, ''],
             'url' => [true, ''],
-            'name' => [true, ''], ];
+            'name' => [true, ''],
+        ];
 
         $di = null;
         $length = $parameters['length'];

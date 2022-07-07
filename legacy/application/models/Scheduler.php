@@ -180,8 +180,10 @@ final class Application_Model_Scheduler
                     $ccShowInstances = $ccShow->getCcShowInstancess();
                     $timeNowUTC = gmdate(DEFAULT_TIMESTAMP_FORMAT);
                     foreach ($ccShowInstances as $ccShowInstance) {
-                        if ($ccShowInstance->getDbStarts() <= $timeNowUTC
-                            && $ccShowInstance->getDbEnds() > $timeNowUTC) {
+                        if (
+                            $ccShowInstance->getDbStarts() <= $timeNowUTC
+                            && $ccShowInstance->getDbEnds() > $timeNowUTC
+                        ) {
                             throw new Exception(_('Content in linked shows cannot be changed while on air!'));
                         }
                     }
@@ -745,7 +747,7 @@ final class Application_Model_Scheduler
                             // each show. In case the position does not exist we need to select
                             // the end time of the last position
                             $maxPos_sql = 'SELECT max(position) from cc_schedule ' .
-                              "WHERE instance_id = {$instanceId}";
+                                "WHERE instance_id = {$instanceId}";
                             $pos = Application_Common_Database::prepareAndExecute(
                                 $maxPos_sql,
                                 [],
@@ -923,7 +925,8 @@ final class Application_Model_Scheduler
 
                                 break;
 
-                            default: break;
+                            default:
+                                break;
                         }
 
                         if ($this->applyCrossfades) {
@@ -975,7 +978,7 @@ final class Application_Model_Scheduler
 
                         $nextStartDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
                         ++$pos;
-                    }// all files have been inserted/moved
+                    } // all files have been inserted/moved
                     if ($doInsert) {
                         $insert_sql = 'INSERT INTO cc_schedule ' .
                             '(starts, ends, cue_in, cue_out, fade_in, fade_out, ' .
@@ -1044,8 +1047,8 @@ final class Application_Model_Scheduler
                     if ($moveAction) {
                         $this->calculateCrossfades($instanceId);
                     }
-                }// for each instance
-            }// for each schedule location
+                } // for each instance
+            } // for each schedule location
 
             $endProfile = microtime(true);
             Logging::debug('finished adding scheduled items.');

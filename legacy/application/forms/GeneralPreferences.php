@@ -127,7 +127,8 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $podcast_album_override->setValue(Application_Model_Preference::GetPodcastAlbumOverride());
         $podcast_album_override->setDescription(_('Enabling this feature will cause podcast episode tracks to have their Artist, Title, and Album metatags set from podcast feed values. Note that enabling this feature is recommended in order to ensure reliable scheduling of episodes via smartblocks.'));
         $podcast_album_override->setSeparator(' '); // No <br> between radio buttons
-        $podcast_album_override->addDecorator('HtmlTag', ['tag' => 'dd',
+        $podcast_album_override->addDecorator('HtmlTag', [
+            'tag' => 'dd',
             'id' => 'podcastAlbumOverride-element',
             'class' => 'radio-inline-list',
         ]);
@@ -142,7 +143,8 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $podcast_auto_smartblock->setValue(Application_Model_Preference::GetPodcastAutoSmartblock());
         $podcast_auto_smartblock->setDescription(_('If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the "Overwrite Podcast Episode Metatags" feature must also be enabled in order for smartblocks to reliably find episodes.'));
         $podcast_auto_smartblock->setSeparator(' '); // No <br> between radio buttons
-        $podcast_auto_smartblock->addDecorator('HtmlTag', ['tag' => 'dd',
+        $podcast_auto_smartblock->addDecorator('HtmlTag', [
+            'tag' => 'dd',
             'id' => 'podcastAutoSmartblock-element',
             'class' => 'radio-inline-list',
         ]);
@@ -162,7 +164,8 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
                                             to external widgets that can be embedded in your website.'));
         $third_party_api->setSeparator(' '); // No <br> between radio buttons
         // $third_party_api->addDecorator(new Zend_Form_Decorator_Label(array('tag' => 'dd', 'class' => 'radio-inline-list')));
-        $third_party_api->addDecorator('HtmlTag', ['tag' => 'dd',
+        $third_party_api->addDecorator('HtmlTag', [
+            'tag' => 'dd',
             'id' => 'thirdPartyApi-element',
             'class' => 'radio-inline-list',
         ]);
@@ -219,7 +222,8 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $feature_preview_mode->setValue(Application_Model_Preference::GetFeaturePreviewMode());
         $feature_preview_mode->setDescription(_('Enable this to opt-in to test new features.'));
         $feature_preview_mode->setSeparator(' '); // No <br> between radio buttons
-        $feature_preview_mode->addDecorator('HtmlTag', ['tag' => 'dd',
+        $feature_preview_mode->addDecorator('HtmlTag', [
+            'tag' => 'dd',
             'id' => 'featurePreviewMode-element',
             'class' => 'radio-inline-list',
         ]);

@@ -25,9 +25,11 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
      */
     public function __construct(Zend_Acl $aclData, $roleName = 'G')
     {
-        $this->_errorPage = ['module' => 'default',
+        $this->_errorPage = [
+            'module' => 'default',
             'controller' => 'error',
-            'action' => 'error', ];
+            'action' => 'error',
+        ];
 
         $this->_roleName = $roleName;
 
@@ -82,9 +84,11 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
      */
     public function setErrorPage($action, $controller = 'error', $module = 'default')
     {
-        $this->_errorPage = ['module' => $module,
+        $this->_errorPage = [
+            'module' => $module,
             'controller' => $controller,
-            'action' => $action, ];
+            'action' => $action,
+        ];
     }
 
     /**

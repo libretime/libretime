@@ -12,7 +12,8 @@ class Application_Form_PodcastPreferences extends Zend_Form_SubForm
             _('Private'),
         ]);
         $stationPodcastPrivacy->setSeparator(' ');
-        $stationPodcastPrivacy->addDecorator('HtmlTag', ['tag' => 'dd',
+        $stationPodcastPrivacy->addDecorator('HtmlTag', [
+            'tag' => 'dd',
             'id' => 'stationPodcastPrivacy-element',
             'class' => 'radio-inline-list',
         ]);

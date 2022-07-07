@@ -67,16 +67,20 @@ class Application_Service_ShowFormService
     public function populateNewShowForms($formWhat, $formWhen, $formRepeats)
     {
         $formWhat->populate(
-            ['add_show_id' => '-1',
-                'add_show_instance_id' => '-1', ]
+            [
+                'add_show_id' => '-1',
+                'add_show_instance_id' => '-1',
+            ]
         );
 
         $formWhen->populate(
-            ['add_show_start_date' => date('Y-m-d'),
+            [
+                'add_show_start_date' => date('Y-m-d'),
                 'add_show_start_time' => '00:00',
                 'add_show_end_date_no_repeate' => date('Y-m-d'),
                 'add_show_end_time' => '01:00',
-                'add_show_duration' => '01h 00m', ]
+                'add_show_duration' => '01h 00m',
+            ]
         );
 
         $formRepeats->populate(['add_show_end_date' => date('Y-m-d')]);
@@ -204,7 +208,8 @@ class Application_Service_ShowFormService
                 'add_show_end_time' => $showEnd->format('H:i'),
                 'add_show_duration' => $ccShowDay->formatDuration(true),
                 'add_show_timezone' => $ccShowDay->getDbTimezone(),
-                'add_show_repeats' => $ccShowDay->isRepeating() ? 1 : 0, ]
+                'add_show_repeats' => $ccShowDay->isRepeating() ? 1 : 0,
+            ]
         );
 
         return $showStart;
@@ -269,7 +274,8 @@ class Application_Service_ShowFormService
                     $timezone
                 ),
                 'add_show_timezone' => $timezone,
-                'add_show_repeats' => 0, ]
+                'add_show_repeats' => 0,
+            ]
         );
 
         $form->getElement('add_show_repeats')->setOptions(['disabled' => true]);
@@ -321,7 +327,8 @@ class Application_Service_ShowFormService
                 'add_show_day_check' => $days,
                 'add_show_end_date' => (!is_null($repeatEndDate)) ? $repeatEndDate->format('Y-m-d') : null,
                 'add_show_no_end' => (is_null($repeatEndDate)),
-                'add_show_monthly_repeat_type' => $monthlyRepeatType, ]
+                'add_show_monthly_repeat_type' => $monthlyRepeatType,
+            ]
         );
 
         if (!$this->ccShow->isLinkable() || $this->ccShow->isRecorded()) {
@@ -362,7 +369,8 @@ class Application_Service_ShowFormService
             [
                 'add_show_background_color' => $this->ccShow->getDbBackgroundColor(),
                 'add_show_color' => $this->ccShow->getDbColor(),
-                'add_show_logo_current' => $src, ]
+                'add_show_logo_current' => $src,
+            ]
         );
     }
 
@@ -405,7 +413,8 @@ class Application_Service_ShowFormService
                 'cb_airtime_auth' => $this->ccShow->getDbLiveStreamUsingAirtimeAuth(),
                 'cb_custom_auth' => $this->ccShow->getDbLiveStreamUsingCustomAuth(),
                 'custom_username' => $this->ccShow->getDbLiveStreamUser(),
-                'custom_password' => $this->ccShow->getDbLiveStreamPass(), ]
+                'custom_password' => $this->ccShow->getDbLiveStreamPass(),
+            ]
         );
     }
 
@@ -414,7 +423,8 @@ class Application_Service_ShowFormService
         $form->populate(
             [
                 'add_show_record' => $this->ccShow->isRecorded(),
-                'add_show_rebroadcast' => $this->ccShow->isRebroadcast(), ]
+                'add_show_rebroadcast' => $this->ccShow->isRebroadcast(),
+            ]
         );
 
         $form->getElement('add_show_record')->setOptions(['disabled' => true]);

@@ -96,7 +96,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
             $resp = $this->getResponse();
             $resp->setHttpResponseCode(400);
             $resp->appendBody('ERROR: Episode ID should not be specified when using POST. POST is only used for '
-                            . 'importing podcast episodes, and an episode ID will be chosen by Airtime');
+                . 'importing podcast episodes, and an episode ID will be chosen by Airtime');
 
             return;
         }

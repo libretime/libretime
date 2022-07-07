@@ -198,7 +198,8 @@ class Application_Form_EditAudioMD extends Zend_Form
             ->setFilters(['StringTrim'])
             ->setValidators([
                 new Zend_Validate_StringLength(['min' => 0, 'max' => 8]),
-                new Zend_Validate_Digits(), ]);
+                new Zend_Validate_Digits(),
+            ]);
         $this->addElement($bpm);
 
         // Add copyright field

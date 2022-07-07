@@ -15,8 +15,10 @@ class Application_Form_PasswordChange extends Zend_Form
             'label' => _('Password'),
             'required' => true,
             'filters' => ['stringTrim'],
-            'validators' => [$notEmptyValidator,
-                $stringLengthValidator, ],
+            'validators' => [
+                $notEmptyValidator,
+                $stringLengthValidator,
+            ],
             'decorators' => [
                 'ViewHelper',
             ],
