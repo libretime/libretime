@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2022-07-04 18:49+0200\n"
-"PO-Revision-Date: 2022-07-06 05:21+0000\n"
+"PO-Revision-Date: 2022-07-07 08:51+0000\n"
 "Last-Translator: Mykola <bondarchuk.nikola@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/libretime/"
 "legacy/uk/>\n"
@@ -23,17 +23,17 @@ msgstr ""
 #: application/common/DateHelper.php:216
 #, php-format
 msgid "The year %s must be within the range of 1753 - 9999"
-msgstr "The year %s must be within the range of 1753 - 9999"
+msgstr "Рік %s має бути в діапазоні 1753 - 9999"
 
 #: application/common/DateHelper.php:219
 #, php-format
 msgid "%s-%s-%s is not a valid date"
-msgstr "%s-%s-%s is not a valid date"
+msgstr "%s-%s-%s дата недійсна"
 
 #: application/common/DateHelper.php:243
 #, php-format
 msgid "%s:%s:%s is not a valid time"
-msgstr "%s:%s:%s is not a valid time"
+msgstr "%s:%s:%s недійсний час"
 
 #: application/common/LocaleHelper.php:23
 msgid "English"
@@ -800,17 +800,19 @@ msgid "File does not exist in %s"
 msgstr "Файл не існує в %s"
 
 #: application/controllers/ApiController.php:1003
+#, fuzzy
 msgid "Bad request. no 'mode' parameter passed."
 msgstr "Bad request. no 'mode' parameter passed."
 
 #: application/controllers/ApiController.php:1015
+#, fuzzy
 msgid "Bad request. 'mode' parameter is invalid"
 msgstr "Bad request. 'mode' parameter is invalid"
 
 #: application/controllers/DashboardController.php:34
 #: application/controllers/DashboardController.php:86
 msgid "You don't have permission to disconnect source."
-msgstr "You don't have permission to disconnect source."
+msgstr "Ви не маєте дозволу на відключення джерела."
 
 #: application/controllers/DashboardController.php:36
 #: application/controllers/DashboardController.php:88
@@ -896,7 +898,7 @@ msgstr "Додати в плейлист"
 
 #: application/controllers/LibraryController.php:113
 msgid "Add to Smart Block"
-msgstr "Add to Smart Block"
+msgstr "Додати до Смарт Блоку"
 
 #: application/controllers/LibraryController.php:118
 #: application/controllers/LibraryController.php:155
@@ -970,31 +972,31 @@ msgstr "Запис:"
 
 #: application/controllers/LocaleController.php:31
 msgid "Master Stream"
-msgstr "Master Stream"
+msgstr "Головний потік"
 
 #: application/controllers/LocaleController.php:32
 msgid "Live Stream"
-msgstr "Live Stream"
+msgstr "Наживо"
 
 #: application/controllers/LocaleController.php:33
 msgid "Nothing Scheduled"
-msgstr "Nothing Scheduled"
+msgstr "Нічого не заплановано"
 
 #: application/controllers/LocaleController.php:34
 msgid "Current Show:"
-msgstr "Current Show:"
+msgstr "Поточна програма:"
 
 #: application/controllers/LocaleController.php:35
 msgid "Current"
-msgstr "Current"
+msgstr "Поточний"
 
 #: application/controllers/LocaleController.php:37
 msgid "You are running the latest version"
-msgstr "You are running the latest version"
+msgstr "Ви використовуєте останню версію"
 
 #: application/controllers/LocaleController.php:38
 msgid "New version available: "
-msgstr "New version available: "
+msgstr "Доступна нова версія: "
 
 #: application/controllers/LocaleController.php:39
 msgid "You have a pre-release version of LibreTime intalled."
@@ -1018,33 +1020,34 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:45
 msgid "Add to current playlist"
-msgstr "Add to current playlist"
+msgstr "Додати до поточного списку відтворення"
 
 #: application/controllers/LocaleController.php:46
 msgid "Add to current smart block"
-msgstr "Add to current smart block"
+msgstr "Додати до поточного смарт-блоку"
 
 #: application/controllers/LocaleController.php:47
 msgid "Adding 1 Item"
-msgstr "Adding 1 Item"
+msgstr "Додавання 1 елемента"
 
 #: application/controllers/LocaleController.php:48
 #, php-format
 msgid "Adding %s Items"
-msgstr "Adding %s Items"
+msgstr "Додавання %s Елемента(ів)"
 
 #: application/controllers/LocaleController.php:49
 msgid "You can only add tracks to smart blocks."
-msgstr "You can only add tracks to smart blocks."
+msgstr "Ви можете додавати треки лише до смарт-блоків."
 
 #: application/controllers/LocaleController.php:50
 #: application/controllers/PlaylistController.php:182
 msgid "You can only add tracks, smart blocks, and webstreams to playlists."
-msgstr "You can only add tracks, smart blocks, and webstreams to playlists."
+msgstr ""
+"До списків відтворення можна додавати лише треки, смарт-блоки та веб-потоки."
 
 #: application/controllers/LocaleController.php:53
 msgid "Please select a cursor position on timeline."
-msgstr "Please select a cursor position on timeline."
+msgstr "Виберіть позицію курсору на часовій шкалі."
 
 #: application/controllers/LocaleController.php:54
 msgid "You haven't added any tracks"
@@ -1101,7 +1104,7 @@ msgstr ""
 #: application/controllers/LocaleController.php:70
 #: application/services/CalendarService.php:147
 msgid "Edit"
-msgstr "Edit"
+msgstr "Редагувати"
 
 #: application/controllers/LocaleController.php:71
 msgid "Add to Schedule"
@@ -1127,39 +1130,41 @@ msgstr ""
 #: application/forms/AddShowStyle.php:63
 #: application/forms/GeneralPreferences.php:54
 msgid "Remove"
-msgstr "Remove"
+msgstr "Видалити"
 
 #: application/controllers/LocaleController.php:78
 msgid "Edit Metadata"
-msgstr "Edit Metadata"
+msgstr "Редагувати метадані"
 
 #: application/controllers/LocaleController.php:79
 msgid "Add to selected show"
-msgstr "Add to selected show"
+msgstr "Додати до вибраної програми"
 
 #: application/controllers/LocaleController.php:80
 msgid "Select"
-msgstr "Select"
+msgstr "Вибрати"
 
 #: application/controllers/LocaleController.php:81
 msgid "Select this page"
-msgstr "Select this page"
+msgstr "Вибрати цю сторінку"
 
 #: application/controllers/LocaleController.php:82
 msgid "Deselect this page"
-msgstr "Deselect this page"
+msgstr "Скасувати вибір цієї сторінки"
 
 #: application/controllers/LocaleController.php:83
+#, fuzzy
 msgid "Deselect all"
-msgstr "Deselect all"
+msgstr "Зняти вибір із усіх"
 
 #: application/controllers/LocaleController.php:84
 msgid "Are you sure you want to delete the selected item(s)?"
-msgstr "Are you sure you want to delete the selected item(s)?"
+msgstr "Ви впевнені, що бажаєте видалити вибрані елементи?"
 
 #: application/controllers/LocaleController.php:85
+#, fuzzy
 msgid "Scheduled"
-msgstr "Scheduled"
+msgstr "За розкладом"
 
 #: application/controllers/LocaleController.php:86
 #: application/views/scripts/partialviews/dashboard-sub-nav.php:3
@@ -1177,7 +1182,7 @@ msgstr ""
 #: application/services/HistoryService.php:1086
 #: application/services/HistoryService.php:1101
 msgid "Title"
-msgstr "Title"
+msgstr "Назва"
 
 #: application/controllers/LocaleController.php:89
 #: application/forms/SmartBlockCriteria.php:66
@@ -1186,7 +1191,7 @@ msgstr "Title"
 #: application/services/HistoryService.php:1087
 #: application/services/HistoryService.php:1102
 msgid "Creator"
-msgstr "Creator"
+msgstr "Автор"
 
 #: application/controllers/LocaleController.php:90
 #: application/forms/SmartBlockCriteria.php:57
@@ -1211,7 +1216,7 @@ msgstr "BPM"
 #: application/services/HistoryService.php:1058
 #: application/services/HistoryService.php:1105
 msgid "Composer"
-msgstr "Composer"
+msgstr "Композитор"
 
 #: application/controllers/LocaleController.php:94
 #: application/forms/SmartBlockCriteria.php:61
@@ -1261,19 +1266,20 @@ msgstr "Label"
 #: application/models/Block.php:1439 application/models/Block.php:1535
 #: application/services/HistoryService.php:1064
 msgid "Language"
-msgstr "Language"
+msgstr "Мова"
 
 #: application/controllers/LocaleController.php:101
 #: application/forms/SmartBlockCriteria.php:72
 #: application/models/Block.php:1441 application/models/Block.php:1537
 msgid "Last Modified"
-msgstr "Last Modified"
+msgstr "Остання зміна"
 
 #: application/controllers/LocaleController.php:102
 #: application/forms/SmartBlockCriteria.php:73
 #: application/models/Block.php:1442 application/models/Block.php:1538
+#, fuzzy
 msgid "Last Played"
-msgstr "Last Played"
+msgstr "Останнє програвання"
 
 #: application/controllers/LocaleController.php:103
 #: application/forms/SmartBlockCriteria.php:74
@@ -1281,11 +1287,12 @@ msgstr "Last Played"
 #: application/services/HistoryService.php:1054
 #: application/services/HistoryService.php:1104
 msgid "Length"
-msgstr "Length"
+msgstr "Довжина"
 
 #: application/controllers/LocaleController.php:104
 #: application/forms/SmartBlockCriteria.php:76
 #: application/models/Block.php:1445 application/models/Block.php:1541
+#, fuzzy
 msgid "Mime"
 msgstr "Mime"
 
@@ -1294,21 +1301,23 @@ msgstr "Mime"
 #: application/models/Block.php:1446 application/models/Block.php:1542
 #: application/services/HistoryService.php:1056
 msgid "Mood"
-msgstr "Mood"
+msgstr "Настрій"
 
 #: application/controllers/LocaleController.php:106
 #: application/forms/SmartBlockCriteria.php:78
 #: application/models/Block.php:1447 application/models/Block.php:1543
 msgid "Owner"
-msgstr "Owner"
+msgstr "Власник"
 
 #: application/controllers/LocaleController.php:107
 #: application/forms/SmartBlockCriteria.php:79
 #: application/models/Block.php:1448 application/models/Block.php:1544
+#, fuzzy
 msgid "Replay Gain"
 msgstr "Replay Gain"
 
 #: application/controllers/LocaleController.php:108
+#, fuzzy
 msgid "Sample Rate"
 msgstr "Sample Rate"
 
@@ -1316,13 +1325,13 @@ msgstr "Sample Rate"
 #: application/forms/SmartBlockCriteria.php:82
 #: application/models/Block.php:1451 application/models/Block.php:1547
 msgid "Track Number"
-msgstr "Track Number"
+msgstr "Номер треку"
 
 #: application/controllers/LocaleController.php:110
 #: application/forms/SmartBlockCriteria.php:83
 #: application/models/Block.php:1452 application/models/Block.php:1548
 msgid "Uploaded"
-msgstr "Uploaded"
+msgstr "Завантажено"
 
 #: application/controllers/LocaleController.php:111
 #: application/forms/SmartBlockCriteria.php:84
@@ -1335,16 +1344,16 @@ msgstr "Website"
 #: application/models/Block.php:1454 application/models/Block.php:1550
 #: application/services/HistoryService.php:1061
 msgid "Year"
-msgstr "Year"
+msgstr "Рік"
 
 #: application/controllers/LocaleController.php:113
 msgid "Loading..."
-msgstr "Loading..."
+msgstr "Завантаження..."
 
 #: application/controllers/LocaleController.php:114
 #: application/controllers/LocaleController.php:411
 msgid "All"
-msgstr "All"
+msgstr "Всі"
 
 #: application/controllers/LocaleController.php:115
 msgid "Files"
@@ -1353,33 +1362,34 @@ msgstr "Files"
 #: application/controllers/LocaleController.php:116
 #: application/views/scripts/partialviews/dashboard-sub-nav.php:8
 msgid "Playlists"
-msgstr "Playlists"
+msgstr "Плейлист"
 
 #: application/controllers/LocaleController.php:117
 #: application/views/scripts/partialviews/dashboard-sub-nav.php:13
 msgid "Smart Blocks"
-msgstr "Smart Blocks"
+msgstr "Смарт-блок"
 
 #: application/controllers/LocaleController.php:118
 msgid "Web Streams"
-msgstr "Web Streams"
+msgstr "Веб-потоки"
 
 #: application/controllers/LocaleController.php:119
+#, fuzzy
 msgid "Unknown type: "
-msgstr "Unknown type: "
+msgstr "Невідомий тип файлу: "
 
 #: application/controllers/LocaleController.php:120
 msgid "Are you sure you want to delete the selected item?"
-msgstr "Are you sure you want to delete the selected item?"
+msgstr "Ви впевнені, що бажаєте видалити вибраний елемент?"
 
 #: application/controllers/LocaleController.php:121
 #: application/controllers/LocaleController.php:218
 msgid "Uploading in progress..."
-msgstr "Uploading in progress..."
+msgstr "Виконується завантаження..."
 
 #: application/controllers/LocaleController.php:122
 msgid "Retrieving data from the server..."
-msgstr "Retrieving data from the server..."
+msgstr "Отримання даних із сервера..."
 
 #: application/controllers/LocaleController.php:124
 msgid "Import"
@@ -1400,24 +1410,27 @@ msgid "Error code: "
 msgstr "Error code: "
 
 #: application/controllers/LocaleController.php:128
+#, fuzzy
 msgid "Error msg: "
-msgstr "Error msg: "
+msgstr "Повідомлення про помилку: "
 
 #: application/controllers/LocaleController.php:129
+#, fuzzy
 msgid "Input must be a positive number"
-msgstr "Input must be a positive number"
+msgstr "Введене число має бути додатним"
 
 #: application/controllers/LocaleController.php:130
+#, fuzzy
 msgid "Input must be a number"
-msgstr "Input must be a number"
+msgstr "Введіть число"
 
 #: application/controllers/LocaleController.php:131
 msgid "Input must be in the format: yyyy-mm-dd"
-msgstr "Input must be in the format: yyyy-mm-dd"
+msgstr "Вхідні дані мають бути у такому форматі: yyyy-mm-dd"
 
 #: application/controllers/LocaleController.php:132
 msgid "Input must be in the format: hh:mm:ss.t"
-msgstr "Input must be in the format: hh:mm:ss.t"
+msgstr "Вхідні дані мають бути у такому форматі: hh:mm:ss.t"
 
 #: application/controllers/LocaleController.php:133
 msgid "My Podcast"
@@ -4100,62 +4113,65 @@ msgstr ""
 
 #: application/services/CalendarService.php:101
 msgid "Clear Show"
-msgstr ""
+msgstr "Очистити програму"
 
 #: application/services/CalendarService.php:115
 #: application/services/CalendarService.php:120
 msgid "Cancel Show"
-msgstr ""
+msgstr "Відміна програми"
 
 #: application/services/CalendarService.php:141
 #: application/services/CalendarService.php:160
 msgid "Edit Instance"
-msgstr ""
+msgstr "Редагувати екземпляр"
 
 #: application/services/CalendarService.php:153
 #: application/services/CalendarService.php:167
 msgid "Edit Show"
-msgstr "Edit Show"
+msgstr "Редагування програми"
 
 #: application/services/CalendarService.php:189
 msgid "Delete Instance"
-msgstr ""
+msgstr "Видалити екземпляр"
 
 #: application/services/CalendarService.php:195
 msgid "Delete Instance and All Following"
-msgstr ""
+msgstr "Видалити екземпляр і все наступне"
 
 #: application/services/CalendarService.php:250
 msgid "Permission denied"
-msgstr "Permission denied"
+msgstr "У дозволі відмовлено"
 
 #: application/services/CalendarService.php:254
 msgid "Can't drag and drop repeating shows"
-msgstr "Can't drag and drop repeating shows"
+msgstr "Не можна перетягувати повторювані програми"
 
 #: application/services/CalendarService.php:263
 msgid "Can't move a past show"
-msgstr "Can't move a past show"
+msgstr "Неможливо перемістити минулу програму"
 
 #: application/services/CalendarService.php:298
+#, fuzzy
 msgid "Can't move show into past"
-msgstr "Can't move show into past"
+msgstr "Неможливо перенести програму в минуле"
 
 #: application/services/CalendarService.php:322
 msgid "Can't move a recorded show less than 1 hour before its rebroadcasts."
-msgstr "Can't move a recorded show less than 1 hour before its rebroadcasts."
+msgstr ""
+"Не можна перемістити записану програму менш ніж за 1 годину до її повторної "
+"трансляції."
 
 #: application/services/CalendarService.php:333
 msgid "Show was deleted because recorded show does not exist!"
-msgstr "Show was deleted because recorded show does not exist!"
+msgstr "Програму видалено, оскільки записаної програми не існує!"
 
 #: application/services/CalendarService.php:340
 msgid "Must wait 1 hour to rebroadcast."
-msgstr "Must wait 1 hour to rebroadcast."
+msgstr "Для повторної трансляції потрібно почекати 1 годину."
 
 #: application/services/HistoryService.php:1062
 msgid "Track"
-msgstr "Track"
+msgstr "Трек"
 
 #: application/services/HistoryService.php:1103
 msgid "Played"
@@ -4163,11 +4179,11 @@ msgstr "Played"
 
 #: application/services/PodcastService.php:163
 msgid "Auto-generated smartblock for podcast"
-msgstr ""
+msgstr "Автоматично створений смарт-блок для подкасту"
 
 #: application/views/scripts/partialviews/dashboard-sub-nav.php:18
 msgid "Webstreams"
-msgstr ""
+msgstr "Веб-потоки"
 
 #~ msgid " to "
 #~ msgstr " to "
