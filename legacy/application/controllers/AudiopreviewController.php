@@ -184,7 +184,8 @@ class AudiopreviewController extends Zend_Controller_Action
     {
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $elementMap = ['element_title' => isset($track['track_title']) ? $track['track_title'] : '',
+        $elementMap = [
+            'element_title' => isset($track['track_title']) ? $track['track_title'] : '',
             'element_artist' => isset($track['artist_name']) ? $track['artist_name'] : '',
             'element_id' => isset($track['id']) ? $track['id'] : '',
             'element_position' => isset($track['position']) ? $track['position'] : '',

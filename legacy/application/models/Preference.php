@@ -157,7 +157,7 @@ class Application_Model_Preference
 
             // Check if key already exists
             $sql = 'SELECT COUNT(*) FROM cc_pref'
-            . ' WHERE keystr = :key';
+                . ' WHERE keystr = :key';
 
             $paramMap = [];
             $paramMap[':key'] = $key;
@@ -177,7 +177,7 @@ class Application_Model_Preference
                 $res = '';
             } else {
                 $sql = 'SELECT valstr FROM cc_pref'
-                . ' WHERE keystr = :key';
+                    . ' WHERE keystr = :key';
 
                 $paramMap = [];
                 $paramMap[':key'] = $key;
@@ -667,10 +667,12 @@ class Application_Model_Preference
             if (isset($info[1])) {
                 $key = str_replace(' ', '_', trim($info[0]));
                 $key = strtoupper($key);
-                if ($key == 'WEB_SERVER' || $key == 'CPU' || $key == 'OS' || $key == 'TOTAL_RAM'
-                          || $key == 'FREE_RAM' || $key == 'AIRTIME_VERSION' || $key == 'KERNAL_VERSION'
-                          || $key == 'MACHINE_ARCHITECTURE' || $key == 'TOTAL_MEMORY_MBYTES' || $key == 'TOTAL_SWAP_MBYTES'
-                          || $key == 'PLAYOUT_ENGINE_CPU_PERC') {
+                if (
+                    $key == 'WEB_SERVER' || $key == 'CPU' || $key == 'OS' || $key == 'TOTAL_RAM'
+                    || $key == 'FREE_RAM' || $key == 'AIRTIME_VERSION' || $key == 'KERNAL_VERSION'
+                    || $key == 'MACHINE_ARCHITECTURE' || $key == 'TOTAL_MEMORY_MBYTES' || $key == 'TOTAL_SWAP_MBYTES'
+                    || $key == 'PLAYOUT_ENGINE_CPU_PERC'
+                ) {
                     if ($key == 'AIRTIME_VERSION') {
                         // remove hash tag on the version string
                         $version = explode('+', $info[1]);
@@ -1206,7 +1208,9 @@ class Application_Model_Preference
     {
         $v = self::getValue($pref_param, true);
 
-        $id = function ($x) { return $x; };
+        $id = function ($x) {
+            return $x;
+        };
 
         if ($v === '') {
             return $id;

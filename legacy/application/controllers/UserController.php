@@ -133,8 +133,10 @@ class UserController extends Zend_Controller_Action
         if ($request->isPost()) {
             $formData = $request->getPost();
 
-            if ($form->isValid($formData)
-                       && $form->validateLogin($formData['cu_login'], $formData['cu_user_id'])) {
+            if (
+                $form->isValid($formData)
+                && $form->validateLogin($formData['cu_login'], $formData['cu_user_id'])
+            ) {
                 $user = new Application_Model_User($formData['cu_user_id']);
                 // Stupid hack because our schema enforces non-null first_name
                 // even though by default the admin user has no first name... (....)
@@ -154,8 +156,10 @@ class UserController extends Zend_Controller_Action
                 // We don't allow 6 x's as a password.
                 // The reason is because we use that as a password placeholder
                 // on the client side.
-                if (array_key_exists('cu_password', $formData) && ($formData['cu_password'] != 'xxxxxx')
-                    && (!empty($formData['cu_password']))) {
+                if (
+                    array_key_exists('cu_password', $formData) && ($formData['cu_password'] != 'xxxxxx')
+                    && (!empty($formData['cu_password']))
+                ) {
                     $user->setPassword($formData['cu_password']);
                 }
 

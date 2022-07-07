@@ -105,7 +105,8 @@ class Application_Model_Datatables
                     $debug = [
                         '$new_index' => $new_index,
                         '$currentPos' => $currentPos,
-                        '$orig2searchTerm' => $orig2searchTerm, ];
+                        '$orig2searchTerm' => $orig2searchTerm,
+                    ];
                     Logging::warn($debug);
                 }
             }

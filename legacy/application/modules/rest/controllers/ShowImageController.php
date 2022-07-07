@@ -256,8 +256,8 @@ class Rest_ShowImageController extends Zend_Rest_Controller
             unlink($image_file); // remove the file after failed rename
 
             throw new Exception('The file was not uploaded, this error can occur if the computer '
-                                . 'hard drive does not have enough disk space or the stor '
-                                . 'directory does not have correct write permissions.');
+                . 'hard drive does not have enough disk space or the stor '
+                . 'directory does not have correct write permissions.');
         }
 
         return $image_stor;

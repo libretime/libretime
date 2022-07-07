@@ -1,4 +1,5 @@
 <?php
+
 /**
  * custom filter for image uploads.
  *

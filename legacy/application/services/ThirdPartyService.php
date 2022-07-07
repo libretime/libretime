@@ -102,7 +102,7 @@ abstract class Application_Service_ThirdPartyService
                 ->findOneByDbTrackReference($ref->getDbId());
 
             return $task->getDbStatus() == CELERY_PENDING_STATUS ? -1
-                    : ($task->getDbStatus() == CELERY_FAILED_STATUS ? 0 : 1);
+                : ($task->getDbStatus() == CELERY_FAILED_STATUS ? 0 : 1);
         }
 
         return 0;

@@ -12,7 +12,8 @@ class FeedsController extends Zend_Controller_Action
 
         if ((Application_Model_Preference::getStationPodcastPrivacy()
                 && $request->getParam('sharing_token') != Application_Model_Preference::getStationPodcastDownloadKey())
-                && !RestAuth::verifyAuth(true, false, $this)) {
+            && !RestAuth::verifyAuth(true, false, $this)
+        ) {
             $response->setHttpResponseCode(401);
 
             return;

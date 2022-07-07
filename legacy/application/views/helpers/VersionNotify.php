@@ -86,7 +86,7 @@ class Airtime_View_Helper_VersionNotify extends Zend_View_Helper_Abstract
         ];
 
         return sprintf('<script>var versionNotifyInfo = %s;</script>', json_encode($data))
-                . "<div id='version-icon' class='" . $class . "'></div>";
+            . "<div id='version-icon' class='" . $class . "'></div>";
     }
 
     private function normalizeVersion($version, $isGit)

@@ -5,7 +5,8 @@ class RestAuth
     public static function verifyAuth($checkApiKey, $checkSession, $action)
     {
         // Session takes precedence over API key for now:
-        if ($checkSession && self::verifySession()
+        if (
+            $checkSession && self::verifySession()
             || $checkApiKey && self::verifyAPIKey($action)
         ) {
             return true;

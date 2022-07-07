@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Auth adaptor for FreeIPA.
  */

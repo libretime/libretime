@@ -17,30 +17,38 @@ class Application_Model_Dashboard
                 return null;
             }
 
-            return ['name' => $row[0]['artist_name'] . ' - ' . $row[0]['track_title'],
+            return [
+                'name' => $row[0]['artist_name'] . ' - ' . $row[0]['track_title'],
                 'starts' => $row[0]['starts'],
-                'ends' => $row[0]['ends'], ];
+                'ends' => $row[0]['ends'],
+            ];
         }
         if (count($row) == 0) {
             if ($showInstance->isRecorded()) {
                 // last item is a show instance
-                return ['name' => $showInstance->getName(),
+                return [
+                    'name' => $showInstance->getName(),
                     'starts' => $showInstance->getShowInstanceStart(),
-                    'ends' => $showInstance->getShowInstanceEnd(), ];
+                    'ends' => $showInstance->getShowInstanceEnd(),
+                ];
             }
 
             return null;
         }
         // return the one that started later.
         if ($row[0]['starts'] >= $showInstance->getShowInstanceStart()) {
-            return ['name' => $row[0]['artist_name'] . ' - ' . $row[0]['track_title'],
+            return [
+                'name' => $row[0]['artist_name'] . ' - ' . $row[0]['track_title'],
                 'starts' => $row[0]['starts'],
-                'ends' => $row[0]['ends'], ];
+                'ends' => $row[0]['ends'],
+            ];
         }
 
-        return ['name' => $showInstance->getName(),
+        return [
+            'name' => $showInstance->getName(),
             'starts' => $showInstance->getShowInstanceStart(),
-            'ends' => $showInstance->getShowInstanceEnd(), ];
+            'ends' => $showInstance->getShowInstanceEnd(),
+        ];
     }
 
     public static function GetCurrentItem($p_timeNow)
@@ -65,30 +73,36 @@ class Application_Model_Dashboard
              * in the future.
              */
 
-            return ['name' => $row[0]['artist_name'] . ' - ' . $row[0]['track_title'],
+            return [
+                'name' => $row[0]['artist_name'] . ' - ' . $row[0]['track_title'],
                 'artwork_data' => $row[0]['artwork_data'],
                 'starts' => $row[0]['starts'],
-                'ends' => $row[0]['ends'], ];
+                'ends' => $row[0]['ends'],
+            ];
         }
         if (count($row) == 0) {
             // last item is a show instance
             if ($showInstance->isRecorded()) {
-                return ['name' => $showInstance->getName(),
+                return [
+                    'name' => $showInstance->getName(),
                     'starts' => $showInstance->getShowInstanceStart(),
                     'ends' => $showInstance->getShowInstanceEnd(),
                     'media_item_played' => false,
-                    'record' => true, ];
+                    'record' => true,
+                ];
             }
 
             return null;
         }
 
-        return ['name' => $row[0]['artist_name'] . ' - ' . $row[0]['track_title'],
+        return [
+            'name' => $row[0]['artist_name'] . ' - ' . $row[0]['track_title'],
             'artwork_data' => $row[0]['artwork_data'],
             'starts' => $row[0]['starts'],
             'ends' => $row[0]['ends'],
             'media_item_played' => $row[0]['media_item_played'],
-            'record' => 0, ];
+            'record' => 0,
+        ];
     }
 
     public static function GetNextItem($p_timeNow)
@@ -106,17 +120,21 @@ class Application_Model_Dashboard
                 return null;
             }
 
-            return ['name' => $row[0]['artist_name'] . ' - ' . $row[0]['track_title'],
+            return [
+                'name' => $row[0]['artist_name'] . ' - ' . $row[0]['track_title'],
                 'artwork_data' => $row[0]['artwork_data'],
                 'starts' => $row[0]['starts'],
-                'ends' => $row[0]['ends'], ];
+                'ends' => $row[0]['ends'],
+            ];
         }
         if (count($row) == 0) {
             if ($showInstance->isRecorded()) {
                 // last item is a show instance
-                return ['name' => $showInstance->getName(),
+                return [
+                    'name' => $showInstance->getName(),
                     'starts' => $showInstance->getShowInstanceStart(),
-                    'ends' => $showInstance->getShowInstanceEnd(), ];
+                    'ends' => $showInstance->getShowInstanceEnd(),
+                ];
             }
 
             return null;
@@ -124,14 +142,18 @@ class Application_Model_Dashboard
         // return the one that starts sooner.
 
         if ($row[0]['starts'] <= $showInstance->getShowInstanceStart()) {
-            return ['name' => $row[0]['artist_name'] . ' - ' . $row[0]['track_title'],
+            return [
+                'name' => $row[0]['artist_name'] . ' - ' . $row[0]['track_title'],
                 'artwork_data' => $row[0]['artwork_data'],
                 'starts' => $row[0]['starts'],
-                'ends' => $row[0]['ends'], ];
+                'ends' => $row[0]['ends'],
+            ];
         }
 
-        return ['name' => $showInstance->getName(),
+        return [
+            'name' => $showInstance->getName(),
             'starts' => $showInstance->getShowInstanceStart(),
-            'ends' => $showInstance->getShowInstanceEnd(), ];
+            'ends' => $showInstance->getShowInstanceEnd(),
+        ];
     }
 }

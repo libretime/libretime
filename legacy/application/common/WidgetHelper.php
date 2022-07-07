@@ -9,9 +9,11 @@ class WidgetHelper
         // weekStart is in station time.
         $weekStartDateTime = Application_Common_DateHelper::getWeekStartDateTime();
 
-        $dow = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday',
+        $dow = [
+            'monday', 'tuesday', 'wednesday', 'thursday', 'friday',
             'saturday', 'sunday', 'nextmonday', 'nexttuesday', 'nextwednesday',
-            'nextthursday', 'nextfriday', 'nextsaturday', 'nextsunday', ];
+            'nextthursday', 'nextfriday', 'nextsaturday', 'nextsunday',
+        ];
 
         $result = [];
 

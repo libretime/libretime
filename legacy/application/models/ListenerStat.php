@@ -63,7 +63,7 @@ SQL;
 
         foreach ($enabledStreamIds as $sId) {
             $sql = 'SELECT value FROM cc_stream_setting'
-            . ' WHERE keyname = :key';
+                . ' WHERE keyname = :key';
 
             $result = Application_Common_Database::prepareAndExecute($sql, ['key' => $sId . '_mount'], 'single');
 
@@ -120,8 +120,10 @@ SQL;
                 // tricking javascript so it thinks the server timezone is in UTC
                 $average_listeners = array_sum(array_column($data, 'listeners')) / count($data);
                 $max_num_listeners = max(array_column($data, 'listeners'));
-                $entry = ['show' => $showName, 'time' => $t->format('Y-m-d H:i:s'), 'average_number_of_listeners' => $average_listeners,
-                    'maximum_number_of_listeners' => $max_num_listeners, ];
+                $entry = [
+                    'show' => $showName, 'time' => $t->format('Y-m-d H:i:s'), 'average_number_of_listeners' => $average_listeners,
+                    'maximum_number_of_listeners' => $max_num_listeners,
+                ];
                 array_push($showData, $entry);
             }
         }
@@ -195,7 +197,8 @@ SQL;
 
             Application_Common_Database::prepareAndExecute(
                 $stats_sql,
-                ['timestamp_id' => $timestamp_id,
+                [
+                    'timestamp_id' => $timestamp_id,
                     'listener_count' => $dp['num_listeners'],
                     'mount_name_id' => $mount_name_id,
                 ]

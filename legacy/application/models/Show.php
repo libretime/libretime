@@ -339,7 +339,7 @@ SQL;
 
             if ($overlapping) {
                 return _("Cannot schedule overlapping shows.\nNote: Resizing a repeating show " .
-                       'affects all of its repeats.');
+                    'affects all of its repeats.');
             }
         }
 
@@ -428,7 +428,8 @@ SQL;
 
         $rows = Application_Common_Database::prepareAndExecute($sql, [
             ':dayTimestamp' => $day_timestamp,
-            ':showId' => $this->getId(), ], 'all');
+            ':showId' => $this->getId(),
+        ], 'all');
 
         foreach ($rows as $row) {
             try {
@@ -591,8 +592,10 @@ WHERE starts > :timestamp::TIMESTAMP
 SQL;
         Application_Common_Database::prepareAndExecute(
             $sql,
-            [':timestamp' => gmdate(DEFAULT_TIMESTAMP_FORMAT),
-                ':showId' => $this->getId(), ],
+            [
+                ':timestamp' => gmdate(DEFAULT_TIMESTAMP_FORMAT),
+                ':showId' => $this->getId(),
+            ],
             'execute'
         );
     }
@@ -612,8 +615,10 @@ WHERE starts > :timestamp::TIMESTAMP
 SQL;
         Application_Common_Database::prepareAndExecute(
             $sql,
-            [':showId' => $this->getId(),
-                ':timestamp' => gmdate(DEFAULT_TIMESTAMP_FORMAT), ],
+            [
+                ':showId' => $this->getId(),
+                ':timestamp' => gmdate(DEFAULT_TIMESTAMP_FORMAT),
+            ],
             'execute'
         );
     }
@@ -632,9 +637,9 @@ SQL;
         $showId = $this->getId();
         $stmt = $con->prepare(
             'SELECT first_show, start_time, timezone FROM cc_show_days'
-            . ' WHERE show_id = :showId'
-            . ' ORDER BY first_show'
-            . ' LIMIT 1'
+                . ' WHERE show_id = :showId'
+                . ' ORDER BY first_show'
+                . ' LIMIT 1'
         );
 
         $stmt->bindParam(':showId', $showId);
@@ -750,8 +755,10 @@ WHERE show_id = :showId
 SQL;
         $rows = Application_Common_Database::prepareAndExecute(
             $sql,
-            [':showId' => $this->getId(),
-                ':timestamp' => gmdate(DEFAULT_TIMESTAMP_FORMAT), ],
+            [
+                ':showId' => $this->getId(),
+                ':timestamp' => gmdate(DEFAULT_TIMESTAMP_FORMAT),
+            ],
             'all'
         );
 
@@ -777,8 +784,8 @@ SQL;
         $timestamp = gmdate(DEFAULT_TIMESTAMP_FORMAT);
 
         $stmt = $con->prepare('UPDATE cc_show_days '
-                 . 'SET duration = :add_show_duration '
-                 . 'WHERE show_id = :add_show_id');
+            . 'SET duration = :add_show_duration '
+            . 'WHERE show_id = :add_show_id');
         $stmt->execute([
             ':add_show_duration' => $p_data['add_show_duration'],
             ':add_show_id' => $p_data['add_show_id'],
@@ -794,7 +801,8 @@ SQL;
         Application_Common_Database::prepareAndExecute($sql, [
             ':add_show_duration' => $p_data['add_show_duration'],
             ':show_id' => $p_data['add_show_id'],
-            ':timestamp' => $timestamp, ], 'execute');
+            ':timestamp' => $timestamp,
+        ], 'execute');
     }
 
     public function getDuration($format = false)
@@ -896,8 +904,10 @@ SQL;
         try {
             $row = Application_Common_Database::prepareAndExecute(
                 $sql,
-                [':showId' => $this->getId(),
-                    ':timestamp' => $timestamp, ],
+                [
+                    ':showId' => $this->getId(),
+                    ':timestamp' => $timestamp,
+                ],
                 'column'
             );
 
@@ -1092,8 +1102,10 @@ SQL;
             if ($p_editable) {
                 if ($show['record'] && $now > $startsDT) {
                     $options['editable'] = false;
-                } elseif ($show['rebroadcast']
-                    && $now > $parentStartsDT) {
+                } elseif (
+                    $show['rebroadcast']
+                    && $now > $parentStartsDT
+                ) {
                     $options['editable'] = false;
                 } elseif ($now < $endsDT) {
                     $options['editable'] = true;
@@ -1460,7 +1472,8 @@ SQL;
                         'ends' => $rows[$i - 1]['ends'],
                         'record' => $rows[$i - 1]['record'],
                         'image_path' => $rows[$i - 1]['image_path'],
-                        'type' => 'show', ];
+                        'type' => 'show',
+                    ];
                 }
 
                 $results['currentShow'][0] = $rows[$i];
@@ -1478,7 +1491,8 @@ SQL;
                         'ends' => $rows[$i + 1]['ends'],
                         'record' => $rows[$i + 1]['record'],
                         'image_path' => $rows[$i + 1]['image_path'],
-                        'type' => 'show', ];
+                        'type' => 'show',
+                    ];
                 }
 
                 break;
@@ -1501,7 +1515,8 @@ SQL;
                     'ends' => $rows[$i]['ends'],
                     'record' => $rows[$i]['record'],
                     'image_path' => $rows[$i]['image_path'],
-                    'type' => 'show', ];
+                    'type' => 'show',
+                ];
 
                 break;
             }
@@ -1519,7 +1534,8 @@ SQL;
                 'starts' => $rows[$previousShowIndex]['starts'],
                 'ends' => $rows[$previousShowIndex]['ends'],
                 'record' => $rows[$previousShowIndex]['record'],
-                'type' => 'show', ];
+                'type' => 'show',
+            ];
         }
 
         return $results;
@@ -1578,11 +1594,13 @@ SQL;
             $params = [
                 ':timeStart' => $timeStart,
                 ':timeEnd' => $timeEnd,
-                ':lim' => $limit, ];
+                ':lim' => $limit,
+            ];
         } else {
             $params = [
                 ':timeStart' => $timeStart,
-                ':timeEnd' => $timeEnd, ];
+                ':timeEnd' => $timeEnd,
+            ];
         }
 
         return Application_Common_Database::prepareAndExecute($sql, $params, 'all');

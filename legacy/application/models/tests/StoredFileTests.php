@@ -21,10 +21,11 @@ class StoredFileTest extends PHPUnit_TestCase
         $metadata = Metadata::LoadFromFile($filePath);
         if (($metadata['dc:description'] != 'Tmu sem tam videla ...')
             || ($metadata['audio']['dataformat'] != 'mp3')
-            || ($metadata['dc:type'] != 'Speech')) {
+            || ($metadata['dc:type'] != 'Speech')
+        ) {
             $str = '  [dc:description] = ' . $metadata['dc:description'] . "\n"
-                               . '  [audio][dataformat] = ' . $metadata['audio']['dataformat'] . "\n"
-                               . '  [dc:type] = ' . $metadata['dc:type'] . "\n";
+                . '  [audio][dataformat] = ' . $metadata['audio']['dataformat'] . "\n"
+                . '  [dc:type] = ' . $metadata['dc:type'] . "\n";
             $this->fail("Metadata has unexpected values:\n" . $str);
         }
         // var_dump($metadata);
@@ -44,8 +45,10 @@ class StoredFileTest extends PHPUnit_TestCase
         }
 
         // Test inserting a file by linking
-        $values = ['filepath' => $filePath,
-            'dc:description' => 'Unit test ' . time(), ];
+        $values = [
+            'filepath' => $filePath,
+            'dc:description' => 'Unit test ' . time(),
+        ];
         $storedFile = Application_Model_StoredFile::Insert($values, false);
         // var_dump($storedFile);
         $id = $storedFile->getId();

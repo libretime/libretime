@@ -53,9 +53,11 @@ class ScheduleUnitTest extends Zend_Test_PHPUnit_ControllerTestCase // PHPUnit_F
         $params['api_key'] = $CC_CONFIG['apiKey'][0];
         $request->setParams($params);
 
-        $metadata = ['MDATA_KEY_FILEPATH' => '/tmp/foobar.mp3',
+        $metadata = [
+            'MDATA_KEY_FILEPATH' => '/tmp/foobar.mp3',
             'MDATA_KEY_DURATION' => '00:01:00',
-            'is_record' => false, ];
+            'is_record' => false,
+        ];
 
         // Create the file in the database via the HTTP API.
         $apiController = new ApiController($this->request, $this->getResponse());

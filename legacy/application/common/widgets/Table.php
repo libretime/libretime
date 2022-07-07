@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: asantoni
@@ -9,7 +10,8 @@ class AirtimeTableView
 {
     private static function _getTableJavaScriptDependencies()
     {
-        return ['js/airtime/widgets/table.js',
+        return [
+            'js/airtime/widgets/table.js',
             'js/datatables/js/jquery.dataTables.js',
             'js/datatables/plugin/dataTables.pluginAPI.js',
             'js/datatables/plugin/dataTables.fnSetFilteringDelay.js',
@@ -17,7 +19,8 @@ class AirtimeTableView
             'js/datatables/plugin/dataTables.colReorder.min.js?',
             'js/datatables/plugin/dataTables.FixedColumns.js',
             'js/datatables/plugin/dataTables.FixedHeader.js',
-            'js/datatables/plugin/dataTables.columnFilter.js?', ];
+            'js/datatables/plugin/dataTables.columnFilter.js?',
+        ];
     }
 
     public static function injectTableJavaScriptDependencies(&$headScript, $baseUrl, $airtimeVersion)

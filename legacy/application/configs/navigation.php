@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Navigation container (config/array).
  *

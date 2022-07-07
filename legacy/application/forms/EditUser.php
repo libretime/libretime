@@ -18,7 +18,8 @@ class Application_Form_EditUser extends Zend_Form
         $notDemoValidator = new Application_Validate_NotDemoValidate();
 
         $this->setDecorators([
-            ['ViewScript', ['viewScript' => 'form/edit-user.phtml', 'currentUser' => $currentUser->getLogin()]], ]);
+            ['ViewScript', ['viewScript' => 'form/edit-user.phtml', 'currentUser' => $currentUser->getLogin()]],
+        ]);
         $this->setAttrib('id', 'current-user-form');
 
         $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');

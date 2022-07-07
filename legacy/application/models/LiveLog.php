@@ -6,9 +6,9 @@ class Application_Model_LiveLog
     {
         try {
             $sql = 'SELECT * FROM CC_LIVE_LOG'
-            . ' WHERE state = :state'
-            . " and (start_time >= (now() - INTERVAL '1 day'))"
-            . ' ORDER BY id';
+                . ' WHERE state = :state'
+                . " and (start_time >= (now() - INTERVAL '1 day'))"
+                . ' ORDER BY id';
             $rows = Application_Common_Database::prepareAndExecute(
                 $sql,
                 [':state' => 'L'],
@@ -37,7 +37,7 @@ class Application_Model_LiveLog
                     array_push($rows, $last_row);
                     foreach ($rows as $row) {
                         $sql_delete = 'DELETE FROM CC_LIVE_LOG'
-                                    . ' WHERE id = :id';
+                            . ' WHERE id = :id';
                         Application_Common_Database::prepareAndExecute(
                             $sql_delete,
                             [':id' => $row['id']],
@@ -88,7 +88,7 @@ class Application_Model_LiveLog
                     if (!$p_keepData) {
                         // Delete data we just used to start a new log history
                         $sql_delete = 'DELETE FROM CC_LIVE_LOG'
-                        . ' WHERE id = :id';
+                            . ' WHERE id = :id';
                         Application_Common_Database::prepareAndExecute(
                             $sql_delete,
                             [':id' => $row['id']],
@@ -118,9 +118,9 @@ class Application_Model_LiveLog
     {
         try {
             $sql_get_logs = 'SELECT * FROM CC_LIVE_LOG'
-            . ' WHERE state = :state'
-            . " and (start_time >= (now() - INTERVAL '1 day'))"
-            . ' ORDER BY id';
+                . ' WHERE state = :state'
+                . " and (start_time >= (now() - INTERVAL '1 day'))"
+                . ' ORDER BY id';
 
             $rows = Application_Common_Database::prepareAndExecute(
                 $sql_get_logs,
@@ -150,7 +150,7 @@ class Application_Model_LiveLog
                     array_push($rows, $last_row);
                     foreach ($rows as $row) {
                         $sql_delete = 'DELETE FROM CC_LIVE_LOG'
-                                    . ' WHERE id = :id';
+                            . ' WHERE id = :id';
                         Application_Common_Database::prepareAndExecute(
                             $sql_delete,
                             [':id' => $row['id']],
@@ -171,10 +171,10 @@ class Application_Model_LiveLog
                  */
                 foreach ($rows as $row) {
                     $sql_get_tracks = 'SELECT * FROM cc_schedule'
-                    . ' WHERE starts >= :starts1'
-                    . ' AND starts < :starts2'
-                    . ' AND file_id IS NOT NULL'
-                    . ' AND media_item_played IS TRUE';
+                        . ' WHERE starts >= :starts1'
+                        . ' AND starts < :starts2'
+                        . ' AND file_id IS NOT NULL'
+                        . ' AND media_item_played IS TRUE';
                     $params = [
                         ':starts1' => $row['start_time'],
                         ':starts2' => $row['end_time'],
@@ -269,7 +269,7 @@ class Application_Model_LiveLog
                     if (!$p_keepData) {
                         // Delete row because we do not need data anymore
                         $sql_delete = 'DELETE FROM CC_LIVE_LOG'
-                                    . ' WHERE id = :id';
+                            . ' WHERE id = :id';
                         Application_Common_Database::prepareAndExecute(
                             $sql_delete,
                             [':id' => $row['id']],
@@ -320,7 +320,7 @@ class Application_Model_LiveLog
              * has ended
              */
             $sql_select = 'SELECT max(id) from CC_LIVE_LOG'
-            . ' WHERE (state= :state1 and end_time is NULL) or (state= :state2 and end_time is NULL)';
+                . ' WHERE (state= :state1 and end_time is NULL) or (state= :state2 and end_time is NULL)';
             $params = [
                 ':state1' => 'L',
                 ':state2' => 'S',
@@ -333,7 +333,7 @@ class Application_Model_LiveLog
 
             if ($id == null) {
                 $sql_insert = 'INSERT INTO CC_LIVE_LOG (state, start_time)'
-                . ' VALUES (:state, :start)';
+                    . ' VALUES (:state, :start)';
                 $params = [
                     ':state' => $state,
                     ':start' => $dateTime->format(DEFAULT_TIMESTAMP_FORMAT),
@@ -364,7 +364,7 @@ class Application_Model_LiveLog
 
             if (($dj_live == 'off' && $master_live == 'off') || $state == 'S' || $override) {
                 $sql = 'SELECT id, state from cc_live_log'
-                . ' where id in (select max(id) from cc_live_log)';
+                    . ' where id in (select max(id) from cc_live_log)';
                 $row = Application_Common_Database::prepareAndExecute(
                     $sql,
                     [],
@@ -376,8 +376,8 @@ class Application_Model_LiveLog
                  */
                 if ($row['state'] == $state) {
                     $update_sql = 'UPDATE CC_LIVE_LOG'
-                    . ' SET end_time = :end'
-                    . ' WHERE id = :id';
+                        . ' SET end_time = :end'
+                        . ' WHERE id = :id';
                     $params = [
                         ':end' => $dateTime->format(DEFAULT_TIMESTAMP_FORMAT),
                         ':id' => $row['id'],

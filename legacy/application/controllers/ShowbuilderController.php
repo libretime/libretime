@@ -106,7 +106,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $userService = new Application_Service_UserService();
         $currentUser = $userService->getCurrentUser();
         $previousPageWasLoginScreen = (strpos($previousPage, 'login') !== false)
-                                    || (strpos($previousPage, SAAS_LOGIN_REFERRER) !== false);
+            || (strpos($previousPage, SAAS_LOGIN_REFERRER) !== false);
 
         // If current user is Super Admin, and they came from the login page,
         // and they have not seen the setup popup before
@@ -218,9 +218,11 @@ class ShowbuilderController extends Zend_Controller_Action
 
         [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($request);
 
-        $opts = ['myShows' => $my_shows,
+        $opts = [
+            'myShows' => $my_shows,
             'showFilter' => $show_filter,
-            'showInstanceFilter' => $show_instance_filter, ];
+            'showInstanceFilter' => $show_instance_filter,
+        ];
         $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT, $opts);
 
         $data = $showBuilder->getItems();

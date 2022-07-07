@@ -44,7 +44,8 @@ AND rebroadcast = 1;
 SQL;
         Application_Common_Database::prepareAndExecute($sql, [
             ':instanceId' => $instance_id,
-            ':timestamp' => $timestamp, ], 'execute');
+            ':timestamp' => $timestamp,
+        ], 'execute');
     }
 
     /* This function is weird. It should return a boolean, but instead returns
@@ -553,7 +554,8 @@ SQL;
 
         $counts = Application_Common_Database::prepareAndExecute($sql, [
             ':p_start' => $p_start->format('Y-m-d G:i:s'),
-            ':p_end' => $p_end->format('Y-m-d G:i:s'), ], 'all');
+            ':p_end' => $p_end->format('Y-m-d G:i:s'),
+        ], 'all');
 
         $real_counts = [];
         foreach ($counts as $c) {
@@ -574,7 +576,8 @@ SQL;
 
         $res = Application_Common_Database::prepareAndExecute($sql, [
             ':p_start' => $p_start->format('Y-m-d G:i:s'),
-            ':p_end' => $p_end->format('Y-m-d G:i:s'), ], 'all');
+            ':p_end' => $p_end->format('Y-m-d G:i:s'),
+        ], 'all');
 
         $isFilled = [];
         foreach ($res as $r) {
@@ -755,7 +758,8 @@ WHERE si.ends < :timeNow::TIMESTAMP
 ORDER BY si.ends DESC LIMIT 1;
 SQL;
         $id = Application_Common_Database($sql, [
-            ':timeNow' => $p_timeNow, ], 'column');
+            ':timeNow' => $p_timeNow,
+        ], 'column');
 
         return $id ? new Application_Model_ShowInstance($id) : null;
     }
@@ -779,7 +783,8 @@ SQL;
 
         $id = Application_Common_Database($sql, [
             ':timeNow1' => $p_timeNow,
-            ':timeNow2' => $p_timeNow, ], 'column');
+            ':timeNow2' => $p_timeNow,
+        ], 'column');
 
         return $id ? new Application_Model_ShowInstance($id) : null;
     }
@@ -835,7 +840,8 @@ SQL;
 
         return Application_Common_Database::prepareAndExecute($sql, [
             ':startTime' => $p_startTime,
-            ':endTime' => $p_endTime, ], 'all');
+            ':endTime' => $p_endTime,
+        ], 'all');
     }
 
     public function isRepeating()

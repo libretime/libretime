@@ -106,9 +106,11 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
     {
         $elements = $this->getElements();
         foreach ($elements as $element) {
-            if ($element->getType() != 'Zend_Form_Element_Hidden'
+            if (
+                $element->getType() != 'Zend_Form_Element_Hidden'
                 // We should still be able to remove the show logo
-                && $element->getName() != 'add_show_logo_current_remove') {
+                && $element->getName() != 'add_show_logo_current_remove'
+            ) {
                 $element->setAttrib('disabled', 'disabled');
             }
         }

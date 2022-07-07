@@ -221,9 +221,9 @@ class PlaylistController extends Zend_Controller_Action
         $type = $this->_getParam('type');
         $objInfo = Application_Model_Library::getObjInfo($type);
 
-//        if (!is_null($id)) {
+        //        if (!is_null($id)) {
         Application_Model_Library::changePlaylist($id, $type);
-//        }
+        //        }
 
         try {
             $obj = new $objInfo['className']($id);

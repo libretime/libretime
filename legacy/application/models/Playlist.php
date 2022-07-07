@@ -230,7 +230,8 @@ SQL;
         // Logging::info($sql);
 
         $params = [
-            ':playlist_id1' => $this->id, ':playlist_id2' => $this->id, ':playlist_id3' => $this->id, ];
+            ':playlist_id1' => $this->id, ':playlist_id2' => $this->id, ':playlist_id3' => $this->id,
+        ];
         if ($filterFiles) {
             $params[':file_exists'] = $filterFiles;
         }
@@ -401,7 +402,8 @@ SQL;
         if (isset($obj)) {
             if (($obj instanceof CcFiles && $obj->visible())
                 || $obj instanceof CcWebstream
-                || $obj instanceof CcBlock) {
+                || $obj instanceof CcBlock
+            ) {
                 $entry = $this->plItem;
                 $entry['id'] = $obj->getDbId();
                 $entry['pos'] = $pos;
@@ -409,19 +411,19 @@ SQL;
 
                 if ($obj instanceof CcFiles && $obj) {
                     $entry['cuein'] = isset($p_item['cuein']) ?
-                            $p_item['cuein'] : $obj->getDbCuein();
+                        $p_item['cuein'] : $obj->getDbCuein();
 
                     $entry['cueout'] = isset($p_item['cueout']) ?
-                            $p_item['cueout'] : $obj->getDbCueout();
+                        $p_item['cueout'] : $obj->getDbCueout();
 
                     $cue_in = isset($p_item['cueInSec']) ?
-                            $p_item['cueInSec'] : Application_Common_DateHelper::calculateLengthInSeconds($entry['cuein']);
+                        $p_item['cueInSec'] : Application_Common_DateHelper::calculateLengthInSeconds($entry['cuein']);
 
                     $cue_out = isset($p_item['cueOutSec']) ?
-                            $p_item['cueOutSec'] : Application_Common_DateHelper::calculateLengthInSeconds($entry['cueout']);
+                        $p_item['cueOutSec'] : Application_Common_DateHelper::calculateLengthInSeconds($entry['cueout']);
 
                     $entry['cliplength'] = isset($p_item['length']) ?
-                            $p_item['length'] : Application_Common_DateHelper::secondsToPlaylistTime($cue_out - $cue_in);
+                        $p_item['length'] : Application_Common_DateHelper::secondsToPlaylistTime($cue_out - $cue_in);
                 } elseif ($obj instanceof CcWebstream && $obj) {
                     $entry['cuein'] = '00:00:00';
                     $entry['cueout'] = $entry['cliplength'];
@@ -914,8 +916,10 @@ SQL;
             throw $e;
         }
 
-        return ['cliplength' => $cliplength, 'cueIn' => $cueIn, 'cueOut' => $cueOut, 'length' => $this->getLength(),
-            'fadeIn' => $fadeIn, 'fadeOut' => $fadeOut, ];
+        return [
+            'cliplength' => $cliplength, 'cueIn' => $cueIn, 'cueOut' => $cueOut, 'length' => $this->getLength(),
+            'fadeIn' => $fadeIn, 'fadeOut' => $fadeOut,
+        ];
     }
 
     public function getAllPLMetaData()

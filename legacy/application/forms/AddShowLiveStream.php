@@ -25,7 +25,8 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
             ->setLabel(_('Custom Username'))
             ->setFilters(['StringTrim'])
             ->setValidators([
-                new ConditionalNotEmpty(['cb_custom_auth' => '1']), ]);
+                new ConditionalNotEmpty(['cb_custom_auth' => '1']),
+            ]);
         $this->addElement($custom_username);
 
         // custom password
@@ -37,7 +38,8 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
             ->setLabel(_('Custom Password'))
             ->setFilters(['StringTrim'])
             ->setValidators([
-                new ConditionalNotEmpty(['cb_custom_auth' => '1']), ]);
+                new ConditionalNotEmpty(['cb_custom_auth' => '1']),
+            ]);
         $this->addElement($custom_password);
 
         $showSourceParams = parse_url(Application_Model_Preference::GetLiveDJSourceConnectionURL());

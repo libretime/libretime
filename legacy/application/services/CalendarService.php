@@ -46,19 +46,22 @@ class Application_Service_CalendarService
                 if (!isset($ccFile)) {
                     $menu['error when recording'] = [
                         'name' => _("Record file doesn't exist"),
-                        'icon' => 'error', ];
+                        'icon' => 'error',
+                    ];
                 } else {
                     $menu['view_recorded'] = [
                         'name' => _('View Recorded File Metadata'),
                         'icon' => 'overview',
-                        'url' => $baseUrl . 'library/edit-file-md/id/' . $ccFile->getDbId(), ];
+                        'url' => $baseUrl . 'library/edit-file-md/id/' . $ccFile->getDbId(),
+                    ];
                 }
             } else {
                 $menu['content'] = [
                     // "name"=> _("Show Content"),
                     'name' => _('View'),
                     'icon' => 'overview',
-                    'url' => $baseUrl . 'schedule/show-content-dialog', ];
+                    'url' => $baseUrl . 'schedule/show-content-dialog',
+                ];
             }
         } else {
             // Show content can be modified from the calendar if:
@@ -77,7 +80,8 @@ class Application_Service_CalendarService
                         // "name"=> _("Add / Remove Content"),
                         'name' => _('Schedule Tracks'),
                         'icon' => 'add-remove-content',
-                        'url' => $baseUrl . 'showbuilder/builder-dialog/', ];
+                        'url' => $baseUrl . 'showbuilder/builder-dialog/',
+                    ];
                 }
             }
 
@@ -88,7 +92,8 @@ class Application_Service_CalendarService
                     // "name"=> _("Show Content"),
                     'name' => _('View'),
                     'icon' => 'overview',
-                    'url' => $baseUrl . 'schedule/show-content-dialog', ];
+                    'url' => $baseUrl . 'schedule/show-content-dialog',
+                ];
             }
 
             // user can remove all content if the show has not started
@@ -100,7 +105,8 @@ class Application_Service_CalendarService
                         // "name"=> _("Remove All Content"),
                         'name' => _('Clear Show'),
                         'icon' => 'remove-all-content',
-                        'url' => $baseUrl . 'schedule/clear-show', ];
+                        'url' => $baseUrl . 'schedule/clear-show',
+                    ];
                 }
             }
 
@@ -113,12 +119,14 @@ class Application_Service_CalendarService
                     $menu['cancel_recorded'] = [
                         // "name"=> _("Cancel Current Show"),
                         'name' => _('Cancel Show'),
-                        'icon' => 'delete', ];
+                        'icon' => 'delete',
+                    ];
                 } else {
                     $menu['cancel'] = [
                         // "name"=> _("Cancel Current Show"),
                         'name' => _('Cancel Show'),
-                        'icon' => 'delete', ];
+                        'icon' => 'delete',
+                    ];
                 }
             }
 
@@ -167,7 +175,8 @@ class Application_Service_CalendarService
                         'name' => _('Edit Show'),
                         'icon' => 'edit',
                         '_type' => 'all',
-                        'url' => $baseUrl . 'Schedule/populate-show-form', ];
+                        'url' => $baseUrl . 'Schedule/populate-show-form',
+                    ];
                 }
             }
 
@@ -182,29 +191,34 @@ class Application_Service_CalendarService
                     $menu['del'] = [
                         'name' => _('Delete'),
                         'icon' => 'delete',
-                        'items' => [], ];
+                        'items' => [],
+                    ];
 
                     $menu['del']['items']['single'] = [
                         // "name"=> _("Delete This Instance"),
                         'name' => _('Delete Instance'),
                         'icon' => 'delete',
-                        'url' => $baseUrl . 'schedule/delete-show-instance', ];
+                        'url' => $baseUrl . 'schedule/delete-show-instance',
+                    ];
 
                     $menu['del']['items']['following'] = [
                         // "name"=> _("Delete This Instance and All Following"),
                         'name' => _('Delete Instance and All Following'),
                         'icon' => 'delete',
-                        'url' => $baseUrl . 'schedule/delete-show', ];
+                        'url' => $baseUrl . 'schedule/delete-show',
+                    ];
                 } elseif ($populateInstance) {
                     $menu['del'] = [
                         'name' => _('Delete'),
                         'icon' => 'delete',
-                        'url' => $baseUrl . 'schedule/delete-show-instance', ];
+                        'url' => $baseUrl . 'schedule/delete-show-instance',
+                    ];
                 } else {
                     $menu['del'] = [
                         'name' => _('Delete'),
                         'icon' => 'delete',
-                        'url' => $baseUrl . 'schedule/delete-show', ];
+                        'url' => $baseUrl . 'schedule/delete-show',
+                    ];
                 }
             }
         }

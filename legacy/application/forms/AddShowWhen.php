@@ -37,7 +37,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             ->setFilters(['StringTrim'])
             ->setValidators([
                 $notEmptyValidator,
-                $dateValidator, ])
+                $dateValidator,
+            ])
             ->setDecorators(['ViewHelper']);
         $startDate->setAttrib('alt', 'date');
         $this->addElement($startDate);
@@ -64,7 +65,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             ->setFilters(['StringTrim'])
             ->setValidators([
                 $notEmptyValidator,
-                $dateValidator, ])
+                $dateValidator,
+            ])
             ->setDecorators(['ViewHelper']);
         $endDate->setAttrib('alt', 'date');
         $this->addElement($endDate);
@@ -77,7 +79,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             ->setFilters(['StringTrim'])
             ->setValidators([
                 $notEmptyValidator,
-                $regexValidator, ])
+                $regexValidator,
+            ])
             ->setDecorators(['ViewHelper']);
         $endTime->setAttrib('alt', 'time');
         $this->addElement($endTime);
@@ -173,10 +176,12 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         } elseif ($showStartDateTime == $showEndDateTime) {
             $this->getElement('add_show_duration')->setErrors([_('Cannot have duration 00h 00m')]);
             $valid = false;
-        } elseif (intval($duration->format('%d')) > 0
-                && (intval($duration->format('%h')) > 0
-                 || intval($duration->format('%i')) > 0
-                 || intval($duration->format('%s')) > 0)) {
+        } elseif (
+            intval($duration->format('%d')) > 0
+            && (intval($duration->format('%h')) > 0
+                || intval($duration->format('%i')) > 0
+                || intval($duration->format('%s')) > 0)
+        ) {
             $this->getElement('add_show_duration')->setErrors([_('Cannot have duration greater than 24h')]);
             $valid = false;
         }
