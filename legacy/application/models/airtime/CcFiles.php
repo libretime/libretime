@@ -168,7 +168,7 @@ class CcFiles extends BaseCcFiles
             $file->setDbHidden(true);
             $file->save();
 
-            $callbackUrl = Application_Common_HTTPHelper::getStationUrl() . 'rest/media/' . $file->getPrimaryKey();
+            $callbackUrl = Config::getPublicUrl() . 'rest/media/' . $file->getPrimaryKey();
 
             Application_Service_MediaService::importFileToLibrary(
                 $callbackUrl,

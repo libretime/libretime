@@ -99,7 +99,7 @@ class PreferenceController extends Zend_Controller_Action
         // Append sharing token (download key) to Station podcast URL
         $stationPodcast = PodcastQuery::create()->findOneByDbId(Application_Model_Preference::getStationPodcastId());
         $key = Application_Model_Preference::getStationPodcastDownloadKey();
-        $url = Application_Common_HTTPHelper::getStationUrl() .
+        $url = Config::getPublicUrl() .
             (((int) $values->stationPodcastPrivacy) ? "feeds/station-rss?sharing_token={$key}" : 'feeds/station-rss');
         $stationPodcast->setDbUrl($url)->save();
         Application_Model_Preference::setStationPodcastPrivacy($values->stationPodcastPrivacy);

@@ -30,7 +30,7 @@ class PodcastEpisodes extends BasePodcastEpisodes
             $ext = FileDataHelper::getAudioMimeTypeArray()[$file->getDbMime()];
             $key = Application_Model_Preference::getStationPodcastDownloadKey();
 
-            return Application_Common_HTTPHelper::getStationUrl() . "rest/media/{$fileId}/download/{$key}.{$ext}";
+            return Config::getPublicUrl() . "rest/media/{$fileId}/download/{$key}.{$ext}";
         }
 
         return parent::getDbDownloadUrl();

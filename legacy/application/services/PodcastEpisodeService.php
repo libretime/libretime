@@ -181,7 +181,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     private function _download($id, $url, $title, $album_override, $track_title = null)
     {
         $CC_CONFIG = Config::getConfig();
-        $stationUrl = Application_Common_HTTPHelper::getStationUrl();
+        $stationUrl = Config::getPublicUrl();
         $data = [
             'id' => $id,
             'url' => $url,
@@ -249,7 +249,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     public function publish($fileId)
     {
         $id = Application_Model_Preference::getStationPodcastId();
-        $url = $guid = Application_Common_HTTPHelper::getStationUrl() . "rest/media/{$fileId}/download";
+        $url = $guid = Config::getPublicUrl() . "rest/media/{$fileId}/download";
         if (!PodcastEpisodesQuery::create()
             ->filterByDbPodcastId($id)
             ->findOneByDbFileId($fileId)) {  // Don't allow duplicate episodes

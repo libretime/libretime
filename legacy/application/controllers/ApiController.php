@@ -313,7 +313,7 @@ class ApiController extends Zend_Controller_Action
                 $this->returnJsonOrJsonp($request, []);
             }
 
-            $stationUrl = Application_Common_HTTPHelper::getStationUrl();
+            $stationUrl = Config::getPublicUrl();
 
             if (isset($result['previous'])) {
                 if (
@@ -701,7 +701,7 @@ class ApiController extends Zend_Controller_Action
             $request = $this->getRequest();
 
             $result['name'] = Application_Model_Preference::GetStationName();
-            $result['logo'] = Application_Common_HTTPHelper::getStationUrl() . 'api/station-logo';
+            $result['logo'] = Config::getPublicUrl() . 'api/station-logo';
             $result['description'] = Application_Model_Preference::GetStationDescription();
             $result['timezone'] = Application_Model_Preference::GetDefaultTimezone();
             $result['locale'] = Application_Model_Preference::GetDefaultLocale();
