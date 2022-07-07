@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2022-07-04 18:49+0200\n"
-"PO-Revision-Date: 2022-07-07 14:44+0000\n"
+"PO-Revision-Date: 2022-07-07 18:01+0000\n"
 "Last-Translator: Mykola <bondarchuk.nikola@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/libretime/"
 "legacy/uk/>\n"
@@ -129,7 +129,7 @@ msgstr "Німецька"
 
 #: application/common/LocaleHelper.php:46
 msgid "Bhutani"
-msgstr ""
+msgstr "Мови Бутану"
 
 #: application/common/LocaleHelper.php:47
 msgid "Greek"
@@ -137,7 +137,7 @@ msgstr "Грецька"
 
 #: application/common/LocaleHelper.php:48
 msgid "Esperanto"
-msgstr ""
+msgstr "Есперанто"
 
 #: application/common/LocaleHelper.php:49
 msgid "Spanish"
@@ -161,7 +161,7 @@ msgstr "Фінська"
 
 #: application/common/LocaleHelper.php:54
 msgid "Fiji"
-msgstr ""
+msgstr "Фіджійська"
 
 #: application/common/LocaleHelper.php:55
 msgid "Faeroese"
@@ -185,19 +185,19 @@ msgstr "Шотландська/Гельська"
 
 #: application/common/LocaleHelper.php:60
 msgid "Galician"
-msgstr ""
+msgstr "Галісійська"
 
 #: application/common/LocaleHelper.php:61
 msgid "Guarani"
-msgstr ""
+msgstr "Гуарані"
 
 #: application/common/LocaleHelper.php:62
 msgid "Gujarati"
-msgstr ""
+msgstr "Гуджаратська"
 
 #: application/common/LocaleHelper.php:63
 msgid "Hausa"
-msgstr ""
+msgstr "Хауса"
 
 #: application/common/LocaleHelper.php:64
 msgid "Hindi"
@@ -217,15 +217,15 @@ msgstr "Вірменська"
 
 #: application/common/LocaleHelper.php:68
 msgid "Interlingua"
-msgstr ""
+msgstr "Інтерлінгва"
 
 #: application/common/LocaleHelper.php:69
 msgid "Interlingue"
-msgstr ""
+msgstr "Окциденталь"
 
 #: application/common/LocaleHelper.php:70
 msgid "Inupiak"
-msgstr ""
+msgstr "Аляскинсько-інуїтська"
 
 #: application/common/LocaleHelper.php:71
 msgid "Indonesian"
@@ -273,7 +273,7 @@ msgstr "Камбоджійська"
 
 #: application/common/LocaleHelper.php:82
 msgid "Kannada"
-msgstr ""
+msgstr "Каннада"
 
 #: application/common/LocaleHelper.php:83
 msgid "Korean"
@@ -281,7 +281,7 @@ msgstr "Корейська"
 
 #: application/common/LocaleHelper.php:84
 msgid "Kashmiri"
-msgstr ""
+msgstr "Кашмірська"
 
 #: application/common/LocaleHelper.php:85
 msgid "Kurdish"
@@ -297,7 +297,7 @@ msgstr "Латинська"
 
 #: application/common/LocaleHelper.php:88
 msgid "Lingala"
-msgstr ""
+msgstr "Лінґала"
 
 #: application/common/LocaleHelper.php:89
 msgid "Laothian"
@@ -317,7 +317,7 @@ msgstr "Малагасійська"
 
 #: application/common/LocaleHelper.php:93
 msgid "Maori"
-msgstr ""
+msgstr "Маорійська"
 
 #: application/common/LocaleHelper.php:94
 msgid "Macedonian"
@@ -325,7 +325,7 @@ msgstr "Македонська"
 
 #: application/common/LocaleHelper.php:95
 msgid "Malayalam"
-msgstr ""
+msgstr "Малаялам"
 
 #: application/common/LocaleHelper.php:96
 msgid "Mongolian"
@@ -337,7 +337,7 @@ msgstr "Молдавська"
 
 #: application/common/LocaleHelper.php:98
 msgid "Marathi"
-msgstr ""
+msgstr "Мара́тська"
 
 #: application/common/LocaleHelper.php:99
 msgid "Malay"
@@ -353,7 +353,7 @@ msgstr "Бірманська"
 
 #: application/common/LocaleHelper.php:102
 msgid "Nauru"
-msgstr ""
+msgstr "Науруанська"
 
 #: application/common/LocaleHelper.php:103
 msgid "Nepali"
@@ -373,11 +373,11 @@ msgstr "Окситанська"
 
 #: application/common/LocaleHelper.php:107
 msgid "(Afan)/Oromoor/Oriya"
-msgstr ""
+msgstr "Оромо"
 
 #: application/common/LocaleHelper.php:108
 msgid "Punjabi"
-msgstr ""
+msgstr "Пенджабська"
 
 #: application/common/LocaleHelper.php:109
 msgid "Polish"
@@ -385,7 +385,7 @@ msgstr "Польська"
 
 #: application/common/LocaleHelper.php:110
 msgid "Pashto/Pushto"
-msgstr ""
+msgstr "Пушту"
 
 #: application/common/LocaleHelper.php:111
 msgid "Portuguese"
@@ -393,7 +393,7 @@ msgstr "Португальська"
 
 #: application/common/LocaleHelper.php:112
 msgid "Quechua"
-msgstr ""
+msgstr "Кечуа"
 
 #: application/common/LocaleHelper.php:113
 msgid "Rhaeto-Romance"
@@ -401,7 +401,7 @@ msgstr "Рето-романська"
 
 #: application/common/LocaleHelper.php:114
 msgid "Kirundi"
-msgstr ""
+msgstr "Кірунді"
 
 #: application/common/LocaleHelper.php:115
 msgid "Romanian"
@@ -413,7 +413,7 @@ msgstr "Російська"
 
 #: application/common/LocaleHelper.php:117
 msgid "Kinyarwanda"
-msgstr ""
+msgstr "Руандійська"
 
 #: application/common/LocaleHelper.php:118
 msgid "Sanskrit"
@@ -425,7 +425,7 @@ msgstr "Сіндхі"
 
 #: application/common/LocaleHelper.php:120
 msgid "Sangro"
-msgstr ""
+msgstr "Санго"
 
 #: application/common/LocaleHelper.php:121
 msgid "Serbo-Croatian"
@@ -449,7 +449,7 @@ msgstr "Самоанська"
 
 #: application/common/LocaleHelper.php:126
 msgid "Shona"
-msgstr ""
+msgstr "Шона"
 
 #: application/common/LocaleHelper.php:127
 msgid "Somali"
@@ -465,11 +465,11 @@ msgstr "Сербська"
 
 #: application/common/LocaleHelper.php:130
 msgid "Siswati"
-msgstr ""
+msgstr "Сваті"
 
 #: application/common/LocaleHelper.php:131
 msgid "Sesotho"
-msgstr ""
+msgstr "Сесото"
 
 #: application/common/LocaleHelper.php:132
 msgid "Sundanese"
@@ -481,7 +481,7 @@ msgstr "Шведська"
 
 #: application/common/LocaleHelper.php:134
 msgid "Swahili"
-msgstr ""
+msgstr "Суахілі"
 
 #: application/common/LocaleHelper.php:135
 msgid "Tamil"
@@ -489,7 +489,7 @@ msgstr "Тамільська"
 
 #: application/common/LocaleHelper.php:136
 msgid "Tegulu"
-msgstr ""
+msgstr "Телугу"
 
 #: application/common/LocaleHelper.php:137
 msgid "Tajik"
@@ -501,7 +501,7 @@ msgstr "Тайська"
 
 #: application/common/LocaleHelper.php:139
 msgid "Tigrinya"
-msgstr ""
+msgstr "Тигринья"
 
 #: application/common/LocaleHelper.php:140
 msgid "Turkmen"
@@ -513,11 +513,11 @@ msgstr "Тагальська"
 
 #: application/common/LocaleHelper.php:142
 msgid "Setswana"
-msgstr ""
+msgstr "Тсвана"
 
 #: application/common/LocaleHelper.php:143
 msgid "Tonga"
-msgstr ""
+msgstr "Тонганська"
 
 #: application/common/LocaleHelper.php:144
 msgid "Turkish"
@@ -525,7 +525,7 @@ msgstr "Турецька"
 
 #: application/common/LocaleHelper.php:145
 msgid "Tsonga"
-msgstr ""
+msgstr "Тсонга"
 
 #: application/common/LocaleHelper.php:146
 msgid "Tatar"
@@ -533,7 +533,7 @@ msgstr "Татарська"
 
 #: application/common/LocaleHelper.php:147
 msgid "Twi"
-msgstr ""
+msgstr "Чві"
 
 #: application/common/LocaleHelper.php:148
 msgid "Ukrainian"
@@ -541,7 +541,7 @@ msgstr "Українська"
 
 #: application/common/LocaleHelper.php:149
 msgid "Urdu"
-msgstr ""
+msgstr "Урду"
 
 #: application/common/LocaleHelper.php:150
 msgid "Uzbek"
@@ -553,19 +553,19 @@ msgstr "В'єтнамська"
 
 #: application/common/LocaleHelper.php:152
 msgid "Volapuk"
-msgstr ""
+msgstr "Волапюк"
 
 #: application/common/LocaleHelper.php:153
 msgid "Wolof"
-msgstr ""
+msgstr "Волоф"
 
 #: application/common/LocaleHelper.php:154
 msgid "Xhosa"
-msgstr ""
+msgstr "Хоса"
 
 #: application/common/LocaleHelper.php:155
 msgid "Yoruba"
-msgstr ""
+msgstr "Юрубський"
 
 #: application/common/LocaleHelper.php:156
 msgid "Chinese"
@@ -587,8 +587,7 @@ msgstr ""
 #: application/common/UsabilityHints.php:69
 #, php-format
 msgid "It looks like you haven't uploaded any audio files yet. %sUpload a file now%s."
-msgstr ""
-"Схоже, ви ще не завантажили жодного аудіофайлу.%sЗавантажте файл зараз%s."
+msgstr "Схоже, ви ще не завантажили жодного аудіофайлу.%sЗавантажте файли%s."
 
 #: application/common/UsabilityHints.php:76
 msgid "Click the 'New Show' button and fill out the required fields."
@@ -636,15 +635,15 @@ msgstr "Клацніть на програму що йде наступною, �
 #: application/common/UsabilityHints.php:111
 #, php-format
 msgid "It looks like the next show is empty. %sAdd tracks to your show now%s."
-msgstr ""
+msgstr "Схоже, наступна програма порожня. %sДодайте треки до своєї програми%s."
 
 #: application/configs/config-check.php:175
 msgid "LibreTime media analyzer service"
-msgstr ""
+msgstr "Служба медіааналізатора LibreTime"
 
 #: application/configs/config-check.php:182
 msgid "Check that the libretime-analyzer service is installed correctly in "
-msgstr ""
+msgstr "Переконайтеся, що службу libretime-analyzer встановлено правильно "
 
 #: application/configs/config-check.php:183
 #: application/configs/config-check.php:204
@@ -652,7 +651,7 @@ msgstr ""
 #: application/configs/config-check.php:246
 #: application/configs/config-check.php:267
 msgid " and ensure that it's running with "
-msgstr ""
+msgstr " і переконайтеся, що вона працює "
 
 #: application/configs/config-check.php:185
 #: application/configs/config-check.php:206
@@ -660,43 +659,43 @@ msgstr ""
 #: application/configs/config-check.php:248
 #: application/configs/config-check.php:269
 msgid "If not, try "
-msgstr ""
+msgstr "Якщо ні, спробуйте запустити "
 
 #: application/configs/config-check.php:196
 msgid "LibreTime playout service"
-msgstr ""
+msgstr "Сервіс відтворення LibreTime"
 
 #: application/configs/config-check.php:203
 msgid "Check that the libretime-playout service is installed correctly in "
-msgstr ""
+msgstr "Переконайтеся, що службу libretime-playout встановлено правильно "
 
 #: application/configs/config-check.php:217
 msgid "LibreTime liquidsoap service"
-msgstr ""
+msgstr "Служба LibreTime liquidsoap"
 
 #: application/configs/config-check.php:224
 msgid "Check that the libretime-liquidsoap service is installed correctly in "
-msgstr ""
+msgstr "Переконайтеся, що службу libretime-liquidsoap встановлено правильно "
 
 #: application/configs/config-check.php:238
 msgid "LibreTime Celery Task service"
-msgstr ""
+msgstr "Служба завдань LibreTime Celery"
 
 #: application/configs/config-check.php:245
 msgid "Check that the libretime-celery service is installed correctly in "
-msgstr ""
+msgstr "Переконайтеся, що службу libretime-celery встановлено правильно "
 
 #: application/configs/config-check.php:259
 msgid "LibreTime API service"
-msgstr ""
+msgstr "LibreTime API service"
 
 #: application/configs/config-check.php:266
 msgid "Check that the libretime-api service is installed correctly in "
-msgstr ""
+msgstr "Переконайтеся, що службу libretime-api встановлено правильно "
 
 #: application/configs/navigation.php:27
 msgid "Radio Page"
-msgstr ""
+msgstr "Сторінка радіо"
 
 #: application/configs/navigation.php:35
 msgid "Calendar"
@@ -720,7 +719,7 @@ msgstr "Налаштування"
 
 #: application/configs/navigation.php:74
 msgid "General"
-msgstr ""
+msgstr "Основні"
 
 #: application/configs/navigation.php:80
 msgid "My Profile"
@@ -811,14 +810,12 @@ msgid "File does not exist in %s"
 msgstr "Файл не існує в %s"
 
 #: application/controllers/ApiController.php:1003
-#, fuzzy
 msgid "Bad request. no 'mode' parameter passed."
-msgstr "Bad request. no 'mode' parameter passed."
+msgstr "Неправильний запит. параметр 'mode' не передано."
 
 #: application/controllers/ApiController.php:1015
-#, fuzzy
 msgid "Bad request. 'mode' parameter is invalid"
-msgstr "Bad request. 'mode' parameter is invalid"
+msgstr "Неправильний запит. Параметр 'mode' недійсний"
 
 #: application/controllers/DashboardController.php:34
 #: application/controllers/DashboardController.php:86
@@ -851,12 +848,18 @@ msgid ""
 "To use the embeddable weekly schedule widget you must:<br><br>\n"
 "            Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
+"Щоб використовувати вбудований віджет тижневого розкладу, ви повинні:<br><br>"
+"\n"
+"            Увімкніть API Public LibreTime у меню Налаштування -&gt; Основні"
 
 #: application/controllers/EmbeddablewidgetsController.php:52
 msgid ""
 "To add the Radio Tab to your Facebook Page, you must first:<br><br>\n"
 "            Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
+"Щоб додати вкладку «Радіо» на свою сторінку у Facebook, ви повинні "
+"спочатку:<br><br>\n"
+"            Увімкніть API Public LibreTime у меню Налаштування -&gt; Основні"
 
 #: application/controllers/ErrorController.php:96
 msgid "Page not found."
@@ -881,7 +884,7 @@ msgstr "%s Підкаст"
 
 #: application/controllers/IndexController.php:89
 msgid "No tracks have been published yet."
-msgstr ""
+msgstr "Треків ще не опубліковано."
 
 #: application/controllers/LibraryController.php:28
 #: application/controllers/PlaylistController.php:149
@@ -939,7 +942,7 @@ msgstr "Дублікат плейлиста"
 
 #: application/controllers/LibraryController.php:137
 msgid "Duplicate Smartblock"
-msgstr ""
+msgstr "Дублікат Смарт-блоку"
 
 #: application/controllers/LibraryController.php:179
 msgid "No action available"
@@ -951,7 +954,7 @@ msgstr "Ви не маєте дозволу на видалення вибран
 
 #: application/controllers/LibraryController.php:244
 msgid "Could not delete file because it is scheduled in the future."
-msgstr ""
+msgstr "Не вдалося видалити файл, оскільки його заплановано в майбутньому."
 
 #: application/controllers/LibraryController.php:247
 msgid "Could not delete file(s)."
@@ -1011,23 +1014,25 @@ msgstr "Доступна нова версія: "
 
 #: application/controllers/LocaleController.php:39
 msgid "You have a pre-release version of LibreTime intalled."
-msgstr ""
+msgstr "У вас встановлено попередню версію LibreTime."
 
 #: application/controllers/LocaleController.php:40
 msgid "A patch update for your LibreTime installation is available."
-msgstr ""
+msgstr "Доступне оновлення для вашої інсталяції LibreTime."
 
 #: application/controllers/LocaleController.php:41
 msgid "A feature update for your LibreTime installation is available."
-msgstr ""
+msgstr "Доступне оновлення функції для вашої інсталяції LibreTime."
 
 #: application/controllers/LocaleController.php:42
 msgid "A major update for your LibreTime installation is available."
-msgstr ""
+msgstr "Доступне велике оновлення для вашої інсталяції LibreTime."
 
 #: application/controllers/LocaleController.php:43
 msgid "Multiple major updates for LibreTime installation are available. Please upgrade as soon as possible."
 msgstr ""
+"Доступно кілька основних оновлень для встановлення LibreTime. Оновіть "
+"якнайшвидше."
 
 #: application/controllers/LocaleController.php:45
 msgid "Add to current playlist"
@@ -1062,55 +1067,55 @@ msgstr "Виберіть позицію курсору на часовій шк�
 
 #: application/controllers/LocaleController.php:54
 msgid "You haven't added any tracks"
-msgstr ""
+msgstr "Ви не додали жодної композиції"
 
 #: application/controllers/LocaleController.php:55
 msgid "You haven't added any playlists"
-msgstr ""
+msgstr "Ви не додали жодного плейлиста"
 
 #: application/controllers/LocaleController.php:56
 msgid "You haven't added any podcasts"
-msgstr ""
+msgstr "Ви не додали подкастів"
 
 #: application/controllers/LocaleController.php:57
 msgid "You haven't added any smart blocks"
-msgstr ""
+msgstr "Ви не додали смарт-блоків"
 
 #: application/controllers/LocaleController.php:58
 msgid "You haven't added any webstreams"
-msgstr ""
+msgstr "Ви не додали жодного веб-потоку"
 
 #: application/controllers/LocaleController.php:59
 msgid "Learn about tracks"
-msgstr ""
+msgstr "Дізнайтеся про треки"
 
 #: application/controllers/LocaleController.php:60
 msgid "Learn about playlists"
-msgstr ""
+msgstr "Дізнайтеся про плейлисти"
 
 #: application/controllers/LocaleController.php:61
 msgid "Learn about podcasts"
-msgstr ""
+msgstr "Дізнайтеся про подкасти"
 
 #: application/controllers/LocaleController.php:62
 msgid "Learn about smart blocks"
-msgstr ""
+msgstr "Дізнайтеся про смарт-блоки"
 
 #: application/controllers/LocaleController.php:63
 msgid "Learn about webstreams"
-msgstr ""
+msgstr "Дізнайтеся про веб-потоки"
 
 #: application/controllers/LocaleController.php:64
 msgid "Click 'New' to create one."
-msgstr ""
+msgstr "Натисніть «Новий», щоб створити."
 
 #: application/controllers/LocaleController.php:68
 msgid "Add"
-msgstr "Add"
+msgstr "Додати"
 
 #: application/controllers/LocaleController.php:69
 msgid "New"
-msgstr ""
+msgstr "Новий"
 
 #: application/controllers/LocaleController.php:70
 #: application/services/CalendarService.php:147
@@ -1119,23 +1124,23 @@ msgstr "Редагувати"
 
 #: application/controllers/LocaleController.php:71
 msgid "Add to Schedule"
-msgstr ""
+msgstr "Додати до розкладу"
 
 #: application/controllers/LocaleController.php:72
 msgid "Add to next show"
-msgstr ""
+msgstr "Додати до наступної програми"
 
 #: application/controllers/LocaleController.php:73
 msgid "Add to current show"
-msgstr ""
+msgstr "Додати до поточної програми"
 
 #: application/controllers/LocaleController.php:74
 msgid "Add after selected items"
-msgstr ""
+msgstr "Додати після вибраних елементів"
 
 #: application/controllers/LocaleController.php:76
 msgid "Publish"
-msgstr ""
+msgstr "Опублікувати"
 
 #: application/controllers/LocaleController.php:77
 #: application/forms/AddShowStyle.php:63
@@ -1157,34 +1162,32 @@ msgstr "Вибрати"
 
 #: application/controllers/LocaleController.php:81
 msgid "Select this page"
-msgstr "Вибрати цю сторінку"
+msgstr "Вибрати поточну сторінку"
 
 #: application/controllers/LocaleController.php:82
 msgid "Deselect this page"
-msgstr "Скасувати вибір цієї сторінки"
+msgstr "Скасувати вибір поточної сторінки"
 
 #: application/controllers/LocaleController.php:83
-#, fuzzy
 msgid "Deselect all"
-msgstr "Зняти вибір із усіх"
+msgstr "Скасувати виділення з усіх"
 
 #: application/controllers/LocaleController.php:84
 msgid "Are you sure you want to delete the selected item(s)?"
 msgstr "Ви впевнені, що бажаєте видалити вибрані елементи?"
 
 #: application/controllers/LocaleController.php:85
-#, fuzzy
 msgid "Scheduled"
-msgstr "За розкладом"
+msgstr "Запланований"
 
 #: application/controllers/LocaleController.php:86
 #: application/views/scripts/partialviews/dashboard-sub-nav.php:3
 msgid "Tracks"
-msgstr ""
+msgstr "Треки"
 
 #: application/controllers/LocaleController.php:87
 msgid "Playlist"
-msgstr ""
+msgstr "Плейлист"
 
 #: application/controllers/LocaleController.php:88
 #: application/forms/SmartBlockCriteria.php:81
@@ -1209,7 +1212,7 @@ msgstr "Автор"
 #: application/models/Block.php:1425 application/models/Block.php:1521
 #: application/services/HistoryService.php:1053
 msgid "Album"
-msgstr "Album"
+msgstr "Альбом"
 
 #: application/controllers/LocaleController.php:91
 msgid "Bit Rate"
@@ -1234,7 +1237,7 @@ msgstr "Композитор"
 #: application/models/Block.php:1429 application/models/Block.php:1525
 #: application/services/HistoryService.php:1063
 msgid "Conductor"
-msgstr "Conductor"
+msgstr "Виконавець"
 
 #: application/controllers/LocaleController.php:95
 #: application/forms/SmartBlockCriteria.php:62
@@ -1242,13 +1245,13 @@ msgstr "Conductor"
 #: application/services/HistoryService.php:1060
 #: application/services/HistoryService.php:1106
 msgid "Copyright"
-msgstr "Copyright"
+msgstr "Авторське право"
 
 #: application/controllers/LocaleController.php:96
 #: application/forms/SmartBlockCriteria.php:67
 #: application/models/Block.php:1435 application/models/Block.php:1531
 msgid "Encoded By"
-msgstr "Encoded By"
+msgstr "Закодовано"
 
 #: application/controllers/LocaleController.php:97
 #: application/forms/SmartBlockCriteria.php:68
@@ -1256,7 +1259,7 @@ msgstr "Encoded By"
 #: application/models/Block.php:1436 application/models/Block.php:1532
 #: application/services/HistoryService.php:1055
 msgid "Genre"
-msgstr "Genre"
+msgstr "Жанр"
 
 #: application/controllers/LocaleController.php:98
 #: application/forms/SmartBlockCriteria.php:69
@@ -1288,7 +1291,6 @@ msgstr "Остання зміна"
 #: application/controllers/LocaleController.php:102
 #: application/forms/SmartBlockCriteria.php:73
 #: application/models/Block.php:1442 application/models/Block.php:1538
-#, fuzzy
 msgid "Last Played"
 msgstr "Останнє програвання"
 
@@ -1303,7 +1305,6 @@ msgstr "Довжина"
 #: application/controllers/LocaleController.php:104
 #: application/forms/SmartBlockCriteria.php:76
 #: application/models/Block.php:1445 application/models/Block.php:1541
-#, fuzzy
 msgid "Mime"
 msgstr "Mime"
 
@@ -1323,14 +1324,12 @@ msgstr "Власник"
 #: application/controllers/LocaleController.php:107
 #: application/forms/SmartBlockCriteria.php:79
 #: application/models/Block.php:1448 application/models/Block.php:1544
-#, fuzzy
 msgid "Replay Gain"
 msgstr "Replay Gain"
 
 #: application/controllers/LocaleController.php:108
-#, fuzzy
 msgid "Sample Rate"
-msgstr "Sample Rate"
+msgstr "Частота дискретизації"
 
 #: application/controllers/LocaleController.php:109
 #: application/forms/SmartBlockCriteria.php:82
@@ -1348,7 +1347,7 @@ msgstr "Завантажено"
 #: application/forms/SmartBlockCriteria.php:84
 #: application/models/Block.php:1453 application/models/Block.php:1549
 msgid "Website"
-msgstr "Website"
+msgstr "Веб-Сайт"
 
 #: application/controllers/LocaleController.php:112
 #: application/forms/SmartBlockCriteria.php:85
@@ -1368,7 +1367,7 @@ msgstr "Всі"
 
 #: application/controllers/LocaleController.php:115
 msgid "Files"
-msgstr "Files"
+msgstr "Файли"
 
 #: application/controllers/LocaleController.php:116
 #: application/views/scripts/partialviews/dashboard-sub-nav.php:8
@@ -1385,9 +1384,8 @@ msgid "Web Streams"
 msgstr "Веб-потоки"
 
 #: application/controllers/LocaleController.php:119
-#, fuzzy
 msgid "Unknown type: "
-msgstr "Невідомий тип файлу: "
+msgstr "Невідомий тип: "
 
 #: application/controllers/LocaleController.php:120
 msgid "Are you sure you want to delete the selected item?"
@@ -1404,36 +1402,33 @@ msgstr "Отримання даних із сервера..."
 
 #: application/controllers/LocaleController.php:124
 msgid "Import"
-msgstr ""
+msgstr "Імпорт"
 
 #: application/controllers/LocaleController.php:125
 msgid "Imported?"
-msgstr ""
+msgstr "Імпортований?"
 
 #: application/controllers/LocaleController.php:126
 #: application/services/CalendarService.php:59
 #: application/services/CalendarService.php:89
 msgid "View"
-msgstr ""
+msgstr "Переглянути"
 
 #: application/controllers/LocaleController.php:127
 msgid "Error code: "
-msgstr "Error code: "
+msgstr "Код помилки: "
 
 #: application/controllers/LocaleController.php:128
-#, fuzzy
 msgid "Error msg: "
 msgstr "Повідомлення про помилку: "
 
 #: application/controllers/LocaleController.php:129
-#, fuzzy
 msgid "Input must be a positive number"
-msgstr "Введене число має бути додатним"
+msgstr "Введене значення має бути позитивним числом"
 
 #: application/controllers/LocaleController.php:130
-#, fuzzy
 msgid "Input must be a number"
-msgstr "Введіть число"
+msgstr "Введене значення має бути числом"
 
 #: application/controllers/LocaleController.php:131
 msgid "Input must be in the format: yyyy-mm-dd"
@@ -1445,7 +1440,7 @@ msgstr "Вхідні дані мають бути у такому форматі
 
 #: application/controllers/LocaleController.php:133
 msgid "My Podcast"
-msgstr ""
+msgstr "Мій Подкаст"
 
 #: application/controllers/LocaleController.php:135
 #, php-format
@@ -1455,9 +1450,8 @@ msgstr ""
 "завантаження. %sВи впевнені, що бажаєте залишити сторінку?"
 
 #: application/controllers/LocaleController.php:137
-#, fuzzy
 msgid "Open Media Builder"
-msgstr "Відкрити Media Builder"
+msgstr "Відкрити Конструктор Медіафайлів"
 
 #: application/controllers/LocaleController.php:138
 msgid "please put in a time '00:00:00 (.0)'"
@@ -1465,7 +1459,7 @@ msgstr "будь ласка, вкажіть час '00:00:00 (.0)'"
 
 #: application/controllers/LocaleController.php:139
 msgid "Please enter a valid time in seconds. Eg. 0.5"
-msgstr ""
+msgstr "Введіть дійсний час у секундах. напр. 0.5"
 
 #: application/controllers/LocaleController.php:140
 msgid "Your browser does not support playing this file type: "
@@ -1490,28 +1484,26 @@ msgstr "Плейлист перемішано"
 #: application/controllers/LocaleController.php:145
 msgid "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
 msgstr ""
-"Airtime не впевнений щодо статусу цього файлу. Це може статися, коли файл "
+"Libretime не впевнений щодо статусу цього файлу. Це може статися, коли файл "
 "знаходиться на віддаленому диску, до якого немає доступу, або файл "
 "знаходиться в каталозі, який більше не «відстежується»."
 
 #: application/controllers/LocaleController.php:147
-#, fuzzy, php-format
+#, php-format
 msgid "Listener Count on %s: %s"
-msgstr "Listener Count on %s: %s"
+msgstr "Кількість слухачів %s: %s"
 
 #: application/controllers/LocaleController.php:149
 msgid "Remind me in 1 week"
 msgstr "Нагадати через 1 тиждень"
 
 #: application/controllers/LocaleController.php:150
-#, fuzzy
 msgid "Remind me never"
 msgstr "Ніколи не нагадувати"
 
 #: application/controllers/LocaleController.php:151
-#, fuzzy
 msgid "Yes, help Airtime"
-msgstr "Yes, help Airtime"
+msgstr "Так, допоможи Libretime"
 
 #: application/controllers/LocaleController.php:152
 #: application/controllers/LocaleController.php:196
@@ -1536,22 +1528,25 @@ msgstr ""
 #, php-format
 msgid "The desired block length will not be reached if %s cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
 msgstr ""
+"Бажана довжина блоку не буде досягнута, якщо %s не зможе знайти достатньо "
+"унікальних доріжок, які б відповідали вашим критеріям. Увімкніть цю опцію, "
+"якщо ви бажаєте дозволити багаторазове додавання треків до смарт-блоку."
 
 #: application/controllers/LocaleController.php:157
 msgid "Smart block shuffled"
-msgstr "Smart block shuffled"
+msgstr "Смарт-блок перемішано"
 
 #: application/controllers/LocaleController.php:158
 msgid "Smart block generated and criteria saved"
-msgstr "Smart block generated and criteria saved"
+msgstr "Створено смарт-блок і збережено критерії"
 
 #: application/controllers/LocaleController.php:159
 msgid "Smart block saved"
-msgstr "Smart block saved"
+msgstr "Смарт-блок збережено"
 
 #: application/controllers/LocaleController.php:160
 msgid "Processing..."
-msgstr "Processing..."
+msgstr "Обробка..."
 
 #: application/controllers/LocaleController.php:161
 #: application/forms/SmartBlockCriteria.php:100
@@ -1563,19 +1558,19 @@ msgstr "Processing..."
 #: application/forms/SmartBlockCriteria.php:676
 #: application/models/Block.php:1458 application/models/Block.php:1554
 msgid "Select modifier"
-msgstr "Select modifier"
+msgstr "Виберіть модифікатор"
 
 #: application/controllers/LocaleController.php:162
 #: application/forms/SmartBlockCriteria.php:101
 #: application/models/Block.php:1459 application/models/Block.php:1555
 msgid "contains"
-msgstr "contains"
+msgstr "містить"
 
 #: application/controllers/LocaleController.php:163
 #: application/forms/SmartBlockCriteria.php:102
 #: application/models/Block.php:1460 application/models/Block.php:1556
 msgid "does not contain"
-msgstr "does not contain"
+msgstr "не містить"
 
 #: application/controllers/LocaleController.php:164
 #: application/forms/SmartBlockCriteria.php:103
@@ -1585,7 +1580,7 @@ msgstr "does not contain"
 #: application/models/Block.php:1461 application/models/Block.php:1468
 #: application/models/Block.php:1557 application/models/Block.php:1564
 msgid "is"
-msgstr "is"
+msgstr "є"
 
 #: application/controllers/LocaleController.php:165
 #: application/forms/SmartBlockCriteria.php:104
@@ -1595,402 +1590,438 @@ msgstr "is"
 #: application/models/Block.php:1462 application/models/Block.php:1469
 #: application/models/Block.php:1558 application/models/Block.php:1565
 msgid "is not"
-msgstr "is not"
+msgstr "не"
 
 #: application/controllers/LocaleController.php:166
 #: application/forms/SmartBlockCriteria.php:105
 #: application/models/Block.php:1463 application/models/Block.php:1559
 msgid "starts with"
-msgstr "starts with"
+msgstr "починається з"
 
 #: application/controllers/LocaleController.php:167
 #: application/forms/SmartBlockCriteria.php:106
 #: application/models/Block.php:1464 application/models/Block.php:1560
 msgid "ends with"
-msgstr "ends with"
+msgstr "закінчується на"
 
 #: application/controllers/LocaleController.php:168
 #: application/forms/SmartBlockCriteria.php:120
 #: application/forms/SmartBlockCriteria.php:139
 #: application/models/Block.php:1470 application/models/Block.php:1566
 msgid "is greater than"
-msgstr "is greater than"
+msgstr "більше ніж"
 
 #: application/controllers/LocaleController.php:169
 #: application/forms/SmartBlockCriteria.php:121
 #: application/forms/SmartBlockCriteria.php:140
 #: application/models/Block.php:1471 application/models/Block.php:1567
 msgid "is less than"
-msgstr "is less than"
+msgstr "менше ніж"
 
 #: application/controllers/LocaleController.php:170
 #: application/forms/SmartBlockCriteria.php:122
 #: application/forms/SmartBlockCriteria.php:141
 #: application/models/Block.php:1472 application/models/Block.php:1568
 msgid "is in the range"
-msgstr "is in the range"
+msgstr "знаходиться в діапазоні"
 
 #: application/controllers/LocaleController.php:172
 #: application/forms/SmartBlockCriteria.php:565
 msgid "Generate"
-msgstr "Generate"
+msgstr "Генерувати"
 
 #: application/controllers/LocaleController.php:174
 msgid "Choose Storage Folder"
-msgstr "Choose Storage Folder"
+msgstr "Виберіть папку зберігання"
 
 #: application/controllers/LocaleController.php:175
 msgid "Choose Folder to Watch"
-msgstr "Choose Folder to Watch"
+msgstr "Виберіть папку для перегляду"
 
 #: application/controllers/LocaleController.php:176
 msgid ""
 "Are you sure you want to change the storage folder?\n"
 "This will remove the files from your Airtime library!"
 msgstr ""
-"Are you sure you want to change the storage folder?\n"
-"This will remove the files from your Airtime library!"
+"Ви впевнені, що бажаєте змінити папку для зберігання?\n"
+"Це видалить файли з вашої бібліотеки!"
 
 #: application/controllers/LocaleController.php:177
 msgid "Manage Media Folders"
-msgstr "Manage Media Folders"
+msgstr "Керування медіа-папками"
 
 #: application/controllers/LocaleController.php:178
 msgid "Are you sure you want to remove the watched folder?"
-msgstr "Are you sure you want to remove the watched folder?"
+msgstr "Ви впевнені, що хочете видалити переглянуту папку?"
 
 #: application/controllers/LocaleController.php:179
 msgid "This path is currently not accessible."
-msgstr "This path is currently not accessible."
+msgstr "Цей шлях зараз недоступний."
 
 #: application/controllers/LocaleController.php:181
 #, php-format
 msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
-msgstr "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
+msgstr ""
+"Деякі типи потоків потребують додаткового налаштування. Подано інформацію "
+"про ввімкнення  %sAAC+ Support%s або %sOpus Support%s."
 
 #: application/controllers/LocaleController.php:182
 msgid "Connected to the streaming server"
-msgstr "Connected to the streaming server"
+msgstr "Підключено до потокового сервера"
 
 #: application/controllers/LocaleController.php:183
 msgid "The stream is disabled"
-msgstr "The stream is disabled"
+msgstr "Потік вимкнено"
 
 #: application/controllers/LocaleController.php:184
 #: application/forms/StreamSettingSubForm.php:191
 msgid "Getting information from the server..."
-msgstr "Getting information from the server..."
+msgstr "Отримання інформації з сервера..."
 
 #: application/controllers/LocaleController.php:185
 msgid "Can not connect to the streaming server"
-msgstr "Can not connect to the streaming server"
+msgstr "Не вдається підключитися до потокового сервера"
 
 #: application/controllers/LocaleController.php:186
 #, php-format
 msgid "If %s is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."
 msgstr ""
+"Якщо %s знаходиться за маршрутизатором або брандмауером, вам може "
+"знадобитися налаштувати переадресацію портів, і інформація в цьому полі буде "
+"неправильною. У цьому випадку вам потрібно буде вручну оновити це поле, щоб "
+"воно показувало правильний хост/порт/монтування, до якого ваш ді-джей має "
+"підключитися. Дозволений діапазон – від 1024 до 49151."
 
 #: application/controllers/LocaleController.php:187
 #, php-format
 msgid "For more details, please read the %s%s Manual%s"
-msgstr ""
+msgstr "Щоб дізнатися більше, прочитайте %s%s Мануал%s"
 
 #: application/controllers/LocaleController.php:188
 msgid "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
-msgstr "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
+msgstr ""
+"Позначте цей параметр, щоб увімкнути метадані для потоків OGG (метаданими "
+"потоку є назва композиції, виконавець і назва програми, які відображаються в "
+"аудіопрогравачі). VLC і mplayer мають серйозну помилку під час відтворення "
+"потоку OGG/VORBIS, у якому ввімкнено метадані: вони відключатимуться від "
+"потоку після кожної пісні. Якщо ви використовуєте потік OGG і вашим слухачам "
+"не потрібна підтримка цих аудіоплеєрів, сміливо вмикайте цю опцію."
 
 #: application/controllers/LocaleController.php:189
 msgid "Check this box to automatically switch off Master/Show source upon source disconnection."
-msgstr "Check this box to automatically switch off Master/Show source upon source disconnection."
+msgstr ""
+"Позначте цей прапорець, щоб автоматично вимикати джерело Мастер/Програми "
+"після відключення джерела."
 
 #: application/controllers/LocaleController.php:190
 msgid "Check this box to automatically switch on Master/Show source upon source connection."
-msgstr "Check this box to automatically switch on Master/Show source upon source connection."
+msgstr ""
+"Позначте цей прапорець для автоматичного підключення зовнішнього джерела "
+"Мастер або Програми до серверу LibreTime."
 
 #: application/controllers/LocaleController.php:191
 msgid "If your Icecast server expects a username of 'source', this field can be left blank."
-msgstr "If your Icecast server expects a username of 'source', this field can be left blank."
+msgstr ""
+"Якщо ваш сервер Icecast очікує ім’я користувача 'source', це поле можна "
+"залишити порожнім."
 
 #: application/controllers/LocaleController.php:192
 #: application/controllers/LocaleController.php:202
 msgid "If your live streaming client does not ask for a username, this field should be 'source'."
-msgstr "If your live streaming client does not ask for a username, this field should be 'source'."
+msgstr ""
+"Якщо ваш клієнт прямої трансляції не запитує ім’я користувача, це поле має "
+"бути 'source'."
 
 #: application/controllers/LocaleController.php:193
 msgid "WARNING: This will restart your stream and may cause a short dropout for your listeners!"
 msgstr ""
+"ЗАСТЕРЕЖЕННЯ: це перезапустить ваш потік і може призвести до короткого "
+"відключення для ваших слухачів!"
 
 #: application/controllers/LocaleController.php:194
 msgid "This is the admin username and password for Icecast/SHOUTcast to get listener statistics."
-msgstr "This is the admin username and password for Icecast/SHOUTcast to get listener statistics."
+msgstr ""
+"Це ім’я користувача та пароль адміністратора для Icecast/SHOUTcast для "
+"отримання статистики слухачів."
 
 #: application/controllers/LocaleController.php:198
 msgid "Warning: You cannot change this field while the show is currently playing"
-msgstr "Warning: You cannot change this field while the show is currently playing"
+msgstr "Попередження: Ви не можете змінити це поле під час відтворення програми"
 
 #: application/controllers/LocaleController.php:199
 msgid "No result found"
-msgstr "No result found"
+msgstr "Результатів не знайдено"
 
 #: application/controllers/LocaleController.php:200
 msgid "This follows the same security pattern for the shows: only users assigned to the show can connect."
-msgstr "This follows the same security pattern for the shows: only users assigned to the show can connect."
+msgstr ""
+"Це відбувається за тією ж схемою безпеки для програм: лише користувачі, "
+"призначені для програм, можуть підключатися."
 
 #: application/controllers/LocaleController.php:201
 msgid "Specify custom authentication which will work only for this show."
-msgstr "Specify custom authentication which will work only for this show."
+msgstr ""
+"Вкажіть спеціальну автентифікацію, яка працюватиме лише для цієї програми."
 
 #: application/controllers/LocaleController.php:203
 msgid "The show instance doesn't exist anymore!"
-msgstr "The show instance doesn't exist anymore!"
+msgstr "Екземпляр програми більше не існує!"
 
 #: application/controllers/LocaleController.php:204
 msgid "Warning: Shows cannot be re-linked"
-msgstr "Warning: Shows cannot be re-linked"
+msgstr "Застереження: програму не можна повторно пов’язати"
 
 #: application/controllers/LocaleController.php:205
 msgid "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"
-msgstr "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"
+msgstr ""
+"Якщо пов’язати ваші повторювані програми, будь-які медіа-елементи, "
+"заплановані в будь-якому повторюваній програмі, також будуть заплановані в "
+"інших повторних програмах"
 
 #: application/controllers/LocaleController.php:206
 msgid "Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the Interface Timezone in your user settings."
-msgstr "Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the Interface Timezone in your user settings."
+msgstr ""
+"За замовчуванням часовий пояс встановлено на часовий пояс станції. Програма "
+"в календарі відображатиметься за вашим місцевим часом, визначеним часовим "
+"поясом інтерфейсу в налаштуваннях користувача."
 
 #: application/controllers/LocaleController.php:210
 msgid "Show"
-msgstr "Show"
+msgstr "Програма"
 
 #: application/controllers/LocaleController.php:211
 msgid "Show is empty"
-msgstr "Show is empty"
+msgstr "Програма порожня"
 
 #: application/controllers/LocaleController.php:212
 msgid "1m"
-msgstr "1m"
+msgstr "1хв"
 
 #: application/controllers/LocaleController.php:213
 msgid "5m"
-msgstr "5m"
+msgstr "5хв"
 
 #: application/controllers/LocaleController.php:214
 msgid "10m"
-msgstr "10m"
+msgstr "10хв"
 
 #: application/controllers/LocaleController.php:215
 msgid "15m"
-msgstr "15m"
+msgstr "15хв"
 
 #: application/controllers/LocaleController.php:216
 msgid "30m"
-msgstr "30m"
+msgstr "30хв"
 
 #: application/controllers/LocaleController.php:217
 msgid "60m"
-msgstr "60m"
+msgstr "60хв"
 
 #: application/controllers/LocaleController.php:219
 msgid "Retreiving data from the server..."
-msgstr "Retrieving data from the server..."
+msgstr "Отримання даних із сервера..."
 
 #: application/controllers/LocaleController.php:220
 msgid "This show has no scheduled content."
-msgstr "This show has no scheduled content."
+msgstr "Це програма не має запланованого вмісту."
 
 #: application/controllers/LocaleController.php:221
 msgid "This show is not completely filled with content."
-msgstr "This show is not completely filled with content."
+msgstr "Це програма не повністю наповнена контентом."
 
 #: application/controllers/LocaleController.php:225
 msgid "January"
-msgstr "January"
+msgstr "Січень"
 
 #: application/controllers/LocaleController.php:226
 msgid "February"
-msgstr "February"
+msgstr "Лютий"
 
 #: application/controllers/LocaleController.php:227
 msgid "March"
-msgstr "March"
+msgstr "Березень"
 
 #: application/controllers/LocaleController.php:228
 msgid "April"
-msgstr "April"
+msgstr "Квітень"
 
 #: application/controllers/LocaleController.php:229
 #: application/controllers/LocaleController.php:241
 msgid "May"
-msgstr "May"
+msgstr "Травень"
 
 #: application/controllers/LocaleController.php:230
 msgid "June"
-msgstr "June"
+msgstr "Червень"
 
 #: application/controllers/LocaleController.php:231
 msgid "July"
-msgstr "July"
+msgstr "Липень"
 
 #: application/controllers/LocaleController.php:232
 msgid "August"
-msgstr "August"
+msgstr "Серпень"
 
 #: application/controllers/LocaleController.php:233
 msgid "September"
-msgstr "September"
+msgstr "Вересень"
 
 #: application/controllers/LocaleController.php:234
 msgid "October"
-msgstr "October"
+msgstr "Жовтень"
 
 #: application/controllers/LocaleController.php:235
 msgid "November"
-msgstr "November"
+msgstr "Листопад"
 
 #: application/controllers/LocaleController.php:236
 msgid "December"
-msgstr "December"
+msgstr "Грудень"
 
 #: application/controllers/LocaleController.php:237
 msgid "Jan"
-msgstr "Jan"
+msgstr "Січ"
 
 #: application/controllers/LocaleController.php:238
 msgid "Feb"
-msgstr "Feb"
+msgstr "Лют"
 
 #: application/controllers/LocaleController.php:239
 msgid "Mar"
-msgstr "Mar"
+msgstr "Бер"
 
 #: application/controllers/LocaleController.php:240
 msgid "Apr"
-msgstr "Apr"
+msgstr "Квіт"
 
 #: application/controllers/LocaleController.php:242
 msgid "Jun"
-msgstr "Jun"
+msgstr "Черв"
 
 #: application/controllers/LocaleController.php:243
 msgid "Jul"
-msgstr "Jul"
+msgstr "Лип"
 
 #: application/controllers/LocaleController.php:244
 msgid "Aug"
-msgstr "Aug"
+msgstr "Серп"
 
 #: application/controllers/LocaleController.php:245
 msgid "Sep"
-msgstr "Sep"
+msgstr "Вер"
 
 #: application/controllers/LocaleController.php:246
 msgid "Oct"
-msgstr "Oct"
+msgstr "Жовт"
 
 #: application/controllers/LocaleController.php:247
 msgid "Nov"
-msgstr "Nov"
+msgstr "Лист"
 
 #: application/controllers/LocaleController.php:248
 msgid "Dec"
-msgstr "Dec"
+msgstr "Груд"
 
 #: application/controllers/LocaleController.php:249
 msgid "Today"
-msgstr ""
+msgstr "Сьогодні"
 
 #: application/controllers/LocaleController.php:250
 msgid "Day"
-msgstr ""
+msgstr "День"
 
 #: application/controllers/LocaleController.php:251
 msgid "Week"
-msgstr ""
+msgstr "Тиждень"
 
 #: application/controllers/LocaleController.php:252
 msgid "Month"
-msgstr ""
+msgstr "Місяць"
 
 #: application/controllers/LocaleController.php:253
 #: application/forms/GeneralPreferences.php:232
 msgid "Sunday"
-msgstr "Sunday"
+msgstr "Неділя"
 
 #: application/controllers/LocaleController.php:254
 #: application/forms/GeneralPreferences.php:233
 msgid "Monday"
-msgstr "Monday"
+msgstr "Понеділок"
 
 #: application/controllers/LocaleController.php:255
 #: application/forms/GeneralPreferences.php:234
 msgid "Tuesday"
-msgstr "Tuesday"
+msgstr "Вівторок"
 
 #: application/controllers/LocaleController.php:256
 #: application/forms/GeneralPreferences.php:235
 msgid "Wednesday"
-msgstr "Wednesday"
+msgstr "Середа"
 
 #: application/controllers/LocaleController.php:257
 #: application/forms/GeneralPreferences.php:236
 msgid "Thursday"
-msgstr "Thursday"
+msgstr "Четвер"
 
 #: application/controllers/LocaleController.php:258
 #: application/forms/GeneralPreferences.php:237
 msgid "Friday"
-msgstr "Friday"
+msgstr "П'ятниця"
 
 #: application/controllers/LocaleController.php:259
 #: application/forms/GeneralPreferences.php:238
 msgid "Saturday"
-msgstr "Saturday"
+msgstr "Субота"
 
 #: application/controllers/LocaleController.php:260
 #: application/forms/AddShowRepeats.php:33
 msgid "Sun"
-msgstr "Sun"
+msgstr "Нд"
 
 #: application/controllers/LocaleController.php:261
 #: application/forms/AddShowRepeats.php:34
 msgid "Mon"
-msgstr "Mon"
+msgstr "Пн"
 
 #: application/controllers/LocaleController.php:262
 #: application/forms/AddShowRepeats.php:35
 msgid "Tue"
-msgstr "Tue"
+msgstr "Вт"
 
 #: application/controllers/LocaleController.php:263
 #: application/forms/AddShowRepeats.php:36
 msgid "Wed"
-msgstr "Wed"
+msgstr "Ср"
 
 #: application/controllers/LocaleController.php:264
 #: application/forms/AddShowRepeats.php:37
 msgid "Thu"
-msgstr "Thu"
+msgstr "Чт"
 
 #: application/controllers/LocaleController.php:265
 #: application/forms/AddShowRepeats.php:38
 msgid "Fri"
-msgstr "Fri"
+msgstr "Пт"
 
 #: application/controllers/LocaleController.php:266
 #: application/forms/AddShowRepeats.php:39
 msgid "Sat"
-msgstr "Sat"
+msgstr "Сб"
 
 #: application/controllers/LocaleController.php:267
 msgid "Shows longer than their scheduled time will be cut off by a following show."
-msgstr "Shows longer than their scheduled time will be cut off by a following show."
+msgstr ""
+"Програма, яка триває довше запланованого часу, буде перервана наступною "
+"програмою."
 
 #: application/controllers/LocaleController.php:268
 msgid "Cancel Current Show?"
-msgstr "Cancel Current Show?"
+msgstr "Скасувати поточну програму?"
 
 #: application/controllers/LocaleController.php:269
 #: application/controllers/LocaleController.php:318
 msgid "Stop recording current show?"
-msgstr "Stop recording current show?"
+msgstr "Зупинити запис поточної програми?"
 
 #: application/controllers/LocaleController.php:270
 msgid "Ok"
@@ -1998,27 +2029,27 @@ msgstr "Ok"
 
 #: application/controllers/LocaleController.php:271
 msgid "Contents of Show"
-msgstr "Contents of Show"
+msgstr "Зміст програми"
 
 #: application/controllers/LocaleController.php:274
 msgid "Remove all content?"
-msgstr "Remove all content?"
+msgstr "Видалити весь вміст?"
 
 #: application/controllers/LocaleController.php:276
 msgid "Delete selected item(s)?"
-msgstr "Delete selected item(s)?"
+msgstr "Видалити вибрані елементи?"
 
 #: application/controllers/LocaleController.php:277
 msgid "Start"
-msgstr "Start"
+msgstr "Старт"
 
 #: application/controllers/LocaleController.php:278
 msgid "End"
-msgstr "End"
+msgstr "Кінець"
 
 #: application/controllers/LocaleController.php:279
 msgid "Duration"
-msgstr "Duration"
+msgstr "Тривалість"
 
 #: application/controllers/LocaleController.php:280
 msgid "Filtering out "
@@ -2111,7 +2142,6 @@ msgid "Select all"
 msgstr "Вибрати все"
 
 #: application/controllers/LocaleController.php:310
-#, fuzzy
 msgid "Select none"
 msgstr "Зняти виділення"
 
@@ -2507,9 +2537,8 @@ msgid "No tracks were played during the selected time period."
 msgstr "Жоден трек не відтворювався протягом вибраного періоду часу."
 
 #: application/controllers/LocaleController.php:432
-#, fuzzy
 msgid "Unpublish"
-msgstr "Відмінити публікацію"
+msgstr "Зняти з публікації"
 
 #: application/controllers/LocaleController.php:433
 msgid "No matching results found."
@@ -2576,19 +2605,19 @@ msgstr "Показано від _START_ to _END_ of _TOTAL_ користувач
 
 #: application/controllers/LocaleController.php:449
 msgid "Showing 0 to 0 of 0 entries"
-msgstr ""
+msgstr "Показано від 0 до 0 із 0 записів"
 
 #: application/controllers/LocaleController.php:450
 msgid "Showing 0 to 0 of 0 tracks"
-msgstr ""
+msgstr "Показано від 0 до 0 із 0 треків"
 
 #: application/controllers/LocaleController.php:451
 msgid "Showing 0 to 0 of 0 track types"
-msgstr ""
+msgstr "Показано від 0 до 0 із 0 типів треків"
 
 #: application/controllers/LocaleController.php:452
 msgid "(filtered from _MAX_ total track types)"
-msgstr ""
+msgstr "(filtered from _MAX_ total track types)"
 
 #: application/controllers/LocaleController.php:454
 msgid "Are you sure you want to delete this tracktype?"
@@ -2656,9 +2685,8 @@ msgid "You haven't published any episodes!"
 msgstr "Ви не опублікували жодного випуску!"
 
 #: application/controllers/LocaleController.php:467
-#, fuzzy
 msgid "You can publish your uploaded content from the 'Tracks' view."
-msgstr "Ви можете опублікувати завантажений вміст із перегляду «Доріжки»."
+msgstr "Ви можете опублікувати завантажений вміст із перегляду «Треки»."
 
 #: application/controllers/LocaleController.php:468
 msgid "Try it now"
@@ -3070,9 +3098,8 @@ msgid "Description:"
 msgstr "Опис:"
 
 #: application/forms/AddShowWhat.php:69
-#, fuzzy
 msgid "Instance Description:"
-msgstr "Опис примірника:"
+msgstr "Опис екземпляру:"
 
 #: application/forms/AddShowWhen.php:15
 msgid "'%value%' does not fit the time format 'HH:mm'"
@@ -3103,7 +3130,6 @@ msgid "Repeats?"
 msgstr "Повторювати?"
 
 #: application/forms/AddShowWhen.php:146
-#, fuzzy
 msgid "Cannot create show in the past"
 msgstr "Неможливо створити програму в минулому часі"
 
@@ -3130,9 +3156,8 @@ msgstr "Тривалість не може перевищувати 24 год"
 #: application/forms/AddShowWhen.php:310 application/forms/AddShowWhen.php:341
 #: application/forms/AddShowWhen.php:346
 #: application/services/CalendarService.php:309
-#, fuzzy
 msgid "Cannot schedule overlapping shows"
-msgstr "Неможливо запланувати перекриття шоу"
+msgstr "Неможливо запланувати накладені програми"
 
 #: application/forms/AddShowWho.php:9
 msgid "Search Users:"
@@ -3252,9 +3277,8 @@ msgid "Composer:"
 msgstr "Композитор:"
 
 #: application/forms/EditAudioMD.php:177
-#, fuzzy
 msgid "Conductor:"
-msgstr "Conductor:"
+msgstr "Виконавець:"
 
 #: application/forms/EditAudioMD.php:187
 msgid "Mood:"
@@ -3363,13 +3387,12 @@ msgid "Generate a smartblock and a playlist upon creation of a new podcast"
 msgstr "Створіть смартблок і список відтворення після створення нового подкасту"
 
 #: application/forms/GeneralPreferences.php:143
-#, fuzzy
 msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
 msgstr ""
 "Якщо цей параметр увімкнено, новий смарт-блок і список відтворення, які "
 "відповідають найновішому треку подкасту, будуть створені одразу після "
 "створення нового подкасту. Зауважте, що функція «Перезаписати метатеги "
-"епізоду подкасту» також має бути ввімкнена, щоб смартблок міг надійно "
+"епізоду подкасту» також має бути ввімкнена, щоб смарт-блок міг надійно "
 "знаходити епізоди."
 
 #: application/forms/GeneralPreferences.php:154
@@ -3394,7 +3417,6 @@ msgid "Allowed CORS URLs (DEPRECATED)"
 msgstr "Дозволені URL-адреси CORS (Застаріле)"
 
 #: application/forms/GeneralPreferences.php:174
-#, fuzzy
 msgid "Remote URLs that are allowed to access this LibreTime instance in a browser. One URL per line. (DEPRECATED: Allowed CORS origins configuration moved to the configuration file.)"
 msgstr ""
 "Віддалені URL-адреси, які мають доступ до цього екземпляра LibreTime у веб-"
@@ -3411,9 +3433,8 @@ msgid "Station Timezone"
 msgstr "Часовий пояс станції"
 
 #: application/forms/GeneralPreferences.php:193
-#, fuzzy
 msgid "Week Starts On"
-msgstr "Тиждень починається"
+msgstr "Тиждень починається з"
 
 #: application/forms/GeneralPreferences.php:209
 msgid "Display login button on your Radio Page?"
@@ -3543,9 +3564,8 @@ msgid "Preview:"
 msgstr "Попередній перегляд:"
 
 #: application/forms/PodcastPreferences.php:9
-#, fuzzy
 msgid "Feed Privacy"
-msgstr "Конфіденційність каналу"
+msgstr "Конфіденційність стрічки"
 
 #: application/forms/PodcastPreferences.php:11
 msgid "Public"
@@ -3560,7 +3580,6 @@ msgid "Station Language"
 msgstr "Мова станції"
 
 #: application/forms/ShowBuilder.php:71 application/forms/ShowBuilder.php:88
-#, fuzzy
 msgid "Filter by Show"
 msgstr "Фільтрувати мої програми"
 
@@ -3672,7 +3691,6 @@ msgid "Most recently played"
 msgstr "Нещодавно зіграно"
 
 #: application/forms/SmartBlockCriteria.php:187
-#, fuzzy
 msgid "Least recently played"
 msgstr "Нещодавно грали"
 
@@ -3709,9 +3727,8 @@ msgid "Sort Tracks:"
 msgstr "Сортування треків:"
 
 #: application/forms/SmartBlockCriteria.php:548
-#, fuzzy
 msgid "Limit to:"
-msgstr "Обмежити:"
+msgstr "Обмежити в:"
 
 #: application/forms/SmartBlockCriteria.php:560
 msgid "Generate playlist content and save criteria"
@@ -3739,9 +3756,8 @@ msgid "The value should be an integer"
 msgstr "Значення має бути цілим числом"
 
 #: application/forms/SmartBlockCriteria.php:819
-#, fuzzy
 msgid "500 is the max item limit value you can set"
-msgstr "500 максимальне граничне значення пунктів, які ви можете встановити"
+msgstr "500 максимальне граничне значення"
 
 #: application/forms/SmartBlockCriteria.php:830
 msgid "You must select Criteria and Modifier"
@@ -3759,9 +3775,8 @@ msgstr ""
 
 #: application/forms/SmartBlockCriteria.php:850
 #: application/forms/SmartBlockCriteria.php:875
-#, fuzzy
 msgid "You must select a time unit for a relative datetime."
-msgstr "Ви повинні вибрати одиницю часу для відносної дати та часу."
+msgstr "Ви повинні вибрати одиницю вимірювання часу для відносної дати та часу."
 
 #: application/forms/SmartBlockCriteria.php:855
 #: application/forms/SmartBlockCriteria.php:880
@@ -3846,28 +3861,24 @@ msgid "Station name - Show name"
 msgstr "Назва станції - Показати назву"
 
 #: application/forms/StreamSetting.php:67
-#, fuzzy
 msgid "Off Air Metadata"
-msgstr "Off Air Metadata"
+msgstr "Метадані при вимкненому ефірі"
 
 #: application/forms/StreamSetting.php:73
-#, fuzzy
 msgid "Enable Replay Gain"
-msgstr "Enable Replay Gain"
+msgstr "Вмикнути Replay Gain"
 
 #: application/forms/StreamSetting.php:79
-#, fuzzy
 msgid "Replay Gain Modifier"
-msgstr "Replay Gain Modifier"
+msgstr "Змінити Replay Gain"
 
 #: application/forms/StreamSetting.php:87
 msgid "Streaming Server:"
 msgstr "Потоковий сервер:"
 
 #: application/forms/StreamSetting.php:88
-#, fuzzy
 msgid "Custom / 3rd Party Streaming"
-msgstr "Custom / 3rd Party Streaming"
+msgstr "Трансляція на зовнішні сервери"
 
 #: application/forms/StreamSetting.php:88
 msgid "Default Streaming"
@@ -3890,9 +3901,8 @@ msgid "Bit Rate:"
 msgstr "Bit Rate:"
 
 #: application/forms/StreamSettingSubForm.php:82
-#, fuzzy
 msgid "Service Type:"
-msgstr "Service Type:"
+msgstr "Тип сервіса:"
 
 #: application/forms/StreamSettingSubForm.php:90
 msgid "Channels:"
@@ -3927,9 +3937,8 @@ msgid "Mount Point"
 msgstr "Точка монтування"
 
 #: application/forms/StreamSettingSubForm.php:174
-#, fuzzy
 msgid "Admin User"
-msgstr "Користувач адміністратора"
+msgstr "Адміністратор"
 
 #: application/forms/StreamSettingSubForm.php:183
 msgid "Admin Password"
