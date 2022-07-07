@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2022-07-04 18:49+0200\n"
-"PO-Revision-Date: 2022-07-07 10:38+0000\n"
+"PO-Revision-Date: 2022-07-07 14:44+0000\n"
 "Last-Translator: Mykola <bondarchuk.nikola@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/libretime/"
 "legacy/uk/>\n"
@@ -2022,146 +2022,147 @@ msgstr "Duration"
 
 #: application/controllers/LocaleController.php:280
 msgid "Filtering out "
-msgstr ""
+msgstr "Фільтрація "
 
 #: application/controllers/LocaleController.php:281
 msgid " of "
-msgstr ""
+msgstr " з "
 
 #: application/controllers/LocaleController.php:282
 msgid " records"
-msgstr ""
+msgstr " записи"
 
 #: application/controllers/LocaleController.php:283
 msgid "There are no shows scheduled during the specified time period."
-msgstr ""
+msgstr "На зазначений період часу не заплановано жодної програми."
 
 #: application/controllers/LocaleController.php:289
 #: application/forms/SmartBlockCriteria.php:63
 #: application/models/Block.php:1431 application/models/Block.php:1527
 msgid "Cue In"
-msgstr "Cue In"
+msgstr "Початок звучання"
 
 #: application/controllers/LocaleController.php:290
 #: application/forms/SmartBlockCriteria.php:64
 #: application/models/Block.php:1432 application/models/Block.php:1528
 msgid "Cue Out"
-msgstr "Cue Out"
+msgstr "Закінчення звучання"
 
 #: application/controllers/LocaleController.php:291
 msgid "Fade In"
-msgstr "Fade In"
+msgstr "Зведення"
 
 #: application/controllers/LocaleController.php:292
 msgid "Fade Out"
-msgstr "Fade Out"
+msgstr "Затухання"
 
 #: application/controllers/LocaleController.php:293
 msgid "Show Empty"
-msgstr "Show Empty"
+msgstr "Програма порожня"
 
 #: application/controllers/LocaleController.php:294
 msgid "Recording From Line In"
-msgstr "Recording From Line In"
+msgstr "Запис з лінійного входу"
 
 #: application/controllers/LocaleController.php:295
 msgid "Track preview"
-msgstr "Track preview"
+msgstr "Попередній перегляд треку"
 
 #: application/controllers/LocaleController.php:299
 msgid "Cannot schedule outside a show."
-msgstr "Cannot schedule outside a show."
+msgstr "Не можна планувати поза програмою."
 
 #: application/controllers/LocaleController.php:300
 msgid "Moving 1 Item"
-msgstr "Moving 1 Item"
+msgstr "Переміщення 1 елементу"
 
 #: application/controllers/LocaleController.php:301
 #, php-format
 msgid "Moving %s Items"
-msgstr "Moving %s Items"
+msgstr "Переміщення %s елементів"
 
 #: application/controllers/LocaleController.php:302
 #: application/forms/AddTracktype.php:59 application/forms/AddUser.php:108
 #: application/forms/EditAudioMD.php:280 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:41 application/forms/Preferences.php:37
 msgid "Save"
-msgstr "Save"
+msgstr "Зберегти"
 
 #: application/controllers/LocaleController.php:303
 #: application/controllers/LocaleController.php:327
 #: application/forms/EditAudioMD.php:270 application/forms/EditHistory.php:141
 msgid "Cancel"
-msgstr "Cancel"
+msgstr "Відміна"
 
 #: application/controllers/LocaleController.php:304
 msgid "Fade Editor"
-msgstr "Fade Editor"
+msgstr "Редактор Fade"
 
 #: application/controllers/LocaleController.php:305
 msgid "Cue Editor"
-msgstr "Cue Editor"
+msgstr "Редактор Cue"
 
 #: application/controllers/LocaleController.php:306
 msgid "Waveform features are available in a browser supporting the Web Audio API"
-msgstr "Waveform features are available in a browser supporting the Web Audio API"
+msgstr "Функції Waveform доступні в браузері, який підтримує API Web Audio"
 
 #: application/controllers/LocaleController.php:309
 msgid "Select all"
-msgstr "Select all"
+msgstr "Вибрати все"
 
 #: application/controllers/LocaleController.php:310
+#, fuzzy
 msgid "Select none"
-msgstr "Select none"
+msgstr "Зняти виділення"
 
 #: application/controllers/LocaleController.php:311
 msgid "Trim overbooked shows"
-msgstr ""
+msgstr "Обрізати переповнені програми"
 
 #: application/controllers/LocaleController.php:312
 msgid "Remove selected scheduled items"
-msgstr "Remove selected scheduled items"
+msgstr "Видалити вибрані заплановані елементи"
 
 #: application/controllers/LocaleController.php:313
 msgid "Jump to the current playing track"
-msgstr "Jump to the current playing track"
+msgstr "Перехід до поточного треку"
 
 #: application/controllers/LocaleController.php:314
 msgid "Jump to Current"
-msgstr ""
+msgstr "Перейти до поточного"
 
 #: application/controllers/LocaleController.php:315
 msgid "Cancel current show"
-msgstr "Cancel current show"
+msgstr "Скасувати поточну програму"
 
 #: application/controllers/LocaleController.php:320
 msgid "Open library to add or remove content"
-msgstr "Open library to add or remove content"
+msgstr "Відкрийте бібліотеку, щоб додати або видалити вміст"
 
 #: application/controllers/LocaleController.php:321
 msgid "Add / Remove Content"
-msgstr "Add / Remove Content"
+msgstr "Додати / видалити вміст"
 
 #: application/controllers/LocaleController.php:323
 msgid "in use"
-msgstr "in use"
+msgstr "у вживанні"
 
 #: application/controllers/LocaleController.php:324
 msgid "Disk"
-msgstr "Disk"
+msgstr "Диск"
 
 #: application/controllers/LocaleController.php:326
 msgid "Look in"
-msgstr "Look in"
+msgstr "Подивитись"
 
 #: application/controllers/LocaleController.php:328
 msgid "Open"
-msgstr "Open"
+msgstr "Відкрити"
 
 #: application/controllers/LocaleController.php:330
 #: application/forms/AddUser.php:100
 msgid "Admin"
-msgstr "Admin"
+msgstr "Адмін"
 
 #: application/controllers/LocaleController.php:331
 #: application/forms/AddUser.php:98
@@ -2171,104 +2172,104 @@ msgstr "DJ"
 #: application/controllers/LocaleController.php:332
 #: application/forms/AddUser.php:99
 msgid "Program Manager"
-msgstr "Program Manager"
+msgstr "Менеджер програми"
 
 #: application/controllers/LocaleController.php:333
 #: application/forms/AddUser.php:97
 msgid "Guest"
-msgstr "Guest"
+msgstr "Гість"
 
 #: application/controllers/LocaleController.php:334
 msgid "Guests can do the following:"
-msgstr "Guests can do the following:"
+msgstr "Гості можуть зробити наступне:"
 
 #: application/controllers/LocaleController.php:335
 msgid "View schedule"
-msgstr "View schedule"
+msgstr "Переглянути розклад"
 
 #: application/controllers/LocaleController.php:336
 msgid "View show content"
-msgstr "View show content"
+msgstr "Переглянути вміст програм"
 
 #: application/controllers/LocaleController.php:337
 msgid "DJs can do the following:"
-msgstr "DJs can do the following:"
+msgstr "DJs можуть робити наступне:"
 
 #: application/controllers/LocaleController.php:338
 msgid "Manage assigned show content"
-msgstr "Manage assigned show content"
+msgstr "Керуйте призначеним вмістом програм"
 
 #: application/controllers/LocaleController.php:339
 msgid "Import media files"
-msgstr "Import media files"
+msgstr "Імпорт медіафайлів"
 
 #: application/controllers/LocaleController.php:340
 msgid "Create playlists, smart blocks, and webstreams"
-msgstr "Create playlists, smart blocks, and webstreams"
+msgstr "Створюйте списки відтворення, смарт-блоки та веб-потоки"
 
 #: application/controllers/LocaleController.php:341
 msgid "Manage their own library content"
-msgstr "Manage their own library content"
+msgstr "Керувати вмістом власної бібліотеки"
 
 #: application/controllers/LocaleController.php:342
 msgid "Program Managers can do the following:"
-msgstr ""
+msgstr "Керівники програм можуть робити наступне:"
 
 #: application/controllers/LocaleController.php:343
 msgid "View and manage show content"
-msgstr "View and manage show content"
+msgstr "Перегляд вмісту програм та керування ними"
 
 #: application/controllers/LocaleController.php:344
 msgid "Schedule shows"
-msgstr "Schedule shows"
+msgstr "Розклад програм"
 
 #: application/controllers/LocaleController.php:345
 msgid "Manage all library content"
-msgstr "Manage all library content"
+msgstr "Керуйте всім вмістом бібліотеки"
 
 #: application/controllers/LocaleController.php:346
 msgid "Admins can do the following:"
-msgstr "Admins can do the following:"
+msgstr "Адміністратори можуть робити наступне:"
 
 #: application/controllers/LocaleController.php:347
 msgid "Manage preferences"
-msgstr "Manage preferences"
+msgstr "Керувати налаштуваннями"
 
 #: application/controllers/LocaleController.php:348
 msgid "Manage users"
-msgstr "Manage users"
+msgstr "Керувати користувачами"
 
 #: application/controllers/LocaleController.php:349
 msgid "Manage watched folders"
-msgstr "Manage watched folders"
+msgstr "Керування папками, які переглядаються"
 
 #: application/controllers/LocaleController.php:350
 msgid "Send support feedback"
-msgstr "Send support feedback"
+msgstr "Надіслати відгук у службу підтримки"
 
 #: application/controllers/LocaleController.php:351
 msgid "View system status"
-msgstr "View system status"
+msgstr "Переглянути стан системи"
 
 #: application/controllers/LocaleController.php:352
 msgid "Access playout history"
-msgstr "Access playout history"
+msgstr "Доступ до історії відтворення"
 
 #: application/controllers/LocaleController.php:353
 msgid "View listener stats"
-msgstr "View listener stats"
+msgstr "Переглянути статистику слухачів"
 
 #: application/controllers/LocaleController.php:355
 msgid "Show / hide columns"
-msgstr "Show / hide columns"
+msgstr "Показати/сховати стовпці"
 
 #: application/controllers/LocaleController.php:356
 msgid "Columns"
-msgstr ""
+msgstr "Стовпці"
 
 #: application/controllers/LocaleController.php:358
 msgid "From {from} to {to}"
-msgstr "From {from} to {to}"
+msgstr "З {from} до {to}"
 
 #: application/controllers/LocaleController.php:359
 msgid "kbps"
@@ -2276,11 +2277,11 @@ msgstr "kbps"
 
 #: application/controllers/LocaleController.php:360
 msgid "yyyy-mm-dd"
-msgstr "yyyy-mm-dd"
+msgstr "рррр-мм-дд"
 
 #: application/controllers/LocaleController.php:361
 msgid "hh:mm:ss.t"
-msgstr "hh:mm:ss.t"
+msgstr "гг:хх:ss.t"
 
 #: application/controllers/LocaleController.php:362
 msgid "kHz"
@@ -2288,78 +2289,78 @@ msgstr "kHz"
 
 #: application/controllers/LocaleController.php:365
 msgid "Su"
-msgstr "Su"
+msgstr "Нд"
 
 #: application/controllers/LocaleController.php:366
 msgid "Mo"
-msgstr "Mo"
+msgstr "Пн"
 
 #: application/controllers/LocaleController.php:367
 msgid "Tu"
-msgstr "Tu"
+msgstr "Вт"
 
 #: application/controllers/LocaleController.php:368
 msgid "We"
-msgstr "We"
+msgstr "Ср"
 
 #: application/controllers/LocaleController.php:369
 msgid "Th"
-msgstr "Th"
+msgstr "Чт"
 
 #: application/controllers/LocaleController.php:370
 msgid "Fr"
-msgstr "Fr"
+msgstr "Пт"
 
 #: application/controllers/LocaleController.php:371
 msgid "Sa"
-msgstr "Sa"
+msgstr "Сб"
 
 #: application/controllers/LocaleController.php:372
 #: application/controllers/LocaleController.php:400
 msgid "Close"
-msgstr "Close"
+msgstr "Закрити"
 
 #: application/controllers/LocaleController.php:374
 msgid "Hour"
-msgstr "Hour"
+msgstr "Година"
 
 #: application/controllers/LocaleController.php:375
 msgid "Minute"
-msgstr "Minute"
+msgstr "Хвилина"
 
 #: application/controllers/LocaleController.php:376
 msgid "Done"
-msgstr "Done"
+msgstr "Готово"
 
 #: application/controllers/LocaleController.php:379
 msgid "Select files"
-msgstr "Select files"
+msgstr "Виберіть файли"
 
 #: application/controllers/LocaleController.php:380
 #: application/controllers/LocaleController.php:381
 msgid "Add files to the upload queue and click the start button."
-msgstr "Add files to the upload queue and click the start button."
+msgstr "Додайте файли до черги завантаження та натисніть кнопку «Пуск»."
 
 #: application/controllers/LocaleController.php:384
 msgid "Add Files"
-msgstr "Add Files"
+msgstr "Додати файли"
 
 #: application/controllers/LocaleController.php:385
 msgid "Stop Upload"
-msgstr "Stop Upload"
+msgstr "Зупинити завантаження"
 
 #: application/controllers/LocaleController.php:386
 msgid "Start upload"
-msgstr "Start upload"
+msgstr "Почати завантаження"
 
 #: application/controllers/LocaleController.php:387
 msgid "Add files"
-msgstr "Add files"
+msgstr "Додати файли"
 
 #: application/controllers/LocaleController.php:388
 #, php-format
 msgid "Uploaded %d/%d files"
-msgstr "Uploaded %d/%d files"
+msgstr "Завантажено %d/%d файлів"
 
 #: application/controllers/LocaleController.php:389
 msgid "N/A"
@@ -2367,208 +2368,211 @@ msgstr "N/A"
 
 #: application/controllers/LocaleController.php:390
 msgid "Drag files here."
-msgstr "Drag files here."
+msgstr "Перетягніть файли сюди."
 
 #: application/controllers/LocaleController.php:391
 msgid "File extension error."
-msgstr "File extension error."
+msgstr "Помилка розширення файлу."
 
 #: application/controllers/LocaleController.php:392
 msgid "File size error."
-msgstr "File size error."
+msgstr "Помилка розміру файлу."
 
 #: application/controllers/LocaleController.php:393
 msgid "File count error."
-msgstr "File count error."
+msgstr "Помилка підрахунку файлів."
 
 #: application/controllers/LocaleController.php:394
 msgid "Init error."
-msgstr "Init error."
+msgstr "Помилка ініціалізації."
 
 #: application/controllers/LocaleController.php:395
 msgid "HTTP Error."
-msgstr "HTTP Error."
+msgstr "HTTP помилка."
 
 #: application/controllers/LocaleController.php:396
 msgid "Security error."
-msgstr "Security error."
+msgstr "Помилка безпеки."
 
 #: application/controllers/LocaleController.php:397
 msgid "Generic error."
-msgstr "Generic error."
+msgstr "Загальна помилка."
 
 #: application/controllers/LocaleController.php:398
 msgid "IO error."
-msgstr "IO error."
+msgstr "IO помилка."
 
 #: application/controllers/LocaleController.php:399
 #, php-format
 msgid "File: %s"
-msgstr "File: %s"
+msgstr "Файл: %s"
 
 #: application/controllers/LocaleController.php:401
 #, php-format
 msgid "%d files queued"
-msgstr "%d files queued"
+msgstr "%d файлів у черзі"
 
 #: application/controllers/LocaleController.php:402
 msgid "File: %f, size: %s, max file size: %m"
-msgstr "File: %f, size: %s, max file size: %m"
+msgstr "Файл: %f, розмір: %s, макс. розмір файлу: %m"
 
 #: application/controllers/LocaleController.php:403
 msgid "Upload URL might be wrong or doesn't exist"
-msgstr "Upload URL might be wrong or doesn't exist"
+msgstr "URL-адреса завантаження може бути неправильною або не існує"
 
 #: application/controllers/LocaleController.php:404
 msgid "Error: File too large: "
-msgstr "Error: File too large: "
+msgstr "Помилка: Файл завеликий: "
 
 #: application/controllers/LocaleController.php:405
 msgid "Error: Invalid file extension: "
-msgstr "Error: Invalid file extension: "
+msgstr "Помилка: Недійсне розширення файлу: "
 
 #: application/controllers/LocaleController.php:407
 msgid "Set Default"
-msgstr "Set Default"
+msgstr "Встановити за замовчуванням"
 
 #: application/controllers/LocaleController.php:408
 msgid "Create Entry"
-msgstr "Create Entry"
+msgstr "Створити запис"
 
 #: application/controllers/LocaleController.php:409
 msgid "Edit History Record"
-msgstr "Edit History Record"
+msgstr "Редагувати запис історії"
 
 #: application/controllers/LocaleController.php:410
 #: application/forms/EditHistoryItem.php:57
 msgid "No Show"
-msgstr "No Show"
+msgstr "Немає програми"
 
 #: application/controllers/LocaleController.php:412
 #, php-format
 msgid "Copied %s row%s to the clipboard"
-msgstr "Copied %s row%s to the clipboard"
+msgstr "Скопійовано %s рядок%s у буфер обміну"
 
 #: application/controllers/LocaleController.php:413
 #, php-format
 msgid "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."
-msgstr "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."
+msgstr ""
+"%sПерегляд для друку%sДля друку цієї таблиці скористайтеся функцією друку "
+"свого браузера. Коли закінчите, натисніть клавішу Escape."
 
 #: application/controllers/LocaleController.php:414
 msgid "New Show"
-msgstr ""
+msgstr "Нова програма"
 
 #: application/controllers/LocaleController.php:415
 msgid "New Log Entry"
-msgstr ""
+msgstr "Новий запис журналу"
 
 #: application/controllers/LocaleController.php:417
 msgid "No data available in table"
-msgstr ""
+msgstr "Дані в таблиці відсутні"
 
 #: application/controllers/LocaleController.php:418
 msgid "(filtered from _MAX_ total entries)"
-msgstr ""
+msgstr "(відфільтровано з _MAX_ всього записів)"
 
 #: application/controllers/LocaleController.php:424
 msgid "First"
-msgstr ""
+msgstr "Спочатку"
 
 #: application/controllers/LocaleController.php:425
 msgid "Last"
-msgstr ""
+msgstr "Останній"
 
 #: application/controllers/LocaleController.php:426
 msgid "Next"
-msgstr ""
+msgstr "Наступний"
 
 #: application/controllers/LocaleController.php:427
 msgid "Previous"
-msgstr ""
+msgstr "Попередній"
 
 #: application/controllers/LocaleController.php:428
 msgid "Search:"
-msgstr ""
+msgstr "Пошук:"
 
 #: application/controllers/LocaleController.php:429
 #: application/controllers/LocaleController.php:442
 msgid "No matching records found"
-msgstr ""
+msgstr "Відповідних записів не знайдено"
 
 #: application/controllers/LocaleController.php:430
 msgid "Drag tracks here from the library"
-msgstr ""
+msgstr "Перетягніть треки сюди з бібліотеки"
 
 #: application/controllers/LocaleController.php:431
 msgid "No tracks were played during the selected time period."
-msgstr ""
+msgstr "Жоден трек не відтворювався протягом вибраного періоду часу."
 
 #: application/controllers/LocaleController.php:432
+#, fuzzy
 msgid "Unpublish"
-msgstr ""
+msgstr "Відмінити публікацію"
 
 #: application/controllers/LocaleController.php:433
 msgid "No matching results found."
-msgstr ""
+msgstr "Відповідних результатів не знайдено."
 
 #: application/controllers/LocaleController.php:434
 msgid "Author"
-msgstr ""
+msgstr "Автор"
 
 #: application/controllers/LocaleController.php:435
 #: application/forms/SmartBlockCriteria.php:65
 #: application/forms/StreamSettingSubForm.php:148
 #: application/models/Block.php:1433 application/models/Block.php:1529
 msgid "Description"
-msgstr "Description"
+msgstr "Опис"
 
 #: application/controllers/LocaleController.php:436
 msgid "Link"
-msgstr ""
+msgstr "Посилання"
 
 #: application/controllers/LocaleController.php:437
 msgid "Publication Date"
-msgstr ""
+msgstr "Дата публікації"
 
 #: application/controllers/LocaleController.php:438
 msgid "Import Status"
-msgstr ""
+msgstr "Статус імпорту"
 
 #: application/controllers/LocaleController.php:439
 msgid "Actions"
-msgstr ""
+msgstr "Дії"
 
 #: application/controllers/LocaleController.php:440
 msgid "Delete from Library"
-msgstr ""
+msgstr "Видалити з бібліотеки"
 
 #: application/controllers/LocaleController.php:441
 msgid "Successfully imported"
-msgstr ""
+msgstr "Успішно імпортовано"
 
 #: application/controllers/LocaleController.php:443
 msgid "Show _MENU_"
-msgstr ""
+msgstr "Показати _MENU_"
 
 #: application/controllers/LocaleController.php:444
 msgid "Show _MENU_ entries"
-msgstr ""
+msgstr "Показати _MENU_ записів"
 
 #: application/controllers/LocaleController.php:445
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
-msgstr ""
+msgstr "Показано від _START_ to _END_ of _TOTAL_ записів"
 
 #: application/controllers/LocaleController.php:446
 msgid "Showing _START_ to _END_ of _TOTAL_ tracks"
-msgstr ""
+msgstr "Показано від _START_ to _END_ of _TOTAL_ треків"
 
 #: application/controllers/LocaleController.php:447
 msgid "Showing _START_ to _END_ of _TOTAL_ track types"
-msgstr ""
+msgstr "Показано від _START_ to _END_ of _TOTAL_типів треків"
 
 #: application/controllers/LocaleController.php:448
 msgid "Showing _START_ to _END_ of _TOTAL_ users"
-msgstr ""
+msgstr "Показано від _START_ to _END_ of _TOTAL_ користувачів"
 
 #: application/controllers/LocaleController.php:449
 msgid "Showing 0 to 0 of 0 entries"
@@ -2588,19 +2592,19 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:454
 msgid "Are you sure you want to delete this tracktype?"
-msgstr ""
+msgstr "Ви впевнені, що хочете видалити цей тип треку?"
 
 #: application/controllers/LocaleController.php:455
 msgid "No track types were found."
-msgstr ""
+msgstr "Типи треків не знайдено."
 
 #: application/controllers/LocaleController.php:456
 msgid "No track types found"
-msgstr ""
+msgstr "Типи треків не знайдено"
 
 #: application/controllers/LocaleController.php:457
 msgid "No matching track types found"
-msgstr ""
+msgstr "Відповідних типів треків не знайдено"
 
 #: application/controllers/LocaleController.php:458
 #: application/forms/AddTracktype.php:50
@@ -2609,7 +2613,7 @@ msgstr ""
 #: application/forms/GeneralPreferences.php:158
 #: application/forms/GeneralPreferences.php:217
 msgid "Enabled"
-msgstr "Enabled"
+msgstr "Увімкнено"
 
 #: application/controllers/LocaleController.php:459
 #: application/forms/AddTracktype.php:49
@@ -2618,238 +2622,255 @@ msgstr "Enabled"
 #: application/forms/GeneralPreferences.php:157
 #: application/forms/GeneralPreferences.php:216
 msgid "Disabled"
-msgstr "Disabled"
+msgstr "Вимкнено"
 
 #: application/controllers/LocaleController.php:460
 msgid "Cancel upload"
-msgstr ""
+msgstr "Скасувати завантаження"
 
 #: application/controllers/LocaleController.php:461
 msgid "Type"
-msgstr ""
+msgstr "Тип"
 
 #: application/controllers/LocaleController.php:462
 msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/docs/playlists'>More information</a>"
 msgstr ""
+"Вміст автозавантажуваних списків відтворення додається до шоу за годину до "
+"виходу в ефір. <a target=\"_blank\" href=\"http://libretime.org/docs/"
+"playlists\">Більше інформації</a>"
 
 #: application/controllers/LocaleController.php:463
 msgid "Podcast settings saved"
-msgstr ""
+msgstr "Налаштування подкасту збережено"
 
 #: application/controllers/LocaleController.php:464
 msgid "Are you sure you want to delete this user?"
-msgstr ""
+msgstr "Ви впевнені, що хочете видалити цього користувача?"
 
 #: application/controllers/LocaleController.php:465
 msgid "Can't delete yourself!"
-msgstr ""
+msgstr "Неможливо видалити себе!"
 
 #: application/controllers/LocaleController.php:466
 msgid "You haven't published any episodes!"
-msgstr ""
+msgstr "Ви не опублікували жодного випуску!"
 
 #: application/controllers/LocaleController.php:467
+#, fuzzy
 msgid "You can publish your uploaded content from the 'Tracks' view."
-msgstr ""
+msgstr "Ви можете опублікувати завантажений вміст із перегляду «Доріжки»."
 
 #: application/controllers/LocaleController.php:468
 msgid "Try it now"
-msgstr ""
+msgstr "Спробуй зараз"
 
 #: application/controllers/LocaleController.php:469
 msgid "<p>If this option is unchecked, the smartblock will schedule as many tracks as can be played out <strong>in their entirety</strong> within the specified duration. This will usually result in audio playback that is slightly less than the specified duration.</p><p>If this option is checked, the smartblock will also schedule one final track which will overflow the specified duration. This final track may be cut off mid-way if the show into which the smartblock is added finishes.</p>"
 msgstr ""
+"<p>Якщо цей параметр не позначено, smartblock запланує стільки треків, які "
+"можуть бути відтворені <strong>повністю</strong> протягом зазначеного "
+"періоду. Зазвичай це призведе до відтворення аудіо, яке буде трохи менше "
+"зазначеної тривалості.</p><p>Якщо цей параметр позначено, smartblock також "
+"запланує одну останню доріжку, яка перевищуватиме вказану тривалість. Ця "
+"остання доріжка може бути обрізана на середині, якщо шоу, до якого додано "
+"смарт-блок, закінчиться.</p>"
 
 #: application/controllers/LocaleController.php:470
 msgid "Playlist preview"
-msgstr ""
+msgstr "Попередній перегляд плейлиста"
 
 #: application/controllers/LocaleController.php:471
 msgid "Smart Block"
-msgstr ""
+msgstr "Смарт-блок"
 
 #: application/controllers/LocaleController.php:472
 msgid "Webstream preview"
-msgstr ""
+msgstr "Попередній перегляд веб-потоку"
 
 #: application/controllers/LocaleController.php:473
 msgid "You don't have permission to view the library."
-msgstr ""
+msgstr "Ви не маєте дозволу переглядати бібліотеку."
 
 #: application/controllers/LocaleController.php:474
 #: application/forms/AddShowWhen.php:23
 msgid "Now"
-msgstr ""
+msgstr "Зараз"
 
 #: application/controllers/LocaleController.php:475
 msgid "Click 'New' to create one now."
-msgstr ""
+msgstr "Натисніть «Новий», щоб створити."
 
 #: application/controllers/LocaleController.php:476
 msgid "Click 'Upload' to add some now."
-msgstr ""
+msgstr "Натисніть «Завантажити», щоб додати."
 
 #: application/controllers/LocaleController.php:477
 msgid "Feed URL"
-msgstr ""
+msgstr "URL стрічки"
 
 #: application/controllers/LocaleController.php:478
 msgid "Import Date"
-msgstr ""
+msgstr "Дата імпорту"
 
 #: application/controllers/LocaleController.php:479
 msgid "Add New Podcast"
-msgstr ""
+msgstr "Додати новий подкаст"
 
 #: application/controllers/LocaleController.php:480
 msgid ""
 "Cannot schedule outside a show.\n"
 "Try creating a show first."
 msgstr ""
+"Не можна планувати за межами програми.\n"
+"Спочатку створіть програму."
 
 #: application/controllers/LocaleController.php:481
 msgid "No files have been uploaded yet."
-msgstr ""
+msgstr "Файли ще не завантажено."
 
 #: application/controllers/LocaleController.php:487
 msgid "On Air"
-msgstr ""
+msgstr "On Air"
 
 #: application/controllers/LocaleController.php:488
 msgid "Off Air"
-msgstr ""
+msgstr "Off Air"
 
 #: application/controllers/LocaleController.php:489
 msgid "Offline"
-msgstr ""
+msgstr "Offline"
 
 #: application/controllers/LocaleController.php:490
 msgid "Nothing scheduled"
-msgstr ""
+msgstr "Нічого не заплановано"
 
 #: application/controllers/LocaleController.php:491
 msgid "Click 'Add' to create one now."
-msgstr ""
+msgstr "Натисніть «Додати», щоб створити зараз."
 
 #: application/controllers/LoginController.php:50
 msgid "Please enter your username and password."
-msgstr ""
+msgstr "Будь ласка, введіть своє ім'я користувача та пароль."
 
 #: application/controllers/LoginController.php:154
 msgid "Email could not be sent. Check your mail server settings and ensure it has been configured properly."
-msgstr "Email could not be sent. Check your mail server settings and ensure it has been configured properly."
+msgstr ""
+"Не вдалося надіслати електронний лист. Перевірте налаштування свого "
+"поштового сервера та переконайтеся, що його налаштовано належним чином."
 
 #: application/controllers/LoginController.php:157
 msgid "That username or email address could not be found."
-msgstr ""
+msgstr "Не вдалося знайти це ім’я користувача чи електронну адресу."
 
 #: application/controllers/LoginController.php:160
 msgid "There was a problem with the username or email address you entered."
 msgstr ""
+"Виникла проблема з іменем користувача або електронною адресою, яку ви ввели."
 
 #: application/controllers/LoginController.php:238
 msgid "Wrong username or password provided. Please try again."
-msgstr "Wrong username or password provided. Please try again."
+msgstr ""
+"Вказано неправильне ім'я користувача або пароль. Будь ласка спробуйте ще раз."
 
 #: application/controllers/PlaylistController.php:52
 #, php-format
 msgid "You are viewing an older version of %s"
-msgstr "You are viewing an older version of %s"
+msgstr "Ви переглядаєте старішу версію %s"
 
 #: application/controllers/PlaylistController.php:142
 msgid "You cannot add tracks to dynamic blocks."
-msgstr "You cannot add tracks to dynamic blocks."
+msgstr "До динамічних блоків не можна додавати треки."
 
 #: application/controllers/PlaylistController.php:163
 #, php-format
 msgid "You don't have permission to delete selected %s(s)."
-msgstr "You don't have permission to delete selected %s(s)."
+msgstr "Ви не маєте дозволу на видалення вибраного %s(х)."
 
 #: application/controllers/PlaylistController.php:176
 msgid "You can only add tracks to smart block."
-msgstr "You can only add tracks to smart block."
+msgstr "Ви можете додавати треки лише в смарт-блок."
 
 #: application/controllers/PlaylistController.php:194
 msgid "Untitled Playlist"
-msgstr "Untitled Playlist"
+msgstr "Плейлист без назви"
 
 #: application/controllers/PlaylistController.php:196
 msgid "Untitled Smart Block"
-msgstr "Untitled Smart Block"
+msgstr "Смарт-блок без назви"
 
 #: application/controllers/PlaylistController.php:526
 msgid "Unknown Playlist"
-msgstr "Unknown Playlist"
+msgstr "Невідомий плейлист"
 
 #: application/controllers/PreferenceController.php:73
 msgid "Preferences updated."
-msgstr "Preferences updated."
+msgstr "Налаштування оновлено."
 
 #: application/controllers/PreferenceController.php:308
 msgid "Stream Setting Updated."
-msgstr "Stream Setting Updated."
+msgstr "Налаштування потоку оновлено."
 
 #: application/controllers/PreferenceController.php:356
 msgid "path should be specified"
-msgstr "path should be specified"
+msgstr "слід вказати шлях"
 
 #: application/controllers/PreferenceController.php:399
 msgid "Problem with Liquidsoap..."
-msgstr "Problem with Liquidsoap..."
+msgstr "Проблема з Liquidsoap..."
 
 #: application/controllers/PreferenceController.php:462
 msgid "Request method not accepted"
-msgstr ""
+msgstr "Метод запиту не прийнято"
 
 #: application/controllers/ScheduleController.php:394
 #, php-format
 msgid "Rebroadcast of show %s from %s at %s"
-msgstr "Rebroadcast of show %s from %s at %s"
+msgstr "Ретрансяція програми %s від %s в %s"
 
 #: application/controllers/ShowbuilderController.php:137
 msgid "Select cursor"
-msgstr "Select cursor"
+msgstr "Вибрати курсор"
 
 #: application/controllers/ShowbuilderController.php:138
 msgid "Remove cursor"
-msgstr "Remove cursor"
+msgstr "Видалити курсор"
 
 #: application/controllers/ShowbuilderController.php:156
 msgid "show does not exist"
-msgstr "show does not exist"
+msgstr "програми не існує"
 
 #: application/controllers/TracktypeController.php:69
 msgid "Track Type added successfully!"
-msgstr ""
+msgstr "Тип треку успішно додано!"
 
 #: application/controllers/TracktypeController.php:71
 msgid "Track Type updated successfully!"
-msgstr ""
+msgstr "Тип треку успішно оновлено!"
 
 #: application/controllers/UserController.php:86
 msgid "User added successfully!"
-msgstr "User added successfully!"
+msgstr "Користувача успішно додано!"
 
 #: application/controllers/UserController.php:88
 msgid "User updated successfully!"
-msgstr "User updated successfully!"
+msgstr "Користувача успішно оновлено!"
 
 #: application/controllers/UserController.php:188
 msgid "Settings updated successfully!"
-msgstr "Settings updated successfully!"
+msgstr "Налаштування успішно оновлено!"
 
 #: application/controllers/WebstreamController.php:29
 #: application/controllers/WebstreamController.php:33
 msgid "Untitled Webstream"
-msgstr "Untitled Webstream"
+msgstr "Веб-потік без назви"
 
 #: application/controllers/WebstreamController.php:156
 msgid "Webstream saved."
-msgstr "Webstream saved."
+msgstr "Веб-потік збережено."
 
 #: application/controllers/WebstreamController.php:164
 msgid "Invalid form values."
-msgstr "Invalid form values."
+msgstr "Недійсні значення форми."
 
 #: application/forms/AddShowAbsoluteRebroadcastDates.php:24
 #: application/forms/AddShowRebroadcastDates.php:29
@@ -2867,173 +2888,173 @@ msgstr "Invalid form values."
 #: application/forms/StreamSettingSubForm.php:177
 #: application/forms/StreamSettingSubForm.php:186
 msgid "Invalid character entered"
-msgstr "Invalid character entered"
+msgstr "Введено недійсний символ"
 
 #: application/forms/AddShowAbsoluteRebroadcastDates.php:64
 #: application/forms/AddShowRebroadcastDates.php:69
 msgid "Day must be specified"
-msgstr "Day must be specified"
+msgstr "Необхідно вказати день"
 
 #: application/forms/AddShowAbsoluteRebroadcastDates.php:69
 #: application/forms/AddShowRebroadcastDates.php:74
 msgid "Time must be specified"
-msgstr "Time must be specified"
+msgstr "Необхідно вказати час"
 
 #: application/forms/AddShowAbsoluteRebroadcastDates.php:93
 #: application/forms/AddShowRebroadcastDates.php:102
 msgid "Must wait at least 1 hour to rebroadcast"
-msgstr "Must wait at least 1 hour to rebroadcast"
+msgstr "Для повторної трансляції потрібно зачекати принаймні 1 годину"
 
 #: application/forms/AddShowAutoPlaylist.php:18
 msgid "Add Autoloading Playlist ?"
-msgstr ""
+msgstr "Додати плейлист з автозавантаженням?"
 
 #: application/forms/AddShowAutoPlaylist.php:25
 msgid "Select Playlist"
-msgstr ""
+msgstr "Вибір плейлиста"
 
 #: application/forms/AddShowAutoPlaylist.php:32
 msgid "Repeat Playlist Until Show is Full ?"
-msgstr ""
+msgstr "Повторювати список відтворення до заповнення програми?"
 
 #: application/forms/AddShowLiveStream.php:10
 #, php-format
 msgid "Use %s Authentication:"
-msgstr ""
+msgstr "Використовувати %s Аутентифікацію:"
 
 #: application/forms/AddShowLiveStream.php:16
 msgid "Use Custom Authentication:"
-msgstr "Use Custom Authentication:"
+msgstr "Використовувати спеціальну автентифікацію:"
 
 #: application/forms/AddShowLiveStream.php:25
 msgid "Custom Username"
-msgstr "Custom Username"
+msgstr "Спеціальне ім'я користувача"
 
 #: application/forms/AddShowLiveStream.php:37
 msgid "Custom Password"
-msgstr "Custom Password"
+msgstr "Користувацький пароль"
 
 #: application/forms/AddShowLiveStream.php:48
 msgid "Host:"
-msgstr ""
+msgstr "Хост:"
 
 #: application/forms/AddShowLiveStream.php:54
 msgid "Port:"
-msgstr ""
+msgstr "Порт:"
 
 #: application/forms/AddShowLiveStream.php:60
 msgid "Mount:"
-msgstr ""
+msgstr "Точка монтування:"
 
 #: application/forms/AddShowLiveStream.php:78
 msgid "Username field cannot be empty."
-msgstr "Username field cannot be empty."
+msgstr "Поле імені користувача не може бути порожнім."
 
 #: application/forms/AddShowLiveStream.php:83
 msgid "Password field cannot be empty."
-msgstr "Password field cannot be empty."
+msgstr "Поле пароля не може бути порожнім."
 
 #: application/forms/AddShowRR.php:9
 msgid "Record from Line In?"
-msgstr "Record from Line In?"
+msgstr "Записувати з лінійного входу?"
 
 #: application/forms/AddShowRR.php:15
 msgid "Rebroadcast?"
-msgstr "Rebroadcast?"
+msgstr "Повторна трансляція?"
 
 #: application/forms/AddShowRebroadcastDates.php:14
 msgid "days"
-msgstr "days"
+msgstr "днів"
 
 #: application/forms/AddShowRepeats.php:8
 msgid "Link:"
-msgstr "Link:"
+msgstr "Посилання:"
 
 #: application/forms/AddShowRepeats.php:14
 msgid "Repeat Type:"
-msgstr "Repeat Type:"
+msgstr "Тип повтору:"
 
 #: application/forms/AddShowRepeats.php:17
 msgid "weekly"
-msgstr "weekly"
+msgstr "щотижня"
 
 #: application/forms/AddShowRepeats.php:18
 msgid "every 2 weeks"
-msgstr "every 2 weeks"
+msgstr "кожні 2 тижні"
 
 #: application/forms/AddShowRepeats.php:19
 msgid "every 3 weeks"
-msgstr "every 3 weeks"
+msgstr "кожні 3 тижні"
 
 #: application/forms/AddShowRepeats.php:20
 msgid "every 4 weeks"
-msgstr "every 4 weeks"
+msgstr "кожні 4 тижні"
 
 #: application/forms/AddShowRepeats.php:21
 msgid "monthly"
-msgstr "monthly"
+msgstr "щомісяця"
 
 #: application/forms/AddShowRepeats.php:30
 msgid "Select Days:"
-msgstr "Select Days:"
+msgstr "Оберіть дні:"
 
 #: application/forms/AddShowRepeats.php:46
 msgid "Repeat By:"
-msgstr "Repeat By:"
+msgstr "Повторити:"
 
 #: application/forms/AddShowRepeats.php:49
 msgid "day of the month"
-msgstr "day of the month"
+msgstr "день місяця"
 
 #: application/forms/AddShowRepeats.php:49
 msgid "day of the week"
-msgstr "day of the week"
+msgstr "день тижня"
 
 #: application/forms/AddShowRepeats.php:56 application/forms/DateRange.php:43
 #: application/forms/ShowBuilder.php:45
 #: application/forms/ShowListenerStat.php:43
 msgid "Date End:"
-msgstr "Date End:"
+msgstr "Кінцева дата:"
 
 #: application/forms/AddShowRepeats.php:69
 msgid "No End?"
-msgstr "No End?"
+msgstr "Немає кінця?"
 
 #: application/forms/AddShowRepeats.php:107
 msgid "End date must be after start date"
-msgstr "End date must be after start date"
+msgstr "Дата завершення має бути після дати початку"
 
 #: application/forms/AddShowRepeats.php:116
 msgid "Please select a repeat day"
-msgstr "Please select a repeat day"
+msgstr "Виберіть день повторення"
 
 #: application/forms/AddShowStyle.php:11
 msgid "Background Colour:"
-msgstr "Background Color:"
+msgstr "Колір фону:"
 
 #: application/forms/AddShowStyle.php:30
 msgid "Text Colour:"
-msgstr "Text Color:"
+msgstr "Колір тексту:"
 
 #: application/forms/AddShowStyle.php:48
 msgid "Current Logo:"
-msgstr ""
+msgstr "Поточний логотип:"
 
 #: application/forms/AddShowStyle.php:71
 msgid "Show Logo:"
-msgstr ""
+msgstr "Показати логотип:"
 
 #: application/forms/AddShowStyle.php:86
 msgid "Logo Preview:"
-msgstr ""
+msgstr "Попередній перегляд логотипу:"
 
 #: application/forms/AddShowWhat.php:26
 msgid "Name:"
-msgstr "Name:"
+msgstr "Ім'я:"
 
 #: application/forms/AddShowWhat.php:30
 msgid "Untitled Show"
-msgstr "Untitled Show"
+msgstr "Програма без назви"
 
 #: application/forms/AddShowWhat.php:36
 msgid "URL:"
@@ -3041,78 +3062,81 @@ msgstr "URL:"
 
 #: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:134
 msgid "Genre:"
-msgstr "Genre:"
+msgstr "Жанр:"
 
 #: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:35
 #: application/forms/EditAudioMD.php:116
 msgid "Description:"
-msgstr "Description:"
+msgstr "Опис:"
 
 #: application/forms/AddShowWhat.php:69
+#, fuzzy
 msgid "Instance Description:"
-msgstr ""
+msgstr "Опис примірника:"
 
 #: application/forms/AddShowWhen.php:15
 msgid "'%value%' does not fit the time format 'HH:mm'"
-msgstr "'%value%' does not fit the time format 'HH:mm'"
+msgstr "'%value%' не відповідає часовому формату 'HH:mm'"
 
 #: application/forms/AddShowWhen.php:21
 msgid "Start Time:"
-msgstr ""
+msgstr "Час початку:"
 
 #: application/forms/AddShowWhen.php:24 application/forms/AddShowWhen.php:35
 msgid "In the Future:"
-msgstr ""
+msgstr "У майбутньому:"
 
 #: application/forms/AddShowWhen.php:62
 msgid "End Time:"
-msgstr ""
+msgstr "Час закінчення:"
 
 #: application/forms/AddShowWhen.php:87
 msgid "Duration:"
-msgstr "Duration:"
+msgstr "Тривалість:"
 
 #: application/forms/AddShowWhen.php:96
 msgid "Timezone:"
-msgstr "Timezone:"
+msgstr "Часовий пояс:"
 
 #: application/forms/AddShowWhen.php:105
 msgid "Repeats?"
-msgstr "Repeats?"
+msgstr "Повторювати?"
 
 #: application/forms/AddShowWhen.php:146
+#, fuzzy
 msgid "Cannot create show in the past"
-msgstr "Cannot create show in the past"
+msgstr "Неможливо створити програму в минулому часі"
 
 #: application/forms/AddShowWhen.php:154
 msgid "Cannot modify start date/time of the show that is already started"
-msgstr "Cannot modify start date/time of the show that is already started"
+msgstr "Неможливо змінити дату/час початку програми, яка вже розпочата"
 
 #: application/forms/AddShowWhen.php:163 application/models/Show.php:326
 msgid "End date/time cannot be in the past"
-msgstr "End date/time cannot be in the past"
+msgstr "Дата/час завершення не можуть бути в минулому"
 
 #: application/forms/AddShowWhen.php:171
 msgid "Cannot have duration < 0m"
-msgstr "Cannot have duration < 0m"
+msgstr "Не може мати тривалість &lt; 0хв"
 
 #: application/forms/AddShowWhen.php:174
 msgid "Cannot have duration 00h 00m"
-msgstr "Cannot have duration 00h 00m"
+msgstr "Не може мати тривалість 00год 00хв"
 
 #: application/forms/AddShowWhen.php:180
 msgid "Cannot have duration greater than 24h"
-msgstr "Cannot have duration greater than 24h"
+msgstr "Тривалість не може перевищувати 24 год"
 
 #: application/forms/AddShowWhen.php:310 application/forms/AddShowWhen.php:341
 #: application/forms/AddShowWhen.php:346
 #: application/services/CalendarService.php:309
+#, fuzzy
 msgid "Cannot schedule overlapping shows"
-msgstr "Cannot schedule overlapping shows"
+msgstr "Неможливо запланувати перекриття шоу"
 
 #: application/forms/AddShowWho.php:9
 msgid "Search Users:"
-msgstr "Search Users:"
+msgstr "Пошук користувачів:"
 
 #: application/forms/AddShowWho.php:23
 msgid "DJs:"
@@ -3120,43 +3144,43 @@ msgstr "DJs:"
 
 #: application/forms/AddTracktype.php:20
 msgid "Type Name:"
-msgstr ""
+msgstr "Назва типу:"
 
 #: application/forms/AddTracktype.php:26
 msgid "Code:"
-msgstr ""
+msgstr "Код:"
 
 #: application/forms/AddTracktype.php:45
 msgid "Visibility:"
-msgstr ""
+msgstr "Видимість:"
 
 #: application/forms/AddTracktype.php:69
 msgid "Code is not unique."
-msgstr ""
+msgstr "Код не унікальний."
 
 #: application/forms/AddUser.php:27 application/forms/EditUser.php:35
 #: application/forms/LiveStreamingPreferences.php:41
 #: application/forms/Login.php:39
 msgid "Username:"
-msgstr "Username:"
+msgstr "Ім'я користувача:"
 
 #: application/forms/AddUser.php:36 application/forms/EditUser.php:46
 #: application/forms/LiveStreamingPreferences.php:57
 #: application/forms/Login.php:52
 msgid "Password:"
-msgstr "Password:"
+msgstr "Пароль:"
 
 #: application/forms/AddUser.php:44 application/forms/EditUser.php:55
 msgid "Verify Password:"
-msgstr "Verify Password:"
+msgstr "Підтвердіть пароль:"
 
 #: application/forms/AddUser.php:53 application/forms/EditUser.php:65
 msgid "Firstname:"
-msgstr "Firstname:"
+msgstr "Ім'я:"
 
 #: application/forms/AddUser.php:59 application/forms/EditUser.php:73
 msgid "Lastname:"
-msgstr "Lastname:"
+msgstr "Прізвище:"
 
 #: application/forms/AddUser.php:65 application/forms/EditUser.php:81
 msgid "Email:"
@@ -3164,7 +3188,7 @@ msgstr "Email:"
 
 #: application/forms/AddUser.php:74 application/forms/EditUser.php:92
 msgid "Mobile Phone:"
-msgstr "Mobile Phone:"
+msgstr "Телефон:"
 
 #: application/forms/AddUser.php:80 application/forms/EditUser.php:100
 msgid "Skype:"
@@ -3176,48 +3200,48 @@ msgstr "Jabber:"
 
 #: application/forms/AddUser.php:93
 msgid "User Type:"
-msgstr "User Type:"
+msgstr "Тип користувача:"
 
 #: application/forms/AddUser.php:118 application/forms/EditUser.php:142
 msgid "Login name is not unique."
-msgstr "Login name is not unique."
+msgstr "Логін не є унікальним."
 
 #: application/forms/DangerousPreferences.php:12
 msgid "Delete All Tracks in Library"
-msgstr ""
+msgstr "Видалити всі треки з бібліотеки"
 
 #: application/forms/DateRange.php:15 application/forms/ShowBuilder.php:17
 #: application/forms/ShowListenerStat.php:15
 msgid "Date Start:"
-msgstr "Date Start:"
+msgstr "Дата початку:"
 
 #: application/forms/EditAudioMD.php:53 application/forms/Player.php:15
 msgid "Title:"
-msgstr "Title:"
+msgstr "Назва:"
 
 #: application/forms/EditAudioMD.php:63
 msgid "Creator:"
-msgstr "Creator:"
+msgstr "Автор:"
 
 #: application/forms/EditAudioMD.php:73
 msgid "Album:"
-msgstr "Album:"
+msgstr "Альбом:"
 
 #: application/forms/EditAudioMD.php:90
 msgid "Owner:"
-msgstr ""
+msgstr "Власник:"
 
 #: application/forms/EditAudioMD.php:102
 msgid "Select a Type"
-msgstr ""
+msgstr "Виберіть тип"
 
 #: application/forms/EditAudioMD.php:109
 msgid "Track Type:"
-msgstr ""
+msgstr "Тип треку:"
 
 #: application/forms/EditAudioMD.php:144
 msgid "Year:"
-msgstr "Year:"
+msgstr "Рік:"
 
 #: application/forms/EditAudioMD.php:157
 msgid "Label:"
@@ -3225,15 +3249,16 @@ msgstr "Label:"
 
 #: application/forms/EditAudioMD.php:167
 msgid "Composer:"
-msgstr "Composer:"
+msgstr "Композитор:"
 
 #: application/forms/EditAudioMD.php:177
+#, fuzzy
 msgid "Conductor:"
 msgstr "Conductor:"
 
 #: application/forms/EditAudioMD.php:187
 msgid "Mood:"
-msgstr "Mood:"
+msgstr "Настрій:"
 
 #: application/forms/EditAudioMD.php:197
 msgid "BPM:"
@@ -3241,293 +3266,316 @@ msgstr "BPM:"
 
 #: application/forms/EditAudioMD.php:207
 msgid "Copyright:"
-msgstr "Copyright:"
+msgstr "Авторське право:"
 
 #: application/forms/EditAudioMD.php:217
 msgid "ISRC Number:"
-msgstr "ISRC Number:"
+msgstr "Номер ISRC:"
 
 #: application/forms/EditAudioMD.php:227
 msgid "Website:"
-msgstr "Website:"
+msgstr "Веб-сайт:"
 
 #: application/forms/EditAudioMD.php:237 application/forms/EditUser.php:117
 #: application/forms/Login.php:66
 msgid "Language:"
-msgstr "Language:"
+msgstr "Мова:"
 
 #: application/forms/EditAudioMD.php:290
 msgid "Publish..."
-msgstr ""
+msgstr "Опублікувати..."
 
 #: application/forms/EditHistoryItem.php:32
 #: application/services/HistoryService.php:1084
 msgid "Start Time"
-msgstr "Start Time"
+msgstr "Час початку"
 
 #: application/forms/EditHistoryItem.php:44
 #: application/services/HistoryService.php:1085
 msgid "End Time"
-msgstr "End Time"
+msgstr "Час закінчення"
 
 #: application/forms/EditUser.php:127
 msgid "Interface Timezone:"
-msgstr "Interface Timezone:"
+msgstr "Часовий пояс інтерфейсу:"
 
 #: application/forms/GeneralPreferences.php:26
 msgid "Station Name"
-msgstr "Station Name"
+msgstr "Назва станції"
 
 #: application/forms/GeneralPreferences.php:34
 msgid "Station Description"
-msgstr ""
+msgstr "Опис Станції"
 
 #: application/forms/GeneralPreferences.php:43
 msgid "Station Logo:"
-msgstr "Station Logo:"
+msgstr "Лого Станції:"
 
 #: application/forms/GeneralPreferences.php:44
 msgid "Note: Anything larger than 600x600 will be resized."
-msgstr "Note: Anything larger than 600x600 will be resized."
+msgstr "Примітка: все, що перевищує 600x600, буде змінено."
 
 #: application/forms/GeneralPreferences.php:63
 msgid "Default Crossfade Duration (s):"
-msgstr "Default Crossfade Duration (s):"
+msgstr "Тривалість переходу за замовчуванням (с):"
 
 #: application/forms/GeneralPreferences.php:69
 #: application/forms/GeneralPreferences.php:83
 #: application/forms/GeneralPreferences.php:97
 #: application/forms/LiveStreamingPreferences.php:33
 msgid "Please enter a time in seconds (eg. 0.5)"
-msgstr ""
+msgstr "Будь ласка, введіть час у секундах (наприклад, 0,5)"
 
 #: application/forms/GeneralPreferences.php:77
 msgid "Default Fade In (s):"
-msgstr "Default Fade In (s):"
+msgstr "За замовчуванням Fade In (s):"
 
 #: application/forms/GeneralPreferences.php:91
 msgid "Default Fade Out (s):"
-msgstr "Default Fade Out (s):"
+msgstr "За замовчуванням Fade Out (s):"
 
 #: application/forms/GeneralPreferences.php:103
 msgid "Track Type Upload Default"
-msgstr ""
+msgstr "Тип доріжки Завантаження за замовчуванням"
 
 #: application/forms/GeneralPreferences.php:110
 msgid "Intro Autoloading Playlist"
-msgstr ""
+msgstr "Вступний автозавантажуваний плейлист (Intro)"
 
 #: application/forms/GeneralPreferences.php:116
 msgid "Outro Autoloading Playlist"
-msgstr ""
+msgstr "Завершальний автозавантажувальний плейлист (Outro)"
 
 #: application/forms/GeneralPreferences.php:122
 msgid "Overwrite Podcast Episode Metatags"
-msgstr ""
+msgstr "Перезаписати метатеги епізоду подкасту"
 
 #: application/forms/GeneralPreferences.php:128
 msgid "Enabling this feature will cause podcast episode tracks to have their Artist, Title, and Album metatags set from podcast feed values. Note that enabling this feature is recommended in order to ensure reliable scheduling of episodes via smartblocks."
 msgstr ""
+"Якщо ввімкнути цю функцію, метатеги виконавця, назви та альбому для доріжок "
+"епізодів подкастів установлюватимуться зі значень каналу подкастів. "
+"Зауважте, що вмикати цю функцію рекомендується, щоб забезпечити надійне "
+"планування епізодів через смарт-блоки."
 
 #: application/forms/GeneralPreferences.php:137
 msgid "Generate a smartblock and a playlist upon creation of a new podcast"
-msgstr ""
+msgstr "Створіть смартблок і список відтворення після створення нового подкасту"
 
 #: application/forms/GeneralPreferences.php:143
+#, fuzzy
 msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
 msgstr ""
+"Якщо цей параметр увімкнено, новий смарт-блок і список відтворення, які "
+"відповідають найновішому треку подкасту, будуть створені одразу після "
+"створення нового подкасту. Зауважте, що функція «Перезаписати метатеги "
+"епізоду подкасту» також має бути ввімкнена, щоб смартблок міг надійно "
+"знаходити епізоди."
 
 #: application/forms/GeneralPreferences.php:154
 msgid "Public LibreTime API"
-msgstr ""
+msgstr "Public LibreTime API"
 
 #: application/forms/GeneralPreferences.php:155
 msgid "Required for embeddable schedule widget."
-msgstr ""
+msgstr "Потрібний для вбудованого віджета розкладу."
 
 #: application/forms/GeneralPreferences.php:161
 msgid ""
 "Enabling this feature will allow LibreTime to provide schedule data\n"
 "                                            to external widgets that can be embedded in your website."
 msgstr ""
+"Увімкнення цієї функції дозволить LibreTime надавати дані розкладу\n"
+"                                            до зовнішніх віджетів, які можна "
+"вбудувати на ваш веб-сайт."
 
 #: application/forms/GeneralPreferences.php:173
 msgid "Allowed CORS URLs (DEPRECATED)"
-msgstr ""
+msgstr "Дозволені URL-адреси CORS (Застаріле)"
 
 #: application/forms/GeneralPreferences.php:174
+#, fuzzy
 msgid "Remote URLs that are allowed to access this LibreTime instance in a browser. One URL per line. (DEPRECATED: Allowed CORS origins configuration moved to the configuration file.)"
 msgstr ""
+"Віддалені URL-адреси, які мають доступ до цього екземпляра LibreTime у веб-"
+"переглядачі. Один URL на рядок. (Застаріле: конфігурацію дозволених джерел "
+"CORS переміщено до файлу конфігурації.)"
 
 #: application/forms/GeneralPreferences.php:179
 msgid "Default Language"
-msgstr ""
+msgstr "Мова за замовчуванням"
 
 #: application/forms/GeneralPreferences.php:186
 #: application/forms/SetupLanguageTimezone.php:21
 msgid "Station Timezone"
-msgstr "Station Timezone"
+msgstr "Часовий пояс станції"
 
 #: application/forms/GeneralPreferences.php:193
+#, fuzzy
 msgid "Week Starts On"
-msgstr "Week Starts On"
+msgstr "Тиждень починається"
 
 #: application/forms/GeneralPreferences.php:209
 msgid "Display login button on your Radio Page?"
-msgstr ""
+msgstr "Відображати кнопку входу на сторінці радіо?"
 
 #: application/forms/GeneralPreferences.php:214
 msgid "Feature Previews"
-msgstr ""
+msgstr "Попередній перегляд функцій"
 
 #: application/forms/GeneralPreferences.php:220
 msgid "Enable this to opt-in to test new features."
-msgstr ""
+msgstr "Увімкніть це, щоб тестувати нові функції."
 
 #: application/forms/LiveStreamingPreferences.php:18
 msgid "Auto Switch Off:"
-msgstr ""
+msgstr "Автоматичне вимкнення:"
 
 #: application/forms/LiveStreamingPreferences.php:24
 msgid "Auto Switch On:"
-msgstr ""
+msgstr "Автоматичне ввімкнення:"
 
 #: application/forms/LiveStreamingPreferences.php:30
 msgid "Switch Transition Fade (s):"
-msgstr ""
+msgstr "Перемикання переходу Fade (s):"
 
 #: application/forms/LiveStreamingPreferences.php:65
 msgid "Master Source Host:"
-msgstr ""
+msgstr "Головний вихідний хост:"
 
 #: application/forms/LiveStreamingPreferences.php:76
 msgid "Master Source Port:"
-msgstr ""
+msgstr "Головний вихідний порт:"
 
 #: application/forms/LiveStreamingPreferences.php:79
 #: application/forms/LiveStreamingPreferences.php:107
 #: application/forms/StreamSettingSubForm.php:112
 msgid "Only numbers are allowed."
-msgstr "Only numbers are allowed."
+msgstr "Дозволяються лише цифри."
 
 #: application/forms/LiveStreamingPreferences.php:85
 msgid "Master Source Mount:"
-msgstr ""
+msgstr "Головне джерело монтування:"
 
 #: application/forms/LiveStreamingPreferences.php:95
 msgid "Show Source Host:"
-msgstr ""
+msgstr "Показати вихідний хост:"
 
 #: application/forms/LiveStreamingPreferences.php:104
 msgid "Show Source Port:"
-msgstr ""
+msgstr "Показати вихідний порт:"
 
 #: application/forms/LiveStreamingPreferences.php:112
 msgid "Show Source Mount:"
-msgstr ""
+msgstr "Показати джерела монтування:"
 
 #: application/forms/Login.php:77
 msgid "Login"
-msgstr "Login"
+msgstr "Логін"
 
 #: application/forms/PasswordChange.php:15
 #: application/forms/StreamSettingSubForm.php:117
 msgid "Password"
-msgstr "Password"
+msgstr "Пароль"
 
 #: application/forms/PasswordChange.php:26
 msgid "Confirm new password"
-msgstr "Confirm new password"
+msgstr "Підтвердити новий пароль"
 
 #: application/forms/PasswordChange.php:34
 msgid "Password confirmation does not match your password."
-msgstr "Password confirmation does not match your password."
+msgstr "Підтвердження пароля не збігається з вашим."
 
 #: application/forms/PasswordRestore.php:12
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: application/forms/PasswordRestore.php:23
 #: application/forms/StreamSettingSubForm.php:164
 msgid "Username"
-msgstr "Username"
+msgstr "Ім'я користувача"
 
 #: application/forms/PasswordRestore.php:34
 msgid "Reset password"
-msgstr "Reset password"
+msgstr "Скинути пароль"
 
 #: application/forms/PasswordRestore.php:44
 msgid "Back"
-msgstr ""
+msgstr "Назад"
 
 #: application/forms/Player.php:14
 msgid "Now Playing"
-msgstr "Now Playing"
+msgstr "Зараз грає"
 
 #: application/forms/Player.php:25
 msgid "Select Stream:"
-msgstr ""
+msgstr "Виберіть потік:"
 
 #: application/forms/Player.php:28
 msgid "Auto detect the most appropriate stream to use."
 msgstr ""
+"Автоматичне визначення потоку, який найбільше підходить для використання."
 
 #: application/forms/Player.php:29
 msgid "Select a stream:"
-msgstr ""
+msgstr "Виберіть потік:"
 
 #: application/forms/Player.php:41
 msgid " - Mobile friendly"
-msgstr ""
+msgstr " - Зручний для мобільних пристроїв"
 
 #: application/forms/Player.php:45
 msgid " - The player does not support Opus streams."
-msgstr ""
+msgstr " - Плеєр не підтримує потоки Opus."
 
 #: application/forms/Player.php:71
 msgid "Embeddable code:"
-msgstr ""
+msgstr "Код для вбудовування:"
 
 #: application/forms/Player.php:72
 msgid "Copy this code and paste it into your website's HTML to embed the player in your site."
 msgstr ""
+"Скопіюйте цей код і вставте його в HTML-код свого веб-сайту, щоб вставити "
+"програвач на свій сайт."
 
 #: application/forms/Player.php:77
 msgid "Preview:"
-msgstr ""
+msgstr "Попередній перегляд:"
 
 #: application/forms/PodcastPreferences.php:9
+#, fuzzy
 msgid "Feed Privacy"
-msgstr ""
+msgstr "Конфіденційність каналу"
 
 #: application/forms/PodcastPreferences.php:11
 msgid "Public"
-msgstr ""
+msgstr "Публічний"
 
 #: application/forms/PodcastPreferences.php:12
 msgid "Private"
-msgstr ""
+msgstr "Приватний"
 
 #: application/forms/SetupLanguageTimezone.php:16
 msgid "Station Language"
-msgstr ""
+msgstr "Мова станції"
 
 #: application/forms/ShowBuilder.php:71 application/forms/ShowBuilder.php:88
+#, fuzzy
 msgid "Filter by Show"
-msgstr ""
+msgstr "Фільтрувати мої програми"
 
 #: application/forms/ShowBuilder.php:79
 msgid "All My Shows:"
-msgstr "All My Shows:"
+msgstr "Усі мої програми:"
 
 #: application/forms/ShowBuilder.php:90
 msgid "My Shows"
-msgstr ""
+msgstr "Мої програми"
 
 #: application/forms/SmartBlockCriteria.php:56
 #: application/models/Block.php:1424 application/models/Block.php:1520
 msgid "Select criteria"
-msgstr "Select criteria"
+msgstr "Виберіть критерії"
 
 #: application/forms/SmartBlockCriteria.php:58
 #: application/models/Block.php:1426 application/models/Block.php:1522
@@ -3538,7 +3586,7 @@ msgstr "Bit Rate (Kbps)"
 #: application/models/Block.php:1444 application/models/Block.php:1540
 #: application/services/HistoryService.php:1065
 msgid "Track Type"
-msgstr ""
+msgstr "Тип треку"
 
 #: application/forms/SmartBlockCriteria.php:80
 #: application/models/Block.php:1449 application/models/Block.php:1545
@@ -3548,308 +3596,323 @@ msgstr "Sample Rate (kHz)"
 #: application/forms/SmartBlockCriteria.php:134
 #: application/models/Block.php:1465 application/models/Block.php:1561
 msgid "before"
-msgstr ""
+msgstr "раніше"
 
 #: application/forms/SmartBlockCriteria.php:135
 #: application/models/Block.php:1466 application/models/Block.php:1562
 msgid "after"
-msgstr ""
+msgstr "після"
 
 #: application/forms/SmartBlockCriteria.php:136
 #: application/models/Block.php:1467 application/models/Block.php:1563
 msgid "between"
-msgstr ""
+msgstr "між"
 
 #: application/forms/SmartBlockCriteria.php:152
 #: application/forms/SmartBlockCriteria.php:463
 #: application/forms/SmartBlockCriteria.php:503
 msgid "Select unit of time"
-msgstr ""
+msgstr "Виберіть одиницю часу"
 
 #: application/forms/SmartBlockCriteria.php:153
 msgid "minute(s)"
-msgstr ""
+msgstr "хвилина(и)"
 
 #: application/forms/SmartBlockCriteria.php:154
 msgid "hour(s)"
-msgstr ""
+msgstr "година(и)"
 
 #: application/forms/SmartBlockCriteria.php:155
 msgid "day(s)"
-msgstr ""
+msgstr "День(Дні)"
 
 #: application/forms/SmartBlockCriteria.php:156
 msgid "week(s)"
-msgstr ""
+msgstr "Тиждень(і)"
 
 #: application/forms/SmartBlockCriteria.php:157
 msgid "month(s)"
-msgstr ""
+msgstr "місяць(і)"
 
 #: application/forms/SmartBlockCriteria.php:158
 msgid "year(s)"
-msgstr ""
+msgstr "Рік(и)"
 
 #: application/forms/SmartBlockCriteria.php:169
 msgid "hours"
-msgstr "hours"
+msgstr "година(и)"
 
 #: application/forms/SmartBlockCriteria.php:170
 msgid "minutes"
-msgstr "minutes"
+msgstr "хвилина(и)"
 
 #: application/forms/SmartBlockCriteria.php:171
 #: application/models/Block.php:336
 msgid "items"
-msgstr "items"
+msgstr "елементи"
 
 #: application/forms/SmartBlockCriteria.php:172
 msgid "time remaining in show"
-msgstr ""
+msgstr "час, що залишився у програмі"
 
 #: application/forms/SmartBlockCriteria.php:183
 msgid "Randomly"
-msgstr ""
+msgstr "Довільно"
 
 #: application/forms/SmartBlockCriteria.php:184
 msgid "Newest"
-msgstr ""
+msgstr "Найновіший(і)"
 
 #: application/forms/SmartBlockCriteria.php:185
 msgid "Oldest"
-msgstr ""
+msgstr "Найстаріший(і)"
 
 #: application/forms/SmartBlockCriteria.php:186
 msgid "Most recently played"
-msgstr ""
+msgstr "Нещодавно зіграно"
 
 #: application/forms/SmartBlockCriteria.php:187
+#, fuzzy
 msgid "Least recently played"
-msgstr ""
+msgstr "Нещодавно грали"
 
 #: application/forms/SmartBlockCriteria.php:211
 msgid "Select Track Type"
-msgstr ""
+msgstr "Виберіть тип доріжки"
 
 #: application/forms/SmartBlockCriteria.php:268
 msgid "Type:"
-msgstr ""
+msgstr "Тип:"
 
 #: application/forms/SmartBlockCriteria.php:271
 msgid "Dynamic"
-msgstr "Dynamic"
+msgstr "Динамічний"
 
 #: application/forms/SmartBlockCriteria.php:272
 msgid "Static"
-msgstr "Static"
+msgstr "Статичний"
 
 #: application/forms/SmartBlockCriteria.php:431
 msgid "Select track type"
-msgstr ""
+msgstr "Виберіть тип доріжки"
 
 #: application/forms/SmartBlockCriteria.php:513
 msgid "Allow Repeated Tracks:"
-msgstr ""
+msgstr "Дозволити повторення треків:"
 
 #: application/forms/SmartBlockCriteria.php:521
 msgid "Allow last track to exceed time limit:"
-msgstr ""
+msgstr "Дозволити останньому треку перевищити ліміт часу:"
 
 #: application/forms/SmartBlockCriteria.php:530
 msgid "Sort Tracks:"
-msgstr ""
+msgstr "Сортування треків:"
 
 #: application/forms/SmartBlockCriteria.php:548
+#, fuzzy
 msgid "Limit to:"
-msgstr ""
+msgstr "Обмежити:"
 
 #: application/forms/SmartBlockCriteria.php:560
 msgid "Generate playlist content and save criteria"
-msgstr "Generate playlist content and save criteria"
+msgstr "Створення вмісту списку відтворення та збереження критеріїв"
 
 #: application/forms/SmartBlockCriteria.php:572
 msgid "Shuffle playlist content"
-msgstr "Shuffle playlist content"
+msgstr "Перемішати вміст плейлиста"
 
 #: application/forms/SmartBlockCriteria.php:574
 msgid "Shuffle"
-msgstr "Shuffle"
+msgstr "Перемішати"
 
 #: application/forms/SmartBlockCriteria.php:801
 #: application/forms/SmartBlockCriteria.php:813
 msgid "Limit cannot be empty or smaller than 0"
-msgstr "Limit cannot be empty or smaller than 0"
+msgstr "Ліміт не може бути порожнім або меншим за 0"
 
 #: application/forms/SmartBlockCriteria.php:806
 msgid "Limit cannot be more than 24 hrs"
-msgstr "Limit cannot be more than 24 hrs"
+msgstr "Ліміт не може перевищувати 24 год"
 
 #: application/forms/SmartBlockCriteria.php:816
 msgid "The value should be an integer"
-msgstr "The value should be an integer"
+msgstr "Значення має бути цілим числом"
 
 #: application/forms/SmartBlockCriteria.php:819
+#, fuzzy
 msgid "500 is the max item limit value you can set"
-msgstr "500 is the max item limit value you can set"
+msgstr "500 максимальне граничне значення пунктів, які ви можете встановити"
 
 #: application/forms/SmartBlockCriteria.php:830
 msgid "You must select Criteria and Modifier"
-msgstr "You must select Criteria and Modifier"
+msgstr "Ви повинні вибрати Критерії і Модифікатор"
 
 #: application/forms/SmartBlockCriteria.php:837
 msgid "'Length' should be in '00:00:00' format"
-msgstr "'Length' should be in '00:00:00' format"
+msgstr "'Довжина має бути введена у '00:00:00' форматі"
 
 #: application/forms/SmartBlockCriteria.php:845
 msgid "Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
 msgstr ""
+"Для текстового значення допускаються лише невід’ємні цілі числа (наприклад, "
+"1 або 5)"
 
 #: application/forms/SmartBlockCriteria.php:850
 #: application/forms/SmartBlockCriteria.php:875
+#, fuzzy
 msgid "You must select a time unit for a relative datetime."
-msgstr ""
+msgstr "Ви повинні вибрати одиницю часу для відносної дати та часу."
 
 #: application/forms/SmartBlockCriteria.php:855
 #: application/forms/SmartBlockCriteria.php:880
 msgid "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
-msgstr "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
+msgstr ""
+"Значення має бути у форматі позначки часу (e.g. 0000-00-00 or 0000-00-00 "
+"00:00:00)"
 
 #: application/forms/SmartBlockCriteria.php:870
 msgid "Only non-negative integer numbers are allowed for a relative date time"
 msgstr ""
+"Для відносної дати й часу дозволено використовувати лише невід’ємні цілі "
+"числа"
 
 #: application/forms/SmartBlockCriteria.php:895
 msgid "The value has to be numeric"
-msgstr "The value has to be numeric"
+msgstr "Значення має бути числовим"
 
 #: application/forms/SmartBlockCriteria.php:900
 msgid "The value should be less then 2147483648"
-msgstr "The value should be less then 2147483648"
+msgstr "Значення має бути меншим  2147483648"
 
 #: application/forms/SmartBlockCriteria.php:905
 #, php-format
 msgid "The value should be less than %s characters"
-msgstr "The value should be less than %s characters"
+msgstr "Значення має бути менше ніж %s символів"
 
 #: application/forms/SmartBlockCriteria.php:912
 msgid "Value cannot be empty"
-msgstr "Value cannot be empty"
+msgstr "Значення не може бути порожнім"
 
 #: application/forms/StreamSetting.php:25
 msgid "Hardware Audio Output:"
-msgstr ""
+msgstr "Апаратний аудіовихід:"
 
 #: application/forms/StreamSetting.php:32
 msgid "Output Type"
-msgstr ""
+msgstr "Тип виходу"
 
 #: application/forms/StreamSetting.php:34
 msgid "ALSA"
-msgstr ""
+msgstr "ALSA"
 
 #: application/forms/StreamSetting.php:35
 msgid "AO"
-msgstr ""
+msgstr "AO"
 
 #: application/forms/StreamSetting.php:36
 msgid "OSS"
-msgstr ""
+msgstr "OSS"
 
 #: application/forms/StreamSetting.php:37
 msgid "Portaudio"
-msgstr ""
+msgstr "Portaudio"
 
 #: application/forms/StreamSetting.php:38
 msgid "Pulseaudio"
-msgstr ""
+msgstr "Pulseaudio"
 
 #: application/forms/StreamSetting.php:39
 msgid "Jack"
-msgstr ""
+msgstr "Джек"
 
 #: application/forms/StreamSetting.php:46
 msgid "Icecast Vorbis Metadata"
-msgstr "Icecast Vorbis Metadata"
+msgstr "Метадані Icecast Vorbis"
 
 #: application/forms/StreamSetting.php:56
 msgid "Stream Label:"
-msgstr "Stream Label:"
+msgstr "Метадані потоку:"
 
 #: application/forms/StreamSetting.php:58
 msgid "Artist - Title"
-msgstr "Artist - Title"
+msgstr "Виконавець - Назва"
 
 #: application/forms/StreamSetting.php:59
 msgid "Show - Artist - Title"
-msgstr "Show - Artist - Title"
+msgstr "Програма - Виконавець - Назва"
 
 #: application/forms/StreamSetting.php:60
 msgid "Station name - Show name"
-msgstr "Station name - Show name"
+msgstr "Назва станції - Показати назву"
 
 #: application/forms/StreamSetting.php:67
+#, fuzzy
 msgid "Off Air Metadata"
 msgstr "Off Air Metadata"
 
 #: application/forms/StreamSetting.php:73
+#, fuzzy
 msgid "Enable Replay Gain"
 msgstr "Enable Replay Gain"
 
 #: application/forms/StreamSetting.php:79
+#, fuzzy
 msgid "Replay Gain Modifier"
 msgstr "Replay Gain Modifier"
 
 #: application/forms/StreamSetting.php:87
 msgid "Streaming Server:"
-msgstr ""
+msgstr "Потоковий сервер:"
 
 #: application/forms/StreamSetting.php:88
+#, fuzzy
 msgid "Custom / 3rd Party Streaming"
-msgstr ""
+msgstr "Custom / 3rd Party Streaming"
 
 #: application/forms/StreamSetting.php:88
 msgid "Default Streaming"
-msgstr ""
+msgstr "Стрім за замовчуванням"
 
 #: application/forms/StreamSettingSubForm.php:52
 msgid "Enabled:"
-msgstr "Enabled:"
+msgstr "Увімкнено:"
 
 #: application/forms/StreamSettingSubForm.php:59
 msgid "Mobile:"
-msgstr ""
+msgstr "Телефон:"
 
 #: application/forms/StreamSettingSubForm.php:66
 msgid "Stream Type:"
-msgstr "Stream Type:"
+msgstr "Тип потоку:"
 
 #: application/forms/StreamSettingSubForm.php:74
 msgid "Bit Rate:"
 msgstr "Bit Rate:"
 
 #: application/forms/StreamSettingSubForm.php:82
+#, fuzzy
 msgid "Service Type:"
 msgstr "Service Type:"
 
 #: application/forms/StreamSettingSubForm.php:90
 msgid "Channels:"
-msgstr "Channels:"
+msgstr "Канали:"
 
 #: application/forms/StreamSettingSubForm.php:91
 msgid "1 - Mono"
-msgstr "1 - Mono"
+msgstr "1 - Моно"
 
 #: application/forms/StreamSettingSubForm.php:91
 msgid "2 - Stereo"
-msgstr "2 - Stereo"
+msgstr "2 - Стерео"
 
 #: application/forms/StreamSettingSubForm.php:98
 msgid "Server"
-msgstr "Server"
+msgstr "Сервер"
 
 #: application/forms/StreamSettingSubForm.php:108
 msgid "Port"
-msgstr "Port"
+msgstr "Порт"
 
 #: application/forms/StreamSettingSubForm.php:133
 msgid "URL"
@@ -3857,35 +3920,37 @@ msgstr "URL"
 
 #: application/forms/StreamSettingSubForm.php:142
 msgid "Name"
-msgstr "Name"
+msgstr "Ім'я"
 
 #: application/forms/StreamSettingSubForm.php:154
 msgid "Mount Point"
-msgstr "Mount Point"
+msgstr "Точка монтування"
 
 #: application/forms/StreamSettingSubForm.php:174
+#, fuzzy
 msgid "Admin User"
-msgstr "Admin User"
+msgstr "Користувач адміністратора"
 
 #: application/forms/StreamSettingSubForm.php:183
 msgid "Admin Password"
-msgstr "Admin Password"
+msgstr "Пароль адміністратора"
 
 #: application/forms/StreamSettingSubForm.php:211
 msgid "Server cannot be empty."
-msgstr "Server cannot be empty."
+msgstr "Сервер не може бути порожнім."
 
 #: application/forms/StreamSettingSubForm.php:216
 msgid "Port cannot be empty."
-msgstr "Port cannot be empty."
+msgstr "Порт не може бути порожнім."
 
 #: application/forms/StreamSettingSubForm.php:222
+#, fuzzy
 msgid "Mount cannot be empty with Icecast server."
-msgstr "Mount cannot be empty with Icecast server."
+msgstr "Монтування не може бути порожнім із сервером Icecast."
 
 #: application/forms/TuneInPreferences.php:20
 msgid "Push metadata to your station on TuneIn?"
-msgstr ""
+msgstr "Надішлати метадані на свою станцію в TuneIn?"
 
 #: application/forms/TuneInPreferences.php:25
 msgid "Station ID:"
