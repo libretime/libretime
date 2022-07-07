@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2022-07-04 18:49+0200\n"
-"PO-Revision-Date: 2022-07-07 08:51+0000\n"
+"PO-Revision-Date: 2022-07-07 10:38+0000\n"
 "Last-Translator: Mykola <bondarchuk.nikola@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/libretime/"
 "legacy/uk/>\n"
@@ -41,7 +41,7 @@ msgstr "Англійська"
 
 #: application/common/LocaleHelper.php:24
 msgid "Afar"
-msgstr ""
+msgstr "Афар"
 
 #: application/common/LocaleHelper.php:25
 msgid "Abkhazian"
@@ -61,11 +61,11 @@ msgstr "Арабська"
 
 #: application/common/LocaleHelper.php:29
 msgid "Assamese"
-msgstr ""
+msgstr "Асамська"
 
 #: application/common/LocaleHelper.php:30
 msgid "Aymara"
-msgstr ""
+msgstr "Аймара"
 
 #: application/common/LocaleHelper.php:31
 msgid "Azerbaijani"
@@ -85,15 +85,15 @@ msgstr "Болгарська"
 
 #: application/common/LocaleHelper.php:35
 msgid "Bihari"
-msgstr ""
+msgstr "Біхарі"
 
 #: application/common/LocaleHelper.php:36
 msgid "Bislama"
-msgstr ""
+msgstr "Біслама"
 
 #: application/common/LocaleHelper.php:37
 msgid "Bengali/Bangla"
-msgstr ""
+msgstr "Бенгальська/Бангла"
 
 #: application/common/LocaleHelper.php:38
 msgid "Tibetan"
@@ -101,15 +101,15 @@ msgstr "Тибетська"
 
 #: application/common/LocaleHelper.php:39
 msgid "Breton"
-msgstr ""
+msgstr "Бретонська"
 
 #: application/common/LocaleHelper.php:40
 msgid "Catalan"
-msgstr ""
+msgstr "Каталонська"
 
 #: application/common/LocaleHelper.php:41
 msgid "Corsican"
-msgstr ""
+msgstr "Корсиканська"
 
 #: application/common/LocaleHelper.php:42
 msgid "Czech"
@@ -117,7 +117,7 @@ msgstr "Чеська"
 
 #: application/common/LocaleHelper.php:43
 msgid "Welsh"
-msgstr ""
+msgstr "Валлійська"
 
 #: application/common/LocaleHelper.php:44
 msgid "Danish"
@@ -149,7 +149,7 @@ msgstr "Естонська"
 
 #: application/common/LocaleHelper.php:51
 msgid "Basque"
-msgstr ""
+msgstr "Баскська"
 
 #: application/common/LocaleHelper.php:52
 msgid "Persian"
@@ -165,7 +165,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:55
 msgid "Faeroese"
-msgstr ""
+msgstr "Фарерська"
 
 #: application/common/LocaleHelper.php:56
 msgid "French"
@@ -173,7 +173,7 @@ msgstr "Французька"
 
 #: application/common/LocaleHelper.php:57
 msgid "Frisian"
-msgstr ""
+msgstr "Фризька"
 
 #: application/common/LocaleHelper.php:58
 msgid "Irish"
@@ -181,7 +181,7 @@ msgstr "Ірландська"
 
 #: application/common/LocaleHelper.php:59
 msgid "Scots/Gaelic"
-msgstr ""
+msgstr "Шотландська/Гельська"
 
 #: application/common/LocaleHelper.php:60
 msgid "Galician"
@@ -201,7 +201,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:64
 msgid "Hindi"
-msgstr ""
+msgstr "Хінді"
 
 #: application/common/LocaleHelper.php:65
 msgid "Croatian"
@@ -253,7 +253,7 @@ msgstr "Ідиш"
 
 #: application/common/LocaleHelper.php:77
 msgid "Javanese"
-msgstr ""
+msgstr "Яванська"
 
 #: application/common/LocaleHelper.php:78
 msgid "Georgian"
@@ -269,7 +269,7 @@ msgstr "Гренландська"
 
 #: application/common/LocaleHelper.php:81
 msgid "Cambodian"
-msgstr ""
+msgstr "Камбоджійська"
 
 #: application/common/LocaleHelper.php:82
 msgid "Kannada"
@@ -285,15 +285,15 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:85
 msgid "Kurdish"
-msgstr ""
+msgstr "Курдська"
 
 #: application/common/LocaleHelper.php:86
 msgid "Kirghiz"
-msgstr ""
+msgstr "Киргизька"
 
 #: application/common/LocaleHelper.php:87
 msgid "Latin"
-msgstr ""
+msgstr "Латинська"
 
 #: application/common/LocaleHelper.php:88
 msgid "Lingala"
@@ -301,7 +301,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:89
 msgid "Laothian"
-msgstr ""
+msgstr "Лаоська"
 
 #: application/common/LocaleHelper.php:90
 msgid "Lithuanian"
@@ -309,11 +309,11 @@ msgstr "Литовська"
 
 #: application/common/LocaleHelper.php:91
 msgid "Latvian/Lettish"
-msgstr ""
+msgstr "Латиська"
 
 #: application/common/LocaleHelper.php:92
 msgid "Malagasy"
-msgstr ""
+msgstr "Малагасійська"
 
 #: application/common/LocaleHelper.php:93
 msgid "Maori"
@@ -341,15 +341,15 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:99
 msgid "Malay"
-msgstr ""
+msgstr "Малайська"
 
 #: application/common/LocaleHelper.php:100
 msgid "Maltese"
-msgstr ""
+msgstr "Мальтійська"
 
 #: application/common/LocaleHelper.php:101
 msgid "Burmese"
-msgstr ""
+msgstr "Бірманська"
 
 #: application/common/LocaleHelper.php:102
 msgid "Nauru"
@@ -357,7 +357,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:103
 msgid "Nepali"
-msgstr ""
+msgstr "Непальська"
 
 #: application/common/LocaleHelper.php:104
 msgid "Dutch"
@@ -369,7 +369,7 @@ msgstr "Норвезька"
 
 #: application/common/LocaleHelper.php:106
 msgid "Occitan"
-msgstr ""
+msgstr "Окситанська"
 
 #: application/common/LocaleHelper.php:107
 msgid "(Afan)/Oromoor/Oriya"
@@ -397,7 +397,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:113
 msgid "Rhaeto-Romance"
-msgstr ""
+msgstr "Рето-романська"
 
 #: application/common/LocaleHelper.php:114
 msgid "Kirundi"
@@ -409,7 +409,7 @@ msgstr "Румунська"
 
 #: application/common/LocaleHelper.php:116
 msgid "Russian"
-msgstr ""
+msgstr "Російська"
 
 #: application/common/LocaleHelper.php:117
 msgid "Kinyarwanda"
@@ -417,11 +417,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:118
 msgid "Sanskrit"
-msgstr ""
+msgstr "Санскрит"
 
 #: application/common/LocaleHelper.php:119
 msgid "Sindhi"
-msgstr ""
+msgstr "Сіндхі"
 
 #: application/common/LocaleHelper.php:120
 msgid "Sangro"
@@ -429,11 +429,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:121
 msgid "Serbo-Croatian"
-msgstr ""
+msgstr "Сербохорватська"
 
 #: application/common/LocaleHelper.php:122
 msgid "Singhalese"
-msgstr ""
+msgstr "Сингальська"
 
 #: application/common/LocaleHelper.php:123
 msgid "Slovak"
@@ -445,7 +445,7 @@ msgstr "Словенська"
 
 #: application/common/LocaleHelper.php:125
 msgid "Samoan"
-msgstr ""
+msgstr "Самоанська"
 
 #: application/common/LocaleHelper.php:126
 msgid "Shona"
@@ -453,7 +453,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:127
 msgid "Somali"
-msgstr ""
+msgstr "Сомалійська"
 
 #: application/common/LocaleHelper.php:128
 msgid "Albanian"
@@ -473,7 +473,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:132
 msgid "Sundanese"
-msgstr ""
+msgstr "Сунданська"
 
 #: application/common/LocaleHelper.php:133
 msgid "Swedish"
@@ -485,7 +485,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:135
 msgid "Tamil"
-msgstr ""
+msgstr "Тамільська"
 
 #: application/common/LocaleHelper.php:136
 msgid "Tegulu"
@@ -493,11 +493,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:137
 msgid "Tajik"
-msgstr ""
+msgstr "Таджицька"
 
 #: application/common/LocaleHelper.php:138
 msgid "Thai"
-msgstr ""
+msgstr "Тайська"
 
 #: application/common/LocaleHelper.php:139
 msgid "Tigrinya"
@@ -505,11 +505,11 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:140
 msgid "Turkmen"
-msgstr ""
+msgstr "Туркменський"
 
 #: application/common/LocaleHelper.php:141
 msgid "Tagalog"
-msgstr ""
+msgstr "Тагальська"
 
 #: application/common/LocaleHelper.php:142
 msgid "Setswana"
@@ -573,7 +573,7 @@ msgstr "Китайська"
 
 #: application/common/LocaleHelper.php:157
 msgid "Zulu"
-msgstr ""
+msgstr "Зулуська"
 
 #: application/common/Timezone.php:21
 msgid "Use station default"
@@ -588,19 +588,22 @@ msgstr ""
 #, php-format
 msgid "It looks like you haven't uploaded any audio files yet. %sUpload a file now%s."
 msgstr ""
+"Схоже, ви ще не завантажили жодного аудіофайлу.%sЗавантажте файл зараз%s."
 
 #: application/common/UsabilityHints.php:76
 msgid "Click the 'New Show' button and fill out the required fields."
-msgstr ""
+msgstr "Натисніть кнопку «Нова програма» та заповніть необхідні поля."
 
 #: application/common/UsabilityHints.php:80
 #, php-format
 msgid "It looks like you don't have any shows scheduled. %sCreate a show now%s."
-msgstr ""
+msgstr "Схоже, у вас немає запланованих програм.%sСтворіть програму зараз%s."
 
 #: application/common/UsabilityHints.php:89
 msgid "To start broadcasting, cancel the current linked show by clicking on it and selecting 'Cancel Show'."
 msgstr ""
+"Щоб розпочати трансляцію, скасуйте поточну пов’язану програму, клацнувши по "
+"ній оберіть «Скасувати програму»."
 
 #: application/common/UsabilityHints.php:92
 #, php-format
@@ -608,19 +611,27 @@ msgid ""
 "Linked shows need to be filled with tracks before it starts. To start broadcasting cancel the current linked show and schedule an unlinked show.\n"
 "                    %sCreate an unlinked show now%s."
 msgstr ""
+"Пов’язані програми потрібно заповнити треками перед їх початком. Щоб "
+"розпочати трансляцію, скасуйте поточне пов’язану програму та заплануйте незв’"
+"язану програму.\n"
+"                    %sСтворіть непов'язану програму зараз%s."
 
 #: application/common/UsabilityHints.php:96
 msgid "To start broadcasting, click on the current show and select 'Schedule Tracks'"
 msgstr ""
+"Щоб розпочати трансляцію, клацніть поточна програма та виберіть «Заплановані "
+"треки»"
 
 #: application/common/UsabilityHints.php:100
 #, php-format
 msgid "It looks like the current show needs more tracks. %sAdd tracks to your show now%s."
 msgstr ""
+"Схоже, поточне програма потребує більше треків. %sДодайте треки до своєї "
+"проограми зараз%s."
 
 #: application/common/UsabilityHints.php:107
 msgid "Click on the show starting next and select 'Schedule Tracks'"
-msgstr ""
+msgstr "Клацніть на програму що йде наступною, і оберіть «Заплановані треки»"
 
 #: application/common/UsabilityHints.php:111
 #, php-format
@@ -1439,15 +1450,18 @@ msgstr ""
 #: application/controllers/LocaleController.php:135
 #, php-format
 msgid "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"
-msgstr "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"
+msgstr ""
+"Зараз ви завантажуєте файли. %sПерехід на інший екран скасує процес "
+"завантаження. %sВи впевнені, що бажаєте залишити сторінку?"
 
 #: application/controllers/LocaleController.php:137
+#, fuzzy
 msgid "Open Media Builder"
-msgstr "Open Media Builder"
+msgstr "Відкрити Media Builder"
 
 #: application/controllers/LocaleController.php:138
 msgid "please put in a time '00:00:00 (.0)'"
-msgstr "please put in a time '00:00:00 (.0)'"
+msgstr "будь ласка, вкажіть час '00:00:00 (.0)'"
 
 #: application/controllers/LocaleController.php:139
 msgid "Please enter a valid time in seconds. Eg. 0.5"
@@ -1455,57 +1469,68 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:140
 msgid "Your browser does not support playing this file type: "
-msgstr "Your browser does not support playing this file type: "
+msgstr "Ваш браузер не підтримує відтворення цього типу файлу: "
 
 #: application/controllers/LocaleController.php:141
 msgid "Dynamic block is not previewable"
-msgstr "Dynamic block is not previewable"
+msgstr "Динамічний блок не доступний для попереднього перегляду"
 
 #: application/controllers/LocaleController.php:142
 msgid "Limit to: "
-msgstr "Limit to: "
+msgstr "Обмеження до: "
 
 #: application/controllers/LocaleController.php:143
 msgid "Playlist saved"
-msgstr "Playlist saved"
+msgstr "Плейлист збережено"
 
 #: application/controllers/LocaleController.php:144
 msgid "Playlist shuffled"
-msgstr "Playlist shuffled"
+msgstr "Плейлист перемішано"
 
 #: application/controllers/LocaleController.php:145
 msgid "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
-msgstr "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
+msgstr ""
+"Airtime не впевнений щодо статусу цього файлу. Це може статися, коли файл "
+"знаходиться на віддаленому диску, до якого немає доступу, або файл "
+"знаходиться в каталозі, який більше не «відстежується»."
 
 #: application/controllers/LocaleController.php:147
-#, php-format
+#, fuzzy, php-format
 msgid "Listener Count on %s: %s"
 msgstr "Listener Count on %s: %s"
 
 #: application/controllers/LocaleController.php:149
 msgid "Remind me in 1 week"
-msgstr "Remind me in 1 week"
+msgstr "Нагадати через 1 тиждень"
 
 #: application/controllers/LocaleController.php:150
+#, fuzzy
 msgid "Remind me never"
-msgstr "Remind me never"
+msgstr "Ніколи не нагадувати"
 
 #: application/controllers/LocaleController.php:151
+#, fuzzy
 msgid "Yes, help Airtime"
 msgstr "Yes, help Airtime"
 
 #: application/controllers/LocaleController.php:152
 #: application/controllers/LocaleController.php:196
 msgid "Image must be one of jpg, jpeg, png, or gif"
-msgstr "Image must be one of jpg, jpeg, png, or gif"
+msgstr "Зображення має бути jpg, jpeg, png, або gif"
 
 #: application/controllers/LocaleController.php:154
 msgid "A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show."
-msgstr "A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show."
+msgstr ""
+"Статичний смарт-блок збереже критерії та негайно згенерує вміст блоку. Це "
+"дозволяє редагувати та переглядати його в бібліотеці перед додаванням до "
+"програми."
 
 #: application/controllers/LocaleController.php:155
 msgid "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."
-msgstr "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."
+msgstr ""
+"Динамічний смарт-блок збереже лише критерії. Вміст блоку буде створено після "
+"додавання його до програми. Ви не зможете переглядати та редагувати вміст у "
+"бібліотеці."
 
 #: application/controllers/LocaleController.php:156
 #, php-format
@@ -3864,61 +3889,66 @@ msgstr ""
 
 #: application/forms/TuneInPreferences.php:25
 msgid "Station ID:"
-msgstr ""
+msgstr "ID Станції:"
 
 #: application/forms/TuneInPreferences.php:31
 msgid "Partner Key:"
-msgstr ""
+msgstr "Ключ партнера:"
 
 #: application/forms/TuneInPreferences.php:37
 msgid "Partner Id:"
-msgstr ""
+msgstr "ID партнера:"
 
 #: application/forms/TuneInPreferences.php:78
 #: application/forms/TuneInPreferences.php:87
 msgid "Invalid TuneIn Settings. Please ensure your TuneIn settings are correct and try again."
 msgstr ""
+"Недійсні налаштування TuneIn. Переконайтеся, що налаштування TuneIn "
+"правильні, і повторіть спробу."
 
 #: application/forms/WatchedDirPreferences.php:13
 msgid "Import Folder:"
-msgstr "Import Folder:"
+msgstr "Імпорт папки:"
 
 #: application/forms/WatchedDirPreferences.php:24
 msgid "Watched Folders:"
-msgstr "Watched Folders:"
+msgstr "Переглянути папки:"
 
 #: application/forms/WatchedDirPreferences.php:39
 msgid "Not a valid Directory"
-msgstr "Not a valid Directory"
+msgstr "Недійсний каталог"
 
 #: application/forms/customvalidators/ConditionalNotEmpty.php:32
 #: application/forms/helpers/ValidationTypes.php:9
 msgid "Value is required and can't be empty"
-msgstr "Value is required and can't be empty"
+msgstr "Значення є обов’язковим і не може бути порожнім"
 
 #: application/forms/helpers/ValidationTypes.php:20
+#, fuzzy
 msgid "'%value%' is no valid email address in the basic format local-part@hostname"
-msgstr "'%value%' is no valid email address in the basic format local-part@hostname"
+msgstr ""
+"'%value%' не є дійсною електронною адресою в основному форматі local-"
+"part@hostname"
 
 #: application/forms/helpers/ValidationTypes.php:34
 msgid "'%value%' does not fit the date format '%format%'"
-msgstr "'%value%' does not fit the date format '%format%'"
+msgstr "'%value%' не відповідає формату дати '%format%'"
 
 #: application/forms/helpers/ValidationTypes.php:60
 msgid "'%value%' is less than %min% characters long"
-msgstr "'%value%' is less than %min% characters long"
+msgstr "'%value%' є меншим ніж %min% довжина символів"
 
 #: application/forms/helpers/ValidationTypes.php:65
 msgid "'%value%' is more than %max% characters long"
-msgstr "'%value%' is more than %max% characters long"
+msgstr "'%value%' це більше ніж %max% довжина символів"
 
 #: application/forms/helpers/ValidationTypes.php:77
 msgid "'%value%' is not between '%min%' and '%max%', inclusively"
-msgstr "'%value%' is not between '%min%' and '%max%', inclusively"
+msgstr "'%value%' не знаходиться між '%min%' і '%max%', включно"
 
 #: application/forms/helpers/ValidationTypes.php:90
 msgid "Passwords do not match"
-msgstr "Passwords do not match"
+msgstr "Паролі не співпадають"
 
 #: application/models/Auth.php:33
 #, php-format
@@ -3927,6 +3957,9 @@ msgid ""
 "\n"
 "Please click this link to reset your password: "
 msgstr ""
+"Привіт %s, \n"
+"\n"
+"Натисніть це посилання, щоб змінити пароль: "
 
 #: application/models/Auth.php:35
 #, php-format
@@ -3935,6 +3968,9 @@ msgid ""
 "\n"
 "If you have any problems, please contact our support team: %s"
 msgstr ""
+"\n"
+"\n"
+"Якщо у вас виникли проблеми, зверніться до нашої служби підтримки: %s"
 
 #: application/models/Auth.php:36
 #, php-format
@@ -3944,172 +3980,182 @@ msgid ""
 "Thank you,\n"
 "The %s Team"
 msgstr ""
+"\n"
+"\n"
+"Дякую Вам,\n"
+"The %s Team"
 
 #: application/models/Auth.php:38
 #, php-format
 msgid "%s Password Reset"
-msgstr ""
+msgstr "%s Скидання паролю"
 
 #: application/models/Block.php:832 application/models/Playlist.php:800
+#, fuzzy
 msgid "Cue in and cue out are null."
 msgstr "Cue in and cue out are null."
 
 #: application/models/Block.php:866 application/models/Block.php:921
 #: application/models/Playlist.php:838 application/models/Playlist.php:879
+#, fuzzy
 msgid "Can't set cue out to be greater than file length."
 msgstr "Can't set cue out to be greater than file length."
 
 #: application/models/Block.php:878 application/models/Block.php:898
 #: application/models/Playlist.php:830 application/models/Playlist.php:853
+#, fuzzy
 msgid "Can't set cue in to be larger than cue out."
 msgstr "Can't set cue in to be larger than cue out."
 
 #: application/models/Block.php:933 application/models/Playlist.php:871
+#, fuzzy
 msgid "Can't set cue out to be smaller than cue in."
 msgstr "Can't set cue out to be smaller than cue in."
 
 #: application/models/Block.php:1440 application/models/Block.php:1536
 msgid "Upload Time"
-msgstr ""
+msgstr "Час завантаження"
 
 #: application/models/Library.php:36 application/models/Library.php:57
 msgid "None"
-msgstr ""
+msgstr "Жодного"
 
 #: application/models/Preference.php:521
 #, php-format
 msgid "Powered by %s"
-msgstr ""
+msgstr "На основі %s"
 
 #: application/models/Preference.php:651
 msgid "Select Country"
-msgstr "Select Country"
+msgstr "Оберіть Країну"
 
 #: application/models/Schedule.php:211
 msgid "livestream"
-msgstr ""
+msgstr "Наживо"
 
 #: application/models/Scheduler.php:79
 msgid "Cannot move items out of linked shows"
-msgstr "Cannot move items out of linked shows"
+msgstr "Неможливо перемістити елементи з пов’язаних програм"
 
 #: application/models/Scheduler.php:125
 msgid "The schedule you're viewing is out of date! (sched mismatch)"
-msgstr "The schedule you're viewing is out of date! (sched mismatch)"
+msgstr "Розклад, який ви переглядаєте, застарів! (невідповідність графіку)"
 
 #: application/models/Scheduler.php:130
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
-msgstr "The schedule you're viewing is out of date! (instance mismatch)"
+msgstr "Розклад, який ви переглядаєте, застарів! (невідповідність екземплярів)"
 
 #: application/models/Scheduler.php:138 application/models/Scheduler.php:489
 #: application/models/Scheduler.php:527 application/models/Scheduler.php:566
 msgid "The schedule you're viewing is out of date!"
-msgstr "The schedule you're viewing is out of date!"
+msgstr "Розклад, який ви переглядаєте, застарів!"
 
 #: application/models/Scheduler.php:147
 #, php-format
 msgid "You are not allowed to schedule show %s."
-msgstr "You are not allowed to schedule show %s."
+msgstr "Вам не дозволено планувати програму %s."
 
 #: application/models/Scheduler.php:151
+#, fuzzy
 msgid "You cannot add files to recording shows."
-msgstr "You cannot add files to recording shows."
+msgstr "Ви не можете додавати файли до програми, яка записується ."
 
 #: application/models/Scheduler.php:157
 #, php-format
 msgid "The show %s is over and cannot be scheduled."
-msgstr "The show %s is over and cannot be scheduled."
+msgstr "Програма %s закінчилась, її не можливо запланувати."
 
 #: application/models/Scheduler.php:165
-#, php-format
+#, fuzzy, php-format
 msgid "The show %s has been previously updated!"
 msgstr "The show %s has been previously updated!"
 
 #: application/models/Scheduler.php:185
 msgid "Content in linked shows cannot be changed while on air!"
-msgstr ""
+msgstr "Вміст пов’язаних програм не можна змінювати під час трансляції!"
 
 #: application/models/Scheduler.php:200
 msgid "Cannot schedule a playlist that contains missing files."
-msgstr ""
+msgstr "Неможливо запланувати плейлист, який містить відсутні файли."
 
 #: application/models/Scheduler.php:226 application/models/Scheduler.php:318
 msgid "A selected File does not exist!"
-msgstr "A selected File does not exist!"
+msgstr "Вибраний файл не існує!"
 
 #: application/models/Show.php:229
 msgid "Shows can have a max length of 24 hours."
-msgstr "Shows can have a max length of 24 hours."
+msgstr "Програма може тривати не більше 24 годин."
 
 #: application/models/Show.php:341
+#, fuzzy
 msgid ""
 "Cannot schedule overlapping shows.\n"
 "Note: Resizing a repeating show affects all of its repeats."
 msgstr ""
 "Cannot schedule overlapping shows.\n"
-"Note: Resizing a repeating show affects all of its repeats."
+"Примітка: Зміна розміру повторюваного шоу впливає на всі його повтори."
 
 #: application/models/ShowBuilder.php:209
-#, php-format
+#, fuzzy, php-format
 msgid "Rebroadcast of %s from %s"
 msgstr "Rebroadcast of %s from %s"
 
 #: application/models/Webstream.php:163
 msgid "Length needs to be greater than 0 minutes"
-msgstr "Length needs to be greater than 0 minutes"
+msgstr "Довжина повинна бути більше ніж 0 хвилин"
 
 #: application/models/Webstream.php:167
 msgid "Length should be of form \"00h 00m\""
-msgstr "Length should be of form \"00h 00m\""
+msgstr "Довжина повинна відповідати формі \"00год 00хв\""
 
 #: application/models/Webstream.php:180
 msgid "URL should be of form \"http://domain\""
-msgstr "URL should be of form \"http://domain\""
+msgstr "URL має бути форми \"http://domain\""
 
 #: application/models/Webstream.php:183
 msgid "URL should be 512 characters or less"
-msgstr "URL should be 512 characters or less"
+msgstr "URL-адреса має містити не більше 512 символів"
 
 #: application/models/Webstream.php:188
 msgid "No MIME type found for webstream."
-msgstr "No MIME type found for webstream."
+msgstr "Для веб-потоку не знайдено тип MIME."
 
 #: application/models/Webstream.php:204
 msgid "Webstream name cannot be empty"
-msgstr "Webstream name cannot be empty"
+msgstr "Назва веб-потоку не може бути пустою"
 
 #: application/models/Webstream.php:274
 msgid "Could not parse XSPF playlist"
-msgstr "Could not parse XSPF playlist"
+msgstr "Не вдалося проаналізувати XSPF плейлист"
 
 #: application/models/Webstream.php:295
 msgid "Could not parse PLS playlist"
-msgstr "Could not parse PLS playlist"
+msgstr "Не вдалося проаналізувати PLS плейлист"
 
 #: application/models/Webstream.php:314
 msgid "Could not parse M3U playlist"
-msgstr "Could not parse M3U playlist"
+msgstr "Не вдалося проаналізувати M3U плейлист"
 
 #: application/models/Webstream.php:327
 msgid "Invalid webstream - This appears to be a file download."
-msgstr "Invalid webstream - This appears to be a file download."
+msgstr "Недійсний веб-потік. Здається, це завантажений файл."
 
 #: application/models/Webstream.php:331
 #, php-format
 msgid "Unrecognized stream type: %s"
-msgstr "Unrecognized stream type: %s"
+msgstr "Нерозпізнаний тип потоку: %s"
 
 #: application/services/CalendarService.php:48
 msgid "Record file doesn't exist"
-msgstr "Record file doesn't exist"
+msgstr "Файл запису не існує"
 
 #: application/services/CalendarService.php:52
 msgid "View Recorded File Metadata"
-msgstr "View Recorded File Metadata"
+msgstr "Перегляд метаданих записаного файлу"
 
 #: application/services/CalendarService.php:78
 msgid "Schedule Tracks"
-msgstr ""
+msgstr "Заплановані треки"
 
 #: application/services/CalendarService.php:101
 msgid "Clear Show"
