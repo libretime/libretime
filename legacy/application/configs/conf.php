@@ -29,6 +29,12 @@ class Config
         $CC_CONFIG['public_url_raw'] = $public_url;
         $CC_CONFIG['public_url'] = strval($public_url);
 
+        if (isset($values['general']['internal_url'])) {
+            $internal_url = self::validateUrl('general.internal_url', $values['general']['internal_url']);
+            $CC_CONFIG['internal_url_raw'] = $internal_url;
+            $CC_CONFIG['internal_url'] = strval($internal_url);
+        }
+
         // Allowed hosts
         $CC_CONFIG['allowedCorsOrigins'] = $values['general']['allowed_cors_origins'] ?? [];
         $CC_CONFIG['allowedCorsOrigins'][] = strval($public_url->withPath(''));
@@ -169,6 +175,11 @@ class Config
     public static function getPublicUrl()
     {
         return self::getConfig()['public_url'];
+    }
+
+    public static function getInternalUrl()
+    {
+        return self::getConfig()['internal_url'] ?? self::getConfig()['public_url'];
     }
 
     public static function getBasePath()

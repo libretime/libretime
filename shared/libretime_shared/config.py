@@ -118,10 +118,15 @@ def no_trailing_slash_validator(key: str) -> "AnyClassMethod":
 # pylint: disable=too-few-public-methods
 class GeneralConfig(BaseModel):
     public_url: AnyHttpUrl
+    internal_url: Optional[AnyHttpUrl] = None
     api_key: str
 
     # Validators
     _public_url_no_trailing_slash = no_trailing_slash_validator("public_url")
+    _internal_url_no_trailing_slash = no_trailing_slash_validator("internal_url")
+
+    def get_internal_url(self) -> AnyHttpUrl:
+        return self.public_url if self.internal_url is None else self.internal_url
 
 
 # pylint: disable=too-few-public-methods

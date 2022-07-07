@@ -129,7 +129,7 @@ class AirtimeApiClient:
         self.logger = logger or logging
 
         config = Config(filepath=config_path)
-        self.base_url = config.general.public_url
+        self.base_url = config.general.get_internal_url()
         self.api_key = config.general.api_key
 
         self.services = RequestProvider(

@@ -510,23 +510,7 @@ SQL;
      */
     public function getFileUrl()
     {
-        $protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
-
-        $serverName = $_SERVER['SERVER_NAME'];
-        $serverPort = $_SERVER['SERVER_PORT'];
-        $subDir = Config::getBasePath();
-
-        if ($protocol === 'https' && $serverPort == 80) {
-            $serverPort = 443;
-        }
-
-        if ($subDir[0] === '/') {
-            $subDir = substr($subDir, 1, strlen($subDir) - 1);
-        }
-
-        $baseUrl = "{$protocol}://{$serverName}:{$serverPort}/{$subDir}";
-
-        return $this->getRelativeFileUrl($baseUrl);
+        return $this->getRelativeFileUrl(Config::getPublicUrl());
     }
 
     /**
