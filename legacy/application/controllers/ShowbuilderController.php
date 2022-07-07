@@ -18,7 +18,7 @@ class ShowbuilderController extends Zend_Controller_Action
     public function indexAction()
     {
         $CC_CONFIG = Config::getConfig();
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
         $userType = Application_Model_User::GetCurrentUser()->getType();
 
         // $this->_helper->layout->setLayout("showbuilder");
@@ -100,7 +100,7 @@ class ShowbuilderController extends Zend_Controller_Action
     public function checkAndShowSetupPopup($request)
     {
         $CC_CONFIG = Config::getConfig();
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
         $setupComplete = Application_Model_Preference::getLangTimezoneSetupComplete();
         $previousPage = strtolower($request->getHeader('Referer'));
         $userService = new Application_Service_UserService();
@@ -119,7 +119,7 @@ class ShowbuilderController extends Zend_Controller_Action
 
     public function contextMenuAction()
     {
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         $id = $this->_getParam('id');
         $now = floatval(microtime(true));

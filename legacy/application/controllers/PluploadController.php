@@ -14,7 +14,7 @@ class PluploadController extends Zend_Controller_Action
     {
         $CC_CONFIG = Config::getConfig();
 
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
         $locale = Application_Model_Preference::GetLocale();
 
         $this->view->headScript()->appendFile($baseUrl . 'js/datatables/js/jquery.dataTables.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');

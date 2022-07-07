@@ -4,8 +4,6 @@ class Application_Form_Preferences extends Zend_Form
 {
     public function init()
     {
-        $baseUrl = Application_Common_OsPath::getBaseDir();
-
         $this->setDecorators([
             ['ViewScript', ['viewScript' => 'form/preferences.phtml']],
         ]);

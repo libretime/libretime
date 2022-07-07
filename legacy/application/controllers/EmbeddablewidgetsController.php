@@ -11,7 +11,7 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Widgets');
 
         $CC_CONFIG = Config::getConfig();
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
         $this->view->headLink()->appendStylesheet($baseUrl . 'css/player-form.css?' . $CC_CONFIG['airtime_version']);
         $this->view->headScript()->appendFile($baseUrl . 'js/airtime/player/player.js?' . $CC_CONFIG['airtime_version']);
 
@@ -54,7 +54,7 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
         }
 
         $CC_CONFIG = Config::getConfig();
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         $facebookAppId = $CC_CONFIG['facebook-app-id'];
         $this->view->headScript()->appendScript('var FACEBOOK_APP_ID = ' . json_encode($facebookAppId) . ';');

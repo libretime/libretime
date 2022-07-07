@@ -27,7 +27,7 @@ class Application_Service_CalendarService
     {
         $menu = [];
         $now = time();
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
         $isAdminOrPM = $this->currentUser->isAdminOrPM();
         $isHostOfShow = $this->currentUser->isHostOfShow($this->ccShow->getDbId());
 

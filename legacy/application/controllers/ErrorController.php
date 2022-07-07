@@ -13,7 +13,7 @@ class ErrorController extends Zend_Controller_Action
         try {
             $service_user = new Application_Service_UserService();
             $service_user->getCurrentUser();
-            $this->view->helpUrl = Application_Common_OsPath::getBaseDir() . 'dashboard/help';
+            $this->view->helpUrl = Config::getBasePath() . 'dashboard/help';
         } catch (Exception $e) {
             $this->view->helpUrl = HELP_URL;
         }

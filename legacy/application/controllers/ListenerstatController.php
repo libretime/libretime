@@ -15,7 +15,7 @@ class ListenerstatController extends Zend_Controller_Action
         $CC_CONFIG = Config::getConfig();
 
         $request = $this->getRequest();
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Analytics');
 
@@ -61,7 +61,7 @@ class ListenerstatController extends Zend_Controller_Action
         $CC_CONFIG = Config::getConfig();
 
         $request = $this->getRequest();
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
         $headScript = $this->view->headScript();
         AirtimeTableView::injectTableJavaScriptDependencies($headScript, $baseUrl, $CC_CONFIG['airtime_version']);
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Analytics');

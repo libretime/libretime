@@ -44,7 +44,7 @@ class ScheduleController extends Zend_Controller_Action
     {
         $CC_CONFIG = Config::getConfig();
 
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         // Embed the schedule in our page response so we don't have to make an AJAX request to get this data after the page load.
         $scheduleController = new ScheduleController($this->getRequest(), $this->getResponse());

@@ -95,7 +95,7 @@ class DashboardController extends Zend_Controller_Action
     {
         $CC_CONFIG = Config::getConfig();
 
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         $this->view->headLink()->appendStylesheet($baseUrl . 'js/jplayer/skin/jplayer.blue.monday.css?' . $CC_CONFIG['airtime_version']);
         $this->_helper->layout->setLayout('livestream');
@@ -122,7 +122,7 @@ class DashboardController extends Zend_Controller_Action
 
         $CC_CONFIG = Config::getConfig();
 
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Config::getBasePath();
 
         $headScript = $this->view->headScript();
         AirtimeTableView::injectTableJavaScriptDependencies($headScript, $baseUrl, $CC_CONFIG['airtime_version']);
