@@ -199,14 +199,14 @@ class Application_Service_PodcastService
     public static function createStationPodcast()
     {
         $podcast = new Podcast();
-        $podcast->setDbUrl(Application_Common_HTTPHelper::getStationUrl() . 'feeds/station-rss');
+        $podcast->setDbUrl(Config::getPublicUrl() . 'feeds/station-rss');
 
         $title = Application_Model_Preference::GetStationName();
         $title = empty($title) ? "My Station's Podcast" : $title;
         $podcast->setDbTitle($title);
 
         $podcast->setDbDescription(Application_Model_Preference::GetStationDescription());
-        $podcast->setDbLink(Application_Common_HTTPHelper::getStationUrl());
+        $podcast->setDbLink(Config::getPublicUrl());
         $podcast->setDbLanguage(explode('_', Application_Model_Preference::GetLocale())[0]);
         $podcast->setDbCreator(Application_Model_Preference::GetStationName());
         $podcast->setDbOwner(self::getOwnerId());
@@ -430,15 +430,15 @@ class Application_Service_PodcastService
             $xml->addAttribute('xmlns:xmlns:atom', 'http://www.w3.org/2005/Atom');
 
             $atomLink = $channel->addChild('xmlns:atom:link');
-            $atomLink->addAttribute('href', Application_Common_HTTPHelper::getStationUrl() . 'feeds/station-rss');
+            $atomLink->addAttribute('href', Config::getPublicUrl() . 'feeds/station-rss');
             $atomLink->addAttribute('rel', 'self');
             $atomLink->addAttribute('type', 'application/rss+xml');
 
-            $imageUrl = Application_Common_HTTPHelper::getStationUrl() . 'api/station-logo';
+            $imageUrl = Config::getPublicUrl() . 'api/station-logo';
             $image = $channel->addChild('image');
             $image->addChild('title', htmlspecialchars($podcast->getDbTitle()));
             self::addEscapedChild($image, 'url', $imageUrl);
-            self::addEscapedChild($image, 'link', Application_Common_HTTPHelper::getStationUrl());
+            self::addEscapedChild($image, 'link', Config::getPublicUrl());
 
             $xml->addAttribute('xmlns:xmlns:itunes', ITUNES_XML_NAMESPACE_URL);
             self::addEscapedChild($channel, 'xmlns:itunes:author', $podcast->getDbItunesAuthor());

@@ -1,7 +1,5 @@
 <?php
 
-use League\Uri\Uri;
-
 class Application_Common_HTTPHelper
 {
     /**
@@ -20,29 +18,6 @@ class Application_Common_HTTPHelper
             $request->getParam('end', null),
             $request->getParam('timezone', null)
         );
-    }
-
-    /**
-     * Construct the base station URL.
-     *
-     * @param bool $secured whether or not to use HTTPS
-     *
-     * @return string the station URL
-     */
-    public static function getStationUrl($secured = true)
-    {
-        $CC_CONFIG = Config::getConfig();
-
-        $url = Uri::createFromComponents(
-            [
-                'scheme' => $CC_CONFIG['protocol'],
-                'host' => $CC_CONFIG['baseUrl'],
-                'port' => $CC_CONFIG['basePort'],
-                'path' => $CC_CONFIG['baseDir'],
-            ]
-        );
-
-        return rtrim($url, '/') . '/';
     }
 
     /**

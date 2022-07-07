@@ -20,7 +20,7 @@ abstract class ThirdPartyController extends Zend_Controller_Action
      */
     public function init()
     {
-        $this->_baseUrl = Application_Common_HTTPHelper::getStationUrl();
+        $this->_baseUrl = Config::getPublicUrl();
 
         $this->view->layout()->disableLayout();  // Don't inject the standard Now Playing header.
         $this->_helper->viewRenderer->setNoRender(true);  // Don't use (phtml) templates

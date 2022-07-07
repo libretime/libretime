@@ -82,7 +82,7 @@ class FileDataHelper
      */
     public static function getArtworkData($file, $size, $filepath = false)
     {
-        $baseUrl = Application_Common_HTTPHelper::getStationUrl();
+        $baseUrl = Config::getPublicUrl();
         $default = $baseUrl . 'css/images/no-cover.jpg';
 
         if ($filepath != false) {
