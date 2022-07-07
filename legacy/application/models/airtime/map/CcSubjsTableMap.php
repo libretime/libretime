@@ -63,11 +63,11 @@ class CcSubjsTableMap extends TableMap
         $this->addRelation('CcFilesRelatedByDbOwnerId', 'CcFiles', RelationMap::ONE_TO_MANY, array('id' => 'owner_id', ), null, null, 'CcFilessRelatedByDbOwnerId');
         $this->addRelation('CcFilesRelatedByDbEditedby', 'CcFiles', RelationMap::ONE_TO_MANY, array('id' => 'editedby', ), null, null, 'CcFilessRelatedByDbEditedby');
         $this->addRelation('CcShowHosts', 'CcShowHosts', RelationMap::ONE_TO_MANY, array('id' => 'subjs_id', ), 'CASCADE', null, 'CcShowHostss');
-        $this->addRelation('CcPlaylist', 'CcPlaylist', RelationMap::ONE_TO_MANY, array('id' => 'creator_id', ), 'CASCADE', null, 'CcPlaylists');
-        $this->addRelation('CcBlock', 'CcBlock', RelationMap::ONE_TO_MANY, array('id' => 'creator_id', ), 'CASCADE', null, 'CcBlocks');
+        $this->addRelation('CcPlaylist', 'CcPlaylist', RelationMap::ONE_TO_MANY, array('id' => 'creator_id', ), 'SET NULL', null, 'CcPlaylists');
+        $this->addRelation('CcBlock', 'CcBlock', RelationMap::ONE_TO_MANY, array('id' => 'creator_id', ), 'SET NULL', null, 'CcBlocks');
         $this->addRelation('CcPref', 'CcPref', RelationMap::ONE_TO_MANY, array('id' => 'subjid', ), 'CASCADE', null, 'CcPrefs');
         $this->addRelation('CcSubjsToken', 'CcSubjsToken', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'CASCADE', null, 'CcSubjsTokens');
-        $this->addRelation('Podcast', 'Podcast', RelationMap::ONE_TO_MANY, array('id' => 'owner', ), 'CASCADE', null, 'Podcasts');
+        $this->addRelation('Podcast', 'Podcast', RelationMap::ONE_TO_MANY, array('id' => 'owner', ), 'SET NULL', null, 'Podcasts');
     } // buildRelations()
 
 } // CcSubjsTableMap

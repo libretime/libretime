@@ -754,7 +754,7 @@ ALTER TABLE "cc_show_hosts" ADD CONSTRAINT "cc_perm_host_fkey"
 ALTER TABLE "cc_playlist" ADD CONSTRAINT "cc_playlist_createdby_fkey"
     FOREIGN KEY ("creator_id")
     REFERENCES "cc_subjs" ("id")
-    ON DELETE CASCADE;
+    ON DELETE SET NULL;
 
 ALTER TABLE "cc_playlistcontents" ADD CONSTRAINT "cc_playlistcontents_file_id_fkey"
     FOREIGN KEY ("file_id")
@@ -774,7 +774,7 @@ ALTER TABLE "cc_playlistcontents" ADD CONSTRAINT "cc_playlistcontents_playlist_i
 ALTER TABLE "cc_block" ADD CONSTRAINT "cc_block_createdby_fkey"
     FOREIGN KEY ("creator_id")
     REFERENCES "cc_subjs" ("id")
-    ON DELETE CASCADE;
+    ON DELETE SET NULL;
 
 ALTER TABLE "cc_blockcontents" ADD CONSTRAINT "cc_blockcontents_file_id_fkey"
     FOREIGN KEY ("file_id")
@@ -864,7 +864,7 @@ ALTER TABLE "celery_tasks" ADD CONSTRAINT "celery_service_fkey"
 ALTER TABLE "podcast" ADD CONSTRAINT "podcast_owner_fkey"
     FOREIGN KEY ("owner")
     REFERENCES "cc_subjs" ("id")
-    ON DELETE CASCADE;
+    ON DELETE SET NULL;
 
 ALTER TABLE "station_podcast" ADD CONSTRAINT "podcast_id_fkey"
     FOREIGN KEY ("podcast_id")

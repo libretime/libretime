@@ -1058,9 +1058,10 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
 
             if ($this->ccPlaylistsScheduledForDeletion !== null) {
                 if (!$this->ccPlaylistsScheduledForDeletion->isEmpty()) {
-                    CcPlaylistQuery::create()
-                        ->filterByPrimaryKeys($this->ccPlaylistsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
+                    foreach ($this->ccPlaylistsScheduledForDeletion as $ccPlaylist) {
+                        // need to save related object because we set the relation to null
+                        $ccPlaylist->save($con);
+                    }
                     $this->ccPlaylistsScheduledForDeletion = null;
                 }
             }
@@ -1075,9 +1076,10 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
 
             if ($this->ccBlocksScheduledForDeletion !== null) {
                 if (!$this->ccBlocksScheduledForDeletion->isEmpty()) {
-                    CcBlockQuery::create()
-                        ->filterByPrimaryKeys($this->ccBlocksScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
+                    foreach ($this->ccBlocksScheduledForDeletion as $ccBlock) {
+                        // need to save related object because we set the relation to null
+                        $ccBlock->save($con);
+                    }
                     $this->ccBlocksScheduledForDeletion = null;
                 }
             }
@@ -1126,9 +1128,10 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
 
             if ($this->podcastsScheduledForDeletion !== null) {
                 if (!$this->podcastsScheduledForDeletion->isEmpty()) {
-                    PodcastQuery::create()
-                        ->filterByPrimaryKeys($this->podcastsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
+                    foreach ($this->podcastsScheduledForDeletion as $podcast) {
+                        // need to save related object because we set the relation to null
+                        $podcast->save($con);
+                    }
                     $this->podcastsScheduledForDeletion = null;
                 }
             }

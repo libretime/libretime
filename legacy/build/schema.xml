@@ -203,7 +203,7 @@
       <parameter name="foreign_table" value="cc_playlistcontents" />
       <parameter name="expression" value="SUM(cliplength)" />
     </behavior>
-    <foreign-key foreignTable="cc_subjs" name="cc_playlist_createdby_fkey" onDelete="CASCADE">
+    <foreign-key foreignTable="cc_subjs" name="cc_playlist_createdby_fkey" onDelete="SETNULL">
       <reference local="creator_id" foreign="id" />
     </foreign-key>
   </table>
@@ -251,7 +251,7 @@
       <parameter name="foreign_table" value="cc_blockcontents" />
       <parameter name="expression" value="SUM(cliplength)" />
     </behavior>
-    <foreign-key foreignTable="cc_subjs" name="cc_block_createdby_fkey" onDelete="CASCADE">
+    <foreign-key foreignTable="cc_subjs" name="cc_block_createdby_fkey" onDelete="SETNULL">
       <reference local="creator_id" foreign="id" />
     </foreign-key>
   </table>
@@ -522,7 +522,7 @@
     <column name="itunes_category" phpName="DbItunesCategory" type="VARCHAR" size="4096" />
     <column name="itunes_explicit" phpName="DbItunesExplicit" type="VARCHAR" size="4096" />
     <column name="owner" phpName="DbOwner" type="INTEGER" />
-    <foreign-key foreignTable="cc_subjs" name="podcast_owner_fkey" onDelete="CASCADE">
+    <foreign-key foreignTable="cc_subjs" name="podcast_owner_fkey" onDelete="SETNULL">
       <reference local="owner" foreign="id" />
     </foreign-key>
   </table>

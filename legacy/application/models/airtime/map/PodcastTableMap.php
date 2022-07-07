@@ -62,7 +62,7 @@ class PodcastTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('CcSubjs', 'CcSubjs', RelationMap::MANY_TO_ONE, array('owner' => 'id', ), 'CASCADE', null);
+        $this->addRelation('CcSubjs', 'CcSubjs', RelationMap::MANY_TO_ONE, array('owner' => 'id', ), 'SET NULL', null);
         $this->addRelation('StationPodcast', 'StationPodcast', RelationMap::ONE_TO_MANY, array('id' => 'podcast_id', ), 'CASCADE', null, 'StationPodcasts');
         $this->addRelation('ImportedPodcast', 'ImportedPodcast', RelationMap::ONE_TO_MANY, array('id' => 'podcast_id', ), 'CASCADE', null, 'ImportedPodcasts');
         $this->addRelation('PodcastEpisodes', 'PodcastEpisodes', RelationMap::ONE_TO_MANY, array('id' => 'podcast_id', ), 'CASCADE', null, 'PodcastEpisodess');
