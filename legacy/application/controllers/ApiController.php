@@ -698,12 +698,10 @@ class ApiController extends Zend_Controller_Action
             $this->view->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
 
-            $CC_CONFIG = Config::getConfig();
-            $baseDir = Application_Common_OsPath::formatDirectoryWithDirectorySeparators($CC_CONFIG['baseDir']);
-            $path = 'http://' . $_SERVER['HTTP_HOST'] . $baseDir . 'api/station-logo';
+            $request = $this->getRequest();
 
             $result['name'] = Application_Model_Preference::GetStationName();
-            $result['logo'] = $path;
+            $result['logo'] = Application_Common_HTTPHelper::getStationUrl() . 'api/station-logo';
             $result['description'] = Application_Model_Preference::GetStationDescription();
             $result['timezone'] = Application_Model_Preference::GetDefaultTimezone();
             $result['locale'] = Application_Model_Preference::GetDefaultLocale();
