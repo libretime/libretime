@@ -11,7 +11,7 @@ INSERT INTO cc_pref ("keystr", "valstr") VALUES ('default_stream_mount_point', '
 INSERT INTO cc_pref ("keystr", "valstr") VALUES ('enable_replay_gain', 1);
 INSERT INTO cc_pref ("keystr", "valstr") VALUES ('locale', 'en_US');
 INSERT INTO cc_pref ("keystr", "valstr") VALUES ('max_bitrate', '320');
-INSERT INTO cc_pref ("keystr", "valstr") VALUES ('num_of_streams', '3');
+INSERT INTO cc_pref ("keystr", "valstr") VALUES ('num_of_streams', '4');
 INSERT INTO cc_pref ("keystr", "valstr") VALUES ('plan_level', 'disabled');
 INSERT INTO cc_pref ("keystr", "valstr") VALUES ('podcast_album_override', 1);
 INSERT INTO cc_pref ("keystr", "valstr") VALUES ('podcast_auto_smartblock', 0);
