@@ -395,19 +395,6 @@ CREATE TABLE "cc_subjs_token"
 );
 
 -----------------------------------------------------------------------
--- cc_country
------------------------------------------------------------------------
-
-DROP TABLE IF EXISTS "cc_country" CASCADE;
-
-CREATE TABLE "cc_country"
-(
-    "isocode" CHAR(3) NOT NULL,
-    "name" VARCHAR(255) NOT NULL,
-    PRIMARY KEY ("isocode")
-);
-
------------------------------------------------------------------------
 -- cc_stream_setting
 -----------------------------------------------------------------------
 
