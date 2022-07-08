@@ -9,7 +9,7 @@ INSERT INTO cc_pref ("keystr", "valstr") VALUES ('import_timestamp', '0');
 INSERT INTO cc_pref ("keystr", "valstr") VALUES ('timezone', 'UTC');
 INSERT INTO cc_pref ("keystr", "valstr") VALUES ('default_stream_mount_point', 'main');
 INSERT INTO cc_pref ("keystr", "valstr") VALUES ('enable_replay_gain', 1);
-INSERT INTO cc_pref ("keystr", "valstr") VALUES ('locale', 'en_CA');
+INSERT INTO cc_pref ("keystr", "valstr") VALUES ('locale', 'en_US');
 INSERT INTO cc_pref ("keystr", "valstr") VALUES ('max_bitrate', '320');
 INSERT INTO cc_pref ("keystr", "valstr") VALUES ('num_of_streams', '3');
 INSERT INTO cc_pref ("keystr", "valstr") VALUES ('plan_level', 'disabled');
@@ -21,7 +21,7 @@ INSERT INTO cc_pref ("keystr", "valstr") VALUES ('stream_type', 'ogg, mp3, opus,
 INSERT INTO cc_pref ("keystr", "valstr") VALUES ('whats_new_dialog_viewed', 1);
 
 INSERT INTO cc_subjs ("login", "type", "pass") VALUES ('admin', 'A', md5('admin'));
-INSERT INTO cc_pref ("subjid", "keystr", "valstr") VALUES (1, 'user_locale', 'en_CA');
+INSERT INTO cc_pref ("subjid", "keystr", "valstr") VALUES (1, 'user_locale', 'en_US');
 
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('icecast_vorbis_metadata', 'false', 'boolean');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('off_air_meta', 'LibreTime - offline', 'string');
