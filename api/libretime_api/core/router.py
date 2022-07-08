@@ -2,7 +2,6 @@ from rest_framework import routers
 
 from .views import (
     CeleryTaskViewSet,
-    CountryViewSet,
     LoginAttemptViewSet,
     PreferenceViewSet,
     ServiceRegisterViewSet,
@@ -13,7 +12,6 @@ from .views import (
 )
 
 router = routers.DefaultRouter()
-router.register("countries", CountryViewSet)
 router.register("login-attempts", LoginAttemptViewSet)
 router.register("preferences", PreferenceViewSet)
 router.register("service-registers", ServiceRegisterViewSet)
