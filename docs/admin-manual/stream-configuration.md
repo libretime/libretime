@@ -3,17 +3,22 @@ title: Stream configuration
 sidebar_position: 30
 ---
 
-LibreTime supports direct connection to two popular streaming media servers, the open source Icecast (https://www.icecast.org/) and the proprietary SHOUTcast (https://www.shoutcast.com). Apart from the software license, the main difference between these two servers is that Icecast supports simultaneous MP3, AAC, Ogg Vorbis or Ogg Opus streaming from LibreTime, whereas SHOUTcast only supports MP3 and AAC streams. The royalty-free Ogg Vorbis format has the advantage of better sound quality than MP3 at lower bitrates, which has a direct impact on the amount of bandwidth that your station will require to serve the same number of listeners. Ogg Opus also benefits from good sound quality at low bitrates, with the added advantage of lower latency than other streaming formats. Opus is now an [IETF standard](https://datatracker.ietf.org/doc/html/rfc6716) and requires Icecast 2.4 or later to be installed on the streaming server.
+LibreTime supports streaming in multiple formats and protocols. For example, it is possible to provide one or more streams for your website, and another stream for a hardware player.
 
-Ogg Vorbis playback is supported in most modern web browsers (see [this MDN article](https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Audio_codecs#opus) for more information) and desktop players like [VLC](https://www.videolan.org/vlc/).
+You can stream using the following protocols:
 
-Streaming MP3 below a bitrate of 128kbps is not recommended for music, because of a perceptible loss of high audio frequencies in the broadcast playout. A 96kbps or 64kbps MP3 stream may be acceptable for voice broadcasts if there is a requirement for compatibility with legacy hardware playback devices which do not support Ogg Vorbis or Opus streams.
+- [Icecast](https://www.icecast.org/) open source, supports MP3, AAC, Ogg Vorbis or Ogg Opus.
+- [SHOUTcast](https://www.shoutcast.com), proprietary, and supports MP3 and AAC.
 
-Because LibreTime supports simultaneous streaming in multiple formats, it is possible to offer one or more streams via your website, and another independent stream for direct connection from hardware players. You can test whether Ogg streams sound better at low bitrates for yourself, by using the **LISTEN** button in LibreTime's **Master Panel** to switch between streaming formats.
+You have to choose which [formats and codecs](https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Audio_codecs) to use:
+
+- Ogg Vorbis has the advantage of better sound quality than MP3 at low bitrate, which has a direct impact on the amount of bandwidth that your station will require to serve the same number of listeners.
+- Ogg Opus benefits from good sound quality at low bitrate, with the added advantage of lower latency than other streaming formats.
+- MP3 below a bitrate of 128kbps is not recommended for music, because of a perceptible loss of high audio frequencies. A 96kbps or 64kbps MP3 stream may be acceptable for voice broadcasts if there is a requirement for compatibility with legacy hardware playback devices which do not support Ogg Vorbis or Opus streams.
 
 :::tip
 
-Setting a higher bitrate for your output stream will only benefit your listeners if you have high bitrate source material to play. LibreTime can convert bitrates down for lower-quality streams but _cannot_ convert up for higher-quality streams.
+Setting a higher bitrate for your output stream will only benefit your listeners if you have high bitrate source material to play. LibreTime can convert bitrates down for lower-quality streams but **cannot** convert up for higher-quality streams.
 
 :::
 
