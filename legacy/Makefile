@@ -2,10 +2,10 @@ SHELL = bash
 
 all: vendor locale-build
 
-PHP-CS-FIXER = tools/vendor/bin/php-cs-fixer
-$(PHP-CS-FIXER):
-	mkdir -p tools
-	composer require --working-dir=tools friendsofphp/php-cs-fixer
+TOOLS =  tools/vendor
+tools: $(TOOLS)
+$(TOOLS):
+	composer --working-dir=tools install
 
 locale-update:
 	$(MAKE) -C locale update
@@ -20,12 +20,12 @@ test: vendor
 	cd tests && ../vendor/bin/phpunit
 
 .PHONY: format
-format: $(PHP-CS-FIXER)
-	$(PHP-CS-FIXER) fix
+format: tools
+	$(TOOLS)/bin/php-cs-fixer fix
 
 .PHONY: lint
-lint: $(PHP-CS-FIXER)
-	$(PHP-CS-FIXER) fix --dry-run --diff
+lint: tools
+	$(TOOLS)/bin/php-cs-fixer fix --dry-run --diff
 
 .PHONY: build
 build:

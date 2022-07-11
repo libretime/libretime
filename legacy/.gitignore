@@ -9,7 +9,7 @@
 /tests/test_results.xml
 
 # Tools
-/tools/
+/tools/vendor/
 .php-cs-fixer.cache
 
 ## Github Composer .gitignore
