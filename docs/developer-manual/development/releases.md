@@ -152,6 +152,15 @@ git show --quiet
 git tag -a -m "$VERSION" "$VERSION"
 ```
 
+Generate the changelog for the newly tagged version:
+
+```bash
+make changelog
+
+git add .
+git commit -m "chore: generate changelog for $VERSION"
+```
+
 Push the tag upstream to finalize the release process:
 
 ```bash

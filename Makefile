@@ -19,6 +19,9 @@ shell-check:
 VERSION:
 	tools/version.sh
 
+changelog:
+	tools/changelog.sh
+
 .PHONY: tarball
 tarball: VERSION
 	$(MAKE) -C legacy build
