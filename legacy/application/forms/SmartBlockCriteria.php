@@ -914,6 +914,11 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                                 $element->addError(_('The value should be less then 2147483648'));
                                 $isValid = false;
                             }
+                            // Unselected track type
+                            if ($d['sp_criteria_field'] == 'track_type_id' && $d['sp_criteria_value'] == 0) {
+                                $element->addError(_('The value cannot be empty'));
+                                $isValid = false;
+                            }
                         } elseif ($column->getType() == PropelColumnTypes::VARCHAR) {
                             if (strlen($d['sp_criteria_value']) > $column->getSize()) {
                                 $element->addError(sprintf(_('The value should be less than %s characters'), $column->getSize()));
