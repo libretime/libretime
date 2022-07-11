@@ -326,7 +326,7 @@ class Application_Service_ShowFormService
                 'add_show_repeat_type' => $repeatType,
                 'add_show_day_check' => $days,
                 'add_show_end_date' => (!is_null($repeatEndDate)) ? $repeatEndDate->format('Y-m-d') : null,
-                'add_show_no_end' => (is_null($repeatEndDate)),
+                'add_show_no_end' => is_null($repeatEndDate),
                 'add_show_monthly_repeat_type' => $monthlyRepeatType,
             ]
         );

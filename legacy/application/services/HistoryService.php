@@ -437,7 +437,7 @@ class Application_Service_HistoryService
         Logging::info($shows);
 
         // need to filter the list to only their shows
-        if ((!empty($user)) && ($user->isHost())) {
+        if ((!empty($user)) && $user->isHost()) {
             $showIds = [];
 
             foreach ($shows as $show) {

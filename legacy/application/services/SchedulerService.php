@@ -324,7 +324,7 @@ class Application_Service_SchedulerService
             $con->rollback();
             Logging::info('Error filling linked shows: ' . $e->getMessage());
 
-            exit();
+            exit;
         }
     }
 

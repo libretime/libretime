@@ -769,7 +769,7 @@ class ScheduleController extends Zend_Controller_Action
 
         echo Zend_Json::encode($result);
 
-        exit();
+        exit;
     }
 
     public function updateFutureIsScheduledAction()

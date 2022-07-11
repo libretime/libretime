@@ -22,7 +22,7 @@ function showConfigCheckPage()
 
     require_once CONFIG_PATH . '/config-check.php';
 
-    exit();
+    exit;
 }
 
 function isApiCall()
