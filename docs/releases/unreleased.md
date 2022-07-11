@@ -52,6 +52,28 @@ If the above command outputs the following, no file needs fixing.
 (0 rows)
 ```
 
+In addition, the database smart block criteria value was previously referencing track types using codes, and should now reference track types using ids. You need to check whether some smart block have broken track type references and fix them accordingly. To list broken track type references, you can run the following command:
+
+```bash
+sudo -u libretime libretime-api dbshell --command="
+    SELECT b.name, c.criteria, c.modifier, c.value
+    FROM cc_blockcriteria c, cc_block b
+    WHERE c.block_id = b.id
+    AND NOT EXISTS (
+        SELECT FROM cc_track_types tt
+        WHERE tt.code = c.value
+    )
+    AND criteria = 'track_type';"
+```
+
+If the above command outputs the following, no smart block needs fixing.
+
+```
+ name | criteria | modifier | value
+------+----------+----------+-------
+(0 rows)
+```
+
 ### New configuration file
 
 :::caution

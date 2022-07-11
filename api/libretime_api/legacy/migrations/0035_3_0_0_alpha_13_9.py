@@ -19,6 +19,13 @@ UPDATE "cc_files" file SET "track_type_id" = (
 )
 WHERE "track_type" IS NOT NULL;
 
+UPDATE "cc_blockcriteria" criteria
+SET "criteria" = 'track_type_id', "value" = (
+    SELECT "id" FROM "cc_track_types"
+    WHERE "code" = criteria."value"
+)
+WHERE "criteria" = 'track_type';
+
 UPDATE "cc_pref" file SET "valstr" = (
     SELECT "id" FROM "cc_track_types"
     WHERE "code" = file."valstr"
@@ -37,6 +44,13 @@ UPDATE "cc_files" file SET "track_type" = (
     WHERE "id" = file."track_type_id"
 )
 WHERE "track_type_id" IS NOT NULL;
+
+UPDATE "cc_blockcriteria" criteria
+SET "criteria" = 'track_type', "value" = (
+    SELECT "code" FROM "cc_track_types"
+    WHERE "id" = criteria."value"::int
+)
+WHERE "criteria" = 'track_type_id';
 
 UPDATE "cc_pref" pref SET "valstr" = (
     SELECT "code" FROM "cc_track_types"
