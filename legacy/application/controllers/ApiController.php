@@ -105,14 +105,14 @@ class ApiController extends Zend_Controller_Action
         $authAdapter = Zend_Auth::getInstance();
         Application_Model_Auth::pinSessionToClient($authAdapter);
 
-        if ((Zend_Auth::getInstance()->hasIdentity())) {
+        if (Zend_Auth::getInstance()->hasIdentity()) {
             return true;
         }
 
         header('HTTP/1.0 401 Unauthorized');
         echo _('You are not allowed to access this resource.');
 
-        exit();
+        exit;
     }
 
     public function versionAction()

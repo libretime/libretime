@@ -15,7 +15,7 @@ class Application_Common_OsPath
             $initial_slashes = false;
         }
         if (
-            ($initial_slashes)
+            $initial_slashes
             && (strpos($path, '//') === 0)
             && (strpos($path, '///') === false)
         ) {

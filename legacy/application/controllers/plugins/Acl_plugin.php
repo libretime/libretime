@@ -183,7 +183,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                         ->appendBody('ERROR: CSRF token mismatch.')
                         ->sendResponse();
 
-                    exit();
+                    exit;
                 }
             }
 

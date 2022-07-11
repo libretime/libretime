@@ -1222,7 +1222,7 @@ SQL;
 
                     if ($field == 'utime' || $field == 'mtime' || $field == 'lptime') {
                         // if the date isn't relative we  want to convert the value to a specific UTC date
-                        if (!(in_array($modifier, ['before', 'after', 'between']))) {
+                        if (!in_array($modifier, ['before', 'after', 'between'])) {
                             $value = Application_Common_DateHelper::UserTimezoneStringToUTCString($value);
                         } else {
                             $value = $value . ' ' . $datetimeunit . ' ago';
@@ -1239,7 +1239,7 @@ SQL;
                     if (isset($d['sp_criteria_extra'])) {
                         if ($field == 'utime' || $field == 'mtime' || $field == 'lptime') {
                             // if the date isn't relative we  want to convert the value to a specific UTC date
-                            if (!(in_array($modifier, ['before', 'after', 'between']))) {
+                            if (!in_array($modifier, ['before', 'after', 'between'])) {
                                 $extra = Application_Common_DateHelper::UserTimezoneStringToUTCString($extra);
                             } else {
                                 $extra = $extra . ' ' . $extradatetimeunit . ' ago';
@@ -1676,7 +1676,7 @@ SQL;
                             // addslashes() does not esapce '%' so we have to do it manually
                             $spCriteriaValue = str_replace('%', '\%', $spCriteriaValue);
                         } else {
-                            $spCriteriaValue = ($criteria['value']);
+                            $spCriteriaValue = $criteria['value'];
                         }
                         $spCriteriaExtra = $criteria['extra'];
                     }
@@ -1772,9 +1772,9 @@ SQL;
             if ($storedCrit['limit']['modifier'] == 'items') {
                 $limits['time'] = 1440 * 60;
                 $limits['items'] = $storedCrit['limit']['value'];
-            } elseif (($storedCrit['limit']['modifier'] == 'remaining')) {
+            } elseif ($storedCrit['limit']['modifier'] == 'remaining') {
                 // show will be null unless being called inside a show instance
-                if (!(is_null($showLimit))) {
+                if (!is_null($showLimit)) {
                     $limits['time'] = $showLimit;
                     $limits['items'] = null;
                 } else {

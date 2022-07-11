@@ -883,11 +883,10 @@ SQL;
             CcShowQuery::create()
                 ->filterByDbId($showId)
                 ->delete();
-        /* There is only one cc_show_instance if the user selects 'Delete This Instance'
-         * There is more than one cc_show_instance if the user selects 'Delete This
-         * Instance and All Following'. We only need to set the last_show value
-         * when 'Delete This Instance and All Following' has been selected
-         */
+        // There is only one cc_show_instance if the user selects 'Delete This Instance'
+        // There is more than one cc_show_instance if the user selects 'Delete This
+        // Instance and All Following'. We only need to set the last_show value
+        // when 'Delete This Instance and All Following' has been selected
         } elseif (count($ccShowInstances) > 1) {
             $this->setLastRepeatingShowDate($showId);
         }
