@@ -12,15 +12,16 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2022-07-04 18:49+0200\n"
-"PO-Revision-Date: 2021-10-17 08:09+0000\n"
+"PO-Revision-Date: 2022-07-14 09:18+0000\n"
 "Last-Translator: Kyle Robbertze <github@paddatrapper.com>\n"
-"Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/libretime/legacy/en_GB/>\n"
+"Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
+"libretime/legacy/en_GB/>\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.14-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -222,8 +223,9 @@ msgid "Interlingua"
 msgstr "Interlingua"
 
 #: application/common/LocaleHelper.php:69
+#, fuzzy
 msgid "Interlingue"
-msgstr ""
+msgstr "Interlingue"
 
 #: application/common/LocaleHelper.php:70
 msgid "Inupiak"
@@ -254,100 +256,101 @@ msgid "Yiddish"
 msgstr "Yiddish"
 
 #: application/common/LocaleHelper.php:77
+#, fuzzy
 msgid "Javanese"
-msgstr ""
+msgstr "Javanese"
 
 #: application/common/LocaleHelper.php:78
 msgid "Georgian"
-msgstr ""
+msgstr "Georgian"
 
 #: application/common/LocaleHelper.php:79
 msgid "Kazakh"
-msgstr ""
+msgstr "Kazakh"
 
 #: application/common/LocaleHelper.php:80
 msgid "Greenlandic"
-msgstr ""
+msgstr "Greenlandic"
 
 #: application/common/LocaleHelper.php:81
 msgid "Cambodian"
-msgstr ""
+msgstr "Cambodian"
 
 #: application/common/LocaleHelper.php:82
 msgid "Kannada"
-msgstr ""
+msgstr "Kannada"
 
 #: application/common/LocaleHelper.php:83
 msgid "Korean"
-msgstr ""
+msgstr "Korean"
 
 #: application/common/LocaleHelper.php:84
 msgid "Kashmiri"
-msgstr ""
+msgstr "Kashmiri"
 
 #: application/common/LocaleHelper.php:85
 msgid "Kurdish"
-msgstr ""
+msgstr "Kurdish"
 
 #: application/common/LocaleHelper.php:86
 msgid "Kirghiz"
-msgstr ""
+msgstr "Kirghiz"
 
 #: application/common/LocaleHelper.php:87
 msgid "Latin"
-msgstr ""
+msgstr "Latin"
 
 #: application/common/LocaleHelper.php:88
 msgid "Lingala"
-msgstr ""
+msgstr "Lingala"
 
 #: application/common/LocaleHelper.php:89
 msgid "Laothian"
-msgstr ""
+msgstr "Laothian"
 
 #: application/common/LocaleHelper.php:90
 msgid "Lithuanian"
-msgstr ""
+msgstr "Lithuanian"
 
 #: application/common/LocaleHelper.php:91
 msgid "Latvian/Lettish"
-msgstr ""
+msgstr "Latvian/Lettish"
 
 #: application/common/LocaleHelper.php:92
 msgid "Malagasy"
-msgstr ""
+msgstr "Malagasy"
 
 #: application/common/LocaleHelper.php:93
 msgid "Maori"
-msgstr ""
+msgstr "Maori"
 
 #: application/common/LocaleHelper.php:94
 msgid "Macedonian"
-msgstr ""
+msgstr "Macedonian"
 
 #: application/common/LocaleHelper.php:95
 msgid "Malayalam"
-msgstr ""
+msgstr "Malayalam"
 
 #: application/common/LocaleHelper.php:96
 msgid "Mongolian"
-msgstr ""
+msgstr "Mongolian"
 
 #: application/common/LocaleHelper.php:97
 msgid "Moldavian"
-msgstr ""
+msgstr "Moldavian"
 
 #: application/common/LocaleHelper.php:98
 msgid "Marathi"
-msgstr ""
+msgstr "Marathi"
 
 #: application/common/LocaleHelper.php:99
 msgid "Malay"
-msgstr ""
+msgstr "Malay"
 
 #: application/common/LocaleHelper.php:100
 msgid "Maltese"
-msgstr ""
+msgstr "Maltese"
 
 #: application/common/LocaleHelper.php:101
 msgid "Burmese"
