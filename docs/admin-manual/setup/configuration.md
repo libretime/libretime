@@ -11,10 +11,14 @@ The `general` section configure anything related to the legacy and API services.
 
 ```yml
 general:
-  # The public url. This field is REQUIRED
+  # The public url, this field is REQUIRED
   public_url: https://example.com
   # The internal API authentication key, this field is REQUIRED
   api_key: some_random_generated_secret!
+
+  # List of origins allowed to access resources on the server, default is []
+  # The public url origin is automatically included
+  allowed_cors_origins: []
 
   # How many hours ahead Playout should cache scheduled media files, default is 1
   cache_ahead_hours: 1
