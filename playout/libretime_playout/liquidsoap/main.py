@@ -11,7 +11,7 @@ from libretime_shared.config import DEFAULT_ENV_PREFIX
 from libretime_shared.logging import level_from_name, setup_logger
 from loguru import logger
 
-from . import generate_liquidsoap_cfg
+from .entrypoint import generate_entrypoint
 
 
 @click.command(context_settings={"auto_envvar_prefix": DEFAULT_ENV_PREFIX})
@@ -23,7 +23,8 @@ def cli(log_level: int, log_filepath: Optional[Path]):
     log_level = level_from_name(log_level)
     setup_logger(log_level, log_filepath)
 
-    generate_liquidsoap_cfg.run(log_filepath)
+    generate_entrypoint(log_filepath)
+
     # check liquidsoap version so we can run a scripts matching the liquidsoap minor version
     liquidsoap_version = subprocess.check_output(
         "liquidsoap 'print(liquidsoap.version) shutdown()'",
