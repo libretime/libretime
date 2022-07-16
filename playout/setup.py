@@ -35,7 +35,7 @@ setup(
         "kombu==4.6.11",
         "mutagen>=1.45.1,<1.46",
         "pytz",
-        "requests",
+        "requests>=2.25.1,<2.29",
         "typing-extensions",
     ],
     extras_require={
