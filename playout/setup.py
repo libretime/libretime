@@ -32,7 +32,7 @@ setup(
     install_requires=[
         "amqplib",
         "defusedxml",
-        "kombu",
+        "kombu==4.6.11",
         "mutagen",
         "pytz",
         "requests",
