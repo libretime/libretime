@@ -1,7 +1,7 @@
 from os import chdir
 from pathlib import Path
 
-from setuptools import setup
+from setuptools import find_packages, setup
 
 # Change directory since setuptools uses relative paths
 here = Path(__file__).parent.resolve()
@@ -19,16 +19,12 @@ setup(
         "Source Code": "https://github.com/libretime/libretime",
     },
     license="AGPLv3",
-    packages=[
-        "libretime_playout",
-        "libretime_playout.notify",
-        "libretime_liquidsoap",
-    ],
+    packages=find_packages(),
     package_data={"": ["**/*.liq", "*.cfg", "*.types"]},
     entry_points={
         "console_scripts": [
             "libretime-playout=libretime_playout.main:cli",
-            "libretime-liquidsoap=libretime_liquidsoap.main:cli",
+            "libretime-liquidsoap=libretime_playout.liquidsoap.main:cli",
             "libretime-playout-notify=libretime_playout.notify.main:cli",
         ]
     },
