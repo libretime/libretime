@@ -30,7 +30,6 @@ setup(
     },
     python_requires=">=3.6",
     install_requires=[
-        "amqplib",
         "defusedxml",
         "kombu==4.6.11",
         "mutagen>=1.45.1,<1.46",
