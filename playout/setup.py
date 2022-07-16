@@ -20,7 +20,7 @@ setup(
     },
     license="AGPLv3",
     packages=find_packages(),
-    package_data={"": ["**/*.liq", "*.cfg", "*.types"]},
+    package_data={"": ["**/*.liq", "*.types"]},
     entry_points={
         "console_scripts": [
             "libretime-playout=libretime_playout.main:cli",
