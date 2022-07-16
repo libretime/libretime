@@ -4,7 +4,6 @@ amqplib
 defusedxml
 kombu
 mutagen
-packaging
 pytz
 requests
 typing-extensions

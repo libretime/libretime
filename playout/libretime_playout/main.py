@@ -2,7 +2,6 @@
 Python part of radio playout (pypo)
 """
 
-import re
 import signal
 import sys
 import telnetlib
@@ -11,7 +10,7 @@ from datetime import datetime
 from pathlib import Path
 from queue import Queue
 from threading import Lock
-from typing import Optional
+from typing import Optional, Tuple
 
 import click
 from libretime_api_client.version1 import AirtimeApiClient as ApiClient
@@ -20,8 +19,8 @@ from libretime_shared.config import DEFAULT_ENV_PREFIX
 from libretime_shared.logging import level_from_name, setup_logger
 from loguru import logger
 
-from . import pure
 from .config import CACHE_DIR, RECORD_DIR, Config
+from .liquidsoap.version import LIQUIDSOAP_MIN_VERSION, parse_liquidsoap_version
 from .listenerstat import ListenerStat
 from .pypofetch import PypoFetch
 from .pypofile import PypoFile
@@ -30,8 +29,6 @@ from .pypomessagehandler import PypoMessageHandler
 from .pypopush import PypoPush
 from .recorder import Recorder
 from .timeout import ls_timeout
-
-LIQUIDSOAP_MIN_VERSION = "1.1.1"
 
 
 class Global:
@@ -51,7 +48,7 @@ def keyboardInterruptHandler(signum, frame):
 
 
 @ls_timeout
-def liquidsoap_get_info(telnet_lock, host, port):
+def liquidsoap_get_info(telnet_lock, host, port) -> Optional[Tuple[int, int, int]]:
     logger.debug("Checking to see if Liquidsoap is running")
     try:
         telnet_lock.acquire()
@@ -66,50 +63,38 @@ def liquidsoap_get_info(telnet_lock, host, port):
     finally:
         telnet_lock.release()
 
-    return get_liquidsoap_version(response)
-
-
-def get_liquidsoap_version(version_string):
-    m = re.match(r"Liquidsoap (\d+.\d+.\d+)", version_string)
-
-    if m:
-        return m.group(1)
-    else:
-        return None
+    return parse_liquidsoap_version(response)
 
 
 def liquidsoap_startup_test(telnet_lock, liquidsoap_host, liquidsoap_port):
 
-    liquidsoap_version_string = liquidsoap_get_info(
+    liquidsoap_version = liquidsoap_get_info(
         telnet_lock,
         liquidsoap_host,
         liquidsoap_port,
     )
-    while not liquidsoap_version_string:
-        logger.warning(
-            "Liquidsoap doesn't appear to be running!, " + "Sleeping and trying again"
-        )
+    while not liquidsoap_version:
+        logger.warning("Liquidsoap doesn't appear to be running! Trying again later...")
         time.sleep(1)
-        liquidsoap_version_string = liquidsoap_get_info(
+        liquidsoap_version = liquidsoap_get_info(
             telnet_lock,
             liquidsoap_host,
             liquidsoap_port,
         )
 
-    while pure.version_cmp(liquidsoap_version_string, LIQUIDSOAP_MIN_VERSION) < 0:
+    while not LIQUIDSOAP_MIN_VERSION <= liquidsoap_version:
         logger.warning(
-            "Liquidsoap is running but in incorrect version! "
-            + "Make sure you have at least Liquidsoap %s installed"
-            % LIQUIDSOAP_MIN_VERSION
+            f"Found invalid Liquidsoap version! "
+            f"Liquidsoap<={LIQUIDSOAP_MIN_VERSION} is required!"
         )
-        time.sleep(1)
-        liquidsoap_version_string = liquidsoap_get_info(
+        time.sleep(5)
+        liquidsoap_version = liquidsoap_get_info(
             telnet_lock,
             liquidsoap_host,
             liquidsoap_port,
         )
 
-    logger.info("Liquidsoap version string found %s" % liquidsoap_version_string)
+    logger.info(f"Liquidsoap version {liquidsoap_version}")
 
 
 @click.command(context_settings={"auto_envvar_prefix": DEFAULT_ENV_PREFIX})

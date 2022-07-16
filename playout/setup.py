@@ -34,13 +34,13 @@ setup(
         "defusedxml",
         "kombu",
         "mutagen",
-        "packaging",
         "pytz",
         "requests",
         "typing-extensions",
     ],
     extras_require={
         "dev": [
+            "distro",
             f"libretime-api-client @ file://localhost{here.parent / 'api-client'}",
             f"libretime-shared @ file://localhost{here.parent / 'shared'}",
         ],
