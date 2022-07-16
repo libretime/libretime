@@ -1,7 +1,6 @@
 """ Runs Airtime liquidsoap
 """
 import os
-import subprocess
 from pathlib import Path
 from typing import Optional
 
@@ -12,6 +11,7 @@ from libretime_shared.logging import level_from_name, setup_logger
 from loguru import logger
 
 from .entrypoint import generate_entrypoint
+from .version import get_liquidsoap_version
 
 
 @click.command(context_settings={"auto_envvar_prefix": DEFAULT_ENV_PREFIX})
@@ -25,14 +25,10 @@ def cli(log_level: int, log_filepath: Optional[Path]):
 
     generate_entrypoint(log_filepath)
 
-    # check liquidsoap version so we can run a scripts matching the liquidsoap minor version
-    liquidsoap_version = subprocess.check_output(
-        "liquidsoap 'print(liquidsoap.version) shutdown()'",
-        shell=True,
-        universal_newlines=True,
-    )[0:3]
+    version = get_liquidsoap_version()
+
     script_path = os.path.join(
-        os.path.dirname(__file__), liquidsoap_version, "ls_script.liq"
+        os.path.dirname(__file__), f"{version[0]}.{version[1]}", "ls_script.liq"
     )
     exec_args = [
         "/usr/bin/liquidsoap",
@@ -43,5 +39,5 @@ def cli(log_level: int, log_filepath: Optional[Path]):
     if log_level.is_debug():
         exec_args.append("--debug")
 
-    logger.debug(f"Liquidsoap {liquidsoap_version} using script: {script_path}")
+    logger.debug(f"Liquidsoap {version} using script: {script_path}")
     os.execl(*exec_args)
