@@ -43,7 +43,7 @@ def generate_liquidsoap_config(ss, log_filepath: Optional[Path]):
     fh.close()
 
 
-def run(log_filepath: Optional[Path]):
+def generate_entrypoint(log_filepath: Optional[Path]):
     attempts = 0
     max_attempts = 10
     successful = False
