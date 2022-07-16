@@ -33,7 +33,7 @@ setup(
         "amqplib",
         "defusedxml",
         "kombu==4.6.11",
-        "mutagen",
+        "mutagen>=1.45.1,<1.46",
         "pytz",
         "requests",
         "typing-extensions",
