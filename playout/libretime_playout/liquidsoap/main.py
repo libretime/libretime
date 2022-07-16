@@ -18,12 +18,11 @@ here = Path(__file__).parent
 
 @click.command(context_settings={"auto_envvar_prefix": DEFAULT_ENV_PREFIX})
 @cli_logging_options()
-def cli(log_level: int, log_filepath: Optional[Path]):
+def cli(log_level: str, log_filepath: Optional[Path]):
     """
     Run liquidsoap.
     """
-    log_level = level_from_name(log_level)
-    setup_logger(log_level, log_filepath)
+    logger_level, _ = setup_logger(level_from_name(log_level), log_filepath)
 
     generate_entrypoint(log_filepath)
 
@@ -36,7 +35,7 @@ def cli(log_level: int, log_filepath: Optional[Path]):
         "--verbose",
         str(script_path),
     ]
-    if log_level.is_debug():
+    if logger_level.is_debug():
         exec_args.append("--debug")
 
     logger.debug(f"Liquidsoap {version} using script: {script_path}")
