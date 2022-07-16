@@ -22,7 +22,7 @@ setup(
     packages=["libretime_api_client"],
     python_requires=">=3.6",
     install_requires=[
-        "python-dateutil>=2.7.0",
+        "python-dateutil>=2.8.1,<2.9",
         "requests>=2.25.1,<2.29",
     ],
     extras_require={
