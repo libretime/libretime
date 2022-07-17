@@ -80,14 +80,13 @@ Vagrant.configure('2') do |config|
     LIBRETIME_RABBITMQ_PASSWORD=libretime \
     bash install \
       --listen-port 8080 \
-      --allow-restart \
       --in-place \
       http://192.168.10.100:8080
 
     libretime-api migrate
     libretime-api set_icecast_passwords --from-icecast-config
 
-    systemctl start libretime.target
+    systemctl restart libretime.target
     SCRIPT
 
     config.vm.provision 'install', type: 'shell', inline: $script
