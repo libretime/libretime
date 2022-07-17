@@ -30,7 +30,7 @@ setup(
     },
     python_requires=">=3.6",
     install_requires=[
-        "defusedxml",
+        "defusedxml>=0.6.0,<0.8",
         "kombu==4.6.11",
         "mutagen>=1.45.1,<1.46",
         "pytz",
