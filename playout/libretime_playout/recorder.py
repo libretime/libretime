@@ -6,11 +6,12 @@ import re
 import signal
 import time
 import traceback
+from datetime import timezone
 from subprocess import PIPE, Popen
 from threading import Thread
+from zoneinfo import ZoneInfo
 
 import mutagen
-import pytz
 from libretime_api_client.version1 import AirtimeApiClient as AirtimeApiClientV1
 from loguru import logger
 
@@ -277,11 +278,12 @@ class Recorder(Thread):
                 show_name = self.shows_to_record[start_time][2]
                 server_timezone = self.shows_to_record[start_time][3]
 
-                T = pytz.timezone(server_timezone)
+                server_tz = ZoneInfo(server_timezone)
                 start_time_on_UTC = getDateTimeObj(start_time)
                 start_time_on_server = start_time_on_UTC.replace(
-                    tzinfo=pytz.utc
-                ).astimezone(T)
+                    tzinfo=timezone.utc
+                ).astimezone(server_tz)
+
                 start_time_formatted = (
                     "%(year)d-%(month)02d-%(day)02d %(hour)02d:%(min)02d:%(sec)02d"
                     % {
