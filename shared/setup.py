@@ -20,7 +20,7 @@ setup(
         "click~=8.0.4",
         "loguru==0.6.0",
         "pydantic",
-        "pyyaml",
+        "pyyaml>=5.3.1,<6.1",
     ],
     extras_require={
         "dev": [
