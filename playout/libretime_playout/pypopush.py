@@ -85,8 +85,7 @@ class PypoPush(Thread):
                 logger.debug(f"ignoring ended media_item: {media_item}")
                 continue
 
-            diff_td = tnow - media_item["start"]
-            diff_sec = self.date_interval_to_seconds(diff_td)
+            diff_sec = (tnow - media_item["start"]).total_seconds()
 
             if diff_sec >= 0:
                 logger.debug(f"adding media_item to present: {media_item}")
@@ -96,18 +95,6 @@ class PypoPush(Thread):
                 future[mkey] = media_item
 
         return present, future
-
-    def date_interval_to_seconds(self, interval):
-        """
-        Convert timedelta object into int representing the number of seconds. If
-        number of seconds is less than 0, then return 0.
-        """
-        seconds = (
-            interval.microseconds
-            + (interval.seconds + interval.days * 24 * 3600) * 10**6
-        ) / float(10**6)
-
-        return seconds
 
     @ls_timeout
     def stop_web_stream_all(self):

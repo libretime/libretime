@@ -8,6 +8,8 @@ from threading import Thread
 
 from loguru import logger
 
+from .utils import seconds_between
+
 
 def keyboardInterruptHandler(signum, frame):
     logger.info("\nKeyboard Interrupt\n")
@@ -45,11 +47,10 @@ class PypoLiqQueue(Thread):
                 media_item = schedule_deque.popleft()
                 self.pypo_liquidsoap.play(media_item)
                 if len(schedule_deque):
-                    time_until_next_play = self.date_interval_to_seconds(
-                        schedule_deque[0]["start"] - datetime.utcnow()
+                    time_until_next_play = seconds_between(
+                        datetime.utcnow(),
+                        schedule_deque[0]["start"],
                     )
-                    if time_until_next_play < 0:
-                        time_until_next_play = 0
                 else:
                     time_until_next_play = None
             else:
@@ -63,26 +64,13 @@ class PypoLiqQueue(Thread):
                     schedule_deque.append(media_schedule[i])
 
                 if len(keys):
-                    time_until_next_play = self.date_interval_to_seconds(
-                        media_schedule[keys[0]]["start"] - datetime.utcnow()
+                    time_until_next_play = seconds_between(
+                        datetime.utcnow(),
+                        media_schedule[keys[0]]["start"],
                     )
 
                 else:
                     time_until_next_play = None
-
-    def date_interval_to_seconds(self, interval):
-        """
-        Convert timedelta object into int representing the number of seconds. If
-        number of seconds is less than 0, then return 0.
-        """
-        seconds = (
-            interval.microseconds
-            + (interval.seconds + interval.days * 24 * 3600) * 10**6
-        ) / float(10**6)
-        if seconds < 0:
-            seconds = 0
-
-        return seconds
 
     def run(self):
         try:

@@ -5,6 +5,7 @@ from loguru import logger
 
 from .events import EventKind
 from .telnetliquidsoap import TelnetLiquidsoap
+from .utils import seconds_between
 
 
 class PypoLiquidsoap:
@@ -209,36 +210,12 @@ class PypoLiquidsoap:
     def modify_cue_point(self, link):
         assert self.is_file(link)
 
-        tnow = datetime.utcnow()
+        lateness = seconds_between(link["start"], datetime.utcnow())
 
-        link_start = link["start"]
-
-        diff_td = tnow - link_start
-        diff_sec = self.date_interval_to_seconds(diff_td)
-
-        if diff_sec > 0:
-            logger.debug(
-                "media item was supposed to start %s ago. Preparing to start..",
-                diff_sec,
-            )
-            original_cue_in_td = timedelta(seconds=float(link["cue_in"]))
-            link["cue_in"] = (
-                self.date_interval_to_seconds(original_cue_in_td) + diff_sec
-            )
-
-    def date_interval_to_seconds(self, interval):
-        """
-        Convert timedelta object into int representing the number of seconds. If
-        number of seconds is less than 0, then return 0.
-        """
-        seconds = (
-            interval.microseconds
-            + (interval.seconds + interval.days * 24 * 3600) * 10**6
-        ) / float(10**6)
-        if seconds < 0:
-            seconds = 0
-
-        return seconds
+        if lateness > 0:
+            logger.debug(f"media item was supposed to start {lateness}s ago")
+            cue_in_orig = timedelta(seconds=float(link["cue_in"]))
+            link["cue_in"] = cue_in_orig.total_seconds() + lateness
 
     def clear_all_queues(self):
         self.telnet_liquidsoap.queue_clear_all()

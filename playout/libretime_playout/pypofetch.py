@@ -389,7 +389,7 @@ class PypoFetch(Thread):
         mimetypes.init(["%s/mime.types" % os.path.dirname(os.path.realpath(__file__))])
         mime_ext = mimetypes.guess_extension(mime, strict=False)
 
-        length1 = pure.date_interval_to_seconds(end - start)
+        length1 = (end - start).total_seconds()
         length2 = media_item["cue_out"] - media_item["cue_in"]
 
         if abs(length2 - length1) > 1:
