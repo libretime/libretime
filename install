@@ -67,7 +67,6 @@ Options:
   --user USER, -u USER          User used to run LibreTime.
   --listen-port PORT, -p PORT   Listen port for LibreTime.
 
-  --allow-restart, -r           Allow the installer to restart LibreTime services.
   --in-place, -i                Install LibreTime in place.
 
   --no-setup-icecast            Do not setup Icecast.
@@ -104,9 +103,6 @@ LIBRETIME_LISTEN_PORT=${LIBRETIME_LISTEN_PORT:-"80"}
 # > Public URL for LibreTime.
 LIBRETIME_PUBLIC_URL=${LIBRETIME_PUBLIC_URL:-}
 
-# > Allow the installer to restart LibreTime services. We don't want to restart the
-# > services by default to prevent uncontrolled downtime.
-LIBRETIME_ALLOW_RESTART=${LIBRETIME_ALLOW_RESTART:-false}
 # > Install LibreTime in editable mode.
 # > Will keep working files in the project directory.
 LIBRETIME_INSTALL_IN_PLACE=${LIBRETIME_INSTALL_IN_PLACE:-false}
@@ -129,10 +125,6 @@ while [[ $# -gt 0 ]]; do
     --listen-port | -p)
       LIBRETIME_LISTEN_PORT=$2
       shift 2
-      ;;
-    --allow-restart | -r)
-      LIBRETIME_ALLOW_RESTART=true
-      shift 1
       ;;
     --in-place | -i)
       LIBRETIME_INSTALL_IN_PLACE=true
@@ -289,10 +281,6 @@ install_service() {
 
 # service_restart_if_active <name>
 service_restart_if_active() {
-  if ! $LIBRETIME_ALLOW_RESTART && [[ "$1" =~ libretime ]]; then
-    return
-  fi
-
   if systemctl is-active "$1" > /dev/null; then
     info "restarting $1 service"
     systemctl restart "$1"
@@ -710,12 +698,6 @@ systemctl daemon-reload
 service_restart_if_active "php$PHP_VERSION-fpm"
 service_restart_if_active "nginx"
 
-service_restart_if_active "libretime-api"
-service_restart_if_active "libretime-celery"
-service_restart_if_active "libretime-analyzer"
-service_restart_if_active "libretime-playout"
-service_restart_if_active "libretime-liquidsoap"
-
 # Instructions
 ########################################################################################
 
@@ -741,6 +723,16 @@ Finally, start LibreTime using the following command:
 
 ${cyan}\
 $ sudo systemctl start libretime.target
+
+${reset}"
+
+else
+  printf "
+${yellow}\
+You can restart LibreTime using the following command:
+
+${cyan}\
+$ sudo systemctl restart libretime.target
 
 ${reset}"
 fi

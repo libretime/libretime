@@ -152,12 +152,6 @@ The install script will use randomly generated passwords to create the PostgreSQ
 
 :::
 
-:::info
-
-By default, the install script will not restart any service for you, this is to prevent unwanted restarts on production environment. To let the install script restart the services, you need to pass the `--allow-restart` flag.
-
-:::
-
 Feel free to run `./install --help` to get more details.
 
 #### Using hardware audio output
