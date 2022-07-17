@@ -27,16 +27,17 @@ def get_schedule(api_client: ApiClient):
 
     schedule = api_client.services.schedule_url(
         params={
-            "ends__range": (f"{current_time_str}Z,{end_time_str}Z"),
-            "is_valid": True,
-            "playout_status__gt": 0,
+            "ends_after": f"{current_time_str}Z",
+            "ends_before": f"{end_time_str}Z",
+            "overbooked": False,
+            "position_status__gt": 0,
         }
     )
 
     events = {}
     for item in schedule:
-        item["starts"] = isoparse(item["starts"])
-        item["ends"] = isoparse(item["ends"])
+        item["starts_at"] = isoparse(item["starts_at"])
+        item["ends_at"] = isoparse(item["ends_at"])
 
         show_instance = api_client.services.show_instance_url(id=item["instance_id"])
         show = api_client.services.show_url(id=show_instance["show_id"])
@@ -62,8 +63,8 @@ def generate_file_events(
     """
     events = {}
 
-    schedule_start_event_key = datetime_to_event_key(schedule["starts"])
-    schedule_end_event_key = datetime_to_event_key(schedule["ends"])
+    schedule_start_event_key = datetime_to_event_key(schedule["starts_at"])
+    schedule_end_event_key = datetime_to_event_key(schedule["ends_at"])
 
     events[schedule_start_event_key] = {
         "type": EventKind.FILE,
@@ -102,15 +103,15 @@ def generate_webstream_events(
     """
     events = {}
 
-    schedule_start_event_key = datetime_to_event_key(schedule["starts"])
-    schedule_end_event_key = datetime_to_event_key(schedule["ends"])
+    schedule_start_event_key = datetime_to_event_key(schedule["starts_at"])
+    schedule_end_event_key = datetime_to_event_key(schedule["ends_at"])
 
     events[schedule_start_event_key] = {
         "type": EventKind.STREAM_BUFFER_START,
         "independent_event": True,
         "row_id": schedule["id"],
-        "start": datetime_to_event_key(schedule["starts"] - timedelta(seconds=5)),
-        "end": datetime_to_event_key(schedule["starts"] - timedelta(seconds=5)),
+        "start": datetime_to_event_key(schedule["starts_at"] - timedelta(seconds=5)),
+        "end": datetime_to_event_key(schedule["starts_at"] - timedelta(seconds=5)),
         "uri": webstream["url"],
         "id": webstream["id"],
     }
@@ -127,7 +128,8 @@ def generate_webstream_events(
         "show_name": show["name"],
     }
 
-    # NOTE: stream_*_end were previously triggerered 1 second before the schedule end.
+    # NOTE: stream_*_end were previously triggered 1 second before
+    # the schedule end.
     events[schedule_end_event_key] = {
         "type": EventKind.STREAM_BUFFER_END,
         "independent_event": True,

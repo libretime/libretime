@@ -2540,134 +2540,33 @@ paths:
           schema:
             type: integer
         - in: query
-          name: broadcasted__gt
-          schema:
-            type: integer
-        - in: query
-          name: broadcasted__gte
-          schema:
-            type: integer
-        - in: query
-          name: broadcasted__lt
-          schema:
-            type: integer
-        - in: query
-          name: broadcasted__lte
-          schema:
-            type: integer
-        - in: query
-          name: broadcasted__range
-          schema:
-            type: array
-            items:
-              type: integer
-          description: Multiple values may be separated by commas.
-          explode: false
-          style: form
-        - in: query
-          name: ends
+          name: ends_after
           schema:
             type: string
             format: date-time
         - in: query
-          name: ends__gt
+          name: ends_before
           schema:
             type: string
             format: date-time
         - in: query
-          name: ends__gte
-          schema:
-            type: string
-            format: date-time
-        - in: query
-          name: ends__lt
-          schema:
-            type: string
-            format: date-time
-        - in: query
-          name: ends__lte
-          schema:
-            type: string
-            format: date-time
-        - in: query
-          name: ends__range
-          schema:
-            type: array
-            items:
-              type: string
-              format: date-time
-          description: Multiple values may be separated by commas.
-          explode: false
-          style: form
-        - in: query
-          name: is_valid
+          name: overbooked
           schema:
             type: boolean
-          description: Filter on valid instances
         - in: query
-          name: playout_status
+          name: position_status
           schema:
             type: integer
         - in: query
-          name: playout_status__gt
-          schema:
-            type: integer
-        - in: query
-          name: playout_status__gte
-          schema:
-            type: integer
-        - in: query
-          name: playout_status__lt
-          schema:
-            type: integer
-        - in: query
-          name: playout_status__lte
-          schema:
-            type: integer
-        - in: query
-          name: playout_status__range
-          schema:
-            type: array
-            items:
-              type: integer
-          description: Multiple values may be separated by commas.
-          explode: false
-          style: form
-        - in: query
-          name: starts
+          name: starts_after
           schema:
             type: string
             format: date-time
         - in: query
-          name: starts__gt
+          name: starts_before
           schema:
             type: string
             format: date-time
-        - in: query
-          name: starts__gte
-          schema:
-            type: string
-            format: date-time
-        - in: query
-          name: starts__lt
-          schema:
-            type: string
-            format: date-time
-        - in: query
-          name: starts__lte
-          schema:
-            type: string
-            format: date-time
-        - in: query
-          name: starts__range
-          schema:
-            type: array
-            items:
-              type: string
-              format: date-time
-          description: Multiple values may be separated by commas.
-          explode: false
-          style: form
       tags:
         - schedule
       security:
@@ -6553,12 +6452,18 @@ components:
         id:
           type: integer
           readOnly: true
-        starts:
+        starts_at:
           type: string
           format: date-time
-        ends:
+        ends_at:
           type: string
           format: date-time
+          readOnly: true
+        instance:
+          type: string
+          format: uri
+        instance_id:
+          type: integer
           readOnly: true
         file:
           type: string
@@ -6574,7 +6479,7 @@ components:
         stream_id:
           type: integer
           readOnly: true
-        clip_length:
+        length:
           type: string
           nullable: true
         fade_in:
@@ -6590,27 +6495,25 @@ components:
         cue_out:
           type: string
           readOnly: true
-        media_item_played:
-          type: boolean
-          nullable: true
-        instance:
-          type: string
-          format: uri
-        instance_id:
-          type: integer
-          readOnly: true
-        playout_status:
-          type: integer
-          maximum: 32767
-          minimum: -32768
-        broadcasted:
-          type: integer
-          maximum: 32767
-          minimum: -32768
         position:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
+        position_status:
+          allOf:
+            - $ref: "#/components/schemas/PositionStatusEnum"
+          minimum: -32768
+          maximum: 32767
+        broadcasted:
+          type: integer
+          maximum: 32767
+          minimum: -32768
+        played:
+          type: boolean
+          nullable: true
+        overbooked:
+          type: string
+          readOnly: true
     PatchedServiceRegister:
       type: object
       properties:
@@ -7381,6 +7284,13 @@ components:
         - item_url
         - podcast
         - published_at
+    PositionStatusEnum:
+      enum:
+        - -1
+        - 0
+        - 1
+        - 2
+      type: integer
     Preference:
       type: object
       properties:
@@ -7433,12 +7343,18 @@ components:
         id:
           type: integer
           readOnly: true
-        starts:
+        starts_at:
           type: string
           format: date-time
-        ends:
+        ends_at:
           type: string
           format: date-time
+          readOnly: true
+        instance:
+          type: string
+          format: uri
+        instance_id:
+          type: integer
           readOnly: true
         file:
           type: string
@@ -7454,7 +7370,7 @@ components:
         stream_id:
           type: integer
           readOnly: true
-        clip_length:
+        length:
           type: string
           nullable: true
         fade_in:
@@ -7470,40 +7386,38 @@ components:
         cue_out:
           type: string
           readOnly: true
-        media_item_played:
-          type: boolean
-          nullable: true
-        instance:
-          type: string
-          format: uri
-        instance_id:
-          type: integer
-          readOnly: true
-        playout_status:
-          type: integer
-          maximum: 32767
-          minimum: -32768
-        broadcasted:
-          type: integer
-          maximum: 32767
-          minimum: -32768
         position:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
+        position_status:
+          allOf:
+            - $ref: "#/components/schemas/PositionStatusEnum"
+          minimum: -32768
+          maximum: 32767
+        broadcasted:
+          type: integer
+          maximum: 32767
+          minimum: -32768
+        played:
+          type: boolean
+          nullable: true
+        overbooked:
+          type: string
+          readOnly: true
       required:
         - broadcasted
         - cue_in
         - cue_out
-        - ends
+        - ends_at
         - file_id
         - id
         - instance
         - instance_id
         - item_url
-        - playout_status
+        - overbooked
         - position
-        - starts
+        - starts_at
         - stream_id
     ServiceRegister:
       type: object

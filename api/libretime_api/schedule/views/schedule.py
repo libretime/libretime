@@ -1,42 +1,33 @@
-from django.db.models import F
-from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view
+from django.db import models
+from django_filters import rest_framework as filters
 from rest_framework import viewsets
 
-from ..._constants import FILTER_NUMERICAL_LOOKUPS
 from ..models import Schedule
 from ..serializers import ScheduleSerializer
 
 
-@extend_schema_view(
-    list=extend_schema(
-        parameters=[
-            OpenApiParameter(
-                name="is_valid",
-                description="Filter on valid instances",
-                required=False,
-                type=bool,
-            ),
-        ]
-    )
-)
+class ScheduleFilter(filters.FilterSet):
+    starts = filters.DateTimeFromToRangeFilter(field_name="starts_at")
+    ends = filters.DateTimeFromToRangeFilter(field_name="ends_at")
+    position_status = filters.NumberFilter()
+    broadcasted = filters.NumberFilter()
+
+    overbooked = filters.BooleanFilter(method="overbooked_filter")
+
+    # pylint: disable=unused-argument
+    def overbooked_filter(self, queryset, name, value):
+        # TODO: deduplicate code using the overbooked property
+        if value:
+            return queryset.filter(starts_at__gte=models.F("instance__ends_at"))
+        return queryset.filter(starts_at__lt=models.F("instance__ends_at"))
+
+    class Meta:
+        model = Schedule
+        fields = []  # type: ignore
+
+
 class ScheduleViewSet(viewsets.ModelViewSet):
     queryset = Schedule.objects.all()
     serializer_class = ScheduleSerializer
-    filterset_fields = {
-        "starts": FILTER_NUMERICAL_LOOKUPS,
-        "ends": FILTER_NUMERICAL_LOOKUPS,
-        "playout_status": FILTER_NUMERICAL_LOOKUPS,
-        "broadcasted": FILTER_NUMERICAL_LOOKUPS,
-    }
+    filterset_class = ScheduleFilter
     model_permission_name = "schedule"
-
-    def get_queryset(self):
-        filter_valid = self.request.query_params.get("is_valid")
-        if filter_valid is None:
-            return self.queryset.all()
-
-        filter_valid = filter_valid.strip().lower() in ("true", "yes", "1")
-        if filter_valid:
-            return self.queryset.filter(starts__lt=F("instance__ends"))
-
-        return self.queryset.filter(starts__gte=F("instance__ends"))
