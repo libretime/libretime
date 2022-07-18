@@ -16,9 +16,9 @@ from libretime_api_client import version1 as v1_api_client
 from libretime_api_client import version2 as api_client
 from loguru import logger
 
-from .config import CACHE_DIR, POLL_INTERVAL, Config
+from ..config import CACHE_DIR, POLL_INTERVAL, Config
+from ..timeout import ls_timeout
 from .schedule import get_schedule
-from .timeout import ls_timeout
 
 
 def keyboardInterruptHandler(signum, frame):

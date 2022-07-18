@@ -3,7 +3,7 @@ import traceback
 
 from loguru import logger
 
-from .timeout import ls_timeout
+from ..timeout import ls_timeout
 
 
 def create_liquidsoap_annotation(media):

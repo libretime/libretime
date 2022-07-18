@@ -21,13 +21,13 @@ from loguru import logger
 
 from .config import CACHE_DIR, RECORD_DIR, Config
 from .liquidsoap.version import LIQUIDSOAP_MIN_VERSION, parse_liquidsoap_version
-from .listenerstat import ListenerStat
-from .pypofetch import PypoFetch
-from .pypofile import PypoFile
-from .pypoliquidsoap import PypoLiquidsoap
-from .pypomessagehandler import PypoMessageHandler
-from .pypopush import PypoPush
+from .message_handler import PypoMessageHandler
+from .player.fetch import PypoFetch
+from .player.file import PypoFile
+from .player.liquidsoap import PypoLiquidsoap
+from .player.push import PypoPush
 from .recorder import Recorder
+from .stats import ListenerStat
 from .timeout import ls_timeout
 
 

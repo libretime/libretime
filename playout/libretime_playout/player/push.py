@@ -9,9 +9,9 @@ from threading import Thread
 from libretime_api_client import version1 as api_client
 from loguru import logger
 
-from .config import PUSH_INTERVAL, Config
-from .pypoliqqueue import PypoLiqQueue
-from .timeout import ls_timeout
+from ..config import PUSH_INTERVAL, Config
+from ..timeout import ls_timeout
+from .queue import PypoLiqQueue
 
 
 def is_stream(media_item):
