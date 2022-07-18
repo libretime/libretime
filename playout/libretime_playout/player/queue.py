@@ -8,7 +8,7 @@ from threading import Thread
 
 from loguru import logger
 
-from .utils import seconds_between
+from ..utils import seconds_between
 
 
 def keyboardInterruptHandler(signum, frame):

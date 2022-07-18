@@ -1,6 +1,6 @@
 import threading
 
-from . import pypofetch
+from .player import fetch
 
 
 def __timeout(func, timeout_duration, default, args, kwargs):
@@ -26,7 +26,7 @@ def __timeout(func, timeout_duration, default, args, kwargs):
             # fails again then there is something critically wrong...
             if first_attempt:
                 # restart liquidsoap
-                pypofetch.PypoFetch.ref.restart_liquidsoap()
+                fetch.PypoFetch.ref.restart_liquidsoap()
             else:
                 raise Exception("Thread did not terminate")
         else:

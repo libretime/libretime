@@ -3,9 +3,9 @@ from datetime import datetime, timedelta
 
 from loguru import logger
 
+from ..utils import seconds_between
 from .events import EventKind
-from .telnetliquidsoap import TelnetLiquidsoap
-from .utils import seconds_between
+from .liquidsoap_gateway import TelnetLiquidsoap
 
 
 class PypoLiquidsoap:

@@ -1,4 +1,4 @@
-from libretime_playout.schedule import get_schedule
+from libretime_playout.player.schedule import get_schedule
 
 
 class ApiClientServicesMock:

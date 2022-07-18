@@ -7,8 +7,8 @@ from threading import Lock
 from libretime_shared.logging import TRACE, setup_logger
 from loguru import logger
 
-from .pypoliqqueue import PypoLiqQueue
-from .telnetliquidsoap import TelnetLiquidsoap
+from .player.liquidsoap_gateway import TelnetLiquidsoap
+from .player.queue import PypoLiqQueue
 
 
 def keyboardInterruptHandler(signum, frame):
