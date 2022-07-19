@@ -1,3 +1,4 @@
+from django.urls import path
 from rest_framework import routers
 
 from .views import (
@@ -9,6 +10,7 @@ from .views import (
     ThirdPartyTrackReferenceViewSet,
     UserTokenViewSet,
     UserViewSet,
+    VersionView,
 )
 
 router = routers.DefaultRouter()
@@ -21,4 +23,7 @@ router.register("user-tokens", UserTokenViewSet)
 router.register("celery-tasks", CeleryTaskViewSet)
 router.register("third-party-track-references", ThirdPartyTrackReferenceViewSet)
 
-urls = router.urls
+urls = [
+    *router.urls,
+    path("version/", VersionView.as_view()),
+]
