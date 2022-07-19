@@ -5415,7 +5415,7 @@ components:
           readOnly: true
         import_status:
           allOf:
-            - $ref: "#/components/schemas/ImportStatusEnum"
+            - $ref: "#/components/schemas/PlaylistContentKindEnum"
           minimum: -2147483648
           maximum: 2147483647
         filepath:
@@ -5671,12 +5671,6 @@ components:
         - mime
         - name
         - size
-    ImportStatusEnum:
-      enum:
-        - 0
-        - 1
-        - 2
-      type: integer
     ImportedPodcast:
       type: object
       properties:
@@ -5700,12 +5694,6 @@ components:
         - item_url
         - override_album
         - podcast
-    Kind1d2Enum:
-      enum:
-        - 0
-        - 1
-        - 2
-      type: integer
     Library:
       type: object
       properties:
@@ -5838,7 +5826,7 @@ components:
           readOnly: true
         import_status:
           allOf:
-            - $ref: "#/components/schemas/ImportStatusEnum"
+            - $ref: "#/components/schemas/PlaylistContentKindEnum"
           minimum: -2147483648
           maximum: 2147483647
         filepath:
@@ -6219,7 +6207,7 @@ components:
           readOnly: true
         kind:
           allOf:
-            - $ref: "#/components/schemas/Kind1d2Enum"
+            - $ref: "#/components/schemas/PlaylistContentKindEnum"
           minimum: -32768
           maximum: 32767
         position:
@@ -7043,7 +7031,7 @@ components:
           readOnly: true
         kind:
           allOf:
-            - $ref: "#/components/schemas/Kind1d2Enum"
+            - $ref: "#/components/schemas/PlaylistContentKindEnum"
           minimum: -32768
           maximum: 32767
         position:
@@ -7091,6 +7079,12 @@ components:
         - item_url
         - kind
         - offset
+    PlaylistContentKindEnum:
+      enum:
+        - 0
+        - 1
+        - 2
+      type: integer
     PlayoutHistory:
       type: object
       properties:
