@@ -52,7 +52,7 @@ class Schedule(models.Model):
     )
 
     @property
-    def overbooked(self):
+    def overbooked(self) -> bool:
         """
         A schedule item is overbooked if it starts after the end of the show
         instance it is in.

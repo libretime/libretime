@@ -6512,7 +6512,7 @@ components:
           type: boolean
           nullable: true
         overbooked:
-          type: string
+          type: boolean
           readOnly: true
     PatchedServiceRegister:
       type: object
@@ -7403,7 +7403,7 @@ components:
           type: boolean
           nullable: true
         overbooked:
-          type: string
+          type: boolean
           readOnly: true
       required:
         - broadcasted
