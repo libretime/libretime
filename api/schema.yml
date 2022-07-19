@@ -5070,7 +5070,11 @@ paths:
         - {}
       responses:
         "200":
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Version"
+          description: ""
   /api/v2/webstream-metadata/:
     get:
       operationId: webstream_metadata_list
@@ -7928,6 +7932,13 @@ components:
         - item_url
         - token
         - user
+    Version:
+      type: object
+      properties:
+        api_version:
+          type: string
+      required:
+        - api_version
     Webstream:
       type: object
       properties:
