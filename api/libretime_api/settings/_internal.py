@@ -166,8 +166,14 @@ AUTH_USER_MODEL = "core.User"
 # Spectacular
 # https://drf-spectacular.readthedocs.io/en/latest/settings.html
 
+SPECTACULAR_ENUM_NAME_OVERRIDES = {
+    "SmartBlockKindEnum": "libretime_api.schedule.models.SmartBlock.Kind",
+    "PlaylistContentKindEnum": "libretime_api.schedule.models.PlaylistContent.Kind",
+}
+
 SPECTACULAR_SETTINGS = {
     "TITLE": "LibreTime API",
     "DESCRIPTION": "Radio Broadcast & Automation Platform",
     "VERSION": API_VERSION,
+    "ENUM_NAME_OVERRIDES": SPECTACULAR_ENUM_NAME_OVERRIDES,
 }
