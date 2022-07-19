@@ -20,3 +20,5 @@ router.register("users", UserViewSet)
 router.register("user-tokens", UserTokenViewSet)
 router.register("celery-tasks", CeleryTaskViewSet)
 router.register("third-party-track-references", ThirdPartyTrackReferenceViewSet)
+
+urls = router.urls

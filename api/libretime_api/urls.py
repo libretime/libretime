@@ -6,26 +6,24 @@ https://docs.djangoproject.com/en/3.2/topics/http/urls/
 """
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-from rest_framework import routers
 
-from .core.router import router as core_router
+from .core.router import urls as core_urls
 from .core.views import version
-from .history.router import router as history_router
-from .podcasts.router import router as podcasts_router
-from .schedule.router import router as schedule_router
-from .storage.router import router as storage_router
+from .history.router import urls as history_urls
+from .podcasts.router import urls as podcasts_urls
+from .schedule.router import urls as schedule_urls
+from .storage.router import urls as storage_urls
 
-router = routers.DefaultRouter()
-
-router.registry.extend(core_router.registry)
-router.registry.extend(history_router.registry)
-router.registry.extend(podcasts_router.registry)
-router.registry.extend(schedule_router.registry)
-router.registry.extend(storage_router.registry)
+api_urls = []
+api_urls += core_urls
+api_urls += history_urls
+api_urls += podcasts_urls
+api_urls += schedule_urls
+api_urls += storage_urls
 
 
 urlpatterns = [
-    path("api/v2/", include(router.urls)),
+    path("api/v2/", include(api_urls)),
     path("api/v2/version/", version),
     path(
         "api/v2/schema/",
