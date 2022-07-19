@@ -117,8 +117,7 @@ class PypoLiquidsoap:
         uri: "http://stream2.radioblackout.org:80/blackout.ogg",
         start: "2013-03-21-22-56-00",
         end: "2013-03-21-23-26-00",
-        show_name: "Untitled Show",
-        independent_event: true
+        show_name: "Untitled Show"
         },
         """
 
