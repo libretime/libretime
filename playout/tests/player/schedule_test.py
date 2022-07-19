@@ -76,7 +76,6 @@ def test_get_schedule():
         "media": {
             "2022-03-04-15-30-00": {
                 "type": "file",
-                "independent_event": False,
                 "row_id": 17,
                 "start": "2022-03-04-15-30-00",
                 "end": "2022-03-04-15-33-50",
@@ -100,7 +99,6 @@ def test_get_schedule():
             },
             "2022-03-04-15-33-50": {
                 "type": "stream_buffer_start",
-                "independent_event": True,
                 "row_id": 18,
                 "start": "2022-03-04-15-33-45",
                 "end": "2022-03-04-15-33-45",
@@ -109,7 +107,6 @@ def test_get_schedule():
             },
             "2022-03-04-15-33-50_0": {
                 "type": "stream_output_start",
-                "independent_event": True,
                 "row_id": 18,
                 "start": "2022-03-04-15-33-50",
                 "end": "2022-03-04-16-03-50",
@@ -119,7 +116,6 @@ def test_get_schedule():
             },
             "2022-03-04-16-03-50": {
                 "type": "stream_buffer_end",
-                "independent_event": True,
                 "row_id": 18,
                 "start": "2022-03-04-16-03-50",
                 "end": "2022-03-04-16-03-50",
@@ -128,7 +124,6 @@ def test_get_schedule():
             },
             "2022-03-04-16-03-50_0": {
                 "type": "stream_output_end",
-                "independent_event": True,
                 "row_id": 18,
                 "start": "2022-03-04-16-03-50",
                 "end": "2022-03-04-16-03-50",

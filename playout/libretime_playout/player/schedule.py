@@ -68,7 +68,6 @@ def generate_file_events(
 
     events[schedule_start_event_key] = {
         "type": EventKind.FILE,
-        "independent_event": False,
         "row_id": schedule["id"],
         "start": schedule_start_event_key,
         "end": schedule_end_event_key,
@@ -108,7 +107,6 @@ def generate_webstream_events(
 
     events[schedule_start_event_key] = {
         "type": EventKind.STREAM_BUFFER_START,
-        "independent_event": True,
         "row_id": schedule["id"],
         "start": datetime_to_event_key(schedule["starts_at"] - timedelta(seconds=5)),
         "end": datetime_to_event_key(schedule["starts_at"] - timedelta(seconds=5)),
@@ -118,7 +116,6 @@ def generate_webstream_events(
 
     events[f"{schedule_start_event_key}_0"] = {
         "type": EventKind.STREAM_OUTPUT_START,
-        "independent_event": True,
         "row_id": schedule["id"],
         "start": schedule_start_event_key,
         "end": schedule_end_event_key,
@@ -132,7 +129,6 @@ def generate_webstream_events(
     # the schedule end.
     events[schedule_end_event_key] = {
         "type": EventKind.STREAM_BUFFER_END,
-        "independent_event": True,
         "row_id": schedule["id"],
         "start": schedule_end_event_key,
         "end": schedule_end_event_key,
@@ -142,7 +138,6 @@ def generate_webstream_events(
 
     events[f"{schedule_end_event_key}_0"] = {
         "type": EventKind.STREAM_OUTPUT_END,
-        "independent_event": True,
         "row_id": schedule["id"],
         "start": schedule_end_event_key,
         "end": schedule_end_event_key,

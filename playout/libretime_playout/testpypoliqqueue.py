@@ -67,7 +67,6 @@ media_schedule[start_dt] = {
     "end": end_dt,
     "show_name": "Untitled",
     "replay_gain": 0,
-    "independent_event": True,
 }
 
 
@@ -88,7 +87,6 @@ media_schedule[start_dt] = {
     "end": end_dt,
     "show_name": "Untitled",
     "replay_gain": 0,
-    "independent_event": True,
 }
 pypoLiq_q.put(media_schedule)
 

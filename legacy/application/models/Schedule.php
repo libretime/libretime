@@ -851,7 +851,6 @@ SQL;
             $data['media'][$kick_start]['end'] = $kick_start;
             $data['media'][$kick_start]['event_type'] = 'kick_out';
             $data['media'][$kick_start]['type'] = 'event';
-            $data['media'][$kick_start]['independent_event'] = true;
 
             if ($kick_time !== $switch_off_time) {
                 $switch_start = self::AirtimeTimeToPypoTime($switch_off_time);
@@ -859,7 +858,6 @@ SQL;
                 $data['media'][$switch_start]['end'] = $switch_start;
                 $data['media'][$switch_start]['event_type'] = 'switch_off';
                 $data['media'][$switch_start]['type'] = 'event';
-                $data['media'][$switch_start]['independent_event'] = true;
             }
         }
     }
@@ -880,12 +878,6 @@ SQL;
     {
         $start = self::AirtimeTimeToPypoTime($item['start']);
         $end = self::AirtimeTimeToPypoTime($item['end']);
-
-        [,,, $start_hour] = explode('-', $start);
-        [,,, $end_hour] = explode('-', $end);
-
-        $same_hour = $start_hour == $end_hour;
-        $independent_event = !$same_hour;
 
         $replay_gain = is_null($item['replay_gain']) ? '0' : $item['replay_gain'];
         $replay_gain += Application_Model_Preference::getReplayGainModifier();
@@ -914,7 +906,6 @@ SQL;
             'end' => $end,
             'show_name' => $item['show_name'],
             'replay_gain' => $replay_gain,
-            'independent_event' => $independent_event,
             'filesize' => $filesize,
         ];
 
@@ -941,7 +932,6 @@ SQL;
             'uri' => $uri,
             'row_id' => $item['id'],
             'type' => 'stream_buffer_start',
-            'independent_event' => true,
         ];
 
         self::appendScheduleItem($data, $start, $schedule_item);
@@ -954,7 +944,6 @@ SQL;
             'start' => $start,
             'end' => $end,
             'show_name' => $item['show_name'],
-            'independent_event' => true,
         ];
         self::appendScheduleItem($data, $start, $schedule_item);
 
@@ -971,7 +960,6 @@ SQL;
             'uri' => $uri,
             'type' => 'stream_buffer_end',
             'row_id' => $item['id'],
-            'independent_event' => true,
         ];
         self::appendScheduleItem($data, $stream_end, $schedule_item);
 
@@ -980,7 +968,6 @@ SQL;
             'end' => $stream_end,
             'uri' => $uri,
             'type' => 'stream_output_end',
-            'independent_event' => true,
         ];
         self::appendScheduleItem($data, $stream_end, $schedule_item);
     }
