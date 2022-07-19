@@ -5,3 +5,5 @@ from .views import FileViewSet, LibraryViewSet
 router = routers.DefaultRouter()
 router.register("files", FileViewSet)
 router.register("libraries", LibraryViewSet)
+
+urls = router.urls

@@ -12,3 +12,5 @@ router.register("podcast-episodes", PodcastEpisodeViewSet)
 router.register("podcasts", PodcastViewSet)
 router.register("station-podcasts", StationPodcastViewSet)
 router.register("imported-podcasts", ImportedPodcastViewSet)
+
+urls = router.urls

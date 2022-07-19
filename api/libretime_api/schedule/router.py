@@ -30,3 +30,5 @@ router.register("smart-block-criteria", SmartBlockCriteriaViewSet)
 router.register("smart-blocks", SmartBlockViewSet)
 router.register("webstream-metadata", WebstreamMetadataViewSet)
 router.register("webstreams", WebstreamViewSet)
+
+urls = router.urls
