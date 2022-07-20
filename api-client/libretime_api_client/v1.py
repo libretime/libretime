@@ -14,9 +14,14 @@ import traceback
 import urllib.parse
 
 import requests
+from libretime_shared.config import BaseConfig, GeneralConfig
 
-from ._config import Config
 from ._utils import ApiRequest, RequestProvider
+
+
+class Config(BaseConfig):
+    general: GeneralConfig
+
 
 AIRTIME_API_VERSION = "1.1"
 
