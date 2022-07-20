@@ -1,29 +1,13 @@
-from pathlib import Path
-
-import pytest
-
 from libretime_api_client.v2 import ApiClient
 
 
-@pytest.fixture()
-def config_filepath(tmp_path: Path):
-    filepath = tmp_path / "config.yml"
-    filepath.write_text(
-        """
-general:
-  public_url: http://localhost/test
-  api_key: TEST_KEY
-"""
+def test_api_client(requests_mock):
+    api_client = ApiClient(base_url="http://localhost:8080", api_key="test-key")
+
+    requests_mock.get(
+        "http://localhost:8080/api/v2/version",
+        json={"api_version": "2.0.0"},
     )
-    return filepath
 
-
-def test_api_client(config_filepath):
-    client = ApiClient(config_path=config_filepath)
-    assert callable(client.services.version_url)
-    assert callable(client.services.schedule_url)
-    assert callable(client.services.webstream_url)
-    assert callable(client.services.show_instance_url)
-    assert callable(client.services.show_url)
-    assert callable(client.services.file_url)
-    assert callable(client.services.file_download_url)
+    resp = api_client.get_version()
+    assert resp.json() == {"api_version": "2.0.0"}
