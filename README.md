@@ -37,23 +37,6 @@ provided here.
 The full text of the contract is licensed under the GPL and available at
 the above link courtesy of the [ZeroMQ community](https://zeromq.org/).
 
-## Releasing
-
-The LibreTime maintainers release new versions of LibreTime at regular
-intervals. We follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
-standards.
-
-In a nutshell, given a version number MAJOR.MINOR.PATCH we increment the:
-
-1. MAJOR version when we make incompatible API changes,
-2. MINOR version when we add functionality in a backwards-compatible manner, and
-3. PATCH version when we make backwards-compatible bug fixes.
-
-Given the history of the project we will be starting with version 3.0.0.
-
-Stay tuned for early alphas and lots of betas as we get development
-up and running.
-
 ## Support
 
 To get support for any questions or problems you might have using the software

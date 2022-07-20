@@ -23,13 +23,14 @@ You can install LibreTime using the one of the following methods:
 
 #### Minimum system requirements
 
-- One of the following Linux distributions
-  - Ubuntu [current LTS](https://wiki.ubuntu.com/Releases).
-    [Note Ubuntu 22.04 LTS is not yet supported](https://github.com/libretime/libretime/issues/1845)
-  - Debian [current stable](https://www.debian.org/releases/)
 - 1 Ghz Processor
 - 2 GB RAM recommended (1 GB required)
 - A static external IP address ([How to setup a static ip using Netplan](../tutorials/setup-a-static-ip-using-netplan.md))
+
+One of the [supported distribution releases](../../developer-manual/development/releases.md#distributions-releases-support):
+
+- [Debian 11](https://www.debian.org/releases/)
+- [Ubuntu 20.04 LTS](https://wiki.ubuntu.com/Releases)
 
 :::warning
 
