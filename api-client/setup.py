@@ -27,6 +27,7 @@ setup(
     ],
     extras_require={
         "dev": [
+            "types-requests",
             f"libretime-shared @ file://localhost{here.parent / 'shared'}",
         ],
     },
