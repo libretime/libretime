@@ -49,7 +49,7 @@ install: $(VENV)
 .PHONY: .pylint
 .pylint: $(VENV)
 	source $(VENV)/bin/activate
-	pylint --jobs=$(CPU_CORES) --output-format=colorized $(PYLINT_ARG)
+	pylint --jobs=$(CPU_CORES) --output-format=colorized --recursive=true $(PYLINT_ARG)
 
 .PHONY: .mypy
 .mypy: $(VENV)
