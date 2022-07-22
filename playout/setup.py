@@ -40,6 +40,7 @@ setup(
     extras_require={
         "dev": [
             "distro",
+            "requests-mock",
             f"libretime-api-client @ file://localhost{here.parent / 'api-client'}",
             f"libretime-shared @ file://localhost{here.parent / 'shared'}",
         ],

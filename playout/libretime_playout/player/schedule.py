@@ -25,29 +25,29 @@ def get_schedule(api_client: ApiClient):
     current_time_str = current_time.isoformat(timespec="seconds")
     end_time_str = end_time.isoformat(timespec="seconds")
 
-    schedule = api_client.services.schedule_url(
+    schedule = api_client.list_schedule(
         params={
             "ends_after": f"{current_time_str}Z",
             "ends_before": f"{end_time_str}Z",
             "overbooked": False,
             "position_status__gt": 0,
         }
-    )
+    ).json()
 
     events = {}
     for item in schedule:
         item["starts_at"] = isoparse(item["starts_at"])
         item["ends_at"] = isoparse(item["ends_at"])
 
-        show_instance = api_client.services.show_instance_url(id=item["instance_id"])
-        show = api_client.services.show_url(id=show_instance["show_id"])
+        show_instance = api_client.get_show_instance(item["instance_id"]).json()
+        show = api_client.get_show(show_instance["show_id"]).json()
 
         if item["file"]:
-            file = api_client.services.file_url(id=item["file_id"])
+            file = api_client.get_file(item["file_id"]).json()
             events.update(generate_file_events(item, file, show))
 
         elif item["stream"]:
-            webstream = api_client.services.webstream_url(id=item["stream_id"])
+            webstream = api_client.get_webstream(item["stream_id"]).json()
             events.update(generate_webstream_events(item, webstream, show))
 
     return {"media": events}

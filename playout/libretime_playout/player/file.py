@@ -8,7 +8,7 @@ from threading import Thread
 
 from libretime_api_client.v2 import ApiClient
 from loguru import logger
-from requests.exceptions import ConnectionError, Timeout
+from requests.exceptions import ConnectionError, HTTPError, Timeout
 
 
 class PypoFile(Thread):
@@ -22,10 +22,8 @@ class PypoFile(Thread):
         """
         Copy media_item from local library directory to local cache directory.
         """
-        src = media_item["uri"]
+        file_id = media_item["id"]
         dst = media_item["dst"]
-
-        src_size = media_item["filesize"]
 
         dst_exists = True
         try:
@@ -43,33 +41,26 @@ class PypoFile(Thread):
             # become an issue here... This needs proper cache management.
             # https://github.com/libretime/libretime/issues/756#issuecomment-477853018
             # https://github.com/libretime/libretime/pull/845
-            logger.debug(
-                "file %s already exists in local cache as %s, skipping copying..."
-                % (src, dst)
-            )
+            logger.debug(f"found file {file_id} in cache {dst}, skipping copy...")
         else:
             do_copy = True
 
         media_item["file_ready"] = not do_copy
 
         if do_copy:
-            logger.info(f"copying from {src} to local cache {dst}")
+            logger.info(f"copying file {file_id} to cache {dst}")
             try:
                 with open(dst, "wb") as handle:
                     logger.info(media_item)
-                    response = self.api_client.services.file_download_url(
-                        id=media_item["id"]
-                    )
+                    try:
+                        response = self.api_client.download_file(file_id)
+                        for chunk in response.iter_content(chunk_size=1024):
+                            handle.write(chunk)
 
-                    if not response.ok:
-                        logger.error(response)
+                    except HTTPError as exception:
                         raise Exception(
-                            "%s - Error occurred downloading file"
-                            % response.status_code
-                        )
-
-                    for chunk in response.iter_content(chunk_size=1024):
-                        handle.write(chunk)
+                            f"could not download file {media_item['id']}"
+                        ) from exception
 
                 # make file world readable and owner writable
                 os.chmod(dst, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
@@ -82,7 +73,7 @@ class PypoFile(Thread):
 
                 media_item["file_ready"] = True
             except Exception as e:
-                logger.error(f"Could not copy from {src} to {dst}")
+                logger.error(f"could not copy file {file_id} to {dst}")
                 logger.error(e)
 
     def report_file_size_and_md5_to_api(self, file_path, file_id):
@@ -109,8 +100,10 @@ class PypoFile(Thread):
             "Could not update media file %s with file size and md5 hash:" % file_id
         )
         try:
-            payload = {"filesize": file_size, "md5": md5_hash}
-            response = self.api_client.update_file(file_id, payload)
+            self.api_client.update_file(
+                file_id,
+                json={"filesize": file_size, "md5": md5_hash},
+            )
         except (ConnectionError, Timeout):
             logger.error(error_msg)
         except Exception as e:
