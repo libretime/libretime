@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from libretime_api_client.version2 import AirtimeApiClient
+from libretime_api_client.v2 import AirtimeApiClient
 
 
 @pytest.fixture()
