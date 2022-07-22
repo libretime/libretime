@@ -5,7 +5,7 @@ import traceback
 from pathlib import Path
 from typing import Optional
 
-from libretime_api_client.v1 import ApiClient
+from libretime_api_client.v1 import ApiClient as LegacyClient
 from loguru import logger
 
 
@@ -50,8 +50,8 @@ def generate_entrypoint(log_filepath: Optional[Path]):
 
     while not successful:
         try:
-            ac = ApiClient(logger)
-            ss = ac.get_stream_setting()
+            legacy_client = LegacyClient(logger)
+            ss = legacy_client.get_stream_setting()
             generate_liquidsoap_config(ss, log_filepath)
             successful = True
         except Exception as e:

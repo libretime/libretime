@@ -12,7 +12,7 @@ from threading import Thread
 from zoneinfo import ZoneInfo
 
 import mutagen
-from libretime_api_client.v1 import ApiClient
+from libretime_api_client.v1 import ApiClient as LegacyClient
 from loguru import logger
 
 from libretime_playout.config import PUSH_INTERVAL, RECORD_DIR, Config
@@ -44,9 +44,10 @@ class ShowRecorder(Thread):
         filelength,
         start_time,
         config: Config,
+        legacy_client: LegacyClient,
     ):
         Thread.__init__(self)
-        self.api_client = ApiClient()
+        self.legacy_client = legacy_client
         self.config = config
         self.filelength = filelength
         self.start_time = start_time
@@ -120,7 +121,7 @@ class ShowRecorder(Thread):
             "show_instance": self.show_instance,
         }
 
-        self.api_client.upload_recorded_show(files, self.show_instance)
+        self.legacy_client.upload_recorded_show(files, self.show_instance)
 
     def set_metadata_and_save(self, filepath):
         """
@@ -168,9 +169,9 @@ class ShowRecorder(Thread):
 
 
 class Recorder(Thread):
-    def __init__(self, q, config: Config):
+    def __init__(self, q, config: Config, legacy_client: LegacyClient):
         Thread.__init__(self)
-        self.api_client = ApiClient()
+        self.legacy_client = legacy_client
         self.config = config
         self.sr = None
         self.shows_to_record = {}
@@ -182,7 +183,7 @@ class Recorder(Thread):
         success = False
         while not success:
             try:
-                self.api_client.register_component("show-recorder")
+                self.legacy_client.register_component("show-recorder")
                 success = True
             except Exception as e:
                 logger.error(str(e))
@@ -304,6 +305,7 @@ class Recorder(Thread):
                             show_length_seconds,
                             start_time_formatted,
                             self.config,
+                            self.legacy_client,
                         )
                         self.sr.start()
                         break
@@ -327,7 +329,7 @@ class Recorder(Thread):
             # Bootstrap: since we are just starting up, we need to grab the
             # most recent schedule.  After that we can just wait for updates.
             try:
-                temp = self.api_client.get_shows_to_record()
+                temp = self.legacy_client.get_shows_to_record()
                 if temp is not None:
                     self.process_recorder_schedule(temp)
                 logger.info("Bootstrap recorder schedule received: %s", temp)
@@ -345,7 +347,7 @@ class Recorder(Thread):
                     self.loops = 0
                     # Fetch recorder schedule
                     try:
-                        temp = self.api_client.get_shows_to_record()
+                        temp = self.legacy_client.get_shows_to_record()
                         if temp is not None:
                             self.process_recorder_schedule(temp)
                         logger.info("updated recorder schedule received: %s", temp)

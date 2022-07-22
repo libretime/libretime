@@ -7,7 +7,7 @@ from datetime import datetime
 from threading import Thread
 
 import defusedxml.minidom
-from libretime_api_client.v1 import ApiClient
+from libretime_api_client.v1 import ApiClient as LegacyClient
 from loguru import logger
 
 from .config import Config
@@ -17,10 +17,10 @@ class ListenerStat(Thread):
 
     HTTP_REQUEST_TIMEOUT = 30  # 30 second HTTP request timeout
 
-    def __init__(self, config: Config):
+    def __init__(self, config: Config, legacy_client: LegacyClient):
         Thread.__init__(self)
         self.config = config
-        self.api_client = ApiClient()
+        self.legacy_client = legacy_client
 
     def get_node_text(self, nodelist):
         rc = []
@@ -31,7 +31,7 @@ class ListenerStat(Thread):
 
     def get_stream_parameters(self):
         # [{"user":"", "password":"", "url":"", "port":""},{},{}]
-        return self.api_client.get_stream_parameters()
+        return self.legacy_client.get_stream_parameters()
 
     def get_stream_server_xml(self, ip, url, is_shoutcast=False):
         auth_string = "%(admin_user)s:%(admin_pass)s" % ip
@@ -132,12 +132,12 @@ class ListenerStat(Thread):
         return stats
 
     def push_stream_stats(self, stats):
-        self.api_client.push_stream_stats(stats)
+        self.legacy_client.push_stream_stats(stats)
 
     def update_listener_stat_error(self, stream_id, error):
         keyname = "%s_listener_stat_error" % stream_id
         data = {keyname: error}
-        self.api_client.update_stream_setting_table(data)
+        self.legacy_client.update_stream_setting_table(data)
 
     def run(self):
         # Wake up every 120 seconds and gather icecast statistics. Note that we

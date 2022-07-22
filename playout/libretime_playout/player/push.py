@@ -6,7 +6,6 @@ from datetime import datetime
 from queue import Queue
 from threading import Thread
 
-from libretime_api_client.v1 import ApiClient
 from loguru import logger
 
 from ..config import PUSH_INTERVAL, Config
@@ -25,7 +24,6 @@ def is_file(media_item):
 class PypoPush(Thread):
     def __init__(self, q, telnet_lock, pypo_liquidsoap, config: Config):
         Thread.__init__(self)
-        self.api_client = ApiClient()
         self.queue = q
 
         self.telnet_lock = telnet_lock
