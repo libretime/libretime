@@ -16,7 +16,7 @@ import urllib.parse
 import requests
 
 from ._config import Config
-from .utils import ApiRequest, RequestProvider
+from ._utils import ApiRequest, RequestProvider
 
 AIRTIME_API_VERSION = "1.1"
 

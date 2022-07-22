@@ -9,7 +9,7 @@
 import logging
 
 from ._config import Config
-from .utils import RequestProvider
+from ._utils import RequestProvider
 
 LIBRETIME_API_VERSION = "2.0"
 
