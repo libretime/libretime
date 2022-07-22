@@ -13,7 +13,7 @@ from .views import (
     VersionView,
 )
 
-router = routers.DefaultRouter()
+router = routers.DefaultRouter(trailing_slash=False)
 router.register("login-attempts", LoginAttemptViewSet)
 router.register("preferences", PreferenceViewSet)
 router.register("service-registers", ServiceRegisterViewSet)
@@ -25,5 +25,5 @@ router.register("third-party-track-references", ThirdPartyTrackReferenceViewSet)
 
 urls = [
     *router.urls,
-    path("version/", VersionView.as_view()),
+    path("version", VersionView.as_view()),
 ]

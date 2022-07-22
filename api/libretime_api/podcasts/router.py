@@ -7,7 +7,7 @@ from .views import (
     StationPodcastViewSet,
 )
 
-router = routers.DefaultRouter()
+router = routers.DefaultRouter(trailing_slash=False)
 router.register("podcast-episodes", PodcastEpisodeViewSet)
 router.register("podcasts", PodcastViewSet)
 router.register("station-podcasts", StationPodcastViewSet)

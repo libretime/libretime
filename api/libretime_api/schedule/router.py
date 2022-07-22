@@ -16,7 +16,7 @@ from .views import (
     WebstreamViewSet,
 )
 
-router = routers.DefaultRouter()
+router = routers.DefaultRouter(trailing_slash=False)
 router.register("playlist-contents", PlaylistContentViewSet)
 router.register("playlists", PlaylistViewSet)
 router.register("schedule", ScheduleViewSet)

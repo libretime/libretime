@@ -4,7 +4,7 @@ info:
   version: 2.0.0
   description: Radio Broadcast & Automation Platform
 paths:
-  /api/v2/celery-tasks/:
+  /api/v2/celery-tasks:
     get:
       operationId: celery_tasks_list
       tags:
@@ -47,7 +47,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/CeleryTask"
           description: ""
-  /api/v2/celery-tasks/{id}/:
+  /api/v2/celery-tasks/{id}:
     get:
       operationId: celery_tasks_retrieve
       parameters:
@@ -151,7 +151,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/files/:
+  /api/v2/files:
     get:
       operationId: files_list
       tags:
@@ -194,7 +194,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/File"
           description: ""
-  /api/v2/files/{id}/:
+  /api/v2/files/{id}:
     get:
       operationId: files_retrieve
       parameters:
@@ -298,7 +298,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/files/{id}/download/:
+  /api/v2/files/{id}/download:
     get:
       operationId: files_download_retrieve
       parameters:
@@ -320,7 +320,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/File"
           description: ""
-  /api/v2/imported-podcasts/:
+  /api/v2/imported-podcasts:
     get:
       operationId: imported_podcasts_list
       tags:
@@ -363,7 +363,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ImportedPodcast"
           description: ""
-  /api/v2/imported-podcasts/{id}/:
+  /api/v2/imported-podcasts/{id}:
     get:
       operationId: imported_podcasts_retrieve
       parameters:
@@ -467,7 +467,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/libraries/:
+  /api/v2/libraries:
     get:
       operationId: libraries_list
       tags:
@@ -510,7 +510,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Library"
           description: ""
-  /api/v2/libraries/{id}/:
+  /api/v2/libraries/{id}:
     get:
       operationId: libraries_retrieve
       parameters:
@@ -614,7 +614,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/listener-counts/:
+  /api/v2/listener-counts:
     get:
       operationId: listener_counts_list
       tags:
@@ -657,7 +657,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ListenerCount"
           description: ""
-  /api/v2/listener-counts/{id}/:
+  /api/v2/listener-counts/{id}:
     get:
       operationId: listener_counts_retrieve
       parameters:
@@ -761,7 +761,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/live-logs/:
+  /api/v2/live-logs:
     get:
       operationId: live_logs_list
       tags:
@@ -804,7 +804,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/LiveLog"
           description: ""
-  /api/v2/live-logs/{id}/:
+  /api/v2/live-logs/{id}:
     get:
       operationId: live_logs_retrieve
       parameters:
@@ -908,7 +908,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/login-attempts/:
+  /api/v2/login-attempts:
     get:
       operationId: login_attempts_list
       tags:
@@ -950,7 +950,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/LoginAttempt"
           description: ""
-  /api/v2/login-attempts/{ip}/:
+  /api/v2/login-attempts/{ip}:
     get:
       operationId: login_attempts_retrieve
       parameters:
@@ -1053,7 +1053,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/mount-names/:
+  /api/v2/mount-names:
     get:
       operationId: mount_names_list
       tags:
@@ -1096,7 +1096,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/MountName"
           description: ""
-  /api/v2/mount-names/{id}/:
+  /api/v2/mount-names/{id}:
     get:
       operationId: mount_names_retrieve
       parameters:
@@ -1200,7 +1200,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/playlist-contents/:
+  /api/v2/playlist-contents:
     get:
       operationId: playlist_contents_list
       tags:
@@ -1243,7 +1243,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/PlaylistContent"
           description: ""
-  /api/v2/playlist-contents/{id}/:
+  /api/v2/playlist-contents/{id}:
     get:
       operationId: playlist_contents_retrieve
       parameters:
@@ -1347,7 +1347,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/playlists/:
+  /api/v2/playlists:
     get:
       operationId: playlists_list
       tags:
@@ -1390,7 +1390,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Playlist"
           description: ""
-  /api/v2/playlists/{id}/:
+  /api/v2/playlists/{id}:
     get:
       operationId: playlists_retrieve
       parameters:
@@ -1494,7 +1494,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/playout-history/:
+  /api/v2/playout-history:
     get:
       operationId: playout_history_list
       tags:
@@ -1537,7 +1537,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/PlayoutHistory"
           description: ""
-  /api/v2/playout-history-metadata/:
+  /api/v2/playout-history-metadata:
     get:
       operationId: playout_history_metadata_list
       tags:
@@ -1580,7 +1580,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/PlayoutHistoryMetadata"
           description: ""
-  /api/v2/playout-history-metadata/{id}/:
+  /api/v2/playout-history-metadata/{id}:
     get:
       operationId: playout_history_metadata_retrieve
       parameters:
@@ -1684,7 +1684,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/playout-history-template-fields/:
+  /api/v2/playout-history-template-fields:
     get:
       operationId: playout_history_template_fields_list
       tags:
@@ -1727,7 +1727,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/PlayoutHistoryTemplateField"
           description: ""
-  /api/v2/playout-history-template-fields/{id}/:
+  /api/v2/playout-history-template-fields/{id}:
     get:
       operationId: playout_history_template_fields_retrieve
       parameters:
@@ -1839,7 +1839,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/playout-history-templates/:
+  /api/v2/playout-history-templates:
     get:
       operationId: playout_history_templates_list
       tags:
@@ -1882,7 +1882,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/PlayoutHistoryTemplate"
           description: ""
-  /api/v2/playout-history-templates/{id}/:
+  /api/v2/playout-history-templates/{id}:
     get:
       operationId: playout_history_templates_retrieve
       parameters:
@@ -1986,7 +1986,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/playout-history/{id}/:
+  /api/v2/playout-history/{id}:
     get:
       operationId: playout_history_retrieve
       parameters:
@@ -2090,7 +2090,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/podcast-episodes/:
+  /api/v2/podcast-episodes:
     get:
       operationId: podcast_episodes_list
       tags:
@@ -2133,7 +2133,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/PodcastEpisode"
           description: ""
-  /api/v2/podcast-episodes/{id}/:
+  /api/v2/podcast-episodes/{id}:
     get:
       operationId: podcast_episodes_retrieve
       parameters:
@@ -2237,7 +2237,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/podcasts/:
+  /api/v2/podcasts:
     get:
       operationId: podcasts_list
       tags:
@@ -2280,7 +2280,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Podcast"
           description: ""
-  /api/v2/podcasts/{id}/:
+  /api/v2/podcasts/{id}:
     get:
       operationId: podcasts_retrieve
       parameters:
@@ -2384,7 +2384,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/preferences/:
+  /api/v2/preferences:
     get:
       operationId: preferences_list
       tags:
@@ -2427,7 +2427,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Preference"
           description: ""
-  /api/v2/preferences/{id}/:
+  /api/v2/preferences/{id}:
     get:
       operationId: preferences_retrieve
       parameters:
@@ -2531,7 +2531,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/schedule/:
+  /api/v2/schedule:
     get:
       operationId: schedule_list
       parameters:
@@ -2607,7 +2607,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Schedule"
           description: ""
-  /api/v2/schedule/{id}/:
+  /api/v2/schedule/{id}:
     get:
       operationId: schedule_retrieve
       parameters:
@@ -2711,7 +2711,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/schema/:
+  /api/v2/schema:
     get:
       operationId: schema_retrieve
       description: |-
@@ -2854,7 +2854,7 @@ paths:
                 type: object
                 additionalProperties: {}
           description: ""
-  /api/v2/service-registers/:
+  /api/v2/service-registers:
     get:
       operationId: service_registers_list
       tags:
@@ -2897,7 +2897,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ServiceRegister"
           description: ""
-  /api/v2/service-registers/{name}/:
+  /api/v2/service-registers/{name}:
     get:
       operationId: service_registers_retrieve
       parameters:
@@ -3001,7 +3001,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/show-days/:
+  /api/v2/show-days:
     get:
       operationId: show_days_list
       tags:
@@ -3044,7 +3044,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ShowDays"
           description: ""
-  /api/v2/show-days/{id}/:
+  /api/v2/show-days/{id}:
     get:
       operationId: show_days_retrieve
       parameters:
@@ -3148,7 +3148,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/show-hosts/:
+  /api/v2/show-hosts:
     get:
       operationId: show_hosts_list
       tags:
@@ -3191,7 +3191,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ShowHost"
           description: ""
-  /api/v2/show-hosts/{id}/:
+  /api/v2/show-hosts/{id}:
     get:
       operationId: show_hosts_retrieve
       parameters:
@@ -3295,7 +3295,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/show-instances/:
+  /api/v2/show-instances:
     get:
       operationId: show_instances_list
       tags:
@@ -3338,7 +3338,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ShowInstance"
           description: ""
-  /api/v2/show-instances/{id}/:
+  /api/v2/show-instances/{id}:
     get:
       operationId: show_instances_retrieve
       parameters:
@@ -3442,7 +3442,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/show-rebroadcasts/:
+  /api/v2/show-rebroadcasts:
     get:
       operationId: show_rebroadcasts_list
       tags:
@@ -3485,7 +3485,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ShowRebroadcast"
           description: ""
-  /api/v2/show-rebroadcasts/{id}/:
+  /api/v2/show-rebroadcasts/{id}:
     get:
       operationId: show_rebroadcasts_retrieve
       parameters:
@@ -3589,7 +3589,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/shows/:
+  /api/v2/shows:
     get:
       operationId: shows_list
       tags:
@@ -3632,7 +3632,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Show"
           description: ""
-  /api/v2/shows/{id}/:
+  /api/v2/shows/{id}:
     get:
       operationId: shows_retrieve
       parameters:
@@ -3736,7 +3736,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/smart-block-contents/:
+  /api/v2/smart-block-contents:
     get:
       operationId: smart_block_contents_list
       tags:
@@ -3779,7 +3779,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/SmartBlockContent"
           description: ""
-  /api/v2/smart-block-contents/{id}/:
+  /api/v2/smart-block-contents/{id}:
     get:
       operationId: smart_block_contents_retrieve
       parameters:
@@ -3883,7 +3883,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/smart-block-criteria/:
+  /api/v2/smart-block-criteria:
     get:
       operationId: smart_block_criteria_list
       tags:
@@ -3926,7 +3926,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/SmartBlockCriteria"
           description: ""
-  /api/v2/smart-block-criteria/{id}/:
+  /api/v2/smart-block-criteria/{id}:
     get:
       operationId: smart_block_criteria_retrieve
       parameters:
@@ -4030,7 +4030,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/smart-blocks/:
+  /api/v2/smart-blocks:
     get:
       operationId: smart_blocks_list
       tags:
@@ -4073,7 +4073,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/SmartBlock"
           description: ""
-  /api/v2/smart-blocks/{id}/:
+  /api/v2/smart-blocks/{id}:
     get:
       operationId: smart_blocks_retrieve
       parameters:
@@ -4177,7 +4177,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/station-podcasts/:
+  /api/v2/station-podcasts:
     get:
       operationId: station_podcasts_list
       tags:
@@ -4220,7 +4220,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/StationPodcast"
           description: ""
-  /api/v2/station-podcasts/{id}/:
+  /api/v2/station-podcasts/{id}:
     get:
       operationId: station_podcasts_retrieve
       parameters:
@@ -4324,7 +4324,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/stream-settings/:
+  /api/v2/stream-settings:
     get:
       operationId: stream_settings_list
       tags:
@@ -4367,7 +4367,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/StreamSetting"
           description: ""
-  /api/v2/stream-settings/{key}/:
+  /api/v2/stream-settings/{key}:
     get:
       operationId: stream_settings_retrieve
       parameters:
@@ -4471,7 +4471,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/third-party-track-references/:
+  /api/v2/third-party-track-references:
     get:
       operationId: third_party_track_references_list
       tags:
@@ -4514,7 +4514,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ThirdPartyTrackReference"
           description: ""
-  /api/v2/third-party-track-references/{id}/:
+  /api/v2/third-party-track-references/{id}:
     get:
       operationId: third_party_track_references_retrieve
       parameters:
@@ -4618,7 +4618,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/timestamps/:
+  /api/v2/timestamps:
     get:
       operationId: timestamps_list
       tags:
@@ -4661,7 +4661,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Timestamp"
           description: ""
-  /api/v2/timestamps/{id}/:
+  /api/v2/timestamps/{id}:
     get:
       operationId: timestamps_retrieve
       parameters:
@@ -4765,7 +4765,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/user-tokens/:
+  /api/v2/user-tokens:
     get:
       operationId: user_tokens_list
       tags:
@@ -4808,7 +4808,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserToken"
           description: ""
-  /api/v2/user-tokens/{id}/:
+  /api/v2/user-tokens/{id}:
     get:
       operationId: user_tokens_retrieve
       parameters:
@@ -4912,7 +4912,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/users/:
+  /api/v2/users:
     get:
       operationId: users_list
       tags:
@@ -4955,7 +4955,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/User"
           description: ""
-  /api/v2/users/{id}/:
+  /api/v2/users/{id}:
     get:
       operationId: users_retrieve
       parameters:
@@ -5059,7 +5059,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/version/:
+  /api/v2/version:
     get:
       operationId: version_retrieve
       tags:
@@ -5075,7 +5075,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Version"
           description: ""
-  /api/v2/webstream-metadata/:
+  /api/v2/webstream-metadata:
     get:
       operationId: webstream_metadata_list
       tags:
@@ -5118,7 +5118,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/WebstreamMetadata"
           description: ""
-  /api/v2/webstream-metadata/{id}/:
+  /api/v2/webstream-metadata/{id}:
     get:
       operationId: webstream_metadata_retrieve
       parameters:
@@ -5222,7 +5222,7 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/webstreams/:
+  /api/v2/webstreams:
     get:
       operationId: webstreams_list
       tags:
@@ -5265,7 +5265,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Webstream"
           description: ""
-  /api/v2/webstreams/{id}/:
+  /api/v2/webstreams/{id}:
     get:
       operationId: webstreams_retrieve
       parameters:
