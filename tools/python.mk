@@ -31,6 +31,7 @@ install: $(VENV)
 	source $(VENV)/bin/activate
 	pip install --upgrade pip setuptools wheel
 	pip install $(SHARED_DEV_REQUIREMENTS)
+	pip cache remove 'libretime_*'
 	[[ -z "$(PIP_INSTALL)" ]] || pip install $(PIP_INSTALL)
 
 .PHONY: .format
