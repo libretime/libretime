@@ -11,7 +11,7 @@ from ..permissions import IsSystemTokenOrUser
 class TestIsSystemTokenOrUser(APITestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.path = "/api/v2/files/"
+        cls.path = "/api/v2/files"
 
     def test_unauthorized(self):
         response = self.client.get(self.path.format("files"))
@@ -67,7 +67,7 @@ class TestPermissions(APITestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.path = "/api/v2/{}/"
+        cls.path = "/api/v2/{}"
 
     def test_guest_permissions_success(self):
         for model in self.URLS:

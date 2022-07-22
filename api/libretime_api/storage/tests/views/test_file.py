@@ -8,7 +8,7 @@ from ...._fixtures import AUDIO_FILENAME
 class TestFileViewSet(APITestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.path = "/api/v2/files/{id}/download/"
+        cls.path = "/api/v2/files/{id}/download"
         cls.token = settings.CONFIG.general.api_key
 
     def test_invalid(self):

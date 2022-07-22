@@ -11,7 +11,7 @@ from ...._fixtures import AUDIO_FILENAME
 class TestScheduleViewSet(APITestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.path = "/api/v2/schedule/"
+        cls.path = "/api/v2/schedule"
         cls.token = settings.CONFIG.general.api_key
 
     def test_schedule_item_full_length(self):
