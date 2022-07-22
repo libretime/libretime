@@ -249,8 +249,8 @@ class AirtimeApiClient:
                 """
                 break
 
-            except requests.exceptions.HTTPError as e:
-                logger.error("Http error code: %s", e.code)
+            except requests.exceptions.HTTPError as exception:
+                logger.error(f"Http error code: {exception.response.status_code}")
                 logger.error("traceback: %s", traceback.format_exc())
             except requests.exceptions.ConnectionError as e:
                 logger.error("Server is down: %s", e.args)
