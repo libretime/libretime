@@ -129,7 +129,10 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
     legacy_client = LegacyClient()
-    api_client = ApiClient()
+    api_client = ApiClient(
+        base_url=config.general.public_url,
+        api_key=config.general.api_key,
+    )
     g = Global(legacy_client)
 
     while not g.selfcheck():

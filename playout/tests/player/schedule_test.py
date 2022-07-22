@@ -1,10 +1,17 @@
+import pytest
+from libretime_api_client.v2 import ApiClient
+
 from libretime_playout.player.schedule import get_schedule
 
 
-class ApiClientServicesMock:
-    @staticmethod
-    def schedule_url(*args, **kwargs):
-        return [
+@pytest.fixture(name="api_client_mock")
+def _api_client_mock(requests_mock):
+    base_url = "http://localhost"
+    api_client = ApiClient(base_url=base_url, api_key="test_key")
+
+    requests_mock.get(
+        f"{base_url}/api/v2/schedule",
+        json=[
             {
                 "id": 17,
                 "starts_at": "2022-03-04T15:30:00Z",
@@ -31,23 +38,26 @@ class ApiClientServicesMock:
                 "cue_out": "00:30:00",
                 "instance_id": 3,
             },
-        ]
+        ],
+    )
 
-    @staticmethod
-    def show_instance_url(*args, **kwargs):
-        return {
+    requests_mock.get(
+        f"{base_url}/api/v2/show-instances/3",
+        json={
             "show_id": 3,
-        }
+        },
+    )
 
-    @staticmethod
-    def show_url(*args, **kwargs):
-        return {
+    requests_mock.get(
+        f"{base_url}/api/v2/shows/3",
+        json={
             "name": "Test",
-        }
+        },
+    )
 
-    @staticmethod
-    def file_url(*args, **kwargs):
-        return {
+    requests_mock.get(
+        f"{base_url}/api/v2/files/1",
+        json={
             "id": 1,
             "url": None,
             "replay_gain": "-8.77",
@@ -55,24 +65,23 @@ class ApiClientServicesMock:
             "artist_name": "Bag Raiders",
             "track_title": "Shooting Stars",
             "mime": "audio/mp3",
-        }
+        },
+    )
 
-    @staticmethod
-    def webstream_url(*args, **kwargs):
-        return {
+    requests_mock.get(
+        f"{base_url}/api/v2/webstreams/1",
+        json={
             "id": 1,
             "name": "Test",
             "url": "http://some-other-radio:8800/main.ogg",
-        }
+        },
+    )
+
+    return api_client
 
 
-class ApiClientMock:
-    services = ApiClientServicesMock()
-
-
-def test_get_schedule():
-    api_client = ApiClientMock()
-    assert get_schedule(api_client) == {
+def test_get_schedule(api_client_mock: ApiClient):
+    assert get_schedule(api_client_mock) == {
         "media": {
             "2022-03-04-15-30-00": {
                 "type": "file",
