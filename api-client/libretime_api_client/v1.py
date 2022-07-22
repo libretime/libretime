@@ -120,7 +120,7 @@ api_endpoints[
 ################################################################################
 # Airtime API Version 1 Client
 ################################################################################
-class AirtimeApiClient:
+class ApiClient:
     API_BASE = "/api"
     UPLOAD_RETRIES = 3
     UPLOAD_WAIT = 60

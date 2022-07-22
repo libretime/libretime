@@ -6,7 +6,7 @@ from datetime import datetime
 from queue import Queue
 from threading import Thread
 
-from libretime_api_client.v1 import AirtimeApiClient as ApiClient
+from libretime_api_client.v1 import ApiClient
 from loguru import logger
 
 from ..config import PUSH_INTERVAL, Config

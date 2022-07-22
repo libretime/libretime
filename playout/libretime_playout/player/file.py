@@ -6,7 +6,7 @@ import traceback
 from queue import Empty
 from threading import Thread
 
-from libretime_api_client.v2 import AirtimeApiClient as ApiClient
+from libretime_api_client.v2 import ApiClient
 from loguru import logger
 from requests.exceptions import ConnectionError, Timeout
 

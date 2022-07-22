@@ -1,6 +1,6 @@
 import sys
 
-from libretime_api_client.v1 import AirtimeApiClient as ApiClient
+from libretime_api_client.v1 import ApiClient
 
 api_client = ApiClient()
 
