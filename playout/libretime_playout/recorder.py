@@ -12,19 +12,10 @@ from threading import Thread
 from zoneinfo import ZoneInfo
 
 import mutagen
-from libretime_api_client.version1 import AirtimeApiClient as AirtimeApiClientV1
+from libretime_api_client.v1 import AirtimeApiClient as ApiClient
 from loguru import logger
 
 from libretime_playout.config import PUSH_INTERVAL, RECORD_DIR, Config
-
-
-def api_client():
-    """
-    api_client returns the correct instance of AirtimeApiClient. Although there is only one
-    instance to choose from at the moment.
-    """
-    return AirtimeApiClientV1()
-
 
 # TODO : add docstrings everywhere in this module
 
@@ -55,7 +46,7 @@ class ShowRecorder(Thread):
         config: Config,
     ):
         Thread.__init__(self)
-        self.api_client = api_client()
+        self.api_client = ApiClient()
         self.config = config
         self.filelength = filelength
         self.start_time = start_time
@@ -179,7 +170,7 @@ class ShowRecorder(Thread):
 class Recorder(Thread):
     def __init__(self, q, config: Config):
         Thread.__init__(self)
-        self.api_client = api_client()
+        self.api_client = ApiClient()
         self.config = config
         self.sr = None
         self.shows_to_record = {}

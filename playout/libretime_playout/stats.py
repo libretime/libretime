@@ -7,7 +7,7 @@ from datetime import datetime
 from threading import Thread
 
 import defusedxml.minidom
-from libretime_api_client import version1 as api_client
+from libretime_api_client.v1 import AirtimeApiClient as ApiClient
 from loguru import logger
 
 from .config import Config
@@ -20,7 +20,7 @@ class ListenerStat(Thread):
     def __init__(self, config: Config):
         Thread.__init__(self)
         self.config = config
-        self.api_client = api_client.AirtimeApiClient()
+        self.api_client = ApiClient()
 
     def get_node_text(self, nodelist):
         rc = []

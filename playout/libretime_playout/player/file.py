@@ -6,7 +6,7 @@ import traceback
 from queue import Empty
 from threading import Thread
 
-from libretime_api_client import version2 as api_client
+from libretime_api_client.v2 import AirtimeApiClient as ApiClient
 from loguru import logger
 from requests.exceptions import ConnectionError, Timeout
 
@@ -16,7 +16,7 @@ class PypoFile(Thread):
         Thread.__init__(self)
         self.media_queue = schedule_queue
         self.media = None
-        self.api_client = api_client.AirtimeApiClient()
+        self.api_client = ApiClient()
 
     def copy_file(self, media_item):
         """

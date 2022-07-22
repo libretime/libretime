@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from typing import Dict
 
 from dateutil.parser import isoparse
-from libretime_api_client.version2 import AirtimeApiClient as ApiClient
+from libretime_api_client.v2 import AirtimeApiClient as ApiClient
 from libretime_shared.datetime import (
     time_fromisoformat,
     time_in_milliseconds,

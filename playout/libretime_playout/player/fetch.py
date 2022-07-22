@@ -12,8 +12,8 @@ from queue import Empty
 from subprocess import PIPE, Popen
 from threading import Thread, Timer
 
-from libretime_api_client import version1 as v1_api_client
-from libretime_api_client import version2 as api_client
+from libretime_api_client.v1 import AirtimeApiClient as ApiClientV1
+from libretime_api_client.v2 import AirtimeApiClient as ApiClientV2
 from loguru import logger
 
 from ..config import CACHE_DIR, POLL_INTERVAL, Config
@@ -44,8 +44,8 @@ class PypoFetch(Thread):
         # Hacky...
         PypoFetch.ref = self
 
-        self.v1_api_client = v1_api_client.AirtimeApiClient()
-        self.api_client = api_client.AirtimeApiClient()
+        self.v1_api_client = ApiClientV1()
+        self.api_client = ApiClientV2()
         self.fetch_queue = pypoFetch_q
         self.push_queue = pypoPush_q
         self.media_prepare_queue = media_q

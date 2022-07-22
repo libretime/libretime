@@ -5,7 +5,7 @@ import traceback
 from pathlib import Path
 from typing import Optional
 
-from libretime_api_client.version1 import AirtimeApiClient
+from libretime_api_client.v1 import AirtimeApiClient as ApiClient
 from loguru import logger
 
 
@@ -50,7 +50,7 @@ def generate_entrypoint(log_filepath: Optional[Path]):
 
     while not successful:
         try:
-            ac = AirtimeApiClient(logger)
+            ac = ApiClient(logger)
             ss = ac.get_stream_setting()
             generate_liquidsoap_config(ss, log_filepath)
             successful = True

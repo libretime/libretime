@@ -1,8 +1,8 @@
 import sys
 
-from libretime_api_client import version1 as api_client
+from libretime_api_client.v1 import AirtimeApiClient as ApiClient
 
-api_clients = api_client.AirtimeApiClient()
+api_client = ApiClient()
 
 dj_type = sys.argv[1]
 username = sys.argv[2]
@@ -14,7 +14,7 @@ if dj_type == "--master":
 elif dj_type == "--dj":
     source_type = "dj"
 
-response = api_clients.check_live_stream_auth(username, password, source_type)
+response = api_client.check_live_stream_auth(username, password, source_type)
 
 if "msg" in response and response["msg"] == True:
     print(response["msg"])
