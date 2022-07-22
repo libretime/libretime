@@ -12,8 +12,8 @@ from queue import Empty
 from subprocess import PIPE, Popen
 from threading import Thread, Timer
 
-from libretime_api_client.v1 import ApiClientV1
-from libretime_api_client.v2 import ApiClientV2
+from libretime_api_client.v1 import ApiClient as LegacyClient
+from libretime_api_client.v2 import ApiClient
 from loguru import logger
 
 from ..config import CACHE_DIR, POLL_INTERVAL, Config
@@ -38,14 +38,16 @@ class PypoFetch(Thread):
         telnet_lock,
         pypo_liquidsoap,
         config: Config,
+        api_client: ApiClient,
+        legacy_client: LegacyClient,
     ):
         Thread.__init__(self)
 
         # Hacky...
         PypoFetch.ref = self
 
-        self.v1_api_client = ApiClientV1()
-        self.api_client = ApiClientV2()
+        self.api_client = api_client
+        self.legacy_client = legacy_client
         self.fetch_queue = pypoFetch_q
         self.push_queue = pypoPush_q
         self.media_prepare_queue = media_q
@@ -143,7 +145,7 @@ class PypoFetch(Thread):
     def set_bootstrap_variables(self):
         logger.debug("Getting information needed on bootstrap from Airtime")
         try:
-            info = self.v1_api_client.get_bootstrap_info()
+            info = self.legacy_client.get_bootstrap_info()
         except Exception as e:
             logger.exception("Unable to get bootstrap info.. Exiting pypo...")
 
@@ -257,7 +259,7 @@ class PypoFetch(Thread):
             stream_id = info[0]
             status = info[1]
             if status == "true":
-                self.v1_api_client.notify_liquidsoap_status(
+                self.legacy_client.notify_liquidsoap_status(
                     "OK", stream_id, str(fake_time)
                 )
 
@@ -470,7 +472,7 @@ class PypoFetch(Thread):
     # push metadata to TuneIn. We have to do this because TuneIn turns
     # off metadata if it does not receive a request every 5 minutes.
     def update_metadata_on_tunein(self):
-        self.v1_api_client.update_metadata_on_tunein()
+        self.legacy_client.update_metadata_on_tunein()
         Timer(120, self.update_metadata_on_tunein).start()
 
     def main(self):

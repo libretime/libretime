@@ -1,8 +1,8 @@
 import sys
 
-from libretime_api_client.v1 import ApiClient
+from libretime_api_client.v1 import ApiClient as LegacyClient
 
-api_client = ApiClient()
+legacy_client = LegacyClient()
 
 dj_type = sys.argv[1]
 username = sys.argv[2]
@@ -14,7 +14,7 @@ if dj_type == "--master":
 elif dj_type == "--dj":
     source_type = "dj"
 
-response = api_client.check_live_stream_auth(username, password, source_type)
+response = legacy_client.check_live_stream_auth(username, password, source_type)
 
 if "msg" in response and response["msg"] == True:
     print(response["msg"])

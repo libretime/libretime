@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Optional
 
 import click
-from libretime_api_client.v1 import ApiClient
+from libretime_api_client.v1 import ApiClient as LegacyClient
 from libretime_shared.cli import cli_logging_options
 from libretime_shared.config import DEFAULT_ENV_PREFIX
 from libretime_shared.logging import level_from_name, setup_logger
@@ -24,7 +24,7 @@ from loguru import logger
 
 
 def api_client():
-    return ApiClient(logger=logger)
+    return LegacyClient(logger=logger)
 
 
 @click.group(context_settings={"auto_envvar_prefix": DEFAULT_ENV_PREFIX})

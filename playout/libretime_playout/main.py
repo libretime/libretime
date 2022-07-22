@@ -13,7 +13,8 @@ from threading import Lock
 from typing import Optional, Tuple
 
 import click
-from libretime_api_client.v1 import ApiClient
+from libretime_api_client.v1 import ApiClient as LegacyClient
+from libretime_api_client.v2 import ApiClient
 from libretime_shared.cli import cli_config_options, cli_logging_options
 from libretime_shared.config import DEFAULT_ENV_PREFIX
 from libretime_shared.logging import level_from_name, setup_logger
@@ -32,14 +33,14 @@ from .timeout import ls_timeout
 
 
 class Global:
-    def __init__(self, api_client):
-        self.api_client = api_client
+    def __init__(self, legacy_client: LegacyClient):
+        self.legacy_client = legacy_client
 
     def selfcheck(self):
-        return self.api_client.is_server_compatible()
+        return self.legacy_client.is_server_compatible()
 
     def test_api(self):
-        self.api_client.test()
+        self.legacy_client.test()
 
 
 def keyboardInterruptHandler(signum, frame):
@@ -127,8 +128,9 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
 
     signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
+    legacy_client = LegacyClient()
     api_client = ApiClient()
-    g = Global(api_client)
+    g = Global(legacy_client)
 
     while not g.selfcheck():
         time.sleep(5)
@@ -136,7 +138,7 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     success = False
     while not success:
         try:
-            api_client.register_component("pypo")
+            legacy_client.register_component("pypo")
             success = True
         except Exception as e:
             logger.error(str(e))
@@ -166,7 +168,7 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     pmh.daemon = True
     pmh.start()
 
-    pfile = PypoFile(media_q)
+    pfile = PypoFile(media_q, api_client)
     pfile.daemon = True
     pfile.start()
 
@@ -177,6 +179,8 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
         telnet_lock,
         pypo_liquidsoap,
         config,
+        api_client,
+        legacy_client,
     )
     pf.daemon = True
     pf.start()
@@ -185,11 +189,11 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     pp.daemon = True
     pp.start()
 
-    recorder = Recorder(recorder_q, config)
+    recorder = Recorder(recorder_q, config, legacy_client)
     recorder.daemon = True
     recorder.start()
 
-    stat = ListenerStat(config)
+    stat = ListenerStat(config, legacy_client)
     stat.daemon = True
     stat.start()
 

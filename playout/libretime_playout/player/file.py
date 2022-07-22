@@ -12,11 +12,11 @@ from requests.exceptions import ConnectionError, Timeout
 
 
 class PypoFile(Thread):
-    def __init__(self, schedule_queue):
+    def __init__(self, schedule_queue, api_client: ApiClient):
         Thread.__init__(self)
         self.media_queue = schedule_queue
         self.media = None
-        self.api_client = ApiClient()
+        self.api_client = api_client
 
     def copy_file(self, media_item):
         """
