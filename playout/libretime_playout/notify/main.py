@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Optional
 
 import click
-from libretime_api_client.v1 import AirtimeApiClient as ApiClient
+from libretime_api_client.v1 import ApiClient
 from libretime_shared.cli import cli_logging_options
 from libretime_shared.config import DEFAULT_ENV_PREFIX
 from libretime_shared.logging import level_from_name, setup_logger

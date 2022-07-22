@@ -12,7 +12,7 @@ from threading import Thread
 from zoneinfo import ZoneInfo
 
 import mutagen
-from libretime_api_client.v1 import AirtimeApiClient as ApiClient
+from libretime_api_client.v1 import ApiClient
 from loguru import logger
 
 from libretime_playout.config import PUSH_INTERVAL, RECORD_DIR, Config

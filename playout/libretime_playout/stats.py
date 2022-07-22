@@ -7,7 +7,7 @@ from datetime import datetime
 from threading import Thread
 
 import defusedxml.minidom
-from libretime_api_client.v1 import AirtimeApiClient as ApiClient
+from libretime_api_client.v1 import ApiClient
 from loguru import logger
 
 from .config import Config

@@ -12,8 +12,8 @@ from queue import Empty
 from subprocess import PIPE, Popen
 from threading import Thread, Timer
 
-from libretime_api_client.v1 import AirtimeApiClient as ApiClientV1
-from libretime_api_client.v2 import AirtimeApiClient as ApiClientV2
+from libretime_api_client.v1 import ApiClientV1
+from libretime_api_client.v2 import ApiClientV2
 from loguru import logger
 
 from ..config import CACHE_DIR, POLL_INTERVAL, Config

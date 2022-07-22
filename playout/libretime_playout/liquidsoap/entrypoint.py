@@ -5,7 +5,7 @@ import traceback
 from pathlib import Path
 from typing import Optional
 
-from libretime_api_client.v1 import AirtimeApiClient as ApiClient
+from libretime_api_client.v1 import ApiClient
 from loguru import logger
 
 
