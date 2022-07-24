@@ -35,6 +35,7 @@ setup(
     extras_require={
         "dev": [
             "distro",
+            "types-requests",
             f"libretime-shared @ file://localhost{here.parent / 'shared'}",
         ],
     },
