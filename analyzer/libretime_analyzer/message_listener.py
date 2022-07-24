@@ -1,7 +1,7 @@
 import json
-import queue
 import signal
 import time
+from queue import Queue
 
 import pika
 from libretime_shared.config import RabbitMQConfig
@@ -39,11 +39,11 @@ class MessageListener:
                 break  # Break out of the while loop and exit the application
             except OSError:
                 pass
-            except pika.exceptions.AMQPError as e:
+            except pika.exceptions.AMQPError as exception:
                 if self._shutdown:
                     break
                 logger.error("Connection to message queue failed. ")
-                logger.error(e)
+                logger.error(exception)
                 logger.info("Retrying in 5 seconds...")
                 time.sleep(5)
 
@@ -134,7 +134,7 @@ class MessageListener:
                 callback_url, api_key, audio_metadata
             )
 
-        except KeyError as e:
+        except KeyError:
             logger.exception("A mandatory field was missing from the message.")
             channel.basic_nack(
                 delivery_tag=method_frame.delivery_tag,
@@ -142,8 +142,8 @@ class MessageListener:
                 requeue=False,
             )
 
-        except Exception as e:
-            logger.exception(e)
+        except Exception as exception:
+            logger.exception(exception)
             channel.basic_nack(
                 delivery_tag=method_frame.delivery_tag,
                 multiple=False,
@@ -171,23 +171,23 @@ class MessageListener:
     ):
         metadata = {}
 
-        q = queue.Queue()
+        queue = Queue()
         try:
             Pipeline.run_analysis(
-                q,
+                queue,
                 audio_file_path,
                 import_directory,
                 original_filename,
                 storage_backend,
                 file_prefix,
             )
-            metadata = q.get()
-        except Exception as e:
-            logger.error("Analyzer pipeline exception: %s" % str(e))
+            metadata = queue.get()
+        except Exception as exception:
+            logger.error("Analyzer pipeline exception: %s" % str(exception))
             metadata["import_status"] = PipelineStatus.failed
 
-        # Ensure our queue doesn't fill up and block due to unexpected behaviour. Defensive code.
-        while not q.empty():
-            q.get()
+        # Ensure our queue doesn't fill up and block due to unexpected behavior. Defensive code.
+        while not queue.empty():
+            queue.get()
 
         return metadata
