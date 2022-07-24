@@ -1,4 +1,9 @@
+import logging
+from typing import Optional, Union
+
 from django.db import models
+
+logger = logging.getLogger(__name__)
 
 
 class Preference(models.Model):
@@ -34,14 +39,31 @@ class StreamSetting(models.Model):
         max_length=64,
         db_column="keyname",
     )
-    value = models.CharField(
+    raw_value = models.CharField(
         max_length=255,
         blank=True,
         null=True,
+        db_column="value",
     )
     type = models.CharField(
         max_length=16,
     )
+
+    @property
+    def value(self) -> Optional[Union[bool, int, str]]:
+        # Ignore if value is an empty string
+        if not self.raw_value:
+            return None
+
+        if self.type == "boolean":
+            return self.raw_value.lower() == "true"
+        if self.type == "integer":
+            return int(self.raw_value)
+        if self.type == "string":
+            return self.raw_value
+
+        logger.warning(f"StreamSetting {self.key} has invalid type {self.type}")
+        return self.raw_value
 
     class Meta:
         managed = False

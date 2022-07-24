@@ -6826,7 +6826,7 @@ components:
           type: string
           format: uri
           readOnly: true
-        value:
+        raw_value:
           type: string
           nullable: true
           maxLength: 255
@@ -7796,7 +7796,7 @@ components:
           type: string
           format: uri
           readOnly: true
-        value:
+        raw_value:
           type: string
           nullable: true
           maxLength: 255
