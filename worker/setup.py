@@ -1,7 +1,7 @@
 from os import chdir
 from pathlib import Path
 
-from setuptools import setup
+from setuptools import find_packages, setup
 
 # Change directory since setuptools uses relative paths
 here = Path(__file__).parent.resolve()
@@ -19,7 +19,7 @@ setup(
         "Source Code": "https://github.com/libretime/libretime",
     },
     license="MIT",
-    packages=["libretime_worker"],
+    packages=find_packages(exclude=["*tests*", "*fixtures*"]),
     python_requires=">=3.6",
     install_requires=[
         "celery==4.4.7",
