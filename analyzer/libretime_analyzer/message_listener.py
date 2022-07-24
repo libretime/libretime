@@ -1,6 +1,5 @@
 import json
 import queue
-import select
 import signal
 import time
 
