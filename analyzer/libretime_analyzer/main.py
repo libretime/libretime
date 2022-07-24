@@ -41,6 +41,6 @@ def cli(
 
     # Start listening for RabbitMQ messages telling us about newly
     # uploaded files. This blocks until we receive a shutdown signal.
-    _msg_listener = MessageListener(config.rabbitmq)
+    MessageListener(config.rabbitmq)
 
     StatusReporter.stop_thread()
