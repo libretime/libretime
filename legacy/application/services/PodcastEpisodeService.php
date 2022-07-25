@@ -180,13 +180,9 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      */
     private function _download($id, $url, $title, $album_override, $track_title = null)
     {
-        $CC_CONFIG = Config::getConfig();
-        $stationUrl = Config::getPublicUrl();
         $data = [
             'id' => $id,
             'url' => $url,
-            'callback_url' => $stationUrl . 'rest/media',
-            'api_key' => $CC_CONFIG['apiKey'][0],
             'podcast_name' => $title,
             'album_override' => $album_override,
             'track_title' => $track_title,

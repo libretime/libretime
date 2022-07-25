@@ -12,21 +12,25 @@ import requests
 from celery import Celery
 from celery.utils.log import get_task_logger
 
+from .config import config
+
 worker = Celery()
 logger = get_task_logger(__name__)
 
 
 @worker.task(name="podcast-download", acks_late=True)
 def podcast_download(
-    id, url, callback_url, api_key, podcast_name, album_override, track_title
+    id,
+    url,
+    podcast_name,
+    album_override,
+    track_title,
 ):
     """
     Download a podcast episode
 
     :param id:              episode unique ID
     :param url:             download url for the episode
-    :param callback_url:    callback URL to send the downloaded file to
-    :param api_key:         API key for callback authentication
     :param podcast_name:    Name of podcast to be added to id3 metadata for smartblock
     :param album_override:  Passing whether to override the album id3 even if it exists
     :param track_title:     Passing the title of the episode from feed to override the metadata
@@ -66,10 +70,13 @@ def podcast_download(
                 logger.info(
                     "filetypeinfo is {}".format(filetypeinfo.encode("ascii", "ignore"))
                 )
+                callback_url = f"{config.general.public_url}/rest/media"
+                callback_api_key = config.general.api_key
+
                 re = requests.post(
                     callback_url,
                     files={"file": (filename, open(audiofile.name, "rb"))},
-                    auth=requests.auth.HTTPBasicAuth(api_key, ""),
+                    auth=requests.auth.HTTPBasicAuth(callback_api_key, ""),
                 )
         re.raise_for_status()
         try:

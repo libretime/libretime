@@ -1,10 +1,11 @@
 from os import getenv
 
 from kombu import Exchange, Queue
-from libretime_shared.config import BaseConfig, RabbitMQConfig
+from libretime_shared.config import BaseConfig, GeneralConfig, RabbitMQConfig
 
 
 class Config(BaseConfig):
+    general: GeneralConfig
     rabbitmq: RabbitMQConfig = RabbitMQConfig()
 
 
