@@ -12,11 +12,11 @@ from loguru import logger
 
 
 class PicklableHttpRequest:
-    def __init__(self, method, url, data, api_key):
+    def __init__(self, method, url, api_key, data):
         self.method = method
         self.url = url
-        self.data = data
         self.api_key = api_key
+        self.data = data
 
     def create_request(self):
         return requests.Request(
@@ -194,30 +194,30 @@ class StatusReporter:
         StatusReporter._ipc_queue.put(request)
 
     @classmethod
-    def report_success_to_callback_url(
+    def report_success(
         self,
-        callback_url,
-        api_key,
-        audio_metadata,
+        callback_url: str,
+        callback_api_key: str,
+        metadata: dict,
     ):
         """Report the extracted metadata and status of the successfully imported file
         to the callback URL (which should be the Airtime File Upload API)
         """
-        put_payload = json.dumps(audio_metadata)
+        put_payload = json.dumps(metadata)
         StatusReporter._send_http_request(
             PicklableHttpRequest(
                 method="PUT",
                 url=callback_url,
+                api_key=callback_api_key,
                 data=put_payload,
-                api_key=api_key,
             )
         )
 
     @classmethod
-    def report_failure_to_callback_url(
+    def report_failure(
         self,
         callback_url,
-        api_key,
+        callback_api_key,
         import_status,
         reason,
     ):
@@ -228,7 +228,7 @@ class StatusReporter:
             )
 
         logger.debug("Reporting import failure to Airtime REST API...")
-        audio_metadata = dict()
+        audio_metadata = {}
         audio_metadata["import_status"] = import_status
         audio_metadata["comment"] = reason  # hack attack
         put_payload = json.dumps(audio_metadata)
@@ -238,7 +238,7 @@ class StatusReporter:
             PicklableHttpRequest(
                 method="PUT",
                 url=callback_url,
+                api_key=callback_api_key,
                 data=put_payload,
-                api_key=api_key,
             )
         )

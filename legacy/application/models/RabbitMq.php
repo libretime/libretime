@@ -92,10 +92,7 @@ class Application_Model_RabbitMq
         $tmpFilePath,
         $importedStorageDirectory,
         $originalFilename,
-        $callbackUrl,
-        $apiKey,
-        $storageBackend,
-        $filePrefix
+        $fileId
     ) {
         $config = Config::getConfig();
 
@@ -111,19 +108,11 @@ class Application_Model_RabbitMq
         $exchangeType = 'topic';
         $queue = 'airtime-uploads';
         $autoDeleteExchange = false;
+
+        $data['file_id'] = $fileId;
         $data['tmp_file_path'] = $tmpFilePath;
-        $data['storage_backend'] = $storageBackend;
         $data['import_directory'] = $importedStorageDirectory;
         $data['original_filename'] = $originalFilename;
-        $data['callback_url'] = $callbackUrl;
-        $data['api_key'] = $apiKey;
-
-        // We add a prefix to the resource name so files are not all placed
-        // under the root folder. We do this in case we need to restore a
-        // customer's file/s; File restoration is done via the S3 Browser
-        // client. The client will hang if there are too many files under the
-        // same folder.
-        $data['file_prefix'] = $filePrefix;
 
         $jsonData = json_encode($data);
         // self::sendMessage($exchange, 'topic', false, $jsonData, 'airtime-uploads');
