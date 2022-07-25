@@ -1,7 +1,7 @@
 from os import chdir
 from pathlib import Path
 
-from setuptools import setup
+from setuptools import find_packages, setup
 
 # Change directory since setuptools uses relative paths
 here = Path(__file__).parent.resolve()
@@ -19,10 +19,7 @@ setup(
         "Source Code": "https://github.com/libretime/libretime",
     },
     license="AGPLv3",
-    packages=[
-        "libretime_analyzer",
-        "libretime_analyzer.pipeline",
-    ],
+    packages=find_packages(exclude=["*tests*", "*fixtures*"]),
     entry_points={
         "console_scripts": [
             "libretime-analyzer=libretime_analyzer.main:cli",

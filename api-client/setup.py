@@ -19,7 +19,7 @@ setup(
         "Source Code": "https://github.com/libretime/libretime",
     },
     license="AGPLv3",
-    packages=find_packages(),
+    packages=find_packages(exclude=["*tests*", "*fixtures*"]),
     python_requires=">=3.6",
     install_requires=[
         "python-dateutil>=2.8.1,<2.9",

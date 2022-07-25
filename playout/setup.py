@@ -19,7 +19,7 @@ setup(
         "Source Code": "https://github.com/libretime/libretime",
     },
     license="AGPLv3",
-    packages=find_packages(),
+    packages=find_packages(exclude=["*tests*", "*fixtures*"]),
     package_data={"": ["**/*.liq", "*.types"]},
     entry_points={
         "console_scripts": [
