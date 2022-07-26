@@ -4,9 +4,9 @@ import time
 from queue import Queue
 
 import pika
-from libretime_shared.config import RabbitMQConfig
 from loguru import logger
 
+from .config import Config
 from .pipeline import Pipeline, PipelineStatus
 from .status_reporter import StatusReporter
 
@@ -17,7 +17,7 @@ QUEUE = "airtime-uploads"
 
 
 class MessageListener:
-    def __init__(self, config: RabbitMQConfig):
+    def __init__(self, config: Config):
         """
         Start listening for file upload event messages from RabbitMQ.
         """
@@ -54,12 +54,12 @@ class MessageListener:
         """Connect to the RabbitMQ server and start listening for messages."""
         self._connection = pika.BlockingConnection(
             pika.ConnectionParameters(
-                host=self.config.host,
-                port=self.config.port,
-                virtual_host=self.config.vhost,
+                host=self.config.rabbitmq.host,
+                port=self.config.rabbitmq.port,
+                virtual_host=self.config.rabbitmq.vhost,
                 credentials=pika.credentials.PlainCredentials(
-                    self.config.user,
-                    self.config.password,
+                    self.config.rabbitmq.user,
+                    self.config.rabbitmq.password,
                 ),
             )
         )
@@ -104,9 +104,7 @@ class MessageListener:
         # final_file_path = ""
         import_directory = ""
         original_filename = ""
-        callback_url = ""
-        api_key = ""
-        file_prefix = ""
+        file_id = ""
 
         try:
             try:
@@ -114,25 +112,22 @@ class MessageListener:
             except (UnicodeDecodeError, AttributeError):
                 pass
             msg_dict = json.loads(body)
-            api_key = msg_dict["api_key"]
-            callback_url = msg_dict["callback_url"]
 
+            file_id = msg_dict["file_id"]
             audio_file_path = msg_dict["tmp_file_path"]
-            import_directory = msg_dict["import_directory"]
             original_filename = msg_dict["original_filename"]
-            file_prefix = msg_dict["file_prefix"]
-            storage_backend = msg_dict["storage_backend"]
+            import_directory = msg_dict["import_directory"]
 
-            audio_metadata = MessageListener.spawn_analyzer_process(
+            metadata = MessageListener.spawn_analyzer_process(
                 audio_file_path,
                 import_directory,
                 original_filename,
-                storage_backend,
-                file_prefix,
             )
-            StatusReporter.report_success_to_callback_url(
-                callback_url, api_key, audio_metadata
-            )
+
+            callback_url = f"{self.config.general.public_url}/rest/media/{file_id}"
+            callback_api_key = self.config.general.api_key
+
+            StatusReporter.report_success(callback_url, callback_api_key, metadata)
 
         except KeyError:
             logger.exception("A mandatory field was missing from the message.")
@@ -150,10 +145,10 @@ class MessageListener:
                 requeue=False,
             )
 
-            if callback_url:
-                StatusReporter.report_failure_to_callback_url(
+            if file_id:
+                StatusReporter.report_failure(
                     callback_url,
-                    api_key,
+                    callback_api_key,
                     import_status=2,
                     reason="An error occurred while importing this file",
                 )
@@ -166,8 +161,6 @@ class MessageListener:
         audio_file_path,
         import_directory,
         original_filename,
-        storage_backend,
-        file_prefix,
     ):
         metadata = {}
 
@@ -178,8 +171,6 @@ class MessageListener:
                 audio_file_path,
                 import_directory,
                 original_filename,
-                storage_backend,
-                file_prefix,
             )
             metadata = queue.get()
         except Exception as exception:

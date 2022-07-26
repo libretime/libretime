@@ -16,8 +16,6 @@ def test_run_analysis(src_dir: Path, dest_dir: Path):
         str(src_dir / AUDIO_FILENAME),
         str(dest_dir),
         AUDIO_FILENAME,
-        "file",
-        "",
     )
     metadata = queue.get()
 
@@ -30,17 +28,3 @@ def test_run_analysis(src_dir: Path, dest_dir: Path):
     assert metadata["length_seconds"] == pytest.approx(15.0, abs=0.1)
     assert metadata["length"] == str(timedelta(seconds=metadata["length_seconds"]))
     assert (dest_dir / AUDIO_IMPORT_DEST).exists()
-
-
-@pytest.mark.parametrize(
-    "params,exception",
-    [
-        ((Queue(), "", "", ""), TypeError),
-        ((Queue(), "", "", ""), TypeError),
-        ((Queue(), "", "", ""), TypeError),
-        ((Queue(), "", "", ""), TypeError),
-    ],
-)
-def test_run_analysis_wrong_params(params, exception):
-    with pytest.raises(exception):
-        Pipeline.run_analysis(*params)

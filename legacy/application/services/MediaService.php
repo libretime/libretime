@@ -13,7 +13,7 @@ class Application_Service_MediaService
     /** Move (or copy) a file to the stor/organize directory and send it off to the
      * analyzer to be processed.
      *
-     * @param $callbackUrl
+     * @param $fileId
      * @param $filePath string Path to the local file to import to the library
      * @param $originalFilename string The original filename, if you want it to be preserved after import
      * @param $ownerId string The ID of the user that will own the file inside Airtime
@@ -23,11 +23,8 @@ class Application_Service_MediaService
      *
      * @return Ambigous
      */
-    public static function importFileToLibrary($callbackUrl, $filePath, $originalFilename, $ownerId, $copyFile)
+    public static function importFileToLibrary($fileId, $filePath, $originalFilename, $ownerId, $copyFile)
     {
-        $CC_CONFIG = Config::getConfig();
-        $apiKey = $CC_CONFIG['apiKey'][0];
-
         $importedStorageDirectory = Config::getStoragePath() . '/imported/' . $ownerId;
 
         // Copy the temporary file over to the "organize" folder so that it's off our webserver
@@ -40,10 +37,7 @@ class Application_Service_MediaService
             $newTempFilePath,
             $importedStorageDirectory,
             basename($originalFilename),
-            $callbackUrl,
-            $apiKey,
-            '',
-            '',
+            $fileId,
         );
 
         return $newTempFilePath;
