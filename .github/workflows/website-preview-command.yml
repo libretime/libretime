@@ -64,13 +64,23 @@ jobs:
           full_commit_message: "deploy pr-${{ github.event.inputs.pull-request-number }}"
           keep_files: true
 
+      - name: Find deployment comment
+        uses: peter-evans/find-comment@v2
+        id: find-comment
+        with:
+          issue-number: ${{ github.event.inputs.pull-request-number }}
+          comment-author: github-actions[bot]
+          body-includes: Website preview deployment
+
       - name: Notify deployment succeeded
         if: ${{ success() }}
         uses: peter-evans/create-or-update-comment@v2
         with:
           issue-number: ${{ github.event.inputs.pull-request-number }}
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          edit-mode: replace
           body: |
-            **:rocket: Preview deployment succeeded!**
+            **:rocket: Website preview deployment succeeded!**
 
             Website preview: ${{ env.PREVIEW_URL }}${{ env.PREVIEW_BASE_URL }}pr-${{ github.event.inputs.pull-request-number }}/
             New docs preview: ${{ env.PREVIEW_URL }}${{ env.PREVIEW_BASE_URL }}pr-${{ github.event.inputs.pull-request-number }}/docs/next/
@@ -81,8 +91,10 @@ jobs:
         uses: peter-evans/create-or-update-comment@v2
         with:
           issue-number: ${{ github.event.inputs.pull-request-number }}
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          edit-mode: replace
           body: |
-            **:boom: Preview deployment failed!**
+            **:boom: Website preview deployment failed!**
 
             Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
