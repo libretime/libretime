@@ -39,15 +39,15 @@ def get_schedule(api_client: ApiClient):
         item["starts_at"] = isoparse(item["starts_at"])
         item["ends_at"] = isoparse(item["ends_at"])
 
-        show_instance = api_client.get_show_instance(item["instance_id"]).json()
-        show = api_client.get_show(show_instance["show_id"]).json()
+        show_instance = api_client.get_show_instance(item["instance"]).json()
+        show = api_client.get_show(show_instance["show"]).json()
 
         if item["file"]:
-            file = api_client.get_file(item["file_id"]).json()
+            file = api_client.get_file(item["file"]).json()
             events.update(generate_file_events(item, file, show))
 
         elif item["stream"]:
-            webstream = api_client.get_webstream(item["stream_id"]).json()
+            webstream = api_client.get_webstream(item["stream"]).json()
             events.update(generate_webstream_events(item, webstream, show))
 
     return {"media": events}
