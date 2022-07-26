@@ -1,11 +1,20 @@
+import pytest
+
 from libretime_api_client.v2 import ApiClient
 
 
-def test_api_client(requests_mock):
-    api_client = ApiClient(base_url="http://localhost:8080", api_key="test-key")
+@pytest.mark.parametrize(
+    "base_url",
+    [
+        ("http://localhost:8080"),
+        ("http://localhost:8080/base"),
+    ],
+)
+def test_api_client(requests_mock, base_url):
+    api_client = ApiClient(base_url=base_url, api_key="test-key")
 
     requests_mock.get(
-        "http://localhost:8080/api/v2/version",
+        f"{base_url}/api/v2/version",
         json={"api_version": "2.0.0"},
     )
 

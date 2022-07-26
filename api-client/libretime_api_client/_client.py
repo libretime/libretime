@@ -1,5 +1,4 @@
 from typing import Optional
-from urllib.parse import urljoin
 
 from loguru import logger
 from requests import Response
@@ -51,7 +50,9 @@ class Session(BaseSession):
 
     def create_url(self, url):
         """Create the URL based off this partial path."""
-        return urljoin(self.base_url, url)
+        if self.base_url is None:
+            return url
+        return f"{self.base_url.rstrip('/')}/{url.lstrip('/')}"
 
 
 # pylint: disable=too-few-public-methods
