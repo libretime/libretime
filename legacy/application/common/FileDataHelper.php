@@ -49,6 +49,9 @@ class FileDataHelper
             // This will convert floats to ints too.
             $data['bpm'] = intval($data['bpm']);
         }
+        if (array_key_exists('track_type_id', $data)) {
+            $data['track_type_id'] = intval($data['track_type_id']);
+        }
     }
 
     /**
