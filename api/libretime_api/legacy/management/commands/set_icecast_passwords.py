@@ -67,10 +67,10 @@ class Command(BaseCommand):
             if admin_password is not None:
                 StreamSetting.objects.update_or_create(
                     key=f"{key}_admin_pass",
-                    defaults={"value": admin_password},
+                    defaults={"raw_value": admin_password},
                 )
             if source_password is not None:
                 StreamSetting.objects.update_or_create(
                     key=f"{key}_pass",
-                    defaults={"value": source_password},
+                    defaults={"raw_value": source_password},
                 )
