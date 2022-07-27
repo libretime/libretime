@@ -2,7 +2,10 @@ all: lint
 
 include ../tools/python.mk
 
-PIP_INSTALL := --editable .[dev]
+PIP_INSTALL := \
+	--editable ../api-client \
+	--editable ../shared \
+	--editable .[dev]
 PYLINT_ARG := libretime_playout tests || true
 MYPY_ARG := libretime_playout tests || true
 BANDIT_ARG := libretime_playout || true

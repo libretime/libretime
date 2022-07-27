@@ -50,7 +50,6 @@ setup(
             "pylint-django",
             "pytest-django",
             "requests-mock",
-            f"libretime-shared @ file://localhost/{here.parent / 'shared'}#egg=libretime_shared",
         ],
     },
 )

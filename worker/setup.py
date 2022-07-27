@@ -28,9 +28,7 @@ setup(
         "requests>=2.25.1,<2.29",
     ],
     extras_require={
-        "dev": [
-            f"libretime-shared @ file://localhost{here.parent / 'shared'}",
-        ],
+        "dev": [],
     },
     zip_safe=False,
 )
