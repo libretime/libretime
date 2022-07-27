@@ -229,6 +229,12 @@ class Application_Model_StoredFile
                     if ($dbColumn == 'track_number' && empty($mdValue)) {
                         $mdValue = null;
                     }
+
+                    // We need to set track_type_id to null if it is an empty string or 0
+                    if ($dbColumn == 'track_type_id' && ($mdValue == 0 || empty($mdValue))) {
+                        $mdValue = null;
+                    }
+
                     $this->_file->{$method}($mdValue);
                 }
             }
