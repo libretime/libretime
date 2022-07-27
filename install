@@ -637,6 +637,11 @@ info "deploying libretime-legacy files"
 if $LIBRETIME_INSTALL_IN_PLACE; then
   LEGACY_WEB_ROOT="$SCRIPT_DIR/legacy"
 else
+  if [[ -d "$LEGACY_WEB_ROOT" ]]; then
+    info "cleaning old libretime-legacy files"
+    rm -Rf "$LEGACY_WEB_ROOT"
+  fi
+
   mkdir_and_chown "$LIBRETIME_USER" "$LEGACY_WEB_ROOT"
   cp -R "$SCRIPT_DIR/legacy/." "$LEGACY_WEB_ROOT"
   chown -R "$LIBRETIME_USER:$LIBRETIME_USER" "$LEGACY_WEB_ROOT"
