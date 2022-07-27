@@ -8,25 +8,25 @@ from ..models import (
 )
 
 
-class PlayoutHistorySerializer(serializers.HyperlinkedModelSerializer):
+class PlayoutHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = PlayoutHistory
         fields = "__all__"
 
 
-class PlayoutHistoryMetadataSerializer(serializers.HyperlinkedModelSerializer):
+class PlayoutHistoryMetadataSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlayoutHistoryMetadata
         fields = "__all__"
 
 
-class PlayoutHistoryTemplateSerializer(serializers.HyperlinkedModelSerializer):
+class PlayoutHistoryTemplateSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlayoutHistoryTemplate
         fields = "__all__"
 
 
-class PlayoutHistoryTemplateFieldSerializer(serializers.HyperlinkedModelSerializer):
+class PlayoutHistoryTemplateFieldSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlayoutHistoryTemplateField
         fields = "__all__"

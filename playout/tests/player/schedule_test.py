@@ -16,27 +16,25 @@ def _api_client_mock(requests_mock):
                 "id": 17,
                 "starts_at": "2022-03-04T15:30:00Z",
                 "ends_at": "2022-03-04T15:33:50.674340Z",
-                "file": "http://192.168.10.100:8081/api/v2/files/1/",
-                "file_id": 1,
+                "file": 1,
                 "stream": None,
                 "fade_in": "00:00:00.500000",
                 "fade_out": "00:00:00.500000",
                 "cue_in": "00:00:01.310660",
                 "cue_out": "00:03:51.985000",
-                "instance_id": 3,
+                "instance": 3,
             },
             {
                 "id": 18,
                 "starts_at": "2022-03-04T15:33:50.674340Z",
                 "ends_at": "2022-03-04T16:03:50.674340Z",
                 "file": None,
-                "stream": "http://192.168.10.100:8081/api/v2/webstreams/1/",
-                "stream_id": 1,
+                "stream": 1,
                 "fade_in": "00:00:00.500000",
                 "fade_out": "00:00:00.500000",
                 "cue_in": "00:00:00",
                 "cue_out": "00:30:00",
-                "instance_id": 3,
+                "instance": 3,
             },
         ],
     )
@@ -44,7 +42,7 @@ def _api_client_mock(requests_mock):
     requests_mock.get(
         f"{base_url}/api/v2/show-instances/3",
         json={
-            "show_id": 3,
+            "show": 3,
         },
     )
 

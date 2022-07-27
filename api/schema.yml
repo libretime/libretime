@@ -940,6 +940,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: "#/components/schemas/LoginAttempt"
+        required: true
       security:
         - cookieAuth: []
         - basicAuth: []
@@ -994,6 +995,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: "#/components/schemas/LoginAttempt"
+        required: true
       security:
         - cookieAuth: []
         - basicAuth: []
@@ -5377,9 +5379,8 @@ components:
     CeleryTask:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         task_id:
           type: string
@@ -5396,20 +5397,15 @@ components:
           type: string
           maxLength: 256
         track_reference:
-          type: string
-          format: uri
+          type: integer
       required:
-        - item_url
+        - id
         - status
         - task_id
         - track_reference
     File:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
-          readOnly: true
         id:
           type: integer
           readOnly: true
@@ -5653,30 +5649,25 @@ components:
           nullable: true
           maxLength: 512
         library:
-          type: string
-          format: uri
+          type: integer
           nullable: true
         owner:
-          type: string
-          format: uri
+          type: integer
           nullable: true
         edited_by:
-          type: string
-          format: uri
+          type: integer
           nullable: true
       required:
         - accessed
         - id
-        - item_url
         - mime
         - name
         - size
     ImportedPodcast:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         override_album:
           type: boolean
@@ -5687,19 +5678,17 @@ components:
           format: date-time
           nullable: true
         podcast:
-          type: string
-          format: uri
+          type: integer
       required:
         - auto_ingest
-        - item_url
+        - id
         - override_album
         - podcast
     Library:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         name:
           type: string
@@ -5716,35 +5705,31 @@ components:
           type: boolean
       required:
         - code
-        - item_url
+        - id
     ListenerCount:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         listener_count:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
         timestamp:
-          type: string
-          format: uri
+          type: integer
         mount_name:
-          type: string
-          format: uri
+          type: integer
       required:
-        - item_url
+        - id
         - listener_count
         - mount_name
         - timestamp
     LiveLog:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         state:
           type: string
@@ -5757,35 +5742,33 @@ components:
           format: date-time
           nullable: true
       required:
-        - item_url
+        - id
         - start_time
         - state
     LoginAttempt:
       type: object
       properties:
-        item_url:
+        ip:
           type: string
-          format: uri
-          readOnly: true
+          maxLength: 32
         attempts:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
       required:
-        - item_url
+        - ip
     MountName:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         mount_name:
           type: string
           maxLength: 1024
       required:
-        - item_url
+        - id
         - mount_name
     NullEnum:
       enum:
@@ -5793,9 +5776,8 @@ components:
     PatchedCeleryTask:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         task_id:
           type: string
@@ -5812,15 +5794,10 @@ components:
           type: string
           maxLength: 256
         track_reference:
-          type: string
-          format: uri
+          type: integer
     PatchedFile:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
-          readOnly: true
         id:
           type: integer
           readOnly: true
@@ -6064,23 +6041,19 @@ components:
           nullable: true
           maxLength: 512
         library:
-          type: string
-          format: uri
+          type: integer
           nullable: true
         owner:
-          type: string
-          format: uri
+          type: integer
           nullable: true
         edited_by:
-          type: string
-          format: uri
+          type: integer
           nullable: true
     PatchedImportedPodcast:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         override_album:
           type: boolean
@@ -6091,14 +6064,12 @@ components:
           format: date-time
           nullable: true
         podcast:
-          type: string
-          format: uri
+          type: integer
     PatchedLibrary:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         name:
           type: string
@@ -6116,26 +6087,22 @@ components:
     PatchedListenerCount:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         listener_count:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
         timestamp:
-          type: string
-          format: uri
+          type: integer
         mount_name:
-          type: string
-          format: uri
+          type: integer
     PatchedLiveLog:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         state:
           type: string
@@ -6150,10 +6117,9 @@ components:
     PatchedLoginAttempt:
       type: object
       properties:
-        item_url:
+        ip:
           type: string
-          format: uri
-          readOnly: true
+          maxLength: 32
         attempts:
           type: integer
           maximum: 2147483647
@@ -6162,9 +6128,8 @@ components:
     PatchedMountName:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         mount_name:
           type: string
@@ -6172,9 +6137,8 @@ components:
     PatchedPlaylist:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         created_at:
           type: string
@@ -6195,15 +6159,13 @@ components:
           type: string
           nullable: true
         owner:
-          type: string
-          format: uri
+          type: integer
           nullable: true
     PatchedPlaylistContent:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         kind:
           allOf:
@@ -6236,27 +6198,22 @@ components:
           format: time
           nullable: true
         playlist:
-          type: string
-          format: uri
+          type: integer
           nullable: true
         file:
-          type: string
-          format: uri
+          type: integer
           nullable: true
         stream:
-          type: string
-          format: uri
+          type: integer
           nullable: true
         block:
-          type: string
-          format: uri
+          type: integer
           nullable: true
     PatchedPlayoutHistory:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         starts:
           type: string
@@ -6266,19 +6223,16 @@ components:
           format: date-time
           nullable: true
         file:
-          type: string
-          format: uri
+          type: integer
           nullable: true
         instance:
-          type: string
-          format: uri
+          type: integer
           nullable: true
     PatchedPlayoutHistoryMetadata:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         key:
           type: string
@@ -6287,14 +6241,12 @@ components:
           type: string
           maxLength: 128
         history:
-          type: string
-          format: uri
+          type: integer
     PatchedPlayoutHistoryTemplate:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         name:
           type: string
@@ -6305,9 +6257,8 @@ components:
     PatchedPlayoutHistoryTemplateField:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         name:
           type: string
@@ -6325,14 +6276,12 @@ components:
           maximum: 2147483647
           minimum: -2147483648
         template:
-          type: string
-          format: uri
+          type: integer
     PatchedPodcast:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         url:
           type: string
@@ -6385,15 +6334,13 @@ components:
           nullable: true
           maxLength: 4096
         owner:
-          type: string
-          format: uri
+          type: integer
           nullable: true
     PatchedPodcastEpisode:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         published_at:
           type: string
@@ -6410,18 +6357,15 @@ components:
         episode_description:
           type: string
         podcast:
-          type: string
-          format: uri
+          type: integer
         file:
-          type: string
-          format: uri
+          type: integer
           nullable: true
     PatchedPreference:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         key:
           type: string
@@ -6431,46 +6375,24 @@ components:
           type: string
           nullable: true
         user:
-          type: string
-          format: uri
+          type: integer
           nullable: true
     PatchedSchedule:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
-          readOnly: true
         id:
           type: integer
           readOnly: true
-        starts_at:
+        cue_out:
           type: string
-          format: date-time
+          readOnly: true
         ends_at:
           type: string
           format: date-time
           readOnly: true
-        instance:
+        starts_at:
           type: string
-          format: uri
-        instance_id:
-          type: integer
-          readOnly: true
-        file:
-          type: string
-          format: uri
-          nullable: true
-        file_id:
-          type: integer
-          readOnly: true
-        stream:
-          type: string
-          format: uri
-          nullable: true
-        stream_id:
-          type: integer
-          readOnly: true
+          format: date-time
         length:
           type: string
           nullable: true
@@ -6484,9 +6406,6 @@ components:
           nullable: true
         cue_in:
           type: string
-        cue_out:
-          type: string
-          readOnly: true
         position:
           type: integer
           maximum: 2147483647
@@ -6503,26 +6422,26 @@ components:
         played:
           type: boolean
           nullable: true
-        overbooked:
-          type: boolean
-          readOnly: true
+        instance:
+          type: integer
+        file:
+          type: integer
+          nullable: true
+        stream:
+          type: integer
+          nullable: true
     PatchedServiceRegister:
       type: object
       properties:
-        item_url:
+        name:
           type: string
-          format: uri
-          readOnly: true
+          maxLength: 32
         ip:
           type: string
           maxLength: 45
     PatchedShow:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
-          readOnly: true
         id:
           type: integer
           readOnly: true
@@ -6558,8 +6477,7 @@ components:
         linkable:
           type: boolean
         auto_playlist:
-          type: string
-          format: uri
+          type: integer
           nullable: true
         auto_playlist_enabled:
           type: boolean
@@ -6568,9 +6486,8 @@ components:
     PatchedShowDays:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         first_show_on:
           type: string
@@ -6612,44 +6529,26 @@ components:
           format: date
           nullable: true
         show:
-          type: string
-          format: uri
+          type: integer
     PatchedShowHost:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         show:
-          type: string
-          format: uri
+          type: integer
         user:
-          type: string
-          format: uri
+          type: integer
     PatchedShowInstance:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
-          readOnly: true
         id:
           type: integer
           readOnly: true
         created_at:
           type: string
           format: date-time
-        show:
-          type: string
-          format: uri
-        show_id:
-          type: integer
-          readOnly: true
-        instance:
-          type: string
-          format: uri
-          nullable: true
         starts_at:
           type: string
           format: date-time
@@ -6683,19 +6582,19 @@ components:
           oneOf:
             - $ref: "#/components/schemas/RecordEnabledEnum"
             - $ref: "#/components/schemas/NullEnum"
-        record_file:
-          type: string
-          format: uri
-          nullable: true
-        record_file_id:
+        show:
           type: integer
-          readOnly: true
+        instance:
+          type: integer
+          nullable: true
+        record_file:
+          type: integer
+          nullable: true
     PatchedShowRebroadcast:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         day_offset:
           type: string
@@ -6704,14 +6603,12 @@ components:
           type: string
           format: time
         show:
-          type: string
-          format: uri
+          type: integer
     PatchedSmartBlock:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         created_at:
           type: string
@@ -6738,15 +6635,13 @@ components:
             - $ref: "#/components/schemas/BlankEnum"
             - $ref: "#/components/schemas/NullEnum"
         owner:
-          type: string
-          format: uri
+          type: integer
           nullable: true
     PatchedSmartBlockContent:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         position:
           type: integer
@@ -6774,19 +6669,16 @@ components:
           format: time
           nullable: true
         block:
-          type: string
-          format: uri
+          type: integer
           nullable: true
         file:
-          type: string
-          format: uri
+          type: integer
           nullable: true
     PatchedSmartBlockCriteria:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         group:
           type: integer
@@ -6807,25 +6699,21 @@ components:
           nullable: true
           maxLength: 512
         block:
-          type: string
-          format: uri
+          type: integer
     PatchedStationPodcast:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         podcast:
-          type: string
-          format: uri
+          type: integer
     PatchedStreamSetting:
       type: object
       properties:
-        item_url:
+        key:
           type: string
-          format: uri
-          readOnly: true
+          maxLength: 64
         raw_value:
           type: string
           nullable: true
@@ -6836,9 +6724,8 @@ components:
     PatchedThirdPartyTrackReference:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         service:
           type: string
@@ -6856,15 +6743,13 @@ components:
           nullable: true
           maxLength: 256
         file:
-          type: string
-          format: uri
+          type: integer
           nullable: true
     PatchedTimestamp:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         timestamp:
           type: string
@@ -6872,9 +6757,8 @@ components:
     PatchedUser:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         role:
           $ref: "#/components/schemas/RoleEnum"
@@ -6919,9 +6803,8 @@ components:
     PatchedUserToken:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         action:
           type: string
@@ -6933,15 +6816,10 @@ components:
           type: string
           format: date-time
         user:
-          type: string
-          format: uri
+          type: integer
     PatchedWebstream:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
-          readOnly: true
         id:
           type: integer
           readOnly: true
@@ -6971,15 +6849,13 @@ components:
           nullable: true
           maxLength: 1024
         owner:
-          type: string
-          format: uri
+          type: integer
           nullable: true
     PatchedWebstreamMetadata:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         starts_at:
           type: string
@@ -6988,14 +6864,12 @@ components:
           type: string
           maxLength: 1024
         schedule:
-          type: string
-          format: uri
+          type: integer
     Playlist:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         created_at:
           type: string
@@ -7016,18 +6890,16 @@ components:
           type: string
           nullable: true
         owner:
-          type: string
-          format: uri
+          type: integer
           nullable: true
       required:
-        - item_url
+        - id
         - name
     PlaylistContent:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         kind:
           allOf:
@@ -7060,23 +6932,19 @@ components:
           format: time
           nullable: true
         playlist:
-          type: string
-          format: uri
+          type: integer
           nullable: true
         file:
-          type: string
-          format: uri
+          type: integer
           nullable: true
         stream:
-          type: string
-          format: uri
+          type: integer
           nullable: true
         block:
-          type: string
-          format: uri
+          type: integer
           nullable: true
       required:
-        - item_url
+        - id
         - kind
         - offset
     PlaylistContentKindEnum:
@@ -7088,9 +6956,8 @@ components:
     PlayoutHistory:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         starts:
           type: string
@@ -7100,22 +6967,19 @@ components:
           format: date-time
           nullable: true
         file:
-          type: string
-          format: uri
+          type: integer
           nullable: true
         instance:
-          type: string
-          format: uri
+          type: integer
           nullable: true
       required:
-        - item_url
+        - id
         - starts
     PlayoutHistoryMetadata:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         key:
           type: string
@@ -7124,19 +6988,17 @@ components:
           type: string
           maxLength: 128
         history:
-          type: string
-          format: uri
+          type: integer
       required:
         - history
-        - item_url
+        - id
         - key
         - value
     PlayoutHistoryTemplate:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         name:
           type: string
@@ -7145,15 +7007,14 @@ components:
           type: string
           maxLength: 35
       required:
-        - item_url
+        - id
         - name
         - type
     PlayoutHistoryTemplateField:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         name:
           type: string
@@ -7171,11 +7032,10 @@ components:
           maximum: 2147483647
           minimum: -2147483648
         template:
-          type: string
-          format: uri
+          type: integer
       required:
+        - id
         - is_file_md
-        - item_url
         - label
         - name
         - position
@@ -7184,9 +7044,8 @@ components:
     Podcast:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         url:
           type: string
@@ -7239,19 +7098,17 @@ components:
           nullable: true
           maxLength: 4096
         owner:
-          type: string
-          format: uri
+          type: integer
           nullable: true
       required:
-        - item_url
+        - id
         - title
         - url
     PodcastEpisode:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         published_at:
           type: string
@@ -7268,18 +7125,16 @@ components:
         episode_description:
           type: string
         podcast:
-          type: string
-          format: uri
+          type: integer
         file:
-          type: string
-          format: uri
+          type: integer
           nullable: true
       required:
         - download_url
         - episode_description
         - episode_guid
         - episode_title
-        - item_url
+        - id
         - podcast
         - published_at
     PositionStatusEnum:
@@ -7292,9 +7147,8 @@ components:
     Preference:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         key:
           type: string
@@ -7304,11 +7158,10 @@ components:
           type: string
           nullable: true
         user:
-          type: string
-          format: uri
+          type: integer
           nullable: true
       required:
-        - item_url
+        - id
         - key
         - user
     RecordEnabledEnum:
@@ -7334,40 +7187,19 @@ components:
     Schedule:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
-          readOnly: true
         id:
           type: integer
           readOnly: true
-        starts_at:
+        cue_out:
           type: string
-          format: date-time
+          readOnly: true
         ends_at:
           type: string
           format: date-time
           readOnly: true
-        instance:
+        starts_at:
           type: string
-          format: uri
-        instance_id:
-          type: integer
-          readOnly: true
-        file:
-          type: string
-          format: uri
-          nullable: true
-        file_id:
-          type: integer
-          readOnly: true
-        stream:
-          type: string
-          format: uri
-          nullable: true
-        stream_id:
-          type: integer
-          readOnly: true
+          format: date-time
         length:
           type: string
           nullable: true
@@ -7381,9 +7213,6 @@ components:
           nullable: true
         cue_in:
           type: string
-        cue_out:
-          type: string
-          readOnly: true
         position:
           type: integer
           maximum: 2147483647
@@ -7400,43 +7229,38 @@ components:
         played:
           type: boolean
           nullable: true
-        overbooked:
-          type: boolean
-          readOnly: true
+        instance:
+          type: integer
+        file:
+          type: integer
+          nullable: true
+        stream:
+          type: integer
+          nullable: true
       required:
         - broadcasted
         - cue_in
         - cue_out
         - ends_at
-        - file_id
         - id
         - instance
-        - instance_id
-        - item_url
-        - overbooked
         - position
         - starts_at
-        - stream_id
     ServiceRegister:
       type: object
       properties:
-        item_url:
+        name:
           type: string
-          format: uri
-          readOnly: true
+          maxLength: 32
         ip:
           type: string
           maxLength: 45
       required:
         - ip
-        - item_url
+        - name
     Show:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
-          readOnly: true
         id:
           type: integer
           readOnly: true
@@ -7472,8 +7296,7 @@ components:
         linkable:
           type: boolean
         auto_playlist:
-          type: string
-          format: uri
+          type: integer
           nullable: true
         auto_playlist_enabled:
           type: boolean
@@ -7483,16 +7306,14 @@ components:
         - auto_playlist_enabled
         - auto_playlist_repeat
         - id
-        - item_url
         - linkable
         - linked
         - name
     ShowDays:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         first_show_on:
           type: string
@@ -7534,12 +7355,11 @@ components:
           format: date
           nullable: true
         show:
-          type: string
-          format: uri
+          type: integer
       required:
         - duration
         - first_show_on
-        - item_url
+        - id
         - repeat_kind
         - show
         - start_time
@@ -7547,43 +7367,26 @@ components:
     ShowHost:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         show:
-          type: string
-          format: uri
+          type: integer
         user:
-          type: string
-          format: uri
+          type: integer
       required:
-        - item_url
+        - id
         - show
         - user
     ShowInstance:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
-          readOnly: true
         id:
           type: integer
           readOnly: true
         created_at:
           type: string
           format: date-time
-        show:
-          type: string
-          format: uri
-        show_id:
-          type: integer
-          readOnly: true
-        instance:
-          type: string
-          format: uri
-          nullable: true
         starts_at:
           type: string
           format: date-time
@@ -7617,30 +7420,27 @@ components:
           oneOf:
             - $ref: "#/components/schemas/RecordEnabledEnum"
             - $ref: "#/components/schemas/NullEnum"
-        record_file:
-          type: string
-          format: uri
-          nullable: true
-        record_file_id:
+        show:
           type: integer
-          readOnly: true
+        instance:
+          type: integer
+          nullable: true
+        record_file:
+          type: integer
+          nullable: true
       required:
         - auto_playlist_built
         - created_at
         - ends_at
         - id
-        - item_url
         - modified
-        - record_file_id
         - show
-        - show_id
         - starts_at
     ShowRebroadcast:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         day_offset:
           type: string
@@ -7649,19 +7449,17 @@ components:
           type: string
           format: time
         show:
-          type: string
-          format: uri
+          type: integer
       required:
         - day_offset
-        - item_url
+        - id
         - show
         - start_time
     SmartBlock:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         created_at:
           type: string
@@ -7688,18 +7486,16 @@ components:
             - $ref: "#/components/schemas/BlankEnum"
             - $ref: "#/components/schemas/NullEnum"
         owner:
-          type: string
-          format: uri
+          type: integer
           nullable: true
       required:
-        - item_url
+        - id
         - name
     SmartBlockContent:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         position:
           type: integer
@@ -7727,22 +7523,19 @@ components:
           format: time
           nullable: true
         block:
-          type: string
-          format: uri
+          type: integer
           nullable: true
         file:
-          type: string
-          format: uri
+          type: integer
           nullable: true
       required:
-        - item_url
+        - id
         - offset
     SmartBlockCriteria:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         group:
           type: integer
@@ -7763,13 +7556,12 @@ components:
           nullable: true
           maxLength: 512
         block:
-          type: string
-          format: uri
+          type: integer
       required:
         - block
         - condition
         - criteria
-        - item_url
+        - id
         - value
     SmartBlockKindEnum:
       enum:
@@ -7779,23 +7571,20 @@ components:
     StationPodcast:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         podcast:
-          type: string
-          format: uri
+          type: integer
       required:
-        - item_url
+        - id
         - podcast
     StreamSetting:
       type: object
       properties:
-        item_url:
+        key:
           type: string
-          format: uri
-          readOnly: true
+          maxLength: 64
         raw_value:
           type: string
           nullable: true
@@ -7804,14 +7593,13 @@ components:
           type: string
           maxLength: 16
       required:
-        - item_url
+        - key
         - type
     ThirdPartyTrackReference:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         service:
           type: string
@@ -7829,31 +7617,28 @@ components:
           nullable: true
           maxLength: 256
         file:
-          type: string
-          format: uri
+          type: integer
           nullable: true
       required:
-        - item_url
+        - id
         - service
     Timestamp:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         timestamp:
           type: string
           format: date-time
       required:
-        - item_url
+        - id
         - timestamp
     User:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         role:
           $ref: "#/components/schemas/RoleEnum"
@@ -7897,16 +7682,15 @@ components:
           maxLength: 1024
       required:
         - first_name
-        - item_url
+        - id
         - last_name
         - role
         - username
     UserToken:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         action:
           type: string
@@ -7918,12 +7702,11 @@ components:
           type: string
           format: date-time
         user:
-          type: string
-          format: uri
+          type: integer
       required:
         - action
         - created
-        - item_url
+        - id
         - token
         - user
     Version:
@@ -7936,10 +7719,6 @@ components:
     Webstream:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
-          readOnly: true
         id:
           type: integer
           readOnly: true
@@ -7969,14 +7748,12 @@ components:
           nullable: true
           maxLength: 1024
         owner:
-          type: string
-          format: uri
+          type: integer
           nullable: true
       required:
         - created_at
         - description
         - id
-        - item_url
         - length
         - name
         - updated_at
@@ -7984,9 +7761,8 @@ components:
     WebstreamMetadata:
       type: object
       properties:
-        item_url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         starts_at:
           type: string
@@ -7995,11 +7771,10 @@ components:
           type: string
           maxLength: 1024
         schedule:
-          type: string
-          format: uri
+          type: integer
       required:
         - data
-        - item_url
+        - id
         - schedule
         - starts_at
     WeekDayEnum:
