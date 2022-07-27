@@ -1,11 +1,4 @@
-from os import chdir
-from pathlib import Path
-
 from setuptools import find_packages, setup
-
-# Change directory since setuptools uses relative paths
-here = Path(__file__).parent.resolve()
-chdir(here)
 
 setup(
     name="libretime-playout",
