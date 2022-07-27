@@ -33,6 +33,8 @@ django_settings_module = "libretime_api.settings.testing"
 log_cli = true
 log_cli_level = "DEBUG"
 
+DJANGO_SETTINGS_MODULE = "libretime_api.settings.testing"
+
 [tool.coverage.run]
 omit = [
   "*/tests/*",
