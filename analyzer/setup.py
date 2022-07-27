@@ -36,7 +36,6 @@ setup(
         "dev": [
             "distro",
             "types-requests",
-            f"libretime-shared @ file://localhost{here.parent / 'shared'}",
         ],
     },
     zip_safe=False,

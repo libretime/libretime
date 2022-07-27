@@ -29,7 +29,6 @@ setup(
         "dev": [
             "requests-mock",
             "types-requests",
-            f"libretime-shared @ file://localhost{here.parent / 'shared'}",
         ],
     },
     zip_safe=False,
