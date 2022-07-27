@@ -626,7 +626,7 @@ class Application_Model_Preference
         }
         // We return the Airtime logo if no logo is set in the database.
         // airtime_logo.png is stored under the public directory
-        $image = @file_get_contents(Config::getPublicUrl() . DEFAULT_LOGO_FILE);
+        $image = @file_get_contents(ROOT_PATH . '/public/' . DEFAULT_LOGO_FILE);
 
         return base64_encode($image);
     }
