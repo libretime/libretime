@@ -11,19 +11,22 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2022-07-04 18:49+0200\n"
-"PO-Revision-Date: 2015-09-05 08:33+0000\n"
-"Last-Translator: Daniel James <daniel@64studio.com>\n"
-"Language-Team: Croatian (Croatia)\n"
+"PO-Revision-Date: 2022-07-28 14:22+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Language-Team: Croatian <https://hosted.weblate.org/projects/libretime/"
+"legacy/hr/>\n"
 "Language: hr_HR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.14-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
 msgid "The year %s must be within the range of 1753 - 9999"
-msgstr "Godine %s moraju biti u rasponu od 1753 - 9999"
+msgstr "Godine %s moraju biti u rasponu od 1753. – 9999."
 
 #: application/common/DateHelper.php:219
 #, php-format
@@ -33,7 +36,7 @@ msgstr "%s-%s-%s nije ispravan datum"
 #: application/common/DateHelper.php:243
 #, php-format
 msgid "%s:%s:%s is not a valid time"
-msgstr "%s:%s:%s nije ispravan datum"
+msgstr "%s:%s:%s nije ispravno vrijeme"
 
 #: application/common/LocaleHelper.php:23
 msgid "English"
@@ -1259,13 +1262,13 @@ msgstr "Jezik"
 #: application/forms/SmartBlockCriteria.php:72
 #: application/models/Block.php:1441 application/models/Block.php:1537
 msgid "Last Modified"
-msgstr "Zadnja Izmjena"
+msgstr "Zadnja promjena"
 
 #: application/controllers/LocaleController.php:102
 #: application/forms/SmartBlockCriteria.php:73
 #: application/models/Block.php:1442 application/models/Block.php:1538
 msgid "Last Played"
-msgstr "Zadnji Put Odigrano"
+msgstr "Zadnji put svirano"
 
 #: application/controllers/LocaleController.php:103
 #: application/forms/SmartBlockCriteria.php:74
@@ -1273,20 +1276,20 @@ msgstr "Zadnji Put Odigrano"
 #: application/services/HistoryService.php:1054
 #: application/services/HistoryService.php:1104
 msgid "Length"
-msgstr "Dužina"
+msgstr "Trajanje"
 
 #: application/controllers/LocaleController.php:104
 #: application/forms/SmartBlockCriteria.php:76
 #: application/models/Block.php:1445 application/models/Block.php:1541
 msgid "Mime"
-msgstr "Mimika"
+msgstr "Vrsta"
 
 #: application/controllers/LocaleController.php:105
 #: application/forms/SmartBlockCriteria.php:77
 #: application/models/Block.php:1446 application/models/Block.php:1542
 #: application/services/HistoryService.php:1056
 msgid "Mood"
-msgstr "Raspoloženje"
+msgstr "Ugođaj"
 
 #: application/controllers/LocaleController.php:106
 #: application/forms/SmartBlockCriteria.php:78
@@ -1298,17 +1301,17 @@ msgstr "Vlasnik"
 #: application/forms/SmartBlockCriteria.php:79
 #: application/models/Block.php:1448 application/models/Block.php:1544
 msgid "Replay Gain"
-msgstr "Replay Gain"
+msgstr "Pojačanje reprodukcije"
 
 #: application/controllers/LocaleController.php:108
 msgid "Sample Rate"
-msgstr "Uzorak Stopa"
+msgstr "Stopa uzorka"
 
 #: application/controllers/LocaleController.php:109
 #: application/forms/SmartBlockCriteria.php:82
 #: application/models/Block.php:1451 application/models/Block.php:1547
 msgid "Track Number"
-msgstr "Broj Pjesma"
+msgstr "Broj pjesme"
 
 #: application/controllers/LocaleController.php:110
 #: application/forms/SmartBlockCriteria.php:83
@@ -2028,12 +2031,12 @@ msgstr "Ne može se zakazivati izvan emisije."
 
 #: application/controllers/LocaleController.php:300
 msgid "Moving 1 Item"
-msgstr "Premještanje 1 Stavka"
+msgstr "Premještanje 1 stavke"
 
 #: application/controllers/LocaleController.php:301
 #, php-format
 msgid "Moving %s Items"
-msgstr "Premještanje %s Stavke"
+msgstr "Premještanje %s stavki"
 
 #: application/controllers/LocaleController.php:302
 #: application/forms/AddTracktype.php:59 application/forms/AddUser.php:108
@@ -4031,7 +4034,7 @@ msgstr ""
 #: application/models/ShowBuilder.php:209
 #, php-format
 msgid "Rebroadcast of %s from %s"
-msgstr "Reemitiranje od %s od %s"
+msgstr "Reemitiraj emisiju %s od %s"
 
 #: application/models/Webstream.php:163
 msgid "Length needs to be greater than 0 minutes"
