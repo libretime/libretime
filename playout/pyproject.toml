@@ -6,6 +6,10 @@ disable = [
   "missing-module-docstring",
 ]
 
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "DEBUG"
+
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
