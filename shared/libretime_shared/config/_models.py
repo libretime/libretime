@@ -9,8 +9,10 @@ if TYPE_CHECKING:
 
 def no_trailing_slash_validator(key: str) -> "AnyClassMethod":
     # pylint: disable=unused-argument
-    def strip_trailing_slash(cls: Any, value: str) -> str:
-        return value.rstrip("/")
+    def strip_trailing_slash(cls: Any, value: Any) -> Any:
+        if isinstance(value, str):
+            return value.rstrip("/")
+        return value
 
     return validator(key, pre=True, allow_reuse=True)(strip_trailing_slash)
 
