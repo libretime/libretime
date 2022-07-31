@@ -1,0 +1,188 @@
+{
+  "title": "Config",
+  "description": "LibreTime configuration.",
+  "type": "object",
+  "properties": {
+    "general": {
+      "$ref": "#/definitions/GeneralConfig"
+    },
+    "database": {
+      "title": "Database",
+      "default": {
+        "host": "localhost",
+        "port": 5432,
+        "name": "libretime",
+        "user": "libretime",
+        "password": "libretime"
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/DatabaseConfig"
+        }
+      ]
+    },
+    "rabbitmq": {
+      "title": "Rabbitmq",
+      "default": {
+        "host": "localhost",
+        "port": 5672,
+        "name": "libretime",
+        "user": "libretime",
+        "password": "libretime",
+        "vhost": "/libretime"
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/RabbitMQConfig"
+        }
+      ]
+    },
+    "playout": {
+      "title": "Playout",
+      "default": {
+        "liquidsoap_host": "localhost",
+        "liquidsoap_port": 1234,
+        "record_file_format": "ogg",
+        "record_bitrate": 256,
+        "record_samplerate": 44100,
+        "record_channels": 2,
+        "record_sample_size": 16
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/PlayoutConfig"
+        }
+      ]
+    }
+  },
+  "required": ["general"],
+  "definitions": {
+    "GeneralConfig": {
+      "title": "GeneralConfig",
+      "type": "object",
+      "properties": {
+        "public_url": {
+          "title": "Public Url",
+          "minLength": 1,
+          "maxLength": 65536,
+          "format": "uri",
+          "type": "string"
+        },
+        "api_key": {
+          "title": "Api Key",
+          "type": "string"
+        }
+      },
+      "required": ["public_url", "api_key"]
+    },
+    "DatabaseConfig": {
+      "title": "DatabaseConfig",
+      "type": "object",
+      "properties": {
+        "host": {
+          "title": "Host",
+          "default": "localhost",
+          "type": "string"
+        },
+        "port": {
+          "title": "Port",
+          "default": 5432,
+          "type": "integer"
+        },
+        "name": {
+          "title": "Name",
+          "default": "libretime",
+          "type": "string"
+        },
+        "user": {
+          "title": "User",
+          "default": "libretime",
+          "type": "string"
+        },
+        "password": {
+          "title": "Password",
+          "default": "libretime",
+          "type": "string"
+        }
+      }
+    },
+    "RabbitMQConfig": {
+      "title": "RabbitMQConfig",
+      "type": "object",
+      "properties": {
+        "host": {
+          "title": "Host",
+          "default": "localhost",
+          "type": "string"
+        },
+        "port": {
+          "title": "Port",
+          "default": 5672,
+          "type": "integer"
+        },
+        "name": {
+          "title": "Name",
+          "default": "libretime",
+          "type": "string"
+        },
+        "user": {
+          "title": "User",
+          "default": "libretime",
+          "type": "string"
+        },
+        "password": {
+          "title": "Password",
+          "default": "libretime",
+          "type": "string"
+        },
+        "vhost": {
+          "title": "Vhost",
+          "default": "/libretime",
+          "type": "string"
+        }
+      }
+    },
+    "PlayoutConfig": {
+      "title": "PlayoutConfig",
+      "type": "object",
+      "properties": {
+        "liquidsoap_host": {
+          "title": "Liquidsoap Host",
+          "default": "localhost",
+          "type": "string"
+        },
+        "liquidsoap_port": {
+          "title": "Liquidsoap Port",
+          "default": 1234,
+          "type": "integer"
+        },
+        "record_file_format": {
+          "title": "Record File Format",
+          "default": "ogg",
+          "enum": ["mp3", "ogg"],
+          "type": "string"
+        },
+        "record_bitrate": {
+          "title": "Record Bitrate",
+          "default": 256,
+          "type": "integer"
+        },
+        "record_samplerate": {
+          "title": "Record Samplerate",
+          "default": 44100,
+          "type": "integer"
+        },
+        "record_channels": {
+          "title": "Record Channels",
+          "default": 2,
+          "type": "integer"
+        },
+        "record_sample_size": {
+          "title": "Record Sample Size",
+          "default": 16,
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

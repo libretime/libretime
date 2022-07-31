@@ -52,3 +52,15 @@ jobs:
           python-version: "3.x"
       - run: make all
         working-directory: tools
+
+  generate-config-schema:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+      - run: |
+          make config-schema
+          git diff --exit-code -- ../config.schema.json
+        working-directory: tools

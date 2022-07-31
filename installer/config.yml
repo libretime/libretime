@@ -1,4 +1,5 @@
 # See https://libretime.org/docs/admin-manual/setup/configuration/
+# yaml-language-server: $schema=../config.schema.json
 
 general:
   # The public url, this field is REQUIRED
