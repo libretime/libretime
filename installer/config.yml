@@ -85,3 +85,170 @@ playout:
   # The sample size for recordings.
   # > default is 16
   record_sample_size: 16
+
+stream:
+  # Inputs sources.
+  inputs:
+    # Main harbor input.
+    main:
+      # Harbor input public url. If not defined, the value will be generated from
+      # the [general.public_url] hostname, the input port and mount.
+      public_url:
+      # Mount point for the main harbor input.
+      # > default is main
+      mount: main
+      # Listen port for the main harbor input.
+      # > default is 8001
+      port: 8001
+
+    # Show harbor input.
+    show:
+      # Harbor input public url. If not defined, the value will be generated from
+      # the [general.public_url] hostname, the input port and mount.
+      public_url:
+      # Mount point for the show harbor input.
+      # > default is show
+      mount: show
+      # Listen port for the show harbor input.
+      # > default is 8002
+      port: 8002
+
+  # Output streams.
+  outputs:
+    # Default icecast output
+    # This can be reused to define multiple outputs without duplicating data
+    .default_icecast_output: &default_icecast_output
+      host: localhost
+      port: 8000
+      mount: main
+      source_password: hackme
+      admin_password: hackme
+      audio:
+        format: ogg
+        bitrate: 256
+      name: LibreTime!
+      description: LibreTime Radio!
+      website: https://libretime.org
+      genre: various
+
+    # Icecast output streams.
+    # > max items is 3
+    icecast:
+      # The default Icecast output stream
+      - <<: *default_icecast_output
+        enabled: true
+
+      # You can define extra outputs by reusing the default output using a yaml anchor
+      - <<: *default_icecast_output
+        enabled: false
+        mount: extra
+
+      - # Whether the output is enabled.
+        # > default is false
+        enabled: false
+        # Output public url, If not defined, the value will be generated from
+        # the [general.public_url] hostname, the output port and mount.
+        public_url:
+        # Icecast server host.
+        # > default is localhost
+        host: localhost
+        # Icecast server port.
+        # > default is 8000
+        port: 8000
+        # Icecast server mount point.
+        # > this field is REQUIRED
+        mount: main
+        # Icecast source user.
+        # > default is source
+        source_user: source
+        # Icecast source password.
+        # > this field is REQUIRED
+        source_password: hackme
+        # Icecast admin user.
+        # > default is admin
+        admin_user: admin
+        # Icecast admin password. If not defined, statistics will not be collected.
+        admin_password: hackme
+
+        # Icecast output audio.
+        audio:
+          # Icecast output audio format.
+          # > must be one of (aac, mp3, ogg, opus)
+          # > this field is REQUIRED
+          format: ogg
+          # Icecast output audio bitrate.
+          # > must be one of (32, 48, 64, 96, 128, 160, 192, 224, 256, 320)
+          # > this field is REQUIRED
+          bitrate: 256
+
+          # format=ogg only field: Embed metadata (track title, artist, and show name)
+          # in the output stream. Some bugged players will disconnect from the stream
+          # after every songs when playing ogg streams that have metadata information
+          # enabled.
+          # > default is false
+          enable_metadata: false
+
+        # Icecast stream name.
+        name: LibreTime!
+        # Icecast stream description.
+        description: LibreTime Radio!
+        # Icecast stream website.
+        website: https://libretime.org
+        # Icecast stream genre.
+        genre: various
+
+    # Shoutcast output streams.
+    # > max items is 1
+    shoutcast:
+      - # Whether the output is enabled.
+        # > default is false
+        enabled: false
+        # Output public url. If not defined, the value will be generated from
+        # the [general.public_url] hostname and the output port.
+        public_url:
+        # Shoutcast server host.
+        # > default is localhost
+        host: localhost
+        # Shoutcast server port.
+        # > default is 8000
+        port: 8000
+        # Shoutcast source user.
+        # > default is source
+        source_user: source
+        # Shoutcast source password.
+        # > this field is REQUIRED
+        source_password: hackme
+        # Shoutcast admin user.
+        # > default is admin
+        admin_user: admin
+        # Shoutcast admin password. If not defined, statistics will not be collected.
+        admin_password: hackme
+
+        # Shoutcast output audio.
+        audio:
+          # Shoutcast output audio format.
+          # > must be one of (aac, mp3)
+          # > this field is REQUIRED
+          format: mp3
+          # Shoutcast output audio bitrate.
+          # > must be one of (32, 48, 64, 96, 128, 160, 192, 224, 256, 320)
+          # > this field is REQUIRED
+          bitrate: 256
+
+        # Shoutcast stream name.
+        name: LibreTime!
+        # Shoutcast stream website.
+        website: https://libretime.org
+        # Shoutcast stream genre.
+        genre: various
+
+    # System outputs.
+    # > max items is 1
+    system:
+      - # Whether the output is enabled.
+        # > default is false
+        enabled: false
+        # System output kind.
+        # > must be one of (alsa, ao, oss, portaudio, pulseaudio)
+        # > default is alsa
+        kind: alsa

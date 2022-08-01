@@ -533,8 +533,8 @@ if $LIBRETIME_SETUP_ICECAST; then
 
     service_restart_if_active icecast2
 
-    # set_config "$LIBRETIME_ICECAST_ADMIN_PASSWORD" icecast admin_password
-    # set_config "$LIBRETIME_ICECAST_SOURCE_PASSWORD" icecast source_password
+    set_config "$LIBRETIME_ICECAST_ADMIN_PASSWORD" stream outputs .default_icecast_output admin_password
+    set_config "$LIBRETIME_ICECAST_SOURCE_PASSWORD" stream outputs .default_icecast_output source_password
   fi
 fi
 
