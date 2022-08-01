@@ -234,14 +234,15 @@ set_config() {
   value="${1}" && shift
 
   # Build sed query
-  query="/^${1}:/"
+  query="/^${1}:/\n"
   while [[ $# -gt 1 ]]; do
     shift
-    query="${query},/${1}:/"
+    query+="/${1}:/\n"
   done
-  query="${query} s|(${1}:).*|\1 ${value}|"
+  query+="s|\(${1}:\).*|\1 ${value}|\n"
+  query+="wq"
 
-  sed --regexp-extended --in-place "$query" "$CONFIG_TMP_FILEPATH"
+  echo -e "$query" | ed --quiet "$CONFIG_TMP_FILEPATH" > /dev/null
 }
 
 # install_python_app <path>
@@ -382,7 +383,7 @@ section "Prepare"
 
 prepare_packages_install
 
-install_packages git make
+install_packages git make ed
 make VERSION
 
 info "creating project user"
