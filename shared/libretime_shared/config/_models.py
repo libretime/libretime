@@ -54,7 +54,6 @@ class DatabaseConfig(BaseModel):
 class RabbitMQConfig(BaseModel):
     host: str = "localhost"
     port: int = 5672
-    name: str = "libretime"
     user: str = "libretime"
     password: str = "libretime"
     vhost: str = "/libretime"
