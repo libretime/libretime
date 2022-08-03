@@ -187,4 +187,15 @@ sudo systemctl start libretime.target
 sudo systemctl --all --plain | grep libretime
 ```
 
+#### Configure
+
+Once the setup is completed, log in the interface and make sure to edit the project settings (go to **Settings** > **General**) to match your needs. Important settings are:
+
+- Timezone
+- First day of the week
+
+Accurate time on your server is important, make sure that your operating system is [properly configured and does not go out of sync](../server-time.md).
+
+### Next
+
 Once completed, it's recommended to [install a reverse proxy](./reverse-proxy.md) to setup SSL termination and secure your installation.
