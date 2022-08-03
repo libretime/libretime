@@ -3,6 +3,12 @@ title: Custom authentication
 sidebar_position: 40
 ---
 
+:::warning
+
+Since LibreTime v3.0.0-alpha.13, this documentation is out of date, as it relies on the Apache2 web server and the default web server installed by LibreTime is now NGINX.
+
+:::
+
 ## Setup FreeIPA authentication
 
 You can configure LibreTime to delegate all authentication to a FreeIPA server.
