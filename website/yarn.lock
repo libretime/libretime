@@ -5523,7 +5523,7 @@ mdurl@^1.0.0:
   resolved "https://registry.yarnpkg.com/mdurl/-/mdurl-1.0.1.tgz#fe85b2ec75a59037f2adfec100fd6c601761152e"
   integrity sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==
 
-mdx-mermaid@^1.2.2:
+mdx-mermaid@^1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/mdx-mermaid/-/mdx-mermaid-1.2.3.tgz#8a33fd7584d4de1f9096055a6d5e87ac1507572e"
   integrity sha512-x2K+4M3zQKIgbdvrACoXc2C6waP4fIJof65VKS5wcBxYEoO76H3S0keYZQY36qauI6Cw9unuWLh7mdaYEbHZiQ==
@@ -5555,7 +5555,7 @@ merge2@^1.3.0, merge2@^1.4.1:
   resolved "https://registry.yarnpkg.com/merge2/-/merge2-1.4.1.tgz#4368892f885e907455a6fd7dc55c0c9d404990ae"
   integrity sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==
 
-mermaid@^9.0.1:
+mermaid@^9.1.4:
   version "9.1.4"
   resolved "https://registry.yarnpkg.com/mermaid/-/mermaid-9.1.4.tgz#05113b14dabe6b2ce5abd7452d10d4309cc0467f"
   integrity sha512-QgQTpIIzJfV/Ob7FZTDzxmWjFzCciij4C8RbbQbamsadf2gHrNrfqAoWLF6ALfQlW5ZqOefvlogDdWcFZRnifg==
