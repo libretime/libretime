@@ -1232,7 +1232,7 @@
     "@docsearch/css" "3.2.0"
     algoliasearch "^4.0.0"
 
-"@docusaurus/core@2.0.1", "@docusaurus/core@^2.0.0-beta.21":
+"@docusaurus/core@2.0.1", "@docusaurus/core@^2.0.1":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@docusaurus/core/-/core-2.0.1.tgz#a2b0d653e8f18eacddda4778a46b638dd1f0f45c"
   integrity sha512-Prd46TtZdiixlTl8a+h9bI5HegkfREjSNkrX2rVEwJZeziSz4ya+l7QDnbnCB2XbxEG8cveFo/F9q5lixolDtQ==
@@ -1350,17 +1350,6 @@
     url-loader "^4.1.1"
     webpack "^5.73.0"
 
-"@docusaurus/module-type-aliases@2.0.0-beta.21":
-  version "2.0.0-beta.21"
-  resolved "https://registry.yarnpkg.com/@docusaurus/module-type-aliases/-/module-type-aliases-2.0.0-beta.21.tgz#345f1c1a99407775d1d3ffc1a90c2df93d50a9b8"
-  integrity sha512-gRkWICgQZiqSJgrwRKWjXm5gAB+9IcfYdUbCG0PRPP/G8sNs9zBIOY4uT4Z5ox2CWFEm44U3RTTxj7BiLVMBXw==
-  dependencies:
-    "@docusaurus/types" "2.0.0-beta.21"
-    "@types/react" "*"
-    "@types/react-router-config" "*"
-    "@types/react-router-dom" "*"
-    react-helmet-async "*"
-
 "@docusaurus/module-type-aliases@2.0.1":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@docusaurus/module-type-aliases/-/module-type-aliases-2.0.1.tgz#44d7132297bedae0890695b0e7ebbe14a73e26d1"
@@ -1375,7 +1364,7 @@
     react-helmet-async "*"
     react-loadable "npm:@docusaurus/react-loadable@5.5.2"
 
-"@docusaurus/plugin-client-redirects@^2.0.0-beta.21":
+"@docusaurus/plugin-client-redirects@^2.0.1":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@docusaurus/plugin-client-redirects/-/plugin-client-redirects-2.0.1.tgz#3b00cd0a816fe85e6c505651f28b59fff723ac67"
   integrity sha512-A/giM3MIRRyUmxNzLb/jWvmRf0NtPYX4bV04njAnziAdPo4dqT4dZF2Hvy0uUSaF/SXPGLUjrZWWpzTl5mTJtQ==
@@ -1495,7 +1484,7 @@
     sitemap "^7.1.1"
     tslib "^2.4.0"
 
-"@docusaurus/preset-classic@^2.0.0-beta.21":
+"@docusaurus/preset-classic@^2.0.1":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@docusaurus/preset-classic/-/preset-classic-2.0.1.tgz#21a806e16b61026d2a0efa6ca97e17397065d894"
   integrity sha512-nOoniTg46My1qdDlLWeFs55uEmxOJ+9WMF8KKG8KMCu5LAvpemMi7rQd4x8Tw+xiPHZ/sQzH9JmPTMPRE4QGPw==
@@ -1601,19 +1590,6 @@
   dependencies:
     fs-extra "^10.1.0"
     tslib "^2.4.0"
-
-"@docusaurus/types@2.0.0-beta.21":
-  version "2.0.0-beta.21"
-  resolved "https://registry.yarnpkg.com/@docusaurus/types/-/types-2.0.0-beta.21.tgz#36659c6c012663040dcd4cbc97b5d7a555dae229"
-  integrity sha512-/GH6Npmq81eQfMC/ikS00QSv9jNyO1RXEpNSx5GLA3sFX8Iib26g2YI2zqNplM8nyxzZ2jVBuvUoeODTIbTchQ==
-  dependencies:
-    commander "^5.1.0"
-    history "^4.9.0"
-    joi "^17.6.0"
-    react-helmet-async "^1.3.0"
-    utility-types "^3.10.0"
-    webpack "^5.72.1"
-    webpack-merge "^5.8.0"
 
 "@docusaurus/types@2.0.1":
   version "2.0.1"
@@ -1941,7 +1917,7 @@
   resolved "https://registry.yarnpkg.com/@trysound/sax/-/sax-0.2.0.tgz#cccaab758af56761eb7bf37af6f03f326dd798ad"
   integrity sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==
 
-"@tsconfig/docusaurus@^1.0.5":
+"@tsconfig/docusaurus@^1.0.6":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@tsconfig/docusaurus/-/docusaurus-1.0.6.tgz#7305a7fa590decc0d5968500234e95fd68788978"
   integrity sha512-1QxDaP54hpzM6bq9E+yFEo4F9WbWHhsDe4vktZXF/iDlc9FqGr9qlg+3X/nuKQXx8QxHV7ue8NXFazzajsxFBA==
@@ -7999,7 +7975,7 @@ webpack-sources@^3.2.2, webpack-sources@^3.2.3:
   resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.2.3.tgz#2d4daab8451fd4b240cc27055ff6a0c2ccea0cde"
   integrity sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==
 
-webpack@^5.72.1, webpack@^5.73.0:
+webpack@^5.73.0:
   version "5.74.0"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.74.0.tgz#02a5dac19a17e0bb47093f2be67c695102a55980"
   integrity sha512-A2InDwnhhGN4LYctJj6M1JEaGL7Luj6LOmyBHjcI8529cm5p6VXiTIW2sn6ffvEAKmveLzvu4jrihwXtPojlAA==
