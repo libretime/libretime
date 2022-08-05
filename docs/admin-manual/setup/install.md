@@ -50,6 +50,32 @@ LibreTime requires the following default ports to be open:
 
 The installer is shipped in the released tarballs or directly in the project repository.
 
+### Before installing
+
+Before installing LibreTime, you need to make sure you operating system is properly configured.
+
+#### Operating system time configuration
+
+Check your operating system time configuration using the following command:
+
+```bash
+timedatectl
+```
+
+```
+               Local time: Fri 2022-08-05 12:43:39 CEST
+           Universal time: Fri 2022-08-05 10:43:39 UTC
+                 RTC time: Fri 2022-08-05 10:43:40
+                Time zone: Europe/Berlin (CEST, +0200)
+System clock synchronized: yes
+              NTP service: active
+          RTC in local TZ: no
+```
+
+Make sure that your time zone is properly configured, if not you can set it using the [`timedatectl set-timezone` command](https://www.freedesktop.org/software/systemd/man/timedatectl.html#set-timezone%20%5BTIMEZONE%5D).
+
+If the NTP service is inactive, you should consider enabling it using the [`timedatectl set-ntp` command](https://www.freedesktop.org/software/systemd/man/timedatectl.html#set-ntp%20%5BBOOL%5D).
+
 ### Download
 
 You can either download the latest released tarball or clone the repository.
@@ -193,8 +219,6 @@ Once the setup is completed, log in the interface and make sure to edit the proj
 
 - Timezone
 - First day of the week
-
-Accurate time on your server is important, make sure that your operating system is [properly configured and does not go out of sync](../server-time.md).
 
 ### Next
 
