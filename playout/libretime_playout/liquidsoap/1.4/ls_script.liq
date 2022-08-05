@@ -20,7 +20,6 @@ set("harbor.bind_addr", "0.0.0.0")
 
 current_dyn_id = ref '-1'
 
-pypo_data = ref '0'
 stream_metadata_type = ref 0
 default_dj_fade = ref 0.
 station_name = ref ''
@@ -115,9 +114,6 @@ stream_queue = map_metadata(update=false, append_title, stream_queue)
 
 ignore(output.dummy(stream_queue, fallible=true))
 
-server.register(namespace="vars",
-                "pypo_data",
-                fun (s) -> begin log("vars.pypo_data") pypo_data := s "Done" end)
 server.register(namespace="vars",
                 "stream_metadata_type",
                 fun (s) -> begin log("vars.stream_metadata_type") stream_metadata_type := int_of_string(s) s end)
