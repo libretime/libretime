@@ -292,7 +292,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_StreamSetting::setDjLiveStreamPort($values['show_source_port']);
                 Application_Model_StreamSetting::setDjLiveStreamMountPoint($values['show_source_mount']);
 
-                Application_Model_StreamSetting::setOffAirMeta($values['offAirMeta']);
+                Application_Model_Preference::setOffAirMeta($values['offAirMeta']);
 
                 // store stream update timestamp
                 Application_Model_Preference::SetStreamUpdateTimestamp();

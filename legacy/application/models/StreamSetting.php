@@ -207,7 +207,7 @@ class Application_Model_StreamSetting
         $settings['master_live_stream_mp'] = self::getMasterLiveStreamMountPoint();
         $settings['dj_live_stream_port'] = self::getDjLiveStreamPort();
         $settings['dj_live_stream_mp'] = self::getDjLiveStreamMountPoint();
-        $settings['off_air_meta'] = self::getOffAirMeta();
+        $settings['off_air_meta'] = Application_Model_Preference::getOffAirMeta();
         $settings['icecast_vorbis_metadata'] = self::getIcecastVorbisMetadata();
         $settings['output_sound_device'] = self::getOutputSoundDevice();
         $settings['output_sound_device_type'] = self::getOutputSoundDeviceType();
@@ -505,16 +505,6 @@ class Application_Model_StreamSetting
     public static function setAdminPass($stream, $v)
     {
         self::setValue($stream . '_admin_pass', $v, 'string');
-    }
-
-    public static function getOffAirMeta()
-    {
-        return self::getValue('off_air_meta');
-    }
-
-    public static function setOffAirMeta($offAirMeta)
-    {
-        self::setValue('off_air_meta', $offAirMeta, 'string');
     }
 
     public static function GetAllListenerStatErrors()
