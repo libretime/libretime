@@ -350,6 +350,16 @@ class Application_Model_Preference
         return self::getValue('stream_label_format');
     }
 
+    public static function getOffAirMeta()
+    {
+        return self::getValue('off_air_meta');
+    }
+
+    public static function setOffAirMeta($offAirMeta)
+    {
+        self::setValue('off_air_meta', $offAirMeta);
+    }
+
     public static function GetStationName()
     {
         return self::getValue('station_name');
