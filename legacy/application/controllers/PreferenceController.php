@@ -301,7 +301,7 @@ class PreferenceController extends Zend_Controller_Action
                 $info = Application_Model_StreamSetting::getStreamSetting();
                 $data['setting'] = $info;
                 for ($i = 1; $i <= $num_of_stream; ++$i) {
-                    Application_Model_StreamSetting::setLiquidsoapError($i, 'waiting');
+                    Application_Model_Preference::setLiquidsoapError($i, 'waiting');
                 }
 
                 Application_Model_RabbitMq::SendMessageToPypo('update_stream_setting', $data);
@@ -395,7 +395,7 @@ class PreferenceController extends Zend_Controller_Action
         $out = [];
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
         for ($i = 1; $i <= $num_of_stream; ++$i) {
-            $status = Application_Model_StreamSetting::getLiquidsoapError($i);
+            $status = Application_Model_Preference::getLiquidsoapError($i);
             $status = $status == null ? _('Problem with Liquidsoap...') : $status;
             if (!Application_Model_StreamSetting::getStreamEnabled($i)) {
                 $status = 'N/A';
