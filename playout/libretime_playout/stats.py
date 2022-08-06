@@ -122,10 +122,10 @@ class ListenerStat(Thread):
                             stats.append(mount_stats)
                     else:
                         stats.append(self.get_shoutcast_stats(v))
-                    self.update_listener_stat_error(v["mount"], "OK")
+                    self.update_listener_stat_error(k, "OK")
                 except Exception as e:
                     try:
-                        self.update_listener_stat_error(v["mount"], str(e))
+                        self.update_listener_stat_error(k, str(e))
                     except Exception as e:
                         logger.error("Exception: %s", e)
 
@@ -135,8 +135,7 @@ class ListenerStat(Thread):
         self.legacy_client.push_stream_stats(stats)
 
     def update_listener_stat_error(self, stream_id, error):
-        keyname = "%s_listener_stat_error" % stream_id
-        data = {keyname: error}
+        data = {stream_id: error}
         self.legacy_client.update_stream_setting_table(data)
 
     def run(self):

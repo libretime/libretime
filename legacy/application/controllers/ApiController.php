@@ -1389,8 +1389,8 @@ class ApiController extends Zend_Controller_Action
             return;
         }
 
-        foreach ($data as $k => $v) {
-            Application_Model_StreamSetting::SetListenerStatError($k, $v);
+        foreach ($data as $stream_id => $status) {
+            Application_Model_Preference::SetListenerStatError($stream_id, $status);
         }
     }
 

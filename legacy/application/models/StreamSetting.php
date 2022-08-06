@@ -436,29 +436,6 @@ class Application_Model_StreamSetting
         self::setValue($stream . '_admin_pass', $v, 'string');
     }
 
-    public static function GetAllListenerStatErrors()
-    {
-        $sql = 'SELECT * FROM cc_stream_setting WHERE keyname like :p1';
-        $mounts = Application_Common_Database::prepareAndExecute($sql, [':p1' => '%_mount']);
-
-        $mps = [];
-
-        foreach ($mounts as $mount) {
-            $mps[] = "'" . $mount['value'] . "_listener_stat_error'";
-        }
-
-        $in = implode(',', $mps);
-
-        $sql = "SELECT * FROM cc_stream_setting WHERE keyname IN ( {$in} )";
-
-        return Application_Common_Database::prepareAndExecute($sql, []);
-    }
-
-    public static function SetListenerStatError($key, $v)
-    {
-        self::setValue($key, $v, 'string');
-    }
-
     public static function getIcecastVorbisMetadata()
     {
         return self::getValue('icecast_vorbis_metadata', '');
