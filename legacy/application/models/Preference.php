@@ -1677,4 +1677,21 @@ class Application_Model_Preference
 
         return ($result !== false) ? $result : null;
     }
+
+    public static function GetAllListenerStatErrors()
+    {
+        $sql = <<<'SQL'
+SELECT *
+FROM cc_pref
+WHERE keystr LIKE 'stream_stats_status:%'
+SQL;
+
+        return Application_Common_Database::prepareAndExecute($sql, []);
+    }
+
+    public static function SetListenerStatError($stream_id, $value)
+    {
+        $stream_id = trim($stream_id, 's');
+        self::setValue("stream_stats_status:{$stream_id}", $value);
+    }
 }

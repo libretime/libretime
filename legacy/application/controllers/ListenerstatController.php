@@ -41,15 +41,15 @@ class ListenerstatController extends Zend_Controller_Action
             'his_time_end' => $endsDT->format('H:i'),
         ]);
 
-        $errorStatus = Application_Model_StreamSetting::GetAllListenerStatErrors();
+        $errorStatus = Application_Model_Preference::GetAllListenerStatErrors();
         Logging::info($errorStatus);
         $out = [];
         foreach ($errorStatus as $v) {
-            $key = explode('_listener_stat_error', $v['keyname']);
-            if ($v['value'] != 'OK') {
-                $v['value'] = _('Please make sure admin user/password is correct on Settings->Streams page.');
+            $key = explode(':', $v['keystr']);
+            if ($v['valstr'] != 'OK') {
+                $v['valstr'] = _('Please make sure admin user/password is correct on Settings->Streams page.');
             }
-            $out[$key[0]] = $v['value'];
+            $out['stream ' . $key[1]] = $v['valstr'];
         }
 
         $this->view->errorStatus = $out;
