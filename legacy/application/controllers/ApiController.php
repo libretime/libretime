@@ -1100,7 +1100,7 @@ class ApiController extends Zend_Controller_Action
         $stream_id = $request->getParam('stream_id');
         $boot_time = $request->getParam('boot_time');
 
-        Application_Model_StreamSetting::setLiquidsoapError($stream_id, $msg, $boot_time);
+        Application_Model_Preference::setLiquidsoapError($stream_id, $msg, $boot_time);
     }
 
     public function updateSourceStatusAction()

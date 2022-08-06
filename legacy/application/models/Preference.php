@@ -1656,4 +1656,25 @@ class Application_Model_Preference
     {
         return self::setValue('feature_preview_mode', $value);
     }
+
+    /*
+     * Stores liquidsoap status if $boot_time > save time.
+     * save time is the time that user clicked save on stream setting page
+     */
+    public static function setLiquidsoapError($stream_id, $msg, $boot_time = null)
+    {
+        $update_time = Application_Model_Preference::GetStreamUpdateTimestemp();
+
+        if ($boot_time == null || $boot_time > $update_time) {
+            $stream_id = trim($stream_id, 's');
+            self::setValue("stream_liquidsoap_status:{$stream_id}", $msg);
+        }
+    }
+
+    public static function getLiquidsoapError($stream_id)
+    {
+        $result = self::getValue("stream_liquidsoap_status:{$stream_id}");
+
+        return ($result !== false) ? $result : null;
+    }
 }
