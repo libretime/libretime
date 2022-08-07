@@ -1,13 +1,15 @@
-<div><!-- jQuery UI changes the styling on the outermost div; use a blank div so as not to break the .wrapper styling-->
+<div>
+    <!-- jQuery UI changes the styling on the outermost div; use a blank div so as not to break the .wrapper styling-->
     <div class="wrapper">
         <div id="media_selector_wrapper">
-            <?php $subnavPrefix = ""; require_once APPLICATION_PATH . "/views/scripts/partialviews/dashboard-sub-nav.php"; ?>
+            <?php $subnavPrefix = "";
+            require_once APPLICATION_PATH . "/views/scripts/partialviews/dashboard-sub-nav.php"; ?>
         </div>
         <?php echo $this->csrf ?>
 
         <div id="library_content" class="lib-content tabs content-pane wide-panel">
             <div>
-                <h2 id="library_title"><?php echo _("Dashboard")." - " ?><span id="library_filter"></span></h2>
+                <h2 id="library_title"><?php echo _("Dashboard") . " - " ?><span id="library_filter"></span></h2>
             </div>
             <div class="panel-header-calendar">
                 <div id="advanced-options" class="btn-group">

@@ -6,10 +6,10 @@
     </div>
     <div class="inner_editor_wrapper">
         <form class="podcast-metadata">
-            <input ng-value="podcast.id" class="obj_id" type="hidden"/>
+            <input ng-value="podcast.id" class="obj_id" type="hidden" />
             <div class="podcast-metadata-row">
                 <label for="podcast_name"><?php echo _("Podcast Name: ") ?></label>
-                <input name="podcast_name" type="text" ng-model="podcast.title" value={{podcast.title}} >
+                <input name="podcast_name" type="text" ng-model="podcast.title" value={{podcast.title}}>
             </div>
             <div class="podcast-metadata-row">
                 <label for="podcast_url"><?php echo _("Podcast URL: ") ?></label>
@@ -18,10 +18,10 @@
             <div class="podcast-metadata-row">
                 <label for="podcast_auto_ingest"><?php echo _("Download latest episodes:") ?></label>
                 <div>
-                    <input name="podcast_auto_ingest"  id="podcast_auto_ingest" ng-model="podcast.auto_ingest" type="checkbox"/>
+                    <input name="podcast_auto_ingest" id="podcast_auto_ingest" ng-model="podcast.auto_ingest" type="checkbox" />
                 </div>
             </div>
-            <div class="podcast-metadata-row" >
+            <div class="podcast-metadata-row">
                 <label><?php echo _("Scheduling:") ?></label>
                 <div>
                     <button ng-click="createSmartblock()" class="btn" type="button" name="smartblock">
@@ -33,7 +33,7 @@
         </form>
     </div>
 
-   <table class="datatable podcast_episodes" cellpadding="0" cellspacing="0"></table>
+    <table class="datatable podcast_episodes" cellpadding="0" cellspacing="0"></table>
 
     <div class="btn-toolbar clearfix">
         <div class="btn-group pull-right">

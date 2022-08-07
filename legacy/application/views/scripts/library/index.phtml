@@ -9,18 +9,18 @@ if ($this->showPlaylist) {
     $display = "display:none";
 }
 ?>
-<div class="side_playlist pl-content ui-widget ui-widget-content block-shadow omega-block padded" style="height:697px; width:720px;<?php echo $display?>">
+<div class="side_playlist pl-content ui-widget ui-widget-content block-shadow omega-block padded" style="height:697px; width:720px;<?php echo $display ?>">
     <?php if ($this->type == 'block') {
-            echo $this->render('playlist/smart-block.phtml');
-        } else if ($this->type == 'playlist') {
-            echo $this->render('playlist/playlist.phtml');
-        } else if ($this->type == 'stream') {
-            echo $this->render('webstream/webstream.phtml');
-        } else {
-            echo $this->render('webstream/webstream.phtml');
-            //throw new Exception("Unrecognized type: '{$this->type}'");
-        }
+        echo $this->render('playlist/smart-block.phtml');
+    } else if ($this->type == 'playlist') {
+        echo $this->render('playlist/playlist.phtml');
+    } else if ($this->type == 'stream') {
+        echo $this->render('webstream/webstream.phtml');
+    } else {
+        echo $this->render('webstream/webstream.phtml');
+        //throw new Exception("Unrecognized type: '{$this->type}'");
+    }
 
 
-?>
+    ?>
 </div>

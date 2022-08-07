@@ -15,18 +15,18 @@
             </div>
             <form class="podcast-metadata">
                 <?php echo $this->form->getElement('csrf') ?>
-                <input ng-value="podcast.id" class="obj_id" type="hidden"/>
+                <input ng-value="podcast.id" class="obj_id" type="hidden" />
 
                 <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("General Fields") ?></h3>
                 <div class="collapsible-content">
                     <fieldset class="padded">
                         <div class="podcast-metadata-row">
                             <label><?php echo _("Name") ?></label>
-                            <input name="podcast_name" ng-model="podcast.title" type="text"/>
+                            <input name="podcast_name" ng-model="podcast.title" type="text" />
                         </div>
                         <div class="podcast-metadata-row">
                             <label><?php echo _("Creator") ?></label>
-                            <input name="podcast_creator" ng-model="podcast.creator" type="text"/>
+                            <input name="podcast_creator" ng-model="podcast.creator" type="text" />
                         </div>
 
                         <div class="podcast-metadata-row">
@@ -37,20 +37,20 @@
                             <label><?php echo _("Language") ?></label>
                             <select name="podcast_language" ng-model="podcast.language">
                                 <?php
-                                    foreach(Application_Common_LocaleHelper::getISO6391LanguageCodes() as $code=>$lang) {
-                                        echo "<option value='$code'>$lang</option>";
-                                    }
+                                foreach (Application_Common_LocaleHelper::getISO6391LanguageCodes() as $code => $lang) {
+                                    echo "<option value='$code'>$lang</option>";
+                                }
                                 ?>
                             </select>
                         </div>
 
                         <div class="podcast-metadata-row">
                             <label><?php echo _("Copyright") ?></label>
-                            <input name="podcast_copyright" ng-model="podcast.copyright" type="text"/>
+                            <input name="podcast_copyright" ng-model="podcast.copyright" type="text" />
                         </div>
                         <div class="podcast-metadata-row">
                             <label><?php echo _("Link") ?></label>
-                            <input name="podcast_link" ng-model="podcast.link" type="url"/>
+                            <input name="podcast_link" ng-model="podcast.link" type="url" />
                         </div>
                     </fieldset>
                 </div>
@@ -60,12 +60,12 @@
                     <fieldset class="padded">
                         <div class="podcast-metadata-row">
                             <label><?php echo _("Author") ?></label>
-                            <input name="podcast_itunes_author" ng-model="podcast.itunes_author" type="text"/>
+                            <input name="podcast_itunes_author" ng-model="podcast.itunes_author" type="text" />
                         </div>
 
                         <div class="podcast-metadata-row">
                             <label><?php echo _("Keywords") ?></label>
-                            <input name="podcast_itunes_keywords" ng-model="podcast.itunes_keywords" type="text"/>
+                            <input name="podcast_itunes_keywords" ng-model="podcast.itunes_keywords" type="text" />
                         </div>
 
                         <div class="podcast-metadata-row">
@@ -80,12 +80,12 @@
 
                         <div class="podcast-metadata-row">
                             <label><?php echo _("Category") ?></label>
-                            <input name="podcast_itunes_category" ng-model="podcast.itunes_category" type="text"/>
+                            <input name="podcast_itunes_category" ng-model="podcast.itunes_category" type="text" />
                         </div>
 
                         <div class="podcast-metadata-row">
                             <label><?php echo _("Explicit") ?></label>
-                            <input name="podcast_itunes_explicit" ng-model="podcast.itunes_explicit" type="checkbox"/>
+                            <input name="podcast_itunes_explicit" ng-model="podcast.itunes_explicit" type="checkbox" />
                         </div>
                     </fieldset>
                 </div>
@@ -114,10 +114,14 @@
                 </div>
 
                 <p id="station_podcast_help_text">
-                    <?php echo(sprintf(_("For detailed information on what these metadata fields mean, please see the %sRSS specification%s
+                    <?php echo (sprintf(
+                        _("For detailed information on what these metadata fields mean, please see the %sRSS specification%s
                     or %sApple's podcasting documentation%s."),
-                        '<a href="http://cyber.law.harvard.edu/rss/rss.html#requiredChannelElements">', '</a>',
-                        '<a target="_blank" href="http://www.apple.com/ca/itunes/podcasts/specs.html">', "</a>")); ?>
+                        '<a href="http://cyber.law.harvard.edu/rss/rss.html#requiredChannelElements">',
+                        '</a>',
+                        '<a target="_blank" href="http://www.apple.com/ca/itunes/podcasts/specs.html">',
+                        "</a>"
+                    )); ?>
                 </p>
             </form>
 
@@ -135,7 +139,7 @@
     </div>
 </div>
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         <?php echo "var podcast = " . $this->podcast . ";" ?>
         AIRTIME.podcast.podcastApp.value('podcast', podcast);
         AIRTIME.podcast.podcastApp.value('tab', null);

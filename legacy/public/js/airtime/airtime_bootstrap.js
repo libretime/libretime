@@ -1,5 +1,5 @@
-$(document).ready(function() {
-    $.ajaxSetup({
-      cache: false
-    });
+$(document).ready(function () {
+  $.ajaxSetup({
+    cache: false,
+  });
 });
