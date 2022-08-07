@@ -16,7 +16,7 @@ webstream_enabled = ref false
 time = ref string_of(gettimeofday())
 
 #live stream setup
-set("harbor.bind_addr", "0.0.0.0")
+set("harbor.bind_addrs", ["0.0.0.0"])
 
 current_dyn_id = ref '-1'
 
