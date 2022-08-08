@@ -84,7 +84,6 @@ Vagrant.configure('2') do |config|
       http://192.168.10.100:8080
 
     libretime-api migrate
-    libretime-api set_icecast_passwords --from-icecast-config
 
     systemctl restart libretime.target
     SCRIPT

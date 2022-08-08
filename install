@@ -755,12 +755,6 @@ ${cyan}\
 $ sudo -u $LIBRETIME_USER libretime-api migrate
 
 ${yellow}\
-Run the following command to configure the default icecast passwords in the database:
-
-${cyan}\
-$ sudo libretime-api set_icecast_passwords --from-icecast-config
-
-${yellow}\
 Finally, start LibreTime using the following command:
 
 ${cyan}\
