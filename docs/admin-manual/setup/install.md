@@ -199,12 +199,6 @@ Next, run the following commands to setup the database:
 sudo -u libretime libretime-api migrate
 ```
 
-Synchronize the new Icecast passwords into the database:
-
-```bash
-sudo libretime-api set_icecast_passwords --from-icecast-config
-```
-
 Finally, start the services, and check that they are running properly using the following commands:
 
 ```bash
