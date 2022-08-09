@@ -36,6 +36,7 @@ setup(
             "distro",
             "requests-mock",
             "types-python-dateutil",
+            "types-requests",
         ],
     },
     zip_safe=False,
