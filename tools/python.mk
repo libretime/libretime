@@ -2,7 +2,7 @@
 
 .DEFAULT_GOAL = install
 SHELL = bash
-CPU_CORES = $(shell nproc)
+CPU_CORES = $$(( $(shell nproc) > 4 ? 4 : $(shell nproc) ))
 
 # PIP_INSTALL = --editable .
 # PYLINT_ARG =
