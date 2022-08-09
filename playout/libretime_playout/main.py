@@ -21,6 +21,7 @@ from libretime_shared.logging import level_from_name, setup_logger
 from loguru import logger
 
 from .config import CACHE_DIR, RECORD_DIR, Config
+from .history.stats import StatsCollectorThread
 from .liquidsoap.version import LIQUIDSOAP_MIN_VERSION, parse_liquidsoap_version
 from .message_handler import PypoMessageHandler
 from .player.fetch import PypoFetch
@@ -28,7 +29,6 @@ from .player.file import PypoFile
 from .player.liquidsoap import PypoLiquidsoap
 from .player.push import PypoPush
 from .recorder import Recorder
-from .stats import ListenerStat
 from .timeout import ls_timeout
 
 
@@ -196,9 +196,8 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     recorder.daemon = True
     recorder.start()
 
-    stat = ListenerStat(config, legacy_client)
-    stat.daemon = True
-    stat.start()
+    stats_collector = StatsCollectorThread(legacy_client)
+    stats_collector.start()
 
     # Just sleep the main thread, instead of blocking on pf.join().
     # This allows CTRL-C to work!

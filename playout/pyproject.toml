@@ -1,5 +1,8 @@
 [tool.pylint.messages_control]
-extension-pkg-whitelist = "pydantic"
+extension-pkg-whitelist = [
+  "lxml.etree",
+  "pydantic",
+]
 disable = [
   "missing-class-docstring",
   "missing-function-docstring",
