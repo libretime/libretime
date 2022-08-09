@@ -1,7 +1,6 @@
 import json
 import logging
 import time
-import traceback
 import urllib.parse
 
 import requests
@@ -89,8 +88,8 @@ class ApiClient:
     def __get_api_version(self):
         try:
             return self.services.version_url()["api_version"]
-        except Exception as e:
-            self.logger.exception(e)
+        except Exception as exception:
+            self.logger.exception(exception)
             return -1
 
     def is_server_compatible(self, verbose=True):
@@ -118,8 +117,8 @@ class ApiClient:
     def notify_liquidsoap_started(self):
         try:
             self.services.notify_liquidsoap_started()
-        except Exception as e:
-            self.logger.exception(e)
+        except Exception as exception:
+            self.logger.exception(exception)
 
     def notify_media_item_start_playing(self, media_id):
         """
@@ -129,15 +128,15 @@ class ApiClient:
         """
         try:
             return self.services.update_start_playing_url(media_id=media_id)
-        except Exception as e:
-            self.logger.exception(e)
+        except Exception as exception:
+            self.logger.exception(exception)
             return None
 
     def get_shows_to_record(self):
         try:
             return self.services.show_schedule_url()
-        except Exception as e:
-            self.logger.exception(e)
+        except Exception as exception:
+            self.logger.exception(exception)
             return None
 
     def upload_recorded_show(self, files, show_id):
@@ -186,12 +185,13 @@ class ApiClient:
 
             except requests.exceptions.HTTPError as exception:
                 logger.error(f"Http error code: {exception.response.status_code}")
-                logger.error("traceback: %s", traceback.format_exc())
-            except requests.exceptions.ConnectionError as e:
-                logger.error("Server is down: %s", e.args)
-                logger.error("traceback: %s", traceback.format_exc())
-            except Exception as e:
-                self.logger.exception(e)
+                logger.exception(exception)
+
+            except requests.exceptions.ConnectionError as exception:
+                logger.exception(f"Server is down: {exception}")
+
+            except Exception as exception:
+                self.logger.exception(exception)
 
             # wait some time before next retry
             time.sleep(retries_wait)
@@ -203,8 +203,8 @@ class ApiClient:
             return self.services.check_live_stream_auth(
                 username=username, password=password, djtype=dj_type
             )
-        except Exception as e:
-            self.logger.exception(e)
+        except Exception as exception:
+            self.logger.exception(exception)
             return {}
 
     def construct_rest_url(self, action_key):
@@ -240,16 +240,16 @@ class ApiClient:
                 stream_id=stream_id,
                 boot_time=time,
             ).retry(5)
-        except Exception as e:
-            self.logger.exception(e)
+        except Exception as exception:
+            self.logger.exception(exception)
 
     def notify_source_status(self, sourcename, status):
         try:
             return self.services.update_source_status.req(
                 sourcename=sourcename, status=status
             ).retry(5)
-        except Exception as e:
-            self.logger.exception(e)
+        except Exception as exception:
+            self.logger.exception(exception)
 
     def get_bootstrap_info(self):
         """
@@ -286,8 +286,8 @@ class ApiClient:
                 _post_data={"data": json.dumps(data)}
             )
             return response
-        except Exception as e:
-            self.logger.exception(e)
+        except Exception as exception:
+            self.logger.exception(exception)
 
     def update_metadata_on_tunein(self):
         self.services.update_metadata_on_tunein()
