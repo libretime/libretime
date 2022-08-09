@@ -1,14 +1,18 @@
 import re
 from math import inf
+from os import getenv
 from pathlib import Path
 from typing import List, Optional, Tuple
 
 from ._utils import run_
 
+FFPROBE = getenv("FFPROBE_PATH", "ffprobe")
+FFMPEG = getenv("FFMPEG_PATH", "ffmpeg")
+
 
 def _ffmpeg(*args, **kwargs):
     return run_(
-        "ffmpeg",
+        FFMPEG,
         *args,
         "-f",
         "null",
@@ -20,7 +24,7 @@ def _ffmpeg(*args, **kwargs):
 
 
 def _ffprobe(*args, **kwargs):
-    return run_("ffprobe", *args, **kwargs)
+    return run_(FFPROBE, *args, **kwargs)
 
 
 _PROBE_REPLAYGAIN_RE = re.compile(

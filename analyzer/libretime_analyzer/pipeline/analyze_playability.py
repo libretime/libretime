@@ -5,12 +5,11 @@ from typing import Any, Dict
 
 from loguru import logger
 
+from ._liquidsoap import LIQUIDSOAP
+
 
 class UnplayableFileError(Exception):
     pass
-
-
-LIQUIDSOAP_EXECUTABLE = "liquidsoap"
 
 
 def analyze_playability(filename: str, metadata: Dict[str, Any]):
@@ -20,7 +19,7 @@ def analyze_playability(filename: str, metadata: Dict[str, Any]):
     :return: The metadata dictionary
     """
     command = [
-        LIQUIDSOAP_EXECUTABLE,
+        LIQUIDSOAP,
         "-v",
         "-c",
         "output.dummy(audio_to_stereo(single(argv(1))))",
