@@ -1,6 +1,5 @@
 import signal
 import sys
-import traceback
 from collections import deque
 from datetime import datetime
 from queue import Empty
@@ -42,7 +41,7 @@ class PypoLiqQueue(Thread):
                     media_schedule = self.queue.get(
                         block=True, timeout=time_until_next_play
                     )
-            except Empty as e:
+            except Empty:
                 # Time to push a scheduled item.
                 media_item = schedule_deque.popleft()
                 self.pypo_liquidsoap.play(media_item)
@@ -75,5 +74,5 @@ class PypoLiqQueue(Thread):
     def run(self):
         try:
             self.main()
-        except Exception as e:
-            logger.error("PypoLiqQueue Exception: %s", traceback.format_exc())
+        except Exception as exception:
+            logger.exception(exception)

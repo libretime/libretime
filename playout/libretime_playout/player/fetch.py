@@ -120,8 +120,8 @@ class PypoFetch(Thread):
                 if self.listener_timeout < 0:
                     self.listener_timeout = 0
             logger.info("New timeout: %s" % self.listener_timeout)
-        except Exception as e:
-            logger.exception("Exception in handling Message Handler message")
+        except Exception as exception:
+            logger.exception(exception)
 
     def switch_source_temp(self, sourcename, status):
         logger.debug('Switching source: %s to "%s" status', sourcename, status)
@@ -146,8 +146,8 @@ class PypoFetch(Thread):
         logger.debug("Getting information needed on bootstrap from Airtime")
         try:
             info = self.legacy_client.get_bootstrap_info()
-        except Exception as e:
-            logger.exception("Unable to get bootstrap info.. Exiting pypo...")
+        except Exception as exception:
+            logger.exception(f"Unable to get bootstrap info: {exception}")
 
         logger.debug("info:%s", info)
         commands = []
@@ -170,11 +170,11 @@ class PypoFetch(Thread):
 
     def restart_liquidsoap(self):
         try:
-            """do not block - if we receive the lock then good - no other thread
-            will try communicating with Liquidsoap. If we don't receive, it may
-            mean some thread blocked and is still holding the lock. Restarting
-            Liquidsoap will cause that thread to release the lock as an Exception
-            will be thrown."""
+            # do not block - if we receive the lock then good - no other thread
+            # will try communicating with Liquidsoap. If we don't receive, it may
+            # mean some thread blocked and is still holding the lock. Restarting
+            # Liquidsoap will cause that thread to release the lock as an Exception
+            # will be thrown.
             self.telnet_lock.acquire(False)
 
             logger.info("Restarting Liquidsoap")
@@ -194,12 +194,12 @@ class PypoFetch(Thread):
                     tn.read_all()
                     logger.info("Liquidsoap is up and running")
                     break
-                except Exception as e:
+                except Exception:
                     # sleep 0.5 seconds and try again
                     time.sleep(0.5)
 
-        except Exception as e:
-            logger.exception(e)
+        except Exception as exception:
+            logger.exception(exception)
         finally:
             if self.telnet_lock.locked():
                 self.telnet_lock.release()
@@ -240,8 +240,8 @@ class PypoFetch(Thread):
             tn.write(b"exit\n")
 
             output = tn.read_all()
-        except Exception as e:
-            logger.exception(e)
+        except Exception as exception:
+            logger.exception(exception)
         finally:
             self.telnet_lock.release()
 
@@ -254,8 +254,8 @@ class PypoFetch(Thread):
         logger.info(streams)
 
         fake_time = current_time + 1
-        for s in streams:
-            info = s.split(":")
+        for stream in streams:
+            info = stream.split(":")
             stream_id = info[0]
             status = info[1]
             if status == "true":
@@ -278,8 +278,8 @@ class PypoFetch(Thread):
             tn.write(command)
             tn.write(b"exit\n")
             tn.read_all()
-        except Exception as e:
-            logger.exception(e)
+        except Exception as exception:
+            logger.exception(exception)
         finally:
             self.telnet_lock.release()
 
@@ -298,8 +298,8 @@ class PypoFetch(Thread):
             tn.write(command)
             tn.write(b"exit\n")
             tn.read_all()
-        except Exception as e:
-            logger.exception(e)
+        except Exception as exception:
+            logger.exception(exception)
         finally:
             self.telnet_lock.release()
 
@@ -319,12 +319,12 @@ class PypoFetch(Thread):
                 tn.write(command)
                 tn.write(b"exit\n")
                 tn.read_all()
-            except Exception as e:
-                logger.exception(e)
+            except Exception as exception:
+                logger.exception(exception)
             finally:
                 self.telnet_lock.release()
-        except Exception as e:
-            logger.exception(e)
+        except Exception as exception:
+            logger.exception(exception)
 
     # Process the schedule
     #  - Reads the scheduled entries of a given range (actual time +/- "prepare_ahead" / "cache_for")
@@ -346,7 +346,7 @@ class PypoFetch(Thread):
             download_dir = self.cache_dir
             try:
                 os.makedirs(download_dir)
-            except Exception as e:
+            except Exception:
                 pass
 
             media_copy = {}
@@ -368,8 +368,8 @@ class PypoFetch(Thread):
                 media_copy[key] = media_item
 
             self.media_prepare_queue.put(copy.copy(media_filtered))
-        except Exception as e:
-            logger.exception(e)
+        except Exception as exception:
+            logger.exception(exception)
 
         # Send the data to pypo-push
         logger.debug("Pushing to pypo-push")
@@ -378,8 +378,8 @@ class PypoFetch(Thread):
         # cleanup
         try:
             self.cache_cleanup(media)
-        except Exception as e:
-            logger.exception(e)
+        except Exception as exception:
+            logger.exception(exception)
 
     # do basic validation of file parameters. Useful for debugging
     # purposes
@@ -445,8 +445,8 @@ class PypoFetch(Thread):
                     logger.info("File '%s' removed" % path)
                 else:
                     logger.info("File '%s' not removed. Still busy!" % path)
-            except Exception as e:
-                logger.exception("Problem removing file '%s'" % f)
+            except Exception as exception:
+                logger.exception(f"Problem removing file '{f}': {exception}")
 
     def manual_schedule_fetch(self):
         try:
@@ -454,9 +454,8 @@ class PypoFetch(Thread):
             logger.debug(f"Received event from API client: {self.schedule_data}")
             self.process_schedule(self.schedule_data)
             return True
-        except Exception as e:
-            logger.error("Unable to fetch schedule")
-            logger.exception(e)
+        except Exception as exception:
+            logger.exception(f"Unable to fetch schedule: {exception}")
         return False
 
     def persistent_manual_schedule_fetch(self, max_attempts=1):
@@ -517,17 +516,17 @@ class PypoFetch(Thread):
                 )
                 manual_fetch_needed = False
                 self.handle_message(message)
-            except Empty as e:
+            except Empty:
                 logger.info("Queue timeout. Fetching schedule manually")
                 manual_fetch_needed = True
-            except Exception as e:
-                logger.exception(e)
+            except Exception as exception:
+                logger.exception(exception)
 
             try:
                 if manual_fetch_needed:
                     self.persistent_manual_schedule_fetch(max_attempts=5)
-            except Exception as e:
-                logger.exception("Failed to manually fetch the schedule.")
+            except Exception as exception:
+                logger.exception(f"Failed to manually fetch the schedule: {exception}")
 
             loops += 1
 

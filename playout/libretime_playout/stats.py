@@ -51,8 +51,8 @@ class ListenerStat(Thread):
             headers=header,
         )
 
-        f = urllib.request.urlopen(req, timeout=ListenerStat.HTTP_REQUEST_TIMEOUT)
-        document = f.read()
+        resp = urllib.request.urlopen(req, timeout=ListenerStat.HTTP_REQUEST_TIMEOUT)
+        document = resp.read()
 
         return document
 
@@ -68,12 +68,12 @@ class ListenerStat(Thread):
         sources = dom.getElementsByTagName("source")
 
         mount_stats = None
-        for s in sources:
+        for source in sources:
             # drop the leading '/' character
-            mount_name = s.getAttribute("mount")[1:]
+            mount_name = source.getAttribute("mount")[1:]
             if mount_name == ip["mount"]:
                 timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
-                listeners = s.getElementsByTagName("listeners")
+                listeners = source.getElementsByTagName("listeners")
                 num_listeners = 0
                 if len(listeners):
                     num_listeners = self.get_node_text(listeners[0].childNodes)
@@ -94,7 +94,7 @@ class ListenerStat(Thread):
 
         timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
         num_listeners = 0
-        if len(current_listeners):
+        if current_listeners:
             num_listeners = self.get_node_text(current_listeners[0].childNodes)
 
         mount_stats = {
@@ -123,11 +123,11 @@ class ListenerStat(Thread):
                     else:
                         stats.append(self.get_shoutcast_stats(v))
                     self.update_listener_stat_error(k, "OK")
-                except Exception as e:
+                except Exception as exception:
                     try:
-                        self.update_listener_stat_error(k, str(e))
-                    except Exception as e:
-                        logger.error("Exception: %s", e)
+                        self.update_listener_stat_error(k, str(exception))
+                    except Exception as exception2:
+                        logger.exception(exception2)
 
         return stats
 
@@ -150,7 +150,7 @@ class ListenerStat(Thread):
 
                 if stats:
                     self.push_stream_stats(stats)
-            except Exception as e:
-                logger.error("Exception: %s", e)
+            except Exception as exception:
+                logger.exception(exception)
 
             time.sleep(120)

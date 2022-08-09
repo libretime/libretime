@@ -5,7 +5,6 @@ import os
 import re
 import signal
 import time
-import traceback
 from datetime import timezone
 from subprocess import PIPE, Popen
 from threading import Thread
@@ -145,10 +144,8 @@ class ShowRecorder(Thread):
             recorded_file["tracknumber"] = self.show_instance
             recorded_file.save()
 
-        except Exception as e:
-            top = traceback.format_exc()
-            logger.error("Exception: %s", e)
-            logger.error("traceback: %s", top)
+        except Exception as exception:
+            logger.exception(exception)
 
     def run(self):
         code, filepath = self.record_show()
@@ -161,8 +158,8 @@ class ShowRecorder(Thread):
 
                 self.upload_file(filepath)
                 os.remove(filepath)
-            except Exception as e:
-                logger.error(e)
+            except Exception as exception:
+                logger.exception(exception)
         else:
             logger.info("problem recording show")
             os.remove(filepath)
@@ -185,8 +182,8 @@ class Recorder(Thread):
             try:
                 self.legacy_client.register_component("show-recorder")
                 success = True
-            except Exception as e:
-                logger.error(str(e))
+            except Exception as exception:
+                logger.exception(exception)
                 time.sleep(10)
 
     def handle_message(self):
@@ -313,10 +310,8 @@ class Recorder(Thread):
                 # remove show from shows to record.
                 del self.shows_to_record[start_time]
                 # self.time_till_next_show = self.get_time_till_next_show()
-        except Exception as e:
-            top = traceback.format_exc()
-            logger.error("Exception: %s", e)
-            logger.error("traceback: %s", top)
+        except Exception as exception:
+            logger.exception(exception)
 
     def run(self):
         """
@@ -333,9 +328,8 @@ class Recorder(Thread):
                 if temp is not None:
                     self.process_recorder_schedule(temp)
                 logger.info("Bootstrap recorder schedule received: %s", temp)
-            except Exception as e:
-                logger.error(traceback.format_exc())
-                logger.error(e)
+            except Exception as exception:
+                logger.exception(exception)
 
             logger.info("Bootstrap complete: got initial copy of the schedule")
 
@@ -351,17 +345,16 @@ class Recorder(Thread):
                         if temp is not None:
                             self.process_recorder_schedule(temp)
                         logger.info("updated recorder schedule received: %s", temp)
-                    except Exception as e:
-                        logger.error(traceback.format_exc())
-                        logger.error(e)
+                    except Exception as exception:
+                        logger.exception(exception)
+
                 try:
                     self.handle_message()
-                except Exception as e:
-                    logger.error(traceback.format_exc())
-                    logger.error("Pypo Recorder Exception: %s", e)
+                except Exception as exception:
+                    logger.exception(exception)
+
                 time.sleep(PUSH_INTERVAL)
                 self.loops += 1
-        except Exception as e:
-            top = traceback.format_exc()
-            logger.error("Exception: %s", e)
-            logger.error("traceback: %s", top)
+
+        except Exception as exception:
+            logger.exception(exception)

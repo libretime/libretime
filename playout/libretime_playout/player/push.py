@@ -1,7 +1,6 @@
 import math
 import telnetlib
 import time
-import traceback
 from datetime import datetime
 from queue import Queue
 from threading import Thread
@@ -49,9 +48,9 @@ class PypoPush(Thread):
         while True:
             try:
                 media_schedule = self.queue.get(block=True)
-            except Exception as e:
-                logger.error(str(e))
-                raise
+            except Exception as exception:
+                logger.exception(exception)
+                raise exception
             else:
                 logger.debug(media_schedule)
                 # separate media_schedule list into currently_playing and
@@ -119,8 +118,8 @@ class PypoPush(Thread):
             tn.write("exit\n")
             logger.debug(tn.read_all())
 
-        except Exception as e:
-            logger.error(str(e))
+        except Exception as exception:
+            logger.exception(exception)
         finally:
             self.telnet_lock.release()
 
@@ -128,8 +127,6 @@ class PypoPush(Thread):
         while True:
             try:
                 self.main()
-            except Exception as e:
-                top = traceback.format_exc()
-                logger.error("Pypo Push Exception: %s", top)
+            except Exception as exception:
+                logger.exception(exception)
                 time.sleep(5)
-        logger.info("PypoPush thread exiting")

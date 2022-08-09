@@ -143,8 +143,8 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
         try:
             legacy_client.register_component("pypo")
             success = True
-        except Exception as e:
-            logger.error(str(e))
+        except Exception as exception:
+            logger.exception(exception)
             time.sleep(10)
 
     telnet_lock = Lock()

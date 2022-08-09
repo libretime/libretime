@@ -2,7 +2,6 @@ import hashlib
 import os
 import stat
 import time
-import traceback
 from queue import Empty
 from threading import Thread
 
@@ -30,7 +29,7 @@ class PypoFile(Thread):
             dst_size = os.path.getsize(dst)
             if dst_size == 0:
                 dst_exists = False
-        except Exception as e:
+        except Exception:
             dst_exists = False
 
         do_copy = False
@@ -72,9 +71,8 @@ class PypoFile(Thread):
                     media_item["filesize"] = file_size
 
                 media_item["file_ready"] = True
-            except Exception as e:
-                logger.error(f"could not copy file {file_id} to {dst}")
-                logger.error(e)
+            except Exception as exception:
+                logger.exception(f"could not copy file {file_id} to {dst}: {exception}")
 
     def report_file_size_and_md5_to_api(self, file_path, file_id):
         try:
@@ -88,27 +86,23 @@ class PypoFile(Thread):
                         break
                     m.update(data)
                 md5_hash = m.hexdigest()
-        except OSError as e:
+        except OSError as exception:
             file_size = 0
-            logger.error(
-                "Error getting file size and md5 hash for file id %s" % file_id
+            logger.exception(
+                f"Error getting file size and md5 hash for file id {file_id}: {exception}"
             )
-            logger.error(e)
 
         # Make PUT request to LibreTime to update the file size and hash
-        error_msg = (
-            "Could not update media file %s with file size and md5 hash:" % file_id
-        )
+        error_msg = f"Could not update media file {file_id} with file size and md5 hash"
         try:
             self.api_client.update_file(
                 file_id,
                 json={"filesize": file_size, "md5": md5_hash},
             )
         except (ConnectionError, Timeout):
-            logger.error(error_msg)
-        except Exception as e:
-            logger.error(error_msg)
-            logger.error(e)
+            logger.exception(error_msg)
+        except Exception as exception:
+            logger.exception(f"{error_msg}: {exception}")
 
         return file_size
 
@@ -154,19 +148,15 @@ class PypoFile(Thread):
                     # or we don't), get back to work on preparing getting files.
                     try:
                         self.media = self.media_queue.get_nowait()
-                    except Empty as e:
+                    except Empty:
                         pass
 
                 media_item = self.get_highest_priority_media_item(self.media)
                 if media_item is not None:
                     self.copy_file(media_item)
-            except Exception as e:
-                import traceback
-
-                top = traceback.format_exc()
-                logger.error(str(e))
-                logger.error(top)
-                raise
+            except Exception as exception:
+                logger.exception(exception)
+                raise exception
 
     def run(self):
         """
@@ -174,8 +164,8 @@ class PypoFile(Thread):
         """
         try:
             self.main()
-        except Exception as e:
-            top = traceback.format_exc()
-            logger.error("PypoFile Exception: %s", top)
+        except Exception as exception:
+            logger.exception(exception)
             time.sleep(5)
+
         logger.info("PypoFile thread exiting")
