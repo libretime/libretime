@@ -42,8 +42,8 @@ def test_apc_url_incomplete():
 
 
 def test_api_request_init():
-    u = ApiRequest("request_name", ApcUrl("/test/ing"))
-    assert u.name == "request_name"
+    req = ApiRequest("request_name", ApcUrl("/test/ing"))
+    assert req.name == "request_name"
 
 
 def test_api_request_call_json():

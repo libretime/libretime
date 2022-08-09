@@ -93,26 +93,26 @@ class ApiClient:
             return -1
 
     def is_server_compatible(self, verbose=True):
-        logger = self.logger
         api_version = self.__get_api_version()
         if api_version == -1:
             if verbose:
-                logger.info("Unable to get Airtime API version number.\n")
+                self.logger.info("Unable to get Airtime API version number.\n")
             return False
-        elif api_version[0:3] != AIRTIME_API_VERSION[0:3]:
+
+        if api_version[0:3] != AIRTIME_API_VERSION[0:3]:
             if verbose:
-                logger.info("Airtime API version found: " + str(api_version))
-                logger.info(
+                self.logger.info("Airtime API version found: " + str(api_version))
+                self.logger.info(
                     "pypo is only compatible with API version: " + AIRTIME_API_VERSION
                 )
             return False
-        else:
-            if verbose:
-                logger.info("Airtime API version found: " + str(api_version))
-                logger.info(
-                    "pypo is only compatible with API version: " + AIRTIME_API_VERSION
-                )
-            return True
+
+        if verbose:
+            self.logger.info("Airtime API version found: " + str(api_version))
+            self.logger.info(
+                "pypo is only compatible with API version: " + AIRTIME_API_VERSION
+            )
+        return True
 
     def notify_liquidsoap_started(self):
         try:
@@ -140,7 +140,6 @@ class ApiClient:
             return None
 
     def upload_recorded_show(self, files, show_id):
-        logger = self.logger
         response = ""
 
         retries = self.UPLOAD_RETRIES
@@ -148,19 +147,19 @@ class ApiClient:
 
         url = self.construct_rest_url("upload_file_url")
 
-        logger.debug(url)
+        self.logger.debug(url)
 
         for i in range(0, retries):
-            logger.debug("Upload attempt: %s", i + 1)
-            logger.debug(files)
-            logger.debug(ApiRequest.API_HTTP_REQUEST_TIMEOUT)
+            self.logger.debug("Upload attempt: %s", i + 1)
+            self.logger.debug(files)
+            self.logger.debug(ApiRequest.API_HTTP_REQUEST_TIMEOUT)
 
             try:
                 request = requests.post(
                     url, files=files, timeout=float(ApiRequest.API_HTTP_REQUEST_TIMEOUT)
                 )
                 response = request.json()
-                logger.debug(response)
+                self.logger.debug(response)
 
                 # FIXME: We need to tell LibreTime that the uploaded track was recorded
                 # for a specific show
@@ -184,11 +183,11 @@ class ApiClient:
                 break
 
             except requests.exceptions.HTTPError as exception:
-                logger.error(f"Http error code: {exception.response.status_code}")
-                logger.exception(exception)
+                self.logger.error(f"Http error code: {exception.response.status_code}")
+                self.logger.exception(exception)
 
             except requests.exceptions.ConnectionError as exception:
-                logger.exception(f"Server is down: {exception}")
+                self.logger.exception(f"Server is down: {exception}")
 
             except Exception as exception:
                 self.logger.exception(exception)
@@ -229,7 +228,6 @@ class ApiClient:
         return self.services.register_component(component=component)
 
     def notify_liquidsoap_status(self, msg, stream_id, time):
-        logger = self.logger
         try:
             # encoded_msg is no longer used server_side!!
             encoded_msg = urllib.parse.quote("dummy")

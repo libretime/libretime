@@ -16,6 +16,7 @@ class UrlException(Exception):
 
 class IncompleteUrl(UrlException):
     def __init__(self, url):
+        super().__init__()
         self.url = url
 
     def __str__(self):
@@ -24,6 +25,7 @@ class IncompleteUrl(UrlException):
 
 class UrlBadParam(UrlException):
     def __init__(self, url, param):
+        super().__init__()
         self.url = url
         self.param = param
 
@@ -31,6 +33,7 @@ class UrlBadParam(UrlException):
         return f"Bad param '{self.param}' passed into url: '{self.url}'"
 
 
+# pylint: disable=too-few-public-methods
 class KeyAuth(AuthBase):
     def __init__(self, key):
         self.key = key
@@ -49,9 +52,9 @@ class ApcUrl:
 
     def params(self, **params):
         temp_url = self.base_url
-        for k, v in params.items():
+        for k in params:
             wrapped_param = "{" + k + "}"
-            if not wrapped_param in temp_url:
+            if wrapped_param not in temp_url:
                 raise UrlBadParam(self.base_url, k)
         temp_url = temp_url.format_map(UrlParamDict(**params))
         return ApcUrl(temp_url)
@@ -59,8 +62,7 @@ class ApcUrl:
     def url(self):
         if "{" in self.base_url:
             raise IncompleteUrl(self.base_url)
-        else:
-            return self.base_url
+        return self.base_url
 
 
 class ApiRequest:
@@ -123,13 +125,13 @@ class ApiRequest:
         self.__req = lambda: self(*args, **kwargs)
         return self
 
-    def retry(self, n, delay=5):
+    def retry(self, count, delay=5):
         """Try to send request n times. If after n times it fails then
         we finally raise exception"""
-        for i in range(0, n - 1):
+        for _ in range(0, count - 1):
             try:
                 return self.__req()
-            except Exception:
+            except requests.exceptions.RequestException:
                 sleep(delay)
         return self.__req()
 
@@ -161,5 +163,5 @@ class RequestProvider:
     def __getattr__(self, attr):
         if attr in self:
             return self.requests[attr]
-        else:
-            return super().__getattribute__(attr)
+
+        return super().__getattribute__(attr)
