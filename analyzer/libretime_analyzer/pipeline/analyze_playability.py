@@ -1,11 +1,9 @@
-__author__ = "asantoni"
-
-import subprocess
+from subprocess import CalledProcessError
 from typing import Any, Dict
 
 from loguru import logger
 
-from ._liquidsoap import LIQUIDSOAP
+from ._liquidsoap import _liquidsoap
 
 
 class UnplayableFileError(Exception):
@@ -13,31 +11,21 @@ class UnplayableFileError(Exception):
 
 
 def analyze_playability(filename: str, metadata: Dict[str, Any]):
-    """Checks if a file can be played by Liquidsoap.
-    :param filename: The full path to the file to analyzer
-    :param metadata: A metadata dictionary where the results will be put
-    :return: The metadata dictionary
     """
-    command = [
-        LIQUIDSOAP,
-        "-v",
-        "-c",
-        "output.dummy(audio_to_stereo(single(argv(1))))",
-        "--",
-        filename,
-    ]
+    Checks if a file can be played by Liquidsoap.
+    """
     try:
-        subprocess.check_output(command, stderr=subprocess.STDOUT, close_fds=True)
-
-    except OSError as exception:  # liquidsoap was not found
-        logger.warning(
-            f"Failed to run: {command[0]} - {exception}. Is liquidsoap installed?"
+        _liquidsoap(
+            "-v",
+            *("-c", "output.dummy(audio_to_stereo(single(argv(1))))"),
+            "--",
+            filename,
         )
-    except (
-        subprocess.CalledProcessError,
-        Exception,
-    ) as exception:  # liquidsoap returned an error code
+    except CalledProcessError as exception:
         logger.warning(exception)
         raise UnplayableFileError() from exception
+
+    except OSError as exception:  # liquidsoap was not found
+        logger.warning(f"Failed to run: {exception}. Is liquidsoap installed?")
 
     return metadata
