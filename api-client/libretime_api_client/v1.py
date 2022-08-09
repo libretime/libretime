@@ -6,7 +6,6 @@
 # probably want to create a script on your server side to automatically
 # schedule a playlist one minute from the current time.
 ###############################################################################
-import base64
 import json
 import logging
 import time
@@ -143,12 +142,6 @@ class ApiClient:
             endpoints=api_endpoints,
         )
 
-    def __get_airtime_version(self):
-        try:
-            return self.services.version_url()["airtime_version"]
-        except Exception:
-            return -1
-
     def __get_api_version(self):
         try:
             return self.services.version_url()["api_version"]
@@ -178,14 +171,6 @@ class ApiClient:
                     "pypo is only compatible with API version: " + AIRTIME_API_VERSION
                 )
             return True
-
-    def get_schedule(self):
-        # TODO : properly refactor this routine
-        # For now the return type is a little messed up for compatibility reasons
-        try:
-            return (True, self.services.export_url())
-        except:
-            return (False, None)
 
     def notify_liquidsoap_started(self):
         try:
@@ -285,111 +270,6 @@ class ApiClient:
         url.username = self.api_key
         return f"{url.geturl()}/{api_endpoints[action_key]}"
 
-    """
-    Caller of this method needs to catch any exceptions such as
-    ValueError thrown by json.loads or URLError by urllib2.urlopen
-    """
-
-    def setup_media_monitor(self):
-        return self.services.media_setup_url()
-
-    def send_media_monitor_requests(self, action_list, dry=False):
-        """
-        Send a gang of media monitor events at a time. actions_list is a
-        list of dictionaries where every dictionary is representing an
-        action. Every action dict must contain a 'mode' key that says
-        what kind of action it is and an optional 'is_record' key that
-        says whether the show was recorded or not. The value of this key
-        does not matter, only if it's present or not.
-        """
-        # We are assuming that action_list is a list of dictionaries such
-        # that every dictionary represents the metadata of a file along
-        # with a special mode key that is the action to be executed by the
-        # controller.
-        valid_actions = []
-        # We could get a list of valid_actions in a much shorter way using
-        # filter but here we prefer a little more verbosity to help
-        # debugging
-        for action in action_list:
-            if not "mode" in action:
-                self.logger.debug(
-                    "Warning: Trying to send a request element without a 'mode'"
-                )
-                self.logger.debug("Here is the the request: '%s'" % str(action))
-            else:
-                # We alias the value of is_record to true or false no
-                # matter what it is based on if it's absent in the action
-                if "is_record" not in action:
-                    action["is_record"] = 0
-                valid_actions.append(action)
-        # Note that we must prefix every key with: mdX where x is a number
-        # Is there a way to format the next line a little better? The
-        # parenthesis make the code almost unreadable
-        md_list = {("md%d" % i): json.dumps(md) for i, md in enumerate(valid_actions)}
-        # For testing we add the following "dry" parameter to tell the
-        # controller not to actually do any changes
-        if dry:
-            md_list["dry"] = 1
-        self.logger.info("Pumping out %d requests..." % len(valid_actions))
-        return self.services.reload_metadata_group(_post_data=md_list)
-
-    # returns a list of all db files for a given directory in JSON format:
-    # {"files":["path/to/file1", "path/to/file2"]}
-    # Note that these are relative paths to the given directory. The full
-    # path is not returned.
-    def list_all_db_files(self, dir_id, all_files=True):
-        logger = self.logger
-        try:
-            all_files = "1" if all_files else "0"
-            response = self.services.list_all_db_files(dir_id=dir_id, all=all_files)
-        except Exception as e:
-            response = {}
-            logger.error("Exception: %s", e)
-        try:
-            return response["files"]
-        except KeyError:
-            self.logger.error(
-                "Could not find index 'files' in dictionary: %s", str(response)
-            )
-            return []
-
-    """
-    Caller of this method needs to catch any exceptions such as
-    ValueError thrown by json.loads or URLError by urllib2.urlopen
-    """
-
-    def list_all_watched_dirs(self):
-        return self.services.list_all_watched_dirs()
-
-    """
-    Caller of this method needs to catch any exceptions such as
-    ValueError thrown by json.loads or URLError by urllib2.urlopen
-    """
-
-    def add_watched_dir(self, path):
-        return self.services.add_watched_dir(path=base64.b64encode(path))
-
-    """
-    Caller of this method needs to catch any exceptions such as
-    ValueError thrown by json.loads or URLError by urllib2.urlopen
-    """
-
-    def remove_watched_dir(self, path):
-        return self.services.remove_watched_dir(path=base64.b64encode(path))
-
-    """
-    Caller of this method needs to catch any exceptions such as
-    ValueError thrown by json.loads or URLError by urllib2.urlopen
-    """
-
-    def set_storage_dir(self, path):
-        return self.services.set_storage_dir(path=base64.b64encode(path))
-
-    """
-    Caller of this method needs to catch any exceptions such as
-    ValueError thrown by json.loads or URLError by urllib2.urlopen
-    """
-
     def get_stream_setting(self):
         return self.services.get_stream_setting()
 
@@ -427,51 +307,6 @@ class ApiClient:
     def get_bootstrap_info(self):
         """Retrieve infomations needed on bootstrap time"""
         return self.services.get_bootstrap_info()
-
-    def get_files_without_replay_gain_value(self, dir_id):
-        """
-        Download a list of files that need to have their ReplayGain value
-        calculated. This list of files is downloaded into a file and the path
-        to this file is the return value.
-        """
-        # http://localhost/api/get-files-without-replay-gain/dir_id/1
-        try:
-            return self.services.get_files_without_replay_gain(dir_id=dir_id)
-        except Exception as e:
-            self.logger.exception(e)
-            return []
-
-    def get_files_without_silan_value(self):
-        """
-        Download a list of files that need to have their cue in/out value
-        calculated. This list of files is downloaded into a file and the path
-        to this file is the return value.
-        """
-        try:
-            return self.services.get_files_without_silan_value()
-        except Exception as e:
-            self.logger.exception(e)
-            return []
-
-    def update_replay_gain_values(self, pairs):
-        """
-        'pairs' is a list of pairs in (x, y), where x is the file's database
-        row id and y is the file's replay_gain value in dB
-        """
-        self.logger.debug(
-            self.services.update_replay_gain_value(
-                _post_data={"data": json.dumps(pairs)}
-            )
-        )
-
-    def update_cue_values_by_silan(self, pairs):
-        """
-        'pairs' is a list of pairs in (x, y), where x is the file's database
-        row id and y is the file's cue values in dB
-        """
-        return self.services.update_cue_values_by_silan(
-            _post_data={"data": json.dumps(pairs)}
-        )
 
     def notify_webstream_data(self, data, media_id):
         """
