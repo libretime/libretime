@@ -21,7 +21,7 @@ def test_analyze_playability(filepath):
 
 def test_analyze_playability_missing_liquidsoap():
     with patch(
-        "libretime_analyzer.pipeline.analyze_playability.LIQUIDSOAP_EXECUTABLE",
+        "libretime_analyzer.pipeline._liquidsoap.LIQUIDSOAP",
         "foobar",
     ):
         analyze_playability(str(FILES[0].path), {})
