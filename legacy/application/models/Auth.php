@@ -23,15 +23,13 @@ class Application_Model_Auth
 
     public function sendPasswordRestoreLink($user, $view)
     {
-        $token = $this->generateToken('password.restore', $user->getDbId());
+        $public_url = Config::getPublicUrl();
 
-        $e_link_protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
-        $e_link_base = $_SERVER['SERVER_NAME'];
-        $e_link_port = $_SERVER['SERVER_PORT'];
-        $e_link_path = $view->url(['user_id' => $user->getDbId(), 'token' => $token], 'password-change');
+        $token = $this->generateToken('password.restore', $user->getDbId());
+        $link_path = $view->url(['user_id' => $user->getDbId(), 'token' => $token], 'password-change');
 
         $message = sprintf(_("Hi %s, \n\nPlease click this link to reset your password: "), $user->getDbLogin());
-        $message .= "{$e_link_protocol}://{$e_link_base}:{$e_link_port}{$e_link_path}";
+        $message .= "{$public_url}{$link_path}";
         $message .= sprintf(_("\n\nIf you have any problems, please contact our support team: %s"), SUPPORT_ADDRESS);
         $message .= sprintf(_("\n\nThank you,\nThe %s Team"), SAAS_PRODUCT_BRANDING_NAME);
 
@@ -132,17 +130,14 @@ class Application_Model_Auth
 
     /** It is essential to do this before interacting with Zend_Auth otherwise sessions could be shared between
      *  different copies of Airtime on the same webserver. This essentially pins this session to:
-     *   - The server hostname - including subdomain so we segment multiple Airtime installs on different subdomains
-     *   - The remote IP of the browser - to help prevent session hijacking
-     *   - The client ID - same reason as server hostname.
+     *   - The server public url.
      *
      * @param Zend_Auth $auth get this with Zend_Auth::getInstance()
      */
     public static function pinSessionToClient($auth)
     {
-        $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
-        $remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
-        $sessionIdentifier = 'Airtime' . '-' . $serverName . '-' . $remoteAddr . '-' . Application_Model_Preference::GetClientId() . '-' . Config::getBasePath();
-        $auth->setStorage(new Zend_Auth_Storage_Session($sessionIdentifier));
+        $session_id = PRODUCT_NAME . '-';
+        $session_id .= bin2hex(Config::getPublicUrl());
+        $auth->setStorage(new Zend_Auth_Storage_Session($session_id));
     }
 }
