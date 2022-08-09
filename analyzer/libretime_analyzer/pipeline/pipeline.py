@@ -19,9 +19,9 @@ class Step(Protocol):
 
 
 class PipelineStatus(int, Enum):
-    succeed = 0
-    pending = 1
-    failed = 2
+    SUCCEED = 0
+    PENDING = 1
+    FAILED = 2
 
 
 class Pipeline:
@@ -89,13 +89,13 @@ class Pipeline:
                 metadata,
             )
 
-            metadata["import_status"] = PipelineStatus.succeed
+            metadata["import_status"] = PipelineStatus.SUCCEED
 
             # Pass all the file metadata back to the main analyzer process
             queue.put(metadata)
         except UnplayableFileError as exception:
             logger.exception(exception)
-            metadata["import_status"] = PipelineStatus.failed
+            metadata["import_status"] = PipelineStatus.FAILED
             metadata["reason"] = "The file could not be played."
             raise exception
         except Exception as exception:

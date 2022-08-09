@@ -15,7 +15,7 @@ from ..fixtures import FILES
     ),
 )
 def test_analyze_cuepoint(filepath, length, cuein, cueout):
-    metadata = analyze_cuepoint(filepath, dict())
+    metadata = analyze_cuepoint(filepath, {})
 
     assert metadata["length_seconds"] == pytest.approx(length, abs=0.1)
     assert float(metadata["cuein"]) == pytest.approx(float(cuein), abs=1)

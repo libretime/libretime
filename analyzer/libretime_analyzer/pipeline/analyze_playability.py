@@ -30,16 +30,15 @@ def analyze_playability(filename: str, metadata: Dict[str, Any]):
     try:
         subprocess.check_output(command, stderr=subprocess.STDOUT, close_fds=True)
 
-    except OSError as e:  # liquidsoap was not found
+    except OSError as exception:  # liquidsoap was not found
         logger.warning(
-            "Failed to run: %s - %s. %s"
-            % (command[0], e.strerror, "Do you have liquidsoap installed?")
+            f"Failed to run: {command[0]} - {exception}. Is liquidsoap installed?"
         )
     except (
         subprocess.CalledProcessError,
         Exception,
-    ) as e:  # liquidsoap returned an error code
-        logger.warning(e)
-        raise UnplayableFileError()
+    ) as exception:  # liquidsoap returned an error code
+        logger.warning(exception)
+        raise UnplayableFileError() from exception
 
     return metadata
