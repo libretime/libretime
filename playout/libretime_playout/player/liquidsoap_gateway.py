@@ -1,5 +1,4 @@
 import telnetlib
-import traceback
 
 from loguru import logger
 
@@ -78,8 +77,6 @@ class TelnetLiquidsoap:
 
             connection.write(b"exit\n")
             logger.debug(connection.read_all().decode("utf-8"))
-        except Exception:
-            raise
         finally:
             self.telnet_lock.release()
 
@@ -95,8 +92,6 @@ class TelnetLiquidsoap:
 
             connection.write(b"exit\n")
             logger.debug(connection.read_all().decode("utf-8"))
-        except Exception:
-            raise
         finally:
             self.telnet_lock.release()
 
@@ -121,8 +116,6 @@ class TelnetLiquidsoap:
 
             connection.write(b"exit\n")
             logger.debug(connection.read_all().decode("utf-8"))
-        except Exception:
-            raise
         finally:
             self.telnet_lock.release()
 
@@ -145,8 +138,7 @@ class TelnetLiquidsoap:
             logger.debug(connection.read_all().decode("utf-8"))
 
         except Exception as exception:
-            logger.error(str(exception))
-            logger.error(traceback.format_exc())
+            logger.exception(exception)
         finally:
             self.telnet_lock.release()
 
@@ -165,8 +157,7 @@ class TelnetLiquidsoap:
             logger.debug(connection.read_all().decode("utf-8"))
 
         except Exception as exception:
-            logger.error(str(exception))
-            logger.error(traceback.format_exc())
+            logger.exception(exception)
         finally:
             self.telnet_lock.release()
 
@@ -189,8 +180,7 @@ class TelnetLiquidsoap:
 
             self.current_prebuffering_stream_id = None
         except Exception as exception:
-            logger.error(str(exception))
-            logger.error(traceback.format_exc())
+            logger.exception(exception)
         finally:
             self.telnet_lock.release()
 
@@ -213,8 +203,7 @@ class TelnetLiquidsoap:
 
             self.current_prebuffering_stream_id = media_item["row_id"]
         except Exception as exception:
-            logger.error(str(exception))
-            logger.error(traceback.format_exc())
+            logger.exception(exception)
         finally:
             self.telnet_lock.release()
 
@@ -234,8 +223,7 @@ class TelnetLiquidsoap:
 
             return stream_id
         except Exception as exception:
-            logger.error(str(exception))
-            logger.error(traceback.format_exc())
+            logger.exception(exception)
         finally:
             self.telnet_lock.release()
 
@@ -255,8 +243,8 @@ class TelnetLiquidsoap:
             connection.write(command.encode("utf-8"))
             connection.write(b"exit\n")
             connection.read_all().decode("utf-8")
-        except Exception:
-            logger.error(traceback.format_exc())
+        except Exception as exception:
+            logger.exception(exception)
         finally:
             self.telnet_lock.release()
 
@@ -275,8 +263,7 @@ class TelnetLiquidsoap:
             connection.write(b"exit\n")
             connection.read_all().decode("utf-8")
         except Exception as exception:
-            logger.error(str(exception))
-            logger.error(traceback.format_exc())
+            logger.exception(exception)
         finally:
             self.telnet_lock.release()
 
@@ -318,8 +305,6 @@ class DummyTelnetLiquidsoap:
 
             annotation = create_liquidsoap_annotation(media_item)
             self.liquidsoap_mock_queues[queue_id].append(annotation)
-        except Exception:
-            raise
         finally:
             self.telnet_lock.release()
 
@@ -332,9 +317,6 @@ class DummyTelnetLiquidsoap:
             from datetime import datetime
 
             print(f"Time now: {datetime.utcnow():s}")
-
-        except Exception:
-            raise
         finally:
             self.telnet_lock.release()
 

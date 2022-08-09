@@ -64,9 +64,9 @@ class PypoLiquidsoap:
             try:
                 self.telnet_liquidsoap.queue_push(available_queue, media_item)
                 self.liq_queue_tracker[available_queue] = media_item
-            except Exception as e:
-                logger.error(e)
-                raise
+            except Exception as exception:
+                logger.exception(exception)
+                raise exception
         else:
             logger.warning(
                 "File %s did not become ready in less than 5 seconds. Skipping...",
@@ -87,13 +87,12 @@ class PypoLiquidsoap:
 
     def find_available_queue(self):
         available_queue = None
-        for i in self.liq_queue_tracker:
-            mi = self.liq_queue_tracker[i]
-            if mi == None or self.is_media_item_finished(mi):
+        for queue_id, item in self.liq_queue_tracker.items():
+            if item is None or self.is_media_item_finished(item):
                 # queue "i" is available. Push to this queue
-                available_queue = i
+                available_queue = queue_id
 
-        if available_queue == None:
+        if available_queue is None:
             raise NoQueueAvailableException()
 
         return available_queue
@@ -192,8 +191,8 @@ class PypoLiquidsoap:
                 # something is playing and it shouldn't be.
                 self.telnet_liquidsoap.stop_web_stream_buffer()
                 self.telnet_liquidsoap.stop_web_stream_output()
-        except KeyError as e:
-            logger.error("Error: Malformed event in schedule. " + str(e))
+        except KeyError as exception:
+            logger.exception(f"Malformed event in schedule: {exception}")
 
     def stop(self, queue):
         self.telnet_liquidsoap.queue_remove(queue)

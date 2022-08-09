@@ -1,7 +1,6 @@
 import os
 import sys
 import time
-import traceback
 from pathlib import Path
 from typing import Optional
 
@@ -54,10 +53,8 @@ def generate_entrypoint(log_filepath: Optional[Path]):
             ss = legacy_client.get_stream_setting()
             generate_liquidsoap_config(ss, log_filepath)
             successful = True
-        except Exception as e:
-            print("Unable to connect to the Airtime server.")
-            logger.error(str(e))
-            logger.error("traceback: %s", traceback.format_exc())
+        except Exception:
+            logger.exception("Unable to connect to the Airtime server")
             if attempts == max_attempts:
                 logger.error("giving up and exiting...")
                 sys.exit(1)

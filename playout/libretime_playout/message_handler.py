@@ -1,6 +1,5 @@
 import json
 import time
-import traceback
 from threading import Thread
 
 # For RabbitMQ
@@ -49,8 +48,8 @@ class PypoMessageHandler(Thread):
             ) as connection:
                 rabbit = RabbitConsumer(connection, [schedule_queue], self)
                 rabbit.run()
-        except Exception as e:
-            logger.error(e)
+        except Exception as exception:
+            logger.exception(exception)
 
     # Handle a message from RabbitMQ, put it into our yucky global var.
     # Hopefully there is a better way to do this.
@@ -97,15 +96,14 @@ class PypoMessageHandler(Thread):
                 self.recorder_queue.put(message)
             else:
                 logger.info("Unknown command: %s" % command)
-        except Exception as e:
-            logger.error("Exception in handling RabbitMQ message: %s", e)
+        except Exception as exception:
+            logger.exception(exception)
 
     def main(self):
         try:
             self.init_rabbit_mq()
-        except Exception as e:
-            logger.error("Exception: %s", e)
-            logger.error("traceback: %s", traceback.format_exc())
+        except Exception as exception:
+            logger.exception(exception)
         logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
         time.sleep(5)
 
