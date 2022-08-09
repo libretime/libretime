@@ -18,5 +18,5 @@ def test_analyze_replaygain(filepath, replaygain):
     if distro.codename() == "bionic" and str(filepath).endswith("+12.mp3"):
         tolerance = 5
 
-    metadata = analyze_replaygain(filepath, dict())
+    metadata = analyze_replaygain(filepath, {})
     assert metadata["replay_gain"] == pytest.approx(replaygain, abs=tolerance)

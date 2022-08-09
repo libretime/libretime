@@ -16,7 +16,7 @@ from ..fixtures import FILE_INVALID_DRM, FILES
     map(lambda i: str(i.path), FILES),
 )
 def test_analyze_playability(filepath):
-    analyze_playability(filepath, dict())
+    analyze_playability(filepath, {})
 
 
 def test_analyze_playability_missing_liquidsoap():
@@ -24,7 +24,7 @@ def test_analyze_playability_missing_liquidsoap():
         "libretime_analyzer.pipeline.analyze_playability.LIQUIDSOAP_EXECUTABLE",
         "foobar",
     ):
-        analyze_playability(str(FILES[0].path), dict())
+        analyze_playability(str(FILES[0].path), {})
 
 
 def test_analyze_playability_invalid_filepath():

@@ -174,8 +174,8 @@ class MessageListener:
             )
             metadata = queue.get()
         except Exception as exception:
-            logger.error("Analyzer pipeline exception: %s" % str(exception))
-            metadata["import_status"] = PipelineStatus.failed
+            logger.exception(f"Analyzer pipeline exception: {exception}")
+            metadata["import_status"] = PipelineStatus.FAILED
 
         # Ensure our queue doesn't fill up and block due to unexpected behavior. Defensive code.
         while not queue.empty():
