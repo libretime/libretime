@@ -1,11 +1,3 @@
-###############################################################################
-# This file holds the implementations for all the API clients.
-#
-# If you want to develop a new client, here are some suggestions: Get the fetch
-# methods working first, then the push, then the liquidsoap notifier.  You will
-# probably want to create a script on your server side to automatically
-# schedule a playlist one minute from the current time.
-###############################################################################
 import json
 import logging
 import time
@@ -76,9 +68,6 @@ api_endpoints[
 ] = "update-metadata-on-tunein/api_key/{api_key}"
 
 
-################################################################################
-# Airtime API Version 1 Client
-################################################################################
 class ApiClient:
     API_BASE = "/api"
     UPLOAD_RETRIES = 3
@@ -107,7 +96,6 @@ class ApiClient:
     def is_server_compatible(self, verbose=True):
         logger = self.logger
         api_version = self.__get_api_version()
-        # logger.info('Airtime version found: ' + str(version))
         if api_version == -1:
             if verbose:
                 logger.info("Unable to get Airtime API version number.\n")
@@ -134,9 +122,11 @@ class ApiClient:
             self.logger.exception(e)
 
     def notify_media_item_start_playing(self, media_id):
-        """This is a callback from liquidsoap, we use this to notify
+        """
+        This is a callback from liquidsoap, we use this to notify
         about the currently playing *song*. We get passed a JSON string
-        which we handed to liquidsoap in get_liquidsoap_data()."""
+        which we handed to liquidsoap in get_liquidsoap_data().
+        """
         try:
             return self.services.update_start_playing_url(media_id=media_id)
         except Exception as e:
@@ -173,25 +163,25 @@ class ApiClient:
                 response = request.json()
                 logger.debug(response)
 
-                """
-                FIXME: We need to tell LibreTime that the uploaded track was recorded for a specific show
-
-                My issue here is that response does not yet have an id. The id gets generated at the point
-                where analyzer is done with it's work. We probably need to do what is below in analyzer
-                and also make sure that the show instance id is routed all the way through.
-
-                It already gets uploaded by this but the RestController does not seem to care about it. In
-                the end analyzer doesn't have the info in it's rabbitmq message and imports the show as a
-                regular track.
-
-                logger.info("uploaded show result as file id %s", response.id)
-
-                url = self.construct_url("upload_recorded")
-                url = url.replace('%%fileid%%', response.id)
-                url = url.replace('%%showinstanceid%%', show_id)
-                request.get(url)
-                logger.info("associated uploaded file %s with show instance %s", response.id, show_id)
-                """
+                # FIXME: We need to tell LibreTime that the uploaded track was recorded
+                # for a specific show
+                #
+                # My issue here is that response does not yet have an id. The id gets
+                # generated at the point where analyzer is done with it's work. We
+                # probably need to do what is below in analyzer and also make sure that
+                # the show instance id is routed all the way through.
+                #
+                # It already gets uploaded by this but the RestController does not seem
+                # to care about it. In the end analyzer doesn't have the info in it's
+                # rabbitmq message and imports the show as a regular track.
+                #
+                # logger.info("uploaded show result as file id %s", response.id)
+                #
+                # url = self.construct_url("upload_recorded") url =
+                # url.replace('%%fileid%%', response.id) url =
+                # url.replace('%%showinstanceid%%', show_id) request.get(url)
+                # logger.info("associated uploaded file %s with show instance %s",
+                # response.id, show_id)
                 break
 
             except requests.exceptions.HTTPError as exception:
@@ -229,11 +219,13 @@ class ApiClient:
         return self.services.get_stream_setting()
 
     def register_component(self, component):
-        """Purpose of this method is to contact the server with a "Hey its
+        """
+        Purpose of this method is to contact the server with a "Hey its
         me!" message. This will allow the server to register the component's
         (component = media-monitor, pypo etc.) ip address, and later use it
         to query monit via monit's http service, or download log files via a
-        http server."""
+        http server.
+        """
         return self.services.register_component(component=component)
 
     def notify_liquidsoap_status(self, msg, stream_id, time):
@@ -260,7 +252,9 @@ class ApiClient:
             self.logger.exception(e)
 
     def get_bootstrap_info(self):
-        """Retrieve infomations needed on bootstrap time"""
+        """
+        Retrieve infomations needed on bootstrap time.
+        """
         return self.services.get_bootstrap_info()
 
     def notify_webstream_data(self, data, media_id):
