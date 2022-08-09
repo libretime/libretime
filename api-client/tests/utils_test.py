@@ -84,7 +84,6 @@ def test_request_provider_init():
 def test_request_provider_contains():
     endpoints = {
         "upload_recorded": "/1/",
-        "update_media_url": "/2/",
     }
     request_provider = RequestProvider(
         base_url="http://localhost/test",

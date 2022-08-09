@@ -35,46 +35,13 @@ api_endpoints[
 ] = "register-component/format/json/api_key/{api_key}/component/{component}"
 
 # media-monitor
-api_endpoints["media_setup_url"] = "media-monitor-setup/format/json/api_key/{api_key}"
 api_endpoints[
     "upload_recorded"
 ] = "upload-recorded/format/json/api_key/{api_key}/fileid/{fileid}/showinstanceid/{showinstanceid}"
-api_endpoints[
-    "update_media_url"
-] = "reload-metadata/format/json/api_key/{api_key}/mode/{mode}"
-api_endpoints[
-    "list_all_db_files"
-] = "list-all-files/format/json/api_key/{api_key}/dir_id/{dir_id}/all/{all}"
-api_endpoints[
-    "list_all_watched_dirs"
-] = "list-all-watched-dirs/format/json/api_key/{api_key}"
-api_endpoints[
-    "add_watched_dir"
-] = "add-watched-dir/format/json/api_key/{api_key}/path/{path}"
-api_endpoints[
-    "remove_watched_dir"
-] = "remove-watched-dir/format/json/api_key/{api_key}/path/{path}"
-api_endpoints[
-    "set_storage_dir"
-] = "set-storage-dir/format/json/api_key/{api_key}/path/{path}"
-api_endpoints[
-    "update_fs_mount"
-] = "update-file-system-mount/format/json/api_key/{api_key}"
-api_endpoints[
-    "reload_metadata_group"
-] = "reload-metadata-group/format/json/api_key/{api_key}"
-api_endpoints[
-    "handle_watched_dir_missing"
-] = "handle-watched-dir-missing/format/json/api_key/{api_key}/dir/{dir}"
 # show-recorder
 api_endpoints["show_schedule_url"] = "recorded-shows/format/json/api_key/{api_key}"
 api_endpoints["upload_file_url"] = "rest/media"
 # pypo
-api_endpoints["export_url"] = "schedule/api_key/{api_key}"
-api_endpoints["get_media_url"] = "get-media/file/{file}/api_key/{api_key}"
-api_endpoints[
-    "update_item_url"
-] = "notify-schedule-group-play/api_key/{api_key}/schedule_id/{schedule_id}"
 api_endpoints[
     "update_start_playing_url"
 ] = "notify-media-item-start-play/api_key/{api_key}/media_id/{media_id}/"
@@ -92,12 +59,6 @@ api_endpoints[
 ] = "check-live-stream-auth/format/json/api_key/{api_key}/username/{username}/password/{password}/djtype/{djtype}"
 api_endpoints["get_bootstrap_info"] = "get-bootstrap-info/format/json/api_key/{api_key}"
 api_endpoints[
-    "get_files_without_replay_gain"
-] = "get-files-without-replay-gain/api_key/{api_key}/dir_id/{dir_id}"
-api_endpoints[
-    "update_replay_gain_value"
-] = "update-replay-gain-value/format/json/api_key/{api_key}"
-api_endpoints[
     "notify_webstream_data"
 ] = "notify-webstream-data/api_key/{api_key}/media_id/{media_id}/format/json"
 api_endpoints[
@@ -110,12 +71,6 @@ api_endpoints["push_stream_stats"] = "push-stream-stats/api_key/{api_key}/format
 api_endpoints[
     "update_stream_setting_table"
 ] = "update-stream-setting-table/api_key/{api_key}/format/json"
-api_endpoints[
-    "get_files_without_silan_value"
-] = "get-files-without-silan-value/api_key/{api_key}"
-api_endpoints[
-    "update_cue_values_by_silan"
-] = "update-cue-values-by-silan/api_key/{api_key}"
 api_endpoints[
     "update_metadata_on_tunein"
 ] = "update-metadata-on-tunein/api_key/{api_key}"
