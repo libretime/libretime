@@ -49,10 +49,6 @@ class Logging
     {
         $linePrefix = '';
 
-        if (array_key_exists('SERVER_NAME', $_SERVER)) {
-            $linePrefix .= $_SERVER['SERVER_NAME'] . ' ';
-        }
-
         if ($debugMode) {
             // debug_backtrace is SLOW so we don't want this invoke unless there was a real error! (hence $debugMode)
             $bt = debug_backtrace();
