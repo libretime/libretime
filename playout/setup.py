@@ -27,6 +27,7 @@ setup(
         "defusedxml>=0.6.0,<0.8",
         "kombu==4.6.11",
         "mutagen>=1.45.1,<1.46",
+        "python-dateutil>=2.8.1,<2.9",
         "requests>=2.25.1,<2.29",
         "typing-extensions",
     ],
@@ -34,6 +35,7 @@ setup(
         "dev": [
             "distro",
             "requests-mock",
+            "types-python-dateutil",
         ],
     },
     zip_safe=False,
