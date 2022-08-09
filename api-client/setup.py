@@ -21,6 +21,7 @@ setup(
     extras_require={
         "dev": [
             "requests-mock",
+            "types-python-dateutil",
             "types-requests",
         ],
     },
