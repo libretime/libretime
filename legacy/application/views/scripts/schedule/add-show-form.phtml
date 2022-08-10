@@ -16,8 +16,8 @@
         <?php
         if (!$this->addNewShow) {
             $this->when->getElement('add_show_timezone')->setOptions(array('disabled' => true));
-            ?>
-            <input type="hidden" name="add_show_timezone" id="add_show_timezone" value=<?php echo $this->when->getElement('add_show_timezone')->getValue()?>>
+        ?>
+            <input type="hidden" name="add_show_timezone" id="add_show_timezone" value=<?php echo $this->when->getElement('add_show_timezone')->getValue() ?>>
         <?php
         }
         ?>

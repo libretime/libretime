@@ -2,7 +2,7 @@
     <dl>
         <dt id="add_show_start_now-label">
             <label for="add_show_start_now">
-                <?php echo $this->element->getElement('add_show_start_now')->getLabel()?>
+                <?php echo $this->element->getElement('add_show_start_now')->getLabel() ?>
             </label>
         </dt>
         <dd>
@@ -12,29 +12,30 @@
 
         <dt id="add_show_start_date-label">
             <label for="add_show_start_date" class="required">
-                <?php //echo $this->element->getElement('add_show_start_date')->getLabel()?>
+                <?php //echo $this->element->getElement('add_show_start_date')->getLabel()
+                ?>
             </label>
         </dt>
         <dd>
             <?php echo $this->element->getElement('add_show_start_date') ?>
             <?php echo $this->element->getElement('add_show_start_time') ?>
         </dd>
-        <?php if($this->element->getElement('add_show_start_date')->hasErrors() || $this->element->getElement('add_show_start_time')->hasErrors()){ ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('add_show_start_date')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                    <?php foreach($this->element->getElement('add_show_start_time')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
+        <?php if ($this->element->getElement('add_show_start_date')->hasErrors() || $this->element->getElement('add_show_start_time')->hasErrors()) { ?>
+            <ul class='errors'>
+                <?php foreach ($this->element->getElement('add_show_start_date')->getMessages() as $error) : ?>
+                    <li><?php echo $error; ?></li>
+                <?php endforeach; ?>
+                <?php foreach ($this->element->getElement('add_show_start_time')->getMessages() as $error) : ?>
+                    <li><?php echo $error; ?></li>
+                <?php endforeach; ?>
+            </ul>
         <?php } ?>
 
 
 
         <dt id="add_show_end_date_no_repeat-label">
             <label for="add_show_end_date_no_repeat" class="required">
-                <?php echo $this->element->getElement('add_show_end_date_no_repeat')->getLabel()?>
+                <?php echo $this->element->getElement('add_show_end_date_no_repeat')->getLabel() ?>
             </label>
         </dt>
 
@@ -42,15 +43,15 @@
             <?php echo $this->element->getElement('add_show_end_date_no_repeat') ?>
             <?php echo $this->element->getElement('add_show_end_time') ?>
         </dd>
-        <?php if($this->element->getElement('add_show_end_date_no_repeat')->hasErrors() || $this->element->getElement('add_show_end_time')->hasErrors()){ ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('add_show_end_date_no_repeat')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                    <?php foreach($this->element->getElement('add_show_end_time')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
+        <?php if ($this->element->getElement('add_show_end_date_no_repeat')->hasErrors() || $this->element->getElement('add_show_end_time')->hasErrors()) { ?>
+            <ul class='errors'>
+                <?php foreach ($this->element->getElement('add_show_end_date_no_repeat')->getMessages() as $error) : ?>
+                    <li><?php echo $error; ?></li>
+                <?php endforeach; ?>
+                <?php foreach ($this->element->getElement('add_show_end_time')->getMessages() as $error) : ?>
+                    <li><?php echo $error; ?></li>
+                <?php endforeach; ?>
+            </ul>
         <?php } ?>
         <dt id="add_show_duration-label">
             <label for="add_show_duration" class="optional">
@@ -59,14 +60,14 @@
         </dt>
         <dd id="add_show_duration-element">
             <?php echo $this->element->getElement('add_show_duration') ?>
-            <img id="icon-loader-small"/>
+            <img id="icon-loader-small" />
         </dd>
-        <?php if($this->element->getElement('add_show_duration')->hasErrors()){ ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('add_show_duration')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
+        <?php if ($this->element->getElement('add_show_duration')->hasErrors()) { ?>
+            <ul class='errors'>
+                <?php foreach ($this->element->getElement('add_show_duration')->getMessages() as $error) : ?>
+                    <li><?php echo $error; ?></li>
+                <?php endforeach; ?>
+            </ul>
         <?php } ?>
 
         <dt id="add_show_timezone-label">
@@ -85,5 +86,5 @@
         <dd id="add_show_repeats-element">
             <?php echo $this->element->getElement('add_show_repeats') ?>
         </dd>
-     </dl>
+    </dl>
 </fieldset>

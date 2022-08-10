@@ -1,19 +1,15 @@
 <style type="text/css">
+    .player-title {
+        width: 70px;
+        border-style: none float: left;
+    }
 
-.player-title {
-	width: 70px;
-	border-style: none
-	float: left;
-	}
-
-.preview-label {
-	line-height: 60px;
-	border-style: none
-	float: left;
-	font-size: 20px;
-	color: #fff
-	}
-
+    .preview-label {
+        line-height: 60px;
+        border-style: none float: left;
+        font-size: 20px;
+        color: #fff
+    }
 </style>
 <fieldset class="padded">
     <dl class="zend_form">
@@ -38,7 +34,8 @@
 
         <?php echo $this->element->getElement('player_embed_src')->render(); ?>
 
-        <?php //echo $this->element->getElement('player_display_track_metadata'); ?>
+        <?php //echo $this->element->getElement('player_display_track_metadata');
+        ?>
 
         <table id="player_compatibility_chart" style="text-align:center; position:relative; top:40px;">
             <th colspan="5" style="text-align:center"><?php echo _("Stream Compatibility") ?></th>

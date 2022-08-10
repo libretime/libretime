@@ -7,17 +7,17 @@ if (isset($this->obj)) {
 
 <?php if (isset($this->obj)) : ?>
     <div class="inner_editor_title">
-        <H2><?php echo(_("Editing "));?>"<span class="title_obj_name"><?php if (isset($this->unsavedName)) echo $this->unsavedName;
-            else echo $this->escape($this->obj->getName());?></span>"</H2>
+        <H2><?php echo (_("Editing ")); ?>"<span class="title_obj_name"><?php if (isset($this->unsavedName)) echo $this->unsavedName;
+                                                                        else echo $this->escape($this->obj->getName()); ?></span>"</H2>
     </div>
     <div class="inner_editor_wrapper">
-        <input class="obj_id" type="hidden" value="<?php echo $this->obj->getId(); ?>"/>
-        <input class="obj_lastMod" type="hidden" value="<?php echo $this->obj->getLastModified('U'); ?>"/>
-        <input class='obj_type' type='hidden' value='playlist'/>
+        <input class="obj_id" type="hidden" value="<?php echo $this->obj->getId(); ?>" />
+        <input class="obj_lastMod" type="hidden" value="<?php echo $this->obj->getLastModified('U'); ?>" />
+        <input class='obj_type' type='hidden' value='playlist' />
 
         <dl class="zend_form playlist_editor">
             <dt>
-                <label><?php echo(_("Name:")); ?></label>
+                <label><?php echo (_("Name:")); ?></label>
             </dt>
             <dd>
                 <input type="text" class="playlist_name_display" contenteditable="true" value="<?php echo $this->escape($this->obj->getName()); ?>">
@@ -28,13 +28,14 @@ if (isset($this->obj)) {
             </dd>
         </dl>
 
-        <?php //echo $this->form; ?>
+        <?php //echo $this->form;
+        ?>
 
     </div>
 
     <div class="ui-widget-header fg-toolbar btn-toolbar clearfix">
-        <h4 class="obj_length"><?php echo($this->length); ?></h4>
-        <h4 class="obj_length_label"><?php echo(_("Duration:"));?></h4>
+        <h4 class="obj_length"><?php echo ($this->length); ?></h4>
+        <h4 class="obj_length_label"><?php echo (_("Duration:")); ?></h4>
 
         <div class='btn-group'>
             <button class="btn toggle-editor-form" title='<?php echo _("Toggle Details") ?>' type="button"><span class="icon-white spl-no-r-margin icon-chevron-up"></span></button>
@@ -67,8 +68,8 @@ if (isset($this->obj)) {
     </div>
 
     <ul class="spl_sortable">
-        <?php  $this->contents = $contents;
-            echo $this->render('playlist/update.phtml') ?>
+        <?php $this->contents = $contents;
+        echo $this->render('playlist/update.phtml') ?>
     </ul>
     <div class="btn-toolbar clearfix">
         <div class="btn-group pull-right">
