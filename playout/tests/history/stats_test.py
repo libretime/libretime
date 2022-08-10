@@ -1,90 +1,97 @@
 from datetime import datetime
+from typing import List
 from unittest.mock import Mock, call
 
 import pytest
+from libretime_shared.config import IcecastOutput, ShoutcastOutput
+from lxml.etree import XMLSyntaxError
+from requests.exceptions import HTTPError
 
-from libretime_playout.history.stats import Server, Source, Stats, StatsCollector
+from libretime_playout.history.stats import AnyOutput, Stats, StatsCollector
 
 from ..fixtures import icecast_stats, shoutcast_admin
 
 
-@pytest.fixture(name="server")
-def _server_fixture():
-    return Server(
-        host="example.com",
-        port=8000,
-        auth=("admin", "hackme"),
-        sources=[
-            Source("s1", "main.ogg"),
-        ],
-    )
+@pytest.fixture(name="outputs")
+def outputs_fixture():
+    default_output = {
+        "enabled": True,
+        "mount": "main.ogg",
+        "source_password": "hackme",
+        "admin_password": "hackme",
+        "audio": {"format": "ogg", "bitrate": 256},
+    }
+    return [
+        IcecastOutput(**default_output),
+        IcecastOutput(
+            **{
+                **default_output,
+                "mount": "main.mp3",
+                "audio": {"format": "mp3", "bitrate": 256},
+            }
+        ),
+    ]
 
 
-def test_stats_collector_collect_server_stats(requests_mock, server):
+def test_stats_collector_collect_server_stats(
+    requests_mock,
+    outputs: List[AnyOutput],
+):
     requests_mock.get(
-        "http://example.com:8000/admin/stats.xml",
+        "http://localhost:8000/admin/stats.xml",
         content=icecast_stats.read_bytes(),
     )
 
     legacy_client = Mock()
 
     collector = StatsCollector(legacy_client)
-    assert collector.collect_server_stats(server) == {"main.ogg": Stats(listeners=2)}
+    result = collector.collect_output_stats(outputs[0])
+    assert result == {
+        "main.ogg": Stats(listeners=2),
+        "main.mp3": Stats(listeners=3),
+    }
 
     legacy_client.assert_not_called()
 
 
-def test_stats_collector_collect_server_stats_unauthorized(requests_mock, server):
+def test_stats_collector_collect_server_stats_unauthorized(
+    requests_mock,
+    outputs: List[AnyOutput],
+):
     requests_mock.get(
-        "http://example.com:8000/admin/stats.xml",
+        "http://localhost:8000/admin/stats.xml",
         status_code=401,
     )
 
     legacy_client = Mock()
 
     collector = StatsCollector(legacy_client)
-    assert not collector.collect_server_stats(server)
-
-    legacy_client.assert_has_calls(
-        [
-            call.update_stream_setting_table(
-                {
-                    "s1": "401 Client Error: None for url: http://example.com:8000/admin/stats.xml",
-                }
-            )
-        ]
-    )
+    with pytest.raises(HTTPError):
+        collector.collect_output_stats(outputs[0])
 
 
-def test_stats_collector_collect_server_stats_invalid_xml(requests_mock, server):
+def test_stats_collector_collect_server_stats_invalid_xml(
+    requests_mock,
+    outputs: List[AnyOutput],
+):
     requests_mock.get(
-        "http://example.com:8000/admin/stats.xml",
-        content=b"""<?xml version="1.0"?>
-<icestats>
-    <host>localhost
-</icestats>
-    """,
+        "http://localhost:8000/admin/stats.xml",
+        content=b"""<?xml version="1.0"?><icestats><host>localhost</icestats>""",
     )
 
     legacy_client = Mock()
 
     collector = StatsCollector(legacy_client)
-    assert not collector.collect_server_stats(server)
-
-    legacy_client.assert_has_calls(
-        [
-            call.update_stream_setting_table(
-                {
-                    "s1": "Opening and ending tag mismatch: host line 3 and icestats, line 4, column 12 (<string>, line 4)",
-                }
-            )
-        ]
-    )
+    with pytest.raises(XMLSyntaxError):
+        collector.collect_output_stats(outputs[0])
 
 
-def test_stats_collector_collect(requests_mock):
+def test_stats_collector_collect(
+    requests_mock,
+    outputs: List[AnyOutput],
+):
     requests_mock.get(
-        "http://example.com:8000/admin/stats.xml",
+        "http://localhost:8000/admin/stats.xml",
         content=icecast_stats.read_bytes(),
     )
     requests_mock.get(
@@ -93,35 +100,38 @@ def test_stats_collector_collect(requests_mock):
     )
 
     legacy_client = Mock()
-    default_stream = {
-        "enable": "true",
-        "output": "icecast",
-        "host": "example.com",
-        "port": 8000,
-        "mount": "main.ogg",
-        "admin_user": "admin",
-        "admin_pass": "hackme",
+    default_output = {
+        "source_password": "hackme",
+        "admin_password": "hackme",
     }
-    legacy_client.get_stream_parameters.return_value = {
-        "stream_params": {
-            "s1": {**default_stream},
-            "s2": {**default_stream, "enable": "false", "mount": "main.mp3"},
-            "s3": {**default_stream, "mount": "unknown.mp3"},
-            "s4": {
-                **default_stream,
-                "output": "shoutcast",
-                "host": "shoutcast.com",
-                "mount": "shout.mp3",
-            },
-        }
-    }
+    outputs.extend(
+        [
+            IcecastOutput(
+                **{
+                    **default_output,
+                    "enabled": False,
+                    "host": "example.com",
+                    "mount": "disabled.ogg",
+                    "audio": {"format": "ogg", "bitrate": 256},
+                }
+            ),
+            ShoutcastOutput(
+                **{
+                    **default_output,
+                    "enabled": True,
+                    "kind": "shoutcast",
+                    "host": "shoutcast.com",
+                    "audio": {"format": "mp3", "bitrate": 256},
+                }
+            ),
+        ]
+    )
 
     collector = StatsCollector(legacy_client)
-    collector.collect(_timestamp=datetime(2022, 8, 9, 11, 19, 7))
+    collector.collect(outputs, _timestamp=datetime(2022, 8, 9, 11, 19, 7))
 
     legacy_client.assert_has_calls(
         [
-            call.get_stream_parameters(),
             call.push_stream_stats(
                 [
                     {
@@ -131,10 +141,15 @@ def test_stats_collector_collect(requests_mock):
                     },
                     {
                         "timestamp": "2022-08-09 11:19:07",
+                        "num_listeners": 3,
+                        "mount_name": "main.mp3",
+                    },
+                    {
+                        "timestamp": "2022-08-09 11:19:07",
                         "num_listeners": 1,
                         "mount_name": "shoutcast",
                     },
                 ]
-            ),
+            )
         ]
     )

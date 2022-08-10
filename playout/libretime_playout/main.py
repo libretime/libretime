@@ -135,7 +135,7 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     recorder_thread.daemon = True
     recorder_thread.start()
 
-    stats_collector_thread = StatsCollectorThread(legacy_client)
+    stats_collector_thread = StatsCollectorThread(config, legacy_client)
     stats_collector_thread.start()
 
     # Just sleep the main thread, instead of blocking on fetch_thread.join().
