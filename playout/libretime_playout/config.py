@@ -1,6 +1,11 @@
 from pathlib import Path
 
-from libretime_shared.config import BaseConfig, GeneralConfig, RabbitMQConfig
+from libretime_shared.config import (
+    BaseConfig,
+    GeneralConfig,
+    RabbitMQConfig,
+    StreamConfig,
+)
 from pydantic import BaseModel
 from typing_extensions import Literal
 
@@ -26,3 +31,4 @@ class Config(BaseConfig):
     general: GeneralConfig
     rabbitmq: RabbitMQConfig = RabbitMQConfig()
     playout: PlayoutConfig = PlayoutConfig()
+    stream: StreamConfig = StreamConfig()
