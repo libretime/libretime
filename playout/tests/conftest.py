@@ -3,7 +3,7 @@ import pytest
 from libretime_playout.config import Config
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def config():
     return Config(
         **{

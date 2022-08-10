@@ -2,9 +2,10 @@ from dataclasses import dataclass
 from datetime import datetime
 from threading import Thread
 from time import sleep
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Union
 
 from libretime_api_client.v1 import ApiClient as LegacyClient
+from libretime_shared.config import IcecastOutput, ShoutcastOutput
 from loguru import logger
 from lxml import etree
 from requests import Session
@@ -14,20 +15,9 @@ from requests.exceptions import (  # pylint: disable=redefined-builtin
     Timeout,
 )
 
+from ..config import Config
 
-@dataclass
-class Source:
-    stream_id: str
-    mount: str
-
-
-@dataclass
-class Server:
-    host: str
-    port: int
-    auth: Tuple[str, str]
-    sources: List[Source]
-    is_shoutcast: bool = False
+AnyOutput = Union[IcecastOutput, ShoutcastOutput]
 
 
 @dataclass
@@ -48,73 +38,32 @@ class StatsCollector:
         self._timeout = 30
         self._legacy_client = legacy_client
 
-    def get_streams_grouped_by_server(self) -> List[Server]:
-        """
-        Get streams grouped by server to prevent duplicate requests.
-        """
-        dirty_streams: Dict[str, Dict[str, Any]]
-        dirty_streams = self._legacy_client.get_stream_parameters()["stream_params"]
+    def get_output_url(self, output: AnyOutput) -> str:
+        if output.kind == "icecast":
+            return f"http://{output.host}:{output.port}/admin/stats.xml"
+        return f"http://{output.host}:{output.port}/admin.cgi?sid=1&mode=viewxml"
 
-        servers: Dict[str, Server] = {}
-        for stream_id, dirty_stream in dirty_streams.items():
-            if dirty_stream["enable"].lower() != "true":
-                continue
+    def collect_output_stats(
+        self,
+        output: AnyOutput,
+    ) -> Dict[str, Stats]:
 
-            source = Source(stream_id=stream_id, mount=dirty_stream["mount"])
-
-            server_id = f"{dirty_stream['host']}:{dirty_stream['port']}"
-            if server_id not in servers:
-                servers[server_id] = Server(
-                    host=dirty_stream["host"],
-                    port=dirty_stream["port"],
-                    auth=(dirty_stream["admin_user"], dirty_stream["admin_pass"]),
-                    sources=[source],
-                    is_shoutcast=dirty_stream["output"] == "shoutcast",
-                )
-            else:
-                servers[server_id].sources.append(source)
-
-        return list(servers.values())
-
-    def report_server_error(self, server: Server, error: Exception):
-        self._legacy_client.update_stream_setting_table(
-            {source.stream_id: str(error) for source in server.sources}
+        response = self._session.get(
+            url=self.get_output_url(output),
+            auth=(output.admin_user, output.admin_password),
+            timeout=self._timeout,
         )
+        response.raise_for_status()
 
-    def collect_server_stats(self, server: Server) -> Dict[str, Stats]:
-        url = f"http://{server.host}:{server.port}/admin/stats.xml"
-
-        # Shoutcast specific url
-        if server.is_shoutcast:
-            url = f"http://{server.host}:{server.port}/admin.cgi?sid=1&mode=viewxml"
-
-        try:
-            response = self._session.get(url, auth=server.auth, timeout=self._timeout)
-            response.raise_for_status()
-
-        except (
-            ConnectionError,
-            HTTPError,
-            Timeout,
-        ) as exception:
-            logger.exception(exception)
-            self.report_server_error(server, exception)
-            return {}
-
-        try:
-            root = etree.fromstring(  # nosec
-                response.content,
-                parser=etree.XMLParser(resolve_entities=False),
-            )
-        except etree.XMLSyntaxError as exception:
-            logger.exception(exception)
-            self.report_server_error(server, exception)
-            return {}
+        root = etree.fromstring(  # nosec
+            response.content,
+            parser=etree.XMLParser(resolve_entities=False),
+        )
 
         stats = {}
 
         # Shoutcast specific parsing
-        if server.is_shoutcast:
+        if output.kind == "shoutcast":
             listeners_el = root.find("CURRENTLISTENERS")
             listeners = 0 if listeners_el is None else int(listeners_el.text)
 
@@ -123,46 +72,71 @@ class StatsCollector:
             )
             return stats
 
-        mounts = [source.mount for source in server.sources]
+        # Icecast specific parsing
         for source in root.iterchildren("source"):
             mount = source.attrib.get("mount")
             if mount is None:
-                continue
-            mount = mount.lstrip("/")
-            if mount not in mounts:
                 continue
 
             listeners_el = source.find("listeners")
             listeners = 0 if listeners_el is None else int(listeners_el.text)
 
+            mount = mount.lstrip("/")
             stats[mount] = Stats(
                 listeners=listeners,
             )
 
         return stats
 
-    def collect(self, *, _timestamp: Optional[datetime] = None):
+    def collect(
+        self,
+        outputs: List[AnyOutput],
+        *,
+        _timestamp: Optional[datetime] = None,
+    ):
         if _timestamp is None:
             _timestamp = datetime.utcnow()
 
-        servers = self.get_streams_grouped_by_server()
-
         stats: List[Dict[str, Any]] = []
         stats_timestamp = _timestamp.strftime("%Y-%m-%d %H:%M:%S")
+        cache: Dict[str, Dict[str, Stats]] = {}
 
-        for server in servers:
-            server_stats = self.collect_server_stats(server)
-            if not server_stats:
+        for output_id, output in enumerate(outputs, start=1):
+            if (
+                output.kind not in ("icecast", "shoutcast")
+                or not output.enabled
+                or output.admin_password is None
+            ):
                 continue
 
-            stats.extend(
-                {
-                    "timestamp": stats_timestamp,
-                    "num_listeners": mount_stats.listeners,
-                    "mount_name": mount,
-                }
-                for mount, mount_stats in server_stats.items()
-            )
+            output_url = self.get_output_url(output)
+            if output_url not in cache:
+                try:
+                    cache[output_url] = self.collect_output_stats(output)
+                except (
+                    etree.XMLSyntaxError,
+                    ConnectionError,
+                    HTTPError,
+                    Timeout,
+                ) as exception:
+                    logger.exception(exception)
+                    self._legacy_client.update_stream_setting_table(
+                        {output_id: str(exception)}
+                    )
+                    continue
+
+            output_stats = cache[output_url]
+
+            mount = "shoutcast" if output.kind == "shoutcast" else output.mount
+
+            if mount in output_stats:
+                stats.append(
+                    {
+                        "timestamp": stats_timestamp,
+                        "num_listeners": output_stats[mount].listeners,
+                        "mount_name": mount,
+                    }
+                )
 
         if stats:
             self._legacy_client.push_stream_stats(stats)
@@ -172,15 +146,16 @@ class StatsCollectorThread(Thread):
     name = "stats collector"
     daemon = True
 
-    def __init__(self, legacy_client: LegacyClient) -> None:
+    def __init__(self, config: Config, legacy_client: LegacyClient) -> None:
         super().__init__()
+        self._config = config
         self._collector = StatsCollector(legacy_client)
 
     def run(self):
         logger.info(f"starting {self.name}")
         while True:
             try:
-                self._collector.collect()
+                self._collector.collect(self._config.stream.outputs.merged)
             except Exception as exception:
                 logger.exception(exception)
             sleep(120)
