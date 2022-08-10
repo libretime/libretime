@@ -1,0 +1,105 @@
+# THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
+###########################################################
+# The ignore() lines are to squash unused variable warnings
+
+# Inputs
+master_live_stream_mp = "main"
+master_live_stream_port = 8001
+dj_live_stream_mp = "show"
+dj_live_stream_port = 8002
+
+# Output s1
+s1_enable = true
+s1_output = "icecast"
+s1_host = "localhost"
+s1_port = 8000
+s1_mount = "main"
+s1_user = "source"
+s1_pass = "hackme"
+
+s1_channels = "stereo"
+s1_type = "ogg"
+s1_bitrate = 256
+
+s1_name = "LibreTime!"
+s1_description = "LibreTime Radio! Stream #1"
+s1_genre = "various"
+s1_url = "https://libretime.org"
+
+# Output s2
+s2_enable = true
+s2_output = "icecast"
+s2_host = "localhost"
+s2_port = 8000
+s2_mount = "second"
+s2_user = "source"
+s2_pass = "hackme"
+
+s2_channels = "stereo"
+s2_type = "mp3"
+s2_bitrate = 256
+
+s2_name = ""
+s2_description = ""
+s2_genre = ""
+s2_url = ""
+
+# Output s3
+s3_enable = false
+s3_output = "icecast"
+s3_host = "localhost"
+s3_port = 8000
+s3_mount = ""
+s3_user = "source"
+s3_pass = ""
+
+s3_channels = "stereo"
+s3_type = "ogg"
+s3_bitrate = 256
+
+s3_name = ""
+s3_description = ""
+s3_genre = ""
+s3_url = ""
+
+# Output s4
+s4_enable = false
+s4_output = "icecast"
+s4_host = "localhost"
+s4_port = 8000
+s4_mount = ""
+s4_user = "source"
+s4_pass = ""
+
+s4_channels = "stereo"
+s4_type = "ogg"
+s4_bitrate = 256
+
+s4_name = ""
+s4_description = ""
+s4_genre = ""
+s4_url = ""
+
+icecast_vorbis_metadata = false
+
+# System output
+output_sound_device = false
+output_sound_device_type = "alsa"
+
+# Settings
+auth_path = "/fake/liquidsoap_auth.py"
+
+set("log.file.path", "/var/log/radio.log")
+
+set("server.telnet", true)
+set("server.telnet.port", 1234)
+
+set("harbor.bind_addr", "0.0.0.0")
+
+station_name = ref "LibreTime"
+
+off_air_meta = "LibreTime - offline"
+stream_metadata_type = ref 0
+default_dj_fade = ref 0.0
+
+%include "/fake/1.1/ls_script.liq"

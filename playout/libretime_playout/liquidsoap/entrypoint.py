@@ -1,64 +1,70 @@
-import os
-import sys
-import time
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Tuple
 
-from libretime_api_client.v1 import ApiClient as LegacyClient
-from loguru import logger
+from jinja2 import Template
+from libretime_shared.config import AudioFormat, IcecastOutput, SystemOutput
 
+from ..config import Config
+from .models import Info, StreamPreferences
 
-def generate_liquidsoap_config(ss, log_filepath: Optional[Path]):
-    data = ss["msg"]
-    fh = open("/etc/libretime/liquidsoap.cfg", "w")
-    fh.write("################################################\n")
-    fh.write("# THIS FILE IS AUTO GENERATED. DO NOT CHANGE!! #\n")
-    fh.write("################################################\n")
-    fh.write("# The ignore() lines are to squash unused variable warnings\n")
+here = Path(__file__).parent
 
-    for key, value in data.items():
-        try:
-            if not "port" in key and not "bitrate" in key:  # Stupid hack
-                raise ValueError()
-            str_buffer = f"{key} = {int(value)}\n"
-        except ValueError:
-            try:  # Is it a boolean?
-                if value == "true" or value == "false":
-                    str_buffer = f"{key} = {value.lower()}\n"
-                else:
-                    raise ValueError()  # Just drop into the except below
-            except:  # Everything else is a string
-                str_buffer = f'{key} = "{value}"\n'
+entrypoint_template_path = here / "entrypoint.liq.j2"
+entrypoint_template = Template(
+    entrypoint_template_path.read_text(encoding="utf-8"),
+    keep_trailing_newline=True,
+)
 
-        fh.write(str_buffer)
-        # ignore squashes unused variable errors from Liquidsoap
-        fh.write("ignore(%s)\n" % key)
+# Liquidsoap has 4 hardcoded output stream set of variables, so we need to
+# fill the missing stream outputs with placeholders so Liquidsoap does
+# not fail with missing variables in the entrypoint.
+_icecast_placeholder = IcecastOutput(
+    enabled=False,
+    mount="",
+    source_password="",
+    audio=dict(format="ogg", bitrate=256),
+)
 
-    auth_path = os.path.dirname(os.path.realpath(__file__))
-    log_file = log_filepath.resolve() if log_filepath is not None else ""
-
-    fh.write(f'log_file = "{log_file}"\n')
-    fh.write('auth_path = "%s/liquidsoap_auth.py"\n' % auth_path)
-    fh.close()
+_system_placeholder = SystemOutput()
 
 
-def generate_entrypoint(log_filepath: Optional[Path]):
-    attempts = 0
-    max_attempts = 10
-    successful = False
+def generate_entrypoint(
+    entrypoint_filepath: Path,
+    log_filepath: Optional[Path],
+    config: Config,
+    preferences: StreamPreferences,
+    info: Info,
+    version: Tuple[int, int, int],
+):
+    paths = {}
+    paths["auth_filepath"] = here / "liquidsoap_auth.py"
+    paths["lib_filepath"] = here / f"{version[0]}.{version[1]}/ls_script.liq"
 
-    while not successful:
-        try:
-            legacy_client = LegacyClient(logger)
-            ss = legacy_client.get_stream_setting()
-            generate_liquidsoap_config(ss, log_filepath)
-            successful = True
-        except Exception:
-            logger.exception("Unable to connect to the Airtime server")
-            if attempts == max_attempts:
-                logger.error("giving up and exiting...")
-                sys.exit(1)
-            else:
-                logger.info("Retrying in 3 seconds...")
-                time.sleep(3)
-        attempts += 1
+    if log_filepath is not None:
+        paths["log_filepath"] = log_filepath.resolve()
+
+    config = config.copy()
+    missing_outputs = [_icecast_placeholder] * (4 - len(config.stream.outputs.merged))
+    config.stream.outputs.icecast.extend(missing_outputs)
+
+    if not config.stream.outputs.system:
+        config.stream.outputs.system.append(_system_placeholder)
+
+    # Global icecast_vorbis_metadata until it is
+    # handled per output
+    icecast_vorbis_metadata = any(
+        o.enabled and o.audio.format == AudioFormat.OGG and o.audio.enable_metadata  # type: ignore
+        for o in config.stream.outputs.icecast
+    )
+
+    entrypoint_filepath.write_text(
+        entrypoint_template.render(
+            config=config,
+            preferences=preferences,
+            info=info,
+            paths=paths,
+            version=version,
+            icecast_vorbis_metadata=icecast_vorbis_metadata,
+        ),
+        encoding="utf-8",
+    )

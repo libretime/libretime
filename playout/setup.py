@@ -13,7 +13,7 @@ setup(
     },
     license="AGPLv3",
     packages=find_packages(exclude=["*tests*", "*fixtures*"]),
-    package_data={"": ["**/*.liq", "*.types"]},
+    package_data={"": ["**/*.liq", "**/*.liq.j2", "*.types"]},
     entry_points={
         "console_scripts": [
             "libretime-playout=libretime_playout.main:cli",
@@ -25,6 +25,7 @@ setup(
     install_requires=[
         "backports.zoneinfo>=0.2.1,<0.3;python_version<'3.9'",
         "dataclasses>=0.8,<0.9;python_version<'3.7'",
+        "jinja2>=3.0.3,<3.2",
         "kombu==4.6.11",
         "lxml>=4.5.0,<4.10.0",
         "mutagen>=1.45.1,<1.46",

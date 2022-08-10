@@ -1,28 +1,11 @@
-%include "/etc/libretime/liquidsoap.cfg"
-
-if (log_file != "") then
-    set("log.file.path", log_file)
-else
-    set("log.file", false)
-end
-
-set("server.telnet", true)
-set("server.telnet.port", 1234)
+time = ref string_of(gettimeofday())
 
 #Dynamic source list
 #dyn_sources = ref []
 webstream_enabled = ref false
 
-time = ref string_of(gettimeofday())
-
-#live stream setup
-set("harbor.bind_addr", "0.0.0.0")
-
 current_dyn_id = ref '-1'
 
-stream_metadata_type = ref 0
-default_dj_fade = ref 0.
-station_name = ref ''
 show_name = ref ''
 
 dynamic_metadata_callback = ref fun (s) -> begin () end
