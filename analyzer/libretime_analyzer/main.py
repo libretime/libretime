@@ -34,7 +34,7 @@ def cli(
     Run analyzer.
     """
     setup_logger(level_from_name(log_level), log_filepath)
-    config = Config(filepath=config_filepath)
+    config = Config(config_filepath)
 
     # Start up the StatusReporter process
     StatusReporter.start_thread(retry_queue_filepath)
