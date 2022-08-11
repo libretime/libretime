@@ -29,7 +29,7 @@ $(VENV):
 
 install: $(VENV)
 	source $(VENV)/bin/activate
-	pip install --upgrade pip setuptools wheel
+	pip install --upgrade pip 'setuptools<64.0' wheel
 	pip install $(SHARED_DEV_REQUIREMENTS)
 	[[ -z "$(PIP_INSTALL)" ]] || pip install $(PIP_INSTALL)
 
