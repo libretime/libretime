@@ -9,101 +9,217 @@ require_once VENDOR_PATH . '/autoload.php';
 // THIS FILE IS NOT MEANT FOR CUSTOMIZING.
 use League\Uri\Contracts\UriException;
 use League\Uri\Uri;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+
+class Schema implements ConfigurationInterface
+{
+    public function getConfigTreeBuilder()
+    {
+        $trim_trailing_slash = function ($v) {
+            return rtrim($v, '/') . '/';
+        };
+
+        $treeBuilder = new TreeBuilder('');
+        $treeBuilder->getRootNode()
+            ->children()
+
+            // General schema
+            ->arrayNode('general')
+            /**/->addDefaultsIfNotSet()
+            /**/->children()
+            /*  */->scalarNode('public_url')->cannotBeEmpty()->end()
+            /*  */->scalarNode('api_key')->cannotBeEmpty()->end()
+            /*  */->arrayNode('allowed_cors_origins')->scalarPrototype()->defaultValue([])->end()->end()
+            /*  */->scalarNode('dev_env')->defaultValue('production')->end()
+            /*  */->scalarNode('auth')->defaultValue('local')->end()
+            /*  */->integerNode('cache_ahead_hours')->defaultValue(1)->end()
+            /**/->end()
+            ->end()
+
+            // Database schema
+            ->arrayNode('database')
+            /**/->addDefaultsIfNotSet()
+            /**/->children()
+            /*  */->scalarNode('host')->defaultValue('localhost')->end()
+            /*  */->integerNode('port')->defaultValue(5432)->end()
+            /*  */->scalarNode('name')->defaultValue('libretime')->end()
+            /*  */->scalarNode('user')->defaultValue('libretime')->end()
+            /*  */->scalarNode('password')->defaultValue('libretime')->end()
+            /**/->end()
+            ->end()
+
+            // Rabbitmq schema
+            ->arrayNode('rabbitmq')
+            /**/->addDefaultsIfNotSet()
+            /**/->children()
+            /*  */->scalarNode('host')->defaultValue('localhost')->end()
+            /*  */->integerNode('port')->defaultValue(5672)->end()
+            /*  */->scalarNode('vhost')->defaultValue('/libretime')->end()
+            /*  */->scalarNode('user')->defaultValue('libretime')->end()
+            /*  */->scalarNode('password')->defaultValue('libretime')->end()
+            /**/->end()
+            ->end()
+
+            // Storage schema
+            ->arrayNode('storage')
+            /**/->addDefaultsIfNotSet()
+            /**/->children()
+            /*  */->scalarNode('path')->defaultValue('/srv/libretime')
+            /*      */->validate()->ifString()->then($trim_trailing_slash)->end()
+            /*  */->end()
+            /**/->end()
+            ->end()
+
+            // Facebook schema
+            ->arrayNode('facebook')
+            /**/->setDeprecated("legacy", "3.0.0-alpha.11")
+            /**/->children()
+            /*  */->scalarNode('facebook_app_id')->end()
+            /*  */->scalarNode('facebook_app_url')->end()
+            /*  */->scalarNode('facebook_app_api_key')->end()
+            /**/->end()
+            ->end()
+
+            // LDAP schema
+            ->arrayNode('ldap')
+            /**/->children()
+            /*  */->scalarNode('hostname')->end()
+            /*  */->scalarNode('binddn')->end()
+            /*  */->scalarNode('password')->end()
+            /*  */->scalarNode('account_domain')->end()
+            /*  */->scalarNode('basedn')->end()
+            /*  */->scalarNode('groupmap_guest')->end()
+            /*  */->scalarNode('groupmap_host')->end()
+            /*  */->scalarNode('groupmap_program_manager')->end()
+            /*  */->scalarNode('groupmap_admin')->end()
+            /*  */->scalarNode('groupmap_superadmin')->end()
+            /*  */->scalarNode('filter_field')->end()
+            /**/->end()
+            ->end()
+
+            // Playout schema
+            ->arrayNode('playout')
+            /**/->ignoreExtraKeys()
+            ->end()
+
+            ->end();
+
+        return $treeBuilder;
+    }
+}
 
 class Config
 {
-    private static $CC_CONFIG;
+    private static $internal_values;
+    private static $values;
 
-    public static function loadConfig()
+    private static function load()
     {
         $filename = $_SERVER['LIBRETIME_CONFIG_FILEPATH'] ?? LIBRETIME_CONFIG_FILEPATH;
-        $values = yaml_parse_file($filename);
+        $dirty = yaml_parse_file($filename);
 
-        $CC_CONFIG = [];
+        $schema = new Schema();
+        $processor = new Processor();
 
+        try {
+            $values = $processor->processConfiguration($schema, [$dirty]);
+        } catch (InvalidConfigurationException $error) {
+            echo "could not parse configuration: " .  $error->getMessage();
+            exit;
+        }
+
+        // Public url
+        $public_url = self::validateUrl('general.public_url', $values['general']['public_url']);
+        $values['general']['public_url_raw'] = $public_url;
+        $values['general']['public_url'] = strval($public_url);
+
+        // Allowed cors origins
+        $values['general']['allowed_cors_origins'][] = strval($values['general']['public_url_raw']->withPath(''));
+
+        // Storage path
+        if (!is_dir($values['storage']['path'])) {
+            echo "the configured storage.path '{$values['storage']['path']}' does not exists!";
+            exit;
+        }
+        if (!is_writable($values['storage']['path'])) {
+            echo "the configured storage.path '{$values['storage']['path']}' is not writable!";
+            exit;
+        }
+
+        self::$values = $values;
+        self::fillInternalValues($values);
+    }
+
+    private static function fillInternalValues($values)
+    {
+        $internal_values = [];
         // General
         // //////////////////////////////////////////////////////////////////////////////
-        $CC_CONFIG['apiKey'] = [$values['general']['api_key']];
-
-        $public_url = self::validateUrl('general.public_url', $values['general']['public_url']);
-        $CC_CONFIG['public_url_raw'] = $public_url;
-        $CC_CONFIG['public_url'] = strval($public_url);
+        $internal_values['apiKey'] = [$values['general']['api_key']];
+        $internal_values['public_url_raw'] = $values['general']['public_url_raw'];
+        $internal_values['public_url'] = $values['general']['public_url'];
 
         // Allowed hosts
-        $CC_CONFIG['allowedCorsOrigins'] = $values['general']['allowed_cors_origins'] ?? [];
-        $CC_CONFIG['allowedCorsOrigins'][] = strval($public_url->withPath(''));
+        $internal_values['allowedCorsOrigins'] = $values['general']['allowed_cors_origins'];
 
-        $CC_CONFIG['dev_env'] = $values['general']['dev_env'] ?? 'production';
-        $CC_CONFIG['auth'] = $values['general']['auth'] ?? 'local';
-        $CC_CONFIG['cache_ahead_hours'] = $values['general']['cache_ahead_hours'] ?? 1;
+        $internal_values['dev_env'] = $values['general']['dev_env'];
+        $internal_values['auth'] = $values['general']['auth'];
+        $internal_values['cache_ahead_hours'] = $values['general']['cache_ahead_hours'];
 
         // SAAS remaining fields
-        $CC_CONFIG['stationId'] = $values['general']['station_id'] ?? '';
-        $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'] ?? '';
-        $CC_CONFIG['staticBaseDir'] = $values['general']['static_base_dir'] ?? '/';
+        $internal_values['stationId'] = '';
+        $internal_values['phpDir'] = '';
+        $internal_values['staticBaseDir'] = '/';
 
         // Database
         // //////////////////////////////////////////////////////////////////////////////
-        $CC_CONFIG['dsn']['phptype'] = 'pgsql';
-        $CC_CONFIG['dsn']['host'] = $values['database']['host'] ?? 'localhost';
-        $CC_CONFIG['dsn']['port'] = $values['database']['port'] ?? 5432;
-        $CC_CONFIG['dsn']['database'] = $values['database']['name'] ?? 'libretime';
-        $CC_CONFIG['dsn']['username'] = $values['database']['user'] ?? 'libretime';
-        $CC_CONFIG['dsn']['password'] = $values['database']['password'] ?? 'libretime';
+        $internal_values['dsn']['phptype'] = 'pgsql';
+        $internal_values['dsn']['host'] = $values['database']['host'];
+        $internal_values['dsn']['port'] = $values['database']['port'];
+        $internal_values['dsn']['database'] = $values['database']['name'];
+        $internal_values['dsn']['username'] = $values['database']['user'];
+        $internal_values['dsn']['password'] = $values['database']['password'];
 
         // RabbitMQ
         // //////////////////////////////////////////////////////////////////////////////
-        $CC_CONFIG['rabbitmq']['host'] = $values['rabbitmq']['host'] ?? 'localhost';
-        $CC_CONFIG['rabbitmq']['port'] = $values['rabbitmq']['port'] ?? 5672;
-        $CC_CONFIG['rabbitmq']['vhost'] = $values['rabbitmq']['vhost'] ?? '/libretime';
-        $CC_CONFIG['rabbitmq']['user'] = $values['rabbitmq']['user'] ?? 'libretime';
-        $CC_CONFIG['rabbitmq']['password'] = $values['rabbitmq']['password'] ?? 'libretime';
+        $internal_values['rabbitmq']['host'] = $values['rabbitmq']['host'];
+        $internal_values['rabbitmq']['port'] = $values['rabbitmq']['port'];
+        $internal_values['rabbitmq']['vhost'] = $values['rabbitmq']['vhost'];
+        $internal_values['rabbitmq']['user'] = $values['rabbitmq']['user'];
+        $internal_values['rabbitmq']['password'] = $values['rabbitmq']['password'];
 
         // Storage
         // //////////////////////////////////////////////////////////////////////////////
-        $CC_CONFIG['storagePath'] = $values['storage']['path'] ?? '/srv/libretime';
-        if (!is_dir($CC_CONFIG['storagePath'])) {
-            echo "the configured storage.path '{$CC_CONFIG['storagePath']}' does not exists!";
-
-            exit;
-        }
-        if (!is_writable($CC_CONFIG['storagePath'])) {
-            echo "the configured storage.path '{$CC_CONFIG['storagePath']}' is not writable!";
-
-            exit;
-        }
+        $internal_values['storagePath'] = $values['storage']['path'];
 
         // Facebook (DEPRECATED)
         // //////////////////////////////////////////////////////////////////////////////
         if (isset($values['facebook']['facebook_app_id'])) {
-            $CC_CONFIG['facebook-app-id'] = $values['facebook']['facebook_app_id'];
-            $CC_CONFIG['facebook-app-url'] = $values['facebook']['facebook_app_url'];
-            $CC_CONFIG['facebook-app-api-key'] = $values['facebook']['facebook_app_api_key'];
+            $internal_values['facebook-app-id'] = $values['facebook']['facebook_app_id'];
+            $internal_values['facebook-app-url'] = $values['facebook']['facebook_app_url'];
+            $internal_values['facebook-app-api-key'] = $values['facebook']['facebook_app_api_key'];
         }
 
         // LDAP
         // //////////////////////////////////////////////////////////////////////////////
         if (array_key_exists('ldap', $values)) {
-            $CC_CONFIG['ldap_hostname'] = $values['ldap']['hostname'];
-            $CC_CONFIG['ldap_binddn'] = $values['ldap']['binddn'];
-            $CC_CONFIG['ldap_password'] = $values['ldap']['password'];
-            $CC_CONFIG['ldap_account_domain'] = $values['ldap']['account_domain'];
-            $CC_CONFIG['ldap_basedn'] = $values['ldap']['basedn'];
-            $CC_CONFIG['ldap_groupmap_guest'] = $values['ldap']['groupmap_guest'];
-            $CC_CONFIG['ldap_groupmap_host'] = $values['ldap']['groupmap_host'];
-            $CC_CONFIG['ldap_groupmap_program_manager'] = $values['ldap']['groupmap_program_manager'];
-            $CC_CONFIG['ldap_groupmap_admin'] = $values['ldap']['groupmap_admin'];
-            $CC_CONFIG['ldap_groupmap_superadmin'] = $values['ldap']['groupmap_superadmin'];
-            $CC_CONFIG['ldap_filter_field'] = $values['ldap']['filter_field'];
+            $internal_values['ldap_hostname'] = $values['ldap']['hostname'];
+            $internal_values['ldap_binddn'] = $values['ldap']['binddn'];
+            $internal_values['ldap_password'] = $values['ldap']['password'];
+            $internal_values['ldap_account_domain'] = $values['ldap']['account_domain'];
+            $internal_values['ldap_basedn'] = $values['ldap']['basedn'];
+            $internal_values['ldap_groupmap_guest'] = $values['ldap']['groupmap_guest'];
+            $internal_values['ldap_groupmap_host'] = $values['ldap']['groupmap_host'];
+            $internal_values['ldap_groupmap_program_manager'] = $values['ldap']['groupmap_program_manager'];
+            $internal_values['ldap_groupmap_admin'] = $values['ldap']['groupmap_admin'];
+            $internal_values['ldap_groupmap_superadmin'] = $values['ldap']['groupmap_superadmin'];
+            $internal_values['ldap_filter_field'] = $values['ldap']['filter_field'];
         }
 
-        // Demo
-        // //////////////////////////////////////////////////////////////////////////////
-        if (isset($values['demo']['demo'])) {
-            $CC_CONFIG['demo'] = $values['demo']['demo'];
-        }
-
-        self::$CC_CONFIG = $CC_CONFIG;
+        self::$internal_values = $internal_values;
     }
 
     public static function setAirtimeVersion()
@@ -113,16 +229,16 @@ class Config
             // fallback to constant from constants.php if no other info is available
             $version = LIBRETIME_MAJOR_VERSION;
         }
-        self::$CC_CONFIG['airtime_version'] = trim($version);
+        self::$internal_values['airtime_version'] = trim($version);
     }
 
     public static function getConfig()
     {
-        if (is_null(self::$CC_CONFIG)) {
-            self::loadConfig();
+        if (is_null(self::$internal_values)) {
+            self::load();
         }
 
-        return self::$CC_CONFIG;
+        return self::$internal_values;
     }
 
     /**
@@ -154,7 +270,7 @@ class Config
             $url = Uri::createFromString($value);
 
             return $url->withPath(rtrim($url->getPath() ?? '', '/') . '/');
-        } catch (UriException|TypeError $e) {
+        } catch (UriException | TypeError $e) {
             echo "could not parse configuration field {$key}: " . $e->getMessage();
 
             exit;
@@ -163,7 +279,7 @@ class Config
 
     public static function getStoragePath()
     {
-        return rtrim(self::getConfig()['storagePath'], '/') . '/';
+        return self::getConfig()['storagePath'];
     }
 
     public static function getPublicUrl()

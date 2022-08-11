@@ -2,6 +2,7 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
+    ->notPath('application/configs/conf.php')
     ->exclude('application/models/airtime/map')
     ->exclude('application/models/airtime/om');
 
