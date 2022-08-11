@@ -7,6 +7,7 @@ require_once __DIR__ . '/constants.php';
 require_once VENDOR_PATH . '/autoload.php';
 
 // THIS FILE IS NOT MEANT FOR CUSTOMIZING.
+use Adbar\Dot;
 use League\Uri\Contracts\UriException;
 use League\Uri\Uri;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -98,6 +99,7 @@ class Schema implements ConfigurationInterface
 class Config
 {
     private static $legacy_values;
+    private static $dot_values;
     private static $values;
 
     private static function load()
@@ -135,6 +137,7 @@ class Config
 
         self::$values = $values;
         self::fillLegacyValues($values);
+        self::$dot_values = new Dot($values);
     }
 
     /**
@@ -154,6 +157,33 @@ class Config
 
             exit;
         }
+    }
+
+    public static function get(...$args)
+    {
+        if (is_null(self::$dot_values)) self::load();
+        return self::$dot_values->get(...$args);
+    }
+
+    public static function has(...$args)
+    {
+        if (is_null(self::$dot_values)) self::load();
+        return self::$dot_values->has(...$args);
+    }
+
+    public static function getStoragePath()
+    {
+        return self::get('storage.path');
+    }
+
+    public static function getPublicUrl()
+    {
+        return self::get('general.public_url');
+    }
+
+    public static function getBasePath()
+    {
+        return self::get('general.public_url_raw')->getPath();
     }
 
     /**
@@ -240,21 +270,5 @@ class Config
         }
 
         return self::$legacy_values;
-    }
-
-
-    public static function getStoragePath()
-    {
-        return self::getConfig()['storagePath'];
-    }
-
-    public static function getPublicUrl()
-    {
-        return self::getConfig()['public_url'];
-    }
-
-    public static function getBasePath()
-    {
-        return self::getConfig()['public_url_raw']->getPath();
     }
 }
