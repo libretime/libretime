@@ -11,5 +11,5 @@ allow_redefinition = true
 disallow_incomplete_defs= true
 
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools<64.0", "wheel"]
 build-backend = "setuptools.build_meta"

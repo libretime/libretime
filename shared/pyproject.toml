@@ -20,5 +20,5 @@ log_cli = true
 log_cli_level = "DEBUG"
 
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools<64.0", "wheel"]
 build-backend = "setuptools.build_meta"
