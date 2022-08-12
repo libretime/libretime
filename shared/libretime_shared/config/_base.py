@@ -24,20 +24,23 @@ class BaseConfig(BaseModel):
     :returns: configuration class
     """
 
+    # pylint: disable=no-self-argument
     def __init__(
-        self,
+        _self,
+        _filepath: Optional[Union[Path, str]] = None,
         *,
-        env_prefix: str = DEFAULT_ENV_PREFIX,
-        env_delimiter: str = "_",
-        filepath: Optional[Union[Path, str]] = None,
+        _env_prefix: str = DEFAULT_ENV_PREFIX,
+        _env_delimiter: str = "_",
+        **kwargs: Any,
     ) -> None:
-        if filepath is not None:
-            filepath = Path(filepath)
+        if _filepath is not None:
+            _filepath = Path(_filepath)
 
-        env_loader = EnvLoader(self.schema(), env_prefix, env_delimiter)
+        env_loader = EnvLoader(_self.schema(), _env_prefix, _env_delimiter)
 
         values = deep_merge_dict(
-            self._load_file_values(filepath),
+            kwargs,
+            _self._load_file_values(_filepath),
             env_loader.load(),
         )
 
@@ -67,36 +70,39 @@ class BaseConfig(BaseModel):
         return {}
 
 
-def deep_merge_dict(base: Dict[str, Any], next_: Dict[str, Any]) -> Dict[str, Any]:
+def deep_merge_dict(base: Dict[str, Any], *elements: Dict[str, Any]) -> Dict[str, Any]:
     result = base.copy()
-    for key, value in next_.items():
-        if key in result:
-            if isinstance(result[key], dict) and isinstance(value, dict):
-                result[key] = deep_merge_dict(result[key], value)
-                continue
 
-            if isinstance(result[key], list) and isinstance(value, list):
-                result[key] = deep_merge_list(result[key], value)
-                continue
+    for element in elements:
+        for key, value in element.items():
+            if key in result:
+                if isinstance(result[key], dict) and isinstance(value, dict):
+                    result[key] = deep_merge_dict(result[key], value)
+                    continue
 
-        if value:
-            result[key] = value
+                if isinstance(result[key], list) and isinstance(value, list):
+                    result[key] = deep_merge_list(result[key], value)
+                    continue
+
+            if value:
+                result[key] = value
 
     return result
 
 
-def deep_merge_list(base: List[Any], next_: List[Any]) -> List[Any]:
+def deep_merge_list(base: List[Any], *elements: List[Any]) -> List[Any]:
     result: List[Any] = []
-    for base_item, next_item in zip_longest(base, next_):
-        if isinstance(base_item, list) and isinstance(next_item, list):
-            result.append(deep_merge_list(base_item, next_item))
-            continue
+    for element in elements:
+        for base_item, next_item in zip_longest(base, element):
+            if isinstance(base_item, list) and isinstance(next_item, list):
+                result.append(deep_merge_list(base_item, next_item))
+                continue
 
-        if isinstance(base_item, dict) and isinstance(next_item, dict):
-            result.append(deep_merge_dict(base_item, next_item))
-            continue
+            if isinstance(base_item, dict) and isinstance(next_item, dict):
+                result.append(deep_merge_dict(base_item, next_item))
+                continue
 
-        if next_item:
-            result.append(next_item)
+            if next_item:
+                result.append(next_item)
 
     return result

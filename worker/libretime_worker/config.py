@@ -11,7 +11,7 @@ class Config(BaseConfig):
 
 LIBRETIME_CONFIG_FILEPATH = getenv("LIBRETIME_CONFIG_FILEPATH")
 
-config = Config(filepath=LIBRETIME_CONFIG_FILEPATH)
+config = Config(LIBRETIME_CONFIG_FILEPATH)
 
 # Celery amqp settings
 BROKER_URL = config.rabbitmq.url

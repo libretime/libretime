@@ -75,7 +75,7 @@ class ApiClient:
     def __init__(self, logger=None, config_path="/etc/libretime/config.yml"):
         self.logger = logger or logging
 
-        config = Config(filepath=config_path)
+        config = Config(config_path)
         self.base_url = config.general.public_url
         self.api_key = config.general.api_key
 

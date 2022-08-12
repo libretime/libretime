@@ -57,7 +57,7 @@ def test_base_config(tmp_path: Path):
             "WRONGPREFIX_API_KEY": "invalid",
         },
     ):
-        config = FixtureConfig(filepath=config_filepath)
+        config = FixtureConfig(config_filepath)
 
         assert config.public_url == "http://libretime.example.com"
         assert config.api_key == "f3bf04fc"
@@ -69,7 +69,7 @@ def test_base_config(tmp_path: Path):
 
     # Optional model: loading default values (rabbitmq)
     with mock.patch.dict(environ, {}):
-        config = FixtureConfig(filepath=config_filepath)
+        config = FixtureConfig(config_filepath)
         assert config.allowed_hosts == ["example.com", "sub.example.com"]
         assert config.rabbitmq.host == "localhost"
         assert config.rabbitmq.port == 5672
@@ -82,7 +82,7 @@ def test_base_config(tmp_path: Path):
             "LIBRETIME_ALLOWED_HOSTS": "example.com, changed.example.com",
         },
     ):
-        config = FixtureConfig(filepath=config_filepath)
+        config = FixtureConfig(config_filepath)
         assert config.allowed_hosts == ["example.com", "changed.example.com"]
         assert config.rabbitmq.host == "changed"
         assert config.rabbitmq.port == 5672
@@ -111,19 +111,19 @@ def test_base_config_required_submodel(tmp_path: Path):
 
     # With config file
     with mock.patch.dict(environ, {}):
-        config = FixtureWithRequiredSubmodelConfig(filepath=config_filepath)
+        config = FixtureWithRequiredSubmodelConfig(config_filepath)
         assert config.required.api_key == "test_key"
         assert config.required.with_default == "original"
 
     # With env variables
     with mock.patch.dict(environ, {"LIBRETIME_REQUIRED_API_KEY": "test_key"}):
-        config = FixtureWithRequiredSubmodelConfig(filepath=None)
+        config = FixtureWithRequiredSubmodelConfig(None)
         assert config.required.api_key == "test_key"
         assert config.required.with_default == "original"
 
     # With env variables override
     with mock.patch.dict(environ, {"LIBRETIME_REQUIRED_API_KEY": "changed"}):
-        config = FixtureWithRequiredSubmodelConfig(filepath=config_filepath)
+        config = FixtureWithRequiredSubmodelConfig(config_filepath)
         assert config.required.api_key == "changed"
         assert config.required.with_default == "original"
 
@@ -135,14 +135,29 @@ def test_base_config_required_submodel(tmp_path: Path):
             "LIBRETIME_REQUIRED_WITH_DEFAULT": "changed",
         },
     ):
-        config = FixtureWithRequiredSubmodelConfig(filepath=config_filepath)
+        config = FixtureWithRequiredSubmodelConfig(config_filepath)
         assert config.required.api_key == "changed"
         assert config.required.with_default == "changed"
 
     # Raise validation error
     with mock.patch.dict(environ, {}):
         with raises(SystemExit):
-            FixtureWithRequiredSubmodelConfig(filepath=None)
+            FixtureWithRequiredSubmodelConfig(None)
+
+
+def test_base_config_from_init() -> None:
+    class FromInitFixtureConfig(BaseConfig):
+        found: str
+        override: str
+
+    with mock.patch.dict(environ, {"LIBRETIME_OVERRIDE": "changed"}):
+        config = FromInitFixtureConfig(
+            found="changed",
+            override="invalid",
+        )
+
+    assert config.found == "changed"
+    assert config.override == "changed"
 
 
 FIXTURE_CONFIG_RAW_MISSING = """
@@ -169,4 +184,4 @@ def test_load_config_error(tmp_path: Path, raw, exception):
 
     with raises(exception):
         with mock.patch.dict(environ, {}):
-            FixtureConfig(filepath=config_filepath)
+            FixtureConfig(config_filepath)

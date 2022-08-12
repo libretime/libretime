@@ -29,7 +29,7 @@ class Config(BaseConfig):
     rabbitmq: RabbitMQConfig
     analyzer: AnalyzerConfig
 
-config = Config(filepath="/etc/libretime/config.yml")
+config = Config("/etc/libretime/config.yml")
 ```
 
 > Don't instantiate a sub model if it has a required field, otherwise the `Config` class import will raise a `ValidationError`.

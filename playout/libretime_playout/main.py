@@ -106,7 +106,7 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     Run playout.
     """
     setup_logger(level_from_name(log_level), log_filepath)
-    config = Config(filepath=config_filepath)
+    config = Config(config_filepath)
 
     try:
         for dir_path in [CACHE_DIR, RECORD_DIR]:
