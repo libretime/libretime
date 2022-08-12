@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2022-07-04 18:49+0200\n"
-"PO-Revision-Date: 2022-07-28 14:22+0000\n"
+"PO-Revision-Date: 2022-08-12 17:34+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/libretime/"
 "legacy/hr/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 #: application/common/DateHelper.php:216
 #, php-format
 msgid "The year %s must be within the range of 1753 - 9999"
-msgstr "Godine %s moraju biti u rasponu od 1753. – 9999."
+msgstr "Godina %s mora biti u rasponu od 1753. – 9999."
 
 #: application/common/DateHelper.php:219
 #, php-format
@@ -580,7 +580,7 @@ msgstr ""
 
 #: application/common/Timezone.php:21
 msgid "Use station default"
-msgstr ""
+msgstr "Koristi standardne podatke stanice"
 
 #: application/common/UsabilityHints.php:65
 msgid "Upload some tracks below to add them to your library!"
@@ -792,7 +792,7 @@ msgstr "Ne smiješ pristupiti ovog izvora."
 #: application/controllers/ApiController.php:679
 #: application/controllers/ApiController.php:712
 msgid "You are not allowed to access this resource. "
-msgstr "Ne smiješ pristupiti ovog izvora."
+msgstr "Ne smiješ pristupiti ovom izvoru. "
 
 #: application/controllers/ApiController.php:916
 #: application/controllers/ApiController.php:937
@@ -949,7 +949,9 @@ msgstr "Kopiranje od %s"
 
 #: application/controllers/ListenerstatController.php:50
 msgid "Please make sure admin user/password is correct on Settings->Streams page."
-msgstr "Molimo, provjeri da li je ispravan/na admin korisnik/lozinka na stranici Sustav->Prijenosi."
+msgstr ""
+"Provjeri ispravanost administratora/lozinke na stranici "
+"Postavke-&gt;Prijenosi."
 
 #: application/controllers/LocaleController.php:27
 msgid "Audio Player"
@@ -989,7 +991,7 @@ msgstr "Ti imaš instaliranu najnoviju verziju"
 
 #: application/controllers/LocaleController.php:38
 msgid "New version available: "
-msgstr "Nova verzija je dostupna:"
+msgstr "Dostupna je nova verzija: "
 
 #: application/controllers/LocaleController.php:39
 msgid "You have a pre-release version of LibreTime intalled."
@@ -1361,7 +1363,7 @@ msgstr "Prijenosi"
 
 #: application/controllers/LocaleController.php:119
 msgid "Unknown type: "
-msgstr "Nepoznati tip:"
+msgstr "Nepoznata vrsta: "
 
 #: application/controllers/LocaleController.php:120
 msgid "Are you sure you want to delete the selected item?"
@@ -1378,25 +1380,25 @@ msgstr "Preuzimanje podataka s poslužitelja..."
 
 #: application/controllers/LocaleController.php:124
 msgid "Import"
-msgstr ""
+msgstr "Uvezi"
 
 #: application/controllers/LocaleController.php:125
 msgid "Imported?"
-msgstr ""
+msgstr "Uvezeno?"
 
 #: application/controllers/LocaleController.php:126
 #: application/services/CalendarService.php:59
 #: application/services/CalendarService.php:89
 msgid "View"
-msgstr ""
+msgstr "Prikaz"
 
 #: application/controllers/LocaleController.php:127
 msgid "Error code: "
-msgstr "Šifra pogreške:"
+msgstr "Kod pogreške: "
 
 #: application/controllers/LocaleController.php:128
 msgid "Error msg: "
-msgstr "Poruka o pogrešci:"
+msgstr "Poruka pogreške: "
 
 #: application/controllers/LocaleController.php:129
 msgid "Input must be a positive number"
@@ -1416,7 +1418,7 @@ msgstr "Mora biti u obliku: hh:mm:ss.t"
 
 #: application/controllers/LocaleController.php:133
 msgid "My Podcast"
-msgstr ""
+msgstr "Moj Podcast"
 
 #: application/controllers/LocaleController.php:135
 #, php-format
@@ -1433,11 +1435,11 @@ msgstr "molimo stavi u vrijeme '00:00:00 (.0)'"
 
 #: application/controllers/LocaleController.php:139
 msgid "Please enter a valid time in seconds. Eg. 0.5"
-msgstr ""
+msgstr "Upiši ispravno vrijeme u sekundama. Npr. 0,5"
 
 #: application/controllers/LocaleController.php:140
 msgid "Your browser does not support playing this file type: "
-msgstr "Tvoj preglednik ne podržava ovu vrstu audio datoteku:"
+msgstr "Tvoj preglednik ne podržava reprodukciju ove vrste datoteku: "
 
 #: application/controllers/LocaleController.php:141
 msgid "Dynamic block is not previewable"
@@ -1445,7 +1447,7 @@ msgstr "Dinamički blok nije dostupan za pregled"
 
 #: application/controllers/LocaleController.php:142
 msgid "Limit to: "
-msgstr "Ograničiti se na:"
+msgstr "Ograniči na: "
 
 #: application/controllers/LocaleController.php:143
 msgid "Playlist saved"
@@ -2085,7 +2087,7 @@ msgstr "Skoči na trenutnu sviranu pjesmu"
 
 #: application/controllers/LocaleController.php:314
 msgid "Jump to Current"
-msgstr ""
+msgstr "Skoči na trenutnu"
 
 #: application/controllers/LocaleController.php:315
 msgid "Cancel current show"
@@ -2378,11 +2380,11 @@ msgstr "Prijenosni URL može biti u krivu ili ne postoji"
 
 #: application/controllers/LocaleController.php:404
 msgid "Error: File too large: "
-msgstr "Pogreška: Datoteka je prevelika:"
+msgstr "Pogreška: Datoteka je prevelika: "
 
 #: application/controllers/LocaleController.php:405
 msgid "Error: Invalid file extension: "
-msgstr "Pogreška: Nevažeći datotečni nastavak:"
+msgstr "Pogreška: Nevažeći datotečni nastavak: "
 
 #: application/controllers/LocaleController.php:407
 msgid "Set Default"
@@ -3051,15 +3053,15 @@ msgstr "Datum završetka i vrijeme ne može biti u prošlosti"
 
 #: application/forms/AddShowWhen.php:171
 msgid "Cannot have duration < 0m"
-msgstr "Ne može trajati < 0m"
+msgstr "Ne može trajati kraće od 0 min"
 
 #: application/forms/AddShowWhen.php:174
 msgid "Cannot have duration 00h 00m"
-msgstr "Ne može trajati 00h 00m"
+msgstr "Ne može trajati 00 h 00 min"
 
 #: application/forms/AddShowWhen.php:180
 msgid "Cannot have duration greater than 24h"
-msgstr "Ne može trajati više od 24h"
+msgstr "Ne može trajati duže od 24 h"
 
 #: application/forms/AddShowWhen.php:310 application/forms/AddShowWhen.php:341
 #: application/forms/AddShowWhen.php:346
@@ -3077,19 +3079,19 @@ msgstr "Disk-Džokeji:"
 
 #: application/forms/AddTracktype.php:20
 msgid "Type Name:"
-msgstr ""
+msgstr "Ime vrste:"
 
 #: application/forms/AddTracktype.php:26
 msgid "Code:"
-msgstr ""
+msgstr "Kod:"
 
 #: application/forms/AddTracktype.php:45
 msgid "Visibility:"
-msgstr ""
+msgstr "Vidljivost:"
 
 #: application/forms/AddTracktype.php:69
 msgid "Code is not unique."
-msgstr ""
+msgstr "Kod nije jedinstven."
 
 #: application/forms/AddUser.php:27 application/forms/EditUser.php:35
 #: application/forms/LiveStreamingPreferences.php:41
@@ -4029,7 +4031,8 @@ msgid ""
 "Note: Resizing a repeating show affects all of its repeats."
 msgstr ""
 "Ne može se zakazati preklapajuće emisije.\n"
-"Napomena: Promjena veličine ponovljene emisije utječe na sve njene ponavljanje"
+"Napomena: Promjena veličine ponovljene emisije utječe na sva njena "
+"ponavljanja."
 
 #: application/models/ShowBuilder.php:209
 #, php-format
