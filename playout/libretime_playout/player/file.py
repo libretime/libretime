@@ -52,8 +52,8 @@ class PypoFile(Thread):
                 with open(dst, "wb") as handle:
                     logger.info(media_item)
                     try:
-                        response = self.api_client.download_file(file_id)
-                        for chunk in response.iter_content(chunk_size=1024):
+                        response = self.api_client.download_file(file_id, stream=True)
+                        for chunk in response.iter_content(chunk_size=2048):
                             handle.write(chunk)
 
                     except HTTPError as exception:
