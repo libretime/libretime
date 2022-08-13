@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2022-07-04 18:49+0200\n"
-"PO-Revision-Date: 2022-08-13 13:53+0000\n"
+"PO-Revision-Date: 2022-08-14 21:20+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/libretime/"
 "legacy/hr/>\n"
@@ -687,7 +687,7 @@ msgstr ""
 
 #: application/configs/navigation.php:27
 msgid "Radio Page"
-msgstr ""
+msgstr "Stranica radija"
 
 #: application/configs/navigation.php:35
 msgid "Calendar"
@@ -695,27 +695,27 @@ msgstr "Kalendar"
 
 #: application/configs/navigation.php:43
 msgid "Widgets"
-msgstr ""
+msgstr "Programčići"
 
 #: application/configs/navigation.php:52
 msgid "Player"
-msgstr ""
+msgstr "Player"
 
 #: application/configs/navigation.php:58
 msgid "Weekly Schedule"
-msgstr ""
+msgstr "Tjedni raspored"
 
 #: application/configs/navigation.php:66
 msgid "Settings"
-msgstr ""
+msgstr "Postavke"
 
 #: application/configs/navigation.php:74
 msgid "General"
-msgstr ""
+msgstr "Opće"
 
 #: application/configs/navigation.php:80
 msgid "My Profile"
-msgstr ""
+msgstr "Moj profil"
 
 #: application/configs/navigation.php:85
 msgid "Users"
@@ -723,7 +723,7 @@ msgstr "Korisnici"
 
 #: application/configs/navigation.php:91
 msgid "Track Types"
-msgstr ""
+msgstr "Vrste snimaka"
 
 #: application/configs/navigation.php:98
 msgid "Streams"
@@ -737,23 +737,23 @@ msgstr "Stanje"
 
 #: application/configs/navigation.php:114
 msgid "Analytics"
-msgstr ""
+msgstr "Analitike"
 
 #: application/configs/navigation.php:123
 msgid "Playout History"
-msgstr "Povijest puštenih pjesama"
+msgstr "Povijest reproduciranih pjesama"
 
 #: application/configs/navigation.php:130
 msgid "History Templates"
-msgstr "Povijesni Predlošci"
+msgstr "Predlošci za povijest"
 
 #: application/configs/navigation.php:137
 msgid "Listener Stats"
-msgstr "Slušateljska Statistika"
+msgstr "Statistika slušatelja"
 
 #: application/configs/navigation.php:144
 msgid "Show Listener Stats"
-msgstr ""
+msgstr "Prikaži statistiku slušatelja"
 
 #: application/configs/navigation.php:153
 msgid "Help"
@@ -761,28 +761,28 @@ msgstr "Pomoć"
 
 #: application/configs/navigation.php:161
 msgid "Getting Started"
-msgstr "Početak Korištenja"
+msgstr "Prvi koraci"
 
 #: application/configs/navigation.php:168
 msgid "User Manual"
-msgstr "Priručnik"
+msgstr "Korisnički priručnik"
 
 #: application/configs/navigation.php:173
 msgid "Get Help Online"
-msgstr ""
+msgstr "Pomoć na internetu"
 
 #: application/configs/navigation.php:178
 msgid "Contribute to LibreTime"
-msgstr ""
+msgstr "Doprinesi projektu LibreTime"
 
 #: application/configs/navigation.php:183
 msgid "What's New?"
-msgstr ""
+msgstr "Što je novo?"
 
 #: application/controllers/ApiController.php:112
 #: application/controllers/ApiController.php:746
 msgid "You are not allowed to access this resource."
-msgstr "Ne smiješ pristupiti ovog izvora."
+msgstr "Ne smiješ pristupiti ovom izvoru."
 
 #: application/controllers/ApiController.php:374
 #: application/controllers/ApiController.php:450
@@ -799,29 +799,29 @@ msgstr "Ne smiješ pristupiti ovom izvoru. "
 #: application/controllers/ApiController.php:949
 #, php-format
 msgid "File does not exist in %s"
-msgstr ""
+msgstr "Datoteka ne postoji u %s"
 
 #: application/controllers/ApiController.php:1003
 msgid "Bad request. no 'mode' parameter passed."
-msgstr "Neispravan zahtjev."
+msgstr "Neispravan zahtjev. Prametar „mode” nije predan."
 
 #: application/controllers/ApiController.php:1015
 msgid "Bad request. 'mode' parameter is invalid"
-msgstr "Neispravan zahtjev"
+msgstr "Neispravan zahtjev. Prametar „mode” je neispravan"
 
 #: application/controllers/DashboardController.php:34
 #: application/controllers/DashboardController.php:86
 msgid "You don't have permission to disconnect source."
-msgstr "Nemaš dopuštenje isključiti izvor."
+msgstr "Nemaš dozvole za odspajanje izvora."
 
 #: application/controllers/DashboardController.php:36
 #: application/controllers/DashboardController.php:88
 msgid "There is no source connected to this input."
-msgstr "Nema spojenog izvora na ovaj ulaz."
+msgstr "Nema spojenog izvora na ovaj unos."
 
 #: application/controllers/DashboardController.php:83
 msgid "You don't have permission to switch source."
-msgstr "Nemaš dozvolu za promjenu izvora."
+msgstr "Nemaš dozvole za mijenjanje izvora."
 
 #: application/controllers/EmbeddablewidgetsController.php:26
 msgid ""
@@ -844,7 +844,7 @@ msgstr ""
 
 #: application/controllers/ErrorController.php:96
 msgid "Page not found."
-msgstr ""
+msgstr "Stranica nije pronađena."
 
 #: application/controllers/ErrorController.php:106
 msgid "The requested action is not supported."
@@ -852,7 +852,7 @@ msgstr ""
 
 #: application/controllers/ErrorController.php:116
 msgid "You do not have permission to access this resource."
-msgstr ""
+msgstr "Nemaš dozvole za pristupanje ovom resursu."
 
 #: application/controllers/ErrorController.php:127
 msgid "An internal application error has occurred."
@@ -876,7 +876,7 @@ msgstr "%s nije pronađen"
 #: application/controllers/LibraryController.php:37
 #: application/controllers/PlaylistController.php:170
 msgid "Something went wrong."
-msgstr "Nešto je pošlo po krivu."
+msgstr "Dogodila se greška."
 
 #: application/controllers/LibraryController.php:91
 #: application/controllers/LocaleController.php:171
@@ -893,7 +893,7 @@ msgstr "Dodaj na Popis Pjesama"
 
 #: application/controllers/LibraryController.php:113
 msgid "Add to Smart Block"
-msgstr "Dodaj u Smart Block"
+msgstr "Dodaj u pametni blok"
 
 #: application/controllers/LibraryController.php:118
 #: application/controllers/LibraryController.php:155
@@ -910,7 +910,7 @@ msgstr "Izbriši"
 #: application/controllers/LibraryController.php:150
 #: application/controllers/LibraryController.php:172
 msgid "Edit..."
-msgstr ""
+msgstr "Uredi …"
 
 #: application/controllers/LibraryController.php:130
 #: application/controllers/ScheduleController.php:735
@@ -919,11 +919,11 @@ msgstr "Preuzimanje"
 
 #: application/controllers/LibraryController.php:134
 msgid "Duplicate Playlist"
-msgstr "Udvostručavanje"
+msgstr "Dupliciraj playlistu"
 
 #: application/controllers/LibraryController.php:137
 msgid "Duplicate Smartblock"
-msgstr ""
+msgstr "Dupliciraj pametni blok"
 
 #: application/controllers/LibraryController.php:179
 msgid "No action available"
@@ -931,15 +931,15 @@ msgstr "Nema dostupnih akcija"
 
 #: application/controllers/LibraryController.php:199
 msgid "You don't have permission to delete selected items."
-msgstr "Nemaš dopuštenje za brisanje odabrane stavke."
+msgstr "Nemaš dozvole za brisanje odabrane stavke."
 
 #: application/controllers/LibraryController.php:244
 msgid "Could not delete file because it is scheduled in the future."
-msgstr ""
+msgstr "Nije bilo moguće izbrisati datoteku jer je zakazana u budućnosti."
 
 #: application/controllers/LibraryController.php:247
 msgid "Could not delete file(s)."
-msgstr ""
+msgstr "Nije bilo moguće izbrisati datoteku(e)."
 
 #: application/controllers/LibraryController.php:289
 #: application/controllers/LibraryController.php:324
@@ -950,16 +950,16 @@ msgstr "Kopiranje od %s"
 #: application/controllers/ListenerstatController.php:50
 msgid "Please make sure admin user/password is correct on Settings->Streams page."
 msgstr ""
-"Provjeri ispravanost administratora/lozinke na stranici "
-"Postavke-&gt;Prijenosi."
+"Provjeri ispravnost administratora/lozinke u izborniku Postavke-&gt;Stranica "
+"prijenosa."
 
 #: application/controllers/LocaleController.php:27
 msgid "Audio Player"
-msgstr "Audio Uređaj"
+msgstr "Audio player"
 
 #: application/controllers/LocaleController.php:28
 msgid "Something went wrong!"
-msgstr ""
+msgstr "Dogodila se greška!"
 
 #: application/controllers/LocaleController.php:30
 msgid "Recording:"
@@ -967,27 +967,27 @@ msgstr "Snimanje:"
 
 #: application/controllers/LocaleController.php:31
 msgid "Master Stream"
-msgstr "Majstorski Prijenos"
+msgstr "Prijenos mastera"
 
 #: application/controllers/LocaleController.php:32
 msgid "Live Stream"
-msgstr "Prijenos Uživo"
+msgstr "Prijenos uživo"
 
 #: application/controllers/LocaleController.php:33
 msgid "Nothing Scheduled"
-msgstr "Ništa po rasporedu"
+msgstr "Ništa nije zakazano"
 
 #: application/controllers/LocaleController.php:34
 msgid "Current Show:"
-msgstr "Trenutna Emisija:"
+msgstr "Trenutačna emisija:"
 
 #: application/controllers/LocaleController.php:35
 msgid "Current"
-msgstr "Trenutna"
+msgstr "Trenutačna"
 
 #: application/controllers/LocaleController.php:37
 msgid "You are running the latest version"
-msgstr "Ti imaš instaliranu najnoviju verziju"
+msgstr "Pokrećeš najnoviju verziju"
 
 #: application/controllers/LocaleController.php:38
 msgid "New version available: "
@@ -1019,29 +1019,31 @@ msgstr "Dodaj u trenutni popis pjesama"
 
 #: application/controllers/LocaleController.php:46
 msgid "Add to current smart block"
-msgstr "Dodaj u trenutni smart block"
+msgstr "Dodaj u trenutačni pametni blok"
 
 #: application/controllers/LocaleController.php:47
 msgid "Adding 1 Item"
-msgstr "Dodavanje 1 Stavke"
+msgstr "Dodavanje 1 stavke"
 
 #: application/controllers/LocaleController.php:48
 #, php-format
 msgid "Adding %s Items"
-msgstr "Dodavanje %s Stavke"
+msgstr "Dodavanje %s stavki"
 
 #: application/controllers/LocaleController.php:49
 msgid "You can only add tracks to smart blocks."
-msgstr "Možeš dodavati samo pjesme kod pametnih blokova."
+msgstr "Možeš dodavati samo pjesme u pametne blokove."
 
 #: application/controllers/LocaleController.php:50
 #: application/controllers/PlaylistController.php:182
 msgid "You can only add tracks, smart blocks, and webstreams to playlists."
-msgstr "Možeš samo dodati pjesme, pametne blokova, i prijenose kod popise pjesama."
+msgstr ""
+"Možeš dodati samo pjesme, pametne blokova i internetske prijenose u "
+"playliste."
 
 #: application/controllers/LocaleController.php:53
 msgid "Please select a cursor position on timeline."
-msgstr "Molimo odaberi mjesto pokazivača na vremenskoj crti."
+msgstr "Odaberi mjesto pokazivača na vremenskoj crti."
 
 #: application/controllers/LocaleController.php:54
 msgid "You haven't added any tracks"
@@ -1093,7 +1095,7 @@ msgstr "Dodaj"
 
 #: application/controllers/LocaleController.php:69
 msgid "New"
-msgstr ""
+msgstr "Nova"
 
 #: application/controllers/LocaleController.php:70
 #: application/services/CalendarService.php:147
@@ -1102,23 +1104,23 @@ msgstr "Uredi"
 
 #: application/controllers/LocaleController.php:71
 msgid "Add to Schedule"
-msgstr ""
+msgstr "Dodaj rasporedu"
 
 #: application/controllers/LocaleController.php:72
 msgid "Add to next show"
-msgstr ""
+msgstr "Dodaj sljedećoj emisiji"
 
 #: application/controllers/LocaleController.php:73
 msgid "Add to current show"
-msgstr ""
+msgstr "Dodaj trenutačnoj emisiji"
 
 #: application/controllers/LocaleController.php:74
 msgid "Add after selected items"
-msgstr ""
+msgstr "Dodaj nakon odabranih stavki"
 
 #: application/controllers/LocaleController.php:76
 msgid "Publish"
-msgstr ""
+msgstr "Objavi"
 
 #: application/controllers/LocaleController.php:77
 #: application/forms/AddShowStyle.php:63
@@ -1128,11 +1130,11 @@ msgstr "Ukloni"
 
 #: application/controllers/LocaleController.php:78
 msgid "Edit Metadata"
-msgstr "Uredi Metapodatke"
+msgstr "Uredi metapodatke"
 
 #: application/controllers/LocaleController.php:79
 msgid "Add to selected show"
-msgstr "Dodaj u odabranoj emisiji"
+msgstr "Dodaj odabranoj emisiji"
 
 #: application/controllers/LocaleController.php:80
 msgid "Select"
@@ -1152,20 +1154,20 @@ msgstr "Odznači sve"
 
 #: application/controllers/LocaleController.php:84
 msgid "Are you sure you want to delete the selected item(s)?"
-msgstr "Jesi li siguran da želiš izbrisati odabranu (e) stavku (e)?"
+msgstr "Stvarno želiš izbrisati odabranu(e) stavku(e)?"
 
 #: application/controllers/LocaleController.php:85
 msgid "Scheduled"
-msgstr "Zakazana"
+msgstr "Zakazano"
 
 #: application/controllers/LocaleController.php:86
 #: application/views/scripts/partialviews/dashboard-sub-nav.php:3
 msgid "Tracks"
-msgstr ""
+msgstr "Snimke"
 
 #: application/controllers/LocaleController.php:87
 msgid "Playlist"
-msgstr ""
+msgstr "Playlista"
 
 #: application/controllers/LocaleController.php:88
 #: application/forms/SmartBlockCriteria.php:81
@@ -1174,7 +1176,7 @@ msgstr ""
 #: application/services/HistoryService.php:1086
 #: application/services/HistoryService.php:1101
 msgid "Title"
-msgstr "Naziv"
+msgstr "Naslov"
 
 #: application/controllers/LocaleController.php:89
 #: application/forms/SmartBlockCriteria.php:66
@@ -1194,7 +1196,7 @@ msgstr "Album"
 
 #: application/controllers/LocaleController.php:91
 msgid "Bit Rate"
-msgstr "Prijenos Bita"
+msgstr "Brzina prijenosa"
 
 #: application/controllers/LocaleController.php:92
 #: application/forms/SmartBlockCriteria.php:59
@@ -1251,7 +1253,7 @@ msgstr "ISRC"
 #: application/models/Block.php:1438 application/models/Block.php:1534
 #: application/services/HistoryService.php:1057
 msgid "Label"
-msgstr "Naljepnica"
+msgstr "Etiketa"
 
 #: application/controllers/LocaleController.php:100
 #: application/forms/SmartBlockCriteria.php:71
@@ -1307,19 +1309,19 @@ msgstr "Pojačanje reprodukcije"
 
 #: application/controllers/LocaleController.php:108
 msgid "Sample Rate"
-msgstr "Stopa uzorka"
+msgstr "Frekvencija"
 
 #: application/controllers/LocaleController.php:109
 #: application/forms/SmartBlockCriteria.php:82
 #: application/models/Block.php:1451 application/models/Block.php:1547
 msgid "Track Number"
-msgstr "Broj pjesme"
+msgstr "Broj snimke"
 
 #: application/controllers/LocaleController.php:110
 #: application/forms/SmartBlockCriteria.php:83
 #: application/models/Block.php:1452 application/models/Block.php:1548
 msgid "Uploaded"
-msgstr "Dodano"
+msgstr "Preneseno"
 
 #: application/controllers/LocaleController.php:111
 #: application/forms/SmartBlockCriteria.php:84
@@ -1350,12 +1352,12 @@ msgstr "Datoteke"
 #: application/controllers/LocaleController.php:116
 #: application/views/scripts/partialviews/dashboard-sub-nav.php:8
 msgid "Playlists"
-msgstr "Popisi pjesama"
+msgstr "Playliste"
 
 #: application/controllers/LocaleController.php:117
 #: application/views/scripts/partialviews/dashboard-sub-nav.php:13
 msgid "Smart Blocks"
-msgstr "Smart Block-ovi"
+msgstr "Pametni blokovi"
 
 #: application/controllers/LocaleController.php:118
 msgid "Web Streams"
@@ -1367,7 +1369,7 @@ msgstr "Nepoznata vrsta: "
 
 #: application/controllers/LocaleController.php:120
 msgid "Are you sure you want to delete the selected item?"
-msgstr "Jesi li siguran da želiš obrisati odabranu stavku?"
+msgstr "Stvarno želiš izbrisati odabranu stavku?"
 
 #: application/controllers/LocaleController.php:121
 #: application/controllers/LocaleController.php:218
@@ -1376,7 +1378,7 @@ msgstr "Prijenos je u tijeku..."
 
 #: application/controllers/LocaleController.php:122
 msgid "Retrieving data from the server..."
-msgstr "Preuzimanje podataka s poslužitelja..."
+msgstr "Preuzimanje podataka s poslužitelja …"
 
 #: application/controllers/LocaleController.php:124
 msgid "Import"
@@ -1402,19 +1404,19 @@ msgstr "Poruka pogreške: "
 
 #: application/controllers/LocaleController.php:129
 msgid "Input must be a positive number"
-msgstr "Mora biti pozitivan broj"
+msgstr "Unos mora biti pozitivan broj"
 
 #: application/controllers/LocaleController.php:130
 msgid "Input must be a number"
-msgstr "Mora biti broj"
+msgstr "Unos mora biti broj"
 
 #: application/controllers/LocaleController.php:131
 msgid "Input must be in the format: yyyy-mm-dd"
-msgstr "Mora biti u obliku: gggg-mm-dd"
+msgstr "Unos mora biti u obliku: gggg-mm-dd"
 
 #: application/controllers/LocaleController.php:132
 msgid "Input must be in the format: hh:mm:ss.t"
-msgstr "Mora biti u obliku: hh:mm:ss.t"
+msgstr "Unos mora biti u obliku: hh:mm:ss.t"
 
 #: application/controllers/LocaleController.php:133
 msgid "My Podcast"
@@ -1423,15 +1425,17 @@ msgstr "Moj Podcast"
 #: application/controllers/LocaleController.php:135
 #, php-format
 msgid "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"
-msgstr "Trenutno je prijenos datoteke. %sOdlazak na drugom ekranu će otkazati proces slanja. %sJesi li siguran da želiš napustiti stranicu?"
+msgstr ""
+"Trenutačno prenosiš datoteke. %sPrijelazom na drugi ekran prekinut će se "
+"postupak prenošenja. %sStvarno želiš napustiti stranicu?"
 
 #: application/controllers/LocaleController.php:137
 msgid "Open Media Builder"
-msgstr "Otvori Medijskog Graditelja"
+msgstr "Otvori Media Builder"
 
 #: application/controllers/LocaleController.php:138
 msgid "please put in a time '00:00:00 (.0)'"
-msgstr "molimo stavi u vrijeme '00:00:00 (.0)'"
+msgstr "upiši vrijeme „00:00:00 (.0)”"
 
 #: application/controllers/LocaleController.php:139
 msgid "Please enter a valid time in seconds. Eg. 0.5"
@@ -1443,7 +1447,7 @@ msgstr "Tvoj preglednik ne podržava reprodukciju ove vrste datoteku: "
 
 #: application/controllers/LocaleController.php:141
 msgid "Dynamic block is not previewable"
-msgstr "Dinamički blok nije dostupan za pregled"
+msgstr "Dinamički blok se ne može pregledati"
 
 #: application/controllers/LocaleController.php:142
 msgid "Limit to: "
@@ -1451,11 +1455,11 @@ msgstr "Ograniči na: "
 
 #: application/controllers/LocaleController.php:143
 msgid "Playlist saved"
-msgstr "Popis pjesama je spremljena"
+msgstr "Playlista je spremljena"
 
 #: application/controllers/LocaleController.php:144
 msgid "Playlist shuffled"
-msgstr "Popis pjesama je izmiješan"
+msgstr "Playlista je izmiješana"
 
 #: application/controllers/LocaleController.php:145
 msgid "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
@@ -1464,7 +1468,7 @@ msgstr "Airtime je nesiguran o statusu ove datoteke. To se također može dogodi
 #: application/controllers/LocaleController.php:147
 #, php-format
 msgid "Listener Count on %s: %s"
-msgstr "Broj Slušalaca %s: %s"
+msgstr "Broj slušatelja %s: %s"
 
 #: application/controllers/LocaleController.php:149
 msgid "Remind me in 1 week"
@@ -1472,7 +1476,7 @@ msgstr "Podsjeti me za 1 tjedan"
 
 #: application/controllers/LocaleController.php:150
 msgid "Remind me never"
-msgstr "Nikad me više ne podsjeti"
+msgstr "Nikada me nemoj podsjetiti"
 
 #: application/controllers/LocaleController.php:151
 msgid "Yes, help Airtime"
@@ -1485,11 +1489,17 @@ msgstr "Slika mora biti jpg, jpeg, png, ili gif"
 
 #: application/controllers/LocaleController.php:154
 msgid "A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show."
-msgstr "Statički pametni blokovi spremaju kriterije i odmah generiraju blok sadržaja. To ti omogućuje da urediš i vidiš ga u knjižnici prije nego što ga dodaš na emisiju."
+msgstr ""
+"Statični pametni blokovi spremaju kriterije i odmah generiraju blok "
+"sadržaja. To ti omogućuje da ga urediš i vidiš u medijateci prije nego što "
+"ga dodaš jednoj emisiji."
 
 #: application/controllers/LocaleController.php:155
 msgid "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."
-msgstr "Dinamički pametni blokovi samo kriterije spremaju. Blok sadržaja će se generira nakon što ga dodate na emisiju. Nećeš moći pregledavati i uređivati sadržaj u knjižnici."
+msgstr ""
+"Dinamični pametni blokovi spremaju samo kriterije. Sadržaj bloka će se "
+"generirati nakon što ga dodaš jednoj emisiji. Nećeš moći pregledavati i "
+"uređivati sadržaj u medijateci."
 
 #: application/controllers/LocaleController.php:156
 #, php-format
@@ -1498,15 +1508,15 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:157
 msgid "Smart block shuffled"
-msgstr "Smart block je izmiješan"
+msgstr "Pametni blok je izmiješan"
 
 #: application/controllers/LocaleController.php:158
 msgid "Smart block generated and criteria saved"
-msgstr "Smart block je generiran i kriterije su spremne"
+msgstr "Pametni blok je generiran i kriteriji su spremljeni"
 
 #: application/controllers/LocaleController.php:159
 msgid "Smart block saved"
-msgstr "Smart block je spremljen"
+msgstr "Pametni blok je spremljen"
 
 #: application/controllers/LocaleController.php:160
 msgid "Processing..."
@@ -1596,19 +1606,19 @@ msgstr "Generiraj"
 
 #: application/controllers/LocaleController.php:174
 msgid "Choose Storage Folder"
-msgstr "Odaberi Mapu za Skladištenje"
+msgstr "Odaberi mapu za spremanje"
 
 #: application/controllers/LocaleController.php:175
 msgid "Choose Folder to Watch"
-msgstr "Odaberi Mapu za Praćenje"
+msgstr "Odaberi mapu za praćenje"
 
 #: application/controllers/LocaleController.php:176
 msgid ""
 "Are you sure you want to change the storage folder?\n"
 "This will remove the files from your Airtime library!"
 msgstr ""
-"Jesi li siguran da želiš promijeniti mapu za pohranu?\n"
-"To će ukloniti datoteke iz tvoje knjižnice!"
+"Stvarno želiš promijeniti mapu za spremanje?\n"
+"To će ukloniti datoteke iz tvoje Airtime medijateke!"
 
 #: application/controllers/LocaleController.php:177
 msgid "Manage Media Folders"
@@ -1616,7 +1626,7 @@ msgstr "Upravljanje Medijske Mape"
 
 #: application/controllers/LocaleController.php:178
 msgid "Are you sure you want to remove the watched folder?"
-msgstr "Jesi li siguran da želiš ukloniti nadzorsku mapu?"
+msgstr "Stvarno želiš ukloniti nadzorsku mapu?"
 
 #: application/controllers/LocaleController.php:179
 msgid "This path is currently not accessible."
@@ -1638,7 +1648,7 @@ msgstr "Prijenos je onemogućen"
 #: application/controllers/LocaleController.php:184
 #: application/forms/StreamSettingSubForm.php:191
 msgid "Getting information from the server..."
-msgstr "Dobivanje informacija sa poslužitelja..."
+msgstr "Preuzimanje informacija s poslužitelja …"
 
 #: application/controllers/LocaleController.php:185
 msgid "Can not connect to the streaming server"
@@ -1697,7 +1707,7 @@ msgstr "To slijedi isti uzorak sigurnosti za emisije: samo dodijeljeni korisnici
 
 #: application/controllers/LocaleController.php:201
 msgid "Specify custom authentication which will work only for this show."
-msgstr "Odredi prilagođene autentikacije koje će se uvažiti samo za ovu emisiju."
+msgstr "Odredi prilagođenu autentikaciju koja će vrijediti samo za ovu emisiju."
 
 #: application/controllers/LocaleController.php:203
 msgid "The show instance doesn't exist anymore!"
@@ -1717,7 +1727,7 @@ msgstr "Vremenska zona je postavljena po staničnu zonu prema zadanim. Emisije u
 
 #: application/controllers/LocaleController.php:210
 msgid "Show"
-msgstr "Program"
+msgstr "Emisija"
 
 #: application/controllers/LocaleController.php:211
 msgid "Show is empty"
@@ -1749,7 +1759,7 @@ msgstr "60m"
 
 #: application/controllers/LocaleController.php:219
 msgid "Retreiving data from the server..."
-msgstr "Dobivanje podataka s poslužitelja..."
+msgstr "Preuzimanje podataka s poslužitelja …"
 
 #: application/controllers/LocaleController.php:220
 msgid "This show has no scheduled content."
@@ -1854,15 +1864,15 @@ msgstr "Pro"
 
 #: application/controllers/LocaleController.php:249
 msgid "Today"
-msgstr ""
+msgstr "Danas"
 
 #: application/controllers/LocaleController.php:250
 msgid "Day"
-msgstr ""
+msgstr "Dan"
 
 #: application/controllers/LocaleController.php:251
 msgid "Week"
-msgstr ""
+msgstr "Tjedan"
 
 #: application/controllers/LocaleController.php:252
 msgid "Month"
@@ -1940,7 +1950,9 @@ msgstr "Sub"
 
 #: application/controllers/LocaleController.php:267
 msgid "Shows longer than their scheduled time will be cut off by a following show."
-msgstr "Emisije koje traju dulje od predviđenog vremena će biti odsječene."
+msgstr ""
+"Emisije koje traju dulje od predviđenog vremena će se prekinuti i nastaviti "
+"sa sljedećom emisijom."
 
 #: application/controllers/LocaleController.php:268
 msgid "Cancel Current Show?"
@@ -1965,7 +1977,7 @@ msgstr "Ukloniti sav sadržaj?"
 
 #: application/controllers/LocaleController.php:276
 msgid "Delete selected item(s)?"
-msgstr "Obrisati odabranu(e) stavku(e)?"
+msgstr "Izbrisati odabranu(e) stavku(e)?"
 
 #: application/controllers/LocaleController.php:277
 msgid "Start"
@@ -2020,16 +2032,17 @@ msgid "Show Empty"
 msgstr "Prazna emisija"
 
 #: application/controllers/LocaleController.php:294
+#, fuzzy
 msgid "Recording From Line In"
 msgstr "Snimanje sa Line In"
 
 #: application/controllers/LocaleController.php:295
 msgid "Track preview"
-msgstr "Pregled pjesama"
+msgstr "Pregled snimaka"
 
 #: application/controllers/LocaleController.php:299
 msgid "Cannot schedule outside a show."
-msgstr "Ne može se zakazivati izvan emisije."
+msgstr "Nije moguće zakazati izvan emisije."
 
 #: application/controllers/LocaleController.php:300
 msgid "Moving 1 Item"
@@ -2051,11 +2064,11 @@ msgstr "Spremi"
 #: application/controllers/LocaleController.php:327
 #: application/forms/EditAudioMD.php:270 application/forms/EditHistory.php:141
 msgid "Cancel"
-msgstr "Otkaži"
+msgstr "Odustani"
 
 #: application/controllers/LocaleController.php:304
 msgid "Fade Editor"
-msgstr "Uređivač za (Od-/Za-)tamnjivanje"
+msgstr "Uređivač prijelaza"
 
 #: application/controllers/LocaleController.php:305
 msgid "Cue Editor"
@@ -2071,7 +2084,7 @@ msgstr "Odaberi sve"
 
 #: application/controllers/LocaleController.php:310
 msgid "Select none"
-msgstr "Ne odaberi ništa"
+msgstr "Odaberi ništa"
 
 #: application/controllers/LocaleController.php:311
 msgid "Trim overbooked shows"
@@ -2091,7 +2104,7 @@ msgstr "Skoči na trenutnu"
 
 #: application/controllers/LocaleController.php:315
 msgid "Cancel current show"
-msgstr "Poništi trenutnu emisiju"
+msgstr "Prekini trenutačnu emisiju"
 
 #: application/controllers/LocaleController.php:320
 msgid "Open library to add or remove content"
@@ -2130,7 +2143,7 @@ msgstr "Disk-džokej"
 #: application/controllers/LocaleController.php:332
 #: application/forms/AddUser.php:99
 msgid "Program Manager"
-msgstr "Voditelj Programa"
+msgstr "Voditelj programa"
 
 #: application/controllers/LocaleController.php:333
 #: application/forms/AddUser.php:97
@@ -2143,11 +2156,11 @@ msgstr "Gosti mogu učiniti sljedeće:"
 
 #: application/controllers/LocaleController.php:335
 msgid "View schedule"
-msgstr "Pregled rasporeda"
+msgstr "Prikaži raspored"
 
 #: application/controllers/LocaleController.php:336
 msgid "View show content"
-msgstr "Pregled sadržaj emisije"
+msgstr "Prikaži sadržaj emisije"
 
 #: application/controllers/LocaleController.php:337
 msgid "DJs can do the following:"
@@ -2159,11 +2172,11 @@ msgstr "Upravljanje dodijeljen sadržaj emisije"
 
 #: application/controllers/LocaleController.php:339
 msgid "Import media files"
-msgstr "Uvoz medijske datoteke"
+msgstr "Uvezi medijske datoteke"
 
 #: application/controllers/LocaleController.php:340
 msgid "Create playlists, smart blocks, and webstreams"
-msgstr "Izradi popise naslova, smart block-ove, i prijenose"
+msgstr "Izradi popise naslova, pametnih blokova, i prijenose"
 
 #: application/controllers/LocaleController.php:341
 msgid "Manage their own library content"
@@ -2171,15 +2184,15 @@ msgstr "Upravljanje svoje knjižničnog sadržaja"
 
 #: application/controllers/LocaleController.php:342
 msgid "Program Managers can do the following:"
-msgstr ""
+msgstr "Voditelj programa može:"
 
 #: application/controllers/LocaleController.php:343
 msgid "View and manage show content"
-msgstr "Prikaz i upravljanje sadržaj emisije"
+msgstr "Prikaži i upravljaj sadržajem emisije"
 
 #: application/controllers/LocaleController.php:344
 msgid "Schedule shows"
-msgstr "Rasporedne emisije"
+msgstr "Zakaži emisije"
 
 #: application/controllers/LocaleController.php:345
 msgid "Manage all library content"
@@ -2207,7 +2220,7 @@ msgstr "Pošalji povratne informacije"
 
 #: application/controllers/LocaleController.php:351
 msgid "View system status"
-msgstr "Pregled stanja sustava"
+msgstr "Prikaži stanje sustava"
 
 #: application/controllers/LocaleController.php:352
 msgid "Access playout history"
@@ -2215,15 +2228,15 @@ msgstr "Pristup za povijest puštenih pjesama"
 
 #: application/controllers/LocaleController.php:353
 msgid "View listener stats"
-msgstr "Pogledaj statistiku slušatelje"
+msgstr "Prikaži statistiku slušatelja"
 
 #: application/controllers/LocaleController.php:355
 msgid "Show / hide columns"
-msgstr "Pokaži/sakrij stupce"
+msgstr "Prikaži/sakrij stupce"
 
 #: application/controllers/LocaleController.php:356
 msgid "Columns"
-msgstr ""
+msgstr "Stupci"
 
 #: application/controllers/LocaleController.php:358
 msgid "From {from} to {to}"
@@ -2305,11 +2318,11 @@ msgstr "Dodaj Datoteke"
 
 #: application/controllers/LocaleController.php:385
 msgid "Stop Upload"
-msgstr "Zaustavi Upload"
+msgstr "Prekini prijenos"
 
 #: application/controllers/LocaleController.php:386
 msgid "Start upload"
-msgstr "Pokreni upload"
+msgstr "Započni prijenos"
 
 #: application/controllers/LocaleController.php:387
 msgid "Add files"
@@ -2318,7 +2331,7 @@ msgstr "Dodaj datoteke"
 #: application/controllers/LocaleController.php:388
 #, php-format
 msgid "Uploaded %d/%d files"
-msgstr "Poslana %d/%d datoteka"
+msgstr "Preneseno %d/%d datoteka"
 
 #: application/controllers/LocaleController.php:389
 msgid "N/A"
@@ -2326,19 +2339,19 @@ msgstr "N/A"
 
 #: application/controllers/LocaleController.php:390
 msgid "Drag files here."
-msgstr "Povuci datoteke ovdje."
+msgstr "Povuci datoteke ovamo."
 
 #: application/controllers/LocaleController.php:391
 msgid "File extension error."
-msgstr "Pogreška (datotečni nastavak)."
+msgstr "Pogrešan datotečni nastavak."
 
 #: application/controllers/LocaleController.php:392
 msgid "File size error."
-msgstr "Pogreška veličine datoteke."
+msgstr "Pogrešna veličina datoteke."
 
 #: application/controllers/LocaleController.php:393
 msgid "File count error."
-msgstr "Pogreška broj datoteke."
+msgstr "Pogrešan broj datoteka."
 
 #: application/controllers/LocaleController.php:394
 msgid "Init error."
@@ -2354,7 +2367,7 @@ msgstr "Sigurnosna pogreška."
 
 #: application/controllers/LocaleController.php:397
 msgid "Generic error."
-msgstr "Generička pogreška."
+msgstr "Opća pogreška."
 
 #: application/controllers/LocaleController.php:398
 msgid "IO error."
@@ -2376,7 +2389,7 @@ msgstr "Datoteka: %f, veličina: %s, maks veličina datoteke: %m"
 
 #: application/controllers/LocaleController.php:403
 msgid "Upload URL might be wrong or doesn't exist"
-msgstr "Prijenosni URL može biti u krivu ili ne postoji"
+msgstr "URL prijenosa možda nije ispravan ili ne postoji"
 
 #: application/controllers/LocaleController.php:404
 msgid "Error: File too large: "
@@ -2388,7 +2401,7 @@ msgstr "Pogreška: Nevažeći datotečni nastavak: "
 
 #: application/controllers/LocaleController.php:407
 msgid "Set Default"
-msgstr "Postavi Zadano"
+msgstr "Postavi standardne postavke"
 
 #: application/controllers/LocaleController.php:408
 msgid "Create Entry"
@@ -2396,7 +2409,7 @@ msgstr "Stvaranje Unosa"
 
 #: application/controllers/LocaleController.php:409
 msgid "Edit History Record"
-msgstr "Uredi Povijest Zapisa"
+msgstr "Uredi zapis povijesti"
 
 #: application/controllers/LocaleController.php:410
 #: application/forms/EditHistoryItem.php:57
@@ -2431,7 +2444,7 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:424
 msgid "First"
-msgstr ""
+msgstr "Prvo"
 
 #: application/controllers/LocaleController.php:425
 msgid "Last"
@@ -2443,11 +2456,11 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:427
 msgid "Previous"
-msgstr ""
+msgstr "Prethodno"
 
 #: application/controllers/LocaleController.php:428
 msgid "Search:"
-msgstr ""
+msgstr "Traži:"
 
 #: application/controllers/LocaleController.php:429
 #: application/controllers/LocaleController.php:442
@@ -2456,7 +2469,7 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:430
 msgid "Drag tracks here from the library"
-msgstr ""
+msgstr "Povuci snimke ovamo iz medijateke"
 
 #: application/controllers/LocaleController.php:431
 msgid "No tracks were played during the selected time period."
@@ -2464,7 +2477,7 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:432
 msgid "Unpublish"
-msgstr ""
+msgstr "Poništi objavu"
 
 #: application/controllers/LocaleController.php:433
 msgid "No matching results found."
@@ -2472,7 +2485,7 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:434
 msgid "Author"
-msgstr ""
+msgstr "Autor"
 
 #: application/controllers/LocaleController.php:435
 #: application/forms/SmartBlockCriteria.php:65
@@ -2487,11 +2500,11 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:437
 msgid "Publication Date"
-msgstr ""
+msgstr "Datum objavljivanja"
 
 #: application/controllers/LocaleController.php:438
 msgid "Import Status"
-msgstr ""
+msgstr "Uvezi stanje"
 
 #: application/controllers/LocaleController.php:439
 msgid "Actions"
@@ -2499,47 +2512,47 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:440
 msgid "Delete from Library"
-msgstr ""
+msgstr "Izbriši iz medijateke"
 
 #: application/controllers/LocaleController.php:441
 msgid "Successfully imported"
-msgstr ""
+msgstr "Uspješno uvezeno"
 
 #: application/controllers/LocaleController.php:443
 msgid "Show _MENU_"
-msgstr ""
+msgstr "Prikaži _MENU_"
 
 #: application/controllers/LocaleController.php:444
 msgid "Show _MENU_ entries"
-msgstr ""
+msgstr "Prikaži unose za _MENU_"
 
 #: application/controllers/LocaleController.php:445
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
-msgstr ""
+msgstr "Prikaz _START_ do _END_ od _TOTAL_ unosa"
 
 #: application/controllers/LocaleController.php:446
 msgid "Showing _START_ to _END_ of _TOTAL_ tracks"
-msgstr ""
+msgstr "Prikaz _START_ do _END_ od _TOTAL_ snimaka"
 
 #: application/controllers/LocaleController.php:447
 msgid "Showing _START_ to _END_ of _TOTAL_ track types"
-msgstr ""
+msgstr "Prikaz _START_ do _END_ od _TOTAL_ vrsta snimaka"
 
 #: application/controllers/LocaleController.php:448
 msgid "Showing _START_ to _END_ of _TOTAL_ users"
-msgstr ""
+msgstr "Prikaz _START_ do _END_ od _TOTAL_ korisnika"
 
 #: application/controllers/LocaleController.php:449
 msgid "Showing 0 to 0 of 0 entries"
-msgstr ""
+msgstr "Prikaz 0 do 0 od 0 unosa"
 
 #: application/controllers/LocaleController.php:450
 msgid "Showing 0 to 0 of 0 tracks"
-msgstr ""
+msgstr "Prikaz 0 do 0 od 0 snimaka"
 
 #: application/controllers/LocaleController.php:451
 msgid "Showing 0 to 0 of 0 track types"
-msgstr ""
+msgstr "Prikaz 0 do 0 od 0 vrsta snimaka"
 
 #: application/controllers/LocaleController.php:452
 msgid "(filtered from _MAX_ total track types)"
@@ -2547,7 +2560,7 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:454
 msgid "Are you sure you want to delete this tracktype?"
-msgstr ""
+msgstr "Stvarno želiš izbrisati ovu vrstu snimke?"
 
 #: application/controllers/LocaleController.php:455
 msgid "No track types were found."
@@ -2568,7 +2581,7 @@ msgstr ""
 #: application/forms/GeneralPreferences.php:158
 #: application/forms/GeneralPreferences.php:217
 msgid "Enabled"
-msgstr "Omogućeno"
+msgstr "Aktivirano"
 
 #: application/controllers/LocaleController.php:459
 #: application/forms/AddTracktype.php:49
@@ -2577,15 +2590,15 @@ msgstr "Omogućeno"
 #: application/forms/GeneralPreferences.php:157
 #: application/forms/GeneralPreferences.php:216
 msgid "Disabled"
-msgstr "Onemogućeno"
+msgstr "Deaktivirano"
 
 #: application/controllers/LocaleController.php:460
 msgid "Cancel upload"
-msgstr ""
+msgstr "Prekini prijenos"
 
 #: application/controllers/LocaleController.php:461
 msgid "Type"
-msgstr ""
+msgstr "Vrsta"
 
 #: application/controllers/LocaleController.php:462
 msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/docs/playlists'>More information</a>"
@@ -2593,15 +2606,15 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:463
 msgid "Podcast settings saved"
-msgstr ""
+msgstr "Postavke podcasta su spremljene"
 
 #: application/controllers/LocaleController.php:464
 msgid "Are you sure you want to delete this user?"
-msgstr ""
+msgstr "Stvarno želiš izbrisati ovog korisnika?"
 
 #: application/controllers/LocaleController.php:465
 msgid "Can't delete yourself!"
-msgstr ""
+msgstr "Ne možeš sebe izbrisati!"
 
 #: application/controllers/LocaleController.php:466
 msgid "You haven't published any episodes!"
@@ -2621,24 +2634,24 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:470
 msgid "Playlist preview"
-msgstr ""
+msgstr "Pregled playliste"
 
 #: application/controllers/LocaleController.php:471
 msgid "Smart Block"
-msgstr ""
+msgstr "Pametni blok"
 
 #: application/controllers/LocaleController.php:472
 msgid "Webstream preview"
-msgstr ""
+msgstr "Pregled internetskog prijenosa"
 
 #: application/controllers/LocaleController.php:473
 msgid "You don't have permission to view the library."
-msgstr ""
+msgstr "Nemaš dozvole za prikaz medijateke."
 
 #: application/controllers/LocaleController.php:474
 #: application/forms/AddShowWhen.php:23
 msgid "Now"
-msgstr ""
+msgstr "Sada"
 
 #: application/controllers/LocaleController.php:475
 msgid "Click 'New' to create one now."
@@ -2650,11 +2663,11 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:477
 msgid "Feed URL"
-msgstr ""
+msgstr "URL feeda"
 
 #: application/controllers/LocaleController.php:478
 msgid "Import Date"
-msgstr ""
+msgstr "Uvezi datum"
 
 #: application/controllers/LocaleController.php:479
 msgid "Add New Podcast"
@@ -2665,6 +2678,8 @@ msgid ""
 "Cannot schedule outside a show.\n"
 "Try creating a show first."
 msgstr ""
+"Nije moguće zakazati izvan emisije.\n"
+"Pokušaj najprije stvoriti emisiju."
 
 #: application/controllers/LocaleController.php:481
 msgid "No files have been uploaded yet."
@@ -2692,11 +2707,13 @@ msgstr ""
 
 #: application/controllers/LoginController.php:50
 msgid "Please enter your username and password."
-msgstr ""
+msgstr "Upiši svoje korisničko ime i lozinku."
 
 #: application/controllers/LoginController.php:154
 msgid "Email could not be sent. Check your mail server settings and ensure it has been configured properly."
-msgstr "E-mail nije mogao biti poslan. Provjeri svoje postavke poslužitelja pošte i uvjeri se da je ispravno podešen."
+msgstr ""
+"E-mail nije mogao biti poslan. Provjeri svoje postavke poslužitelja pošte i "
+"uvjeri se da je ispravno konfiguriran."
 
 #: application/controllers/LoginController.php:157
 msgid "That username or email address could not be found."
@@ -2708,7 +2725,7 @@ msgstr ""
 
 #: application/controllers/LoginController.php:238
 msgid "Wrong username or password provided. Please try again."
-msgstr "Pogrešno korisničko ime ili lozinka. Molimo pokušaj ponovno."
+msgstr "Pogrešno korisničko ime ili lozinka. Pokušaj ponovo."
 
 #: application/controllers/PlaylistController.php:52
 #, php-format
@@ -2717,28 +2734,28 @@ msgstr "Gledaš stariju verziju %s"
 
 #: application/controllers/PlaylistController.php:142
 msgid "You cannot add tracks to dynamic blocks."
-msgstr "Ne možeš dodavati pjesme za dinamične blokove."
+msgstr "Ne možeš dodavati pjesme u dinamične blokove."
 
 #: application/controllers/PlaylistController.php:163
 #, php-format
 msgid "You don't have permission to delete selected %s(s)."
-msgstr "Nemaš dopuštenje za brisanje odabranog (e) %s."
+msgstr "Nemaš dozvole za brisanje odabranih %s."
 
 #: application/controllers/PlaylistController.php:176
 msgid "You can only add tracks to smart block."
-msgstr "Možeš samo pjesme dodavati za pametnog bloka."
+msgstr "Možeš samo dodati pjesme u pametni blok."
 
 #: application/controllers/PlaylistController.php:194
 msgid "Untitled Playlist"
-msgstr "Neimenovani Popis Pjesama"
+msgstr "Neimenovana playlista"
 
 #: application/controllers/PlaylistController.php:196
 msgid "Untitled Smart Block"
-msgstr "Neimenovani Smart Block"
+msgstr "Neimenovan pametni blok"
 
 #: application/controllers/PlaylistController.php:526
 msgid "Unknown Playlist"
-msgstr "Nepoznati Popis Pjesama"
+msgstr "Nepoznata playlista"
 
 #: application/controllers/PreferenceController.php:73
 msgid "Preferences updated."
@@ -2746,7 +2763,7 @@ msgstr "Postavke su ažurirane."
 
 #: application/controllers/PreferenceController.php:308
 msgid "Stream Setting Updated."
-msgstr "Prijenos Podešavanje je Ažurirano."
+msgstr "Postavka prijenosa je ažurirana."
 
 #: application/controllers/PreferenceController.php:356
 msgid "path should be specified"
@@ -2754,7 +2771,7 @@ msgstr "put bi trebao biti specificiran"
 
 #: application/controllers/PreferenceController.php:399
 msgid "Problem with Liquidsoap..."
-msgstr "Problem sa Liquidsoap..."
+msgstr "Problem s Liquidsoap..."
 
 #: application/controllers/PreferenceController.php:462
 msgid "Request method not accepted"
@@ -2763,7 +2780,7 @@ msgstr ""
 #: application/controllers/ScheduleController.php:394
 #, php-format
 msgid "Rebroadcast of show %s from %s at %s"
-msgstr "Reemitiranje emisija %s od %s na %s"
+msgstr "Ponovo emitiraj emisiju %s od %s na %s"
 
 #: application/controllers/ShowbuilderController.php:137
 msgid "Select cursor"
@@ -2779,11 +2796,11 @@ msgstr "emisija ne postoji"
 
 #: application/controllers/TracktypeController.php:69
 msgid "Track Type added successfully!"
-msgstr ""
+msgstr "Vrsta snimke uspješno dodana!"
 
 #: application/controllers/TracktypeController.php:71
 msgid "Track Type updated successfully!"
-msgstr ""
+msgstr "Vrsta snimke uspješno ažurirana!"
 
 #: application/controllers/UserController.php:86
 msgid "User added successfully!"
@@ -2800,15 +2817,15 @@ msgstr "Postavke su uspješno ažurirane!"
 #: application/controllers/WebstreamController.php:29
 #: application/controllers/WebstreamController.php:33
 msgid "Untitled Webstream"
-msgstr "Neimenovani Prijenos"
+msgstr "Neimenovan internetski prijenos"
 
 #: application/controllers/WebstreamController.php:156
 msgid "Webstream saved."
-msgstr "Prijenos je spremljen."
+msgstr "Internetski prijenos je spremljen."
 
 #: application/controllers/WebstreamController.php:164
 msgid "Invalid form values."
-msgstr "Nevažeći vrijednosti obrasca."
+msgstr "Nevažeće vrijednosti obrasca."
 
 #: application/forms/AddShowAbsoluteRebroadcastDates.php:24
 #: application/forms/AddShowRebroadcastDates.php:29
@@ -2831,7 +2848,7 @@ msgstr "Uneseni su nevažeći znakovi"
 #: application/forms/AddShowAbsoluteRebroadcastDates.php:64
 #: application/forms/AddShowRebroadcastDates.php:69
 msgid "Day must be specified"
-msgstr "Dan mora biti naveden"
+msgstr "Dan se mora navesti"
 
 #: application/forms/AddShowAbsoluteRebroadcastDates.php:69
 #: application/forms/AddShowRebroadcastDates.php:74
@@ -2849,36 +2866,36 @@ msgstr ""
 
 #: application/forms/AddShowAutoPlaylist.php:25
 msgid "Select Playlist"
-msgstr ""
+msgstr "Odaberi playlistu"
 
 #: application/forms/AddShowAutoPlaylist.php:32
 msgid "Repeat Playlist Until Show is Full ?"
-msgstr ""
+msgstr "Ponavljati playlistu sve dok emisija nije potpuna?"
 
 #: application/forms/AddShowLiveStream.php:10
 #, php-format
 msgid "Use %s Authentication:"
-msgstr ""
+msgstr "Koristi %s autentifikaciju:"
 
 #: application/forms/AddShowLiveStream.php:16
 msgid "Use Custom Authentication:"
-msgstr "Koristi Prilagođeno provjeru autentičnosti:"
+msgstr "Koristi prilagođenu autentifikaciju:"
 
 #: application/forms/AddShowLiveStream.php:25
 msgid "Custom Username"
-msgstr "Prilagođeno Korisničko Ime"
+msgstr "Prilagođeno korisničko Ime"
 
 #: application/forms/AddShowLiveStream.php:37
 msgid "Custom Password"
-msgstr "Prilagođena Lozinka"
+msgstr "Prilagođena lozinka"
 
 #: application/forms/AddShowLiveStream.php:48
 msgid "Host:"
-msgstr ""
+msgstr "Host:"
 
 #: application/forms/AddShowLiveStream.php:54
 msgid "Port:"
-msgstr ""
+msgstr "Priključak:"
 
 #: application/forms/AddShowLiveStream.php:60
 msgid "Mount:"
@@ -2886,19 +2903,20 @@ msgstr ""
 
 #: application/forms/AddShowLiveStream.php:78
 msgid "Username field cannot be empty."
-msgstr "'Korisničko Ime' polja ne smije ostati prazno."
+msgstr "Polje korisničkog imena ne smije biti prazno."
 
 #: application/forms/AddShowLiveStream.php:83
 msgid "Password field cannot be empty."
 msgstr "'Lozinka' polja ne smije ostati prazno."
 
 #: application/forms/AddShowRR.php:9
+#, fuzzy
 msgid "Record from Line In?"
 msgstr "Snimanje sa Line In?"
 
 #: application/forms/AddShowRR.php:15
 msgid "Rebroadcast?"
-msgstr "Ponovno emitirati?"
+msgstr "Ponovo emitirati?"
 
 #: application/forms/AddShowRebroadcastDates.php:14
 msgid "days"
@@ -2910,7 +2928,7 @@ msgstr "Link:"
 
 #: application/forms/AddShowRepeats.php:14
 msgid "Repeat Type:"
-msgstr "Tip Ponavljanje:"
+msgstr "Vrsta ponavljanja:"
 
 #: application/forms/AddShowRepeats.php:17
 msgid "weekly"
@@ -2934,11 +2952,11 @@ msgstr "mjesečno"
 
 #: application/forms/AddShowRepeats.php:30
 msgid "Select Days:"
-msgstr "Odaberi Dane:"
+msgstr "Odaberi dane:"
 
 #: application/forms/AddShowRepeats.php:46
 msgid "Repeat By:"
-msgstr "Ponavljanje Po:"
+msgstr "Ponavljaj po:"
 
 #: application/forms/AddShowRepeats.php:49
 msgid "day of the month"
@@ -2952,7 +2970,7 @@ msgstr "dan u tjednu"
 #: application/forms/ShowBuilder.php:45
 #: application/forms/ShowListenerStat.php:43
 msgid "Date End:"
-msgstr "Datum Završetka:"
+msgstr "Datum završetka:"
 
 #: application/forms/AddShowRepeats.php:69
 msgid "No End?"
@@ -2964,23 +2982,23 @@ msgstr "Datum završetka mora biti nakon datuma početka"
 
 #: application/forms/AddShowRepeats.php:116
 msgid "Please select a repeat day"
-msgstr "Molimo, odaberi kojeg dana"
+msgstr "Odaberi dan ponavljanja"
 
 #: application/forms/AddShowStyle.php:11
 msgid "Background Colour:"
-msgstr "Boja Pozadine:"
+msgstr "Boja pozadine:"
 
 #: application/forms/AddShowStyle.php:30
 msgid "Text Colour:"
-msgstr "Boja Teksta:"
+msgstr "Boja teksta:"
 
 #: application/forms/AddShowStyle.php:48
 msgid "Current Logo:"
-msgstr ""
+msgstr "Trenutačni logotip:"
 
 #: application/forms/AddShowStyle.php:71
 msgid "Show Logo:"
-msgstr ""
+msgstr "Prikaži logotip:"
 
 #: application/forms/AddShowStyle.php:86
 msgid "Logo Preview:"
@@ -2992,7 +3010,7 @@ msgstr "Naziv:"
 
 #: application/forms/AddShowWhat.php:30
 msgid "Untitled Show"
-msgstr "Neimenovan Program"
+msgstr "Neimenovana emisija"
 
 #: application/forms/AddShowWhat.php:36
 msgid "URL:"
@@ -3009,7 +3027,7 @@ msgstr "Opis:"
 
 #: application/forms/AddShowWhat.php:69
 msgid "Instance Description:"
-msgstr ""
+msgstr "Opis instance:"
 
 #: application/forms/AddShowWhen.php:15
 msgid "'%value%' does not fit the time format 'HH:mm'"
@@ -3017,15 +3035,15 @@ msgstr "'%value%' se ne uklapa u vremenskom formatu 'HH:mm'"
 
 #: application/forms/AddShowWhen.php:21
 msgid "Start Time:"
-msgstr ""
+msgstr "Vrijeme početka:"
 
 #: application/forms/AddShowWhen.php:24 application/forms/AddShowWhen.php:35
 msgid "In the Future:"
-msgstr ""
+msgstr "Ubuduće:"
 
 #: application/forms/AddShowWhen.php:62
 msgid "End Time:"
-msgstr ""
+msgstr "Vrijeme završetka:"
 
 #: application/forms/AddShowWhen.php:87
 msgid "Duration:"
@@ -3033,7 +3051,7 @@ msgstr "Trajanje:"
 
 #: application/forms/AddShowWhen.php:96
 msgid "Timezone:"
-msgstr "Vremenska Zona:"
+msgstr "Vremenska zona:"
 
 #: application/forms/AddShowWhen.php:105
 msgid "Repeats?"
@@ -3041,11 +3059,11 @@ msgstr "Ponavljanje?"
 
 #: application/forms/AddShowWhen.php:146
 msgid "Cannot create show in the past"
-msgstr "Ne može se stvoriti emisije u prošlosti"
+msgstr "Ne može se stvoriti emisija u prošlosti"
 
 #: application/forms/AddShowWhen.php:154
 msgid "Cannot modify start date/time of the show that is already started"
-msgstr "Ne možeš mijenjati datum/vrijeme početak emisije, ako je već počela"
+msgstr "Ne može se promijeniti datum/vrijeme početak emisije, ako je već počela"
 
 #: application/forms/AddShowWhen.php:163 application/models/Show.php:326
 msgid "End date/time cannot be in the past"
@@ -3067,15 +3085,15 @@ msgstr "Ne može trajati duže od 24 h"
 #: application/forms/AddShowWhen.php:346
 #: application/services/CalendarService.php:309
 msgid "Cannot schedule overlapping shows"
-msgstr "Ne možeš zakazati preklapajuće emisije"
+msgstr "Nije moguće zakazati preklapajuće emisije"
 
 #: application/forms/AddShowWho.php:9
 msgid "Search Users:"
-msgstr "Traži Korisnike:"
+msgstr "Traži korisnike:"
 
 #: application/forms/AddShowWho.php:23
 msgid "DJs:"
-msgstr "Disk-Džokeji:"
+msgstr "Disk-džokeji:"
 
 #: application/forms/AddTracktype.php:20
 msgid "Type Name:"
@@ -3107,7 +3125,7 @@ msgstr "Lozinka:"
 
 #: application/forms/AddUser.php:44 application/forms/EditUser.php:55
 msgid "Verify Password:"
-msgstr "Potvrdi Lozinku:"
+msgstr "Potvrdi lozinku:"
 
 #: application/forms/AddUser.php:53 application/forms/EditUser.php:65
 msgid "Firstname:"
@@ -3135,7 +3153,7 @@ msgstr "Jabber:"
 
 #: application/forms/AddUser.php:93
 msgid "User Type:"
-msgstr "Vrsta Korisnika:"
+msgstr "Vrsta korisnika:"
 
 #: application/forms/AddUser.php:118 application/forms/EditUser.php:142
 msgid "Login name is not unique."
@@ -3143,16 +3161,16 @@ msgstr "Ime prijave nije jedinstveno."
 
 #: application/forms/DangerousPreferences.php:12
 msgid "Delete All Tracks in Library"
-msgstr ""
+msgstr "Izbriši sve snimke u medijateci"
 
 #: application/forms/DateRange.php:15 application/forms/ShowBuilder.php:17
 #: application/forms/ShowListenerStat.php:15
 msgid "Date Start:"
-msgstr "Datum Početka:"
+msgstr "Datum početka:"
 
 #: application/forms/EditAudioMD.php:53 application/forms/Player.php:15
 msgid "Title:"
-msgstr "Naziv:"
+msgstr "Naslov:"
 
 #: application/forms/EditAudioMD.php:63
 msgid "Creator:"
@@ -3168,11 +3186,11 @@ msgstr ""
 
 #: application/forms/EditAudioMD.php:102
 msgid "Select a Type"
-msgstr ""
+msgstr "Odaberi jednu vrstu"
 
 #: application/forms/EditAudioMD.php:109
 msgid "Track Type:"
-msgstr ""
+msgstr "Vrsta snimke:"
 
 #: application/forms/EditAudioMD.php:144
 msgid "Year:"
@@ -3217,33 +3235,33 @@ msgstr "Jezik:"
 
 #: application/forms/EditAudioMD.php:290
 msgid "Publish..."
-msgstr ""
+msgstr "Objavi …"
 
 #: application/forms/EditHistoryItem.php:32
 #: application/services/HistoryService.php:1084
 msgid "Start Time"
-msgstr "Vrijeme Početka"
+msgstr "Vrijeme početka"
 
 #: application/forms/EditHistoryItem.php:44
 #: application/services/HistoryService.php:1085
 msgid "End Time"
-msgstr "Vrijeme Završetka"
+msgstr "Vrijeme završetka"
 
 #: application/forms/EditUser.php:127
 msgid "Interface Timezone:"
-msgstr "Vremenska Zona Sučelja:"
+msgstr "Vremenska zona sučelja:"
 
 #: application/forms/GeneralPreferences.php:26
 msgid "Station Name"
-msgstr "Naziv Postaje"
+msgstr "Ime stanice"
 
 #: application/forms/GeneralPreferences.php:34
 msgid "Station Description"
-msgstr ""
+msgstr "Opis stanice"
 
 #: application/forms/GeneralPreferences.php:43
 msgid "Station Logo:"
-msgstr "Logo:"
+msgstr "Logotip stanice:"
 
 #: application/forms/GeneralPreferences.php:44
 msgid "Note: Anything larger than 600x600 will be resized."
@@ -3251,26 +3269,26 @@ msgstr "Napomena: Sve veća od 600x600 će se mijenjati."
 
 #: application/forms/GeneralPreferences.php:63
 msgid "Default Crossfade Duration (s):"
-msgstr "Zadano Trajanje Križno Stišavanje (s):"
+msgstr "Standardno trajanje međuprijelaza (s):"
 
 #: application/forms/GeneralPreferences.php:69
 #: application/forms/GeneralPreferences.php:83
 #: application/forms/GeneralPreferences.php:97
 #: application/forms/LiveStreamingPreferences.php:33
 msgid "Please enter a time in seconds (eg. 0.5)"
-msgstr ""
+msgstr "Upiši vrijeme u sekundama (npr. 0,5)"
 
 #: application/forms/GeneralPreferences.php:77
 msgid "Default Fade In (s):"
-msgstr "Zadano Odtamnjenje (s):"
+msgstr "Standardno postupno pojačavanje glasnoće (s):"
 
 #: application/forms/GeneralPreferences.php:91
 msgid "Default Fade Out (s):"
-msgstr "Zadano Zatamnjenje (s):"
+msgstr "Standardno postupno smanjivanje glasnoće (s):"
 
 #: application/forms/GeneralPreferences.php:103
 msgid "Track Type Upload Default"
-msgstr ""
+msgstr "Standard za prijenos vrsta snimaka"
 
 #: application/forms/GeneralPreferences.php:110
 msgid "Intro Autoloading Playlist"
@@ -3298,7 +3316,7 @@ msgstr ""
 
 #: application/forms/GeneralPreferences.php:154
 msgid "Public LibreTime API"
-msgstr ""
+msgstr "Javni LibreTime API"
 
 #: application/forms/GeneralPreferences.php:155
 msgid "Required for embeddable schedule widget."
@@ -3320,16 +3338,16 @@ msgstr ""
 
 #: application/forms/GeneralPreferences.php:179
 msgid "Default Language"
-msgstr ""
+msgstr "Standardni jezik"
 
 #: application/forms/GeneralPreferences.php:186
 #: application/forms/SetupLanguageTimezone.php:21
 msgid "Station Timezone"
-msgstr "Stanična Vremenska Zona"
+msgstr "Vremenska zona stanice"
 
 #: application/forms/GeneralPreferences.php:193
 msgid "Week Starts On"
-msgstr "Prvi Dan u Tjednu"
+msgstr "Prvi dan tjedna"
 
 #: application/forms/GeneralPreferences.php:209
 msgid "Display login button on your Radio Page?"
@@ -3337,23 +3355,23 @@ msgstr ""
 
 #: application/forms/GeneralPreferences.php:214
 msgid "Feature Previews"
-msgstr ""
+msgstr "Pregledi funkcija"
 
 #: application/forms/GeneralPreferences.php:220
 msgid "Enable this to opt-in to test new features."
-msgstr ""
+msgstr "Aktiviraj ovo za testiranje novih funkcija."
 
 #: application/forms/LiveStreamingPreferences.php:18
 msgid "Auto Switch Off:"
-msgstr ""
+msgstr "Automatsko isključivanje:"
 
 #: application/forms/LiveStreamingPreferences.php:24
 msgid "Auto Switch On:"
-msgstr ""
+msgstr "Automatsko uključivanje:"
 
 #: application/forms/LiveStreamingPreferences.php:30
 msgid "Switch Transition Fade (s):"
-msgstr ""
+msgstr "Promijeni postupni prijelaz (s):"
 
 #: application/forms/LiveStreamingPreferences.php:65
 msgid "Master Source Host:"
@@ -3375,15 +3393,15 @@ msgstr ""
 
 #: application/forms/LiveStreamingPreferences.php:95
 msgid "Show Source Host:"
-msgstr ""
+msgstr "Prikaži host izvora:"
 
 #: application/forms/LiveStreamingPreferences.php:104
 msgid "Show Source Port:"
-msgstr ""
+msgstr "Prikaži priključak izvora:"
 
 #: application/forms/LiveStreamingPreferences.php:112
 msgid "Show Source Mount:"
-msgstr ""
+msgstr "Prikaži pogon izvora:"
 
 #: application/forms/Login.php:77
 msgid "Login"
@@ -3404,7 +3422,7 @@ msgstr "Lozinke koje ste unijeli ne podudaraju se."
 
 #: application/forms/PasswordRestore.php:12
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #: application/forms/PasswordRestore.php:23
 #: application/forms/StreamSettingSubForm.php:164
@@ -3417,7 +3435,7 @@ msgstr "Resetuj lozinku"
 
 #: application/forms/PasswordRestore.php:44
 msgid "Back"
-msgstr ""
+msgstr "Natrag"
 
 #: application/forms/Player.php:14
 msgid "Now Playing"
@@ -3425,7 +3443,7 @@ msgstr "Trenutno Izvođena"
 
 #: application/forms/Player.php:25
 msgid "Select Stream:"
-msgstr ""
+msgstr "Odaberi emisiju:"
 
 #: application/forms/Player.php:28
 msgid "Auto detect the most appropriate stream to use."
@@ -3433,7 +3451,7 @@ msgstr ""
 
 #: application/forms/Player.php:29
 msgid "Select a stream:"
-msgstr ""
+msgstr "Odaberi jednu emisiju:"
 
 #: application/forms/Player.php:41
 msgid " - Mobile friendly"
@@ -3445,7 +3463,7 @@ msgstr ""
 
 #: application/forms/Player.php:71
 msgid "Embeddable code:"
-msgstr ""
+msgstr "Ugradiv kod:"
 
 #: application/forms/Player.php:72
 msgid "Copy this code and paste it into your website's HTML to embed the player in your site."
@@ -3453,31 +3471,31 @@ msgstr ""
 
 #: application/forms/Player.php:77
 msgid "Preview:"
-msgstr ""
+msgstr "Pregled:"
 
 #: application/forms/PodcastPreferences.php:9
 msgid "Feed Privacy"
-msgstr ""
+msgstr "Privatnost feeda"
 
 #: application/forms/PodcastPreferences.php:11
 msgid "Public"
-msgstr ""
+msgstr "Javni"
 
 #: application/forms/PodcastPreferences.php:12
 msgid "Private"
-msgstr ""
+msgstr "Privatni"
 
 #: application/forms/SetupLanguageTimezone.php:16
 msgid "Station Language"
-msgstr ""
+msgstr "Jezik stanice"
 
 #: application/forms/ShowBuilder.php:71 application/forms/ShowBuilder.php:88
 msgid "Filter by Show"
-msgstr ""
+msgstr "Filtriraj po emisijama"
 
 #: application/forms/ShowBuilder.php:79
 msgid "All My Shows:"
-msgstr "Sve Moje Emisije:"
+msgstr "Sve moje emisije:"
 
 #: application/forms/ShowBuilder.php:90
 msgid "My Shows"
@@ -3491,63 +3509,63 @@ msgstr "Odaberi kriterije"
 #: application/forms/SmartBlockCriteria.php:58
 #: application/models/Block.php:1426 application/models/Block.php:1522
 msgid "Bit Rate (Kbps)"
-msgstr "Brzina u Bitovima (Kbps)"
+msgstr "Brzina prijenosa (Kbps)"
 
 #: application/forms/SmartBlockCriteria.php:75
 #: application/models/Block.php:1444 application/models/Block.php:1540
 #: application/services/HistoryService.php:1065
 msgid "Track Type"
-msgstr ""
+msgstr "Vrsta snimke"
 
 #: application/forms/SmartBlockCriteria.php:80
 #: application/models/Block.php:1449 application/models/Block.php:1545
 msgid "Sample Rate (kHz)"
-msgstr "Uzorak Stopa (kHz)"
+msgstr "Frekvencija (kHz)"
 
 #: application/forms/SmartBlockCriteria.php:134
 #: application/models/Block.php:1465 application/models/Block.php:1561
 msgid "before"
-msgstr ""
+msgstr "prije"
 
 #: application/forms/SmartBlockCriteria.php:135
 #: application/models/Block.php:1466 application/models/Block.php:1562
 msgid "after"
-msgstr ""
+msgstr "nakon"
 
 #: application/forms/SmartBlockCriteria.php:136
 #: application/models/Block.php:1467 application/models/Block.php:1563
 msgid "between"
-msgstr ""
+msgstr "između"
 
 #: application/forms/SmartBlockCriteria.php:152
 #: application/forms/SmartBlockCriteria.php:463
 #: application/forms/SmartBlockCriteria.php:503
 msgid "Select unit of time"
-msgstr ""
+msgstr "Odaberi vremensku jedinicu"
 
 #: application/forms/SmartBlockCriteria.php:153
 msgid "minute(s)"
-msgstr ""
+msgstr "minute"
 
 #: application/forms/SmartBlockCriteria.php:154
 msgid "hour(s)"
-msgstr ""
+msgstr "sati"
 
 #: application/forms/SmartBlockCriteria.php:155
 msgid "day(s)"
-msgstr ""
+msgstr "dani"
 
 #: application/forms/SmartBlockCriteria.php:156
 msgid "week(s)"
-msgstr ""
+msgstr "tjedni"
 
 #: application/forms/SmartBlockCriteria.php:157
 msgid "month(s)"
-msgstr ""
+msgstr "mjeseci"
 
 #: application/forms/SmartBlockCriteria.php:158
 msgid "year(s)"
-msgstr ""
+msgstr "godine"
 
 #: application/forms/SmartBlockCriteria.php:169
 msgid "hours"
@@ -3555,7 +3573,7 @@ msgstr "sati"
 
 #: application/forms/SmartBlockCriteria.php:170
 msgid "minutes"
-msgstr "minuti"
+msgstr "minute"
 
 #: application/forms/SmartBlockCriteria.php:171
 #: application/models/Block.php:336
@@ -3564,35 +3582,35 @@ msgstr "elementi"
 
 #: application/forms/SmartBlockCriteria.php:172
 msgid "time remaining in show"
-msgstr ""
+msgstr "preostalo vrijeme u emisiji"
 
 #: application/forms/SmartBlockCriteria.php:183
 msgid "Randomly"
-msgstr ""
+msgstr "Slučajno"
 
 #: application/forms/SmartBlockCriteria.php:184
 msgid "Newest"
-msgstr ""
+msgstr "Najnovije"
 
 #: application/forms/SmartBlockCriteria.php:185
 msgid "Oldest"
-msgstr ""
+msgstr "Najstarije"
 
 #: application/forms/SmartBlockCriteria.php:186
 msgid "Most recently played"
-msgstr ""
+msgstr "Zadnje reproducirane"
 
 #: application/forms/SmartBlockCriteria.php:187
 msgid "Least recently played"
-msgstr ""
+msgstr "Najstarije reproducirane"
 
 #: application/forms/SmartBlockCriteria.php:211
 msgid "Select Track Type"
-msgstr ""
+msgstr "Odaberi vrstu snimke"
 
 #: application/forms/SmartBlockCriteria.php:268
 msgid "Type:"
-msgstr ""
+msgstr "Vrsta:"
 
 #: application/forms/SmartBlockCriteria.php:271
 msgid "Dynamic"
@@ -3600,39 +3618,39 @@ msgstr "Dinamički"
 
 #: application/forms/SmartBlockCriteria.php:272
 msgid "Static"
-msgstr "Statički"
+msgstr "Statični"
 
 #: application/forms/SmartBlockCriteria.php:431
 msgid "Select track type"
-msgstr ""
+msgstr "Odaberi vrstu snimke"
 
 #: application/forms/SmartBlockCriteria.php:513
 msgid "Allow Repeated Tracks:"
-msgstr ""
+msgstr "Dozvoli ponavljanje snimaka:"
 
 #: application/forms/SmartBlockCriteria.php:521
 msgid "Allow last track to exceed time limit:"
-msgstr ""
+msgstr "Dozvoli da zadnji zapis prekorači vremensko ograničenje:"
 
 #: application/forms/SmartBlockCriteria.php:530
 msgid "Sort Tracks:"
-msgstr ""
+msgstr "Redoslijed snimaka:"
 
 #: application/forms/SmartBlockCriteria.php:548
 msgid "Limit to:"
-msgstr ""
+msgstr "Ograniči na:"
 
 #: application/forms/SmartBlockCriteria.php:560
 msgid "Generate playlist content and save criteria"
-msgstr "Generiranje popisa pjesama i spremanje sadržaja kriterije"
+msgstr "Generiraj sadržaj playliste i spremi kriterije"
 
 #: application/forms/SmartBlockCriteria.php:572
 msgid "Shuffle playlist content"
-msgstr "Sadržaj slučajni izbor popis pjesama"
+msgstr "Promiješaj sadržaj playliste"
 
 #: application/forms/SmartBlockCriteria.php:574
 msgid "Shuffle"
-msgstr "Miješanje"
+msgstr "Promiješaj"
 
 #: application/forms/SmartBlockCriteria.php:801
 #: application/forms/SmartBlockCriteria.php:813
@@ -3645,7 +3663,7 @@ msgstr "Ograničenje ne može biti više od 24 sati"
 
 #: application/forms/SmartBlockCriteria.php:816
 msgid "The value should be an integer"
-msgstr "Vrijednost mora biti cijeli broj"
+msgstr "Vrijednost bi trebala biti cijeli broj"
 
 #: application/forms/SmartBlockCriteria.php:819
 msgid "500 is the max item limit value you can set"
@@ -3671,7 +3689,9 @@ msgstr ""
 #: application/forms/SmartBlockCriteria.php:855
 #: application/forms/SmartBlockCriteria.php:880
 msgid "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
-msgstr "Vrijednost mora biti u obliku vremenske oznake (npr. 0000-00-00 ili 0000-00-00 00:00:00)"
+msgstr ""
+"Vrijednost bi trebala biti u formatu vremenske oznake (npr. 0000-00-00 ili "
+"0000-00-00 00:00:00)"
 
 #: application/forms/SmartBlockCriteria.php:870
 msgid "Only non-negative integer numbers are allowed for a relative date time"
@@ -3688,7 +3708,7 @@ msgstr "Vrijednost bi trebala biti manja od 2147483648"
 #: application/forms/SmartBlockCriteria.php:905
 #, php-format
 msgid "The value should be less than %s characters"
-msgstr "Vrijednost mora biti manja od %s znakova"
+msgstr "Vrijednost bi trebala biti manja od %s znakova"
 
 #: application/forms/SmartBlockCriteria.php:912
 msgid "Value cannot be empty"
@@ -3704,63 +3724,64 @@ msgstr ""
 
 #: application/forms/StreamSetting.php:34
 msgid "ALSA"
-msgstr ""
+msgstr "ALSA"
 
 #: application/forms/StreamSetting.php:35
 msgid "AO"
-msgstr ""
+msgstr "AO"
 
 #: application/forms/StreamSetting.php:36
 msgid "OSS"
-msgstr ""
+msgstr "OSS"
 
 #: application/forms/StreamSetting.php:37
 msgid "Portaudio"
-msgstr ""
+msgstr "Portaudio"
 
 #: application/forms/StreamSetting.php:38
 msgid "Pulseaudio"
-msgstr ""
+msgstr "Pulseaudio"
 
 #: application/forms/StreamSetting.php:39
 msgid "Jack"
-msgstr ""
+msgstr "Jack"
 
 #: application/forms/StreamSetting.php:46
 msgid "Icecast Vorbis Metadata"
-msgstr "Icecast Vorbis Metapodaci"
+msgstr "Icecast Vorbis metapodaci"
 
 #: application/forms/StreamSetting.php:56
 msgid "Stream Label:"
-msgstr "Vidljivi Podaci:"
+msgstr "Oznaka prijenosa:"
 
 #: application/forms/StreamSetting.php:58
 msgid "Artist - Title"
-msgstr "Autor - Naziv"
+msgstr "Izvođač – Naslov"
 
 #: application/forms/StreamSetting.php:59
 msgid "Show - Artist - Title"
-msgstr "Program - Autor - Naziv"
+msgstr "Emisija – Izvođač – Naslov"
 
 #: application/forms/StreamSetting.php:60
 msgid "Station name - Show name"
-msgstr "Naziv postaje - Naziv programa"
+msgstr "Ime stanice – Ime emisije"
 
 #: application/forms/StreamSetting.php:67
+#, fuzzy
 msgid "Off Air Metadata"
-msgstr "Off Air Metapodaci"
+msgstr "Off Air metapodaci"
 
 #: application/forms/StreamSetting.php:73
 msgid "Enable Replay Gain"
-msgstr "Omogući Replay Gain"
+msgstr "Aktiviraj pojačanje glasnoće"
 
 #: application/forms/StreamSetting.php:79
 msgid "Replay Gain Modifier"
-msgstr "Replay Gain Modifikator"
+msgstr "Modifikator pojačanje glasnoće"
 
 #: application/forms/StreamSetting.php:87
 msgid "Streaming Server:"
-msgstr ""
+msgstr "Poslužitelj za internetski prijenos:"
 
 #: application/forms/StreamSetting.php:88
 msgid "Custom / 3rd Party Streaming"
@@ -3772,23 +3793,23 @@ msgstr ""
 
 #: application/forms/StreamSettingSubForm.php:52
 msgid "Enabled:"
-msgstr "Omogućeno:"
+msgstr "Aktivirano:"
 
 #: application/forms/StreamSettingSubForm.php:59
 msgid "Mobile:"
-msgstr ""
+msgstr "Mobitel:"
 
 #: application/forms/StreamSettingSubForm.php:66
 msgid "Stream Type:"
-msgstr "Prijenos Tipa:"
+msgstr "Vrsta prijenosa:"
 
 #: application/forms/StreamSettingSubForm.php:74
 msgid "Bit Rate:"
-msgstr "Brzina u Bitovima:"
+msgstr "Brzina prijenosa:"
 
 #: application/forms/StreamSettingSubForm.php:82
 msgid "Service Type:"
-msgstr "Tip Usluge:"
+msgstr "Vrsta usluge:"
 
 #: application/forms/StreamSettingSubForm.php:90
 msgid "Channels:"
@@ -3796,11 +3817,11 @@ msgstr "Kanali:"
 
 #: application/forms/StreamSettingSubForm.php:91
 msgid "1 - Mono"
-msgstr "1 - Mono"
+msgstr "1 – Mono"
 
 #: application/forms/StreamSettingSubForm.php:91
 msgid "2 - Stereo"
-msgstr "2 - Stereo"
+msgstr "2 – Stereo"
 
 #: application/forms/StreamSettingSubForm.php:98
 msgid "Server"
@@ -3808,7 +3829,7 @@ msgstr "Poslužitelj"
 
 #: application/forms/StreamSettingSubForm.php:108
 msgid "Port"
-msgstr "Port"
+msgstr "Priključak"
 
 #: application/forms/StreamSettingSubForm.php:133
 msgid "URL"
@@ -3816,7 +3837,7 @@ msgstr "URL"
 
 #: application/forms/StreamSettingSubForm.php:142
 msgid "Name"
-msgstr "Naziv"
+msgstr "Ime"
 
 #: application/forms/StreamSettingSubForm.php:154
 msgid "Mount Point"
@@ -3824,11 +3845,11 @@ msgstr "Točka Montiranja"
 
 #: application/forms/StreamSettingSubForm.php:174
 msgid "Admin User"
-msgstr "Admin Korisnik"
+msgstr "Administratorski korisnik"
 
 #: application/forms/StreamSettingSubForm.php:183
 msgid "Admin Password"
-msgstr "Admin Lozinka"
+msgstr "Administratorska lozinka"
 
 #: application/forms/StreamSettingSubForm.php:211
 msgid "Server cannot be empty."
@@ -3836,11 +3857,11 @@ msgstr "Poslužitelj ne može biti prazan."
 
 #: application/forms/StreamSettingSubForm.php:216
 msgid "Port cannot be empty."
-msgstr "Port ne može biti prazan."
+msgstr "Priključak ne može biti prazan."
 
 #: application/forms/StreamSettingSubForm.php:222
 msgid "Mount cannot be empty with Icecast server."
-msgstr "Montiranje ne može biti prazna s Icecast poslužiteljem."
+msgstr "Montiranje ne može biti prazno s Icecast poslužiteljem."
 
 #: application/forms/TuneInPreferences.php:20
 msgid "Push metadata to your station on TuneIn?"
@@ -3848,7 +3869,7 @@ msgstr ""
 
 #: application/forms/TuneInPreferences.php:25
 msgid "Station ID:"
-msgstr ""
+msgstr "ID stanice:"
 
 #: application/forms/TuneInPreferences.php:31
 msgid "Partner Key:"
@@ -3865,20 +3886,20 @@ msgstr ""
 
 #: application/forms/WatchedDirPreferences.php:13
 msgid "Import Folder:"
-msgstr "Uvozna Mapa:"
+msgstr "Mapa uvoza:"
 
 #: application/forms/WatchedDirPreferences.php:24
 msgid "Watched Folders:"
-msgstr "Mape Pod Nadzorom:"
+msgstr "Mape praćenja:"
 
 #: application/forms/WatchedDirPreferences.php:39
 msgid "Not a valid Directory"
-msgstr "Ne valjana Direktorija"
+msgstr "Nije ispravan direktorij"
 
 #: application/forms/customvalidators/ConditionalNotEmpty.php:32
 #: application/forms/helpers/ValidationTypes.php:9
 msgid "Value is required and can't be empty"
-msgstr "Vrijednost je potrebna i ne može biti prazan"
+msgstr "Vrijednost je potrebna i ne može biti prazna"
 
 #: application/forms/helpers/ValidationTypes.php:20
 msgid "'%value%' is no valid email address in the basic format local-part@hostname"
@@ -3911,6 +3932,9 @@ msgid ""
 "\n"
 "Please click this link to reset your password: "
 msgstr ""
+"Bok %s,\n"
+"\n"
+"Pritisni ovu poveznicu za resetiranje lozinke: "
 
 #: application/models/Auth.php:35
 #, php-format
@@ -3928,11 +3952,15 @@ msgid ""
 "Thank you,\n"
 "The %s Team"
 msgstr ""
+"\n"
+"\n"
+"Hvala,\n"
+"Tim %s"
 
 #: application/models/Auth.php:38
 #, php-format
 msgid "%s Password Reset"
-msgstr ""
+msgstr "Resetiranje lozinke za %s"
 
 #: application/models/Block.php:832 application/models/Playlist.php:800
 msgid "Cue in and cue out are null."
@@ -3954,11 +3982,11 @@ msgstr "Ne mogu se postaviti da će 'cue out' biti manje od 'cue in'."
 
 #: application/models/Block.php:1440 application/models/Block.php:1536
 msgid "Upload Time"
-msgstr ""
+msgstr "Vrijeme prijenosa"
 
 #: application/models/Library.php:36 application/models/Library.php:57
 msgid "None"
-msgstr ""
+msgstr "Ništa"
 
 #: application/models/Preference.php:521
 #, php-format
@@ -3967,28 +3995,28 @@ msgstr ""
 
 #: application/models/Preference.php:651
 msgid "Select Country"
-msgstr "Odaberi Državu"
+msgstr "Odaberi zemlju"
 
 #: application/models/Schedule.php:211
 msgid "livestream"
-msgstr ""
+msgstr "prijenos uživo"
 
 #: application/models/Scheduler.php:79
 msgid "Cannot move items out of linked shows"
-msgstr "Ne možeš premjestiti stavke iz povezanih emisija"
+msgstr "Nije moguće premjestiti stavke iz povezanih emisija"
 
 #: application/models/Scheduler.php:125
 msgid "The schedule you're viewing is out of date! (sched mismatch)"
-msgstr "Zastario se pregledan raspored! (nevažeći raspored)"
+msgstr "Raspored koji gledaš nije aktualan! (neusklađenost rasporeda)"
 
 #: application/models/Scheduler.php:130
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
-msgstr "Zastario se pregledan raspored! (primjer neusklađenost)"
+msgstr "Raspored koji gledaš nije aktualan! (neusklađenost instance)"
 
 #: application/models/Scheduler.php:138 application/models/Scheduler.php:489
 #: application/models/Scheduler.php:527 application/models/Scheduler.php:566
 msgid "The schedule you're viewing is out of date!"
-msgstr "Zastario se pregledan raspored!"
+msgstr "Raspored koji gledaš nije aktualan!"
 
 #: application/models/Scheduler.php:147
 #, php-format
@@ -4007,7 +4035,7 @@ msgstr "Emisija %s je gotova i ne mogu biti zakazana."
 #: application/models/Scheduler.php:165
 #, php-format
 msgid "The show %s has been previously updated!"
-msgstr "Ranije je %s emisija već bila ažurirana!"
+msgstr "Emisija %s je već prije bila ažurirana!"
 
 #: application/models/Scheduler.php:185
 msgid "Content in linked shows cannot be changed while on air!"
@@ -4015,7 +4043,7 @@ msgstr ""
 
 #: application/models/Scheduler.php:200
 msgid "Cannot schedule a playlist that contains missing files."
-msgstr ""
+msgstr "Nije moguće zakazati playlistu koja sadrži nedostajuće datoteke."
 
 #: application/models/Scheduler.php:226 application/models/Scheduler.php:318
 msgid "A selected File does not exist!"
@@ -4023,21 +4051,21 @@ msgstr "Odabrana Datoteka ne postoji!"
 
 #: application/models/Show.php:229
 msgid "Shows can have a max length of 24 hours."
-msgstr "Emisija može imati najveću duljinu od 24 sata."
+msgstr "Emisija može trajati maksimalno 24 sata."
 
 #: application/models/Show.php:341
 msgid ""
 "Cannot schedule overlapping shows.\n"
 "Note: Resizing a repeating show affects all of its repeats."
 msgstr ""
-"Ne može se zakazati preklapajuće emisije.\n"
-"Napomena: Promjena veličine ponovljene emisije utječe na sva njena "
+"Nije moguće zakazati preklapajuće emisije.\n"
+"Napomena: Mijenjanje veličine ponovljene emisije utječe na sva njena "
 "ponavljanja."
 
 #: application/models/ShowBuilder.php:209
 #, php-format
 msgid "Rebroadcast of %s from %s"
-msgstr "Reemitiraj emisiju %s od %s"
+msgstr "Ponovo emitiraj emisiju %s od %s"
 
 #: application/models/Webstream.php:163
 msgid "Length needs to be greater than 0 minutes"
@@ -4045,15 +4073,15 @@ msgstr "Duljina mora biti veća od 0 minuta"
 
 #: application/models/Webstream.php:167
 msgid "Length should be of form \"00h 00m\""
-msgstr "Duljina mora biti u obliku \"00h 00m\""
+msgstr "Duljina mora biti u obliku „00h 00m”"
 
 #: application/models/Webstream.php:180
 msgid "URL should be of form \"http://domain\""
-msgstr "URL mora biti u obliku \"http://domain\""
+msgstr "URL mora biti u obliku „http://domain”"
 
 #: application/models/Webstream.php:183
 msgid "URL should be 512 characters or less"
-msgstr "URL mora biti 512 znakova ili manje"
+msgstr "URL mora sadržati 512 znakova ili manje"
 
 #: application/models/Webstream.php:188
 msgid "No MIME type found for webstream."
@@ -4061,67 +4089,68 @@ msgstr "Ne postoji MIME tip za prijenos."
 
 #: application/models/Webstream.php:204
 msgid "Webstream name cannot be empty"
-msgstr "Ime prijenosa ne može biti prazno"
+msgstr "Ime internetskog prijenosa ne može biti prazno"
 
 #: application/models/Webstream.php:274
 msgid "Could not parse XSPF playlist"
-msgstr "Nismo mogli analizirati XSPF popis pjesama"
+msgstr "Nije bilo moguće analizirati XSPF playlistu"
 
 #: application/models/Webstream.php:295
 msgid "Could not parse PLS playlist"
-msgstr "Nismo mogli analizirati PLS popis pjesama"
+msgstr "Nije bilo moguće analizirati PLS playlistu"
 
 #: application/models/Webstream.php:314
 msgid "Could not parse M3U playlist"
-msgstr "Nismo mogli analizirati M3U popis pjesama"
+msgstr "Nije bilo moguće analizirati M3U playlistu"
 
 #: application/models/Webstream.php:327
 msgid "Invalid webstream - This appears to be a file download."
-msgstr "Nevažeći prijenos - Čini se da je ovo preuzimanje datoteka."
+msgstr ""
+"Nevažeći internetski prijenos – Čini se da se radi o preuzimanju datoteke."
 
 #: application/models/Webstream.php:331
 #, php-format
 msgid "Unrecognized stream type: %s"
-msgstr "Nepoznati prijenosni tip: %s"
+msgstr "Nepepoznata vrsta prijenosa: %s"
 
 #: application/services/CalendarService.php:48
 msgid "Record file doesn't exist"
-msgstr "Snimljena datoteka ne postoji"
+msgstr "Datoteka snimke ne postoji"
 
 #: application/services/CalendarService.php:52
 msgid "View Recorded File Metadata"
-msgstr "Metapodaci Snimljenog Fajla"
+msgstr "Prikaži metapodatke snimljene datoteke"
 
 #: application/services/CalendarService.php:78
 msgid "Schedule Tracks"
-msgstr ""
+msgstr "Zakaži snimke"
 
 #: application/services/CalendarService.php:101
 msgid "Clear Show"
-msgstr ""
+msgstr "Izbriši emisiju"
 
 #: application/services/CalendarService.php:115
 #: application/services/CalendarService.php:120
 msgid "Cancel Show"
-msgstr ""
+msgstr "Prekini emisiju"
 
 #: application/services/CalendarService.php:141
 #: application/services/CalendarService.php:160
 msgid "Edit Instance"
-msgstr ""
+msgstr "Uredi instancu"
 
 #: application/services/CalendarService.php:153
 #: application/services/CalendarService.php:167
 msgid "Edit Show"
-msgstr "Uredi Programa"
+msgstr "Uredi emisiju"
 
 #: application/services/CalendarService.php:189
 msgid "Delete Instance"
-msgstr ""
+msgstr "Izbriši instancu"
 
 #: application/services/CalendarService.php:195
 msgid "Delete Instance and All Following"
-msgstr ""
+msgstr "Izbriši instancu i sva praćenja"
 
 #: application/services/CalendarService.php:250
 msgid "Permission denied"
@@ -4141,23 +4170,25 @@ msgstr "Ne možeš premjestiti emisiju u prošlosti"
 
 #: application/services/CalendarService.php:322
 msgid "Can't move a recorded show less than 1 hour before its rebroadcasts."
-msgstr "Ne možeš premjestiti snimljene emisije ranije od 1 sat vremena prije njenih reemitiranja."
+msgstr ""
+"Ne možeš premjestiti snimljene emisije manje od sat vremena prije ponovnog "
+"emitiranja emisija."
 
 #: application/services/CalendarService.php:333
 msgid "Show was deleted because recorded show does not exist!"
-msgstr "Emisija je izbrisana jer je snimljena emisija ne postoji!"
+msgstr "Emisija je izbrisana jer snimljena emisija ne postoji!"
 
 #: application/services/CalendarService.php:340
 msgid "Must wait 1 hour to rebroadcast."
-msgstr "Moraš pričekati 1 sat za re-emitiranje."
+msgstr "Moraš pričekati jedan sat za ponovno emitiranje."
 
 #: application/services/HistoryService.php:1062
 msgid "Track"
-msgstr "Pjesma"
+msgstr "Snimka"
 
 #: application/services/HistoryService.php:1103
 msgid "Played"
-msgstr "Pušteno"
+msgstr "Reproducirano"
 
 #: application/services/PodcastService.php:163
 msgid "Auto-generated smartblock for podcast"
@@ -4165,7 +4196,7 @@ msgstr ""
 
 #: application/views/scripts/partialviews/dashboard-sub-nav.php:18
 msgid "Webstreams"
-msgstr ""
+msgstr "Internetski prijenosi"
 
 #~ msgid " to "
 #~ msgstr "do"
