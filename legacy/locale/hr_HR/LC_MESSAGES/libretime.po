@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2022-07-04 18:49+0200\n"
-"PO-Revision-Date: 2022-08-12 17:34+0000\n"
+"PO-Revision-Date: 2022-08-13 13:53+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/libretime/"
 "legacy/hr/>\n"
@@ -1940,32 +1940,32 @@ msgstr "Sub"
 
 #: application/controllers/LocaleController.php:267
 msgid "Shows longer than their scheduled time will be cut off by a following show."
-msgstr "Emisija dulje od predviđenog vremena će biti odsječen."
+msgstr "Emisije koje traju dulje od predviđenog vremena će biti odsječene."
 
 #: application/controllers/LocaleController.php:268
 msgid "Cancel Current Show?"
-msgstr "Otkaži Trenutnog Programa?"
+msgstr "Prekinuti trenutačnu emisiju?"
 
 #: application/controllers/LocaleController.php:269
 #: application/controllers/LocaleController.php:318
 msgid "Stop recording current show?"
-msgstr "Zaustavljanje snimanje emisije?"
+msgstr "Zaustaviti snimanje emisije?"
 
 #: application/controllers/LocaleController.php:270
 msgid "Ok"
-msgstr "Ok"
+msgstr "U redu"
 
 #: application/controllers/LocaleController.php:271
 msgid "Contents of Show"
-msgstr "Sadržaj Emisije"
+msgstr "Sadržaj emisije"
 
 #: application/controllers/LocaleController.php:274
 msgid "Remove all content?"
-msgstr "Ukloniš sve sadržaje?"
+msgstr "Ukloniti sav sadržaj?"
 
 #: application/controllers/LocaleController.php:276
 msgid "Delete selected item(s)?"
-msgstr "Obrišeš li odabranu(e) stavku(e)?"
+msgstr "Obrisati odabranu(e) stavku(e)?"
 
 #: application/controllers/LocaleController.php:277
 msgid "Start"
@@ -1981,19 +1981,19 @@ msgstr "Trajanje"
 
 #: application/controllers/LocaleController.php:280
 msgid "Filtering out "
-msgstr ""
+msgstr "Izdvjanje "
 
 #: application/controllers/LocaleController.php:281
 msgid " of "
-msgstr ""
+msgstr " od "
 
 #: application/controllers/LocaleController.php:282
 msgid " records"
-msgstr ""
+msgstr " snimaka"
 
 #: application/controllers/LocaleController.php:283
 msgid "There are no shows scheduled during the specified time period."
-msgstr ""
+msgstr "U navedenom vremenskom razdoblju nema zakazanih emisija."
 
 #: application/controllers/LocaleController.php:289
 #: application/forms/SmartBlockCriteria.php:63
@@ -2009,15 +2009,15 @@ msgstr "Cue Out"
 
 #: application/controllers/LocaleController.php:291
 msgid "Fade In"
-msgstr "Odtamnjenje"
+msgstr "Postupno pojačavanje glasnoće"
 
 #: application/controllers/LocaleController.php:292
 msgid "Fade Out"
-msgstr "Zatamnjenje"
+msgstr "Postupno smanjivanje glasnoće"
 
 #: application/controllers/LocaleController.php:293
 msgid "Show Empty"
-msgstr "Prazna Emisija"
+msgstr "Prazna emisija"
 
 #: application/controllers/LocaleController.php:294
 msgid "Recording From Line In"
@@ -2025,7 +2025,7 @@ msgstr "Snimanje sa Line In"
 
 #: application/controllers/LocaleController.php:295
 msgid "Track preview"
-msgstr "Pregled pjesma"
+msgstr "Pregled pjesama"
 
 #: application/controllers/LocaleController.php:299
 msgid "Cannot schedule outside a show."
