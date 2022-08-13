@@ -70,7 +70,12 @@ jobs:
               python3 \
               python3-pip \
               python3-venv \
+              sudo \
               $(cat packages.list)
+
+          RUN adduser --disabled-password --gecos '' --uid 1001 runner
+          RUN adduser runner sudo
+          RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
           EOF
 
       - name: Build and push
