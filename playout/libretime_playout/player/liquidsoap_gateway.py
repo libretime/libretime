@@ -53,17 +53,6 @@ class TelnetLiquidsoap:
     def __connect(self):
         return telnetlib.Telnet(self.ls_host, self.ls_port)
 
-    def __is_empty(self, queue_id):
-        return True
-        connection = self.__connect()
-        msg = "%s.queue\nexit\n" % queue_id
-        connection.write(msg.encode("utf-8"))
-        output = connection.read_all().decode("utf-8").splitlines()
-        if len(output) == 3:
-            return len(output[0]) == 0
-        else:
-            raise Exception("Unexpected list length returned: %s" % output)
-
     @ls_timeout
     def queue_clear_all(self):
         try:
@@ -99,9 +88,6 @@ class TelnetLiquidsoap:
     def queue_push(self, queue_id, media_item):
         try:
             self.telnet_lock.acquire()
-
-            if not self.__is_empty(queue_id):
-                raise QueueNotEmptyException()
 
             connection = self.__connect()
             annotation = create_liquidsoap_annotation(media_item)
@@ -283,43 +269,3 @@ class TelnetLiquidsoap:
             command += "stop\n"
 
         self.telnet_send([command])
-
-
-class DummyTelnetLiquidsoap:
-    def __init__(self, telnet_lock):
-        self.telnet_lock = telnet_lock
-        self.liquidsoap_mock_queues = {}
-
-        for index in range(4):
-            self.liquidsoap_mock_queues["s" + str(index)] = []
-
-    @ls_timeout
-    def queue_push(self, queue_id, media_item):
-        try:
-            self.telnet_lock.acquire()
-
-            logger.info(f"Pushing {media_item} to queue {queue_id}")
-            from datetime import datetime
-
-            print(f"Time now: {datetime.utcnow():s}")
-
-            annotation = create_liquidsoap_annotation(media_item)
-            self.liquidsoap_mock_queues[queue_id].append(annotation)
-        finally:
-            self.telnet_lock.release()
-
-    @ls_timeout
-    def queue_remove(self, queue_id):
-        try:
-            self.telnet_lock.acquire()
-
-            logger.info("Purging queue %s" % queue_id)
-            from datetime import datetime
-
-            print(f"Time now: {datetime.utcnow():s}")
-        finally:
-            self.telnet_lock.release()
-
-
-class QueueNotEmptyException(Exception):
-    pass

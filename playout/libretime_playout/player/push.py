@@ -1,5 +1,4 @@
 import math
-import telnetlib
 import time
 from datetime import datetime
 from queue import Queue
@@ -8,7 +7,6 @@ from threading import Thread
 from loguru import logger
 
 from ..config import PUSH_INTERVAL, Config
-from ..timeout import ls_timeout
 from .queue import PypoLiqQueue
 
 
@@ -92,36 +90,6 @@ class PypoPush(Thread):
                 future[mkey] = media_item
 
         return present, future
-
-    @ls_timeout
-    def stop_web_stream_all(self):
-        try:
-            self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(
-                self.config.playout.liquidsoap_host,
-                self.config.playout.liquidsoap_port,
-            )
-
-            # msg = 'dynamic_source.read_stop_all xxx\n'
-            msg = "http.stop\n"
-            logger.debug(msg)
-            tn.write(msg)
-
-            msg = "dynamic_source.output_stop\n"
-            logger.debug(msg)
-            tn.write(msg)
-
-            msg = "dynamic_source.id -1\n"
-            logger.debug(msg)
-            tn.write(msg)
-
-            tn.write("exit\n")
-            logger.debug(tn.read_all())
-
-        except Exception as exception:
-            logger.exception(exception)
-        finally:
-            self.telnet_lock.release()
 
     def run(self):
         while True:

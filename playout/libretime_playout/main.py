@@ -39,9 +39,6 @@ class Global:
     def selfcheck(self):
         return self.legacy_client.is_server_compatible()
 
-    def test_api(self):
-        self.legacy_client.test()
-
 
 def keyboardInterruptHandler(signum, frame):
     logger.info("\nKeyboard Interrupt\n")
