@@ -11,6 +11,8 @@ from requests.exceptions import ConnectionError, HTTPError, Timeout
 
 
 class PypoFile(Thread):
+    name = "file"
+
     def __init__(self, schedule_queue, api_client: ApiClient):
         Thread.__init__(self)
         self.media_queue = schedule_queue

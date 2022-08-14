@@ -19,6 +19,8 @@ signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
 
 class PypoLiqQueue(Thread):
+    name = "liquidsoap_queue"
+
     def __init__(self, q, pypo_liquidsoap):
         Thread.__init__(self)
         self.queue = q

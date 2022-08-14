@@ -21,6 +21,8 @@ def is_file(media_item):
 
 
 class PypoPush(Thread):
+    name = "push"
+
     def __init__(self, q, telnet_lock, pypo_liquidsoap, config: Config):
         Thread.__init__(self)
         self.queue = q

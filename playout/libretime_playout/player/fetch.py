@@ -30,6 +30,8 @@ signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
 
 class PypoFetch(Thread):
+    name = "fetch"
+
     def __init__(
         self,
         pypoFetch_q,
