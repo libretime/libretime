@@ -5,6 +5,8 @@ from .player import fetch
 
 def __timeout(func, timeout_duration, default, args, kwargs):
     class InterruptableThread(threading.Thread):
+        name = "liquidsoap_timeout"
+
         def __init__(self):
             threading.Thread.__init__(self)
             self.result = default

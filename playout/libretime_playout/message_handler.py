@@ -27,6 +27,8 @@ class RabbitConsumer(ConsumerMixin):
 
 
 class PypoMessageHandler(Thread):
+    name = "message_handler"
+
     def __init__(self, pq, rq, config: RabbitMQConfig):
         Thread.__init__(self)
         self.pypo_queue = pq

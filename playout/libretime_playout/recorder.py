@@ -36,6 +36,8 @@ def getDateTimeObj(time):
 
 
 class ShowRecorder(Thread):
+    name = "show_recorder"
+
     def __init__(
         self,
         show_instance,
