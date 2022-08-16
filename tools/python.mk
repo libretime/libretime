@@ -74,3 +74,19 @@ install: $(VENV)
 .PHONY: .clean
 .clean:
 	rm -Rf $(VENV)
+
+DISTRO ?= bullseye
+DOCKER_RUN = docker run -it --rm \
+			--user $$(id -u):$$(id -g) \
+			--env HOME=/src/.docker/$(DISTRO) \
+			--volume $$(pwd)/..:/src \
+			--workdir /src/$(APP) \
+			ghcr.io/libretime/libretime-dev:$(DISTRO)
+
+docker-dev:
+	$(MAKE) clean
+	$(DOCKER_RUN) bash
+
+docker-test:
+	$(MAKE) clean
+	$(DOCKER_RUN) make test
