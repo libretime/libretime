@@ -2,6 +2,7 @@ all: lint
 
 include ../tools/python.mk
 
+APP := playout
 PIP_INSTALL := \
 	--editable ../api-client \
 	--editable ../shared \
