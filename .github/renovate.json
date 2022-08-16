@@ -17,7 +17,8 @@
     },
     {
       "matchManagers": ["pip_setup", "pip_requirements"],
-      "addLabels": ["python"]
+      "addLabels": ["python"],
+      "rangeStrategy": "widen"
     },
     {
       "matchPaths": ["website/**"],
