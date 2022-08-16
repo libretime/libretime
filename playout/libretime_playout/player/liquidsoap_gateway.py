@@ -1,7 +1,8 @@
-import telnetlib
+from typing import List
 
 from loguru import logger
 
+from ..liquidsoap.client import LiquidsoapClient
 from ..timeout import ls_timeout
 
 
@@ -43,229 +44,91 @@ def create_liquidsoap_annotation(media):
 
 
 class TelnetLiquidsoap:
-    def __init__(self, telnet_lock, ls_host, ls_port, queues):
-        self.telnet_lock = telnet_lock
-        self.ls_host = ls_host
-        self.ls_port = ls_port
+    def __init__(self, liq_client: LiquidsoapClient, queues: List[str]):
+        self.liq_client = liq_client
         self.queues = queues
         self.current_prebuffering_stream_id = None
-
-    def __connect(self):
-        return telnetlib.Telnet(self.ls_host, self.ls_port)
 
     @ls_timeout
     def queue_clear_all(self):
         try:
-            self.telnet_lock.acquire()
-            connection = self.__connect()
-
-            for i in self.queues:
-                msg = "queues.%s_skip\n" % i
-                logger.debug(msg)
-                connection.write(msg.encode("utf-8"))
-
-            connection.write(b"exit\n")
-            logger.debug(connection.read_all().decode("utf-8"))
-        finally:
-            self.telnet_lock.release()
+            self.liq_client.queues_remove(*self.queues)
+        except (ConnectionError, TimeoutError) as exception:
+            logger.exception(exception)
 
     @ls_timeout
     def queue_remove(self, queue_id):
         try:
-            self.telnet_lock.acquire()
-            connection = self.__connect()
-
-            msg = "queues.%s_skip\n" % queue_id
-            logger.debug(msg)
-            connection.write(msg.encode("utf-8"))
-
-            connection.write(b"exit\n")
-            logger.debug(connection.read_all().decode("utf-8"))
-        finally:
-            self.telnet_lock.release()
+            self.liq_client.queues_remove(queue_id)
+        except (ConnectionError, TimeoutError) as exception:
+            logger.exception(exception)
 
     @ls_timeout
     def queue_push(self, queue_id, media_item):
         try:
-            self.telnet_lock.acquire()
-
-            connection = self.__connect()
             annotation = create_liquidsoap_annotation(media_item)
-            msg = f"{queue_id}.push {annotation}\n"
-            logger.debug(msg)
-            connection.write(msg.encode("utf-8"))
-
-            show_name = media_item["show_name"]
-            msg = "vars.show_name %s\n" % show_name
-            connection.write(msg.encode("utf-8"))
-            logger.debug(msg)
-
-            connection.write(b"exit\n")
-            logger.debug(connection.read_all().decode("utf-8"))
-        finally:
-            self.telnet_lock.release()
+            self.liq_client.queue_push(queue_id, annotation, media_item["show_name"])
+        except (ConnectionError, TimeoutError) as exception:
+            logger.exception(exception)
 
     @ls_timeout
     def stop_web_stream_buffer(self):
         try:
-            self.telnet_lock.acquire()
-            connection = telnetlib.Telnet(self.ls_host, self.ls_port)
-            # dynamic_source.stop http://87.230.101.24:80/top100station.mp3
-
-            msg = "http.stop\n"
-            logger.debug(msg)
-            connection.write(msg.encode("utf-8"))
-
-            msg = "dynamic_source.id -1\n"
-            logger.debug(msg)
-            connection.write(msg.encode("utf-8"))
-
-            connection.write(b"exit\n")
-            logger.debug(connection.read_all().decode("utf-8"))
-
-        except Exception as exception:
+            self.liq_client.web_stream_stop_buffer()
+        except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
-        finally:
-            self.telnet_lock.release()
 
     @ls_timeout
     def stop_web_stream_output(self):
         try:
-            self.telnet_lock.acquire()
-            connection = telnetlib.Telnet(self.ls_host, self.ls_port)
-            # dynamic_source.stop http://87.230.101.24:80/top100station.mp3
-
-            msg = "dynamic_source.output_stop\n"
-            logger.debug(msg)
-            connection.write(msg.encode("utf-8"))
-
-            connection.write(b"exit\n")
-            logger.debug(connection.read_all().decode("utf-8"))
-
-        except Exception as exception:
+            self.liq_client.web_stream_stop()
+        except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
-        finally:
-            self.telnet_lock.release()
 
     @ls_timeout
     def start_web_stream(self, media_item):
         try:
-            self.telnet_lock.acquire()
-            connection = telnetlib.Telnet(self.ls_host, self.ls_port)
-
-            # TODO: DO we need this?
-            msg = "streams.scheduled_play_start\n"
-            connection.write(msg.encode("utf-8"))
-
-            msg = "dynamic_source.output_start\n"
-            logger.debug(msg)
-            connection.write(msg.encode("utf-8"))
-
-            connection.write(b"exit\n")
-            logger.debug(connection.read_all().decode("utf-8"))
-
+            self.liq_client.web_stream_start()
             self.current_prebuffering_stream_id = None
-        except Exception as exception:
+        except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
-        finally:
-            self.telnet_lock.release()
 
     @ls_timeout
     def start_web_stream_buffer(self, media_item):
         try:
-            self.telnet_lock.acquire()
-            connection = telnetlib.Telnet(self.ls_host, self.ls_port)
-
-            msg = "dynamic_source.id %s\n" % media_item["row_id"]
-            logger.debug(msg)
-            connection.write(msg.encode("utf-8"))
-
-            msg = "http.restart %s\n" % media_item["uri"]
-            logger.debug(msg)
-            connection.write(msg.encode("utf-8"))
-
-            connection.write(b"exit\n")
-            logger.debug(connection.read_all().decode("utf-8"))
-
+            self.liq_client.web_stream_start_buffer(
+                media_item["row_id"],
+                media_item["uri"],
+            )
             self.current_prebuffering_stream_id = media_item["row_id"]
-        except Exception as exception:
+        except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
-        finally:
-            self.telnet_lock.release()
 
     @ls_timeout
     def get_current_stream_id(self):
         try:
-            self.telnet_lock.acquire()
-            connection = telnetlib.Telnet(self.ls_host, self.ls_port)
-
-            msg = "dynamic_source.get_id\n"
-            logger.debug(msg)
-            connection.write(msg.encode("utf-8"))
-
-            connection.write(b"exit\n")
-            stream_id = connection.read_all().decode("utf-8").splitlines()[0]
-            logger.debug("stream_id: %s" % stream_id)
-
-            return stream_id
-        except Exception as exception:
+            return self.liq_client.web_stream_get_id()
+        except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
-        finally:
-            self.telnet_lock.release()
 
     @ls_timeout
     def disconnect_source(self, sourcename):
-        logger.debug("Disconnecting source: %s", sourcename)
-        command = ""
-        if sourcename == "master_dj":
-            command += "master_harbor.stop\n"
-        elif sourcename == "live_dj":
-            command += "live_dj_harbor.stop\n"
+        if sourcename not in ("master_dj", "live_dj"):
+            raise ValueError(f"invalid source name: {sourcename}")
 
         try:
-            self.telnet_lock.acquire()
-            connection = telnetlib.Telnet(self.ls_host, self.ls_port)
-            logger.info(command)
-            connection.write(command.encode("utf-8"))
-            connection.write(b"exit\n")
-            connection.read_all().decode("utf-8")
-        except Exception as exception:
+            logger.debug("Disconnecting source: %s", sourcename)
+            self.liq_client.source_disconnect(sourcename)
+        except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
-        finally:
-            self.telnet_lock.release()
 
     @ls_timeout
-    def telnet_send(self, commands):
-        try:
-            self.telnet_lock.acquire()
-
-            connection = telnetlib.Telnet(self.ls_host, self.ls_port)
-            for line in commands:
-                logger.info(line)
-                if type(line) is str:
-                    line = line.encode("utf-8")
-                connection.write(line)
-
-            connection.write(b"exit\n")
-            connection.read_all().decode("utf-8")
-        except Exception as exception:
-            logger.exception(exception)
-        finally:
-            self.telnet_lock.release()
-
     def switch_source(self, sourcename, status):
-        logger.debug('Switching source: %s to "%s" status', sourcename, status)
-        command = "streams."
-        if sourcename == "master_dj":
-            command += "master_dj_"
-        elif sourcename == "live_dj":
-            command += "live_dj_"
-        elif sourcename == "scheduled_play":
-            command += "scheduled_play_"
+        if sourcename not in ("master_dj", "live_dj", "scheduled_play"):
+            raise ValueError(f"invalid source name: {sourcename}")
 
-        if status == "on":
-            command += "start\n"
-        else:
-            command += "stop\n"
-
-        self.telnet_send([command])
+        try:
+            logger.debug('Switching source: %s to "%s" status', sourcename, status)
+            self.liq_client.source_switch_status(sourcename, status == "on")
+        except (ConnectionError, TimeoutError) as exception:
+            logger.exception(exception)

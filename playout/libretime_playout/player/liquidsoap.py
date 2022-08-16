@@ -3,13 +3,14 @@ from datetime import datetime, timedelta
 
 from loguru import logger
 
+from ..liquidsoap.client import LiquidsoapClient
 from ..utils import seconds_between
 from .events import EventKind
 from .liquidsoap_gateway import TelnetLiquidsoap
 
 
 class PypoLiquidsoap:
-    def __init__(self, telnet_lock, host, port):
+    def __init__(self, liq_client: LiquidsoapClient):
         self.liq_queue_tracker = {
             "s0": None,
             "s1": None,
@@ -18,12 +19,11 @@ class PypoLiquidsoap:
             "s4": None,
         }
 
+        self.liq_client = liq_client
         self.telnet_liquidsoap = TelnetLiquidsoap(
-            telnet_lock, host, port, list(self.liq_queue_tracker.keys())
+            liq_client,
+            list(self.liq_queue_tracker.keys()),
         )
-
-    def get_telnet_dispatcher(self):
-        return self.telnet_liquidsoap
 
     def play(self, media_item):
         if media_item["type"] == EventKind.FILE:
