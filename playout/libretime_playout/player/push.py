@@ -7,6 +7,7 @@ from threading import Thread
 from loguru import logger
 
 from ..config import PUSH_INTERVAL, Config
+from .liquidsoap import PypoLiquidsoap
 from .queue import PypoLiqQueue
 
 
@@ -21,11 +22,10 @@ def is_file(media_item):
 class PypoPush(Thread):
     name = "push"
 
-    def __init__(self, q, telnet_lock, pypo_liquidsoap, config: Config):
+    def __init__(self, q, pypo_liquidsoap: PypoLiquidsoap, config: Config):
         Thread.__init__(self)
         self.queue = q
 
-        self.telnet_lock = telnet_lock
         self.config = config
 
         self.pushed_objects = {}

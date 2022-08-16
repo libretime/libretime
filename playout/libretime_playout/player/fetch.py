@@ -3,9 +3,7 @@ import json
 import mimetypes
 import os
 import signal
-import subprocess
 import sys
-import telnetlib
 import time
 from datetime import datetime
 from queue import Empty
@@ -17,7 +15,9 @@ from libretime_api_client.v2 import ApiClient
 from loguru import logger
 
 from ..config import CACHE_DIR, POLL_INTERVAL, Config
+from ..liquidsoap.client import LiquidsoapClient
 from ..timeout import ls_timeout
+from .liquidsoap import PypoLiquidsoap
 from .schedule import get_schedule
 
 
@@ -37,8 +37,8 @@ class PypoFetch(Thread):
         pypoFetch_q,
         pypoPush_q,
         media_q,
-        telnet_lock,
-        pypo_liquidsoap,
+        liq_client: LiquidsoapClient,
+        pypo_liquidsoap: PypoLiquidsoap,
         config: Config,
         api_client: ApiClient,
         legacy_client: LegacyClient,
@@ -57,8 +57,7 @@ class PypoFetch(Thread):
         self.config = config
         self.listener_timeout = POLL_INTERVAL
 
-        self.telnet_lock = telnet_lock
-
+        self.liq_client = liq_client
         self.pypo_liquidsoap = pypo_liquidsoap
 
         self.cache_dir = CACHE_DIR
@@ -101,12 +100,12 @@ class PypoFetch(Thread):
                 self.update_liquidsoap_transition_fade(m["transition_fade"])
             elif command == "switch_source":
                 logger.info("switch_on_source show command received...")
-                self.pypo_liquidsoap.get_telnet_dispatcher().switch_source(
+                self.pypo_liquidsoap.telnet_liquidsoap.switch_source(
                     m["sourcename"], m["status"]
                 )
             elif command == "disconnect_source":
                 logger.info("disconnect_on_source show command received...")
-                self.pypo_liquidsoap.get_telnet_dispatcher().disconnect_source(
+                self.pypo_liquidsoap.telnet_liquidsoap.disconnect_source(
                     m["sourcename"]
                 )
             else:
@@ -125,25 +124,7 @@ class PypoFetch(Thread):
         except Exception as exception:
             logger.exception(exception)
 
-    def switch_source_temp(self, sourcename, status):
-        logger.debug('Switching source: %s to "%s" status', sourcename, status)
-        command = "streams."
-        if sourcename == "master_dj":
-            command += "master_dj_"
-        elif sourcename == "live_dj":
-            command += "live_dj_"
-        elif sourcename == "scheduled_play":
-            command += "scheduled_play_"
-
-        if status == "on":
-            command += "start\n"
-        else:
-            command += "stop\n"
-
-        return command
-
     # Initialize Liquidsoap environment
-
     def set_bootstrap_variables(self):
         logger.debug("Getting information needed on bootstrap from Airtime")
         try:
@@ -152,59 +133,33 @@ class PypoFetch(Thread):
             logger.exception(f"Unable to get bootstrap info: {exception}")
 
         logger.debug("info:%s", info)
-        commands = []
-        for k, v in info["switch_status"].items():
-            commands.append(self.switch_source_temp(k, v))
 
-        stream_format = info["stream_label"]
-        station_name = info["station_name"]
-        fade = info["transition_fade"]
+        try:
+            for source_name, source_status in info["switch_status"].items():
+                self.pypo_liquidsoap.liq_client.source_switch_status(
+                    name=source_name,
+                    streaming=source_status == "on",
+                )
 
-        commands.append(
-            ("vars.stream_metadata_type %s\n" % stream_format).encode("utf-8")
-        )
-        commands.append(("vars.station_name %s\n" % station_name).encode("utf-8"))
-        commands.append(("vars.default_dj_fade %s\n" % fade).encode("utf-8"))
-        self.pypo_liquidsoap.get_telnet_dispatcher().telnet_send(commands)
+            self.pypo_liquidsoap.liq_client.settings_update(
+                station_name=info["station_name"],
+                message_format=info["stream_label"],
+                input_fade_transition=info["transition_fade"],
+            )
+        except (ConnectionError, TimeoutError) as exception:
+            logger.exception(exception)
 
         self.pypo_liquidsoap.clear_all_queues()
         self.pypo_liquidsoap.clear_queue_tracker()
 
     def restart_liquidsoap(self):
         try:
-            # do not block - if we receive the lock then good - no other thread
-            # will try communicating with Liquidsoap. If we don't receive, it may
-            # mean some thread blocked and is still holding the lock. Restarting
-            # Liquidsoap will cause that thread to release the lock as an Exception
-            # will be thrown.
-            self.telnet_lock.acquire(False)
-
             logger.info("Restarting Liquidsoap")
-            subprocess.call(
-                "kill -9 `pidof libretime-liquidsoap`", shell=True, close_fds=True
-            )
-
-            # Wait here and poll Liquidsoap until it has started up
-            logger.info("Waiting for Liquidsoap to start")
-            while True:
-                try:
-                    tn = telnetlib.Telnet(
-                        self.config.playout.liquidsoap_host,
-                        self.config.playout.liquidsoap_port,
-                    )
-                    tn.write(b"exit\n")
-                    tn.read_all()
-                    logger.info("Liquidsoap is up and running")
-                    break
-                except Exception:
-                    # sleep 0.5 seconds and try again
-                    time.sleep(0.5)
+            self.liq_client.restart()
+            logger.info("Liquidsoap is up and running")
 
         except Exception as exception:
             logger.exception(exception)
-        finally:
-            if self.telnet_lock.locked():
-                self.telnet_lock.release()
 
     # NOTE: This function is quite short after it was refactored.
 
@@ -220,35 +175,18 @@ class PypoFetch(Thread):
         """
 
         try:
-            self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(
-                self.config.playout.liquidsoap_host,
-                self.config.playout.liquidsoap_port,
-            )
-            # update the boot up time of Liquidsoap. Since Liquidsoap is not restarting,
-            # we are manually adjusting the bootup time variable so the status msg will get
-            # updated.
-            current_time = time.time()
-            boot_up_time_command = (
-                "vars.bootup_time " + str(current_time) + "\n"
-            ).encode("utf-8")
-            logger.info(boot_up_time_command)
-            tn.write(boot_up_time_command)
+            with self.liq_client.conn:
+                # update the boot up time of Liquidsoap. Since Liquidsoap is not restarting,
+                # we are manually adjusting the bootup time variable so the status msg will get
+                # updated.
+                current_time = time.time()
+                self.liq_client.conn.write(f"vars.bootup_time {str(current_time)}")
+                self.liq_client.conn.read()
 
-            connection_status = b"streams.connection_status\n"
-            logger.info(connection_status)
-            tn.write(connection_status)
-
-            tn.write(b"exit\n")
-
-            output = tn.read_all()
-        except Exception as exception:
+                self.liq_client.conn.write("streams.connection_status")
+                stream_info = self.liq_client.conn.read().splitlines()[0]
+        except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
-        finally:
-            self.telnet_lock.release()
-
-        output_list = output.split("\r\n")
-        stream_info = output_list[2]
 
         # streamin info is in the form of:
         # eg. s1:true,2:true,3:false
@@ -267,65 +205,23 @@ class PypoFetch(Thread):
 
     @ls_timeout
     def update_liquidsoap_stream_format(self, stream_format):
-        # Push stream metadata to liquidsoap
-        # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
         try:
-            self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(
-                self.config.playout.liquidsoap_host,
-                self.config.playout.liquidsoap_port,
-            )
-            command = ("vars.stream_metadata_type %s\n" % stream_format).encode("utf-8")
-            logger.info(command)
-            tn.write(command)
-            tn.write(b"exit\n")
-            tn.read_all()
-        except Exception as exception:
+            self.liq_client.settings_update(message_format=stream_format)
+        except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
-        finally:
-            self.telnet_lock.release()
 
     @ls_timeout
     def update_liquidsoap_transition_fade(self, fade):
-        # Push stream metadata to liquidsoap
-        # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
         try:
-            self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(
-                self.config.playout.liquidsoap_host,
-                self.config.playout.liquidsoap_port,
-            )
-            command = ("vars.default_dj_fade %s\n" % fade).encode("utf-8")
-            logger.info(command)
-            tn.write(command)
-            tn.write(b"exit\n")
-            tn.read_all()
-        except Exception as exception:
+            self.liq_client.settings_update(input_fade_transition=fade)
+        except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
-        finally:
-            self.telnet_lock.release()
 
     @ls_timeout
     def update_liquidsoap_station_name(self, station_name):
-        # Push stream metadata to liquidsoap
-        # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
         try:
-            try:
-                self.telnet_lock.acquire()
-                tn = telnetlib.Telnet(
-                    self.config.playout.liquidsoap_host,
-                    self.config.playout.liquidsoap_port,
-                )
-                command = ("vars.station_name %s\n" % station_name).encode("utf-8")
-                logger.info(command)
-                tn.write(command)
-                tn.write(b"exit\n")
-                tn.read_all()
-            except Exception as exception:
-                logger.exception(exception)
-            finally:
-                self.telnet_lock.release()
-        except Exception as exception:
+            self.liq_client.settings_update(station_name=station_name)
+        except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
 
     # Process the schedule

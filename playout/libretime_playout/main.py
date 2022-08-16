@@ -4,13 +4,11 @@ Python part of radio playout (pypo)
 
 import signal
 import sys
-import telnetlib
 import time
 from datetime import datetime
 from pathlib import Path
 from queue import Queue
-from threading import Lock
-from typing import Optional, Tuple
+from typing import Optional
 
 import click
 from libretime_api_client.v1 import ApiClient as LegacyClient
@@ -22,14 +20,14 @@ from loguru import logger
 
 from .config import CACHE_DIR, RECORD_DIR, Config
 from .history.stats import StatsCollectorThread
-from .liquidsoap.version import LIQUIDSOAP_MIN_VERSION, parse_liquidsoap_version
+from .liquidsoap.client import LiquidsoapClient
+from .liquidsoap.version import LIQUIDSOAP_MIN_VERSION
 from .message_handler import PypoMessageHandler
 from .player.fetch import PypoFetch
 from .player.file import PypoFile
 from .player.liquidsoap import PypoLiquidsoap
 from .player.push import PypoPush
 from .recorder import Recorder
-from .timeout import ls_timeout
 
 
 class Global:
@@ -43,56 +41,6 @@ class Global:
 def keyboardInterruptHandler(signum, frame):
     logger.info("\nKeyboard Interrupt\n")
     sys.exit(0)
-
-
-@ls_timeout
-def liquidsoap_get_info(telnet_lock, host, port) -> Optional[Tuple[int, int, int]]:
-    logger.debug("Checking to see if Liquidsoap is running")
-    try:
-        telnet_lock.acquire()
-        tn = telnetlib.Telnet(host, port)
-        msg = "version\n"
-        tn.write(msg.encode("utf-8"))
-        tn.write(b"exit\n")
-        response = tn.read_all().decode("utf-8")
-    except Exception as e:
-        logger.error(e)
-        return None
-    finally:
-        telnet_lock.release()
-
-    return parse_liquidsoap_version(response)
-
-
-def liquidsoap_startup_test(telnet_lock, liquidsoap_host, liquidsoap_port):
-
-    liquidsoap_version = liquidsoap_get_info(
-        telnet_lock,
-        liquidsoap_host,
-        liquidsoap_port,
-    )
-    while not liquidsoap_version:
-        logger.warning("Liquidsoap doesn't appear to be running! Trying again later...")
-        time.sleep(1)
-        liquidsoap_version = liquidsoap_get_info(
-            telnet_lock,
-            liquidsoap_host,
-            liquidsoap_port,
-        )
-
-    while not LIQUIDSOAP_MIN_VERSION <= liquidsoap_version:
-        logger.warning(
-            f"Found invalid Liquidsoap version! "
-            f"Liquidsoap<={LIQUIDSOAP_MIN_VERSION} is required!"
-        )
-        time.sleep(5)
-        liquidsoap_version = liquidsoap_get_info(
-            telnet_lock,
-            liquidsoap_host,
-            liquidsoap_port,
-        )
-
-    logger.info(f"Liquidsoap version {liquidsoap_version}")
 
 
 @click.command(context_settings={"auto_envvar_prefix": DEFAULT_ENV_PREFIX})
@@ -144,18 +92,21 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
             logger.exception(exception)
             time.sleep(10)
 
-    telnet_lock = Lock()
+    liq_client = LiquidsoapClient(
+        host=config.playout.liquidsoap_host,
+        port=config.playout.liquidsoap_port,
+    )
 
-    liquidsoap_host = config.playout.liquidsoap_host
-    liquidsoap_port = config.playout.liquidsoap_port
-
-    liquidsoap_startup_test(telnet_lock, liquidsoap_host, liquidsoap_port)
+    logger.debug("Checking if Liquidsoap is running")
+    liq_version = liq_client.wait_for_version()
+    if not LIQUIDSOAP_MIN_VERSION <= liq_version:
+        raise Exception(f"Invalid liquidsoap version {liq_version}")
 
     pypoFetch_q = Queue()
     recorder_q = Queue()
     pypoPush_q = Queue()
 
-    pypo_liquidsoap = PypoLiquidsoap(telnet_lock, liquidsoap_host, liquidsoap_port)
+    pypo_liquidsoap = PypoLiquidsoap(liq_client)
 
     # This queue is shared between pypo-fetch and pypo-file, where pypo-file
     # is the consumer. Pypo-fetch will send every schedule it gets to pypo-file
@@ -176,7 +127,7 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
         pypoFetch_q,
         pypoPush_q,
         media_q,
-        telnet_lock,
+        liq_client,
         pypo_liquidsoap,
         config,
         api_client,
@@ -185,7 +136,7 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     pf.daemon = True
     pf.start()
 
-    pp = PypoPush(pypoPush_q, telnet_lock, pypo_liquidsoap, config)
+    pp = PypoPush(pypoPush_q, pypo_liquidsoap, config)
     pp.daemon = True
     pp.start()
 
