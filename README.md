@@ -99,6 +99,6 @@ version 3 of the License.
 
 Copyright (c) 2011-2017 Sourcefabric z.ú.
 
-Copyright (c) 2017-2021 LibreTime Community
+Copyright (c) 2017-2022 LibreTime Community
 
 Please refer to the [LEGACY](./LEGACY.md) file for more information.
