@@ -45,9 +45,6 @@ class PypoFetch(Thread):
     ):
         Thread.__init__(self)
 
-        # Hacky...
-        PypoFetch.ref = self
-
         self.api_client = api_client
         self.legacy_client = legacy_client
         self.fetch_queue = fetch_queue
@@ -86,9 +83,6 @@ class PypoFetch(Thread):
                 self.process_schedule(self.schedule_data)
             elif command == "reset_liquidsoap_bootstrap":
                 self.set_bootstrap_variables()
-            elif command == "update_stream_setting":
-                logger.info("Updating stream setting...")
-                self.regenerate_liquidsoap_conf(m["setting"])
             elif command == "update_stream_format":
                 logger.info("Updating stream format...")
                 self.update_liquidsoap_stream_format(m["stream_format"])
@@ -154,21 +148,6 @@ class PypoFetch(Thread):
 
         self.pypo_liquidsoap.clear_all_queues()
         self.pypo_liquidsoap.clear_queue_tracker()
-
-    def restart_liquidsoap(self):
-        try:
-            logger.info("Restarting Liquidsoap")
-            self.liq_client.restart()
-            logger.info("Liquidsoap is up and running")
-
-        except Exception as exception:
-            logger.exception(exception)
-
-    # NOTE: This function is quite short after it was refactored.
-
-    def regenerate_liquidsoap_conf(self, setting):
-        self.restart_liquidsoap()
-        self.update_liquidsoap_connection_status()
 
     @ls_timeout
     def update_liquidsoap_connection_status(self):

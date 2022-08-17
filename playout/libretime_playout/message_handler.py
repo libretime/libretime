@@ -80,9 +80,6 @@ class PypoMessageHandler(Thread):
             elif command == "reset_liquidsoap_bootstrap":
                 logger.info("Resetting bootstrap vars...")
                 self.pypo_queue.put(message)
-            elif command == "update_stream_setting":
-                logger.info("Updating stream setting...")
-                self.pypo_queue.put(message)
             elif command == "update_stream_format":
                 logger.info("Updating stream format...")
                 self.pypo_queue.put(message)
