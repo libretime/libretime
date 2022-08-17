@@ -54,7 +54,7 @@ set("harbor.bind_addr", "0.0.0.0")
 
 station_name = ref "{{ info.station_name }}"
 
-off_air_meta = "{{ preferences.message_offline }}"
+off_air_meta = ref "{{ preferences.message_offline }}"
 stream_metadata_type = ref {{ preferences.message_format.value }}
 default_dj_fade = ref {{ preferences.input_fade_transition }}
 

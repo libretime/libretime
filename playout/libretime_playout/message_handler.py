@@ -86,6 +86,9 @@ class PypoMessageHandler(Thread):
             elif command == "update_stream_format":
                 logger.info("Updating stream format...")
                 self.pypo_queue.put(message)
+            elif command == "update_message_offline":
+                logger.info("Updating message offline...")
+                self.pypo_queue.put(message)
             elif command == "update_station_name":
                 logger.info("Updating station name...")
                 self.pypo_queue.put(message)

@@ -107,6 +107,9 @@ server.register(namespace="vars",
                 "station_name",
                 fun (s) -> begin log("vars.station_name") station_name := s s end)
 server.register(namespace="vars",
+                "off_air_meta",
+                fun (s) -> begin log("vars.off_air_meta") off_air_meta := s s end)
+server.register(namespace="vars",
                 "bootup_time",
                 fun (s) -> begin log("vars.bootup_time") time := s s end)
 server.register(namespace="streams",
@@ -159,11 +162,10 @@ server.register(namespace="dynamic_source",
 #                fun (s) -> begin log("dynamic_source.read_stop") destroy_dynamic_source_all() end)
 
 default = amplify(id="silence_src", 0.00001, noise())
-ref_off_air_meta = ref off_air_meta
-if !ref_off_air_meta == "" then
-    ref_off_air_meta := "LibreTime - offline"
+if !off_air_meta == "" then
+    off_air_meta := "LibreTime - offline"
 end
-default = rewrite_metadata([("title", !ref_off_air_meta)], default)
+default = rewrite_metadata([("title", !off_air_meta)], default)
 ignore(output.dummy(default, fallible=true))
 
 master_dj_enabled = ref false

@@ -358,6 +358,11 @@ class Application_Model_Preference
     public static function setOffAirMeta($offAirMeta)
     {
         self::setValue('off_air_meta', $offAirMeta);
+
+        Application_Model_RabbitMq::SendMessageToPypo(
+            'update_message_offline',
+            ['message_offline' => $offAirMeta]
+        );
     }
 
     public static function GetStationName()
