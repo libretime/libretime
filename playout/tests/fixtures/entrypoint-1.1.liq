@@ -98,7 +98,7 @@ set("harbor.bind_addr", "0.0.0.0")
 
 station_name = ref "LibreTime"
 
-off_air_meta = "LibreTime - offline"
+off_air_meta = ref "LibreTime - offline"
 stream_metadata_type = ref 0
 default_dj_fade = ref 0.0
 

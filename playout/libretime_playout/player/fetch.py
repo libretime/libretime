@@ -92,6 +92,9 @@ class PypoFetch(Thread):
             elif command == "update_stream_format":
                 logger.info("Updating stream format...")
                 self.update_liquidsoap_stream_format(m["stream_format"])
+            elif command == "update_message_offline":
+                logger.info("Updating message offline...")
+                self.update_liquidsoap_message_offline(m["message_offline"])
             elif command == "update_station_name":
                 logger.info("Updating station name...")
                 self.update_liquidsoap_station_name(m["station_name"])
@@ -204,6 +207,13 @@ class PypoFetch(Thread):
     def update_liquidsoap_stream_format(self, stream_format):
         try:
             self.liq_client.settings_update(message_format=stream_format)
+        except (ConnectionError, TimeoutError) as exception:
+            logger.exception(exception)
+
+    @ls_timeout
+    def update_liquidsoap_message_offline(self, message_offline: str):
+        try:
+            self.liq_client.settings_update(message_offline=message_offline)
         except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
 
