@@ -175,16 +175,13 @@ class PypoFetch(Thread):
         """
 
         try:
-            with self.liq_client.conn:
-                # update the boot up time of Liquidsoap. Since Liquidsoap is not restarting,
-                # we are manually adjusting the bootup time variable so the status msg will get
-                # updated.
-                current_time = time.time()
-                self.liq_client.conn.write(f"vars.bootup_time {str(current_time)}")
-                self.liq_client.conn.read()
+            # update the boot up time of Liquidsoap. Since Liquidsoap is not restarting,
+            # we are manually adjusting the bootup time variable so the status msg will get
+            # updated.
+            current_time = time.time()
+            self.liq_client.boot_timestamp_update(current_time)
 
-                self.liq_client.conn.write("streams.connection_status")
-                stream_info = self.liq_client.conn.read().splitlines()[0]
+            stream_info = self.liq_client.outputs_connection_status()
         except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
 
