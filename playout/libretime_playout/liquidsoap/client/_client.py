@@ -59,6 +59,11 @@ class LiquidsoapClient:
 
         raise LiquidsoapClientError("could not get liquidsoap version")
 
+    def outputs_connection_status(self):
+        with self.conn:
+            self.conn.write("streams.connection_status")
+            return self.conn.read().splitlines()[0]
+
     def queues_remove(self, *queues: int) -> None:
         with self.conn:
             for queue_id in queues:
@@ -124,6 +129,10 @@ class LiquidsoapClient:
                 self._set_var("stream_metadata_type", message_format)
             if input_fade_transition is not None:
                 self._set_var("default_dj_fade", input_fade_transition)
+
+    def boot_timestamp_update(self, timestamp: float):
+        with self.conn:
+            self._set_var("bootup_time", str(timestamp))
 
     def restart(self):
         logger.warning("restarting Liquidsoap")
