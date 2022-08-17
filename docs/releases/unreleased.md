@@ -26,6 +26,16 @@ Along with the Ubuntu Bionic deprecation, the following dependencies versions ar
 - [php7.2](https://packages.ubuntu.com/bionic/php7.2)
 - [python3.6](https://packages.ubuntu.com/bionic/python3)
 
+### Debian Buster support deprecation
+
+Support for Debian Buster is being deprecated, and will be removed in LibreTime v3.1.0. Maintenance only versions (3.0.x) for Debian Buster will be provided until the distribution release reaches its end of life. Please see the [supported distributions release policy](../developer-manual/development/releases.md#distributions-releases-support) for details.
+
+Along with the Debian Buster deprecation, the following dependencies versions are also being deprecated:
+
+- [liquidsoap 1.3.3](https://packages.debian.org/buster/liquidsoap)
+- [php7.3](https://packages.debian.org/buster/php7.3)
+- [python3.7](https://packages.debian.org/buster/python3)
+
 ## :arrow_up: Upgrading
 
 ## :warning: Known issues
