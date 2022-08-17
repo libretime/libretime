@@ -1,7 +1,7 @@
 from pathlib import Path
 from subprocess import CalledProcessError, check_output, run
 from time import sleep
-from typing import Optional, Tuple
+from typing import Any, Optional, Tuple
 
 from loguru import logger
 from typing_extensions import Literal
@@ -37,6 +37,10 @@ class LiquidsoapClient:
             timeout=timeout,
         )
 
+    def _set_var(self, name: str, value: Any):
+        self.conn.write(f"vars.{name} {value}")
+        self.conn.read()
+
     def version(self) -> Tuple[int, int, int]:
         with self.conn:
             self.conn.write("version")
@@ -63,7 +67,7 @@ class LiquidsoapClient:
     def queue_push(self, queue_id: int, entry: str, show_name: str) -> None:
         with self.conn:
             self.conn.write(f"{queue_id}.push {entry}")
-            self.conn.write(f"vars.show_name {show_name}")
+            self._set_var("show_name", show_name)
 
     def web_stream_get_id(self) -> str:
         with self.conn:
@@ -115,14 +119,11 @@ class LiquidsoapClient:
     ):
         with self.conn:
             if station_name is not None:
-                self.conn.write(f"vars.station_name {station_name}")
-                self.conn.read()
+                self._set_var("station_name", station_name)
             if message_format is not None:
-                self.conn.write(f"vars.stream_metadata_type {message_format}")
-                self.conn.read()
+                self._set_var("stream_metadata_type", message_format)
             if input_fade_transition is not None:
-                self.conn.write(f"vars.default_dj_fade {input_fade_transition}")
-                self.conn.read()
+                self._set_var("default_dj_fade", input_fade_transition)
 
     def restart(self):
         logger.warning("restarting Liquidsoap")
