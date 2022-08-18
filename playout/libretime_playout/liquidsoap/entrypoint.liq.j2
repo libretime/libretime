@@ -44,12 +44,13 @@ set("log.file", false)
 {%- endif %}
 
 set("server.telnet", true)
-set("server.telnet.port", 1234)
+set("server.telnet.bind_addr", "{{ config.liquidsoap.server_listen_address }}")
+set("server.telnet.port", {{ config.liquidsoap.server_listen_port }})
 
 {% if version >= (1, 3, 3) -%}
-set("harbor.bind_addrs", ["0.0.0.0"])
+set("harbor.bind_addrs", ["{{ config.liquidsoap.harbor_listen_address | join('", "') }}"])
 {%- else -%}
-set("harbor.bind_addr", "0.0.0.0")
+set("harbor.bind_addr", "{{ config.liquidsoap.harbor_listen_address[0] }}")
 {%- endif %}
 
 station_name = ref "{{ info.station_name }}"

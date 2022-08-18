@@ -92,6 +92,7 @@ auth_path = "/fake/liquidsoap_auth.py"
 set("log.file.path", "/var/log/radio.log")
 
 set("server.telnet", true)
+set("server.telnet.bind_addr", "127.0.0.1")
 set("server.telnet.port", 1234)
 
 set("harbor.bind_addrs", ["0.0.0.0"])
