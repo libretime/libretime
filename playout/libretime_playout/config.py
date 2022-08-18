@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import List
 
 from libretime_shared.config import (
     BaseConfig,
@@ -27,8 +28,16 @@ class PlayoutConfig(BaseModel):
     record_sample_size: int = 16
 
 
+class LiquidsoapConfig(BaseModel):
+    server_listen_address: str = "127.0.0.1"
+    server_listen_port: int = 1234
+
+    harbor_listen_address: List[str] = ["0.0.0.0"]
+
+
 class Config(BaseConfig):
     general: GeneralConfig
     rabbitmq: RabbitMQConfig = RabbitMQConfig()
     playout: PlayoutConfig = PlayoutConfig()
+    liquidsoap: LiquidsoapConfig = LiquidsoapConfig()
     stream: StreamConfig = StreamConfig()

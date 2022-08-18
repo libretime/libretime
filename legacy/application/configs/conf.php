@@ -93,6 +93,11 @@ class Schema implements ConfigurationInterface
             /**/->ignoreExtraKeys()
             ->end()
 
+            // Liquidsoap schema
+            ->arrayNode('liquidsoap')
+            /**/->ignoreExtraKeys()
+            ->end()
+
             // Stream schema
             ->arrayNode('stream')->ignoreExtraKeys()->addDefaultsIfNotSet()->children()
 

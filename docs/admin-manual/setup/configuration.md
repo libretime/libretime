@@ -152,6 +152,12 @@ libretime-worker
 
 The `playout` section configure anything related to the playout service.
 
+:::caution
+
+When changing the `playout.liquidsoap_*` entries, make sure to also configure the `liquidsoap.server_listen_*` entries accordingly.
+
+:::
+
 ```yml
 playout:
   # Liquidsoap connection host.
@@ -183,6 +189,36 @@ In order to apply the changes made in this section, please restart the following
 
 ```
 libretime-playout
+```
+
+## Liquidsoap
+
+The `liquidsoap` section configure anything related to the liquidsoap service.
+
+:::caution
+
+When changing the `liquidsoap.server_listen_*` entries, make sure to also configure the `playout.liquidsoap_*` entries accordingly.
+
+:::
+
+```yml
+liquidsoap:
+  # Liquidsoap server listen address.
+  # > default is 127.0.0.1
+  server_listen_address: "127.0.0.1"
+  # Liquidsoap server listen port.
+  # > default is 1234
+  server_listen_port: 1234
+
+  # Input harbor listen address.
+  # > default is ["0.0.0.0"]
+  harbor_listen_address: ["0.0.0.0"]
+```
+
+In order to apply the changes made in this section, please restart the following services:
+
+```
+libretime-liquidsoap
 ```
 
 ## LDAP
