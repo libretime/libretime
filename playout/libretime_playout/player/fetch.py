@@ -13,9 +13,11 @@ from threading import Thread, Timer
 from libretime_api_client.v1 import ApiClient as LegacyClient
 from libretime_api_client.v2 import ApiClient
 from loguru import logger
+from requests import RequestException
 
 from ..config import CACHE_DIR, POLL_INTERVAL, Config
 from ..liquidsoap.client import LiquidsoapClient
+from ..liquidsoap.models import Info, StreamPreferences, StreamState
 from ..timeout import ls_timeout
 from .liquidsoap import PypoLiquidsoap
 from .schedule import get_schedule
@@ -125,24 +127,40 @@ class PypoFetch(Thread):
     def set_bootstrap_variables(self):
         logger.debug("Getting information needed on bootstrap from Airtime")
         try:
-            info = self.legacy_client.get_bootstrap_info()
-        except Exception as exception:
-            logger.exception(f"Unable to get bootstrap info: {exception}")
+            info = Info(**self.api_client.get_info().json())
+            preferences = StreamPreferences(
+                **self.api_client.get_stream_preferences().json()
+            )
+            state = StreamState(**self.api_client.get_stream_state().json())
 
-        logger.debug("info:%s", info)
+        except RequestException as exception:
+            logger.exception(f"Unable to get stream settings: {exception}")
+
+        logger.debug(f"info: {info}")
+        logger.debug(f"preferences: {preferences}")
+        logger.debug(f"state: {state}")
 
         try:
-            for source_name, source_status in info["switch_status"].items():
-                self.pypo_liquidsoap.liq_client.source_switch_status(
-                    name=source_name,
-                    streaming=source_status == "on",
-                )
-
             self.pypo_liquidsoap.liq_client.settings_update(
-                station_name=info["station_name"],
-                message_format=info["stream_label"],
-                input_fade_transition=info["transition_fade"],
+                station_name=info.station_name,
+                message_format=preferences.message_format,
+                message_offline=preferences.message_offline,
+                input_fade_transition=preferences.input_fade_transition,
             )
+
+            self.pypo_liquidsoap.liq_client.source_switch_status(
+                name="master_dj",
+                streaming=state.input_main_streaming,
+            )
+            self.pypo_liquidsoap.liq_client.source_switch_status(
+                name="live_dj",
+                streaming=state.input_show_streaming,
+            )
+            self.pypo_liquidsoap.liq_client.source_switch_status(
+                name="scheduled_play",
+                streaming=state.schedule_streaming,
+            )
+
         except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
 
