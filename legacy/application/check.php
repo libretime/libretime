@@ -150,13 +150,13 @@ function checkLiquidsoapService()
 }
 
 /**
- * Check if libretime-celery is currently running.
+ * Check if libretime-worker is currently running.
  *
- * @return bool true if libretime-celery is running
+ * @return bool true if libretime-worker is running
  */
 function checkCeleryService()
 {
-    exec('systemctl is-active libretime-celery --quiet', $out, $status);
+    exec('systemctl is-active libretime-worker --quiet', $out, $status);
 
     return $status == 0;
 }

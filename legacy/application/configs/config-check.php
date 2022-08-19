@@ -243,10 +243,10 @@ $result = $r1 && $r2;
                         <?php
                     } else {
                         ?>">
-                        <?php echo _('Check that the libretime-celery service is installed correctly in '); ?><code>/etc/systemd/system/</code>,
+                        <?php echo _('Check that the libretime-worker service is installed correctly in '); ?><code>/etc/systemd/system/</code>,
                         <?php echo _(" and ensure that it's running with "); ?>
-                        <br /><code>systemctl status libretime-celery</code><br />
-                        <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-celery</code>
+                        <br /><code>systemctl status libretime-worker</code><br />
+                        <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-worker</code>
                     <?php
                     }
                     ?>

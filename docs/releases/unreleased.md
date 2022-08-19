@@ -38,6 +38,18 @@ Along with the Debian Buster deprecation, the following dependencies versions ar
 
 ## :arrow_up: Upgrading
 
+### Worker python package and service
+
+The `libretime-celery` python package and service was renamed to `libretime-worker`. Make sure to remove the old python package and service using the following command:
+
+```bash
+sudo pip3 uninstall libretime-celery
+
+sudo rm -f \
+    /etc/systemd/system/libretime-celery.service \
+    /usr/lib/systemd/system/libretime-celery.service
+```
+
 ## :warning: Known issues
 
 The following issues may need a workaround for the time being. Please search the [issues](https://github.com/libretime/libretime/issues) before reporting problems not listed below.
