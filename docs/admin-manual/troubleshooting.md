@@ -23,7 +23,7 @@ If a service isn't running, you should search for details using the tool running
 On a common setup, you should use the systemd service status:
 
 ```bash
-sudo systemctl status libretime-celery
+sudo systemctl status libretime-worker
 ```
 
 :::note
@@ -51,6 +51,7 @@ On a common setup, to access LibreTime specific logs you should search for the f
 - The `/var/log/libretime/legacy.log` file contains logs from the legacy app,
 - The `/var/log/libretime/liquidsoap.log` file contains logs from liquidsoap,
 - The `/var/log/libretime/playout.log` file contains logs from playout.
+- The `/var/log/libretime/worker.log` file contains logs from the worker.
 
 For some LibreTime services, you can set a higher log level using the `LIBRETIME_LOG_LEVEL` environment variable, or by running the service by hand and using a command line flag:
 

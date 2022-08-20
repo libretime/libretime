@@ -31,10 +31,10 @@ general:
 In order to apply the changes made in this section, please restart the following services:
 
 ```
-libretime-api
 libretime-analyzer
-libretime-celery
+libretime-api
 libretime-playout
+libretime-worker
 ```
 
 ## Database
@@ -110,10 +110,10 @@ rabbitmq:
 In order to apply the changes made in this section, please restart the following services:
 
 ```
-libretime-api
 libretime-analyzer
-libretime-celery
+libretime-api
 libretime-playout
+libretime-worker
 ```
 
 ## Playout

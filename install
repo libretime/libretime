@@ -591,10 +591,10 @@ section "Worker"
 
 install_python_app "$SCRIPT_DIR/worker"
 
-info "creating libretime-celery working directory"
+info "creating libretime-worker working directory"
 mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR/worker"
 
-install_service "libretime-celery.service" "$SCRIPT_DIR/worker/install/systemd/libretime-celery.service"
+install_service "libretime-worker.service" "$SCRIPT_DIR/worker/install/systemd/libretime-worker.service"
 
 # Install Legacy
 ########################################################################################

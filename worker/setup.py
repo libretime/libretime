@@ -1,9 +1,9 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="libretime-celery",
+    name="libretime-worker",
     version="0.1",
-    description="LibreTime Celery",
+    description="LibreTime Worker",
     author="LibreTime Contributors",
     url="https://github.com/libretime/libretime",
     project_urls={
