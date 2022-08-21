@@ -41,5 +41,5 @@ omit = [
 ]
 
 [build-system]
-requires = ["setuptools<64.0", "wheel"]
+requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
