@@ -8,7 +8,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 from queue import Queue
-from typing import Optional
+from typing import Any, Dict, Optional
 
 import click
 from libretime_api_client.v1 import ApiClient as LegacyClient
@@ -93,52 +93,52 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     if not LIQUIDSOAP_MIN_VERSION <= liq_version:
         raise Exception(f"Invalid liquidsoap version {liq_version}")
 
-    pypoFetch_q = Queue()
-    recorder_q = Queue()
-    pypoPush_q = Queue()
-
-    pypo_liquidsoap = PypoLiquidsoap(liq_client)
-
+    fetch_queue: Queue[Dict[str, Any]] = Queue()
+    recorder_queue: Queue[Dict[str, Any]] = Queue()
+    push_queue: Queue[Dict[str, Any]] = Queue()
     # This queue is shared between pypo-fetch and pypo-file, where pypo-file
     # is the consumer. Pypo-fetch will send every schedule it gets to pypo-file
     # and pypo will parse this schedule to determine which file has the highest
     # priority, and retrieve it.
-    media_q = Queue()
+    file_queue: Queue[Dict[str, Any]] = Queue()
 
-    # Pass only the configuration sections needed; PypoMessageHandler only needs rabbitmq settings
-    pmh = PypoMessageHandler(pypoFetch_q, recorder_q, config.rabbitmq)
-    pmh.daemon = True
-    pmh.start()
+    pypo_liquidsoap = PypoLiquidsoap(liq_client)
 
-    pfile = PypoFile(media_q, api_client)
-    pfile.daemon = True
-    pfile.start()
+    # Pass only the configuration sections needed; PypoMessageHandler only
+    # needs rabbitmq settings
+    message_handler = PypoMessageHandler(fetch_queue, recorder_queue, config.rabbitmq)
+    message_handler.daemon = True
+    message_handler.start()
 
-    pf = PypoFetch(
-        pypoFetch_q,
-        pypoPush_q,
-        media_q,
+    file_thread = PypoFile(file_queue, api_client)
+    file_thread.daemon = True
+    file_thread.start()
+
+    fetch_thread = PypoFetch(
+        fetch_queue,
+        push_queue,
+        file_queue,
         liq_client,
         pypo_liquidsoap,
         config,
         api_client,
         legacy_client,
     )
-    pf.daemon = True
-    pf.start()
+    fetch_thread.daemon = True
+    fetch_thread.start()
 
-    pp = PypoPush(pypoPush_q, pypo_liquidsoap, config)
-    pp.daemon = True
-    pp.start()
+    push_thread = PypoPush(push_queue, pypo_liquidsoap, config)
+    push_thread.daemon = True
+    push_thread.start()
 
-    recorder = Recorder(recorder_q, config, legacy_client)
-    recorder.daemon = True
-    recorder.start()
+    recorder_thread = Recorder(recorder_queue, config, legacy_client)
+    recorder_thread.daemon = True
+    recorder_thread.start()
 
-    stats_collector = StatsCollectorThread(legacy_client)
-    stats_collector.start()
+    stats_collector_thread = StatsCollectorThread(legacy_client)
+    stats_collector_thread.start()
 
-    # Just sleep the main thread, instead of blocking on pf.join().
+    # Just sleep the main thread, instead of blocking on fetch_thread.join().
     # This allows CTRL-C to work!
     while True:
         time.sleep(1)

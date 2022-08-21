@@ -2,8 +2,9 @@ import hashlib
 import os
 import stat
 import time
-from queue import Empty
+from queue import Empty, Queue
 from threading import Thread
+from typing import Any, Dict
 
 from libretime_api_client.v2 import ApiClient
 from loguru import logger
@@ -13,9 +14,13 @@ from requests.exceptions import ConnectionError, HTTPError, Timeout
 class PypoFile(Thread):
     name = "file"
 
-    def __init__(self, schedule_queue, api_client: ApiClient):
+    def __init__(
+        self,
+        file_queue: Queue[Dict[str, Any]],
+        api_client: ApiClient,
+    ):
         Thread.__init__(self)
-        self.media_queue = schedule_queue
+        self.media_queue = file_queue
         self.media = None
         self.api_client = api_client
 

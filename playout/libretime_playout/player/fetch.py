@@ -6,9 +6,10 @@ import signal
 import sys
 import time
 from datetime import datetime
-from queue import Empty
+from queue import Empty, Queue
 from subprocess import PIPE, Popen
 from threading import Thread, Timer
+from typing import Any, Dict
 
 from libretime_api_client.v1 import ApiClient as LegacyClient
 from libretime_api_client.v2 import ApiClient
@@ -34,9 +35,9 @@ class PypoFetch(Thread):
 
     def __init__(
         self,
-        pypoFetch_q,
-        pypoPush_q,
-        media_q,
+        fetch_queue: Queue[Dict[str, Any]],
+        push_queue: Queue[Dict[str, Any]],
+        file_queue: Queue[Dict[str, Any]],
         liq_client: LiquidsoapClient,
         pypo_liquidsoap: PypoLiquidsoap,
         config: Config,
@@ -50,9 +51,9 @@ class PypoFetch(Thread):
 
         self.api_client = api_client
         self.legacy_client = legacy_client
-        self.fetch_queue = pypoFetch_q
-        self.push_queue = pypoPush_q
-        self.media_prepare_queue = media_q
+        self.fetch_queue = fetch_queue
+        self.push_queue = push_queue
+        self.media_prepare_queue = file_queue
         self.last_update_schedule_timestamp = time.time()
         self.config = config
         self.listener_timeout = POLL_INTERVAL

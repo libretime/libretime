@@ -2,12 +2,14 @@ import signal
 import sys
 from collections import deque
 from datetime import datetime
-from queue import Empty
+from queue import Empty, Queue
 from threading import Thread
+from typing import Any, Dict
 
 from loguru import logger
 
 from ..utils import seconds_between
+from .liquidsoap import PypoLiquidsoap
 
 
 def keyboardInterruptHandler(signum, frame):
@@ -21,9 +23,13 @@ signal.signal(signal.SIGINT, keyboardInterruptHandler)
 class PypoLiqQueue(Thread):
     name = "liquidsoap_queue"
 
-    def __init__(self, q, pypo_liquidsoap):
+    def __init__(
+        self,
+        future_queue: Queue[Dict[str, Any]],
+        pypo_liquidsoap: PypoLiquidsoap,
+    ):
         Thread.__init__(self)
-        self.queue = q
+        self.queue = future_queue
         self.pypo_liquidsoap = pypo_liquidsoap
 
     def main(self):

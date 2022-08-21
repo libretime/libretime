@@ -44,7 +44,11 @@ def create_liquidsoap_annotation(media):
 
 
 class TelnetLiquidsoap:
-    def __init__(self, liq_client: LiquidsoapClient, queues: List[str]):
+    def __init__(
+        self,
+        liq_client: LiquidsoapClient,
+        queues: List[str],
+    ):
         self.liq_client = liq_client
         self.queues = queues
         self.current_prebuffering_stream_id = None
