@@ -30,14 +30,6 @@ from .player.push import PypoPush
 from .recorder import Recorder
 
 
-class Global:
-    def __init__(self, legacy_client: LegacyClient):
-        self.legacy_client = legacy_client
-
-    def selfcheck(self):
-        return self.legacy_client.is_server_compatible()
-
-
 def keyboardInterruptHandler(signum, frame):
     logger.info("\nKeyboard Interrupt\n")
     sys.exit(0)
@@ -78,9 +70,8 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
         base_url=config.general.public_url,
         api_key=config.general.api_key,
     )
-    g = Global(legacy_client)
 
-    while not g.selfcheck():
+    while not legacy_client.is_server_compatible():
         time.sleep(5)
 
     success = False
