@@ -3,6 +3,7 @@ import time
 from datetime import datetime
 from queue import Queue
 from threading import Thread
+from typing import Any, Dict
 
 from loguru import logger
 
@@ -22,9 +23,14 @@ def is_file(media_item):
 class PypoPush(Thread):
     name = "push"
 
-    def __init__(self, q, pypo_liquidsoap: PypoLiquidsoap, config: Config):
+    def __init__(
+        self,
+        push_queue: Queue[Dict[str, Any]],
+        pypo_liquidsoap: PypoLiquidsoap,
+        config: Config,
+    ):
         Thread.__init__(self)
-        self.queue = q
+        self.queue = push_queue
 
         self.config = config
 
@@ -32,7 +38,7 @@ class PypoPush(Thread):
         self.current_prebuffering_stream_id = None
         self.queue_id = 0
 
-        self.future_scheduled_queue = Queue()
+        self.future_scheduled_queue: Queue[Dict[str, Any]] = Queue()
         self.pypo_liquidsoap = pypo_liquidsoap
 
         self.plq = PypoLiqQueue(self.future_scheduled_queue, self.pypo_liquidsoap)
