@@ -1,18 +1,25 @@
 from os import environ
 from pathlib import Path
-from typing import List
+from typing import List, Union
 from unittest import mock
 
-from pydantic import AnyHttpUrl, BaseModel
+from pydantic import AnyHttpUrl, BaseModel, Field
 from pytest import mark, raises
+from typing_extensions import Annotated
 
 from libretime_shared.config import (
     BaseConfig,
     DatabaseConfig,
+    IcecastOutput,
     RabbitMQConfig,
+    ShoutcastOutput,
     no_trailing_slash_validator,
 )
 
+AnyOutput = Annotated[
+    Union[IcecastOutput, ShoutcastOutput],
+    Field(discriminator="kind"),
+]
 
 # pylint: disable=too-few-public-methods
 class FixtureConfig(BaseConfig):
@@ -21,6 +28,7 @@ class FixtureConfig(BaseConfig):
     allowed_hosts: List[str] = []
     database: DatabaseConfig
     rabbitmq: RabbitMQConfig = RabbitMQConfig()
+    outputs: List[AnyOutput]
 
     # Validators
     _public_url_no_trailing_slash = no_trailing_slash_validator("public_url")
@@ -39,6 +47,17 @@ database:
   port: 5432
 
 ignored: "ignored"
+
+outputs:
+  - enabled: true
+    kind: icecast
+    host: localhost
+    port: 8000
+    mount: main.ogg
+    source_password: hackme
+    audio:
+      format: ogg
+      bitrate: 256
 """
 
 
@@ -54,6 +73,8 @@ def test_base_config(tmp_path: Path):
             "LIBRETIME_DATABASE": "invalid",
             "LIBRETIME_RABBITMQ": "invalid",
             "LIBRETIME_RABBITMQ_HOST": "changed",
+            "LIBRETIME_OUTPUTS_0_ENABLED": "false",
+            "LIBRETIME_OUTPUTS_0_HOST": "changed",
             "WRONGPREFIX_API_KEY": "invalid",
         },
     ):
@@ -66,6 +87,10 @@ def test_base_config(tmp_path: Path):
         assert config.database.port == 8888
         assert config.rabbitmq.host == "changed"
         assert config.rabbitmq.port == 5672
+        assert config.outputs[0].enabled is False
+        assert config.outputs[0].kind == "icecast"
+        assert config.outputs[0].host == "changed"
+        assert config.outputs[0].audio.format == "ogg"
 
     # Optional model: loading default values (rabbitmq)
     with mock.patch.dict(environ, {}):
