@@ -36,6 +36,44 @@ Along with the Debian Buster deprecation, the following dependencies versions ar
 - [php7.3](https://packages.debian.org/buster/php7.3)
 - [python3.7](https://packages.debian.org/buster/python3)
 
+## :arrow_up: Before upgrading
+
+:::caution
+
+Please follow this **before the upgrade procedure**!
+
+:::
+
+### File based stream configuration
+
+The stream configuration moved from the database to the [configuration](../admin-manual/setup/configuration.md#stream) file. A configuration sample can be found in the project folder under `installer/config.yml`. Make sure to save your existing stream config to the configuration file.
+
+:::info
+
+To prevent accidental data loss during upgrade, the stream configuration data will only be removed from the database in future releases. You can view the data using the following commands:
+
+```bash
+sudo -u libretime libretime-api dbshell --command="
+    SELECT *
+    FROM cc_stream_setting
+    ORDER BY keyname;"
+
+sudo -u libretime libretime-api dbshell --command="
+    SELECT *
+    FROM cc_pref
+    WHERE keystr IN (
+        'default_icecast_password',
+        'default_stream_mount_point',
+        'live_dj_connection_url_override',
+        'live_dj_source_connection_url',
+        'master_dj_connection_url_override',
+        'master_dj_source_connection_url'
+    )
+    ORDER BY keystr;"
+```
+
+:::
+
 ## :arrow_up: Upgrading
 
 ### Worker python package and service
