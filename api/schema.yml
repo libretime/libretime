@@ -467,6 +467,22 @@ paths:
       responses:
         "204":
           description: No response body
+  /api/v2/info:
+    get:
+      operationId: info_retrieve
+      tags:
+        - info
+      security:
+        - cookieAuth: []
+        - basicAuth: []
+        - {}
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Info"
+          description: ""
   /api/v2/libraries:
     get:
       operationId: libraries_list
@@ -4326,11 +4342,11 @@ paths:
       responses:
         "204":
           description: No response body
-  /api/v2/stream-settings:
+  /api/v2/stream/preferences:
     get:
-      operationId: stream_settings_list
+      operationId: stream_preferences_retrieve
       tags:
-        - stream-settings
+        - stream
       security:
         - cookieAuth: []
         - basicAuth: []
@@ -4339,48 +4355,13 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/StreamSetting"
+                $ref: "#/components/schemas/StreamPreferences"
           description: ""
-    post:
-      operationId: stream_settings_create
-      tags:
-        - stream-settings
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/StreamSetting"
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "#/components/schemas/StreamSetting"
-          multipart/form-data:
-            schema:
-              $ref: "#/components/schemas/StreamSetting"
-        required: true
-      security:
-        - cookieAuth: []
-        - basicAuth: []
-      responses:
-        "201":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/StreamSetting"
-          description: ""
-  /api/v2/stream-settings/{key}:
+  /api/v2/stream/state:
     get:
-      operationId: stream_settings_retrieve
-      parameters:
-        - in: path
-          name: key
-          schema:
-            type: string
-          description: A unique value identifying this stream setting.
-          required: true
+      operationId: stream_state_retrieve
       tags:
-        - stream-settings
+        - stream
       security:
         - cookieAuth: []
         - basicAuth: []
@@ -4389,90 +4370,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/StreamSetting"
+                $ref: "#/components/schemas/StreamState"
           description: ""
-    put:
-      operationId: stream_settings_update
-      parameters:
-        - in: path
-          name: key
-          schema:
-            type: string
-          description: A unique value identifying this stream setting.
-          required: true
-      tags:
-        - stream-settings
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/StreamSetting"
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "#/components/schemas/StreamSetting"
-          multipart/form-data:
-            schema:
-              $ref: "#/components/schemas/StreamSetting"
-        required: true
-      security:
-        - cookieAuth: []
-        - basicAuth: []
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/StreamSetting"
-          description: ""
-    patch:
-      operationId: stream_settings_partial_update
-      parameters:
-        - in: path
-          name: key
-          schema:
-            type: string
-          description: A unique value identifying this stream setting.
-          required: true
-      tags:
-        - stream-settings
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PatchedStreamSetting"
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "#/components/schemas/PatchedStreamSetting"
-          multipart/form-data:
-            schema:
-              $ref: "#/components/schemas/PatchedStreamSetting"
-      security:
-        - cookieAuth: []
-        - basicAuth: []
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/StreamSetting"
-          description: ""
-    delete:
-      operationId: stream_settings_destroy
-      parameters:
-        - in: path
-          name: key
-          schema:
-            type: string
-          description: A unique value identifying this stream setting.
-          required: true
-      tags:
-        - stream-settings
-      security:
-        - cookieAuth: []
-        - basicAuth: []
-      responses:
-        "204":
-          description: No response body
   /api/v2/third-party-track-references:
     get:
       operationId: third_party_track_references_list
@@ -5684,6 +5583,14 @@ components:
         - id
         - override_album
         - podcast
+    Info:
+      type: object
+      properties:
+        station_name:
+          type: string
+          readOnly: true
+      required:
+        - station_name
     Library:
       type: object
       properties:
@@ -6708,19 +6615,6 @@ components:
           readOnly: true
         podcast:
           type: integer
-    PatchedStreamSetting:
-      type: object
-      properties:
-        key:
-          type: string
-          maxLength: 64
-        raw_value:
-          type: string
-          nullable: true
-          maxLength: 255
-        type:
-          type: string
-          maxLength: 16
     PatchedThirdPartyTrackReference:
       type: object
       properties:
@@ -7579,22 +7473,47 @@ components:
       required:
         - id
         - podcast
-    StreamSetting:
+    StreamPreferences:
       type: object
       properties:
-        key:
+        input_fade_transition:
+          type: number
+          format: double
+          readOnly: true
+        message_format:
+          type: integer
+          readOnly: true
+        message_offline:
           type: string
-          maxLength: 64
-        raw_value:
-          type: string
-          nullable: true
-          maxLength: 255
-        type:
-          type: string
-          maxLength: 16
+          readOnly: true
       required:
-        - key
-        - type
+        - input_fade_transition
+        - message_format
+        - message_offline
+    StreamState:
+      type: object
+      properties:
+        input_main_connected:
+          type: boolean
+          readOnly: true
+        input_main_streaming:
+          type: boolean
+          readOnly: true
+        input_show_connected:
+          type: boolean
+          readOnly: true
+        input_show_streaming:
+          type: boolean
+          readOnly: true
+        schedule_streaming:
+          type: boolean
+          readOnly: true
+      required:
+        - input_main_connected
+        - input_main_streaming
+        - input_show_connected
+        - input_show_streaming
+        - schedule_streaming
     ThirdPartyTrackReference:
       type: object
       properties:
@@ -7714,6 +7633,7 @@ components:
       properties:
         api_version:
           type: string
+          readOnly: true
       required:
         - api_version
     Webstream:

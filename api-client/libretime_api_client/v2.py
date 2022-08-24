@@ -8,6 +8,9 @@ class ApiClient(AbstractApiClient):
         super().__init__(base_url=base_url)
         self.session.headers.update({"Authorization": f"Api-Key {api_key}"})
 
+    def get_info(self, **kwargs) -> Response:
+        return self._request("GET", "/api/v2/info", **kwargs)
+
     def get_version(self, **kwargs) -> Response:
         return self._request("GET", "/api/v2/version", **kwargs)
 
@@ -31,3 +34,9 @@ class ApiClient(AbstractApiClient):
 
     def download_file(self, item_id: int, **kwargs) -> Response:
         return self._request("GET", f"/api/v2/files/{item_id}/download", **kwargs)
+
+    def get_stream_preferences(self, **kwargs) -> Response:
+        return self._request("GET", "/api/v2/stream/preferences", **kwargs)
+
+    def get_stream_state(self, **kwargs) -> Response:
+        return self._request("GET", "/api/v2/stream/state", **kwargs)

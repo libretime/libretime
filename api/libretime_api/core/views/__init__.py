@@ -1,6 +1,7 @@
 from .auth import LoginAttemptViewSet, UserTokenViewSet
-from .info import VersionView
-from .preference import PreferenceViewSet, StreamSettingViewSet
+from .info import InfoView, VersionView
+from .preference import PreferenceViewSet
 from .service import ServiceRegisterViewSet
+from .stream import StreamPreferencesView, StreamStateView
 from .user import UserViewSet
 from .worker import CeleryTaskViewSet, ThirdPartyTrackReferenceViewSet
