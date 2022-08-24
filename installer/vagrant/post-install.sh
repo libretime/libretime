@@ -20,3 +20,8 @@ rabbitmqctl set_user_tags libretime administrator
 DEBIAN_FRONTEND=noninteractive apt-get -y -qq install alsa-utils
 usermod -a -G audio vagrant
 usermod -a -G audio libretime
+
+# Setup debug environment for services
+cat << EOF > /etc/libretime/env
+LIBRETIME_LOG_LEVEL=debug
+EOF
