@@ -42,6 +42,23 @@ libretime-playout
 libretime-worker
 ```
 
+## Storage
+
+The `storage` section configure the project storage.
+
+```yml
+storage:
+  # Path of the storage directory.
+  # > default is /srv/libretime
+  path: "/srv/libretime"
+```
+
+In order to apply the changes made in this section, please restart the following services:
+
+```
+libretime-api
+```
+
 ## Database
 
 The `database` section configure the PostgreSQL connection.
