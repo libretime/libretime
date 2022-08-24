@@ -42,7 +42,6 @@ class ListenerstatController extends Zend_Controller_Action
         ]);
 
         $errorStatus = Application_Model_Preference::GetAllListenerStatErrors();
-        Logging::info($errorStatus);
         $out = [];
         foreach ($errorStatus as $v) {
             $key = explode(':', $v['keystr']);
@@ -73,7 +72,7 @@ class ListenerstatController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl . 'css/datatables/css/ColVis.css?' . $CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl . 'css/datatables/css/dataTables.colReorder.min.css?' . $CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl . 'css/jquery.ui.timepicker.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/show_analytics.css' . $CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl . 'css/show_analytics.css?' . $CC_CONFIG['airtime_version']);
 
         $user = Application_Model_User::getCurrentUser();
         if ($user->isUserType([UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER])) {
