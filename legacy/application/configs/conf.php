@@ -19,7 +19,7 @@ class Schema implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
-        $trim_trailing_slash = function ($v) {
+        $force_trailing_slash = function ($v) {
             return rtrim($v, '/') . '/';
         };
 
@@ -58,7 +58,7 @@ class Schema implements ConfigurationInterface
             // Storage schema
             ->arrayNode('storage')->addDefaultsIfNotSet()->children()
             /**/->scalarNode('path')->defaultValue('/srv/libretime')
-            /*  */->validate()->ifString()->then($trim_trailing_slash)->end()
+            /*  */->validate()->ifString()->then($force_trailing_slash)->end()
             /**/->end()
             ->end()->end()
 
