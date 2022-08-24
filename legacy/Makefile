@@ -25,7 +25,7 @@ format: tools
 
 .PHONY: lint
 lint: tools
-	$(TOOLS)/bin/php-cs-fixer fix --dry-run --diff
+	$(TOOLS)/bin/php-cs-fixer fix --verbose --dry-run --diff
 
 .PHONY: build
 build:

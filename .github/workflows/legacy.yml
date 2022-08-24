@@ -22,11 +22,20 @@ concurrency:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php-version: "7.2" # Bionic
+          - php-version: "7.3" # Buster
+          - php-version: "7.4" # Bullseye, Focal
+
     steps:
       - uses: actions/checkout@v3
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
+          php-version: ${{ matrix.php-version }}
+
       - name: Lint
         run: make lint
         working-directory: legacy
