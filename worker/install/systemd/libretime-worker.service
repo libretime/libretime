@@ -3,6 +3,7 @@ Description=LibreTime Worker Service
 PartOf=libretime.target
 
 [Service]
+EnvironmentFile=-@@CONFIG_DIR@@/env
 Environment=LIBRETIME_LOG_FILEPATH=@@LOG_DIR@@/worker.log
 Environment=LIBRETIME_CONFIG_FILEPATH=@@CONFIG_FILEPATH@@
 WorkingDirectory=@@WORKING_DIR@@/worker
