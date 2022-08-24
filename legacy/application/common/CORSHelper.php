@@ -31,7 +31,7 @@ class CORSHelper
 
         return array_merge(
             $config['allowedCorsOrigins'],
-            self::getDatabaseAllowedOrigins(),
+            self::getDatabaseAllowedOrigins()
         );
     }
 
@@ -46,7 +46,7 @@ class CORSHelper
             'trim',
             explode(
                 PHP_EOL,
-                Application_Model_Preference::GetAllowedCorsUrls(),
+                Application_Model_Preference::GetAllowedCorsUrls()
             )
         );
     }
