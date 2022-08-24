@@ -221,6 +221,240 @@ In order to apply the changes made in this section, please restart the following
 libretime-liquidsoap
 ```
 
+## Stream
+
+The `stream` section configures anything related to the input and output streams.
+
+```yml
+stream:
+  inputs: # See the [stream.inputs] section.
+  outputs: # See the [stream.outputs] section.
+```
+
+:::info
+
+To help you simplify your stream configuration, you can use yaml anchors to define a common properties and reuse them in your output definitions:
+
+```yml
+stream:
+  outputs:
+    # This can be reused to define multiple outputs without duplicating data
+    .default_icecast_output: &default_icecast_output
+      source_password: "hackme"
+      admin_password: "hackme"
+      name: "LibreTime!"
+      description: "LibreTime Radio!"
+      website: "https://libretime.org"
+      genre: "various"
+
+    icecast:
+      - <<: *default_icecast_output
+        enabled: true
+        mount: "main.ogg"
+        audio:
+          format: "ogg"
+          bitrate: 256
+
+      - <<: *default_icecast_output
+        enabled: true
+        mount: "main.mp3"
+        audio:
+          format: "mp3"
+          bitrate: 256
+```
+
+:::
+
+In order to apply the changes made in this section, please restart the following services:
+
+```
+libretime-liquidsoap
+libretime-playout
+```
+
+### Inputs
+
+The `stream.inputs` section configures anything related to the input streams.
+
+```yml
+stream:
+  # Inputs sources.
+  inputs:
+    # Main harbor input.
+    main:
+      # Harbor input public url. If not defined, the value will be generated from
+      # the [general.public_url] hostname, the input port and mount.
+      public_url:
+      # Mount point for the main harbor input.
+      # > default is main
+      mount: "main"
+      # Listen port for the main harbor input.
+      # > default is 8001
+      port: 8001
+
+    # Show harbor input.
+    show:
+      # Harbor input public url. If not defined, the value will be generated from
+      # the [general.public_url] hostname, the input port and mount.
+      public_url:
+      # Mount point for the show harbor input.
+      # > default is show
+      mount: "show"
+      # Listen port for the show harbor input.
+      # > default is 8002
+      port: 8002
+```
+
+### Outputs
+
+The `stream.outputs` section configures anything related to the output streams.
+
+```yml
+stream:
+  # Output streams.
+  outputs:
+    icecast: # See the [stream.outputs.icecast] section.
+    shoutcast: # See the [stream.outputs.shoutcast] section.
+    system: # See the [stream.outputs.system] section.
+```
+
+#### Icecast
+
+The `stream.outputs.icecast` section configures the icecast output streams.
+
+```yml
+stream:
+  outputs:
+    # Icecast output streams.
+    # > max items is 3
+    icecast:
+      - # Whether the output is enabled.
+        # > default is false
+        enabled: false
+        # Output public url, If not defined, the value will be generated from
+        # the [general.public_url] hostname, the output port and mount.
+        public_url:
+        # Icecast server host.
+        # > default is localhost
+        host: "localhost"
+        # Icecast server port.
+        # > default is 8000
+        port: 8000
+        # Icecast server mount point.
+        # > this field is REQUIRED
+        mount: "main"
+        # Icecast source user.
+        # > default is source
+        source_user: "source"
+        # Icecast source password.
+        # > this field is REQUIRED
+        source_password: "hackme"
+        # Icecast admin user.
+        # > default is admin
+        admin_user: "admin"
+        # Icecast admin password. If not defined, statistics will not be collected.
+        admin_password: "hackme"
+
+        # Icecast output audio.
+        audio:
+          # Icecast output audio format.
+          # > must be one of (aac, mp3, ogg, opus)
+          # > this field is REQUIRED
+          format: "ogg"
+          # Icecast output audio bitrate.
+          # > must be one of (32, 48, 64, 96, 128, 160, 192, 224, 256, 320)
+          # > this field is REQUIRED
+          bitrate: 256
+
+          # format=ogg only field: Embed metadata (track title, artist, and show name)
+          # in the output stream. Some bugged players will disconnect from the stream
+          # after every songs when playing ogg streams that have metadata information
+          # enabled.
+          # > default is false
+          enable_metadata: false
+
+        # Icecast stream name.
+        name: "LibreTime!"
+        # Icecast stream description.
+        description: "LibreTime Radio!"
+        # Icecast stream website.
+        website: "https://libretime.org"
+        # Icecast stream genre.
+        genre: "various"
+```
+
+#### Shoutcast
+
+The `stream.outputs.shoutcast` section configures the shoutcast output streams.
+
+```yml
+stream:
+  outputs:
+    # Shoutcast output streams.
+    # > max items is 1
+    shoutcast:
+      - # Whether the output is enabled.
+        # > default is false
+        enabled: false
+        # Output public url. If not defined, the value will be generated from
+        # the [general.public_url] hostname and the output port.
+        public_url:
+        # Shoutcast server host.
+        # > default is localhost
+        host: "localhost"
+        # Shoutcast server port.
+        # > default is 8000
+        port: 8000
+        # Shoutcast source user.
+        # > default is source
+        source_user: "source"
+        # Shoutcast source password.
+        # > this field is REQUIRED
+        source_password: "hackme"
+        # Shoutcast admin user.
+        # > default is admin
+        admin_user: "admin"
+        # Shoutcast admin password. If not defined, statistics will not be collected.
+        admin_password: "hackme"
+
+        # Shoutcast output audio.
+        audio:
+          # Shoutcast output audio format.
+          # > must be one of (aac, mp3)
+          # > this field is REQUIRED
+          format: "mp3"
+          # Shoutcast output audio bitrate.
+          # > must be one of (32, 48, 64, 96, 128, 160, 192, 224, 256, 320)
+          # > this field is REQUIRED
+          bitrate: 256
+
+        # Shoutcast stream name.
+        name: "LibreTime!"
+        # Shoutcast stream website.
+        website: "https://libretime.org"
+        # Shoutcast stream genre.
+        genre: "various"
+```
+
+#### System
+
+The `stream.outputs.system` section configures the system outputs.
+
+```yml
+stream:
+  outputs:
+    # System outputs.
+    # > max items is 1
+    system:
+      - # Whether the output is enabled.
+        # > default is false
+        enabled: false
+        # System output kind.
+        # > must be one of (alsa, ao, oss, portaudio, pulseaudio)
+        # > default is alsa
+        kind: "alsa"
+```
+
 ## LDAP
 
 The `ldap` section provide additional configuration for the authentication mechanism defined in `general.auth`, please see the [custom authentication documentation](../custom-authentication.md) for more details.
