@@ -37,7 +37,7 @@ class Application_Service_MediaService
             $newTempFilePath,
             $importedStorageDirectory,
             basename($originalFilename),
-            $fileId,
+            $fileId
         );
 
         return $newTempFilePath;
