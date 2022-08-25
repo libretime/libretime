@@ -18,8 +18,8 @@ general:
   # > this field is REQUIRED
   api_key: "some_random_generated_secret!"
 
-  # List of origins allowed to access resources on the server, the public url
-  # origin is automatically included.
+  # List of origins allowed to access resources on the server,
+  # the [general.public_url] origin is automatically included.
   # > default is []
   allowed_cors_origins: []
 
