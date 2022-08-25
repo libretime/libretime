@@ -15,7 +15,7 @@ class Application_Common_FileIO
      * @param int    $size     - the file size, in bytes
      *
      * @see https://groups.google.com/d/msg/jplayer/nSM2UmnSKKA/Hu76jDZS4xcJ
-     * @see http://php.net/manual/en/function.readfile.php#86244
+     * @see https://php.net/manual/en/function.readfile.php#86244
      */
     public static function smartReadFile($filePath, $size, $mimeType)
     {
@@ -69,7 +69,7 @@ class Application_Common_FileIO
 
         // We can have multiple levels of output buffering. Need to
         // keep looping until all have been disabled!!!
-        // http://www.php.net/manual/en/function.ob-end-flush.php
+        // https://www.php.net/manual/en/function.ob-end-flush.php
         while (ob_get_level() > 0) {
             ob_end_flush();
         }

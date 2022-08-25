@@ -4,7 +4,7 @@ setup(
     name="libretime-shared",
     version="1.0.0",
     description="LibreTime Shared",
-    url="http://github.com/libretime/libretime",
+    url="https://github.com/libretime/libretime",
     author="LibreTime Contributors",
     license="AGPLv3",
     packages=find_packages(exclude=["*tests*", "*fixtures*"]),

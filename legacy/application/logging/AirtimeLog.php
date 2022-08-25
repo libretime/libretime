@@ -25,7 +25,7 @@ class Airtime_Zend_Log extends Zend_Log
     /**
      * Error Handler will convert error into log message, and then call the original error handler.
      *
-     * @see http://www.php.net/manual/en/function.set-error-handler.php Custom error handler
+     * @see https://www.php.net/manual/en/function.set-error-handler.php Custom error handler
      *
      * @param int    $errno
      * @param string $errstr
@@ -66,7 +66,7 @@ class Airtime_Zend_Log extends Zend_Log
      *   E_DEPRECATED, E_STRICT, E_USER_DEPRECATED => DEBUG
      *   (unknown/other) => INFO
      *
-     * @see http://www.php.net/manual/en/function.set-error-handler.php Custom error handler
+     * @see https://www.php.net/manual/en/function.set-error-handler.php Custom error handler
      *
      * @return Zend_Log
      */

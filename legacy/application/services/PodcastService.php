@@ -496,7 +496,7 @@ class Application_Service_PodcastService
                 $enclosure->addAttribute('type', $publishedFile->getDbMime());
 
                 // itunes:subtitle
-                // From http://www.apple.com/ca/itunes/podcasts/specs.html#subtitle :
+                // From https://www.apple.com/ca/itunes/podcasts/specs.html#subtitle :
                 // 'The contents of the <itunes:subtitle> tag are displayed in the Description column in iTunes.'
                 // self::addEscapedChild($item, "xmlns:itunes:subtitle", $publishedFile->getDbTrackTitle());
                 self::addEscapedChild($item, 'xmlns:itunes:subtitle', $publishedFile->getDbDescription());

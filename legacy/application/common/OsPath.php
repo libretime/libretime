@@ -2,7 +2,7 @@
 
 class Application_Common_OsPath
 {
-    // this function is from http://stackoverflow.com/questions/2670299/is-there-a-php-equivalent-function-to-the-python-os-path-normpath
+    // this function is from https://stackoverflow.com/questions/2670299/is-there-a-php-equivalent-function-to-the-python-os-path-normpath
     public static function normpath($path)
     {
         if (empty($path)) {
@@ -52,7 +52,7 @@ class Application_Common_OsPath
     }
 
     /* Similar to the os.path.join python method
-     * http://stackoverflow.com/a/1782990/276949 */
+     * https://stackoverflow.com/a/1782990/276949 */
     public static function join()
     {
         $args = func_get_args();
