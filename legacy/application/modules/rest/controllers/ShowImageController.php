@@ -289,7 +289,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller
         return self::delTree($importedStorageDirectory);
     }
 
-    // from a note @ http://php.net/manual/en/function.rmdir.php
+    // from a note @ https://php.net/manual/en/function.rmdir.php
     private static function delTree($dir)
     {
         $files = array_diff(scandir($dir), ['.', '..']);

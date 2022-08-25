@@ -263,7 +263,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
     private function verifyAPIKey()
     {
         // The API key is passed in via HTTP "basic authentication":
-        // http://en.wikipedia.org/wiki/Basic_access_authentication
+        // https://en.wikipedia.org/wiki/Basic_access_authentication
         $CC_CONFIG = Config::getConfig();
 
         // Decode the API key that was passed to us in the HTTP request.

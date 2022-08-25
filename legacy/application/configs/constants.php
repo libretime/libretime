@@ -25,23 +25,23 @@ define('LIBRETIME_CONFIG_FILEPATH', getenv('LIBRETIME_CONFIG_FILEPATH') ?: LIBRE
 
 // Legacy constants
 define('PRODUCT_NAME', 'LibreTime');
-define('PRODUCT_SITE_URL', 'http://libretime.org');
+define('PRODUCT_SITE_URL', 'https://libretime.org');
 
 define('SAAS_PRODUCT_BRANDING_NAME', 'LibreTime');
-define('SAAS_LOGIN_REFERRER', 'http://libretime.org');
+define('SAAS_LOGIN_REFERRER', 'https://libretime.org');
 
 define('COMPANY_NAME', 'LibreTime Community');
 define('COMPANY_SUFFIX', '');
 define('COMPANY_SITE', 'libretime.org');
-define('COMPANY_SITE_URL', 'http://libretime.org');
+define('COMPANY_SITE_URL', 'https://libretime.org');
 define('SUPPORT_ADDRESS', 'https://discourse.libretime.org/');
 
 define('HELP_URL', 'https://discourse.libretime.org/');
 define('WHOS_USING_URL', 'https://github.com/orgs/libretime/people');
 define('TERMS_AND_CONDITIONS_URL', 'https://github.com/libretime/libretime/blob/main/README.md');
 define('PRIVACY_POLICY_URL', 'https://github.com/libretime/organization/blob/main/CODE_OF_CONDUCT.md');
-define('USER_MANUAL_URL', 'http://libretime.org/docs');
-define('ABOUT_AIRTIME_URL', 'http://libretime.org');
+define('USER_MANUAL_URL', 'https://libretime.org/docs');
+define('ABOUT_AIRTIME_URL', 'https://libretime.org');
 define('LIBRETIME_CONTRIBUTE_URL', 'https://libretime.org/contribute');
 define('LIBRETIME_DISCOURSE_URL', 'https://discourse.libretime.org');
 define('UI_REVAMP_EMBED_URL', 'https://www.youtube.com/embed/nqpNnCKGluY');
@@ -50,7 +50,7 @@ define('LIBRETIME_UPDATE_FEED', 'https://github.com/libretime/libretime/releases
 define('LIBRETIME_EMAIL_FROM', 'noreply@libretime.org');
 
 define('LICENSE_VERSION', 'GNU AGPL v.3');
-define('LICENSE_URL', 'http://www.gnu.org/licenses/agpl-3.0-standalone.html');
+define('LICENSE_URL', 'https://www.gnu.org/licenses/agpl-3.0-standalone.html');
 
 define('AIRTIME_COPYRIGHT_DATE', '2010-2015');
 define('AIRTIME_REST_VERSION', '1.1');
@@ -127,7 +127,7 @@ define('UI_PLAYLISTCONTROLLER_OBJ_SESSNAME', 'PLAYLISTCONTROLLER_OBJ');
 define('UI_BLOCK_SESSNAME', 'BLOCK');*/
 
 // TuneIn integration
-define('TUNEIN_API_URL', 'http://air.radiotime.com/Playing.ashx');
+define('TUNEIN_API_URL', 'https://air.radiotime.com/Playing.ashx');
 
 // Celery
 define('CELERY_PENDING_STATUS', 'PENDING');

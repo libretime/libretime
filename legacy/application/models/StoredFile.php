@@ -4,7 +4,7 @@
  *  Application_Model_StoredFile class.
  *
  * @copyright 2010 Sourcefabric O.P.S.
- * @license http://www.gnu.org/licenses/gpl.txt
+ * @license https://www.gnu.org/licenses/gpl.txt
  *
  * @see MetaData
  */
@@ -521,7 +521,7 @@ SQL;
 
     /**
      * Sometimes we want a relative URL and not a full URL. See bug
-     * http://dev.sourcefabric.org/browse/CC-2403.
+     * https://dev.sourcefabric.org/browse/CC-2403.
      *
      * @param mixed $baseUrl
      */

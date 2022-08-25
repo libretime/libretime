@@ -2,7 +2,7 @@
 
 /**
  * @copyright 2010 Sourcefabric O.P.S.
- * @license http://www.gnu.org/licenses/gpl.txt
+ * @license https://www.gnu.org/licenses/gpl.txt
  */
 class Application_Model_Block implements Application_Model_LibraryEditable
 {

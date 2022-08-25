@@ -117,7 +117,7 @@ class Application_Model_Preference
      * Given a PDO connection, lock the cc_pref table for the current transaction.
      *
      * Creates a table level lock, which defaults to ACCESS EXCLUSIVE mode;
-     * see http://www.postgresql.org/docs/9.1/static/explicit-locking.html
+     * see https://www.postgresql.org/docs/9.1/static/explicit-locking.html
      *
      * @param PDO $con
      */
