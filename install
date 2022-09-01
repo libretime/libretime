@@ -268,6 +268,11 @@ install_service() {
 
   [[ -f "$service_src" ]] || error "service '$service_name' src path '$service_src' does not exists!"
 
+  # TODO: Remove when Bionic support is dropped
+  if [[ $distro == "bionic" ]]; then
+    mkdir -p "$SERVICE_DIR"
+  fi
+
   template_file "$service_src" "$service_dest" \
     sed \
       -e "s|^User=.*|User=${LIBRETIME_USER}|" \
@@ -428,7 +433,9 @@ if $LIBRETIME_SETUP_POSTGRESQL; then
   install_packages postgresql postgresql-client
 
   if $is_first_install; then
-    if ! sudo -u postgres psql --csv --tuples-only --command='\du' | grep -qw "^$LIBRETIME_POSTGRESQL_USER"; then
+    # TODO: Swap lines when Bionic support is dropped
+    # if ! sudo -u postgres psql --csv --tuples-only --command='\du' | grep -qw "^$LIBRETIME_POSTGRESQL_USER"; then
+    if ! sudo -u postgres psql --tuples-only --command='\du' | grep -qw "$LIBRETIME_POSTGRESQL_USER"; then
       info "creating PostgreSQL user '$LIBRETIME_POSTGRESQL_USER'"
       sudo -u postgres createuser "$LIBRETIME_POSTGRESQL_USER"
       sudo -u postgres psql -c "ALTER ROLE $LIBRETIME_POSTGRESQL_USER WITH PASSWORD '$LIBRETIME_POSTGRESQL_PASSWORD';"
@@ -439,7 +446,9 @@ if $LIBRETIME_SETUP_POSTGRESQL; then
       warning "PostgreSQL user '$LIBRETIME_POSTGRESQL_USER' already exists!"
     fi
 
-    if ! sudo -u postgres psql --csv --tuples-only --list | grep -qw "^$LIBRETIME_POSTGRESQL_DATABASE"; then
+    # TODO: Swap lines when Bionic support is dropped
+    # if ! sudo -u postgres psql --csv --tuples-only --list | grep -qw "^$LIBRETIME_POSTGRESQL_DATABASE"; then
+    if ! sudo -u postgres psql --tuples-only --list | grep -qw "$LIBRETIME_POSTGRESQL_DATABASE"; then
       info "creating PostgreSQL database '$LIBRETIME_POSTGRESQL_DATABASE' with owner '$LIBRETIME_POSTGRESQL_USER'"
       sudo -u postgres createdb --template=template0 --encoding=UTF-8 --owner="$LIBRETIME_POSTGRESQL_USER" "$LIBRETIME_POSTGRESQL_DATABASE"
 
@@ -465,7 +474,9 @@ if $LIBRETIME_SETUP_RABBITMQ; then
   install_packages rabbitmq-server
 
   if $is_first_install; then
-    if ! rabbitmqctl list_users --quiet | grep -qw "^$LIBRETIME_RABBITMQ_USER"; then
+    # TODO: Swap lines when Bionic support is dropped
+    # if ! rabbitmqctl --quiet list_users | grep -qw "^$LIBRETIME_RABBITMQ_USER"; then
+    if ! rabbitmqctl -q list_users | grep -qw "^$LIBRETIME_RABBITMQ_USER"; then
       info "creating RabbitMQ user '$LIBRETIME_RABBITMQ_USER'"
       rabbitmqctl add_user "$LIBRETIME_RABBITMQ_USER" "$LIBRETIME_RABBITMQ_PASSWORD"
 
@@ -475,7 +486,9 @@ if $LIBRETIME_SETUP_RABBITMQ; then
       warning "RabbitMQ user '$LIBRETIME_RABBITMQ_USER' already exists!"
     fi
 
-    if ! rabbitmqctl list_vhosts --quiet | grep -qw "^$LIBRETIME_RABBITMQ_VHOST"; then
+    # TODO: Swap lines when Bionic support is dropped
+    # if ! rabbitmqctl --quiet list_vhosts | grep -qw "^$LIBRETIME_RABBITMQ_VHOST"; then
+    if ! rabbitmqctl -q list_vhosts | grep -qw "^$LIBRETIME_RABBITMQ_VHOST"; then
       info "creating RabbitMQ vhost '$LIBRETIME_RABBITMQ_VHOST' with owner '$LIBRETIME_RABBITMQ_USER'"
       rabbitmqctl add_vhost "$LIBRETIME_RABBITMQ_VHOST"
       rabbitmqctl set_permissions -p "$LIBRETIME_RABBITMQ_VHOST" "$LIBRETIME_RABBITMQ_USER" '.*' '.*' '.*'
@@ -501,6 +514,12 @@ if $LIBRETIME_SETUP_ICECAST; then
   section "Icecast"
   install_packages icecast2
   systemctl enable icecast2
+
+  # TODO: Remove when Bionic support is dropped
+  if [[ $distro == "bionic" ]]; then
+    sed --in-place -e "s|^ENABLE=.*$|ENABLE=true|" /etc/default/icecast2
+  fi
+
   systemctl start icecast2
 
   if $is_first_install; then
@@ -523,7 +542,7 @@ fi
 ########################################################################################
 
 section "Python3"
-install_packages python3 python3-pip
+install_packages python3 python3-pip python3-wheel
 
 info "upgrading python3 tools"
 $PIP install --upgrade setuptools~=58.0
@@ -605,6 +624,11 @@ install_python_app "$SCRIPT_DIR/worker"
 
 info "creating libretime-worker working directory"
 mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR/worker"
+
+# TODO: Remove when Bionic support is dropped
+if [[ $distro == "bionic" ]]; then
+  ln -sf /bin/sh /usr/bin/sh
+fi
 
 install_service "libretime-worker.service" "$SCRIPT_DIR/worker/install/systemd/libretime-worker.service"
 
