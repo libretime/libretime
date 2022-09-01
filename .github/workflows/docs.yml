@@ -22,13 +22,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            /usr/local/bin/vale*
+          key: ${{ runner.os }}-docs-lint-tools
+          restore-keys: |
+            ${{ runner.os }}-docs-lint-tools
+
       - name: Install Vale
         run: |
-          sudo pip3 install gh-release-install
-          sudo gh-release-install \
+          python -m venv venv && source venv/bin/activate
+          pip install gh-release-install
+
+          sudo venv/bin/gh-release-install \
             errata-ai/vale \
             vale_{version}_Linux_64-bit.tar.gz --extract vale \
-            /usr/local/bin/vale
+            /usr/local/bin/vale \
+            --version-file '{destination}.version'
 
       - name: Add annotations matchers
         run: |
