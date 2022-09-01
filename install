@@ -248,7 +248,10 @@ set_config() {
 # install_python_app <path>
 install_python_app()  {
   info "installing python app from $1"
-  $PIP install "$1"
+  $PIP install \
+    --upgrade \
+    --upgrade-strategy only-if-needed \
+    "$1"
 }
 
 # install_service <name> <filepath>
