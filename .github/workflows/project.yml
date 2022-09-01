@@ -18,6 +18,14 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.x"
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-project-pre-commit-pip-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-project-pre-commit-pip
+
       - uses: pre-commit/action@v3.0.0
 
   check-shell:
