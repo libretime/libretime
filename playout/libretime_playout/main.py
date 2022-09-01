@@ -8,7 +8,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 from queue import Queue
-from typing import Any, Dict, Optional
+from typing import Optional
 
 import click
 from libretime_api_client.v1 import ApiClient as LegacyClient
@@ -93,14 +93,14 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     if not LIQUIDSOAP_MIN_VERSION <= liq_version:
         raise Exception(f"Invalid liquidsoap version {liq_version}")
 
-    fetch_queue: Queue[Dict[str, Any]] = Queue()
-    recorder_queue: Queue[Dict[str, Any]] = Queue()
-    push_queue: Queue[Dict[str, Any]] = Queue()
+    fetch_queue = Queue()
+    recorder_queue = Queue()
+    push_queue = Queue()
     # This queue is shared between pypo-fetch and pypo-file, where pypo-file
     # is the consumer. Pypo-fetch will send every schedule it gets to pypo-file
     # and pypo will parse this schedule to determine which file has the highest
     # priority, and retrieve it.
-    file_queue: Queue[Dict[str, Any]] = Queue()
+    file_queue = Queue()
 
     pypo_liquidsoap = PypoLiquidsoap(liq_client)
 

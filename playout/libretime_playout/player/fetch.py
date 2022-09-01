@@ -9,7 +9,6 @@ from datetime import datetime
 from queue import Empty, Queue
 from subprocess import PIPE, Popen
 from threading import Thread, Timer
-from typing import Any, Dict
 
 from libretime_api_client.v1 import ApiClient as LegacyClient
 from libretime_api_client.v2 import ApiClient
@@ -35,9 +34,9 @@ class PypoFetch(Thread):
 
     def __init__(
         self,
-        fetch_queue: Queue[Dict[str, Any]],
-        push_queue: Queue[Dict[str, Any]],
-        file_queue: Queue[Dict[str, Any]],
+        fetch_queue: Queue,
+        push_queue: Queue,
+        file_queue: Queue,
         liq_client: LiquidsoapClient,
         pypo_liquidsoap: PypoLiquidsoap,
         config: Config,

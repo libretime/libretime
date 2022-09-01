@@ -2,7 +2,6 @@ import json
 import time
 from queue import Queue as ThreadQueue
 from threading import Thread
-from typing import Any, Dict
 
 # For RabbitMQ
 from kombu.connection import Connection
@@ -33,8 +32,8 @@ class PypoMessageHandler(Thread):
 
     def __init__(
         self,
-        fetch_queue: ThreadQueue[Dict[str, Any]],
-        recorder_queue: ThreadQueue[Dict[str, Any]],
+        fetch_queue: ThreadQueue,
+        recorder_queue: ThreadQueue,
         config: RabbitMQConfig,
     ):
         Thread.__init__(self)
