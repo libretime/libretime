@@ -43,6 +43,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-project-check-shell-pip
 
+      - uses: actions/cache@v3
+        with:
+          path: |
+            /usr/local/bin/shellcheck*
+            /usr/local/bin/shfmt*
+          key: ${{ runner.os }}-project-check-shell-tools
+          restore-keys: |
+            ${{ runner.os }}-project-check-shell-tools
+
       - run: |
           python -m venv venv && source venv/bin/activate
           pip install gh-release-install
@@ -50,12 +59,14 @@ jobs:
           sudo venv/bin/gh-release-install \
             koalaman/shellcheck \
             shellcheck-{tag}.linux.x86_64.tar.xz --extract shellcheck-{tag}/shellcheck \
-            /usr/bin/shellcheck
+            /usr/local/bin/shellcheck \
+            --version-file '{destination}.version'
 
           sudo venv/bin/gh-release-install \
             mvdan/sh \
             shfmt_{tag}_linux_amd64 \
-            /usr/bin/shfmt
+            /usr/local/bin/shfmt \
+            --version-file '{destination}.version'
 
       - run: SEVERITY=warning make shell-check
 
