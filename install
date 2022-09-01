@@ -542,6 +542,15 @@ section "API"
 # shellcheck disable=SC2046
 install_packages $(list_packages "$SCRIPT_DIR/api")
 
+# TODO: Remove when Bionic support is dropped
+if [[ $distro == "bionic" ]]; then
+  info "installing gunicorn"
+  $PIP install \
+    'gunicorn' \
+    'uvicorn>=0.16.0,<0.17'
+  ln -sf /usr/local/bin/gunicorn /usr/bin/gunicorn
+fi
+
 install_python_app "$SCRIPT_DIR/api[prod]"
 
 install_service "libretime-api.service" "$SCRIPT_DIR/api/install/systemd/libretime-api.service"
