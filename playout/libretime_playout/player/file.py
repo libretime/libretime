@@ -4,7 +4,6 @@ import stat
 import time
 from queue import Empty, Queue
 from threading import Thread
-from typing import Any, Dict
 
 from libretime_api_client.v2 import ApiClient
 from loguru import logger
@@ -16,7 +15,7 @@ class PypoFile(Thread):
 
     def __init__(
         self,
-        file_queue: Queue[Dict[str, Any]],
+        file_queue: Queue,
         api_client: ApiClient,
     ):
         Thread.__init__(self)
