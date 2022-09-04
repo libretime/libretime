@@ -113,7 +113,8 @@ class Config
         try {
             $values = $processor->processConfiguration($schema, [$dirty]);
         } catch (InvalidConfigurationException $error) {
-            echo "could not parse configuration: " .  $error->getMessage();
+            echo 'could not parse configuration: ' . $error->getMessage();
+
             exit;
         }
 
@@ -128,10 +129,12 @@ class Config
         // Storage path
         if (!is_dir($values['storage']['path'])) {
             echo "the configured storage.path '{$values['storage']['path']}' does not exists!";
+
             exit;
         }
         if (!is_writable($values['storage']['path'])) {
             echo "the configured storage.path '{$values['storage']['path']}' is not writable!";
+
             exit;
         }
 
@@ -161,13 +164,19 @@ class Config
 
     public static function get(...$args)
     {
-        if (is_null(self::$dot_values)) self::load();
+        if (is_null(self::$dot_values)) {
+            self::load();
+        }
+
         return self::$dot_values->get(...$args);
     }
 
     public static function has(...$args)
     {
-        if (is_null(self::$dot_values)) self::load();
+        if (is_null(self::$dot_values)) {
+            self::load();
+        }
+
         return self::$dot_values->has(...$args);
     }
 
