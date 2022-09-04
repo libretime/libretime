@@ -264,12 +264,18 @@ class Config
 
     public static function setAirtimeVersion()
     {
-        $version = @file_get_contents(dirname(ROOT_PATH) . '/VERSION');
-        if (!$version) {
-            // fallback to constant from constants.php if no other info is available
-            $version = LIBRETIME_MAJOR_VERSION;
+        $version = LIBRETIME_MAJOR_VERSION;
+
+        foreach ([ROOT_PATH, dirname(ROOT_PATH)] as $path) {
+            $content = @file_get_contents($path . '/VERSION');
+            if ($content) {
+                $version = trim($content);
+
+                break;
+            }
         }
-        self::$legacy_values['airtime_version'] = trim($version);
+
+        self::$legacy_values['airtime_version'] = $version;
     }
 
     public static function getConfig()
