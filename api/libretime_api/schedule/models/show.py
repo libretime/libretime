@@ -26,11 +26,13 @@ class Show(models.Model):
     )
 
     live_auth_registered = models.BooleanField(
+        default=False,
         blank=True,
         null=True,
         db_column="live_stream_using_airtime_auth",
     )
     live_auth_custom = models.BooleanField(
+        default=False,
         blank=True,
         null=True,
         db_column="live_stream_using_custom_auth",
@@ -47,6 +49,10 @@ class Show(models.Model):
         null=True,
         db_column="live_stream_pass",
     )
+
+    @property
+    def live_enabled(self) -> bool:
+        return any((self.live_auth_registered, self.live_auth_custom))
 
     # A show is linkable if it has never been linked before. Once
     # a show becomes unlinked it can not be linked again.

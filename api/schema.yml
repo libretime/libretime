@@ -6379,6 +6379,9 @@ components:
           type: string
           nullable: true
           maxLength: 6
+        live_enabled:
+          type: boolean
+          readOnly: true
         linked:
           type: boolean
         linkable:
@@ -7185,6 +7188,9 @@ components:
           type: string
           nullable: true
           maxLength: 6
+        live_enabled:
+          type: boolean
+          readOnly: true
         linked:
           type: boolean
         linkable:
@@ -7202,6 +7208,7 @@ components:
         - id
         - linkable
         - linked
+        - live_enabled
         - name
     ShowDays:
       type: object
