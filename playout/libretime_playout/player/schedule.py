@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from operator import itemgetter
 from typing import Dict
 
 from dateutil.parser import isoparse
@@ -18,6 +19,22 @@ def datetime_to_event_key(value: datetime) -> str:
     return value.strftime(EVENT_KEY_FORMAT)
 
 
+def insert_event(events: dict, event_key: str, event: dict):
+    key = event_key
+
+    # Search for an empty slot
+    index = 0
+    while key in events:
+        # Ignore duplicate event
+        if event == events[key]:
+            return
+
+        key = f"{event_key}_{index}"
+        index += 1
+
+    events[key] = event
+
+
 def get_schedule(api_client: ApiClient):
     current_time = datetime.utcnow()
     end_time = current_time + timedelta(days=1)
@@ -34,8 +51,8 @@ def get_schedule(api_client: ApiClient):
         }
     ).json()
 
-    events = {}
-    for item in schedule:
+    events: Dict[str, dict] = {}
+    for item in sorted(schedule, key=itemgetter("starts_at")):
         item["starts_at"] = isoparse(item["starts_at"])
         item["ends_at"] = isoparse(item["ends_at"])
 
@@ -44,29 +61,28 @@ def get_schedule(api_client: ApiClient):
 
         if item["file"]:
             file = api_client.get_file(item["file"]).json()
-            events.update(generate_file_events(item, file, show))
+            generate_file_events(events, item, file, show)
 
         elif item["stream"]:
             webstream = api_client.get_webstream(item["stream"]).json()
-            events.update(generate_webstream_events(item, webstream, show))
+            generate_webstream_events(events, item, webstream, show)
 
-    return {"media": events}
+    return {"media": dict(sorted(events.items()))}
 
 
 def generate_file_events(
+    events: dict,
     schedule: dict,
     file: dict,
     show: dict,
-) -> Dict[str, dict]:
+):
     """
     Generate events for a scheduled file.
     """
-    events = {}
-
     schedule_start_event_key = datetime_to_event_key(schedule["starts_at"])
     schedule_end_event_key = datetime_to_event_key(schedule["ends_at"])
 
-    events[schedule_start_event_key] = {
+    event = {
         "type": EventKind.FILE,
         "row_id": schedule["id"],
         "start": schedule_start_event_key,
@@ -88,24 +104,22 @@ def generate_file_events(
         "replay_gain": file["replay_gain"],
         "filesize": file["size"],
     }
-
-    return events
+    insert_event(events, schedule_start_event_key, event)
 
 
 def generate_webstream_events(
+    events: dict,
     schedule: dict,
     webstream: dict,
     show: dict,
-) -> Dict[str, dict]:
+):
     """
     Generate events for a scheduled webstream.
     """
-    events = {}
-
     schedule_start_event_key = datetime_to_event_key(schedule["starts_at"])
     schedule_end_event_key = datetime_to_event_key(schedule["ends_at"])
 
-    events[schedule_start_event_key] = {
+    stream_buffer_start_event = {
         "type": EventKind.STREAM_BUFFER_START,
         "row_id": schedule["id"],
         "start": datetime_to_event_key(schedule["starts_at"] - timedelta(seconds=5)),
@@ -113,8 +127,9 @@ def generate_webstream_events(
         "uri": webstream["url"],
         "id": webstream["id"],
     }
+    insert_event(events, schedule_start_event_key, stream_buffer_start_event)
 
-    events[f"{schedule_start_event_key}_0"] = {
+    stream_output_start_event = {
         "type": EventKind.STREAM_OUTPUT_START,
         "row_id": schedule["id"],
         "start": schedule_start_event_key,
@@ -124,10 +139,11 @@ def generate_webstream_events(
         # Show data
         "show_name": show["name"],
     }
+    insert_event(events, schedule_start_event_key, stream_output_start_event)
 
     # NOTE: stream_*_end were previously triggered 1 second before
     # the schedule end.
-    events[schedule_end_event_key] = {
+    stream_buffer_end_event = {
         "type": EventKind.STREAM_BUFFER_END,
         "row_id": schedule["id"],
         "start": schedule_end_event_key,
@@ -135,8 +151,9 @@ def generate_webstream_events(
         "uri": webstream["url"],
         "id": webstream["id"],
     }
+    insert_event(events, schedule_end_event_key, stream_buffer_end_event)
 
-    events[f"{schedule_end_event_key}_0"] = {
+    stream_output_end_event = {
         "type": EventKind.STREAM_OUTPUT_END,
         "row_id": schedule["id"],
         "start": schedule_end_event_key,
@@ -144,5 +161,4 @@ def generate_webstream_events(
         "uri": webstream["url"],
         "id": webstream["id"],
     }
-
-    return events
+    insert_event(events, schedule_end_event_key, stream_output_end_event)
