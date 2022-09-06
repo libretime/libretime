@@ -15,6 +15,7 @@ class ShowSerializer(serializers.ModelSerializer):
             "image",
             "foreground_color",
             "background_color",
+            "live_enabled",
             "linked",
             "linkable",
             "auto_playlist",

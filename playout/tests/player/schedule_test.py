@@ -1,4 +1,5 @@
 import random
+from datetime import timedelta
 
 import pytest
 from dateutil.parser import isoparse
@@ -7,6 +8,7 @@ from libretime_api_client.v2 import ApiClient
 from libretime_playout.player.events import EventKind
 from libretime_playout.player.schedule import (
     generate_file_events,
+    generate_live_events,
     generate_webstream_events,
     get_schedule,
 )
@@ -18,10 +20,10 @@ def _api_client_fixture():
     return ApiClient(base_url=base_url, api_key="test_key")
 
 
-SHOW_1 = {"id": 1, "name": "Show 1"}
-SHOW_2 = {"id": 2, "name": "Show 2"}
-SHOW_3 = {"id": 3, "name": "Show 3"}
-SHOW_4 = {"id": 4, "name": "Show 4"}
+SHOW_1 = {"id": 1, "name": "Show 1", "live_enabled": False}
+SHOW_2 = {"id": 2, "name": "Show 2", "live_enabled": False}
+SHOW_3 = {"id": 3, "name": "Show 3", "live_enabled": True}
+SHOW_4 = {"id": 4, "name": "Show 4", "live_enabled": False}
 
 SHOW_INSTANCE_1 = {
     "id": 1,
@@ -264,6 +266,40 @@ SCHEDULE = [
 ]
 
 
+def test_generate_live_events():
+    show_instance_3 = SHOW_INSTANCE_3.copy()
+    show_instance_3["starts_at"] = isoparse(show_instance_3["starts_at"])
+    show_instance_3["ends_at"] = isoparse(show_instance_3["ends_at"])
+
+    result = {}
+    generate_live_events(result, show_instance_3, 0.0)
+    assert result == {
+        "2022-09-05-13-00-00": {
+            "type": EventKind.EVENT,
+            "event_type": "kick_out",
+            "start": "2022-09-05-13-00-00",
+            "end": "2022-09-05-13-00-00",
+        }
+    }
+
+    result = {}
+    generate_live_events(result, show_instance_3, 2.0)
+    assert result == {
+        "2022-09-05-12-59-58": {
+            "type": EventKind.EVENT,
+            "event_type": "switch_off",
+            "start": "2022-09-05-12-59-58",
+            "end": "2022-09-05-12-59-58",
+        },
+        "2022-09-05-13-00-00": {
+            "type": EventKind.EVENT,
+            "event_type": "kick_out",
+            "start": "2022-09-05-13-00-00",
+            "end": "2022-09-05-13-00-00",
+        },
+    }
+
+
 def test_generate_file_events():
     schedule_1 = SCHEDULE_1.copy()
     schedule_1["starts_at"] = isoparse(schedule_1["starts_at"])
@@ -348,6 +384,15 @@ def test_generate_webstream_events():
 )
 def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
     base_url = api_client.base_url
+
+    requests_mock.get(
+        f"{base_url}/api/v2/stream/preferences",
+        json={
+            "input_fade_transition": 2.0,
+            "message_format": 0,
+            "message_offline": "",
+        },
+    )
 
     requests_mock.get(f"{base_url}/api/v2/schedule", json=schedule)
 
@@ -541,7 +586,19 @@ def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
                 "replay_gain": "4.52",
                 "filesize": 10000,
             },
+            "2022-09-05-12-59-58": {
+                "type": EventKind.EVENT,
+                "event_type": "switch_off",
+                "start": "2022-09-05-12-59-58",
+                "end": "2022-09-05-12-59-58",
+            },
             "2022-09-05-13-00-00": {
+                "type": EventKind.EVENT,
+                "event_type": "kick_out",
+                "start": "2022-09-05-13-00-00",
+                "end": "2022-09-05-13-00-00",
+            },
+            "2022-09-05-13-00-00_0": {
                 "type": EventKind.FILE,
                 "row_id": 9,
                 "start": "2022-09-05-13-00-00",

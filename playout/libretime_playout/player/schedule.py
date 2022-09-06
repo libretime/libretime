@@ -10,6 +10,7 @@ from libretime_shared.datetime import (
     time_in_seconds,
 )
 
+from ..liquidsoap.models import StreamPreferences
 from .events import EventKind
 
 EVENT_KEY_FORMAT = "%Y-%m-%d-%H-%M-%S"
@@ -36,6 +37,8 @@ def insert_event(events: dict, event_key: str, event: dict):
 
 
 def get_schedule(api_client: ApiClient):
+    stream_preferences = StreamPreferences(**api_client.get_stream_preferences().json())
+
     current_time = datetime.utcnow()
     end_time = current_time + timedelta(days=1)
 
@@ -59,6 +62,15 @@ def get_schedule(api_client: ApiClient):
         show_instance = api_client.get_show_instance(item["instance"]).json()
         show = api_client.get_show(show_instance["show"]).json()
 
+        if show["live_enabled"]:
+            show_instance["starts_at"] = isoparse(show_instance["starts_at"])
+            show_instance["ends_at"] = isoparse(show_instance["ends_at"])
+            generate_live_events(
+                events,
+                show_instance,
+                stream_preferences.input_fade_transition,
+            )
+
         if item["file"]:
             file = api_client.get_file(item["file"]).json()
             generate_file_events(events, item, file, show)
@@ -68,6 +80,36 @@ def get_schedule(api_client: ApiClient):
             generate_webstream_events(events, item, webstream, show)
 
     return {"media": dict(sorted(events.items()))}
+
+
+def generate_live_events(
+    events: dict,
+    show_instance: dict,
+    input_fade_transition: float,
+):
+    transition = timedelta(seconds=input_fade_transition)
+
+    switch_off_event_key = datetime_to_event_key(show_instance["ends_at"] - transition)
+    kick_out_event_key = datetime_to_event_key(show_instance["ends_at"])
+
+    # If enabled, fade the input source out
+    if switch_off_event_key != kick_out_event_key:
+        switch_off_event = {
+            "type": EventKind.EVENT,
+            "event_type": "switch_off",
+            "start": switch_off_event_key,
+            "end": switch_off_event_key,
+        }
+        insert_event(events, switch_off_event_key, switch_off_event)
+
+    # Then kick the source out
+    kick_out_event = {
+        "type": EventKind.EVENT,
+        "event_type": "kick_out",
+        "start": kick_out_event_key,
+        "end": kick_out_event_key,
+    }
+    insert_event(events, kick_out_event_key, kick_out_event)
 
 
 def generate_file_events(
