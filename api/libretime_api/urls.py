@@ -22,6 +22,7 @@ api_urls += storage_urls
 
 
 urlpatterns = [
+    path("api/browser/", include("rest_framework.urls", namespace="rest_framework")),
     path("api/v2/", include(api_urls)),
     path(
         "api/v2/schema",
@@ -33,5 +34,4 @@ urlpatterns = [
         SpectacularSwaggerView.as_view(url_name="schema"),
         name="swagger-ui",
     ),
-    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 ]
