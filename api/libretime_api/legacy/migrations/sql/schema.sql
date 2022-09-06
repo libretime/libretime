@@ -395,20 +395,6 @@ CREATE TABLE "cc_subjs_token"
 );
 
 -----------------------------------------------------------------------
--- cc_stream_setting
------------------------------------------------------------------------
-
-DROP TABLE IF EXISTS "cc_stream_setting" CASCADE;
-
-CREATE TABLE "cc_stream_setting"
-(
-    "keyname" VARCHAR(64) NOT NULL,
-    "value" VARCHAR(255),
-    "type" VARCHAR(16) NOT NULL,
-    PRIMARY KEY ("keyname")
-);
-
------------------------------------------------------------------------
 -- cc_login_attempts
 -----------------------------------------------------------------------
 

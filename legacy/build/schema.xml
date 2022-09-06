@@ -375,11 +375,6 @@
       <reference local="user_id" foreign="id" />
     </foreign-key>
   </table>
-  <table name="cc_stream_setting" phpName="CcStreamSetting">
-    <column name="keyname" phpName="DbKeyName" primaryKey="true" type="VARCHAR" size="64" required="true" />
-    <column name="value" phpName="DbValue" type="VARCHAR" size="255" required="false" />
-    <column name="type" phpName="DbType" type="VARCHAR" size="16" required="true" />
-  </table>
   <table name="cc_login_attempts" phpName="CcLoginAttempts">
     <column name="ip" phpName="DbIP" primaryKey="true" type="VARCHAR" size="32" required="true" />
     <column name="attempts" phpName="DbAttempts" type="INTEGER" required="false" defaultValue="0" />
