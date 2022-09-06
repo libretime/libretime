@@ -10,27 +10,6 @@ function showErrorSections() {
     }
   });
 }
-function rebuildStreamURL(ele) {
-  var div = ele.closest("div");
-  host = div.find("input[id$=-host]").val();
-  port = div.find("input[id$=-port]").val();
-  mount = div.find("input[id$=-mount]").val();
-  streamurl = "";
-  if (div.find("select[id$=-output]").val() == "icecast") {
-    streamurl = "http://" + host;
-    if ($.trim(port) != "") {
-      streamurl += ":" + port;
-    }
-    if ($.trim(mount) != "") {
-      streamurl += "/" + mount;
-    }
-  } else {
-    streamurl = "http://" + host + ":" + port + "/";
-  }
-  div
-    .find("#stream_url")
-    .html('<a href="' + streamurl + '" target="_blank">' + streamurl + "</a>");
-}
 function restrictOggBitrate(ele, on) {
   var div = ele.closest("div");
   if (on) {
@@ -156,116 +135,7 @@ function checkLiquidsoapStatus() {
   });
 }
 
-function setLiveSourceConnectionOverrideListener() {
-  $("[id=connection_url_override]").click(function (event) {
-    var url_input = $(this)
-      .parent()
-      .find("dd[id$='_source_host-element']")
-      .children();
-    url_input.removeAttr("readonly");
-    $(this).parent().find("div[id$='_dj_connection_url_actions']").show();
-    event.preventDefault();
-  });
-
-  // set action for "OK" and "X"
-  var live_dj_actions = $("#live_dj_connection_url_actions");
-  var live_dj_input = live_dj_actions
-    .parent()
-    .find("dd[id$='_source_host-element']")
-    .children();
-  var master_dj_actions = $("#master_dj_connection_url_actions");
-  var master_dj_input = master_dj_actions
-    .parent()
-    .find("dd[id$='_source_host-element']")
-    .children();
-
-  live_dj_actions.find("#ok").click(function (event) {
-    event.preventDefault();
-    var url = live_dj_input.val();
-    live_dj_input.val(url);
-    live_dj_input.attr("readonly", "readonly");
-    live_dj_actions.hide();
-    $.get(baseUrl + "Preference/set-source-connection-url", {
-      format: "json",
-      type: "livedj",
-      url: encodeURIComponent(url),
-      override: 1,
-    });
-    event.preventDefault();
-  });
-
-  live_dj_actions.find("#reset").click(function (event) {
-    event.preventDefault();
-    var port = $("#show_source_port").val();
-    var mount = $("#show_source_mount").val();
-    if (mount.charAt(0) != "/") {
-      mount = "/".concat(mount);
-    }
-    var url = "http://" + location.hostname + ":" + port + mount;
-    live_dj_input.val(url);
-    live_dj_input.attr("readonly", "readonly");
-    live_dj_actions.hide();
-    $.get(baseUrl + "Preference/set-source-connection-url", {
-      format: "json",
-      type: "livedj",
-      url: encodeURIComponent(url),
-      override: 0,
-    });
-    event.preventDefault();
-  });
-
-  master_dj_actions.find("#ok").click(function (event) {
-    var url = master_dj_input.val();
-    master_dj_input.val(url);
-    master_dj_input.attr("readonly", "readonly");
-    master_dj_actions.hide();
-    $.get(baseUrl + "Preference/set-source-connection-url", {
-      format: "json",
-      type: "masterdj",
-      url: encodeURIComponent(url),
-      override: 1,
-    });
-    event.preventDefault();
-  });
-
-  master_dj_actions.find("#reset").click(function (event) {
-    var port = $("#master_source_port").val();
-    var mount = $("#master_source_mount").val();
-    if (mount.charAt(0) != "/") {
-      mount = "/".concat(mount);
-    }
-    var url = "http://" + location.hostname + ":" + port + mount;
-    master_dj_input.val(url);
-    master_dj_input.attr("readonly", "readonly");
-    master_dj_actions.hide();
-    $.get(baseUrl + "Preference/set-source-connection-url", {
-      format: "json",
-      type: "masterdj",
-      url: encodeURIComponent(url),
-      override: 0,
-    });
-    event.preventDefault();
-  });
-}
-
 function setupEventListeners() {
-  // initial stream url
-  $("dd[id=outputStreamURL-element]").each(function () {
-    rebuildStreamURL($(this));
-  });
-
-  $("input[id$=-host], input[id$=-port], input[id$=-mount]").keyup(function () {
-    rebuildStreamURL($(this));
-  });
-
-  $("input[id$=-port]").keypress(function (e) {
-    validate($(this), e);
-  });
-
-  $("select[id$=-output]").change(function () {
-    rebuildStreamURL($(this));
-  });
-
   if (!$("#output_sound_device").is(":checked")) {
     $("select[id=output_sound_device_type]").attr("disabled", "disabled");
   } else {
@@ -318,8 +188,6 @@ function setupEventListeners() {
     $(this).toggleClass("closed");
     return false;
   });
-
-  setLiveSourceConnectionOverrideListener();
 
   showErrorSections();
   checkLiquidsoapStatus();
@@ -582,30 +450,18 @@ $(document).ready(function () {
       if (e[0] == s[0]) {
         return;
       }
-      var confirm_pypo_restart_text = $.i18n._(
-        "WARNING: This will restart your stream and may cause a short dropout for your listeners!"
-      );
-      if (confirm(confirm_pypo_restart_text)) {
-        var data = $("#stream_form").serialize();
-        var url = baseUrl + "Preference/stream-setting";
+      var data = $("#stream_form").serialize();
+      var url = baseUrl + "Preference/stream-setting";
 
-        $.post(url, { format: "json", data: data }, function (json) {
-          $("#content").empty().append(json.html);
-          if (json.valid) {
-            window.location.reload();
-          }
-          setupEventListeners();
-          setSliderForReplayGain();
-          getAdminPasswordStatus();
-        });
-      } else {
-        if (e.prop("checked")) {
-          if (e[0] != s[0]) {
-            e.prop("checked", false);
-            s.prop("checked", true);
-          }
+      $.post(url, { format: "json", data: data }, function (json) {
+        $("#content").empty().append(json.html);
+        if (json.valid) {
+          window.location.reload();
         }
-      }
+        setupEventListeners();
+        setSliderForReplayGain();
+        getAdminPasswordStatus();
+      });
     }
   );
 });

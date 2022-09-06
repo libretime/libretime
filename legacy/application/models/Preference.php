@@ -795,20 +795,6 @@ class Application_Model_Preference
         return (int) self::getValue('import_timestamp');
     }
 
-    public static function GetStreamType()
-    {
-        $st = self::getValue('stream_type');
-
-        return explode(',', $st);
-    }
-
-    public static function GetStreamBitrate()
-    {
-        $sb = self::getValue('stream_bitrate');
-
-        return explode(',', $sb);
-    }
-
     public static function SetPrivacyPolicyCheck($flag)
     {
         self::setValue('privacy_policy', $flag);
@@ -819,36 +805,9 @@ class Application_Model_Preference
         return self::getValue('privacy_policy');
     }
 
-    public static function SetNumOfStreams($num)
-    {
-        self::setValue('num_of_streams', intval($num));
-
-        // Enable or disable each stream according to whatever was just changed.
-        for ($streamIdx = 1; $streamIdx <= MAX_NUM_STREAMS; ++$streamIdx) {
-            $prefix = 's' . $streamIdx . '_';
-            $enable = 'false';
-            if ($streamIdx <= intval($num)) {
-                $enable = 'true';
-            }
-
-            // Enable or disable the stream in the Stream Settings DB table.
-            Application_Model_StreamSetting::setIndividualStreamSetting([$prefix . 'enable' => $enable]);
-        }
-    }
-
     public static function GetNumOfStreams()
     {
-        return self::getValue('num_of_streams');
-    }
-
-    public static function SetMaxBitrate($bitrate)
-    {
-        self::setValue('max_bitrate', intval($bitrate));
-    }
-
-    public static function GetMaxBitrate()
-    {
-        return self::getValue('max_bitrate');
+        return count(Config::get('stream.outputs.merged'));
     }
 
     public static function SetEnableStreamConf($bool)
@@ -1128,57 +1087,31 @@ class Application_Model_Preference
         return ($value == null || $value == 'off') ? 'off' : 'on';
     }
 
-    public static function SetMasterDJSourceConnectionURL($value)
-    {
-        self::setValue('master_dj_source_connection_url', $value, false);
-    }
-
     public static function GetMasterDJSourceConnectionURL()
     {
-        $master_connection_url = self::getValue('master_dj_source_connection_url');
-        if ($master_connection_url == '') {
-            $master_connection_url = 'http://' . $_SERVER['SERVER_NAME'] . ':' . Application_Model_StreamSetting::getMasterLiveStreamPort() . Application_Model_StreamSetting::getMasterLiveStreamMountPoint();
+        if (Config::has('stream.inputs.main.public_url') && Config::get('stream.inputs.main.public_url')) {
+            return Config::get('stream.inputs.main.public_url');
         }
 
-        return $master_connection_url;
-    }
+        $host = Config::get('general.public_url_raw')->getHost();
+        $port = Application_Model_StreamSetting::getMasterLiveStreamPort();
+        $mount = Application_Model_StreamSetting::getMasterLiveStreamMountPoint();
 
-    public static function SetLiveDJSourceConnectionURL($value)
-    {
-        self::setValue('live_dj_source_connection_url', $value, false);
+        return "http://{$host}:{$port}/{$mount}";
     }
 
     public static function GetLiveDJSourceConnectionURL()
     {
-        $livedj_connection_url = self::getValue('live_dj_source_connection_url');
-        if ($livedj_connection_url == '') {
-            $livedj_connection_url = 'http://' . $_SERVER['SERVER_NAME'] . ':' . Application_Model_StreamSetting::getDjLiveStreamPort() . Application_Model_StreamSetting::getDjLiveStreamMountPoint();
+        if (Config::has('stream.inputs.show.public_url') && Config::get('stream.inputs.show.public_url')) {
+            return Config::get('stream.inputs.show.public_url');
         }
 
-        return $livedj_connection_url;
-    }
+        $host = Config::get('general.public_url_raw')->getHost();
+        $port = Application_Model_StreamSetting::getDjLiveStreamPort();
+        $mount = Application_Model_StreamSetting::getDjLiveStreamMountPoint();
 
-    // Source Connection URL override status starts
-    public static function GetLiveDjConnectionUrlOverride()
-    {
-        return self::getValue('live_dj_connection_url_override');
+        return "http://{$host}:{$port}/{$mount}";
     }
-
-    public static function SetLiveDjConnectionUrlOverride($value)
-    {
-        self::setValue('live_dj_connection_url_override', $value, false);
-    }
-
-    public static function GetMasterDjConnectionUrlOverride()
-    {
-        return self::getValue('master_dj_connection_url_override');
-    }
-
-    public static function SetMasterDjConnectionUrlOverride($value)
-    {
-        self::setValue('master_dj_connection_url_override', $value, false);
-    }
-    // Source Connection URL override status ends
 
     public static function SetAutoTransition($value)
     {
@@ -1453,28 +1386,6 @@ class Application_Model_Preference
 
     // SAAS-876 - Store the default Icecast password to restore when switching
     //            back to Airtime Pro streaming settings
-
-    public static function getDefaultIcecastPassword()
-    {
-        $val = self::getValue('default_icecast_password');
-
-        return empty($val) ? DEFAULT_ICECAST_PASS : $val;
-    }
-
-    public static function setDefaultIcecastPassword($value)
-    {
-        self::setValue('default_icecast_password', $value);
-    }
-
-    public static function getDefaultStreamMountPoint()
-    {
-        return self::getValue('default_stream_mount_point');
-    }
-
-    public static function setDefaultStreamMountPoint($value)
-    {
-        self::setValue('default_stream_mount_point', $value);
-    }
 
     public static function getRadioPageDisplayLoginButton()
     {
