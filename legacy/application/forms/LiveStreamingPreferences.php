@@ -4,9 +4,6 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
 {
     public function init()
     {
-        $CC_CONFIG = Config::getConfig();
-        $isDemo = isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1;
-
         $defaultFade = Application_Model_Preference::GetDefaultTransitionFade();
 
         $this->setDecorators([
@@ -46,13 +43,9 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $this->addElement($master_username);
 
         // Master password
-        if ($isDemo) {
-            $master_password = new Zend_Form_Element_Text('master_password');
-        } else {
-            $master_password = new Zend_Form_Element_Password('master_password');
-            $master_password->setAttrib('renderPassword', 'true');
-        }
-        $master_password->setAttrib('autocomplete', 'off')
+        $master_password = new Zend_Form_Element_Password('master_password');
+        $master_password
+            ->setAttrib('autocomplete', 'off')
             ->setAttrib('renderPassword', 'true')
             ->setAllowEmpty(true)
             ->setValue(Application_Model_Preference::GetLiveStreamMasterPassword())
@@ -60,74 +53,53 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             ->setFilters(['StringTrim']);
         $this->addElement($master_password);
 
-        $masterSourceParams = parse_url(Application_Model_Preference::GetMasterDJSourceConnectionURL());
-
         // Master source connection url parameters
         $masterSourceHost = new Zend_Form_Element_Text('master_source_host');
-        $masterSourceHost->setLabel(_('Master Source Host:'))
+        $masterSourceHost
+            ->setLabel(_('Master Source Host:'))
             ->setAttrib('readonly', true)
             ->setValue(Application_Model_Preference::GetMasterDJSourceConnectionURL());
         $this->addElement($masterSourceHost);
 
-        // liquidsoap harbor.input port
-        $betweenValidator = Application_Form_Helper_ValidationTypes::overrideBetweenValidator(1024, 49151);
-
-        $m_port = Application_Model_StreamSetting::getMasterLiveStreamPort();
-
         $masterSourcePort = new Zend_Form_Element_Text('master_source_port');
-        $masterSourcePort->setLabel(_('Master Source Port:'))
-            ->setValue($m_port)
-            ->setValidators([$betweenValidator])
-            ->addValidator('regex', false, ['pattern' => '/^[0-9]+$/', 'messages' => ['regexNotMatch' => _('Only numbers are allowed.')]]);
-
+        $masterSourcePort
+            ->setLabel(_('Master Source Port:'))
+            ->setAttrib('readonly', true)
+            ->setValue(Application_Model_StreamSetting::getMasterLiveStreamPort());
         $this->addElement($masterSourcePort);
 
-        $m_mount = Application_Model_StreamSetting::getMasterLiveStreamMountPoint();
         $masterSourceMount = new Zend_Form_Element_Text('master_source_mount');
-        $masterSourceMount->setLabel(_('Master Source Mount:'))
-            ->setValue($m_mount)
-            ->setValidators([
-                ['regex', false, ['/^[^ &<>]+$/', 'messages' => _('Invalid character entered')]],
-            ]);
+        $masterSourceMount
+            ->setLabel(_('Master Source Mount:'))
+            ->setAttrib('readonly', true)
+            ->setValue(Application_Model_StreamSetting::getMasterLiveStreamMountPoint());
         $this->addElement($masterSourceMount);
-
-        $showSourceParams = parse_url(Application_Model_Preference::GetLiveDJSourceConnectionURL());
 
         // Show source connection url parameters
         $showSourceHost = new Zend_Form_Element_Text('show_source_host');
-        $showSourceHost->setLabel(_('Show Source Host:'))
+        $showSourceHost
+            ->setLabel(_('Show Source Host:'))
             ->setAttrib('readonly', true)
             ->setValue(Application_Model_Preference::GetLiveDJSourceConnectionURL());
         $this->addElement($showSourceHost);
 
-        // liquidsoap harbor.input port
-        $l_port = Application_Model_StreamSetting::getDjLiveStreamPort();
-
         $showSourcePort = new Zend_Form_Element_Text('show_source_port');
-        $showSourcePort->setLabel(_('Show Source Port:'))
-            ->setValue($l_port)
-            ->setValidators([$betweenValidator])
-            ->addValidator('regex', false, ['pattern' => '/^[0-9]+$/', 'messages' => ['regexNotMatch' => _('Only numbers are allowed.')]]);
+        $showSourcePort
+            ->setLabel(_('Show Source Port:'))
+            ->setAttrib('readonly', true)
+            ->setValue(Application_Model_StreamSetting::getDjLiveStreamPort());
         $this->addElement($showSourcePort);
 
-        $l_mount = Application_Model_StreamSetting::getDjLiveStreamMountPoint();
         $showSourceMount = new Zend_Form_Element_Text('show_source_mount');
-        $showSourceMount->setLabel(_('Show Source Mount:'))
-            ->setValue($l_mount)
-            ->setValidators([
-                ['regex', false, ['/^[^ &<>]+$/', 'messages' => _('Invalid character entered')]],
-            ]);
+        $showSourceMount
+            ->setLabel(_('Show Source Mount:'))
+            ->setAttrib('readonly', true)
+            ->setValue(Application_Model_StreamSetting::getDjLiveStreamMountPoint());
         $this->addElement($showSourceMount);
     }
 
     public function updateVariables()
     {
-        $CC_CONFIG = Config::getConfig();
-
-        $isDemo = isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1;
-        $masterSourceParams = parse_url(Application_Model_Preference::GetMasterDJSourceConnectionURL());
-        $showSourceParams = parse_url(Application_Model_Preference::GetLiveDJSourceConnectionURL());
-
         $this->setDecorators(
             [
                 [
@@ -140,7 +112,6 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
                         'show_source_host' => isset($showSourceHost) ? Application_Model_Preference::GetLiveDJSourceConnectionURL() : '',
                         'show_source_port' => isset($showSourcePort) ? Application_Model_StreamSetting::getDjLiveStreamPort() : '',
                         'show_source_mount' => isset($showSourceMount) ? Application_Model_StreamSetting::getDjLiveStreamMountPoint() : '',
-                        'isDemo' => $isDemo,
                     ],
                 ],
             ]

@@ -13,7 +13,6 @@ class PreferenceController extends Zend_Controller_Action
             ->addActionContext('is-import-in-progress', 'json')
             ->addActionContext('change-stream-setting', 'json')
             ->addActionContext('get-liquidsoap-status', 'json')
-            ->addActionContext('set-source-connection-url', 'json')
             ->addActionContext('get-admin-password-status', 'json')
             ->initContext();
     }
@@ -162,28 +161,6 @@ class PreferenceController extends Zend_Controller_Action
         $live_stream_subform = new Application_Form_LiveStreamingPreferences();
         $form->addSubForm($live_stream_subform, 'live_stream_subform');
 
-        // get predefined type and bitrate from pref table
-        $temp_types = Application_Model_Preference::GetStreamType();
-        $stream_types = [];
-        foreach ($temp_types as $type) {
-            $type = strtolower(trim($type));
-            if (isset($name_map[$type])) {
-                $name = $name_map[$type];
-            } else {
-                $name = $type;
-            }
-            $stream_types[$type] = $name;
-        }
-
-        $temp_bitrate = Application_Model_Preference::GetStreamBitrate();
-        $max_bitrate = intval(Application_Model_Preference::GetMaxBitrate());
-        $stream_bitrates = [];
-        foreach ($temp_bitrate as $type) {
-            if (intval($type) <= $max_bitrate) {
-                $stream_bitrates[trim($type)] = strtoupper(trim($type)) . ' kbit/s';
-            }
-        }
-
         // get current settings
         $setting = Application_Model_StreamSetting::getStreamSetting();
         $form->setSetting($setting);
@@ -192,10 +169,7 @@ class PreferenceController extends Zend_Controller_Action
             $subform = new Application_Form_StreamSettingSubForm();
             $subform->setPrefix($i);
             $subform->setSetting($setting);
-            $subform->setStreamTypes($stream_types);
-            $subform->setStreamBitrates($stream_bitrates);
             $subform->startForm();
-            $subform->toggleState();
             $form->addSubForm($subform, 's' . $i . '_subform');
         }
 
@@ -208,48 +182,14 @@ class PreferenceController extends Zend_Controller_Action
              * $form->isValid() is expecting it in
              */
             $postData = explode('&', $params['data']);
-            $s1_data = [];
-            $s2_data = [];
-            $s3_data = [];
-            $s4_data = [];
             $values = [];
+
             foreach ($postData as $k => $v) {
                 $v = explode('=', urldecode($v));
-                if (strpos($v[0], 's1_data') !== false) {
-                    /* In this case $v[0] may be 's1_data[enable]' , for example.
-                     * We only want the 'enable' part
-                     */
-                    preg_match('/\[(.*)\]/', $v[0], $matches);
-                    $s1_data[$matches[1]] = $v[1];
-                } elseif (strpos($v[0], 's2_data') !== false) {
-                    preg_match('/\[(.*)\]/', $v[0], $matches);
-                    $s2_data[$matches[1]] = $v[1];
-                } elseif (strpos($v[0], 's3_data') !== false) {
-                    preg_match('/\[(.*)\]/', $v[0], $matches);
-                    $s3_data[$matches[1]] = $v[1];
-                } elseif (strpos($v[0], 's4_data') !== false) {
-                    preg_match('/\[(.*)\]/', $v[0], $matches);
-                    $s4_data[$matches[1]] = $v[1];
-                } else {
-                    $values[$v[0]] = $v[1];
-                }
+                $values[$v[0]] = $v[1];
             }
-            $values['s1_data'] = $s1_data;
-            $values['s2_data'] = $s2_data;
-            $values['s3_data'] = $s3_data;
-            $values['s4_data'] = $s4_data;
 
             if ($form->isValid($values)) {
-                Application_Model_StreamSetting::setStreamSetting($values);
-
-                /* If the admin password values are empty then we should not
-                 * set the pseudo password ('xxxxxx') on the front-end
-                 */
-                $s1_set_admin_pass = !empty($values['s1_data']['admin_pass']);
-                $s2_set_admin_pass = !empty($values['s2_data']['admin_pass']);
-                $s3_set_admin_pass = !empty($values['s3_data']['admin_pass']);
-                $s4_set_admin_pass = !empty($values['s4_data']['admin_pass']);
-
                 // this goes into cc_pref table
                 $this->setStreamPreferences($values);
 
@@ -264,47 +204,9 @@ class PreferenceController extends Zend_Controller_Action
                     // Application_Model_RabbitMq::PushSchedule();
                 }
 
-                // pulling this from the 2.5.x branch
-                if (!Application_Model_Preference::GetMasterDjConnectionUrlOverride()) {
-                    $master_connection_url = 'http://' . $_SERVER['SERVER_NAME'] . ':' . $values['master_source_port'] . $values['master_source_mount'];
-                    if (empty($values['master_source_port']) || empty($values['master_source_mount'])) {
-                        Application_Model_Preference::SetMasterDJSourceConnectionURL('N/A');
-                    } else {
-                        Application_Model_Preference::SetMasterDJSourceConnectionURL($master_connection_url);
-                    }
-                } else {
-                    Application_Model_Preference::SetMasterDJSourceConnectionURL($values['master_source_host']);
-                }
-
-                if (!Application_Model_Preference::GetLiveDjConnectionUrlOverride()) {
-                    $live_connection_url = 'http://' . $_SERVER['SERVER_NAME'] . ':' . $values['show_source_port'] . $values['show_source_mount'];
-                    if (empty($values['show_source_port']) || empty($values['show_source_mount'])) {
-                        Application_Model_Preference::SetLiveDJSourceConnectionURL('N/A');
-                    } else {
-                        Application_Model_Preference::SetLiveDJSourceConnectionURL($live_connection_url);
-                    }
-                } else {
-                    Application_Model_Preference::SetLiveDJSourceConnectionURL($values['show_source_host']);
-                }
-
-                Application_Model_StreamSetting::setMasterLiveStreamPort($values['master_source_port']);
-                Application_Model_StreamSetting::setMasterLiveStreamMountPoint($values['master_source_mount']);
-                Application_Model_StreamSetting::setDjLiveStreamPort($values['show_source_port']);
-                Application_Model_StreamSetting::setDjLiveStreamMountPoint($values['show_source_mount']);
-
-                Application_Model_Preference::setOffAirMeta($values['offAirMeta']);
-
                 // store stream update timestamp
                 Application_Model_Preference::SetStreamUpdateTimestamp();
 
-                $data = [];
-                $info = Application_Model_StreamSetting::getStreamSetting();
-                $data['setting'] = $info;
-                for ($i = 1; $i <= $num_of_stream; ++$i) {
-                    Application_Model_Preference::setLiquidsoapError($i, 'waiting');
-                }
-
-                Application_Model_RabbitMq::SendMessageToPypo('update_stream_setting', $data);
                 $this->view->statusMsg = "<div class='success'>" . _('Stream Setting Updated.') . '</div>';
             }
         }
@@ -312,15 +214,12 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->num_stream = $num_of_stream;
         $this->view->enable_stream_conf = Application_Model_Preference::GetEnableStreamConf();
         $this->view->form = $form;
+
         if ($request->isPost()) {
             if ($form->isValid($values)) {
                 $this->_helper->json->sendJson([
                     'valid' => 'true',
                     'html' => $this->view->render('preference/stream-setting.phtml'),
-                    's1_set_admin_pass' => $s1_set_admin_pass,
-                    's2_set_admin_pass' => $s2_set_admin_pass,
-                    's3_set_admin_pass' => $s3_set_admin_pass,
-                    's4_set_admin_pass' => $s4_set_admin_pass,
                 ]);
             } else {
                 $this->_helper->json->sendJson(['valid' => 'false', 'html' => $this->view->render('preference/stream-setting.phtml')]);
@@ -335,7 +234,7 @@ class PreferenceController extends Zend_Controller_Action
      */
     private function setStreamPreferences($values)
     {
-        Application_Model_Preference::setUsingCustomStreamSettings($values['customStreamSettings']);
+        Application_Model_Preference::setOffAirMeta($values['offAirMeta']);
         Application_Model_Preference::SetStreamLabelFormat($values['streamFormat']);
         Application_Model_Preference::SetLiveStreamMasterUsername($values['master_username']);
         Application_Model_Preference::SetLiveStreamMasterPassword($values['master_password']);
@@ -403,26 +302,6 @@ class PreferenceController extends Zend_Controller_Action
             $out[] = ['id' => $i, 'status' => $status];
         }
         $this->_helper->json->sendJson($out);
-    }
-
-    public function setSourceConnectionUrlAction()
-    {
-        SessionHelper::reopenSessionForWriting();
-
-        $request = $this->getRequest();
-        $type = $request->getParam('type', null);
-        $url = urldecode($request->getParam('url', null));
-        $override = $request->getParam('override', false);
-
-        if ($type == 'masterdj') {
-            Application_Model_Preference::SetMasterDJSourceConnectionURL($url);
-            Application_Model_Preference::SetMasterDjConnectionUrlOverride($override);
-        } elseif ($type == 'livedj') {
-            Application_Model_Preference::SetLiveDJSourceConnectionURL($url);
-            Application_Model_Preference::SetLiveDjConnectionUrlOverride($override);
-        }
-
-        $this->_helper->json->sendJson(null);
     }
 
     public function getAdminPasswordStatusAction()

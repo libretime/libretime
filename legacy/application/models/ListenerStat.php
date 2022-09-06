@@ -58,29 +58,6 @@ SQL;
         }
 
         return $out;
-        $enabledStreamIds = Application_Model_StreamSetting::getEnabledStreamIds();
-        $enabledOut = [];
-
-        foreach ($enabledStreamIds as $sId) {
-            $sql = 'SELECT value FROM cc_stream_setting'
-                . ' WHERE keyname = :key';
-
-            $result = Application_Common_Database::prepareAndExecute($sql, ['key' => $sId . '_mount'], 'single');
-
-            $enabledMountPoint = $result['value'];
-
-            if (isset($out[$enabledMountPoint])) {
-                $enabledOut[$enabledMountPoint] = $out[$enabledMountPoint];
-            } else {
-                // TODO fix this hack (here for CC-5254)
-                // all shoutcast streams are automatically put under "shoutcast" mount point.
-                if (isset($out['shoutcast'])) {
-                    $enabledOut['shoutcast'] = $out['shoutcast'];
-                }
-            }
-        }
-
-        return $enabledOut;
     }
 
     // this will currently log the average number of listeners to a specific show during a certain range

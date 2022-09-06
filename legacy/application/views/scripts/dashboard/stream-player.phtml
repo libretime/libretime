@@ -36,7 +36,7 @@
             if (count($ids) > 0) {
                 $id = $ids[0];
                 $streamData = Application_Model_StreamSetting::getStreamData($id);
-                $url = "http://" . $streamData["${id}_host"] . ":" . $streamData["${id}_port"] . "/" . $streamData["${id}_mount"];
+                $url = $streamData["${id}_public_url"];
                 $type = $streamData["${id}_type"];
                 $serverType = $streamData["${id}_output"];
                 if ($type == "ogg")
@@ -68,7 +68,7 @@
                 <?php
                 foreach ($ids as $id) {
                     $streamData = Application_Model_StreamSetting::getStreamData($id);
-                    $url = "http://" . $streamData["${id}_host"] . ":" . $streamData["${id}_port"] . "/" . $streamData["${id}_mount"];
+                    $url = $streamData["${id}_public_url"];
                     $type = $streamData["${id}_type"];
                     $serverType = $streamData["${id}_output"];
                     if ($type == "ogg")

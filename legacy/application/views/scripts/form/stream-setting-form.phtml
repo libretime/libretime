@@ -15,27 +15,13 @@ $s_name = "s" . $this->stream_number;
                 <?php echo $this->element->getElement('enable') ?>
             </dd>
 
-            <dt id="<?php echo $s_name ?>Mobile-label">
-                <label for="<?php echo $s_name ?>Mobile"><?php echo $this->element->getElement('mobile')->getLabel() ?></label>
+            <dt id="<?php echo $s_name  ?>Output-label">
+                <label for="<?php echo $s_name  ?>Output"><?php echo $this->element->getElement('output')->getLabel() ?></label>
             </dt>
-            <dd id="<?php echo $s_name ?>Mobile-element">
-                <?php echo $this->element->getElement('mobile') ?>
+            <dd id="<?php echo $s_name  ?>Output-element">
+                <?php echo $this->element->getElement('output')  ?>
             </dd>
 
-            <dt id="<?php echo $s_name ?>Type-label">
-                <label for="<?php echo $s_name ?>Type"><?php echo $this->element->getElement('type')->getLabel() ?></label>
-            </dt>
-            <dd id="<?php echo $s_name ?>Type-element">
-                <?php echo $this->element->getElement('type') ?>
-                <span class='stream_type_help_icon'></span>
-            </dd>
-
-            <dt id="<?php echo $s_name ?>Bitrate-label">
-                <label for="<?php echo $s_name ?>Bitrate"><?php echo $this->element->getElement('bitrate')->getLabel() ?></label>
-            </dt>
-            <dd id="<?php echo $s_name ?>Bitrate-element">
-                <?php echo $this->element->getElement('bitrate') ?>
-            </dd>
             <dt id="outputServer-label">
                 <label for="outputServer"><?php echo $this->element->getElement('host')->getLabel() ?><span class="info-text-small">
                         <?php echo _("(Required)") ?></span> :</label>
@@ -64,12 +50,6 @@ $s_name = "s" . $this->stream_number;
                     </ul>
                 <?php endif; ?>
             </dd>
-            <dt id="<?php echo $s_name ?>Output-label">
-                <label for="<?php echo $s_name ?>Output"><?php echo $this->element->getElement('output')->getLabel() ?></label>
-            </dt>
-            <dd id="<?php echo $s_name ?>Output-element">
-                <?php echo $this->element->getElement('output') ?>
-            </dd>
 
             <dt id="<?php echo $s_name ?>Channels-label">
                 <label for="<?php echo $s_name ?>Channels"><?php echo $this->element->getElement('channels')->getLabel() ?></label>
@@ -78,144 +58,100 @@ $s_name = "s" . $this->stream_number;
                 <?php echo $this->element->getElement('channels') ?>
             </dd>
 
-            <fieldset class="padded top-margin display_field toggle closed" id="output_setting">
-                <legend style="cursor: pointer;">
-                    <span class="ui-icon ui-icon-triangle-2-n-s"></span>
-                    <?php echo _("Additional Options") ?>
-                </legend>
-                <dl class="zend_form">
-                    <dt id="outputUser-label">
-                        <label for="outputUser"><?php echo $this->element->getElement('user')->getLabel() ?> :
-                            <span class='stream_username_help_icon'></span>
-                        </label>
-                    </dt>
-                    <dd id="outputUser-element">
-                        <?php echo $this->element->getElement('user') ?>
-                        <?php if ($this->element->getElement('user')->hasErrors()) : ?>
-                            <ul class='errors'>
-                                <?php foreach ($this->element->getElement('user')->getMessages() as $error) : ?>
-                                    <li><?php echo $error; ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php endif; ?>
-                    </dd>
-                    <dt id="outputPassword-label">
-                        <label class="optional" for="outputPassword"><?php echo $this->element->getElement('pass')->getLabel() ?> :</label>
-                    </dt>
-                    <dd id="outputPassword-element" class="clearfix">
-                        <?php echo $this->element->getElement('pass') ?>
-                        <?php if ($this->element->getElement('pass')->hasErrors()) : ?>
-                            <ul class='errors'>
-                                <?php foreach ($this->element->getElement('pass')->getMessages() as $error) : ?>
-                                    <li><?php echo $error; ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php endif; ?>
-                    </dd>
-                    <dt id="adminUser-label">
-                        <label for="outputUser"><?php echo $this->element->getElement('admin_user')->getLabel() ?> :
-                            <span class='admin_username_help_icon'></span>
-                        </label>
-                    </dt>
-                    <dd id="adminUser-element">
-                        <?php echo $this->element->getElement('admin_user') ?>
-                        <?php if ($this->element->getElement('admin_user')->hasErrors()) : ?>
-                            <ul class='errors'>
-                                <?php foreach ($this->element->getElement('admin_user')->getMessages() as $error) : ?>
-                                    <li><?php echo $error; ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php endif; ?>
-                    </dd>
-                    <dt id="adminPassword-label">
-                        <label class="optional" for="outputPassword"><?php echo $this->element->getElement('admin_pass')->getLabel() ?> :</label>
-                    </dt>
-                    <dd id="adminPassword-element" class="clearfix">
-                        <?php echo $this->element->getElement('admin_pass') ?>
-                        <?php if ($this->element->getElement('admin_pass')->hasErrors()) : ?>
-                            <ul class='errors'>
-                                <?php foreach ($this->element->getElement('admin_pass')->getMessages() as $error) : ?>
-                                    <li><?php echo $error; ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php endif; ?>
-                    </dd>
-                    <dt class="block-display info-block">
-                        <?php echo _("The following info will be displayed to listeners in their media player:") ?>
-                    </dt>
-                    <dt id="stationName-label">
-                        <label for="stationName"><?php echo $this->element->getElement('name')->getLabel() ?> :</label>
-                    </dt>
-                    <dd id="stationName-element" class="clearfix">
-                        <?php echo $this->element->getElement('name') ?>
-                        <?php if ($this->element->getElement('name')->hasErrors()) : ?>
-                            <ul class='errors'>
-                                <?php foreach ($this->element->getElement('name')->getMessages() as $error) : ?>
-                                    <li><?php echo $error; ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php endif; ?>
-                    </dd>
-                    <dt id="stationDescription-label">
-                        <label for="stationDescription"><?php echo $this->element->getElement('description')->getLabel() ?> :</label>
-                    </dt>
-                    <dd id="stationDescription-element" class="clearfix">
-                        <?php echo $this->element->getElement('description') ?>
-                        <?php if ($this->element->getElement('description')->hasErrors()) : ?>
-                            <ul class='errors'>
-                                <?php foreach ($this->element->getElement('description')->getMessages() as $error) : ?>
-                                    <li><?php echo $error; ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php endif; ?>
-                    </dd>
-                    <dt id="stationURL-label">
-                        <label for="stationURL"><?php echo $this->element->getElement('url')->getLabel() ?> :</label>
-                    </dt>
-                    <dd id="stationURL-element" class="clearfix">
-                        <?php echo $this->element->getElement('url') ?>
-                        <span class="info-text-small"><?php echo _("(Your radio station website)") ?></span>
-                        <?php if ($this->element->getElement('url')->hasErrors()) : ?>
-                            <ul class='errors'>
-                                <?php foreach ($this->element->getElement('url')->getMessages() as $error) : ?>
-                                    <li><?php echo $error; ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php endif; ?>
-                    </dd>
-                    <dt id="outputGenre-label">
-                        <label for="outputGenre"><?php echo $this->element->getElement('genre')->getLabel() ?> :</label>
-                    </dt>
-                    <dd id="outputGenre-element">
-                        <?php echo $this->element->getElement('genre') ?>
-                        <?php if ($this->element->getElement('genre')->hasErrors()) : ?>
-                            <ul class='errors'>
-                                <?php foreach ($this->element->getElement('genre')->getMessages() as $error) : ?>
-                                    <li><?php echo $error; ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php endif; ?>
-                    </dd>
-                    <dt id="outputMountpoint-label">
-                        <label for="outputMountpoint"><?php echo $this->element->getElement('mount')->getLabel() ?> :</label>
-                    </dt>
-                    <dd id="outputMountpoint-element">
-                        <?php echo $this->element->getElement('mount') ?>
-                        <?php if ($this->element->getElement('mount')->hasErrors()) : ?>
-                            <ul class='errors'>
-                                <?php foreach ($this->element->getElement('mount')->getMessages() as $error) : ?>
-                                    <li><?php echo $error; ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php endif; ?>
-                    </dd>
-                </dl>
-            </fieldset>
+            <dt id="<?php echo $s_name ?>Type-label">
+                <label for="<?php echo $s_name ?>Type"><?php echo $this->element->getElement('type')->getLabel() ?></label>
+            </dt>
+            <dd id="<?php echo $s_name ?>Type-element">
+                <?php echo $this->element->getElement('type') ?>
+                <span class='stream_type_help_icon'></span>
+            </dd>
+
+            <dt id="<?php echo $s_name ?>Bitrate-label">
+                <label for="<?php echo $s_name ?>Bitrate"><?php echo $this->element->getElement('bitrate')->getLabel() ?></label>
+            </dt>
+            <dd id="<?php echo $s_name ?>Bitrate-element">
+                <?php echo $this->element->getElement('bitrate') ?>
+            </dd>
+
+
+            <dt id="stationName-label">
+                <label for="stationName"><?php echo $this->element->getElement('name')->getLabel() ?> :</label>
+            </dt>
+            <dd id="stationName-element" class="clearfix">
+                <?php echo $this->element->getElement('name') ?>
+                <?php if ($this->element->getElement('name')->hasErrors()) : ?>
+                    <ul class='errors'>
+                        <?php foreach ($this->element->getElement('name')->getMessages() as $error) : ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </dd>
+            <dt id="stationDescription-label">
+                <label for="stationDescription"><?php echo $this->element->getElement('description')->getLabel() ?> :</label>
+            </dt>
+            <dd id="stationDescription-element" class="clearfix">
+                <?php echo $this->element->getElement('description') ?>
+                <?php if ($this->element->getElement('description')->hasErrors()) : ?>
+                    <ul class='errors'>
+                        <?php foreach ($this->element->getElement('description')->getMessages() as $error) : ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </dd>
+            <dt id="stationURL-label">
+                <label for="stationURL"><?php echo $this->element->getElement('url')->getLabel() ?> :</label>
+            </dt>
+            <dd id="stationURL-element" class="clearfix">
+                <?php echo $this->element->getElement('url') ?>
+                <?php if ($this->element->getElement('url')->hasErrors()) : ?>
+                    <ul class='errors'>
+                        <?php foreach ($this->element->getElement('url')->getMessages() as $error) : ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </dd>
+            <dt id="outputGenre-label">
+                <label for="outputGenre"><?php echo $this->element->getElement('genre')->getLabel() ?> :</label>
+            </dt>
+            <dd id="outputGenre-element">
+                <?php echo $this->element->getElement('genre') ?>
+                <?php if ($this->element->getElement('genre')->hasErrors()) : ?>
+                    <ul class='errors'>
+                        <?php foreach ($this->element->getElement('genre')->getMessages() as $error) : ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </dd>
+            <dt id="outputMountpoint-label">
+                <label for="outputMountpoint"><?php echo $this->element->getElement('mount')->getLabel() ?> :</label>
+            </dt>
+            <dd id="outputMountpoint-element">
+                <?php echo $this->element->getElement('mount') ?>
+                <?php if ($this->element->getElement('mount')->hasErrors()) : ?>
+                    <ul class='errors'>
+                        <?php foreach ($this->element->getElement('mount')->getMessages() as $error) : ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </dd>
+            <dt id="<?php echo $s_name ?>Mobile-label">
+                <label for="<?php echo $s_name ?>Mobile"><?php echo $this->element->getElement('mobile')->getLabel() ?></label>
+            </dt>
+            <dd id="<?php echo $s_name ?>Mobile-element">
+                <?php echo $this->element->getElement('mobile') ?>
+            </dd>
             <dt id="outputStreamURL-label">
-                <label for="outputStreamURL"><?php echo _("Stream URL: "); ?></label>
+                <label for="outputStreamURL"><?php echo $this->element->getElement('public_url')->getLabel() ?> :</label>
             </dt>
             <dd id="outputStreamURL-element">
-                <span id="stream_url" class="static_text"></span>
+                <a href="<?php echo $this->element->getElement('public_url')->getValue() ?>" target="_blank" rel="noopener noreferrer">
+                    <?php echo $this->element->getElement('public_url')->getValue() ?>
+                </a>
             </dd>
         </dl>
     </fieldset>

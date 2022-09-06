@@ -23,6 +23,10 @@ class Schema implements ConfigurationInterface
             return rtrim($v, '/') . '/';
         };
 
+        $trim_leading_slash = function ($v) {
+            return ltrim($v, '/');
+        };
+
         $treeBuilder = new TreeBuilder('');
         $treeBuilder->getRootNode()
             ->children()
@@ -89,6 +93,111 @@ class Schema implements ConfigurationInterface
             /**/->ignoreExtraKeys()
             ->end()
 
+            // Stream schema
+            ->arrayNode('stream')->ignoreExtraKeys()->addDefaultsIfNotSet()->children()
+
+            // Stream inputs
+            ->arrayNode('inputs')->addDefaultsIfNotSet()->children()
+            /**/->arrayNode('main')->addDefaultsIfNotSet()->children()
+            /*  */->booleanNode('enabled')->defaultTrue()->end()
+            /*  */->enumNode('kind')->values(['harbor'])->defaultValue('harbor')->end()
+            /*  */->scalarNode('public_url')->end()
+            /*  */->scalarNode('mount')->defaultValue("main")
+            /*      */->validate()->ifString()->then($trim_leading_slash)->end()
+            /*  */->end()
+            /*  */->integerNode('port')->defaultValue(8001)->end()
+            /**/->end()->end()
+            /**/->arrayNode('show')->addDefaultsIfNotSet()->children()
+            /*  */->booleanNode('enabled')->defaultTrue()->end()
+            /*  */->enumNode('kind')->values(['harbor'])->defaultValue('harbor')->end()
+            /*  */->scalarNode('public_url')->end()
+            /*  */->scalarNode('mount')->defaultValue("show")
+            /*      */->validate()->ifString()->then($trim_leading_slash)->end()
+            /*  */->end()
+            /*  */->integerNode('port')->defaultValue(8002)->end()
+            /**/->end()->end()
+            ->end()->end()
+
+            // Stream outputs
+            ->arrayNode('outputs')->ignoreExtraKeys()->addDefaultsIfNotSet()->children()
+
+            // Icecast outputs
+            /**/->arrayNode('icecast')->arrayPrototype()->children()
+            /*  */->booleanNode('enabled')->defaultFalse()->end()
+            /*  */->enumNode('kind')->values(['icecast'])->defaultValue('icecast')->end()
+            /*  */->scalarNode('public_url')->end()
+            /*  */->scalarNode('host')->defaultValue('localhost')->end()
+            /*  */->integerNode('port')->defaultValue(8000)->end()
+            /*  */->scalarNode('mount')->cannotBeEmpty()
+            /*    */->validate()->ifString()->then($trim_leading_slash)->end()
+            /*  */->end()
+            /*  */->scalarNode('source_user')->defaultValue('source')->end()
+            /*  */->scalarNode('source_password')->cannotBeEmpty()->end()
+            /*  */->scalarNode('admin_user')->defaultValue('admin')->end()
+            /*  */->scalarNode('admin_password')->end()
+            /*  */->arrayNode('audio')->addDefaultsIfNotSet()->children()
+            /*    */->scalarNode('channels')->defaultValue('stereo')
+            /*        */->validate()->ifNotInArray(['stereo', 'mono'])
+            /*        */->thenInvalid('invalid stream.outputs.icecast.audio.channels %s')
+            /*        */->end()
+            /*    */->end()
+            /*    */->scalarNode('format')->cannotBeEmpty()
+            /*        */->validate()->ifNotInArray(['aac', 'mp3', 'ogg', 'opus'])
+            /*        */->thenInvalid('invalid stream.outputs.icecast.audio.format %s')
+            /*        */->end()
+            /*    */->end()
+            /*    */->integerNode('bitrate')->isRequired()->end()
+            /*    */->booleanNode('enable_metadata')->defaultFalse()->end()
+            /*  */->end()->end()
+            /*  */->scalarNode('name')->end()
+            /*  */->scalarNode('description')->end()
+            /*  */->scalarNode('website')->end()
+            /*  */->scalarNode('genre')->end()
+            /**/->end()->end()->end()
+
+            // Shoutcast outputs
+            /**/->arrayNode('shoutcast')->arrayPrototype()->children()
+            /*  */->booleanNode('enabled')->defaultFalse()->end()
+            /*  */->enumNode('kind')->values(['shoutcast'])->defaultValue('shoutcast')->end()
+            /*  */->scalarNode('public_url')->end()
+            /*  */->scalarNode('host')->defaultValue('localhost')->end()
+            /*  */->integerNode('port')->defaultValue(8000)->end()
+            /*  */->scalarNode('source_user')->defaultValue('source')->end()
+            /*  */->scalarNode('source_password')->cannotBeEmpty()->end()
+            /*  */->scalarNode('admin_user')->defaultValue('admin')->end()
+            /*  */->scalarNode('admin_password')->end()
+            /*  */->arrayNode('audio')->addDefaultsIfNotSet()->children()
+            /*    */->scalarNode('channels')->defaultValue('stereo')
+            /*        */->validate()->ifNotInArray(['stereo', 'mono'])
+            /*        */->thenInvalid('invalid stream.outputs.shoutcast.audio.channels %s')
+            /*        */->end()
+            /*    */->end()
+            /*    */->scalarNode('format')->cannotBeEmpty()
+            /*        */->validate()->ifNotInArray(['aac', 'mp3'])
+            /*        */->thenInvalid('invalid stream.outputs.shoutcast.audio.format %s')
+            /*        */->end()
+            /*    */->end()
+            /*    */->integerNode('bitrate')->isRequired()->end()
+            /*  */->end()->end()
+            /*  */->scalarNode('name')->end()
+            /*  */->scalarNode('website')->end()
+            /*  */->scalarNode('genre')->end()
+            /**/->end()->end()->end()
+
+            // System outputs
+            /**/->arrayNode('system')->arrayPrototype()->children()
+            /*  */->booleanNode('enabled')->defaultFalse()->end()
+            /*  */->scalarNode('kind')->defaultValue('alsa')
+            /*    */->validate()->ifNotInArray(["alsa", "ao", "oss", "portaudio", "pulseaudio"])
+            /*    */->thenInvalid('invalid stream.outputs.system.kind %s')
+            /*  */->end()->end()
+            /**/->end()->end()->end()
+
+            ->end()->end()
+
+            // END Stream schema
+            ->end()->end()
+
             // END Schema
             ->end();
 
@@ -137,6 +246,12 @@ class Config
 
             exit;
         }
+
+        // Merge Icecast and Shoutcast outputs
+        $values['stream']['outputs']['merged'] = array_merge(
+            $values['stream']['outputs']['icecast'],
+            $values['stream']['outputs']['shoutcast']
+        );
 
         self::$values = $values;
         self::fillLegacyValues($values);
@@ -236,6 +351,9 @@ class Config
 
         // Storage
         $legacy_values['storagePath'] = $values['storage']['path'];
+
+        // Stream
+        $legacy_values['stream'] = $values['stream'];
 
         // Facebook (DEPRECATED)
         if (isset($values['facebook']['facebook_app_id'])) {
