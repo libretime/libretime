@@ -43,6 +43,8 @@ Fixture(here / "s1-stereo.ogg",         15.0,   6.0,    13.0,   -5.7    ),
 Fixture(here / "s1-stereo",             15.0,   6.0,    13.0,   -5.7    ),
 Fixture(here / "s1-mono.wav",           15.0,   6.0,    13.0,   -2.3    ),
 Fixture(here / "s1-stereo.wav",         15.0,   6.0,    13.0,   -6.0    ),
+# sample 1 large (looped for 2 hours)
+Fixture(here / "s1-large.flac",         7200,   6.0,    7198,   -6.0    ),
 # sample 2
 # 0s   -> 1.8s: silence
 # 1.8s        : noise
