@@ -27,27 +27,6 @@ class CORSHelper
      */
     public static function getAllowedOrigins($request)
     {
-        $config = Config::getConfig();
-
-        return array_merge(
-            $config['allowedCorsOrigins'],
-            self::getDatabaseAllowedOrigins()
-        );
-    }
-
-    /**
-     * Get database allowed origins.
-     *
-     * @return array
-     */
-    private static function getDatabaseAllowedOrigins()
-    {
-        return array_map(
-            'trim',
-            explode(
-                PHP_EOL,
-                Application_Model_Preference::GetAllowedCorsUrls()
-            )
-        );
+        return Config::get('general.allowed_cors_origins');
     }
 }

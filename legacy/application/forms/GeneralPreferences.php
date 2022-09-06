@@ -171,13 +171,6 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         ]);
         $this->addElement($third_party_api);
 
-        $allowedCorsUrlsValue = Application_Model_Preference::GetAllowedCorsUrls();
-        $allowedCorsUrls = new Zend_Form_Element_Textarea('allowedCorsUrls');
-        $allowedCorsUrls->setLabel(_('Allowed CORS URLs (DEPRECATED)'));
-        $allowedCorsUrls->setDescription(_('Remote URLs that are allowed to access this LibreTime instance in a browser. One URL per line. (DEPRECATED: Allowed CORS origins configuration moved to the configuration file.)'));
-        $allowedCorsUrls->setValue($allowedCorsUrlsValue);
-        $this->addElement($allowedCorsUrls);
-
         $locale = new Zend_Form_Element_Select('locale');
         $locale->setLabel(_('Default Language'));
         $locale->setMultiOptions(Application_Model_Locale::getLocales());
