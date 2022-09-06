@@ -11,6 +11,10 @@ command -v ffmpeg > /dev/null || error "ffmpeg command not found!"
 
 cd "$(dirname "${BASH_SOURCE[0]}")" || error "could not change directory!"
 
+ffmpeg_cmd() {
+  ffmpeg -y "$@" 2> /dev/null
+}
+
 # <metadata> <input> <output>
 tag() {
   metadata="$1" && shift
@@ -18,8 +22,7 @@ tag() {
   output="$1" && shift
   if [[ ! -f "$output" ]]; then
     echo "tagging $output from $input with $metadata"
-    ffmpeg -y -i "$input" -f ffmetadata -i "$metadata" -c copy -map_metadata 1 "$output" \
-      2> /dev/null ||
+    ffmpeg_cmd -i "$input" -f ffmetadata -i "$metadata" -c copy -map_metadata 1 "$output" ||
       error "could not tag $output"
   fi
 }
@@ -30,8 +33,7 @@ generate() {
   output="$1" && shift
   if [[ ! -f "$output" ]]; then
     echo "generating $output from $input"
-    ffmpeg -y -i "$input" -vn "$@" "$output" \
-      2> /dev/null ||
+    ffmpeg_cmd  -i "$input" -vn "$@" "$output" ||
       error "could not generate $output"
   fi
 }
@@ -59,6 +61,12 @@ generate  s1.flac s1-mono+12.flac         -ac 1   -acodec flac          -af volu
 generate  s1.flac s1-stereo+12.flac       -ac 2   -acodec flac          -af volume=+12dB
 generate  s1.flac s1-mono+12.mp3          -ac 1   -acodec libmp3lame    -af volume=+12dB
 generate  s1.flac s1-stereo+12.mp3        -ac 2   -acodec libmp3lame    -af volume=+12dB
+
+# Generate sample 1 large
+if [[ ! -f s1-large.flac ]]; then
+  echo "generating s1-large.flac from s1.flac"
+  ffmpeg_cmd -stream_loop -1 -t $((3600 * 2)) -i s1.flac -vn s1-large.flac
+fi
 
 # Generate sample 2
 generate  s2.flac s2-mono.flac         -ac 1   -acodec flac
