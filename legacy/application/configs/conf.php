@@ -61,7 +61,7 @@ class Schema implements ConfigurationInterface
 
             // Storage schema
             ->arrayNode('storage')->addDefaultsIfNotSet()->children()
-            /**/->scalarNode('path')->defaultValue('/srv/libretime')
+            /**/->scalarNode('path')->defaultValue('/srv/libretime/')
             /*  */->validate()->ifString()->then($force_trailing_slash)->end()
             /**/->end()
             ->end()->end()
