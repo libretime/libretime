@@ -70,3 +70,11 @@ repos:
         pass_filenames: false
         language: script
         files: setup.py$
+
+      - id: config.yml
+        name: config.yml
+        description: Update config files
+        entry: tools/update-config-files.sh
+        pass_filenames: false
+        language: script
+        files: ^installer/config.yml$
