@@ -25,6 +25,8 @@ jobs:
             release: buster
           - distribution: debian
             release: bullseye
+          - distribution: debian
+            release: bookworm
 
     env:
       REGISTRY: ghcr.io
