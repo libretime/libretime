@@ -12,6 +12,7 @@ from requests.exceptions import ConnectionError, HTTPError, Timeout
 
 class PypoFile(Thread):
     name = "file"
+    daemon = True
 
     def __init__(
         self,

@@ -22,6 +22,7 @@ signal.signal(signal.SIGTERM, shutdown_handler)
 
 class PypoLiqQueue(Thread):
     name = "liquidsoap_queue"
+    daemon = True
 
     def __init__(
         self,
