@@ -749,7 +749,7 @@ SQL;
                 $streamSelect[] = 'EXTRACT(YEAR FROM utime)::varchar AS ' . $key;
             }
             // need to cast certain data as ints for the union to search on.
-            elseif (in_array($key, ['track_number', 'bit_rate', 'sample_rate', 'bpm'])) {
+            elseif (in_array($key, ['track_number', 'bit_rate', 'sample_rate', 'bpm', 'track_type_id'])) {
                 $plSelect[] = 'NULL::int AS ' . $key;
                 $blSelect[] = 'NULL::int AS ' . $key;
                 $fileSelect[] = $key;
