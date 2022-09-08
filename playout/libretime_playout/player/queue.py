@@ -11,12 +11,13 @@ from ..utils import seconds_between
 from .liquidsoap import PypoLiquidsoap
 
 
-def keyboardInterruptHandler(signum, frame):
-    logger.info("\nKeyboard Interrupt\n")
+def shutdown_handler(signum, frame):
+    logger.info("shutting down")
     sys.exit(0)
 
 
-signal.signal(signal.SIGINT, keyboardInterruptHandler)
+signal.signal(signal.SIGINT, shutdown_handler)
+signal.signal(signal.SIGTERM, shutdown_handler)
 
 
 class PypoLiqQueue(Thread):

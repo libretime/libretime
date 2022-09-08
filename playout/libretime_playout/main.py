@@ -30,8 +30,8 @@ from .player.push import PypoPush
 from .recorder import Recorder
 
 
-def keyboardInterruptHandler(signum, frame):
-    logger.info("\nKeyboard Interrupt\n")
+def shutdown_handler(signum, frame):
+    logger.info("shutting down")
     sys.exit(0)
 
 
@@ -63,7 +63,8 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     logger.info("Timezone: %s" % str(time.tzname))
     logger.info("UTC time: %s" % str(datetime.utcnow()))
 
-    signal.signal(signal.SIGINT, keyboardInterruptHandler)
+    signal.signal(signal.SIGINT, shutdown_handler)
+    signal.signal(signal.SIGTERM, shutdown_handler)
 
     legacy_client = LegacyClient()
     api_client = ApiClient(
