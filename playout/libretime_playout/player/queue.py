@@ -1,5 +1,3 @@
-import signal
-import sys
 from collections import deque
 from datetime import datetime
 from queue import Empty, Queue
@@ -9,15 +7,6 @@ from loguru import logger
 
 from ..utils import seconds_between
 from .liquidsoap import PypoLiquidsoap
-
-
-def shutdown_handler(signum, frame):
-    logger.info("shutting down")
-    sys.exit(0)
-
-
-signal.signal(signal.SIGINT, shutdown_handler)
-signal.signal(signal.SIGTERM, shutdown_handler)
 
 
 class PypoLiqQueue(Thread):

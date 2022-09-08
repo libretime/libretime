@@ -2,8 +2,6 @@ import copy
 import json
 import mimetypes
 import os
-import signal
-import sys
 import time
 from datetime import datetime
 from queue import Empty, Queue
@@ -21,15 +19,6 @@ from ..liquidsoap.models import Info, StreamPreferences, StreamState
 from ..timeout import ls_timeout
 from .liquidsoap import PypoLiquidsoap
 from .schedule import get_schedule
-
-
-def shutdown_handler(signum, frame):
-    logger.info("shutting down")
-    sys.exit(0)
-
-
-signal.signal(signal.SIGINT, shutdown_handler)
-signal.signal(signal.SIGTERM, shutdown_handler)
 
 
 class PypoFetch(Thread):
