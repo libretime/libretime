@@ -68,10 +68,7 @@ class Application_Model_StreamConfig
         }
 
         if (!$result[$prefix . 'public_url']) {
-            $host = $result[$prefix . 'host'];
-            if ($host == 'localhost') {
-                $host = Config::get('general.public_url_raw')->getHost();
-            }
+            $host = Config::get('general.public_url_raw')->getHost();
             $port = $result[$prefix . 'port'];
             $mount = $result[$prefix . 'mount'];
 
