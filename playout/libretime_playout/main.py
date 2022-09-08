@@ -2,7 +2,6 @@
 Python part of radio playout (pypo)
 """
 
-import signal
 import sys
 import time
 from datetime import datetime
@@ -28,11 +27,6 @@ from .player.file import PypoFile
 from .player.liquidsoap import PypoLiquidsoap
 from .player.push import PypoPush
 from .recorder import Recorder
-
-
-def shutdown_handler(signum, frame):
-    logger.info("shutting down")
-    sys.exit(0)
 
 
 @click.command(context_settings={"auto_envvar_prefix": DEFAULT_ENV_PREFIX})
@@ -62,9 +56,6 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     # log entries were made
     logger.info("Timezone: %s" % str(time.tzname))
     logger.info("UTC time: %s" % str(datetime.utcnow()))
-
-    signal.signal(signal.SIGINT, shutdown_handler)
-    signal.signal(signal.SIGTERM, shutdown_handler)
 
     legacy_client = LegacyClient()
     api_client = ApiClient(
