@@ -29,6 +29,11 @@ general:
   # > default is []
   allowed_cors_origins: []
 
+  # The server timezone, should be a lookup key in the IANA time zone database,
+  # for example Europe/Berlin.
+  # > default is UTC
+  timezone: UTC
+
   # How many hours ahead Playout should cache scheduled media files.
   # > default is 1
   cache_ahead_hours: 1

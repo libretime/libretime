@@ -536,21 +536,10 @@ class Application_Model_Preference
         return sprintf(_('Powered by %s'), SAAS_PRODUCT_BRANDING_NAME);
     }
 
-    // Sets station default timezone (from preferences)
-    public static function SetDefaultTimezone($timezone)
-    {
-        self::setValue('timezone', $timezone);
-    }
-
     // Returns station default timezone (from preferences)
     public static function GetDefaultTimezone()
     {
-        $stationTimezone = self::getValue('timezone');
-        if (is_null($stationTimezone) || $stationTimezone == '') {
-            $stationTimezone = 'UTC';
-        }
-
-        return $stationTimezone;
+        return Config::get('general.timezone');
     }
 
     public static function SetUserTimezone($timezone = null)

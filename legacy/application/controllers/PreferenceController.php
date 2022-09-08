@@ -50,7 +50,6 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetAllow3rdPartyApi($values['thirdPartyApi']);
                 Application_Model_Preference::SetAllowedCorsUrls($values['allowedCorsUrls']);
                 Application_Model_Preference::SetDefaultLocale($values['locale']);
-                Application_Model_Preference::SetDefaultTimezone($values['timezone']);
                 Application_Model_Preference::SetWeekStartDay($values['weekStartDay']);
                 Application_Model_Preference::setRadioPageDisplayLoginButton($values['radioPageLoginButton']);
                 Application_Model_Preference::SetFeaturePreviewMode($values['featurePreviewMode']);

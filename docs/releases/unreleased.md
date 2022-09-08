@@ -74,6 +74,20 @@ sudo -u libretime libretime-api dbshell --command="
 
 :::
 
+### Timezone configuration
+
+The timezone preference moved from the database to the [configuration](../admin-manual/setup/configuration.md#general) file. Make sure to save your existing timezone preference to the configuration file.
+
+:::info
+
+To prevent accidental data loss during upgrade, the timezone preference will only be removed from the database in future releases. You can view the data using the following commands:
+
+```bash
+sudo -u libretime libretime-api dbshell --command="SELECT * FROM cc_pref WHERE keystr = 'timezone'";
+```
+
+:::
+
 ## :arrow_up: Upgrading
 
 ### Worker python package and service

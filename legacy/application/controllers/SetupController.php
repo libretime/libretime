@@ -25,7 +25,6 @@ class SetupController extends Zend_Controller_Action
                 $currentUserId = $currentUser->getDbId();
 
                 Application_Model_Preference::SetUserTimezone($formData['setup_timezone'], $currentUserId);
-                Application_Model_Preference::SetDefaultTimezone($formData['setup_timezone']);
 
                 Application_Model_Preference::SetUserLocale($formData['setup_language'], $currentUserId);
                 Application_Model_Preference::SetDefaultLocale($formData['setup_language']);

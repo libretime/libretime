@@ -6,7 +6,6 @@ ANALYZE "cc_pref";
 INSERT INTO cc_live_log ("state", "start_time") VALUES ('S', now() at time zone 'UTC');
 
 INSERT INTO cc_pref ("keystr", "valstr") VALUES ('import_timestamp', '0');
-INSERT INTO cc_pref ("keystr", "valstr") VALUES ('timezone', 'UTC');
 INSERT INTO cc_pref ("keystr", "valstr") VALUES ('off_air_meta', 'LibreTime - offline');
 INSERT INTO cc_pref ("keystr", "valstr") VALUES ('enable_replay_gain', 1);
 INSERT INTO cc_pref ("keystr", "valstr") VALUES ('locale', 'en_US');
