@@ -38,6 +38,7 @@ setup(
             "distro",
             "requests-mock",
             "syrupy",
+            "types-backports",
             "types-python-dateutil",
             "types-requests",
         ],
