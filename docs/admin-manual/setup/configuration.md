@@ -5,6 +5,12 @@ sidebar_position: 20
 
 To configure LibreTime, you need to edit the `/etc/libretime/config.yml` file. This page describe the available options to configure your installation.
 
+Don't forget to restart the services after you made changes to the configuration file:
+
+```
+sudo systemctl restart libretime.target
+```
+
 ## General
 
 The `general` section configure anything related to the legacy and API services.
@@ -33,15 +39,6 @@ general:
   auth: "local"
 ```
 
-In order to apply the changes made in this section, please restart the following services:
-
-```
-libretime-analyzer
-libretime-api
-libretime-playout
-libretime-worker
-```
-
 ## Storage
 
 The `storage` section configure the project storage.
@@ -51,12 +48,6 @@ storage:
   # Path of the storage directory.
   # > default is /srv/libretime
   path: "/srv/libretime"
-```
-
-In order to apply the changes made in this section, please restart the following services:
-
-```
-libretime-api
 ```
 
 ## Database
@@ -96,12 +87,6 @@ database:
   password: "some_random_generated_secret!"
 ```
 
-In order to apply the changes made in this section, please restart the following services:
-
-```
-libretime-api
-```
-
 ## RabbitMQ
 
 The `rabbitmq` section configure the RabbitMQ connection.
@@ -137,15 +122,6 @@ rabbitmq:
   # The password of the RabbitMQ user.
   # > default is libretime
   password: "some_random_generated_secret!"
-```
-
-In order to apply the changes made in this section, please restart the following services:
-
-```
-libretime-analyzer
-libretime-api
-libretime-playout
-libretime-worker
 ```
 
 ## Playout
@@ -185,12 +161,6 @@ playout:
   record_sample_size: 16
 ```
 
-In order to apply the changes made in this section, please restart the following services:
-
-```
-libretime-playout
-```
-
 ## Liquidsoap
 
 The `liquidsoap` section configure anything related to the liquidsoap service.
@@ -213,12 +183,6 @@ liquidsoap:
   # Input harbor listen address.
   # > default is ["0.0.0.0"]
   harbor_listen_address: ["0.0.0.0"]
-```
-
-In order to apply the changes made in this section, please restart the following services:
-
-```
-libretime-liquidsoap
 ```
 
 ## Stream
@@ -264,13 +228,6 @@ stream:
 ```
 
 :::
-
-In order to apply the changes made in this section, please restart the following services:
-
-```
-libretime-liquidsoap
-libretime-playout
-```
 
 ### Inputs
 
