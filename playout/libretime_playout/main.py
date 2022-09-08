@@ -112,7 +112,6 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     message_handler.start()
 
     file_thread = PypoFile(file_queue, api_client)
-    file_thread.daemon = True
     file_thread.start()
 
     fetch_thread = PypoFetch(
@@ -125,15 +124,12 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
         api_client,
         legacy_client,
     )
-    fetch_thread.daemon = True
     fetch_thread.start()
 
     push_thread = PypoPush(push_queue, pypo_liquidsoap, config)
-    push_thread.daemon = True
     push_thread.start()
 
     recorder_thread = Recorder(recorder_queue, config, legacy_client)
-    recorder_thread.daemon = True
     recorder_thread.start()
 
     stats_collector_thread = StatsCollectorThread(config, legacy_client)

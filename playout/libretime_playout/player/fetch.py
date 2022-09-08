@@ -34,6 +34,7 @@ signal.signal(signal.SIGTERM, shutdown_handler)
 
 class PypoFetch(Thread):
     name = "fetch"
+    daemon = True
 
     def __init__(
         self,

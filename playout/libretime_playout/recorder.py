@@ -173,6 +173,9 @@ class ShowRecorder(Thread):
 
 
 class Recorder(Thread):
+    name = "recorder"
+    daemon = True
+
     def __init__(self, q, config: Config, legacy_client: LegacyClient):
         Thread.__init__(self)
         self.legacy_client = legacy_client
