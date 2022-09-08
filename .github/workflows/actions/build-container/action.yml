@@ -1,0 +1,24 @@
+name: Build container
+description: Build and push a container
+
+inputs:
+  target:
+    required: true
+  images:
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: docker/metadata-action@v4
+      id: meta
+      with:
+        images: ${{ inputs.images }}
+
+    - uses: docker/build-push-action@v3
+      with:
+        context: .
+        push: ${{ startsWith(github.ref, 'refs/tags') }}
+        target: ${{ inputs.target }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
