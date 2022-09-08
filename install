@@ -551,6 +551,10 @@ $PIP install --upgrade setuptools~=58.0
 ########################################################################################
 
 section "Shared"
+
+# shellcheck disable=SC2046
+install_packages $(list_packages "$SCRIPT_DIR/shared")
+
 install_python_app "$SCRIPT_DIR/shared"
 
 section "API client"
