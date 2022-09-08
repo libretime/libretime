@@ -395,8 +395,7 @@ if ! id "$LIBRETIME_USER" &> /dev/null; then
 fi
 
 info "creating project directories"
-# TODO: Config dir should not be owned by www-data and should be readonly
-mkdir_and_chown "$LIBRETIME_USER" "$CONFIG_DIR"
+mkdir -p "$CONFIG_DIR"
 mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR"
 mkdir_and_chown "$LIBRETIME_USER" "$LOG_DIR"
 
