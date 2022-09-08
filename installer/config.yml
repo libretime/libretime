@@ -132,12 +132,8 @@ stream:
     .default_icecast_output: &default_icecast_output
       host: localhost
       port: 8000
-      mount: main
       source_password: hackme
       admin_password: hackme
-      audio:
-        format: ogg
-        bitrate: 256
       name: LibreTime!
       description: LibreTime Radio!
       website: https://libretime.org
@@ -149,6 +145,11 @@ stream:
       # The default Icecast output stream
       - <<: *default_icecast_output
         enabled: true
+        public_url:
+        mount: main
+        audio:
+          format: ogg
+          bitrate: 256
 
       # You can define extra outputs by reusing the default output using a yaml anchor
       - <<: *default_icecast_output
