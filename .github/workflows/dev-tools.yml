@@ -48,6 +48,7 @@ jobs:
           tools/packages.py --dev --format line ${{ matrix.release }} \
             analyzer \
             playout \
+            shared \
             > packages.list
 
       - name: Generate Dockerfile
