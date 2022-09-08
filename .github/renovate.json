@@ -23,8 +23,11 @@
     },
     {
       "matchPaths": ["website/**"],
-      "addLabels": ["javascript"],
-      "extends": ["monorepo:docusaurus"]
+      "addLabels": ["javascript"]
+    },
+    {
+      "extends": "monorepo:docusaurus",
+      "groupName": "docusaurus monorepo"
     },
     {
       "matchUpdateTypes": ["patch"],
