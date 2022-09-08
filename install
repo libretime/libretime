@@ -320,14 +320,9 @@ check_distribution()  {
       error << "EOF"
   could not determine supported distribution "$ID-$VERSION_ID"!
 
-  Ubuntu Xenial is archived and does not receive any security or other updates since
-  2021-04-01, support for installing LibreTime on Xenial has dropped since 3.0.0-alpha.10.
-
-  Debian Stretch is archived and does not receive any security or other updates since
-  2020-06-06, support for installing LibreTime on Stretch has dropped since 3.0.0-alpha.10.
-
-  Debian Jessie is archived and does not receive any security or other updates since
-  2018-05-17, support for installing LibreTime on Jessie has dropped since 3.0.0-alpha.8.
+  Support for installing LibreTime on Xenial has dropped since 3.0.0-alpha.10.
+  Support for installing LibreTime on Stretch has dropped since 3.0.0-alpha.10.
+  Support for installing LibreTime on Jessie has dropped since 3.0.0-alpha.8.
 
 EOF
       exit 1
