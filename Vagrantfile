@@ -6,7 +6,7 @@
 # export VAGRANT_NO_PORT_FORWARDING=true
 # export VAGRANT_CPUS=4
 # export VAGRANT_MEMORY=4096
-# vagrant up buster
+# vagrant up bullseye
 #
 
 Vagrant.configure('2') do |config|
@@ -105,15 +105,6 @@ Vagrant.configure('2') do |config|
       override.vm.box = 'bento/debian-11'
     end
     setup_nfs(config, 4)
-    setup_libretime(os, 'debian.sh')
-  end
-
-  config.vm.define 'buster' do |os|
-    os.vm.box = 'debian/buster64'
-    config.vm.provider 'virtualbox' do |v, override|
-      override.vm.box = 'bento/debian-10'
-    end
-    setup_nfs(config)
     setup_libretime(os, 'debian.sh')
   end
 end

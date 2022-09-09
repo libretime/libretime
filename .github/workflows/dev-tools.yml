@@ -20,8 +20,6 @@ jobs:
           - distribution: ubuntu
             release: jammy
           - distribution: debian
-            release: buster
-          - distribution: debian
             release: bullseye
           - distribution: debian
             release: bookworm

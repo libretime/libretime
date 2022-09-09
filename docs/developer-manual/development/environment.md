@@ -104,7 +104,6 @@ offers the option to choose a different operation system according to you needs.
 
 | OS           | Command               | Comment                        |
 | ------------ | --------------------- | ------------------------------ |
-| Debian 10    | `vagrant up buster`   | Install on Debian Buster.      |
 | Debian 11    | `vagrant up bullseye` | Install on Debian Bullseye.    |
 | Ubuntu 20.04 | `vagrant up focal`    | Install on Ubuntu Focal Fossa. |
 

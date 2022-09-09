@@ -30,7 +30,6 @@ jobs:
       fail-fast: false
       matrix:
         release:
-          - buster
           - bullseye
           - focal
           - jammy
