@@ -2,6 +2,7 @@ import json
 from queue import Queue as ThreadQueue
 from signal import SIGTERM, signal
 from time import sleep
+from typing import Any, Dict
 
 # For RabbitMQ
 from kombu.connection import Connection
@@ -75,8 +76,8 @@ class MessageListener:
     def __init__(
         self,
         config: Config,
-        fetch_queue: ThreadQueue,
-        recorder_queue: ThreadQueue,
+        fetch_queue: ThreadQueue[Dict[str, Any]],
+        recorder_queue: ThreadQueue[Dict[str, Any]],
     ) -> None:
         self.config = config
 
