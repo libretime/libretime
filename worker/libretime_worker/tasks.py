@@ -1,18 +1,16 @@
 import json
-import shutil
-import tempfile
-import traceback
 from cgi import parse_header
-from contextlib import closing
 from pathlib import Path
-from typing import Optional
+from tempfile import NamedTemporaryFile
+from typing import Any, Dict, Optional
 from urllib.parse import urlsplit
 
 import mutagen
 import requests
 from celery import Celery
 from celery.utils.log import get_task_logger
-from requests import Response
+from mutagen import MutagenError
+from requests import RequestException, Response
 
 from .config import config
 
@@ -22,108 +20,95 @@ logger = get_task_logger(__name__)
 
 @worker.task(name="podcast-download", acks_late=True)
 def podcast_download(
-    id: int,
-    url: str,
+    episode_id: int,
+    episode_url: str,
+    episode_title: Optional[str],
     podcast_name: str,
-    album_override: bool,
-    track_title: Optional[str],
+    override_album: bool,
 ):
     """
     Download a podcast episode.
 
     Args:
-        id: Episode ID.
-        url: Episode download url.
+        episode_id: Episode ID.
+        episode_url: Episode download url.
+        episode_title: Episode title to override the title metadata.
         podcast_name: Podcast name to save to the metadata.
-        album_override: Whether to override the album metadata.
-        track_title: Episode title to override the title metadata.
+        override_album: Whether to override the album metadata.
 
     Returns:
         Status of the podcast download as JSON string.
     """
-    # Object to store file IDs, episode IDs, and download status
-    # (important if there's an error before the file is posted)
-    obj = {"episodeid": id}
+    result: Dict[str, Any] = {"episodeid": episode_id}
+
     try:
-        re = None
-        with closing(requests.get(url, stream=True)) as r:
-            filename = extract_filename(r)
-            with tempfile.NamedTemporaryFile(mode="wb+", delete=False) as audiofile:
-                r.raw.decode_content = True
-                shutil.copyfileobj(r.raw, audiofile)
-                # mutagen should be able to guess the write file type
-                metadata_audiofile = mutagen.File(audiofile.name, easy=True)
-                # if for some reason this should fail lets try it as a mp3 specific code
-                if metadata_audiofile == None:
-                    # if this happens then mutagen couldn't guess what type of file it is
-                    mp3suffix = ("mp3", "MP3", "Mp3", "mP3")
-                    # so we treat it like a mp3 if it has a mp3 file extension and hope for the best
-                    if filename.endswith(mp3suffix):
-                        metadata_audiofile = mutagen.mp3.MP3(
-                            audiofile.name, ID3=mutagen.easyid3.EasyID3
-                        )
-                # replace track metadata as indicated by album_override setting
-                # replace album title as needed
-                metadata_audiofile = podcast_override_metadata(
-                    metadata_audiofile, podcast_name, album_override, track_title
-                )
-                metadata_audiofile.save()
-                filetypeinfo = metadata_audiofile.pprint()
-                logger.info(
-                    "filetypeinfo is {}".format(filetypeinfo.encode("ascii", "ignore"))
-                )
-                callback_url = f"{config.general.public_url}/rest/media"
-                callback_api_key = config.general.api_key
-
-                re = requests.post(
-                    callback_url,
-                    files={"file": (filename, open(audiofile.name, "rb"))},
-                    auth=requests.auth.HTTPBasicAuth(callback_api_key, ""),
-                )
-        re.raise_for_status()
+        # Download podcast episode file
         try:
-            response = re.content.decode()
-        except (UnicodeDecodeError, AttributeError):
-            response = re.content
-        f = json.loads(
-            response
-        )  # Read the response from the media API to get the file id
-        obj["fileid"] = f["id"]
-        obj["status"] = 1
-    except Exception as e:
-        obj["error"] = e.message
-        logger.info(f"Error during file download: {e}")
-        logger.debug("Original Traceback: %s" % (traceback.format_exc(e)))
-        obj["status"] = 0
-    return json.dumps(obj)
+            with requests.get(episode_url, stream=True, timeout=30) as resp:
+                resp.raise_for_status()
 
+                filename = extract_filename(resp)
 
-def podcast_override_metadata(m, podcast_name, override, track_title):
-    """
-    Override m['album'] if empty or forced with override arg
-    """
-    # if the album override option is enabled replace the album id3 tag with the podcast name even if the album tag contains data
-    if override is True:
-        logger.debug(
-            "overriding album name to {} in podcast".format(
-                podcast_name.encode("ascii", "ignore")
-            )
-        )
-        m["album"] = podcast_name
-        m["title"] = track_title
-        m["artist"] = podcast_name
-    else:
-        # replace the album id3 tag with the podcast name if the album tag is empty
+                # The filename extension helps to determine the file type using mutagen
+                with NamedTemporaryFile(suffix=filename, delete=False) as tmp_file:
+                    for chunk in resp.iter_content(chunk_size=2048):
+                        tmp_file.write(chunk)
+
+        except RequestException as exception:
+            logger.exception(f"could not download podcast episode {episode_id}")
+            raise exception
+
+        # Save metadata to podcast episode file
         try:
-            m["album"]
-        except KeyError:
-            logger.debug(
-                "setting new album name to {} in podcast".format(
-                    podcast_name.encode("ascii", "ignore")
+            metadata = mutagen.File(tmp_file.name, easy=True)
+            if metadata is None:
+                raise MutagenError(
+                    f"could not determine episode {episode_id} file type"
                 )
-            )
-            m["album"] = podcast_name
-    return m
+
+            if override_album:
+                logger.debug(f"overriding album name with podcast name {podcast_name}")
+                metadata["artist"] = podcast_name
+                metadata["album"] = podcast_name
+                metadata["title"] = episode_title
+
+            elif "album" not in metadata:
+                logger.debug(f"setting album name to podcast name {podcast_name}")
+                metadata["album"] = podcast_name
+
+            metadata.save()
+            logger.debug(f"saved metadata {metadata}")
+
+        except MutagenError as exception:
+            logger.exception(f"could not save episode {episode_id} metadata")
+            raise exception
+
+        # Upload podcast episode file
+        try:
+            with requests.post(
+                f"{config.general.public_url}/rest/media",
+                files={"file": (filename, open(tmp_file.name, "rb"))},
+                auth=(config.general.api_key, ""),
+                timeout=30,
+            ) as upload_resp:
+                upload_resp.raise_for_status()
+                upload_payload = upload_resp.json()
+
+                result["fileid"] = upload_payload["id"]
+                result["status"] = 1
+
+        except RequestException as exception:
+            logger.exception(f"could not upload episode {episode_id}")
+            raise exception
+
+    except (RequestException, MutagenError) as exception:
+        result["status"] = 0
+        result["error"] = str(exception)
+
+    if tmp_file is not None:
+        Path(tmp_file.name).unlink()
+
+    return json.dumps(result)
 
 
 def extract_filename(response: Response) -> str:

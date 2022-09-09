@@ -181,11 +181,11 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     private function _download($id, $url, $title, $album_override, $track_title = null)
     {
         $data = [
-            'id' => $id,
-            'url' => $url,
+            'episode_id' => $id,
+            'episode_url' => $url,
+            'episode_title' => $track_title,
             'podcast_name' => $title,
-            'album_override' => $album_override,
-            'track_title' => $track_title,
+            'override_album' => $album_override,
         ];
         $task = $this->_executeTask(static::$_CELERY_TASKS[self::DOWNLOAD], $data);
         // Get the created ThirdPartyTaskReference and set the episode ID so
