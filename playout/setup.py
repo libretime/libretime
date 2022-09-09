@@ -37,6 +37,7 @@ setup(
         "dev": [
             "distro",
             "requests-mock",
+            "syrupy",
             "types-python-dateutil",
             "types-requests",
         ],
