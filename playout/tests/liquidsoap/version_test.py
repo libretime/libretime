@@ -28,7 +28,6 @@ def test_parse_liquidsoap_version(version, expected):
 @pytest.mark.skipif(getenv("CI") != "true", reason="requires liquidsoap")
 def test_get_liquidsoap_version():
     LIQUIDSOAP_VERSION_MAP = {
-        "buster": (1, 3, 3),
         "focal": (1, 4, 1),
         "bullseye": (1, 4, 3),
         "jammy": (2, 0, 2),

@@ -305,13 +305,13 @@ check_distribution()  {
 
   # shellcheck disable=SC2034
   case "$ID-$VERSION_ID" in
-    debian-10)    is_debian=true && distro="buster" ;;
     debian-11)    is_debian=true && distro="bullseye" ;;
     ubuntu-20.04) is_ubuntu=true && distro="focal" ;;
     *)
       error << "EOF"
   could not determine supported distribution "$ID-$VERSION_ID"!
 
+  Support for installing LibreTime on Buster has dropped since 3.1.0.
   Support for installing LibreTime on Bionic has dropped since 3.1.0.
   Support for installing LibreTime on Xenial has dropped since 3.0.0-alpha.10.
   Support for installing LibreTime on Stretch has dropped since 3.0.0-alpha.10.
