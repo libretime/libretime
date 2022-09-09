@@ -22,6 +22,7 @@ setup(
     ],
     extras_require={
         "dev": [
+            "requests-mock",
             "types-requests",
         ],
     },
