@@ -30,8 +30,8 @@ jobs:
       fail-fast: false
       matrix:
         release:
-          - bullseye
           - focal
+          - bullseye
           - jammy
 
     services:

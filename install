@@ -305,8 +305,8 @@ check_distribution()  {
 
   # shellcheck disable=SC2034
   case "$ID-$VERSION_ID" in
-    debian-11)    is_debian=true && distro="bullseye" ;;
     ubuntu-20.04) is_ubuntu=true && distro="focal" ;;
+    debian-11)    is_debian=true && distro="bullseye" ;;
     *)
       error << "EOF"
   could not determine supported distribution "$ID-$VERSION_ID"!
