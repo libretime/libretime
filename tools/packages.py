@@ -8,7 +8,7 @@ from typing import Iterator, List, Optional, Set
 
 DEFAULT_PACKAGES_FILENAME = "packages.ini"
 FORMATS = ("list", "line")
-DISTRIBUTIONS = ("bullseye", "bookworm", "focal", "jammy")
+DISTRIBUTIONS = ("focal", "bullseye", "jammy", "bookworm")
 
 SETTINGS_SECTION = "=settings"
 DEVELOPMENT_SECTION = "=development"

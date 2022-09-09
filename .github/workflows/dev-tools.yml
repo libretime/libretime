@@ -17,10 +17,10 @@ jobs:
         include:
           - distribution: ubuntu
             release: focal
-          - distribution: ubuntu
-            release: jammy
           - distribution: debian
             release: bullseye
+          - distribution: ubuntu
+            release: jammy
           - distribution: debian
             release: bookworm
 

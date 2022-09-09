@@ -4,15 +4,15 @@ from tools.packages import list_packages, load_packages
 
 PACKAGE_INI = """
 [common]
-postgresql = jammy, focal
+postgresql = focal, jammy
 # Some comment
-curl = jammy, bullseye
+curl = bullseye, jammy
 
 [legacy]
-some-package = bullseye, focal
+some-package = focal, bullseye
 
 [=development]
-ffmpeg = jammy, bullseye, focal
+ffmpeg = focal, bullseye, jammy
 """
 
 result_jammy = {"curl", "postgresql"}
