@@ -7,17 +7,15 @@ from libretime_playout.config import Config
 from libretime_playout.liquidsoap.entrypoint import generate_entrypoint
 from libretime_playout.liquidsoap.models import Info, StreamPreferences
 
-from ..fixtures import entrypoint_1_1_snapshot, entrypoint_1_4_snapshot
-
 
 @pytest.mark.parametrize(
-    "version, expected",
+    "version",
     [
-        pytest.param((1, 1, 1), entrypoint_1_1_snapshot, id="snapshot_1.1"),
-        pytest.param((1, 4, 4), entrypoint_1_4_snapshot, id="snapshot_1.4"),
+        pytest.param((1, 1, 1), id="1.1"),
+        pytest.param((1, 4, 4), id="1.4"),
     ],
 )
-def test_generate_entrypoint(tmp_path: Path, config: Config, version, expected):
+def test_generate_entrypoint(tmp_path: Path, config: Config, version, snapshot):
     entrypoint_filepath = tmp_path / "radio.liq"
 
     with mock.patch(
@@ -40,4 +38,4 @@ def test_generate_entrypoint(tmp_path: Path, config: Config, version, expected):
         )
 
     found = entrypoint_filepath.read_text(encoding="utf-8")
-    assert found == expected
+    assert found == snapshot

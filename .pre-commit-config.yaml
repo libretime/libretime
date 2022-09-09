@@ -22,6 +22,7 @@ repos:
       - id: mixed-line-ending
         args: [--fix=lf]
       - id: trailing-whitespace
+        exclude: \.ambr$
 
       - id: name-tests-test
         # TODO: Remove once the django api uses pytest
