@@ -62,7 +62,7 @@ def liq_conn_fixture(request, tmp_path_factory):
     logger.debug(liq_script)
     entrypoint.write_text(liq_script)
 
-    # The --verbose flag seem to hang when testing on bionic in CI
+    # The --verbose flag seem to hang when testing in CI
     with Popen(
         ("liquidsoap", "--debug", str(entrypoint)),
         stdout=PIPE,

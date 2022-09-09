@@ -1,6 +1,3 @@
-from math import inf
-
-import distro
 import pytest
 
 from libretime_analyzer.pipeline._ffmpeg import (
@@ -29,11 +26,6 @@ def test_probe_replaygain(filepath, replaygain):
 )
 def test_compute_replaygain(filepath, replaygain):
     tolerance = 0.8
-
-    # On bionic, replaygain is a bit higher for loud mp3 files.
-    # This huge tolerance makes the test pass, with values devianting from ~-17 to ~-13
-    if distro.codename() == "bionic" and str(filepath).endswith("+12.mp3"):
-        tolerance = 5
 
     assert compute_replaygain(filepath) == pytest.approx(replaygain, abs=tolerance)
 
@@ -86,10 +78,6 @@ def test_silence_detect_re(line, expected):
 def test_compute_silences(filepath, length, cuein, cueout):
     result = compute_silences(filepath)
 
-    # On bionic, large file duration is a wrong.
-    if distro.codename() == "bionic" and str(filepath).endswith("s1-large.flac"):
-        return
-
     if cuein != 0.0:
         assert len(result) > 0
         first = result.pop(0)
@@ -97,11 +85,6 @@ def test_compute_silences(filepath, length, cuein, cueout):
         assert first[1] == pytest.approx(cuein, abs=1)
 
     if cueout != length:
-        # ffmpeg v3 (bionic) does not warn about silence end when the track ends.
-        # Check for infinity on last silence ending
-        if distro.codename() == "bionic":
-            length = inf
-
         assert len(result) > 0
         last = result.pop()
         assert last[0] == pytest.approx(cueout, abs=1)
@@ -113,8 +96,4 @@ def test_compute_silences(filepath, length, cuein, cueout):
     map(lambda i: pytest.param(i.path, i.length, id=i.path.name), FILES),
 )
 def test_probe_duration(filepath, length):
-    # On bionic, large file duration is a wrong.
-    if distro.codename() == "bionic" and str(filepath).endswith("s1-large.flac"):
-        return
-
     assert probe_duration(filepath) == pytest.approx(length, abs=0.05)

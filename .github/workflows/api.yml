@@ -32,7 +32,6 @@ jobs:
         release:
           - buster
           - bullseye
-          - bionic
           - focal
           - jammy
 

@@ -99,12 +99,6 @@ Vagrant.configure('2') do |config|
     setup_libretime(os, "debian.sh")
   end
 
-  config.vm.define 'bionic' do |os|
-    os.vm.box = 'bento/ubuntu-18.04'
-    setup_nfs(config)
-    setup_libretime(os, 'debian.sh')
-  end
-
   config.vm.define 'bullseye' do |os|
     os.vm.box = 'debian/bullseye64'
     config.vm.provider 'virtualbox' do |v, override|
