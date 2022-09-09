@@ -94,9 +94,8 @@ def compute_silences(filepath: Path) -> List[Tuple[float, float]]:
             end = float(match.group(2))
             ends.append(end)
 
-    # ffmpeg v3 (bionic) does not warn about silence end when the track ends.
-    # Set the last silence ending to infinity, and clamp it to the track duration before
-    # using this value.
+    # If one end is missing, set the last silence ending to infinity, and
+    # clamp it to the track duration before using this value.
     if len(starts) - 1 == len(ends):
         ends.append(inf)
 

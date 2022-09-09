@@ -26,7 +26,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - php-version: "7.2" # Bionic
           - php-version: "7.3" # Buster
           - php-version: "7.4" # Bullseye, Focal
 
@@ -46,7 +45,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - php-version: "7.2" # Bionic
           - php-version: "7.3" # Buster
           - php-version: "7.4" # Bullseye, Focal
 
