@@ -1,4 +1,4 @@
-from subprocess import PIPE, CalledProcessError, CompletedProcess, run
+from subprocess import CalledProcessError, CompletedProcess, run
 
 from loguru import logger
 
@@ -8,9 +8,8 @@ def run_(*args, **kwargs) -> CompletedProcess:
         return run(
             args,
             check=True,
-            stdout=PIPE,
-            stderr=PIPE,
-            universal_newlines=True,
+            capture_output=True,
+            text=True,
             **kwargs,
         )
 

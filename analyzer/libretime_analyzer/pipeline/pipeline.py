@@ -1,9 +1,8 @@
 from enum import Enum
 from queue import Queue
-from typing import Any, Dict
+from typing import Any, Dict, Protocol
 
 from loguru import logger
-from typing_extensions import Protocol
 
 from .analyze_cuepoint import analyze_cuepoint
 from .analyze_metadata import analyze_metadata

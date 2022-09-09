@@ -67,7 +67,7 @@ def liq_conn_fixture(request, tmp_path_factory):
         ("liquidsoap", "--debug", str(entrypoint)),
         stdout=PIPE,
         stderr=STDOUT,
-        universal_newlines=True,
+        text=True,
     ) as process:
         if request.param == "telnet":
             sleep(2)
