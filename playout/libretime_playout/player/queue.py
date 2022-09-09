@@ -2,6 +2,7 @@ from collections import deque
 from datetime import datetime
 from queue import Empty, Queue
 from threading import Thread
+from typing import Any, Dict
 
 from loguru import logger
 
@@ -15,7 +16,7 @@ class PypoLiqQueue(Thread):
 
     def __init__(
         self,
-        future_queue: Queue,
+        future_queue: Queue[Dict[str, Any]],
         pypo_liquidsoap: PypoLiquidsoap,
     ):
         Thread.__init__(self)

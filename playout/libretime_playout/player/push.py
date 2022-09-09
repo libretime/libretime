@@ -3,6 +3,7 @@ import time
 from datetime import datetime
 from queue import Queue
 from threading import Thread
+from typing import Any, Dict
 
 from loguru import logger
 
@@ -25,7 +26,7 @@ class PypoPush(Thread):
 
     def __init__(
         self,
-        push_queue: Queue,
+        push_queue: Queue[Dict[str, Any]],
         pypo_liquidsoap: PypoLiquidsoap,
         config: Config,
     ):
@@ -38,7 +39,7 @@ class PypoPush(Thread):
         self.current_prebuffering_stream_id = None
         self.queue_id = 0
 
-        self.future_scheduled_queue = Queue()
+        self.future_scheduled_queue: Queue[Dict[str, Any]] = Queue()
         self.pypo_liquidsoap = pypo_liquidsoap
 
         self.plq = PypoLiqQueue(self.future_scheduled_queue, self.pypo_liquidsoap)
