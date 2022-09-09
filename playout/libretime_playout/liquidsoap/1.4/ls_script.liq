@@ -29,31 +29,10 @@ def check_version(~version=liquidsoap.version, major, minor) =
     list.nth(v,0,default=0) > major or list.nth(v,0,default=0) == major and list.nth(v,1,default=0) >= minor
 end
 
-# cue cut fix for liquidsoap <1.2.2
-#
-# This was most likely broken on 1.1.1 (debian) as well.
-#
-# adapted from https://github.com/savonet/liquidsoap/issues/390#issuecomment-277562081
-#
-def fix_cue_in(~cue_in_metadata='liq_cue_in', m) =
-    # 0.04 might need to be adjusted according to your frame size
-    if float_of_string(m[cue_in_metadata]) < 0.04 then
-        [(cue_in_metadata, "0")]
-    else
-        []
-    end
-end
-
 def create_source()
     l = request.equeue(id="s#{!source_id}", length=0.5)
 
     l = audio_to_stereo(id="queue_src", l)
-
-    l = if not check_version(1, 3) then
-        map_metadata(fix_cue_in, l)
-    else
-        l
-    end
     l = cue_cut(l)
     l = amplify(1., override="replay_gain", l)
 
