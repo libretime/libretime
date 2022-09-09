@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List
+from typing import List, Literal
 
 from libretime_shared.config import (
     BaseConfig,
@@ -8,7 +8,6 @@ from libretime_shared.config import (
     StreamConfig,
 )
 from pydantic import BaseModel
-from typing_extensions import Literal
 
 CACHE_DIR = Path.cwd() / "scheduler"
 RECORD_DIR = Path.cwd() / "recorder"

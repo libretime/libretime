@@ -1,10 +1,9 @@
 from pathlib import Path
 from subprocess import CalledProcessError, check_output, run
 from time import sleep
-from typing import Any, Optional, Tuple
+from typing import Any, Literal, Optional, Tuple
 
 from loguru import logger
-from typing_extensions import Literal
 
 from ..version import parse_liquidsoap_version
 from ._connection import LiquidsoapConnection

@@ -1,9 +1,9 @@
 from enum import Enum
-from typing import TYPE_CHECKING, Any, List, Optional, Sequence, Union
+from typing import TYPE_CHECKING, Any, List, Literal, Optional, Sequence, Union
 
 # pylint: disable=no-name-in-module
 from pydantic import AnyHttpUrl, AnyUrl, BaseModel, Field, validator
-from typing_extensions import Annotated, Literal
+from typing_extensions import Annotated
 
 try:
     from zoneinfo import ZoneInfo, ZoneInfoNotFoundError

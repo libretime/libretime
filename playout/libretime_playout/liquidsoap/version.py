@@ -1,5 +1,5 @@
 import re
-from subprocess import PIPE, run
+from subprocess import run
 from typing import Tuple
 
 LIQUIDSOAP_VERSION_RE = re.compile(r"(?:Liquidsoap )?(\d+).(\d+).(\d+)")
@@ -18,9 +18,8 @@ def get_liquidsoap_version() -> Tuple[int, int, int]:
     cmd = run(
         ("liquidsoap", "--check", "print(liquidsoap.version) shutdown()"),
         check=True,
-        stdout=PIPE,
-        stderr=PIPE,
-        universal_newlines=True,
+        capture_output=True,
+        text=True,
     )
 
     return parse_liquidsoap_version(cmd.stdout)
