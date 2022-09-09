@@ -1,16 +1,17 @@
-import cgi
 import json
-import posixpath
 import shutil
 import tempfile
 import traceback
+from cgi import parse_header
 from contextlib import closing
+from pathlib import Path
 from urllib.parse import urlsplit
 
 import mutagen
 import requests
 from celery import Celery
 from celery.utils.log import get_task_logger
+from requests import Response
 
 from .config import config
 
@@ -45,7 +46,7 @@ def podcast_download(
     try:
         re = None
         with closing(requests.get(url, stream=True)) as r:
-            filename = get_filename(r)
+            filename = extract_filename(r)
             with tempfile.NamedTemporaryFile(mode="wb+", delete=False) as audiofile:
                 r.raw.decode_content = True
                 shutil.copyfileobj(r.raw, audiofile)
@@ -124,31 +125,19 @@ def podcast_override_metadata(m, podcast_name, override, track_title):
     return m
 
 
-def get_filename(r):
+def extract_filename(response: Response) -> str:
     """
-    Given a request object to a file resource, get the name of the file to be downloaded
-    by parsing either the content disposition or the request URL
+    Extract the filename from a download request.
 
-    :param r: request object
+    Args:
+        response: Download request response.
 
-    :return: the file name
-    :rtype: string
+    Returns:
+        Extracted filename.
     """
-    # Try to get the filename from the content disposition
-    d = r.headers.get("Content-Disposition")
-    filename = ""
-    if d:
-        try:
-            _, params = cgi.parse_header(d)
-            filename = params["filename"]
-        except Exception as e:
-            # We end up here if we get a Content-Disposition header with no filename
-            logger.warning(
-                "Couldn't find file name in Content-Disposition header, using url"
-            )
-    if not filename:
-        # Since we don't necessarily get the filename back in the response headers,
-        # parse the URL and get the filename and extension
-        path = urlsplit(r.url).path
-        filename = posixpath.basename(path)
-    return filename
+    if "Content-Disposition" in response.headers:
+        _, params = parse_header(response.headers["Content-Disposition"])
+        if "filename" in params:
+            return params["filename"]
+
+    return Path(urlsplit(response.url).path).name
