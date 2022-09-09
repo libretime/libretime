@@ -5,6 +5,7 @@ import traceback
 from cgi import parse_header
 from contextlib import closing
 from pathlib import Path
+from typing import Optional
 from urllib.parse import urlsplit
 
 import mutagen
@@ -21,24 +22,24 @@ logger = get_task_logger(__name__)
 
 @worker.task(name="podcast-download", acks_late=True)
 def podcast_download(
-    id,
-    url,
-    podcast_name,
-    album_override,
-    track_title,
+    id: int,
+    url: str,
+    podcast_name: str,
+    album_override: bool,
+    track_title: Optional[str],
 ):
     """
-    Download a podcast episode
+    Download a podcast episode.
 
-    :param id:              episode unique ID
-    :param url:             download url for the episode
-    :param podcast_name:    Name of podcast to be added to id3 metadata for smartblock
-    :param album_override:  Passing whether to override the album id3 even if it exists
-    :param track_title:     Passing the title of the episode from feed to override the metadata
+    Args:
+        id: Episode ID.
+        url: Episode download url.
+        podcast_name: Podcast name to save to the metadata.
+        album_override: Whether to override the album metadata.
+        track_title: Episode title to override the title metadata.
 
-    :return: JSON formatted string of a dictionary of download statuses
-             and file identifiers (for successful uploads)
-    :rtype: string
+    Returns:
+        Status of the podcast download as JSON string.
     """
     # Object to store file IDs, episode IDs, and download status
     # (important if there's an error before the file is posted)
