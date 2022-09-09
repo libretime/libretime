@@ -10,10 +10,7 @@ from libretime_playout.liquidsoap.models import Info, StreamPreferences
 
 @pytest.mark.parametrize(
     "version",
-    [
-        pytest.param((1, 1, 1), id="1.1"),
-        pytest.param((1, 4, 4), id="1.4"),
-    ],
+    [pytest.param((1, 4, 4), id="1.4")],
 )
 def test_generate_entrypoint(tmp_path: Path, config: Config, version, snapshot):
     entrypoint_filepath = tmp_path / "radio.liq"
