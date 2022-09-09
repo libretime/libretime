@@ -29,3 +29,8 @@ flags:
     paths:
       - shared/
     carryforward: true
+
+  worker:
+    paths:
+      - worker/
+    carryforward: true
