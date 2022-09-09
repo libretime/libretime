@@ -21,7 +21,9 @@ setup(
         "requests>=2.25.1,<2.29",
     ],
     extras_require={
-        "dev": [],
+        "dev": [
+            "types-requests",
+        ],
     },
     zip_safe=False,
 )
