@@ -3,7 +3,7 @@ from subprocess import PIPE, run
 from typing import Tuple
 
 LIQUIDSOAP_VERSION_RE = re.compile(r"(?:Liquidsoap )?(\d+).(\d+).(\d+)")
-LIQUIDSOAP_MIN_VERSION = (1, 3, 3)
+LIQUIDSOAP_MIN_VERSION = (1, 4, 0)
 
 
 def parse_liquidsoap_version(version: str) -> Tuple[int, int, int]:
