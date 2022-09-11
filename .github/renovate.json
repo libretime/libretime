@@ -26,10 +26,6 @@
       "addLabels": ["javascript"]
     },
     {
-      "extends": "monorepo:docusaurus",
-      "groupName": "docusaurus monorepo"
-    },
-    {
       "matchUpdateTypes": ["patch"],
       "matchPaths": [
         ".github/workflows/*",
