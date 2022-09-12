@@ -3,7 +3,7 @@
   "extends": ["config:base", ":enablePreCommit", ":preserveSemverRanges"],
   "lockFileMaintenance": {
     "enabled": true,
-    "commitMessageAction": "chore: lock file maintenance",
+    "commitMessageAction": "lock file maintenance",
     "commitMessageExtra": "({{packageFile}})",
     "branchTopic": "lock-file-maintenance-{{packageFile}}",
     "schedule": ["after 4am and before 5am on monday"]
