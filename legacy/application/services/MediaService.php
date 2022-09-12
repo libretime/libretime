@@ -19,9 +19,9 @@ class Application_Service_MediaService
      * @param $ownerId string The ID of the user that will own the file inside Airtime
      * @param $copyFile bool True if you want to copy the file to the "organize" directory, false if you want to move it (default)
      *
-     * @throws Exception
-     *
      * @return Ambigous
+     *
+     * @throws Exception
      */
     public static function importFileToLibrary($fileId, $filePath, $originalFilename, $ownerId, $copyFile)
     {

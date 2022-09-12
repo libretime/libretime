@@ -10,6 +10,6 @@ class Application_Common_Storage
             return null;
         }
 
-        return [$storage_path,  substr($p_filepath, strlen($storage_path))];
+        return [$storage_path, substr($p_filepath, strlen($storage_path))];
     }
 }

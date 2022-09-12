@@ -88,9 +88,9 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      * @param int   $podcastId Podcast object identifier
      * @param array $episode   array of podcast episode data
      *
-     * @throws DuplicatePodcastEpisodeException
-     *
      * @return PodcastEpisodes the stored PodcastEpisodes object
+     *
+     * @throws DuplicatePodcastEpisodeException
      */
     public function addPlaceholder($podcastId, $episode)
     {
@@ -116,10 +116,10 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      * @param string $title           the title of the episode
      * @param string $description     the description of the epsiode
      *
+     * @return PodcastEpisodes the newly created PodcastEpisodes object
+     *
      * @throws Exception
      * @throws PropelException
-     *
-     * @return PodcastEpisodes the newly created PodcastEpisodes object
      */
     private function _buildEpisode($podcastId, $url, $guid, $publicationDate, $title = null, $description = null)
     {
@@ -202,10 +202,10 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      * @param $episode      stdClass    simple object containing Podcast episode information
      * @param $status       string      Celery task status
      *
+     * @return ThirdPartyTrackReferences the updated ThirdPartyTrackReferences object
+     *
      * @throws Exception
      * @throws PropelException
-     *
-     * @return ThirdPartyTrackReferences the updated ThirdPartyTrackReferences object
      */
     public function updateTrackReference($task, $episodeId, $episode, $status)
     {
@@ -320,9 +320,9 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     /**
      * @param $episodeId
      *
-     * @throws PodcastEpisodeNotFoundException
-     *
      * @return array
+     *
+     * @throws PodcastEpisodeNotFoundException
      */
     public static function getPodcastEpisodeById($episodeId)
     {
@@ -343,9 +343,9 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      * @param string $sortColumn
      * @param string $sortDir    "ASC" || "DESC"
      *
-     * @throws PodcastNotFoundException
-     *
      * @return array
+     *
+     * @throws PodcastNotFoundException
      */
     public function getPodcastEpisodes(
         $podcastId,
@@ -408,9 +408,9 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      * @param ImportedPodcast $podcast  Podcast object to fetch the episodes for
      * @param array           $episodes array of PodcastEpisodes objects to
      *
-     * @throws CcFiles/LibreTimeFileNotFoundException
-     *
      * @return array array of episode data
+     *
+     * @throws CcFiles/LibreTimeFileNotFoundException
      */
     public function _getImportedPodcastEpisodeArray($podcast, $episodes)
     {

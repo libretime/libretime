@@ -2,6 +2,7 @@
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class BlockDbTest extends Zend_Test_PHPUnit_DatabaseTestCase // PHPUnit_Framework_TestCase

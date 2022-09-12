@@ -12,6 +12,7 @@ require_once '../application/configs/conf.php';
  */
 /**
  * @internal
+ *
  * @coversNothing
  */
 class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase

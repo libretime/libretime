@@ -2,6 +2,7 @@
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class StoredFileTest extends PHPUnit_TestCase

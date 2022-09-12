@@ -38,9 +38,9 @@ class CcShow extends BaseCcShow
      * @param Criteria  $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con      optional connection object
      *
-     * @throws PropelException
-     *
      * @return array|PropelCollection CcShowDays[] List of CcShowDays objects
+     *
+     * @throws PropelException
      */
     public function getFirstCcShowDay($criteria = null, PropelPDO $con = null)
     {
@@ -157,9 +157,9 @@ class CcShow extends BaseCcShow
      * @param Criteria  $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con      optional connection object
      *
-     * @throws PropelException
-     *
      * @return array|PropelCollection CcShowInstances[] List of CcShowInstances objects
+     *
+     * @throws PropelException
      */
     public function getFutureCcShowInstancess($criteria = null, PropelPDO $con = null)
     {
@@ -242,9 +242,9 @@ class CcShow extends BaseCcShow
      * @param Criteria  $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con      optional connection object
      *
-     * @throws PropelException
-     *
      * @return array|PropelCollection CcShowInstances[] List of CcShowInstances objects
+     *
+     * @throws PropelException
      */
     public function getCcShowInstancess($criteria = null, PropelPDO $con = null)
     {

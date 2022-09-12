@@ -584,9 +584,9 @@ SQL;
      * @param Propel Connection
      * @param null|mixed $con
      *
-     * @throws Exception
-     *
      * @return Application_Model_StoredFile
+     *
+     * @throws Exception
      */
     public static function RecallById($p_id = null, $con = null)
     {
@@ -914,9 +914,9 @@ SQL;
      * @param string $originalFilename
      * @param bool   $copyFile         copy the file instead of moving it
      *
-     * @throws Exception
-     *
      * @return Ambigous <unknown, string>
+     *
+     * @throws Exception
      */
     public static function moveFileToStor($tempFilePath, $originalFilename, $copyFile = false)
     {

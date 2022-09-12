@@ -31,9 +31,9 @@ class CeleryManager
      * @param $exchange string the amqp exchange name
      * @param $queue    string the amqp queue name
      *
-     * @throws Exception when a connection error occurs
-     *
      * @return Celery the Celery connection object
+     *
+     * @throws Exception when a connection error occurs
      */
     private static function _setupCeleryExchange($config, $exchange, $queue)
     {
@@ -76,11 +76,11 @@ class CeleryManager
      *
      * @param $task CeleryTasks the Celery task object
      *
+     * @return array the message response array
+     *
      * @throws CeleryException        when no message is found
      * @throws CeleryTimeoutException when no message is found and more than
      *                                $_CELERY_MESSAGE_TIMEOUT milliseconds have passed
-     *
-     * @return array the message response array
      */
     private static function getAsyncResultMessage($task)
     {
@@ -183,10 +183,10 @@ class CeleryManager
      *
      * @param $task CeleryTasks the Celery task object
      *
+     * @return object the task message object
+     *
      * @throws CeleryException        when the result message for this task is still pending
      * @throws CeleryTimeoutException when the result message for this task no longer exists
-     *
-     * @return object the task message object
      */
     protected static function _getTaskMessage($task)
     {

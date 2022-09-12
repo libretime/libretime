@@ -24,10 +24,10 @@ abstract class Application_Service_ThirdPartyService
      *
      * @param $fileId int local CcFiles identifier
      *
+     * @return string the new ThirdPartyTrackReferences identifier
+     *
      * @throws Exception
      * @throws PropelException
-     *
-     * @return string the new ThirdPartyTrackReferences identifier
      */
     public function createTrackReference($fileId)
     {

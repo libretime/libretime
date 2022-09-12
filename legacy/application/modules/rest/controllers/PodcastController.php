@@ -170,7 +170,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
                     Application_Service_PodcastService::deletePodcastById($id);
                 }
 
-            break;
+                break;
 
             case HttpRequestType::GET:
                 $path = 'podcast/podcast.phtml';
@@ -181,7 +181,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
                     ];
                 }
 
-            break;
+                break;
         }
 
         $this->_helper->json->sendJson($responseBody);

@@ -66,7 +66,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $output
             ->setLabel(_('Service Type:'))
             ->setAttrib('readonly', true)
-            ->setValue((isset($setting[$prefix . '_output']) ? $setting[$prefix . '_output'] : 'icecast'))
+            ->setValue(isset($setting[$prefix . '_output']) ? $setting[$prefix . '_output'] : 'icecast')
             ->setDecorators(['ViewHelper']);
         $this->addElement($output);
 
@@ -82,7 +82,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $host
             ->setLabel(_('Server'))
             ->setAttrib('readonly', true)
-            ->setValue((isset($setting[$prefix . '_host']) ? $setting[$prefix . '_host'] : ''))
+            ->setValue(isset($setting[$prefix . '_host']) ? $setting[$prefix . '_host'] : '')
             ->setDecorators(['ViewHelper']);
         $host->setAttrib('alt', 'domain');
         $this->addElement($host);
@@ -91,7 +91,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $port
             ->setLabel(_('Port'))
             ->setAttrib('readonly', true)
-            ->setValue((isset($setting[$prefix . '_port']) ? $setting[$prefix . '_port'] : ''))
+            ->setValue(isset($setting[$prefix . '_port']) ? $setting[$prefix . '_port'] : '')
             ->setDecorators(['ViewHelper']);
         $this->addElement($port);
 
@@ -99,7 +99,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $mount
             ->setLabel(_('Mount Point'))
             ->setAttrib('readonly', true)
-            ->setValue((isset($setting[$prefix . '_mount']) ? $setting[$prefix . '_mount'] : ''))
+            ->setValue(isset($setting[$prefix . '_mount']) ? $setting[$prefix . '_mount'] : '')
             ->setDecorators(['ViewHelper']);
         $mount->setAttrib('alt', 'regular_text');
         $this->addElement($mount);

@@ -2,6 +2,7 @@
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class SchedulerExportTests extends PHPUnit_TestCase

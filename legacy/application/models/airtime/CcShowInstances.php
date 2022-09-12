@@ -15,9 +15,9 @@ class CcShowInstances extends BaseCcShowInstances
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *                       If format is NULL, then the raw DateTime object will be returned.
      *
-     * @throws propelException - if unable to parse/validate the date/time value
-     *
      * @return mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
+     *
+     * @throws propelException - if unable to parse/validate the date/time value
      */
     public function getDbStarts($format = 'Y-m-d H:i:s')
     {
@@ -48,9 +48,9 @@ class CcShowInstances extends BaseCcShowInstances
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *                       If format is NULL, then the raw DateTime object will be returned.
      *
-     * @throws propelException - if unable to parse/validate the date/time value
-     *
      * @return mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
+     *
+     * @throws propelException - if unable to parse/validate the date/time value
      */
     public function getDbEnds($format = 'Y-m-d H:i:s')
     {
@@ -81,9 +81,9 @@ class CcShowInstances extends BaseCcShowInstances
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *                       If format is NULL, then the raw DateTime object will be returned.
      *
-     * @throws propelException - if unable to parse/validate the date/time value
-     *
      * @return mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
+     *
+     * @throws propelException - if unable to parse/validate the date/time value
      */
     public function getDbLastScheduled($format = 'Y-m-d H:i:s')
     {

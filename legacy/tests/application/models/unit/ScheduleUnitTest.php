@@ -2,6 +2,7 @@
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class ScheduleUnitTest extends Zend_Test_PHPUnit_ControllerTestCase // PHPUnit_Framework_TestCase
