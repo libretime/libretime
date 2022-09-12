@@ -12,7 +12,7 @@ setup(
     install_requires=[
         "click~=8.0.4",
         "loguru==0.6.0",
-        "pydantic>=1.7.4,<1.10",
+        "pydantic>=1.7.4,<1.11",
         "pyyaml>=5.3.1,<6.1",
     ],
     extras_require={
