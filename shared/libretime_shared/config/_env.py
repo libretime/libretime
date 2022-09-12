@@ -176,6 +176,12 @@ class EnvLoader:
             # Merging all subtypes data together
             return dict(ChainMap(*all_of_mapping.values()))
 
+        # Get all the properties as we won't have typing conflicts
+        if "oneOf" in schema:
+            one_of_mapping = self._get_mapping(env_name, *schema["oneOf"])
+            # Merging all subtypes data together
+            return dict(ChainMap(*one_of_mapping.values()))
+
         # Get all the properties and resolve conflicts after
         if "anyOf" in schema:
             any_of_mapping = self._get_mapping(env_name, *schema["anyOf"])
