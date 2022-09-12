@@ -58,7 +58,8 @@ Create a new `release-$VERSION` branch and release commit to prepare a release p
 
 ```bash
 git checkout -b "release-$VERSION"
-git commit --allow-empty "chore: release $VERSION"
+export COMMIT_MESSAGE="chore: release $VERSION"
+git commit --allow-empty "$COMMIT_MESSAGE"
 ```
 
 ### 1. Version bump
@@ -66,11 +67,10 @@ git commit --allow-empty "chore: release $VERSION"
 Write the new `$VERSION` to the VERSION file, and bump the python packages version:
 
 ```bash
-echo $VERSION > VERSION
-bash tools/bump-python-version.sh
+bash tools/bump-python-version.sh "$VERSION"
 
 git add .
-git commit --fixup ":/chore: release $VERSION"
+git commit --fixup ":/$COMMIT_MESSAGE"
 ```
 
 ### 2. Release note
@@ -99,7 +99,7 @@ Commit the release note changes:
 
 ```bash
 git add .
-git commit --fixup ':/chore: release'
+git commit --fixup ":/$COMMIT_MESSAGE"
 ```
 
 ### 3. Website and docs
@@ -122,7 +122,7 @@ Commit the website and docs changes:
 
 ```bash
 git add .
-git commit --fixup ':/chore: release'
+git commit --fixup ":/$COMMIT_MESSAGE"
 ```
 
 ### 4. Create a new pull request

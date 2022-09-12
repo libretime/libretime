@@ -11,7 +11,7 @@ error() {
 
 command -v sed > /dev/null || error "sed command not found!"
 
-version="$(cat VERSION)"
+version="$1"
 
 for setup_path in */setup.py; do
   sed --in-place \
