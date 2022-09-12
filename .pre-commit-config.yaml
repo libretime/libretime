@@ -42,7 +42,7 @@ repos:
         args: [--py3-plus, --py36-plus]
 
   - repo: https://github.com/psf/black
-    rev: 22.3.0
+    rev: 22.8.0
     hooks:
       - id: black
 
