@@ -7,6 +7,8 @@
  * along with steps to fix them if they're not found or misconfigured.
  */
 
+global $extensions;
+
 $phpDependencies = checkPhpDependencies();
 $externalServices = checkExternalServices();
 $postgres = $phpDependencies['postgres'];
@@ -32,9 +34,10 @@ $result = $r1 && $r2;
 </head>
 <style>
     /*
-            This is here because we're using the config-check css for
-            both this page and the system status page
-         */
+    This is here because we're using the config-check css for
+    both this page and the system status page
+    */
+
     html {
         background-color: #f5f5f5;
     }
@@ -55,9 +58,7 @@ $result = $r1 && $r2;
         <strong>Configuration Checklist</strong>
     </h2>
 
-    <?php
-    if (!$result) {
-        ?>
+    <?php if (!$result) { ?>
         <br />
         <h3 class="error">Looks like something went wrong!</h3>
         <p>
@@ -67,16 +68,12 @@ $result = $r1 && $r2;
             come <a href="https://discourse.libretime.org/">visit our discourse</a>
             or, check <a href="https://www.libretime.org/">the website and main docs</a>.
         </p>
-    <?php
-    } else {
-        ?>
+    <?php } else { ?>
         <p>
             Your Airtime station is up and running! Get started by logging in with the default username and password: admin/admin
         </p>
         <button onclick="location = location.pathname;">Log in to Airtime!</button>
-    <?php
-    }
-    ?>
+    <?php } ?>
 
 
     <table class="table">
@@ -108,16 +105,11 @@ $result = $r1 && $r2;
                     <td class="description">
                         PDO and PostgreSQL libraries
                     </td>
-                    <td class="solution <?php if ($postgres) {
-        echo 'check'; ?>">
-                        <?php
-    } else {
-        ?>">
-                        Try running <code>sudo apt-get install php5-pgsql</code>
-                    <?php
-    }
-                    ?>
-                    </td>
+                    <?php if ($postgres) { ?>
+                        <td class="solution check"></td>
+                    <?php } else { ?>
+                        <td class="solution">Try running <code>sudo apt-get install php5-pgsql</code></td>
+                    <?php } ?>
                 </tr>
             </tbody>
         </table>
@@ -134,18 +126,15 @@ $result = $r1 && $r2;
                     <td class="description">
                         Database configuration for Airtime
                     </td>
-                    <td class="solution <?php if ($database) {
-                        echo 'check'; ?>">
-                        <?php
-                    } else {
-                        ?>">
-                        Make sure you aren't missing any of the Postgres dependencies in the table above.
-                        If your dependencies check out, make sure your database configuration settings in
-                        <code><?php echo LIBRETIME_CONFIG_FILEPATH; ?></code> are correct and the Airtime database was installed correctly.
-                    <?php
-                    }
-                    ?>
-                    </td>
+                    <?php if ($database) { ?>
+                        <td class="solution check"></td>
+                    <?php } else { ?>
+                        <td class="solution">
+                            Make sure you aren't missing any of the Postgres dependencies in the table above.
+                            If your dependencies check out, make sure your database configuration settings in
+                            <code><?php echo LIBRETIME_CONFIG_FILEPATH; ?></code> are correct and the Airtime database was installed correctly.
+                        </td>
+                    <?php } ?>
                 </tr>
                 <tr class="<?php echo $rabbitmq ? 'success' : 'danger'; ?>">
                     <td class="component">
@@ -154,19 +143,17 @@ $result = $r1 && $r2;
                     <td class="description">
                         RabbitMQ configuration for Airtime
                     </td>
-                    <td class="solution <?php if ($rabbitmq) {
-                        echo 'check'; ?>">
-                        <?php
-                    } else {
-                        ?>">
-                        Make sure RabbitMQ is installed correctly, and that your settings in <?php echo LIBRETIME_CONFIG_FILEPATH; ?>
-                        are correct. Try using <code>sudo rabbitmqctl list_users</code> and <code>sudo rabbitmqctl list_vhosts</code>
-                        to see if the airtime user (or your custom RabbitMQ user) exists, then checking that
-                        <code>sudo rabbitmqctl list_exchanges</code> contains entries for airtime-pypo and airtime-uploads.
-                    <?php
-                    }
-                    ?>
-                    </td>
+
+                    <?php if ($rabbitmq) { ?>
+                        <td class="solution check"></td>
+                    <?php } else { ?>
+                        <td class="solution">
+                            Make sure RabbitMQ is installed correctly, and that your settings in <?php echo LIBRETIME_CONFIG_FILEPATH; ?>
+                            are correct. Try using <code>sudo rabbitmqctl list_users</code> and <code>sudo rabbitmqctl list_vhosts</code>
+                            to see if the airtime user (or your custom RabbitMQ user) exists, then checking that
+                            <code>sudo rabbitmqctl list_exchanges</code> contains entries for airtime-pypo and airtime-uploads.
+                        </td>
+                    <?php } ?>
                 </tr>
                 <tr class="<?php echo $analyzer ? 'success' : 'danger'; ?>">
                     <td class="component">
@@ -175,20 +162,19 @@ $result = $r1 && $r2;
                     <td class="description">
                         <?php echo _('LibreTime media analyzer service'); ?>
                     </td>
-                    <td class="solution <?php if ($analyzer) {
-                        echo 'check'; ?>">
-                        <?php
-                    } else {
-                        ?>">
-                        <?php echo _('Check that the libretime-analyzer service is installed correctly in '); ?><code>/etc/systemd/system/</code>,
-                        <?php echo _(" and ensure that it's running with "); ?>
-                        <br /><code>systemctl status libretime-analyzer</code><br />
-                        <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-analyzer</code>
-                    <?php
-                    }
-                    ?>
-                    </td>
+
+                    <?php if ($analyzer) { ?>
+                        <td class="solution check"></td>
+                    <?php } else { ?>
+                        <td class="solution">
+                            <?php echo _('Check that the libretime-analyzer service is installed correctly in '); ?><code>/etc/systemd/system/</code>,
+                            <?php echo _(" and ensure that it's running with "); ?>
+                            <br /><code>systemctl status libretime-analyzer</code><br />
+                            <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-analyzer</code>
+                        </td>
+                    <?php } ?>
                 </tr>
+
                 <tr class="<?php echo $pypo ? 'success' : 'danger'; ?>">
                     <td class="component">
                         Pypo
@@ -196,19 +182,16 @@ $result = $r1 && $r2;
                     <td class="description">
                         <?php echo _('LibreTime playout service'); ?>
                     </td>
-                    <td class="solution <?php if ($pypo) {
-                        echo 'check'; ?>">
-                        <?php
-                    } else {
-                        ?>">
-                        <?php echo _('Check that the libretime-playout service is installed correctly in '); ?><code>/etc/systemd/system/</code>,
-                        <?php echo _(" and ensure that it's running with "); ?>
-                        <br /><code>systemctl status libretime-playout</code><br />
-                        <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-playout</code>
-                    <?php
-                    }
-                    ?>
-                    </td>
+                    <?php if ($pypo) { ?>
+                        <td class="solution check"></td>
+                    <?php } else { ?>
+                        <td class="solution">
+                            <?php echo _('Check that the libretime-playout service is installed correctly in '); ?><code>/etc/systemd/system/</code>,
+                            <?php echo _(" and ensure that it's running with "); ?>
+                            <br /><code>systemctl status libretime-playout</code><br />
+                            <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-playout</code>
+                        </td>
+                    <?php } ?>
                 </tr>
                 <tr class="<?php echo $liquidsoap ? 'success' : 'danger'; ?>">
                     <td class="component">
@@ -217,19 +200,17 @@ $result = $r1 && $r2;
                     <td class="description">
                         <?php echo _('LibreTime liquidsoap service'); ?>
                     </td>
-                    <td class="solution <?php if ($liquidsoap) {
-                        echo 'check'; ?>">
-                        <?php
-                    } else {
-                        ?>">
-                        <?php echo _('Check that the libretime-liquidsoap service is installed correctly in '); ?><code>/etc/systemd/system/</code>,
-                        <?php echo _(" and ensure that it's running with "); ?>
-                        <br /><code>systemctl status libretime-liquidsoap</code><br />
-                        <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-liquidsoap</code>
-                    <?php
-                    }
-                    ?>
-                    </td>
+
+                    <?php if ($liquidsoap) { ?>
+                        <td class="solution check"></td>
+                    <?php } else { ?>
+                        <td class="solution">
+                            <?php echo _('Check that the libretime-liquidsoap service is installed correctly in '); ?><code>/etc/systemd/system/</code>,
+                            <?php echo _(" and ensure that it's running with "); ?>
+                            <br /><code>systemctl status libretime-liquidsoap</code><br />
+                            <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-liquidsoap</code>
+                        </td>
+                    <?php } ?>
                 </tr>
                 <tr class="<?php echo $celery ? 'success' : 'danger'; ?>">
                     <td class="component">
@@ -238,19 +219,17 @@ $result = $r1 && $r2;
                     <td class="description">
                         <?php echo _('LibreTime Celery Task service'); ?>
                     </td>
-                    <td class="solution <?php if ($celery) {
-                        echo 'check'; ?>">
-                        <?php
-                    } else {
-                        ?>">
-                        <?php echo _('Check that the libretime-worker service is installed correctly in '); ?><code>/etc/systemd/system/</code>,
-                        <?php echo _(" and ensure that it's running with "); ?>
-                        <br /><code>systemctl status libretime-worker</code><br />
-                        <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-worker</code>
-                    <?php
-                    }
-                    ?>
-                    </td>
+
+                    <?php if ($celery) { ?>
+                        <td class="solution check"></td>
+                    <?php } else { ?>
+                        <td class="solution">
+                            <?php echo _('Check that the libretime-worker service is installed correctly in '); ?><code>/etc/systemd/system/</code>,
+                            <?php echo _(" and ensure that it's running with "); ?>
+                            <br /><code>systemctl status libretime-worker</code><br />
+                            <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-worker</code>
+                        </td>
+                    <?php } ?>
                 </tr>
                 <tr class="<?php echo $api ? 'success' : 'danger'; ?>">
                     <td class="component">
@@ -259,19 +238,17 @@ $result = $r1 && $r2;
                     <td class="description">
                         <?php echo _('LibreTime API service'); ?>
                     </td>
-                    <td class="solution <?php if ($api) {
-                        echo 'check'; ?>">
-                        <?php
-                    } else {
-                        ?>">
-                        <?php echo _('Check that the libretime-api service is installed correctly in '); ?><code>/etc/init.d/</code>,
-                        <?php echo _(" and ensure that it's running with "); ?>
-                        <br /><code>systemctl status libretime-api</code><br />
-                        <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-api</code>
-                    <?php
-                    }
-                    ?>
-                    </td>
+
+                    <?php if ($api) { ?>
+                        <td class="solution check"></td>
+                    <?php } else { ?>
+                        <td class="solution">
+                            <?php echo _('Check that the libretime-api service is installed correctly in '); ?><code>/etc/init.d/</code>,
+                            <?php echo _(" and ensure that it's running with "); ?>
+                            <br /><code>systemctl status libretime-api</code><br />
+                            <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-api</code>
+                        </td>
+                    <?php } ?>
                 </tr>
             </tbody>
         </table>
@@ -281,17 +258,6 @@ $result = $r1 && $r2;
             PHP Extension List
         </h3>
         <p>
-            <?php
-            global $extensions;
-            $first = true;
-            foreach ($extensions as $ext) {
-                if (!$first) {
-                    echo ' | ';
-                } else {
-                    $first = false;
-                }
-                echo $ext;
-            }
-            ?>
+            <?php echo implode('|', $extensions); ?>
         </p>
     </div>
