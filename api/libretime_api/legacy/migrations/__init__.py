@@ -1,2 +1,2 @@
 # The schema version is defined using the migration file prefix number
-LEGACY_SCHEMA_VERSION = "41"
+LEGACY_SCHEMA_VERSION = "42"
