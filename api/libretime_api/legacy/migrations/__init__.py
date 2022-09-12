@@ -1,1 +1,2 @@
-LEGACY_SCHEMA_VERSION = "3.0.0-beta.0.1"
+# The schema version is defined using the migration file prefix number
+LEGACY_SCHEMA_VERSION = "41"
