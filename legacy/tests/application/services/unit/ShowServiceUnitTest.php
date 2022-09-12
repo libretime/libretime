@@ -4,6 +4,7 @@ require_once '../application/configs/conf.php';
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class ShowServiceUnitTest extends PHPUnit_Framework_TestCase

@@ -782,8 +782,6 @@ final class Application_Model_Scheduler
 
                             ++$pos;
                         }
-
-                        // $pos++;
                     }
                     // selected empty row to add after
                     else {

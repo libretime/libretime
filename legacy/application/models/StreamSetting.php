@@ -6,7 +6,7 @@ class Application_Model_StreamConfig
 {
     private static function toOutputKey($id)
     {
-        return 's' . ($id);
+        return 's' . $id;
     }
 
     private static function toOutputId($key)

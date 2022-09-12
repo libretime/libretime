@@ -19,9 +19,9 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
      * @param array  $data     the data array to send as task parameters
      * @param int    $fileId   the unique identifier for the file involved in the task
      *
-     * @throws Exception
-     *
      * @return CeleryTasks the created task
+     *
+     * @throws Exception
      */
     protected function _executeTask($taskName, $data, $fileId = null)
     {
@@ -49,10 +49,10 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
      *                             receive completed task messages
      * @param $taskName     string broker task name
      *
+     * @return CeleryTasks the created task
+     *
      * @throws Exception
      * @throws PropelException
-     *
-     * @return CeleryTasks the created task
      */
     protected function _createTaskReference($fileId, $brokerTaskId, $taskName)
     {
@@ -95,10 +95,10 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
      * @param $result   mixed       Celery task result message
      * @param $status   string      Celery task status
      *
+     * @return ThirdPartyTrackReferences the updated ThirdPartyTrackReferences object
+     *
      * @throws Exception
      * @throws PropelException
-     *
-     * @return ThirdPartyTrackReferences the updated ThirdPartyTrackReferences object
      */
     public function updateTrackReference($task, $trackId, $result, $status)
     {

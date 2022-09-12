@@ -2,6 +2,7 @@
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase

@@ -69,9 +69,9 @@ class CcFiles extends BaseCcFiles
      *
      * @param $fileArray An array containing metadata for a CcFiles object
      *
-     * @throws Exception
-     *
      * @return object the sanitized response
+     *
+     * @throws Exception
      */
     public static function createFromUpload($fileArray)
     {
@@ -126,10 +126,10 @@ class CcFiles extends BaseCcFiles
      * @param string $originalFilename
      * @param bool   $copyFile
      *
+     * @return mixed
+     *
      * @throws Exception
      * @throws PropelException
-     *
-     * @return mixed
      */
     private static function createAndImport($fileArray, $filePath, $originalFilename, $copyFile = false)
     {
@@ -190,11 +190,11 @@ class CcFiles extends BaseCcFiles
      * @param $fileId string The ID of the file to update in the DB
      * @param $fileArray array An associative array containing metadata. Replaces those fields if they exist.
      *
+     * @return array a sanitized version of the file metadata array
+     *
      * @throws Exception
      * @throws LibreTimeFileNotFoundException
      * @throws PropelException
-     *
-     * @return array a sanitized version of the file metadata array
      */
     public static function updateFromArray($fileId, $fileArray)
     {

@@ -146,11 +146,11 @@ class Rest_ShowImageController extends Zend_Rest_Controller
      * @param int    $showId       the ID of the show we're adding the image to
      * @param string $tempFilePath temporary filepath assigned to the upload generally of the form /tmp/:tmp_name
      *
+     * @return string the path to the new location for the file
+     *
      * @throws Exception
      *                   - when a file with an unsupported file extension is uploaded or an
      *                   error occurs in copyFileToStor
-     *
-     * @return string the path to the new location for the file
      */
     private function processUploadedImage($showId, $tempFilePath)
     {
@@ -219,12 +219,12 @@ class Rest_ShowImageController extends Zend_Rest_Controller
      * @param string $importedStorageDirectory the path to the new location for the file
      * @param string $fileExtension            the file's extension based on its MIME type
      *
+     * @return string the new full path to the file in stor
+     *
      * @throws Exception if either the storage directory does not exist and cannot be
      *                   created, the storage directory does not have write permissions
      *                   enabled, or the user's hard drive does not have enough space to
      *                   store the file
-     *
-     * @return string the new full path to the file in stor
      */
     private function copyFileToStor($tempFilePath, $importedStorageDirectory, $fileExtension)
     {

@@ -849,8 +849,9 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                                 $element->addError(_("'Length' should be in '00:00:00' format"));
                                 $isValid = false;
                             }
-                            // this looks up the column type for the criteria the modified time, upload time etc.
-                        } elseif ($column->getType() == PropelColumnTypes::TIMESTAMP) {
+                        }
+                        // this looks up the column type for the criteria the modified time, upload time etc.
+                        elseif ($column->getType() == PropelColumnTypes::TIMESTAMP) {
                             // need to check for relative modifiers first - bypassing currently
                             if (in_array($d['sp_criteria_modifier'], ['before', 'after', 'between'])) {
                                 if (!preg_match('/^[1-9][0-9]*$|0/', $d['sp_criteria_value'])) {

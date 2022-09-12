@@ -14,9 +14,9 @@ class CcBlockcontents extends BaseCcBlockcontents
      *
      * @param mixed $format
      *
-     * @throws propelException - if unable to parse/validate the date/time value
-     *
      * @return mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
+     *
+     * @throws propelException - if unable to parse/validate the date/time value
      */
     public function getDbFadein($format = 's.u')
     {
@@ -28,9 +28,9 @@ class CcBlockcontents extends BaseCcBlockcontents
      *
      * @param mixed $format
      *
-     * @throws propelException - if unable to parse/validate the date/time value
-     *
      * @return mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
+     *
+     * @throws propelException - if unable to parse/validate the date/time value
      */
     public function getDbFadeout($format = 's.u')
     {

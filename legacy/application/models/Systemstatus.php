@@ -80,8 +80,9 @@ class Application_Model_Systemstatus
                             if ($pid->length == 0) {
                                 $data = $notRunning;
                             }
-                            // running!
-                        } elseif ($status == 0) {
+                        }
+                        // running!
+                        elseif ($status == 0) {
                             $data = $notMonitored;
                         }
                     }

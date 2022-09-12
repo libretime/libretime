@@ -59,9 +59,9 @@ class FileDataHelper
      *
      * @param string $mime
      *
-     * @throws Exception
-     *
      * @return string file extension with(!) a dot (for convenience)
+     *
+     * @throws Exception
      */
     public static function getFileExtensionFromMime($mime)
     {
