@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="libretime-playout",
-    version="1.0",
+    version="3.0.0-alpha.13",
     description="LibreTime Playout",
     author="LibreTime Contributors",
     url="https://github.com/libretime/libretime",
