@@ -1,5 +1,25 @@
 # LibreTime Playout
 
+LibreTime Playout is a service that will ingest a schedule and stream it.
+
+## Development
+
+```bash
+# Install dependencies
+make install
+# Activate the development environment
+source .venv/bin/activate
+
+# Run linters
+make lint
+
+# Run tests
+make test
+
+# See the Makefile for more commands
+cat Makefile
+```
+
 ## History
 
 This tool was born out of a collaboration between Open Broadcast and Sourcefabric.
