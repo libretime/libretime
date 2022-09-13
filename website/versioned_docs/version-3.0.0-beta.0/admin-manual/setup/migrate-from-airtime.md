@@ -15,9 +15,27 @@ LibreTime dropped support for Ubuntu 16.04, which is the last supported version 
 
 ## Make a backup
 
-<!-- TODO: Airtime backup process might be different from the LibreTime one, we might need to write a dedicated backup guide here. -->
+### Backup the configuration
 
-Follow [the backup guide](../backup.md) to make a backup of your current Airtime installation.
+On common setups, you need to backup the entire `/etc/airtime` folder.
+
+### Backup the database
+
+You need to backup the PostgreSQL database, which holds the entire data of your installation.
+
+Here is an example to dump your PostgreSQL database:
+
+```bash
+sudo -u postgres pg_dump --file=airtime.sql airtime
+```
+
+Please read the `pg_dump` usage for additional details.
+
+### Backup the storage
+
+You need to backup the entire file storage, which holds all the files of your installation.
+
+The path to your storage was defined during the installation process, the default storage path is `/srv/airtime/stor`.
 
 ## Install
 

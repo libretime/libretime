@@ -16,6 +16,14 @@ The LibreTime project wants to thank the following contributors for authoring PR
 
 ## :fire: Deprecation and removal
 
+## :arrow_up: Before upgrading
+
+:::caution
+
+Please follow this **before the upgrade procedure**!
+
+:::
+
 ## :arrow_up: Upgrading
 
 ## :warning: Known issues
