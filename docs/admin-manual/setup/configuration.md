@@ -279,6 +279,20 @@ stream:
 
 The `stream.outputs.icecast` section configures the icecast output streams.
 
+:::warning
+
+If you configure more than 2 icecast stream on a **single icecast server**, make sure to raise the icecast sources limit:
+
+```xml
+<icecast>
+  <limits>
+    <sources>2</sources>
+  </limits>
+</icecast>
+```
+
+:::
+
 ```yml
 stream:
   outputs:
