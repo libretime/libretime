@@ -20,9 +20,9 @@ sudo systemctl stop libretime.target
 # Or
 sudo systemctl stop libretime-analyzer.service
 sudo systemctl stop libretime-api.service
-sudo systemctl stop libretime-celery.service
 sudo systemctl stop libretime-liquidsoap.service
 sudo systemctl stop libretime-playout.service
+sudo systemctl stop libretime-worker.service
 ```
 
 ## Make a backup

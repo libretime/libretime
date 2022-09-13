@@ -78,9 +78,10 @@ sudo pip3 uninstall \
     libretime-analyzer \
     libretime-api \
     libretime-api-client \
+    libretime-celery \
     libretime-playout \
     libretime-shared \
-    libretime-celery
+    libretime-worker
 
 # Check if we forgot old python packages.
 # Remove packages that show up with this commands.

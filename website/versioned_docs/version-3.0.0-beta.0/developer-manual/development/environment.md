@@ -2,6 +2,25 @@
 title: Development environment
 ---
 
+## Docker-compose
+
+To setup a docker-compose development environment, run the following commands:
+
+```bash
+# Clean and build
+make clean
+cp .env.dev .env
+docker-compose build
+
+# Setup
+docker-compose run --rm legacy make build
+docker-compose run --rm api libretime-api migrate
+
+# Run
+docker-compose up -d
+docker-compose logs -f
+```
+
 ## Vagrant
 
 To use Vagrant, you need to install a virtualization engine: [VirtualBox](https://www.virtualbox.org) or Libvirt. The [vagrant-vbguest] package on Github can help maintain guest extensions on host systems using VirtualBox.
@@ -112,7 +131,7 @@ multipass shell ltTEST
 ```
 
 Multipass isn't currently able to do an automated install from the cloud-init script.
-After you enter the shell for the first time, you will still need to [run the LibreTime installer](../admin-manual/setup/install.md).
+After you enter the shell for the first time, you will still need to [run the LibreTime installer](../../admin-manual/setup/install.md).
 
 The IP address of your new VM can be found by running `multipass list`. Copy and paste it into your web browser to access the LibreTime interface and complete the setup wizard.
 
