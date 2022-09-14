@@ -4,7 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - .github/workflows/**
+      - .github/workflows/_python.yml
+      - .github/workflows/playout.yml
       - playout/**
       - api-client/**
       - shared/**
@@ -12,7 +13,8 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - .github/workflows/**
+      - .github/workflows/_python.yml
+      - .github/workflows/playout.yml
       - playout/**
       - api-client/**
       - shared/**
