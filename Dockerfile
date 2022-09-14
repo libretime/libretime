@@ -182,7 +182,7 @@ CMD ["/usr/local/bin/celery", "worker", \
 #======================================================================================#
 # Legacy                                                                               #
 #======================================================================================#
-FROM php:7.4-fpm as libretime-legacy
+FROM php:8.1-fpm as libretime-legacy
 
 ENV LIBRETIME_CONFIG_FILEPATH=/etc/libretime/config.yml
 
