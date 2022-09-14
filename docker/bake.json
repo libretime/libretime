@@ -1,0 +1,46 @@
+{
+  "group": {
+    "default": {
+      "targets": [
+        "analyzer",
+        "api",
+        "legacy",
+        "liquidsoap",
+        "playout",
+        "worker"
+      ]
+    }
+  },
+  "target": {
+    "analyzer": {
+      "context": ".",
+      "dockerfile": "Dockerfile",
+      "target": "libretime-analyzer"
+    },
+    "api": {
+      "context": ".",
+      "dockerfile": "Dockerfile",
+      "target": "libretime-api"
+    },
+    "legacy": {
+      "context": ".",
+      "dockerfile": "Dockerfile",
+      "target": "libretime-legacy"
+    },
+    "liquidsoap": {
+      "context": ".",
+      "dockerfile": "Dockerfile",
+      "target": "libretime-playout"
+    },
+    "playout": {
+      "context": ".",
+      "dockerfile": "Dockerfile",
+      "target": "libretime-playout"
+    },
+    "worker": {
+      "context": ".",
+      "dockerfile": "Dockerfile",
+      "target": "libretime-worker"
+    }
+  }
+}
