@@ -4,13 +4,13 @@ on:
   push:
     branches: [main]
     paths:
-      - .github/workflows/**
+      - .github/workflows/api-schema.yml
       - api/**
 
   pull_request:
     branches: [main]
     paths:
-      - .github/workflows/**
+      - .github/workflows/api-schema.yml
       - api/**
 
 concurrency:

@@ -4,14 +4,16 @@ on:
   push:
     branches: [main]
     paths:
-      - .github/workflows/**
+      - .github/workflows/_python.yml
+      - .github/workflows/api-client.yml
       - api-client/**
       - shared/**
 
   pull_request:
     branches: [main]
     paths:
-      - .github/workflows/**
+      - .github/workflows/_python.yml
+      - .github/workflows/api-client.yml
       - api-client/**
       - shared/**
 
