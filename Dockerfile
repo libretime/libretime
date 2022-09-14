@@ -1,7 +1,7 @@
 #======================================================================================#
 # Python Builder                                                                       #
 #======================================================================================#
-FROM python:3.9-bullseye as python-builder
+FROM python:3.9-slim-bullseye as python-builder
 
 WORKDIR /build
 
