@@ -72,13 +72,16 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 WORKDIR /src
 
 COPY analyzer/requirements.txt .
-RUN pip --no-cache-dir install --no-compile -r requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --no-compile -r requirements.txt
 
 COPY --from=python-builder /build/shared/*.whl .
-RUN pip --no-cache-dir install --no-compile *.whl && rm -Rf *.whl
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --no-compile *.whl && rm -Rf *.whl
 
 COPY analyzer .
-RUN pip --no-cache-dir install --editable . && rm -Rf /root/.cache
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --editable .
 
 # Run
 USER ${UID}:${GID}
@@ -101,13 +104,16 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 WORKDIR /src
 
 COPY api/requirements.txt .
-RUN pip --no-cache-dir install --no-compile gunicorn uvicorn -r requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --no-compile gunicorn uvicorn -r requirements.txt
 
 COPY --from=python-builder /build/shared/*.whl .
-RUN pip --no-cache-dir install --no-compile *.whl && rm -Rf *.whl
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --no-compile *.whl && rm -Rf *.whl
 
 COPY api .
-RUN pip --no-cache-dir install --editable .[prod] && rm -Rf /root/.cache
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --editable .[prod]
 
 # Run
 USER ${UID}:${GID}
@@ -137,14 +143,17 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 WORKDIR /src
 
 COPY playout/requirements.txt .
-RUN pip --no-cache-dir install --no-compile -r requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --no-compile -r requirements.txt
 
 COPY --from=python-builder /build/shared/*.whl .
 COPY --from=python-builder /build/api-client/*.whl .
-RUN pip --no-cache-dir install --no-compile *.whl && rm -Rf *.whl
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --no-compile *.whl && rm -Rf *.whl
 
 COPY playout .
-RUN pip --no-cache-dir install --editable . && rm -Rf /root/.cache
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --editable .
 
 # Run
 USER ${UID}:${GID}
@@ -160,13 +169,16 @@ FROM python-base as libretime-worker
 WORKDIR /src
 
 COPY worker/requirements.txt .
-RUN pip --no-cache-dir install --no-compile -r requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --no-compile -r requirements.txt
 
 COPY --from=python-builder /build/shared/*.whl .
-RUN pip --no-cache-dir install --no-compile *.whl && rm -Rf *.whl
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --no-compile *.whl && rm -Rf *.whl
 
 COPY worker .
-RUN pip --no-cache-dir install --editable . && rm -Rf /root/.cache
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --editable .
 
 # Run
 USER ${UID}:${GID}
