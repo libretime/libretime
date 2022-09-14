@@ -17,10 +17,13 @@ jobs:
     env:
       REGISTRY: ghcr.io
       NAMESPACE: ${{ github.repository_owner }}
+      CACHE_REF: ghcr.io/${{ github.repository_owner }}/libretime-cache
 
     if: ${{ github.repository_owner == 'libretime' }}
     steps:
       - uses: actions/checkout@v3
+
+      - uses: docker/setup-buildx-action@v2
 
       - uses: docker/login-action@v2
         with:
@@ -28,32 +31,54 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build libretime-analyzer
+      - name: Build python-builder
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          pull: true
+          target: python-builder
+          cache-from: type=gha,scope=python-builder
+          cache-to: type=gha,scope=python-builder,mode=max
+
+      - name: Build python-base
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          pull: true
+          target: python-base
+          cache-from: type=gha,scope=python-base
+          cache-to: type=gha,scope=python-base,mode=max
+
+      - name: Build python-base-ffmpeg
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          pull: true
+          target: python-base-ffmpeg
+          cache-from: type=gha,scope=python-base-ffmpeg
+          cache-to: type=gha,scope=python-base-ffmpeg,mode=max
+
+      - name: Build analyzer
         uses: ./.github/workflows/actions/build-container
         with:
           target: libretime-analyzer
-          images: ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/libretime-analyzer
 
-      - name: Build libretime-api
+      - name: Build api
         uses: ./.github/workflows/actions/build-container
         with:
           target: libretime-api
-          images: ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/libretime-api
 
-      - name: Build libretime-playout
+      - name: Build playout
         uses: ./.github/workflows/actions/build-container
         with:
           target: libretime-playout
-          images: ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/libretime-playout
 
-      - name: Build libretime-worker
+      - name: Build worker
         uses: ./.github/workflows/actions/build-container
         with:
           target: libretime-worker
-          images: ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/libretime-worker
 
-      - name: Build libretime-legacy
+      - name: Build legacy
         uses: ./.github/workflows/actions/build-container
         with:
           target: libretime-legacy
-          images: ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/libretime-legacy
