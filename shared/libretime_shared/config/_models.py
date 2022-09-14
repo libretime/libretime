@@ -5,6 +5,11 @@ from typing import TYPE_CHECKING, Any, List, Optional, Sequence, Union
 from pydantic import AnyHttpUrl, AnyUrl, BaseModel, Field, validator
 from typing_extensions import Annotated, Literal
 
+try:
+    from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
+except ImportError:
+    from backports.zoneinfo import ZoneInfo, ZoneInfoNotFoundError  # type: ignore
+
 if TYPE_CHECKING:
     from pydantic.typing import AnyClassMethod
 
@@ -38,8 +43,20 @@ class GeneralConfig(BaseModel):
     public_url: AnyHttpUrl
     api_key: str
 
+    timezone: str = "UTC"
+
     # Validators
     _public_url_no_trailing_slash = no_trailing_slash_validator("public_url")
+
+    @validator("timezone")
+    @classmethod
+    def _validate_timezone(cls, value: str) -> str:
+        try:
+            ZoneInfo(value)
+        except ZoneInfoNotFoundError as exception:
+            raise ValueError(f"invalid timezone '{value}'") from exception
+
+        return value
 
 
 # StorageConfig

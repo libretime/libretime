@@ -6,8 +6,20 @@ from libretime_shared.config._models import (
     AudioMP3,
     AudioOGG,
     AudioOpus,
+    GeneralConfig,
     StreamConfig,
 )
+
+
+def test_general_config_timezone():
+    defaults = {
+        "public_url": "http://localhost:8080",
+        "api_key": "api_key",
+    }
+    GeneralConfig(**defaults, timezone="UTC")
+    GeneralConfig(**defaults, timezone="Europe/Berlin")
+    with pytest.raises(ValidationError):
+        GeneralConfig(**defaults, timezone="Europe/Invalid")
 
 
 @pytest.mark.parametrize(
