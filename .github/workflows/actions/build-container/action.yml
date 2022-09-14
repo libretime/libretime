@@ -4,8 +4,6 @@ description: Build and push a container
 inputs:
   target:
     required: true
-  images:
-    required: true
 
 runs:
   using: composite
@@ -13,12 +11,15 @@ runs:
     - uses: docker/metadata-action@v4
       id: meta
       with:
-        images: ${{ inputs.images }}
+        images: ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ inputs.target }}
 
     - uses: docker/build-push-action@v3
       with:
         context: .
-        push: ${{ startsWith(github.ref, 'refs/tags') }}
+        pull: true
+        push: ${{ github.event_name == 'push' }}
         target: ${{ inputs.target }}
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha,scope=${{ inputs.target }}
+        cache-to: type=gha,scope=${{ inputs.target }},mode=max
