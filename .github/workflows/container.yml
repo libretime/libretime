@@ -17,7 +17,6 @@ jobs:
     env:
       REGISTRY: ghcr.io
       NAMESPACE: ${{ github.repository_owner }}
-      CACHE_REF: ghcr.io/${{ github.repository_owner }}/libretime-cache
 
     if: ${{ github.repository_owner == 'libretime' }}
     steps:
