@@ -1,7 +1,7 @@
 #======================================================================================#
 # Python Builder                                                                       #
 #======================================================================================#
-FROM python:3.9-slim-bullseye as python-builder
+FROM python:3.10-slim-bullseye as python-builder
 
 WORKDIR /build
 
@@ -17,7 +17,7 @@ RUN pip wheel --wheel-dir . --no-deps .
 #======================================================================================#
 # Python base                                                                          #
 #======================================================================================#
-FROM python:3.9-slim-bullseye as python-base
+FROM python:3.10-slim-bullseye as python-base
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
