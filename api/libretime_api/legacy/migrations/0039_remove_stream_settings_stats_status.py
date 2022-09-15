@@ -17,7 +17,7 @@ where "keystr" like 'stream_stats_status:%';
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("legacy", "0038_3_0_0_alpha_14_2"),
+        ("legacy", "0038_remove_stream_settings_liquidsoap_status"),
     ]
     operations = [
         migrations.RunPython(
