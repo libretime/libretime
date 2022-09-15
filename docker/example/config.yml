@@ -159,7 +159,10 @@ stream:
       # You can define extra outputs by reusing the default output using a yaml anchor
       - <<: *default_icecast_output
         enabled: false
-        mount: extra
+        mount: main-low
+        audio:
+          format: ogg
+          bitrate: 128
 
       - # Whether the output is enabled.
         # > default is false
