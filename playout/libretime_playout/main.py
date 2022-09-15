@@ -21,7 +21,7 @@ from .config import CACHE_DIR, RECORD_DIR, Config
 from .history.stats import StatsCollectorThread
 from .liquidsoap.client import LiquidsoapClient
 from .liquidsoap.version import LIQUIDSOAP_MIN_VERSION
-from .message_handler import PypoMessageHandler
+from .message_handler import MessageListener
 from .player.fetch import PypoFetch
 from .player.file import PypoFile
 from .player.liquidsoap import PypoLiquidsoap
@@ -96,12 +96,6 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
 
     pypo_liquidsoap = PypoLiquidsoap(liq_client)
 
-    # Pass only the configuration sections needed; PypoMessageHandler only
-    # needs rabbitmq settings
-    message_handler = PypoMessageHandler(fetch_queue, recorder_queue, config.rabbitmq)
-    message_handler.daemon = True
-    message_handler.start()
-
     file_thread = PypoFile(file_queue, api_client)
     file_thread.start()
 
@@ -126,7 +120,5 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     stats_collector_thread = StatsCollectorThread(config, legacy_client)
     stats_collector_thread.start()
 
-    # Just sleep the main thread, instead of blocking on fetch_thread.join().
-    # This allows CTRL-C to work!
-    while True:
-        time.sleep(1)
+    message_listener = MessageListener(config, fetch_queue, recorder_queue)
+    message_listener.run_forever()
