@@ -764,6 +764,12 @@ ${reset}"
 else
   printf "
 ${yellow}\
+Once upgraded, run the following command to migrate the database:
+
+${cyan}\
+$ sudo -u $LIBRETIME_USER libretime-api migrate
+
+${yellow}\
 You can restart LibreTime using the following command:
 
 ${cyan}\
