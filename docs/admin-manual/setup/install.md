@@ -273,6 +273,7 @@ Finally, start the services, and check that they are running properly using the 
 ```bash
 docker-compose up -d
 
+docker-compose ps
 docker-compose logs -f
 ```
 
