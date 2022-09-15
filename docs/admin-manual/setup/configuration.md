@@ -11,6 +11,25 @@ Don't forget to restart the services after you made changes to the configuration
 sudo systemctl restart libretime.target
 ```
 
+:::tip
+
+When upgrading, if [`yq`](https://mikefarah.gitbook.io/yq/) is installed on your system, you can easily keep your configuration file schema in sync, without losing your configuration values:
+
+```bash
+# Load your existing configuration values and merge them on top
+# of the default configuration file
+yq '. *= (load("/etc/libretime/config.yml") | ... comments="")' \
+  installer/config.yml > update-config.yml
+
+# Check what has been updated
+diff -y /etc/libretime/config.yml update-config.yml
+
+# Move the updated configuration file in place
+sudo cp update-config.yml /etc/libretime/config.yml
+```
+
+:::
+
 ## General
 
 The `general` section configure anything related to the legacy and API services.
