@@ -83,16 +83,14 @@ Vagrant.configure('2') do |config|
       --in-place \
       http://192.168.10.100:8080
 
+    installer/vagrant/post-install.sh
+
     libretime-api migrate
 
     systemctl restart libretime.target
     SCRIPT
 
     config.vm.provision 'install', type: 'shell', inline: $script
-
-    config.vm.provision 'post-install',
-                        type: 'shell',
-                        path: 'installer/vagrant/post-install.sh'
   end
 
   # Define all the OS boxes we support
