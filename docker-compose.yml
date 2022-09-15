@@ -90,6 +90,8 @@ services:
     image: nginx
     ports:
       - 8080:80
+    depends_on:
+      - legacy
     volumes:
       - libretime_assets:/var/www/html:ro
       - ${NGINX_CONFIG_FILEPATH:-./nginx.conf}:/etc/nginx/conf.d/default.conf:ro
