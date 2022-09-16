@@ -1,0 +1,40 @@
+name: End-to-end
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/e2e.yml
+      - e2e/**
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Start dev environment
+        run: |
+          make .env dev-certs
+
+          docker buildx bake \
+            --file docker-compose.yml \
+            --file docker-compose.override.yml \
+            --set *.cache-from=type=gha,scope=e2e \
+            --set *.cache-to=type=gha,scope=e2e,mode=max \
+            --load
+
+          docker-compose run --rm legacy make build
+          docker compose run --rm api libretime-api migrate
+          docker compose up -d
+
+      - uses: cypress-io/github-action@v4
+        with:
+          working-directory: e2e
+          wait-on: http://localhost:8080
+
+      - if: failure()
+        run: docker compose logs
