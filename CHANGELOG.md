@@ -1,3 +1,154 @@
+<a name="3.0.0-beta.0"></a>
+
+## [3.0.0-beta.0](https://github.com/libretime/libretime/compare/3.0.0-alpha.13...3.0.0-beta.0) (2022-09-16)
+
+- [Release note](https://libretime.org/docs/releases/3.0.0-beta.0/)
+
+### Features
+
+- **playout:** use liquidsoap version functions
+- **playout:** replace pytz with zoneinfo ([#1969](https://github.com/libretime/libretime/issues/1969))
+- **installer:** remove allow-restart flag ([#1970](https://github.com/libretime/libretime/issues/1970))
+- rename AirtimeApiClient to ApiClient
+- **playout:** use single clients instance ([#1980](https://github.com/libretime/libretime/issues/1980))
+- **api:** don't use trailing slashes ([#1982](https://github.com/libretime/libretime/issues/1982))
+- **api:** cast StreamSetting raw_value to value ([#1991](https://github.com/libretime/libretime/issues/1991))
+- **worker:** load callback details from config ([#1994](https://github.com/libretime/libretime/issues/1994))
+- **analyzer:** load callback details from config and file_id ([#1993](https://github.com/libretime/libretime/issues/1993))
+- **api-client:** rewrite api-client v2
+- **playout:** integrate api-client v2 calls
+- **api:** don't use hyperlinked serializers ([#1984](https://github.com/libretime/libretime/issues/1984))
+- **shared:** load env config using jsonschema
+- **installer:** use ed for config update ([#2013](https://github.com/libretime/libretime/issues/2013))
+- move off_air_meta stream setting to pref table ([#2023](https://github.com/libretime/libretime/issues/2023))
+- move stream liquisoap status to pref table
+- move stream stats status to pref table
+- **analyzer:** override paths using env variables
+- **playout:** rewrite stats collector ([#2028](https://github.com/libretime/libretime/issues/2028))
+- **legacy:** setup config schema validation
+- **legacy:** add config dot notation access
+- **shared:** pass config data via init ([#2042](https://github.com/libretime/libretime/issues/2042))
+- **playout:** create liquidsoap client
+- **playout:** integrate new liquisoap client
+- **worker:** rename service and package to libretime-worker ([#2065](https://github.com/libretime/libretime/issues/2065))
+- **playout:** improve generate\_\*\_events ([#2088](https://github.com/libretime/libretime/issues/2088))
+- **api:** remove set passwords command
+- remove cc_stream_setting models
+- **installer:** deploy stream config
+- **legacy:** read stream config from file
+- **api:** add /info and /stream/\* endpoints
+- **shared:** create stream config models
+- **playout:** build liquidsoap entrypoint with stream config
+- **playout:** stats collector using stream config
+- **playout:** allow updating message_offline value
+- **playout:** remove stream_setting update handler
+- **playout:** liquidsoap bootstrap using new api endpoints
+- **playout:** allow liquidsoap listen address configuration
+- **api:** move /api-auth to /api/browser ([#2094](https://github.com/libretime/libretime/issues/2094))
+- add container setup
+- move timezone preference to config file ([#2096](https://github.com/libretime/libretime/issues/2096))
+- **playout:** move message handling to main thread
+
+### Bug Fixes
+
+- **api-client:** get status_code from response
+- **analyzer:** remove outdated urllib3 workaround
+- **api-client:** fix base_url joining for client v2 ([#1998](https://github.com/libretime/libretime/issues/1998))
+- **api:** update set_icecast_passwords StreamSetting fields ([#2001](https://github.com/libretime/libretime/issues/2001))
+- **legacy:** get local logo file ([#1999](https://github.com/libretime/libretime/issues/1999))
+- **installer:** clean legacy files before copying ([#2002](https://github.com/libretime/libretime/issues/2002))
+- **legacy:** sanitize track_type_id when updating file ([#2003](https://github.com/libretime/libretime/issues/2003))
+- **shared:** validator value type can be wrong
+- **shared:** remove unused field from rabbitmq config ([#2012](https://github.com/libretime/libretime/issues/2012))
+- **playout:** replace deprecated harbor.bind_addr ([#2025](https://github.com/libretime/libretime/issues/2025))
+- **legacy:** do not rely on undefined SERVER_NAME ([#2031](https://github.com/libretime/libretime/issues/2031))
+- **api-client:** remove unused v1 methods
+- **playout:** use stream download when fetching files ([#2048](https://github.com/libretime/libretime/issues/2048))
+- **playout:** add thread names ([#2056](https://github.com/libretime/libretime/issues/2056))
+- **legacy:** args comma syntax error
+- **legacy:** 404 on listeners stats
+- **deps:** update dependency mdx-mermaid to v1.3.0 [security]
+- **playout:** py36 compatibility broken typings
+- **playout:** py39 compatibility zoneinfo import
+- **api:** install gunicorn from pip for bionic
+- **installer:** only upgrade pip packages if needed
+- **installer:** fix compatibility with bionic
+- **legacy:** look in /legacy for a VERSION file
+- **playout:** missing live show events ([#2087](https://github.com/libretime/libretime/issues/2087))
+- **legacy:** config default values are not sanitized
+- **installer:** add liquidsoap config section
+- **installer:** move non reusable fields from default output
+- **legacy:** consistent with docs in outputs public_url generation
+- **playout:** also shutdown on SIGTERM ([#2104](https://github.com/libretime/libretime/issues/2104))
+- **installer:** simplify distro support notice ([#2106](https://github.com/libretime/libretime/issues/2106))
+- **shared:** install tzdata distribution package ([#2105](https://github.com/libretime/libretime/issues/2105))
+- **installer:** config dir should be read only
+- **installer:** config should not be world readable
+- **legacy:** track_type_id should cast to int not text ([#2112](https://github.com/libretime/libretime/issues/2112))
+- **worker:** rewrite podcast download task
+- **shared:** load env from oneOf union schema
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.11.1
+- nginx depends on legacy in docker-compose ([#2147](https://github.com/libretime/libretime/issues/2147))
+- **playout:** remove shutdown_handler
+
+### Documentation
+
+- remove empty section in release note
+- fix missing release date
+- create development section
+- add releases distributions support
+- add release instructions ([#1995](https://github.com/libretime/libretime/issues/1995))
+- use dedicated backup procedure for airtime
+- add out of date warning to custom auth setup
+- edit timezone during setup
+- check system time config before installing ([#2019](https://github.com/libretime/libretime/issues/2019))
+- add ubuntu bionic deprecation notice
+- add debian buster deprecation notice
+- add restore procedure ([#2071](https://github.com/libretime/libretime/issues/2071))
+- improve config comments
+- add missing storage configuration
+- use brackets to refer to another field in the config
+- file based stream configuration
+- single restart notice for config changes ([#2098](https://github.com/libretime/libretime/issues/2098))
+- add warning about icecast sources limit ([#2133](https://github.com/libretime/libretime/issues/2133))
+- missing fields from stream config ([#2146](https://github.com/libretime/libretime/issues/2146))
+- add docker-compose ps command ([#2150](https://github.com/libretime/libretime/issues/2150))
+- add tip to use yq for configuration upgrade
+
+### Tests
+
+- **api:** ignore mypy missing imports
+- **api:** always print logs while testing ([#1988](https://github.com/libretime/libretime/issues/1988))
+- **api:** create api_client pytest fixture ([#1990](https://github.com/libretime/libretime/issues/1990))
+- enable logs when running pytest ([#2008](https://github.com/libretime/libretime/issues/2008))
+- **shared:** move config tests
+- **api:** conftest at top level for global fixture access ([#2038](https://github.com/libretime/libretime/issues/2038))
+- **legacy:** enable stdout logs
+- **analyzer:** analyze large audio files ([#2050](https://github.com/libretime/libretime/issues/2050))
+- **worker:** setup testing
+- **playout:** use snapshot testing tool ([#2115](https://github.com/libretime/libretime/issues/2115))
+- **worker:** allow pylint and bandit to fail
+
+### CI
+
+- website-preview use single comment ([#1996](https://github.com/libretime/libretime/issues/1996))
+- add custom user for dev containers
+- add missing gid when running dev container
+- **legacy:** catch syntax errors on older php versions
+- add pre-commit python cache
+- add check-shell python cache
+- add check-shell tools cache
+- add docs lint tools cache
+- add housekeeping lychee cache
+- build test images for debian bookworm ([#2097](https://github.com/libretime/libretime/issues/2097))
+- fix docusaurus monorepo config ([#2101](https://github.com/libretime/libretime/issues/2101))
+- add shared packages to dev container
+- add containers build job
+- don't run all workflows in unrelated workflows changes ([#2142](https://github.com/libretime/libretime/issues/2142))
+- enable containers concurrency group
+- improve containers build caching
+- add container tags
+
 <a name="3.0.0-alpha.13"></a>
 
 ## [3.0.0-alpha.13](https://github.com/libretime/libretime/compare/3.0.0-alpha.12...3.0.0-alpha.13) (2022-07-15)
