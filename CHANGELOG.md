@@ -1,3 +1,165 @@
+<a name="3.0.0-alpha.13"></a>
+
+## [3.0.0-alpha.13](https://github.com/libretime/libretime/compare/3.0.0-alpha.12...3.0.0-alpha.13) (2022-07-15)
+
+- [Release note](https://libretime.org/docs/releases/3.0.0-alpha.13/)
+
+### Features
+
+- remove unused python3-venv package ([#1728](https://github.com/libretime/libretime/issues/1728))
+- **api:** split api into multiple apps ([#1626](https://github.com/libretime/libretime/issues/1626))
+- improve apache configuration ([#1784](https://github.com/libretime/libretime/issues/1784))
+- **api:** replace uwsgi with gunicorn ([#1785](https://github.com/libretime/libretime/issues/1785))
+- replace exploded base\_\* with public_url
+- **shared:** compress logs with gz ([#1827](https://github.com/libretime/libretime/issues/1827))
+- **shared:** remove unused abstract app ([#1828](https://github.com/libretime/libretime/issues/1828))
+- replace click envar with auto_envvar_prefix ([#1829](https://github.com/libretime/libretime/issues/1829))
+- **shared:** allow to disable log rotate/retention
+- **legacy:** change logrotate config deploy path
+- rotate logs using libretime user
+- **legacy:** improve rabbitmq check ([#1839](https://github.com/libretime/libretime/issues/1839))
+- **worker:** don't run with a dedicated user
+- **playout:** remove unused liquidsoap_prepare_terminate.py ([#1854](https://github.com/libretime/libretime/issues/1854))
+- **legacy:** check services using systemctl ([#1856](https://github.com/libretime/libretime/issues/1856))
+- change config file format to yaml
+- change config filename to config.yml
+- change config dir path to /etc/libretime
+- **installer:** rewrite install script
+- replace php migration with django migration
+- drop cc_locale table
+- **api:** create set_icecast_passwords command
+- **installer:** post install setup instructions
+- add systemd libretime.target
+- move allowed cors url to configuration file
+- remove php web installer
+- move storage path setting to configuration file
+- **installer:** rename shared files path to /usr/share/libretime
+- **shared:** add config trailing slash sanitizer ([#1870](https://github.com/libretime/libretime/issues/1870))
+- rename default stream mount point to main
+- **api:** rename user model fields ([#1902](https://github.com/libretime/libretime/issues/1902))
+- remove unused cc_sess table ([#1907](https://github.com/libretime/libretime/issues/1907))
+- remove unused cc_perms table ([#1909](https://github.com/libretime/libretime/issues/1909))
+- **api:** rename podcasts models fields ([#1910](https://github.com/libretime/libretime/issues/1910))
+- **analyzer:** move compute_md5 to shared library
+- **api:** create bulk_import command
+- **legacy:** compute md5 during early upload
+- **api:** rename track type to library
+- **legacy:** add Ukrainian language
+- **legacy:** don't guess cors url from server
+- **installer:** load .env file to persistent install config
+- use dedicated 'libretime' user
+- replace apache2 with nginx + php-fpm
+- **api:** listen on unix socket with gunicorn
+- **api:** use uvicorn as asgi server with gunicorn
+- set default locale to en_US
+- remove unused cc_country table
+
+### Bug Fixes
+
+- add gettext for legacy locale generation ([#1720](https://github.com/libretime/libretime/issues/1720))
+- **installer:** install software-properties-common when required
+- **installer:** always install fresh packages
+- **api:** prevent timing attacke on api key ([#1771](https://github.com/libretime/libretime/issues/1771))
+- **legacy:** load vendors during config init
+- **legacy:** bypass config validation during django migration
+- **legacy:** the ini config parser requires a .conf ext
+- **playout:** disable playout-notify log rotation
+- don't set log folder permissions recursively
+- **shared:** allow list settings ([#1837](https://github.com/libretime/libretime/issues/1837))
+- **legacy:** station url always has a trailing slash ([#1838](https://github.com/libretime/libretime/issues/1838))
+- **legacy:** check if libretime-api is running ([#1841](https://github.com/libretime/libretime/issues/1841))
+- don't add track types only on migration
+- correct cc_file.artwork column size
+- **legacy:** remove not null constraint when using default
+- **api:** missing build-essential to build psycopg2
+- drop unused sequences
+- **api:** allow updating default_icecast_password ([#1872](https://github.com/libretime/libretime/issues/1872))
+- **deps:** update dependency [@cmfcmf](https://github.com/cmfcmf)/docusaurus-search-local to ^0.11.0 ([#1873](https://github.com/libretime/libretime/issues/1873))
+- **legacy:** remove file directory metadata ([#1887](https://github.com/libretime/libretime/issues/1887))
+- **api:** update model fields in set_icecast_passwords ([#1903](https://github.com/libretime/libretime/issues/1903))
+- **api:** cascade when dropping table ([#1908](https://github.com/libretime/libretime/issues/1908))
+- **legacy:** station-metadata api endpoint
+- **legacy:** don't log 'could not obtain lock' exception ([#1943](https://github.com/libretime/libretime/issues/1943))
+- **legacy:** check empty before iteration on files
+- use constrained foreign key for files track_type
+- **deps:** update dependency mermaid to v9.1.2 [security] ([#1948](https://github.com/libretime/libretime/issues/1948))
+- **installer:** update version file unless tarball ([#1950](https://github.com/libretime/libretime/issues/1950))
+- prevent data loose on track_types_id migration ([#1949](https://github.com/libretime/libretime/issues/1949))
+- use track_type_id in smartblock criteria
+- **legacy:** no invalid track type in smartblock criteria
+
+### Documentation
+
+- create 3.0.0-alpha.12 docs
+- add version nav dropdown
+- add urls redirects ([#1581](https://github.com/libretime/libretime/issues/1581))
+- fix broken links to celery project ([#1744](https://github.com/libretime/libretime/issues/1744))
+- draft architecture design document ([#1736](https://github.com/libretime/libretime/issues/1736))
+- start troubleshooting with syslog over libretime logs ([#1783](https://github.com/libretime/libretime/issues/1783))
+- update apache log filepath ([#1811](https://github.com/libretime/libretime/issues/1811))
+- explicitly mention lack of 22.04 support ([#1858](https://github.com/libretime/libretime/issues/1858))
+- add pre upgrade procedure warnings
+- update install procedure
+- add missing storage config upgrade procedure ([#1871](https://github.com/libretime/libretime/issues/1871))
+- remove packages based install ([#1883](https://github.com/libretime/libretime/issues/1883))
+- provide uninstall guidance ([#1938](https://github.com/libretime/libretime/issues/1938))
+- rename icecast to stream-configuration
+- rename Libretime to LibreTime
+- double 'the'
+- rewrite reverse proxy guide
+- uninstall /usr/lib systemd services
+- troubleshoot webserver services ([#1961](https://github.com/libretime/libretime/issues/1961))
+- reorder upgrade steps
+- add missing allowed_cors_origins config
+
+### Tests
+
+- **analyzer:** recent liquidsoap version do not fail playability check
+- **legacy:** use default rabbitmq settings ([#1855](https://github.com/libretime/libretime/issues/1855))
+- **shared:** remove bad disable no-self-use ([#1862](https://github.com/libretime/libretime/issues/1862))
+- **api:** use pytest to run api tests ([#1645](https://github.com/libretime/libretime/issues/1645))
+- **api:** allow f string format for logging
+- **api:** disable too-few-public-methods lint error
+- **api:** fix lint errors
+- **api:** disable too-many-arguments lint error
+- **api:** ignore tests file coverage
+
+### CI
+
+- add missing python3-venv package for testing ([#1729](https://github.com/libretime/libretime/issues/1729))
+- generate schema and push to api-client repo ([#1740](https://github.com/libretime/libretime/issues/1740))
+- update api-schema generation commit message
+- don't run api-schema generation on forks
+- build test images for ubuntu jammy ([#1743](https://github.com/libretime/libretime/issues/1743))
+- fix dev images creation script ([#1745](https://github.com/libretime/libretime/issues/1745))
+- simplify legacy test matrix ([#1749](https://github.com/libretime/libretime/issues/1749))
+- test on ubuntu jammy
+- ignore versioned_docs with find_closed_references ([#1753](https://github.com/libretime/libretime/issues/1753))
+- move docs linting to docs workflow
+- only run website workflow for main branch
+- add website build cache
+- add website-preview workflow
+- use GH actions bot for schema generation committer ([#1756](https://github.com/libretime/libretime/issues/1756))
+- setup command dispatcher ([#1759](https://github.com/libretime/libretime/issues/1759))
+- update workflow dispatch input description ([#1762](https://github.com/libretime/libretime/issues/1762))
+- do not cache website preview build ([#1763](https://github.com/libretime/libretime/issues/1763))
+- fix website preview cleanup branch ([#1793](https://github.com/libretime/libretime/issues/1793))
+- reduce usage ([#1804](https://github.com/libretime/libretime/issues/1804))
+- rename api-client repo ([#1805](https://github.com/libretime/libretime/issues/1805))
+- add link to next version of the docs in preview comment ([#1824](https://github.com/libretime/libretime/issues/1824))
+- specify python version
+- replace link checker report with failing job
+- check and dispatch api schema changes
+- fix python packages caching ([#1893](https://github.com/libretime/libretime/issues/1893))
+- fix schema update commit author ([#1912](https://github.com/libretime/libretime/issues/1912))
+- **api:** fail job on linting error
+- report pytest coverage in PR via codecov
+- add missing codecov flags
+- add api coverage report using codecov
+- setup carryforward for coverage
+- disable codecov project status check
+- disable codecov patch status check
+
 <a name="3.0.0-alpha.12"></a>
 
 ## [3.0.0-alpha.12](https://github.com/libretime/libretime/compare/3.0.0-alpha.11...3.0.0-alpha.12) (2022-03-29)
