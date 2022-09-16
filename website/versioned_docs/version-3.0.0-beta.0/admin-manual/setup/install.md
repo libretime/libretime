@@ -283,7 +283,6 @@ Next, continue by [configuring your installation](#configure).
 
 Once the setup is completed, log in the interface and make sure to edit the project settings (go to **Settings** > **General**) to match your needs. Important settings are:
 
-- Timezone
 - First day of the week
 
 ## Next
