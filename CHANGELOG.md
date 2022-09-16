@@ -1,3 +1,19 @@
+<a name="3.0.0-alpha.12"></a>
+
+## [3.0.0-alpha.12](https://github.com/libretime/libretime/compare/3.0.0-alpha.11...3.0.0-alpha.12) (2022-03-29)
+
+- [Release note](https://libretime.org/docs/releases/3.0.0-alpha.12/)
+
+### Bug Fixes
+
+- **playout:** add locales to libretime-playout-notify calls ([#1715](https://github.com/libretime/libretime/issues/1715))
+- **worker:** enable logfile variable expansion in ExecStart ([#1717](https://github.com/libretime/libretime/issues/1717))
+
+### Documentation
+
+- add missing data to release note
+- fix and update links ([#1714](https://github.com/libretime/libretime/issues/1714))
+
 <a name="3.0.0-alpha.11"></a>
 
 ## [3.0.0-alpha.11](https://github.com/libretime/libretime/compare/3.0.0-alpha.10...3.0.0-alpha.11) (2022-03-28)
