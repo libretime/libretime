@@ -59,6 +59,7 @@ jobs:
             --exclude 'https://dir.xiph.org/cgi-bin/yp-cgi'
             --exclude 'https://radio.indymedia.org/cgi-bin/yp-cgi'
             --exclude 'https://www.ascap.com'
+            --exclude 'github\.com/libretime/libretime/(issues|pulls)'
             --cache
             --max-cache-age 2d
           fail: true
