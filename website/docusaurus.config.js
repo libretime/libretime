@@ -64,7 +64,6 @@ const config = {
           },
           remarkPlugins: [require("mdx-mermaid")],
         },
-        blog: false,
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
         },
@@ -90,6 +89,7 @@ const config = {
             items: vars.doc.sections,
           },
           { label: "Contribute", to: "/contribute", position: "left" },
+          { label: "Blog", to: "blog", position: "left" },
 
           { ...vars.repository, position: "right" },
           { ...vars.forum, position: "right" },
