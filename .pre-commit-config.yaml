@@ -19,6 +19,7 @@ repos:
 
       - id: check-merge-conflict
       - id: end-of-file-fixer
+        exclude: \.json$
       - id: mixed-line-ending
         args: [--fix=lf]
       - id: trailing-whitespace
@@ -78,3 +79,11 @@ repos:
         pass_filenames: false
         language: script
         files: ^installer/config.yml$
+
+      - id: legacy-assets-checksum-update
+        name: legacy-assets-checksum-update
+        description: Update legacy assets checksum
+        entry: legacy/tools/assets-checksum-update.py
+        pass_filenames: false
+        language: script
+        files: ^legacy
