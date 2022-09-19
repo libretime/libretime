@@ -45,6 +45,11 @@ function checkDatabaseDependencies()
         && in_array('pgsql', $extensions);
 }
 
+function with_systemd()
+{
+    return !empty(shell_exec('which systemctl'));
+}
+
 /**
  * Check that all external services are configured correctly and return an associative
  * array with the results.
@@ -53,15 +58,20 @@ function checkDatabaseDependencies()
  */
 function checkExternalServices()
 {
-    return [
+    $result = [
         'database' => checkDatabaseConfiguration(),
-        'analyzer' => checkAnalyzerService(),
-        'pypo' => checkPlayoutService(),
-        'liquidsoap' => checkLiquidsoapService(),
         'rabbitmq' => checkRMQConnection(),
-        'celery' => checkCeleryService(),
-        'api' => checkApiService(),
     ];
+
+    if (with_systemd()) {
+        $result['analyzer'] = checkAnalyzerService();
+        $result['pypo'] = checkPlayoutService();
+        $result['liquidsoap'] = checkLiquidsoapService();
+        $result['celery'] = checkCeleryService();
+        $result['api'] = checkApiService();
+    }
+
+    return $result;
 }
 
 /**
