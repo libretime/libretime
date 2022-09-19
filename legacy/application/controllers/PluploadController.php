@@ -12,21 +12,18 @@ class PluploadController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $CC_CONFIG = Config::getConfig();
-
-        $baseUrl = Config::getBasePath();
         $locale = Application_Model_Preference::GetLocale();
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/datatables/js/jquery.dataTables.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/plupload/plupload.full.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/plupload/jquery.plupload.queue.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/library/plupload.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/plupload/i18n/' . $locale . '.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/libs/dropzone.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/datatables/js/jquery.dataTables.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/plupload/plupload.full.min.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/plupload/jquery.plupload.queue.min.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/library/plupload.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/plupload/i18n/' . $locale . '.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/libs/dropzone.min.js'), 'text/javascript');
 
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/plupload.queue.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/addmedia.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/dashboard.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet(Assets::url('css/plupload.queue.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/addmedia.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/dashboard.css'));
 
         $this->view->quotaLimitReached = false;
         if (Application_Model_Systemstatus::isDiskOverQuota()) {

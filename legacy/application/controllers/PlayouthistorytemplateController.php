@@ -20,8 +20,8 @@ class PlayouthistorytemplateController extends Zend_Controller_Action
 
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Analytics');
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/playouthistory/template.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/history_styles.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/playouthistory/template.js'), 'text/javascript');
+        $this->view->headLink()->appendStylesheet(Assets::url('css/history_styles.css'));
 
         $historyService = new Application_Service_HistoryService();
         $this->view->template_list = $historyService->getListItemTemplates();
@@ -36,8 +36,8 @@ class PlayouthistorytemplateController extends Zend_Controller_Action
 
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Analytics');
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/playouthistory/configuretemplate.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/history_styles.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/playouthistory/configuretemplate.js'), 'text/javascript');
+        $this->view->headLink()->appendStylesheet(Assets::url('css/history_styles.css'));
 
         try {
             $templateId = $this->_getParam('id');

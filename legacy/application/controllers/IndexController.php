@@ -11,24 +11,24 @@ class IndexController extends Zend_Controller_Action
         $CC_CONFIG = Config::getConfig();
         $baseUrl = Config::getBasePath();
         $this->view->headTitle(Application_Model_Preference::GetHeadTitle());
-        $this->view->headScript()->appendFile($baseUrl . 'js/libs/jquery-1.8.3.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/libs/jquery-1.8.3.min.js'), 'text/javascript');
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/i18n/jquery.i18n.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'locale/general-translation-table?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/i18n/jquery.i18n.js'), 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl . 'locale/general-translation-table', 'text/javascript');
         $this->view->headScript()->appendScript('$.i18n.setDictionary(general_dict)');
         $this->view->headScript()->appendScript("var baseUrl='{$baseUrl}'");
 
         // jplayer
-        $this->view->headScript()->appendFile($baseUrl . 'js/jplayer/jquery.jplayer.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/jplayer/jplayer.playlist.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/jplayer/jquery.jplayer.min.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/jplayer/jplayer.playlist.min.js'), 'text/javascript');
 
-        $this->view->headLink()->setStylesheet($baseUrl . 'css/radio-page/radio-page.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/embed/weekly-schedule-widget.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/radio-page/station-podcast.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/bootstrap.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headLink()->setStylesheet(Assets::url('css/radio-page/radio-page.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/embed/weekly-schedule-widget.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/radio-page/station-podcast.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/bootstrap.css'));
 
         // jplayer control buttons
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/redmond/jquery-ui-1.8.8.custom.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet(Assets::url('css/redmond/jquery-ui-1.8.8.custom.css'));
 
         $this->_helper->layout->setLayout('radio-page');
 

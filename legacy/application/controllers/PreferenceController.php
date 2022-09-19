@@ -19,14 +19,13 @@ class PreferenceController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $CC_CONFIG = Config::getConfig();
         $request = $this->getRequest();
 
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Settings');
 
         $baseUrl = Config::getBasePath();
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/preferences/preferences.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/preferences/preferences.js'), 'text/javascript');
         $this->view->statusMsg = '';
 
         $form = new Application_Form_Preferences();
@@ -129,15 +128,11 @@ class PreferenceController extends Zend_Controller_Action
 
     public function streamSettingAction()
     {
-        $CC_CONFIG = Config::getConfig();
-
         $request = $this->getRequest();
 
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Settings');
 
-        $baseUrl = Config::getBasePath();
-
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/preferences/streamsetting.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/preferences/streamsetting.js'), 'text/javascript');
 
         SessionHelper::reopenSessionForWriting();
 

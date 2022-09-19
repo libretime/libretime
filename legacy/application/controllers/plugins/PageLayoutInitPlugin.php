@@ -152,20 +152,18 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
 
     protected function _initHeadLink()
     {
-        $CC_CONFIG = Config::getConfig();
-
         $view = $this->_bootstrap->getResource('view');
 
         $baseUrl = Config::getBasePath();
 
-        $view->headLink(['rel' => 'icon', 'href' => $baseUrl . 'favicon.ico?' . $CC_CONFIG['airtime_version'], 'type' => 'image/x-icon'], 'PREPEND')
-            ->appendStylesheet($baseUrl . 'css/bootstrap.css?' . $CC_CONFIG['airtime_version'])
-            ->appendStylesheet($baseUrl . 'css/redmond/jquery-ui-1.8.8.custom.css?' . $CC_CONFIG['airtime_version'])
-            ->appendStylesheet($baseUrl . 'css/pro_dropdown_3.css?' . $CC_CONFIG['airtime_version'])
-            ->appendStylesheet($baseUrl . 'css/qtip/jquery.qtip.min.css?' . $CC_CONFIG['airtime_version'])
-            ->appendStylesheet($baseUrl . 'css/styles.css?' . $CC_CONFIG['airtime_version'])
-            ->appendStylesheet($baseUrl . 'css/masterpanel.css?' . $CC_CONFIG['airtime_version'])
-            ->appendStylesheet($baseUrl . 'css/tipsy/jquery.tipsy.css?' . $CC_CONFIG['airtime_version']);
+        $view->headLink(['rel' => 'icon', 'href' => $baseUrl . 'favicon.ico', 'type' => 'image/x-icon'], 'PREPEND')
+            ->appendStylesheet(Assets::url('css/bootstrap.css'))
+            ->appendStylesheet(Assets::url('css/redmond/jquery-ui-1.8.8.custom.css'))
+            ->appendStylesheet(Assets::url('css/pro_dropdown_3.css'))
+            ->appendStylesheet(Assets::url('css/qtip/jquery.qtip.min.css'))
+            ->appendStylesheet(Assets::url('css/styles.css'))
+            ->appendStylesheet(Assets::url('css/masterpanel.css'))
+            ->appendStylesheet(Assets::url('css/tipsy/jquery.tipsy.css'));
     }
 
     protected function _initHeadScript()
@@ -174,25 +172,23 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             return;
         }
 
-        $CC_CONFIG = Config::getConfig();
-
         $view = $this->_bootstrap->getResource('view');
 
         $baseUrl = Config::getBasePath();
 
-        $view->headScript()->appendFile($baseUrl . 'js/libs/jquery-1.8.3.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
-            ->appendFile($baseUrl . 'js/libs/jquery-ui-1.8.24.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
-            ->appendFile($baseUrl . 'js/libs/angular.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
-            ->appendFile($baseUrl . 'js/bootstrap/bootstrap.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
-            ->appendFile($baseUrl . 'js/libs/underscore-min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
+        $view->headScript()->appendFile(Assets::url('js/libs/jquery-1.8.3.min.js'), 'text/javascript')
+            ->appendFile(Assets::url('js/libs/jquery-ui-1.8.24.min.js'), 'text/javascript')
+            ->appendFile(Assets::url('js/libs/angular.min.js'), 'text/javascript')
+            ->appendFile(Assets::url('js/bootstrap/bootstrap.min.js'), 'text/javascript')
+            ->appendFile(Assets::url('js/libs/underscore-min.js'), 'text/javascript')
 
-            ->appendFile($baseUrl . 'js/qtip/jquery.qtip.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
-            ->appendFile($baseUrl . 'js/jplayer/jquery.jplayer.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
-            ->appendFile($baseUrl . 'js/sprintf/sprintf-0.7-beta1.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
-            ->appendFile($baseUrl . 'js/cookie/js.cookie.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
-            ->appendFile($baseUrl . 'js/i18n/jquery.i18n.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
-            ->appendFile($baseUrl . 'locale/general-translation-table?' . $CC_CONFIG['airtime_version'], 'text/javascript')
-            ->appendFile($baseUrl . 'locale/datatables-translation-table?' . $CC_CONFIG['airtime_version'], 'text/javascript')
+            ->appendFile(Assets::url('js/qtip/jquery.qtip.js'), 'text/javascript')
+            ->appendFile(Assets::url('js/jplayer/jquery.jplayer.min.js'), 'text/javascript')
+            ->appendFile(Assets::url('js/sprintf/sprintf-0.7-beta1.js'), 'text/javascript')
+            ->appendFile(Assets::url('js/cookie/js.cookie.js'), 'text/javascript')
+            ->appendFile(Assets::url('js/i18n/jquery.i18n.js'), 'text/javascript')
+            ->appendFile($baseUrl . 'locale/general-translation-table', 'text/javascript')
+            ->appendFile($baseUrl . 'locale/datatables-translation-table', 'text/javascript')
 
             ->appendScript('$.i18n.setDictionary(general_dict)')
             ->appendScript("var baseUrl='{$baseUrl}'");
@@ -212,14 +208,14 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
         }
 
         // scripts for now playing bar
-        $view->headScript()->appendFile($baseUrl . 'js/airtime/airtime_bootstrap.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
-            ->appendFile($baseUrl . 'js/airtime/dashboard/helperfunctions.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
-            ->appendFile($baseUrl . 'js/airtime/dashboard/dashboard.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
-            ->appendFile($baseUrl . 'js/airtime/dashboard/versiontooltip.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
-            ->appendFile($baseUrl . 'js/tipsy/jquery.tipsy.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
+        $view->headScript()->appendFile(Assets::url('js/airtime/airtime_bootstrap.js'), 'text/javascript')
+            ->appendFile(Assets::url('js/airtime/dashboard/helperfunctions.js'), 'text/javascript')
+            ->appendFile(Assets::url('js/airtime/dashboard/dashboard.js'), 'text/javascript')
+            ->appendFile(Assets::url('js/airtime/dashboard/versiontooltip.js'), 'text/javascript')
+            ->appendFile(Assets::url('js/tipsy/jquery.tipsy.js'), 'text/javascript')
 
-            ->appendFile($baseUrl . 'js/airtime/common/common.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
-            ->appendFile($baseUrl . 'js/airtime/common/audioplaytest.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+            ->appendFile(Assets::url('js/airtime/common/common.js'), 'text/javascript')
+            ->appendFile(Assets::url('js/airtime/common/audioplaytest.js'), 'text/javascript');
 
         $user = Application_Model_User::getCurrentUser();
         if (!is_null($user)) {

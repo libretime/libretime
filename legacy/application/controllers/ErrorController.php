@@ -71,9 +71,7 @@ class ErrorController extends Zend_Controller_Action
 
     private function setupCSS()
     {
-        $CC_CONFIG = Config::getConfig();
-        $staticBaseDir = Application_Common_OsPath::formatDirectoryWithDirectorySeparators($CC_CONFIG['staticBaseDir']);
-        $this->view->headLink()->appendStylesheet($staticBaseDir . 'css/styles.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet(Assets::url('css/styles.css'));
     }
 
     public function getLog()

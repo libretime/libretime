@@ -4,23 +4,20 @@ class PodcastController extends Zend_Controller_Action
 {
     public function init()
     {
-        $CC_CONFIG = Config::getConfig();
-        $baseUrl = Config::getBasePath();
-
         $headScript = $this->view->headScript();
-        AirtimeTableView::injectTableJavaScriptDependencies($headScript, $baseUrl, $CC_CONFIG['airtime_version']);
+        AirtimeTableView::injectTableJavaScriptDependencies($headScript);
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/library/library.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/library/events/library_showbuilder.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/library/library.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/library/events/library_showbuilder.js'), 'text/javascript');
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/widgets/table.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/library/podcast.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/widgets/table.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/library/podcast.js'), 'text/javascript');
 
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/datatables/css/ColVis.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/datatables/css/dataTables.colReorder.min.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet(Assets::url('css/datatables/css/ColVis.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/datatables/css/dataTables.colReorder.min.css'));
 
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/station_podcast.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/dashboard.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet(Assets::url('css/station_podcast.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/dashboard.css'));
     }
 
     /**

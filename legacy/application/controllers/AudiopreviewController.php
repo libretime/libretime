@@ -27,15 +27,15 @@ class AudiopreviewController extends Zend_Controller_Action
         $baseUrl = Config::getBasePath();
 
         $this->view->headScript()->appendFile(
-            $baseUrl . 'js/airtime/audiopreview/preview_jplayer.js?' . $CC_CONFIG['airtime_version'],
+            Assets::url('js/airtime/audiopreview/preview_jplayer.js'),
             'text/javascript'
         );
         $this->view->headScript()->appendFile(
-            $baseUrl . 'js/jplayer/jplayer.playlist.min.js?' . $CC_CONFIG['airtime_version'],
+            Assets::url('js/jplayer/jplayer.playlist.min.js'),
             'text/javascript'
         );
         $this->view->headLink()->appendStylesheet(
-            $baseUrl . 'js/jplayer/skin/jplayer.airtime.audio.preview.css?' . $CC_CONFIG['airtime_version']
+            Assets::url('js/jplayer/skin/jplayer.airtime.audio.preview.css')
         );
         $this->_helper->layout->setLayout('audioPlayer');
 
@@ -83,9 +83,9 @@ class AudiopreviewController extends Zend_Controller_Action
 
         $baseUrl = Config::getBasePath();
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/audiopreview/preview_jplayer.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/jplayer/jplayer.playlist.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headLink()->appendStylesheet($baseUrl . 'js/jplayer/skin/jplayer.airtime.audio.preview.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/audiopreview/preview_jplayer.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/jplayer/jplayer.playlist.min.js'), 'text/javascript');
+        $this->view->headLink()->appendStylesheet(Assets::url('js/jplayer/skin/jplayer.airtime.audio.preview.css'));
         $this->_helper->layout->setLayout('audioPlayer');
 
         $logo = Application_Model_Preference::GetStationLogo();
@@ -109,9 +109,9 @@ class AudiopreviewController extends Zend_Controller_Action
 
         $baseUrl = Config::getBasePath();
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/audiopreview/preview_jplayer.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/jplayer/jplayer.playlist.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headLink()->appendStylesheet($baseUrl . 'js/jplayer/skin/jplayer.airtime.audio.preview.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/audiopreview/preview_jplayer.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/jplayer/jplayer.playlist.min.js'), 'text/javascript');
+        $this->view->headLink()->appendStylesheet(Assets::url('js/jplayer/skin/jplayer.airtime.audio.preview.css'));
         $this->_helper->layout->setLayout('audioPlayer');
 
         $logo = Application_Model_Preference::GetStationLogo();
@@ -231,9 +231,9 @@ class AudiopreviewController extends Zend_Controller_Action
 
         $baseUrl = Config::getBasePath();
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/audiopreview/preview_jplayer.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/jplayer/jplayer.playlist.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headLink()->appendStylesheet($baseUrl . 'js/jplayer/skin/jplayer.airtime.audio.preview.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/audiopreview/preview_jplayer.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/jplayer/jplayer.playlist.min.js'), 'text/javascript');
+        $this->view->headLink()->appendStylesheet(Assets::url('js/jplayer/skin/jplayer.airtime.audio.preview.css'));
         $this->_helper->layout->setLayout('audioPlayer');
 
         $logo = Application_Model_Preference::GetStationLogo();
