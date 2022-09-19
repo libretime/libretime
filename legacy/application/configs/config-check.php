@@ -15,12 +15,15 @@ $postgres = $phpDependencies['postgres'];
 
 $database = $externalServices['database'];
 $rabbitmq = $externalServices['rabbitmq'];
+$systemd = with_systemd();
 
-$pypo = $externalServices['pypo'];
-$liquidsoap = $externalServices['liquidsoap'];
-$analyzer = $externalServices['analyzer'];
-$celery = $externalServices['celery'];
-$api = $externalServices['api'];
+if ($systemd) {
+    $pypo = $externalServices['pypo'];
+    $liquidsoap = $externalServices['liquidsoap'];
+    $analyzer = $externalServices['analyzer'];
+    $celery = $externalServices['celery'];
+    $api = $externalServices['api'];
+}
 
 $r1 = array_reduce($phpDependencies, 'booleanReduce', true);
 $r2 = array_reduce($externalServices, 'booleanReduce', true);
@@ -155,101 +158,103 @@ $result = $r1 && $r2;
                         </td>
                     <?php } ?>
                 </tr>
-                <tr class="<?php echo $analyzer ? 'success' : 'danger'; ?>">
-                    <td class="component">
-                        Media Analyzer
-                    </td>
-                    <td class="description">
-                        <?php echo _('LibreTime media analyzer service'); ?>
-                    </td>
-
-                    <?php if ($analyzer) { ?>
-                        <td class="solution check"></td>
-                    <?php } else { ?>
-                        <td class="solution">
-                            <?php echo _('Check that the libretime-analyzer service is installed correctly in '); ?><code>/etc/systemd/system/</code>,
-                            <?php echo _(" and ensure that it's running with "); ?>
-                            <br /><code>systemctl status libretime-analyzer</code><br />
-                            <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-analyzer</code>
+                <?php if ($systemd) { ?>
+                    <tr class="<?php echo $analyzer ? 'success' : 'danger'; ?>">
+                        <td class="component">
+                            Media Analyzer
                         </td>
-                    <?php } ?>
-                </tr>
-
-                <tr class="<?php echo $pypo ? 'success' : 'danger'; ?>">
-                    <td class="component">
-                        Pypo
-                    </td>
-                    <td class="description">
-                        <?php echo _('LibreTime playout service'); ?>
-                    </td>
-                    <?php if ($pypo) { ?>
-                        <td class="solution check"></td>
-                    <?php } else { ?>
-                        <td class="solution">
-                            <?php echo _('Check that the libretime-playout service is installed correctly in '); ?><code>/etc/systemd/system/</code>,
-                            <?php echo _(" and ensure that it's running with "); ?>
-                            <br /><code>systemctl status libretime-playout</code><br />
-                            <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-playout</code>
+                        <td class="description">
+                            <?php echo _('LibreTime media analyzer service'); ?>
                         </td>
-                    <?php } ?>
-                </tr>
-                <tr class="<?php echo $liquidsoap ? 'success' : 'danger'; ?>">
-                    <td class="component">
-                        Liquidsoap
-                    </td>
-                    <td class="description">
-                        <?php echo _('LibreTime liquidsoap service'); ?>
-                    </td>
 
-                    <?php if ($liquidsoap) { ?>
-                        <td class="solution check"></td>
-                    <?php } else { ?>
-                        <td class="solution">
-                            <?php echo _('Check that the libretime-liquidsoap service is installed correctly in '); ?><code>/etc/systemd/system/</code>,
-                            <?php echo _(" and ensure that it's running with "); ?>
-                            <br /><code>systemctl status libretime-liquidsoap</code><br />
-                            <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-liquidsoap</code>
-                        </td>
-                    <?php } ?>
-                </tr>
-                <tr class="<?php echo $celery ? 'success' : 'danger'; ?>">
-                    <td class="component">
-                        Celery
-                    </td>
-                    <td class="description">
-                        <?php echo _('LibreTime Celery Task service'); ?>
-                    </td>
+                        <?php if ($analyzer) { ?>
+                            <td class="solution check"></td>
+                        <?php } else { ?>
+                            <td class="solution">
+                                <?php echo _('Check that the libretime-analyzer service is installed correctly in '); ?><code>/etc/systemd/system/</code>,
+                                <?php echo _(" and ensure that it's running with "); ?>
+                                <br /><code>systemctl status libretime-analyzer</code><br />
+                                <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-analyzer</code>
+                            </td>
+                        <?php } ?>
+                    </tr>
 
-                    <?php if ($celery) { ?>
-                        <td class="solution check"></td>
-                    <?php } else { ?>
-                        <td class="solution">
-                            <?php echo _('Check that the libretime-worker service is installed correctly in '); ?><code>/etc/systemd/system/</code>,
-                            <?php echo _(" and ensure that it's running with "); ?>
-                            <br /><code>systemctl status libretime-worker</code><br />
-                            <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-worker</code>
+                    <tr class="<?php echo $pypo ? 'success' : 'danger'; ?>">
+                        <td class="component">
+                            Pypo
                         </td>
-                    <?php } ?>
-                </tr>
-                <tr class="<?php echo $api ? 'success' : 'danger'; ?>">
-                    <td class="component">
-                        API
-                    </td>
-                    <td class="description">
-                        <?php echo _('LibreTime API service'); ?>
-                    </td>
+                        <td class="description">
+                            <?php echo _('LibreTime playout service'); ?>
+                        </td>
+                        <?php if ($pypo) { ?>
+                            <td class="solution check"></td>
+                        <?php } else { ?>
+                            <td class="solution">
+                                <?php echo _('Check that the libretime-playout service is installed correctly in '); ?><code>/etc/systemd/system/</code>,
+                                <?php echo _(" and ensure that it's running with "); ?>
+                                <br /><code>systemctl status libretime-playout</code><br />
+                                <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-playout</code>
+                            </td>
+                        <?php } ?>
+                    </tr>
+                    <tr class="<?php echo $liquidsoap ? 'success' : 'danger'; ?>">
+                        <td class="component">
+                            Liquidsoap
+                        </td>
+                        <td class="description">
+                            <?php echo _('LibreTime liquidsoap service'); ?>
+                        </td>
 
-                    <?php if ($api) { ?>
-                        <td class="solution check"></td>
-                    <?php } else { ?>
-                        <td class="solution">
-                            <?php echo _('Check that the libretime-api service is installed correctly in '); ?><code>/etc/init.d/</code>,
-                            <?php echo _(" and ensure that it's running with "); ?>
-                            <br /><code>systemctl status libretime-api</code><br />
-                            <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-api</code>
+                        <?php if ($liquidsoap) { ?>
+                            <td class="solution check"></td>
+                        <?php } else { ?>
+                            <td class="solution">
+                                <?php echo _('Check that the libretime-liquidsoap service is installed correctly in '); ?><code>/etc/systemd/system/</code>,
+                                <?php echo _(" and ensure that it's running with "); ?>
+                                <br /><code>systemctl status libretime-liquidsoap</code><br />
+                                <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-liquidsoap</code>
+                            </td>
+                        <?php } ?>
+                    </tr>
+                    <tr class="<?php echo $celery ? 'success' : 'danger'; ?>">
+                        <td class="component">
+                            Celery
                         </td>
-                    <?php } ?>
-                </tr>
+                        <td class="description">
+                            <?php echo _('LibreTime Celery Task service'); ?>
+                        </td>
+
+                        <?php if ($celery) { ?>
+                            <td class="solution check"></td>
+                        <?php } else { ?>
+                            <td class="solution">
+                                <?php echo _('Check that the libretime-worker service is installed correctly in '); ?><code>/etc/systemd/system/</code>,
+                                <?php echo _(" and ensure that it's running with "); ?>
+                                <br /><code>systemctl status libretime-worker</code><br />
+                                <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-worker</code>
+                            </td>
+                        <?php } ?>
+                    </tr>
+                    <tr class="<?php echo $api ? 'success' : 'danger'; ?>">
+                        <td class="component">
+                            API
+                        </td>
+                        <td class="description">
+                            <?php echo _('LibreTime API service'); ?>
+                        </td>
+
+                        <?php if ($api) { ?>
+                            <td class="solution check"></td>
+                        <?php } else { ?>
+                            <td class="solution">
+                                <?php echo _('Check that the libretime-api service is installed correctly in '); ?><code>/etc/init.d/</code>,
+                                <?php echo _(" and ensure that it's running with "); ?>
+                                <br /><code>systemctl status libretime-api</code><br />
+                                <?php echo _('If not, try '); ?><br /><code>sudo systemctl restart libretime-api</code>
+                            </td>
+                        <?php } ?>
+                    </tr>
+                <?php } ?>
             </tbody>
         </table>
     </div>
