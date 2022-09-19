@@ -17,52 +17,50 @@ class ShowbuilderController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $CC_CONFIG = Config::getConfig();
-        $baseUrl = Config::getBasePath();
         $userType = Application_Model_User::GetCurrentUser()->getType();
 
         // $this->_helper->layout->setLayout("showbuilder");
 
         $this->view->headScript()->appendScript("localStorage.setItem( 'user-type', '{$userType}' );");
 
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/redmond/jquery-ui-1.8.8.custom.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet(Assets::url('css/redmond/jquery-ui-1.8.8.custom.css'));
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/contextmenu/jquery.contextMenu.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/contextmenu/jquery.contextMenu.js'), 'text/javascript');
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/blockui/jquery.blockUI.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/buttons/buttons.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/utilities/utilities.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/blockui/jquery.blockUI.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/buttons/buttons.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/utilities/utilities.js'), 'text/javascript');
 
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/media_library.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/jquery.contextMenu.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/datatables/css/ColVis.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/datatables/css/dataTables.colReorder.min.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/library/library.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/library/events/library_showbuilder.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headLink()->appendStylesheet(Assets::url('css/media_library.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/jquery.contextMenu.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/datatables/css/ColVis.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/datatables/css/dataTables.colReorder.min.css'));
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/library/library.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/library/events/library_showbuilder.js'), 'text/javascript');
         $headScript = $this->view->headScript();
-        AirtimeTableView::injectTableJavaScriptDependencies($headScript, $baseUrl, $CC_CONFIG['airtime_version']);
+        AirtimeTableView::injectTableJavaScriptDependencies($headScript);
 
         // PLUPLOAD
-        $this->view->headScript()->appendFile($baseUrl . 'js/libs/dropzone.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/libs/dropzone.min.js'), 'text/javascript');
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/timepicker/jquery.ui.timepicker.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/showbuilder/tabs.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/showbuilder/builder.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/showbuilder/main_builder.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/timepicker/jquery.ui.timepicker.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/showbuilder/tabs.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/showbuilder/builder.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/showbuilder/main_builder.js'), 'text/javascript');
 
         // MEDIA BUILDER
-        $this->view->headScript()->appendFile($baseUrl . 'js/libs/dayjs.min.js', 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/libs/utc.min.js', 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/libs/timezone.min.js', 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/library/spl.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/library/podcast.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/library/publish.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/playlist/smart_blockbuilder.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/playlist_builder.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headScript()->appendFile(Assets::url('js/libs/dayjs.min.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/libs/utc.min.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/libs/timezone.min.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/library/spl.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/library/podcast.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/library/publish.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/playlist/smart_blockbuilder.js'), 'text/javascript');
+        $this->view->headLink()->appendStylesheet(Assets::url('css/playlist_builder.css'));
 
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/jquery.ui.timepicker.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/showbuilder.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/dashboard.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet(Assets::url('css/jquery.ui.timepicker.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/showbuilder.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/dashboard.css'));
 
         $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
         $csrf_element = new Zend_Form_Element_Hidden('csrf');
@@ -99,8 +97,6 @@ class ShowbuilderController extends Zend_Controller_Action
     /** Check if we need to show the timezone/language setup popup and display it. (eg. on first run) */
     public function checkAndShowSetupPopup($request)
     {
-        $CC_CONFIG = Config::getConfig();
-        $baseUrl = Config::getBasePath();
         $setupComplete = Application_Model_Preference::getLangTimezoneSetupComplete();
         $previousPage = strtolower($request->getHeader('Referer'));
         $userService = new Application_Service_UserService();
@@ -113,7 +109,7 @@ class ShowbuilderController extends Zend_Controller_Action
         if ($currentUser->isSuperAdmin() && $previousPageWasLoginScreen && empty($setupComplete)) {
             $lang_tz_popup_form = new Application_Form_SetupLanguageTimezone();
             $this->view->lang_tz_popup_form = $lang_tz_popup_form;
-            $this->view->headScript()->appendFile($baseUrl . 'js/airtime/nowplaying/lang-timezone-setup.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+            $this->view->headScript()->appendFile(Assets::url('js/airtime/nowplaying/lang-timezone-setup.js'), 'text/javascript');
         }
     }
 

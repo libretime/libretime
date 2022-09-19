@@ -16,28 +16,20 @@ class TracktypeController extends Zend_Controller_Action
         // Start the session to re-open write permission to the session so we can
         // create the namespace for our csrf token verification
         SessionHelper::reopenSessionForWriting();
-        $CC_CONFIG = Config::getConfig();
 
         $request = $this->getRequest();
 
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Settings');
 
-        $baseUrl = Config::getBasePath();
-
-        $js_files = [
-            'js/datatables/js/jquery.dataTables.js?',
-            'js/datatables/plugin/dataTables.pluginAPI.js?',
-            'js/airtime/tracktype/tracktype.js?',
-        ];
-
-        foreach ($js_files as $js) {
-            $this->view->headScript()->appendFile(
-                $baseUrl . $js . $CC_CONFIG['airtime_version'],
-                'text/javascript'
-            );
+        foreach ([
+            'js/datatables/js/jquery.dataTables.js',
+            'js/datatables/plugin/dataTables.pluginAPI.js',
+            'js/airtime/tracktype/tracktype.js',
+        ] as $file) {
+            $this->view->headScript()->appendFile(Assets::url($file), 'text/javascript');
         }
 
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/tracktypes.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet(Assets::url('css/tracktypes.css'));
 
         $form = new Application_Form_AddTracktype();
 

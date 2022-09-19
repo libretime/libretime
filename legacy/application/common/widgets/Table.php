@@ -16,18 +16,17 @@ class AirtimeTableView
             'js/datatables/plugin/dataTables.pluginAPI.js',
             'js/datatables/plugin/dataTables.fnSetFilteringDelay.js',
             'js/datatables/plugin/dataTables.ColVis.js',
-            'js/datatables/plugin/dataTables.colReorder.min.js?',
+            'js/datatables/plugin/dataTables.colReorder.min.js',
             'js/datatables/plugin/dataTables.FixedColumns.js',
             'js/datatables/plugin/dataTables.FixedHeader.js',
-            'js/datatables/plugin/dataTables.columnFilter.js?',
+            'js/datatables/plugin/dataTables.columnFilter.js',
         ];
     }
 
-    public static function injectTableJavaScriptDependencies(&$headScript, $baseUrl, $airtimeVersion)
+    public static function injectTableJavaScriptDependencies(&$headScript)
     {
-        $deps = self::_getTableJavaScriptDependencies();
-        for ($i = 0; $i < count($deps); ++$i) {
-            $headScript->appendFile($baseUrl . $deps[$i] . '?' . $airtimeVersion, 'text/javascript');
+        foreach (self::_getTableJavaScriptDependencies() as $path) {
+            $headScript->appendFile(Assets::url($path), 'text/javascript');
         }
     }
 }

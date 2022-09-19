@@ -4,13 +4,12 @@ class LoginController extends Zend_Controller_Action
 {
     public function init()
     {
-        $CC_CONFIG = Config::getConfig();
         $baseUrl = Config::getBasePath();
 
-        $this->view->headLink(['rel' => 'icon', 'href' => $baseUrl . 'favicon.ico?' . $CC_CONFIG['airtime_version'], 'type' => 'image/x-icon'], 'PREPEND')
-            ->appendStylesheet($baseUrl . 'css/bootstrap.css?' . $CC_CONFIG['airtime_version'])
-            ->appendStylesheet($baseUrl . 'css/redmond/jquery-ui-1.8.8.custom.css?' . $CC_CONFIG['airtime_version'])
-            ->appendStylesheet($baseUrl . 'css/styles.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headLink(['rel' => 'icon', 'href' => $baseUrl . 'favicon.ico', 'type' => 'image/x-icon'], 'PREPEND')
+            ->appendStylesheet(Assets::url('css/bootstrap.css'))
+            ->appendStylesheet(Assets::url('css/redmond/jquery-ui-1.8.8.custom.css'))
+            ->appendStylesheet(Assets::url('css/styles.css'));
     }
 
     public function indexAction()
@@ -42,8 +41,6 @@ class LoginController extends Zend_Controller_Action
         $this->_helper->layout->setLayout('login');
 
         $this->view->error = false;
-
-        $baseUrl = Config::getBasePath();
 
         $form = new Application_Form_Login();
 
@@ -111,11 +108,7 @@ class LoginController extends Zend_Controller_Action
 
     public function passwordRestoreAction()
     {
-        $CC_CONFIG = Config::getConfig();
-
-        $baseUrl = Config::getBasePath();
-
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/login/password-restore.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/login/password-restore.js'), 'text/javascript');
 
         $request = $this->getRequest();
         $stationLocale = Application_Model_Preference::GetDefaultLocale();

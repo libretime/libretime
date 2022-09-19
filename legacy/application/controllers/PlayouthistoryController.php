@@ -42,25 +42,25 @@ class PlayouthistoryController extends Zend_Controller_Action
 
         $this->view->date_form = $form;
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/contextmenu/jquery.contextMenu.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/datatables/js/jquery.dataTables.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/datatables/plugin/dataTables.pluginAPI.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/datatables/plugin/dataTables.fnSetFilteringDelay.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/contextmenu/jquery.contextMenu.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/datatables/js/jquery.dataTables.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/datatables/plugin/dataTables.pluginAPI.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/datatables/plugin/dataTables.fnSetFilteringDelay.js'), 'text/javascript');
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/timepicker/jquery.ui.timepicker.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/bootstrap-datetime/bootstrap-datetimepicker.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/buttons/buttons.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/utilities/utilities.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/libs/CSVexport.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/libs/pdfmake.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/libs/vfs_fonts.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/playouthistory/historytable.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/timepicker/jquery.ui.timepicker.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/bootstrap-datetime/bootstrap-datetimepicker.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/buttons/buttons.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/utilities/utilities.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/libs/CSVexport.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/libs/pdfmake.min.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/libs/vfs_fonts.min.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/playouthistory/historytable.js'), 'text/javascript');
 
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/bootstrap-datetimepicker.min.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/jquery.ui.timepicker.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/playouthistory.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/history_styles.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/jquery.contextMenu.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet(Assets::url('css/bootstrap-datetimepicker.min.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/jquery.ui.timepicker.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/playouthistory.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/history_styles.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/jquery.contextMenu.css'));
 
         // set datatables columns for display of data.
         $historyService = new Application_Service_HistoryService();

@@ -12,21 +12,18 @@ class ListenerstatController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $CC_CONFIG = Config::getConfig();
-
         $request = $this->getRequest();
-        $baseUrl = Config::getBasePath();
 
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Analytics');
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/flot/jquery.flot.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/flot/jquery.flot.crosshair.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/flot/jquery.flot.resize.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/listenerstat/listenerstat.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/timepicker/jquery.ui.timepicker.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/buttons/buttons.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/utilities/utilities.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/jquery.ui.timepicker.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headScript()->appendFile(Assets::url('js/flot/jquery.flot.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/flot/jquery.flot.crosshair.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/flot/jquery.flot.resize.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/listenerstat/listenerstat.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/timepicker/jquery.ui.timepicker.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/buttons/buttons.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/utilities/utilities.js'), 'text/javascript');
+        $this->view->headLink()->appendStylesheet(Assets::url('css/jquery.ui.timepicker.css'));
 
         [$startsDT, $endsDT] = Application_Common_HTTPHelper::getStartEndFromRequest($request);
         $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
@@ -57,22 +54,19 @@ class ListenerstatController extends Zend_Controller_Action
 
     public function showAction()
     {
-        $CC_CONFIG = Config::getConfig();
-
         $request = $this->getRequest();
-        $baseUrl = Config::getBasePath();
         $headScript = $this->view->headScript();
-        AirtimeTableView::injectTableJavaScriptDependencies($headScript, $baseUrl, $CC_CONFIG['airtime_version']);
+        AirtimeTableView::injectTableJavaScriptDependencies($headScript);
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Analytics');
-        $this->view->headScript()->appendFile($baseUrl . 'js/timepicker/jquery.ui.timepicker.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/buttons/buttons.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/utilities/utilities.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/listenerstat/showlistenerstat.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/timepicker/jquery.ui.timepicker.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/buttons/buttons.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/utilities/utilities.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/listenerstat/showlistenerstat.js'), 'text/javascript');
 
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/datatables/css/ColVis.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/datatables/css/dataTables.colReorder.min.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/jquery.ui.timepicker.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/show_analytics.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet(Assets::url('css/datatables/css/ColVis.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/datatables/css/dataTables.colReorder.min.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/jquery.ui.timepicker.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/show_analytics.css'));
 
         $user = Application_Model_User::getCurrentUser();
         if ($user->isUserType([UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER])) {

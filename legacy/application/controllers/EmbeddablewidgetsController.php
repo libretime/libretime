@@ -10,10 +10,8 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
     {
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Widgets');
 
-        $CC_CONFIG = Config::getConfig();
-        $baseUrl = Config::getBasePath();
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/player-form.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/player/player.js?' . $CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet(Assets::url('css/player-form.css'));
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/player/player.js'));
 
         $form = new Application_Form_Player();
 
@@ -58,7 +56,7 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
 
         $facebookAppId = $CC_CONFIG['facebook-app-id'];
         $this->view->headScript()->appendScript('var FACEBOOK_APP_ID = ' . json_encode($facebookAppId) . ';');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/common/facebook.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/common/facebook.js'), 'text/javascript');
     }
 
     /** Airtime makes an AJAX POST here after it successfully adds a tab to your Facebook page. */

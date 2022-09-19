@@ -18,28 +18,20 @@ class UserController extends Zend_Controller_Action
         // Start the session to re-open write permission to the session so we can
         // create the namespace for our csrf token verification
         SessionHelper::reopenSessionForWriting();
-        $CC_CONFIG = Config::getConfig();
 
         $request = $this->getRequest();
 
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Settings');
 
-        $baseUrl = Config::getBasePath();
-
-        $js_files = [
-            'js/datatables/js/jquery.dataTables.js?',
-            'js/datatables/plugin/dataTables.pluginAPI.js?',
-            'js/airtime/user/user.js?',
-        ];
-
-        foreach ($js_files as $js) {
-            $this->view->headScript()->appendFile(
-                $baseUrl . $js . $CC_CONFIG['airtime_version'],
-                'text/javascript'
-            );
+        foreach ([
+            'js/datatables/js/jquery.dataTables.js',
+            'js/datatables/plugin/dataTables.pluginAPI.js',
+            'js/airtime/user/user.js',
+        ] as $file) {
+            $this->view->headScript()->appendFile(Assets::url($file), 'text/javascript');
         }
 
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/users.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet(Assets::url('css/users.css'));
 
         $form = new Application_Form_AddUser();
 

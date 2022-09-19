@@ -42,10 +42,6 @@ class ScheduleController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $CC_CONFIG = Config::getConfig();
-
-        $baseUrl = Config::getBasePath();
-
         // Embed the schedule in our page response so we don't have to make an AJAX request to get this data after the page load.
         $scheduleController = new ScheduleController($this->getRequest(), $this->getResponse());
         $scheduleController->eventFeedPreloadAction();
@@ -62,50 +58,50 @@ class ScheduleController extends Zend_Controller_Action
                 "var calendarEvents = {$events};"
         );
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/contextmenu/jquery.contextMenu.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/contextmenu/jquery.contextMenu.js'), 'text/javascript');
 
         // full-calendar-functions.js requires this variable, so that datePicker widget can be offset to server time instead of client time
         // this should be as a default, however with our new drop down timezone changing for shows, we should reset this offset then??
         $this->view->headScript()->appendScript('var timezoneOffset = ' . Application_Common_DateHelper::getStationTimezoneOffset() . '; //in seconds');
         // set offset to ensure it loads last
-        $this->view->headScript()->offsetSetFile(90, $baseUrl . 'js/airtime/schedule/full-calendar-functions.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->offsetSetFile(90, Assets::url('js/airtime/schedule/full-calendar-functions.js'), 'text/javascript');
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/fullcalendar/fullcalendar.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/timepicker/jquery.ui.timepicker.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/colorpicker/js/colorpicker.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/fullcalendar/fullcalendar.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/timepicker/jquery.ui.timepicker.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/colorpicker/js/colorpicker.js'), 'text/javascript');
 
         // This block needs to be added before the add-show.js script
-        $this->view->headScript()->appendFile($baseUrl . 'js/libs/dayjs.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/libs/utc.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/libs/timezone.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/libs/dayjs.min.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/libs/utc.min.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/libs/timezone.min.js'), 'text/javascript');
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/schedule/add-show.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->offsetSetFile(100, $baseUrl . 'js/airtime/schedule/schedule.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/blockui/jquery.blockUI.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/schedule/add-show.js'), 'text/javascript');
+        $this->view->headScript()->offsetSetFile(100, Assets::url('js/airtime/schedule/schedule.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/blockui/jquery.blockUI.js'), 'text/javascript');
 
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/jquery.ui.timepicker.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/fullcalendar.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/colorpicker/css/colorpicker.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/add-show.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/jquery.contextMenu.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet(Assets::url('css/jquery.ui.timepicker.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/fullcalendar.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/colorpicker/css/colorpicker.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/add-show.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/jquery.contextMenu.css'));
 
         // Start Show builder JS/CSS requirements
         $headScript = $this->view->headScript();
-        AirtimeTableView::injectTableJavaScriptDependencies($headScript, $baseUrl, $CC_CONFIG['airtime_version']);
+        AirtimeTableView::injectTableJavaScriptDependencies($headScript);
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/utilities/utilities.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/utilities/utilities.js'), 'text/javascript');
 
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/buttons/buttons.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/library/events/library_showbuilder.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/library/library.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/showbuilder/builder.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/buttons/buttons.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/library/events/library_showbuilder.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/library/library.js'), 'text/javascript');
+        $this->view->headScript()->appendFile(Assets::url('js/airtime/showbuilder/builder.js'), 'text/javascript');
 
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/media_library.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/jquery.contextMenu.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/datatables/css/ColVis.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/datatables/css/dataTables.colReorder.min.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/showbuilder.css?' . $CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl . 'css/dashboard.css?' . $CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet(Assets::url('css/media_library.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/jquery.contextMenu.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/datatables/css/ColVis.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/datatables/css/dataTables.colReorder.min.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/showbuilder.css'));
+        $this->view->headLink()->appendStylesheet(Assets::url('css/dashboard.css'));
         // End Show builder JS/CSS requirements
 
         $this->createShowFormAction(true);

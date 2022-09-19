@@ -23,22 +23,20 @@ class EmbedController extends Zend_Controller_Action
     {
         $this->view->layout()->disableLayout();
 
-        $CC_CONFIG = Config::getConfig();
-
         $request = $this->getRequest();
 
-        $this->view->playerhtml5_js = '/js/airtime/player/playerhtml5.js?' . $CC_CONFIG['airtime_version'];
-        $this->view->jquery = '/js/libs/jquery-1.10.2.min.js';
+        $this->view->playerhtml5_js = Assets::url('js/airtime/player/playerhtml5.js');
+        $this->view->jquery = Assets::url('js/libs/jquery-1.10.2.min.js');
         $this->view->metadata_api_url = '/api/live-info';
         $this->view->player_title = json_encode($this->view->escape($request->getParam('title')));
-        $this->view->jquery_i18n = '/js/i18n/jquery.i18n.js?';
+        $this->view->jquery_i18n = Assets::url('js/i18n/jquery.i18n.js');
 
         $styleParam = $request->getParam('style');
         $player_style = isset($styleParam) ? $styleParam : 'basic';
         if ($player_style == 'premium') {
-            $this->view->css = '/css/radio-page/premium_player.css?' . $CC_CONFIG['airtime_version'];
+            $this->view->css = Assets::url('css/radio-page/premium_player.css');
         } else {
-            $this->view->css = '/css/player.css?' . $CC_CONFIG['airtime_version'];
+            $this->view->css = Assets::url('css/player.css');
         }
         $this->view->player_style = $player_style;
 
@@ -75,20 +73,18 @@ class EmbedController extends Zend_Controller_Action
     {
         $this->view->layout()->disableLayout();
 
-        $CC_CONFIG = Config::getConfig();
-
         $request = $this->getRequest();
 
-        $this->view->angular = Config::getPublicUrl() . 'js/libs/angular.min.js?' . $CC_CONFIG['airtime_version'];
+        $this->view->angular = Config::getPublicUrl() . Assets::url('js/libs/angular.min.js');
         $widgetStyle = $request->getParam('style');
         if ($widgetStyle == 'premium') {
             $this->view->widgetStyle = 'premium';
-            $this->view->css = '/css/embed/weekly-schedule-widget.css?' . $CC_CONFIG['airtime_version'];
+            $this->view->css = Assets::url('css/embed/weekly-schedule-widget.css');
         } else {
             $this->view->widgetStyle = 'basic';
-            $this->view->css = '/css/embed/weekly-schedule-widget-basic.css?' . $CC_CONFIG['airtime_version'];
+            $this->view->css = Assets::url('css/embed/weekly-schedule-widget-basic.css');
         }
-        $this->view->jquery = '/js/libs/jquery-1.8.3.min.js?' . $CC_CONFIG['airtime_version'];
+        $this->view->jquery = Assets::url('js/libs/jquery-1.8.3.min.js');
 
         $weeklyScheduleData = WidgetHelper::getWeekInfoV2();
 
