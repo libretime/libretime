@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Extract the checksum for all the assets in the $1 directory.
+# Extract the checksum for all the assets in the public directory.
 import hashlib
 import json
 from pathlib import Path
