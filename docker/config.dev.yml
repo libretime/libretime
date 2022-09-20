@@ -40,3 +40,7 @@ stream:
         audio:
           format: mp3
           bitrate: 256
+
+    system:
+      - enabled: false
+        kind: pulseaudio
