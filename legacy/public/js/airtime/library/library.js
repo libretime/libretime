@@ -873,6 +873,7 @@ var AIRTIME = (function (AIRTIME) {
       aoColumns: cols,
       bProcessing: true,
       bServerSide: true,
+      iDisplayLength: 25,
       aLengthMenu: [25, 50, 100],
       bStateSave: true,
       fnStateSaveParams: function (oSettings, oData) {
