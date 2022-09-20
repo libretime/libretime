@@ -281,7 +281,7 @@ Next, continue by [configuring your installation](#configure).
 
 ## Configure
 
-Once the setup is completed, log in the interface and make sure to edit the project settings (go to **Settings** > **General**) to match your needs. Important settings are:
+Once the setup is completed, log in the interface (with the default user `admin` and password `admin`), and make sure to edit the project settings (go to **Settings** > **General**) to match your needs. Important settings are:
 
 - First day of the week
 
