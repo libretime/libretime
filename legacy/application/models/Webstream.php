@@ -179,7 +179,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         $mediaUrl = null;
         if ($result == 0) {
             $valid['url'][0] = false;
-            $valid['url'][1] = _('URL should be of form "http://domain"');
+            $valid['url'][1] = _('URL should be of form "https://example.org"');
         } elseif (strlen($url) > 512) {
             $valid['url'][0] = false;
             $valid['url'][1] = _('URL should be 512 characters or less');
@@ -344,7 +344,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
      * 0 => "HTTP/1.1 302 Moved Temporarily",
      * 1 => "X-Powered-By: Servlet/3.0 JSP/2.2 (GlassFish Server Open Source Edition 3.1.1 Java/Sun Microsystems Inc./1.6)",
      * 2 => "Server: GlassFish Server Open Source Edition 3.1.1",
-     * 3 => "Location: https://3043.live.streamtheworld.com:80/SAM04AAC89_SC",
+     * 3 => "Location: https://example.org/SAM04AAC89_SC",
      * 4 => "Content-Type: text/html;charset=ISO-8859-1",
      * 5 => "Content-Language: en-US",
      * 6 => "Content-Length: 202",

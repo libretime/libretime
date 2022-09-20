@@ -2,9 +2,6 @@
 
 /**
  * Class Rest_RouteController.
- *
- * Taken from https://github.com/aporat/Application_Rest_Controller_Route
- * to enable hierarchy routing
  */
 class Rest_RouteController extends Zend_Controller_Router_Route
 {
