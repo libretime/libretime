@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2022-09-12 18:07+0200\n"
+"POT-Creation-Date: 2022-09-21 00:42+0200\n"
 "PO-Revision-Date: 2021-12-27 20:52+0000\n"
 "Last-Translator: f3rr31 <5920873@disroot.org>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/libretime/legacy/hu/>\n"
@@ -631,59 +631,59 @@ msgstr "Kattintson a következő műsorra és válassza a „Sávok ütemezése�
 msgid "It looks like the next show is empty. %sAdd tracks to your show now%s."
 msgstr "Úgy tűnik az következő műsor üres. %sSávok hozzáadása a műsorhoz most%s."
 
-#: application/configs/config-check.php:163
+#: application/configs/config-check.php:167
 msgid "LibreTime media analyzer service"
 msgstr ""
 
-#: application/configs/config-check.php:170
+#: application/configs/config-check.php:174
 msgid "Check that the libretime-analyzer service is installed correctly in "
 msgstr ""
 
-#: application/configs/config-check.php:171
-#: application/configs/config-check.php:190
-#: application/configs/config-check.php:209
-#: application/configs/config-check.php:228
-#: application/configs/config-check.php:247
+#: application/configs/config-check.php:175
+#: application/configs/config-check.php:194
+#: application/configs/config-check.php:213
+#: application/configs/config-check.php:232
+#: application/configs/config-check.php:251
 msgid " and ensure that it's running with "
 msgstr ""
 
-#: application/configs/config-check.php:173
-#: application/configs/config-check.php:192
-#: application/configs/config-check.php:211
-#: application/configs/config-check.php:230
-#: application/configs/config-check.php:249
+#: application/configs/config-check.php:177
+#: application/configs/config-check.php:196
+#: application/configs/config-check.php:215
+#: application/configs/config-check.php:234
+#: application/configs/config-check.php:253
 msgid "If not, try "
 msgstr ""
 
-#: application/configs/config-check.php:183
+#: application/configs/config-check.php:187
 msgid "LibreTime playout service"
 msgstr ""
 
-#: application/configs/config-check.php:189
+#: application/configs/config-check.php:193
 msgid "Check that the libretime-playout service is installed correctly in "
 msgstr ""
 
-#: application/configs/config-check.php:201
+#: application/configs/config-check.php:205
 msgid "LibreTime liquidsoap service"
 msgstr ""
 
-#: application/configs/config-check.php:208
+#: application/configs/config-check.php:212
 msgid "Check that the libretime-liquidsoap service is installed correctly in "
 msgstr ""
 
-#: application/configs/config-check.php:220
+#: application/configs/config-check.php:224
 msgid "LibreTime Celery Task service"
 msgstr ""
 
-#: application/configs/config-check.php:227
+#: application/configs/config-check.php:231
 msgid "Check that the libretime-worker service is installed correctly in "
 msgstr ""
 
-#: application/configs/config-check.php:239
+#: application/configs/config-check.php:243
 msgid "LibreTime API service"
 msgstr ""
 
-#: application/configs/config-check.php:246
+#: application/configs/config-check.php:250
 msgid "Check that the libretime-api service is installed correctly in "
 msgstr ""
 
@@ -825,7 +825,7 @@ msgstr "Nem csatlakozik forrás az alábbi bemenethez."
 msgid "You don't have permission to switch source."
 msgstr "Nincs jogosultsága a forrás megváltoztatásához."
 
-#: application/controllers/EmbeddablewidgetsController.php:26
+#: application/controllers/EmbeddablewidgetsController.php:24
 msgid ""
 "To configure and use the embeddable player you must:<br><br>\n"
 "            1. Enable at least one MP3, AAC, or OGG stream under Settings -> Streams<br>\n"
@@ -835,7 +835,7 @@ msgstr ""
 "1. Engedélyezni kell legalább egy MP3, AAC, vagy OGG adásfolyamot a „Beállítások -> Adásfolyamok” alatt<br>\n"
 "2. Engedélyezni kell a Public LibreTime API-t a „Beállítások -> Tulajdonságok” alatt"
 
-#: application/controllers/EmbeddablewidgetsController.php:39
+#: application/controllers/EmbeddablewidgetsController.php:37
 msgid ""
 "To use the embeddable weekly schedule widget you must:<br><br>\n"
 "            Enable the Public LibreTime API under Settings -> Preferences"
@@ -843,7 +843,7 @@ msgstr ""
 "A beágyazható heti ütemezés felületi elem használatához a következőt kell tenni:<br><br>\n"
 "Engedélyezni kell a Public LibreTime API-t a Beállítások -> Tulajdonságok alatt"
 
-#: application/controllers/EmbeddablewidgetsController.php:52
+#: application/controllers/EmbeddablewidgetsController.php:50
 msgid ""
 "To add the Radio Tab to your Facebook Page, you must first:<br><br>\n"
 "            Enable the Public LibreTime API under Settings -> Preferences"
@@ -851,19 +851,19 @@ msgstr ""
 "A Rádió fül Facebook Oldalba illesztéséhez először a következőt kell tenni:<br><br>\n"
 "Engedélyezni kell a Public LibreTime API-t a Beállítások -> Tulajdonságok alatt"
 
-#: application/controllers/ErrorController.php:96
+#: application/controllers/ErrorController.php:94
 msgid "Page not found."
 msgstr "Oldal nem található."
 
-#: application/controllers/ErrorController.php:106
+#: application/controllers/ErrorController.php:104
 msgid "The requested action is not supported."
 msgstr "A kiválasztott művelet nem támogatott."
 
-#: application/controllers/ErrorController.php:116
+#: application/controllers/ErrorController.php:114
 msgid "You do not have permission to access this resource."
 msgstr "Nincs jogosultsága ennek a forrásnak az eléréséhez."
 
-#: application/controllers/ErrorController.php:127
+#: application/controllers/ErrorController.php:125
 msgid "An internal application error has occurred."
 msgstr "Belső alkalmazáshiba történt."
 
@@ -889,7 +889,7 @@ msgstr "Valami hiba történt."
 
 #: application/controllers/LibraryController.php:91
 #: application/controllers/LocaleController.php:171
-#: application/controllers/ShowbuilderController.php:135
+#: application/controllers/ShowbuilderController.php:131
 #: application/forms/SmartBlockCriteria.php:573
 msgid "Preview"
 msgstr "Előnézet"
@@ -908,7 +908,7 @@ msgstr "Hozzáadás Okosblokkhoz"
 #: application/controllers/LibraryController.php:151
 #: application/controllers/LibraryController.php:170
 #: application/controllers/LocaleController.php:75
-#: application/controllers/ShowbuilderController.php:142
+#: application/controllers/ShowbuilderController.php:138
 #: application/services/CalendarService.php:192
 #: application/services/CalendarService.php:212
 #: application/services/CalendarService.php:218
@@ -922,7 +922,7 @@ msgid "Edit..."
 msgstr "Szerkesztés..."
 
 #: application/controllers/LibraryController.php:126
-#: application/controllers/ScheduleController.php:736
+#: application/controllers/ScheduleController.php:732
 msgid "Download"
 msgstr "Letöltés"
 
@@ -956,7 +956,7 @@ msgstr "Nem lehet törölni a fájlokat."
 msgid "Copy of %s"
 msgstr "%s másolata"
 
-#: application/controllers/ListenerstatController.php:49
+#: application/controllers/ListenerstatController.php:46
 msgid "Please make sure admin user/password is correct on Settings->Streams page."
 msgstr "Kérjük győződjön meg róla, hogy megfelelő adminisztrátori felhasználónév és jelszó van megadva a Rendszer -> Adásfolyamok oldalon."
 
@@ -1878,37 +1878,37 @@ msgid "Month"
 msgstr "Hónap"
 
 #: application/controllers/LocaleController.php:253
-#: application/forms/GeneralPreferences.php:236
+#: application/forms/GeneralPreferences.php:237
 msgid "Sunday"
 msgstr "Vasárnap"
 
 #: application/controllers/LocaleController.php:254
-#: application/forms/GeneralPreferences.php:237
+#: application/forms/GeneralPreferences.php:238
 msgid "Monday"
 msgstr "Hétfő"
 
 #: application/controllers/LocaleController.php:255
-#: application/forms/GeneralPreferences.php:238
+#: application/forms/GeneralPreferences.php:239
 msgid "Tuesday"
 msgstr "Kedd"
 
 #: application/controllers/LocaleController.php:256
-#: application/forms/GeneralPreferences.php:239
+#: application/forms/GeneralPreferences.php:240
 msgid "Wednesday"
 msgstr "Szerda"
 
 #: application/controllers/LocaleController.php:257
-#: application/forms/GeneralPreferences.php:240
+#: application/forms/GeneralPreferences.php:241
 msgid "Thursday"
 msgstr "Csütörtök"
 
 #: application/controllers/LocaleController.php:258
-#: application/forms/GeneralPreferences.php:241
+#: application/forms/GeneralPreferences.php:242
 msgid "Friday"
 msgstr "Péntek"
 
 #: application/controllers/LocaleController.php:259
-#: application/forms/GeneralPreferences.php:242
+#: application/forms/GeneralPreferences.php:243
 msgid "Saturday"
 msgstr "Szombat"
 
@@ -2579,7 +2579,7 @@ msgstr ""
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
 #: application/forms/GeneralPreferences.php:160
-#: application/forms/GeneralPreferences.php:220
+#: application/forms/GeneralPreferences.php:221
 msgid "Enabled"
 msgstr "Engedélyezve"
 
@@ -2588,7 +2588,7 @@ msgstr "Engedélyezve"
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
 #: application/forms/GeneralPreferences.php:159
-#: application/forms/GeneralPreferences.php:219
+#: application/forms/GeneralPreferences.php:220
 msgid "Disabled"
 msgstr "Letiltva"
 
@@ -2703,23 +2703,23 @@ msgstr "Nincs semmi ütemezve"
 msgid "Click 'Add' to create one now."
 msgstr ""
 
-#: application/controllers/LoginController.php:50
+#: application/controllers/LoginController.php:47
 msgid "Please enter your username and password."
 msgstr "Kérjük adja meg felhasználónevét és jelszavát."
 
-#: application/controllers/LoginController.php:154
+#: application/controllers/LoginController.php:147
 msgid "Email could not be sent. Check your mail server settings and ensure it has been configured properly."
 msgstr "Az emailt nem lehetett elküldeni. Ellenőrizni kell a levelező kiszolgáló beállításait és, hogy megfelelő-e a konfiguráció."
 
-#: application/controllers/LoginController.php:157
+#: application/controllers/LoginController.php:150
 msgid "That username or email address could not be found."
 msgstr "A felhasználónév vagy email cím nem található."
 
-#: application/controllers/LoginController.php:160
+#: application/controllers/LoginController.php:153
 msgid "There was a problem with the username or email address you entered."
 msgstr "Valamilyen probléma van a megadott felhasználónévvel vagy email címmel."
 
-#: application/controllers/LoginController.php:238
+#: application/controllers/LoginController.php:231
 msgid "Wrong username or password provided. Please try again."
 msgstr "Hibás felhasználónév vagy jelszó. Kérjük, próbálja meg újra."
 
@@ -2753,60 +2753,60 @@ msgstr "Névtelen okosblokk"
 msgid "Unknown Playlist"
 msgstr "Ismeretlen lejátszási lista"
 
-#: application/controllers/PreferenceController.php:72
+#: application/controllers/PreferenceController.php:70
 msgid "Preferences updated."
 msgstr "Beállítások frissítve."
 
-#: application/controllers/PreferenceController.php:210
+#: application/controllers/PreferenceController.php:204
 msgid "Stream Setting Updated."
 msgstr "Adásfolyam beállítások frissítve."
 
-#: application/controllers/PreferenceController.php:255
+#: application/controllers/PreferenceController.php:249
 msgid "path should be specified"
 msgstr "az útvonalat meg kell határozni"
 
-#: application/controllers/PreferenceController.php:298
+#: application/controllers/PreferenceController.php:292
 msgid "Problem with Liquidsoap..."
 msgstr "Probléma lépett fel a Liquidsoap-al..."
 
-#: application/controllers/PreferenceController.php:341
+#: application/controllers/PreferenceController.php:335
 msgid "Request method not accepted"
 msgstr "A kérés módja nem elfogadott"
 
-#: application/controllers/ScheduleController.php:394
+#: application/controllers/ScheduleController.php:390
 #, fuzzy, php-format
 msgid "Rebroadcast of show %s from %s at %s"
 msgstr "A műsor újraközvetítése %s -tól/-től %s a %s"
 
-#: application/controllers/ShowbuilderController.php:137
+#: application/controllers/ShowbuilderController.php:133
 msgid "Select cursor"
 msgstr "Kurzor kiválasztása"
 
-#: application/controllers/ShowbuilderController.php:138
+#: application/controllers/ShowbuilderController.php:134
 msgid "Remove cursor"
 msgstr "Kurzor eltávolítása"
 
-#: application/controllers/ShowbuilderController.php:156
+#: application/controllers/ShowbuilderController.php:152
 msgid "show does not exist"
 msgstr "a műsor nem található"
 
-#: application/controllers/TracktypeController.php:69
+#: application/controllers/TracktypeController.php:61
 msgid "Track Type added successfully!"
 msgstr ""
 
-#: application/controllers/TracktypeController.php:71
+#: application/controllers/TracktypeController.php:63
 msgid "Track Type updated successfully!"
 msgstr ""
 
-#: application/controllers/UserController.php:86
+#: application/controllers/UserController.php:78
 msgid "User added successfully!"
 msgstr "Felhasználó sikeresen hozzáadva!"
 
-#: application/controllers/UserController.php:88
+#: application/controllers/UserController.php:80
 msgid "User updated successfully!"
 msgstr "Felhasználó sikeresen módosítva!"
 
-#: application/controllers/UserController.php:192
+#: application/controllers/UserController.php:184
 msgid "Settings updated successfully!"
 msgstr "Beállítások sikeresen módosítva!"
 
@@ -3335,19 +3335,19 @@ msgstr "Alapértelmezett nyelv"
 msgid "Station Timezone"
 msgstr "Állomás időzóna"
 
-#: application/forms/GeneralPreferences.php:196
+#: application/forms/GeneralPreferences.php:197
 msgid "Week Starts On"
 msgstr "A hét kezdőnapja"
 
-#: application/forms/GeneralPreferences.php:212
+#: application/forms/GeneralPreferences.php:213
 msgid "Display login button on your Radio Page?"
 msgstr "Bejelentkezési gomb megjelenítése a Rádióoldalon?"
 
-#: application/forms/GeneralPreferences.php:217
+#: application/forms/GeneralPreferences.php:218
 msgid "Feature Previews"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:223
+#: application/forms/GeneralPreferences.php:224
 msgid "Enable this to opt-in to test new features."
 msgstr ""
 
@@ -3921,7 +3921,7 @@ msgstr "Nincs"
 msgid "Powered by %s"
 msgstr "Működteti a %s"
 
-#: application/models/Preference.php:666
+#: application/models/Preference.php:655
 msgid "Select Country"
 msgstr "Ország kiválasztása"
 
