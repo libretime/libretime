@@ -550,7 +550,7 @@ function setAddShowEvents(form) {
   form.find(".show_autoplaylist_help_icon").qtip({
     content: {
       text: $.i18n._(
-        "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='http://libretime.org/docs/playlists'>More information</a>"
+        "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='https://libretime.org/docs/user-manual/playlists/'>More information</a>"
       ),
     },
     hide: {

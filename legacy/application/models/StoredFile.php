@@ -108,7 +108,7 @@ class Application_Model_StoredFile
      * Set multiple metadata values using defined metadata constants.
      *
      * @param array $p_md
-     *                    example: $p_md['MDATA_KEY_URL'] = 'http://www.fake.com'
+     *                    example: $p_md['MDATA_KEY_URL'] = 'https://example.org'
      */
     public function setMetadata($p_md = null)
     {
@@ -163,7 +163,7 @@ class Application_Model_StoredFile
      * Set multiple metadata values using database columns as indexes.
      *
      * @param array $p_md
-     *                    example: $p_md['url'] = 'http://www.fake.com'
+     *                    example: $p_md['url'] = 'https://www.example.com'
      */
     public function setDbColMetadata($p_md = null)
     {
