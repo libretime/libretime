@@ -27,6 +27,14 @@ class FileDataHelper
         ];
     }
 
+    public static function getUploadAudioMimeTypeArray()
+    {
+        $mimes = self::getAudioMimeTypeArray();
+        unset($mimes['audio/x-ms-wma']);
+
+        return $mimes;
+    }
+
     /**
      * We want to throw out invalid data and process the upload successfully
      * at all costs, so check the data and sanitize it if necessary.
