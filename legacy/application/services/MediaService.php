@@ -29,7 +29,7 @@ class Application_Service_MediaService
 
         // Copy the temporary file over to the "organize" folder so that it's off our webserver
         // and accessible by libretime-analyzer which could be running on a different machine.
-        $newTempFilePath = Application_Model_StoredFile::moveFileToStor($filePath, $originalFilename, $copyFile);
+        $newTempFilePath = Application_Model_StoredFile::moveFileToStor($filePath, $fileId, $originalFilename, $copyFile);
 
         // Dispatch a message to libretime-analyzer through RabbitMQ,
         // notifying it that there's a new upload to process!
