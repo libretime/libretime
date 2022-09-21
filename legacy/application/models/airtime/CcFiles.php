@@ -139,7 +139,7 @@ class CcFiles extends BaseCcFiles
             // Only accept files with a file extension that we support.
             // Let the analyzer do the heavy lifting in terms of mime verification and playability
             $fileExtension = pathinfo($originalFilename, PATHINFO_EXTENSION);
-            if (!in_array(strtolower($fileExtension), array_values(FileDataHelper::getAudioMimeTypeArray()))) {
+            if (!in_array(strtolower($fileExtension), array_values(FileDataHelper::getUploadAudioMimeTypeArray()))) {
                 throw new Exception('Bad file extension.');
             }
 
