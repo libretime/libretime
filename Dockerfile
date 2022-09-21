@@ -1,3 +1,4 @@
+ARG LIBRETIME_VERSION
 #======================================================================================#
 # Python Builder                                                                       #
 #======================================================================================#
@@ -89,6 +90,9 @@ WORKDIR /app
 
 CMD ["/usr/local/bin/libretime-analyzer"]
 
+ARG LIBRETIME_VERSION
+ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
+
 #======================================================================================#
 # API                                                                                  #
 #======================================================================================#
@@ -126,6 +130,9 @@ CMD ["/usr/local/bin/gunicorn", \
     "--bind=0.0.0.0:9001", \
     "libretime_api.asgi"]
 
+ARG LIBRETIME_VERSION
+ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
+
 #======================================================================================#
 # Playout                                                                              #
 #======================================================================================#
@@ -161,6 +168,9 @@ WORKDIR /app
 
 CMD ["/usr/local/bin/libretime-playout"]
 
+ARG LIBRETIME_VERSION
+ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
+
 #======================================================================================#
 # Worker                                                                               #
 #======================================================================================#
@@ -190,6 +200,9 @@ CMD ["/usr/local/bin/celery", "worker", \
     "--time-limit=1800", \
     "--concurrency=1", \
     "--loglevel=info"]
+
+ARG LIBRETIME_VERSION
+ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 
 #======================================================================================#
 # Legacy                                                                               #
@@ -260,3 +273,6 @@ RUN composer --no-cache dump-autoload --no-interaction --no-dev
 
 # Run
 USER ${UID}:${GID}
+
+ARG LIBRETIME_VERSION
+ENV LIBRETIME_VERSION=$LIBRETIME_VERSION

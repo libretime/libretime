@@ -403,6 +403,10 @@ class Config
             }
         }
 
+        if (getenv('LIBRETIME_VERSION')) {
+            $version = trim(getenv('LIBRETIME_VERSION'));
+        }
+
         self::$legacy_values['airtime_version'] = $version;
     }
 

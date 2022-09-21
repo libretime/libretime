@@ -30,6 +30,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Guess LIBRETIME_VERSION
+        run: |
+          make VERSION
+          echo "LIBRETIME_VERSION=$(cat VERSION | tr -d [:blank:])" >> $GITHUB_ENV
+
       - name: Build python-builder
         uses: docker/build-push-action@v3
         with:
