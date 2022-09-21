@@ -913,12 +913,13 @@ SQL;
      * @param string $tempFilePath
      * @param string $originalFilename
      * @param bool   $copyFile         copy the file instead of moving it
+     * @param mixed  $fileId
      *
      * @return Ambigous <unknown, string>
      *
      * @throws Exception
      */
-    public static function moveFileToStor($tempFilePath, $originalFilename, $copyFile = false)
+    public static function moveFileToStor($tempFilePath, $fileId, $originalFilename, $copyFile = false)
     {
         $audio_file = $tempFilePath;
 
@@ -938,7 +939,7 @@ SQL;
         $audio_stor = Application_Common_OsPath::join(
             $stor,
             'organize',
-            $originalFilename
+            $fileId . '-' . $originalFilename
         );
         // if the uploaded file is not UTF-8 encoded, let's encode it. Assuming source
         // encoding is ISO-8859-1
