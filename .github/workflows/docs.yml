@@ -52,3 +52,4 @@ jobs:
         run: |
           vale sync
           vale --output line docs website/src/pages || true
+          vale --output line --minAlertLevel=error docs/releases
