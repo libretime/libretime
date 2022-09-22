@@ -48,5 +48,5 @@ jobs:
 
       - name: Run Vale
         run: |
-          make -C .github/vale/styles
+          vale sync
           vale --output line docs website/src/pages || true
