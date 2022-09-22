@@ -43,5 +43,5 @@ clean:
 	git clean -xdf */
 
 docs-lint:
-	$(MAKE) -C .github/vale/styles
+	vale sync
 	vale docs website/src/pages
