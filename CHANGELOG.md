@@ -1,3 +1,37 @@
+<a name="3.0.0-beta.1"></a>
+
+## [3.0.0-beta.1](https://github.com/libretime/libretime/compare/3.0.0-beta.0...3.0.0-beta.1) (2022-09-23)
+
+- [Release note](https://libretime.org/docs/releases/3.0.0-beta.1/)
+
+### Features
+
+- **legacy:** disable services check when missing systemctl ([#2160](https://github.com/libretime/libretime/issues/2160))
+- **legacy:** invalidate cached assets using md5sum ([#2161](https://github.com/libretime/libretime/issues/2161))
+- use libretime/icecast container image ([#2165](https://github.com/libretime/libretime/issues/2165))
+
+### Bug Fixes
+
+- **legacy:** number of tracks displayed initially ([#2168](https://github.com/libretime/libretime/issues/2168))
+- **legacy:** rebuild favicon ([#2167](https://github.com/libretime/libretime/issues/2167))
+- **worker:** configure celery timezone ([#2169](https://github.com/libretime/libretime/issues/2169))
+- **legacy:** update or remove broken links
+- **legacy:** prepend file id in tmp upload filename ([#2173](https://github.com/libretime/libretime/issues/2173))
+- **legacy:** fail when uploading wma files ([#2172](https://github.com/libretime/libretime/issues/2172))
+
+### Documentation
+
+- remove UI timezone configuration suggestion ([#2158](https://github.com/libretime/libretime/issues/2158))
+- add default user credentials
+- first blog post, v3 beta.0 ([#1939](https://github.com/libretime/libretime/issues/1939))
+- fix release commands
+
+### CI
+
+- ignore changelog for closed reference notifier
+- don't check github.com/libretime/libretime/(issues|pulls) links
+- run docs workflow on vale files changes
+
 <a name="3.0.0-beta.0"></a>
 
 ## [3.0.0-beta.0](https://github.com/libretime/libretime/compare/3.0.0-alpha.13...3.0.0-beta.0) (2022-09-16)
