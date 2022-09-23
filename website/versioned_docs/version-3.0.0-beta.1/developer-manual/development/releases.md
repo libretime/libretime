@@ -59,7 +59,7 @@ Create a new `release-$VERSION` branch and release commit to prepare a release p
 ```bash
 git checkout -b "release-$VERSION"
 export COMMIT_MESSAGE="chore: release $VERSION"
-git commit --allow-empty "$COMMIT_MESSAGE"
+git commit --allow-empty --message="$COMMIT_MESSAGE"
 ```
 
 ### 1. Version bump
@@ -150,6 +150,15 @@ Make sure `HEAD` is the previously merged release commit and tag it with the new
 git show --quiet
 
 git tag -a -m "$VERSION" "$VERSION"
+```
+
+Generate the changelog for the newly tagged version:
+
+```bash
+make changelog
+
+git add .
+git commit -m "chore: generate changelog for $VERSION"
 ```
 
 Push the tag upstream to finalize the release process:
