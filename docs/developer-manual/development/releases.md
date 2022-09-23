@@ -59,7 +59,7 @@ Create a new `release-$VERSION` branch and release commit to prepare a release p
 ```bash
 git checkout -b "release-$VERSION"
 export COMMIT_MESSAGE="chore: release $VERSION"
-git commit --allow-empty "$COMMIT_MESSAGE"
+git commit --allow-empty --message="$COMMIT_MESSAGE"
 ```
 
 ### 1. Version bump
