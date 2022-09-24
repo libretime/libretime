@@ -7,9 +7,9 @@ LibreTime supports direct connection to two popular streaming media servers, the
 
 Ogg Vorbis playback is supported in most modern web browsers (see [this MDN article](https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Audio_codecs#opus) for more information) and desktop players like [VLC](https://www.videolan.org/vlc/).
 
-Streaming MP3 below a bitrate of 128kbps is not recommended for music, because of a perceptible loss of high audio frequencies in the broadcast playout. A 96kbps or 64kbps MP3 stream may be acceptable for voice broadcasts if there is a requirement for compatibility with legacy hardware playback devices which do not support Ogg Vorbis or Opus streams.
+Streaming MP3 below a bitrate of 128kbps isn't recommended for music, because of a perceptible loss of high audio frequencies in the broadcast playout. A 96kbps or 64kbps MP3 stream may be acceptable for voice broadcasts if there is a requirement for compatibility with legacy hardware playback devices which don't support Ogg Vorbis or Opus streams.
 
-Because LibreTime supports simultaneous streaming in multiple formats, it is possible to offer one or more streams via your website, and another independent stream for direct connection from hardware players. You can test whether Ogg streams sound better at low bitrates for yourself, by using the **LISTEN** button in LibreTime's **Master Panel** to switch between streaming formats.
+Because LibreTime supports simultaneous streaming in multiple formats, it's possible to offer one or more streams via your website, and another independent stream for direct connection from hardware players. You can test whether Ogg streams sound better at low bitrates for yourself, by using the **LISTEN** button in LibreTime's **Master Panel** to switch between streaming formats.
 
 :::tip
 
@@ -21,7 +21,7 @@ Setting a higher bitrate for your output stream will only benefit your listeners
 
 ### UTF-8 metadata in Icecast MP3 streams
 
-When sending metadata about your stream to an Icecast server in non-Latin alphabets, you may find that Icecast does not display the characters correctly for an MP3 stream, even though they're displayed correctly for an Ogg Vorbis stream. In the following screenshot, Russian characters are being displayed incorrectly in the _Current Song_ field for the MP3 stream:
+When sending metadata about your stream to an Icecast server in non-Latin alphabets, you may find that Icecast doesn't display the characters correctly for an MP3 stream, even though they're displayed correctly for an Ogg Vorbis stream. In the following screenshot, Russian characters are being displayed incorrectly in the _Current Song_ field for the MP3 stream:
 
 ![](./icecast-screenshot223-icecast_utf-8_metadata.png)
 
@@ -69,7 +69,7 @@ The example mount section provided in the `icecast.xml` file is commented out by
 </mount>
 ```
 
-These mount point definitions mean that a client connecting to a URL such as *http://icecast.example.com:8000/stream.ogg* will first fall back to the `/live.ogg` mount point if it is available. If not, the client will fall back in turn to the `/main` mount point for LibreTime playout.
+These mount point definitions mean that a client connecting to a URL such as *http://icecast.example.com:8000/stream.ogg* will first fall back to the `/live.ogg` mount point if it's available. If not, the client will fall back in turn to the `/main` mount point for LibreTime playout.
 
 Setting the value of _fallback-override_ to 1 (enabled) means that when the `/live.ogg` mount point becomes available again, the client will be re-connected to it. If you wish to hide the `/main` and `/live.ogg` mount points from the public Icecast web interface, set the value of _hidden_ in each of these definitions to 1.
 

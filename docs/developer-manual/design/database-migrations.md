@@ -8,7 +8,7 @@ Since LibreTime forked, the `schema_version` in the `schema.sql` was locked on `
 
 :::
 
-Django does not maintain a `schema.sql` file, it applies every migrations until it reaches the targeted schema represented by the code. The legacy `schema_version` has to be tracked until we remove the Propel schema generation and let Django handle all the schema migrations. Until then Propel generate the schema and Django handle migrations from already installed databases.
+Django doesn't maintain a `schema.sql` file, it applies every migrations until it reaches the targeted schema represented by the code. The legacy `schema_version` has to be tracked until we remove the Propel schema generation and let Django handle all the schema migrations. Until then Propel generate the schema and Django handle migrations from already installed databases.
 
 :::info
 

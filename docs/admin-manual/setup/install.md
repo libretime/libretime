@@ -110,7 +110,7 @@ cd libretime
 
 :::caution
 
-Don't use the https://github.com/libretime/libretime-debian-packaging repository, it is only used to create LibreTime packages.
+Don't use the https://github.com/libretime/libretime-debian-packaging repository, it's only used to create LibreTime packages.
 
 :::
 
@@ -154,9 +154,9 @@ If you need to change some configuration, the install script can be configured u
 
 ```bash
 # Install LibreTime on your system with the following tweaks:
-# - do not install the liquidsoap package (remember to install liquidsoap yourself)
+# - don't install the liquidsoap package (remember to install liquidsoap yourself)
 # - set the listen port to 8080
-# - do not run the PostgreSQL setup (remember to setup PostgreSQL yourself)
+# - don't run the PostgreSQL setup (remember to setup PostgreSQL yourself)
 sudo \
 LIBRETIME_PACKAGES_EXCLUDES='liquidsoap' \
 ./install \
@@ -200,7 +200,7 @@ Next, run the following commands to setup the database:
 sudo -u libretime libretime-api migrate
 ```
 
-Finally, start the services, and check that they are running properly using the following commands:
+Finally, start the services, and check that they're running properly using the following commands:
 
 ```bash
 sudo systemctl start libretime.target
@@ -243,7 +243,7 @@ Once the files are downloaded, edit the [configuration file](./configuration.md)
 
 :::info
 
-The `docker/config.yml` configuration file you previously downloaded already contains specific values required by the container setup, you should not change them:
+The `docker/config.yml` configuration file you previously downloaded already contains specific values required by the container setup, you shouldn't change them:
 
 ```yaml
 database:
@@ -268,7 +268,7 @@ Next, run the following commands to setup the database:
 docker-compose run --rm api libretime-api migrate
 ```
 
-Finally, start the services, and check that they are running properly using the following commands:
+Finally, start the services, and check that they're running properly using the following commands:
 
 ```bash
 docker-compose up -d

@@ -6,7 +6,7 @@ import TarballLink from '@site/src/components/TarballLink';
 
 Please report new issues and/or feature requests in [the issue tracker](https://github.com/libretime/libretime/issues).
 
-Join our [discourse](https://discourse.libretime.org/) or chat with us on our [mattermost](https://chat.libretime.org/) if you need help and for general discussion.
+For general discussion or if you need help, you can join the [discourse](https://discourse.libretime.org/) forum or chat on the [mattermost](https://chat.libretime.org/) server.
 
 :::
 

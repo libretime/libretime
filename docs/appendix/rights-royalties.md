@@ -35,7 +35,7 @@ of all music streamed or downloaded from your site, which can be onerous. Even
 if your radio station is mostly speech, there are many limitations in the small
 print of these music licences. For instance, you can't use music for
 promotional purposes, and you can't stream a whole opera, without negotiating
-separate licences. Weirdly, you are not allowed to play a piece of music in a
+separate licences. Weirdly, you aren't allowed to play a piece of music in a
 'derogatory context' to the writer or performers; no drummer jokes allowed,
 then.
 
@@ -62,14 +62,14 @@ publishing royalties payable by webcasters streaming to the USA.
 
 Free content streaming offers an alternative for DIY Internet radio. Since
 royalty collection societies like MCPS-PRS and SoundExchange can only represent
-the interests of their own members, it follows that if you are not a member, you
+the interests of their own members, it follows that if you aren't a member, you
 can stream your own self-produced content without paying for their licences. If
 you state somewhere on your website that the stream is of your own copyrighted
 material, and is made available to the public under a specific licence, then
 no-one should misunderstand your intentions.
 
 You might be able to persuade other people to allow you to stream their content
-too, as long as they do not have a conflicting legal obligation, such as having
+too, as long as they don't have a conflicting legal obligation, such as having
 previously joined one of the many royalty collection societies around the world.
 You can ask for permission to stream when website visitors upload their own
 music files to you via a HTML form, much as the likes of SoundCloud do. Or you

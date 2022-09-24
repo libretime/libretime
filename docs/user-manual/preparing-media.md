@@ -61,7 +61,7 @@ CP1256: Arabic
 
 On file ingest, LibreTime analyzes each Ogg Vorbis, MP3, AAC or FLAC file's loudness, and stores a _ReplayGain_ value for that file in its database. At playout time, the ReplayGain value is provided to Liquidsoap so that gain can be automatically adjusted to provide an average output of -14 dBFS loudness (14 decibels below full scale). See https://en.wikipedia.org/wiki/ReplayGain for more details of ReplayGain.
 
-Because of this automatic gain adjustment, any files with average loudness higher than -14 dBFS will not sound louder than quieter files at playout time, but the lower crest factor in the louder files (their relatively low peak-to-average ratio) may be apparent in the output, making those files sound less dynamic. This may be an issue for contemporary popular music, which can average at -9 dBFS or louder before ReplayGain adjustment. (See https://www.soundonsound.com/sound-advice/dynamic-range-loudness-war for a detailed analysis of the problem).
+Because of this automatic gain adjustment, any files with average loudness higher than -14 dBFS won't sound louder than quieter files at playout time, but the lower crest factor in the louder files (their relatively low peak-to-average ratio) may be apparent in the output, making those files sound less dynamic. This may be an issue for contemporary popular music, which can average at -9 dBFS or louder before ReplayGain adjustment. (See https://www.soundonsound.com/sound-advice/dynamic-range-loudness-war for a detailed analysis of the problem).
 
 Your station's producers should therefore aim for 14dB between peak and average loudness to maintain the crest factor of their prepared material (also known as _DR14_ on some dynamic range meters, such as the command-line DR14 T.meter available from https://sourceforge.net/projects/dr14tmeter/). If the producers are working to a different loudness standard, the ReplayGain modifier in LibreTime's Stream Settings page can be adjusted to suit their material.
 
@@ -95,7 +95,7 @@ In the output from vorbisgain, _Peak_ is the maximum sample value of the file be
 
 ## Silence in media files
 
-Before importing media, it is good practice to check for any silent sections in the media files. While LibreTime compensates for leading and trailing silence with the use of automatic cue-in and cue-out points, it is best to trim these files to the intended length before upload. Two notable audio file editors for removing silent sections are [Audacity](https://www.audacityteam.org/) and [Ocenaudio](https://www.ocenaudio.com/).
+Before importing media, it's good practice to check for any silent sections in the media files. While LibreTime compensates for leading and trailing silence with the use of automatic cue-in and cue-out points, it's best to trim these files to the intended length before upload. Two notable audio file editors for removing silent sections are [Audacity](https://www.audacityteam.org/) and [Ocenaudio](https://www.ocenaudio.com/).
 
 :::danger
 

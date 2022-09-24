@@ -57,11 +57,11 @@ configured in the LibreTime **Streams** page, on LibreTime's **System** menu.
 
 1. When its almost your show time go to your LibreTime page and look at the time in the top right when your show starts go to Butt.
 2. Click the white Play button (third button in the middle).
-3. If it says connecting... and then stream time with a counter- congratulations, your are connected!
+3. If it says connecting... and then stream time with a counter- congratulations, your are connected.
 4. Go to the LibreTime page and at the top right under Source Streams the
-   tab besides Show Source is to the left and Orange - if it is and Current
+   tab besides Show Source is to the left and Orange - if it's and Current
    shows Live Show you are connected.
-5. If it is gray, click on the **Show Source** switch to the right of it and it
+5. If it's gray, click on the **Show Source** switch to the right of it and it
    will toggle your show on and you will be broadcasting. _Note: whether auto
    connect is turned on is a station specific setting so it could work either way_
 
@@ -72,7 +72,7 @@ the left. It will save a mp3 based upon the date and time in your home/user
 directory by default.
 
 Everything should now be working and you can broadcast for your entire time
-slot. If you choose to stop streaming before it is over click the white square
+slot. If you choose to stop streaming before it's over click the white square
 **Stop** button to disconnect. Then go to the LibreTime page and if the Show
 Source didn't automatically disconnect you can click it to the right and it
 should turn gray.

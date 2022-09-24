@@ -20,11 +20,11 @@ Episodes of repeating shows also have an **Instance Description** field in which
 
 ![](./calendar-screenshot583-show_instance_description_vc9ooit.png)
 
-Alternatively, individual shows can be clicked on and dragged to new days and times in the calendar. However, LibreTime will not allow you to drag a future show into the past, or drag and drop instances of a repeated show. In the **Day** and **Week** views, show length can be adjusted by clicking on the lower edge of the show box, and dragging the edge of the box upwards or downwards. The new show length is calculated automatically.
+Alternatively, individual shows can be clicked on and dragged to new days and times in the calendar. However, LibreTime won't allow you to drag a future show into the past, or drag and drop instances of a repeated show. In the **Day** and **Week** views, show length can be adjusted by clicking on the lower edge of the show box, and dragging the edge of the box upwards or downwards. The new show length is calculated automatically.
 
 ### Adding content to a show
 
-To add content to a show, click the show in any view on the Calendar, and select **Schedule Tracks** from the pop-up menu. Shows that do not yet contain any scheduled content are marked with a red exclamation mark icon, to the right of the show start and end times in the top bar. Shows partially filled with content have a yellow exclamation mark icon. During playout of the show, a green play icon will also be shown in the top bar.
+To add content to a show, click the show in any view on the Calendar, and select **Schedule Tracks** from the pop-up menu. Shows that don't yet contain any scheduled content are marked with a red exclamation mark icon, to the right of the show start and end times in the top bar. Shows partially filled with content have a yellow exclamation mark icon. During playout of the show, a green play icon will also be shown in the top bar.
 
 ![](./calendar-screenshot488-add_remove_content.png)
 
@@ -48,8 +48,8 @@ To delete an upcoming instance of a repeating show, click on the show in the **C
 
 ![](./calendar-screenshot490-delete_this_instance.png)
 
-You cannot delete or remove content from shows that have already played out. These shows have only one option on the pop-up menu, which is **View**.
+You can't delete or remove content from shows that have already played out. These shows have only one option on the pop-up menu, which is **View**.
 
 ### Cancelling playout
 
-If you wish to cancel playout of a show while it is running, click on the show in the **Calendar** and select **Cancel Show** from the pop-up menu. This action cannot be undone.
+If you wish to cancel playout of a show while it's running, click on the show in the **Calendar** and select **Cancel Show** from the pop-up menu. This action can't be undone.

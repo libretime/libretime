@@ -7,7 +7,7 @@ This guide walk you though the steps required to upgrade LibreTime.
 
 :::tip
 
-You should always have proper backups and a rollback scenario in place before updating. If the update does not go smoothly, it may cause significant downtime, so you should always have a fallback system available during the update to ensure **broadcast continuity**.
+You should always have proper backups and a rollback scenario in place before updating. If the update doesn't go smoothly, it may cause significant downtime, so you should always have a fallback system available during the update to ensure **broadcast continuity**.
 
 :::
 
