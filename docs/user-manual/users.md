@@ -4,7 +4,7 @@ title: Managing users
 
 :::danger
 
-It is strongly recommended not to use the default `admin` account in production, especially if your LibreTime server is accessible from the internet.
+It's strongly recommended not to use the default `admin` account in production, especially if your LibreTime server is accessible from the internet.
 
 :::
 
@@ -20,7 +20,7 @@ To add further user accounts to the system, one for each of your station staff t
 ### DJs
 
 - Everything Guests can do, plus
-- Upload media (music, PSAs, underwriting, shows, etc.) to their own library (DJs cannot view other libraries)
+- Upload media (music, PSAs, underwriting, shows, etc.) to their own library (DJs can't view other libraries)
 - Edit metadata, delete, and schedule media in their own library to shows they're assigned to
 - Preview uploaded media _without_ affecting the live playout
 - Create Playlists, Smart Blocks, and connect Podcasts and Webstreams to LibreTime
@@ -45,7 +45,7 @@ To add further user accounts to the system, one for each of your station staff t
 
 To edit a user account, click on that user's row in the table, change the user's details in the box on the
 right side, and then click the **Save** button. To remove a user account, click the small **x** icon to the right
-side of its row in the table. You cannot delete your own user account, and usernames cannot be changed once created.
+side of its row in the table. You can't delete your own user account, and usernames can't be changed once created.
 
 ![](./users-user-edit.png)
 

@@ -6,7 +6,7 @@ The Podcasts page allows you add subscriptions to podcasts which are often used 
 
 :::info
 
-All podcasts available on iTunes have a RSS feed but it is sometimes hidden. See issue [#510](https://github.com/libretime/libretime/issues/510) for more information. RSS feeds that do not end in _.xml_ may be accepted by LibreTime yet fail to download episodes. A work-around is to download the episode using a podcast client such as [gpodder](https://gpodder.github.io/) and then manually upload and schedule the episode.
+All podcasts available on iTunes have a RSS feed but it's sometimes hidden. See issue [#510](https://github.com/libretime/libretime/issues/510) for more information. RSS feeds that don't end in _.xml_ may be accepted by LibreTime yet fail to download episodes. A work-around is to download the episode using a podcast client such as [gpodder](https://gpodder.github.io/) and then manually upload and schedule the episode.
 
 Podcast feeds coming from Anchor.fm have been known to have a similar issue.
 

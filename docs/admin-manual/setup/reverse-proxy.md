@@ -11,7 +11,7 @@ a single place.
 
 :::warning
 
-The current input and output streams are Icecast based protocols and does not support being behind a reverse proxy. **Do not attempt** to [reverse proxy Icecast](#icecast) or the Liquidsoap harbor inputs.
+The current input and output streams are Icecast based protocols and doesn't support being behind a reverse proxy. **Don't attempt** to [reverse proxy Icecast](#icecast) or the Liquidsoap harbor inputs.
 
 Modern protocols such as [HLS](https://en.wikipedia.org/wiki/HTTP_Live_Streaming) and [SRT](https://en.wikipedia.org/wiki/Secure_Reliable_Transport) will be implement in the future to fix those limitations.
 

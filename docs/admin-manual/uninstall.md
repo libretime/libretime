@@ -7,11 +7,11 @@ This guide provide some guidance to uninstall LibreTime from your system.
 
 We recommend using **disposable devices** for your installations, so you can delete your old system and install on a fresh one easily without worrying about old files.
 
-If you do not have a way use disposable devices, below are commands that should help you remove most of the LibreTime files from your system.
+If you don't have a way use disposable devices, below are commands that should help you remove most of the LibreTime files from your system.
 
 :::warning
 
-Use these commands at your **own risk**, we cannot guarantee that these commands are always up to date!
+Use these commands at your **own risk**, we can't guarantee that these commands are always up to date.
 
 :::
 

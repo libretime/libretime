@@ -32,7 +32,7 @@ This guide walks you through the steps required to release a new version of Libr
 
 :::caution
 
-This guide is still a work in progress, and does not cover every use cases. Depending on
+This guide is still a work in progress, and doesn't cover every use cases. Depending on
 the version bump, some steps might be wrong. For example, in case of a patch release,
 the documentation requires different changes.
 
@@ -133,7 +133,7 @@ Squash the changes and open a pull request for others to review:
 git rebase --autosquash --interactive main
 ```
 
-Merge the pull request when it is reviewed and ready.
+Merge the pull request when it's reviewed and ready.
 
 ### 5. Create and push a tag
 

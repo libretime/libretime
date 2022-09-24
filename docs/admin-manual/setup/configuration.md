@@ -347,7 +347,7 @@ stream:
         # Icecast admin user.
         # > default is admin
         admin_user: "admin"
-        # Icecast admin password. If not defined, statistics will not be collected.
+        # Icecast admin password. If not defined, statistics won't be collected.
         admin_password: "hackme"
 
         # Icecast output audio.
@@ -409,7 +409,7 @@ stream:
         # Shoutcast admin user.
         # > default is admin
         admin_user: "admin"
-        # Shoutcast admin password. If not defined, statistics will not be collected.
+        # Shoutcast admin password. If not defined, statistics won't be collected.
         admin_password: "hackme"
 
         # Shoutcast output audio.

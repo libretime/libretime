@@ -56,12 +56,12 @@ column, and have a pink background.
 
 If a show is overbooked, which means the total playout duration is longer than
 the time allowed for the show, a brown row indicates that the item will be faded
-out when the show ends. A red row indicates that the item will not be played at
+out when the show ends. A red row indicates that the item won't be played at
 all. The length of the overbooking is shown in minutes and seconds in the last
 row of the show. To remove the extra items from the end of an overbooked show,
 click the **Scissors** button at the top left of the table.
 
-Alternatively, check the boxes for items which have not yet completed playout,
+Alternatively, check the boxes for items which haven't yet completed playout,
 and click the **Trashcan** button, to the right of the Scissors, to remove them
 from the schedule. If you remove the currently playing item, playout will skip
 to the next item in the show automatically, so you should make sure you have
@@ -74,13 +74,13 @@ playing item, click the button with the end arrow icon, to the right of the
 **Trashcan**.
 
 To cancel the current show completely, click the red button to the right again.
-A pop-up window will ask you to confirm the cancellation, as this action cannot
+A pop-up window will ask you to confirm the cancellation, as this action can't
 be undone.
 
 Items which are no longer available have an exclamation mark icon in the second
 column. This may happen for media files which were part of previous shows, and
 were removed from LibreTime's library (main storage or watched folders)
-subsequently. Items which are included in forthcoming shows cannot be removed
+subsequently. Items which are included in forthcoming shows can't be removed
 from the Library via the LibreTime interface.
 
 ### Adding content to a running show

@@ -2,7 +2,7 @@
 title: Widgets
 ---
 
-Bring your LibreTime broadcast to your website with embeddable widgets! LibreTime comes with two widgets: a streaming player and a schedule. Both widgets use iframes to display and can be placed wherever embeddable code can on a website.
+Bring your LibreTime broadcast to your website with embeddable widgets. LibreTime comes with two widgets: a streaming player and a schedule. Both widgets use iframes to display and can be placed wherever embeddable code can on a website.
 
 ## Getting started
 
@@ -12,7 +12,7 @@ Before using the widgets, make sure LibreTime's Public API is enabled in **Setti
 
 :::tip Note
 
-LibreTime widgets cannot function through VPNs or SSH tunneling. The instance must be accessible from the internet for the widgets to work.
+LibreTime widgets can't function through VPNs or SSH tunneling. The instance must be accessible from the internet for the widgets to work.
 
 :::
 

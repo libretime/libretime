@@ -67,13 +67,13 @@ The LibreTime architecture is split into 2 main monolithic blocks `Create the sc
 
 :::note
 
-A microservice architecture was rejected as it will not fix or improve any aspect of LibreTime.
+A microservice architecture was rejected as it won't fix or improve any aspect of LibreTime.
 
 :::
 
 :::warning
 
-This document tries to focus on creating and playing a schedule, it does not consider features such as monitoring, logging or archiving.
+This document tries to focus on creating and playing a schedule, it doesn't consider features such as monitoring, logging or archiving.
 
 :::
 
@@ -90,7 +90,7 @@ The web API, the worker and the message API rely on the [Django framework](https
 
 ### Play the schedule
 
-Since the `Play the schedule` has its own requirements in terms of logic and uptime, it is handled separately from the `Create the schedule` block. This block needs to be able to be duplicated in a high availability context.
+Since the `Play the schedule` has its own requirements in terms of logic and uptime, it's handled separately from the `Create the schedule` block. This block needs to be able to be duplicated in a high availability context.
 
 This block contains the following components:
 
@@ -101,7 +101,7 @@ This block contains the following components:
 
 ### One setup per radio station
 
-LibreTime is not meant to be used in a multi-tenant architecture, and an entire LibreTime installation should be dedicated to a single radio station. Previous SAAS or multi-tenant features from Airtime should be deprecated or removed.
+LibreTime isn't meant to be used in a multi-tenant architecture, and an entire LibreTime installation should be dedicated to a single radio station. Previous SAAS or multi-tenant features from Airtime should be deprecated or removed.
 
 ### Separation of concerns
 

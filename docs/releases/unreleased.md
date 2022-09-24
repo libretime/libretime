@@ -20,7 +20,7 @@ The LibreTime project wants to thank the following contributors for authoring PR
 
 :::caution
 
-Please follow this **before the upgrade procedure**!
+Please follow this **before the upgrade procedure**.
 
 :::
 

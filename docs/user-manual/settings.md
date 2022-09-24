@@ -44,14 +44,14 @@ The **Generate a smartblock and a playlist upon creation of a new podcast**
 option when enabled will create a smartblock matching the newest episode of a
 podcast and a playlist containing that smartblock automatically upon adding a
 podcast to LibreTime. This can also be done manually by the generate smartblock
-and playlist button under a podcasts settings which is why it is disabled by
+and playlist button under a podcasts settings which is why it's disabled by
 default.
 
 ![](./settings-api-settings.png)
 
 You can opt-in to test new features with the **Feature Previews** option.
 Features that we soft rollout this way may need more feedback or still have
-tolerable bugs. This contains but is not limited to features like large ui
+tolerable bugs. This contains but isn't limited to features like large ui
 refactors. You can switch back at any time.
 
 You can enable live, read-only access to the LibreTime schedule calendar for
@@ -77,7 +77,7 @@ The **Dangerous Options** section provides an administrator the ability to erase
 
 :::danger
 
-Erasing LibreTime's track library cannot be undone.
+Erasing LibreTime's track library can't be undone.
 
 :::
 
@@ -97,7 +97,7 @@ their username on the right side of the menu bar.
 1. On the "Code" field, type a unique code that can be easily identifiable. Example, for Music use "MUS" or for Sound Effects use something like "FX".
 1. On the "Type Name" field, type a the name of the type of tracks. Example, "Station IDs".
 1. On the "Description" field, enter the description of the type given.
-1. On the "Visibility" drop down menu, choose to enable or disable the track type. By default, it is enabled. If disabled, it won't be shown across LibreTime or in the API for developers.
+1. On the "Visibility" drop down menu, choose to enable or disable the track type. By default, it's enabled. If disabled, it won't be shown across LibreTime or in the API for developers.
 1. Click **Save**.
 
 ---
@@ -123,13 +123,13 @@ The second checkbox under Global Settings enables the sending of **Icecast Vorbi
 
 The **Stream Label** radio button allows you to set the metadata that will be sent with direct streams; _Artist_ and _Title_, _Show_, _Artist_ and _Title_, or _Station name_ and _Show name_.
 
-The **Off Air Metadata** field configures the text that will be sent to any configured streaming servers, and from there on to media players, when Airtime is not streaming any output.
+The **Off Air Metadata** field configures the text that will be sent to any configured streaming servers, and from there on to media players, when Airtime isn't streaming any output.
 
 Below this is the **Enable Replay Gain** checkbox which, if checked, automatically adjusts Airtime's output level to an average of -14dBFS, based on prior analysis of the level of individual files in the **Library**. This feature helps guard against unwanted changes in Airtime's output level caused by the typical variation in average level of recordings made in different studios at different times. The correction value for each file can be viewed by enabling the ReplayGain column in the **Library**.
 
 If Replay Gain is enabled, output level can be adjusted up to 10dB louder or quieter from the reference level of -14dBFS by clicking and dragging the **Replay Gain Modifier** control. Increasing level too far is likely to result in clipping (distortion) since the output level is adjusted to be greater than that of the original files. This scenario is indicated by amplitude correction factors greater than 1.0 in the Liquidsoap log file.
 
-Click the **Save** button on the right side of the page to save any changes that you have made to global settings. If you are only using the hardware audio output, and will not be streaming to or from Airtime, you can leave the **Stream Settings** page after clicking the **Save** button.
+Click the **Save** button on the right side of the page to save any changes that you have made to global settings. If you are only using the hardware audio output, and won't be streaming to or from Airtime, you can leave the **Stream Settings** page after clicking the **Save** button.
 
 ### Input stream settings
 
@@ -143,7 +143,7 @@ Each type of input stream requires a username and password before the remote bro
 
 Input streams must have a **Port** for the remote broadcaster to connect to, which should be a number in the range from 1024 to 49151. If you have the Icecast or SHOUTcast streaming server running on the same machine as Airtime, you should avoid using port 8000 or 8001 for either type of Airtime input stream. This is because both Icecast and SHOUTcast use port 8000, and SHOUTcast also uses port 8001. If the usernames and passwords were similar, remote broadcasters might accidentally connect to the streaming server directly, bypassing Airtime.
 
-To avoid further confusion, it is also recommended that you set a different **Mount Point** (the specific filename for broadcasters and listeners to connect to) from that used on your public Icecast or SHOUTcast server.
+To avoid further confusion, it's also recommended that you set a different **Mount Point** (the specific filename for broadcasters and listeners to connect to) from that used on your public Icecast or SHOUTcast server.
 
 If your Airtime server is behind a firewall, and you wish remote broadcasters to connect input streams to it across the public Internet, you may need to click the **Override** link to set a **Connection URL** which is available from outside your local area network. This URL might be based on the domain name assigned to the router which forwards the appropriate port to your Airtime server. Then click **OK** to save the new connection URL.
 
@@ -153,7 +153,7 @@ In the Master Panel, available input source streams are shown with an orange lin
 
 ![](./settings-libretime-master-source-stream.png)
 
-If you have checked the **Auto Switch On** box in the Stream Settings page, the **Master Source** switch will move automatically to the active position, on the left, when an authenticated master source connects to Airtime. Otherwise, you can activate the switches manually by clicking the left side of each switch, or deactivate them by clicking the right side. The switches do not have to be dragged with the mouse, in the way that a switch on a hardware mixer would be pushed sideways. **Show Source** live input streams can also be manually activated or deactivated in the same way. If neither the show source or master source is active then LibreTime will default to what is scheduled to play in the Calendar.
+If you have checked the **Auto Switch On** box in the Stream Settings page, the **Master Source** switch will move automatically to the active position, on the left, when an authenticated master source connects to Airtime. Otherwise, you can activate the switches manually by clicking the left side of each switch, or deactivate them by clicking the right side. The switches don't have to be dragged with the mouse, in the way that a switch on a hardware mixer would be pushed sideways. **Show Source** live input streams can also be manually activated or deactivated in the same way. If neither the show source or master source is active then LibreTime will default to what is scheduled to play in the Calendar.
 
 ![](./settings-libretime-show-source-stream.png)
 
@@ -173,6 +173,6 @@ Click **Additional Options** to expand a box in which you can enter the username
 
 You can also set the specific **Mount Point** that listeners will connect to here. Then click one of the **Save** buttons in the upper or lower right corner of the page to update the Airtime server's settings.
 
-Airtime supports output to Icecast in Ogg Vorbis, Ogg Opus, MP3 and AAC formats. When selecting a SHOUTcast server from the **Service Type** drop-down menu, you are restricted to using MP3 or AAC formats only, so the choice of Ogg Vorbis and Opus formats is greyed out in the **Stream Type** drop-down menu. The SHOUTcast username for stream sources is fixed, so you do not need to enter this value under **Additional Options**, but you will usually have to enter a password.
+Airtime supports output to Icecast in Ogg Vorbis, Ogg Opus, MP3 and AAC formats. When selecting a SHOUTcast server from the **Service Type** drop-down menu, you are restricted to using MP3 or AAC formats only, so the choice of Ogg Vorbis and Opus formats is greyed out in the **Stream Type** drop-down menu. The SHOUTcast username for stream sources is fixed, so you don't need to enter this value under **Additional Options**, but you will usually have to enter a password.
 
 Any connection problems between Liquidsoap and Icecast or SHOUTcast are shown on the Stream Settings page. For example, if you enter the wrong password, you will see an _Authentication Required_ error message. To fix this, enter the correct password in the **Additional Options** box, and click the **Save** button. If the streaming server is down for any reason, or you have entered an incorrect **Server** name or **Port** number, you will see the message _Can not connect to the streaming server_.
