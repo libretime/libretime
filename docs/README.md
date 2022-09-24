@@ -5,12 +5,6 @@ sidebar_position: 10
 
 Welcome to the **LibreTime documentation**, you should find everything you need to know about LibreTime.
 
-:::caution
-
-:construction: LibreTime is in being modernized and is finalizing the forking process. Be aware that breaking change may occur and that the documentation may not be up to date.
-
-:::
-
 ## Getting started
 
 **Are you new to LibreTime? This is the place to start!**
