@@ -94,6 +94,44 @@ ARG LIBRETIME_VERSION
 ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 
 #======================================================================================#
+# Playout                                                                              #
+#======================================================================================#
+FROM python-base-ffmpeg as libretime-playout
+
+COPY tools/packages.py /tmp/packages.py
+COPY playout/packages.ini /tmp/packages.ini
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    $(python3 /tmp/packages.py --format=line --exclude=python bullseye /tmp/packages.ini) \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -f /tmp/packages.py /tmp/packages.ini
+
+WORKDIR /src
+
+COPY playout/requirements.txt .
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --no-compile -r requirements.txt
+
+COPY --from=python-builder /build/shared/*.whl .
+COPY --from=python-builder /build/api-client/*.whl .
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --no-compile *.whl && rm -Rf *.whl
+
+COPY playout .
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --editable .
+
+# Run
+USER ${UID}:${GID}
+WORKDIR /app
+
+CMD ["/usr/local/bin/libretime-playout"]
+
+ARG LIBRETIME_VERSION
+ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
+
+#======================================================================================#
 # API                                                                                  #
 #======================================================================================#
 FROM python-base as libretime-api
@@ -129,44 +167,6 @@ CMD ["/usr/local/bin/gunicorn", \
     "--log-file", "-", \
     "--bind=0.0.0.0:9001", \
     "libretime_api.asgi"]
-
-ARG LIBRETIME_VERSION
-ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
-
-#======================================================================================#
-# Playout                                                                              #
-#======================================================================================#
-FROM python-base-ffmpeg as libretime-playout
-
-COPY tools/packages.py /tmp/packages.py
-COPY playout/packages.ini /tmp/packages.ini
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    $(python3 /tmp/packages.py --format=line --exclude=python bullseye /tmp/packages.ini) \
-    && rm -rf /var/lib/apt/lists/* \
-    && rm -f /tmp/packages.py /tmp/packages.ini
-
-WORKDIR /src
-
-COPY playout/requirements.txt .
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --no-compile -r requirements.txt
-
-COPY --from=python-builder /build/shared/*.whl .
-COPY --from=python-builder /build/api-client/*.whl .
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --no-compile *.whl && rm -Rf *.whl
-
-COPY playout .
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --editable .
-
-# Run
-USER ${UID}:${GID}
-WORKDIR /app
-
-CMD ["/usr/local/bin/libretime-playout"]
 
 ARG LIBRETIME_VERSION
 ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
