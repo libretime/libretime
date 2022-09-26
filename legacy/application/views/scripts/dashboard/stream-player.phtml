@@ -14,7 +14,7 @@
             $("#jquery_jplayer_1").jPlayer("destroy");
             $("#jquery_jplayer_1").jPlayer({
                 ready: function() {
-                    $(this).jPlayer("setMedia", obj).jPlayer("play");
+                    $(this).jPlayer("setMedia", obj);
                 },
                 ended: function(event) {
                     $(this).jPlayer("play");
@@ -87,6 +87,8 @@
         <div class="jp-type-single">
             <div id="jp_interface_1" class="jp-gui jp-interface">
                 <ul class="jp-controls">
+                    <li><a title="play" tabindex="1" class="jp-play" href="javascript:;" style='top: 5px; left: 5px;'><?php echo _("play") ?></a></li>
+                    <li><a title="pause" tabindex="1" class="jp-pause" href="javascript:;" style='top: 5px; left: 5px;'><?php echo _("pause") ?></a></li>
                     <li><a title="mute" tabindex="1" class="jp-mute" href="javascript:;"><?php echo _("mute") ?></a></li>
                     <li><a title="unmute" tabindex="1" class="jp-unmute" href="javascript:;"><?php echo _("unmute") ?></a></li>
                 </ul>
