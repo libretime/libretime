@@ -1,6 +1,8 @@
 [Unit]
 Description=LibreTime Playout Service
 PartOf=libretime.target
+Wants=libretime-liquidsoap.service
+After=libretime-liquidsoap.service
 
 [Service]
 Environment=LIBRETIME_LOG_FILEPATH=@@LOG_DIR@@/playout.log
