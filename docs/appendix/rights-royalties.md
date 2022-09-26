@@ -2,7 +2,7 @@
 title: Rights and royalties
 ---
 
-If you're new to broadcasting, or have not streamed your station online before,
+If you're new to broadcasting, or haven't streamed your station online before,
 reading the following brief explanation of compensation rules for songwriters,
 musicians and other copyright holders may save you a great deal of trouble
 later.
