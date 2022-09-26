@@ -3,8 +3,21 @@ Description=LibreTime Worker Service
 PartOf=libretime.target
 
 [Service]
-Environment=LIBRETIME_LOG_FILEPATH=@@LOG_DIR@@/worker.log
+NoNewPrivileges=true
+CapabilityBoundingSet=
+PrivateDevices=true
+PrivateTmp=true
+PrivateUsers=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=full
+
 Environment=LIBRETIME_CONFIG_FILEPATH=@@CONFIG_FILEPATH@@
+Environment=LIBRETIME_LOG_FILEPATH=@@LOG_DIR@@/worker.log
 WorkingDirectory=@@WORKING_DIR@@/worker
 
 ExecStart=/usr/bin/sh -c 'celery worker \
@@ -14,9 +27,10 @@ ExecStart=/usr/bin/sh -c 'celery worker \
     --concurrency=1 \
     --loglevel=INFO \
     --logfile=$LIBRETIME_LOG_FILEPATH'
+Restart=always
+
 User=libretime
 Group=libretime
-Restart=always
 
 [Install]
 WantedBy=multi-user.target

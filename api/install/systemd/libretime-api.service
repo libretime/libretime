@@ -4,13 +4,24 @@ Requires=libretime-api.socket
 PartOf=libretime.target
 
 [Service]
+NoNewPrivileges=true
+CapabilityBoundingSet=
+PrivateDevices=true
+PrivateTmp=true
+PrivateUsers=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=full
+
+Environment=LIBRETIME_CONFIG_FILEPATH=@@CONFIG_FILEPATH@@
+Environment=LIBRETIME_LOG_FILEPATH=@@LOG_DIR@@/api.log
+
 Type=notify
 KillMode=mixed
-PrivateTmp=true
-
-Environment=LIBRETIME_LOG_FILEPATH=@@LOG_DIR@@/api.log
-Environment=LIBRETIME_CONFIG_FILEPATH=@@CONFIG_FILEPATH@@
-
 ExecStart=/usr/bin/gunicorn \
         --workers 4 \
         --worker-class uvicorn.workers.UvicornWorker \
@@ -18,9 +29,10 @@ ExecStart=/usr/bin/gunicorn \
         --bind unix:/run/libretime-api.sock \
         libretime_api.asgi
 ExecReload=/bin/kill -s HUP $MAINPID
+Restart=always
+
 User=libretime
 Group=libretime
-Restart=always
 
 [Install]
 WantedBy=multi-user.target

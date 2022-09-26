@@ -3,14 +3,28 @@ Description=LibreTime Liquidsoap Service
 PartOf=libretime.target
 
 [Service]
-Environment=LIBRETIME_LOG_FILEPATH=@@LOG_DIR@@/liquidsoap.log
+NoNewPrivileges=true
+CapabilityBoundingSet=
+PrivateDevices=true
+PrivateTmp=true
+PrivateUsers=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=full
+
 Environment=LIBRETIME_CONFIG_FILEPATH=@@CONFIG_FILEPATH@@
+Environment=LIBRETIME_LOG_FILEPATH=@@LOG_DIR@@/liquidsoap.log
 WorkingDirectory=@@WORKING_DIR@@/playout
 
 ExecStart=/usr/local/bin/libretime-liquidsoap
+Restart=always
+
 User=libretime
 Group=libretime
-Restart=always
 
 [Install]
 WantedBy=multi-user.target
