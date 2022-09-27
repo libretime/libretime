@@ -3,14 +3,28 @@ Description=LibreTime Media Analyzer Service
 PartOf=libretime.target
 
 [Service]
-Environment=LIBRETIME_LOG_FILEPATH=@@LOG_DIR@@/analyzer.log
+NoNewPrivileges=true
+CapabilityBoundingSet=
+PrivateDevices=true
+PrivateTmp=true
+PrivateUsers=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=full
+
 Environment=LIBRETIME_CONFIG_FILEPATH=@@CONFIG_FILEPATH@@
+Environment=LIBRETIME_LOG_FILEPATH=@@LOG_DIR@@/analyzer.log
 WorkingDirectory=@@WORKING_DIR@@/analyzer
 
 ExecStart=/usr/local/bin/libretime-analyzer
+Restart=always
+
 User=libretime
 Group=libretime
-Restart=always
 
 [Install]
 WantedBy=multi-user.target
