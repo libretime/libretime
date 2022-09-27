@@ -240,17 +240,17 @@ class ShowbuilderController extends Zend_Controller_Action
         $log_vars['params'] = [];
         $log_vars['params']['media_items'] = $mediaItems;
         $log_vars['params']['scheduled_items'] = $scheduledItems;
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         try {
             $scheduler = new Application_Model_Scheduler();
             $scheduler->scheduleAfter($scheduledItems, $mediaItems);
         } catch (OutDatedScheduleException $e) {
             $this->view->error = $e->getMessage();
-            Logging::info($e->getMessage());
+            Logging::error($e->getMessage());
         } catch (Exception $e) {
             $this->view->error = $e->getMessage();
-            Logging::info($e->getMessage());
+            Logging::error($e->getMessage());
         }
     }
 
@@ -264,17 +264,17 @@ class ShowbuilderController extends Zend_Controller_Action
         $log_vars['action'] = 'showbuilder/schedule-remove';
         $log_vars['params'] = [];
         $log_vars['params']['removed_items'] = $items;
-        Logging::info($log_vars);
+        Logging::debug($log_vars);
 
         try {
             $scheduler = new Application_Model_Scheduler();
             $scheduler->removeItems($items);
         } catch (OutDatedScheduleException $e) {
             $this->view->error = $e->getMessage();
-            Logging::info($e->getMessage());
+            Logging::error($e->getMessage());
         } catch (Exception $e) {
             $this->view->error = $e->getMessage();
-            Logging::info($e->getMessage());
+            Logging::error($e->getMessage());
         }
     }
 
@@ -284,25 +284,23 @@ class ShowbuilderController extends Zend_Controller_Action
         $selectedItems = $request->getParam('selectedItem');
         $afterItem = $request->getParam('afterItem');
 
-        /*
-        $log_vars = array();
-        $log_vars["url"] = $_SERVER['HTTP_HOST'];
-        $log_vars["action"] = "showbuilder/schedule-move";
-        $log_vars["params"] = array();
-        $log_vars["params"]["selected_items"] = $selectedItems;
-        $log_vars["params"]["destination_after_item"] = $afterItem;
-        Logging::info($log_vars);
-        */
+        $log_vars = [];
+        $log_vars['url'] = $_SERVER['HTTP_HOST'];
+        $log_vars['action'] = 'showbuilder/schedule-move';
+        $log_vars['params'] = [];
+        $log_vars['params']['selected_items'] = $selectedItems;
+        $log_vars['params']['destination_after_item'] = $afterItem;
+        Logging::debug($log_vars);
 
         try {
             $scheduler = new Application_Model_Scheduler();
             $scheduler->moveItem($selectedItems, $afterItem);
         } catch (OutDatedScheduleException $e) {
             $this->view->error = $e->getMessage();
-            Logging::info($e->getMessage());
+            Logging::error($e->getMessage());
         } catch (Exception $e) {
             $this->view->error = $e->getMessage();
-            Logging::info($e->getMessage());
+            Logging::error($e->getMessage());
         }
     }
 
