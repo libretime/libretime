@@ -16,7 +16,7 @@ setup(
     python_requires=">=3.6",
     install_requires=[
         "celery==4.4.7",
-        "kombu==4.6.11",
+        "kombu==5.2.4",
         "mutagen>=1.45.1,<1.46",
         "requests>=2.25.1,<2.29",
     ],
