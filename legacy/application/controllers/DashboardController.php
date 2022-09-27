@@ -93,10 +93,6 @@ class DashboardController extends Zend_Controller_Action
 
     public function streamPlayerAction()
     {
-        $CC_CONFIG = Config::getConfig();
-
-        $baseUrl = Config::getBasePath();
-
         $this->view->headLink()->appendStylesheet(Assets::url('js/jplayer/skin/jplayer.blue.monday.css'));
         $this->_helper->layout->setLayout('livestream');
 
