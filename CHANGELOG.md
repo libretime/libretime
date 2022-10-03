@@ -1,3 +1,33 @@
+<a name="3.0.0-beta.2"></a>
+
+## [3.0.0-beta.2](https://github.com/libretime/libretime/compare/3.0.0-beta.1...3.0.0-beta.2) (2022-10-03)
+
+- [Release note](https://libretime.org/docs/releases/3.0.0-beta.2/)
+
+### Features
+
+- systemd service hardening ([#2186](https://github.com/libretime/libretime/issues/2186))
+- extra systemd service hardening ([#2197](https://github.com/libretime/libretime/issues/2197))
+
+### Bug Fixes
+
+- start playout service after liquidsoap ([#2164](https://github.com/libretime/libretime/issues/2164))
+- include version variable inside containers
+- change version format
+- **legacy:** add play button to stream player ([#2190](https://github.com/libretime/libretime/issues/2190))
+- **legacy:** correct log levels ([#2196](https://github.com/libretime/libretime/issues/2196))
+
+### Documentation
+
+- remove breaking change warning ([#2180](https://github.com/libretime/libretime/issues/2180))
+- fix vale linting errors
+- fix vale linting error
+
+### CI
+
+- allow failure when linting /docs/releases
+- use github.ref_name to get tag
+
 <a name="3.0.0-beta.1"></a>
 
 ## [3.0.0-beta.1](https://github.com/libretime/libretime/compare/3.0.0-beta.0...3.0.0-beta.1) (2022-09-23)
