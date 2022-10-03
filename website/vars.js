@@ -1,7 +1,7 @@
 module.exports = {
   title: "LibreTime",
   description: "Radio Broadcast & Automation Platform",
-  version: "3.0.0-beta.1",
+  version: "3.0.0-beta.2",
   website: "https://libretime.org",
 
   repository: {
@@ -22,7 +22,7 @@ module.exports = {
   home: {
     links: [
       { label: "Get started 🚀", to: "/docs/admin-manual" },
-      { label: "Release note", to: "/docs/releases/3.0.0-beta.1" },
+      { label: "Release note", to: "/docs/releases/3.0.0-beta.2" },
     ],
   },
 
