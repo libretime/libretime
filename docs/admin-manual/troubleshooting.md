@@ -60,3 +60,25 @@ sudo -u libretime libretime-analyzer --config /etc/libretime/config.yml --log-le
 ```
 
 The `/var/log/nginx/libretime.error.log` file contains logs from the web server.
+
+## Test the stream inputs
+
+To test or debug your input streams, you can use the [`tools/test-stream-input.py`](https://github.com/libretime/libretime/blob/main/tools/test-stream-input.py) script to send a test sound to your stream inputs.
+
+To test the `main` input stream, you can run the following command:
+
+```bash
+./tools/test-stream-input.py \
+    --host radio.example.org \
+    --port 8001 \
+    --mount main \
+    --user source \
+    --password hackme
+
+# Or using the --url option
+./tools/test-stream-input.py --url source:hackme@radio.example.org:8001/main
+```
+
+If you are hitting `HTTP error 401 Unauthorized` on the main input stream, make sure that you have configured a user and password in the **Settings** > **Streams settings** page.
+
+If you are connected but don't hear anything streaming, make sure that the main input stream is connected and enabled. In addition, to automatically turn on/off the stream on connect/disconnect you can configure the input stream auto switch in the **Settings** > **Streams settings** page.
