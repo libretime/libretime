@@ -25,7 +25,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          body_path: docs/releases/3.0.0-beta.1.md
+          body_path: docs/releases/${{ github.ref_name }}.md
           draft: true
           prerelease: true
           files: libretime-*.tar.gz
