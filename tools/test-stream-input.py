@@ -76,7 +76,7 @@ def run():
     cmd.extend([stream_url])
 
     print(" ".join(cmd))
-    with suppress(subprocess.CalledProcessError):
+    with suppress(subprocess.CalledProcessError, KeyboardInterrupt):
         subprocess.run(cmd, check=True, text=True)
 
 
