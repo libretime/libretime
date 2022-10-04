@@ -28,48 +28,6 @@ jobs:
 
       - uses: pre-commit/action@v3.0.0
 
-  check-shell:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
-
-      - uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-project-check-shell-pip
-          restore-keys: |
-            ${{ runner.os }}-project-check-shell-pip
-
-      - uses: actions/cache@v3
-        with:
-          path: |
-            /usr/local/bin/shellcheck*
-            /usr/local/bin/shfmt*
-          key: ${{ runner.os }}-project-check-shell-tools
-          restore-keys: |
-            ${{ runner.os }}-project-check-shell-tools
-
-      - run: |
-          python -m venv venv && source venv/bin/activate
-          pip install gh-release-install
-
-          sudo venv/bin/gh-release-install \
-            koalaman/shellcheck \
-            shellcheck-{tag}.linux.x86_64.tar.xz --extract shellcheck-{tag}/shellcheck \
-            /usr/local/bin/shellcheck \
-            --version-file '{destination}.version'
-
-          sudo venv/bin/gh-release-install \
-            mvdan/sh \
-            shfmt_{tag}_linux_amd64 \
-            /usr/local/bin/shfmt \
-            --version-file '{destination}.version'
-
-      - run: SEVERITY=warning make shell-check
-
   test-tools:
     runs-on: ubuntu-latest
     steps:
