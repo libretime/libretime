@@ -64,6 +64,18 @@ repos:
 
   - repo: local
     hooks:
+      - id: shfmt
+        name: shfmt
+        language: docker_image
+        entry: mvdan/shfmt -i 2 -ci -sr -kp -w
+        types: [shell]
+
+      - id: shellcheck
+        name: shellcheck
+        language: docker_image
+        entry: koalaman/shellcheck --color=always --severity=warning
+        types: [shell]
+
       - id: requirements.txt
         name: requirements.txt
         description: Generate requirements.txt
