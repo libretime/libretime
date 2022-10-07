@@ -10,7 +10,13 @@ class Assets
             self::$cache = json_decode(@file_get_contents(APPLICATION_PATH . '/assets.json'), true);
         }
 
-        return self::$cache[$path];
+        if (array_key_exists($path, self::$cache)) {
+            return self::$cache[$path];
+        }
+
+        Logging::error("Missing asset checksum for '{$path}'");
+
+        return strval(time());
     }
 
     public static function url($path)
