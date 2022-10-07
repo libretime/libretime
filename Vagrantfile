@@ -122,10 +122,4 @@ Vagrant.configure('2') do |config|
     setup_nfs(config)
     setup_libretime(os, 'debian.sh')
   end
-
-  config.vm.define 'centos' do |os|
-    os.vm.box = 'centos/8'
-    setup_nfs(config)
-    setup_libretime(os, 'centos.sh', '--selinux')
-  end
 end
