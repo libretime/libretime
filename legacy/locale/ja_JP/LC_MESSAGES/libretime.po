@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2022-09-21 01:05+0200\n"
+"POT-Creation-Date: 2022-10-07 16:26+0200\n"
 "PO-Revision-Date: 2021-10-17 08:09+0000\n"
 "Last-Translator: Kyle Robbertze <github@paddatrapper.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/libretime/legacy/ja/>\n"
@@ -731,7 +731,6 @@ msgstr "配信設定"
 
 #: application/configs/navigation.php:106
 #: application/controllers/LocaleController.php:382
-#: application/controllers/LocaleController.php:383
 msgid "Status"
 msgstr "ステータス"
 
@@ -1337,7 +1336,7 @@ msgid "Loading..."
 msgstr "ロード中…"
 
 #: application/controllers/LocaleController.php:114
-#: application/controllers/LocaleController.php:411
+#: application/controllers/LocaleController.php:414
 msgid "All"
 msgstr "全て"
 
@@ -2270,7 +2269,7 @@ msgid "Sa"
 msgstr "土"
 
 #: application/controllers/LocaleController.php:372
-#: application/controllers/LocaleController.php:400
+#: application/controllers/LocaleController.php:403
 msgid "Close"
 msgstr "閉じる"
 
@@ -2291,9 +2290,16 @@ msgid "Select files"
 msgstr "ファイルを選択"
 
 #: application/controllers/LocaleController.php:380
-#: application/controllers/LocaleController.php:381
 msgid "Add files to the upload queue and click the start button."
 msgstr "ファイルを追加して「アップロード開始」ボタンをクリックして下さい。"
+
+#: application/controllers/LocaleController.php:381
+msgid "Filename"
+msgstr ""
+
+#: application/controllers/LocaleController.php:383
+msgid "Size"
+msgstr ""
 
 #: application/controllers/LocaleController.php:384
 msgid "Add Files"
@@ -2308,256 +2314,268 @@ msgid "Start upload"
 msgstr "アップロード開始"
 
 #: application/controllers/LocaleController.php:387
+msgid "Start Upload"
+msgstr ""
+
+#: application/controllers/LocaleController.php:388
 msgid "Add files"
 msgstr "ファイルを追加"
 
-#: application/controllers/LocaleController.php:388
+#: application/controllers/LocaleController.php:389
+msgid "Stop current upload"
+msgstr ""
+
+#: application/controllers/LocaleController.php:390
+msgid "Start uploading queue"
+msgstr ""
+
+#: application/controllers/LocaleController.php:391
 #, php-format
 msgid "Uploaded %d/%d files"
 msgstr "%d/%d ファイルをアップロードしました。"
 
-#: application/controllers/LocaleController.php:389
+#: application/controllers/LocaleController.php:392
 msgid "N/A"
 msgstr "N/A"
 
-#: application/controllers/LocaleController.php:390
+#: application/controllers/LocaleController.php:393
 msgid "Drag files here."
 msgstr "こちらにファイルをドラッグしてください。"
 
-#: application/controllers/LocaleController.php:391
+#: application/controllers/LocaleController.php:394
 msgid "File extension error."
 msgstr "ファイル拡張子エラーです。"
 
-#: application/controllers/LocaleController.php:392
+#: application/controllers/LocaleController.php:395
 msgid "File size error."
 msgstr "ファイルサイズエラーです。"
 
-#: application/controllers/LocaleController.php:393
+#: application/controllers/LocaleController.php:396
 msgid "File count error."
 msgstr "ファイルカウントのエラーです。"
 
-#: application/controllers/LocaleController.php:394
+#: application/controllers/LocaleController.php:397
 msgid "Init error."
 msgstr "Initエラーです。"
 
-#: application/controllers/LocaleController.php:395
+#: application/controllers/LocaleController.php:398
 msgid "HTTP Error."
 msgstr "HTTPエラーです。"
 
-#: application/controllers/LocaleController.php:396
+#: application/controllers/LocaleController.php:399
 msgid "Security error."
 msgstr "セキュリティエラーです。"
 
-#: application/controllers/LocaleController.php:397
+#: application/controllers/LocaleController.php:400
 msgid "Generic error."
 msgstr "エラーです。"
 
-#: application/controllers/LocaleController.php:398
+#: application/controllers/LocaleController.php:401
 msgid "IO error."
 msgstr "入出力エラーです。"
 
-#: application/controllers/LocaleController.php:399
+#: application/controllers/LocaleController.php:402
 #, php-format
 msgid "File: %s"
 msgstr "ファイル： %s"
 
-#: application/controllers/LocaleController.php:401
+#: application/controllers/LocaleController.php:404
 #, php-format
 msgid "%d files queued"
 msgstr "%d のファイルが待機中"
 
-#: application/controllers/LocaleController.php:402
+#: application/controllers/LocaleController.php:405
 msgid "File: %f, size: %s, max file size: %m"
 msgstr "ファイル： %f, サイズ： %s, ファイルサイズ最大： %m"
 
-#: application/controllers/LocaleController.php:403
+#: application/controllers/LocaleController.php:406
 msgid "Upload URL might be wrong or doesn't exist"
 msgstr "アップロードURLに誤りがあるか存在しません。"
 
-#: application/controllers/LocaleController.php:404
+#: application/controllers/LocaleController.php:407
 msgid "Error: File too large: "
 msgstr "エラー：ファイルサイズが大きすぎます。"
 
-#: application/controllers/LocaleController.php:405
+#: application/controllers/LocaleController.php:408
 msgid "Error: Invalid file extension: "
 msgstr "エラー：ファイル拡張子が無効です。"
 
-#: application/controllers/LocaleController.php:407
+#: application/controllers/LocaleController.php:410
 msgid "Set Default"
 msgstr "初期設定として保存"
 
-#: application/controllers/LocaleController.php:408
+#: application/controllers/LocaleController.php:411
 msgid "Create Entry"
 msgstr "エントリーを作成"
 
-#: application/controllers/LocaleController.php:409
+#: application/controllers/LocaleController.php:412
 msgid "Edit History Record"
 msgstr "配信履歴を編集"
 
-#: application/controllers/LocaleController.php:410
+#: application/controllers/LocaleController.php:413
 #: application/forms/EditHistoryItem.php:57
 msgid "No Show"
 msgstr "番組はありません。"
 
-#: application/controllers/LocaleController.php:412
+#: application/controllers/LocaleController.php:415
 #, php-format
 msgid "Copied %s row%s to the clipboard"
 msgstr "%s 列の%s をクリップボードにコピー しました。"
 
-#: application/controllers/LocaleController.php:413
+#: application/controllers/LocaleController.php:416
 #, php-format
 msgid "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."
 msgstr "%s印刷用表示%sお使いのブラウザの印刷機能を使用してこの表を印刷してください。印刷が完了したらEscボタンを押して下さい。"
 
-#: application/controllers/LocaleController.php:414
+#: application/controllers/LocaleController.php:417
 msgid "New Show"
 msgstr ""
 
-#: application/controllers/LocaleController.php:415
+#: application/controllers/LocaleController.php:418
 msgid "New Log Entry"
 msgstr ""
 
-#: application/controllers/LocaleController.php:417
+#: application/controllers/LocaleController.php:420
 msgid "No data available in table"
 msgstr ""
 
-#: application/controllers/LocaleController.php:418
+#: application/controllers/LocaleController.php:421
 msgid "(filtered from _MAX_ total entries)"
 msgstr ""
 
-#: application/controllers/LocaleController.php:424
+#: application/controllers/LocaleController.php:427
 msgid "First"
 msgstr ""
 
-#: application/controllers/LocaleController.php:425
+#: application/controllers/LocaleController.php:428
 msgid "Last"
 msgstr ""
 
-#: application/controllers/LocaleController.php:426
+#: application/controllers/LocaleController.php:429
 msgid "Next"
 msgstr ""
 
-#: application/controllers/LocaleController.php:427
+#: application/controllers/LocaleController.php:430
 msgid "Previous"
 msgstr ""
 
-#: application/controllers/LocaleController.php:428
+#: application/controllers/LocaleController.php:431
 msgid "Search:"
 msgstr ""
 
-#: application/controllers/LocaleController.php:429
-#: application/controllers/LocaleController.php:442
+#: application/controllers/LocaleController.php:432
+#: application/controllers/LocaleController.php:445
 msgid "No matching records found"
 msgstr ""
 
-#: application/controllers/LocaleController.php:430
+#: application/controllers/LocaleController.php:433
 msgid "Drag tracks here from the library"
 msgstr ""
 
-#: application/controllers/LocaleController.php:431
+#: application/controllers/LocaleController.php:434
 msgid "No tracks were played during the selected time period."
 msgstr ""
 
-#: application/controllers/LocaleController.php:432
+#: application/controllers/LocaleController.php:435
 msgid "Unpublish"
 msgstr ""
 
-#: application/controllers/LocaleController.php:433
+#: application/controllers/LocaleController.php:436
 msgid "No matching results found."
 msgstr ""
 
-#: application/controllers/LocaleController.php:434
+#: application/controllers/LocaleController.php:437
 msgid "Author"
 msgstr ""
 
-#: application/controllers/LocaleController.php:435
+#: application/controllers/LocaleController.php:438
 #: application/forms/SmartBlockCriteria.php:65
 #: application/forms/StreamSettingSubForm.php:134
 #: application/models/Block.php:1441 application/models/Block.php:1539
 msgid "Description"
 msgstr "説明"
 
-#: application/controllers/LocaleController.php:436
+#: application/controllers/LocaleController.php:439
 msgid "Link"
 msgstr ""
 
-#: application/controllers/LocaleController.php:437
+#: application/controllers/LocaleController.php:440
 msgid "Publication Date"
 msgstr ""
 
-#: application/controllers/LocaleController.php:438
+#: application/controllers/LocaleController.php:441
 msgid "Import Status"
 msgstr ""
 
-#: application/controllers/LocaleController.php:439
+#: application/controllers/LocaleController.php:442
 msgid "Actions"
 msgstr ""
 
-#: application/controllers/LocaleController.php:440
+#: application/controllers/LocaleController.php:443
 msgid "Delete from Library"
 msgstr ""
 
-#: application/controllers/LocaleController.php:441
+#: application/controllers/LocaleController.php:444
 msgid "Successfully imported"
 msgstr ""
 
-#: application/controllers/LocaleController.php:443
+#: application/controllers/LocaleController.php:446
 msgid "Show _MENU_"
 msgstr ""
 
-#: application/controllers/LocaleController.php:444
+#: application/controllers/LocaleController.php:447
 msgid "Show _MENU_ entries"
 msgstr ""
 
-#: application/controllers/LocaleController.php:445
+#: application/controllers/LocaleController.php:448
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr ""
 
-#: application/controllers/LocaleController.php:446
+#: application/controllers/LocaleController.php:449
 msgid "Showing _START_ to _END_ of _TOTAL_ tracks"
 msgstr ""
 
-#: application/controllers/LocaleController.php:447
+#: application/controllers/LocaleController.php:450
 msgid "Showing _START_ to _END_ of _TOTAL_ track types"
 msgstr ""
 
-#: application/controllers/LocaleController.php:448
+#: application/controllers/LocaleController.php:451
 msgid "Showing _START_ to _END_ of _TOTAL_ users"
 msgstr ""
 
-#: application/controllers/LocaleController.php:449
+#: application/controllers/LocaleController.php:452
 msgid "Showing 0 to 0 of 0 entries"
 msgstr ""
 
-#: application/controllers/LocaleController.php:450
+#: application/controllers/LocaleController.php:453
 msgid "Showing 0 to 0 of 0 tracks"
 msgstr ""
 
-#: application/controllers/LocaleController.php:451
+#: application/controllers/LocaleController.php:454
 msgid "Showing 0 to 0 of 0 track types"
 msgstr ""
 
-#: application/controllers/LocaleController.php:452
+#: application/controllers/LocaleController.php:455
 msgid "(filtered from _MAX_ total track types)"
 msgstr ""
 
-#: application/controllers/LocaleController.php:454
+#: application/controllers/LocaleController.php:457
 msgid "Are you sure you want to delete this tracktype?"
 msgstr ""
 
-#: application/controllers/LocaleController.php:455
+#: application/controllers/LocaleController.php:458
 msgid "No track types were found."
 msgstr ""
 
-#: application/controllers/LocaleController.php:456
+#: application/controllers/LocaleController.php:459
 msgid "No track types found"
 msgstr ""
 
-#: application/controllers/LocaleController.php:457
+#: application/controllers/LocaleController.php:460
 msgid "No matching track types found"
 msgstr ""
 
-#: application/controllers/LocaleController.php:458
+#: application/controllers/LocaleController.php:461
 #: application/forms/AddTracktype.php:50
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
@@ -2566,7 +2584,7 @@ msgstr ""
 msgid "Enabled"
 msgstr "有効"
 
-#: application/controllers/LocaleController.php:459
+#: application/controllers/LocaleController.php:462
 #: application/forms/AddTracktype.php:49
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
@@ -2575,114 +2593,114 @@ msgstr "有効"
 msgid "Disabled"
 msgstr "無効"
 
-#: application/controllers/LocaleController.php:460
+#: application/controllers/LocaleController.php:463
 msgid "Cancel upload"
 msgstr ""
 
-#: application/controllers/LocaleController.php:461
+#: application/controllers/LocaleController.php:464
 msgid "Type"
 msgstr ""
 
-#: application/controllers/LocaleController.php:462
+#: application/controllers/LocaleController.php:465
 msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='https://libretime.org/docs/user-manual/playlists/'>More information</a>"
 msgstr ""
 
-#: application/controllers/LocaleController.php:463
+#: application/controllers/LocaleController.php:466
 msgid "Podcast settings saved"
 msgstr ""
 
-#: application/controllers/LocaleController.php:464
+#: application/controllers/LocaleController.php:467
 msgid "Are you sure you want to delete this user?"
 msgstr ""
 
-#: application/controllers/LocaleController.php:465
+#: application/controllers/LocaleController.php:468
 msgid "Can't delete yourself!"
 msgstr ""
 
-#: application/controllers/LocaleController.php:466
+#: application/controllers/LocaleController.php:469
 msgid "You haven't published any episodes!"
 msgstr ""
 
-#: application/controllers/LocaleController.php:467
+#: application/controllers/LocaleController.php:470
 msgid "You can publish your uploaded content from the 'Tracks' view."
 msgstr ""
 
-#: application/controllers/LocaleController.php:468
+#: application/controllers/LocaleController.php:471
 msgid "Try it now"
 msgstr ""
 
-#: application/controllers/LocaleController.php:469
+#: application/controllers/LocaleController.php:472
 msgid "<p>If this option is unchecked, the smartblock will schedule as many tracks as can be played out <strong>in their entirety</strong> within the specified duration. This will usually result in audio playback that is slightly less than the specified duration.</p><p>If this option is checked, the smartblock will also schedule one final track which will overflow the specified duration. This final track may be cut off mid-way if the show into which the smartblock is added finishes.</p>"
 msgstr ""
 
-#: application/controllers/LocaleController.php:470
+#: application/controllers/LocaleController.php:473
 msgid "Playlist preview"
 msgstr ""
 
-#: application/controllers/LocaleController.php:471
+#: application/controllers/LocaleController.php:474
 msgid "Smart Block"
 msgstr ""
 
-#: application/controllers/LocaleController.php:472
+#: application/controllers/LocaleController.php:475
 msgid "Webstream preview"
 msgstr ""
 
-#: application/controllers/LocaleController.php:473
+#: application/controllers/LocaleController.php:476
 msgid "You don't have permission to view the library."
 msgstr ""
 
-#: application/controllers/LocaleController.php:474
+#: application/controllers/LocaleController.php:477
 #: application/forms/AddShowWhen.php:23
 msgid "Now"
 msgstr ""
 
-#: application/controllers/LocaleController.php:475
+#: application/controllers/LocaleController.php:478
 msgid "Click 'New' to create one now."
 msgstr ""
 
-#: application/controllers/LocaleController.php:476
+#: application/controllers/LocaleController.php:479
 msgid "Click 'Upload' to add some now."
 msgstr ""
 
-#: application/controllers/LocaleController.php:477
+#: application/controllers/LocaleController.php:480
 msgid "Feed URL"
 msgstr ""
 
-#: application/controllers/LocaleController.php:478
+#: application/controllers/LocaleController.php:481
 msgid "Import Date"
 msgstr ""
 
-#: application/controllers/LocaleController.php:479
+#: application/controllers/LocaleController.php:482
 msgid "Add New Podcast"
 msgstr ""
 
-#: application/controllers/LocaleController.php:480
+#: application/controllers/LocaleController.php:483
 msgid ""
 "Cannot schedule outside a show.\n"
 "Try creating a show first."
 msgstr ""
 
-#: application/controllers/LocaleController.php:481
+#: application/controllers/LocaleController.php:484
 msgid "No files have been uploaded yet."
 msgstr ""
 
-#: application/controllers/LocaleController.php:487
+#: application/controllers/LocaleController.php:490
 msgid "On Air"
 msgstr ""
 
-#: application/controllers/LocaleController.php:488
+#: application/controllers/LocaleController.php:491
 msgid "Off Air"
 msgstr ""
 
-#: application/controllers/LocaleController.php:489
+#: application/controllers/LocaleController.php:492
 msgid "Offline"
 msgstr ""
 
-#: application/controllers/LocaleController.php:490
+#: application/controllers/LocaleController.php:493
 msgid "Nothing scheduled"
 msgstr ""
 
-#: application/controllers/LocaleController.php:491
+#: application/controllers/LocaleController.php:494
 msgid "Click 'Add' to create one now."
 msgstr ""
 
