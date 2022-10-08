@@ -26,8 +26,7 @@ repos:
         exclude: \.ambr$
 
       - id: name-tests-test
-        # TODO: Remove once the django api uses pytest
-        exclude: ^(api.*)$
+        exclude: ^api
 
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v2.7.1
@@ -47,19 +46,11 @@ repos:
     hooks:
       - id: black
 
-  # - repo: https://github.com/pycqa/isort
-  #   rev: 5.9.3
-  #   hooks:
-  #     - id: isort
-  #       args: ["--profile", "black", "--filter-files"]
-
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.1
     hooks:
       - id: codespell
-        args:
-          - --ignore-words=.codespellignore
-          - --builtin=clear,rare,informal
+        args: [--ignore-words=.codespellignore]
         exclude: (^api/schema.yml|^legacy.*|yarn\.lock)$
 
   - repo: local
