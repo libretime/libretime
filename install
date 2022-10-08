@@ -298,7 +298,6 @@ service_restart_if_active() {
 
 is_ubuntu=false
 is_debian=false
-is_centos=false
 distro="unknown"
 
 check_distribution()  {
@@ -315,7 +314,6 @@ check_distribution()  {
     debian-11)    is_debian=true && distro="bullseye" ;;
     ubuntu-18.04) is_ubuntu=true && distro="bionic" ;;
     ubuntu-20.04) is_ubuntu=true && distro="focal" ;;
-    centos-8)     is_centos=true && distro="centos8" ;;
     *)
       error << "EOF"
   could not determine supported distribution "$ID-$VERSION_ID"!
