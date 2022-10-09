@@ -20,7 +20,7 @@ setup(
     },
     python_requires=">=3.6",
     install_requires=[
-        "mutagen>=1.45.1,<1.46",
+        "mutagen>=1.45.1,<1.47",
         "pika>=1.0.0,<1.4",
         "requests>=2.25.1,<2.29",
         "typing_extensions",

@@ -17,7 +17,7 @@ setup(
     install_requires=[
         "celery==4.4.7",
         "kombu==4.6.11",
-        "mutagen>=1.45.1,<1.46",
+        "mutagen>=1.45.1,<1.47",
         "requests>=2.25.1,<2.29",
     ],
     extras_require={
