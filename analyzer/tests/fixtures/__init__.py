@@ -201,7 +201,7 @@ FILES_TAGGED = [
         here / "s1-mono-tagged.wav",
         {
             **meta,
-            "bit_rate": approx(96000, abs=1e2),
+            "bit_rate": approx(768000, abs=1e2),
             "channels": 1,
             "mime": "audio/wav",
         },
@@ -210,7 +210,7 @@ FILES_TAGGED = [
         here / "s1-stereo-tagged.wav",
         {
             **meta,
-            "bit_rate": approx(384000, abs=1e2),
+            "bit_rate": approx(1536000, abs=1e2),
             "channels": 2,
             "mime": "audio/wav",
         },
@@ -333,7 +333,7 @@ FILES_TAGGED += [
         here / "s1-mono-tagged-utf8.wav",
         {
             **meta,
-            "bit_rate": approx(96000, abs=1e2),
+            "bit_rate": approx(768000, abs=1e2),
             "channels": 1,
             "mime": "audio/wav",
         },
@@ -342,7 +342,7 @@ FILES_TAGGED += [
         here / "s1-stereo-tagged-utf8.wav",
         {
             **meta,
-            "bit_rate": approx(384000, abs=1e2),
+            "bit_rate": approx(1536000, abs=1e2),
             "channels": 2,
             "mime": "audio/wav",
         },

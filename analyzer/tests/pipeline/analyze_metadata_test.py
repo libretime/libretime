@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import distro
 import pytest
 
 from libretime_analyzer.pipeline.analyze_metadata import analyze_metadata
@@ -26,6 +27,12 @@ def test_analyze_metadata(filepath: Path, metadata: dict):
     assert metadata["length"] in found["length"]
     del metadata["length"]
     del found["length"]
+
+    # Mutagen <1.46 computes a wrong bit_rate for wav files, this version
+    # of mutagen is only installed on bionic (python <3.7)
+    if filepath.suffix == ".wav" and distro.codename() == "bionic":
+        del metadata["bit_rate"]
+        del found["bit_rate"]
 
     # mp3,ogg,flac files does not support comments yet
     if not filepath.suffix == ".m4a":
