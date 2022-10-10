@@ -55,7 +55,7 @@ jobs:
           COPY packages.list packages.list
           EOF
 
-          [[ "${{ matrix.release }}" =~ "focal" ]] && \
+          [[ "${{ matrix.release }}" == "focal" ]] && \
           cat <<EOF >> Dockerfile
           RUN DEBIAN_FRONTEND=noninteractive apt-get --quiet update && \
               DEBIAN_FRONTEND=noninteractive apt-get --quiet install -y software-properties-common && \
