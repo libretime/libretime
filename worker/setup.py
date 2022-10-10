@@ -13,7 +13,7 @@ setup(
     },
     license="MIT",
     packages=find_packages(exclude=["*tests*", "*fixtures*"]),
-    python_requires=">=3.7",
+    python_requires=">=3.8",
     install_requires=[
         "celery==4.4.7",
         "kombu==4.6.11",

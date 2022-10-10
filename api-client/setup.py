@@ -14,7 +14,7 @@ setup(
     license="AGPLv3",
     packages=find_packages(exclude=["*tests*", "*fixtures*"]),
     package_data={"": ["py.typed"]},
-    python_requires=">=3.7",
+    python_requires=">=3.8",
     install_requires=[
         "python-dateutil>=2.8.1,<2.9",
         "requests>=2.25.1,<2.29",

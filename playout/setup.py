@@ -21,7 +21,7 @@ setup(
             "libretime-playout-notify=libretime_playout.notify.main:cli",
         ]
     },
-    python_requires=">=3.7",
+    python_requires=">=3.8",
     install_requires=[
         "backports.zoneinfo>=0.2.1,<0.3;python_version<'3.9'",
         "jinja2>=3.0.3,<3.2",
