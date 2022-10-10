@@ -4,28 +4,29 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5fa10b8427129984dd981839ea8b1d70",
+    "content-hash": "82c094ec8732573fed114115720bf7f3",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
-            "version": "2.4.1",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/adbario/php-dot-notation.git",
-                "reference": "3bfe67895d26697d20485343499532234eeb7c08"
+                "reference": "aca06bf775809808232b8c21ce1ca3a4fca70ace"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/adbario/php-dot-notation/zipball/3bfe67895d26697d20485343499532234eeb7c08",
-                "reference": "3bfe67895d26697d20485343499532234eeb7c08",
+                "url": "https://api.github.com/repos/adbario/php-dot-notation/zipball/aca06bf775809808232b8c21ce1ca3a4fca70ace",
+                "reference": "aca06bf775809808232b8c21ce1ca3a4fca70ace",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": "^5.5 || ^7.0 || ^8.0"
+                "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8|^5.7|^6.6|^7.5|^8.5|^9.5",
+                "phpstan/phpstan": "^1.5",
+                "phpunit/phpunit": "^9.5",
                 "squizlabs/php_codesniffer": "^3.6"
             },
             "type": "library",
@@ -55,9 +56,9 @@
             ],
             "support": {
                 "issues": "https://github.com/adbario/php-dot-notation/issues",
-                "source": "https://github.com/adbario/php-dot-notation/tree/2.4.1"
+                "source": "https://github.com/adbario/php-dot-notation/tree/3.1.1"
             },
-            "time": "2022-08-25T19:47:20+00:00"
+            "time": "2022-03-28T01:09:30+00:00"
         },
         {
             "name": "composer/semver",
