@@ -283,6 +283,13 @@ install_service() {
       -e "s|@@LOG_DIR@@|${LOG_DIR}|g" \
       -e "s|@@WORKING_DIR@@|${WORKING_DIR}|g"
 
+  # TODO: Remove when Bionic support is dropped
+  if [[ $distro == "bionic" ]]; then
+    for feature in ProtectClock ProtectHostname ProtectKernelLogs ProtectProc; do
+      sed -i -e "s|^${feature}=|#${feature}=|" "$service_dest"
+    done
+  fi
+
   chmod 0644 "$service_dest"
   chown root:root "$service_dest"
   systemctl enable "$service_name"
