@@ -16,3 +16,8 @@ format: .format
 lint: .format-check .pylint .mypy .bandit
 test: .pytest
 clean: .clean
+
+.PHONY: snapshot
+snapshot: $(VENV)
+	source $(VENV)/bin/activate
+	pytest --snapshot-update
