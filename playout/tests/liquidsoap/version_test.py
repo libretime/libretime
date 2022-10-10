@@ -30,7 +30,7 @@ def test_get_liquidsoap_version():
     LIQUIDSOAP_VERSION_MAP = {
         "bionic": (1, 1, 1),
         "buster": (1, 3, 3),
-        "focal": (1, 4, 1),
+        "focal": (1, 4, 2),
         "bullseye": (1, 4, 3),
         "jammy": (2, 0, 2),
     }
