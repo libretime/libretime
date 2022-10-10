@@ -29,7 +29,7 @@
     "james-heinrich/getid3": "^1.9",
     "jooola/celery-php": "dev-master",
     "jooola/propel1": "dev-master",
-    "league/uri": "6.4.0",
+    "league/uri": "^6.7",
     "php-amqplib/php-amqplib": "^3.0",
     "simplepie/simplepie": "^1.5",
     "symfony/config": "^5.4",
