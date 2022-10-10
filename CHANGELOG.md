@@ -1,3 +1,25 @@
+<a name="3.0.0"></a>
+
+## [3.0.0](https://github.com/libretime/libretime/compare/3.0.0-beta.2...3.0.0) (2022-10-10)
+
+- [Release note](https://libretime.org/docs/releases/3.0.0/)
+
+### Bug Fixes
+
+- clean exit by catching keyboard interrupt ([#2206](https://github.com/libretime/libretime/issues/2206))
+- **legacy:** missing plupload uk_UA translation
+- **legacy:** jquery i18n translations for plupload
+- **legacy:** gracefully handle missing asset checksum
+- disable some systemd security features on bionic ([#2219](https://github.com/libretime/libretime/issues/2219))
+
+### Documentation
+
+- **legacy:** how to add a new language
+
+### Tests
+
+- **analyzer:** fix wrong bit_rate values
+
 <a name="3.0.0-beta.2"></a>
 
 ## [3.0.0-beta.2](https://github.com/libretime/libretime/compare/3.0.0-beta.1...3.0.0-beta.2) (2022-10-03)
