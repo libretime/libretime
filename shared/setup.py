@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="libretime-shared",
-    version="3.0.0-beta.2",
+    version="3.0.0",
     description="LibreTime Shared",
     url="https://github.com/libretime/libretime",
     author="LibreTime Contributors",
