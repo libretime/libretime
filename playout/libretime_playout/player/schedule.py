@@ -1,14 +1,10 @@
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 from operator import itemgetter
 from typing import Dict
 
 from dateutil.parser import isoparse
 from libretime_api_client.v2 import ApiClient
-from libretime_shared.datetime import (
-    time_fromisoformat,
-    time_in_milliseconds,
-    time_in_seconds,
-)
+from libretime_shared.datetime import time_in_milliseconds, time_in_seconds
 
 from ..liquidsoap.models import StreamPreferences
 from .events import EventKind
@@ -134,10 +130,10 @@ def generate_file_events(
         # Show data
         "show_name": show["name"],
         # Extra data
-        "fade_in": time_in_milliseconds(time_fromisoformat(schedule["fade_in"])),
-        "fade_out": time_in_milliseconds(time_fromisoformat(schedule["fade_out"])),
-        "cue_in": time_in_seconds(time_fromisoformat(schedule["cue_in"])),
-        "cue_out": time_in_seconds(time_fromisoformat(schedule["cue_out"])),
+        "fade_in": time_in_milliseconds(time.fromisoformat(schedule["fade_in"])),
+        "fade_out": time_in_milliseconds(time.fromisoformat(schedule["fade_out"])),
+        "cue_in": time_in_seconds(time.fromisoformat(schedule["cue_in"])),
+        "cue_out": time_in_seconds(time.fromisoformat(schedule["cue_out"])),
         "metadata": {
             "track_title": file["track_title"],
             "artist_name": file["artist_name"],
