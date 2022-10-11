@@ -47,7 +47,6 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetIntroPlaylist($values['introPlaylistSelect']);
                 Application_Model_Preference::SetOutroPlaylist($values['outroPlaylistSelect']);
                 Application_Model_Preference::SetAllow3rdPartyApi($values['thirdPartyApi']);
-                Application_Model_Preference::SetAllowedCorsUrls($values['allowedCorsUrls']);
                 Application_Model_Preference::SetDefaultLocale($values['locale']);
                 Application_Model_Preference::SetWeekStartDay($values['weekStartDay']);
                 Application_Model_Preference::setRadioPageDisplayLoginButton($values['radioPageLoginButton']);

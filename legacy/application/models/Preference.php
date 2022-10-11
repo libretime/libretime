@@ -1515,34 +1515,6 @@ class Application_Model_Preference
     }
 
     /**
-     * Getter for CORS URLs.
-     *
-     * @return string
-     */
-    public static function GetAllowedCorsUrls()
-    {
-        return self::getValue('allowed_cors_urls');
-    }
-
-    /**
-     * Setter for CORS URLs.
-     *
-     * @param string $value
-     */
-    public static function SetAllowedCorsUrls($value)
-    {
-        // Trim and strip trailing slash for each entry
-        $value = implode(PHP_EOL, array_map(
-            function ($v) {
-                return rtrim(trim($v), '/');
-            },
-            explode(PHP_EOL, $value)
-        ));
-
-        self::setValue('allowed_cors_urls', $value);
-    }
-
-    /**
      * Getter for feature preview mode.
      *
      * @return bool
