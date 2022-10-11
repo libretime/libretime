@@ -23,7 +23,10 @@ def parse_version(version: str):
     if not match:
         raise Exception(f"invalid version {version}")
 
-    major, minor, patch = map(int, match.group("release").split("."))
+    release = list(map(int, match.group("release").split(".")))
+    major = release.pop(0) if release else 0
+    minor = release.pop(0) if release else 0
+    patch = release.pop(0) if release else 0
 
     pre_mapping = {"alpha": -2, "beta": -1, None: 0, "": 0}
     pre = pre_mapping[match.group("pre_l")]
