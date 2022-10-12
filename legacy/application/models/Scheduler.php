@@ -618,9 +618,9 @@ final class Application_Model_Scheduler
      *     cc_schedule items, where the items get inserted after
      * @param $filesToInsert
      *     array of schedule item info, what gets inserted into cc_schedule
-     * @param $adjustSched
      * @param mixed $mediaItems
      * @param mixed $moveAction
+     * @param mixed $adjustSched
      */
     private function insertAfter($scheduleItems, $mediaItems, $filesToInsert = null, $adjustSched = true, $moveAction = false)
     {

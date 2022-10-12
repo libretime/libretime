@@ -318,7 +318,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     }
 
     /**
-     * @param $episodeId
+     * @param mixed $episodeId
      *
      * @return array
      *
@@ -337,11 +337,11 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     /**
      * Returns an array of Podcast episodes, with the option to paginate the results.
      *
-     * @param $podcastId
      * @param int    $offset
      * @param int    $limit
      * @param string $sortColumn
      * @param string $sortDir    "ASC" || "DESC"
+     * @param mixed  $podcastId
      *
      * @return array
      *

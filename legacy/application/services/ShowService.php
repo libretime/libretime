@@ -302,7 +302,7 @@ class Application_Service_ShowService
      * Adjusts the items in cc_schedule to reflect the
      * new (if one) start and end time of the show getting updated.
      *
-     * @param $showData
+     * @param mixed $showData
      */
     private function adjustSchedule($showData)
     {
@@ -759,7 +759,7 @@ SQL;
      *     (days of the week are represented numerically
      *      0=>sunday, 1=>monday, 2=>tuesday, etc.)
      * @param $showDays array of ccShowDays objects
-     * @param $showId
+     * @param mixed $showId
      */
     private function deleteRemovedShowDayInstances($daysRemoved, $showDays, $showId)
     {
@@ -1116,7 +1116,7 @@ SQL;
      *
      * @param ccShowDays $showDay
      * @param DateTime   $showStartDate user's local time
-     * @param $instanceId
+     * @param mixed      $instanceId
      */
     private function createRebroadcastInstances($showDay, $showStartDate, $instanceId)
     {
@@ -1157,8 +1157,8 @@ SQL;
     /**
      * Sets a single cc_show_instance table row.
      *
-     * @param $showDay
-     * @param $populateUntil
+     * @param mixed $showDay
+     * @param mixed $populateUntil
      */
     private function createNonRepeatingInstance($showDay, $populateUntil)
     {
@@ -1647,7 +1647,7 @@ SQL;
      * Sets the fields for a cc_show table row.
      *
      * @param $ccShow
-     * @param $showData
+     * @param mixed $showData
      */
     public function setCcShow($showData)
     {
@@ -1691,12 +1691,12 @@ SQL;
     /**
      * Sets the fields for a cc_show_days table row.
      *
-     * @param $showData
      * @param $showId
      * @param $userId
      * @param $repeatType
      * @param $isRecorded
      * @param $showDay ccShowDay object we are setting values on
+     * @param mixed $showData
      */
     private function setCcShowDays($showData)
     {
@@ -1824,10 +1824,10 @@ SQL;
     /**
      * Sets the fields for a cc_show_rebroadcast table row.
      *
-     * @param $showData
      * @param $showId
      * @param $repeatType
      * @param $isRecorded
+     * @param mixed $showData
      */
     private function setCcShowRebroadcasts($showData)
     {
@@ -1873,8 +1873,8 @@ SQL;
     /**
      * Sets the fields for a cc_show_hosts table row.
      *
-     * @param $showData
      * @param $showId
+     * @param mixed $showData
      */
     private function setCcShowHosts($showData)
     {
@@ -1946,9 +1946,9 @@ SQL;
      * date for when the next repeating show instance should be created
      * as the user browses the calendar further.
      *
-     * @param $nextDate
-     * @param $showId
-     * @param $day
+     * @param mixed $nextDate
+     * @param mixed $day
+     * @param mixed $showId
      */
     private function setNextRepeatingShowDate($nextDate, $day, $showId)
     {
