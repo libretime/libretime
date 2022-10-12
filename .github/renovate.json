@@ -8,6 +8,7 @@
     "branchTopic": "lock-file-maintenance-{{packageFile}}",
     "schedule": ["after 4am and before 5am on monday"]
   },
+  "baseBranches": ["main", "3.0.x"],
   "labels": ["dependencies"],
   "packageRules": [
     {
