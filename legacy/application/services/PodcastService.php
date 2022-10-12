@@ -142,9 +142,9 @@ class Application_Service_PodcastService
     }
 
     /**
-     * @param $podcast
      * @param $title passed in directly from web UI input
      * This will automatically create a smartblock and playlist for this podcast
+     * @param mixed $podcast
      */
     public static function createPodcastSmartblockAndPlaylist($podcast, $title = null)
     {
@@ -276,7 +276,7 @@ class Application_Service_PodcastService
      * Fetches a Podcast's rss feed and returns all its episodes with
      * the Podcast object.
      *
-     * @param $podcastId
+     * @param mixed $podcastId
      *
      * @return array - Podcast Array with a full list of episodes
      *
@@ -299,7 +299,7 @@ class Application_Service_PodcastService
     /**
      * Deletes a Podcast and its podcast episodes.
      *
-     * @param $podcastId
+     * @param mixed $podcastId
      *
      * @throws Exception
      * @throws PodcastNotFoundException
@@ -346,8 +346,8 @@ class Application_Service_PodcastService
     /**
      * Updates a Podcast object with the given metadata.
      *
-     * @param $podcastId
-     * @param $data
+     * @param mixed $podcastId
+     * @param mixed $data
      *
      * @return array
      *

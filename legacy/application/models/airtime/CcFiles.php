@@ -52,7 +52,7 @@ class CcFiles extends BaseCcFiles
     /**
      * Retrieve a sanitized version of the file metadata, suitable for public access.
      *
-     * @param $fileId
+     * @param mixed $fileId
      */
     public static function getSanitizedFileById($fileId)
     {

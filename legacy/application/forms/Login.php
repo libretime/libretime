@@ -94,8 +94,8 @@ class Application_Form_Login extends Zend_Form
      *
      * @see <https://github.com/phingofficial/phing/blob/41b2f54108018cf69aaa73904fade23e5adfd0cc/classes/phing/util/StringHelper.php>
      *
-     * @param $check
-     * @param $string
+     * @param mixed $check
+     * @param mixed $string
      *
      * @return bool
      */

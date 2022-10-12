@@ -21,7 +21,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
      * Constructor.
      *
      * @param mixed $aclData
-     * @param $roleName
+     * @param mixed $roleName
      */
     public function __construct(Zend_Acl $aclData, $roleName = 'G')
     {

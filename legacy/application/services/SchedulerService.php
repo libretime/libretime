@@ -43,8 +43,8 @@ class Application_Service_SchedulerService
     /**
      * Applies the show start difference to any scheduled items.
      *
-     * @param $instanceIds
      * @param $diff (integer, difference between unix epoch in seconds)
+     * @param mixed $instanceIds
      */
     public static function updateScheduleStartTime($instanceIds, $diff)
     {
@@ -278,10 +278,10 @@ class Application_Service_SchedulerService
                         $values[] = '(' . "'{$nextStartDT->format(DEFAULT_TIMESTAMP_FORMAT)}', " .
                             "'{$endTimeDT->format(DEFAULT_TIMESTAMP_FORMAT)}', " .
                             "'{$item['clip_length']}', " .
-                            "'{$item['fade_in']}', " . "'{$item['fade_out']}', " .
-                            "'{$item['cue_in']}', " . "'{$item['cue_out']}', " .
-                            "{$item['file_id']}, " . "{$item['stream_id']}, " .
-                            "{$id}, " . "{$item['position']})";
+                            "'{$item['fade_in']}', '{$item['fade_out']}', " .
+                            "'{$item['cue_in']}', '{$item['cue_out']}', " .
+                            "{$item['file_id']}, {$item['stream_id']}, " .
+                            "{$id}, {$item['position']})";
 
                         $nextStartDT = self::findTimeDifference(
                             $endTimeDT,
