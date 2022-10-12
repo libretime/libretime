@@ -3,9 +3,9 @@ name: Container
 on:
   push:
     tags: ["[0-9]+.[0-9]+.[0-9]+*"]
-    branches: [main]
+    branches: [main, 3.0.x]
   pull_request:
-    branches: [main]
+    branches: [main, 3.0.x]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
