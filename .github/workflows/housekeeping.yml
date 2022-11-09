@@ -45,7 +45,7 @@ jobs:
 
       - name: Check Links
         id: lychee
-        uses: lycheeverse/lychee-action@v1.5.3
+        uses: lycheeverse/lychee-action@v1.5.4
         with:
           args: >-
             '**/*.md'
