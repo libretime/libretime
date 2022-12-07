@@ -28,11 +28,9 @@ ARG USER=libretime
 ARG UID=1000
 ARG GID=1000
 
-RUN adduser --disabled-password --uid=$UID --gecos '' --no-create-home ${USER}
-
-RUN install --directory --owner=${USER} \
-    /etc/libretime \
-    /srv/libretime
+RUN set -eux \
+    && adduser --disabled-password --uid=$UID --gecos '' --no-create-home ${USER} \
+    && install --directory --owner=${USER} /etc/libretime /srv/libretime
 
 ENV LIBRETIME_CONFIG_FILEPATH=/etc/libretime/config.yml
 
@@ -40,8 +38,9 @@ ENV LIBRETIME_CONFIG_FILEPATH=/etc/libretime/config.yml
 COPY tools/packages.py /tmp/packages.py
 COPY shared/packages.ini /tmp/packages.ini
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+RUN set -eux \
+    && DEBIAN_FRONTEND=noninteractive apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     $(python3 /tmp/packages.py --format=line --exclude=python bullseye /tmp/packages.ini) \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /tmp/packages.py /tmp/packages.ini
@@ -51,8 +50,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 #======================================================================================#
 FROM python-base as python-base-ffmpeg
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+RUN set -eux \
+    && DEBIAN_FRONTEND=noninteractive apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
@@ -64,8 +64,9 @@ FROM python-base-ffmpeg as libretime-analyzer
 COPY tools/packages.py /tmp/packages.py
 COPY analyzer/packages.ini /tmp/packages.ini
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+RUN set -eux \
+    && DEBIAN_FRONTEND=noninteractive apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     $(python3 /tmp/packages.py --format=line --exclude=python bullseye /tmp/packages.ini) \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /tmp/packages.py /tmp/packages.ini
@@ -101,8 +102,9 @@ FROM python-base-ffmpeg as libretime-playout
 COPY tools/packages.py /tmp/packages.py
 COPY playout/packages.ini /tmp/packages.ini
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+RUN set -eux \
+    && DEBIAN_FRONTEND=noninteractive apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     $(python3 /tmp/packages.py --format=line --exclude=python bullseye /tmp/packages.ini) \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /tmp/packages.py /tmp/packages.ini
@@ -136,8 +138,9 @@ ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 #======================================================================================#
 FROM python-base as libretime-api
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+RUN set -eux \
+    && DEBIAN_FRONTEND=noninteractive apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     gcc \
     libc6-dev \
     libpq-dev \
@@ -216,14 +219,13 @@ ARG USER=libretime
 ARG UID=1000
 ARG GID=1000
 
-RUN adduser --disabled-password --uid=$UID --gecos '' --no-create-home ${USER}
+RUN set -eux \
+    && adduser --disabled-password --uid=$UID --gecos '' --no-create-home ${USER} \
+    && install --directory --owner=${USER} /etc/libretime /srv/libretime
 
-RUN install --directory --owner=${USER} \
-    /etc/libretime \
-    /srv/libretime
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+RUN set -eux \
+    && DEBIAN_FRONTEND=noninteractive apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     gettext \
     libcurl4-openssl-dev \
     libfreetype6-dev \
@@ -268,8 +270,9 @@ COPY legacy/composer.* ./
 RUN composer --no-cache install --no-progress --no-interaction --no-dev --no-autoloader
 
 COPY legacy .
-RUN make locale-build
-RUN composer --no-cache dump-autoload --no-interaction --no-dev
+RUN set -eux \
+    && make locale-build \
+    && composer --no-cache dump-autoload --no-interaction --no-dev
 
 # Run
 USER ${UID}:${GID}
