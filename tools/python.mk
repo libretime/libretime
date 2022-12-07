@@ -1,8 +1,8 @@
 .ONESHELL:
 
-.DEFAULT_GOAL = install
-SHELL = bash
-CPU_CORES = $$(( $(shell nproc) > 4 ? 4 : $(shell nproc) ))
+.DEFAULT_GOAL := install
+SHELL := bash
+CPU_CORES := $(shell N=$$(nproc); echo $$(( $$N > 4 ? 4 : $$N )))
 
 # PIP_INSTALL = --editable .
 # PYLINT_ARG =
