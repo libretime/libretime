@@ -4,6 +4,7 @@ import math
 import os
 import re
 import signal
+import sys
 import time
 from datetime import timezone
 from subprocess import PIPE, Popen
@@ -15,10 +16,10 @@ from loguru import logger
 
 from libretime_playout.config import PUSH_INTERVAL, RECORD_DIR, Config
 
-try:
-    from zoneinfo import ZoneInfo
-except ImportError:
+if sys.version_info < (3, 9):
     from backports.zoneinfo import ZoneInfo
+else:
+    from zoneinfo import ZoneInfo
 
 
 # TODO : add docstrings everywhere in this module
