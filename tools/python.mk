@@ -55,13 +55,18 @@ install: $(VENV)
 
 .PHONY: .pytest
 .pytest: $(VENV)
-	$(VENV)/bin/pytest -v \
+	$(VENV)/bin/pytest \
 		--numprocesses=$(CPU_CORES) \
-		--color=yes \
+		--color=yes
+
+.PHONY: .coverage
+.coverage: $(VENV)
+	$(VENV)/bin/pytest \
+		--numprocesses=$(CPU_CORES) \
+		--cov \
 		--cov-config=pyproject.toml \
 		--cov-report=term \
-		--cov-report=xml:./coverage.xml \
-		$(PYTEST_ARG)
+		--cov-report=xml
 
 .PHONY: .clean
 .clean:

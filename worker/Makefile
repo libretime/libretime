@@ -8,9 +8,9 @@ PIP_INSTALL := \
 PYLINT_ARG := libretime_worker
 MYPY_ARG := libretime_worker || true
 BANDIT_ARG := libretime_worker
-PYTEST_ARG = --cov=libretime_worker tests
 
 format: .format
 lint: .format-check .pylint .mypy .bandit
 test: .pytest
+test-coverage: .coverage
 clean: .clean

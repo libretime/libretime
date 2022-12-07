@@ -10,11 +10,11 @@ PIP_INSTALL := \
 PYLINT_ARG := libretime_playout tests || true
 MYPY_ARG := libretime_playout tests || true
 BANDIT_ARG := libretime_playout || true
-PYTEST_ARG := --cov=libretime_playout tests
 
 format: .format
 lint: .format-check .pylint .mypy .bandit
 test: .pytest
+test-coverage: .coverage
 clean: .clean
 
 .PHONY: snapshot
