@@ -1,3 +1,4 @@
+import sys
 from enum import Enum
 from typing import TYPE_CHECKING, Any, List, Literal, Optional, Sequence, Union
 
@@ -5,10 +6,11 @@ from typing import TYPE_CHECKING, Any, List, Literal, Optional, Sequence, Union
 from pydantic import AnyHttpUrl, AnyUrl, BaseModel, Field, validator
 from typing_extensions import Annotated
 
-try:
+if sys.version_info < (3, 9):
+    from backports.zoneinfo import ZoneInfo, ZoneInfoNotFoundError
+else:
     from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
-except ImportError:
-    from backports.zoneinfo import ZoneInfo, ZoneInfoNotFoundError  # type: ignore
+
 
 if TYPE_CHECKING:
     from pydantic.typing import AnyClassMethod
