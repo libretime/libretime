@@ -1,5 +1,5 @@
 import json
-from cgi import parse_header
+from email.message import EmailMessage
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Any, Dict, Optional
@@ -121,9 +121,12 @@ def extract_filename(response: Response) -> str:
     Returns:
         Extracted filename.
     """
-    if "Content-Disposition" in response.headers:
-        _, params = parse_header(response.headers["Content-Disposition"])
-        if "filename" in params:
-            return params["filename"]
+    content_disposition = "Content-Disposition"
+    value = response.headers.get(content_disposition)
+    if value and "filename" in value:
+        parser = EmailMessage()
+        parser[content_disposition] = value
+        params = parser[content_disposition].params
+        return params["filename"]
 
     return Path(urlsplit(response.url).path).name
