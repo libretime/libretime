@@ -35,6 +35,7 @@ setup(
             "psycopg2>=2.8.6,<2.10",
         ],
         "dev": [
+            "django-coverage-plugin",
             "django-stubs",
             "djangorestframework-stubs",
             "model_bakery",
