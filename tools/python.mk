@@ -34,12 +34,12 @@ install: $(VENV)
 .PHONY: .format
 .format: $(VENV)
 	$(VENV)/bin/black .
-	$(VENV)/bin/isort . --combine-as --profile black
+	$(VENV)/bin/isort .
 
 .PHONY: .format-check
 .format-check: $(VENV)
 	$(VENV)/bin/black . --check
-	$(VENV)/bin/isort . --combine-as --profile black --check
+	$(VENV)/bin/isort . --check
 
 .PHONY: .pylint
 .pylint: $(VENV)
