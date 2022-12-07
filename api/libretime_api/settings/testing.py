@@ -29,7 +29,6 @@ from .prod import (
     TEMPLATES,
     TIME_ZONE,
     USE_I18N,
-    USE_L10N,
     USE_TZ,
     WSGI_APPLICATION,
 )
