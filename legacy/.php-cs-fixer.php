@@ -23,7 +23,9 @@ return $config->setRules(array_merge(
         'multiline_whitespace_before_semicolons' => ['strategy' => 'no_multi_line'],
         'ordered_class_elements' => false,
         'yoda_style' => false,
+        'declare_strict_types' => true,
     ],
     $extra_rules
 ))
+    ->setRiskyAllowed(true)
     ->setFinder($finder);
