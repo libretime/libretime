@@ -15,6 +15,9 @@ on:
       - .github/workflows/worker.yml
       - worker/**
 
+  schedule:
+    - cron: 0 1 * * 1
+
 jobs:
   python:
     uses: ./.github/workflows/_python.yml
