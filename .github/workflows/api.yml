@@ -68,7 +68,7 @@ jobs:
             ${{ matrix.release }}-pip-api
 
       - name: Test
-        run: make test
+        run: make test-coverage
         working-directory: api
 
       - name: Report coverage
