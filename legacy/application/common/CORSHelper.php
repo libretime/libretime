@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class CORSHelper
 {
     public static function enableCrossOriginRequests(&$request, &$response)

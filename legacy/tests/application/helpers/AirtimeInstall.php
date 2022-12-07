@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 set_include_path(__DIR__ . '/../../legacy/library' . PATH_SEPARATOR . get_include_path());
 
 // require_once('Zend/Loader/Autoloader.php');

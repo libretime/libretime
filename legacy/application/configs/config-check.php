@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * We only get here after setup, or if there's an error in the configuration.
  *

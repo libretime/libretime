@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class ScheduleController extends Zend_Controller_Action
 {
     protected $sched_sess;

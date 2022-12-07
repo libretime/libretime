@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class SystemstatusController extends Zend_Controller_Action
 {
     private $version;

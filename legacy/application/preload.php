@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require_once __DIR__ . '/configs/constants.php';
 
 require_once VENDOR_PATH . '/autoload.php';

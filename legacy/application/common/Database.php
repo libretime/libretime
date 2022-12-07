@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Application_Common_Database
 {
     public const SINGLE = 'single';

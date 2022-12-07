@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Zend_Controller_Plugin_Maintenance extends Zend_Controller_Plugin_Abstract
 {
     public function preDispatch(Zend_Controller_Request_Abstract $request)

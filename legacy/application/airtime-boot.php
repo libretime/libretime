@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 //  Only enable cookie secure if we are supporting https.
 //  Ideally, this would always be on and we would force https,
 //  but the default installation configs are likely to be installed by

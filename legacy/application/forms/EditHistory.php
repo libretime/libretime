@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Application_Form_EditHistory extends Zend_Form
 {
     public const VALIDATE_DATETIME_FORMAT = 'yyyy-MM-dd HH:mm:ss';

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Class ThirdPartyController abstract superclass for third-party service authorization.
  */

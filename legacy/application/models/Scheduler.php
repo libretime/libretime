@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 final class Application_Model_Scheduler
 {
     private $con;

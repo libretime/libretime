@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require_once dirname(__DIR__) . '/application/preload.php';
 
 // Early exit if a configuration file does not exists!

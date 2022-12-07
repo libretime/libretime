@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class DashboardController extends Zend_Controller_Action
 {
     public function init()

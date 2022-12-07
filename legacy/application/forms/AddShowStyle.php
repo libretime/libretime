@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require_once 'customfilters/ImageSize.php';
 
 class Application_Form_AddShowStyle extends Zend_Form_SubForm

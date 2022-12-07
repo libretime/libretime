@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Class Application_Common_FileIO contains helper functions for reading and writing files, and sending them over HTTP.
  */

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // this is not getting loaded by autloading since it has a classname
 // that makes it clash with how zf1 expects to load plugins.
 require_once 'customfilters/ImageSize.php';

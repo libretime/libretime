@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // Path constants
 define('ROOT_PATH', dirname(__DIR__, 2));
 define('LIB_PATH', ROOT_PATH . '/library');

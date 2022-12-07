@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class RestAuth
 {
     public static function verifyAuth($checkApiKey, $checkSession, $action)

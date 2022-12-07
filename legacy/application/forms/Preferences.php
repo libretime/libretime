@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Application_Form_Preferences extends Zend_Form
 {
     public function init()

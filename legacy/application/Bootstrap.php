@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require_once 'preload.php';
 
 $CC_CONFIG = Config::getConfig();

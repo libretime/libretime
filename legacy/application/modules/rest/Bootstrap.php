@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Rest_Bootstrap extends Zend_Application_Module_Bootstrap
 {
     protected function _initRouter()

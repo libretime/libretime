@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Airtime_Zend_Log extends Zend_Log
 {
     /**

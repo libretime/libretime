@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Check if a field is empty but only when specific fields have specific values.
  *

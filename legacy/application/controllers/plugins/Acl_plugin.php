@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 {
     /**

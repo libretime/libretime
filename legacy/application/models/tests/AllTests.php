@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 $WHITE_SCREEN_OF_DEATH = false;
 

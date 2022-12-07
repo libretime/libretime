@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class IndexController extends Zend_Controller_Action
 {
     public function init()

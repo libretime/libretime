@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Skeleton subclass for representing a row from the 'cc_service_register' table.
  *

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class SessionHelper
 {
     public static function reopenSessionForWriting()

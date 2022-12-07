@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class ApiController extends Zend_Controller_Action
 {
     public const DEFAULT_SHOWS_TO_RETRIEVE = '5';

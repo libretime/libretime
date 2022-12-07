@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class SecurityHelper
 {
     public static function htmlescape_recursive(&$arr)

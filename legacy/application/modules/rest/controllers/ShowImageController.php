@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Controller class for handling ShowImage-related functionality.
  * Changelog:

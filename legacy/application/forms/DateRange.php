@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Application_Form_DateRange extends Zend_Form_SubForm
 {
     public function init()

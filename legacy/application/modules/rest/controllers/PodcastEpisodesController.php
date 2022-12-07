@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Rest_PodcastEpisodesController extends Zend_Rest_Controller
 {
     /**

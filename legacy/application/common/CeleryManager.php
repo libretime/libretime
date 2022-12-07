@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Celery\Celery;
 use Celery\CeleryException;
 use Celery\CeleryTimeoutException;

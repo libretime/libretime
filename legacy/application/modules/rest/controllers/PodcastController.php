@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Rest_PodcastController extends Zend_Rest_Controller
 {
     public function init()

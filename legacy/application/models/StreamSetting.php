@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 define('MAX_NUM_STREAMS', 4);
 
 class Application_Model_StreamConfig

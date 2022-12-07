@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 function booleanReduce($a, $b)
 {
     return $a && $b;

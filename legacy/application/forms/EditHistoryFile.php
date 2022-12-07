@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Application_Form_EditHistoryFile extends Application_Form_EditHistory
 {
     public const ID_PREFIX = 'his_file_';

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Application_Model_Datatables
 {
     private static function buildWhereClauseForAdvancedSearch($dbname2searchTerm)

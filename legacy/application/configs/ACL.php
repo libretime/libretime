@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 $ccAcl = new Zend_Acl();
 
 $ccAcl->addRole(new Zend_Acl_Role('G'))

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Skeleton subclass for performing query and update operations on the 'cc_playlist' table.
  *

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Application_Common_OsPath
 {
     // this function is from https://stackoverflow.com/questions/2670299/is-there-a-php-equivalent-function-to-the-python-os-path-normpath

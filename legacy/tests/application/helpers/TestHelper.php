@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class TestHelper
 {
     public static function loginUser()

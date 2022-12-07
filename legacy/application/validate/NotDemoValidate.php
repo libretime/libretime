@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Application_Validate_NotDemoValidate extends Zend_Validate_Abstract
 {
     public const NOTDEMO = 'notdemo';

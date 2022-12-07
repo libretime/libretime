@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 define('OPUS', 'opus');
 
 class Application_Form_Player extends Zend_Form_SubForm

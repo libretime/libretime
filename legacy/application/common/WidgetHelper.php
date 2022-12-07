@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 define('DAYS_PER_WEEK', 7);
 
 class WidgetHelper

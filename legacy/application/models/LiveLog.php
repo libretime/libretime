@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Application_Model_LiveLog
 {
     public static function GetLiveShowDuration($p_keepData = false)

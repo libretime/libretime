@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 define('MAX_REBROADCAST_DATES', 10);
 define('NO_REPEAT', -1);
 define('REPEAT_WEEKLY', 0);

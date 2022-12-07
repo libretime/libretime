@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Application_Form_AddUser extends Zend_Form
 {
     public function init()

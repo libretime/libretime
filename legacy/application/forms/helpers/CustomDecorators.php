@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /** Hide a Zend_Form_Element unless you're logged in as a SuperAdmin. */
 class Airtime_Decorator_SuperAdmin_Only extends Zend_Form_Decorator_Abstract
 {

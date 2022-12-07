@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class FileDataHelper
 {
     public static function getAudioMimeTypeArray()

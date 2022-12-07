@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Application_Model_Systemstatus
 {
     public static function GetMonitStatus($p_ip)

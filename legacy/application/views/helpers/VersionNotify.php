@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Composer\Semver\Semver;
 use Composer\Semver\VersionParser;
 

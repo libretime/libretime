@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Application_Model_Schedule
 {
     public const MASTER_SOURCE_NAME = 'Master';

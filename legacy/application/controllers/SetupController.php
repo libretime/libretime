@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /** This class displays the Language and Timezone setup popup dialog that you see on first run. */
 class SetupController extends Zend_Controller_Action
 {

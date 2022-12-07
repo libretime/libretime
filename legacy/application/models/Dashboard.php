@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Application_Model_Dashboard
 {
     public static function GetPreviousItem($p_timeNow)

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 abstract class Application_Service_ThirdPartyCeleryService extends Application_Service_ThirdPartyService
 {
     /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Application_Common_Storage
 {
     public static function splitFilePath($p_filepath)

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Application_Service_MediaService
 {
     public const PENDING_FILE_TIMEOUT_SECONDS = 3600;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class LibreTime_Model_FreeIpa
 {
     /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Application_Model_Library
 {
     public static function getObjInfo($p_type)

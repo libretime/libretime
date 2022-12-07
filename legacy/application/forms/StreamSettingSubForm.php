@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
 {
     private $prefix;

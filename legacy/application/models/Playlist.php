@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2010 Sourcefabric O.P.S.
  * @license https://www.gnu.org/licenses/gpl.txt

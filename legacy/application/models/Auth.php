@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Application_Model_Auth
 {
     public const TOKEN_LIFETIME = 'P2D'; // DateInterval syntax

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class RabbitMqPlugin extends Zend_Controller_Plugin_Abstract
 {
     public function dispatchLoopShutdown()

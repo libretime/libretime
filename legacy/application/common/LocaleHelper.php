@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // Global functions for translating domain-specific strings
 
 class Application_Common_LocaleHelper

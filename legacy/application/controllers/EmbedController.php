@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class EmbedController extends Zend_Controller_Action
 {
     public function init()

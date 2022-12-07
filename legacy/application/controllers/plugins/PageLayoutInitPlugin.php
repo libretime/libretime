@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /** Our standard page layout initialization has to be done via a plugin
  * because some of it requires session variables, and some of the routes
  * run without a session (like API calls). This is an optimization because

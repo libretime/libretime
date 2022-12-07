@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class PodcastFactory
 {
     public static function create($feedUrl)
