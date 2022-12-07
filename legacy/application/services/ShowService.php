@@ -1492,15 +1492,15 @@ SQL;
 
         do {
             $dt->add(new DateInterval('P1M'));
-        } while (!checkdate($dt->format('m'), $start->format('d'), $dt->format('Y')));
+        } while (!checkdate(intval($dt->format('m')), intval($start->format('d')), intval($dt->format('Y'))));
 
-        $dt->setDate($dt->format('Y'), $dt->format('m'), $start->format('d'));
+        $dt->setDate(intval($dt->format('Y')), intval($dt->format('m')), intval($start->format('d')));
 
         $startTime = explode(':', $startTime);
         $hours = isset($startTime[0]) ? $startTime[0] : '00';
         $minutes = isset($startTime[1]) ? $startTime[1] : '00';
         $seconds = isset($startTime[2]) ? $startTime[2] : '00';
-        $dt->setTime($hours, $minutes, $seconds);
+        $dt->setTime(intval($hours), intval($minutes), intval($seconds));
 
         return $dt;
     }
@@ -1545,10 +1545,10 @@ SQL;
         $dt = $nextDT;
 
         $startTime = explode(':', $startTime);
-        $hours = isset($startTime[0]) ? $startTime[0] : '00';
-        $minutes = isset($startTime[1]) ? $startTime[1] : '00';
-        $seconds = isset($startTime[2]) ? $startTime[2] : '00';
-        $dt->setTime($hours, $minutes, $seconds);
+        $hours = isset($startTime[0]) ? $startTime[0] : 0;
+        $minutes = isset($startTime[1]) ? $startTime[1] : 0;
+        $seconds = isset($startTime[2]) ? $startTime[2] : 0;
+        $dt->setTime(intval($hours), intval($minutes), intval($seconds));
 
         return $dt;
     }

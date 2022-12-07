@@ -65,6 +65,7 @@ services:
       context: .
       target: libretime-legacy
     volumes:
+      - ./api:/var/www/api
       - ./legacy:/var/www/html
 
   nginx:

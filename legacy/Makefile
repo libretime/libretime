@@ -26,6 +26,7 @@ format: tools
 .PHONY: lint
 lint: tools
 	$(TOOLS)/bin/php-cs-fixer fix --verbose --dry-run --diff
+	$(TOOLS)/bin/phpstan analyse application build public tests
 
 .PHONY: build
 build:
