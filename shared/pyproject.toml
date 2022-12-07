@@ -19,6 +19,9 @@ disallow_untyped_defs= true
 log_cli = true
 log_cli_level = "DEBUG"
 
+[tool.coverage.run]
+source = ["libretime_shared"]
+
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"

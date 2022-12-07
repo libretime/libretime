@@ -13,6 +13,9 @@ disable = "logging-fstring-interpolation"
 log_cli = true
 log_cli_level = "DEBUG"
 
+[tool.coverage.run]
+source = ["libretime_worker"]
+
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
