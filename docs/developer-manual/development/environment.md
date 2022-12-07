@@ -10,7 +10,7 @@ To setup a docker-compose development environment, run the following commands:
 # Clean and build
 make clean
 cp .env.dev .env
-docker-compose build
+DOCKER_BUILDKIT=1 docker-compose build
 
 # Setup
 docker-compose run --rm legacy make build
