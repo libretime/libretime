@@ -1,3 +1,7 @@
+[tool.isort]
+profile = "black"
+combine_as_imports = true
+
 [tool.pylint.master]
 load-plugins = "pylint_django"
 django-settings-module = "libretime_api.settings.testing"
