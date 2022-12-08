@@ -421,10 +421,10 @@ if $LIBRETIME_SETUP_POSTGRESQL; then
   install_packages postgresql postgresql-client
 
   if $is_first_install; then
-    if ! sudo -u postgres psql --csv --tuples-only --command='\du' | grep -qw "^$LIBRETIME_POSTGRESQL_USER"; then
+    if ! sudo -iH -u postgres psql --csv --tuples-only --command='\du' | grep -qw "^$LIBRETIME_POSTGRESQL_USER"; then
       info "creating PostgreSQL user '$LIBRETIME_POSTGRESQL_USER'"
-      sudo -u postgres createuser "$LIBRETIME_POSTGRESQL_USER"
-      sudo -u postgres psql -c "ALTER ROLE $LIBRETIME_POSTGRESQL_USER WITH PASSWORD '$LIBRETIME_POSTGRESQL_PASSWORD';"
+      sudo -iH -u postgres createuser "$LIBRETIME_POSTGRESQL_USER"
+      sudo -iH -u postgres psql -c "ALTER ROLE $LIBRETIME_POSTGRESQL_USER WITH PASSWORD '$LIBRETIME_POSTGRESQL_PASSWORD';"
 
       set_config "$LIBRETIME_POSTGRESQL_USER" database user
       set_config "$LIBRETIME_POSTGRESQL_PASSWORD" database password
@@ -432,9 +432,9 @@ if $LIBRETIME_SETUP_POSTGRESQL; then
       warning "PostgreSQL user '$LIBRETIME_POSTGRESQL_USER' already exists!"
     fi
 
-    if ! sudo -u postgres psql --csv --tuples-only --list | grep -qw "^$LIBRETIME_POSTGRESQL_DATABASE"; then
+    if ! sudo -iH -u postgres psql --csv --tuples-only --list | grep -qw "^$LIBRETIME_POSTGRESQL_DATABASE"; then
       info "creating PostgreSQL database '$LIBRETIME_POSTGRESQL_DATABASE' with owner '$LIBRETIME_POSTGRESQL_USER'"
-      sudo -u postgres createdb --template=template0 --encoding=UTF-8 --owner="$LIBRETIME_POSTGRESQL_USER" "$LIBRETIME_POSTGRESQL_DATABASE"
+      sudo -iH -u postgres createdb --template=template0 --encoding=UTF-8 --owner="$LIBRETIME_POSTGRESQL_USER" "$LIBRETIME_POSTGRESQL_DATABASE"
 
       set_config "$LIBRETIME_POSTGRESQL_DATABASE" database name
     else
