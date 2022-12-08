@@ -379,7 +379,7 @@ section "Prepare"
 
 prepare_packages_install
 
-install_packages git make ed
+install_packages sudo git make ed
 make VERSION
 
 info "creating project user"
