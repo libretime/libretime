@@ -33,7 +33,7 @@
     "league/uri": "^6.7",
     "php-amqplib/php-amqplib": "^3.0",
     "simplepie/simplepie": "^1.5",
-    "symfony/config": "^5.4",
+    "symfony/config": "^6.0",
     "zf1s/zend-acl": "^1.13",
     "zf1s/zend-application": "^1.13",
     "zf1s/zend-auth": "^1.13",
