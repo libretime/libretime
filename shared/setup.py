@@ -11,7 +11,7 @@ setup(
     package_data={"": ["py.typed"]},
     install_requires=[
         "backports.zoneinfo>=0.2.1,<0.3;python_version<'3.9'",
-        "click~=8.0.4",
+        "click>=8.0.4,<8.2",
         "loguru==0.6.0",
         "pydantic>=1.7.4,<1.11",
         "pyyaml>=5.3.1,<6.1",
