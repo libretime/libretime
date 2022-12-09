@@ -15,7 +15,7 @@ setup(
     packages=find_packages(exclude=["*tests*", "*fixtures*"]),
     python_requires=">=3.6",
     install_requires=[
-        "celery==4.4.7",
+        "celery==5.2.7",
         "kombu==4.6.11",
         "mutagen>=1.45.1,<1.47",
         "requests>=2.25.1,<2.29",
