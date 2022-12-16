@@ -88,7 +88,9 @@ function checkDatabaseConfiguration()
         // wrong, the database is improperly configured
         Propel::getConnection();
         Propel::close();
-    } catch (Exception $e) {
+    } catch (Exception $exc) {
+        Logging::error($exc->getMessage());
+
         return false;
     }
 
@@ -112,15 +114,21 @@ function checkRMQConnection()
 {
     $config = Config::getConfig();
 
-    $conn = new \PhpAmqpLib\Connection\AMQPStreamConnection(
-        $config['rabbitmq']['host'],
-        $config['rabbitmq']['port'],
-        $config['rabbitmq']['user'],
-        $config['rabbitmq']['password'],
-        $config['rabbitmq']['vhost']
-    );
+    try {
+        $conn = new \PhpAmqpLib\Connection\AMQPStreamConnection(
+            $config['rabbitmq']['host'],
+            $config['rabbitmq']['port'],
+            $config['rabbitmq']['user'],
+            $config['rabbitmq']['password'],
+            $config['rabbitmq']['vhost']
+        );
 
-    return isset($conn);
+        return isset($conn);
+    } catch (\PhpAmqpLib\Exception\AMQPRuntimeException $exc) {
+        Logging::error($exc->getMessage());
+
+        return false;
+    }
 }
 
 /**
