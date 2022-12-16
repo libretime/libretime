@@ -61,6 +61,7 @@ final class TaskManager
     {
         $task = TaskFactory::getTask($taskName);
         if ($task && $task->shouldBeRun()) {
+            Logging::debug("running task {$taskName}");
             $task->run();
         }
         // Mark that the task has been checked/run.
