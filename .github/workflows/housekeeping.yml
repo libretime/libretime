@@ -27,7 +27,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           issueLimit: ${{ github.event.inputs.issueLimit || '5' }}
-          ignore: .git,/docs/releases/*,/website/versioned*,CHANGELOG.md
+          ignore: .git,/docs/releases/*,CHANGELOG.md
 
   find_broken_links:
     if: github.repository_owner == 'libretime'
@@ -49,7 +49,6 @@ jobs:
         with:
           args: >-
             '**/*.md'
-            --exclude-path 'website/versioned_docs'
             --require-https
             --exclude-all-private
             --exclude-mail

@@ -36,4 +36,4 @@ clean:
 
 docs-lint:
 	vale sync
-	vale docs website/src/pages
+	vale docs
