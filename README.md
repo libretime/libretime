@@ -1,4 +1,4 @@
-![](website/static/img/logo-512px.png)
+![](https://github.com/libretime/website/blob/main/static/img/logo-512px.png)
 
 [![Financial Contributors on Open Collective](https://opencollective.com/libretime/all/badge.svg?label=financial+contributors)](https://opencollective.com/libretime)
 

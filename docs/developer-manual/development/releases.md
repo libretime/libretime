@@ -102,30 +102,7 @@ git add .
 git commit --fixup ":/$COMMIT_MESSAGE"
 ```
 
-### 3. Website and docs
-
-Update the version in the website files, the files that need changing are:
-
-- `website/vars.js`
-- `website/versions.json`
-
-Replace the old versioned docs with the current docs:
-
-```bash
-mv website/versioned_sidebars/version-*-sidebars.json website/versioned_sidebars/version-$VERSION-sidebars.json
-
-rm -R website/versioned_docs/version-*
-cp -R docs website/versioned_docs/version-$VERSION
-```
-
-Commit the website and docs changes:
-
-```bash
-git add .
-git commit --fixup ":/$COMMIT_MESSAGE"
-```
-
-### 4. Create a new pull request
+### 3. Create a new pull request
 
 Squash the changes and open a pull request for others to review:
 
@@ -135,7 +112,7 @@ git rebase --autosquash --interactive main
 
 Merge the pull request when it's reviewed and ready.
 
-### 5. Create and push a tag
+### 4. Create and push a tag
 
 Pull the merged release commit:
 

@@ -7,7 +7,6 @@ on:
       - .github/vale/**
       - .github/workflows/docs.yml
       - docs/**
-      - website/**
 
   pull_request:
     branches: [main]
@@ -15,7 +14,6 @@ on:
       - .github/vale/**
       - .github/workflows/docs.yml
       - docs/**
-      - website/**
 
 jobs:
   lint:
@@ -51,5 +49,5 @@ jobs:
       - name: Run Vale
         run: |
           vale sync
-          vale --output line docs website/src/pages || true
+          vale --output line docs || true
           vale --output line --minAlertLevel=error docs/releases
