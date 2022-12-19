@@ -2,18 +2,21 @@ name: Docs
 
 on:
   push:
-    branches: [main]
+    branches: [main, 3.0.x]
     paths:
       - .github/vale/**
       - .github/workflows/docs.yml
       - docs/**
 
   pull_request:
-    branches: [main]
+    branches: [main, 3.0.x]
     paths:
       - .github/vale/**
       - .github/workflows/docs.yml
       - docs/**
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   lint:
@@ -51,3 +54,24 @@ jobs:
           vale sync
           vale --output line docs || true
           vale --output line --minAlertLevel=error docs/releases
+
+  sync:
+    name: Sync
+    if: >
+      github.repository_owner == 'libretime' &&
+      github.event_name == 'push'
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/checkout@v3
+        with:
+          repository: libretime/website
+          path: website
+          ssh-key: "${{ secrets.WEBSITE_DEPLOY_KEY }}"
+
+      - name: Sync docs changes
+        run: tools/ci-sync-docs.sh ${{ github.event.before }}..${{ github.sha }}
