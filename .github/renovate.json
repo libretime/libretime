@@ -25,16 +25,8 @@
       "rangeStrategy": "widen"
     },
     {
-      "matchPaths": ["website/**"],
-      "addLabels": ["javascript"]
-    },
-    {
       "matchUpdateTypes": ["patch"],
-      "matchPaths": [
-        ".github/workflows/*",
-        ".pre-commit-config.yaml",
-        "website/**"
-      ],
+      "matchPaths": [".github/workflows/*", ".pre-commit-config.yaml"],
       "automerge": true
     }
   ]
