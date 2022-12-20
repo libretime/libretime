@@ -41,14 +41,15 @@ else
 fi
 
 for commit in $(git rev-list --reverse --no-merges "$commit_range" -- docs); do
-  rm -fR "website/$dest"
-  cp -r "docs" "website/$dest"
-
+  git checkout "$commit"
   git show \
     --quiet \
     --format="%B%n${GITHUB_REPOSITORY}@%H" \
     "$commit" \
     > commit-message
+
+  rm -fR "website/$dest"
+  cp -r "docs" "website/$dest"
 
   pushd website
   git add "$dest"
