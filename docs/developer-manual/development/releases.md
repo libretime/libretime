@@ -93,8 +93,6 @@ The release note file must be updated with:
 
 Reset and clean the `docs/releases/unreleased.md` file for a future version.
 
-Update the Github release creation job to use the new release note file in `.github/workflows/release.yml`.
-
 Commit the release note changes:
 
 ```bash
