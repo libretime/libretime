@@ -1,3 +1,33 @@
+<a name="3.0.1"></a>
+
+## [3.0.1](https://github.com/libretime/libretime/compare/3.0.0...3.0.1) (2022-12-20)
+
+- [Release note](https://libretime.org/docs/releases/3.0.1/)
+
+### Bug Fixes
+
+- remove systemd ProtectHome feature ([#2244](https://github.com/libretime/libretime/issues/2244))
+- **installer:** install missing sudo
+- **installer:** set home and login when running as postgres
+- **legacy:** add log entry on task run ([#2316](https://github.com/libretime/libretime/issues/2316))
+- **legacy:** log errors on connect check failure ([#2317](https://github.com/libretime/libretime/issues/2317))
+- **worker:** replace deprecated cgi.parse_header
+
+### Documentation
+
+- no need to update release note path
+
+### Tests
+
+- liquidsoap package from ppa is version 1.4.2 ([#2233](https://github.com/libretime/libretime/issues/2233))
+
+### CI
+
+- run tests on 3.0.x
+- enable renovate bot on 3.0.x
+- sync docs with libretime/website repository
+- pin vale version to v2.21.3
+
 <a name="3.0.0"></a>
 
 ## [3.0.0](https://github.com/libretime/libretime/compare/3.0.0-beta.2...3.0.0) (2022-10-10)
