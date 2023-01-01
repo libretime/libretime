@@ -37,3 +37,12 @@ clean:
 docs-lint:
 	vale sync
 	vale docs
+
+website:
+	git clone git@github.com:libretime/website.git
+
+website/node_modules: website
+	yarn --cwd website install
+
+docs-dev: website website/node_modules
+	DOCS_PATH="../docs" yarn --cwd website start
