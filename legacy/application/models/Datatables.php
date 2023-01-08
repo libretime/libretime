@@ -50,8 +50,13 @@ class Application_Model_Datatables
                 }
             } else {
                 if (trim($input1) !== '') {
-                    $where['clause'][$dbname] = $dbname . ' ILIKE :' . $dbname . '1';
-                    $where['params'][$dbname . '1'] = '%' . $input1 . '%';
+                    if ($dbname == 'track_type_id') {
+                        $where['clause'][$dbname] = $dbname . ' = :' . $dbname . '1';
+                        $where['params'][$dbname . '1'] = $input1;
+                    } else {
+                        $where['clause'][$dbname] = $dbname . ' ILIKE :' . $dbname . '1';
+                        $where['params'][$dbname . '1'] = '%' . $input1 . '%';
+                    }
                 }
             }
         }
