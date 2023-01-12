@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c4f5e22f5fdcfdadeea3baa22e939704",
+    "content-hash": "bfb63fdad05ca51f1ca445d3652b1787",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -209,157 +209,6 @@
             "time": "2022-09-29T16:41:13+00:00"
         },
         {
-            "name": "jooola/celery-php",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jooola/celery-php.git",
-                "reference": "395c556159d0c143ffc12cb78f7ba405252dc748"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jooola/celery-php/zipball/395c556159d0c143ffc12cb78f7ba405252dc748",
-                "reference": "395c556159d0c143ffc12cb78f7ba405252dc748",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0"
-            },
-            "require-dev": {
-                "ext-amqp": "*",
-                "php-amqplib/php-amqplib": ">=3.0",
-                "phpunit/phpunit": "<6.0.0",
-                "predis/predis": "*"
-            },
-            "suggest": {
-                "ext-amqp": "Adds support for the AMQP extension for PHP backend",
-                "php-amqplib/php-amqplib": "Adds support for the php-amqplib, AMQP library for PHP, backend",
-                "predis/predis": "Adds support for the predis, PHP client library for Redis, backend"
-            },
-            "default-branch": true,
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Celery\\": "src/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Celery\\Tests\\": "tests/"
-                }
-            },
-            "license": [
-                "BSD-2-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "GDR!",
-                    "email": "info@massivescale.net",
-                    "homepage": "http://massivescale.net/",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PHP client for Celery task queue",
-            "homepage": "https://github.com/gjedeer/celery-php/",
-            "keywords": [
-                "amqp",
-                "celery",
-                "cron",
-                "python",
-                "queue",
-                "redis",
-                "task"
-            ],
-            "support": {
-                "issues": "https://github.com/gjedeer/celery-php/issues",
-                "docs": "https://github.com/gjedeer/celery-php/",
-                "source": "https://github.com/jooola/celery-php/tree/master"
-            },
-            "time": "2022-01-10T15:49:18+00:00"
-        },
-        {
-            "name": "jooola/propel1",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jooola/propel1.git",
-                "reference": "9758036652d6da204f4680adfcb8583ab819a21f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jooola/propel1/zipball/9758036652d6da204f4680adfcb8583ab819a21f",
-                "reference": "9758036652d6da204f4680adfcb8583ab819a21f",
-                "shasum": ""
-            },
-            "require": {
-                "phing/phing": "~2.4",
-                "php": "^7.1"
-            },
-            "require-dev": {
-                "pear-pear.php.net/pear_packagefilemanager2": "@stable",
-                "phpcompatibility/php-compatibility": "^9.3",
-                "phpunit/phpunit": "^9.0.0",
-                "squizlabs/php_codesniffer": "^3.5"
-            },
-            "default-branch": true,
-            "bin": [
-                "generator/bin/propel-gen",
-                "generator/bin/propel-gen.bat"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.7-dev"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "runtime/lib",
-                    "generator/lib"
-                ]
-            },
-            "include-path": [
-                "runtime/lib",
-                "generator/lib"
-            ],
-            "scripts": {
-                "post-install-cmd": [
-                    "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility"
-                ],
-                "post-update-cmd": [
-                    "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility"
-                ]
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "William Durand",
-                    "email": "william.durand1@gmail.com",
-                    "homepage": "http://www.willdurand.fr"
-                }
-            ],
-            "description": "Propel is an open-source Object-Relational Mapping (ORM) for PHP5.",
-            "homepage": "http://www.propelorm.org/",
-            "keywords": [
-                "active record",
-                "database",
-                "mapping",
-                "orm",
-                "persistence"
-            ],
-            "support": {
-                "source": "https://github.com/jooola/propel1/tree/master"
-            },
-            "time": "2022-01-13T02:39:05+00:00"
-        },
-        {
             "name": "league/uri",
             "version": "6.7.2",
             "source": {
@@ -528,6 +377,157 @@
                 }
             ],
             "time": "2021-06-28T04:27:21+00:00"
+        },
+        {
+            "name": "libretime/celery-php",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/libretime/celery-php.git",
+                "reference": "21cf869c5c182aa9296333fcad5f0d27f33ce5b6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/libretime/celery-php/zipball/21cf869c5c182aa9296333fcad5f0d27f33ce5b6",
+                "reference": "21cf869c5c182aa9296333fcad5f0d27f33ce5b6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "ext-amqp": "*",
+                "php-amqplib/php-amqplib": ">=3.0",
+                "phpunit/phpunit": "<6.0.0",
+                "predis/predis": "*"
+            },
+            "suggest": {
+                "ext-amqp": "Adds support for the AMQP extension for PHP backend",
+                "php-amqplib/php-amqplib": "Adds support for the php-amqplib, AMQP library for PHP, backend",
+                "predis/predis": "Adds support for the predis, PHP client library for Redis, backend"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Celery\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Celery\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "GDR!",
+                    "email": "info@massivescale.net",
+                    "homepage": "http://massivescale.net/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP client for Celery task queue",
+            "homepage": "https://github.com/gjedeer/celery-php/",
+            "keywords": [
+                "amqp",
+                "celery",
+                "cron",
+                "python",
+                "queue",
+                "redis",
+                "task"
+            ],
+            "support": {
+                "issues": "https://github.com/gjedeer/celery-php/issues",
+                "docs": "https://github.com/gjedeer/celery-php/",
+                "source": "https://github.com/libretime/celery-php/tree/main"
+            },
+            "time": "2023-01-12T15:55:18+00:00"
+        },
+        {
+            "name": "libretime/propel1",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/libretime/propel1.git",
+                "reference": "b7e07124f494646da5be7342e949e133140c8eba"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/libretime/propel1/zipball/b7e07124f494646da5be7342e949e133140c8eba",
+                "reference": "b7e07124f494646da5be7342e949e133140c8eba",
+                "shasum": ""
+            },
+            "require": {
+                "phing/phing": "~2.4",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "pear-pear.php.net/pear_packagefilemanager2": "@stable",
+                "phpcompatibility/php-compatibility": "^9.3",
+                "phpunit/phpunit": "^9.0.0",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "default-branch": true,
+            "bin": [
+                "generator/bin/propel-gen",
+                "generator/bin/propel-gen.bat"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.7-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "runtime/lib",
+                    "generator/lib"
+                ]
+            },
+            "include-path": [
+                "runtime/lib",
+                "generator/lib"
+            ],
+            "scripts": {
+                "post-install-cmd": [
+                    "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility"
+                ],
+                "post-update-cmd": [
+                    "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "William Durand",
+                    "email": "william.durand1@gmail.com",
+                    "homepage": "http://www.willdurand.fr"
+                }
+            ],
+            "description": "Propel is an open-source Object-Relational Mapping (ORM) for PHP5.",
+            "homepage": "http://www.propelorm.org/",
+            "keywords": [
+                "active record",
+                "database",
+                "mapping",
+                "orm",
+                "persistence"
+            ],
+            "support": {
+                "source": "https://github.com/libretime/propel1/tree/main"
+            },
+            "time": "2023-01-12T16:06:29+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",
@@ -4942,8 +4942,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "jooola/celery-php": 20,
-        "jooola/propel1": 20
+        "libretime/celery-php": 20,
+        "libretime/propel1": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
