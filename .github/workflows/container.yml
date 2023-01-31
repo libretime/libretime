@@ -36,7 +36,7 @@ jobs:
           echo "LIBRETIME_VERSION=$(cat VERSION | tr -d [:blank:])" >> $GITHUB_ENV
 
       - name: Build python-builder
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: .
           pull: true
@@ -45,7 +45,7 @@ jobs:
           cache-to: type=gha,scope=python-builder,mode=max
 
       - name: Build python-base
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: .
           pull: true
@@ -54,7 +54,7 @@ jobs:
           cache-to: type=gha,scope=python-base,mode=max
 
       - name: Build python-base-ffmpeg
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: .
           pull: true
