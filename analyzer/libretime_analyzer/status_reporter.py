@@ -86,7 +86,9 @@ def process_http_requests(ipc_queue, http_retry_queue_path):
             with open(http_retry_queue_path, "wb") as pickle_file:
                 pickle.dump(retry_queue, pickle_file)
             return
-        except Exception as exception:  # Terrible top-level exception handler to prevent the thread from dying, just in case.
+        except (
+            Exception
+        ) as exception:  # Terrible top-level exception handler to prevent the thread from dying, just in case.
             if shutdown:
                 return
             logger.exception(f"Unhandled exception in StatusReporter {exception}")

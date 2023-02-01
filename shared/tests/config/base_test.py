@@ -21,6 +21,7 @@ AnyOutput = Annotated[
     Field(discriminator="kind"),
 ]
 
+
 # pylint: disable=too-few-public-methods
 class FixtureConfig(BaseConfig):
     public_url: AnyHttpUrl
