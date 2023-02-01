@@ -65,7 +65,7 @@ class PypoFile(Thread):
                             handle.write(chunk)
 
                     except HTTPError as exception:
-                        raise Exception(
+                        raise RuntimeError(
                             f"could not download file {media_item['id']}"
                         ) from exception
 

@@ -83,7 +83,7 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     logger.debug("Checking if Liquidsoap is running")
     liq_version = liq_client.wait_for_version()
     if not LIQUIDSOAP_MIN_VERSION <= liq_version:
-        raise Exception(f"Invalid liquidsoap version {liq_version}")
+        raise RuntimeError(f"Invalid liquidsoap version {liq_version}")
 
     fetch_queue: Queue[Dict[str, Any]] = Queue()
     recorder_queue: Queue[Dict[str, Any]] = Queue()
