@@ -49,7 +49,7 @@ def list_packages_files(
             path = path / DEFAULT_PACKAGES_FILENAME
 
         if not path.is_file():
-            raise Exception(f"{path} is not a file!")
+            raise ValueError(f"{path} is not a file!")
 
         yield path
 
