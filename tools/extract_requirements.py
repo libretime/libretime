@@ -39,7 +39,6 @@ for setup in glob("*/setup.py"):
             and isinstance(node.value.func, ast.Name)
             and node.value.func.id == "setup"
         ):
-
             for keyword in node.value.keywords:
                 if keyword.arg == "install_requires":
                     requires.extend(ast.literal_eval(keyword.value))
