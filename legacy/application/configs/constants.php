@@ -41,6 +41,7 @@ define('WHOS_USING_URL', 'https://github.com/orgs/libretime/people');
 define('TERMS_AND_CONDITIONS_URL', 'https://github.com/libretime/libretime/blob/main/README.md');
 define('PRIVACY_POLICY_URL', 'https://github.com/libretime/organization/blob/main/CODE_OF_CONDUCT.md');
 define('USER_MANUAL_URL', 'https://libretime.org/docs');
+define('TROUBLESHOOTING_URL', 'https://libretime.org/docs/admin-manual/troubleshooting/');
 define('ABOUT_AIRTIME_URL', 'https://libretime.org');
 define('LIBRETIME_CONTRIBUTE_URL', 'https://libretime.org/contribute');
 define('LIBRETIME_DISCOURSE_URL', 'https://discourse.libretime.org');
