@@ -28,7 +28,6 @@ def create_liquidsoap_annotation(media):
     # with the metadata we get from Airtime. (You can modify metadata in Airtime's library,
     # which doesn't get saved back to the file.)
     if "metadata" in media:
-
         if "artist_name" in media["metadata"]:
             artist_name = media["metadata"]["artist_name"]
             if isinstance(artist_name, str):

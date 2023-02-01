@@ -47,7 +47,6 @@ class StatsCollector:
         self,
         output: AnyOutput,
     ) -> Dict[str, Stats]:
-
         response = self._session.get(
             url=self.get_output_url(output),
             auth=(output.admin_user, output.admin_password),

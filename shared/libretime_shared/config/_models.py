@@ -64,6 +64,7 @@ class GeneralConfig(BaseModel):
 # StorageConfig
 ########################################################################################
 
+
 # pylint: disable=too-few-public-methods
 class StorageConfig(BaseModel):
     path: str = "/srv/libretime"
@@ -74,6 +75,7 @@ class StorageConfig(BaseModel):
 
 # DatabaseConfig
 ########################################################################################
+
 
 # pylint: disable=too-few-public-methods
 class DatabaseConfig(BaseModel):
@@ -93,6 +95,7 @@ class DatabaseConfig(BaseModel):
 
 # RabbitMQConfig
 ########################################################################################
+
 
 # pylint: disable=too-few-public-methods
 class RabbitMQConfig(BaseModel):
