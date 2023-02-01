@@ -5,6 +5,18 @@ sidebar_position: 90
 
 This guide walk you though the steps required to troubleshoot LibreTime.
 
+## FAQ
+
+### I cannot login the interface "Oops! Something went wrong!"
+
+You might be accessing the interface from an invalid URL. Make sure that the URL in your browser and the one set in your configuration file in `[general.public_url]` are the same.
+
+Make sure to check the legacy logs at `/var/log/libretime/legacy.log`.
+
+References:
+
+- https://discourse.libretime.org/t/version-3-0-1-debian-oops-something-went-wrong/1400
+
 ## Logs
 
 The first place to search for details on potential errors are the log files.
