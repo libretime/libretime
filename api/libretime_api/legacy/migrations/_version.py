@@ -21,7 +21,7 @@ VERSION_RE = re.compile(
 def parse_version(version: str):
     match = VERSION_RE.search(version)
     if not match:
-        raise Exception(f"invalid version {version}")
+        raise ValueError(f"invalid version {version}")
 
     release = list(map(int, match.group("release").split(".")))
     major = release.pop(0) if release else 0
