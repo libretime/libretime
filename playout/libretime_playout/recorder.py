@@ -118,7 +118,6 @@ class ShowRecorder(Thread):
         return self.p is not None
 
     def upload_file(self, filepath):
-
         filename = os.path.split(filepath)[1]
 
         # files is what requests actually expects

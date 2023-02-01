@@ -234,7 +234,6 @@ class PypoFetch(Thread):
 
         # Download all the media and put playlists in liquidsoap "annotate" format
         try:
-
             # Make sure cache_dir exists
             download_dir = self.cache_dir
             try:
