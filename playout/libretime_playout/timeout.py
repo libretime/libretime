@@ -18,7 +18,7 @@ def __timeout(func, timeout_duration, default, args, kwargs):
         thread.join(timeout_duration)
 
         if thread.is_alive():
-            raise Exception("Thread did not terminate")
+            raise RuntimeError("Thread did not terminate")
 
         return thread.result
 
