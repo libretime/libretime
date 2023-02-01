@@ -1,6 +1,6 @@
 from typing import Callable, Optional
 
-from django.db import connection
+from django.db import DataError, connection
 
 from ._version import parse_version
 
@@ -53,7 +53,7 @@ def legacy_migration_factory(
     def inner(_apps, _schema_editor):
         current = get_schema_version()
         if current is None:
-            raise Exception("current schema version was not found!")
+            raise DataError("current schema version was not found!")
 
         current_version = parse_version(current)
         if current_version >= target_version and not reverse:
