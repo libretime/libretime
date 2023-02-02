@@ -27,8 +27,8 @@ setup(
     ],
     extras_require={
         "dev": [
-            "distro",
-            "types-requests",
+            "distro>=1.8.0,<1.9",
+            "types-requests>=2.25.1,<2.29",
         ],
     },
     zip_safe=False,

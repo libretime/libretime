@@ -18,8 +18,8 @@ setup(
     ],
     extras_require={
         "dev": [
-            "types-backports",
-            "types-pyyaml",
+            "types-backports>=0.1.3,<0.2",
+            "types-pyyaml>=5.3.1,<6.1",
         ],
     },
 )
