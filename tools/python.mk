@@ -8,28 +8,18 @@ CPU_CORES := $(shell N=$$(nproc); echo $$(( $$N > 4 ? 4 : $$N )))
 # BANDIT_ARG =
 # PYTEST_ARG =
 
-SHARED_DEV_REQUIREMENTS = \
-	bandit \
-	black \
-	flake8 \
-	isort \
-	mypy \
-	pylint \
-	pytest \
-	pytest-cov \
-	pytest-xdist
-
-VENV = .venv
-$(VENV):
-	python3 -m venv $(VENV)
-	$(MAKE) install
-
 # SETUPTOOLS_ENABLE_FEATURES=legacy-editable is required to work
 # around https://github.com/PyCQA/pylint/issues/7306
+VENV = .venv
 install: $(VENV)
+$(VENV):
+	python3 -m venv $(VENV)
 	$(VENV)/bin/pip install --upgrade pip setuptools wheel
-	$(VENV)/bin/pip install $(SHARED_DEV_REQUIREMENTS)
-	[[ -z "$(PIP_INSTALL)" ]] || SETUPTOOLS_ENABLE_FEATURES=legacy-editable $(VENV)/bin/pip install $(PIP_INSTALL)
+
+	SETUPTOOLS_ENABLE_FEATURES=legacy-editable \
+	$(VENV)/bin/pip install \
+		--requirement ../tools/python-requirements.txt \
+		$(PIP_INSTALL)
 
 .PHONY: .format
 .format: $(VENV)

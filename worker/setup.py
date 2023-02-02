@@ -22,8 +22,8 @@ setup(
     ],
     extras_require={
         "dev": [
-            "requests-mock",
-            "types-requests",
+            "requests-mock>=1.10.0,<1.11",
+            "types-requests>=2.25.1,<2.29",
         ],
     },
     zip_safe=False,
