@@ -1,6 +1,7 @@
 [tool.isort]
 profile = "black"
 combine_as_imports = true
+known_first_party = ["libretime_api_client"]
 
 [tool.pylint.messages_control]
 extension-pkg-whitelist = "pydantic"
