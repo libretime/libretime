@@ -217,15 +217,16 @@ cp_if_different() {
   cp "$1" "$2"
 }
 
-# template_file <src> <dest> <render...>
+# template_file <action> <src> <dest> <render...>
 template_file() {
-  src="$1"
-  dest="$2"
-  shift 2
+  action="$1"
+  src="$2"
+  dest="$3"
+  shift 3
 
   tmp_file=$(mktemp)
   "$@" "$src" > "$tmp_file"
-  cp_if_different "$tmp_file" "$dest"
+  $action "$tmp_file" "$dest"
   rm "$tmp_file"
 }
 
@@ -273,7 +274,7 @@ install_service() {
     mkdir -p "$SERVICE_DIR"
   fi
 
-  template_file "$service_src" "$service_dest" \
+  template_file cp_if_different "$service_src" "$service_dest" \
     sed \
       -e "s|^User=.*|User=${LIBRETIME_USER}|" \
       -e "s|^Group=.*|Group=${LIBRETIME_USER}|" \
@@ -599,7 +600,9 @@ install_service "libretime-liquidsoap.service" "$SCRIPT_DIR/playout/install/syst
 install_service "libretime-playout.service" "$SCRIPT_DIR/playout/install/systemd/libretime-playout.service"
 
 info "deploying libretime-liquidsoap logrotate config"
-template_file "$SCRIPT_DIR/playout/install/logrotate/libretime-liquidsoap.conf" "/etc/logrotate.d/libretime-liquidsoap" \
+template_file cp_if_different \
+  "$SCRIPT_DIR/playout/install/logrotate/libretime-liquidsoap.conf" \
+  "/etc/logrotate.d/libretime-liquidsoap" \
   sed \
     -e "s|@@LOG_DIR@@|${LOG_DIR}|g" \
     -e "s|@@USER@@|${LIBRETIME_USER}|g"
@@ -691,13 +694,17 @@ fi
 PHP_VERSION="$(php-config --version | awk -F . '{ print $1 "." $2 }')"
 
 info "deploying libretime-legacy php-fpm config"
-template_file "$SCRIPT_DIR/legacy/install/php-fpm/libretime-legacy.conf" "/etc/php/$PHP_VERSION/fpm/pool.d/libretime-legacy.conf" \
+template_file cp_if_different \
+  "$SCRIPT_DIR/legacy/install/php-fpm/libretime-legacy.conf" \
+  "/etc/php/$PHP_VERSION/fpm/pool.d/libretime-legacy.conf" \
   sed \
     -e "s|@@DEFAULT_WEB_USER@@|${DEFAULT_WEB_USER}|g" \
     -e "s|@@USER@@|${LIBRETIME_USER}|g"
 
 info "deploying libretime-legacy logrotate config"
-template_file "$SCRIPT_DIR/legacy/install/logrotate/libretime-legacy.conf" "/etc/logrotate.d/libretime-legacy" \
+template_file cp_if_different \
+  "$SCRIPT_DIR/legacy/install/logrotate/libretime-legacy.conf" \
+  "/etc/logrotate.d/libretime-legacy" \
   sed \
     -e "s|@@LOG_DIR@@|${LOG_DIR}|g" \
     -e "s|@@USER@@|${LIBRETIME_USER}|g"
@@ -713,7 +720,9 @@ info "disabling nginx default site"
 rm -f "/etc/nginx/sites-enabled/default"
 
 info "deploying libretime nginx config"
-template_file "${SCRIPT_DIR}/installer/nginx/libretime.conf" "/etc/nginx/sites-available/libretime.conf" \
+template_file cp_if_different \
+  "${SCRIPT_DIR}/installer/nginx/libretime.conf" \
+  "/etc/nginx/sites-available/libretime.conf" \
   sed \
     -e "s|@@LISTEN_PORT@@|${LIBRETIME_LISTEN_PORT}|g" \
     -e "s|@@LEGACY_WEB_ROOT@@|${LEGACY_WEB_ROOT}|g"
