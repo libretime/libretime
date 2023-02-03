@@ -1,6 +1,9 @@
 import pytest
 
-from libretime_analyzer.pipeline.analyze_cuepoint import analyze_cuepoint
+from libretime_analyzer.pipeline.analyze_cuepoint import (
+    analyze_cuepoint,
+    analyze_duration,
+)
 
 from ..fixtures import FILES
 
@@ -15,7 +18,8 @@ from ..fixtures import FILES
     ),
 )
 def test_analyze_cuepoint(filepath, length, cuein, cueout):
-    metadata = analyze_cuepoint(filepath, {})
+    metadata = analyze_duration(filepath, {})
+    metadata = analyze_cuepoint(filepath, metadata)
 
     assert metadata["length_seconds"] == pytest.approx(length, abs=0.1)
     assert float(metadata["cuein"]) == pytest.approx(float(cuein), abs=1)
