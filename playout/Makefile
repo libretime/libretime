@@ -19,5 +19,4 @@ clean: .clean
 
 .PHONY: snapshot
 snapshot: $(VENV)
-	source $(VENV)/bin/activate
-	pytest --snapshot-update
+	$(VENV)/bin/pytest --snapshot-update
