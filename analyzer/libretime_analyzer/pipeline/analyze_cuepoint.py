@@ -8,11 +8,10 @@ from loguru import logger
 from ._ffmpeg import compute_silences, probe_duration
 
 
-def analyze_cuepoint(filepath: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
+def analyze_duration(filepath: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Extracts the cuein and cueout times along and sets the file duration using ffmpeg.
+    Extracts the file duration using ffmpeg.
     """
-
     try:
         duration = probe_duration(filepath)
 
@@ -30,7 +29,23 @@ def analyze_cuepoint(filepath: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
         metadata["length"] = str(timedelta(seconds=duration))
         metadata["cuein"] = 0.0
         metadata["cueout"] = duration
+    except (CalledProcessError, OSError):
+        pass
 
+    return metadata
+
+
+def analyze_cuepoint(filepath: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Extracts the cuein and cueout times using ffmpeg.
+
+    This step must run after the 'analyze_duration' step.
+    """
+
+    # Duration has been computed in the 'analyze_duration' step
+    duration = metadata["length_seconds"]
+
+    try:
         silences = compute_silences(filepath)
 
         if len(silences) > 2:

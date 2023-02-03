@@ -4,7 +4,7 @@ from typing import Any, Dict, Protocol
 
 from loguru import logger
 
-from .analyze_cuepoint import analyze_cuepoint
+from .analyze_cuepoint import analyze_cuepoint, analyze_duration
 from .analyze_metadata import analyze_metadata
 from .analyze_playability import UnplayableFileError, analyze_playability
 from .analyze_replaygain import analyze_replaygain
@@ -77,6 +77,7 @@ class Pipeline:
             # First, we extract the ID3 tags and other metadata:
             metadata = {}
             metadata = analyze_metadata(audio_file_path, metadata)
+            metadata = analyze_duration(audio_file_path, metadata)
             metadata = analyze_cuepoint(audio_file_path, metadata)
             metadata = analyze_replaygain(audio_file_path, metadata)
             metadata = analyze_playability(audio_file_path, metadata)
