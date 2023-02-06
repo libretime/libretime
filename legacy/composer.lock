@@ -760,16 +760,16 @@
         },
         {
             "name": "php-amqplib/php-amqplib",
-            "version": "v3.4.0",
+            "version": "v3.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-amqplib/php-amqplib.git",
-                "reference": "5c537cb724f2e181183c202e63f4303935344c5f"
+                "reference": "2c565476269889544e020d76da0cdf3471675b52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-amqplib/php-amqplib/zipball/5c537cb724f2e181183c202e63f4303935344c5f",
-                "reference": "5c537cb724f2e181183c202e63f4303935344c5f",
+                "url": "https://api.github.com/repos/php-amqplib/php-amqplib/zipball/2c565476269889544e020d76da0cdf3471675b52",
+                "reference": "2c565476269889544e020d76da0cdf3471675b52",
                 "shasum": ""
             },
             "require": {
@@ -835,9 +835,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-amqplib/php-amqplib/issues",
-                "source": "https://github.com/php-amqplib/php-amqplib/tree/v3.4.0"
+                "source": "https://github.com/php-amqplib/php-amqplib/tree/v3.5.1"
             },
-            "time": "2022-10-18T20:52:02+00:00"
+            "time": "2023-01-20T01:02:33+00:00"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -1004,26 +1004,27 @@
         },
         {
             "name": "simplepie/simplepie",
-            "version": "1.7.0",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplepie/simplepie.git",
-                "reference": "9e9add3428ce86aede874bcf9a59c78e272f8dc1"
+                "reference": "65b095d87bc00898d8fa7737bdbcda93a3fbcc55"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/simplepie/simplepie/zipball/9e9add3428ce86aede874bcf9a59c78e272f8dc1",
-                "reference": "9e9add3428ce86aede874bcf9a59c78e272f8dc1",
+                "url": "https://api.github.com/repos/simplepie/simplepie/zipball/65b095d87bc00898d8fa7737bdbcda93a3fbcc55",
+                "reference": "65b095d87bc00898d8fa7737bdbcda93a3fbcc55",
                 "shasum": ""
             },
             "require": {
                 "ext-pcre": "*",
                 "ext-xml": "*",
                 "ext-xmlreader": "*",
-                "php": ">=5.6.0"
+                "php": ">=7.2.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.19 || ^3.8",
+                "psr/simple-cache": "^1 || ^2 || ^3",
                 "yoast/phpunit-polyfills": "^1.0.1"
             },
             "suggest": {
@@ -1073,22 +1074,22 @@
             ],
             "support": {
                 "issues": "https://github.com/simplepie/simplepie/issues",
-                "source": "https://github.com/simplepie/simplepie/tree/1.7.0"
+                "source": "https://github.com/simplepie/simplepie/tree/1.8.0"
             },
-            "time": "2022-09-30T06:49:48+00:00"
+            "time": "2023-01-20T08:37:35+00:00"
         },
         {
             "name": "symfony/config",
-            "version": "v5.4.11",
+            "version": "v5.4.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "ec79e03125c1d2477e43dde8528535d90cc78379"
+                "reference": "9bd60843443cda9638efdca7c41eb82ed0026179"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/ec79e03125c1d2477e43dde8528535d90cc78379",
-                "reference": "ec79e03125c1d2477e43dde8528535d90cc78379",
+                "url": "https://api.github.com/repos/symfony/config/zipball/9bd60843443cda9638efdca7c41eb82ed0026179",
+                "reference": "9bd60843443cda9638efdca7c41eb82ed0026179",
                 "shasum": ""
             },
             "require": {
@@ -1138,7 +1139,7 @@
             "description": "Helps you find, load, combine, autofill and validate configuration values of any kind",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/config/tree/v5.4.11"
+                "source": "https://github.com/symfony/config/tree/v5.4.19"
             },
             "funding": [
                 {
@@ -1154,7 +1155,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-07-20T13:00:38+00:00"
+            "time": "2023-01-08T13:23:55+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -1225,16 +1226,16 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v5.4.13",
+            "version": "v5.4.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "ac09569844a9109a5966b9438fc29113ce77cf51"
+                "reference": "648bfaca6a494f3e22378123bcee2894045dc9d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/ac09569844a9109a5966b9438fc29113ce77cf51",
-                "reference": "ac09569844a9109a5966b9438fc29113ce77cf51",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/648bfaca6a494f3e22378123bcee2894045dc9d8",
+                "reference": "648bfaca6a494f3e22378123bcee2894045dc9d8",
                 "shasum": ""
             },
             "require": {
@@ -1269,7 +1270,7 @@
             "description": "Provides basic utilities for the filesystem",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/filesystem/tree/v5.4.13"
+                "source": "https://github.com/symfony/filesystem/tree/v5.4.19"
             },
             "funding": [
                 {
@@ -1285,7 +1286,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-09-21T19:53:16+00:00"
+            "time": "2023-01-14T19:14:44+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
