@@ -322,15 +322,13 @@ check_distribution()  {
     ubuntu-18.04) is_ubuntu=true && distro="bionic" ;;
     ubuntu-20.04) is_ubuntu=true && distro="focal" ;;
     *)
-      error << "EOF"
-  could not determine supported distribution "$ID-$VERSION_ID"!
+      error "could not determine supported distribution '$ID-$VERSION_ID'
 
-  Support for installing LibreTime on Xenial has dropped since 3.0.0-alpha.10.
-  Support for installing LibreTime on Stretch has dropped since 3.0.0-alpha.10.
-  Support for installing LibreTime on Jessie has dropped since 3.0.0-alpha.8.
+Please check the documentation to find the supported distributions.
 
-EOF
-      exit 1
+Support for installing LibreTime on Xenial has dropped since 3.0.0-alpha.10.
+Support for installing LibreTime on Stretch has dropped since 3.0.0-alpha.10.
+Support for installing LibreTime on Jessie has dropped since 3.0.0-alpha.8."
       ;;
   esac
 }
