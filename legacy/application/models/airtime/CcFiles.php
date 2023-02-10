@@ -170,9 +170,10 @@ class CcFiles extends BaseCcFiles
 
             Application_Service_MediaService::importFileToLibrary(
                 $file->getPrimaryKey(),
-                $filePath,
-                $originalFilename,
                 self::getOwnerId(),
+                $file->getDbTrackTypeId(),
+                $originalFilename,
+                $filePath,
                 $copyFile
             );
 

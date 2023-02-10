@@ -16,6 +16,12 @@ class Library(models.Model):
         db_column="visibility",
     )
 
+    analyze_cue_points = models.BooleanField(
+        blank=True,
+        default=True,
+        db_column="analyze_cue_points",
+    )
+
     class Meta:
         managed = False
         db_table = "cc_track_types"
