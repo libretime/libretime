@@ -13,31 +13,44 @@ class Application_Service_MediaService
     /** Move (or copy) a file to the stor/organize directory and send it off to the
      * analyzer to be processed.
      *
-     * @param $filePath string Path to the local file to import to the library
-     * @param $originalFilename string The original filename, if you want it to be preserved after import
-     * @param $ownerId string The ID of the user that will own the file inside Airtime
-     * @param $copyFile bool True if you want to copy the file to the "organize" directory, false if you want to move it (default)
-     * @param mixed $fileId
+     * @param mixed  $fileId
+     * @param mixed  $fileOwnerId          The ID of the user that will own the file inside Airtime
+     * @param mixed  $fileTrackTypeId
+     * @param string $fileOriginalFilename The original filename, if you want it to be preserved after import
+     * @param string $filePath             Path to the local file to import to the library
+     * @param bool   $copyFile             True if you want to copy the file to the "organize" directory, false if you want to move it (default)
      *
      * @return Ambigous
      *
      * @throws Exception
      */
-    public static function importFileToLibrary($fileId, $filePath, $originalFilename, $ownerId, $copyFile)
-    {
-        $importedStorageDirectory = Config::getStoragePath() . '/imported/' . $ownerId;
+    public static function importFileToLibrary(
+        $fileId,
+        $fileOwnerId,
+        $fileTrackTypeId,
+        $fileOriginalFilename,
+        $filePath,
+        $copyFile
+    ) {
+        $importedStorageDirectory = Config::getStoragePath() . '/imported/' . $fileOwnerId;
 
         // Copy the temporary file over to the "organize" folder so that it's off our webserver
         // and accessible by libretime-analyzer which could be running on a different machine.
-        $newTempFilePath = Application_Model_StoredFile::moveFileToStor($filePath, $fileId, $originalFilename, $copyFile);
+        $newTempFilePath = Application_Model_StoredFile::moveFileToStor(
+            $filePath,
+            $fileId,
+            $fileOriginalFilename,
+            $copyFile
+        );
 
         // Dispatch a message to libretime-analyzer through RabbitMQ,
         // notifying it that there's a new upload to process!
         Application_Model_RabbitMq::SendMessageToAnalyzer(
             $newTempFilePath,
             $importedStorageDirectory,
-            basename($originalFilename),
-            $fileId
+            basename($fileOriginalFilename),
+            $fileId,
+            $fileTrackTypeId
         );
 
         return $newTempFilePath;

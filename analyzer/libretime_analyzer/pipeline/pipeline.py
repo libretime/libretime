@@ -3,6 +3,7 @@ from queue import Queue
 from typing import Any, Dict, Protocol
 
 from loguru import logger
+from pydantic import BaseModel
 
 from .analyze_cuepoint import analyze_cuepoint, analyze_duration
 from .analyze_metadata import analyze_metadata
@@ -23,6 +24,10 @@ class PipelineStatus(int, Enum):
     FAILED = 2
 
 
+class PipelineOptions(BaseModel):
+    analyze_cue_points: bool = True
+
+
 class Pipeline:
     """Analyzes and imports an audio file into the Airtime library.
 
@@ -33,10 +38,11 @@ class Pipeline:
 
     @staticmethod
     def run_analysis(
-        queue,
-        audio_file_path,
-        import_directory,
-        original_filename,
+        queue: Queue,
+        audio_file_path: str,
+        import_directory: str,
+        original_filename: str,
+        options: PipelineOptions,
     ):
         """Analyze and import an audio file, and put all extracted metadata into queue.
 
@@ -78,7 +84,8 @@ class Pipeline:
             metadata = {}
             metadata = analyze_metadata(audio_file_path, metadata)
             metadata = analyze_duration(audio_file_path, metadata)
-            metadata = analyze_cuepoint(audio_file_path, metadata)
+            if options.analyze_cue_points:
+                metadata = analyze_cuepoint(audio_file_path, metadata)
             metadata = analyze_replaygain(audio_file_path, metadata)
             metadata = analyze_playability(audio_file_path, metadata)
 

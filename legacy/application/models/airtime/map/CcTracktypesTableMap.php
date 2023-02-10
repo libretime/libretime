@@ -44,6 +44,7 @@ class CcTracktypesTableMap extends TableMap
         $this->addColumn('visibility', 'DbVisibility', 'BOOLEAN', true, null, true);
         $this->addColumn('type_name', 'DbTypeName', 'VARCHAR', true, 64, '');
         $this->addColumn('description', 'DbDescription', 'VARCHAR', true, 255, '');
+        $this->addColumn('analyze_cue_points', 'DbAnalyzeCuePoints', 'BOOLEAN', true, null, true);
         // validators
     } // initialize()
 

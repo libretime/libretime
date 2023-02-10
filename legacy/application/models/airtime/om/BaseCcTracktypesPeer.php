@@ -24,13 +24,13 @@ abstract class BaseCcTracktypesPeer
     const TM_CLASS = 'CcTracktypesTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 5;
+    const NUM_COLUMNS = 6;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 5;
+    const NUM_HYDRATE_COLUMNS = 6;
 
     /** the column name for the id field */
     const ID = 'cc_track_types.id';
@@ -46,6 +46,9 @@ abstract class BaseCcTracktypesPeer
 
     /** the column name for the description field */
     const DESCRIPTION = 'cc_track_types.description';
+
+    /** the column name for the analyze_cue_points field */
+    const ANALYZE_CUE_POINTS = 'cc_track_types.analyze_cue_points';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -66,12 +69,12 @@ abstract class BaseCcTracktypesPeer
      * e.g. CcTracktypesPeer::$fieldNames[CcTracktypesPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbCode', 'DbVisibility', 'DbTypeName', 'DbDescription', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbCode', 'dbVisibility', 'dbTypeName', 'dbDescription', ),
-        BasePeer::TYPE_COLNAME => array (CcTracktypesPeer::ID, CcTracktypesPeer::CODE, CcTracktypesPeer::VISIBILITY, CcTracktypesPeer::TYPE_NAME, CcTracktypesPeer::DESCRIPTION, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'CODE', 'VISIBILITY', 'TYPE_NAME', 'DESCRIPTION', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'code', 'visibility', 'type_name', 'description', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbCode', 'DbVisibility', 'DbTypeName', 'DbDescription', 'DbAnalyzeCuePoints', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbCode', 'dbVisibility', 'dbTypeName', 'dbDescription', 'dbAnalyzeCuePoints', ),
+        BasePeer::TYPE_COLNAME => array (CcTracktypesPeer::ID, CcTracktypesPeer::CODE, CcTracktypesPeer::VISIBILITY, CcTracktypesPeer::TYPE_NAME, CcTracktypesPeer::DESCRIPTION, CcTracktypesPeer::ANALYZE_CUE_POINTS, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'CODE', 'VISIBILITY', 'TYPE_NAME', 'DESCRIPTION', 'ANALYZE_CUE_POINTS', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'code', 'visibility', 'type_name', 'description', 'analyze_cue_points', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -81,12 +84,12 @@ abstract class BaseCcTracktypesPeer
      * e.g. CcTracktypesPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbCode' => 1, 'DbVisibility' => 2, 'DbTypeName' => 3, 'DbDescription' => 4, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbCode' => 1, 'dbVisibility' => 2, 'dbTypeName' => 3, 'dbDescription' => 4, ),
-        BasePeer::TYPE_COLNAME => array (CcTracktypesPeer::ID => 0, CcTracktypesPeer::CODE => 1, CcTracktypesPeer::VISIBILITY => 2, CcTracktypesPeer::TYPE_NAME => 3, CcTracktypesPeer::DESCRIPTION => 4, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'CODE' => 1, 'VISIBILITY' => 2, 'TYPE_NAME' => 3, 'DESCRIPTION' => 4, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'code' => 1, 'visibility' => 2, 'type_name' => 3, 'description' => 4, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbCode' => 1, 'DbVisibility' => 2, 'DbTypeName' => 3, 'DbDescription' => 4, 'DbAnalyzeCuePoints' => 5, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbCode' => 1, 'dbVisibility' => 2, 'dbTypeName' => 3, 'dbDescription' => 4, 'dbAnalyzeCuePoints' => 5, ),
+        BasePeer::TYPE_COLNAME => array (CcTracktypesPeer::ID => 0, CcTracktypesPeer::CODE => 1, CcTracktypesPeer::VISIBILITY => 2, CcTracktypesPeer::TYPE_NAME => 3, CcTracktypesPeer::DESCRIPTION => 4, CcTracktypesPeer::ANALYZE_CUE_POINTS => 5, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'CODE' => 1, 'VISIBILITY' => 2, 'TYPE_NAME' => 3, 'DESCRIPTION' => 4, 'ANALYZE_CUE_POINTS' => 5, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'code' => 1, 'visibility' => 2, 'type_name' => 3, 'description' => 4, 'analyze_cue_points' => 5, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -165,12 +168,14 @@ abstract class BaseCcTracktypesPeer
             $criteria->addSelectColumn(CcTracktypesPeer::VISIBILITY);
             $criteria->addSelectColumn(CcTracktypesPeer::TYPE_NAME);
             $criteria->addSelectColumn(CcTracktypesPeer::DESCRIPTION);
+            $criteria->addSelectColumn(CcTracktypesPeer::ANALYZE_CUE_POINTS);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.code');
             $criteria->addSelectColumn($alias . '.visibility');
             $criteria->addSelectColumn($alias . '.type_name');
             $criteria->addSelectColumn($alias . '.description');
+            $criteria->addSelectColumn($alias . '.analyze_cue_points');
         }
     }
 

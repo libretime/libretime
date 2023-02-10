@@ -5611,6 +5611,8 @@ components:
           maxLength: 255
         enabled:
           type: boolean
+        analyze_cue_points:
+          type: boolean
       required:
         - code
         - id
@@ -5991,6 +5993,8 @@ components:
           nullable: true
           maxLength: 255
         enabled:
+          type: boolean
+        analyze_cue_points:
           type: boolean
     PatchedListenerCount:
       type: object

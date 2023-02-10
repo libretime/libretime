@@ -4,7 +4,7 @@ from queue import Queue
 
 import pytest
 
-from libretime_analyzer.pipeline import Pipeline
+from libretime_analyzer.pipeline import Pipeline, PipelineOptions
 
 from ..conftest import AUDIO_FILENAME, AUDIO_IMPORT_DEST
 
@@ -16,6 +16,7 @@ def test_run_analysis(src_dir: Path, dest_dir: Path):
         str(src_dir / AUDIO_FILENAME),
         str(dest_dir),
         AUDIO_FILENAME,
+        PipelineOptions(),
     )
     metadata = queue.get()
 

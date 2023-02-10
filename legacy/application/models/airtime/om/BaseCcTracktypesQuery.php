@@ -11,12 +11,14 @@
  * @method CcTracktypesQuery orderByDbVisibility($order = Criteria::ASC) Order by the visibility column
  * @method CcTracktypesQuery orderByDbTypeName($order = Criteria::ASC) Order by the type_name column
  * @method CcTracktypesQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
+ * @method CcTracktypesQuery orderByDbAnalyzeCuePoints($order = Criteria::ASC) Order by the analyze_cue_points column
  *
  * @method CcTracktypesQuery groupByDbId() Group by the id column
  * @method CcTracktypesQuery groupByDbCode() Group by the code column
  * @method CcTracktypesQuery groupByDbVisibility() Group by the visibility column
  * @method CcTracktypesQuery groupByDbTypeName() Group by the type_name column
  * @method CcTracktypesQuery groupByDbDescription() Group by the description column
+ * @method CcTracktypesQuery groupByDbAnalyzeCuePoints() Group by the analyze_cue_points column
  *
  * @method CcTracktypesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method CcTracktypesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -33,12 +35,14 @@
  * @method CcTracktypes findOneByDbVisibility(boolean $visibility) Return the first CcTracktypes filtered by the visibility column
  * @method CcTracktypes findOneByDbTypeName(string $type_name) Return the first CcTracktypes filtered by the type_name column
  * @method CcTracktypes findOneByDbDescription(string $description) Return the first CcTracktypes filtered by the description column
+ * @method CcTracktypes findOneByDbAnalyzeCuePoints(boolean $analyze_cue_points) Return the first CcTracktypes filtered by the analyze_cue_points column
  *
  * @method array findByDbId(int $id) Return CcTracktypes objects filtered by the id column
  * @method array findByDbCode(string $code) Return CcTracktypes objects filtered by the code column
  * @method array findByDbVisibility(boolean $visibility) Return CcTracktypes objects filtered by the visibility column
  * @method array findByDbTypeName(string $type_name) Return CcTracktypes objects filtered by the type_name column
  * @method array findByDbDescription(string $description) Return CcTracktypes objects filtered by the description column
+ * @method array findByDbAnalyzeCuePoints(boolean $analyze_cue_points) Return CcTracktypes objects filtered by the analyze_cue_points column
  *
  * @package    propel.generator.airtime.om
  */
@@ -146,7 +150,7 @@ abstract class BaseCcTracktypesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "code", "visibility", "type_name", "description" FROM "cc_track_types" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "code", "visibility", "type_name", "description", "analyze_cue_points" FROM "cc_track_types" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -389,6 +393,33 @@ abstract class BaseCcTracktypesQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CcTracktypesPeer::DESCRIPTION, $dbDescription, $comparison);
+    }
+
+    /**
+     * Filter the query on the analyze_cue_points column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbAnalyzeCuePoints(true); // WHERE analyze_cue_points = true
+     * $query->filterByDbAnalyzeCuePoints('yes'); // WHERE analyze_cue_points = true
+     * </code>
+     *
+     * @param     boolean|string $dbAnalyzeCuePoints The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcTracktypesQuery The current query, for fluid interface
+     */
+    public function filterByDbAnalyzeCuePoints($dbAnalyzeCuePoints = null, $comparison = null)
+    {
+        if (is_string($dbAnalyzeCuePoints)) {
+            $dbAnalyzeCuePoints = in_array(strtolower($dbAnalyzeCuePoints), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(CcTracktypesPeer::ANALYZE_CUE_POINTS, $dbAnalyzeCuePoints, $comparison);
     }
 
     /**

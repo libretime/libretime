@@ -64,6 +64,13 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
     protected $description;
 
     /**
+     * The value for the analyze_cue_points field.
+     * Note: this column has a database default value of: true
+     * @var        boolean
+     */
+    protected $analyze_cue_points;
+
+    /**
      * @var        PropelObjectCollection|CcFiles[] Collection to store aggregation of CcFiles objects.
      */
     protected $collCcFiless;
@@ -107,6 +114,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
         $this->visibility = true;
         $this->type_name = '';
         $this->description = '';
+        $this->analyze_cue_points = true;
     }
 
     /**
@@ -172,6 +180,17 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
     {
 
         return $this->description;
+    }
+
+    /**
+     * Get the [analyze_cue_points] column value.
+     *
+     * @return boolean
+     */
+    public function getDbAnalyzeCuePoints()
+    {
+
+        return $this->analyze_cue_points;
     }
 
     /**
@@ -288,6 +307,35 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
     } // setDbDescription()
 
     /**
+     * Sets the value of the [analyze_cue_points] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param boolean|integer|string $v The new value
+     * @return CcTracktypes The current object (for fluent API support)
+     */
+    public function setDbAnalyzeCuePoints($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->analyze_cue_points !== $v) {
+            $this->analyze_cue_points = $v;
+            $this->modifiedColumns[] = CcTracktypesPeer::ANALYZE_CUE_POINTS;
+        }
+
+
+        return $this;
+    } // setDbAnalyzeCuePoints()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -310,6 +358,10 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
             }
 
             if ($this->description !== '') {
+                return false;
+            }
+
+            if ($this->analyze_cue_points !== true) {
                 return false;
             }
 
@@ -340,6 +392,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
             $this->visibility = ($row[$startcol + 2] !== null) ? (boolean) $row[$startcol + 2] : null;
             $this->type_name = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
             $this->description = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->analyze_cue_points = ($row[$startcol + 5] !== null) ? (boolean) $row[$startcol + 5] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -349,7 +402,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 5; // 5 = CcTracktypesPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 6; // 6 = CcTracktypesPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating CcTracktypes object", $e);
@@ -606,6 +659,9 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
         if ($this->isColumnModified(CcTracktypesPeer::DESCRIPTION)) {
             $modifiedColumns[':p' . $index++]  = '"description"';
         }
+        if ($this->isColumnModified(CcTracktypesPeer::ANALYZE_CUE_POINTS)) {
+            $modifiedColumns[':p' . $index++]  = '"analyze_cue_points"';
+        }
 
         $sql = sprintf(
             'INSERT INTO "cc_track_types" (%s) VALUES (%s)',
@@ -631,6 +687,9 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
                         break;
                     case '"description"':
                         $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
+                        break;
+                    case '"analyze_cue_points"':
+                        $stmt->bindValue($identifier, $this->analyze_cue_points, PDO::PARAM_BOOL);
                         break;
                 }
             }
@@ -782,6 +841,9 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
             case 4:
                 return $this->getDbDescription();
                 break;
+            case 5:
+                return $this->getDbAnalyzeCuePoints();
+                break;
             default:
                 return null;
                 break;
@@ -816,6 +878,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
             $keys[2] => $this->getDbVisibility(),
             $keys[3] => $this->getDbTypeName(),
             $keys[4] => $this->getDbDescription(),
+            $keys[5] => $this->getDbAnalyzeCuePoints(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -875,6 +938,9 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
             case 4:
                 $this->setDbDescription($value);
                 break;
+            case 5:
+                $this->setDbAnalyzeCuePoints($value);
+                break;
         } // switch()
     }
 
@@ -904,6 +970,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
         if (array_key_exists($keys[2], $arr)) $this->setDbVisibility($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setDbTypeName($arr[$keys[3]]);
         if (array_key_exists($keys[4], $arr)) $this->setDbDescription($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setDbAnalyzeCuePoints($arr[$keys[5]]);
     }
 
     /**
@@ -920,6 +987,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
         if ($this->isColumnModified(CcTracktypesPeer::VISIBILITY)) $criteria->add(CcTracktypesPeer::VISIBILITY, $this->visibility);
         if ($this->isColumnModified(CcTracktypesPeer::TYPE_NAME)) $criteria->add(CcTracktypesPeer::TYPE_NAME, $this->type_name);
         if ($this->isColumnModified(CcTracktypesPeer::DESCRIPTION)) $criteria->add(CcTracktypesPeer::DESCRIPTION, $this->description);
+        if ($this->isColumnModified(CcTracktypesPeer::ANALYZE_CUE_POINTS)) $criteria->add(CcTracktypesPeer::ANALYZE_CUE_POINTS, $this->analyze_cue_points);
 
         return $criteria;
     }
@@ -987,6 +1055,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
         $copyObj->setDbVisibility($this->getDbVisibility());
         $copyObj->setDbTypeName($this->getDbTypeName());
         $copyObj->setDbDescription($this->getDbDescription());
+        $copyObj->setDbAnalyzeCuePoints($this->getDbAnalyzeCuePoints());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1352,6 +1421,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
         $this->visibility = null;
         $this->type_name = null;
         $this->description = null;
+        $this->analyze_cue_points = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;

@@ -1,1 +1,1 @@
-from .pipeline import Pipeline, PipelineStatus
+from .pipeline import Pipeline, PipelineOptions, PipelineStatus

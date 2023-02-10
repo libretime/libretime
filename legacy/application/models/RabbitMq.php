@@ -92,7 +92,8 @@ class Application_Model_RabbitMq
         $tmpFilePath,
         $importedStorageDirectory,
         $originalFilename,
-        $fileId
+        $fileId,
+        $fileTrackTypeId
     ) {
         $config = Config::getConfig();
 
@@ -113,6 +114,15 @@ class Application_Model_RabbitMq
         $data['tmp_file_path'] = $tmpFilePath;
         $data['import_directory'] = $importedStorageDirectory;
         $data['original_filename'] = $originalFilename;
+
+        $options = [];
+
+        if ($fileTrackTypeId) {
+            $fileTrackType = new Application_Model_Tracktype($fileTrackTypeId);
+            $options['analyze_cue_points'] = $fileTrackType->getAnalyzeCuePoints();
+        }
+
+        $data['options'] = $options;
 
         $jsonData = json_encode($data);
         // self::sendMessage($exchange, 'topic', false, $jsonData, 'airtime-uploads');

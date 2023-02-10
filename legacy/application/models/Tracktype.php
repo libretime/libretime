@@ -46,6 +46,12 @@ class Application_Model_Tracktype
         $tracktype->setDbVisibility($visibility);
     }
 
+    public function setAnalyzeCuePoints($value)
+    {
+        $tracktype = $this->_tracktypeInstance;
+        $tracktype->setDbAnalyzeCuePoints($value);
+    }
+
     public function getCode()
     {
         $tracktype = $this->_tracktypeInstance;
@@ -72,6 +78,13 @@ class Application_Model_Tracktype
         $tracktype = $this->_tracktypeInstance;
 
         return $tracktype->getDbVisibility();
+    }
+
+    public function getAnalyzeCuePoints()
+    {
+        $tracktype = $this->_tracktypeInstance;
+
+        return $tracktype->getDbAnalyzeCuePoints();
     }
 
     public function save()
@@ -162,7 +175,7 @@ class Application_Model_Tracktype
     public static function getTracktypeData($id)
     {
         $sql = <<<'SQL'
-SELECT code, type_name, description, visibility, id
+SELECT code, type_name, description, visibility, id, analyze_cue_points
 FROM cc_track_types
 WHERE id = :id
 SQL;

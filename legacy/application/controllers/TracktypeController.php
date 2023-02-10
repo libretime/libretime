@@ -52,6 +52,7 @@ class TracktypeController extends Zend_Controller_Action
                 $tracktype->setTypeName($formData['type_name']);
                 $tracktype->setDescription($formData['description']);
                 $tracktype->setVisibility($formData['visibility']);
+                $tracktype->setAnalyzeCuePoints($formData['analyze_cue_points']);
                 $tracktype->save();
 
                 $form->reset();
