@@ -89,6 +89,14 @@ repos:
         language: script
         files: ^installer/config.yml$
 
+      - id: legacy-migrations-version
+        name: legacy-migrations-version
+        description: Ensure valid schema version for migrations
+        entry: tools/legacy-migrations-version.sh
+        pass_filenames: false
+        language: script
+        files: ^api/libretime_api/legacy/migrations
+
       - id: legacy-assets-checksum-update
         name: legacy-assets-checksum-update
         description: Update legacy assets checksum
