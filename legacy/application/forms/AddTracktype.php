@@ -55,7 +55,6 @@ class Application_Form_AddTracktype extends Zend_Form
 
         $analyze_cue_points = new Zend_Form_Element_Checkbox('analyze_cue_points');
         $analyze_cue_points->setLabel(_('Analyze cue points:'));
-        $analyze_cue_points->setAttrib('checked', true);
         $analyze_cue_points->setRequired(true);
         $this->addElement($analyze_cue_points);
 

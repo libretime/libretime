@@ -92,7 +92,7 @@
     <column name="visibility" phpName="DbVisibility" type="BOOLEAN" required="true" defaultValue="true" />
     <column name="type_name" phpName="DbTypeName" type="VARCHAR" size="64" required="true" defaultValue="" />
     <column name="description" phpName="DbDescription" type="VARCHAR" size="255" required="true" defaultValue="" />
-    <column name="analyze_cue_points" phpName="DbAnalyzeCuePoints" type="BOOLEAN" required="true" defaultValue="true" />
+    <column name="analyze_cue_points" phpName="DbAnalyzeCuePoints" type="BOOLEAN" required="true" defaultValue="false" />
     <unique name="cc_track_types_id_idx">
       <unique-column name="id" />
     </unique>
