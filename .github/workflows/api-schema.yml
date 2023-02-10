@@ -53,11 +53,11 @@ jobs:
               git checkout $commit
 
               make --quiet schema
+              git diff -- schema.yml
               git add schema.yml
               git diff-index --quiet HEAD -- || {
                 echo "ERROR: Schema is outdated for commit $commit"
                 git show --quiet
-                git diff -- schema.yml
                 exit 1
               }
           done
