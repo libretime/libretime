@@ -65,7 +65,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
 
     /**
      * The value for the analyze_cue_points field.
-     * Note: this column has a database default value of: true
+     * Note: this column has a database default value of: false
      * @var        boolean
      */
     protected $analyze_cue_points;
@@ -114,7 +114,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
         $this->visibility = true;
         $this->type_name = '';
         $this->description = '';
-        $this->analyze_cue_points = true;
+        $this->analyze_cue_points = false;
     }
 
     /**
@@ -361,7 +361,7 @@ abstract class BaseCcTracktypes extends BaseObject implements Persistent
                 return false;
             }
 
-            if ($this->analyze_cue_points !== true) {
+            if ($this->analyze_cue_points !== false) {
                 return false;
             }
 

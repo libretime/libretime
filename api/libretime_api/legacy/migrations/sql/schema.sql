@@ -95,7 +95,7 @@ CREATE TABLE "cc_track_types"
     "visibility" BOOLEAN DEFAULT 't' NOT NULL,
     "type_name" VARCHAR(64) DEFAULT '' NOT NULL,
     "description" VARCHAR(255) DEFAULT '' NOT NULL,
-    "analyze_cue_points" BOOLEAN DEFAULT 't' NOT NULL,
+    "analyze_cue_points" BOOLEAN DEFAULT 'f' NOT NULL,
     PRIMARY KEY ("id"),
     CONSTRAINT "cc_track_types_id_idx" UNIQUE ("id"),
     CONSTRAINT "cc_track_types_code_idx" UNIQUE ("code")

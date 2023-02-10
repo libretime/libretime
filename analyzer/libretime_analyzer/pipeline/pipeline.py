@@ -25,7 +25,7 @@ class PipelineStatus(int, Enum):
 
 
 class PipelineOptions(BaseModel):
-    analyze_cue_points: bool = True
+    analyze_cue_points: bool = False
 
 
 class Pipeline:
