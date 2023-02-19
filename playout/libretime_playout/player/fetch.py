@@ -18,6 +18,7 @@ from ..config import CACHE_DIR, POLL_INTERVAL, Config
 from ..liquidsoap.client import LiquidsoapClient
 from ..liquidsoap.models import Info, StreamPreferences, StreamState
 from ..timeout import ls_timeout
+from .events import Events
 from .liquidsoap import PypoLiquidsoap
 from .schedule import get_schedule
 
@@ -56,7 +57,7 @@ class PypoFetch(Thread):
         self.cache_dir = CACHE_DIR
         logger.debug("Cache dir %s", self.cache_dir)
 
-        self.schedule_data = []
+        self.schedule_data: Events = {}
         logger.info("PypoFetch: init complete")
 
     # Handle a message from RabbitMQ, put it into our yucky global var.
@@ -75,7 +76,7 @@ class PypoFetch(Thread):
             logger.info("Handling command: %s", command)
 
             if command == "update_schedule":
-                self.schedule_data = m["schedule"]
+                self.schedule_data = m["schedule"]["media"]
                 self.process_schedule(self.schedule_data)
             elif command == "reset_liquidsoap_bootstrap":
                 self.set_bootstrap_variables()
@@ -196,10 +197,10 @@ class PypoFetch(Thread):
     #    to the cache dir (Folder-structure: cache/YYYY-MM-DD-hh-mm-ss)
     #  - runs the cleanup routine, to get rid of unused cached files
 
-    def process_schedule(self, schedule_data):
+    def process_schedule(self, events: Events):
         self.last_update_schedule_timestamp = time.time()
-        logger.debug(schedule_data)
-        media = schedule_data["media"]
+        logger.debug(events)
+        media = events
         media_filtered = {}
 
         # Download all the media and put playlists in liquidsoap "annotate" format
