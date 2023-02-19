@@ -32,7 +32,7 @@ def insert_event(events: Events, event_key: str, event: AnyEvent):
     events[key] = event
 
 
-def get_schedule(api_client: ApiClient) -> Dict[Literal["media"], Events]:
+def get_schedule(api_client: ApiClient) -> Events:
     stream_preferences = StreamPreferences(**api_client.get_stream_preferences().json())
 
     current_time = datetime.utcnow()
@@ -75,7 +75,7 @@ def get_schedule(api_client: ApiClient) -> Dict[Literal["media"], Events]:
             webstream = api_client.get_webstream(item["stream"]).json()
             generate_webstream_events(events, item, webstream, show)
 
-    return {"media": dict(sorted(events.items()))}
+    return dict(sorted(events.items()))
 
 
 def generate_live_events(
