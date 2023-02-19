@@ -21,9 +21,6 @@ disable = [
 [tool.pylint.design]
 max-parents = 15
 
-[tool.pylint.format]
-disable = "logging-fstring-interpolation"
-
 [tool.mypy]
 plugins = [
   "mypy_django_plugin.main",

@@ -14,9 +14,6 @@ disable = [
   "missing-module-docstring",
 ]
 
-[tool.pylint.format]
-disable = "logging-fstring-interpolation"
-
 [tool.pytest.ini_options]
 log_cli = true
 log_cli_level = "DEBUG"
