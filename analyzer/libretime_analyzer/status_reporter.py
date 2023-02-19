@@ -55,7 +55,7 @@ def process_http_requests(ipc_queue, http_retry_queue_path):
         # If we fail to unpickle a saved queue of failed HTTP requests, then we'll just log an error
         # and continue because those HTTP requests are lost anyways. The pickled file will be
         # overwritten the next time the analyzer is shut down too.
-        logger.error(f"Failed to unpickle {http_retry_queue_path}. Continuing...")
+        logger.error("Failed to unpickle %s. Continuing...", http_retry_queue_path)
 
     while True:
         try:
@@ -91,7 +91,7 @@ def process_http_requests(ipc_queue, http_retry_queue_path):
         ) as exception:  # Terrible top-level exception handler to prevent the thread from dying, just in case.
             if shutdown:
                 return
-            logger.exception(f"Unhandled exception in StatusReporter {exception}")
+            logger.exception("Unhandled exception in StatusReporter %s", exception)
             logger.info("Restarting StatusReporter thread")
             time.sleep(2)  # Throttle it
 
@@ -116,7 +116,7 @@ def send_http_request(picklable_request: PicklableHttpRequest, retry_queue):
             # The request failed with an error 500 probably, so let's check if Airtime and/or
             # the web server are broken. If not, then our request was probably causing an
             # error 500 in the media API (ie. a bug), so there's no point in retrying it.
-            logger.exception(f"HTTP request failed: {exception}")
+            logger.exception("HTTP request failed: %s", exception)
             parsed_url = urlparse(exception.response.request.url)
             if is_web_server_broken(parsed_url.scheme + "://" + parsed_url.netloc):
                 # If the web server is having problems, retry the request later:
@@ -130,7 +130,7 @@ def send_http_request(picklable_request: PicklableHttpRequest, retry_queue):
         )
         retry_queue.append(picklable_request)  # Retry it later
     except Exception as exception:
-        logger.exception(f"HTTP request failed with unhandled exception. {exception}")
+        logger.exception("HTTP request failed with unhandled exception. %s", exception)
         # Don't put the request into the retry queue, just give up on this one.
         # I'm doing this to protect against us getting some pathological request
         # that breaks our code. I don't want us pickling data that potentially

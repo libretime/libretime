@@ -24,7 +24,7 @@ def analyze_metadata(filepath_: str, metadata: Dict[str, Any]):
     # Get audio file metadata
     extracted = mutagen.File(filepath, easy=True)
     if extracted is None:
-        logger.warning(f"no metadata were extracted for {filepath}")
+        logger.warning("no metadata were extracted for %s", filepath)
         return metadata
 
     metadata["mime"] = extracted.mime[0]

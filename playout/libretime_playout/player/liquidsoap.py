@@ -182,7 +182,7 @@ class PypoLiquidsoap:
 
             # handle webstreams
             current_stream_id = self.telnet_liquidsoap.get_current_stream_id()
-            logger.debug(f"scheduled now webstream: {scheduled_now_webstream}")
+            logger.debug("scheduled now webstream: %s", scheduled_now_webstream)
             if scheduled_now_webstream:
                 if int(current_stream_id) != int(scheduled_now_webstream[0]["row_id"]):
                     self.play(scheduled_now_webstream[0])
@@ -191,7 +191,7 @@ class PypoLiquidsoap:
                 self.telnet_liquidsoap.stop_web_stream_buffer()
                 self.telnet_liquidsoap.stop_web_stream_output()
         except KeyError as exception:
-            logger.exception(f"Malformed event in schedule: {exception}")
+            logger.exception("Malformed event in schedule: %s", exception)
 
     def stop(self, queue):
         self.telnet_liquidsoap.queue_remove(queue)
@@ -210,7 +210,7 @@ class PypoLiquidsoap:
         lateness = seconds_between(link["start"], datetime.utcnow())
 
         if lateness > 0:
-            logger.debug(f"media item was supposed to start {lateness}s ago")
+            logger.debug("media item was supposed to start %ss ago", lateness)
             cue_in_orig = timedelta(seconds=float(link["cue_in"]))
             link["cue_in"] = cue_in_orig.total_seconds() + lateness
 

@@ -48,14 +48,14 @@ class PypoFile(Thread):
             # become an issue here... This needs proper cache management.
             # https://github.com/libretime/libretime/issues/756#issuecomment-477853018
             # https://github.com/libretime/libretime/pull/845
-            logger.debug(f"found file {file_id} in cache {dst}, skipping copy...")
+            logger.debug("found file %s in cache %s, skipping copy...", file_id, dst)
         else:
             do_copy = True
 
         media_item["file_ready"] = not do_copy
 
         if do_copy:
-            logger.info(f"copying file {file_id} to cache {dst}")
+            logger.info("copying file %s to cache %s", file_id, dst)
             try:
                 with open(dst, "wb") as handle:
                     logger.info(media_item)
@@ -80,7 +80,12 @@ class PypoFile(Thread):
 
                 media_item["file_ready"] = True
             except Exception as exception:
-                logger.exception(f"could not copy file {file_id} to {dst}: {exception}")
+                logger.exception(
+                    "could not copy file %s to %s: %s",
+                    file_id,
+                    dst,
+                    exception,
+                )
 
     def report_file_size_and_md5_to_api(self, file_path, file_id):
         try:
@@ -110,7 +115,7 @@ class PypoFile(Thread):
         except (ConnectionError, Timeout):
             logger.exception(error_msg)
         except Exception as exception:
-            logger.exception(f"{error_msg}: {exception}")
+            logger.exception("%s: %s", error_msg, exception)
 
         return file_size
 

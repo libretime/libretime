@@ -44,7 +44,7 @@ def media(media_id):
 
     Replaces: notify --media-id=#{m['schedule_table_id']}
     """
-    logger.info(f"Sending currently playing media id '{media_id}'")
+    logger.info("Sending currently playing media id '%s'", media_id)
     api_client().notify_media_item_start_playing(media_id)
 
 
@@ -57,7 +57,7 @@ def webstream(media_id, data):
 
     Replaces: notify --webstream='#{json_str}' --media-id=#{!current_dyn_id}
     """
-    logger.info(f"Sending currently playing webstream '{media_id}' data '{data}'")
+    logger.info("Sending currently playing webstream '%s' data '%s'", media_id, data)
     api_client().notify_webstream_data(data, media_id)
 
 
@@ -70,7 +70,7 @@ def live(name, status):
 
     Replaces: notify --source-name=#{sourcename} --source-status=#{status}
     """
-    logger.info(f"Sending currently playing live source '{name}' status '{status}'")
+    logger.info("Sending currently playing live source '%s' status '%s'", name, status)
     api_client().notify_source_status(name, status)
 
 
@@ -89,7 +89,7 @@ def stream(stream_id, time, error):
     if error is not None:
         status = error
 
-    logger.info(f"Sending output stream '{stream_id}' status '{status}'")
+    logger.info("Sending output stream '%s' status '%s'", stream_id, status)
     api_client().notify_liquidsoap_status(status, stream_id, time)
 
 

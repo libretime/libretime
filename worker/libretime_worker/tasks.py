@@ -55,7 +55,7 @@ def podcast_download(
                         tmp_file.write(chunk)
 
         except RequestException as exception:
-            logger.exception(f"could not download podcast episode {episode_id}")
+            logger.exception("could not download podcast episode %s", episode_id)
             raise exception
 
         # Save metadata to podcast episode file
@@ -67,20 +67,20 @@ def podcast_download(
                 )
 
             if override_album:
-                logger.debug(f"overriding album name with podcast name {podcast_name}")
+                logger.debug("overriding album name with podcast name %s", podcast_name)
                 metadata["artist"] = podcast_name
                 metadata["album"] = podcast_name
                 metadata["title"] = episode_title
 
             elif "album" not in metadata:
-                logger.debug(f"setting album name to podcast name {podcast_name}")
+                logger.debug("setting album name to podcast name %s", podcast_name)
                 metadata["album"] = podcast_name
 
             metadata.save()
-            logger.debug(f"saved metadata {metadata}")
+            logger.debug("saved metadata %s", metadata)
 
         except MutagenError as exception:
-            logger.exception(f"could not save episode {episode_id} metadata")
+            logger.exception("could not save episode %s metadata", episode_id)
             raise exception
 
         # Upload podcast episode file
@@ -98,7 +98,7 @@ def podcast_download(
                 result["status"] = 1
 
         except RequestException as exception:
-            logger.exception(f"could not upload episode {episode_id}")
+            logger.exception("could not upload episode %s", episode_id)
             raise exception
 
     except (RequestException, MutagenError) as exception:

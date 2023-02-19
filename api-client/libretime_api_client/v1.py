@@ -183,11 +183,11 @@ class ApiClient:
                 break
 
             except requests.exceptions.HTTPError as exception:
-                self.logger.error(f"Http error code: {exception.response.status_code}")
+                self.logger.error("Http error code: %s", exception.response.status_code)
                 self.logger.exception(exception)
 
             except requests.exceptions.ConnectionError as exception:
-                self.logger.exception(f"Server is down: {exception}")
+                self.logger.exception("Server is down: %s", exception)
 
             except Exception as exception:
                 self.logger.exception(exception)

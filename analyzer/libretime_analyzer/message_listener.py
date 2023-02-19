@@ -98,7 +98,9 @@ class MessageListener:
         Here we parse the message, spin up an analyzer process, and report the
         metadata back to the Airtime web application (or report an error).
         """
-        logger.info(f" - Received '{body}' on routing_key '{method_frame.routing_key}'")
+        logger.info(
+            " - Received '%s' on routing_key '%s'", body, method_frame.routing_key
+        )
 
         audio_file_path = ""
         # final_file_path = ""
@@ -178,7 +180,7 @@ class MessageListener:
             )
             metadata = queue.get()
         except Exception as exception:
-            logger.exception(f"Analyzer pipeline exception: {exception}")
+            logger.exception("Analyzer pipeline exception: %s", exception)
             metadata["import_status"] = PipelineStatus.FAILED
 
         # Ensure our queue doesn't fill up and block due to unexpected behavior. Defensive code.

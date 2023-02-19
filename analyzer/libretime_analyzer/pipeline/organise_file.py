@@ -42,12 +42,12 @@ def organise_file(
             return metadata
 
         dest_path = dest_path.with_name(f"{dest_path.stem}_{uuid4()}{dest_path.suffix}")
-        logger.warning(f"found existing file, using new filepath {dest_path}")
+        logger.warning("found existing file, using new filepath %s", dest_path)
 
     # Import
     dest_path.parent.mkdir(parents=True, exist_ok=True)
 
-    logger.debug(f"moving {filepath} to {dest_path}")
+    logger.debug("moving %s to %s", filepath, dest_path)
     shutil.move(filepath, dest_path)
 
     metadata["full_path"] = str(dest_path)
