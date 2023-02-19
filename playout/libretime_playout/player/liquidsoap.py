@@ -28,11 +28,11 @@ class PypoLiquidsoap:
     def play(self, media_item):
         if media_item["type"] == EventKind.FILE:
             self.handle_file_type(media_item)
-        elif media_item["type"] == EventKind.EVENT:
+        elif media_item["type"] == EventKind.ACTION:
             self.handle_event_type(media_item)
-        elif media_item["type"] == EventKind.STREAM_BUFFER_START:
+        elif media_item["type"] == EventKind.WEB_STREAM_BUFFER_START:
             self.telnet_liquidsoap.start_web_stream_buffer(media_item)
-        elif media_item["type"] == EventKind.STREAM_OUTPUT_START:
+        elif media_item["type"] == EventKind.WEB_STREAM_OUTPUT_START:
             if (
                 media_item["row_id"]
                 != self.telnet_liquidsoap.current_prebuffering_stream_id
@@ -41,9 +41,9 @@ class PypoLiquidsoap:
                 # so that the prebuffering stage could take effect. Let's do the prebuffering now.
                 self.telnet_liquidsoap.start_web_stream_buffer(media_item)
             self.telnet_liquidsoap.start_web_stream(media_item)
-        elif media_item["type"] == EventKind.STREAM_BUFFER_END:
+        elif media_item["type"] == EventKind.WEB_STREAM_BUFFER_END:
             self.telnet_liquidsoap.stop_web_stream_buffer()
-        elif media_item["type"] == EventKind.STREAM_OUTPUT_END:
+        elif media_item["type"] == EventKind.WEB_STREAM_OUTPUT_END:
             self.telnet_liquidsoap.stop_web_stream_output()
         else:
             raise UnknownMediaItemType(str(media_item))
@@ -126,7 +126,9 @@ class PypoLiquidsoap:
             ]
 
             scheduled_now_webstream = [
-                x for x in scheduled_now if x["type"] in (EventKind.STREAM_OUTPUT_START)
+                x
+                for x in scheduled_now
+                if x["type"] in (EventKind.WEB_STREAM_OUTPUT_START)
             ]
 
             schedule_ids = {x["row_id"] for x in scheduled_now_files}

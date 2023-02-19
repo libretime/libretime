@@ -91,7 +91,7 @@ def generate_live_events(
     # If enabled, fade the input source out
     if switch_off_event_key != kick_out_event_key:
         switch_off_event = {
-            "type": EventKind.EVENT,
+            "type": EventKind.ACTION,
             "event_type": "switch_off",
             "start": switch_off_event_key,
             "end": switch_off_event_key,
@@ -100,7 +100,7 @@ def generate_live_events(
 
     # Then kick the source out
     kick_out_event = {
-        "type": EventKind.EVENT,
+        "type": EventKind.ACTION,
         "event_type": "kick_out",
         "start": kick_out_event_key,
         "end": kick_out_event_key,
@@ -158,7 +158,7 @@ def generate_webstream_events(
     schedule_end_event_key = datetime_to_event_key(schedule["ends_at"])
 
     stream_buffer_start_event = {
-        "type": EventKind.STREAM_BUFFER_START,
+        "type": EventKind.WEB_STREAM_BUFFER_START,
         "row_id": schedule["id"],
         "start": datetime_to_event_key(schedule["starts_at"] - timedelta(seconds=5)),
         "end": datetime_to_event_key(schedule["starts_at"] - timedelta(seconds=5)),
@@ -168,7 +168,7 @@ def generate_webstream_events(
     insert_event(events, schedule_start_event_key, stream_buffer_start_event)
 
     stream_output_start_event = {
-        "type": EventKind.STREAM_OUTPUT_START,
+        "type": EventKind.WEB_STREAM_OUTPUT_START,
         "row_id": schedule["id"],
         "start": schedule_start_event_key,
         "end": schedule_end_event_key,
@@ -182,7 +182,7 @@ def generate_webstream_events(
     # NOTE: stream_*_end were previously triggered 1 second before
     # the schedule end.
     stream_buffer_end_event = {
-        "type": EventKind.STREAM_BUFFER_END,
+        "type": EventKind.WEB_STREAM_BUFFER_END,
         "row_id": schedule["id"],
         "start": schedule_end_event_key,
         "end": schedule_end_event_key,
@@ -192,7 +192,7 @@ def generate_webstream_events(
     insert_event(events, schedule_end_event_key, stream_buffer_end_event)
 
     stream_output_end_event = {
-        "type": EventKind.STREAM_OUTPUT_END,
+        "type": EventKind.WEB_STREAM_OUTPUT_END,
         "row_id": schedule["id"],
         "start": schedule_end_event_key,
         "end": schedule_end_event_key,
