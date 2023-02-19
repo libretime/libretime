@@ -205,19 +205,12 @@ class PypoFetch(Thread):
 
         # Download all the media and put playlists in liquidsoap "annotate" format
         try:
-            # Make sure cache_dir exists
-            download_dir = self.cache_dir
-            try:
-                os.makedirs(download_dir)
-            except Exception:
-                pass
-
             media_copy = {}
             for key in media:
                 media_item = media[key]
                 if media_item["type"] == "file":
                     fileExt = self.sanity_check_media_item(media_item)
-                    dst = os.path.join(download_dir, f'{media_item["id"]}{fileExt}')
+                    dst = os.path.join(self.cache_dir, f'{media_item["id"]}{fileExt}')
                     media_item["dst"] = dst
                     media_item["file_ready"] = False
                     media_filtered[key] = media_item
