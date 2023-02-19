@@ -275,7 +275,7 @@ def test_generate_live_events():
     generate_live_events(result, show_instance_3, 0.0)
     assert result == {
         "2022-09-05-13-00-00": {
-            "type": EventKind.EVENT,
+            "type": EventKind.ACTION,
             "event_type": "kick_out",
             "start": "2022-09-05-13-00-00",
             "end": "2022-09-05-13-00-00",
@@ -286,13 +286,13 @@ def test_generate_live_events():
     generate_live_events(result, show_instance_3, 2.0)
     assert result == {
         "2022-09-05-12-59-58": {
-            "type": EventKind.EVENT,
+            "type": EventKind.ACTION,
             "event_type": "switch_off",
             "start": "2022-09-05-12-59-58",
             "end": "2022-09-05-12-59-58",
         },
         "2022-09-05-13-00-00": {
-            "type": EventKind.EVENT,
+            "type": EventKind.ACTION,
             "event_type": "kick_out",
             "start": "2022-09-05-13-00-00",
             "end": "2022-09-05-13-00-00",
@@ -340,7 +340,7 @@ def test_generate_webstream_events():
     generate_webstream_events(result, schedule_5, WEBSTREAM_1, SHOW_3)
     assert result == {
         "2022-09-05-12-10-00": {
-            "type": EventKind.STREAM_BUFFER_START,
+            "type": EventKind.WEB_STREAM_BUFFER_START,
             "row_id": 5,
             "start": "2022-09-05-12-09-55",
             "end": "2022-09-05-12-09-55",
@@ -348,7 +348,7 @@ def test_generate_webstream_events():
             "id": 1,
         },
         "2022-09-05-12-10-00_0": {
-            "type": EventKind.STREAM_OUTPUT_START,
+            "type": EventKind.WEB_STREAM_OUTPUT_START,
             "row_id": 5,
             "start": "2022-09-05-12-10-00",
             "end": "2022-09-05-12-40-00",
@@ -357,7 +357,7 @@ def test_generate_webstream_events():
             "show_name": "Show 3",
         },
         "2022-09-05-12-40-00": {
-            "type": EventKind.STREAM_BUFFER_END,
+            "type": EventKind.WEB_STREAM_BUFFER_END,
             "row_id": 5,
             "start": "2022-09-05-12-40-00",
             "end": "2022-09-05-12-40-00",
@@ -365,7 +365,7 @@ def test_generate_webstream_events():
             "id": 1,
         },
         "2022-09-05-12-40-00_0": {
-            "type": EventKind.STREAM_OUTPUT_END,
+            "type": EventKind.WEB_STREAM_OUTPUT_END,
             "row_id": 5,
             "start": "2022-09-05-12-40-00",
             "end": "2022-09-05-12-40-00",
@@ -494,7 +494,7 @@ def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
                 "filesize": 10000,
             },
             "2022-09-05-12-10-00": {
-                "type": EventKind.STREAM_BUFFER_START,
+                "type": EventKind.WEB_STREAM_BUFFER_START,
                 "row_id": 5,
                 "start": "2022-09-05-12-09-55",
                 "end": "2022-09-05-12-09-55",
@@ -502,7 +502,7 @@ def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
                 "id": 1,
             },
             "2022-09-05-12-10-00_0": {
-                "type": EventKind.STREAM_OUTPUT_START,
+                "type": EventKind.WEB_STREAM_OUTPUT_START,
                 "row_id": 5,
                 "start": "2022-09-05-12-10-00",
                 "end": "2022-09-05-12-40-00",
@@ -511,7 +511,7 @@ def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
                 "show_name": "Show 3",
             },
             "2022-09-05-12-40-00": {
-                "type": EventKind.STREAM_BUFFER_END,
+                "type": EventKind.WEB_STREAM_BUFFER_END,
                 "row_id": 5,
                 "start": "2022-09-05-12-40-00",
                 "end": "2022-09-05-12-40-00",
@@ -519,7 +519,7 @@ def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
                 "id": 1,
             },
             "2022-09-05-12-40-00_0": {
-                "type": EventKind.STREAM_OUTPUT_END,
+                "type": EventKind.WEB_STREAM_OUTPUT_END,
                 "row_id": 5,
                 "start": "2022-09-05-12-40-00",
                 "end": "2022-09-05-12-40-00",
@@ -587,13 +587,13 @@ def test_get_schedule(schedule, requests_mock, api_client: ApiClient):
                 "filesize": 10000,
             },
             "2022-09-05-12-59-58": {
-                "type": EventKind.EVENT,
+                "type": EventKind.ACTION,
                 "event_type": "switch_off",
                 "start": "2022-09-05-12-59-58",
                 "end": "2022-09-05-12-59-58",
             },
             "2022-09-05-13-00-00": {
-                "type": EventKind.EVENT,
+                "type": EventKind.ACTION,
                 "event_type": "kick_out",
                 "start": "2022-09-05-13-00-00",
                 "end": "2022-09-05-13-00-00",
