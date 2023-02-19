@@ -1,13 +1,13 @@
 from datetime import datetime, time, timedelta
 from operator import itemgetter
-from typing import Dict
+from typing import Dict, Literal
 
 from dateutil.parser import isoparse
 from libretime_api_client.v2 import ApiClient
 from libretime_shared.datetime import time_in_milliseconds, time_in_seconds
 
 from ..liquidsoap.models import StreamPreferences
-from .events import EventKind
+from .events import ActionEvent, AnyEvent, EventKind, Events, FileEvent, WebStreamEvent
 
 EVENT_KEY_FORMAT = "%Y-%m-%d-%H-%M-%S"
 
@@ -16,7 +16,7 @@ def datetime_to_event_key(value: datetime) -> str:
     return value.strftime(EVENT_KEY_FORMAT)
 
 
-def insert_event(events: dict, event_key: str, event: dict):
+def insert_event(events: Events, event_key: str, event: AnyEvent):
     key = event_key
 
     # Search for an empty slot
@@ -32,7 +32,7 @@ def insert_event(events: dict, event_key: str, event: dict):
     events[key] = event
 
 
-def get_schedule(api_client: ApiClient):
+def get_schedule(api_client: ApiClient) -> Dict[Literal["media"], Events]:
     stream_preferences = StreamPreferences(**api_client.get_stream_preferences().json())
 
     current_time = datetime.utcnow()
@@ -50,7 +50,7 @@ def get_schedule(api_client: ApiClient):
         }
     ).json()
 
-    events: Dict[str, dict] = {}
+    events: Dict[str, AnyEvent] = {}
     for item in sorted(schedule, key=itemgetter("starts_at")):
         item["starts_at"] = isoparse(item["starts_at"])
         item["ends_at"] = isoparse(item["ends_at"])
@@ -79,7 +79,7 @@ def get_schedule(api_client: ApiClient):
 
 
 def generate_live_events(
-    events: dict,
+    events: Events,
     show_instance: dict,
     input_fade_transition: float,
 ):
@@ -90,7 +90,7 @@ def generate_live_events(
 
     # If enabled, fade the input source out
     if switch_off_event_key != kick_out_event_key:
-        switch_off_event = {
+        switch_off_event: ActionEvent = {
             "type": EventKind.ACTION,
             "event_type": "switch_off",
             "start": switch_off_event_key,
@@ -99,7 +99,7 @@ def generate_live_events(
         insert_event(events, switch_off_event_key, switch_off_event)
 
     # Then kick the source out
-    kick_out_event = {
+    kick_out_event: ActionEvent = {
         "type": EventKind.ACTION,
         "event_type": "kick_out",
         "start": kick_out_event_key,
@@ -109,7 +109,7 @@ def generate_live_events(
 
 
 def generate_file_events(
-    events: dict,
+    events: Events,
     schedule: dict,
     file: dict,
     show: dict,
@@ -120,7 +120,7 @@ def generate_file_events(
     schedule_start_event_key = datetime_to_event_key(schedule["starts_at"])
     schedule_end_event_key = datetime_to_event_key(schedule["ends_at"])
 
-    event = {
+    event: FileEvent = {
         "type": EventKind.FILE,
         "row_id": schedule["id"],
         "start": schedule_start_event_key,
@@ -146,7 +146,7 @@ def generate_file_events(
 
 
 def generate_webstream_events(
-    events: dict,
+    events: Events,
     schedule: dict,
     webstream: dict,
     show: dict,
@@ -157,7 +157,7 @@ def generate_webstream_events(
     schedule_start_event_key = datetime_to_event_key(schedule["starts_at"])
     schedule_end_event_key = datetime_to_event_key(schedule["ends_at"])
 
-    stream_buffer_start_event = {
+    stream_buffer_start_event: WebStreamEvent = {
         "type": EventKind.WEB_STREAM_BUFFER_START,
         "row_id": schedule["id"],
         "start": datetime_to_event_key(schedule["starts_at"] - timedelta(seconds=5)),
@@ -167,7 +167,7 @@ def generate_webstream_events(
     }
     insert_event(events, schedule_start_event_key, stream_buffer_start_event)
 
-    stream_output_start_event = {
+    stream_output_start_event: WebStreamEvent = {
         "type": EventKind.WEB_STREAM_OUTPUT_START,
         "row_id": schedule["id"],
         "start": schedule_start_event_key,
@@ -181,7 +181,7 @@ def generate_webstream_events(
 
     # NOTE: stream_*_end were previously triggered 1 second before
     # the schedule end.
-    stream_buffer_end_event = {
+    stream_buffer_end_event: WebStreamEvent = {
         "type": EventKind.WEB_STREAM_BUFFER_END,
         "row_id": schedule["id"],
         "start": schedule_end_event_key,
@@ -191,7 +191,7 @@ def generate_webstream_events(
     }
     insert_event(events, schedule_end_event_key, stream_buffer_end_event)
 
-    stream_output_end_event = {
+    stream_output_end_event: WebStreamEvent = {
         "type": EventKind.WEB_STREAM_OUTPUT_END,
         "row_id": schedule["id"],
         "start": schedule_end_event_key,
