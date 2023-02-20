@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="libretime-worker",
-    version="3.0.1",
+    version="3.0.2",
     description="LibreTime Worker",
     author="LibreTime Contributors",
     url="https://github.com/libretime/libretime",
