@@ -27,17 +27,17 @@ end
 
 # A function applied to each metadata chunk
 def append_title(m) =
-  log("Using stream_format #{!stream_metadata_type}")
+  log("Using message format #{message_format()}")
 
   if list.mem_assoc("mapped", m) then
     #protection against applying this function twice. It shouldn't be happening
     #and bug file with Liquidsoap.
     m
   else
-      if !stream_metadata_type == 1 then
-        [("title", "#{!show_name} - #{m['artist']} - #{m['title']}"), ("mapped", "true")]
-      elsif !stream_metadata_type == 2 then
-        [("title", "#{!station_name} - #{!show_name}"), ("mapped", "true")]
+      if message_format() == "1" then
+        [("title", "#{show_name()} - #{m['artist']} - #{m['title']}"), ("mapped", "true")]
+      elsif message_format() == "2" then
+        [("title", "#{station_name()} - #{show_name()}"), ("mapped", "true")]
       else
         if "#{m['artist']}" == "" then
           [("title", "#{m['title']}"), ("mapped", "true")]
@@ -50,10 +50,16 @@ end
 
 def transition(a,b) =
   log("transition called...")
-  add(normalize=false,
-     [ sequence([ blank(duration=0.01),
-                   fade.initial(duration=!default_dj_fade, b) ]),
-        fade.final(duration=!default_dj_fade, a) ])
+  add(
+    normalize=false,
+    [
+      sequence([
+        blank(duration=0.01),
+        fade.initial(duration=input_fade_transition(), b)
+      ]),
+      fade.final(duration=input_fade_transition(), a)
+    ]
+  )
 end
 
 # we need this function for special transition case(from default to queue)
@@ -63,10 +69,16 @@ def transition_default(a,b) =
   log("transition called...")
   if !just_switched then
       just_switched := false
-      add(normalize=false,
-         [ sequence([ blank(duration=0.01),
-                       fade.initial(duration=!default_dj_fade, b) ]),
-            fade.final(duration=!default_dj_fade, a) ])
+      add(
+        normalize=false,
+        [
+          sequence([
+            blank(duration=0.01),
+            fade.initial(duration=input_fade_transition(), b)
+          ]),
+          fade.final(duration=input_fade_transition(), a)
+        ]
+      )
   else
     just_switched := false
     b
@@ -90,12 +102,12 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
     source = ref s
     def on_error(msg)
         connected := "false"
-        gateway("stream '#{stream}' '#{!time}' --error='#{msg}'")
+        gateway("stream '#{stream}' '#{boot_timestamp()}' --error='#{msg}'")
         5.
     end
     def on_connect()
         connected := "true"
-        gateway("stream '#{stream}' '#{!time}'")
+        gateway("stream '#{stream}' '#{boot_timestamp()}'")
     end
 
     stereo = (channels == "stereo")

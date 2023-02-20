@@ -100,11 +100,11 @@
   
   set("harbor.bind_addrs", ["0.0.0.0"])
   
-  station_name = ref "LibreTime"
+  station_name = interactive.string("station_name", "LibreTime")
   
-  off_air_meta = ref "LibreTime - offline"
-  stream_metadata_type = ref 0
-  default_dj_fade = ref 0.0
+  message_offline = interactive.string("message_offline", "LibreTime - offline")
+  message_format = interactive.string("message_format", "0")
+  input_fade_transition = interactive.float("input_fade_transition", 0.0)
   
   %include "/fake/1.4/ls_script.liq"
   
