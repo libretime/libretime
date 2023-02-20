@@ -6,6 +6,7 @@ from libretime_shared.config import AudioFormat, IcecastOutput, SystemOutput
 
 from ..config import Config
 from .models import Info, StreamPreferences
+from .utils import quote
 
 here = Path(__file__).parent
 
@@ -16,6 +17,7 @@ templates = Environment(  # nosec
     loader=templates_loader,
     keep_trailing_newline=True,
 )
+templates.filters["quote"] = quote
 
 # Liquidsoap has 4 hardcoded output stream set of variables, so we need to
 # fill the missing stream outputs with placeholders so Liquidsoap does
