@@ -2,9 +2,8 @@ boot_timestamp = interactive.string("boot_timestamp", string_of(gettimeofday()))
 
 #Dynamic source list
 #dyn_sources = ref []
-webstream_enabled = ref false
-
-current_dyn_id = ref '-1'
+web_stream_enabled = ref false
+web_stream_id = ref '-1'
 
 show_name = interactive.string("show_name", "")
 
@@ -85,13 +84,13 @@ server.register(namespace="dynamic_source",
                 usage='start',
                 "output_start",
                 fun (s) -> begin log("dynamic_source.output_start")
-                    notify([("schedule_table_id", !current_dyn_id)])
-                    webstream_enabled := true "enabled" end)
+                    notify([("schedule_table_id", !web_stream_id)])
+                    web_stream_enabled := true "enabled" end)
 server.register(namespace="dynamic_source",
                 description="Enable webstream output",
                 usage='stop',
                 "output_stop",
-                fun (s) -> begin log("dynamic_source.output_stop") webstream_enabled := false "disabled" end)
+                fun (s) -> begin log("dynamic_source.output_stop") web_stream_enabled := false "disabled" end)
 
 server.register(namespace="dynamic_source",
                 description="Set the streams cc_schedule row id",

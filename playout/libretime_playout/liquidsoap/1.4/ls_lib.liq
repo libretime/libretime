@@ -15,13 +15,13 @@ def notify_queue(m)
 end
 
 def notify_stream(m)
-  if !current_dyn_id != "-1" then
+  if !web_stream_id != "-1" then
     json_str = string.replace(pattern="\n",(fun (s) -> ""), json_of(m))
     #if a string has a single apostrophe in it, let's comment it out by ending the string before right before it
     #escaping the apostrophe, and then starting a new string right after it. This is why we use 3 apostrophes.
     json_str = string.replace(pattern="'",(fun (s) -> "'\''"), json_str)
 
-    gateway("webstream '#{!current_dyn_id}' '#{json_str}'")
+    gateway("webstream '#{!web_stream_id}' '#{json_str}'")
   end
 end
 
@@ -234,12 +234,12 @@ def clear_queue(s)
 end
 
 def set_dynamic_source_id(id) =
-    current_dyn_id := id
-    string_of(!current_dyn_id)
+    web_stream_id := id
+    string_of(!web_stream_id)
 end
 
 def get_dynamic_source_id() =
-    string_of(!current_dyn_id)
+    string_of(!web_stream_id)
 end
 
 #cc-4633
@@ -393,7 +393,7 @@ def http_fallback(~http_input_id,~http,~default)
     track_sensitive=false,
     transitions=[to_live,to_static],
     [(# make sure it is connected, and not buffering
-      {connected() and source.is_ready(http) and !webstream_enabled}, http),
+      {connected() and source.is_ready(http) and !web_stream_enabled}, http),
      ({true},default)])
 
 end
