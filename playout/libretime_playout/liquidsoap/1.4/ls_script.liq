@@ -7,9 +7,6 @@ show_name = interactive.string("show_name", "")
 
 dynamic_metadata_callback = ref fun (~new_track=false, s) -> begin () end
 
-s1_namespace = ref ''
-s2_namespace = ref ''
-s3_namespace = ref ''
 just_switched = ref false
 
 %include "ls_lib.liq"
@@ -311,22 +308,12 @@ if output_sound_device then
 end
 
 if s1_enable == true then
-    if s1_output == 'shoutcast' then
-        s1_namespace := "shoutcast_stream_1"
-    else
-        s1_namespace := s1_mount
-    end
     output_to(s1_output, s1_type, s1_bitrate, s1_host, s1_port, s1_pass,
                 s1_mount, s1_url, s1_description, s1_genre, s1_user, s, "1",
                 s1_name, s1_channels)
 end
 
 if s2_enable == true then
-    if s2_output == 'shoutcast' then
-        s2_namespace := "shoutcast_stream_2"
-    else
-        s2_namespace := s2_mount
-    end
     output_to(s2_output, s2_type, s2_bitrate, s2_host, s2_port, s2_pass,
                 s2_mount, s2_url, s2_description, s2_genre, s2_user, s, "2",
                 s2_name, s2_channels)
@@ -334,24 +321,13 @@ if s2_enable == true then
 end
 
 if s3_enable == true then
-    if s3_output == 'shoutcast' then
-        s3_namespace := "shoutcast_stream_3"
-    else
-        s3_namespace := s3_mount
-    end
     output_to(s3_output, s3_type, s3_bitrate, s3_host, s3_port, s3_pass,
                 s3_mount, s3_url, s3_description, s3_genre, s3_user, s, "3",
                 s3_name, s3_channels)
 end
 
-s4_namespace = ref ''
 if s4_enable == true then
     log("Stream 4 Enabled")
-    if s4_output == 'shoutcast' then
-        s4_namespace := "shoutcast_stream_4"
-    else
-        s4_namespace := s4_mount
-    end
     output_to(s4_output, s4_type, s4_bitrate, s4_host, s4_port, s4_pass,
                 s4_mount, s4_url, s4_name, s4_genre, s4_user, s, "4",
                 s4_description, s4_channels)
