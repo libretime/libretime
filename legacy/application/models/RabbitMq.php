@@ -119,7 +119,7 @@ class Application_Model_RabbitMq
 
         if ($fileTrackTypeId) {
             $fileTrackType = new Application_Model_Tracktype($fileTrackTypeId);
-            $options['analyze_cue_points'] = $fileTrackType->getAnalyzeCuePoints();
+            $options->analyze_cue_points = $fileTrackType->getAnalyzeCuePoints();
         }
 
         $data['options'] = $options;
