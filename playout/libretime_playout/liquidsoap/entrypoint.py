@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Optional, Tuple
 
-from jinja2 import Template
+from jinja2 import DictLoader, Environment
 from libretime_shared.config import AudioFormat, IcecastOutput, SystemOutput
 
 from ..config import Config
@@ -9,9 +9,11 @@ from .models import Info, StreamPreferences
 
 here = Path(__file__).parent
 
-entrypoint_template_path = here / "entrypoint.liq.j2"
-entrypoint_template = Template(
-    entrypoint_template_path.read_text(encoding="utf-8"),
+templates_loader = DictLoader(
+    {"entrypoint.liq.j2": (here / "entrypoint.liq.j2").read_text(encoding="utf-8")}
+)
+templates = Environment(  # nosec
+    loader=templates_loader,
     keep_trailing_newline=True,
 )
 
@@ -58,7 +60,7 @@ def generate_entrypoint(
     )
 
     entrypoint_filepath.write_text(
-        entrypoint_template.render(
+        templates.get_template("entrypoint.liq.j2").render(
             config=config,
             preferences=preferences,
             info=info,
