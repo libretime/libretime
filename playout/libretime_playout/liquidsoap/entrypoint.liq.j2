@@ -49,10 +49,10 @@ set("server.telnet.port", {{ config.liquidsoap.server_listen_port }})
 
 set("harbor.bind_addrs", ["{{ config.liquidsoap.harbor_listen_address | join('", "') }}"])
 
-station_name = ref {{ info.station_name | quote }}
+station_name = interactive.string("station_name", {{ info.station_name | quote }})
 
-off_air_meta = ref {{ preferences.message_offline | quote }}
-stream_metadata_type = ref {{ preferences.message_format.value }}
-default_dj_fade = ref {{ preferences.input_fade_transition }}
+message_offline = interactive.string("message_offline", {{ preferences.message_offline | quote }})
+message_format = interactive.string("message_format", {{ preferences.message_format.value | quote }})
+input_fade_transition = interactive.float("input_fade_transition", {{ preferences.input_fade_transition }})
 
 %include "{{ paths.lib_filepath }}"

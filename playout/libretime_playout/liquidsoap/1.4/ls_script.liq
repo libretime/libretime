@@ -1,4 +1,4 @@
-time = ref string_of(gettimeofday())
+boot_timestamp = interactive.string("boot_timestamp", string_of(gettimeofday()))
 
 #Dynamic source list
 #dyn_sources = ref []
@@ -6,7 +6,7 @@ webstream_enabled = ref false
 
 current_dyn_id = ref '-1'
 
-show_name = ref ''
+show_name = interactive.string("show_name", "")
 
 dynamic_metadata_callback = ref fun (~new_track=false, s) -> begin () end
 
@@ -76,27 +76,9 @@ stream_queue = map_metadata(update=false, append_title, stream_queue)
 
 ignore(output.dummy(stream_queue, fallible=true))
 
-server.register(namespace="vars",
-                "stream_metadata_type",
-                fun (s) -> begin log("vars.stream_metadata_type") stream_metadata_type := int_of_string(s) s end)
-server.register(namespace="vars",
-                "show_name",
-                fun (s) -> begin log("vars.show_name") show_name := s s end)
-server.register(namespace="vars",
-                "station_name",
-                fun (s) -> begin log("vars.station_name") station_name := s s end)
-server.register(namespace="vars",
-                "off_air_meta",
-                fun (s) -> begin log("vars.off_air_meta") off_air_meta := s s end)
-server.register(namespace="vars",
-                "bootup_time",
-                fun (s) -> begin log("vars.bootup_time") time := s s end)
 server.register(namespace="streams",
                 "connection_status",
                 fun (s) -> begin log("streams.connection_status") "1:#{!s1_connected},2:#{!s2_connected},3:#{!s3_connected},4:#{!s4_connected}" end)
-server.register(namespace="vars",
-                "default_dj_fade",
-                fun (s) -> begin log("vars.default_dj_fade") default_dj_fade := float_of_string(s) s end)
 
 server.register(namespace="dynamic_source",
                 description="Enable webstream output",
@@ -141,13 +123,12 @@ server.register(namespace="dynamic_source",
 #                fun (s) -> begin log("dynamic_source.read_stop") destroy_dynamic_source_all() end)
 
 default = amplify(id="silence_src", 0.00001, noise())
-if !off_air_meta == "" then
-    off_air_meta := "LibreTime - offline"
+
+def map_message_offline(m) =
+  [("title", message_offline())]
 end
-def map_off_air_meta(m) =
-  [("title", !off_air_meta)]
-end
-default = map_metadata(map_off_air_meta, default)
+
+default = map_metadata(map_message_offline, default)
 ignore(output.dummy(default, fallible=true))
 
 master_dj_enabled = ref false

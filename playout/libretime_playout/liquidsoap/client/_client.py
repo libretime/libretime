@@ -5,6 +5,8 @@ from typing import Any, Literal, Optional, Tuple
 
 from loguru import logger
 
+from ..models import MessageFormatKind
+from ..utils import quote
 from ..version import parse_liquidsoap_version
 from ._connection import LiquidsoapConnection
 
@@ -36,9 +38,14 @@ class LiquidsoapClient:
             timeout=timeout,
         )
 
+    def _quote(self, value: Any):
+        return quote(value, double=True)
+
     def _set_var(self, name: str, value: Any):
-        self.conn.write(f"vars.{name} {value}")
-        self.conn.read()
+        self.conn.write(f"var.set {name} = {value}")
+        result = self.conn.read()
+        if f"Variable {name} set" not in result:
+            logger.error(result)
 
     def version(self) -> Tuple[int, int, int]:
         with self.conn:
@@ -71,7 +78,7 @@ class LiquidsoapClient:
     def queue_push(self, queue_id: int, entry: str, show_name: str) -> None:
         with self.conn:
             self.conn.write(f"{queue_id}.push {entry}")
-            self._set_var("show_name", show_name)
+            self._set_var("show_name", self._quote(show_name))
 
     def web_stream_get_id(self) -> str:
         with self.conn:
@@ -118,23 +125,23 @@ class LiquidsoapClient:
         self,
         *,
         station_name: Optional[str] = None,
-        message_format: Optional[int] = None,
+        message_format: Optional[MessageFormatKind] = None,
         message_offline: Optional[str] = None,
         input_fade_transition: Optional[float] = None,
     ):
         with self.conn:
             if station_name is not None:
-                self._set_var("station_name", station_name)
+                self._set_var("station_name", self._quote(station_name))
             if message_format is not None:
-                self._set_var("stream_metadata_type", message_format)
+                self._set_var("message_format", self._quote(message_format.value))
             if message_offline is not None:
-                self._set_var("off_air_meta", message_offline)
+                self._set_var("message_offline", self._quote(message_offline))
             if input_fade_transition is not None:
-                self._set_var("default_dj_fade", input_fade_transition)
+                self._set_var("input_fade_transition", input_fade_transition)
 
     def boot_timestamp_update(self, timestamp: float):
         with self.conn:
-            self._set_var("bootup_time", str(timestamp))
+            self._set_var("boot_timestamp", self._quote(timestamp))
 
     def restart(self):
         logger.warning("restarting Liquidsoap")
