@@ -294,8 +294,7 @@ install_service() {
 
   [[ -f "$service_src" ]] || error "service '$service_name' src path '$service_src' does not exists!"
 
-  # TODO: Remove when Bionic support is dropped
-  if [[ $distro == "bionic" ]]; then
+  if [[ ! -d "$SERVICE_DIR" ]]; then
     mkdir -p "$SERVICE_DIR"
   fi
 
