@@ -29,7 +29,14 @@ stream:
     icecast:
       - <<: *default_icecast_output
         enabled: true
-        mount: main
+        mount: main.ogg
         audio:
           format: ogg
+          bitrate: 256
+
+      - <<: *default_icecast_output
+        enabled: true
+        mount: main.mp3
+        audio:
+          format: mp3
           bitrate: 256
