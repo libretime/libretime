@@ -160,39 +160,6 @@ class PypoFetch(Thread):
         self.pypo_liquidsoap.clear_queue_tracker()
 
     @ls_timeout
-    def update_liquidsoap_connection_status(self):
-        """
-        updates the status of Liquidsoap connection to the streaming server
-        This function updates the bootup time variable in Liquidsoap script
-        """
-
-        try:
-            # update the boot up time of Liquidsoap. Since Liquidsoap is not restarting,
-            # we are manually adjusting the bootup time variable so the status msg will get
-            # updated.
-            current_time = time.time()
-            self.liq_client.boot_timestamp_update(current_time)
-
-            stream_info = self.liq_client.outputs_connection_status()
-        except (ConnectionError, TimeoutError) as exception:
-            logger.exception(exception)
-
-        # streamin info is in the form of:
-        # eg. s1:true,2:true,3:false
-        streams = stream_info.split(",")
-        logger.info(streams)
-
-        fake_time = current_time + 1
-        for stream in streams:
-            info = stream.split(":")
-            stream_id = info[0]
-            status = info[1]
-            if status == "true":
-                self.legacy_client.notify_liquidsoap_status(
-                    "OK", stream_id, str(fake_time)
-                )
-
-    @ls_timeout
     def update_liquidsoap_stream_format(self, stream_format):
         try:
             self.liq_client.settings_update(message_format=stream_format)
