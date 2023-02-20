@@ -95,15 +95,13 @@ def to_live(old,new) =
 end
 
 
-def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, user, s, stream, connected, name, channels) =
+def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, user, s, stream, name, channels) =
     source = ref s
     def on_error(msg)
-        connected := "false"
         gateway("stream '#{stream}' '#{boot_timestamp()}' --error='#{msg}'")
         5.
     end
     def on_connect()
-        connected := "true"
         gateway("stream '#{stream}' '#{boot_timestamp()}'")
     end
 
