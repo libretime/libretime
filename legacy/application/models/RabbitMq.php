@@ -115,7 +115,7 @@ class Application_Model_RabbitMq
         $data['import_directory'] = $importedStorageDirectory;
         $data['original_filename'] = $originalFilename;
 
-        $options = [];
+        $options = new stdClass();
 
         if ($fileTrackTypeId) {
             $fileTrackType = new Application_Model_Tracktype($fileTrackTypeId);
