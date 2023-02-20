@@ -30,8 +30,8 @@ def append_title(m) =
   log("Using message format #{message_format()}")
 
   if list.mem_assoc("mapped", m) then
-    #protection against applying this function twice. It shouldn't be happening
-    #and bug file with Liquidsoap.
+    # protection against applying this function twice. It shouldn't be happening and bug
+    # file with Liquidsoap.
     m
   else
       if message_format() == "1" then
@@ -62,9 +62,9 @@ def transition(a,b) =
   )
 end
 
-# we need this function for special transition case(from default to queue)
-# we don't want the trasition fade to have effect on the first song that would
-# be played switching out of the default(silent) source
+# we need this function for special transition case(from default to queue) we don't want
+# the trasition fade to have effect on the first song that would be played switching out
+# of the default(silent) source
 def transition_default(a,b) =
   log("transition called...")
   if !just_switched then
@@ -85,15 +85,12 @@ def transition_default(a,b) =
   end
 end
 
-
-# Define a transition that fades out the
-# old source, adds a single, and then
-# plays the new source
+# Define a transition that fades out the old source, adds a single, and then plays the
+# new source
 def to_live(old,new) =
   # Fade out old source
   old = fade.final(old)
-  # Compose this in sequence with
-  # the new source
+  # Compose this in sequence with the new source
   sequence([old,new])
 end
 
@@ -202,33 +199,6 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
     end
 end
 
-# Add a skip function to a source
-# when it does not have one
-# by default
-#def add_skip_command(s)
-# # A command to skip
-#  def skip(_)
-#    # get playing (active) queue and flush it
-#    l = list.hd(server.execute("queue.secondary_queue"))
-#    l = string.split(separator=" ",l)
-#    list.iter(fun (rid) -> ignore(server.execute("queue.remove #{rid}")), l)
-#
-#    l = list.hd(server.execute("queue.primary_queue"))
-#    l = string.split(separator=" ", l)
-#    if list.length(l) > 0 then
-#      source.skip(s)
-#      "Skipped"
-#    else
-#      "Not skipped"
-#    end
-#  end
-# # Register the command:
-# server.register(namespace="source",
-#                 usage="skip",
-#                 description="Skip the current song.",
-#                 "skip",fun(s) -> begin log("source.skip") skip(s) end)
-#end
-
 def clear_queue(s)
     source.skip(s)
 end
@@ -241,9 +211,6 @@ end
 def get_dynamic_source_id() =
     string_of(!web_stream_id)
 end
-
-#cc-4633
-
 
 # NOTE
 # A few values are hardcoded and may be dependent:
@@ -285,11 +252,6 @@ def input.http_restart(~id,~initial_url="http://dummy/url")
                         else 0.5 end})
                     "OK"
                   end)
-
-  # Dummy output should be useless if HTTP stream is meant
-  # to be listened to immediately. Otherwise, apply it.
-  #
-  # output.dummy(fallible=true,source)
 
   source
 

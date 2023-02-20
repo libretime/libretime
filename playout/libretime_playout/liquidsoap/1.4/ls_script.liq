@@ -1,7 +1,5 @@
 boot_timestamp = interactive.string("boot_timestamp", string_of(gettimeofday()))
 
-#Dynamic source list
-#dyn_sources = ref []
 web_stream_enabled = ref false
 web_stream_id = ref '-1'
 
@@ -98,23 +96,6 @@ server.register(namespace="dynamic_source",
                 usage="get_id",
                 "get_id",
                 fun (s) -> begin log("dynamic_source.get_id") get_dynamic_source_id() end)
-
-#server.register(namespace="dynamic_source",
-#                description="Start a new dynamic source.",
-#                usage="start <uri>",
-#                "read_start",
-#                fun (uri) -> begin log("dynamic_source.read_start") begin_stream_read(uri) end)
-#server.register(namespace="dynamic_source",
-#                description="Stop a dynamic source.",
-#                usage="stop <id>",
-#                "read_stop",
-#                fun (s) -> begin log("dynamic_source.read_stop") stop_stream_read(s) end)
-
-#server.register(namespace="dynamic_source",
-#                description="Stop a dynamic source.",
-#                usage="stop <id>",
-#                "read_stop_all",
-#                fun (s) -> begin log("dynamic_source.read_stop") destroy_dynamic_source_all() end)
 
 default = amplify(id="silence_src", 0.00001, noise())
 
@@ -259,10 +240,6 @@ s = if master_live_stream_port != 0 and master_live_stream_mp != "" then
 else
     s
 end
-
-
-# Attach a skip command to the source s:
-#add_skip_command(s)
 
 server.register(namespace="streams",
     description="Stop Master DJ source.",
