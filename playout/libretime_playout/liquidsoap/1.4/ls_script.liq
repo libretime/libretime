@@ -23,11 +23,6 @@ just_switched = ref false
 sources = ref []
 source_id = ref 0
 
-def check_version(~version=liquidsoap.version, major, minor) =
-    v = list.map(int_of_string, string.split(separator="\.", version))
-    list.nth(v,0,default=0) > major or list.nth(v,0,default=0) == major and list.nth(v,1,default=0) >= minor
-end
-
 def create_source()
     l = request.equeue(id="s#{!source_id}", length=0.5)
 
