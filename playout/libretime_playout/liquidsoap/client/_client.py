@@ -133,20 +133,3 @@ class LiquidsoapClient:
                 self._set_var("message_offline", self._quote(message_offline))
             if input_fade_transition is not None:
                 self._set_var("input_fade_transition", input_fade_transition)
-
-    def restart(self):
-        logger.warning("restarting Liquidsoap")
-
-        try:
-            output = check_output(("pidof", "libretime-liquidsoap"))
-            liq_pid = output.strip().decode("utf-8")
-            logger.debug(f"found liquidsoap pid {liq_pid}")
-
-            run(("kill", "-9", liq_pid), check=True)
-        except CalledProcessError as exception:
-            raise LiquidsoapClientError("could not restart liquidsoap") from exception
-
-        # Wait for the previous process to shutdown.
-        sleep(1)
-
-        self.wait_for_version()
