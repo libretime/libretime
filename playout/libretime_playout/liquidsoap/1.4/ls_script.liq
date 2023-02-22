@@ -1,4 +1,4 @@
-boot_timestamp = interactive.string("boot_timestamp", string_of(gettimeofday()))
+boot_timestamp = string_of(gettimeofday())
 
 web_stream_enabled = ref false
 web_stream_id = ref '-1'
