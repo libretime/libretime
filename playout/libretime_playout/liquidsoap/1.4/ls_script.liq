@@ -120,7 +120,7 @@ def input_show_on_disconnect() update_source_status("live_dj", false) end
 # @param user     Username to check against LibreTime API
 # @param password Password to check against LibreTime API
 # @param ~type    Type of password to check, "dj" or "master, default: "master"
-def check_auth(user="", password="", ~type="master") =
+def input_check_auth(user="", password="", ~type="master") =
     log("#{type} user #{user} connected",label="#{type}_source")
 
     # Check auth based on return value from auth script
@@ -135,20 +135,11 @@ def check_auth(user="", password="", ~type="master") =
     ret
 end
 
-# Check master source auth
-# @Category LiveStream
-# @param user     Username to check against LibreTime API
-# @param password Password to check against LibreTime API
-def check_master_dj_client(user, password) =
-    check_auth(user, password)
-end
-
-# Check dj/show source auth
-# @Category LiveStream
-# @param user     Username to check against LibreTime API
-# @param password Password to check against LibreTime API
-def check_dj_client(user, password) =
-    check_auth(user, password, type="dj")
+def make_input_auth_handler(source_name)
+    def auth_handler(user, password) =
+        input_check_auth(user, password, type=source_name)
+    end
+    auth_handler
 end
 
 s = switch(id="schedule_noise_switch",
@@ -163,7 +154,7 @@ s = if input_show_port != 0 and input_show_mount != "" then
             input.harbor(id="input_show_harbor",
                 input_show_mount,
                 port=input_show_port,
-                auth=check_dj_client,
+                auth=make_input_auth_handler("dj"),
                 max=40.,
                 on_connect=input_show_on_connect,
                 on_disconnect=input_show_on_disconnect))
@@ -185,7 +176,7 @@ s = if input_main_port != 0 and input_main_mount != "" then
             input.harbor(id="input_main_harbor",
                 input_main_mount,
                 port=input_main_port,
-                auth=check_master_dj_client,
+                auth=make_input_auth_handler("master"),
                 max=40.,
                 on_connect=input_main_on_connect,
                 on_disconnect=input_main_on_disconnect))
