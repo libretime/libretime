@@ -98,11 +98,11 @@ end
 def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, user, s, stream, name, channels) =
     source = ref s
     def on_error(msg)
-        gateway("stream '#{stream}' '#{boot_timestamp()}' --error='#{msg}'")
+        gateway("stream '#{stream}' '#{boot_timestamp}' --error='#{msg}'")
         5.
     end
     def on_connect()
-        gateway("stream '#{stream}' '#{boot_timestamp()}'")
+        gateway("stream '#{stream}' '#{boot_timestamp}'")
     end
 
     stereo = (channels == "stereo")
