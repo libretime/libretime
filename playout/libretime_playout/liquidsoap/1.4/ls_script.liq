@@ -99,30 +99,12 @@ input_main_streaming = ref false
 input_show_streaming = ref false
 schedule_streaming = ref false
 
-def make_master_dj_available()
-    input_main_streaming := true
-end
-
-def make_master_dj_unavailable()
-    input_main_streaming := false
-end
-
-def make_live_dj_available()
-    input_show_streaming := true
-end
-
-def make_live_dj_unavailable()
-    input_show_streaming := false
-end
-
-def make_scheduled_play_available()
-    schedule_streaming := true
-    just_switched := true
-end
-
-def make_scheduled_play_unavailable()
-    schedule_streaming := false
-end
+def start_input_main() input_main_streaming := true end
+def stop_input_main() input_main_streaming := false end
+def start_input_show() input_show_streaming := true end
+def stop_input_show() input_show_streaming := false end
+def start_schedule() schedule_streaming := true; just_switched := true end
+def stop_schedule() schedule_streaming := false end
 
 def update_source_status(sourcename, status) =
     gateway("live '#{sourcename}' '#{status}'")
@@ -230,36 +212,36 @@ else
     s
 end
 
-server.register(namespace="streams",
-    description="Stop Master DJ source.",
-    usage="master_dj_stop",
-    "master_dj_stop",
-    fun (s) -> begin log("streams.master_dj_stop") make_master_dj_unavailable() "Done." end)
-server.register(namespace="streams",
-    description="Start Master DJ source.",
-    usage="master_dj_start",
-    "master_dj_start",
-    fun (s) -> begin log("streams.master_dj_start") make_master_dj_available() "Done." end)
-server.register(namespace="streams",
-    description="Stop Live DJ source.",
-    usage="live_dj_stop",
-    "live_dj_stop",
-    fun (s) -> begin log("streams.live_dj_stop") make_live_dj_unavailable() "Done." end)
-server.register(namespace="streams",
-    description="Start Live DJ source.",
-    usage="live_dj_start",
-    "live_dj_start",
-    fun (s) -> begin log("streams.live_dj_start") make_live_dj_available() "Done." end)
-server.register(namespace="streams",
-    description="Stop Scheduled Play source.",
-    usage="scheduled_play_stop",
-    "scheduled_play_stop",
-    fun (s) -> begin log("streams.scheduled_play_stop") make_scheduled_play_unavailable() "Done." end)
-server.register(namespace="streams",
-    description="Start Scheduled Play source.",
-    usage="scheduled_play_start",
-    "scheduled_play_start",
-    fun (s) -> begin log("streams.scheduled_play_start") make_scheduled_play_available() "Done." end)
+server.register(namespace="sources",
+    description="Stop main input source.",
+    usage="stop_input_main",
+    "stop_input_main",
+    fun (s) -> begin log("sources.stop_input_main") stop_input_main() "Done." end)
+server.register(namespace="sources",
+    description="Start main input source.",
+    usage="start_input_main",
+    "start_input_main",
+    fun (s) -> begin log("sources.start_input_main") start_input_main() "Done." end)
+server.register(namespace="sources",
+    description="Stop show input source.",
+    usage="stop_input_show",
+    "stop_input_show",
+    fun (s) -> begin log("sources.stop_input_show") stop_input_show() "Done." end)
+server.register(namespace="sources",
+    description="Start show input source.",
+    usage="start_input_show",
+    "start_input_show",
+    fun (s) -> begin log("sources.start_input_show") start_input_show() "Done." end)
+server.register(namespace="sources",
+    description="Stop schedule source.",
+    usage="stop_schedule",
+    "stop_schedule",
+    fun (s) -> begin log("sources.stop_schedule") stop_schedule() "Done." end)
+server.register(namespace="sources",
+    description="Start schedule source.",
+    usage="start_schedule",
+    "start_schedule",
+    fun (s) -> begin log("sources.start_schedule") start_schedule() "Done." end)
 
 if output_sound_device then
     success = ref false
