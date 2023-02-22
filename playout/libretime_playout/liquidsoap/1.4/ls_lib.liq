@@ -201,12 +201,12 @@ def clear_queue(s)
     source.skip(s)
 end
 
-def set_dynamic_source_id(id) =
+def set_web_stream_id(id) =
     web_stream_id := id
     string_of(!web_stream_id)
 end
 
-def get_dynamic_source_id() =
+def get_web_stream_id() =
     string_of(!web_stream_id)
 end
 
