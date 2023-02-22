@@ -3,10 +3,10 @@
 # The ignore() lines are to squash unused variable warnings
 
 # Inputs
-master_live_stream_mp = {{ config.stream.inputs.main.mount | quote }}
-master_live_stream_port = {{ config.stream.inputs.main.port }}
-dj_live_stream_mp = {{ config.stream.inputs.show.mount | quote }}
-dj_live_stream_port = {{ config.stream.inputs.show.port }}
+input_main_mount = {{ config.stream.inputs.main.mount | quote }}
+input_main_port = {{ config.stream.inputs.main.port }}
+input_show_mount = {{ config.stream.inputs.show.mount | quote }}
+input_show_port = {{ config.stream.inputs.show.port }}
 
 {% for output in config.stream.outputs.merged -%}
 # Output s{{ loop.index }}

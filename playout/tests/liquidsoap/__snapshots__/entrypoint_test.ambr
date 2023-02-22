@@ -6,10 +6,10 @@
   # The ignore() lines are to squash unused variable warnings
   
   # Inputs
-  master_live_stream_mp = "main"
-  master_live_stream_port = 8001
-  dj_live_stream_mp = "show"
-  dj_live_stream_port = 8002
+  input_main_mount = "main"
+  input_main_port = 8001
+  input_show_mount = "show"
+  input_show_port = 8002
   
   # Output s1
   s1_enable = true
