@@ -82,7 +82,7 @@ class LiquidsoapClient:
 
     def web_stream_start(self) -> None:
         with self.conn:
-            self.conn.write("streams.scheduled_play_start")
+            self.conn.write("sources.start_schedule")
             self.conn.write("web_stream.output_start")
 
     def web_stream_start_buffer(self, schedule_id: int, uri: str) -> None:
@@ -112,9 +112,14 @@ class LiquidsoapClient:
         name: Literal["master_dj", "live_dj", "scheduled_play"],
         streaming: bool,
     ) -> None:
+        name_map = {
+            "master_dj": "input_main",
+            "live_dj": "input_show",
+            "scheduled_play": "schedule",
+        }
         action = "start" if streaming else "stop"
         with self.conn:
-            self.conn.write(f"streams.{name}_{action}")
+            self.conn.write(f"sources.{action}_{name_map[name]}")
 
     def settings_update(
         self,
