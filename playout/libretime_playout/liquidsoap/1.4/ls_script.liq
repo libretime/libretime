@@ -186,12 +186,12 @@ s = switch(id="schedule_noise_switch",
             [({!schedule_streaming}, stream_queue), ({true}, default)]
     )
 
-s = if dj_live_stream_port != 0 and dj_live_stream_mp != "" then
+s = if input_show_port != 0 and input_show_mount != "" then
     dj_live =
         audio_to_stereo(
             input.harbor(id="live_dj_harbor",
-                dj_live_stream_mp,
-                port=dj_live_stream_port,
+                input_show_mount,
+                port=input_show_port,
                 auth=check_dj_client,
                 max=40.,
                 on_connect=live_dj_connect,
@@ -208,12 +208,12 @@ else
     s
 end
 
-s = if master_live_stream_port != 0 and master_live_stream_mp != "" then
+s = if input_main_port != 0 and input_main_mount != "" then
     master_dj =
         audio_to_stereo(
             input.harbor(id="master_harbor",
-                master_live_stream_mp,
-                port=master_live_stream_port,
+                input_main_mount,
+                port=input_main_port,
                 auth=check_master_dj_client,
                 max=40.,
                 on_connect=master_dj_connect,
