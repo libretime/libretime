@@ -158,9 +158,9 @@ s = switch(id="schedule_noise_switch",
     )
 
 s = if input_show_port != 0 and input_show_mount != "" then
-    dj_live =
+    input_show_source =
         audio_to_stereo(
-            input.harbor(id="live_dj_harbor",
+            input.harbor(id="input_show_harbor",
                 input_show_mount,
                 port=input_show_port,
                 auth=check_dj_client,
@@ -168,21 +168,21 @@ s = if input_show_port != 0 and input_show_mount != "" then
                 on_connect=input_show_on_connect,
                 on_disconnect=input_show_on_disconnect))
 
-    ignore(output.dummy(dj_live, fallible=true))
+    ignore(output.dummy(input_show_source, fallible=true))
 
     switch(id="show_schedule_noise_switch",
             track_sensitive=false,
             transitions=[transition, transition],
-            [({!input_show_streaming}, dj_live), ({true}, s)]
+            [({!input_show_streaming}, input_show_source), ({true}, s)]
         )
 else
     s
 end
 
 s = if input_main_port != 0 and input_main_mount != "" then
-    master_dj =
+    input_main_source =
         audio_to_stereo(
-            input.harbor(id="master_harbor",
+            input.harbor(id="input_main_harbor",
                 input_main_mount,
                 port=input_main_port,
                 auth=check_master_dj_client,
@@ -190,12 +190,12 @@ s = if input_main_port != 0 and input_main_mount != "" then
                 on_connect=input_main_on_connect,
                 on_disconnect=input_main_on_disconnect))
 
-    ignore(output.dummy(master_dj, fallible=true))
+    ignore(output.dummy(input_main_source, fallible=true))
 
-    switch(id="master_show_schedule_noise_switch",
+    switch(id="main_show_schedule_noise_switch",
             track_sensitive=false,
             transitions=[transition, transition],
-            [({!input_main_streaming}, master_dj), ({true}, s)]
+            [({!input_main_streaming}, input_main_source), ({true}, s)]
         )
 else
     s
