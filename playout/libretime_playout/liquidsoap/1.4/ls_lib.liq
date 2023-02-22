@@ -282,8 +282,8 @@ def cross_http(~debug=true,~http_input_id,source)
   cross_d = 3.
 
   def crosser(a,b,ma,mb,sa,sb)
-    url = list.hd(server.execute('#{id}.url'), default="")
-    status = list.hd(server.execute('#{id}.status'))
+    url = list.hd(server.execute("#{id}.url"), default="")
+    status = list.hd(server.execute("#{id}.status"))
     on_m([("source_url",url)])
     if debug then
       log("New track inside HTTP stream")
