@@ -61,30 +61,30 @@ stream_queue = map_metadata(update=false, append_title, stream_queue)
 
 ignore(output.dummy(stream_queue, fallible=true))
 
-server.register(namespace="dynamic_source",
+server.register(namespace="web_stream",
                 description="Enable webstream output",
                 usage='start',
                 "output_start",
-                fun (s) -> begin log("dynamic_source.output_start")
+                fun (s) -> begin log("web_stream.output_start")
                     notify([("schedule_table_id", !web_stream_id)])
                     web_stream_enabled := true "enabled" end)
-server.register(namespace="dynamic_source",
+server.register(namespace="web_stream",
                 description="Enable webstream output",
                 usage='stop',
                 "output_stop",
-                fun (s) -> begin log("dynamic_source.output_stop") web_stream_enabled := false "disabled" end)
+                fun (s) -> begin log("web_stream.output_stop") web_stream_enabled := false "disabled" end)
 
-server.register(namespace="dynamic_source",
+server.register(namespace="web_stream",
                 description="Set the streams cc_schedule row id",
                 usage="id <id>",
                 "id",
-                fun (s) -> begin log("dynamic_source.id") set_dynamic_source_id(s) end)
+                fun (s) -> begin log("web_stream.id") set_web_stream_id(s) end)
 
-server.register(namespace="dynamic_source",
+server.register(namespace="web_stream",
                 description="Get the streams cc_schedule row id",
                 usage="get_id",
                 "get_id",
-                fun (s) -> begin log("dynamic_source.get_id") get_dynamic_source_id() end)
+                fun (s) -> begin log("web_stream.get_id") get_web_stream_id() end)
 
 default = amplify(id="silence_src", 0.00001, noise())
 

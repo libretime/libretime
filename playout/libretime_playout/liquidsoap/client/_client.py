@@ -77,27 +77,27 @@ class LiquidsoapClient:
 
     def web_stream_get_id(self) -> str:
         with self.conn:
-            self.conn.write("dynamic_source.get_id")
+            self.conn.write("web_stream.get_id")
             return self.conn.read().splitlines()[0]
 
     def web_stream_start(self) -> None:
         with self.conn:
             self.conn.write("streams.scheduled_play_start")
-            self.conn.write("dynamic_source.output_start")
+            self.conn.write("web_stream.output_start")
 
     def web_stream_start_buffer(self, schedule_id: int, uri: str) -> None:
         with self.conn:
-            self.conn.write(f"dynamic_source.id {schedule_id}")
+            self.conn.write(f"web_stream.id {schedule_id}")
             self.conn.write(f"http.restart {uri}")
 
     def web_stream_stop(self) -> None:
         with self.conn:
-            self.conn.write("dynamic_source.output_stop")
+            self.conn.write("web_stream.output_stop")
 
     def web_stream_stop_buffer(self) -> None:
         with self.conn:
             self.conn.write("http.stop")
-            self.conn.write("dynamic_source.id -1")
+            self.conn.write("web_stream.id -1")
 
     def source_disconnect(self, name: Literal["master_dj", "live_dj"]) -> None:
         command_map = {
