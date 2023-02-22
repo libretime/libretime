@@ -21,6 +21,7 @@ services:
       target: libretime-playout
     volumes:
       - ./playout:/src
+      - ./docker/data/playout:/app
 
   liquidsoap:
     build:
@@ -30,6 +31,7 @@ services:
       - 1234:1234
     volumes:
       - ./playout:/src
+      - ./docker/data/playout:/app
 
   analyzer:
     build:
