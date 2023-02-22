@@ -95,33 +95,33 @@ end
 default = map_metadata(map_message_offline, default)
 ignore(output.dummy(default, fallible=true))
 
-master_dj_enabled = ref false
-live_dj_enabled = ref false
-scheduled_play_enabled = ref false
+input_main_streaming = ref false
+input_show_streaming = ref false
+schedule_streaming = ref false
 
 def make_master_dj_available()
-    master_dj_enabled := true
+    input_main_streaming := true
 end
 
 def make_master_dj_unavailable()
-    master_dj_enabled := false
+    input_main_streaming := false
 end
 
 def make_live_dj_available()
-    live_dj_enabled := true
+    input_show_streaming := true
 end
 
 def make_live_dj_unavailable()
-    live_dj_enabled := false
+    input_show_streaming := false
 end
 
 def make_scheduled_play_available()
-    scheduled_play_enabled := true
+    schedule_streaming := true
     just_switched := true
 end
 
 def make_scheduled_play_unavailable()
-    scheduled_play_enabled := false
+    schedule_streaming := false
 end
 
 def update_source_status(sourcename, status) =
@@ -183,7 +183,7 @@ end
 s = switch(id="schedule_noise_switch",
             track_sensitive=false,
             transitions=[transition_default, transition],
-            [({!scheduled_play_enabled}, stream_queue), ({true}, default)]
+            [({!schedule_streaming}, stream_queue), ({true}, default)]
     )
 
 s = if dj_live_stream_port != 0 and dj_live_stream_mp != "" then
@@ -202,7 +202,7 @@ s = if dj_live_stream_port != 0 and dj_live_stream_mp != "" then
     switch(id="show_schedule_noise_switch",
             track_sensitive=false,
             transitions=[transition, transition],
-            [({!live_dj_enabled}, dj_live), ({true}, s)]
+            [({!input_show_streaming}, dj_live), ({true}, s)]
         )
 else
     s
@@ -224,7 +224,7 @@ s = if master_live_stream_port != 0 and master_live_stream_mp != "" then
     switch(id="master_show_schedule_noise_switch",
             track_sensitive=false,
             transitions=[transition, transition],
-            [({!master_dj_enabled}, master_dj), ({true}, s)]
+            [({!input_main_streaming}, master_dj), ({true}, s)]
         )
 else
     s
