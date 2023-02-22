@@ -110,21 +110,10 @@ def update_source_status(sourcename, status) =
     gateway("live '#{sourcename}' '#{status}'")
 end
 
-def live_dj_connect(header) =
-    update_source_status("live_dj", true)
-end
-
-def live_dj_disconnect() =
-    update_source_status("live_dj", false)
-end
-
-def master_dj_connect(header) =
-    update_source_status("master_dj", true)
-end
-
-def master_dj_disconnect() =
-    update_source_status("master_dj", false)
-end
+def input_main_on_connect(header) update_source_status("master_dj", true) end
+def input_main_on_disconnect() update_source_status("master_dj", false) end
+def input_show_on_connect(header) update_source_status("live_dj", true) end
+def input_show_on_disconnect() update_source_status("live_dj", false) end
 
 # Auth function for live stream
 # @Category LiveStream
@@ -176,8 +165,8 @@ s = if input_show_port != 0 and input_show_mount != "" then
                 port=input_show_port,
                 auth=check_dj_client,
                 max=40.,
-                on_connect=live_dj_connect,
-                on_disconnect=live_dj_disconnect))
+                on_connect=input_show_on_connect,
+                on_disconnect=input_show_on_disconnect))
 
     ignore(output.dummy(dj_live, fallible=true))
 
@@ -198,8 +187,8 @@ s = if input_main_port != 0 and input_main_mount != "" then
                 port=input_main_port,
                 auth=check_master_dj_client,
                 max=40.,
-                on_connect=master_dj_connect,
-                on_disconnect=master_dj_disconnect))
+                on_connect=input_main_on_connect,
+                on_disconnect=input_main_on_disconnect))
 
     ignore(output.dummy(master_dj, fallible=true))
 
