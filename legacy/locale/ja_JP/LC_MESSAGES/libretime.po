@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2022-10-07 16:26+0200\n"
+"POT-Creation-Date: 2023-02-24 13:48+0100\n"
 "PO-Revision-Date: 2021-10-17 08:09+0000\n"
 "Last-Translator: Kyle Robbertze <github@paddatrapper.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/libretime/legacy/ja/>\n"
@@ -1864,37 +1864,37 @@ msgid "Month"
 msgstr ""
 
 #: application/controllers/LocaleController.php:253
-#: application/forms/GeneralPreferences.php:237
+#: application/forms/GeneralPreferences.php:230
 msgid "Sunday"
 msgstr "日曜日"
 
 #: application/controllers/LocaleController.php:254
-#: application/forms/GeneralPreferences.php:238
+#: application/forms/GeneralPreferences.php:231
 msgid "Monday"
 msgstr "月曜日"
 
 #: application/controllers/LocaleController.php:255
-#: application/forms/GeneralPreferences.php:239
+#: application/forms/GeneralPreferences.php:232
 msgid "Tuesday"
 msgstr "火曜日"
 
 #: application/controllers/LocaleController.php:256
-#: application/forms/GeneralPreferences.php:240
+#: application/forms/GeneralPreferences.php:233
 msgid "Wednesday"
 msgstr "水曜日"
 
 #: application/controllers/LocaleController.php:257
-#: application/forms/GeneralPreferences.php:241
+#: application/forms/GeneralPreferences.php:234
 msgid "Thursday"
 msgstr "木曜日"
 
 #: application/controllers/LocaleController.php:258
-#: application/forms/GeneralPreferences.php:242
+#: application/forms/GeneralPreferences.php:235
 msgid "Friday"
 msgstr "金曜日"
 
 #: application/controllers/LocaleController.php:259
-#: application/forms/GeneralPreferences.php:243
+#: application/forms/GeneralPreferences.php:236
 msgid "Saturday"
 msgstr "土曜日"
 
@@ -2036,7 +2036,7 @@ msgid "Moving %s Items"
 msgstr "%s 個の項目を移動"
 
 #: application/controllers/LocaleController.php:302
-#: application/forms/AddTracktype.php:59 application/forms/AddUser.php:108
+#: application/forms/AddTracktype.php:64 application/forms/AddUser.php:108
 #: application/forms/EditAudioMD.php:280 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
@@ -2580,7 +2580,7 @@ msgstr ""
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
 #: application/forms/GeneralPreferences.php:160
-#: application/forms/GeneralPreferences.php:221
+#: application/forms/GeneralPreferences.php:214
 msgid "Enabled"
 msgstr "有効"
 
@@ -2589,7 +2589,7 @@ msgstr "有効"
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
 #: application/forms/GeneralPreferences.php:159
-#: application/forms/GeneralPreferences.php:220
+#: application/forms/GeneralPreferences.php:213
 msgid "Disabled"
 msgstr "無効"
 
@@ -2754,23 +2754,23 @@ msgstr "無題のスマートブロック"
 msgid "Unknown Playlist"
 msgstr "不明なプレイリスト"
 
-#: application/controllers/PreferenceController.php:70
+#: application/controllers/PreferenceController.php:69
 msgid "Preferences updated."
 msgstr "設定が更新されました。"
 
-#: application/controllers/PreferenceController.php:204
+#: application/controllers/PreferenceController.php:203
 msgid "Stream Setting Updated."
 msgstr "配信設定が更新されました。"
 
-#: application/controllers/PreferenceController.php:249
+#: application/controllers/PreferenceController.php:248
 msgid "path should be specified"
 msgstr "パスを指定する必要があります"
 
-#: application/controllers/PreferenceController.php:292
+#: application/controllers/PreferenceController.php:291
 msgid "Problem with Liquidsoap..."
 msgstr "Liquidsoapに問題があります。"
 
-#: application/controllers/PreferenceController.php:335
+#: application/controllers/PreferenceController.php:334
 msgid "Request method not accepted"
 msgstr ""
 
@@ -2791,11 +2791,11 @@ msgstr "カーソルを削除"
 msgid "show does not exist"
 msgstr "番組が存在しません。"
 
-#: application/controllers/TracktypeController.php:61
+#: application/controllers/TracktypeController.php:62
 msgid "Track Type added successfully!"
 msgstr ""
 
-#: application/controllers/TracktypeController.php:63
+#: application/controllers/TracktypeController.php:64
 msgid "Track Type updated successfully!"
 msgstr ""
 
@@ -3094,7 +3094,11 @@ msgstr ""
 msgid "Visibility:"
 msgstr ""
 
-#: application/forms/AddTracktype.php:69
+#: application/forms/AddTracktype.php:57
+msgid "Analyze cue points:"
+msgstr ""
+
+#: application/forms/AddTracktype.php:74
 msgid "Code is not unique."
 msgstr ""
 
@@ -3315,36 +3319,28 @@ msgid ""
 "                                            to external widgets that can be embedded in your website."
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:176
-msgid "Allowed CORS URLs (DEPRECATED)"
-msgstr ""
-
-#: application/forms/GeneralPreferences.php:177
-msgid "Remote URLs that are allowed to access this LibreTime instance in a browser. One URL per line. (DEPRECATED: Allowed CORS origins configuration moved to the configuration file.)"
-msgstr ""
-
-#: application/forms/GeneralPreferences.php:182
+#: application/forms/GeneralPreferences.php:175
 msgid "Default Language"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:189
+#: application/forms/GeneralPreferences.php:182
 #: application/forms/SetupLanguageTimezone.php:22
 msgid "Station Timezone"
 msgstr "ステーションのタイムゾーン"
 
-#: application/forms/GeneralPreferences.php:197
+#: application/forms/GeneralPreferences.php:190
 msgid "Week Starts On"
 msgstr "週の開始曜日"
 
-#: application/forms/GeneralPreferences.php:213
+#: application/forms/GeneralPreferences.php:206
 msgid "Display login button on your Radio Page?"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:218
+#: application/forms/GeneralPreferences.php:211
 msgid "Feature Previews"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:224
+#: application/forms/GeneralPreferences.php:217
 msgid "Enable this to opt-in to test new features."
 msgstr ""
 

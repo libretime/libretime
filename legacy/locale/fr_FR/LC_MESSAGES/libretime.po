@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2022-10-07 16:26+0200\n"
+"POT-Creation-Date: 2023-02-24 13:48+0100\n"
 "PO-Revision-Date: 2022-07-06 05:21+0000\n"
 "Last-Translator: Maxime Leroy <lisacintosh@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/libretime/legacy/fr/>\n"
@@ -1874,37 +1874,37 @@ msgid "Month"
 msgstr "Mois"
 
 #: application/controllers/LocaleController.php:253
-#: application/forms/GeneralPreferences.php:237
+#: application/forms/GeneralPreferences.php:230
 msgid "Sunday"
 msgstr "Dimanche"
 
 #: application/controllers/LocaleController.php:254
-#: application/forms/GeneralPreferences.php:238
+#: application/forms/GeneralPreferences.php:231
 msgid "Monday"
 msgstr "Lundi"
 
 #: application/controllers/LocaleController.php:255
-#: application/forms/GeneralPreferences.php:239
+#: application/forms/GeneralPreferences.php:232
 msgid "Tuesday"
 msgstr "Mardi"
 
 #: application/controllers/LocaleController.php:256
-#: application/forms/GeneralPreferences.php:240
+#: application/forms/GeneralPreferences.php:233
 msgid "Wednesday"
 msgstr "Mercredi"
 
 #: application/controllers/LocaleController.php:257
-#: application/forms/GeneralPreferences.php:241
+#: application/forms/GeneralPreferences.php:234
 msgid "Thursday"
 msgstr "Jeudi"
 
 #: application/controllers/LocaleController.php:258
-#: application/forms/GeneralPreferences.php:242
+#: application/forms/GeneralPreferences.php:235
 msgid "Friday"
 msgstr "Vendredi"
 
 #: application/controllers/LocaleController.php:259
-#: application/forms/GeneralPreferences.php:243
+#: application/forms/GeneralPreferences.php:236
 msgid "Saturday"
 msgstr "Samedi"
 
@@ -2046,7 +2046,7 @@ msgid "Moving %s Items"
 msgstr "Déplacer %s éléments"
 
 #: application/controllers/LocaleController.php:302
-#: application/forms/AddTracktype.php:59 application/forms/AddUser.php:108
+#: application/forms/AddTracktype.php:64 application/forms/AddUser.php:108
 #: application/forms/EditAudioMD.php:280 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
@@ -2590,7 +2590,7 @@ msgstr "Aucun type de piste correspondant trouvé"
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
 #: application/forms/GeneralPreferences.php:160
-#: application/forms/GeneralPreferences.php:221
+#: application/forms/GeneralPreferences.php:214
 msgid "Enabled"
 msgstr "Activé"
 
@@ -2599,7 +2599,7 @@ msgstr "Activé"
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
 #: application/forms/GeneralPreferences.php:159
-#: application/forms/GeneralPreferences.php:220
+#: application/forms/GeneralPreferences.php:213
 msgid "Disabled"
 msgstr "Désactivé"
 
@@ -2766,23 +2766,23 @@ msgstr "Bloc intelligent sans titre"
 msgid "Unknown Playlist"
 msgstr "Liste de lecture inconnue"
 
-#: application/controllers/PreferenceController.php:70
+#: application/controllers/PreferenceController.php:69
 msgid "Preferences updated."
 msgstr "Préférences mises à jour."
 
-#: application/controllers/PreferenceController.php:204
+#: application/controllers/PreferenceController.php:203
 msgid "Stream Setting Updated."
 msgstr "Réglages du Flux mis à jour."
 
-#: application/controllers/PreferenceController.php:249
+#: application/controllers/PreferenceController.php:248
 msgid "path should be specified"
 msgstr "le chemin doit être spécifié"
 
-#: application/controllers/PreferenceController.php:292
+#: application/controllers/PreferenceController.php:291
 msgid "Problem with Liquidsoap..."
 msgstr "Problème avec Liquidsoap..."
 
-#: application/controllers/PreferenceController.php:335
+#: application/controllers/PreferenceController.php:334
 msgid "Request method not accepted"
 msgstr "Cette méthode de requête ne peut aboutir"
 
@@ -2803,11 +2803,11 @@ msgstr "Enlever le Curseur"
 msgid "show does not exist"
 msgstr "l'émission n'existe pas"
 
-#: application/controllers/TracktypeController.php:61
+#: application/controllers/TracktypeController.php:62
 msgid "Track Type added successfully!"
 msgstr "Type de piste ajouté avec succès !"
 
-#: application/controllers/TracktypeController.php:63
+#: application/controllers/TracktypeController.php:64
 msgid "Track Type updated successfully!"
 msgstr "Type de piste mis à jour avec succès !"
 
@@ -3106,7 +3106,11 @@ msgstr "Code :"
 msgid "Visibility:"
 msgstr "Visibilité :"
 
-#: application/forms/AddTracktype.php:69
+#: application/forms/AddTracktype.php:57
+msgid "Analyze cue points:"
+msgstr ""
+
+#: application/forms/AddTracktype.php:74
 msgid "Code is not unique."
 msgstr "Ce code n'est pas unique."
 
@@ -3329,36 +3333,28 @@ msgstr ""
 "L'activation de cette fonctionnalité permettra à LibreTime de fournir des données de planification\n"
 "                                            à des widgets externes pouvant être intégrés à votre site Web."
 
-#: application/forms/GeneralPreferences.php:176
-msgid "Allowed CORS URLs (DEPRECATED)"
-msgstr "Les URL CORS autorisés (OBSOLÈTE)"
-
-#: application/forms/GeneralPreferences.php:177
-msgid "Remote URLs that are allowed to access this LibreTime instance in a browser. One URL per line. (DEPRECATED: Allowed CORS origins configuration moved to the configuration file.)"
-msgstr "Les URL distantes qui sont autorisées pour accéder à cette instance de LibreTime depuis un navigation. Une URL par ligne. (OBSOLÈTE : La configuration des origines CORS a été déplacée dans le fichier de configuration.)"
-
-#: application/forms/GeneralPreferences.php:182
+#: application/forms/GeneralPreferences.php:175
 msgid "Default Language"
 msgstr "Langage par défaut"
 
-#: application/forms/GeneralPreferences.php:189
+#: application/forms/GeneralPreferences.php:182
 #: application/forms/SetupLanguageTimezone.php:22
 msgid "Station Timezone"
 msgstr "Fuseau horaire de la Station"
 
-#: application/forms/GeneralPreferences.php:197
+#: application/forms/GeneralPreferences.php:190
 msgid "Week Starts On"
 msgstr "La semaine commence le"
 
-#: application/forms/GeneralPreferences.php:213
+#: application/forms/GeneralPreferences.php:206
 msgid "Display login button on your Radio Page?"
 msgstr "Afficher le bouton de connexion sur votre page radio ?"
 
-#: application/forms/GeneralPreferences.php:218
+#: application/forms/GeneralPreferences.php:211
 msgid "Feature Previews"
 msgstr "Aperçus de fonctionnalités"
 
-#: application/forms/GeneralPreferences.php:224
+#: application/forms/GeneralPreferences.php:217
 msgid "Enable this to opt-in to test new features."
 msgstr "Activer ceci pour vous inscrire pour tester les nouvelles fonctionnalités."
 
@@ -4264,6 +4260,9 @@ msgstr "Flux web"
 #~ msgid "Allowed CORS URLs"
 #~ msgstr "URLs CORS autorisées"
 
+#~ msgid "Allowed CORS URLs (DEPRECATED)"
+#~ msgstr "Les URL CORS autorisés (OBSOLÈTE)"
+
 #~ msgid "An error has occurred."
 #~ msgstr "Une erreur est survenue."
 
@@ -4770,6 +4769,9 @@ msgstr "Flux web"
 
 #~ msgid "Remote URLs that are allowed to access this LibreTime instance in a browser. One URL per line."
 #~ msgstr "URL distantes autorisées à accéder à cette instance LibreTime dans un navigateur. Une URL par ligne."
+
+#~ msgid "Remote URLs that are allowed to access this LibreTime instance in a browser. One URL per line. (DEPRECATED: Allowed CORS origins configuration moved to the configuration file.)"
+#~ msgstr "Les URL distantes qui sont autorisées pour accéder à cette instance de LibreTime depuis un navigation. Une URL par ligne. (OBSOLÈTE : La configuration des origines CORS a été déplacée dans le fichier de configuration.)"
 
 #~ msgid "Remove all content from this smart block"
 #~ msgstr "Supprimer tout le contenu de ce bloc intelligent"

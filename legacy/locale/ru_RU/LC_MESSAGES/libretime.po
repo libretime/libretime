@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2022-10-07 16:26+0200\n"
+"POT-Creation-Date: 2023-02-24 13:48+0100\n"
 "PO-Revision-Date: 2022-06-05 10:17+0000\n"
 "Last-Translator: МАН69К <weblate@mah69k.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/libretime/legacy/ru/>\n"
@@ -1878,37 +1878,37 @@ msgid "Month"
 msgstr "Месяц"
 
 #: application/controllers/LocaleController.php:253
-#: application/forms/GeneralPreferences.php:237
+#: application/forms/GeneralPreferences.php:230
 msgid "Sunday"
 msgstr "Воскресенье"
 
 #: application/controllers/LocaleController.php:254
-#: application/forms/GeneralPreferences.php:238
+#: application/forms/GeneralPreferences.php:231
 msgid "Monday"
 msgstr "Понедельник"
 
 #: application/controllers/LocaleController.php:255
-#: application/forms/GeneralPreferences.php:239
+#: application/forms/GeneralPreferences.php:232
 msgid "Tuesday"
 msgstr "Вторник"
 
 #: application/controllers/LocaleController.php:256
-#: application/forms/GeneralPreferences.php:240
+#: application/forms/GeneralPreferences.php:233
 msgid "Wednesday"
 msgstr "Среда"
 
 #: application/controllers/LocaleController.php:257
-#: application/forms/GeneralPreferences.php:241
+#: application/forms/GeneralPreferences.php:234
 msgid "Thursday"
 msgstr "Четверг"
 
 #: application/controllers/LocaleController.php:258
-#: application/forms/GeneralPreferences.php:242
+#: application/forms/GeneralPreferences.php:235
 msgid "Friday"
 msgstr "Пятница"
 
 #: application/controllers/LocaleController.php:259
-#: application/forms/GeneralPreferences.php:243
+#: application/forms/GeneralPreferences.php:236
 msgid "Saturday"
 msgstr "Суббота"
 
@@ -2050,7 +2050,7 @@ msgid "Moving %s Items"
 msgstr "Перемещение %s элементов"
 
 #: application/controllers/LocaleController.php:302
-#: application/forms/AddTracktype.php:59 application/forms/AddUser.php:108
+#: application/forms/AddTracktype.php:64 application/forms/AddUser.php:108
 #: application/forms/EditAudioMD.php:280 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
@@ -2594,7 +2594,7 @@ msgstr "Не найдено подходящих типов треков"
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
 #: application/forms/GeneralPreferences.php:160
-#: application/forms/GeneralPreferences.php:221
+#: application/forms/GeneralPreferences.php:214
 msgid "Enabled"
 msgstr "Включено"
 
@@ -2603,7 +2603,7 @@ msgstr "Включено"
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
 #: application/forms/GeneralPreferences.php:159
-#: application/forms/GeneralPreferences.php:220
+#: application/forms/GeneralPreferences.php:213
 msgid "Disabled"
 msgstr "Отключено"
 
@@ -2770,23 +2770,23 @@ msgstr "Смарт-блок без названия"
 msgid "Unknown Playlist"
 msgstr "Неизвестный Плейлист"
 
-#: application/controllers/PreferenceController.php:70
+#: application/controllers/PreferenceController.php:69
 msgid "Preferences updated."
 msgstr "Настройки сохранены."
 
-#: application/controllers/PreferenceController.php:204
+#: application/controllers/PreferenceController.php:203
 msgid "Stream Setting Updated."
 msgstr "Настройки потока обновлены."
 
-#: application/controllers/PreferenceController.php:249
+#: application/controllers/PreferenceController.php:248
 msgid "path should be specified"
 msgstr "необходимо указать путь"
 
-#: application/controllers/PreferenceController.php:292
+#: application/controllers/PreferenceController.php:291
 msgid "Problem with Liquidsoap..."
 msgstr "Проблема с Liquidsoap ..."
 
-#: application/controllers/PreferenceController.php:335
+#: application/controllers/PreferenceController.php:334
 msgid "Request method not accepted"
 msgstr "Метод запроса не принят"
 
@@ -2807,11 +2807,11 @@ msgstr "Удалить курсор"
 msgid "show does not exist"
 msgstr "Программы не существует"
 
-#: application/controllers/TracktypeController.php:61
+#: application/controllers/TracktypeController.php:62
 msgid "Track Type added successfully!"
 msgstr ""
 
-#: application/controllers/TracktypeController.php:63
+#: application/controllers/TracktypeController.php:64
 msgid "Track Type updated successfully!"
 msgstr ""
 
@@ -3110,7 +3110,11 @@ msgstr "Код:"
 msgid "Visibility:"
 msgstr "Видимость:"
 
-#: application/forms/AddTracktype.php:69
+#: application/forms/AddTracktype.php:57
+msgid "Analyze cue points:"
+msgstr ""
+
+#: application/forms/AddTracktype.php:74
 msgid "Code is not unique."
 msgstr ""
 
@@ -3331,36 +3335,28 @@ msgid ""
 "                                            to external widgets that can be embedded in your website."
 msgstr "Активация данной функции позволит LibreTime предоставлять данные на внешние виджеты, которые могут быть встроены на сайт."
 
-#: application/forms/GeneralPreferences.php:176
-msgid "Allowed CORS URLs (DEPRECATED)"
-msgstr ""
-
-#: application/forms/GeneralPreferences.php:177
-msgid "Remote URLs that are allowed to access this LibreTime instance in a browser. One URL per line. (DEPRECATED: Allowed CORS origins configuration moved to the configuration file.)"
-msgstr ""
-
-#: application/forms/GeneralPreferences.php:182
+#: application/forms/GeneralPreferences.php:175
 msgid "Default Language"
 msgstr "Язык по умолчанию:"
 
-#: application/forms/GeneralPreferences.php:189
+#: application/forms/GeneralPreferences.php:182
 #: application/forms/SetupLanguageTimezone.php:22
 msgid "Station Timezone"
 msgstr "Часовой пояс станции:"
 
-#: application/forms/GeneralPreferences.php:197
+#: application/forms/GeneralPreferences.php:190
 msgid "Week Starts On"
 msgstr "Неделя начинается с:"
 
-#: application/forms/GeneralPreferences.php:213
+#: application/forms/GeneralPreferences.php:206
 msgid "Display login button on your Radio Page?"
 msgstr "Отображать кнопку «Вход» на Странице Радио?"
 
-#: application/forms/GeneralPreferences.php:218
+#: application/forms/GeneralPreferences.php:211
 msgid "Feature Previews"
 msgstr ""
 
-#: application/forms/GeneralPreferences.php:224
+#: application/forms/GeneralPreferences.php:217
 msgid "Enable this to opt-in to test new features."
 msgstr ""
 
