@@ -112,7 +112,9 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
         if user == "" then
             user_ref := "source"
         end
-        output_mono = output.icecast(host = host,
+        output_mono = output.icecast(
+                    id = "icecast:stream_#{stream}",
+                    host = host,
                     port = port,
                     password = pass,
                     mount = mount_point,
@@ -125,7 +127,9 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                     on_error = on_error,
                     on_connect = on_connect)
 
-        output_stereo = output.icecast(host = host,
+        output_stereo = output.icecast(
+                    id = "icecast:stream_#{stream}",
+                    host = host,
                     port = port,
                     password = pass,
                     mount = mount_point,
@@ -161,7 +165,8 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
             user_ref := "source"
         end
 
-        output_mono = output.shoutcast(id = "shoutcast_stream_#{stream}",
+        output_mono = output.shoutcast(
+                    id = "shoutcast:stream_#{stream}",
                     host = host,
                     port = port,
                     password = pass,
@@ -173,7 +178,8 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                     on_error = on_error,
                     on_connect = on_connect)
 
-        output_stereo = output.shoutcast(id = "shoutcast_stream_#{stream}",
+        output_stereo = output.shoutcast(
+                    id = "shoutcast:stream_#{stream}",
                     host = host,
                     port = port,
                     password = pass,
