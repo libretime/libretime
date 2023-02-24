@@ -305,12 +305,18 @@ class FileDataHelper
 
         $fp = Config::getStoragePath();
 
-        $dbAudioPath = $md['MDATA_KEY_ARTWORK'];
-        $fullpath = $fp . $dbAudioPath;
+        $dbMetadataPath = $md['MDATA_KEY_ARTWORK'];
+        $fullpath = $fp . $dbMetadataPath;
+
+        $audioPath = $fp . $md['MDATA_KEY_FILEPATH'];
 
         if (file_exists($fullpath)) {
             foreach (glob("{$fullpath}*", GLOB_NOSORT) as $filename) {
-                unlink($filename);
+                
+                // Do not delete the audio file.
+                if($filename !== $audioPath){
+                    unlink($filename);
+                }
             }
         } else {
             throw new Exception('Could not locate file ' . $filepath);
