@@ -7,17 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2022-10-07 16:26+0200\n"
+"POT-Creation-Date: 2023-02-24 13:48+0100\n"
 "PO-Revision-Date: 2022-11-07 01:18+0000\n"
 "Last-Translator: Ihor Hordiichuk <igor_ck@outlook.com>\n"
-"Language-Team: Ukrainian <https://hosted.weblate.org/projects/libretime/"
-"legacy/uk/>\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/libretime/legacy/uk/>\n"
 "Language: uk_UA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 4.14.2\n"
 
 #: application/common/DateHelper.php:216
@@ -1872,37 +1870,37 @@ msgid "Month"
 msgstr "Місяць"
 
 #: application/controllers/LocaleController.php:253
-#: application/forms/GeneralPreferences.php:237
+#: application/forms/GeneralPreferences.php:230
 msgid "Sunday"
 msgstr "Неділя"
 
 #: application/controllers/LocaleController.php:254
-#: application/forms/GeneralPreferences.php:238
+#: application/forms/GeneralPreferences.php:231
 msgid "Monday"
 msgstr "Понеділок"
 
 #: application/controllers/LocaleController.php:255
-#: application/forms/GeneralPreferences.php:239
+#: application/forms/GeneralPreferences.php:232
 msgid "Tuesday"
 msgstr "Вівторок"
 
 #: application/controllers/LocaleController.php:256
-#: application/forms/GeneralPreferences.php:240
+#: application/forms/GeneralPreferences.php:233
 msgid "Wednesday"
 msgstr "Середа"
 
 #: application/controllers/LocaleController.php:257
-#: application/forms/GeneralPreferences.php:241
+#: application/forms/GeneralPreferences.php:234
 msgid "Thursday"
 msgstr "Четвер"
 
 #: application/controllers/LocaleController.php:258
-#: application/forms/GeneralPreferences.php:242
+#: application/forms/GeneralPreferences.php:235
 msgid "Friday"
 msgstr "П'ятниця"
 
 #: application/controllers/LocaleController.php:259
-#: application/forms/GeneralPreferences.php:243
+#: application/forms/GeneralPreferences.php:236
 msgid "Saturday"
 msgstr "Субота"
 
@@ -2044,7 +2042,7 @@ msgid "Moving %s Items"
 msgstr "Переміщення %s елементів"
 
 #: application/controllers/LocaleController.php:302
-#: application/forms/AddTracktype.php:59 application/forms/AddUser.php:108
+#: application/forms/AddTracktype.php:64 application/forms/AddUser.php:108
 #: application/forms/EditAudioMD.php:280 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
@@ -2588,7 +2586,7 @@ msgstr "Відповідних типів треків не знайдено"
 #: application/forms/GeneralPreferences.php:125
 #: application/forms/GeneralPreferences.php:141
 #: application/forms/GeneralPreferences.php:160
-#: application/forms/GeneralPreferences.php:221
+#: application/forms/GeneralPreferences.php:214
 msgid "Enabled"
 msgstr "Увімкнено"
 
@@ -2597,7 +2595,7 @@ msgstr "Увімкнено"
 #: application/forms/GeneralPreferences.php:124
 #: application/forms/GeneralPreferences.php:140
 #: application/forms/GeneralPreferences.php:159
-#: application/forms/GeneralPreferences.php:220
+#: application/forms/GeneralPreferences.php:213
 msgid "Disabled"
 msgstr "Вимкнено"
 
@@ -2611,10 +2609,7 @@ msgstr "Тип"
 
 #: application/controllers/LocaleController.php:465
 msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='https://libretime.org/docs/user-manual/playlists/'>More information</a>"
-msgstr ""
-"Вміст автозавантажуваних списків відтворення додається до передач за годину "
-"до їх виходу в ефір. <a target='_blank' href='https://libretime.org/docs/"
-"user-manual/playlists/'>Докладніше</a>"
+msgstr "Вміст автозавантажуваних списків відтворення додається до передач за годину до їх виходу в ефір. <a target='_blank' href='https://libretime.org/docs/user-manual/playlists/'>Докладніше</a>"
 
 #: application/controllers/LocaleController.php:466
 msgid "Podcast settings saved"
@@ -2767,23 +2762,23 @@ msgstr "Смарт-блок без назви"
 msgid "Unknown Playlist"
 msgstr "Невідомий плейлист"
 
-#: application/controllers/PreferenceController.php:70
+#: application/controllers/PreferenceController.php:69
 msgid "Preferences updated."
 msgstr "Налаштування оновлено."
 
-#: application/controllers/PreferenceController.php:204
+#: application/controllers/PreferenceController.php:203
 msgid "Stream Setting Updated."
 msgstr "Налаштування потоку оновлено."
 
-#: application/controllers/PreferenceController.php:249
+#: application/controllers/PreferenceController.php:248
 msgid "path should be specified"
 msgstr "слід вказати шлях"
 
-#: application/controllers/PreferenceController.php:292
+#: application/controllers/PreferenceController.php:291
 msgid "Problem with Liquidsoap..."
 msgstr "Проблема з Liquidsoap..."
 
-#: application/controllers/PreferenceController.php:335
+#: application/controllers/PreferenceController.php:334
 msgid "Request method not accepted"
 msgstr "Метод запиту не прийнято"
 
@@ -2804,11 +2799,11 @@ msgstr "Видалити курсор"
 msgid "show does not exist"
 msgstr "програми не існує"
 
-#: application/controllers/TracktypeController.php:61
+#: application/controllers/TracktypeController.php:62
 msgid "Track Type added successfully!"
 msgstr "Тип треку успішно додано!"
 
-#: application/controllers/TracktypeController.php:63
+#: application/controllers/TracktypeController.php:64
 msgid "Track Type updated successfully!"
 msgstr "Тип треку успішно оновлено!"
 
@@ -3107,7 +3102,11 @@ msgstr "Код:"
 msgid "Visibility:"
 msgstr "Видимість:"
 
-#: application/forms/AddTracktype.php:69
+#: application/forms/AddTracktype.php:57
+msgid "Analyze cue points:"
+msgstr ""
+
+#: application/forms/AddTracktype.php:74
 msgid "Code is not unique."
 msgstr "Код не унікальний."
 
@@ -3330,36 +3329,28 @@ msgstr ""
 "Увімкнення цієї функції дозволить LibreTime надавати дані розкладу\n"
 "                                            до зовнішніх віджетів, які можна вбудувати на ваш веб-сайт."
 
-#: application/forms/GeneralPreferences.php:176
-msgid "Allowed CORS URLs (DEPRECATED)"
-msgstr "Дозволені URL-адреси CORS (Застаріле)"
-
-#: application/forms/GeneralPreferences.php:177
-msgid "Remote URLs that are allowed to access this LibreTime instance in a browser. One URL per line. (DEPRECATED: Allowed CORS origins configuration moved to the configuration file.)"
-msgstr "Віддалені URL-адреси, які мають доступ до цього екземпляра LibreTime у веб-переглядачі. Один URL на рядок. (Застаріле: конфігурацію дозволених джерел CORS переміщено до файлу конфігурації.)"
-
-#: application/forms/GeneralPreferences.php:182
+#: application/forms/GeneralPreferences.php:175
 msgid "Default Language"
 msgstr "Мова за замовчуванням"
 
-#: application/forms/GeneralPreferences.php:189
+#: application/forms/GeneralPreferences.php:182
 #: application/forms/SetupLanguageTimezone.php:22
 msgid "Station Timezone"
 msgstr "Часовий пояс станції"
 
-#: application/forms/GeneralPreferences.php:197
+#: application/forms/GeneralPreferences.php:190
 msgid "Week Starts On"
 msgstr "Тиждень починається з"
 
-#: application/forms/GeneralPreferences.php:213
+#: application/forms/GeneralPreferences.php:206
 msgid "Display login button on your Radio Page?"
 msgstr "Відображати кнопку входу на сторінці радіо?"
 
-#: application/forms/GeneralPreferences.php:218
+#: application/forms/GeneralPreferences.php:211
 msgid "Feature Previews"
 msgstr "Попередній перегляд функцій"
 
-#: application/forms/GeneralPreferences.php:224
+#: application/forms/GeneralPreferences.php:217
 msgid "Enable this to opt-in to test new features."
 msgstr "Увімкніть це, щоб тестувати нові функції."
 
@@ -4216,6 +4207,9 @@ msgstr "Веб-потоки"
 #~ msgid "All rights are reserved"
 #~ msgstr "All rights are reserved"
 
+#~ msgid "Allowed CORS URLs (DEPRECATED)"
+#~ msgstr "Дозволені URL-адреси CORS (Застаріле)"
+
 #~ msgid "Audio Track"
 #~ msgstr "Audio Track"
 
@@ -4480,6 +4474,9 @@ msgstr "Веб-потоки"
 
 #~ msgid "Register Airtime"
 #~ msgstr "Register Airtime"
+
+#~ msgid "Remote URLs that are allowed to access this LibreTime instance in a browser. One URL per line. (DEPRECATED: Allowed CORS origins configuration moved to the configuration file.)"
+#~ msgstr "Віддалені URL-адреси, які мають доступ до цього екземпляра LibreTime у веб-переглядачі. Один URL на рядок. (Застаріле: конфігурацію дозволених джерел CORS переміщено до файлу конфігурації.)"
 
 #~ msgid "Remove watched directory"
 #~ msgstr "Remove watched directory"
