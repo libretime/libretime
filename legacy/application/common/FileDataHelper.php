@@ -305,21 +305,31 @@ class FileDataHelper
 
         $fp = Config::getStoragePath();
 
-        $dbMetadataPath = $md['MDATA_KEY_ARTWORK'];
-        $fullpath = $fp . $dbMetadataPath;
-
+        $artworkBasePath = $fp . $md['MDATA_KEY_ARTWORK'];
         $audioPath = $fp . $md['MDATA_KEY_FILEPATH'];
 
-        if (file_exists($fullpath)) {
-            foreach (glob("{$fullpath}*", GLOB_NOSORT) as $filename) {
-                
-                // Do not delete the audio file.
-                if($filename !== $audioPath){
-                    unlink($filename);
-                }
+        $artworkPaths = [
+            $artworkBasePath,
+            $artworkBasePath . '-32.jpg',
+            $artworkBasePath . '-64.jpg',
+            $artworkBasePath . '-128.jpg',
+            $artworkBasePath . '-256.jpg',
+            $artworkBasePath . '-512.jpg',
+            $artworkBasePath . '-32',
+            $artworkBasePath . '-64',
+            $artworkBasePath . '-128',
+            $artworkBasePath . '-256',
+        ];
+
+        foreach ($artworkPaths as $filename) {
+            // This should never happen. Make sure we don't delete the audio file.
+            if ($filename == $audioPath) {
+                continue;
             }
-        } else {
-            throw new Exception('Could not locate file ' . $filepath);
+
+            if (file_exists($filename)) {
+                unlink($filename);
+            }
         }
 
         return '';
