@@ -57,7 +57,7 @@ http = input.http_restart(id="http")
 http = cross_http(http_input_id="http",http)
 output.dummy(fallible=true, http)
 stream_queue = http_fallback(http_input_id="http", http=http, default=queue)
-stream_queue = map_metadata(update=false, append_title, stream_queue)
+stream_queue = map_metadata(id="map_metadata:schedule", update=false, append_title, stream_queue)
 
 ignore(output.dummy(stream_queue, fallible=true))
 
@@ -92,7 +92,7 @@ def map_message_offline(m) =
   [("title", message_offline())]
 end
 
-default = map_metadata(map_message_offline, default)
+default = map_metadata(id="map_metadata:offline", map_message_offline, default)
 ignore(output.dummy(default, fallible=true))
 
 input_main_streaming = ref false
@@ -142,7 +142,7 @@ def make_input_auth_handler(source_name)
     auth_handler
 end
 
-s = switch(id="schedule_noise_switch",
+s = switch(id="switch:blank+schedule",
             track_sensitive=false,
             transitions=[transition_default, transition],
             [({!schedule_streaming}, stream_queue), ({true}, default)]
@@ -151,7 +151,7 @@ s = switch(id="schedule_noise_switch",
 s = if input_show_port != 0 and input_show_mount != "" then
     input_show_source =
         audio_to_stereo(
-            input.harbor(id="input_show_harbor",
+            input.harbor(id="harbor:input_show",
                 input_show_mount,
                 port=input_show_port,
                 auth=make_input_auth_handler("dj"),
@@ -161,7 +161,7 @@ s = if input_show_port != 0 and input_show_mount != "" then
 
     ignore(output.dummy(input_show_source, fallible=true))
 
-    switch(id="show_schedule_noise_switch",
+    switch(id="switch:blank+schedule+show",
             track_sensitive=false,
             transitions=[transition, transition],
             [({!input_show_streaming}, input_show_source), ({true}, s)]
@@ -173,7 +173,7 @@ end
 s = if input_main_port != 0 and input_main_mount != "" then
     input_main_source =
         audio_to_stereo(
-            input.harbor(id="input_main_harbor",
+            input.harbor(id="harbor:input_main",
                 input_main_mount,
                 port=input_main_port,
                 auth=make_input_auth_handler("master"),
@@ -183,7 +183,7 @@ s = if input_main_port != 0 and input_main_mount != "" then
 
     ignore(output.dummy(input_main_source, fallible=true))
 
-    switch(id="main_show_schedule_noise_switch",
+    switch(id="switch:blank+schedule+show+main",
             track_sensitive=false,
             transitions=[transition, transition],
             [({!input_main_streaming}, input_main_source), ({true}, s)]
