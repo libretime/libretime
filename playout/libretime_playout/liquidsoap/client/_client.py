@@ -83,21 +83,21 @@ class LiquidsoapClient:
     def web_stream_start(self) -> None:
         with self.conn:
             self.conn.write("sources.start_schedule")
-            self.conn.write("web_stream.output_start")
+            self.conn.write("sources.start_web_stream")
 
     def web_stream_start_buffer(self, schedule_id: int, uri: str) -> None:
         with self.conn:
-            self.conn.write(f"web_stream.id {schedule_id}")
+            self.conn.write(f"web_stream.set_id {schedule_id}")
             self.conn.write(f"http.restart {uri}")
 
     def web_stream_stop(self) -> None:
         with self.conn:
-            self.conn.write("web_stream.output_stop")
+            self.conn.write("sources.stop_web_stream")
 
     def web_stream_stop_buffer(self) -> None:
         with self.conn:
             self.conn.write("http.stop")
-            self.conn.write("web_stream.id -1")
+            self.conn.write("web_stream.set_id -1")
 
     def source_disconnect(self, name: Literal["master_dj", "live_dj"]) -> None:
         command_map = {
