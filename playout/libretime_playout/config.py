@@ -12,8 +12,8 @@ from pydantic import BaseModel
 CACHE_DIR = Path.cwd() / "scheduler"
 RECORD_DIR = Path.cwd() / "recorder"
 
-PUSH_INTERVAL = 2
-POLL_INTERVAL = 400
+PUSH_INTERVAL: float = 2.0
+POLL_INTERVAL: float = 400.0
 
 
 class PlayoutConfig(BaseModel):

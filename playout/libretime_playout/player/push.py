@@ -4,9 +4,10 @@ import time
 from datetime import datetime
 from queue import Queue
 from threading import Thread
-from typing import Any, Dict
+from typing import List, Tuple
 
 from ..config import PUSH_INTERVAL, Config
+from .events import AnyEvent, EventKind, Events, event_key_to_datetime
 from .liquidsoap import PypoLiquidsoap
 from .queue import PypoLiqQueue
 
@@ -27,7 +28,7 @@ class PypoPush(Thread):
 
     def __init__(
         self,
-        push_queue: Queue[Dict[str, Any]],
+        push_queue: Queue[Events],
         pypo_liquidsoap: PypoLiquidsoap,
         config: Config,
     ):
@@ -36,11 +37,7 @@ class PypoPush(Thread):
 
         self.config = config
 
-        self.pushed_objects = {}
-        self.current_prebuffering_stream_id = None
-        self.queue_id = 0
-
-        self.future_scheduled_queue: Queue[Dict[str, Any]] = Queue()
+        self.future_scheduled_queue: Queue[Events] = Queue()
         self.pypo_liquidsoap = pypo_liquidsoap
 
         self.plq = PypoLiqQueue(self.future_scheduled_queue, self.pypo_liquidsoap)
@@ -50,20 +47,20 @@ class PypoPush(Thread):
         loops = 0
         heartbeat_period = math.floor(30 / PUSH_INTERVAL)
 
-        media_schedule = None
+        events = None
 
         while True:
             try:
-                media_schedule = self.queue.get(block=True)
+                events = self.queue.get(block=True)
             except Exception as exception:
                 logger.exception(exception)
                 raise exception
             else:
-                logger.debug(media_schedule)
+                logger.debug(events)
                 # separate media_schedule list into currently_playing and
                 # scheduled_for_future lists
                 currently_playing, scheduled_for_future = self.separate_present_future(
-                    media_schedule
+                    events
                 )
 
                 self.pypo_liquidsoap.verify_correct_present_media(currently_playing)
@@ -74,29 +71,31 @@ class PypoPush(Thread):
                 loops = 0
             loops += 1
 
-    def separate_present_future(self, media_schedule):
-        tnow = datetime.utcnow()
+    def separate_present_future(self, events: Events) -> Tuple[List[AnyEvent], Events]:
+        now = datetime.utcnow()
 
-        present = []
-        future = {}
+        present: List[AnyEvent] = []
+        future: Events = {}
 
-        sorted_keys = sorted(media_schedule.keys())
-        for mkey in sorted_keys:
-            media_item = media_schedule[mkey]
+        for key in sorted(events.keys()):
+            item = events[key]
 
             # Ignore track that already ended
-            if media_item["type"] == "file" and media_item["end"] < tnow:
-                logger.debug("ignoring ended media_item: %s", media_item)
+            if (
+                item["type"] == EventKind.FILE
+                and event_key_to_datetime(item["end"]) < now
+            ):
+                logger.debug("ignoring ended media_item: %s", item)
                 continue
 
-            diff_sec = (tnow - media_item["start"]).total_seconds()
+            diff_sec = (now - event_key_to_datetime(item["start"])).total_seconds()
 
             if diff_sec >= 0:
-                logger.debug("adding media_item to present: %s", media_item)
-                present.append(media_item)
+                logger.debug("adding media_item to present: %s", item)
+                present.append(item)
             else:
-                logger.debug("adding media_item to future: %s", media_item)
-                future[mkey] = media_item
+                logger.debug("adding media_item to future: %s", item)
+                future[key] = item
 
         return present, future
 

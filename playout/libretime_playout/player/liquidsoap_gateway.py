@@ -3,44 +3,41 @@ from typing import List
 
 from ..liquidsoap.client import LiquidsoapClient
 from ..timeout import ls_timeout
+from .events import FileEvent
 
 logger = logging.getLogger(__name__)
 
 
-def create_liquidsoap_annotation(media):
+def create_liquidsoap_annotation(file_event: FileEvent) -> str:
     # We need liq_start_next value in the annotate. That is the value that controls overlap duration of crossfade.
-
-    filename = media["dst"]
-    annotation = (
-        'annotate:media_id="%s",liq_start_next="0",liq_fade_in="%s",'
-        + 'liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",'
-        + 'schedule_table_id="%s",replay_gain="%s dB"'
-    ) % (
-        media["id"],
-        float(media["fade_in"]) / 1000,
-        float(media["fade_out"]) / 1000,
-        float(media["cue_in"]),
-        float(media["cue_out"]),
-        media["row_id"],
-        media["replay_gain"],
-    )
+    annotations = {
+        "media_id": file_event["id"],
+        "liq_start_next": "0",
+        "liq_fade_in": float(file_event["fade_in"]) / 1000,
+        "liq_fade_out": float(file_event["fade_out"]) / 1000,
+        "liq_cue_in": float(file_event["cue_in"]),
+        "liq_cue_out": float(file_event["cue_out"]),
+        "schedule_table_id": file_event["row_id"],
+        "replay_gain": f"{file_event['replay_gain']} dB",
+    }
 
     # Override the the artist/title that Liquidsoap extracts from a file's metadata
     # with the metadata we get from Airtime. (You can modify metadata in Airtime's library,
     # which doesn't get saved back to the file.)
-    if "metadata" in media:
-        if "artist_name" in media["metadata"]:
-            artist_name = media["metadata"]["artist_name"]
-            if isinstance(artist_name, str):
-                annotation += ',artist="%s"' % (artist_name.replace('"', '\\"'))
-        if "track_title" in media["metadata"]:
-            track_title = media["metadata"]["track_title"]
-            if isinstance(track_title, str):
-                annotation += ',title="%s"' % (track_title.replace('"', '\\"'))
+    if "metadata" in file_event:
+        if "artist_name" in file_event["metadata"]:
+            artist_name = file_event["metadata"]["artist_name"]
+            if artist_name:
+                annotations["artist"] = artist_name.replace('"', '\\"')
 
-    annotation += ":" + filename
+        if "track_title" in file_event["metadata"]:
+            track_title = file_event["metadata"]["track_title"]
+            if track_title:
+                annotations["title"] = track_title.replace('"', '\\"')
 
-    return annotation
+    annotations_str = ",".join(f'{key}="{value}"' for key, value in annotations.items())
+
+    return "annotate:" + annotations_str + ":" + file_event["dst"]
 
 
 class TelnetLiquidsoap:

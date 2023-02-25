@@ -5,10 +5,12 @@ import stat
 import time
 from queue import Empty, Queue
 from threading import Thread
-from typing import Any, Dict
+from typing import Optional
 
 from libretime_api_client.v2 import ApiClient
 from requests.exceptions import ConnectionError, HTTPError, Timeout
+
+from .events import FileEvent, FileEvents
 
 logger = logging.getLogger(__name__)
 
@@ -17,22 +19,25 @@ class PypoFile(Thread):
     name = "file"
     daemon = True
 
+    file_events_queue: Queue[FileEvents]
+    file_events: FileEvents
+
     def __init__(
         self,
-        file_queue: Queue[Dict[str, Any]],
+        file_queue: Queue[FileEvents],
         api_client: ApiClient,
     ):
         Thread.__init__(self)
-        self.media_queue = file_queue
-        self.media = None
+        self.file_events_queue = file_queue
+        self.file_events = {}
         self.api_client = api_client
 
-    def copy_file(self, media_item):
+    def copy_file(self, file_event: FileEvent):
         """
-        Copy media_item from local library directory to local cache directory.
+        Copy file_event from local library directory to local cache directory.
         """
-        file_id = media_item["id"]
-        dst = media_item["dst"]
+        file_id = file_event["id"]
+        dst = file_event["dst"]
 
         dst_exists = True
         try:
@@ -54,13 +59,13 @@ class PypoFile(Thread):
         else:
             do_copy = True
 
-        media_item["file_ready"] = not do_copy
+        file_event["file_ready"] = not do_copy
 
         if do_copy:
             logger.info("copying file %s to cache %s", file_id, dst)
             try:
                 with open(dst, "wb") as handle:
-                    logger.info(media_item)
+                    logger.info(file_event)
                     try:
                         response = self.api_client.download_file(file_id, stream=True)
                         for chunk in response.iter_content(chunk_size=2048):
@@ -68,19 +73,19 @@ class PypoFile(Thread):
 
                     except HTTPError as exception:
                         raise RuntimeError(
-                            f"could not download file {media_item['id']}"
+                            f"could not download file {file_event['id']}"
                         ) from exception
 
                 # make file world readable and owner writable
                 os.chmod(dst, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
 
-                if media_item["filesize"] == 0:
+                if file_event["filesize"] == 0:
                     file_size = self.report_file_size_and_md5_to_api(
-                        dst, media_item["id"]
+                        dst, file_event["id"]
                     )
-                    media_item["filesize"] = file_size
+                    file_event["filesize"] = file_size
 
-                media_item["file_ready"] = True
+                file_event["file_ready"] = True
             except Exception as exception:
                 logger.exception(
                     "could not copy file %s to %s: %s",
@@ -89,18 +94,18 @@ class PypoFile(Thread):
                     exception,
                 )
 
-    def report_file_size_and_md5_to_api(self, file_path, file_id):
+    def report_file_size_and_md5_to_api(self, file_path: str, file_id: int) -> int:
         try:
             file_size = os.path.getsize(file_path)
 
             with open(file_path, "rb") as fh:
-                m = hashlib.md5()
+                hasher = hashlib.md5(usedforsecurity=False)
                 while True:
                     data = fh.read(8192)
                     if not data:
                         break
-                    m.update(data)
-                md5_hash = m.hexdigest()
+                    hasher.update(data)
+                md5_hash = hasher.hexdigest()
         except OSError as exception:
             file_size = 0
             logger.exception(
@@ -123,21 +128,24 @@ class PypoFile(Thread):
 
         return file_size
 
-    def get_highest_priority_media_item(self, schedule):
+    def get_highest_priority_file_event(
+        self,
+        file_events: FileEvents,
+    ) -> Optional[FileEvent]:
         """
-        Get highest priority media_item in the queue. Currently the highest
+        Get highest priority file event in the queue. Currently the highest
         priority is decided by how close the start time is to "now".
         """
-        if schedule is None or len(schedule) == 0:
+        if file_events is None or len(file_events) == 0:
             return None
 
-        sorted_keys = sorted(schedule.keys())
+        sorted_keys = sorted(file_events.keys())
 
         if len(sorted_keys) == 0:
             return None
 
         highest_priority = sorted_keys[0]
-        media_item = schedule[highest_priority]
+        file_event = file_events[highest_priority]
 
         logger.debug("Highest priority item: %s", highest_priority)
 
@@ -147,30 +155,30 @@ class PypoFile(Thread):
         # it is very possible we will have to deal with the same media_items
         # again. In this situation, the worst possible case is that we try to
         # copy the file again and realize we already have it (thus aborting the copy).
-        del schedule[highest_priority]
+        del file_events[highest_priority]
 
-        return media_item
+        return file_event
 
     def main(self):
         while True:
             try:
-                if self.media is None or len(self.media) == 0:
+                if self.file_events is None or len(self.file_events) == 0:
                     # We have no schedule, so we have nothing else to do. Let's
                     # do a blocked wait on the queue
-                    self.media = self.media_queue.get(block=True)
+                    self.file_events = self.file_events_queue.get(block=True)
                 else:
                     # We have a schedule we need to process, but we also want
                     # to check if a newer schedule is available. In this case
                     # do a non-blocking queue.get and in either case (we get something
                     # or we don't), get back to work on preparing getting files.
                     try:
-                        self.media = self.media_queue.get_nowait()
+                        self.file_events = self.file_events_queue.get_nowait()
                     except Empty:
                         pass
 
-                media_item = self.get_highest_priority_media_item(self.media)
-                if media_item is not None:
-                    self.copy_file(media_item)
+                file_event = self.get_highest_priority_file_event(self.file_events)
+                if file_event is not None:
+                    self.copy_file(file_event)
             except Exception as exception:
                 logger.exception(exception)
                 raise exception
