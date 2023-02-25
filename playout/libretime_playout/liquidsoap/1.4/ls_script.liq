@@ -43,11 +43,6 @@ create_source()
 create_source()
 create_source()
 
-create_source()
-create_source()
-create_source()
-create_source()
-
 queue = add(!sources, normalize=false)
 pair = insert_metadata(queue)
 dynamic_metadata_callback := fst(pair)

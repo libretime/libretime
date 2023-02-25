@@ -16,7 +16,6 @@ class PypoLiquidsoap:
             "s1": None,
             "s2": None,
             "s3": None,
-            "s4": None,
         }
 
         self.liq_client = liq_client
