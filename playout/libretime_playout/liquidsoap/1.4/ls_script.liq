@@ -61,30 +61,35 @@ stream_queue = map_metadata(id="map_metadata:schedule", update=false, append_tit
 
 ignore(output.dummy(stream_queue, fallible=true))
 
-server.register(namespace="web_stream",
-                description="Enable webstream output",
-                usage='start',
-                "output_start",
-                fun (s) -> begin log("web_stream.output_start")
+def web_stream_set_id(value)
+    web_stream_id := value
+    string_of(!web_stream_id)
+end
+
+def web_stream_get_id()
+    string_of(!web_stream_id)
+end
+
+server.register(namespace="sources",
+                description="Start webstream source",
+                "start_web_stream",
+                fun (s) -> begin log("sources.start_web_stream")
                     notify([("schedule_table_id", !web_stream_id)])
                     web_stream_enabled := true "enabled" end)
-server.register(namespace="web_stream",
-                description="Enable webstream output",
-                usage='stop',
-                "output_stop",
-                fun (s) -> begin log("web_stream.output_stop") web_stream_enabled := false "disabled" end)
+server.register(namespace="sources",
+                description="Stop webstream source",
+                "stop_web_stream",
+                fun (s) -> begin log("sources.stop_web_stream") web_stream_enabled := false "disabled" end)
 
 server.register(namespace="web_stream",
-                description="Set the streams cc_schedule row id",
-                usage="id <id>",
-                "id",
-                fun (s) -> begin log("web_stream.id") set_web_stream_id(s) end)
+                description="Set the web stream id",
+                "set_id",
+                fun (s) -> begin log("web_stream.set_id") web_stream_set_id(s) end)
 
 server.register(namespace="web_stream",
-                description="Get the streams cc_schedule row id",
-                usage="get_id",
+                description="Get the web stream id",
                 "get_id",
-                fun (s) -> begin log("web_stream.get_id") get_web_stream_id() end)
+                fun (s) -> begin log("web_stream.get_id") web_stream_get_id() end)
 
 default = amplify(id="silence_src", 0.00001, noise())
 

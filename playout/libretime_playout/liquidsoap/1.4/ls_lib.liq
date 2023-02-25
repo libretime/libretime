@@ -207,15 +207,6 @@ def clear_queue(s)
     source.skip(s)
 end
 
-def set_web_stream_id(id) =
-    web_stream_id := id
-    string_of(!web_stream_id)
-end
-
-def get_web_stream_id() =
-    string_of(!web_stream_id)
-end
-
 # NOTE
 # A few values are hardcoded and may be dependent:
 #  - the delay in gracetime is linked with the buffer duration of input.http
