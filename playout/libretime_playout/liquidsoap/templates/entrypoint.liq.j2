@@ -8,9 +8,6 @@ input_main_port = {{ config.stream.inputs.main.port }}
 input_show_mount = {{ config.stream.inputs.show.mount | quote }}
 input_show_port = {{ config.stream.inputs.show.port }}
 
-# Outputs
-icecast_vorbis_metadata = {{ icecast_vorbis_metadata | lower }}
-
 # Settings
 auth_path = {{ paths.auth_filepath | quote }}
 

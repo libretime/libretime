@@ -11,9 +11,6 @@
   input_show_mount = "show"
   input_show_port = 8002
   
-  # Outputs
-  icecast_vorbis_metadata = false
-  
   # Settings
   auth_path = "/fake/liquidsoap_auth.py"
   
@@ -51,9 +48,6 @@
   input_show_mount = "show"
   input_show_port = 8002
   
-  # Outputs
-  icecast_vorbis_metadata = false
-  
   # Settings
   auth_path = "/fake/liquidsoap_auth.py"
   
@@ -75,6 +69,8 @@
   
   # icecast:1
   output_icecast_1_source = s
+  # Disable ogg metadata
+  output_icecast_1_source = add(normalize=false, [amplify(0.00001, noise()), output_icecast_1_source])
   output.icecast(
     id="icecast:1",
     host="localhost",
@@ -113,9 +109,6 @@
   input_main_port = 8001
   input_show_mount = "show"
   input_show_port = 8002
-  
-  # Outputs
-  icecast_vorbis_metadata = false
   
   # Settings
   auth_path = "/fake/liquidsoap_auth.py"
@@ -175,9 +168,6 @@
   input_show_mount = "show"
   input_show_port = 8002
   
-  # Outputs
-  icecast_vorbis_metadata = false
-  
   # Settings
   auth_path = "/fake/liquidsoap_auth.py"
   
@@ -199,6 +189,8 @@
   
   # icecast:1
   output_icecast_1_source = s
+  # Disable ogg metadata
+  output_icecast_1_source = add(normalize=false, [amplify(0.00001, noise()), output_icecast_1_source])
   output.icecast(
     id="icecast:1",
     host="localhost",
@@ -259,9 +251,6 @@
   input_show_mount = "show"
   input_show_port = 8002
   
-  # Outputs
-  icecast_vorbis_metadata = false
-  
   # Settings
   auth_path = "/fake/liquidsoap_auth.py"
   
@@ -305,9 +294,6 @@
   input_main_port = 8001
   input_show_mount = "show"
   input_show_port = 8002
-  
-  # Outputs
-  icecast_vorbis_metadata = false
   
   # Settings
   auth_path = "/fake/liquidsoap_auth.py"

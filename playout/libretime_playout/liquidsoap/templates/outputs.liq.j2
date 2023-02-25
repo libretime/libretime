@@ -53,6 +53,12 @@ output_icecast_{{ output_id }}_source = s
 output_icecast_{{ output_id }}_source = mean(s)
 {% endif -%}
 
+{#- Add per output stream modifications. -#}
+{% if output.audio.format == "ogg" and not output.audio.enable_metadata -%}
+# Disable ogg metadata
+output_icecast_{{ output_id }}_source = add(normalize=false, [amplify(0.00001, noise()), output_icecast_{{ output_id }}_source])
+{% endif -%}
+
 output.icecast(
   id="icecast:{{ output_id }}",
   host={{ output.host | quote }},
