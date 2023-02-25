@@ -70,3 +70,7 @@ services:
   nginx:
     volumes:
       - ./legacy:/var/www/html
+
+  icecast:
+    environment:
+      ICECAST_MAX_SOURCES: 10

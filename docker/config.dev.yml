@@ -36,6 +36,13 @@ stream:
 
       - <<: *default_icecast_output
         enabled: true
+        mount: main.opus
+        audio:
+          format: opus
+          bitrate: 256
+
+      - <<: *default_icecast_output
+        enabled: true
         mount: main.mp3
         audio:
           format: mp3
