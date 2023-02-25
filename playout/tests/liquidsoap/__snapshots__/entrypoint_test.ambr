@@ -1,5 +1,116 @@
 # serializer version: 1
-# name: test_generate_entrypoint[1.4]
+# name: test_generate_entrypoint[stream_config0-1.4]
+  '''
+  # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
+  ###########################################################
+  # The ignore() lines are to squash unused variable warnings
+  
+  # Inputs
+  input_main_mount = "main"
+  input_main_port = 8001
+  input_show_mount = "show"
+  input_show_port = 8002
+  
+  # Output s1
+  s1_enable = false
+  s1_output = "icecast"
+  s1_host = "localhost"
+  s1_port = 8000
+  s1_mount = ""
+  s1_user = "source"
+  s1_pass = ""
+  
+  s1_channels = "stereo"
+  s1_type = "ogg"
+  s1_bitrate = 256
+  
+  s1_name = ""
+  s1_description = ""
+  s1_genre = ""
+  s1_url = ""
+  
+  # Output s2
+  s2_enable = false
+  s2_output = "icecast"
+  s2_host = "localhost"
+  s2_port = 8000
+  s2_mount = ""
+  s2_user = "source"
+  s2_pass = ""
+  
+  s2_channels = "stereo"
+  s2_type = "ogg"
+  s2_bitrate = 256
+  
+  s2_name = ""
+  s2_description = ""
+  s2_genre = ""
+  s2_url = ""
+  
+  # Output s3
+  s3_enable = false
+  s3_output = "icecast"
+  s3_host = "localhost"
+  s3_port = 8000
+  s3_mount = ""
+  s3_user = "source"
+  s3_pass = ""
+  
+  s3_channels = "stereo"
+  s3_type = "ogg"
+  s3_bitrate = 256
+  
+  s3_name = ""
+  s3_description = ""
+  s3_genre = ""
+  s3_url = ""
+  
+  # Output s4
+  s4_enable = false
+  s4_output = "icecast"
+  s4_host = "localhost"
+  s4_port = 8000
+  s4_mount = ""
+  s4_user = "source"
+  s4_pass = ""
+  
+  s4_channels = "stereo"
+  s4_type = "ogg"
+  s4_bitrate = 256
+  
+  s4_name = ""
+  s4_description = ""
+  s4_genre = ""
+  s4_url = ""
+  
+  icecast_vorbis_metadata = false
+  
+  # System output
+  output_sound_device = false
+  output_sound_device_type = "alsa"
+  
+  # Settings
+  auth_path = "/fake/liquidsoap_auth.py"
+  
+  set("log.file.path", "/var/log/radio.log")
+  
+  set("server.telnet", true)
+  set("server.telnet.bind_addr", "127.0.0.1")
+  set("server.telnet.port", 1234)
+  
+  set("harbor.bind_addrs", ["0.0.0.0"])
+  
+  station_name = interactive.string("station_name", "LibreTime")
+  
+  message_offline = interactive.string("message_offline", "LibreTime - offline")
+  message_format = interactive.string("message_format", "0")
+  input_fade_transition = interactive.float("input_fade_transition", 0.0)
+  
+  %include "/fake/1.4/ls_script.liq"
+  
+  '''
+# ---
+# name: test_generate_entrypoint[stream_config1-1.4]
   '''
   # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
   ###########################################################
@@ -30,7 +141,7 @@
   s1_url = "https://libretime.org"
   
   # Output s2
-  s2_enable = true
+  s2_enable = false
   s2_output = "icecast"
   s2_host = "localhost"
   s2_port = 8000
@@ -40,6 +151,450 @@
   
   s2_channels = "stereo"
   s2_type = "mp3"
+  s2_bitrate = 256
+  
+  s2_name = ""
+  s2_description = ""
+  s2_genre = ""
+  s2_url = ""
+  
+  # Output s3
+  s3_enable = false
+  s3_output = "icecast"
+  s3_host = "localhost"
+  s3_port = 8000
+  s3_mount = ""
+  s3_user = "source"
+  s3_pass = ""
+  
+  s3_channels = "stereo"
+  s3_type = "ogg"
+  s3_bitrate = 256
+  
+  s3_name = ""
+  s3_description = ""
+  s3_genre = ""
+  s3_url = ""
+  
+  # Output s4
+  s4_enable = false
+  s4_output = "icecast"
+  s4_host = "localhost"
+  s4_port = 8000
+  s4_mount = ""
+  s4_user = "source"
+  s4_pass = ""
+  
+  s4_channels = "stereo"
+  s4_type = "ogg"
+  s4_bitrate = 256
+  
+  s4_name = ""
+  s4_description = ""
+  s4_genre = ""
+  s4_url = ""
+  
+  icecast_vorbis_metadata = false
+  
+  # System output
+  output_sound_device = false
+  output_sound_device_type = "alsa"
+  
+  # Settings
+  auth_path = "/fake/liquidsoap_auth.py"
+  
+  set("log.file.path", "/var/log/radio.log")
+  
+  set("server.telnet", true)
+  set("server.telnet.bind_addr", "127.0.0.1")
+  set("server.telnet.port", 1234)
+  
+  set("harbor.bind_addrs", ["0.0.0.0"])
+  
+  station_name = interactive.string("station_name", "LibreTime")
+  
+  message_offline = interactive.string("message_offline", "LibreTime - offline")
+  message_format = interactive.string("message_format", "0")
+  input_fade_transition = interactive.float("input_fade_transition", 0.0)
+  
+  %include "/fake/1.4/ls_script.liq"
+  
+  '''
+# ---
+# name: test_generate_entrypoint[stream_config2-1.4]
+  '''
+  # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
+  ###########################################################
+  # The ignore() lines are to squash unused variable warnings
+  
+  # Inputs
+  input_main_mount = "main"
+  input_main_port = 8001
+  input_show_mount = "show"
+  input_show_port = 8002
+  
+  # Output s1
+  s1_enable = false
+  s1_output = "icecast"
+  s1_host = "localhost"
+  s1_port = 8000
+  s1_mount = ""
+  s1_user = "source"
+  s1_pass = ""
+  
+  s1_channels = "stereo"
+  s1_type = "ogg"
+  s1_bitrate = 256
+  
+  s1_name = ""
+  s1_description = ""
+  s1_genre = ""
+  s1_url = ""
+  
+  # Output s2
+  s2_enable = false
+  s2_output = "icecast"
+  s2_host = "localhost"
+  s2_port = 8000
+  s2_mount = ""
+  s2_user = "source"
+  s2_pass = ""
+  
+  s2_channels = "stereo"
+  s2_type = "ogg"
+  s2_bitrate = 256
+  
+  s2_name = ""
+  s2_description = ""
+  s2_genre = ""
+  s2_url = ""
+  
+  # Output s3
+  s3_enable = false
+  s3_output = "icecast"
+  s3_host = "localhost"
+  s3_port = 8000
+  s3_mount = ""
+  s3_user = "source"
+  s3_pass = ""
+  
+  s3_channels = "stereo"
+  s3_type = "ogg"
+  s3_bitrate = 256
+  
+  s3_name = ""
+  s3_description = ""
+  s3_genre = ""
+  s3_url = ""
+  
+  # Output s4
+  s4_enable = true
+  s4_output = "shoutcast"
+  s4_host = "localhost"
+  s4_port = 8000
+  s4_mount = ""
+  s4_user = "source"
+  s4_pass = "hackme"
+  
+  s4_channels = "stereo"
+  s4_type = "mp3"
+  s4_bitrate = 256
+  
+  s4_name = "LibreTime!"
+  s4_description = ""
+  s4_genre = "various"
+  s4_url = "https://libretime.org"
+  
+  icecast_vorbis_metadata = false
+  
+  # System output
+  output_sound_device = false
+  output_sound_device_type = "alsa"
+  
+  # Settings
+  auth_path = "/fake/liquidsoap_auth.py"
+  
+  set("log.file.path", "/var/log/radio.log")
+  
+  set("server.telnet", true)
+  set("server.telnet.bind_addr", "127.0.0.1")
+  set("server.telnet.port", 1234)
+  
+  set("harbor.bind_addrs", ["0.0.0.0"])
+  
+  station_name = interactive.string("station_name", "LibreTime")
+  
+  message_offline = interactive.string("message_offline", "LibreTime - offline")
+  message_format = interactive.string("message_format", "0")
+  input_fade_transition = interactive.float("input_fade_transition", 0.0)
+  
+  %include "/fake/1.4/ls_script.liq"
+  
+  '''
+# ---
+# name: test_generate_entrypoint[stream_config3-1.4]
+  '''
+  # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
+  ###########################################################
+  # The ignore() lines are to squash unused variable warnings
+  
+  # Inputs
+  input_main_mount = "main"
+  input_main_port = 8001
+  input_show_mount = "show"
+  input_show_port = 8002
+  
+  # Output s1
+  s1_enable = true
+  s1_output = "icecast"
+  s1_host = "localhost"
+  s1_port = 8000
+  s1_mount = "main"
+  s1_user = "source"
+  s1_pass = "hackme"
+  
+  s1_channels = "stereo"
+  s1_type = "ogg"
+  s1_bitrate = 256
+  
+  s1_name = ""
+  s1_description = ""
+  s1_genre = ""
+  s1_url = ""
+  
+  # Output s2
+  s2_enable = false
+  s2_output = "icecast"
+  s2_host = "localhost"
+  s2_port = 8000
+  s2_mount = ""
+  s2_user = "source"
+  s2_pass = ""
+  
+  s2_channels = "stereo"
+  s2_type = "ogg"
+  s2_bitrate = 256
+  
+  s2_name = ""
+  s2_description = ""
+  s2_genre = ""
+  s2_url = ""
+  
+  # Output s3
+  s3_enable = false
+  s3_output = "icecast"
+  s3_host = "localhost"
+  s3_port = 8000
+  s3_mount = ""
+  s3_user = "source"
+  s3_pass = ""
+  
+  s3_channels = "stereo"
+  s3_type = "ogg"
+  s3_bitrate = 256
+  
+  s3_name = ""
+  s3_description = ""
+  s3_genre = ""
+  s3_url = ""
+  
+  # Output s4
+  s4_enable = true
+  s4_output = "shoutcast"
+  s4_host = "localhost"
+  s4_port = 8000
+  s4_mount = ""
+  s4_user = "source"
+  s4_pass = "hackme"
+  
+  s4_channels = "stereo"
+  s4_type = "mp3"
+  s4_bitrate = 256
+  
+  s4_name = ""
+  s4_description = ""
+  s4_genre = ""
+  s4_url = ""
+  
+  icecast_vorbis_metadata = false
+  
+  # System output
+  output_sound_device = false
+  output_sound_device_type = "alsa"
+  
+  # Settings
+  auth_path = "/fake/liquidsoap_auth.py"
+  
+  set("log.file.path", "/var/log/radio.log")
+  
+  set("server.telnet", true)
+  set("server.telnet.bind_addr", "127.0.0.1")
+  set("server.telnet.port", 1234)
+  
+  set("harbor.bind_addrs", ["0.0.0.0"])
+  
+  station_name = interactive.string("station_name", "LibreTime")
+  
+  message_offline = interactive.string("message_offline", "LibreTime - offline")
+  message_format = interactive.string("message_format", "0")
+  input_fade_transition = interactive.float("input_fade_transition", 0.0)
+  
+  %include "/fake/1.4/ls_script.liq"
+  
+  '''
+# ---
+# name: test_generate_entrypoint[stream_config4-1.4]
+  '''
+  # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
+  ###########################################################
+  # The ignore() lines are to squash unused variable warnings
+  
+  # Inputs
+  input_main_mount = "main"
+  input_main_port = 8001
+  input_show_mount = "show"
+  input_show_port = 8002
+  
+  # Output s1
+  s1_enable = false
+  s1_output = "icecast"
+  s1_host = "localhost"
+  s1_port = 8000
+  s1_mount = ""
+  s1_user = "source"
+  s1_pass = ""
+  
+  s1_channels = "stereo"
+  s1_type = "ogg"
+  s1_bitrate = 256
+  
+  s1_name = ""
+  s1_description = ""
+  s1_genre = ""
+  s1_url = ""
+  
+  # Output s2
+  s2_enable = false
+  s2_output = "icecast"
+  s2_host = "localhost"
+  s2_port = 8000
+  s2_mount = ""
+  s2_user = "source"
+  s2_pass = ""
+  
+  s2_channels = "stereo"
+  s2_type = "ogg"
+  s2_bitrate = 256
+  
+  s2_name = ""
+  s2_description = ""
+  s2_genre = ""
+  s2_url = ""
+  
+  # Output s3
+  s3_enable = false
+  s3_output = "icecast"
+  s3_host = "localhost"
+  s3_port = 8000
+  s3_mount = ""
+  s3_user = "source"
+  s3_pass = ""
+  
+  s3_channels = "stereo"
+  s3_type = "ogg"
+  s3_bitrate = 256
+  
+  s3_name = ""
+  s3_description = ""
+  s3_genre = ""
+  s3_url = ""
+  
+  # Output s4
+  s4_enable = false
+  s4_output = "icecast"
+  s4_host = "localhost"
+  s4_port = 8000
+  s4_mount = ""
+  s4_user = "source"
+  s4_pass = ""
+  
+  s4_channels = "stereo"
+  s4_type = "ogg"
+  s4_bitrate = 256
+  
+  s4_name = ""
+  s4_description = ""
+  s4_genre = ""
+  s4_url = ""
+  
+  icecast_vorbis_metadata = false
+  
+  # System output
+  output_sound_device = true
+  output_sound_device_type = "pulseaudio"
+  
+  # Settings
+  auth_path = "/fake/liquidsoap_auth.py"
+  
+  set("log.file.path", "/var/log/radio.log")
+  
+  set("server.telnet", true)
+  set("server.telnet.bind_addr", "127.0.0.1")
+  set("server.telnet.port", 1234)
+  
+  set("harbor.bind_addrs", ["0.0.0.0"])
+  
+  station_name = interactive.string("station_name", "LibreTime")
+  
+  message_offline = interactive.string("message_offline", "LibreTime - offline")
+  message_format = interactive.string("message_format", "0")
+  input_fade_transition = interactive.float("input_fade_transition", 0.0)
+  
+  %include "/fake/1.4/ls_script.liq"
+  
+  '''
+# ---
+# name: test_generate_entrypoint[stream_config5-1.4]
+  '''
+  # THIS FILE IS AUTO GENERATED. PLEASE DO NOT EDIT!
+  ###########################################################
+  # The ignore() lines are to squash unused variable warnings
+  
+  # Inputs
+  input_main_mount = "main"
+  input_main_port = 8001
+  input_show_mount = "show"
+  input_show_port = 8002
+  
+  # Output s1
+  s1_enable = false
+  s1_output = "icecast"
+  s1_host = "localhost"
+  s1_port = 8000
+  s1_mount = ""
+  s1_user = "source"
+  s1_pass = ""
+  
+  s1_channels = "stereo"
+  s1_type = "ogg"
+  s1_bitrate = 256
+  
+  s1_name = ""
+  s1_description = ""
+  s1_genre = ""
+  s1_url = ""
+  
+  # Output s2
+  s2_enable = false
+  s2_output = "icecast"
+  s2_host = "localhost"
+  s2_port = 8000
+  s2_mount = ""
+  s2_user = "source"
+  s2_pass = ""
+  
+  s2_channels = "stereo"
+  s2_type = "ogg"
   s2_bitrate = 256
   
   s2_name = ""
