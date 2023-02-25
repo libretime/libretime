@@ -1,0 +1,142 @@
+{#-
+  Build an audio encoder usable by the icecast or shoutcast output functions,
+  using the output audio configuration
+#}
+{%- macro icecast_encoder(audio) -%}
+
+{%- if audio.format == "ogg" -%}
+{%- set quality_mapping = {
+  32: "-0.1", 48: "-0.1", 64: "0", 96: "0.2", 128: "0.4",
+  160: "0.5", 192: "0.6", 224: "0.7", 256: "0.8", 320: "0.9",
+} -%}
+%vorbis(
+  quality={{ quality_mapping[audio.bitrate] }},
+  channels={{ 2 if audio.channels == "stereo" else 1 }}
+)
+
+{%- elif audio.format == "mp3" -%}
+%mp3(
+  bitrate={{ audio.bitrate }},
+  stereo={{ "true" if audio.channels == "stereo" else "false" }}
+)
+
+{%- elif audio.format == "opus" -%}
+%opus(
+  bitrate={{ audio.bitrate }},
+  channels={{ 2 if audio.channels == "stereo" else 1 }},
+  signal="music",
+  application="audio",
+  complexity=10,
+  vbr="constrained"
+)
+
+{%- elif audio.format == "aac" -%}
+%fdkaac(
+  bitrate=bitrate={{ audio.bitrate }},
+  aot={{ "mpeg4_he_aac_v2" if audio.bitrate <= 64 else "mpeg4_aac_lc" }},
+  afterburner={{ "false" if audio.bitrate <= 128 else "true" }},
+  sbr_mode=true
+)
+
+{%- endif -%}
+{%- endmacro -%}
+
+{#-
+  Build an icecast output the output configuration.
+#}
+{%- macro output_icecast(output_id, output) -%}
+# icecast:{{ output_id }}
+{#- Handle stereo or mono output #}
+{% if output.audio.channels == "stereo" -%}
+output_icecast_{{ output_id }}_source = s
+{% else -%}
+output_icecast_{{ output_id }}_source = mean(s)
+{% endif -%}
+
+output.icecast(
+  id="icecast:{{ output_id }}",
+  host={{ output.host | quote }},
+  port={{ output.port }},
+  mount={{ output.mount | quote }},
+  user={{ output.source_user | quote }},
+  password={{ output.source_password | quote }},
+  fallible = true,
+  name={{ (output.name or '') | quote }},
+  description={{ (output.description or '') | quote }},
+  genre={{ (output.genre or '') | quote }},
+  url={{ (output.website or '') | quote }},
+  on_connect=make_ouput_on_connect_handler("{{ output_id }}"),
+  on_error=make_ouput_on_error_handler("{{ output_id }}"),
+  {{ icecast_encoder(output.audio) | indent(width=2) }},
+  output_icecast_{{ output_id }}_source,
+)
+{%- endmacro -%}
+
+{#-
+  Build a shoutcast output the output configuration.
+#}
+{%- macro output_shoutcast(output_id, output) -%}
+# shoutcast:{{ output_id }}
+{#- Handle stereo or mono output #}
+{% if output.audio.channels == "stereo" -%}
+output_shoutcast_{{ output_id }}_source = s
+{% else -%}
+output_shoutcast_{{ output_id }}_source = mean(s)
+{% endif -%}
+
+output.shoutcast(
+  id="shoutcast:{{ output_id }}",
+  host={{ output.host | quote }},
+  port={{ output.port }},
+{#- Shoutcast does not have any mount
+  mount={{ output.mount | quote }},
+#}
+  user={{ output.source_user | quote }},
+  password={{ output.source_password | quote }},
+  fallible = true,
+{#- Pass output.description to name and ignore output.name
+  name={{ (output.name or '') | quote }},
+  description={{ (output.description or '') | quote }},
+#}
+  name={{ (output.description or '') | quote }},
+  genre={{ (output.genre or '') | quote }},
+  url={{ (output.website or '') | quote }},
+  on_connect=make_ouput_on_connect_handler("{{ output_id }}"),
+  on_error=make_ouput_on_error_handler("{{ output_id }}"),
+{#-
+  The config validation will prevent from using incompatible audio encoders
+#}
+  {{ icecast_encoder(output.audio) | indent(width=2) }},
+  output_shoutcast_{{ output_id }}_source,
+)
+{%- endmacro -%}
+
+{% for output in config.stream.outputs.system -%}
+{% if output.enabled -%}
+# {{ output.kind.value }}:{{ loop.index }}
+%ifdef output.{{ output.kind.value }}
+output.{{ output.kind.value }}(id="{{ output.kind.value }}:{{ loop.index }}", s)
+%else
+log("output.{{ output.kind.value }} is not defined!")
+%endif
+
+{% endif -%}
+{% endfor -%}
+
+{% for output in config.stream.outputs.icecast -%}
+{% if output.enabled -%}
+{{ output_icecast(loop.index, output) }}
+
+{% endif -%}
+{% endfor -%}
+
+{% for output in config.stream.outputs.shoutcast -%}
+{% if output.enabled -%}
+{#
+  Icecast and Shoutcast streams are merged in legacy, so we need to use a custom index
+  as stream id.
+-#}
+{{ output_shoutcast((config.stream.outputs.icecast | length) + loop.index, output) }}
+
+{% endif -%}
+{% endfor -%}

@@ -95,112 +95,19 @@ def to_live(old,new) =
 end
 
 
-def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, user, s, stream, name, channels) =
-    source = ref s
-    def on_error(msg)
-        gateway("stream '#{stream}' '#{boot_timestamp}' --error='#{msg}'")
-        5.
-    end
-    def on_connect()
-        gateway("stream '#{stream}' '#{boot_timestamp}'")
-    end
+def make_ouput_on_connect_handler(stream)
+  def on_connect()
+    gateway("stream '#{stream}' '#{boot_timestamp}'")
+  end
+  on_connect
+end
 
-    stereo = (channels == "stereo")
-
-    if output_type == "icecast" then
-        user_ref = ref user
-        if user == "" then
-            user_ref := "source"
-        end
-        output_mono = output.icecast(
-                    id = "icecast:stream_#{stream}",
-                    host = host,
-                    port = port,
-                    password = pass,
-                    mount = mount_point,
-                    fallible = true,
-                    url = url,
-                    description = description,
-                    name = name,
-                    genre = genre,
-                    user = !user_ref,
-                    on_error = on_error,
-                    on_connect = on_connect)
-
-        output_stereo = output.icecast(
-                    id = "icecast:stream_#{stream}",
-                    host = host,
-                    port = port,
-                    password = pass,
-                    mount = mount_point,
-                    fallible = true,
-                    url = url,
-                    description = description,
-                    name = name,
-                    genre = genre,
-                    user = !user_ref,
-                    on_error = on_error,
-                    on_connect = on_connect)
-        if type == "mp3" then
-            %include "mp3.liq"
-        end
-        if type == "ogg" then
-            %include "ogg.liq"
-        end
-
-        %ifencoder %opus
-        if type == "opus" then
-            %include "opus.liq"
-        end
-        %endif
-
-        %ifencoder %fdkaac
-        if type == "aac" then
-            %include "fdkaac.liq"
-        end
-        %endif
-    else
-        user_ref = ref user
-        if user == "" then
-            user_ref := "source"
-        end
-
-        output_mono = output.shoutcast(
-                    id = "shoutcast:stream_#{stream}",
-                    host = host,
-                    port = port,
-                    password = pass,
-                    fallible = true,
-                    url = url,
-                    genre = genre,
-                    name = description,
-                    user = !user_ref,
-                    on_error = on_error,
-                    on_connect = on_connect)
-
-        output_stereo = output.shoutcast(
-                    id = "shoutcast:stream_#{stream}",
-                    host = host,
-                    port = port,
-                    password = pass,
-                    fallible = true,
-                    url = url,
-                    genre = genre,
-                    name = description,
-                    user = !user_ref,
-                    on_error = on_error,
-                    on_connect = on_connect)
-
-        if type == "mp3" then
-            %include "mp3.liq"
-        end
-
-        %ifencoder %fdkaac
-        if type == "aac" then
-            %include "fdkaac.liq"
-        end
-        %endif
-    end
+def make_ouput_on_error_handler(stream)
+  def on_error(msg)
+    gateway("stream '#{stream}' '#{boot_timestamp}' --error='#{msg}'")
+    5.
+  end
+  on_error
 end
 
 def clear_queue(s)

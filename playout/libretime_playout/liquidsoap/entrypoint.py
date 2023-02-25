@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Optional, Tuple
 
 from jinja2 import Environment, PackageLoader
-from libretime_shared.config import AudioFormat, IcecastOutput, SystemOutput
+from libretime_shared.config import AudioFormat
 
 from ..config import Config
 from .models import Info, StreamPreferences
@@ -16,18 +16,6 @@ templates = Environment(  # nosec
     keep_trailing_newline=True,
 )
 templates.filters["quote"] = quote
-
-# Liquidsoap has 4 hardcoded output stream set of variables, so we need to
-# fill the missing stream outputs with placeholders so Liquidsoap does
-# not fail with missing variables in the entrypoint.
-_icecast_placeholder = IcecastOutput(
-    enabled=False,
-    mount="",
-    source_password="",
-    audio=dict(format="ogg", bitrate=256),
-)
-
-_system_placeholder = SystemOutput()
 
 
 def generate_entrypoint(
@@ -46,11 +34,6 @@ def generate_entrypoint(
         paths["log_filepath"] = log_filepath.resolve()
 
     config = config.copy()
-    missing_outputs = [_icecast_placeholder] * (4 - len(config.stream.outputs.merged))
-    config.stream.outputs.icecast.extend(missing_outputs)
-
-    if not config.stream.outputs.system:
-        config.stream.outputs.system.append(_system_placeholder)
 
     # Global icecast_vorbis_metadata until it is
     # handled per output
