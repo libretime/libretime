@@ -74,6 +74,7 @@ class LiquidsoapClient:
     def queue_push(self, queue_id: int, entry: str, show_name: str) -> None:
         with self.conn:
             self.conn.write(f"{queue_id}.push {entry}")
+            self.conn.read()  # Flush
             self._set_var("show_name", self._quote(show_name))
 
     def web_stream_get_id(self) -> str:
