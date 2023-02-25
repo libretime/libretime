@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Optional, Tuple
 
-from jinja2 import DictLoader, Environment
+from jinja2 import Environment, PackageLoader
 from libretime_shared.config import AudioFormat, IcecastOutput, SystemOutput
 
 from ..config import Config
@@ -10,9 +10,7 @@ from .utils import quote
 
 here = Path(__file__).parent
 
-templates_loader = DictLoader(
-    {"entrypoint.liq.j2": (here / "entrypoint.liq.j2").read_text(encoding="utf-8")}
-)
+templates_loader = PackageLoader(__name__, "templates")
 templates = Environment(  # nosec
     loader=templates_loader,
     keep_trailing_newline=True,
