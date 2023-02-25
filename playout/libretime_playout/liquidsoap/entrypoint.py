@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import Optional, Tuple
 
 from jinja2 import Environment, PackageLoader
-from libretime_shared.config import AudioFormat
 
 from ..config import Config
 from .models import Info, StreamPreferences
@@ -33,23 +32,13 @@ def generate_entrypoint(
     if log_filepath is not None:
         paths["log_filepath"] = log_filepath.resolve()
 
-    config = config.copy()
-
-    # Global icecast_vorbis_metadata until it is
-    # handled per output
-    icecast_vorbis_metadata = any(
-        o.enabled and o.audio.format == AudioFormat.OGG and o.audio.enable_metadata  # type: ignore
-        for o in config.stream.outputs.icecast
-    )
-
     entrypoint_filepath.write_text(
         templates.get_template("entrypoint.liq.j2").render(
-            config=config,
+            config=config.copy(),
             preferences=preferences,
             info=info,
             paths=paths,
             version=version,
-            icecast_vorbis_metadata=icecast_vorbis_metadata,
         ),
         encoding="utf-8",
     )
