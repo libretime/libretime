@@ -15,7 +15,9 @@ sources = ref []
 source_id = ref 0
 
 def create_source()
-    l = request.equeue(id="s#{!source_id}", length=0.5)
+    this_source_id = !source_id
+
+    l = request.equeue(id="s#{this_source_id}", length=0.5)
 
     l = audio_to_stereo(id="queue_src", l)
     l = cue_cut(l)
@@ -28,8 +30,8 @@ def create_source()
 
     sources := list.append([l], !sources)
     server.register(namespace="queues",
-                "s#{!source_id}_skip",
-                fun (s) -> begin log("queues.s#{!source_id}_skip")
+                "s#{this_source_id}_skip",
+                fun (s) -> begin log("queues.s#{this_source_id}_skip")
                     clear_queue(l)
                     "Done"
                 end)
