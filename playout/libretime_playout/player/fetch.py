@@ -4,11 +4,10 @@ import logging
 import mimetypes
 import os
 import time
-from datetime import datetime
 from queue import Empty, Queue
 from subprocess import PIPE, Popen
 from threading import Thread, Timer
-from typing import Any, Dict
+from typing import Union
 
 from libretime_api_client.v1 import ApiClient as LegacyClient
 from libretime_api_client.v2 import ApiClient
@@ -18,7 +17,7 @@ from ..config import CACHE_DIR, POLL_INTERVAL, Config
 from ..liquidsoap.client import LiquidsoapClient
 from ..liquidsoap.models import Info, StreamPreferences, StreamState
 from ..timeout import ls_timeout
-from .events import Events
+from .events import EventKind, Events, FileEvent, FileEvents, event_key_to_datetime
 from .liquidsoap import PypoLiquidsoap
 from .schedule import get_schedule
 
@@ -31,9 +30,9 @@ class PypoFetch(Thread):
 
     def __init__(
         self,
-        fetch_queue: Queue[Dict[str, Any]],
-        push_queue: Queue[Dict[str, Any]],
-        file_queue: Queue[Dict[str, Any]],
+        fetch_queue: Queue[Union[str, bytes]],
+        push_queue: Queue[Events],
+        file_queue: Queue[FileEvents],
         liq_client: LiquidsoapClient,
         pypo_liquidsoap: PypoLiquidsoap,
         config: Config,
@@ -63,15 +62,13 @@ class PypoFetch(Thread):
     # Handle a message from RabbitMQ, put it into our yucky global var.
     # Hopefully there is a better way to do this.
 
-    def handle_message(self, message):
+    def handle_message(self, message: Union[bytes, str]):
         try:
             logger.info("Received event from Pypo Message Handler: %s", message)
-
-            try:
+            if isinstance(message, bytes):
                 message = message.decode()
-            except (UnicodeDecodeError, AttributeError):
-                pass
-            m = json.loads(message)
+            m: dict = json.loads(message)
+
             command = m["event_type"]
             logger.info("Handling command: %s", command)
 
@@ -200,62 +197,57 @@ class PypoFetch(Thread):
     def process_schedule(self, events: Events):
         self.last_update_schedule_timestamp = time.time()
         logger.debug(events)
-        media = events
-        media_filtered = {}
+        file_events: FileEvents = {}
+        all_events: Events = {}
 
         # Download all the media and put playlists in liquidsoap "annotate" format
         try:
-            media_copy = {}
-            for key in media:
-                media_item = media[key]
-                if media_item["type"] == "file":
-                    fileExt = self.sanity_check_media_item(media_item)
-                    dst = os.path.join(self.cache_dir, f'{media_item["id"]}{fileExt}')
-                    media_item["dst"] = dst
-                    media_item["file_ready"] = False
-                    media_filtered[key] = media_item
+            for key in events:
+                item = events[key]
+                if item["type"] == EventKind.FILE:
+                    file_ext = self.sanity_check_media_item(item)
+                    dst = os.path.join(self.cache_dir, f'{item["id"]}{file_ext}')
+                    item["dst"] = dst
+                    item["file_ready"] = False
+                    file_events[key] = item
 
-                media_item["start"] = datetime.strptime(
-                    media_item["start"], "%Y-%m-%d-%H-%M-%S"
-                )
-                media_item["end"] = datetime.strptime(
-                    media_item["end"], "%Y-%m-%d-%H-%M-%S"
-                )
-                media_copy[key] = media_item
+                item["start"] = event_key_to_datetime(item["start"])
+                item["end"] = event_key_to_datetime(item["end"])
+                all_events[key] = item
 
-            self.media_prepare_queue.put(copy.copy(media_filtered))
+            self.media_prepare_queue.put(copy.copy(file_events))
         except Exception as exception:
             logger.exception(exception)
 
         # Send the data to pypo-push
         logger.debug("Pushing to pypo-push")
-        self.push_queue.put(media_copy)
+        self.push_queue.put(all_events)
 
         # cleanup
         try:
-            self.cache_cleanup(media)
+            self.cache_cleanup(events)
         except Exception as exception:
             logger.exception(exception)
 
     # do basic validation of file parameters. Useful for debugging
     # purposes
-    def sanity_check_media_item(self, media_item):
-        start = datetime.strptime(media_item["start"], "%Y-%m-%d-%H-%M-%S")
-        end = datetime.strptime(media_item["end"], "%Y-%m-%d-%H-%M-%S")
+    def sanity_check_media_item(self, event: FileEvent):
+        start = event_key_to_datetime(event["start"])
+        end = event_key_to_datetime(event["end"])
 
-        mime = media_item["metadata"]["mime"]
+        mime = event["metadata"]["mime"]
         mimetypes.init(["%s/mime.types" % os.path.dirname(os.path.realpath(__file__))])
         mime_ext = mimetypes.guess_extension(mime, strict=False)
 
         length1 = (end - start).total_seconds()
-        length2 = media_item["cue_out"] - media_item["cue_in"]
+        length2 = event["cue_out"] - event["cue_in"]
 
         if abs(length2 - length1) > 1:
             logger.error("end - start length: %s", length1)
             logger.error("cue_out - cue_in length: %s", length2)
             logger.error("Two lengths are not equal!!!")
 
-        media_item["file_ext"] = mime_ext
+        event["file_ext"] = mime_ext
 
         return mime_ext
 
@@ -265,7 +257,7 @@ class PypoFetch(Thread):
         out = proc.communicate()[0].strip()
         return bool(out)
 
-    def cache_cleanup(self, media):
+    def cache_cleanup(self, events: Events):
         """
         Get list of all files in the cache dir and remove them if they aren't being used anymore.
         Input dict() media, lists all files that are scheduled or currently playing. Not being in this
@@ -274,35 +266,35 @@ class PypoFetch(Thread):
         cached_file_set = set(os.listdir(self.cache_dir))
         scheduled_file_set = set()
 
-        for mkey in media:
-            media_item = media[mkey]
-            if media_item["type"] == "file":
-                if "file_ext" not in media_item.keys():
-                    media_item["file_ext"] = mimetypes.guess_extension(
-                        media_item["metadata"]["mime"], strict=False
+        for key in events:
+            item = events[key]
+            if item["type"] == EventKind.FILE:
+                if "file_ext" not in item.keys():
+                    item["file_ext"] = mimetypes.guess_extension(
+                        item["metadata"]["mime"], strict=False
                     )
-                scheduled_file_set.add(
-                    "{}{}".format(media_item["id"], media_item["file_ext"])
-                )
+                scheduled_file_set.add("{}{}".format(item["id"], item["file_ext"]))
 
         expired_files = cached_file_set - scheduled_file_set
 
         logger.debug("Files to remove %s", str(expired_files))
-        for f in expired_files:
+        for expired_file in expired_files:
             try:
-                path = os.path.join(self.cache_dir, f)
-                logger.debug("Removing %s", path)
+                expired_filepath = os.path.join(self.cache_dir, expired_file)
+                logger.debug("Removing %s", expired_filepath)
 
                 # check if this file is opened (sometimes Liquidsoap is still
                 # playing the file due to our knowledge of the track length
                 # being incorrect!)
-                if not self.is_file_opened(path):
-                    os.remove(path)
-                    logger.info("File '%s' removed", path)
+                if not self.is_file_opened(expired_filepath):
+                    os.remove(expired_filepath)
+                    logger.info("File '%s' removed", expired_filepath)
                 else:
-                    logger.info("File '%s' not removed. Still busy!", path)
+                    logger.info("File '%s' not removed. Still busy!", expired_filepath)
             except Exception as exception:
-                logger.exception("Problem removing file '%s': %s", f, exception)
+                logger.exception(
+                    "Problem removing file '%s': %s", expired_file, exception
+                )
 
     def manual_schedule_fetch(self):
         try:

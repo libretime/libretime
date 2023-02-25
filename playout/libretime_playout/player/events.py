@@ -1,7 +1,22 @@
+from datetime import datetime
 from enum import Enum
-from typing import Dict, Literal, TypedDict, Union
+from typing import Dict, Literal, Optional, TypedDict, Union
 
 from typing_extensions import NotRequired
+
+EVENT_KEY_FORMAT = "%Y-%m-%d-%H-%M-%S"
+
+
+def event_key_to_datetime(value: Union[str, datetime]) -> datetime:
+    if isinstance(value, datetime):
+        return value
+    return datetime.strptime(value, EVENT_KEY_FORMAT)
+
+
+def datetime_to_event_key(value: Union[str, datetime]) -> str:
+    if isinstance(value, str):
+        return value
+    return value.strftime(EVENT_KEY_FORMAT)
 
 
 class EventKind(str, Enum):
@@ -14,9 +29,9 @@ class EventKind(str, Enum):
 
 
 class BaseEvent(TypedDict):
-    # TODO: Convert start/end to datetime
-    start: str
-    end: str
+    # TODO: Only use datetime
+    start: Union[str, datetime]
+    end: Union[str, datetime]
 
 
 class FileEventMetadata(TypedDict):
@@ -30,7 +45,7 @@ class FileEvent(BaseEvent):
 
     # Schedule
     row_id: int
-    uri: str
+    uri: Optional[str]
     id: int
 
     # Show data
@@ -47,6 +62,11 @@ class FileEvent(BaseEvent):
 
     replay_gain: float
     filesize: int
+
+    # Runtime
+    dst: NotRequired[str]
+    file_ready: NotRequired[bool]
+    file_ext: NotRequired[str]
 
 
 class WebStreamEvent(BaseEvent):
@@ -78,4 +98,6 @@ class ActionEvent(BaseEvent):
 
 
 AnyEvent = Union[FileEvent, WebStreamEvent, ActionEvent]
+
+FileEvents = Dict[str, FileEvent]
 Events = Dict[str, AnyEvent]

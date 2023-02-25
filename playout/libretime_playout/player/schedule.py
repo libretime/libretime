@@ -1,19 +1,21 @@
 from datetime import datetime, time, timedelta
 from operator import itemgetter
-from typing import Dict, Literal
+from typing import Dict
 
 from dateutil.parser import isoparse
 from libretime_api_client.v2 import ApiClient
 from libretime_shared.datetime import time_in_milliseconds, time_in_seconds
 
 from ..liquidsoap.models import StreamPreferences
-from .events import ActionEvent, AnyEvent, EventKind, Events, FileEvent, WebStreamEvent
-
-EVENT_KEY_FORMAT = "%Y-%m-%d-%H-%M-%S"
-
-
-def datetime_to_event_key(value: datetime) -> str:
-    return value.strftime(EVENT_KEY_FORMAT)
+from .events import (
+    ActionEvent,
+    AnyEvent,
+    EventKind,
+    Events,
+    FileEvent,
+    WebStreamEvent,
+    datetime_to_event_key,
+)
 
 
 def insert_event(events: Events, event_key: str, event: AnyEvent):

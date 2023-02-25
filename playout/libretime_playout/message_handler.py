@@ -3,10 +3,11 @@ import logging
 from queue import Queue as ThreadQueue
 from signal import SIGTERM, signal
 from time import sleep
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 # For RabbitMQ
 from kombu.connection import Connection
+from kombu.message import Message
 from kombu.messaging import Exchange, Queue
 from kombu.mixins import ConsumerMixin
 
@@ -35,7 +36,7 @@ class MessageHandler(ConsumerMixin):
             Consumer(queues, callbacks=[self.on_message], accept=["text/plain"]),
         ]
 
-    def on_message(self, body, message):
+    def on_message(self, body, message: Message):
         logger.debug("received message: %s", body)
         try:
             try:
@@ -78,7 +79,7 @@ class MessageListener:
     def __init__(
         self,
         config: Config,
-        fetch_queue: ThreadQueue[Dict[str, Any]],
+        fetch_queue: ThreadQueue[Union[str, bytes]],
         recorder_queue: ThreadQueue[Dict[str, Any]],
     ) -> None:
         self.config = config
