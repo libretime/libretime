@@ -117,6 +117,38 @@ output.shoutcast(
 )
 {%- endmacro -%}
 
+{#-
+  Build an hls output configuration.
+#}
+{%- macro output_hls(output_id, output) -%}
+# hls:{{ output_id }}
+output_hls_{{ output_id }}_source = s
+output_hls_{{ output_id }}_lofi = %ffmpeg(format="mpegts", codec="aac", channels=2, ar=44100, b="32k")
+output_hls_{{ output_id }}_midfi = %ffmpeg(format="mpegts", codec="aac", channels=2, ar=44100, b="96k")
+output_hls_{{ output_id }}_hifi = %ffmpeg(format="mpegts", codec="aac", channels=2, ar=44100, b="192k")
+output.file.hls(
+    playlist="{{ output.playlist }}",
+    segment_duration={{ output.segment_duration }},
+    segments={{ output.segments }},
+    segments_overhead={{ output.segments_overhead }},
+    streams_info=[
+        # stream_name, (bandwidth, codec, extname)
+        ("aac_lofi", (40000, "mp4a.40.29", "ts")),
+        ("aac_midfi", (110000, "mp4a.40.2", "ts")),
+        ("aac_hifi", (220000, "mp4a.40.2", "ts")),
+    ],
+    persist=true,
+    persist_at="hls.conf",
+    "{{ output.path }}",
+    [
+        ("aac_lofi", output_hls_{{ output_id }}_lofi),
+        ("aac_midfi", output_hls_{{ output_id }}_midfi),
+        ("aac_hifi", output_hls_{{ output_id }}_hifi),
+    ],
+    output_hls_{{ output_id }}_source,
+)
+{%- endmacro -%}
+
 {% for output in config.stream.outputs.system -%}
 {% if output.enabled -%}
 # {{ output.kind.value }}:{{ loop.index }}
@@ -144,6 +176,13 @@ output.{{ output.kind.value }}(id="{{ output.kind.value }}:{{ loop.index }}", s)
   as stream id.
 -#}
 {{ output_shoutcast((config.stream.outputs.icecast | length) + loop.index, output) }}
+
+{% endif -%}
+{% endfor -%}
+
+{% for output in config.stream.outputs.hls -%}
+{% if output.enabled -%}
+{{ output_hls(loop.index, output) }}
 
 {% endif -%}
 {% endfor -%}

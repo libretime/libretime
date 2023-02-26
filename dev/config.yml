@@ -27,6 +27,10 @@ stream:
       secure: true
 
   outputs:
+    hls:
+      - enabled: True
+        path: /app/hls
+
     .default_icecast_output: &default_icecast_output
       host: icecast
       port: 8000

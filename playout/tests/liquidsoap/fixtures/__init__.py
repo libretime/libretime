@@ -30,6 +30,8 @@ TEST_STREAM_CONFIGS: List[Config] = [
             "system": [{"enabled": True, "kind": "pulseaudio"}],
         },
     ),
+    make_config_with_stream(),
+    make_config_with_stream(outputs={"hls": [{"enabled": True}]}),
     make_config_with_stream(
         outputs={
             "icecast": [

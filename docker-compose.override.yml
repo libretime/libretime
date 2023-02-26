@@ -71,6 +71,7 @@ services:
   nginx:
     volumes:
       - ./legacy:/var/www/html
+      - ./docker/data/playout:/var/playout:ro
 
   icecast:
     ports:
