@@ -41,6 +41,9 @@ setup(
             "types-python-dateutil>=2.8.1,<2.9",
             "types-requests>=2.25.1,<2.29",
         ],
+        "sentry": [
+            "sentry-sdk>=1.15.0,<1.16",
+        ],
     },
     zip_safe=False,
 )

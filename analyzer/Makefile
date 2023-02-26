@@ -4,7 +4,7 @@ include ../tools/python.mk
 
 PIP_INSTALL := \
 	--editable ../shared \
-	--editable .[dev]
+	--editable .[dev,sentry]
 PYLINT_ARG := libretime_analyzer tests || true
 MYPY_ARG := libretime_analyzer tests || true
 BANDIT_ARG := libretime_analyzer || true

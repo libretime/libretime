@@ -1,4 +1,5 @@
 import json
+import os
 from email.message import EmailMessage
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -7,15 +8,33 @@ from urllib.parse import urlsplit
 
 import mutagen
 import requests
-from celery import Celery
+from celery import Celery, signals
 from celery.utils.log import get_task_logger
 from mutagen import MutagenError
 from requests import RequestException, Response
 
+from . import PACKAGE, VERSION
 from .config import config
 
 worker = Celery()
 logger = get_task_logger(__name__)
+
+
+@signals.worker_init.connect
+def init_sentry(**_kwargs):
+    if "SENTRY_DSN" in os.environ:
+        logger.info("installing sentry")
+        # pylint: disable=import-outside-toplevel
+        import sentry_sdk
+        from sentry_sdk.integrations.celery import CeleryIntegration
+
+        sentry_sdk.init(
+            traces_sample_rate=1.0,
+            release=f"{PACKAGE}@{VERSION}",
+            integrations=[
+                CeleryIntegration(),
+            ],
+        )
 
 
 @worker.task(name="podcast-download", acks_late=True)

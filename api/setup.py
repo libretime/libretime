@@ -44,5 +44,8 @@ setup(
             "pytest-django>=4.5.2,<4.6",
             "requests-mock>=1.10.0,<1.11",
         ],
+        "sentry": [
+            "sentry-sdk[django]>=1.15.0,<1.16",
+        ],
     },
 )

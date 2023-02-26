@@ -76,7 +76,7 @@ repos:
       - id: requirements.txt
         name: requirements.txt
         description: Generate requirements.txt
-        entry: tools/extract_requirements.py dev
+        entry: tools/extract_requirements.py dev sentry
         pass_filenames: false
         language: script
         files: setup.py$
