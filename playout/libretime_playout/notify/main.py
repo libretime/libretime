@@ -12,6 +12,7 @@ Main case:
    media id from it, and then calls back to the API to tell about it about it.
 
 """
+import logging
 from pathlib import Path
 from typing import Optional
 
@@ -19,12 +20,13 @@ import click
 from libretime_api_client.v1 import ApiClient as LegacyClient
 from libretime_shared.cli import cli_logging_options
 from libretime_shared.config import DEFAULT_ENV_PREFIX
-from libretime_shared.logging import level_from_name, setup_logger
-from loguru import logger
+from libretime_shared.logging import setup_logger
+
+logger = logging.getLogger(__name__)
 
 
 def api_client():
-    return LegacyClient(logger=logger)
+    return LegacyClient()
 
 
 @click.group(context_settings={"auto_envvar_prefix": DEFAULT_ENV_PREFIX})
@@ -33,7 +35,7 @@ def cli(log_level: str, log_filepath: Optional[Path]):
     """
     A gateway between Liquidsoap and the API.
     """
-    setup_logger(level_from_name(log_level), log_filepath, rotate=False)
+    setup_logger(log_level, log_filepath, rotate=False)
 
 
 @cli.command()

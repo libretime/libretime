@@ -1,10 +1,12 @@
+import logging
 from datetime import timedelta
 from pathlib import Path
 from typing import Any, Dict
 
 import mutagen
 from libretime_shared.files import compute_md5
-from loguru import logger
+
+logger = logging.getLogger(__name__)
 
 
 def analyze_metadata(filepath_: str, metadata: Dict[str, Any]):

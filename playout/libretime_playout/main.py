@@ -2,6 +2,7 @@
 Python part of radio playout (pypo)
 """
 
+import logging
 import sys
 import time
 from datetime import datetime
@@ -14,8 +15,7 @@ from libretime_api_client.v1 import ApiClient as LegacyClient
 from libretime_api_client.v2 import ApiClient
 from libretime_shared.cli import cli_config_options, cli_logging_options
 from libretime_shared.config import DEFAULT_ENV_PREFIX
-from libretime_shared.logging import level_from_name, setup_logger
-from loguru import logger
+from libretime_shared.logging import setup_logger
 
 from .config import CACHE_DIR, RECORD_DIR, Config
 from .history.stats import StatsCollectorThread
@@ -28,6 +28,8 @@ from .player.liquidsoap import PypoLiquidsoap
 from .player.push import PypoPush
 from .recorder import Recorder
 
+logger = logging.getLogger(__name__)
+
 
 @click.command(context_settings={"auto_envvar_prefix": DEFAULT_ENV_PREFIX})
 @cli_logging_options()
@@ -36,7 +38,7 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     """
     Run playout.
     """
-    setup_logger(level_from_name(log_level), log_filepath)
+    setup_logger(log_level, log_filepath)
     config = Config(config_filepath)
 
     try:

@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 from random import randint
 from subprocess import PIPE, STDOUT, Popen
@@ -5,13 +6,14 @@ from textwrap import dedent
 from time import sleep
 
 import pytest
-from libretime_shared.logging import TRACE, setup_logger
-from loguru import logger
+from libretime_shared.logging import setup_logger
 
 from libretime_playout.liquidsoap.client import LiquidsoapConnection
 from libretime_playout.liquidsoap.version import get_liquidsoap_version
 
-setup_logger(TRACE)
+logger = logging.getLogger(__name__)
+
+setup_logger("debug")
 
 LIQ_VERSION = get_liquidsoap_version()
 LIQ_VERSION_STR = ".".join(map(str, LIQ_VERSION))

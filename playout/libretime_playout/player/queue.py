@@ -1,13 +1,14 @@
+import logging
 from collections import deque
 from datetime import datetime
 from queue import Empty, Queue
 from threading import Thread
 from typing import Any, Dict
 
-from loguru import logger
-
 from ..utils import seconds_between
 from .liquidsoap import PypoLiquidsoap
+
+logger = logging.getLogger(__name__)
 
 
 class PypoLiqQueue(Thread):

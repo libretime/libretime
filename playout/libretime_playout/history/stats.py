@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass
 from datetime import datetime
 from threading import Thread
@@ -6,7 +7,6 @@ from typing import Any, Dict, List, Optional, Union
 
 from libretime_api_client.v1 import ApiClient as LegacyClient
 from libretime_shared.config import IcecastOutput, ShoutcastOutput
-from loguru import logger
 from lxml import etree
 from requests import Session
 from requests.exceptions import (  # pylint: disable=redefined-builtin
@@ -16,6 +16,8 @@ from requests.exceptions import (  # pylint: disable=redefined-builtin
 )
 
 from ..config import Config
+
+logger = logging.getLogger(__name__)
 
 AnyOutput = Union[IcecastOutput, ShoutcastOutput]
 

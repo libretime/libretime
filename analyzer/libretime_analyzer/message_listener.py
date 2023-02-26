@@ -1,14 +1,16 @@
 import json
+import logging
 import signal
 import time
 from queue import Queue
 
 import pika
-from loguru import logger
 
 from .config import Config
 from .pipeline import Pipeline, PipelineOptions, PipelineStatus
 from .status_reporter import StatusReporter
+
+logger = logging.getLogger(__name__)
 
 EXCHANGE = "airtime-uploads"
 EXCHANGE_TYPE = "topic"

@@ -1,9 +1,10 @@
+import logging
 from pathlib import Path
 from socket import AF_UNIX, SOCK_STREAM, create_connection, socket
 from threading import Lock
 from typing import Optional
 
-from loguru import logger
+logger = logging.getLogger(__name__)
 
 
 class InvalidConnection(Exception):
@@ -61,7 +62,7 @@ class LiquidsoapConnection:
         self.close()
 
     def connect(self):
-        logger.trace("trying to acquire lock")
+        logger.debug("trying to acquire lock")
         # pylint: disable=consider-using-with
         self._lock.acquire()
         logger.debug(f"connecting to {self.address()}")

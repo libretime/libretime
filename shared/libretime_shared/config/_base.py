@@ -1,13 +1,15 @@
+import logging
 import sys
 from itertools import zip_longest
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-from loguru import logger
 from pydantic import BaseModel, ValidationError
 from yaml import YAMLError, safe_load
 
 from ._env import EnvLoader
+
+logger = logging.getLogger(__name__)
 
 DEFAULT_ENV_PREFIX = "LIBRETIME"
 DEFAULT_CONFIG_FILEPATH = Path("/etc/libretime/config.yml")

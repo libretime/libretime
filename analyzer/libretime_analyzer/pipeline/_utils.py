@@ -1,6 +1,7 @@
+import logging
 from subprocess import CalledProcessError, CompletedProcess, run
 
-from loguru import logger
+logger = logging.getLogger(__name__)
 
 
 def run_(*args, **kwargs) -> CompletedProcess:

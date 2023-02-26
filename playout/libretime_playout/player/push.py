@@ -1,3 +1,4 @@
+import logging
 import math
 import time
 from datetime import datetime
@@ -5,11 +6,11 @@ from queue import Queue
 from threading import Thread
 from typing import Any, Dict
 
-from loguru import logger
-
 from ..config import PUSH_INTERVAL, Config
 from .liquidsoap import PypoLiquidsoap
 from .queue import PypoLiqQueue
+
+logger = logging.getLogger(__name__)
 
 
 def is_stream(media_item):

@@ -1,8 +1,9 @@
+import logging
 import shutil
 from pathlib import Path
 from uuid import uuid4
 
-from loguru import logger
+logger = logging.getLogger(__name__)
 
 MAX_DIR_LEN = 48
 MAX_FILE_LEN = 48

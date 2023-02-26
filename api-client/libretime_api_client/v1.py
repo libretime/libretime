@@ -8,6 +8,8 @@ from libretime_shared.config import BaseConfig, GeneralConfig
 
 from ._utils import ApiRequest, RequestProvider
 
+logger = logging.getLogger(__name__)
+
 
 class Config(BaseConfig):
     general: GeneralConfig
@@ -72,9 +74,7 @@ class ApiClient:
     UPLOAD_RETRIES = 3
     UPLOAD_WAIT = 60
 
-    def __init__(self, logger=None, config_path="/etc/libretime/config.yml"):
-        self.logger = logger or logging
-
+    def __init__(self, config_path="/etc/libretime/config.yml"):
         config = Config(config_path)
         self.base_url = config.general.public_url
         self.api_key = config.general.api_key
@@ -89,27 +89,27 @@ class ApiClient:
         try:
             return self.services.version_url()["api_version"]
         except Exception as exception:
-            self.logger.exception(exception)
+            logger.exception(exception)
             return -1
 
     def is_server_compatible(self, verbose=True):
         api_version = self.__get_api_version()
         if api_version == -1:
             if verbose:
-                self.logger.info("Unable to get Airtime API version number.\n")
+                logger.info("Unable to get Airtime API version number.\n")
             return False
 
         if api_version[0:3] != AIRTIME_API_VERSION[0:3]:
             if verbose:
-                self.logger.info("Airtime API version found: " + str(api_version))
-                self.logger.info(
+                logger.info("Airtime API version found: " + str(api_version))
+                logger.info(
                     "pypo is only compatible with API version: " + AIRTIME_API_VERSION
                 )
             return False
 
         if verbose:
-            self.logger.info("Airtime API version found: " + str(api_version))
-            self.logger.info(
+            logger.info("Airtime API version found: " + str(api_version))
+            logger.info(
                 "pypo is only compatible with API version: " + AIRTIME_API_VERSION
             )
         return True
@@ -118,7 +118,7 @@ class ApiClient:
         try:
             self.services.notify_liquidsoap_started()
         except Exception as exception:
-            self.logger.exception(exception)
+            logger.exception(exception)
 
     def notify_media_item_start_playing(self, media_id):
         """
@@ -129,14 +129,14 @@ class ApiClient:
         try:
             return self.services.update_start_playing_url(media_id=media_id)
         except Exception as exception:
-            self.logger.exception(exception)
+            logger.exception(exception)
             return None
 
     def get_shows_to_record(self):
         try:
             return self.services.show_schedule_url()
         except Exception as exception:
-            self.logger.exception(exception)
+            logger.exception(exception)
             return None
 
     def upload_recorded_show(self, files, show_id):
@@ -147,19 +147,19 @@ class ApiClient:
 
         url = self.construct_rest_url("upload_file_url")
 
-        self.logger.debug(url)
+        logger.debug(url)
 
         for i in range(0, retries):
-            self.logger.debug("Upload attempt: %s", i + 1)
-            self.logger.debug(files)
-            self.logger.debug(ApiRequest.API_HTTP_REQUEST_TIMEOUT)
+            logger.debug("Upload attempt: %s", i + 1)
+            logger.debug(files)
+            logger.debug(ApiRequest.API_HTTP_REQUEST_TIMEOUT)
 
             try:
                 request = requests.post(
                     url, files=files, timeout=float(ApiRequest.API_HTTP_REQUEST_TIMEOUT)
                 )
                 response = request.json()
-                self.logger.debug(response)
+                logger.debug(response)
 
                 # FIXME: We need to tell LibreTime that the uploaded track was recorded
                 # for a specific show
@@ -183,14 +183,14 @@ class ApiClient:
                 break
 
             except requests.exceptions.HTTPError as exception:
-                self.logger.error(f"Http error code: {exception.response.status_code}")
-                self.logger.exception(exception)
+                logger.error(f"Http error code: {exception.response.status_code}")
+                logger.exception(exception)
 
             except requests.exceptions.ConnectionError as exception:
-                self.logger.exception(f"Server is down: {exception}")
+                logger.exception(f"Server is down: {exception}")
 
             except Exception as exception:
-                self.logger.exception(exception)
+                logger.exception(exception)
 
             # wait some time before next retry
             time.sleep(retries_wait)
@@ -203,7 +203,7 @@ class ApiClient:
                 username=username, password=password, djtype=dj_type
             )
         except Exception as exception:
-            self.logger.exception(exception)
+            logger.exception(exception)
             return {}
 
     def construct_rest_url(self, action_key):
@@ -239,7 +239,7 @@ class ApiClient:
                 boot_time=time,
             ).retry(5)
         except Exception as exception:
-            self.logger.exception(exception)
+            logger.exception(exception)
 
     def notify_source_status(self, sourcename, status):
         try:
@@ -247,7 +247,7 @@ class ApiClient:
                 sourcename=sourcename, status=status
             ).retry(5)
         except Exception as exception:
-            self.logger.exception(exception)
+            logger.exception(exception)
 
     def get_bootstrap_info(self):
         """
@@ -260,7 +260,7 @@ class ApiClient:
         Update the server with the latest metadata we've received from the
         external webstream
         """
-        self.logger.info(
+        logger.info(
             self.services.notify_webstream_data.req(
                 _post_data={"data": data}, media_id=str(media_id)
             ).retry(5)
@@ -268,7 +268,7 @@ class ApiClient:
 
     def get_stream_parameters(self):
         response = self.services.get_stream_parameters()
-        self.logger.debug(response)
+        logger.debug(response)
         return response
 
     def push_stream_stats(self, data):
@@ -285,7 +285,7 @@ class ApiClient:
             )
             return response
         except Exception as exception:
-            self.logger.exception(exception)
+            logger.exception(exception)
 
     def update_metadata_on_tunein(self):
         self.services.update_metadata_on_tunein()
