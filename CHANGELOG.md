@@ -1,3 +1,36 @@
+<a name="3.0.2"></a>
+
+## [3.0.2](https://github.com/libretime/libretime/compare/3.0.1...3.0.2) (2023-02-21)
+
+- [Release note](https://libretime.org/docs/releases/3.0.2/)
+
+### Bug Fixes
+
+- **legacy:** advanced search by track type id
+- **legacy:** refresh lock files
+- **legacy:** move forked deps to the libretime namespace
+- **legacy:** improve error messages and logs
+- **installer:** allow different actions on template_file
+- **installer:** print diff on file deployment
+- **installer:** only setup nginx on first install
+- **installer:** print unsupported distribution error ([#2368](https://github.com/libretime/libretime/issues/2368))
+- **installer:** create systemd dirs if missing ([#2379](https://github.com/libretime/libretime/issues/2379))
+
+### Documentation
+
+- add DOCKER_BUILDKIT env variable for docker-compose v1 ([#2270](https://github.com/libretime/libretime/issues/2270))
+- check logs before checking services status
+- add small faq for troubleshooting
+
+### Tests
+
+- **playout:** refresh snapshots after major upgrade ([#2381](https://github.com/libretime/libretime/issues/2381))
+
+### CI
+
+- don't squash commits during docs sync
+- test project weekly
+
 <a name="3.0.1"></a>
 
 ## [3.0.1](https://github.com/libretime/libretime/compare/3.0.0...3.0.1) (2022-12-20)

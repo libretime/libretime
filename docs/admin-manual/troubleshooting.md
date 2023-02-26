@@ -5,36 +5,21 @@ sidebar_position: 90
 
 This guide walk you though the steps required to troubleshoot LibreTime.
 
-## Services status
+## FAQ
 
-When facing a problem with LibreTime the first reflex is to verify whether the services are running.
+### I cannot login the interface "Oops! Something went wrong!"
 
-In the web interface, go to **Settings** > **Status** to see the state of the services.
+You might be accessing the interface from an invalid URL. Make sure that the URL in your browser and the one set in your configuration file in `[general.public_url]` are the same.
 
-![](./troubleshooting-status-page.png)
+Make sure to check the legacy logs at `/var/log/libretime/legacy.log`.
 
-Or directly from a terminal:
+References:
 
-```bash
-sudo systemctl --all --plain | egrep 'libretime|nginx|php.*-fpm'
-```
-
-If a service isn't running, you should search for details using the tool running those services.
-On a common setup, you should use the systemd service status:
-
-```bash
-sudo systemctl status libretime-worker
-```
-
-:::note
-
-Be sure to replace the service name with the problematic one.
-
-:::
+- https://discourse.libretime.org/t/version-3-0-1-debian-oops-something-went-wrong/1400
 
 ## Logs
 
-The next place to search for details on potential errors are the log files.
+The first place to search for details on potential errors are the log files.
 
 The `/var/log/syslog` file contains most of the system logs combined. This log file may contain information that the application logger wasn't able to log, such as early startup errors. You can follow the logs using:
 
@@ -60,6 +45,33 @@ sudo -u libretime libretime-analyzer --config /etc/libretime/config.yml --log-le
 ```
 
 The `/var/log/nginx/libretime.error.log` file contains logs from the web server.
+
+## Services status
+
+The next reflex is to verify whether the services are running.
+
+In the web interface, go to **Settings** > **Status** to see the state of the services.
+
+![](./troubleshooting-status-page.png)
+
+Or directly from a terminal:
+
+```bash
+sudo systemctl --all --plain | egrep 'libretime|nginx|php.*-fpm'
+```
+
+If a service isn't running, you should search for details using the tool running those services.
+On a common setup, you should use the systemd service status:
+
+```bash
+sudo systemctl status libretime-worker
+```
+
+:::note
+
+Be sure to replace the service name with the problematic one.
+
+:::
 
 ## Test the stream inputs
 

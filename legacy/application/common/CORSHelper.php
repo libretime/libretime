@@ -10,7 +10,9 @@ class CORSHelper
 
         if (!($origin == '' || preg_match('/https?:\/\/localhost/', $origin) === 1 || in_array($origin, $allowedOrigins))) {
             // Don't allow CORS from other domains to prevent XSS.
-            Logging::error("request origin '{$origin}' is not in allowed '" . implode(', ', $allowedOrigins) . "'!");
+            Logging::error(
+                "request origin '{$origin}' is not in the configured 'allowed_cors_origins' '" . implode(', ', $allowedOrigins) . "'"
+            );
 
             throw new Zend_Controller_Action_Exception('Forbidden', 403);
         }

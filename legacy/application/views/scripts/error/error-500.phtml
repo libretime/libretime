@@ -12,7 +12,12 @@
         <h2><?php echo _("Oops!") ?></h2>
         <p><?php echo _("Something went wrong!") ?></p>
         <div class="button-bar">
-            <a class="toggle-button" href="<?php echo $this->helpUrl; ?>"><?php echo _("Help") ?></a>
+            <a class="toggle-button" href="<?php echo TROUBLESHOOTING_URL; ?>" target="_blank">
+                <?php echo _("Troubleshooting help") ?>
+            </a>
+            <a class="toggle-button" href="<?php echo $this->helpUrl; ?>" target="_blank">
+                <?php echo _("More help") ?>
+            </a>
         </div>
     </div>
 </body>
