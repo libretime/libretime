@@ -1,0 +1,24 @@
+{
+  "group": {
+    "default": {
+      "targets": ["analyzer", "playout", "api", "worker", "legacy"]
+    }
+  },
+  "target": {
+    "analyzer": {
+      "target": "libretime-analyzer"
+    },
+    "playout": {
+      "target": "libretime-playout"
+    },
+    "api": {
+      "target": "libretime-api"
+    },
+    "worker": {
+      "target": "libretime-worker"
+    },
+    "legacy": {
+      "target": "libretime-legacy"
+    }
+  }
+}
