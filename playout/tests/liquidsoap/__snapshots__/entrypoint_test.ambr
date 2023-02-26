@@ -271,10 +271,11 @@
   %include "/fake/1.4/ls_script.liq"
   
   # pulseaudio:1
+  %ifndef output.pulseaudio
+  log("output.pulseaudio is not defined!")
+  %endif
   %ifdef output.pulseaudio
   output.pulseaudio(id="pulseaudio:1", s)
-  %else
-  log("output.pulseaudio is not defined!")
   %endif
   
   

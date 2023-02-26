@@ -120,10 +120,11 @@ output.shoutcast(
 {% for output in config.stream.outputs.system -%}
 {% if output.enabled -%}
 # {{ output.kind.value }}:{{ loop.index }}
+%ifndef output.{{ output.kind.value }}
+log("output.{{ output.kind.value }} is not defined!")
+%endif
 %ifdef output.{{ output.kind.value }}
 output.{{ output.kind.value }}(id="{{ output.kind.value }}:{{ loop.index }}", s)
-%else
-log("output.{{ output.kind.value }} is not defined!")
 %endif
 
 {% endif -%}
