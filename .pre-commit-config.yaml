@@ -104,12 +104,3 @@ repos:
         pass_filenames: false
         language: script
         files: ^legacy
-
-      - id: legacy-locale-update
-        name: legacy-locale-update
-        description: Update legacy locale
-        entry: make
-        args: [-C, legacy/locale, check-update]
-        pass_filenames: false
-        language: system
-        files: ^legacy
