@@ -1,11 +1,14 @@
-from ._client import AbstractApiClient, Response
+from ._client import AbstractApiClient, Response, default_retry
 
 
 class ApiClient(AbstractApiClient):
     VERSION = "2.0"
 
     def __init__(self, base_url: str, api_key: str):
-        super().__init__(base_url=base_url)
+        super().__init__(
+            base_url=base_url,
+            retry=default_retry(),
+        )
         self.session.headers.update({"Authorization": f"Api-Key {api_key}"})
 
     def get_info(self, **kwargs) -> Response:
