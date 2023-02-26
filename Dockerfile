@@ -83,7 +83,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 COPY analyzer .
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --editable .
+    pip install --editable .[sentry]
 
 # Run
 USER ${UID}:${GID}
@@ -122,7 +122,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 COPY playout .
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --editable .
+    pip install --editable .[sentry]
 
 # Run
 USER ${UID}:${GID}
@@ -158,7 +158,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 COPY api .
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --editable .[prod]
+    pip install --editable .[prod,sentry]
 
 # Run
 USER ${UID}:${GID}
@@ -191,7 +191,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 COPY worker .
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --editable .
+    pip install --editable .[sentry]
 
 # Run
 USER ${UID}:${GID}

@@ -1,5 +1,7 @@
-from os import getenv
+from os import environ, getenv
 from typing import Optional
+
+from .. import PACKAGE, VERSION
 
 API_VERSION = "2.0.0"
 
@@ -178,3 +180,18 @@ SPECTACULAR_SETTINGS = {
     "VERSION": API_VERSION,
     "ENUM_NAME_OVERRIDES": SPECTACULAR_ENUM_NAME_OVERRIDES,
 }
+
+# Sentry
+# https://docs.sentry.io/platforms/python/guides/django/
+if "SENTRY_DSN" in environ:
+    # pylint: disable=import-outside-toplevel
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        traces_sample_rate=1.0,
+        release=f"{PACKAGE}@{VERSION}",
+        integrations=[
+            DjangoIntegration(),
+        ],
+    )

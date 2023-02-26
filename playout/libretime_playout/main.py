@@ -1,8 +1,8 @@
 """
 Python part of radio playout (pypo)
 """
-
 import logging
+import os
 import sys
 import time
 from datetime import datetime
@@ -18,6 +18,7 @@ from libretime_shared.cli import cli_config_options, cli_logging_options
 from libretime_shared.config import DEFAULT_ENV_PREFIX
 from libretime_shared.logging import setup_logger
 
+from . import PACKAGE, VERSION
 from .config import CACHE_DIR, RECORD_DIR, Config
 from .history.stats import StatsCollectorThread
 from .liquidsoap.client import LiquidsoapClient
@@ -74,6 +75,16 @@ def cli(
     """
     setup_logger(log_level, log_filepath)
     config = Config(config_filepath)
+
+    if "SENTRY_DSN" in os.environ:
+        logger.info("installing sentry")
+        # pylint: disable=import-outside-toplevel
+        import sentry_sdk
+
+        sentry_sdk.init(
+            traces_sample_rate=1.0,
+            release=f"{PACKAGE}@{VERSION}",
+        )
 
     try:
         for dir_path in [CACHE_DIR, RECORD_DIR]:
