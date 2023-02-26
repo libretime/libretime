@@ -207,9 +207,12 @@ class ApiController extends Zend_Controller_Action
 
         $range = Application_Model_Schedule::GetPlayOrderRange();
 
-        $isItemCurrentlyScheduled = !is_null($range['tracks']['current']) && count($range['tracks']['current']) > 0 ? true : false;
-
-        $isCurrentItemPlaying = $range['tracks']['current']['media_item_played'] ? true : false;
+        $isItemCurrentlyScheduled = false;
+        $isCurrentItemPlaying = false;
+        if (!is_null($range['tracks']['current']) && count($range['tracks']['current']) > 0) {
+            $isItemCurrentlyScheduled = true;
+            $isCurrentItemPlaying = $range['tracks']['current']['media_item_played'] ? true : false;
+        }
 
         if (
             $isItemCurrentlyScheduled
