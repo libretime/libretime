@@ -9,14 +9,13 @@ import pytest
 from libretime_shared.logging import setup_logger
 
 from libretime_playout.liquidsoap.client import LiquidsoapConnection
-from libretime_playout.liquidsoap.version import get_liquidsoap_version
+
+from ..conftest import LIQ_VERSION, LIQ_VERSION_STR
 
 logger = logging.getLogger(__name__)
 
 setup_logger("debug")
 
-LIQ_VERSION = get_liquidsoap_version()
-LIQ_VERSION_STR = ".".join(map(str, LIQ_VERSION))
 
 pytestmark = pytest.mark.skipif(
     LIQ_VERSION >= (2, 0, 0),
