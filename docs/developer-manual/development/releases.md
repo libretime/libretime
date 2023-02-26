@@ -7,14 +7,14 @@ title: Releases
 New releases target the current stable distributions release, and development should prepare for future stable distributions releases.
 
 - We recommend installing LibreTime on the current stable distributions.
-- Maintenance only releases will provide bug and security fixes for stable and old stable distributions.
+- We do not provide maintenance releases for old stable distributions.
 
-|              | Ubuntu 18.04 |  Debian 10  | Ubuntu 20.04 |  Debian 11  |
-| ------------ | :----------: | :---------: | :----------: | :---------: |
-| Release date |  2018-04-26  | 2019-07-06  |  2020-04-23  | 2021-08-14  |
-| End of life  |   2023-04    |   2024-06   |   2025-04    |   2026-06   |
-| Versions     |              |             |              |             |
-| 3.0.x        | maintenance  | maintenance | recommended  | recommended |
+|              | Ubuntu 18.04 | Debian 10  | Ubuntu 20.04 |  Debian 11  |
+| ------------ | :----------: | :--------: | :----------: | :---------: |
+| Release date |  2018-04-26  | 2019-07-06 |  2020-04-23  | 2021-08-14  |
+| End of life  |   2023-04    |  2024-06   |   2025-04    |   2026-06   |
+| Versions     |              |            |              |             |
+| 3.0.x        |  deprecated  | deprecated | recommended  | recommended |
 
 ## Versioning schema
 
