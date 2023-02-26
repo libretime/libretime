@@ -49,11 +49,6 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
         logger.error(exception)
         sys.exit(1)
 
-    logger.info("###########################################")
-    logger.info("#             *** pypo  ***               #")
-    logger.info("#   Liquidsoap Scheduled Playout System   #")
-    logger.info("###########################################")
-
     # Although all of our calculations are in UTC, it is useful to know what timezone
     # the local machine is, so that we have a reference for what time the actual
     # log entries were made
