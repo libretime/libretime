@@ -16,7 +16,7 @@ def run_(*args, **kwargs) -> CompletedProcess:
 
     except OSError as exception:  # executable was not found
         cmd = args[0]
-        logger.warning(f"Failed to run: {cmd} - {exception}. Is {cmd} installed?")
+        logger.warning("Failed to run: %s - %s. Is %s installed?", cmd, exception, cmd)
         raise exception
 
     except CalledProcessError as exception:  # returned an error code

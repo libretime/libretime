@@ -61,13 +61,15 @@ class BaseConfig(BaseModel):
             return {}
 
         if not filepath.is_file():
-            logger.warning(f"provided config filepath '{filepath}' is not a file")
+            logger.warning("provided config filepath '%s' is not a file", filepath)
             return {}
 
         try:
             return safe_load(filepath.read_text(encoding="utf-8"))
-        except YAMLError as error:
-            logger.error(f"config file '{filepath}' is not a valid yaml file: {error}")
+        except YAMLError as exception:
+            logger.error(
+                "config file '%s' is not a valid yaml file: %s", filepath, exception
+            )
 
         return {}
 

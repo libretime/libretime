@@ -56,8 +56,8 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     # Although all of our calculations are in UTC, it is useful to know what timezone
     # the local machine is, so that we have a reference for what time the actual
     # log entries were made
-    logger.info("Timezone: %s" % str(time.tzname))
-    logger.info("UTC time: %s" % str(datetime.utcnow()))
+    logger.info("Timezone: %s", time.tzname)
+    logger.info("UTC time: %s", datetime.utcnow())
 
     legacy_client = LegacyClient()
     api_client = ApiClient(

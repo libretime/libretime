@@ -36,7 +36,7 @@ class PypoLiqQueue(Thread):
                     media_schedule = self.queue.get(block=True)
                 else:
                     logger.info(
-                        "waiting %ss until next scheduled item" % time_until_next_play
+                        "waiting %ss until next scheduled item", time_until_next_play
                     )
                     media_schedule = self.queue.get(
                         block=True, timeout=time_until_next_play

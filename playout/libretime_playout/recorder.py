@@ -89,7 +89,7 @@ class ShowRecorder(Thread):
         args = command.split(" ")
 
         logger.info("starting record")
-        logger.info("command " + command)
+        logger.info("command %s", command)
 
         self.p = Popen(args, stdout=PIPE, stderr=PIPE)
 
@@ -139,7 +139,7 @@ class ShowRecorder(Thread):
             full_date, full_time = self.start_time.split(" ", 1)
             # No idea why we translated - to : before
             # full_time = full_time.replace(":","-")
-            logger.info("time: %s" % full_time)
+            logger.info("time: %s", full_time)
             artist = "Airtime Show Recorder"
             # set some metadata for our file daemon
             recorded_file = mutagen.File(filepath, easy=True)
@@ -160,7 +160,7 @@ class ShowRecorder(Thread):
 
         if code == 0:
             try:
-                logger.info("Preparing to upload %s" % filepath)
+                logger.info("Preparing to upload %s", filepath)
 
                 self.set_metadata_and_save(filepath)
 

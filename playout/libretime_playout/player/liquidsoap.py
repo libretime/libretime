@@ -157,7 +157,7 @@ class PypoLiquidsoap:
 
                     if not correct:
                         # need to re-add
-                        logger.info("Track %s found to have new attr." % i)
+                        logger.info("Track %s found to have new attr.", i)
                         to_be_removed.add(i["row_id"])
                         to_be_added.add(i["row_id"])
 
@@ -165,7 +165,7 @@ class PypoLiquidsoap:
             to_be_added.update(schedule_ids - liq_queue_ids)
 
             if to_be_removed:
-                logger.info("Need to remove items from Liquidsoap: %s" % to_be_removed)
+                logger.info("Need to remove items from Liquidsoap: %s", to_be_removed)
 
                 # remove files from Liquidsoap's queue
                 for i in self.liq_queue_tracker:
@@ -174,7 +174,7 @@ class PypoLiquidsoap:
                         self.stop(i)
 
             if to_be_added:
-                logger.info("Need to add items to Liquidsoap *now*: %s" % to_be_added)
+                logger.info("Need to add items to Liquidsoap *now*: %s", to_be_added)
 
                 for i in scheduled_now_files:
                     if i["row_id"] in to_be_added:
@@ -183,7 +183,7 @@ class PypoLiquidsoap:
 
             # handle webstreams
             current_stream_id = self.telnet_liquidsoap.get_current_stream_id()
-            logger.debug(f"scheduled now webstream: {scheduled_now_webstream}")
+            logger.debug("scheduled now webstream: %s", scheduled_now_webstream)
             if scheduled_now_webstream:
                 if int(current_stream_id) != int(scheduled_now_webstream[0]["row_id"]):
                     self.play(scheduled_now_webstream[0])
@@ -192,7 +192,7 @@ class PypoLiquidsoap:
                 self.telnet_liquidsoap.stop_web_stream_buffer()
                 self.telnet_liquidsoap.stop_web_stream_output()
         except KeyError as exception:
-            logger.exception(f"Malformed event in schedule: {exception}")
+            logger.exception("Malformed event in schedule: %s", exception)
 
     def stop(self, queue):
         self.telnet_liquidsoap.queue_remove(queue)
@@ -211,7 +211,7 @@ class PypoLiquidsoap:
         lateness = seconds_between(link["start"], datetime.utcnow())
 
         if lateness > 0:
-            logger.debug(f"media item was supposed to start {lateness}s ago")
+            logger.debug("media item was supposed to start %ss ago", lateness)
             cue_in_orig = timedelta(seconds=float(link["cue_in"]))
             link["cue_in"] = cue_in_orig.total_seconds() + lateness
 

@@ -86,16 +86,16 @@ class PypoPush(Thread):
 
             # Ignore track that already ended
             if media_item["type"] == "file" and media_item["end"] < tnow:
-                logger.debug(f"ignoring ended media_item: {media_item}")
+                logger.debug("ignoring ended media_item: %s", media_item)
                 continue
 
             diff_sec = (tnow - media_item["start"]).total_seconds()
 
             if diff_sec >= 0:
-                logger.debug(f"adding media_item to present: {media_item}")
+                logger.debug("adding media_item to present: %s", media_item)
                 present.append(media_item)
             else:
-                logger.debug(f"adding media_item to future: {media_item}")
+                logger.debug("adding media_item to future: %s", media_item)
                 future[mkey] = media_item
 
         return present, future
