@@ -1,6 +1,5 @@
 import logging
 from pathlib import Path
-from subprocess import CalledProcessError, check_output, run
 from time import sleep
 from typing import Any, Literal, Optional, Tuple
 
