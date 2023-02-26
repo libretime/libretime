@@ -32,15 +32,6 @@ update:
 	find ./locale -name $(PO_FILE) -exec msgmerge $(MSGMERGE_ARGS) "{}" $(PO_FILE) \;
 	rm $(PO_FILE)
 
-update-foreach-commit:
-	git rebase main -x "$(MAKE) -C legacy/locale update"
-
-check-update: update
-	if git status --porcelain -- */LC_MESSAGES/$(PO_FILE) | grep -q '^ M'; then \
-		git --no-pager diff -- */LC_MESSAGES/$(PO_FILE); \
-		exit 1; \
-	fi
-
 %.mo: %.po
 	msgfmt $< -o $@
 
