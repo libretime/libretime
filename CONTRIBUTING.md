@@ -6,9 +6,12 @@ LibreTime, your time is valuable, and your contributions mean a lot to us.
 Before any contribution, read and be prepared to adhere to our
 [code of conduct](https://github.com/libretime/organization/blob/main/CODE_OF_CONDUCT.md).
 
-In addition, LibreTime follow the standardized
-[C4 development process](https://rfc.zeromq.org/spec:42/c4/), in which you can
-find explanation about most of the development workflows for LibreTime.
+LibreTime development workflows follow the standardized [C4 development process](https://rfc.zeromq.org/spec:42/c4/), with some LibreTime specific changes:
+
+- [2.3. Patch Requirements](https://rfc.zeromq.org/spec/42/#23-patch-requirements)
+  - 7. A patch commit message MUST follow the [conventional commits specification](https://www.conventionalcommits.org/en/v1.0.0/).
+- [2.4. Development Process](https://rfc.zeromq.org/spec/42/#24-development-process)
+  - 16. Maintainers MAY NOT merge incorrect patches.
 
 **How to contribute**
 
