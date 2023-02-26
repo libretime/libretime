@@ -102,17 +102,17 @@ class Importer:
             raise RuntimeError(f"could not upload {filepath}") from exception
 
     def _delete_file(self, filepath: Path) -> None:
-        logger.info(f"deleting {filepath}")
+        logger.info("deleting %s", filepath)
         filepath.unlink()
 
     def _handle_file(self, filepath: Path, library: Optional[str]) -> None:
-        logger.debug(f"handling file {filepath}")
+        logger.debug("handling file %s", filepath)
 
         if not filepath.is_file():
             raise ValueError(f"provided path {filepath} is not a file")
 
         if self._check_file_md5(filepath):
-            logger.info(f"found similar md5sum, ignoring {filepath}")
+            logger.info("found similar md5sum, ignoring %s", filepath)
             if self.delete_if_exists:
                 self._delete_file(filepath)
             return

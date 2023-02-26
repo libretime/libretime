@@ -153,7 +153,7 @@ class StatsCollectorThread(Thread):
         self._collector = StatsCollector(legacy_client)
 
     def run(self):
-        logger.info(f"starting {self.name}")
+        logger.info("starting %s", self.name)
         while True:
             try:
                 self._collector.collect(self._config.stream.outputs.merged)

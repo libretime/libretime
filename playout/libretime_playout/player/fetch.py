@@ -64,7 +64,7 @@ class PypoFetch(Thread):
 
     def handle_message(self, message):
         try:
-            logger.info("Received event from Pypo Message Handler: %s" % message)
+            logger.info("Received event from Pypo Message Handler: %s", message)
 
             try:
                 message = message.decode()
@@ -72,7 +72,7 @@ class PypoFetch(Thread):
                 pass
             m = json.loads(message)
             command = m["event_type"]
-            logger.info("Handling command: " + command)
+            logger.info("Handling command: %s", command)
 
             if command == "update_schedule":
                 self.schedule_data = m["schedule"]
@@ -102,7 +102,7 @@ class PypoFetch(Thread):
                     m["sourcename"]
                 )
             else:
-                logger.info("Unknown command: %s" % command)
+                logger.info("Unknown command: %s", command)
 
             # update timeout value
             if command == "update_schedule":
@@ -113,7 +113,7 @@ class PypoFetch(Thread):
                 )
                 if self.listener_timeout < 0:
                     self.listener_timeout = 0
-            logger.info("New timeout: %s" % self.listener_timeout)
+            logger.info("New timeout: %s", self.listener_timeout)
         except Exception as exception:
             logger.exception(exception)
 
@@ -128,11 +128,11 @@ class PypoFetch(Thread):
             state = StreamState(**self.api_client.get_stream_state().json())
 
         except RequestException as exception:
-            logger.exception(f"Unable to get stream settings: {exception}")
+            logger.exception("Unable to get stream settings: %s", exception)
 
-        logger.debug(f"info: {info}")
-        logger.debug(f"preferences: {preferences}")
-        logger.debug(f"state: {state}")
+        logger.debug("info: %s", info)
+        logger.debug("preferences: %s", preferences)
+        logger.debug("state: %s", state)
 
         try:
             self.pypo_liquidsoap.liq_client.settings_update(
@@ -293,31 +293,31 @@ class PypoFetch(Thread):
 
         expired_files = cached_file_set - scheduled_file_set
 
-        logger.debug("Files to remove " + str(expired_files))
+        logger.debug("Files to remove %s", str(expired_files))
         for f in expired_files:
             try:
                 path = os.path.join(self.cache_dir, f)
-                logger.debug("Removing %s" % path)
+                logger.debug("Removing %s", path)
 
                 # check if this file is opened (sometimes Liquidsoap is still
                 # playing the file due to our knowledge of the track length
                 # being incorrect!)
                 if not self.is_file_opened(path):
                     os.remove(path)
-                    logger.info("File '%s' removed" % path)
+                    logger.info("File '%s' removed", path)
                 else:
-                    logger.info("File '%s' not removed. Still busy!" % path)
+                    logger.info("File '%s' not removed. Still busy!", path)
             except Exception as exception:
-                logger.exception(f"Problem removing file '{f}': {exception}")
+                logger.exception("Problem removing file '%s': %s", f, exception)
 
     def manual_schedule_fetch(self):
         try:
             self.schedule_data = get_schedule(self.api_client)
-            logger.debug(f"Received event from API client: {self.schedule_data}")
+            logger.debug("Received event from API client: %s", self.schedule_data)
             self.process_schedule(self.schedule_data)
             return True
         except Exception as exception:
-            logger.exception(f"Unable to fetch schedule: {exception}")
+            logger.exception("Unable to fetch schedule: %s", exception)
         return False
 
     def persistent_manual_schedule_fetch(self, max_attempts=1):
@@ -358,7 +358,7 @@ class PypoFetch(Thread):
 
         loops = 1
         while True:
-            logger.info(f"Loop #{loops}")
+            logger.info("Loop #%s", loops)
             manual_fetch_needed = False
             try:
                 # our simple_queue.get() requires a timeout, in which case we
@@ -388,7 +388,7 @@ class PypoFetch(Thread):
                 if manual_fetch_needed:
                     self.persistent_manual_schedule_fetch(max_attempts=5)
             except Exception as exception:
-                logger.exception(f"Failed to manually fetch the schedule: {exception}")
+                logger.exception("Failed to manually fetch the schedule: %s", exception)
 
             loops += 1
 

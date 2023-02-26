@@ -101,16 +101,16 @@ class ApiClient:
 
         if api_version[0:3] != AIRTIME_API_VERSION[0:3]:
             if verbose:
-                logger.info("Airtime API version found: " + str(api_version))
+                logger.info("Airtime API version found: %s", str(api_version))
                 logger.info(
-                    "pypo is only compatible with API version: " + AIRTIME_API_VERSION
+                    "pypo is only compatible with API version: %s", AIRTIME_API_VERSION
                 )
             return False
 
         if verbose:
-            logger.info("Airtime API version found: " + str(api_version))
+            logger.info("Airtime API version found: %s", str(api_version))
             logger.info(
-                "pypo is only compatible with API version: " + AIRTIME_API_VERSION
+                "pypo is only compatible with API version: %s", AIRTIME_API_VERSION
             )
         return True
 
@@ -183,11 +183,11 @@ class ApiClient:
                 break
 
             except requests.exceptions.HTTPError as exception:
-                logger.error(f"Http error code: {exception.response.status_code}")
+                logger.error("Http error code: %s", exception.response.status_code)
                 logger.exception(exception)
 
             except requests.exceptions.ConnectionError as exception:
-                logger.exception(f"Server is down: {exception}")
+                logger.exception("Server is down: %s", exception)
 
             except Exception as exception:
                 logger.exception(exception)

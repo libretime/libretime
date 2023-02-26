@@ -36,7 +36,7 @@ class MessageHandler(ConsumerMixin):
         ]
 
     def on_message(self, body, message):
-        logger.debug(f"received message: {body}")
+        logger.debug("received message: %s", body)
         try:
             try:
                 body = body.decode()
@@ -45,7 +45,7 @@ class MessageHandler(ConsumerMixin):
 
             payload = json.loads(body)
             command = payload["event_type"]
-            logger.info(f"handling command: {command}")
+            logger.info("handling command: %s", command)
 
             if command in (
                 "update_schedule",
@@ -66,7 +66,7 @@ class MessageHandler(ConsumerMixin):
                 self.recorder_queue.put(message.payload)
 
             else:
-                logger.warning(f"invalid command: {command}")
+                logger.warning("invalid command: %s", command)
 
         except Exception as exception:
             logger.exception(exception)

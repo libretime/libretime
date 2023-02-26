@@ -65,7 +65,7 @@ class LiquidsoapConnection:
         logger.debug("trying to acquire lock")
         # pylint: disable=consider-using-with
         self._lock.acquire()
-        logger.debug(f"connecting to {self.address()}")
+        logger.debug("connecting to %s", self.address())
 
         if self._path is not None:
             self._sock = socket(AF_UNIX, SOCK_STREAM)
@@ -79,7 +79,7 @@ class LiquidsoapConnection:
 
     def close(self):
         if self._sock is not None:
-            logger.debug(f"closing connection to {self.address()}")
+            logger.debug("closing connection to %s", self.address())
 
             self.write("exit")
             # Reading for clean exit
@@ -97,7 +97,7 @@ class LiquidsoapConnection:
             raise InvalidConnection()
 
         for message in messages:
-            logger.debug(f"sending {message}")
+            logger.debug("sending %s", message)
             buffer = message.encode(encoding="utf-8")
             buffer += b"\n"
 
@@ -127,5 +127,5 @@ class LiquidsoapConnection:
         buffer = buffer.strip(b"\n")
         message = buffer.decode("utf-8")
 
-        logger.debug(f"received {message}")
+        logger.debug("received %s", message)
         return message
