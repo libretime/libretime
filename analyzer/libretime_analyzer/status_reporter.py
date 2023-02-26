@@ -1,5 +1,6 @@
 import collections
 import json
+import logging
 import pickle
 import queue
 import threading
@@ -7,8 +8,9 @@ import time
 from urllib.parse import urlparse
 
 import requests
-from loguru import logger
 from requests.exceptions import HTTPError
+
+logger = logging.getLogger(__name__)
 
 
 class PicklableHttpRequest:

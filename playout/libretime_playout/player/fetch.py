@@ -1,5 +1,6 @@
 import copy
 import json
+import logging
 import mimetypes
 import os
 import time
@@ -11,7 +12,6 @@ from typing import Any, Dict
 
 from libretime_api_client.v1 import ApiClient as LegacyClient
 from libretime_api_client.v2 import ApiClient
-from loguru import logger
 from requests import RequestException
 
 from ..config import CACHE_DIR, POLL_INTERVAL, Config
@@ -20,6 +20,8 @@ from ..liquidsoap.models import Info, StreamPreferences, StreamState
 from ..timeout import ls_timeout
 from .liquidsoap import PypoLiquidsoap
 from .schedule import get_schedule
+
+logger = logging.getLogger(__name__)
 
 
 class PypoFetch(Thread):

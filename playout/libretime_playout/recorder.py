@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 import math
 import os
 import re
@@ -12,7 +13,6 @@ from threading import Thread
 
 import mutagen
 from libretime_api_client.v1 import ApiClient as LegacyClient
-from loguru import logger
 
 from libretime_playout.config import PUSH_INTERVAL, RECORD_DIR, Config
 
@@ -21,6 +21,7 @@ if sys.version_info < (3, 9):
 else:
     from zoneinfo import ZoneInfo
 
+logger = logging.getLogger(__name__)
 
 # TODO : add docstrings everywhere in this module
 

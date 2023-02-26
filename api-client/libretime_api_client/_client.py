@@ -1,10 +1,12 @@
+import logging
 from typing import Optional
 
-from loguru import logger
 from requests import Response, Session as BaseSession
 from requests.adapters import HTTPAdapter
 from requests.exceptions import RequestException
 from urllib3.util import Retry
+
+logger = logging.getLogger(__name__)
 
 DEFAULT_TIMEOUT = 5
 

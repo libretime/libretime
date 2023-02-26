@@ -1,11 +1,12 @@
+import logging
 from datetime import timedelta
 from math import isclose
 from subprocess import CalledProcessError
 from typing import Any, Dict
 
-from loguru import logger
-
 from ._ffmpeg import compute_silences, probe_duration
+
+logger = logging.getLogger(__name__)
 
 
 def analyze_duration(filepath: str, metadata: Dict[str, Any]) -> Dict[str, Any]:

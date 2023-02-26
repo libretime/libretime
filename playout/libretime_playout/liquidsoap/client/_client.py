@@ -1,14 +1,15 @@
+import logging
 from pathlib import Path
 from subprocess import CalledProcessError, check_output, run
 from time import sleep
 from typing import Any, Literal, Optional, Tuple
 
-from loguru import logger
-
 from ..models import MessageFormatKind
 from ..utils import quote
 from ..version import parse_liquidsoap_version
 from ._connection import LiquidsoapConnection
+
+logger = logging.getLogger(__name__)
 
 
 class LiquidsoapClientError(Exception):

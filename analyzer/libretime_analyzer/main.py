@@ -4,7 +4,7 @@ from typing import Optional
 import click
 from libretime_shared.cli import cli_config_options, cli_logging_options
 from libretime_shared.config import DEFAULT_ENV_PREFIX
-from libretime_shared.logging import level_from_name, setup_logger
+from libretime_shared.logging import setup_logger
 
 from .config import Config
 from .message_listener import MessageListener
@@ -33,7 +33,7 @@ def cli(
     """
     Run analyzer.
     """
-    setup_logger(level_from_name(log_level), log_filepath)
+    setup_logger(log_level, log_filepath)
     config = Config(config_filepath)
 
     # Start up the StatusReporter process

@@ -1,4 +1,5 @@
 import json
+import logging
 from queue import Queue as ThreadQueue
 from signal import SIGTERM, signal
 from time import sleep
@@ -8,9 +9,10 @@ from typing import Any, Dict
 from kombu.connection import Connection
 from kombu.messaging import Exchange, Queue
 from kombu.mixins import ConsumerMixin
-from loguru import logger
 
 from .config import Config
+
+logger = logging.getLogger(__name__)
 
 
 class MessageHandler(ConsumerMixin):

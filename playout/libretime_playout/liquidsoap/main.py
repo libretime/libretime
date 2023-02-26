@@ -1,3 +1,4 @@
+import logging
 import os
 from pathlib import Path
 from typing import Optional
@@ -6,13 +7,14 @@ import click
 from libretime_api_client.v2 import ApiClient
 from libretime_shared.cli import cli_config_options, cli_logging_options
 from libretime_shared.config import DEFAULT_ENV_PREFIX
-from libretime_shared.logging import level_from_name, setup_logger
-from loguru import logger
+from libretime_shared.logging import setup_logger
 
 from ..config import Config
 from .entrypoint import generate_entrypoint
 from .models import Info, StreamPreferences
 from .version import get_liquidsoap_version
+
+logger = logging.getLogger(__name__)
 
 here = Path(__file__).parent
 
@@ -24,7 +26,7 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     """
     Run liquidsoap.
     """
-    logger_level, _ = setup_logger(level_from_name(log_level), log_filepath)
+    setup_logger(log_level, log_filepath)
     config = Config(config_filepath)
 
     api_client = ApiClient(
@@ -53,7 +55,7 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
         "--verbose",
         str(entrypoint_filepath),
     ]
-    if logger_level.is_debug():
+    if log_level == "debug":
         exec_args.append("--debug")
 
     logger.debug(f"liquidsoap {version} using script: {entrypoint_filepath}")

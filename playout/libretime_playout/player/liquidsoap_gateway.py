@@ -1,9 +1,10 @@
+import logging
 from typing import List
-
-from loguru import logger
 
 from ..liquidsoap.client import LiquidsoapClient
 from ..timeout import ls_timeout
+
+logger = logging.getLogger(__name__)
 
 
 def create_liquidsoap_annotation(media):

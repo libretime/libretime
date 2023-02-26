@@ -1,9 +1,10 @@
+import logging
 from subprocess import CalledProcessError
 from typing import Any, Dict
 
-from loguru import logger
-
 from ._liquidsoap import _liquidsoap
+
+logger = logging.getLogger(__name__)
 
 
 class UnplayableFileError(Exception):

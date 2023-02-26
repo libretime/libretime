@@ -2,11 +2,11 @@ import shutil
 from pathlib import Path
 
 import pytest
-from libretime_shared.logging import TRACE, setup_logger
+from libretime_shared.logging import setup_logger
 
 from .fixtures import fixtures_path
 
-setup_logger(TRACE)
+setup_logger("debug")
 
 AUDIO_FILENAME = "s1-stereo-tagged.mp3"
 AUDIO_FILE = fixtures_path / AUDIO_FILENAME

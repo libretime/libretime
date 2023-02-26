@@ -1,4 +1,5 @@
 import hashlib
+import logging
 import os
 import stat
 import time
@@ -7,8 +8,9 @@ from threading import Thread
 from typing import Any, Dict
 
 from libretime_api_client.v2 import ApiClient
-from loguru import logger
 from requests.exceptions import ConnectionError, HTTPError, Timeout
+
+logger = logging.getLogger(__name__)
 
 
 class PypoFile(Thread):

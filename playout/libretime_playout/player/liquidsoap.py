@@ -1,12 +1,13 @@
+import logging
 import time
 from datetime import datetime, timedelta
-
-from loguru import logger
 
 from ..liquidsoap.client import LiquidsoapClient
 from ..utils import seconds_between
 from .events import EventKind
 from .liquidsoap_gateway import TelnetLiquidsoap
+
+logger = logging.getLogger(__name__)
 
 
 class PypoLiquidsoap:

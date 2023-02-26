@@ -3,8 +3,6 @@ from typing import Any, Callable, Optional
 
 import click
 
-from .logging import INFO, LOG_LEVEL_MAP
-
 
 def cli_logging_options() -> Callable:
     def decorator(func: Callable) -> Callable:
@@ -18,8 +16,8 @@ def cli_logging_options() -> Callable:
         func = click.option(
             "--log-level",
             "log_level",
-            type=click.Choice(list(LOG_LEVEL_MAP.keys())),
-            default=INFO.name,
+            type=click.Choice(["error", "warning", "info", "debug"]),
+            default="info",
             help="Name of the logging level.",
         )(func)
 
