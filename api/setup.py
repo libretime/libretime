@@ -37,7 +37,7 @@ setup(
         "dev": [
             "django-coverage-plugin>=3.0.0,<3.1",
             "django-stubs>=1.14.0,<1.16",
-            "djangorestframework-stubs>=1.8.0,<1.9",
+            "djangorestframework-stubs>=1.8.0,<1.10",
             "model_bakery>=1.10.1,<1.11",
             "psycopg2-binary>=2.8.6,<2.10",
             "pylint-django>=2.5.3,<2.6",
