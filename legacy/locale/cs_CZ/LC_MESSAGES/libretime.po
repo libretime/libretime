@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2023-02-24 13:48+0100\n"
+"POT-Creation-Date: 2023-02-27 12:16+0000\n"
 "PO-Revision-Date: 2015-09-05 08:33+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: Czech (Czech Republic)\n"
@@ -777,32 +777,32 @@ msgid "What's New?"
 msgstr ""
 
 #: application/controllers/ApiController.php:113
-#: application/controllers/ApiController.php:750
+#: application/controllers/ApiController.php:753
 msgid "You are not allowed to access this resource."
 msgstr "Nemáte udělen přístup k tomuto zdroji."
 
-#: application/controllers/ApiController.php:380
-#: application/controllers/ApiController.php:456
-#: application/controllers/ApiController.php:525
-#: application/controllers/ApiController.php:580
-#: application/controllers/ApiController.php:668
-#: application/controllers/ApiController.php:685
-#: application/controllers/ApiController.php:716
+#: application/controllers/ApiController.php:383
+#: application/controllers/ApiController.php:459
+#: application/controllers/ApiController.php:528
+#: application/controllers/ApiController.php:583
+#: application/controllers/ApiController.php:671
+#: application/controllers/ApiController.php:688
+#: application/controllers/ApiController.php:719
 msgid "You are not allowed to access this resource. "
 msgstr "Nemáte udělen přístup k tomuto zdroji. "
 
-#: application/controllers/ApiController.php:920
-#: application/controllers/ApiController.php:941
-#: application/controllers/ApiController.php:953
+#: application/controllers/ApiController.php:923
+#: application/controllers/ApiController.php:944
+#: application/controllers/ApiController.php:956
 #, php-format
 msgid "File does not exist in %s"
 msgstr "Soubor neexistuje v %s"
 
-#: application/controllers/ApiController.php:1007
+#: application/controllers/ApiController.php:1010
 msgid "Bad request. no 'mode' parameter passed."
 msgstr "Špatný požadavek. Žádný 'mode' parametr neprošel."
 
-#: application/controllers/ApiController.php:1020
+#: application/controllers/ApiController.php:1023
 msgid "Bad request. 'mode' parameter is invalid"
 msgstr "Špatný požadavek. 'Mode' parametr je neplatný."
 
