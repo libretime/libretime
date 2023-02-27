@@ -88,9 +88,15 @@ jobs:
   locale:
     runs-on: ubuntu-latest
 
-    if: github.event_name == 'schedule'
+    if: >
+      github.repository_owner == 'libretime' && (
+        github.event_name == 'schedule' ||
+        github.event_name == 'workflow_dispatch'
+      )
     steps:
       - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.LIBRETIME_BOT_TOKEN }}
 
       - name: Install dependencies
         run: |
@@ -99,10 +105,12 @@ jobs:
 
       - name: Update locales
         run: |
-          make -C legacy/locale update
-
           git config --global user.name "libretime-bot"
           git config --global user.email "libretime-bot@users.noreply.github.com"
+
+          git pull
+
+          make -C legacy/locale update
 
           git add legacy/locale
           git diff-index --quiet HEAD -- legacy/locale || {
