@@ -20,8 +20,8 @@ class MessageHandler(ConsumerMixin):
     def __init__(
         self,
         connection: Connection,
-        fetch_queue: ThreadQueue,
-        recorder_queue: ThreadQueue,
+        fetch_queue: ThreadQueue[Dict[str, Any]],
+        recorder_queue: ThreadQueue[Dict[str, Any]],
     ):
         self.connection = connection
 
@@ -44,9 +44,9 @@ class MessageHandler(ConsumerMixin):
             except (UnicodeDecodeError, AttributeError):
                 pass
 
-            payload = json.loads(body)
+            payload: dict = json.loads(body)
             command = payload["event_type"]
-            logger.info("handling command: %s", command)
+            logger.info("handling event %s: %s", command, payload)
 
             if command in (
                 "update_schedule",
@@ -58,13 +58,13 @@ class MessageHandler(ConsumerMixin):
                 "update_transition_fade",
                 "disconnect_source",
             ):
-                self.fetch_queue.put(message.payload)
+                self.fetch_queue.put(payload)
 
             elif command in (
                 "update_recorder_schedule",
                 "cancel_recording",
             ):
-                self.recorder_queue.put(message.payload)
+                self.recorder_queue.put(payload)
 
             else:
                 logger.warning("invalid command: %s", command)

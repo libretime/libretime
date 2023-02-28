@@ -8,7 +8,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 from queue import Queue
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional
 
 import click
 from libretime_api_client.v1 import ApiClient as LegacyClient
@@ -83,7 +83,7 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     if not LIQUIDSOAP_MIN_VERSION <= liq_version:
         raise RuntimeError(f"Invalid liquidsoap version {liq_version}")
 
-    fetch_queue: Queue[Union[str, bytes]] = Queue()
+    fetch_queue: Queue[Dict[str, Any]] = Queue()
     recorder_queue: Queue[Dict[str, Any]] = Queue()
     push_queue: Queue[Events] = Queue()
     # This queue is shared between pypo-fetch and pypo-file, where pypo-file

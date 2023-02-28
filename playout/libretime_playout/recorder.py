@@ -1,5 +1,4 @@
 import datetime
-import json
 import logging
 import math
 import os
@@ -8,8 +7,10 @@ import signal
 import sys
 import time
 from datetime import timezone
+from queue import Queue
 from subprocess import PIPE, Popen
 from threading import Thread
+from typing import Any, Dict
 
 import mutagen
 from libretime_api_client.v1 import ApiClient as LegacyClient
@@ -177,14 +178,19 @@ class Recorder(Thread):
     name = "recorder"
     daemon = True
 
-    def __init__(self, q, config: Config, legacy_client: LegacyClient):
+    def __init__(
+        self,
+        recorder_queue: Queue[Dict[str, Any]],
+        config: Config,
+        legacy_client: LegacyClient,
+    ):
         Thread.__init__(self)
         self.legacy_client = legacy_client
         self.config = config
         self.sr = None
         self.shows_to_record = {}
         self.server_timezone = ""
-        self.queue = q
+        self.queue = recorder_queue
         self.loops = 0
         logger.info("RecorderFetch: init complete")
 
@@ -199,14 +205,9 @@ class Recorder(Thread):
 
     def handle_message(self):
         if not self.queue.empty():
-            message = self.queue.get()
-            try:
-                message = message.decode()
-            except (UnicodeDecodeError, AttributeError):
-                pass
-            msg = json.loads(message)
+            msg = self.queue.get()
             command = msg["event_type"]
-            logger.info("Received msg from Pypo Message Handler: %s", msg)
+            logger.debug("handling event %s: %s", command, msg)
             if command == "cancel_recording":
                 if self.currently_recording():
                     self.cancel_recording()
