@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 from time import sleep
-from typing import Any, Literal, Optional, Tuple
+from typing import Any, Literal, Optional, Tuple, Union
 
 from ..models import MessageFormatKind
 from ..utils import quote
@@ -126,7 +126,7 @@ class LiquidsoapClient:
         self,
         *,
         station_name: Optional[str] = None,
-        message_format: Optional[MessageFormatKind] = None,
+        message_format: Optional[Union[MessageFormatKind, str]] = None,
         message_offline: Optional[str] = None,
         input_fade_transition: Optional[float] = None,
     ):
@@ -134,7 +134,9 @@ class LiquidsoapClient:
             if station_name is not None:
                 self._set_var("station_name", self._quote(station_name))
             if message_format is not None:
-                self._set_var("message_format", self._quote(message_format.value))
+                if isinstance(message_format, MessageFormatKind):
+                    message_format = message_format.value
+                self._set_var("message_format", self._quote(message_format))
             if message_offline is not None:
                 self._set_var("message_offline", self._quote(message_offline))
             if input_fade_transition is not None:
