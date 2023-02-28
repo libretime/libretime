@@ -31,6 +31,10 @@ from .recorder import Recorder
 
 logger = logging.getLogger(__name__)
 
+for module in ("amqp",):
+    logging.getLogger(module).setLevel(logging.INFO)
+    logging.getLogger(module).propagate = False
+
 
 @click.command(context_settings={"auto_envvar_prefix": DEFAULT_ENV_PREFIX})
 @cli_logging_options()
