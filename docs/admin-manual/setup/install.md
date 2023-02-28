@@ -18,8 +18,8 @@ If you are coming from **Airtime**, please follow the [Airtime migration guide](
 
 You can install LibreTime using the one of the following methods:
 
-- [:rocket: Using the installer](#using-the-installer)
 - [:rocket: Using docker-compose](#using-docker-compose)
+- [:rocket: Using the installer](#using-the-installer)
 - :construction: Using ansible
 
 ### Minimum system requirements
@@ -217,12 +217,6 @@ sudo systemctl --all --plain | grep libretime
 Next, continue by [configuring your installation](#configure).
 
 ## Using docker-compose
-
-:::warning
-
-The docker-compose install is still a work in progress and is **EXPERIMENTAL**, breaking changes may occur without notice.
-
-:::
 
 ### Download
 
