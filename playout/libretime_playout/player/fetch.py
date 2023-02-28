@@ -1,5 +1,4 @@
 import copy
-import json
 import logging
 import mimetypes
 import os
@@ -7,7 +6,7 @@ import time
 from queue import Empty, Queue
 from subprocess import PIPE, Popen
 from threading import Thread, Timer
-from typing import Union
+from typing import Any, Dict
 
 from libretime_api_client.v1 import ApiClient as LegacyClient
 from libretime_api_client.v2 import ApiClient
@@ -30,7 +29,7 @@ class PypoFetch(Thread):
 
     def __init__(
         self,
-        fetch_queue: Queue[Union[str, bytes]],
+        fetch_queue: Queue[Dict[str, Any]],
         push_queue: Queue[Events],
         file_queue: Queue[FileEvents],
         liq_client: LiquidsoapClient,
@@ -62,42 +61,37 @@ class PypoFetch(Thread):
     # Handle a message from RabbitMQ, put it into our yucky global var.
     # Hopefully there is a better way to do this.
 
-    def handle_message(self, message: Union[bytes, str]):
+    def handle_message(self, message: Dict[str, Any]):
         try:
-            logger.info("Received event from Pypo Message Handler: %s", message)
-            if isinstance(message, bytes):
-                message = message.decode()
-            m: dict = json.loads(message)
-
-            command = m["event_type"]
-            logger.info("Handling command: %s", command)
+            command = message["event_type"]
+            logger.debug("handling event %s: %s", command, message)
 
             if command == "update_schedule":
-                self.schedule_data = m["schedule"]["media"]
+                self.schedule_data = message["schedule"]["media"]
                 self.process_schedule(self.schedule_data)
             elif command == "reset_liquidsoap_bootstrap":
                 self.set_bootstrap_variables()
             elif command == "update_stream_format":
                 logger.info("Updating stream format...")
-                self.update_liquidsoap_stream_format(m["stream_format"])
+                self.update_liquidsoap_stream_format(message["stream_format"])
             elif command == "update_message_offline":
                 logger.info("Updating message offline...")
-                self.update_liquidsoap_message_offline(m["message_offline"])
+                self.update_liquidsoap_message_offline(message["message_offline"])
             elif command == "update_station_name":
                 logger.info("Updating station name...")
-                self.update_liquidsoap_station_name(m["station_name"])
+                self.update_liquidsoap_station_name(message["station_name"])
             elif command == "update_transition_fade":
                 logger.info("Updating transition_fade...")
-                self.update_liquidsoap_transition_fade(m["transition_fade"])
+                self.update_liquidsoap_transition_fade(message["transition_fade"])
             elif command == "switch_source":
                 logger.info("switch_on_source show command received...")
                 self.pypo_liquidsoap.telnet_liquidsoap.switch_source(
-                    m["sourcename"], m["status"]
+                    message["sourcename"], message["status"]
                 )
             elif command == "disconnect_source":
                 logger.info("disconnect_on_source show command received...")
                 self.pypo_liquidsoap.telnet_liquidsoap.disconnect_source(
-                    m["sourcename"]
+                    message["sourcename"]
                 )
             else:
                 logger.info("Unknown command: %s", command)
