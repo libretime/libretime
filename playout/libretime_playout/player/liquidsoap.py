@@ -20,11 +20,11 @@ logger = logging.getLogger(__name__)
 
 class PypoLiquidsoap:
     def __init__(self, liq_client: LiquidsoapClient):
-        self.liq_queue_tracker: Dict[str, Optional[FileEvent]] = {
-            "s0": None,
-            "s1": None,
-            "s2": None,
-            "s3": None,
+        self.liq_queue_tracker: Dict[int, Optional[FileEvent]] = {
+            0: None,
+            1: None,
+            2: None,
+            3: None,
         }
 
         self.liq_client = liq_client
@@ -93,7 +93,7 @@ class PypoLiquidsoap:
             return True
         return datetime.utcnow() > event_key_to_datetime(media_item["end"])
 
-    def find_available_queue(self) -> str:
+    def find_available_queue(self) -> int:
         available_queue = None
         for queue_id, item in self.liq_queue_tracker.items():
             if item is None or self.is_media_item_finished(item):
@@ -213,7 +213,7 @@ class PypoLiquidsoap:
         except KeyError as exception:
             logger.exception("Malformed event in schedule: %s", exception)
 
-    def stop(self, queue_id: str):
+    def stop(self, queue_id: int):
         self.telnet_liquidsoap.queue_remove(queue_id)
         self.liq_queue_tracker[queue_id] = None
 

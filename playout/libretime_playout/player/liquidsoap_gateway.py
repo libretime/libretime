@@ -45,7 +45,7 @@ class TelnetLiquidsoap:
     def __init__(
         self,
         liq_client: LiquidsoapClient,
-        queues: List[str],
+        queues: List[int],
     ):
         self.liq_client = liq_client
         self.queues = queues
@@ -59,14 +59,14 @@ class TelnetLiquidsoap:
             logger.exception(exception)
 
     @ls_timeout
-    def queue_remove(self, queue_id):
+    def queue_remove(self, queue_id: int):
         try:
             self.liq_client.queues_remove(queue_id)
         except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
 
     @ls_timeout
-    def queue_push(self, queue_id, media_item):
+    def queue_push(self, queue_id: int, media_item: FileEvent):
         try:
             annotation = create_liquidsoap_annotation(media_item)
             self.liq_client.queue_push(queue_id, annotation, media_item["show_name"])
