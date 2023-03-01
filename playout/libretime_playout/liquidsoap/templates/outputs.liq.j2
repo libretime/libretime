@@ -9,10 +9,10 @@
   32: "-0.1", 48: "-0.1", 64: "0", 96: "0.2", 128: "0.4",
   160: "0.5", 192: "0.6", 224: "0.7", 256: "0.8", 320: "0.9",
 } -%}
-%vorbis(
+%ogg(%vorbis(
   quality={{ quality_mapping[audio.bitrate] }},
   channels={{ 2 if audio.channels == "stereo" else 1 }}
-)
+))
 
 {%- elif audio.format == "mp3" -%}
 %mp3(
