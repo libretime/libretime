@@ -3,6 +3,7 @@ import logging
 import mimetypes
 import os
 import time
+from pathlib import Path
 from queue import Empty, Queue
 from subprocess import PIPE, Popen
 from threading import Thread, Timer
@@ -21,6 +22,17 @@ from .liquidsoap import PypoLiquidsoap
 from .schedule import get_schedule
 
 logger = logging.getLogger(__name__)
+
+here = Path(__file__).parent
+mimetypes.init([str(here / "mime.types")])
+
+
+def mime_guess_extension(mime: str) -> str:
+    extension = mimetypes.guess_extension(mime, strict=False)
+    if extension is None:
+        logger.warning("could not determine file extension from mime: %s", mime)
+        return ""
+    return extension
 
 
 class PypoFetch(Thread):
@@ -230,9 +242,8 @@ class PypoFetch(Thread):
         start = event_key_to_datetime(event["start"])
         end = event_key_to_datetime(event["end"])
 
-        mime = event["metadata"]["mime"]
-        mimetypes.init(["%s/mime.types" % os.path.dirname(os.path.realpath(__file__))])
-        mime_ext = mimetypes.guess_extension(mime, strict=False)
+        file_ext = mime_guess_extension(event["metadata"]["mime"])
+        event["file_ext"] = file_ext
 
         length1 = (end - start).total_seconds()
         length2 = event["cue_out"] - event["cue_in"]
@@ -242,9 +253,7 @@ class PypoFetch(Thread):
             logger.error("cue_out - cue_in length: %s", length2)
             logger.error("Two lengths are not equal!!!")
 
-        event["file_ext"] = mime_ext
-
-        return mime_ext
+        return file_ext
 
     def is_file_opened(self, path):
         # Capture stderr to avoid polluting py-interpreter.log
@@ -264,10 +273,8 @@ class PypoFetch(Thread):
         for key in events:
             item = events[key]
             if item["type"] == EventKind.FILE:
-                if "file_ext" not in item.keys():
-                    item["file_ext"] = mimetypes.guess_extension(
-                        item["metadata"]["mime"], strict=False
-                    )
+                if "file_ext" not in item:
+                    item["file_ext"] = mime_guess_extension(item["metadata"]["mime"])
                 scheduled_file_set.add("{}{}".format(item["id"], item["file_ext"]))
 
         expired_files = cached_file_set - scheduled_file_set
