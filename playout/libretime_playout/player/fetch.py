@@ -119,7 +119,7 @@ class PypoFetch(Thread):
                     0,
                 )
             logger.info("New timeout: %s", self.listener_timeout)
-        except Exception as exception:
+        except Exception as exception:  # pylint: disable=broad-exception-caught
             logger.exception(exception)
 
     # Initialize Liquidsoap environment
@@ -226,7 +226,7 @@ class PypoFetch(Thread):
                 all_events[key] = item
 
             self.media_prepare_queue.put(copy.copy(file_events))
-        except Exception as exception:
+        except Exception as exception:  # pylint: disable=broad-exception-caught
             logger.exception(exception)
 
         # Send the data to pypo-push
@@ -236,7 +236,7 @@ class PypoFetch(Thread):
         # cleanup
         try:
             self.cache_cleanup(events)
-        except Exception as exception:
+        except Exception as exception:  # pylint: disable=broad-exception-caught
             logger.exception(exception)
 
     # do basic validation of file parameters. Useful for debugging
@@ -295,7 +295,7 @@ class PypoFetch(Thread):
                     logger.info("File '%s' removed", expired_filepath)
                 else:
                     logger.info("File '%s' not removed. Still busy!", expired_filepath)
-            except Exception as exception:
+            except Exception as exception:  # pylint: disable=broad-exception-caught
                 logger.exception(
                     "Problem removing file '%s': %s", expired_file, exception
                 )
@@ -306,7 +306,7 @@ class PypoFetch(Thread):
             logger.debug("Received event from API client: %s", self.schedule_data)
             self.process_schedule(self.schedule_data)
             return True
-        except Exception as exception:
+        except Exception as exception:  # pylint: disable=broad-exception-caught
             logger.exception("Unable to fetch schedule: %s", exception)
         return False
 
@@ -371,13 +371,13 @@ class PypoFetch(Thread):
             except Empty:
                 logger.info("Queue timeout. Fetching schedule manually")
                 manual_fetch_needed = True
-            except Exception as exception:
+            except Exception as exception:  # pylint: disable=broad-exception-caught
                 logger.exception(exception)
 
             try:
                 if manual_fetch_needed:
                     self.persistent_manual_schedule_fetch(max_attempts=5)
-            except Exception as exception:
+            except Exception as exception:  # pylint: disable=broad-exception-caught
                 logger.exception("Failed to manually fetch the schedule: %s", exception)
 
             loops += 1

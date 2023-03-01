@@ -60,7 +60,7 @@ class MessageHandler(ConsumerMixin):
             else:
                 logger.warning("invalid command: %s", command)
 
-        except Exception as exception:
+        except Exception as exception:  # pylint: disable=broad-exception-caught
             logger.exception(exception)
 
         message.ack()

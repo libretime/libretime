@@ -153,6 +153,6 @@ class StatsCollectorThread(Thread):
         while True:
             try:
                 self._collector.collect(self._config.stream.outputs.merged)
-            except Exception as exception:
+            except Exception as exception:  # pylint: disable=broad-exception-caught
                 logger.exception(exception)
             sleep(120)

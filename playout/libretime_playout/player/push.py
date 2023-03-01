@@ -52,7 +52,7 @@ class PypoPush(Thread):
         while True:
             try:
                 events = self.queue.get(block=True)
-            except Exception as exception:
+            except Exception as exception:  # pylint: disable=broad-exception-caught
                 logger.exception(exception)
                 raise exception
 
@@ -103,6 +103,6 @@ class PypoPush(Thread):
         while True:
             try:
                 self.main()
-            except Exception as exception:
+            except Exception as exception:  # pylint: disable=broad-exception-caught
                 logger.exception(exception)
                 time.sleep(5)
