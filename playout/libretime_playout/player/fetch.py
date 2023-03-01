@@ -1,6 +1,5 @@
 import copy
 import logging
-import mimetypes
 import os
 import time
 from pathlib import Path
@@ -24,15 +23,8 @@ from .schedule import get_schedule
 logger = logging.getLogger(__name__)
 
 here = Path(__file__).parent
-mimetypes.init([str(here / "mime.types")])
 
-
-def mime_guess_extension(mime: str) -> str:
-    extension = mimetypes.guess_extension(mime, strict=False)
-    if extension is None:
-        logger.warning("could not determine file extension from mime: %s", mime)
-        return ""
-    return extension
+from ..utils import mime_guess_extension
 
 
 # pylint: disable=too-many-instance-attributes
