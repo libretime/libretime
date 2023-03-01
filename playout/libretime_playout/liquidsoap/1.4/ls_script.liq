@@ -120,29 +120,19 @@ def input_main_on_disconnect() update_source_status("master_dj", false) end
 def input_show_on_connect(header) update_source_status("live_dj", true) end
 def input_show_on_disconnect() update_source_status("live_dj", false) end
 
-# Auth function for live stream
-# @Category LiveStream
-# @param user     Username to check against LibreTime API
-# @param password Password to check against LibreTime API
-# @param ~type    Type of password to check, "dj" or "master, default: "master"
-def input_check_auth(user="", password="", ~type="master") =
-    log("#{type} user #{user} connected",label="#{type}_source")
+def make_input_auth_handler(input_name)
+    def auth_handler(user, password)
+        log("user '#{user}' connected", label="#{input_name}_input")
 
-    # Check auth based on return value from auth script
-    ret = test_process("python3 #{auth_path} --#{type} #{user} #{password}")
+        # Check auth based on return value from auth script
+        ret = test_process("python3 '#{auth_path}' '#{input_name}' '#{user}' '#{password}'")
+        if ret then
+            log("user '#{user}' authenticated", label="#{input_name}_input")
+        else
+            log("user '#{user}' auth failed", label="#{input_name}_input",level=2)
+        end
 
-    if ret then
-        log("#{type} user #{user} authenticated",label="#{type}_source")
-    else
-        log("#{type} user #{user} auth failed",label="#{type}_source",level=2)
-    end
-
-    ret
-end
-
-def make_input_auth_handler(source_name)
-    def auth_handler(user, password) =
-        input_check_auth(user, password, type=source_name)
+        ret
     end
     auth_handler
 end
@@ -159,7 +149,7 @@ s = if input_show_port != 0 and input_show_mount != "" then
             input.harbor(id="harbor:input_show",
                 input_show_mount,
                 port=input_show_port,
-                auth=make_input_auth_handler("dj"),
+                auth=make_input_auth_handler("show"),
                 max=40.,
                 on_connect=input_show_on_connect,
                 on_disconnect=input_show_on_disconnect))
@@ -181,7 +171,7 @@ s = if input_main_port != 0 and input_main_mount != "" then
             input.harbor(id="harbor:input_main",
                 input_main_mount,
                 port=input_main_port,
-                auth=make_input_auth_handler("master"),
+                auth=make_input_auth_handler("main"),
                 max=40.,
                 on_connect=input_main_on_connect,
                 on_disconnect=input_main_on_disconnect))
