@@ -9,7 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 def create_liquidsoap_annotation(file_event: FileEvent) -> str:
-    # We need liq_start_next value in the annotate. That is the value that controls overlap duration of crossfade.
+    # We need liq_start_next value in the annotate. That is the value that controls
+    # overlap duration of crossfade.
     annotations = {
         "media_id": file_event["id"],
         "liq_start_next": "0",
@@ -21,8 +22,8 @@ def create_liquidsoap_annotation(file_event: FileEvent) -> str:
         "replay_gain": f"{file_event['replay_gain']} dB",
     }
 
-    # Override the the artist/title that Liquidsoap extracts from a file's metadata
-    # with the metadata we get from Airtime. (You can modify metadata in Airtime's library,
+    # Override the the artist/title that Liquidsoap extracts from a file's metadata with
+    # the metadata we get from Airtime. (You can modify metadata in Airtime's library,
     # which doesn't get saved back to the file.)
     if "metadata" in file_event:
         if "artist_name" in file_event["metadata"]:
@@ -87,7 +88,7 @@ class TelnetLiquidsoap:
             logger.exception(exception)
 
     @ls_timeout
-    def start_web_stream(self, media_item):
+    def start_web_stream(self):
         try:
             self.liq_client.web_stream_start()
             self.current_prebuffering_stream_id = None
@@ -106,11 +107,12 @@ class TelnetLiquidsoap:
             logger.exception(exception)
 
     @ls_timeout
-    def get_current_stream_id(self):
+    def get_current_stream_id(self) -> str:
         try:
             return self.liq_client.web_stream_get_id()
         except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
+            return "-1"
 
     @ls_timeout
     def disconnect_source(self, sourcename):

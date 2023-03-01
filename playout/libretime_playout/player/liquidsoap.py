@@ -1,7 +1,7 @@
 import logging
 import time
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Set
 
 from ..liquidsoap.client import LiquidsoapClient
 from ..utils import seconds_between
@@ -49,7 +49,7 @@ class PypoLiquidsoap:
                 # time so that the prebuffering stage could take effect. Let's do the
                 # prebuffering now.
                 self.telnet_liquidsoap.start_web_stream_buffer(media_item)
-            self.telnet_liquidsoap.start_web_stream(media_item)
+            self.telnet_liquidsoap.start_web_stream()
         elif media_item["type"] == EventKind.WEB_STREAM_BUFFER_END:
             self.telnet_liquidsoap.stop_web_stream_buffer()
         elif media_item["type"] == EventKind.WEB_STREAM_OUTPUT_END:
@@ -105,6 +105,7 @@ class PypoLiquidsoap:
 
         return available_queue
 
+    # pylint: disable=too-many-branches
     def verify_correct_present_media(self, scheduled_now: List[AnyEvent]):
         """
         verify whether Liquidsoap is currently playing the correct files.
@@ -139,20 +140,19 @@ class PypoLiquidsoap:
                 if x["type"] == EventKind.WEB_STREAM_OUTPUT_START
             ]
 
-            schedule_ids = {x["row_id"] for x in scheduled_now_files}
+            schedule_ids: Set[int] = {x["row_id"] for x in scheduled_now_files}
 
             row_id_map = {}
-            liq_queue_ids = set()
-            for queue_id in self.liq_queue_tracker:
-                queue_item = self.liq_queue_tracker[queue_id]
+            liq_queue_ids: Set[int] = set()
+            for queue_item in self.liq_queue_tracker.values():
                 if queue_item is not None and not self.is_media_item_finished(
                     queue_item
                 ):
                     liq_queue_ids.add(queue_item["row_id"])
                     row_id_map[queue_item["row_id"]] = queue_item
 
-            to_be_removed = set()
-            to_be_added = set()
+            to_be_removed: Set[int] = set()
+            to_be_added: Set[int] = set()
 
             # Iterate over the new files, and compare them to currently scheduled
             # tracks. If already in liquidsoap queue still need to make sure they don't
@@ -182,9 +182,11 @@ class PypoLiquidsoap:
                 logger.info("Need to remove items from Liquidsoap: %s", to_be_removed)
 
                 # remove files from Liquidsoap's queue
-                for queue_id in self.liq_queue_tracker:
-                    queue_item = self.liq_queue_tracker[queue_id]
-                    if queue_item is not None and queue_item["row_id"] in to_be_removed:
+                for queue_id, queue_item in self.liq_queue_tracker.items():
+                    if (
+                        queue_item is not None
+                        and queue_item.get("row_id") in to_be_removed
+                    ):
                         self.stop(queue_id)
 
             if to_be_added:

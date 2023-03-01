@@ -55,16 +55,16 @@ class PypoPush(Thread):
             except Exception as exception:
                 logger.exception(exception)
                 raise exception
-            else:
-                logger.debug(events)
-                # separate media_schedule list into currently_playing and
-                # scheduled_for_future lists
-                currently_playing, scheduled_for_future = self.separate_present_future(
-                    events
-                )
 
-                self.pypo_liquidsoap.verify_correct_present_media(currently_playing)
-                self.future_scheduled_queue.put(scheduled_for_future)
+            logger.debug(events)
+            # separate media_schedule list into currently_playing and
+            # scheduled_for_future lists
+            currently_playing, scheduled_for_future = self.separate_present_future(
+                events
+            )
+
+            self.pypo_liquidsoap.verify_correct_present_media(currently_playing)
+            self.future_scheduled_queue.put(scheduled_for_future)
 
             if loops % heartbeat_period == 0:
                 logger.info("heartbeat")

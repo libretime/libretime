@@ -5,7 +5,7 @@ import os
 import time
 from pathlib import Path
 from queue import Empty, Queue
-from subprocess import PIPE, Popen
+from subprocess import DEVNULL, PIPE, run
 from threading import Thread, Timer
 from typing import Any, Dict
 
@@ -35,10 +35,12 @@ def mime_guess_extension(mime: str) -> str:
     return extension
 
 
+# pylint: disable=too-many-instance-attributes
 class PypoFetch(Thread):
     name = "fetch"
     daemon = True
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         fetch_queue: Queue[Dict[str, Any]],
@@ -112,11 +114,10 @@ class PypoFetch(Thread):
             if command == "update_schedule":
                 self.listener_timeout = POLL_INTERVAL
             else:
-                self.listener_timeout = (
-                    self.last_update_schedule_timestamp - time.time() + POLL_INTERVAL
+                self.listener_timeout = max(
+                    self.last_update_schedule_timestamp - time.time() + POLL_INTERVAL,
+                    0,
                 )
-                if self.listener_timeout < 0:
-                    self.listener_timeout = 0
             logger.info("New timeout: %s", self.listener_timeout)
         except Exception as exception:
             logger.exception(exception)
@@ -195,10 +196,12 @@ class PypoFetch(Thread):
             logger.exception(exception)
 
     # Process the schedule
-    #  - Reads the scheduled entries of a given range (actual time +/- "prepare_ahead" / "cache_for")
+    #  - Reads the scheduled entries of a given range (actual time +/- "prepare_ahead" /
+    #    "cache_for")
     #  - Saves a serialized file of the schedule
-    #  - playlists are prepared. (brought to liquidsoap format) and, if not mounted via nsf, files are copied
-    #    to the cache dir (Folder-structure: cache/YYYY-MM-DD-hh-mm-ss)
+    #  - playlists are prepared. (brought to liquidsoap format) and, if not mounted via
+    #    nsf, files are copied to the cache dir
+    #    (Folder-structure: cache/YYYY-MM-DD-hh-mm-ss)
     #  - runs the cleanup routine, to get rid of unused cached files
 
     def process_schedule(self, events: Events):
@@ -255,17 +258,16 @@ class PypoFetch(Thread):
 
         return file_ext
 
-    def is_file_opened(self, path):
-        # Capture stderr to avoid polluting py-interpreter.log
-        proc = Popen(["lsof", path], stdout=PIPE, stderr=PIPE)
-        out = proc.communicate()[0].strip()
-        return bool(out)
+    def is_file_opened(self, path: str) -> bool:
+        result = run(["lsof", "--", path], stdout=PIPE, stderr=DEVNULL, check=False)
+        return bool(result.stdout)
 
     def cache_cleanup(self, events: Events):
         """
-        Get list of all files in the cache dir and remove them if they aren't being used anymore.
-        Input dict() media, lists all files that are scheduled or currently playing. Not being in this
-        dict() means the file is safe to remove.
+        Get list of all files in the cache dir and remove them if they aren't being used
+        anymore.
+        Input dict() media, lists all files that are scheduled or currently playing. Not
+        being in this dict() means the file is safe to remove.
         """
         cached_file_set = set(os.listdir(self.cache_dir))
         scheduled_file_set = set()
@@ -275,7 +277,7 @@ class PypoFetch(Thread):
             if item["type"] == EventKind.FILE:
                 if "file_ext" not in item:
                     item["file_ext"] = mime_guess_extension(item["metadata"]["mime"])
-                scheduled_file_set.add("{}{}".format(item["id"], item["file_ext"]))
+                scheduled_file_set.add(f'{item["id"]}{item["file_ext"]}')
 
         expired_files = cached_file_set - scheduled_file_set
 
