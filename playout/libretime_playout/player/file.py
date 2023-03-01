@@ -7,8 +7,8 @@ from queue import Empty, Queue
 from threading import Thread
 from typing import Optional
 
+import requests
 from libretime_api_client.v2 import ApiClient
-from requests.exceptions import ConnectionError, HTTPError, Timeout
 
 from .events import FileEvent, FileEvents
 
@@ -71,7 +71,7 @@ class PypoFile(Thread):
                         for chunk in response.iter_content(chunk_size=2048):
                             handle.write(chunk)
 
-                    except HTTPError as exception:
+                    except requests.exceptions.HTTPError as exception:
                         raise RuntimeError(
                             f"could not download file {file_event['id']}"
                         ) from exception
@@ -98,10 +98,10 @@ class PypoFile(Thread):
         try:
             file_size = os.path.getsize(file_path)
 
-            with open(file_path, "rb") as fh:
+            with open(file_path, "rb") as file_fd:
                 hasher = hashlib.md5(usedforsecurity=False)
                 while True:
-                    data = fh.read(8192)
+                    data = file_fd.read(8192)
                     if not data:
                         break
                     hasher.update(data)
@@ -121,7 +121,7 @@ class PypoFile(Thread):
                 file_id,
                 json={"filesize": file_size, "md5": md5_hash},
             )
-        except (ConnectionError, Timeout):
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             logger.exception(error_msg)
         except Exception as exception:
             logger.exception("%s: %s", error_msg, exception)

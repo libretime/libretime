@@ -3,7 +3,7 @@ import logging
 from queue import Queue as ThreadQueue
 from signal import SIGTERM, signal
 from time import sleep
-from typing import Any, Dict, Union
+from typing import Any, Dict
 
 # For RabbitMQ
 from kombu.connection import Connection
@@ -66,11 +66,12 @@ class MessageHandler(ConsumerMixin):
         message.ack()
 
 
+# pylint: disable=too-few-public-methods
 class MessageListener:
     def __init__(
         self,
         config: Config,
-        fetch_queue: ThreadQueue[Union[str, bytes]],
+        fetch_queue: ThreadQueue[Dict[str, Any]],
     ) -> None:
         self.config = config
         self.fetch_queue = fetch_queue

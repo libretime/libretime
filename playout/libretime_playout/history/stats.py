@@ -5,15 +5,11 @@ from threading import Thread
 from time import sleep
 from typing import Any, Dict, List, Optional, Union
 
+import requests
 from libretime_api_client.v1 import ApiClient as LegacyClient
 from libretime_shared.config import IcecastOutput, ShoutcastOutput
 from lxml import etree
 from requests import Session
-from requests.exceptions import (  # pylint: disable=redefined-builtin
-    ConnectionError,
-    HTTPError,
-    Timeout,
-)
 
 from ..config import Config
 
@@ -116,9 +112,9 @@ class StatsCollector:
                     cache[output_url] = self.collect_output_stats(output)
                 except (
                     etree.XMLSyntaxError,
-                    ConnectionError,
-                    HTTPError,
-                    Timeout,
+                    requests.exceptions.ConnectionError,
+                    requests.exceptions.HTTPError,
+                    requests.exceptions.Timeout,
                 ) as exception:
                     logger.exception(exception)
                     self._legacy_client.update_stream_setting_table(

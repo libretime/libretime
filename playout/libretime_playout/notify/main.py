@@ -22,11 +22,12 @@ from libretime_shared.cli import cli_config_options, cli_logging_options
 from libretime_shared.config import DEFAULT_ENV_PREFIX
 from libretime_shared.logging import setup_logger
 
-logger = logging.getLogger(__name__)
-
 from ..config import Config
 
+logger = logging.getLogger(__name__)
 
+
+# pylint: disable=too-few-public-methods
 class App:
     config: Config
     api_client: LegacyClient

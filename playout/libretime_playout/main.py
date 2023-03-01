@@ -11,6 +11,7 @@ from queue import Queue
 from typing import Any, Dict, Optional
 
 import click
+import requests
 from libretime_api_client.v1 import ApiClient as LegacyClient
 from libretime_api_client.v2 import ApiClient
 from libretime_shared.cli import cli_config_options, cli_logging_options
@@ -33,6 +34,31 @@ logger = logging.getLogger(__name__)
 for module in ("amqp",):
     logging.getLogger(module).setLevel(logging.INFO)
     logging.getLogger(module).propagate = False
+
+
+def wait_for_legacy(legacy_client: LegacyClient):
+    while not legacy_client.is_server_compatible():
+        time.sleep(5)
+
+    success = False
+    while not success:
+        try:
+            legacy_client.register_component("pypo")
+            success = True
+        except (
+            requests.exceptions.ConnectionError,
+            requests.exceptions.HTTPError,
+            requests.exceptions.Timeout,
+        ) as exception:
+            logger.exception(exception)
+            time.sleep(10)
+
+
+def wait_for_liquidsoap(liq_client: LiquidsoapClient):
+    logger.debug("Checking if Liquidsoap is running")
+    liq_version = liq_client.wait_for_version()
+    if not LIQUIDSOAP_MIN_VERSION <= liq_version:
+        raise RuntimeError(f"Invalid liquidsoap version {liq_version}")
 
 
 @click.command(context_settings={"auto_envvar_prefix": DEFAULT_ENV_PREFIX})
@@ -58,33 +84,19 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     logger.info("Timezone: %s", time.tzname)
     logger.info("UTC time: %s", datetime.utcnow())
 
-    legacy_client = LegacyClient()
     api_client = ApiClient(
         base_url=config.general.public_url,
         api_key=config.general.api_key,
     )
 
-    while not legacy_client.is_server_compatible():
-        time.sleep(5)
-
-    success = False
-    while not success:
-        try:
-            legacy_client.register_component("pypo")
-            success = True
-        except Exception as exception:
-            logger.exception(exception)
-            time.sleep(10)
+    legacy_client = LegacyClient()
+    wait_for_legacy(legacy_client)
 
     liq_client = LiquidsoapClient(
         host=config.playout.liquidsoap_host,
         port=config.playout.liquidsoap_port,
     )
-
-    logger.debug("Checking if Liquidsoap is running")
-    liq_version = liq_client.wait_for_version()
-    if not LIQUIDSOAP_MIN_VERSION <= liq_version:
-        raise RuntimeError(f"Invalid liquidsoap version {liq_version}")
+    wait_for_liquidsoap(liq_client)
 
     fetch_queue: Queue[Dict[str, Any]] = Queue()
     push_queue: Queue[Events] = Queue()
@@ -96,10 +108,9 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
 
     pypo_liquidsoap = PypoLiquidsoap(liq_client)
 
-    file_thread = PypoFile(file_queue, api_client)
-    file_thread.start()
+    PypoFile(file_queue, api_client).start()
 
-    fetch_thread = PypoFetch(
+    PypoFetch(
         fetch_queue,
         push_queue,
         file_queue,
@@ -108,14 +119,11 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
         config,
         api_client,
         legacy_client,
-    )
-    fetch_thread.start()
+    ).start()
 
-    push_thread = PypoPush(push_queue, pypo_liquidsoap, config)
-    push_thread.start()
+    PypoPush(push_queue, pypo_liquidsoap, config).start()
 
-    stats_collector_thread = StatsCollectorThread(config, legacy_client)
-    stats_collector_thread.start()
+    StatsCollectorThread(config, legacy_client).start()
 
     message_listener = MessageListener(config, fetch_queue)
     message_listener.run_forever()
