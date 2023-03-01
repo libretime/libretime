@@ -85,10 +85,10 @@
     url="https://libretime.org",
     on_connect=make_ouput_on_connect_handler("1"),
     on_error=make_ouput_on_error_handler("1"),
-    %vorbis(
+    %ogg(%vorbis(
       quality=0.8,
       channels=2
-    ),
+    )),
     output_icecast_1_source,
   )
   
@@ -205,10 +205,10 @@
     url="",
     on_connect=make_ouput_on_connect_handler("1"),
     on_error=make_ouput_on_error_handler("1"),
-    %vorbis(
+    %ogg(%vorbis(
       quality=0.8,
       channels=2
-    ),
+    )),
     output_icecast_1_source,
   )
   
