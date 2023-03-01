@@ -7,7 +7,7 @@ from pathlib import Path
 from queue import Empty, Queue
 from subprocess import DEVNULL, PIPE, run
 from threading import Thread, Timer
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 from libretime_api_client.v1 import ApiClient as LegacyClient
 from libretime_api_client.v2 import ApiClient
@@ -15,7 +15,7 @@ from requests import RequestException
 
 from ..config import CACHE_DIR, POLL_INTERVAL, Config
 from ..liquidsoap.client import LiquidsoapClient
-from ..liquidsoap.models import Info, StreamPreferences, StreamState
+from ..liquidsoap.models import Info, MessageFormatKind, StreamPreferences, StreamState
 from ..timeout import ls_timeout
 from .events import EventKind, Events, FileEvent, FileEvents, event_key_to_datetime
 from .liquidsoap import PypoLiquidsoap
@@ -75,7 +75,7 @@ class PypoFetch(Thread):
     # Handle a message from RabbitMQ, put it into our yucky global var.
     # Hopefully there is a better way to do this.
 
-    def handle_message(self, message: Dict[str, Any]):
+    def handle_message(self, message: Dict[str, Any]) -> None:
         try:
             command = message["event_type"]
             logger.debug("handling event %s: %s", command, message)
@@ -123,7 +123,7 @@ class PypoFetch(Thread):
             logger.exception(exception)
 
     # Initialize Liquidsoap environment
-    def set_bootstrap_variables(self):
+    def set_bootstrap_variables(self) -> None:
         logger.debug("Getting information needed on bootstrap from Airtime")
         try:
             info = Info(**self.api_client.get_info().json())
@@ -168,28 +168,31 @@ class PypoFetch(Thread):
         self.pypo_liquidsoap.clear_queue_tracker()
 
     @ls_timeout
-    def update_liquidsoap_stream_format(self, stream_format):
+    def update_liquidsoap_stream_format(
+        self,
+        stream_format: Union[MessageFormatKind, int],
+    ) -> None:
         try:
             self.liq_client.settings_update(message_format=stream_format)
         except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
 
     @ls_timeout
-    def update_liquidsoap_message_offline(self, message_offline: str):
+    def update_liquidsoap_message_offline(self, message_offline: str) -> None:
         try:
             self.liq_client.settings_update(message_offline=message_offline)
         except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
 
     @ls_timeout
-    def update_liquidsoap_transition_fade(self, fade):
+    def update_liquidsoap_transition_fade(self, fade: float) -> None:
         try:
             self.liq_client.settings_update(input_fade_transition=fade)
         except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
 
     @ls_timeout
-    def update_liquidsoap_station_name(self, station_name):
+    def update_liquidsoap_station_name(self, station_name: str) -> None:
         try:
             self.liq_client.settings_update(station_name=station_name)
         except (ConnectionError, TimeoutError) as exception:
@@ -204,7 +207,7 @@ class PypoFetch(Thread):
     #    (Folder-structure: cache/YYYY-MM-DD-hh-mm-ss)
     #  - runs the cleanup routine, to get rid of unused cached files
 
-    def process_schedule(self, events: Events):
+    def process_schedule(self, events: Events) -> None:
         self.last_update_schedule_timestamp = time.time()
         logger.debug(events)
         file_events: FileEvents = {}
@@ -300,7 +303,7 @@ class PypoFetch(Thread):
                     "Problem removing file '%s': %s", expired_file, exception
                 )
 
-    def manual_schedule_fetch(self):
+    def manual_schedule_fetch(self) -> bool:
         try:
             self.schedule_data = get_schedule(self.api_client)
             logger.debug("Received event from API client: %s", self.schedule_data)
@@ -310,7 +313,7 @@ class PypoFetch(Thread):
             logger.exception("Unable to fetch schedule: %s", exception)
         return False
 
-    def persistent_manual_schedule_fetch(self, max_attempts=1):
+    def persistent_manual_schedule_fetch(self, max_attempts=1) -> bool:
         success = False
         num_attempts = 0
         while not success and num_attempts < max_attempts:

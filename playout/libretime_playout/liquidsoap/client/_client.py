@@ -38,10 +38,10 @@ class LiquidsoapClient:
             timeout=timeout,
         )
 
-    def _quote(self, value: Any):
+    def _quote(self, value: Any) -> str:
         return quote(value, double=True)
 
-    def _set_var(self, name: str, value: Any):
+    def _set_var(self, name: str, value: Any) -> None:
         self.conn.write(f"var.set {name} = {value}")
         result = self.conn.read()
         if f"Variable {name} set" not in result:
@@ -126,16 +126,18 @@ class LiquidsoapClient:
         self,
         *,
         station_name: Optional[str] = None,
-        message_format: Optional[Union[MessageFormatKind, str]] = None,
+        message_format: Optional[Union[MessageFormatKind, int]] = None,
         message_offline: Optional[str] = None,
         input_fade_transition: Optional[float] = None,
-    ):
+    ) -> None:
         with self.conn:
             if station_name is not None:
                 self._set_var("station_name", self._quote(station_name))
             if message_format is not None:
                 if isinstance(message_format, MessageFormatKind):
                     message_format = message_format.value
+                # Use an interactive.string until Liquidsoap have interactive.int
+                # variables
                 self._set_var("message_format", self._quote(message_format))
             if message_offline is not None:
                 self._set_var("message_offline", self._quote(message_offline))

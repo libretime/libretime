@@ -14,11 +14,11 @@ from .queue import PypoLiqQueue
 logger = logging.getLogger(__name__)
 
 
-def is_stream(media_item):
+def is_stream(media_item: AnyEvent) -> bool:
     return media_item["type"] == "stream_output_start"
 
 
-def is_file(media_item):
+def is_file(media_item: AnyEvent) -> bool:
     return media_item["type"] == "file"
 
 
@@ -43,7 +43,7 @@ class PypoPush(Thread):
         self.plq = PypoLiqQueue(self.future_scheduled_queue, self.pypo_liquidsoap)
         self.plq.start()
 
-    def main(self):
+    def main(self) -> None:
         loops = 0
         heartbeat_period = math.floor(30 / PUSH_INTERVAL)
 
@@ -99,7 +99,7 @@ class PypoPush(Thread):
 
         return present, future
 
-    def run(self):
+    def run(self) -> None:
         while True:
             try:
                 self.main()
