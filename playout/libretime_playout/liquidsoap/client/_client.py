@@ -68,11 +68,11 @@ class LiquidsoapClient:
     def queues_remove(self, *queues: int) -> None:
         with self.conn:
             for queue_id in queues:
-                self.conn.write(f"queues.{queue_id}_skip")
+                self.conn.write(f"queues.s{queue_id}_skip")
 
     def queue_push(self, queue_id: int, entry: str, show_name: str) -> None:
         with self.conn:
-            self.conn.write(f"{queue_id}.push {entry}")
+            self.conn.write(f"s{queue_id}.push {entry}")
             self.conn.read()  # Flush
             self._set_var("show_name", self._quote(show_name))
 
