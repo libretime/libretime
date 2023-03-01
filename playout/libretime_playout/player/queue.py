@@ -74,5 +74,5 @@ class PypoLiqQueue(Thread):
     def run(self):
         try:
             self.main()
-        except Exception as exception:
+        except Exception as exception:  # pylint: disable=broad-exception-caught
             logger.exception(exception)

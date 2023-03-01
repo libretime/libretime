@@ -44,7 +44,7 @@ class PypoFile(Thread):
             dst_size = os.path.getsize(dst)
             if dst_size == 0:
                 dst_exists = False
-        except Exception:
+        except Exception:  # pylint: disable=broad-exception-caught
             dst_exists = False
 
         do_copy = False
@@ -86,7 +86,7 @@ class PypoFile(Thread):
                     file_event["filesize"] = file_size
 
                 file_event["file_ready"] = True
-            except Exception as exception:
+            except Exception as exception:  # pylint: disable=broad-exception-caught
                 logger.exception(
                     "could not copy file %s to %s: %s",
                     file_id,
@@ -123,7 +123,7 @@ class PypoFile(Thread):
             )
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             logger.exception(error_msg)
-        except Exception as exception:
+        except Exception as exception:  # pylint: disable=broad-exception-caught
             logger.exception("%s: %s", error_msg, exception)
 
         return file_size
@@ -179,7 +179,7 @@ class PypoFile(Thread):
                 file_event = self.get_highest_priority_file_event(self.file_events)
                 if file_event is not None:
                     self.copy_file(file_event)
-            except Exception as exception:
+            except Exception as exception:  # pylint: disable=broad-exception-caught
                 logger.exception(exception)
                 raise exception
 
@@ -189,7 +189,7 @@ class PypoFile(Thread):
         """
         try:
             self.main()
-        except Exception as exception:
+        except Exception as exception:  # pylint: disable=broad-exception-caught
             logger.exception(exception)
             time.sleep(5)
 
