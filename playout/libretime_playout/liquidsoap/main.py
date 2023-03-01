@@ -40,13 +40,15 @@ def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[
     preferences = StreamPreferences(**api_client.get_stream_preferences().json())
 
     entrypoint_filepath = Path.cwd() / "radio.liq"
-    generate_entrypoint(
-        entrypoint_filepath,
-        log_filepath,
-        config,
-        preferences,
-        info,
-        version,
+    entrypoint_filepath.write_text(
+        generate_entrypoint(
+            log_filepath,
+            config,
+            preferences,
+            info,
+            version,
+        ),
+        encoding="utf-8",
     )
 
     exec_args = [
