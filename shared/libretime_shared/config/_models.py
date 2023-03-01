@@ -1,6 +1,6 @@
 import sys
 from enum import Enum
-from typing import TYPE_CHECKING, Any, List, Literal, Optional, Sequence, Union
+from typing import TYPE_CHECKING, Any, List, Literal, Optional, Union
 
 # pylint: disable=no-name-in-module
 from pydantic import AnyHttpUrl, AnyUrl, BaseModel, Field, validator
@@ -261,8 +261,8 @@ class Outputs(BaseModel):
     system: List[SystemOutput] = Field([], max_items=1)
 
     @property
-    def merged(self) -> Sequence[Union[IcecastOutput, ShoutcastOutput]]:
-        return self.icecast + self.shoutcast  # type: ignore
+    def merged(self) -> List[Union[IcecastOutput, ShoutcastOutput]]:
+        return self.icecast + self.shoutcast
 
 
 # pylint: disable=too-few-public-methods
