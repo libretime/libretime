@@ -7,7 +7,7 @@ PIP_INSTALL := \
 	--editable ../api-client \
 	--editable ../shared \
 	--editable .[dev]
-PYLINT_ARG := libretime_playout tests || true
+PYLINT_ARG := libretime_playout tests
 MYPY_ARG := libretime_playout tests || true
 BANDIT_ARG := libretime_playout || true
 
