@@ -19,6 +19,9 @@ disable = [
 log_cli = true
 log_cli_level = "DEBUG"
 
+[tool.mypy]
+check_untyped_defs = true
+
 [tool.coverage.run]
 source = ["libretime_playout"]
 
