@@ -18,13 +18,12 @@ templates.filters["quote"] = quote
 
 
 def generate_entrypoint(
-    entrypoint_filepath: Path,
     log_filepath: Optional[Path],
     config: Config,
     preferences: StreamPreferences,
     info: Info,
     version: Tuple[int, int, int],
-):
+) -> str:
     paths = {}
     paths["auth_filepath"] = here / "liquidsoap_auth.py"
     paths["lib_filepath"] = here / f"{version[0]}.{version[1]}/ls_script.liq"
@@ -32,13 +31,10 @@ def generate_entrypoint(
     if log_filepath is not None:
         paths["log_filepath"] = log_filepath.resolve()
 
-    entrypoint_filepath.write_text(
-        templates.get_template("entrypoint.liq.j2").render(
-            config=config.copy(),
-            preferences=preferences,
-            info=info,
-            paths=paths,
-            version=version,
-        ),
-        encoding="utf-8",
+    return templates.get_template("entrypoint.liq.j2").render(
+        config=config.copy(),
+        preferences=preferences,
+        info=info,
+        paths=paths,
+        version=version,
     )
