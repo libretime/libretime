@@ -121,6 +121,7 @@ class PypoFetch(Thread):
 
         except RequestException as exception:
             logger.exception("Unable to get stream settings: %s", exception)
+            return
 
         logger.debug("info: %s", info)
         logger.debug("preferences: %s", preferences)
