@@ -33,7 +33,7 @@ class PypoLiquidsoap:
             list(self.liq_queue_tracker.keys()),
         )
 
-    def play(self, media_item: AnyEvent):
+    def play(self, media_item: AnyEvent) -> None:
         if media_item["type"] == EventKind.FILE:
             self.handle_file_type(media_item)
         elif media_item["type"] == EventKind.ACTION:
@@ -57,7 +57,7 @@ class PypoLiquidsoap:
         else:
             raise UnknownMediaItemType(str(media_item))
 
-    def handle_file_type(self, media_item: FileEvent):
+    def handle_file_type(self, media_item: FileEvent) -> None:
         """
         Wait 200 seconds (2000 iterations) for file to become ready,
         otherwise give up on it.
@@ -82,13 +82,13 @@ class PypoLiquidsoap:
                 media_item["dst"],
             )
 
-    def handle_event_type(self, media_item: ActionEvent):
+    def handle_event_type(self, media_item: ActionEvent) -> None:
         if media_item["event_type"] == "kick_out":
             self.telnet_liquidsoap.disconnect_source("live_dj")
         elif media_item["event_type"] == "switch_off":
             self.telnet_liquidsoap.switch_source("live_dj", "off")
 
-    def is_media_item_finished(self, media_item: Optional[AnyEvent]):
+    def is_media_item_finished(self, media_item: Optional[AnyEvent]) -> bool:
         if media_item is None:
             return True
         return datetime.utcnow() > event_key_to_datetime(media_item["end"])
@@ -106,7 +106,7 @@ class PypoLiquidsoap:
         return available_queue
 
     # pylint: disable=too-many-branches
-    def verify_correct_present_media(self, scheduled_now: List[AnyEvent]):
+    def verify_correct_present_media(self, scheduled_now: List[AnyEvent]) -> None:
         """
         verify whether Liquidsoap is currently playing the correct files.
         if we find an item that Liquidsoap is not playing, then push it
@@ -213,18 +213,18 @@ class PypoLiquidsoap:
         except KeyError as exception:
             logger.exception("Malformed event in schedule: %s", exception)
 
-    def stop(self, queue_id: int):
+    def stop(self, queue_id: int) -> None:
         self.telnet_liquidsoap.queue_remove(queue_id)
         self.liq_queue_tracker[queue_id] = None
 
-    def is_file(self, event: AnyEvent):
+    def is_file(self, event: AnyEvent) -> bool:
         return event["type"] == EventKind.FILE
 
-    def clear_queue_tracker(self):
+    def clear_queue_tracker(self) -> None:
         for queue_id in self.liq_queue_tracker:
             self.liq_queue_tracker[queue_id] = None
 
-    def modify_cue_point(self, link: FileEvent):
+    def modify_cue_point(self, link: FileEvent) -> None:
         assert self.is_file(link)
 
         lateness = seconds_between(
@@ -237,7 +237,7 @@ class PypoLiquidsoap:
             cue_in_orig = timedelta(seconds=float(link["cue_in"]))
             link["cue_in"] = cue_in_orig.total_seconds() + lateness
 
-    def clear_all_queues(self):
+    def clear_all_queues(self) -> None:
         self.telnet_liquidsoap.queue_clear_all()
 
 

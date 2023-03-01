@@ -47,7 +47,7 @@ class StatsCollector:
     ) -> Dict[str, Stats]:
         response = self._session.get(
             url=self.get_output_url(output),
-            auth=(output.admin_user, output.admin_password),
+            auth=(output.admin_user, output.admin_password or ""),
             timeout=self._timeout,
         )
         response.raise_for_status()
@@ -90,7 +90,7 @@ class StatsCollector:
         outputs: List[AnyOutput],
         *,
         _timestamp: Optional[datetime] = None,
-    ):
+    ) -> None:
         if _timestamp is None:
             _timestamp = datetime.utcnow()
 
@@ -148,7 +148,7 @@ class StatsCollectorThread(Thread):
         self._config = config
         self._collector = StatsCollector(legacy_client)
 
-    def run(self):
+    def run(self) -> None:
         logger.info("starting %s", self.name)
         while True:
             try:

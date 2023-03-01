@@ -36,7 +36,7 @@ for module in ("amqp",):
     logging.getLogger(module).propagate = False
 
 
-def wait_for_legacy(legacy_client: LegacyClient):
+def wait_for_legacy(legacy_client: LegacyClient) -> None:
     while not legacy_client.is_server_compatible():
         time.sleep(5)
 
@@ -54,7 +54,7 @@ def wait_for_legacy(legacy_client: LegacyClient):
             time.sleep(10)
 
 
-def wait_for_liquidsoap(liq_client: LiquidsoapClient):
+def wait_for_liquidsoap(liq_client: LiquidsoapClient) -> None:
     logger.debug("Checking if Liquidsoap is running")
     liq_version = liq_client.wait_for_version()
     if not LIQUIDSOAP_MIN_VERSION <= liq_version:
@@ -64,7 +64,11 @@ def wait_for_liquidsoap(liq_client: LiquidsoapClient):
 @click.command(context_settings={"auto_envvar_prefix": DEFAULT_ENV_PREFIX})
 @cli_logging_options()
 @cli_config_options()
-def cli(log_level: str, log_filepath: Optional[Path], config_filepath: Optional[Path]):
+def cli(
+    log_level: str,
+    log_filepath: Optional[Path],
+    config_filepath: Optional[Path],
+) -> None:
     """
     Run playout.
     """

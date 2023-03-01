@@ -34,7 +34,7 @@ class MessageHandler(ConsumerMixin):
             Consumer(queues, callbacks=[self.on_message], accept=["text/plain"]),
         ]
 
-    def on_message(self, body, message: Message):
+    def on_message(self, body, message: Message) -> None:
         logger.debug("received message: %s", body)
         try:
             try:
@@ -76,7 +76,7 @@ class MessageListener:
         self.config = config
         self.fetch_queue = fetch_queue
 
-    def run_forever(self):
+    def run_forever(self) -> None:
         while True:
             with Connection(
                 self.config.rabbitmq.url,

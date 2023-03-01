@@ -18,7 +18,7 @@ from .events import (
 )
 
 
-def insert_event(events: Events, event_key: str, event: AnyEvent):
+def insert_event(events: Events, event_key: str, event: AnyEvent) -> None:
     key = event_key
 
     # Search for an empty slot
