@@ -22,6 +22,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Update Docker Hub description
+        if: github.event_name == 'push'
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: libretime/libretime-${{ matrix.target }}
+          readme-filepath: ./README.md
+
       - uses: docker/metadata-action@v4
         id: meta
         with:
