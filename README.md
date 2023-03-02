@@ -9,7 +9,7 @@ It is managed by a friendly inclusive community of stations from around the
 globe that use, document and improve LibreTime. Join us in fixing bugs and in
 defining how we manage the codebase going forward.
 
-Check out the [documentation](https://libretime.org) for more information and
+Check out the [documentation](https://libretime.org/docs/) for more information and
 start broadcasting!
 
 Please note that LibreTime is released with a [Contributor Code
