@@ -23,8 +23,11 @@ def create_source()
     l = cue_cut(l)
     l = amplify(1., override="replay_gain", l)
 
-    # the crossfade function controls fade in/out
-    l = crossfade(duration=0., smart=true, l)
+    # Fade the tracks to avoid hard cuts in between two tracks and at the end of the shows.
+    # Liquidsoap reads the fade in/out durations from the annotation "liq_fade_in/out" which
+    # value can be set via Libretime settings.
+    l = fade.in(l)
+    l = fade.out(l)
 
     l = on_metadata(notify_queue, l)
 
