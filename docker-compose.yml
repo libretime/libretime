@@ -71,8 +71,6 @@ services:
     volumes:
       - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
       - libretime_storage:/srv/libretime
-    healthcheck:
-      test: python3 -c "import requests; requests.get('http://localhost:9001/api/v2/version').raise_for_status()"
 
   legacy:
     image: ghcr.io/libretime/libretime-legacy:${LIBRETIME_VERSION:-latest}
@@ -83,8 +81,6 @@ services:
       - ${LIBRETIME_CONFIG_FILEPATH:-./config.yml}:/etc/libretime/config.yml:ro
       - libretime_assets:/var/www/html
       - libretime_storage:/srv/libretime
-    environment:
-      LIBRETIME_LOG_FILEPATH: php://stderr
 
   nginx:
     image: nginx

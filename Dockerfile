@@ -174,6 +174,9 @@ CMD ["/usr/local/bin/gunicorn", \
 ARG LIBRETIME_VERSION
 ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 
+HEALTHCHECK CMD ["python3", "-c", \
+    "import requests; requests.get('http://localhost:9001/api/v2/version').raise_for_status()"]
+
 #======================================================================================#
 # Worker                                                                               #
 #======================================================================================#
@@ -213,6 +216,7 @@ ENV LIBRETIME_VERSION=$LIBRETIME_VERSION
 FROM php:7.4-fpm as libretime-legacy
 
 ENV LIBRETIME_CONFIG_FILEPATH=/etc/libretime/config.yml
+ENV LIBRETIME_LOG_FILEPATH=php://stderr
 
 # Custom user
 ARG USER=libretime
