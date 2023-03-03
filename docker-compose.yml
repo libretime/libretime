@@ -6,17 +6,17 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: libretime
-      POSTGRES_PASSWORD: libretime # Change me !
+      POSTGRES_USER: ${POSTGRES_USER:-libretime}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-libretime} # Change me !
     healthcheck:
       test: pg_isready -U libretime
 
   rabbitmq:
     image: rabbitmq:3.11-alpine
     environment:
-      RABBITMQ_DEFAULT_VHOST: /libretime
-      RABBITMQ_DEFAULT_USER: libretime
-      RABBITMQ_DEFAULT_PASS: libretime # Change me !
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST:-/libretime}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-libretime}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-libretime} # Change me !
     healthcheck:
       test: rabbitmq-diagnostics -q ping
 
@@ -101,9 +101,9 @@ services:
     ports:
       - 8000:8000
     environment:
-      ICECAST_SOURCE_PASSWORD: hackme # Change me !
-      ICECAST_ADMIN_PASSWORD: hackme # Change me !
-      ICECAST_RELAY_PASSWORD: hackme # Change me !
+      ICECAST_SOURCE_PASSWORD: ${ICECAST_SOURCE_PASSWORD:-hackme} # Change me !
+      ICECAST_ADMIN_PASSWORD: ${ICECAST_ADMIN_PASSWORD:-hackme} # Change me !
+      ICECAST_RELAY_PASSWORD: ${ICECAST_RELAY_PASSWORD:-hackme} # Change me !
 
 volumes:
   postgres_data: {}
