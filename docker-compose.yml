@@ -12,7 +12,7 @@ services:
       test: pg_isready -U libretime
 
   rabbitmq:
-    image: rabbitmq:alpine
+    image: rabbitmq:3.11-alpine
     environment:
       RABBITMQ_DEFAULT_VHOST: /libretime
       RABBITMQ_DEFAULT_USER: libretime
