@@ -104,6 +104,8 @@ LIBRETIME_USER=${LIBRETIME_USER:-"libretime"}
 LIBRETIME_LISTEN_PORT=${LIBRETIME_LISTEN_PORT:-"80"}
 # > Public URL for LibreTime.
 LIBRETIME_PUBLIC_URL=${LIBRETIME_PUBLIC_URL:-}
+# > Timezone for LibreTime.
+LIBRETIME_TIMEZONE=${LIBRETIME_TIMEZONE:-}
 
 # > Install LibreTime in editable mode.
 # > Will keep working files in the project directory.
@@ -388,6 +390,24 @@ install_packages() {
   fi
 }
 
+# get_system_timezone
+get_system_timezone() {
+  if ! command -v timedatectl > /dev/null; then
+    return
+  fi
+
+  timezone="$(timedatectl show --property=Timezone --value)"
+  if [[ -n "$timezone" && ! "$timezone" =~ UTC$ ]]; then
+    echo "$timezone"
+  fi
+}
+
+load_config_defaults() {
+  if [[ -z "$LIBRETIME_TIMEZONE" ]]; then
+    LIBRETIME_TIMEZONE="$(get_system_timezone)"
+  fi
+}
+
 # Prepare
 ########################################################################################
 
@@ -396,6 +416,8 @@ install_packages() {
 
 banner
 check_distribution
+
+load_config_defaults
 
 is_first_install=true
 if [[ -f "$CONFIG_FILEPATH" ]]; then
@@ -429,6 +451,10 @@ if $is_first_install; then
     set_config "$LIBRETIME_PUBLIC_URL" general public_url
   fi
   set_config "$(generate_random_password)" general api_key
+
+  if [[ -n "$LIBRETIME_TIMEZONE" ]]; then
+    set_config "$LIBRETIME_TIMEZONE"  general timezone
+  fi
 
   mkdir_and_chown "$LIBRETIME_USER" "$STORAGE_DIR"
   set_config "$STORAGE_DIR" storage path
