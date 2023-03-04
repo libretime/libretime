@@ -10,6 +10,9 @@ on:
         required: true
         default: "5"
 
+permissions:
+  issues: write
+
 jobs:
   find_closed_references:
     if: github.repository_owner == 'libretime'
@@ -65,3 +68,38 @@ jobs:
           fail: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  find_stale_issues:
+    if: github.repository_owner == 'libretime'
+    name: Find stale issues
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v7
+        with:
+          stale-issue-message: >
+            This issue has been automatically marked as stale because it has not had
+            activity in the last 5 months. It will be closed if no activity occurs in
+            the next month.
+
+            Please chat to us on the [forum](https://discourse.libretime.org/) or
+            ask for help on our [chat](https://chat.libretime.org/) if you have any
+            questions or need further support with getting this issue resolved.
+
+            You may also label an issue as *pinned* if you would like to make sure
+            that it does not get closed by this bot.
+          close-issue-message: >
+            This issue has been automatically closed after is was marked as stale and
+            did not receive any further inputs.
+
+            Feel free to let us know on the [forum](https://discourse.libretime.org/) or
+            ask for help on our [chat](https://chat.libretime.org/) if you feel this
+            issue should not have been closed.
+
+            Thank you for your contributions.
+          days-before-issue-stale: 150
+          days-before-issue-close: 30
+          stale-issue-label: "status: stalled"
+          exempt-issue-labels: "status: pinned,status: maybe later,security"
+          exempt-issue-assignees: true
+          exempt-issue-milestones: true
