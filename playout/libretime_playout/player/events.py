@@ -1,22 +1,35 @@
 from datetime import datetime
 from enum import Enum
-from typing import Dict, Literal, Optional, TypedDict, Union
+from pathlib import Path
+from typing import TYPE_CHECKING, Dict, Literal, Optional, Union
 
-from typing_extensions import NotRequired
+from dateutil.parser import isoparse
+from pydantic import BaseModel, Field, parse_obj_as, validator
+from typing_extensions import Annotated
+
+from ..config import CACHE_DIR
+from ..utils import mime_guess_extension
+
+if TYPE_CHECKING:
+    from pydantic.typing import AnyClassMethod
 
 EVENT_KEY_FORMAT = "%Y-%m-%d-%H-%M-%S"
 
 
 def event_key_to_datetime(value: Union[str, datetime]) -> datetime:
-    if isinstance(value, datetime):
-        return value
-    return datetime.strptime(value, EVENT_KEY_FORMAT)
+    if isinstance(value, str):
+        value = datetime.strptime(value, EVENT_KEY_FORMAT)
+    return value
 
 
 def datetime_to_event_key(value: Union[str, datetime]) -> str:
-    if isinstance(value, str):
-        return value
-    return value.strftime(EVENT_KEY_FORMAT)
+    if isinstance(value, datetime):
+        value = value.strftime(EVENT_KEY_FORMAT)
+    return value
+
+
+def event_isoparse(value: str) -> datetime:
+    return isoparse(value).replace(tzinfo=None).replace(microsecond=0)
 
 
 class EventKind(str, Enum):
@@ -28,16 +41,24 @@ class EventKind(str, Enum):
     WEB_STREAM_OUTPUT_END = "stream_output_end"
 
 
-class BaseEvent(TypedDict):
-    # TODO: Only use datetime
-    start: Union[str, datetime]
-    end: Union[str, datetime]
+def event_datetime_validator(prop: str) -> "AnyClassMethod":
+    return validator(prop, pre=True, allow_reuse=True)(event_key_to_datetime)
 
 
-class FileEventMetadata(TypedDict):
-    track_title: str
-    artist_name: str
-    mime: str
+class BaseEvent(BaseModel):
+    start: datetime
+    end: datetime
+
+    _start_validator = event_datetime_validator("start")
+    _end_validator = event_datetime_validator("end")
+
+    @property
+    def start_key(self) -> str:
+        return datetime_to_event_key(self.start)
+
+    @property
+    def end_key(self) -> str:
+        return datetime_to_event_key(self.end)
 
 
 class FileEvent(BaseEvent):
@@ -45,7 +66,7 @@ class FileEvent(BaseEvent):
 
     # Schedule
     row_id: int
-    uri: Optional[str]
+    uri: Optional[str] = None
     id: int
 
     # Show data
@@ -57,16 +78,22 @@ class FileEvent(BaseEvent):
     cue_in: float
     cue_out: float
 
-    # TODO: Flatten this metadata dict
-    metadata: FileEventMetadata
+    track_title: Optional[str] = None
+    artist_name: Optional[str] = None
 
-    replay_gain: float
+    mime: str
+    replay_gain: Optional[float] = None
     filesize: int
 
-    # Runtime
-    dst: NotRequired[str]
-    file_ready: NotRequired[bool]
-    file_ext: NotRequired[str]
+    file_ready: bool = False
+
+    @property
+    def file_ext(self) -> str:
+        return mime_guess_extension(self.mime)
+
+    @property
+    def local_filepath(self) -> Path:
+        return CACHE_DIR / f"{self.id}{self.file_ext}"
 
 
 class WebStreamEvent(BaseEvent):
@@ -83,7 +110,7 @@ class WebStreamEvent(BaseEvent):
     id: int
 
     # Show data
-    show_name: NotRequired[str]
+    show_name: str
 
 
 class ActionEventKind(str, Enum):
@@ -97,7 +124,15 @@ class ActionEvent(BaseEvent):
     event_type: str
 
 
-AnyEvent = Union[FileEvent, WebStreamEvent, ActionEvent]
+AnyEvent = Annotated[
+    Union[FileEvent, WebStreamEvent, ActionEvent],
+    Field(discriminator="type"),
+]
+
+
+def parse_any_event(value: dict) -> AnyEvent:
+    return parse_obj_as(AnyEvent, value)  # type: ignore
+
 
 FileEvents = Dict[str, FileEvent]
 Events = Dict[str, AnyEvent]

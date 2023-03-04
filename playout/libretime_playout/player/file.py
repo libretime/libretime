@@ -1,7 +1,6 @@
 import hashlib
 import logging
 import os
-import stat
 import time
 from queue import Empty, Queue
 from threading import Thread
@@ -36,63 +35,49 @@ class PypoFile(Thread):
         """
         Copy file_event from local library directory to local cache directory.
         """
-        file_id = file_event["id"]
-        dst = file_event["dst"]
+        if file_event.local_filepath.is_file():
+            logger.debug(
+                "found file %s in cache %s",
+                file_event.id,
+                file_event.local_filepath,
+            )
+            file_event.file_ready = True
+            return
 
-        dst_exists = True
+        logger.info(
+            "copying file %s to cache %s",
+            file_event.id,
+            file_event.local_filepath,
+        )
         try:
-            dst_size = os.path.getsize(dst)
-            if dst_size == 0:
-                dst_exists = False
-        except Exception:  # pylint: disable=broad-exception-caught
-            dst_exists = False
+            with file_event.local_filepath.open("wb") as file_fd:
+                try:
+                    response = self.api_client.download_file(file_event.id, stream=True)
+                    for chunk in response.iter_content(chunk_size=2048):
+                        file_fd.write(chunk)
 
-        do_copy = False
-        if dst_exists:
-            # TODO: Check if the locally cached variant of the file is sane.
-            # This used to be a filesize check that didn't end up working.
-            # Once we have watched folders updated files from them might
-            # become an issue here... This needs proper cache management.
-            # https://github.com/libretime/libretime/issues/756#issuecomment-477853018
-            # https://github.com/libretime/libretime/pull/845
-            logger.debug("found file %s in cache %s, skipping copy...", file_id, dst)
-        else:
-            do_copy = True
+                except requests.exceptions.HTTPError as exception:
+                    raise RuntimeError(
+                        f"could not download file {file_event.id}"
+                    ) from exception
 
-        file_event["file_ready"] = not do_copy
+            # make file world readable and owner writable
+            file_event.local_filepath.chmod(0o644)
 
-        if do_copy:
-            logger.info("copying file %s to cache %s", file_id, dst)
-            try:
-                with open(dst, "wb") as handle:
-                    logger.info(file_event)
-                    try:
-                        response = self.api_client.download_file(file_id, stream=True)
-                        for chunk in response.iter_content(chunk_size=2048):
-                            handle.write(chunk)
-
-                    except requests.exceptions.HTTPError as exception:
-                        raise RuntimeError(
-                            f"could not download file {file_event['id']}"
-                        ) from exception
-
-                # make file world readable and owner writable
-                os.chmod(dst, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
-
-                if file_event["filesize"] == 0:
-                    file_size = self.report_file_size_and_md5_to_api(
-                        dst, file_event["id"]
-                    )
-                    file_event["filesize"] = file_size
-
-                file_event["file_ready"] = True
-            except Exception as exception:  # pylint: disable=broad-exception-caught
-                logger.exception(
-                    "could not copy file %s to %s: %s",
-                    file_id,
-                    dst,
-                    exception,
+            if file_event.filesize == 0:
+                file_event.filesize = self.report_file_size_and_md5_to_api(
+                    str(file_event.local_filepath),
+                    file_event.id,
                 )
+
+            file_event.file_ready = True
+        except Exception as exception:  # pylint: disable=broad-exception-caught
+            logger.exception(
+                "could not copy file %s to %s: %s",
+                file_event.id,
+                file_event.local_filepath,
+                exception,
+            )
 
     def report_file_size_and_md5_to_api(self, file_path: str, file_id: int) -> int:
         try:

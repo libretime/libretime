@@ -16,15 +16,13 @@ from ..config import CACHE_DIR, POLL_INTERVAL, Config
 from ..liquidsoap.client import LiquidsoapClient
 from ..liquidsoap.models import Info, MessageFormatKind, StreamPreferences, StreamState
 from ..timeout import ls_timeout
-from .events import EventKind, Events, FileEvent, FileEvents, event_key_to_datetime
+from .events import Events, FileEvent, FileEvents
 from .liquidsoap import PypoLiquidsoap
-from .schedule import get_schedule
+from .schedule import get_schedule, receive_schedule
 
 logger = logging.getLogger(__name__)
 
 here = Path(__file__).parent
-
-from ..utils import mime_guess_extension
 
 
 # pylint: disable=too-many-instance-attributes
@@ -73,7 +71,7 @@ class PypoFetch(Thread):
             logger.debug("handling event %s: %s", command, message)
 
             if command == "update_schedule":
-                self.schedule_data = message["schedule"]["media"]
+                self.schedule_data = receive_schedule(message["schedule"]["media"])
                 self.process_schedule(self.schedule_data)
             elif command == "reset_liquidsoap_bootstrap":
                 self.set_bootstrap_variables()
@@ -209,15 +207,8 @@ class PypoFetch(Thread):
         try:
             for key in events:
                 item = events[key]
-                if item["type"] == EventKind.FILE:
-                    file_ext = self.sanity_check_media_item(item)
-                    dst = os.path.join(self.cache_dir, f'{item["id"]}{file_ext}')
-                    item["dst"] = dst
-                    item["file_ready"] = False
+                if isinstance(item, FileEvent):
                     file_events[key] = item
-
-                item["start"] = event_key_to_datetime(item["start"])
-                item["end"] = event_key_to_datetime(item["end"])
                 all_events[key] = item
 
             self.media_prepare_queue.put(copy.copy(file_events))
@@ -233,25 +224,6 @@ class PypoFetch(Thread):
             self.cache_cleanup(events)
         except Exception as exception:  # pylint: disable=broad-exception-caught
             logger.exception(exception)
-
-    # do basic validation of file parameters. Useful for debugging
-    # purposes
-    def sanity_check_media_item(self, event: FileEvent):
-        start = event_key_to_datetime(event["start"])
-        end = event_key_to_datetime(event["end"])
-
-        file_ext = mime_guess_extension(event["metadata"]["mime"])
-        event["file_ext"] = file_ext
-
-        length1 = (end - start).total_seconds()
-        length2 = event["cue_out"] - event["cue_in"]
-
-        if abs(length2 - length1) > 1:
-            logger.error("end - start length: %s", length1)
-            logger.error("cue_out - cue_in length: %s", length2)
-            logger.error("Two lengths are not equal!!!")
-
-        return file_ext
 
     def is_file_opened(self, path: str) -> bool:
         result = run(["lsof", "--", path], stdout=PIPE, stderr=DEVNULL, check=False)
@@ -269,10 +241,8 @@ class PypoFetch(Thread):
 
         for key in events:
             item = events[key]
-            if item["type"] == EventKind.FILE:
-                if "file_ext" not in item:
-                    item["file_ext"] = mime_guess_extension(item["metadata"]["mime"])
-                scheduled_file_set.add(f'{item["id"]}{item["file_ext"]}')
+            if isinstance(item, FileEvent):
+                scheduled_file_set.add(item.local_filepath.name)
 
         expired_files = cached_file_set - scheduled_file_set
 
