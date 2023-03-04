@@ -6,7 +6,7 @@ from threading import Thread
 from typing import Any, Dict
 
 from ..utils import seconds_between
-from .events import AnyEvent, event_key_to_datetime
+from .events import AnyEvent
 from .liquidsoap import PypoLiquidsoap
 
 logger = logging.getLogger(__name__)
@@ -49,7 +49,7 @@ class PypoLiqQueue(Thread):
                 if len(schedule_deque):
                     time_until_next_play = seconds_between(
                         datetime.utcnow(),
-                        event_key_to_datetime(schedule_deque[0]["start"]),
+                        schedule_deque[0].start,
                     )
                 else:
                     time_until_next_play = None
@@ -66,7 +66,7 @@ class PypoLiqQueue(Thread):
                 if len(keys):
                     time_until_next_play = seconds_between(
                         datetime.utcnow(),
-                        media_schedule[keys[0]]["start"],
+                        media_schedule[keys[0]].start,
                     )
 
                 else:

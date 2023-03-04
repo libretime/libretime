@@ -1,9 +1,9 @@
 import logging
-from typing import List
+from typing import List, Optional
 
 from ..liquidsoap.client import LiquidsoapClient
 from ..timeout import ls_timeout
-from .events import FileEvent
+from .events import FileEvent, WebStreamEvent
 
 logger = logging.getLogger(__name__)
 
@@ -12,36 +12,35 @@ def create_liquidsoap_annotation(file_event: FileEvent) -> str:
     # We need liq_start_next value in the annotate. That is the value that controls
     # overlap duration of crossfade.
     annotations = {
-        "media_id": file_event["id"],
+        "media_id": file_event.id,
+        "schedule_table_id": file_event.row_id,
         "liq_start_next": "0",
-        "liq_fade_in": float(file_event["fade_in"]) / 1000,
-        "liq_fade_out": float(file_event["fade_out"]) / 1000,
-        "liq_cue_in": float(file_event["cue_in"]),
-        "liq_cue_out": float(file_event["cue_out"]),
-        "schedule_table_id": file_event["row_id"],
-        "replay_gain": f"{file_event['replay_gain']} dB",
+        "liq_fade_in": file_event.fade_in / 1000,
+        "liq_fade_out": file_event.fade_out / 1000,
+        "liq_cue_in": file_event.cue_in,
+        "liq_cue_out": file_event.cue_out,
     }
+
+    if file_event.replay_gain is not None:
+        annotations["replay_gain"] = f"{file_event.replay_gain} dB"
 
     # Override the the artist/title that Liquidsoap extracts from a file's metadata with
     # the metadata we get from Airtime. (You can modify metadata in Airtime's library,
     # which doesn't get saved back to the file.)
-    if "metadata" in file_event:
-        if "artist_name" in file_event["metadata"]:
-            artist_name = file_event["metadata"]["artist_name"]
-            if artist_name:
-                annotations["artist"] = artist_name.replace('"', '\\"')
+    if file_event.artist_name:
+        annotations["artist"] = file_event.artist_name.replace('"', '\\"')
 
-        if "track_title" in file_event["metadata"]:
-            track_title = file_event["metadata"]["track_title"]
-            if track_title:
-                annotations["title"] = track_title.replace('"', '\\"')
+    if file_event.track_title:
+        annotations["title"] = file_event.track_title.replace('"', '\\"')
 
     annotations_str = ",".join(f'{key}="{value}"' for key, value in annotations.items())
 
-    return "annotate:" + annotations_str + ":" + file_event["dst"]
+    return "annotate:" + annotations_str + ":" + str(file_event.local_filepath)
 
 
 class TelnetLiquidsoap:
+    current_prebuffering_stream_id: Optional[int] = None
+
     def __init__(
         self,
         liq_client: LiquidsoapClient,
@@ -49,7 +48,6 @@ class TelnetLiquidsoap:
     ):
         self.liq_client = liq_client
         self.queues = queues
-        self.current_prebuffering_stream_id = None
 
     @ls_timeout
     def queue_clear_all(self):
@@ -66,10 +64,10 @@ class TelnetLiquidsoap:
             logger.exception(exception)
 
     @ls_timeout
-    def queue_push(self, queue_id: int, media_item: FileEvent):
+    def queue_push(self, queue_id: int, file_event: FileEvent):
         try:
-            annotation = create_liquidsoap_annotation(media_item)
-            self.liq_client.queue_push(queue_id, annotation, media_item["show_name"])
+            annotation = create_liquidsoap_annotation(file_event)
+            self.liq_client.queue_push(queue_id, annotation, file_event.show_name)
         except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
 
@@ -96,13 +94,10 @@ class TelnetLiquidsoap:
             logger.exception(exception)
 
     @ls_timeout
-    def start_web_stream_buffer(self, media_item):
+    def start_web_stream_buffer(self, event: WebStreamEvent):
         try:
-            self.liq_client.web_stream_start_buffer(
-                media_item["row_id"],
-                media_item["uri"],
-            )
-            self.current_prebuffering_stream_id = media_item["row_id"]
+            self.liq_client.web_stream_start_buffer(event.row_id, event.uri)
+            self.current_prebuffering_stream_id = event.row_id
         except (ConnectionError, TimeoutError) as exception:
             logger.exception(exception)
 

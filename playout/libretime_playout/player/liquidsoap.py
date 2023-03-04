@@ -5,14 +5,7 @@ from typing import Dict, List, Optional, Set
 
 from ..liquidsoap.client import LiquidsoapClient
 from ..utils import seconds_between
-from .events import (
-    ActionEvent,
-    AnyEvent,
-    EventKind,
-    FileEvent,
-    WebStreamEvent,
-    event_key_to_datetime,
-)
+from .events import ActionEvent, AnyEvent, EventKind, FileEvent, WebStreamEvent
 from .liquidsoap_gateway import TelnetLiquidsoap
 
 logger = logging.getLogger(__name__)
@@ -33,65 +26,66 @@ class PypoLiquidsoap:
             list(self.liq_queue_tracker.keys()),
         )
 
-    def play(self, media_item: AnyEvent) -> None:
-        if media_item["type"] == EventKind.FILE:
-            self.handle_file_type(media_item)
-        elif media_item["type"] == EventKind.ACTION:
-            self.handle_event_type(media_item)
-        elif media_item["type"] == EventKind.WEB_STREAM_BUFFER_START:
-            self.telnet_liquidsoap.start_web_stream_buffer(media_item)
-        elif media_item["type"] == EventKind.WEB_STREAM_OUTPUT_START:
-            if (
-                media_item["row_id"]
-                != self.telnet_liquidsoap.current_prebuffering_stream_id
-            ):
-                # this is called if the stream wasn't scheduled sufficiently ahead of
-                # time so that the prebuffering stage could take effect. Let's do the
-                # prebuffering now.
-                self.telnet_liquidsoap.start_web_stream_buffer(media_item)
-            self.telnet_liquidsoap.start_web_stream()
-        elif media_item["type"] == EventKind.WEB_STREAM_BUFFER_END:
-            self.telnet_liquidsoap.stop_web_stream_buffer()
-        elif media_item["type"] == EventKind.WEB_STREAM_OUTPUT_END:
-            self.telnet_liquidsoap.stop_web_stream_output()
+    def play(self, event: AnyEvent) -> None:
+        if isinstance(event, FileEvent):
+            self.handle_file_type(event)
+        elif isinstance(event, ActionEvent):
+            self.handle_event_type(event)
+        elif isinstance(event, WebStreamEvent):
+            self.handle_web_stream_type(event)
         else:
-            raise UnknownMediaItemType(str(media_item))
+            raise UnknownEvent(str(event))
 
-    def handle_file_type(self, media_item: FileEvent) -> None:
+    def handle_file_type(self, file_event: FileEvent) -> None:
         """
         Wait 200 seconds (2000 iterations) for file to become ready,
         otherwise give up on it.
         """
         iter_num = 0
-        while not media_item.get("file_ready", False) and iter_num < 2000:
+        while not file_event.file_ready and iter_num < 2000:
             time.sleep(0.1)
             iter_num += 1
 
-        if media_item.get("file_ready", False):
+        if file_event.file_ready:
             available_queue = self.find_available_queue()
 
             try:
-                self.telnet_liquidsoap.queue_push(available_queue, media_item)
-                self.liq_queue_tracker[available_queue] = media_item
+                self.telnet_liquidsoap.queue_push(available_queue, file_event)
+                self.liq_queue_tracker[available_queue] = file_event
             except Exception as exception:
                 logger.exception(exception)
                 raise exception
         else:
             logger.warning(
                 "File %s did not become ready in less than 5 seconds. Skipping...",
-                media_item["dst"],
+                file_event.local_filepath,
             )
 
-    def handle_event_type(self, media_item: ActionEvent) -> None:
-        if media_item["event_type"] == "kick_out":
+    def handle_web_stream_type(self, event: WebStreamEvent) -> None:
+        if event.type == EventKind.WEB_STREAM_BUFFER_START:
+            self.telnet_liquidsoap.start_web_stream_buffer(event)
+        elif event.type == EventKind.WEB_STREAM_OUTPUT_START:
+            if event.row_id != self.telnet_liquidsoap.current_prebuffering_stream_id:
+                # this is called if the stream wasn't scheduled sufficiently ahead of
+                # time so that the prebuffering stage could take effect. Let's do the
+                # prebuffering now.
+                self.telnet_liquidsoap.start_web_stream_buffer(event)
+            self.telnet_liquidsoap.start_web_stream()
+        elif event.type == EventKind.WEB_STREAM_BUFFER_END:
+            self.telnet_liquidsoap.stop_web_stream_buffer()
+        elif event.type == EventKind.WEB_STREAM_OUTPUT_END:
+            self.telnet_liquidsoap.stop_web_stream_output()
+
+    def handle_event_type(self, event: ActionEvent) -> None:
+        if event.event_type == "kick_out":
             self.telnet_liquidsoap.disconnect_source("live_dj")
-        elif media_item["event_type"] == "switch_off":
+        elif event.event_type == "switch_off":
             self.telnet_liquidsoap.switch_source("live_dj", "off")
 
     def is_media_item_finished(self, media_item: Optional[AnyEvent]) -> bool:
         if media_item is None:
             return True
-        return datetime.utcnow() > event_key_to_datetime(media_item["end"])
+        return datetime.utcnow() > media_item.end
 
     def find_available_queue(self) -> int:
         available_queue = None
@@ -131,25 +125,25 @@ class PypoLiquidsoap:
 
         try:
             scheduled_now_files: List[FileEvent] = [
-                x for x in scheduled_now if x["type"] == EventKind.FILE
+                x for x in scheduled_now if x.type == EventKind.FILE  # type: ignore
             ]
 
             scheduled_now_webstream: List[WebStreamEvent] = [
-                x
+                x  # type: ignore
                 for x in scheduled_now
-                if x["type"] == EventKind.WEB_STREAM_OUTPUT_START
+                if x.type == EventKind.WEB_STREAM_OUTPUT_START
             ]
 
-            schedule_ids: Set[int] = {x["row_id"] for x in scheduled_now_files}
+            schedule_ids: Set[int] = {x.row_id for x in scheduled_now_files}
 
-            row_id_map = {}
+            row_id_map: Dict[int, FileEvent] = {}
             liq_queue_ids: Set[int] = set()
             for queue_item in self.liq_queue_tracker.values():
                 if queue_item is not None and not self.is_media_item_finished(
                     queue_item
                 ):
-                    liq_queue_ids.add(queue_item["row_id"])
-                    row_id_map[queue_item["row_id"]] = queue_item
+                    liq_queue_ids.add(queue_item.row_id)
+                    row_id_map[queue_item.row_id] = queue_item
 
             to_be_removed: Set[int] = set()
             to_be_added: Set[int] = set()
@@ -159,21 +153,18 @@ class PypoLiquidsoap:
             # have different attributes. Ff replay gain changes, it shouldn't change the
             # amplification of the currently playing song
             for item in scheduled_now_files:
-                if item["row_id"] in row_id_map:
-                    queue_item = row_id_map[item["row_id"]]
-                    assert queue_item is not None
+                if item.row_id in row_id_map:
+                    queue_item = row_id_map[item.row_id]
 
-                    correct = (
-                        queue_item["start"] == item["start"]
-                        and queue_item["end"] == item["end"]
-                        and queue_item["row_id"] == item["row_id"]
-                    )
-
-                    if not correct:
+                    if not (
+                        queue_item.start == item.start
+                        and queue_item.end == item.end
+                        and queue_item.row_id == item.row_id
+                    ):
                         # need to re-add
                         logger.info("Track %s found to have new attr.", item)
-                        to_be_removed.add(item["row_id"])
-                        to_be_added.add(item["row_id"])
+                        to_be_removed.add(item.row_id)
+                        to_be_added.add(item.row_id)
 
             to_be_removed.update(liq_queue_ids - schedule_ids)
             to_be_added.update(schedule_ids - liq_queue_ids)
@@ -183,17 +174,14 @@ class PypoLiquidsoap:
 
                 # remove files from Liquidsoap's queue
                 for queue_id, queue_item in self.liq_queue_tracker.items():
-                    if (
-                        queue_item is not None
-                        and queue_item.get("row_id") in to_be_removed
-                    ):
+                    if queue_item is not None and queue_item.row_id in to_be_removed:
                         self.stop(queue_id)
 
             if to_be_added:
                 logger.info("Need to add items to Liquidsoap *now*: %s", to_be_added)
 
                 for item in scheduled_now_files:
-                    if item["row_id"] in to_be_added:
+                    if item.row_id in to_be_added:
                         self.modify_cue_point(item)
                         self.play(item)
 
@@ -204,7 +192,7 @@ class PypoLiquidsoap:
 
             logger.debug("scheduled now webstream: %s", scheduled_now_webstream)
             if scheduled_now_webstream:
-                if int(current_stream_id) != int(scheduled_now_webstream[0]["row_id"]):
+                if int(current_stream_id) != int(scheduled_now_webstream[0].row_id):
                     self.play(scheduled_now_webstream[0])
             elif current_stream_id != "-1":
                 # something is playing and it shouldn't be.
@@ -217,31 +205,25 @@ class PypoLiquidsoap:
         self.telnet_liquidsoap.queue_remove(queue_id)
         self.liq_queue_tracker[queue_id] = None
 
-    def is_file(self, event: AnyEvent) -> bool:
-        return event["type"] == EventKind.FILE
-
     def clear_queue_tracker(self) -> None:
         for queue_id in self.liq_queue_tracker:
             self.liq_queue_tracker[queue_id] = None
 
-    def modify_cue_point(self, link: FileEvent) -> None:
-        assert self.is_file(link)
+    def modify_cue_point(self, file_event: FileEvent) -> None:
+        assert file_event.type == EventKind.FILE
 
-        lateness = seconds_between(
-            event_key_to_datetime(link["start"]),
-            datetime.utcnow(),
-        )
+        lateness = seconds_between(file_event.start, datetime.utcnow())
 
         if lateness > 0:
             logger.debug("media item was supposed to start %ss ago", lateness)
-            cue_in_orig = timedelta(seconds=float(link["cue_in"]))
-            link["cue_in"] = cue_in_orig.total_seconds() + lateness
+            cue_in_orig = timedelta(seconds=file_event.cue_in)
+            file_event.cue_in = cue_in_orig.total_seconds() + lateness
 
     def clear_all_queues(self) -> None:
         self.telnet_liquidsoap.queue_clear_all()
 
 
-class UnknownMediaItemType(Exception):
+class UnknownEvent(Exception):
     pass
 
 

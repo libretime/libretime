@@ -7,19 +7,11 @@ from threading import Thread
 from typing import List, Tuple
 
 from ..config import PUSH_INTERVAL, Config
-from .events import AnyEvent, EventKind, Events, event_key_to_datetime
+from .events import AnyEvent, Events, FileEvent
 from .liquidsoap import PypoLiquidsoap
 from .queue import PypoLiqQueue
 
 logger = logging.getLogger(__name__)
-
-
-def is_stream(media_item: AnyEvent) -> bool:
-    return media_item["type"] == "stream_output_start"
-
-
-def is_file(media_item: AnyEvent) -> bool:
-    return media_item["type"] == "file"
 
 
 class PypoPush(Thread):
@@ -81,14 +73,11 @@ class PypoPush(Thread):
             item = events[key]
 
             # Ignore track that already ended
-            if (
-                item["type"] == EventKind.FILE
-                and event_key_to_datetime(item["end"]) < now
-            ):
+            if isinstance(item, FileEvent) and item.end < now:
                 logger.debug("ignoring ended media_item: %s", item)
                 continue
 
-            diff_sec = (now - event_key_to_datetime(item["start"])).total_seconds()
+            diff_sec = (now - item.start).total_seconds()
 
             if diff_sec >= 0:
                 logger.debug("adding media_item to present: %s", item)
