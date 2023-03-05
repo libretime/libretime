@@ -12,15 +12,16 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2023-02-27 12:16+0000\n"
-"PO-Revision-Date: 2022-07-06 05:21+0000\n"
-"Last-Translator: Maxime Leroy <lisacintosh@gmail.com>\n"
-"Language-Team: French <https://hosted.weblate.org/projects/libretime/legacy/fr/>\n"
+"PO-Revision-Date: 2023-03-06 23:45+0000\n"
+"Last-Translator: \"Jonas L.\" <ljonas@riseup.net>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/libretime/legacy/"
+"fr/>\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.13.1-dev\n"
+"X-Generator: Weblate 4.16.2-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -583,7 +584,8 @@ msgstr "Utiliser les réglages par défaut"
 
 #: application/common/UsabilityHints.php:65
 msgid "Upload some tracks below to add them to your library!"
-msgstr "Téléversez des pistes ci-dessous pour les ajouter à votre bibliothèque !"
+msgstr ""
+"Téléversez des pistes ci-dessous pour les ajouter à votre bibliothèque&nbsp;!"
 
 #: application/common/UsabilityHints.php:69
 #, php-format
@@ -592,7 +594,9 @@ msgstr "Vous n'avez pas encore ajouté de fichiers audios. %sTéléverser un fic
 
 #: application/common/UsabilityHints.php:76
 msgid "Click the 'New Show' button and fill out the required fields."
-msgstr "Cliquez sur le bouton « Nouvelle émission » et remplissez les champs requis."
+msgstr ""
+"Cliquez sur le bouton «&nbsp;Nouvelle émission&nbsp;» et remplissez les "
+"champs requis."
 
 #: application/common/UsabilityHints.php:80
 #, php-format
@@ -677,6 +681,7 @@ msgstr "Service Celery Task de LibreTime"
 #: application/configs/config-check.php:231
 msgid "Check that the libretime-worker service is installed correctly in "
 msgstr ""
+"Vérifiez que le service « libretime-worker » est installé correctement dans "
 
 #: application/configs/config-check.php:243
 msgid "LibreTime API service"
@@ -2305,11 +2310,11 @@ msgstr "Ajouter des fichiers à la file d'attente de téléversement, puis cliqu
 
 #: application/controllers/LocaleController.php:381
 msgid "Filename"
-msgstr ""
+msgstr "Nom du fichier"
 
 #: application/controllers/LocaleController.php:383
 msgid "Size"
-msgstr ""
+msgstr "Taille"
 
 #: application/controllers/LocaleController.php:384
 msgid "Add Files"
@@ -2325,7 +2330,7 @@ msgstr "Démarrer le Téléversement"
 
 #: application/controllers/LocaleController.php:387
 msgid "Start Upload"
-msgstr ""
+msgstr "Démarrer le téléversement"
 
 #: application/controllers/LocaleController.php:388
 msgid "Add files"
@@ -2333,11 +2338,11 @@ msgstr "Ajouter des fichiers"
 
 #: application/controllers/LocaleController.php:389
 msgid "Stop current upload"
-msgstr ""
+msgstr "Arrêter le téléversement en cours"
 
 #: application/controllers/LocaleController.php:390
 msgid "Start uploading queue"
-msgstr ""
+msgstr "Démarrer le téléversement de la file"
 
 #: application/controllers/LocaleController.php:391
 #, php-format
@@ -2614,6 +2619,9 @@ msgstr "Type"
 #: application/controllers/LocaleController.php:465
 msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='https://libretime.org/docs/user-manual/playlists/'>More information</a>"
 msgstr ""
+"Le contenu des playlists automatiques est ajouté aux émissions une heure "
+"avant le début de l'émission. <a target='_blank' href='https://libretime.org/"
+"docs/user-manual/playlists/'>Plus d'information</a>"
 
 #: application/controllers/LocaleController.php:466
 msgid "Podcast settings saved"
@@ -3108,7 +3116,7 @@ msgstr "Visibilité :"
 
 #: application/forms/AddTracktype.php:57
 msgid "Analyze cue points:"
-msgstr ""
+msgstr "Analyser les points d'entrée et de sortie :"
 
 #: application/forms/AddTracktype.php:74
 msgid "Code is not unique."
@@ -3694,7 +3702,7 @@ msgstr "La valeur doit être inférieure à 2147483648"
 
 #: application/forms/SmartBlockCriteria.php:920
 msgid "The value cannot be empty"
-msgstr ""
+msgstr "La valeur ne peut pas être vide"
 
 #: application/forms/SmartBlockCriteria.php:925
 #, php-format
@@ -3787,7 +3795,7 @@ msgstr "URL"
 
 #: application/forms/StreamSettingSubForm.php:142
 msgid "Stream URL"
-msgstr ""
+msgstr "URL du flux"
 
 #: application/forms/TuneInPreferences.php:20
 msgid "Push metadata to your station on TuneIn?"
