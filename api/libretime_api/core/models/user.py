@@ -47,6 +47,9 @@ class User(AbstractBaseUser):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
 
+    # Django password reset functions checks for this field
+    is_active = models.BooleanField(default=True)
+
     login_attempts = models.IntegerField(
         blank=True,
         null=True,
