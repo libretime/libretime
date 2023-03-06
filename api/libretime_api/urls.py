@@ -7,6 +7,7 @@ https://docs.djangoproject.com/en/3.2/topics/http/urls/
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
+from .authentication import urls as authentication_urls
 from .core.router import urls as core_urls
 from .history.router import urls as history_urls
 from .podcasts.router import urls as podcasts_urls
@@ -24,6 +25,7 @@ api_urls += storage_urls
 urlpatterns = [
     path("api/browser/", include("rest_framework.urls", namespace="rest_framework")),
     path("api/v2/", include(api_urls)),
+    path("api/v2/authentication/", include(authentication_urls)),
     path(
         "api/v2/schema",
         SpectacularAPIView.as_view(),

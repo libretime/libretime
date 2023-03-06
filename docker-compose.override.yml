@@ -59,6 +59,8 @@ services:
     command: /usr/local/bin/libretime-api runserver 0.0.0.0:9001
     environment:
       LIBRETIME_DEBUG: "true"
+      # Needed so that the api can use the correct url to make request to legacy
+      LIBRETIME_LEGACY_URL: "http://nginx"
 
   legacy:
     build:

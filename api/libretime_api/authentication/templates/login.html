@@ -1,0 +1,24 @@
+<html>
+<body>
+
+ {% if message %}<div class='imp_message'>{{ message }} <hr></div>{% endif %}
+
+ <form action="/api/v2/authentication/login" method="post">
+  {% csrf_token %}
+
+  <div class="container">
+    <label for="uname"><b>Username</b></label>
+    <input type="text" placeholder="Enter Username" name="username" required>
+
+    <label for="psw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="password" required>
+
+    <label for="psw"><b>Locale</b></label>
+    <input type="text" placeholder="Enter locale" value="en_US" name="locale" required>
+
+    <button type="submit">Login</button>
+  </div>
+
+</form>
+</body>
+</html>

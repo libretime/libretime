@@ -9,6 +9,7 @@ DEBUG = getenv("LIBRETIME_DEBUG", "false").lower() == "true"
 # Application definition
 
 INSTALLED_APPS = [
+    "libretime_api.authentication",
     "libretime_api.legacy",
     "libretime_api.core",
     "libretime_api.history",
