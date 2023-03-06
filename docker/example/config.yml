@@ -47,6 +47,23 @@ database:
   user: libretime
   # The password of the PostgreSQL user.
   # > default is libretime
+  password: libretime'
+
+email:
+  # Hostname of the smtp server
+  # > default is localhost
+  host: localhost
+  # Port of the smtp server
+  # > default is 587
+  port: 587
+  # From address for emails
+  # > default is libretime@localhost
+  from_address: libretime@localhost
+  # Username to authenticate at the smtp server
+  # Often this is the same as from_adress
+  # > default is libretime
+  user: libretime
+  # Password of the smtpuser
   password: libretime
 
 rabbitmq:

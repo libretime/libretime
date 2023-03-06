@@ -93,6 +93,20 @@ class DatabaseConfig(BaseModel):
         )
 
 
+# EmailConfig
+########################################################################################
+
+
+# pylint: disable=too-few-public-methods
+class EmailConfig(BaseModel):
+    host: str = "localhost"
+    port: int = 587
+    from_address: str = "libretime@localhost"
+    tls: bool = True
+    username: str = "libretime"
+    password: str = "libretime"
+
+
 # RabbitMQConfig
 ########################################################################################
 

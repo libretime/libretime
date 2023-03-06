@@ -3,6 +3,7 @@ from ._models import (
     AudioChannels,
     AudioFormat,
     DatabaseConfig,
+    EmailConfig,
     GeneralConfig,
     HarborInput,
     IcecastOutput,

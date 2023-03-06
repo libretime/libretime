@@ -1,5 +1,7 @@
 from os import getenv
 
+from django.conf import settings
+
 # pylint: disable=unused-import
 from ._internal import (
     API_VERSION,
@@ -43,6 +45,18 @@ DATABASES = {
         "PASSWORD": CONFIG.database.password,
     }
 }
+
+if DEBUG:
+    # Print emails to stdout
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    DEFAULT_FROM_EMAIL = CONFIG.email.from_address
+    EMAIL_USE_TLS = CONFIG.email.tls
+    EMAIL_HOST = CONFIG.email.host
+    EMAIL_PORT = CONFIG.email.port
+    EMAIL_HOST_USER = CONFIG.email.user
+    EMAIL_HOST_PASSWORD = CONFIG.email.password
 
 
 # Internationalization
