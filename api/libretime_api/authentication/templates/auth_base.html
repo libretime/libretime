@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>{% block title %}{{ section.title }}{% endblock %}</title>
+
+  <link href="/favicon.ico" rel="icon" type="image/x-icon" />
+  <link href="/css/bootstrap.css?fa73bb3d655ac6f52673f440e1058afd" media="screen" rel="stylesheet" type="text/css" />
+  <link href="/css/redmond/jquery-ui-1.8.8.custom.css?4a04bbd7e5a47de479cef65e3dcb8168" media="screen" rel="stylesheet"
+    type="text/css" />
+  <link href="/css/styles.css?6890a553402f44cefc7c6915f38aa657" media="screen" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+  {% block content %}
+  <h1>{{ section.title }}</h1>
+
+  {% endblock %}
+</body>
+
+<div class="footer">
+  LibreTime copyright &copy; LibreTime Community All rights reserved. <br />
+  Maintained and distributed under the
+  <a href='https://www.gnu.org/licenses/agpl-3.0-standalone.html'>GNU AGPL v.3</a> by
+  <a href='https://libretime.org'>LibreTime Community </a>
+</div>
+
+</html>

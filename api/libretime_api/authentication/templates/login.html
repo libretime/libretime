@@ -1,24 +1,84 @@
-<html>
-<body>
+{% extends 'auth_base.html' %}
+{% block title %}
+Login
+{% endblock %}
 
- {% if message %}<div class='imp_message'>{{ message }} <hr></div>{% endif %}
+{% block content %}
+<div id="login-page">
+  <div class="login_box">
+    <div class="logobox">&nbsp;</div>
+    <h2>Login</h2>
+    <div id="login" class="login-content clearfix">
+      <p class="light" style=''></p>
 
- <form action="/api/v2/authentication/login" method="post">
-  {% csrf_token %}
+      <form enctype="application/x-www-form-urlencoded" method="post" action="{% url 'authentication.login' %}">
+        {% csrf_token %}
+        <dl class="zend_form">
 
-  <div class="container">
-    <label for="uname"><b>Username</b></label>
-    <input type="text" placeholder="Enter Username" name="username" required>
+          <dt id="username-label">
+            <label for="username" class="required">
+              Username: </label>
+          </dt>
+          <dd id="username-element">
 
-    <label for="psw"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="password" required>
+            <input type="text" name="username" id="username" value="" autofocus="true" class="input_text" required />
+          </dd>
 
-    <label for="psw"><b>Locale</b></label>
-    <input type="text" placeholder="Enter locale" value="en_US" name="locale" required>
+          <dt id="password-label">
+            <label for="password" class="required">
+              Password: </label>
+          </dt>
+          <dd id="password-element">
 
-    <button type="submit">Login</button>
+            <input type="password" name="password" id="password" value="" class="input_text" required />
+          </dd>
+
+          <dt id="locale-label">
+            <label for="locale" class="required">
+              Language: </label>
+          </dt>
+          <dd id="locale-element">
+
+            <select name="locale" id="locale" required>
+              <option value="en_US" selected="selected">English (USA)</option>
+              <option value="cs_CZ">Český</option>
+              <option value="de_AT">Deutsch (Österreich)</option>
+              <option value="de_DE">Deutsch</option>
+              <option value="el_GR">Ελληνικά</option>
+              <option value="en_CA">English (Canada)</option>
+              <option value="en_GB">English (Britain)</option>
+              <option value="es_ES">Español</option>
+              <option value="fr_FR">Français</option>
+              <option value="hr_HR">Hrvatski</option>
+              <option value="hu_HU">Magyar</option>
+              <option value="it_IT">Italiano</option>
+              <option value="ja_JP">日本語</option>
+              <option value="ko_KR">한국어</option>
+              <option value="pl_PL">Polski</option>
+              <option value="pt_BR">Português (Brasil)</option>
+              <option value="ru_RU">Русский</option>
+              <option value="sr_RS">Српски (Ћирилица)</option>
+              <option value="sr_RS@latin">Srpski (Latinica)</option>
+              <option value="uk_UA">украї́нська мо́ва</option>
+              <option value="zh_CN">简体中文</option>
+            </select>
+          </dd>
+
+
+          <dt id="submit-label">&nbsp;</dt>
+          <dd id="submit-element">
+
+            <input type="submit" name="submit" id="submit" value="Login"
+              class="ui-button ui-widget ui-state-default ui-button-text-only center" />
+          </dd>
+
+          <dt id="reset-label" class="hidden">&nbsp;</dt>
+          <dd id="reset-element" class="text-right">
+            <a href="/login/password-restore" class="link reset">Forgot your password?</a>
+          </dd>
+        </dl>
+      </form>
+    </div>
   </div>
-
-</form>
-</body>
-</html>
+</div>
+{% endblock %}
