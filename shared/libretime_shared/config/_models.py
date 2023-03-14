@@ -270,4 +270,4 @@ class StreamConfig(BaseModel):
     """Stream configuration model."""
 
     inputs: Inputs = Inputs()
-    outputs: Outputs = Outputs()
+    outputs: Outputs = Outputs()  # type: ignore[call-arg]
