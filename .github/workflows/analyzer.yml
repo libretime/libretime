@@ -9,6 +9,7 @@ on:
       - .github/workflows/analyzer.yml
       - analyzer/**
       - shared/**
+      - tools/python*
 
   pull_request:
     branches: [main]
@@ -17,6 +18,7 @@ on:
       - .github/workflows/analyzer.yml
       - analyzer/**
       - shared/**
+      - tools/python*
 
   schedule:
     - cron: 0 1 * * 1

@@ -8,6 +8,7 @@ on:
       - .github/workflows/_python.yml
       - .github/workflows/shared.yml
       - shared/**
+      - tools/python*
 
   pull_request:
     branches: [main]
@@ -15,6 +16,7 @@ on:
       - .github/workflows/_python.yml
       - .github/workflows/shared.yml
       - shared/**
+      - tools/python*
 
   schedule:
     - cron: 0 1 * * 1
