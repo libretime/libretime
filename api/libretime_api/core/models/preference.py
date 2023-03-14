@@ -78,7 +78,7 @@ class Preference(models.Model):
         entries = dict(cls.site.values_list("key", "value"))
         return StreamPreferences(
             input_fade_transition=float(entries.get("default_transition_fade") or 0.0),
-            message_format=int(entries.get("stream_label_format") or 0),
+            message_format=MessageFormatKind(entries.get("stream_label_format") or 0),
             message_offline=entries.get("off_air_meta") or "Offline",
         )
 
