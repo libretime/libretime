@@ -167,8 +167,9 @@ AUTH_USER_MODEL = "core.User"
 # https://drf-spectacular.readthedocs.io/en/latest/settings.html
 
 SPECTACULAR_ENUM_NAME_OVERRIDES = {
-    "SmartBlockKindEnum": "libretime_api.schedule.models.SmartBlock.Kind",
+    "FileImportStatusEnum": "libretime_api.storage.models.File.ImportStatus",
     "PlaylistContentKindEnum": "libretime_api.schedule.models.PlaylistContent.Kind",
+    "SmartBlockKindEnum": "libretime_api.schedule.models.SmartBlock.Kind",
 }
 
 SPECTACULAR_SETTINGS = {
