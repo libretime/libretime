@@ -6855,6 +6855,10 @@ components:
         - 1
         - 2
       type: integer
+      description: |-
+        * `0` - Success
+        * `1` - Pending
+        * `2` - Failed
     PlayoutHistory:
       type: object
       properties:
@@ -7046,6 +7050,11 @@ components:
         - 1
         - 2
       type: integer
+      description: |-
+        * `-1` - Filler
+        * `0` - Outside
+        * `1` - Inside
+        * `2` - Boundary
     Preference:
       type: object
       properties:
@@ -7071,6 +7080,9 @@ components:
         - 0
         - 1
       type: integer
+      description: |-
+        * `0` - No
+        * `1` - Yes
     RepeatKindEnum:
       enum:
         - 0
@@ -7079,6 +7091,12 @@ components:
         - 5
         - 2
       type: integer
+      description: |-
+        * `0` - Every week
+        * `1` - Every 2 weeks
+        * `4` - Every 3 weeks
+        * `5` - Every 4 weeks
+        * `2` - Every month
     RoleEnum:
       enum:
         - G
@@ -7086,6 +7104,11 @@ components:
         - P
         - A
       type: string
+      description: |-
+        * `G` - Guest
+        * `H` - Host
+        * `P` - Manager
+        * `A` - Admin
     Schedule:
       type: object
       properties:
@@ -7474,6 +7497,9 @@ components:
         - static
         - dynamic
       type: string
+      description: |-
+        * `static` - Static
+        * `dynamic` - Dynamic
     StationPodcast:
       type: object
       properties:
@@ -7719,6 +7745,14 @@ components:
         - 5
         - 6
       type: integer
+      description: |-
+        * `0` - Monday
+        * `1` - Tuesday
+        * `2` - Wednesday
+        * `3` - Thursday
+        * `4` - Friday
+        * `5` - Saturday
+        * `6` - Sunday
   securitySchemes:
     basicAuth:
       type: http
