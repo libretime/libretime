@@ -25,7 +25,7 @@ setup(
     },
     install_requires=[
         "django-filter>=2.4.0,<22.0",
-        "django>=3.2.12,<4.0",
+        "django>=3.2.12,<4.2",
         "djangorestframework>=3.12.1,<3.15",
         "drf-spectacular>=0.22.1,<0.25",
         "requests>=2.25.1,<2.29",
