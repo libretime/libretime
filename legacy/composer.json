@@ -24,7 +24,7 @@
     }
   ],
   "require": {
-    "adbario/php-dot-notation": "^2.3.0",
+    "adbario/php-dot-notation": "^3.0.0",
     "composer/semver": "^3.2",
     "james-heinrich/getid3": "^1.9",
     "league/uri": "6.4.0",
