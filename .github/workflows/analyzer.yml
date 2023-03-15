@@ -2,7 +2,7 @@ name: Analyzer
 
 on:
   push:
-    branches: [main, 3.0.x]
+    branches: [main, stable]
     paths:
       - .github/workflows/_python.yml
       - .github/workflows/analyzer.yml
@@ -10,7 +10,7 @@ on:
       - shared/**
 
   pull_request:
-    branches: [main, 3.0.x]
+    branches: [main, stable]
     paths:
       - .github/workflows/_python.yml
       - .github/workflows/analyzer.yml
