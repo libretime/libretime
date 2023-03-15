@@ -1,4 +1,5 @@
 from os import getenv
+from warnings import warn
 
 # pylint: disable=unused-import
 from ._internal import (
@@ -24,7 +25,15 @@ LIBRETIME_CONFIG_FILEPATH = getenv("LIBRETIME_CONFIG_FILEPATH")
 
 CONFIG = Config(LIBRETIME_CONFIG_FILEPATH)  # type: ignore[arg-type, misc]
 
-SECRET_KEY = CONFIG.general.api_key
+if CONFIG.general.secret_key is None:
+    warn(
+        "The [general.secret_key] configuration field is not set but will be required "
+        "in the next major release. Using [general.api_key] as fallback.",
+        FutureWarning,
+    )
+    SECRET_KEY = CONFIG.general.api_key
+else:
+    SECRET_KEY = CONFIG.general.secret_key
 
 ALLOWED_HOSTS = ["*"]
 

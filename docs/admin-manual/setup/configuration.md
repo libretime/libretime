@@ -42,6 +42,9 @@ general:
   # The internal API authentication key.
   # > this field is REQUIRED
   api_key: "some_random_generated_secret!"
+  # The Django API secret key. If not defined, the value of [general.api_key] will be
+  # used as fallback.
+  secret_key: "some_random_generated_secret!"
 
   # List of origins allowed to access resources on the server,
   # the [general.public_url] origin is automatically included.
