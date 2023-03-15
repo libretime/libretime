@@ -3,10 +3,10 @@ name: Project
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, stable]
   pull_request:
     types: [opened, reopened, synchronize, edited]
-    branches: [main]
+    branches: [main, stable]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

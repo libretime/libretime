@@ -1,7 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:base", ":enablePreCommit", ":preserveSemverRanges"],
-  "baseBranches": ["main", "3.0.x"],
   "lockFileMaintenance": {
     "enabled": true,
     "commitMessageAction": "lock file maintenance",
@@ -9,6 +8,7 @@
     "branchTopic": "lock-file-maintenance-{{packageFile}}",
     "schedule": ["after 4am and before 5am on monday"]
   },
+  "baseBranches": ["main", "stable"],
   "labels": ["dependencies"],
   "packageRules": [
     {

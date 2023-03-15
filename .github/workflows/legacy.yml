@@ -3,14 +3,14 @@ name: Legacy
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, stable]
     paths:
       - .github/workflows/legacy.yml
       - api/**
       - legacy/**
 
   pull_request:
-    branches: [main]
+    branches: [main, stable]
     paths:
       - .github/workflows/legacy.yml
       - api/**
