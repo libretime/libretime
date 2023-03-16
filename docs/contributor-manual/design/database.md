@@ -1,4 +1,8 @@
-# Database schema creation and migrations
+---
+title: Database
+---
+
+## Database schema creation and migrations
 
 The method to maintain the database schema, is to write both a migration file for already installed databases and to update a `schema.sql` file for fresh databases. On fresh installation, the database is filled with the `schema.sql` and `data.sql` files and LibreTime won't run any sql migration on top of it. Previously, when LibreTime was upgraded, the missing migrations were run using a custom php based migration tool, those migrations are now handled by Django. The missing migrations are tracked using both a `schema_version` field in the `cc_pref` table and a Django migration id.
 
