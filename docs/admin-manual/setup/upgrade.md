@@ -11,6 +11,12 @@ You should always have proper backups and a rollback scenario in place before up
 
 :::
 
+:::info
+
+You may upgrade LibreTime by migrating to a new server. This is probably the cleanest way if you are coming from [Airtime](./migrate-from-airtime.md), if you wish to upgrade the underlying system, or if you want to skip multiple upgrade procedures.
+
+:::
+
 ## Stop the services
 
 Run the following commands to stop the services:
@@ -33,6 +39,12 @@ Follow [the backup guide](../backup.md) to make an extra backup of your installa
 
 Be sure to carefully read **all** the [releases notes](../../releases/README.md), from your current version to the targeted version, to apply upgrade or breaking changes instructions to your installation.
 
+:::danger
+
+If you are migrating LibreTime to a new server, you must **not** apply the upgrade procedure.
+
+:::
+
 :::caution
 
 You might need to run steps before and after the install procedure. Be sure to follow these steps thoroughly.
@@ -42,6 +54,12 @@ You might need to run steps before and after the install procedure. Be sure to f
 ## Install the new version
 
 Follow [the install guide](./install.md#download) to download and install the new version, and re-run the `./install` script with the same arguments you used during the initial install.
+
+:::caution
+
+If you are migrating LibreTime to a new server, you must **stop before the [setup tasks](./install.md#setup)** and [restore the backups](../backup.md#restore-a-backup) on the new server.
+
+:::
 
 ## Apply migrations
 
