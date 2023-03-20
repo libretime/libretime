@@ -2,6 +2,10 @@
 title: Development environment
 ---
 
+This page describes the different way to run LibreTime in a development environment.
+
+The recommended development environment is the [docker-compose setup](#docker-compose).
+
 ## Docker-compose
 
 To setup a docker-compose development environment, run the following commands:
@@ -20,6 +24,18 @@ docker-compose run --rm api libretime-api migrate
 docker-compose up -d
 docker-compose logs -f
 ```
+
+:::info
+
+You may also use the following `make clean dev` shortcut:
+
+```bash
+make clean dev
+
+docker-compose logs -f
+```
+
+:::
 
 ## Vagrant
 
