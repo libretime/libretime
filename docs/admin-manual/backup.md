@@ -27,17 +27,17 @@ On common setups, you need to backup the entire `/etc/libretime` folder.
 
 You need to backup the PostgreSQL database, which holds the entire data of your installation.
 
-Here is an example to dump your PostgreSQL database:
+Here is an example to dump your PostgreSQL database to a plain text SQL file:
 
 ```bash
-sudo -u postgres pg_dump --file=libretime.sql libretime
+sudo -u postgres pg_dump --no-owner --no-privileges libretime > libretime.sql
 ```
 
 :::note
 
-Consider using the `--no-owner` and `--no-privileges` flags to ignore roles
+We use the `--no-owner` and `--no-privileges` flags to ignore roles
 and permissions details about the database. This can be useful when restoring
-to database or role that have different names.
+to database or role that have different names (e.g. `airtime` to `libretime`).
 
 :::
 
@@ -65,15 +65,25 @@ If you are upgrading LibreTime, edit the configuration file to match the new con
 
 ### Restore the database
 
-Restore the database by using the following command:
+Restore the database by using the one of the following command depending on the format of you backup file:
 
 ```bash
-sudo -u postgres pg_restore --dbname=libretime libretime.sql
+# With a plain text SQL file
+sudo -u libretime libretime-api dbshell < libretime.sql
+
+# With a custom pg_dump format
+sudo -u postgres pg_restore --no-owner --no-privileges --dbname=libretime libretime.dump
 ```
+
+:::info
+
+The `libretime-api dbshell` command is a shortcut to the `psql` command, and automatically passes the database access details (e.g. database name, user, password).
+
+:::
 
 :::note
 
-Consider using the `--no-owner` and `--no-privileges` flags to ignore roles
+We use the `--no-owner` and `--no-privileges` flags to ignore roles
 and permissions details about the database. This can be useful when restoring
 to database or role that have different names.
 
