@@ -20,7 +20,7 @@ class MessageHandler(ConsumerMixin):
     def __init__(
         self,
         connection: Connection,
-        fetch_queue: ThreadQueue[Dict[str, Any]],
+        fetch_queue: "ThreadQueue[Dict[str, Any]]",
     ):
         self.connection = connection
 
@@ -71,7 +71,7 @@ class MessageListener:
     def __init__(
         self,
         config: Config,
-        fetch_queue: ThreadQueue[Dict[str, Any]],
+        fetch_queue: "ThreadQueue[Dict[str, Any]]",
     ) -> None:
         self.config = config
         self.fetch_queue = fetch_queue

@@ -113,13 +113,13 @@ def cli(
     )
     wait_for_liquidsoap(liq_client)
 
-    fetch_queue: Queue[Dict[str, Any]] = Queue()
-    push_queue: Queue[Events] = Queue()
+    fetch_queue: "Queue[Dict[str, Any]]" = Queue()
+    push_queue: "Queue[Events]" = Queue()
     # This queue is shared between pypo-fetch and pypo-file, where pypo-file
     # is the consumer. Pypo-fetch will send every schedule it gets to pypo-file
     # and pypo will parse this schedule to determine which file has the highest
     # priority, and retrieve it.
-    file_queue: Queue[FileEvents] = Queue()
+    file_queue: "Queue[FileEvents]" = Queue()
 
     pypo_liquidsoap = PypoLiquidsoap(liq_client)
 

@@ -19,12 +19,12 @@ class PypoFile(Thread):
     name = "file"
     daemon = True
 
-    file_events_queue: Queue[FileEvents]
+    file_events_queue: "Queue[FileEvents]"
     file_events: FileEvents
 
     def __init__(
         self,
-        file_queue: Queue[FileEvents],
+        file_queue: "Queue[FileEvents]",
         api_client: ApiClient,
     ):
         Thread.__init__(self)

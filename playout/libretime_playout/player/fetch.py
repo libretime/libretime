@@ -43,9 +43,9 @@ class PypoFetch(Thread):
     # pylint: disable=too-many-arguments
     def __init__(
         self,
-        fetch_queue: Queue[Dict[str, Any]],
-        push_queue: Queue[Events],
-        file_queue: Queue[FileEvents],
+        fetch_queue: "Queue[Dict[str, Any]]",
+        push_queue: "Queue[Events]",
+        file_queue: "Queue[FileEvents]",
         liq_client: LiquidsoapClient,
         pypo_liquidsoap: PypoLiquidsoap,
         config: Config,

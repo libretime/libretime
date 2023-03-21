@@ -28,7 +28,7 @@ class PypoPush(Thread):
 
     def __init__(
         self,
-        push_queue: Queue[Events],
+        push_queue: "Queue[Events]",
         pypo_liquidsoap: PypoLiquidsoap,
         config: Config,
     ):
@@ -37,7 +37,7 @@ class PypoPush(Thread):
 
         self.config = config
 
-        self.future_scheduled_queue: Queue[Events] = Queue()
+        self.future_scheduled_queue: "Queue[Events]" = Queue()
         self.pypo_liquidsoap = pypo_liquidsoap
 
         self.plq = PypoLiqQueue(self.future_scheduled_queue, self.pypo_liquidsoap)
