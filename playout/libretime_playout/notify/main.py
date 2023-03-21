@@ -34,7 +34,10 @@ class App:
 
     def __init__(self, config: Config) -> None:
         self.config = config
-        self.api_client = LegacyClient()
+        self.api_client = LegacyClient(
+            base_url=config.general.public_url,
+            api_key=config.general.api_key,
+        )
 
 
 pass_app = click.make_pass_decorator(App)

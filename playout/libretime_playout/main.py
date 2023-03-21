@@ -38,8 +38,8 @@ for module in ("amqp",):
 
 
 def wait_for_legacy(legacy_client: LegacyClient) -> None:
-    while not legacy_client.is_server_compatible():
-        time.sleep(5)
+    while legacy_client.version() == -1:
+        time.sleep(2)
 
     success = False
     while not success:
@@ -104,7 +104,10 @@ def cli(
         api_key=config.general.api_key,
     )
 
-    legacy_client = LegacyClient()
+    legacy_client = LegacyClient(
+        base_url=config.general.public_url,
+        api_key=config.general.api_key,
+    )
     wait_for_legacy(legacy_client)
 
     liq_client = LiquidsoapClient(
