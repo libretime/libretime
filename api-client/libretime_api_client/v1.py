@@ -1,108 +1,150 @@
 import json
 import logging
-import urllib.parse
+from functools import wraps
+from time import sleep
 
-from libretime_shared.config import BaseConfig, GeneralConfig
+from requests.exceptions import RequestException
 
-from ._utils import RequestProvider
+from ._client import AbstractApiClient, Response
 
 logger = logging.getLogger(__name__)
 
 
-class Config(BaseConfig):
-    general: GeneralConfig
+def retry_decorator(max_retries: int = 5):
+    def retry_request(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            retries = max_retries
+            while True:
+                try:
+                    return func(*args, **kwargs)
+                except RequestException as exception:
+                    logger.warning(exception)
+
+                    retries -= 1
+                    if retries <= 0:
+                        break
+
+                    sleep(2.0)
+
+            return None
+
+        return wrapper
+
+    return retry_request
 
 
-AIRTIME_API_VERSION = "1.1"
+class BaseApiClient(AbstractApiClient):
+    def __init__(self, base_url: str, api_key: str):
+        super().__init__(base_url=base_url)
+        self.session.headers.update({"Authorization": f"Api-Key {api_key}"})
+        self.session.params.update({"format": "json"})  # type: ignore[union-attr]
 
+    def version(self, **kwargs) -> Response:
+        return self._request(
+            "GET",
+            "/api/version",
+            **kwargs,
+        )
 
-api_endpoints = {}
+    def register_component(self, component: str, **kwargs) -> Response:
+        return self._request(
+            "GET",
+            "/api/register-component",
+            params={"component": component},
+            **kwargs,
+        )
 
-# URL to get the version number of the server API
-api_endpoints["version_url"] = "version/api_key/{api_key}"
-# URL to register a components IP Address with the central web server
-api_endpoints[
-    "register_component"
-] = "register-component/format/json/api_key/{api_key}/component/{component}"
+    def notify_media_item_start_play(self, media_id, **kwargs) -> Response:
+        return self._request(
+            "GET",
+            "/api/notify-media-item-start-play",
+            params={"media_id": media_id},
+            **kwargs,
+        )
 
-# pypo
-api_endpoints[
-    "update_start_playing_url"
-] = "notify-media-item-start-play/api_key/{api_key}/media_id/{media_id}/"
-api_endpoints[
-    "update_liquidsoap_status"
-] = "update-liquidsoap-status/format/json/api_key/{api_key}/msg/{msg}/stream_id/{stream_id}/boot_time/{boot_time}"
-api_endpoints[
-    "update_source_status"
-] = "update-source-status/format/json/api_key/{api_key}/sourcename/{sourcename}/status/{status}"
-api_endpoints[
-    "check_live_stream_auth"
-] = "check-live-stream-auth/format/json/api_key/{api_key}/username/{username}/password/{password}/djtype/{djtype}"
-api_endpoints[
-    "notify_webstream_data"
-] = "notify-webstream-data/api_key/{api_key}/media_id/{media_id}/format/json"
-api_endpoints[
-    "notify_liquidsoap_started"
-] = "rabbitmq-do-push/api_key/{api_key}/format/json"
-api_endpoints["push_stream_stats"] = "push-stream-stats/api_key/{api_key}/format/json"
-api_endpoints[
-    "update_stream_setting_table"
-] = "update-stream-setting-table/api_key/{api_key}/format/json"
-api_endpoints[
-    "update_metadata_on_tunein"
-] = "update-metadata-on-tunein/api_key/{api_key}"
+    def update_liquidsoap_status(self, msg, stream_id, boot_time, **kwargs) -> Response:
+        return self._request(
+            "POST",
+            "/api/update-liquidsoap-status",
+            params={"stream_id": stream_id, "boot_time": boot_time},
+            data={"msg_post": msg},
+            **kwargs,
+        )
+
+    def update_source_status(self, sourcename, status, **kwargs) -> Response:
+        return self._request(
+            "GET",
+            "/api/update-source-status",
+            params={"sourcename": sourcename, "status": status},
+            **kwargs,
+        )
+
+    def check_live_stream_auth(self, username, password, djtype, **kwargs) -> Response:
+        return self._request(
+            "GET",
+            "/api/check-live-stream-auth",
+            params={"username": username, "password": password, "djtype": djtype},
+            **kwargs,
+        )
+
+    def notify_webstream_data(self, media_id, data, **kwargs) -> Response:
+        return self._request(
+            "POST",
+            "/api/notify-webstream-data",
+            params={"media_id": media_id},
+            data={"data": data},  # Data is already a json formatted string
+            **kwargs,
+        )
+
+    def rabbitmq_do_push(self, **kwargs) -> Response:
+        return self._request(
+            "GET",
+            "/api/rabbitmq-do-push",
+            **kwargs,
+        )
+
+    def push_stream_stats(self, data, **kwargs) -> Response:
+        return self._request(
+            "POST",
+            "/api/push-stream-stats",
+            data={"data": json.dumps(data)},
+            **kwargs,
+        )
+
+    def update_stream_setting_table(self, data, **kwargs) -> Response:
+        return self._request(
+            "POST",
+            "/api/update-stream-setting-table",
+            data={"data": json.dumps(data)},
+            **kwargs,
+        )
+
+    def update_metadata_on_tunein(self, **kwargs) -> Response:
+        return self._request(
+            "GET",
+            "/api/update-metadata-on-tunein",
+            **kwargs,
+        )
 
 
 class ApiClient:
-    API_BASE = "/api"
-    UPLOAD_RETRIES = 3
-    UPLOAD_WAIT = 60
+    def __init__(self, base_url: str, api_key: str):
+        self._base_client = BaseApiClient(base_url=base_url, api_key=api_key)
 
-    def __init__(self, config_path="/etc/libretime/config.yml"):
-        config = Config(config_path)
-        self.base_url = config.general.public_url
-        self.api_key = config.general.api_key
-
-        self.services = RequestProvider(
-            base_url=self.base_url + self.API_BASE,
-            api_key=self.api_key,
-            endpoints=api_endpoints,
-        )
-
-    def __get_api_version(self):
+    def version(self):
         try:
-            return self.services.version_url()["api_version"]
-        except Exception as exception:
-            logger.exception(exception)
+            resp = self._base_client.version()
+            payload = resp.json()
+            return payload["api_version"]
+        except RequestException:
             return -1
-
-    def is_server_compatible(self, verbose=True):
-        api_version = self.__get_api_version()
-        if api_version == -1:
-            if verbose:
-                logger.info("Unable to get Airtime API version number.\n")
-            return False
-
-        if api_version[0:3] != AIRTIME_API_VERSION[0:3]:
-            if verbose:
-                logger.info("Airtime API version found: %s", str(api_version))
-                logger.info(
-                    "pypo is only compatible with API version: %s", AIRTIME_API_VERSION
-                )
-            return False
-
-        if verbose:
-            logger.info("Airtime API version found: %s", str(api_version))
-            logger.info(
-                "pypo is only compatible with API version: %s", AIRTIME_API_VERSION
-            )
-        return True
 
     def notify_liquidsoap_started(self):
         try:
-            self.services.notify_liquidsoap_started()
-        except Exception as exception:
-            logger.exception(exception)
+            self._base_client.rabbitmq_do_push()
+        except RequestException:
+            pass
 
     def notify_media_item_start_playing(self, media_id):
         """
@@ -111,18 +153,18 @@ class ApiClient:
         which we handed to liquidsoap in get_liquidsoap_data().
         """
         try:
-            return self.services.update_start_playing_url(media_id=media_id)
-        except Exception as exception:
-            logger.exception(exception)
+            return self._base_client.notify_media_item_start_play(media_id=media_id)
+        except RequestException:
             return None
 
     def check_live_stream_auth(self, username, password, dj_type):
         try:
-            return self.services.check_live_stream_auth(
-                username=username, password=password, djtype=dj_type
+            return self._base_client.check_live_stream_auth(
+                username=username,
+                password=password,
+                djtype=dj_type,
             )
-        except Exception as exception:
-            logger.exception(exception)
+        except RequestException:
             return {}
 
     def register_component(self, component):
@@ -133,56 +175,42 @@ class ApiClient:
         to query monit via monit's http service, or download log files via a
         http server.
         """
-        return self.services.register_component(component=component)
+        return self._base_client.register_component(component=component)
 
+    @retry_decorator()
     def notify_liquidsoap_status(self, msg, stream_id, time):
-        try:
-            # encoded_msg is no longer used server_side!!
-            encoded_msg = urllib.parse.quote("dummy")
+        self._base_client.update_liquidsoap_status(
+            msg=msg,
+            stream_id=stream_id,
+            boot_time=time,
+        )
 
-            self.services.update_liquidsoap_status.req(
-                _post_data={"msg_post": msg},
-                msg=encoded_msg,
-                stream_id=stream_id,
-                boot_time=time,
-            ).retry(5)
-        except Exception as exception:
-            logger.exception(exception)
-
+    @retry_decorator()
     def notify_source_status(self, sourcename, status):
-        try:
-            return self.services.update_source_status.req(
-                sourcename=sourcename, status=status
-            ).retry(5)
-        except Exception as exception:
-            logger.exception(exception)
+        return self._base_client.update_source_status(
+            sourcename=sourcename,
+            status=status,
+        )
 
+    @retry_decorator()
     def notify_webstream_data(self, data, media_id):
         """
         Update the server with the latest metadata we've received from the
         external webstream
         """
-        logger.info(
-            self.services.notify_webstream_data.req(
-                _post_data={"data": data}, media_id=str(media_id)
-            ).retry(5)
+        return self._base_client.notify_webstream_data(
+            data=data,
+            media_id=str(media_id),
         )
 
     def push_stream_stats(self, data):
-        # TODO : users of this method should do their own error handling
-        response = self.services.push_stream_stats(
-            _post_data={"data": json.dumps(data)}
-        )
-        return response
+        return self._base_client.push_stream_stats(data=data)
 
     def update_stream_setting_table(self, data):
         try:
-            response = self.services.update_stream_setting_table(
-                _post_data={"data": json.dumps(data)}
-            )
-            return response
-        except Exception as exception:
-            logger.exception(exception)
+            return self._base_client.update_stream_setting_table(data=data)
+        except RequestException:
+            return None
 
     def update_metadata_on_tunein(self):
-        self.services.update_metadata_on_tunein()
+        self._base_client.update_metadata_on_tunein()
