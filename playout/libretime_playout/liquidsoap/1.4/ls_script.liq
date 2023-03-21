@@ -125,7 +125,7 @@ def make_input_auth_handler(input_name)
         log("user '#{user}' connected", label="#{input_name}_input")
 
         # Check auth based on return value from auth script
-        ret = test_process("python3 '#{auth_path}' '#{input_name}' '#{user}' '#{password}'")
+        ret = test_process("libretime-playout-notify live-auth '#{input_name}' '#{user}' '#{password}'")
         if ret then
             log("user '#{user}' authenticated", label="#{input_name}_input")
         else

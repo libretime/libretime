@@ -9,8 +9,6 @@ input_show_mount = {{ config.stream.inputs.show.mount | quote }}
 input_show_port = {{ config.stream.inputs.show.port }}
 
 # Settings
-auth_path = {{ paths.auth_filepath | quote }}
-
 {% if paths.log_filepath is defined -%}
 set("log.file.path", "{{ paths.log_filepath }}")
 {%- else -%}

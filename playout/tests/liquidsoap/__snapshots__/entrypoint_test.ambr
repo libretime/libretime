@@ -12,8 +12,6 @@
   input_show_port = 8002
   
   # Settings
-  auth_path = "/fake/liquidsoap_auth.py"
-  
   set("log.file.path", "/var/log/radio.log")
   
   set("server.telnet", true)
@@ -49,8 +47,6 @@
   input_show_port = 8002
   
   # Settings
-  auth_path = "/fake/liquidsoap_auth.py"
-  
   set("log.file.path", "/var/log/radio.log")
   
   set("server.telnet", true)
@@ -111,8 +107,6 @@
   input_show_port = 8002
   
   # Settings
-  auth_path = "/fake/liquidsoap_auth.py"
-  
   set("log.file.path", "/var/log/radio.log")
   
   set("server.telnet", true)
@@ -169,8 +163,6 @@
   input_show_port = 8002
   
   # Settings
-  auth_path = "/fake/liquidsoap_auth.py"
-  
   set("log.file.path", "/var/log/radio.log")
   
   set("server.telnet", true)
@@ -252,8 +244,6 @@
   input_show_port = 8002
   
   # Settings
-  auth_path = "/fake/liquidsoap_auth.py"
-  
   set("log.file.path", "/var/log/radio.log")
   
   set("server.telnet", true)
@@ -297,8 +287,6 @@
   input_show_port = 8002
   
   # Settings
-  auth_path = "/fake/liquidsoap_auth.py"
-  
   set("log.file.path", "/var/log/radio.log")
   
   set("server.telnet", true)

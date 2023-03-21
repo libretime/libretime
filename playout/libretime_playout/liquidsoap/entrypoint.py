@@ -25,7 +25,6 @@ def generate_entrypoint(
     version: Tuple[int, int, int],
 ) -> str:
     paths = {}
-    paths["auth_filepath"] = here / "liquidsoap_auth.py"
     paths["lib_filepath"] = here / f"{version[0]}.{version[1]}/ls_script.liq"
 
     if log_filepath is not None:
