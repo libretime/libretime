@@ -14,7 +14,7 @@ Main case:
 """
 import logging
 from pathlib import Path
-from typing import Optional
+from typing import Literal, Optional
 
 import click
 from libretime_api_client.v1 import ApiClient as LegacyClient
@@ -99,6 +99,39 @@ def live(app: App, name, status):
     """
     logger.info("Sending currently playing live source '%s' status '%s'", name, status)
     app.api_client.notify_source_status(name, status)
+
+
+@cli.command()
+@click.argument("input_name", type=click.Choice(["main", "show"]))
+@click.argument("username")
+@click.argument("password")
+@pass_app
+def live_auth(
+    app: App,
+    input_name: Literal["main", "show"],
+    username: str,
+    password: str,
+):
+    """
+    Check live stream user authentication.
+    """
+    input_name_map = {"main": "master", "show": "dj"}
+
+    logger.info(
+        "Checking '%s' live stream user authentication '%s'",
+        input_name,
+        username,
+    )
+    resp = app.api_client.check_live_stream_auth(
+        username,
+        password,
+        input_name_map[input_name],
+    )
+
+    payload: dict = resp.json()
+    if payload.get("msg", False) is True:
+        raise SystemExit(0)
+    raise SystemExit(1)
 
 
 @cli.command()
