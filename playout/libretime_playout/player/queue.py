@@ -18,7 +18,7 @@ class PypoLiqQueue(Thread):
 
     def __init__(
         self,
-        future_queue: Queue[Dict[str, Any]],
+        future_queue: "Queue[Dict[str, Any]]",
         pypo_liquidsoap: PypoLiquidsoap,
     ):
         Thread.__init__(self)
