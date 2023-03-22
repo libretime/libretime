@@ -452,6 +452,8 @@ if $is_first_install; then
   fi
   set_config "$(generate_random_password)" general api_key
 
+  set_config "$(generate_random_password)" general secret_key
+
   if [[ -n "$LIBRETIME_TIMEZONE" ]]; then
     set_config "$LIBRETIME_TIMEZONE"  general timezone
   fi

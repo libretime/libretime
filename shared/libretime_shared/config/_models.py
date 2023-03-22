@@ -44,6 +44,7 @@ def no_leading_slash_validator(key: str) -> "AnyClassMethod":
 class GeneralConfig(BaseModel):
     public_url: AnyHttpUrl
     api_key: str
+    secret_key: Optional[str] = None
 
     timezone: str = "UTC"
 

@@ -7,6 +7,10 @@ general:
   # The internal API authentication key.
   # > this field is REQUIRED
   api_key:
+  # The Django API secret key. If not defined, the value of [general.api_key] will be
+  # used as fallback.
+  # > this field will be REQUIRED starting with LibreTime 4.0.0
+  secret_key:
 
   # List of origins allowed to access resources on the server, the public url
   # origin is automatically included.
