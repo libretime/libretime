@@ -195,15 +195,10 @@ class PypoLiquidsoap:
         elif event.event_type == "switch_off":
             self.telnet_liquidsoap.switch_source("live_dj", "off")
 
-    def is_media_item_finished(self, media_item: Optional[AnyEvent]) -> bool:
-        if media_item is None:
-            return True
-        return datetime.utcnow() > media_item.end
-
     def find_available_queue(self) -> int:
         available_queue = None
         for queue_id, item in self.liq_queue_tracker.items():
-            if item is None or self.is_media_item_finished(item):
+            if item is None or item.ended():
                 # queue "i" is available. Push to this queue
                 available_queue = queue_id
 
@@ -252,9 +247,7 @@ class PypoLiquidsoap:
             row_id_map: Dict[int, FileEvent] = {}
             liq_queue_ids: Set[int] = set()
             for queue_item in self.liq_queue_tracker.values():
-                if queue_item is not None and not self.is_media_item_finished(
-                    queue_item
-                ):
+                if queue_item is not None and not queue_item.ended():
                     liq_queue_ids.add(queue_item.row_id)
                     row_id_map[queue_item.row_id] = queue_item
 
