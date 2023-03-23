@@ -21,3 +21,9 @@ Having trouble? We’d like to help!
 
 - [:question: Try the Forum – it’s got answers to many common questions](https://discourse.libretime.org/).
 - [:bug: Report bugs with LibreTime in our ticket tracker.](https://github.com/libretime/libretime/issues)
+
+## History
+
+LibreTime is a fork of AirTime due to stalled development of the open source version. For background on this, see this [open letter to the Airtime community](https://gist.github.com/hairmare/8c03b69c9accc90cfe31fd7e77c3b07d).
+
+Airtime itself was based on the software called Campcaster. You can find more information about the [early days of Campcaster and Airtime in the repository](https://github.com/libretime/libretime/blob/main/LEGACY.md).
