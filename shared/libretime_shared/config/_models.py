@@ -48,6 +48,8 @@ class GeneralConfig(BaseModel):
 
     timezone: str = "UTC"
 
+    allowed_cors_origins: List[AnyHttpUrl] = []
+
     # Validators
     _public_url_no_trailing_slash = no_trailing_slash_validator("public_url")
 
