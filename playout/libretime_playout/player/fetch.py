@@ -15,7 +15,6 @@ from requests import RequestException
 from ..config import CACHE_DIR, POLL_INTERVAL, Config
 from ..liquidsoap.client import LiquidsoapClient
 from ..liquidsoap.models import Info, MessageFormatKind, StreamPreferences, StreamState
-from ..timeout import ls_timeout
 from .events import Events, FileEvent, FileEvents
 from .liquidsoap import PypoLiquidsoap
 from .schedule import get_schedule, receive_schedule
@@ -157,7 +156,6 @@ class PypoFetch(Thread):
         self.pypo_liquidsoap.clear_all_queues()
         self.pypo_liquidsoap.clear_queue_tracker()
 
-    @ls_timeout
     def update_liquidsoap_stream_format(
         self,
         stream_format: Union[MessageFormatKind, int],
@@ -167,21 +165,18 @@ class PypoFetch(Thread):
         except OSError as exception:
             logger.exception(exception)
 
-    @ls_timeout
     def update_liquidsoap_message_offline(self, message_offline: str) -> None:
         try:
             self.liq_client.settings_update(message_offline=message_offline)
         except OSError as exception:
             logger.exception(exception)
 
-    @ls_timeout
     def update_liquidsoap_transition_fade(self, fade: float) -> None:
         try:
             self.liq_client.settings_update(input_fade_transition=fade)
         except OSError as exception:
             logger.exception(exception)
 
-    @ls_timeout
     def update_liquidsoap_station_name(self, station_name: str) -> None:
         try:
             self.liq_client.settings_update(station_name=station_name)

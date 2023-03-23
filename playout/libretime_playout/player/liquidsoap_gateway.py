@@ -2,7 +2,6 @@ import logging
 from typing import List, Optional
 
 from ..liquidsoap.client import LiquidsoapClient
-from ..timeout import ls_timeout
 from .events import FileEvent, WebStreamEvent
 
 logger = logging.getLogger(__name__)
@@ -49,21 +48,18 @@ class TelnetLiquidsoap:
         self.liq_client = liq_client
         self.queues = queues
 
-    @ls_timeout
     def queue_clear_all(self):
         try:
             self.liq_client.queues_remove(*self.queues)
         except OSError as exception:
             logger.exception(exception)
 
-    @ls_timeout
     def queue_remove(self, queue_id: int):
         try:
             self.liq_client.queues_remove(queue_id)
         except OSError as exception:
             logger.exception(exception)
 
-    @ls_timeout
     def queue_push(self, queue_id: int, file_event: FileEvent):
         try:
             annotation = create_liquidsoap_annotation(file_event)
@@ -71,21 +67,18 @@ class TelnetLiquidsoap:
         except OSError as exception:
             logger.exception(exception)
 
-    @ls_timeout
     def stop_web_stream_buffer(self):
         try:
             self.liq_client.web_stream_stop_buffer()
         except OSError as exception:
             logger.exception(exception)
 
-    @ls_timeout
     def stop_web_stream_output(self):
         try:
             self.liq_client.web_stream_stop()
         except OSError as exception:
             logger.exception(exception)
 
-    @ls_timeout
     def start_web_stream(self):
         try:
             self.liq_client.web_stream_start()
@@ -93,7 +86,6 @@ class TelnetLiquidsoap:
         except OSError as exception:
             logger.exception(exception)
 
-    @ls_timeout
     def start_web_stream_buffer(self, event: WebStreamEvent):
         try:
             self.liq_client.web_stream_start_buffer(event.row_id, event.uri)
@@ -101,7 +93,6 @@ class TelnetLiquidsoap:
         except OSError as exception:
             logger.exception(exception)
 
-    @ls_timeout
     def get_current_stream_id(self) -> str:
         try:
             return self.liq_client.web_stream_get_id()
@@ -109,7 +100,6 @@ class TelnetLiquidsoap:
             logger.exception(exception)
             return "-1"
 
-    @ls_timeout
     def disconnect_source(self, sourcename):
         if sourcename not in ("master_dj", "live_dj"):
             raise ValueError(f"invalid source name: {sourcename}")
@@ -120,7 +110,6 @@ class TelnetLiquidsoap:
         except OSError as exception:
             logger.exception(exception)
 
-    @ls_timeout
     def switch_source(self, sourcename, status):
         if sourcename not in ("master_dj", "live_dj", "scheduled_play"):
             raise ValueError(f"invalid source name: {sourcename}")
