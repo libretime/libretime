@@ -5,10 +5,7 @@ from unittest.mock import MagicMock, patch
 from dateutil.tz import tzutc
 
 from libretime_playout.player.events import EventKind, FileEvent
-from libretime_playout.player.liquidsoap import (
-    PypoLiquidsoap,
-    create_liquidsoap_annotation,
-)
+from libretime_playout.player.liquidsoap import Liquidsoap, create_liquidsoap_annotation
 
 
 @patch("libretime_playout.player.events.CACHE_DIR", Path("/fake"))
@@ -49,4 +46,4 @@ def test_create_liquidsoap_annotation():
 
 
 def test_liquidsoap():
-    PypoLiquidsoap(MagicMock())
+    Liquidsoap(MagicMock())

@@ -7,7 +7,7 @@ from typing import Any, Dict
 
 from ..utils import seconds_between
 from .events import AnyEvent
-from .liquidsoap import PypoLiquidsoap
+from .liquidsoap import Liquidsoap
 
 logger = logging.getLogger(__name__)
 
@@ -19,11 +19,11 @@ class PypoLiqQueue(Thread):
     def __init__(
         self,
         future_queue: "Queue[Dict[str, Any]]",
-        pypo_liquidsoap: PypoLiquidsoap,
+        liquidsoap: Liquidsoap,
     ):
         Thread.__init__(self)
         self.queue = future_queue
-        self.pypo_liquidsoap = pypo_liquidsoap
+        self.liquidsoap = liquidsoap
 
     def main(self) -> None:
         time_until_next_play = None
@@ -45,7 +45,7 @@ class PypoLiqQueue(Thread):
             except Empty:
                 # Time to push a scheduled item.
                 media_item = schedule_deque.popleft()
-                self.pypo_liquidsoap.play(media_item)
+                self.liquidsoap.play(media_item)
                 if len(schedule_deque):
                     time_until_next_play = seconds_between(
                         datetime.utcnow(),

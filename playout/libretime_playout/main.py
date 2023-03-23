@@ -27,7 +27,7 @@ from .message_handler import MessageListener
 from .player.events import Events, FileEvents
 from .player.fetch import PypoFetch
 from .player.file import PypoFile
-from .player.liquidsoap import PypoLiquidsoap
+from .player.liquidsoap import Liquidsoap
 from .player.push import PypoPush
 
 logger = logging.getLogger(__name__)
@@ -124,7 +124,7 @@ def cli(
     # priority, and retrieve it.
     file_queue: "Queue[FileEvents]" = Queue()
 
-    pypo_liquidsoap = PypoLiquidsoap(liq_client)
+    liquidsoap = Liquidsoap(liq_client)
 
     PypoFile(file_queue, api_client).start()
 
@@ -133,13 +133,13 @@ def cli(
         push_queue,
         file_queue,
         liq_client,
-        pypo_liquidsoap,
+        liquidsoap,
         config,
         api_client,
         legacy_client,
     ).start()
 
-    PypoPush(push_queue, pypo_liquidsoap, config).start()
+    PypoPush(push_queue, liquidsoap, config).start()
 
     StatsCollectorThread(config, legacy_client).start()
 

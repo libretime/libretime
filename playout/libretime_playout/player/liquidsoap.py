@@ -124,7 +124,7 @@ class TelnetLiquidsoap:
             logger.exception(exception)
 
 
-class PypoLiquidsoap:
+class Liquidsoap:
     def __init__(self, liq_client: LiquidsoapClient):
         self.liq_queue_tracker: Dict[int, Optional[FileEvent]] = {
             0: None,
