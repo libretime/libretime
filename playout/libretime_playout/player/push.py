@@ -8,7 +8,7 @@ from typing import List, Tuple
 
 from ..config import PUSH_INTERVAL, Config
 from .events import AnyEvent, Events, FileEvent
-from .liquidsoap import PypoLiquidsoap
+from .liquidsoap import Liquidsoap
 from .queue import PypoLiqQueue
 
 logger = logging.getLogger(__name__)
@@ -21,7 +21,7 @@ class PypoPush(Thread):
     def __init__(
         self,
         push_queue: "Queue[Events]",
-        pypo_liquidsoap: PypoLiquidsoap,
+        liquidsoap: Liquidsoap,
         config: Config,
     ):
         Thread.__init__(self)
@@ -30,9 +30,9 @@ class PypoPush(Thread):
         self.config = config
 
         self.future_scheduled_queue: "Queue[Events]" = Queue()
-        self.pypo_liquidsoap = pypo_liquidsoap
+        self.liquidsoap = liquidsoap
 
-        self.plq = PypoLiqQueue(self.future_scheduled_queue, self.pypo_liquidsoap)
+        self.plq = PypoLiqQueue(self.future_scheduled_queue, self.liquidsoap)
         self.plq.start()
 
     def main(self) -> None:
@@ -55,7 +55,7 @@ class PypoPush(Thread):
                 events
             )
 
-            self.pypo_liquidsoap.verify_correct_present_media(currently_playing)
+            self.liquidsoap.verify_correct_present_media(currently_playing)
             self.future_scheduled_queue.put(scheduled_for_future)
 
             if loops % heartbeat_period == 0:

@@ -16,7 +16,7 @@ from ..config import CACHE_DIR, POLL_INTERVAL, Config
 from ..liquidsoap.client import LiquidsoapClient
 from ..liquidsoap.models import Info, MessageFormatKind, StreamPreferences, StreamState
 from .events import Events, FileEvent, FileEvents
-from .liquidsoap import PypoLiquidsoap
+from .liquidsoap import Liquidsoap
 from .schedule import get_schedule, receive_schedule
 
 logger = logging.getLogger(__name__)
@@ -36,7 +36,7 @@ class PypoFetch(Thread):
         push_queue: "Queue[Events]",
         file_queue: "Queue[FileEvents]",
         liq_client: LiquidsoapClient,
-        pypo_liquidsoap: PypoLiquidsoap,
+        liquidsoap: Liquidsoap,
         config: Config,
         api_client: ApiClient,
         legacy_client: LegacyClient,
@@ -53,7 +53,7 @@ class PypoFetch(Thread):
         self.listener_timeout = POLL_INTERVAL
 
         self.liq_client = liq_client
-        self.pypo_liquidsoap = pypo_liquidsoap
+        self.liquidsoap = liquidsoap
 
         self.cache_dir = CACHE_DIR
         logger.debug("Cache dir %s", self.cache_dir)
@@ -88,12 +88,12 @@ class PypoFetch(Thread):
                 self.update_liquidsoap_transition_fade(message["transition_fade"])
             elif command == "switch_source":
                 logger.info("switch_on_source show command received...")
-                self.pypo_liquidsoap.telnet_liquidsoap.switch_source(
+                self.liquidsoap.telnet_liquidsoap.switch_source(
                     message["sourcename"], message["status"]
                 )
             elif command == "disconnect_source":
                 logger.info("disconnect_on_source show command received...")
-                self.pypo_liquidsoap.telnet_liquidsoap.disconnect_source(
+                self.liquidsoap.telnet_liquidsoap.disconnect_source(
                     message["sourcename"]
                 )
             else:
@@ -130,22 +130,22 @@ class PypoFetch(Thread):
         logger.debug("state: %s", state)
 
         try:
-            self.pypo_liquidsoap.liq_client.settings_update(
+            self.liquidsoap.liq_client.settings_update(
                 station_name=info.station_name,
                 message_format=preferences.message_format,
                 message_offline=preferences.message_offline,
                 input_fade_transition=preferences.input_fade_transition,
             )
 
-            self.pypo_liquidsoap.liq_client.source_switch_status(
+            self.liquidsoap.liq_client.source_switch_status(
                 name="master_dj",
                 streaming=state.input_main_streaming,
             )
-            self.pypo_liquidsoap.liq_client.source_switch_status(
+            self.liquidsoap.liq_client.source_switch_status(
                 name="live_dj",
                 streaming=state.input_show_streaming,
             )
-            self.pypo_liquidsoap.liq_client.source_switch_status(
+            self.liquidsoap.liq_client.source_switch_status(
                 name="scheduled_play",
                 streaming=state.schedule_streaming,
             )
@@ -153,8 +153,8 @@ class PypoFetch(Thread):
         except OSError as exception:
             logger.exception(exception)
 
-        self.pypo_liquidsoap.clear_all_queues()
-        self.pypo_liquidsoap.clear_queue_tracker()
+        self.liquidsoap.clear_all_queues()
+        self.liquidsoap.clear_queue_tracker()
 
     def update_liquidsoap_stream_format(
         self,
@@ -292,7 +292,7 @@ class PypoFetch(Thread):
         # is playing tracks. In this case let's just restart everything from scratch
         # so that we can repopulate our dictionary that keeps track of what
         # Liquidsoap is playing much more easily.
-        self.pypo_liquidsoap.clear_all_queues()
+        self.liquidsoap.clear_all_queues()
 
         self.set_bootstrap_variables()
 
