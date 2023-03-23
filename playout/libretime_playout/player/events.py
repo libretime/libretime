@@ -60,6 +60,9 @@ class BaseEvent(BaseModel):
     def end_key(self) -> str:
         return datetime_to_event_key(self.end)
 
+    def ended(self) -> bool:
+        return datetime.utcnow() > self.end
+
 
 class FileEvent(BaseEvent):
     type: Literal[EventKind.FILE]
