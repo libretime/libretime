@@ -231,81 +231,78 @@ class PypoLiquidsoap:
         },
         """
 
-        try:
-            scheduled_now_files: List[FileEvent] = [
-                x for x in scheduled_now if x.type == EventKind.FILE  # type: ignore
-            ]
+        scheduled_now_files: List[FileEvent] = [
+            x for x in scheduled_now if x.type == EventKind.FILE  # type: ignore
+        ]
 
-            scheduled_now_webstream: List[WebStreamEvent] = [
-                x  # type: ignore
-                for x in scheduled_now
-                if x.type == EventKind.WEB_STREAM_OUTPUT_START
-            ]
+        scheduled_now_webstream: List[WebStreamEvent] = [
+            x  # type: ignore
+            for x in scheduled_now
+            if x.type == EventKind.WEB_STREAM_OUTPUT_START
+        ]
 
-            schedule_ids: Set[int] = {x.row_id for x in scheduled_now_files}
+        schedule_ids: Set[int] = {x.row_id for x in scheduled_now_files}
 
-            row_id_map: Dict[int, FileEvent] = {}
-            liq_queue_ids: Set[int] = set()
-            for queue_item in self.liq_queue_tracker.values():
-                if queue_item is not None and not queue_item.ended():
-                    liq_queue_ids.add(queue_item.row_id)
-                    row_id_map[queue_item.row_id] = queue_item
+        row_id_map: Dict[int, FileEvent] = {}
+        liq_queue_ids: Set[int] = set()
+        for queue_item in self.liq_queue_tracker.values():
+            if queue_item is not None and not queue_item.ended():
+                liq_queue_ids.add(queue_item.row_id)
+                row_id_map[queue_item.row_id] = queue_item
 
-            to_be_removed: Set[int] = set()
-            to_be_added: Set[int] = set()
+        to_be_removed: Set[int] = set()
+        to_be_added: Set[int] = set()
 
-            # Iterate over the new files, and compare them to currently scheduled
-            # tracks. If already in liquidsoap queue still need to make sure they don't
-            # have different attributes. Ff replay gain changes, it shouldn't change the
-            # amplification of the currently playing song
+        # Iterate over the new files, and compare them to currently scheduled
+        # tracks. If already in liquidsoap queue still need to make sure they don't
+        # have different attributes. Ff replay gain changes, it shouldn't change the
+        # amplification of the currently playing song
+        for item in scheduled_now_files:
+            if item.row_id in row_id_map:
+                queue_item = row_id_map[item.row_id]
+
+                if not (
+                    queue_item.start == item.start
+                    and queue_item.end == item.end
+                    and queue_item.row_id == item.row_id
+                ):
+                    # need to re-add
+                    logger.info("Track %s found to have new attr.", item)
+                    to_be_removed.add(item.row_id)
+                    to_be_added.add(item.row_id)
+
+        to_be_removed.update(liq_queue_ids - schedule_ids)
+        to_be_added.update(schedule_ids - liq_queue_ids)
+
+        if to_be_removed:
+            logger.info("Need to remove items from Liquidsoap: %s", to_be_removed)
+
+            # remove files from Liquidsoap's queue
+            for queue_id, queue_item in self.liq_queue_tracker.items():
+                if queue_item is not None and queue_item.row_id in to_be_removed:
+                    self.stop(queue_id)
+
+        if to_be_added:
+            logger.info("Need to add items to Liquidsoap *now*: %s", to_be_added)
+
             for item in scheduled_now_files:
-                if item.row_id in row_id_map:
-                    queue_item = row_id_map[item.row_id]
+                if item.row_id in to_be_added:
+                    self.modify_cue_point(item)
+                    self.play(item)
 
-                    if not (
-                        queue_item.start == item.start
-                        and queue_item.end == item.end
-                        and queue_item.row_id == item.row_id
-                    ):
-                        # need to re-add
-                        logger.info("Track %s found to have new attr.", item)
-                        to_be_removed.add(item.row_id)
-                        to_be_added.add(item.row_id)
+        # handle webstreams
+        current_stream_id = self.telnet_liquidsoap.get_current_stream_id()
+        if current_stream_id is None:
+            current_stream_id = "-1"
 
-            to_be_removed.update(liq_queue_ids - schedule_ids)
-            to_be_added.update(schedule_ids - liq_queue_ids)
-
-            if to_be_removed:
-                logger.info("Need to remove items from Liquidsoap: %s", to_be_removed)
-
-                # remove files from Liquidsoap's queue
-                for queue_id, queue_item in self.liq_queue_tracker.items():
-                    if queue_item is not None and queue_item.row_id in to_be_removed:
-                        self.stop(queue_id)
-
-            if to_be_added:
-                logger.info("Need to add items to Liquidsoap *now*: %s", to_be_added)
-
-                for item in scheduled_now_files:
-                    if item.row_id in to_be_added:
-                        self.modify_cue_point(item)
-                        self.play(item)
-
-            # handle webstreams
-            current_stream_id = self.telnet_liquidsoap.get_current_stream_id()
-            if current_stream_id is None:
-                current_stream_id = "-1"
-
-            logger.debug("scheduled now webstream: %s", scheduled_now_webstream)
-            if scheduled_now_webstream:
-                if int(current_stream_id) != int(scheduled_now_webstream[0].row_id):
-                    self.play(scheduled_now_webstream[0])
-            elif current_stream_id != "-1":
-                # something is playing and it shouldn't be.
-                self.telnet_liquidsoap.stop_web_stream_buffer()
-                self.telnet_liquidsoap.stop_web_stream_output()
-        except KeyError as exception:
-            logger.exception("Malformed event in schedule: %s", exception)
+        logger.debug("scheduled now webstream: %s", scheduled_now_webstream)
+        if scheduled_now_webstream:
+            if int(current_stream_id) != int(scheduled_now_webstream[0].row_id):
+                self.play(scheduled_now_webstream[0])
+        elif current_stream_id != "-1":
+            # something is playing and it shouldn't be.
+            self.telnet_liquidsoap.stop_web_stream_buffer()
+            self.telnet_liquidsoap.stop_web_stream_output()
 
     def stop(self, queue_id: int) -> None:
         self.telnet_liquidsoap.queue_remove(queue_id)
