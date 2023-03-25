@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2023-02-27 12:16+0000\n"
-"PO-Revision-Date: 2023-03-09 20:41+0000\n"
+"PO-Revision-Date: 2023-03-26 18:38+0000\n"
 "Last-Translator: Felipe Nogueira <contato.fnog@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "libretime/legacy/pt_BR/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.16.2-dev\n"
+"X-Generator: Weblate 4.17-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -109,7 +109,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:38
 msgid "Catalan"
-msgstr ""
+msgstr "Catalão"
 
 #: application/common/LocaleHelper.php:39
 msgid "Corsican"
@@ -393,7 +393,7 @@ msgstr ""
 
 #: application/common/LocaleHelper.php:109
 msgid "Portuguese"
-msgstr ""
+msgstr "Português"
 
 #: application/common/LocaleHelper.php:110
 msgid "Quechua"
@@ -581,7 +581,7 @@ msgstr ""
 
 #: application/common/Timezone.php:21
 msgid "Use station default"
-msgstr ""
+msgstr "Usar estação padrão"
 
 #: application/common/UsabilityHints.php:65
 msgid "Upload some tracks below to add them to your library!"
@@ -680,7 +680,7 @@ msgstr ""
 
 #: application/configs/config-check.php:243
 msgid "LibreTime API service"
-msgstr ""
+msgstr "Seviço de API do LibreTime"
 
 #: application/configs/config-check.php:250
 msgid "Check that the libretime-api service is installed correctly in "
@@ -1047,11 +1047,11 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:55
 msgid "You haven't added any playlists"
-msgstr ""
+msgstr "Você não adicionou nenhuma playlist"
 
 #: application/controllers/LocaleController.php:56
 msgid "You haven't added any podcasts"
-msgstr ""
+msgstr "Você não adicionou nenhum podcast"
 
 #: application/controllers/LocaleController.php:57
 msgid "You haven't added any smart blocks"
