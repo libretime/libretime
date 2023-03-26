@@ -25,7 +25,7 @@ setup(
     },
     install_requires=[
         "django-cors-headers>=3.14.0,<3.15",
-        "django-filter>=2.4.0,<22.2",
+        "django-filter>=2.4.0,<23.2",
         "django>=4.1.4,<4.2",
         "djangorestframework>=3.12.1,<3.15",
         "drf-spectacular>=0.22.1,<0.27",
