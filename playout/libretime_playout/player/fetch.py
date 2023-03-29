@@ -151,7 +151,7 @@ class PypoFetch(Thread):
                 streaming=state.schedule_streaming,
             )
 
-        except (ConnectionError, TimeoutError) as exception:
+        except OSError as exception:
             logger.exception(exception)
 
         self.pypo_liquidsoap.clear_all_queues()
@@ -164,28 +164,28 @@ class PypoFetch(Thread):
     ) -> None:
         try:
             self.liq_client.settings_update(message_format=stream_format)
-        except (ConnectionError, TimeoutError) as exception:
+        except OSError as exception:
             logger.exception(exception)
 
     @ls_timeout
     def update_liquidsoap_message_offline(self, message_offline: str) -> None:
         try:
             self.liq_client.settings_update(message_offline=message_offline)
-        except (ConnectionError, TimeoutError) as exception:
+        except OSError as exception:
             logger.exception(exception)
 
     @ls_timeout
     def update_liquidsoap_transition_fade(self, fade: float) -> None:
         try:
             self.liq_client.settings_update(input_fade_transition=fade)
-        except (ConnectionError, TimeoutError) as exception:
+        except OSError as exception:
             logger.exception(exception)
 
     @ls_timeout
     def update_liquidsoap_station_name(self, station_name: str) -> None:
         try:
             self.liq_client.settings_update(station_name=station_name)
-        except (ConnectionError, TimeoutError) as exception:
+        except OSError as exception:
             logger.exception(exception)
 
     # Process the schedule

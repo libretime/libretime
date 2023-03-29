@@ -53,14 +53,14 @@ class TelnetLiquidsoap:
     def queue_clear_all(self):
         try:
             self.liq_client.queues_remove(*self.queues)
-        except (ConnectionError, TimeoutError) as exception:
+        except OSError as exception:
             logger.exception(exception)
 
     @ls_timeout
     def queue_remove(self, queue_id: int):
         try:
             self.liq_client.queues_remove(queue_id)
-        except (ConnectionError, TimeoutError) as exception:
+        except OSError as exception:
             logger.exception(exception)
 
     @ls_timeout
@@ -68,21 +68,21 @@ class TelnetLiquidsoap:
         try:
             annotation = create_liquidsoap_annotation(file_event)
             self.liq_client.queue_push(queue_id, annotation, file_event.show_name)
-        except (ConnectionError, TimeoutError) as exception:
+        except OSError as exception:
             logger.exception(exception)
 
     @ls_timeout
     def stop_web_stream_buffer(self):
         try:
             self.liq_client.web_stream_stop_buffer()
-        except (ConnectionError, TimeoutError) as exception:
+        except OSError as exception:
             logger.exception(exception)
 
     @ls_timeout
     def stop_web_stream_output(self):
         try:
             self.liq_client.web_stream_stop()
-        except (ConnectionError, TimeoutError) as exception:
+        except OSError as exception:
             logger.exception(exception)
 
     @ls_timeout
@@ -90,7 +90,7 @@ class TelnetLiquidsoap:
         try:
             self.liq_client.web_stream_start()
             self.current_prebuffering_stream_id = None
-        except (ConnectionError, TimeoutError) as exception:
+        except OSError as exception:
             logger.exception(exception)
 
     @ls_timeout
@@ -98,14 +98,14 @@ class TelnetLiquidsoap:
         try:
             self.liq_client.web_stream_start_buffer(event.row_id, event.uri)
             self.current_prebuffering_stream_id = event.row_id
-        except (ConnectionError, TimeoutError) as exception:
+        except OSError as exception:
             logger.exception(exception)
 
     @ls_timeout
     def get_current_stream_id(self) -> str:
         try:
             return self.liq_client.web_stream_get_id()
-        except (ConnectionError, TimeoutError) as exception:
+        except OSError as exception:
             logger.exception(exception)
             return "-1"
 
@@ -117,7 +117,7 @@ class TelnetLiquidsoap:
         try:
             logger.debug("Disconnecting source: %s", sourcename)
             self.liq_client.source_disconnect(sourcename)
-        except (ConnectionError, TimeoutError) as exception:
+        except OSError as exception:
             logger.exception(exception)
 
     @ls_timeout
@@ -128,5 +128,5 @@ class TelnetLiquidsoap:
         try:
             logger.debug('Switching source: %s to "%s" status', sourcename, status)
             self.liq_client.source_switch_status(sourcename, status == "on")
-        except (ConnectionError, TimeoutError) as exception:
+        except OSError as exception:
             logger.exception(exception)
