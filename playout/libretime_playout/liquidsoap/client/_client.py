@@ -58,7 +58,7 @@ class LiquidsoapClient:
                 version = self.version()
                 logger.info("found version %s", version)
                 return version
-            except (ConnectionError, TimeoutError) as exception:
+            except OSError as exception:
                 logger.warning("could not get version: %s", exception)
                 timeout -= 1
                 sleep(1)

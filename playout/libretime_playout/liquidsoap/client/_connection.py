@@ -53,7 +53,7 @@ class LiquidsoapConnection:
         try:
             self.connect()
             return self
-        except (ConnectionError, TimeoutError) as exception:
+        except OSError as exception:
             self._sock = None
             self._lock.release()
             raise exception
