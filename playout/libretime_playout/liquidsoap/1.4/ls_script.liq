@@ -120,6 +120,14 @@ def input_main_on_disconnect() update_source_status("master_dj", false) end
 def input_show_on_connect(header) update_source_status("live_dj", true) end
 def input_show_on_disconnect() update_source_status("live_dj", false) end
 
+def make_input_func(secure)
+    if secure then
+        input.harbor.ssl
+    else
+        input.harbor
+    end
+end
+
 def make_input_auth_handler(input_name)
     def auth_handler(user, password)
         log("user '#{user}' connected", label="#{input_name}_input")
@@ -144,9 +152,10 @@ s = switch(id="switch:blank+schedule",
     )
 
 s = if input_show_port != 0 and input_show_mount != "" then
+    input_show_func = make_input_func(input_show_secure)
     input_show_source =
         audio_to_stereo(
-            input.harbor(id="harbor:input_show",
+            input_show_func(id="harbor:input_show",
                 input_show_mount,
                 port=input_show_port,
                 auth=make_input_auth_handler("show"),
@@ -166,9 +175,10 @@ else
 end
 
 s = if input_main_port != 0 and input_main_mount != "" then
+    input_main_func = make_input_func(input_main_secure)
     input_main_source =
         audio_to_stereo(
-            input.harbor(id="harbor:input_main",
+            input_main_func(id="harbor:input_main",
                 input_main_mount,
                 port=input_main_port,
                 auth=make_input_auth_handler("main"),

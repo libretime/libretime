@@ -360,6 +360,44 @@ Check that the renewal configuration is valid:
 sudo certbot renew --dry-run
 ```
 
+### Setup the certificate for Liquidsoap
+
+To stream audio content from an external source to the LibreTime server, Liquidsoap creates input harbors (Icecast mount points) for the clients to connect to. These mount points are insecure by default, so it's recommended secure them.
+
+To enable the secure input streams, edit the [configuration file](../configuration.md) at `/etc/libretime/config.yml` with the following, be sure to replace `libretime.example.com` with the domain name of your installation:
+
+```git title="/etc/libretime/config.yml"
+ liquidsoap:
+-  harbor_ssl_certificate:
+-  harbor_ssl_private_key:
++  harbor_ssl_certificate: /etc/letsencrypt/live/libretime.example.com/fullchain.pem
++  harbor_ssl_private_key: /etc/letsencrypt/live/libretime.example.com/privkey.pem
+```
+
+```git title="/etc/libretime/config.yml"
+ stream:
+   inputs:
+     main:
+       public_url:
+       mount: main
+       port: 8001
+-      secure: false
++      secure: true
+
+     show:
+       public_url:
+       mount: show
+       port: 8002
+-      secure: false
++      secure: true
+```
+
+Restart the LibreTime to apply the changes:
+
+```bash
+sudo systemctl restart libretime.target
+```
+
 ## First login
 
 Once the setup is completed, log in the interface (with the default user `admin` and password `admin`), and edit the project settings (go to **Settings** > **General**) to match your needs.

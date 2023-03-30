@@ -133,6 +133,7 @@ class HarborInput(BaseInput):
     kind: Literal[InputKind.HARBOR] = InputKind.HARBOR
     mount: str
     port: int
+    secure: bool = False
 
     _mount_no_leading_slash = no_leading_slash_validator("mount")
 

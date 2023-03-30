@@ -32,6 +32,7 @@ services:
     volumes:
       - ./playout:/src
       - ./dev/playout:/app
+      - ./dev/certs:/certs
       ## See https://libretime.org/docs/admin-manual/tutorials/setup-a-pulseaudio-output-inside-containers/
       # - ./dev/pulse.socket:/tmp/pulse.socket
       # - ./docker/pulse.client.conf:/etc/pulse/client.conf
