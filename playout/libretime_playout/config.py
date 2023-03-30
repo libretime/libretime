@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Literal
+from typing import List, Literal, Optional
 
 from libretime_shared.config import (
     BaseConfig,
@@ -7,7 +7,7 @@ from libretime_shared.config import (
     RabbitMQConfig,
     StreamConfig,
 )
-from pydantic import BaseModel
+from pydantic import BaseModel, root_validator
 
 CACHE_DIR = Path.cwd() / "scheduler"
 RECORD_DIR = Path.cwd() / "recorder"
@@ -32,6 +32,23 @@ class LiquidsoapConfig(BaseModel):
     server_listen_port: int = 1234
 
     harbor_listen_address: List[str] = ["0.0.0.0"]
+
+    harbor_ssl_certificate: Optional[str] = None
+    harbor_ssl_private_key: Optional[str] = None
+    harbor_ssl_password: Optional[str] = None
+
+    @root_validator
+    @classmethod
+    def _validate_harbor_ssl(cls, values: dict):
+        harbor_ssl_certificate = values.get("harbor_ssl_certificate")
+        harbor_ssl_private_key = values.get("harbor_ssl_private_key")
+        if harbor_ssl_certificate is not None and harbor_ssl_private_key is None:
+            raise ValueError("missing 'harbor_ssl_private_key' value")
+
+        if harbor_ssl_certificate is None and harbor_ssl_private_key is not None:
+            raise ValueError("missing 'harbor_ssl_certificate' value")
+
+        return values
 
 
 class Config(BaseConfig):

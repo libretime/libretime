@@ -190,6 +190,11 @@ class Application_Model_StreamSetting
         return Config::get('stream.inputs.main.mount') ?? 'main';
     }
 
+    public static function getMasterLiveStreamSecure()
+    {
+        return Config::get('stream.inputs.main.secure') ?? false;
+    }
+
     public static function getDjLiveStreamPort()
     {
         return Config::get('stream.inputs.show.port') ?? 8002;
@@ -198,6 +203,11 @@ class Application_Model_StreamSetting
     public static function getDjLiveStreamMountPoint()
     {
         return Config::get('stream.inputs.show.mount') ?? 'show';
+    }
+
+    public static function getDjLiveStreamSecure()
+    {
+        return Config::get('stream.inputs.show.secure') ?? false;
     }
 
     public static function getAdminUser($stream)

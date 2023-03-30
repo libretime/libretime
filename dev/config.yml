@@ -15,7 +15,17 @@ playout:
 liquidsoap:
   server_listen_address: 0.0.0.0
 
+  harbor_ssl_certificate: /certs/fake.crt
+  harbor_ssl_private_key: /certs/fake.key
+
 stream:
+  inputs:
+    main:
+      public_url: https://localhost:8001/main
+      mount: main
+      port: 8001
+      secure: true
+
   outputs:
     .default_icecast_output: &default_icecast_output
       host: icecast

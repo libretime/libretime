@@ -210,6 +210,13 @@ liquidsoap:
   # Input harbor listen address.
   # > default is ["0.0.0.0"]
   harbor_listen_address: ["0.0.0.0"]
+
+  # Input harbor tls certificate path.
+  harbor_ssl_certificate:
+  # Input harbor tls certificate private key path.
+  harbor_ssl_private_key:
+  # Input harbor tls certificate password.
+  harbor_ssl_password:
 ```
 
 ## Stream
@@ -275,6 +282,9 @@ stream:
       # Listen port for the main harbor input.
       # > default is 8001
       port: 8001
+      # Whether the input harbor is secured with the tls certificate.
+      # > default is false
+      secure: false
 
     # Show harbor input.
     show:
@@ -287,6 +297,9 @@ stream:
       # Listen port for the show harbor input.
       # > default is 8002
       port: 8002
+      # Whether the input harbor is secured with the tls certificate.
+      # > default is false
+      secure: false
 ```
 
 ### Outputs

@@ -1090,8 +1090,11 @@ class Application_Model_Preference
         $host = Config::get('general.public_url_raw')->getHost();
         $port = Application_Model_StreamSetting::getMasterLiveStreamPort();
         $mount = Application_Model_StreamSetting::getMasterLiveStreamMountPoint();
+        $secure = Application_Model_StreamSetting::getMasterLiveStreamSecure();
 
-        return "http://{$host}:{$port}/{$mount}";
+        $scheme = $secure ? 'https' : 'http';
+
+        return "{$scheme}://{$host}:{$port}/{$mount}";
     }
 
     public static function GetLiveDJSourceConnectionURL()
@@ -1103,8 +1106,11 @@ class Application_Model_Preference
         $host = Config::get('general.public_url_raw')->getHost();
         $port = Application_Model_StreamSetting::getDjLiveStreamPort();
         $mount = Application_Model_StreamSetting::getDjLiveStreamMountPoint();
+        $secure = Application_Model_StreamSetting::getDjLiveStreamSecure();
 
-        return "http://{$host}:{$port}/{$mount}";
+        $scheme = $secure ? 'https' : 'http';
+
+        return "{$scheme}://{$host}:{$port}/{$mount}";
     }
 
     public static function SetAutoTransition($value)

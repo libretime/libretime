@@ -117,6 +117,7 @@ class Schema implements ConfigurationInterface
             /*      */->validate()->ifString()->then($trim_leading_slash)->end()
             /*  */->end()
             /*  */->integerNode('port')->defaultValue(8001)->end()
+            /*  */->booleanNode('secure')->defaultValue(False)->end()
             /**/->end()->end()
             /**/->arrayNode('show')->addDefaultsIfNotSet()->children()
             /*  */->booleanNode('enabled')->defaultTrue()->end()
@@ -126,6 +127,7 @@ class Schema implements ConfigurationInterface
             /*      */->validate()->ifString()->then($trim_leading_slash)->end()
             /*  */->end()
             /*  */->integerNode('port')->defaultValue(8002)->end()
+            /*  */->booleanNode('secure')->defaultValue(False)->end()
             /**/->end()->end()
             ->end()->end()
 

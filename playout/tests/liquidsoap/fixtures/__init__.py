@@ -3,20 +3,33 @@ from typing import List
 from libretime_playout.config import Config
 
 
-def make_config_with_stream(**kwargs) -> Config:
+def make_config(**kwargs) -> Config:
     return Config(
         **{
             "general": {
                 "public_url": "http://localhost:8080",
                 "api_key": "some_api_key",
             },
-            "stream": kwargs,
+            **kwargs,
         }
     )
 
 
+def make_config_with_stream(**kwargs) -> Config:
+    return make_config(stream=kwargs)
+
+
 TEST_STREAM_CONFIGS: List[Config] = [
-    make_config_with_stream(),
+    make_config(),
+    make_config(
+        liquidsoap={
+            "harbor_ssl_certificate": "/fake/ssl.cert",
+            "harbor_ssl_private_key": "/fake/ssl.key",
+        },
+        stream={
+            "system": [{"enabled": True, "kind": "pulseaudio"}],
+        },
+    ),
     make_config_with_stream(
         outputs={
             "icecast": [

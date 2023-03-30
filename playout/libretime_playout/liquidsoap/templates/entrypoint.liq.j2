@@ -5,8 +5,10 @@
 # Inputs
 input_main_mount = {{ config.stream.inputs.main.mount | quote }}
 input_main_port = {{ config.stream.inputs.main.port }}
+input_main_secure = {{ config.stream.inputs.main.secure | string | lower }}
 input_show_mount = {{ config.stream.inputs.show.mount | quote }}
 input_show_port = {{ config.stream.inputs.show.port }}
+input_show_secure = {{ config.stream.inputs.show.secure | string | lower }}
 
 # Settings
 {% if paths.log_filepath is defined -%}
@@ -20,6 +22,14 @@ set("server.telnet.bind_addr", {{ config.liquidsoap.server_listen_address | quot
 set("server.telnet.port", {{ config.liquidsoap.server_listen_port }})
 
 set("harbor.bind_addrs", ["{{ config.liquidsoap.harbor_listen_address | join('", "') }}"])
+
+{% if config.liquidsoap.harbor_ssl_certificate -%}
+set("harbor.ssl.certificate", "{{ config.liquidsoap.harbor_ssl_certificate }}")
+set("harbor.ssl.private_key", "{{ config.liquidsoap.harbor_ssl_private_key }}")
+{% if config.liquidsoap.harbor_ssl_password -%}
+set("harbor.ssl.password", "{{ config.liquidsoap.harbor_ssl_password }}")
+{%- endif %}
+{% endif -%}
 
 station_name = interactive.string("station_name", {{ info.station_name | quote }})
 
