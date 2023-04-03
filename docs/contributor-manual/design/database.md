@@ -1,4 +1,10 @@
-# Database schema creation and migrations
+---
+title: Database
+---
+
+LibreTime is designed to work with a [PostgreSQL](https://www.postgresql.org/) database server and uses both the [PropelORM](https://github.com/propelorm/Propel) in the legacy app and [Django ORM](https://docs.djangoproject.com/en/4.1/topics/db/models/) in the API to interact with the database.
+
+## Database schema creation and migrations
 
 The method to maintain the database schema, is to write both a migration file for already installed databases and to update a `schema.sql` file for fresh databases. On fresh installation, the database is filled with the `schema.sql` and `data.sql` files and LibreTime won't run any sql migration on top of it. Previously, when LibreTime was upgraded, the missing migrations were run using a custom php based migration tool, those migrations are now handled by Django. The missing migrations are tracked using both a `schema_version` field in the `cc_pref` table and a Django migration id.
 
@@ -49,3 +55,13 @@ stateDiagram-v2
 
     apply_django_migration --> [*]
 ```
+
+## Modifying the database schema
+
+To modify the database schema use the following steps:
+
+1. Modify `legacy/build/schema.xml`.
+2. Run `make -C legacy propel-gen` to regenerate the legacy files.
+3. Run `pre-commit run --all` and `make -C legacy format` multiple times to clean and format the previously generated files.
+4. Update the `api` models to reflect the changes made to the schema.
+5. Create a new schema migration file in the `api/legacy/migrations` directory.

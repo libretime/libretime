@@ -2,6 +2,10 @@
 title: Development environment
 ---
 
+This page describes the different way to run LibreTime in a development environment.
+
+The recommended development environment is the [docker-compose setup](#docker-compose).
+
 ## Docker-compose
 
 To setup a docker-compose development environment, run the following commands:
@@ -20,6 +24,18 @@ docker-compose run --rm api libretime-api migrate
 docker-compose up -d
 docker-compose logs -f
 ```
+
+:::info
+
+You may also use the following `make clean dev` shortcut:
+
+```bash
+make clean dev
+
+docker-compose logs -f
+```
+
+:::
 
 ## Vagrant
 
@@ -128,7 +144,7 @@ multipass shell ltTEST
 ```
 
 Multipass isn't currently able to do an automated install from the cloud-init script.
-After you enter the shell for the first time, you will still need to [run the LibreTime installer](../../admin-manual/setup/install.md).
+After you enter the shell for the first time, you will still need to [run the LibreTime installer](../admin-manual/setup/install.md).
 
 The IP address of your new VM can be found by running `multipass list`. Copy and paste it into your web browser to access the LibreTime interface and complete the setup wizard.
 
