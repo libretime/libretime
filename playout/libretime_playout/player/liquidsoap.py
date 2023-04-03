@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 def create_liquidsoap_annotation(file_event: FileEvent) -> str:
-    # We need liq_start_next value in the annotate. That is the value that controls
+    # We need liq_start_next value in the annotation. That is the value that controls
     # overlap duration of crossfade.
     annotations = {
         "media_id": file_event.id,
@@ -27,7 +27,7 @@ def create_liquidsoap_annotation(file_event: FileEvent) -> str:
         annotations["replay_gain"] = f"{file_event.replay_gain} dB"
 
     # Override the the artist/title that Liquidsoap extracts from a file's metadata with
-    # the metadata we get from Airtime. (You can modify metadata in Airtime's library,
+    # the metadata we get from LibreTime. (You can modify metadata in LibreTime's library,
     # which doesn't get saved back to the file.)
     if file_event.artist_name:
         annotations["artist"] = file_event.artist_name.replace('"', '\\"')
