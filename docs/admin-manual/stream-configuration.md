@@ -28,10 +28,18 @@ When sending metadata about your stream to an Icecast server in non-Latin alphab
 The solution is to specify that the metadata for the MP3 mount point you are using should be interpreted using UTF-8 encoding. You can do this by adding the following stanza to the `/etc/icecast2/icecast.xml` file, where `libretime.mp3` is the name of your mount point:
 
 ```xml
-<mount>
-  <mount-name>/libretime.mp3</mount-name>
-  <charset>UTF-8</charset>
-</mount>
+     <mount type="normal">
+          <mount-name>/libretime.mp3</mount-name>
+          <charset>UTF-8</charset>
+     </mount>
+```
+
+Or if you want to default to UTF-8 for all the mount points:
+
+```xml
+    <mount type="default">
+        <charset>UTF-8</charset>
+    </mount>
 ```
 
 After saving the `/etc/icecast2/icecast.xml` file, restart the Icecast server with `sudo systemctl restart icecast2`.

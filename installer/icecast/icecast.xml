@@ -142,6 +142,9 @@
         </http-headers>
     </mount>
     -->
+    <mount type="default">
+        <charset>UTF-8</charset>
+    </mount>
 
     <!-- Normal mounts -->
     <!--

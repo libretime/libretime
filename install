@@ -556,6 +556,10 @@ if $LIBRETIME_SETUP_ICECAST; then
   if $is_first_install; then
     icecast_config_filepath="/etc/icecast2/icecast.xml"
 
+    cp_if_different \
+      "${SCRIPT_DIR}/installer/icecast/icecast.xml" \
+      "$icecast_config_filepath"
+
     sed --in-place \
       -e "s|<admin-password>[^<]*</admin-password>|<admin-password>${LIBRETIME_ICECAST_ADMIN_PASSWORD}</admin-password>|" \
       -e "s|<source-password>[^<]*</source-password>|<source-password>${LIBRETIME_ICECAST_SOURCE_PASSWORD}</source-password>|" \
