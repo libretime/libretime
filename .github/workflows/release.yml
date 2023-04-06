@@ -28,4 +28,6 @@ jobs:
           body_path: docs/releases/${{ github.ref_name }}.md
           draft: true
           prerelease: true
-          files: libretime-*.tar.gz
+          files: |
+            libretime-*.tar.gz
+            sha256sums.txt
