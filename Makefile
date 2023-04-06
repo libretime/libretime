@@ -49,6 +49,7 @@ tarball: VERSION
 		libretime/SECURITY.md \
 		libretime/VERSION
 	mv ../libretime-*.tar.gz .
+	sha256sum libretime-*.tar.gz > sha256sums.txt
 
 # Only clean subdirs
 clean:
