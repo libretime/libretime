@@ -29,14 +29,25 @@ tarball: VERSION
 	cd .. && tar -czf libretime-$(shell cat VERSION | tr -d [:blank:]).tar.gz \
 		--owner=root --group=root \
 		--exclude-vcs \
-		--exclude .codespellignore \
-		--exclude .git* \
-		--exclude .pre-commit-config.yaml \
-		--exclude dev_tools \
-		--exclude jekyll.sh \
+		libretime/analyzer \
+		libretime/api \
+		libretime/api-client \
+		libretime/docs \
+		libretime/installer \
+		libretime/legacy \
 		--exclude legacy/vendor/phing \
 		--exclude legacy/vendor/simplepie/simplepie/tests \
-		libretime
+		libretime/playout \
+		libretime/shared \
+		libretime/tools \
+		libretime/worker \
+		libretime/CHANGELOG.md \
+		libretime/install \
+		libretime/LICENSE \
+		libretime/Makefile \
+		libretime/README.md \
+		libretime/SECURITY.md \
+		libretime/VERSION
 	mv ../libretime-*.tar.gz .
 
 # Only clean subdirs
