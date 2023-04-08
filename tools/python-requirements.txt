@@ -6,4 +6,4 @@ mypy==1.2.0
 pylint>=2.16.1,<2.18
 pytest-cov>=4.0.0,<4.1
 pytest-xdist>=3.1.0,<3.3
-pytest>=7.2.1,<7.3
+pytest>=7.2.1,<7.4
