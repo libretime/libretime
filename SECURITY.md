@@ -11,4 +11,4 @@ The LibreTime maintainers ask that known and suspected vulnerabilities to be pri
 
 A LibreTime maintainer will acknowledged the report within 3 working days.
 
-We aim to provide a security patch within 30 days, after this period the report will be disclosed to the public. The security patch will be distributed for the [maintained versions of LibreTime](https://libretime.org/docs/developer-manual/development/releases/#distributions-releases-support).
+We aim to provide a security patch within 30 days, after this period the report will be disclosed to the public. The security patch will be distributed for the [maintained versions of LibreTime](https://libretime.org/docs/releases/#distributions-releases-support).
