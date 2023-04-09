@@ -44,7 +44,7 @@ The [official issue tracker](https://github.com/libretime/libretime/issues) is h
 
 Are you familiar with coding in PHP or Python? Have you made projects in [Liquidsoap](https://www.liquidsoap.info/) and some of the other services we use? Help us improve LibreTime by picking an issue in the [list of bugs and feature requests](https://github.com/libretime/libretime/issues).
 
-Then [fork our repo](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) and [setup a development environment](https://libretime.org/docs/contributor-manual/development-environment.md) to get you started! Make sure to setup [pre-commit](https://libretime.org/docs/contributor-manual/development-workflows.md#pre-commit) to enforce the project best practices before committing new code.
+Then [fork our repo](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) and [setup a development environment](https://libretime.org/docs/contributor-manual/development-environment/) to get you started! Make sure to setup [pre-commit](https://libretime.org/docs/contributor-manual/development-workflows/#pre-commit) to enforce the project best practices before committing new code.
 
 Knowledge on how to use [Github](https://guides.github.com/activities/hello-world/)
 and [Git](https://git-scm.com/docs/gittutorial) will suit you well, use the
