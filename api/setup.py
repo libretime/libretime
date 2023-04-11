@@ -27,7 +27,7 @@ setup(
         "django-cors-headers>=3.14.0,<3.15",
         "django-filter>=2.4.0,<23.2",
         "django>=4.2.0,<4.3",
-        "djangorestframework>=3.12.1,<3.15",
+        "djangorestframework @ git+https://github.com/encode/django-rest-framework@38a74b42da10576857d6bf8bd82a73b15d12a7ed",
         "drf-spectacular>=0.22.1,<0.27",
         "requests>=2.25.1,<2.29",
     ],
