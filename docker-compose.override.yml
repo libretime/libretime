@@ -72,5 +72,11 @@ services:
       - ./legacy:/var/www/html
 
   icecast:
+    ports:
+      - 8000:8000
+      - 8443:8443
     environment:
       ICECAST_MAX_SOURCES: 10
+    volumes:
+      - ./dev/certs:/certs
+      - ./dev/icecast.xml:/etc/icecast.xml

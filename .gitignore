@@ -8,6 +8,7 @@
 *~
 VERSION
 
+/dev/certs/*
 /dev/playout/*
 
 /website/

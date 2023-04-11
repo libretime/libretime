@@ -10,7 +10,18 @@ setup:
 .env:
 	cp .env.dev .env
 
-dev: .env
+dev-certs:
+	rm -f dev/certs/fake.*
+	openssl req -x509 \
+		-newkey rsa:2048 \
+		-days 365 \
+		-nodes \
+		-subj "/CN=localhost" -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" \
+		-keyout dev/certs/fake.key \
+		-out dev/certs/fake.crt
+	cat dev/certs/fake.{key,crt} > dev/certs/fake.pem
+
+dev: .env dev-certs
 	DOCKER_BUILDKIT=1 docker-compose build
 	docker-compose run --rm legacy make build
 	docker-compose run --rm api libretime-api migrate

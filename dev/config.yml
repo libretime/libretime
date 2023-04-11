@@ -31,6 +31,7 @@ stream:
       - <<: *default_icecast_output
         enabled: true
         mount: main.ogg
+        public_url: https://localhost:8443/main.ogg
         audio:
           format: ogg
           bitrate: 256
@@ -38,6 +39,7 @@ stream:
       - <<: *default_icecast_output
         enabled: true
         mount: main.opus
+        public_url: https://localhost:8443/main.opus
         audio:
           format: opus
           bitrate: 256
@@ -45,6 +47,7 @@ stream:
       - <<: *default_icecast_output
         enabled: true
         mount: main.mp3
+        public_url: https://localhost:8443/main.mp3
         audio:
           format: mp3
           bitrate: 256
