@@ -229,7 +229,7 @@ diff_if_exists() {
     src_explicit_filename="$(dirname "$src")/$(basename "$dest").new"
     cp "$src" "$src_explicit_filename"
     # print what the existing file $dest would become if $src is copied
-    diff -u --color=always "$dest" "$src_explicit_filename" || :
+    diff -u --color=always --ignore-trailing-space "$dest" "$src_explicit_filename" || :
     rm -f "$src_explicit_filename"
   fi
 }
