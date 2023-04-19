@@ -31,7 +31,7 @@ setup(
             "types-requests>=2.25.1,<2.29",
         ],
         "sentry": [
-            "sentry-sdk>=1.15.0,<1.20",
+            "sentry-sdk>=1.15.0,<1.21",
         ],
     },
     zip_safe=False,
