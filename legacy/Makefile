@@ -12,8 +12,16 @@ locale-update:
 locale-build:
 	$(MAKE) -C locale clean build
 
+export COMPOSER_ALLOW_SUPERUSER = true
+COMPOSER_INSTALL = composer install \
+	--no-interaction \
+	--no-progress \
+	--no-plugins \
+	--no-scripts \
+	--optimize-autoloader
+
 vendor:
-	composer install --no-progress --no-interaction $(COMPOSER_ARGS)
+	$(COMPOSER_INSTALL)
 
 .PHONY: test
 test: vendor
@@ -28,8 +36,8 @@ lint: tools
 	$(TOOLS)/bin/php-cs-fixer fix --verbose --dry-run --diff
 
 .PHONY: build
-build:
-	COMPOSER_ARGS="--no-dev --ignore-platform-reqs" $(MAKE)
+build: locale-build
+	$(COMPOSER_INSTALL) --no-dev --ignore-platform-reqs
 
 propel-gen: vendor
 	cd build && \
