@@ -53,7 +53,7 @@ The path to your storage is defined in the [configuration](./configuration.md) f
 
 ### Install or cleanup
 
-If you are restoring a backup on a fresh system, we recommend that you first [install LibreTime](./setup/install.md), and **stop before the [setup tasks](./setup/install.md#setup)**.
+If you are restoring a backup on a fresh system, we recommend that you first [install LibreTime](./install/README.md), and **stop before the [setup tasks](./install/README.md#setup)**.
 
 If you are restoring a backup on an existing system, make sure to clean the old **database** and **files storage**.
 
@@ -89,7 +89,7 @@ to database or role that have different names.
 
 :::
 
-If you are upgrading LibreTime, make sure to apply the [database migration](./setup/upgrade.md#apply-migrations).
+If you are upgrading LibreTime, make sure to apply the [database migration](./install/upgrade.md#apply-migrations).
 
 ### Restore the storage
 
