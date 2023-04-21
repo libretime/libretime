@@ -24,7 +24,7 @@ Before following any steps, be sure that your system is up-to-date.
 - [:rocket: Install LibreTime](./setup/install.md)
 - [:arrow_up: Upgrade from a previous install](./setup/upgrade.md)
 - [:airplane_arriving: Migrate from Airtime](./setup/migrate-from-airtime.md)
-- [:gear: Configure your installation](./setup/configuration.md)
+- [:gear: Configure your installation](./configuration.md)
 - [:lock: Put your installation behind a reverse proxy](./setup/reverse-proxy.md)
 
 ## Advanced

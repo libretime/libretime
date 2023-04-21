@@ -1,6 +1,6 @@
 ---
 title: Configuration
-sidebar_position: 20
+sidebar_position: 5
 ---
 
 To configure LibreTime, you need to edit the `/etc/libretime/config.yml` file. This page describe the available options to configure your installation.
@@ -455,7 +455,7 @@ stream:
 
 ## LDAP
 
-The `ldap` section provide additional configuration for the authentication mechanism defined in `general.auth`, please see the [custom authentication documentation](../custom-authentication.md) for more details.
+The `ldap` section provide additional configuration for the authentication mechanism defined in `general.auth`, please see the [custom authentication documentation](./custom-authentication.md) for more details.
 
 ```yml
 ldap:

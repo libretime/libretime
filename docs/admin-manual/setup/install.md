@@ -198,7 +198,7 @@ sudo adduser libretime audio
 
 ### Setup
 
-Once the installation is completed, edit the [configuration file](./configuration.md) at `/etc/libretime/config.yml` to fill required information and to match your needs.
+Once the installation is completed, edit the [configuration file](../configuration.md) at `/etc/libretime/config.yml` to fill required information and to match your needs.
 
 Next, run the following commands to setup the database:
 
@@ -265,7 +265,7 @@ You can find more details in the `docker-compose.yml` file or on the external se
 
 :::
 
-Next, edit the [configuration file](./configuration.md) at `./config.yml` to set the previously generated passwords, fill required information, and to match your needs.
+Next, edit the [configuration file](../configuration.md) at `./config.yml` to set the previously generated passwords, fill required information, and to match your needs.
 
 :::info
 
