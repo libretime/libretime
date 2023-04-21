@@ -12,21 +12,21 @@ This guide walk you though the steps required to install LibreTime on your syste
 
 The installer is shipped in the released tarballs or directly in the project repository.
 
-We recommend installing on one of the following [distribution releases](../../releases/README.md#distributions-releases-support):
+Installing on one of the following [distribution releases](../../releases/README.md#distributions-releases-support) is recommend:
 
 - [Debian 11](https://www.debian.org/releases/)
 - [Ubuntu 20.04 LTS](https://wiki.ubuntu.com/Releases)
 
 ## Before installing
 
-Before installing LibreTime, you need to make sure you operating system is **up to date** and properly configured.
+Before installing LibreTime, you need to make sure you operating system is **up to date** and configured.
 
 ### Operating system time configuration
 
 Check your operating system time configuration using the following command:
 
 ```bash
-timedatectl
+sudo timedatectl
 ```
 
 ```
@@ -39,9 +39,23 @@ System clock synchronized: yes
           RTC in local TZ: no
 ```
 
-Make sure that your time zone is properly configured, if not you can set it using the [`timedatectl set-timezone` command](https://www.freedesktop.org/software/systemd/man/timedatectl.html#set-timezone%20%5BTIMEZONE%5D).
+Make sure that your time zone is configured, if not you can set it using the [`timedatectl set-timezone` command](https://www.freedesktop.org/software/systemd/man/timedatectl.html#set-timezone%20%5BTIMEZONE%5D). The following command configure the timezone to `Europe/Paris`, make sure to set your own timezone:
 
-If the NTP service is inactive, you should consider enabling it using the [`timedatectl set-ntp` command](https://www.freedesktop.org/software/systemd/man/timedatectl.html#set-ntp%20%5BBOOL%5D).
+```bash
+sudo timedatectl set-timezone Europe/Paris
+```
+
+If the NTP service is inactive, you should consider enabling it using the [`timedatectl set-ntp` command](https://www.freedesktop.org/software/systemd/man/timedatectl.html#set-ntp%20%5BBOOL%5D). The following command enables the `NTP service`:
+
+```bash
+sudo timedatectl set-ntp true
+```
+
+Finally, check that everything was applied by running `timedatectl`:
+
+```bash
+sudo timedatectl
+```
 
 ## Download
 
@@ -103,11 +117,10 @@ git checkout {vars.version}
 
 ## Run the installer
 
-Install LibreTime with the recommended options, be sure to replace `PUBLIC_URL` with the public url of your installation,
-for example `https://libretime.example.com` or `http://192.168.10.100:80`:
+Install LibreTime with the recommended options, be sure to replace `https://libretime.example.com` with the public url of your installation:
 
 ```bash
-sudo ./install PUBLIC_URL
+sudo ./install https://libretime.example.com
 ```
 
 :::caution
@@ -148,13 +161,13 @@ LIBRETIME_PUBLIC_URL='https://libretime.example.com'
 
 :::note
 
-The install script will use randomly generated passwords to create the PostgreSQL user, RabbitMQ user and to update the default Icecast passwords. Those passwords will be saved to the configuration files.
+The install script will use generated passwords to create the PostgreSQL user, RabbitMQ user and to update the default Icecast passwords. Those passwords will be saved to the configuration files.
 
 :::
 
 Feel free to run `./install --help` to get more details.
 
-### Using hardware audio output
+### Using the system audio output
 
 If you plan to output analog audio directly to a mixing console or transmitter, the user running LibreTime needs to be added to the `audio` user group using the command below:
 
@@ -166,13 +179,23 @@ sudo adduser libretime audio
 
 Once the installation is completed, edit the [configuration file](../configuration.md) at `/etc/libretime/config.yml` to fill required information and to match your needs.
 
+You may have to configure your timezone to match the one configured earlier:
+
+```git title="/etc/libretime/config.yml"
+   # The server timezone, should be a lookup key in the IANA time zone database,
+   # for example Europe/Berlin.
+   # > default is UTC
+-  timezone: UTC
++  timezone: Europe/Paris
+```
+
 Next, run the following commands to setup the database:
 
 ```bash
 sudo -u libretime libretime-api migrate
 ```
 
-Finally, start the services, and check that they're running properly using the following commands:
+Finally, start the services, and check that they're running using the following commands:
 
 ```bash
 sudo systemctl start libretime.target
@@ -187,3 +210,9 @@ Once LibreTime is running, it's recommended to [install a reverse proxy](./rever
 ## First login
 
 Once the setup is completed, log in the interface (with the default user `admin` and password `admin`), and edit the project settings (go to **Settings** > **General**) to match your needs.
+
+:::warning
+
+Remember to change your password.
+
+:::

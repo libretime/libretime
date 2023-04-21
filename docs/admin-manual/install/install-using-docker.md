@@ -109,7 +109,7 @@ Next, run the following commands to setup the database:
 docker-compose run --rm api libretime-api migrate
 ```
 
-Finally, start the services, and check that they're running properly using the following commands:
+Finally, start the services, and check that they're running using the following commands:
 
 ```bash
 docker-compose up -d
@@ -125,3 +125,9 @@ Once LibreTime is running, it's recommended to [install a reverse proxy](./rever
 ## First login
 
 Once the setup is completed, log in the interface (with the default user `admin` and password `admin`), and edit the project settings (go to **Settings** > **General**) to match your needs.
+
+:::warning
+
+Remember to change your password.
+
+:::
