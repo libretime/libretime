@@ -37,10 +37,23 @@ set_docker_config() {
   set_config "icecast" stream outputs .default_icecast_output host
 }
 
+set_docker_config_template_vars() {
+  set_config "\${POSTGRES_PASSWORD}" database password
+  set_config "\${RABBITMQ_DEFAULT_PASS}" rabbitmq password
+  set_config "\${ICECAST_SOURCE_PASSWORD}" stream outputs .default_icecast_output source_password
+  set_config "\${ICECAST_ADMIN_PASSWORD}" stream outputs .default_icecast_output admin_password
+}
+
 CONFIG_FILEPATH="docker/config.yml"
 cp "$CONFIG_ORIG_FILEPATH" "$CONFIG_FILEPATH"
 
 set_docker_config
+
+CONFIG_FILEPATH="docker/config.template.yml"
+cp "$CONFIG_ORIG_FILEPATH" "$CONFIG_FILEPATH"
+
+set_docker_config
+set_docker_config_template_vars
 
 CONFIG_FILEPATH="docker/example/config.yml"
 cp "$CONFIG_ORIG_FILEPATH" "$CONFIG_FILEPATH"

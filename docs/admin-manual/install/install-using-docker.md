@@ -30,8 +30,33 @@ source .env
 
 wget "https://raw.githubusercontent.com/libretime/libretime/$LIBRETIME_VERSION/docker-compose.yml"
 wget "https://raw.githubusercontent.com/libretime/libretime/$LIBRETIME_VERSION/docker/nginx.conf"
-wget "https://raw.githubusercontent.com/libretime/libretime/$LIBRETIME_VERSION/docker/config.yml"
+wget "https://raw.githubusercontent.com/libretime/libretime/$LIBRETIME_VERSION/docker/config.template.yml"
 ```
+
+:::info
+
+The `config.template.yml` configuration file you downloaded already contains specific values required by the container setup, you shouldn't change them:
+
+```yaml
+database:
+  host: "postgres"
+  password: ${POSTGRES_PASSWORD} # The value will be substituted
+rabbitmq:
+  host: "rabbitmq"
+  password: ${RABBITMQ_DEFAULT_PASS} # The value will be substituted
+playout:
+  liquidsoap_host: "liquidsoap"
+liquidsoap:
+  server_listen_address: "0.0.0.0"
+stream:
+  outputs:
+    .default_icecast_output:
+      host: "icecast"
+      source_password: ${ICECAST_SOURCE_PASSWORD} # The value will be substituted
+      admin_password: ${ICECAST_ADMIN_PASSWORD} # The value will be substituted
+```
+
+:::
 
 ## Setup LibreTime
 
@@ -48,8 +73,25 @@ RABBITMQ_DEFAULT_PASS=$(openssl rand -hex 16)
 ICECAST_SOURCE_PASSWORD=$(openssl rand -hex 16)
 ICECAST_ADMIN_PASSWORD=$(openssl rand -hex 16)
 ICECAST_RELAY_PASSWORD=$(openssl rand -hex 16)" >> .env
-cat .env
 ```
+
+Generate a [configuration file](../configuration.md) from the `./config.template.yml` template with the previously generated passwords:
+
+```bash
+bash -a -c "source .env; envsubst < config.template.yml > config.yml"
+```
+
+:::note
+
+On Debian based systems, if the `envsubst` command isn't found you can install it with:
+
+```bash
+sudo apt install gettext-base
+```
+
+:::
+
+Next, edit the [configuration file](../configuration.md) at `./config.yml` to fill required information and to match your needs.
 
 :::info
 
@@ -58,29 +100,6 @@ You can find more details in the `docker-compose.yml` file or on the external se
 - [Postgres](https://hub.docker.com/_/postgres)
 - [RabbitMQ](https://hub.docker.com/_/rabbitmq)
 - [Icecast](https://github.com/libretime/icecast-docker#readme)
-
-:::
-
-Next, edit the [configuration file](../configuration.md) at `./config.yml` to set the previously generated passwords, fill required information, and to match your needs.
-
-:::info
-
-The `docker/config.yml` configuration file you previously downloaded already contains specific values required by the container setup, you shouldn't change them:
-
-```yaml
-database:
-  host: "postgres"
-rabbitmq:
-  host: "rabbitmq"
-playout:
-  liquidsoap_host: "liquidsoap"
-liquidsoap:
-  server_listen_address: "0.0.0.0"
-stream:
-  outputs:
-    .default_icecast_output:
-      host: "icecast"
-```
 
 :::
 
