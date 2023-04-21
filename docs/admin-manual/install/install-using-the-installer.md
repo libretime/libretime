@@ -205,7 +205,160 @@ sudo systemctl --all --plain | grep libretime
 
 ## Securing LibreTime
 
-Once LibreTime is running, it's recommended to [install a reverse proxy](./reverse-proxy.md) to setup SSL termination and secure your installation.
+### Install Certbot
+
+The first step to using Let’s Encrypt to obtain an SSL certificate is to install the Certbot software on your server:
+
+```bash
+sudo apt install certbot python3-certbot-nginx
+```
+
+Let’s Encrypt’s certificates are only valid for ninety days. The certbot package takes care of this for you by adding a systemd timer that will run twice a day and automatically renew any certificate that’s within thirty days of expiration.
+
+You can query the status of the timer using:
+
+```bash
+sudo systemctl status certbot.timer
+```
+
+### Prepare Nginx to obtain a certificate
+
+Next, edit the LibreTime Nginx configuration to add the `server_name` configuration, be sure to replace `libretime.example.com` with the domain name of your installation:
+
+```git title="/etc/nginx/sites-available/libretime.conf"
+ server {
+   listen 80;
+   listen [::]:80;
++
++  server_name libretime.example.com;
+
+   access_log /var/log/nginx/libretime.access.log;
+   error_log /var/log/nginx/libretime.error.log;
+```
+
+Then, check that the nginx config is valid and reload nginx:
+
+```bash
+sudo nginx -t
+
+sudo systemctl reload nginx
+```
+
+#### Obtain a certificate
+
+Certbot provides a variety of ways to obtain SSL certificates through plugins. The Nginx plugin will take care of reconfiguring Nginx and reloading the config whenever necessary.
+
+To request a Let’s Encrypt certificate using Certbot with the Nginx plugin, be sure to replace `libretime.example.com` with the domain name of your installation and run the following:
+
+```bash
+sudo certbot --nginx -d libretime.example.com
+```
+
+### Setup the certificate for Icecast
+
+By default, browsers will [prevent loading mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) on secure pages, so you won't be able to listen the insecure Icecast streams on a secure website. To fix that you need to secure the Icecast streams.
+
+Create a Icecast specific SSL certificate bundle:
+
+```bash
+sudo install \
+  --group=icecast \
+  --mode=640 \
+  <(cat /etc/letsencrypt/live/libretime.example.com/{fullchain,privkey}.pem) \
+  /etc/icecast2/bundle.pem
+```
+
+Enable the secure socket and set the SSL certificate bundle path in the Icecast configuration file:
+
+```git title="/etc/icecast2/icecast.xml"
+     <!-- You may have multiple <listen-socket> elements -->
+     <listen-socket>
+         <port>8000</port>
+         <!-- <bind-address>127.0.0.1</bind-address> -->
+         <!-- <shoutcast-mount>/stream</shoutcast-mount> -->
+     </listen-socket>
+     <!--
+     <listen-socket>
+         <port>8080</port>
+     </listen-socket>
+     -->
+-    <!--
+     <listen-socket>
+         <port>8443</port>
+         <ssl>1</ssl>
+     </listen-socket>
+-    -->
+```
+
+```git title="/etc/icecast2/icecast.xml"
+         <!-- Aliases: can also be used for simple redirections as well,
+              this example will redirect all requests for http://server:port/ to
+              the status page
+         -->
+         <alias source="/" destination="/status.xsl"/>
+         <!-- The certificate file needs to contain both public and private part.
+              Both should be PEM encoded.
+         <ssl-certificate>/usr/share/icecast2/icecast.pem</ssl-certificate>
+         -->
++        <ssl-certificate>/etc/icecast2/bundle.pem</ssl-certificate>
+     </paths>
+```
+
+Restart Icecast to apply the changes:
+
+```bash
+sudo systemctl restart icecast2
+```
+
+Next, you need to change the LibreTime `stream.outputs.icecast.*.public_url` configuration to use the newly enabled Icecast secure port:
+
+```git title="/etc/libretime/config.yml"
+     # Icecast output streams.
+     # > max items is 3
+     icecast:
+       - <<: *default_icecast_output
+         enabled: true
+-        public_url:
++        public_url: https://libretime.example.com:8443/main.ogg
+         mount: main.ogg
+         audio:
+           format: ogg
+           bitrate: 256
+
+       - <<: *default_icecast_output
+         enabled: true
+-        public_url:
++        public_url: https://libretime.example.com:8443/main.mp3
+         mount: main.mp3
+         audio:
+           format: mp3
+           bitrate: 320
+```
+
+Restart the LibreTime to apply the changes:
+
+```bash
+sudo systemctl restart libretime.target
+```
+
+Finally, you need to configure the Certbot renewal to bundle a Icecast specific SSL certificate and restart the Icecast service:
+
+```git title="/etc/letsencrypt/renewal/libretime.example.com.conf"
+ # Options used in the renewal process
+ [renewalparams]
+ account = d76ce6a241c7c74f79e5443216ee420e
+ authenticator = nginx
+ installer = nginx
+ server = https://acme-v02.api.letsencrypt.org/directory
++
++deploy_hook = 'bash -c "install --group=icecast --mode=640 <(cat $RENEWED_LINEAGE/{fullchain,privkey}.pem) /etc/icecast2/bundle.pem && systemctl restart icecast2"'
+```
+
+Check that the renewal configuration is valid:
+
+```bash
+sudo certbot renew --dry-run
+```
 
 ## First login
 
