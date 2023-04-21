@@ -145,7 +145,7 @@ multipass shell ltTEST
 ```
 
 Multipass isn't currently able to do an automated install from the cloud-init script.
-After you enter the shell for the first time, you will still need to [run the LibreTime installer](../admin-manual/setup/install.md).
+After you enter the shell for the first time, you will still need to [run the LibreTime installer](../admin-manual/install/README.md).
 
 The IP address of your new VM can be found by running `multipass list`. Copy and paste it into your web browser to access the LibreTime interface and complete the setup wizard.
 

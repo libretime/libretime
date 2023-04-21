@@ -53,11 +53,11 @@ You might need to run steps before and after the install procedure. Be sure to f
 
 ## Install the new version
 
-Follow [the install guide](./install.md#download) to download and install the new version, and re-run the `./install` script with the same arguments you used during the initial install.
+Follow [the install guide](./README.md#download) to download and install the new version, and re-run the `./install` script with the same arguments you used during the initial install.
 
 :::caution
 
-If you are migrating LibreTime to a new server, you must **stop before the [setup tasks](./install.md#setup)** and [restore the backups](../backup.md#restore-a-backup) on the new server.
+If you are migrating LibreTime to a new server, you must **stop before the [setup tasks](./README.md#setup)** and [restore the backups](../backup.md#restore-a-backup) on the new server.
 
 :::
 

@@ -1,6 +1,6 @@
 ---
 title: Install
-sidebar_position: 10
+sidebar_position: 00
 ---
 
 import Tabs from '@theme/Tabs';

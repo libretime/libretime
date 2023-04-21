@@ -6,7 +6,7 @@ This tutorials walks you though the steps required to setup a PulseAudio output 
 
 :::info
 
-We assume you already [installed LibreTime using docker-compose](../setup/install.md#using-docker-compose).
+We assume you already [installed LibreTime using docker-compose](../install/README.md#using-docker-compose).
 
 :::
 

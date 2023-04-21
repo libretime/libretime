@@ -39,7 +39,7 @@ The path to your storage was defined during the installation process, the defaul
 
 ## Install
 
-Install LibreTime on a new system by [running the installer](./install.md#run-the-installer), and **don't run the setup tasks**.
+Install LibreTime on a new system by [running the installer](./README.md#run-the-installer), and **don't run the setup tasks**.
 
 ## Restore the backup
 
