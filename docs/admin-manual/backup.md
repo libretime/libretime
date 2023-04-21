@@ -47,7 +47,7 @@ Please read the `pg_dump` usage for additional details.
 
 You need to backup the entire file storage, which holds all the files of your installation.
 
-The path to your storage is defined in the [configuration](./setup/configuration.md) file.
+The path to your storage is defined in the [configuration](./configuration.md) file.
 
 ## Restore a backup
 
@@ -59,9 +59,9 @@ If you are restoring a backup on an existing system, make sure to clean the old 
 
 ### Restore the configuration
 
-Copy the backed configuration files back to the [configuration](./setup/configuration.md) folder.
+Copy the backed configuration files back to the [configuration](./configuration.md) folder.
 
-If you are upgrading LibreTime, edit the configuration file to match the new configuration schema and update any changed values. See the [configuration](./setup/configuration.md) documentation for more details.
+If you are upgrading LibreTime, edit the configuration file to match the new configuration schema and update any changed values. See the [configuration](./configuration.md) documentation for more details.
 
 ### Restore the database
 
@@ -95,4 +95,4 @@ If you are upgrading LibreTime, make sure to apply the [database migration](./se
 
 Copy the entire backed file storage back to the storage path.
 
-The path to your storage is defined in the [configuration](./setup/configuration.md) file.
+The path to your storage is defined in the [configuration](./configuration.md) file.
