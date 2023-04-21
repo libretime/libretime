@@ -258,7 +258,7 @@ sudo certbot --nginx -d libretime.example.com
 
 By default, browsers will [prevent loading mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) on secure pages, so you won't be able to listen the insecure Icecast streams on a secure website. To fix that you need to secure the Icecast streams.
 
-Create a Icecast specific SSL certificate bundle:
+Create a Icecast specific SSL certificate bundle, be sure to replace `libretime.example.com` with the domain name of your installation:
 
 ```bash
 sudo install \
