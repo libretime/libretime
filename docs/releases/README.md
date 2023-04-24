@@ -29,3 +29,4 @@ New releases target the current stable distributions release, and development sh
 | End of life  |   2023-04    |  2024-06   |   2025-04    |   2026-06   |
 | Versions     |              |            |              |             |
 | 3.0.x        |  deprecated  | deprecated | recommended  | recommended |
+| 3.1.x        |              |            | recommended  | recommended |
