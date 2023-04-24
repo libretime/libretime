@@ -1107,6 +1107,18 @@ var AIRTIME = (function (AIRTIME) {
               });
             })
             .html(type_button);
+        } else {
+          // Not on dashboard (show builder)
+          if (
+            aData.track_type_id == null ||
+            aData.track_type_id == undefined ||
+            aData.track_type_id == 0
+          ) {
+            var track_type_code = "";
+          } else {
+            var track_type_code = TRACKTYPES[aData.track_type_id].code;
+          }
+          $(nRow).find("td.library_track_type").html(track_type_code);
         }
 
         // add audio preview image/button
