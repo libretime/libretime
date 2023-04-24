@@ -177,12 +177,10 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Variables
-PYTHON="python3"
-PIP="$PYTHON -m pip"
-
 DEFAULT_WEB_USER="www-data"
 
 # Paths
+VENV_DIR="/opt/libretime"
 CONFIG_DIR="/etc/libretime"
 CONFIG_FILEPATH="$CONFIG_DIR/config.yml"
 CONFIG_TMP_FILEPATH="$CONFIG_DIR/config.yml.tmp"
@@ -276,10 +274,12 @@ set_config() {
 # install_python_app <path>
 install_python_app()  {
   info "installing python app from $1"
-  $PIP install \
-    --upgrade \
-    --upgrade-strategy only-if-needed \
-    "$1"
+  $VENV_DIR/bin/pip install --upgrade "$1"
+}
+
+# link_python_app <name>
+link_python_app() {
+  ln -s -f "$VENV_DIR/bin/$1" "/usr/local/bin/$1"
 }
 
 # install_service <name> <filepath>
@@ -305,6 +305,7 @@ install_service() {
       -e "s|^User=.*|User=${LIBRETIME_USER}|" \
       -e "s|^Group=.*|Group=${LIBRETIME_USER}|" \
       -e "s|@@DEFAULT_WEB_USER@@|${DEFAULT_WEB_USER}|g" \
+      -e "s|@@VENV_DIR@@|${VENV_DIR}|g" \
       -e "s|@@CONFIG_DIR@@|${CONFIG_DIR}|g" \
       -e "s|@@CONFIG_FILEPATH@@|${CONFIG_FILEPATH}|g" \
       -e "s|@@LOG_DIR@@|${LOG_DIR}|g" \
@@ -577,10 +578,13 @@ fi
 ########################################################################################
 
 section "Python3"
-install_packages python3 python3-pip python3-wheel
+install_packages python3 python3-pip python3-wheel python3-venv
+
+info "creating python3 venv"
+python3 -m venv "$VENV_DIR"
 
 info "upgrading python3 tools"
-$PIP install --upgrade setuptools~=67.3
+$VENV_DIR/bin/pip install --upgrade pip setuptools wheel
 
 # Install Shared and API client
 ########################################################################################
@@ -604,6 +608,7 @@ section "API"
 install_packages $(list_packages "$SCRIPT_DIR/api")
 
 install_python_app "$SCRIPT_DIR/api[prod]"
+link_python_app libretime-api
 
 install_service "libretime-api.service" "$SCRIPT_DIR/api/install/systemd/libretime-api.service"
 install_service "libretime-api.socket" "$SCRIPT_DIR/api/install/systemd/libretime-api.socket"
@@ -617,6 +622,9 @@ section "Playout"
 install_packages $(list_packages "$SCRIPT_DIR/playout")
 
 install_python_app "$SCRIPT_DIR/playout"
+link_python_app libretime-liquidsoap
+link_python_app libretime-playout
+link_python_app libretime-playout-notify
 
 info "creating libretime-playout working directory"
 mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR/playout"
@@ -641,6 +649,7 @@ section "Analyzer"
 install_packages $(list_packages "$SCRIPT_DIR/analyzer")
 
 install_python_app "$SCRIPT_DIR/analyzer"
+link_python_app libretime-analyzer
 
 info "creating libretime-analyzer working directory"
 mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR/analyzer"
