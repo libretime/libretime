@@ -19,17 +19,21 @@ class TestIsSystemTokenOrUser(APITestCase):
 
     def test_token_incorrect(self):
         token = "doesnotexist"
-        request = APIRequestFactory().get(self.path)
+        request = APIRequestFactory().get(
+            self.path,
+            headers={"Authorization": f"Api-Key {token}"},
+        )
         request.user = AnonymousUser()
-        request.META["Authorization"] = f"Api-Key {token}"
         allowed = IsSystemTokenOrUser().has_permission(request, None)
         self.assertFalse(allowed)
 
     def test_token_correct(self):
         token = settings.CONFIG.general.api_key
-        request = APIRequestFactory().get(self.path)
+        request = APIRequestFactory().get(
+            self.path,
+            headers={"Authorization": f"Api-Key {token}"},
+        )
         request.user = AnonymousUser()
-        request.META["Authorization"] = f"Api-Key {token}"
         allowed = IsSystemTokenOrUser().has_permission(request, None)
         self.assertTrue(allowed)
 
