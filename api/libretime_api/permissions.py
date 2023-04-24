@@ -2,6 +2,7 @@ from secrets import compare_digest
 
 from django.conf import settings
 from rest_framework.permissions import BasePermission
+from rest_framework.request import Request
 
 from .core.models import Role
 
@@ -48,11 +49,8 @@ def get_permission_for_view(request, view):
         return None
 
 
-def check_authorization_header(request):
-    auth_header = request.META.get("Authorization")
-    if not auth_header:
-        auth_header = request.META.get("HTTP_AUTHORIZATION", "")
-
+def check_authorization_header(request: Request):
+    auth_header = request.headers.get("authorization", "")
     if auth_header.startswith("Api-Key"):
         token = auth_header.split()[1]
         return compare_digest(token, settings.CONFIG.general.api_key)
