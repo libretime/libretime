@@ -864,6 +864,12 @@ var AIRTIME = (function (AIRTIME) {
                             DATATABLES
             ############################################ */
 
+    if (onDashboard) {
+      var dataTableLocalStorageKey = "datatables-library-dashboard";
+    } else {
+      var dataTableLocalStorageKey = "datatables-library-builder";
+    }
+
     mod.libraryDataTable = $libTable.dataTable({
       // put hidden columns at the top to insure they can never be visible
       // on the table through column reordering.
@@ -882,7 +888,7 @@ var AIRTIME = (function (AIRTIME) {
         delete oData.aoSearchCols;
       },
       fnStateSave: function (oSettings, oData) {
-        localStorage.setItem("datatables-library", JSON.stringify(oData));
+        localStorage.setItem(dataTableLocalStorageKey, JSON.stringify(oData));
 
         // Sadly, this is necessary because we need to unscramble the colReorder map on the backend
         $.ajax({
@@ -895,7 +901,9 @@ var AIRTIME = (function (AIRTIME) {
         colReorderMap = oData.ColReorder;
       },
       fnStateLoad: function fnLibStateLoad(oSettings) {
-        var settings = JSON.parse(localStorage.getItem("datatables-library"));
+        var settings = JSON.parse(
+          localStorage.getItem(dataTableLocalStorageKey)
+        );
 
         // local storage was empty lets get something from the backend
         if (settings === null) {
@@ -907,7 +915,10 @@ var AIRTIME = (function (AIRTIME) {
             async: false, // <<< every sane browser will warn that this is not nice
             dataType: "json",
             success: function (oData) {
-              localStorage.setItem("datatables-library", JSON.stringify(oData));
+              localStorage.setItem(
+                dataTableLocalStorageKey,
+                JSON.stringify(oData)
+              );
               settings = oData;
             },
           });
