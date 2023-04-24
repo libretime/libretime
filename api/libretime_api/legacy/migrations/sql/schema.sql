@@ -686,6 +686,21 @@ CREATE TABLE "podcast_episodes"
     PRIMARY KEY ("id")
 );
 
+-----------------------------------------------------------------------
+-- sessions
+-----------------------------------------------------------------------
+
+DROP TABLE IF EXISTS "sessions" CASCADE;
+
+CREATE TABLE "sessions"
+(
+    "id" CHAR(32) NOT NULL,
+    "modified" INTEGER,
+    "lifetime" INTEGER,
+    "data" TEXT,
+    PRIMARY KEY ("id")
+);
+
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_owner_fkey"
     FOREIGN KEY ("owner_id")
     REFERENCES "cc_subjs" ("id");

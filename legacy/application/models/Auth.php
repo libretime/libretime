@@ -136,8 +136,6 @@ class Application_Model_Auth
      */
     public static function pinSessionToClient($auth)
     {
-        $session_id = PRODUCT_NAME . '-';
-        $session_id .= bin2hex(Config::getPublicUrl());
-        $auth->setStorage(new Zend_Auth_Storage_Session($session_id));
+        $auth->setStorage(new Zend_Auth_Storage_Session('libretime'));
     }
 }
