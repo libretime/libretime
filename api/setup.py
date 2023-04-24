@@ -26,6 +26,7 @@ setup(
         ]
     },
     install_requires=[
+        "dj-rest-auth>=5.0.2,<5.1",
         "django-cors-headers>=3.14.0,<4.5",
         "django-filter>=2.4.0,<24.4",
         "django>=4.2.0,<4.3",

@@ -23,6 +23,7 @@ from .prod import (
     LANGUAGE_CODE,
     LOGGING,
     MIDDLEWARE,
+    REST_AUTH,
     REST_FRAMEWORK,
     ROOT_URLCONF,
     SECRET_KEY,
