@@ -100,6 +100,6 @@ jobs:
           days-before-issue-stale: 150
           days-before-issue-close: 30
           stale-issue-label: "status: stalled"
-          exempt-issue-labels: "status: pinned,status: maybe later,security"
+          exempt-issue-labels: "status: pinned,status: maybe later,security,is: feature-request"
           exempt-issue-assignees: true
           exempt-issue-milestones: true
