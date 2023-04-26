@@ -18,7 +18,7 @@ setup(
         "celery==4.4.7",
         "kombu==4.6.11",
         "mutagen>=1.45.1,<1.47",
-        "requests>=2.25.1,<2.29",
+        "requests>=2.25.1,<2.30",
     ],
     extras_require={
         "dev": [
