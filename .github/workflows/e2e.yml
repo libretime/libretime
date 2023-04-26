@@ -27,9 +27,6 @@ jobs:
             --set *.cache-to=type=gha,scope=e2e,mode=max \
             --load
 
-          export UID=1001
-          export GID=1001
-
           docker-compose run --rm legacy make build
           docker compose run --rm api libretime-api migrate
           docker compose up -d
