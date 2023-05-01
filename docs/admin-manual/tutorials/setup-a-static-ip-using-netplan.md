@@ -2,7 +2,7 @@
 title: How to setup a static ip using Netplan
 ---
 
-This tutorials will walk you though the steps required to configure a server static IP address by modifying the [Netplan](https://netplan.io/reference/) configuration.
+This tutorials will walk you though the steps required to configure a server static IP address by modifying the [Netplan](https://netplan.readthedocs.io/en/stable/reference/) configuration.
 
 ## 1. Edit the configuration
 
