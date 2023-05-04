@@ -17,7 +17,7 @@ setup(
     python_requires=">=3.6",
     install_requires=[
         "python-dateutil>=2.8.1,<2.9",
-        "requests>=2.25.1,<2.30",
+        "requests>=2.25.1,<2.31",
     ],
     extras_require={
         "dev": [
