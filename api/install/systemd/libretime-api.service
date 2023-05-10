@@ -23,7 +23,7 @@ Environment=LIBRETIME_LOG_FILEPATH=@@LOG_DIR@@/api.log
 
 Type=notify
 KillMode=mixed
-ExecStart=/usr/bin/gunicorn \
+ExecStart=/usr/local/bin/gunicorn \
         --workers 4 \
         --worker-class uvicorn.workers.UvicornWorker \
         --log-file - \
