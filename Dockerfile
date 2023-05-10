@@ -151,7 +151,7 @@ WORKDIR /src
 
 COPY api/requirements.txt .
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --no-compile gunicorn uvicorn -r requirements.txt
+    pip install --no-compile -r requirements.txt
 
 COPY --from=python-builder /build/shared/*.whl .
 RUN --mount=type=cache,target=/root/.cache/pip \
