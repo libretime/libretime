@@ -1,0 +1,77 @@
+name: Webapp
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, stable]
+    paths:
+      - .github/workflows/webapp.yml
+      - webapp/**
+
+  pull_request:
+    branches: [main, stable]
+    paths:
+      - .github/workflows/webapp.yml
+      - webapp/**
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  eslint-lint:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "yarn"
+          cache-dependency-path: "webapp/yarn.lock"
+      - name: Install packages
+        run: yarn install --frozen-lockfile
+        working-directory: webapp
+      - name: Lint
+        run: yarn lint
+        working-directory: webapp
+
+  cypress-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "yarn"
+          cache-dependency-path: "webapp/yarn.lock"
+      - name: Install packages
+        run: yarn install --frozen-lockfile
+        working-directory: webapp
+      - name: Run tests with Cypress
+        run: yarn cypress:run
+        working-directory: webapp
+
+  test-build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "yarn"
+          cache-dependency-path: "webapp/yarn.lock"
+      - name: Install packages
+        run: yarn install --frozen-lockfile
+        working-directory: webapp
+      - name: Build
+        run: yarn build
+        working-directory: webapp
