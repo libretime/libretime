@@ -19,7 +19,7 @@ The documentation is divided into multiple parts:
 
 Having trouble? We’d like to help!
 
-- [:question: Try the Forum – it’s got answers to many common questions](https://discourse.libretime.org/).
+- [:question: Try the Forum; it’s got answers to many common questions](https://discourse.libretime.org/).
 - [:bug: Report bugs with LibreTime in our ticket tracker.](https://github.com/libretime/libretime/issues)
 
 ## History
