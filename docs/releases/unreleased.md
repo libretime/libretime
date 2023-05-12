@@ -47,6 +47,16 @@ Or if only want to set the charset to UTF-8 for specific mounts (for example `/m
 
 Please, see the [documentation for more details](../admin-manual/stream-configuration.md#utf-8-metadata-in-icecast-mp3-streams).
 
+### Unused packages and dependencies
+
+Starting with this release, LibreTime installs `gunicorn`, `uvicorn` and `pika` from PyPi. This renders some previously installed distribution packages useless. You can remove them from your system using the following command:
+
+```bash
+sudo apt remove gunicorn python3-gunicorn python3-httptools python3-uvicorn python3-uvloop python3-pika
+```
+
+In addition, LibreTime now install its dependencies in a python virtual environment. This renders the python packages that LibreTime installed globally useless. There is no clean way to remove those python packages, because there is no safe way to know if other tools depend on them. If you are experienced enough with CLI and system administration, you may prune the entire `/usr/local/lib/python3.*/dist-packages/` directory, but do this **at your own risk**. Those globally installed python packages may stay on the system, they shouldn't break LibreTime.
+
 ## :warning: Known issues
 
 The following issues may need a workaround for the time being. Please search the [issues](https://github.com/libretime/libretime/issues) before reporting problems not listed below.
