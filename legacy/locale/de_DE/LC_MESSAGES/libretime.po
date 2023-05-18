@@ -15,15 +15,16 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2023-02-27 12:16+0000\n"
-"PO-Revision-Date: 2022-07-30 21:18+0000\n"
-"Last-Translator: Domenik Töfflinger <domenikt96@yahoo.de>\n"
-"Language-Team: German <https://hosted.weblate.org/projects/libretime/legacy/de/>\n"
+"PO-Revision-Date: 2023-05-19 16:32+0000\n"
+"Last-Translator: Dave Berg <dberg316@gmail.com>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/libretime/legacy/"
+"de/>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -1527,7 +1528,7 @@ msgstr "In Bearbeitung..."
 #: application/forms/SmartBlockCriteria.php:688
 #: application/models/Block.php:1466 application/models/Block.php:1564
 msgid "Select modifier"
-msgstr " - Attribut - "
+msgstr "- Attribut -"
 
 #: application/controllers/LocaleController.php:162
 #: application/forms/SmartBlockCriteria.php:101
@@ -3492,7 +3493,7 @@ msgstr ""
 #: application/forms/SmartBlockCriteria.php:56
 #: application/models/Block.php:1432 application/models/Block.php:1530
 msgid "Select criteria"
-msgstr " - Kriterien - "
+msgstr "- Kriterien -"
 
 #: application/forms/SmartBlockCriteria.php:58
 #: application/models/Block.php:1434 application/models/Block.php:1532
