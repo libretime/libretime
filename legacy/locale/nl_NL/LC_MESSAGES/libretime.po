@@ -13,15 +13,16 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2023-02-27 12:16+0000\n"
-"PO-Revision-Date: 2021-10-17 08:09+0000\n"
-"Last-Translator: Kyle Robbertze <github@paddatrapper.com>\n"
-"Language-Team: Dutch <https://hosted.weblate.org/projects/libretime/legacy/nl/>\n"
+"PO-Revision-Date: 2023-05-18 19:28+0000\n"
+"Last-Translator: Dave Berg <dberg316@gmail.com>\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/libretime/legacy/"
+"nl/>\n"
 "Language: nl_NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -40,547 +41,547 @@ msgstr "%s:%s:%s Dit is geen geldige tijd"
 
 #: application/common/LocaleHelper.php:21
 msgid "English"
-msgstr ""
+msgstr "Engels"
 
 #: application/common/LocaleHelper.php:22
 msgid "Afar"
-msgstr ""
+msgstr "Afar"
 
 #: application/common/LocaleHelper.php:23
 msgid "Abkhazian"
-msgstr ""
+msgstr "Abchazisch"
 
 #: application/common/LocaleHelper.php:24
 msgid "Afrikaans"
-msgstr ""
+msgstr "Afrikaans"
 
 #: application/common/LocaleHelper.php:25
 msgid "Amharic"
-msgstr ""
+msgstr "Amhaars"
 
 #: application/common/LocaleHelper.php:26
 msgid "Arabic"
-msgstr ""
+msgstr "Arabisch"
 
 #: application/common/LocaleHelper.php:27
 msgid "Assamese"
-msgstr ""
+msgstr "Assamees"
 
 #: application/common/LocaleHelper.php:28
 msgid "Aymara"
-msgstr ""
+msgstr "Aymara"
 
 #: application/common/LocaleHelper.php:29
 msgid "Azerbaijani"
-msgstr ""
+msgstr "Azerbeidzjaans"
 
 #: application/common/LocaleHelper.php:30
 msgid "Bashkir"
-msgstr ""
+msgstr "Basjkiers"
 
 #: application/common/LocaleHelper.php:31
 msgid "Belarusian"
-msgstr ""
+msgstr "Wit-Russisch"
 
 #: application/common/LocaleHelper.php:32
 msgid "Bulgarian"
-msgstr ""
+msgstr "Bulgaars"
 
 #: application/common/LocaleHelper.php:33
 msgid "Bihari"
-msgstr ""
+msgstr "Bihari"
 
 #: application/common/LocaleHelper.php:34
 msgid "Bislama"
-msgstr ""
+msgstr "Bislama"
 
 #: application/common/LocaleHelper.php:35
 msgid "Bengali/Bangla"
-msgstr ""
+msgstr "Bengaals/Bangla"
 
 #: application/common/LocaleHelper.php:36
 msgid "Tibetan"
-msgstr ""
+msgstr "Tibetaans"
 
 #: application/common/LocaleHelper.php:37
 msgid "Breton"
-msgstr ""
+msgstr "Bretoens"
 
 #: application/common/LocaleHelper.php:38
 msgid "Catalan"
-msgstr ""
+msgstr "Catalaans"
 
 #: application/common/LocaleHelper.php:39
 msgid "Corsican"
-msgstr ""
+msgstr "Corsicaans"
 
 #: application/common/LocaleHelper.php:40
 msgid "Czech"
-msgstr ""
+msgstr "Tsjechisch"
 
 #: application/common/LocaleHelper.php:41
 msgid "Welsh"
-msgstr ""
+msgstr "Wels"
 
 #: application/common/LocaleHelper.php:42
 msgid "Danish"
-msgstr ""
+msgstr "Deens"
 
 #: application/common/LocaleHelper.php:43
 msgid "German"
-msgstr ""
+msgstr "Duits"
 
 #: application/common/LocaleHelper.php:44
 msgid "Bhutani"
-msgstr ""
+msgstr "Bhutaans"
 
 #: application/common/LocaleHelper.php:45
 msgid "Greek"
-msgstr ""
+msgstr "Grieks"
 
 #: application/common/LocaleHelper.php:46
 msgid "Esperanto"
-msgstr ""
+msgstr "Esperanto"
 
 #: application/common/LocaleHelper.php:47
 msgid "Spanish"
-msgstr ""
+msgstr "Spaans"
 
 #: application/common/LocaleHelper.php:48
 msgid "Estonian"
-msgstr ""
+msgstr "Ests"
 
 #: application/common/LocaleHelper.php:49
 msgid "Basque"
-msgstr ""
+msgstr "Baskisch"
 
 #: application/common/LocaleHelper.php:50
 msgid "Persian"
-msgstr ""
+msgstr "Perzisch"
 
 #: application/common/LocaleHelper.php:51
 msgid "Finnish"
-msgstr ""
+msgstr "Fins"
 
 #: application/common/LocaleHelper.php:52
 msgid "Fiji"
-msgstr ""
+msgstr "Fiji"
 
 #: application/common/LocaleHelper.php:53
 msgid "Faeroese"
-msgstr ""
+msgstr "Faeröer"
 
 #: application/common/LocaleHelper.php:54
 msgid "French"
-msgstr ""
+msgstr "Frans"
 
 #: application/common/LocaleHelper.php:55
 msgid "Frisian"
-msgstr ""
+msgstr "Fries"
 
 #: application/common/LocaleHelper.php:56
 msgid "Irish"
-msgstr ""
+msgstr "Iers"
 
 #: application/common/LocaleHelper.php:57
 msgid "Scots/Gaelic"
-msgstr ""
+msgstr "Schots/Gaelisch"
 
 #: application/common/LocaleHelper.php:58
 msgid "Galician"
-msgstr ""
+msgstr "Galicisch"
 
 #: application/common/LocaleHelper.php:59
 msgid "Guarani"
-msgstr ""
+msgstr "Guarani"
 
 #: application/common/LocaleHelper.php:60
 msgid "Gujarati"
-msgstr ""
+msgstr "Gujarati"
 
 #: application/common/LocaleHelper.php:61
 msgid "Hausa"
-msgstr ""
+msgstr "Hausa"
 
 #: application/common/LocaleHelper.php:62
 msgid "Hindi"
-msgstr ""
+msgstr "Hindi"
 
 #: application/common/LocaleHelper.php:63
 msgid "Croatian"
-msgstr ""
+msgstr "Kroatisch"
 
 #: application/common/LocaleHelper.php:64
 msgid "Hungarian"
-msgstr ""
+msgstr "Hongaars"
 
 #: application/common/LocaleHelper.php:65
 msgid "Armenian"
-msgstr ""
+msgstr "Armeens"
 
 #: application/common/LocaleHelper.php:66
 msgid "Interlingua"
-msgstr ""
+msgstr "Interlingua"
 
 #: application/common/LocaleHelper.php:67
 msgid "Interlingue"
-msgstr ""
+msgstr "Interlingue"
 
 #: application/common/LocaleHelper.php:68
 msgid "Inupiak"
-msgstr ""
+msgstr "Inupiak"
 
 #: application/common/LocaleHelper.php:69
 msgid "Indonesian"
-msgstr ""
+msgstr "Indonesisch"
 
 #: application/common/LocaleHelper.php:70
 msgid "Icelandic"
-msgstr ""
+msgstr "IJslands"
 
 #: application/common/LocaleHelper.php:71
 msgid "Italian"
-msgstr ""
+msgstr "Italiaans"
 
 #: application/common/LocaleHelper.php:72
 msgid "Hebrew"
-msgstr ""
+msgstr "Hebreeuws"
 
 #: application/common/LocaleHelper.php:73
 msgid "Japanese"
-msgstr ""
+msgstr "Japans"
 
 #: application/common/LocaleHelper.php:74
 msgid "Yiddish"
-msgstr ""
+msgstr "Jiddisch"
 
 #: application/common/LocaleHelper.php:75
 msgid "Javanese"
-msgstr ""
+msgstr "Javaans"
 
 #: application/common/LocaleHelper.php:76
 msgid "Georgian"
-msgstr ""
+msgstr "Georgisch"
 
 #: application/common/LocaleHelper.php:77
 msgid "Kazakh"
-msgstr ""
+msgstr "Kazachstaans"
 
 #: application/common/LocaleHelper.php:78
 msgid "Greenlandic"
-msgstr ""
+msgstr "Groenlands"
 
 #: application/common/LocaleHelper.php:79
 msgid "Cambodian"
-msgstr ""
+msgstr "Cambodja"
 
 #: application/common/LocaleHelper.php:80
 msgid "Kannada"
-msgstr ""
+msgstr "Kannada"
 
 #: application/common/LocaleHelper.php:81
 msgid "Korean"
-msgstr ""
+msgstr "Koreaans"
 
 #: application/common/LocaleHelper.php:82
 msgid "Kashmiri"
-msgstr ""
+msgstr "Kashmiri"
 
 #: application/common/LocaleHelper.php:83
 msgid "Kurdish"
-msgstr ""
+msgstr "Koerdisch"
 
 #: application/common/LocaleHelper.php:84
 msgid "Kirghiz"
-msgstr ""
+msgstr "Kirgizisch"
 
 #: application/common/LocaleHelper.php:85
 msgid "Latin"
-msgstr ""
+msgstr "Latijns"
 
 #: application/common/LocaleHelper.php:86
 msgid "Lingala"
-msgstr ""
+msgstr "Lingala"
 
 #: application/common/LocaleHelper.php:87
 msgid "Laothian"
-msgstr ""
+msgstr "Laotiaans"
 
 #: application/common/LocaleHelper.php:88
 msgid "Lithuanian"
-msgstr ""
+msgstr "Litouws"
 
 #: application/common/LocaleHelper.php:89
 msgid "Latvian/Lettish"
-msgstr ""
+msgstr "Lets/Lettish"
 
 #: application/common/LocaleHelper.php:90
 msgid "Malagasy"
-msgstr ""
+msgstr "Malagasi"
 
 #: application/common/LocaleHelper.php:91
 msgid "Maori"
-msgstr ""
+msgstr "Maori"
 
 #: application/common/LocaleHelper.php:92
 msgid "Macedonian"
-msgstr ""
+msgstr "Macedonisch"
 
 #: application/common/LocaleHelper.php:93
 msgid "Malayalam"
-msgstr ""
+msgstr "Malajalam"
 
 #: application/common/LocaleHelper.php:94
 msgid "Mongolian"
-msgstr ""
+msgstr "Mongools"
 
 #: application/common/LocaleHelper.php:95
 msgid "Moldavian"
-msgstr ""
+msgstr "Moldavisch"
 
 #: application/common/LocaleHelper.php:96
 msgid "Marathi"
-msgstr ""
+msgstr "Marathi"
 
 #: application/common/LocaleHelper.php:97
 msgid "Malay"
-msgstr ""
+msgstr "Maleis"
 
 #: application/common/LocaleHelper.php:98
 msgid "Maltese"
-msgstr ""
+msgstr "Maltees"
 
 #: application/common/LocaleHelper.php:99
 msgid "Burmese"
-msgstr ""
+msgstr "Birmaans"
 
 #: application/common/LocaleHelper.php:100
 msgid "Nauru"
-msgstr ""
+msgstr "Nauru"
 
 #: application/common/LocaleHelper.php:101
 msgid "Nepali"
-msgstr ""
+msgstr "Nepalees"
 
 #: application/common/LocaleHelper.php:102
 msgid "Dutch"
-msgstr ""
+msgstr "Nederlands"
 
 #: application/common/LocaleHelper.php:103
 msgid "Norwegian"
-msgstr ""
+msgstr "Noors"
 
 #: application/common/LocaleHelper.php:104
 msgid "Occitan"
-msgstr ""
+msgstr "Occitaans"
 
 #: application/common/LocaleHelper.php:105
 msgid "(Afan)/Oromoor/Oriya"
-msgstr ""
+msgstr "(Afan)/Oromoor/Oriya"
 
 #: application/common/LocaleHelper.php:106
 msgid "Punjabi"
-msgstr ""
+msgstr "Punjabi"
 
 #: application/common/LocaleHelper.php:107
 msgid "Polish"
-msgstr ""
+msgstr "Pools"
 
 #: application/common/LocaleHelper.php:108
 msgid "Pashto/Pushto"
-msgstr ""
+msgstr "Pasjtoe/Pushto"
 
 #: application/common/LocaleHelper.php:109
 msgid "Portuguese"
-msgstr ""
+msgstr "Portugees"
 
 #: application/common/LocaleHelper.php:110
 msgid "Quechua"
-msgstr ""
+msgstr "Quechua"
 
 #: application/common/LocaleHelper.php:111
 msgid "Rhaeto-Romance"
-msgstr ""
+msgstr "Reto-Romaans"
 
 #: application/common/LocaleHelper.php:112
 msgid "Kirundi"
-msgstr ""
+msgstr "Kirundi"
 
 #: application/common/LocaleHelper.php:113
 msgid "Romanian"
-msgstr ""
+msgstr "Roemeens"
 
 #: application/common/LocaleHelper.php:114
 msgid "Russian"
-msgstr ""
+msgstr "Russische"
 
 #: application/common/LocaleHelper.php:115
 msgid "Kinyarwanda"
-msgstr ""
+msgstr "Kinyarwanda"
 
 #: application/common/LocaleHelper.php:116
 msgid "Sanskrit"
-msgstr ""
+msgstr "Sanskriet"
 
 #: application/common/LocaleHelper.php:117
 msgid "Sindhi"
-msgstr ""
+msgstr "Sindhi"
 
 #: application/common/LocaleHelper.php:118
 msgid "Sangro"
-msgstr ""
+msgstr "Sangro"
 
 #: application/common/LocaleHelper.php:119
 msgid "Serbo-Croatian"
-msgstr ""
+msgstr "Servisch-Kroatisch"
 
 #: application/common/LocaleHelper.php:120
 msgid "Singhalese"
-msgstr ""
+msgstr "Sinhalees"
 
 #: application/common/LocaleHelper.php:121
 msgid "Slovak"
-msgstr ""
+msgstr "Slowaaks"
 
 #: application/common/LocaleHelper.php:122
 msgid "Slovenian"
-msgstr ""
+msgstr "Sloveens"
 
 #: application/common/LocaleHelper.php:123
 msgid "Samoan"
-msgstr ""
+msgstr "Samoaans"
 
 #: application/common/LocaleHelper.php:124
 msgid "Shona"
-msgstr ""
+msgstr "Shona"
 
 #: application/common/LocaleHelper.php:125
 msgid "Somali"
-msgstr ""
+msgstr "Somalisch"
 
 #: application/common/LocaleHelper.php:126
 msgid "Albanian"
-msgstr ""
+msgstr "Albanees"
 
 #: application/common/LocaleHelper.php:127
 msgid "Serbian"
-msgstr ""
+msgstr "Servisch"
 
 #: application/common/LocaleHelper.php:128
 msgid "Siswati"
-msgstr ""
+msgstr "Siswatiti"
 
 #: application/common/LocaleHelper.php:129
 msgid "Sesotho"
-msgstr ""
+msgstr "Sesotho"
 
 #: application/common/LocaleHelper.php:130
 msgid "Sundanese"
-msgstr ""
+msgstr "Soendanees"
 
 #: application/common/LocaleHelper.php:131
 msgid "Swedish"
-msgstr ""
+msgstr "Zweeds"
 
 #: application/common/LocaleHelper.php:132
 msgid "Swahili"
-msgstr ""
+msgstr "Swahili"
 
 #: application/common/LocaleHelper.php:133
 msgid "Tamil"
-msgstr ""
+msgstr "Tamil"
 
 #: application/common/LocaleHelper.php:134
 msgid "Tegulu"
-msgstr ""
+msgstr "Tegulu"
 
 #: application/common/LocaleHelper.php:135
 msgid "Tajik"
-msgstr ""
+msgstr "Tadzjieks"
 
 #: application/common/LocaleHelper.php:136
 msgid "Thai"
-msgstr ""
+msgstr "Thais"
 
 #: application/common/LocaleHelper.php:137
 msgid "Tigrinya"
-msgstr ""
+msgstr "Tigrinja"
 
 #: application/common/LocaleHelper.php:138
 msgid "Turkmen"
-msgstr ""
+msgstr "Turkmeens"
 
 #: application/common/LocaleHelper.php:139
 msgid "Tagalog"
-msgstr ""
+msgstr "Tagalog"
 
 #: application/common/LocaleHelper.php:140
 msgid "Setswana"
-msgstr ""
+msgstr "Setswana"
 
 #: application/common/LocaleHelper.php:141
 msgid "Tonga"
-msgstr ""
+msgstr "Tonga"
 
 #: application/common/LocaleHelper.php:142
 msgid "Turkish"
-msgstr ""
+msgstr "Turks"
 
 #: application/common/LocaleHelper.php:143
 msgid "Tsonga"
-msgstr ""
+msgstr "Tsonga"
 
 #: application/common/LocaleHelper.php:144
 msgid "Tatar"
-msgstr ""
+msgstr "Tataars"
 
 #: application/common/LocaleHelper.php:145
 msgid "Twi"
-msgstr ""
+msgstr "Twee"
 
 #: application/common/LocaleHelper.php:146
 msgid "Ukrainian"
-msgstr ""
+msgstr "Oekraïens"
 
 #: application/common/LocaleHelper.php:147
 msgid "Urdu"
-msgstr ""
+msgstr "Urdu"
 
 #: application/common/LocaleHelper.php:148
 msgid "Uzbek"
-msgstr ""
+msgstr "Oezbeeks"
 
 #: application/common/LocaleHelper.php:149
 msgid "Vietnamese"
-msgstr ""
+msgstr "Vietnamees"
 
 #: application/common/LocaleHelper.php:150
 msgid "Volapuk"
-msgstr ""
+msgstr "Volapuk"
 
 #: application/common/LocaleHelper.php:151
 msgid "Wolof"
-msgstr ""
+msgstr "Wolof"
 
 #: application/common/LocaleHelper.php:152
 msgid "Xhosa"
-msgstr ""
+msgstr "Xhosa"
 
 #: application/common/LocaleHelper.php:153
 msgid "Yoruba"
-msgstr ""
+msgstr "Joruba"
 
 #: application/common/LocaleHelper.php:154
 msgid "Chinese"
-msgstr ""
+msgstr "Chinees"
 
 #: application/common/LocaleHelper.php:155
 msgid "Zulu"
-msgstr ""
+msgstr "Zoeloe"
 
 #: application/common/Timezone.php:21
 msgid "Use station default"
-msgstr ""
+msgstr "Gebruik stationsstandaard"
 
 #: application/common/UsabilityHints.php:65
 msgid "Upload some tracks below to add them to your library!"
@@ -621,23 +622,28 @@ msgstr "Om te beginnen omroep, klik op de huidige show en selecteer 'Schema Trac
 #, php-format
 msgid "It looks like the current show needs more tracks. %sAdd tracks to your show now%s."
 msgstr ""
+"Het lijkt erop dat de huidige show meer tracks nodig heeft. %sVoeg nu tracks "
+"toe aan je show%s."
 
 #: application/common/UsabilityHints.php:107
 msgid "Click on the show starting next and select 'Schedule Tracks'"
-msgstr ""
+msgstr "Klik op de show die hierna begint en selecteer 'Tracks plannen'"
 
 #: application/common/UsabilityHints.php:111
 #, php-format
 msgid "It looks like the next show is empty. %sAdd tracks to your show now%s."
 msgstr ""
+"Het lijkt erop dat de volgende show leeg is. %sVoeg nu tracks toe aan je "
+"show%s."
 
 #: application/configs/config-check.php:167
 msgid "LibreTime media analyzer service"
-msgstr ""
+msgstr "LibreTime media analyseservice"
 
 #: application/configs/config-check.php:174
 msgid "Check that the libretime-analyzer service is installed correctly in "
 msgstr ""
+"Controleer of de libretime-analyzer-service correct is geïnstalleerd in "
 
 #: application/configs/config-check.php:175
 #: application/configs/config-check.php:194
@@ -645,7 +651,7 @@ msgstr ""
 #: application/configs/config-check.php:232
 #: application/configs/config-check.php:251
 msgid " and ensure that it's running with "
-msgstr ""
+msgstr " en zorg ervoor dat het draait met "
 
 #: application/configs/config-check.php:177
 #: application/configs/config-check.php:196
@@ -653,43 +659,44 @@ msgstr ""
 #: application/configs/config-check.php:234
 #: application/configs/config-check.php:253
 msgid "If not, try "
-msgstr ""
+msgstr "Zo niet, probeer dan "
 
 #: application/configs/config-check.php:187
 msgid "LibreTime playout service"
-msgstr ""
+msgstr "LibreTime afspeeldienst"
 
 #: application/configs/config-check.php:193
 msgid "Check that the libretime-playout service is installed correctly in "
-msgstr ""
+msgstr "Controleer of de libretime-playout service correct is geïnstalleerd in "
 
 #: application/configs/config-check.php:205
 msgid "LibreTime liquidsoap service"
-msgstr ""
+msgstr "LibreTime liquidsoap service"
 
 #: application/configs/config-check.php:212
 msgid "Check that the libretime-liquidsoap service is installed correctly in "
 msgstr ""
+"Controleer of de libretime-liquidsoap service correct is geïnstalleerd in "
 
 #: application/configs/config-check.php:224
 msgid "LibreTime Celery Task service"
-msgstr ""
+msgstr "LibreTime Celery Taakservice"
 
 #: application/configs/config-check.php:231
 msgid "Check that the libretime-worker service is installed correctly in "
-msgstr ""
+msgstr "Controleer of de libretime-worker service correct is geïnstalleerd in "
 
 #: application/configs/config-check.php:243
 msgid "LibreTime API service"
-msgstr ""
+msgstr "LibreTime API-dienst"
 
 #: application/configs/config-check.php:250
 msgid "Check that the libretime-api service is installed correctly in "
-msgstr ""
+msgstr "Controleer of de libretime-api service correct is geïnstalleerd in "
 
 #: application/configs/navigation.php:28
 msgid "Radio Page"
-msgstr ""
+msgstr "Radio pagina"
 
 #: application/configs/navigation.php:36
 msgid "Calendar"
@@ -697,27 +704,27 @@ msgstr "Calender"
 
 #: application/configs/navigation.php:44
 msgid "Widgets"
-msgstr ""
+msgstr "Widgets"
 
 #: application/configs/navigation.php:53
 msgid "Player"
-msgstr ""
+msgstr "Speler"
 
 #: application/configs/navigation.php:59
 msgid "Weekly Schedule"
-msgstr ""
+msgstr "Wekelijks schema"
 
 #: application/configs/navigation.php:67
 msgid "Settings"
-msgstr ""
+msgstr "Instellingen"
 
 #: application/configs/navigation.php:75
 msgid "General"
-msgstr ""
+msgstr "Algemeen"
 
 #: application/configs/navigation.php:81
 msgid "My Profile"
-msgstr ""
+msgstr "Mijn profiel"
 
 #: application/configs/navigation.php:86
 msgid "Users"
@@ -725,7 +732,7 @@ msgstr "gebruikers"
 
 #: application/configs/navigation.php:92
 msgid "Track Types"
-msgstr ""
+msgstr "Soorten tracks"
 
 #: application/configs/navigation.php:99
 msgid "Streams"
@@ -738,7 +745,7 @@ msgstr "Status"
 
 #: application/configs/navigation.php:115
 msgid "Analytics"
-msgstr ""
+msgstr "Analyse"
 
 #: application/configs/navigation.php:124
 msgid "Playout History"
@@ -754,7 +761,7 @@ msgstr "luister status"
 
 #: application/configs/navigation.php:145
 msgid "Show Listener Stats"
-msgstr ""
+msgstr "Toon luisteraars statistieken"
 
 #: application/configs/navigation.php:154
 msgid "Help"
@@ -770,15 +777,15 @@ msgstr "Gebruikershandleiding"
 
 #: application/configs/navigation.php:174
 msgid "Get Help Online"
-msgstr ""
+msgstr "Krijg online hulp"
 
 #: application/configs/navigation.php:179
 msgid "Contribute to LibreTime"
-msgstr ""
+msgstr "Bijdragen aan LibreTime"
 
 #: application/configs/navigation.php:184
 msgid "What's New?"
-msgstr ""
+msgstr "Wat is nieuw?"
 
 #: application/controllers/ApiController.php:113
 #: application/controllers/ApiController.php:753
@@ -793,7 +800,7 @@ msgstr "U bent niet toegestaan voor toegang tot deze bron."
 #: application/controllers/ApiController.php:688
 #: application/controllers/ApiController.php:719
 msgid "You are not allowed to access this resource. "
-msgstr "U bent niet toegestaan voor toegang tot deze bron."
+msgstr "U bent niet toegestaan voor toegang tot deze bron. "
 
 #: application/controllers/ApiController.php:923
 #: application/controllers/ApiController.php:944
@@ -813,7 +820,7 @@ msgstr "Slecht verzoek. 'mode' parameter is ongeldig"
 #: application/controllers/DashboardController.php:34
 #: application/controllers/DashboardController.php:86
 msgid "You don't have permission to disconnect source."
-msgstr "Je hebt geen toestemming om te bron verbreken"
+msgstr "Je hebt geen toestemming om de bron los te koppelen."
 
 #: application/controllers/DashboardController.php:36
 #: application/controllers/DashboardController.php:88
@@ -830,22 +837,33 @@ msgid ""
 "            1. Enable at least one MP3, AAC, or OGG stream under Settings -> Streams<br>\n"
 "            2. Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
+"To configure and use the embeddable player you must:<br><br>\n"
+"            1. Enable at least one MP3, AAC, or OGG stream under Settings "
+"-&gt; Streams<br>\n"
+"            2. Enable the Public LibreTime API under Settings -&gt; "
+"Preferences"
 
 #: application/controllers/EmbeddablewidgetsController.php:37
 msgid ""
 "To use the embeddable weekly schedule widget you must:<br><br>\n"
 "            Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
+"Om de embeddable weekly schedule widget te gebruiken moet u:<br><br>\n"
+"            De Openbare LibreTime API inschakelen onder Instellingen -&gt; "
+"Voorkeuren"
 
 #: application/controllers/EmbeddablewidgetsController.php:50
 msgid ""
 "To add the Radio Tab to your Facebook Page, you must first:<br><br>\n"
 "            Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
+"Om de Radio Tab aan uw Facebook Pagina toe te voegen, moet u eerst:<br><br>\n"
+"            De openbare LibreTime API inschakelen onder Instellingen -&gt; "
+"Voorkeuren"
 
 #: application/controllers/ErrorController.php:94
 msgid "Page not found."
-msgstr "Pagina niet gevonden"
+msgstr "Pagina niet gevonden."
 
 #: application/controllers/ErrorController.php:104
 msgid "The requested action is not supported."
@@ -862,11 +880,11 @@ msgstr "Een interne toepassingsfout opgetreden."
 #: application/controllers/IndexController.php:88
 #, php-format
 msgid "%s Podcast"
-msgstr ""
+msgstr "%s Podcast"
 
 #: application/controllers/IndexController.php:89
 msgid "No tracks have been published yet."
-msgstr ""
+msgstr "Er zijn nog geen tracks gepubliceerd."
 
 #: application/controllers/LibraryController.php:28
 #: application/controllers/PlaylistController.php:149
@@ -911,7 +929,7 @@ msgstr "Verwijderen"
 #: application/controllers/LibraryController.php:146
 #: application/controllers/LibraryController.php:168
 msgid "Edit..."
-msgstr ""
+msgstr "Bewerk..."
 
 #: application/controllers/LibraryController.php:126
 #: application/controllers/ScheduleController.php:732
@@ -924,7 +942,7 @@ msgstr "Dubbele afspeellijst"
 
 #: application/controllers/LibraryController.php:133
 msgid "Duplicate Smartblock"
-msgstr ""
+msgstr "Dubbel Smartblock"
 
 #: application/controllers/LibraryController.php:175
 msgid "No action available"
@@ -932,7 +950,7 @@ msgstr "Geen actie beschikbaar"
 
 #: application/controllers/LibraryController.php:195
 msgid "You don't have permission to delete selected items."
-msgstr "Je hebt geen toestemming om geselecteerde items te verwijderen"
+msgstr "Je hebt geen toestemming om geselecteerde items te verwijderen."
 
 #: application/controllers/LibraryController.php:240
 msgid "Could not delete file because it is scheduled in the future."
@@ -950,23 +968,25 @@ msgstr "Kopie van %s"
 
 #: application/controllers/ListenerstatController.php:46
 msgid "Please make sure admin user/password is correct on Settings->Streams page."
-msgstr "Controleer of admin gebruiker/wachtwoord klopt op systeem-> Streams pagina."
+msgstr ""
+"Controleer of admin gebruiker/wachtwoord klopt op systeem-&gt; Streams "
+"pagina."
 
 #: application/controllers/LocaleController.php:27
 msgid "Audio Player"
-msgstr "Audio Player"
+msgstr "Audiospeler"
 
 #: application/controllers/LocaleController.php:28
 msgid "Something went wrong!"
-msgstr ""
+msgstr "Er is iets misgegaan!"
 
 #: application/controllers/LocaleController.php:30
 msgid "Recording:"
-msgstr "Opname"
+msgstr "Opname:"
 
 #: application/controllers/LocaleController.php:31
 msgid "Master Stream"
-msgstr "Master Stream"
+msgstr "Hoofdstream"
 
 #: application/controllers/LocaleController.php:32
 msgid "Live Stream"
@@ -990,27 +1010,29 @@ msgstr "U werkt de meest recente versie"
 
 #: application/controllers/LocaleController.php:38
 msgid "New version available: "
-msgstr "Nieuwe versie beschikbaar:"
+msgstr "Nieuwe versie beschikbaar: "
 
 #: application/controllers/LocaleController.php:39
 msgid "You have a pre-release version of LibreTime intalled."
-msgstr ""
+msgstr "Je hebt een pre-release versie van LibreTime geïnstalleerd."
 
 #: application/controllers/LocaleController.php:40
 msgid "A patch update for your LibreTime installation is available."
-msgstr ""
+msgstr "Een patch update voor uw LibreTime installatie is beschikbaar."
 
 #: application/controllers/LocaleController.php:41
 msgid "A feature update for your LibreTime installation is available."
-msgstr ""
+msgstr "Er is een functie-update voor uw LibreTime-installatie beschikbaar."
 
 #: application/controllers/LocaleController.php:42
 msgid "A major update for your LibreTime installation is available."
-msgstr ""
+msgstr "Er is een grote update voor uw LibreTime-installatie beschikbaar."
 
 #: application/controllers/LocaleController.php:43
 msgid "Multiple major updates for LibreTime installation are available. Please upgrade as soon as possible."
 msgstr ""
+"Er zijn meerdere grote updates voor de LibreTime installatie beschikbaar. "
+"Upgrade alstublieft zo snel mogelijk."
 
 #: application/controllers/LocaleController.php:45
 msgid "Add to current playlist"
@@ -1052,7 +1074,7 @@ msgstr "U heb niet alle afspeellijsten toegevoegd"
 
 #: application/controllers/LocaleController.php:56
 msgid "You haven't added any podcasts"
-msgstr ""
+msgstr "Je hebt geen podcasts toegevoegd"
 
 #: application/controllers/LocaleController.php:57
 msgid "You haven't added any smart blocks"
@@ -1072,7 +1094,7 @@ msgstr "Meer informatie over afspeellijsten"
 
 #: application/controllers/LocaleController.php:61
 msgid "Learn about podcasts"
-msgstr ""
+msgstr "Meer informatie over podcasts"
 
 #: application/controllers/LocaleController.php:62
 msgid "Learn about smart blocks"
@@ -1092,7 +1114,7 @@ msgstr "toevoegen"
 
 #: application/controllers/LocaleController.php:69
 msgid "New"
-msgstr ""
+msgstr "Nieuw"
 
 #: application/controllers/LocaleController.php:70
 #: application/services/CalendarService.php:155
@@ -1101,23 +1123,23 @@ msgstr "Bewerken"
 
 #: application/controllers/LocaleController.php:71
 msgid "Add to Schedule"
-msgstr ""
+msgstr "Toevoegen aan schema"
 
 #: application/controllers/LocaleController.php:72
 msgid "Add to next show"
-msgstr ""
+msgstr "Toevoegen aan volgende show"
 
 #: application/controllers/LocaleController.php:73
 msgid "Add to current show"
-msgstr ""
+msgstr "Toevoegen aan de huidige show"
 
 #: application/controllers/LocaleController.php:74
 msgid "Add after selected items"
-msgstr ""
+msgstr "Toevoegen na geselecteerde items"
 
 #: application/controllers/LocaleController.php:76
 msgid "Publish"
-msgstr ""
+msgstr "Publiceer"
 
 #: application/controllers/LocaleController.php:77
 #: application/forms/AddShowStyle.php:63
@@ -1222,7 +1244,7 @@ msgstr "Dirigent"
 #: application/services/HistoryService.php:1060
 #: application/services/HistoryService.php:1106
 msgid "Copyright"
-msgstr "Copyright:"
+msgstr "Copyright"
 
 #: application/controllers/LocaleController.php:96
 #: application/forms/SmartBlockCriteria.php:67
@@ -1283,14 +1305,14 @@ msgstr "Lengte"
 #: application/forms/SmartBlockCriteria.php:76
 #: application/models/Block.php:1453 application/models/Block.php:1551
 msgid "Mime"
-msgstr "Mime"
+msgstr "nabootsen"
 
 #: application/controllers/LocaleController.php:105
 #: application/forms/SmartBlockCriteria.php:77
 #: application/models/Block.php:1454 application/models/Block.php:1552
 #: application/services/HistoryService.php:1056
 msgid "Mood"
-msgstr "Mood"
+msgstr "Stemming"
 
 #: application/controllers/LocaleController.php:106
 #: application/forms/SmartBlockCriteria.php:78
@@ -1318,13 +1340,13 @@ msgstr "Track nummer"
 #: application/forms/SmartBlockCriteria.php:83
 #: application/models/Block.php:1460 application/models/Block.php:1558
 msgid "Uploaded"
-msgstr "Uploaded"
+msgstr "Uploaden"
 
 #: application/controllers/LocaleController.php:111
 #: application/forms/SmartBlockCriteria.php:84
 #: application/models/Block.php:1461 application/models/Block.php:1559
 msgid "Website"
-msgstr "Website:"
+msgstr "Website"
 
 #: application/controllers/LocaleController.php:112
 #: application/forms/SmartBlockCriteria.php:85
@@ -1358,11 +1380,11 @@ msgstr "slimme blokken"
 
 #: application/controllers/LocaleController.php:118
 msgid "Web Streams"
-msgstr "Web Streams"
+msgstr "Webstreams"
 
 #: application/controllers/LocaleController.php:119
 msgid "Unknown type: "
-msgstr "Onbekend type"
+msgstr "Onbekend type: "
 
 #: application/controllers/LocaleController.php:120
 msgid "Are you sure you want to delete the selected item?"
@@ -1379,11 +1401,11 @@ msgstr "Gegevens op te halen van de server..."
 
 #: application/controllers/LocaleController.php:124
 msgid "Import"
-msgstr ""
+msgstr "Importeer"
 
 #: application/controllers/LocaleController.php:125
 msgid "Imported?"
-msgstr ""
+msgstr "Geïmporteerd?"
 
 #: application/controllers/LocaleController.php:126
 #: application/services/CalendarService.php:61
@@ -1393,11 +1415,11 @@ msgstr "Weergeven"
 
 #: application/controllers/LocaleController.php:127
 msgid "Error code: "
-msgstr "foutcode"
+msgstr "Foutcode: "
 
 #: application/controllers/LocaleController.php:128
 msgid "Error msg: "
-msgstr "Fout msg:"
+msgstr "Fout msg: "
 
 #: application/controllers/LocaleController.php:129
 msgid "Input must be a positive number"
@@ -1417,7 +1439,7 @@ msgstr "Invoer moet worden in het formaat: hh:mm:ss.t"
 
 #: application/controllers/LocaleController.php:133
 msgid "My Podcast"
-msgstr ""
+msgstr "Mijn Podcast"
 
 #: application/controllers/LocaleController.php:135
 #, php-format
@@ -1434,11 +1456,12 @@ msgstr "Gelieve te zetten in een tijd '00:00 (.0)'"
 
 #: application/controllers/LocaleController.php:139
 msgid "Please enter a valid time in seconds. Eg. 0.5"
-msgstr ""
+msgstr "Voer een geldige tijd in seconden in. Bijv. 0,5"
 
 #: application/controllers/LocaleController.php:140
 msgid "Your browser does not support playing this file type: "
-msgstr "Uw browser biedt geen ondersteuning voor het spelen van dit bestandstype:"
+msgstr ""
+"Uw browser biedt geen ondersteuning voor het spelen van dit bestandstype: "
 
 #: application/controllers/LocaleController.php:141
 msgid "Dynamic block is not previewable"
@@ -1446,7 +1469,7 @@ msgstr "Dynamische blok is niet previewable"
 
 #: application/controllers/LocaleController.php:142
 msgid "Limit to: "
-msgstr "Beperk tot:"
+msgstr "Beperk tot: "
 
 #: application/controllers/LocaleController.php:143
 msgid "Playlist saved"
@@ -1494,6 +1517,9 @@ msgstr "Een dynamische slimme blok bespaart alleen de criteria. Het blok inhoud 
 #, php-format
 msgid "The desired block length will not be reached if %s cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
 msgstr ""
+"De gewenste bloklengte wordt niet bereikt als %s niet genoeg unieke tracks "
+"kan vinden die aan uw criteria voldoen. Schakel deze optie in als u wilt "
+"toestaan dat tracks meerdere keren worden toegevoegd aan het slimme blok."
 
 #: application/controllers/LocaleController.php:157
 msgid "Smart block shuffled"
@@ -1647,11 +1673,16 @@ msgstr "Kan geen verbinding maken met de streaming server"
 #, php-format
 msgid "If %s is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."
 msgstr ""
+"Als %s achter een router of firewall zit, moet je misschien port forwarding "
+"configureren en zal de informatie in dit veld onjuist zijn. In dat geval "
+"moet je dit veld handmatig bijwerken zodat het de juiste host/poort/mount "
+"toont waarmee je DJ's verbinding moeten maken. Het toegestane bereik ligt "
+"tussen 1024 en 49151."
 
 #: application/controllers/LocaleController.php:187
 #, php-format
 msgid "For more details, please read the %s%s Manual%s"
-msgstr ""
+msgstr "Lees voor meer informatie de %s%s Handleiding%s"
 
 #: application/controllers/LocaleController.php:188
 msgid "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
@@ -1716,7 +1747,7 @@ msgstr "tijdzone is standaard ingesteld op de tijdzone station. Shows in de kale
 
 #: application/controllers/LocaleController.php:210
 msgid "Show"
-msgstr "Show"
+msgstr "Toon"
 
 #: application/controllers/LocaleController.php:211
 msgid "Show is empty"
@@ -1980,19 +2011,19 @@ msgstr "Duur"
 
 #: application/controllers/LocaleController.php:280
 msgid "Filtering out "
-msgstr "Filteren op"
+msgstr "Filteren op "
 
 #: application/controllers/LocaleController.php:281
 msgid " of "
-msgstr "of"
+msgstr " of "
 
 #: application/controllers/LocaleController.php:282
 msgid " records"
-msgstr "records"
+msgstr " records"
 
 #: application/controllers/LocaleController.php:283
 msgid "There are no shows scheduled during the specified time period."
-msgstr ""
+msgstr "Er zijn geen shows gepland tijdens de opgegeven periode."
 
 #: application/controllers/LocaleController.php:289
 #: application/forms/SmartBlockCriteria.php:63
@@ -2004,7 +2035,7 @@ msgstr "Cue In"
 #: application/forms/SmartBlockCriteria.php:64
 #: application/models/Block.php:1440 application/models/Block.php:1538
 msgid "Cue Out"
-msgstr "Cue Out"
+msgstr "Cue uit"
 
 #: application/controllers/LocaleController.php:291
 msgid "Fade In"
@@ -2086,7 +2117,7 @@ msgstr "Jump naar de huidige playing track"
 
 #: application/controllers/LocaleController.php:314
 msgid "Jump to Current"
-msgstr ""
+msgstr "Springen naar actueel"
 
 #: application/controllers/LocaleController.php:315
 msgid "Cancel current show"
@@ -2110,7 +2141,7 @@ msgstr "hardeschijf"
 
 #: application/controllers/LocaleController.php:326
 msgid "Look in"
-msgstr "Zoeken in:"
+msgstr "Zoeken in"
 
 #: application/controllers/LocaleController.php:328
 msgid "Open"
@@ -2170,7 +2201,7 @@ msgstr "De inhoud van hun eigen bibliotheek beheren"
 
 #: application/controllers/LocaleController.php:342
 msgid "Program Managers can do the following:"
-msgstr ""
+msgstr "Programmamanagers kunnen het volgende doen:"
 
 #: application/controllers/LocaleController.php:343
 msgid "View and manage show content"
@@ -2222,7 +2253,7 @@ msgstr "Geef weer / verberg kolommen"
 
 #: application/controllers/LocaleController.php:356
 msgid "Columns"
-msgstr ""
+msgstr "Kolommen"
 
 #: application/controllers/LocaleController.php:358
 msgid "From {from} to {to}"
@@ -2295,15 +2326,15 @@ msgstr "Selecteer bestanden"
 
 #: application/controllers/LocaleController.php:380
 msgid "Add files to the upload queue and click the start button."
-msgstr "Voeg bestanden aan de upload wachtrij toe en klik op de begin knop"
+msgstr "Voeg bestanden aan de upload wachtrij toe en klik op de begin knop."
 
 #: application/controllers/LocaleController.php:381
 msgid "Filename"
-msgstr ""
+msgstr "Bestandsnaam"
 
 #: application/controllers/LocaleController.php:383
 msgid "Size"
-msgstr ""
+msgstr "Grootte"
 
 #: application/controllers/LocaleController.php:384
 msgid "Add Files"
@@ -2319,7 +2350,7 @@ msgstr "Begin upload"
 
 #: application/controllers/LocaleController.php:387
 msgid "Start Upload"
-msgstr ""
+msgstr "Start upload"
 
 #: application/controllers/LocaleController.php:388
 msgid "Add files"
@@ -2327,11 +2358,11 @@ msgstr "Bestanden toevoegen"
 
 #: application/controllers/LocaleController.php:389
 msgid "Stop current upload"
-msgstr ""
+msgstr "Stop de huidige upload"
 
 #: application/controllers/LocaleController.php:390
 msgid "Start uploading queue"
-msgstr ""
+msgstr "Begin met het uploaden van wachtrij"
 
 #: application/controllers/LocaleController.php:391
 #, php-format
@@ -2348,7 +2379,7 @@ msgstr "Sleep bestanden hierheen."
 
 #: application/controllers/LocaleController.php:394
 msgid "File extension error."
-msgstr "Bestandsextensie fout"
+msgstr "Bestandsextensie fout."
 
 #: application/controllers/LocaleController.php:395
 msgid "File size error."
@@ -2398,7 +2429,7 @@ msgstr "Upload URL zou verkeerd kunnen zijn of bestaat niet"
 
 #: application/controllers/LocaleController.php:407
 msgid "Error: File too large: "
-msgstr "Fout: Bestand is te groot"
+msgstr "Fout: Bestand is te groot: "
 
 #: application/controllers/LocaleController.php:408
 msgid "Error: Invalid file extension: "
@@ -2410,7 +2441,7 @@ msgstr "Standaard instellen"
 
 #: application/controllers/LocaleController.php:411
 msgid "Create Entry"
-msgstr "Aangemaakt op:"
+msgstr "Aangemaakt op"
 
 #: application/controllers/LocaleController.php:412
 msgid "Edit History Record"
@@ -2441,56 +2472,56 @@ msgstr "Nieuwe logboekvermelding"
 
 #: application/controllers/LocaleController.php:420
 msgid "No data available in table"
-msgstr ""
+msgstr "Geen gegevens beschikbaar in de tabel"
 
 #: application/controllers/LocaleController.php:421
 msgid "(filtered from _MAX_ total entries)"
-msgstr ""
+msgstr "(gefilterd uit _MAX_ totale invoer)"
 
 #: application/controllers/LocaleController.php:427
 msgid "First"
-msgstr ""
+msgstr "Eerst"
 
 #: application/controllers/LocaleController.php:428
 msgid "Last"
-msgstr ""
+msgstr "Laatst"
 
 #: application/controllers/LocaleController.php:429
 msgid "Next"
-msgstr ""
+msgstr "Volgende"
 
 #: application/controllers/LocaleController.php:430
 msgid "Previous"
-msgstr ""
+msgstr "Vorige"
 
 #: application/controllers/LocaleController.php:431
 msgid "Search:"
-msgstr ""
+msgstr "Zoeken:"
 
 #: application/controllers/LocaleController.php:432
 #: application/controllers/LocaleController.php:445
 msgid "No matching records found"
-msgstr ""
+msgstr "Geen overeenkomstige gegevens gevonden"
 
 #: application/controllers/LocaleController.php:433
 msgid "Drag tracks here from the library"
-msgstr ""
+msgstr "Sleep tracks hierheen vanuit de bibliotheek"
 
 #: application/controllers/LocaleController.php:434
 msgid "No tracks were played during the selected time period."
-msgstr ""
+msgstr "Tijdens de geselecteerde periode werden geen nummers afgespeeld."
 
 #: application/controllers/LocaleController.php:435
 msgid "Unpublish"
-msgstr ""
+msgstr "Niet publiceren"
 
 #: application/controllers/LocaleController.php:436
 msgid "No matching results found."
-msgstr ""
+msgstr "Geen passende resultaten gevonden."
 
 #: application/controllers/LocaleController.php:437
 msgid "Author"
-msgstr ""
+msgstr "Auteur"
 
 #: application/controllers/LocaleController.php:438
 #: application/forms/SmartBlockCriteria.php:65
@@ -2501,83 +2532,83 @@ msgstr "Beschrijving"
 
 #: application/controllers/LocaleController.php:439
 msgid "Link"
-msgstr ""
+msgstr "Link"
 
 #: application/controllers/LocaleController.php:440
 msgid "Publication Date"
-msgstr ""
+msgstr "Publicatiedatum"
 
 #: application/controllers/LocaleController.php:441
 msgid "Import Status"
-msgstr ""
+msgstr "Importstatus"
 
 #: application/controllers/LocaleController.php:442
 msgid "Actions"
-msgstr ""
+msgstr "Acties"
 
 #: application/controllers/LocaleController.php:443
 msgid "Delete from Library"
-msgstr ""
+msgstr "Verwijderen uit bibliotheek"
 
 #: application/controllers/LocaleController.php:444
 msgid "Successfully imported"
-msgstr ""
+msgstr "Succesvol geïmporteerd"
 
 #: application/controllers/LocaleController.php:446
 msgid "Show _MENU_"
-msgstr ""
+msgstr "Toon _MENU_"
 
 #: application/controllers/LocaleController.php:447
 msgid "Show _MENU_ entries"
-msgstr ""
+msgstr "Toon _MENU_ vermeldingen"
 
 #: application/controllers/LocaleController.php:448
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
-msgstr ""
+msgstr "Tonen van _START_ tot _END_ van _TOTAL_ inzendingen"
 
 #: application/controllers/LocaleController.php:449
 msgid "Showing _START_ to _END_ of _TOTAL_ tracks"
-msgstr ""
+msgstr "Tonen van _START_ tot _END_ van _TOTAL_ tracks"
 
 #: application/controllers/LocaleController.php:450
 msgid "Showing _START_ to _END_ of _TOTAL_ track types"
-msgstr ""
+msgstr "Tonen van _START_ tot _END_ van _TOTAL_ track types"
 
 #: application/controllers/LocaleController.php:451
 msgid "Showing _START_ to _END_ of _TOTAL_ users"
-msgstr ""
+msgstr "Tonen van _START_ tot _END_ van _TOTAL_ gebruikers"
 
 #: application/controllers/LocaleController.php:452
 msgid "Showing 0 to 0 of 0 entries"
-msgstr ""
+msgstr "Het tonen van 0 tot 0 van 0 inzendingen"
 
 #: application/controllers/LocaleController.php:453
 msgid "Showing 0 to 0 of 0 tracks"
-msgstr ""
+msgstr "Toont 0 tot 0 van 0 tracks"
 
 #: application/controllers/LocaleController.php:454
 msgid "Showing 0 to 0 of 0 track types"
-msgstr ""
+msgstr "Het tonen van 0 tot 0 van 0 track types"
 
 #: application/controllers/LocaleController.php:455
 msgid "(filtered from _MAX_ total track types)"
-msgstr ""
+msgstr "(gefilterd uit _MAX_ totaal aantal soorten sporen)"
 
 #: application/controllers/LocaleController.php:457
 msgid "Are you sure you want to delete this tracktype?"
-msgstr ""
+msgstr "Weet u zeker dat u dit tracktype wilt verwijderen?"
 
 #: application/controllers/LocaleController.php:458
 msgid "No track types were found."
-msgstr ""
+msgstr "Er zijn geen sporen gevonden."
 
 #: application/controllers/LocaleController.php:459
 msgid "No track types found"
-msgstr ""
+msgstr "Geen track types gevonden"
 
 #: application/controllers/LocaleController.php:460
 msgid "No matching track types found"
-msgstr ""
+msgstr "Geen overeenkomende track types gevonden"
 
 #: application/controllers/LocaleController.php:461
 #: application/forms/AddTracktype.php:50
@@ -2599,114 +2630,126 @@ msgstr "Uitgeschakeld"
 
 #: application/controllers/LocaleController.php:463
 msgid "Cancel upload"
-msgstr ""
+msgstr "Uploaden annuleren"
 
 #: application/controllers/LocaleController.php:464
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: application/controllers/LocaleController.php:465
 msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='https://libretime.org/docs/user-manual/playlists/'>More information</a>"
 msgstr ""
+"De inhoud van autoloadende afspeellijsten wordt een uur voor de uitzending "
+"toegevoegd aan shows. <a target='_blank' href='https://libretime.org/docs/"
+"user-manual/playlists/'>Meer informatie</a>"
 
 #: application/controllers/LocaleController.php:466
 msgid "Podcast settings saved"
-msgstr ""
+msgstr "Podcast instellingen opgeslagen"
 
 #: application/controllers/LocaleController.php:467
 msgid "Are you sure you want to delete this user?"
-msgstr ""
+msgstr "Weet je zeker dat je deze gebruiker wilt verwijderen?"
 
 #: application/controllers/LocaleController.php:468
 msgid "Can't delete yourself!"
-msgstr ""
+msgstr "Je kunt jezelf niet verwijderen!"
 
 #: application/controllers/LocaleController.php:469
 msgid "You haven't published any episodes!"
-msgstr ""
+msgstr "Je hebt geen enkele aflevering gepubliceerd!"
 
 #: application/controllers/LocaleController.php:470
 msgid "You can publish your uploaded content from the 'Tracks' view."
-msgstr ""
+msgstr "U kunt uw geüploade inhoud publiceren vanuit de \"Tracks\"-weergave."
 
 #: application/controllers/LocaleController.php:471
 msgid "Try it now"
-msgstr ""
+msgstr "Probeer het nu"
 
 #: application/controllers/LocaleController.php:472
 msgid "<p>If this option is unchecked, the smartblock will schedule as many tracks as can be played out <strong>in their entirety</strong> within the specified duration. This will usually result in audio playback that is slightly less than the specified duration.</p><p>If this option is checked, the smartblock will also schedule one final track which will overflow the specified duration. This final track may be cut off mid-way if the show into which the smartblock is added finishes.</p>"
 msgstr ""
+"<p>Als deze optie niet is aangevinkt, plant het smartblock zoveel tracks als "
+"<strong>in hun geheel</strong> kunnen worden afgespeeld binnen de opgegeven "
+"duur. Dit resulteert meestal in een audioweergave die iets korter is dan de "
+"opgegeven duur.</p><p>Als deze optie is aangevinkt, plant het smartblock ook "
+"een laatste track die de opgegeven duur overschrijdt. Dit laatste spoor kan "
+"halverwege worden afgebroken als de show waaraan het smartblock is "
+"toegevoegd, wordt beëindigd.</p>"
 
 #: application/controllers/LocaleController.php:473
 msgid "Playlist preview"
-msgstr ""
+msgstr "Voorbeeld van afspeellijst"
 
 #: application/controllers/LocaleController.php:474
 msgid "Smart Block"
-msgstr ""
+msgstr "Slim Blok"
 
 #: application/controllers/LocaleController.php:475
 msgid "Webstream preview"
-msgstr ""
+msgstr "Webstream voorbeeld"
 
 #: application/controllers/LocaleController.php:476
 msgid "You don't have permission to view the library."
-msgstr ""
+msgstr "Je hebt geen toestemming om de bibliotheek te bekijken."
 
 #: application/controllers/LocaleController.php:477
 #: application/forms/AddShowWhen.php:23
 msgid "Now"
-msgstr ""
+msgstr "Nu"
 
 #: application/controllers/LocaleController.php:478
 msgid "Click 'New' to create one now."
-msgstr ""
+msgstr "Klik op 'Nieuw' om er nu een aan te maken."
 
 #: application/controllers/LocaleController.php:479
 msgid "Click 'Upload' to add some now."
-msgstr ""
+msgstr "Klik op 'Uploaden' om nu wat toe te voegen."
 
 #: application/controllers/LocaleController.php:480
 msgid "Feed URL"
-msgstr ""
+msgstr "Feed URL"
 
 #: application/controllers/LocaleController.php:481
 msgid "Import Date"
-msgstr ""
+msgstr "Invoerdatum"
 
 #: application/controllers/LocaleController.php:482
 msgid "Add New Podcast"
-msgstr ""
+msgstr "Nieuwe podcast toevoegen"
 
 #: application/controllers/LocaleController.php:483
 msgid ""
 "Cannot schedule outside a show.\n"
 "Try creating a show first."
 msgstr ""
+"Kan niet buiten een show om plannen.\n"
+"Probeer eerst een show te maken."
 
 #: application/controllers/LocaleController.php:484
 msgid "No files have been uploaded yet."
-msgstr ""
+msgstr "Er zijn nog geen bestanden geupload."
 
 #: application/controllers/LocaleController.php:490
 msgid "On Air"
-msgstr ""
+msgstr "Live"
 
 #: application/controllers/LocaleController.php:491
 msgid "Off Air"
-msgstr ""
+msgstr "Uit de lucht"
 
 #: application/controllers/LocaleController.php:492
 msgid "Offline"
-msgstr ""
+msgstr "Offline"
 
 #: application/controllers/LocaleController.php:493
 msgid "Nothing scheduled"
-msgstr ""
+msgstr "Niets gepland"
 
 #: application/controllers/LocaleController.php:494
 msgid "Click 'Add' to create one now."
-msgstr ""
+msgstr "Klik op 'Toevoegen' om er nu een te maken."
 
 #: application/controllers/LoginController.php:47
 msgid "Please enter your username and password."
@@ -2718,7 +2761,7 @@ msgstr "E-mail kan niet worden verzonden. Controleer de instellingen van uw e-ma
 
 #: application/controllers/LoginController.php:150
 msgid "That username or email address could not be found."
-msgstr ""
+msgstr "Die gebruikersnaam of dat e-mailadres kon niet worden gevonden."
 
 #: application/controllers/LoginController.php:153
 msgid "There was a problem with the username or email address you entered."
@@ -2740,7 +2783,7 @@ msgstr "U kunt nummers toevoegen aan dynamische blokken."
 #: application/controllers/PlaylistController.php:163
 #, php-format
 msgid "You don't have permission to delete selected %s(s)."
-msgstr "Je hebt geen toestemming om te verwijderen van de geselecteerde %s(s)"
+msgstr "Je hebt geen toestemming om te verwijderen van de geselecteerde %s(s)."
 
 #: application/controllers/PlaylistController.php:176
 msgid "You can only add tracks to smart block."
@@ -2797,19 +2840,19 @@ msgstr "show bestaat niet"
 
 #: application/controllers/TracktypeController.php:62
 msgid "Track Type added successfully!"
-msgstr ""
+msgstr "Track Type succesvol toegevoegd!"
 
 #: application/controllers/TracktypeController.php:64
 msgid "Track Type updated successfully!"
-msgstr ""
+msgstr "Track Type succesvol bijgewerkt!"
 
 #: application/controllers/UserController.php:78
 msgid "User added successfully!"
-msgstr "gebruiker Succesvol Toegevoegd"
+msgstr "gebruiker Succesvol Toegevoegd!"
 
 #: application/controllers/UserController.php:80
 msgid "User updated successfully!"
-msgstr "gebruiker Succesvol bijgewerkt"
+msgstr "gebruiker Succesvol bijgewerkt!"
 
 #: application/controllers/UserController.php:184
 msgid "Settings updated successfully!"
@@ -2854,20 +2897,20 @@ msgstr "Ten minste 1 uur opnieuw uitzenden moet wachten"
 
 #: application/forms/AddShowAutoPlaylist.php:18
 msgid "Add Autoloading Playlist ?"
-msgstr ""
+msgstr "Automatisch ladende afspeellijst toevoegen ?"
 
 #: application/forms/AddShowAutoPlaylist.php:25
 msgid "Select Playlist"
-msgstr ""
+msgstr "Selecteer afspeellijst"
 
 #: application/forms/AddShowAutoPlaylist.php:32
 msgid "Repeat Playlist Until Show is Full ?"
-msgstr ""
+msgstr "Afspeellijst herhalen tot show vol is ?"
 
 #: application/forms/AddShowLiveStream.php:10
 #, php-format
 msgid "Use %s Authentication:"
-msgstr "verificatie %s  gebruiken:"
+msgstr "Gebruik %s Authenticatie:"
 
 #: application/forms/AddShowLiveStream.php:16
 msgid "Use Custom Authentication:"
@@ -2883,15 +2926,15 @@ msgstr "Aangepaste wachtwoord"
 
 #: application/forms/AddShowLiveStream.php:50
 msgid "Host:"
-msgstr ""
+msgstr "Host:"
 
 #: application/forms/AddShowLiveStream.php:56
 msgid "Port:"
-msgstr ""
+msgstr "Port:"
 
 #: application/forms/AddShowLiveStream.php:62
 msgid "Mount:"
-msgstr ""
+msgstr "Mount:"
 
 #: application/forms/AddShowLiveStream.php:80
 msgid "Username field cannot be empty."
@@ -2907,7 +2950,7 @@ msgstr "Opnemen vanaf de lijn In?"
 
 #: application/forms/AddShowRR.php:15
 msgid "Rebroadcast?"
-msgstr "Rebroadcast?"
+msgstr "Heruitzending?"
 
 #: application/forms/AddShowRebroadcastDates.php:14
 msgid "days"
@@ -2915,7 +2958,7 @@ msgstr "dagen"
 
 #: application/forms/AddShowRepeats.php:8
 msgid "Link:"
-msgstr "link"
+msgstr "Link:"
 
 #: application/forms/AddShowRepeats.php:14
 msgid "Repeat Type:"
@@ -2961,7 +3004,7 @@ msgstr "Dag van de week"
 #: application/forms/ShowBuilder.php:47
 #: application/forms/ShowListenerStat.php:45
 msgid "Date End:"
-msgstr "datum einde"
+msgstr "Einddatum:"
 
 #: application/forms/AddShowRepeats.php:69
 msgid "No End?"
@@ -2977,27 +3020,27 @@ msgstr "Selecteer een Herhaal dag"
 
 #: application/forms/AddShowStyle.php:11
 msgid "Background Colour:"
-msgstr "achtergrond kleur"
+msgstr "Achtergrond Kleur:"
 
 #: application/forms/AddShowStyle.php:30
 msgid "Text Colour:"
-msgstr "tekst kleur"
+msgstr "Tekst Kleur:"
 
 #: application/forms/AddShowStyle.php:48
 msgid "Current Logo:"
-msgstr ""
+msgstr "Huidig logo:"
 
 #: application/forms/AddShowStyle.php:71
 msgid "Show Logo:"
-msgstr ""
+msgstr "Toon Logo:"
 
 #: application/forms/AddShowStyle.php:86
 msgid "Logo Preview:"
-msgstr ""
+msgstr "Logo Voorbeeld:"
 
 #: application/forms/AddShowWhat.php:26
 msgid "Name:"
-msgstr "naam"
+msgstr "Naam:"
 
 #: application/forms/AddShowWhat.php:30
 msgid "Untitled Show"
@@ -3005,7 +3048,7 @@ msgstr "Zonder titel show"
 
 #: application/forms/AddShowWhat.php:36
 msgid "URL:"
-msgstr "URL"
+msgstr "URL:"
 
 #: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:133
 msgid "Genre:"
@@ -3018,7 +3061,7 @@ msgstr "Omschrijving:"
 
 #: application/forms/AddShowWhat.php:69
 msgid "Instance Description:"
-msgstr ""
+msgstr "Exemplaarbeschrijving:"
 
 #: application/forms/AddShowWhen.php:15
 msgid "'%value%' does not fit the time format 'HH:mm'"
@@ -3026,15 +3069,15 @@ msgstr "'%value%' past niet de tijdnotatie 'UU:mm'"
 
 #: application/forms/AddShowWhen.php:21
 msgid "Start Time:"
-msgstr ""
+msgstr "Begintijd:"
 
 #: application/forms/AddShowWhen.php:24 application/forms/AddShowWhen.php:35
 msgid "In the Future:"
-msgstr ""
+msgstr "In de toekomst:"
 
 #: application/forms/AddShowWhen.php:63
 msgid "End Time:"
-msgstr ""
+msgstr "Eindtijd:"
 
 #: application/forms/AddShowWhen.php:90
 msgid "Duration:"
@@ -3062,7 +3105,7 @@ msgstr "Eind datum/tijd mogen niet in het verleden"
 
 #: application/forms/AddShowWhen.php:174
 msgid "Cannot have duration < 0m"
-msgstr "Geen duur hebben < 0m"
+msgstr "Geen duur hebben &lt; 0m"
 
 #: application/forms/AddShowWhen.php:177
 msgid "Cannot have duration 00h 00m"
@@ -3080,7 +3123,7 @@ msgstr "kan Niet gepland overlappen shows"
 
 #: application/forms/AddShowWho.php:9
 msgid "Search Users:"
-msgstr "zoek gebruikers"
+msgstr "Zoek Gebruikers:"
 
 #: application/forms/AddShowWho.php:23
 msgid "DJs:"
@@ -3088,35 +3131,35 @@ msgstr "DJs:"
 
 #: application/forms/AddTracktype.php:20
 msgid "Type Name:"
-msgstr ""
+msgstr "Type Naam:"
 
 #: application/forms/AddTracktype.php:26
 msgid "Code:"
-msgstr ""
+msgstr "Code:"
 
 #: application/forms/AddTracktype.php:45
 msgid "Visibility:"
-msgstr ""
+msgstr "Zichtbaarheid:"
 
 #: application/forms/AddTracktype.php:57
 msgid "Analyze cue points:"
-msgstr ""
+msgstr "Analyseer cue points:"
 
 #: application/forms/AddTracktype.php:74
 msgid "Code is not unique."
-msgstr ""
+msgstr "Code is niet uniek."
 
 #: application/forms/AddUser.php:27 application/forms/EditUser.php:36
 #: application/forms/LiveStreamingPreferences.php:40
 #: application/forms/Login.php:39
 msgid "Username:"
-msgstr "gebuikersnaam"
+msgstr "Gebuikersnaam:"
 
 #: application/forms/AddUser.php:36 application/forms/EditUser.php:47
 #: application/forms/LiveStreamingPreferences.php:52
 #: application/forms/Login.php:53
 msgid "Password:"
-msgstr "wachtwoord"
+msgstr "Wachtwoord:"
 
 #: application/forms/AddUser.php:44 application/forms/EditUser.php:56
 msgid "Verify Password:"
@@ -3124,23 +3167,23 @@ msgstr "Wachtwoord verifiëren:"
 
 #: application/forms/AddUser.php:53 application/forms/EditUser.php:66
 msgid "Firstname:"
-msgstr "voornaam"
+msgstr "Voornaam:"
 
 #: application/forms/AddUser.php:59 application/forms/EditUser.php:74
 msgid "Lastname:"
-msgstr "achternaam"
+msgstr "Achternaam:"
 
 #: application/forms/AddUser.php:65 application/forms/EditUser.php:82
 msgid "Email:"
-msgstr "e-mail"
+msgstr "E-mail:"
 
 #: application/forms/AddUser.php:74 application/forms/EditUser.php:93
 msgid "Mobile Phone:"
-msgstr "mobiel nummer"
+msgstr "Mobielnummer:"
 
 #: application/forms/AddUser.php:80 application/forms/EditUser.php:101
 msgid "Skype:"
-msgstr "skype"
+msgstr "Skype:"
 
 #: application/forms/AddUser.php:86 application/forms/EditUser.php:109
 msgid "Jabber:"
@@ -3156,48 +3199,48 @@ msgstr "Login naam is niet uniek."
 
 #: application/forms/DangerousPreferences.php:12
 msgid "Delete All Tracks in Library"
-msgstr ""
+msgstr "Alle tracks in de bibliotheek verwijderen"
 
 #: application/forms/DateRange.php:15 application/forms/ShowBuilder.php:17
 #: application/forms/ShowListenerStat.php:15
 msgid "Date Start:"
-msgstr "datum start"
+msgstr "Datum Start:"
 
 #: application/forms/EditAudioMD.php:52 application/forms/Player.php:15
 msgid "Title:"
-msgstr "Titel"
+msgstr "Titel:"
 
 #: application/forms/EditAudioMD.php:62
 msgid "Creator:"
-msgstr "Aangemaakt door"
+msgstr "Aangemaakt door:"
 
 #: application/forms/EditAudioMD.php:72
 msgid "Album:"
-msgstr "Album"
+msgstr "Album:"
 
 #: application/forms/EditAudioMD.php:89
 msgid "Owner:"
-msgstr ""
+msgstr "Eigenaar:"
 
 #: application/forms/EditAudioMD.php:101
 msgid "Select a Type"
-msgstr ""
+msgstr "Selecteer een type"
 
 #: application/forms/EditAudioMD.php:108
 msgid "Track Type:"
-msgstr ""
+msgstr "Type spoor:"
 
 #: application/forms/EditAudioMD.php:143
 msgid "Year:"
-msgstr "Jaar"
+msgstr "Jaar:"
 
 #: application/forms/EditAudioMD.php:156
 msgid "Label:"
-msgstr "label"
+msgstr "Label:"
 
 #: application/forms/EditAudioMD.php:166
 msgid "Composer:"
-msgstr "schrijver van een muziekwerk"
+msgstr "Samensteller:"
 
 #: application/forms/EditAudioMD.php:176
 msgid "Conductor:"
@@ -3205,7 +3248,7 @@ msgstr "Conductor:"
 
 #: application/forms/EditAudioMD.php:186
 msgid "Mood:"
-msgstr "Mood:"
+msgstr "Stemming:"
 
 #: application/forms/EditAudioMD.php:196
 msgid "BPM:"
@@ -3230,7 +3273,7 @@ msgstr "Taal:"
 
 #: application/forms/EditAudioMD.php:290
 msgid "Publish..."
-msgstr ""
+msgstr "Publiceren..."
 
 #: application/forms/EditHistoryItem.php:32
 #: application/services/HistoryService.php:1084
@@ -3252,11 +3295,11 @@ msgstr "station naam"
 
 #: application/forms/GeneralPreferences.php:34
 msgid "Station Description"
-msgstr ""
+msgstr "Station Beschrijving"
 
 #: application/forms/GeneralPreferences.php:43
 msgid "Station Logo:"
-msgstr "Station Logo:"
+msgstr "Stationslogo:"
 
 #: application/forms/GeneralPreferences.php:44
 msgid "Note: Anything larger than 600x600 will be resized."
@@ -3271,7 +3314,7 @@ msgstr "Standaardduur Crossfade (s):"
 #: application/forms/GeneralPreferences.php:97
 #: application/forms/LiveStreamingPreferences.php:31
 msgid "Please enter a time in seconds (eg. 0.5)"
-msgstr ""
+msgstr "Voer een tijd in seconden in (bijv. 0,5)"
 
 #: application/forms/GeneralPreferences.php:77
 msgid "Default Fade In (s):"
@@ -3283,49 +3326,63 @@ msgstr "standaard fade uit (s):"
 
 #: application/forms/GeneralPreferences.php:103
 msgid "Track Type Upload Default"
-msgstr ""
+msgstr "Standaard uploaden van tracktype"
 
 #: application/forms/GeneralPreferences.php:110
 msgid "Intro Autoloading Playlist"
-msgstr ""
+msgstr "Intro Automatisch ladende Afspeellijst"
 
 #: application/forms/GeneralPreferences.php:116
 msgid "Outro Autoloading Playlist"
-msgstr ""
+msgstr "Outro autoloading afspeellijst"
 
 #: application/forms/GeneralPreferences.php:122
 msgid "Overwrite Podcast Episode Metatags"
-msgstr ""
+msgstr "Podcastaflevering metatags overschrijven"
 
 #: application/forms/GeneralPreferences.php:128
 msgid "Enabling this feature will cause podcast episode tracks to have their Artist, Title, and Album metatags set from podcast feed values. Note that enabling this feature is recommended in order to ensure reliable scheduling of episodes via smartblocks."
 msgstr ""
+"Als je deze functie inschakelt, worden de metatags van podcastafleveringen "
+"ingesteld op basis van podcast feed-waarden. Merk op dat het inschakelen van "
+"deze functie wordt aanbevolen om een betrouwbare planning van afleveringen "
+"via smartblocks te garanderen."
 
 #: application/forms/GeneralPreferences.php:138
 msgid "Generate a smartblock and a playlist upon creation of a new podcast"
 msgstr ""
+"Genereer een smartblock en een afspeellijst bij het maken van een nieuwe "
+"podcast"
 
 #: application/forms/GeneralPreferences.php:144
 msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
 msgstr ""
+"Als deze optie is ingeschakeld, worden bij het aanmaken van een nieuwe "
+"podcast onmiddellijk een nieuw smartblock en een nieuwe afspeellijst "
+"gegenereerd die overeenkomen met het nieuwste nummer van de podcast. Merk op "
+"dat de functie \"Metatags van podcastafleveringen overschrijven\" ook moet "
+"zijn ingeschakeld, zodat smartblocks betrouwbaar afleveringen kunnen vinden."
 
 #: application/forms/GeneralPreferences.php:156
 msgid "Public LibreTime API"
-msgstr ""
+msgstr "Openbare LibreTime API"
 
 #: application/forms/GeneralPreferences.php:157
 msgid "Required for embeddable schedule widget."
-msgstr ""
+msgstr "Vereist voor embeddable schedule widget."
 
 #: application/forms/GeneralPreferences.php:163
 msgid ""
 "Enabling this feature will allow LibreTime to provide schedule data\n"
 "                                            to external widgets that can be embedded in your website."
 msgstr ""
+"Door deze functie in te schakelen kan LibreTime planningsgegevens leveren\n"
+"                                            aan externe widgets die in uw "
+"website kunnen worden geïntegreerd."
 
 #: application/forms/GeneralPreferences.php:175
 msgid "Default Language"
-msgstr ""
+msgstr "Standaardtaal"
 
 #: application/forms/GeneralPreferences.php:182
 #: application/forms/SetupLanguageTimezone.php:22
@@ -3338,51 +3395,51 @@ msgstr "Week start aan"
 
 #: application/forms/GeneralPreferences.php:206
 msgid "Display login button on your Radio Page?"
-msgstr ""
+msgstr "Inlogknop op uw radiopagina weergeven?"
 
 #: application/forms/GeneralPreferences.php:211
 msgid "Feature Previews"
-msgstr ""
+msgstr "Functievoorbeelden"
 
 #: application/forms/GeneralPreferences.php:217
 msgid "Enable this to opt-in to test new features."
-msgstr ""
+msgstr "Schakel dit in om u aan te melden voor het testen van nieuwe functies."
 
 #: application/forms/LiveStreamingPreferences.php:15
 msgid "Auto Switch Off:"
-msgstr ""
+msgstr "Automatisch uitschakelen:"
 
 #: application/forms/LiveStreamingPreferences.php:21
 msgid "Auto Switch On:"
-msgstr ""
+msgstr "Automatisch inschakelen:"
 
 #: application/forms/LiveStreamingPreferences.php:27
 msgid "Switch Transition Fade (s):"
-msgstr ""
+msgstr "Schakelaar Overgang Fade (s):"
 
 #: application/forms/LiveStreamingPreferences.php:59
 msgid "Master Source Host:"
-msgstr ""
+msgstr "Hoofdbronhost:"
 
 #: application/forms/LiveStreamingPreferences.php:66
 msgid "Master Source Port:"
-msgstr ""
+msgstr "Hoofdbronpoort:"
 
 #: application/forms/LiveStreamingPreferences.php:73
 msgid "Master Source Mount:"
-msgstr ""
+msgstr "Hoofdbronbevestiging:"
 
 #: application/forms/LiveStreamingPreferences.php:81
 msgid "Show Source Host:"
-msgstr ""
+msgstr "Toon bronhost:"
 
 #: application/forms/LiveStreamingPreferences.php:88
 msgid "Show Source Port:"
-msgstr ""
+msgstr "Toon Source Port:"
 
 #: application/forms/LiveStreamingPreferences.php:95
 msgid "Show Source Mount:"
-msgstr ""
+msgstr "Bronbevestiging weergeven:"
 
 #: application/forms/Login.php:78
 msgid "Login"
@@ -3402,7 +3459,7 @@ msgstr "Wachtwoord bevestiging komt niet overeen met uw wachtwoord."
 
 #: application/forms/PasswordRestore.php:12
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #: application/forms/PasswordRestore.php:23
 msgid "Username"
@@ -3414,7 +3471,7 @@ msgstr "Reset wachtwoord"
 
 #: application/forms/PasswordRestore.php:44
 msgid "Back"
-msgstr ""
+msgstr "Terug"
 
 #: application/forms/Player.php:14
 msgid "Now Playing"
@@ -3422,63 +3479,65 @@ msgstr "Nu spelen"
 
 #: application/forms/Player.php:25
 msgid "Select Stream:"
-msgstr ""
+msgstr "Selecteer Stream:"
 
 #: application/forms/Player.php:28
 msgid "Auto detect the most appropriate stream to use."
-msgstr ""
+msgstr "Detecteert automatisch de meest geschikte stream om te gebruiken."
 
 #: application/forms/Player.php:29
 msgid "Select a stream:"
-msgstr ""
+msgstr "Selecteer een stream:"
 
 #: application/forms/Player.php:41
 msgid " - Mobile friendly"
-msgstr ""
+msgstr " - Mobielvriendelijk"
 
 #: application/forms/Player.php:45
 msgid " - The player does not support Opus streams."
-msgstr ""
+msgstr " - De speler ondersteunt geen Opus-streams."
 
 #: application/forms/Player.php:71
 msgid "Embeddable code:"
-msgstr ""
+msgstr "Insluitbare code:"
 
 #: application/forms/Player.php:72
 msgid "Copy this code and paste it into your website's HTML to embed the player in your site."
 msgstr ""
+"Kopieer deze code en plak hem in de HTML van uw website om de speler op uw "
+"site in te sluiten."
 
 #: application/forms/Player.php:77
 msgid "Preview:"
-msgstr ""
+msgstr "Voorbeeld:"
 
 #: application/forms/PodcastPreferences.php:9
 msgid "Feed Privacy"
-msgstr ""
+msgstr "Privacy van het voer"
 
 #: application/forms/PodcastPreferences.php:11
 msgid "Public"
-msgstr ""
+msgstr "Publiek"
 
 #: application/forms/PodcastPreferences.php:12
 msgid "Private"
-msgstr ""
+msgstr "Privé"
 
 #: application/forms/SetupLanguageTimezone.php:17
 msgid "Station Language"
-msgstr ""
+msgstr "Stationstaal"
 
 #: application/forms/ShowBuilder.php:75 application/forms/ShowBuilder.php:92
 msgid "Filter by Show"
-msgstr ""
+msgstr "Filter op show"
 
 #: application/forms/ShowBuilder.php:83
 msgid "All My Shows:"
-msgstr "al mij shows"
+msgstr "Al mijn shows:"
 
 #: application/forms/ShowBuilder.php:94
 msgid "My Shows"
-msgstr ""
+msgstr "Mijn shows"
 
 #: application/forms/SmartBlockCriteria.php:56
 #: application/models/Block.php:1432 application/models/Block.php:1530
@@ -3494,57 +3553,57 @@ msgstr "Bit Rate (kbps)"
 #: application/models/Block.php:1452 application/models/Block.php:1550
 #: application/services/HistoryService.php:1065
 msgid "Track Type"
-msgstr ""
+msgstr "Track Type"
 
 #: application/forms/SmartBlockCriteria.php:80
 #: application/models/Block.php:1457 application/models/Block.php:1555
 msgid "Sample Rate (kHz)"
-msgstr "Sample Rate (kHz)"
+msgstr "Samplefrequentie (kHz)"
 
 #: application/forms/SmartBlockCriteria.php:134
 #: application/models/Block.php:1473 application/models/Block.php:1571
 msgid "before"
-msgstr ""
+msgstr "eerder"
 
 #: application/forms/SmartBlockCriteria.php:135
 #: application/models/Block.php:1474 application/models/Block.php:1572
 msgid "after"
-msgstr ""
+msgstr "na"
 
 #: application/forms/SmartBlockCriteria.php:136
 #: application/models/Block.php:1475 application/models/Block.php:1573
 msgid "between"
-msgstr ""
+msgstr "tussen"
 
 #: application/forms/SmartBlockCriteria.php:152
 #: application/forms/SmartBlockCriteria.php:471
 #: application/forms/SmartBlockCriteria.php:513
 msgid "Select unit of time"
-msgstr ""
+msgstr "Selecteer tijdseenheid"
 
 #: application/forms/SmartBlockCriteria.php:153
 msgid "minute(s)"
-msgstr ""
+msgstr "minuut(en)"
 
 #: application/forms/SmartBlockCriteria.php:154
 msgid "hour(s)"
-msgstr ""
+msgstr "uur(en)"
 
 #: application/forms/SmartBlockCriteria.php:155
 msgid "day(s)"
-msgstr ""
+msgstr "dag(en)"
 
 #: application/forms/SmartBlockCriteria.php:156
 msgid "week(s)"
-msgstr ""
+msgstr "week(en)"
 
 #: application/forms/SmartBlockCriteria.php:157
 msgid "month(s)"
-msgstr ""
+msgstr "maand(en)"
 
 #: application/forms/SmartBlockCriteria.php:158
 msgid "year(s)"
-msgstr ""
+msgstr "jaar(en)"
 
 #: application/forms/SmartBlockCriteria.php:169
 msgid "hours"
@@ -3561,35 +3620,35 @@ msgstr "artikelen"
 
 #: application/forms/SmartBlockCriteria.php:172
 msgid "time remaining in show"
-msgstr ""
+msgstr "resterende tijd van de show"
 
 #: application/forms/SmartBlockCriteria.php:183
 msgid "Randomly"
-msgstr ""
+msgstr "Random"
 
 #: application/forms/SmartBlockCriteria.php:184
 msgid "Newest"
-msgstr ""
+msgstr "Nieuwste"
 
 #: application/forms/SmartBlockCriteria.php:185
 msgid "Oldest"
-msgstr ""
+msgstr "Oudste"
 
 #: application/forms/SmartBlockCriteria.php:186
 msgid "Most recently played"
-msgstr ""
+msgstr "Meest recent gespeeld"
 
 #: application/forms/SmartBlockCriteria.php:187
 msgid "Least recently played"
-msgstr ""
+msgstr "Minst recent gespeeld"
 
 #: application/forms/SmartBlockCriteria.php:211
 msgid "Select Track Type"
-msgstr ""
+msgstr "Selecteer Track Type"
 
 #: application/forms/SmartBlockCriteria.php:268
 msgid "Type:"
-msgstr ""
+msgstr "Type:"
 
 #: application/forms/SmartBlockCriteria.php:271
 msgid "Dynamic"
@@ -3601,23 +3660,23 @@ msgstr "status"
 
 #: application/forms/SmartBlockCriteria.php:437
 msgid "Select track type"
-msgstr ""
+msgstr "Selecteer type track"
 
 #: application/forms/SmartBlockCriteria.php:523
 msgid "Allow Repeated Tracks:"
-msgstr ""
+msgstr "Herhaalde tracks toestaan:"
 
 #: application/forms/SmartBlockCriteria.php:531
 msgid "Allow last track to exceed time limit:"
-msgstr ""
+msgstr "Laat het laatste nummer de tijdslimiet overschrijden:"
 
 #: application/forms/SmartBlockCriteria.php:540
 msgid "Sort Tracks:"
-msgstr ""
+msgstr "Sorteer nummers:"
 
 #: application/forms/SmartBlockCriteria.php:558
 msgid "Limit to:"
-msgstr ""
+msgstr "Beperk tot:"
 
 #: application/forms/SmartBlockCriteria.php:570
 msgid "Generate playlist content and save criteria"
@@ -3629,7 +3688,7 @@ msgstr "Shuffle afspeellijst inhoud"
 
 #: application/forms/SmartBlockCriteria.php:584
 msgid "Shuffle"
-msgstr "Shuffle"
+msgstr "Schudden"
 
 #: application/forms/SmartBlockCriteria.php:813
 #: application/forms/SmartBlockCriteria.php:825
@@ -3659,11 +3718,13 @@ msgstr "'Lengte' moet in ' 00:00:00 ' formaat"
 #: application/forms/SmartBlockCriteria.php:858
 msgid "Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
 msgstr ""
+"Alleen niet-negatieve gehele getallen zijn toegestaan (bijv. 1 of 5) voor de "
+"tekstwaarde"
 
 #: application/forms/SmartBlockCriteria.php:863
 #: application/forms/SmartBlockCriteria.php:888
 msgid "You must select a time unit for a relative datetime."
-msgstr ""
+msgstr "U moet een tijdseenheid selecteren voor een relatieve datumtijd."
 
 #: application/forms/SmartBlockCriteria.php:868
 #: application/forms/SmartBlockCriteria.php:893
@@ -3673,6 +3734,8 @@ msgstr "De waarde moet in timestamp indeling (bijvoorbeeld 0000-00-00 of 0000-00
 #: application/forms/SmartBlockCriteria.php:883
 msgid "Only non-negative integer numbers are allowed for a relative date time"
 msgstr ""
+"Alleen niet-negatieve gehele getallen zijn toegestaan voor een relatieve "
+"datumtijd"
 
 #: application/forms/SmartBlockCriteria.php:910
 msgid "The value has to be numeric"
@@ -3684,7 +3747,7 @@ msgstr "De waarde moet minder dan 2147483648"
 
 #: application/forms/SmartBlockCriteria.php:920
 msgid "The value cannot be empty"
-msgstr ""
+msgstr "De waarde kan niet leeg zijn"
 
 #: application/forms/SmartBlockCriteria.php:925
 #, php-format
@@ -3697,7 +3760,7 @@ msgstr "Waarde kan niet leeg"
 
 #: application/forms/StreamSetting.php:26
 msgid "Stream Label:"
-msgstr "Stream Label:"
+msgstr "Stream-label:"
 
 #: application/forms/StreamSetting.php:28
 msgid "Artist - Title"
@@ -3713,7 +3776,7 @@ msgstr "Station naam - Show naam"
 
 #: application/forms/StreamSetting.php:38
 msgid "Off Air Metadata"
-msgstr "Off Air Metadata"
+msgstr "Off Air metagegevens"
 
 #: application/forms/StreamSetting.php:45
 msgid "Enable Replay Gain"
@@ -3725,19 +3788,19 @@ msgstr "Replay Gain Modifier"
 
 #: application/forms/StreamSetting.php:60
 msgid "Hardware Audio Output:"
-msgstr ""
+msgstr "Hardware Audio uitgang:"
 
 #: application/forms/StreamSetting.php:69
 msgid "Output Type"
-msgstr ""
+msgstr "Uitvoertype"
 
 #: application/forms/StreamSettingSubForm.php:35
 msgid "Enabled:"
-msgstr "Ingeschakeld"
+msgstr "Ingeschakeld:"
 
 #: application/forms/StreamSettingSubForm.php:43
 msgid "Mobile:"
-msgstr ""
+msgstr "Mobiel:"
 
 #: application/forms/StreamSettingSubForm.php:51
 msgid "Stream Type:"
@@ -3777,32 +3840,34 @@ msgstr "URL"
 
 #: application/forms/StreamSettingSubForm.php:142
 msgid "Stream URL"
-msgstr ""
+msgstr "Stream-URL"
 
 #: application/forms/TuneInPreferences.php:20
 msgid "Push metadata to your station on TuneIn?"
-msgstr ""
+msgstr "Push je metadata naar je station op TuneIn?"
 
 #: application/forms/TuneInPreferences.php:25
 msgid "Station ID:"
-msgstr ""
+msgstr "Station ID:"
 
 #: application/forms/TuneInPreferences.php:31
 msgid "Partner Key:"
-msgstr ""
+msgstr "Partnersleutel:"
 
 #: application/forms/TuneInPreferences.php:37
 msgid "Partner Id:"
-msgstr ""
+msgstr "Partneridentificatie:"
 
 #: application/forms/TuneInPreferences.php:78
 #: application/forms/TuneInPreferences.php:87
 msgid "Invalid TuneIn Settings. Please ensure your TuneIn settings are correct and try again."
 msgstr ""
+"Ongeldige TuneIn instellingen. Controleer of uw TuneIn-instellingen correct "
+"zijn en probeer het opnieuw."
 
 #: application/forms/WatchedDirPreferences.php:13
 msgid "Import Folder:"
-msgstr "mappen importeren"
+msgstr "Importeer Map:"
 
 #: application/forms/WatchedDirPreferences.php:24
 msgid "Watched Folders:"
@@ -3839,7 +3904,7 @@ msgstr "'%value%' is niet tussen '%min%' en '%max%', inclusief"
 
 #: application/forms/helpers/ValidationTypes.php:90
 msgid "Passwords do not match"
-msgstr "Wachtwoorden komen niet overeen."
+msgstr "Wachtwoorden komen niet overeen"
 
 #: application/models/Auth.php:31
 #, php-format
@@ -3848,6 +3913,9 @@ msgid ""
 "\n"
 "Please click this link to reset your password: "
 msgstr ""
+"Hoi %s, \n"
+"\n"
+"Klik op deze link om uw wachtwoord opnieuw in te stellen: "
 
 #: application/models/Auth.php:33
 #, php-format
@@ -3856,6 +3924,9 @@ msgid ""
 "\n"
 "If you have any problems, please contact our support team: %s"
 msgstr ""
+"\n"
+"\n"
+"Als u problemen hebt, neem dan contact op met ons ondersteuningsteam: %s"
 
 #: application/models/Auth.php:34
 #, php-format
@@ -3865,6 +3936,10 @@ msgid ""
 "Thank you,\n"
 "The %s Team"
 msgstr ""
+"\n"
+"\n"
+"Bedankt,\n"
+"Het %s Team"
 
 #: application/models/Auth.php:36
 #, php-format
@@ -3878,7 +3953,7 @@ msgstr "Het Cue in en cue uit null zijn."
 #: application/models/Block.php:867 application/models/Block.php:922
 #: application/models/Playlist.php:840 application/models/Playlist.php:881
 msgid "Can't set cue out to be greater than file length."
-msgstr "Niet instellen cue uit groter zijn dan de bestandslengte van het"
+msgstr "Kan cue out niet groter instellen dan de bestandslengte."
 
 #: application/models/Block.php:879 application/models/Block.php:899
 #: application/models/Playlist.php:832 application/models/Playlist.php:855
@@ -3891,16 +3966,16 @@ msgstr "Niet instellen cue uit op kleiner zijn dan het cue in."
 
 #: application/models/Block.php:1448 application/models/Block.php:1546
 msgid "Upload Time"
-msgstr ""
+msgstr "Upload Tijd"
 
 #: application/models/Library.php:36 application/models/Library.php:57
 msgid "None"
-msgstr ""
+msgstr "Geen"
 
 #: application/models/Preference.php:536
 #, php-format
 msgid "Powered by %s"
-msgstr ""
+msgstr "Aangedreven door %s"
 
 #: application/models/Preference.php:655
 msgid "Select Country"
@@ -3908,7 +3983,7 @@ msgstr "Selecteer land"
 
 #: application/models/Schedule.php:211
 msgid "livestream"
-msgstr ""
+msgstr "Livestream"
 
 #: application/models/Scheduler.php:79
 msgid "Cannot move items out of linked shows"
@@ -3949,6 +4024,7 @@ msgstr "De show %s heeft al eerder zijn bijgewerkt!"
 #: application/models/Scheduler.php:187
 msgid "Content in linked shows cannot be changed while on air!"
 msgstr ""
+"De inhoud van gelinkte shows kan niet worden gewijzigd tijdens de uitzending!"
 
 #: application/models/Scheduler.php:202
 msgid "Cannot schedule a playlist that contains missing files."
@@ -3973,7 +4049,7 @@ msgstr ""
 #: application/models/ShowBuilder.php:212
 #, php-format
 msgid "Rebroadcast of %s from %s"
-msgstr "Rebroadcast van %s van %s"
+msgstr "Heruitzending van %s uit %s"
 
 #: application/models/Webstream.php:165
 msgid "Length needs to be greater than 0 minutes"
@@ -3981,11 +4057,11 @@ msgstr "Lengte moet groter zijn dan 0 minuten"
 
 #: application/models/Webstream.php:169
 msgid "Length should be of form \"00h 00m\""
-msgstr "Length should be of form \"00h 00m\""
+msgstr "De lengte moet de vorm \"00h 00m\""
 
 #: application/models/Webstream.php:182
 msgid "URL should be of form \"https://example.org\""
-msgstr "URL should be of form \"https://example.org\""
+msgstr "De URL moet de vorm hebben van \"https://example.org\""
 
 #: application/models/Webstream.php:185
 msgid "URL should be 512 characters or less"
@@ -4001,7 +4077,7 @@ msgstr "Webstream naam mag niet leeg zijn"
 
 #: application/models/Webstream.php:276
 msgid "Could not parse XSPF playlist"
-msgstr "Could not parse XSPF playlist"
+msgstr "Kon XSPF afspeellijst niet parsen"
 
 #: application/models/Webstream.php:297
 msgid "Could not parse PLS playlist"
@@ -4097,11 +4173,11 @@ msgstr "Gespeeld"
 
 #: application/services/PodcastService.php:163
 msgid "Auto-generated smartblock for podcast"
-msgstr ""
+msgstr "Automatisch gegenereerd smartblock voor podcast"
 
 #: application/views/scripts/partialviews/dashboard-sub-nav.php:18
 msgid "Webstreams"
-msgstr ""
+msgstr "Webstreams"
 
 #~ msgid " to "
 #~ msgstr "tot"
