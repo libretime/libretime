@@ -7,5 +7,5 @@ kombu==4.6.11
 lxml>=4.5.0,<4.10.0
 mutagen>=1.45.1,<1.47
 python-dateutil>=2.8.1,<2.9
-requests>=2.25.1,<2.30
+requests>=2.25.1,<2.32
 typing-extensions
