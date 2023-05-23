@@ -28,7 +28,7 @@ setup(
         "django>=3.2.12,<4.0",
         "djangorestframework>=3.12.1,<3.15",
         "drf-spectacular>=0.22.1,<0.25",
-        "requests>=2.25.1,<2.30",
+        "requests>=2.31.0,<2.32",
     ],
     extras_require={
         "prod": [
