@@ -23,7 +23,7 @@ setup(
     extras_require={
         "dev": [
             "requests-mock>=1.10.0,<1.11",
-            "types-requests>=2.25.1,<2.31",
+            "types-requests>=2.31.0,<2.32",
         ],
         "sentry": [
             "sentry-sdk>=1.15.0,<1.25",
