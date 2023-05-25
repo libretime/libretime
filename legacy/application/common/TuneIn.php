@@ -3,7 +3,7 @@
 class Application_Common_TuneIn
 {
     /**
-     * @param $title url encoded string
+     * @param $title  url encoded string
      * @param $artist url encoded string
      */
     public static function sendMetadataToTunein($title, $artist)

@@ -197,10 +197,10 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     /**
      * Update a ThirdPartyTrackReferences object for a completed upload.
      *
-     * @param $task         CeleryTasks the completed CeleryTasks object
-     * @param $episodeId    int         PodcastEpisodes identifier
-     * @param $episode      stdClass    simple object containing Podcast episode information
-     * @param $status       string      Celery task status
+     * @param $task      CeleryTasks the completed CeleryTasks object
+     * @param $episodeId int         PodcastEpisodes identifier
+     * @param $episode   stdClass    simple object containing Podcast episode information
+     * @param $status    string      Celery task status
      *
      * @return ThirdPartyTrackReferences the updated ThirdPartyTrackReferences object
      *

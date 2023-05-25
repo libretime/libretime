@@ -434,7 +434,6 @@ class Application_Common_DateHelper
      *
      * Convert float seconds value to playlist time format
      *
-     * @param float $seconds
      * @param mixed $p_seconds
      *
      * @return string

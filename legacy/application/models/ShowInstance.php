@@ -234,8 +234,6 @@ SQL;
     /**
      * Add a playlist as the last item of the current show.
      *
-     * @param int   $plId
-     *                             Playlist ID
      * @param mixed $pl_id
      * @param mixed $checkUserPerm
      */
@@ -257,8 +255,6 @@ SQL;
     /**
      * Add a playlist as the first item of the current show.
      *
-     * @param int   $plId
-     *                             Playlist ID
      * @param mixed $pl_id
      * @param mixed $checkUserPerm
      */

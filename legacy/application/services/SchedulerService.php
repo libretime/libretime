@@ -43,7 +43,7 @@ class Application_Service_SchedulerService
     /**
      * Applies the show start difference to any scheduled items.
      *
-     * @param $diff (integer, difference between unix epoch in seconds)
+     * @param       $diff        (integer, difference between unix epoch in seconds)
      * @param mixed $instanceIds
      */
     public static function updateScheduleStartTime($instanceIds, $diff)

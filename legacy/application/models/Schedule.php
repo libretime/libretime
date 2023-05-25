@@ -171,9 +171,9 @@ SQL;
      * If a current media item is currently playing, this function then attempts to
      * find an item that played previously and is scheduled to play next.
      *
-     * @param $utcNow                   DateTime current time in UTC
-     * @param $currentShowInstanceId    int      id of the show instance currently playing
-     * @param $source                   string   the current prioritized source
+     * @param $utcNow                DateTime current time in UTC
+     * @param $currentShowInstanceId int      id of the show instance currently playing
+     * @param $source                string   the current prioritized source
      *
      * @return array with data about the previous, current, and next media items playing.
      *               Returns an empty arrays if there is no media item currently playing
@@ -871,7 +871,6 @@ SQL;
      * @param array  $item     schedule info about one track
      * @param int    $media_id scheduled item's cc_files id
      * @param string $uri      path to the scheduled item's physical location
-     * @param int    $filsize  The file's file size in bytes
      * @param mixed  $filesize
      */
     private static function createFileScheduleEvent(&$data, $item, $media_id, $uri, $filesize)

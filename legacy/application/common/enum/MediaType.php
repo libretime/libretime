@@ -12,6 +12,6 @@ final class MediaType
 
     public static function getDefault()
     {
-        return static::__default;
+        return self::__default;
     }
 }

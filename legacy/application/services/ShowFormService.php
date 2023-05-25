@@ -469,8 +469,7 @@ class Application_Service_ShowFormService
     /**
      * Enter description here ...
      *
-     * @param DateTime $showStart   user's local time
-     * @param mixed    $p_showStart
+     * @param mixed $p_showStart
      */
     private function hasShowStarted($p_showStart)
     {
@@ -658,9 +657,8 @@ class Application_Service_ShowFormService
      * When the timezone is changed in add-show form this function
      * applies the new timezone to the start and end time.
      *
-     * @param $date String
-     * @param $time String
-     * @param $timezone String
+     * @param       $date        String
+     * @param       $time        String
      * @param mixed $newTimezone
      * @param mixed $oldTimezone
      */

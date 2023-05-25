@@ -590,9 +590,6 @@ class ApiController extends Zend_Controller_Action
      * New API endpoint to display metadata from any single track.
      *
      * Find metadata to any track imported (eg. id=1&return=json)
-     *
-     * @param int    $id     track ID
-     * @param string $return json, artwork_data, or artwork
      */
     public function trackAction()
     {

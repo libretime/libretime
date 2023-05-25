@@ -959,14 +959,13 @@ SQL;
     /**
      * Get all the show instances in the given time range (inclusive).
      *
-     * @param dateTime     $start_timestamp
-     *                                      In UTC time
-     * @param dateTime     $end_timestamp
-     *                                      In UTC time
-     * @param unknown_type $excludeInstance
-     * @param bool         $onlyRecord
-     * @param int          $showId
-     *                                      limits the results to instances of a given showId only
+     * @param dateTime $start_timestamp
+     *                                  In UTC time
+     * @param dateTime $end_timestamp
+     *                                  In UTC time
+     * @param bool     $onlyRecord
+     * @param int      $showId
+     *                                  limits the results to instances of a given showId only
      *
      * @return array
      */
@@ -1054,14 +1053,9 @@ SQL;
     }
 
     /**
-     * @param DateTime $start
-     *                             -in UTC time
-     * @param DateTime $end
-     *                             -in UTC time
-     * @param bool     $editable
-     * @param mixed    $p_start
-     * @param mixed    $p_end
-     * @param mixed    $p_editable
+     * @param mixed $p_start
+     * @param mixed $p_end
+     * @param mixed $p_editable
      */
     public static function &getFullCalendarEvents($p_start, $p_end, $p_editable = false)
     {
@@ -1301,7 +1295,7 @@ SQL;
      * Gets the current show, previous and next with an n-day window from
      * the given timeNow, so timeNow-2days and timeNow+$daysToRetrieve days.
      *
-     * @param $utcNow A DateTime object containing the current time in UTC
+     * @param       $utcNow          A DateTime object containing the current time in UTC
      * @param mixed $utcEndStr
      * @param mixed $showsToRetrieve
      *
