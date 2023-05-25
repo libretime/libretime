@@ -41,7 +41,6 @@ COPY shared/packages.ini /tmp/packages.ini
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    git \
     $(python3 /tmp/packages.py --format=line --exclude=python bullseye /tmp/packages.ini) \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /tmp/packages.py /tmp/packages.ini
