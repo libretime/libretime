@@ -247,12 +247,8 @@ class Application_Model_StoredFile
     /**
      * Set metadata element value.
      *
-     * @param string $category
-     *                           Metadata element by metadata constant
-     * @param string $value
-     *                           value to store, if NULL then delete record
-     * @param mixed  $p_category
-     * @param mixed  $p_value
+     * @param mixed $p_category
+     * @param mixed $p_value
      */
     public function setMetadataValue($p_category, $p_value)
     {
@@ -264,12 +260,8 @@ class Application_Model_StoredFile
     /**
      * Set metadata element value.
      *
-     * @param string $category
-     *                           Metadata element by db column
-     * @param string $value
-     *                           value to store, if NULL then delete record
-     * @param mixed  $p_category
-     * @param mixed  $p_value
+     * @param mixed $p_category
+     * @param mixed $p_value
      */
     public function setDbColMetadataValue($p_category, $p_value)
     {
@@ -468,7 +460,6 @@ SQL;
      * This function is for when media monitor detects deletion of file
      * and trying to update airtime side.
      *
-     * @param bool  $p_deleteFile
      * @param mixed $deleteFromPlaylist
      */
     public function deleteByMediaMonitor($deleteFromPlaylist = false)
@@ -1009,8 +1000,8 @@ SQL;
     /**
      * Enter description here ...
      *
-     * @param $dir_id - if this is not provided, it returns all files with full
-     * path constructed
+     * @param       $dir_id - if this is not provided, it returns all files with full
+     *                      path constructed
      * @param mixed $all
      */
     public static function listAllFiles($dir_id = null, $all = true)

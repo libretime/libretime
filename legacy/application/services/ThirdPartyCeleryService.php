@@ -46,7 +46,7 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
      *
      * @param $fileId       int    CcFiles identifier
      * @param $brokerTaskId int    broker task identifier to so we can asynchronously
-     *                             receive completed task messages
+     *                       receive completed task messages
      * @param $taskName     string broker task name
      *
      * @return CeleryTasks the created task
@@ -73,7 +73,7 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
      * Update a CeleryTasks object for a completed task
      * TODO: should we have a database layer class to handle Propel operations?
      *
-     * @param $task CeleryTasks the completed CeleryTasks object
+     * @param $task   CeleryTasks the completed CeleryTasks object
      * @param $status string    Celery task status
      *
      * @throws Exception
@@ -90,10 +90,10 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
      *
      * Manipulation and use of the track object is left up to child implementations
      *
-     * @param $task     CeleryTasks the completed CeleryTasks object
-     * @param $trackId  int         ThirdPartyTrackReferences identifier
-     * @param $result   mixed       Celery task result message
-     * @param $status   string      Celery task status
+     * @param $task    CeleryTasks the completed CeleryTasks object
+     * @param $trackId int         ThirdPartyTrackReferences identifier
+     * @param $result  mixed       Celery task result message
+     * @param $status  string      Celery task status
      *
      * @return ThirdPartyTrackReferences the updated ThirdPartyTrackReferences object
      *

@@ -39,8 +39,6 @@ class CcShowDays extends BaseCcShowDays
 
     /**
      * Returns the end of a show in the timezone it was created in.
-     *
-     * @param DateTime $startDateTime first show in show's local time
      */
     public function getLocalEndDateAndTime()
     {

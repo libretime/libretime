@@ -707,8 +707,6 @@ SQL;
     /**
      * Change fadeIn and fadeOut values for block Element.
      *
-     * @param int        $pos
-     *                            position of audioclip in block
      * @param string     $fadeIn
      *                            new value in ss.ssssss or extent format
      * @param string     $fadeOut
@@ -812,8 +810,6 @@ SQL;
     /**
      * Change cueIn/cueOut values for block element.
      *
-     * @param int    $pos
-     *                       position of audioclip in block
      * @param string $cueIn
      *                       new value in ss.ssssss or extent format
      * @param string $cueOut

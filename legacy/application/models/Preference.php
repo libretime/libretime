@@ -952,7 +952,7 @@ class Application_Model_Preference
     /**
      * Sets the time scale preference (agendaDay/agendaWeek/month) in Calendar.
      *
-     * @param $timeScale    new time scale
+     * @param $timeScale new time scale
      */
     public static function SetCalendarTimeScale($timeScale)
     {
@@ -976,7 +976,7 @@ class Application_Model_Preference
     /**
      * Sets the number of entries to show preference in library under Playlist Builder.
      *
-     * @param $numEntries    new number of entries to show
+     * @param $numEntries new number of entries to show
      */
     public static function SetLibraryNumEntries($numEntries)
     {
@@ -1000,7 +1000,7 @@ class Application_Model_Preference
     /**
      * Sets the time interval preference in Calendar.
      *
-     * @param $timeInterval        new time interval
+     * @param $timeInterval new time interval
      */
     public static function SetCalendarTimeInterval($timeInterval)
     {

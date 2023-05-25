@@ -781,8 +781,6 @@ SQL;
     /**
      * Change cueIn/cueOut values for playlist element.
      *
-     * @param int    $pos
-     *                       position of audioclip in playlist
      * @param string $cueIn
      *                       new value in ss.ssssss or extent format
      * @param string $cueOut
@@ -1033,8 +1031,6 @@ SQL;
 
     /**
      * Delete all files from playlist.
-     *
-     * @param int $p_playlistId
      */
     public function deleteAllFilesFromPlaylist()
     {

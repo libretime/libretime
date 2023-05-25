@@ -188,7 +188,7 @@ class CcFiles extends BaseCcFiles
     }
 
     /** Update a file with metadata specified in an array.
-     * @param $fileId string The ID of the file to update in the DB
+     * @param $fileId    string The ID of the file to update in the DB
      * @param $fileArray array An associative array containing metadata. Replaces those fields if they exist.
      *
      * @return array a sanitized version of the file metadata array
