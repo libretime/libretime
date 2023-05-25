@@ -47,19 +47,25 @@ The path to your storage was defined during the installation process, the defaul
 
 Install LibreTime on a new system by [running the installer](./install-using-the-installer.md#run-the-installer), and **don't run the setup tasks**.
 
-## Update the configuration files
-
-Update the configuration file to match the new configuration schema and update any changed values. See the [configuration](../configuration.md) documentation for more details.
-
-Edit the Icecast password in `/etc/icecast2/icecast.xml` to reflect the password used in Airtime.
-
-## Restore the backup
+## Restore the Airtime backup
 
 Restore [the Airtime backup](../backup.md#restore) on the newly installed LibreTime server.
 
-You have to restore the **database**, and the **files storage**.
+### Restore the storage
 
-Here is an example to restore your PostgreSQL database:
+Restore the storage by moving the files the your new storage location, the **new default** storage path is `/srv/libretime`.
+
+### Update the configuration
+
+The [configuration](../configuration.md) file changed a lot between Airtime and LibreTime, please take the time to understand it.
+
+Update the **new** LibreTime configuration file to match your previous Airtime settings. See the [configuration](../configuration.md) documentation for more details.
+
+The installer already configured random passwords for Icecast. If you need to restore the Icecast passwords used in Airtime, you have to edit the Icecast password in `/etc/icecast2/icecast.xml` and in the LibreTime [configuration](../configuration.md#stream) file.
+
+### Restore the database
+
+Restore the database by using the following command:
 
 ```bash
 sudo -u libretime libretime-api dbshell < airtime.sql
@@ -75,4 +81,4 @@ sudo -u libretime libretime-api migrate
 
 ## Finish
 
-Restart the LibreTime services and navigate to the LibreTime web-page.
+[Restart the LibreTime services](upgrade.md#restart-the-services) and navigate to the LibreTime web-page.
