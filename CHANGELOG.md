@@ -1,3 +1,195 @@
+<a name="3.1.0"></a>
+
+## [3.1.0](https://github.com/libretime/libretime/compare/3.0.2...3.1.0) (2023-05-26)
+
+- [Release note](https://libretime.org/docs/releases/3.1.0/)
+
+### Features
+
+- drop Ubuntu Bionic support
+- drop Python 3.6 support
+- drop Debian Buster support
+- drop Liquidsoap 1.1 support
+- drop Liquidsoap 1.3 support
+- drop Python 3.7 support
+- drop cc_stream_setting table
+- delete cc_pref stream preferences rows
+- **legacy:** remove db allowed_cors_origins preference ([#2095](https://github.com/libretime/libretime/issues/2095))
+- configure cue points analysis per track type
+- **playout:** use jinja2 env for template loading
+- **playout:** add jinja2 quote filter for liquidsoap
+- **playout:** use liquidsoap interactive variables
+- **playout:** remove unused liquidsoap outputs connection status
+- **playout:** remove unused liquidsoap restart function
+- **playout:** remove unused liquidsoap output namespace
+- replace loguru with logging
+- **playout:** use jinja to configure liquidsoap outputs
+- **playout:** enable vorbis metadata per icecast output
+- **playout:** use shared app for cli commands
+- **installer:** configure timezone using timedatectl ([#2418](https://github.com/libretime/libretime/issues/2418))
+- **playout:** don't serialize message twice
+- add python packages version
+- add sentry sdk
+- use secret_key config field instead of api_key ([#2444](https://github.com/libretime/libretime/issues/2444))
+- **api-client:** remove unused api v1 calls
+- **api-client:** rewrite api-client v1 using abstract client
+- **playout:** move liquidsoap auth to notify cli
+- **playout:** replace schedule event dicts with objects
+- **api:** add cors headers middleware ([#2479](https://github.com/libretime/libretime/issues/2479))
+- **playout:** replace thread timeout with socket timeout
+- remove dev files from tarball
+- include tarball checksums in releases
+- set icecast mount default charset to UTF-8
+- **playout:** allow harbor ssl configuration
+- **api:** install gunicorn/uvicorn from pip
+- install inside a python3 venv
+
+### Bug Fixes
+
+- **deps:** update dependency adbario/php-dot-notation to v3 ([#2226](https://github.com/libretime/libretime/issues/2226))
+- **deps:** update dependency league/uri to v6.7.2
+- **legacy:** set platform requirements to php ^7.4
+- **playout:** remove outdated liquidsoap code
+- **playout:** add types
+- **api:** allow single digit version for legacy schema
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.12.1
+- remove systemd ProtectHome feature ([#2243](https://github.com/libretime/libretime/issues/2243))
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.13.1 ([#2249](https://github.com/libretime/libretime/issues/2249))
+- **worker:** replace deprecated cgi.parse_header
+- **installer:** install missing sudo
+- **installer:** set home and login when running as postgres
+- **legacy:** add log entry on task run ([#2316](https://github.com/libretime/libretime/issues/2316))
+- **legacy:** log errors on connect check failure ([#2317](https://github.com/libretime/libretime/issues/2317))
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.13.2
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.13.3
+- **legacy:** advanced search by track type id
+- **legacy:** move forked deps to the libretime namespace
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.14.4
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.14.5
+- **legacy:** ensure options is a dict during json encoding
+- **legacy:** don't use dict assignment on object ([#2384](https://github.com/libretime/libretime/issues/2384))
+- **playout:** quote escape strings in liquidsoap entrypoint
+- **legacy:** do not delete audio file when removing artwork ([#2395](https://github.com/libretime/libretime/issues/2395))
+- **playout:** use explicit ids for liquidsoap components
+- **playout:** skip the identified queue instead of the current
+- **playout:** use the same number of schedule queues
+- **legacy:** on air light fails when no shows are scheduled
+- **playout:** flush liquidsoap response before sending new
+- **playout:** use package loader for liquidsoap templates
+- **playout:** %else is not defined
+- **playout:** when shows ends, next shows starts without fade-in/fade-out ([#2412](https://github.com/libretime/libretime/issues/2412))
+- **playout:** legacy pushes non validated data
+- **playout:** explicit ogg vorbis icecast encoder
+- **playout:** prevent unbound variables
+- **playout:** use int for liquidsoap queues map
+- **shared:** return type confusion
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.15.2
+- **api:** explicit FileImportStatusEnum in schema
+- pin postgresql version in docker-compose
+- pin rabbitmq version in docker-compose
+- allow overriding docker-compose predefined environment
+- move docker specific setup to dockerfile
+- **api:** cast string value to int enum ([#2461](https://github.com/libretime/libretime/issues/2461))
+- **playout:** quote incompatible <py3.9 type hints
+- **installer:** bump setuptools to ~=67.3 ([#2387](https://github.com/libretime/libretime/issues/2387))
+- **playout:** use new api-client v1
+- **playout:** catch oserror in liquidsoap client
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.16.1 (main) ([#2490](https://github.com/libretime/libretime/issues/2490))
+- **api:** require django >=4.2.0,<4.3
+- **api:** upgrade psycopg to v3.1
+- **playout:** remove unused ecasound package ([#2496](https://github.com/libretime/libretime/issues/2496))
+- **installer:** ignore whitespace during diff
+- **legacy:** don't print track_type id in show builder table ([#2510](https://github.com/libretime/libretime/issues/2510))
+- **legacy:** remove composer superuser warning ([#2515](https://github.com/libretime/libretime/issues/2515))
+- **legacy:** keep datatable settings between views ([#2519](https://github.com/libretime/libretime/issues/2519))
+- **api:** upgrade django code (pre-commit)
+- **analyzer:** remove unused python3 package
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.17.1 (main) ([#2556](https://github.com/libretime/libretime/issues/2556))
+
+### Documentation
+
+- **playout:** add simple inputs pipeline schema ([#2240](https://github.com/libretime/libretime/issues/2240))
+- add DOCKER_BUILDKIT env variable for docker-compose v1 ([#2270](https://github.com/libretime/libretime/issues/2270))
+- no need to update release note path
+- adapt c4 to our workflows
+- stop providing maintenance releases for old distributions
+- add pulseaudio output in containers tutorial ([#2166](https://github.com/libretime/libretime/issues/2166))
+- remove warning about docker install ([#2411](https://github.com/libretime/libretime/issues/2411))
+- docker-compose env variables setup
+- add instructions for the sentry setup ([#2441](https://github.com/libretime/libretime/issues/2441))
+- upgrade by migrating to a new server
+- fix database backup and restore commands
+- move contributing to docs/contribute
+- split developer and contributor manual
+- extract dev workflows from contributing docs
+- add some history notes
+- move release docs in the release section
+- fix broken links
+- ignore range format during docs linting
+- only use microsoft styling guide
+- move configuration documentation
+- rename setup to install
+- split install guide per install method
+- docker config template install with envsubst ([#2517](https://github.com/libretime/libretime/issues/2517))
+- improve reverse proxy docs
+- improve install guides
+- add certbot setup guide
+- ensure example values are replaced
+- fix broken link ([#2532](https://github.com/libretime/libretime/issues/2532))
+- add note about unused packages
+- improve airtime migration guide ([#2564](https://github.com/libretime/libretime/issues/2564))
+- split airtime migration into more steps ([#2565](https://github.com/libretime/libretime/issues/2565))
+- remove setup without reverse proxy
+- fix icecast certificates bundle command
+- install using a reverse proxy by default
+- be consistent with example domain ([#2568](https://github.com/libretime/libretime/issues/2568))
+- add 3.1.x distribution releases support
+
+### Tests
+
+- liquidsoap package from ppa is version 1.4.2 ([#2223](https://github.com/libretime/libretime/issues/2223))
+- **playout:** refresh snapshots after major upgrade
+- re-enable pylint logging-fstring-interpolation
+- **playout:** more entrypoint config test cases
+- **playout:** generated liquidsoap script syntax
+- **playout:** silence existing broad-exception-caught errors
+- **playout:** allow pylint failure
+- **playout:** check untyped defs with mypy
+- **api:** fix linting errors
+- **shared:** fix linting errors
+- **api:** fix linting errors
+- **shared:** fix linting errors
+- **playout:** class creation
+- **api-client:** allow linters failure
+- **playout:** move liq_conn fixture to conftest
+- **playout:** liquidsoap wait for version
+- **api:** add django-upgrade pre-commit hook
+
+### CI
+
+- test project weekly
+- enable renovate for 3.0.x ([#2277](https://github.com/libretime/libretime/issues/2277))
+- sync docs with libretime/website repository
+- pin vale version to v2.21.3
+- don't squash commits during docs sync
+- always print diff when schema changes
+- check if locale are up to date
+- update locales weekly, not for every commit ([#2403](https://github.com/libretime/libretime/issues/2403))
+- use bake file for container build
+- allow manual ci trigger
+- use bot to update locales
+- replace deprecated set-output ([#2408](https://github.com/libretime/libretime/issues/2408))
+- update docker hub containers description
+- replace stale bot with stale action ([#2421](https://github.com/libretime/libretime/issues/2421))
+- allow Falso as a word in codespell
+- allow Falso as a word in codespell
+- run all tests on python tools changes
+- don't run stale bot on feature requests ([#2527](https://github.com/libretime/libretime/issues/2527))
+
+### Reverts
+
+- chore(api): install django-rest-framework from git ([#2518](https://github.com/libretime/libretime/issues/2518))
+
 <a name="3.0.2"></a>
 
 ## [3.0.2](https://github.com/libretime/libretime/compare/3.0.1...3.0.2) (2023-02-21)
