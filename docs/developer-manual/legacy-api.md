@@ -15,7 +15,7 @@ If you intend to use the LibreTime API across a public network, for security rea
 The format of API requests is:
 
 ```
-https://libretime.example.com/api/api-action/format/json/api_key/XXXXXX
+https://libretime.example.org/api/api-action/format/json/api_key/XXXXXX
 ```
 
 where api-action is the type of request and XXXXXX is the secret API key. Available actions include:
@@ -55,7 +55,7 @@ Some API requests require the directory ID number to be specified as _dir_id_ in
 For example, using a request such as:
 
 ```
-http://libretime.example.com/api/list-all-files/format/json/api_key/XXXXXX/dir_id/1/
+http://libretime.example.org/api/list-all-files/format/json/api_key/XXXXXX/dir_id/1/
 ```
 
 returns the full path to each media file in the LibreTime storage directory:

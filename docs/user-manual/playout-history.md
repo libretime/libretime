@@ -42,10 +42,10 @@ Instead, your public-facing web server can retrieve the schedule information fro
 
 There are two kinds of information that can be retrieved remotely from the LibreTime API without authentication; the metadata for the current show plus the following show (live-info), or the schedule for the current week and the week ahead (week-info). The week-info metadata includes show names, times, and individual show URLs on your public website. That way, the audience for your station can click through from the schedule information to find out more about a particular show, or download a previous show recording that you might have made available.
 
-If your LibreTime server was accessible at https://libretime.example.com the live show information could be retrieved by your web server using this URL:
+If your LibreTime server was accessible at https://libretime.example.org the live show information could be retrieved by your web server using this URL:
 
 ```
-https://libretime.example.com/api/live-info/?callback
+https://libretime.example.org/api/live-info/?callback
 ```
 
 The comma-separated text metadata returned to your web server might be something like this:
@@ -130,7 +130,7 @@ The comma-separated text metadata returned to your web server might be something
 The information for the current week's schedule could be retrieved using the URL:
 
 ```
-https://libretime.example.com/api/week-info/?callback
+https://libretime.example.org/api/week-info/?callback
 ```
 
 In this case, the metadata returned would be in a different format from the above example, something like the following. To keep the example short, this particular schedule export only contains four shows on a Monday. A full weekly schedule export would contain a great deal more text.
@@ -205,20 +205,20 @@ If the LibreTime server is behind a firewall, or you want to protect the LibreTi
 
 Your system administrator can set up schedule caching on a standard Apache and PHP enabled web server with the _curl_ program installed, using the following steps:
 
-1. Create a shell script on the schedule server (schedule.example.com) that polls the remote LibreTime server (libretime.example.com), and writes the metadata returned into a pair of local temporary files:
+1. Create a shell script on the schedule server (schedule.example.com) that polls the remote LibreTime server (libretime.example.org), and writes the metadata returned into a pair of local temporary files:
 
 ```
 sudo nano /usr/local/bin/libretime-schedule.sh
 ```
 
-The content of this file should be like the following script, replacing libretime.example.com with the name of your LibreTime server:
+The content of this file should be like the following script, replacing libretime.example.org with the name of your LibreTime server:
 
 ```bash
 #!/bin/sh
 
-curl -s "https://libretime.example.com/api/live-info/?callback=***" > /tmp/live-info
+curl -s "https://libretime.example.org/api/live-info/?callback=***" > /tmp/live-info
 
-curl -s "https://libretime.example.com/api/week-info/?callback=***" > /tmp/week-info
+curl -s "https://libretime.example.org/api/week-info/?callback=***" > /tmp/week-info
 ```
 
 2. Make the script executable:

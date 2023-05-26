@@ -36,7 +36,7 @@ class FixtureConfig(BaseConfig):
 
 
 FIXTURE_CONFIG_RAW = """
-public_url: http://libretime.example.com/
+public_url: http://libretime.example.org/
 api_key: "f3bf04fc"
 allowed_hosts:
   - example.com
@@ -81,7 +81,7 @@ def test_base_config(tmp_path: Path):
     ):
         config = FixtureConfig(config_filepath)
 
-        assert config.public_url == "http://libretime.example.com"
+        assert config.public_url == "http://libretime.example.org"
         assert config.api_key == "f3bf04fc"
         assert config.allowed_hosts == ["example.com", "sub.example.com"]
         assert config.database.host == "localhost"
