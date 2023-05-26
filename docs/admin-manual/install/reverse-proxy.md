@@ -5,41 +5,9 @@ sidebar_position: 30
 
 To secure the communication between the users and LibreTime, you have to serve LibreTime over `https`.
 
-We document 2 options, with regards to were the `https` encryption should be terminated:
+The recommended way is to put a reverse proxy in front of LibreTime, and terminating the `https` communication at the reverse proxy.
 
-- [Securing without a reverse proxy](#securing-without-a-reverse-proxy)
-- [Securing with a reverse proxy](#securing-with-a-reverse-proxy)
-
-#### Securing without a reverse proxy
-
-One option is to directly update the nginx server configuration (deployed by the LibreTime installer) to load your TLS certificates and listen on the ports 80 and 443.
-
-```mermaid
-flowchart LR
-    internet[Internet]
-
-    subgraph internal[Your system or private network]
-        libretime[LibreTime service, listen on :80 and :443]
-
-        icecast[Icecast service, listen on :8000 and :8443]
-        liquidsoap[Liquidsoap service, listen on :8001 and 8002]
-    end
-
-    internet ==> libretime
-    internet ==> icecast
-    internet ==> liquidsoap
-```
-
-This is usually done automatically by Certbot. You can accomplish this by following one these guides:
-
-- [How To Secure Nginx with Let's Encrypt on Ubuntu 20.04](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04)
-- [How To Secure Apache with Let's Encrypt on Ubuntu 20.04](https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-ubuntu-20-04)
-
-#### Securing with a reverse proxy
-
-The second option, is to put a reverse proxy in front of LibreTime, and terminating the `https` communication at the reverse proxy.
-
-The benefits are managing your certificates in a single place, and being easier to extend your infrastructure. You also don't have to edit the LibreTime specific files which greatly helps when upgrading LibreTime.
+The benefits are managing your certificates in a single place, and being easier to extend your infrastructure. You also don't have to edit the LibreTime specific files which helps when upgrading LibreTime.
 
 ```mermaid
 flowchart LR
