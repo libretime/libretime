@@ -261,11 +261,11 @@ By default, browsers will [prevent loading mixed content](https://developer.mozi
 Create a Icecast specific SSL certificate bundle, be sure to replace `libretime.example.com` with the domain name of your installation:
 
 ```bash
-sudo install \
+sudo bash -c "install \
   --group=icecast \
   --mode=640 \
   <(cat /etc/letsencrypt/live/libretime.example.com/{fullchain,privkey}.pem) \
-  /etc/icecast2/bundle.pem
+  /etc/icecast2/bundle.pem"
 ```
 
 Enable the secure socket and set the SSL certificate bundle path in the Icecast configuration file:
