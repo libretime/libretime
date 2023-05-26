@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="libretime-api",
-    version="3.0.2",
+    version="3.1.0",
     description="LibreTime API",
     author="LibreTime Contributors",
     url="https://github.com/libretime/libretime",
