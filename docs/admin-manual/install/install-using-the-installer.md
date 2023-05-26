@@ -117,10 +117,12 @@ git checkout {vars.version}
 
 ## Run the installer
 
-Install LibreTime with the recommended options, be sure to replace `https://libretime.example.com` with the public url of your installation:
+By default the installer will configure LibreTime to listen at the port `80`, but this isn't the recommended way to install LibreTime. Instead you should configure a [reverse proxy in front of LibreTime](./reverse-proxy.md) to secure the connection using HTTPS, and route the traffic to the LibreTime server.
+
+Install LibreTime with the following command, be sure to replace `https://libretime.example.com` with the public url of your installation:
 
 ```bash
-sudo ./install https://libretime.example.com
+sudo ./install --listen-port 8080 https://libretime.example.com
 ```
 
 :::caution
@@ -221,19 +223,36 @@ You can query the status of the timer using:
 sudo systemctl status certbot.timer
 ```
 
-### Prepare Nginx to obtain a certificate
+### Configure a reverse proxy
 
-Next, edit the LibreTime Nginx configuration to add the `server_name` configuration, be sure to replace `libretime.example.com` with the domain name of your installation:
+Next, you have to [configure a reverse proxy](./reverse-proxy.md) to route the traffic from port `80` to LibreTime (port `8080`).
 
-```git title="/etc/nginx/sites-available/libretime.conf"
- server {
-   listen 80;
-   listen [::]:80;
-+
-+  server_name libretime.example.com;
+Copy the following in a new Nginx configuration file, make sure to replace `libretime.example.com` with your own domain name:
 
-   access_log /var/log/nginx/libretime.access.log;
-   error_log /var/log/nginx/libretime.error.log;
+```nginx title="/etc/nginx/sites-available/libretime.example.com.conf"
+server {
+  listen 80;
+  listen [::]:80;
+
+  server_name libretime.example.com;
+
+  location / {
+    proxy_set_header Host              $host;
+    proxy_set_header X-Real-IP         $remote_addr;
+    proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-Host  $host;
+    proxy_set_header X-Forwarded-Port  $server_port;
+
+    proxy_pass http://localhost:8080/;
+  }
+}
+```
+
+Enable the new reverse proxy configuration, make sure to replace `libretime.example.com` with your own domain name:
+
+```bash
+sudo ln -s /etc/nginx/sites-{available,enabled}/libretime.example.com.conf
 ```
 
 Then, check that the nginx config is valid and reload nginx:
