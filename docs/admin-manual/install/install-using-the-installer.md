@@ -119,10 +119,10 @@ git checkout {vars.version}
 
 By default the installer will configure LibreTime to listen at the port `80`, but this isn't the recommended way to install LibreTime. Instead you should configure a [reverse proxy in front of LibreTime](./reverse-proxy.md) to secure the connection using HTTPS, and route the traffic to the LibreTime server.
 
-Install LibreTime with the following command, be sure to replace `https://libretime.example.com` with the public url of your installation:
+Install LibreTime with the following command, be sure to replace `https://libretime.example.org` with the public url of your installation:
 
 ```bash
-sudo ./install --listen-port 8080 https://libretime.example.com
+sudo ./install --listen-port 8080 https://libretime.example.org
 ```
 
 :::caution
@@ -149,7 +149,7 @@ LIBRETIME_PACKAGES_EXCLUDES='liquidsoap' \
 ./install \
   --listen-port 8080 \
   --no-setup-postgresql \
-  https://libretime.example.com
+  https://libretime.example.org
 ```
 
 You can persist the install configuration in a `.env` file next to the install script. For example, the above command could be persisted using the `.env` file below, and you should be able to run the install script without arguments:
@@ -158,7 +158,7 @@ You can persist the install configuration in a `.env` file next to the install s
 LIBRETIME_PACKAGES_EXCLUDES='liquidsoap'
 LIBRETIME_LISTEN_PORT='8080'
 LIBRETIME_SETUP_POSTGRESQL=false
-LIBRETIME_PUBLIC_URL='https://libretime.example.com'
+LIBRETIME_PUBLIC_URL='https://libretime.example.org'
 ```
 
 :::note
@@ -227,14 +227,14 @@ sudo systemctl status certbot.timer
 
 Next, you have to [configure a reverse proxy](./reverse-proxy.md) to route the traffic from port `80` to LibreTime (port `8080`).
 
-Copy the following in a new Nginx configuration file, make sure to replace `libretime.example.com` with your own domain name:
+Copy the following in a new Nginx configuration file, make sure to replace `libretime.example.org` with your own domain name:
 
-```nginx title="/etc/nginx/sites-available/libretime.example.com.conf"
+```nginx title="/etc/nginx/sites-available/libretime.example.org.conf"
 server {
   listen 80;
   listen [::]:80;
 
-  server_name libretime.example.com;
+  server_name libretime.example.org;
 
   location / {
     proxy_set_header Host              $host;
@@ -249,10 +249,10 @@ server {
 }
 ```
 
-Enable the new reverse proxy configuration, make sure to replace `libretime.example.com` with your own domain name:
+Enable the new reverse proxy configuration, make sure to replace `libretime.example.org` with your own domain name:
 
 ```bash
-sudo ln -s /etc/nginx/sites-{available,enabled}/libretime.example.com.conf
+sudo ln -s /etc/nginx/sites-{available,enabled}/libretime.example.org.conf
 ```
 
 Then, check that the nginx config is valid and reload nginx:
@@ -267,23 +267,23 @@ sudo systemctl reload nginx
 
 Certbot provides a variety of ways to obtain SSL certificates through plugins. The Nginx plugin will take care of reconfiguring Nginx and reloading the config whenever necessary.
 
-To request a Let’s Encrypt certificate using Certbot with the Nginx plugin, be sure to replace `libretime.example.com` with the domain name of your installation and run the following:
+To request a Let’s Encrypt certificate using Certbot with the Nginx plugin, be sure to replace `libretime.example.org` with the domain name of your installation and run the following:
 
 ```bash
-sudo certbot --nginx -d libretime.example.com
+sudo certbot --nginx -d libretime.example.org
 ```
 
 ### Setup the certificate for Icecast
 
 By default, browsers will [prevent loading mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) on secure pages, so you won't be able to listen the insecure Icecast streams on a secure website. To fix that you need to secure the Icecast streams.
 
-Create a Icecast specific SSL certificate bundle, be sure to replace `libretime.example.com` with the domain name of your installation:
+Create a Icecast specific SSL certificate bundle, be sure to replace `libretime.example.org` with the domain name of your installation:
 
 ```bash
 sudo bash -c "install \
   --group=icecast \
   --mode=640 \
-  <(cat /etc/letsencrypt/live/libretime.example.com/{fullchain,privkey}.pem) \
+  <(cat /etc/letsencrypt/live/libretime.example.org/{fullchain,privkey}.pem) \
   /etc/icecast2/bundle.pem"
 ```
 
@@ -338,7 +338,7 @@ Next, you need to change the LibreTime `stream.outputs.icecast.*.public_url` con
        - <<: *default_icecast_output
          enabled: true
 -        public_url:
-+        public_url: https://libretime.example.com:8443/main.ogg
++        public_url: https://libretime.example.org:8443/main.ogg
          mount: main.ogg
          audio:
            format: ogg
@@ -347,7 +347,7 @@ Next, you need to change the LibreTime `stream.outputs.icecast.*.public_url` con
        - <<: *default_icecast_output
          enabled: true
 -        public_url:
-+        public_url: https://libretime.example.com:8443/main.mp3
++        public_url: https://libretime.example.org:8443/main.mp3
          mount: main.mp3
          audio:
            format: mp3
@@ -362,7 +362,7 @@ sudo systemctl restart libretime.target
 
 Finally, you need to configure the Certbot renewal to bundle a Icecast specific SSL certificate and restart the Icecast service:
 
-```git title="/etc/letsencrypt/renewal/libretime.example.com.conf"
+```git title="/etc/letsencrypt/renewal/libretime.example.org.conf"
  # Options used in the renewal process
  [renewalparams]
  account = d76ce6a241c7c74f79e5443216ee420e
@@ -383,14 +383,14 @@ sudo certbot renew --dry-run
 
 To stream audio content from an external source to the LibreTime server, Liquidsoap creates input harbors (Icecast mount points) for the clients to connect to. These mount points are insecure by default, so it's recommended secure them.
 
-To enable the secure input streams, edit the [configuration file](../configuration.md) at `/etc/libretime/config.yml` with the following, be sure to replace `libretime.example.com` with the domain name of your installation:
+To enable the secure input streams, edit the [configuration file](../configuration.md) at `/etc/libretime/config.yml` with the following, be sure to replace `libretime.example.org` with the domain name of your installation:
 
 ```git title="/etc/libretime/config.yml"
  liquidsoap:
 -  harbor_ssl_certificate:
 -  harbor_ssl_private_key:
-+  harbor_ssl_certificate: /etc/letsencrypt/live/libretime.example.com/fullchain.pem
-+  harbor_ssl_private_key: /etc/letsencrypt/live/libretime.example.com/privkey.pem
++  harbor_ssl_certificate: /etc/letsencrypt/live/libretime.example.org/fullchain.pem
++  harbor_ssl_private_key: /etc/letsencrypt/live/libretime.example.org/privkey.pem
 ```
 
 ```git title="/etc/libretime/config.yml"
