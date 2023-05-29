@@ -32,8 +32,8 @@
 
 {%- elif audio.format == "aac" -%}
 %fdkaac(
-  bitrate=bitrate={{ audio.bitrate }},
-  aot={{ "mpeg4_he_aac_v2" if audio.bitrate <= 64 else "mpeg4_aac_lc" }},
+  bitrate={{ audio.bitrate }},
+  aot={{ ("mpeg4_he_aac_v2" if audio.bitrate <= 64 else "mpeg4_aac_lc") | quote }},
   afterburner={{ "false" if audio.bitrate <= 128 else "true" }},
   sbr_mode=true
 )
