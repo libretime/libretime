@@ -13,11 +13,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2023-02-27 12:16+0000\n"
+"POT-Creation-Date: 2023-05-29 02:11+0000\n"
 "PO-Revision-Date: 2023-03-21 11:41+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
-"Language-Team: Spanish <https://hosted.weblate.org/projects/libretime/legacy/"
-"es/>\n"
+"Language-Team: Spanish <https://hosted.weblate.org/projects/libretime/legacy/es/>\n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -591,9 +590,7 @@ msgstr "¡Sube algunas pistas a continuación para agregarlas a tu biblioteca!"
 #: application/common/UsabilityHints.php:69
 #, php-format
 msgid "It looks like you haven't uploaded any audio files yet. %sUpload a file now%s."
-msgstr ""
-"Parece que aún no has subido ningún archivo de audio. %sSube un archivo "
-"ahora%s."
+msgstr "Parece que aún no has subido ningún archivo de audio. %sSube un archivo ahora%s."
 
 #: application/common/UsabilityHints.php:76
 msgid "Click the 'New Show' button and fill out the required fields."
@@ -624,9 +621,7 @@ msgstr "Para iniciar la transmisión, haz clic en el programa actual y seleccion
 #: application/common/UsabilityHints.php:100
 #, php-format
 msgid "It looks like the current show needs more tracks. %sAdd tracks to your show now%s."
-msgstr ""
-"Parece que el programa actual necesita más pistas. %sAñade pistas a tu "
-"programa ahora%s."
+msgstr "Parece que el programa actual necesita más pistas. %sAñade pistas a tu programa ahora%s."
 
 #: application/common/UsabilityHints.php:107
 msgid "Click on the show starting next and select 'Schedule Tracks'"
@@ -643,8 +638,7 @@ msgstr "Servicio de análisis multimedia LibreTime"
 
 #: application/configs/config-check.php:174
 msgid "Check that the libretime-analyzer service is installed correctly in "
-msgstr ""
-"Compruebe que el servicio libretime-analyzer está instalado correctamente en "
+msgstr "Compruebe que el servicio libretime-analyzer está instalado correctamente en "
 
 #: application/configs/config-check.php:175
 #: application/configs/config-check.php:194
@@ -668,8 +662,7 @@ msgstr "Servicio de emisión de LibreTime"
 
 #: application/configs/config-check.php:193
 msgid "Check that the libretime-playout service is installed correctly in "
-msgstr ""
-"Compruebe que el servicio libretime-playout está instalado correctamente en "
+msgstr "Compruebe que el servicio libretime-playout está instalado correctamente en "
 
 #: application/configs/config-check.php:205
 msgid "LibreTime liquidsoap service"
@@ -677,9 +670,7 @@ msgstr "Servicio LibreTime liquidsoap"
 
 #: application/configs/config-check.php:212
 msgid "Check that the libretime-liquidsoap service is installed correctly in "
-msgstr ""
-"Comprueba que el servicio libretime-liquidsoap está instalado correctamente "
-"en "
+msgstr "Comprueba que el servicio libretime-liquidsoap está instalado correctamente en "
 
 #: application/configs/config-check.php:224
 msgid "LibreTime Celery Task service"
@@ -687,8 +678,7 @@ msgstr "Servicio de tareas LibreTime Celery"
 
 #: application/configs/config-check.php:231
 msgid "Check that the libretime-worker service is installed correctly in "
-msgstr ""
-"Compruebe que el servicio libretime-worker está instalado correctamente en "
+msgstr "Compruebe que el servicio libretime-worker está instalado correctamente en "
 
 #: application/configs/config-check.php:243
 msgid "LibreTime API service"
@@ -696,8 +686,7 @@ msgstr "Servicio API de LibreTime"
 
 #: application/configs/config-check.php:250
 msgid "Check that the libretime-api service is installed correctly in "
-msgstr ""
-"Comprueba que el servicio libretime-api está instalado correctamente en "
+msgstr "Comprueba que el servicio libretime-api está instalado correctamente en "
 
 #: application/configs/navigation.php:28
 msgid "Radio Page"
@@ -793,7 +782,7 @@ msgid "What's New?"
 msgstr "¿Qué hay de nuevo?"
 
 #: application/controllers/ApiController.php:113
-#: application/controllers/ApiController.php:753
+#: application/controllers/ApiController.php:750
 msgid "You are not allowed to access this resource."
 msgstr "No tienes permiso para acceder a este recurso."
 
@@ -801,24 +790,24 @@ msgstr "No tienes permiso para acceder a este recurso."
 #: application/controllers/ApiController.php:459
 #: application/controllers/ApiController.php:528
 #: application/controllers/ApiController.php:583
-#: application/controllers/ApiController.php:671
-#: application/controllers/ApiController.php:688
-#: application/controllers/ApiController.php:719
+#: application/controllers/ApiController.php:668
+#: application/controllers/ApiController.php:685
+#: application/controllers/ApiController.php:716
 msgid "You are not allowed to access this resource. "
 msgstr "No tienes permiso para acceder a este recurso. "
 
-#: application/controllers/ApiController.php:923
-#: application/controllers/ApiController.php:944
-#: application/controllers/ApiController.php:956
+#: application/controllers/ApiController.php:920
+#: application/controllers/ApiController.php:941
+#: application/controllers/ApiController.php:953
 #, php-format
 msgid "File does not exist in %s"
 msgstr "El archivo no existe en %s"
 
-#: application/controllers/ApiController.php:1010
+#: application/controllers/ApiController.php:1007
 msgid "Bad request. no 'mode' parameter passed."
 msgstr "Solicitud incorrecta. No se pasa el parámetro 'mode'."
 
-#: application/controllers/ApiController.php:1023
+#: application/controllers/ApiController.php:1020
 msgid "Bad request. 'mode' parameter is invalid"
 msgstr "Solicitud incorrecta. El parámetro 'mode' pasado es inválido"
 
@@ -843,10 +832,8 @@ msgid ""
 "            2. Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
 "Para configurar y utilizar el reproductor integrado debe:<br><br>\n"
-"            1. Habilita al menos un flujo MP3, AAC u OGG en Ajustes -&gt; "
-"Streamer<br>\n"
-"            2. Active la API pública LibreTime en Configuración -&gt; "
-"Preferencias"
+"            1. Habilita al menos un flujo MP3, AAC u OGG en Ajustes -&gt; Streamer<br>\n"
+"            2. Active la API pública LibreTime en Configuración -&gt; Preferencias"
 
 #: application/controllers/EmbeddablewidgetsController.php:37
 msgid ""
@@ -854,18 +841,15 @@ msgid ""
 "            Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
 "Para utilizar el widget de horario semanal incrustado debe:<br><br>\n"
-"            Habilitar la API pública LibreTime en Configuración -&gt; "
-"Preferencias"
+"            Habilitar la API pública LibreTime en Configuración -&gt; Preferencias"
 
 #: application/controllers/EmbeddablewidgetsController.php:50
 msgid ""
 "To add the Radio Tab to your Facebook Page, you must first:<br><br>\n"
 "            Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
-"Para añadir la pestaña Radio a tu página de Facebook, primero debes:<br><br>"
-"\n"
-"            Habilitar la API pública LibreTime en Configuración -&gt; "
-"Preferencias"
+"Para añadir la pestaña Radio a tu página de Facebook, primero debes:<br><br>\n"
+"            Habilitar la API pública LibreTime en Configuración -&gt; Preferencias"
 
 #: application/controllers/ErrorController.php:94
 msgid "Page not found."
@@ -960,8 +944,7 @@ msgstr "No tienes permiso para eliminar los elementos seleccionados."
 
 #: application/controllers/LibraryController.php:240
 msgid "Could not delete file because it is scheduled in the future."
-msgstr ""
-"No se ha podido eliminar el archivo porque está programado para el futuro."
+msgstr "No se ha podido eliminar el archivo porque está programado para el futuro."
 
 #: application/controllers/LibraryController.php:243
 msgid "Could not delete file(s)."
@@ -975,9 +958,7 @@ msgstr "Copia de %s"
 
 #: application/controllers/ListenerstatController.php:46
 msgid "Please make sure admin user/password is correct on Settings->Streams page."
-msgstr ""
-"Asegúrese de que el usuario/contraseña de administrador es correcto en la "
-"página Configuración-&gt;Streams."
+msgstr "Asegúrese de que el usuario/contraseña de administrador es correcto en la página Configuración-&gt;Streams."
 
 #: application/controllers/LocaleController.php:27
 msgid "Audio Player"
@@ -1195,7 +1176,7 @@ msgstr "Listas de reproducción"
 
 #: application/controllers/LocaleController.php:88
 #: application/forms/SmartBlockCriteria.php:81
-#: application/models/Block.php:1458 application/models/Block.php:1556
+#: application/models/Block.php:1454 application/models/Block.php:1552
 #: application/services/HistoryService.php:1051
 #: application/services/HistoryService.php:1086
 #: application/services/HistoryService.php:1101
@@ -1204,7 +1185,7 @@ msgstr "Título"
 
 #: application/controllers/LocaleController.php:89
 #: application/forms/SmartBlockCriteria.php:66
-#: application/models/Block.php:1442 application/models/Block.php:1540
+#: application/models/Block.php:1438 application/models/Block.php:1536
 #: application/services/HistoryService.php:1052
 #: application/services/HistoryService.php:1087
 #: application/services/HistoryService.php:1102
@@ -1213,7 +1194,7 @@ msgstr "Creador"
 
 #: application/controllers/LocaleController.php:90
 #: application/forms/SmartBlockCriteria.php:57
-#: application/models/Block.php:1433 application/models/Block.php:1531
+#: application/models/Block.php:1429 application/models/Block.php:1527
 #: application/services/HistoryService.php:1053
 msgid "Album"
 msgstr "Álbum"
@@ -1224,13 +1205,13 @@ msgstr "Tasa de bits"
 
 #: application/controllers/LocaleController.php:92
 #: application/forms/SmartBlockCriteria.php:59
-#: application/models/Block.php:1435 application/models/Block.php:1533
+#: application/models/Block.php:1431 application/models/Block.php:1529
 msgid "BPM"
 msgstr "BPM"
 
 #: application/controllers/LocaleController.php:93
 #: application/forms/SmartBlockCriteria.php:60
-#: application/models/Block.php:1436 application/models/Block.php:1534
+#: application/models/Block.php:1432 application/models/Block.php:1530
 #: application/services/HistoryService.php:1058
 #: application/services/HistoryService.php:1105
 msgid "Composer"
@@ -1238,14 +1219,14 @@ msgstr "Compositor"
 
 #: application/controllers/LocaleController.php:94
 #: application/forms/SmartBlockCriteria.php:61
-#: application/models/Block.php:1437 application/models/Block.php:1535
+#: application/models/Block.php:1433 application/models/Block.php:1531
 #: application/services/HistoryService.php:1063
 msgid "Conductor"
 msgstr "Director"
 
 #: application/controllers/LocaleController.php:95
 #: application/forms/SmartBlockCriteria.php:62
-#: application/models/Block.php:1438 application/models/Block.php:1536
+#: application/models/Block.php:1434 application/models/Block.php:1532
 #: application/services/HistoryService.php:1060
 #: application/services/HistoryService.php:1106
 msgid "Copyright"
@@ -1253,54 +1234,54 @@ msgstr "Derechos de autor"
 
 #: application/controllers/LocaleController.php:96
 #: application/forms/SmartBlockCriteria.php:67
-#: application/models/Block.php:1443 application/models/Block.php:1541
+#: application/models/Block.php:1439 application/models/Block.php:1537
 msgid "Encoded By"
 msgstr "Codificado por"
 
 #: application/controllers/LocaleController.php:97
 #: application/forms/SmartBlockCriteria.php:68
 #: application/forms/StreamSettingSubForm.php:118
-#: application/models/Block.php:1444 application/models/Block.php:1542
+#: application/models/Block.php:1440 application/models/Block.php:1538
 #: application/services/HistoryService.php:1055
 msgid "Genre"
 msgstr "Género"
 
 #: application/controllers/LocaleController.php:98
 #: application/forms/SmartBlockCriteria.php:69
-#: application/models/Block.php:1445 application/models/Block.php:1543
+#: application/models/Block.php:1441 application/models/Block.php:1539
 #: application/services/HistoryService.php:1059
 msgid "ISRC"
 msgstr "ISRC"
 
 #: application/controllers/LocaleController.php:99
 #: application/forms/SmartBlockCriteria.php:70
-#: application/models/Block.php:1446 application/models/Block.php:1544
+#: application/models/Block.php:1442 application/models/Block.php:1540
 #: application/services/HistoryService.php:1057
 msgid "Label"
 msgstr "Sello"
 
 #: application/controllers/LocaleController.php:100
 #: application/forms/SmartBlockCriteria.php:71
-#: application/models/Block.php:1447 application/models/Block.php:1545
+#: application/models/Block.php:1443 application/models/Block.php:1541
 #: application/services/HistoryService.php:1064
 msgid "Language"
 msgstr "Idioma"
 
 #: application/controllers/LocaleController.php:101
 #: application/forms/SmartBlockCriteria.php:72
-#: application/models/Block.php:1449 application/models/Block.php:1547
+#: application/models/Block.php:1445 application/models/Block.php:1543
 msgid "Last Modified"
 msgstr "Ult.Modificado"
 
 #: application/controllers/LocaleController.php:102
 #: application/forms/SmartBlockCriteria.php:73
-#: application/models/Block.php:1450 application/models/Block.php:1548
+#: application/models/Block.php:1446 application/models/Block.php:1544
 msgid "Last Played"
 msgstr "Ult.Reproducido"
 
 #: application/controllers/LocaleController.php:103
 #: application/forms/SmartBlockCriteria.php:74
-#: application/models/Block.php:1451 application/models/Block.php:1549
+#: application/models/Block.php:1447 application/models/Block.php:1545
 #: application/services/HistoryService.php:1054
 #: application/services/HistoryService.php:1104
 msgid "Length"
@@ -1308,26 +1289,26 @@ msgstr "Duración"
 
 #: application/controllers/LocaleController.php:104
 #: application/forms/SmartBlockCriteria.php:76
-#: application/models/Block.php:1453 application/models/Block.php:1551
+#: application/models/Block.php:1449 application/models/Block.php:1547
 msgid "Mime"
 msgstr "Mime"
 
 #: application/controllers/LocaleController.php:105
 #: application/forms/SmartBlockCriteria.php:77
-#: application/models/Block.php:1454 application/models/Block.php:1552
+#: application/models/Block.php:1450 application/models/Block.php:1548
 #: application/services/HistoryService.php:1056
 msgid "Mood"
 msgstr "Estilo (mood)"
 
 #: application/controllers/LocaleController.php:106
 #: application/forms/SmartBlockCriteria.php:78
-#: application/models/Block.php:1455 application/models/Block.php:1553
+#: application/models/Block.php:1451 application/models/Block.php:1549
 msgid "Owner"
 msgstr "Propietario"
 
 #: application/controllers/LocaleController.php:107
 #: application/forms/SmartBlockCriteria.php:79
-#: application/models/Block.php:1456 application/models/Block.php:1554
+#: application/models/Block.php:1452 application/models/Block.php:1550
 msgid "Replay Gain"
 msgstr "Ganancia"
 
@@ -1337,25 +1318,25 @@ msgstr "Tasa de muestreo"
 
 #: application/controllers/LocaleController.php:109
 #: application/forms/SmartBlockCriteria.php:82
-#: application/models/Block.php:1459 application/models/Block.php:1557
+#: application/models/Block.php:1455 application/models/Block.php:1553
 msgid "Track Number"
 msgstr "Núm.Pista"
 
 #: application/controllers/LocaleController.php:110
 #: application/forms/SmartBlockCriteria.php:83
-#: application/models/Block.php:1460 application/models/Block.php:1558
+#: application/models/Block.php:1456 application/models/Block.php:1554
 msgid "Uploaded"
 msgstr "Subido"
 
 #: application/controllers/LocaleController.php:111
 #: application/forms/SmartBlockCriteria.php:84
-#: application/models/Block.php:1461 application/models/Block.php:1559
+#: application/models/Block.php:1457 application/models/Block.php:1555
 msgid "Website"
 msgstr "Sitio web"
 
 #: application/controllers/LocaleController.php:112
 #: application/forms/SmartBlockCriteria.php:85
-#: application/models/Block.php:1462 application/models/Block.php:1560
+#: application/models/Block.php:1458 application/models/Block.php:1556
 #: application/services/HistoryService.php:1061
 msgid "Year"
 msgstr "Año"
@@ -1449,9 +1430,7 @@ msgstr "Mi Podcast"
 #: application/controllers/LocaleController.php:135
 #, php-format
 msgid "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"
-msgstr ""
-"Estás cargando archivos. %sIr a otra pantalla cancelará el proceso de carga. "
-"%s¿Estás seguro de que quieres salir de la página?"
+msgstr "Estás cargando archivos. %sIr a otra pantalla cancelará el proceso de carga. %s¿Estás seguro de que quieres salir de la página?"
 
 #: application/controllers/LocaleController.php:137
 msgid "Open Media Builder"
@@ -1487,10 +1466,7 @@ msgstr "Lista de reproducción mezclada"
 
 #: application/controllers/LocaleController.php:145
 msgid "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
-msgstr ""
-"Airtime no está seguro del estado de este archivo. Esto puede suceder cuando "
-"el archivo está en una unidad remota a la que no se puede acceder o el "
-"archivo está en un directorio que ya no se 'vigila'."
+msgstr "Airtime no está seguro del estado de este archivo. Esto puede suceder cuando el archivo está en una unidad remota a la que no se puede acceder o el archivo está en un directorio que ya no se 'vigila'."
 
 #: application/controllers/LocaleController.php:147
 #, php-format
@@ -1516,10 +1492,7 @@ msgstr "La imagen debe ser jpg, jpeg, png, o gif"
 
 #: application/controllers/LocaleController.php:154
 msgid "A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show."
-msgstr ""
-"Un bloque inteligente estático guardará los criterios y generará el "
-"contenido del bloque inmediatamente. Esto le permite editarlo y verlo en la "
-"Biblioteca antes de añadirlo a un programa."
+msgstr "Un bloque inteligente estático guardará los criterios y generará el contenido del bloque inmediatamente. Esto le permite editarlo y verlo en la Biblioteca antes de añadirlo a un programa."
 
 #: application/controllers/LocaleController.php:155
 msgid "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."
@@ -1528,11 +1501,7 @@ msgstr "Un bloque inteligente dinámico sólo guardará los criterios. El conten
 #: application/controllers/LocaleController.php:156
 #, php-format
 msgid "The desired block length will not be reached if %s cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
-msgstr ""
-"No se alcanzará la longitud de bloque deseada si %s no puede encontrar "
-"suficientes pistas únicas que coincidan con sus criterios. Active esta "
-"opción si desea permitir que las pistas se añadan varias veces al bloque "
-"inteligente."
+msgstr "No se alcanzará la longitud de bloque deseada si %s no puede encontrar suficientes pistas únicas que coincidan con sus criterios. Active esta opción si desea permitir que las pistas se añadan varias veces al bloque inteligente."
 
 #: application/controllers/LocaleController.php:157
 msgid "Smart block shuffled"
@@ -1558,19 +1527,19 @@ msgstr "Procesando..."
 #: application/forms/SmartBlockCriteria.php:377
 #: application/forms/SmartBlockCriteria.php:631
 #: application/forms/SmartBlockCriteria.php:688
-#: application/models/Block.php:1466 application/models/Block.php:1564
+#: application/models/Block.php:1462 application/models/Block.php:1560
 msgid "Select modifier"
 msgstr "Elige modificador"
 
 #: application/controllers/LocaleController.php:162
 #: application/forms/SmartBlockCriteria.php:101
-#: application/models/Block.php:1467 application/models/Block.php:1565
+#: application/models/Block.php:1463 application/models/Block.php:1561
 msgid "contains"
 msgstr "contiene"
 
 #: application/controllers/LocaleController.php:163
 #: application/forms/SmartBlockCriteria.php:102
-#: application/models/Block.php:1468 application/models/Block.php:1566
+#: application/models/Block.php:1464 application/models/Block.php:1562
 msgid "does not contain"
 msgstr "no contiene"
 
@@ -1579,8 +1548,8 @@ msgstr "no contiene"
 #: application/forms/SmartBlockCriteria.php:118
 #: application/forms/SmartBlockCriteria.php:137
 #: application/forms/SmartBlockCriteria.php:199
-#: application/models/Block.php:1469 application/models/Block.php:1476
-#: application/models/Block.php:1567 application/models/Block.php:1574
+#: application/models/Block.php:1465 application/models/Block.php:1472
+#: application/models/Block.php:1563 application/models/Block.php:1570
 msgid "is"
 msgstr "es"
 
@@ -1589,41 +1558,41 @@ msgstr "es"
 #: application/forms/SmartBlockCriteria.php:119
 #: application/forms/SmartBlockCriteria.php:138
 #: application/forms/SmartBlockCriteria.php:200
-#: application/models/Block.php:1470 application/models/Block.php:1477
-#: application/models/Block.php:1568 application/models/Block.php:1575
+#: application/models/Block.php:1466 application/models/Block.php:1473
+#: application/models/Block.php:1564 application/models/Block.php:1571
 msgid "is not"
 msgstr "no es"
 
 #: application/controllers/LocaleController.php:166
 #: application/forms/SmartBlockCriteria.php:105
-#: application/models/Block.php:1471 application/models/Block.php:1569
+#: application/models/Block.php:1467 application/models/Block.php:1565
 msgid "starts with"
 msgstr "empieza con"
 
 #: application/controllers/LocaleController.php:167
 #: application/forms/SmartBlockCriteria.php:106
-#: application/models/Block.php:1472 application/models/Block.php:1570
+#: application/models/Block.php:1468 application/models/Block.php:1566
 msgid "ends with"
 msgstr "termina con"
 
 #: application/controllers/LocaleController.php:168
 #: application/forms/SmartBlockCriteria.php:120
 #: application/forms/SmartBlockCriteria.php:139
-#: application/models/Block.php:1478 application/models/Block.php:1576
+#: application/models/Block.php:1474 application/models/Block.php:1572
 msgid "is greater than"
 msgstr "es mayor que"
 
 #: application/controllers/LocaleController.php:169
 #: application/forms/SmartBlockCriteria.php:121
 #: application/forms/SmartBlockCriteria.php:140
-#: application/models/Block.php:1479 application/models/Block.php:1577
+#: application/models/Block.php:1475 application/models/Block.php:1573
 msgid "is less than"
 msgstr "es menor que"
 
 #: application/controllers/LocaleController.php:170
 #: application/forms/SmartBlockCriteria.php:122
 #: application/forms/SmartBlockCriteria.php:141
-#: application/models/Block.php:1480 application/models/Block.php:1578
+#: application/models/Block.php:1476 application/models/Block.php:1574
 msgid "is in the range"
 msgstr "está en el rango de"
 
@@ -1685,12 +1654,7 @@ msgstr "No es posible conectar el servidor de streaming"
 #: application/controllers/LocaleController.php:186
 #, php-format
 msgid "If %s is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."
-msgstr ""
-"Si %s está detrás de un router o firewall, puede que necesites configurar el "
-"reenvío de puertos y la información de este campo será incorrecta. En este "
-"caso, tendrá que actualizar manualmente este campo para que muestre el host/"
-"puerto/mount correcto al que sus DJ necesitan conectarse. El rango permitido "
-"está entre 1024 y 49151."
+msgstr "Si %s está detrás de un router o firewall, puede que necesites configurar el reenvío de puertos y la información de este campo será incorrecta. En este caso, tendrá que actualizar manualmente este campo para que muestre el host/puerto/mount correcto al que sus DJ necesitan conectarse. El rango permitido está entre 1024 y 49151."
 
 #: application/controllers/LocaleController.php:187
 #, php-format
@@ -1699,15 +1663,7 @@ msgstr "Para más detalles, lea el %s%s Manual %s"
 
 #: application/controllers/LocaleController.php:188
 msgid "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
-msgstr ""
-"Marque esta opción para activar los metadatos para los flujos OGG (los "
-"metadatos del flujo son el título de la pista, el artista y el nombre del "
-"programa que se muestran en un reproductor de audio). VLC y mplayer tienen "
-"un grave error cuando reproducen un flujo OGG/VORBIS que tiene activada la "
-"información de metadatos: se desconectarán del flujo después de cada "
-"canción. Si estás usando un stream OGG y tus oyentes no necesitan soporte "
-"para estos reproductores de audio, entonces siéntete libre de habilitar esta "
-"opción."
+msgstr "Marque esta opción para activar los metadatos para los flujos OGG (los metadatos del flujo son el título de la pista, el artista y el nombre del programa que se muestran en un reproductor de audio). VLC y mplayer tienen un grave error cuando reproducen un flujo OGG/VORBIS que tiene activada la información de metadatos: se desconectarán del flujo después de cada canción. Si estás usando un stream OGG y tus oyentes no necesitan soporte para estos reproductores de audio, entonces siéntete libre de habilitar esta opción."
 
 #: application/controllers/LocaleController.php:189
 msgid "Check this box to automatically switch off Master/Show source upon source disconnection."
@@ -2048,13 +2004,13 @@ msgstr "No hay shows programados durante el período de tiempo especificado."
 
 #: application/controllers/LocaleController.php:289
 #: application/forms/SmartBlockCriteria.php:63
-#: application/models/Block.php:1439 application/models/Block.php:1537
+#: application/models/Block.php:1435 application/models/Block.php:1533
 msgid "Cue In"
 msgstr "Señal de entrada"
 
 #: application/controllers/LocaleController.php:290
 #: application/forms/SmartBlockCriteria.php:64
-#: application/models/Block.php:1440 application/models/Block.php:1538
+#: application/models/Block.php:1436 application/models/Block.php:1534
 msgid "Cue Out"
 msgstr "Señal de salida"
 
@@ -2481,9 +2437,7 @@ msgstr "Se copiaron %s celda%s al portapapeles"
 #: application/controllers/LocaleController.php:416
 #, php-format
 msgid "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."
-msgstr ""
-"%sImprimir vista%sPor favor, utilice la función de impresión de su navegador "
-"para imprimir esta tabla. Pulse Escape cuando termine."
+msgstr "%sImprimir vista%sPor favor, utilice la función de impresión de su navegador para imprimir esta tabla. Pulse Escape cuando termine."
 
 #: application/controllers/LocaleController.php:417
 msgid "New Show"
@@ -2532,8 +2486,7 @@ msgstr "Arrastre las pistas desde la biblioteca"
 
 #: application/controllers/LocaleController.php:434
 msgid "No tracks were played during the selected time period."
-msgstr ""
-"No se ha reproducido ninguna pista durante el periodo de tiempo seleccionado."
+msgstr "No se ha reproducido ninguna pista durante el periodo de tiempo seleccionado."
 
 #: application/controllers/LocaleController.php:435
 msgid "Unpublish"
@@ -2550,7 +2503,7 @@ msgstr "Autor"
 #: application/controllers/LocaleController.php:438
 #: application/forms/SmartBlockCriteria.php:65
 #: application/forms/StreamSettingSubForm.php:134
-#: application/models/Block.php:1441 application/models/Block.php:1539
+#: application/models/Block.php:1437 application/models/Block.php:1535
 msgid "Description"
 msgstr "Descripción"
 
@@ -2662,10 +2615,7 @@ msgstr "Tipo"
 
 #: application/controllers/LocaleController.php:465
 msgid "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='https://libretime.org/docs/user-manual/playlists/'>More information</a>"
-msgstr ""
-"El contenido de las listas de reproducción de la carga automática se agrega "
-"a los programas una hora antes de que se transmita. <a target='_blank' "
-"href='https://libretime.org/docs/user-manual/playlists/'>Más información</a>"
+msgstr "El contenido de las listas de reproducción de la carga automática se agrega a los programas una hora antes de que se transmita. <a target='_blank' href='https://libretime.org/docs/user-manual/playlists/'>Más información</a>"
 
 #: application/controllers/LocaleController.php:466
 msgid "Podcast settings saved"
@@ -2693,14 +2643,7 @@ msgstr "Pruebalo ahora"
 
 #: application/controllers/LocaleController.php:472
 msgid "<p>If this option is unchecked, the smartblock will schedule as many tracks as can be played out <strong>in their entirety</strong> within the specified duration. This will usually result in audio playback that is slightly less than the specified duration.</p><p>If this option is checked, the smartblock will also schedule one final track which will overflow the specified duration. This final track may be cut off mid-way if the show into which the smartblock is added finishes.</p>"
-msgstr ""
-"<p>Si esta opción no está marcada, el bloque inteligente programará tantas "
-"pistas como puedan reproducirse <strong>en su totalidad</strong> dentro de "
-"la duración especificada. Esto normalmente resultará en una reproducción de "
-"audio ligeramente inferior a la duración especificada.</p><p>Si esta opción "
-"está marcada, el smartblock también programará una pista final que "
-"sobrepasará la duración especificada. Esta pista final puede cortarse a "
-"mitad de camino si el programa al que se añade el smartblock termina.</p>"
+msgstr "<p>Si esta opción no está marcada, el bloque inteligente programará tantas pistas como puedan reproducirse <strong>en su totalidad</strong> dentro de la duración especificada. Esto normalmente resultará en una reproducción de audio ligeramente inferior a la duración especificada.</p><p>Si esta opción está marcada, el smartblock también programará una pista final que sobrepasará la duración especificada. Esta pista final puede cortarse a mitad de camino si el programa al que se añade el smartblock termina.</p>"
 
 #: application/controllers/LocaleController.php:473
 msgid "Playlist preview"
@@ -2785,9 +2728,7 @@ msgstr "No fue posible enviar el correo electrónico. Revisa tu configuración d
 
 #: application/controllers/LoginController.php:150
 msgid "That username or email address could not be found."
-msgstr ""
-"No se ha podido encontrar ese nombre de usuario o dirección de correo "
-"electrónico."
+msgstr "No se ha podido encontrar ese nombre de usuario o dirección de correo electrónico."
 
 #: application/controllers/LoginController.php:153
 msgid "There was a problem with the username or email address you entered."
@@ -2795,8 +2736,7 @@ msgstr "Hubo un problema con el nombre de usuario o la dirección de correo elec
 
 #: application/controllers/LoginController.php:231
 msgid "Wrong username or password provided. Please try again."
-msgstr ""
-"Nombre de usuario o contraseña incorrectos. Por favor, inténtelo de nuevo."
+msgstr "Nombre de usuario o contraseña incorrectos. Por favor, inténtelo de nuevo."
 
 #: application/controllers/PlaylistController.php:52
 #, php-format
@@ -3373,19 +3313,11 @@ msgstr "Habilitar esto significa que las pistas del podcast siempre contendrán 
 
 #: application/forms/GeneralPreferences.php:138
 msgid "Generate a smartblock and a playlist upon creation of a new podcast"
-msgstr ""
-"Genere un bloque inteligente y una lista de reproducción al crear un nuevo "
-"podcast"
+msgstr "Genere un bloque inteligente y una lista de reproducción al crear un nuevo podcast"
 
 #: application/forms/GeneralPreferences.php:144
 msgid "If this option is enabled, a new smartblock and playlist matching the newest track of a podcast will be generated immediately upon creation of a new podcast. Note that the \"Overwrite Podcast Episode Metatags\" feature must also be enabled in order for smartblocks to reliably find episodes."
-msgstr ""
-"Si esta opción está activada, se generará un nuevo bloque inteligente y una "
-"nueva lista de reproducción que coincidan con la pista más reciente de un "
-"podcast inmediatamente después de la creación de un nuevo podcast. Tenga en "
-"cuenta que la función \"Sobrescribir metatags de episodios de podcast\" "
-"también debe estar activada para que los smartblocks encuentren episodios de "
-"forma fiable."
+msgstr "Si esta opción está activada, se generará un nuevo bloque inteligente y una nueva lista de reproducción que coincidan con la pista más reciente de un podcast inmediatamente después de la creación de un nuevo podcast. Tenga en cuenta que la función \"Sobrescribir metatags de episodios de podcast\" también debe estar activada para que los smartblocks encuentren episodios de forma fiable."
 
 #: application/forms/GeneralPreferences.php:156
 msgid "Public LibreTime API"
@@ -3561,38 +3493,38 @@ msgid "My Shows"
 msgstr "Mis Shows"
 
 #: application/forms/SmartBlockCriteria.php:56
-#: application/models/Block.php:1432 application/models/Block.php:1530
+#: application/models/Block.php:1428 application/models/Block.php:1526
 msgid "Select criteria"
 msgstr "Seleccionar criterio"
 
 #: application/forms/SmartBlockCriteria.php:58
-#: application/models/Block.php:1434 application/models/Block.php:1532
+#: application/models/Block.php:1430 application/models/Block.php:1528
 msgid "Bit Rate (Kbps)"
 msgstr "Tasa de bits (Kbps)"
 
 #: application/forms/SmartBlockCriteria.php:75
-#: application/models/Block.php:1452 application/models/Block.php:1550
+#: application/models/Block.php:1448 application/models/Block.php:1546
 #: application/services/HistoryService.php:1065
 msgid "Track Type"
 msgstr "Tipo de pista"
 
 #: application/forms/SmartBlockCriteria.php:80
-#: application/models/Block.php:1457 application/models/Block.php:1555
+#: application/models/Block.php:1453 application/models/Block.php:1551
 msgid "Sample Rate (kHz)"
 msgstr "Tasa de muestreo (kHz)"
 
 #: application/forms/SmartBlockCriteria.php:134
-#: application/models/Block.php:1473 application/models/Block.php:1571
+#: application/models/Block.php:1469 application/models/Block.php:1567
 msgid "before"
 msgstr "antes"
 
 #: application/forms/SmartBlockCriteria.php:135
-#: application/models/Block.php:1474 application/models/Block.php:1572
+#: application/models/Block.php:1470 application/models/Block.php:1568
 msgid "after"
 msgstr "después"
 
 #: application/forms/SmartBlockCriteria.php:136
-#: application/models/Block.php:1475 application/models/Block.php:1573
+#: application/models/Block.php:1471 application/models/Block.php:1569
 msgid "between"
 msgstr "entre"
 
@@ -3738,9 +3670,7 @@ msgstr "'Longitud' debe estar en formato '00:00:00'"
 
 #: application/forms/SmartBlockCriteria.php:858
 msgid "Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
-msgstr ""
-"Sólo se permiten números enteros no negativos (por ejemplo, 1 ó 5) para el "
-"valor del texto"
+msgstr "Sólo se permiten números enteros no negativos (por ejemplo, 1 ó 5) para el valor del texto"
 
 #: application/forms/SmartBlockCriteria.php:863
 #: application/forms/SmartBlockCriteria.php:888
@@ -3754,8 +3684,7 @@ msgstr "El valor debe estar en un formato de tiempo (e.g. 0000-00-00 or 0000-00-
 
 #: application/forms/SmartBlockCriteria.php:883
 msgid "Only non-negative integer numbers are allowed for a relative date time"
-msgstr ""
-"Sólo se permiten números enteros no negativos para una fecha-hora relativa"
+msgstr "Sólo se permiten números enteros no negativos para una fecha-hora relativa"
 
 #: application/forms/SmartBlockCriteria.php:910
 msgid "The value has to be numeric"
@@ -3964,25 +3893,25 @@ msgstr ""
 msgid "%s Password Reset"
 msgstr "%s Restablecimiento de Contraseña"
 
-#: application/models/Block.php:833 application/models/Playlist.php:802
+#: application/models/Block.php:829 application/models/Playlist.php:800
 msgid "Cue in and cue out are null."
 msgstr "Cue in y cue out son nulos."
 
-#: application/models/Block.php:867 application/models/Block.php:922
-#: application/models/Playlist.php:840 application/models/Playlist.php:881
+#: application/models/Block.php:863 application/models/Block.php:918
+#: application/models/Playlist.php:838 application/models/Playlist.php:879
 msgid "Can't set cue out to be greater than file length."
 msgstr "No se puede asignar un cue out mayor que la duración del archivo."
 
-#: application/models/Block.php:879 application/models/Block.php:899
-#: application/models/Playlist.php:832 application/models/Playlist.php:855
+#: application/models/Block.php:875 application/models/Block.php:895
+#: application/models/Playlist.php:830 application/models/Playlist.php:853
 msgid "Can't set cue in to be larger than cue out."
 msgstr "No se puede asignar un cue in mayor al cue out."
 
-#: application/models/Block.php:934 application/models/Playlist.php:873
+#: application/models/Block.php:930 application/models/Playlist.php:871
 msgid "Can't set cue out to be smaller than cue in."
 msgstr "No se puede asignar un cue out menor que el cue in."
 
-#: application/models/Block.php:1448 application/models/Block.php:1546
+#: application/models/Block.php:1444 application/models/Block.php:1542
 msgid "Upload Time"
 msgstr "Hora de Subida"
 
