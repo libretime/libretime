@@ -26,7 +26,8 @@ we have a forum at [discourse.libretime.org](https://discourse.libretime.org).
 We are moving towards using the forum to provide community support and reserving
 the github issue queue for confirmed bugs and well-formed feature requests.
 
-You can also contact us through our [Mattermost instance](https://chat.libretime.org)
+You can also contact us through [Matrix
+(#libretime:matrix.org)](https://matrix.to/#/#libretime:matrix.org)
 where you can talk with other users and developers.
 
 ## Contributors
