@@ -83,8 +83,8 @@ jobs:
             the next month.
 
             Please chat to us on the [forum](https://discourse.libretime.org/) or
-            ask for help on our [chat](https://chat.libretime.org/) if you have any
-            questions or need further support with getting this issue resolved.
+            ask for help on [#libretime:matrix.org](https://matrix.to/#/#libretime:matrix.org)
+            if you have any questions or need further support with getting this issue resolved.
 
             You may also label an issue as *pinned* if you would like to make sure
             that it does not get closed by this bot.
@@ -93,8 +93,8 @@ jobs:
             did not receive any further inputs.
 
             Feel free to let us know on the [forum](https://discourse.libretime.org/) or
-            ask for help on our [chat](https://chat.libretime.org/) if you feel this
-            issue should not have been closed.
+            ask for help on [#libretime:matrix.org](https://matrix.to/#/#libretime:matrix.org)
+            if you feel this issue should not have been closed.
 
             Thank you for your contributions.
           days-before-issue-stale: 150
