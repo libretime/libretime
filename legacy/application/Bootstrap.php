@@ -14,7 +14,29 @@ if (!isset($configRun) || !$configRun) {
 
 Logging::setLogPath(LIBRETIME_LOG_FILEPATH);
 
-Zend_Session::setOptions(['strict' => true]);
+if (APPLICATION_ENV != 'testing') {
+    Zend_Session::setOptions([
+        'strict' => true,
+        'serialize_handler' => 'php_serialize',
+    ]);
+
+    $db = Zend_Db::factory('PDO_' . $CC_CONFIG['dsn']['phptype'], [
+        'host' => $CC_CONFIG['dsn']['host'],
+        'port' => $CC_CONFIG['dsn']['port'],
+        'username' => $CC_CONFIG['dsn']['username'],
+        'password' => $CC_CONFIG['dsn']['password'],
+        'dbname' => $CC_CONFIG['dsn']['database'],
+    ]);
+    Zend_Db_Table_Abstract::setDefaultAdapter($db);
+    Zend_Session::setSaveHandler(new Zend_Session_SaveHandler_DbTable([
+        'name' => 'sessions',
+        'primary' => 'id',
+        'modifiedColumn' => 'modified',
+        'dataColumn' => 'data',
+        'lifetimeColumn' => 'lifetime',
+    ]));
+}
+
 Config::setAirtimeVersion();
 
 require_once CONFIG_PATH . '/navigation.php';

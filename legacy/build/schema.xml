@@ -565,4 +565,11 @@
       <reference local="podcast_id" foreign="id" />
     </foreign-key>
   </table>
+
+  <table name="sessions" phpName="Sessions">
+    <column name="id" phpName="DbId" primaryKey="true" type="CHAR" size="32" required="true" />
+    <column name="modified" phpName="DbModified" type="INTEGER" />
+    <column name="lifetime" phpName="DbLifetime" type="INTEGER" />
+    <column name="data" phpName="DbData" type="LONGVARCHAR" />
+  </table>
 </database>
