@@ -5,6 +5,6 @@ contact_links:
     url: https://discourse.libretime.org/
     about: Please find existing questions and discussions here.
 
-  - name: LibreTime Chat
-    url: https://chat.libretime.org/
+  - name: LibreTime Chat (#libretime:matrix.org)
+    url: https://matrix.to/#/#libretime:matrix.org
     about: Discuss with the LibreTime community.
