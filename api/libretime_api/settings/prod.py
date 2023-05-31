@@ -73,3 +73,20 @@ LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
+
+# Email
+# https://docs.djangoproject.com/en/4.2/topics/email/
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+EMAIL_HOST = CONFIG.email.host
+EMAIL_PORT = CONFIG.email.port
+EMAIL_HOST_USER = CONFIG.email.user
+EMAIL_HOST_PASSWORD = CONFIG.email.password
+EMAIL_USE_SSL = CONFIG.email.encryption == "ssl/tls"  # implicit
+EMAIL_USE_TLS = CONFIG.email.encryption == "starttls"  # explicit
+EMAIL_TIMEOUT = CONFIG.email.timeout
+EMAIL_SSL_KEYFILE = CONFIG.email.key_file
+EMAIL_SSL_CERTFILE = CONFIG.email.cert_file
+
+DEFAULT_FROM_EMAIL = CONFIG.email.from_email

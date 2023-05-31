@@ -65,6 +65,11 @@ class Schema implements ConfigurationInterface
             /**/->scalarNode('password')->defaultValue('libretime')->end()
             ->end()->end()
 
+            // Email schema
+            ->arrayNode('email')
+            /**/->ignoreExtraKeys()
+            ->end()
+
             // Storage schema
             ->arrayNode('storage')->addDefaultsIfNotSet()->children()
             /**/->scalarNode('path')->defaultValue('/srv/libretime/')
