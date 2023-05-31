@@ -60,7 +60,16 @@ class phpobject:
         self.__php_vars__[name] = value
 
     def __repr__(self):
-        return f"<phpobject {self.__name__!r}>"
+        return f"<phpobject name={self.__name__!r} d={self._asdict()!r}>"
+
+    def __eq__(self, value: object) -> bool:
+        if not isinstance(value, phpobject):
+            return False
+
+        if self.__name__ != value.__name__:
+            return False
+
+        return self._asdict() == value._asdict()
 
 
 def convert_member_dict(d):
