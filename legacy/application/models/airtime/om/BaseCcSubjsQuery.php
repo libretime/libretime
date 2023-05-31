@@ -10,6 +10,7 @@
  * @method CcSubjsQuery orderByDbLogin($order = Criteria::ASC) Order by the login column
  * @method CcSubjsQuery orderByDbPass($order = Criteria::ASC) Order by the pass column
  * @method CcSubjsQuery orderByDbType($order = Criteria::ASC) Order by the type column
+ * @method CcSubjsQuery orderByDbIsActive($order = Criteria::ASC) Order by the is_active column
  * @method CcSubjsQuery orderByDbFirstName($order = Criteria::ASC) Order by the first_name column
  * @method CcSubjsQuery orderByDbLastName($order = Criteria::ASC) Order by the last_name column
  * @method CcSubjsQuery orderByDbLastlogin($order = Criteria::ASC) Order by the lastlogin column
@@ -24,6 +25,7 @@
  * @method CcSubjsQuery groupByDbLogin() Group by the login column
  * @method CcSubjsQuery groupByDbPass() Group by the pass column
  * @method CcSubjsQuery groupByDbType() Group by the type column
+ * @method CcSubjsQuery groupByDbIsActive() Group by the is_active column
  * @method CcSubjsQuery groupByDbFirstName() Group by the first_name column
  * @method CcSubjsQuery groupByDbLastName() Group by the last_name column
  * @method CcSubjsQuery groupByDbLastlogin() Group by the lastlogin column
@@ -76,6 +78,7 @@
  * @method CcSubjs findOneByDbLogin(string $login) Return the first CcSubjs filtered by the login column
  * @method CcSubjs findOneByDbPass(string $pass) Return the first CcSubjs filtered by the pass column
  * @method CcSubjs findOneByDbType(string $type) Return the first CcSubjs filtered by the type column
+ * @method CcSubjs findOneByDbIsActive(boolean $is_active) Return the first CcSubjs filtered by the is_active column
  * @method CcSubjs findOneByDbFirstName(string $first_name) Return the first CcSubjs filtered by the first_name column
  * @method CcSubjs findOneByDbLastName(string $last_name) Return the first CcSubjs filtered by the last_name column
  * @method CcSubjs findOneByDbLastlogin(string $lastlogin) Return the first CcSubjs filtered by the lastlogin column
@@ -90,6 +93,7 @@
  * @method array findByDbLogin(string $login) Return CcSubjs objects filtered by the login column
  * @method array findByDbPass(string $pass) Return CcSubjs objects filtered by the pass column
  * @method array findByDbType(string $type) Return CcSubjs objects filtered by the type column
+ * @method array findByDbIsActive(boolean $is_active) Return CcSubjs objects filtered by the is_active column
  * @method array findByDbFirstName(string $first_name) Return CcSubjs objects filtered by the first_name column
  * @method array findByDbLastName(string $last_name) Return CcSubjs objects filtered by the last_name column
  * @method array findByDbLastlogin(string $lastlogin) Return CcSubjs objects filtered by the lastlogin column
@@ -206,7 +210,7 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "login", "pass", "type", "first_name", "last_name", "lastlogin", "lastfail", "skype_contact", "jabber_contact", "email", "cell_phone", "login_attempts" FROM "cc_subjs" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "login", "pass", "type", "is_active", "first_name", "last_name", "lastlogin", "lastfail", "skype_contact", "jabber_contact", "email", "cell_phone", "login_attempts" FROM "cc_subjs" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -422,6 +426,33 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CcSubjsPeer::TYPE, $dbType, $comparison);
+    }
+
+    /**
+     * Filter the query on the is_active column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbIsActive(true); // WHERE is_active = true
+     * $query->filterByDbIsActive('yes'); // WHERE is_active = true
+     * </code>
+     *
+     * @param     boolean|string $dbIsActive The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcSubjsQuery The current query, for fluid interface
+     */
+    public function filterByDbIsActive($dbIsActive = null, $comparison = null)
+    {
+        if (is_string($dbIsActive)) {
+            $dbIsActive = in_array(strtolower($dbIsActive), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(CcSubjsPeer::IS_ACTIVE, $dbIsActive, $comparison);
     }
 
     /**

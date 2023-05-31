@@ -57,6 +57,13 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
     protected $type;
 
     /**
+     * The value for the is_active field.
+     * Note: this column has a database default value of: false
+     * @var        boolean
+     */
+    protected $is_active;
+
+    /**
      * The value for the first_name field.
      * Note: this column has a database default value of: ''
      * @var        string
@@ -240,6 +247,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
         $this->login = '';
         $this->pass = '';
         $this->type = 'U';
+        $this->is_active = false;
         $this->first_name = '';
         $this->last_name = '';
         $this->login_attempts = 0;
@@ -297,6 +305,17 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
     {
 
         return $this->type;
+    }
+
+    /**
+     * Get the [is_active] column value.
+     *
+     * @return boolean
+     */
+    public function getDbIsActive()
+    {
+
+        return $this->is_active;
     }
 
     /**
@@ -531,6 +550,35 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
     } // setDbType()
 
     /**
+     * Sets the value of the [is_active] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param boolean|integer|string $v The new value
+     * @return CcSubjs The current object (for fluent API support)
+     */
+    public function setDbIsActive($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->is_active !== $v) {
+            $this->is_active = $v;
+            $this->modifiedColumns[] = CcSubjsPeer::IS_ACTIVE;
+        }
+
+
+        return $this;
+    } // setDbIsActive()
+
+    /**
      * Set the value of [first_name] column.
      *
      * @param  string $v new value
@@ -745,6 +793,10 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
                 return false;
             }
 
+            if ($this->is_active !== false) {
+                return false;
+            }
+
             if ($this->first_name !== '') {
                 return false;
             }
@@ -783,15 +835,16 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
             $this->login = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
             $this->pass = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->type = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->first_name = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->last_name = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-            $this->lastlogin = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-            $this->lastfail = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
-            $this->skype_contact = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-            $this->jabber_contact = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
-            $this->email = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
-            $this->cell_phone = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
-            $this->login_attempts = ($row[$startcol + 12] !== null) ? (int) $row[$startcol + 12] : null;
+            $this->is_active = ($row[$startcol + 4] !== null) ? (boolean) $row[$startcol + 4] : null;
+            $this->first_name = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->last_name = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+            $this->lastlogin = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+            $this->lastfail = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+            $this->skype_contact = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+            $this->jabber_contact = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
+            $this->email = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
+            $this->cell_phone = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
+            $this->login_attempts = ($row[$startcol + 13] !== null) ? (int) $row[$startcol + 13] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -801,7 +854,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 13; // 13 = CcSubjsPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 14; // 14 = CcSubjsPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating CcSubjs object", $e);
@@ -1189,6 +1242,9 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
         if ($this->isColumnModified(CcSubjsPeer::TYPE)) {
             $modifiedColumns[':p' . $index++]  = '"type"';
         }
+        if ($this->isColumnModified(CcSubjsPeer::IS_ACTIVE)) {
+            $modifiedColumns[':p' . $index++]  = '"is_active"';
+        }
         if ($this->isColumnModified(CcSubjsPeer::FIRST_NAME)) {
             $modifiedColumns[':p' . $index++]  = '"first_name"';
         }
@@ -1238,6 +1294,9 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
                         break;
                     case '"type"':
                         $stmt->bindValue($identifier, $this->type, PDO::PARAM_STR);
+                        break;
+                    case '"is_active"':
+                        $stmt->bindValue($identifier, $this->is_active, PDO::PARAM_BOOL);
                         break;
                     case '"first_name"':
                         $stmt->bindValue($identifier, $this->first_name, PDO::PARAM_STR);
@@ -1470,30 +1529,33 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
                 return $this->getDbType();
                 break;
             case 4:
-                return $this->getDbFirstName();
+                return $this->getDbIsActive();
                 break;
             case 5:
-                return $this->getDbLastName();
+                return $this->getDbFirstName();
                 break;
             case 6:
-                return $this->getDbLastlogin();
+                return $this->getDbLastName();
                 break;
             case 7:
-                return $this->getDbLastfail();
+                return $this->getDbLastlogin();
                 break;
             case 8:
-                return $this->getDbSkypeContact();
+                return $this->getDbLastfail();
                 break;
             case 9:
-                return $this->getDbJabberContact();
+                return $this->getDbSkypeContact();
                 break;
             case 10:
-                return $this->getDbEmail();
+                return $this->getDbJabberContact();
                 break;
             case 11:
-                return $this->getDbCellPhone();
+                return $this->getDbEmail();
                 break;
             case 12:
+                return $this->getDbCellPhone();
+                break;
+            case 13:
                 return $this->getDbLoginAttempts();
                 break;
             default:
@@ -1529,15 +1591,16 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
             $keys[1] => $this->getDbLogin(),
             $keys[2] => $this->getDbPass(),
             $keys[3] => $this->getDbType(),
-            $keys[4] => $this->getDbFirstName(),
-            $keys[5] => $this->getDbLastName(),
-            $keys[6] => $this->getDbLastlogin(),
-            $keys[7] => $this->getDbLastfail(),
-            $keys[8] => $this->getDbSkypeContact(),
-            $keys[9] => $this->getDbJabberContact(),
-            $keys[10] => $this->getDbEmail(),
-            $keys[11] => $this->getDbCellPhone(),
-            $keys[12] => $this->getDbLoginAttempts(),
+            $keys[4] => $this->getDbIsActive(),
+            $keys[5] => $this->getDbFirstName(),
+            $keys[6] => $this->getDbLastName(),
+            $keys[7] => $this->getDbLastlogin(),
+            $keys[8] => $this->getDbLastfail(),
+            $keys[9] => $this->getDbSkypeContact(),
+            $keys[10] => $this->getDbJabberContact(),
+            $keys[11] => $this->getDbEmail(),
+            $keys[12] => $this->getDbCellPhone(),
+            $keys[13] => $this->getDbLoginAttempts(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1616,30 +1679,33 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
                 $this->setDbType($value);
                 break;
             case 4:
-                $this->setDbFirstName($value);
+                $this->setDbIsActive($value);
                 break;
             case 5:
-                $this->setDbLastName($value);
+                $this->setDbFirstName($value);
                 break;
             case 6:
-                $this->setDbLastlogin($value);
+                $this->setDbLastName($value);
                 break;
             case 7:
-                $this->setDbLastfail($value);
+                $this->setDbLastlogin($value);
                 break;
             case 8:
-                $this->setDbSkypeContact($value);
+                $this->setDbLastfail($value);
                 break;
             case 9:
-                $this->setDbJabberContact($value);
+                $this->setDbSkypeContact($value);
                 break;
             case 10:
-                $this->setDbEmail($value);
+                $this->setDbJabberContact($value);
                 break;
             case 11:
-                $this->setDbCellPhone($value);
+                $this->setDbEmail($value);
                 break;
             case 12:
+                $this->setDbCellPhone($value);
+                break;
+            case 13:
                 $this->setDbLoginAttempts($value);
                 break;
         } // switch()
@@ -1670,15 +1736,16 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
         if (array_key_exists($keys[1], $arr)) $this->setDbLogin($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setDbPass($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setDbType($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setDbFirstName($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setDbLastName($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setDbLastlogin($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setDbLastfail($arr[$keys[7]]);
-        if (array_key_exists($keys[8], $arr)) $this->setDbSkypeContact($arr[$keys[8]]);
-        if (array_key_exists($keys[9], $arr)) $this->setDbJabberContact($arr[$keys[9]]);
-        if (array_key_exists($keys[10], $arr)) $this->setDbEmail($arr[$keys[10]]);
-        if (array_key_exists($keys[11], $arr)) $this->setDbCellPhone($arr[$keys[11]]);
-        if (array_key_exists($keys[12], $arr)) $this->setDbLoginAttempts($arr[$keys[12]]);
+        if (array_key_exists($keys[4], $arr)) $this->setDbIsActive($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setDbFirstName($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setDbLastName($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setDbLastlogin($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setDbLastfail($arr[$keys[8]]);
+        if (array_key_exists($keys[9], $arr)) $this->setDbSkypeContact($arr[$keys[9]]);
+        if (array_key_exists($keys[10], $arr)) $this->setDbJabberContact($arr[$keys[10]]);
+        if (array_key_exists($keys[11], $arr)) $this->setDbEmail($arr[$keys[11]]);
+        if (array_key_exists($keys[12], $arr)) $this->setDbCellPhone($arr[$keys[12]]);
+        if (array_key_exists($keys[13], $arr)) $this->setDbLoginAttempts($arr[$keys[13]]);
     }
 
     /**
@@ -1694,6 +1761,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
         if ($this->isColumnModified(CcSubjsPeer::LOGIN)) $criteria->add(CcSubjsPeer::LOGIN, $this->login);
         if ($this->isColumnModified(CcSubjsPeer::PASS)) $criteria->add(CcSubjsPeer::PASS, $this->pass);
         if ($this->isColumnModified(CcSubjsPeer::TYPE)) $criteria->add(CcSubjsPeer::TYPE, $this->type);
+        if ($this->isColumnModified(CcSubjsPeer::IS_ACTIVE)) $criteria->add(CcSubjsPeer::IS_ACTIVE, $this->is_active);
         if ($this->isColumnModified(CcSubjsPeer::FIRST_NAME)) $criteria->add(CcSubjsPeer::FIRST_NAME, $this->first_name);
         if ($this->isColumnModified(CcSubjsPeer::LAST_NAME)) $criteria->add(CcSubjsPeer::LAST_NAME, $this->last_name);
         if ($this->isColumnModified(CcSubjsPeer::LASTLOGIN)) $criteria->add(CcSubjsPeer::LASTLOGIN, $this->lastlogin);
@@ -1769,6 +1837,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
         $copyObj->setDbLogin($this->getDbLogin());
         $copyObj->setDbPass($this->getDbPass());
         $copyObj->setDbType($this->getDbType());
+        $copyObj->setDbIsActive($this->getDbIsActive());
         $copyObj->setDbFirstName($this->getDbFirstName());
         $copyObj->setDbLastName($this->getDbLastName());
         $copyObj->setDbLastlogin($this->getDbLastlogin());
@@ -3805,6 +3874,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
         $this->login = null;
         $this->pass = null;
         $this->type = null;
+        $this->is_active = null;
         $this->first_name = null;
         $this->last_name = null;
         $this->lastlogin = null;
