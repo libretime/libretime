@@ -151,6 +151,65 @@ rabbitmq:
   password: "some_random_generated_secret!"
 ```
 
+## Email
+
+The `email` section configure a SMTP server used to send emails.
+
+```yml
+email:
+  # Sender email address to use when sending emails.
+  # > default is no-reply@libretime.org
+  from_address: no-reply@libretime.org
+
+  # The hostname of the SMTP server.
+  # > default is localhost
+  host: localhost
+  # The port of the SMTP server.
+  # > default is 25
+  port: 25
+  # Whether to use an insecure connection, an SSL/TLS (implicit) connection (generally
+  # on port 465) or a STARTTLS (explicit) connection (generally on port 587) when
+  # talking to the SMTP server.
+  # > must be one of (ssl/tls, starttls)
+  encryption:
+  # The username to use for the SMTP server.
+  # > default is ""
+  user: ""
+  # The password to use for the SMTP server.
+  # > default is ""
+  password: ""
+  # Timeout in seconds for blocking operations like the connection attempt.
+  timeout:
+  # The path to a PEM-formatted certificate chain file to use for the connection.
+  cert_file:
+  # The path to a PEM-formatted private key file to use for the connection.
+  key_file:
+```
+
+:::info
+
+Below are 2 common email configuration example:
+
+```yml
+email:
+  host: mail.gandi.net
+  port: 587
+  encryption: starttls
+  user: some_user
+  password: some_password!
+```
+
+```yml
+email:
+  host: mail.gandi.net
+  port: 465
+  encryption: ssl/tls
+  user: some_user
+  password: some_password!
+```
+
+:::
+
 ## Playout
 
 The `playout` section configure anything related to the playout service.

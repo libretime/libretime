@@ -18,6 +18,7 @@ from .prod import (
     DATABASES,
     DEBUG,
     DEFAULT_AUTO_FIELD,
+    DEFAULT_FROM_EMAIL,
     INSTALLED_APPS,
     LANGUAGE_CODE,
     LOGGING,
@@ -33,6 +34,11 @@ from .prod import (
     USE_TZ,
     WSGI_APPLICATION,
 )
+
+# Email
+# https://docs.djangoproject.com/en/4.2/topics/email/
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Testing
 # https://docs.djangoproject.com/en/3.2/ref/settings/#test-runner
