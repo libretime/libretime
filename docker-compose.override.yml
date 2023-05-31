@@ -81,3 +81,9 @@ services:
     volumes:
       - ./dev/certs:/certs
       - ./dev/icecast.xml:/etc/icecast.xml
+
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - 8025:8025
+      - 1025:1025
