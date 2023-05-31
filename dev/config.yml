@@ -9,6 +9,10 @@ database:
 rabbitmq:
   host: rabbitmq
 
+email:
+  host: mailpit
+  port: 1025
+
 playout:
   liquidsoap_host: liquidsoap
 
