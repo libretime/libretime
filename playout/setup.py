@@ -35,14 +35,14 @@ setup(
     extras_require={
         "dev": [
             "distro>=1.8.0,<1.9",
-            "requests-mock>=1.10.0,<1.11",
+            "requests-mock>=1.10.0,<1.12",
             "syrupy>=4.0.0,<4.1",
             "types-backports>=0.1.3,<0.2",
             "types-python-dateutil>=2.8.1,<2.9",
             "types-requests>=2.31.0,<2.32",
         ],
         "sentry": [
-            "sentry-sdk>=1.15.0,<1.25",
+            "sentry-sdk>=1.15.0,<1.26",
         ],
     },
     zip_safe=False,

@@ -22,11 +22,11 @@ setup(
     ],
     extras_require={
         "dev": [
-            "requests-mock>=1.10.0,<1.11",
+            "requests-mock>=1.10.0,<1.12",
             "types-requests>=2.31.0,<2.32",
         ],
         "sentry": [
-            "sentry-sdk>=1.15.0,<1.25",
+            "sentry-sdk>=1.15.0,<1.26",
         ],
     },
     zip_safe=False,
