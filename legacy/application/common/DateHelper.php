@@ -46,7 +46,7 @@ class Application_Common_DateHelper
     }
 
     /** Get the abbreviated timezone for the currently logged in user.
-     *  @return A string containing the short form of the timezone set in the preferences for the current user (eg. EST, CEST, etc.)
+     * @return string A string containing the short form of the timezone set in the preferences for the current user (eg. EST, CEST, etc.)
      */
     public static function getUserTimezoneAbbreviation()
     {
@@ -54,7 +54,7 @@ class Application_Common_DateHelper
     }
 
     /** Get the abbreviated timezone string of the timezone the station is set to.
-     *  @return A string containing the short form of the station's timezone (eg. EST, CEST, etc.)
+     * @return string A string containing the short form of the station's timezone (eg. EST, CEST, etc.)
      */
     public static function getStationTimezoneAbbreviation()
     {
