@@ -24,7 +24,7 @@ setup(
         ]
     },
     install_requires=[
-        "django-cors-headers>=3.14.0,<4.1",
+        "django-cors-headers>=3.14.0,<4.2",
         "django-filter>=2.4.0,<23.3",
         "django>=4.2.0,<4.3",
         "djangorestframework>=3.14.0,<3.15",
@@ -48,7 +48,7 @@ setup(
             "requests-mock>=1.10.0,<1.12",
         ],
         "sentry": [
-            "sentry-sdk[django]>=1.15.0,<1.26",
+            "sentry-sdk[django]>=1.15.0,<1.27",
         ],
     },
 )
