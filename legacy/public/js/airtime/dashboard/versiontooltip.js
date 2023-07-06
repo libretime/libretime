@@ -24,28 +24,28 @@ function getContent() {
       msg +=
         "<li>" +
         $.i18n._(
-          "A patch update for your LibreTime installation is available."
+          "A patch update for your LibreTime installation is available.",
         );
     }
     if (hasMinor) {
       msg +=
         "<li>" +
         $.i18n._(
-          "A feature update for your LibreTime installation is available."
+          "A feature update for your LibreTime installation is available.",
         );
     }
     if (hasMajor && !hasMultiMajor) {
       msg +=
         "<li>" +
         $.i18n._(
-          "A major update for your LibreTime installation is available."
+          "A major update for your LibreTime installation is available.",
         );
     }
     if (hasMultiMajor) {
       msg +=
         "<li>" +
         $.i18n._(
-          "Multiple major updates for LibreTime installation are available. Please upgrade as soon as possible."
+          "Multiple major updates for LibreTime installation are available. Please upgrade as soon as possible.",
         );
     }
     msg += "</ul>";

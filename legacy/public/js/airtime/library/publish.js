@@ -74,7 +74,7 @@ var AIRTIME = (function (AIRTIME) {
           { format: "json" },
           function (json) {
             AIRTIME.playlist.fileMdEdit(json, uid);
-          }
+          },
         );
       };
 
@@ -161,7 +161,7 @@ var AIRTIME = (function (AIRTIME) {
         var tab = AIRTIME.tabs.openTab(
           html,
           PUBLISH_APP_NAME + "_" + mediaId,
-          null
+          null,
         );
         _bootstrapAngularApp(mediaId, tab);
       });

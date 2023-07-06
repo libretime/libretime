@@ -18,7 +18,7 @@ $(document).ready(function () {
       dateStartId,
       timeStartId,
       dateEndId,
-      timeEndId
+      timeEndId,
     );
     var start = oRange.start;
     var end = oRange.end;
@@ -57,7 +57,7 @@ function getDataAndPlot(startTimestamp, endTimestamp) {
       plot(out);
       // Turn off the processing overlay
       toggleOverlay();
-    }
+    },
   );
 }
 
@@ -184,8 +184,8 @@ function plot(datasets) {
             sprintf(
               $.i18n._("Listener Count on %s: %s"),
               item.series.label,
-              Math.floor(y)
-            )
+              Math.floor(y),
+            ),
           );
         }
       } else {

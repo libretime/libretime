@@ -141,7 +141,7 @@ function updatePlaybar() {
           $.i18n._("Recording:") +
           "</span>" +
           currentSong.name +
-          ","
+          ",",
       );
     } else {
       $("#current").text(currentSong.name + ",");
@@ -153,7 +153,7 @@ function updatePlaybar() {
           $("#now-playing-artwork_containter").html(
             "<img height='75' width='75' class'artwork' src='" +
               currentSong.metadata.artwork_data +
-              "' />"
+              "' />",
           );
           Cookies.remove("current_track");
           Cookies.set("current_track", currentSong.name);
@@ -175,14 +175,14 @@ function updatePlaybar() {
             showName +
             " - " +
             $.i18n._("Master Stream") +
-            "</span>"
+            "</span>",
         );
       } else {
         $("#current").html(
           $.i18n._("Current") +
             ": <span style='color:red; font-weight:bold'>" +
             $.i18n._("Master Stream") +
-            "</span>"
+            "</span>",
         );
       }
     } else if (live_dj_on_air) {
@@ -193,14 +193,14 @@ function updatePlaybar() {
             showName +
             " - " +
             $.i18n._("Live Stream") +
-            "</span>"
+            "</span>",
         );
       } else {
         $("#current").html(
           $.i18n._("Current") +
             ": <span style='color:red; font-weight:bold'>" +
             $.i18n._("Live Stream") +
-            "</span>"
+            "</span>",
         );
       }
     } else {
@@ -208,7 +208,7 @@ function updatePlaybar() {
         $.i18n._("Current") +
           ": <span style='color:red; font-weight:bold'>" +
           $.i18n._("Nothing Scheduled") +
-          "</span>"
+          "</span>",
       );
     }
   }
@@ -238,10 +238,10 @@ function updatePlaybar() {
       parseInt(Math.round(currentSong.songEndPosixTime / 1000), 10) * 1000;
 
     $("#time-elapsed").text(
-      convertToHHMMSS(approximateServerTime - songStartRoughly)
+      convertToHHMMSS(approximateServerTime - songStartRoughly),
     );
     $("#time-remaining").text(
-      convertToHHMMSS(songEndRoughly - approximateServerTime)
+      convertToHHMMSS(songEndRoughly - approximateServerTime),
     );
     $("#song-length").text(convertToHHMMSS(currentSong.songLengthMs));
   }
@@ -260,7 +260,7 @@ function updatePlaybar() {
     $("#show-length").text(
       convertDateToHHMM(currentShow[0].showStartPosixTime) +
         " - " +
-        convertDateToHHMM(currentShow[0].showEndPosixTime)
+        convertDateToHHMM(currentShow[0].showEndPosixTime),
     );
   }
 
@@ -278,7 +278,7 @@ function calcAdditionalData(currentItem) {
 function calcAdditionalShowData(show) {
   if (show.length > 0) {
     show[0].showStartPosixTime = convertDateToPosixTime(
-      show[0].start_timestamp
+      show[0].start_timestamp,
     );
     show[0].showEndPosixTime = convertDateToPosixTime(show[0].end_timestamp);
     show[0].showLengthMs =
@@ -538,7 +538,7 @@ function setSwitchListener(ele) {
         }
         status_span.html(data.status);
       }
-    }
+    },
   );
 }
 
@@ -553,7 +553,7 @@ function kickSource(ele) {
       if (data.error) {
         alert(data.error);
       }
-    }
+    },
   );
 }
 
@@ -573,7 +573,7 @@ function init() {
       stream_window = window.open(
         baseUrl + "Dashboard/stream-player",
         "name",
-        "width=400,height=158"
+        "width=400,height=158",
       );
     stream_window.focus();
     return false;

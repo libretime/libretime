@@ -37,7 +37,7 @@ var AIRTIME = (function (AIRTIME) {
     }
     AIRTIME.library.changeAddButtonText(
       $(".btn-group #library-plus #lib-plus-text"),
-      btnText
+      btnText,
     );
   };
 
@@ -73,7 +73,7 @@ var AIRTIME = (function (AIRTIME) {
     mod.checkToolBarIcons();
 
     $(
-      "#library_display tr.lib-audio, tr.lib-stream, tr.lib-pl, tr.lib-block"
+      "#library_display tr.lib-audio, tr.lib-stream, tr.lib-pl, tr.lib-block",
     ).draggable({
       helper: function () {
         var $el = $(this),
@@ -178,8 +178,8 @@ var AIRTIME = (function (AIRTIME) {
           } else if ($(".obj_type").val() == "playlist") {
             alert(
               $.i18n._(
-                "You can only add tracks, smart blocks, and webstreams to playlists."
-              )
+                "You can only add tracks, smart blocks, and webstreams to playlists.",
+              ),
             );
           }
         }

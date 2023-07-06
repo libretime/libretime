@@ -119,13 +119,13 @@ function removeLogo() {
     function (json) {
       // Reload without resubmitting the form
       location.href = location.href.replace(location.hash, "");
-    }
+    },
   );
 }
 
 function deleteAllFiles() {
   var resp = confirm(
-    $.i18n._("Are you sure you want to delete all the tracks in your library?")
+    $.i18n._("Are you sure you want to delete all the tracks in your library?"),
   );
   if (resp) {
     $.post(
@@ -133,7 +133,7 @@ function deleteAllFiles() {
       { csrf_token: $("#csrf").val() },
       function (json) {
         location.reload();
-      }
+      },
     );
   }
 }

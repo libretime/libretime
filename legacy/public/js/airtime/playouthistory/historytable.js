@@ -36,7 +36,7 @@ var AIRTIME = (function (AIRTIME) {
       dateStartId,
       timeStartId,
       dateEndId,
-      timeEndId
+      timeEndId,
     );
 
     start = oRange.start;
@@ -251,7 +251,7 @@ var AIRTIME = (function (AIRTIME) {
         "<i class='icon-white icon-plus'></i>" +
         $.i18n._("New Log Entry") +
         "</button>" +
-        "</div>"
+        "</div>",
     );
 
     $menu.append(
@@ -271,7 +271,7 @@ var AIRTIME = (function (AIRTIME) {
         $.i18n._("Deselect all") +
         "</a></li>" +
         "</ul>" +
-        "</div>"
+        "</div>",
     );
 
     $menu.append(
@@ -288,7 +288,7 @@ var AIRTIME = (function (AIRTIME) {
         $.i18n._("Export as PDF") +
         "</a></li>" +
         "</ul>" +
-        "</div>"
+        "</div>",
     );
 
     $menu.append(
@@ -296,7 +296,7 @@ var AIRTIME = (function (AIRTIME) {
         "<button class='btn btn-small' id='his_trash'>" +
         "<i class='icon-white icon-trash'></i>" +
         "</button>" +
-        "</div>"
+        "</div>",
     );
 
     $el.append($menu);
@@ -317,7 +317,7 @@ var AIRTIME = (function (AIRTIME) {
     };
 
     columns = JSON.parse(
-      localStorage.getItem("datatables-historyfile-aoColumns")
+      localStorage.getItem("datatables-historyfile-aoColumns"),
     );
 
     oTable = $historyTableDiv.dataTable({
@@ -331,7 +331,7 @@ var AIRTIME = (function (AIRTIME) {
       fnRowCallback: fnRowCallback,
       oLanguage: getDatatablesStrings({
         sEmptyTable: $.i18n._(
-          "No tracks were played during the selected time period."
+          "No tracks were played during the selected time period.",
         ),
         sInfoEmpty: $.i18n._("Showing 0 to 0 of 0 tracks"),
         sInfo: $.i18n._("Showing _START_ to _END_ of _TOTAL_ tracks"),
@@ -361,7 +361,7 @@ var AIRTIME = (function (AIRTIME) {
       c;
 
     columns = JSON.parse(
-      localStorage.getItem("datatables-historyitem-aoColumns")
+      localStorage.getItem("datatables-historyitem-aoColumns"),
     );
 
     for (i in columns) {
@@ -409,7 +409,7 @@ var AIRTIME = (function (AIRTIME) {
       fnRowCallback: fnRowCallback,
       oLanguage: getDatatablesStrings({
         sEmptyTable: $.i18n._(
-          "No tracks were played during the selected time period."
+          "No tracks were played during the selected time period.",
         ),
         sInfoEmpty: $.i18n._("Showing 0 to 0 of 0 tracks"),
         sInfo: $.i18n._("Showing _START_ to _END_ of _TOTAL_ tracks"),
@@ -562,14 +562,14 @@ var AIRTIME = (function (AIRTIME) {
       ".his-timerange .ui-button",
       function (ev) {
         $(this).addClass("ui-state-hover");
-      }
+      },
     );
     $historyContentDiv.on(
       "mouseleave",
       ".his-timerange .ui-button",
       function (ev) {
         $(this).removeClass("ui-state-hover");
-      }
+      },
     );
 
     oBaseDatePickerSettings = {
@@ -624,7 +624,7 @@ var AIRTIME = (function (AIRTIME) {
         function (json) {
           makeHistoryDialog(json.dialog);
         },
-        "json"
+        "json",
       );
     });
 
@@ -791,7 +791,7 @@ var AIRTIME = (function (AIRTIME) {
             redrawTables();
           }
         },
-        "json"
+        "json",
       );
     });
 
@@ -839,7 +839,7 @@ var AIRTIME = (function (AIRTIME) {
             redrawTables();
           }
         },
-        "json"
+        "json",
       );
     });
 
@@ -901,7 +901,7 @@ var AIRTIME = (function (AIRTIME) {
         dateStartId,
         timeStartId,
         dateEndId,
-        timeEndId
+        timeEndId,
       );
     }
 
@@ -981,7 +981,7 @@ var AIRTIME = (function (AIRTIME) {
               function (json) {
                 makeHistoryDialog(json.dialog);
               },
-              "json"
+              "json",
             );
           };
 

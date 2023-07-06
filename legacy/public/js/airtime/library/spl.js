@@ -16,7 +16,7 @@ var AIRTIME = (function (AIRTIME) {
   function isTimeValid(time) {
     //var regExpr = new RegExp("^\\d{2}[:]\\d{2}[:]\\d{2}([.]\\d{1,6})?$");
     var regExpr = new RegExp(
-      "^\\d{2}[:]([0-5]){1}([0-9]){1}[:]([0-5]){1}([0-9]){1}([.]\\d{1})?$"
+      "^\\d{2}[:]([0-5]){1}([0-9]){1}[:]([0-5]){1}([0-9]){1}([.]\\d{1})?$",
     );
 
     return regExpr.test(time);
@@ -87,7 +87,7 @@ var AIRTIME = (function (AIRTIME) {
         li.find(".cue-edit").toggle();
         highlightActive(li);
         highlightActive(li.find(".spl_cue"));
-      }
+      },
     );
   }
 
@@ -126,7 +126,7 @@ var AIRTIME = (function (AIRTIME) {
         li.find(".cue-edit").toggle();
         highlightActive(li);
         highlightActive(li.find(".spl_cue"));
-      }
+      },
     );
   }
 
@@ -201,7 +201,7 @@ var AIRTIME = (function (AIRTIME) {
         li.find(".cue-edit").toggle();
         highlightActive(li);
         highlightActive(li.find(".spl_cue"));
-      }
+      },
     );
   }
 
@@ -237,7 +237,7 @@ var AIRTIME = (function (AIRTIME) {
         $li = $pl.find("li[unqid=" + id + "]");
         $li.find(".crossfade").toggle();
         highlightActive($li.find(".spl_fade_control"));
-      }
+      },
     );
   }
 
@@ -256,7 +256,7 @@ var AIRTIME = (function (AIRTIME) {
     if (!isFadeValid(fadeIn)) {
       showError(
         span,
-        $.i18n._("Please enter a valid time in seconds. Eg. 0.5")
+        $.i18n._("Please enter a valid time in seconds. Eg. 0.5"),
       );
       return;
     } else {
@@ -281,7 +281,7 @@ var AIRTIME = (function (AIRTIME) {
         li = $pl.find("li[unqid=" + unqid + "]");
         li.find(".crossfade").toggle();
         highlightActive(li.find(".spl_fade_control"));
-      }
+      },
     );
   }
 
@@ -300,7 +300,7 @@ var AIRTIME = (function (AIRTIME) {
     if (!isFadeValid(fadeOut)) {
       showError(
         span,
-        $.i18n._("Please enter a valid time in seconds. Eg. 0.5")
+        $.i18n._("Please enter a valid time in seconds. Eg. 0.5"),
       );
       return;
     } else {
@@ -331,7 +331,7 @@ var AIRTIME = (function (AIRTIME) {
         li = $pl.find("li[unqid=" + unqid + "]");
         li.find(".crossfade").toggle();
         highlightActive(li.find(".spl_fade_control"));
-      }
+      },
     );
   }
 
@@ -427,7 +427,7 @@ var AIRTIME = (function (AIRTIME) {
 
     $(".zend_form + .spl-no-margin > div:has(*:visible):last").css(
       "margin-left",
-      0
+      0,
     );
   };
 
@@ -476,7 +476,7 @@ var AIRTIME = (function (AIRTIME) {
             $(value).qtip({
               content:
                 $.i18n._(
-                  "Your browser does not support playing this file type: "
+                  "Your browser does not support playing this file type: ",
                 ) + mime,
               show: "mouseover",
               hide: {
@@ -637,8 +637,8 @@ var AIRTIME = (function (AIRTIME) {
         .parent()
         .html(
           $.i18n._(
-            "Waveform features are available in a browser supporting the Web Audio API"
-          )
+            "Waveform features are available in a browser supporting the Web Audio API",
+          ),
         );
     }
   }
@@ -659,8 +659,8 @@ var AIRTIME = (function (AIRTIME) {
         .parent()
         .html(
           $.i18n._(
-            "Waveform features are available in a browser supporting the Web Audio API"
-          )
+            "Waveform features are available in a browser supporting the Web Audio API",
+          ),
         );
     }
   }
@@ -711,7 +711,7 @@ var AIRTIME = (function (AIRTIME) {
                 $pl.find("#crossfade_main").show();
               }
             }
-          }
+          },
         );
       }
     });
@@ -728,7 +728,7 @@ var AIRTIME = (function (AIRTIME) {
       if (!isFadeValid(fadeIn)) {
         showError(
           input,
-          $.i18n._("Please enter a valid time in seconds. Eg. 0.5")
+          $.i18n._("Please enter a valid time in seconds. Eg. 0.5"),
         );
         return;
       } else {
@@ -742,7 +742,7 @@ var AIRTIME = (function (AIRTIME) {
           if (json.modified !== undefined) {
             mod.setModified(json.modified);
           }
-        }
+        },
       );
     });
 
@@ -758,7 +758,7 @@ var AIRTIME = (function (AIRTIME) {
       if (!isFadeValid(fadeOut)) {
         showError(
           input,
-          $.i18n._("Please enter a valid time in seconds. Eg. 0.5")
+          $.i18n._("Please enter a valid time in seconds. Eg. 0.5"),
         );
         return;
       } else {
@@ -773,14 +773,14 @@ var AIRTIME = (function (AIRTIME) {
           if (json.modified !== undefined) {
             mod.setModified(json.modified);
           }
-        }
+        },
       );
     });
 
     $pl.on(
       "keydown",
       "span.spl_main_fade_in, span.spl_main_fade_out",
-      submitOnEnter
+      submitOnEnter,
     );
 
     $pl.on("click", "#crossfade_main > .ui-icon-closethick", function () {
@@ -887,7 +887,7 @@ var AIRTIME = (function (AIRTIME) {
             //redraw the library to show the new webstream
             redrawLib();
           }
-        }
+        },
       );
     });
 
@@ -1004,7 +1004,7 @@ var AIRTIME = (function (AIRTIME) {
             }
             mod.setFadeIcon();
             disableLoadingIcon();
-          }
+          },
         );
       });
 
@@ -1149,7 +1149,7 @@ var AIRTIME = (function (AIRTIME) {
           if ($("#schedule_calendar").length === 0) {
             oTable.fnStandingRedraw();
           }
-        }
+        },
       );
 
       newTab.close();
@@ -1179,7 +1179,7 @@ var AIRTIME = (function (AIRTIME) {
       AIRTIME.tabs.openTab(
         json.html,
         uid,
-        AIRTIME.playlist._initPlaylistTabEvents
+        AIRTIME.playlist._initPlaylistTabEvents,
       );
       redrawLib();
     });
@@ -1195,7 +1195,7 @@ var AIRTIME = (function (AIRTIME) {
       AIRTIME.tabs.openTab(
         json.html,
         uid,
-        AIRTIME.playlist._initPlaylistTabEvents
+        AIRTIME.playlist._initPlaylistTabEvents,
       );
       redrawLib();
     });
@@ -1211,7 +1211,7 @@ var AIRTIME = (function (AIRTIME) {
       AIRTIME.tabs.openTab(
         json.html,
         uid,
-        AIRTIME.playlist._initPlaylistTabEvents
+        AIRTIME.playlist._initPlaylistTabEvents,
       );
       redrawLib();
     });
@@ -1231,10 +1231,10 @@ var AIRTIME = (function (AIRTIME) {
         AIRTIME.tabs.openTab(
           json.html,
           data.tr_id,
-          AIRTIME.playlist._initPlaylistTabEvents
+          AIRTIME.playlist._initPlaylistTabEvents,
         );
         redrawLib();
-      }
+      },
     );
   };
 
@@ -1256,7 +1256,7 @@ var AIRTIME = (function (AIRTIME) {
       { format: "json", ids: id, modified: lastMod, type: type },
       function (json) {
         redrawLib();
-      }
+      },
     );
   };
 
@@ -1277,10 +1277,10 @@ var AIRTIME = (function (AIRTIME) {
         AIRTIME.tabs.openTab(
           json.html,
           uid,
-          AIRTIME.playlist._initPlaylistTabEvents
+          AIRTIME.playlist._initPlaylistTabEvents,
         );
         redrawLib();
-      }
+      },
     );
   };
 
@@ -1330,7 +1330,7 @@ var AIRTIME = (function (AIRTIME) {
     AIRTIME.tabs.openTab(
       json.html,
       uid,
-      AIRTIME.playlist._initPlaylistTabEvents
+      AIRTIME.playlist._initPlaylistTabEvents,
     );
   };
 
@@ -1659,9 +1659,9 @@ var AIRTIME = (function (AIRTIME) {
       content: {
         text: sprintf(
           $.i18n._(
-            "%s is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
+            "%s is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore.",
           ),
-          PRODUCT_NAME
+          PRODUCT_NAME,
         ),
       },
       position: {
