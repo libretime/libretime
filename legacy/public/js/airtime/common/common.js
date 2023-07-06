@@ -151,7 +151,7 @@ function open_audio_preview(type, id) {
   openPreviewWindow(
     baseUrl + "audiopreview/audio-preview/audioFileID/" + id + "/type/" + type,
     previewWidth,
-    previewHeight
+    previewHeight,
   );
   _preview_window.focus();
 }
@@ -177,7 +177,7 @@ function open_playlist_preview(p_playlistID, p_playlistIndex) {
         "/playlistID/" +
         p_playlistID,
       previewWidth,
-      previewHeight
+      previewHeight,
     );
   _preview_window.focus();
 }
@@ -197,7 +197,7 @@ function open_block_preview(p_blockId, p_blockIndex) {
         "/blockId/" +
         p_blockId,
       previewWidth,
-      previewHeight
+      previewHeight,
     );
   _preview_window.focus();
 }
@@ -219,7 +219,7 @@ function open_show_preview(p_showID, p_showIndex) {
         "/showIndex/" +
         p_showIndex,
       previewWidth,
-      previewHeight
+      previewHeight,
     );
   _preview_window.focus();
 }
@@ -230,7 +230,7 @@ function openPreviewWindow(url, w, h) {
   _preview_window = window.open(
     url,
     $.i18n._("Audio Player"),
-    dim + "scrollbars=yes"
+    dim + "scrollbars=yes",
   );
   return false;
 }
@@ -245,7 +245,7 @@ function validateTimeRange() {
     dateStartId,
     timeStartId,
     dateEndId,
-    timeEndId
+    timeEndId,
   );
 
   start = oRange.start;
@@ -278,13 +278,13 @@ function validateImage(img, el) {
     // hack way of inserting an error message
     var err = $.i18n._("Selected file is too large");
     el.parent().after(
-      "<ul id='img-err' class='errors'>" + "<li>" + err + "</li>" + "</ul>"
+      "<ul id='img-err' class='errors'>" + "<li>" + err + "</li>" + "</ul>",
     );
     return false;
   } else if (validateMimeType(img.type) < 0) {
     var err = $.i18n._("File format is not supported");
     el.parent().after(
-      "<ul id='img-err' class='errors'>" + "<li>" + err + "</li>" + "</ul>"
+      "<ul id='img-err' class='errors'>" + "<li>" + err + "</li>" + "</ul>",
     );
     return false;
   }
@@ -346,7 +346,7 @@ function getUsabilityHint() {
           showHint($hint_div);
         }
       }
-    }
+    },
   );
 }
 
@@ -395,7 +395,7 @@ jQuery.fn.scrollText = function (selector) {
             {
               textIndent: "-" + (sw + 1 - iw) + "px",
             },
-            sw * 8
+            sw * 8,
           );
       }
     });
@@ -404,7 +404,7 @@ jQuery.fn.scrollText = function (selector) {
         {
           textIndent: "0",
         },
-        500
+        500,
       );
     });
   });

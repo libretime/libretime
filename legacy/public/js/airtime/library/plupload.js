@@ -48,10 +48,10 @@ $(document).ready(function () {
     if (uploadProgress) {
       return sprintf(
         $.i18n._(
-          "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"
+          "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?",
         ),
         "\n",
-        "\n"
+        "\n",
       );
     }
   });
@@ -104,8 +104,8 @@ $(document).ready(function () {
       error: function () {
         alert(
           $.i18n._(
-            "Error: The file could not be deleted. Please try again later."
-          )
+            "Error: The file could not be deleted. Please try again later.",
+          ),
         );
       },
     });

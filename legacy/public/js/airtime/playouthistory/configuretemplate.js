@@ -143,7 +143,7 @@ var AIRTIME = (function (AIRTIME) {
         },
         function (json) {
           var x;
-        }
+        },
       );
     }
 

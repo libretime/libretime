@@ -164,7 +164,7 @@ function assignUserRightsToUserTypes() {
             "<br><br>" +
             $.i18n._("View schedule") +
             "<br>" +
-            $.i18n._("View show content")
+            $.i18n._("View show content"),
         );
         break;
       case "H":
@@ -183,7 +183,7 @@ function assignUserRightsToUserTypes() {
             "<br>" +
             $.i18n._("Create playlists, smart blocks, and webstreams") +
             "<br>" +
-            $.i18n._("Manage their own library content")
+            $.i18n._("Manage their own library content"),
         );
         break;
       case "P":
@@ -202,7 +202,7 @@ function assignUserRightsToUserTypes() {
             "<br>" +
             $.i18n._("Create playlists, smart blocks, and webstreams") +
             "<br>" +
-            $.i18n._("Manage all library content")
+            $.i18n._("Manage all library content"),
         );
         break;
       case "A":
@@ -235,7 +235,7 @@ function assignUserRightsToUserTypes() {
             "<br>" +
             $.i18n._("Create playlists, smart blocks, and webstreams") +
             "<br>" +
-            $.i18n._("Manage all library content")
+            $.i18n._("Manage all library content"),
         );
         break;
     }

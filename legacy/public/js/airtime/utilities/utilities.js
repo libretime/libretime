@@ -46,7 +46,7 @@ var AIRTIME = (function (AIRTIME) {
     dateStartId,
     timeStartId,
     dateEndId,
-    timeEndId
+    timeEndId,
   ) {
     var start, end, time;
 

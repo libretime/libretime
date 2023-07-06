@@ -17,7 +17,7 @@ $(document).ready(function () {
       dateStartId,
       timeStartId,
       dateEndId,
-      timeEndId
+      timeEndId,
     );
     var start = oRange.start;
     var end = oRange.end;
@@ -32,7 +32,7 @@ function getShowData(startTimestamp, endTimestamp, show_id) {
     { start: startTimestamp, end: endTimestamp },
     function (data) {
       return data;
-    }
+    },
   );
 }
 
@@ -81,7 +81,7 @@ function getStartEnd() {
     dateStartId,
     timeStartId,
     dateEndId,
-    timeEndId
+    timeEndId,
   );
 }
 
@@ -96,7 +96,7 @@ function validateTimeRange() {
     dateStartId,
     timeStartId,
     dateEndId,
-    timeEndId
+    timeEndId,
   );
 
   start = oRange.start;
@@ -123,7 +123,7 @@ function showListenerDataTable() {
     dateStartId,
     timeStartId,
     dateEndId,
-    timeEndId
+    timeEndId,
   );
   var start = oRange.start;
   var lengthMenu = [

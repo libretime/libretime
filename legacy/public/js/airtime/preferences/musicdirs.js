@@ -46,10 +46,10 @@ function setWatchedDirEvents() {
       confirm(
         sprintf(
           $.i18n._(
-            "Are you sure you want to change the storage folder?\nThis will remove the files from your %s library!"
+            "Are you sure you want to change the storage folder?\nThis will remove the files from your %s library!",
           ),
-          PRODUCT_NAME
-        )
+          PRODUCT_NAME,
+        ),
       )
     ) {
       url = baseUrl + "Preference/change-stor-directory";
@@ -63,7 +63,7 @@ function setWatchedDirEvents() {
           $("#watched-folder-section").empty();
           $("#watched-folder-section").append(json.subform);
           setWatchedDirEvents();
-        }
+        },
       );
     } else {
       $("#storageFolder").val("");
@@ -83,11 +83,11 @@ function setWatchedDirEvents() {
       function (json) {
         $("#watched-folder-section").empty();
         $("#watched-folder-section").append(
-          "<h2>" + $.i18n._("Manage Media Folders") + "</h2>"
+          "<h2>" + $.i18n._("Manage Media Folders") + "</h2>",
         );
         $("#watched-folder-section").append(json.subform);
         setWatchedDirEvents();
-      }
+      },
     );
   });
 
@@ -119,11 +119,11 @@ function setWatchedDirEvents() {
           function (json) {
             $("#watched-folder-section").empty();
             $("#watched-folder-section").append(
-              "<h2>" + $.i18n._("Manage Media Folders") + "</h2>"
+              "<h2>" + $.i18n._("Manage Media Folders") + "</h2>",
             );
             $("#watched-folder-section").append(json.subform);
             setWatchedDirEvents();
-          }
+          },
         );
       }
     });

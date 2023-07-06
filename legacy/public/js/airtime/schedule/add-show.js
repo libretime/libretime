@@ -47,7 +47,7 @@ function makeAddShowButton() {
           $.i18n._("New Show") +
           "</span>" +
           "</button>" +
-          "</span>"
+          "</span>",
       );
   }
 }
@@ -196,7 +196,7 @@ function findHosts(request, callback) {
       } else {
         callback(json.hosts);
       }
-    }
+    },
   );
 }
 
@@ -314,12 +314,12 @@ function setAddShowEvents(form) {
   // If we're adding a new show or the show has no logo, hide the "Current Logo" element tree
   $("[id^=add_show_logo_current]").toggle(
     $("#add_show_logo_current").attr("src") !== "" &&
-      $(".button-bar.bottom").find(".ui-button-text").text() === "Update show"
+      $(".button-bar.bottom").find(".ui-button-text").text() === "Update show",
   );
 
   var submitButton = $(".button-bar.bottom").find(".add-show-submit");
   $("[id^=add_show_instance_description]").toggle(
-    submitButton.attr("data-action") === "edit-repeating-show-instance"
+    submitButton.attr("data-action") === "edit-repeating-show-instance",
   );
 
   form.find("#add_show_has_autoplaylist").click(function () {
@@ -342,7 +342,7 @@ function setAddShowEvents(form) {
 
     if (!checkBoxSelected) {
       var d = getDateFromString(
-        form.find("#add_show_start_date").attr("value")
+        form.find("#add_show_start_date").attr("value"),
       );
       if (d != null)
         form.find("#add_show_day_check-" + d.getDay()).attr("checked", true);
@@ -368,9 +368,9 @@ function setAddShowEvents(form) {
           .after(
             "<ul id='show-link-readonly-warning' class='errors'><li>" +
               $.i18n._(
-                "Warning: You cannot change this field while the show is currently playing"
+                "Warning: You cannot change this field while the show is currently playing",
               ) +
-              "</li></ul>"
+              "</li></ul>",
           );
       }
       return false;
@@ -386,9 +386,9 @@ function setAddShowEvents(form) {
           .after(
             "<ul id='show-link-warning' class='errors'><li>" +
               $.i18n._(
-                "Warning: All other repetitions of this show will have their contents replaced to match the show you selected 'Edit Show' with."
+                "Warning: All other repetitions of this show will have their contents replaced to match the show you selected 'Edit Show' with.",
               ) +
-              "</li></ul>"
+              "</li></ul>",
           );
       }
 
@@ -476,7 +476,7 @@ function setAddShowEvents(form) {
         endTimeField.val(json.end.time);
         // Change the timezone now that we've updated the times
         currentTimezone = newTimezone;
-      }
+      },
     );
   });
 
@@ -506,13 +506,13 @@ function setAddShowEvents(form) {
     if (form.find("#add_show_repeat_type").val() == 2) {
       form
         .find(
-          "#add_show_monthly_repeat_type-label, #add_show_monthly_repeat_type-element"
+          "#add_show_monthly_repeat_type-label, #add_show_monthly_repeat_type-element",
         )
         .show();
     } else {
       form
         .find(
-          "#add_show_monthly_repeat_type-label, #add_show_monthly_repeat_type-element"
+          "#add_show_monthly_repeat_type-label, #add_show_monthly_repeat_type-element",
         )
         .hide();
     }
@@ -527,7 +527,7 @@ function setAddShowEvents(form) {
     content: {
       text: $.i18n._(
         "Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the " +
-          "Interface Timezone in your user settings."
+          "Interface Timezone in your user settings.",
       ),
     },
     hide: {
@@ -550,7 +550,7 @@ function setAddShowEvents(form) {
   form.find(".show_autoplaylist_help_icon").qtip({
     content: {
       text: $.i18n._(
-        "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='https://libretime.org/docs/user-manual/playlists/'>More information</a>"
+        "Autoloading playlists' contents are added to shows one hour before the show airs. <a target='_blank' href='https://libretime.org/docs/user-manual/playlists/'>More information</a>",
       ),
     },
     hide: {
@@ -573,7 +573,7 @@ function setAddShowEvents(form) {
   form.find(".airtime_auth_help_icon").qtip({
     content: {
       text: $.i18n._(
-        "This follows the same security pattern for the shows: only users assigned to the show can connect."
+        "This follows the same security pattern for the shows: only users assigned to the show can connect.",
       ),
     },
     hide: {
@@ -595,7 +595,7 @@ function setAddShowEvents(form) {
   form.find(".custom_auth_help_icon").qtip({
     content: {
       text: $.i18n._(
-        "Specify custom authentication which will work only for this show."
+        "Specify custom authentication which will work only for this show.",
       ),
     },
     hide: {
@@ -617,7 +617,7 @@ function setAddShowEvents(form) {
   form.find(".stream_username_help_icon").qtip({
     content: {
       text: $.i18n._(
-        "If your live streaming client does not ask for a username, this field should be 'source'."
+        "If your live streaming client does not ask for a username, this field should be 'source'.",
       ),
     },
     hide: {
@@ -639,7 +639,7 @@ function setAddShowEvents(form) {
   form.find(".show_linking_help_icon").qtip({
     content: {
       text: $.i18n._(
-        "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"
+        "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows",
       ),
     },
     hide: {
@@ -933,7 +933,7 @@ function setAddShowEvents(form) {
             { format: "json" },
             function (json) {
               redrawAddShowForm($addShowForm, json.form);
-            }
+            },
           );
         } else {
           redrawAddShowForm($addShowForm, json.newForm);
@@ -970,7 +970,7 @@ function setAddShowEvents(form) {
           startTime[0],
           startTime[1],
           0,
-          0
+          0,
         );
 
         var endDateString = $("#add_show_end_date_no_repeat").val();
@@ -984,7 +984,7 @@ function setAddShowEvents(form) {
           endTime[0],
           endTime[1],
           0,
-          0
+          0,
         );
 
         if (startDateTime.getTime() >= endDateTime.getTime()) {
@@ -1024,7 +1024,7 @@ function setAddShowEvents(form) {
         var timezone = $("#add_show_timezone").val();
         calculateDuration(startDateTimeString, endDateTimeString, timezone);
       }
-    }
+    },
   );
 
   // when end date/time changes, check if the changed date is in past of start date/time
@@ -1047,7 +1047,7 @@ function setAddShowEvents(form) {
           startTime[0],
           startTime[1],
           0,
-          0
+          0,
         );
 
         var endDate = endDateString.split("-");
@@ -1059,7 +1059,7 @@ function setAddShowEvents(form) {
           endTime[0],
           endTime[1],
           0,
-          0
+          0,
         );
 
         if (startDateTime.getTime() > endDateTime.getTime()) {
@@ -1076,7 +1076,7 @@ function setAddShowEvents(form) {
         var timezone = $("#add_show_timezone").val();
         calculateDuration(startDateTimeString, endDateTimeString, timezone);
       }
-    }
+    },
   );
 
   if ($("#cb_custom_auth").attr("checked")) {
@@ -1103,7 +1103,7 @@ function setAddShowEvents(form) {
       function (data) {
         $("#add_show_duration").val(JSON.parse(data));
         loadingIcon.hide();
-      }
+      },
     );
   }
 

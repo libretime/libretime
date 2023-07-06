@@ -54,7 +54,7 @@ $(document).ready(function () {
           playBlock(blockId, blockIndex);
         }
       },
-    }
+    },
   );
 
   $("#jp_container_1").on("mouseenter", "ul.jp-controls li", function (ev) {
@@ -80,7 +80,7 @@ function playAllPlaylist(p_playlistID, p_playlistIndex) {
   } else {
     buildplaylist(
       baseUrl + "audiopreview/get-playlist/playlistID/" + p_playlistID,
-      p_playlistIndex
+      p_playlistIndex,
     );
   }
 }
@@ -93,7 +93,7 @@ function playBlock(p_blockId, p_blockIndex) {
   } else {
     buildplaylist(
       baseUrl + "audiopreview/get-block/blockId/" + p_blockId,
-      p_blockIndex
+      p_blockIndex,
     );
   }
 }
@@ -113,7 +113,7 @@ function playAllShow(p_showID, p_index) {
   } else {
     buildplaylist(
       baseUrl + "audiopreview/get-show/showID/" + p_showID,
-      p_index
+      p_index,
     );
   }
 }
@@ -208,7 +208,7 @@ function buildplaylist(p_url, p_playIndex) {
     // Add 2px to account for borders
     window.resizeTo(
       container.width() + 2,
-      container.height() + URL_BAR_HEIGHT + 2
+      container.height() + URL_BAR_HEIGHT + 2,
     );
   });
 }
@@ -270,6 +270,6 @@ function playOne(uri, mime) {
   // Add 2px to account for borders
   window.resizeTo(
     container.width() + 2,
-    container.height() + URL_BAR_HEIGHT + 2
+    container.height() + URL_BAR_HEIGHT + 2,
   );
 }
