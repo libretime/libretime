@@ -73,6 +73,6 @@ $(document).ready(function () {
       //Datatables overrides.
       aoColumns: aoColumns,
       sAjaxSource: ajaxSourceURL,
-    }
+    },
   );
 });

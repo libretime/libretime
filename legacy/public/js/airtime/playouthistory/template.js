@@ -43,7 +43,7 @@ var AIRTIME = (function (AIRTIME) {
         editUrl: editUrl,
         defaultUrl: defaultUrl,
         removeUrl: removeUrl,
-      })
+      }),
     );
 
     return $li;
@@ -75,10 +75,10 @@ var AIRTIME = (function (AIRTIME) {
       $newLi = $a.parents("li");
 
       $oldLi.replaceWith(
-        createItemLi($oldLi.data("template"), $oldLi.data("name"), false)
+        createItemLi($oldLi.data("template"), $oldLi.data("name"), false),
       );
       $newLi.replaceWith(
-        createItemLi($newLi.data("template"), $newLi.data("name"), true)
+        createItemLi($newLi.data("template"), $newLi.data("name"), true),
       );
 
       $.post(url, function () {

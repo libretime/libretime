@@ -94,7 +94,7 @@ var AIRTIME = (function (AIRTIME) {
           // redraw list of smartblocks just in case they have it visible on the left
           dt = $('table[id="library_display"]').dataTable();
           dt.fnStandingRedraw();
-        }
+        },
       );
     };
     /**
@@ -178,7 +178,7 @@ var AIRTIME = (function (AIRTIME) {
    * @type {PodcastController}
    */
   StationPodcastController.prototype = Object.create(
-    PodcastController.prototype
+    PodcastController.prototype,
   );
 
   /**
@@ -196,7 +196,7 @@ var AIRTIME = (function (AIRTIME) {
             "/episodes/" +
             this.id +
             "?csrf_token=" +
-            $scope.csrf
+            $scope.csrf,
         )
         .success(function () {
           self.reloadEpisodeTable();
@@ -258,13 +258,13 @@ var AIRTIME = (function (AIRTIME) {
             $.i18n._("You haven't published any episodes!") +
             "<br/>" +
             $.i18n._(
-              "You can publish your uploaded content from the 'Tracks' view."
+              "You can publish your uploaded content from the 'Tracks' view.",
             ) +
             "<br/><a target='_parent' href='/showbuilder#tracks'>" +
             $.i18n._("Try it now") +
             "</a>",
         },
-      }
+      },
     );
 
     mod.stationPodcastTable = this.episodeTable.getDatatable();
@@ -339,7 +339,7 @@ var AIRTIME = (function (AIRTIME) {
       $.post(
         endpoint + "bulk",
         { csrf_token: $("#csrf").val(), method: method, ids: ids },
-        callback
+        callback,
       );
     }
   }
@@ -382,7 +382,7 @@ var AIRTIME = (function (AIRTIME) {
     $(".album_names.help_icon").qtip({
       content: {
         text: $.i18n._(
-          'Overwrite downloaded podcast episodes\' "Album" and "Creator" metadata tag with the Podcast Name specified above and set the track title to the title of the Podcast Episode. This album name can then be used as a search criteria by a smartblock. '
+          'Overwrite downloaded podcast episodes\' "Album" and "Creator" metadata tag with the Podcast Name specified above and set the track title to the title of the Podcast Episode. This album name can then be used as a search criteria by a smartblock. ',
         ),
       },
       hide: {
@@ -406,7 +406,7 @@ var AIRTIME = (function (AIRTIME) {
     var episodeTable =
       AIRTIME.podcast.initPodcastEpisodeDatatableWithButtonEvents(
         $("#podcast_episodes_" + podcast.id),
-        podcast.id.toString()
+        podcast.id.toString(),
       );
     episodeTable.reload(podcast.id);
     episodeTable.clearSelection();
@@ -425,7 +425,7 @@ var AIRTIME = (function (AIRTIME) {
       bItemSelection,
       toolbarButtons,
       dataTablesOptions,
-      config
+      config,
     ) {
       this.config = config; // Internal configuration object
       this._setupImportListener();
@@ -436,11 +436,11 @@ var AIRTIME = (function (AIRTIME) {
         bItemSelection,
         toolbarButtons,
         dataTablesOptions,
-        config.emptyPlaceholder
+        config.emptyPlaceholder,
       );
     }; // Subclass AIRTIME.widgets.Table
     PodcastEpisodeTable.prototype = Object.create(
-      AIRTIME.widgets.Table.prototype
+      AIRTIME.widgets.Table.prototype,
     );
     PodcastEpisodeTable.prototype.constructor = PodcastEpisodeTable;
     PodcastEpisodeTable.prototype._SELECTORS = Object.freeze({
@@ -465,7 +465,7 @@ var AIRTIME = (function (AIRTIME) {
     PodcastEpisodeTable.prototype._datatablesCheckboxDataDelegate = function (
       rowData,
       callType,
-      dataToSave
+      dataToSave,
     ) {
       var defaultIcon = "<span class='icon icon-circle-arrow-down'></span>",
         importIcon =
@@ -488,7 +488,7 @@ var AIRTIME = (function (AIRTIME) {
         this,
         rowData,
         callType,
-        dataToSave
+        dataToSave,
       );
     };
 
@@ -615,7 +615,7 @@ var AIRTIME = (function (AIRTIME) {
 
         // open newly created podcast in right-side edit pane
         _initAppFromResponse(json);
-      }
+      },
     ).fail(function (e) {
       var errors = $("#podcast_url_dialog").find(".errors");
       errors.show(200).text(e.responseText);
@@ -636,7 +636,7 @@ var AIRTIME = (function (AIRTIME) {
         json.forEach(function (data) {
           _initAppFromResponse(data);
         });
-      }
+      },
     );
   };
 
@@ -647,8 +647,8 @@ var AIRTIME = (function (AIRTIME) {
     if (
       confirm(
         $.i18n._(
-          "Are you sure you want to delete the selected podcasts from your library?"
-        )
+          "Are you sure you want to delete the selected podcasts from your library?",
+        ),
       )
     ) {
       _bulkAction(
@@ -656,7 +656,7 @@ var AIRTIME = (function (AIRTIME) {
         HTTPMethods.DELETE,
         function () {
           AIRTIME.library.podcastDataTable.fnDraw();
-        }
+        },
       );
     }
   };
@@ -676,7 +676,7 @@ var AIRTIME = (function (AIRTIME) {
         { format: "json" },
         function (json) {
           AIRTIME.playlist.fileMdEdit(json, uid);
-        }
+        },
       );
     });
   };
@@ -703,7 +703,7 @@ var AIRTIME = (function (AIRTIME) {
         }),
         function () {
           dt.reload(dt.config.podcastId);
-        }
+        },
       );
 
       remainingDiskSpace -= this.enclosure.length;
@@ -729,7 +729,7 @@ var AIRTIME = (function (AIRTIME) {
    */
   mod.initPodcastEpisodeDatatableWithButtonEvents = function (
     domNode,
-    podcastId
+    podcastId,
   ) {
     /**
      * Check the import statuses of each selected episode to see which
@@ -767,14 +767,14 @@ var AIRTIME = (function (AIRTIME) {
             var episodes = mod.episodeTables[podcastId].getSelectedRows();
             AIRTIME.podcast.importSelectedEpisodes(
               episodes,
-              mod.episodeTables[podcastId]
+              mod.episodeTables[podcastId],
             );
           },
         },
         validateConstraints: function () {
           return checkSelectedEpisodeImportStatus.call(this, false);
         },
-      }
+      },
     );
     $.extend(
       true,
@@ -789,7 +789,7 @@ var AIRTIME = (function (AIRTIME) {
         validateConstraints: function () {
           return checkSelectedEpisodeImportStatus.call(this, true);
         },
-      }
+      },
     );
     $.extend(
       true,
@@ -808,7 +808,7 @@ var AIRTIME = (function (AIRTIME) {
         validateConstraints: function () {
           return checkSelectedEpisodeImportStatus.call(this, true);
         },
-      }
+      },
     );
 
     // Reassign these because integer keys take precedence in iteration order - we want to order based on insertion
@@ -874,13 +874,13 @@ var AIRTIME = (function (AIRTIME) {
             $.i18n._("This podcast doesn't have any episodes!") +
             "<br/>" +
             $.i18n._(
-              "Make sure the RSS feed contains audio items (with enclosure tags)."
+              "Make sure the RSS feed contains audio items (with enclosure tags).",
             ) +
             "<br/><a target='_blank' href='http://www.apple.com/ca/itunes/podcasts/specs.html'>" +
             $.i18n._("Learn about podcasts") +
             "</a>",
         },
-      }
+      },
     );
 
     mod.podcastEpisodeDataTable = mod.episodeTables[podcastId].getDatatable();
@@ -893,7 +893,7 @@ var AIRTIME = (function (AIRTIME) {
           // Only import if the file isn't pending
           AIRTIME.podcast.importSelectedEpisodes(
             [data],
-            mod.episodeTables[podcastId]
+            mod.episodeTables[podcastId],
           );
         }
       }
@@ -918,7 +918,7 @@ var AIRTIME = (function (AIRTIME) {
     domNode,
     params,
     buttons,
-    config
+    config,
   ) {
     params = $.extend(true, params, {
       aoColumns: [
@@ -991,7 +991,7 @@ var AIRTIME = (function (AIRTIME) {
                 this,
                 data,
                 self.SELECTION_MODE.SINGLE,
-                $row.index()
+                $row.index(),
               );
               var selected = self.getSelectedRows().length,
                 container,
@@ -1002,7 +1002,7 @@ var AIRTIME = (function (AIRTIME) {
 
               message = sprintf(
                 $.i18n._(selected > 1 ? "Adding %s Items" : "Adding %s Item"),
-                selected
+                selected,
               );
               container = $("<div/>")
                 .attr("id", "draggingContainer")
@@ -1028,7 +1028,7 @@ var AIRTIME = (function (AIRTIME) {
             },
             distance: 25, // min-distance for dragging
             connectToSortable: $(
-              "#show_builder_table, .active-tab .spl_sortable"
+              "#show_builder_table, .active-tab .spl_sortable",
             ),
           });
         }
@@ -1054,7 +1054,7 @@ var AIRTIME = (function (AIRTIME) {
       true, // Enable item selection
       buttons, // Toolbar buttons
       params, // Datatables overrides.
-      config // Internal config
+      config, // Internal config
     );
 
     podcastEpisodeTableObj.getDatatable().addTitles("td");

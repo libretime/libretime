@@ -147,7 +147,7 @@ function buildTimerange(dialog) {
     dateStartId,
     timeStartId,
     dateEndId,
-    timeEndId
+    timeEndId,
   );
   AIRTIME.showbuilder.fnServerData.start = oRange.start;
   AIRTIME.showbuilder.fnServerData.end = oRange.end;
@@ -354,7 +354,7 @@ $(document).ready(function () {
               { format: "json", id: data.id },
               function (json) {
                 buildScheduleDialog(json, data.id);
-              }
+              },
             );
           };
 
@@ -370,7 +370,7 @@ $(document).ready(function () {
                 { format: "json", id: data.id },
                 function (json) {
                   scheduleRefetchEvents(json);
-                }
+                },
               );
             }
           };
@@ -394,7 +394,7 @@ $(document).ready(function () {
                 },
                 function (json) {
                   beginEditShow(json);
-                }
+                },
               );
             };
             edit.instance.callback = callback;
@@ -411,7 +411,7 @@ $(document).ready(function () {
                 },
                 function (json) {
                   beginEditShow(json);
-                }
+                },
               );
             };
             edit.all.callback = callback;
@@ -427,7 +427,7 @@ $(document).ready(function () {
                 },
                 function (json) {
                   beginEditShow(json);
-                }
+                },
               );
             };
             oItems.edit.callback = callback;
@@ -442,7 +442,7 @@ $(document).ready(function () {
               { format: "json", id: data.id },
               function (json) {
                 buildContentDialog(json);
-              }
+              },
             );
           };
           oItems.content.callback = callback;
@@ -465,7 +465,7 @@ $(document).ready(function () {
               function (json) {
                 //in library.js
                 buildEditMetadataDialog(json);
-              }
+              },
             );
           };
           oItems.view_recorded.callback = callback;
@@ -492,7 +492,7 @@ $(document).ready(function () {
                 { format: "json", id: data.id },
                 function (json) {
                   scheduleRefetchEvents(json);
-                }
+                },
               );
             };
             del.single.callback = callback;
@@ -504,7 +504,7 @@ $(document).ready(function () {
                 { format: "json", id: data.id },
                 function (json) {
                   scheduleRefetchEvents(json);
-                }
+                },
               );
             };
             del.following.callback = callback;
@@ -517,7 +517,7 @@ $(document).ready(function () {
                 { format: "json", id: data.id },
                 function (json) {
                   scheduleRefetchEvents(json);
-                }
+                },
               );
             };
             oItems.del.callback = callback;

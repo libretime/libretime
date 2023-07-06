@@ -136,7 +136,7 @@ $(document).ready(function () {
 
       ul = logoEl.find(".errors");
       li = $("<li/>").append(
-        $.i18n._("Image must be one of jpg, jpeg, png, or gif")
+        $.i18n._("Image must be one of jpg, jpeg, png, or gif"),
       );
 
       //errors ul has already been created.

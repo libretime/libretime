@@ -38,14 +38,14 @@ var AIRTIME = (function (AIRTIME) {
         if (response.authResponse) {
           mod.getPagesOwnedByUser(
             response.authResponse.userID,
-            response.authResponse.accessToken
+            response.authResponse.accessToken,
           );
           mod.addPageTab();
         } else {
           console.log("Authorization failed.");
         }
       },
-      { scope: "manage_pages" }
+      { scope: "manage_pages" },
     );
   };
 
@@ -55,7 +55,7 @@ var AIRTIME = (function (AIRTIME) {
       function (response) {
         console.log(response);
       },
-      { access_token: accessToken }
+      { access_token: accessToken },
     );
   };
 
@@ -79,12 +79,12 @@ var AIRTIME = (function (AIRTIME) {
             { pages: JSON.stringify(pageIdList) },
             function () {
               alert("Successfully added to your Facebook page!");
-            }
+            },
           )
             .done(function () {})
             .fail(function () {
               alert(
-                "Sorry, an error occurred and we were unable to add the widget to your Facebook page."
+                "Sorry, an error occurred and we were unable to add the widget to your Facebook page.",
               );
             });
         }
@@ -92,7 +92,7 @@ var AIRTIME = (function (AIRTIME) {
       {
         app_id: FACEBOOK_APP_ID,
         //redirect_uri: 'https://localhost'
-      }
+      },
     );
   };
 

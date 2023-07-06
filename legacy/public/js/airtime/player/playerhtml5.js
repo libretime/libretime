@@ -16,7 +16,7 @@ function playerhtml5_insert(settings) {
       settings.replacePortTo = ":" + settings.replacePortTo;
     settings.url = settings.url.replace(
       ":" + settings.replacePort,
-      settings.replacePortTo
+      settings.replacePortTo,
     );
   }
   if (settings.codec == "mp3") settings.codec = "mpeg";

@@ -184,7 +184,7 @@ function setSmartBlockEvents() {
           .val(criteria_datetime);
         disableAndHideDateTimeDropdown(
           next.find("first-child"),
-          getRowIndex(next)
+          getRowIndex(next),
         );
         /* if only the current row has the extra criteria value,
          * then just remove the current row's extra criteria element
@@ -224,7 +224,7 @@ function setSmartBlockEvents() {
           .val(extra_criteria_datetime);
         disableAndHideExtraDateTimeDropdown(
           next.find("first-child"),
-          getRowIndex(next)
+          getRowIndex(next),
         );
         /* if only the current row has the extra criteria value,
          * then just remove the current row's extra criteria element
@@ -325,7 +325,7 @@ function setSmartBlockEvents() {
     sizeTextBoxes(
       item_to_hide.find('[name^="sp_criteria_value"]'),
       "sp_extra_input_text",
-      "sp_input_text"
+      "sp_input_text",
     );
     item_to_hide.hide();
 
@@ -396,7 +396,7 @@ function setSmartBlockEvents() {
   /********** CRITERIA CHANGE **********/
   form
     .find(
-      'select[id^="sp_criteria"]:not([id^="sp_criteria_modifier"]):not([id^="sp_criteria_datetime"]):not([id^="sp_criteria_extra_datetime"]):not([id^="sp_criteria_value"])'
+      'select[id^="sp_criteria"]:not([id^="sp_criteria_modifier"]):not([id^="sp_criteria_datetime"]):not([id^="sp_criteria_extra_datetime"]):not([id^="sp_criteria_value"])',
     )
     .live("change", function () {
       var index = getRowIndex($(this).parent());
@@ -611,7 +611,7 @@ function buttonClickAction(clickType, url) {
     function (data) {
       callback(data, clickType);
       disableLoadingIcon();
-    }
+    },
   );
 }
 
@@ -660,11 +660,11 @@ function setupUI() {
     content: {
       text:
         $.i18n._(
-          "A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show."
+          "A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show.",
         ) +
         "<br /><br />" +
         $.i18n._(
-          "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."
+          "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library.",
         ),
     },
     hide: {
@@ -688,9 +688,9 @@ function setupUI() {
     content: {
       text: sprintf(
         $.i18n._(
-          "The desired block length will not be reached if %s cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
+          "The desired block length will not be reached if %s cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block.",
         ),
-        PRODUCT_NAME
+        PRODUCT_NAME,
       ),
     },
     hide: {
@@ -714,9 +714,9 @@ function setupUI() {
     content: {
       text: sprintf(
         $.i18n._(
-          "<p>If this option is unchecked, the smartblock will schedule as many tracks as can be played out <strong>in their entirety</strong> within the specified duration. This will usually result in audio playback that is slightly less than the specified duration.</p><p>If this option is checked, the smartblock will also schedule one final track which will overflow the specified duration. This final track may be cut off mid-way if the show into which the smartblock is added finishes.</p>"
+          "<p>If this option is unchecked, the smartblock will schedule as many tracks as can be played out <strong>in their entirety</strong> within the specified duration. This will usually result in audio playback that is slightly less than the specified duration.</p><p>If this option is checked, the smartblock will also schedule one final track which will overflow the specified duration. This final track may be cut off mid-way if the show into which the smartblock is added finishes.</p>",
         ),
-        PRODUCT_NAME
+        PRODUCT_NAME,
       ),
     },
     hide: {
@@ -752,11 +752,11 @@ function enableAndShowTracktypeDropdown(valEle, index) {
       index +
       '" id="sp_criteria_value_' +
       index +
-      '" class="input_select sp_input_select"></select>'
+      '" class="input_select sp_input_select"></select>',
   );
   $.each(stringTracktypeOptions, function (key, value) {
     $("#sp_criteria_value_" + index).append(
-      $("<option></option>").attr("value", key).text(value)
+      $("<option></option>").attr("value", key).text(value),
     );
   });
 }
@@ -768,7 +768,7 @@ function disableAndHideTracktypeDropdown(valEle, index) {
       index +
       '" id="sp_criteria_value_' +
       index +
-      '" value="" class="input_text sp_input_text">'
+      '" value="" class="input_text sp_input_text">',
   );
 }
 
@@ -1151,5 +1151,5 @@ for (var key in TRACKTYPES) {
 
 var stringTracktypeOptions = Object.assign(
   { 0: "Select Track Type" },
-  tracktypes
+  tracktypes,
 );

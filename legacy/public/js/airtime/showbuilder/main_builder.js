@@ -219,7 +219,7 @@ AIRTIME = (function (AIRTIME) {
       dateStartId,
       timeStartId,
       dateEndId,
-      timeEndId
+      timeEndId,
     );
     AIRTIME.showbuilder.fnServerData.start = oRange.start;
     AIRTIME.showbuilder.fnServerData.end = oRange.end;

@@ -54,7 +54,7 @@ var AIRTIME = (function (AIRTIME) {
 
     AIRTIME.library.changeAddButtonText(
       $(".btn-group #library-plus #lib-plus-text"),
-      btnText
+      btnText,
     );
   };
 
@@ -100,7 +100,7 @@ var AIRTIME = (function (AIRTIME) {
     if (emptyRow.length > 0) {
       emptyRow.hide();
       var mediaType = parseInt(
-          $(".media_type_selector.selected").data("selection-id")
+          $(".media_type_selector.selected").data("selection-id"),
         ),
         img = wrapper.find(".empty_placeholder_image");
       if (!opts && isNaN(mediaType)) {
@@ -127,7 +127,7 @@ var AIRTIME = (function (AIRTIME) {
               opts.href +
               "'>" +
               $.i18n._("Learn about " + opts.media) +
-              "</a>"
+              "</a>",
           );
       }
 
@@ -265,7 +265,7 @@ var AIRTIME = (function (AIRTIME) {
 
     if (data === undefined) {
       alert(
-        $.i18n._("Cannot schedule outside a show.\nTry creating a show first.")
+        $.i18n._("Cannot schedule outside a show.\nTry creating a show first."),
       );
       return false;
     }
@@ -281,7 +281,7 @@ var AIRTIME = (function (AIRTIME) {
         {
           scrollTop: el.offset().top,
         },
-        0
+        0,
       );
     }
 
@@ -420,7 +420,7 @@ var AIRTIME = (function (AIRTIME) {
               function (json) {
                 AIRTIME.playlist.fileMdEdit(json, data.tr_id);
                 //buildEditMetadataDialog(json);
-              }
+              },
             );
           } else if (data.ftype === "playlist" || data.ftype === "block") {
             AIRTIME.playlist.fnEdit(data, baseUrl + "playlist/edit");
