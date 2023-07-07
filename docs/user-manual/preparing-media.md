@@ -13,7 +13,7 @@ There are a number of programs available which can be used to correct mistakes o
 - [TagScanner](https://www.xdlab.ru/en/) (Windows)
 - [Mp3tag](https://www.mp3tag.de/en/index.html) (Windows)
 - [MusicBrainz Picard](https://picard.musicbrainz.org/) (Mac, Windows, Linux)
-- [Ex Falso](https://code.google.com/p/quodlibet/) (Linux)
+- [Ex Falso](https://github.com/quodlibet/quodlibet) (Linux)
 
 The _Tags From Path_ feature of Ex Falso is a particularly useful time saver if you have a large archive of untagged files. Sometimes there is useful creator or title information in the file name or directory path structure, which can be converted into an ID3 tag automatically.
 
