@@ -38,7 +38,7 @@ setup(
             "uvicorn[standard]>=0.17.6,<0.23.0",
         ],
         "dev": [
-            "django-coverage-plugin>=3.0.0,<3.1",
+            "django-coverage-plugin>=3.0.0,<3.2",
             "django-stubs>=1.14.0,<4.3",
             "djangorestframework-stubs>=1.8.0,<3.15",
             "model_bakery>=1.10.1,<1.13",
