@@ -22,6 +22,9 @@ services:
 
   playout:
     image: ghcr.io/libretime/libretime-playout:${LIBRETIME_VERSION:-latest}
+    init: true
+    ulimits:
+      nofile: 1024
     depends_on:
       - rabbitmq
     volumes:
@@ -33,6 +36,9 @@ services:
   liquidsoap:
     image: ghcr.io/libretime/libretime-playout:${LIBRETIME_VERSION:-latest}
     command: /usr/local/bin/libretime-liquidsoap
+    init: true
+    ulimits:
+      nofile: 1024
     ports:
       - 8001:8001
       - 8002:8002
@@ -46,6 +52,9 @@ services:
 
   analyzer:
     image: ghcr.io/libretime/libretime-analyzer:${LIBRETIME_VERSION:-latest}
+    init: true
+    ulimits:
+      nofile: 1024
     depends_on:
       - rabbitmq
     volumes:
@@ -56,6 +65,9 @@ services:
 
   worker:
     image: ghcr.io/libretime/libretime-worker:${LIBRETIME_VERSION:-latest}
+    init: true
+    ulimits:
+      nofile: 1024
     depends_on:
       - rabbitmq
     volumes:
@@ -65,6 +77,9 @@ services:
 
   api:
     image: ghcr.io/libretime/libretime-api:${LIBRETIME_VERSION:-latest}
+    init: true
+    ulimits:
+      nofile: 1024
     depends_on:
       - postgres
       - rabbitmq
@@ -74,6 +89,9 @@ services:
 
   legacy:
     image: ghcr.io/libretime/libretime-legacy:${LIBRETIME_VERSION:-latest}
+    init: true
+    ulimits:
+      nofile: 1024
     depends_on:
       - postgres
       - rabbitmq
