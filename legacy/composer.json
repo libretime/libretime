@@ -28,7 +28,7 @@
     "adbario/php-dot-notation": "^3.0.0",
     "composer/semver": "^3.2",
     "james-heinrich/getid3": "^1.9",
-    "league/uri": "^6.7",
+    "league/uri": "^7.0",
     "libretime/celery-php": "dev-main",
     "libretime/propel1": "dev-main",
     "php-amqplib/php-amqplib": "^3.0",
