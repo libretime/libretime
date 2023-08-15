@@ -1209,6 +1209,7 @@ SQL;
         $row = intval($date->format('w')) % count($palette);
         $foo = $date->format('H');
         $col = intval(intval($date->format('H')) / 24.0 * count($palette[0]));
+
         // $color = $palette[$hashValue % sizeof($palette)];
         return $palette[$row][$col];
     }

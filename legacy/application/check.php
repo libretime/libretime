@@ -40,6 +40,7 @@ function checkPhpDependencies()
 function checkDatabaseDependencies()
 {
     global $extensions;
+
     // Check the PHP extension list for the Postgres db extensions
     return in_array('pdo_pgsql', $extensions)
         && in_array('pgsql', $extensions);
