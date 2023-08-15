@@ -125,6 +125,7 @@ SQL;
         foreach ($data as $show_id) {
             $all_show_data = array_merge(self::getShowDataPointsWithinRange($p_start, $p_end, $show_id['show_id']), $all_show_data);
         }
+
         /* option to sort by number of listeners currently commented out
         usort($all_show_data, function($a, $b) {
             return $a['average_number_of_listeners'] - $b['average_number_of_listeners'];

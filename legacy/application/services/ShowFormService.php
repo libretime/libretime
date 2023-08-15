@@ -401,6 +401,7 @@ class Application_Service_ShowFormService
             Logging::error('Failed to read image: ' . $path);
             $imageData = null;
         }
+
         // return the data URI - data:{mime};base64,{data}
         return ($imageData === null || $imageData === '') ?
             '' : 'data: ' . mime_content_type($path) . ';base64,' . $imageData;

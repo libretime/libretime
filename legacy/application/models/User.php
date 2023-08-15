@@ -227,6 +227,7 @@ class Application_Model_User
     public function getOwnedFiles()
     {
         $user = $this->_userInstance;
+
         // do we need a find call at the end here?
         return $user->getCcFilessRelatedByDbOwnerId();
     }
