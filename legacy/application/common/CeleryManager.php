@@ -98,6 +98,7 @@ class CeleryManager
 
                 throw new CeleryTimeoutException('Celery task ' . $task->getDbName() . ' with ID ' . $task->getDbTaskId() . ' timed out');
             }
+
             // The message hasn't timed out, but it's still false, which means it hasn't been
             // sent back from Celery yet.
             throw new CeleryException('Waiting on Celery task ' . $task->getDbName() . ' with ID ' . $task->getDbTaskId());

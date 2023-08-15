@@ -52,10 +52,9 @@ class Application_Common_HTTPHelper
 class ZendActionHttpException extends Exception
 {
     /**
-     * @param int       $statusCode
-     * @param string    $message
-     * @param int       $code
-     * @param Exception $previous
+     * @param int    $statusCode
+     * @param string $message
+     * @param int    $code
      *
      * @throws Zend_Controller_Response_Exception
      */
