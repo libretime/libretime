@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2023-05-29 02:11+0000\n"
+"POT-Creation-Date: 2023-08-21 01:45+0000\n"
 "PO-Revision-Date: 2022-06-05 10:17+0000\n"
 "Last-Translator: МАН69К <weblate@mah69k.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/libretime/legacy/ru/>\n"
@@ -2832,11 +2832,11 @@ msgstr "Настройки успешно обновлены!"
 msgid "Untitled Webstream"
 msgstr "Веб-поток без названия"
 
-#: application/controllers/WebstreamController.php:156
+#: application/controllers/WebstreamController.php:158
 msgid "Webstream saved."
 msgstr "Веб-поток сохранен."
 
-#: application/controllers/WebstreamController.php:164
+#: application/controllers/WebstreamController.php:166
 msgid "Invalid form values."
 msgstr "Недопустимые значения."
 

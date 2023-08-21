@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2023-05-29 02:11+0000\n"
+"POT-Creation-Date: 2023-08-21 01:45+0000\n"
 "PO-Revision-Date: 2022-08-14 21:20+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/libretime/legacy/hr/>\n"
@@ -2819,11 +2819,11 @@ msgstr "Postavke su uspješno ažurirane!"
 msgid "Untitled Webstream"
 msgstr "Neimenovan internetski prijenos"
 
-#: application/controllers/WebstreamController.php:156
+#: application/controllers/WebstreamController.php:158
 msgid "Webstream saved."
 msgstr "Internetski prijenos je spremljen."
 
-#: application/controllers/WebstreamController.php:164
+#: application/controllers/WebstreamController.php:166
 msgid "Invalid form values."
 msgstr "Nevažeće vrijednosti obrasca."
 

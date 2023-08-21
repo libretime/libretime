@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2023-05-29 02:11+0000\n"
+"POT-Creation-Date: 2023-08-21 01:45+0000\n"
 "PO-Revision-Date: 2023-05-19 16:32+0000\n"
 "Last-Translator: Dave Berg <dberg316@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/libretime/legacy/de/>\n"
@@ -2829,11 +2829,11 @@ msgstr "Einstellungen erfolgreich aktualisiert!"
 msgid "Untitled Webstream"
 msgstr "Unbenannter Webstream"
 
-#: application/controllers/WebstreamController.php:156
+#: application/controllers/WebstreamController.php:158
 msgid "Webstream saved."
 msgstr "Webstream gespeichert."
 
-#: application/controllers/WebstreamController.php:164
+#: application/controllers/WebstreamController.php:166
 msgid "Invalid form values."
 msgstr "Ungültige Formularwerte."
 
