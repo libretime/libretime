@@ -12,14 +12,17 @@ msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
 "POT-Creation-Date: 2023-08-21 01:45+0000\n"
-"PO-Revision-Date: 2015-09-05 08:33+0000\n"
-"Last-Translator: Daniel James <daniel@64studio.com>\n"
-"Language-Team: Polish (Poland)\n"
+"PO-Revision-Date: 2023-08-31 10:55+0000\n"
+"Last-Translator: Eryk Michalak <gnu.ewm@protonmail.com>\n"
+"Language-Team: Polish <https://hosted.weblate.org/projects/libretime/legacy/"
+"pl/>\n"
 "Language: pl_PL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.0.1-dev\n"
 
 #: application/common/DateHelper.php:216
 #, php-format
@@ -38,7 +41,7 @@ msgstr "%s:%s:%s nie jest prawidłowym czasem"
 
 #: application/common/LocaleHelper.php:21
 msgid "English"
-msgstr ""
+msgstr "Angielski"
 
 #: application/common/LocaleHelper.php:22
 msgid "Afar"
@@ -693,11 +696,11 @@ msgstr "Kalendarz"
 
 #: application/configs/navigation.php:44
 msgid "Widgets"
-msgstr ""
+msgstr "Widżety"
 
 #: application/configs/navigation.php:53
 msgid "Player"
-msgstr ""
+msgstr "Odtwarzacz"
 
 #: application/configs/navigation.php:59
 msgid "Weekly Schedule"
@@ -705,11 +708,11 @@ msgstr ""
 
 #: application/configs/navigation.php:67
 msgid "Settings"
-msgstr ""
+msgstr "Ustawienia"
 
 #: application/configs/navigation.php:75
 msgid "General"
-msgstr ""
+msgstr "Ogólne"
 
 #: application/configs/navigation.php:81
 msgid "My Profile"
@@ -734,7 +737,7 @@ msgstr "Status"
 
 #: application/configs/navigation.php:115
 msgid "Analytics"
-msgstr ""
+msgstr "Analityka"
 
 #: application/configs/navigation.php:124
 msgid "Playout History"
@@ -907,7 +910,7 @@ msgstr "Usuń"
 #: application/controllers/LibraryController.php:146
 #: application/controllers/LibraryController.php:168
 msgid "Edit..."
-msgstr ""
+msgstr "Edytuj..."
 
 #: application/controllers/LibraryController.php:126
 #: application/controllers/ScheduleController.php:732
@@ -1088,7 +1091,7 @@ msgstr "Dodaj"
 
 #: application/controllers/LocaleController.php:69
 msgid "New"
-msgstr ""
+msgstr "Nowe"
 
 #: application/controllers/LocaleController.php:70
 #: application/services/CalendarService.php:155
@@ -1151,16 +1154,16 @@ msgstr "Czy na pewno chcesz usunąć wybrane elementy?"
 
 #: application/controllers/LocaleController.php:85
 msgid "Scheduled"
-msgstr ""
+msgstr "W kolejce"
 
 #: application/controllers/LocaleController.php:86
 #: application/views/scripts/partialviews/dashboard-sub-nav.php:3
 msgid "Tracks"
-msgstr ""
+msgstr "Ścieżki"
 
 #: application/controllers/LocaleController.php:87
 msgid "Playlist"
-msgstr ""
+msgstr "Lista odtwarzania"
 
 #: application/controllers/LocaleController.php:88
 #: application/forms/SmartBlockCriteria.php:81
@@ -1375,7 +1378,7 @@ msgstr "Pobieranie danych z serwera..."
 
 #: application/controllers/LocaleController.php:124
 msgid "Import"
-msgstr ""
+msgstr "Importuj"
 
 #: application/controllers/LocaleController.php:125
 msgid "Imported?"
@@ -1385,7 +1388,7 @@ msgstr ""
 #: application/services/CalendarService.php:61
 #: application/services/CalendarService.php:93
 msgid "View"
-msgstr ""
+msgstr "Widok"
 
 #: application/controllers/LocaleController.php:127
 msgid "Error code: "
@@ -1849,19 +1852,19 @@ msgstr "Gru"
 
 #: application/controllers/LocaleController.php:249
 msgid "Today"
-msgstr ""
+msgstr "Dzisiaj"
 
 #: application/controllers/LocaleController.php:250
 msgid "Day"
-msgstr ""
+msgstr "Dzień"
 
 #: application/controllers/LocaleController.php:251
 msgid "Week"
-msgstr ""
+msgstr "Tydzień"
 
 #: application/controllers/LocaleController.php:252
 msgid "Month"
-msgstr ""
+msgstr "Miesiąc"
 
 #: application/controllers/LocaleController.php:253
 #: application/forms/GeneralPreferences.php:230
