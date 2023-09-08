@@ -3,9 +3,7 @@
 /**
  * Class ServiceNotFoundException.
  */
-class ServiceNotFoundException extends Exception
-{
-}
+class ServiceNotFoundException extends Exception {}
 
 /**
  * Class ThirdPartyService generic superclass for third-party services.

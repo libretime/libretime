@@ -1,12 +1,8 @@
 <?php
 
-class PodcastEpisodeNotFoundException extends Exception
-{
-}
+class PodcastEpisodeNotFoundException extends Exception {}
 
-class DuplicatePodcastEpisodeException extends Exception
-{
-}
+class DuplicatePodcastEpisodeException extends Exception {}
 
 class Application_Service_PodcastEpisodeService extends Application_Service_ThirdPartyCeleryService implements Publish
 {
