@@ -1,12 +1,8 @@
 <?php
 
-class InvalidPodcastException extends Exception
-{
-}
+class InvalidPodcastException extends Exception {}
 
-class PodcastNotFoundException extends Exception
-{
-}
+class PodcastNotFoundException extends Exception {}
 
 class Application_Service_PodcastService
 {

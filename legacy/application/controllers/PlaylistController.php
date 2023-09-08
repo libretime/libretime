@@ -687,12 +687,6 @@ class PlaylistController extends Zend_Controller_Action
         $this->_helper->json->sendJson($out);
     }
 }
-class WrongTypeToBlockException extends Exception
-{
-}
-class WrongTypeToPlaylistException extends Exception
-{
-}
-class BlockDynamicException extends Exception
-{
-}
+class WrongTypeToBlockException extends Exception {}
+class WrongTypeToPlaylistException extends Exception {}
+class BlockDynamicException extends Exception {}

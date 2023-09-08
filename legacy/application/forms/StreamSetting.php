@@ -4,9 +4,7 @@ class Application_Form_StreamSetting extends Zend_Form
 {
     private $setting;
 
-    public function init()
-    {
-    }
+    public function init() {}
 
     public function setSetting($setting)
     {

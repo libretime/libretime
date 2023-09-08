@@ -7,6 +7,4 @@
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  */
-class CcBackupPeer extends BaseCcBackupPeer
-{
-} // CcBackupPeer
+class CcBackupPeer extends BaseCcBackupPeer {} // CcBackupPeer

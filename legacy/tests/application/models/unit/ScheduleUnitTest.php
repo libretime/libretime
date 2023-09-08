@@ -15,9 +15,7 @@ class ScheduleUnitTest extends Zend_Test_PHPUnit_ControllerTestCase // PHPUnit_F
         parent::setUp();
     }
 
-    public function testCheckOverlappingShows()
-    {
-    }
+    public function testCheckOverlappingShows() {}
 
     public function testIsFileScheduledInTheFuture()
     {

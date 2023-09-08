@@ -10,9 +10,7 @@ class DashboardController extends Zend_Controller_Action
             ->initContext();
     }
 
-    public function indexAction()
-    {
-    }
+    public function indexAction() {}
 
     public function disconnectSourceAction()
     {

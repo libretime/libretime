@@ -2,9 +2,7 @@
 
 class Application_Model_ListenerStat
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public static function getDataPointsWithinRange($p_start, $p_end)
     {

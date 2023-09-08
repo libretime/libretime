@@ -1145,12 +1145,6 @@ SQL;
     }
 } // class Playlist
 
-class PlaylistNotFoundException extends Exception
-{
-}
-class PlaylistNoPermissionException extends Exception
-{
-}
-class PlaylistOutDatedException extends Exception
-{
-}
+class PlaylistNotFoundException extends Exception {}
+class PlaylistNoPermissionException extends Exception {}
+class PlaylistOutDatedException extends Exception {}

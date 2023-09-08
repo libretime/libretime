@@ -217,9 +217,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         return $names;
     }
 
-    public function init()
-    {
-    }
+    public function init() {}
 
     // converts UTC timestamp citeria into user timezone strings.
     private function convertTimestamps(&$criteria)

@@ -1183,12 +1183,6 @@ SQL;
     }
 }
 
-class DeleteScheduledFileException extends Exception
-{
-}
-class FileDoesNotExistException extends Exception
-{
-}
-class FileNoPermissionException extends Exception
-{
-}
+class DeleteScheduledFileException extends Exception {}
+class FileDoesNotExistException extends Exception {}
+class FileNoPermissionException extends Exception {}
