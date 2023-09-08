@@ -103,9 +103,7 @@ class PreferenceController extends Zend_Controller_Action
         $this->_helper->json->sendJson(['url' => $url]);
     }
 
-    public function directoryConfigAction()
-    {
-    }
+    public function directoryConfigAction() {}
 
     public function removeLogoAction()
     {

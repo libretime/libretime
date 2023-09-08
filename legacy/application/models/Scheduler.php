@@ -1084,9 +1084,7 @@ final class Application_Model_Scheduler
         }
     }
 
-    private function updateMovedItem()
-    {
-    }
+    private function updateMovedItem() {}
 
     private function getInstances($instanceId)
     {
@@ -1410,6 +1408,4 @@ final class Application_Model_Scheduler
     }
 }
 
-class OutDatedScheduleException extends Exception
-{
-}
+class OutDatedScheduleException extends Exception {}

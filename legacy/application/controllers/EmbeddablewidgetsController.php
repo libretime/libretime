@@ -2,9 +2,7 @@
 
 class EmbeddableWidgetsController extends Zend_Controller_Action
 {
-    public function init()
-    {
-    }
+    public function init() {}
 
     public function playerAction()
     {

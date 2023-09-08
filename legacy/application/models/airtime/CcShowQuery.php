@@ -7,6 +7,4 @@
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  */
-class CcShowQuery extends BaseCcShowQuery
-{
-} // CcShowQuery
+class CcShowQuery extends BaseCcShowQuery {} // CcShowQuery
