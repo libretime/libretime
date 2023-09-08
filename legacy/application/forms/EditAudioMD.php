@@ -2,9 +2,7 @@
 
 class Application_Form_EditAudioMD extends Zend_Form
 {
-    public function init()
-    {
-    }
+    public function init() {}
 
     public function startForm($p_id)
     {

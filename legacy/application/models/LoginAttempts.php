@@ -2,9 +2,7 @@
 
 class Application_Model_LoginAttempts
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public static function increaseAttempts($ip)
     {

@@ -1867,15 +1867,7 @@ SQL;
     // smart block functions end
 }
 
-class BlockNotFoundException extends Exception
-{
-}
-class BlockNoPermissionException extends Exception
-{
-}
-class BlockOutDatedException extends Exception
-{
-}
-class BlockDyanmicException extends Exception
-{
-}
+class BlockNotFoundException extends Exception {}
+class BlockNoPermissionException extends Exception {}
+class BlockOutDatedException extends Exception {}
+class BlockDyanmicException extends Exception {}

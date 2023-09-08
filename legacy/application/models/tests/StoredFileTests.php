@@ -12,9 +12,7 @@ class StoredFileTest extends PHPUnit_TestCase
         parent::__construct($name);
     }
 
-    public function setup()
-    {
-    }
+    public function setup() {}
 
     public function testGetAudioMetadata()
     {
