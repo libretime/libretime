@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2023-08-21 01:45+0000\n"
+"POT-Creation-Date: 2023-09-11 01:51+0000\n"
 "PO-Revision-Date: 2023-07-11 20:49+0000\n"
 "Last-Translator: Ihor Hordiichuk <igor_ck@outlook.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/libretime/legacy/uk/>\n"
@@ -805,21 +805,21 @@ msgstr "Неправильний запит. параметр 'mode' не пер
 msgid "Bad request. 'mode' parameter is invalid"
 msgstr "Неправильний запит. Параметр 'mode' недійсний"
 
-#: application/controllers/DashboardController.php:34
-#: application/controllers/DashboardController.php:86
+#: application/controllers/DashboardController.php:32
+#: application/controllers/DashboardController.php:84
 msgid "You don't have permission to disconnect source."
 msgstr "Ви не маєте дозволу на відключення джерела."
 
-#: application/controllers/DashboardController.php:36
-#: application/controllers/DashboardController.php:88
+#: application/controllers/DashboardController.php:34
+#: application/controllers/DashboardController.php:86
 msgid "There is no source connected to this input."
 msgstr "До цього входу не підключено джерело."
 
-#: application/controllers/DashboardController.php:83
+#: application/controllers/DashboardController.php:81
 msgid "You don't have permission to switch source."
 msgstr "Ви не маєте дозволу перемикати джерело."
 
-#: application/controllers/EmbeddablewidgetsController.php:24
+#: application/controllers/EmbeddablewidgetsController.php:22
 msgid ""
 "To configure and use the embeddable player you must:<br><br>\n"
 "            1. Enable at least one MP3, AAC, or OGG stream under Settings -> Streams<br>\n"
@@ -829,7 +829,7 @@ msgstr ""
 "            1. Увімкніть принаймні один потік MP3, AAC або OGG у меню Налаштування -&gt; Потоки<br>\n"
 "            2. Увімкніть API Public LibreTime у меню Налаштування -&gt; Основні"
 
-#: application/controllers/EmbeddablewidgetsController.php:37
+#: application/controllers/EmbeddablewidgetsController.php:35
 msgid ""
 "To use the embeddable weekly schedule widget you must:<br><br>\n"
 "            Enable the Public LibreTime API under Settings -> Preferences"
@@ -837,7 +837,7 @@ msgstr ""
 "Щоб використовувати вбудований віджет тижневого розкладу, ви повинні:<br><br>\n"
 "            Увімкніть API Public LibreTime у меню Налаштування -&gt; Основні"
 
-#: application/controllers/EmbeddablewidgetsController.php:50
+#: application/controllers/EmbeddablewidgetsController.php:48
 msgid ""
 "To add the Radio Tab to your Facebook Page, you must first:<br><br>\n"
 "            Enable the Public LibreTime API under Settings -> Preferences"
@@ -861,12 +861,12 @@ msgstr "Ви не маєте дозволу на доступ до цього р
 msgid "An internal application error has occurred."
 msgstr "Сталася внутрішня помилка програми."
 
-#: application/controllers/IndexController.php:88
+#: application/controllers/IndexController.php:86
 #, php-format
 msgid "%s Podcast"
 msgstr "%s Підкаст"
 
-#: application/controllers/IndexController.php:89
+#: application/controllers/IndexController.php:87
 msgid "No tracks have been published yet."
 msgstr "Треків ще не опубліковано."
 
@@ -884,7 +884,7 @@ msgstr "Щось пішло не так."
 #: application/controllers/LibraryController.php:91
 #: application/controllers/LocaleController.php:171
 #: application/controllers/ShowbuilderController.php:131
-#: application/forms/SmartBlockCriteria.php:573
+#: application/forms/SmartBlockCriteria.php:571
 msgid "Preview"
 msgstr "Попередній перегляд"
 
@@ -1234,7 +1234,7 @@ msgstr "Закодовано"
 
 #: application/controllers/LocaleController.php:97
 #: application/forms/SmartBlockCriteria.php:68
-#: application/forms/StreamSettingSubForm.php:118
+#: application/forms/StreamSettingSubForm.php:116
 #: application/models/Block.php:1440 application/models/Block.php:1538
 #: application/services/HistoryService.php:1055
 msgid "Genre"
@@ -1518,9 +1518,9 @@ msgstr "Обробка..."
 #: application/forms/SmartBlockCriteria.php:117
 #: application/forms/SmartBlockCriteria.php:133
 #: application/forms/SmartBlockCriteria.php:198
-#: application/forms/SmartBlockCriteria.php:377
-#: application/forms/SmartBlockCriteria.php:631
-#: application/forms/SmartBlockCriteria.php:688
+#: application/forms/SmartBlockCriteria.php:375
+#: application/forms/SmartBlockCriteria.php:629
+#: application/forms/SmartBlockCriteria.php:686
 #: application/models/Block.php:1462 application/models/Block.php:1560
 msgid "Select modifier"
 msgstr "Виберіть модифікатор"
@@ -1591,7 +1591,7 @@ msgid "is in the range"
 msgstr "знаходиться в діапазоні"
 
 #: application/controllers/LocaleController.php:172
-#: application/forms/SmartBlockCriteria.php:575
+#: application/forms/SmartBlockCriteria.php:573
 msgid "Generate"
 msgstr "Генерувати"
 
@@ -1637,7 +1637,7 @@ msgid "The stream is disabled"
 msgstr "Потік вимкнено"
 
 #: application/controllers/LocaleController.php:184
-#: application/forms/StreamSettingSubForm.php:146
+#: application/forms/StreamSettingSubForm.php:144
 msgid "Getting information from the server..."
 msgstr "Отримання інформації з сервера..."
 
@@ -2043,14 +2043,14 @@ msgstr "Переміщення %s елементів"
 
 #: application/controllers/LocaleController.php:302
 #: application/forms/AddTracktype.php:64 application/forms/AddUser.php:108
-#: application/forms/EditAudioMD.php:280 application/forms/EditHistory.php:131
+#: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
 msgstr "Зберегти"
 
 #: application/controllers/LocaleController.php:303
 #: application/controllers/LocaleController.php:327
-#: application/forms/EditAudioMD.php:270 application/forms/EditHistory.php:141
+#: application/forms/EditAudioMD.php:268 application/forms/EditHistory.php:141
 msgid "Cancel"
 msgstr "Відміна"
 
@@ -2496,7 +2496,7 @@ msgstr "Автор"
 
 #: application/controllers/LocaleController.php:438
 #: application/forms/SmartBlockCriteria.php:65
-#: application/forms/StreamSettingSubForm.php:134
+#: application/forms/StreamSettingSubForm.php:132
 #: application/models/Block.php:1437 application/models/Block.php:1535
 msgid "Description"
 msgstr "Опис"
@@ -2766,19 +2766,19 @@ msgstr "Невідомий плейлист"
 msgid "Preferences updated."
 msgstr "Налаштування оновлено."
 
-#: application/controllers/PreferenceController.php:203
+#: application/controllers/PreferenceController.php:201
 msgid "Stream Setting Updated."
 msgstr "Налаштування потоку оновлено."
 
-#: application/controllers/PreferenceController.php:248
+#: application/controllers/PreferenceController.php:246
 msgid "path should be specified"
 msgstr "слід вказати шлях"
 
-#: application/controllers/PreferenceController.php:291
+#: application/controllers/PreferenceController.php:289
 msgid "Problem with Liquidsoap..."
 msgstr "Проблема з Liquidsoap..."
 
-#: application/controllers/PreferenceController.php:334
+#: application/controllers/PreferenceController.php:332
 msgid "Request method not accepted"
 msgstr "Метод запиту не прийнято"
 
@@ -3011,12 +3011,12 @@ msgstr "Програма без назви"
 msgid "URL:"
 msgstr "URL:"
 
-#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:133
+#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:131
 msgid "Genre:"
 msgstr "Жанр:"
 
 #: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:35
-#: application/forms/EditAudioMD.php:115
+#: application/forms/EditAudioMD.php:113
 msgid "Description:"
 msgstr "Опис:"
 
@@ -3167,72 +3167,72 @@ msgstr "Видалити всі треки з бібліотеки"
 msgid "Date Start:"
 msgstr "Дата початку:"
 
-#: application/forms/EditAudioMD.php:52 application/forms/Player.php:15
+#: application/forms/EditAudioMD.php:50 application/forms/Player.php:15
 msgid "Title:"
 msgstr "Назва:"
 
-#: application/forms/EditAudioMD.php:62
+#: application/forms/EditAudioMD.php:60
 msgid "Creator:"
 msgstr "Автор:"
 
-#: application/forms/EditAudioMD.php:72
+#: application/forms/EditAudioMD.php:70
 msgid "Album:"
 msgstr "Альбом:"
 
-#: application/forms/EditAudioMD.php:89
+#: application/forms/EditAudioMD.php:87
 msgid "Owner:"
 msgstr "Власник:"
 
-#: application/forms/EditAudioMD.php:101
+#: application/forms/EditAudioMD.php:99
 msgid "Select a Type"
 msgstr "Виберіть тип"
 
-#: application/forms/EditAudioMD.php:108
+#: application/forms/EditAudioMD.php:106
 msgid "Track Type:"
 msgstr "Тип треку:"
 
-#: application/forms/EditAudioMD.php:143
+#: application/forms/EditAudioMD.php:141
 msgid "Year:"
 msgstr "Рік:"
 
-#: application/forms/EditAudioMD.php:156
+#: application/forms/EditAudioMD.php:154
 msgid "Label:"
 msgstr "Label:"
 
-#: application/forms/EditAudioMD.php:166
+#: application/forms/EditAudioMD.php:164
 msgid "Composer:"
 msgstr "Композитор:"
 
-#: application/forms/EditAudioMD.php:176
+#: application/forms/EditAudioMD.php:174
 msgid "Conductor:"
 msgstr "Виконавець:"
 
-#: application/forms/EditAudioMD.php:186
+#: application/forms/EditAudioMD.php:184
 msgid "Mood:"
 msgstr "Настрій:"
 
-#: application/forms/EditAudioMD.php:196
+#: application/forms/EditAudioMD.php:194
 msgid "BPM:"
 msgstr "BPM:"
 
-#: application/forms/EditAudioMD.php:207
+#: application/forms/EditAudioMD.php:205
 msgid "Copyright:"
 msgstr "Авторське право:"
 
-#: application/forms/EditAudioMD.php:217
+#: application/forms/EditAudioMD.php:215
 msgid "ISRC Number:"
 msgstr "Номер ISRC:"
 
-#: application/forms/EditAudioMD.php:227
+#: application/forms/EditAudioMD.php:225
 msgid "Website:"
 msgstr "Веб-сайт:"
 
-#: application/forms/EditAudioMD.php:237 application/forms/EditUser.php:118
+#: application/forms/EditAudioMD.php:235 application/forms/EditUser.php:118
 #: application/forms/Login.php:67
 msgid "Language:"
 msgstr "Мова:"
 
-#: application/forms/EditAudioMD.php:290
+#: application/forms/EditAudioMD.php:288
 msgid "Publish..."
 msgstr "Опублікувати..."
 
@@ -3523,8 +3523,8 @@ msgid "between"
 msgstr "між"
 
 #: application/forms/SmartBlockCriteria.php:152
-#: application/forms/SmartBlockCriteria.php:471
-#: application/forms/SmartBlockCriteria.php:513
+#: application/forms/SmartBlockCriteria.php:469
+#: application/forms/SmartBlockCriteria.php:511
 msgid "Select unit of time"
 msgstr "Виберіть одиницю часу"
 
@@ -3593,195 +3593,195 @@ msgstr "Нещодавно грали"
 msgid "Select Track Type"
 msgstr "Виберіть тип доріжки"
 
-#: application/forms/SmartBlockCriteria.php:268
+#: application/forms/SmartBlockCriteria.php:266
 msgid "Type:"
 msgstr "Тип:"
 
-#: application/forms/SmartBlockCriteria.php:271
+#: application/forms/SmartBlockCriteria.php:269
 msgid "Dynamic"
 msgstr "Динамічний"
 
-#: application/forms/SmartBlockCriteria.php:272
+#: application/forms/SmartBlockCriteria.php:270
 msgid "Static"
 msgstr "Статичний"
 
-#: application/forms/SmartBlockCriteria.php:437
+#: application/forms/SmartBlockCriteria.php:435
 msgid "Select track type"
 msgstr "Виберіть тип доріжки"
 
-#: application/forms/SmartBlockCriteria.php:523
+#: application/forms/SmartBlockCriteria.php:521
 msgid "Allow Repeated Tracks:"
 msgstr "Дозволити повторення треків:"
 
-#: application/forms/SmartBlockCriteria.php:531
+#: application/forms/SmartBlockCriteria.php:529
 msgid "Allow last track to exceed time limit:"
 msgstr "Дозволити останньому треку перевищити ліміт часу:"
 
-#: application/forms/SmartBlockCriteria.php:540
+#: application/forms/SmartBlockCriteria.php:538
 msgid "Sort Tracks:"
 msgstr "Сортування треків:"
 
-#: application/forms/SmartBlockCriteria.php:558
+#: application/forms/SmartBlockCriteria.php:556
 msgid "Limit to:"
 msgstr "Обмежити в:"
 
-#: application/forms/SmartBlockCriteria.php:570
+#: application/forms/SmartBlockCriteria.php:568
 msgid "Generate playlist content and save criteria"
 msgstr "Створення вмісту списку відтворення та збереження критеріїв"
 
-#: application/forms/SmartBlockCriteria.php:582
+#: application/forms/SmartBlockCriteria.php:580
 msgid "Shuffle playlist content"
 msgstr "Перемішати вміст плейлиста"
 
-#: application/forms/SmartBlockCriteria.php:584
+#: application/forms/SmartBlockCriteria.php:582
 msgid "Shuffle"
 msgstr "Перемішати"
 
-#: application/forms/SmartBlockCriteria.php:813
-#: application/forms/SmartBlockCriteria.php:825
+#: application/forms/SmartBlockCriteria.php:811
+#: application/forms/SmartBlockCriteria.php:823
 msgid "Limit cannot be empty or smaller than 0"
 msgstr "Ліміт не може бути порожнім або меншим за 0"
 
-#: application/forms/SmartBlockCriteria.php:818
+#: application/forms/SmartBlockCriteria.php:816
 msgid "Limit cannot be more than 24 hrs"
 msgstr "Ліміт не може перевищувати 24 год"
 
-#: application/forms/SmartBlockCriteria.php:828
+#: application/forms/SmartBlockCriteria.php:826
 msgid "The value should be an integer"
 msgstr "Значення має бути цілим числом"
 
-#: application/forms/SmartBlockCriteria.php:831
+#: application/forms/SmartBlockCriteria.php:829
 msgid "500 is the max item limit value you can set"
 msgstr "500 максимальне граничне значення"
 
-#: application/forms/SmartBlockCriteria.php:842
+#: application/forms/SmartBlockCriteria.php:840
 msgid "You must select Criteria and Modifier"
 msgstr "Ви повинні вибрати Критерії і Модифікатор"
 
-#: application/forms/SmartBlockCriteria.php:849
+#: application/forms/SmartBlockCriteria.php:847
 msgid "'Length' should be in '00:00:00' format"
 msgstr "'Довжина має бути введена у '00:00:00' форматі"
 
-#: application/forms/SmartBlockCriteria.php:858
+#: application/forms/SmartBlockCriteria.php:856
 msgid "Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
 msgstr "Для текстового значення допускаються лише невід’ємні цілі числа (наприклад, 1 або 5)"
 
-#: application/forms/SmartBlockCriteria.php:863
-#: application/forms/SmartBlockCriteria.php:888
+#: application/forms/SmartBlockCriteria.php:861
+#: application/forms/SmartBlockCriteria.php:886
 msgid "You must select a time unit for a relative datetime."
 msgstr "Ви повинні вибрати одиницю вимірювання часу для відносної дати та часу."
 
-#: application/forms/SmartBlockCriteria.php:868
-#: application/forms/SmartBlockCriteria.php:893
+#: application/forms/SmartBlockCriteria.php:866
+#: application/forms/SmartBlockCriteria.php:891
 msgid "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
 msgstr "Значення має бути у форматі позначки часу (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
 
-#: application/forms/SmartBlockCriteria.php:883
+#: application/forms/SmartBlockCriteria.php:881
 msgid "Only non-negative integer numbers are allowed for a relative date time"
 msgstr "Для відносної дати й часу дозволено використовувати лише невід’ємні цілі числа"
 
-#: application/forms/SmartBlockCriteria.php:910
+#: application/forms/SmartBlockCriteria.php:908
 msgid "The value has to be numeric"
 msgstr "Значення має бути числовим"
 
-#: application/forms/SmartBlockCriteria.php:915
+#: application/forms/SmartBlockCriteria.php:913
 msgid "The value should be less then 2147483648"
 msgstr "Значення має бути меншим, ніж 2147483648"
 
-#: application/forms/SmartBlockCriteria.php:920
+#: application/forms/SmartBlockCriteria.php:918
 msgid "The value cannot be empty"
 msgstr "Значення не може бути порожнім"
 
-#: application/forms/SmartBlockCriteria.php:925
+#: application/forms/SmartBlockCriteria.php:923
 #, php-format
 msgid "The value should be less than %s characters"
 msgstr "Значення має бути менше ніж %s символів"
 
-#: application/forms/SmartBlockCriteria.php:932
+#: application/forms/SmartBlockCriteria.php:930
 msgid "Value cannot be empty"
 msgstr "Значення не може бути порожнім"
 
-#: application/forms/StreamSetting.php:26
+#: application/forms/StreamSetting.php:24
 msgid "Stream Label:"
 msgstr "Метадані потоку:"
 
-#: application/forms/StreamSetting.php:28
+#: application/forms/StreamSetting.php:26
 msgid "Artist - Title"
 msgstr "Виконавець - Назва"
 
-#: application/forms/StreamSetting.php:29
+#: application/forms/StreamSetting.php:27
 msgid "Show - Artist - Title"
 msgstr "Програма - Виконавець - Назва"
 
-#: application/forms/StreamSetting.php:30
+#: application/forms/StreamSetting.php:28
 msgid "Station name - Show name"
 msgstr "Назва станції - Показати назву"
 
-#: application/forms/StreamSetting.php:38
+#: application/forms/StreamSetting.php:36
 msgid "Off Air Metadata"
 msgstr "Метадані при вимкненому ефірі"
 
-#: application/forms/StreamSetting.php:45
+#: application/forms/StreamSetting.php:43
 msgid "Enable Replay Gain"
 msgstr "Вмикнути Replay Gain"
 
-#: application/forms/StreamSetting.php:52
+#: application/forms/StreamSetting.php:50
 msgid "Replay Gain Modifier"
 msgstr "Змінити Replay Gain"
 
-#: application/forms/StreamSetting.php:60
+#: application/forms/StreamSetting.php:58
 msgid "Hardware Audio Output:"
 msgstr "Апаратний аудіовихід:"
 
-#: application/forms/StreamSetting.php:69
+#: application/forms/StreamSetting.php:67
 msgid "Output Type"
 msgstr "Тип виходу"
 
-#: application/forms/StreamSettingSubForm.php:35
+#: application/forms/StreamSettingSubForm.php:33
 msgid "Enabled:"
 msgstr "Увімкнено:"
 
-#: application/forms/StreamSettingSubForm.php:43
+#: application/forms/StreamSettingSubForm.php:41
 msgid "Mobile:"
 msgstr "Телефон:"
 
-#: application/forms/StreamSettingSubForm.php:51
+#: application/forms/StreamSettingSubForm.php:49
 msgid "Stream Type:"
 msgstr "Тип потоку:"
 
-#: application/forms/StreamSettingSubForm.php:59
+#: application/forms/StreamSettingSubForm.php:57
 msgid "Bit Rate:"
 msgstr "Bit Rate:"
 
-#: application/forms/StreamSettingSubForm.php:67
+#: application/forms/StreamSettingSubForm.php:65
 msgid "Service Type:"
 msgstr "Тип сервіса:"
 
-#: application/forms/StreamSettingSubForm.php:75
+#: application/forms/StreamSettingSubForm.php:73
 msgid "Channels:"
 msgstr "Канали:"
 
-#: application/forms/StreamSettingSubForm.php:83
+#: application/forms/StreamSettingSubForm.php:81
 msgid "Server"
 msgstr "Сервер"
 
-#: application/forms/StreamSettingSubForm.php:92
+#: application/forms/StreamSettingSubForm.php:90
 msgid "Port"
 msgstr "Порт"
 
-#: application/forms/StreamSettingSubForm.php:100
+#: application/forms/StreamSettingSubForm.php:98
 msgid "Mount Point"
 msgstr "Точка монтування"
 
-#: application/forms/StreamSettingSubForm.php:109
+#: application/forms/StreamSettingSubForm.php:107
 msgid "Name"
 msgstr "Ім'я"
 
-#: application/forms/StreamSettingSubForm.php:125
+#: application/forms/StreamSettingSubForm.php:123
 msgid "URL"
 msgstr "URL"
 
-#: application/forms/StreamSettingSubForm.php:142
+#: application/forms/StreamSettingSubForm.php:140
 msgid "Stream URL"
 msgstr "URL-адреса трансляції"
 
@@ -4111,7 +4111,7 @@ msgstr "Трек"
 msgid "Played"
 msgstr "Програно"
 
-#: application/services/PodcastService.php:163
+#: application/services/PodcastService.php:159
 msgid "Auto-generated smartblock for podcast"
 msgstr "Автоматично створений смарт-блок для подкасту"
 

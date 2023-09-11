@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LibreTime\n"
 "Report-Msgid-Bugs-To: https://github.com/libretime/libretime/issues\n"
-"POT-Creation-Date: 2023-08-21 01:45+0000\n"
+"POT-Creation-Date: 2023-09-11 01:51+0000\n"
 "PO-Revision-Date: 2021-10-17 08:09+0000\n"
 "Last-Translator: Kyle Robbertze <github@paddatrapper.com>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/libretime/legacy/el/>\n"
@@ -807,34 +807,34 @@ msgstr "Λανθασμένο αίτημα. Η παράμετρος «κατάσ�
 msgid "Bad request. 'mode' parameter is invalid"
 msgstr "Λανθασμένο αίτημα. Η παράμετρος «κατάσταση» δεν είναι έγκυρη"
 
-#: application/controllers/DashboardController.php:34
-#: application/controllers/DashboardController.php:86
+#: application/controllers/DashboardController.php:32
+#: application/controllers/DashboardController.php:84
 msgid "You don't have permission to disconnect source."
 msgstr "Δεν έχετε άδεια για αποσύνδεση πηγής."
 
-#: application/controllers/DashboardController.php:36
-#: application/controllers/DashboardController.php:88
+#: application/controllers/DashboardController.php:34
+#: application/controllers/DashboardController.php:86
 msgid "There is no source connected to this input."
 msgstr "Δεν υπάρχει καμία πηγή που είναι συνδεδεμένη σε αυτή την είσοδο."
 
-#: application/controllers/DashboardController.php:83
+#: application/controllers/DashboardController.php:81
 msgid "You don't have permission to switch source."
 msgstr "Δεν έχετε άδεια για αλλαγή πηγής."
 
-#: application/controllers/EmbeddablewidgetsController.php:24
+#: application/controllers/EmbeddablewidgetsController.php:22
 msgid ""
 "To configure and use the embeddable player you must:<br><br>\n"
 "            1. Enable at least one MP3, AAC, or OGG stream under Settings -> Streams<br>\n"
 "            2. Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
 
-#: application/controllers/EmbeddablewidgetsController.php:37
+#: application/controllers/EmbeddablewidgetsController.php:35
 msgid ""
 "To use the embeddable weekly schedule widget you must:<br><br>\n"
 "            Enable the Public LibreTime API under Settings -> Preferences"
 msgstr ""
 
-#: application/controllers/EmbeddablewidgetsController.php:50
+#: application/controllers/EmbeddablewidgetsController.php:48
 msgid ""
 "To add the Radio Tab to your Facebook Page, you must first:<br><br>\n"
 "            Enable the Public LibreTime API under Settings -> Preferences"
@@ -856,12 +856,12 @@ msgstr ""
 msgid "An internal application error has occurred."
 msgstr ""
 
-#: application/controllers/IndexController.php:88
+#: application/controllers/IndexController.php:86
 #, php-format
 msgid "%s Podcast"
 msgstr ""
 
-#: application/controllers/IndexController.php:89
+#: application/controllers/IndexController.php:87
 msgid "No tracks have been published yet."
 msgstr ""
 
@@ -879,7 +879,7 @@ msgstr "Κάτι πήγε στραβά."
 #: application/controllers/LibraryController.php:91
 #: application/controllers/LocaleController.php:171
 #: application/controllers/ShowbuilderController.php:131
-#: application/forms/SmartBlockCriteria.php:573
+#: application/forms/SmartBlockCriteria.php:571
 msgid "Preview"
 msgstr "Προεπισκόπηση"
 
@@ -1229,7 +1229,7 @@ msgstr "Κωδικοποιήθηκε από"
 
 #: application/controllers/LocaleController.php:97
 #: application/forms/SmartBlockCriteria.php:68
-#: application/forms/StreamSettingSubForm.php:118
+#: application/forms/StreamSettingSubForm.php:116
 #: application/models/Block.php:1440 application/models/Block.php:1538
 #: application/services/HistoryService.php:1055
 msgid "Genre"
@@ -1513,9 +1513,9 @@ msgstr "Επεξεργασία..."
 #: application/forms/SmartBlockCriteria.php:117
 #: application/forms/SmartBlockCriteria.php:133
 #: application/forms/SmartBlockCriteria.php:198
-#: application/forms/SmartBlockCriteria.php:377
-#: application/forms/SmartBlockCriteria.php:631
-#: application/forms/SmartBlockCriteria.php:688
+#: application/forms/SmartBlockCriteria.php:375
+#: application/forms/SmartBlockCriteria.php:629
+#: application/forms/SmartBlockCriteria.php:686
 #: application/models/Block.php:1462 application/models/Block.php:1560
 msgid "Select modifier"
 msgstr "Επιλέξτε τροποποιητή"
@@ -1586,7 +1586,7 @@ msgid "is in the range"
 msgstr "είναι στην κλίμακα"
 
 #: application/controllers/LocaleController.php:172
-#: application/forms/SmartBlockCriteria.php:575
+#: application/forms/SmartBlockCriteria.php:573
 msgid "Generate"
 msgstr "Δημιουργία"
 
@@ -1632,7 +1632,7 @@ msgid "The stream is disabled"
 msgstr "Το stream είναι απενεργοποιημένο"
 
 #: application/controllers/LocaleController.php:184
-#: application/forms/StreamSettingSubForm.php:146
+#: application/forms/StreamSettingSubForm.php:144
 msgid "Getting information from the server..."
 msgstr "Λήψη πληροφοριών από το διακομιστή..."
 
@@ -2038,14 +2038,14 @@ msgstr "Μετακίνηση Στοιχείων %s"
 
 #: application/controllers/LocaleController.php:302
 #: application/forms/AddTracktype.php:64 application/forms/AddUser.php:108
-#: application/forms/EditAudioMD.php:280 application/forms/EditHistory.php:131
+#: application/forms/EditAudioMD.php:278 application/forms/EditHistory.php:131
 #: application/forms/PasswordChange.php:43 application/forms/Preferences.php:35
 msgid "Save"
 msgstr "Αποθήκευση"
 
 #: application/controllers/LocaleController.php:303
 #: application/controllers/LocaleController.php:327
-#: application/forms/EditAudioMD.php:270 application/forms/EditHistory.php:141
+#: application/forms/EditAudioMD.php:268 application/forms/EditHistory.php:141
 msgid "Cancel"
 msgstr "Ακύρωση"
 
@@ -2491,7 +2491,7 @@ msgstr ""
 
 #: application/controllers/LocaleController.php:438
 #: application/forms/SmartBlockCriteria.php:65
-#: application/forms/StreamSettingSubForm.php:134
+#: application/forms/StreamSettingSubForm.php:132
 #: application/models/Block.php:1437 application/models/Block.php:1535
 msgid "Description"
 msgstr "Περιγραφή"
@@ -2759,19 +2759,19 @@ msgstr "Άγνωστη λίστα αναπαραγωγής"
 msgid "Preferences updated."
 msgstr "Οι προτιμήσεις ενημερώθηκαν."
 
-#: application/controllers/PreferenceController.php:203
+#: application/controllers/PreferenceController.php:201
 msgid "Stream Setting Updated."
 msgstr "Η Ρύθμιση Stream Ενημερώθηκε."
 
-#: application/controllers/PreferenceController.php:248
+#: application/controllers/PreferenceController.php:246
 msgid "path should be specified"
 msgstr "η διαδρομή πρέπει να καθοριστεί"
 
-#: application/controllers/PreferenceController.php:291
+#: application/controllers/PreferenceController.php:289
 msgid "Problem with Liquidsoap..."
 msgstr "Πρόβλημα με Liquidsoap ..."
 
-#: application/controllers/PreferenceController.php:334
+#: application/controllers/PreferenceController.php:332
 msgid "Request method not accepted"
 msgstr ""
 
@@ -3004,12 +3004,12 @@ msgstr "Εκπομπή χωρίς Τίτλο"
 msgid "URL:"
 msgstr "Διεύθυνση URL:"
 
-#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:133
+#: application/forms/AddShowWhat.php:45 application/forms/EditAudioMD.php:131
 msgid "Genre:"
 msgstr "Είδος:"
 
 #: application/forms/AddShowWhat.php:54 application/forms/AddTracktype.php:35
-#: application/forms/EditAudioMD.php:115
+#: application/forms/EditAudioMD.php:113
 msgid "Description:"
 msgstr "Περιγραφή:"
 
@@ -3160,72 +3160,72 @@ msgstr ""
 msgid "Date Start:"
 msgstr "Ημερομηνία Έναρξης:"
 
-#: application/forms/EditAudioMD.php:52 application/forms/Player.php:15
+#: application/forms/EditAudioMD.php:50 application/forms/Player.php:15
 msgid "Title:"
 msgstr "Τίτλος:"
 
-#: application/forms/EditAudioMD.php:62
+#: application/forms/EditAudioMD.php:60
 msgid "Creator:"
 msgstr "Δημιουργός:"
 
-#: application/forms/EditAudioMD.php:72
+#: application/forms/EditAudioMD.php:70
 msgid "Album:"
 msgstr "Album:"
 
-#: application/forms/EditAudioMD.php:89
+#: application/forms/EditAudioMD.php:87
 msgid "Owner:"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:101
+#: application/forms/EditAudioMD.php:99
 msgid "Select a Type"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:108
+#: application/forms/EditAudioMD.php:106
 msgid "Track Type:"
 msgstr ""
 
-#: application/forms/EditAudioMD.php:143
+#: application/forms/EditAudioMD.php:141
 msgid "Year:"
 msgstr "Έτος"
 
-#: application/forms/EditAudioMD.php:156
+#: application/forms/EditAudioMD.php:154
 msgid "Label:"
 msgstr "Δισκογραφική:"
 
-#: application/forms/EditAudioMD.php:166
+#: application/forms/EditAudioMD.php:164
 msgid "Composer:"
 msgstr "Συνθέτης:"
 
-#: application/forms/EditAudioMD.php:176
+#: application/forms/EditAudioMD.php:174
 msgid "Conductor:"
 msgstr "Μαέστρος:"
 
-#: application/forms/EditAudioMD.php:186
+#: application/forms/EditAudioMD.php:184
 msgid "Mood:"
 msgstr "Διάθεση:"
 
-#: application/forms/EditAudioMD.php:196
+#: application/forms/EditAudioMD.php:194
 msgid "BPM:"
 msgstr "BPM:"
 
-#: application/forms/EditAudioMD.php:207
+#: application/forms/EditAudioMD.php:205
 msgid "Copyright:"
 msgstr "Copyright:"
 
-#: application/forms/EditAudioMD.php:217
+#: application/forms/EditAudioMD.php:215
 msgid "ISRC Number:"
 msgstr "Αριθμός ISRC:"
 
-#: application/forms/EditAudioMD.php:227
+#: application/forms/EditAudioMD.php:225
 msgid "Website:"
 msgstr "Ιστοσελίδα:"
 
-#: application/forms/EditAudioMD.php:237 application/forms/EditUser.php:118
+#: application/forms/EditAudioMD.php:235 application/forms/EditUser.php:118
 #: application/forms/Login.php:67
 msgid "Language:"
 msgstr "Γλώσσα:"
 
-#: application/forms/EditAudioMD.php:290
+#: application/forms/EditAudioMD.php:288
 msgid "Publish..."
 msgstr ""
 
@@ -3514,8 +3514,8 @@ msgid "between"
 msgstr ""
 
 #: application/forms/SmartBlockCriteria.php:152
-#: application/forms/SmartBlockCriteria.php:471
-#: application/forms/SmartBlockCriteria.php:513
+#: application/forms/SmartBlockCriteria.php:469
+#: application/forms/SmartBlockCriteria.php:511
 msgid "Select unit of time"
 msgstr ""
 
@@ -3584,195 +3584,195 @@ msgstr ""
 msgid "Select Track Type"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:268
+#: application/forms/SmartBlockCriteria.php:266
 msgid "Type:"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:271
+#: application/forms/SmartBlockCriteria.php:269
 msgid "Dynamic"
 msgstr "Δυναμικό"
 
-#: application/forms/SmartBlockCriteria.php:272
+#: application/forms/SmartBlockCriteria.php:270
 msgid "Static"
 msgstr "Στατικό"
 
-#: application/forms/SmartBlockCriteria.php:437
+#: application/forms/SmartBlockCriteria.php:435
 msgid "Select track type"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:523
+#: application/forms/SmartBlockCriteria.php:521
 msgid "Allow Repeated Tracks:"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:531
+#: application/forms/SmartBlockCriteria.php:529
 msgid "Allow last track to exceed time limit:"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:540
+#: application/forms/SmartBlockCriteria.php:538
 msgid "Sort Tracks:"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:558
+#: application/forms/SmartBlockCriteria.php:556
 msgid "Limit to:"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:570
+#: application/forms/SmartBlockCriteria.php:568
 msgid "Generate playlist content and save criteria"
 msgstr "Δημιουργία λίστας αναπαραγωγής περιεχομένου και αποθήκευση κριτηρίων"
 
-#: application/forms/SmartBlockCriteria.php:582
+#: application/forms/SmartBlockCriteria.php:580
 msgid "Shuffle playlist content"
 msgstr "Περιεχόμενο λίστας Shuffle "
 
-#: application/forms/SmartBlockCriteria.php:584
+#: application/forms/SmartBlockCriteria.php:582
 msgid "Shuffle"
 msgstr "Shuffle"
 
-#: application/forms/SmartBlockCriteria.php:813
-#: application/forms/SmartBlockCriteria.php:825
+#: application/forms/SmartBlockCriteria.php:811
+#: application/forms/SmartBlockCriteria.php:823
 msgid "Limit cannot be empty or smaller than 0"
 msgstr "Το όριο δεν μπορεί να είναι κενό ή μικρότερο από 0"
 
-#: application/forms/SmartBlockCriteria.php:818
+#: application/forms/SmartBlockCriteria.php:816
 msgid "Limit cannot be more than 24 hrs"
 msgstr "Το όριο δεν μπορεί να είναι ξεπερνάει τις 24 ώρες"
 
-#: application/forms/SmartBlockCriteria.php:828
+#: application/forms/SmartBlockCriteria.php:826
 msgid "The value should be an integer"
 msgstr "Η τιμή πρέπει να είναι ακέραιος αριθμός"
 
-#: application/forms/SmartBlockCriteria.php:831
+#: application/forms/SmartBlockCriteria.php:829
 msgid "500 is the max item limit value you can set"
 msgstr "Το 500 είναι η μέγιστη οριακή τιμή σημείου, που μπορείτε να ορίσετε"
 
-#: application/forms/SmartBlockCriteria.php:842
+#: application/forms/SmartBlockCriteria.php:840
 msgid "You must select Criteria and Modifier"
 msgstr "Θα πρέπει να επιλέξετε Κριτήρια και Τροποποιητή"
 
-#: application/forms/SmartBlockCriteria.php:849
+#: application/forms/SmartBlockCriteria.php:847
 msgid "'Length' should be in '00:00:00' format"
 msgstr "Το «Μήκος» θα πρέπει να είναι σε υπό μορφής  '00:00:00'"
 
-#: application/forms/SmartBlockCriteria.php:858
+#: application/forms/SmartBlockCriteria.php:856
 msgid "Only non-negative integer numbers are allowed (e.g 1 or 5) for the text value"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:863
-#: application/forms/SmartBlockCriteria.php:888
+#: application/forms/SmartBlockCriteria.php:861
+#: application/forms/SmartBlockCriteria.php:886
 msgid "You must select a time unit for a relative datetime."
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:868
-#: application/forms/SmartBlockCriteria.php:893
+#: application/forms/SmartBlockCriteria.php:866
+#: application/forms/SmartBlockCriteria.php:891
 msgid "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
 msgstr "Η τιμή θα πρέπει να είναι υπο μορφής ώρας (π.χ. 0000-00-00 ή 0000-00-00 00:00:00)"
 
-#: application/forms/SmartBlockCriteria.php:883
+#: application/forms/SmartBlockCriteria.php:881
 msgid "Only non-negative integer numbers are allowed for a relative date time"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:910
+#: application/forms/SmartBlockCriteria.php:908
 msgid "The value has to be numeric"
 msgstr "Η τιμή πρέπει να είναι αριθμός"
 
-#: application/forms/SmartBlockCriteria.php:915
+#: application/forms/SmartBlockCriteria.php:913
 msgid "The value should be less then 2147483648"
 msgstr "Η τιμή πρέπει να είναι μικρότερη από 2147483648"
 
-#: application/forms/SmartBlockCriteria.php:920
+#: application/forms/SmartBlockCriteria.php:918
 msgid "The value cannot be empty"
 msgstr ""
 
-#: application/forms/SmartBlockCriteria.php:925
+#: application/forms/SmartBlockCriteria.php:923
 #, php-format
 msgid "The value should be less than %s characters"
 msgstr "Η τιμή πρέπει να είναι μικρότερη από %s χαρακτήρες"
 
-#: application/forms/SmartBlockCriteria.php:932
+#: application/forms/SmartBlockCriteria.php:930
 msgid "Value cannot be empty"
 msgstr "Η αξία δεν μπορεί να είναι κενή"
 
-#: application/forms/StreamSetting.php:26
+#: application/forms/StreamSetting.php:24
 msgid "Stream Label:"
 msgstr "Stream Label:"
 
-#: application/forms/StreamSetting.php:28
+#: application/forms/StreamSetting.php:26
 msgid "Artist - Title"
 msgstr "Καλλιτέχνης - Τίτλος"
 
-#: application/forms/StreamSetting.php:29
+#: application/forms/StreamSetting.php:27
 msgid "Show - Artist - Title"
 msgstr "Εκπομπή - Καλλιτέχνης - Τίτλος"
 
-#: application/forms/StreamSetting.php:30
+#: application/forms/StreamSetting.php:28
 msgid "Station name - Show name"
 msgstr "Όνομα Σταθμού - Όνομα Εκπομπής"
 
-#: application/forms/StreamSetting.php:38
+#: application/forms/StreamSetting.php:36
 msgid "Off Air Metadata"
 msgstr "Μεταδεδομένα Off Air"
 
-#: application/forms/StreamSetting.php:45
+#: application/forms/StreamSetting.php:43
 msgid "Enable Replay Gain"
 msgstr "Ενεργοποίηση Επανάληψη Κέρδους"
 
-#: application/forms/StreamSetting.php:52
+#: application/forms/StreamSetting.php:50
 msgid "Replay Gain Modifier"
 msgstr "Τροποποιητής Επανάληψης Κέρδους"
 
-#: application/forms/StreamSetting.php:60
+#: application/forms/StreamSetting.php:58
 msgid "Hardware Audio Output:"
 msgstr ""
 
-#: application/forms/StreamSetting.php:69
+#: application/forms/StreamSetting.php:67
 msgid "Output Type"
 msgstr ""
 
-#: application/forms/StreamSettingSubForm.php:35
+#: application/forms/StreamSettingSubForm.php:33
 msgid "Enabled:"
 msgstr "Ενεργοποιημένο"
 
-#: application/forms/StreamSettingSubForm.php:43
+#: application/forms/StreamSettingSubForm.php:41
 msgid "Mobile:"
 msgstr ""
 
-#: application/forms/StreamSettingSubForm.php:51
+#: application/forms/StreamSettingSubForm.php:49
 msgid "Stream Type:"
 msgstr "Τύπος Stream:"
 
-#: application/forms/StreamSettingSubForm.php:59
+#: application/forms/StreamSettingSubForm.php:57
 msgid "Bit Rate:"
 msgstr "Ρυθμός Δεδομένων:"
 
-#: application/forms/StreamSettingSubForm.php:67
+#: application/forms/StreamSettingSubForm.php:65
 msgid "Service Type:"
 msgstr "Τύπος Υπηρεσίας:"
 
-#: application/forms/StreamSettingSubForm.php:75
+#: application/forms/StreamSettingSubForm.php:73
 msgid "Channels:"
 msgstr "Κανάλια"
 
-#: application/forms/StreamSettingSubForm.php:83
+#: application/forms/StreamSettingSubForm.php:81
 msgid "Server"
 msgstr "Διακομιστής"
 
-#: application/forms/StreamSettingSubForm.php:92
+#: application/forms/StreamSettingSubForm.php:90
 msgid "Port"
 msgstr "Θύρα"
 
-#: application/forms/StreamSettingSubForm.php:100
+#: application/forms/StreamSettingSubForm.php:98
 msgid "Mount Point"
 msgstr "Σημείο Προσάρτησης"
 
-#: application/forms/StreamSettingSubForm.php:109
+#: application/forms/StreamSettingSubForm.php:107
 msgid "Name"
 msgstr "Ονομασία"
 
-#: application/forms/StreamSettingSubForm.php:125
+#: application/forms/StreamSettingSubForm.php:123
 msgid "URL"
 msgstr "Διεύθυνση URL:"
 
-#: application/forms/StreamSettingSubForm.php:142
+#: application/forms/StreamSettingSubForm.php:140
 msgid "Stream URL"
 msgstr ""
 
@@ -4092,7 +4092,7 @@ msgstr "Κομμάτι"
 msgid "Played"
 msgstr "Παίχτηκε"
 
-#: application/services/PodcastService.php:163
+#: application/services/PodcastService.php:159
 msgid "Auto-generated smartblock for podcast"
 msgstr ""
 
