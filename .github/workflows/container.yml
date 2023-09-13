@@ -31,7 +31,7 @@ jobs:
           repository: libretime/libretime-${{ matrix.target }}
           readme-filepath: ./README.md
 
-      - uses: docker/metadata-action@v4
+      - uses: docker/metadata-action@v5
         id: meta
         with:
           bake-target: ${{ matrix.target }}
