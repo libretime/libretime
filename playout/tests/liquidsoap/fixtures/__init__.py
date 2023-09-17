@@ -98,7 +98,7 @@ TEST_STREAM_CONFIGS: List[Config] = [
                 {
                     "enabled": True,
                     "kind": "pulseaudio",
-                    "device": "alsa_output.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi__hw_sofhdadsp__sink",
+                    "device": "alsa_output.pci-0000_00_sink",
                 }
             ],
         }
