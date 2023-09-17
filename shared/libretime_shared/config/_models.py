@@ -216,7 +216,7 @@ class ShoutcastOutput(BaseModel):
     mobile: bool = False
 
 
-class SystemOutputKind(str, Enum):
+class SystemOutput(str, Enum):
     ALSA = "alsa"
     AO = "ao"
     OSS = "oss"
@@ -224,16 +224,49 @@ class SystemOutputKind(str, Enum):
     PULSEAUDIO = "pulseaudio"
 
 
-class SystemOutput(BaseModel):
+class BaseSystemOutput(BaseModel):
     enabled: bool = False
-    kind: SystemOutputKind = SystemOutputKind.PULSEAUDIO
+
+
+class ALSASystemOutput(BaseSystemOutput):
+    kind: Literal[SystemOutput.ALSA] = SystemOutput.ALSA
+    device: Optional[str] = None
+
+
+class AOSystemOutput(BaseSystemOutput):
+    kind: Literal[SystemOutput.AO] = SystemOutput.AO
+
+
+class OSSSystemOutput(BaseSystemOutput):
+    kind: Literal[SystemOutput.OSS] = SystemOutput.OSS
+
+
+class PortAudioSystemOutput(BaseSystemOutput):
+    kind: Literal[SystemOutput.PORTAUDIO] = SystemOutput.PORTAUDIO
+
+
+class PulseAudioSystemOutput(BaseSystemOutput):
+    kind: Literal[SystemOutput.PULSEAUDIO] = SystemOutput.PULSEAUDIO
+    device: Optional[str] = None
+
+
+AnySystemOutput = Annotated[
+    Union[
+        ALSASystemOutput,
+        AOSystemOutput,
+        OSSSystemOutput,
+        PortAudioSystemOutput,
+        PulseAudioSystemOutput,
+    ],
+    Field(discriminator="kind", default=SystemOutput.PULSEAUDIO),
+]
 
 
 # pylint: disable=too-few-public-methods
 class Outputs(BaseModel):
     icecast: List[IcecastOutput] = Field([], max_length=3)
     shoutcast: List[ShoutcastOutput] = Field([], max_length=1)
-    system: List[SystemOutput] = Field([], max_length=1)
+    system: List[AnySystemOutput] = Field([], max_length=1)
 
     @property
     def merged(self) -> List[Union[IcecastOutput, ShoutcastOutput]]:
