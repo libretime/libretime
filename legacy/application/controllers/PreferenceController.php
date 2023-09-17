@@ -248,7 +248,7 @@ class PreferenceController extends Zend_Controller_Action
             $element['isError'] = true;
             $result[$path] = $element;
         } else {
-            $path = $path . '/';
+            $path .= '/';
             $handle = opendir($path);
             if ($handle !== false) {
                 while (false !== ($file = readdir($handle))) {

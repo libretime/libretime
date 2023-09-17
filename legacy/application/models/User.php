@@ -311,7 +311,7 @@ class Application_Model_User
         $sql .= ' AND login ILIKE :search';
         $params[':search'] = "%{$search}%";
 
-        $sql = $sql . ' ORDER BY login';
+        $sql .= ' ORDER BY login';
 
         return Application_Common_Database::prepareAndExecute($sql, $params, 'all');
     }

@@ -349,7 +349,7 @@ SQL;
                 if ($mins > 59) {
                     $hour = intval($mins / 60);
                     $hour = str_pad($hour, 2, '0', STR_PAD_LEFT);
-                    $mins = $mins % 60;
+                    $mins %= 60;
                 }
             }
             $hour = str_pad($hour, 2, '0', STR_PAD_LEFT);
@@ -499,10 +499,10 @@ SQL;
                         $db_file = CcFilesQuery::create()->findPk($ac[0], $this->con);
                         $db_file->setDbIsPlaylist(true)->save($this->con);
 
-                        $pos = $pos + 1;
+                        ++$pos;
                     } elseif (!is_array($ac)) {
                         $res = $this->insertBlockElement($this->buildEntry($ac, $pos));
-                        $pos = $pos + 1;
+                        ++$pos;
 
                         $db_file = CcFilesQuery::create()->findPk($ac, $this->con);
                         $db_file->setDbIsPlaylist(true)->save($this->con);
@@ -516,7 +516,7 @@ SQL;
             for ($i = 0; $i < count($contentsToUpdate); ++$i) {
                 $contentsToUpdate[$i]->setDbPosition($pos);
                 $contentsToUpdate[$i]->save($this->con);
-                $pos = $pos + 1;
+                ++$pos;
             }
 
             $this->block->setDbMtime(new DateTime('now', new DateTimeZone('UTC')));
@@ -565,13 +565,13 @@ SQL;
                     Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
-                    $pos = $pos + 1;
+                    ++$pos;
                 }
                 foreach ($otherContent as $item) {
                     Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
-                    $pos = $pos + 1;
+                    ++$pos;
                 }
             } else {
                 Logging::info("moving items after {$p_afterItem}");
@@ -580,14 +580,14 @@ SQL;
                     Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
-                    $pos = $pos + 1;
+                    ++$pos;
 
                     if ($item->getDbId() == $p_afterItem) {
                         foreach ($contentsToMove as $move) {
                             Logging::info("item {$move->getDbId()} to pos {$pos}");
                             $move->setDbPosition($pos);
                             $move->save($this->con);
-                            $pos = $pos + 1;
+                            ++$pos;
                         }
                     }
                 }
@@ -1660,7 +1660,7 @@ SQL;
                         */
                     } elseif (in_array($spCriteria, ['length', 'cuein', 'cueout']) && $spCriteriaModifier == 'is') {
                         $spCriteriaModifier = 'starts with';
-                        $spCriteria = $spCriteria . '::text';
+                        $spCriteria .= '::text';
                         $spCriteriaValue = $criteria['value'];
                     } else {
                         /* Propel does not escape special characters properly when using LIKE/ILIKE
