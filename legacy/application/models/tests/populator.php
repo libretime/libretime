@@ -105,7 +105,7 @@ while ($showTime < $endDate) {
         createTestShow($showNumber, $showTime);
         $showTime->add(new DateInterval('PT1H'));
     }
-    $showNumber = $showNumber + 1;
+    ++$showNumber;
 }
 
 if (Application_Model_RabbitMq::$doPush) {

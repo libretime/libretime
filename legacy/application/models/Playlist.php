@@ -499,14 +499,14 @@ SQL;
                     $db_file->setDbIsPlaylist(true)->save($this->con);
                 }
 
-                $pos = $pos + 1;
+                ++$pos;
             }
 
             // reset the positions of the remaining items.
             for ($i = 0; $i < count($contentsToUpdate); ++$i) {
                 $contentsToUpdate[$i]->setDbPosition($pos);
                 $contentsToUpdate[$i]->save($this->con);
-                $pos = $pos + 1;
+                ++$pos;
             }
 
             $this->pl->setDbMtime(new DateTime('now', new DateTimeZone('UTC')));
@@ -553,13 +553,13 @@ SQL;
                     Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
-                    $pos = $pos + 1;
+                    ++$pos;
                 }
                 foreach ($otherContent as $item) {
                     Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
-                    $pos = $pos + 1;
+                    ++$pos;
                 }
             } else {
                 Logging::info("moving items after {$p_afterItem}");
@@ -568,14 +568,14 @@ SQL;
                     Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
-                    $pos = $pos + 1;
+                    ++$pos;
 
                     if ($item->getDbId() == $p_afterItem) {
                         foreach ($contentsToMove as $move) {
                             Logging::info("item {$move->getDbId()} to pos {$pos}");
                             $move->setDbPosition($pos);
                             $move->save($this->con);
-                            $pos = $pos + 1;
+                            ++$pos;
                         }
                     }
                 }
