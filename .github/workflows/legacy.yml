@@ -33,7 +33,7 @@ jobs:
           - php-version: "7.4" # Focal, Bullseye
 
     steps:
-      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
@@ -53,7 +53,7 @@ jobs:
     env:
       ENVIRONMENT: testing
     steps:
-      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
 
       - name: Setup PostgreSQL
         run: |
@@ -94,7 +94,7 @@ jobs:
         github.event_name == 'workflow_dispatch'
       )
     steps:
-      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
         with:
           token: ${{ secrets.LIBRETIME_BOT_TOKEN }}
 
