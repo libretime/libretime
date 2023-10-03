@@ -63,7 +63,7 @@ def transition(a,b) =
 end
 
 # we need this function for special transition case(from default to queue) we don't want
-# the trasition fade to have effect on the first song that would be played switching out
+# the transition fade to have effect on the first song that would be played switching out
 # of the default(silent) source
 def transition_default(a,b) =
   log("transition called...")

@@ -10,7 +10,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             ['ViewScript', ['viewScript' => 'form/preferences_livestream.phtml']],
         ]);
 
-        // automatic trasition on source disconnection
+        // automatic transition on source disconnection
         $auto_transition = new Zend_Form_Element_Checkbox('auto_transition');
         $auto_transition->setLabel(_('Auto Switch Off:'))
             ->setValue(Application_Model_Preference::GetAutoTransition());
