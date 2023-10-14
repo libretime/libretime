@@ -21,9 +21,9 @@ setup(
     ],
     extras_require={
         "dev": [
-            "requests-mock>=1.10.0,<1.12",
-            "types-python-dateutil>=2.8.1,<2.9",
-            "types-requests>=2.31.0,<2.32",
+            "requests-mock>=1.10.0,<2",
+            "types-python-dateutil>=2.8.1,<3",
+            "types-requests>=2.31.0,<3",
         ],
     },
     zip_safe=False,
