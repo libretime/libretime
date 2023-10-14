@@ -9,6 +9,7 @@ extension-pkg-whitelist = [
   "pydantic",
 ]
 disable = [
+  "duplicate-code",
   "fixme",
   "missing-class-docstring",
   "missing-function-docstring",
