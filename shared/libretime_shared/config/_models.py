@@ -220,6 +220,8 @@ class IcecastOutput(BaseModel):
     website: Optional[str] = None
     genre: Optional[str] = None
 
+    mobile: bool = False
+
     _mount_no_leading_slash = no_leading_slash_validator("mount")
 
 
@@ -243,6 +245,8 @@ class ShoutcastOutput(BaseModel):
     name: Optional[str] = None
     website: Optional[str] = None
     genre: Optional[str] = None
+
+    mobile: bool = False
 
 
 class SystemOutputKind(str, Enum):

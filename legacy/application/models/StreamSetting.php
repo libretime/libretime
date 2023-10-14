@@ -62,7 +62,7 @@ class Application_Model_StreamConfig
                 $prefix . 'description' => $output['description'] ?? '',
                 $prefix . 'genre' => $output['genre'] ?? '',
                 $prefix . 'url' => $output['website'] ?? '',
-                $prefix . 'mobile' => 'false',
+                $prefix . 'mobile' => $output['mobile'] ?? 'false',
                 // $prefix . 'liquidsoap_error' => 'waiting',
             ];
         }

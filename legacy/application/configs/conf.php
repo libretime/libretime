@@ -171,6 +171,7 @@ class Schema implements ConfigurationInterface
             /*  */->scalarNode('description')->end()
             /*  */->scalarNode('website')->end()
             /*  */->scalarNode('genre')->end()
+            /*  */->booleanNode('mobile')->defaultFalse()->end()
             /**/->end()->end()->end()
 
             // Shoutcast outputs
@@ -200,6 +201,7 @@ class Schema implements ConfigurationInterface
             /*  */->scalarNode('name')->end()
             /*  */->scalarNode('website')->end()
             /*  */->scalarNode('genre')->end()
+            /*  */->booleanNode('mobile')->defaultFalse()->end()
             /**/->end()->end()->end()
 
             // System outputs

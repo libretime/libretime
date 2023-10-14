@@ -451,6 +451,10 @@ stream:
         website: "https://libretime.org"
         # Icecast stream genre.
         genre: "various"
+
+        # Whether the stream should be used for mobile devices.
+        # > default is false
+        mobile: false
 ```
 
 #### Shoutcast
@@ -504,6 +508,10 @@ stream:
         website: "https://libretime.org"
         # Shoutcast stream genre.
         genre: "various"
+
+        # Whether the stream should be used for mobile devices.
+        # > default is false
+        mobile: false
 ```
 
 #### System
