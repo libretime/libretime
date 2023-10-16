@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="libretime-analyzer",
-    version="3.1.0",
+    version="3.2.0",
     description="Libretime Analyzer",
     author="LibreTime Contributors",
     url="https://github.com/libretime/libretime",
