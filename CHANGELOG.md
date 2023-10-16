@@ -1,3 +1,43 @@
+<a name="3.2.0"></a>
+
+## [3.2.0](https://github.com/libretime/libretime/compare/3.1.0...3.2.0) (2023-10-16)
+
+- [Release note](https://libretime.org/docs/releases/3.2.0/)
+
+### Features
+
+- **legacy:** move session store to database ([#2523](https://github.com/libretime/libretime/issues/2523))
+- **api:** add email configuration
+- add mobile devices stream config field ([#2744](https://github.com/libretime/libretime/issues/2744))
+
+### Bug Fixes
+
+- **playout:** liquidsoap aac output syntax errors
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.20.1 (stable) ([#2602](https://github.com/libretime/libretime/issues/2602))
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.21.2 ([#2612](https://github.com/libretime/libretime/issues/2612))
+- libretime process leaks and lsof high cpu usage ([#2615](https://github.com/libretime/libretime/issues/2615))
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.22.1 ([#2633](https://github.com/libretime/libretime/issues/2633))
+- libretime process leaks and lsof high cpu usage ([#2615](https://github.com/libretime/libretime/issues/2615))
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.23.1 (stable) ([#2656](https://github.com/libretime/libretime/issues/2656))
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.26.1 (stable) ([#2678](https://github.com/libretime/libretime/issues/2678))
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.26.1 (main) ([#2677](https://github.com/libretime/libretime/issues/2677))
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.26.2 ([#2686](https://github.com/libretime/libretime/issues/2686))
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.26.2 ([#2687](https://github.com/libretime/libretime/issues/2687))
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.27.1 (main) ([#2714](https://github.com/libretime/libretime/issues/2714))
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.27.1 (stable) ([#2715](https://github.com/libretime/libretime/issues/2715))
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.34.1 ([#2723](https://github.com/libretime/libretime/issues/2723))
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.35.2 ([#2738](https://github.com/libretime/libretime/issues/2738))
+- **deps:** update dependency friendsofphp/php-cs-fixer to <3.35.2 ([#2722](https://github.com/libretime/libretime/issues/2722))
+
+### Documentation
+
+- update chat links to point to matrix ([#2571](https://github.com/libretime/libretime/issues/2571))
+- fix broken link ([#2616](https://github.com/libretime/libretime/issues/2616))
+
+### Tests
+
+- **playout:** check unsupported liquidsoap aac output
+
 <a name="3.1.0"></a>
 
 ## [3.1.0](https://github.com/libretime/libretime/compare/3.0.2...3.1.0) (2023-05-26)
