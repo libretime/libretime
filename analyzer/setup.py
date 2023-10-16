@@ -27,11 +27,11 @@ setup(
     ],
     extras_require={
         "dev": [
-            "distro>=1.8.0,<1.9",
-            "types-requests>=2.31.0,<2.32",
+            "distro>=1.8.0,<2",
+            "types-requests>=2.31.0,<3",
         ],
         "sentry": [
-            "sentry-sdk>=1.15.0,<1.33",
+            "sentry-sdk>=1.15.0,<2",
         ],
     },
     zip_safe=False,
