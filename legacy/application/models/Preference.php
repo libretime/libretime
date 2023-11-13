@@ -64,6 +64,7 @@ class Application_Model_Preference
             if ($result > 1) {
                 // this case should not happen.
                 $caller = debug_backtrace()[1]['function'];
+
                 throw new Exception('Invalid number of results returned. Should be ' .
                     "0 or 1, but is '{$result}' instead, caller={$caller}");
             }
