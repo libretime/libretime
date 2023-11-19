@@ -4,13 +4,13 @@
 <head>
     <link rel="stylesheet" href="<?php echo $this->css ?>" type="text/css">
     <script src="<?php echo $this->playerhtml5_js ?>" type="text/javascript"></script>
-    <script src="<?php echo $this->jquery ?>" type="text/javascript"></script>
-
-    <script src="<?php echo $this->jquery_i18n ?>" type="text/javascript"></script>
+    <!-- get rid of jquery (PRO accelerated loading CONS drop i18n intenalization)
+    script src="<?php echo $this->jquery ?>" type="text/javascript"></script>
+    <script src="<?php echo $this->jquery_i18n ?>" type="text/javascript"></script-->
     <script src="/locale/general-translation-table" type="text/javascript"></script>
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
-    <script type="text/javascript">
-        $.i18n.setDictionary(general_dict);
+     <script type="text/javascript">
+        //$.i18n.setDictionary(general_dict);
 
         var MAX_MOBILE_SCREEN_WIDTH = 760;
 
@@ -48,10 +48,12 @@
             // Configure player title
             var player_title = <?php echo $this->player_title ?>;
             if (player_title === null) {
-                $(".airtime_header").hide();
-                $(".airtime_player").css('height', '150px');
+                ///TODO without JQuery
+                //$(".airtime_header").hide();
+                //$(".airtime_player").css('height', '150px');
             } else {
-                $("p.station_name").html(player_title);
+                //$("p.station_name").html(player_title);
+                document.getElementById('station_name').textContent=player_title;
             }
 
             attachStreamMetadataToPlayer();
@@ -125,7 +127,19 @@
             document.getElementById("stop_button").classList.toggle("hide_button");
         }
 
-        $(document).ready(function() {
+
+        window.onload=function(){ 
+            let playbuts=document.getElementsByClassName('play');
+            playbuts[0].onClick=function(){  
+        
+                if (playbuts[0].hasClass("pause"))
+                    html5Player.stop();
+                else  
+                    html5Player.play();
+                playbuts[0].classList.toggle("pause");
+            };
+        }
+        /*$(document).ready(function() {
             $(".play").click(function() {
                 if ($(this).hasClass("pause")) {
                     html5Player.stop();
@@ -135,19 +149,153 @@
 
                 $(this).toggleClass("pause");
             });
-        });
+        });*/
 
         // variables for updating the player's metadata
         var time_to_next_track_starts = 0;
         var metadataTimer = null;
-
+        var current_track_end_time;var current_track_start_time;
+        function fillNodeArray( arr,content){
+	   //for(let i=0;i<arr.length;++i) arr[i].innerHTML=content;
+	  Array.prototype.filter.call(
+	  arr,
+	  function (elmt) {
+	       elmt.innerHTML=content;
+	       console.log(content);
+	  },
+	);
+	};
         // Fetches the streams metadata from the Airtime live-info API
         // and attaches it to the player UI.
         //
         // The metadata is fetched when the current track is about to end.
         function attachStreamMetadataToPlayer() {
-            $.ajax({
-                url: "<?php echo $this->metadata_api_url ?>",
+        
+            let metadataxhr = new XMLHttpRequest();
+            metadataxhr.open('GET', "/api/live-info?type=interval&limit=5");
+            metadataxhr.onload = function() {
+                    if (metadataxhr.status != 200) { metadataxhr.onerror();return;}
+ 
+                    let data=JSON.parse(this.response);
+                    var nowdivs=document.getElementsByClassName('now_playing');                    
+		    var rcursor=document.getElementById("radio_cursor");
+                    if (data.current === null) {
+                        if (data.currentShow != null && data.currentShow.length > 0) {
+                            //Master/show source have no current track but they do have a current show.
+                            //$("div.now_playing").html($.i18n._("On Air") + "<span>" + data.currentShow[0].name + "</span>");
+                            fillNodeArray(nowdivs,"On Air" + "<span>" + data.currentShow[0].name + "</span>");
+                        } else {
+                            //$("div.now_playing").html($.i18n._("Off Air") + "<span>" + $.i18n._("Offline") + "</span>");
+                            fillNodeArray(nowdivs,"Off Air" + "<span>" + "Offline" + "</span>");
+                        }
+                        time_to_next_track_starts = 20000;
+                    } else {
+                    
+                        //console.log( data.current.name);
+                        var artist = '';// data.current.name;//.split(" - ")[0];
+                        var track =data.current.name;//.split(" - ")[1];
+                        var nowPlayingHtml = "";
+                        if (artist) {
+                            nowPlayingHtml += artist+" - ";
+                        }
+                        if (track) {
+                            nowPlayingHtml +=  track ;
+                        }
+                         
+                        //$("div.now_playing").html(nowPlayingHtml);
+                        fillNodeArray(nowdivs,nowPlayingHtml);
+
+                        current_track_end_time = new Date(data.current.ends);
+                        var artwork_url=data.current.metadata.artwork_url;
+                        
+                        artwork_url=artwork_url.replace('&amp;','&');
+                        //$("#artwork_image").attr('src', artwork_url );
+                        document.getElementById('artwork_image').src=artwork_url;
+                        
+                        if (current_track_end_time == "Invalid Date" || isNaN(current_track_end_time)) {
+                            // If the conversion didn't work (since the String is not in ISO format)
+                            // then change it to be ISO-compliant. This is somewhat hacky and may break
+                            // if the date string format in live-info changes!
+                            current_track_end_time = new Date((data.current.ends).replace(" ", "T"));
+                        }
+                        var current_time = new Date();
+                        //convert current_time to UTC to match the timezone of time_to_next_track_starts
+                        current_time = new Date(current_time.getTime() + current_time.getTimezoneOffset() * 60 * 1000);
+                        current_track_start_time= new Date((data.current.starts).replace(" ", "T"));
+                        time_to_next_track_starts = current_track_end_time - current_time;
+                       }
+
+
+                    let schedule_list=document.getElementsByClassName('schedule_list');
+                    if (data.next === null) {
+                        $("ul.schedule_list").find("li").html($.i18n._("Nothing scheduled"));
+                    } else {
+                        //$("ul.schedule_list").find("li").html(data.next.name);
+                        schedule_list[0].children[0].innerHTML=data.next.name;
+                        
+                    }
+                    
+                    
+                 //Preventative code if the local and remote clocks are out of sync.
+            if (isNaN(time_to_next_track_starts) || time_to_next_track_starts < 0) {
+                time_to_next_track_starts = 0;
+            }
+
+            
+		var current_time = new Date();
+		var current_time = new Date(current_time.getTime() + current_time.getTimezoneOffset() * 60 * 1000);
+
+		/*if (current_track_end_time === undefined )
+			time_to_next_track_starts=0;
+		else*/
+			time_to_next_track_starts = current_track_end_time - current_time;
+		 
+		var cursor_ratio=rcursor.clientWidth/rcursor.parentNode.clientWidth; ///cursor size in perc of its parent
+		var time_from_start_time= (current_time-current_track_start_time ) /(current_track_end_time-current_track_start_time); 
+		console.log(time_from_start_time);//hoping perc
+		//time_from_start_time=0;
+		time_from_start_time=time_from_start_time*(1.0-cursor_ratio);
+		var transl=(1.0-cursor_ratio)/cursor_ratio;
+		console.log(transl);//hoping perc	
+
+		 // $("#radio_cursor").attr('style', cursor_transition );
+		console.log('current_track_end_time'+current_track_end_time);
+		console.log('current_time'+current_time);
+		console.log('time_to_next_track_starts'+time_to_next_track_starts/1000);         	 
+		
+		 const cursoranimate = [
+		  { transform: "translate("+(time_from_start_time*100/cursor_ratio)+"%) " },
+		  { transform: "translate("+transl*100+"%) " },
+		];
+		const cursoranimateTiming = {
+		  duration: time_to_next_track_starts ,
+		  iterations: 1,
+		};
+			console.log(rcursor.clientWidth/rcursor.parentNode.clientWidth);	
+		 //rcursor.style="	width:"+cursor_ratio+"%;";	
+		rcursor.animate(cursoranimate, cursoranimateTiming);    
+		/*rcursor.classList.add ('notransform');  
+		// Add 3 seconds to the timeout so Airtime has time to update the metadata before we fetch it 
+		metadataTimer = null; 
+		rcursor.style= cursor_transition; 
+		rcursor.classList.remove ('notransform');  */
+		metadataTimer= setTimeout(attachStreamMetadataToPlayer,time_to_next_track_starts+ 3000);
+		 //Math.max(time_to_next_track_starts+ 3000,0) );    
+                    
+                    
+                    
+                    
+                }
+                
+                 
+		metadataxhr.onerror = function() {
+		  console.log("Metadata request failed, relaunching in 5 sec");
+		  metadataTimer= setTimeout(attachStreamMetadataToPlayer, 5000);
+		}; 
+		metadataxhr.send( ); 
+
+            /*$.ajax({
+                url: "/api/live-info",
                 data: {
                     type: "interval",
                     limit: "5"
@@ -164,18 +312,26 @@
                         }
                         time_to_next_track_starts = 20000;
                     } else {
-                        var artist = data.current.name.split(" - ")[0];
-                        var track = data.current.name.split(" - ")[1];
+                    
+                        console.log( data.current.name);
+                        var artist = '';// data.current.name;//.split(" - ")[0];
+                        var track =data.current.name;//.split(" - ")[1];
                         var nowPlayingHtml = "";
                         if (artist) {
-                            nowPlayingHtml += artist;
+                            nowPlayingHtml += artist+" - ";
                         }
                         if (track) {
-                            nowPlayingHtml += "<span>" + track + "</span>";
+                            nowPlayingHtml +=  track ;
                         }
-                        $("p.now_playing").html(nowPlayingHtml);
+                        console.log(nowPlayingHtml);
+                        $("div.now_playing").html(nowPlayingHtml);
 
-                        var current_track_end_time = new Date(data.current.ends);
+                        current_track_end_time = new Date(data.current.ends);
+                        var artwork_url=data.current.metadata.artwork_url;
+                        
+                        artwork_url=artwork_url.replace('&amp;','&');
+                        //artwork_url='https://deltacast.hd.free.fr/api/track?id=26&return=artwork';
+                        $("#artwork_image").attr('src', artwork_url );
                         if (current_track_end_time == "Invalid Date" || isNaN(current_track_end_time)) {
                             // If the conversion didn't work (since the String is not in ISO format)
                             // then change it to be ISO-compliant. This is somewhat hacky and may break
@@ -185,8 +341,9 @@
                         var current_time = new Date();
                         //convert current_time to UTC to match the timezone of time_to_next_track_starts
                         current_time = new Date(current_time.getTime() + current_time.getTimezoneOffset() * 60 * 1000);
+                        current_track_start_time= new Date((data.current.starts).replace(" ", "T"));
                         time_to_next_track_starts = current_track_end_time - current_time;
-                    }
+                       }
 
                     if (data.next === null) {
                         $("ul.schedule_list").find("li").html($.i18n._("Nothing scheduled"));
@@ -195,14 +352,40 @@
                     }
                 }
             });
-
-            //Preventative code if the local and remote clocks are out of sync.
+             //Preventative code if the local and remote clocks are out of sync.
             if (isNaN(time_to_next_track_starts) || time_to_next_track_starts < 0) {
                 time_to_next_track_starts = 0;
             }
 
-            // Add 3 seconds to the timeout so Airtime has time to update the metadata before we fetch it
-            metadataTimer = setTimeout(attachStreamMetadataToPlayer, time_to_next_track_starts + 3000);
+            
+		var current_time = new Date();
+		var current_time = new Date(current_time.getTime() + current_time.getTimezoneOffset() * 60 * 1000);
+
+		/*if (current_track_end_time === undefined )
+			time_to_next_track_starts=0;
+		else* /
+			time_to_next_track_starts = current_track_end_time - current_time;
+		var time_from_start_time= (current_time-current_track_start_time ) /(current_track_end_time-current_track_start_time); 
+		console.log(time_from_start_time);//hoping perc
+		var cursor_ratio=3; ///cursor size in perc of its parent
+		var transl=(100*(100-cursor_ratio))/cursor_ratio;
+		console.log(transl);//hoping perc
+		transl=transl-(time_from_start_time)*100*(100-cursor_ratio)/cursor_ratio;
+		console.log(transl);//hoping perc
+		//transl=0;
+		var cursor_transition="position:relative;left:"+time_from_start_time*100+"%;height: 100%;width: "+cursor_ratio+"%; transform: translate("+transl+"%);background-color: #787878;opacity:0.5;display: block;transition: transform linear "+time_to_next_track_starts/1000+"s;  ";
+
+		 // $("#radio_cursor").attr('style', cursor_transition );
+		console.log('current_track_end_time'+current_track_end_time);
+		console.log('current_time'+current_time);
+		console.log('time_to_next_track_starts'+time_to_next_track_starts/1000);         
+		document.getElementById("radio_cursor").style=  cursor_transition;         
+		// Add 3 seconds to the timeout so Airtime has time to update the metadata before we fetch it 
+		metadataTimer = null; 
+		metadataTimer= setTimeout(attachStreamMetadataToPlayer,time_to_next_track_starts+ 3000);
+		 //Math.max(time_to_next_track_starts+ 3000,0) );
+*/
+           
 
 
         }
@@ -220,6 +403,22 @@
             height: 0;
             overflow: hidden;
         }
+        #time_bar{
+            width:100%;
+            overflow:hidden;
+            height: 20px;   
+            //background-color:rgb(53,230,197);
+            display:inline-block;
+        } 
+        #radio_cursor
+        {
+            width:3%;
+            position:relative;
+            display: block; 
+            height: 100%;
+            background-color: #787878;
+            opacity:0.5;
+        }
     </style>
 
 </head>
@@ -231,16 +430,21 @@
         <div class="airtime_player">
 
             <div class="airtime_header">
-                <p class="station_name">fff</p>
+                <p id="station_name">station_name</p>
             </div>
 
             <div class="airtime_box">
-
+                <span id="artwork">
+                <img  id="artwork_image" src="/css/images/maintenance.png"   onerror='this.src="/css/images/maintenance.png"' style="width: 50px;padding-left:15px;" ></img>
+                </span>
                 <div class="airtime_button">
                     <span id="play_button" class="play_button" onclick="html5Player.play()"></span>
                     <span id="stop_button" class="stop_button hide_button" onclick="html5Player.stop()"></span>
                 </div>
-                <p class="now_playing"></p>
+                <div id="div_playing">
+                <div class="now_playing" style></div>
+                <div id="time_bar">  <div id="radio_cursor" > </div></div>
+                </div>
 
             </div>
 
@@ -263,7 +467,7 @@
             <div class="play cont_btn"></div>
 
             <div class="on_air">
-                <p class="now_playing"></p>
+                <div class="now_playing"></div>
             </div>
         </div>
 
