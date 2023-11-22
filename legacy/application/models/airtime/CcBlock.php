@@ -21,6 +21,7 @@ class CcBlock extends BaseCcBlock
      */
     public function getDbUtime($format = 'Y-m-d H:i:s')
     {
+            Logging::info('getDbUtime');
         if ($this->utime === null) {
             return null;
         }
@@ -54,6 +55,7 @@ class CcBlock extends BaseCcBlock
      */
     public function getDbMtime($format = 'Y-m-d H:i:s')
     {
+            Logging::info('getDbMtime');
         if ($this->mtime === null) {
             return null;
         }
@@ -68,6 +70,9 @@ class CcBlock extends BaseCcBlock
             // Because propel.useDateTimeClass is TRUE, we return a DateTime object.
             return $dt;
         }
+        
+            Logging::info('getDbMtime');
+            Logging::info(strftime($format, $dt->format('U')));
         if (strpos($format, '%') !== false) {
             return strftime($format, $dt->format('U'));
         }

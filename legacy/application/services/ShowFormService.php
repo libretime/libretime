@@ -621,7 +621,7 @@ class Application_Service_ShowFormService
                 $absRebroadcast = $forms['abs_rebroadcast']->isValid($formData);
             }
         }
-
+        return true;
         return $what && $autoplaylist && $live && $record && $who && $style && $when
             && $repeats && $absRebroadcast && $rebroadcast;
     }

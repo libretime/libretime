@@ -202,9 +202,9 @@ class Application_Service_ShowService
         $showData['add_show_duration'] = $this->formatShowDuration(
             $showData['add_show_duration']
         );
-
-        $con = Propel::getConnection();
-        $con->beginTransaction();
+ 	
+        $con = Propel::getConnection(); 
+        $con->beginTransaction(); 
 
         try {
             if (!$currentUser->isAdminOrPM()) {
@@ -243,19 +243,21 @@ class Application_Service_ShowService
 
                 $this->storeInstanceIds();
             }
-
+ 
             // update ccShowDays
             $this->setCcShowDays($showData);
-
+ 
             // update ccShowRebroadcasts
             $this->setCcShowRebroadcasts($showData);
-
+ 
             // update ccShowHosts
             $this->setCcShowHosts($showData);
 
+            Logging::info($daysAdded);
             // create new ccShowInstances
             $this->delegateInstanceCreation($daysAdded);
 
+            Logging::info('addUpdateShow');
             if ($this->isUpdate) {
                 /* If the show is repeating and the start date changes we need
                  * to ignore that difference when re-calculating schedule start times.
@@ -272,6 +274,7 @@ class Application_Service_ShowService
             }
 
             $con->commit();
+            Logging::info('addUpdateShowok');
             Application_Model_RabbitMq::PushSchedule();
         } catch (Exception $e) {
             $con->rollback();
@@ -356,6 +359,7 @@ class Application_Service_ShowService
          */
         $ccShows = [];
 
+            Logging::info('delegateInstanceCreation');
         foreach ($ccShowDays as $day) {
             $this->ccShow = $day->getCcShow();
             $this->isRecorded = $this->ccShow->isRecorded();
@@ -372,6 +376,9 @@ class Application_Service_ShowService
                 $this->newInstanceIdsCreated[$show_id] = [];
             }
 
+            Logging::info('delegateInstanceCreation');
+            Logging::info($day);
+            Logging::info($populateUntil);
             switch ($day->getDbRepeatType()) {
                 case NO_REPEAT:
                     $this->createNonRepeatingInstance($day, $populateUntil);
@@ -434,6 +441,7 @@ class Application_Service_ShowService
             }
         }
 
+            Logging::info('delegateInstanceCreation');
         foreach ($ccShows as $ccShow) {
             if (($this->isUpdate || $fillInstances) && $ccShow->isLinked()) {
                 Application_Service_SchedulerService::fillLinkedInstances(
@@ -1159,14 +1167,18 @@ SQL;
      */
     private function createNonRepeatingInstance($showDay, $populateUntil)
     {
+            Logging::info('createNonRepeatingInstance');
+            //Logging::info($showDay);
         // DateTime object
         $start = $showDay->getLocalStartDateAndTime();
 
+            Logging::info('createNonRepeatingInstance');
         [$utcStartDateTime, $utcEndDateTime] = $this->createUTCStartEndDateTime(
             $start,
             $showDay->getDbDuration()
         );
 
+            Logging::info('createNonRepeatingInstance');
         if ($utcStartDateTime->getTimestamp() < $populateUntil->getTimestamp()) {
             $ccShowInstance = new CcShowInstances();
             if ($this->isUpdate) {
@@ -1182,12 +1194,14 @@ SQL;
                 }
             }
 
+            Logging::info('createNonRepeatingInstance');
             $ccShowInstance->setDbShowId($this->ccShow->getDbId());
             $ccShowInstance->setDbStarts($utcStartDateTime);
             $ccShowInstance->setDbEnds($utcEndDateTime);
             $ccShowInstance->setDbRecord($showDay->getDbRecord());
             $ccShowInstance->save();
 
+            Logging::info('createNonRepeatingInstance');
             if ($this->isRebroadcast) {
                 $this->createRebroadcastInstances($showDay, $start, $ccShowInstance->getDbId());
             }

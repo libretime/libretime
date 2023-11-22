@@ -172,7 +172,7 @@
         function attachStreamMetadataToPlayer() {
         
             let metadataxhr = new XMLHttpRequest();
-            metadataxhr.open('GET', "/api/live-info?type=interval&limit=5");
+            metadataxhr.open('GET', "<?php echo $this->metadata_api_url ?>?type=interval&limit=5&version=18");
             metadataxhr.onload = function() {
                     if (metadataxhr.status != 200) { metadataxhr.onerror();return;}
  
@@ -250,29 +250,32 @@
 		else*/
 			time_to_next_track_starts = current_track_end_time - current_time;
 		 
+		 
 		var cursor_ratio=rcursor.clientWidth/rcursor.parentNode.clientWidth; ///cursor size in perc of its parent
 		var time_from_start_time= (current_time-current_track_start_time ) /(current_track_end_time-current_track_start_time); 
 		console.log(time_from_start_time);//hoping perc
 		//time_from_start_time=0;
 		time_from_start_time=time_from_start_time*(1.0-cursor_ratio);
 		var transl=(1.0-cursor_ratio)/cursor_ratio;
-		console.log(transl);//hoping perc	
+		console.log(transl);//hoping perc 
+		
 
 		 // $("#radio_cursor").attr('style', cursor_transition );
 		console.log('current_track_end_time'+current_track_end_time);
 		console.log('current_time'+current_time);
-		console.log('time_to_next_track_starts'+time_to_next_track_starts/1000);         	 
-		
-		 const cursoranimate = [
-		  { transform: "translate("+(time_from_start_time*100/cursor_ratio)+"%) " },
-		  { transform: "translate("+transl*100+"%) " },
+		console.log('time_to_next_track_starts'+time_to_next_track_starts/1000);  		 
+		 
+		 
+		const cursoranimate = [
+		{ transform: "translate("+(time_from_start_time*100/cursor_ratio)+"%) " },
+		{ transform: "translate("+transl*100+"%) " },
 		];
 		const cursoranimateTiming = {
-		  duration: time_to_next_track_starts ,
-		  iterations: 1,
+		duration: time_to_next_track_starts ,
+		iterations: 1,
 		};
-			console.log(rcursor.clientWidth/rcursor.parentNode.clientWidth);	
-		 //rcursor.style="	width:"+cursor_ratio+"%;";	
+		console.log(rcursor.clientWidth/rcursor.parentNode.clientWidth);	
+		//rcursor.style="	width:"+cursor_ratio+"%;";	
 		rcursor.animate(cursoranimate, cursoranimateTiming);    
 		/*rcursor.classList.add ('notransform');  
 		// Add 3 seconds to the timeout so Airtime has time to update the metadata before we fetch it 
@@ -287,12 +290,20 @@
                     
                 }
                 
-                 
-		metadataxhr.onerror = function() {
-		  console.log("Metadata request failed, relaunching in 5 sec");
-		  metadataTimer= setTimeout(attachStreamMetadataToPlayer, 5000);
-		}; 
-		metadataxhr.send( ); 
+                /*function() {
+  if (metadataxhr.status != 200) { // analyse l'état HTTP de la réponse
+    alert(`Error ${metadataxhr.status}: ${metadataxhr.statusText}`); // e.g. 404: Not Found
+  } else { // show the result
+    alert(`Done, got ${metadataxhr.response.length} bytes`); // response est la réponse du serveur
+  }
+};*/
+//metadataxhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+metadataxhr.onerror = function() {
+  console.log("Metadata request failed, relaunching in 5 sec");
+  metadataTimer= setTimeout(attachStreamMetadataToPlayer, 5000);
+}; 
+metadataxhr.send( ); 
 
             /*$.ajax({
                 url: "/api/live-info",

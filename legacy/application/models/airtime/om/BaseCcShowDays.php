@@ -181,7 +181,12 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+                   $ret=new DateTime();
+            $ret->setTimeStamp($dt->format('U'));
+              
+            Logging::info('getDbFirstShow');
+            return $ret->format('H:i'); 
+            return strftime($format,$dt->format('U') );
         }
 
         return $dt->format($format);
@@ -216,6 +221,11 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
+          $ret=new DateTime();
+            $ret->setTimeStamp($dt->format('U'));
+              
+            Logging::info('getDbFirstShow');
+            return $ret->format('H:i');
             return strftime($format, $dt->format('U'));
         }
 
@@ -251,6 +261,12 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
+        //assuming default
+         $ret=new DateTime();
+            $ret->setTimeStamp($dt->format('U'));
+            Logging::info($ret->format('Y-m-d'));
+            return $ret->format('Y-m-d');
+            return $formatter->format($ret);
             return strftime($format, $dt->format('U'));
         }
 

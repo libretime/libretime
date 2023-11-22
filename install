@@ -339,6 +339,7 @@ check_distribution()  {
   # shellcheck disable=SC2034
   case "$ID-$VERSION_ID" in
     ubuntu-20.04) is_ubuntu=true && distro="focal" ;;
+    ubuntu-22.04) is_ubuntu=true && distro="jammy" ;;
     debian-11)    is_debian=true && distro="bullseye" ;;
     *)
       error "could not determine supported distribution '$ID-$VERSION_ID'
@@ -375,8 +376,9 @@ prepare_packages_install() {
 
   if $is_ubuntu; then
     install_packages software-properties-common
-    add-apt-repository -y ppa:libretime/libretime
-
+    if echo $distro | grep -q 'focal'; then 
+       add-apt-repository -y ppa:libretime/libretime
+    fi
     DEBIAN_FRONTEND=noninteractive apt-get -q update
   fi
 }
@@ -722,7 +724,7 @@ fi
 
 PHP_VERSION="$(php-config --version | awk -F . '{ print $1 "." $2 }')"
 
-info "deploying libretime-legacy php-fpm config"
+info "deploying libretime-legacy php-fpm config $PHP_VERSION"
 template_file cp_if_different \
   "$SCRIPT_DIR/legacy/install/php-fpm/libretime-legacy.conf" \
   "/etc/php/$PHP_VERSION/fpm/pool.d/libretime-legacy.conf" \
