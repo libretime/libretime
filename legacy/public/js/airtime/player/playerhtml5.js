@@ -20,18 +20,19 @@ function playerhtml5_insert(settings) {
     );
   }
   if (settings.codec == "mp3") settings.codec = "mpeg";
+  if (settings.codec == "ogg") {settings.codec = "x-mpegURL" ;}
   document.getElementById("html5player_skin").innerHTML +=
     '<div id="div_' +
     settings.elementId +
-    '" style="" ><audio loop controls id="' +
+    '" style="" ><video autoplay preload controls id="' +
     settings.elementId +
     '" src="' +
     settings.url +
     '" ' +
     atp +
-    ' type="audio/' +
+    ' type="application/' +
     settings.codec +
-    '" >' +
-    "Ihr Browser unterstützt das Element <code>audio</code> nicht." +
-    "</audio></div>";
+    '" class="video-js">' +
+    "Your browser doesn't support HTML5 the <code>audio</code> tag." +
+    "</video></div>";
 }

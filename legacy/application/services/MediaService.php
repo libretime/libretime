@@ -135,7 +135,12 @@ class Application_Service_MediaService
      */
     public static function areFilesStuckInPending()
     {
-        $oneHourAgo = gmdate( DEFAULT_TIMESTAMP_FORMAT, hrtime(true) - self::PENDING_FILE_TIMEOUT_SECONDS);
+        $oneHourAgo = gmdate( DEFAULT_TIMESTAMP_FORMAT, floor(microtime(true)) - self::PENDING_FILE_TIMEOUT_SECONDS);
+        
+            Logging::info('areFilesStuckInPending');
+            Logging::info(self::PENDING_FILE_TIMEOUT_SECONDS);
+            Logging::info('areFilesStuckInPending');
+            Logging::info($oneHourAgo);
         self::$_pendingFiles = CcFilesQuery::create()
             ->filterByDbImportStatus(CcFiles::IMPORT_STATUS_PENDING)
             ->filterByDbUtime($oneHourAgo, Criteria::LESS_EQUAL)
