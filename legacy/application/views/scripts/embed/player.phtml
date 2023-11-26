@@ -246,7 +246,7 @@ this.settings.url="http://localhost/hls/main";
 
             
 		var current_time = new Date();
-		var current_time = new Date(current_time.getTime() -9000+//timeoffset  hls stream is 8s late on calendar(can't fix currenttitle at this point)
+		var current_time = new Date(current_time.getTime() -8000+//timeoffset  hls stream is 8s late on calendar
 		 current_time.getTimezoneOffset() * 60 * 1000);
 
 		/*if (current_track_end_time === undefined )
@@ -279,7 +279,8 @@ this.settings.url="http://localhost/hls/main";
 		iterations: 1,
 		};
 		console.log(rcursor.clientWidth/rcursor.parentNode.clientWidth); 
-		rcursor.animate(cursoranimate, cursoranimateTiming);    
+		rcursor.animate(cursoranimate, cursoranimateTiming);  
+		  
 		metadataTimer= setTimeout(attachStreamMetadataToPlayer,time_to_next_track_starts+ 3000); 
                     
                     
