@@ -1,23 +1,22 @@
-boot_timestamp = string_of(gettimeofday())
+boot_timestamp = string_of(time())
 
-web_stream_enabled = ref false
-web_stream_id = ref '-1'
+web_stream_enabled = ref(false)
+web_stream_id = ref( '-1')
 
 show_name = interactive.string("show_name", "")
 
-dynamic_metadata_callback = ref fun (~new_track=false, s) -> begin () end
+dynamic_metadata_callback = ref (fun (~new_track=false, s) -> begin () end)
 
-just_switched = ref false
+just_switched = ref (false)
 
 %include "ls_lib.liq"
 
-sources = ref []
-source_id = ref 0
+sources = ref([])
+source_id = ref (0)
 
 def create_source()
     this_source_id = !source_id
-
-    l = request.equeue(id="s#{this_source_id}", length=0.5)
+    l = request.queue(id="s#{this_source_id}")#, length=0.5
 
     l = audio_to_stereo(id="queue_src", l)
     l = cue_cut(l)
@@ -29,8 +28,8 @@ def create_source()
     l = fade.in(l)
     l = fade.out(l)
 
-    l = on_metadata(notify_queue, l)
-
+    l = map_metadata(notify_queue,l)
+    l =cross_http(http_input_id="http",l)
     sources := list.append([l], !sources)
     server.register(namespace="queues",
                 "s#{this_source_id}_skip",
@@ -46,15 +45,13 @@ create_source()
 create_source()
 create_source()
 
-queue = add(!sources, normalize=false)
-pair = insert_metadata(queue)
-dynamic_metadata_callback := fst(pair)
-queue = snd(pair)
+queue = add(!sources)#, normalize=false)
+queue = insert_metadata(queue)
+dynamic_metadata_callback := queue.insert_metadata   
 
 output.dummy(fallible=true, queue)
 
 http = input.http_restart(id="http")
-http = cross_http(http_input_id="http",http)
 output.dummy(fallible=true, http)
 stream_queue = http_fallback(http_input_id="http", http=http, default=queue)
 stream_queue = map_metadata(id="map_metadata:schedule", update=false, append_title, stream_queue)
@@ -100,9 +97,9 @@ end
 default = map_metadata(id="map_metadata:offline", map_message_offline, default)
 ignore(output.dummy(default, fallible=true))
 
-input_main_streaming = ref false
-input_show_streaming = ref false
-schedule_streaming = ref false
+input_main_streaming = ref (false)
+input_show_streaming = ref (false)
+schedule_streaming = ref (false)
 
 def start_input_main() input_main_streaming := true end
 def stop_input_main() input_main_streaming := false end
@@ -120,29 +117,22 @@ def input_main_on_disconnect() update_source_status("master_dj", false) end
 def input_show_on_connect(header) update_source_status("live_dj", true) end
 def input_show_on_disconnect() update_source_status("live_dj", false) end
 
-def make_input_func(secure)
-    if secure then
-        input.harbor.ssl
-    else
-        input.harbor
-    end
-end
-
 def make_input_auth_handler(input_name)
-    def auth_handler(user, password)
-        log("user '#{user}' connected", label="#{input_name}_input")
+    def auth_handler(args)
+        log("user '#{args.user}' connected", label="#{input_name}_input")
 
         # Check auth based on return value from auth script
-        ret = test_process("libretime-playout-notify live-auth '#{input_name}' '#{user}' '#{password}'")
+        ret = test_process("libretime-playout-notify live-auth '#{input_name}' '#{args.user}' '#{args.password}'")
         if ret then
-            log("user '#{user}' authenticated", label="#{input_name}_input")
+            log("user '#{args.user}' authenticated", label="#{input_name}_input")
         else
-            log("user '#{user}' auth failed", label="#{input_name}_input",level=2)
+            log("user '#{args.user}' auth failed", label="#{input_name}_input",level=2)
         end
 
         ret
     end
     auth_handler
+      
 end
 
 s = switch(id="switch:blank+schedule",
@@ -152,10 +142,9 @@ s = switch(id="switch:blank+schedule",
     )
 
 s = if input_show_port != 0 and input_show_mount != "" then
-    input_show_func = make_input_func(input_show_secure)
     input_show_source =
         audio_to_stereo(
-            input_show_func(id="harbor:input_show",
+            input.harbor(id="harbor:input_show",
                 input_show_mount,
                 port=input_show_port,
                 auth=make_input_auth_handler("show"),
@@ -175,10 +164,9 @@ else
 end
 
 s = if input_main_port != 0 and input_main_mount != "" then
-    input_main_func = make_input_func(input_main_secure)
     input_main_source =
         audio_to_stereo(
-            input_main_func(id="harbor:input_main",
+            input.harbor(id="harbor:input_main",
                 input_main_mount,
                 port=input_main_port,
                 auth=make_input_auth_handler("main"),
