@@ -377,7 +377,10 @@ prepare_packages_install() {
   if $is_ubuntu; then
     install_packages software-properties-common
     if echo $distro | grep -q 'focal'; then 
-       add-apt-repository -y ppa:libretime/libretime
+       add-apt-repository -y ppa:libretime/libretime       
+    fi
+    if echo $distro | grep -q 'jammy'; then 
+       apt-get install php-cli php-dev  php  php-fpm php-pear php-yaml php-gd php-bcmath php-curl 
     fi
     DEBIAN_FRONTEND=noninteractive apt-get -q update
   fi

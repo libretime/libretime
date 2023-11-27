@@ -16,7 +16,7 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "https://github.com/libretime/propel1"
+      "url": "https://github.com/mp3butcher/propel1"
     },
     {
       "type": "vcs",
@@ -30,7 +30,7 @@
     "james-heinrich/getid3": "^1.9",
     "league/uri": "^6.7",
     "libretime/celery-php": "dev-main",
-    "libretime/propel1": "dev-main",
+    "mp3butcher/propel1": "main",
     "php-amqplib/php-amqplib": "^3.0",
     "simplepie/simplepie": "^1.5",
     "symfony/config": "^5.4",
