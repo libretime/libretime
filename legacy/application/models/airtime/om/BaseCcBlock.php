@@ -190,7 +190,7 @@ abstract class BaseCcBlock extends BaseObject implements Persistent
      * Get the [optionally formatted] temporal [mtime] column value.
      *
      *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     * @param string $format The date/time format string (date()-style).
      *				 If format is null, then the raw DateTime object will be returned.
      * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
@@ -214,7 +214,7 @@ abstract class BaseCcBlock extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            throw new PropelException('strftime format not supported anymore');
         }
 
         return $dt->format($format);
@@ -225,7 +225,7 @@ abstract class BaseCcBlock extends BaseObject implements Persistent
      * Get the [optionally formatted] temporal [utime] column value.
      *
      *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     * @param string $format The date/time format string (date()-style).
      *				 If format is null, then the raw DateTime object will be returned.
      * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
@@ -249,7 +249,7 @@ abstract class BaseCcBlock extends BaseObject implements Persistent
         }
 
         if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
+            throw new PropelException('strftime format not supported anymore');
         }
 
         return $dt->format($format);

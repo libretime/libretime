@@ -284,7 +284,11 @@ class ApiController extends Zend_Controller_Action
 
             // default to the station timezone
             $timezone = Application_Model_Preference::GetDefaultTimezone();
-            $userDefinedTimezone = strtolower($request->getParam('timezone'));
+            if ($request->getParam('timezone')) {
+                $userDefinedTimezone = strtolower($request->getParam('timezone'));
+            } else {
+                $userDefinedTimezone = '';
+            }
             $upcase = false; // only upcase the timezone abbreviations
             $this->updateTimezone($userDefinedTimezone, $timezone, $upcase);
 
@@ -410,7 +414,11 @@ class ApiController extends Zend_Controller_Action
 
             // default to the station timezone
             $timezone = Application_Model_Preference::GetDefaultTimezone();
-            $userDefinedTimezone = strtolower($request->getParam('timezone'));
+            if ($request->getParam('timezone')) {
+                $userDefinedTimezone = strtolower($request->getParam('timezone'));
+            } else {
+                $userDefinedTimezone = '';
+            }
             $upcase = false; // only upcase the timezone abbreviations
             $this->updateTimezone($userDefinedTimezone, $timezone, $upcase);
 
@@ -1640,7 +1648,7 @@ class ApiController extends Zend_Controller_Action
         echo "Recalculated {$total} shows.";
     }
 
-    final private function returnJsonOrJsonp($request, $result)
+    private function returnJsonOrJsonp($request, $result)
     {
         $callback = $request->getParam('callback');
         $response = $this->getResponse();
@@ -1667,7 +1675,7 @@ class ApiController extends Zend_Controller_Action
      * @param mixed $status
      * @param mixed $message
      */
-    final private function jsonError($status, $message)
+    private function jsonError($status, $message)
     {
         $this->getResponse()
             ->setHttpResponseCode($status)
