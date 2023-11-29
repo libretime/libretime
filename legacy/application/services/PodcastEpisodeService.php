@@ -472,6 +472,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
             if (!empty($file) && $file['import_status'] == CcFiles::IMPORT_STATUS_PENDING) {
                 $ingested = -1;
             }
+            $itemdesc = $item->get_description() ? $item->get_description() : '';
 
             array_push($episodesArray, [
                 'podcast_id' => $podcast->getDbId(),
@@ -481,7 +482,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
                 // From the RSS spec best practices:
                 // 'An item's author element provides the e-mail address of the person who wrote the item'
                 'author' => $this->_buildAuthorString($item),
-                'description' => htmlspecialchars($item->get_description()),
+                'description' => htmlspecialchars($itemdesc),
                 'pub_date' => $item->get_gmdate(),
                 'link' => $url,
                 'enclosure' => $enclosure,

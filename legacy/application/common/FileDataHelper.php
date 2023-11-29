@@ -371,15 +371,15 @@ class FileDataHelper
     public static function renderImage($file)
     {
         if ($file && file_exists($file)) {
-           $im = @imagecreatefromjpeg($file);
+            $im = @imagecreatefromjpeg($file);
 
-           $img = $im;
+            $img = $im;
 
-           if ($im) {
-               header('Content-Type: image/jpeg');
-               imagejpeg($img);
-               imagedestroy($img);
-           }
+            if ($im) {
+                header('Content-Type: image/jpeg');
+                imagejpeg($img);
+                imagedestroy($img);
+            }
         }
     }
 
