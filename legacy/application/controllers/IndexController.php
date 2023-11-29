@@ -57,8 +57,16 @@ class IndexController extends Zend_Controller_Action
         $podcastEpisodesService = new Application_Service_PodcastEpisodeService();
         $episodes = $podcastEpisodesService->getPodcastEpisodes($stationPodcastId, 0, 0, PodcastEpisodesPeer::PUBLICATION_DATE, 'DESC');
         foreach ($episodes as $e => $v) {
-            $episodes[$e]['CcFiles']['track_title'] = htmlspecialchars($v['CcFiles']['track_title'], ENT_QUOTES);
-            $episodes[$e]['CcFiles']['artist_name'] = htmlspecialchars($v['CcFiles']['artist_name'], ENT_QUOTES);
+            if ($v['CcFiles']['track_title']) {
+                $episodes[$e]['CcFiles']['track_title'] = htmlspecialchars($v['CcFiles']['track_title'], ENT_QUOTES);
+            } else {
+                $episodes[$e]['CcFiles']['track_title'] = '';
+            }
+            if ($v['CcFiles']['artist_name']) {
+                $episodes[$e]['CcFiles']['artist_name'] = htmlspecialchars($v['CcFiles']['artist_name'], ENT_QUOTES);
+            } else {
+                $episodes[$e]['CcFiles']['artist_name'] = '';
+            }
 
             $pubDate = explode(' ', $v['publication_date']);
             $episodes[$e]['publication_date'] = $pubDate[0];
