@@ -6,8 +6,12 @@ if ($isSmartBlock && $this->showPoolCount) { ?>
     <div class='sp_text_font sp_text_font_bold'>
         <span id='sp_pool_count' class='sp_text_font sp_text_font_bold'>
             <?php
-            echo $this->poolCount;
-            echo ngettext(" track matches your search criteria.", " tracks match your search criteria.", $this->poolCount);
+            if($this->poolCount) {
+                echo $this->poolCount;
+                echo ngettext(" track matches your search criteria.", " tracks match your search criteria.", $this->poolCount);
+            } else {
+                echo "No track match the search criteria";
+            }
             ?>
         </span>
         <?php if ($this->poolCount > 0) { ?>
@@ -26,6 +30,7 @@ if (count($items) && ($isSmartBlock || $isPlaylist)) : ?>
     ?>
     <?php foreach ($items as $item) :
         $staticBlock = null;
+        $fileUrl = null;
         $nextFileUrl = null;
         if ($item['type'] == 2) {
             $bl = new Application_Model_Block($item['item_id']);
