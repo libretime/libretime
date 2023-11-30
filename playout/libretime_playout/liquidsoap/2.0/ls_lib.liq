@@ -209,9 +209,9 @@ def cross_http(~debug=true,~http_input_id,source)
     end
   end
 
-  # Setting conservative=true would mess with the delayed switch below 
+  # Setting conservative=true would mess with the delayed switch below
   cross(duration=cross_d,conservative=false,crosser,source)
-   
+
 end
 
 # Custom fallback between http and default source with fading of
