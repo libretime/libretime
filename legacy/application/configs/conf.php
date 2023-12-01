@@ -203,6 +203,7 @@ class Schema implements ConfigurationInterface
             /*  */->scalarNode('genre')->end()
             /*  */->booleanNode('mobile')->defaultFalse()->end()
             /**/->end()->end()->end()
+
             // Hls outputs
             /**/->arrayNode('hls')->arrayPrototype()->children()
             /*  */->arrayNode('streams')->arrayPrototype()->children()
@@ -232,12 +233,6 @@ class Schema implements ConfigurationInterface
             /*  */->scalarNode('mount')->cannotBeEmpty()
             /*    */->validate()->ifString()->then($trim_leading_slash)->end()
             /*  */->end()
-
-
-            /*  */->scalarNode('name')->end()
-            /*  */->scalarNode('description')->end()
-            /*  */->scalarNode('website')->end()
-            /*  */->scalarNode('genre')->end()
             /*  */->booleanNode('mobile')->defaultFalse()->end()
             /**/->end()->end()->end()
             // System outputs
