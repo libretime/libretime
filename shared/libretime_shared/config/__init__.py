@@ -5,6 +5,7 @@ from ._models import (
     DatabaseConfig,
     GeneralConfig,
     HarborInput,
+    HlsOutput,
     IcecastOutput,
     RabbitMQConfig,
     ShoutcastOutput,

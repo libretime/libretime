@@ -197,6 +197,31 @@ class AudioOpus(BaseAudio):
     format: Literal[AudioFormat.OPUS] = AudioFormat.OPUS
 
 
+class HlsStream(BaseModel):
+    fragment_prefix: str = "mp3_128"
+    bitrate: str = "128k"
+    sample_rate: int = 44100
+    codec: str = "libmp3lame"
+
+
+class HlsOutput(BaseModel):
+    kind: Literal["hls"] = "hls"
+    enabled: bool = False
+    public_url: Optional[AnyUrl] = None
+    host: str = "localhost"
+    port: int = 80
+    format: str = "mpegts"
+    segment_duration: float = 2.0
+    segment_count: int = 5
+    segments_overhead: int = 5
+    streams: List[HlsStream] = Field([], max_items=10)
+    mount: str
+
+    mobile: bool = False
+
+    _mount_no_leading_slash = no_leading_slash_validator("mount")
+
+
 class IcecastOutput(BaseModel):
     kind: Literal["icecast"] = "icecast"
     enabled: bool = False
@@ -266,6 +291,7 @@ class SystemOutput(BaseModel):
 class Outputs(BaseModel):
     icecast: List[IcecastOutput] = Field([], max_items=3)
     shoutcast: List[ShoutcastOutput] = Field([], max_items=1)
+    hls: List[HlsOutput] = Field([], max_items=1)
     system: List[SystemOutput] = Field([], max_items=1)
 
     @property

@@ -55,9 +55,6 @@ class Application_Model_StreamConfig
                 $prefix . 'pass' => $output['source_password'] ?? '',
                 $prefix . 'admin_user' => $output['admin_user'] ?? 'admin',
                 $prefix . 'admin_pass' => $output['admin_password'] ?? '',
-                $prefix . 'channels' => $output['audio']['channels'] ?? 'stereo',
-                $prefix . 'bitrate' => $output['audio']['bitrate'] ?? 128,
-                $prefix . 'type' => $output['audio']['format'],
                 $prefix . 'name' => $output['name'] ?? '',
                 $prefix . 'description' => $output['description'] ?? '',
                 $prefix . 'genre' => $output['genre'] ?? '',
@@ -65,6 +62,14 @@ class Application_Model_StreamConfig
                 $prefix . 'mobile' => $output['mobile'] ?? 'false',
                 // $prefix . 'liquidsoap_error' => 'waiting',
             ];
+            if (array_key_exists('audio',$output))
+            {
+                $result = $result.merge([
+                    $prefix . 'channels' => $output['audio']['channels'] ?? 'stereo',
+                    $prefix . 'bitrate' => $output['audio']['bitrate'] ?? 128,
+                    $prefix . 'type' => $output['audio']['format'],
+                ]);
+            }
         }
 
         if (!$result[$prefix . 'public_url']) {
@@ -108,8 +113,8 @@ class Application_Model_StreamSetting
             $prefix = $id . '_';
             $streams[$id] = [
                 'url' => $streamData[$prefix . 'public_url'],
-                'codec' => $streamData[$prefix . 'type'],
-                'bitrate' => $streamData[$prefix . 'bitrate'],
+                'codec' => $streamData[$prefix . 'type'] ?? 'hls',
+                'bitrate' => $streamData[$prefix . 'bitrate'] ?? '',
                 'mobile' => $streamData[$prefix . 'mobile'],
             ];
         }
