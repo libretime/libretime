@@ -62,9 +62,8 @@ class Application_Model_StreamConfig
                 $prefix . 'mobile' => $output['mobile'] ?? 'false',
                 // $prefix . 'liquidsoap_error' => 'waiting',
             ];
-            if (array_key_exists('audio',$output))
-            {
-                $result = $result.merge([
+            if (array_key_exists('audio',$output)) {
+                $result .= merge([
                     $prefix . 'channels' => $output['audio']['channels'] ?? 'stereo',
                     $prefix . 'bitrate' => $output['audio']['bitrate'] ?? 128,
                     $prefix . 'type' => $output['audio']['format'],
