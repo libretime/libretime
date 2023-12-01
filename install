@@ -628,6 +628,7 @@ link_python_app libretime-playout-notify
 
 info "creating libretime-playout working directory"
 mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR/playout"
+mkdir_and_chown "$LIBRETIME_USER" "$WORKING_DIR/playout/hls"
 
 install_service "libretime-liquidsoap.service" "$SCRIPT_DIR/playout/install/systemd/libretime-liquidsoap.service"
 install_service "libretime-playout.service" "$SCRIPT_DIR/playout/install/systemd/libretime-playout.service"
