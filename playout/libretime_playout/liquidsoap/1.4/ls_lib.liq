@@ -1,3 +1,7 @@
+def appendinfos(streaminfos, fragment_prefix, bandwidth, codec, container)
+    streaminfos := list.append([(fragment_prefix, (bandwidth, codec, container))], !streaminfos)
+end
+
 def gateway(args)
   command = "timeout --signal=KILL 45 libretime-playout-notify #{args} &"
   log(command)

@@ -64,31 +64,36 @@ output_hls_{{ output_id }}_source = add(normalize=false, [amplify(0.00001, noise
 -#}
 
 streams = ref([])
+streaminfos = ref([])
 
 {% for stream in output.streams -%}
 
-    streamout = %ffmpeg(format="{{output.format}}" ,
+    streamout = %ffmpeg(format="{{output.format}}",
                      strict="-2",
                     %audio( codec="{{stream.codec}}",
                             channels=2,
                             ar={{stream.sample_rate}},
                             b="{{stream.bitrate}}"))
     streams := list.append([("{{stream.fragment_prefix}}",streamout)], !streams)
+    {# Append dummy infos (required arg for 1.4) player will find out#}
+    appendinfos(streaminfos, "{{stream.fragment_prefix}}", {{ loop.index }}*10000, "", "")
 
 {% endfor -%}
 
-def segment_name(~position,~extname,stream_name) =
+def segment_name(~position,~extname, stream_name) =
   timestamp = int_of_float(time())
-  duration = 2
+  duration = {{output.segment_duration}}
   "#{stream_name}_#{duration}_#{timestamp}_#{position}.#{extname}"
 end
 
-argstream=!streams
+argstream= !streams
+arginfos= !streaminfos
 
 output.file.hls(playlist=input_main_mount,
                 segment_duration={{output.segment_duration}},
                 segments={{output.segment_count}},
                 segments_overhead={{output.segments_overhead}},
+                streams_info=arginfos,
                 segment_name=segment_name,
                 "/var/lib/libretime/playout/hls",
                 argstream,
