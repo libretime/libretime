@@ -63,10 +63,15 @@ class Application_Model_StreamConfig
                 // $prefix . 'liquidsoap_error' => 'waiting',
             ];
             if (array_key_exists('audio', $output)) {
-                $result .= merge([
+                $result = array_merge($result, [
                     $prefix . 'channels' => $output['audio']['channels'] ?? 'stereo',
                     $prefix . 'bitrate' => $output['audio']['bitrate'] ?? 128,
                     $prefix . 'type' => $output['audio']['format'],
+                ]);
+            } else {
+                // assume HLS : set web server port
+                $result = array_merge($result, [
+                    $prefix . 'port' => $_SERVER['SERVER_PORT'],
                 ]);
             }
         }
